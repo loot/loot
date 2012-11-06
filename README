@@ -1,0 +1,341 @@
+LOOT
+====
+
+Introduction
+============
+
+LOOT is BOSS v3.
+See BOSS: http://code.google.com/p/better-oblivion-sorting-software/
+
+LOOT has been given a different working name because it will be a very
+different program to the one that people know and love as BOSS.
+
+LOOT is being designed from the ground up to address the shortcomings
+that are inherent in how BOSS approaches load order optimisation. That's
+another reason why it's being hosted on a different site, under a
+different name, even though it is intended to be released as an update
+to BOSS. While ideas and some code will be transferred, the distancing
+will hopefully produce better results.
+
+So what's wrong with BOSS? Why do I feel the need to go back to the
+drawing board?
+
+Well, Oblivion has accumulated around 25,000 mods on
+Oblivion Nexus since its launch in 2006. Skyrim has accumulated around
+19,000 mods on Skyrim Nexus since its launch in 2011. Growth models aside,
+Skyrim has proved incredibly popular for modding.
+
+For BOSS to be as useful as possible, it needs to be able to sort as many
+mods as possible. For Skyrim, we're getting user submissions of mods to
+be sorted faster than we can add them, and our backlog is at 3,000+
+plugins and growing. That's after I've doubled the effective team size.
+
+The BOSS team's operational model is therefore unsustainable, and has
+to change. The main issue is that it takes time for us to process all
+these reports, and we only have so much free time: the team itself is the
+weak point in the operating chain. It's a good idea, then, to automate
+as much as possible, and so reduce the bottleneck.
+
+
+LOOT Design Overview
+====================
+
+BOSS sorts mods according to their positions on a "masterlist", which is
+essentially a massive 'correct' load order. This masterlist is maintained
+by the BOSS team, with input from the community via user submission of
+plugins to be added and suggested improvements for existing positions.
+
+To answer the question of how this may be automated, we first consider
+how it is that a correct load order is obtained. A correct load order
+satisfies the following conditions:
+
+1. It satisfies all the explicit and implicit dependencies of all plugins
+   in the load order.
+2. It maximises the impact of each plugin on the list. Every plugin has
+   a purpose, and given any two conflicting plugins there is a load order
+   for them that has the highest 'impact factor'. Eg. if a mod contains 5
+   armour records that conflict with another mod containing 10 armour
+   records and 15 weapon records, loading the first after the second will
+   result in a (100% + 80%)/2 = 90% impact, but loading the
+   second after the first will result in a (0% + 100%)/2 = 50% impact.
+
+The implicit dependencies mentioned in the first point are those that do
+not appear in a plugin's master list, eg. target mods for landscape
+patches. Such dependencies cannot be determined by examination of the
+plugin's contents, but may be noted in the plugin's filename or in its
+documentation.
+
+The second point has some additional subtleties associated with it:
+it may be that a player may only want some changes from one mod, and some
+from another, but the majority of changes from neither. It may also be
+that while a plugin makes a lot of or a few changes, it is a low-priority
+plugin by intent, eg. the Unofficial Patches are loaded early so that other
+mods may override their fixes with other changes. There is probably
+therefore an element of intent or user choice that cannot be determined from
+examining the contents of the plugins.
+
+These two points mean that a fully analytic load order solver is impossible
+given an arbitrary set of plugins, so LOOT cannot be totally automated.
+Some means of transferring data on implicit dependencies, intents and
+user choices is required.
+
+Data on implicit dependencies and author intentions are suitable for
+mass distribution to all LOOT users, as they are universally applicable,
+while user choices are personal and so unsuitable for mass distribution.
+This split can be neatly codified into a database of "master rules"
+(masterlist) and a database of "user rules" (userlist). The masterlist
+could also be used to distribute various messages as BOSS's masterlist does.
+
+Most plugins will likely not require additional data, and so not require
+masterlist rules, so this will remove most of the strain on BOSS team members.
+
+
+LOOT Masterlist & Userlist
+==========================
+
+As the purpose of LOOT's masterlist will be to provide additional data
+for the sorting of plugins via algorithms, rather than to provide the
+positions of plugins directly, the ordering of plugins loses semantic
+meaning. As such, each plugin's entry becomes standalone from the rest
+of the file, from a structure perspective. This leads to plugin grouping
+also losing semantic meaning.
+
+The userlist broadly maintains the purpose it has in BOSS, but expands to
+mirror the masterlist, so that the two are equivalent, but with the
+userlist overriding the masterlist. Userlist rules will be valid masterlist
+rules and vice-versa.
+
+To ease future development, the masterlist and userlist will be written
+in YAML, which has a suitable mix of simplicity, power and flexibility.
+The format is described later in this file.
+
+Below is a run-down of the masterlist and userlist feature differences
+between BOSS and LOOT:
+
+Masterlist
+----------
+
+Plugins are unordered. No distinction is made in the syntax between regex
+plugins and non-regex plugins. Detection of regex plugins will be done by
+looking for a "\.esp" or "\.esm" in the filename.
+
+Groups will no longer exist.
+
+The requirement and incompatibility message types will be removed. Instead,
+error messages will be generated if any requirements are not met or any
+incompatibilities are present.
+
+The Bash Tag suggestion message type will be removed. LOOT will be Bash
+Tag agnostic. This is because BOSS's Bash Tag suggestions are very patchy,
+and it would be more effective for Bash to implement some sort of scanning
+mechanism to determine the correct Bash Tags for a plugin than for LOOT to
+do the same.
+
+Variables will no longer exist, as YAML's support for references and
+aliases is far more flexible and powerful. 'Loose' file and message
+definitions may be put at the beginning of the masterlist / userlist for
+reference to later without requiring them to be attached to a plugin.
+
+Web Link support will be retained with its current functionality.
+
+Global message support will be retained with its current functionality. Global
+messages will be required to be listed before all plugin entries.
+
+Conditionals will be retained, though the hardcoded placeholders will be removed
+and replaced with YAML references. The 'VAR' and 'REGEX' condition types will be
+removed as the former will be unnecesssary and the latter included in the 'FILE'
+type, since all file objects will potentially contain regex strings.
+
+All conditionals will have their results cached.
+
+Userlist
+--------
+
+There will be no distinction between those that add new rules, those that
+override existing rules, and those that only supply messages.
+
+Userlist rules will override masterlist rules on a per-component basis,
+eg. if requirements are given, they will override the requirements given
+in the masterlist, but if they are not given then the masterlist rule's
+requirements will be used.
+
+Rules will not be able to reference groups at all, as they will no longer
+exist.
+
+Rules will not be able to specify plugin positions, but will be able to
+specify requirements, incompatibilities and priority instead.
+
+
+LOOT User Experience
+====================
+
+LOOT will require a greater degree of user interaction than BOSS does,
+so an interface that facilitates this is required: as such, LOOT will
+not have a CLI.
+
+A general workflow for a user running LOOT to sort would be:
+
+1. Run LOOT: it auto-sorts based on plugin content plus and masterlist
+   and userlist rules.
+2. LOOT finishes sorting, and displays the load order it sets.
+   Clicking on a plugin in the load order will highlight all those it
+   conflicts with. This provides a simple way for users to gauge conflicts
+   and so decide which plugin's changes they wish to apply to their games.
+   Dragging a plugin will display the positions to which it can be moved
+   (by dropping it there) whilst satisfying dependencies.
+   Plugins which have no conflicts are greyed out and cannot be selected,
+   to simplify this process.
+   There will be an information panel which will display the selected
+   plugin's requirements, incompatibilities, priority and messages. These
+   will be editable, upon exit of the load order window, the user will be
+   asked if they wish to submit any edits they make to these fields.
+   Edits to plugin positions will not be submitted.
+   If LOOT encounters any errors while sorting, they are displayed instead
+   of the load order.
+3. The user exits the load order display, choosing either to apply or
+   discard changes.
+4. LOOT asks the user if they want to submit their plugin data edits. If
+   so, it then asks the user to supply links for each of the plugins
+   with edited data.
+4. LOOT then applies the resulting load order, saves any user choices
+   as userlist rules, and exits.
+
+Because auto-sorting will require significant computation (think CBash
+Bashed Patch building), optimisations will be made where possible. For
+example, if LOOT is run and the plugins have not changed since it was
+last run, then it will use the last load order it calculated. It will
+also do this if the only change was removal of plugin(s). Addition of
+plugins will require a re-calculation, but it may be possible that only
+a partial scan would be required.
+
+LOOT must also provide a means to manage user rules, to undo its
+changes (only back one run though), and to edit its settings.
+
+The Userlist Syntax and Masterlist Syntax docs will be merged into a
+"Rule Syntax" doc, as the syntax will be the same for both. The new doc
+will be structured so that there is a progression in complexity from
+simple rule syntax to complex rule syntax as the guide progresses.
+
+
+Implementation
+==============
+
+LOOT will be an ambitious project: to keep its code as simple as possible,
+it will make use of external libraries to supply functionality where
+possible, for example:
+  * yaml-cpp: for masterlist/userlist parsing.
+  * libespm: for plugin parsing.
+  * libloadorder: for reading and writing load order.
+  * cURL: for networking.
+  * wxWidgets: for the interface.
+  * Boost: for filesystem interaction, various helpful functions.
+
+As a reflection of this, LOOT's API will provide functions only for
+accessing LOOT-specific functionality and data, eg. auto-sorting,
+masterlist / userlist reading, masterlist download and user
+edits submission.
+
+To provide greater flexibility in the case of the LOOT team having to
+relocate their hosting, the locations of the online masterlists will
+not be hardcoded, but instead specified in LOOT's ini file. More generally,
+hardcoding of potential variables will be avoided where possible.
+
+
+LOOT Database Format
+====================
+
+Simple Example
+--------------
+
+{{{
+---
+- name: MyMod.esp
+  req:
+    - name: AnotherMod.esp
+    - name: AnotherModPatch.esp
+  msg:
+    - type: say
+      content: "This is my mod."
+    - type: say
+      content: "This is a second message."
+...
+}}}
+
+Complex Example
+---------------
+
+Note: The below example does not support compound conditionals:
+I'm still trying to work out how to fit them in.
+
+{{{
+---
+
+# Datatypes:
+# !condition {key: REQUIRED, type: REQUIRED, arg: [REQUIRED, OPTIONAL]}
+# !file { condition: OPTIONAL, name: REQUIRED, version: OPTIONAL, mod: OPTIONAL}
+# !message { condition: OPTIONAL, type: REQUIRED, content: REQUIRED}
+# !plugin
+#    name: REQUIRED
+#    priority: OPTIONAL
+#    req: [OPTIONAL !file, OPTIONAL !file]
+#    inc: [OPTIONAL !file, OPTIONAL !file]
+#    msg: [OPTIONAL !message, OPTIONAL !message]
+#
+# Variables can be implemented as references to file and message objects.
+# Datatypes don't need to be explicitly declared, since the parser that will
+# be used (yaml-cpp) will allow the querying of nodes that don't exist. The
+# parser will simply assume that the correct data type is being used and fail
+# if a required node is missing.
+#
+# The req, inc and msg lists in the plugin datatype should be omitted if they
+# are empty, but can hold any number > 0 of nodes. The req list is ordered, in
+# the load order of its contents, omitting any nodes that are for files that are
+# not .esp or .esm files.
+#
+# For the condition datatype, 'key' is either "IF" or "IFNOT", 'type' is one
+# of 'FILE', 'CRC', 'VERSION', 'ACTIVE' or 'LANG'. Depending on the value of
+# 'type', 'arg' can be one of the following:
+#
+# Type      Arg
+# FILE      a single file object
+# CRC       a single file object
+# VERSION   a single file object, followed by '<', '=' or '>' as the second arg.
+# ACTIVE    a single file object
+# LANG      a language name string
+#
+# CRCs and version strings can both be used in !file data structures' 'version'
+# nodes, but strings should be wrapped in double quotes and CRCs unquoted. CRCs
+# must be preceded by '0x' to tell the YAML parser that it's a hex integer and
+# not a string.
+#
+# In general, strings should be double-quoted for consistency: they may be
+# unquoted if they use no YAML syntax characters or single-quoted if that is
+# convenient though. I haven't really decided yet. For instance, messages
+# that include a web link but no apostrophes are better single-quoted, as that
+# requires less escaping.
+
+
+# These are all treated as file datatypes by LOOT, but they are not file
+# datatypes in YAML.
+filevars:
+  - &GAME name: "TESV.exe"
+  - &MASTER {name: "Oblivion.esm", version: "1.2.416"}
+  - &SE name: "obse_loader.exe"
+  - &TEST {name: "Test.esp", version: 0x0537AB3C}
+  - &SE20 <<: [*SE, version: "0.0.20.1"]    # The result is {name: "obse_loader.exe", version: "0.0.20.1"}
+
+msgvars:
+  - &OBSOLETE {type: SAY, content: "Obsolete. Remove and upgrade to the latest version."}
+
+globals:
+  - {type: SAY, content: "You're using LOOT!"}
+
+- name: Oblivion.esm
+  # Any unfulfilled 'req's will produce an error message, as will any 'inc's
+  # present. As an aside, it's OK for '#' to be the comment symbol, because
+  # while it can be used in filenames, plugins.txt also uses it for comments.
+  msg:
+    - {condition: {key: if, type: file, arg: *GAME}, type: WARN, content: "False alarm."}
+    - <<: {*OBSOLETE, content: Quotes aren't necessary, unless the message contains special chars. }
+...
+}}}
