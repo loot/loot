@@ -244,3 +244,15 @@ ignored by the masterlist parser. I think that YAML is a suitable format for
 these files as it is simple, human-readable, yet quite powerful.
 
 Further details can be found in the LOOT File Format doc.
+
+
+Networking
+==========
+
+LOOT needs to be able to download and upload specific files from a VCS 
+repository. (VCS to help deal with possible spam/vandalism, and to track 
+changes.) It also needs to be able to send/receive data from some sort of issue
+tracker.
+
+As LOOT needs to do this for users without their own credentials for the 
+repository, it needs to do this as a robot.

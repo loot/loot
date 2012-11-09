@@ -150,94 +150,99 @@ globals:
 LOOT Machine Database Format
 ============================
 
-The formatting of this database has not yet been decided. It doesn't need to be
-human-readable, but must contain the following information for each plugin:
+The formatting of this database doesn't need to be human-readable, but must 
+contain the following information for each plugin:
 
   * Filename (for roughly identifying the file)
   * CRC	(for precisely identifying the exact file)
   * Masters in the order they appear in the plugin's master list.
   * FormIDs of the records it edits (not added records).
   
-However, the filename being a variable length byte string makes searching
-through filenames more complicated than if a unique identifier of fixed length
-generated from the filename were used. A hash is suitable, but it would have to
-be of sufficient size to minimise the probability of hash collisions. There are
-~25,000 mods for Oblivion on the Nexus, let's assume that each mod contains 4 
-plugins: many contain only one, but many others contain lots of plugins. Factor
-in some room for growth, since Skyrim will likely have many more mods than
-Oblivion does at its age, and having an upper bound of ~10,000,000 plugins,
-including different versions of the same plugin does not seem wholey 
-unreasonable. It's unlikely that the number of plugins would reach over order 
-10^6, but this is an upper bound, after all.
+Rather than have a single database file, it is more efficient past the short
+term to use a different file for each plugin filename's data, even after taking
+into account the additional networking cost of using many small files. See
+the section after the divider below for the analysis.
 
-A 32-bit hash has around 4 billion possible values, but due to the birthday
-problem collisions become significant way below that, with there being a 1%
-probability at ~10,000 values, assuming I've understood that right. A 64-bit
-hash has a 1% probability at around 609 million values, so it's a much better
-choice.
+Each database file will be named filename.txt, where filename is a plugin
+filename including extension, eg. "Unofficial Oblivion Patch.esp.txt". In each
+database file, the data will be divided into entries for each of the different
+versions of that file, which are handled using their CRCs. These entries make
+up the bulk of the file, and are followed by an index of CRCs and offsets to
+their corresponding data at the end of the file.
 
-As for the choice of hash function, it doesn't need to be cryptographically
-secure, and speed is favoured.
+	Name			Type					Details
+	---------------------------------------------------------------------------
+	Data Entries	data entry[Entry Count]		
+	Index			index entry[Entry Count]
+	Entry Count		uint32_t
+	
+Each data entry has the following structure:
 
-Since the use of the database is limited to searching for a specific file then
-reading its data, it makes sense to optimise searching by storing all filename
-hashes and CRCs in an index, with offsets to each file's data.
-
-A 4 GB file can store of order 10^8 index entries, or ~10^7 plugin entries
-including the index. It might be prudent to allow for some leeway by specifying
-offsets using 64 bit integers, just in case my upper bound is too low, but we're
-talking about a database file over 4 GB big. That's just crazy.
-
-Storing the index at the beginning of the file would require the entire file to
-be rewritten whenever it is updated, so instead it will be stored at the end
-of the file, so that a new entry can be appended then only the index rewritten.
-
-So anyway, the plugin index:
-
-	Index entries		index entry[Size]
-	Size				uint32_t			Last 4 bytes of the file.
-
-A plugin index entry:
-
-	Filename hash		uint64_t
-	File data CRC32		uint32_t
-	Data offset			uint32_t			From beginning of file.
-
-A plugin data entry:
-
-	Size				uint32_t			Total size of data entry, not
+	Name			Type					Details
+	---------------------------------------------------------------------------
+	Size			uint32_t				Total size of data entry, not
 											including this value.
-	Masters length		uint16_t			Includes null characters.
-	Masters				char *				null-terminated filenames in order
+	Masters Length	uint16_t				Includes null characters.
+	Masters			char[Masters Length]	Null-terminated filenames in order
 											of how they appeared in the plugin.
-	FormIDs				uint32_t[len]		len = (Size - Masters length) / 4
+	FormIDs			uint32_t[len]			len = (Size - Masters Length) / 4
+
+Each index entry has the following structure:
+
+	Name			Type					Details
+	---------------------------------------------------------------------------
+	File CRC		uint32_t
+	Data offset		uint32_t				From beginning of file.
+	
+All numbers are encoded low to high byte. All strings are encoded in UTF-8.
+
+The reason for this structure is to optimise the processes that will be
+performed upon database files: searching, reading data and appending new data.
+The index allows quick searching of the file as it is composed of a given
+number of entries with defined size. It is located at the end of the file rather
+than the more usual beginning so that appending new data does not need to
+rewrite the whole file to also update the index: only the index will ever be
+rewritten.
+
+Each database file will be able to store up to ~10^7 entries, though the
+probability of there being a CRC collision reaches 1% at ~10^4 entries, due to
+the birthday problem. Still, it's unlikely that there will ever be several
+thousand versions of a file with the same filename in use, so it's probably not
+worth worrying about.
 
 
-However, it turns out that storing the data in the above manner is inefficient.
-Let's say the database file holds the info for 20,000 plugins, which is a very 
-conservative estimate. That means that the file will have to be at least 500 kB
-even without any FormID info at all (ie. a totally useless database). Assuming
-each plugin changes 10 records, and has 2 masters with filenames 10 characters
-long, the size is ~1.6 MB.
+Single vs. Multi-File
+---------------------
 
-If instead each plugin's data is stored in a separate file, with different
-entries for different CRCs of that plugin, each index entry can shrink by 8
-bytes, as the hash is no longer required. If a plugin has 5 versions, then
-using the same assumptions as above, the size of each file will be 390 bytes.
+A single-file database would use the above structure, but with an additional
+uint64_t in each index entry to store a filename hash.
+
+Let's say the database file holds info for 100,000 plugins (25,000 mods, each
+with two plugins, and having two versions released - probably still a
+conservative estimate). Assuming each plugin changes 10 records, and has 2 
+masters with filenames 10 characters long, the size is ~11.4 MB.
+
+Using a multi-file database and the same assumptions being made as above, 
+the size of each file will be 390 bytes.
 
 However, because we're dealing with lots of small files, HTTP request/response
-and connection time has to be accounted for. Google says that the best average
-for the upload/download speed ratio of most Internet connections is 1:4, and
-that headers are roughly 300 bytes long without cookies. Each file's effective
-size is therefore 1890 bytes. However, this still doesn't take into account
-the connection time, but the increase in this due to accessing several files
-over just one can be mitigated by using a persistent connection. In any case,
-it's unlikely that the connection time for accessing 200 files will be ~1,000
-times longer than for accessing one file. It is therefore more efficient to use
-separate files for the database.
+time has to be accounted for. Google says that the best average for the 
+upload/download speed ratio of most Internet connections is 1:4, and that 
+headers are roughly 300 bytes long without cookies. Each file's effective size 
+is therefore 1890 bytes. 
 
-Going with that, the format of the index entries changes from above to:
-	File data CRC32		uint32_t
-	Data offset			uint32_t			From beginning of file.
-	
-The rest of the file structure remains unchanged.
+For a load order of 250 plugins, the total effective size is ~461 kB. This is
+~25x smaller than the equivalent single-file database that would need to be
+transferred, but it doesn't take into account the HTTP connection time, which
+is significant for small files. I don't know how I can take that into account,
+but if I've understood things correctly, I don't need to, as a persistent
+connection could be used, which would require only one HTTP connection to be
+made. HTTP pipelining could also be used to improve performance. A multi-file 
+database could also be cached, with new files only being downloaded if they had 
+changed or weren't already on the user's system, rather than the whole database 
+having to be re-downloaded even if the only change was the addition of a plugin 
+the user doesn't have. This would only save 95 kB over the assumed load order at 
+maximum though.
+
+Given all that, it's probably better to use a multi-file database over a single
+file database.
