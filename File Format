@@ -1,0 +1,217 @@
+LOOT Masterlist File Format
+===========================
+
+In YAML, the message object is:
+---
+!message:
+    condition: OPTIONAL !condition
+    type: REQUIRED !!string
+    content: REQUIRED !!string
+...
+Allowed values for the 'type' node are "SAY", "WARN" or "ERROR". The semantics
+of the types are:
+	say		Generic message type, carries no semantics.
+	warn	A warning message, detailing a non-critical installation issue.
+	error	An error message, detailing a critical installation issue.
+	
+The 'content' node string will treat all file:// , http:// and https:// links as
+hyperlinks. A link can be given a label by enclosing it and the label in double
+quotes, eg. "http://www.example.com example link".
+
+
+The file object:
+---
+!file:
+	condition: OPTIONAL !condition
+	name: REQUIRED !!string
+	ver: OPTIONAL !!int or !!string
+	mod: OPTIONAL !!string
+...
+CRCs are given as hex integers prefixed by 0x. The 'mod' node allows the name
+of the parent mod to be used instead of the filename in messages.
+
+
+The condition object:
+---
+!condition:
+   	exp: REQUIRED !!string
+   	vars: REQUIRED [!file or !!string]
+...
+The [] denotes a list of the given type(s).
+All 'file' objects used in a condition must have empty 'condition' nodes to
+prevent recursion loops.
+All conditions will have their results cached.
+The 'exp' string must follow the following format:
+
+IF|IFNOT FILE|VERSION|ACTIVE|LANG [AND|OR IF|IFNOT FILE|VERSION|ACTIVE|LANG]*
+
+The four condition types are detailed below:
+	Type	Args			Details
+	FILE	!file			If the file object passed contains a CRC, this 
+							condition checks for a CRC match, otherwise it 
+							checks for existence.
+	VERSION	!file, !!string	The 'ver' node of the file object must contain
+							a version string. The string argument is '<', '=' or
+							'>', and is used to form an expression with the true
+							version on the left and the given version on the
+							right, which is then checked to see if it holds.
+	ACTIVE	!file			Checks if the given file is a plugin, and if that
+							plugin is active.
+	LANG	!!string		Checks to see if the given language string matches
+							the current language.
+
+The 'vars' node lists the variables that are used in the expression in the order
+that they are to be used.
+
+The plugin object:
+---
+!plugin:
+	name: REQUIRED !!string
+	priority: OPTIONAL !undecided
+	reqs: OPTIONAL [!file]
+	incs: OPTIONAL [!file]
+	msgs: OPTIONAL [!message]
+...
+The 'name' node can be either an exact filename or a regular expression. The 
+difference will be determined by looking for the "\.esp" or "\.esm" substrings, 
+which are only valid for a regular expression.
+The type of the 'priority' node has not been decided yet, as it's not yet clear
+how much fidelity is required for it.
+If any of the 'reqs' node objects are not present, an error message will be
+displayed. If any of the 'incs' node objects are present, an error message will
+be displayed.
+The 'reqs' node objects must be listed in load order. The 'reqs' and 'incs'
+nodes may contain a mix of plugin and non-plugin objects.
+
+
+LOOT Userlist Format
+====================
+
+Same as masterlist format, but the plugin object is:
+---
+!plugin:
+	name: REQUIRED !!string
+	priority: OPTIONAL !undecided
+	enabled: OPTIONAL !bool
+	after: OPTIONAL !!string
+	reqs: OPTIONAL [!file]
+	incs: OPTIONAL [!file]
+	msgs: OPTIONAL [!message]
+...
+If the 'enabled' node is not specified, its value is assumed true. The 'after'
+node is a tentative implementation of how users will specify custom positions,
+and will take the filename of the plugin that the object plugin will load after.
+
+
+Examples
+========
+
+Simple Example
+--------------
+
+---
+- name: MyMod.esp
+  req:
+    - name: AnotherMod.esp
+    - name: AnotherModPatch.esp
+  msg:
+    - type: say
+      content: "This is my mod."
+    - type: say
+      content: "This is a second message."
+...
+
+Complex Example
+---------------
+
+---
+# Note that classes are not specified, YAML will treat them as assoc. arrays,
+# LOOT will assume they are file objects.
+filevars:
+  - &GAME name: "TESV.exe"
+  - &MASTER {name: "Oblivion.esm", ver: "1.2.416"}
+  - &SE name: "obse_loader.exe"
+  - &TEST {name: "Test.esp", ver: 0x0537AB3C}
+  - &SE20 <<: [*SE, ver: "0.0.20.1"]
+
+msgvars:
+  - &OBSOLETE {type: SAY, content: "Obsolete. Remove and upgrade to the latest version."}
+
+globals:
+  - {type: SAY, content: "You're using LOOT!"}
+
+- name: Oblivion.esm
+  msg:
+    - {condition: {exp: IF FILE, vars: *GAME}, type: WARN, content: "False alarm."}
+    - <<: {*OBSOLETE, content: Quotes aren't necessary, unless the message contains special chars. }
+...
+
+
+LOOT Machine Database Format
+============================
+
+The formatting of this database has not yet been decided. It doesn't need to be
+human-readable, but must contain the following information for each plugin:
+
+  * Filename (for roughly identifying the file)
+  * CRC	(for precisely identifying the exact file)
+  * Masters in the order they appear in the plugin's master list.
+  * FormIDs of the records it edits (not added records).
+  
+However, the filename being a variable length byte string makes searching
+through filenames more complicated than if a unique identifier of fixed length
+generated from the filename were used. A hash is suitable, but it would have to
+be of sufficient size to minimise the probability of hash collisions. There are
+~25,000 mods for Oblivion on the Nexus, let's assume that each mod contains 4 
+plugins: many contain only one, but many others contain lots of plugins. Factor
+in some room for growth, since Skyrim will likely have many more mods than
+Oblivion does at its age, and having an upper bound of ~10,000,000 plugins,
+including different versions of the same plugin does not seem wholey 
+unreasonable. It's unlikely that the number of plugins would reach over order 
+10^6, but this is an upper bound, after all.
+
+A 32-bit hash has around 4 billion possible values, but due to the birthday
+problem collisions become significant way below that, with there being a 1%
+probability at ~10,000 values, assuming I've understood that right. A 64-bit
+hash has a 1% probability at around 609 million values, so it's a much better
+choice.
+
+As for the choice of hash function, it doesn't need to be cryptographically
+secure, and speed is favoured.
+
+Since the use of the database is limited to searching for a specific file then
+reading its data, it makes sense to optimise searching by storing all filename
+hashes and CRCs in an index, with offsets to each file's data.
+
+A 4 GB file can store of order 10^8 index entries, or ~10^7 plugin entries
+including the index. It might be prudent to allow for some leeway by specifying
+offsets using 64 bit integers, just in case my upper bound is too low, but we're
+talking about a database file over 4 GB big. There's no way anyone is
+downloading that. If the upper bound is surpassed, we'll just have multiple
+files. That's something worth considering earlier too, because we want to avoid
+people having to download things they'll never use.
+
+Storing the index at the beginning of the file would require the entire file to
+be rewritten whenever it is updated, so instead it will be stored at the end
+of the file, so that a new entry can be appended then only the index rewritten.
+
+So anyway, the plugin index:
+
+	Index entries		index entry[Size]
+	Size				uint32_t			Last 4 bytes of the file.
+
+A plugin index entry:
+
+	Filename hash		uint64_t
+	File data CRC32		uint32_t
+	Data offset			uint32_t			From beginning of file.
+
+A plugin data entry:
+
+	Size				uint32_t			Total size of data entry, not
+											including this value.
+	Masters length		uint16_t			Includes null characters.
+	Masters				char *				null-terminated filenames in order
+											of how they appeared in the plugin.
+	FormIDs				uint32_t[len]		len = (Size - Masters length) / 4
+
