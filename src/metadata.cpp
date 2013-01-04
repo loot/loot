@@ -27,10 +27,13 @@ using namespace std;
 
 namespace boss {
 
-    ConditionalData::ConditionalData(string in) : condition(in) {}
+    ConditionalData::ConditionalData() {}
+
+    ConditionalData::ConditionalData(const string in) : condition(in) {}
 
     bool ConditionalData::EvalCondition() const {
 
+        return true;
     }
 
     Tag::Tag() : addTag(true) {}
@@ -60,37 +63,37 @@ namespace boss {
     }
 
     void Plugin::EvalAllConditions() {
-        for (list::iterator it = loadAfter.begin(), endIt = loadAfter.end(); it != endIt; ++it) {
+        for (list<File>::iterator it = loadAfter.begin(); it != loadAfter.end(); ++it) {
             if (!it->EvalCondition()) {
                 it = loadAfter.erase(it);
                 --it;
             }
         }
 
-        for (list::iterator it = requirements.begin(), endIt = requirements.end(); it != endIt; ++it) {
+        for (list<File>::iterator it = requirements.begin(); it != requirements.end(); ++it) {
             if (!it->EvalCondition()) {
                 it = requirements.erase(it);
                 --it;
             }
         }
 
-        for (set::iterator it = incompatibilities.begin(), endIt = incompatibilities.end(); it != endIt; ++it) {
+        for (set<File>::iterator it = incompatibilities.begin(); it != incompatibilities.end(); ++it) {
             if (!it->EvalCondition()) {
-                it = incompatibilities.erase(it);
+     //           it = incompatibilities.erase(it);
                 --it;
             }
         }
 
-        for (list::iterator it = messages.begin(), endIt = messages.end(); it != endIt; ++it) {
+        for (list<Message>::iterator it = messages.begin(); it != messages.end(); ++it) {
             if (!it->EvalCondition()) {
                 it = messages.erase(it);
                 --it;
             }
         }
 
-        for (set::iterator it = tags.begin(), endIt = tags.end(); it != endIt; ++it) {
+        for (set<Tag>::iterator it = tags.begin(); it != tags.end(); ++it) {
             if (!it->EvalCondition()) {
-                it = tags.erase(it);
+     //           it = tags.erase(it);
                 --it;
             }
         }
