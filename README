@@ -52,17 +52,17 @@ goals:
     other than the plugins it will order.
   * LOOT should be able to figure out a correct load order with a minimum of
     supplementary data on author intent.
-  * LOOT should be able to obtain supplementary data from an arbitrary source, 
+  * LOOT should be able to obtain supplementary data from an arbitrary source,
     or arbitrary sources, depending on the number of types of data.
   * LOOT's effects should be customiseable by the user.
   * LOOT should be scaleable, focussed and extensible.
-  
-Note that an optimum load order is not necessarily a correct load order. If 
+
+Note that an optimum load order is not necessarily a correct load order. If
 we define the impact of a plugin as the number of its edits that get applied to
 a person's game, then an optimum load order is one with the highest average
 impact from its constituent plugins whilst satisfiying all explicit dependencies.
 However, some plugins may be made with the intent that they are to be overridden
-by others, and so a correct load order is one that also takes into account 
+by others, and so a correct load order is one that also takes into account
 author intent. Given a set of plugins, their correct load order may have a lower
 average impact than their optimum load order.
 
@@ -117,21 +117,26 @@ people want one.
 
 A general workflow for a user running LOOT to sort would be:
 
-1. Run LOOT: it auto-sorts based on plugin content plus and masterlist
-   and userlist rules.
-2. LOOT finishes sorting, and displays the load order it sets.
+1. Run LOOT: it auto-sorts based on plugin content plus supplementary data.
+2. LOOT finishes sorting, and displays the load order it suggests. At this point
+   the load order has not yet been applied.
+
    Clicking on a plugin in the load order will highlight all those it
    conflicts with. This provides a simple way for users to gauge conflicts
    and so decide which plugin's changes they wish to apply to their games.
+
    Dragging a plugin will display the positions to which it can be moved
    (by dropping it there) whilst satisfying dependencies.
+
    Plugins which have no conflicts are greyed out and cannot be selected,
    to simplify this process.
+
    There will be an information panel which will display the selected
    plugin's requirements, incompatibilities, priority and messages. These
-   will be editable, upon exit of the load order window, the user will be
-   asked if they wish to submit any edits they make to these fields.
-   Edits to plugin positions will not be submitted.
+   will be editable, and upon exit of the load order window, the user will be
+   asked if they wish to submit any edits they make to these fields. Edits to
+   plugin positions will not be submitted.
+
    If LOOT encounters any errors while sorting, they are displayed instead
    of the load order.
 3. The user exits the load order display, choosing either to apply or
@@ -139,21 +144,20 @@ A general workflow for a user running LOOT to sort would be:
 4. LOOT asks the user if they want to submit their plugin data edits. If
    so, it then asks the user to supply links for each of the plugins
    with edited data.
-4. LOOT then applies the resulting load order, saves any user choices
-   as userlist rules, and exits.
+4. LOOT then applies the resulting load order, saves any user choices, and
+   exits.
 
-LOOT must also provide a means to manage user rules, to undo its
+LOOT must also provide a means to manage past user choices, to undo its
 changes (only back one run though), and to edit its settings.
 
-The Userlist Syntax and Masterlist Syntax docs will be merged into a
-"Rule Syntax" doc, as the syntax will be the same for both. The new doc
-will be structured so that there is a progression in complexity from
-simple rule syntax to complex rule syntax as the guide progresses.
+LOOT should ask for permission to send plugin contents data on first run, and
+to send plugin metadata whenever there are metadata changes to send, unless the
+user selects a "do not ask me again" option. These settings should be
+configurable at any time.
 
-The drag 'n' drop plugin positioning will likely require userlist rules
-to support positioning of plugins precisely relative to other plugins, but it
-may be possible to achieve the positioning using only the priority setting. If
-possible, that is preferred.
+Documentation will be split between three readmes: one general readme, one API
+readme and one rule syntax readme. The version history can be split into a
+fourth readme when it grows sufficiently long.
 
 
 Implementation
@@ -165,7 +169,8 @@ possible, for example:
   * yaml-cpp: for masterlist/userlist parsing.
   * libespm: for plugin parsing.
   * libloadorder: for reading and writing load order.
-  * cURL: for networking.
+  * libsvn: for accessing the Subversion repositories used.
+  * cURL: for misc. networking.
   * wxWidgets: for the interface.
   * Boost: for filesystem interaction, various helpful functions.
 
@@ -196,19 +201,19 @@ used in the following manner:
      plugins, the database, the masterlist and the userlist.
   6. The data from the scanned plugins is appended to the database file, which
      is then uploaded to its hosted location.
-     
-In addition to having this database file as a sort of permanent and 
-self-updating cache, optimisations can also be made to skip load order 
+
+In addition to having this database file as a sort of permanent and
+self-updating cache, optimisations can also be made to skip load order
 calculation. For example, if the only changes from the last load order set by
 LOOT is that a plugin or plugins have been removed, then the last load order
 may be used. It might also be possible to only perform partial calculation
 when plugins are added, though this is not certain.
 
 Note: For clarity, the database that holds the results of plugin scanning will
-be referred to as the "machine database" (or MDB) as it will only be read and
-written by the LOOT code. The list of metadata that is maintained by the LOOT
-team will be referred to as the "masterlist", and the list of metadata that is
-individual to each user will be referred to as the "userlist".
+be referred to as the "cache". The list of metadata that is maintained by the
+LOOT team will be referred to as the "masterlist", and the list of metadata that
+is individual to each user will be referred to as the "userlist".
+
 
 LOOT Masterlist & Userlist
 ==========================
@@ -221,7 +226,7 @@ The purpose of the masterlist is to store the following data for plugins:
   * The intended priority of the plugin relative to others that make the same
     changes.
   * Possibly also Bash Tags to be applied.
-    
+
 It is also useful to store some data not associated with plugins, such as:
 
   * Global messages.
@@ -229,10 +234,10 @@ It is also useful to store some data not associated with plugins, such as:
     multiple times.
   * File objects, for reference instead of rewriting the same condition
     argument multiple times.
-    
-All messages should also be optionally conditional on an arbitrary number of
-conditions. More on that later.
-    
+
+All messages and files should also be optionally conditional on an arbitrary
+number of conditions.
+
 The purpose of the userlist is to store modifications to masterlist plugin data,
 and to also store user-specified positions of plugins. The userlist must also
 support the disabling of plugin entries within it, so that users can turn off
@@ -243,16 +248,332 @@ the same format. The userlist could then simply support two data fields that are
 ignored by the masterlist parser. I think that YAML is a suitable format for
 these files as it is simple, human-readable, yet quite powerful.
 
-Further details can be found in the LOOT File Format doc.
+The drag 'n' drop plugin positioning will likely require userlist rules
+to support positioning of plugins precisely relative to other plugins, but it
+may be possible to achieve the positioning using only the priority setting. If
+possible, that is preferred.
+
+Further details can be found in the File Format doc.
 
 
 Networking
 ==========
 
-LOOT needs to be able to download and upload specific files from a VCS 
-repository. (VCS to help deal with possible spam/vandalism, and to track 
-changes.) It also needs to be able to send/receive data from some sort of issue
-tracker.
+LOOT has four target networking functionalities:
 
-As LOOT needs to do this for users without their own credentials for the 
-repository, it needs to do this as a robot.
+    * Remote / local cache sync.
+    * Masterlist updating.
+    * User feedback submission.
+
+None of these functionalities are critical to usage of LOOT.
+
+The masterlist and cache repositories will be Subversion repositories, as this
+allows users to most easily download only the files they require, and only the
+diffs of those files.
+
+As LOOT needs commit as well as checkout access to the cache repository, for
+users without their own credentials, it must access the repository using a
+robot account. Google Code does not allow the use of robot accounts, but
+Sourceforge does. However, the actions performed by the robot account are the responsibility of the account creator. This brings up the issue of account
+abuse. This will be covered in the 'Security' section below.
+
+Conflicts between different users' commits will probably be an issue.
+Because the database files are binary, not text, and because they use an index
+with data offsets, they can't be merged automatically. The database file
+workflow is:
+        1. User svn updates their working copy of a file.
+        2. User performs scanning actions.
+        3. User edits their working copy of the file.
+        4. User commits their edit to the repository.
+
+If another user changes the same file between steps 1 and 4, the commit will
+fail. If this happens, LOOT should svn revert followed by svn update, then
+re-apply the user's edits to the updated file, checking to make sure that the
+updated file doesn't already include the same data. A second commit should then
+be attempted. If this commit also fails, it's best just to discard the edits.
+While that means the user won't benefit from having a local cache, it becomes
+too complicated to store the edits on disk and re-apply them for a potentially
+uncapped number of failures.
+
+The database repository may store tens if not hundreds of thousands of files,
+so they need to be organised well to ease browsing. Grouping the files into
+the game they are for, then subgrouping them into folders based on the first
+character of their filename, then subgrouping again based on the second
+character would probably do. For example:
+
+repo/
+    Oblivion/
+            o/
+                b/
+                    oblivion.esm.bpdc
+
+Files and the 'letter folders' will be in lowercase.
+
+"repo" does not have to be the repository root, but LOOT's settings should
+use the URL pointing to that location. The repository will be required to use
+the same game folder names as LOOT's install structure (see the section below).
+
+The masterlists would be stored using a folder structure that mirrors LOOT's
+install structure, for example:
+
+repo/
+    Oblivion/
+            masterlist.yaml
+
+"repo" does not have to be the repository root, but LOOT's settings should
+use the URL pointing to that location. The repo will be required to use the same
+game folder names as LOOT's install structure.
+
+The masterlist update mechanism will feature a validator such that if the
+masterlist downloaded cannot be parsed, it will not replace the current
+masterlist (if exists). The log will display notification of validation failure
+with instructions to inform the maintainers of this issue. This is a fairly
+major improvement over BOSS currently, which becomes unusable when a masterlist
+update is occassionally broken.
+
+The final bit of networking to be considered is the feedback mechanism. It's not
+an initial development target, as initially I think it would be better for all
+communication between users and the team to be two-way, which is easier
+accomplished through our forum threads. It's probably best to leave design of
+this until we see what sort of feedback users are giving.
+
+A program update checker is notably absent, as a fully automated updater is
+not worth the trouble of implementing well, and notification of an available
+update is easily performed through a global masterlist message and so does not
+require an additional transport mechanism.
+
+
+Security
+========
+
+The abuse of the database repository credentials to be distributed with LOOT is
+a very real concern. Steps must be taken to prevent or minimise the associated
+risk. Unfortunately, I have no experience with this sort of thing, so I could
+be making some incorrect assumptions below.
+
+One possible way to make obtaining the SSH key for use outside of LOOT
+non-trivial is to compile it into the executable. The key could be stored in a
+header file, eg. "key.h", of which a template with an empty or dummy key is
+committed to the source code repository, and then this header could be included
+in the file(s) that require it. So long as the actual key is not distributed
+beyond the team member who builds releases, this would then require people to
+either reverse-engineer the executable or monitor its allocated memory to obtain
+the key.
+
+However, this doesn't prevent the swapping out of files that LOOT uploads. It
+may be possible for an attacker to replace the file that LOOT generates or edits
+for upload with another containing rubbish data or malicious code. Attackers
+could also "cut and paste" the section of the executable that deals with the
+uploading into another executable that allows arbitrary uploads. I don't
+actually know if the latter is possible, but it sounds like it could be.
+
+In that case, may we lose any upload safeguards, but the attacker could not
+disable the download safeguards present in other users' copies of the LOOT
+executable unless their systems were already compromised. We have to then assume
+that the database is not necessarily safe. Given an unsafe database, we can do
+the following:
+
+        * Ensure that the robot only has repository commit/checkout permissions and
+          no admin abilities. Team members should be given repository access to
+          allow oversight, with admins having admin abilities.
+        * Check for the validity of database files. A database file should only ever
+          be read or generated by LOOT, so invalid database files should never
+          exist except on a compromised system. Any invalid files found could
+          cause a message to be displayed and a notification sent to the team using
+          the feedback mechanism. The invalid file would then be deleted. The parser
+          should fail immediately upon encountering invalid content.
+        * Don't execute database file content. The format doesn't have any
+          executable data, so this is pretty obvious in this case.
+        * Revoke access to the repository for the compromised key. If we only have
+          one valid robot key at any one time, this is pretty easy. The downside is
+          that it means that nobody can access the repository with the key,
+          effectively disabling the online cache. The procedure in case this was
+          done would be to then figure out how the compromise happened, then try to
+          stop it happening again, before releasing an update to LOOT with a new
+          key.
+        * Only download a database file if a plugin's data isn't found in the local
+          cache. This means that clients will only download database files for
+          plugins which are installed and which don't already have cached data. So
+          if A.esp and B.esp have database file updates available, but the specific
+          version of A.esp that the user has installed already has its data cached
+          locally, then only B.esp.lmdb will be updated.
+        * Users could disable online database access in their copies of LOOT. If
+          a user thinks that they have downloaded rubbish data, they can delete
+          their local cache and LOOT will regenerate it the next time it runs.
+
+The validity and non-execute points would not prevent an attacker from
+distributing rubbish data, but it would only take one user noticing and
+informing the team for this to be caught and dealt with.
+
+Since the database repository would be separate from the masterlist repository,
+and the robot wouldn't have access to the latter, users can easily be informed
+of any compromise via masterlist messages.
+
+An attacker may also upload files that may never be downloaded by users, but
+which are still malicious or illegal in nature. As such, we can't rely on
+users vetting the files they download as an indicator for a compromise. One
+possibility is for the database to be monitored by having an email notification
+system in place that would notify team members of any file uploads and their
+content. That would allow us to detect database compromise without any user
+involvement, though it does require team activity.
+
+All the above points are suggested on the assumption that we can't have a
+dedicated machine to filter out malicious use. Such a machine would be likely
+flawed anyway, so the above points are still worth considering even if we had
+a dedicated machine.
+
+
+Install Structure
+=================
+
+LOOT will be a self-contained installation that can be dropped anywhere. It will
+have an installer option that also installs some Start menu shortcuts and a
+Registry entry, but these will not be required for LOOT to function.
+
+The directory structure will be as follows:
+
+LOOT/
+        Morrowind/
+                .svn/
+                        ...
+                Cache/
+                        .svn/
+                                ...
+                        m/
+                                o/
+                                        morrowind.esm.lmdb
+                                        ...
+                masterlist.yaml
+                userlist.yaml
+                lastrun.yaml
+                loadorder.old
+        Oblivion/
+                .svn/
+                        ...
+                Cache/
+                        .svn/
+                                ...
+                        o/
+                                b/
+                                        oblivion.esm.lmdb
+                                        ...
+                masterlist.yaml
+                userlist.yaml
+                lastrun.yaml
+                loadorder.old
+        Skyrim/
+                .svn/
+                        ...
+                Cache/
+                        .svn/
+                                ...
+                        s/
+                                k/
+                                        skyrim.esm.lmdb
+                                        ...
+                masterlist.yaml
+                userlist.yaml
+                lastrun.yaml
+                loadorder.old
+        Fallout3/
+                .svn/
+                        ...
+                Cache/
+                        .svn/
+                                ...
+                        f/
+                                a/
+                                        fallout3.esm.lmdb
+                                        ...
+                masterlist.yaml
+                userlist.yaml
+                lastrun.yaml
+                loadorder.old
+        FalloutNewVegas/
+                .svn/
+                        ...
+                Cache/
+                        .svn/
+                                ...
+                        f/
+                                a/
+                                        falloutNV.esm.lmdb
+                                        ...
+                masterlist.yaml
+                userlist.yaml
+                lastrun.yaml
+                loadorder.old
+        LOOT.exe
+        LOOT.ini
+
+lastrun.yaml stores the last load order set by LOOT, with the messages
+displayed at that time, and uses the same format as the masterlist and userlist.
+
+loadorder.old stores the load order before LOOT was last run.
+
+The game caches are for storing database files so that they can be used when
+there is no Internet connection. Each cache acts as separate working copy of
+the database repository, holding the files it needs. They are separate to
+help prevent name clashes between games. Each game folder also acts as a working
+copy of the folder which stores the masterlist for that game on the repository.
+
+
+Configuration
+=============
+
+LOOT will store its settings in a LOOT.ini file in its install directory. This
+file should contain the following settings:
+
+bEnableNetworking               Boolean
+bUseOnlineCache                 Boolean         Cache = Database
+bGetMetadataUpdates             Boolean         Metadata = Masterlist
+bPromptMetadataSubmit   Boolean
+bAlwaysSubmitMetadata   Boolean         Only has effect if the above is false.
+bDoStartupUpdateCheck   Boolean         Check for program updates.
+
+sOnlineCacheURL                 String          URL to the base of the database repository.
+sMetadataURL                    String
+sVersionCheckerURL              String          URL to the file holding version info.
+sFeedbackURL                    String          URL to the issue tracker used for feedback.
+
+sGame                                   String          Same as in BOSS.
+sLastGame                               String          Same as in BOSS.
+iDebugVerbosity                 Integer         Debug output is logged if > 0.
+bDoTrialRun                             Boolean         Same as in BOSS.
+sLanguage                               String          Same as in BOSS.
+
+
+Cross-Platform Support
+======================
+
+I develop on Linux, cross-compiling for Windows. LOOT will use the CMake build
+system generator so that it can be compiled on multiple platforms, though some
+functionality will require Windows-specific things, such as Registry queries.
+
+
+Backwards Compatibility
+=======================
+
+No backwards compatibility with previous versions of BOSS is planned: there are
+simply too many changes. To ease the transition though, it may be beneficial for
+there to be converters for the userlist and masterlist.
+
+Such converters would be limited in scope, however, due to the differences in
+capabilities: only userlist rules which sort plugins after others and perform no
+message changes have direct conversions. The masterlist may be adapted by having
+rules created for those plugins with messages attached, but the content of those
+messages would have to be adjusted manually, and all specific positioning
+information would be lost too.
+
+
+Misc
+====
+
+Here is the full list of BOSS members at the end of 2012. Any of these who lose
+their membership status should still be credited in the BOSS readme:
+
+Random007, Arthmoor, WrinklyNinja, PacificMorrowind, aellis, Vacuity, Gabba,
+ZiggyX200, RiddlingLynx, AliTheLord, Tokc.D.K., Valda, Space Oden69, Televator,
+Leandro Conde, Psymon, Loucifer, Torrello, Malonn, Skyline, Sharlikran, Red Eye,
+iyumichan, Peste, Calen Ellefson, SilentSpike, Arkangel, zyp, v111, Chevenga,
+rowynyew
