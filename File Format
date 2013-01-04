@@ -36,14 +36,10 @@ The file object:
 !file:
         condition: OPTIONAL !condition
         name: REQUIRED !!string
-        ver: OPTIONAL !!int or !!string
         display: OPTIONAL !!string
-        operator: OPTIONAL !!string
 ...
-CRCs are given as hex integers prefixed by 0x. The 'display' node allows the name
-of the parent mod or program to be used instead of the filename in messages.
-'operator' is the comparison operator used for the version check (if performed).
-'>=' is the default used if not specified, other possibilities include =, <, etc.
+The 'display' node allows the name of the parent mod or program to be used instead
+of the filename in messages.
 
 The tag object:
 ---
@@ -52,7 +48,8 @@ The tag object:
     name: !!string
 ...
 This object can be used to represent a conditional tag. 'name' is the tag name,
-eg. Graphics.
+eg. Graphics. Tags that are prepended with a '-' (eg. '-Graphics') are suggested
+for removal, otherwise tags are suggested for addition.
 
 
 The condition string:
@@ -88,13 +85,13 @@ The type of the 'priority' node has not been decided yet, as it's not yet clear
 how much fidelity is required for it.
 If any of the 'req' node objects are not present, an error message will be
 displayed. If any of the 'incs' node objects are present, an error message will
-be displayed.
+be displayed. The 'req' node is intended for use with implicit dependencies.
 The 'req' node objects must be listed in load order. The 'req' and 'inc'
 nodes may contain a mix of plugin and non-plugin objects.
 If the 'enabled' node is not specified, its value is assumed true. It is
 provided for use in the userlist.
-The 'after' node is a list of plugins that the object plugin must load after, intended for use specifying implicit dependencies. It may also be used in the userlist to specify custom positions.
-The 'tag' node holds an array of Bash Tags to be suggested. Tags that are prepended with a '-' (eg. '-Graphics') are suggested for removal, otherwise tags are suggested for addition.
+The 'after' node is a list of plugins that the object plugin must load after, intended for use specifying plugins which the object plugin must load after, but which are not dependencies. It may also be used in the userlist to specify custom positions.
+The 'tag' node holds an array of Bash Tags to be suggested.
 
 
 Simple Example

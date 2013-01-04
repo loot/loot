@@ -29,9 +29,7 @@
 #   - Requirements and incompatibilities do not use their new data structures,
 #     and are just converted to 'say' messages.
 #   - All strings except tags are enclosed in double quotes and escaped, even
-#     those that don't need to be. This means that any single backspaces used
-#     in a string will cause problems, but some strings are escaped where others
-#     aren't, so basically just test using the parser.
+#     those that don't need to be, and those that are already escaped.
 #   - No extraneous comments/messages are removed.
 #   - VAR conditions are not replaced with their conditional statements. SET lines
 #     are stripped, so the old masterlist must be used to check what they are.
@@ -41,7 +39,7 @@
 #     duplicate entries.
 
 def escapeYAMLStr(s):
-    return '"' + s.replace('"', '\\"').strip(' ') + '"'
+    return '"' + s.replace('"', '\\"').replace('\\', '\\\\').strip(' ') + '"'
 
 def mContent(line):
     content = line[line.find(':')+1:]
@@ -105,6 +103,7 @@ for line in inFile:
         key = line[:line.find(':')]
         key = key.replace('GLOBAL', '')
         condition = key[:key.rfind(' ')].strip(' ')
+        condition = condition.replace('&&', 'and').replace('||', 'or')
     elif ('ELSE' in line and ':' in line):
         condition = condition.replace('IF ', 'IFNOT2 ')
         condition = condition.replace('IFNOT ', 'IF ')
