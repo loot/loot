@@ -21,7 +21,7 @@
     <http://www.gnu.org/licenses/>.
 */
 
-#include <metadata.h>
+#include "metadata.h"
 
 using namespace std;
 
@@ -62,40 +62,51 @@ namespace boss {
         return addTag;
     }
 
+    string Tag::Data() const {
+        if (addTag)
+            return name;
+        else
+            return "-" + name;
+    }
+
     void Plugin::EvalAllConditions() {
-        for (list<File>::iterator it = loadAfter.begin(); it != loadAfter.end(); ++it) {
-            if (!it->EvalCondition()) {
+        for (list<File>::iterator it = loadAfter.begin(); it != loadAfter.end();) {
+            if (!it->EvalCondition())
                 it = loadAfter.erase(it);
-                --it;
-            }
+            else
+                ++it;
         }
 
-        for (list<File>::iterator it = requirements.begin(); it != requirements.end(); ++it) {
-            if (!it->EvalCondition()) {
+        for (list<File>::iterator it = requirements.begin(); it != requirements.end();) {
+            if (!it->EvalCondition())
                 it = requirements.erase(it);
-                --it;
-            }
+            else
+                ++it;
         }
 
-        for (set<File>::iterator it = incompatibilities.begin(); it != incompatibilities.end(); ++it) {
-            if (!it->EvalCondition()) {
-     //           it = incompatibilities.erase(it);
-                --it;
-            }
+        for (set<File, file_comp>::iterator it = incompatibilities.begin(); it != incompatibilities.end();) {
+            if (!it->EvalCondition())
+                incompatibilities.erase(it++);
+            else
+                ++it;
         }
 
-        for (list<Message>::iterator it = messages.begin(); it != messages.end(); ++it) {
-            if (!it->EvalCondition()) {
+        for (list<Message>::iterator it = messages.begin(); it != messages.end();) {
+            if (!it->EvalCondition())
                 it = messages.erase(it);
-                --it;
-            }
+            else
+                ++it;
         }
 
-        for (set<Tag>::iterator it = tags.begin(); it != tags.end(); ++it) {
-            if (!it->EvalCondition()) {
-     //           it = tags.erase(it);
-                --it;
-            }
+        for (list<Tag>::iterator it = tags.begin(); it != tags.end();) {
+            if (!it->EvalCondition())
+                it = tags.erase(it++);
+            else
+                ++it;
         }
+    }
+
+    bool Plugin::NameOnly() const {
+        return priority == 0 && enabled == true && loadAfter.empty() && requirements.empty() && incompatibilities.empty() && messages.empty() && tags.empty();
     }
 }

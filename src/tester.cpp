@@ -1,10 +1,28 @@
 
 #include <yaml-cpp/yaml.h>
-#include "metadata.cpp"
+#include "metadata.h"
+#include "parsers.h"
 
 #include <ostream>
+#include <fstream>
 
 using namespace std;
+
+//It would be neater if this could be done by just skipping bits of the output...
+void minimisePluginList(set<boss::Plugin, boss::plugin_comp>& plugins) {
+    set<boss::Plugin, boss::plugin_comp> out;
+    for (set<boss::Plugin, boss::plugin_comp>::iterator it=plugins.begin(), endIt=plugins.end(); it != endIt; ++it) {
+        boss::Plugin p = *it;
+        p.priority = 0;
+        p.enabled = true;
+        p.loadAfter.clear();
+        p.requirements.clear();
+        p.incompatibilities.clear();
+        p.messages.clear();
+        out.insert(p);
+    }
+    plugins.swap(out);
+}
 
 int main() {
 
@@ -28,29 +46,20 @@ int main() {
         }
     }
 
-    for (list<boss::Message>::const_iterator it=globalMessages.begin(), endIt=globalMessages.end(); it != endIt; ++it) {
-        cout << "Message data:" << endl
-             << "\tCondition: " << it->condition << endl
-             << "\tType: " << it->type << endl
-             << "\tLanguage: " << it->language << endl
-             << "\tContent: " << it->content << endl;
-    }
+    cout << "Testing masterlist generator." << endl;
 
-    for (set<boss::Plugin, boss::plugin_comp>::const_iterator it=pluginData.begin(), endIt=pluginData.end(); it != endIt; ++it) {
-        cout << it->name << endl;
-        for (list<boss::Message>::const_iterator jt=it->messages.begin(), endJt=it->messages.end(); jt != endJt; ++jt) {
-            cout << "\tMessage:" << endl
-                 << "\t\tCondition: " << jt->condition << endl
-                 << "\t\tType: " << jt->type << endl
-                 << "\t\tLanguage: " << jt->language << endl
-                 << "\t\tContent: " << jt->content << endl;
-        }
-        for (set<boss::Tag, boss::tag_comp>::const_iterator jt=it->tags.begin(), endJt=it->tags.end(); jt != endJt; ++jt) {
-            cout << "\tTag:" << endl
-                 << "\t\tCondition: " << jt->condition << endl
-                 << "\t\tName: " << jt->name << endl;
-        }
-    }
+    minimisePluginList(pluginData);
+
+    ofstream out("minimal.yaml");
+    YAML::Emitter yout;
+    yout.SetIndent(2);
+    yout << YAML::BeginMap
+         << YAML::Key << "globals" << YAML::Value << globalMessages
+         << YAML::Key << "plugins" << YAML::Value << pluginData
+         << YAML::EndMap;
+
+    out << yout.c_str();
+    out.close();
 
     return 0;
 }

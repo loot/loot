@@ -11,7 +11,7 @@
 cmake_minimum_required (VERSION 2.8.9)
 project (boss)
 
-set (BOSS_SRC )
+set (BOSS_SRC "${CMAKE_SOURCE_DIR}/src/metadata.cpp")
 
 # Include source and library directories.
 include_directories ("${BOSS_LIBS_DIR}/boost" "${BOSS_LIBS_DIR}/yaml-cpp/include" "${CMAKE_SOURCE_DIR}/src")
@@ -61,5 +61,5 @@ ENDIF ()
 ##############################
 
 # Build tester.
-add_executable        (parser-tester "${CMAKE_SOURCE_DIR}/src/tester.cpp")
+add_executable        (parser-tester "${CMAKE_SOURCE_DIR}/src/tester.cpp" ${BOSS_SRC})
 target_link_libraries (parser-tester ${BOSS_LIBS})
