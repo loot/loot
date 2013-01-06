@@ -29,10 +29,14 @@
 #endif
 
 #include "metadata.h"
+#include "helpers.h"
 
 #include <stdexcept>
+#include <stdint.h>
 
+#include <boost/regex.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/algorithm/string.hpp>
 #include <boost/spirit/include/qi.hpp>
 #include <boost/spirit/include/phoenix_core.hpp>
 #include <boost/spirit/include/phoenix_operator.hpp>
@@ -279,50 +283,16 @@ namespace YAML {
 
 namespace boss {
 
-    /* Conditional parser
+    ///////////////////////////////
+    // Condition parser/evaluator
+    ///////////////////////////////
 
-    Expression is of the form:
-
-    condition = keyword type
-
-    expression = -'(' condition (operator condition)* -')' operator
-
-    comp_exp = expression (operator expression)*
-    -'(' keyword type (operator -'(' keyword type -')' )*
-
-    keyword = if | ifnot
-    operator = and | or
-    type = file(...) | checksum(...) | version(...) | active(...)
-
-    'and' takes precedence over 'or', and brackets can also be used to indicate
-    overriding precedences.
-
-    Split string up into sub-strings according to the bracketing if present, then
-    according to operators, until each sub-string only contains one condition.
-
-    {
-        expression =
-            term
-            >> *(string("or") >> term)
-            ;
-
-        term =
-            factor
-            >> *(string("and") >> factor)
-
-        factor =
-            condition
-            | '(' >> expression >> ')'
-            |
-
-        condition = keyword >> type
-
-    }
-
-    */
+    /* Still need to add support for bracketing and evaluation of the compound
+       conditions. */
 
     namespace qi = boost::spirit::qi;
     namespace unicode = boost::spirit::unicode;
+    namespace phoenix = boost::phoenix;
 
     template<typename Iterator, typename Skipper>
     class condition_grammar : public qi::grammar<Iterator, bool(), Skipper> {
@@ -330,7 +300,14 @@ namespace boss {
         condition_grammar() : condition_grammar::base_type(expression, "condition grammar") {
 
             expression =
-                condition;
+                andStatement
+                >> *(qi::lit("or") >> andStatement)
+                ;
+
+            andStatement =
+                condition
+                >> *(qi::lit("and") >> condition)
+                ;
 
             condition =
                       ( qi::lit("if") >> type )     [qi::labels::_val = qi::labels::_1]
@@ -338,38 +315,144 @@ namespace boss {
                     ;
 
             type =
-                  ( "file("     > quotedStr > ')' )                                             [qi::labels::_val = true]
-                | ( "checksum(" > quotedStr > ',' > +unicode::xdigit > ')' )                    [qi::labels::_val = true]
-                | ( "version("  > quotedStr > ',' > quotedStr  > ',' > unicode::char_ > ')' )   [qi::labels::_val = true]
-                | ( "active("   > quotedStr > ')' )                                             [qi::labels::_val = true]
+                  ( "file("     > quotedStr > ')' )                                             [phoenix::bind(&condition_grammar::CheckFile, this, qi::labels::_val, qi::labels::_1)]
+                | ( "checksum(" > quotedStr > ',' > qi::hex > ')' )                    [phoenix::bind(&condition_grammar::CheckSum, this, qi::labels::_val, qi::labels::_1, qi::labels::_2)]
+                | ( "version("  > quotedStr > ',' > quotedStr  > ',' > unicode::char_ > ')' )   [phoenix::bind(&condition_grammar::CheckVersion, this, qi::labels::_val, qi::labels::_1, qi::labels::_2, qi::labels::_3)]
+                | ( "active("   > quotedStr > ')' )                                             [phoenix::bind(&condition_grammar::CheckActive, this, qi::labels::_val, qi::labels::_1)]
                 ;
 
             quotedStr = '"' > +(unicode::char_ - '"') > '"';
 
-            /* Need to add error handlers and actual type evaluation, then start on
-               compound conditional parsing. Need game path support. */
+            expression.name("expression");
+            condition.name("condition");
+            type.name("condition type");
+            quotedStr.name("quoted string");
+
+            qi::on_error<qi::fail>(expression,  phoenix::bind(&condition_grammar::SyntaxError, this, qi::labels::_1, qi::labels::_2, qi::labels::_3, qi::labels::_4));
+            qi::on_error<qi::fail>(condition,   phoenix::bind(&condition_grammar::SyntaxError, this, qi::labels::_1, qi::labels::_2, qi::labels::_3, qi::labels::_4));
+            qi::on_error<qi::fail>(type,        phoenix::bind(&condition_grammar::SyntaxError, this, qi::labels::_1, qi::labels::_2, qi::labels::_3, qi::labels::_4));
+            qi::on_error<qi::fail>(quotedStr,   phoenix::bind(&condition_grammar::SyntaxError, this, qi::labels::_1, qi::labels::_2, qi::labels::_3, qi::labels::_4));
+        }
+
+        void SetGame(boss::Game& g) {
+            game = &g;
         }
 
     private:
         qi::rule<Iterator, bool(), Skipper> expression, condition, type;
         qi::rule<Iterator, std::string()> quotedStr;
 
+        boss::Game * game;
+
+        //Eval's regex and exact paths. Check for files and ghosted plugins.
+        void CheckFile(bool& result, const std::string& file) {
+            if (boost::contains(file, "\\.")) {  //Regex. Only supports filenames right now.
+
+                result = false;
+                boost::regex regex;
+                try {
+                    regex = boost::regex(file, boost::regex::extended|boost::regex::icase);
+                } catch (boost::regex_error e) {
+                    throw std::runtime_error("The regex string \"" + file + "\" is invalid.");
+        //            LOG_ERROR("\"%s\" is not a valid regular expression. Item skipped.", reg.c_str());
+                }
+                for (fs::directory_iterator itr(game->DataPath()); itr != fs::directory_iterator(); ++itr) {
+                    if (fs::is_regular_file(itr->status())) {
+                        if (boost::regex_match(itr->path().filename().string(), regex)) {
+                            result = true;
+                            break;
+                        }
+                    }
+                }
 
 
-        //Eval's regex and exact paths.
-        bool FileExists(bool& result, std::string file);
+            } else if (IsPlugin(file))
+                result = boost::filesystem::exists(game->DataPath() / file) || boost::filesystem::exists(game->DataPath() / (file + ".ghost"));
+            else
+                result = boost::filesystem::exists(game->DataPath() / file);
+        }
 
+        void CheckSum(bool& result, const std::string& file, const uint32_t checksum) {
+            uint32_t crc;
+            boost::unordered_map<std::string,uint32_t>::iterator it = game->crcCache.find(boost::to_lower_copy(file));
 
+            if (it != game->crcCache.end())
+                crc = it->second;
+            else {
+                if (boost::filesystem::exists(game->DataPath() / file))
+                    crc = GetCrc32(game->DataPath() / file);
+                else if (IsPlugin(file) && boost::filesystem::exists(game->DataPath() / (file + ".ghost")))
+                    crc = GetCrc32(game->DataPath() / (file + ".ghost"));
+                else {
+                    result = false;
+                    return;
+                }
+
+                game->crcCache.emplace(boost::to_lower_copy(file), crc);
+            }
+
+            result = checksum == crc;
+        }
+
+        void CheckVersion(bool& result, const std::string&  file, const std::string&  version, const char comparator) {
+
+            CheckFile(result, file);
+            if (!result) {
+                if (comparator == '<')
+                    result = true;
+                return;
+            }
+
+            Version givenVersion = Version(version);
+            Version trueVersion = Version(game->DataPath() / file);
+
+            switch (comparator) {
+            case '>':
+                if (trueVersion <= givenVersion)
+                    result = false;
+                break;
+            case '<':
+                if (trueVersion >= givenVersion)
+                    result = false;
+                break;
+            case '=':
+                if (trueVersion != givenVersion)
+                    result = false;
+                break;
+            }
+        }
+
+        void CheckActive(bool& result, const std::string& file) {
+            result = game->IsActive(file);
+        }
+
+        bool IsPlugin(const std::string& file) {
+            return boost::iends_with(file, ".esm") || boost::iends_with(file, ".esp");
+        }
+
+        void SyntaxError(Iterator const& /*first*/, Iterator const& last, Iterator const& errorpos, boost::spirit::info const& what) {
+
+            std::string context(errorpos, min(errorpos +50, last));
+            boost::trim(context);
+
+            throw std::runtime_error("Error parsing condition at \"" + context + "\", expected \"" + what.tag + "\"");
+        }
     };
 
-    bool ConditionalData::EvalCondition(const boost::filesystem::path& gamePath) const {
+    bool ConditionalData::EvalCondition(boss::Game& game) const {
         if (condition.empty())
             return true;
+
+        boost::unordered_map<std::string, bool>::const_iterator it = game.conditionCache.find(boost::to_lower_copy(condition));
+        if (it != game.conditionCache.end())
+            return it->second;
+
         condition_grammar<std::string::const_iterator, qi::space_type> grammar;
         qi::space_type skipper;
         std::string::const_iterator begin, end;
         bool eval;
 
+        grammar.SetGame(game);
         begin = condition.begin();
         end = condition.end();
 
@@ -377,6 +460,8 @@ namespace boss {
 
         if (!r || begin != end)
             throw std::runtime_error("Parsing of condition \"" + condition + "\" failed!");
+
+        game.conditionCache.emplace(boost::to_lower_copy(condition), eval);
 
         return eval;
     }

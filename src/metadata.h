@@ -23,6 +23,8 @@
 #ifndef __BOSS_METADATA__
 #define __BOSS_METADATA__
 
+#include "game.h"
+
 #include <string>
 #include <list>
 #include <set>
@@ -38,7 +40,7 @@ namespace boss {
         ConditionalData(const std::string& condition, const std::string& data);
 
         bool IsConditional() const;
-        bool EvalCondition(const boost::filesystem::path& gamePath) const;
+        bool EvalCondition(boss::Game& game) const;
 
         std::string Condition() const;
         std::string Data() const;
@@ -124,7 +126,7 @@ namespace boss {
         void Messages(const std::list<Message>& messages);
         void Tags(const std::list<Tag>& tags);
 
-        void EvalAllConditions(const boost::filesystem::path& gamePath);
+        void EvalAllConditions(boss::Game& game);
         bool HasNameOnly() const;
         bool IsRegexPlugin() const;
     private:

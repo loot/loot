@@ -27,6 +27,8 @@
 
 #include <stdexcept>
 
+#include <boost/algorithm/string.hpp>
+
 #if _WIN32 || _WIN64
 #   include <Windows.h>
 #   include <Shlobj.h>
@@ -114,6 +116,15 @@ namespace boss {
 
     fs::path Game::DataPath() const {
         return GamePath() / pluginsFolderName;
+    }
+
+    bool Game::IsActive(const std::string& plugin) const {
+        if (activePlugins.empty()) {
+            //Use libloadorder to fetch the active plugins list. Fill the set
+            //with the lowercased filenames.
+        }
+
+        return activePlugins.find(boost::to_lower_copy(plugin)) != activePlugins.end();
     }
 
     void Game::CreateBOSSGameFolder() {

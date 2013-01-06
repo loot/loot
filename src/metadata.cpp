@@ -22,6 +22,7 @@
 */
 
 #include "metadata.h"
+#include <boost/algorithm/string.hpp>
 
 using namespace std;
 
@@ -188,37 +189,37 @@ namespace boss {
         tags = t;
     }
 
-    void Plugin::EvalAllConditions(const boost::filesystem::path& gamePath) {
+    void Plugin::EvalAllConditions(boss::Game& game) {
         for (list<File>::iterator it = loadAfter.begin(); it != loadAfter.end();) {
-            if (!it->EvalCondition(gamePath))
+            if (!it->EvalCondition(game))
                 it = loadAfter.erase(it);
             else
                 ++it;
         }
 
         for (list<File>::iterator it = requirements.begin(); it != requirements.end();) {
-            if (!it->EvalCondition(gamePath))
+            if (!it->EvalCondition(game))
                 it = requirements.erase(it);
             else
                 ++it;
         }
 
         for (set<File, file_comp>::iterator it = incompatibilities.begin(); it != incompatibilities.end();) {
-            if (!it->EvalCondition(gamePath))
+            if (!it->EvalCondition(game))
                 incompatibilities.erase(it++);
             else
                 ++it;
         }
 
         for (list<Message>::iterator it = messages.begin(); it != messages.end();) {
-            if (!it->EvalCondition(gamePath))
+            if (!it->EvalCondition(game))
                 it = messages.erase(it);
             else
                 ++it;
         }
 
         for (list<Tag>::iterator it = tags.begin(); it != tags.end();) {
-            if (!it->EvalCondition(gamePath))
+            if (!it->EvalCondition(game))
                 it = tags.erase(it++);
             else
                 ++it;
@@ -230,6 +231,6 @@ namespace boss {
     }
 
     bool Plugin::IsRegexPlugin() const {
-        return name.substr(name.length()-5) == "\\.esp" || name.substr(name.length()-5) == "\\.esm";
+        return boost::iends_with(name, "\\.esm") || boost::iends_with(name, "\\.esp");
     }
 }

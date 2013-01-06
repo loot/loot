@@ -175,9 +175,8 @@ possible, for example:
   * Boost: for filesystem interaction, various helpful functions.
 
 As a reflection of this, LOOT's API will provide functions only for
-accessing LOOT-specific functionality and data, eg. auto-sorting,
-masterlist / userlist reading, masterlist download and user
-edits submission.
+accessing LOOT-specific functionality and data, eg. masterlist / userlist reading,
+masterlist download and user edits submission.
 
 The support for arbitrary data sources will be implemented by having the source
 LOOT uses specified in a settings file, which will be editable via the GUI.
@@ -529,7 +528,6 @@ bUseOnlineCache                 Boolean         Cache = Database
 bGetMetadataUpdates             Boolean         Metadata = Masterlist
 bPromptMetadataSubmit   Boolean
 bAlwaysSubmitMetadata   Boolean         Only has effect if the above is false.
-bDoStartupUpdateCheck   Boolean         Check for program updates.
 
 sOnlineCacheURL                 String          URL to the base of the database repository.
 sMetadataURL                    String

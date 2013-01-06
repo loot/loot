@@ -28,6 +28,7 @@
 #ifndef __BOSS_HELPERS__
 #define __BOSS_HELPERS__
 
+#include <stdint.h>
 #include <string>
 #include <boost/filesystem.hpp>
 
@@ -42,10 +43,10 @@ namespace boss {
     uint32_t GetCrc32(const fs::path& filename);
 
     //Converts an integer to a string using BOOST's Spirit.Karma. Faster than a stringstream conversion.
-    std::string IntToString(const uint32_t n);
+    std::string IntToString(const int n);
 
     //Converts an integer to a hex string using BOOST's Spirit.Karma. Faster than a stringstream conversion.
-    std::string IntToHexString(const uint32_t n);
+    std::string IntToHexString(const int n);
 
     //Converts a boolean to a string representation (true/false)
     std::string BoolToString(const bool b);
@@ -71,6 +72,7 @@ namespace boss {
         bool operator > (Version);
         bool operator < (Version);
         bool operator >= (Version);
+        bool operator <= (Version);
         bool operator == (Version);
         bool operator != (Version);
     };

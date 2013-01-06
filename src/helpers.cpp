@@ -26,6 +26,7 @@
 */
 
 #include "helpers.h"
+#include "plugin/ModFormat.h"
 
 #include <boost/spirit/include/karma.hpp>
 #include <boost/algorithm/string.hpp>
@@ -78,15 +79,15 @@ namespace boss {
     }
 
     //Converts an integer to a string using BOOST's Spirit.Karma, which is apparently a lot faster than a stringstream conversion...
-    std::string IntToString(const uint32_t n) {
+    std::string IntToString(const int n) {
         string out;
         back_insert_iterator<string> sink(out);
-        karma::generate(sink,karma::upper[karma::uint_],n);
+        karma::generate(sink,karma::upper[karma::int_],n);
         return out;
     }
 
     //Converts an integer to a hex string using BOOST's Spirit.Karma, which is apparently a lot faster than a stringstream conversion...
-    std::string IntToHexString(const uint32_t n) {
+    std::string IntToHexString(const int n) {
         string out;
         back_insert_iterator<string> sink(out);
         karma::generate(sink,karma::upper[karma::hex],n);
@@ -156,53 +157,58 @@ namespace boss {
 
     Version::Version(const fs::path file) {
  //       LOG_TRACE("extracting version from '%s'", file.string().c_str());
+        if (file.extension().string() == ".esm" || file.extension().string() == ".esp") {
+            //Use libespm interface.
+            verString = ReadHeader(file).Version;
+        } else {
 #if _WIN32 || _WIN64
-        DWORD dummy = 0;
-        DWORD size = GetFileVersionInfoSize(file.wstring().c_str(), &dummy);
+            DWORD dummy = 0;
+            DWORD size = GetFileVersionInfoSize(file.wstring().c_str(), &dummy);
 
-        if (size > 0) {
-            LPBYTE point = new BYTE[size];
-            UINT uLen;
-            VS_FIXEDFILEINFO *info;
-            string ver;
+            if (size > 0) {
+                LPBYTE point = new BYTE[size];
+                UINT uLen;
+                VS_FIXEDFILEINFO *info;
+                string ver;
 
-            GetFileVersionInfo(file.wstring().c_str(),0,size,point);
+                GetFileVersionInfo(file.wstring().c_str(),0,size,point);
 
-            VerQueryValue(point,L"\\",(LPVOID *)&info,&uLen);
+                VerQueryValue(point,L"\\",(LPVOID *)&info,&uLen);
 
-            DWORD dwLeftMost     = HIWORD(info->dwFileVersionMS);
-            DWORD dwSecondLeft   = LOWORD(info->dwFileVersionMS);
-            DWORD dwSecondRight  = HIWORD(info->dwFileVersionLS);
-            DWORD dwRightMost    = LOWORD(info->dwFileVersionLS);
+                DWORD dwLeftMost     = HIWORD(info->dwFileVersionMS);
+                DWORD dwSecondLeft   = LOWORD(info->dwFileVersionMS);
+                DWORD dwSecondRight  = HIWORD(info->dwFileVersionLS);
+                DWORD dwRightMost    = LOWORD(info->dwFileVersionLS);
 
-            delete [] point;
+                delete [] point;
 
-            verString = IntToString(dwLeftMost) + '.' + IntToString(dwSecondLeft) + '.' + IntToString(dwSecondRight) + '.' + IntToString(dwRightMost);
-        }
+                verString = IntToString(dwLeftMost) + '.' + IntToString(dwSecondLeft) + '.' + IntToString(dwSecondRight) + '.' + IntToString(dwRightMost);
+            }
 #else
-        // ensure filename has no quote characters in it to avoid command injection attacks
-        if (string::npos == file.string().find('"')) {
-     //       LOG_WARN("filename has embedded quotes; skipping to avoid command injection: '%s'", file.string().c_str());
-     //   } else {
-            // command mostly borrowed from the gnome-exe-thumbnailer.sh script
-            // wrestool is part of the icoutils package
-            string cmd = "wrestool --extract --raw --type=version \"" + file.string() + "\" | tr '\\0, ' '\\t.\\0' | sed 's/\\t\\t/_/g' | tr -c -d '[:print:]' | sed -r 's/.*Version[^0-9]*([0-9]+(\\.[0-9]+)+).*/\\1/'";
+            // ensure filename has no quote characters in it to avoid command injection attacks
+            if (string::npos == file.string().find('"')) {
+         //       LOG_WARN("filename has embedded quotes; skipping to avoid command injection: '%s'", file.string().c_str());
+         //   } else {
+                // command mostly borrowed from the gnome-exe-thumbnailer.sh script
+                // wrestool is part of the icoutils package
+                string cmd = "wrestool --extract --raw --type=version \"" + file.string() + "\" | tr '\\0, ' '\\t.\\0' | sed 's/\\t\\t/_/g' | tr -c -d '[:print:]' | sed -r 's/.*Version[^0-9]*([0-9]+(\\.[0-9]+)+).*/\\1/'";
 
-            FILE *fp = popen(cmd.c_str(), "r");
+                FILE *fp = popen(cmd.c_str(), "r");
 
-            // read out the version string
-            static const uint32_t BUFSIZE = 32;
-            char buf[BUFSIZE];
-            if (NULL != fgets(buf, BUFSIZE, fp)) {
-    /*            LOG_DEBUG("failed to extract version from '%s'", file.string().c_str());
+                // read out the version string
+                static const uint32_t BUFSIZE = 32;
+                char buf[BUFSIZE];
+                if (NULL != fgets(buf, BUFSIZE, fp)) {
+        /*            LOG_DEBUG("failed to extract version from '%s'", file.string().c_str());
+                }
+                else {
+        */            verString = string(buf);
+        //            LOG_DEBUG("extracted version from '%s': %s", file.string().c_str(), retVal.c_str());
+                }
+                pclose(fp);
             }
-            else {
-    */            verString = string(buf);
-    //            LOG_DEBUG("extracted version from '%s': %s", file.string().c_str(), retVal.c_str());
-            }
-            pclose(fp);
-        }
 #endif
+        }
     }
 
     string Version::AsString() const {
@@ -252,6 +258,10 @@ namespace boss {
 
     bool Version::operator >= (Version ver) {
         return (*this == ver || *this > ver);
+    }
+
+    bool Version::operator <= (Version ver) {
+        return (*this == ver || *this < ver);
     }
 
     bool Version::operator == (Version ver) {

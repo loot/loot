@@ -1,0 +1,313 @@
+# This is the Oblivion masterlist up to the end of the ESMs group, converted by
+# hand to MF3 (ie. YAML-based format for BOSSv3). Mods without messages attached
+# have been removed (since they wouldn't be included unless extra data was
+# required for BOSS to sort them.
+
+globals:
+
+  - condition: IF VERSION("../BOSS/BOSS.exe", "2.1.1.0", <)
+    type: warn
+    content: An update for BOSS (v2.1.1) has been released. Download it at "http://code.google.com/p/better-oblivion-sorting-software/downloads/list"
+
+  - condition: IFNOT VERSION("../BOSS/BOSS.exe", "2.1.1.0", <)
+    type: say
+    content: You are using the latest version of BOSS.
+
+plugins:
+
+  - name: Oblivion_1.1.esm
+    msg:
+      - &modESM
+        type: say
+        content: A modding esm - do not use in game, deactivate.
+
+  - name: Oblivion_SI.esm
+    msg:
+      - *modESM
+
+  - name: Oblivion_GOTY non-SI.esm
+    msg:
+      - *modESM
+
+  - name: Hammerfell.esm
+    msg:
+      - condition: if checksum("Hammerfell.esm", 7D22F9DF)
+        type: warn
+        content: 'Contains dirty edits; 0 ITM, 4 UDR records. Needs TES4Edit cleaning: "http://cs.elderscrolls.com/constwiki/index.php/TES4Edit_Cleaning_Guide"'
+
+  - name: GTAesgaard_2.esm
+    msg:
+      - &warnWorldspaces
+        type: warn
+        content: This needs to load directly after Oblivion.esm to avoid landscape issues caused by a failure by the mod author to use TES4Gecko's "Move Worldspaces" function.
+
+  - name: DibellasWatch.esm
+    msg:
+      - *warnWorldspaces
+
+  - name: Belas.esm
+    msg:
+      - type: warn
+        content: Part of Chronicles of Reeb. Do not use. Has serious landscape issues due to editing the Tamriel worldspace. Uninstall and delete.
+
+  - name: Morrowind_ob.esm
+    msg:
+      - *warnWorldspaces
+
+  - name: Silgrad_Tower.esm
+    msg:
+      - condition: if file("Silgrad_Tower_T.esm")
+        type: warn
+        content: Use either Silgrad_Tower.esm or Silgrad_Tower_T.esm but not both together.
+
+  - name: Silgrad_Tower_T.esm
+    msg:
+      - condition: if file("Silgrad_Tower.esm")
+        type: warn
+        content: Use either Silgrad_Tower.esm or Silgrad_Tower_T.esm but not both together.
+
+  - name: Beautiful People 2ch-Ed.esm
+    tag:
+      - Eyes
+      - Graphics
+      - Hair
+      - R.Relations
+
+  - name: xeoex.esm
+    tag:
+      - Body-F
+      - Body-Size-F
+      - Body-M
+      - Body-Size-M
+      - Eyes
+
+  - name: EnhancedWeatherSIOnly.esm
+    msg:
+      - type: warn
+        content: Obsolete. Remove this and install Enhanced Weather.
+
+  - name: Francesco's Leveled Creatures-Items Mod.esm
+    tag:
+      - Actors.ACBS
+      - Actors.AIData
+      - Actors.AIPackages
+      - Actors.CombatStype
+      - Actors.DeathItem
+      - Actors.Stats
+      - Delev
+      - Invent
+      - NpcFaces
+      - Relev
+      - Scripts
+      - Stats
+    msg:
+      - condition: IF CHECKSUM("Francesco's Leveled Creatures-Items Mod.esm", 17F6FD1A)
+        type: warn
+        content: 'Contains dirty edits; 6 ITM, 0 UDR records. Needs TES4Edit cleaning: "http://cs.elderscrolls.com/constwiki/index.php/TES4Edit_Cleaning_Guide"'
+
+  - name: Francesco's Optional New Items Add-On.esm
+    tag:
+      - Delev
+      - Relev
+    msg:
+      - condition: IF CHECKSUM("Francesco's Optional New Items Add-On.esm", DFD4FB97)
+        type: warn
+        content: 'Contains dirty edits; 2 ITM, 0 UDR records. Needs TES4Edit cleaning: "http://cs.elderscrolls.com/constwiki/index.php/TES4Edit_Cleaning_Guide"'
+
+  - name: Francesco's Optional New Creatures Add-On.esm
+    tag:
+      - Actors.AIPackages
+      - Delev
+      - Factions
+      - Invent
+      - Relations
+      - Relev
+      - Scripts
+    msg:
+      - condition: &fcomCond IF FILE("FCOM_Convergence.esm")
+        type: error
+        content: Delete. Not compatible with FCOM. Already integrated into FCOM.
+
+  - name: Crafting Skill Engine.esm
+    msg:
+      - condition: IF FILE("Retros Fletching and Imbueing 1.7.1_rus.esp")
+        type: error
+        content: Delete. Included in Retros Fletching and Imbueing 1.7.1_rus.esp
+
+  - name: Tamrielic Ingredients.esm
+    msg:
+      - type: say
+        content: Do not use Tamrielic Ingredients and COBL at the same time.
+
+  - name: Cobl Main.esm
+    msg:
+      - type: say
+        content: Do not use Tamrielic Ingredients and COBL at the same time.
+
+  - name: Item interchange.esm
+    msg:
+      - type: say
+        content: Outdated. All functions are now handled by Cobl.esm. Update to the latest versions of 'Item Interchange' and Cobl.
+
+  - name: Qarls_Harvest.esm
+    tag:
+      - Scripts
+
+  - name: DEJ Harvest - Flora.esm
+    msg:
+      - type: say
+        content: Obsolete. Update to 'Harvest [Flora]' v3.0.1+.
+
+  - name: Tamriel's Glittering Geology.esm
+    msg:
+      - condition: &oooCond IF FILE("Oscuro's_Oblivion_Overhaul.esm")
+        type: error
+        content: Not compatible with OOO. Already included in OOO.
+
+  - name: Oscuro's_Oblivion_Overhaul.esm
+    tag:
+      - Actors.Spells
+      - Graphics
+      - Invent
+      - Relations
+      - Scripts
+      - Stats
+      - condition: IF FILE("Mart's Monster Mod for OOO.esm") || IF VAR(FCOM)
+        name: -Relations
+    msg:
+      - type: say
+        content: Do not clean. "Dirty" edits are intentional and required for the mod to function.
+
+  - name: Mart's Monster Mod.esm
+    tag:
+      - Actors.AIData
+      - Actors.AIPackages
+      - Actors.Spells
+      - Actors.Stats
+      - Delev
+      - Factions
+      - Graphics
+      - Invent
+      - Names
+      - Relations
+      - Relev
+      - Scripts
+      - Stats
+
+  - name: Mart's Monster Mod for OOO.esm
+    msg:
+      - condition: *fcomCond
+        type: error
+        content: Delete. Not compatible with FCOM.
+    tag:
+      - Delev
+      - Factions
+      - Relations
+      - Relev
+
+# The message attached to the Waalx plugin below is too vague for the specialised
+# incompatibility list in MF3, and should probably be removed.
+  - name: Waalx Animals & Creatures.esm
+    msg:
+      - type: say
+        content: Incompatible with other overhaul mods.
+
+  - name: FCOM_Convergence.esm
+    tag:
+      - Delev
+      - Factions
+      - Relations
+      - Relev
+
+  - name: Armamentarium.esm
+    tag:
+      - Relev
+
+  - name: ArmamentariumFran.esm
+    tag:
+      - Relev
+
+  - name: ArmamentariumEnchanted.esm
+    msg:
+      - type: say
+        content: Outdated, included in Armamentarium Complete.
+
+  - name: bookplacing.esm
+    msg:
+      - type: warn
+        content: Check you are using v2+. If not, Update. v1 has a severe bug with the Mystic Emporium disappearing.
+
+  - name: No Lights Flicker.esm
+    msg:
+      - condition: &bpTweakMsg IF FILE("Bashed Patch.*\.esp")
+        type: say
+        content: Use Wrye Bash Bashed Patch tweak instead.
+
+# If a plugin name was given for Reznod's Mannequins, the incompatibility list
+# syntax could be used.
+  - name: TLS Modded Mannequins.esm
+    msg:
+      - type: say
+        content: Incompatible with Reznod's Mannequins.
+
+  - name: DKImperials.esm
+    tag:
+      - Hair
+      - Eyes
+
+  - name: Minotaur Race.esm
+    req:
+      - name: &OBSE ../obse_loader.exe
+        condition: if version("../obse_loader.exe", "0.0.18.0", >=)
+        display: OBSE v18+
+    msg:
+      - type: say
+        content: Requires 'Race Repository'
+      - condition: IF CHECKSUM("Minotaur Race.esm", 477340C8)
+        type: warn
+        content: 'Contains dirty edits; 7 ITM, 0 UDR records. Needs TES4Edit cleaning: "http://cs.elderscrolls.com/constwiki/index.php/TES4Edit_Cleaning_Guide"'
+
+  - name: x117race.esm
+    tag:
+      - Hair
+
+  - name: Chocolate Elves.esm
+    tag:
+      - NpcFaces
+      - Hair
+      - Eyes
+      - R.Relations
+
+  - name: Independent High Elf Body (Replace)(v1.1).esm
+    tag:
+      - NpcFaces
+      - Hair
+      - Eyes
+      - R.Relations
+
+  - name: p2p'sAshDraconian.esm
+    tag:
+      - NpcFaces
+      - Hair
+      - Eyes
+      - R.Relations
+
+  - name: SPTDiverseGuards-Resources.esm
+    msg:
+      - condition: *oooCond
+        type: say
+        content: Probably not compatible with OOO. Untested.
+
+  - name: John's Leveled List Overhaul.esm
+    tag:
+      - Graphics
+
+# I've just made up the OBME DLL name and version here for an example.
+  - name: Diverse Magic Effects Resource.esm
+    req:
+      - name: *OBSE
+        condition: if version("../obse_loader.exe", "0.0.19.0", >=)
+        display: OBSE v19+
+      - name: OBSE/Plugins/obme.dll
+        condition: if version("../obse_loader.exe", "0.1.0.0", >=)
+        display: OBME v1+

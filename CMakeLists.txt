@@ -11,7 +11,7 @@
 cmake_minimum_required (VERSION 2.8.9)
 project (boss)
 
-set (BOSS_SRC "${CMAKE_SOURCE_DIR}/src/metadata.cpp" "${CMAKE_SOURCE_DIR}/src/game.cpp" "${CMAKE_SOURCE_DIR}/src/helpers.cpp")
+set (BOSS_SRC "${CMAKE_SOURCE_DIR}/src/metadata.cpp" "${CMAKE_SOURCE_DIR}/src/game.cpp" "${CMAKE_SOURCE_DIR}/src/helpers.cpp" "${CMAKE_SOURCE_DIR}/src/plugin/ModFormat.cpp" "${CMAKE_SOURCE_DIR}/src/plugin/VersionRegex.cpp")
 
 # Include source and library directories.
 include_directories ("${BOSS_LIBS_DIR}/alphanum" "${BOSS_LIBS_DIR}/utf8" "${BOSS_LIBS_DIR}/boost" "${BOSS_LIBS_DIR}/yaml-cpp/include" "${CMAKE_SOURCE_DIR}/src")
