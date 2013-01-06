@@ -29,84 +29,207 @@ namespace boss {
 
     ConditionalData::ConditionalData() {}
 
-    ConditionalData::ConditionalData(const string in) : condition(in) {}
+    ConditionalData::ConditionalData(const string& c) : condition(c) {}
 
-    bool ConditionalData::EvalCondition() const {
+    ConditionalData::ConditionalData(const std::string& c, const std::string& d)
+        : condition(c), data(d) {}
 
-        return true;
+    bool ConditionalData::IsConditional() const {
+        return !condition.empty();
+    }
+
+    std::string ConditionalData::Condition() const {
+        return condition;
+    }
+
+    std::string ConditionalData::Data() const {
+        return data;
+    }
+
+    void ConditionalData::Data(const std::string& d) {
+        data = d;
+    }
+
+    Message::Message() {}
+
+    Message::Message(const std::string& t, const std::string& cont)
+        : type(t), ConditionalData("", cont) {}
+
+    Message::Message(const std::string& t, const std::string& cont,
+                     const std::string& cond, const std::string& l)
+        : type(t), language(l), ConditionalData(cond, cont) {}
+
+    std::string Message::Type() const {
+        return type;
+    }
+
+    std::string Message::Language() const {
+        return language;
+    }
+
+    std::string Message::Content() const {
+        return Data();
+    }
+
+    File::File() {}
+    File::File(const std::string& n) : ConditionalData("", n) {}
+    File::File(const std::string& n, const std::string& d, const std::string& c)
+        : display(d), ConditionalData(c, n) {}
+
+    std::string File::Name() const {
+        return Data();
+    }
+
+    std::string File::DisplayName() const {
+        return display;
     }
 
     Tag::Tag() : addTag(true) {}
 
-    Tag::Tag(const string tag) {
+    Tag::Tag(const string& tag) {
+        string data;
         if (tag[0] == '-') {
             addTag = false;
-            name = tag.substr(1);
+            data = tag.substr(1);
         } else {
             addTag = true;
-            name = tag;
+            data = tag;
         }
+        Data(data);
     }
 
-    Tag::Tag(const string condition, const string tag) : ConditionalData(condition) {
+    Tag::Tag(const string& tag, const string& condition) : ConditionalData(condition) {
+        string data;
         if (tag[0] == '-') {
             addTag = false;
-            name = tag.substr(1);
+            data = tag.substr(1);
         } else {
             addTag = true;
-            name = tag;
+            data = tag;
         }
+        Data(data);
     }
 
     bool Tag::IsAddition() const {
         return addTag;
     }
 
-    string Tag::Data() const {
+    string Tag::PrefixedName() const {
         if (addTag)
-            return name;
+            return Name();
         else
-            return "-" + name;
+            return "-" + Name();
     }
 
-    void Plugin::EvalAllConditions() {
+    std::string Tag::Name() const {
+        return Data();
+    }
+
+    Plugin::Plugin() : enabled(true), priority(0) {}
+    Plugin::Plugin(const std::string n) : name(n), enabled(true), priority(0) {}
+
+    std::string Plugin::Name() const {
+        return name;
+    }
+
+    bool Plugin::Enabled() const {
+        return enabled;
+    }
+
+    int Plugin::Priority() const {
+        return priority;
+    }
+
+    std::list<File> Plugin::LoadAfter() const {
+        return loadAfter;
+    }
+
+    std::list<File> Plugin::Reqs() const {
+        return requirements;
+    }
+
+    std::set<File, file_comp> Plugin::Incs() const {
+        return incompatibilities;
+    }
+
+    std::list<Message> Plugin::Messages() const {
+        return messages;
+    }
+
+    std::list<Tag> Plugin::Tags() const {
+        return tags;
+    }
+
+    void Plugin::Enabled(const bool e) {
+        enabled = e;
+    }
+
+    void Plugin::Priority(const int p) {
+        priority = p;
+    }
+
+    void Plugin::LoadAfter(const std::list<File>& l) {
+        loadAfter = l;
+    }
+
+    void Plugin::Reqs(const std::list<File>& r) {
+        requirements = r;
+    }
+
+    void Plugin::Incs(const std::set<File, file_comp>& i) {
+        incompatibilities = i;
+    }
+
+    void Plugin::Messages(const std::list<Message>& m) {
+        messages = m;
+    }
+
+    void Plugin::Tags(const std::list<Tag>& t) {
+        tags = t;
+    }
+
+    void Plugin::EvalAllConditions(const boost::filesystem::path& gamePath) {
         for (list<File>::iterator it = loadAfter.begin(); it != loadAfter.end();) {
-            if (!it->EvalCondition())
+            if (!it->EvalCondition(gamePath))
                 it = loadAfter.erase(it);
             else
                 ++it;
         }
 
         for (list<File>::iterator it = requirements.begin(); it != requirements.end();) {
-            if (!it->EvalCondition())
+            if (!it->EvalCondition(gamePath))
                 it = requirements.erase(it);
             else
                 ++it;
         }
 
         for (set<File, file_comp>::iterator it = incompatibilities.begin(); it != incompatibilities.end();) {
-            if (!it->EvalCondition())
+            if (!it->EvalCondition(gamePath))
                 incompatibilities.erase(it++);
             else
                 ++it;
         }
 
         for (list<Message>::iterator it = messages.begin(); it != messages.end();) {
-            if (!it->EvalCondition())
+            if (!it->EvalCondition(gamePath))
                 it = messages.erase(it);
             else
                 ++it;
         }
 
         for (list<Tag>::iterator it = tags.begin(); it != tags.end();) {
-            if (!it->EvalCondition())
+            if (!it->EvalCondition(gamePath))
                 it = tags.erase(it++);
             else
                 ++it;
         }
     }
 
-    bool Plugin::NameOnly() const {
+    bool Plugin::HasNameOnly() const {
         return priority == 0 && enabled == true && loadAfter.empty() && requirements.empty() && incompatibilities.empty() && messages.empty() && tags.empty();
+    }
+
+    bool Plugin::IsRegexPlugin() const {
+        return name.substr(name.length()-5) == "\\.esp" || name.substr(name.length()-5) == "\\.esm";
     }
 }

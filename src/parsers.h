@@ -24,7 +24,20 @@
 #ifndef __BOSS_PARSERS__
 #define __BOSS_PARSERS__
 
+#ifndef BOOST_SPIRIT_UNICODE
+#define BOOST_SPIRIT_UNICODE
+#endif
+
 #include "metadata.h"
+
+#include <stdexcept>
+
+#include <boost/filesystem.hpp>
+#include <boost/spirit/include/qi.hpp>
+#include <boost/spirit/include/phoenix_core.hpp>
+#include <boost/spirit/include/phoenix_operator.hpp>
+#include <boost/spirit/home/phoenix/object/construct.hpp>
+#include <boost/spirit/include/phoenix_bind.hpp>
 
 namespace YAML {
 
@@ -36,10 +49,10 @@ namespace YAML {
     struct convert<boss::Message> {
         static Node encode(const boss::Message& rhs) {
             Node node;
-            node["condition"] = rhs.condition;
-            node["type"] = rhs.type;
-            node["content"] = rhs.content;
-            node["lang"] = rhs.language;
+            node["condition"] = rhs.Condition();
+            node["type"] = rhs.Type();
+            node["content"] = rhs.Content();
+            node["lang"] = rhs.Language();
             return node;
         }
 
@@ -47,14 +60,17 @@ namespace YAML {
             if(!node.IsMap())
                 return false;
 
+            std::string condition, type, content, language;
             if (node["condition"])
-                rhs.condition = node["condition"].as<std::string>();
+                condition = node["condition"].as<std::string>();
             if (node["type"])
-                rhs.type = node["type"].as<std::string>();
+                type = node["type"].as<std::string>();
             if (node["content"])
-                rhs.content = node["content"].as<std::string>();
+                content = node["content"].as<std::string>();
             if (node["lang"])
-                rhs.language = node["lang"].as<std::string>();
+                language = node["lang"].as<std::string>();
+
+            rhs = boss::Message(type, content, condition, language);
             return true;
         }
     };
@@ -63,23 +79,24 @@ namespace YAML {
     struct convert<boss::File> {
         static Node encode(const boss::File& rhs) {
             Node node;
-            node["condition"] = rhs.condition;
-            node["name"] = rhs.name;
-            node["display"] = rhs.display;
+            node["condition"] = rhs.Condition();
+            node["name"] = rhs.Name();
+            node["display"] = rhs.DisplayName();
             return node;
         }
 
         static bool decode(const Node& node, boss::File& rhs) {
             if(node.IsMap()) {
+                std::string condition, name, display;
                 if (node["condition"])
-                    rhs.condition = node["condition"].as<std::string>();
+                    condition = node["condition"].as<std::string>();
                 if (node["name"])
-                    rhs.name = node["name"].as<std::string>();
+                    name = node["name"].as<std::string>();
                 if (node["display"])
-                    rhs.display = node["display"].as<std::string>();
-            } else {
-                rhs.name = node.as<std::string>();
-            }
+                    display = node["display"].as<std::string>();
+                rhs = boss::File(name, display, condition);
+            } else
+                rhs = boss::File(node.as<std::string>());
             return true;
         }
     };
@@ -88,25 +105,22 @@ namespace YAML {
     struct convert<boss::Tag> {
         static Node encode(const boss::Tag& rhs) {
             Node node;
-            node["condition"] = rhs.condition;
-            if (!rhs.addTag)
-                node["name"] = "-" + rhs.name;
-            else
-                node["name"] = rhs.name;
+            node["condition"] = rhs.Condition();
+            node["name"] = rhs.PrefixedName();
             return node;
         }
 
         static bool decode(const Node& node, boss::Tag& rhs) {
-            std::string condition, tag;
             if(node.IsMap()) {
+                std::string condition, tag;
                 if (node["condition"])
                     condition = node["condition"].as<std::string>();
                 if (node["name"])
                     tag = node["name"].as<std::string>();
+                rhs = boss::Tag(tag, condition);
             } else if (node.IsScalar()) {
-                tag = node.as<std::string>();
+                rhs = boss::Tag(node.as<std::string>());
             }
-            rhs = boss::Tag(condition, tag);
             return true;
         }
     };
@@ -138,14 +152,14 @@ namespace YAML {
     struct convert<boss::Plugin> {
         static Node encode(const boss::Plugin& rhs) {
             Node node;
-            node["name"] = rhs.name;
-            node["enabled"] = rhs.enabled;
-            node["priority"] = rhs.priority;
-            node["after"] = rhs.loadAfter;
-            node["req"] = rhs.requirements;
-            node["inc"] = rhs.incompatibilities;
-            node["msg"] = rhs.messages;
-            node["tag"] = rhs.tags;
+            node["name"] = rhs.Name();
+            node["enabled"] = rhs.Enabled();
+            node["priority"] = rhs.Priority();
+            node["after"] = rhs.LoadAfter();
+            node["req"] = rhs.Reqs();
+            node["inc"] = rhs.Incs();
+            node["msg"] = rhs.Messages();
+            node["tag"] = rhs.Tags();
 
             return node;
         }
@@ -155,27 +169,23 @@ namespace YAML {
                 return false;
 
             if (node["name"])
-                rhs.name = node["name"].as<std::string>();
+                rhs = boss::Plugin(node["name"].as<std::string>());
             if (node["enabled"])
-                rhs.enabled = node["enabled"].as<bool>();
-            else
-                rhs.enabled = true;
+                rhs.Enabled(node["enabled"].as<bool>());
 
             if (node["priority"])
-                rhs.priority = node["priority"].as<int>();
-            else
-                rhs.priority = 0;
+                rhs.Priority(node["priority"].as<int>());
 
             if (node["after"])
-                rhs.loadAfter = node["after"].as< std::list<boss::File> >();
+                rhs.LoadAfter(node["after"].as< std::list<boss::File> >());
             if (node["req"])
-                rhs.requirements = node["req"].as< std::list<boss::File> >();
+                rhs.Reqs(node["req"].as< std::list<boss::File> >());
             if (node["inc"])
-                rhs.incompatibilities = node["inc"].as< std::set<boss::File, boss::file_comp> >();
+                rhs.Incs(node["inc"].as< std::set<boss::File, boss::file_comp> >());
             if (node["msg"])
-                rhs.messages = node["msg"].as< std::list<boss::Message> >();
+                rhs.Messages(node["msg"].as< std::list<boss::Message> >());
             if (node["tag"])
-                rhs.tags = node["tag"].as< std::list<boss::Tag> >();
+                rhs.Tags(node["tag"].as< std::list<boss::Tag> >());
             return true;
         }
     };
@@ -195,72 +205,72 @@ namespace YAML {
 
     Emitter& operator << (Emitter& out, const boss::Message& rhs) {
         out << BeginMap
-            << Key << "type" << rhs.type
-            << Key << "content" << rhs.content;
+            << Key << "type" << rhs.Type()
+            << Key << "content" << rhs.Content();
 
-        if (!rhs.language.empty())
-            out << Key << "lang" << rhs.language;
+        if (!rhs.Language().empty())
+            out << Key << "lang" << rhs.Language();
 
-        if (!rhs.condition.empty())
-            out << Key << "condition" << rhs.condition;
+        if (!rhs.Condition().empty())
+            out << Key << "condition" << rhs.Condition();
 
         out << EndMap;
     }
 
     Emitter& operator << (Emitter& out, const boss::File& rhs) {
-        if (rhs.condition.empty() && rhs.display.empty())
-            out << rhs.name;
+        if (!rhs.IsConditional() && rhs.DisplayName().empty())
+            out << rhs.Name();
         else {
             out << BeginMap
-                << Key << "name" << rhs.name;
+                << Key << "name" << rhs.Name();
 
-            if (!rhs.condition.empty())
-                out << Key << "condition" << rhs.condition;
+            if (!rhs.Condition().empty())
+                out << Key << "condition" << rhs.Condition();
 
-            if (!rhs.display.empty())
-                out << Key << "display" << rhs.display;
+            if (!rhs.DisplayName().empty())
+                out << Key << "display" << rhs.DisplayName();
 
             out << EndMap;
         }
     }
 
     Emitter& operator << (Emitter& out, const boss::Tag& rhs) {
-        if (rhs.condition.empty())
-            out << rhs.Data();
+        if (!rhs.IsConditional())
+            out << rhs.PrefixedName();
         else {
             out << BeginMap
-                << Key << "name" << rhs.Data()
-                << Key << "condition" << rhs.condition
+                << Key << "name" << rhs.PrefixedName()
+                << Key << "condition" << rhs.Condition()
                 << EndMap;
         }
     }
 
     Emitter& operator << (Emitter& out, const boss::Plugin& rhs) {
-        if (!rhs.NameOnly()) {
+        if (!rhs.HasNameOnly()) {
 
             out << BeginMap
-                << Key << "name" << Value << rhs.name;
+                << Key << "name" << Value << rhs.Name();
 
-            if (rhs.priority != 0)
-                out << Key << "priority" << Value << rhs.priority;
+            if (rhs.Priority() != 0)
+                out << Key << "priority" << Value << rhs.Priority();
 
-            if (!rhs.enabled)
-                out << Key << "enabled" << Value << rhs.enabled;
+            if (!rhs.Enabled())
+                out << Key << "enabled" << Value << rhs.Enabled();
 
-            if (!rhs.loadAfter.empty())
-                out << Key << "after" << Value << rhs.loadAfter;
+            if (!rhs.LoadAfter().empty())
+                out << Key << "after" << Value << rhs.LoadAfter();
 
-            if (!rhs.requirements.empty())
-                out << Key << "req" << Value << rhs.requirements;
+            if (!rhs.Reqs().empty())
+                out << Key << "req" << Value << rhs.Reqs();
 
-            if (!rhs.incompatibilities.empty())
-                out << Key << "inc" << Value << rhs.incompatibilities;
+            if (!rhs.Incs().empty())
+                out << Key << "inc" << Value << rhs.Incs();
 
-            if (!rhs.messages.empty())
-                out << Key << "msg" << Value << rhs.messages;
+            if (!rhs.Messages().empty())
+                out << Key << "msg" << Value << rhs.Messages();
 
-            if (!rhs.tags.empty())
-                out << Key << "tag" << Value << rhs.tags;
+            if (!rhs.Tags().empty())
+                out << Key << "tag" << Value << rhs.Tags();
 
             out << EndMap;
         }
@@ -310,5 +320,65 @@ namespace boss {
     }
 
     */
+
+    namespace qi = boost::spirit::qi;
+    namespace unicode = boost::spirit::unicode;
+
+    template<typename Iterator, typename Skipper>
+    class condition_grammar : public qi::grammar<Iterator, bool(), Skipper> {
+    public:
+        condition_grammar() : condition_grammar::base_type(expression, "condition grammar") {
+
+            expression =
+                condition;
+
+            condition =
+                      ( qi::lit("if") >> type )     [qi::labels::_val = qi::labels::_1]
+                    | ( qi::lit("ifnot") >> type )  [qi::labels::_val = !qi::labels::_1]
+                    ;
+
+            type =
+                  ( "file("     > quotedStr > ')' )                                             [qi::labels::_val = true]
+                | ( "checksum(" > quotedStr > ',' > +unicode::xdigit > ')' )                    [qi::labels::_val = true]
+                | ( "version("  > quotedStr > ',' > quotedStr  > ',' > unicode::char_ > ')' )   [qi::labels::_val = true]
+                | ( "active("   > quotedStr > ')' )                                             [qi::labels::_val = true]
+                ;
+
+            quotedStr = '"' > +(unicode::char_ - '"') > '"';
+
+            /* Need to add error handlers and actual type evaluation, then start on
+               compound conditional parsing. Need game path support. */
+        }
+
+    private:
+        qi::rule<Iterator, bool(), Skipper> expression, condition, type;
+        qi::rule<Iterator, std::string()> quotedStr;
+
+
+
+        //Eval's regex and exact paths.
+        bool FileExists(bool& result, std::string file);
+
+
+    };
+
+    bool ConditionalData::EvalCondition(const boost::filesystem::path& gamePath) const {
+        if (condition.empty())
+            return true;
+        condition_grammar<std::string::const_iterator, qi::space_type> grammar;
+        qi::space_type skipper;
+        std::string::const_iterator begin, end;
+        bool eval;
+
+        begin = condition.begin();
+        end = condition.end();
+
+        bool r = qi::phrase_parse(begin, end, grammar, skipper, eval);
+
+        if (!r || begin != end)
+            throw std::runtime_error("Parsing of condition \"" + condition + "\" failed!");
+
+        return eval;
+    }
 }
 #endif

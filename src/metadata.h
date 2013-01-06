@@ -27,73 +27,120 @@
 #include <list>
 #include <set>
 
+#include <boost/filesystem.hpp>
+
 namespace boss {
 
     class ConditionalData {
     public:
         ConditionalData();
-        ConditionalData(const std::string s);
-        std::string condition;
+        ConditionalData(const std::string& condition);
+        ConditionalData(const std::string& condition, const std::string& data);
 
-        bool EvalCondition() const;
+        bool IsConditional() const;
+        bool EvalCondition(const boost::filesystem::path& gamePath) const;
+
+        std::string Condition() const;
+        std::string Data() const;
+
+        void Data(const std::string& data);
+    private:
+        std::string condition;
+        std::string data;
     };
 
     class Message : public ConditionalData {
     public:
+        Message();
+        Message(const std::string& type, const std::string& content);
+        Message(const std::string& type, const std::string& content,
+                const std::string& condition, const std::string& language);
+
+        std::string Type() const;
+        std::string Language() const;
+        std::string Content() const;
+    private:
         std::string type;
         std::string language;
-        std::string content;
     };
 
     class File : public ConditionalData {
     public:
-        std::string name;
+        File();
+        File(const std::string& name);
+        File(const std::string& name, const std::string& display,
+                                     const std::string& condition);
+
+        std::string Name() const;
+        std::string DisplayName() const;
+    private:
         std::string display;
     };
 
     class Tag : public ConditionalData {
     public:
         Tag();
-        Tag(const std::string tag);
-        Tag(const std::string condition, const std::string tag);
-
-        bool addTag;
-        std::string name;
+        Tag(const std::string& tag);
+        Tag(const std::string& tag, const std::string& condition);
 
         bool IsAddition() const;
-        std::string Data() const;  //Name with '-' in front if suggested for removal.
+        std::string Name() const;
+        std::string PrefixedName() const;  //Name with '-' in front if suggested for removal.
+    private:
+        bool addTag;
     };
 
     struct file_comp {
         bool operator() (const File& lhs, const File& rhs) const {
-            return lhs.name < rhs.name;
+            return lhs.Name() < rhs.Name();
         }
     };
 
     struct tag_comp {
         bool operator() (const Tag& lhs, const Tag& rhs) const {
-            return lhs.name < rhs.name;
+            return lhs.Name() < rhs.Name();
         }
     };
 
     class Plugin {
     public:
+        Plugin();
+        Plugin(const std::string name);
+
+        std::string Name() const;
+        bool Enabled() const;
+        int Priority() const;
+        std::list<File> LoadAfter() const;
+        std::list<File> Reqs() const;
+        std::set<File, file_comp> Incs() const;
+        std::list<Message> Messages() const;
+        std::list<Tag> Tags() const;
+
+        void Enabled(const bool enabled);
+        void Priority(const int priority);
+        void LoadAfter(const std::list<File>& after);
+        void Reqs(const std::list<File>& reqs);
+        void Incs(const std::set<File, file_comp>& incs);
+        void Messages(const std::list<Message>& messages);
+        void Tags(const std::list<Tag>& tags);
+
+        void EvalAllConditions(const boost::filesystem::path& gamePath);
+        bool HasNameOnly() const;
+        bool IsRegexPlugin() const;
+    private:
         std::string name;
         bool enabled;  //Default to true.
-        int priority;  //Default to 0 : >0 his higher, <0 is lower priorities.
+        int priority;  //Default to 0 : >0 is higher, <0 is lower priorities.
         std::list<File> loadAfter;
         std::list<File> requirements;
         std::set<File, file_comp> incompatibilities;
         std::list<Message> messages;
         std::list<Tag> tags;
-
-        void EvalAllConditions();
-        bool NameOnly() const;
     };
 
     struct plugin_comp {
         bool operator() (const Plugin& lhs, const Plugin& rhs) const {
-            return lhs.name < rhs.name;
+            return lhs.Name() < rhs.Name();
         }
     };
 }

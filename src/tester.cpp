@@ -12,13 +12,8 @@ using namespace std;
 void minimisePluginList(set<boss::Plugin, boss::plugin_comp>& plugins) {
     set<boss::Plugin, boss::plugin_comp> out;
     for (set<boss::Plugin, boss::plugin_comp>::iterator it=plugins.begin(), endIt=plugins.end(); it != endIt; ++it) {
-        boss::Plugin p = *it;
-        p.priority = 0;
-        p.enabled = true;
-        p.loadAfter.clear();
-        p.requirements.clear();
-        p.incompatibilities.clear();
-        p.messages.clear();
+        boss::Plugin p(it->Name());
+        p.Tags(it->Tags());
         out.insert(p);
     }
     plugins.swap(out);
