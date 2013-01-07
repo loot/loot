@@ -317,21 +317,32 @@ namespace boss {
             type =
                   ( "file("     > quotedStr > ')' )                                             [phoenix::bind(&condition_grammar::CheckFile, this, qi::labels::_val, qi::labels::_1)]
                 | ( "checksum(" > quotedStr > ',' > qi::hex > ')' )                    [phoenix::bind(&condition_grammar::CheckSum, this, qi::labels::_val, qi::labels::_1, qi::labels::_2)]
-                | ( "version("  > quotedStr > ',' > quotedStr  > ',' > unicode::char_ > ')' )   [phoenix::bind(&condition_grammar::CheckVersion, this, qi::labels::_val, qi::labels::_1, qi::labels::_2, qi::labels::_3)]
+                | ( "version("  > quotedStr > ',' > quotedStr  > ',' > comparator > ')' )   [phoenix::bind(&condition_grammar::CheckVersion, this, qi::labels::_val, qi::labels::_1, qi::labels::_2, qi::labels::_3)]
                 | ( "active("   > quotedStr > ')' )                                             [phoenix::bind(&condition_grammar::CheckActive, this, qi::labels::_val, qi::labels::_1)]
                 ;
 
-            quotedStr = '"' > +(unicode::char_ - '"') > '"';
+            quotedStr %= '"' > +(unicode::char_ - '"') > '"';
+
+            comparator %=
+                      unicode::string("==")
+                    | unicode::string("!=")
+                    | unicode::string("<")
+                    | unicode::string(">")
+                    | unicode::string("<=")
+                    | unicode::string(">=")
+                    ;
 
             expression.name("expression");
             condition.name("condition");
             type.name("condition type");
             quotedStr.name("quoted string");
+            comparator.name("comparator");
 
             qi::on_error<qi::fail>(expression,  phoenix::bind(&condition_grammar::SyntaxError, this, qi::labels::_1, qi::labels::_2, qi::labels::_3, qi::labels::_4));
             qi::on_error<qi::fail>(condition,   phoenix::bind(&condition_grammar::SyntaxError, this, qi::labels::_1, qi::labels::_2, qi::labels::_3, qi::labels::_4));
             qi::on_error<qi::fail>(type,        phoenix::bind(&condition_grammar::SyntaxError, this, qi::labels::_1, qi::labels::_2, qi::labels::_3, qi::labels::_4));
             qi::on_error<qi::fail>(quotedStr,   phoenix::bind(&condition_grammar::SyntaxError, this, qi::labels::_1, qi::labels::_2, qi::labels::_3, qi::labels::_4));
+            qi::on_error<qi::fail>(comparator,   phoenix::bind(&condition_grammar::SyntaxError, this, qi::labels::_1, qi::labels::_2, qi::labels::_3, qi::labels::_4));
         }
 
         void SetGame(boss::Game& g) {
@@ -339,8 +350,8 @@ namespace boss {
         }
 
     private:
-        qi::rule<Iterator, bool(), Skipper> expression, condition, type;
-        qi::rule<Iterator, std::string()> quotedStr;
+        qi::rule<Iterator, bool(), Skipper> expression, andStatement, condition, type;
+        qi::rule<Iterator, std::string()> quotedStr, comparator;
 
         boss::Game * game;
 
@@ -394,11 +405,11 @@ namespace boss {
             result = checksum == crc;
         }
 
-        void CheckVersion(bool& result, const std::string&  file, const std::string&  version, const char comparator) {
+        void CheckVersion(bool& result, const std::string&  file, const std::string& version, const std::string& comparator) {
 
             CheckFile(result, file);
             if (!result) {
-                if (comparator == '<')
+                if (comparator == "!=" || comparator == "<" || comparator == "<=")
                     result = true;
                 return;
             }
@@ -406,20 +417,13 @@ namespace boss {
             Version givenVersion = Version(version);
             Version trueVersion = Version(game->DataPath() / file);
 
-            switch (comparator) {
-            case '>':
-                if (trueVersion <= givenVersion)
-                    result = false;
-                break;
-            case '<':
-                if (trueVersion >= givenVersion)
-                    result = false;
-                break;
-            case '=':
-                if (trueVersion != givenVersion)
-                    result = false;
-                break;
-            }
+            if (   (comparator == "==" && trueVersion != givenVersion)
+                || (comparator == "!=" && trueVersion == givenVersion)
+                || (comparator == "<" && trueVersion >= givenVersion)
+                || (comparator == ">" && trueVersion <= givenVersion)
+                || (comparator == "<=" && trueVersion > givenVersion)
+                || (comparator == ">=" && trueVersion < givenVersion))
+                result = false;
         }
 
         void CheckActive(bool& result, const std::string& file) {

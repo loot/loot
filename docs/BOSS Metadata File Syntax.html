@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>BOSS Metadata File Syntax</title>
+<style>
+    body {font-family:Helvetica,sans-serif;font-size:10pt;}
+    h1 + p {text-align:center;}
+    li {margin-bottom:10px;}
+    li ul, li ol {margin-top:0.4em;}
+    q {font-style:italic;}
+    code {display:inline-block; padding:2px 5px; background:#eee;}
+    td, th {border:1px solid #ddd; padding: 5px; vertical-align:top;}
+    table {border-collapse:collapse; margin:1em;background:#FafaFf;}
+    thead {font-weight:bold;background:#99CCFF;}
+    code.box {line-height:20px; white-space:pre; margin:1em 1em 1em 3em; display:table; padding:5px 10px;}
+    ol li ol {list-style:lower-alpha;}
+    ol li ol li ol {list-style:lower-roman;}
+ ol ol li {margin-bottom:0.2em;}
+    blockquote {background:#E6E6FA; display:table; padding:5px 10px;}
+    h1 {text-align:center;font-size:24pt;}
+    h2 {margin-top:3em;font-size:20pt;}
+    h3 {margin-top:2em;font-size:16pt;}
+    h4 {margin-top:2em;font-size:12pt;}
+    a:link {text-decoration:none;}
+    a:hover {text-decoration:underline;}
+    a[href^="http"]:after {padding-left:2px; content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAVklEQVR4Xn3PgQkAMQhDUXfqTu7kTtkpd5RA8AInfArtQ2iRXFWT2QedAfttj2FsPIOE1eCOlEuoWWjgzYaB/IkeGOrxXhqB+uA9Bfcm0lAZuh+YIeAD+cAqSz4kCMUAAAAASUVORK5CYII=);}
+
+    ul.errorMessages > li {margin-bottom:1.4em;}
+    td.t {background:#90ff90;text-align:center;}
+    td.c {background:#ff9090;text-align:center;}
+    td.t:after {content: '\2713';}
+    td.c:after {content: '\2717';}
+    img {border:0;}
+    .slideshow img {opacity:0;
+        position:absolute;
+        transition: opacity 1.5s;
+        -moz-transition: opacity 1.5s;
+        -webkit-transition: opacity 1.5s;
+        -o-transition: opacity 1.5s;}
+    .slideshow img:first-child {opacity:1;}
+    figcaption {font-style:italic; margin-bottom:2em;}
+    tr.inactive {color:#888;}
+ tr.inactive td.c, tr.inactive td.t {background:#E3E3E3;}
+    span[title] {border-bottom: 1px dotted; font-family: sans-serif; cursor:help;}
+    dt {margin-bottom:0.5em; margin-top:1em; font-style:italic;}
+    dd {margin-bottom:0.8em;}
+    abbr {cursor:help;}
+</style>
+<!--  BOSS
+
+    A plugin load order optimiser for games that use the esp/esm plugin system.
+
+    Copyright (C) 2012    WrinklyNinja
+
+    This file is part of BOSS.
+
+    BOSS is free software: you can redistribute
+    it and/or modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation, either version 3 of
+    the License, or (at your option) any later version.
+
+    BOSS is distributed in the hope that it will
+    be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with BOSS.  If not, see
+    <http://www.gnu.org/licenses/>.
+-->
+
+<h1>BOSS Metadata File Syntax</h1>
+
+<h2>Contents</h2>
+<ol>
+    <li><a href="#intro">Introduction</a>
+    <li><a href="#struct">File Structure</a>
+    <li><a href="#structs">Data Structures</a>
+</ol>
+
+<h2 id="intro">Introduction</h2>
+<p>The metadata file syntax is what BOSS's masterlists and userlists are written in (as of BOSS v3 - prior versions will not be covered here). If you know YAML, good news: the metadata file syntax is essentially just YAML v1.2! If you don't know YAML, then this section is for you.
+<p>Some important points about how BOSS uses YAML.
+<ul>
+    <li>Child data nodes should be indented two spaces from their parents (see the example later in this document if you don't understand). This isn't a strict requirement, but is the best trade-off between compactness and readability.
+    <li>Strings should be enclosed in double quotes if they contain any of the following characters: <code>-?:,[]{}#&amp;*!|&gt;'"%@`</code>. Any backslashes or double quotes within a quoted string should be escaped with a backslash, ie. <code>"</code> -> <code>\"</code> and <code>\</code> -> <code>\\</code>.
+    <li>File paths must be specified using forwardslashes to delimit directory components, not backslashes.
+    <li>For some file data, BOSS can accept either regular expressions or exact file paths. It differentiates between the two by checking the period preceding the file extension: in regex it should be escaped with a backslash <code>\.</code>, whereas in a file path it is not.
+</ul>
+
+
+<h2 id="structs">Data Structures</h2>
+<p>While you could write whatever you wanted in a metadata file without problems, so long as it was valid YAML, BOSS expects the metadata to be laid out using a certain set of data structures, described in this section.
+
+<h3 id="structs-message">Message Data Structure</h3>
+<p>Messages are given as key-value maps. All values are strings, and the type, content and lang strings are case-sensitive. The condition string has varying case sensitivity according to its content.
+<table>
+    <thead><tr><th>Key Name<th>Required<th>Notes
+    <tbody>
+        <tr><td><code>type</code><td>&#x2713;<td>The type string can be one of three keywords, see the table below for their semantics.
+        <tr><td><code>content</code><td>&#x2713;<td>The actual message content string. It has a few special properties, see the <q>Message Strings</q> section for details.
+        <tr><td><code>condition</code><td>&#x2717;<td>A condition string that is evaluated to determine whether the message should be displayed: if it evaluates to true, the message is displayed, otherwise it is not. See the <q>Condition Strings</q> section for details.
+        <tr><td><code>lang</code><td>&#x2717;<td>What language this message is written in, given as an ISO 639-3 language code. The languages BOSS supports are given in the <q>Language Codes</q> section. If no language is given, then the message will always be displayed. If a language is given and it does not match the language BOSS is running for, the message will not be displayed, otherwise its display is dependent on the evaluation of the condition string, if present.
+</table>
+
+<p>There are three message types:
+<table>
+    <thead><tr><th>Keyword<th>Description
+    <tbody>
+        <tr><td><code>say</code><td>A generic message, useful for miscellaneous notes.
+        <tr><td><code>warn</code><td>A warning message, describing a non-critical issue with the user's mods (eg. dirty mods).
+        <tr><td><code>error</code><td>An error message, decribing a critical installation issue (eg. missing masters).
+</table>
+
+<p>Example:
+<code class="box">condition: if file("Silgrad_Tower.esm")
+type: warn
+content: Use either Silgrad_Tower.esm or Silgrad_Tower_T.esm but not both together.
+</code>
+
+<h3 id="structs-file">File Data Structure</h3>
+<p>Not to be confused with the structure of the metadata file itself, this structure can be used to hold filenames. It has two forms: the first is a simple string, and the second is a key-value map. All values in the map are strings.
+<p>The simple form:
+<code class="box"><var>[filename]</var></code>
+<p>where <var>[filename]</var> is a filename relative to the game's Data folder.
+<p>The map form:
+<table>
+    <thead><tr><th>Key Name<th>Required<th>Notes
+    <tbody>
+        <tr><td><code>name</code><td>&#x2713;<td>A filename relative to the game's Data folder. Case-insensitive. Directory components must be delimited by forwardslashes, not backslashes.
+        <tr><td><code>display</code><td>&#x2717;<td>A substitute string to be displayed instead of the filename in any generated messages, eg. the name of the mod the file belongs to.
+        <tr><td><code>condition</code><td>&#x2717;<td>A condition string that is evaluated to determine whether this file data should be used: if it evaluates to true, the data is used, otherwise it is ignored. See the <q>Condition Strings</q> section for details.
+</table>
+
+<p>Examples:
+<code class="box">../obse_loader.exe</code>
+or
+<code class="box">name: ../obse_loader.exe
+condition: if version("../obse_loader.exe", "0.0.18.0", &lt;)
+display: OBSE v18+
+</code>
+
+<h3 id="structs-tag">Tag Data Structure</h3>
+<p>BOSS metadata files can contain suggestions for the addition or removal of Bash Tags, and this is the structure used for them. Like the file data structure, it has simple string and key-value map forms. All values in the map are strings. The Tag name is case-sensitive.
+<p>The simple form:
+<code class="box"><var>[tag]</var></code>
+<p>where <var>[tag]</var> is one of two things:
+<ul>
+    <li>If the Tag is being suggested for addition, <var>[tag]</var> is just the Tag name, eg. <code>Graphics</code>.
+    <li>If the Tag is being suggested for removal, <var>[tag]</var> is the Tag name preceded by a minus sign, eg. <code>-Graphics</code>.
+</ul>
+<p>The map form:
+<table>
+    <thead><tr><th>Key Name<th>Required<th>Notes
+    <tbody>
+        <tr><td><code>name</code><td>&#x2713;<td>A Bash Tag, preceded by a minus sign if it is suggested for removal.
+        <tr><td><code>condition</code><td>&#x2717;<td>A condition string that is evaluated to determine whether this Bash Tag should be suggested: if it evaluates to true, the Tag is suggested, otherwise it is ignored. See the <q>Condition Strings</q> section for details.
+</table>
+<p>Examples:
+<code class="box">Relations</code>
+or
+<code class="box">name: -Relations
+condition: if file("Mart's Monster Mod for OOO.esm") or if file("FCOM_Convergence.esm")
+</code>
+
+<h3 id="structs-plugin">Plugin Data Structure</h3>
+<p>This is the structure that brings all the others together, and forms the main component of a metadata file. It is a key-value map.
+<table>
+    <thead><tr><th>Key Name<th>Data Type<th>Required<th>Notes
+    <tbody>
+        <tr><td><code>name</code><td>string<td>&#x2713;<td>Can be an exact plugin filename or a regular expression using the <a href="http://www.boost.org/doc/libs/1_50_0/libs/regex/doc/html/boost_regex/syntax/basic_extended.html">POSIX Extended</a> syntax. Case-insensitive.
+        <tr><td><code>enabled</code><td>boolean<td>&#x2717;<td>Enables or disables use of the plugin object. Used for user rules, but no reason to use it in the masterlist.
+        <tr><td><code>priority</code><td>integer<td>&#x2717;<td>???
+        <tr><td><code>after</code><td>file list<td>&#x2717;<td>Plugins that this plugin must load after, but which are not dependencies. Used for resolving specific compatibility issues and by user rules for specifying custom plugin positions.
+        <tr><td><code>req</code><td>file list<td>&#x2717;<td>Files that this plugin requires to be present. If any of these files are missing, an error message will be displayed. The list can contain a mixture of plugins and other files, but all plugins must be given in their required load order relative to one another. Intended for use specifying implicit dependencies, as BOSS will detect a plugin's explicit masters itself.
+        <tr><td><code>inc</code><td>file list<td>&#x2717;<td>Files that this plugin is incompatible with. If any of these files are present, an error message will be displayed.
+        <tr><td><code>msg</code><td>message list<td>&#x2717;<td>The messages attached to this plugin.
+        <tr><td><code>tag</code><td>tag list<td>&#x2717;<td>The Bash Tags suggested for this plugin.
+</table>
+<p>Example:
+<code class="box">name: Oscuro's_Oblivion_Overhaul.esm
+tag:
+  - Actors.Spells
+  - Graphics
+  - Invent
+  - Relations
+  - Scripts
+  - Stats
+  - name: -Relations
+    condition: if file("Mart's Monster Mod for OOO.esm") or if file("FCOM_Convergence.esm")
+msg:
+  - type: say
+    content: Do not clean. "Dirty" edits are intentional and required for the mod to function.
+</code>
+
+<h2>Metadata File Structure</h2>
+<p>The root of a metadata file is a key-value map. BOSS will recognise the following keys, none of which are required:
+<table>
+    <thead><tr><th>Key Name<th>Value Type<th>Notes
+    <tbody>
+        <tr><td><code>globals</code><td>message list<td>A list of global messages.
+        <tr><td><code>plugins</code><td>plugin list<td>
+</table>
+<p>Other keys may also be present, but are not processed by BOSS.
+<p>An example metadata file:
+<code class="box">globals:
+  - type: say
+    content: You are using the latest version of BOSS.
+    condition: if version("../BOSS/BOSS.exe", "2.1.1.0", ==)
+plugins:
+  - name: Armamentarium.esm
+    tag:
+      - Relev
+  - name: ArmamentariumFran.esm
+    tag:
+      - Relev
+  - name: Beautiful People 2ch-Ed.esm
+    tag:
+      - Eyes
+      - Graphics
+      - Hair
+      - R.Relations
+</code>
+
+
+
+<h2>Message Strings</h2>
+<p>URLs in message content strings will be turned into hyperlinks in BOSS's user interface. Recognised URLs are those that start with <code>file:</code>, <code>http:</code> or <code>https:</code> and contain no spaces (valid URLs can't contain spaces anyway). URLs can be labelled by writing the label after the URL, with a space separating them, and enclosing the URL and label in double quotes.
+<p>Examples:
+<code class="box">http://www.example.com</code>
+becomes
+<blockquote><a href="http://www.example.com">http://www.example.com</a></blockquote>
+while
+<code class="box">"http://www.example.com example link"</code>
+becomes
+<blockquote><a href="http://www.example.com">example link</a></blockquote>
+
+<h2>Condition Strings</h2>
+<p>Condition strings can be used to ensure that data is only acted on by BOSS under certain circumstances. They are similar in form to conditional expressions in programming languages, and their format is:
+<code class="box">[keyword] [function] *( [operator] [keyword] [function] )</code>
+<p>where <code>*(  )</code> encloses a phrase that may be repeated zero or more times.
+<p>The <code>[keyword] [function]</code> pair is referred to as a condition, and two conditions joined by an operator is referred to as a compound condition.
+<p>Unlike previous versions of BOSS, BOSS v3 caches the results of condition evaluations, so performance is not really an issue. A regular expression check will still take longer than a file check though, so use the former only when appropriate to do so.
+
+<h3>Keywords</h3>
+<p>There are two keywords:
+<table>
+    <thead><tr><th>Keyword<th>Description
+    <tbody>
+        <tr><td><code>if</code><td>If the following <code><var>[function]</var></code> evaluates to true, the condition will be true. Otherwise, the condition will be false.
+        <tr><td><code>ifnot</code><td>If the following <code><var>[function]</var></code> evaluates to false, the condition will be true. Otherwise, the condition will be false.
+</table>
+
+<h3>Functions</h3>
+<p>There are several conditions that can be tested for using the functions detailed in the table below.
+<table>
+    <thead><tr><th>Function<th>Syntax<th>Description
+    <tbody>
+        <tr><td>File<td><code>file("<var>[filepath]</var>")</code><td>Returns true if <var>[filepath]</var> is installed, false otherwise.
+        <tr><td>File<td><code>file("<var>[regex]</var>")</code><td>Returns true if a file matching <var>[regex]</var> is found, false otherwise.
+        <tr><td>Checksum<td><code>checksum("<var>[filepath]</var>", <var>[checksum]</var>)</code><td>Returns true if the calculated checksum of <var>[filepath]</var> matches <var>[checksum]</var>, false otherwise. If <var>[filepath]</var> does not exist, returns false.
+        <tr><td>Version<td><code>version("<var>[filepath]</var>", "<var>[version]</var>", <var>[comparator]</var>)</code><td>Returns true if the expression <code><var>[version] [comparator] [actual version of [filepath]]</var></code> holds true, false otherwise. If <var>[filepath]</var> does not exist and <var>[comparator]</var> is <code>==</code>, <code>&gt;</code> or <code>&gt;=</code>, returns false. If <var>[filepath]</var> does not exist and <var>[comparator]</var> is <code>!=</code>, <code>&lt;</code> or <code>&lt;=</code>, returns true.
+        <tr><td>Plugin Active Status<td><code>active("<var>[filepath]</var>")</code><td>Returns true if <var>[filepath]</var> is a <code>.esp</code> or <code>.esm</code> file that is both installed and active, false otherwise.
+</table>
+
+<p>The different types of condition variable described below. Only version strings are case-sensitive.
+<table>
+ <thead><tr><th>Variable Type<th>Syntax Description
+ <tbody>
+  <tr><td><code>[filepath]</code><td>A file path or regular expression string to match file paths to. Must not contain a double quote character <code>"</code>. Evaluated relative to the game's Data folder. If a regex, the string cannot contain any directory components, ie. matches can only exist in the Data folder. Paths must use forwardslashes to delimit directory components.
+  <tr><td><code>[regex]</code><td>A regular expression string to match filenames to. Evaluated relative to the game's Data folder. The string cannot contain any directory components. The syntax used must be <a href="http://www.boost.org/doc/libs/1_50_0/libs/regex/doc/html/boost_regex/syntax/basic_extended.html">POSIX Extended</a>.
+  <tr><td><code>[checksum]</code><td>A string of hexadecimal digits representing an unsigned integer that is the data checksum of a file. BOSS displays the checksums of plugins in its user interface after running.
+  <tr><td><code>[version]</code><td>A string of characters representing the version of a plugin or executable. BOSS displays the versions of plugins in its user interface after running.
+  <tr><td><code>[comparator]</code><td>A comparison operator, ie. one of <code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code> or <code>&gt;=</code>, meaning "is equal to", "is not equal to", "is less than", "is greater than", "is less than or equal to" and "is greater than or equal to" respectively.
+</table>
+
+<h3>Operators</h3>
+<p>There are two operators, which both operate on the conditions to their immediate left and right:
+<table>
+    <thead><tr><th>Operator<th>Syntax<th>Description
+    <tbody>
+        <tr><td>Logical AND<td><code>and</code><td>Both condition must evaluate to true for the compound condition to evaluate to true. If not, the compound condition evaluates to false.
+        <tr><td>Logical OR<td><code>or</code><td>One condition or both conditions must evaluate to true for the compound condition to evaluate to true. If neither condition is true, then the compound condition evaluates to false.
+</table>
+
+<h3>Order Of Evaluation</h3>
+<p>When a condition string is evaluated, its constituent parts are evaluated in the following order:
+<ol>
+    <li>The function is evaluated.
+    <li>The keyword-function pair (condition) is evaluated, with the keyword modifying the result of the function's evaluation if necessary.
+    <li>If AND operators are present, then they are evaluated using the evaluation results of the conditions to their immediate left and right, reading from left to right.
+    <li>If OR operators are present, then they are evaluated using the evaluation results of the AND operators (if present) or conditions to their immediate left and right, reading from left to right.
+</ol>
+<p>In case the words are confusing, here's a table of generic condition string structures and how they get evaluated, using brackets to display precedence. To reduce the number of brackets visible in the more complicated examples, the <code>[keyword] [function]</code> pair is replaced with <code>C</code> after the first example.
+<table>
+    <thead><tr><th>String Structure<th>Evaluated As
+    <tbody>
+        <tr><td><code>[keyword] [function]</code><td><code>( [keyword] ( [function] ) )</code>
+        <tr><td><code>C and C</code><td><code>( C and C )</code>
+        <tr><td><code>C or C</code><td><code>( C or C )</code>
+        <tr><td><code>C and C and C</code><td><code>( ( C and C ) and C )</code>
+        <tr><td><code>C or C or C</code><td><code>( ( C or C ) or C )</code>
+        <tr><td><code>C and C or C</code><td><code>( ( C and C ) or C )</code>
+        <tr><td><code>C or C and C</code><td><code>( C or ( C and C ) )</code>
+        <tr><td><code>C and C and C and C</code><td><code>( ( ( C and C ) and C ) and C )</code>
+        <tr><td><code>C and C and C or C</code><td><code>( ( ( C and C ) and C ) or C )</code>
+        <tr><td><code>C and C or C and C</code><td><code>( ( C and C ) or ( C and C ) )</code>
+        <tr><td><code>C and C or C or C</code><td><code>( ( ( C and C ) or C ) or C)</code>
+        <tr><td><code>C or C or C or C</code><td><code>( ( ( C or C ) or C ) or C )</code>
+        <tr><td><code>C or C or C and C</code><td><code>( ( C or C ) or ( C and C ) )</code>
+        <tr><td><code>C or C and C or C</code><td><code>( ( C or ( C and C ) ) or C )</code>
+        <tr><td><code>C or C and C and C</code><td><code>( C or ( ( C and C ) and C ) )</code>
+</table>
+
+<h2>Language Codes</h2>
+<p>BOSS supports the following languages and language codes:
+<table>
+    <thead><tr><th>Language<th>ISO 639-3 Code
+    <tbody>
+        <tr><td>English<td>eng
+</table>
+
+<h2 id="license">License</h2>
+<p>This document is part of the BOSS documentation.<br>
+Copyright (C) 2011 BOSS Development Team.<br>
+See the file <q>BOSS ReadMe.html</q> for copying conditions.
