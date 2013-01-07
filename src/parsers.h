@@ -300,18 +300,19 @@ namespace boss {
         condition_grammar() : condition_grammar::base_type(expression, "condition grammar") {
 
             expression =
-                andStatement
-                >> *(qi::lit("or") >> andStatement)
+                andStatement                         [qi::labels::_val = qi::labels::_1]
+                >> *((qi::lit("or") >> andStatement) [qi::labels::_val = qi::labels::_val || qi::labels::_1])
                 ;
 
             andStatement =
-                condition
-                >> *(qi::lit("and") >> condition)
+                condition                           [qi::labels::_val = qi::labels::_1]
+                >> *((qi::lit("and") >> condition)  [qi::labels::_val = qi::labels::_val && qi::labels::_1])
                 ;
 
             condition =
                       ( qi::lit("if") >> type )     [qi::labels::_val = qi::labels::_1]
                     | ( qi::lit("ifnot") >> type )  [qi::labels::_val = !qi::labels::_1]
+                    | ( '(' >> expression >> ')' )  [qi::labels::_val = qi::labels::_1] //This *should* handle the "brackets override operators" rule.
                     ;
 
             type =
