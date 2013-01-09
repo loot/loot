@@ -23,7 +23,7 @@ int main() {
 
     cout << "Testing masterlist parser." << endl;
 
-    YAML::Node test = YAML::LoadFile("masterlist-example.yaml");
+    YAML::Node test = YAML::LoadFile("masterlist.yaml");
 
     list<boss::Message> globalMessages;
     if (test["globals"]) {

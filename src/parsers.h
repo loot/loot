@@ -37,6 +37,7 @@
 #include <boost/regex.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/regex.hpp>
 #include <boost/spirit/include/qi.hpp>
 #include <boost/spirit/include/phoenix_core.hpp>
 #include <boost/spirit/include/phoenix_operator.hpp>
@@ -228,7 +229,7 @@ namespace YAML {
             out << BeginMap
                 << Key << "name" << rhs.Name();
 
-            if (!rhs.Condition().empty())
+            if (rhs.IsConditional())
                 out << Key << "condition" << rhs.Condition();
 
             if (!rhs.DisplayName().empty())
@@ -300,50 +301,69 @@ namespace boss {
         condition_grammar() : condition_grammar::base_type(expression, "condition grammar") {
 
             expression =
-                andStatement                         [qi::labels::_val = qi::labels::_1]
-                >> *((qi::lit("or") >> andStatement) [qi::labels::_val = qi::labels::_val || qi::labels::_1])
+                compound                            [qi::labels::_val = qi::labels::_1]
+                >> *((qi::lit("or") >> compound)    [qi::labels::_val = qi::labels::_val || qi::labels::_1])
                 ;
 
-            andStatement =
+            compound =
                 condition                           [qi::labels::_val = qi::labels::_1]
                 >> *((qi::lit("and") >> condition)  [qi::labels::_val = qi::labels::_val && qi::labels::_1])
                 ;
 
             condition =
-                      ( qi::lit("if") >> type )     [qi::labels::_val = qi::labels::_1]
-                    | ( qi::lit("ifnot") >> type )  [qi::labels::_val = !qi::labels::_1]
-                    | ( '(' >> expression >> ')' )  [qi::labels::_val = qi::labels::_1] //This *should* handle the "brackets override operators" rule.
-                    ;
+                  function                          [qi::labels::_val = qi::labels::_1]
+                | ( qi::lit("not") > function )     [qi::labels::_val = !qi::labels::_1]
+                | ( '(' > expression > ')' )        [qi::labels::_val = qi::labels::_1]
+                ;
 
-            type =
-                  ( "file("     > quotedStr > ')' )                                             [phoenix::bind(&condition_grammar::CheckFile, this, qi::labels::_val, qi::labels::_1)]
-                | ( "checksum(" > quotedStr > ',' > qi::hex > ')' )                    [phoenix::bind(&condition_grammar::CheckSum, this, qi::labels::_val, qi::labels::_1, qi::labels::_2)]
-                | ( "version("  > quotedStr > ',' > quotedStr  > ',' > comparator > ')' )   [phoenix::bind(&condition_grammar::CheckVersion, this, qi::labels::_val, qi::labels::_1, qi::labels::_2, qi::labels::_3)]
-                | ( "active("   > quotedStr > ')' )                                             [phoenix::bind(&condition_grammar::CheckActive, this, qi::labels::_val, qi::labels::_1)]
+            function =
+                  ( "file("     > filePath > ')' )                                             [phoenix::bind(&condition_grammar::CheckFile, this, qi::labels::_val, qi::labels::_1)]
+                | ( "regex("     > quotedStr > ')' )                                             [phoenix::bind(&condition_grammar::CheckRegex, this, qi::labels::_val, qi::labels::_1)]
+                | ( "checksum(" > filePath > ',' > qi::hex > ')' )                    [phoenix::bind(&condition_grammar::CheckSum, this, qi::labels::_val, qi::labels::_1, qi::labels::_2)]
+                | ( "version("  > filePath > ',' > quotedStr  > ',' > comparator > ')' )   [phoenix::bind(&condition_grammar::CheckVersion, this, qi::labels::_val, qi::labels::_1, qi::labels::_2, qi::labels::_3)]
+                | ( "active("   > filePath > ')' )                                             [phoenix::bind(&condition_grammar::CheckActive, this, qi::labels::_val, qi::labels::_1)]
                 ;
 
             quotedStr %= '"' > +(unicode::char_ - '"') > '"';
 
+            filePath %= '"' > +(unicode::char_ - invalidPathChars) > '"';
+
+            invalidPathChars %=
+                  unicode::char_(':')
+                | unicode::char_('*')
+                | unicode::char_('?')
+                | unicode::char_('"')
+                | unicode::char_('<')
+                | unicode::char_('>')
+                | unicode::char_('|')
+                ;
+
             comparator %=
-                      unicode::string("==")
-                    | unicode::string("!=")
-                    | unicode::string("<")
-                    | unicode::string(">")
-                    | unicode::string("<=")
-                    | unicode::string(">=")
-                    ;
+                  unicode::string("==")
+                | unicode::string("!=")
+                | unicode::string("<")
+                | unicode::string(">")
+                | unicode::string("<=")
+                | unicode::string(">=")
+                ;
 
             expression.name("expression");
+            compound.name("compound condition");
             condition.name("condition");
-            type.name("condition type");
+            function.name("function");
             quotedStr.name("quoted string");
+            filePath.name("file path");
             comparator.name("comparator");
+            invalidPathChars.name("invalid file path characters");
 
             qi::on_error<qi::fail>(expression,  phoenix::bind(&condition_grammar::SyntaxError, this, qi::labels::_1, qi::labels::_2, qi::labels::_3, qi::labels::_4));
+            qi::on_error<qi::fail>(compound,   phoenix::bind(&condition_grammar::SyntaxError, this, qi::labels::_1, qi::labels::_2, qi::labels::_3, qi::labels::_4));
             qi::on_error<qi::fail>(condition,   phoenix::bind(&condition_grammar::SyntaxError, this, qi::labels::_1, qi::labels::_2, qi::labels::_3, qi::labels::_4));
-            qi::on_error<qi::fail>(type,        phoenix::bind(&condition_grammar::SyntaxError, this, qi::labels::_1, qi::labels::_2, qi::labels::_3, qi::labels::_4));
+            qi::on_error<qi::fail>(function,        phoenix::bind(&condition_grammar::SyntaxError, this, qi::labels::_1, qi::labels::_2, qi::labels::_3, qi::labels::_4));
             qi::on_error<qi::fail>(quotedStr,   phoenix::bind(&condition_grammar::SyntaxError, this, qi::labels::_1, qi::labels::_2, qi::labels::_3, qi::labels::_4));
+            qi::on_error<qi::fail>(filePath,   phoenix::bind(&condition_grammar::SyntaxError, this, qi::labels::_1, qi::labels::_2, qi::labels::_3, qi::labels::_4));
             qi::on_error<qi::fail>(comparator,   phoenix::bind(&condition_grammar::SyntaxError, this, qi::labels::_1, qi::labels::_2, qi::labels::_3, qi::labels::_4));
+            qi::on_error<qi::fail>(invalidPathChars,   phoenix::bind(&condition_grammar::SyntaxError, this, qi::labels::_1, qi::labels::_2, qi::labels::_3, qi::labels::_4));
         }
 
         void SetGame(boss::Game& g) {
@@ -351,40 +371,84 @@ namespace boss {
         }
 
     private:
-        qi::rule<Iterator, bool(), Skipper> expression, andStatement, condition, type;
-        qi::rule<Iterator, std::string()> quotedStr, comparator;
+        qi::rule<Iterator, bool(), Skipper> expression, compound, condition, function;
+        qi::rule<Iterator, std::string()> quotedStr, filePath, comparator;
+        qi::rule<Iterator, char()> invalidPathChars;
 
         boss::Game * game;
 
         //Eval's regex and exact paths. Check for files and ghosted plugins.
         void CheckFile(bool& result, const std::string& file) {
-            if (boost::contains(file, "\\.")) {  //Regex. Only supports filenames right now.
 
-                result = false;
-                boost::regex regex;
-                try {
-                    regex = boost::regex(file, boost::regex::extended|boost::regex::icase);
-                } catch (boost::regex_error e) {
-                    throw std::runtime_error("The regex string \"" + file + "\" is invalid.");
-        //            LOG_ERROR("\"%s\" is not a valid regular expression. Item skipped.", reg.c_str());
-                }
-                for (fs::directory_iterator itr(game->DataPath()); itr != fs::directory_iterator(); ++itr) {
-                    if (fs::is_regular_file(itr->status())) {
-                        if (boost::regex_match(itr->path().filename().string(), regex)) {
-                            result = true;
-                            break;
-                        }
-                    }
-                }
+            if (!IsSafePath(file))
+                throw std::runtime_error("The file path \"" + file + "\" is invalid.");
 
-
-            } else if (IsPlugin(file))
+            if (IsPlugin(file))
                 result = boost::filesystem::exists(game->DataPath() / file) || boost::filesystem::exists(game->DataPath() / (file + ".ghost"));
             else
                 result = boost::filesystem::exists(game->DataPath() / file);
         }
 
+        void CheckRegex(bool& result, const std::string& regexStr) {
+            result = false;
+            //Can't support a regex string where all path components may be regex, since this could
+            //lead to massive scanning if an unfortunately-named directory is encountered.
+            //As such, only the filename portion can be a regex. Need to separate that from the rest
+            //of the string.
+
+            /* Look for directory separators: in non-regex strings, they are '/' and '\'. In regex,
+            the backslash is special so must be escaped using another backslash, so look for '/' and "\\".
+            In C++ string literals, the backslash must be escaped once more to give "\\\\".
+            Split the regex with another regex! */
+
+            //Need to also check if the regex is for a safe path.
+
+            boost::regex sepReg("/|(\\\\)", boost::regex::extended);
+
+            std::vector<std::string> components;
+            boost::algorithm::split_regex(components, regexStr, sepReg);
+
+            std::string filename = components.back();
+            components.pop_back();
+
+            std::string parent;
+            for (std::vector<std::string>::const_iterator it=components.begin(), endIt=components.end()--; it != endIt; ++it) {
+                if (*it == ".")
+                    continue;
+
+                parent += *it + '/';
+            }
+
+            if (boost::contains(parent, "../../"))
+                throw std::runtime_error("The folder path \"" + parent + "\" is invalid.");
+
+            //Now we have a valid parent path and a regex filename. Check that
+            //the parent path exists and is a directory.
+
+            boost::filesystem::path parent_path = game->DataPath() / parent;
+            if (!boost::filesystem::exists(parent_path) || !boost::filesystem::is_directory(parent_path))
+                return;
+
+            boost::regex regex;
+            try {
+                regex = boost::regex(filename, boost::regex::extended|boost::regex::icase);
+            } catch (boost::regex_error e) {
+                throw std::runtime_error("The regex string \"" + filename + "\" is invalid.");
+            }
+
+            for (fs::directory_iterator itr(parent_path); itr != fs::directory_iterator(); ++itr) {
+                if (boost::regex_match(itr->path().filename().string(), regex)) {
+                    result = true;
+                    return;
+                }
+            }
+        }
+
         void CheckSum(bool& result, const std::string& file, const uint32_t checksum) {
+
+            if (!IsSafePath(file))
+                throw std::runtime_error("The file path \"" + file + "\" is invalid.");
+
             uint32_t crc;
             boost::unordered_map<std::string,uint32_t>::iterator it = game->crcCache.find(boost::to_lower_copy(file));
 
@@ -441,6 +505,20 @@ namespace boss {
             boost::trim(context);
 
             throw std::runtime_error("Error parsing condition at \"" + context + "\", expected \"" + what.tag + "\"");
+        }
+
+        //Checks that the path (not regex) doesn't go outside any game folders.
+        bool IsSafePath(const std::string& path) {
+            std::vector<std::string> components;
+            boost::split(components, path, boost::is_any_of("/\\"));
+            components.pop_back();
+            std::string parent_path;
+            for (std::vector<std::string>::const_iterator it=components.begin(), endIt=components.end()--; it != endIt; ++it) {
+                if (*it == ".")
+                    continue;
+                parent_path += *it + '/';
+            }
+            return !boost::contains(parent_path, "../../");
         }
     };
 

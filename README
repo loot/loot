@@ -252,7 +252,10 @@ to support positioning of plugins precisely relative to other plugins, but it
 may be possible to achieve the positioning using only the priority setting. If
 possible, that is preferred.
 
-Further details can be found in the File Format doc.
+When the masterlist/userlist is loaded, it is scanned for entries for each of
+the installed plugins. If more than one match is found, they should be merged.
+
+Further details can be found in the 'docs/BOSS Metadata File Syntax.html' file.
 
 
 Networking
