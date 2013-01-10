@@ -84,7 +84,6 @@ This documentation is a work in progress, covering a syntax that is also still a
         <li><a href="#structs-tag">Tag Data Structure</a>
         <li><a href="#structs-plugin">Plugin Data Structure</a>
     </ol>
-    <li><a href="#message">Message Strings</a>
     <li><a href="#cond">Condition Strings</a>
     <ol>
         <li><a href="#cond-function">Functions</a>
@@ -158,7 +157,7 @@ plugins:
     <thead><tr><th>Key Name<th>Required<th>Notes
     <tbody>
         <tr><td><code>type</code><td>&#x2713;<td>The type string can be one of three keywords, see the table below for their semantics.
-        <tr><td><code>content</code><td>&#x2713;<td>The actual message content string. It has a few special properties, see <a href="#message">Message Strings</a> for details.
+        <tr><td><code>content</code><td>&#x2713;<td>The actual message content string. URLs in message content strings will be turned into hyperlinks in BOSS's user interface. Recognised URLs are those that start with <code>file:</code>, <code>http:</code> or <code>https:</code>. URLs can be labelled by writing the label after the URL, with a space separating them, and enclosing the URL and label in double quotes.
         <tr><td><code>condition</code><td>&#x2717;<td>A condition string that is evaluated to determine whether the message should be displayed: if it evaluates to true, the message is displayed, otherwise it is not. See <a href="#cond">Condition Strings</a> for details.
         <tr><td><code>lang</code><td>&#x2717;<td>What language this message is written in, given as an ISO 639-3 language code. The languages BOSS supports are given in <a href="#lang">Language Codes</a>. If no language is given, then the message will always be displayed. If a language is given and it does not match the language BOSS is running for, the message will not be displayed, otherwise its display is dependent on the evaluation of the condition string, if present.
 </table>
@@ -172,11 +171,19 @@ plugins:
         <tr><td><code>error</code><td>An error message, decribing a critical installation issue (eg. missing masters).
 </table>
 
-<p>Example:
+<p>Examples:
 <code class="box">condition: 'file("Silgrad_Tower.esm")'
 type: warn
 content: Use either Silgrad_Tower.esm or Silgrad_Tower_T.esm but not both together.
 </code>
+A content string of
+<code class="box">See http://www.example.com for more information.</code>
+would be displayed as
+<blockquote>See <a href="http://www.example.com">http://www.example.com</a> for more information.</blockquote>
+while
+<code class="box">See "http://www.example.com example link" for more information.</code>
+would be displayed as
+<blockquote>See <a href="http://www.example.com">example link</a> for more information.</blockquote>
 
 <h3 id="structs-file">File Data Structure</h3>
 <p>Not to be confused with the structure of the metadata file itself, this structure can be used to hold filenames. It has two forms: the first is a simple string, and the second is a key-value map. All values in the map are strings.
@@ -248,18 +255,6 @@ msg:
   - type: say
     content: 'Do not clean. "Dirty" edits are intentional and required for the mod to function.'
 </code>
-
-<h2 id="message">Message Strings</h2>
-<p>URLs in message content strings will be turned into hyperlinks in BOSS's user interface. Recognised URLs are those that start with <code>file:</code>, <code>http:</code> or <code>https:</code> and contain no spaces (valid URLs can't contain spaces anyway). URLs can be labelled by writing the label after the URL, with a space separating them, and enclosing the URL and label in double quotes.
-<p>Examples:
-<code class="box">http://www.example.com</code>
-becomes
-<blockquote><a href="http://www.example.com">http://www.example.com</a></blockquote>
-while
-<code class="box">"http://www.example.com example link"</code>
-becomes
-<blockquote><a href="http://www.example.com">example link</a></blockquote>
-
 
 <h2 id="cond">Condition Strings</h2>
 <p>Condition strings can be used to ensure that data is only acted on by BOSS under certain circumstances. They are very similar to boolean conditional expressions in programming languages such as Python, though more limited. Their <a href="https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_Form">EBNF</a> grammar is:

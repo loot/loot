@@ -2,6 +2,8 @@
 #include <yaml-cpp/yaml.h>
 #include "metadata.h"
 #include "parsers.h"
+#include "game.h"
+#include "globals.h"
 
 #include <ostream>
 #include <fstream>
@@ -23,7 +25,7 @@ int main() {
 
     cout << "Testing masterlist parser." << endl;
 
-    YAML::Node test = YAML::LoadFile("masterlist.yaml");
+    YAML::Node test = YAML::LoadFile("masterlist-example.yaml");
 
     list<boss::Message> globalMessages;
     if (test["globals"]) {
@@ -33,19 +35,19 @@ int main() {
         }
     }
 
-    set<boss::Plugin, boss::plugin_comp> pluginData;
+    list<boss::Plugin> pluginData;
     if (test["plugins"]) {
         YAML::Node plugins = test["plugins"];
         for (YAML::const_iterator it=plugins.begin(); it != plugins.end(); ++it) {
-            pluginData.insert(it->as<boss::Plugin>());
+            pluginData.push_back(it->as<boss::Plugin>());
         }
     }
 
     cout << "Testing masterlist generator." << endl;
 
-    minimisePluginList(pluginData);
+  //  minimisePluginList(pluginData);
 
-    ofstream out("minimal.yaml");
+    ofstream out("generated.yaml");
     YAML::Emitter yout;
     yout.SetIndent(2);
     yout << YAML::BeginMap
@@ -55,6 +57,29 @@ int main() {
 
     out << yout.c_str();
     out.close();
+
+    cout << "Testing game settings structure." << endl;
+
+    boss::Game game(BOSS_GAME_TES5, "/media/oliver/6CF05918F058EA3A/Program Files (x86)/Steam/steamapps/common/skyrim");
+
+    for (list<boss::Plugin>::iterator it=pluginData.begin(), endIt=pluginData.end(); it != endIt; ++it) {
+        try {
+        it->EvalAllConditions(game);
+        } catch (std::runtime_error& e) {
+            cout << e.what() << endl;
+        }
+    }
+
+    ofstream out2("evaled.yaml");
+    YAML::Emitter yout2;
+    yout2.SetIndent(2);
+    yout2 << YAML::BeginMap
+         << YAML::Key << "globals" << YAML::Value << globalMessages
+         << YAML::Key << "plugins" << YAML::Value << pluginData
+         << YAML::EndMap;
+
+    out2 << yout2.c_str();
+    out2.close();
 
     return 0;
 }
