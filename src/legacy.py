@@ -23,13 +23,10 @@
 
 # This is a script that converts a MF 2.3 masterlist to a MF 3 masterlist. It's
 # a bit hacky, but the YAML parser accepts it. Limitations are:
-#   - Doesn't lowercase condition statements.
 #   - Doesn't strip plugins that no longer belong in the masterlist, ie. without
 #     messages or positioning comments.
 #   - Requirements and incompatibilities do not use their new data structures,
 #     and are just converted to 'say' messages.
-#   - All strings except tags are enclosed in double quotes and escaped, even
-#     those that don't need to be, and those that are already escaped.
 #   - No extraneous comments/messages are removed.
 #   - VAR conditions are not replaced with their conditional statements. SET lines
 #     are stripped, so the old masterlist must be used to check what they are.
@@ -38,15 +35,46 @@
 #   - Conditional plugin positions are all made unconditional, so there will be
 #     duplicate entries.
 
+import re
+
 def escapeYAMLStr(s):
-    return '"' + s.replace('"', '\\"').replace('\\', '\\\\').strip(' ') + '"'
+    special = ['-', '?', ':', ',', '[', ']', '{', '}', '&', '*', '!', '|', '>', '\'', '"', '%', '@', '`']
+    if ('\'' in s):
+        return '"' + s.replace('\\', '\\\\').replace('"', '\\"').strip() + '"'
+    elif (1 in [c in s for c in special]):
+        return '\'' + s.strip() + '\''
+    else:
+        return s;
 
 def mContent(line):
     content = line[line.find(':')+1:]
     return escapeYAMLStr(content)
 
-inFile = open('masterlist.txt', 'r')
-outFile = open('masterlist.yaml', 'w')
+def convertCondition(condition):
+    #IF no longer exists.
+    #IFNOT is now 'not'.
+    #The VAR condition no longer exists.
+    #The '=' comparator is now '=='.
+    #The LANG condition no longer exists.
+    #'&&' is now 'and'.
+    #'||' is now 'or'.
+
+    #Really, these will probably have to be done manually.
+
+    parts = condition.split('"')  # Every odd index is quoted and shouldn't be lowercased.
+
+    for i in range(len(parts)):
+        if (i % 2 == 0):
+            parts[i] = parts[i].lower()
+
+    condition = '"'.join(parts)
+
+    condition.replace(' && ', ' and ').replace(' || ', ' or ').replace(' =)', ' ==)')
+
+    return escapeYAMLStr(condition)
+
+inFile = open('../../BOSS/data/boss-oblivion/masterlist.txt', 'r')
+outFile = open('../build/masterlist.yaml', 'w')
 
 outFile.write('---\n');
 
@@ -57,7 +85,7 @@ for line in inFile:
 
     line = line.replace('\n', '')
 
-    if (len(line) == 0):
+    if (len(line.strip()) == 0):
         continue
 
     # Skip group lines.
@@ -102,14 +130,15 @@ for line in inFile:
     if ('IF' in line and ':' in line):
         key = line[:line.find(':')]
         key = key.replace('GLOBAL', '')
-        condition = key[:key.rfind(' ')].strip(' ')
-        condition = condition.replace('&&', 'and').replace('||', 'or')
+        condition = key[:key.rfind(' ')].strip()
     elif ('ELSE' in line and ':' in line):
-        condition = condition.replace('IF ', 'IFNOT2 ')
-        condition = condition.replace('IFNOT ', 'IF ')
-        condition = condition.replace('IFNOT2 ', 'IFNOT ')
+        if (condition[0] != 'n'):
+            condition = 'not ' + condition
+        condition = condition.replace('not ', '`~||~`')
+        condition = condition.replace('d f', 'd not f').replace('d c', 'd not c', ', 'and
     else:
         condition = ''
+    condition = convertCondition(condition);
 
     # Write tag lines.
     if ('TAG:' in line):
@@ -141,10 +170,17 @@ for line in inFile:
             indent = '      '
         else:
             indent = '  '
+        prefix = ''
+        if ('INC:' in line):
+            line = 'Incompatible with ' + line.split(':')[1]
+        elif ('REQ:' in line):
+            line = 'Requires ' + line.split(':')[1]
+        else:
+            line = line.split(':')[1]
         outFile.write(indent + '- type: say\n')
         if (condition):
             outFile.write(indent + '  condition: ' + condition + '\n')
-        outFile.write(indent + '  content: ' + mContent(line) + '\n')
+        outFile.write(indent + '  content: ' + escapeYAMLStr(line) + '\n')
 
     # Write 'warn' messages.
     if ('DIRTY:' in line or 'WARN:' in line):

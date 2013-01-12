@@ -36,12 +36,12 @@ namespace boss {
     class Game {
     public:
         Game();  //Sets game to BOSS_GAME_AUTODETECT, with all other vars being empty.
-        Game(const uint32_t gameCode, const std::string path = "", const bool noPathInit = false); //Empty path means constructor will detect its location. If noPathInit is true, then the game's BOSS subfolder will not be created.
+        Game(const unsigned int gameCode, const std::string path = "", const bool noPathInit = false); //Empty path means constructor will detect its location. If noPathInit is true, then the game's BOSS subfolder will not be created.
 
         bool IsInstalled() const;
         bool IsInstalledLocally() const;
 
-        uint32_t Id() const;
+        unsigned int Id() const;
         std::string Name() const;  //Returns the game's name, eg. "TES IV: Oblivion".
 
         boost::filesystem::path GamePath() const;
@@ -56,7 +56,7 @@ namespace boss {
         boost::unordered_map<std::string, bool> conditionCache;  //Holds lowercased strings.
         boost::unordered_map<std::string, uint32_t> crcCache;  //Holds lowercased strings.
     private:
-        uint32_t id;
+        unsigned id;
         std::string name;
 
         std::string registryKey;

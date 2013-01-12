@@ -25,6 +25,8 @@
 #include "globals.h"
 #include "helpers.h"
 
+#include <libloadorder.h>
+
 #include <stdexcept>
 
 #include <boost/algorithm/string.hpp>
@@ -43,7 +45,7 @@ namespace boss {
     Game::Game()
         : id(BOSS_GAME_AUTODETECT) {}
 
-    Game::Game(const uint32_t gameCode, const string path, const bool noPathInit)
+    Game::Game(const unsigned int gameCode, const string path, const bool noPathInit)
         : id(gameCode) {
         if (Id() == BOSS_GAME_TES4) {
             name = "TES IV: Oblivion";
@@ -91,6 +93,31 @@ namespace boss {
                     throw runtime_error("Game path could not be detected.");
             } else
                 gamePath = fs::path(path);
+
+            lo_game_handle gh;
+            int ret;
+            char ** pluginArr;
+            size_t pluginArrSize;
+            if (id == BOSS_GAME_TES4)
+                ret = lo_create_handle(&gh, LIBLO_GAME_TES4, gamePath.string().c_str());
+            else if (id == BOSS_GAME_TES5)
+                ret = lo_create_handle(&gh, LIBLO_GAME_TES5, gamePath.string().c_str());
+            else if (id == BOSS_GAME_FO3)
+                ret = lo_create_handle(&gh, LIBLO_GAME_FO3, gamePath.string().c_str());
+            else if (id == BOSS_GAME_FONV)
+                ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str());
+
+            if (ret != LIBLO_OK)
+                throw runtime_error("Active plugin list lookup failed.");
+            else {
+                if (lo_get_active_plugins(gh, &pluginArr, &pluginArrSize) != LIBLO_OK)
+                    throw runtime_error("Active plugin list lookup failed.");
+                else {
+                    for (size_t i=0; i < pluginArrSize; ++i) {
+                        activePlugins.insert(string(pluginArr[i]));
+                    }
+                }
+            }
         }
     }
 
@@ -102,7 +129,7 @@ namespace boss {
         return fs::exists(fs::path("..") / pluginsFolderName);
     }
 
-    uint32_t Game::Id() const {
+    unsigned int Game::Id() const {
         return id;
     }
 
@@ -119,11 +146,6 @@ namespace boss {
     }
 
     bool Game::IsActive(const std::string& plugin) const {
-        if (activePlugins.empty()) {
-            //Use libloadorder to fetch the active plugins list. Fill the set
-            //with the lowercased filenames.
-        }
-
         return activePlugins.find(boost::to_lower_copy(plugin)) != activePlugins.end();
     }
 

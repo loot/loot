@@ -34,6 +34,8 @@
 #include <stdexcept>
 #include <stdint.h>
 
+#include <yaml-cpp/yaml.h>
+
 #include <boost/regex.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string.hpp>

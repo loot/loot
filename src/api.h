@@ -68,67 +68,40 @@ extern "C"
 // All API strings are uint8_t* strings encoded in UTF-8. Strings returned
 // by the API should not have their memory freed by the client: the API will
 // clean up after itself.
-// All API numbers and error codes are uint32_t integers.
+// All API numbers and error codes are unsigned int integers.
 
 // Abstracts the definition of BOSS's internal state while still providing
 // type safety across the API.
 typedef struct _boss_db_int * boss_db;
 
-// boss_tag structure gives the Unique ID number (UID) for each Bash Tag and
-// the corresponding Tag name string.
-typedef struct {
-    uint32_t id;
-    const uint8_t * name;  // don't use char for utf-8 since char can be signed
-} boss_tag;
-
 // boss_message structure gives the type of message and it contents.
 typedef struct {
-    uint32_t type;
-    const uint8_t * message;
+    unsigned int type;
+    const char * message;
 } boss_message;
 
 
 // The following are the possible codes that the API can return.
-BOSS_API extern const uint32_t BOSS_API_OK;
-BOSS_API extern const uint32_t BOSS_API_OK_NO_UPDATE_NECESSARY;
-BOSS_API extern const uint32_t BOSS_API_WARN_BAD_FILENAME;
-BOSS_API extern const uint32_t BOSS_API_WARN_LO_MISMATCH;
-BOSS_API extern const uint32_t BOSS_API_ERROR_FILE_WRITE_FAIL;
-BOSS_API extern const uint32_t BOSS_API_ERROR_FILE_DELETE_FAIL;
-BOSS_API extern const uint32_t BOSS_API_ERROR_FILE_NOT_UTF8;
-BOSS_API extern const uint32_t BOSS_API_ERROR_FILE_NOT_FOUND;
-BOSS_API extern const uint32_t BOSS_API_ERROR_FILE_RENAME_FAIL;
-BOSS_API extern const uint32_t BOSS_API_ERROR_TIMESTAMP_READ_FAIL;
-BOSS_API extern const uint32_t BOSS_API_ERROR_TIMESTAMP_WRITE_FAIL;
-BOSS_API extern const uint32_t BOSS_API_ERROR_PARSE_FAIL;
-BOSS_API extern const uint32_t BOSS_API_ERROR_CONDITION_EVAL_FAIL;
-BOSS_API extern const uint32_t BOSS_API_ERROR_REGEX_EVAL_FAIL;
-BOSS_API extern const uint32_t BOSS_API_ERROR_NO_MEM;
-BOSS_API extern const uint32_t BOSS_API_ERROR_INVALID_ARGS;
-BOSS_API extern const uint32_t BOSS_API_ERROR_NETWORK_FAIL;
-BOSS_API extern const uint32_t BOSS_API_ERROR_NO_INTERNET_CONNECTION;
-BOSS_API extern const uint32_t BOSS_API_ERROR_NO_TAG_MAP;
-BOSS_API extern const uint32_t BOSS_API_ERROR_PLUGINS_FULL;
-BOSS_API extern const uint32_t BOSS_API_ERROR_GAME_NOT_FOUND;
-BOSS_API extern const uint32_t BOSS_API_ERROR_PLUGIN_BEFORE_MASTER;
-BOSS_API extern const uint32_t BOSS_API_RETURN_MAX;
+BOSS_API extern const unsigned int BOSS_API_OK;
+BOSS_API extern const unsigned int BOSS_API_ERROR_LIBLO_ERROR;
+BOSS_API extern const unsigned int BOSS_API_ERROR_PARSE_FAIL;
+BOSS_API extern const unsigned int BOSS_API_ERROR_CONDITION_EVAL_FAIL;
+BOSS_API extern const unsigned int BOSS_API_ERROR_REGEX_EVAL_FAIL;
+BOSS_API extern const unsigned int BOSS_API_ERROR_NO_MEM;
+BOSS_API extern const unsigned int BOSS_API_ERROR_INVALID_ARGS;
+BOSS_API extern const unsigned int BOSS_API_ERROR_NO_TAG_MAP;
+BOSS_API extern const unsigned int BOSS_API_RETURN_MAX;
 
 // The following are the games identifiers used by the API.
-BOSS_API extern const uint32_t BOSS_API_GAME_OBLIVION;
-BOSS_API extern const uint32_t BOSS_API_GAME_FALLOUT3;
-BOSS_API extern const uint32_t BOSS_API_GAME_FALLOUTNV;
-BOSS_API extern const uint32_t BOSS_API_GAME_NEHRIM;
-BOSS_API extern const uint32_t BOSS_API_GAME_SKYRIM;
-BOSS_API extern const uint32_t BOSS_API_GAME_MORROWIND;
+BOSS_API extern const unsigned int BOSS_API_GAME_TES4;
+BOSS_API extern const unsigned int BOSS_API_GAME_TES5;
+BOSS_API extern const unsigned int BOSS_API_GAME_FO3;
+BOSS_API extern const unsigned int BOSS_API_GAME_FONV;
 
 // BOSS message types.
-BOSS_API extern const uint32_t BOSS_API_MESSAGE_SAY;
-BOSS_API extern const uint32_t BOSS_API_MESSAGE_TAG;
-BOSS_API extern const uint32_t BOSS_API_MESSAGE_REQUIREMENT;
-BOSS_API extern const uint32_t BOSS_API_MESSAGE_INCOMPATIBILITY;
-BOSS_API extern const uint32_t BOSS_API_MESSAGE_DIRTY;
-BOSS_API extern const uint32_t BOSS_API_MESSAGE_WARN;
-BOSS_API extern const uint32_t BOSS_API_MESSAGE_ERROR;
+BOSS_API extern const unsigned int BOSS_API_MESSAGE_SAY;
+BOSS_API extern const unsigned int BOSS_API_MESSAGE_WARN;
+BOSS_API extern const unsigned int BOSS_API_MESSAGE_ERROR;
 
 
 
@@ -138,8 +111,11 @@ BOSS_API extern const uint32_t BOSS_API_MESSAGE_ERROR;
 
 // Outputs a string giving the details of the last time an error or
 // warning return code was returned by a function. The string exists
-// until this function is called again or until CleanUpAPI is called.
-BOSS_API uint32_t boss_get_error_message (uint8_t ** message);
+// until this function is called again or until boss_cleanup is called.
+BOSS_API unsigned int boss_get_error_message (char ** message);
+
+// Frees memory allocated to error string.
+BOSS_API void     boss_cleanup ();
 
 
 //////////////////////////////
@@ -148,12 +124,12 @@ BOSS_API uint32_t boss_get_error_message (uint8_t ** message);
 
 // Returns whether this version of BOSS supports the API from the given
 // BOSS version. Abstracts BOSS API stability policy away from clients.
-BOSS_API bool boss_is_compatible (const uint32_t versionMajor, const uint32_t versionMinor, const uint32_t versionPatch);
+BOSS_API bool boss_is_compatible (const unsigned int versionMajor, const unsigned int versionMinor, const unsigned int versionPatch);
 
 // Returns the version string for this version of BOSS.
 // The string exists until this function is called again or until
 // CleanUpAPI is called.
-BOSS_API uint32_t boss_get_version (uint32_t * versionMajor, uint32_t * versionMinor, uint32_t * versionPatch);
+BOSS_API unsigned int boss_get_version (unsigned int * versionMajor, unsigned int * versionMinor, unsigned int * versionPatch);
 
 
 ////////////////////////////////////
@@ -167,13 +143,10 @@ BOSS_API uint32_t boss_get_version (uint32_t * versionMajor, uint32_t * versionM
 // plugins.txt and loadorder.txt (if they both exist) are in sync. If
 // dataPath == NULL then the API will attempt to detect the data path of
 // the specified game.
-BOSS_API uint32_t boss_create_db (boss_db * db, const uint32_t clientGame, const uint8_t * gamePath);
+BOSS_API unsigned int boss_create_db (boss_db * db, const unsigned int clientGame, const char * gamePath);
 
 // Destroys the given DB, freeing any memory allocated as part of its use.
 BOSS_API void     boss_destroy_db (boss_db db);
-
-// Frees memory allocated to version and error strings.
-BOSS_API void     boss_cleanup ();
 
 
 ///////////////////////////////////
@@ -184,8 +157,8 @@ BOSS_API void     boss_cleanup ();
 // Can be called multiple times. On error, the database is unchanged.
 // Paths are case-sensitive if the underlying filesystem is case-sensitive.
 // masterlistPath and userlistPath are files.
-BOSS_API uint32_t boss_load_lists (boss_db db, const uint8_t * masterlistPath,
-                                    const uint8_t * userlistPath);
+BOSS_API unsigned int boss_load_lists (boss_db db, const char * masterlistPath,
+                                    const char * userlistPath);
 
 // Evaluates all conditional lines and regex mods the loaded masterlist.
 // This exists so that Load() doesn't need to be called whenever the mods
@@ -193,7 +166,7 @@ BOSS_API uint32_t boss_load_lists (boss_db db, const uint8_t * masterlistPath,
 // is called. Repeated calls re-evaluate the masterlist from scratch each time,
 // ignoring the results of any previous evaluations. Paths are case-sensitive
 // if the underlying filesystem is case-sensitive.
-BOSS_API uint32_t boss_eval_lists (boss_db db);
+BOSS_API unsigned int boss_eval_lists (boss_db db);
 
 
 //////////////////////////
@@ -203,7 +176,8 @@ BOSS_API uint32_t boss_eval_lists (boss_db db);
 // Returns an array of the Bash Tags encounterred when loading the masterlist
 // and userlist, and the number of tags in the returned array. The array and
 // its contents are static and should not be freed by the client.
-BOSS_API uint32_t boss_get_tag_map (boss_db db, boss_tag ** tagMap, size_t * numTags);
+// The indices of the tagMap are each tag's UID.
+BOSS_API unsigned int boss_get_tag_map (boss_db db, char *** tagMap, size_t * numTags);
 
 // Returns arrays of Bash Tag UIDs for Bash Tags suggested for addition and removal
 // by BOSS's masterlist and userlist, and the number of tags in each array.
@@ -212,17 +186,17 @@ BOSS_API uint32_t boss_get_tag_map (boss_db db, boss_tag ** tagMap, size_t * num
 // case-insensitive. If no Tags are found for an array, the array pointer (*tagIds)
 // will be NULL. The userlistModified bool is true if the userlist contains Bash Tag
 // suggestion message additions.
-BOSS_API uint32_t boss_get_plugin_tags (boss_db db, const uint8_t * plugin,
-                                    uint32_t ** tagIds_added,
+BOSS_API unsigned int boss_get_plugin_tags (boss_db db, const char * plugin,
+                                    unsigned int ** tagIds_added,
                                     size_t * numTags_added,
-                                    uint32_t **tagIds_removed,
+                                    unsigned int **tagIds_removed,
                                     size_t *numTags_removed,
                                     bool * userlistModified);
 
 // Returns the messages attached to the given plugin. Messages are valid until Load,
 // DestroyBossDb or GetPluginMessages are next called. plugin is case-insensitive.
 // If no messages are attached, *messages will be NULL and numMessages will equal 0.
-BOSS_API uint32_t boss_get_plugin_messages (boss_db db, const uint8_t * plugin,
+BOSS_API unsigned int boss_get_plugin_messages (boss_db db, const char * plugin,
                                             boss_message ** messages,
                                             size_t * numMessages);
 
@@ -230,7 +204,7 @@ BOSS_API uint32_t boss_get_plugin_messages (boss_db db, const uint8_t * plugin,
 // and/or dirty messages, plus the Tag suggestions and/or messages themselves and their
 // conditions, in order to create the Wrye Bash taglist. outputFile is the path to use
 // for output. If outputFile already exists, it will only be overwritten if overwrite is true.
-BOSS_API uint32_t boss_write_minimal_list (boss_db db, const uint8_t * outputFile, const bool overwrite);
+BOSS_API unsigned int boss_write_minimal_list (boss_db db, const char * outputFile, const bool overwrite);
 
 
 #ifdef __cplusplus

@@ -129,6 +129,8 @@ namespace boss {
         void EvalAllConditions(boss::Game& game);
         bool HasNameOnly() const;
         bool IsRegexPlugin() const;
+
+        bool operator == (Plugin rhs);
     private:
         std::string name;
         bool enabled;  //Default to true.
@@ -145,6 +147,8 @@ namespace boss {
             return lhs.Name() < rhs.Name();
         }
     };
+
+
 }
 
 #endif

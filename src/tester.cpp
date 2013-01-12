@@ -27,21 +27,8 @@ int main() {
 
     YAML::Node test = YAML::LoadFile("masterlist-example.yaml");
 
-    list<boss::Message> globalMessages;
-    if (test["globals"]) {
-        YAML::Node globals = test["globals"];
-        for (YAML::const_iterator it=globals.begin(); it != globals.end(); ++it) {
-            globalMessages.push_back(it->as<boss::Message>());
-        }
-    }
-
-    list<boss::Plugin> pluginData;
-    if (test["plugins"]) {
-        YAML::Node plugins = test["plugins"];
-        for (YAML::const_iterator it=plugins.begin(); it != plugins.end(); ++it) {
-            pluginData.push_back(it->as<boss::Plugin>());
-        }
-    }
+    list<boss::Message> globalMessages = test["globals"].as< list<boss::Message> >();
+    list<boss::Plugin> pluginData = test["plugins"].as< list<boss::Plugin> >();
 
     cout << "Testing masterlist generator." << endl;
 

@@ -233,4 +233,8 @@ namespace boss {
     bool Plugin::IsRegexPlugin() const {
         return boost::iends_with(name, "\\.esm") || boost::iends_with(name, "\\.esp");
     }
+
+    bool Plugin::operator == (Plugin rhs) {
+        return name == rhs.Name();
+    }
 }

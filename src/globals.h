@@ -23,14 +23,14 @@
 #ifndef __BOSS_GLOBALS__
 #define __BOSS_GLOBALS__
 
-const int BOSS_GAME_AUTODETECT  = 0;
-const int BOSS_GAME_TES4        = 1;
-const int BOSS_GAME_TES5        = 2;
-const int BOSS_GAME_FO3         = 3;
-const int BOSS_GAME_FONV        = 4;
+const unsigned int BOSS_GAME_AUTODETECT  = 0;
+const unsigned int BOSS_GAME_TES4        = 1;
+const unsigned int BOSS_GAME_TES5        = 2;
+const unsigned int BOSS_GAME_FO3         = 3;
+const unsigned int BOSS_GAME_FONV        = 4;
 
-const int BOSS_VERSION_MAJOR = 3;
-const int BOSS_VERSION_MINOR = 0;
-const int BOSS_VERSION_PATCH = 0;
+const unsigned int BOSS_VERSION_MAJOR = 3;
+const unsigned int BOSS_VERSION_MINOR = 0;
+const unsigned int BOSS_VERSION_PATCH = 0;
 
 #endif
