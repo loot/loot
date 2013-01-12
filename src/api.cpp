@@ -364,9 +364,9 @@ BOSS_API unsigned int boss_get_plugin_tags (boss_db db, const char * plugin,
     *numTags_removed = 0;
 
     boost::unordered_set<std::string> tagsAdded, tagsRemoved;
-    std::list<boss::Plugin>::iterator it = std::find(db->metadata.begin(), db->metadata.end(), boss::Plugin(plugin));
-    if (it != db->metadata.end()) {
-        std::list<boss::Tag> tags = it->Tags();
+    std::list<boss::Plugin>::iterator pluginIt = std::find(db->metadata.begin(), db->metadata.end(), boss::Plugin(plugin));
+    if (pluginIt != db->metadata.end()) {
+        std::list<boss::Tag> tags = pluginIt->Tags();
         for (std::list<boss::Tag>::const_iterator it=tags.begin(), endIt=tags.end(); it != endIt; ++it) {
             if (it->IsAddition())
                 tagsAdded.insert(it->Name());
@@ -375,8 +375,8 @@ BOSS_API unsigned int boss_get_plugin_tags (boss_db db, const char * plugin,
         }
     }
 
-    it = std::find(db->userMetadata.begin(), db->userMetadata.end(), boss::Plugin(plugin));
-    if (it != db->userMetadata.end()) {
+    pluginIt = std::find(db->userMetadata.begin(), db->userMetadata.end(), boss::Plugin(plugin));
+    if (pluginIt != db->userMetadata.end()) {
         *userlistModified = true;
     }
 
@@ -440,12 +440,35 @@ BOSS_API unsigned int boss_get_plugin_messages (boss_db db, const char * plugin,
     *messages = NULL;
     *numMessages = 0;
 
-    std::list<boss::Plugin>::iterator it = std::find(db->metadata.begin(), db->metadata.end(), boss::Plugin(plugin));
-    if (it == db->metadata.end()) {
-        it = std::find(db->userMetadata.begin(), db->userMetadata.end(), boss::Plugin(plugin));
-        if (it == db->userMetadata.end())
-            return BOSS_API_OK;
+    std::list<boss::Message> pluginMessages;
+    std::list<boss::Plugin>::iterator pluginIt = std::find(db->metadata.begin(), db->metadata.end(), boss::Plugin(plugin));
+    if (pluginIt != db->metadata.end()) {
+        pluginMessages = pluginIt->Messages();
     }
+
+    pluginIt = std::find(db->userMetadata.begin(), db->userMetadata.end(), boss::Plugin(plugin));
+    if (pluginIt != db->userMetadata.end()) {
+    }
+
+    db->extMessageArraySize = pluginMessages.size();
+    try {
+        db->extMessageArray = new boss_message[db->extMessageArraySize];
+        int i = 0;
+        for (std::list<boss::Message>::const_iterator it=pluginMessages.begin(), endIt=pluginMessages.end(); it != endIt; ++it) {
+            if (it->Type() == "say")
+                db->extMessageArray[i].type = BOSS_API_MESSAGE_SAY;
+            else if (it->Type() == "warn")
+                db->extMessageArray[i].type = BOSS_API_MESSAGE_WARN;
+            else if (it->Type() == "error")
+                db->extMessageArray[i].type = BOSS_API_MESSAGE_ERROR;
+            db->extMessageArray[i].message = ToNewCString(it->Content());
+        }
+    } catch (std::bad_alloc /*&e*/) {
+        return BOSS_API_ERROR_INVALID_ARGS;
+    }
+
+    *messages = db->extMessageArray;
+    *numMessages = db->extMessageArraySize;
 
     return BOSS_API_OK;
 }
