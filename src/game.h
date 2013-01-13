@@ -50,6 +50,7 @@ namespace boss {
         //Creates directory in BOSS folder for BOSS's game-specific files.
         void CreateBOSSGameFolder();
 
+        void RefreshActivePluginsList();
         bool IsActive(const std::string& plugin) const;
 
         //Caches for condition results, active plugins and CRCs.

@@ -84,6 +84,7 @@ typedef struct {
 // The following are the possible codes that the API can return.
 BOSS_API extern const unsigned int BOSS_API_OK;
 BOSS_API extern const unsigned int BOSS_API_ERROR_LIBLO_ERROR;
+BOSS_API extern const unsigned int BOSS_API_ERROR_FILE_WRITE_FAIL;
 BOSS_API extern const unsigned int BOSS_API_ERROR_PARSE_FAIL;
 BOSS_API extern const unsigned int BOSS_API_ERROR_CONDITION_EVAL_FAIL;
 BOSS_API extern const unsigned int BOSS_API_ERROR_REGEX_EVAL_FAIL;
@@ -187,18 +188,18 @@ BOSS_API unsigned int boss_get_tag_map (boss_db db, char *** tagMap, size_t * nu
 // will be NULL. The userlistModified bool is true if the userlist contains Bash Tag
 // suggestion message additions.
 BOSS_API unsigned int boss_get_plugin_tags (boss_db db, const char * plugin,
-                                    unsigned int ** tagIds_added,
-                                    size_t * numTags_added,
-                                    unsigned int **tagIds_removed,
-                                    size_t *numTags_removed,
-                                    bool * userlistModified);
+                                            unsigned int ** tags_added,
+                                            size_t * numTags_added,
+                                            unsigned int ** tags_removed,
+                                            size_t * numTags_removed,
+                                            bool * userlistModified);
 
 // Returns the messages attached to the given plugin. Messages are valid until Load,
 // DestroyBossDb or GetPluginMessages are next called. plugin is case-insensitive.
 // If no messages are attached, *messages will be NULL and numMessages will equal 0.
 BOSS_API unsigned int boss_get_plugin_messages (boss_db db, const char * plugin,
-                                            boss_message ** messages,
-                                            size_t * numMessages);
+                                                boss_message ** messages,
+                                                size_t * numMessages);
 
 // Writes a minimal masterlist that only contains mods that have Bash Tag suggestions,
 // and/or dirty messages, plus the Tag suggestions and/or messages themselves and their

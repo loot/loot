@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>BOSS API Readme</title>
+<style>
+    body {
+        font:12pt/1.5 Helvetica,sans-serif;
+        text-rendering:optimizeLegibility;}
+    p, ul, li {margin:1.5em 0;}
+    h1,h3,h2 {font-weight:normal;}
+h1{
+    font-size:36pt;
+    line-height:0.5;
+    margin-top:1.125em;
+    margin-bottom:0.375em;}
+h2{
+    font-size:24pt;
+    line-height:0.75;
+    margin-top:3em;
+    margin-bottom:1.5em;}
+h3{
+    font-size:18pt;
+    line-height:1;
+    margin-top:3.5em;
+    margin-bottom:1em;}
+    ul, ol {margin-top:0.5em; margin-bottom:1em;}
+    li {margin:0.75em 0;}
+    a:link {text-decoration:none;}
+    a:hover {text-decoration:underline;}
+    ol ol {list-style:lower-alpha;}
+
+    code {display:inline-block; padding:0 3px; background:#eee;}
+    td, th {border:1px solid #ddd; padding: 5px; vertical-align:top;}
+    table {border-collapse:collapse; margin:1.5em; margin-bottom: 3em; background:#fafafa;}
+    thead {background:#99CCFF;}
+    code.box {border-radius:5px; border:1px solid #ccc; padding:0.75em; white-space:pre; overflow-x:auto; display:table; margin:1.5em;}
+
+    blockquote {border-radius:3px; border:1px solid #0c0; padding:5px; background:#7e7; display:table;margin:1.5em;}
+
+    a[href^="http"]:after {padding-left:2px; content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAVklEQVR4Xn3PgQkAMQhDUXfqTu7kTtkpd5RA8AInfArtQ2iRXFWT2QedAfttj2FsPIOE1eCOlEuoWWjgzYaB/IkeGOrxXhqB+uA9Bfcm0lAZuh+YIeAD+cAqSz4kCMUAAAAASUVORK5CYII=);}
+
+    span[title] {border-bottom: 1px dotted; font-family: sans-serif; cursor:help;}
+    abbr {cursor:help;}
+
+    #warning {background:#c00; padding:10px 5px;margin:-8px;}
+    var {color:#8B4513;}
+    .dfn {display:block; margin-bottom:4.5em; font-style:normal;}
+</style>
+<!--  BOSS
+
+    A plugin load order optimiser for games that use the esp/esm plugin system.
+
+    Copyright (C) 2012–2013    WrinklyNinja
+
+    This file is part of BOSS.
+
+    BOSS is free software: you can redistribute
+    it and/or modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation, either version 3 of
+    the License, or (at your option) any later version.
+
+    BOSS is distributed in the hope that it will
+    be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with BOSS.  If not, see
+    <http://www.gnu.org/licenses/>.
+-->
+
+<div id="warning">
+This documentation is a work in progress, covering an API that is also still a work in progress, and is subject to change. Userlist loading and access has not yet been implemented. The minimal file write doesn't include dirty messages yet.
+</div>
+
+<h1>BOSS API Readme</h1>
+
+<h2>Contents</h2>
+<ol>
+    <li><a href="#intro">Introduction</a>
+    <li><a href="#types">Variable Types</a>
+    <li><a href="#memory">Memory Management</a>
+    <li><a href="#codes">API Codes</a>
+    <li><a href="#func">Functions</a>
+    <ol>
+        <li><a href="#func-error">Error Handling Functions</a>
+        <li><a href="#func-version">Version Functions</a>
+        <li><a href="#func-lifecycle">Lifecycle Management Functions</a>
+        <li><a href="#func-load">Database Loading Functions</a>
+        <li><a href="#func-access">Database Access Functions</a>
+    </ol>
+    <li><a href="#examples">Examples</a>
+    <li><a href="#credits">Credits</a>
+    <li><a href="#license">License</a>
+</ol>
+
+<h2 id="intro">Introduction</h2>
+<p>BOSS is a utility that helps users avoid serious conflicts between their mods by setting their plugins in an optimal load order. It also provides tens of thousands of plugin-specific messages, including usage notes, requirements, incompatibilities, bug warnings and installation mistake notifications, and thousands of Bash Tag suggestions.
+<p>This metadata that BOSS supplies is stored in its <em>masterlist</em>, which is maintained by the BOSS team using information provided by mod authors and users. Users can also add to and modify the metadata used by BOSS through the use of <em>userlist</em> files. The BOSS API provides a way for third-party developers to access this metadata for use in their own programs.
+<p><b>Note:</b> The BOSS API is not thread-safe. Thread safety is a goal, but has not yet been implemented.
+
+<h2 id="types">Variable Types</h2>
+<p>The API uses character strings and unsigned integers for data input/output.
+<ul>
+    <li>All strings consist of byte characters, are encoded in UTF-8 and are null-terminated.
+    <li>All codes are unsigned integers at least 16 bits in size.
+    <li>All array sizes are unsigned integers at least 16 bits in size.
+    <li>File paths are case-sensitive if the underlying file system is case-sensitive.
+</ul>
+<p>The API also provides two new structures:
+<code class="box">typedef struct _boss_db_int * boss_db;</code>
+<p>The <code>boss_db</code> structure is used by the API to abstract the internal state of a database while still providing type safety.
+<code class="box">typedef struct {
+    unsigned int type;
+    const char * message;
+} boss_message;
+</code>
+<p>The <code>boss_message</code> structure gives the type of a message and the message string itself.
+
+<h2 id="memory">Memory Management</h2>
+<p>The API manages the memory of strings and arrays it returns internally, so such strings and arrays should not be deallocated by the client.
+<p>Data returned by a function lasts until a function is called which returns data of the same type (eg. a string is stored until the client calls another function which returns a string, an integer array lasts until another integer array is returned, etc.).
+<p>All allocated memory is freed when <a href="#boss_destroy_db">boss_destroy_db</a> is called, except the string allocated by <a href="#boss_get_error_message">boss_get_error_message</a>, which must be freed by calling <a href="#boss_cleanup">boss_cleanup</a>.
+
+<h2 id="codes">API Codes</h2>
+<p>The following codes are used to signal how a function completes.
+<table>
+    <thead><tr><th>Return Code<th>Description
+    <tbody>
+        <tr><td>BOSS_API_OK<td> The function completed successfully.
+        <tr><td>BOSS_API_ERROR_LIBLO_ERROR<td>There was an error in reading the active plugins list.
+        <tr><td>BOSS_API_ERROR_FILE_WRITE_FAIL<td>A file could not be written to.
+        <tr><td>BOSS_API_ERROR_PARSE_FAIL<td>There was an error parsing the file.
+        <tr><td>BOSS_API_ERROR_CONDITION_EVAL_FAIL<td>  There was an error evaluating the conditionals in a metadata file.
+        <tr><td>BOSS_API_ERROR_REGEX_EVAL_FAIL<td>  There was an error evaluating the regular expressions in a metadata file.
+        <tr><td>BOSS_API_ERROR_NO_MEM<td>The API was unable to allocate the required memory.
+        <tr><td>BOSS_API_ERROR_INVALID_ARGS<td> Invalid arguments were given for the function.
+        <tr><td>BOSS_API_ERROR_NO_TAG_MAP<td>No Bash Tag map has been generated yet.
+        <tr><td>BOSS_API_RETURN_MAX<td>Matches the value of the highest-numbered return code.
+</table>
+<p>The following codes are used with <a href="#boss_create_db">boss_create_db</a> to specify the game that the API acts for.
+<table>
+    <thead><tr><th>Game Code<th>Game
+    <tbody>
+        <tr><td>BOSS_API_GAME_TES4<td>The Elder Scrolls IV: Oblivion
+        <tr><td>BOSS_API_GAME_TES5<td>The Elder Scrolls V: Skyrim
+        <tr><td>BOSS_API_GAME_FO3<td>Fallout 3
+        <tr><td>BOSS_API_GAME_FONV<td>Fallout: New Vegas
+</table>
+<p>The following codes are used by the <code>boss_message</code> type to specify the type of a particular message.
+<table>
+    <thead><tr><th>Message Type Code<th>Game
+    <tbody>
+        <tr><td>BOSS_API_MESSAGE_SAY<td>A general note.
+        <tr><td>BOSS_API_MESSAGE_WARN<td>A warning message.
+        <tr><td>BOSS_API_MESSAGE_ERROR<td>An error message.
+</table>
+
+<h2 id="func">Functions</h2>
+
+<h3 id="func-error">Error Handling Functions</h3>
+<div id="boss_get_error_message">
+<code class="box">unsigned int boss_get_error_message (char ** message);</code>
+<p>Outputs a string detailing the last error encountered.
+<ul>
+    <li><var>message</var> - A pointer to the error string outputted.
+</ul>
+</div>
+<div id="boss_cleanup">
+<code class="box">void boss_cleanup ();</code>
+<p>Frees the memory allocated to the error message string, if <a href="#boss_get_error_message">boss_get_error_message</a> has been called.
+</div>
+
+<h3 id="func-version">Version Functions</h3>
+<div id="boss_is_compatible">
+<code class="box">bool boss_is_compatible (const unsigned int versionMajor,
+                         const unsigned int versionMinor,
+                         const unsigned int versionPatch);</code>
+<p>Checks if the API version in use is compatible with the given API version. Abstracts BOSS API stability policy away from clients.
+<ul>
+    <li><var>versionMajor</var> - The major version number (<b>major</b>.minor.patch) to check.
+    <li><var>versionMinor</var> - The minor version number (major.<b>minor</b>.patch) to check.
+    <li><var>versionPatch</var> - The patch version number (major.minor.<b>patch</b>) to check.
+</ul>
+</div>
+<div id="boss_get_version">
+<code class="box">unsigned int boss_get_version (unsigned int * versionMajor,
+                               unsigned int * versionMinor,
+                               unsigned int * versionPatch);</code>
+<p>Gets the version numbers of the API in use.
+<ul>
+    <li><var>versionMajor</var> - A pointer to the major version number (<b>major</b>.minor.patch).
+    <li><var>versionMinor</var> - A pointer to the minor version number (major.<b>minor</b>.patch).
+    <li><var>versionPatch</var> - A pointer to the patch version number (major.minor.<b>patch</b>).
+</ul>
+</div>
+
+<h3 id="func-lifecycle">Lifecycle Management Functions</h3>
+<div id="boss_create_db">
+<code class="box">unsigned int boss_create_db (boss_db * db,
+                             const unsigned int clientGame,
+                             const char * gamePath);</code>
+<p>Creates a database for the specified game. You can create multiple databases.
+<ul>
+    <li><var>db</var> - A pointer to the database to be created.
+    <li><var>clientGame</var> - A game code specifying for which game you want to create a database.
+    <li><var>gamePath</var> - A string giving the path to the game's main folder, ie. the one in which the game's executable lies, or <code>null</code>. If <code>null</code>, then the API will attempt to detect the game folder location itself using the game's registry entries.
+</ul>
+</div>
+<div id="boss_destroy_db">
+<code class="box">void boss_destroy_db (boss_db db);</code>
+<p>Destroys the given database, freeing any memory allocated during its use.
+<ul>
+    <li><var>db</var> - The database to be destroyed.
+</ul>
+</div>
+
+<h3 id="func-load">Database Loading Functions</h3>
+<div id="boss_load_lists">
+<code class="box">unsigned int boss_load_lists (boss_db db,
+                              const char * masterlistPath,
+                              const char * userlistPath);</code>
+<p>Loads the given masterlist and userlist for the game specified when the given database was created. Also frees any memory currently allocated to the given database by any access functions previously called. Can be called multiple times. If an error is encountered, the database remains unchanged.
+<ul>
+    <li><var>db</var> - The database the function acts on.
+    <li><var>masterlistPath</var> - A string containing the relative or absolute path to the masterlist file that should be loaded.
+    <li><var>userlistPath</var> - A string containing the relative or absolute path to the userlist file that should be loaded, or <code>null</code>. If <code>null</code>, no userlist will be loaded.
+</ul>
+</div>
+<div id="boss_eval_lists">
+<code class="box">unsigned int boss_eval_lists (boss_db db);</code>
+<p>Refreshes the active plugin list used during evaluation then evaluates all conditional and regular expression metadata entries. Repeated calls re-evaluate the metadata from scratch. This function affects the output of all the database access functions.
+<ul>
+    <li><var>db</var> - The database the function acts on.
+</ul>
+</div>
+
+<h3 id="func-access">Database Access Functions</h3>
+<div id="boss_get_tag_map">
+<code class="box">unsigned int boss_get_tag_map (boss_db db,
+                               char *** tagMap,
+                               size_t * numTags);</code>
+<p>Outputs an array of the Bash Tags that are suggested in the masterlist and userlist. This function must be called prior to calling <a href="#boss_get_plugin_tags">boss_get_plugin_tags</a> to ensure that the latter can return the Tags using the correct array indicies.
+<ul>
+    <li><var>db</var> - The database the function acts on.
+    <li><var>tagMap</var> - A pointer to the outputted array of Bash Tags. The array functions as a map where the indicies are the keys, allowing the API to use them as UIDs for Bash Tags instead of passing their names as strings every time <a href="#boss_get_plugin_tags">boss_get_plugin_tags</a> is called.
+    <li><var>numTags</var> - A pointer to the size of the <var>tagMap</var> array. <code>0</code> if <var>tagMap</var> is <code>null</code>.
+</ul>
+</div>
+<div id="boss_get_plugin_tags">
+<code class="box">unsigned int boss_get_plugin_tags (boss_db db,
+                                   const char * plugin,
+                                   unsigned int ** tags_added,
+                                   size_t * numTags_added,
+                                   unsigned int ** tags_removed,
+                                   size_t * numTags_removed,
+                                   bool * userlistModified);</code>
+<p>Outputs the Bash Tags suggested for addition and removal by the masterlist and userlist. <a href="#boss_get_tag_map">boss_get_tag_map</a> must be called before this to ensure that the Bash Tag UIDs outputted by this function can be matched up to name strings.
+<ul>
+    <li><var>db</var> - The database the function acts on.
+    <li><var>plugin</var> - The filename of the plugin to look up Bash Tag suggestions for.
+    <li><var>tags_added</var> - A pointer to the outputted array of UIDs of the Bash Tags suggested for addition to the specified plugin. <code>null</code> if no Bash Tag additions are suggested.
+    <li><var>numTags_added</var> - A pointer to the size of the <var>tags_added</var> array. <code>0</code> if <var>tags_added</var> is <code>null</code>.
+    <li><var>tags_removed</var> - A pointer to the outputted array of UIDs of the Bash Tags suggested for removal from the specified plugin. <code>null</code> if no Bash Tag removals are suggested.
+    <li><var>numTags_removed</var> - A pointer to the size of the <var>tags_removed</var> array. <code>0</code> if <var>tags_removed</var> is <code>null</code>.
+    <li><var>userlistModified</var> - <code>true</code> if the Bash Tag suggestions were modified by the data in the userlist, <code>false</code> otherwise.
+</ul>
+</div>
+<div id="boss_get_plugin_messages">
+<code class="box">unsigned int boss_get_plugin_messages (boss_db db,
+                                       const char * plugin,
+                                       boss_message ** messages,
+                                       size_t * numMessages);</code>
+<p>Outputs the messages associated with the given plugin in the masterlist and/or userlist.
+<ul>
+    <li><var>db</var> - The database the function acts on.
+    <li><var>plugin</var> - The filename of the plugin to look up messages for.
+    <li><var>messages</var> - A pointer to the outputted array of messages associated with the specified plugin, given as <code>boss_message</code> structures. <code>null</code> if the plugin has no messages associated with it.
+    <li><var>numMessages</var> - A pointer to the size of the <var>messages</var> array. <code>0</code> if <var>messages</var> is <code>null</code>.
+</ul>
+</div>
+<div id="boss_write_minimal_list">
+<code class="box">unsigned int boss_write_minimal_list (boss_db db,
+                                      const char * outputFile,
+                                      const bool overwrite);</code>
+<p>Writes a minimal metadata file that only contains plugins with Bash Tag suggestions and/or warning messages about dirtiness, plus the suggestions and messages themselves.
+<ul>
+    <li><var>db</var> - The database the function acts on.
+    <li><var>outputFile</var> - The path to which the file shall be written.
+    <li><var>overwrite</var> - If <code>true</code> and <var>outputFile</var> already exists, the existing file will be overwritten. If <code>false</code> and <var>outputFile</var> already exists, no data will be written. Otherwise, data will be written to <var>outputFile</var>.
+</ul>
+</div>
+
+<h2 id="examples">Examples</h2>
+<p>The <code>api-tester</code> application provides a very simple usage example. Its source code is hosted with the BOSS API source code.
+
+<h2 id="credits">Credits</h2>
+<p>Thanks go to Lojack and myk002 for significant contributions during planning and beta testing, and to kaburke for beta testing of v2 of the API.
+<p>The BOSS API is written in C/C++ and makes use of the <a href="http://www.boost.org/">Boost</a>, <a href="http://code.google.com/p/yaml-cpp/">yaml-cpp</a> and <a href="http://github.com/WrinklyNinja/libloadorder/">libloadorder</a> libraries.
+
+<h2 id="license">License</h2>
+<p>This document is part of the BOSS documentation.<br>
+Copyright (C) 2013 WrinklyNinja<br>
+See the file <q>BOSS ReadMe.html</q> for copying conditions.

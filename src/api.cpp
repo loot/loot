@@ -42,12 +42,13 @@
 
 const unsigned int BOSS_API_OK                          = 0;
 const unsigned int BOSS_API_ERROR_LIBLO_ERROR           = 1;
-const unsigned int BOSS_API_ERROR_PARSE_FAIL            = 2;
-const unsigned int BOSS_API_ERROR_CONDITION_EVAL_FAIL   = 3;
-const unsigned int BOSS_API_ERROR_REGEX_EVAL_FAIL       = 4;
-const unsigned int BOSS_API_ERROR_NO_MEM                = 5;
-const unsigned int BOSS_API_ERROR_INVALID_ARGS          = 6;
-const unsigned int BOSS_API_ERROR_NO_TAG_MAP            = 7;
+const unsigned int BOSS_API_ERROR_FILE_WRITE_FAIL       = 2;
+const unsigned int BOSS_API_ERROR_PARSE_FAIL            = 3;
+const unsigned int BOSS_API_ERROR_CONDITION_EVAL_FAIL   = 4;
+const unsigned int BOSS_API_ERROR_REGEX_EVAL_FAIL       = 5;
+const unsigned int BOSS_API_ERROR_NO_MEM                = 6;
+const unsigned int BOSS_API_ERROR_INVALID_ARGS          = 7;
+const unsigned int BOSS_API_ERROR_NO_TAG_MAP            = 8;
 const unsigned int BOSS_API_RETURN_MAX                  = BOSS_API_ERROR_NO_TAG_MAP;
 
 // The following are the games identifiers used by the API.
@@ -88,8 +89,7 @@ struct _boss_db_int {
     }
 
     boss::Game game;
-    std::list<boss::Plugin> metadata;
-    std::list<boss::Plugin> userMetadata;
+    std::list<boss::Plugin> metadata, rawMetadata, userMetadata, rawUserMetadata;
 
     boost::unordered_map<std::string, unsigned int> bashTagMap;
 
@@ -232,8 +232,27 @@ BOSS_API unsigned int boss_load_lists (boss_db db, const char * masterlistPath,
         return BOSS_API_ERROR_INVALID_ARGS;
     }
 
+    //Also free memory.
+    db->bashTagMap.clear();
+    delete [] db->extAddedTagIds;
+    delete [] db->extRemovedTagIds;
+
+    if (db->extTagMap != NULL) {
+        for (size_t i=0; i < db->bashTagMap.size(); i++)
+            delete [] db->extTagMap[i];  //Gotta clear those allocated strings.
+        delete [] db->extTagMap;
+    }
+
+    if (db->extMessageArray != NULL) {
+        for (size_t i=0; i < db->extMessageArraySize; i++)
+            delete [] db->extMessageArray[i].message;  //Gotta clear those allocated strings.
+        delete [] db->extMessageArray;
+    }
+
+    db->rawMetadata = temp;
     db->metadata = temp;
     db->userMetadata = userTemp;
+    db->rawUserMetadata = userTemp;
 
     return BOSS_API_OK;
 }
@@ -246,20 +265,59 @@ BOSS_API unsigned int boss_load_lists (boss_db db, const char * masterlistPath,
 // if the underlying filesystem is case-sensitive.
 BOSS_API unsigned int boss_eval_lists (boss_db db) {
 
-    std::list<boss::Plugin> temp = db->metadata;
+    std::list<boss::Plugin> temp = db->rawMetadata;
     try {
-        for (std::list<boss::Plugin>::iterator it=temp.begin(), endIt=temp.end(); it != endIt; ++it) {
+        db->game.RefreshActivePluginsList();
+        for (std::list<boss::Plugin>::iterator it=temp.begin(); it != temp.end(); ++it) {
             it->EvalAllConditions(db->game);
+            if (it->IsRegexPlugin()) {
+                boost::regex regex;
+                try {
+                    regex = boost::regex(it->Name(), boost::regex::extended|boost::regex::icase);
+                } catch (boost::regex_error e) {
+                    return BOSS_API_ERROR_INVALID_ARGS;
+                }
+
+                for (boost::filesystem::directory_iterator itr(db->game.DataPath()); itr != boost::filesystem::directory_iterator(); ++itr) {
+                    const std::string filename = itr->path().filename().string();
+                    if (boost::regex_match(filename, regex)) {
+                        boss::Plugin p = *it;
+                        p.Name(filename);
+                        temp.push_back(p);
+                    }
+                }
+                it = temp.erase(it);
+                --it;
+            }
         }
     } catch (std::runtime_error& e) {
         return BOSS_API_ERROR_INVALID_ARGS;
     }
     db->metadata = temp;
 
-    temp = db->userMetadata;
+    temp = db->rawUserMetadata;
     try {
         for (std::list<boss::Plugin>::iterator it=temp.begin(), endIt=temp.end(); it != endIt; ++it) {
             it->EvalAllConditions(db->game);
+            if (it->IsRegexPlugin()) {
+                boost::regex regex;
+                try {
+                    regex = boost::regex(it->Name(), boost::regex::extended|boost::regex::icase);
+                } catch (boost::regex_error e) {
+                    return BOSS_API_ERROR_INVALID_ARGS;
+                }
+
+                for (boost::filesystem::directory_iterator itr(db->game.DataPath()); itr != boost::filesystem::directory_iterator(); ++itr) {
+                    const std::string filename = itr->path().filename().string();
+                    if (boost::regex_match(filename, regex)) {
+                        boss::Plugin p = *it;
+                        p.Name(filename);
+                        temp.push_back(p);
+                    }
+                }
+                it = temp.erase(it);
+                --it;
+            }
         }
     } catch (std::runtime_error& e) {
         return BOSS_API_ERROR_INVALID_ARGS;
@@ -362,6 +420,9 @@ BOSS_API unsigned int boss_get_plugin_tags (boss_db db, const char * plugin,
     *userlistModified = false;
     *numTags_added = 0;
     *numTags_removed = 0;
+
+    if (db->bashTagMap.empty())
+        return BOSS_API_ERROR_NO_TAG_MAP;
 
     boost::unordered_set<std::string> tagsAdded, tagsRemoved;
     std::list<boss::Plugin>::iterator pluginIt = std::find(db->metadata.begin(), db->metadata.end(), boss::Plugin(plugin));

@@ -118,6 +118,7 @@ namespace boss {
         std::list<Message> Messages() const;
         std::list<Tag> Tags() const;
 
+        void Name(const std::string& name);
         void Enabled(const bool enabled);
         void Priority(const int priority);
         void LoadAfter(const std::list<File>& after);

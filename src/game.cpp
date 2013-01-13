@@ -94,30 +94,7 @@ namespace boss {
             } else
                 gamePath = fs::path(path);
 
-            lo_game_handle gh;
-            int ret;
-            char ** pluginArr;
-            size_t pluginArrSize;
-            if (id == BOSS_GAME_TES4)
-                ret = lo_create_handle(&gh, LIBLO_GAME_TES4, gamePath.string().c_str());
-            else if (id == BOSS_GAME_TES5)
-                ret = lo_create_handle(&gh, LIBLO_GAME_TES5, gamePath.string().c_str());
-            else if (id == BOSS_GAME_FO3)
-                ret = lo_create_handle(&gh, LIBLO_GAME_FO3, gamePath.string().c_str());
-            else if (id == BOSS_GAME_FONV)
-                ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str());
-
-            if (ret != LIBLO_OK)
-                throw runtime_error("Active plugin list lookup failed.");
-            else {
-                if (lo_get_active_plugins(gh, &pluginArr, &pluginArrSize) != LIBLO_OK)
-                    throw runtime_error("Active plugin list lookup failed.");
-                else {
-                    for (size_t i=0; i < pluginArrSize; ++i) {
-                        activePlugins.insert(string(pluginArr[i]));
-                    }
-                }
-            }
+            RefreshActivePluginsList();
         }
     }
 
@@ -143,6 +120,33 @@ namespace boss {
 
     fs::path Game::DataPath() const {
         return GamePath() / pluginsFolderName;
+    }
+
+    void Game::RefreshActivePluginsList() {
+        lo_game_handle gh;
+        int ret;
+        char ** pluginArr;
+        size_t pluginArrSize;
+        if (id == BOSS_GAME_TES4)
+            ret = lo_create_handle(&gh, LIBLO_GAME_TES4, gamePath.string().c_str());
+        else if (id == BOSS_GAME_TES5)
+            ret = lo_create_handle(&gh, LIBLO_GAME_TES5, gamePath.string().c_str());
+        else if (id == BOSS_GAME_FO3)
+            ret = lo_create_handle(&gh, LIBLO_GAME_FO3, gamePath.string().c_str());
+        else if (id == BOSS_GAME_FONV)
+            ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str());
+
+        if (ret != LIBLO_OK)
+            throw runtime_error("Active plugin list lookup failed.");
+        else {
+            if (lo_get_active_plugins(gh, &pluginArr, &pluginArrSize) != LIBLO_OK)
+                throw runtime_error("Active plugin list lookup failed.");
+            else {
+                for (size_t i=0; i < pluginArrSize; ++i) {
+                    activePlugins.insert(string(pluginArr[i]));
+                }
+            }
+        }
     }
 
     bool Game::IsActive(const std::string& plugin) const {

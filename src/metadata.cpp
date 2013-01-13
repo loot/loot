@@ -161,6 +161,10 @@ namespace boss {
         return tags;
     }
 
+    void Plugin::Name(const std::string& n) {
+        name = n;
+    }
+
     void Plugin::Enabled(const bool e) {
         enabled = e;
     }
