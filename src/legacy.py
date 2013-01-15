@@ -35,7 +35,8 @@
 #   - Conditional plugin positions are all made unconditional, so there will be
 #     duplicate entries.
 
-import re
+class Plugin:
+
 
 def escapeYAMLStr(s):
     special = ['-', '?', ':', ',', '[', ']', '{', '}', '&', '*', '!', '|', '>', '\'', '"', '%', '@', '`']

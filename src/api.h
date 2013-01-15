@@ -24,29 +24,30 @@
 #ifndef __BOSS_API_H__
 #define __BOSS_API_H__
 
-#include <stdint.h>
 #include <stddef.h>
 
 #if defined(_MSC_VER)
 //MSVC doesn't support C99, so do the stdbool.h definitions ourselves.
 //START OF stdbool.h DEFINITIONS.
 #   ifndef __cplusplus
-#       define bool _Bool
-#       define true 1
-#       define false   0
+#       define bool  _Bool
+#       define true  1
+#       define false 0
 #   endif
-#   define __bool_true_false_are_defined   1
+#   define __bool_true_false_are_defined 1
 //END OF stdbool.h DEFINITIONS.
 #else
 #   include <stdbool.h>
 #endif
 
 // set up dll import/export decorators
-// when compiling the dll on windows, ensure BOSS_API_EXPORT is defined. clients
+// when compiling the dll on windows, ensure BOSS_EXPORT is defined. clients
 // that use this header do not need to define anything to import the symbols
 // properly.
 #if defined(_WIN32) || defined(_WIN64)
-#   ifdef BOSS_API_EXPORT
+#   ifdef BOSS_STATIC
+#       define BOSS_API
+#   elif defined BOSS_EXPORT
 #       define BOSS_API __declspec(dllexport)
 #   else
 #       define BOSS_API __declspec(dllimport)

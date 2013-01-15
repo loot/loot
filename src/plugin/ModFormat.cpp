@@ -134,7 +134,7 @@ namespace boss {
         if (filename.empty())
             return false;
 
-        ifstream    file(filename.native().c_str(), ios_base::binary | ios_base::in);
+        ifstream    file(filename.string().c_str(), ios_base::binary | ios_base::in);
 
         if (file.bad())
             //throw boss_error(BOSS_ERROR_FILE_READ_FAIL, filename.string());
@@ -163,7 +163,7 @@ namespace boss {
         char        buffer[MAXLENGTH];
         char*       bufptr = buffer;
         ModHeader   modHeader;
-        ifstream    file(filename.native().c_str(), ios_base::binary | ios_base::in);
+        ifstream    file(filename.string().c_str(), ios_base::binary | ios_base::in);
 
         modHeader.Name = filename.string();
 

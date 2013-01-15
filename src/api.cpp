@@ -35,6 +35,8 @@
 #include <list>
 #include <vector>
 
+#include <boost/regex.hpp>
+#include <boost/algorithm/string.hpp>
 #include <boost/filesystem/detail/utf8_codecvt_facet.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/unordered_set.hpp>
@@ -549,6 +551,19 @@ BOSS_API unsigned int boss_write_minimal_list (boss_db db, const char * outputFi
     for (std::list<boss::Plugin>::iterator it=temp.begin(), endIt=temp.end(); it != endIt; ++it) {
         boss::Plugin p(it->Name());
         p.Tags(it->Tags());
+
+        std::list<boss::Message> messages = it->Messages(), newMessages;
+        for (std::list<boss::Message>::iterator messageIter = messages.begin(); messageIter != messages.end(); ++messageIter) {
+            if (messageIter->Type() == "warn") {
+                const std::string content = messageIter->Content();
+                if (boost::contains(content, "Do not clean"))
+                    newMessages.push_back(*messageIter);
+                else if (boost::contains(content, "Contains dirty edits"))
+                    newMessages.push_back(*messageIter);
+            }
+        }
+        it->Messages(newMessages);
+
         *it = p;
     }
 

@@ -46,8 +46,14 @@
 #include <sstream>
 
 #if _WIN32 || _WIN64
-#   include "Windows.h"
-#   include "Shlobj.h"
+#   ifndef UNICODE
+#       define UNICODE
+#   endif
+#   ifndef _UNICODE
+#      define _UNICODE
+#   endif
+#   include "windows.h"
+#   include "shlobj.h"
 #endif
 
 namespace boss {
@@ -62,7 +68,7 @@ namespace boss {
         uint32_t chksum = 0;
         static const size_t buffer_size = 8192;
         char buffer[buffer_size];
-        ifstream ifile(filename.c_str(), ios::binary);
+        ifstream ifile(filename.string().c_str(), ios::binary);
     //    LOG_TRACE("calculating CRC for: '%s'", filename.string().c_str());
         boost::crc_32_type result;
         if (ifile) {

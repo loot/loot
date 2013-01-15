@@ -69,7 +69,7 @@ h3{
 -->
 
 <div id="warning">
-This documentation is a work in progress, covering an API that is also still a work in progress, and is subject to change. Userlist loading and access has not yet been implemented. The minimal file write doesn't include dirty messages yet.
+This documentation is a work in progress, covering an API that is also still a work in progress, and is subject to change. Userlist access has not yet been implemented.
 </div>
 
 <h1>BOSS API Readme</h1>
@@ -101,10 +101,10 @@ This documentation is a work in progress, covering an API that is also still a w
 <h2 id="types">Variable Types</h2>
 <p>The API uses character strings and unsigned integers for data input/output.
 <ul>
-    <li>All strings consist of byte characters, are encoded in UTF-8 and are null-terminated.
+    <li>All strings are null-terminated byte character strings encoded in UTF-8.
     <li>All codes are unsigned integers at least 16 bits in size.
     <li>All array sizes are unsigned integers at least 16 bits in size.
-    <li>File paths are case-sensitive if the underlying file system is case-sensitive.
+    <li>File paths are case-sensitive if and only if the underlying file system is case-sensitive.
 </ul>
 <p>The API also provides two new structures:
 <code class="box">typedef struct _boss_db_int * boss_db;</code>
@@ -158,20 +158,20 @@ This documentation is a work in progress, covering an API that is also still a w
 <h2 id="func">Functions</h2>
 
 <h3 id="func-error">Error Handling Functions</h3>
-<div id="boss_get_error_message">
+<div class="dfn" id="boss_get_error_message">
 <code class="box">unsigned int boss_get_error_message (char ** message);</code>
 <p>Outputs a string detailing the last error encountered.
 <ul>
     <li><var>message</var> - A pointer to the error string outputted.
 </ul>
 </div>
-<div id="boss_cleanup">
+<div class="dfn" id="boss_cleanup">
 <code class="box">void boss_cleanup ();</code>
 <p>Frees the memory allocated to the error message string, if <a href="#boss_get_error_message">boss_get_error_message</a> has been called.
 </div>
 
 <h3 id="func-version">Version Functions</h3>
-<div id="boss_is_compatible">
+<div class="dfn" id="boss_is_compatible">
 <code class="box">bool boss_is_compatible (const unsigned int versionMajor,
                          const unsigned int versionMinor,
                          const unsigned int versionPatch);</code>
@@ -182,7 +182,7 @@ This documentation is a work in progress, covering an API that is also still a w
     <li><var>versionPatch</var> - The patch version number (major.minor.<b>patch</b>) to check.
 </ul>
 </div>
-<div id="boss_get_version">
+<div class="dfn" id="boss_get_version">
 <code class="box">unsigned int boss_get_version (unsigned int * versionMajor,
                                unsigned int * versionMinor,
                                unsigned int * versionPatch);</code>
@@ -195,7 +195,7 @@ This documentation is a work in progress, covering an API that is also still a w
 </div>
 
 <h3 id="func-lifecycle">Lifecycle Management Functions</h3>
-<div id="boss_create_db">
+<div class="dfn" id="boss_create_db">
 <code class="box">unsigned int boss_create_db (boss_db * db,
                              const unsigned int clientGame,
                              const char * gamePath);</code>
@@ -206,7 +206,7 @@ This documentation is a work in progress, covering an API that is also still a w
     <li><var>gamePath</var> - A string giving the path to the game's main folder, ie. the one in which the game's executable lies, or <code>null</code>. If <code>null</code>, then the API will attempt to detect the game folder location itself using the game's registry entries.
 </ul>
 </div>
-<div id="boss_destroy_db">
+<div class="dfn" id="boss_destroy_db">
 <code class="box">void boss_destroy_db (boss_db db);</code>
 <p>Destroys the given database, freeing any memory allocated during its use.
 <ul>
@@ -215,7 +215,7 @@ This documentation is a work in progress, covering an API that is also still a w
 </div>
 
 <h3 id="func-load">Database Loading Functions</h3>
-<div id="boss_load_lists">
+<div class="dfn" id="boss_load_lists">
 <code class="box">unsigned int boss_load_lists (boss_db db,
                               const char * masterlistPath,
                               const char * userlistPath);</code>
@@ -226,7 +226,7 @@ This documentation is a work in progress, covering an API that is also still a w
     <li><var>userlistPath</var> - A string containing the relative or absolute path to the userlist file that should be loaded, or <code>null</code>. If <code>null</code>, no userlist will be loaded.
 </ul>
 </div>
-<div id="boss_eval_lists">
+<div class="dfn" id="boss_eval_lists">
 <code class="box">unsigned int boss_eval_lists (boss_db db);</code>
 <p>Refreshes the active plugin list used during evaluation then evaluates all conditional and regular expression metadata entries. Repeated calls re-evaluate the metadata from scratch. This function affects the output of all the database access functions.
 <ul>
@@ -235,7 +235,7 @@ This documentation is a work in progress, covering an API that is also still a w
 </div>
 
 <h3 id="func-access">Database Access Functions</h3>
-<div id="boss_get_tag_map">
+<div class="dfn" id="boss_get_tag_map">
 <code class="box">unsigned int boss_get_tag_map (boss_db db,
                                char *** tagMap,
                                size_t * numTags);</code>
@@ -246,7 +246,7 @@ This documentation is a work in progress, covering an API that is also still a w
     <li><var>numTags</var> - A pointer to the size of the <var>tagMap</var> array. <code>0</code> if <var>tagMap</var> is <code>null</code>.
 </ul>
 </div>
-<div id="boss_get_plugin_tags">
+<div class="dfn" id="boss_get_plugin_tags">
 <code class="box">unsigned int boss_get_plugin_tags (boss_db db,
                                    const char * plugin,
                                    unsigned int ** tags_added,
@@ -265,7 +265,7 @@ This documentation is a work in progress, covering an API that is also still a w
     <li><var>userlistModified</var> - <code>true</code> if the Bash Tag suggestions were modified by the data in the userlist, <code>false</code> otherwise.
 </ul>
 </div>
-<div id="boss_get_plugin_messages">
+<div class="dfn" id="boss_get_plugin_messages">
 <code class="box">unsigned int boss_get_plugin_messages (boss_db db,
                                        const char * plugin,
                                        boss_message ** messages,
@@ -278,7 +278,7 @@ This documentation is a work in progress, covering an API that is also still a w
     <li><var>numMessages</var> - A pointer to the size of the <var>messages</var> array. <code>0</code> if <var>messages</var> is <code>null</code>.
 </ul>
 </div>
-<div id="boss_write_minimal_list">
+<div class="dfn" id="boss_write_minimal_list">
 <code class="box">unsigned int boss_write_minimal_list (boss_db db,
                                       const char * outputFile,
                                       const bool overwrite);</code>
