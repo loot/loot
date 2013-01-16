@@ -27,6 +27,7 @@
 
 #include "helpers.h"
 #include "plugin/ModFormat.h"
+#include "error.h"
 
 #include <boost/spirit/include/karma.hpp>
 #include <boost/algorithm/string.hpp>
@@ -78,7 +79,7 @@ namespace boss {
             } while (ifile);
             chksum = result.checksum();
         } else {
-            throw runtime_error("Unable to open \"" + filename.string() + "\" for CRC calculation.");
+            throw error(ERROR_PATH_READ_FAIL, "Unable to open \"" + filename.string() + "\" for CRC calculation.");
         }
     //    LOG_DEBUG("CRC32('%s'): 0x%x", filename.string().c_str(), chksum);
         return chksum;

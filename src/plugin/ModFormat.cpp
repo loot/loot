@@ -137,7 +137,6 @@ namespace boss {
         ifstream    file(filename.string().c_str(), ios_base::binary | ios_base::in);
 
         if (file.bad())
-            //throw boss_error(BOSS_ERROR_FILE_READ_FAIL, filename.string());
             return false;
 
         // Reads the first MAXLENGTH bytes into the buffer

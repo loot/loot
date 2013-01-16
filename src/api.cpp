@@ -26,6 +26,7 @@
 #include "game.h"
 #include "metadata.h"
 #include "parsers.h"
+#include "error.h"
 
 #include <yaml-cpp/yaml.h>
 
@@ -42,22 +43,23 @@
 #include <boost/unordered_set.hpp>
 #include <boost/unordered_map.hpp>
 
-const unsigned int BOSS_API_OK                          = 0;
-const unsigned int BOSS_API_ERROR_LIBLO_ERROR           = 1;
-const unsigned int BOSS_API_ERROR_FILE_WRITE_FAIL       = 2;
-const unsigned int BOSS_API_ERROR_PARSE_FAIL            = 3;
-const unsigned int BOSS_API_ERROR_CONDITION_EVAL_FAIL   = 4;
-const unsigned int BOSS_API_ERROR_REGEX_EVAL_FAIL       = 5;
-const unsigned int BOSS_API_ERROR_NO_MEM                = 6;
-const unsigned int BOSS_API_ERROR_INVALID_ARGS          = 7;
-const unsigned int BOSS_API_ERROR_NO_TAG_MAP            = 8;
-const unsigned int BOSS_API_RETURN_MAX                  = BOSS_API_ERROR_NO_TAG_MAP;
+const unsigned int BOSS_API_OK                          = boss::OK;
+const unsigned int BOSS_API_ERROR_LIBLO_ERROR           = boss::ERROR_LIBLO_ERROR;
+const unsigned int BOSS_API_ERROR_FILE_WRITE_FAIL       = boss::ERROR_PATH_WRITE_FAIL;
+const unsigned int BOSS_API_ERROR_PARSE_FAIL            = boss::ERROR_PATH_READ_FAIL;
+const unsigned int BOSS_API_ERROR_CONDITION_EVAL_FAIL   = boss::ERROR_CONDITION_EVAL_FAIL;
+const unsigned int BOSS_API_ERROR_REGEX_EVAL_FAIL       = boss::ERROR_REGEX_EVAL_FAIL;
+const unsigned int BOSS_API_ERROR_NO_MEM                = boss::ERROR_NO_MEM;
+const unsigned int BOSS_API_ERROR_INVALID_ARGS          = boss::ERROR_INVALID_ARGS;
+const unsigned int BOSS_API_ERROR_NO_TAG_MAP            = boss::ERROR_NO_TAG_MAP;
+const unsigned int BOSS_API_ERROR_PATH_NOT_FOUND        = boss::ERROR_PATH_NOT_FOUND;
+const unsigned int BOSS_API_RETURN_MAX                  = BOSS_API_ERROR_PATH_NOT_FOUND;
 
 // The following are the games identifiers used by the API.
-const unsigned int BOSS_API_GAME_TES4                   = BOSS_GAME_TES4;
-const unsigned int BOSS_API_GAME_TES5                   = BOSS_GAME_TES5;
-const unsigned int BOSS_API_GAME_FO3                    = BOSS_GAME_FO3;
-const unsigned int BOSS_API_GAME_FONV                   = BOSS_GAME_FONV;
+const unsigned int BOSS_API_GAME_TES4                   = boss::GAME_TES4;
+const unsigned int BOSS_API_GAME_TES5                   = boss::GAME_TES5;
+const unsigned int BOSS_API_GAME_FO3                    = boss::GAME_FO3;
+const unsigned int BOSS_API_GAME_FONV                   = boss::GAME_FONV;
 
 // BOSS message types.
 const unsigned int BOSS_API_MESSAGE_SAY                 = 1;
@@ -104,7 +106,7 @@ struct _boss_db_int {
     size_t extMessageArraySize;
 };
 
-char * extMessageStr;
+const char * extMessageStr = NULL;
 
 // std::string to null-terminated char string converter.
 char * ToNewCString(std::string str) {
@@ -119,18 +121,18 @@ char * ToNewCString(std::string str) {
 // Outputs a string giving the details of the last time an error or
 // warning return code was returned by a function. The string exists
 // until this function is called again or until CleanUpAPI is called.
-BOSS_API unsigned int boss_get_error_message (char ** message) {
+BOSS_API unsigned int boss_get_error_message (const char ** const message) {
     if (message == NULL)
         return BOSS_API_ERROR_INVALID_ARGS;
 
-    *message = "Something went wrong.";
+    *message = extMessageStr;
 
     return BOSS_API_OK;
 }
 
 // Frees memory allocated to error string.
 BOSS_API void     boss_cleanup () {
-    delete[] extMessageStr;
+    delete [] extMessageStr;
 }
 
 
@@ -141,19 +143,19 @@ BOSS_API void     boss_cleanup () {
 // Returns whether this version of BOSS supports the API from the given
 // BOSS version. Abstracts BOSS API stability policy away from clients.
 BOSS_API bool boss_is_compatible (const unsigned int versionMajor, const unsigned int versionMinor, const unsigned int versionPatch) {
-    return versionMajor == BOSS_VERSION_MAJOR && versionMinor == BOSS_VERSION_MINOR;
+    return versionMajor == boss::VERSION_MAJOR && versionMinor == boss::VERSION_MINOR;
 }
 
 // Returns the version string for this version of BOSS.
 // The string exists until this function is called again or until
 // CleanUpAPI is called.
-BOSS_API unsigned int boss_get_version (unsigned int * versionMajor, unsigned int * versionMinor, unsigned int * versionPatch) {
+BOSS_API unsigned int boss_get_version (unsigned int * const versionMajor, unsigned int * const versionMinor, unsigned int * const versionPatch) {
     if (versionMajor == NULL || versionMinor == NULL || versionPatch == NULL)
         return BOSS_API_ERROR_INVALID_ARGS;
 
-    *versionMajor = BOSS_VERSION_MAJOR;
-    *versionMinor = BOSS_VERSION_MINOR;
-    *versionPatch = BOSS_VERSION_PATCH;
+    *versionMajor = boss::VERSION_MAJOR;
+    *versionMinor = boss::VERSION_MINOR;
+    *versionPatch = boss::VERSION_PATCH;
 
     return BOSS_API_OK;
 }
@@ -170,7 +172,7 @@ BOSS_API unsigned int boss_get_version (unsigned int * versionMajor, unsigned in
 // plugins.txt and loadorder.txt (if they both exist) are in sync. If
 // dataPath == NULL then the API will attempt to detect the data path of
 // the specified game.
-BOSS_API unsigned int boss_create_db (boss_db * db, const unsigned int clientGame, const char * gamePath) {
+BOSS_API unsigned int boss_create_db (boss_db * const db, const unsigned int clientGame, const char * const gamePath) {
     if (db == NULL || (clientGame != BOSS_API_GAME_TES4 && clientGame != BOSS_API_GAME_TES5 && clientGame != BOSS_API_GAME_FO3 && clientGame != BOSS_API_GAME_FONV))
         return BOSS_API_ERROR_INVALID_ARGS;
 
@@ -187,15 +189,17 @@ BOSS_API unsigned int boss_create_db (boss_db * db, const unsigned int clientGam
     boss::Game game;
     try {
         game = boss::Game(clientGame, game_path);  //This also checks to see if the game is installed if game_path is empty and throws an exception if it is not detected.
-    } catch (std::runtime_error& e) {
-        return BOSS_API_ERROR_INVALID_ARGS;
+    } catch (boss::error& e) {
+        extMessageStr = e.what();
+        return e.code();
     }
 
     boss_db retVal;
     try {
         retVal = new _boss_db_int;
-    } catch (std::bad_alloc /*&e*/) {
-        return BOSS_API_ERROR_INVALID_ARGS;
+    } catch (std::bad_alloc& e) {
+        extMessageStr = e.what();
+        return BOSS_API_ERROR_NO_MEM;
     }
     retVal->game = game;
     *db = retVal;
@@ -217,8 +221,8 @@ BOSS_API void     boss_destroy_db (boss_db db) {
 // Can be called multiple times. On error, the database is unchanged.
 // Paths are case-sensitive if the underlying filesystem is case-sensitive.
 // masterlistPath and userlistPath are files.
-BOSS_API unsigned int boss_load_lists (boss_db db, const char * masterlistPath,
-                                    const char * userlistPath) {
+BOSS_API unsigned int boss_load_lists (boss_db db, const char * const masterlistPath,
+                                    const char * const userlistPath) {
     if (db == NULL || masterlistPath == NULL)
         return BOSS_API_ERROR_INVALID_ARGS;
 
@@ -230,8 +234,9 @@ BOSS_API unsigned int boss_load_lists (boss_db db, const char * masterlistPath,
 
         tempNode = YAML::LoadFile(userlistPath);
         userTemp = tempNode["plugins"].as< std::list<boss::Plugin> >();
-    } catch (YAML::Exception &e) {
-        return BOSS_API_ERROR_INVALID_ARGS;
+    } catch (YAML::Exception& e) {
+        extMessageStr = e.what();
+        return BOSS_API_ERROR_PARSE_FAIL;
     }
 
     //Also free memory.
@@ -276,8 +281,9 @@ BOSS_API unsigned int boss_eval_lists (boss_db db) {
                 boost::regex regex;
                 try {
                     regex = boost::regex(it->Name(), boost::regex::extended|boost::regex::icase);
-                } catch (boost::regex_error e) {
-                    return BOSS_API_ERROR_INVALID_ARGS;
+                } catch (boost::regex_error& e) {
+                    extMessageStr = e.what();
+                    return BOSS_API_ERROR_REGEX_EVAL_FAIL;
                 }
 
                 for (boost::filesystem::directory_iterator itr(db->game.DataPath()); itr != boost::filesystem::directory_iterator(); ++itr) {
@@ -292,8 +298,9 @@ BOSS_API unsigned int boss_eval_lists (boss_db db) {
                 --it;
             }
         }
-    } catch (std::runtime_error& e) {
-        return BOSS_API_ERROR_INVALID_ARGS;
+    } catch (boss::error& e) {
+        extMessageStr = e.what();
+        return e.code();
     }
     db->metadata = temp;
 
@@ -305,7 +312,8 @@ BOSS_API unsigned int boss_eval_lists (boss_db db) {
                 boost::regex regex;
                 try {
                     regex = boost::regex(it->Name(), boost::regex::extended|boost::regex::icase);
-                } catch (boost::regex_error e) {
+                } catch (boost::regex_error& e) {
+                    extMessageStr = e.what();
                     return BOSS_API_ERROR_INVALID_ARGS;
                 }
 
@@ -321,8 +329,9 @@ BOSS_API unsigned int boss_eval_lists (boss_db db) {
                 --it;
             }
         }
-    } catch (std::runtime_error& e) {
-        return BOSS_API_ERROR_INVALID_ARGS;
+    } catch (boss::error& e) {
+        extMessageStr = e.what();
+        return e.code();
     }
     db->userMetadata = temp;
 
@@ -337,7 +346,7 @@ BOSS_API unsigned int boss_eval_lists (boss_db db) {
 // Returns an array of the Bash Tags encounterred when loading the masterlist
 // and userlist, and the number of tags in the returned array. The array and
 // its contents are static and should not be freed by the client.
-BOSS_API unsigned int boss_get_tag_map (boss_db db, char *** tagMap, size_t * numTags) {
+BOSS_API unsigned int boss_get_tag_map (boss_db db, char *** const tagMap, size_t * const numTags) {
     if (db == NULL || tagMap == NULL || numTags == NULL)
         return BOSS_API_ERROR_INVALID_ARGS;
 
@@ -373,8 +382,9 @@ BOSS_API unsigned int boss_get_tag_map (boss_db db, char *** tagMap, size_t * nu
 
     try {
         db->extTagMap = new char*[allTags.size()];
-    } catch (std::bad_alloc /*&e*/) {
-        return BOSS_API_ERROR_INVALID_ARGS;
+    } catch (std::bad_alloc& e) {
+        extMessageStr = e.what();
+        return BOSS_API_ERROR_NO_MEM;
     }
 
     unsigned int UID = 0;
@@ -385,8 +395,9 @@ BOSS_API unsigned int boss_get_tag_map (boss_db db, char *** tagMap, size_t * nu
             db->extTagMap[UID] = ToNewCString(*it);
             UID++;
         }
-    } catch (std::bad_alloc /*&e*/) {
-        return BOSS_API_ERROR_INVALID_ARGS;
+    } catch (std::bad_alloc& e) {
+        extMessageStr = e.what();
+        return BOSS_API_ERROR_NO_MEM;
     }
 
     *tagMap = db->extTagMap;
@@ -402,12 +413,12 @@ BOSS_API unsigned int boss_get_tag_map (boss_db db, char *** tagMap, size_t * nu
 // case-insensitive. If no Tags are found for an array, the array pointer (*tagIds)
 // will be NULL. The userlistModified bool is true if the userlist contains Bash Tag
 // suggestion message additions.
-BOSS_API unsigned int boss_get_plugin_tags (boss_db db, const char * plugin,
-                                            unsigned int ** tagIds_added,
-                                            size_t * numTags_added,
-                                            unsigned int **tagIds_removed,
-                                            size_t * numTags_removed,
-                                            bool * userlistModified) {
+BOSS_API unsigned int boss_get_plugin_tags (boss_db db, const char * const plugin,
+                                            unsigned int ** const tagIds_added,
+                                            size_t * const numTags_added,
+                                            unsigned int ** const tagIds_removed,
+                                            size_t * const numTags_removed,
+                                            bool * const userlistModified) {
     if (db == NULL || plugin == NULL || tagIds_added == NULL || numTags_added == NULL || tagIds_removed == NULL || numTags_removed == NULL || userlistModified == NULL)
         return BOSS_API_ERROR_INVALID_ARGS;
 
@@ -469,8 +480,9 @@ BOSS_API unsigned int boss_get_plugin_tags (boss_db db, const char * plugin,
             for (size_t i=0; i < numRemoved; i++)
                 db->extRemovedTagIds[i] = tagsRemovedIDs[i];
         }
-    } catch (std::bad_alloc /*&e*/) {
-        return BOSS_API_ERROR_INVALID_ARGS;
+    } catch (std::bad_alloc& e) {
+        extMessageStr = e.what();
+        return BOSS_API_ERROR_NO_MEM;
     }
 
     //Set outputs.
@@ -485,9 +497,9 @@ BOSS_API unsigned int boss_get_plugin_tags (boss_db db, const char * plugin,
 // Returns the messages attached to the given plugin. Messages are valid until Load,
 // DestroyBossDb or GetPluginMessages are next called. plugin is case-insensitive.
 // If no messages are attached, *messages will be NULL and numMessages will equal 0.
-BOSS_API unsigned int boss_get_plugin_messages (boss_db db, const char * plugin,
-                                                boss_message ** messages,
-                                                size_t * numMessages) {
+BOSS_API unsigned int boss_get_plugin_messages (boss_db db, const char * const plugin,
+                                                boss_message ** const messages,
+                                                size_t * const numMessages) {
     if (db == NULL || plugin == NULL || messages == NULL || numMessages == NULL)
         return BOSS_API_ERROR_INVALID_ARGS;
 
@@ -526,8 +538,9 @@ BOSS_API unsigned int boss_get_plugin_messages (boss_db db, const char * plugin,
                 db->extMessageArray[i].type = BOSS_API_MESSAGE_ERROR;
             db->extMessageArray[i].message = ToNewCString(it->Content());
         }
-    } catch (std::bad_alloc /*&e*/) {
-        return BOSS_API_ERROR_INVALID_ARGS;
+    } catch (std::bad_alloc& e) {
+        extMessageStr = e.what();
+        return BOSS_API_ERROR_NO_MEM;
     }
 
     *messages = db->extMessageArray;
@@ -540,7 +553,7 @@ BOSS_API unsigned int boss_get_plugin_messages (boss_db db, const char * plugin,
 // and/or dirty messages, plus the Tag suggestions and/or messages themselves and their
 // conditions, in order to create the Wrye Bash taglist. outputFile is the path to use
 // for output. If outputFile already exists, it will only be overwritten if overwrite is true.
-BOSS_API unsigned int boss_write_minimal_list (boss_db db, const char * outputFile, const bool overwrite) {
+BOSS_API unsigned int boss_write_minimal_list (boss_db db, const char * const outputFile, const bool overwrite) {
     if (db == NULL || outputFile == NULL)
         return BOSS_API_ERROR_INVALID_ARGS;
 

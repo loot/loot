@@ -3,6 +3,7 @@
 #include "metadata.h"
 #include "parsers.h"
 #include "game.h"
+#include "error.h"
 #include "globals.h"
 
 #include <ostream>
@@ -47,12 +48,12 @@ int main() {
 
     cout << "Testing game settings structure." << endl;
 
-    boss::Game game(BOSS_GAME_TES5, "/media/oliver/6CF05918F058EA3A/Program Files (x86)/Steam/steamapps/common/skyrim");
+    boss::Game game(boss::GAME_TES5, "/media/oliver/6CF05918F058EA3A/Program Files (x86)/Steam/steamapps/common/skyrim");
 
     for (list<boss::Plugin>::iterator it=pluginData.begin(), endIt=pluginData.end(); it != endIt; ++it) {
         try {
         it->EvalAllConditions(game);
-        } catch (std::runtime_error& e) {
+        } catch (boss::error& e) {
             cout << e.what() << endl;
         }
     }

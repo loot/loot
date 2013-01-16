@@ -135,6 +135,7 @@ This documentation is a work in progress, covering an API that is also still a w
         <tr><td>BOSS_API_ERROR_NO_MEM<td>The API was unable to allocate the required memory.
         <tr><td>BOSS_API_ERROR_INVALID_ARGS<td> Invalid arguments were given for the function.
         <tr><td>BOSS_API_ERROR_NO_TAG_MAP<td>No Bash Tag map has been generated yet.
+        <tr><td>BOSS_API_ERROR_PATH_NOT_FOUND<td>A file or folder path could not be found.
         <tr><td>BOSS_API_RETURN_MAX<td>Matches the value of the highest-numbered return code.
 </table>
 <p>The following codes are used with <a href="#boss_create_db">boss_create_db</a> to specify the game that the API acts for.
@@ -159,7 +160,7 @@ This documentation is a work in progress, covering an API that is also still a w
 
 <h3 id="func-error">Error Handling Functions</h3>
 <div class="dfn" id="boss_get_error_message">
-<code class="box">unsigned int boss_get_error_message (char ** message);</code>
+<code class="box">unsigned int boss_get_error_message (const char ** const message);</code>
 <p>Outputs a string detailing the last error encountered.
 <ul>
     <li><var>message</var> - A pointer to the error string outputted.
@@ -183,9 +184,9 @@ This documentation is a work in progress, covering an API that is also still a w
 </ul>
 </div>
 <div class="dfn" id="boss_get_version">
-<code class="box">unsigned int boss_get_version (unsigned int * versionMajor,
-                               unsigned int * versionMinor,
-                               unsigned int * versionPatch);</code>
+<code class="box">unsigned int boss_get_version (unsigned int * const versionMajor,
+                               unsigned int * const versionMinor,
+                               unsigned int * const versionPatch);</code>
 <p>Gets the version numbers of the API in use.
 <ul>
     <li><var>versionMajor</var> - A pointer to the major version number (<b>major</b>.minor.patch).
@@ -196,9 +197,9 @@ This documentation is a work in progress, covering an API that is also still a w
 
 <h3 id="func-lifecycle">Lifecycle Management Functions</h3>
 <div class="dfn" id="boss_create_db">
-<code class="box">unsigned int boss_create_db (boss_db * db,
+<code class="box">unsigned int boss_create_db (boss_db * const db,
                              const unsigned int clientGame,
-                             const char * gamePath);</code>
+                             const char * const gamePath);</code>
 <p>Creates a database for the specified game. You can create multiple databases.
 <ul>
     <li><var>db</var> - A pointer to the database to be created.
@@ -217,8 +218,8 @@ This documentation is a work in progress, covering an API that is also still a w
 <h3 id="func-load">Database Loading Functions</h3>
 <div class="dfn" id="boss_load_lists">
 <code class="box">unsigned int boss_load_lists (boss_db db,
-                              const char * masterlistPath,
-                              const char * userlistPath);</code>
+                              const char * const masterlistPath,
+                              const char * const userlistPath);</code>
 <p>Loads the given masterlist and userlist for the game specified when the given database was created. Also frees any memory currently allocated to the given database by any access functions previously called. Can be called multiple times. If an error is encountered, the database remains unchanged.
 <ul>
     <li><var>db</var> - The database the function acts on.
@@ -237,8 +238,8 @@ This documentation is a work in progress, covering an API that is also still a w
 <h3 id="func-access">Database Access Functions</h3>
 <div class="dfn" id="boss_get_tag_map">
 <code class="box">unsigned int boss_get_tag_map (boss_db db,
-                               char *** tagMap,
-                               size_t * numTags);</code>
+                               char *** const tagMap,
+                               size_t * const numTags);</code>
 <p>Outputs an array of the Bash Tags that are suggested in the masterlist and userlist. This function must be called prior to calling <a href="#boss_get_plugin_tags">boss_get_plugin_tags</a> to ensure that the latter can return the Tags using the correct array indicies.
 <ul>
     <li><var>db</var> - The database the function acts on.
@@ -248,12 +249,12 @@ This documentation is a work in progress, covering an API that is also still a w
 </div>
 <div class="dfn" id="boss_get_plugin_tags">
 <code class="box">unsigned int boss_get_plugin_tags (boss_db db,
-                                   const char * plugin,
-                                   unsigned int ** tags_added,
-                                   size_t * numTags_added,
-                                   unsigned int ** tags_removed,
-                                   size_t * numTags_removed,
-                                   bool * userlistModified);</code>
+                                   const char * const plugin,
+                                   unsigned int ** const tags_added,
+                                   size_t * const numTags_added,
+                                   unsigned int ** const tags_removed,
+                                   size_t * const numTags_removed,
+                                   bool * const userlistModified);</code>
 <p>Outputs the Bash Tags suggested for addition and removal by the masterlist and userlist. <a href="#boss_get_tag_map">boss_get_tag_map</a> must be called before this to ensure that the Bash Tag UIDs outputted by this function can be matched up to name strings.
 <ul>
     <li><var>db</var> - The database the function acts on.
@@ -267,9 +268,9 @@ This documentation is a work in progress, covering an API that is also still a w
 </div>
 <div class="dfn" id="boss_get_plugin_messages">
 <code class="box">unsigned int boss_get_plugin_messages (boss_db db,
-                                       const char * plugin,
-                                       boss_message ** messages,
-                                       size_t * numMessages);</code>
+                                       const char * const plugin,
+                                       boss_message ** const messages,
+                                       size_t * const numMessages);</code>
 <p>Outputs the messages associated with the given plugin in the masterlist and/or userlist.
 <ul>
     <li><var>db</var> - The database the function acts on.
@@ -280,7 +281,7 @@ This documentation is a work in progress, covering an API that is also still a w
 </div>
 <div class="dfn" id="boss_write_minimal_list">
 <code class="box">unsigned int boss_write_minimal_list (boss_db db,
-                                      const char * outputFile,
+                                      const char * const outputFile,
                                       const bool overwrite);</code>
 <p>Writes a minimal metadata file that only contains plugins with Bash Tag suggestions and/or warning messages about dirtiness, plus the suggestions and messages themselves.
 <ul>

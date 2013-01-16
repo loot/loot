@@ -24,6 +24,7 @@
 #include "game.h"
 #include "globals.h"
 #include "helpers.h"
+#include "error.h"
 
 #include <libloadorder.h>
 
@@ -42,12 +43,13 @@ namespace fs = boost::filesystem;
 
 namespace boss {
 
-    Game::Game()
-        : id(BOSS_GAME_AUTODETECT) {}
+    Game::Game() {
+        throw error(ERROR_INVALID_ARGS, "No arguments supplied.");
+    }
 
     Game::Game(const unsigned int gameCode, const string path, const bool noPathInit)
         : id(gameCode) {
-        if (Id() == BOSS_GAME_TES4) {
+        if (Id() == GAME_TES4) {
             name = "TES IV: Oblivion";
 
             registryKey = "Software\\Bethesda Softworks\\Oblivion";
@@ -55,7 +57,7 @@ namespace boss {
 
             bossFolderName = "Oblivion";
             pluginsFolderName = "Data";
-        } else if (Id() == BOSS_GAME_TES5) {
+        } else if (Id() == GAME_TES5) {
             name = "TES V: Skyrim";
 
             registryKey = "Software\\Bethesda Softworks\\Skyrim";
@@ -63,7 +65,7 @@ namespace boss {
 
             bossFolderName = "Skyrim";
             pluginsFolderName = "Data";
-        } else if (Id() == BOSS_GAME_FO3) {
+        } else if (Id() == GAME_FO3) {
             name = "Fallout 3";
 
             registryKey = "Software\\Bethesda Softworks\\Fallout3";
@@ -71,7 +73,7 @@ namespace boss {
 
             bossFolderName = "Fallout 3";
             pluginsFolderName = "Data";
-        } else if (Id() == BOSS_GAME_FONV) {
+        } else if (Id() == GAME_FONV) {
             name = "Fallout: New Vegas";
 
             registryKey = "Software\\Bethesda Softworks\\FalloutNV";
@@ -80,7 +82,7 @@ namespace boss {
             bossFolderName = "Fallout New Vegas";
             pluginsFolderName = "Data";
         } else
-            throw runtime_error("Invalid game ID supplied.");
+            throw error(ERROR_INVALID_ARGS, "Invalid game ID supplied.");
 
         if (!noPathInit) {
             if (path.empty()) {
@@ -90,7 +92,7 @@ namespace boss {
                 else if (RegKeyExists("HKEY_LOCAL_MACHINE", registryKey, registrySubKey))
                     gamePath = fs::path(RegKeyStringValue("HKEY_LOCAL_MACHINE", registryKey, registrySubKey));
                 else
-                    throw runtime_error("Game path could not be detected.");
+                    throw error(ERROR_PATH_NOT_FOUND, "Game path could not be detected.");
             } else
                 gamePath = fs::path(path);
 
@@ -127,20 +129,20 @@ namespace boss {
         int ret;
         char ** pluginArr;
         size_t pluginArrSize;
-        if (id == BOSS_GAME_TES4)
+        if (id == GAME_TES4)
             ret = lo_create_handle(&gh, LIBLO_GAME_TES4, gamePath.string().c_str());
-        else if (id == BOSS_GAME_TES5)
+        else if (id == GAME_TES5)
             ret = lo_create_handle(&gh, LIBLO_GAME_TES5, gamePath.string().c_str());
-        else if (id == BOSS_GAME_FO3)
+        else if (id == GAME_FO3)
             ret = lo_create_handle(&gh, LIBLO_GAME_FO3, gamePath.string().c_str());
-        else if (id == BOSS_GAME_FONV)
+        else if (id == GAME_FONV)
             ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str());
 
         if (ret != LIBLO_OK)
-            throw runtime_error("Active plugin list lookup failed.");
+            throw error(ERROR_LIBLO_ERROR, "libloadorder game handle creation failed.");
         else {
             if (lo_get_active_plugins(gh, &pluginArr, &pluginArrSize) != LIBLO_OK)
-                throw runtime_error("Active plugin list lookup failed.");
+                throw error(ERROR_LIBLO_ERROR, "Active plugin list lookup failed.");
             else {
                 for (size_t i=0; i < pluginArrSize; ++i) {
                     activePlugins.insert(string(pluginArr[i]));
@@ -158,8 +160,8 @@ namespace boss {
         try {
             if (!fs::exists(bossFolderName))
                 fs::create_directory(bossFolderName);
-        } catch (fs::filesystem_error e) {
-            throw runtime_error("Could not create BOSS folder for game.");
+        } catch (fs::filesystem_error& e) {
+            throw error(ERROR_PATH_WRITE_FAIL, "Could not create BOSS folder for game.");
         }
     }
 

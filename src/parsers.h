@@ -30,6 +30,7 @@
 
 #include "metadata.h"
 #include "helpers.h"
+#include "error.h"
 
 #include <stdexcept>
 #include <stdint.h>
@@ -383,7 +384,7 @@ namespace boss {
         void CheckFile(bool& result, const std::string& file) {
 
             if (!IsSafePath(file))
-                throw std::runtime_error("The file path \"" + file + "\" is invalid.");
+                throw boss::error(boss::ERROR_INVALID_ARGS, "The file path \"" + file + "\" is invalid.");
 
             if (IsPlugin(file))
                 result = boost::filesystem::exists(game->DataPath() / file) || boost::filesystem::exists(game->DataPath() / (file + ".ghost"));
@@ -422,7 +423,7 @@ namespace boss {
             }
 
             if (boost::contains(parent, "../../"))
-                throw std::runtime_error("The folder path \"" + parent + "\" is invalid.");
+                throw boss::error(boss::ERROR_INVALID_ARGS, "The folder path \"" + parent + "\" is invalid.");
 
             //Now we have a valid parent path and a regex filename. Check that
             //the parent path exists and is a directory.
@@ -434,8 +435,8 @@ namespace boss {
             boost::regex regex;
             try {
                 regex = boost::regex(filename, boost::regex::extended|boost::regex::icase);
-            } catch (boost::regex_error e) {
-                throw std::runtime_error("The regex string \"" + filename + "\" is invalid.");
+            } catch (boost::regex_error& e) {
+                throw boss::error(boss::ERROR_INVALID_ARGS, "The regex string \"" + filename + "\" is invalid.");
             }
 
             for (fs::directory_iterator itr(parent_path); itr != fs::directory_iterator(); ++itr) {
@@ -449,7 +450,7 @@ namespace boss {
         void CheckSum(bool& result, const std::string& file, const uint32_t checksum) {
 
             if (!IsSafePath(file))
-                throw std::runtime_error("The file path \"" + file + "\" is invalid.");
+                throw boss::error(boss::ERROR_INVALID_ARGS, "The file path \"" + file + "\" is invalid.");
 
             uint32_t crc;
             boost::unordered_map<std::string,uint32_t>::iterator it = game->crcCache.find(boost::to_lower_copy(file));
@@ -506,7 +507,7 @@ namespace boss {
             std::string context(errorpos, min(errorpos +50, last));
             boost::trim(context);
 
-            throw std::runtime_error("Error parsing condition at \"" + context + "\", expected \"" + what.tag + "\"");
+            throw boss::error(boss::ERROR_CONDITION_EVAL_FAIL, "Error parsing condition at \"" + context + "\", expected \"" + what.tag + "\"");
         }
 
         //Checks that the path (not regex) doesn't go outside any game folders.
@@ -541,10 +542,15 @@ namespace boss {
         begin = condition.begin();
         end = condition.end();
 
-        bool r = qi::phrase_parse(begin, end, grammar, skipper, eval);
+        bool r;
+        try {
+            r = qi::phrase_parse(begin, end, grammar, skipper, eval);
+        } catch (boss::error& e) {
+            throw boss::error(boss::ERROR_PATH_READ_FAIL, "Parsing of condition \"" + condition + "\" failed: " + e.what());
+        }
 
         if (!r || begin != end)
-            throw std::runtime_error("Parsing of condition \"" + condition + "\" failed!");
+            throw boss::error(boss::ERROR_PATH_READ_FAIL, "Parsing of condition \"" + condition + "\" failed!");
 
         game.conditionCache.emplace(boost::to_lower_copy(condition), eval);
 

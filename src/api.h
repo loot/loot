@@ -92,6 +92,7 @@ BOSS_API extern const unsigned int BOSS_API_ERROR_REGEX_EVAL_FAIL;
 BOSS_API extern const unsigned int BOSS_API_ERROR_NO_MEM;
 BOSS_API extern const unsigned int BOSS_API_ERROR_INVALID_ARGS;
 BOSS_API extern const unsigned int BOSS_API_ERROR_NO_TAG_MAP;
+BOSS_API extern const unsigned int BOSS_API_ERROR_PATH_NOT_FOUND;
 BOSS_API extern const unsigned int BOSS_API_RETURN_MAX;
 
 // The following are the games identifiers used by the API.
@@ -114,7 +115,7 @@ BOSS_API extern const unsigned int BOSS_API_MESSAGE_ERROR;
 // Outputs a string giving the details of the last time an error or
 // warning return code was returned by a function. The string exists
 // until this function is called again or until boss_cleanup is called.
-BOSS_API unsigned int boss_get_error_message (char ** message);
+BOSS_API unsigned int boss_get_error_message (const char ** const message);
 
 // Frees memory allocated to error string.
 BOSS_API void     boss_cleanup ();
@@ -131,7 +132,7 @@ BOSS_API bool boss_is_compatible (const unsigned int versionMajor, const unsigne
 // Returns the version string for this version of BOSS.
 // The string exists until this function is called again or until
 // CleanUpAPI is called.
-BOSS_API unsigned int boss_get_version (unsigned int * versionMajor, unsigned int * versionMinor, unsigned int * versionPatch);
+BOSS_API unsigned int boss_get_version (unsigned int * const versionMajor, unsigned int * const versionMinor, unsigned int * const versionPatch);
 
 
 ////////////////////////////////////
@@ -145,7 +146,7 @@ BOSS_API unsigned int boss_get_version (unsigned int * versionMajor, unsigned in
 // plugins.txt and loadorder.txt (if they both exist) are in sync. If
 // dataPath == NULL then the API will attempt to detect the data path of
 // the specified game.
-BOSS_API unsigned int boss_create_db (boss_db * db, const unsigned int clientGame, const char * gamePath);
+BOSS_API unsigned int boss_create_db (boss_db * const db, const unsigned int clientGame, const char * const gamePath);
 
 // Destroys the given DB, freeing any memory allocated as part of its use.
 BOSS_API void     boss_destroy_db (boss_db db);
@@ -159,8 +160,8 @@ BOSS_API void     boss_destroy_db (boss_db db);
 // Can be called multiple times. On error, the database is unchanged.
 // Paths are case-sensitive if the underlying filesystem is case-sensitive.
 // masterlistPath and userlistPath are files.
-BOSS_API unsigned int boss_load_lists (boss_db db, const char * masterlistPath,
-                                    const char * userlistPath);
+BOSS_API unsigned int boss_load_lists (boss_db db, const char * const masterlistPath,
+                                    const char * const userlistPath);
 
 // Evaluates all conditional lines and regex mods the loaded masterlist.
 // This exists so that Load() doesn't need to be called whenever the mods
@@ -179,7 +180,7 @@ BOSS_API unsigned int boss_eval_lists (boss_db db);
 // and userlist, and the number of tags in the returned array. The array and
 // its contents are static and should not be freed by the client.
 // The indices of the tagMap are each tag's UID.
-BOSS_API unsigned int boss_get_tag_map (boss_db db, char *** tagMap, size_t * numTags);
+BOSS_API unsigned int boss_get_tag_map (boss_db db, char *** const tagMap, size_t * const numTags);
 
 // Returns arrays of Bash Tag UIDs for Bash Tags suggested for addition and removal
 // by BOSS's masterlist and userlist, and the number of tags in each array.
@@ -188,25 +189,25 @@ BOSS_API unsigned int boss_get_tag_map (boss_db db, char *** tagMap, size_t * nu
 // case-insensitive. If no Tags are found for an array, the array pointer (*tagIds)
 // will be NULL. The userlistModified bool is true if the userlist contains Bash Tag
 // suggestion message additions.
-BOSS_API unsigned int boss_get_plugin_tags (boss_db db, const char * plugin,
-                                            unsigned int ** tags_added,
-                                            size_t * numTags_added,
-                                            unsigned int ** tags_removed,
-                                            size_t * numTags_removed,
-                                            bool * userlistModified);
+BOSS_API unsigned int boss_get_plugin_tags (boss_db db, const char * const plugin,
+                                            unsigned int ** const tags_added,
+                                            size_t * const numTags_added,
+                                            unsigned int ** const tags_removed,
+                                            size_t * const numTags_removed,
+                                            bool * const userlistModified);
 
 // Returns the messages attached to the given plugin. Messages are valid until Load,
 // DestroyBossDb or GetPluginMessages are next called. plugin is case-insensitive.
 // If no messages are attached, *messages will be NULL and numMessages will equal 0.
-BOSS_API unsigned int boss_get_plugin_messages (boss_db db, const char * plugin,
-                                                boss_message ** messages,
-                                                size_t * numMessages);
+BOSS_API unsigned int boss_get_plugin_messages (boss_db db, const char * const plugin,
+                                                boss_message ** const messages,
+                                                size_t * const numMessages);
 
 // Writes a minimal masterlist that only contains mods that have Bash Tag suggestions,
 // and/or dirty messages, plus the Tag suggestions and/or messages themselves and their
 // conditions, in order to create the Wrye Bash taglist. outputFile is the path to use
 // for output. If outputFile already exists, it will only be overwritten if overwrite is true.
-BOSS_API unsigned int boss_write_minimal_list (boss_db db, const char * outputFile, const bool overwrite);
+BOSS_API unsigned int boss_write_minimal_list (boss_db db, const char * const outputFile, const bool overwrite);
 
 
 #ifdef __cplusplus
