@@ -291,9 +291,6 @@ namespace boss {
     // Condition parser/evaluator
     ///////////////////////////////
 
-    /* Still need to add support for bracketing and evaluation of the compound
-       conditions. */
-
     namespace qi = boost::spirit::qi;
     namespace unicode = boost::spirit::unicode;
     namespace phoenix = boost::phoenix;

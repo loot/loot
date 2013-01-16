@@ -292,7 +292,46 @@ This documentation is a work in progress, covering an API that is also still a w
 </div>
 
 <h2 id="examples">Examples</h2>
-<p>The <code>api-tester</code> application provides a very simple usage example. Its source code is hosted with the BOSS API source code.
+<p>The following is a short program that will print out a list of dirty messages for a given plugin.
+<code class="box">#include "api.h"
+#include &lt;cstddef&gt;
+#include &lt;cstring&gt;
+#include &lt;iostream&gt;
+
+int main(int argc, char *argv[]) {
+    boss_db db;
+    unsigned int ret;
+    boss_message * messages;
+    size_t numMessages;
+
+    if (argc != 2) {
+        std::cout &lt;&lt; "Invalid args.";
+        return -1;
+    }
+
+    //Creating a database for Oblivion, using path stored in Registry.
+    ret = boss_create_db(&amp;db, BOSS_API_GAME_TES4, NULL);
+
+    //Load a masterlist that's in the current working directory.
+    ret = boss_load_lists(db, "masterlist.yaml", NULL);
+
+    //We only want the messages that are relevant to the current install.
+    ret = boss_eval_lists(db);
+
+    //Now fetch the messages for the plugin given as the program's argument.
+    ret = boss_get_plugin_messages(db, argv[1], &amp;messages, &amp;numMessages);
+
+    //Dirty messages are of the warning type and contain the substring "dirty edits".
+    for (size_t i = 0; i &lt; numMessages; ++i) {
+        if (messages[i].type == BOSS_API_MESSAGE_WARN &amp;&amp;
+            strstr(messages[i].message, "dirty edits") != NULL) {
+            std::cout &lt;&lt; messages[i].message &lt;&lt; std::endl;
+        }
+    }
+
+    return 0;
+}
+</code>
 
 <h2 id="credits">Credits</h2>
 <p>Thanks go to Lojack and myk002 for significant contributions during planning and beta testing, and to kaburke for beta testing of v2 of the API.
