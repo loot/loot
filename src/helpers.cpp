@@ -26,7 +26,7 @@
 */
 
 #include "helpers.h"
-#include "plugin/ModFormat.h"
+#include "VersionRegex.h"
 #include "error.h"
 
 #include <boost/spirit/include/karma.hpp>
@@ -45,6 +45,10 @@
 #include <time.h>
 #include <sys/types.h>
 #include <sstream>
+
+// Libespm files.
+#include <src/commonSupport.h>
+#include <src/fileFormat.h>
 
 #if _WIN32 || _WIN64
 #   ifndef UNICODE
@@ -163,10 +167,37 @@ namespace boss {
         : verString(ver) {}
 
     Version::Version(const fs::path file) {
- //       LOG_TRACE("extracting version from '%s'", file.string().c_str());
         if (file.extension().string() == ".esm" || file.extension().string() == ".esp") {
-            //Use libespm interface.
-            verString = ReadHeader(file).Version;
+            //Use libespm interface. Assumes that it has previously been initialised.
+            ifstream input(file.string().c_str(), ios::binary);
+            espm::file FileStruct;
+			espm::readFile(input, FileStruct);
+			input.close();
+			
+			for(size_t i=0,max=FileStruct.fields.size(); i < max; ++i){
+				if (FileStruct.fields[i].name == "SNAM") {
+					string text = FileStruct.fields[i].data;
+					
+					string::const_iterator begin, end;
+					begin = text.begin();
+					end = text.end();
+
+					for(int i = 0; regex* re = version_checks[i]; i++) {
+						smatch what;
+						while (regex_search(begin, end, what, *re)) {
+							if (what.empty())
+								continue;
+
+							ssub_match match = what[1];
+							if (!match.matched)
+								continue;
+
+							verString = trim_copy(string(match.first, match.second));
+						}
+					}
+				}
+			}
+			
         } else {
 #if _WIN32 || _WIN64
             DWORD dummy = 0;
@@ -193,10 +224,8 @@ namespace boss {
             }
 #else
             // ensure filename has no quote characters in it to avoid command injection attacks
-            if (string::npos == file.string().find('"')) {
-         //       LOG_WARN("filename has embedded quotes; skipping to avoid command injection: '%s'", file.string().c_str());
-         //   } else {
-                // command mostly borrowed from the gnome-exe-thumbnailer.sh script
+            if (string::npos != file.string().find('"')) {
+                 // command mostly borrowed from the gnome-exe-thumbnailer.sh script
                 // wrestool is part of the icoutils package
                 string cmd = "wrestool --extract --raw --type=version \"" + file.string() + "\" | tr '\\0, ' '\\t.\\0' | sed 's/\\t\\t/_/g' | tr -c -d '[:print:]' | sed -r 's/.*Version[^0-9]*([0-9]+(\\.[0-9]+)+).*/\\1/'";
 
@@ -206,11 +235,7 @@ namespace boss {
                 static const uint32_t BUFSIZE = 32;
                 char buf[BUFSIZE];
                 if (NULL != fgets(buf, BUFSIZE, fp)) {
-        /*            LOG_DEBUG("failed to extract version from '%s'", file.string().c_str());
-                }
-                else {
-        */            verString = string(buf);
-        //            LOG_DEBUG("extracted version from '%s': %s", file.string().c_str(), retVal.c_str());
+                    verString = string(buf);
                 }
                 pclose(fp);
             }

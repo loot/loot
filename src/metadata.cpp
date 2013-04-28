@@ -22,7 +22,11 @@
 */
 
 #include "metadata.h"
+#include "helpers.h"
 #include <boost/algorithm/string.hpp>
+#include <src/fileFormat.h>
+
+#include <iostream>
 
 using namespace std;
 
@@ -126,8 +130,31 @@ namespace boss {
         return Data();
     }
 
-    Plugin::Plugin() : enabled(true), priority(0) {}
-    Plugin::Plugin(const std::string n) : name(n), enabled(true), priority(0) {}
+    Plugin::Plugin() : enabled(true), priority(0), crc(0), isMaster(false) {}
+    Plugin::Plugin(const std::string& n) : name(n), enabled(true), priority(0), crc(0), isMaster(false) {}
+
+	Plugin::Plugin(const std::string& n, const std::string& path)
+		: name(n), enabled(true), priority(0) {
+			
+		// Get data from file contents using libespm. Assumes libespm has already been initialised.
+		boost::filesystem::path filepath = boost::filesystem::path(path) / n;
+		ifstream input(filepath.string().c_str(), ios::binary);
+		espm::file File;
+		espm::readFile(input, File);
+		input.close();
+		
+		crc = GetCrc32(filepath);
+		isMaster = espm::isMaster(File);
+		vector<char*> rawMasters = espm::getMasters(File);
+		for (size_t i=0,max=rawMasters.size(); i < max; ++i) {
+			masters.push_back(rawMasters[i]);
+		}
+		
+		vector<espm::item> records = espm::getRecords(File);
+		for (vector<espm::item>::const_iterator it = records.begin(),endIt = records.end(); it != endIt; ++it){
+			formIDs.insert(*reinterpret_cast<uint32_t*>(it->record.recID));
+		}
+	}
 
     std::string Plugin::Name() const {
         return name;
@@ -241,4 +268,33 @@ namespace boss {
     bool Plugin::operator == (Plugin rhs) {
         return name == rhs.Name();
     }
+    
+    std::set<uint32_t> Plugin::FormIDs() const {
+		return formIDs;
+	}
+	
+	std::set<uint32_t> Plugin::OverrideFormIDs() const {
+		int modIndex = masters.size() << 24;
+		
+		set<uint32_t> fidSubset;
+		
+		for (set<uint32_t>::const_iterator it = formIDs.begin(), endIt=formIDs.end(); it != endIt; ++it) {
+			if (*it < modIndex)
+				fidSubset.insert(*it);
+		}
+		
+		return fidSubset;
+	}
+	
+	std::vector<std::string> Plugin::Masters() const {
+		return masters;
+	}
+	
+	uint32_t Plugin::Crc() const {
+		return crc;
+	}
+	
+	bool Plugin::IsMaster() const {
+		return isMaster;
+	}
 }

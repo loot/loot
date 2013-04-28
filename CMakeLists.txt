@@ -11,10 +11,12 @@
 cmake_minimum_required (VERSION 2.8.9)
 project (boss)
 
-set (BOSS_SRC "${CMAKE_SOURCE_DIR}/src/metadata.cpp" "${CMAKE_SOURCE_DIR}/src/game.cpp" "${CMAKE_SOURCE_DIR}/src/helpers.cpp" "${CMAKE_SOURCE_DIR}/src/plugin/ModFormat.cpp" "${CMAKE_SOURCE_DIR}/src/plugin/VersionRegex.cpp")
+set (BOSS_SRC "${CMAKE_SOURCE_DIR}/src/metadata.cpp" "${CMAKE_SOURCE_DIR}/src/game.cpp" "${CMAKE_SOURCE_DIR}/src/helpers.cpp" "${CMAKE_SOURCE_DIR}/src/VersionRegex.cpp")
+
+set (BOSS_SRC ${BOSS_SRC} "${PROJECT_LIBS_DIR}/libespm/src/commonSupport.cpp" "${PROJECT_LIBS_DIR}/libespm/src/fileFormat.cpp")
 
 # Include source and library directories.
-include_directories ("${PROJECT_LIBS_DIR}/alphanum" "${PROJECT_LIBS_DIR}/utf8" "${PROJECT_LIBS_DIR}/boost" "${PROJECT_LIBS_DIR}/yaml-cpp/include" "${CMAKE_SOURCE_DIR}/src" "${PROJECT_LIBS_DIR}/libloadorder/src")
+include_directories ("${PROJECT_LIBS_DIR}/alphanum" "${PROJECT_LIBS_DIR}/utf8" "${PROJECT_LIBS_DIR}/boost" "${PROJECT_LIBS_DIR}/yaml-cpp/include" "${CMAKE_SOURCE_DIR}/src" "${PROJECT_LIBS_DIR}/libloadorder/src" "${PROJECT_LIBS_DIR}/BOSS/trunk" "${PROJECT_LIBS_DIR}/libespm" "${PROJECT_LIBS_DIR}/zlib")
 
 
 ##############################
@@ -39,6 +41,7 @@ ENDIF ()
 
 link_directories ("${PROJECT_LIBS_DIR}/yaml-cpp/build")
 link_directories ("${PROJECT_LIBS_DIR}/libloadorder/build")
+link_directories ("${PROJECT_LIBS_DIR}/zlib" )
 
 # Settings when compiling and cross-compiling on Linux.
 IF (CMAKE_HOST_SYSTEM_NAME MATCHES "Linux")
@@ -53,12 +56,12 @@ IF (CMAKE_HOST_SYSTEM_NAME MATCHES "Linux")
         set (BOSS_LIBS version)
     ENDIF ()
 
-    set (BOSS_LIBS ${BOSS_LIBS} loadorder yaml-cpp boost_filesystem boost_system boost_regex)
+    set (BOSS_LIBS ${BOSS_LIBS} zlibstatic loadorder yaml-cpp boost_locale boost_filesystem boost_system boost_regex)
 ENDIF ()
 
 # Settings when compiling on Windows.
 IF (CMAKE_HOST_SYSTEM_NAME MATCHES "Windows")
-    set (BOSS_LIBS loadorder yaml-cpp libboost_filesystem-vc110-mt-1_52 libboost_system-vc110-mt-1_52)
+    set (BOSS_LIBS zlibstatic loadorder yaml-cpp boost_locale-vc110-mt-1_52 libboost_filesystem-vc110-mt-1_52 libboost_system-vc110-mt-1_52)
     set (CMAKE_CXX_FLAGS "/EHsc")
 ENDIF ()
 
@@ -67,8 +70,8 @@ ENDIF ()
 ##############################
 
 # Build API.
-add_library           (boss ${PROJECT_LINK} "${CMAKE_SOURCE_DIR}/src/api.cpp" ${BOSS_SRC})
-target_link_libraries (boss ${BOSS_LIBS})
+#add_library           (boss ${PROJECT_LINK} "${CMAKE_SOURCE_DIR}/src/api.cpp" ${BOSS_SRC})
+#target_link_libraries (boss ${BOSS_LIBS})
 
 # Build tester.
 add_executable        (tester "${CMAKE_SOURCE_DIR}/src/tester.cpp" ${BOSS_SRC})

@@ -213,14 +213,14 @@ namespace YAML {
 
     Emitter& operator << (Emitter& out, const boss::Message& rhs) {
         out << BeginMap
-            << Key << "type" << rhs.Type()
-            << Key << "content" << rhs.Content();
+            << Key << "type" << Value << rhs.Type()
+            << Key << "content" << Value << rhs.Content();
 
         if (!rhs.Language().empty())
-            out << Key << "lang" << rhs.Language();
+            out << Key << "lang" << Value << rhs.Language();
 
         if (!rhs.Condition().empty())
-            out << Key << "condition" << rhs.Condition();
+            out << Key << "condition" << Value << rhs.Condition();
 
         out << EndMap;
     }
@@ -230,13 +230,13 @@ namespace YAML {
             out << rhs.Name();
         else {
             out << BeginMap
-                << Key << "name" << rhs.Name();
+                << Key << "name" << Value << rhs.Name();
 
             if (rhs.IsConditional())
-                out << Key << "condition" << rhs.Condition();
+                out << Key << "condition" << Value << rhs.Condition();
 
             if (!rhs.DisplayName().empty())
-                out << Key << "display" << rhs.DisplayName();
+                out << Key << "display" << Value << rhs.DisplayName();
 
             out << EndMap;
         }
@@ -247,8 +247,8 @@ namespace YAML {
             out << rhs.PrefixedName();
         else {
             out << BeginMap
-                << Key << "name" << rhs.PrefixedName()
-                << Key << "condition" << rhs.Condition()
+                << Key << "name" << Value << rhs.PrefixedName()
+                << Key << "condition" << Value << rhs.Condition()
                 << EndMap;
         }
     }

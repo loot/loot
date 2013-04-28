@@ -8,6 +8,15 @@
 
 #include <ostream>
 #include <fstream>
+#include <stdint.h>
+#include <ctime>
+
+#include <src/commonSupport.h>
+#include <src/fileFormat.h>
+
+#include <boost/filesystem.hpp>
+
+namespace fs = boost::filesystem;
 
 using namespace std;
 
@@ -22,9 +31,9 @@ void minimisePluginList(set<boss::Plugin, boss::plugin_comp>& plugins) {
     plugins.swap(out);
 }
 
-int main() {
+int main(int argc, char *argv[]) {
 
-    cout << "Testing masterlist parser." << endl;
+ /*   cout << "Testing masterlist parser." << endl;
 
     YAML::Node test = YAML::LoadFile("masterlist-example.yaml");
 
@@ -68,6 +77,52 @@ int main() {
 
     out2 << yout2.c_str();
     out2.close();
-
+ */   
+    cout << "Testing plugin reading." << endl;
+    
+    time_t start, end;
+    start = time(NULL);
+    
+    // Set up libesm.
+	common::options::setGame(boss::libespm_game);
+	ifstream input(boss::libespm_options_path);
+	common::readOptions(input);
+	input.close();
+    
+    // Get a list of the plugins.
+    list<boss::Plugin> plugins;
+    for (fs::directory_iterator it(argv[1]); it != fs::directory_iterator(); ++it) {
+        if (fs::is_regular_file(it->status()) && (it->path().extension().string() == ".esp" || it->path().extension().string() == ".esm")) {
+			
+			if (it->path().filename().string() == "Skyrim.esm")
+				continue;  // Libespm crashes with v1.9 Skyrim.esm.
+			
+			cout << "Found plugin: " << it->path().string() << endl;
+			boss::Plugin plugin(it->path().filename().string(),it->path().parent_path().string());
+			plugins.push_back(plugin);
+        }
+    }
+    
+    cout << "Finished looking for plugins." << endl;
+    
+    plugins.sort(boss::plugin_comp());
+    
+    for (list<boss::Plugin>::iterator it=plugins.begin(), endIt = plugins.end(); it != endIt; ++it) {
+		cout << it->Name() << endl
+			 << '\t' << "Is Master: " << it->IsMaster() << endl
+			 << '\t' << "Masters:" << endl;
+			 
+		vector<std::string> masters = it->Masters();
+		for(int i = 0; i < masters.size(); ++i)
+			cout << '\t' << '\t' << i << ": " << masters[i] << endl;
+			
+		cout << '\t' << "Number of Records: " << it->FormIDs().size() << endl;
+		
+		cout << '\t' << "Number of Override Records: " << it->OverrideFormIDs().size() << endl;
+	}
+	
+	end = time(NULL);
+	cout << "Time taken to sort plugins: " << (end - start) << " seconds." << endl;
+	
     return 0;
 }

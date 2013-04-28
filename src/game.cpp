@@ -164,21 +164,4 @@ namespace boss {
             throw error(ERROR_PATH_WRITE_FAIL, "Could not create BOSS folder for game.");
         }
     }
-
-    //Can be used to get the location of the LOCALAPPDATA folder (and its Windows XP equivalent).
-    fs::path Game::GetLocalAppDataPath() {
-#if _WIN32 || _WIN64
-        HWND owner;
-        TCHAR path[MAX_PATH];
-
-        HRESULT res = SHGetFolderPath(owner, CSIDL_LOCAL_APPDATA, NULL, SHGFP_TYPE_CURRENT, path);
-
-        if (res == S_OK)
-            return fs::path(path);
-        else
-            return fs::path("");
-#else
-        return fs::path("");
-#endif
-    }
 }

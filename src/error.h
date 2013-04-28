@@ -25,6 +25,7 @@
 #define __BOSS_ERROR__
 
 #include <exception>
+#include <string>
 
 namespace boss {
 
@@ -41,7 +42,7 @@ namespace boss {
 
     class error : public std::exception {
     public:
-        error(const int code_arg, const std::string& what_arg) : _code(code_arg), _what(what_arg) {}
+        error(const unsigned int code_arg, const std::string& what_arg) : _code(code_arg), _what(what_arg) {}
         ~error() throw() {};
 
         unsigned int code() const { return _code; }

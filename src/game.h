@@ -68,9 +68,6 @@ namespace boss {
 
         boost::filesystem::path gamePath;  //Path to the game's folder.
         boost::unordered_set<std::string> activePlugins;  //Holds lowercased strings.
-
-        //Can be used to get the location of the LOCALAPPDATA folder (and its Windows XP equivalent).
-        boost::filesystem::path GetLocalAppDataPath();
     };
 }
 

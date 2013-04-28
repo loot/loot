@@ -25,7 +25,9 @@
 
 #include "game.h"
 
+#include <stdint.h>
 #include <string>
+#include <vector>
 #include <list>
 #include <set>
 
@@ -107,7 +109,8 @@ namespace boss {
     class Plugin {
     public:
         Plugin();
-        Plugin(const std::string name);
+        Plugin(const std::string& name);
+        Plugin(const std::string& name, const std::string& path);
 
         std::string Name() const;
         bool Enabled() const;
@@ -132,6 +135,12 @@ namespace boss {
         bool IsRegexPlugin() const;
 
         bool operator == (Plugin rhs);
+        
+        std::set<uint32_t> FormIDs() const;
+        std::set<uint32_t> OverrideFormIDs() const;
+        std::vector<std::string> Masters() const;
+        uint32_t Crc() const;
+        bool IsMaster() const;
     private:
         std::string name;
         bool enabled;  //Default to true.
@@ -141,11 +150,38 @@ namespace boss {
         std::set<File, file_comp> incompatibilities;
         std::list<Message> messages;
         std::list<Tag> tags;
+        
+        std::vector<std::string> masters;
+        std::set<uint32_t> formIDs;
+        uint32_t crc;
+        bool isMaster;
     };
+    
+    inline bool isMasterOf(const Plugin& servant, const Plugin& master) {
+		std::vector<std::string> masters = servant.Masters();
+		for (int i = 0; i < masters.size(); ++i) {
+			if (masters[i] == master.Name())
+				return true;
+		}
+		return false;
+	}
 
     struct plugin_comp {
         bool operator() (const Plugin& lhs, const Plugin& rhs) const {
-            return lhs.Name() < rhs.Name();
+            if (lhs.IsMaster() && !rhs.IsMaster())
+				return true;
+			else if (!lhs.IsMaster() && rhs.IsMaster())
+				return false;
+			else if (isMasterOf(rhs, lhs))
+				return true;
+			else if (isMasterOf(lhs, rhs)) // Should probably also check for cyclic masters.
+				return false;
+			else if (lhs.OverrideFormIDs().size() > rhs.OverrideFormIDs().size())
+				return true;
+			else if (lhs.OverrideFormIDs().size() < rhs.OverrideFormIDs().size())
+				return false;
+			else
+				return lhs.Name() < rhs.Name();
         }
     };
 

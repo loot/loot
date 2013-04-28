@@ -150,13 +150,12 @@ A general workflow for a user running LOOT to sort would be:
 LOOT must also provide a means to manage past user choices, to undo its
 changes (only back one run though), and to edit its settings.
 
-LOOT should ask for permission to send plugin contents data on first run, and
-to send plugin metadata whenever there are metadata changes to send, unless the
-user selects a "do not ask me again" option. These settings should be
-configurable at any time.
+LOOT should ask for permission to send plugin metadata whenever there are 
+metadata changes to send, unless the user selects a "do not ask me again" 
+option. This setting should be configurable at any time.
 
 Documentation will be split between three readmes: one general readme, one API
-readme and one rule syntax readme. The version history can be split into a
+readme and one syntax readme. The version history can be split into a
 fourth readme when it grows sufficiently long.
 
 
@@ -183,33 +182,17 @@ LOOT uses specified in a settings file, which will be editable via the GUI.
 
 Because auto-sorting requires LOOT to know what is inside the plugins it sorts,
 it must scan the plugins, and determine which of its records are new and which
-are edited (new records aren't used for determining load order). However, this
-requires significant computation, so LOOT will use a database that holds which
-records each plugin changes. The database will be hosted online, and will be
-used in the following manner:
+are edited (new records aren't used for determining load order).
 
-  1. LOOT checks to see if a database update is available, and downloads the
-     update if so. This may be done by diff or by downloading the whole file if
-     a diff is not feasible.
-  2. LOOT scans the installed plugins, calculating the CRC of each plugin.
-  3. For each plugin, the database is scanned for an entry with a matching file
-     name and CRC. If an entry is found, the entry's data is used and scanning
-     of the plugin is skipped.
-  4. Any plugins which do not already have database entries are scanned.
-  5. The correct load order of the plugins is calculated using data from scanned
-     plugins, the database, the masterlist and the userlist.
-  6. The data from the scanned plugins is appended to the database file, which
-     is then uploaded to its hosted location.
-
-In addition to having this database file as a sort of permanent and
-self-updating cache, optimisations can also be made to skip load order
+Optimisations can be made to skip load order
 calculation. For example, if the only changes from the last load order set by
 LOOT is that a plugin or plugins have been removed, then the last load order
 may be used. It might also be possible to only perform partial calculation
-when plugins are added, though this is not certain.
+when plugins are added, though this is not certain. It might not also be worth
+the effort, since preliminary testing shows that scanning is considerably
+faster than first anticipated.
 
-Note: For clarity, the database that holds the results of plugin scanning will
-be referred to as the "cache". The list of metadata that is maintained by the
+Note: For clarity, the he list of metadata that is maintained by the
 LOOT team will be referred to as the "masterlist", and the list of metadata that
 is individual to each user will be referred to as the "userlist".
 
@@ -261,59 +244,16 @@ Further details can be found in the 'docs/BOSS Metadata File Syntax.html' file.
 Networking
 ==========
 
-LOOT has four target networking functionalities:
+LOOT has two target networking functionalities:
 
-    * Remote / local cache sync.
     * Masterlist updating.
     * User feedback submission.
 
-None of these functionalities are critical to usage of LOOT.
+Neither of these functionalities are critical to usage of LOOT.
 
-The masterlist and cache repositories will be Subversion repositories, as this
-allows users to most easily download only the files they require, and only the
-diffs of those files.
-
-As LOOT needs commit as well as checkout access to the cache repository, for
-users without their own credentials, it must access the repository using a
-robot account. Google Code does not allow the use of robot accounts, but
-Sourceforge does. However, the actions performed by the robot account are the responsibility of the account creator. This brings up the issue of account
-abuse. This will be covered in the 'Security' section below.
-
-Conflicts between different users' commits will probably be an issue.
-Because the database files are binary, not text, and because they use an index
-with data offsets, they can't be merged automatically. The database file
-workflow is:
-        1. User svn updates their working copy of a file.
-        2. User performs scanning actions.
-        3. User edits their working copy of the file.
-        4. User commits their edit to the repository.
-
-If another user changes the same file between steps 1 and 4, the commit will
-fail. If this happens, LOOT should svn revert followed by svn update, then
-re-apply the user's edits to the updated file, checking to make sure that the
-updated file doesn't already include the same data. A second commit should then
-be attempted. If this commit also fails, it's best just to discard the edits.
-While that means the user won't benefit from having a local cache, it becomes
-too complicated to store the edits on disk and re-apply them for a potentially
-uncapped number of failures.
-
-The database repository may store tens if not hundreds of thousands of files,
-so they need to be organised well to ease browsing. Grouping the files into
-the game they are for, then subgrouping them into folders based on the first
-character of their filename, then subgrouping again based on the second
-character would probably do. For example:
-
-repo/
-    Oblivion/
-            o/
-                b/
-                    oblivion.esm.bpdc
-
-Files and the 'letter folders' will be in lowercase.
-
-"repo" does not have to be the repository root, but LOOT's settings should
-use the URL pointing to that location. The repository will be required to use
-the same game folder names as LOOT's install structure (see the section below).
+The masterlist repository will use Subversion, as this
+allows users to most easily download only the file they require, and only the
+diffs of that file.
 
 The masterlists would be stored using a folder structure that mirrors LOOT's
 install structure, for example:
@@ -343,86 +283,6 @@ A program update checker is notably absent, as a fully automated updater is
 not worth the trouble of implementing well, and notification of an available
 update is easily performed through a global masterlist message and so does not
 require an additional transport mechanism.
-
-
-Security
-========
-
-The abuse of the database repository credentials to be distributed with LOOT is
-a very real concern. Steps must be taken to prevent or minimise the associated
-risk. Unfortunately, I have no experience with this sort of thing, so I could
-be making some incorrect assumptions below.
-
-One possible way to make obtaining the SSH key for use outside of LOOT
-non-trivial is to compile it into the executable. The key could be stored in a
-header file, eg. "key.h", of which a template with an empty or dummy key is
-committed to the source code repository, and then this header could be included
-in the file(s) that require it. So long as the actual key is not distributed
-beyond the team member who builds releases, this would then require people to
-either reverse-engineer the executable or monitor its allocated memory to obtain
-the key.
-
-However, this doesn't prevent the swapping out of files that LOOT uploads. It
-may be possible for an attacker to replace the file that LOOT generates or edits
-for upload with another containing rubbish data or malicious code. Attackers
-could also "cut and paste" the section of the executable that deals with the
-uploading into another executable that allows arbitrary uploads. I don't
-actually know if the latter is possible, but it sounds like it could be.
-
-In that case, may we lose any upload safeguards, but the attacker could not
-disable the download safeguards present in other users' copies of the LOOT
-executable unless their systems were already compromised. We have to then assume
-that the database is not necessarily safe. Given an unsafe database, we can do
-the following:
-
-        * Ensure that the robot only has repository commit/checkout permissions and
-          no admin abilities. Team members should be given repository access to
-          allow oversight, with admins having admin abilities.
-        * Check for the validity of database files. A database file should only ever
-          be read or generated by LOOT, so invalid database files should never
-          exist except on a compromised system. Any invalid files found could
-          cause a message to be displayed and a notification sent to the team using
-          the feedback mechanism. The invalid file would then be deleted. The parser
-          should fail immediately upon encountering invalid content.
-        * Don't execute database file content. The format doesn't have any
-          executable data, so this is pretty obvious in this case.
-        * Revoke access to the repository for the compromised key. If we only have
-          one valid robot key at any one time, this is pretty easy. The downside is
-          that it means that nobody can access the repository with the key,
-          effectively disabling the online cache. The procedure in case this was
-          done would be to then figure out how the compromise happened, then try to
-          stop it happening again, before releasing an update to LOOT with a new
-          key.
-        * Only download a database file if a plugin's data isn't found in the local
-          cache. This means that clients will only download database files for
-          plugins which are installed and which don't already have cached data. So
-          if A.esp and B.esp have database file updates available, but the specific
-          version of A.esp that the user has installed already has its data cached
-          locally, then only B.esp.lmdb will be updated.
-        * Users could disable online database access in their copies of LOOT. If
-          a user thinks that they have downloaded rubbish data, they can delete
-          their local cache and LOOT will regenerate it the next time it runs.
-
-The validity and non-execute points would not prevent an attacker from
-distributing rubbish data, but it would only take one user noticing and
-informing the team for this to be caught and dealt with.
-
-Since the database repository would be separate from the masterlist repository,
-and the robot wouldn't have access to the latter, users can easily be informed
-of any compromise via masterlist messages.
-
-An attacker may also upload files that may never be downloaded by users, but
-which are still malicious or illegal in nature. As such, we can't rely on
-users vetting the files they download as an indicator for a compromise. One
-possibility is for the database to be monitored by having an email notification
-system in place that would notify team members of any file uploads and their
-content. That would allow us to detect database compromise without any user
-involvement, though it does require team activity.
-
-All the above points are suggested on the assumption that we can't have a
-dedicated machine to filter out malicious use. Such a machine would be likely
-flawed anyway, so the above points are still worth considering even if we had
-a dedicated machine.
 
 
 Install Structure
