@@ -1,430 +1,95 @@
-LOOT
-====
+BOSSv3
+======
 
 Introduction
 ============
 
-LOOT is BOSS v3.
 See BOSS: http://code.google.com/p/better-oblivion-sorting-software/
 
-LOOT has been given a different working name because it will be a very
-different program to the one that people know and love as BOSS.
+BOSSv3 is being developed on a separate repository from the rest of BOSS's code as it is essentially a new program, and is being designed to address the shortcomings that are inherent in how BOSS approaches load order optimisation.
 
-LOOT is being designed from the ground up to address the shortcomings
-that are inherent in how BOSS approaches load order optimisation. That's
-another reason why it's being hosted on a different site, under a
-different name, even though it is intended to be released as an update
-to BOSS. While ideas and some code will be transferred, the distancing
-will hopefully produce better results.
+So what's wrong with BOSS? Why do I feel the need to go back to the drawing board?
 
-So what's wrong with BOSS? Why do I feel the need to go back to the
-drawing board?
+Well, modding for Bethesda's games has proved to be incredibly popular, with over 25,000 mods each available for Oblivion and Skyrim.
 
-Well, Oblivion has accumulated around 25,000 mods on
-Oblivion Nexus since its launch in 2006. Skyrim has accumulated around
-19,000 mods on Skyrim Nexus since its launch in 2011. Growth models aside,
-Skyrim has proved incredibly popular for modding.
+For BOSS to be as useful as possible, it needs to be able to sort as many mods as possible. For Skyrim, the backlog of mods that need adding to its masterlist is at 5,800+ and growing. Recruiting extra team members isn't a real solution, as I've already done that and frankly copy/pasting filenames into a massive text file is not a whole load of fun and any analysis takes a while to do properly.
 
-For BOSS to be as useful as possible, it needs to be able to sort as many
-mods as possible. For Skyrim, we're getting user submissions of mods to
-be sorted faster than we can add them, and our backlog is at 3,000+
-plugins and growing. That's after I've doubled the effective team size.
+The other obvious solution is to cut down on the number of mods that need to be added to the masterlist - instead of having every single mod listed, BOSS could be made to sort the 'simple' mods on its own, and then we could add to the masterlist only those that proved too tricky for it to position itself.
 
-The BOSS team's operational model is therefore unsustainable, and has
-to change. The main issue is that it takes time for us to process all
-these reports, and we only have so much free time: the team itself is the
-weak point in the operating chain. It's a good idea, then, to automate
-as much as possible, and so reduce the need for the team to do things.
-
-While that's being done, I might as well also make some improvements to
-other areas of BOSS.
+While that's being done, I might as well also make some improvements to other areas of BOSS.
 
 
-LOOT Design Overview
-====================
+Design Notes
+============
 
-LOOT's central design idea is that its functionality should be as independent of
-external systems as possible. A system might be a human, a group of humans, or a
-server somewhere. This rather vague idea can be broken down into a few design
-goals:
+BOSS should be able to identify a reasonably correct load order for a group of arbitrary plugins based on their contents. However, there are always some plugins that must be positioned in certain ways relative to other plugins due to author intent that cannot be determined from their contents. There is also generally an element of user preference in setting a load order. BOSS should also be able to provide mechanisms for dealing with such plugins and preferences in addition to its basic 'reasonably correct' sorting.
 
-  * LOOT should be able to figure out an optimum load order without any inputs
-    other than the plugins it will order.
-  * LOOT should be able to figure out a correct load order with a minimum of
-    supplementary data on author intent.
-  * LOOT should be able to obtain supplementary data from an arbitrary source,
-    or arbitrary sources, depending on the number of types of data.
-  * LOOT's effects should be customiseable by the user.
-  * LOOT should be scaleable, focussed and extensible.
+BOSSv3's masterlist will therefore be used to provide unordered data sets for plugins that require them, and the userlist used to allow users to override the automatic sorting and to provide additional metadata themselves. They will be quite different to the current masterlist and userlist, and will use a new language/format.
 
-Note that an optimum load order is not necessarily a correct load order. If
-we define the impact of a plugin as the number of its edits that get applied to
-a person's game, then an optimum load order is one with the highest average
-impact from its constituent plugins whilst satisfiying all explicit dependencies.
-However, some plugins may be made with the intent that they are to be overridden
-by others, and so a correct load order is one that also takes into account
-author intent. Given a set of plugins, their correct load order may have a lower
-average impact than their optimum load order.
+If the 'impact' of a plugin is defined as the number of its edits that get applied to a person's game divided by the total number of edits it makes, then an 'optimum' load order is one that maximises the average impact of its constituent plugins whilst satisfying all explicit dependencies. A 'correct' load order is not necessarily an optimum load order though, as some plugins may be made with the intent that they are overridden by other plugins.
 
-The design goal for a correct load order specifies the use of supplementary data
-because the determination of author intent is not generally possible given only
-a plugin. Such supplementary data might include any implicit masters, and
-their intended order relative to any explicit masters. It might also include
-whether the plugin was intended to be high or low priority.
+For flexibility, the 'masterlist' data file that gets updated by the BOSS Team should have its online location as a configurable option within BOSS, so that should its location change for whatever reason, users would be able to redirect their copy of BOSS to look in the new location. It might be a good idea to download it via a diff, or allow compression, somehow as the Skyrim masterlist is 1.7 MB. 
 
-Supplementary data can also include data not related to load ordering: one of
-BOSS's great successes has been the highlighting of the issue of dirty plugins,
-and the distribution of generally applicable information such as that is an
-important feature to retain.
+BOSSv3 will also have an API for accessing BOSS data and functionality. The more general functionality found in v2's API has already been forked to libloadorder, which v3 shall make use of.
 
-The goal of arbitrary data sources is with LOOT's long-term success in mind. It
-may be that the team responsible for it may suddenly drop off the face of the
-Internet, as has happened with other utilities' teams in the past. In such a
-circumstance, getting access to the data source LOOT uses may be difficult or
-impossible, and so anyone wishing to pick the project up would have to set up
-a new source, but if LOOT can't handle arbitrary data sources, then those
-picking it up would also have to release a new version of LOOT and distribute
-that. This may take a while if there is nobody available with the skills or
-experience required. If LOOT can handle arbitrary data sources, then all that
-would need to be done is for LOOT users to be made aware of the situation, and
-for them to be given instructions on how to change the source LOOT looks at in
-their copies.
+Unlike v2, v3 will not have a built-in updater/update checker. It's just too much of a headache to code and manage for the payoff it gives, especially since notifications can be sent to users via the masterlist.
 
-The goal of customiseability is because LOOT will never be able to automatically
-get a load order quite how everyone wants it. There will always be an element of
-choice involved in setting up a load order, so LOOT should accommodate for that.
+When run, BOSS shall output its results to a "log.yaml" file, which shall then be interpreted by the UI to display the BOSS Log. In addition, before running it shall create a copy of the current load order in the same directory with the filename "loadorder.old".
 
-The final goal is basically to prevent the problems BOSS has happening again, by
-implementing good systems design and coding practice. I'm always learning, and
-now I realise some of the decisions I made working on BOSS weren't the best. I
-probably won't make the best decisions this time around either, but they should
-end up better.
-
-I anticipate that by having LOOT be able to figure out an optimum load order
-without any input from humans, ordering the vast majority of plugins correctly
-can be fully automated, as most plugins make a small number of changes that
-are highly compatible. More complex plugins will still require the maintainance
-team to provide LOOT with supplementary data, but they are relatively few.
+BOSSv3 won't have a command line interface. Command line options may be added to the GUI if requested. Users need to be made aware that what BOSS sets isn't the absolutely perfect load order, and is open to tweaking, which is being lost on some people currently, in part due to the 'one click' nature of BOSS.
 
 
-LOOT User Experience
-====================
+Roadmap
+=======
 
-LOOT will require a greater degree of user interaction than BOSS does,
-so an interface that facilitates this is required: as such, LOOT will
-not have a CLI. A GUI that accepts command line parameters may be an option if
-people want one.
-
-A general workflow for a user running LOOT to sort would be:
-
-1. Run LOOT: it auto-sorts based on plugin content plus supplementary data.
-2. LOOT finishes sorting, and displays the load order it suggests. At this point
-   the load order has not yet been applied.
-
-   Clicking on a plugin in the load order will highlight all those it
-   conflicts with. This provides a simple way for users to gauge conflicts
-   and so decide which plugin's changes they wish to apply to their games.
-
-   Dragging a plugin will display the positions to which it can be moved
-   (by dropping it there) whilst satisfying dependencies.
-
-   Plugins which have no conflicts are greyed out and cannot be selected,
-   to simplify this process.
-
-   There will be an information panel which will display the selected
-   plugin's requirements, incompatibilities, priority and messages. These
-   will be editable, and upon exit of the load order window, the user will be
-   asked if they wish to submit any edits they make to these fields. Edits to
-   plugin positions will not be submitted.
-
-   If LOOT encounters any errors while sorting, they are displayed instead
-   of the load order.
-3. The user exits the load order display, choosing either to apply or
-   discard changes.
-4. LOOT asks the user if they want to submit their plugin data edits. If
-   so, it then asks the user to supply links for each of the plugins
-   with edited data.
-4. LOOT then applies the resulting load order, saves any user choices, and
-   exits.
-
-LOOT must also provide a means to manage past user choices, to undo its
-changes (only back one run though), and to edit its settings.
-
-LOOT should ask for permission to send plugin metadata whenever there are 
-metadata changes to send, unless the user selects a "do not ask me again" 
-option. This setting should be configurable at any time.
-
-Documentation will be split between three readmes: one general readme, one API
-readme and one syntax readme. The version history can be split into a
-fourth readme when it grows sufficiently long.
+1. Write new masterlist, userlist, settings file parsers. DONE
+2. Implement per-game handling. DONE
+3. Write API. DONE
+4. Develop sorting algorithm.
+5. Tie together automatic 'simple' sorting with masterlist, userlist data parsing and usage.
+6. Write masterlist updating code.
+7. Develop graphical user interface.
 
 
-Implementation
-==============
+Sorting Algorithm
+=================
 
-LOOT will be an ambitious project: to keep its code as simple as possible,
-it will make use of external libraries to supply functionality where
-possible, for example:
-  * yaml-cpp: for masterlist/userlist parsing.
-  * libespm: for plugin parsing.
-  * libloadorder: for reading and writing load order.
-  * libsvn: for accessing the Subversion repositories used.
-  * cURL: for misc. networking.
-  * wxWidgets: for the interface.
-  * Boost: for filesystem interaction, various helpful functions.
+Given two plugins A and B, their load order only matters if they both change a third plugin's records or if one changes the other's records. In such a case, the plugins can be said to 'overlap'.
 
-As a reflection of this, LOOT's API will provide functions only for
-accessing LOOT-specific functionality and data, eg. masterlist / userlist reading,
-masterlist download and user edits submission.
+The hard rules of load ordering are:
+  1. Master files always load before non-master files.
+  2. A plugin must load after all its masters.
 
-The support for arbitrary data sources will be implemented by having the source
-LOOT uses specified in a settings file, which will be editable via the GUI.
+Beyond that, the following can be used to maximise the impact of two plugins:
+  1. Compute the overlap between A and B. Divide the overlap size by the number of records in each plugin, and the plugin with the larger ratio should load later, as more of its overall changes would be lost if it loaded first than if the other plugin does.
 
-Because auto-sorting requires LOOT to know what is inside the plugins it sorts,
-it must scan the plugins, and determine which of its records are new and which
-are edited (new records aren't used for determining load order).
+There are issues related to author intent: for example, the Unofficial Patches contain a large number of mostly edited records, as does a Bashed Patch, but the former is intended to load early and be overridden by other plugins while the latter is designed to load late. It's not clear how such situations can be resolved.
 
-Optimisations can be made to skip load order
-calculation. For example, if the only changes from the last load order set by
-LOOT is that a plugin or plugins have been removed, then the last load order
-may be used. It might also be possible to only perform partial calculation
-when plugins are added, though this is not certain. It might not also be worth
-the effort, since preliminary testing shows that scanning is considerably
-faster than first anticipated.
+One possibility is to have a 'priority' metadata field, which has a default value, a value signifying the plugin should load late, and a value signifying the plugin should load early. If left at the default value, the plugin would be sorted by the algorithm normally, but if set to the early value, the plugin would be moved as far up the load order as the hard rules allow, and if set to the late value, would be moved as far down the load order as the hard rules allow. If multiple plugins are present that load early or late, then within that set of plugins the algorithm could be applied normally.
 
-Note: For clarity, the he list of metadata that is maintained by the
-LOOT team will be referred to as the "masterlist", and the list of metadata that
-is individual to each user will be referred to as the "userlist".
+It's not a great solution though, being far too imprecise for my liking, but then the loading intention is also vague. 
+
+Optimisations may also be made, such as not performing any new sorting if the only differences since previous sorting are the removal of plugins, or if the plugins added only add new records they can just be placed at the end.
 
 
-LOOT Masterlist & Userlist
-==========================
+Data Files Format
+=================
 
-The purpose of the masterlist is to store the following data for plugins:
+BOSSv3's settings file, masterlist, userlist and previous run logs will all be written in YAML. This allows me to take advantage of existing parsing libraries and the format's flexibility. It's also not that much more verbose than v2's masterlist format, once data structure changes are taken into account.
 
-  * Implicit and explicit requirements in load order.
-  * Incompatibilities, for catching unresolveable conflicts.
-  * Messages, for displaying information about the plugins.
-  * The intended priority of the plugin relative to others that make the same
-    changes.
-  * Possibly also Bash Tags to be applied.
+A custom parser is required for the evaluation of conditions though. The syntax has been made more human readable and compound conditions now evaluate according to standard logic.
 
-It is also useful to store some data not associated with plugins, such as:
+The masterlist and userlist will use the same parser, and simply combined by merging or replacing plugin metadata where depending on the type of metadata, though the details haven't yet been decided.
 
-  * Global messages.
-  * Message objects, for reference instead of rewriting the same message
-    multiple times.
-  * File objects, for reference instead of rewriting the same condition
-    argument multiple times.
-
-All messages and files should also be optionally conditional on an arbitrary
-number of conditions.
-
-The purpose of the userlist is to store modifications to masterlist plugin data,
-and to also store user-specified positions of plugins. The userlist must also
-support the disabling of plugin entries within it, so that users can turn off
-their changes without deleting them.
-
-As the masterlist and userlist are very similar, it makes sense for them to use
-the same format. The userlist could then simply support two data fields that are
-ignored by the masterlist parser. I think that YAML is a suitable format for
-these files as it is simple, human-readable, yet quite powerful.
-
-The drag 'n' drop plugin positioning will likely require userlist rules
-to support positioning of plugins precisely relative to other plugins, but it
-may be possible to achieve the positioning using only the priority setting. If
-possible, that is preferred.
-
-When the masterlist/userlist is loaded, it is scanned for entries for each of
-the installed plugins. If more than one match is found, they should be merged.
-
-Further details can be found in the 'docs/BOSS Metadata File Syntax.html' file.
-
-
-Networking
-==========
-
-LOOT has two target networking functionalities:
-
-    * Masterlist updating.
-    * User feedback submission.
-
-Neither of these functionalities are critical to usage of LOOT.
-
-The masterlist repository will use Subversion, as this
-allows users to most easily download only the file they require, and only the
-diffs of that file.
-
-The masterlists would be stored using a folder structure that mirrors LOOT's
-install structure, for example:
-
-repo/
-    Oblivion/
-            masterlist.yaml
-
-"repo" does not have to be the repository root, but LOOT's settings should
-use the URL pointing to that location. The repo will be required to use the same
-game folder names as LOOT's install structure.
-
-The masterlist update mechanism will feature a validator such that if the
-masterlist downloaded cannot be parsed, it will not replace the current
-masterlist (if exists). The log will display notification of validation failure
-with instructions to inform the maintainers of this issue. This is a fairly
-major improvement over BOSS currently, which becomes unusable when a masterlist
-update is occassionally broken.
-
-The final bit of networking to be considered is the feedback mechanism. It's not
-an initial development target, as initially I think it would be better for all
-communication between users and the team to be two-way, which is easier
-accomplished through our forum threads. It's probably best to leave design of
-this until we see what sort of feedback users are giving.
-
-A program update checker is notably absent, as a fully automated updater is
-not worth the trouble of implementing well, and notification of an available
-update is easily performed through a global masterlist message and so does not
-require an additional transport mechanism.
+Further details can be found in the 'docs/BOSS Metadata File Syntax.html' file. An example settings file can be found at 'examples/settings.yaml'.
 
 
 Install Structure
 =================
 
-LOOT will be a self-contained installation that can be dropped anywhere. It will
-have an installer option that also installs some Start menu shortcuts and a
-Registry entry, but these will not be required for LOOT to function.
+LOOT will be a self-contained installation that can be dropped anywhere. It will have an installer option that also installs some Start menu shortcuts and a Registry entry, but these will not be required for LOOT to function.
 
-The directory structure will be as follows:
-
-LOOT/
-        Morrowind/
-                .svn/
-                        ...
-                Cache/
-                        .svn/
-                                ...
-                        m/
-                                o/
-                                        morrowind.esm.lmdb
-                                        ...
-                masterlist.yaml
-                userlist.yaml
-                lastrun.yaml
-                loadorder.old
-        Oblivion/
-                .svn/
-                        ...
-                Cache/
-                        .svn/
-                                ...
-                        o/
-                                b/
-                                        oblivion.esm.lmdb
-                                        ...
-                masterlist.yaml
-                userlist.yaml
-                lastrun.yaml
-                loadorder.old
-        Skyrim/
-                .svn/
-                        ...
-                Cache/
-                        .svn/
-                                ...
-                        s/
-                                k/
-                                        skyrim.esm.lmdb
-                                        ...
-                masterlist.yaml
-                userlist.yaml
-                lastrun.yaml
-                loadorder.old
-        Fallout3/
-                .svn/
-                        ...
-                Cache/
-                        .svn/
-                                ...
-                        f/
-                                a/
-                                        fallout3.esm.lmdb
-                                        ...
-                masterlist.yaml
-                userlist.yaml
-                lastrun.yaml
-                loadorder.old
-        FalloutNewVegas/
-                .svn/
-                        ...
-                Cache/
-                        .svn/
-                                ...
-                        f/
-                                a/
-                                        falloutNV.esm.lmdb
-                                        ...
-                masterlist.yaml
-                userlist.yaml
-                lastrun.yaml
-                loadorder.old
-        LOOT.exe
-        LOOT.ini
-
-lastrun.yaml stores the last load order set by LOOT, with the messages
-displayed at that time, and uses the same format as the masterlist and userlist.
-
-loadorder.old stores the load order before LOOT was last run.
-
-The game caches are for storing database files so that they can be used when
-there is no Internet connection. Each cache acts as separate working copy of
-the database repository, holding the files it needs. They are separate to
-help prevent name clashes between games. Each game folder also acts as a working
-copy of the folder which stores the masterlist for that game on the repository.
-
-
-Configuration
-=============
-
-LOOT will store its settings in a LOOT.ini file in its install directory. This
-file should contain the following settings:
-
-bEnableNetworking               Boolean
-bUseOnlineCache                 Boolean         Cache = Database
-bGetMetadataUpdates             Boolean         Metadata = Masterlist
-bPromptMetadataSubmit   Boolean
-bAlwaysSubmitMetadata   Boolean         Only has effect if the above is false.
-
-sOnlineCacheURL                 String          URL to the base of the database repository.
-sMetadataURL                    String
-sVersionCheckerURL              String          URL to the file holding version info.
-sFeedbackURL                    String          URL to the issue tracker used for feedback.
-
-sGame                                   String          Same as in BOSS.
-sLastGame                               String          Same as in BOSS.
-iDebugVerbosity                 Integer         Debug output is logged if > 0.
-bDoTrialRun                             Boolean         Same as in BOSS.
-sLanguage                               String          Same as in BOSS.
-
-
-Cross-Platform Support
-======================
-
-I develop on Linux, cross-compiling for Windows. LOOT will use the CMake build
-system generator so that it can be compiled on multiple platforms, though some
-functionality will require Windows-specific things, such as Registry queries.
-
-
-Backwards Compatibility
-=======================
-
-No backwards compatibility with previous versions of BOSS is planned: there are
-simply too many changes. To ease the transition though, it may be beneficial for
-there to be converters for the userlist and masterlist.
-
-Such converters would be limited in scope, however, due to the differences in
-capabilities: only userlist rules which sort plugins after others and perform no
-message changes have direct conversions. The masterlist may be adapted by having
-rules created for those plugins with messages attached, but the content of those
-messages would have to be adjusted manually, and all specific positioning
-information would be lost too.
+The directory structure will be identical to that which BOSS currently has, with the exception that the text and ini files will be replaced by YAML files.
 
 
 Misc
@@ -438,3 +103,39 @@ ZiggyX200, RiddlingLynx, AliTheLord, Tokc.D.K., Valda, Space Oden69, Televator,
 Leandro Conde, Psymon, Loucifer, Torrello, Malonn, Skyline, Sharlikran, Red Eye,
 iyumichan, Peste, Calen Ellefson, SilentSpike, Arkangel, zyp, v111, Chevenga,
 rowynyew
+  
+
+Backwards Compatibility
+=======================
+
+BOSSv3 will not be backwards compatible with previous versions of BOSS: that is, it will not be able to use masterlists, userlists, translation files and ini files from previous versions of BOSS.
+
+It may be possible to perform limited conversion from v2 masterlists and userlists to their v3 equivalents, but as their capabilities have substantially changed, much of them may be untransferrable or at least not automatically transferable.
+
+A userlist converter would be most useful, since that would make most people's switch between v2 and v3 easier. The masterlists will probably have to be manually scanned for useful information.
+
+Userlist Conversion
+-------------------
+
+Differences between BOSSv2 and v3:
+
+  - In v2, plugins can be sorted before or after other plugins, but v3 only supports sorting after other plugins.
+  - In v2, it is possible to replace or append to masterlist messages. In v3, the user can only append messages.
+  - In v2, it is possible to sort groups or relative to groups, but groups do not exist in v3.
+  - In v2, the order of rules affects their execution. In v3 the order of rules doesn't matter.
+  - In v2, requirements and incompatibilities are added in messages, but in v3 they are added in a separate data structure.
+
+Conversion for syntax is just a matter of reading in using the old parser and writing out using the new generator. If any of the following are detected in a rule, conversion should be aborted and error messages detailing why displayed, asking the user to make the relevant changes before running the converter again.
+
+  - If the rule object is a group.
+  - If the sort keyword is 'BEFORE', 'TOP' or 'BOTTOM'.
+  - If the sort object is a group.
+  - If the message keyword is 'REPLACE'.
+  - If the message object's keyword is 'REQ' or 'INC'.
+
+If any of the following are detected, then BOSS should display a warning that the result may differ from the original:
+
+  - If a message object's keyword is 'TAG'.
+  - If more than one rule references the same sort object or the same plugin appears as a sort object in one rule and a rule object in another.
+
+Additionally, a warning should be displayed that all comments will be ignored.

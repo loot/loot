@@ -3,18 +3,13 @@
 # If you don't know YAML, just think of a normal ini file, but replace the
 # equals signs with colons followed by a space. No tabs allowed.
 
-bEnableNetworking:     true
-bUseOnlineCache:       true
-bGetMetadataUpdates:   true
-bPromptMetadataSubmit: true
-bAlwaysSubmitMetadata: true
+bGetMetadataUpdates: true
 
-sOnlineCacheURL:    "http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-nehrim/masterlist.txt"
-sMetadataURL:       "http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-nehrim/masterlist.txt"
-sVersionCheckerURL: "http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-nehrim/masterlist.txt"
+sMetadataURL:        "http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-nehrim/masterlist.txt"
 
-sGame:           auto   # auto, oblivion, skyrim, fallout3, falloutnv
-sLastGame:       auto   # auto, oblivion, skyrim, fallout3, falloutnv
-iDebugVerbosity: 0      # 0, 1, 2, 3. Logging takes place if > 0.
-bDoTrialRun:     false
-sLanguage:       eng    # An ISO 639-3 language string.
+sGame:               auto   # auto, oblivion, skyrim, fallout3, falloutnv
+sLastGame:           auto   # auto, oblivion, skyrim, fallout3, falloutnv
+iDebugVerbosity:     0      # 0, 1, 2, 3. Logging takes place if > 0.
+bDoTrialRun:         false
+sLanguage:           eng    # An ISO 639-3 language string.
+                        

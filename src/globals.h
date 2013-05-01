@@ -34,10 +34,6 @@ namespace boss {
     const unsigned int VERSION_MAJOR = 3;
     const unsigned int VERSION_MINOR = 0;
     const unsigned int VERSION_PATCH = 0;
-    
-    // Temporary hack.
-    const char * const libespm_options_path = "../../libespm/opts/input";
-    const char * const libespm_game = "Skyrim";
 
 }
 

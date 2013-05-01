@@ -31,9 +31,30 @@
 #include <list>
 #include <set>
 
-#include <boost/filesystem.hpp>
-
 namespace boss {
+
+    //A FormID is a 32 bit unsigned integer of the form xxYYYYYY in hex. The xx is the position in the masters list of the plugin that the FormID is from, and the YYYYYY is the rest of the FormID. Here the xx bit is stored as the corresponding filename to allow comparison between FormIDs from different plugins.
+    class FormID {
+    public:
+        FormID();
+        FormID(const std::string& pluginName, const uint32_t objectID);
+
+        //The masters here also includes the plugin that they are masters of as the last element.
+        FormID(const std::vector<std::string>& masters, const uint32_t formID);
+
+        bool operator == (const FormID& rhs) const;
+        bool operator != (const FormID& rhs) const;
+        bool operator < (const FormID& rhs) const;
+        bool operator > (const FormID& rhs) const;
+        bool operator <= (const FormID& rhs) const;
+        bool operator >= (const FormID& rhs) const;
+
+        std::string Plugin() const;
+        uint32_t Id() const;
+    private:
+        std::string plugin;
+        uint32_t id;
+    };
 
     class ConditionalData {
     public:
@@ -75,6 +96,8 @@ namespace boss {
         File(const std::string& name, const std::string& display,
                                      const std::string& condition);
 
+        bool operator < (const File& rhs) const;
+
         std::string Name() const;
         std::string DisplayName() const;
     private:
@@ -87,23 +110,13 @@ namespace boss {
         Tag(const std::string& tag);
         Tag(const std::string& tag, const std::string& condition);
 
+        bool operator < (const Tag& rhs) const;
+
         bool IsAddition() const;
         std::string Name() const;
         std::string PrefixedName() const;  //Name with '-' in front if suggested for removal.
     private:
         bool addTag;
-    };
-
-    struct file_comp {
-        bool operator() (const File& lhs, const File& rhs) const {
-            return lhs.Name() < rhs.Name();
-        }
-    };
-
-    struct tag_comp {
-        bool operator() (const Tag& lhs, const Tag& rhs) const {
-            return lhs.Name() < rhs.Name();
-        }
     };
 
     class Plugin {
@@ -117,7 +130,7 @@ namespace boss {
         int Priority() const;
         std::list<File> LoadAfter() const;
         std::list<File> Reqs() const;
-        std::set<File, file_comp> Incs() const;
+        std::set<File> Incs() const;
         std::list<Message> Messages() const;
         std::list<Tag> Tags() const;
 
@@ -126,7 +139,7 @@ namespace boss {
         void Priority(const int priority);
         void LoadAfter(const std::list<File>& after);
         void Reqs(const std::list<File>& reqs);
-        void Incs(const std::set<File, file_comp>& incs);
+        void Incs(const std::set<File>& incs);
         void Messages(const std::list<Message>& messages);
         void Tags(const std::list<Tag>& tags);
 
@@ -134,57 +147,36 @@ namespace boss {
         bool HasNameOnly() const;
         bool IsRegexPlugin() const;
 
-        bool operator == (Plugin rhs);
+        //Compare name strings.
+        bool operator == (const Plugin& rhs) const;
+        bool operator != (const Plugin& rhs) const;
+
+        //Compare load order positions.
+        bool operator < (const Plugin& rhs) const;
+        bool operator > (const Plugin& rhs) const;
+        bool operator <= (const Plugin& rhs) const;
+        bool operator >= (const Plugin& rhs) const;
         
-        std::set<uint32_t> FormIDs() const;
-        std::set<uint32_t> OverrideFormIDs() const;
+        std::set<FormID> FormIDs() const;
+        std::set<FormID> OverrideFormIDs() const;
+        std::set<FormID> OverlapFormIDs(const Plugin& plugin) const;
         std::vector<std::string> Masters() const;
-        uint32_t Crc() const;
-        bool IsMaster() const;
+        bool IsMaster() const;  //Checks master bit flag.
+        bool IsChildOf(const Plugin& plugin) const;  //Checks masters for given plugin.
     private:
         std::string name;
         bool enabled;  //Default to true.
         int priority;  //Default to 0 : >0 is higher, <0 is lower priorities.
         std::list<File> loadAfter;
         std::list<File> requirements;
-        std::set<File, file_comp> incompatibilities;
+        std::set<File> incompatibilities;
         std::list<Message> messages;
         std::list<Tag> tags;
         
         std::vector<std::string> masters;
-        std::set<uint32_t> formIDs;
-        uint32_t crc;
+        std::set<FormID> formIDs;
         bool isMaster;
     };
-    
-    inline bool isMasterOf(const Plugin& servant, const Plugin& master) {
-		std::vector<std::string> masters = servant.Masters();
-		for (int i = 0; i < masters.size(); ++i) {
-			if (masters[i] == master.Name())
-				return true;
-		}
-		return false;
-	}
-
-    struct plugin_comp {
-        bool operator() (const Plugin& lhs, const Plugin& rhs) const {
-            if (lhs.IsMaster() && !rhs.IsMaster())
-				return true;
-			else if (!lhs.IsMaster() && rhs.IsMaster())
-				return false;
-			else if (isMasterOf(rhs, lhs))
-				return true;
-			else if (isMasterOf(lhs, rhs)) // Should probably also check for cyclic masters.
-				return false;
-			else if (lhs.OverrideFormIDs().size() > rhs.OverrideFormIDs().size())
-				return true;
-			else if (lhs.OverrideFormIDs().size() < rhs.OverrideFormIDs().size())
-				return false;
-			else
-				return lhs.Name() < rhs.Name();
-        }
-    };
-
 
 }
 

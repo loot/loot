@@ -189,7 +189,7 @@ namespace YAML {
             if (node["req"])
                 rhs.Reqs(node["req"].as< std::list<boss::File> >());
             if (node["inc"])
-                rhs.Incs(node["inc"].as< std::set<boss::File, boss::file_comp> >());
+                rhs.Incs(node["inc"].as< std::set<boss::File> >());
             if (node["msg"])
                 rhs.Messages(node["msg"].as< std::list<boss::Message> >());
             if (node["tag"])

@@ -24,6 +24,7 @@
 #include "metadata.h"
 #include "helpers.h"
 #include <boost/algorithm/string.hpp>
+#include <boost/filesystem.hpp>
 #include <src/fileFormat.h>
 
 #include <iostream>
@@ -31,6 +32,54 @@
 using namespace std;
 
 namespace boss {
+
+    FormID::FormID() : id(0) {}
+    
+    FormID::FormID(const std::string& sourcePlugin, const uint32_t objectID) : plugin(sourcePlugin), id(objectID) {}
+    
+    FormID::FormID(const std::vector<std::string>& sourcePlugins, const uint32_t formID) {
+        int index = formID >> 24;
+        id = formID & ~((uint32_t)index << 24);
+
+        if (index >= sourcePlugins.size()) {
+            cout << hex << formID << dec << " in " << sourcePlugins.back() << " has a higher modIndex than expected." << endl;
+            index = sourcePlugins.size() - 1;
+        }
+
+        plugin = sourcePlugins[index];
+    }
+
+    bool FormID::operator == (const FormID& rhs) const {
+
+    }
+    
+    bool FormID::operator != (const FormID& rhs) const {
+        return !(*this == rhs);
+    }
+    
+    bool FormID::operator < (const FormID& rhs) const {
+        return (id < rhs.Id() || plugin < rhs.Plugin());
+    }
+    
+    bool FormID::operator > (const FormID& rhs) const {
+        return !(*this == rhs || *this < rhs);
+    }
+    
+    bool FormID::operator <= (const FormID& rhs) const {
+        return (*this == rhs || *this < rhs);
+    }
+    
+    bool FormID::operator >= (const FormID& rhs) const {
+        return !(*this < rhs);
+    }
+    
+    std::string FormID::Plugin() const {
+        return plugin;
+    }
+    
+    uint32_t FormID::Id() const {
+        return id;
+    }
 
     ConditionalData::ConditionalData() {}
 
@@ -81,6 +130,10 @@ namespace boss {
     File::File(const std::string& n, const std::string& d, const std::string& c)
         : display(d), ConditionalData(c, n) {}
 
+    bool File::operator < (const File& rhs) const {
+        return Name() < rhs.Name();
+    }
+
     std::string File::Name() const {
         return Data();
     }
@@ -115,6 +168,10 @@ namespace boss {
         Data(data);
     }
 
+    bool Tag::operator < (const Tag& rhs) const {
+        return Name() < rhs.Name();
+    }
+
     bool Tag::IsAddition() const {
         return addTag;
     }
@@ -130,20 +187,20 @@ namespace boss {
         return Data();
     }
 
-    Plugin::Plugin() : enabled(true), priority(0), crc(0), isMaster(false) {}
-    Plugin::Plugin(const std::string& n) : name(n), enabled(true), priority(0), crc(0), isMaster(false) {}
+    Plugin::Plugin() : enabled(true), priority(0), isMaster(false) {}
+    Plugin::Plugin(const std::string& n) : name(n), enabled(true), priority(0), isMaster(false) {}
 
 	Plugin::Plugin(const std::string& n, const std::string& path)
 		: name(n), enabled(true), priority(0) {
 			
 		// Get data from file contents using libespm. Assumes libespm has already been initialised.
 		boost::filesystem::path filepath = boost::filesystem::path(path) / n;
+		
 		ifstream input(filepath.string().c_str(), ios::binary);
 		espm::file File;
 		espm::readFile(input, File);
 		input.close();
-		
-		crc = GetCrc32(filepath);
+
 		isMaster = espm::isMaster(File);
 		vector<char*> rawMasters = espm::getMasters(File);
 		for (size_t i=0,max=rawMasters.size(); i < max; ++i) {
@@ -151,8 +208,11 @@ namespace boss {
 		}
 		
 		vector<espm::item> records = espm::getRecords(File);
+        vector<string> plugins = masters;
+        plugins.push_back(name);
 		for (vector<espm::item>::const_iterator it = records.begin(),endIt = records.end(); it != endIt; ++it){
-			formIDs.insert(*reinterpret_cast<uint32_t*>(it->record.recID));
+            uint32_t id = *reinterpret_cast<uint32_t*>(it->record.recID);
+			formIDs.insert(FormID(plugins, id));
 		}
 	}
 
@@ -176,7 +236,7 @@ namespace boss {
         return requirements;
     }
 
-    std::set<File, file_comp> Plugin::Incs() const {
+    std::set<File> Plugin::Incs() const {
         return incompatibilities;
     }
 
@@ -208,7 +268,7 @@ namespace boss {
         requirements = r;
     }
 
-    void Plugin::Incs(const std::set<File, file_comp>& i) {
+    void Plugin::Incs(const std::set<File>& i) {
         incompatibilities = i;
     }
 
@@ -235,7 +295,7 @@ namespace boss {
                 ++it;
         }
 
-        for (set<File, file_comp>::iterator it = incompatibilities.begin(); it != incompatibilities.end();) {
+        for (set<File>::iterator it = incompatibilities.begin(); it != incompatibilities.end();) {
             if (!it->EvalCondition(game))
                 incompatibilities.erase(it++);
             else
@@ -265,36 +325,90 @@ namespace boss {
         return boost::iends_with(name, "\\.esm") || boost::iends_with(name, "\\.esp");
     }
 
-    bool Plugin::operator == (Plugin rhs) {
-        return name == rhs.Name();
+    bool Plugin::operator == (const Plugin& rhs) const {
+        return boost::iequals(name, rhs.Name());
+    }
+
+    bool Plugin::operator != (const Plugin& rhs) const {
+        return !(*this == rhs);
+    }
+
+    bool Plugin::operator < (const Plugin& rhs) const {
+
+        /* If this plugin is a master and the other isn't, this plugin should load first.
+         * If this plugin is a master of the other plugin, this plugin should load first.
+         * If this plugin conflicts with the other plugin, then the plugin which contains the most records overall should load first.
+        */
+        
+		if (IsMaster() && !rhs.IsMaster())
+			return true;
+
+        if (!IsMaster() && rhs.IsMaster())
+			return false;
+
+        if (rhs.IsChildOf(*this))
+			return true;
+
+        if (IsChildOf(rhs)) // Should probably also check for cyclic masters.
+			return false;
+
+        if (!OverlapFormIDs(rhs).empty() && formIDs.size() != rhs.FormIDs().size())
+            return formIDs.size() > rhs.FormIDs().size();
+
+        //return false;
+        return name < rhs.Name();
+	}
+
+    bool Plugin::operator > (const Plugin& rhs) const {
+        return !(*this == rhs || *this < rhs);
+    }
+
+    bool Plugin::operator <= (const Plugin& rhs) const {
+        return (*this == rhs || *this < rhs);
+    }
+
+    bool Plugin::operator >= (const Plugin& rhs) const {
+        return !(*this < rhs);
     }
     
-    std::set<uint32_t> Plugin::FormIDs() const {
+    std::set<FormID> Plugin::FormIDs() const {
 		return formIDs;
 	}
 	
-	std::set<uint32_t> Plugin::OverrideFormIDs() const {
-		int modIndex = masters.size() << 24;
-		
-		set<uint32_t> fidSubset;
-		
-		for (set<uint32_t>::const_iterator it = formIDs.begin(), endIt=formIDs.end(); it != endIt; ++it) {
-			if (*it < modIndex)
+	std::set<FormID> Plugin::OverrideFormIDs() const {
+		set<FormID> fidSubset;
+		for (set<FormID>::const_iterator it = formIDs.begin(), endIt=formIDs.end(); it != endIt; ++it) {
+			if (boost::iequals(it->Plugin(), name))
 				fidSubset.insert(*it);
 		}
-		
 		return fidSubset;
 	}
 	
+    std::set<FormID> Plugin::OverlapFormIDs(const Plugin& plugin) const {
+        std::set<FormID> otherFormIDs = plugin.FormIDs();
+        std::set<FormID> overlap;
+        for (std::set<FormID>::const_iterator it=formIDs.begin(), endIt=formIDs.end(); it != endIt; ++it) {
+            if (otherFormIDs.find(*it) != otherFormIDs.end())
+                overlap.insert(*it);
+        }
+
+        return overlap;
+    }
+    
 	std::vector<std::string> Plugin::Masters() const {
 		return masters;
 	}
 	
-	uint32_t Plugin::Crc() const {
-		return crc;
-	}
-	
 	bool Plugin::IsMaster() const {
 		return isMaster;
+	}
+
+    //Checks if the object plugin is explicitly dependent on the given plugin.
+	bool Plugin::IsChildOf(const Plugin& plugin) const {
+        for (vector<string>::const_iterator it=masters.begin(), endIt=masters.end(); it != endIt; ++it) {
+            if (boost::iequals(*it, plugin.Name()))
+                return true;
+        }
+		return false;
 	}
 }
