@@ -50,58 +50,26 @@ using namespace std;
 const char * const libespm_options_path = "libespm.cfg";
 const char * const libespm_game = "Skyrim";
 
+const char * const masterlist_path = "masterlist.yaml";
+const char * const userlist_path = "userlist.yaml";
+
 
 
 int main(int argc, char *argv[]) {
 
- /*   cout << "Testing masterlist parser." << endl;
+    /* Stuff still missing from a normal execution of BOSS:
 
-    YAML::Node test = YAML::LoadFile("masterlist-example.yaml");
+      - Reading of settings file.
+      - Detecting game to run for.
+      - Error handling.
+      - Masterlist updating.
+      - Writing of log file.
 
-    list<boss::Message> globalMessages = test["globals"].as< list<boss::Message> >();
-    list<boss::Plugin> pluginData = test["plugins"].as< list<boss::Plugin> >();
+      Need to include libespm setup into game setup, once the former is made to be not global.
+    */
 
-    cout << "Testing masterlist generator." << endl;
-
-  //  minimisePluginList(pluginData);
-
-    ofstream out("generated.yaml");
-    YAML::Emitter yout;
-    yout.SetIndent(2);
-    yout << YAML::BeginMap
-         << YAML::Key << "globals" << YAML::Value << globalMessages
-         << YAML::Key << "plugins" << YAML::Value << pluginData
-         << YAML::EndMap;
-
-    out << yout.c_str();
-    out.close();
-
-    cout << "Testing game settings structure." << endl;
-
-    boss::Game game(boss::GAME_TES5, "/media/oliver/6CF05918F058EA3A/Program Files (x86)/Steam/steamapps/common/skyrim");
-
-    for (list<boss::Plugin>::iterator it=pluginData.begin(), endIt=pluginData.end(); it != endIt; ++it) {
-        try {
-        it->EvalAllConditions(game);
-        } catch (boss::error& e) {
-            cout << e.what() << endl;
-        }
-    }
-
-    ofstream out2("evaled.yaml");
-    YAML::Emitter yout2;
-    yout2.SetIndent(2);
-    yout2 << YAML::BeginMap
-         << YAML::Key << "globals" << YAML::Value << globalMessages
-         << YAML::Key << "plugins" << YAML::Value << pluginData
-         << YAML::EndMap;
-
-    out2 << yout2.c_str();
-    out2.close();
- */   
     cout << "Setting up libespm and BOSS..." << endl;
-    
-    
+
     // Set up libesm.
 	common::options::setGame(libespm_game);
 	ifstream input(libespm_options_path);
@@ -136,6 +104,82 @@ int main(int argc, char *argv[]) {
 	cout << "Time taken to read plugins: " << (end - start) << " seconds." << endl;
     start = time(NULL);
 
+    YAML::Node mlist, ulist;
+    list<boss::Message> messages, mlist_messages, ulist_messages;
+    list<boss::Plugin> mlist_plugins, ulist_plugins;
+
+    if (fs::exists(masterlist_path)) {
+        cout << "Parsing masterlist..." << endl;
+
+        mlist = YAML::LoadFile(masterlist_path);
+        if (mlist["globals"])
+            mlist_messages = mlist["globals"].as< list<boss::Message> >();
+        if (mlist["plugins"])
+            mlist_plugins = mlist["plugins"].as< list<boss::Plugin> >();
+
+        end = time(NULL);
+        cout << "Time taken to parse masterlist: " << (end - start) << " seconds." << endl;
+        start = time(NULL);
+    }
+
+    if (fs::exists(userlist_path)) {
+        cout << "Parsing userlist..." << endl;
+
+        ulist = YAML::LoadFile(userlist_path);
+        if (ulist["globals"])
+            ulist_messages = ulist["globals"].as< list<boss::Message> >();
+        if (ulist["plugins"])
+            ulist_plugins = ulist["plugins"].as< list<boss::Plugin> >();
+
+        end = time(NULL);
+        cout << "Time taken to parse userlist: " << (end - start) << " seconds." << endl;
+        start = time(NULL);
+    }
+
+    if (fs::exists(masterlist_path) || fs::exists(userlist_path)) {
+        cout << "Merging plugin lists..." << endl;
+
+        //Merge all global message lists.
+        messages = mlist_messages;
+        messages.insert(messages.end(), ulist_messages.begin(), ulist_messages.end());
+
+        //Merge plugin list, masterlist and userlist plugin data.
+        for (list<boss::Plugin>::iterator it=plugins.begin(), endIt=plugins.end(); it != endIt; ++it) {
+            //Check if there is already a plugin in the 'plugins' list or not.
+            list<boss::Plugin>::iterator pos = std::find(mlist_plugins.begin(), mlist_plugins.end(), *it);
+
+            if (pos != mlist_plugins.end()) {
+                //Need to merge plugins.
+                it->Merge(*pos);
+            }
+
+            pos = std::find(ulist_plugins.begin(), ulist_plugins.end(), *it);
+
+            if (pos != ulist_plugins.end()) {
+                //Need to merge plugins.
+                it->Merge(*pos);
+            }
+        }
+
+        end = time(NULL);
+        cout << "Time taken to merge lists: " << (end - start) << " seconds." << endl;
+        start = time(NULL);
+    }
+    
+    cout << "Evaluating plugin list..." << endl;
+
+    for (list<boss::Plugin>::iterator it=plugins.begin(), endIt=plugins.end(); it != endIt; ++it) {
+        try {
+        it->EvalAllConditions(game);
+        } catch (boss::error& e) {
+            cout << e.what() << endl;
+        }
+    }
+
+    end = time(NULL);
+	cout << "Time taken to evaluate plugin list: " << (end - start) << " seconds." << endl;
+    start = time(NULL);    
+
     for (list<boss::Plugin>::iterator it=plugins.begin(), endIt = plugins.end(); it != endIt; ++it) {
 		cout << it->Name() << endl
              << '\t' << "Number of records: " << it->FormIDs().size() << endl
@@ -163,7 +207,8 @@ int main(int argc, char *argv[]) {
     cout << "Sorting plugins..." << endl;
 
     plugins.sort();
-	
+
+    end = time(NULL);
 	cout << "Time taken to sort plugins: " << (end - start) << " seconds." << endl;
 
     for (list<boss::Plugin>::iterator it=plugins.begin(), endIt = plugins.end(); it != endIt; ++it)

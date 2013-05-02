@@ -185,15 +185,15 @@ namespace YAML {
                 rhs.Priority(node["priority"].as<int>());
 
             if (node["after"])
-                rhs.LoadAfter(node["after"].as< std::list<boss::File> >());
+                rhs.LoadAfter(node["after"].as< std::set<boss::File> >());
             if (node["req"])
-                rhs.Reqs(node["req"].as< std::list<boss::File> >());
+                rhs.Reqs(node["req"].as< std::set<boss::File> >());
             if (node["inc"])
                 rhs.Incs(node["inc"].as< std::set<boss::File> >());
             if (node["msg"])
                 rhs.Messages(node["msg"].as< std::list<boss::Message> >());
             if (node["tag"])
-                rhs.Tags(node["tag"].as< std::list<boss::Tag> >());
+                rhs.Tags(node["tag"].as< std::set<boss::Tag> >());
             return true;
         }
     };

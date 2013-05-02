@@ -125,23 +125,25 @@ namespace boss {
         Plugin(const std::string& name);
         Plugin(const std::string& name, const std::string& path);
 
+        void Merge(const Plugin& plugin);
+
         std::string Name() const;
         bool Enabled() const;
         int Priority() const;
-        std::list<File> LoadAfter() const;
-        std::list<File> Reqs() const;
+        std::set<File> LoadAfter() const;
+        std::set<File> Reqs() const;
         std::set<File> Incs() const;
         std::list<Message> Messages() const;
-        std::list<Tag> Tags() const;
+        std::set<Tag> Tags() const;
 
         void Name(const std::string& name);
         void Enabled(const bool enabled);
         void Priority(const int priority);
-        void LoadAfter(const std::list<File>& after);
-        void Reqs(const std::list<File>& reqs);
+        void LoadAfter(const std::set<File>& after);
+        void Reqs(const std::set<File>& reqs);
         void Incs(const std::set<File>& incs);
         void Messages(const std::list<Message>& messages);
-        void Tags(const std::list<Tag>& tags);
+        void Tags(const std::set<Tag>& tags);
 
         void EvalAllConditions(boss::Game& game);
         bool HasNameOnly() const;
@@ -167,17 +169,16 @@ namespace boss {
         std::string name;
         bool enabled;  //Default to true.
         int priority;  //Default to 0 : >0 is higher, <0 is lower priorities.
-        std::list<File> loadAfter;
-        std::list<File> requirements;
+        std::set<File> loadAfter;
+        std::set<File> requirements;
         std::set<File> incompatibilities;
         std::list<Message> messages;
-        std::list<Tag> tags;
+        std::set<Tag> tags;
         
         std::vector<std::string> masters;
         std::set<FormID> formIDs;
         bool isMaster;
     };
-
 }
 
 #endif

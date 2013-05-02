@@ -169,7 +169,7 @@ namespace boss {
     }
 
     bool Tag::operator < (const Tag& rhs) const {
-        return Name() < rhs.Name();
+        return (Name() < rhs.Name());
     }
 
     bool Tag::IsAddition() const {
@@ -216,6 +216,39 @@ namespace boss {
 		}
 	}
 
+    void Plugin::Merge(const Plugin& plugin) {
+        //If 'name' differs or if 'enabled' is false for the given plugin, don't change anything.
+        if (!boost::iequals(name, plugin.Name()) || !plugin.Enabled())
+            return;
+
+        //The following should be replaced.
+        priority = plugin.Priority();
+        masters = plugin.Masters();
+        formIDs = plugin.FormIDs();
+        isMaster = plugin.IsMaster();
+
+        //Merge the following. If any files in the source already exist in the destination, they will be skipped. Files have display strings and condition strings which aren't considered when comparing them, so will be lost if the plugin being merged in has additional data in these strings.
+        std::set<File> files = plugin.LoadAfter();
+        loadAfter.insert(files.begin(), files.end());
+
+        files = plugin.Reqs();
+        requirements.insert(files.begin(), files.end());
+
+        files = plugin.Incs();
+        incompatibilities.insert(files.begin(), files.end());
+
+        //Merge Bash Tags too, but Tags can be added or removed, and BOSS should not be doing both for any one Tag, so whether a tag is added or removed is not considered during comparison. As such, the Tags from the plugin being merged in should override any equal-but-opposite Tags that already exist.
+        std::set<Tag> bashTags = plugin.Tags();
+        bashTags.insert(tags.begin(), tags.end());
+        tags = bashTags;
+
+        //Messages are in an ordered list, and should be fully merged.
+        std::list<Message> pMessages = plugin.Messages();
+        messages.insert(messages.end(), pMessages.begin(), pMessages.end());
+        
+        return;
+    }
+
     std::string Plugin::Name() const {
         return name;
     }
@@ -228,11 +261,11 @@ namespace boss {
         return priority;
     }
 
-    std::list<File> Plugin::LoadAfter() const {
+    std::set<File> Plugin::LoadAfter() const {
         return loadAfter;
     }
 
-    std::list<File> Plugin::Reqs() const {
+    std::set<File> Plugin::Reqs() const {
         return requirements;
     }
 
@@ -244,7 +277,7 @@ namespace boss {
         return messages;
     }
 
-    std::list<Tag> Plugin::Tags() const {
+    std::set<Tag> Plugin::Tags() const {
         return tags;
     }
 
@@ -260,11 +293,11 @@ namespace boss {
         priority = p;
     }
 
-    void Plugin::LoadAfter(const std::list<File>& l) {
+    void Plugin::LoadAfter(const std::set<File>& l) {
         loadAfter = l;
     }
 
-    void Plugin::Reqs(const std::list<File>& r) {
+    void Plugin::Reqs(const std::set<File>& r) {
         requirements = r;
     }
 
@@ -276,21 +309,21 @@ namespace boss {
         messages = m;
     }
 
-    void Plugin::Tags(const std::list<Tag>& t) {
+    void Plugin::Tags(const std::set<Tag>& t) {
         tags = t;
     }
 
     void Plugin::EvalAllConditions(boss::Game& game) {
-        for (list<File>::iterator it = loadAfter.begin(); it != loadAfter.end();) {
+        for (set<File>::iterator it = loadAfter.begin(); it != loadAfter.end();) {
             if (!it->EvalCondition(game))
-                it = loadAfter.erase(it);
+                loadAfter.erase(it++);
             else
                 ++it;
         }
 
-        for (list<File>::iterator it = requirements.begin(); it != requirements.end();) {
+        for (set<File>::iterator it = requirements.begin(); it != requirements.end();) {
             if (!it->EvalCondition(game))
-                it = requirements.erase(it);
+                requirements.erase(it++);
             else
                 ++it;
         }
@@ -309,9 +342,9 @@ namespace boss {
                 ++it;
         }
 
-        for (list<Tag>::iterator it = tags.begin(); it != tags.end();) {
+        for (set<Tag>::iterator it = tags.begin(); it != tags.end();) {
             if (!it->EvalCondition(game))
-                it = tags.erase(it++);
+                tags.erase(it++);
             else
                 ++it;
         }
@@ -351,6 +384,12 @@ namespace boss {
 
         if (IsChildOf(rhs)) // Should probably also check for cyclic masters.
 			return false;
+
+        if (Priority() > rhs.Priority())
+            return true;
+            
+        if (Priority() < rhs.Priority())
+            return false;
 
         if (!OverlapFormIDs(rhs).empty() && formIDs.size() != rhs.FormIDs().size())
             return formIDs.size() > rhs.FormIDs().size();

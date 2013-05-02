@@ -42,13 +42,15 @@ BOSSv3 won't have a command line interface. Command line options may be added to
 Roadmap
 =======
 
-1. Write new masterlist, userlist, settings file parsers. DONE
-2. Implement per-game handling. DONE
-3. Write API. DONE
-4. Develop sorting algorithm.
-5. Tie together automatic 'simple' sorting with masterlist, userlist data parsing and usage.
-6. Write masterlist updating code.
-7. Develop graphical user interface.
+- Write new masterlist, userlist, settings file parsers. DONE
+- Implement per-game handling. DONE
+- Write API. DONE
+- Develop sorting algorithm.
+- Tie together automatic 'simple' sorting with masterlist, userlist data parsing and usage. DONE
+- Write masterlist updating code.
+- Develop graphical user interface.
+- Error handling.
+- Initialisation and finishing routines (read settings file, write log file, etc.).
 
 
 Sorting Algorithm
