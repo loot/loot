@@ -2,7 +2,7 @@
 
     A plugin load order optimiser for games that use the esp/esm plugin system.
 
-    Copyright (C) 2012    WrinklyNinja
+    Copyright (C) 2013    WrinklyNinja
 
     This file is part of BOSS.
 
@@ -20,22 +20,19 @@
     along with BOSS.  If not, see
     <http://www.gnu.org/licenses/>.
 */
-#ifndef __BOSS_GLOBALS__
-#define __BOSS_GLOBALS__
 
-namespace boss {
+#include "ids.h"
 
-    const unsigned int GAME_AUTODETECT  = 0;
-    const unsigned int GAME_TES4        = 1;
-    const unsigned int GAME_TES5        = 2;
-    const unsigned int GAME_FO3         = 3;
-    const unsigned int GAME_FONV        = 4;
-    const unsigned int GAME_NEHRIM      = 5;
+#include <boost/locale.hpp>
 
-    const unsigned int VERSION_MAJOR = 3;
-    const unsigned int VERSION_MINOR = 0;
-    const unsigned int VERSION_PATCH = 0;
-
+wxString translate(const std::string& str) {
+    return wxString(boost::locale::translate(str).str().c_str(), wxConvUTF8);
 }
 
-#endif
+wxString FromUTF8(const std::string& str) {
+    return wxString(str.c_str(), wxConvUTF8);
+}
+
+wxString FromUTF8(const boost::format& f) {
+    return FromUTF8(f.str());
+}

@@ -63,10 +63,10 @@
 
 namespace boss {
     using namespace std;
-    using namespace boost;
     using boost::algorithm::replace_all;
     using boost::algorithm::replace_first;
     namespace karma = boost::spirit::karma;
+    namespace fs = boost::filesystem;
 
     //Calculate the CRC of the given file for comparison purposes.
     uint32_t GetCrc32(const fs::path& filename) {

@@ -25,6 +25,8 @@ include_directories ("${PROJECT_LIBS_DIR}/alphanum" "${PROJECT_LIBS_DIR}/utf8" "
 
 # Settings when compiling for Windows.
 IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
+    add_definitions (-DUNICODE -D_UNICODE)
+    set (BOSS_SRC ${BOSS_SRC} "${CMAKE_SOURCE_DIR}/resource.rc")
     IF (${PROJECT_LINK} MATCHES "STATIC")
         add_definitions (-DLIBLO_STATIC)
         add_definitions (-DBOSS_STATIC)
@@ -52,8 +54,10 @@ IF (CMAKE_HOST_SYSTEM_NAME MATCHES "Linux")
     set (CMAKE_MODULE_LINKER_FLAGS "-static-libstdc++ -static-libgcc")
 
     IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
-        link_directories ("${PROJECT_LIBS_DIR}/boost/stage-mingw-${PROJECT_ARCH}/lib")
-        set (BOSS_LIBS version)
+        link_directories ("${PROJECT_LIBS_DIR}/boost/stage-mingw-${PROJECT_ARCH}/lib" "${PROJECT_LIBS_DIR}/wxWidgets/build-msw/lib")
+        include_directories ("${PROJECT_LIBS_DIR}/wxWidgets/build-msw/lib/wx/include/i586-mingw32msvc-msw-unicode-static-2.9" "${PROJECT_LIBS_DIR}/wxWidgets/include")
+        set (BOSS_LIBS version wx_mswu_core-2.9-i586-mingw32msvc wx_baseu-2.9-i586-mingw32msvc wx_mswu_adv-2.9-i586-mingw32msvc wxpng-2.9-i586-mingw32msvc wxzlib-2.9-i586-mingw32msvc comctl32)
+        set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--subsystem,windows")
     ENDIF ()
 
     set (BOSS_LIBS ${BOSS_LIBS} zlibstatic loadorder yaml-cpp boost_locale boost_filesystem boost_system boost_regex)
@@ -66,13 +70,22 @@ IF (CMAKE_HOST_SYSTEM_NAME MATCHES "Windows")
 ENDIF ()
 
 ##############################
+# More General Settings
+##############################
+
+set (BOSS_GUI_SRC ${BOSS_SRC} "${CMAKE_SOURCE_DIR}/src/gui/ids.cpp" "${CMAKE_SOURCE_DIR}/src/gui/main.cpp" "${CMAKE_SOURCE_DIR}/src/gui/settings.cpp")
+
+set (BOSS_API_SRC ${BOSS_SRC} "${CMAKE_SOURCE_DIR}/src/api.cpp")
+
+
+##############################
 # Actual Building
 ##############################
 
 # Build API.
-#add_library           (boss ${PROJECT_LINK} "${CMAKE_SOURCE_DIR}/src/api.cpp" ${BOSS_SRC})
+#add_library           (boss ${PROJECT_LINK} ${BOSS_API_SRC})
 #target_link_libraries (boss ${BOSS_LIBS})
 
 # Build tester.
-add_executable        (tester "${CMAKE_SOURCE_DIR}/src/tester.cpp" ${BOSS_SRC})
-target_link_libraries (tester ${BOSS_LIBS})
+add_executable        (BOSS ${BOSS_GUI_SRC})
+target_link_libraries (BOSS ${BOSS_LIBS})

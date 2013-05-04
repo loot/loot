@@ -33,14 +33,13 @@
 #include <boost/filesystem.hpp>
 
 namespace boss {
-    namespace fs = boost::filesystem;
 
     //////////////////////////////////////////////////////////////////////////
     // Helper functions
     //////////////////////////////////////////////////////////////////////////
 
     //Calculate the CRC of the given file for comparison purposes.
-    uint32_t GetCrc32(const fs::path& filename);
+    uint32_t GetCrc32(const boost::filesystem::path& filename);
 
     //Converts an integer to a string using BOOST's Spirit.Karma. Faster than a stringstream conversion.
     std::string IntToString(const int n);
@@ -65,7 +64,7 @@ namespace boss {
         Version();
         Version(const char * ver);
         Version(const std::string ver);
-        Version(const fs::path file);
+        Version(const boost::filesystem::path file);
 
         std::string AsString() const;
 

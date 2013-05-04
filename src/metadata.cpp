@@ -479,16 +479,16 @@ namespace boss {
         map<string,bool> issues;
         if (tags.find(Tag("Filter")) == tags.end()) {
             for (vector<string>::const_iterator it=masters.begin(), endIt=masters.end(); it != endIt; ++it) {
-                if (!fs::exists(game.DataPath() / *it))
+                if (!boost::filesystem::exists(game.DataPath() / *it))
                     issues.insert(pair<string,bool>(*it,false));
             }
         }
         for (set<File>::const_iterator it=requirements.begin(), endIt=requirements.end(); it != endIt; ++it) {
-            if (!fs::exists(game.DataPath() / it->Name()))
+            if (!boost::filesystem::exists(game.DataPath() / it->Name()))
                 issues.insert(pair<string,bool>(it->Name(),false));
         }
         for (set<File>::const_iterator it=incompatibilities.begin(), endIt=incompatibilities.end(); it != endIt; ++it) {
-            if (fs::exists(game.DataPath() / it->Name()))
+            if (boost::filesystem::exists(game.DataPath() / it->Name()))
                 issues.insert(pair<string,bool>(it->Name(),true));
         }
         return issues;

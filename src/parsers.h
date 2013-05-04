@@ -436,7 +436,7 @@ namespace boss {
                 throw boss::error(boss::ERROR_INVALID_ARGS, "The regex string \"" + filename + "\" is invalid.");
             }
 
-            for (fs::directory_iterator itr(parent_path); itr != fs::directory_iterator(); ++itr) {
+            for (boost::filesystem::directory_iterator itr(parent_path); itr != boost::filesystem::directory_iterator(); ++itr) {
                 if (boost::regex_match(itr->path().filename().string(), regex)) {
                     result = true;
                     return;

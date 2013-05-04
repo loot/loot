@@ -2,7 +2,7 @@
 
     A plugin load order optimiser for games that use the esp/esm plugin system.
 
-    Copyright (C) 2012    WrinklyNinja
+    Copyright (C) 2013    WrinklyNinja
 
     This file is part of BOSS.
 
@@ -20,22 +20,31 @@
     along with BOSS.  If not, see
     <http://www.gnu.org/licenses/>.
 */
-#ifndef __BOSS_GLOBALS__
-#define __BOSS_GLOBALS__
 
-namespace boss {
+#ifndef __BOSS_GUI_SETTINGS__
+#define __BOSS_GUI_SETTINGS__
 
-    const unsigned int GAME_AUTODETECT  = 0;
-    const unsigned int GAME_TES4        = 1;
-    const unsigned int GAME_TES5        = 2;
-    const unsigned int GAME_FO3         = 3;
-    const unsigned int GAME_FONV        = 4;
-    const unsigned int GAME_NEHRIM      = 5;
+#include "ids.h"
+#include <yaml-cpp/yaml.h>
+#include <wx/listctrl.h>
 
-    const unsigned int VERSION_MAJOR = 3;
-    const unsigned int VERSION_MINOR = 0;
-    const unsigned int VERSION_PATCH = 0;
+class SettingsFrame : public wxFrame {
+public:
+	SettingsFrame(const wxString title, wxFrame *parent, YAML::Node& settings);
+	void OnQuit(wxCommandEvent& event);
+	void SetDefaultValues();
+	DECLARE_EVENT_TABLE()
+private:
+	wxChoice *DebugVerbosityChoice;
+	wxChoice *GameChoice;
+	wxChoice *LanguageChoice;
+    wxCheckBox *UpdateMasterlistBox;
+    wxTextCtrl *OblivionURL;
+    wxTextCtrl *NehrimURL;
+    wxTextCtrl *SkyrimURL;
+    wxTextCtrl *FO3URL;
+    wxTextCtrl *FONVURL;
 
-}
-
+    YAML::Node _settings;
+};
 #endif

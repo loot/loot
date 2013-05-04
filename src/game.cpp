@@ -43,9 +43,7 @@ namespace fs = boost::filesystem;
 
 namespace boss {
 
-    Game::Game() {
-        throw error(ERROR_INVALID_ARGS, "No arguments supplied.");
-    }
+    Game::Game() {}
 
     Game::Game(const unsigned int gameCode, const string path, const bool noPathInit)
         : id(gameCode) {
