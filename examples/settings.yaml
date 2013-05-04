@@ -1,15 +1,16 @@
 # BOSS Settings File
 # This file is written in YAML <http://www.yaml.org/>.
-# If you don't know YAML, just think of a normal ini file, but replace the
-# equals signs with colons followed by a space. No tabs allowed.
 
-bGetMetadataUpdates: true
+Language:            eng    # An ISO 639-3 language string.
 
-sMetadataURL:        "http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-nehrim/masterlist.txt"
+Game:                auto   # auto, oblivion, skyrim, fallout3, falloutnv
+Last Game:           auto   # auto, oblivion, skyrim, fallout3, falloutnv
+Debug Verbosity:     0      # 0, 1, 2, 3. Logging takes place if > 0.
+Update Masterlist:   true
 
-sGame:               auto   # auto, oblivion, skyrim, fallout3, falloutnv
-sLastGame:           auto   # auto, oblivion, skyrim, fallout3, falloutnv
-iDebugVerbosity:     0      # 0, 1, 2, 3. Logging takes place if > 0.
-bDoTrialRun:         false
-sLanguage:           eng    # An ISO 639-3 language string.
-                        
+Masterlist URLs:
+  Oblivion:          http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-oblivion/masterlist.yaml
+  Nehrim:            http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-nehrim/masterlist.yaml
+  Skyrim:            http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-skyrim/masterlist.yaml
+  Fallout 3:         http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-fallout/masterlist.yaml
+  Fallout New Vegas: http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-fallout-nv/masterlist.yaml

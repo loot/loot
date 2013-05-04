@@ -123,7 +123,7 @@ namespace boss {
     public:
         Plugin();
         Plugin(const std::string& name);
-        Plugin(const std::string& name, const std::string& path);
+        Plugin(const boss::Game& game, const std::string& name);
 
         void Merge(const Plugin& plugin);
 
@@ -135,6 +135,10 @@ namespace boss {
         std::set<File> Incs() const;
         std::list<Message> Messages() const;
         std::set<Tag> Tags() const;
+        
+        std::set<FormID> FormIDs() const;
+        std::vector<std::string> Masters() const;
+        bool IsMaster() const;  //Checks master bit flag.
 
         void Name(const std::string& name);
         void Enabled(const bool enabled);
@@ -158,17 +162,17 @@ namespace boss {
         bool operator > (const Plugin& rhs) const;
         bool operator <= (const Plugin& rhs) const;
         bool operator >= (const Plugin& rhs) const;
-        
-        std::set<FormID> FormIDs() const;
-        std::set<FormID> OverrideFormIDs() const;
+
+        //Load ordering functions.
         std::set<FormID> OverlapFormIDs(const Plugin& plugin) const;
-        std::vector<std::string> Masters() const;
-        bool IsMaster() const;  //Checks master bit flag.
-        bool IsChildOf(const Plugin& plugin) const;  //Checks masters for given plugin.
+        bool MustLoadAfter(const Plugin& plugin) const;  //Checks masters, reqs and loadAfter.
+
+        //Validity checks.
+        std::map<std::string,bool> CheckInstallValidity(const Game& game) const;  //Checks that reqs and masters are all present, and that no incs are present. Returns a map of filenames and whether they are missing (if bool is true, then filename is a req or master, otherwise it's an inc).
     private:
         std::string name;
         bool enabled;  //Default to true.
-        int priority;  //Default to 0 : >0 is higher, <0 is lower priorities.
+        int priority;  //Default to 0 : >0 is lower down in load order, <0 is higher up.
         std::set<File> loadAfter;
         std::set<File> requirements;
         std::set<File> incompatibilities;

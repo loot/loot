@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>BOSS Readme</title>
+<style>
+    body {
+        font:12pt/1.5 Helvetica,sans-serif;
+        text-rendering:optimizeLegibility;}
+    p, ul, li {margin:1.5em 0;}
+    h1,h3,h2 {font-weight:normal;}
+h1{
+    font-size:36pt;
+    line-height:0.5;
+    margin-top:1.125em;
+    margin-bottom:0.375em;}
+h2{
+    font-size:24pt;
+    line-height:0.75;
+    margin-top:3em;
+    margin-bottom:1.5em;}
+h3{
+    font-size:18pt;
+    line-height:1;
+    margin-top:3.5em;
+    margin-bottom:1em;}
+    ul, ol {margin-top:0.5em; margin-bottom:1em;}
+    li {margin:0.75em 0;}
+    a:link {text-decoration:none;}
+    a:hover {text-decoration:underline;}
+    ol ol {list-style:lower-alpha;}
+
+    code {display:inline-block; padding:0 3px; background:#eee;}
+    td, th {border:1px solid #ddd; padding: 5px; vertical-align:top;}
+    table {border-collapse:collapse; margin:1.5em; margin-bottom: 3em; background:#fafafa;}
+    thead {background:#99CCFF;}
+    code.box {border-radius:5px; border:1px solid #ccc; padding:0.75em; white-space:pre; overflow-x:auto; display:table; margin:1.5em;}
+
+    blockquote {border-radius:3px; border:1px solid #0c0; padding:5px; background:#7e7; display:table;margin:1.5em;}
+
+    a[href^="http"]:after {padding-left:2px; content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAVklEQVR4Xn3PgQkAMQhDUXfqTu7kTtkpd5RA8AInfArtQ2iRXFWT2QedAfttj2FsPIOE1eCOlEuoWWjgzYaB/IkeGOrxXhqB+uA9Bfcm0lAZuh+YIeAD+cAqSz4kCMUAAAAASUVORK5CYII=);}
+
+    span[title] {border-bottom: 1px dotted; font-family: sans-serif; cursor:help;}
+    abbr {cursor:help;}
+
+    #warning {background:#c00; padding:10px 5px;margin:-8px;}
+    var {color:#8B4513;}
+
+    #teamTableBody > tr > td:first-child {border-right:0;}
+    #teamTableBody > tr > td:nth-child(2) {border-left:0;font-style:italic;}
+    td.t {background:#90ff90;text-align:center;}
+    td.c {background:#ff9090;text-align:center;}
+    td.t:after {content: '\2713';}
+    td.c:after {content: '\2717';}
+    tr.inactive {color:#888;}
+    tr.inactive td.c, tr.inactive td.t {background:#E3E3E3;}
+
+</style>
+<!--  BOSS
+
+    A plugin load order optimiser for games that use the esp/esm plugin system.
+
+    Copyright (C) 2012–2013    WrinklyNinja
+
+    This file is part of BOSS.
+
+    BOSS is free software: you can redistribute
+    it and/or modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation, either version 3 of
+    the License, or (at your option) any later version.
+
+    BOSS is distributed in the hope that it will
+    be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with BOSS.  If not, see
+    <http://www.gnu.org/licenses/>.
+-->
+
+<div id="warning">
+This documentation is a work in progress, covering an application that is also still a work in progress, and is subject to change.
+</div>
+
+<h1>BOSS</h1>
+
+<h2>Contents</h2>
+
+<ol>
+    <li><a href="#intro">Introduction</a>
+    <li><a href="#install">Installation &amp; Uninstallation</a>
+    <li><a href="#usage">Using BOSS</a>
+    <ol>
+        <li><a href="#usage-sort">Sorting Plugins</a>
+        <li><a href="#usage-custom">Customising BOSS's Results</a>
+        <li><a href="#usage-log">The Results Report</a>
+    </ol>
+    <li><a href="#trouble">Troubleshooting</a>
+    <li><a href="#contrib">Contributing To BOSS</a>
+    <li><a href="#translate">Translating BOSS</a>
+    <ol>
+        <li><a href="#translate-installer">Translating The Installer</a>
+        <li><a href="#translate-gui">Translating The GUI</a>
+    </ol>
+    <li><a href="#credits">Credits</a>
+    <li><a href="#project">Project Members</a>
+    <li><a href="#license">License</a>
+    <li><a href="#appendix">Appendices</a>
+    <ol>
+        <li><a href="appendix-intro">Introduction To Load Orders</a>
+        <li><a href="appendix-dirty">Dirty Edits, Mod Cleaning &amp; CRCs</a>
+        <li><a href="appendix-permissions">File Permissions</a>
+    </ol>
+</ol>
+
+<h2 id="intro">Introduction</h2>
+
+BOSS is designed to assist mod users in avoiding detrimental conflicts, by automatically setting a load order for their plugins that satisfies their dependencies and maximises the impact of each plugin on the user's game.
+
+BOSS also provides basic load order error checking, including cyclic dependency checks and warnings for any incompatibilities it detects, and also provides a large number of plugin-specific usage notes, bug warnings and Bash Tag suggestions.
+
+Although BOSS can correctly position the vast majority of plugins, it is not a complete solution to load ordering issues, as it may sort more complex mods, or those that are intended by the author to load early or late, incorrectly. For such plugins, a good working knowledge of mod load ordering is still necessary, for which some research and documentation reading will go a long way. See <a href="#">Introduction To Load Orders</a> for an overview.
+
+
+<h2 id="install">Installation</h2>
+<p>The simplest way to install BOSS is to use the installer. However, the instructions below are provided if a manual install method is preferred.
+<ol>
+    <li>If updating from an earlier version of BOSS, uninstall the existing BOSS install before continuing. Any userlists you have should be moved to a temporary location while you install the BOSS update.
+    <li>Extract the <q>BOSS</q> folder the downloaded archive contains to a location of your choice. Make sure that you have the appropriate file permissions for the directory you choose. See the <a href="#">File Permissions</a> section for more information. Note that if you install the BOSS folder to the same location as a supported game's executable, BOSS will only run for that game by default, and will not ask you to choose which game it should run for, even if you have other supported games installed.
+    <li>If any of the <abbr title="Wrye Bash, Wrye Flash or Wrye Flash NV">Wrye *ash</abbr> utilities are installed, make sure their <q>BOSS Disable Lock Load Order</q><span title="previously BOSS Disable Lock Times">*</span> setting is enabled.
+    <li>If updating from an earlier version of BOSS and you moved any userlists you have to a temporary location, after you have run BOSS at least once for each game with a userlist, you will need to move your userlist(s) into the game(s) subfolders that are created within the BOSS folder.
+</ol>
+<p>BOSS version 3 is not backwards-compatible with earlier versions. Any user rules will have to be manually re-applied through BOSS's user interface.
+<p>If BOSS was installed using the installer, then use the uninstaller it provides a link to in the Start Menu to uninstall BOSS. If BOSS was installed manually, simply delete the <q>BOSS</q> folder you installed.
+
+
+<h2 id="usage">Using BOSS</h2>
+<h3 id="usage-sort">Sorting Plugins</h3>
+
+<h3 id="usage-custom">Customising BOSS's Results</h3>
+
+<h3 id="usage-log">The Results Report</h3>
+
+
+<h2 id="trouble">Troubleshooting</h2>
+
+
+<h2 id="contrib">Contributing To BOSS</h2>
+
+
+<h2 id="translate">Translating BOSS</h2>
+<h3 id="translate-installer">Translating The Installer</h3>
+
+<h3 id="translate-gui">Translating The GUI</h3>
+
+
+<h2 id="credits">Credits</h2>
+<p>As BOSS is very much a community project, credit is due to a very large number of sources and people outside of the BOSS Development Team. Some people have gone out of their way and provided continuing, expert and detailed help - <b>thank you very much</b>!
+<p>In addition to the above, the following are credited with application-related support:
+<ul>
+    <li><a href="http://www.darkcreations.org">Dark Creations</a>: For hosting BOSS's Bugzilla bug tracker that is used to collect anonymous unrecognised plugin reports. Particular thanks to its administrators Andalaybay and Xae for offering to host the tracker and helping to work around Firefox and Bugzilla bugs encountered.
+    <li>Surazal: For extensive testing of v1.6+ prior to release and for providing the inspiration for many features through his BOSS Masterlist Manager macro for Microsoft Word.
+    <li>myk002: For extensive testing and code contributions during development of v1.6+.
+    <li>Hickory: For extensive testing and for providing the icon used by the executables.
+    <li>Scharesoft: For the installer/uninstaller German translation.
+    <li>Ysne58: For testing and keeping the thread links on BOSS's Nexus site pages up to date.
+    <li>For testing and feedback prior to releases:
+    <ul>
+        <li>The Beta Testing &amp; Analysis Guild at <a href="http://tesalliance.org/forums/">TES Alliance</a>
+        <li>AndalayBay
+        <li>dj2005
+        <li>Dubiousness
+        <li>saebel
+        <li>Telyn
+        <li>wiz0floyd
+        <li>Zanderat
+    </ul>
+</ul>
+<p>BOSS is written in C/C++ and makes use of the <a href="https://github.com/WrinklyNinja/libespm">Libespm</a>, <a href="https://github.com/WrinklyNinja/libloadorder">Libloadorder</a>, <a href="http://www.boost.org/">Boost</a>, <a href="http://curl.haxx.se/libcurl/">libcurl</a>, <a href="http://www.wxwidgets.org/">wxWidgets</a> and <a href="http://utfcpp.sourceforge.net/">UTF8-CPP</a> libraries. Without them, the majority of BOSS's features would probably never have been implemented. BOSS also uses an adaptation of Dirk Jagdmann's implementation of the Alphanum Algorithm developed by Dave Koelle for comparing version strings.
+
+
+<h2 id="project">Project Members</h2>
+<p>Since June 2009, BOSS has been a collaborative project on Google Code using the Subversion version control system. In alphabetical order, the project members are:
+<table>
+    <thead class="c"><tr><th colspan="2" rowspan="2">Member<th rowspan="2">Admin<th rowspan="2">Programmer<th colspan="5">Masterlists Member Contributes To
+        <tr><th>Oblivion<th>Nehrim<th>Fallout 3<th>Fallout: New Vegas<th>Skyrim
+    <tbody id="teamTableBody">
+        <tr class="inactive"><td>AliTheLord<td><td class="c"><td class="t"><td class="t"><td class="c"><td class="t"><td class="c"><td class="t">
+        <tr><td>Arkangel<td>(Krhanal on Nexus)<td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t">
+        <tr><td>Arthmoor<td><td class="t"><td class="c"><td class="t"><td class="c"><td class="c"><td class="c"><td class="t">
+        <tr><td>Calen Ellefson<td>(Bethesda Softworks only)<td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t">
+        <tr class="inactive"><td>Gabba<td>(Bethesda Softworks only)<td class="c"><td class="c"><td class="t"><td class="c"><td class="c"><td class="c"><td class="c">
+        <tr><td>iyumichan<td><td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t"><td class="c">
+        <tr class="inactive"><td>Leandro Conde<td>(Bethesda Softworks only)<td class="c"><td class="t"><td class="c"><td class="c"><td class="c"><td class="c"><td class="c">
+        <tr class="inactive"><td>Loucifer<td>(Linmor on Nexus)<td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t"><td class="c">
+        <tr class="inactive"><td>Malonn<td><td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t"><td class="c">
+        <tr class="inactive"><td>PacificMorrowind<td><td class="t"><td class="t"><td class="t"><td class="c"><td class="t"><td class="c"><td class="c">
+        <tr><td>Peste<td>(ztrathego on Nexus)<td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t">
+        <tr class="inactive"><td>Psymon<td>(Bethesda Softworks only)<td class="c"><td class="c"><td class="c"><td class="t"><td class="c"><td class="c"><td class="c">
+        <tr class="inactive"><td>Random007<td><td class="t"><td class="t"><td class="t"><td class="c"><td class="c"><td class="c"><td class="c">
+        <tr><td>Red Eye<td>(redeye85 on Nexus)<td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t"><td class="c">
+        <tr class="inactive"><td>RiddlingLynx<td>(Nexus only)<td class="c"><td class="c"><td class="t"><td class="c"><td class="c"><td class="c"><td class="c">
+        <tr><td>Sharlikran<td><td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t">
+        <tr><td>SilentSpike<td>(SilentSpike69 on Nexus)<td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t">
+        <tr class="inactive"><td>Skyline<td>(skyline99 on Nexus)<td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t"><td class="c">
+        <tr><td>Space Oden69<td>(SpaceOden on Nexus)<td class="c"><td class="c"><td class="c"><td class="c"><td class="t"><td class="c"><td class="c">
+        <tr class="inactive"><td>Televator<td><td class="c"><td class="c"><td class="c"><td class="c"><td class="t"><td class="c"><td class="c">
+        <tr><td>Tokc.D.K.<td>(Bethesda Softworks only)<td class="c"><td class="c"><td class="t"><td class="c"><td class="c"><td class="c"><td class="t">
+        <tr><td>Torrello<td><td class="c"><td class="c"><td class="c"><td class="c"><td class="t"><td class="c"><td class="t">
+        <tr class="inactive"><td>Vacuity<td><td class="c"><td class="c"><td class="t"><td class="c"><td class="c"><td class="c"><td class="c">
+        <tr class="inactive"><td>Valda<td><td class="c"><td class="c"><td class="c"><td class="c"><td class="t"><td class="t"><td class="c">
+        <tr><td>WrinklyNinja<td><td class="t"><td class="t"><td class="c"><td class="c"><td class="c"><td class="c"><td class="c">
+        <tr class="inactive"><td>ZiggyX200<td><td class="c"><td class="c"><td class="t"><td class="c"><td class="c"><td class="c"><td class="t">
+</table>
+<p>Members with greyed-out rows are currently inactive, with no contributions in the last 3 months. Unless otherwise noted, project members can be contacted on the <a href="http://forums.bethsoft.com/index.php">Bethesda Softworks Forums</a> or on <a href="http://forums.nexusmods.com/">The Nexus Forums</a> via the private messaging system.
+
+<h2 id="license">License</h2>
+<p>BOSS is distributed under the <a href="http://www.gnu.org/licenses/gpl.html">GNU General Public License v3.0</a>, aside from the documentation, which is distributed under the <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License v1.3</a>. For the full text of both licenses, see the included <q>Licenses.txt</q> file.
+
+<p>While the GPL license allows anyone to make derivative works of BOSS, the BOSS Development Team encourages those thinking of doing so to first discuss their reasoning for such an endevour with the Team. It may be that what the derivative work would do differently from BOSS itself is already planned for a future version of BOSS or would be happily integrated into BOSS by the Team, thus avoiding any extra effort by others.
+<p>The BOSS Team also appeals to the community to avoid the distribution and development of alternative masterlists, as this would only hamper the community effort to create one universally-optimised load order for all plugins available for download. Any issues with a masterlist are best brought to the attention of the BOSS Team so that we may remedy them ourselves.
+
+<h3>GNU Free Documentation License Version 1.3 Notice</h3>
+<blockquote>Copyright (C)  2009-2012  BOSS Development Team<br />
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3
+or any later version published by the Free Software Foundation;
+with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.<br />
+A copy of the license is included in the file named "Licenses.txt".</blockquote>
+
+<h2 id="appendix">Appendices</h2>
+<h3 id="appendix-intro">Introduction To Load Orders</h3>
+<p>This appendix provides a general overview of load ordering in the games BOSS supports for those who are unfamiliar with the concept. For simplicity, <q>the game</q> will be used when the text refers to any of the games that BOSS supports.
+<p>Mod plugins for the game are files that end in <code>.esp</code> or <code>.esm</code>. These files are created by the game's official editing tools, or by third party modders' tools. They contain various data entries, which can either be brand new additions or changes to the entries added by another plugin, including the game's main master file (Oblivion.esm, Nehrim.esm, Skyrim.esm, Fallout3.esm or FalloutNV.esm depending on the game). These entries cover almost all aspects of what is in the game, eg. NPCs, items, races, interiors, worlds, quests, etc.
+<p>When the game is run, it loads each of the plugins you have installed one by one. The order in which it loads them is, unsurprisingly, what is referred to as the load order. The load order is important for two reasons:
+<ul>
+ <li>Dependency resolution.
+ <li>Conflict resolution.
+</ul>
+<p>A plugin which changes the entries added by other plugins is dependent on those other plugins, and the game requires all of the latter plugins to be loaded before the former. If they aren't, the game will crash on launch.
+<p>The game can only apply one version of any one entry (this is known as the <q>rule of one</q>). Therefore, when more than one plugin changes the same entry, the load order is used to decide which plugin's changes are applied. Put simply, the last loaded plugin's changes are applied. The one exception to the <q>rule of one</q> is that the contents of cells (the physical space in which your character moves) can be changed by any number of plugins, so different plugins can add objects to cells, move them around or remove them and all will see their changes applied by the game.
+<p>By changing the load order, you can change which plugins override and which are overridden, and so reduce detrimental conflicts. You cannot actually reduce how much is overridden through load order alone, but it is often the case that some overrides are acceptable while others cause problems in game. Setting a good load order is the process by which you seek to maximise the former instead of the latter.
+<p>Further compatibility between mods is then possible through the use of patches, which are made to address incompatibilities between specific mods, and through the use of Wrye Bash, which can create a <q>Bashed Patch</q> that allows you to select between types of changes for different mods. For example, two mods change a piece of armour, but one changes how it looks and the other changes its effectiveness: through load order alone you could only ever get one change, but using Wrye Bash you can get both, because they change different things in the same armour entry.
+<p>There are a few hardcoded rules that trump load order in many cases:
+<ul>
+ <li>Master plugins always load before non-master plugins.
+ <li>There is a limit of 255 active plugins that can be loaded by the game. This isn't strictly a load <em>order</em> thing, but is worth mentioning.
+ <li>In Skyrim, <code>Skyrim.esm</code> always loads before all other plugins.
+ <li>In Skyrim, if <code>Update.esm</code> is present, it is always loaded. If it has no load order position set, it loads after all other master plugins. That might sound a bit odd, but thanks to Skyrim's load order mechanism, it is possible for it to have no set load order position, even though it is always loaded.
+</ul>
+<p>A plugin's position in the load order is often displayed by mod managers as a hexadecimal number, from 00 to FE (0 to 255 in decimal). The plugin with position 00 loads first, and the plugin with position FE is loaded last. Hexadecimal numbers are used to display the load order positions of plugins because these numbers form the first two digits of the code that the game uses to reference the entries that the plugin adds, so knowing the numbers allows modders and mod users to determine from which plugin an entry is from.
+<p>That's all that you as a mod user <em>need</em> to know about load orders. If you want to find out more about the actual mechanism by which the game decides the load order, read on.
+<p>Oblivion, Fallout 3 and Fallout: New Vegas all share the same mechanism for deciding load order. Skyrim, since the 1.4.26 patch, uses a different mechanism.
+<p>Load order for Oblivion, Fallout 3 and Fallout: New Vegas is decided by the modification date timestamps of the mod plugins. The active plugin with the earliest date loads first, with plugins being listed in descending date order (earliest to latest). It's a bad idea for a plugin that isn't the game's main master file to load first.
+<p>Skyrim's mechanism uses the order that plugins are listed within its <code>plugins.txt</code> file as its load order (from top to bottom). This file is the one in which the list of active plugins is stored, so only active plugins can be strictly said to have a load order.
+
+<h3 id="appendix-dirty">Dirty Edits, Mod Cleaning &amp; CRCs</h3>
+<p>Dirty edits are often a side-effect of mod creation, and are often due to bugs in the utilities Bethesda has provided to create mods, rather than bad practice by mod authors. Dirty edits can cause a wide range of issues, including incorrect game settings, missing content, broken quests and crashing to desktop. The more dirty edits there are in a mod, and the more mods with dirty edits you use, the more likely you are to experience issues.
+<p>Thankfully there is a way to remove dirty edits from mods relatively easily, a process known as <i>mod cleaning</i>, using TES4Edit (for Oblivion), FO3Edit (for Fallout 3), FNVEdit (for Fallout: New Vegas) or TES5Edit (for Skyrim). A detailed set of instructions and information on mod cleaning can be found on the CS Wiki's <a href="http://cs.elderscrolls.com/constwiki/index.php/TES4Edit_Cleaning_Guide">TES4Edit Cleaning Guide</a> (the page also largely applies to Fallout 3, Fallout: New Vegas and Skyrim). <abbr title="Wrye Bash, Wrye Flash or Wrye Flash NV">Wrye *ash</abbr> can also scan plugins for dirty edits and return their ITM and UDR counts, though at the time of writing it cannot clean plugins itself.
+<p>The problem of dirty edits is largely a problem of ignorance on the part of mod authors and users alike of the problems dirty mods can cause. As such, there are community efforts to raise awareness of dirty edits and cleaning. BOSS plays a key role in these efforts, as it holds the complete list of all known dirty mods, and it uses this information to provide notification messages to users for any dirty mods they have installed.
+There are three key pieces of information that are used to accurately describe and identify an unclean mod. They are:
+<ul>
+    <li><i><abbr title="Identical To Master">ITM</abbr> Count</i>: ITM records are a type of dirty edit where a mod has overwritten something in the game without actually changing anything. If another mod lower in the load order makes an intentional change to that thing, it will have its effect cancelled out by the ITM record, which can cause problems. The ITM count is the number of ITM records found and corrected in the mod plugin.
+    <li><i><abbr title="Undeleted and Disabled Reference">UDR</abbr> Count</i>: Deleting records is a significant cause of crashes and game bugs. UDRs are records that the mod deleted from the game or from another mod that have been corrected safely by undeleting them and disabling them instead, which has the same intended effect without causing issues. The UDR count is the number of deleted reference records found and corrected in the mod plugin.
+    <li><i>CRC</i> or <i>Checksum</i>: A file's CRC is a highly accurate way of identifying it, and is a number calculated from the file's contents. If the contents of a file changes, so will its CRC. BOSS uses CRCs to check if a user's mods are dirty by checking their CRCs against pre-determined CRCs of known dirty mods. This lets BOSS give precise notification messages for any dirty mods it detects. BOSS can calculate the CRCs of all your installed plugins if run from the GUI with the <q>Display File CRCs</q> option enabled.
+</ul>
+<p>However, not all unclean mods have all or any of these pieces of information. For unclean mods whose ITM and UDR counts have not been reported, BOSS cannot give them. For unclean mods whose CRCs have not been reported, BOSS cannot give precise notification and so prints a message whether or not the user has cleaned their mod.
+<p>BOSS and the modding communities rely on user contribution of this information to progress. For information on how to contribute, see the <a href="#contrib">Contributing To BOSS</a> section below. If you find that a mod is dirty, you should also report this to the mod's author so that they can fix it.
+<p><b>Note:</b> TES4Edit et al. will include a variety of <em>junk records</em> in the ITM count for a plugin, such as new empty cells that are automatically generated by the Construction Set and are almost impossible to remove. These junk records are non-harmful, and BOSS will inform users when a mod contains these to avoid confusion. This is also the source of any discrepancies between the counts produced by TES4Edit and those produced by <abbr title="Wrye Bash, Wrye Flash or Wrye Flash NV">Wrye *ash</abbr>. The latter's counts are more technically accurate, but both are acceptable for use.
+<p>There is also another type of unnecessary edit, known as a wild edit, that can also cause problems. These edits are neither Identical To Master edits nor deleted records, so cannot be automatically cleaned. Cleaning must be manually done in TES4Edit/FO3Edit/FNVEdit. BOSS can still check for plugins with these edits if the CRCs of the plugins with wild edits are known, and it can provide notification of these edits and some information on fixing them if they are reported in an official BOSS thread.
+
+<h3 id="appendix-permissions">File Permissions</h3>
+<p>If you are running Windows Vista or a later version of Windows, BOSS (and other modding programs) may be prevented from working correctly by the UAC security feature. There are four common workarounds to this problem:
+<ol>
+    <li>Install the game outside the <q>Program Files</q> (or <q>Program Files (x86)</q> if on 64-bit Windows). UAC prevents unauthorised edits to these folders, so by installing the game outside of them, you remove it from UAC's reach, allowing you to use mods more easily.
+    <li>Deactivate UAC. This can be done from the Control Panel, and will turn UAC off across the whole of your computer. It is up to you whether you feel that you have adequate security measures in place to do this without risk.
+    <li>Give yourself <q>Full Control</q> permissions over your game install folder. This will allow you to make any edits you desire while keeping UAC active and on guard for any edits made by programs you do not run, and also means that you do not need to reinstall your game to a new location.
+    <li>Run BOSS as an Administrator. Right-click the <q>BOSS.exe</q> and <q>BOSS GUI.exe</q>, and select <q>Run as administrator</q>.
+</ol>
+<p>For those that wish to take the third option and give themselves <q>Full Control</q> permissions, here is a guide:
+<ol>
+    <li>Right-click the folder you wish to change the permissions for, and select <q>Properties</q>.
+    <li>In <q>Properties</q>, select the <q>Security</q> tab, and click the <q>Edit...</q> button. A UAC prompt may appear, simply allow yourself to continue.
+    <li>In the <q>Group or user names</q> box, select the <q>Users</q> option.
+    <li>In the lower box, check the box opposite <q>Full Control</q> in the <q>Allow</q> column. Press OK to exit. If a UAC prompt appears, allow the change.
+    <li>In the <q>Properties</q> window, select OK to exit. You should now have Full Control permissions over your chosen folder.
+</ol>

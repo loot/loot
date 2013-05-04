@@ -52,10 +52,11 @@ const char * const libespm_game = "Skyrim";
 
 const char * const masterlist_path = "masterlist.yaml";
 const char * const userlist_path = "userlist.yaml";
-
-
+const char * const results_path = "results.yaml";
 
 int main(int argc, char *argv[]) {
+
+    time_t t0 = time(NULL);
 
     /* Stuff still missing from a normal execution of BOSS:
 
@@ -63,7 +64,9 @@ int main(int argc, char *argv[]) {
       - Detecting game to run for.
       - Error handling.
       - Masterlist updating.
-      - Writing of log file.
+      - Checks for metadata self-consistency.
+      - Checks for cyclic dependencies and incompatibilities.
+      - Setting of load order.
 
       Need to include libespm setup into game setup, once the former is made to be not global.
     */
@@ -95,7 +98,7 @@ int main(int argc, char *argv[]) {
 				continue;  // Libespm crashes with these plugins.
 			
 			cout << "Reading plugin: " << filename << endl;
-			boss::Plugin plugin(filename, it->path().parent_path().string());
+			boss::Plugin plugin(game, filename);
             plugins.push_back(plugin);
         }
     }
@@ -166,7 +169,7 @@ int main(int argc, char *argv[]) {
         start = time(NULL);
     }
     
-    cout << "Evaluating plugin list..." << endl;
+    cout << "Evaluating any conditions in plugin list..." << endl;
 
     for (list<boss::Plugin>::iterator it=plugins.begin(), endIt=plugins.end(); it != endIt; ++it) {
         try {
@@ -178,7 +181,23 @@ int main(int argc, char *argv[]) {
 
     end = time(NULL);
 	cout << "Time taken to evaluate plugin list: " << (end - start) << " seconds." << endl;
-    start = time(NULL);    
+    start = time(NULL);
+
+    cout << "Checking install validity..." << endl;
+
+    for (list<boss::Plugin>::iterator it=plugins.begin(), endIt = plugins.end(); it != endIt; ++it) {
+        map<string, bool> issues = it->CheckInstallValidity(game);
+        for (map<string,bool>::const_iterator jt=issues.begin(), endJt=issues.end(); jt != endJt; ++jt) {
+            if (jt->second)
+                cout << "Error: Invalid install detected! \"" << jt->first << "\" is incompatible with \"" << it->Name() << "\" and is present." << endl;
+            else
+                cout << "Error: Invalid install detected! \"" << jt->first << "\" is required by \"" << it->Name() << "\" but is missing." << endl;
+        }
+    }
+
+    
+
+    cout << "Printing plugin details..." << endl;    
 
     for (list<boss::Plugin>::iterator it=plugins.begin(), endIt = plugins.end(); it != endIt; ++it) {
 		cout << it->Name() << endl
@@ -192,7 +211,7 @@ int main(int argc, char *argv[]) {
 
         cout << '\t' << "Conflicts with:" << endl;
         for (list<boss::Plugin>::iterator jt=plugins.begin(), endJt = plugins.end(); jt != endJt; ++jt) {
-            if (*jt != *it && !jt->IsChildOf(*it)) {
+            if (*jt != *it && !jt->MustLoadAfter(*it)) {
                 size_t overlap = jt->OverlapFormIDs(*it).size();
                 if (overlap > 0)
                     cout << '\t' << '\t' << jt->Name() << " (" << overlap << " records)" << endl;
@@ -213,8 +232,20 @@ int main(int argc, char *argv[]) {
 
     for (list<boss::Plugin>::iterator it=plugins.begin(), endIt = plugins.end(); it != endIt; ++it)
         cout << it->Name() << endl;
+
+    cout << "Writing results file..." << endl;
+
+    YAML::Emitter yout;
+    yout.SetIndent(2);
+    yout << YAML::BeginMap
+         << YAML::Key << "globals" << YAML::Value << messages
+         << YAML::Key << "plugins" << YAML::Value << plugins
+         << YAML::EndMap;
+
+    ofstream out(results_path);
+    out << yout.c_str();
+    out.close();
     
-	cout << "Tester finished." << endl;
-    start = time(NULL);
+	cout << "Tester finished. Total time taken: " << time(NULL) - t0 << endl;
     return 0;
 }

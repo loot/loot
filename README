@@ -34,7 +34,7 @@ BOSSv3 will also have an API for accessing BOSS data and functionality. The more
 
 Unlike v2, v3 will not have a built-in updater/update checker. It's just too much of a headache to code and manage for the payoff it gives, especially since notifications can be sent to users via the masterlist.
 
-When run, BOSS shall output its results to a "log.yaml" file, which shall then be interpreted by the UI to display the BOSS Log. In addition, before running it shall create a copy of the current load order in the same directory with the filename "loadorder.old".
+When run, BOSS shall output its results to a "log.yaml" file, which shall then be interpreted by the UI to display the BOSS Log.
 
 BOSSv3 won't have a command line interface. Command line options may be added to the GUI if requested. Users need to be made aware that what BOSS sets isn't the absolutely perfect load order, and is open to tweaking, which is being lost on some people currently, in part due to the 'one click' nature of BOSS.
 
@@ -81,7 +81,7 @@ BOSSv3's settings file, masterlist, userlist and previous run logs will all be w
 
 A custom parser is required for the evaluation of conditions though. The syntax has been made more human readable and compound conditions now evaluate according to standard logic.
 
-The masterlist and userlist will use the same parser, and simply combined by merging or replacing plugin metadata where depending on the type of metadata, though the details haven't yet been decided.
+The masterlist and userlist will use the same parser, and simply combined by merging or replacing plugin metadata where depending on the type of metadata.
 
 Further details can be found in the 'docs/BOSS Metadata File Syntax.html' file. An example settings file can be found at 'examples/settings.yaml'.
 

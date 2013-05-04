@@ -42,7 +42,7 @@ namespace boss {
         id = formID & ~((uint32_t)index << 24);
 
         if (index >= sourcePlugins.size()) {
-            cout << hex << formID << dec << " in " << sourcePlugins.back() << " has a higher modIndex than expected." << endl;
+            //cout << hex << formID << dec << " in " << sourcePlugins.back() << " has a higher modIndex than expected." << endl;
             index = sourcePlugins.size() - 1;
         }
 
@@ -190,11 +190,11 @@ namespace boss {
     Plugin::Plugin() : enabled(true), priority(0), isMaster(false) {}
     Plugin::Plugin(const std::string& n) : name(n), enabled(true), priority(0), isMaster(false) {}
 
-	Plugin::Plugin(const std::string& n, const std::string& path)
+	Plugin::Plugin(const boss::Game& game, const std::string& n)
 		: name(n), enabled(true), priority(0) {
 			
 		// Get data from file contents using libespm. Assumes libespm has already been initialised.
-		boost::filesystem::path filepath = boost::filesystem::path(path) / n;
+		boost::filesystem::path filepath = game.DataPath() / n;
 		
 		ifstream input(filepath.string().c_str(), ios::binary);
 		espm::file File;
@@ -214,6 +214,32 @@ namespace boss {
             uint32_t id = *reinterpret_cast<uint32_t*>(it->record.recID);
 			formIDs.insert(FormID(plugins, id));
 		}
+
+        //Also read Bash Tags applied in description.
+        for(size_t i=0,max=File.fields.size(); i < max; ++i){
+            if (File.fields[i].name == "SNAM") {
+                string text = File.fields[i].data;
+                
+                size_t pos1 = text.find("{{BASH:");
+                if (pos1 == string::npos)
+                    break;
+
+                size_t pos2 = text.find("}}", pos1);
+                if (pos2 == string::npos)
+                    break;
+
+                text = text.substr(pos1, pos2-pos1);
+
+                vector<string> bashTags;
+                boost::split(bashTags, text, boost::is_any_of(","));
+
+                for (int i=0,max=bashTags.size(); i<max; ++i) {
+                    tags.insert(Tag(bashTags[i]));
+                }
+
+                break;
+            }
+        }
 	}
 
     void Plugin::Merge(const Plugin& plugin) {
@@ -379,16 +405,16 @@ namespace boss {
         if (!IsMaster() && rhs.IsMaster())
 			return false;
 
-        if (rhs.IsChildOf(*this))
+        if (rhs.MustLoadAfter(*this))
 			return true;
 
-        if (IsChildOf(rhs)) // Should probably also check for cyclic masters.
+        if (MustLoadAfter(rhs))
 			return false;
 
-        if (Priority() > rhs.Priority())
+        if (Priority() < rhs.Priority())
             return true;
             
-        if (Priority() < rhs.Priority())
+        if (Priority() > rhs.Priority())
             return false;
 
         if (!OverlapFormIDs(rhs).empty() && formIDs.size() != rhs.FormIDs().size())
@@ -413,16 +439,7 @@ namespace boss {
     std::set<FormID> Plugin::FormIDs() const {
 		return formIDs;
 	}
-	
-	std::set<FormID> Plugin::OverrideFormIDs() const {
-		set<FormID> fidSubset;
-		for (set<FormID>::const_iterator it = formIDs.begin(), endIt=formIDs.end(); it != endIt; ++it) {
-			if (boost::iequals(it->Plugin(), name))
-				fidSubset.insert(*it);
-		}
-		return fidSubset;
-	}
-	
+
     std::set<FormID> Plugin::OverlapFormIDs(const Plugin& plugin) const {
         std::set<FormID> otherFormIDs = plugin.FormIDs();
         std::set<FormID> overlap;
@@ -442,12 +459,38 @@ namespace boss {
 		return isMaster;
 	}
 
-    //Checks if the object plugin is explicitly dependent on the given plugin.
-	bool Plugin::IsChildOf(const Plugin& plugin) const {
+    bool Plugin::MustLoadAfter(const Plugin& plugin) const {
         for (vector<string>::const_iterator it=masters.begin(), endIt=masters.end(); it != endIt; ++it) {
             if (boost::iequals(*it, plugin.Name()))
                 return true;
         }
-		return false;
-	}
+        for (set<File>::const_iterator it=requirements.begin(), endIt=requirements.end(); it != endIt; ++it) {
+            if (boost::iequals(it->Name(), plugin.Name()))
+                return true;
+        }
+        for (set<File>::const_iterator it=loadAfter.begin(), endIt=loadAfter.end(); it != endIt; ++it) {
+            if (boost::iequals(it->Name(), plugin.Name()))
+                return true;
+        }
+        return false;
+    }
+
+    std::map<string,bool> Plugin::CheckInstallValidity(const Game& game) const {
+        map<string,bool> issues;
+        if (tags.find(Tag("Filter")) == tags.end()) {
+            for (vector<string>::const_iterator it=masters.begin(), endIt=masters.end(); it != endIt; ++it) {
+                if (!fs::exists(game.DataPath() / *it))
+                    issues.insert(pair<string,bool>(*it,false));
+            }
+        }
+        for (set<File>::const_iterator it=requirements.begin(), endIt=requirements.end(); it != endIt; ++it) {
+            if (!fs::exists(game.DataPath() / it->Name()))
+                issues.insert(pair<string,bool>(it->Name(),false));
+        }
+        for (set<File>::const_iterator it=incompatibilities.begin(), endIt=incompatibilities.end(); it != endIt; ++it) {
+            if (fs::exists(game.DataPath() / it->Name()))
+                issues.insert(pair<string,bool>(it->Name(),true));
+        }
+        return issues;
+    }
 }

@@ -171,7 +171,7 @@ namespace boss {
             //Use libespm interface. Assumes that it has previously been initialised.
             ifstream input(file.string().c_str(), ios::binary);
             espm::file FileStruct;
-			espm::readFile(input, FileStruct);
+			espm::readHeaderThing(input, FileStruct);
 			input.close();
 			
 			for(size_t i=0,max=FileStruct.fields.size(); i < max; ++i){
@@ -195,6 +195,7 @@ namespace boss {
 							verString = trim_copy(string(match.first, match.second));
 						}
 					}
+                    break;
 				}
 			}
 			
