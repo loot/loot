@@ -139,6 +139,7 @@ namespace boss {
         std::set<FormID> FormIDs() const;
         std::vector<std::string> Masters() const;
         bool IsMaster() const;  //Checks master bit flag.
+        std::string Version() const;
 
         void Name(const std::string& name);
         void Enabled(const bool enabled);
@@ -181,6 +182,7 @@ namespace boss {
         
         std::vector<std::string> masters;
         std::set<FormID> formIDs;
+        std::string version;  //Obtained from description field.
         bool isMaster;
     };
 }

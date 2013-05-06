@@ -28,11 +28,18 @@
 #ifndef __BOSS_HELPERS__
 #define __BOSS_HELPERS__
 
+#include "metadata.h"
+
 #include <stdint.h>
 #include <string>
 #include <boost/filesystem.hpp>
+#include <boost/regex.hpp>
 
 namespace boss {
+
+    /// Array used to try each of the expressions defined using 
+	/// an iteration for each of them.
+	extern boost::regex* version_checks[];
 
     //////////////////////////////////////////////////////////////////////////
     // Helper functions
@@ -62,9 +69,9 @@ namespace boss {
         std::string verString;
     public:
         Version();
-        Version(const char * ver);
-        Version(const std::string ver);
-        Version(const boost::filesystem::path file);
+        Version(const std::string& ver);
+        Version(const boost::filesystem::path& file);
+        Version(const Plugin& plugin);
 
         std::string AsString() const;
 

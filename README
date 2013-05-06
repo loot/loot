@@ -39,9 +39,9 @@ When run, BOSS shall output its results to a "log.yaml" file, which shall then b
 BOSSv3 won't have a command line interface. Command line options may be added to the GUI if requested. Users need to be made aware that what BOSS sets isn't the absolutely perfect load order, and is open to tweaking, which is being lost on some people currently, in part due to the 'one click' nature of BOSS.
 
 
-Roadmap
-=======
-
+Roadmap/To Do
+=============
+    
 - Write new masterlist, userlist, settings file parsers. DONE
 - Implement per-game handling. DONE
 - Write API. DONE
@@ -50,7 +50,14 @@ Roadmap
 - Write masterlist updating code.
 - Develop graphical user interface.
 - Error handling.
-- Initialisation and finishing routines (read settings file, write log file, etc.).
+- Initialisation and finishing routines (read settings file, write log file, etc.). DONE
+- Remove game detection override.
+- Checks for cyclic dependencies and incompatibilities.
+- Setting load order.
+- Include libespm initialisation into Game constructor.
+- Optimisations to load ordering.
+- Implement logging.
+- Implement reading of plugin versions from their description field.
 
 
 Sorting Algorithm
@@ -105,39 +112,3 @@ ZiggyX200, RiddlingLynx, AliTheLord, Tokc.D.K., Valda, Space Oden69, Televator,
 Leandro Conde, Psymon, Loucifer, Torrello, Malonn, Skyline, Sharlikran, Red Eye,
 iyumichan, Peste, Calen Ellefson, SilentSpike, Arkangel, zyp, v111, Chevenga,
 rowynyew
-  
-
-Backwards Compatibility
-=======================
-
-BOSSv3 will not be backwards compatible with previous versions of BOSS: that is, it will not be able to use masterlists, userlists, translation files and ini files from previous versions of BOSS.
-
-It may be possible to perform limited conversion from v2 masterlists and userlists to their v3 equivalents, but as their capabilities have substantially changed, much of them may be untransferrable or at least not automatically transferable.
-
-A userlist converter would be most useful, since that would make most people's switch between v2 and v3 easier. The masterlists will probably have to be manually scanned for useful information.
-
-Userlist Conversion
--------------------
-
-Differences between BOSSv2 and v3:
-
-  - In v2, plugins can be sorted before or after other plugins, but v3 only supports sorting after other plugins.
-  - In v2, it is possible to replace or append to masterlist messages. In v3, the user can only append messages.
-  - In v2, it is possible to sort groups or relative to groups, but groups do not exist in v3.
-  - In v2, the order of rules affects their execution. In v3 the order of rules doesn't matter.
-  - In v2, requirements and incompatibilities are added in messages, but in v3 they are added in a separate data structure.
-
-Conversion for syntax is just a matter of reading in using the old parser and writing out using the new generator. If any of the following are detected in a rule, conversion should be aborted and error messages detailing why displayed, asking the user to make the relevant changes before running the converter again.
-
-  - If the rule object is a group.
-  - If the sort keyword is 'BEFORE', 'TOP' or 'BOTTOM'.
-  - If the sort object is a group.
-  - If the message keyword is 'REPLACE'.
-  - If the message object's keyword is 'REQ' or 'INC'.
-
-If any of the following are detected, then BOSS should display a warning that the result may differ from the original:
-
-  - If a message object's keyword is 'TAG'.
-  - If more than one rule references the same sort object or the same plugin appears as a sort object in one rule and a rule object in another.
-
-Additionally, a warning should be displayed that all comments will be ignored.

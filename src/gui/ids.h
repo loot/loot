@@ -62,13 +62,4 @@ wxString FromUTF8(const std::string& str);
 
 wxString FromUTF8(const boost::format& f);
 
-// Temporary hacks.
-const char * const libespm_options_path = "libespm.cfg";
-const char * const libespm_game = "Skyrim";
-
-const char * const masterlist_path = "masterlist.yaml";
-const char * const userlist_path = "userlist.yaml";
-const char * const results_path = "results.yaml";
-const char * const settings_path = "settings.yaml";
-
 #endif

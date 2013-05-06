@@ -24,19 +24,28 @@
 #ifndef __BOSS_GAME__
 #define __BOSS_GAME__
 
+
 #include <string>
+#include <vector>
 #include <stdint.h>
 
 #include <boost/filesystem.hpp>
 #include <boost/unordered_map.hpp>
 #include <boost/unordered_set.hpp>
 
+#include <libloadorder.h>
+#include <src/playground.h>
+
 namespace boss {
+
+    class Plugin;
+
+    void DetectGames(std::vector<unsigned int>& detected, std::vector<unsigned int>& undetected);
 
     class Game {
     public:
         Game();  //Sets game to BOSS_GAME_AUTODETECT, with all other vars being empty.
-        Game(const unsigned int gameCode, const std::string path = "", const bool noPathInit = false); //Empty path means constructor will detect its location. If noPathInit is true, then the game's BOSS subfolder will not be created.
+        Game(const unsigned int gameCode, const bool pathInit = true); //Empty path means constructor will detect its location. If noPathInit is true, then the game's BOSS subfolder will not be created.
 
         bool IsInstalled() const;
         bool IsInstalledLocally() const;
@@ -46,6 +55,9 @@ namespace boss {
 
         boost::filesystem::path GamePath() const;
         boost::filesystem::path DataPath() const;
+        boost::filesystem::path MasterlistPath() const;
+        boost::filesystem::path UserlistPath() const;
+        boost::filesystem::path ResultsPath() const;
 
         //Creates directory in BOSS folder for BOSS's game-specific files.
         void CreateBOSSGameFolder();
@@ -53,9 +65,13 @@ namespace boss {
         void RefreshActivePluginsList();
         bool IsActive(const std::string& plugin) const;
 
+        void SetLoadOrder(const std::list<Plugin>& loadOrder) const;
+
         //Caches for condition results, active plugins and CRCs.
         boost::unordered_map<std::string, bool> conditionCache;  //Holds lowercased strings.
         boost::unordered_map<std::string, uint32_t> crcCache;  //Holds lowercased strings.
+
+        espm::Settings espm_settings;
     private:
         unsigned id;
         std::string name;
@@ -64,7 +80,7 @@ namespace boss {
         std::string registrySubKey;
 
         std::string bossFolderName;
-        std::string pluginsFolderName;
+        std::string masterFile;
 
         boost::filesystem::path gamePath;  //Path to the game's folder.
         boost::unordered_set<std::string> activePlugins;  //Holds lowercased strings.

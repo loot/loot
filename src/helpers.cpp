@@ -26,7 +26,6 @@
 */
 
 #include "helpers.h"
-#include "VersionRegex.h"
 #include "error.h"
 
 #include <boost/spirit/include/karma.hpp>
@@ -35,7 +34,6 @@
 #include <boost/regex.hpp>
 
 #include <alphanum.hpp>
-#include "source/utf8.h"
 
 #include <cstring>
 #include <iostream>
@@ -45,10 +43,6 @@
 #include <time.h>
 #include <sys/types.h>
 #include <sstream>
-
-// Libespm files.
-#include <src/commonSupport.h>
-#include <src/fileFormat.h>
 
 #if _WIN32 || _WIN64
 #   ifndef UNICODE
@@ -67,6 +61,65 @@ namespace boss {
     using boost::algorithm::replace_first;
     namespace karma = boost::spirit::karma;
     namespace fs = boost::filesystem;
+    
+
+	/// REGEX expression definition
+	///  Each expression is composed of three parts:
+	///    1. The marker string "version", "ver", "rev", "v" or "r"
+	///    2. The version string itself.
+
+	const char* regex1 = 
+		"^(?:\\bversion\\b[ ]*(?:[:.\\-]?)|\\brevision\\b(?:[:.\\-]?))[ ]*"
+		"((?:alpha|beta|test|debug)?\\s*[-0-9a-zA-Z._+]+\\s*(?:alpha|beta|test|debug)?\\s*(?:[0-9]*))$"
+		;
+
+	const char* regex2 = 
+		"(?:\\bversion\\b(?:[ :]?)|\\brevision\\b(?:[:.\\-]?))[ ]*"
+		"([0-9][-0-9a-zA-Z._]+\\+?)"
+		;
+
+	const char* regex3 = 
+		"(?:\\bver(?:[:.]?)|\\brev(?:[:.]?))\\s*"
+		"([0-9][-0-9a-zA-Z._]*\\+?)"
+		;
+
+	// Matches "Updated: <date>" for the Bashed patch
+	const char* regex4 = 
+		"(?:Updated:)\\s*"
+		"([-0-9aAmMpP/ :]+)$"
+		;
+
+	// Matches isolated versions as last resort
+	const char* regex5 = 
+		"(?:(?:\\bv|\\br)(?:\\s?)(?:[-.:])?(?:\\s*))"
+		"((?:(?:\\balpha\\b)?|(?:\\bbeta\\b)?)\\s*[0-9][-0-9a-zA-Z._]*\\+?)"
+		;
+
+	// Matches isolated versions as last resort
+	const char* regex6 = 
+		"((?:(?:\\balpha\\b)?|(?:\\bbeta\\b)?)\\s*\\b[0-9][-0-9a-zA-Z._]*\\+?)$"
+		;
+
+	const char* regex7 = 
+		"(^\\bmark\\b\\s*\\b[IVX0-9][-0-9a-zA-Z._+]*\\s*(?:alpha|beta|test|debug)?\\s*(?:[0-9]*)?)$"
+		;
+
+	/// Array used to try each of the expressions defined above using 
+	/// an iteration for each of them.
+	boost::regex* version_checks[] = {
+			new boost::regex(regex1, boost::regex::icase),
+			new boost::regex(regex2, boost::regex::icase),
+			new boost::regex(regex3, boost::regex::icase),
+			new boost::regex(regex4, boost::regex::icase),
+			new boost::regex(regex5, boost::regex::icase),  //This incorrectly identifies "OBSE v19" where 19 is any integer.
+			new boost::regex(regex6, boost::regex::icase),  //This is responsible for metallicow's false positive.
+			new boost::regex(regex7, boost::regex::icase),
+			0
+			};
+
+    //////////////////////////////////////////////////////////////////////////
+    // Helper functions
+    //////////////////////////////////////////////////////////////////////////
 
     //Calculate the CRC of the given file for comparison purposes.
     uint32_t GetCrc32(const fs::path& filename) {
@@ -160,88 +213,55 @@ namespace boss {
 
     Version::Version() {}
 
-    Version::Version(const char * ver)
+    Version::Version(const std::string& ver)
         : verString(ver) {}
 
-    Version::Version(const std::string ver)
-        : verString(ver) {}
-
-    Version::Version(const fs::path file) {
-        if (file.extension().string() == ".esm" || file.extension().string() == ".esp") {
-            //Use libespm interface. Assumes that it has previously been initialised.
-            ifstream input(file.string().c_str(), ios::binary);
-            espm::file FileStruct;
-			espm::readHeaderThing(input, FileStruct);
-			input.close();
-			
-			for(size_t i=0,max=FileStruct.fields.size(); i < max; ++i){
-				if (FileStruct.fields[i].name == "SNAM") {
-					string text = FileStruct.fields[i].data;
-					
-					string::const_iterator begin, end;
-					begin = text.begin();
-					end = text.end();
-
-					for(int i = 0; regex* re = version_checks[i]; i++) {
-						smatch what;
-						while (regex_search(begin, end, what, *re)) {
-							if (what.empty())
-								continue;
-
-							ssub_match match = what[1];
-							if (!match.matched)
-								continue;
-
-							verString = trim_copy(string(match.first, match.second));
-						}
-					}
-                    break;
-				}
-			}
-			
-        } else {
+    Version::Version(const fs::path& file) {
 #if _WIN32 || _WIN64
-            DWORD dummy = 0;
-            DWORD size = GetFileVersionInfoSize(file.wstring().c_str(), &dummy);
+        DWORD dummy = 0;
+        DWORD size = GetFileVersionInfoSize(file.wstring().c_str(), &dummy);
 
-            if (size > 0) {
-                LPBYTE point = new BYTE[size];
-                UINT uLen;
-                VS_FIXEDFILEINFO *info;
-                string ver;
+        if (size > 0) {
+            LPBYTE point = new BYTE[size];
+            UINT uLen;
+            VS_FIXEDFILEINFO *info;
+            string ver;
 
-                GetFileVersionInfo(file.wstring().c_str(),0,size,point);
+            GetFileVersionInfo(file.wstring().c_str(),0,size,point);
 
-                VerQueryValue(point,L"\\",(LPVOID *)&info,&uLen);
+            VerQueryValue(point,L"\\",(LPVOID *)&info,&uLen);
 
-                DWORD dwLeftMost     = HIWORD(info->dwFileVersionMS);
-                DWORD dwSecondLeft   = LOWORD(info->dwFileVersionMS);
-                DWORD dwSecondRight  = HIWORD(info->dwFileVersionLS);
-                DWORD dwRightMost    = LOWORD(info->dwFileVersionLS);
+            DWORD dwLeftMost     = HIWORD(info->dwFileVersionMS);
+            DWORD dwSecondLeft   = LOWORD(info->dwFileVersionMS);
+            DWORD dwSecondRight  = HIWORD(info->dwFileVersionLS);
+            DWORD dwRightMost    = LOWORD(info->dwFileVersionLS);
 
-                delete [] point;
+            delete [] point;
 
-                verString = IntToString(dwLeftMost) + '.' + IntToString(dwSecondLeft) + '.' + IntToString(dwSecondRight) + '.' + IntToString(dwRightMost);
-            }
-#else
-            // ensure filename has no quote characters in it to avoid command injection attacks
-            if (string::npos != file.string().find('"')) {
-                 // command mostly borrowed from the gnome-exe-thumbnailer.sh script
-                // wrestool is part of the icoutils package
-                string cmd = "wrestool --extract --raw --type=version \"" + file.string() + "\" | tr '\\0, ' '\\t.\\0' | sed 's/\\t\\t/_/g' | tr -c -d '[:print:]' | sed -r 's/.*Version[^0-9]*([0-9]+(\\.[0-9]+)+).*/\\1/'";
-
-                FILE *fp = popen(cmd.c_str(), "r");
-
-                // read out the version string
-                static const uint32_t BUFSIZE = 32;
-                char buf[BUFSIZE];
-                if (NULL != fgets(buf, BUFSIZE, fp)) {
-                    verString = string(buf);
-                }
-                pclose(fp);
-            }
-#endif
+            verString = IntToString(dwLeftMost) + '.' + IntToString(dwSecondLeft) + '.' + IntToString(dwSecondRight) + '.' + IntToString(dwRightMost);
         }
+#else
+        // ensure filename has no quote characters in it to avoid command injection attacks
+        if (string::npos != file.string().find('"')) {
+             // command mostly borrowed from the gnome-exe-thumbnailer.sh script
+            // wrestool is part of the icoutils package
+            string cmd = "wrestool --extract --raw --type=version \"" + file.string() + "\" | tr '\\0, ' '\\t.\\0' | sed 's/\\t\\t/_/g' | tr -c -d '[:print:]' | sed -r 's/.*Version[^0-9]*([0-9]+(\\.[0-9]+)+).*/\\1/'";
+
+            FILE *fp = popen(cmd.c_str(), "r");
+
+            // read out the version string
+            static const uint32_t BUFSIZE = 32;
+            char buf[BUFSIZE];
+            if (NULL != fgets(buf, BUFSIZE, fp)) {
+                verString = string(buf);
+            }
+            pclose(fp);
+        }
+#endif
+    }
+
+    Version::Version(const Plugin& plugin) {
+        verString = plugin.Version();
     }
 
     string Version::AsString() const {

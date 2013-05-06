@@ -39,6 +39,7 @@ namespace boss {
     const unsigned int ERROR_INVALID_ARGS          = 7;
     const unsigned int ERROR_NO_TAG_MAP            = 8;
     const unsigned int ERROR_PATH_NOT_FOUND        = 9;
+    const unsigned int ERROR_NO_GAME_DETECTED      = 10;
 
     class error : public std::exception {
     public:

@@ -21,11 +21,13 @@
     <http://www.gnu.org/licenses/>.
 */
 
-#include "metadata.h"
 #include "helpers.h"
+#include "metadata.h"
+
+#include <src/playground.h>
+
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
-#include <src/fileFormat.h>
 
 #include <iostream>
 
@@ -195,34 +197,48 @@ namespace boss {
 			
 		// Get data from file contents using libespm. Assumes libespm has already been initialised.
 		boost::filesystem::path filepath = game.DataPath() / n;
-		
 		ifstream input(filepath.string().c_str(), ios::binary);
-		espm::file File;
-		espm::readFile(input, File);
+        input.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+		espm::File file;
+        file.Read(input, game.espm_settings);
 		input.close();
 
-		isMaster = espm::isMaster(File);
-		vector<char*> rawMasters = espm::getMasters(File);
-		for (size_t i=0,max=rawMasters.size(); i < max; ++i) {
-			masters.push_back(rawMasters[i]);
-		}
+		isMaster = file.IsMaster(game.espm_settings);
+		masters = file.GetMasters();
 		
-		vector<espm::item> records = espm::getRecords(File);
+		vector<uint32_t> records = file.GetFormIDs();
         vector<string> plugins = masters;
         plugins.push_back(name);
-		for (vector<espm::item>::const_iterator it = records.begin(),endIt = records.end(); it != endIt; ++it){
-            uint32_t id = *reinterpret_cast<uint32_t*>(it->record.recID);
-			formIDs.insert(FormID(plugins, id));
-		}
+		for (vector<uint32_t>::const_iterator it = records.begin(),endIt = records.end(); it != endIt; ++it)
+			formIDs.insert(FormID(plugins, *it));
 
-        //Also read Bash Tags applied in description.
-        for(size_t i=0,max=File.fields.size(); i < max; ++i){
-            if (File.fields[i].name == "SNAM") {
-                string text = File.fields[i].data;
+        //Also read Bash Tags applied and version string in description.
+        for(size_t i=0,max=file.fields.size(); i < max; ++i){
+            if (strncmp(file.fields[i].type,"SNAM", 4) == 0) {
+                string text = file.fields[i].data;
+
+                string::const_iterator begin, end;
+                begin = text.begin();
+                end = text.end(); 
+
+        /*        for(int j = 0; boost::regex* re = version_checks[j]; j++) {
+                    boost::smatch what;
+                    while (boost::regex_search(begin, end, what, *re)) {
+                        if (what.empty())
+                            continue;
+
+                        boost::ssub_match match = what[1];
+                        if (!match.matched)
+                            continue;
+
+                        version = boost::trim_copy(string(match.first, match.second));
+                    }
+                    cout << "Checking regex: " << j << endl;
+                }*/
                 
                 size_t pos1 = text.find("{{BASH:");
                 if (pos1 == string::npos)
-                    break;
+                    continue;
 
                 size_t pos2 = text.find("}}", pos1);
                 if (pos2 == string::npos)
@@ -458,6 +474,10 @@ namespace boss {
 	bool Plugin::IsMaster() const {
 		return isMaster;
 	}
+
+    std::string Plugin::Version() const {
+        return version;
+    }
 
     bool Plugin::MustLoadAfter(const Plugin& plugin) const {
         for (vector<string>::const_iterator it=masters.begin(), endIt=masters.end(); it != endIt; ++it) {

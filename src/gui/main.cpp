@@ -31,11 +31,13 @@
 #include <algorithm>
 #include <iterator>
 #include <ctime>
+#include <clocale>
 
-#include <src/commonSupport.h>
-#include <src/fileFormat.h>
+#include <libloadorder.h>
+#include <src/playground.h>
 
 #include <boost/filesystem.hpp>
+#include <boost/filesystem/detail/utf8_codecvt_facet.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
@@ -70,18 +72,13 @@ IMPLEMENT_APP(BossGUI);
 
 using namespace boss;
 using namespace std;
+using boost::format;
 
 namespace fs = boost::filesystem;
 namespace loc = boost::locale;
 
-// Temporary hacks.
-const fs::path readme_path = fs::path("Docs") / "BOSS Readme.html";
-const fs::path syntax_doc_path = fs::path("Docs") / "BOSS Metadata File Syntax.html";
-const fs::path api_doc_path = fs::path("Docs") / "BOSS API Readme.html";
-const fs::path version_history_path = fs::path("Docs") / "BOSS Version History.html";
-const fs::path licenses_path = fs::path("Docs") / "Licenses.txt";
-
 bool BossGUI::OnInit() {
+    
     //Check if GUI is already running.
 	wxSingleInstanceChecker *checker = new wxSingleInstanceChecker;
 
@@ -96,15 +93,109 @@ bool BossGUI::OnInit() {
     //Load settings.
     YAML::Node settings;
     if (fs::exists(settings_path)) {
-        settings = YAML::LoadFile(settings_path);
+        try {
+            settings = YAML::LoadFile(settings_path.string());
+        } catch (YAML::ParserException& e) {
+            //LOG_ERROR("Error: %s", e.getString().c_str());
+            wxMessageBox(
+				FromUTF8(format(loc::translate("Error: Settings parsing failed. %1%")) % e.what()),
+				translate("BOSS: Error"),
+				wxOK | wxICON_ERROR,
+				NULL);
+        }
     }
 
-    //Apply logging and language settings (skipping for tester though).
+    //Skip logging initialisation for tester.
+/*    if (gl_log_debug_output)
+		g_logger.setStream(debug_log_path.string().c_str());
+	g_logger.setOriginTracking(gl_debug_with_source);
+	// it's ok if this number is too high.  setVerbosity will handle it
+	g_logger.setVerbosity(static_cast<LogVerbosity>(LV_WARN + gl_debug_verbosity));
+*/
+    //Specify location of language dictionaries
+	boost::locale::generator gen;
+	gen.add_messages_path(fs::path("l10n").string());
+	gen.add_messages_domain("messages");
 
-    //Also skipping game detection.
-    Game game(GAME_TES5);
-    vector<unsigned int> detected;
-    detected.push_back(GAME_TES5);
+    //Set the locale to get encoding and language conversions working correctly.
+    if (settings["Language"]) {
+        string localeId = "";
+        wxLanguage lang;
+        if (settings["Language"].as<string>() == "eng") {
+            localeId = "en.UTF-8";
+            lang = wxLANGUAGE_ENGLISH;
+        }
+
+        try {
+            locale::global(gen(localeId));
+            cout.imbue(locale());
+            //Need to also set up wxWidgets locale so that its default interface text comes out in the right language.
+            wxLoc = new wxLocale();
+            if (!wxLoc->Init(lang, wxLOCALE_LOAD_DEFAULT))
+                throw runtime_error("System GUI text could not be set.");
+            wxLocale::AddCatalogLookupPathPrefix(".\\l10n");
+            wxLoc->AddCatalog("wxstd");
+        } catch(runtime_error &e) {
+           // LOG_ERROR("could not implement translation: %s", e.what());
+            wxMessageBox(
+                FromUTF8(format(loc::translate("Error: could not apply translation: %1%")) % e.what()),
+                translate("BOSS: Error"),
+                wxOK | wxICON_ERROR,
+                NULL);
+        }
+        locale global_loc = locale();
+        locale loc(global_loc, new boost::filesystem::detail::utf8_codecvt_facet());
+        boost::filesystem::path::imbue(loc);
+    }
+
+    //Detect installed games.
+    vector<unsigned int> detected, undetected;
+    DetectGames(detected, undetected);
+    if (detected.empty())
+        throw error(ERROR_NO_GAME_DETECTED, "None of the supported games were detected.");
+
+    string target;
+    unsigned int targetGame;
+    if (settings["Game"] && settings["Game"].as<string>() != "auto")
+        target = settings["Game"].as<string>();
+    else if (settings["Last Game"] && settings["Last Game"].as<string>() != "auto")
+        target = settings["Last Game"].as<string>();
+
+    if (!target.empty()) {
+        for (size_t i=0, max=detected.size(); i < max; ++i) {
+            if (target == "oblivion" && detected[i] == GAME_TES4) {
+                targetGame = GAME_TES4;
+                break;
+            } else if (target == "nehrim" && detected[i] == GAME_NEHRIM) {
+                targetGame = GAME_NEHRIM;
+                break;
+            } else if (target == "skyrim" && detected[i] == GAME_TES5) {
+                targetGame = GAME_TES5;
+                break;
+            } else if (target == "fallout3" && detected[i] == GAME_FO3) {
+                targetGame = GAME_FO3;
+                break;
+            } else if (target == "falloutnv" && detected[i] == GAME_FONV) {
+                targetGame = GAME_FONV;
+                break;
+            }
+        }
+    } else {
+        if (Game(GAME_NEHRIM, false).IsInstalledLocally())  //Before Oblivion because Nehrim installs can have Oblivion.esm for porting mods.
+            targetGame = GAME_NEHRIM;
+        else if (Game(GAME_TES4, false).IsInstalledLocally())
+            targetGame = GAME_TES4;
+        else if (Game(GAME_TES5, false).IsInstalledLocally())
+            targetGame = GAME_TES5;
+        else if (Game(GAME_FONV, false).IsInstalledLocally())  //Before Fallout 3 because some mods for New Vegas require Fallout3.esm.
+            targetGame = GAME_FONV;
+        else if (Game(GAME_FO3, false).IsInstalledLocally())
+            targetGame = GAME_FO3;
+        else
+            targetGame = detected[0];
+    }
+    targetGame = GAME_TES5;
+    Game game(targetGame);
 
     //Create launcher window.
     Launcher * launcher = new Launcher(wxT("BOSS"), settings, game, detected);
@@ -192,30 +283,10 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     
     time_t t0 = time(NULL);
 
-    /* Stuff still missing from a normal execution of BOSS:
-
-      - Reading of settings file.
-      - Detecting game to run for.
-      - Error handling.
-      - Masterlist updating.
-      - Checks for metadata self-consistency.
-      - Checks for cyclic dependencies and incompatibilities.
-      - Setting of load order.
-
-      Need to include libespm setup into game setup, once the former is made to be not global.
-    */
-
     ofstream out("out.txt");
 
     out << "Setting up libespm and BOSS..." << endl;
 
-    // Set up libesm.
-	common::options::setGame(libespm_game);
-	ifstream input(libespm_options_path);
-	common::readOptions(input);
-	input.close();
-	
-	//Set up BOSS vars.
 	boss::Game game(boss::GAME_TES5);
 
     out << "Reading plugins in Data folder..." << endl;
@@ -228,11 +299,6 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         if (fs::is_regular_file(it->status()) && (it->path().extension().string() == ".esp" || it->path().extension().string() == ".esm")) {
 
             string filename = it->path().filename().string();
-			if (filename == "Skyrim.esm"
-             || filename == "Tamriel Compendium.esp"
-             || filename == "Tamriel Compendium - Skill Books.esp")
-				continue;  // Libespm crashes with these plugins.
-			
 			out << "Reading plugin: " << filename << endl;
 			boss::Plugin plugin(game, filename);
             plugins.push_back(plugin);
@@ -249,10 +315,19 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     list<boss::Message> messages, mlist_messages, ulist_messages;
     list<boss::Plugin> mlist_plugins, ulist_plugins;
 
-    if (fs::exists(masterlist_path)) {
+    if (fs::exists(game.MasterlistPath())) {
         out << "Parsing masterlist..." << endl;
 
-        mlist = YAML::LoadFile(masterlist_path);
+        try {
+            mlist = YAML::LoadFile(game.MasterlistPath().string());
+        } catch (YAML::ParserException& e) {
+            //LOG_ERROR("Error: %s", e.getString().c_str());
+            wxMessageBox(
+				FromUTF8(format(loc::translate("Error: Masterlist parsing failed. %1%")) % e.what()),
+				translate("BOSS: Error"),
+				wxOK | wxICON_ERROR,
+				NULL);
+        }
         if (mlist["globals"])
             mlist_messages = mlist["globals"].as< list<boss::Message> >();
         if (mlist["plugins"])
@@ -263,10 +338,19 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         start = time(NULL);
     }
 
-    if (fs::exists(userlist_path)) {
+    if (fs::exists(game.UserlistPath())) {
         out << "Parsing userlist..." << endl;
 
-        ulist = YAML::LoadFile(userlist_path);
+        try {
+            ulist = YAML::LoadFile(game.UserlistPath().string());
+        } catch (YAML::ParserException& e) {
+            //LOG_ERROR("Error: %s", e.getString().c_str());
+            wxMessageBox(
+				FromUTF8(format(loc::translate("Error: Userlist parsing failed. %1%")) % e.what()),
+				translate("BOSS: Error"),
+				wxOK | wxICON_ERROR,
+				NULL);
+        }
         if (ulist["globals"])
             ulist_messages = ulist["globals"].as< list<boss::Message> >();
         if (ulist["plugins"])
@@ -279,7 +363,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     progDia->Pulse();
 
-    if (fs::exists(masterlist_path) || fs::exists(userlist_path)) {
+    if (fs::exists(game.MasterlistPath()) || fs::exists(game.UserlistPath())) {
         out << "Merging plugin lists..." << endl;
 
         //Merge all global message lists.
@@ -291,17 +375,13 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             //Check if there is already a plugin in the 'plugins' list or not.
             list<boss::Plugin>::iterator pos = std::find(mlist_plugins.begin(), mlist_plugins.end(), *it);
 
-            if (pos != mlist_plugins.end()) {
-                //Need to merge plugins.
+            if (pos != mlist_plugins.end())
                 it->Merge(*pos);
-            }
 
             pos = std::find(ulist_plugins.begin(), ulist_plugins.end(), *it);
 
-            if (pos != ulist_plugins.end()) {
-                //Need to merge plugins.
+            if (pos != ulist_plugins.end())
                 it->Merge(*pos);
-            }
         }
 
         end = time(NULL);
@@ -317,7 +397,12 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         try {
         it->EvalAllConditions(game);
         } catch (boss::error& e) {
-            out << e.what() << endl;
+            //LOG_ERROR("Error: %s", e.what());
+            wxMessageBox(
+				FromUTF8(format(loc::translate("Error: Condition evaluation failed. %1%")) % e.what()),
+				translate("BOSS: Error"),
+				wxOK | wxICON_ERROR,
+				NULL);
         }
     }
 
@@ -343,7 +428,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     progDia->Pulse();
 
-    out << "Printing plugin details..." << endl;    
+/*    out << "Printing plugin details..." << endl;    
 
     for (list<boss::Plugin>::iterator it=plugins.begin(), endIt = plugins.end(); it != endIt; ++it) {
 		out << it->Name() << endl
@@ -370,7 +455,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     end = time(NULL);
 	out << "Time taken to print plugins' details: " << (end - start) << " seconds." << endl;
     start = time(NULL);
-
+*/
     out << "Sorting plugins..." << endl;
 
     plugins.sort();
@@ -392,7 +477,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
          << YAML::Key << "plugins" << YAML::Value << plugins
          << YAML::EndMap;
 
-    ofstream results_out(results_path);
+    ofstream results_out(game.ResultsPath().string().c_str());
     results_out << yout.c_str();
     results_out.close();
 
@@ -446,7 +531,6 @@ void Launcher::OnGameChange(wxCommandEvent& event) {
 	} catch (error& e) {
 		wxMessageBox(e.what(), translate("BOSS: Error"), wxOK | wxICON_ERROR, this);
 	}
-	_game.CreateBOSSGameFolder();
 	SetTitle(wxT("BOSS - " + _game.Name()));  //Don't need to convert name, known to be only ASCII chars.
 }
 

@@ -11,12 +11,10 @@
 cmake_minimum_required (VERSION 2.8.9)
 project (boss)
 
-set (BOSS_SRC "${CMAKE_SOURCE_DIR}/src/metadata.cpp" "${CMAKE_SOURCE_DIR}/src/game.cpp" "${CMAKE_SOURCE_DIR}/src/helpers.cpp" "${CMAKE_SOURCE_DIR}/src/VersionRegex.cpp")
-
-set (BOSS_SRC ${BOSS_SRC} "${PROJECT_LIBS_DIR}/libespm/src/commonSupport.cpp" "${PROJECT_LIBS_DIR}/libespm/src/fileFormat.cpp")
+set (BOSS_SRC "${CMAKE_SOURCE_DIR}/src/metadata.cpp" "${CMAKE_SOURCE_DIR}/src/game.cpp" "${CMAKE_SOURCE_DIR}/src/helpers.cpp")
 
 # Include source and library directories.
-include_directories ("${PROJECT_LIBS_DIR}/alphanum" "${PROJECT_LIBS_DIR}/utf8" "${PROJECT_LIBS_DIR}/boost" "${PROJECT_LIBS_DIR}/yaml-cpp/include" "${CMAKE_SOURCE_DIR}/src" "${PROJECT_LIBS_DIR}/libloadorder/src" "${PROJECT_LIBS_DIR}/BOSS/trunk" "${PROJECT_LIBS_DIR}/libespm" "${PROJECT_LIBS_DIR}/zlib")
+include_directories ("${PROJECT_LIBS_DIR}/alphanum" "${PROJECT_LIBS_DIR}/boost" "${PROJECT_LIBS_DIR}/yaml-cpp/include" "${CMAKE_SOURCE_DIR}/src" "${PROJECT_LIBS_DIR}/libloadorder/src" "${PROJECT_LIBS_DIR}/libespm" "${PROJECT_LIBS_DIR}/zlib")
 
 
 ##############################

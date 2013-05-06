@@ -22,6 +22,7 @@
 */
 
 #include "settings.h"
+#include "../globals.h"
 #include <fstream>
 
 BEGIN_EVENT_TABLE ( SettingsFrame, wxFrame )
@@ -230,7 +231,7 @@ void SettingsFrame::OnQuit(wxCommandEvent& event) {
         yout.SetIndent(2);
         yout << _settings;
         
-        ofstream out(settings_path);
+        ofstream out(boss::settings_path.string().c_str());
         out << yout.c_str();
         out.close();
     }

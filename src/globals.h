@@ -23,8 +23,11 @@
 #ifndef __BOSS_GLOBALS__
 #define __BOSS_GLOBALS__
 
+#include <boost/filesystem.hpp>
+
 namespace boss {
 
+    //Game values.
     const unsigned int GAME_AUTODETECT  = 0;
     const unsigned int GAME_TES4        = 1;
     const unsigned int GAME_TES5        = 2;
@@ -32,10 +35,22 @@ namespace boss {
     const unsigned int GAME_FONV        = 4;
     const unsigned int GAME_NEHRIM      = 5;
 
+    //Version numbers.
     const unsigned int VERSION_MAJOR = 3;
     const unsigned int VERSION_MINOR = 0;
     const unsigned int VERSION_PATCH = 0;
 
+    //Common paths.
+    const boost::filesystem::path settings_path        = "settings.yaml";
+    const boost::filesystem::path log_path             = "BOSSDebugLog.txt";
+    const boost::filesystem::path readme_path          = boost::filesystem::path("Docs") / "BOSS Readme.html";
+    const boost::filesystem::path syntax_doc_path      = boost::filesystem::path("Docs") / "BOSS Metadata File Syntax.html";
+    const boost::filesystem::path api_doc_path         = boost::filesystem::path("Docs") / "BOSS API Readme.html";
+    const boost::filesystem::path version_history_path = boost::filesystem::path("Docs") / "BOSS Version History.html";
+    const boost::filesystem::path licenses_path        = boost::filesystem::path("Docs") / "Licenses.txt";
+
+    // Temporary hack?
+    const char * const libespm_options_path = "libespm.yaml";
 }
 
 #endif

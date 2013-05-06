@@ -34,6 +34,8 @@
 class BossGUI : public wxApp {
 public:
 	bool OnInit();  //Load settings, apply logging and language settings, check if BOSS is already running, detect games, set game to last game or to first detected game if auto, create launcher window.
+private:
+    wxLocale * wxLoc;
 };
 
 class Launcher : public wxFrame {
