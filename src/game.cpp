@@ -121,9 +121,10 @@ namespace boss {
  
             RefreshActivePluginsList();
             CreateBOSSGameFolder();
+            
+            espm_settings = espm::Settings(libespm_options_path, libespmGame);
         }
         
-        espm_settings = espm::Settings(libespm_options_path, libespmGame);
     }
     
     bool Game::IsInstalled() const {

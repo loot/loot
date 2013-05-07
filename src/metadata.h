@@ -31,7 +31,10 @@
 #include <list>
 #include <set>
 
+#include <boost/unordered_set.hpp>
+
 namespace boss {
+
 
     //A FormID is a 32 bit unsigned integer of the form xxYYYYYY in hex. The xx is the position in the masters list of the plugin that the FormID is from, and the YYYYYY is the rest of the FormID. Here the xx bit is stored as the corresponding filename to allow comparison between FormIDs from different plugins.
     class FormID {
@@ -55,6 +58,19 @@ namespace boss {
         std::string plugin;
         uint32_t id;
     };
+
+    
+    struct FormID_hash
+    : std::unary_function<FormID, std::size_t>
+{
+    std::size_t operator()(FormID const& p) const
+    {
+        std::size_t seed = 0;
+        boost::hash_combine(seed, p.Plugin());
+        boost::hash_combine(seed, p.Id());
+        return seed;
+    }
+};
 
     class ConditionalData {
     public:
@@ -136,7 +152,7 @@ namespace boss {
         std::list<Message> Messages() const;
         std::set<Tag> Tags() const;
         
-        std::set<FormID> FormIDs() const;
+        boost::unordered_set<FormID,FormID_hash> FormIDs() const;
         std::vector<std::string> Masters() const;
         bool IsMaster() const;  //Checks master bit flag.
         std::string Version() const;
@@ -165,7 +181,7 @@ namespace boss {
         bool operator >= (const Plugin& rhs) const;
 
         //Load ordering functions.
-        std::set<FormID> OverlapFormIDs(const Plugin& plugin) const;
+        boost::unordered_set<FormID,FormID_hash> OverlapFormIDs(const Plugin& plugin) const;
         bool MustLoadAfter(const Plugin& plugin) const;  //Checks masters, reqs and loadAfter.
 
         //Validity checks.
@@ -181,7 +197,7 @@ namespace boss {
         std::set<Tag> tags;
         
         std::vector<std::string> masters;
-        std::set<FormID> formIDs;
+        boost::unordered_set<FormID,FormID_hash> formIDs;
         std::string version;  //Obtained from description field.
         bool isMaster;
     };

@@ -197,16 +197,12 @@ namespace boss {
 			
 		// Get data from file contents using libespm. Assumes libespm has already been initialised.
 		boost::filesystem::path filepath = game.DataPath() / n;
-		ifstream input(filepath.string().c_str(), ios::binary);
-        input.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-		espm::File file;
-        file.Read(input, game.espm_settings);
-		input.close();
+		espm::File file(filepath.string(), game.espm_settings, false, false);
 
-		isMaster = file.IsMaster(game.espm_settings);
-		masters = file.GetMasters();
+		isMaster = file.isMaster(game.espm_settings);
+		masters = file.getMasters();
 		
-		vector<uint32_t> records = file.GetFormIDs();
+		vector<uint32_t> records = file.getFormIDs();
         vector<string> plugins = masters;
         plugins.push_back(name);
 		for (vector<uint32_t>::const_iterator it = records.begin(),endIt = records.end(); it != endIt; ++it)
@@ -452,14 +448,14 @@ namespace boss {
         return !(*this < rhs);
     }
     
-    std::set<FormID> Plugin::FormIDs() const {
+    boost::unordered_set<FormID,FormID_hash> Plugin::FormIDs() const {
 		return formIDs;
 	}
 
-    std::set<FormID> Plugin::OverlapFormIDs(const Plugin& plugin) const {
-        std::set<FormID> otherFormIDs = plugin.FormIDs();
-        std::set<FormID> overlap;
-        for (std::set<FormID>::const_iterator it=formIDs.begin(), endIt=formIDs.end(); it != endIt; ++it) {
+    boost::unordered_set<FormID,FormID_hash> Plugin::OverlapFormIDs(const Plugin& plugin) const {
+        boost::unordered_set<FormID,FormID_hash> otherFormIDs = plugin.FormIDs();
+        boost::unordered_set<FormID,FormID_hash> overlap;
+        for (boost::unordered_set<FormID,FormID_hash>::const_iterator it=formIDs.begin(), endIt=formIDs.end(); it != endIt; ++it) {
             if (otherFormIDs.find(*it) != otherFormIDs.end())
                 overlap.insert(*it);
         }
