@@ -53,7 +53,29 @@ enum {
 	MENU_FalloutNewVegas,
     //Settings window.
     OPTION_OKExitSettings,
-	OPTION_CancelExitSettings
+	OPTION_CancelExitSettings,
+    //Editor window.
+    LIST_Plugins,
+    LIST_Reqs,
+    LIST_Incs,
+    LIST_LoadAfter,
+    LIST_Messages,
+    LIST_BashTags,
+    SPIN_Priority,
+    BUTTON_AddFile,
+    BUTTON_EditFile,
+    BUTTON_RemoveFile,
+    BUTTON_AddMessage,
+    BUTTON_EditMessage,
+    BUTTON_RemoveMessage,
+    BUTTON_AddTag,
+    BUTTON_EditTag,
+    BUTTON_RemoveTag,
+    BUTTON_SaveEdits,
+    BUTTON_UndoEdits,
+    BUTTON_Recalc,
+    BUTTON_Apply,
+    BUTTON_Cancel
 };
 
 wxString translate(const std::string& str);

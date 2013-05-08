@@ -54,10 +54,10 @@ Roadmap/To Do
 - Remove game detection override.
 - Checks for cyclic dependencies and incompatibilities.
 - Setting load order.
-- Include libespm initialisation into Game constructor.
+- Include libespm initialisation into Game constructor. DONE
 - Optimisations to load ordering.
 - Implement logging.
-- Implement reading of plugin versions from their description field.
+- Implement reading of plugin versions from their description field. DONE
 
 
 Sorting Algorithm

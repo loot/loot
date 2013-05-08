@@ -26,6 +26,7 @@
 #include "../parsers.h"
 #include "main.h"
 #include "settings.h"
+#include "editor.h"
 
 #include <ostream>
 #include <algorithm>
@@ -490,7 +491,54 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 }
 
 void Launcher::OnEditMetadata(wxCommandEvent& event) {
+    //Parse the userlist and masterlist and get a list of installed plugins.
 
+    list<boss::Plugin> plugins;
+    YAML::Node mlist, ulist;
+    list<boss::Plugin> mlist_plugins, ulist_plugins;
+    
+    for (fs::directory_iterator it(_game.DataPath()); it != fs::directory_iterator(); ++it) {
+        if (fs::is_regular_file(it->status()) && (it->path().extension().string() == ".esp" || it->path().extension().string() == ".esm")) {
+
+			boss::Plugin plugin(it->path().filename().string());
+            plugins.push_back(plugin);
+        }
+    }
+
+    if (fs::exists(_game.MasterlistPath())) {
+        try {
+            mlist = YAML::LoadFile(_game.MasterlistPath().string());
+        } catch (YAML::ParserException& e) {
+            //LOG_ERROR("Error: %s", e.getString().c_str());
+            wxMessageBox(
+				FromUTF8(format(loc::translate("Error: Masterlist parsing failed. %1%")) % e.what()),
+				translate("BOSS: Error"),
+				wxOK | wxICON_ERROR,
+				NULL);
+        }
+        if (mlist["plugins"])
+            mlist_plugins = mlist["plugins"].as< list<boss::Plugin> >();
+    }
+
+    if (fs::exists(_game.UserlistPath())) {
+        try {
+            ulist = YAML::LoadFile(_game.UserlistPath().string());
+        } catch (YAML::ParserException& e) {
+            //LOG_ERROR("Error: %s", e.getString().c_str());
+            wxMessageBox(
+				FromUTF8(format(loc::translate("Error: Userlist parsing failed. %1%")) % e.what()),
+				translate("BOSS: Error"),
+				wxOK | wxICON_ERROR,
+				NULL);
+        }
+        if (ulist["plugins"])
+            ulist_plugins = ulist["plugins"].as< list<boss::Plugin> >();
+    }
+
+    
+    Editor *editor = new Editor(translate("BOSS: Metadata Editor"), this);
+    editor->SetIcon(wxIconLocation("BOSS.exe"));
+	editor->Show();
 }
 
 void Launcher::OnViewLastReport(wxCommandEvent& event) {
@@ -498,7 +546,6 @@ void Launcher::OnViewLastReport(wxCommandEvent& event) {
 }
 
 void Launcher::OnOpenSettings(wxCommandEvent& event) {
-    //Tell the user that stuff is happenining.
 	SettingsFrame *settings = new SettingsFrame(translate("BOSS: Settings"), this, _settings);
 	settings->SetIcon(wxIconLocation("BOSS.exe"));
 	settings->Show();

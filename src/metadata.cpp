@@ -29,7 +29,7 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 
-#include <iostream>
+#include <fstream>
 
 using namespace std;
 
@@ -217,9 +217,9 @@ namespace boss {
                 begin = text.begin();
                 end = text.end(); 
 
-        /*        for(int j = 0; boost::regex* re = version_checks[j]; j++) {
+                for(int j = 0; j < 7 && version.empty(); j++) {
                     boost::smatch what;
-                    while (boost::regex_search(begin, end, what, *re)) {
+                    while (boost::regex_search(begin, end, what, version_checks[j])) {
                         if (what.empty())
                             continue;
 
@@ -228,9 +228,9 @@ namespace boss {
                             continue;
 
                         version = boost::trim_copy(string(match.first, match.second));
+                        break;
                     }
-                    cout << "Checking regex: " << j << endl;
-                }*/
+                }
                 
                 size_t pos1 = text.find("{{BASH:");
                 if (pos1 == string::npos)

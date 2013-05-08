@@ -39,7 +39,7 @@ namespace boss {
 
     /// Array used to try each of the expressions defined using 
 	/// an iteration for each of them.
-	extern boost::regex* version_checks[];
+	extern boost::regex version_checks[7];
 
     //////////////////////////////////////////////////////////////////////////
     // Helper functions

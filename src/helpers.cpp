@@ -106,15 +106,14 @@ namespace boss {
 
 	/// Array used to try each of the expressions defined above using 
 	/// an iteration for each of them.
-	boost::regex* version_checks[] = {
-			new boost::regex(regex1, boost::regex::icase),
-			new boost::regex(regex2, boost::regex::icase),
-			new boost::regex(regex3, boost::regex::icase),
-			new boost::regex(regex4, boost::regex::icase),
-			new boost::regex(regex5, boost::regex::icase),  //This incorrectly identifies "OBSE v19" where 19 is any integer.
-			new boost::regex(regex6, boost::regex::icase),  //This is responsible for metallicow's false positive.
-			new boost::regex(regex7, boost::regex::icase),
-			0
+	boost::regex version_checks[7] = {
+			boost::regex(regex1, boost::regex::icase),
+			boost::regex(regex2, boost::regex::icase),
+			boost::regex(regex3, boost::regex::icase),
+			boost::regex(regex4, boost::regex::icase),
+			boost::regex(regex5, boost::regex::icase),  //This incorrectly identifies "OBSE v19" where 19 is any integer.
+			boost::regex(regex6, boost::regex::icase),  //This is responsible for metallicow's false positive.
+			boost::regex(regex7, boost::regex::icase)
 			};
 
     //////////////////////////////////////////////////////////////////////////
