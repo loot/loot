@@ -233,12 +233,12 @@ condition: "file(\"Mart's Monster Mod for OOO.esm\") or file(\"FCOM_Convergence.
     <tbody>
         <tr><td><code>name</code><td>string<td>&#x2713;<td>Can be an exact plugin filename or a regular expression plugin filename. If the period that precedes the file extension has been escaped (eg. <code>\.esp</code>, <code>\.esm</code>), the string is treated as a regular expression, otherwise it is treated as an exact filename.
         <tr><td><code>enabled</code><td>boolean<td>&#x2717;<td>Enables or disables use of the plugin object. Used for user rules, but no reason to use it in the masterlist. If unspecified, defaults to <code>true</code>.
-        <tr><td><code>priority</code><td>integer<td>&#x2717;<td>??? If unspecified, defaults to <code>0</code>.
+        <tr><td><code>priority</code><td>integer<td>&#x2717;<td>Relative position of plugin to others. Values less than zero cause the plugin to be loaded higher, values greater than zero cause the plugin to be loaded lower. If unspecified, defaults to <code>0</code>.
         <tr><td><code>after</code><td>file list<td>&#x2717;<td>An unordered list of plugins that this plugin must load after, but which are not dependencies. Used for resolving specific compatibility issues and by user rules for specifying custom plugin positions.
         <tr><td><code>req</code><td>file list<td>&#x2717;<td>An unordered list of files that this plugin requires to be present. If any of these files are missing, an error message will be displayed. Intended for use specifying implicit dependencies, as BOSS will detect a plugin's explicit masters itself.
         <tr><td><code>inc</code><td>file list<td>&#x2717;<td>An unordered list of files that this plugin is incompatible with. If any of these files are present, an error message will be displayed.
         <tr><td><code>msg</code><td>message list<td>&#x2717;<td>The messages attached to this plugin. The messages will be displayed in the order that they are listed.
-        <tr><td><code>tag</code><td>tag list<td>&#x2717;<td>An unordered list of Bash Tags suggested for this plugin.
+        <tr><td><code>tag</code><td>tag list<td>&#x2717;<td>An unordered list of Bash Tags suggested for this plugin. If a Bash Tag is suggested for both addition and removal, the latter will override the former when the list is evaluated.
 </table>
 <p>Example:
 <code class="box">name: "Oscuro's_Oblivion_Overhaul.esm"

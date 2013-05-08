@@ -141,7 +141,7 @@ namespace boss {
         Plugin(const std::string& name);
         Plugin(const boss::Game& game, const std::string& name);
 
-        void Merge(const Plugin& plugin);
+        void Merge(const Plugin& plugin, bool ifdDisabled = false);
 
         std::string Name() const;
         bool Enabled() const;

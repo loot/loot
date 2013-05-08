@@ -106,45 +106,93 @@ This documentation is a work in progress, covering an application that is also s
     <li><a href="#license">License</a>
     <li><a href="#appendix">Appendices</a>
     <ol>
-        <li><a href="appendix-intro">Introduction To Load Orders</a>
-        <li><a href="appendix-dirty">Dirty Edits, Mod Cleaning &amp; CRCs</a>
-        <li><a href="appendix-permissions">File Permissions</a>
+        <li><a href="#appendix-intro">Introduction To Load Orders</a>
+        <li><a href="#appendix-dirty">Dirty Edits, Mod Cleaning &amp; CRCs</a>
+        <li><a href="#appendix-permissions">File Permissions</a>
     </ol>
 </ol>
 
 <h2 id="intro">Introduction</h2>
 
-BOSS is designed to assist mod users in avoiding detrimental conflicts, by automatically setting a load order for their plugins that satisfies their dependencies and maximises the impact of each plugin on the user's game.
+<p>BOSS is a plugin load order optimiser for TES IV: Oblivion, TES V: Skyrim, Fallout 3 and Fallout: New Vegas. It is designed to assist mod users in avoiding detrimental conflicts, by automatically calculating a load order that satisfies all plugin dependencies and maximises each plugin's impact on the user's game.
 
-BOSS also provides basic load order error checking, including cyclic dependency checks and warnings for any incompatibilities it detects, and also provides a large number of plugin-specific usage notes, bug warnings and Bash Tag suggestions.
+<p>BOSS also provides some load order error checking, including checks for requirements, incompatibilities and cyclic dependencies. In addition, it provides a large number of plugin-specific usage notes, bug wawrnings and Bash Tag suggestions.
 
-Although BOSS can correctly position the vast majority of plugins, it is not a complete solution to load ordering issues, as it may sort more complex mods, or those that are intended by the author to load early or late, incorrectly. For such plugins, a good working knowledge of mod load ordering is still necessary, for which some research and documentation reading will go a long way. See <a href="#">Introduction To Load Orders</a> for an overview.
+<p>Although BOSS is able to calculate the correct load order positions for the vast majority of mods without any user input, some plugins are designed to load at certain positions in a load order, and BOSS may be unable to determine this from the plugins themselves. As such, BOSS provides a mechanism for supplying additional plugin metadata so that it may sort them correctly.
+
+<p>BOSS is intended to make using mods easier, and mod users should still possess a working knowledge of mod load ordering. See <a href="#appendix-intro">Introduction To Load Orders</a> for an overview.
 
 
 <h2 id="install">Installation</h2>
+
+<blockquote>BOSS version 3 is not backwards compatible with version 2, as it makes a variety of major changes to how BOSS works. In particular, it will almost certainly set a different load order, and any user rules will have to be manually recreated in BOSS's user interface.</blockquote>
+
 <p>The simplest way to install BOSS is to use the installer. However, the instructions below are provided if a manual install method is preferred.
 <ol>
     <li>If updating from an earlier version of BOSS, uninstall the existing BOSS install before continuing. Any userlists you have should be moved to a temporary location while you install the BOSS update.
-    <li>Extract the <q>BOSS</q> folder the downloaded archive contains to a location of your choice. Make sure that you have the appropriate file permissions for the directory you choose. See the <a href="#">File Permissions</a> section for more information. Note that if you install the BOSS folder to the same location as a supported game's executable, BOSS will only run for that game by default, and will not ask you to choose which game it should run for, even if you have other supported games installed.
+    <li>Extract the <q>BOSS</q> folder the downloaded archive contains to a location of your choice. Make sure that you have the appropriate file permissions for the directory you choose. See the <a href="#appendix-permissions">File Permissions</a> section for more information.
     <li>If any of the <abbr title="Wrye Bash, Wrye Flash or Wrye Flash NV">Wrye *ash</abbr> utilities are installed, make sure their <q>BOSS Disable Lock Load Order</q><span title="previously BOSS Disable Lock Times">*</span> setting is enabled.
     <li>If updating from an earlier version of BOSS and you moved any userlists you have to a temporary location, after you have run BOSS at least once for each game with a userlist, you will need to move your userlist(s) into the game(s) subfolders that are created within the BOSS folder.
 </ol>
-<p>BOSS version 3 is not backwards-compatible with earlier versions. Any user rules will have to be manually re-applied through BOSS's user interface.
 <p>If BOSS was installed using the installer, then use the uninstaller it provides a link to in the Start Menu to uninstall BOSS. If BOSS was installed manually, simply delete the <q>BOSS</q> folder you installed.
 
 
 <h2 id="usage">Using BOSS</h2>
+<p>When BOSS is run, it will attempt to detect which of the supported games are installed, and set itself to run for the first game detected, unless a <a href="#settingsDefaultGame">default game</a> has been set, in which case it will set itself to run for that game. Once a game has been set, the main window will be displayed.
+<figure>
+    <img alt="BOSS's main window" src="images/main.png">
+    <figcaption>BOSS's main window. The title bar displays which game BOSS is running for.</figcaption>
+</figure>
+<p>Clicking the <q>Edit Metadata</q> button will open BOSS's metadata editor, where you can make changes to the metadata BOSS uses to sort plugins, the messages that get displayed for plugins, and any Bash Tag suggestions BOSS makes. BOSS also gives you the opportunity to make any such changes when it sorts your plugins, but this option is useful for when you don't want to go through the full sorting process. See <a href="#usage-custom">Customising BOSS's Results</a> for more information.
+<p>Clicking the <q>Sort Plugins</q> button will begin the plugin sorting process. This will sort your plugins, allow you to make any changes, then display a report that details the results of BOSS's activity. See <a href="#usage-sort">Sorting Plugins</a> for more information.
+<p>Clicking the <q>View Last Report</q> button will display the report generated the last time BOSS sorted your plugins.  See <a href="usage-log">The Results Report</a> for more information.
+<p>The <q>File</q> menu provides menu items for sorting plugins, viewing the last report BOSS generated and quitting BOSS, while the <q>Edit</q> menu provides menu items for accessing BOSS's metadata editor and the <a href="usage-settings">settings window</a>.
+<p>The <q>Active Game</q> menu allows you to change which game BOSS is running for without having to close and re-open it. Games that BOSS cannot find are greyed out, and the the one BOSS is running for is marked with a dot to its left. To change the active game, simply select another game in the list.
+<p>The <q>Help</q> menu provides links to BOSS's documentation and an about page that contains the version of BOSS being run, some legal information and a link to the project repository.
+
 <h3 id="usage-sort">Sorting Plugins</h3>
 
 <h3 id="usage-custom">Customising BOSS's Results</h3>
 
 <h3 id="usage-log">The Results Report</h3>
 
+<h3 id="usage-settings">Editing Settings</h3>
+<figure>
+    <img src="images/settings.png">
+    <figcaption>BOSS's settings window.</figcaption>
+</figure>
+<p>BOSS's settings window may be accessed by clicking <q>Edit&#x2192;Settings</q> in the main window's menu bar. BOSS's settings are detailed in the table below.
+<table>
+    <thead>
+        <tr><th>Setting<th>Description
+    <tbody>
+        <tr><td id="settingsDefaultGame">Default Game<td>If set to something other than <q>Autodetect</q>, this overrides game autodetection. If the game specified is not detected, BOSS falls back to autodetection.
+        <tr><td>Language<td>Controls the language BOSS uses in its interfaces. Debug messages are always displayed in English, and any plugin messages that do not have translations in the selected language will be displayed in English instead.
+        <tr><td>Debug Verbosity<td>Controls the verbosity of the debug output, which is written to <q>BOSSDebugLog.txt</q>.
+        <tr><td>Oblivion Masterlist URL<td>The URL that BOSS uses to check for updates to its masterlist for TES IV: Oblivion.
+        <tr><td>Nehrim Masterlist URL<td>The URL that BOSS uses to check for updates to its masterlist for Nehrim: At Fate's Edge.
+        <tr><td>Skyrim Masterlist URL<td>The URL that BOSS uses to check for updates to its masterlist for TES V: Skyrim.
+        <tr><td>Fallout 3 Masterlist URL<td>The URL that BOSS uses to check for updates to its masterlist for Fallout 3.
+        <tr><td>Fallout: New Vegas Masterlist URL<td>The URL that BOSS uses to check for updates to its masterlist for Fallout: New Vegas.
+        <tr><td>Update masterlist before sorting<td>If checked, BOSS will update its masterlist, should an update be available, before sorting mods.
+</table>
+
 
 <h2 id="trouble">Troubleshooting</h2>
 
 
 <h2 id="contrib">Contributing To BOSS</h2>
+<p>User contribution of additions and corrections to BOSS's metadata masterlist are vital to the upkeep of BOSS. Please let us know what you know!
+
+<p>General discussion and the submission of questions, suggestions and metadata takes place in BOSS's official threads for <a href="">Oblivion</a>, <a href="">Nehrim</a>, <a href="">Skyrim</a>, <a href="">Fallout 3</a> and <a href="">Fallout: New Vegas</a>.
+
+<p>Notifications of dirty plugins are very welcome, but for such information to be useful we require:
+<ul>
+    <li>The plugin filename.
+    <li>The number of records removed (the ITM count) as shown by TES4Edit/TES5Edit/FO3Edit/FNVEdit or <abbr title="Wrye Bash, Wrye Flash or Wrye Flash NV">Wrye *ash</abbr> (not the number of records processed).
+    <li>The number of records undeleted (the UDR count) as shown by TES4Edit/TES5Edit/FO3Edit/FNVEdit or <abbr title="Wrye Bash, Wrye Flash or Wrye Flash NV">Wrye *ash</abbr> (not the number of records processed).
+    <li>The CRC of the dirty plugin. Make sure that the CRC is of the dirty file, not the file after cleaning. The CRC may be calculated using <abbr title="Wrye Bash, Wrye Flash or Wrye Flash NV">Wrye *ash</abbr> or 7-zip, with other sources being unverified as correct. In the case of 7-zip, the <q><em>CRC checksum for data</em></q> is the one required.
+</ul>
 
 
 <h2 id="translate">Translating BOSS</h2>

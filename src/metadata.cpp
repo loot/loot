@@ -52,7 +52,7 @@ namespace boss {
     }
 
     bool FormID::operator == (const FormID& rhs) const {
-
+        return (plugin == rhs.Plugin() && id == rhs.Id());
     }
     
     bool FormID::operator != (const FormID& rhs) const {
@@ -133,7 +133,7 @@ namespace boss {
         : display(d), ConditionalData(c, n) {}
 
     bool File::operator < (const File& rhs) const {
-        return Name() < rhs.Name();
+        return (Name() < rhs.Name());
     }
 
     std::string File::Name() const {
@@ -171,7 +171,7 @@ namespace boss {
     }
 
     bool Tag::operator < (const Tag& rhs) const {
-        return (Name() < rhs.Name());
+        return (PrefixedName() < rhs.PrefixedName());
     }
 
     bool Tag::IsAddition() const {
@@ -254,9 +254,9 @@ namespace boss {
         }
 	}
 
-    void Plugin::Merge(const Plugin& plugin) {
+    void Plugin::Merge(const Plugin& plugin, bool ifDisabled) {
         //If 'name' differs or if 'enabled' is false for the given plugin, don't change anything.
-        if (!boost::iequals(name, plugin.Name()) || !plugin.Enabled())
+        if (!boost::iequals(name, plugin.Name()) || (!plugin.Enabled() && !ifDisabled))
             return;
 
         //The following should be replaced.
@@ -275,10 +275,9 @@ namespace boss {
         files = plugin.Incs();
         incompatibilities.insert(files.begin(), files.end());
 
-        //Merge Bash Tags too, but Tags can be added or removed, and BOSS should not be doing both for any one Tag, so whether a tag is added or removed is not considered during comparison. As such, the Tags from the plugin being merged in should override any equal-but-opposite Tags that already exist.
+        //Merge Bash Tags too. Conditions are ignored during comparison, but if a tag is added and removed, both instances will be in the set.
         std::set<Tag> bashTags = plugin.Tags();
-        bashTags.insert(tags.begin(), tags.end());
-        tags = bashTags;
+        tags.insert(bashTags.begin(), bashTags.end());
 
         //Messages are in an ordered list, and should be fully merged.
         std::list<Message> pMessages = plugin.Messages();
