@@ -88,10 +88,9 @@ bool BossGUI::OnInit() {
 	}
 
     //Load settings.
-    YAML::Node settings;
     if (fs::exists(settings_path)) {
         try {
-            settings = YAML::LoadFile(settings_path.string());
+            _settings = YAML::LoadFile(settings_path.string());
         } catch (YAML::ParserException& e) {
             //LOG_ERROR("Error: %s", e.getString().c_str());
             wxMessageBox(
@@ -115,10 +114,10 @@ bool BossGUI::OnInit() {
 	gen.add_messages_domain("messages");
 
     //Set the locale to get encoding and language conversions working correctly.
-    if (settings["Language"]) {
+    if (_settings["Language"]) {
         string localeId = "";
         wxLanguage lang;
-        if (settings["Language"].as<string>() == "eng") {
+        if (_settings["Language"].as<string>() == "eng") {
             localeId = "en.UTF-8";
             lang = wxLANGUAGE_ENGLISH;
         }
@@ -146,9 +145,8 @@ bool BossGUI::OnInit() {
     }
 
     //Detect installed games.
-    vector<unsigned int> detected, undetected;
-    DetectGames(detected, undetected);
-    if (detected.empty())
+    _detectedGames = DetectGames();
+    if (_detectedGames.empty())
         wxMessageBox(
             translate("Error: None of the supported games were detected."),
             translate("BOSS: Error"),
@@ -156,37 +154,40 @@ bool BossGUI::OnInit() {
             NULL);
 
     string target;
-    unsigned int targetGame;
-    if (settings["Game"] && settings["Game"].as<string>() != "auto")
-        target = settings["Game"].as<string>();
-    else if (settings["Last Game"] && settings["Last Game"].as<string>() != "auto")
-        target = settings["Last Game"].as<string>();
+    unsigned int targetGame = GAME_AUTODETECT;
+    if (_settings["Game"] && _settings["Game"].as<string>() != "auto")
+        target = _settings["Game"].as<string>();
+    else if (_settings["Last Game"] && _settings["Last Game"].as<string>() != "auto")
+        target = _settings["Last Game"].as<string>();
 
     if (!target.empty()) {
-        for (size_t i=0, max=detected.size(); i < max; ++i) {
-            if (target == "oblivion" && detected[i] == GAME_TES4) {
+        for (size_t i=0, max=_detectedGames.size(); i < max; ++i) {
+            if (target == "oblivion" && _detectedGames[i] == GAME_TES4) {
                 targetGame = GAME_TES4;
                 break;
-            } else if (target == "nehrim" && detected[i] == GAME_NEHRIM) {
+            } else if (target == "nehrim" && _detectedGames[i] == GAME_NEHRIM) {
                 targetGame = GAME_NEHRIM;
                 break;
-            } else if (target == "skyrim" && detected[i] == GAME_TES5) {
+            } else if (target == "skyrim" && _detectedGames[i] == GAME_TES5) {
                 targetGame = GAME_TES5;
                 break;
-            } else if (target == "fallout3" && detected[i] == GAME_FO3) {
+            } else if (target == "fallout3" && _detectedGames[i] == GAME_FO3) {
                 targetGame = GAME_FO3;
                 break;
-            } else if (target == "falloutnv" && detected[i] == GAME_FONV) {
+            } else if (target == "falloutnv" && _detectedGames[i] == GAME_FONV) {
                 targetGame = GAME_FONV;
                 break;
             }
         }
+        if (targetGame == GAME_AUTODETECT)
+            targetGame = _detectedGames[0];
     } else
-        targetGame = detected[0];
-    Game game(targetGame);
+        targetGame = _detectedGames[0];
+            
+    _game = Game(targetGame);
 
     //Create launcher window.
-    Launcher * launcher = new Launcher(wxT("BOSS"), settings, game, detected);
+    Launcher * launcher = new Launcher(wxT("BOSS"), _settings, _game, _detectedGames);
 
     launcher->SetIcon(wxIconLocation("BOSS.exe"));
 	launcher->Show();
@@ -195,7 +196,7 @@ bool BossGUI::OnInit() {
     return true;
 }
 
-Launcher::Launcher(const wxChar *title, const YAML::Node& settings, const Game& game, const vector<unsigned int>& detectedGames) : wxFrame(NULL, wxID_ANY, title), _game(game), _detectedGames(detectedGames), _settings(settings) {
+Launcher::Launcher(const wxChar *title, YAML::Node& settings, Game& game, const vector<unsigned int>& detectedGames) : wxFrame(NULL, wxID_ANY, title), _game(game), _detectedGames(detectedGames), _settings(settings) {
 
     //Initialise menu items.
     wxMenuBar * MenuBar = new wxMenuBar();
@@ -267,6 +268,15 @@ Launcher::Launcher(const wxChar *title, const YAML::Node& settings, const Game& 
 
 //Called when the frame exits.
 void Launcher::OnQuit(wxCommandEvent& event) {
+    //Save settings.
+    YAML::Emitter yout;
+    yout.SetIndent(2);
+    yout << _settings;
+    
+    ofstream out(boss::settings_path.string().c_str());
+    out << yout.c_str();
+    out.close();
+    
 	Close(true); // Tells the OS to quit running this process
 }
 
@@ -482,8 +492,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     progDia->Destroy();
 
     //Create editor window.
-    Editor *editor = new Editor(translate("BOSS: Metadata Editor"), this);
-    editor->SetIcon(wxIconLocation("BOSS.exe"));
+    Editor *editor = new Editor(this, translate("BOSS: Metadata Editor"));
 
     //The 'plugins' list contains the merged plugin info, but we want to pass a vector of plugins with only masterlist info in its place, so have to construct that.
     vector<boss::Plugin> pluginVec;
@@ -572,9 +581,8 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
     std::sort(ulist_plugins.begin(), ulist_plugins.end(), AlphaSortPlugins);
 
     //Create editor window.
-    Editor *editor = new Editor(translate("BOSS: Metadata Editor"), this);
-    editor->SetIcon(wxIconLocation("BOSS.exe"));
-
+    Editor *editor = new Editor(this, translate("BOSS: Metadata Editor"));
+    
     //Pass plugin lists to editor window.
     editor->SetList(plugins, ulist_plugins);
 
@@ -589,8 +597,7 @@ void Launcher::OnViewLastReport(wxCommandEvent& event) {
 }
 
 void Launcher::OnOpenSettings(wxCommandEvent& event) {
-	SettingsFrame *settings = new SettingsFrame(translate("BOSS: Settings"), this, _settings);
-	settings->SetIcon(wxIconLocation("BOSS.exe"));
+	SettingsFrame *settings = new SettingsFrame(this, translate("BOSS: Settings"), _settings);
 	settings->Show();
 }
 

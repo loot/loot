@@ -43,27 +43,19 @@ namespace fs = boost::filesystem;
 
 namespace boss {
 
-    void DetectGames(std::vector<unsigned int>& detected, std::vector<unsigned int>& undetected) {
+    std::vector<unsigned int> DetectGames() {
+        vector<unsigned int> detected;
         if (Game(GAME_TES4, false).IsInstalled()) //Look for Oblivion.
             detected.push_back(GAME_TES4);
-        else
-            undetected.push_back(GAME_TES4);
         if (Game(GAME_NEHRIM, false).IsInstalled()) //Look for Nehrim.
             detected.push_back(GAME_NEHRIM);
-        else
-            undetected.push_back(GAME_NEHRIM);
         if (Game(GAME_TES5, false).IsInstalled()) //Look for Skyrim.
             detected.push_back(GAME_TES5);
-        else
-            undetected.push_back(GAME_TES5);
         if (Game(GAME_FO3, false).IsInstalled()) //Look for Fallout 3.
             detected.push_back(GAME_FO3);
-        else
-            undetected.push_back(GAME_FO3);
         if (Game(GAME_FONV, false).IsInstalled()) //Look for Fallout New Vegas.
             detected.push_back(GAME_FONV);
-        else
-            undetected.push_back(GAME_FONV);
+        return detected;
     }
 
     Game::Game() {}

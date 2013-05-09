@@ -30,7 +30,7 @@
 
 class SettingsFrame : public wxFrame {
 public:
-	SettingsFrame(const wxString title, wxFrame *parent, YAML::Node& settings);
+	SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node& settings);
 	void OnQuit(wxCommandEvent& event);
 	void SetDefaultValues();
 	DECLARE_EVENT_TABLE()
@@ -45,6 +45,6 @@ private:
     wxTextCtrl *FO3URL;
     wxTextCtrl *FONVURL;
 
-    YAML::Node _settings;
+    YAML::Node& _settings;
 };
 #endif

@@ -36,11 +36,15 @@ public:
 	bool OnInit();  //Load settings, apply logging and language settings, check if BOSS is already running, detect games, set game to last game or to first detected game if auto, create launcher window.
 private:
     wxLocale * wxLoc;
+    
+    boss::Game _game;
+    YAML::Node _settings;
+    std::vector<unsigned int> _detectedGames;
 };
 
 class Launcher : public wxFrame {
 public:
-    Launcher(const wxChar *title, const YAML::Node& settings, const boss::Game& inGame, const std::vector<unsigned int>& inGames);
+    Launcher(const wxChar *title, YAML::Node& settings, boss::Game& inGame, const std::vector<unsigned int>& detectedGames);
     
 	void OnSortPlugins(wxCommandEvent& event);
     void OnEditMetadata(wxCommandEvent& event);
@@ -57,9 +61,9 @@ private:
     wxMenu * GameMenu;
 	wxButton * ViewButton;
     
-	std::vector<unsigned int> _detectedGames;
-	boss::Game _game;
-    YAML::Node _settings;  //BOSS Settings.
+	boss::Game& _game;
+    YAML::Node& _settings;  //BOSS Settings.
+    const std::vector<unsigned int>& _detectedGames;
     
 	void DisableUndetectedGames();
 

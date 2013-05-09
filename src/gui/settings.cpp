@@ -32,7 +32,7 @@ END_EVENT_TABLE()
 
 using namespace std;
 
-SettingsFrame::SettingsFrame(const wxString title, wxFrame *parent, YAML::Node& settings) : wxFrame(parent, wxID_ANY, title), _settings(settings) {
+SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node& settings) : wxFrame(parent, wxID_ANY, title), _settings(settings) {
 
     //Initialise drop-down list contents.
 	wxString DebugVerbosity[] = {
@@ -122,7 +122,7 @@ SettingsFrame::SettingsFrame(const wxString title, wxFrame *parent, YAML::Node& 
 
     bigBox->AddStretchSpacer(1);
 	
-	bigBox->Add(new wxStaticText(this, wxID_ANY, translate("Settings will be applied after BOSS is restarted.")), wholeItem);
+	bigBox->Add(new wxStaticText(this, wxID_ANY, translate("Language changes will be applied after BOSS is restarted.")), wholeItem);
 	
 	//Need to add 'OK' and 'Cancel' buttons.
 	wxBoxSizer * hbox = new wxBoxSizer(wxHORIZONTAL);
@@ -142,6 +142,7 @@ SettingsFrame::SettingsFrame(const wxString title, wxFrame *parent, YAML::Node& 
 
 	//Now set the layout and sizes.
 	SetBackgroundColour(wxColour(255,255,255));
+    SetIcon(wxIconLocation("BOSS.exe"));
 	SetSizerAndFit(bigBox);
 }
 

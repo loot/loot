@@ -37,7 +37,7 @@ END_EVENT_TABLE()
 
 using namespace std;
 
-Editor::Editor(const wxString title, wxFrame *parent) : wxFrame(parent, wxID_ANY, title) {
+Editor::Editor(wxWindow *parent, const wxString& title) : wxFrame(parent, wxID_ANY, title) {
 
     //Initialise child windows.
     listBook = new wxNotebook(this, BOOK_Lists);
@@ -156,6 +156,7 @@ Editor::Editor(const wxString title, wxFrame *parent) : wxFrame(parent, wxID_ANY
     bigBox->Add(mainBox, 2, wxEXPAND|wxTOP|wxBOTTOM|wxRIGHT, 10);
     
     SetBackgroundColour(wxColour(255,255,255));
+    SetIcon(wxIconLocation("BOSS.exe"));
 
     SetSizerAndFit(bigBox);
 }
@@ -348,4 +349,46 @@ void Editor::ApplyCurrentPluginEdits() {
         *it = diff;
     else
         _editedPlugins.push_back(diff);
+}
+
+FileEditDialog::FileEditDialog(wxWindow *parent, const wxString& title) : wxDialog(parent, wxID_ANY, title) {
+
+}
+
+void FileEditDialog::SetValues(const std::string& name, const std::string& display, const std::string& condition) {
+
+}
+
+std::vector<std::string> FileEditDialog::GetValues() const {
+    vector<string> values;
+
+    return values;
+}
+
+MessageEditDialog::MessageEditDialog(wxWindow *parent, const wxString& title) : wxDialog(parent, wxID_ANY, title) {
+
+}
+
+void MessageEditDialog::SetValues(const std::string& type, const std::string& content, const std::string& condition, const std::string& language) {
+
+}
+
+std::vector<std::string> MessageEditDialog::GetValues() const {
+    vector<string> values;
+
+    return values;
+}
+
+TagEditDialog::TagEditDialog(wxWindow *parent, const wxString& title) : wxDialog(parent, wxID_ANY, title) {
+
+}
+
+void TagEditDialog::SetValues(const std::string& addRemove, const std::string& name, const std::string& condition) {
+
+}
+
+std::vector<std::string> TagEditDialog::GetValues() const {
+    vector<string> values;
+
+    return values;
 }

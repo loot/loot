@@ -40,7 +40,7 @@ namespace boss {
 
     class Plugin;
 
-    void DetectGames(std::vector<unsigned int>& detected, std::vector<unsigned int>& undetected);
+    std::vector<unsigned int> DetectGames();
 
     class Game {
     public:

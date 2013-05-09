@@ -34,7 +34,7 @@
 
 class Editor : public wxFrame {
 public:
-    Editor(const wxString title, wxFrame *parent);
+    Editor(wxWindow *parent, const wxString& title);
 
     void SetList(const std::vector<boss::Plugin>& basePlugins, const std::vector<boss::Plugin>& editedPlugins);
     void IsSorted(bool sorted);
@@ -71,6 +71,46 @@ private:
     std::vector<boss::Plugin> _basePlugins, _editedPlugins;
 
     boss::Plugin currentPlugin;
+
+    //boss::Game& _game;
+   // YAML::Node& _settings;  //BOSS Settings.
+};
+
+class FileEditDialog : public wxDialog {
+public:
+    FileEditDialog(wxWindow *parent, const wxString& title);
+
+    void SetValues(const std::string& name, const std::string& display, const std::string& condition);
+    std::vector<std::string> GetValues() const;
+private:
+    wxTextCtrl * _name;
+    wxTextCtrl * _display;
+    wxTextCtrl * _condition;
+};
+
+class MessageEditDialog : public wxDialog {
+public:
+    MessageEditDialog(wxWindow *parent, const wxString& title);
+
+    void SetValues(const std::string& type, const std::string& content, const std::string& condition, const std::string& language);
+    std::vector<std::string> GetValues() const;
+private:
+    wxChoice * _type;
+    wxTextCtrl * _content;
+    wxTextCtrl * _condition;
+    wxChoice * _language;
+};
+
+class TagEditDialog : public wxDialog {
+public:
+    TagEditDialog(wxWindow *parent, const wxString& title);
+
+    void SetValues(const std::string& addRemove, const std::string& name, const std::string& condition);
+    std::vector<std::string> GetValues() const;
+private:
+    wxChoice * _addRemove;
+    wxTextCtrl * _name;
+    wxTextCtrl * _condition;
 };
 
 #endif
