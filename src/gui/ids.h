@@ -38,13 +38,6 @@ enum {
     OPTION_EditMetadata = wxID_HIGHEST + 1, // declares an id which will be used to call our button
 	OPTION_ViewLastReport,
 	OPTION_SortPlugins,
-    MENU_Quit,
-	MENU_OpenMainReadMe,
-	MENU_OpenSyntaxReadMe,
-	MENU_OpenAPIReadMe,
-	MENU_OpenVersionHistory,
-	MENU_OpenLicenses,
-	MENU_ShowAbout,
 	MENU_ShowSettings,
 	MENU_Oblivion,
 	MENU_Nehrim,

@@ -26,6 +26,7 @@
 #include "ids.h"
 #include "../metadata.h"
 
+#include <string>
 #include <vector>
 #include <wx/spinctrl.h>
 #include <wx/notebook.h>
@@ -48,6 +49,7 @@ private:
 
     bool IsCurrentPluginEdited() const;
     boss::Plugin GetOriginal(const boss::Plugin& plugin, bool withEdits) const;
+    void ApplyCurrentPluginEdits();
     
     wxButton * addBtn;
     wxButton * editBtn;

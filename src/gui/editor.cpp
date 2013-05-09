@@ -166,7 +166,7 @@ void Editor::SetList(const std::vector<boss::Plugin>& basePlugins, const std::ve
     
     //Fill pluginList with the contents of basePlugins.
     for (int i=0, max=_basePlugins.size(); i < max; ++i) {
-        pluginList->InsertItem(i, _basePlugins[i].Name());
+        pluginList->InsertItem(i, FromUTF8(_basePlugins[i].Name()));
     }
     pluginList->SetColumnWidth(0, wxLIST_AUTOSIZE);
     Layout();
@@ -174,10 +174,10 @@ void Editor::SetList(const std::vector<boss::Plugin>& basePlugins, const std::ve
 
 void Editor::IsSorted(bool sorted) {
     if (sorted) {
-        applyBtn->SetLabel("Apply Load Order");
+        applyBtn->SetLabel(translate("Apply Load Order"));
     } else {
         recalcBtn->Show(false);
-        applyBtn->SetLabel("Save Changes");
+        applyBtn->SetLabel(translate("Save Changes"));
     }
     Layout();
 }
@@ -189,22 +189,13 @@ void Editor::OnPluginSelect(wxListEvent& event) {
     //Check if the selected plugin is the same as the current plugin.
     if (currentPlugin != plugin) {
         //Check if there are edits made to the current plugin compared to its original.
-        if (IsCurrentPluginEdited()) {
-            //Save changes.
-            boss::Plugin diff = currentPlugin.DiffMetadata(GetOriginal(currentPlugin, false));
-            
-            vector<boss::Plugin>::iterator it = std::find(_editedPlugins.begin(), _editedPlugins.end(), diff);
-
-            if (it != _editedPlugins.end())
-                *it = diff;
-            else
-                _editedPlugins.push_back(diff);
-        }
+        if (IsCurrentPluginEdited())
+            ApplyCurrentPluginEdits();
 
         plugin = GetOriginal(plugin, true);
 
         //Now fill editor fields with new plugin's info.
-        pluginText->SetLabelText(wxString(plugin.Name().c_str(), wxConvUTF8));
+        pluginText->SetLabelText(FromUTF8(plugin.Name()));
 
         prioritySpin->SetValue(plugin.Priority());
 
@@ -219,37 +210,37 @@ void Editor::OnPluginSelect(wxListEvent& event) {
         set<boss::File> files = plugin.LoadAfter();
         int i=0;
         for (set<boss::File>::const_iterator it=files.begin(), endit=files.end(); it != endit; ++it) {
-            loadAfterList->InsertItem(i, wxString(it->Name().c_str(), wxConvUTF8));
-            loadAfterList->SetItem(i, 1, wxString(it->DisplayName().c_str(), wxConvUTF8));
-            loadAfterList->SetItem(i, 2, wxString(it->Condition().c_str(), wxConvUTF8));
+            loadAfterList->InsertItem(i, FromUTF8(it->Name()));
+            loadAfterList->SetItem(i, 1, FromUTF8(it->DisplayName()));
+            loadAfterList->SetItem(i, 2, FromUTF8(it->Condition()));
             ++i;
         }
 
         files = plugin.Reqs();
         i=0;
         for (set<boss::File>::const_iterator it=files.begin(), endit=files.end(); it != endit; ++it) {
-            reqsList->InsertItem(i, wxString(it->Name().c_str(), wxConvUTF8));
-            reqsList->SetItem(i, 1, wxString(it->DisplayName().c_str(), wxConvUTF8));
-            reqsList->SetItem(i, 2, wxString(it->Condition().c_str(), wxConvUTF8));
+            reqsList->InsertItem(i, FromUTF8(it->Name()));
+            reqsList->SetItem(i, 1, FromUTF8(it->DisplayName()));
+            reqsList->SetItem(i, 2, FromUTF8(it->Condition()));
             ++i;
         }
 
         files = plugin.Incs();
         i=0;
         for (set<boss::File>::const_iterator it=files.begin(), endit=files.end(); it != endit; ++it) {
-            incsList->InsertItem(i, wxString(it->Name().c_str(), wxConvUTF8));
-            incsList->SetItem(i, 1, wxString(it->DisplayName().c_str(), wxConvUTF8));
-            incsList->SetItem(i, 2, wxString(it->Condition().c_str(), wxConvUTF8));
+            incsList->InsertItem(i, FromUTF8(it->Name()));
+            incsList->SetItem(i, 1, FromUTF8(it->DisplayName()));
+            incsList->SetItem(i, 2, FromUTF8(it->Condition()));
             ++i;
         }
 
         list<boss::Message> messages = plugin.Messages();
         i=0;
         for (list<boss::Message>::const_iterator it=messages.begin(), endit=messages.end(); it != endit; ++it) {
-            messageList->InsertItem(i, wxString(it->Type().c_str(), wxConvUTF8));
-            messageList->SetItem(i, 1, wxString(it->Content().c_str(), wxConvUTF8));
-            messageList->SetItem(i, 2, wxString(it->Condition().c_str(), wxConvUTF8));
-            messageList->SetItem(i, 2, wxString(it->Language().c_str(), wxConvUTF8));
+            messageList->InsertItem(i, FromUTF8(it->Type()));
+            messageList->SetItem(i, 1, FromUTF8(it->Content()));
+            messageList->SetItem(i, 2, FromUTF8(it->Condition()));
+            messageList->SetItem(i, 2, FromUTF8(it->Language()));
             ++i;
         }
 
@@ -260,8 +251,8 @@ void Editor::OnPluginSelect(wxListEvent& event) {
                 tagsList->InsertItem(i, translate("Add"));
             else
                 tagsList->InsertItem(i, translate("Remove"));
-            tagsList->SetItem(i, 1, wxString(it->Name().c_str(), wxConvUTF8));
-            tagsList->SetItem(i, 2, wxString(it->Condition().c_str(), wxConvUTF8));
+            tagsList->SetItem(i, 1, FromUTF8(it->Name()));
+            tagsList->SetItem(i, 2, FromUTF8(it->Condition()));
             ++i;
         }
 
@@ -275,21 +266,21 @@ void Editor::OnPriorityChange(wxSpinEvent& event) {
 
 void Editor::OnListBookChange(wxBookCtrlEvent& event) {
     if (event.GetSelection() == 0 || event.GetSelection() == 1) {
-        addBtn->SetLabel("Add File");
-        editBtn->SetLabel("Edit File");
-        removeBtn->SetLabel("Remove File");
+        addBtn->SetLabel(translate("Add File"));
+        editBtn->SetLabel(translate("Edit File"));
+        removeBtn->SetLabel(translate("Remove File"));
     } else if (event.GetSelection() == 2) {
-        addBtn->SetLabel("Add Plugin");
-        editBtn->SetLabel("Edit Plugin");
-        removeBtn->SetLabel("Remove Plugin");
+        addBtn->SetLabel(translate("Add Plugin"));
+        editBtn->SetLabel(translate("Edit Plugin"));
+        removeBtn->SetLabel(translate("Remove Plugin"));
     } else if (event.GetSelection() == 3) {
-        addBtn->SetLabel("Add Message");
-        editBtn->SetLabel("Edit Message");
-        removeBtn->SetLabel("Remove Message");
+        addBtn->SetLabel(translate("Add Message"));
+        editBtn->SetLabel(translate("Edit Message"));
+        removeBtn->SetLabel(translate("Remove Message"));
     } else if (event.GetSelection() == 4) {
-        addBtn->SetLabel("Add Bash Tag");
-        editBtn->SetLabel("Edit Bash Tag");
-        removeBtn->SetLabel("Remove Bash Tag");
+        addBtn->SetLabel(translate("Add Bash Tag"));
+        editBtn->SetLabel(translate("Edit Bash Tag"));
+        removeBtn->SetLabel(translate("Remove Bash Tag"));
     }
     Layout();
 }
@@ -300,10 +291,20 @@ void Editor::OnEnabledToggle(wxCommandEvent& event) {
 
 void Editor::OnQuit(wxCommandEvent& event) {
     if (event.GetId() == BUTTON_Apply) {
+        //Save edits to userlist.
+  /*      YAML::Emitter yout;
+        yout.SetIndent(2);
+        yout << YAML::BeginMap
+             << YAML::Key << "plugins" << YAML::Value << _editedPlugins
+             << YAML::EndMap;
+
+        ofstream out(game.UserlistPath().string().c_str());
+        out << yout.c_str();
+        out.close();
+    */    
         if (recalcBtn->IsShown()) {
             //Signal that the load order should be written.
         }
-        //Save edits to userlist.
     }
     Close();
 }
@@ -336,4 +337,15 @@ boss::Plugin Editor::GetOriginal(const boss::Plugin& plugin, bool withEdits) con
     }
 
     return p;
+}
+
+void Editor::ApplyCurrentPluginEdits() {
+    boss::Plugin diff = currentPlugin.DiffMetadata(GetOriginal(currentPlugin, false));
+    
+    vector<boss::Plugin>::iterator it = std::find(_editedPlugins.begin(), _editedPlugins.end(), diff);
+
+    if (it != _editedPlugins.end())
+        *it = diff;
+    else
+        _editedPlugins.push_back(diff);
 }

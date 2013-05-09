@@ -53,10 +53,10 @@ SettingsFrame::SettingsFrame(const wxString title, wxFrame *parent, YAML::Node& 
 
 	wxString Language[] = {
 		wxT("English"),
-	/*	wxString("Español", wxConvUTF8),
+	/*	wxString::FromUTF8("Español"),
 		wxT("Deutsch"),
-		wxString("Русский", wxConvUTF8),
-		wxString("简体中文", wxConvUTF8)*/
+		wxString::FromUTF8("Русский"),
+		wxString::FromUTF8("简体中文")*/
 	};
 
     //Initialise controls.
@@ -183,19 +183,19 @@ void SettingsFrame::SetDefaultValues() {
         YAML::Node urls = _settings["Masterlist URLs"];
 
         if (urls["Oblivion"])
-            OblivionURL->SetValue(urls["Oblivion"].as<string>());
+            OblivionURL->SetValue(FromUTF8(urls["Oblivion"].as<string>()));
 
         if (urls["Nehrim"])
-            NehrimURL->SetValue(urls["Nehrim"].as<string>());
+            NehrimURL->SetValue(FromUTF8(urls["Nehrim"].as<string>()));
 
         if (urls["Skyrim"])
-            SkyrimURL->SetValue(urls["Skyrim"].as<string>());
+            SkyrimURL->SetValue(FromUTF8(urls["Skyrim"].as<string>()));
 
         if (urls["Fallout 3"])
-            FO3URL->SetValue(urls["Fallout 3"].as<string>());
+            FO3URL->SetValue(FromUTF8(urls["Fallout 3"].as<string>()));
 
         if (urls["Fallout New Vegas"])
-            FONVURL->SetValue(urls["Fallout New Vegas"].as<string>());
+            FONVURL->SetValue(FromUTF8(urls["Fallout New Vegas"].as<string>()));
     }
 }
 

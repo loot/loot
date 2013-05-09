@@ -48,16 +48,12 @@
 #include <wx/progdlg.h>
 
 BEGIN_EVENT_TABLE ( Launcher, wxFrame )
-	EVT_MENU ( MENU_Quit, Launcher::OnQuit )
+	EVT_MENU ( wxID_EXIT, Launcher::OnQuit )
 	EVT_MENU ( OPTION_EditMetadata, Launcher::OnEditMetadata )
 	EVT_MENU ( OPTION_ViewLastReport, Launcher::OnViewLastReport )
 	EVT_MENU ( OPTION_SortPlugins, Launcher::OnSortPlugins )
-	EVT_MENU ( MENU_OpenMainReadMe, Launcher::OnOpenFile )
-	EVT_MENU ( MENU_OpenSyntaxReadMe, Launcher::OnOpenFile )
-	EVT_MENU ( MENU_OpenAPIReadMe, Launcher::OnOpenFile )
-	EVT_MENU ( MENU_OpenVersionHistory, Launcher::OnOpenFile )
-	EVT_MENU ( MENU_OpenLicenses, Launcher::OnOpenFile )
-	EVT_MENU ( MENU_ShowAbout, Launcher::OnAbout )
+	EVT_MENU ( wxID_HELP, Launcher::OnHelp )
+	EVT_MENU ( wxID_ABOUT, Launcher::OnAbout )
 	EVT_MENU ( MENU_ShowSettings, Launcher::OnOpenSettings )
 	EVT_MENU ( MENU_Oblivion, Launcher::OnGameChange )
 	EVT_MENU ( MENU_Nehrim, Launcher::OnGameChange )
@@ -153,7 +149,11 @@ bool BossGUI::OnInit() {
     vector<unsigned int> detected, undetected;
     DetectGames(detected, undetected);
     if (detected.empty())
-        throw error(ERROR_NO_GAME_DETECTED, "None of the supported games were detected.");
+        wxMessageBox(
+            translate("Error: None of the supported games were detected."),
+            translate("BOSS: Error"),
+            wxOK | wxICON_ERROR,
+            NULL);
 
     string target;
     unsigned int targetGame;
@@ -205,8 +205,8 @@ Launcher::Launcher(const wxChar *title, const YAML::Node& settings, const Game& 
     wxMenu * HelpMenu = new wxMenu();
 
 	//Initialise controls.
-    wxButton * EditButton = new wxButton(this,OPTION_EditMetadata, translate("Edit Metadata"));
-    wxButton * SortButton = new wxButton(this,OPTION_SortPlugins, translate("Sort Plugins"));
+    wxButton * EditButton = new wxButton(this, OPTION_EditMetadata, translate("Edit Metadata"));
+    wxButton * SortButton = new wxButton(this, OPTION_SortPlugins, translate("Sort Plugins"));
     ViewButton = new wxButton(this,OPTION_ViewLastReport, translate("View Last Report"));
 
     //Construct menus.
@@ -214,7 +214,7 @@ Launcher::Launcher(const wxChar *title, const YAML::Node& settings, const Game& 
 	FileMenu->Append(OPTION_ViewLastReport, translate("&View Last Report"), translate("Opens your last report."));
     FileMenu->Append(OPTION_SortPlugins, translate("&Sort Plugins"), translate("Sorts your installed plugins."));
     FileMenu->AppendSeparator();
-    FileMenu->Append(MENU_Quit, translate("&Quit"), translate("Quit BOSS."));
+    FileMenu->Append(wxID_EXIT);
     MenuBar->Append(FileMenu, translate("&File"));
 	//Edit Menu
 	EditMenu->Append(OPTION_EditMetadata, translate("&Metadata..."), translate("Opens a window where you can edit plugin metadata."));
@@ -228,13 +228,9 @@ Launcher::Launcher(const wxChar *title, const YAML::Node& settings, const Game& 
 	GameMenu->AppendRadioItem(MENU_FalloutNewVegas, wxT("&Fallout: New Vegas"), translate("Switch to running BOSS for Fallout: New Vegas."));
 	MenuBar->Append(GameMenu, translate("&Active Game"));
     //About menu
-	HelpMenu->Append(MENU_OpenMainReadMe, translate("Open &Main Readme"), translate("Opens the main BOSS readme in your default web browser."));
-	HelpMenu->Append(MENU_OpenSyntaxReadMe, translate("Open &Metadata File Syntax Doc"), translate("Opens the BOSS metadata file syntax documentation in your default web browser."));
-	HelpMenu->Append(MENU_OpenAPIReadMe, translate("&Open API Readme"), translate("Opens the BOSS API readme in your default web browser."));
-	HelpMenu->Append(MENU_OpenVersionHistory, translate("Open &Version History"), translate("Opens the BOSS version history in your default web browser."));
-	HelpMenu->Append(MENU_OpenLicenses, translate("View &Copyright Licenses"), translate("View the GNU General Public License v3.0 and GNU Free Documentation License v1.3."));
+	HelpMenu->Append(wxID_HELP);
 	HelpMenu->AppendSeparator();
-	HelpMenu->Append(MENU_ShowAbout, translate("&About BOSS..."), translate("Shows information about BOSS."));
+	HelpMenu->Append(wxID_ABOUT);
     MenuBar->Append(HelpMenu, translate("&Help"));
 
     //Set up layout.
@@ -323,7 +319,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 				FromUTF8(format(loc::translate("Error: Masterlist parsing failed. %1%")) % e.what()),
 				translate("BOSS: Error"),
 				wxOK | wxICON_ERROR,
-				NULL);
+				this);
         }
         if (mlist["globals"])
             mlist_messages = mlist["globals"].as< list<boss::Message> >();
@@ -346,7 +342,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 				FromUTF8(format(loc::translate("Error: Userlist parsing failed. %1%")) % e.what()),
 				translate("BOSS: Error"),
 				wxOK | wxICON_ERROR,
-				NULL);
+				this);
         }
         if (ulist["globals"])
             ulist_messages = ulist["globals"].as< list<boss::Message> >();
@@ -399,7 +395,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 				FromUTF8(format(loc::translate("Error: Condition evaluation failed. %1%")) % e.what()),
 				translate("BOSS: Error"),
 				wxOK | wxICON_ERROR,
-				NULL);
+				this);
         }
     }
 
@@ -537,7 +533,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
 				FromUTF8(format(loc::translate("Error: Masterlist parsing failed. %1%")) % e.what()),
 				translate("BOSS: Error"),
 				wxOK | wxICON_ERROR,
-				NULL);
+				this);
         }
         if (mlist["plugins"])
             mlist_plugins = mlist["plugins"].as< vector<boss::Plugin> >();
@@ -552,7 +548,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
 				FromUTF8(format(loc::translate("Error: Userlist parsing failed. %1%")) % e.what()),
 				translate("BOSS: Error"),
 				wxOK | wxICON_ERROR,
-				NULL);
+				this);
         }
         if (ulist["plugins"])
             ulist_plugins = ulist["plugins"].as< vector<boss::Plugin> >();
@@ -623,29 +619,22 @@ void Launcher::OnGameChange(wxCommandEvent& event) {
             break;
         }
 	} catch (error& e) {
-		wxMessageBox(e.what(), translate("BOSS: Error"), wxOK | wxICON_ERROR, this);
+        wxMessageBox(
+            FromUTF8(format(loc::translate("Error: Game change failed. %1%")) % e.what()),
+            translate("BOSS: Error"),
+            wxOK | wxICON_ERROR,
+            this);
 	}
-	SetTitle(wxT("BOSS - " + _game.Name()));  //Don't need to convert name, known to be only ASCII chars.
+	SetTitle(FromUTF8("BOSS - " + _game.Name()));
 }
 
-void Launcher::OnOpenFile(wxCommandEvent& event) {
-    string file;
-    if (event.GetId() == MENU_OpenMainReadMe)
-        file = readme_path.string();
-    else if (event.GetId() == MENU_OpenSyntaxReadMe)
-        file = syntax_doc_path.string();
-    else if (event.GetId() == MENU_OpenAPIReadMe)
-        file = api_doc_path.string();
-    else if (event.GetId() == MENU_OpenVersionHistory)
-        file = version_history_path.string();
-    else if (event.GetId() == MENU_OpenLicenses)
-        file = licenses_path.string();
+void Launcher::OnHelp(wxCommandEvent& event) {
     //Look for file.
-    if (fs::exists(file)) {
-        wxLaunchDefaultApplication(file);
+    if (fs::exists(readme_path.string())) {
+        wxLaunchDefaultApplication(readme_path.string());
     } else  //No ReadMe exists, show a pop-up message saying so.
         wxMessageBox(
-            FromUTF8(boost::format(loc::translate("Error: \"%1%\" cannot be found.")) % file),
+            FromUTF8(format(loc::translate("Error: \"%1%\" cannot be found.")) % readme_path.string()),
             translate("BOSS: Error"),
             wxOK | wxICON_ERROR,
             this);
@@ -694,7 +683,7 @@ void Launcher::DisableUndetectedGames() {
 			GameMenu->FindItem(MENU_FalloutNewVegas)->Enable();
 	}
 
-	SetTitle(wxT("BOSS - " + _game.Name()));  //Don't need to convert name, known to be only ASCII chars.
+	SetTitle(FromUTF8("BOSS - " + _game.Name()));
 }
 
 bool Launcher::AlphaSortPlugins(const boss::Plugin& lhs, const boss::Plugin& rhs) {

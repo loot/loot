@@ -48,7 +48,7 @@ public:
     
     void OnOpenSettings(wxCommandEvent& event);
     void OnGameChange(wxCommandEvent& event);
-	void OnOpenFile(wxCommandEvent& event);
+	void OnHelp(wxCommandEvent& event);
 	void OnAbout(wxCommandEvent& event);
 	void OnQuit(wxCommandEvent& event);
 

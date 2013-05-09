@@ -26,11 +26,11 @@
 #include <boost/locale.hpp>
 
 wxString translate(const std::string& str) {
-    return wxString(boost::locale::translate(str).str().c_str(), wxConvUTF8);
+    return wxString::FromUTF8(boost::locale::translate(str).str().c_str());
 }
 
 wxString FromUTF8(const std::string& str) {
-    return wxString(str.c_str(), wxConvUTF8);
+    return wxString::FromUTF8(str.c_str());
 }
 
 wxString FromUTF8(const boost::format& f) {
