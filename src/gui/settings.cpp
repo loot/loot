@@ -62,7 +62,6 @@ SettingsFrame::SettingsFrame(const wxString title, wxFrame *parent, YAML::Node& 
     //Initialise controls.
     GameChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 6, Game);
     LanguageChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 1, Language);
-    LanguageChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 1, Language);
     DebugVerbosityChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 4, DebugVerbosity);
 
     OblivionURL = new wxTextCtrl(this, wxID_ANY);
