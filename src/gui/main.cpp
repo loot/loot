@@ -598,7 +598,7 @@ void Launcher::OnViewLastReport(wxCommandEvent& event) {
 
 void Launcher::OnOpenSettings(wxCommandEvent& event) {
 	SettingsFrame *settings = new SettingsFrame(this, translate("BOSS: Settings"), _settings);
-	settings->Show();
+	settings->ShowModal();
 }
 
 void Launcher::OnGameChange(wxCommandEvent& event) {

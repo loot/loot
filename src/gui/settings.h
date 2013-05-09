@@ -28,7 +28,7 @@
 #include <yaml-cpp/yaml.h>
 #include <wx/listctrl.h>
 
-class SettingsFrame : public wxFrame {
+class SettingsFrame : public wxDialog {
 public:
 	SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node& settings);
 	void OnQuit(wxCommandEvent& event);

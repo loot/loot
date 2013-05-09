@@ -25,14 +25,13 @@
 #include "../globals.h"
 #include <fstream>
 
-BEGIN_EVENT_TABLE ( SettingsFrame, wxFrame )
-	EVT_BUTTON ( OPTION_OKExitSettings, SettingsFrame::OnQuit)
-	EVT_BUTTON ( OPTION_CancelExitSettings, SettingsFrame::OnQuit)
+BEGIN_EVENT_TABLE ( SettingsFrame, wxDialog )
+	EVT_BUTTON ( wxID_OK, SettingsFrame::OnQuit)
 END_EVENT_TABLE()
 
 using namespace std;
 
-SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node& settings) : wxFrame(parent, wxID_ANY, title), _settings(settings) {
+SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node& settings) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER), _settings(settings) {
 
     //Initialise drop-down list contents.
 	wxString DebugVerbosity[] = {
@@ -71,9 +70,6 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
     FONVURL = new wxTextCtrl(this, wxID_ANY);
 
     UpdateMasterlistBox = new wxCheckBox(this, wxID_ANY, translate("Update masterlist before sorting."));
-
-    wxButton * okBtn = new wxButton(this, OPTION_OKExitSettings, translate("OK"), wxDefaultPosition, wxSize(70, 30));
-    wxButton * cancelBtn = new wxButton(this, OPTION_CancelExitSettings, translate("Cancel"), wxDefaultPosition, wxSize(70, 30));
 
     //Set up layout.
 	wxSizerFlags leftItem(0);
@@ -119,20 +115,18 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
 	bigBox->Add(GridSizer, 0, wxEXPAND|wxALL, 10);
    
     bigBox->Add(UpdateMasterlistBox, wholeItem);
-
+    
+    bigBox->AddSpacer(10);
     bigBox->AddStretchSpacer(1);
 	
 	bigBox->Add(new wxStaticText(this, wxID_ANY, translate("Language changes will be applied after BOSS is restarted.")), wholeItem);
 	
 	//Need to add 'OK' and 'Cancel' buttons.
-	wxBoxSizer * hbox = new wxBoxSizer(wxHORIZONTAL);
-	hbox->Add(okBtn);
-	hbox->Add(cancelBtn, 0, wxLEFT, 10);
-
-    wholeItem.Centre();
+	wxSizer * sizer = CreateSeparatedButtonSizer(wxOK|wxCANCEL);
 
 	//Now add TabHolder and OK button to window sizer.
-	bigBox->Add(hbox, wholeItem);
+    if (sizer != NULL)
+        bigBox->Add(sizer, 0, wxEXPAND|wxALIGN_CENTRE|wxLEFT|wxBOTTOM|wxRIGHT, 15);
 
 	//Initialise options with values. For checkboxes, they are off by default.
 	SetDefaultValues();
@@ -201,7 +195,7 @@ void SettingsFrame::SetDefaultValues() {
 }
 
 void SettingsFrame::OnQuit(wxCommandEvent& event) {
-    if (event.GetId() == OPTION_OKExitSettings) {
+    if (event.GetId() == wxID_OK) {
 
         switch (GameChoice->GetSelection()) {
         case 0:
@@ -253,5 +247,5 @@ void SettingsFrame::OnQuit(wxCommandEvent& event) {
         out.close();
     }
 
-	this->Close();
+	EndModal(0);
 }
