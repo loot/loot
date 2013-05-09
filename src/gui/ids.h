@@ -71,8 +71,7 @@ enum {
     BUTTON_Recalc,
     BUTTON_Apply,
     BUTTON_Cancel,
-    BOOK_Files,
-    BOOK_Messages
+    BOOK_Lists
 };
 
 wxString translate(const std::string& str);

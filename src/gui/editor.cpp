@@ -29,8 +29,7 @@
 BEGIN_EVENT_TABLE( Editor, wxFrame )
     EVT_LIST_ITEM_SELECTED( LIST_Plugins, Editor::OnPluginSelect )
     EVT_SPINCTRL( SPIN_Priority, Editor::OnPriorityChange )
-    EVT_NOTEBOOK_PAGE_CHANGED( BOOK_Files, Editor::OnFileBookChange )
-    EVT_NOTEBOOK_PAGE_CHANGED( BOOK_Messages, Editor::OnMessageBookChange )
+    EVT_NOTEBOOK_PAGE_CHANGED( BOOK_Lists, Editor::OnListBookChange )
 	EVT_BUTTON ( BUTTON_Apply, Editor::OnQuit )
 	EVT_BUTTON ( BUTTON_Cancel, Editor::OnQuit )
     EVT_CHECKBOX ( wxID_ANY, Editor::OnEnabledToggle )
@@ -41,14 +40,13 @@ using namespace std;
 Editor::Editor(const wxString title, wxFrame *parent) : wxFrame(parent, wxID_ANY, title) {
 
     //Initialise child windows.
-    filesBook = new wxNotebook(this, BOOK_Files);
-    messagesBook = new wxNotebook(this, BOOK_Messages);
+    listBook = new wxNotebook(this, BOOK_Lists);
 
-    wxPanel * reqsTab = new wxPanel(filesBook);
-    wxPanel * incsTab = new wxPanel(filesBook);
-    wxPanel * loadAfterTab = new wxPanel(filesBook);
-    wxPanel * messagesTab = new wxPanel(messagesBook);
-    wxPanel * tagsTab = new wxPanel(messagesBook);
+    wxPanel * reqsTab = new wxPanel(listBook);
+    wxPanel * incsTab = new wxPanel(listBook);
+    wxPanel * loadAfterTab = new wxPanel(listBook);
+    wxPanel * messagesTab = new wxPanel(listBook);
+    wxPanel * tagsTab = new wxPanel(listBook);
 
     //Initialise controls.
     pluginText = new wxStaticText(this, wxID_ANY, "");
@@ -56,12 +54,9 @@ Editor::Editor(const wxString title, wxFrame *parent) : wxFrame(parent, wxID_ANY
     prioritySpin->SetRange(-10,10);
     enableUserEditsBox = new wxCheckBox(this, wxID_ANY, translate("Enable User Changes"));
     
-    addFileBtn = new wxButton(this, BUTTON_AddFile, translate("Add File"));
-    editFileBtn = new wxButton(this, BUTTON_EditFile, translate("Edit File"));
-    removeFileBtn = new wxButton(this, BUTTON_RemoveFile, translate("Remove File"));
-    addMsgBtn = new wxButton(this, BUTTON_AddMessage, translate("Add Message"));
-    editMsgBtn = new wxButton(this, BUTTON_EditMessage, translate("Edit Message"));
-    removeMsgBtn = new wxButton(this, BUTTON_RemoveMessage, translate("Remove Message"));
+    addBtn = new wxButton(this, BUTTON_AddFile, translate("Add File"));
+    editBtn = new wxButton(this, BUTTON_EditFile, translate("Edit File"));
+    removeBtn = new wxButton(this, BUTTON_RemoveFile, translate("Remove File"));
     recalcBtn = new wxButton(this, BUTTON_Recalc, translate("Recalculate Load Order"));
     applyBtn = new wxButton(this, BUTTON_Apply, translate("Apply Load Order"));
     cancelBtn = new wxButton(this, BUTTON_Cancel, translate("Cancel"));
@@ -74,12 +69,11 @@ Editor::Editor(const wxString title, wxFrame *parent) : wxFrame(parent, wxID_ANY
     tagsList = new wxListCtrl(tagsTab, LIST_BashTags, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL);
 
     //Tie together notebooks and panels.
-    filesBook->AddPage(reqsTab, translate("Requirements"), true);
-    filesBook->AddPage(incsTab, translate("Incompatibilities"));
-    filesBook->AddPage(loadAfterTab, translate("Load After"));
-    
-    messagesBook->AddPage(messagesTab, translate("Messages"), true);
-    messagesBook->AddPage(tagsTab, translate("Bash Tag Suggestions"));
+    listBook->AddPage(reqsTab, translate("Requirements"), true);
+    listBook->AddPage(incsTab, translate("Incompatibilities"));
+    listBook->AddPage(loadAfterTab, translate("Load After"));
+    listBook->AddPage(messagesTab, translate("Messages"));
+    listBook->AddPage(tagsTab, translate("Bash Tags"));
 
     //Set up list columns.
     pluginList->AppendColumn(translate("Plugins"));
@@ -114,13 +108,14 @@ Editor::Editor(const wxString title, wxFrame *parent) : wxFrame(parent, wxID_ANY
 
     mainBox->Add(pluginText, 0, wxTOP|wxBOTTOM, 10);
 
-    mainBox->Add(enableUserEditsBox, 0, wxTOP|wxBOTTOM, 5);
-
+    
     wxBoxSizer * hbox1 = new wxBoxSizer(wxHORIZONTAL);
-    hbox1->Add(new wxStaticText(this, wxID_ANY, translate("Priority: ")), 0, wxRIGHT, 5);
-    hbox1->Add(prioritySpin);
+    hbox1->Add(enableUserEditsBox, 0, wxALIGN_LEFT|wxRIGHT, 10);
+    hbox1->AddStretchSpacer(1);
+    hbox1->Add(new wxStaticText(this, wxID_ANY, translate("Priority: ")), 0, wxALIGN_RIGHT|wxLEFT|wxRIGHT, 5);
+    hbox1->Add(prioritySpin, 0, wxALIGN_RIGHT);
 
-    mainBox->Add(hbox1, 0, wxTOP|wxBOTTOM, 5);
+    mainBox->Add(hbox1, 0, wxEXPAND|wxALIGN_RIGHT|wxTOP|wxBOTTOM, 5);
 
     wxBoxSizer * tabBox1 = new wxBoxSizer(wxVERTICAL);
     tabBox1->Add(reqsList, 1, wxEXPAND);
@@ -134,16 +129,6 @@ Editor::Editor(const wxString title, wxFrame *parent) : wxFrame(parent, wxID_ANY
     tabBox3->Add(loadAfterList, 1, wxEXPAND);
     loadAfterTab->SetSizer(tabBox3);
 
-    mainBox->Add(filesBook, 1, wxEXPAND|wxTOP|wxBOTTOM, 10);
-
-    wxBoxSizer * hbox2 = new wxBoxSizer(wxHORIZONTAL);
-    hbox2->Add(addFileBtn, 0, wxRIGHT, 5);
-    hbox2->Add(editFileBtn, 0, wxLEFT|wxRIGHT, 5);
-    hbox2->Add(removeFileBtn, 0, wxLEFT, 5);
-    mainBox->Add(hbox2, 0, wxALIGN_RIGHT);
-
-    mainBox->AddSpacer(20);
-   
     wxBoxSizer * tabBox4 = new wxBoxSizer(wxVERTICAL);
     tabBox4->Add(messageList, 1, wxEXPAND);
     messagesTab->SetSizer(tabBox4);
@@ -152,14 +137,14 @@ Editor::Editor(const wxString title, wxFrame *parent) : wxFrame(parent, wxID_ANY
     tabBox5->Add(tagsList, 1, wxEXPAND);
     tagsTab->SetSizer(tabBox5);
 
-    mainBox->Add(messagesBook, 1, wxEXPAND|wxTOP|wxBOTTOM, 10);
+    mainBox->Add(listBook, 1, wxEXPAND|wxTOP|wxBOTTOM, 10);
 
-    wxBoxSizer * hbox3 = new wxBoxSizer(wxHORIZONTAL);
-    hbox3->Add(addMsgBtn, 0, wxRIGHT, 5);
-    hbox3->Add(editMsgBtn, 0, wxLEFT|wxRIGHT, 5);
-    hbox3->Add(removeMsgBtn, 0, wxLEFT, 5);
-    mainBox->Add(hbox3, 0, wxALIGN_RIGHT);
-
+    wxBoxSizer * hbox2 = new wxBoxSizer(wxHORIZONTAL);
+    hbox2->Add(addBtn, 0, wxRIGHT, 5);
+    hbox2->Add(editBtn, 0, wxLEFT|wxRIGHT, 5);
+    hbox2->Add(removeBtn, 0, wxLEFT, 5);
+    mainBox->Add(hbox2, 0, wxALIGN_RIGHT);
+    
     mainBox->AddSpacer(30);
 
     wxBoxSizer * hbox6 = new wxBoxSizer(wxHORIZONTAL);
@@ -288,32 +273,23 @@ void Editor::OnPriorityChange(wxSpinEvent& event) {
     currentPlugin.Priority(event.GetPosition());
 }
 
-void Editor::OnFileBookChange(wxBookCtrlEvent& event) {
-    if (event.GetSelection() == 0) {
-        addFileBtn->SetLabel("Add File");
-        editFileBtn->SetLabel("Edit File");
-        removeFileBtn->SetLabel("Remove File");
-    } else if (event.GetSelection() == 1) {
-        addFileBtn->SetLabel("Add File");
-        editFileBtn->SetLabel("Edit File");
-        removeFileBtn->SetLabel("Remove File");
+void Editor::OnListBookChange(wxBookCtrlEvent& event) {
+    if (event.GetSelection() == 0 || event.GetSelection() == 1) {
+        addBtn->SetLabel("Add File");
+        editBtn->SetLabel("Edit File");
+        removeBtn->SetLabel("Remove File");
     } else if (event.GetSelection() == 2) {
-        addFileBtn->SetLabel("Add Plugin");
-        editFileBtn->SetLabel("Edit Plugin");
-        removeFileBtn->SetLabel("Remove Plugin");
-    }
-    Layout();
-}
-
-void Editor::OnMessageBookChange(wxBookCtrlEvent& event) {
-    if (event.GetSelection() == 0) {
-        addMsgBtn->SetLabel("Add Message");
-        editMsgBtn->SetLabel("Edit Message");
-        removeMsgBtn->SetLabel("Remove Message");
-    } else if (event.GetSelection() == 1) {
-        addMsgBtn->SetLabel("Add Bash Tag");
-        editMsgBtn->SetLabel("Edit Bash Tag");
-        removeMsgBtn->SetLabel("Remove Bash Tag");
+        addBtn->SetLabel("Add Plugin");
+        editBtn->SetLabel("Edit Plugin");
+        removeBtn->SetLabel("Remove Plugin");
+    } else if (event.GetSelection() == 3) {
+        addBtn->SetLabel("Add Message");
+        editBtn->SetLabel("Edit Message");
+        removeBtn->SetLabel("Remove Message");
+    } else if (event.GetSelection() == 4) {
+        addBtn->SetLabel("Add Bash Tag");
+        editBtn->SetLabel("Edit Bash Tag");
+        removeBtn->SetLabel("Remove Bash Tag");
     }
     Layout();
 }

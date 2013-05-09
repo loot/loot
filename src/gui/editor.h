@@ -41,8 +41,7 @@ public:
     void OnPluginSelect(wxListEvent& event);
     void OnEnabledToggle(wxCommandEvent& event);
     void OnPriorityChange(wxSpinEvent& event);
-    void OnFileBookChange(wxBookCtrlEvent& event);
-    void OnMessageBookChange(wxBookCtrlEvent& event);
+    void OnListBookChange(wxBookCtrlEvent& event);
     void OnQuit(wxCommandEvent& event);
     DECLARE_EVENT_TABLE()
 private:
@@ -50,28 +49,19 @@ private:
     bool IsCurrentPluginEdited() const;
     boss::Plugin GetOriginal(const boss::Plugin& plugin, bool withEdits) const;
     
-    wxButton * addFileBtn;
-    wxButton * editFileBtn;
-    wxButton * removeFileBtn;
-    
-    wxButton * addMsgBtn;
-    wxButton * editMsgBtn;
-    wxButton * removeMsgBtn;
-    
+    wxButton * addBtn;
+    wxButton * editBtn;
+    wxButton * removeBtn;
     wxButton * recalcBtn;
     wxButton * applyBtn;
     wxButton * cancelBtn;
-    
     wxListCtrl * pluginList;
     wxListCtrl * reqsList;
     wxListCtrl * incsList;
     wxListCtrl * loadAfterList;
     wxListCtrl * messageList;
     wxListCtrl * tagsList;
-    
-    wxNotebook * filesBook;
-    wxNotebook * messagesBook;
-    
+    wxNotebook * listBook;
     wxCheckBox * enableUserEditsBox;
     wxSpinCtrl * prioritySpin;
     wxStaticText * pluginText;
