@@ -54,20 +54,16 @@ public:
 
     DECLARE_EVENT_TABLE()
 private:
-    wxMenuBar *MenuBar;
-	wxMenu *FileMenu;
-	wxMenu *EditMenu;
-	wxMenu *GameMenu;
-	wxMenu *HelpMenu;
-	wxButton *SortButton;
-	wxButton *ViewButton;
-	wxButton *EditButton;
+    wxMenu * GameMenu;
+	wxButton * ViewButton;
     
 	std::vector<unsigned int> _detectedGames;
 	boss::Game _game;
     YAML::Node _settings;  //BOSS Settings.
     
 	void DisableUndetectedGames();
+
+    static bool AlphaSortPlugins(const boss::Plugin& lhs, const boss::Plugin& rhs);
 };
 
 #endif

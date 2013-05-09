@@ -34,6 +34,7 @@ using namespace std;
 
 SettingsFrame::SettingsFrame(const wxString title, wxFrame *parent, YAML::Node& settings) : wxFrame(parent, wxID_ANY, title), _settings(settings) {
 
+    //Initialise drop-down list contents.
 	wxString DebugVerbosity[] = {
         translate("None"),
         translate("Low"),
@@ -58,9 +59,24 @@ SettingsFrame::SettingsFrame(const wxString title, wxFrame *parent, YAML::Node& 
 		wxString("简体中文", wxConvUTF8)*/
 	};
 
-	//Set up stuff in the frame.
-	SetBackgroundColour(wxColour(255,255,255));
+    //Initialise controls.
+    GameChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 6, Game);
+    LanguageChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 1, Language);
+    LanguageChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 1, Language);
+    DebugVerbosityChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 4, DebugVerbosity);
 
+    OblivionURL = new wxTextCtrl(this, wxID_ANY);
+    NehrimURL = new wxTextCtrl(this, wxID_ANY);
+    SkyrimURL = new wxTextCtrl(this, wxID_ANY);
+    FO3URL = new wxTextCtrl(this, wxID_ANY);
+    FONVURL = new wxTextCtrl(this, wxID_ANY);
+
+    UpdateMasterlistBox = new wxCheckBox(this, wxID_ANY, translate("Update masterlist before sorting."));
+
+    wxButton * okBtn = new wxButton(this, OPTION_OKExitSettings, translate("OK"), wxDefaultPosition, wxSize(70, 30));
+    wxButton * cancelBtn = new wxButton(this, OPTION_CancelExitSettings, translate("Cancel"), wxDefaultPosition, wxSize(70, 30));
+
+    //Set up layout.
 	wxSizerFlags leftItem(1);
 	leftItem.Border(wxALL, 10).Expand().Left();
 
@@ -70,45 +86,44 @@ SettingsFrame::SettingsFrame(const wxString title, wxFrame *parent, YAML::Node& 
 	wxSizerFlags wholeItem(1);
 	wholeItem.Border(wxALL, 10).Expand();
 
-    wxBoxSizer *bigBox = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer * bigBox = new wxBoxSizer(wxVERTICAL);
 
-	wxFlexGridSizer *GridSizer = new wxFlexGridSizer(2, 5, 5);
+	wxFlexGridSizer * GridSizer = new wxFlexGridSizer(2, 5, 5);
 
 	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Default Game:")), leftItem);
-	GridSizer->Add(GameChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 6, Game), rightItem);
+	GridSizer->Add(GameChoice, rightItem);
     
 	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Language:")), leftItem);
-	GridSizer->Add(LanguageChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 1, Language), rightItem);
+	GridSizer->Add(LanguageChoice, rightItem);
 	
     GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Debug Verbosity:")), leftItem);
-	GridSizer->Add(DebugVerbosityChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 4, DebugVerbosity), rightItem);
+	GridSizer->Add(DebugVerbosityChoice, rightItem);
 
     GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Oblivion Masterlist URL:")), leftItem);
-	GridSizer->Add(OblivionURL = new wxTextCtrl(this, wxID_ANY), rightItem);
+	GridSizer->Add(OblivionURL, rightItem);
 	
     GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Nehrim Masterlist URL:")), leftItem);
-	GridSizer->Add(NehrimURL = new wxTextCtrl(this, wxID_ANY), rightItem);
+	GridSizer->Add(NehrimURL, rightItem);
 	
     GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Skyrim Masterlist URL:")), leftItem);
-	GridSizer->Add(SkyrimURL = new wxTextCtrl(this, wxID_ANY), rightItem);
+	GridSizer->Add(SkyrimURL, rightItem);
 	
     GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Fallout 3 Masterlist URL:")), leftItem);
-	GridSizer->Add(FO3URL = new wxTextCtrl(this, wxID_ANY), rightItem);
+	GridSizer->Add(FO3URL, rightItem);
 	
     GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Fallout: New Vegas Masterlist URL:")), leftItem);
-	GridSizer->Add(FONVURL = new wxTextCtrl(this, wxID_ANY), rightItem);
+	GridSizer->Add(FONVURL, rightItem);
     
 	bigBox->Add(GridSizer);
    
-    bigBox->Add(UpdateMasterlistBox = new wxCheckBox(this, wxID_ANY, translate("Update masterlist before sorting.")), wholeItem);
+    bigBox->Add(UpdateMasterlistBox, wholeItem);
 	
-	wxString text = translate("Language settings will be applied after the BOSS GUI is restarted.");
-	bigBox->Add(new wxStaticText(this, wxID_ANY, text), wholeItem);
+	bigBox->Add(new wxStaticText(this, wxID_ANY, translate("Settings are applied after BOSS is restarted.")), wholeItem);
 	
 	//Need to add 'OK' and 'Cancel' buttons.
-	wxBoxSizer *hbox = new wxBoxSizer(wxHORIZONTAL);
-	hbox->Add(new wxButton(this, OPTION_OKExitSettings, translate("OK"), wxDefaultPosition, wxSize(70, 30)));
-	hbox->Add(new wxButton(this, OPTION_CancelExitSettings, translate("Cancel"), wxDefaultPosition, wxSize(70, 30)), 0, wxLEFT, 20);
+	wxBoxSizer * hbox = new wxBoxSizer(wxHORIZONTAL);
+	hbox->Add(okBtn);
+	hbox->Add(cancelBtn, 0, wxLEFT, 20);
 
 	//Now add TabHolder and OK button to window sizer.
 	bigBox->Add(hbox, 0, wxCENTER|wxALL, 10);
@@ -120,6 +135,7 @@ SettingsFrame::SettingsFrame(const wxString title, wxFrame *parent, YAML::Node& 
 	DebugVerbosityChoice->SetToolTip(translate("The output is logged to the BOSSDebugLog.txt file"));
 
 	//Now set the layout and sizes.
+	SetBackgroundColour(wxColour(255,255,255));
 	SetSizerAndFit(bigBox);
 }
 
@@ -220,12 +236,6 @@ void SettingsFrame::OnQuit(wxCommandEvent& event) {
         _settings["Masterlist URLs"]["Fallout 3"] = string(FO3URL->GetValue().ToUTF8());
 
         _settings["Masterlist URLs"]["Fallout New Vegas"] = string(FONVURL->GetValue().ToUTF8());
-
-        //Also set the logger settings now.
-    /*	g_logger.setOriginTracking(gl_debug_with_source);
-        g_logger.setVerbosity(static_cast<LogVerbosity>(LV_WARN + gl_debug_verbosity));
-        if (gl_log_debug_output)
-            g_logger.setStream(debug_log_path.string().c_str());*/
 
         YAML::Emitter yout;
         yout.SetIndent(2);

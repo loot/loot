@@ -52,7 +52,7 @@ namespace boss {
     }
 
     bool FormID::operator == (const FormID& rhs) const {
-        return (plugin == rhs.Plugin() && id == rhs.Id());
+        return (boost::iequals(plugin, rhs.Plugin()) && id == rhs.Id());
     }
     
     bool FormID::operator != (const FormID& rhs) const {
@@ -114,6 +114,14 @@ namespace boss {
     Message::Message(const std::string& t, const std::string& cont,
                      const std::string& cond, const std::string& l)
         : type(t), language(l), ConditionalData(cond, cont) {}
+        
+    bool Message::operator < (const Message& rhs) const {
+        return (Content() < rhs.Content());
+    }
+
+    bool Message::operator == (const Message& rhs) const {
+        return (boost::iequals(Type(), rhs.Type()) && boost::iequals(Content(), rhs.Content()));
+    }
 
     std::string Message::Type() const {
         return type;
@@ -134,6 +142,10 @@ namespace boss {
 
     bool File::operator < (const File& rhs) const {
         return (Name() < rhs.Name());
+    }
+
+    bool File::operator == (const File& rhs) const {
+        return boost::iequals(Name(), rhs.Name());
     }
 
     std::string File::Name() const {
@@ -172,6 +184,10 @@ namespace boss {
 
     bool Tag::operator < (const Tag& rhs) const {
         return (PrefixedName() < rhs.PrefixedName());
+    }
+
+    bool Tag::operator == (const Tag& rhs) const {
+        return boost::iequals(PrefixedName(), rhs.PrefixedName());
     }
 
     bool Tag::IsAddition() const {
@@ -260,6 +276,7 @@ namespace boss {
             return;
 
         //The following should be replaced.
+        enabled = plugin.Enabled();
         priority = plugin.Priority();
         masters = plugin.Masters();
         formIDs = plugin.FormIDs();
@@ -284,6 +301,42 @@ namespace boss {
         messages.insert(messages.end(), pMessages.begin(), pMessages.end());
         
         return;
+    }
+    
+    Plugin Plugin::DiffMetadata(const Plugin& plugin) const {
+        Plugin p(name);
+        p.Priority(priority);
+
+        //Compare this plugin against the given plugin.
+        set<File> files = plugin.LoadAfter();
+        set<File> filesDiff;
+        set_difference(files.begin(), files.end(), loadAfter.begin(), loadAfter.end(), inserter(filesDiff, filesDiff.begin()));
+        p.LoadAfter(filesDiff);
+
+        filesDiff.clear();
+        files = plugin.Reqs();
+        set_difference(files.begin(), files.end(), requirements.begin(), requirements.end(), inserter(filesDiff, filesDiff.begin()));
+        p.Reqs(filesDiff);
+
+        filesDiff.clear();
+        files = plugin.Incs();
+        set_difference(files.begin(), files.end(), incompatibilities.begin(), incompatibilities.end(), inserter(filesDiff, filesDiff.begin()));
+        p.Incs(filesDiff);
+
+        list<Message> msgs1 = plugin.Messages();
+        list<Message> msgs2 = messages;
+        msgs1.sort();
+        msgs2.sort();
+        list<Message> mDiff;
+        set_difference(msgs1.begin(), msgs1.end(), msgs2.begin(), msgs2.end(), inserter(mDiff, mDiff.begin()));
+        p.Messages(mDiff);
+
+        set<Tag> bashTags = plugin.Tags();
+        set<Tag> tagDiff;
+        set_difference(bashTags.begin(), bashTags.end(), tags.begin(), tags.end(), inserter(tagDiff, tagDiff.begin()));
+        p.Tags(tagDiff);
+
+        return p;
     }
 
     std::string Plugin::Name() const {
@@ -454,10 +507,8 @@ namespace boss {
     boost::unordered_set<FormID,FormID_hash> Plugin::OverlapFormIDs(const Plugin& plugin) const {
         boost::unordered_set<FormID,FormID_hash> otherFormIDs = plugin.FormIDs();
         boost::unordered_set<FormID,FormID_hash> overlap;
-        for (boost::unordered_set<FormID,FormID_hash>::const_iterator it=formIDs.begin(), endIt=formIDs.end(); it != endIt; ++it) {
-            if (otherFormIDs.find(*it) != otherFormIDs.end())
-                overlap.insert(*it);
-        }
+
+        set_intersection(formIDs.begin(), formIDs.end(), otherFormIDs.begin(), otherFormIDs.end(), inserter(overlap, overlap.begin()));
 
         return overlap;
     }
@@ -479,14 +530,10 @@ namespace boss {
             if (boost::iequals(*it, plugin.Name()))
                 return true;
         }
-        for (set<File>::const_iterator it=requirements.begin(), endIt=requirements.end(); it != endIt; ++it) {
-            if (boost::iequals(it->Name(), plugin.Name()))
-                return true;
-        }
-        for (set<File>::const_iterator it=loadAfter.begin(), endIt=loadAfter.end(); it != endIt; ++it) {
-            if (boost::iequals(it->Name(), plugin.Name()))
-                return true;
-        }
+        if (find(requirements.begin(), requirements.end(), plugin) != requirements.end())
+            return true;
+        if (find(loadAfter.begin(), loadAfter.end(), plugin) != requirements.end())
+            return true;
         return false;
     }
 
@@ -507,5 +554,9 @@ namespace boss {
                 issues.insert(pair<string,bool>(it->Name(),true));
         }
         return issues;
+    }
+
+    bool operator == (const File& lhs, const Plugin& rhs) {
+        return boost::iequals(lhs.Name(), rhs.Name());
     }
 }

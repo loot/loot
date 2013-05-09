@@ -35,8 +35,16 @@ class Editor : public wxFrame {
 public:
     Editor(const wxString title, wxFrame *parent);
 
+    void SetList(const std::vector<boss::Plugin>& basePlugins, const std::vector<boss::Plugin>& editedPlugins);
+    void IsSorted(bool sorted);
+
+    void OnPluginSelect(wxListEvent& event);
+    void OnPriorityChange(wxSpinEvent& event);
+    DECLARE_EVENT_TABLE()
 private:
-    wxListBox * pluginList;
+
+    bool IsCurrentPluginEdited() const;
+    boss::Plugin GetOriginal(const boss::Plugin& plugin, bool withEdits) const;
     
     wxButton * addFileBtn;
     wxButton * editFileBtn;
@@ -46,27 +54,31 @@ private:
     wxButton * editMsgBtn;
     wxButton * removeMsgBtn;
     
-    wxButton * addTagBtn;
-    wxButton * editTagBtn;
-    wxButton * removeTagBtn;
-    
     wxButton * saveEditsBtn;
     wxButton * undoEditsBtn;
     wxButton * recalcBtn;
     wxButton * applyBtn;
     wxButton * cancelBtn;
     
-    wxCheckBox * enableUserEditsBox;
-    wxSpinCtrl * prioritySpin;
-    wxStaticText * pluginText;
-    wxNotebook * filesBook;
+    wxListCtrl * pluginList;
     wxListCtrl * reqsList;
     wxListCtrl * incsList;
     wxListCtrl * loadAfterList;
     wxListCtrl * messageList;
     wxListCtrl * tagsList;
+    
+    wxNotebook * filesBook;
+    wxNotebook * messagesBook;
+    
+    wxCheckBox * enableUserEditsBox;
+    wxSpinCtrl * prioritySpin;
+    wxStaticText * pluginText;
 
-    std::vector<boss::Plugin> plugins;
+    wxBoxSizer * sortingButtons;
+
+    std::vector<boss::Plugin> _basePlugins, _editedPlugins;
+
+    boss::Plugin currentPlugin;
 };
 
 #endif

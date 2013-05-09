@@ -96,6 +96,9 @@ namespace boss {
         Message(const std::string& type, const std::string& content);
         Message(const std::string& type, const std::string& content,
                 const std::string& condition, const std::string& language);
+                
+        bool operator < (const Message& rhs) const;
+        bool operator == (const Message& rhs) const;
 
         std::string Type() const;
         std::string Language() const;
@@ -113,6 +116,7 @@ namespace boss {
                                      const std::string& condition);
 
         bool operator < (const File& rhs) const;
+        bool operator == (const File& rhs) const;
 
         std::string Name() const;
         std::string DisplayName() const;
@@ -127,6 +131,7 @@ namespace boss {
         Tag(const std::string& tag, const std::string& condition);
 
         bool operator < (const Tag& rhs) const;
+        bool operator == (const Tag& rhs) const;
 
         bool IsAddition() const;
         std::string Name() const;
@@ -142,6 +147,7 @@ namespace boss {
         Plugin(const boss::Game& game, const std::string& name);
 
         void Merge(const Plugin& plugin, bool ifdDisabled = false);
+        Plugin DiffMetadata(const Plugin& plugin) const;
 
         std::string Name() const;
         bool Enabled() const;
@@ -201,6 +207,8 @@ namespace boss {
         std::string version;  //Obtained from description field.
         bool isMaster;
     };
+    
+    bool operator == (const File& lhs, const Plugin& rhs);
 }
 
 #endif

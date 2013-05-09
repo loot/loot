@@ -181,20 +181,8 @@ bool BossGUI::OnInit() {
                 break;
             }
         }
-    } else {
-        if (Game(GAME_NEHRIM, false).IsInstalledLocally())  //Before Oblivion because Nehrim installs can have Oblivion.esm for porting mods.
-            targetGame = GAME_NEHRIM;
-        else if (Game(GAME_TES4, false).IsInstalledLocally())
-            targetGame = GAME_TES4;
-        else if (Game(GAME_TES5, false).IsInstalledLocally())
-            targetGame = GAME_TES5;
-        else if (Game(GAME_FONV, false).IsInstalledLocally())  //Before Fallout 3 because some mods for New Vegas require Fallout3.esm.
-            targetGame = GAME_FONV;
-        else if (Game(GAME_FO3, false).IsInstalledLocally())
-            targetGame = GAME_FO3;
-        else
-            targetGame = detected[0];
-    }
+    } else
+        targetGame = detected[0];
     targetGame = GAME_TES5;
     Game game(targetGame);
 
@@ -210,30 +198,37 @@ bool BossGUI::OnInit() {
 
 Launcher::Launcher(const wxChar *title, const YAML::Node& settings, const Game& game, const vector<unsigned int>& detectedGames) : wxFrame(NULL, wxID_ANY, title), _game(game), _detectedGames(detectedGames), _settings(settings) {
 
-    //Set up menu bar first.
-    MenuBar = new wxMenuBar();
-    // File Menu
-    FileMenu = new wxMenu();
+    //Initialise menu items.
+    wxMenuBar * MenuBar = new wxMenuBar();
+    wxMenu * FileMenu = new wxMenu();
+    wxMenu * EditMenu = new wxMenu();
+    GameMenu = new wxMenu();
+    wxMenu * HelpMenu = new wxMenu();
+
+	//Initialise controls.
+    wxButton * EditButton = new wxButton(this,OPTION_EditMetadata, translate("Edit Metadata"));
+    wxButton * SortButton = new wxButton(this,OPTION_SortPlugins, translate("Sort Plugins"));
+    ViewButton = new wxButton(this,OPTION_ViewLastReport, translate("View Last Report"));
+
+    //Construct menus.
+    //File Menu
 	FileMenu->Append(OPTION_ViewLastReport, translate("&View Last Report"), translate("Opens your last report."));
     FileMenu->Append(OPTION_SortPlugins, translate("&Sort Plugins"), translate("Sorts your installed plugins."));
     FileMenu->AppendSeparator();
     FileMenu->Append(MENU_Quit, translate("&Quit"), translate("Quit BOSS."));
     MenuBar->Append(FileMenu, translate("&File"));
 	//Edit Menu
-	EditMenu = new wxMenu();
 	EditMenu->Append(OPTION_EditMetadata, translate("&Metadata..."), translate("Opens a window where you can edit plugin metadata."));
 	EditMenu->Append(MENU_ShowSettings, translate("&Settings..."), translate("Opens the Settings window."));
 	MenuBar->Append(EditMenu, translate("&Edit"));
 	//Game menu
-	GameMenu = new wxMenu();
 	GameMenu->AppendRadioItem(MENU_Oblivion, wxT("&Oblivion"), translate("Switch to running BOSS for Oblivion."));
 	GameMenu->AppendRadioItem(MENU_Nehrim, wxT("&Nehrim"), translate("Switch to running BOSS for Nehrim."));
 	GameMenu->AppendRadioItem(MENU_Skyrim, wxT("&Skyrim"), translate("Switch to running BOSS for Skyrim."));
 	GameMenu->AppendRadioItem(MENU_Fallout3, wxT("&Fallout 3"), translate("Switch to running BOSS for Fallout 3."));
 	GameMenu->AppendRadioItem(MENU_FalloutNewVegas, wxT("&Fallout: New Vegas"), translate("Switch to running BOSS for Fallout: New Vegas."));
 	MenuBar->Append(GameMenu, translate("&Active Game"));
-    // About menu
-    HelpMenu = new wxMenu();
+    //About menu
 	HelpMenu->Append(MENU_OpenMainReadMe, translate("Open &Main Readme"), translate("Opens the main BOSS readme in your default web browser."));
 	HelpMenu->Append(MENU_OpenSyntaxReadMe, translate("Open &Metadata File Syntax Doc"), translate("Opens the BOSS metadata file syntax documentation in your default web browser."));
 	HelpMenu->Append(MENU_OpenAPIReadMe, translate("&Open API Readme"), translate("Opens the BOSS API readme in your default web browser."));
@@ -242,17 +237,14 @@ Launcher::Launcher(const wxChar *title, const YAML::Node& settings, const Game& 
 	HelpMenu->AppendSeparator();
 	HelpMenu->Append(MENU_ShowAbout, translate("&About BOSS..."), translate("Shows information about BOSS."));
     MenuBar->Append(HelpMenu, translate("&Help"));
-    SetMenuBar(MenuBar);
 
-	//Set up stuff in the frame.
-	SetBackgroundColour(wxColour(255,255,255));
-
-    //Add the three buttons.
+    //Set up layout.
     wxBoxSizer *buttonBox = new wxBoxSizer(wxVERTICAL);
-	buttonBox->Add(EditButton = new wxButton(this,OPTION_EditMetadata, translate("Edit Metadata")), 1, wxEXPAND|wxALIGN_CENTRE|wxALL, 10);
-	buttonBox->Add(SortButton = new wxButton(this,OPTION_SortPlugins, translate("Sort Plugins")), 1, wxEXPAND|wxALIGN_CENTRE|wxLEFT|wxRIGHT, 10);
-	buttonBox->Add(ViewButton = new wxButton(this,OPTION_ViewLastReport, translate("View Last Report")), 1, wxEXPAND|wxALIGN_CENTRE|wxALL, 10);
+	buttonBox->Add(EditButton, 1, wxEXPAND|wxALIGN_CENTRE|wxALL, 10);
+	buttonBox->Add(SortButton, 1, wxEXPAND|wxALIGN_CENTRE|wxLEFT|wxRIGHT, 10);
+	buttonBox->Add(ViewButton, 1, wxEXPAND|wxALIGN_CENTRE|wxALL, 10);
 
+    //Set up initial state.
     SortButton->SetDefault();
 
 	if (_game.Id() == GAME_TES4)
@@ -265,10 +257,15 @@ Launcher::Launcher(const wxChar *title, const YAML::Node& settings, const Game& 
 		GameMenu->FindItem(MENU_Fallout3)->Check();
 	else if (_game.Id() == GAME_FONV)
 		GameMenu->FindItem(MENU_FalloutNewVegas)->Check();
+
+    if (!fs::exists(_game.ResultsPath()))
+        ViewButton->Enable(false);
         
 	DisableUndetectedGames();
 
     //Now set the layout and sizes.
+    SetMenuBar(MenuBar);
+	SetBackgroundColour(wxColour(255,255,255));
 	SetSizerAndFit(buttonBox);
     SetSize(wxSize(250, 200));
 }
@@ -488,14 +485,41 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     out.close();
 
     progDia->Destroy();
+
+    //Create editor window.
+    Editor *editor = new Editor(translate("BOSS: Metadata Editor"), this);
+    editor->SetIcon(wxIconLocation("BOSS.exe"));
+
+    //The 'plugins' list contains the merged plugin info, but we want to pass a vector of plugins with only masterlist info in its place, so have to construct that.
+    vector<boss::Plugin> pluginVec;
+    for (list<boss::Plugin>::const_iterator it=plugins.begin(), endit=plugins.end(); it != endit; ++it) {
+        boss::Plugin p = *it;
+        list<boss::Plugin>::iterator pos = std::find(mlist_plugins.begin(), mlist_plugins.end(), *it);
+
+        if (pos != mlist_plugins.end())
+            p.Merge(*pos);
+
+        pluginVec.push_back(p);
+    }
+    vector<boss::Plugin> ulistPluginVec(ulist_plugins.begin(), ulist_plugins.end());
+
+    //Pass plugin lists to editor window.
+    editor->SetList(pluginVec, ulistPluginVec);
+
+    //Tell the editor that it's not being shown as part of the load order sort process.
+    editor->IsSorted(true);
+    
+	editor->Show();
+
+    ViewButton->Enable(true);
 }
 
 void Launcher::OnEditMetadata(wxCommandEvent& event) {
     //Parse the userlist and masterlist and get a list of installed plugins.
 
-    list<boss::Plugin> plugins;
+    vector<boss::Plugin> plugins;
     YAML::Node mlist, ulist;
-    list<boss::Plugin> mlist_plugins, ulist_plugins;
+    vector<boss::Plugin> mlist_plugins, ulist_plugins;
     
     for (fs::directory_iterator it(_game.DataPath()); it != fs::directory_iterator(); ++it) {
         if (fs::is_regular_file(it->status()) && (it->path().extension().string() == ".esp" || it->path().extension().string() == ".esm")) {
@@ -517,7 +541,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
 				NULL);
         }
         if (mlist["plugins"])
-            mlist_plugins = mlist["plugins"].as< list<boss::Plugin> >();
+            mlist_plugins = mlist["plugins"].as< vector<boss::Plugin> >();
     }
 
     if (fs::exists(_game.UserlistPath())) {
@@ -532,12 +556,36 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
 				NULL);
         }
         if (ulist["plugins"])
-            ulist_plugins = ulist["plugins"].as< list<boss::Plugin> >();
+            ulist_plugins = ulist["plugins"].as< vector<boss::Plugin> >();
     }
 
+    //Cut out any plugins in the masterlist that aren't installed or in the userlist.
+    //Merge down to the plugin list so that it holds all uneditable metadata.
+    list<boss::Plugin> slim_mlist;
     
+    for (vector<boss::Plugin>::const_iterator it=mlist_plugins.begin(), endit=mlist_plugins.end(); it != endit; ++it) {
+        vector<boss::Plugin>::iterator pos = std::find(plugins.begin(), plugins.end(), *it);
+
+        if (pos != plugins.end())
+            pos->Merge(*it);
+        else if (std::find(ulist_plugins.begin(), ulist_plugins.end(), *it) != ulist_plugins.end())
+            plugins.push_back(*it);
+    }
+
+    //Sort into alphabetical order.
+    std::sort(plugins.begin(), plugins.end(), AlphaSortPlugins);
+    std::sort(ulist_plugins.begin(), ulist_plugins.end(), AlphaSortPlugins);
+
+    //Create editor window.
     Editor *editor = new Editor(translate("BOSS: Metadata Editor"), this);
     editor->SetIcon(wxIconLocation("BOSS.exe"));
+
+    //Pass plugin lists to editor window.
+    editor->SetList(plugins, ulist_plugins);
+
+    //Tell the editor that it's not being shown as part of the load order sort process.
+    editor->IsSorted(false);
+    
 	editor->Show();
 }
 
@@ -647,4 +695,8 @@ void Launcher::DisableUndetectedGames() {
 	}
 
 	SetTitle(wxT("BOSS - " + _game.Name()));  //Don't need to convert name, known to be only ASCII chars.
+}
+
+bool Launcher::AlphaSortPlugins(const boss::Plugin& lhs, const boss::Plugin& rhs) {
+    return boost::to_lower_copy(lhs.Name()) < boost::to_lower_copy(rhs.Name());
 }
