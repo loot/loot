@@ -76,18 +76,19 @@ SettingsFrame::SettingsFrame(const wxString title, wxFrame *parent, YAML::Node& 
     wxButton * cancelBtn = new wxButton(this, OPTION_CancelExitSettings, translate("Cancel"), wxDefaultPosition, wxSize(70, 30));
 
     //Set up layout.
-	wxSizerFlags leftItem(1);
-	leftItem.Border(wxALL, 10).Expand().Left();
+	wxSizerFlags leftItem(0);
+	leftItem.Left();
 
-	wxSizerFlags rightItem(0);
-	rightItem.Border(wxALL, 10).Expand().Right();
+	wxSizerFlags rightItem(1);
+	rightItem.Right();
 
-	wxSizerFlags wholeItem(1);
-	wholeItem.Border(wxALL, 10).Expand();
+	wxSizerFlags wholeItem(0);
+	wholeItem.Border(wxLEFT|wxRIGHT|wxBOTTOM, 10);
 
     wxBoxSizer * bigBox = new wxBoxSizer(wxVERTICAL);
 
 	wxFlexGridSizer * GridSizer = new wxFlexGridSizer(2, 5, 5);
+    GridSizer->AddGrowableCol(1,1);
 
 	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Default Game:")), leftItem);
 	GridSizer->Add(GameChoice, rightItem);
@@ -97,6 +98,8 @@ SettingsFrame::SettingsFrame(const wxString title, wxFrame *parent, YAML::Node& 
 	
     GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Debug Verbosity:")), leftItem);
 	GridSizer->Add(DebugVerbosityChoice, rightItem);
+
+    rightItem.Expand();
 
     GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Oblivion Masterlist URL:")), leftItem);
 	GridSizer->Add(OblivionURL, rightItem);
@@ -113,19 +116,23 @@ SettingsFrame::SettingsFrame(const wxString title, wxFrame *parent, YAML::Node& 
     GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Fallout: New Vegas Masterlist URL:")), leftItem);
 	GridSizer->Add(FONVURL, rightItem);
     
-	bigBox->Add(GridSizer);
+	bigBox->Add(GridSizer, 0, wxEXPAND|wxALL, 10);
    
     bigBox->Add(UpdateMasterlistBox, wholeItem);
+
+    bigBox->AddStretchSpacer(1);
 	
 	bigBox->Add(new wxStaticText(this, wxID_ANY, translate("Settings will be applied after BOSS is restarted.")), wholeItem);
 	
 	//Need to add 'OK' and 'Cancel' buttons.
 	wxBoxSizer * hbox = new wxBoxSizer(wxHORIZONTAL);
 	hbox->Add(okBtn);
-	hbox->Add(cancelBtn, 0, wxLEFT, 20);
+	hbox->Add(cancelBtn, 0, wxLEFT, 10);
+
+    wholeItem.Centre();
 
 	//Now add TabHolder and OK button to window sizer.
-	bigBox->Add(hbox, 0, wxCENTER|wxALL, 10);
+	bigBox->Add(hbox, wholeItem);
 
 	//Initialise options with values. For checkboxes, they are off by default.
 	SetDefaultValues();

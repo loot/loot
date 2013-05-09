@@ -655,7 +655,8 @@ void Launcher::OnAbout(wxCommandEvent& event) {
     wxAboutDialogInfo aboutInfo;
     aboutInfo.SetName("BOSS");
     aboutInfo.SetVersion(IntToString(VERSION_MAJOR)+"."+IntToString(VERSION_MINOR)+"."+IntToString(VERSION_PATCH));
-    aboutInfo.SetDescription(translate("A utility that optimises \nTES IV: Oblivion, Nehrim - At Fate's Edge, TES V: Skyrim, Fallout 3 and Fallout: New Vegas mod load orders."));
+    aboutInfo.SetDescription(translate(
+    "A utility that optimises TES IV: Oblivion, Nehrim - At Fate's Edge,\nTES V: Skyrim, Fallout 3 and Fallout: New Vegas mod load orders."));
     aboutInfo.SetCopyright("Copyright (C) 2009-2013 BOSS Development Team.");
     aboutInfo.SetWebSite("http://code.google.com/p/better-oblivion-sorting-software/");
 	aboutInfo.SetLicence("This program is free software: you can redistribute it and/or modify\n"
