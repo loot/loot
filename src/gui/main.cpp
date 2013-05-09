@@ -183,7 +183,6 @@ bool BossGUI::OnInit() {
         }
     } else
         targetGame = detected[0];
-    targetGame = GAME_TES5;
     Game game(targetGame);
 
     //Create launcher window.

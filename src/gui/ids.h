@@ -68,11 +68,11 @@ enum {
     BUTTON_AddMessage,
     BUTTON_EditMessage,
     BUTTON_RemoveMessage,
-    BUTTON_SaveEdits,
-    BUTTON_UndoEdits,
     BUTTON_Recalc,
     BUTTON_Apply,
-    BUTTON_Cancel
+    BUTTON_Cancel,
+    BOOK_Files,
+    BOOK_Messages
 };
 
 wxString translate(const std::string& str);

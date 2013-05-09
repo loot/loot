@@ -117,7 +117,7 @@ SettingsFrame::SettingsFrame(const wxString title, wxFrame *parent, YAML::Node& 
    
     bigBox->Add(UpdateMasterlistBox, wholeItem);
 	
-	bigBox->Add(new wxStaticText(this, wxID_ANY, translate("Settings are applied after BOSS is restarted.")), wholeItem);
+	bigBox->Add(new wxStaticText(this, wxID_ANY, translate("Settings will be applied after BOSS is restarted.")), wholeItem);
 	
 	//Need to add 'OK' and 'Cancel' buttons.
 	wxBoxSizer * hbox = new wxBoxSizer(wxHORIZONTAL);

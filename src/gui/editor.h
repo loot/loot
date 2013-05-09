@@ -39,7 +39,11 @@ public:
     void IsSorted(bool sorted);
 
     void OnPluginSelect(wxListEvent& event);
+    void OnEnabledToggle(wxCommandEvent& event);
     void OnPriorityChange(wxSpinEvent& event);
+    void OnFileBookChange(wxBookCtrlEvent& event);
+    void OnMessageBookChange(wxBookCtrlEvent& event);
+    void OnQuit(wxCommandEvent& event);
     DECLARE_EVENT_TABLE()
 private:
 
@@ -54,8 +58,6 @@ private:
     wxButton * editMsgBtn;
     wxButton * removeMsgBtn;
     
-    wxButton * saveEditsBtn;
-    wxButton * undoEditsBtn;
     wxButton * recalcBtn;
     wxButton * applyBtn;
     wxButton * cancelBtn;
@@ -73,8 +75,6 @@ private:
     wxCheckBox * enableUserEditsBox;
     wxSpinCtrl * prioritySpin;
     wxStaticText * pluginText;
-
-    wxBoxSizer * sortingButtons;
 
     std::vector<boss::Plugin> _basePlugins, _editedPlugins;
 
