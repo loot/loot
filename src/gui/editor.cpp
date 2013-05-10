@@ -621,6 +621,12 @@ void Editor::OnRowSelect(wxListEvent& event) {
 
 void Editor::OnQuit(wxCommandEvent& event) {
     if (event.GetId() == BUTTON_Apply) {
+
+        //Apply any current edits.
+        wxString currentPlugin = pluginText->GetLabelText();
+        if (!currentPlugin.empty())
+            ApplyEdits(currentPlugin);
+        
         //Save edits to userlist.
         YAML::Emitter yout;
         yout.SetIndent(2);
