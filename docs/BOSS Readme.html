@@ -110,6 +110,8 @@ This documentation is a work in progress, covering an application that is also s
         <li><a href="#appendix-dirty">Dirty Edits, Mod Cleaning &amp; CRCs</a>
         <li><a href="#appendix-permissions">File Permissions</a>
     </ol>
+    <li><a href="BOSS%20API%20Readme.html">API Readme</a> (separate document)
+    <li><a href="BOSS%20Metadata%20File%20Syntax.html">Metadata File Syntax</a> (separate document)
 </ol>
 
 <h2 id="intro">Introduction</h2>
@@ -153,6 +155,55 @@ This documentation is a work in progress, covering an application that is also s
 <h3 id="usage-sort">Sorting Plugins</h3>
 
 <h3 id="usage-custom">Customising BOSS's Results</h3>
+<figure>
+    <img src="images/editor.png">
+    <figcaption>BOSS's metadata editor.</figcaption>
+</figure>
+<p>BOSS's sorting algorithm uses the contents of plugins to work out where they should load relative to one another. However, this is sometimes not enough for it to produce a correct load order. In such cases, additional metadata can be supplied so that the plugins get sorted correctly.
+<p>This metadata is supplied to BOSS by two sources: one is the masterlist, which is maintained by the BOSS Team, and the other is the userlist, which you can edit as you desire.
+<p>The metadata editor allows you to manage the metadata stored in their userlist without having to use a text editor. When opened, it lists all the plugins you have installed, and any that are missing but have existing user-added metadata, in alphabetical order. Clicking on a plugin then opens its metadata for editing, and displays any existing metadata in the fields to the right of the plugin list. These fields are explained in the table below.
+<p>The <q>Add &#x2026;</q>, <q>Edit &#x2026;</q> and <q>Remove &#x2026;</q> buttons are used to edit the contents of the list field currently visible. The <q>Edit &#x2026;</q> and <q>Remove &#x2026;</q> buttons are greyed out if no row is selected or if the selected row is not user-added metadata, but comes from the masterlist or the plugin itself. Metadata that comes from the masterlist or the plugin itself cannot be edited or removed, only added to. This is to prevent users from accidently overriding important metadata.
+<p>The <q>Save Changes</q> button will save any user-added metadata to your userlist, including any changes made, then exit the metadata editor. The <q>Cancel</q> button will exit the editor without saving any changes.
+<table>
+    <thead>
+        <tr><th>Field<th>Description
+    <tbody>
+        <tr><td>Enable User Changes<td>If this is checked, BOSS will use the metadata you supplied when sorting the current plugin. Otherwise, your metadata will be ignored.
+        <tr><td>Priority<td>This is a very rough control for determining how far up or down the load order a plugin should go. Plugins with equal priority will be compared as normal by the sorting algorithm, but plugins with a larger priority value will load later in the load order than plugins with a smaller priority value, unless the former depends on the latter or the latter is explicity told to load after the former. Plugins have a default priority of <code>0</code>.
+        <tr><td>Requirements<td>This is a list of files that are required by the current plugin for it to function correctly. BOSS will refuse to sort your load order if any of the listed files are missing, and will instead display an error message detailing the problem. 
+        <p>Any file, not just plugins, can be listed here, and each file has three sub-fields:
+        <ul>
+            <li>The <var>filename</var> is the path, relative to the game's Data folder, of the file to be checked for. This sub-field is required.
+            <li>The <var>display name</var> is optional, and if specified will be used instead of the <var>filename</var> in any error messages that are displayed if a problem is encountered relating to the file.
+            <li>The <var>condition</var> is the optional condition string that is used to determine if the file should be checked for. If left blank, the file will always be checked for. Condition strings are a relatively advanced part of BOSS's functionality, and their syntax is covered in the <a href="BOSS%20Metadata%20File%20Syntax.html">Metadata Metadata Syntax</a> documentation.
+        </ul>
+        <p>Note that listing a plugin's masters as requirements is pointless, as BOSS already checks them.
+        <tr><td>Incompatibilities<td>This is a list of files that are incompatible with the plugin. BOSS will refuse to sort your load order if any of the listed files are found, and will instead display an error message detailing the problem.
+        <p>Any file, not just plugins, can be listed here, and each file has the same three sub-fields as for the requirements field.
+        <tr><td>Load After<td>This is a list of plugins which, if present, the current plugin must load after, but which are not required. This field can be used for resolving specific compatibility issues.
+        <tr><td>Messages<td>A list of messages that are to be displayed for the plugin in BOSS's report. These have no bearing on a plugin's position in the load order, but the messages BOSS provides for plugins are one of its most important features.
+        <p>Each message has four sub-fields:
+        <ul>
+            <li>The <var>type</var> is fairly self-explanatory, and is used to provide messages of varying severity with appropriate emphasis in BOSS's report.
+            <li>The <var>content</var> is the actual message text.
+            <li>The <var>condition</var> is, like for the corresponding file sub-field, used to determine if the message should be displayed. If left blank, the message is displayed.
+            <li>The <var>language</var> is the language BOSS runs in that the message will be displayed for. For example, if the message language is set to <code>English</code> and BOSS is running in German, then the message will not be displayed. If left unspecified, the message will be shown no matter what language BOSS is running in. 
+        </ul>
+        <p>If a message's condition determines that the message should be displayed, but the language is specified and doesn't match the language BOSS is running in, then the message will not be displayed. However, if the condition determines the message should not be displayed and the language matches the language BOSS is running in, the message will still not be displayed.
+        <tr><td>Bash Tags<td>A list of Bash Tags. These are used by the <abbr title="Wrye Bash, Wrye Flash or Wrye Flash NV">Wrye *ash</abbr> utilities when generating a Bashed Patch. BOSS's metadata includes Bash Tag addition and removal suggestions, and any Bash Tags that came with the plugin are also displayed.
+        <p>As BOSS can suggest Bash Tags be added or removed, it is possible for the same Tag to appear twice, being suggested for addition and removal. In such cases, removal overrides addition.
+        <p>Each Bash Tag has three sub-fields:
+        <ul>
+            <li>The <var>state</var> determines whether the Tag is to be suggested for addition or removal.
+            <li>The <var>name</var> is the actual Bash Tag name.
+            <li>The <var>condition</var> decides if the Tag is to be suggested or not. It functions as for files and messages.
+        </ul>
+        <p>A few Bash Tags are used by BOSS in its load order error checking:
+        <ul>
+            <li>If an active mod has the <code>Deactivate</code> tag applied (not merely suggested), an error message will be displayed for it.
+            <li>If a plugin's masters are missing, an error message will be displayed for it. Filter patches are special mods designed for use with a Bashed Patch that do not require all their masters to be present, and so any plugin with the <code>Filter</code> tag applied and missing masters will not cause any errors to be displayed.
+</table>
+
 
 <h3 id="usage-log">The Results Report</h3>
 
