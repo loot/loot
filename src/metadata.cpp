@@ -278,9 +278,12 @@ namespace boss {
         //The following should be replaced.
         enabled = plugin.Enabled();
         priority = plugin.Priority();
-        masters = plugin.Masters();
-        formIDs = plugin.FormIDs();
-        isMaster = plugin.IsMaster();
+        if (!plugin.Masters().empty())
+            masters = plugin.Masters();
+        if (!plugin.FormIDs().empty())
+            formIDs = plugin.FormIDs();
+        if (!isMaster)
+            isMaster = plugin.IsMaster();
 
         //Merge the following. If any files in the source already exist in the destination, they will be skipped. Files have display strings and condition strings which aren't considered when comparing them, so will be lost if the plugin being merged in has additional data in these strings.
         std::set<File> files = plugin.LoadAfter();
@@ -310,17 +313,17 @@ namespace boss {
         //Compare this plugin against the given plugin.
         set<File> files = plugin.LoadAfter();
         set<File> filesDiff;
-        set_difference(files.begin(), files.end(), loadAfter.begin(), loadAfter.end(), inserter(filesDiff, filesDiff.begin()));
+        set_symmetric_difference(files.begin(), files.end(), loadAfter.begin(), loadAfter.end(), inserter(filesDiff, filesDiff.begin()));
         p.LoadAfter(filesDiff);
 
         filesDiff.clear();
         files = plugin.Reqs();
-        set_difference(files.begin(), files.end(), requirements.begin(), requirements.end(), inserter(filesDiff, filesDiff.begin()));
+        set_symmetric_difference(files.begin(), files.end(), requirements.begin(), requirements.end(), inserter(filesDiff, filesDiff.begin()));
         p.Reqs(filesDiff);
 
         filesDiff.clear();
         files = plugin.Incs();
-        set_difference(files.begin(), files.end(), incompatibilities.begin(), incompatibilities.end(), inserter(filesDiff, filesDiff.begin()));
+        set_symmetric_difference(files.begin(), files.end(), incompatibilities.begin(), incompatibilities.end(), inserter(filesDiff, filesDiff.begin()));
         p.Incs(filesDiff);
 
         list<Message> msgs1 = plugin.Messages();
@@ -328,12 +331,12 @@ namespace boss {
         msgs1.sort();
         msgs2.sort();
         list<Message> mDiff;
-        set_difference(msgs1.begin(), msgs1.end(), msgs2.begin(), msgs2.end(), inserter(mDiff, mDiff.begin()));
+        set_symmetric_difference(msgs1.begin(), msgs1.end(), msgs2.begin(), msgs2.end(), inserter(mDiff, mDiff.begin()));
         p.Messages(mDiff);
 
         set<Tag> bashTags = plugin.Tags();
         set<Tag> tagDiff;
-        set_difference(bashTags.begin(), bashTags.end(), tags.begin(), tags.end(), inserter(tagDiff, tagDiff.begin()));
+        set_symmetric_difference(bashTags.begin(), bashTags.end(), tags.begin(), tags.end(), inserter(tagDiff, tagDiff.begin()));
         p.Tags(tagDiff);
 
         return p;

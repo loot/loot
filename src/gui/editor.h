@@ -73,8 +73,13 @@ private:
 
     void ApplyEdits(const wxString& plugin);
     
-    boss::Plugin GetInitialData(const wxString& plugin) const;
+    boss::Plugin GetMasterData(const wxString& plugin) const;
+    boss::Plugin GetUserData(const wxString& plugin) const;
     boss::Plugin GetNewData(const wxString& plugin) const;
+
+    boss::File RowToFile(wxListView * list, long row) const;
+    boss::Message RowToMessage(wxListView * list, long row) const;
+    boss::Tag RowToTag(wxListView * list, long row) const;
 };
 
 class FileEditDialog : public wxDialog {

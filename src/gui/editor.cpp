@@ -25,6 +25,7 @@
 
 #include <wx/statline.h>
 #include <algorithm>
+#include <boost/algorithm/string.hpp>
 
 BEGIN_EVENT_TABLE( Editor, wxFrame )
     EVT_LIST_ITEM_SELECTED( LIST_Plugins, Editor::OnPluginSelect )
@@ -228,7 +229,8 @@ void Editor::OnPluginSelect(wxListEvent& event) {
         if (!currentPlugin.empty())
             ApplyEdits(currentPlugin);
 
-        boss::Plugin plugin = GetInitialData(selectedPlugin);
+        boss::Plugin plugin = GetMasterData(selectedPlugin);
+        plugin.Merge(GetUserData(selectedPlugin), true);
 
         //Now fill editor fields with new plugin's info and update control states.
         pluginText->SetLabelText(FromUTF8(plugin.Name()));
@@ -274,9 +276,9 @@ void Editor::OnPluginSelect(wxListEvent& event) {
         i=0;
         for (list<boss::Message>::const_iterator it=messages.begin(), endit=messages.end(); it != endit; ++it) {
 
-            if (it->Type() == "say")
+            if (boost::iequals(it->Type(),"say"))
                 messageList->InsertItem(i, Type[0]);
-            else if (it->Type() == "warn")
+            else if (boost::iequals(it->Type(), "warn"))
                 messageList->InsertItem(i, Type[1]);
             else
                 messageList->InsertItem(i, Type[2]);
@@ -331,6 +333,15 @@ void Editor::OnListBookChange(wxBookCtrlEvent& event) {
         editBtn->SetLabel(translate("Edit Bash Tag"));
         removeBtn->SetLabel(translate("Remove Bash Tag"));
     }
+    editBtn->Enable(false);
+    removeBtn->Enable(false);
+
+    reqsList->Select(reqsList->GetFirstSelected(), false);
+    incsList->Select(incsList->GetFirstSelected(), false);
+    loadAfterList->Select(loadAfterList->GetFirstSelected(), false);
+    messageList->Select(messageList->GetFirstSelected(), false);
+    tagsList->Select(tagsList->GetFirstSelected(), false);
+    
     Layout();
 }
 
@@ -515,6 +526,9 @@ void Editor::OnRemoveRow(wxCommandEvent& event) {
         list = tagsList;
 
     list->DeleteItem(list->GetFirstSelected());
+
+    editBtn->Enable(false);
+    removeBtn->Enable(false);
 }
 
 void Editor::OnRecalc(wxCommandEvent& event) {
@@ -522,10 +536,108 @@ void Editor::OnRecalc(wxCommandEvent& event) {
 }
 
 void Editor::OnRowSelect(wxListEvent& event) {
-    //Need to check if this row was added by the masterlist or the userlist. If the latter, enable the edit and remove buttons.
+    if (event.GetId() == LIST_Reqs) {
 
-    editBtn->Enable(true);
-    removeBtn->Enable(true);
+        //Create File object, search the masterlist vector for the plugin and search its reqs for this object.
+        boss::File file = RowToFile(reqsList, event.GetIndex());
+        boss::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
+
+        vector<boss::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
+
+        if (it != _basePlugins.end())
+            plugin = *it;
+
+        set<boss::File> reqs = plugin.Reqs();
+
+        if (reqs.find(file) == reqs.end()) {
+            editBtn->Enable(true);
+            removeBtn->Enable(true);
+        } else {
+            editBtn->Enable(false);
+            removeBtn->Enable(false);
+        }
+        
+    } else if (event.GetId() == LIST_Incs) {
+
+        boss::File file = RowToFile(incsList, event.GetIndex());
+        boss::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
+
+        vector<boss::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
+
+        if (it != _basePlugins.end())
+            plugin = *it;
+
+        set<boss::File> incs = plugin.Incs();
+
+        if (incs.find(file) == incs.end()) {
+            editBtn->Enable(true);
+            removeBtn->Enable(true);
+        } else {
+            editBtn->Enable(false);
+            removeBtn->Enable(false);
+        }
+
+    } else if (event.GetId() == LIST_LoadAfter) {
+
+        boss::File file = RowToFile(loadAfterList, event.GetIndex());
+        boss::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
+
+        vector<boss::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
+
+        if (it != _basePlugins.end())
+            plugin = *it;
+
+        set<boss::File> loadAfter = plugin.LoadAfter();
+
+        if (loadAfter.find(file) == loadAfter.end()) {
+            editBtn->Enable(true);
+            removeBtn->Enable(true);
+        } else {
+            editBtn->Enable(false);
+            removeBtn->Enable(false);
+        }
+
+    } else if (event.GetId() == LIST_Messages) {
+
+        boss::Message message = RowToMessage(messageList, event.GetIndex());
+        boss::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
+
+        vector<boss::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
+
+        if (it != _basePlugins.end())
+            plugin = *it;
+
+        list<boss::Message> messages = plugin.Messages();
+
+        if (find(messages.begin(), messages.end(), message) == messages.end()) {
+            editBtn->Enable(true);
+            removeBtn->Enable(true);
+        } else {
+            editBtn->Enable(false);
+            removeBtn->Enable(false);
+        }
+
+    } else {
+
+        boss::Tag tag = RowToTag(tagsList, event.GetIndex());
+        boss::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
+
+        vector<boss::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
+
+        if (it != _basePlugins.end())
+            plugin = *it;
+
+        set<boss::Tag> tags = plugin.Tags();
+
+        if (tags.find(tag) == tags.end()) {
+            editBtn->Enable(true);
+            removeBtn->Enable(true);
+        } else {
+            editBtn->Enable(false);
+            removeBtn->Enable(false);
+        }
+
+    }
 }
 
 
@@ -550,7 +662,7 @@ void Editor::OnQuit(wxCommandEvent& event) {
 }
 
 void Editor::ApplyEdits(const wxString& plugin) {
-    boss::Plugin initial = GetInitialData(plugin);
+    boss::Plugin initial = GetMasterData(plugin);
     boss::Plugin edited = GetNewData(plugin);
     
     boss::Plugin diff = edited.DiffMetadata(initial);
@@ -563,7 +675,7 @@ void Editor::ApplyEdits(const wxString& plugin) {
         _editedPlugins.push_back(diff);
 }
 
-boss::Plugin Editor::GetInitialData(const wxString& plugin) const {
+boss::Plugin Editor::GetMasterData(const wxString& plugin) const {
     boss::Plugin p;
     boss::Plugin p_in(string(plugin.ToUTF8()));
 
@@ -571,19 +683,100 @@ boss::Plugin Editor::GetInitialData(const wxString& plugin) const {
 
     if (it != _basePlugins.end())
         p = *it;
-        
-    it = std::find(_editedPlugins.begin(), _editedPlugins.end(), p_in);
+
+    return p;
+}
+
+boss::Plugin Editor::GetUserData(const wxString& plugin) const {
+    boss::Plugin p;
+    boss::Plugin p_in(string(plugin.ToUTF8()));
+
+    vector<boss::Plugin>::const_iterator it = std::find(_editedPlugins.begin(), _editedPlugins.end(), p_in);
 
     if (it != _editedPlugins.end())
-        p.Merge(*it, true);
+        p = *it;
 
     return p;
 }
 
 boss::Plugin Editor::GetNewData(const wxString& plugin) const {
-    boss::Plugin p;
+    boss::Plugin p(string(plugin.ToUTF8()));
+
+    p.Priority(prioritySpin->GetValue());
+    p.Enabled(enableUserEditsBox->IsChecked());
+
+    set<boss::File> files;
+    for (int i=0,max=reqsList->GetItemCount(); i < max; ++i) {
+        files.insert(RowToFile(reqsList, i));
+    }
+    p.Reqs(files);
+    files.clear();
+    
+    for (int i=0,max=incsList->GetItemCount(); i < max; ++i) {
+        files.insert(RowToFile(incsList, i));
+    }
+    p.Incs(files);
+    files.clear();
+    
+    for (int i=0,max=loadAfterList->GetItemCount(); i < max; ++i) {
+        files.insert(RowToFile(loadAfterList, i));
+    }
+    p.LoadAfter(files);
+
+    set<boss::Tag> tags;
+    for (int i=0,max=tagsList->GetItemCount(); i < max; ++i) {
+        tags.insert(RowToTag(tagsList, i));
+    }
+    p.Tags(tags);
+
+    list<boss::Message> messages;
+    for (int i=0,max=messageList->GetItemCount(); i < max; ++i) {
+        messages.push_back(RowToMessage(messageList, i));
+    }
+    p.Messages(messages);
 
     return p;
+}
+
+boss::File Editor::RowToFile(wxListView * list, long row) const {
+    return boss::File(
+        string(list->GetItemText(row, 0).ToUTF8()),
+        string(list->GetItemText(row, 1).ToUTF8()),
+        string(list->GetItemText(row, 2).ToUTF8())
+    );
+}
+
+boss::Message Editor::RowToMessage(wxListView * list, long row) const {
+    string type,language;
+    if (list->GetItemText(row, 0) == Type[0])
+        type = "say";
+    else if (list->GetItemText(row, 0) == Type[1])
+        type = "warn";
+    else
+        type = "error";
+    if (list->GetItemText(row, 3) == Language[0])
+        language = "";
+    else
+        language = "eng";
+    
+    return boss::Message(
+        type,
+        string(list->GetItemText(row, 1).ToUTF8()),
+        string(list->GetItemText(row, 2).ToUTF8()),
+        language
+    );
+}
+
+boss::Tag Editor::RowToTag(wxListView * list, long row) const {
+    string name = string(list->GetItemText(row, 1).ToUTF8());
+
+    if (list->GetItemText(row, 0) == State[1])
+        name = "-" + name;
+    
+    return boss::Tag(
+        name,
+        string(list->GetItemText(row, 2).ToUTF8())
+    );
 }
 
 FileEditDialog::FileEditDialog(wxWindow *parent, const wxString& title) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER) {
