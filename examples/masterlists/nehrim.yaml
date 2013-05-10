@@ -18,7 +18,7 @@ plugins:
     msg:
       - type: error
         content: This must not be activated. However, it can be useful when porting Oblivion mods to Nehrim.
-        condition: if active("Oblivion.esm")
+        condition: active("Oblivion.esm")
 
   - name: HorseCombatMaster.esm
     msg: [ *masterReassign ]
