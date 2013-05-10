@@ -56,7 +56,6 @@ enum {
     BUTTON_AddRow,
     BUTTON_EditRow,
     BUTTON_RemoveRow,
-    BUTTON_Recalc,
     BUTTON_Apply,
     BUTTON_Cancel,
     BOOK_Lists

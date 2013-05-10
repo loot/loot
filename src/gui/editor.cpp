@@ -40,7 +40,6 @@ BEGIN_EVENT_TABLE( Editor, wxFrame )
     EVT_BUTTON ( BUTTON_AddRow, Editor::OnAddRow )
     EVT_BUTTON ( BUTTON_EditRow, Editor::OnEditRow )
     EVT_BUTTON ( BUTTON_RemoveRow, Editor::OnRemoveRow )
-    EVT_BUTTON ( BUTTON_Recalc, Editor::OnRecalc )
 END_EVENT_TABLE()
 
 using namespace std;
@@ -65,7 +64,7 @@ wxString State[2] = {
     translate("Remove")
 };
 
-Editor::Editor(wxWindow *parent, const wxString& title, const boss::Game& game, const std::vector<boss::Plugin>& basePlugins, std::vector<boss::Plugin>& editedPlugins, bool showRecalcButton) : wxFrame(parent, wxID_ANY, title), _game(game), _basePlugins(basePlugins), _editedPlugins(editedPlugins) {
+Editor::Editor(wxWindow *parent, const wxString& title, const boss::Game& game, const std::vector<boss::Plugin>& basePlugins, std::vector<boss::Plugin>& editedPlugins) : wxFrame(parent, wxID_ANY, title), _game(game), _basePlugins(basePlugins), _editedPlugins(editedPlugins) {
 
     //Initialise child windows.
     listBook = new wxNotebook(this, BOOK_Lists);
@@ -85,8 +84,7 @@ Editor::Editor(wxWindow *parent, const wxString& title, const boss::Game& game, 
     addBtn = new wxButton(this, BUTTON_AddRow, translate("Add File"));
     editBtn = new wxButton(this, BUTTON_EditRow, translate("Edit File"));
     removeBtn = new wxButton(this, BUTTON_RemoveRow, translate("Remove File"));
-    recalcBtn = new wxButton(this, BUTTON_Recalc, translate("Recalculate Load Order"));
-    applyBtn = new wxButton(this, BUTTON_Apply, translate("Apply Load Order"));
+    applyBtn = new wxButton(this, BUTTON_Apply, translate("Save Changes"));
     cancelBtn = new wxButton(this, BUTTON_Cancel, translate("Cancel"));
 
     pluginList = new wxListView(this, LIST_Plugins, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL);
@@ -183,8 +181,7 @@ Editor::Editor(wxWindow *parent, const wxString& title, const boss::Game& game, 
     mainBox->AddSpacer(30);
 
     wxBoxSizer * hbox6 = new wxBoxSizer(wxHORIZONTAL);
-    hbox6->Add(recalcBtn, 0, wxRIGHT, 5);
-    hbox6->Add(applyBtn, 0, wxLEFT|wxRIGHT, 5);
+    hbox6->Add(applyBtn, 0, wxRIGHT, 5);
     hbox6->Add(cancelBtn, 0, wxLEFT, 5);
     mainBox->Add(hbox6, 0, wxALIGN_RIGHT);
 
@@ -195,16 +192,12 @@ Editor::Editor(wxWindow *parent, const wxString& title, const boss::Game& game, 
         pluginList->InsertItem(i, FromUTF8(_basePlugins[i].Name()));
     }
     pluginList->SetColumnWidth(0, wxLIST_AUTOSIZE);
-
-    if (!showRecalcButton) {
-        recalcBtn->Show(false);
-        applyBtn->SetLabel(translate("Save Changes"));
-    }
         
     SetBackgroundColour(wxColour(255,255,255));
     SetIcon(wxIconLocation("BOSS.exe"));
 
     SetSizerAndFit(bigBox);
+    Layout();
 }
 
 void Editor::OnPluginSelect(wxListEvent& event) {
@@ -520,10 +513,6 @@ void Editor::OnRemoveRow(wxCommandEvent& event) {
     removeBtn->Enable(false);
 }
 
-void Editor::OnRecalc(wxCommandEvent& event) {
-
-}
-
 void Editor::OnRowSelect(wxListEvent& event) {
     if (event.GetId() == LIST_Reqs) {
 
@@ -642,10 +631,6 @@ void Editor::OnQuit(wxCommandEvent& event) {
         ofstream out(_game.UserlistPath().string().c_str());
         out << yout.c_str();
         out.close();
-        
-        if (recalcBtn->IsShown()) {
-            //Signal that the load order should be written and the log opened.
-        }
     }
     Close();
 }

@@ -34,7 +34,7 @@
 
 class Editor : public wxFrame {
 public:
-    Editor(wxWindow *parent, const wxString& title, const boss::Game& game, const std::vector<boss::Plugin>& basePlugins, std::vector<boss::Plugin>& editedPlugins, bool showRecalcButton);
+    Editor(wxWindow *parent, const wxString& title, const boss::Game& game, const std::vector<boss::Plugin>& basePlugins, std::vector<boss::Plugin>& editedPlugins);
 
     void OnPluginSelect(wxListEvent& event);
     void OnEnabledToggle(wxCommandEvent& event);
@@ -52,7 +52,6 @@ private:
     wxButton * addBtn;
     wxButton * editBtn;
     wxButton * removeBtn;
-    wxButton * recalcBtn;
     wxButton * applyBtn;
     wxButton * cancelBtn;
     wxListView * pluginList;

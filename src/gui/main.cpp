@@ -584,7 +584,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
     std::sort(installed.begin(), installed.end(), AlphaSortPlugins);
 
     //Create editor window.
-    Editor *editor = new Editor(this, translate("BOSS: Metadata Editor"), _game, installed, ulist_plugins, false);
+    Editor *editor = new Editor(this, translate("BOSS: Metadata Editor"), _game, installed, ulist_plugins);
     
 	editor->Show();
 }
