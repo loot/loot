@@ -44,9 +44,6 @@ enum {
 	MENU_Skyrim,
 	MENU_Fallout3,
 	MENU_FalloutNewVegas,
-    //Settings window.
-    OPTION_OKExitSettings,
-	OPTION_CancelExitSettings,
     //Editor window.
     LIST_Plugins,
     LIST_Reqs,
@@ -54,7 +51,6 @@ enum {
     LIST_LoadAfter,
     LIST_Messages,
     LIST_BashTags,
-    SPIN_Priority,
     BUTTON_AddRow,
     BUTTON_EditRow,
     BUTTON_RemoveRow,

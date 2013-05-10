@@ -51,10 +51,6 @@ public:
     void OnQuit(wxCommandEvent& event);
     DECLARE_EVENT_TABLE()
 private:
-
-    bool IsCurrentPluginEdited() const;
-    boss::Plugin GetOriginal(const boss::Plugin& plugin, bool withEdits) const;
-    void ApplyCurrentPluginEdits();
     
     wxButton * addBtn;
     wxButton * editBtn;
@@ -62,12 +58,12 @@ private:
     wxButton * recalcBtn;
     wxButton * applyBtn;
     wxButton * cancelBtn;
-    wxListCtrl * pluginList;
-    wxListCtrl * reqsList;
-    wxListCtrl * incsList;
-    wxListCtrl * loadAfterList;
-    wxListCtrl * messageList;
-    wxListCtrl * tagsList;
+    wxListView * pluginList;
+    wxListView * reqsList;
+    wxListView * incsList;
+    wxListView * loadAfterList;
+    wxListView * messageList;
+    wxListView * tagsList;
     wxNotebook * listBook;
     wxCheckBox * enableUserEditsBox;
     wxSpinCtrl * prioritySpin;
@@ -75,18 +71,20 @@ private:
 
     std::vector<boss::Plugin> _basePlugins, _editedPlugins;
 
-    boss::Plugin currentPlugin;
-
-    //boss::Game& _game;
-   // YAML::Node& _settings;  //BOSS Settings.
+    void ApplyEdits(const wxString& plugin);
+    
+    boss::Plugin GetInitialData(const wxString& plugin) const;
+    boss::Plugin GetNewData(const wxString& plugin) const;
 };
 
 class FileEditDialog : public wxDialog {
 public:
     FileEditDialog(wxWindow *parent, const wxString& title);
 
-    void SetValues(const std::string& name, const std::string& display, const std::string& condition);
-    std::vector<std::string> GetValues() const;
+    void SetValues(const wxString& name, const wxString& display, const wxString& condition);
+    wxString GetName() const;
+    wxString GetDisplayName() const;
+    wxString GetCondition() const;
 private:
     wxTextCtrl * _name;
     wxTextCtrl * _display;
@@ -97,8 +95,11 @@ class MessageEditDialog : public wxDialog {
 public:
     MessageEditDialog(wxWindow *parent, const wxString& title);
 
-    void SetValues(const std::string& type, const std::string& content, const std::string& condition, const std::string& language);
-    std::vector<std::string> GetValues() const;
+    void SetValues(int type, const wxString& content, const wxString& condition, int language);
+    wxString GetType() const;
+    wxString GetContent() const;
+    wxString GetCondition() const;
+    wxString GetLanguage() const;
 private:
     wxChoice * _type;
     wxTextCtrl * _content;
@@ -110,10 +111,12 @@ class TagEditDialog : public wxDialog {
 public:
     TagEditDialog(wxWindow *parent, const wxString& title);
 
-    void SetValues(const std::string& addRemove, const std::string& name, const std::string& condition);
-    std::vector<std::string> GetValues() const;
+    void SetValues(int state, const wxString& name, const wxString& condition);
+    wxString GetState() const;
+    wxString GetName() const;
+    wxString GetCondition() const;
 private:
-    wxChoice * _addRemove;
+    wxChoice * _state;
     wxTextCtrl * _name;
     wxTextCtrl * _condition;
 };
