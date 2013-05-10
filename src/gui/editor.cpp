@@ -28,10 +28,19 @@
 
 BEGIN_EVENT_TABLE( Editor, wxFrame )
     EVT_LIST_ITEM_SELECTED( LIST_Plugins, Editor::OnPluginSelect )
+    EVT_LIST_ITEM_SELECTED( LIST_Reqs, Editor::OnRowSelect )
+    EVT_LIST_ITEM_SELECTED( LIST_Incs, Editor::OnRowSelect )
+    EVT_LIST_ITEM_SELECTED( LIST_LoadAfter, Editor::OnRowSelect )
+    EVT_LIST_ITEM_SELECTED( LIST_Messages, Editor::OnRowSelect )
+    EVT_LIST_ITEM_SELECTED( LIST_BashTags, Editor::OnRowSelect )
     EVT_SPINCTRL( SPIN_Priority, Editor::OnPriorityChange )
     EVT_NOTEBOOK_PAGE_CHANGED( BOOK_Lists, Editor::OnListBookChange )
 	EVT_BUTTON ( BUTTON_Apply, Editor::OnQuit )
 	EVT_BUTTON ( BUTTON_Cancel, Editor::OnQuit )
+    EVT_BUTTON ( BUTTON_AddRow, Editor::OnAddRow )
+    EVT_BUTTON ( BUTTON_EditRow, Editor::OnEditRow )
+    EVT_BUTTON ( BUTTON_RemoveRow, Editor::OnRemoveRow )
+    EVT_BUTTON ( BUTTON_Recalc, Editor::OnRecalc )
     EVT_CHECKBOX ( wxID_ANY, Editor::OnEnabledToggle )
 END_EVENT_TABLE()
 
@@ -54,9 +63,9 @@ Editor::Editor(wxWindow *parent, const wxString& title) : wxFrame(parent, wxID_A
     prioritySpin->SetRange(-10,10);
     enableUserEditsBox = new wxCheckBox(this, wxID_ANY, translate("Enable User Changes"));
     
-    addBtn = new wxButton(this, BUTTON_AddFile, translate("Add File"));
-    editBtn = new wxButton(this, BUTTON_EditFile, translate("Edit File"));
-    removeBtn = new wxButton(this, BUTTON_RemoveFile, translate("Remove File"));
+    addBtn = new wxButton(this, BUTTON_AddRow, translate("Add File"));
+    editBtn = new wxButton(this, BUTTON_EditRow, translate("Edit File"));
+    removeBtn = new wxButton(this, BUTTON_RemoveRow, translate("Remove File"));
     recalcBtn = new wxButton(this, BUTTON_Recalc, translate("Recalculate Load Order"));
     applyBtn = new wxButton(this, BUTTON_Apply, translate("Apply Load Order"));
     cancelBtn = new wxButton(this, BUTTON_Cancel, translate("Cancel"));
@@ -98,6 +107,13 @@ Editor::Editor(wxWindow *parent, const wxString& title) : wxFrame(parent, wxID_A
     tagsList->AppendColumn(translate("Add/Remove"));
     tagsList->AppendColumn(translate("Bash Tag"));
     tagsList->AppendColumn(translate("Condition"));
+
+    //Initialise control states.
+    addBtn->Enable(false);
+    editBtn->Enable(false);
+    removeBtn->Enable(false);
+    prioritySpin->Enable(false);
+    enableUserEditsBox->Enable(false);
     
     //Set up layout.
     wxBoxSizer * bigBox = new wxBoxSizer(wxHORIZONTAL);
@@ -195,7 +211,7 @@ void Editor::OnPluginSelect(wxListEvent& event) {
 
         plugin = GetOriginal(plugin, true);
 
-        //Now fill editor fields with new plugin's info.
+        //Now fill editor fields with new plugin's info and update control states.
         pluginText->SetLabelText(FromUTF8(plugin.Name()));
 
         prioritySpin->SetValue(plugin.Priority());
@@ -257,6 +273,13 @@ void Editor::OnPluginSelect(wxListEvent& event) {
             ++i;
         }
 
+        //Set control states.
+        prioritySpin->Enable(true);
+        enableUserEditsBox->Enable(true);
+        addBtn->Enable(true);
+        editBtn->Enable(false);
+        removeBtn->Enable(false);
+
         currentPlugin = plugin;
     }
 }
@@ -289,6 +312,48 @@ void Editor::OnListBookChange(wxBookCtrlEvent& event) {
 void Editor::OnEnabledToggle(wxCommandEvent& event) {
     currentPlugin.Enabled(event.IsChecked());
 }
+
+void Editor::OnAddRow(wxCommandEvent& event) {
+    if (listBook->GetSelection() < 3) {
+        FileEditDialog * rowDialog = new FileEditDialog(this, translate("BOSS: Add File/Plugin"));
+        rowDialog->ShowModal();
+    } else if (listBook->GetSelection() == 3) {
+        MessageEditDialog * rowDialog = new MessageEditDialog(this, translate("BOSS: Add Message"));
+        rowDialog->ShowModal();
+    } else if (listBook->GetSelection() == 4) {
+        TagEditDialog * rowDialog = new TagEditDialog(this, translate("BOSS: Add Tag"));
+        rowDialog->ShowModal();
+    }
+}
+
+void Editor::OnEditRow(wxCommandEvent& event) {
+    if (listBook->GetSelection() < 3) {
+        FileEditDialog * rowDialog = new FileEditDialog(this, translate("BOSS: Edit File/Plugin"));
+
+        
+        
+        rowDialog->ShowModal();
+    } else if (listBook->GetSelection() == 3) {
+        MessageEditDialog * rowDialog = new MessageEditDialog(this, translate("BOSS: Edit Message"));
+        rowDialog->ShowModal();
+    } else if (listBook->GetSelection() == 4) {
+        TagEditDialog * rowDialog = new TagEditDialog(this, translate("BOSS: Edit Tag"));
+        rowDialog->ShowModal();
+    }
+}
+
+void Editor::OnRemoveRow(wxCommandEvent& event) {
+
+}
+
+void Editor::OnRecalc(wxCommandEvent& event) {
+
+}
+
+void Editor::OnRowSelect(wxListEvent& event) {
+    //Need to check if this row was added by the masterlist or the userlist. If the latter, enable the edit and remove buttons.
+}
+
 
 void Editor::OnQuit(wxCommandEvent& event) {
     if (event.GetId() == BUTTON_Apply) {
@@ -351,8 +416,45 @@ void Editor::ApplyCurrentPluginEdits() {
         _editedPlugins.push_back(diff);
 }
 
-FileEditDialog::FileEditDialog(wxWindow *parent, const wxString& title) : wxDialog(parent, wxID_ANY, title) {
+FileEditDialog::FileEditDialog(wxWindow *parent, const wxString& title) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER) {
 
+    _name = new wxTextCtrl(this, wxID_ANY);
+    _display = new wxTextCtrl(this, wxID_ANY);
+    _condition = new wxTextCtrl(this, wxID_ANY);
+
+    wxSizerFlags leftItem(0);
+	leftItem.Left();
+
+	wxSizerFlags rightItem(1);
+	rightItem.Right().Expand();
+
+    wxBoxSizer * bigBox = new wxBoxSizer(wxVERTICAL);
+
+	wxFlexGridSizer * GridSizer = new wxFlexGridSizer(2, 5, 5);
+    GridSizer->AddGrowableCol(1,1);
+
+	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Filename:")), leftItem);
+	GridSizer->Add(_name, rightItem);
+
+	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Displayed Name:")), leftItem);
+	GridSizer->Add(_display, rightItem);
+
+	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Condition:")), leftItem);
+	GridSizer->Add(_condition, rightItem);
+
+    bigBox->Add(GridSizer, 0, wxEXPAND|wxALL, 10);
+
+    bigBox->AddSpacer(10);
+    bigBox->AddStretchSpacer(1);
+
+    //Need to add 'OK' and 'Cancel' buttons.
+	wxSizer * sizer = CreateSeparatedButtonSizer(wxOK|wxCANCEL);
+    if (sizer != NULL)
+        bigBox->Add(sizer, 0, wxEXPAND|wxLEFT|wxBOTTOM|wxRIGHT, 15);
+
+    SetBackgroundColour(wxColour(255,255,255));
+    SetIcon(wxIconLocation("BOSS.exe"));
+	SetSizerAndFit(bigBox);
 }
 
 void FileEditDialog::SetValues(const std::string& name, const std::string& display, const std::string& condition) {
@@ -365,7 +467,70 @@ std::vector<std::string> FileEditDialog::GetValues() const {
     return values;
 }
 
-MessageEditDialog::MessageEditDialog(wxWindow *parent, const wxString& title) : wxDialog(parent, wxID_ANY, title) {
+MessageEditDialog::MessageEditDialog(wxWindow *parent, const wxString& title) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER) {
+
+    wxString Language[] = {
+        wxT("None Specified"),
+		wxT("English"),
+	/*	wxString::FromUTF8("Español"),
+		wxT("Deutsch"),
+		wxString::FromUTF8("Русский"),
+		wxString::FromUTF8("简体中文")*/
+	};
+
+    wxString Type[] = {
+        wxT("Note"),
+        wxT("Warning"),
+        wxT("Error")
+    };
+
+    //Initialise controls.
+    _type = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 3, Type);
+    _language = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 2, Language);
+
+    _content = new wxTextCtrl(this, wxID_ANY);
+    _condition = new wxTextCtrl(this, wxID_ANY);
+
+    wxSizerFlags leftItem(0);
+	leftItem.Left();
+
+	wxSizerFlags rightItem(1);
+	rightItem.Right().Expand();
+
+    wxBoxSizer * bigBox = new wxBoxSizer(wxVERTICAL);
+
+	wxFlexGridSizer * GridSizer = new wxFlexGridSizer(2, 5, 5);
+    GridSizer->AddGrowableCol(1,1);
+
+	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Type:")), leftItem);
+	GridSizer->Add(_type, rightItem);
+
+	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Content:")), leftItem);
+	GridSizer->Add(_content, rightItem);
+
+	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Condition:")), leftItem);
+	GridSizer->Add(_condition, rightItem);
+
+	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Language:")), leftItem);
+	GridSizer->Add(_language, rightItem);
+
+    bigBox->Add(GridSizer, 0, wxEXPAND|wxALL, 10);
+
+    bigBox->AddSpacer(10);
+    bigBox->AddStretchSpacer(1);
+
+    //Need to add 'OK' and 'Cancel' buttons.
+	wxSizer * sizer = CreateSeparatedButtonSizer(wxOK|wxCANCEL);
+    if (sizer != NULL)
+        bigBox->Add(sizer, 0, wxEXPAND|wxLEFT|wxBOTTOM|wxRIGHT, 15);
+
+    //Set defaults.
+    _type->SetSelection(0);
+    _language->SetSelection(0);
+
+    SetBackgroundColour(wxColour(255,255,255));
+    SetIcon(wxIconLocation("BOSS.exe"));
+	SetSizerAndFit(bigBox);
 
 }
 
@@ -379,8 +544,55 @@ std::vector<std::string> MessageEditDialog::GetValues() const {
     return values;
 }
 
-TagEditDialog::TagEditDialog(wxWindow *parent, const wxString& title) : wxDialog(parent, wxID_ANY, title) {
+TagEditDialog::TagEditDialog(wxWindow *parent, const wxString& title) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER) {
 
+    wxString State[] = {
+        wxT("Add"),
+        wxT("Remove")
+    };
+
+    //Initialise controls.
+    _addRemove = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 2, State);
+    
+    _name = new wxTextCtrl(this, wxID_ANY);
+    _condition = new wxTextCtrl(this, wxID_ANY);
+
+    wxSizerFlags leftItem(0);
+	leftItem.Left();
+
+	wxSizerFlags rightItem(1);
+	rightItem.Right().Expand();
+
+    wxBoxSizer * bigBox = new wxBoxSizer(wxVERTICAL);
+
+	wxFlexGridSizer * GridSizer = new wxFlexGridSizer(2, 5, 5);
+    GridSizer->AddGrowableCol(1,1);
+
+	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Add/Remove:")), leftItem);
+	GridSizer->Add(_addRemove, rightItem);
+
+	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Name:")), leftItem);
+	GridSizer->Add(_name, rightItem);
+
+	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Condition:")), leftItem);
+	GridSizer->Add(_condition, rightItem);
+
+    bigBox->Add(GridSizer, 0, wxEXPAND|wxALL, 10);
+
+    bigBox->AddSpacer(10);
+    bigBox->AddStretchSpacer(1);
+
+    //Need to add 'OK' and 'Cancel' buttons.
+	wxSizer * sizer = CreateSeparatedButtonSizer(wxOK|wxCANCEL);
+    if (sizer != NULL)
+        bigBox->Add(sizer, 0, wxEXPAND|wxLEFT|wxBOTTOM|wxRIGHT, 15);
+
+    //Set defaults.
+    _addRemove->SetSelection(0);
+
+    SetBackgroundColour(wxColour(255,255,255));
+    SetIcon(wxIconLocation("BOSS.exe"));
+	SetSizerAndFit(bigBox);
 }
 
 void TagEditDialog::SetValues(const std::string& addRemove, const std::string& name, const std::string& condition) {

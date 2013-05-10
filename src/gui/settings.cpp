@@ -126,7 +126,7 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
 
 	//Now add TabHolder and OK button to window sizer.
     if (sizer != NULL)
-        bigBox->Add(sizer, 0, wxEXPAND|wxALIGN_CENTRE|wxLEFT|wxBOTTOM|wxRIGHT, 15);
+        bigBox->Add(sizer, 0, wxEXPAND|wxLEFT|wxBOTTOM|wxRIGHT, 15);
 
 	//Initialise options with values. For checkboxes, they are off by default.
 	SetDefaultValues();

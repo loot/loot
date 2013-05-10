@@ -43,6 +43,11 @@ public:
     void OnEnabledToggle(wxCommandEvent& event);
     void OnPriorityChange(wxSpinEvent& event);
     void OnListBookChange(wxBookCtrlEvent& event);
+    void OnAddRow(wxCommandEvent& event);
+    void OnEditRow(wxCommandEvent& event);
+    void OnRemoveRow(wxCommandEvent& event);
+    void OnRecalc(wxCommandEvent& event);
+    void OnRowSelect(wxListEvent& event);
     void OnQuit(wxCommandEvent& event);
     DECLARE_EVENT_TABLE()
 private:
