@@ -64,8 +64,6 @@ private:
 	boss::Game& _game;
     YAML::Node& _settings;  //BOSS Settings.
     const std::vector<unsigned int>& _detectedGames;
-    
-	void DisableUndetectedGames();
 
     static bool AlphaSortPlugins(const boss::Plugin& lhs, const boss::Plugin& rhs);
 };

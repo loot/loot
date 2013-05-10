@@ -34,10 +34,7 @@
 
 class Editor : public wxFrame {
 public:
-    Editor(wxWindow *parent, const wxString& title);
-
-    void SetList(const std::vector<boss::Plugin>& basePlugins, const std::vector<boss::Plugin>& editedPlugins);
-    void IsSorted(bool sorted);
+    Editor(wxWindow *parent, const wxString& title, const boss::Game& game, const std::vector<boss::Plugin>& basePlugins, std::vector<boss::Plugin>& editedPlugins, bool showRecalcButton);
 
     void OnPluginSelect(wxListEvent& event);
     void OnEnabledToggle(wxCommandEvent& event);
@@ -69,7 +66,9 @@ private:
     wxSpinCtrl * prioritySpin;
     wxStaticText * pluginText;
 
-    std::vector<boss::Plugin> _basePlugins, _editedPlugins;
+    const boss::Game& _game;
+    const std::vector<boss::Plugin> _basePlugins;
+    std::vector<boss::Plugin> _editedPlugins;
 
     void ApplyEdits(const wxString& plugin);
     

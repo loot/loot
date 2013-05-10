@@ -20,13 +20,15 @@
     along with BOSS.  If not, see
     <http://www.gnu.org/licenses/>.
 */
+#include "main.h"
+#include "settings.h"
+#include "editor.h"
 
 #include "../globals.h"
 #include "../metadata.h"
 #include "../parsers.h"
-#include "main.h"
-#include "settings.h"
-#include "editor.h"
+#include "../error.h"
+#include "../helpers.h"
 
 #include <ostream>
 #include <algorithm>
@@ -256,8 +258,28 @@ Launcher::Launcher(const wxChar *title, YAML::Node& settings, Game& game, const 
 
     if (!fs::exists(_game.ResultsPath()))
         ViewButton->Enable(false);
-        
-	DisableUndetectedGames();
+
+    //Disable the menu items for the undetected games.
+    GameMenu->FindItem(MENU_Oblivion)->Enable(false);
+	GameMenu->FindItem(MENU_Nehrim)->Enable(false);
+	GameMenu->FindItem(MENU_Skyrim)->Enable(false);
+	GameMenu->FindItem(MENU_Fallout3)->Enable(false);
+	GameMenu->FindItem(MENU_FalloutNewVegas)->Enable(false);
+	for (size_t i=0; i < _detectedGames.size(); i++) {
+		if (_detectedGames[i] == GAME_TES4)
+			GameMenu->FindItem(MENU_Oblivion)->Enable();
+		else if (_detectedGames[i] == GAME_NEHRIM)
+			GameMenu->FindItem(MENU_Nehrim)->Enable();
+		else if (_detectedGames[i] == GAME_TES5)
+			GameMenu->FindItem(MENU_Skyrim)->Enable();
+		else if (_detectedGames[i] == GAME_FO3)
+			GameMenu->FindItem(MENU_Fallout3)->Enable();
+		else if (_detectedGames[i] == GAME_FONV)
+			GameMenu->FindItem(MENU_FalloutNewVegas)->Enable();
+	}
+
+    //Set title bar text.
+	SetTitle(FromUTF8("BOSS - " + _game.Name()));
 
     //Now set the layout and sizes.
     SetMenuBar(MenuBar);
@@ -330,6 +352,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 				translate("BOSS: Error"),
 				wxOK | wxICON_ERROR,
 				this);
+            return;
         }
         if (mlist["globals"])
             mlist_messages = mlist["globals"].as< list<boss::Message> >();
@@ -353,6 +376,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 				translate("BOSS: Error"),
 				wxOK | wxICON_ERROR,
 				this);
+            return;
         }
         if (ulist["globals"])
             ulist_messages = ulist["globals"].as< list<boss::Message> >();
@@ -398,7 +422,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     for (list<boss::Plugin>::iterator it=plugins.begin(), endIt=plugins.end(); it != endIt; ++it) {
         try {
-        it->EvalAllConditions(game);
+            it->EvalAllConditions(game);
         } catch (boss::error& e) {
             //LOG_ERROR("Error: %s", e.what());
             wxMessageBox(
@@ -406,6 +430,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 				translate("BOSS: Error"),
 				wxOK | wxICON_ERROR,
 				this);
+            return;
         }
     }
 
@@ -491,64 +516,42 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     progDia->Destroy();
 
-    //Create editor window.
-    Editor *editor = new Editor(this, translate("BOSS: Metadata Editor"));
-
-    //The 'plugins' list contains the merged plugin info, but we want to pass a vector of plugins with only masterlist info in its place, so have to construct that.
-    vector<boss::Plugin> pluginVec;
-    for (list<boss::Plugin>::const_iterator it=plugins.begin(), endit=plugins.end(); it != endit; ++it) {
-        boss::Plugin p = *it;
-        list<boss::Plugin>::iterator pos = std::find(mlist_plugins.begin(), mlist_plugins.end(), *it);
-
-        if (pos != mlist_plugins.end())
-            p.Merge(*pos);
-
-        pluginVec.push_back(p);
-    }
-    vector<boss::Plugin> ulistPluginVec(ulist_plugins.begin(), ulist_plugins.end());
-
-    //Pass plugin lists to editor window.
-    editor->SetList(pluginVec, ulistPluginVec);
-
-    //Tell the editor that it's not being shown as part of the load order sort process.
-    editor->IsSorted(true);
-    
-	editor->Show();
-
+    //Now a results report definitely exists.
     ViewButton->Enable(true);
 }
 
 void Launcher::OnEditMetadata(wxCommandEvent& event) {
-    //Parse the userlist and masterlist and get a list of installed plugins.
 
-    vector<boss::Plugin> plugins;
-    YAML::Node mlist, ulist;
-    vector<boss::Plugin> mlist_plugins, ulist_plugins;
-    
+    //Should probably check for masterlist updates before opening metadata editor.
+    vector<boss::Plugin> installed, mlist_plugins, ulist_plugins;
+
+    //Scan for installed plugins.
     for (fs::directory_iterator it(_game.DataPath()); it != fs::directory_iterator(); ++it) {
         if (fs::is_regular_file(it->status()) && (it->path().extension().string() == ".esp" || it->path().extension().string() == ".esm")) {
-
-			boss::Plugin plugin(it->path().filename().string());
-            plugins.push_back(plugin);
+            installed.push_back(boss::Plugin(it->path().filename().string()));
         }
     }
 
+    //Parse masterlist.
     if (fs::exists(_game.MasterlistPath())) {
+        YAML::Node mlist;
         try {
             mlist = YAML::LoadFile(_game.MasterlistPath().string());
         } catch (YAML::ParserException& e) {
             //LOG_ERROR("Error: %s", e.getString().c_str());
             wxMessageBox(
-				FromUTF8(format(loc::translate("Error: Masterlist parsing failed. %1%")) % e.what()),
-				translate("BOSS: Error"),
-				wxOK | wxICON_ERROR,
-				this);
+                FromUTF8(format(loc::translate("Error: Masterlist parsing failed. %1%")) % e.what()),
+                translate("BOSS: Error"),
+                wxOK | wxICON_ERROR,
+                this);
         }
         if (mlist["plugins"])
             mlist_plugins = mlist["plugins"].as< vector<boss::Plugin> >();
     }
 
+    //Parse userlist.
     if (fs::exists(_game.UserlistPath())) {
+        YAML::Node ulist;
         try {
             ulist = YAML::LoadFile(_game.UserlistPath().string());
         } catch (YAML::ParserException& e) {
@@ -563,31 +566,25 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
             ulist_plugins = ulist["plugins"].as< vector<boss::Plugin> >();
     }
 
-    //Cut out any plugins in the masterlist that aren't installed or in the userlist.
-    //Merge down to the plugin list so that it holds all uneditable metadata.
-    list<boss::Plugin> slim_mlist;
-    
+    //Merge the masterlist down into the installed mods list.
     for (vector<boss::Plugin>::const_iterator it=mlist_plugins.begin(), endit=mlist_plugins.end(); it != endit; ++it) {
-        vector<boss::Plugin>::iterator pos = std::find(plugins.begin(), plugins.end(), *it);
+        vector<boss::Plugin>::iterator pos = find(installed.begin(), installed.end(), *it);
 
-        if (pos != plugins.end())
+        if (pos != installed.end())
             pos->Merge(*it);
-        else if (std::find(ulist_plugins.begin(), ulist_plugins.end(), *it) != ulist_plugins.end())
-            plugins.push_back(*it);
+    }
+
+    //Add empty entries for any userlist entries that aren't installed.
+    for (vector<boss::Plugin>::const_iterator it=ulist_plugins.begin(), endit=ulist_plugins.end(); it != endit; ++it) {
+        if (find(installed.begin(), installed.end(), *it) == installed.end())
+            installed.push_back(boss::Plugin(it->Name()));
     }
 
     //Sort into alphabetical order.
-    std::sort(plugins.begin(), plugins.end(), AlphaSortPlugins);
-    std::sort(ulist_plugins.begin(), ulist_plugins.end(), AlphaSortPlugins);
+    std::sort(installed.begin(), installed.end(), AlphaSortPlugins);
 
     //Create editor window.
-    Editor *editor = new Editor(this, translate("BOSS: Metadata Editor"));
-    
-    //Pass plugin lists to editor window.
-    editor->SetList(plugins, ulist_plugins);
-
-    //Tell the editor that it's not being shown as part of the load order sort process.
-    editor->IsSorted(false);
+    Editor *editor = new Editor(this, translate("BOSS: Metadata Editor"), _game, installed, ulist_plugins, false);
     
 	editor->Show();
 }
@@ -669,28 +666,6 @@ void Launcher::OnAbout(wxCommandEvent& event) {
     "along with this program.  If not, see <http://www.gnu.org/licenses/>.");
 	aboutInfo.SetIcon(wxIconLocation("BOSS.exe"));
     wxAboutBox(aboutInfo);
-}
-
-void Launcher::DisableUndetectedGames() {
-	GameMenu->FindItem(MENU_Oblivion)->Enable(false);
-	GameMenu->FindItem(MENU_Nehrim)->Enable(false);
-	GameMenu->FindItem(MENU_Skyrim)->Enable(false);
-	GameMenu->FindItem(MENU_Fallout3)->Enable(false);
-	GameMenu->FindItem(MENU_FalloutNewVegas)->Enable(false);
-	for (size_t i=0; i < _detectedGames.size(); i++) {
-		if (_detectedGames[i] == GAME_TES4)
-			GameMenu->FindItem(MENU_Oblivion)->Enable();
-		else if (_detectedGames[i] == GAME_NEHRIM)
-			GameMenu->FindItem(MENU_Nehrim)->Enable();
-		else if (_detectedGames[i] == GAME_TES5)
-			GameMenu->FindItem(MENU_Skyrim)->Enable();
-		else if (_detectedGames[i] == GAME_FO3)
-			GameMenu->FindItem(MENU_Fallout3)->Enable();
-		else if (_detectedGames[i] == GAME_FONV)
-			GameMenu->FindItem(MENU_FalloutNewVegas)->Enable();
-	}
-
-	SetTitle(FromUTF8("BOSS - " + _game.Name()));
 }
 
 bool Launcher::AlphaSortPlugins(const boss::Plugin& lhs, const boss::Plugin& rhs) {

@@ -211,7 +211,7 @@ namespace YAML {
         out << EndSeq;
     }
 
-    Emitter& operator << (Emitter& out, const boss::Message& rhs) {
+    inline Emitter& operator << (Emitter& out, const boss::Message& rhs) {
         out << BeginMap
             << Key << "type" << Value << rhs.Type()
             << Key << "content" << Value << rhs.Content();
@@ -225,7 +225,7 @@ namespace YAML {
         out << EndMap;
     }
 
-    Emitter& operator << (Emitter& out, const boss::File& rhs) {
+    inline Emitter& operator << (Emitter& out, const boss::File& rhs) {
         if (!rhs.IsConditional() && rhs.DisplayName().empty())
             out << rhs.Name();
         else {
@@ -242,7 +242,7 @@ namespace YAML {
         }
     }
 
-    Emitter& operator << (Emitter& out, const boss::Tag& rhs) {
+    inline Emitter& operator << (Emitter& out, const boss::Tag& rhs) {
         if (!rhs.IsConditional())
             out << rhs.PrefixedName();
         else {
@@ -253,7 +253,7 @@ namespace YAML {
         }
     }
 
-    Emitter& operator << (Emitter& out, const boss::Plugin& rhs) {
+    inline Emitter& operator << (Emitter& out, const boss::Plugin& rhs) {
         //if (!rhs.HasNameOnly()) {
 
             out << BeginMap
@@ -521,37 +521,5 @@ namespace boss {
             return !boost::contains(parent_path, "../../");
         }
     };
-
-    bool ConditionalData::EvalCondition(boss::Game& game) const {
-        if (condition.empty())
-            return true;
-
-        boost::unordered_map<std::string, bool>::const_iterator it = game.conditionCache.find(boost::to_lower_copy(condition));
-        if (it != game.conditionCache.end())
-            return it->second;
-
-        condition_grammar<std::string::const_iterator, qi::space_type> grammar;
-        qi::space_type skipper;
-        std::string::const_iterator begin, end;
-        bool eval;
-
-        grammar.SetGame(game);
-        begin = condition.begin();
-        end = condition.end();
-
-        bool r;
-        try {
-            r = qi::phrase_parse(begin, end, grammar, skipper, eval);
-        } catch (boss::error& e) {
-            throw boss::error(boss::ERROR_PATH_READ_FAIL, "Parsing of condition \"" + condition + "\" failed: " + e.what());
-        }
-
-        if (!r || begin != end)
-            throw boss::error(boss::ERROR_PATH_READ_FAIL, "Parsing of condition \"" + condition + "\" failed!");
-
-        game.conditionCache.emplace(boost::to_lower_copy(condition), eval);
-
-        return eval;
-    }
 }
 #endif

@@ -23,6 +23,7 @@
 
 #include "helpers.h"
 #include "metadata.h"
+#include "parsers.h"
 
 #include <src/playground.h>
 
@@ -104,6 +105,38 @@ namespace boss {
 
     void ConditionalData::Data(const std::string& d) {
         data = d;
+    }
+
+    bool ConditionalData::EvalCondition(boss::Game& game) const {
+        if (condition.empty())
+            return true;
+
+        boost::unordered_map<std::string, bool>::const_iterator it = game.conditionCache.find(boost::to_lower_copy(condition));
+        if (it != game.conditionCache.end())
+            return it->second;
+
+        condition_grammar<std::string::const_iterator, boost::spirit::qi::space_type> grammar;
+        boost::spirit::qi::space_type skipper;
+        std::string::const_iterator begin, end;
+        bool eval;
+
+        grammar.SetGame(game);
+        begin = condition.begin();
+        end = condition.end();
+
+        bool r;
+        try {
+            r = boost::spirit::qi::phrase_parse(begin, end, grammar, skipper, eval);
+        } catch (boss::error& e) {
+            throw boss::error(boss::ERROR_PATH_READ_FAIL, "Parsing of condition \"" + condition + "\" failed: " + e.what());
+        }
+
+        if (!r || begin != end)
+            throw boss::error(boss::ERROR_PATH_READ_FAIL, "Parsing of condition \"" + condition + "\" failed!");
+
+        game.conditionCache.emplace(boost::to_lower_copy(condition), eval);
+
+        return eval;
     }
 
     Message::Message() {}

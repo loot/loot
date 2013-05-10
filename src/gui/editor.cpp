@@ -22,8 +22,8 @@
 */
 
 #include "editor.h"
+#include "../parsers.h"
 
-#include <wx/statline.h>
 #include <algorithm>
 #include <boost/algorithm/string.hpp>
 
@@ -65,7 +65,7 @@ wxString State[2] = {
     translate("Remove")
 };
 
-Editor::Editor(wxWindow *parent, const wxString& title) : wxFrame(parent, wxID_ANY, title) {
+Editor::Editor(wxWindow *parent, const wxString& title, const boss::Game& game, const std::vector<boss::Plugin>& basePlugins, std::vector<boss::Plugin>& editedPlugins, bool showRecalcButton) : wxFrame(parent, wxID_ANY, title), _game(game), _basePlugins(basePlugins), _editedPlugins(editedPlugins) {
 
     //Initialise child windows.
     listBook = new wxNotebook(this, BOOK_Lists);
@@ -189,33 +189,22 @@ Editor::Editor(wxWindow *parent, const wxString& title) : wxFrame(parent, wxID_A
     mainBox->Add(hbox6, 0, wxALIGN_RIGHT);
 
     bigBox->Add(mainBox, 2, wxEXPAND|wxTOP|wxBOTTOM|wxRIGHT, 10);
-    
-    SetBackgroundColour(wxColour(255,255,255));
-    SetIcon(wxIconLocation("BOSS.exe"));
 
-    SetSizerAndFit(bigBox);
-}
-
-void Editor::SetList(const std::vector<boss::Plugin>& basePlugins, const std::vector<boss::Plugin>& editedPlugins) {
-    _basePlugins = basePlugins;
-    _editedPlugins = editedPlugins;
-    
     //Fill pluginList with the contents of basePlugins.
     for (int i=0, max=_basePlugins.size(); i < max; ++i) {
         pluginList->InsertItem(i, FromUTF8(_basePlugins[i].Name()));
     }
     pluginList->SetColumnWidth(0, wxLIST_AUTOSIZE);
-    Layout();
-}
 
-void Editor::IsSorted(bool sorted) {
-    if (sorted) {
-        applyBtn->SetLabel(translate("Apply Load Order"));
-    } else {
+    if (!showRecalcButton) {
         recalcBtn->Show(false);
         applyBtn->SetLabel(translate("Save Changes"));
     }
-    Layout();
+        
+    SetBackgroundColour(wxColour(255,255,255));
+    SetIcon(wxIconLocation("BOSS.exe"));
+
+    SetSizerAndFit(bigBox);
 }
 
 void Editor::OnPluginSelect(wxListEvent& event) {
@@ -644,18 +633,18 @@ void Editor::OnRowSelect(wxListEvent& event) {
 void Editor::OnQuit(wxCommandEvent& event) {
     if (event.GetId() == BUTTON_Apply) {
         //Save edits to userlist.
-  /*      YAML::Emitter yout;
+        YAML::Emitter yout;
         yout.SetIndent(2);
         yout << YAML::BeginMap
              << YAML::Key << "plugins" << YAML::Value << _editedPlugins
              << YAML::EndMap;
 
-        ofstream out(game.UserlistPath().string().c_str());
+        ofstream out(_game.UserlistPath().string().c_str());
         out << yout.c_str();
         out.close();
-    */    
+        
         if (recalcBtn->IsShown()) {
-            //Signal that the load order should be written.
+            //Signal that the load order should be written and the log opened.
         }
     }
     Close();
