@@ -82,7 +82,11 @@ bool BossGUI::OnInit() {
 	wxSingleInstanceChecker *checker = new wxSingleInstanceChecker;
 
 	if (checker->IsAnotherRunning()) {
-        //Should print error message here.
+        wxMessageBox(
+			translate("Error: BOSS is already running. This instance will now quit."),
+			translate("BOSS: Error"),
+			wxOK | wxICON_ERROR,
+			NULL);
 		delete checker; // OnExit() won't be called if we return false
 		checker = NULL;
 
@@ -100,6 +104,7 @@ bool BossGUI::OnInit() {
 				translate("BOSS: Error"),
 				wxOK | wxICON_ERROR,
 				NULL);
+            return false;
         }
     }
 
@@ -148,12 +153,14 @@ bool BossGUI::OnInit() {
 
     //Detect installed games.
     _detectedGames = DetectGames();
-    if (_detectedGames.empty())
+    if (_detectedGames.empty()) {
         wxMessageBox(
             translate("Error: None of the supported games were detected."),
             translate("BOSS: Error"),
             wxOK | wxICON_ERROR,
             NULL);
+        return false;
+    }
 
     string target;
     unsigned int targetGame = GAME_AUTODETECT;
@@ -185,8 +192,17 @@ bool BossGUI::OnInit() {
             targetGame = _detectedGames[0];
     } else
         targetGame = _detectedGames[0];
-            
-    _game = Game(targetGame);
+
+    try {
+        _game = Game(targetGame);
+    } catch (boss::error& e) {
+        wxMessageBox(
+            FromUTF8(format(loc::translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()),
+            translate("BOSS: Error"),
+            wxOK | wxICON_ERROR,
+            NULL);
+        return false;
+    }
 
     //Create launcher window.
     Launcher * launcher = new Launcher(wxT("BOSS"), _settings, _game, _detectedGames);
@@ -310,22 +326,18 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     ofstream out("out.txt");
 
-    out << "Setting up libespm and BOSS..." << endl;
-
-	boss::Game game(boss::GAME_TES5);
-
     out << "Reading plugins in Data folder..." << endl;
     time_t start, end;
     start = time(NULL);
     
     // Get a list of the plugins.
     list<boss::Plugin> plugins;
-    for (fs::directory_iterator it(game.DataPath()); it != fs::directory_iterator(); ++it) {
+    for (fs::directory_iterator it(_game.DataPath()); it != fs::directory_iterator(); ++it) {
         if (fs::is_regular_file(it->status()) && (it->path().extension().string() == ".esp" || it->path().extension().string() == ".esm")) {
 
             string filename = it->path().filename().string();
 			out << "Reading plugin: " << filename << endl;
-			boss::Plugin plugin(game, filename);
+			boss::Plugin plugin(_game, filename);
             plugins.push_back(plugin);
 
             progDia->Pulse();
@@ -340,11 +352,11 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     list<boss::Message> messages, mlist_messages, ulist_messages;
     list<boss::Plugin> mlist_plugins, ulist_plugins;
 
-    if (fs::exists(game.MasterlistPath())) {
+    if (fs::exists(_game.MasterlistPath())) {
         out << "Parsing masterlist..." << endl;
 
         try {
-            mlist = YAML::LoadFile(game.MasterlistPath().string());
+            mlist = YAML::LoadFile(_game.MasterlistPath().string());
         } catch (YAML::ParserException& e) {
             //LOG_ERROR("Error: %s", e.getString().c_str());
             wxMessageBox(
@@ -364,11 +376,11 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         start = time(NULL);
     }
 
-    if (fs::exists(game.UserlistPath())) {
+    if (fs::exists(_game.UserlistPath())) {
         out << "Parsing userlist..." << endl;
 
         try {
-            ulist = YAML::LoadFile(game.UserlistPath().string());
+            ulist = YAML::LoadFile(_game.UserlistPath().string());
         } catch (YAML::ParserException& e) {
             //LOG_ERROR("Error: %s", e.getString().c_str());
             wxMessageBox(
@@ -390,7 +402,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     progDia->Pulse();
 
-    if (fs::exists(game.MasterlistPath()) || fs::exists(game.UserlistPath())) {
+    if (fs::exists(_game.MasterlistPath()) || fs::exists(_game.UserlistPath())) {
         out << "Merging plugin lists..." << endl;
 
         //Merge all global message lists.
@@ -422,7 +434,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     for (list<boss::Plugin>::iterator it=plugins.begin(), endIt=plugins.end(); it != endIt; ++it) {
         try {
-            it->EvalAllConditions(game);
+            it->EvalAllConditions(_game);
         } catch (boss::error& e) {
             //LOG_ERROR("Error: %s", e.what());
             wxMessageBox(
@@ -443,7 +455,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     out << "Checking install validity..." << endl;
 
     for (list<boss::Plugin>::iterator it=plugins.begin(), endIt = plugins.end(); it != endIt; ++it) {
-        map<string, bool> issues = it->CheckInstallValidity(game);
+        map<string, bool> issues = it->CheckInstallValidity(_game);
         for (map<string,bool>::const_iterator jt=issues.begin(), endJt=issues.end(); jt != endJt; ++jt) {
             if (jt->second)
                 out << "Error: Invalid install detected! \"" << jt->first << "\" is incompatible with \"" << it->Name() << "\" and is present." << endl;
@@ -452,11 +464,23 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         }
     }
 
-    
+
+    end = time(NULL);
+	out << "Time taken to check install validity: " << (end - start) << " seconds." << endl;
+    start = time(NULL);
 
     progDia->Pulse();
 
-/*    out << "Printing plugin details..." << endl;    
+    out << "Sorting plugins..." << endl;
+
+    plugins.sort();
+
+    end = time(NULL);
+	out << "Time taken to sort plugins: " << (end - start) << " seconds." << endl;
+
+    progDia->Pulse();
+
+    out << "Printing plugin details..." << endl;    
 
     for (list<boss::Plugin>::iterator it=plugins.begin(), endIt = plugins.end(); it != endIt; ++it) {
 		out << it->Name() << endl
@@ -483,15 +507,6 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     end = time(NULL);
 	out << "Time taken to print plugins' details: " << (end - start) << " seconds." << endl;
     start = time(NULL);
-*/
-    out << "Sorting plugins..." << endl;
-
-    plugins.sort();
-
-    end = time(NULL);
-	out << "Time taken to sort plugins: " << (end - start) << " seconds." << endl;
-
-    progDia->Pulse();
     
     for (list<boss::Plugin>::iterator it=plugins.begin(), endIt = plugins.end(); it != endIt; ++it)
         out << it->Name() << endl;
@@ -505,7 +520,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
          << YAML::Key << "plugins" << YAML::Value << plugins
          << YAML::EndMap;
 
-    ofstream results_out(game.ResultsPath().string().c_str());
+    ofstream results_out(_game.ResultsPath().string().c_str());
     results_out << yout.c_str();
     results_out.close();
 
