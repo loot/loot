@@ -31,8 +31,6 @@
 #include <list>
 #include <set>
 
-#include <boost/unordered_set.hpp>
-
 namespace boss {
 
 
@@ -58,19 +56,6 @@ namespace boss {
         std::string plugin;
         uint32_t id;
     };
-
-    
-    struct FormID_hash
-    : std::unary_function<FormID, std::size_t>
-{
-    std::size_t operator()(FormID const& p) const
-    {
-        std::size_t seed = 0;
-        boost::hash_combine(seed, p.Plugin());
-        boost::hash_combine(seed, p.Id());
-        return seed;
-    }
-};
 
     class ConditionalData {
     public:
@@ -158,7 +143,7 @@ namespace boss {
         std::list<Message> Messages() const;
         std::set<Tag> Tags() const;
         
-        boost::unordered_set<FormID,FormID_hash> FormIDs() const;
+        std::set<FormID> FormIDs() const;
         std::vector<std::string> Masters() const;
         bool IsMaster() const;  //Checks master bit flag.
         std::string Version() const;
@@ -187,7 +172,7 @@ namespace boss {
         bool operator >= (const Plugin& rhs) const;
 
         //Load ordering functions.
-        boost::unordered_set<FormID,FormID_hash> OverlapFormIDs(const Plugin& plugin) const;
+        std::set<FormID> OverlapFormIDs(const Plugin& plugin) const;
         bool MustLoadAfter(const Plugin& plugin) const;  //Checks masters, reqs and loadAfter.
 
         //Validity checks.
@@ -203,7 +188,7 @@ namespace boss {
         std::set<Tag> tags;
         
         std::vector<std::string> masters;
-        boost::unordered_set<FormID,FormID_hash> formIDs;
+        std::set<FormID> formIDs;
         std::string version;  //Obtained from description field.
         bool isMaster;
     };

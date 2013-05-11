@@ -30,8 +30,6 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 
-#include <fstream>
-
 using namespace std;
 
 namespace boss {
@@ -536,13 +534,13 @@ namespace boss {
         return !(*this < rhs);
     }
     
-    boost::unordered_set<FormID,FormID_hash> Plugin::FormIDs() const {
+    std::set<FormID> Plugin::FormIDs() const {
 		return formIDs;
 	}
 
-    boost::unordered_set<FormID,FormID_hash> Plugin::OverlapFormIDs(const Plugin& plugin) const {
-        boost::unordered_set<FormID,FormID_hash> otherFormIDs = plugin.FormIDs();
-        boost::unordered_set<FormID,FormID_hash> overlap;
+    std::set<FormID> Plugin::OverlapFormIDs(const Plugin& plugin) const {
+        set<FormID> otherFormIDs = plugin.FormIDs();
+        set<FormID> overlap;
 
         set_intersection(formIDs.begin(), formIDs.end(), otherFormIDs.begin(), otherFormIDs.end(), inserter(overlap, overlap.begin()));
 
@@ -568,7 +566,7 @@ namespace boss {
         }
         if (find(requirements.begin(), requirements.end(), plugin) != requirements.end())
             return true;
-        if (find(loadAfter.begin(), loadAfter.end(), plugin) != requirements.end())
+        if (find(loadAfter.begin(), loadAfter.end(), plugin) != loadAfter.end())
             return true;
         return false;
     }
