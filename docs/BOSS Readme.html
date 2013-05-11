@@ -150,7 +150,7 @@ This documentation is a work in progress, covering an application that is also s
 <p>Clicking the <q>View Last Report</q> button will display the report generated the last time BOSS sorted your plugins.  See <a href="usage-log">The Results Report</a> for more information.
 <p>The <q>File</q> menu provides menu items for sorting plugins, viewing the last report BOSS generated and quitting BOSS, while the <q>Edit</q> menu provides menu items for accessing BOSS's metadata editor and the <a href="usage-settings">settings window</a>.
 <p>The <q>Active Game</q> menu allows you to change which game BOSS is running for without having to close and re-open it. Games that BOSS cannot find are greyed out, and the the one BOSS is running for is marked with a dot to its left. To change the active game, simply select another game in the list.
-<p>The <q>Help</q> menu provides links to BOSS's documentation and an about page that contains the version of BOSS being run, some legal information and a link to the project repository.
+<p>The <q>Help</q> menu provides a link to this readme and an about page that contains the version of BOSS being run, some legal information and a link to the project repository.
 
 <h3 id="usage-sort">Sorting Plugins</h3>
 
@@ -161,8 +161,8 @@ This documentation is a work in progress, covering an application that is also s
 </figure>
 <p>BOSS's sorting algorithm uses the contents of plugins to work out where they should load relative to one another. However, this is sometimes not enough for it to produce a correct load order. In such cases, additional metadata can be supplied so that the plugins get sorted correctly.
 <p>This metadata is supplied to BOSS by two sources: one is the masterlist, which is maintained by the BOSS Team, and the other is the userlist, which you can edit as you desire.
-<p>The metadata editor allows you to manage the metadata stored in their userlist without having to use a text editor. When opened, it lists all the plugins you have installed, and any that are missing but have existing user-added metadata, in alphabetical order. Clicking on a plugin then opens its metadata for editing, and displays any existing metadata in the fields to the right of the plugin list. These fields are explained in the table below.
-<p>The <q>Add &#x2026;</q>, <q>Edit &#x2026;</q> and <q>Remove &#x2026;</q> buttons are used to edit the contents of the list field currently visible. The <q>Edit &#x2026;</q> and <q>Remove &#x2026;</q> buttons are greyed out if no row is selected or if the selected row is not user-added metadata, but comes from the masterlist or the plugin itself. Metadata that comes from the masterlist or the plugin itself cannot be edited or removed, only added to. This is to prevent users from accidently overriding important metadata.
+<p>The metadata editor allows you to manage the metadata stored in your userlist. When opened, it lists all the plugins you have installed, and any that are missing but have existing user-added metadata, in alphabetical order. Clicking on a plugin then opens its metadata for editing, and displays any existing metadata in the fields to the right of the plugin list. These fields are explained in the table below.
+<p>The <q>Add &#x2026;</q>, <q>Edit &#x2026;</q> and <q>Remove &#x2026;</q> buttons are used to edit the contents of the list currently visible. The <q>Edit &#x2026;</q> and <q>Remove &#x2026;</q> buttons are greyed out if no row is selected or if the selected row is not user-added metadata, but comes from the masterlist or the plugin itself. Metadata that comes from the masterlist or the plugin itself cannot be edited or removed, only added to. This is to prevent users from accidently overriding important metadata.
 <p>The <q>Save Changes</q> button will save any user-added metadata to your userlist, including any changes made, then exit the metadata editor. The <q>Cancel</q> button will exit the editor without saving any changes.
 <table>
     <thead>
@@ -175,7 +175,7 @@ This documentation is a work in progress, covering an application that is also s
         <ul>
             <li>The <var>filename</var> is the path, relative to the game's Data folder, of the file to be checked for. This sub-field is required.
             <li>The <var>display name</var> is optional, and if specified will be used instead of the <var>filename</var> in any error messages that are displayed if a problem is encountered relating to the file.
-            <li>The <var>condition</var> is the optional condition string that is used to determine if the file should be checked for. If left blank, the file will always be checked for. Condition strings are a relatively advanced part of BOSS's functionality, and their syntax is covered in the <a href="BOSS%20Metadata%20File%20Syntax.html">Metadata Metadata Syntax</a> documentation.
+            <li>The <var>condition</var> is the optional condition string that is used to determine if the file should be checked for. If left blank, the file will always be checked for. Condition strings are a relatively advanced part of BOSS's functionality, and their syntax is covered in the <a href="BOSS%20Metadata%20File%20Syntax.html">Metadata File Syntax</a> documentation.
         </ul>
         <p>Note that listing a plugin's masters as requirements is pointless, as BOSS already checks them.
         <tr><td>Incompatibilities<td>This is a list of files that are incompatible with the plugin. BOSS will refuse to sort your load order if any of the listed files are found, and will instead display an error message detailing the problem.

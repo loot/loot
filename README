@@ -1,10 +1,8 @@
-BOSSv3
-======
+# BOSSv3
 
-Introduction
-============
+## Introduction
 
-See BOSS: http://code.google.com/p/better-oblivion-sorting-software/
+See the [BOSS project page](http://code.google.com/p/better-oblivion-sorting-software/) for a general overview of BOSS.
 
 BOSSv3 is being developed on a separate repository from the rest of BOSS's code as it is essentially a new program, and is being designed to address the shortcomings that are inherent in how BOSS approaches load order optimisation.
 
@@ -17,8 +15,7 @@ The other obvious solution is to cut down on the number of mods that need to be 
 While that's being done, I might as well also make some improvements to other areas of BOSS.
 
 
-Design Notes
-============
+## Design Notes
 
 BOSS should be able to identify a reasonably correct load order for a group of arbitrary plugins based on their contents. However, there are always some plugins that must be positioned in certain ways relative to other plugins due to author intent that cannot be determined from their contents. There is also generally an element of user preference in setting a load order. BOSS should also be able to provide mechanisms for dealing with such plugins and preferences in addition to its basic 'reasonably correct' sorting.
 
@@ -26,7 +23,7 @@ BOSSv3's masterlist will therefore be used to provide unordered data sets for pl
 
 If the 'impact' of a plugin is defined as the number of its edits that get applied to a person's game divided by the total number of edits it makes, then an 'optimum' load order is one that maximises the average impact of its constituent plugins whilst satisfying all explicit dependencies. A 'correct' load order is not necessarily an optimum load order though, as some plugins may be made with the intent that they are overridden by other plugins.
 
-For flexibility, the 'masterlist' data file that gets updated by the BOSS Team should have its online location as a configurable option within BOSS, so that should its location change for whatever reason, users would be able to redirect their copy of BOSS to look in the new location. It might be a good idea to download it via a diff, or allow compression somehow, as the Skyrim masterlist is 1.7 MB. 
+For flexibility, the 'masterlist' data file that gets updated by the BOSS Team should have its online location as a configurable option within BOSS, so that should its location change for whatever reason, users would be able to redirect their copy of BOSS to look in the new location. It might be a good idea to download it via a diff, or allow compression somehow, as the Skyrim masterlist is 1.7 MB. Also need to figure out how to do version checks, because currently it scans a web page for the version number, which isn't exactly robust or flexible.
 
 BOSSv3 will also have an API for accessing BOSS data and functionality. The more general functionality found in v2's API has already been forked to libloadorder, which v3 shall make use of.
 
@@ -37,69 +34,74 @@ When run, BOSS shall output its results to a report file, which shall then be in
 BOSSv3 won't have a command line interface, to simplify things. It also allows BOSSv3 to have a greater focus on users making sure their load order is correct, which is something that is sadly lacking from most users at the moment. Most users don't look any further than assuming BOSS has set their order correctly, which is unfortunate. 
 
 
-Roadmap/To Do
-=============
+## Roadmap/To Do
     
-- Write new masterlist, userlist, settings file parsers. DONE
-- Implement per-game handling. DONE
-- Write API. DONE
-- Tie together automatic 'simple' sorting with masterlist, userlist data parsing and usage. DONE
-- Initialisation and finishing routines (read settings file, write log file, etc.). DONE
-- Remove game detection override. DONE
-- Include libespm initialisation into Game constructor. DONE
-- Implement reading of plugin versions from their description field. DONE
-- Develop UI - main window. DONE
-- Develop UI - settings window. DONE
-- Develop sorting algorithm.
-- Write masterlist updating code.
-- Develop UI - metadata editor window. DONE
-- Develop UI - report viewer.
-- Error handling.
-- Checks for cyclic dependencies and incompatibilities.
-- Setting load order.
-- Optimisations to load ordering.
-- Implement logging.
-- Add a quick header-only plugin read for use when loading the metadata editor, so that existing Bash Tags can also be displayed.
-- Add checks for "Deactivate" tag compliance?
-- Make validity checks non-fatal.
-- Add a massive "RUN THE GAME LAUNCHER IF YOUR GAME IS NOT DETECTED" message somewhere.
+- [x] Write new masterlist, userlist, settings file parsers. DONE
+- [x] Implement per-game handling. DONE
+- [x] Write API. DONE
+- [x] Tie together automatic 'simple' sorting with masterlist, userlist data parsing and usage. DONE
+- [x] Initialisation and finishing routines (read settings file, write log file, etc.). DONE
+- [x] Remove game detection override. DONE
+- [x] Include libespm initialisation into Game constructor. DONE
+- [x] Implement reading of plugin versions from their description field. DONE
+- [x] Develop UI - main window. DONE
+- [x] Develop UI - settings window. DONE
+- [ ] Develop sorting algorithm.
+- [ ] Work out how to implement masterlist updating and write the code.
+- [x] Develop UI - metadata editor window. DONE
+- [ ] Develop UI - report viewer.
+- [ ] Error handling.
+- [ ] Checks for cyclic dependencies and incompatibilities.
+- [ ] Setting load order.
+- [ ] Optimisations to load ordering.
+- [ ] Implement logging.
+- [ ] Add a quick header-only plugin read for use when loading the metadata editor, so that existing Bash Tags can also be displayed.
+- [ ] Add checks for "Deactivate" tag compliance?
+- [ ] Make validity checks non-fatal.
+- [ ] Add a massive "RUN THE GAME LAUNCHER IF YOUR GAME IS NOT DETECTED" message somewhere.
+- [ ] Generalise Total Conversion support, so that any TC for any of the supported 'base' games can be used with BOSS.
 
 
-BOSS Report
-===========
+## BOSS Report
 
 Once BOSS has applied a load order, it will display a report, similar to the BOSS Log, that covers the following:
 
-  - The number of messagesm, broken down into the total, the number of warnings and the number of errors.
-  - The masterlist version used and whether the masterlist was updated or not.
-  - Any parser or validity checker errors encountered.
-  - If there were any changes since BOSS was last run.
-  - The new load order.
-  - The messages attached to plugins, version numbers read, CRCs calculated and whether or not each plugin is active.
+* The number of messagesm, broken down into the total, the number of warnings and the number of errors.
+* The masterlist version used and whether the masterlist was updated or not.
+* Any parser or validity checker errors encountered.
+* If there were any changes since BOSS was last run.
+* The new load order.
+* The messages attached to plugins, version numbers read, CRCs calculated and whether or not each plugin is active.
 
 The current BOSS Log has a number of useful filters. Depending on the UI used for the report, some or all of these filters may be useful for implementation:
 
-  - Hide versions
-  - Hide whether a plugin is active or not.
-  - Hide CRCs
-  - Hide "say" messages.
-  - Hide Bash Tag suggestions.
-  - Hide all messages.
-  - Hide "do not clean" messages.
-  - Hide inactive plugins.
-  - Hide messageless plugins.
+* Hide versions
+* Hide whether a plugin is active or not.
+* Hide CRCs
+* Hide "say" messages.
+* Hide Bash Tag suggestions.
+* Hide all messages.
+* Hide "do not clean" messages.
+* Hide inactive plugins.
+* Hide messageless plugins.
+
+The report data will be stored in a YAML file, which could use an extended form of the metadata file syntax, with the following additions:
+
+* Plugins get 'version' (string) and 'crc' (int) nodes added to them.
+* A new top-level node that holds a 'masterlist version' (string), a 'masterlist updated' (boolean) and a 'report changed' (boolean) node.
+
+That should cover all the data necessary. In terms of UI, much of the BOSS Log UI is unnecessary in v3, all that's needed really is the summary page and the 'recognised' plugin list. They should be kept separate, maybe using notebook tabs, since that works quite well for the current BOSS Log. I would like to use HTML/CSS for the contents, but wxWidgets' HTML module makes that a bit involved.
 
 
-Optimisation
-============
+## Optimisation
 
 Some ideas that have yet to be tested or implemented:
 
-  - If no changes have been made to the installed plugins since previous sorting, then the same order could be applied. This would require CRC checks to make sure plugins haven't been edited though, so it's not clear without profiling whether it would improve or worsen performance.
-  - If plugins have only been removed since last sort, the same order could be used, except that some conditions might be evaluated differently in their absence, so again this isn't clear-cut.
-  - If plugins have been added but those plugins contain only new records, then they can be positioned alphabetically at the end without any trouble.
-  - Masterlist updating using the Subversion API to get only diffs of the file. This would require the masterlists to be always hosted in an SVN repository, which reduces flexibility somewhat, and I've always found SVN to be really slow in practice. If the API isn't too complicated, it might be worth a shot though.
-  - Masterlist updating could also just use a straightforward HTTP GET request, and if this method is chosen then the Accept-Encoding header should be sent with appropriate values so that the server can use compression when serving the file. Unfortunately, Google Code doesn't seem to use it, though other sites do.
+* If no changes have been made to the installed plugins since previous sorting, then the same order could be applied. This would require CRC checks to make sure plugins haven't been edited though, so it's not clear without profiling whether it would improve or worsen performance.
+* If plugins have only been removed since last sort, the same order could be used, except that some conditions might be evaluated differently in their absence, so again this isn't clear-cut.
+* If plugins have been added but those plugins contain only new records, then they can be positioned alphabetically at the end without any trouble.
+* Masterlist updating using the Subversion API to get only diffs of the file. This would require the masterlists to be always hosted in an SVN repository, which reduces flexibility somewhat, and I've always found SVN to be really slow in practice. If the API isn't too complicated, it might be worth a shot though.
+* Masterlist updating could also just use a straightforward HTTP GET request, and if this method is chosen then the Accept-Encoding header should be sent with appropriate values so that the server can use compression when serving the file. Unfortunately, Google Code doesn't seem to use it, though other sites do.
 
 
 Data Files Format
@@ -114,16 +116,14 @@ The masterlist and userlist will use the same parser, and simply combined by mer
 Further details can be found in the 'docs/BOSS Metadata File Syntax.html' file. An example settings file can be found at 'examples/settings.yaml'.
 
 
-Install Structure
-=================
+## Install Structure
 
 LOOT will be a self-contained installation that can be dropped anywhere. It will have an installer option that also installs some Start menu shortcuts and a Registry entry, but these will not be required for LOOT to function.
 
 The directory structure will be identical to that which BOSS currently has, with the exception that the text and ini files will be replaced by YAML files.
 
 
-Misc
-====
+## Misc
 
 Here is the full list of BOSS members at the end of 2012. Any of these who lose
 their membership status should still be credited in the BOSS readme:
