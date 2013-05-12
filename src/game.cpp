@@ -154,8 +154,8 @@ namespace boss {
         return fs::path(bossFolderName) / "userlist.yaml";
     }
     
-    fs::path Game::ResultsPath() const {
-        return fs::path(bossFolderName) / "results.yaml";
+    fs::path Game::ReportPath() const {
+        return fs::path(bossFolderName) / "report.html";
     }
 
     void Game::RefreshActivePluginsList() {

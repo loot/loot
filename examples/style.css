@@ -1,0 +1,124 @@
+body {
+    font:10pt/1.5 Helvetica,sans-serif;
+    margin:0;
+    background:#f8f8f8;
+}
+noscript div {
+    background:#c00;
+    display:block;
+    padding:10px 5px;
+    color:white;
+}
+#nav {
+    background:#eee;
+    position:fixed;
+    top:0;
+    left:0;
+    z-index:2;
+    box-shadow: 0 0 3px 1px rgba(0,0,0,0.5);
+    width:100%;
+}
+.button {
+    display:inline-table;
+    cursor:pointer;
+    padding:0.5em;
+    text-decoration:none;
+    transition:background 0.2s;
+}
+.button.current {
+    background: #ccc;
+}
+.button[id] {
+    position:absolute;
+    right:0;
+}
+#main {
+    position:absolute;
+    top:32px;
+    width:100%;
+}
+#summary, #plugins {
+    padding:1em;
+}
+table {
+    margin:0 auto;
+    border-radius:10px;
+    border-collapse:separate;
+    border-spacing:0;
+}
+td {
+    padding:0.5em;
+    line-height:1.5;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    text-align:right;
+    padding-left:3em;
+}
+table tr:first-child td {
+    border-top: 1px solid #ccc;
+}
+table td:first-child {
+    text-align:left;
+    padding-left:0.5em;
+    border-left: 1px solid #ccc;
+    border-right: none;
+}
+table tr:first-child td:first-child {
+    border-top-left-radius: 5px;
+}
+table tr:first-child td:last-child {
+    border-top-right-radius: 5px;
+}
+table tr:last-child td:first-child {
+    border-bottom-left-radius: 5px;
+}
+table tr:last-child td:last-child {
+    border-bottom-right-radius: 5px;
+}
+#noChanges {
+	font-weight:bold;
+	font-size:12pt;
+	text-align:center;
+	margin:1em;
+}
+#filters {
+    background:#e8e8e8;
+    z-index:1;
+    overflow:hidden;
+    position:fixed;
+    right:0;
+    top:32px;
+    height:0;
+}
+#filters.visible {
+    height:auto;
+    box-shadow:0 0 3px 1px rgba(0,0,0,0.5);
+}
+#filters label {
+    display:block;
+    padding:0.2em 0.5em;
+    white-space:nowrap;
+    cursor:pointer;
+}
+#filters div {
+    padding:0.4em;
+    font-style:italic;
+}
+input[type='checkbox'] {
+    position:relative;
+    top:0.15em;
+    margin-right:0.5em;
+}
+
+ul {margin-top:0.5em; margin-bottom:1em;}
+li {margin:0.75em 0;}
+
+.active {
+	display:block;
+	color:green;
+	margin-left:1.5em;
+}
+#plugins > ul {list-style:none;}
+.hidden, #summary.hidden, #plugins.hidden {
+    display:none;
+}

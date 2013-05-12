@@ -11,10 +11,10 @@
 cmake_minimum_required (VERSION 2.8.9)
 project (boss)
 
-set (BOSS_SRC "${CMAKE_SOURCE_DIR}/src/metadata.cpp" "${CMAKE_SOURCE_DIR}/src/game.cpp" "${CMAKE_SOURCE_DIR}/src/helpers.cpp")
+set (BOSS_SRC "${CMAKE_SOURCE_DIR}/src/metadata.cpp" "${CMAKE_SOURCE_DIR}/src/game.cpp" "${CMAKE_SOURCE_DIR}/src/helpers.cpp" "${PROJECT_LIBS_DIR}/pugixml/src/pugixml.cpp")
 
 # Include source and library directories.
-include_directories ("${PROJECT_LIBS_DIR}/alphanum" "${PROJECT_LIBS_DIR}/boost" "${PROJECT_LIBS_DIR}/yaml-cpp/include" "${CMAKE_SOURCE_DIR}/src" "${PROJECT_LIBS_DIR}/libloadorder/src" "${PROJECT_LIBS_DIR}/libespm" "${PROJECT_LIBS_DIR}/zlib")
+include_directories ("${PROJECT_LIBS_DIR}/alphanum" "${PROJECT_LIBS_DIR}/boost" "${PROJECT_LIBS_DIR}/yaml-cpp/include" "${CMAKE_SOURCE_DIR}/src" "${PROJECT_LIBS_DIR}/libloadorder/src" "${PROJECT_LIBS_DIR}/libespm" "${PROJECT_LIBS_DIR}/zlib" "${PROJECT_LIBS_DIR}/pugixml/src")
 
 
 ##############################
@@ -54,7 +54,7 @@ IF (CMAKE_HOST_SYSTEM_NAME MATCHES "Linux")
     IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
         link_directories ("${PROJECT_LIBS_DIR}/boost/stage-mingw-${PROJECT_ARCH}/lib" "${PROJECT_LIBS_DIR}/wxWidgets/build-msw/lib")
         include_directories ("${PROJECT_LIBS_DIR}/wxWidgets/build-msw/lib/wx/include/i586-mingw32msvc-msw-unicode-static-2.9" "${PROJECT_LIBS_DIR}/wxWidgets/include")
-        set (BOSS_LIBS version wx_mswu_core-2.9-i586-mingw32msvc wx_baseu-2.9-i586-mingw32msvc wx_mswu_adv-2.9-i586-mingw32msvc wxpng-2.9-i586-mingw32msvc wxzlib-2.9-i586-mingw32msvc comctl32)
+        set (BOSS_LIBS version wx_mswu_webview-2.9-i586-mingw32msvc wx_mswu_core-2.9-i586-mingw32msvc wx_baseu-2.9-i586-mingw32msvc wx_mswu_adv-2.9-i586-mingw32msvc wxpng-2.9-i586-mingw32msvc wxzlib-2.9-i586-mingw32msvc comctl32)
         set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--subsystem,windows")
     ENDIF ()
 
@@ -71,7 +71,7 @@ ENDIF ()
 # More General Settings
 ##############################
 
-set (BOSS_GUI_SRC ${BOSS_SRC} "${CMAKE_SOURCE_DIR}/src/gui/ids.cpp" "${CMAKE_SOURCE_DIR}/src/gui/main.cpp" "${CMAKE_SOURCE_DIR}/src/gui/settings.cpp" "${CMAKE_SOURCE_DIR}/src/gui/editor.cpp")
+set (BOSS_GUI_SRC ${BOSS_SRC} "${CMAKE_SOURCE_DIR}/src/gui/ids.cpp" "${CMAKE_SOURCE_DIR}/src/gui/main.cpp" "${CMAKE_SOURCE_DIR}/src/gui/settings.cpp" "${CMAKE_SOURCE_DIR}/src/gui/editor.cpp" "${CMAKE_SOURCE_DIR}/src/gui/viewer.cpp")
 
 set (BOSS_API_SRC ${BOSS_SRC} "${CMAKE_SOURCE_DIR}/src/api.cpp")
 

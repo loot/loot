@@ -23,12 +23,14 @@
 #include "main.h"
 #include "settings.h"
 #include "editor.h"
+#include "viewer.h"
 
 #include "../globals.h"
 #include "../metadata.h"
 #include "../parsers.h"
 #include "../error.h"
 #include "../helpers.h"
+#include "../generators.h"
 
 #include <ostream>
 #include <algorithm>
@@ -272,7 +274,7 @@ Launcher::Launcher(const wxChar *title, YAML::Node& settings, Game& game, const 
 	else if (_game.Id() == GAME_FONV)
 		GameMenu->FindItem(MENU_FalloutNewVegas)->Check();
 
-    if (!fs::exists(_game.ResultsPath()))
+    if (!fs::exists(_game.ReportPath()))
         ViewButton->Enable(false);
 
     //Disable the menu items for the undetected games.
@@ -513,16 +515,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     out << "Writing results file..." << endl;
 
-    YAML::Emitter yout;
-    yout.SetIndent(2);
-    yout << YAML::BeginMap
-         << YAML::Key << "globals" << YAML::Value << messages
-         << YAML::Key << "plugins" << YAML::Value << plugins
-         << YAML::EndMap;
-
-    ofstream results_out(_game.ResultsPath().string().c_str());
-    results_out << yout.c_str();
-    results_out.close();
+    GenerateReport(_game.ReportPath().string());
 
     progDia->Pulse();
     
@@ -605,7 +598,10 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
 }
 
 void Launcher::OnViewLastReport(wxCommandEvent& event) {
-
+    //Create viewer window.
+    Viewer *viewer = new Viewer(this, translate("BOSS: Report Viewer"), _game);
+    
+	viewer->Show();
 }
 
 void Launcher::OnOpenSettings(wxCommandEvent& event) {

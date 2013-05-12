@@ -36,19 +36,19 @@ BOSSv3 won't have a command line interface, to simplify things. It also allows B
 
 ## Roadmap/To Do
     
-- [x] Write new masterlist, userlist, settings file parsers. DONE
-- [x] Implement per-game handling. DONE
-- [x] Write API. DONE
-- [x] Tie together automatic 'simple' sorting with masterlist, userlist data parsing and usage. DONE
-- [x] Initialisation and finishing routines (read settings file, write log file, etc.). DONE
-- [x] Remove game detection override. DONE
-- [x] Include libespm initialisation into Game constructor. DONE
-- [x] Implement reading of plugin versions from their description field. DONE
-- [x] Develop UI - main window. DONE
-- [x] Develop UI - settings window. DONE
+- [x] Write new masterlist, userlist, settings file parsers.
+- [x] Implement per-game handling.
+- [x] Write API.
+- [x] Tie together automatic 'simple' sorting with masterlist, userlist data parsing and usage.
+- [x] Initialisation and finishing routines (read settings file, write log file, etc.).
+- [x] Remove game detection override.
+- [x] Include libespm initialisation into Game constructor.
+- [x] Implement reading of plugin versions from their description field.
+- [x] Develop UI - main window.
+- [x] Develop UI - settings window.
 - [ ] Develop sorting algorithm.
 - [ ] Work out how to implement masterlist updating and write the code.
-- [x] Develop UI - metadata editor window. DONE
+- [x] Develop UI - metadata editor window.
 - [ ] Develop UI - report viewer.
 - [ ] Error handling.
 - [ ] Checks for cyclic dependencies and incompatibilities.
@@ -60,14 +60,17 @@ BOSSv3 won't have a command line interface, to simplify things. It also allows B
 - [ ] Make validity checks non-fatal.
 - [ ] Add a massive "RUN THE GAME LAUNCHER IF YOUR GAME IS NOT DETECTED" message somewhere.
 - [ ] Generalise Total Conversion support, so that any TC for any of the supported 'base' games can be used with BOSS.
+- [ ] Write XHTML report generator.
+- [ ] Write report CSS.
+- [ ] Write report Javascript.
 
 
 ## BOSS Report
 
 Once BOSS has applied a load order, it will display a report, similar to the BOSS Log, that covers the following:
 
-* The number of messagesm, broken down into the total, the number of warnings and the number of errors.
-* The masterlist version used and whether the masterlist was updated or not.
+* The number of messages, broken down into the total, the number of warnings and the number of errors.
+* The masterlist version used.
 * Any parser or validity checker errors encountered.
 * If there were any changes since BOSS was last run.
 * The new load order.
@@ -90,7 +93,7 @@ The report data will be stored in a YAML file, which could use an extended form 
 * Plugins get 'version' (string) and 'crc' (int) nodes added to them.
 * A new top-level node that holds a 'masterlist version' (string), a 'masterlist updated' (boolean) and a 'report changed' (boolean) node.
 
-That should cover all the data necessary. In terms of UI, much of the BOSS Log UI is unnecessary in v3, all that's needed really is the summary page and the 'recognised' plugin list. They should be kept separate, maybe using notebook tabs, since that works quite well for the current BOSS Log. I would like to use HTML/CSS for the contents, but wxWidgets' HTML module makes that a bit involved.
+There are a whole slew of options when it comes to how the report UI will be implemented. Using a native interface isn't a realistic option because it's so difficult to get anything that isn't very limited implemented, and the report is mostly static so wouldn't take advantage of native controls anyway. A HTML/CSS/JS approach is therefore preferable. The neatest way to do this would be to write the HTML as XHTML using PugiXML, then include external CSS & JS that gets distributed with BOSS.
 
 
 ## Optimisation
@@ -104,8 +107,7 @@ Some ideas that have yet to be tested or implemented:
 * Masterlist updating could also just use a straightforward HTTP GET request, and if this method is chosen then the Accept-Encoding header should be sent with appropriate values so that the server can use compression when serving the file. Unfortunately, Google Code doesn't seem to use it, though other sites do.
 
 
-Data Files Format
-=================
+## Data Files Format
 
 BOSSv3's settings file, masterlist, userlist and previous run logs will all be written in YAML. This allows me to take advantage of existing parsing libraries and the format's flexibility. It's also not that much more verbose than v2's masterlist format, once data structure changes are taken into account.
 
@@ -121,6 +123,18 @@ Further details can be found in the 'docs/BOSS Metadata File Syntax.html' file. 
 LOOT will be a self-contained installation that can be dropped anywhere. It will have an installer option that also installs some Start menu shortcuts and a Registry entry, but these will not be required for LOOT to function.
 
 The directory structure will be identical to that which BOSS currently has, with the exception that the text and ini files will be replaced by YAML files.
+
+
+## Required Libraries
+
+BOSS uses the following libraries:
+
+* Alphanum
+* Boost
+* Libespm
+* Libloadorder
+* wxWidgets
+* yaml-cpp
 
 
 ## Misc

@@ -57,7 +57,7 @@ namespace boss {
         boost::filesystem::path DataPath() const;
         boost::filesystem::path MasterlistPath() const;
         boost::filesystem::path UserlistPath() const;
-        boost::filesystem::path ResultsPath() const;
+        boost::filesystem::path ReportPath() const;
 
         //Creates directory in BOSS folder for BOSS's game-specific files.
         void CreateBOSSGameFolder();
