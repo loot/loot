@@ -154,6 +154,13 @@ namespace boss {
         return (boost::iequals(Type(), rhs.Type()) && boost::iequals(Content(), rhs.Content()));
     }
 
+    bool Message::EvalCondition(boss::Game& game, const std::string& lang) const {
+        if (language.empty() || boost::iequals(language, lang))
+            return ConditionalData::EvalCondition(game);
+        else
+            return false;
+    }
+
     std::string Message::Type() const {
         return type;
     }
@@ -236,12 +243,12 @@ namespace boss {
         return Data();
     }
 
-    Plugin::Plugin() : enabled(true), priority(0), isMaster(false) {}
-    Plugin::Plugin(const std::string& n) : name(n), enabled(true), priority(0), isMaster(false) {}
+    Plugin::Plugin() : enabled(true), priority(0), isMaster(false), isActive(false), crc(0) {}
+    Plugin::Plugin(const std::string& n) : name(n), enabled(true), priority(0), isMaster(false), isActive(false), crc(0) {}
 
-	Plugin::Plugin(const boss::Game& game, const std::string& n)
+	Plugin::Plugin(boss::Game& game, const std::string& n)
 		: name(n), enabled(true), priority(0) {
-		/*	
+			
 		// Get data from file contents using libespm. Assumes libespm has already been initialised.
 		boost::filesystem::path filepath = game.DataPath() / n;
 		espm::File file(filepath.string(), game.espm_settings, false, false);
@@ -281,7 +288,9 @@ namespace boss {
                 
                 size_t pos1 = text.find("{{BASH:");
                 if (pos1 == string::npos)
-                    continue;
+                    break;
+
+                pos1 += 7;
 
                 size_t pos2 = text.find("}}", pos1);
                 if (pos2 == string::npos)
@@ -298,7 +307,20 @@ namespace boss {
 
                 break;
             }
-        }*/
+        }
+
+        //Calculate the plugin's CRC, and add it to the hashset.
+        boost::unordered_map<string,uint32_t>::iterator it = game.crcCache.find(boost::to_lower_copy(name));
+
+        if (it != game.crcCache.end())
+            crc = it->second;
+        else {
+            crc = GetCrc32(game.DataPath() / name);
+            game.crcCache.emplace(boost::to_lower_copy(name), crc);
+        }
+
+        //Check if plugin is active.
+        isActive = game.IsActive(name);
 	}
 
     void Plugin::Merge(const Plugin& plugin, bool ifDisabled) {
@@ -437,7 +459,7 @@ namespace boss {
         tags = t;
     }
 
-    void Plugin::EvalAllConditions(boss::Game& game) {
+    void Plugin::EvalAllConditions(boss::Game& game, const std::string& language) {
         for (set<File>::iterator it = loadAfter.begin(); it != loadAfter.end();) {
             if (!it->EvalCondition(game))
                 loadAfter.erase(it++);
@@ -460,7 +482,7 @@ namespace boss {
         }
 
         for (list<Message>::iterator it = messages.begin(); it != messages.end();) {
-            if (!it->EvalCondition(game))
+            if (!it->EvalCondition(game, language))
                 it = messages.erase(it);
             else
                 ++it;
@@ -557,6 +579,14 @@ namespace boss {
 
     std::string Plugin::Version() const {
         return version;
+    }
+
+    uint32_t Plugin::Crc() const {
+        return crc;
+    }
+
+    bool Plugin::IsActive() const {
+        return isActive;
     }
 
     bool Plugin::MustLoadAfter(const Plugin& plugin) const {

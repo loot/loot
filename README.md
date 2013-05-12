@@ -60,40 +60,13 @@ BOSSv3 won't have a command line interface, to simplify things. It also allows B
 - [ ] Make validity checks non-fatal.
 - [ ] Add a massive "RUN THE GAME LAUNCHER IF YOUR GAME IS NOT DETECTED" message somewhere.
 - [ ] Generalise Total Conversion support, so that any TC for any of the supported 'base' games can be used with BOSS.
-- [ ] Write XHTML report generator.
+- [x] Write XHTML report generator.
 - [ ] Write report CSS.
 - [ ] Write report Javascript.
-
-
-## BOSS Report
-
-Once BOSS has applied a load order, it will display a report, similar to the BOSS Log, that covers the following:
-
-* The number of messages, broken down into the total, the number of warnings and the number of errors.
-* The masterlist version used.
-* Any parser or validity checker errors encountered.
-* If there were any changes since BOSS was last run.
-* The new load order.
-* The messages attached to plugins, version numbers read, CRCs calculated and whether or not each plugin is active.
-
-The current BOSS Log has a number of useful filters. Depending on the UI used for the report, some or all of these filters may be useful for implementation:
-
-* Hide versions
-* Hide whether a plugin is active or not.
-* Hide CRCs
-* Hide "say" messages.
-* Hide Bash Tag suggestions.
-* Hide all messages.
-* Hide "do not clean" messages.
-* Hide inactive plugins.
-* Hide messageless plugins.
-
-The report data will be stored in a YAML file, which could use an extended form of the metadata file syntax, with the following additions:
-
-* Plugins get 'version' (string) and 'crc' (int) nodes added to them.
-* A new top-level node that holds a 'masterlist version' (string), a 'masterlist updated' (boolean) and a 'report changed' (boolean) node.
-
-There are a whole slew of options when it comes to how the report UI will be implemented. Using a native interface isn't a realistic option because it's so difficult to get anything that isn't very limited implemented, and the report is mostly static so wouldn't take advantage of native controls anyway. A HTML/CSS/JS approach is therefore preferable. The neatest way to do this would be to write the HTML as XHTML using PugiXML, then include external CSS & JS that gets distributed with BOSS.
+- [ ] Double-check ghosted file support.
+- [ ] Add a setting that lets users choose whether to use the viewer window or their own browser when viewing BOSS's report.
+- [ ] Somehow implement filter settings memory for the BOSS report.
+- [ ] Implement checking of details part of report against previous report.
 
 
 ## Optimisation
@@ -133,6 +106,7 @@ BOSS uses the following libraries:
 * Boost
 * Libespm
 * Libloadorder
+* PugiXML
 * wxWidgets
 * yaml-cpp
 

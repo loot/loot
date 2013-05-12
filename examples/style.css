@@ -88,11 +88,11 @@ table tr:last-child td:last-child {
     position:fixed;
     right:0;
     top:32px;
-    height:0;
-}
-#filters.visible {
-    height:auto;
+    display:block;
     box-shadow:0 0 3px 1px rgba(0,0,0,0.5);
+}
+#filters.hidden {
+    display:none;
 }
 #filters label {
     display:block;

@@ -340,6 +340,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             string filename = it->path().filename().string();
 			out << "Reading plugin: " << filename << endl;
 			boss::Plugin plugin(_game, filename);
+            //boss::Plugin plugin(filename);
             plugins.push_back(plugin);
 
             progDia->Pulse();
@@ -436,7 +437,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     for (list<boss::Plugin>::iterator it=plugins.begin(), endIt=plugins.end(); it != endIt; ++it) {
         try {
-            it->EvalAllConditions(_game);
+            it->EvalAllConditions(_game, _settings["Language"].as<string>());
         } catch (boss::error& e) {
             //LOG_ERROR("Error: %s", e.what());
             wxMessageBox(
@@ -515,7 +516,12 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     out << "Writing results file..." << endl;
 
-    GenerateReport(_game.ReportPath().string());
+    GenerateReport(_game.ReportPath().string(),
+                    messages,
+                    plugins,
+                    "4030 (2020-13-13)",
+                    _settings["Update Masterlist"].as<bool>(),
+                    true);
 
     progDia->Pulse();
     

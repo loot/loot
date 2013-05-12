@@ -85,6 +85,8 @@ namespace boss {
         bool operator < (const Message& rhs) const;
         bool operator == (const Message& rhs) const;
 
+        bool EvalCondition(boss::Game& game, const std::string& language) const;
+
         std::string Type() const;
         std::string Language() const;
         std::string Content() const;
@@ -129,7 +131,7 @@ namespace boss {
     public:
         Plugin();
         Plugin(const std::string& name);
-        Plugin(const boss::Game& game, const std::string& name);
+        Plugin(boss::Game& game, const std::string& name);
 
         void Merge(const Plugin& plugin, bool ifdDisabled = false);
         Plugin DiffMetadata(const Plugin& plugin) const;
@@ -147,6 +149,8 @@ namespace boss {
         std::vector<std::string> Masters() const;
         bool IsMaster() const;  //Checks master bit flag.
         std::string Version() const;
+        uint32_t Crc() const;
+        bool IsActive() const;
 
         void Name(const std::string& name);
         void Enabled(const bool enabled);
@@ -157,7 +161,7 @@ namespace boss {
         void Messages(const std::list<Message>& messages);
         void Tags(const std::set<Tag>& tags);
 
-        void EvalAllConditions(boss::Game& game);
+        void EvalAllConditions(boss::Game& game, const std::string& language);
         bool HasNameOnly() const;
         bool IsRegexPlugin() const;
 
@@ -191,6 +195,8 @@ namespace boss {
         std::set<FormID> formIDs;
         std::string version;  //Obtained from description field.
         bool isMaster;
+        bool isActive;
+        uint32_t crc;
     };
     
     bool operator == (const File& lhs, const Plugin& rhs);

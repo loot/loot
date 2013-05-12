@@ -25,17 +25,13 @@ if (!document.getElementsByClassName) {
 function showElement(element) {
     if (element != null) {
         if (element.className.indexOf('hidden') != -1) {
-            element.className = element.className.replace(' hidden', '');
-        } else if (element.className.indexOf('visible') == -1) {
-            element.className += ' visible';
+            element.className = element.className.replace('hidden', '');
         }
     }
 }
 function hideElement(element) {
     if (element != null) {
-        if (element.className.indexOf('visible') != -1) {
-            element.className = element.className.replace('visible', '');
-        } else if (element.className.indexOf('hidden') == -1) {
+        if (element.className.indexOf('hidden') == -1) {
             element.className += ' hidden';
         }
     }
@@ -58,7 +54,7 @@ function toggleDisplayCSS(evt) {
         }
     } else {
         for (var i = 0, z = e.length; i < z; i++) {
-            e[i].className = e[i].className.replace(' hidden', '');
+            e[i].className = e[i].className.replace('hidden', '');
         }
     }
 }
@@ -68,15 +64,20 @@ function toggleFilters(evt) {
         evt.target.className += ' current';
     } else {
         hideElement(filters);
-        evt.target.className = evt.target.className.replace(' current', '');
+        evt.target.className = evt.target.className.replace('current', '');
     }
 }
 function showSection(evt) {
-    hideElement(document.querySelector('#summary,#plugins'));
+    elemArr = document.getElementById('nav').querySelectorAll('.button[data-section]');
+    var i = elemArr.length - 1;
+    while (i > -1) {
+        hideElement(document.getElementById(elemArr[i].getAttribute('data-section')));
+        i--;
+    }
     showElement(document.getElementById(evt.target.getAttribute('data-section')));
     var elem = document.querySelector('#nav div.current[data-section]');
     if (elem != null) {
-        elem.className = elem.className.replace(' current', '');
+        elem.className = elem.className.replace('current', '');
     }
     if (evt.target.className.indexOf('current') == -1) {
         evt.target.className += ' current';

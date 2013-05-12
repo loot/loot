@@ -34,7 +34,14 @@
 
 namespace boss {
 
-    void WriteMessage(pugi::xml_node& listItem, std::string content) {
+    void WriteMessage(pugi::xml_node& listItem, std::string type, std::string content) {
+
+        if (type == "say")
+            content = "Note: " + content;
+        else if (type == "warn")
+            content = "Warning: " + content;
+        else
+            content = "Error: " + content;
 
         size_t pos1f = content.find("\"file:");
         size_t pos1h = content.find("\"http");
@@ -136,6 +143,28 @@ namespace boss {
         div.text().set("Filters");
     }
 
+    void AppendMessages(pugi::xml_node& parent, const std::list<Message>& messages, int& warnNo, int& errorNo) {
+        if (!messages.empty()) {
+            pugi::xml_node list = parent.append_child();
+            list.set_name("ul");
+
+            for (std::list<Message>::const_iterator it=messages.begin(), endit=messages.end(); it != endit; ++it) {
+
+                pugi::xml_node li = list.append_child();
+                li.set_name("li");
+                li.append_attribute("class").set_value(it->Type().c_str());
+
+                //Turn any urls into hyperlinks.
+                WriteMessage(li, it->Type(), it->Content());
+
+                if (boost::iequals(it->Type(), "warn"))
+                    ++warnNo;
+                else if (boost::iequals(it->Type(), "error"))
+                    ++errorNo;
+            }
+        }
+    }
+
     void AppendSummary(pugi::xml_node& main,
                         bool hasChanged,
                         const std::string& masterlistVersion,
@@ -143,8 +172,7 @@ namespace boss {
                         int messageNo,
                         int warnNo,
                         int errorNo,
-                        const std::list<Message>& messages,
-                        const std::string& language) {
+                        const std::list<Message>& messages) {
 
         pugi::xml_node summary = main.append_child();
         summary.set_name("div");
@@ -187,6 +215,16 @@ namespace boss {
         else
             cell.text().set("Disabled");
 
+        if (hasChanged) {
+            pugi::xml_node note = summary.append_child();
+            note.set_name("div");
+            note.append_attribute("id").set_value("noChanges");
+            note.text().set("No change in details since last run.");
+        }
+
+        AppendMessages(summary, messages, warnNo, errorNo);
+        messageNo += messages.size();
+
         row = table.append_child();
         row.set_name("tr");
         cell = row.append_child();
@@ -213,43 +251,84 @@ namespace boss {
         cell = row.append_child();
         cell.set_name("td");
         cell.text().set(IntToString(errorNo).c_str());
+    }
 
-        if (hasChanged) {
-            pugi::xml_node note = summary.append_child();
-            note.set_name("div");
-            note.append_attribute("id").set_value("noChanges");
-            note.text().set("No changes since last run.");
-        }
+    void AppendDetails(pugi::xml_node& main, const std::list<Plugin>& plugins, int& messageNo, int& warnNo, int& errorNo) {
 
-        if (!messages.empty()) {
-            pugi::xml_node list = summary.append_child();
-            list.set_name("ul");
+        pugi::xml_node details = main.append_child();
+        details.set_name("div");
+        details.append_attribute("id").set_value("plugins");
+        details.append_attribute("class").set_value("hidden");
 
-            for (std::list<Message>::const_iterator it=messages.begin(), endit=messages.end(); it != endit; ++it) {
-                //Need to weed out different language messages.
-                if (it->Language().empty() || boost::iequals(it->Language(), language)) {
+        if (!plugins.empty()) {
 
-                    pugi::xml_node li = list.append_child();
-                    li.set_name("li");
-                    li.append_attribute("class").set_value(it->Type().c_str());
+            details = details.append_child();
+            details.set_name("ul");
 
-                    //Turn any urls into hyperlinks.
-                    WriteMessage(li, it->Content());
-                    
+            for (std::list<Plugin>::const_iterator it=plugins.begin(), endit=plugins.end(); it != endit; ++it) {
+                pugi::xml_node plugin = details.append_child();
+                plugin.set_name("li");
+
+                pugi::xml_node node = plugin.append_child();
+                node.set_name("span");
+                node.append_attribute("class").set_value("mod");
+                node.text().set(it->Name().c_str());
+
+                if (!it->Version().empty()) {
+                    node = plugin.append_child();
+                    node.set_name("span");
+                    node.append_attribute("class").set_value("version");
+                    node.text().set(("Version: " + it->Version()).c_str());
                 }
+
+                if (it->Crc() > 0) {
+                    node = plugin.append_child();
+                    node.set_name("span");
+                    node.append_attribute("class").set_value("crc");
+                    node.text().set(("CRC: " + IntToHexString(it->Crc())).c_str());
+                }
+
+                if (it->IsActive()) {
+                    node = plugin.append_child();
+                    node.set_name("span");
+                    node.append_attribute("class").set_value("active");
+                    node.text().set("Active");
+                }
+
+                std::list<Message> messages = it->Messages();
+
+                std::set<Tag> tags = it->Tags();
+
+                if (!tags.empty()) {
+                    std::string add, remove, content;
+                    for (std::set<Tag>::const_iterator jt=tags.begin(), endjt=tags.end(); jt != endjt; ++jt) {
+                        if (jt->IsAddition())
+                            add += ", " + jt->Name();
+                        else
+                            remove += ", " + jt->Name();
+                    }
+                    if (!add.empty())
+                        content += "Bash Tags suggested for addition are " + add.substr(2) + ". ";
+                    if (!remove.empty())
+                        content += "Bash Tags suggested for removal are " + remove.substr(2) + ". ";
+                    messages.push_back(Message("say", content));
+                }
+
+                AppendMessages(plugin, messages, warnNo, errorNo);
+                messageNo += messages.size();
             }
         }
+        
     }
 
     void AppendMain(pugi::xml_node& body,
                         bool hasChanged,
                         const std::string& masterlistVersion,
                         bool masterlistUpdateEnabled,
-                        int messageNo,
-                        int warnNo,
-                        int errorNo,
                         const std::list<Message>& messages,
-                        const std::string& language) {
+                        const std::list<Plugin>& plugins,
+                        int& pluginMessageNo
+                        ) {
 
         pugi::xml_node main = body.append_child();
         main.set_name("div");
@@ -263,7 +342,11 @@ namespace boss {
         div.set_name("div");
         div.text().set("The BOSS Report requires Javascript to be enabled in order to function.");
 
-        AppendSummary(main, hasChanged, masterlistVersion, masterlistUpdateEnabled, messageNo, warnNo, errorNo, messages, language);
+        int messageNo=0, warnNo=0, errorNo=0;
+        AppendDetails(main, plugins, messageNo, warnNo, errorNo);
+        pluginMessageNo = messageNo;
+
+        AppendSummary(main, hasChanged, masterlistVersion, masterlistUpdateEnabled, messageNo, warnNo, errorNo, messages);
     }
 
     void AppendFilters(pugi::xml_node& body, int messageNo, int pluginNo) {
@@ -271,6 +354,7 @@ namespace boss {
         pugi::xml_node filters = body.append_child();
         filters.set_name("div");
         filters.append_attribute("id").set_value("filters");
+        filters.append_attribute("class").set_value("hidden");
 
         pugi::xml_node label, input;
 
@@ -384,7 +468,12 @@ namespace boss {
         
     }
 
-    void GenerateReport(const std::string& file) {
+    void GenerateReport(const std::string& file,
+                        const std::list<Message>& messages,
+                        const std::list<Plugin>& plugins,
+                        const std::string& masterlistVersion,
+                        const bool masterlistUpdateEnabled,
+                        const bool hasChanged) {
 
         pugi::xml_document doc;
 
@@ -395,18 +484,15 @@ namespace boss {
 
         AppendNav(body);
 
-        std::list<Message> messages;
-        messages.push_back(Message("say", "This is a test message with a link to \"http://www.google.com Google\" in it."));
-
-        AppendMain(body, true, "4308 (2013-06-06)", true, 500, 4, 2, messages, "eng");
+        int messageNo=0;
+        AppendMain(body, hasChanged, masterlistVersion, masterlistUpdateEnabled, messages, plugins, messageNo);
         
-        AppendFilters(body, 5, 5);
+        AppendFilters(body, messageNo, plugins.size());
         
         AppendScripts(body);
         
-
         if (!doc.save_file(file.c_str(), "\t", pugi::format_default | pugi::format_no_declaration))
-            throw std::runtime_error("Could not write XML file.");
+            throw boss::error(ERROR_PATH_WRITE_FAIL, "Could not write BOSS report.");
 
     }
         
