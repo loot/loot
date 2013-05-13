@@ -44,7 +44,6 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
 	wxString Game[] = {
 		translate("Autodetect"),
 		wxT("Oblivion"),
-		wxT("Nehrim"),
 		wxT("Skyrim"),
 		wxT("Fallout 3"),
 		wxT("Fallout: New Vegas"),
@@ -59,12 +58,11 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
 	};
 
     //Initialise controls.
-    GameChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 6, Game);
+    GameChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 5, Game);
     LanguageChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 1, Language);
     DebugVerbosityChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 4, DebugVerbosity);
 
     OblivionURL = new wxTextCtrl(this, wxID_ANY);
-    NehrimURL = new wxTextCtrl(this, wxID_ANY);
     SkyrimURL = new wxTextCtrl(this, wxID_ANY);
     FO3URL = new wxTextCtrl(this, wxID_ANY);
     FONVURL = new wxTextCtrl(this, wxID_ANY);
@@ -100,9 +98,6 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
 
     GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Oblivion Masterlist URL:")), leftItem);
 	GridSizer->Add(OblivionURL, rightItem);
-	
-    GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Nehrim Masterlist URL:")), leftItem);
-	GridSizer->Add(NehrimURL, rightItem);
 	
     GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Skyrim Masterlist URL:")), leftItem);
 	GridSizer->Add(SkyrimURL, rightItem);
@@ -157,14 +152,12 @@ void SettingsFrame::SetDefaultValues() {
             GameChoice->SetSelection(0);
         else if (game == "oblivion")
             GameChoice->SetSelection(1);
-        else if (game == "nehrim")
-            GameChoice->SetSelection(2);
         else if (game == "skyrim")
-            GameChoice->SetSelection(3);
+            GameChoice->SetSelection(2);
         else if (game == "fallout3")
-            GameChoice->SetSelection(4);
+            GameChoice->SetSelection(3);
         else if (game == "falloutnv")
-            GameChoice->SetSelection(5);
+            GameChoice->SetSelection(4);
     }
 
     if (_settings["Debug Verbosity"]) {
@@ -188,9 +181,6 @@ void SettingsFrame::SetDefaultValues() {
         if (urls["Oblivion"])
             OblivionURL->SetValue(FromUTF8(urls["Oblivion"].as<string>()));
 
-        if (urls["Nehrim"])
-            NehrimURL->SetValue(FromUTF8(urls["Nehrim"].as<string>()));
-
         if (urls["Skyrim"])
             SkyrimURL->SetValue(FromUTF8(urls["Skyrim"].as<string>()));
 
@@ -213,15 +203,12 @@ void SettingsFrame::OnQuit(wxCommandEvent& event) {
             _settings["Game"] = "oblivion";
             break;
         case 2:
-            _settings["Game"] = "nehrim";
-            break;
-        case 3:
             _settings["Game"] = "skyrim";
             break;
-        case 4:
+        case 3:
             _settings["Game"] = "fallout3";
             break;
-        case 5:
+        case 4:
             _settings["Game"] = "falloutnv";
             break;
         }
@@ -239,8 +226,6 @@ void SettingsFrame::OnQuit(wxCommandEvent& event) {
         _settings["View Report Externally"] = reportViewBox->IsChecked();
 
         _settings["Masterlist URLs"]["Oblivion"] = string(OblivionURL->GetValue().ToUTF8());
-
-        _settings["Masterlist URLs"]["Nehrim"] = string(NehrimURL->GetValue().ToUTF8());
 
         _settings["Masterlist URLs"]["Skyrim"] = string(SkyrimURL->GetValue().ToUTF8());
 

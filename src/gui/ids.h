@@ -42,7 +42,6 @@ enum {
 	OPTION_SortPlugins,
 	MENU_ShowSettings,
 	MENU_Oblivion,
-	MENU_Nehrim,
 	MENU_Skyrim,
 	MENU_Fallout3,
 	MENU_FalloutNewVegas,

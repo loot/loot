@@ -45,7 +45,7 @@ namespace boss {
     class Game {
     public:
         Game();  //Sets game to BOSS_GAME_AUTODETECT, with all other vars being empty.
-        Game(const unsigned int gameCode, const bool pathInit = true); //Empty path means constructor will detect its location. If noPathInit is true, then the game's BOSS subfolder will not be created.
+        Game(const unsigned int gameCode, const bool pathInit = true);
 
         bool IsInstalled() const;
         bool IsInstalledLocally() const;

@@ -33,7 +33,6 @@ namespace boss {
     const unsigned int GAME_TES5        = 2;
     const unsigned int GAME_FO3         = 3;
     const unsigned int GAME_FONV        = 4;
-    const unsigned int GAME_NEHRIM      = 5;
 
     //Version numbers.
     const unsigned int VERSION_MAJOR = 3;

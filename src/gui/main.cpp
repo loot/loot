@@ -60,7 +60,6 @@ BEGIN_EVENT_TABLE ( Launcher, wxFrame )
 	EVT_MENU ( wxID_ABOUT, Launcher::OnAbout )
 	EVT_MENU ( MENU_ShowSettings, Launcher::OnOpenSettings )
 	EVT_MENU ( MENU_Oblivion, Launcher::OnGameChange )
-	EVT_MENU ( MENU_Nehrim, Launcher::OnGameChange )
 	EVT_MENU ( MENU_Skyrim, Launcher::OnGameChange )
 	EVT_MENU ( MENU_Fallout3, Launcher::OnGameChange )
 	EVT_MENU ( MENU_FalloutNewVegas, Launcher::OnGameChange )
@@ -176,9 +175,6 @@ bool BossGUI::OnInit() {
             if (target == "oblivion" && _detectedGames[i] == GAME_TES4) {
                 targetGame = GAME_TES4;
                 break;
-            } else if (target == "nehrim" && _detectedGames[i] == GAME_NEHRIM) {
-                targetGame = GAME_NEHRIM;
-                break;
             } else if (target == "skyrim" && _detectedGames[i] == GAME_TES5) {
                 targetGame = GAME_TES5;
                 break;
@@ -243,7 +239,6 @@ Launcher::Launcher(const wxChar *title, YAML::Node& settings, Game& game, const 
 	MenuBar->Append(EditMenu, translate("&Edit"));
 	//Game menu
 	GameMenu->AppendRadioItem(MENU_Oblivion, wxT("&Oblivion"), translate("Switch to running BOSS for Oblivion."));
-	GameMenu->AppendRadioItem(MENU_Nehrim, wxT("&Nehrim"), translate("Switch to running BOSS for Nehrim."));
 	GameMenu->AppendRadioItem(MENU_Skyrim, wxT("&Skyrim"), translate("Switch to running BOSS for Skyrim."));
 	GameMenu->AppendRadioItem(MENU_Fallout3, wxT("&Fallout 3"), translate("Switch to running BOSS for Fallout 3."));
 	GameMenu->AppendRadioItem(MENU_FalloutNewVegas, wxT("&Fallout: New Vegas"), translate("Switch to running BOSS for Fallout: New Vegas."));
@@ -265,8 +260,6 @@ Launcher::Launcher(const wxChar *title, YAML::Node& settings, Game& game, const 
 
 	if (_game.Id() == GAME_TES4)
 		GameMenu->FindItem(MENU_Oblivion)->Check();
-	else if (_game.Id() == GAME_NEHRIM)
-		GameMenu->FindItem(MENU_Nehrim)->Check();
 	else if (_game.Id() == GAME_TES5)
 		GameMenu->FindItem(MENU_Skyrim)->Check();
 	else if (_game.Id() == GAME_FO3)
@@ -279,15 +272,12 @@ Launcher::Launcher(const wxChar *title, YAML::Node& settings, Game& game, const 
 
     //Disable the menu items for the undetected games.
     GameMenu->FindItem(MENU_Oblivion)->Enable(false);
-	GameMenu->FindItem(MENU_Nehrim)->Enable(false);
 	GameMenu->FindItem(MENU_Skyrim)->Enable(false);
 	GameMenu->FindItem(MENU_Fallout3)->Enable(false);
 	GameMenu->FindItem(MENU_FalloutNewVegas)->Enable(false);
 	for (size_t i=0; i < _detectedGames.size(); i++) {
 		if (_detectedGames[i] == GAME_TES4)
 			GameMenu->FindItem(MENU_Oblivion)->Enable();
-		else if (_detectedGames[i] == GAME_NEHRIM)
-			GameMenu->FindItem(MENU_Nehrim)->Enable();
 		else if (_detectedGames[i] == GAME_TES5)
 			GameMenu->FindItem(MENU_Skyrim)->Enable();
 		else if (_detectedGames[i] == GAME_FO3)
@@ -674,10 +664,6 @@ void Launcher::OnGameChange(wxCommandEvent& event) {
         case MENU_Oblivion:
             _game = Game(GAME_TES4);
             _settings["Last Game"] = "oblivion";
-            break;
-        case MENU_Nehrim:
-            _game = Game(GAME_NEHRIM);
-            _settings["Last Game"] = "nehrim";
             break;
         case MENU_Skyrim:
             _game = Game(GAME_TES5);

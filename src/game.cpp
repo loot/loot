@@ -47,8 +47,6 @@ namespace boss {
         vector<unsigned int> detected;
         if (Game(GAME_TES4, false).IsInstalled()) //Look for Oblivion.
             detected.push_back(GAME_TES4);
-        if (Game(GAME_NEHRIM, false).IsInstalled()) //Look for Nehrim.
-            detected.push_back(GAME_NEHRIM);
         if (Game(GAME_TES5, false).IsInstalled()) //Look for Skyrim.
             detected.push_back(GAME_TES5);
         if (Game(GAME_FO3, false).IsInstalled()) //Look for Fallout 3.
@@ -70,13 +68,6 @@ namespace boss {
             registrySubKey = "Installed Path";
             bossFolderName = "Oblivion";
             masterFile = "Oblivion.esm";
-            libespmGame = "Oblivion";
-        } else if (Id() == GAME_NEHRIM) {
-            name = "Nehrim - At Fate's Edge";
-            registryKey = "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim - At Fate's Edge_is1";
-            registrySubKey = "InstallLocation";
-            bossFolderName = "Nehrim";
-            masterFile = "Nehrim.esm";
             libespmGame = "Oblivion";
         } else if (Id() == GAME_TES5) {
             name = "TES V: Skyrim";
@@ -165,11 +156,7 @@ namespace boss {
         int ret;
         if (Id() == GAME_TES4)
             ret = lo_create_handle(&gh, LIBLO_GAME_TES4, gamePath.string().c_str());
-        else if (Id() == GAME_NEHRIM) {
-            ret = lo_create_handle(&gh, LIBLO_GAME_TES4, gamePath.string().c_str());
-            if (ret == LIBLO_OK)
-                ret = lo_set_game_master(gh, masterFile.c_str());
-        } else if (Id() == GAME_TES5)
+        else if (Id() == GAME_TES5)
             ret = lo_create_handle(&gh, LIBLO_GAME_TES5, gamePath.string().c_str());
         else if (Id() == GAME_FO3)
             ret = lo_create_handle(&gh, LIBLO_GAME_FO3, gamePath.string().c_str());
@@ -211,11 +198,7 @@ namespace boss {
         int ret;
         if (Id() == GAME_TES4)
             ret = lo_create_handle(&gh, LIBLO_GAME_TES4, gamePath.string().c_str());
-        else if (Id() == GAME_NEHRIM) {
-            ret = lo_create_handle(&gh, LIBLO_GAME_TES4, gamePath.string().c_str());
-            if (ret == LIBLO_OK)
-                ret = lo_set_game_master(gh, masterFile.c_str());
-        } else if (Id() == GAME_TES5)
+        else if (Id() == GAME_TES5)
             ret = lo_create_handle(&gh, LIBLO_GAME_TES5, gamePath.string().c_str());
         else if (Id() == GAME_FO3)
             ret = lo_create_handle(&gh, LIBLO_GAME_FO3, gamePath.string().c_str());

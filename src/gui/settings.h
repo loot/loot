@@ -41,7 +41,6 @@ private:
     wxCheckBox *UpdateMasterlistBox;
     wxCheckBox *reportViewBox;
     wxTextCtrl *OblivionURL;
-    wxTextCtrl *NehrimURL;
     wxTextCtrl *SkyrimURL;
     wxTextCtrl *FO3URL;
     wxTextCtrl *FONVURL;
