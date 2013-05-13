@@ -1,26 +1,34 @@
 'use strict';
-// shim for older browsers:
-if (!document.getElementsByClassName) {
-    document.getElementsByClassName = (function(){
-        // Utility function to traverse the DOM:
-        function traverse (node, callback) {
-            callback(node);
-            for (var i=0;i < node.childNodes.length; i++) {
-                traverse(node.childNodes[i],callback);
+function isStorageSupported() {
+    try {
+        return ('localStorage' in window && window['localStorage'] !== null && window['localStorage'] !== undefined);
+    } catch (e) {
+        return false;
+    }
+}
+function saveCheckboxState(evt) {
+    if (evt.currentTarget.checked) {
+        try {
+            localStorage.setItem(evt.currentTarget.id, evt.currentTarget.checked);
+        } catch (e) {
+            if (e == QUOTA_EXCEEDED_ERR) {
+                alert('Web storage quota for this document has been exceeded. Please empty your browser\'s cache. Note that this will delete all locally stored data.');
             }
         }
-
-        // Actual definition of getElementsByClassName
-        return function (name) {
-            var result = [];
-            traverse(document.body,function(node){
-                if (node.className && node.className.indexOf(name) != -1) {
-                    result.push(node);
-                }
-            });
-            return result;
+    } else {
+        localStorage.removeItem(evt.currentTarget.id);
+    }
+}
+function loadSettings() {
+    var i = localStorage.length - 1;
+    while (i > -1) {
+        var elem = document.getElementById(localStorage.key(i));
+        if (elem != null && 'defaultChecked' in elem) {
+            elem.checked = true;
+            elem.dispatchEvent(new MouseEvent('click'));
         }
-    })()
+        i--;
+    }
 }
 function showElement(element) {
     if (element != null) {
@@ -164,6 +172,14 @@ function togglePlugins(evt) {
 }
 function setupEventHandlers() {
     var i, elemArr;
+    if (isStorageSupported()) { /*Set up filter value and CSS setting storage read/write handlers.*/
+        elemArr = document.getElementById('filters').getElementsByTagName('input');
+        i = elemArr.length - 1;
+        while (i > -1) {
+            elemArr[i].addEventListener('click', saveCheckboxState, false);
+            i--;
+        }
+    }
     document.getElementById('filtersToggle').addEventListener('click', toggleFilters, false);
     /*Set up handlers for section display.*/
     elemArr = document.getElementById('nav').querySelectorAll('.button[data-section]');
@@ -184,6 +200,9 @@ function setupEventHandlers() {
 }
 function init() {
     setupEventHandlers();
+    if (isStorageSupported()) {
+        loadSettings();
+    }
     var elemArr = document.getElementById('filters').getElementsByTagName('input');
     for (var i = 0, z = elemArr.length; i < z; i++) {
         elemArr[i].disabled = true;

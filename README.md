@@ -56,7 +56,6 @@ BOSSv3 won't have a command line interface, to simplify things. It also allows B
 - [ ] Optimisations to load ordering.
 - [ ] Implement logging.
 - [ ] Add a quick header-only plugin read for use when loading the metadata editor, so that existing Bash Tags can also be displayed.
-- [ ] Add checks for "Deactivate" tag compliance?
 - [ ] Make validity checks non-fatal.
 - [ ] Add a massive "RUN THE GAME LAUNCHER IF YOUR GAME IS NOT DETECTED" message somewhere.
 - [ ] Generalise Total Conversion support, so that any TC for any of the supported 'base' games can be used with BOSS.
@@ -65,7 +64,7 @@ BOSSv3 won't have a command line interface, to simplify things. It also allows B
 - [ ] Write report Javascript.
 - [ ] Double-check ghosted file support.
 - [ ] Add a setting that lets users choose whether to use the viewer window or their own browser when viewing BOSS's report.
-- [ ] Somehow implement filter settings memory for the BOSS report.
+- [x] Somehow implement filter settings memory for the BOSS report.
 - [ ] Implement checking of details part of report against previous report.
 
 
@@ -109,6 +108,8 @@ BOSS uses the following libraries:
 * PugiXML
 * wxWidgets
 * yaml-cpp
+
+Also uses (polyfill.js)[https://github.com/inexorabletash/polyfill/blob/master/polyfill.js], (storage.js)[https://github.com/inexorabletash/polyfill/blob/master/storage.js] and (DOM-shim)[https://github.com/Raynos/DOM-shim/blob/master/lib/DOM-shim-ie8.js] for Internet Explorer 8 compatibility.
 
 
 ## Misc

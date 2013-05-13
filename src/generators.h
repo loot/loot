@@ -114,7 +114,7 @@ namespace boss {
         node = head.append_child();
         node.set_name("link");
         node.append_attribute("rel").set_value("stylesheet");
-        node.append_attribute("href").set_value("../../examples/style.css");
+        node.append_attribute("href").set_value("../resource/style.css");
     }
 
     void AppendNav(pugi::xml_node& body) {
@@ -458,12 +458,22 @@ namespace boss {
 
         node = body.append_child();
         node.set_name("script");
-        node.append_attribute("src").set_value("../../examples/eventShim.js");
+        node.append_attribute("src").set_value("../resource/polyfill.js");
         node.text().set(" ");
 
         node = body.append_child();
         node.set_name("script");
-        node.append_attribute("src").set_value("../../examples/script.js");
+        node.append_attribute("src").set_value("../resource/storage.js");
+        node.text().set(" ");
+
+        node = body.append_child();
+        node.set_name("script");
+        node.append_attribute("src").set_value("../resource/DOM-shim-ie8.js");
+        node.text().set(" ");
+
+        node = body.append_child();
+        node.set_name("script");
+        node.append_attribute("src").set_value("../resource/script.js");
         node.text().set(" ");
         
     }
