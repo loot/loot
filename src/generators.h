@@ -38,7 +38,9 @@ namespace boss {
 
         if (type == "say")
             content = "Note: " + content;
-        else if (type == "warn")
+        else if (type == "tag") {
+            content = "Bash Tag Suggestion(s): " + content;
+        } else if (type == "warn")
             content = "Warning: " + content;
         else
             content = "Error: " + content;
@@ -324,7 +326,7 @@ namespace boss {
                         content += "Bash Tags suggested for addition are " + add.substr(2) + ". ";
                     if (!remove.empty())
                         content += "Bash Tags suggested for removal are " + remove.substr(2) + ". ";
-                    messages.push_back(Message("say", content));
+                    messages.push_back(Message("tag", content));  //Special type just for tag suggestions.
                 }
 
                 AppendMessages(plugin, messages, warnNo, errorNo);

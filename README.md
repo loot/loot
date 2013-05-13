@@ -58,6 +58,7 @@ I'm considering using glog to handle logging, should really get that implemented
 - [x] Add a setting that lets users choose whether to use the viewer window or their own browser when viewing BOSS's report.
 - [x] Somehow implement filter settings memory for the BOSS report.
 - [ ] Implement checking of details part of report against previous report.
+- [x] Either remove the Bash Tag suggestions filter or implement their display in the report as a non-note message type.
 
 
 ## Optimisation
@@ -77,6 +78,7 @@ LOOT will be a self-contained installation that can be dropped anywhere. It will
 
 Directory structure will be:
 
+```
 /
     BOSS.exe
     resource/
@@ -95,6 +97,7 @@ Directory structure will be:
         userlist.yaml
         report.html
     ...other game folders with same structure as Oblivion...
+```
 
 
 ## Required Libraries

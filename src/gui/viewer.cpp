@@ -40,4 +40,5 @@ Viewer::Viewer(wxWindow *parent, const wxString& title, const boss::Game& game) 
 
     SetSizer(topsizer);
     SetSize(800,600);
+    SetIcon(wxIconLocation("BOSS.exe"));
 }

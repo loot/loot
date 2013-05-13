@@ -109,11 +109,11 @@ function toggleMessages(evt) {
             var filterMatch = false;
             if (evt.target.id == 'hideAllPluginMessages') {
                 filterMatch = true;
-            } else if (evt.target.id == 'hideNotes' && listItems[i].className.indexOf('note') != -1) {
+            } else if (evt.target.id == 'hideNotes' && listItems[i].className.indexOf('say') != -1) {
                 filterMatch = true;
             } else if (evt.target.id == 'hideBashTags' && listItems[i].className.indexOf('tag') != -1) {
                 filterMatch = true;
-            } else if (evt.target.id == 'hideDoNotCleanMessages' && listItems[i].className.indexOf('dirty') != -1 && (listItems[i].textContent.indexOf('Do not clean.') != -1 || listItems[i].textContent.indexOf('Do not clean.') != -1)) {
+            } else if (evt.target.id == 'hideDoNotCleanMessages' && listItems[i].textContent.indexOf('Do not clean.') != -1) {
                 filterMatch = true;
             }
             if (filterMatch) {
