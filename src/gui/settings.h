@@ -39,6 +39,7 @@ private:
 	wxChoice *GameChoice;
 	wxChoice *LanguageChoice;
     wxCheckBox *UpdateMasterlistBox;
+    wxCheckBox *reportViewBox;
     wxTextCtrl *OblivionURL;
     wxTextCtrl *NehrimURL;
     wxTextCtrl *SkyrimURL;

@@ -246,12 +246,16 @@ namespace boss {
     Plugin::Plugin() : enabled(true), priority(0), isMaster(false), isActive(false), crc(0) {}
     Plugin::Plugin(const std::string& n) : name(n), enabled(true), priority(0), isMaster(false), isActive(false), crc(0) {}
 
-	Plugin::Plugin(boss::Game& game, const std::string& n)
+	Plugin::Plugin(boss::Game& game, const std::string& n, const bool headerOnly)
 		: name(n), enabled(true), priority(0) {
 			
 		// Get data from file contents using libespm. Assumes libespm has already been initialised.
 		boost::filesystem::path filepath = game.DataPath() / n;
-		espm::File file(filepath.string(), game.espm_settings, false, false);
+        espm::File file;
+        if (headerOnly)
+            file = espm::File(filepath.string(), game.espm_settings, false, true);
+        else
+            file = espm::File(filepath.string(), game.espm_settings, false, false);
 
 		isMaster = file.isMaster(game.espm_settings);
 		masters = file.getMasters();

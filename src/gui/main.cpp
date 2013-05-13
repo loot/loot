@@ -339,8 +339,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
             string filename = it->path().filename().string();
 			out << "Reading plugin: " << filename << endl;
-			boss::Plugin plugin(_game, filename);
-            //boss::Plugin plugin(filename);
+			boss::Plugin plugin(_game, filename, false);
             plugins.push_back(plugin);
 
             progDia->Pulse();
@@ -424,6 +423,10 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
             if (pos != ulist_plugins.end())
                 it->Merge(*pos);
+
+            
+
+            progDia->Pulse();
         }
 
         end = time(NULL);
@@ -447,6 +450,8 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 				this);
             return;
         }
+
+        progDia->Pulse();
     }
 
     end = time(NULL);
@@ -459,12 +464,17 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     for (list<boss::Plugin>::iterator it=plugins.begin(), endIt = plugins.end(); it != endIt; ++it) {
         map<string, bool> issues = it->CheckInstallValidity(_game);
+        list<boss::Message> messages = it->Messages();
         for (map<string,bool>::const_iterator jt=issues.begin(), endJt=issues.end(); jt != endJt; ++jt) {
             if (jt->second)
-                out << "Error: Invalid install detected! \"" << jt->first << "\" is incompatible with \"" << it->Name() << "\" and is present." << endl;
+                messages.push_back(boss::Message("error", "\"" + jt->first + "\" is incompatible with \"" + it->Name() + "\" and is present."));
             else
-                out << "Error: Invalid install detected! \"" << jt->first << "\" is required by \"" << it->Name() << "\" but is missing." << endl;
+                messages.push_back(boss::Message("error", "\"" + jt->first + "\" is required by \"" + it->Name() + "\" but is missing."));
         }
+        if (!issues.empty())
+            it->Messages(messages);
+
+        progDia->Pulse();
     }
 
 
@@ -502,7 +512,12 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                 if (overlap > 0)
                     out << '\t' << '\t' << jt->Name() << " (" << overlap << " records)" << endl;
             }
+
+            progDia->Pulse();
         }
+        
+
+        progDia->Pulse();
 	}
 
     progDia->Pulse();
@@ -516,22 +531,39 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     out << "Writing results file..." << endl;
 
-    GenerateReport(_game.ReportPath().string(),
-                    messages,
-                    plugins,
-                    "4030 (2020-13-13)",
-                    _settings["Update Masterlist"].as<bool>(),
-                    true);
+    try {
+        GenerateReport(_game.ReportPath().string(),
+                        messages,
+                        plugins,
+                        "4030 (2020-13-13)",
+                        _settings["Update Masterlist"].as<bool>(),
+                        true);
+    } catch (boss::error& e) {
+        wxMessageBox(
+            FromUTF8(format(loc::translate("Error: %1%")) % e.what()),
+            translate("BOSS: Error"),
+            wxOK | wxICON_ERROR,
+            this);
+        return;
+    }
 
     progDia->Pulse();
     
 	out << "Tester finished. Total time taken: " << time(NULL) - t0 << endl;
     out.close();
 
-    progDia->Destroy();
-
     //Now a results report definitely exists.
     ViewButton->Enable(true);
+
+    progDia->Destroy();
+
+    if (_settings["View Report Externally"] && _settings["View Report Externally"].as<bool>()) {
+        wxLaunchDefaultApplication(_game.ReportPath().string());
+    } else {
+        //Create viewer window.
+        Viewer *viewer = new Viewer(this, translate("BOSS: Report Viewer"), _game);
+        viewer->Show();
+    }
 }
 
 void Launcher::OnEditMetadata(wxCommandEvent& event) {
@@ -539,10 +571,15 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
     //Should probably check for masterlist updates before opening metadata editor.
     vector<boss::Plugin> installed, mlist_plugins, ulist_plugins;
 
+    wxProgressDialog *progDia = new wxProgressDialog(translate("BOSS: Working..."),translate("BOSS working..."), 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_ELAPSED_TIME);
+
     //Scan for installed plugins.
     for (fs::directory_iterator it(_game.DataPath()); it != fs::directory_iterator(); ++it) {
         if (fs::is_regular_file(it->status()) && (it->path().extension().string() == ".esp" || it->path().extension().string() == ".esm")) {
-            installed.push_back(boss::Plugin(it->path().filename().string()));
+			boss::Plugin plugin(_game, it->path().filename().string(), true);
+            installed.push_back(plugin);
+            
+            progDia->Pulse();
         }
     }
 
@@ -562,6 +599,8 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
         if (mlist["plugins"])
             mlist_plugins = mlist["plugins"].as< vector<boss::Plugin> >();
     }
+    
+    progDia->Pulse();
 
     //Parse userlist.
     if (fs::exists(_game.UserlistPath())) {
@@ -579,6 +618,8 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
         if (ulist["plugins"])
             ulist_plugins = ulist["plugins"].as< vector<boss::Plugin> >();
     }
+    
+    progDia->Pulse();
 
     //Merge the masterlist down into the installed mods list.
     for (vector<boss::Plugin>::const_iterator it=mlist_plugins.begin(), endit=mlist_plugins.end(); it != endit; ++it) {
@@ -588,26 +629,38 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
             pos->Merge(*it);
     }
 
+    
+    progDia->Pulse();
+
     //Add empty entries for any userlist entries that aren't installed.
     for (vector<boss::Plugin>::const_iterator it=ulist_plugins.begin(), endit=ulist_plugins.end(); it != endit; ++it) {
         if (find(installed.begin(), installed.end(), *it) == installed.end())
             installed.push_back(boss::Plugin(it->Name()));
     }
+    
+    progDia->Pulse();
 
     //Sort into alphabetical order.
     std::sort(installed.begin(), installed.end(), AlphaSortPlugins);
+    
+    progDia->Pulse();
 
     //Create editor window.
     Editor *editor = new Editor(this, translate("BOSS: Metadata Editor"), _game, installed, ulist_plugins);
+    
+    progDia->Destroy();
     
 	editor->Show();
 }
 
 void Launcher::OnViewLastReport(wxCommandEvent& event) {
-    //Create viewer window.
-    Viewer *viewer = new Viewer(this, translate("BOSS: Report Viewer"), _game);
-    
-	viewer->Show();
+    if (_settings["View Report Externally"] && _settings["View Report Externally"].as<bool>()) {
+        wxLaunchDefaultApplication(_game.ReportPath().string());
+    } else {
+        //Create viewer window.
+        Viewer *viewer = new Viewer(this, translate("BOSS: Report Viewer"), _game);
+        viewer->Show();
+    }
 }
 
 void Launcher::OnOpenSettings(wxCommandEvent& event) {

@@ -49,21 +49,21 @@ BOSSv3 won't have a command line interface, to simplify things. It also allows B
 - [ ] Develop sorting algorithm.
 - [ ] Work out how to implement masterlist updating and write the code.
 - [x] Develop UI - metadata editor window.
-- [ ] Develop UI - report viewer.
-- [ ] Error handling.
+- [x] Develop UI - report viewer.
+- [x] Error handling.
 - [ ] Checks for cyclic dependencies and incompatibilities.
 - [ ] Setting load order.
 - [ ] Optimisations to load ordering.
 - [ ] Implement logging.
-- [ ] Add a quick header-only plugin read for use when loading the metadata editor, so that existing Bash Tags can also be displayed.
-- [ ] Make validity checks non-fatal.
+- [x] Add a quick header-only plugin read for use when loading the metadata editor, so that existing Bash Tags can also be displayed.
+- [x] Make validity checks non-fatal.
 - [ ] Add a massive "RUN THE GAME LAUNCHER IF YOUR GAME IS NOT DETECTED" message somewhere.
 - [ ] Generalise Total Conversion support, so that any TC for any of the supported 'base' games can be used with BOSS.
 - [x] Write XHTML report generator.
 - [ ] Write report CSS.
 - [ ] Write report Javascript.
 - [ ] Double-check ghosted file support.
-- [ ] Add a setting that lets users choose whether to use the viewer window or their own browser when viewing BOSS's report.
+- [x] Add a setting that lets users choose whether to use the viewer window or their own browser when viewing BOSS's report.
 - [x] Somehow implement filter settings memory for the BOSS report.
 - [ ] Implement checking of details part of report against previous report.
 

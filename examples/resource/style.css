@@ -113,11 +113,6 @@ input[type='checkbox'] {
 ul {margin-top:0.5em; margin-bottom:1em;}
 li {margin:0.75em 0;}
 
-.active {
-	display:block;
-	color:green;
-	margin-left:1.5em;
-}
 #plugins > ul {list-style:none;}
 .hidden, #summary.hidden, #plugins.hidden {
     display:none;
@@ -146,7 +141,7 @@ li.success{background:#90ff90;display:table;padding:0.3em 0.5em;border-radius:0.
 
 .crc{color:#BC8923;margin-right:1em;}
 
-.active{color:#0A0;margin-right:1em;}
+.active{color:green;margin-right:1em;}
 
 .tagPrefix{color:#CD5555;}
 

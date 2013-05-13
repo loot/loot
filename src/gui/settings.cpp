@@ -70,6 +70,7 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
     FONVURL = new wxTextCtrl(this, wxID_ANY);
 
     UpdateMasterlistBox = new wxCheckBox(this, wxID_ANY, translate("Update masterlist before sorting."));
+    reportViewBox = new wxCheckBox(this, wxID_ANY, translate("View reports externally in default browser."));
 
     //Set up layout.
 	wxSizerFlags leftItem(0);
@@ -115,6 +116,8 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
 	bigBox->Add(GridSizer, 0, wxEXPAND|wxALL, 10);
    
     bigBox->Add(UpdateMasterlistBox, wholeItem);
+
+    bigBox->Add(reportViewBox, wholeItem);
     
     bigBox->AddSpacer(10);
     bigBox->AddStretchSpacer(1);
@@ -174,6 +177,11 @@ void SettingsFrame::SetDefaultValues() {
         UpdateMasterlistBox->SetValue(update);
     }
 
+    if (_settings["View Report Externally"]) {
+        bool view = _settings["View Report Externally"].as<bool>();
+        reportViewBox->SetValue(view);
+    }
+
     if (_settings["Masterlist URLs"]) {
         YAML::Node urls = _settings["Masterlist URLs"];
 
@@ -227,6 +235,8 @@ void SettingsFrame::OnQuit(wxCommandEvent& event) {
         _settings["Debug Verbosity"] = DebugVerbosityChoice->GetSelection();
 
         _settings["Update Masterlist"] = UpdateMasterlistBox->IsChecked();
+
+        _settings["View Report Externally"] = reportViewBox->IsChecked();
 
         _settings["Masterlist URLs"]["Oblivion"] = string(OblivionURL->GetValue().ToUTF8());
 

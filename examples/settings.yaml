@@ -7,6 +7,7 @@ Game:                auto   # auto, oblivion, nehrim, skyrim, fallout3, falloutn
 Last Game:           auto   # auto, oblivion, nehrim, skyrim, fallout3, falloutnv
 Debug Verbosity:     0      # 0, 1, 2, 3. Logging takes place if > 0.
 Update Masterlist:   true
+View Report Externally: false
 
 Masterlist URLs:
   Oblivion:          http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-oblivion/masterlist.yaml

@@ -115,6 +115,19 @@ namespace boss {
         node.set_name("link");
         node.append_attribute("rel").set_value("stylesheet");
         node.append_attribute("href").set_value("../resource/style.css");
+
+        node = head.append_child();
+        node.set_name("script");
+        node.append_attribute("src").set_value("../resource/polyfill.js");
+        node.text().set(" ");
+
+        node = head.append_child();
+        node.set_name("script");
+        node.append_attribute("src").set_value("../resource/storage.js");
+        node.text().set(" ");
+
+        node = head.append_child(pugi::node_comment);
+        node.set_value("[if IE 8]><script src='../resource/DOM-shim-ie8.js'></script><![endif]");
     }
 
     void AppendNav(pugi::xml_node& body) {
@@ -455,21 +468,6 @@ namespace boss {
     void AppendScripts(pugi::xml_node& body) {
 
         pugi::xml_node node;
-
-        node = body.append_child();
-        node.set_name("script");
-        node.append_attribute("src").set_value("../resource/polyfill.js");
-        node.text().set(" ");
-
-        node = body.append_child();
-        node.set_name("script");
-        node.append_attribute("src").set_value("../resource/storage.js");
-        node.text().set(" ");
-
-        node = body.append_child();
-        node.set_name("script");
-        node.append_attribute("src").set_value("../resource/DOM-shim-ie8.js");
-        node.text().set(" ");
 
         node = body.append_child();
         node.set_name("script");
