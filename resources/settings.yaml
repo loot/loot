@@ -15,3 +15,20 @@ Masterlist URLs:
   Skyrim:            http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-skyrim/masterlist.yaml
   Fallout 3:         http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-fallout/masterlist.yaml
   Fallout New Vegas: http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-fallout-nv/masterlist.yaml
+
+
+# Each TC's files get put in a subdirectory of the BOSS folder with name '<base> TC 1 - <master>'.
+# If registry is left blank, then BOSS must be installed locally for it.
+# Only real difference between TCs and the original games is for interactions with libespm, libloadorder.
+Total Conversions:
+
+  - name: Nehrim - At Fate's Edge
+    base: oblivion
+    master: Nehrim.esm
+    registry: Software\Microsoft\Windows\CurrentVersion\Uninstall\Nehrim - At Fate's Edge_is1\InstallLocation
+    folder: Nehrim
+    
+  - name: Enderal - The Shards of Order
+    base: skyrim
+    master: Enderal.esm
+    folder: Enderal
