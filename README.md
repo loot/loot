@@ -15,26 +15,18 @@ The other obvious solution is to cut down on the number of mods that need to be 
 While that's being done, I might as well also make some improvements to other areas of BOSS.
 
 
-## Design Notes
+## Idea Notes
 
-BOSS should be able to identify a reasonably correct load order for a group of arbitrary plugins based on their contents. However, there are always some plugins that must be positioned in certain ways relative to other plugins due to author intent that cannot be determined from their contents. There is also generally an element of user preference in setting a load order. BOSS should also be able to provide mechanisms for dealing with such plugins and preferences in addition to its basic 'reasonably correct' sorting.
-
-BOSSv3's masterlist will therefore be used to provide unordered data sets for plugins that require them, and the userlist used to allow users to override the automatic sorting and to provide additional metadata themselves. They will be quite different to the current masterlist and userlist, and will use a new language/format.
-
-If the 'impact' of a plugin is defined as the number of its edits that get applied to a person's game divided by the total number of edits it makes, then an 'optimum' load order is one that maximises the average impact of its constituent plugins whilst satisfying all explicit dependencies. A 'correct' load order is not necessarily an optimum load order though, as some plugins may be made with the intent that they are overridden by other plugins.
-
-For flexibility, the 'masterlist' data file that gets updated by the BOSS Team should have its online location as a configurable option within BOSS, so that should its location change for whatever reason, users would be able to redirect their copy of BOSS to look in the new location. It might be a good idea to download it via a diff, or allow compression somehow, as the Skyrim masterlist is 1.7 MB. Also need to figure out how to do version checks, because currently it scans a web page for the version number, which isn't exactly robust or flexible.
-
-BOSSv3 will also have an API for accessing BOSS data and functionality. The more general functionality found in v2's API has already been forked to libloadorder, which v3 shall make use of.
+It might be a good idea to download masterlists via a diff, or allow compression somehow, as the Skyrim masterlist is 1.7 MB. Also need to figure out how to do version checks, because currently it scans a web page for the version number, which isn't exactly robust or flexible.
 
 Unlike v2, v3 will not have a built-in updater/update checker. It's just too much of a headache to code and manage for the payoff it gives, especially since notifications can be sent to users via the masterlist.
 
-When run, BOSS shall output its results to a report file, which shall then be interpreted by the UI to display the BOSS Log.
+It would be good if Nehrim support could be handled as an offshoot of Oblivion support and the framework generalised so that any TC for any of the supported games could be used.
 
-BOSSv3 won't have a command line interface, to simplify things. It also allows BOSSv3 to have a greater focus on users making sure their load order is correct, which is something that is sadly lacking from most users at the moment. Most users don't look any further than assuming BOSS has set their order correctly, which is unfortunate. 
+I'm considering using glog to handle logging, should really get that implemented soon and remove all the messy ofstream debug stuff.
 
 
-## Roadmap/To Do
+## To Do
     
 - [x] Write new masterlist, userlist, settings file parsers.
 - [x] Implement per-game handling.
@@ -79,22 +71,30 @@ Some ideas that have yet to be tested or implemented:
 * Masterlist updating could also just use a straightforward HTTP GET request, and if this method is chosen then the Accept-Encoding header should be sent with appropriate values so that the server can use compression when serving the file. Unfortunately, Google Code doesn't seem to use it, though other sites do.
 
 
-## Data Files Format
-
-BOSSv3's settings file, masterlist, userlist and previous run logs will all be written in YAML. This allows me to take advantage of existing parsing libraries and the format's flexibility. It's also not that much more verbose than v2's masterlist format, once data structure changes are taken into account.
-
-A custom parser is required for the evaluation of conditions though. The syntax has been made more human readable and compound conditions now evaluate according to standard logic.
-
-The masterlist and userlist will use the same parser, and simply combined by merging or replacing plugin metadata where depending on the type of metadata.
-
-Further details can be found in the 'docs/BOSS Metadata File Syntax.html' file. An example settings file can be found at 'examples/settings.yaml'.
-
-
 ## Install Structure
 
 LOOT will be a self-contained installation that can be dropped anywhere. It will have an installer option that also installs some Start menu shortcuts and a Registry entry, but these will not be required for LOOT to function.
 
-The directory structure will be identical to that which BOSS currently has, with the exception that the text and ini files will be replaced by YAML files.
+Directory structure will be:
+
+/
+    BOSS.exe
+    resource/
+        l10n/
+            ...translation files...
+        settings.yaml
+        libespm.yaml
+        ...CSS and JS files...
+    docs/
+        images/
+            ...readme images...
+        BOSS Readme.html
+        ...other docs...
+    Oblivion/
+        masterlist.yaml
+        userlist.yaml
+        report.html
+    ...other game folders with same structure as Oblivion...
 
 
 ## Required Libraries
@@ -109,7 +109,7 @@ BOSS uses the following libraries:
 * wxWidgets
 * yaml-cpp
 
-Also uses (polyfill.js)[https://github.com/inexorabletash/polyfill/blob/master/polyfill.js], (storage.js)[https://github.com/inexorabletash/polyfill/blob/master/storage.js] and (DOM-shim)[https://github.com/Raynos/DOM-shim/blob/master/lib/DOM-shim-ie8.js] for Internet Explorer 8 compatibility.
+Also uses [polyfill.js](https://github.com/inexorabletash/polyfill/blob/master/polyfill.js), [storage.js](https://github.com/inexorabletash/polyfill/blob/master/storage.js) and [DOM-shim](https://github.com/Raynos/DOM-shim/) for Internet Explorer 8 compatibility.
 
 
 ## Misc
