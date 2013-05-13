@@ -41,16 +41,10 @@ namespace boss {
     const unsigned int VERSION_PATCH = 0;
 
     //Common paths.
-    const boost::filesystem::path settings_path        = "settings.yaml";
+    const boost::filesystem::path settings_path        = "resources/settings.yaml";
     const boost::filesystem::path log_path             = "BOSSDebugLog.txt";
     const boost::filesystem::path readme_path          = boost::filesystem::path("Docs") / "BOSS Readme.html";
-    const boost::filesystem::path syntax_doc_path      = boost::filesystem::path("Docs") / "BOSS Metadata File Syntax.html";
-    const boost::filesystem::path api_doc_path         = boost::filesystem::path("Docs") / "BOSS API Readme.html";
-    const boost::filesystem::path version_history_path = boost::filesystem::path("Docs") / "BOSS Version History.html";
-    const boost::filesystem::path licenses_path        = boost::filesystem::path("Docs") / "Licenses.txt";
-
-    // Temporary hack?
-    const char * const libespm_options_path = "libespm.yaml";
+    const char * const libespm_options_path = "resources/libespm.yaml";
 }
 
 #endif
