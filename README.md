@@ -21,7 +21,7 @@ It might be a good idea to download masterlists via a diff, or allow compression
 
 Unlike v2, v3 will not have a built-in updater/update checker. It's just too much of a headache to code and manage for the payoff it gives, especially since notifications can be sent to users via the masterlist.
 
-It would be good if Nehrim support could be handled as an offshoot of Oblivion support and the framework generalised so that any TC for any of the supported games could be used.
+It would be good if Nehrim support could be handled as an offshoot of Oblivion support and the framework generalised so that any TC for any of the supported games could be used. Ideally there would be a list of TCs in the settings file with their relevant data, and these would then be turned into Game instances in the code, and appended to the game list.
 
 I'm considering using glog to handle logging, should really get that implemented soon and remove all the messy ofstream debug stuff.
 

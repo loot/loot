@@ -39,12 +39,12 @@ private:
     
     boss::Game _game;
     YAML::Node _settings;
-    std::vector<unsigned int> _detectedGames;
+    std::vector<boss::Game> _detectedGames, _undetectedGames;
 };
 
 class Launcher : public wxFrame {
 public:
-    Launcher(const wxChar *title, YAML::Node& settings, boss::Game& inGame, const std::vector<unsigned int>& detectedGames);
+    Launcher(const wxChar *title, YAML::Node& settings, boss::Game& inGame, const std::vector<boss::Game>& detectedGames, const std::vector<boss::Game>& undetectedGames);
     
 	void OnSortPlugins(wxCommandEvent& event);
     void OnEditMetadata(wxCommandEvent& event);
@@ -55,15 +55,13 @@ public:
 	void OnHelp(wxCommandEvent& event);
 	void OnAbout(wxCommandEvent& event);
 	void OnQuit(wxCommandEvent& event);
-
-    DECLARE_EVENT_TABLE()
 private:
     wxMenu * GameMenu;
 	wxButton * ViewButton;
     
 	boss::Game& _game;
     YAML::Node& _settings;  //BOSS Settings.
-    const std::vector<unsigned int>& _detectedGames;
+    const std::vector<boss::Game>& _detectedGames;
 
     static bool AlphaSortPlugins(const boss::Plugin& lhs, const boss::Plugin& rhs);
 };

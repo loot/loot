@@ -41,10 +41,6 @@ enum {
 	OPTION_ViewLastReport,
 	OPTION_SortPlugins,
 	MENU_ShowSettings,
-	MENU_Oblivion,
-	MENU_Skyrim,
-	MENU_Fallout3,
-	MENU_FalloutNewVegas,
     //Editor window.
     LIST_Plugins,
     LIST_Reqs,
@@ -57,7 +53,9 @@ enum {
     BUTTON_RemoveRow,
     BUTTON_Apply,
     BUTTON_Cancel,
-    BOOK_Lists
+    BOOK_Lists,
+    //Main window - dynamically created IDs.
+    MENU_LowestDynamicGameID,
 };
 
 wxString translate(const std::string& str);

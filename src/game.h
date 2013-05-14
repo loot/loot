@@ -40,29 +40,28 @@ namespace boss {
 
     class Plugin;
 
-    std::vector<unsigned int> DetectGames();
-
     class Game {
     public:
         Game();  //Sets game to BOSS_GAME_AUTODETECT, with all other vars being empty.
-        Game(const unsigned int gameCode, const bool pathInit = true);
+        Game(const unsigned int baseGameCode);
+
+        Game& SetAsTC(const std::string& name, const std::string& masterFile,
+                      const std::string& bossFolder, const std::string& registry);
+        Game& Init();
 
         bool IsInstalled() const;
-        bool IsInstalledLocally() const;
+
+        bool operator == (const Game& rhs) const;
 
         unsigned int Id() const;
         std::string Name() const;  //Returns the game's name, eg. "TES IV: Oblivion".
+        std::string FolderName() const;
 
         boost::filesystem::path GamePath() const;
         boost::filesystem::path DataPath() const;
         boost::filesystem::path MasterlistPath() const;
         boost::filesystem::path UserlistPath() const;
         boost::filesystem::path ReportPath() const;
-
-        //Creates directory in BOSS folder for BOSS's game-specific files.
-        void CreateBOSSGameFolder();
-
-        void RefreshActivePluginsList();
         bool IsActive(const std::string& plugin) const;
 
         void SetLoadOrder(const std::list<Plugin>& loadOrder) const;
@@ -73,18 +72,28 @@ namespace boss {
 
         espm::Settings espm_settings;
     private:
+        bool isTC;
         unsigned id;
-        std::string name;
+        std::string _name;
 
         std::string registryKey;
         std::string registrySubKey;
 
         std::string bossFolderName;
-        std::string masterFile;
+        std::string _masterFile;
 
         boost::filesystem::path gamePath;  //Path to the game's folder.
         boost::unordered_set<std::string> activePlugins;  //Holds lowercased strings.
+
+        //Creates directory in BOSS folder for BOSS's game-specific files.
+        void CreateBOSSGameFolder();
+
+        void RefreshActivePluginsList();
     };
+
+    std::vector<Game> GetGames(const YAML::Node& settings);
+
+    void DetectGames(std::vector<Game>& detected, std::vector<Game>& undetected);
 }
 
 #endif

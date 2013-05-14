@@ -51,23 +51,6 @@
 #include <wx/aboutdlg.h>
 #include <wx/progdlg.h>
 
-BEGIN_EVENT_TABLE ( Launcher, wxFrame )
-	EVT_MENU ( wxID_EXIT, Launcher::OnQuit )
-	EVT_MENU ( OPTION_EditMetadata, Launcher::OnEditMetadata )
-	EVT_MENU ( OPTION_ViewLastReport, Launcher::OnViewLastReport )
-	EVT_MENU ( OPTION_SortPlugins, Launcher::OnSortPlugins )
-	EVT_MENU ( wxID_HELP, Launcher::OnHelp )
-	EVT_MENU ( wxID_ABOUT, Launcher::OnAbout )
-	EVT_MENU ( MENU_ShowSettings, Launcher::OnOpenSettings )
-	EVT_MENU ( MENU_Oblivion, Launcher::OnGameChange )
-	EVT_MENU ( MENU_Skyrim, Launcher::OnGameChange )
-	EVT_MENU ( MENU_Fallout3, Launcher::OnGameChange )
-	EVT_MENU ( MENU_FalloutNewVegas, Launcher::OnGameChange )
-	EVT_BUTTON ( OPTION_SortPlugins, Launcher::OnSortPlugins )
-	EVT_BUTTON ( OPTION_EditMetadata, Launcher::OnEditMetadata )
-	EVT_BUTTON ( OPTION_ViewLastReport, Launcher::OnViewLastReport )
-END_EVENT_TABLE()
-
 IMPLEMENT_APP(BossGUI);
 
 using namespace boss;
@@ -152,8 +135,21 @@ bool BossGUI::OnInit() {
         boost::filesystem::path::imbue(loc);
     }
 
+    //Get games vector.
+    
+
     //Detect installed games.
-    _detectedGames = DetectGames();
+    try {
+        _detectedGames = GetGames(_settings);
+        DetectGames(_detectedGames, _undetectedGames);
+    } catch (boss::error& e) {
+        wxMessageBox(
+            FromUTF8(format(loc::translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()),
+            translate("BOSS: Error"),
+            wxOK | wxICON_ERROR,
+            NULL);
+        return false;
+    }
     if (_detectedGames.empty()) {
         wxMessageBox(
             translate("Error: None of the supported games were detected."),
@@ -164,7 +160,6 @@ bool BossGUI::OnInit() {
     }
 
     string target;
-    unsigned int targetGame = GAME_AUTODETECT;
     if (_settings["Game"] && _settings["Game"].as<string>() != "auto")
         target = _settings["Game"].as<string>();
     else if (_settings["Last Game"] && _settings["Last Game"].as<string>() != "auto")
@@ -172,38 +167,19 @@ bool BossGUI::OnInit() {
 
     if (!target.empty()) {
         for (size_t i=0, max=_detectedGames.size(); i < max; ++i) {
-            if (target == "oblivion" && _detectedGames[i] == GAME_TES4) {
-                targetGame = GAME_TES4;
-                break;
-            } else if (target == "skyrim" && _detectedGames[i] == GAME_TES5) {
-                targetGame = GAME_TES5;
-                break;
-            } else if (target == "fallout3" && _detectedGames[i] == GAME_FO3) {
-                targetGame = GAME_FO3;
-                break;
-            } else if (target == "falloutnv" && _detectedGames[i] == GAME_FONV) {
-                targetGame = GAME_FONV;
-                break;
-            }
+            if (boost::iequals(target, _detectedGames[i].Name()))
+                _game = _detectedGames[i];
         }
-        if (targetGame == GAME_AUTODETECT)
-            targetGame = _detectedGames[0];
+        if (_game.Id() == GAME_AUTODETECT)
+            _game = _detectedGames[0];
     } else
-        targetGame = _detectedGames[0];
+        _game = _detectedGames[0];
 
-    try {
-        _game = Game(targetGame);
-    } catch (boss::error& e) {
-        wxMessageBox(
-            FromUTF8(format(loc::translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()),
-            translate("BOSS: Error"),
-            wxOK | wxICON_ERROR,
-            NULL);
-        return false;
-    }
+    //Now that game is selected, initialise it.
+    _game.Init();
 
     //Create launcher window.
-    Launcher * launcher = new Launcher(wxT("BOSS"), _settings, _game, _detectedGames);
+    Launcher * launcher = new Launcher(wxT("BOSS"), _settings, _game, _detectedGames, _undetectedGames);
 
     launcher->SetIcon(wxIconLocation("BOSS.exe"));
 	launcher->Show();
@@ -212,7 +188,7 @@ bool BossGUI::OnInit() {
     return true;
 }
 
-Launcher::Launcher(const wxChar *title, YAML::Node& settings, Game& game, const vector<unsigned int>& detectedGames) : wxFrame(NULL, wxID_ANY, title), _game(game), _detectedGames(detectedGames), _settings(settings) {
+Launcher::Launcher(const wxChar *title, YAML::Node& settings, Game& game, const vector<boss::Game>& detectedGames, const vector<boss::Game>& undetectedGames) : wxFrame(NULL, wxID_ANY, title), _game(game), _settings(settings), _detectedGames(detectedGames) {
 
     //Initialise menu items.
     wxMenuBar * MenuBar = new wxMenuBar();
@@ -228,21 +204,27 @@ Launcher::Launcher(const wxChar *title, YAML::Node& settings, Game& game, const 
 
     //Construct menus.
     //File Menu
-	FileMenu->Append(OPTION_ViewLastReport, translate("&View Last Report"), translate("Opens your last report."));
-    FileMenu->Append(OPTION_SortPlugins, translate("&Sort Plugins"), translate("Sorts your installed plugins."));
+	FileMenu->Append(OPTION_ViewLastReport, translate("&View Last Report"));
+    FileMenu->Append(OPTION_SortPlugins, translate("&Sort Plugins"));
     FileMenu->AppendSeparator();
     FileMenu->Append(wxID_EXIT);
     MenuBar->Append(FileMenu, translate("&File"));
 	//Edit Menu
-	EditMenu->Append(OPTION_EditMetadata, translate("&Metadata..."), translate("Opens a window where you can edit plugin metadata."));
-	EditMenu->Append(MENU_ShowSettings, translate("&Settings..."), translate("Opens the Settings window."));
+	EditMenu->Append(OPTION_EditMetadata, translate("&Metadata..."));
+	EditMenu->Append(MENU_ShowSettings, translate("&Settings..."));
 	MenuBar->Append(EditMenu, translate("&Edit"));
-	//Game menu
-	GameMenu->AppendRadioItem(MENU_Oblivion, wxT("&Oblivion"), translate("Switch to running BOSS for Oblivion."));
-	GameMenu->AppendRadioItem(MENU_Skyrim, wxT("&Skyrim"), translate("Switch to running BOSS for Skyrim."));
-	GameMenu->AppendRadioItem(MENU_Fallout3, wxT("&Fallout 3"), translate("Switch to running BOSS for Fallout 3."));
-	GameMenu->AppendRadioItem(MENU_FalloutNewVegas, wxT("&Fallout: New Vegas"), translate("Switch to running BOSS for Fallout: New Vegas."));
-	MenuBar->Append(GameMenu, translate("&Active Game"));
+	//Game menu - set up initial item states here too.
+    for (size_t i=0,max=_detectedGames.size(); i < max; ++i) {
+        wxMenuItem * item = GameMenu->AppendRadioItem(MENU_LowestDynamicGameID + i, FromUTF8(_detectedGames[i].Name()));
+        if (_game == _detectedGames[i])
+            item->Check();
+        Bind(wxEVT_COMMAND_MENU_SELECTED, &Launcher::OnGameChange, this, MENU_LowestDynamicGameID + i);
+    }
+    GameMenu->AppendSeparator();
+    for (size_t i=0,max=undetectedGames.size(); i < max; ++i) {
+        GameMenu->AppendRadioItem(wxID_ANY, FromUTF8(undetectedGames[i].Name()))->Enable(false);
+    }
+	MenuBar->Append(GameMenu, translate("&Game"));
     //About menu
 	HelpMenu->Append(wxID_HELP);
 	HelpMenu->AppendSeparator();
@@ -255,36 +237,23 @@ Launcher::Launcher(const wxChar *title, YAML::Node& settings, Game& game, const 
 	buttonBox->Add(SortButton, 1, wxEXPAND|wxALIGN_CENTRE|wxLEFT|wxRIGHT, 10);
 	buttonBox->Add(ViewButton, 1, wxEXPAND|wxALIGN_CENTRE|wxALL, 10);
 
+    //Bind event handlers.
+    Bind(wxEVT_COMMAND_MENU_SELECTED, &Launcher::OnQuit, this, wxID_EXIT);
+    Bind(wxEVT_COMMAND_MENU_SELECTED, &Launcher::OnViewLastReport, this, OPTION_ViewLastReport);
+    Bind(wxEVT_COMMAND_MENU_SELECTED, &Launcher::OnSortPlugins, this, OPTION_SortPlugins);
+    Bind(wxEVT_COMMAND_MENU_SELECTED, &Launcher::OnEditMetadata, this, OPTION_EditMetadata);
+    Bind(wxEVT_COMMAND_MENU_SELECTED, &Launcher::OnOpenSettings, this, MENU_ShowSettings);
+    Bind(wxEVT_COMMAND_MENU_SELECTED, &Launcher::OnHelp, this, wxID_HELP);
+    Bind(wxEVT_COMMAND_MENU_SELECTED, &Launcher::OnAbout, this, wxID_ABOUT);
+    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Launcher::OnSortPlugins, this, OPTION_SortPlugins);
+    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Launcher::OnEditMetadata, this, OPTION_EditMetadata);
+    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Launcher::OnViewLastReport, this, OPTION_ViewLastReport);
+
     //Set up initial state.
     SortButton->SetDefault();
 
-	if (_game.Id() == GAME_TES4)
-		GameMenu->FindItem(MENU_Oblivion)->Check();
-	else if (_game.Id() == GAME_TES5)
-		GameMenu->FindItem(MENU_Skyrim)->Check();
-	else if (_game.Id() == GAME_FO3)
-		GameMenu->FindItem(MENU_Fallout3)->Check();
-	else if (_game.Id() == GAME_FONV)
-		GameMenu->FindItem(MENU_FalloutNewVegas)->Check();
-
     if (!fs::exists(_game.ReportPath()))
         ViewButton->Enable(false);
-
-    //Disable the menu items for the undetected games.
-    GameMenu->FindItem(MENU_Oblivion)->Enable(false);
-	GameMenu->FindItem(MENU_Skyrim)->Enable(false);
-	GameMenu->FindItem(MENU_Fallout3)->Enable(false);
-	GameMenu->FindItem(MENU_FalloutNewVegas)->Enable(false);
-	for (size_t i=0; i < _detectedGames.size(); i++) {
-		if (_detectedGames[i] == GAME_TES4)
-			GameMenu->FindItem(MENU_Oblivion)->Enable();
-		else if (_detectedGames[i] == GAME_TES5)
-			GameMenu->FindItem(MENU_Skyrim)->Enable();
-		else if (_detectedGames[i] == GAME_FO3)
-			GameMenu->FindItem(MENU_Fallout3)->Enable();
-		else if (_detectedGames[i] == GAME_FONV)
-			GameMenu->FindItem(MENU_FalloutNewVegas)->Enable();
-	}
 
     //Set title bar text.
 	SetTitle(FromUTF8("BOSS - " + _game.Name()));
@@ -659,32 +628,8 @@ void Launcher::OnOpenSettings(wxCommandEvent& event) {
 }
 
 void Launcher::OnGameChange(wxCommandEvent& event) {
-    try {
-        switch (event.GetId()) {
-        case MENU_Oblivion:
-            _game = Game(GAME_TES4);
-            _settings["Last Game"] = "oblivion";
-            break;
-        case MENU_Skyrim:
-            _game = Game(GAME_TES5);
-            _settings["Last Game"] = "skyrim";
-            break;
-        case MENU_Fallout3:
-            _game = Game(GAME_FO3);
-            _settings["Last Game"] = "fallout3";
-            break;
-        case MENU_FalloutNewVegas:
-            _game = Game(GAME_FONV);
-            _settings["Last Game"] = "falloutnv";
-            break;
-        }
-	} catch (error& e) {
-        wxMessageBox(
-            FromUTF8(format(loc::translate("Error: Game change failed. %1%")) % e.what()),
-            translate("BOSS: Error"),
-            wxOK | wxICON_ERROR,
-            this);
-	}
+    _game = _detectedGames[event.GetId() - MENU_LowestDynamicGameID];
+    _game.Init();  //In case it hasn't already been done.
 	SetTitle(FromUTF8("BOSS - " + _game.Name()));
 }
 
