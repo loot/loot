@@ -167,10 +167,10 @@ bool BossGUI::OnInit() {
 
     if (!target.empty()) {
         for (size_t i=0, max=_detectedGames.size(); i < max; ++i) {
-            if (boost::iequals(target, _detectedGames[i].Name()))
+            if (boost::iequals(target, _detectedGames[i].FolderName()))
                 _game = _detectedGames[i];
         }
-        if (_game.Id() == GAME_AUTODETECT)
+        if (_game == Game())
             _game = _detectedGames[0];
     } else
         _game = _detectedGames[0];
@@ -188,7 +188,7 @@ bool BossGUI::OnInit() {
     return true;
 }
 
-Launcher::Launcher(const wxChar *title, YAML::Node& settings, Game& game, const vector<boss::Game>& detectedGames, const vector<boss::Game>& undetectedGames) : wxFrame(NULL, wxID_ANY, title), _game(game), _settings(settings), _detectedGames(detectedGames) {
+Launcher::Launcher(const wxChar *title, YAML::Node& settings, Game& game, const vector<boss::Game>& detectedGames, const vector<boss::Game>& undetectedGames) : wxFrame(NULL, wxID_ANY, title), _game(game), _settings(settings), _detectedGames(detectedGames), _undetectedGames(undetectedGames) {
 
     //Initialise menu items.
     wxMenuBar * MenuBar = new wxMenuBar();
@@ -220,7 +220,6 @@ Launcher::Launcher(const wxChar *title, YAML::Node& settings, Game& game, const 
             item->Check();
         Bind(wxEVT_COMMAND_MENU_SELECTED, &Launcher::OnGameChange, this, MENU_LowestDynamicGameID + i);
     }
-    GameMenu->AppendSeparator();
     for (size_t i=0,max=undetectedGames.size(); i < max; ++i) {
         GameMenu->AppendRadioItem(wxID_ANY, FromUTF8(undetectedGames[i].Name()))->Enable(false);
     }
@@ -248,6 +247,7 @@ Launcher::Launcher(const wxChar *title, YAML::Node& settings, Game& game, const 
     Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Launcher::OnSortPlugins, this, OPTION_SortPlugins);
     Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Launcher::OnEditMetadata, this, OPTION_EditMetadata);
     Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Launcher::OnViewLastReport, this, OPTION_ViewLastReport);
+    Bind(wxEVT_CLOSE_WINDOW, &Launcher::OnClose, this);
 
     //Set up initial state.
     SortButton->SetDefault();
@@ -267,6 +267,15 @@ Launcher::Launcher(const wxChar *title, YAML::Node& settings, Game& game, const 
 
 //Called when the frame exits.
 void Launcher::OnQuit(wxCommandEvent& event) {
+    
+	Close(true); // Tells the OS to quit running this process
+}
+
+void Launcher::OnClose(wxCloseEvent& event) {
+
+
+    _settings["Last Game"] = _game.FolderName();
+    
     //Save settings.
     YAML::Emitter yout;
     yout.SetIndent(2);
@@ -275,8 +284,8 @@ void Launcher::OnQuit(wxCommandEvent& event) {
     ofstream out(boss::settings_path.string().c_str());
     out << yout.c_str();
     out.close();
-    
-	Close(true); // Tells the OS to quit running this process
+
+    Destroy();
 }
 
 void Launcher::OnSortPlugins(wxCommandEvent& event) {
@@ -520,7 +529,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         wxLaunchDefaultApplication(_game.ReportPath().string());
     } else {
         //Create viewer window.
-        Viewer *viewer = new Viewer(this, translate("BOSS: Report Viewer"), _game);
+        Viewer *viewer = new Viewer(this, translate("BOSS: Report Viewer"), _game.ReportPath().string());
         viewer->Show();
     }
 }
@@ -605,7 +614,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
     progDia->Pulse();
 
     //Create editor window.
-    Editor *editor = new Editor(this, translate("BOSS: Metadata Editor"), _game, installed, ulist_plugins);
+    Editor *editor = new Editor(this, translate("BOSS: Metadata Editor"), _game.UserlistPath().string().c_str(), installed, ulist_plugins);
     
     progDia->Destroy();
     
@@ -617,13 +626,15 @@ void Launcher::OnViewLastReport(wxCommandEvent& event) {
         wxLaunchDefaultApplication(_game.ReportPath().string());
     } else {
         //Create viewer window.
-        Viewer *viewer = new Viewer(this, translate("BOSS: Report Viewer"), _game);
+        Viewer *viewer = new Viewer(this, translate("BOSS: Report Viewer"), _game.ReportPath().string());
         viewer->Show();
     }
 }
 
 void Launcher::OnOpenSettings(wxCommandEvent& event) {
-	SettingsFrame *settings = new SettingsFrame(this, translate("BOSS: Settings"), _settings);
+    vector<boss::Game> games = _detectedGames;
+    games.insert(games.end(), _undetectedGames.begin(), _undetectedGames.end());
+	SettingsFrame *settings = new SettingsFrame(this, translate("BOSS: Settings"), _settings, games);
 	settings->ShowModal();
 }
 

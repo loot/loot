@@ -27,15 +27,7 @@
 #include "error.h"
 #include "metadata.h"
 
-
-#include <stdexcept>
-
 #include <boost/algorithm/string.hpp>
-
-#if _WIN32 || _WIN64
-#   include <windows.h>
-#   include <shlobj.h>
-#endif
 
 using namespace std;
 
@@ -91,7 +83,7 @@ namespace boss {
         }
     }
 
-    Game::Game() {}
+    Game::Game() : id(0), isTC(false) {}
 
     Game::Game(const unsigned int gameCode) : id(gameCode), isTC(false) {
 
@@ -100,28 +92,28 @@ namespace boss {
             _name = "TES IV: Oblivion";
             registryKey = "Software\\Bethesda Softworks\\Oblivion";
             registrySubKey = "Installed Path";
-            bossFolderName = "oblivion";
+            bossFolderName = "Oblivion";
             _masterFile = "Oblivion.esm";
             libespmGame = "Oblivion";
         } else if (Id() == GAME_TES5) {
             _name = "TES V: Skyrim";
             registryKey = "Software\\Bethesda Softworks\\Skyrim";
             registrySubKey = "Installed Path";
-            bossFolderName = "skyrim";
+            bossFolderName = "Skyrim";
             _masterFile = "Skyrim.esm";
             libespmGame = "Skyrim";
         } else if (Id() == GAME_FO3) {
             _name = "Fallout 3";
             registryKey = "Software\\Bethesda Softworks\\Fallout3";
             registrySubKey = "Installed Path";
-            bossFolderName = "fallout3";
+            bossFolderName = "Fallout3";
             _masterFile = "Fallout3.esm";
             libespmGame = "Skyrim";
         } else if (Id() == GAME_FONV) {
             _name = "Fallout: New Vegas";
             registryKey = "Software\\Bethesda Softworks\\FalloutNV";
             registrySubKey = "Installed Path";
-            bossFolderName = "falloutnv";
+            bossFolderName = "FalloutNV";
             _masterFile = "FalloutNV.esm";
             libespmGame = "Skyrim";
         } else
@@ -172,8 +164,7 @@ namespace boss {
     bool Game::operator == (const Game& rhs) const {
         return (id == rhs.Id()
              && _name == rhs.Name()
-             && bossFolderName == rhs.FolderName()
-             && gamePath == rhs.GamePath());
+             && bossFolderName == rhs.FolderName());
     }
 
     unsigned int Game::Id() const {

@@ -64,7 +64,7 @@ wxString State[2] = {
     translate("Remove")
 };
 
-Editor::Editor(wxWindow *parent, const wxString& title, const boss::Game& game, const std::vector<boss::Plugin>& basePlugins, std::vector<boss::Plugin>& editedPlugins) : wxFrame(parent, wxID_ANY, title), _game(game), _basePlugins(basePlugins), _editedPlugins(editedPlugins) {
+Editor::Editor(wxWindow *parent, const wxString& title, const char * userlistPath, const std::vector<boss::Plugin>& basePlugins, std::vector<boss::Plugin>& editedPlugins) : wxFrame(parent, wxID_ANY, title), _userlistPath(userlistPath), _basePlugins(basePlugins), _editedPlugins(editedPlugins) {
 
     //Initialise child windows.
     listBook = new wxNotebook(this, BOOK_Lists);
@@ -634,7 +634,7 @@ void Editor::OnQuit(wxCommandEvent& event) {
              << YAML::Key << "plugins" << YAML::Value << _editedPlugins
              << YAML::EndMap;
 
-        ofstream out(_game.UserlistPath().string().c_str());
+        ofstream out(_userlistPath);
         out << yout.c_str();
         out.close();
     }

@@ -55,6 +55,8 @@ public:
 	void OnHelp(wxCommandEvent& event);
 	void OnAbout(wxCommandEvent& event);
 	void OnQuit(wxCommandEvent& event);
+
+    void OnClose(wxCloseEvent& event);
 private:
     wxMenu * GameMenu;
 	wxButton * ViewButton;
@@ -62,6 +64,7 @@ private:
 	boss::Game& _game;
     YAML::Node& _settings;  //BOSS Settings.
     const std::vector<boss::Game>& _detectedGames;
+    const std::vector<boss::Game>& _undetectedGames;
 
     static bool AlphaSortPlugins(const boss::Plugin& lhs, const boss::Plugin& rhs);
 };

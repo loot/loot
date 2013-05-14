@@ -29,7 +29,7 @@
 
 class Viewer : public wxFrame {
 public:
-    Viewer(wxWindow *parent, const wxString& title, const boss::Game& game);
+    Viewer(wxWindow *parent, const wxString& title, const std::string& path);
 };
 
 #endif

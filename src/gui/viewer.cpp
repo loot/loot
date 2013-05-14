@@ -28,11 +28,11 @@
 
 namespace fs = boost::filesystem;
 
-Viewer::Viewer(wxWindow *parent, const wxString& title, const boss::Game& game) : wxFrame(parent, wxID_ANY, title) {
-    if (!fs::exists(fs::absolute(game.ReportPath())))
-        throw boss::error(ERROR_PATH_NOT_FOUND, "The path \"" + game.ReportPath().string() + "\" could not be found.");
+Viewer::Viewer(wxWindow *parent, const wxString& title, const std::string& path) : wxFrame(parent, wxID_ANY, title) {
+    if (!fs::exists(fs::absolute(path)))
+        throw boss::error(ERROR_PATH_NOT_FOUND, "The path \"" + path + "\" could not be found.");
         
-    wxWebView * web = wxWebView::New(this, wxID_ANY, "file://" + fs::absolute(game.ReportPath()).string());
+    wxWebView * web = wxWebView::New(this, wxID_ANY, "file://" + fs::absolute(path).string());
 
     wxBoxSizer* topsizer = new wxBoxSizer(wxVERTICAL);
 

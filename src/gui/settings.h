@@ -25,12 +25,14 @@
 #define __BOSS_GUI_SETTINGS__
 
 #include "ids.h"
+#include "../game.h"
+
 #include <yaml-cpp/yaml.h>
 #include <wx/listctrl.h>
 
 class SettingsFrame : public wxDialog {
 public:
-	SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node& settings);
+	SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node& settings, const std::vector<boss::Game>& games);
 	void OnQuit(wxCommandEvent& event);
 	void SetDefaultValues();
 	DECLARE_EVENT_TABLE()
@@ -46,5 +48,6 @@ private:
     wxTextCtrl *FONVURL;
 
     YAML::Node& _settings;
+    std::vector<boss::Game> _games;
 };
 #endif

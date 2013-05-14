@@ -24,6 +24,7 @@
 #include "settings.h"
 #include "../globals.h"
 #include <fstream>
+#include <boost/algorithm/string.hpp>
 
 BEGIN_EVENT_TABLE ( SettingsFrame, wxDialog )
 	EVT_BUTTON ( wxID_OK, SettingsFrame::OnQuit)
@@ -31,7 +32,7 @@ END_EVENT_TABLE()
 
 using namespace std;
 
-SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node& settings) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER), _settings(settings) {
+SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node& settings, const std::vector<boss::Game>& games) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER), _settings(settings), _games(games) {
 
     //Initialise drop-down list contents.
 	wxString DebugVerbosity[] = {
@@ -41,13 +42,11 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
 		translate("High")
     };
 
-	wxString Game[] = {
-		translate("Autodetect"),
-		wxT("Oblivion"),
-		wxT("Skyrim"),
-		wxT("Fallout 3"),
-		wxT("Fallout: New Vegas"),
-	};
+    wxArrayString Games;
+    Games.Add(translate("Autodetect"));
+    for (size_t i=0,max=_games.size(); i < max; ++i) {
+        Games.Add(FromUTF8(_games[i].Name()));
+    }
 
 	wxString Language[] = {
 		wxT("English"),
@@ -58,7 +57,7 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
 	};
 
     //Initialise controls.
-    GameChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 5, Game);
+    GameChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, Games);
     LanguageChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 1, Language);
     DebugVerbosityChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 4, DebugVerbosity);
 
@@ -148,16 +147,14 @@ void SettingsFrame::SetDefaultValues() {
 
     if (_settings["Game"]) {
         string game = _settings["Game"].as<string>();
-        if (game == "auto")
+        if (boost::iequals(game, "auto"))
             GameChoice->SetSelection(0);
-        else if (game == "oblivion")
-            GameChoice->SetSelection(1);
-        else if (game == "skyrim")
-            GameChoice->SetSelection(2);
-        else if (game == "fallout3")
-            GameChoice->SetSelection(3);
-        else if (game == "falloutnv")
-            GameChoice->SetSelection(4);
+        else {
+            for (size_t i=0,max=_games.size(); i < max; ++i) {
+                if (boost::iequals(game, _games[i].FolderName()))
+                    GameChoice->SetSelection(i+1);
+            }
+        }
     }
 
     if (_settings["Debug Verbosity"]) {
@@ -195,23 +192,10 @@ void SettingsFrame::SetDefaultValues() {
 void SettingsFrame::OnQuit(wxCommandEvent& event) {
     if (event.GetId() == wxID_OK) {
 
-        switch (GameChoice->GetSelection()) {
-        case 0:
+        if (GameChoice->GetSelection() == 0)
             _settings["Game"] = "auto";
-            break;
-        case 1:
-            _settings["Game"] = "oblivion";
-            break;
-        case 2:
-            _settings["Game"] = "skyrim";
-            break;
-        case 3:
-            _settings["Game"] = "fallout3";
-            break;
-        case 4:
-            _settings["Game"] = "falloutnv";
-            break;
-        }
+        else
+            _settings["Game"] = _games[GameChoice->GetSelection() - 1].FolderName();
         
         switch (LanguageChoice->GetSelection()) {
         case 0:
@@ -232,14 +216,6 @@ void SettingsFrame::OnQuit(wxCommandEvent& event) {
         _settings["Masterlist URLs"]["Fallout 3"] = string(FO3URL->GetValue().ToUTF8());
 
         _settings["Masterlist URLs"]["Fallout New Vegas"] = string(FONVURL->GetValue().ToUTF8());
-
-        YAML::Emitter yout;
-        yout.SetIndent(2);
-        yout << _settings;
-        
-        ofstream out(boss::settings_path.string().c_str());
-        out << yout.c_str();
-        out.close();
     }
 
 	EndModal(0);
