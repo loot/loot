@@ -48,11 +48,7 @@ namespace boss {
             for (size_t i=0,max=tcs.size(); i < max; ++i) {
                 if (!tcs[i]["name"] || !tcs[i]["base"] || !tcs[i]["master"] || !tcs[i]["folder"])
                     continue;
-
-                string registry;
-                if (tcs[i]["registry"])
-                    registry = tcs[i]["registry"].as<string>();
-
+                    
                 Game game;
                 if (boost::iequals(tcs[i]["base"].as<string>(), "oblivion"))
                     game = Game(GAME_TES4);
@@ -65,7 +61,7 @@ namespace boss {
                 else
                     continue;
 
-                games.push_back(game.SetAsTC(tcs[i]["name"].as<string>(), tcs[i]["master"].as<string>(), tcs[i]["folder"].as<string>(), registry));
+                games.push_back(game.SetAsTC(tcs[i]["name"].as<string>(), tcs[i]["master"].as<string>(), tcs[i]["folder"].as<string>()));
             }
         }
         return games;
@@ -126,16 +122,11 @@ namespace boss {
     }
 
     Game& Game::SetAsTC(const std::string& name, const std::string& masterFile,
-                      const std::string& bossFolder, const std::string& registry) {
+                      const std::string& bossFolder) {
 
         _name = name;
         _masterFile = masterFile;
         bossFolderName = bossFolder;
-
-        if (!registry.empty()) {
-            registryKey = fs::path(registry).parent_path().string();
-            registrySubKey = fs::path(registry).filename().string();
-        }
 
         isTC = true;
 

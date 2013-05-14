@@ -46,7 +46,7 @@ namespace boss {
         Game(const unsigned int baseGameCode);
 
         Game& SetAsTC(const std::string& name, const std::string& masterFile,
-                      const std::string& bossFolder, const std::string& registry);
+                      const std::string& bossFolder);
         Game& Init();
 
         bool IsInstalled() const;
