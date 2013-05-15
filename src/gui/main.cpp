@@ -176,7 +176,16 @@ bool BossGUI::OnInit() {
         _game = _detectedGames[0];
 
     //Now that game is selected, initialise it.
-    _game.Init();
+    try {
+        _game.Init();
+    } catch (boss::error& e) {
+        wxMessageBox(
+            FromUTF8(format(loc::translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()),
+            translate("BOSS: Error"),
+            wxOK | wxICON_ERROR,
+            NULL);
+        return false;
+    }
 
     //Create launcher window.
     Launcher * launcher = new Launcher(wxT("BOSS"), _settings, _game, _detectedGames, _undetectedGames);
@@ -373,7 +382,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     progDia->Pulse();
 
     if (fs::exists(_game.MasterlistPath()) || fs::exists(_game.UserlistPath())) {
-        out << "Merging plugin lists..." << endl;
+        out << "Merging plugin lists, evaluating conditions and and checking for install validity..." << endl;
 
         //Merge all global message lists.
         messages = mlist_messages;
@@ -392,69 +401,75 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             if (pos != ulist_plugins.end())
                 it->Merge(*pos);
 
-            
+            progDia->Pulse();
+
+            //Now that items are merged, evaluate any conditions they have.
+            try {
+                it->EvalAllConditions(_game, _settings["Language"].as<string>());
+            } catch (boss::error& e) {
+                //LOG_ERROR("Error: %s", e.what());
+                wxMessageBox(
+                    FromUTF8(format(loc::translate("Error: Condition evaluation failed. %1%")) % e.what()),
+                    translate("BOSS: Error"),
+                    wxOK | wxICON_ERROR,
+                    this);
+                return;
+            }
+
+            progDia->Pulse();
+
+            //Also check install validity.
+            map<string, bool> issues = it->CheckInstallValidity(_game);
+            list<boss::Message> messages = it->Messages();
+            for (map<string,bool>::const_iterator jt=issues.begin(), endJt=issues.end(); jt != endJt; ++jt) {
+                if (jt->second)
+                    messages.push_back(boss::Message("error", "\"" + jt->first + "\" is incompatible with \"" + it->Name() + "\" and is present."));
+                else
+                    messages.push_back(boss::Message("error", "\"" + jt->first + "\" is required by \"" + it->Name() + "\" but is missing."));
+            }
+            if (!issues.empty())
+                it->Messages(messages);
 
             progDia->Pulse();
         }
 
         end = time(NULL);
-        out << "Time taken to merge lists: " << (end - start) << " seconds." << endl;
+        out << "Time taken to merge lists, evaluate conditions and check for install validity: " << (end - start) << " seconds." << endl;
         start = time(NULL);
     }
-
-    progDia->Pulse();
-    
-    out << "Evaluating any conditions in plugin list..." << endl;
-
-    for (list<boss::Plugin>::iterator it=plugins.begin(), endIt=plugins.end(); it != endIt; ++it) {
-        try {
-            it->EvalAllConditions(_game, _settings["Language"].as<string>());
-        } catch (boss::error& e) {
-            //LOG_ERROR("Error: %s", e.what());
-            wxMessageBox(
-				FromUTF8(format(loc::translate("Error: Condition evaluation failed. %1%")) % e.what()),
-				translate("BOSS: Error"),
-				wxOK | wxICON_ERROR,
-				this);
-            return;
-        }
-
-        progDia->Pulse();
-    }
-
-    end = time(NULL);
-	out << "Time taken to evaluate plugin list: " << (end - start) << " seconds." << endl;
-    start = time(NULL);
-
-    progDia->Pulse();
-
-    out << "Checking install validity..." << endl;
-
-    for (list<boss::Plugin>::iterator it=plugins.begin(), endIt = plugins.end(); it != endIt; ++it) {
-        map<string, bool> issues = it->CheckInstallValidity(_game);
-        list<boss::Message> messages = it->Messages();
-        for (map<string,bool>::const_iterator jt=issues.begin(), endJt=issues.end(); jt != endJt; ++jt) {
-            if (jt->second)
-                messages.push_back(boss::Message("error", "\"" + jt->first + "\" is incompatible with \"" + it->Name() + "\" and is present."));
-            else
-                messages.push_back(boss::Message("error", "\"" + jt->first + "\" is required by \"" + it->Name() + "\" but is missing."));
-        }
-        if (!issues.empty())
-            it->Messages(messages);
-
-        progDia->Pulse();
-    }
-
-
-    end = time(NULL);
-	out << "Time taken to check install validity: " << (end - start) << " seconds." << endl;
-    start = time(NULL);
 
     progDia->Pulse();
 
     out << "Sorting plugins..." << endl;
 
-    plugins.sort();
+    //Iterate through the container. For each element, compare it against all those following it and insert those that are < it before it. After each insert, step back to the inserted element and compare for that.
+    list<boss::Plugin>::iterator it=plugins.begin();
+    while (it != plugins.end()) {
+        list<boss::Plugin>::iterator jt=it;
+        ++jt;
+
+        out << "Sorting for: " << it->Name() << endl;
+
+        list<boss::Plugin> moved;
+        while (jt != plugins.end()) {
+            if (*jt < *it) {
+                moved.push_back(*jt);
+                jt = plugins.erase(jt);
+            } else
+                ++jt;
+
+            progDia->Pulse();
+        }
+        if (!moved.empty()) {
+            plugins.insert(it, moved.begin(), moved.end());
+            advance(it, -1*(int)moved.size());
+        } else
+            ++it;
+
+        progDia->Pulse();
+    }
+
+    plugins.sort(boss::flex_sort);
 
     end = time(NULL);
 	out << "Time taken to sort plugins: " << (end - start) << " seconds." << endl;
@@ -475,7 +490,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
         out << '\t' << "Conflicts with:" << endl;
         for (list<boss::Plugin>::iterator jt=plugins.begin(), endJt = plugins.end(); jt != endJt; ++jt) {
-            if (*jt != *it && !jt->MustLoadAfter(*it)) {
+            if (*jt != *it && !it->MustLoadAfter(*jt) && !jt->MustLoadAfter(*it)) {
                 size_t overlap = jt->OverlapFormIDs(*it).size();
                 if (overlap > 0)
                     out << '\t' << '\t' << jt->Name() << " (" << overlap << " records)" << endl;
@@ -640,7 +655,15 @@ void Launcher::OnOpenSettings(wxCommandEvent& event) {
 
 void Launcher::OnGameChange(wxCommandEvent& event) {
     _game = _detectedGames[event.GetId() - MENU_LowestDynamicGameID];
-    _game.Init();  //In case it hasn't already been done.
+    try {
+        _game.Init();  //In case it hasn't already been done.
+    } catch (boss::error& e) {
+        wxMessageBox(
+            FromUTF8(format(loc::translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()),
+            translate("BOSS: Error"), 
+            wxOK | wxICON_ERROR,
+            NULL);
+    }
 	SetTitle(FromUTF8("BOSS - " + _game.Name()));
 }
 

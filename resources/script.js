@@ -143,7 +143,7 @@ function togglePlugins(evt) {
     var hiddenNo = parseInt(document.getElementById('hiddenPluginNo').textContent);
     while (i > -1) {
         if (plugins[i].nodeType == Node.ELEMENT_NODE) {
-            var isMessageless = true, isInactive = true;
+            var isMessageless = true;
             var messages = plugins[i].getElementsByTagName('li');
             var j = messages.length - 1;
             while (j > -1) {
@@ -153,10 +153,7 @@ function togglePlugins(evt) {
                 }
                 j--;
             }
-            if (plugins[i].getElementsByClassName('active').length != 0) {
-                isInactive = false;
-            }
-            if ((document.getElementById('hideMessagelessPlugins').checked && isMessageless) || (document.getElementById('hideInactivePlugins').checked && isInactive)) {
+            if (document.getElementById('hideMessagelessPlugins').checked && isMessageless) {
                 if (plugins[i].className.indexOf('hidden') == -1) {
                     hiddenNo++;
                     hideElement(plugins[i]);
@@ -189,13 +186,10 @@ function setupEventHandlers() {
         i--;
     }
     document.getElementById('hideVersionNumbers').addEventListener('click', toggleDisplayCSS, false);
-    document.getElementById('hideActiveLabel').addEventListener('click', toggleDisplayCSS, false);
-    document.getElementById('hideChecksums').addEventListener('click', toggleDisplayCSS, false);
     document.getElementById('hideNotes').addEventListener('click', toggleMessages, false);
     document.getElementById('hideBashTags').addEventListener('click', toggleMessages, false);
     document.getElementById('hideDoNotCleanMessages').addEventListener('click', toggleMessages, false);
     document.getElementById('hideAllPluginMessages').addEventListener('click', toggleMessages, false);
-    document.getElementById('hideInactivePlugins').addEventListener('click', togglePlugins, false);
     document.getElementById('hideMessagelessPlugins').addEventListener('click', togglePlugins, false);
 }
 function init() {

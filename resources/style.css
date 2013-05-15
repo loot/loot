@@ -121,10 +121,6 @@ li {margin:0.75em 0;}
 
 /* Old BOSS Log CSS */
 
-h1{font-size:3em;margin:0;}
-
-h2{font-size:2em;margin-top:0;}
-
 ul{list-style:none;padding-left:0;}
 
 ul li{margin-left:0;margin-bottom:1em;}
@@ -138,16 +134,6 @@ li.warn{background:#FFDD55;display:table;padding:0.3em 0.5em;border-radius:0.5em
 li.success{background:#90ff90;display:table;padding:0.3em 0.5em;border-radius:0.5em;}
 
 .version{color:#6394F8;margin-right:1em;}
-
-.crc{color:#BC8923;margin-right:1em;}
-
-.active{color:green;margin-right:1em;}
-
-.tagPrefix{color:#CD5555;}
-
-.dirty{color:#960;}
-
-.message{color:gray;}
 
 .mod{margin-right:1em;}
 

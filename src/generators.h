@@ -296,20 +296,6 @@ namespace boss {
                     node.text().set(("Version: " + it->Version()).c_str());
                 }
 
-                if (it->Crc() > 0) {
-                    node = plugin.append_child();
-                    node.set_name("span");
-                    node.append_attribute("class").set_value("crc");
-                    node.text().set(("CRC: " + IntToHexString(it->Crc())).c_str());
-                }
-
-                if (it->IsActive()) {
-                    node = plugin.append_child();
-                    node.set_name("span");
-                    node.append_attribute("class").set_value("active");
-                    node.text().set("Active");
-                }
-
                 std::list<Message> messages = it->Messages();
 
                 std::set<Tag> tags = it->Tags();
@@ -387,24 +373,6 @@ namespace boss {
         input = label.append_child();
         input.set_name("input");
         input.append_attribute("type").set_value("checkbox");
-        input.append_attribute("id").set_value("hideActiveLabel");
-        input.append_attribute("data-class").set_value("active");
-        input.text().set("Hide 'Active' Label");
-
-        label = filters.append_child();
-        label.set_name("label");
-        input = label.append_child();
-        input.set_name("input");
-        input.append_attribute("type").set_value("checkbox");
-        input.append_attribute("id").set_value("hideChecksums");
-        input.append_attribute("data-class").set_value("crc");
-        input.text().set("Hide Checksums");
-
-        label = filters.append_child();
-        label.set_name("label");
-        input = label.append_child();
-        input.set_name("input");
-        input.append_attribute("type").set_value("checkbox");
         input.append_attribute("id").set_value("hideNotes");
         input.text().set("Hide Notes");
 
@@ -431,14 +399,6 @@ namespace boss {
         input.append_attribute("type").set_value("checkbox");
         input.append_attribute("id").set_value("hideAllPluginMessages");
         input.text().set("Hide All Plugin Messages");
-
-        label = filters.append_child();
-        label.set_name("label");
-        input = label.append_child();
-        input.set_name("input");
-        input.append_attribute("type").set_value("checkbox");
-        input.append_attribute("id").set_value("hideInactivePlugins");
-        input.text().set("Hide Inactive Plugins");
 
         label = filters.append_child();
         label.set_name("label");
