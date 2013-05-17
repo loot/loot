@@ -34,6 +34,16 @@ namespace boss {
     const unsigned int GAME_FO3         = 3;
     const unsigned int GAME_FONV        = 4;
 
+    //Message types.
+    const unsigned int MESSAGE_SAY      = 0;
+    const unsigned int MESSAGE_WARN     = 1;
+    const unsigned int MESSAGE_ERROR    = 2;
+    const unsigned int MESSAGE_TAG      = 3;
+
+    //Languages
+    const unsigned int LANG_AUTO    = 0;
+    const unsigned int LANG_ENG     = 1;
+
     //Version numbers.
     const unsigned int VERSION_MAJOR = 3;
     const unsigned int VERSION_MINOR = 0;
@@ -43,7 +53,7 @@ namespace boss {
     const boost::filesystem::path settings_path        = "resources/settings.yaml";
     const boost::filesystem::path log_path             = "BOSSDebugLog.txt";
     const boost::filesystem::path readme_path          = boost::filesystem::path("Docs") / "BOSS Readme.html";
-    const char * const libespm_options_path = "resources/libespm.yaml";
+    const char * const libespm_options_path            = "resources/libespm.yaml";
 }
 
 #endif

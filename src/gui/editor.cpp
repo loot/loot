@@ -22,7 +22,7 @@
 */
 
 #include "editor.h"
-#include "../parsers.h"
+#include "../generators.h"
 
 #include <algorithm>
 #include <boost/algorithm/string.hpp>
@@ -258,9 +258,9 @@ void Editor::OnPluginSelect(wxListEvent& event) {
         i=0;
         for (list<boss::Message>::const_iterator it=messages.begin(), endit=messages.end(); it != endit; ++it) {
 
-            if (boost::iequals(it->Type(),"say"))
+            if (it->Type() == boss::MESSAGE_SAY)
                 messageList->InsertItem(i, Type[0]);
-            else if (boost::iequals(it->Type(), "warn"))
+            else if (it->Type() == boss::MESSAGE_WARN)
                 messageList->InsertItem(i, Type[1]);
             else
                 messageList->InsertItem(i, Type[2]);
@@ -268,7 +268,7 @@ void Editor::OnPluginSelect(wxListEvent& event) {
             messageList->SetItem(i, 1, FromUTF8(it->Content()));
             messageList->SetItem(i, 2, FromUTF8(it->Condition()));
 
-            if (it->Language().empty())
+            if (it->Language() == boss::LANG_AUTO)
                 messageList->SetItem(i, 3, Language[0]);
             else
                 messageList->SetItem(i, 3, Language[1]);
@@ -727,17 +727,17 @@ boss::File Editor::RowToFile(wxListView * list, long row) const {
 }
 
 boss::Message Editor::RowToMessage(wxListView * list, long row) const {
-    string type,language;
+    unsigned int type,language;
     if (list->GetItemText(row, 0) == Type[0])
-        type = "say";
+        type = boss::MESSAGE_SAY;
     else if (list->GetItemText(row, 0) == Type[1])
-        type = "warn";
+        type = boss::MESSAGE_WARN;
     else
-        type = "error";
+        type = boss::MESSAGE_ERROR;
     if (list->GetItemText(row, 3) == Language[0])
-        language = "";
+        language = boss::LANG_AUTO;
     else
-        language = "eng";
+        language = boss::LANG_ENG;
     
     return boss::Message(
         type,
@@ -751,12 +751,17 @@ boss::Tag Editor::RowToTag(wxListView * list, long row) const {
     string name = string(list->GetItemText(row, 1).ToUTF8());
 
     if (list->GetItemText(row, 0) == State[1])
-        name = "-" + name;
-    
-    return boss::Tag(
-        name,
-        string(list->GetItemText(row, 2).ToUTF8())
-    );
+        return boss::Tag(
+            name,
+            false,
+            string(list->GetItemText(row, 2).ToUTF8())
+        );
+    else
+        return boss::Tag(
+            name,
+            true,
+            string(list->GetItemText(row, 2).ToUTF8())
+        );
 }
 
 FileEditDialog::FileEditDialog(wxWindow *parent, const wxString& title) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER) {
