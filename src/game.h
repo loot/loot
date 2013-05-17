@@ -43,10 +43,11 @@ namespace boss {
     class Game {
     public:
         Game();  //Sets game to BOSS_GAME_AUTODETECT, with all other vars being empty.
-        Game(const unsigned int baseGameCode);
+        Game(const std::string& folder);
+        Game(const unsigned int baseGameCode, const std::string& folder = "");
 
-        Game& SetAsTC(const std::string& name, const std::string& masterFile,
-                      const std::string& bossFolder);
+        Game& SetDetails(const std::string& name, const std::string& masterFile,
+                        const std::string& url, const std::string& path, const std::string& registry);
         Game& Init();
 
         bool IsInstalled() const;
@@ -56,12 +57,17 @@ namespace boss {
         unsigned int Id() const;
         std::string Name() const;  //Returns the game's name, eg. "TES IV: Oblivion".
         std::string FolderName() const;
+        std::string Master() const;
+        std::string RegistryKey() const;
+        std::string URL() const;
+        
 
         boost::filesystem::path GamePath() const;
         boost::filesystem::path DataPath() const;
         boost::filesystem::path MasterlistPath() const;
         boost::filesystem::path UserlistPath() const;
         boost::filesystem::path ReportPath() const;
+        
         bool IsActive(const std::string& plugin) const;
 
         void SetLoadOrder(const std::list<Plugin>& loadOrder) const;
@@ -72,15 +78,14 @@ namespace boss {
 
         espm::Settings espm_settings;
     private:
-        bool isTC;
         unsigned id;
         std::string _name;
+        std::string _masterFile;
 
         std::string registryKey;
-        std::string registrySubKey;
 
         std::string bossFolderName;
-        std::string _masterFile;
+        std::string _masterlistURL;
 
         boost::filesystem::path gamePath;  //Path to the game's folder.
         boost::unordered_set<std::string> activePlugins;  //Holds lowercased strings.

@@ -172,20 +172,19 @@ void SettingsFrame::SetDefaultValues() {
         reportViewBox->SetValue(view);
     }
 
-    if (_settings["Masterlist URLs"]) {
-        YAML::Node urls = _settings["Masterlist URLs"];
+    if (_settings["Games"]) {
 
-        if (urls["Oblivion"])
-            OblivionURL->SetValue(FromUTF8(urls["Oblivion"].as<string>()));
+        if (_settings["Games"][boss::Game(boss::GAME_TES4).FolderName()])
+            OblivionURL->SetValue(FromUTF8(_settings["Games"][boss::Game(boss::GAME_TES4).FolderName()]["url"].as<string>()));
 
-        if (urls["Skyrim"])
-            SkyrimURL->SetValue(FromUTF8(urls["Skyrim"].as<string>()));
+        if (_settings["Games"][boss::Game(boss::GAME_TES5).FolderName()])
+            SkyrimURL->SetValue(FromUTF8(_settings["Games"][boss::Game(boss::GAME_TES5).FolderName()]["url"].as<string>()));
 
-        if (urls["Fallout 3"])
-            FO3URL->SetValue(FromUTF8(urls["Fallout 3"].as<string>()));
+        if (_settings["Games"][boss::Game(boss::GAME_FO3).FolderName()])
+            FO3URL->SetValue(FromUTF8(_settings["Games"][boss::Game(boss::GAME_FO3).FolderName()]["url"].as<string>()));
 
-        if (urls["Fallout New Vegas"])
-            FONVURL->SetValue(FromUTF8(urls["Fallout New Vegas"].as<string>()));
+        if (_settings["Games"][boss::Game(boss::GAME_FONV).FolderName()])
+            FONVURL->SetValue(FromUTF8(_settings["Games"][boss::Game(boss::GAME_FONV).FolderName()]["url"].as<string>()));
     }
 }
 
@@ -209,13 +208,13 @@ void SettingsFrame::OnQuit(wxCommandEvent& event) {
 
         _settings["View Report Externally"] = reportViewBox->IsChecked();
 
-        _settings["Masterlist URLs"]["Oblivion"] = string(OblivionURL->GetValue().ToUTF8());
+        _settings["Games"][boss::Game(boss::GAME_TES4).FolderName()]["url"] = string(OblivionURL->GetValue().ToUTF8());
 
-        _settings["Masterlist URLs"]["Skyrim"] = string(SkyrimURL->GetValue().ToUTF8());
+        _settings["Games"][boss::Game(boss::GAME_TES5).FolderName()]["url"] = string(SkyrimURL->GetValue().ToUTF8());
 
-        _settings["Masterlist URLs"]["Fallout 3"] = string(FO3URL->GetValue().ToUTF8());
+        _settings["Games"][boss::Game(boss::GAME_FO3).FolderName()]["url"] = string(FO3URL->GetValue().ToUTF8());
 
-        _settings["Masterlist URLs"]["Fallout New Vegas"] = string(FONVURL->GetValue().ToUTF8());
+        _settings["Games"][boss::Game(boss::GAME_FONV).FolderName()]["url"] = string(FONVURL->GetValue().ToUTF8());
     }
 
 	EndModal(0);

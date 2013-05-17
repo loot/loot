@@ -109,3 +109,95 @@ Skyrim:
     BSAHead: BSA
     PlugHead: TES4
     SaveHead: TESV_SAVEGAME
+
+Fallout3:  # A copy of Skyrim's data.
+
+    Group Type: GRUP
+    
+    Group Lengths:
+        Type: 4
+        Size: 4
+        Label: 4
+        GroupType: 4
+        Stamp: 2
+        Unknown 1: 2
+        Version: 2
+        Unknown 2: 2
+
+    Compression Flag: 0x00040000
+    Master Flag: 0x00000001
+
+    Record Lengths:
+        Type: 4
+        Size: 4
+        Unknown 1: 0
+        Flags: 4
+        ID: 4
+        Revision: 4
+        Version: 2
+        Unknown 2: 2
+
+    Field Lengths:
+        Type: 4 
+        Size: 2
+
+    ONAM:
+        - ACHR
+        - LAND
+        - NAVM
+        - PGRE
+        - PHZD
+        - REFR
+        
+    MastExt: .esm
+    PlugExt: .esp
+    SaveExt: .ess
+    BSAHead: BSA
+    PlugHead: TES4
+    SaveHead: TESV_SAVEGAME
+
+FalloutNV:  # A copy of Skyrim's data.
+
+    Group Type: GRUP
+    
+    Group Lengths:
+        Type: 4
+        Size: 4
+        Label: 4
+        GroupType: 4
+        Stamp: 2
+        Unknown 1: 2
+        Version: 2
+        Unknown 2: 2
+
+    Compression Flag: 0x00040000
+    Master Flag: 0x00000001
+
+    Record Lengths:
+        Type: 4
+        Size: 4
+        Unknown 1: 0
+        Flags: 4
+        ID: 4
+        Revision: 4
+        Version: 2
+        Unknown 2: 2
+
+    Field Lengths:
+        Type: 4 
+        Size: 2
+
+    ONAM:
+        - ACHR
+        - LAND
+        - NAVM
+        - PGRE
+        - PHZD
+        - REFR
+        
+    MastExt: .esm
+    PlugExt: .esp
+    SaveExt: .ess
+    BSAHead: BSA
+    PlugHead: TES4
+    SaveHead: TESV_SAVEGAME

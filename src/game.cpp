@@ -43,25 +43,52 @@ namespace boss {
         games.push_back(Game(GAME_FO3));
         games.push_back(Game(GAME_FONV));
         
-        if (settings["Total Conversions"]) {
-            YAML::Node tcs = settings["Total Conversions"];
-            for (size_t i=0,max=tcs.size(); i < max; ++i) {
-                if (!tcs[i]["name"] || !tcs[i]["base"] || !tcs[i]["master"] || !tcs[i]["folder"])
-                    continue;
-                    
-                Game game;
-                if (boost::iequals(tcs[i]["base"].as<string>(), "oblivion"))
-                    game = Game(GAME_TES4);
-                else if (boost::iequals(tcs[i]["base"].as<string>(), "skyrim"))
-                    game = Game(GAME_TES5);
-                else if (boost::iequals(tcs[i]["base"].as<string>(), "fallout3"))
-                    game = Game(GAME_FO3);
-                else if (boost::iequals(tcs[i]["base"].as<string>(), "falloutnv"))
-                    game = Game(GAME_FONV);
-                else
+        if (settings["Games"]) {
+            for(YAML::const_iterator it=settings["Games"].begin(), endit=settings["Games"].end(); it != endit; ++it) {
+                /*
+                    Each game has the following variables: name, type, master, folder, url, path and registry.
+
+                    The four archetypes have hardcoded values for each of these. Each game instance must have a unique name and a unique folder. Two or more games can be the same type, have the same master, use the same masterlist, be installed to the same path (eg. multiple install swapping) and have the same registry entry (again, swapping).
+
+                    In the YAML file, at least a name must be supplied. If the name matches one of the four archetypes, that is all that is required, but if not, then a type and folder are also required.
+                */
+
+                Game game(it->first.as<string>());
+
+                vector<Game>::iterator jt = find(games.begin(), games.end(), game);
+
+                if (jt == games.end() && (!it->second["type"] || !it->second["name"]))
                     continue;
 
-                games.push_back(game.SetAsTC(tcs[i]["name"].as<string>(), tcs[i]["master"].as<string>(), tcs[i]["folder"].as<string>()));
+                string name, master, url, path, registry;
+                if (it->second["name"])
+                    name = it->second["name"].as<string>();
+                if (it->second["master"])
+                    master = it->second["master"].as<string>();
+                if (it->second["url"])
+                    url = it->second["url"].as<string>();
+                if (it->second["path"])
+                    path = it->second["path"].as<string>();
+                if (it->second["registry"])
+                    registry = it->second["registry"].as<string>();
+
+                if (jt != games.end())
+                    jt->SetDetails(name, master, url, path, registry);
+                else {
+
+                    if (boost::iequals(it->second["type"].as<string>(), Game(GAME_TES4).FolderName()))
+                        game = Game(GAME_TES4, game.FolderName());
+                    else if (boost::iequals(it->second["type"].as<string>(), Game(GAME_TES5).FolderName()))
+                        game = Game(GAME_TES5, game.FolderName());
+                    else if (boost::iequals(it->second["type"].as<string>(), Game(GAME_FO3).FolderName()))
+                        game = Game(GAME_FO3, game.FolderName());
+                    else if (boost::iequals(it->second["type"].as<string>(), Game(GAME_FONV).FolderName()))
+                        game = Game(GAME_FONV, game.FolderName());
+                    else
+                        continue;
+
+                    games.push_back(game.SetDetails(name, master, url, path, registry));
+                }
             }
         }
         return games;
@@ -79,41 +106,45 @@ namespace boss {
         }
     }
 
-    Game::Game() : id(0), isTC(false) {}
+    Game::Game() : id(0) {}
 
-    Game::Game(const unsigned int gameCode) : id(gameCode), isTC(false) {
+    Game::Game(const std::string& folder) : bossFolderName(folder) {}
 
+    Game::Game(const unsigned int gameCode, const std::string& folder) : id(gameCode) {
         string libespmGame;
         if (Id() == GAME_TES4) {
             _name = "TES IV: Oblivion";
-            registryKey = "Software\\Bethesda Softworks\\Oblivion";
-            registrySubKey = "Installed Path";
+            registryKey = "Software\\Bethesda Softworks\\Oblivion\\Installed Path";
             bossFolderName = "Oblivion";
             _masterFile = "Oblivion.esm";
             libespmGame = "Oblivion";
+            _masterlistURL = "http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-oblivion/masterlist.yaml";
         } else if (Id() == GAME_TES5) {
             _name = "TES V: Skyrim";
-            registryKey = "Software\\Bethesda Softworks\\Skyrim";
-            registrySubKey = "Installed Path";
+            registryKey = "Software\\Bethesda Softworks\\Skyrim\\Installed Path";
             bossFolderName = "Skyrim";
             _masterFile = "Skyrim.esm";
             libespmGame = "Skyrim";
+            _masterlistURL = "http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-skyrim/masterlist.yaml";
         } else if (Id() == GAME_FO3) {
             _name = "Fallout 3";
-            registryKey = "Software\\Bethesda Softworks\\Fallout3";
-            registrySubKey = "Installed Path";
+            registryKey = "Software\\Bethesda Softworks\\Fallout3\\Installed Path";
             bossFolderName = "Fallout3";
             _masterFile = "Fallout3.esm";
-            libespmGame = "Skyrim";
+            libespmGame = "Fallout3";
+            _masterlistURL = "http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-fallout/masterlist.yaml";
         } else if (Id() == GAME_FONV) {
             _name = "Fallout: New Vegas";
-            registryKey = "Software\\Bethesda Softworks\\FalloutNV";
-            registrySubKey = "Installed Path";
+            registryKey = "Software\\Bethesda Softworks\\FalloutNV\\Installed Path";
             bossFolderName = "FalloutNV";
             _masterFile = "FalloutNV.esm";
-            libespmGame = "Skyrim";
+            libespmGame = "FalloutNV";
+            _masterlistURL = "http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-fallout-nv/masterlist.yaml";
         } else
             throw error(ERROR_INVALID_ARGS, "Invalid game ID supplied.");
+
+        if (!folder.empty())
+            bossFolderName = folder;
 
         if (fs::exists(libespm_options_path))
             espm_settings = espm::Settings(libespm_options_path, libespmGame);
@@ -121,25 +152,45 @@ namespace boss {
             throw error(ERROR_PATH_NOT_FOUND, "Libespm settings file could not be found.");
     }
 
-    Game& Game::SetAsTC(const std::string& name, const std::string& masterFile,
-                      const std::string& bossFolder) {
+    Game& Game::SetDetails(const std::string& name, const std::string& masterFile,
+                        const std::string& url, const std::string& path, const std::string& registry) {
 
-        _name = name;
-        _masterFile = masterFile;
-        bossFolderName = bossFolder;
+        if (!name.empty())
+            _name = name;
 
-        isTC = true;
+        if (!masterFile.empty())
+            _masterFile = masterFile;
+
+        if (!url.empty())
+            _masterlistURL = url;
+
+        if (!path.empty())
+            gamePath = path;
+
+        if (!registry.empty())
+            registryKey = registry;
 
         return *this;
     }
                       
     Game& Game::Init() {
         //First look for local install, then look for Registry.
-        if (fs::exists(fs::path("..") / "Data" / _masterFile))
-            gamePath = "..";
-        else if (RegKeyExists("HKEY_LOCAL_MACHINE", registryKey, registrySubKey))
-            gamePath = fs::path(RegKeyStringValue("HKEY_LOCAL_MACHINE", registryKey, registrySubKey));
-        else
+        if (gamePath.empty() || !fs::exists(gamePath / "Data" / _masterFile)) {
+            if (fs::exists(fs::path("..") / "Data" / _masterFile))
+                gamePath = "..";
+            else {
+                string path;
+                string key_parent = fs::path(registryKey).parent_path().string();
+                string key_name = fs::path(registryKey).filename().string();
+                if (RegKeyExists("HKEY_LOCAL_MACHINE", key_parent, key_name)) {
+                    path = RegKeyStringValue("HKEY_LOCAL_MACHINE", key_parent, key_name);
+                    if (fs::exists(fs::path(path) / "Data" / _masterFile))
+                        gamePath = fs::path(path);
+                }
+            }
+        }
+
+        if (gamePath.empty())
             throw error(ERROR_PATH_NOT_FOUND, "Game path could not be detected.");
 
         RefreshActivePluginsList();
@@ -149,13 +200,26 @@ namespace boss {
     }
     
     bool Game::IsInstalled() const {
-        return (fs::exists(fs::path("..") / "Data" / _masterFile) || RegKeyExists("HKEY_LOCAL_MACHINE", registryKey, registrySubKey));
+        if (!gamePath.empty() && fs::exists(gamePath / "Data" / _masterFile))
+            return true;
+
+        if (fs::exists(fs::path("..") / "Data" / _masterFile))
+            return true;
+
+        string path;
+        string key_parent = fs::path(registryKey).parent_path().string();
+        string key_name = fs::path(registryKey).filename().string();
+        if (RegKeyExists("HKEY_LOCAL_MACHINE", key_parent, key_name)) {
+            path = RegKeyStringValue("HKEY_LOCAL_MACHINE", key_parent, key_name);
+            if (fs::exists(fs::path(path) / "Data" / _masterFile))
+                return true;
+        }
+
+        return false;
     }
 
     bool Game::operator == (const Game& rhs) const {
-        return (id == rhs.Id()
-             && _name == rhs.Name()
-             && bossFolderName == rhs.FolderName());
+        return (_name == rhs.Name() || bossFolderName == rhs.FolderName());
     }
 
     unsigned int Game::Id() const {
@@ -169,6 +233,19 @@ namespace boss {
     string Game::FolderName() const {
         return bossFolderName;
     }
+
+    std::string Game::Master() const {
+        return _masterFile;
+    }
+
+    std::string Game::RegistryKey() const {
+        return registryKey;
+    }
+
+    std::string Game::URL() const {
+        return _masterlistURL;
+    }
+
 
     fs::path Game::GamePath() const {
         return gamePath;
@@ -207,12 +284,10 @@ namespace boss {
         if (ret != LIBLO_OK)
             throw error(ERROR_LIBLO_ERROR, "libloadorder game handle creation failed.");
 
-        if (isTC) {
-            ret = lo_set_game_master(gh, _masterFile.c_str());
+        ret = lo_set_game_master(gh, _masterFile.c_str());
 
-            if (ret != LIBLO_OK)
-                throw error(ERROR_LIBLO_ERROR, "libloadorder total conversion support setup failed.");
-        }
+        if (ret != LIBLO_OK)
+            throw error(ERROR_LIBLO_ERROR, "libloadorder total conversion support setup failed.");
                 
         if (lo_get_active_plugins(gh, &pluginArr, &pluginArrSize) != LIBLO_OK)
             throw error(ERROR_LIBLO_ERROR, "Active plugin list lookup failed.");
@@ -247,12 +322,10 @@ namespace boss {
         if (ret != LIBLO_OK)
             throw error(ERROR_LIBLO_ERROR, "libloadorder game handle creation failed.");
 
-        if (isTC) {
-            ret = lo_set_game_master(gh, _masterFile.c_str());
+        ret = lo_set_game_master(gh, _masterFile.c_str());
 
-            if (ret != LIBLO_OK)
-                throw error(ERROR_LIBLO_ERROR, "libloadorder total conversion support setup failed.");
-        }
+        if (ret != LIBLO_OK)
+            throw error(ERROR_LIBLO_ERROR, "libloadorder total conversion support setup failed.");
 
         pluginArrSize = loadOrder.size();
         pluginArr = new char*[pluginArrSize];

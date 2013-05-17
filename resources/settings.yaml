@@ -3,26 +3,50 @@
 
 Language:            eng    # An ISO 639-3 language string.
 
-Game:                auto   # auto, oblivion, nehrim, skyrim, fallout3, falloutnv
+Game:                auto   # auto, or one of the 'folder' values below.
 Last Game:           auto   # auto, oblivion, nehrim, skyrim, fallout3, falloutnv
 Debug Verbosity:     0      # 0, 1, 2, 3. Logging takes place if > 0.
 Update Masterlist:   true
 View Report Externally: false
 
-Masterlist URLs:
-  Oblivion:          http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-oblivion/masterlist.yaml
-  Skyrim:            http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-skyrim/masterlist.yaml
-  Fallout 3:         http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-fallout/masterlist.yaml
-  Fallout New Vegas: http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-fallout-nv/masterlist.yaml
-
-Total Conversions:
-
-  - name: Nehrim - At Fate's Edge
-    base: oblivion
-    master: Nehrim.esm
-    folder: Nehrim
+# Games. The four archetypes are 'Oblivion', 'Skyrim', 'Fallout3' and 'FalloutNV'. They correspond to each base game's libespm and libloadorder settings.
+Games:
+  Oblivion:
+    name: "TES IV: Oblivion"
+    type: Oblivion
+    master: Oblivion.esm
+    url: http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-oblivion/masterlist.yaml
+    path: ~
+    registry: Software\Bethesda Softworks\Oblivion\Installed Path
     
-  - name: Enderal - The Shards of Order
-    base: skyrim
-    master: Enderal.esm
-    folder: Enderal
+  Skyrim:
+    name: "TES V: Skyrim"
+    type: Skyrim
+    master: Skyrim.esm
+    url: http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-skyrim/masterlist.yaml
+    path: ~
+    registry: Software\Bethesda Softworks\Skyrim\Installed Path
+    
+  Fallout3:
+    name: Fallout 3
+    type: Fallout3
+    master: Fallout3.esm
+    url: http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-fallout/masterlist.yaml
+    path: ~
+    registry: Software\Bethesda Softworks\Fallout3\Installed Path
+
+  FalloutNV:
+    name: "Fallout: New Vegas"
+    type: FalloutNV
+    master: FalloutNV.esm
+    url: http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-fallout-nv/masterlist.yaml
+    path: ~
+    registry: Software\Bethesda Softworks\FalloutNV\Installed Path
+    
+  Nehrim:
+    name: Nehrim - At Fate's Edge
+    type: Oblivion
+    master: Nehrim.esm
+    url: http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-oblivion/masterlist.yaml
+    path: ~
+    registry: Software\Microsoft\Windows\CurrentVersion\Uninstall\Nehrim - At Fate's Edge_is1
