@@ -97,8 +97,6 @@ namespace boss {
     };
 
     std::vector<Game> GetGames(const YAML::Node& settings);
-
-    void DetectGames(std::vector<Game>& detected, std::vector<Game>& undetected);
 }
 
 #endif

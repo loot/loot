@@ -32,7 +32,7 @@
 
 class SettingsFrame : public wxDialog {
 public:
-	SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node& settings, const std::vector<boss::Game>& games);
+	SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node& settings, std::vector<boss::Game>& games);
 	void OnQuit(wxCommandEvent& event);
 	void SetDefaultValues();
 	DECLARE_EVENT_TABLE()
@@ -48,6 +48,6 @@ private:
     wxTextCtrl *FONVURL;
 
     YAML::Node& _settings;
-    std::vector<boss::Game> _games;
+    std::vector<boss::Game>& _games;
 };
 #endif

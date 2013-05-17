@@ -488,8 +488,7 @@ namespace YAML {
 
     inline Emitter& operator << (Emitter& out, const boss::Game& rhs) {
         out << BeginMap
-            << Key << rhs.FolderName() << Value
-            << BeginMap
+            << Key << "folder" << Value << rhs.FolderName()
             << Key << "name" << Value << rhs.Name()
             << Key << "master" << Value << rhs.Master()
             << Key << "url" << Value << rhs.URL()
@@ -505,7 +504,7 @@ namespace YAML {
         else if (rhs.Id() == boss::GAME_FONV)
             out << Key << Value << boss::Game(boss::GAME_FONV).FolderName();
 
-        out << EndMap << EndMap;
+        out << EndMap;
     }
 
     inline Emitter& operator << (Emitter& out, const boss::Message& rhs) {

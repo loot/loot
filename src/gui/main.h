@@ -37,14 +37,14 @@ public:
 private:
     wxLocale * wxLoc;
     
-    boss::Game _game;
     YAML::Node _settings;
-    std::vector<boss::Game> _detectedGames, _undetectedGames;
+    std::vector<boss::Game> _games;
+    boss::Game _game;
 };
 
 class Launcher : public wxFrame {
 public:
-    Launcher(const wxChar *title, YAML::Node& settings, boss::Game& inGame, const std::vector<boss::Game>& detectedGames, const std::vector<boss::Game>& undetectedGames);
+    Launcher(const wxChar *title, YAML::Node& settings, boss::Game& inGame, std::vector<boss::Game>& games);
     
 	void OnSortPlugins(wxCommandEvent& event);
     void OnEditMetadata(wxCommandEvent& event);
@@ -63,8 +63,7 @@ private:
     
 	boss::Game& _game;
     YAML::Node& _settings;  //BOSS Settings.
-    const std::vector<boss::Game>& _detectedGames;
-    const std::vector<boss::Game>& _undetectedGames;
+    std::vector<boss::Game>& _games;
 
     static bool AlphaSortPlugins(const boss::Plugin& lhs, const boss::Plugin& rhs);
 };

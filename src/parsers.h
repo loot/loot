@@ -53,6 +53,57 @@ namespace YAML {
     ///////////////////////
 
     template<>
+    struct convert<boss::Game> {
+        static Node encode(const boss::Game& rhs) {
+            Node node;
+
+            node["type"] = boss::Game(rhs.Id()).FolderName();
+            node["name"] = rhs.Name();
+            node["folder"] = rhs.FolderName();
+            node["master"] = rhs.Master();
+            node["url"] = rhs.URL();
+            node["path"] = rhs.GamePath().string();
+            node["registry"] = rhs.RegistryKey();
+
+            return node;
+        }
+
+        static bool decode(const Node& node, boss::Game& rhs) {
+            if (!node.IsMap() || !node["folder"] || !node["type"])
+                return false;
+
+            boss::Game game(node["folder"].as<std::string>());
+
+            if (node["type"].as<std::string>() == boss::Game(boss::GAME_TES4).FolderName())
+                rhs = boss::Game(boss::GAME_TES4, game.FolderName());
+            else if (node["type"].as<std::string>() == boss::Game(boss::GAME_TES5).FolderName())
+                rhs = boss::Game(boss::GAME_TES5, game.FolderName());
+            else if (node["type"].as<std::string>() == boss::Game(boss::GAME_FO3).FolderName())
+                rhs = boss::Game(boss::GAME_FO3, game.FolderName());
+            else if (node["type"].as<std::string>() == boss::Game(boss::GAME_FONV).FolderName())
+                rhs = boss::Game(boss::GAME_FONV, game.FolderName());
+            else
+                return false;
+
+            std::string name, master, url, path, registry;
+            if (node["name"])
+                name = node["name"].as<std::string>();
+            if (node["master"])
+                master = node["master"].as<std::string>();
+            if (node["url"])
+                url = node["url"].as<std::string>();
+            if (node["path"])
+                path = node["path"].as<std::string>();
+            if (node["registry"])
+                registry = node["registry"].as<std::string>();
+
+            rhs.SetDetails(name, master, url, path, registry);
+
+            return true;
+        }
+    };
+
+    template<>
     struct convert<boss::Message> {
         static Node encode(const boss::Message& rhs) {
             Node node;

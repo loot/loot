@@ -26,6 +26,7 @@
 #include "helpers.h"
 #include "error.h"
 #include "metadata.h"
+#include "parsers.h"
 
 #include <boost/algorithm/string.hpp>
 
@@ -38,72 +39,22 @@ namespace boss {
     std::vector<Game> GetGames(const YAML::Node& settings) {
         vector<Game> games;
 
-        games.push_back(Game(GAME_TES4));
-        games.push_back(Game(GAME_TES5));
-        games.push_back(Game(GAME_FO3));
-        games.push_back(Game(GAME_FONV));
+        if (settings["Games"])
+            games = settings["Games"].as< vector<Game> >();
+
+        if (find(games.begin(), games.end(), Game(GAME_TES4)) == games.end())
+            games.push_back(Game(GAME_TES4));
+
+        if (find(games.begin(), games.end(), Game(GAME_TES5)) == games.end())
+            games.push_back(Game(GAME_TES5));
+
+        if (find(games.begin(), games.end(), Game(GAME_FO3)) == games.end())
+            games.push_back(Game(GAME_FO3));
+
+        if (find(games.begin(), games.end(), Game(GAME_FONV)) == games.end())
+            games.push_back(Game(GAME_FONV));
         
-        if (settings["Games"]) {
-            for(YAML::const_iterator it=settings["Games"].begin(), endit=settings["Games"].end(); it != endit; ++it) {
-                /*
-                    Each game has the following variables: name, type, master, folder, url, path and registry.
-
-                    The four archetypes have hardcoded values for each of these. Each game instance must have a unique name and a unique folder. Two or more games can be the same type, have the same master, use the same masterlist, be installed to the same path (eg. multiple install swapping) and have the same registry entry (again, swapping).
-
-                    In the YAML file, at least a name must be supplied. If the name matches one of the four archetypes, that is all that is required, but if not, then a type and folder are also required.
-                */
-
-                Game game(it->first.as<string>());
-
-                vector<Game>::iterator jt = find(games.begin(), games.end(), game);
-
-                if (jt == games.end() && (!it->second["type"] || !it->second["name"]))
-                    continue;
-
-                string name, master, url, path, registry;
-                if (it->second["name"])
-                    name = it->second["name"].as<string>();
-                if (it->second["master"])
-                    master = it->second["master"].as<string>();
-                if (it->second["url"])
-                    url = it->second["url"].as<string>();
-                if (it->second["path"])
-                    path = it->second["path"].as<string>();
-                if (it->second["registry"])
-                    registry = it->second["registry"].as<string>();
-
-                if (jt != games.end())
-                    jt->SetDetails(name, master, url, path, registry);
-                else {
-
-                    if (boost::iequals(it->second["type"].as<string>(), Game(GAME_TES4).FolderName()))
-                        game = Game(GAME_TES4, game.FolderName());
-                    else if (boost::iequals(it->second["type"].as<string>(), Game(GAME_TES5).FolderName()))
-                        game = Game(GAME_TES5, game.FolderName());
-                    else if (boost::iequals(it->second["type"].as<string>(), Game(GAME_FO3).FolderName()))
-                        game = Game(GAME_FO3, game.FolderName());
-                    else if (boost::iequals(it->second["type"].as<string>(), Game(GAME_FONV).FolderName()))
-                        game = Game(GAME_FONV, game.FolderName());
-                    else
-                        continue;
-
-                    games.push_back(game.SetDetails(name, master, url, path, registry));
-                }
-            }
-        }
         return games;
-    }
-
-    void DetectGames(std::vector<Game>& detected, std::vector<Game>& undetected) {
-        //detected is also the input vector.
-        vector<Game>::iterator it = detected.begin();
-        while (it != detected.end()) {
-            if (!it->IsInstalled()) {
-                undetected.push_back(*it);
-                it = detected.erase(it);
-            } else
-                ++it;
-        }
     }
 
     Game::Game() : id(0) {}
@@ -219,7 +170,7 @@ namespace boss {
     }
 
     bool Game::operator == (const Game& rhs) const {
-        return (_name == rhs.Name() || bossFolderName == rhs.FolderName());
+        return (boost::iequals(_name, rhs.Name()) || boost::iequals(bossFolderName, rhs.FolderName()));
     }
 
     unsigned int Game::Id() const {
@@ -245,7 +196,6 @@ namespace boss {
     std::string Game::URL() const {
         return _masterlistURL;
     }
-
 
     fs::path Game::GamePath() const {
         return gamePath;

@@ -140,8 +140,7 @@ bool BossGUI::OnInit() {
 
     //Detect installed games.
     try {
-        _detectedGames = GetGames(_settings);
-        DetectGames(_detectedGames, _undetectedGames);
+        _games = GetGames(_settings);
     } catch (boss::error& e) {
         wxMessageBox(
             FromUTF8(format(loc::translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()),
@@ -152,15 +151,7 @@ bool BossGUI::OnInit() {
     } catch (YAML::Exception& e) {
         //LOG_ERROR("Error: %s", e.getString().c_str());
         wxMessageBox(
-            FromUTF8(format(loc::translate("Error: Settings parsing failed. %1%")) % e.what()),
-            translate("BOSS: Error"),
-            wxOK | wxICON_ERROR,
-            NULL);
-        return false;
-    }
-    if (_detectedGames.empty()) {
-        wxMessageBox(
-            translate("Error: None of the supported games were detected."),
+            FromUTF8(format(loc::translate("Error: Games' settings parsing failed. %1%")) % e.what()),
             translate("BOSS: Error"),
             wxOK | wxICON_ERROR,
             NULL);
@@ -174,18 +165,33 @@ bool BossGUI::OnInit() {
         target = _settings["Last Game"].as<string>();
 
     if (!target.empty()) {
-        for (size_t i=0, max=_detectedGames.size(); i < max; ++i) {
-            if (target == _detectedGames[i].FolderName())
-                _game = _detectedGames[i];
+        for (size_t i=0, max=_games.size(); i < max; ++i) {
+            if (target == _games[i].FolderName() && _games[i].IsInstalled())
+                _game = _games[i];
         }
-        if (_game == Game())
-            _game = _detectedGames[0];
-    } else
-        _game = _detectedGames[0];
+    }
+    if (_game == Game()) {
+        //Set _game to the first installed game.
+        for (size_t i=0, max=_games.size(); i < max; ++i) {
+            if (_games[i].IsInstalled()) {
+                _game = _games[i];
+                break;
+            }
+        }
+        if (_game == Game()) {
+            wxMessageBox(
+                translate("Error: None of the supported games were detected."),
+                translate("BOSS: Error"),
+                wxOK | wxICON_ERROR,
+                NULL);
+            return false;
+        }
+    }
 
     //Now that game is selected, initialise it.
     try {
         _game.Init();
+        *find(_games.begin(), _games.end(), _game) = _game;  //Sync changes.
     } catch (boss::error& e) {
         wxMessageBox(
             FromUTF8(format(loc::translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()),
@@ -196,7 +202,7 @@ bool BossGUI::OnInit() {
     }
 
     //Create launcher window.
-    Launcher * launcher = new Launcher(wxT("BOSS"), _settings, _game, _detectedGames, _undetectedGames);
+    Launcher * launcher = new Launcher(wxT("BOSS"), _settings, _game, _games);
 
     launcher->SetIcon(wxIconLocation("BOSS.exe"));
 	launcher->Show();
@@ -205,7 +211,7 @@ bool BossGUI::OnInit() {
     return true;
 }
 
-Launcher::Launcher(const wxChar *title, YAML::Node& settings, Game& game, const vector<boss::Game>& detectedGames, const vector<boss::Game>& undetectedGames) : wxFrame(NULL, wxID_ANY, title), _game(game), _settings(settings), _detectedGames(detectedGames), _undetectedGames(undetectedGames) {
+Launcher::Launcher(const wxChar *title, YAML::Node& settings, Game& game, vector<boss::Game>& games) : wxFrame(NULL, wxID_ANY, title), _game(game), _settings(settings), _games(games) {
 
     //Initialise menu items.
     wxMenuBar * MenuBar = new wxMenuBar();
@@ -231,14 +237,15 @@ Launcher::Launcher(const wxChar *title, YAML::Node& settings, Game& game, const 
 	EditMenu->Append(MENU_ShowSettings, translate("&Settings..."));
 	MenuBar->Append(EditMenu, translate("&Edit"));
 	//Game menu - set up initial item states here too.
-    for (size_t i=0,max=_detectedGames.size(); i < max; ++i) {
-        wxMenuItem * item = GameMenu->AppendRadioItem(MENU_LowestDynamicGameID + i, FromUTF8(_detectedGames[i].Name()));
-        if (_game == _detectedGames[i])
+    for (size_t i=0,max=_games.size(); i < max; ++i) {
+        wxMenuItem * item = GameMenu->AppendRadioItem(MENU_LowestDynamicGameID + i, FromUTF8(_games[i].Name()));
+        if (_game == _games[i])
             item->Check();
-        Bind(wxEVT_COMMAND_MENU_SELECTED, &Launcher::OnGameChange, this, MENU_LowestDynamicGameID + i);
-    }
-    for (size_t i=0,max=undetectedGames.size(); i < max; ++i) {
-        GameMenu->AppendRadioItem(wxID_ANY, FromUTF8(undetectedGames[i].Name()))->Enable(false);
+
+        if (_games[i].IsInstalled())
+            Bind(wxEVT_COMMAND_MENU_SELECTED, &Launcher::OnGameChange, this, MENU_LowestDynamicGameID + i);
+        else
+            item->Enable(false);
     }
 	MenuBar->Append(GameMenu, translate("&Game"));
     //About menu
@@ -292,6 +299,8 @@ void Launcher::OnClose(wxCloseEvent& event) {
 
 
     _settings["Last Game"] = _game.FolderName();
+
+    _settings["Games"] = _games;
     
     //Save settings.
     YAML::Emitter yout;
@@ -660,16 +669,15 @@ void Launcher::OnViewLastReport(wxCommandEvent& event) {
 }
 
 void Launcher::OnOpenSettings(wxCommandEvent& event) {
-    vector<boss::Game> games = _detectedGames;
-    games.insert(games.end(), _undetectedGames.begin(), _undetectedGames.end());
-	SettingsFrame *settings = new SettingsFrame(this, translate("BOSS: Settings"), _settings, games);
+	SettingsFrame *settings = new SettingsFrame(this, translate("BOSS: Settings"), _settings, _games);
 	settings->ShowModal();
 }
 
 void Launcher::OnGameChange(wxCommandEvent& event) {
-    _game = _detectedGames[event.GetId() - MENU_LowestDynamicGameID];
+    _game = _games[event.GetId() - MENU_LowestDynamicGameID];
     try {
         _game.Init();  //In case it hasn't already been done.
+        *find(_games.begin(), _games.end(), _game) = _game;  //Sync changes.
     } catch (boss::error& e) {
         wxMessageBox(
             FromUTF8(format(loc::translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()),
