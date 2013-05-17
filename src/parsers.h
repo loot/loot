@@ -32,7 +32,6 @@
 #include "helpers.h"
 #include "error.h"
 
-#include <stdexcept>
 #include <stdint.h>
 
 #include <yaml-cpp/yaml.h>
@@ -58,9 +57,20 @@ namespace YAML {
         static Node encode(const boss::Message& rhs) {
             Node node;
             node["condition"] = rhs.Condition();
-            node["type"] = rhs.Type();
             node["content"] = rhs.Content();
-            node["lang"] = rhs.Language();
+
+            if (rhs.Type() == boss::MESSAGE_SAY)
+                node["type"] = "say";
+            else if (rhs.Type() == boss::MESSAGE_WARN)
+                node["type"] = "warn";
+            else
+                node["type"] = "error";
+
+            if (rhs.Language() == boss::LANG_AUTO)
+                node["lang"] = "";
+            else
+                node["lang"] = "eng";
+                
             return node;
         }
 
@@ -68,17 +78,38 @@ namespace YAML {
             if(!node.IsMap())
                 return false;
 
-            std::string condition, type, content, language;
+            std::string condition, content;
+            unsigned int typeNo, langNo;
             if (node["condition"])
                 condition = node["condition"].as<std::string>();
-            if (node["type"])
-                type = node["type"].as<std::string>();
             if (node["content"])
                 content = node["content"].as<std::string>();
-            if (node["lang"])
-                language = node["lang"].as<std::string>();
+                
+            if (node["type"]) {
+                std::string type;
+                type = node["type"].as<std::string>();
 
-            rhs = boss::Message(type, content, condition, language);
+                if (boost::iequals(type, "say"))
+                    typeNo = boss::MESSAGE_SAY;
+                else if (boost::iequals(type, "warn"))
+                    typeNo = boss::MESSAGE_WARN;
+                else
+                    typeNo = boss::MESSAGE_ERROR;
+            }
+
+                
+            if (node["lang"]) {
+                std::string lang;
+                lang = node["lang"].as<std::string>();
+
+                if (boost::iequals(lang, "eng"))
+                    langNo = boss::LANG_ENG;
+                else
+                    langNo = boss::LANG_AUTO;
+            }
+                
+
+            rhs = boss::Message(typeNo, content, condition, langNo);
             return true;
         }
     };
@@ -114,21 +145,28 @@ namespace YAML {
         static Node encode(const boss::Tag& rhs) {
             Node node;
             node["condition"] = rhs.Condition();
-            node["name"] = rhs.PrefixedName();
+            if (rhs.IsAddition())
+                node["name"] = rhs.Name();
+            else
+                node["name"] = "-" + rhs.Name();
             return node;
         }
 
         static bool decode(const Node& node, boss::Tag& rhs) {
+            std::string condition, tag;
             if(node.IsMap()) {
-                std::string condition, tag;
                 if (node["condition"])
                     condition = node["condition"].as<std::string>();
                 if (node["name"])
                     tag = node["name"].as<std::string>();
-                rhs = boss::Tag(tag, condition);
-            } else if (node.IsScalar()) {
-                rhs = boss::Tag(node.as<std::string>());
-            }
+            } else if (node.IsScalar())
+                tag = node.as<std::string>();
+
+            if (tag[0] == '-')
+                rhs = boss::Tag(tag.substr(1), false, condition);
+            else
+                rhs = boss::Tag(tag, true, condition);
+            
             return true;
         }
     };
@@ -197,92 +235,6 @@ namespace YAML {
             return true;
         }
     };
-
-    ///////////////////
-    // Emitter
-    ///////////////////
-
-    template<class T, class Compare>
-    Emitter& operator << (Emitter& out, const std::set<T, Compare>& rhs) {
-        out << BeginSeq;
-        for (typename std::set<T, Compare>::const_iterator it=rhs.begin(), endIt=rhs.end(); it != endIt; ++it) {
-            out << *it;
-        }
-        out << EndSeq;
-    }
-
-    inline Emitter& operator << (Emitter& out, const boss::Message& rhs) {
-        out << BeginMap
-            << Key << "type" << Value << rhs.Type()
-            << Key << "content" << Value << rhs.Content();
-
-        if (!rhs.Language().empty())
-            out << Key << "lang" << Value << rhs.Language();
-
-        if (!rhs.Condition().empty())
-            out << Key << "condition" << Value << rhs.Condition();
-
-        out << EndMap;
-    }
-
-    inline Emitter& operator << (Emitter& out, const boss::File& rhs) {
-        if (!rhs.IsConditional() && rhs.DisplayName().empty())
-            out << rhs.Name();
-        else {
-            out << BeginMap
-                << Key << "name" << Value << rhs.Name();
-
-            if (rhs.IsConditional())
-                out << Key << "condition" << Value << rhs.Condition();
-
-            if (!rhs.DisplayName().empty())
-                out << Key << "display" << Value << rhs.DisplayName();
-
-            out << EndMap;
-        }
-    }
-
-    inline Emitter& operator << (Emitter& out, const boss::Tag& rhs) {
-        if (!rhs.IsConditional())
-            out << rhs.PrefixedName();
-        else {
-            out << BeginMap
-                << Key << "name" << Value << rhs.PrefixedName()
-                << Key << "condition" << Value << rhs.Condition()
-                << EndMap;
-        }
-    }
-
-    inline Emitter& operator << (Emitter& out, const boss::Plugin& rhs) {
-        //if (!rhs.HasNameOnly()) {
-
-            out << BeginMap
-                << Key << "name" << Value << rhs.Name();
-
-            if (rhs.Priority() != 0)
-                out << Key << "priority" << Value << rhs.Priority();
-
-            if (!rhs.Enabled())
-                out << Key << "enabled" << Value << rhs.Enabled();
-
-            if (!rhs.LoadAfter().empty())
-                out << Key << "after" << Value << rhs.LoadAfter();
-
-            if (!rhs.Reqs().empty())
-                out << Key << "req" << Value << rhs.Reqs();
-
-            if (!rhs.Incs().empty())
-                out << Key << "inc" << Value << rhs.Incs();
-
-            if (!rhs.Messages().empty())
-                out << Key << "msg" << Value << rhs.Messages();
-
-            if (!rhs.Tags().empty())
-                out << Key << "tag" << Value << rhs.Tags();
-
-            out << EndMap;
-        //}
-    }
 }
 
 namespace boss {

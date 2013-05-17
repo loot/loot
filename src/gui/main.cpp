@@ -149,6 +149,14 @@ bool BossGUI::OnInit() {
             wxOK | wxICON_ERROR,
             NULL);
         return false;
+    } catch (YAML::Exception& e) {
+        //LOG_ERROR("Error: %s", e.getString().c_str());
+        wxMessageBox(
+            FromUTF8(format(loc::translate("Error: Settings parsing failed. %1%")) % e.what()),
+            translate("BOSS: Error"),
+            wxOK | wxICON_ERROR,
+            NULL);
+        return false;
     }
     if (_detectedGames.empty()) {
         wxMessageBox(
@@ -167,7 +175,7 @@ bool BossGUI::OnInit() {
 
     if (!target.empty()) {
         for (size_t i=0, max=_detectedGames.size(); i < max; ++i) {
-            if (boost::iequals(target, _detectedGames[i].FolderName()))
+            if (target == _detectedGames[i].FolderName())
                 _game = _detectedGames[i];
         }
         if (_game == Game())
@@ -388,6 +396,11 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         messages = mlist_messages;
         messages.insert(messages.end(), ulist_messages.begin(), ulist_messages.end());
 
+        //Set language.
+        unsigned int lang = boss::LANG_AUTO;
+        if (_settings["Language"].as<string>() == "eng")
+            lang = boss::LANG_ENG;
+
         //Merge plugin list, masterlist and userlist plugin data.
         for (list<boss::Plugin>::iterator it=plugins.begin(), endIt=plugins.end(); it != endIt; ++it) {
             //Check if there is already a plugin in the 'plugins' list or not.
@@ -405,7 +418,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
             //Now that items are merged, evaluate any conditions they have.
             try {
-                it->EvalAllConditions(_game, _settings["Language"].as<string>());
+                it->EvalAllConditions(_game, lang);
             } catch (boss::error& e) {
                 //LOG_ERROR("Error: %s", e.what());
                 wxMessageBox(
@@ -423,9 +436,9 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             list<boss::Message> messages = it->Messages();
             for (map<string,bool>::const_iterator jt=issues.begin(), endJt=issues.end(); jt != endJt; ++jt) {
                 if (jt->second)
-                    messages.push_back(boss::Message("error", "\"" + jt->first + "\" is incompatible with \"" + it->Name() + "\" and is present."));
+                    messages.push_back(boss::Message(boss::MESSAGE_ERROR, "\"" + jt->first + "\" is incompatible with \"" + it->Name() + "\" and is present."));
                 else
-                    messages.push_back(boss::Message("error", "\"" + jt->first + "\" is required by \"" + it->Name() + "\" but is missing."));
+                    messages.push_back(boss::Message(boss::MESSAGE_ERROR, "\"" + jt->first + "\" is required by \"" + it->Name() + "\" but is missing."));
             }
             if (!issues.empty())
                 it->Messages(messages);
@@ -442,7 +455,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     out << "Sorting plugins..." << endl;
 
-    //Iterate through the container. For each element, compare it against all those following it and insert those that are < it before it. After each insert, step back to the inserted element and compare for that.
+    //std::sort doesn't compare each plugin to every other plugin, it seems to compare plugins until no movement is necessary, because it assumes that each plugin will be comparable on all tested data, which isn't the case when dealing with masters, etc. Therefore, loop through the list and move each plugin's dependencies directly before it, then apply std::sort.
     list<boss::Plugin>::iterator it=plugins.begin();
     while (it != plugins.end()) {
         list<boss::Plugin>::iterator jt=it;
@@ -452,7 +465,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
         list<boss::Plugin> moved;
         while (jt != plugins.end()) {
-            if (*jt < *it) {
+            if (it->MustLoadAfter(*jt)) {
                 moved.push_back(*jt);
                 jt = plugins.erase(jt);
             } else
@@ -469,7 +482,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         progDia->Pulse();
     }
 
-    plugins.sort(boss::flex_sort);
+    plugins.sort(boss::load_order_sort);
 
     end = time(NULL);
 	out << "Time taken to sort plugins: " << (end - start) << " seconds." << endl;

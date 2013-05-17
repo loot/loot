@@ -51,27 +51,14 @@ namespace boss {
     }
 
     bool FormID::operator == (const FormID& rhs) const {
-        return (boost::iequals(plugin, rhs.Plugin()) && id == rhs.Id());
-    }
-    
-    bool FormID::operator != (const FormID& rhs) const {
-        return !(*this == rhs);
+        return (id == rhs.Id() && boost::iequals(plugin, rhs.Plugin()));
     }
     
     bool FormID::operator < (const FormID& rhs) const {
-        return (id < rhs.Id() || plugin < rhs.Plugin());
-    }
-    
-    bool FormID::operator > (const FormID& rhs) const {
-        return !(*this == rhs || *this < rhs);
-    }
-    
-    bool FormID::operator <= (const FormID& rhs) const {
-        return (*this == rhs || *this < rhs);
-    }
-    
-    bool FormID::operator >= (const FormID& rhs) const {
-        return !(*this < rhs);
+        if (id != rhs.Id())
+            return id < rhs.Id();
+        else
+            return boost::ilexicographical_compare(plugin, rhs.Plugin());
     }
     
     std::string FormID::Plugin() const {
@@ -138,35 +125,32 @@ namespace boss {
     }
 
     Message::Message() {}
-
-    Message::Message(const std::string& t, const std::string& cont)
-        : type(t), ConditionalData("", cont) {}
-
-    Message::Message(const std::string& t, const std::string& cont,
-                     const std::string& cond, const std::string& l)
-        : type(t), language(l), ConditionalData(cond, cont) {}
+    
+    Message::Message(const unsigned int type, const std::string& content,
+                     const std::string& condition, const unsigned int language)
+        : _type(type), _language(language), ConditionalData(condition, content) {}
         
     bool Message::operator < (const Message& rhs) const {
-        return (Content() < rhs.Content());
+        return boost::ilexicographical_compare(Content(), rhs.Content());
     }
 
     bool Message::operator == (const Message& rhs) const {
-        return (boost::iequals(Type(), rhs.Type()) && boost::iequals(Content(), rhs.Content()));
+        return (_type == rhs.Type() && boost::iequals(Content(), rhs.Content()));
     }
 
-    bool Message::EvalCondition(boss::Game& game, const std::string& lang) const {
-        if (language.empty() || boost::iequals(language, lang))
+    bool Message::EvalCondition(boss::Game& game, const unsigned int lang) const {
+        if (_language == LANG_AUTO || _language == lang)
             return ConditionalData::EvalCondition(game);
         else
             return false;
     }
 
-    std::string Message::Type() const {
-        return type;
+    unsigned int Message::Type() const {
+        return _type;
     }
 
-    std::string Message::Language() const {
-        return language;
+    unsigned int Message::Language() const {
+        return _language;
     }
 
     std::string Message::Content() const {
@@ -174,12 +158,11 @@ namespace boss {
     }
 
     File::File() {}
-    File::File(const std::string& n) : ConditionalData("", n) {}
-    File::File(const std::string& n, const std::string& d, const std::string& c)
-        : display(d), ConditionalData(c, n) {}
+    File::File(const std::string& name, const std::string& display, const std::string& condition)
+        : _display(display), ConditionalData(condition, name) {}
 
     bool File::operator < (const File& rhs) const {
-        return (Name() < rhs.Name());
+        return boost::ilexicographical_compare(Name(), rhs.Name());
     }
 
     bool File::operator == (const File& rhs) const {
@@ -191,71 +174,41 @@ namespace boss {
     }
 
     std::string File::DisplayName() const {
-        return display;
+        return _display;
     }
 
     Tag::Tag() : addTag(true) {}
 
-    Tag::Tag(const string& tag) {
-        string data;
-        if (tag[0] == '-') {
-            addTag = false;
-            data = tag.substr(1);
-        } else {
-            addTag = true;
-            data = tag;
-        }
-        Data(data);
-    }
-
-    Tag::Tag(const string& tag, const string& condition) : ConditionalData(condition) {
-        string data;
-        if (tag[0] == '-') {
-            addTag = false;
-            data = tag.substr(1);
-        } else {
-            addTag = true;
-            data = tag;
-        }
-        Data(data);
-    }
+    Tag::Tag(const string& tag, const bool isAddition, const string& condition) : addTag(isAddition), ConditionalData(condition, tag) {}
 
     bool Tag::operator < (const Tag& rhs) const {
-        return (PrefixedName() < rhs.PrefixedName());
+        if (addTag != rhs.IsAddition())
+            return (addTag && !rhs.IsAddition());
+        else
+            return boost::ilexicographical_compare(Name(), rhs.Name());
     }
 
     bool Tag::operator == (const Tag& rhs) const {
-        return boost::iequals(PrefixedName(), rhs.PrefixedName());
+        return (addTag == rhs.IsAddition() && boost::iequals(Name(), rhs.Name()));
     }
 
     bool Tag::IsAddition() const {
         return addTag;
     }
 
-    string Tag::PrefixedName() const {
-        if (addTag)
-            return Name();
-        else
-            return "-" + Name();
-    }
-
     std::string Tag::Name() const {
         return Data();
     }
 
-    Plugin::Plugin() : enabled(true), priority(0), isMaster(false), isActive(false), crc(0) {}
-    Plugin::Plugin(const std::string& n) : name(n), enabled(true), priority(0), isMaster(false), isActive(false), crc(0) {}
+    Plugin::Plugin() : enabled(true), priority(0), isMaster(false) {}
+    Plugin::Plugin(const std::string& n) : name(n), enabled(true), priority(0), isMaster(false) {}
 
 	Plugin::Plugin(boss::Game& game, const std::string& n, const bool headerOnly)
 		: name(n), enabled(true), priority(0) {
 			
 		// Get data from file contents using libespm. Assumes libespm has already been initialised.
 		boost::filesystem::path filepath = game.DataPath() / n;
-        espm::File file;
-        if (headerOnly)
-            file = espm::File(filepath.string(), game.espm_settings, false, true);
-        else
-            file = espm::File(filepath.string(), game.espm_settings, false, false);
+        espm::File file(filepath.string(), game.espm_settings, false, headerOnly);
 
 		isMaster = file.isMaster(game.espm_settings);
 		masters = file.getMasters();
@@ -312,19 +265,6 @@ namespace boss {
                 break;
             }
         }
-
-        //Calculate the plugin's CRC, and add it to the hashset.
-        boost::unordered_map<string,uint32_t>::iterator it = game.crcCache.find(boost::to_lower_copy(name));
-
-        if (it != game.crcCache.end())
-            crc = it->second;
-        else {
-            crc = GetCrc32(game.DataPath() / name);
-            game.crcCache.emplace(boost::to_lower_copy(name), crc);
-        }
-
-        //Check if plugin is active.
-        isActive = game.IsActive(name);
 	}
 
     void Plugin::Merge(const Plugin& plugin, bool ifDisabled) {
@@ -463,7 +403,7 @@ namespace boss {
         tags = t;
     }
 
-    void Plugin::EvalAllConditions(boss::Game& game, const std::string& language) {
+    void Plugin::EvalAllConditions(boss::Game& game, const unsigned int language) {
         for (set<File>::iterator it = loadAfter.begin(); it != loadAfter.end();) {
             if (!it->EvalCondition(game))
                 loadAfter.erase(it++);
@@ -515,50 +455,6 @@ namespace boss {
     bool Plugin::operator != (const Plugin& rhs) const {
         return !(*this == rhs);
     }
-
-    bool Plugin::operator < (const Plugin& rhs) const {
-
-        /* If this plugin is a master and the other isn't, this plugin should load first.
-         * If this plugin is a master of the other plugin, this plugin should load first.
-         * If this plugin conflicts with the other plugin, then the plugin which contains the most records overall should load first.
-        */
-        
-		if (IsMaster() && !rhs.IsMaster())
-			return true;
-
-        if (!IsMaster() && rhs.IsMaster())
-			return false;
-
-        if (rhs.MustLoadAfter(*this))
-			return true;
-
-        if (MustLoadAfter(rhs))
-			return false;
-
-        if (Priority() < rhs.Priority())
-            return true;
-            
-        if (Priority() > rhs.Priority())
-            return false;
-
-        if (!OverlapFormIDs(rhs).empty() && formIDs.size() != rhs.FormIDs().size())
-            return formIDs.size() > rhs.FormIDs().size();
-
-        //return false;
-        return name < rhs.Name();
-	}
-
-    bool Plugin::operator > (const Plugin& rhs) const {
-        return !(*this == rhs || *this < rhs);
-    }
-
-    bool Plugin::operator <= (const Plugin& rhs) const {
-        return (*this == rhs || *this < rhs);
-    }
-
-    bool Plugin::operator >= (const Plugin& rhs) const {
-        return !(*this < rhs);
-    }
     
     std::set<FormID> Plugin::FormIDs() const {
 		return formIDs;
@@ -568,7 +464,17 @@ namespace boss {
         set<FormID> otherFormIDs = plugin.FormIDs();
         set<FormID> overlap;
 
-        set_intersection(formIDs.begin(), formIDs.end(), otherFormIDs.begin(), otherFormIDs.end(), inserter(overlap, overlap.begin()));
+  /*      for (set<FormID>::iterator it=formIDs.begin(),endit=formIDs.end(); it != endit; ++it) {
+            if (otherFormIDs.find(*it) != otherFormIDs.end())
+                overlap.insert(*it);
+        }
+
+        for (set<FormID>::iterator it=otherFormIDs.begin(),endit=otherFormIDs.end(); it != endit; ++it) {
+            if (formIDs.find(*it) != formIDs.end())
+                overlap.insert(*it);
+        }
+*/
+        set_intersection(formIDs.begin(), formIDs.end(), otherFormIDs.begin(), otherFormIDs.end(), inserter(overlap, overlap.end()));
 
         return overlap;
     }
@@ -583,14 +489,6 @@ namespace boss {
 
     std::string Plugin::Version() const {
         return version;
-    }
-
-    uint32_t Plugin::Crc() const {
-        return crc;
-    }
-
-    bool Plugin::IsActive() const {
-        return isActive;
     }
 
     bool Plugin::MustLoadAfter(const Plugin& plugin) const {
@@ -626,5 +524,34 @@ namespace boss {
 
     bool operator == (const File& lhs, const Plugin& rhs) {
         return boost::iequals(lhs.Name(), rhs.Name());
+    }
+
+    bool alpha_sort(const Plugin& lhs, const Plugin& rhs) {
+        return boost::ilexicographical_compare(lhs.Name(), rhs.Name());
+    }
+
+    bool load_order_sort(const Plugin& lhs, const Plugin& rhs) {
+        if (lhs.IsMaster() && !rhs.IsMaster())
+			return true;
+
+        if (!lhs.IsMaster() && rhs.IsMaster())
+			return false;
+
+        if (rhs.MustLoadAfter(lhs))
+			return true;
+
+        if (lhs.MustLoadAfter(rhs))
+			return false;
+
+        if (lhs.Priority() < rhs.Priority())
+            return true;
+            
+        if (lhs.Priority() > rhs.Priority())
+            return false;
+
+        if (!lhs.OverlapFormIDs(rhs).empty() && lhs.FormIDs().size() != rhs.FormIDs().size())
+            return lhs.FormIDs().size() > rhs.FormIDs().size();
+
+        return boost::ilexicographical_compare(lhs.Name(), rhs.Name());
     }
 }

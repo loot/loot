@@ -24,6 +24,7 @@
 #define __BOSS_METADATA__
 
 #include "game.h"
+#include "globals.h"
 
 #include <stdint.h>
 #include <string>
@@ -39,16 +40,10 @@ namespace boss {
     public:
         FormID();
         FormID(const std::string& pluginName, const uint32_t objectID);
+        FormID(const std::vector<std::string>& masters, const uint32_t formID);  //The masters here also includes the plugin that they are masters of as the last element.
 
-        //The masters here also includes the plugin that they are masters of as the last element.
-        FormID(const std::vector<std::string>& masters, const uint32_t formID);
-
-        bool operator == (const FormID& rhs) const;
-        bool operator != (const FormID& rhs) const;
         bool operator < (const FormID& rhs) const;
-        bool operator > (const FormID& rhs) const;
-        bool operator <= (const FormID& rhs) const;
-        bool operator >= (const FormID& rhs) const;
+        bool operator == (const FormID& rhs) const;
 
         std::string Plugin() const;
         uint32_t Id() const;
@@ -78,29 +73,27 @@ namespace boss {
     class Message : public ConditionalData {
     public:
         Message();
-        Message(const std::string& type, const std::string& content);
-        Message(const std::string& type, const std::string& content,
-                const std::string& condition, const std::string& language);
+        Message(const unsigned int type, const std::string& content,
+                const std::string& condition = "", const unsigned int language = LANG_AUTO);
                 
         bool operator < (const Message& rhs) const;
         bool operator == (const Message& rhs) const;
 
-        bool EvalCondition(boss::Game& game, const std::string& language) const;
+        bool EvalCondition(boss::Game& game, const unsigned int language) const;
 
-        std::string Type() const;
-        std::string Language() const;
+        unsigned int Type() const;
+        unsigned int Language() const;
         std::string Content() const;
     private:
-        std::string type;
-        std::string language;
+        unsigned int _type;
+        unsigned int _language;
     };
 
     class File : public ConditionalData {
     public:
         File();
-        File(const std::string& name);
-        File(const std::string& name, const std::string& display,
-                                     const std::string& condition);
+        File(const std::string& name, const std::string& display = "",
+                                     const std::string& condition = "");
 
         bool operator < (const File& rhs) const;
         bool operator == (const File& rhs) const;
@@ -108,21 +101,19 @@ namespace boss {
         std::string Name() const;
         std::string DisplayName() const;
     private:
-        std::string display;
+        std::string _display;
     };
 
     class Tag : public ConditionalData {
     public:
         Tag();
-        Tag(const std::string& tag);
-        Tag(const std::string& tag, const std::string& condition);
+        Tag(const std::string& tag, const bool isAddition = true, const std::string& condition = "");
 
         bool operator < (const Tag& rhs) const;
         bool operator == (const Tag& rhs) const;
 
         bool IsAddition() const;
         std::string Name() const;
-        std::string PrefixedName() const;  //Name with '-' in front if suggested for removal.
     private:
         bool addTag;
     };
@@ -149,8 +140,6 @@ namespace boss {
         std::vector<std::string> Masters() const;
         bool IsMaster() const;  //Checks master bit flag.
         std::string Version() const;
-        uint32_t Crc() const;
-        bool IsActive() const;
 
         void Name(const std::string& name);
         void Enabled(const bool enabled);
@@ -161,19 +150,13 @@ namespace boss {
         void Messages(const std::list<Message>& messages);
         void Tags(const std::set<Tag>& tags);
 
-        void EvalAllConditions(boss::Game& game, const std::string& language);
+        void EvalAllConditions(boss::Game& game, const unsigned int language);
         bool HasNameOnly() const;
         bool IsRegexPlugin() const;
 
         //Compare name strings.
         bool operator == (const Plugin& rhs) const;
         bool operator != (const Plugin& rhs) const;
-
-        //Compare load order positions.
-        bool operator < (const Plugin& rhs) const;
-        bool operator > (const Plugin& rhs) const;
-        bool operator <= (const Plugin& rhs) const;
-        bool operator >= (const Plugin& rhs) const;
 
         //Load ordering functions.
         std::set<FormID> OverlapFormIDs(const Plugin& plugin) const;
@@ -195,11 +178,15 @@ namespace boss {
         std::set<FormID> formIDs;
         std::string version;  //Obtained from description field.
         bool isMaster;
-        bool isActive;
-        uint32_t crc;
     };
     
     bool operator == (const File& lhs, const Plugin& rhs);
+
+    bool alpha_sort(const Plugin& lhs, const Plugin& rhs);
+
+    bool load_order_sort(const Plugin& lhs, const Plugin& rhs);
+
+    
 }
 
 #endif

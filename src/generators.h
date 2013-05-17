@@ -25,22 +25,24 @@
 
 #include "helpers.h"
 #include "metadata.h"
+#include "globals.h"
 
 #include <pugixml.hpp>
+#include <yaml-cpp/yaml.h>
 
-#include <stdexcept>
 #include <string>
 #include <list>
+#include <boost/algorithm/string.hpp>
 
 namespace boss {
 
-    void WriteMessage(pugi::xml_node& listItem, std::string type, std::string content) {
+    inline void WriteMessage(pugi::xml_node& listItem, unsigned int type, std::string content) {
 
-        if (type == "say")
+        if (type == MESSAGE_SAY)
             content = "Note: " + content;
-        else if (type == "tag") {
+        else if (type == MESSAGE_TAG) {
             content = "Bash Tag Suggestion(s): " + content;
-        } else if (type == "warn")
+        } else if (type == MESSAGE_WARN)
             content = "Warning: " + content;
         else
             content = "Error: " + content;
@@ -88,7 +90,7 @@ namespace boss {
 
     }
 
-    void GenerateHead(pugi::xml_document& doc) {
+    inline void GenerateHead(pugi::xml_document& doc) {
 
         //Add DOCTYPE node.
         doc.append_child(pugi::node_doctype).set_value("html");
@@ -132,7 +134,7 @@ namespace boss {
         node.set_value("[if IE 8]><script src='../resources/DOM-shim-ie8.js'></script><![endif]");
     }
 
-    void AppendNav(pugi::xml_node& body) {
+    inline void AppendNav(pugi::xml_node& body) {
         pugi::xml_node nav, div;
 
         nav = body.append_child();
@@ -158,7 +160,7 @@ namespace boss {
         div.text().set("Filters");
     }
 
-    void AppendMessages(pugi::xml_node& parent, const std::list<Message>& messages, int& warnNo, int& errorNo) {
+    inline void AppendMessages(pugi::xml_node& parent, const std::list<Message>& messages, int& warnNo, int& errorNo) {
         if (!messages.empty()) {
             pugi::xml_node list = parent.append_child();
             list.set_name("ul");
@@ -167,20 +169,24 @@ namespace boss {
 
                 pugi::xml_node li = list.append_child();
                 li.set_name("li");
-                li.append_attribute("class").set_value(it->Type().c_str());
+
+                if (it->Type() == MESSAGE_SAY)
+                    li.append_attribute("class").set_value("say");
+                else if (it->Type() == MESSAGE_WARN) {
+                    li.append_attribute("class").set_value("warn");
+                    ++warnNo;
+                } else {
+                    li.append_attribute("class").set_value("error");
+                    ++errorNo;
+                }
 
                 //Turn any urls into hyperlinks.
                 WriteMessage(li, it->Type(), it->Content());
-
-                if (boost::iequals(it->Type(), "warn"))
-                    ++warnNo;
-                else if (boost::iequals(it->Type(), "error"))
-                    ++errorNo;
             }
         }
     }
 
-    void AppendSummary(pugi::xml_node& main,
+    inline void AppendSummary(pugi::xml_node& main,
                         bool hasChanged,
                         const std::string& masterlistVersion,
                         bool masterlistUpdateEnabled,
@@ -268,7 +274,7 @@ namespace boss {
         cell.text().set(IntToString(errorNo).c_str());
     }
 
-    void AppendDetails(pugi::xml_node& main, const std::list<Plugin>& plugins, int& messageNo, int& warnNo, int& errorNo) {
+    inline void AppendDetails(pugi::xml_node& main, const std::list<Plugin>& plugins, int& messageNo, int& warnNo, int& errorNo) {
 
         pugi::xml_node details = main.append_child();
         details.set_name("div");
@@ -312,7 +318,7 @@ namespace boss {
                         content += "Bash Tags suggested for addition are " + add.substr(2) + ". ";
                     if (!remove.empty())
                         content += "Bash Tags suggested for removal are " + remove.substr(2) + ". ";
-                    messages.push_back(Message("tag", content));  //Special type just for tag suggestions.
+                    messages.push_back(Message(MESSAGE_TAG, content));  //Special type just for tag suggestions.
                 }
 
                 AppendMessages(plugin, messages, warnNo, errorNo);
@@ -322,7 +328,7 @@ namespace boss {
         
     }
 
-    void AppendMain(pugi::xml_node& body,
+    inline void AppendMain(pugi::xml_node& body,
                         bool hasChanged,
                         const std::string& masterlistVersion,
                         bool masterlistUpdateEnabled,
@@ -350,7 +356,7 @@ namespace boss {
         AppendSummary(main, hasChanged, masterlistVersion, masterlistUpdateEnabled, messageNo, warnNo, errorNo, messages);
     }
 
-    void AppendFilters(pugi::xml_node& body, int messageNo, int pluginNo) {
+    inline void AppendFilters(pugi::xml_node& body, int messageNo, int pluginNo) {
 
         pugi::xml_node filters = body.append_child();
         filters.set_name("div");
@@ -427,7 +433,7 @@ namespace boss {
         label.append_child(pugi::node_pcdata).set_value((" of " + IntToString(messageNo) + " messages hidden.").c_str());
     }
 
-    void AppendScripts(pugi::xml_node& body) {
+    inline void AppendScripts(pugi::xml_node& body) {
 
         pugi::xml_node node;
 
@@ -438,7 +444,7 @@ namespace boss {
         
     }
 
-    void GenerateReport(const std::string& file,
+    inline void GenerateReport(const std::string& file,
                         const std::list<Message>& messages,
                         const std::list<Plugin>& plugins,
                         const std::string& masterlistVersion,
@@ -469,3 +475,123 @@ namespace boss {
 }
 
 #endif
+
+namespace YAML {
+    template<class T, class Compare>
+    Emitter& operator << (Emitter& out, const std::set<T, Compare>& rhs) {
+        out << BeginSeq;
+        for (typename std::set<T, Compare>::const_iterator it=rhs.begin(), endIt=rhs.end(); it != endIt; ++it) {
+            out << *it;
+        }
+        out << EndSeq;
+    }
+
+    inline Emitter& operator << (Emitter& out, const boss::Game& rhs) {
+        out << BeginMap
+            << Key << rhs.FolderName() << Value
+            << BeginMap
+            << Key << "name" << Value << rhs.Name()
+            << Key << "master" << Value << rhs.Master()
+            << Key << "url" << Value << rhs.URL()
+            << Key << "path" << Value << rhs.GamePath().string()
+            << Key << "registry" << Value << rhs.RegistryKey();
+
+        if (rhs.Id() == boss::GAME_TES4)
+            out << Key << Value << boss::Game(boss::GAME_TES4).FolderName();
+        else if (rhs.Id() == boss::GAME_TES5)
+            out << Key << Value << boss::Game(boss::GAME_TES5).FolderName();
+        else if (rhs.Id() == boss::GAME_FO3)
+            out << Key << Value << boss::Game(boss::GAME_FO3).FolderName();
+        else if (rhs.Id() == boss::GAME_FONV)
+            out << Key << Value << boss::Game(boss::GAME_FONV).FolderName();
+
+        out << EndMap << EndMap;
+    }
+
+    inline Emitter& operator << (Emitter& out, const boss::Message& rhs) {
+        out << BeginMap;
+
+        if (rhs.Type() == boss::MESSAGE_SAY)
+            out << Key << "type" << Value << "say";
+        else if (rhs.Type() == boss::MESSAGE_WARN)
+            out << Key << "type" << Value << "warn";
+        else
+            out << Key << "type" << Value << "error";
+
+        out << Key << "content" << Value << rhs.Content();
+
+        if (rhs.Language() == boss::LANG_ENG)
+            out << Key << "lang" << Value << "eng";
+
+        if (!rhs.Condition().empty())
+            out << Key << "condition" << Value << rhs.Condition();
+
+        out << EndMap;
+    }
+
+    inline Emitter& operator << (Emitter& out, const boss::File& rhs) {
+        if (!rhs.IsConditional() && rhs.DisplayName().empty())
+            out << rhs.Name();
+        else {
+            out << BeginMap
+                << Key << "name" << Value << rhs.Name();
+
+            if (rhs.IsConditional())
+                out << Key << "condition" << Value << rhs.Condition();
+
+            if (!rhs.DisplayName().empty())
+                out << Key << "display" << Value << rhs.DisplayName();
+
+            out << EndMap;
+        }
+    }
+
+    inline Emitter& operator << (Emitter& out, const boss::Tag& rhs) {
+        if (!rhs.IsConditional()) {
+            if (rhs.IsAddition())
+                out << rhs.Name();
+            else
+                out << '-' << rhs.Name();
+        } else {
+            out << BeginMap;
+            if (rhs.IsAddition())
+                out << Key << "name" << Value << rhs.Name();
+            else
+                out << Key << "name" << Value << '-' << rhs.Name();
+            
+            out << Key << "condition" << Value << rhs.Condition()
+                << EndMap;
+        }
+    }
+
+    inline Emitter& operator << (Emitter& out, const boss::Plugin& rhs) {
+        //if (!rhs.HasNameOnly()) {
+
+            out << BeginMap
+                << Key << "name" << Value << rhs.Name();
+
+            if (rhs.Priority() != 0)
+                out << Key << "priority" << Value << rhs.Priority();
+
+            if (!rhs.Enabled())
+                out << Key << "enabled" << Value << rhs.Enabled();
+
+            if (!rhs.LoadAfter().empty())
+                out << Key << "after" << Value << rhs.LoadAfter();
+
+            if (!rhs.Reqs().empty())
+                out << Key << "req" << Value << rhs.Reqs();
+
+            if (!rhs.Incs().empty())
+                out << Key << "inc" << Value << rhs.Incs();
+
+            if (!rhs.Messages().empty())
+                out << Key << "msg" << Value << rhs.Messages();
+
+            if (!rhs.Tags().empty())
+                out << Key << "tag" << Value << rhs.Tags();
+
+            out << EndMap;
+        //}
+    }
+}
