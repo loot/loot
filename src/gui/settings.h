@@ -33,7 +33,13 @@
 class SettingsFrame : public wxDialog {
 public:
 	SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node& settings, std::vector<boss::Game>& games);
+    
 	void OnQuit(wxCommandEvent& event);
+    void OnGameSelect(wxListEvent& event);
+    void OnAddGame(wxCommandEvent& event);
+    void OnEditGame(wxCommandEvent& event);
+    void OnRemoveGame(wxCommandEvent& event);
+    
 	void SetDefaultValues();
 	DECLARE_EVENT_TABLE()
 private:
@@ -42,12 +48,37 @@ private:
 	wxChoice *LanguageChoice;
     wxCheckBox *UpdateMasterlistBox;
     wxCheckBox *reportViewBox;
-    wxTextCtrl *OblivionURL;
-    wxTextCtrl *SkyrimURL;
-    wxTextCtrl *FO3URL;
-    wxTextCtrl *FONVURL;
+
+    wxListView *gamesList;
+    wxButton * addBtn;
+    wxButton * editBtn;
+    wxButton * removeBtn;
 
     YAML::Node& _settings;
     std::vector<boss::Game>& _games;
 };
+
+class GameEditDialog : public wxDialog {
+public:
+    GameEditDialog(wxWindow *parent, const wxString& title);
+
+    void SetValues(unsigned int type, const wxString& name, const wxString& folderName, const wxString& master,
+                    const wxString& url, const wxString& path, const wxString& registry);
+    wxString GetName() const;
+    wxString GetType() const;
+    wxString GetFolderName() const;
+    wxString GetMaster() const;
+    wxString GetURL() const;
+    wxString GetPath() const;
+    wxString GetRegistryKey() const;
+private:
+    wxChoice * _type;
+    wxTextCtrl * _name;
+    wxTextCtrl * _folderName;
+    wxTextCtrl * _master;
+    wxTextCtrl * _url;
+    wxTextCtrl * _path;
+    wxTextCtrl * _registry;
+};
+
 #endif

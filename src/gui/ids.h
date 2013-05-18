@@ -41,6 +41,11 @@ enum {
 	OPTION_ViewLastReport,
 	OPTION_SortPlugins,
 	MENU_ShowSettings,
+    //Settings window.
+    LIST_Games,
+    BUTTON_AddGame,
+    BUTTON_EditGame,
+    BUTTON_RemoveGame,
     //Editor window.
     LIST_Plugins,
     LIST_Reqs,

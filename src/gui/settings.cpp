@@ -28,6 +28,10 @@
 
 BEGIN_EVENT_TABLE ( SettingsFrame, wxDialog )
 	EVT_BUTTON ( wxID_OK, SettingsFrame::OnQuit)
+    EVT_LIST_ITEM_SELECTED( LIST_Games, SettingsFrame::OnGameSelect )
+    EVT_BUTTON ( BUTTON_AddGame, SettingsFrame::OnAddGame )
+    EVT_BUTTON ( BUTTON_EditGame, SettingsFrame::OnEditGame )
+    EVT_BUTTON ( BUTTON_RemoveGame, SettingsFrame::OnRemoveGame )
 END_EVENT_TABLE()
 
 using namespace std;
@@ -93,21 +97,15 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
     GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Debug Verbosity:")), leftItem);
 	GridSizer->Add(DebugVerbosityChoice, rightItem);
 
-    rightItem.Expand();
-
-    GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Oblivion Masterlist URL:")), leftItem);
-	GridSizer->Add(OblivionURL, rightItem);
-	
-    GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Skyrim Masterlist URL:")), leftItem);
-	GridSizer->Add(SkyrimURL, rightItem);
-	
-    GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Fallout 3 Masterlist URL:")), leftItem);
-	GridSizer->Add(FO3URL, rightItem);
-	
-    GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Fallout: New Vegas Masterlist URL:")), leftItem);
-	GridSizer->Add(FONVURL, rightItem);
-    
 	bigBox->Add(GridSizer, 0, wxEXPAND|wxALL, 10);
+    
+    bigBox->Add(gamesList, wholeItem);
+
+    wxBoxSizer * hbox2 = new wxBoxSizer(wxHORIZONTAL);
+    hbox2->Add(addBtn, 0, wxRIGHT, 5);
+    hbox2->Add(editBtn, 0, wxLEFT|wxRIGHT, 5);
+    hbox2->Add(removeBtn, 0, wxLEFT, 5);
+    bigBox->Add(hbox2, 0, wxALIGN_RIGHT|wxBOTTOM|wxRIGHT, 10);
    
     bigBox->Add(UpdateMasterlistBox, wholeItem);
 
@@ -172,20 +170,19 @@ void SettingsFrame::SetDefaultValues() {
         reportViewBox->SetValue(view);
     }
 
-    if (_settings["Games"]) {
-
-        if (_settings["Games"][boss::Game(boss::GAME_TES4).FolderName()])
-            OblivionURL->SetValue(FromUTF8(_settings["Games"][boss::Game(boss::GAME_TES4).FolderName()]["url"].as<string>()));
-
-        if (_settings["Games"][boss::Game(boss::GAME_TES5).FolderName()])
-            SkyrimURL->SetValue(FromUTF8(_settings["Games"][boss::Game(boss::GAME_TES5).FolderName()]["url"].as<string>()));
-
-        if (_settings["Games"][boss::Game(boss::GAME_FO3).FolderName()])
-            FO3URL->SetValue(FromUTF8(_settings["Games"][boss::Game(boss::GAME_FO3).FolderName()]["url"].as<string>()));
-
-        if (_settings["Games"][boss::Game(boss::GAME_FONV).FolderName()])
-            FONVURL->SetValue(FromUTF8(_settings["Games"][boss::Game(boss::GAME_FONV).FolderName()]["url"].as<string>()));
+    for (size_t i=0, max=_games.size(); i < max; ++i) {
+        gamesList->InsertItem(i, FromUTF8(_games[i].Name()));
+        gamesList->SetItem(i, 1, FromUTF8(boss::Game(_games[i].Id()).FolderName()));
+        gamesList->SetItem(i, 2, FromUTF8(_games[i].FolderName()));
+        gamesList->SetItem(i, 3, FromUTF8(_games[i].Master()));
+        gamesList->SetItem(i, 4, FromUTF8(_games[i].URL()));
+        gamesList->SetItem(i, 5, FromUTF8(_games[i].GamePath().string()));
+        gamesList->SetItem(i, 6, FromUTF8(_games[i].RegistryKey()));
     }
+    
+    addBtn->Enable(true);
+    editBtn->Enable(false);
+    removeBtn->Enable(false);
 }
 
 void SettingsFrame::OnQuit(wxCommandEvent& event) {
@@ -208,14 +205,244 @@ void SettingsFrame::OnQuit(wxCommandEvent& event) {
 
         _settings["View Report Externally"] = reportViewBox->IsChecked();
 
-        _settings["Games"][boss::Game(boss::GAME_TES4).FolderName()]["url"] = string(OblivionURL->GetValue().ToUTF8());
+        for (size_t i=0,max=gamesList->GetItemCount(); i < max; ++i) {
+            string name, folder, master, url, path, registry;
+            unsigned int id;
+            
+            name = gamesList->GetItemText(i, 0).ToUTF8();
+            folder = gamesList->GetItemText(i, 2).ToUTF8();
+            master = gamesList->GetItemText(i, 3).ToUTF8();
+            url = gamesList->GetItemText(i, 4).ToUTF8();
+            path = gamesList->GetItemText(i, 5).ToUTF8();
+            registry = gamesList->GetItemText(i, 6).ToUTF8();
 
-        _settings["Games"][boss::Game(boss::GAME_TES5).FolderName()]["url"] = string(SkyrimURL->GetValue().ToUTF8());
+            if (gamesList->GetItemText(i, 1).ToUTF8() == boss::Game(boss::GAME_TES4).FolderName())
+                id = boss::GAME_TES4;
+            else if (gamesList->GetItemText(i, 1).ToUTF8() == boss::Game(boss::GAME_TES5).FolderName())
+                id = boss::GAME_TES5;
+            else if (gamesList->GetItemText(i, 1).ToUTF8() == boss::Game(boss::GAME_FO3).FolderName())
+                id = boss::GAME_FO3;
+            else
+                id = boss::GAME_FONV;
 
-        _settings["Games"][boss::Game(boss::GAME_FO3).FolderName()]["url"] = string(FO3URL->GetValue().ToUTF8());
-
-        _settings["Games"][boss::Game(boss::GAME_FONV).FolderName()]["url"] = string(FONVURL->GetValue().ToUTF8());
+            _games[i] = boss::Game(id, folder).SetDetails(name, master, url, path, registry);
+        }
     }
 
 	EndModal(0);
 }
+
+void SettingsFrame::OnGameSelect(wxListEvent& event) {
+    wxString name = gamesList->GetItemText(event.GetIndex());
+    if (name == boss::Game(boss::GAME_TES4).Name()
+     || name == boss::Game(boss::GAME_TES5).Name()
+     || name == boss::Game(boss::GAME_FO3).Name()
+     || name == boss::Game(boss::GAME_FONV).Name()) {
+        removeBtn->Enable(false);
+     } else {
+        removeBtn->Enable(true);
+    }
+    editBtn->Enable(true);
+}
+
+void SettingsFrame::OnAddGame(wxCommandEvent& event) {
+    GameEditDialog * rowDialog = new GameEditDialog(this, translate("BOSS: Add Game"));
+
+    if (rowDialog->ShowModal() == wxID_OK) {
+
+        if (rowDialog->GetName().empty()) {
+            wxMessageBox(
+                translate("Error: Name is required. Row will not be added."),
+                translate("BOSS: Error"),
+                wxOK | wxICON_ERROR,
+                this);
+            return;
+        } else if (rowDialog->GetFolderName().empty()) {
+            wxMessageBox(
+                translate("Error: Folder is required. Row will not be added."),
+                translate("BOSS: Error"),
+                wxOK | wxICON_ERROR,
+                this);
+            return;
+        }
+        
+        long i = gamesList->GetItemCount();
+        gamesList->InsertItem(i, rowDialog->GetName());
+        gamesList->SetItem(i, 1, FromUTF8(boss::Game(string(rowDialog->GetType().ToUTF8())).FolderName()));
+        gamesList->SetItem(i, 2, rowDialog->GetFolderName());
+        gamesList->SetItem(i, 3, rowDialog->GetMaster());
+        gamesList->SetItem(i, 4, rowDialog->GetURL());
+        gamesList->SetItem(i, 5, rowDialog->GetPath());
+        gamesList->SetItem(i, 6, rowDialog->GetRegistryKey());
+    }
+}
+
+void SettingsFrame::OnEditGame(wxCommandEvent& event) {
+    GameEditDialog * rowDialog = new GameEditDialog(this, translate("BOSS: Edit Game"));
+
+    long i = gamesList->GetFirstSelected();
+
+    int stateNo;
+    if (gamesList->GetItemText(i, 1) == boss::Game(boss::GAME_TES4).FolderName())
+        stateNo = boss::GAME_TES4;
+    else if (gamesList->GetItemText(i, 1) == boss::Game(boss::GAME_TES5).FolderName())
+        stateNo = boss::GAME_TES5;
+    else if (gamesList->GetItemText(i, 1) == boss::Game(boss::GAME_FO3).FolderName())
+        stateNo = boss::GAME_FO3;
+    else
+        stateNo = boss::GAME_FONV;
+
+    rowDialog->SetValues(stateNo, gamesList->GetItemText(i, 0), gamesList->GetItemText(i, 2), gamesList->GetItemText(i, 3), gamesList->GetItemText(i, 4), gamesList->GetItemText(i, 5), gamesList->GetItemText(i, 6));
+
+    if (rowDialog->ShowModal() == wxID_OK) {
+
+        if (rowDialog->GetName().empty()) {
+            wxMessageBox(
+                translate("Error: Name is required. Row will not be added."),
+                translate("BOSS: Error"),
+                wxOK | wxICON_ERROR,
+                this);
+            return;
+        } else if (rowDialog->GetFolderName().empty()) {
+            wxMessageBox(
+                translate("Error: Folder is required. Row will not be added."),
+                translate("BOSS: Error"),
+                wxOK | wxICON_ERROR,
+                this);
+            return;
+        }
+            
+        gamesList->SetItem(i, 0, rowDialog->GetName());
+        gamesList->SetItem(i, 1, FromUTF8(boss::Game(string(rowDialog->GetType().ToUTF8())).FolderName()));
+        gamesList->SetItem(i, 2, rowDialog->GetFolderName());
+        gamesList->SetItem(i, 3, rowDialog->GetMaster());
+        gamesList->SetItem(i, 4, rowDialog->GetURL());
+        gamesList->SetItem(i, 5, rowDialog->GetPath());
+        gamesList->SetItem(i, 6, rowDialog->GetRegistryKey());
+    }
+}
+
+void SettingsFrame::OnRemoveGame(wxCommandEvent& event) {
+    gamesList->DeleteItem(gamesList->GetFirstSelected());
+
+    editBtn->Enable(false);
+    removeBtn->Enable(false);
+}
+
+GameEditDialog::GameEditDialog(wxWindow *parent, const wxString& title) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER) {
+
+    wxString Types[] = {
+        FromUTF8(boss::Game(boss::GAME_TES4).FolderName()),
+        FromUTF8(boss::Game(boss::GAME_TES5).FolderName()),
+        FromUTF8(boss::Game(boss::GAME_FO3).FolderName()),
+        FromUTF8(boss::Game(boss::GAME_FONV).FolderName())
+    };
+
+    //Initialise controls.
+    _type = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 4, Types);
+
+    _name = new wxTextCtrl(this, wxID_ANY);
+    _folderName = new wxTextCtrl(this, wxID_ANY);
+    _master = new wxTextCtrl(this, wxID_ANY);
+    _url = new wxTextCtrl(this, wxID_ANY);
+    _path = new wxTextCtrl(this, wxID_ANY);
+    _registry = new wxTextCtrl(this, wxID_ANY);
+
+    //Sizers stuff.
+    wxSizerFlags leftItem(0);
+	leftItem.Left();
+
+	wxSizerFlags rightItem(1);
+	rightItem.Right().Expand();
+
+    wxBoxSizer * bigBox = new wxBoxSizer(wxVERTICAL);
+
+	wxFlexGridSizer * GridSizer = new wxFlexGridSizer(2, 5, 5);
+    GridSizer->AddGrowableCol(1,1);
+
+	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Name:")), leftItem);
+	GridSizer->Add(_name, rightItem);
+
+	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Type:")), leftItem);
+	GridSizer->Add(_type, rightItem);
+
+	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("BOSS Folder Name:")), leftItem);
+	GridSizer->Add(_folderName, rightItem);
+
+	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Master File:")), leftItem);
+	GridSizer->Add(_master, rightItem);
+
+	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Masterlist URL:")), leftItem);
+	GridSizer->Add(_url, rightItem);
+
+	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Install Path:")), leftItem);
+	GridSizer->Add(_path, rightItem);
+
+	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Install Path Registry Key:")), leftItem);
+	GridSizer->Add(_registry, rightItem);
+
+    bigBox->Add(GridSizer, 0, wxEXPAND|wxALL, 10);
+
+    bigBox->AddSpacer(10);
+    bigBox->AddStretchSpacer(1);
+
+    //Need to add 'OK' and 'Cancel' buttons.
+	wxSizer * sizer = CreateSeparatedButtonSizer(wxOK|wxCANCEL);
+    if (sizer != NULL)
+        bigBox->Add(sizer, 0, wxEXPAND|wxLEFT|wxBOTTOM|wxRIGHT, 15);
+
+    //Set defaults.
+    _type->SetSelection(0);
+
+    SetBackgroundColour(wxColour(255,255,255));
+    SetIcon(wxIconLocation("BOSS.exe"));
+	SetSizerAndFit(bigBox);
+}
+
+void GameEditDialog::SetValues(unsigned int type, const wxString& name, const wxString& folderName, const wxString& master,
+                const wxString& url, const wxString& path, const wxString& registry) {
+    if (type == boss::GAME_TES4)
+        _type->SetSelection(0);
+    else if (type == boss::GAME_TES5)
+        _type->SetSelection(1);
+    else if (type  == boss::GAME_FO3)
+        _type->SetSelection(2);
+    else
+        _type->SetSelection(3);
+
+    _name->SetValue(name);
+    _folderName->SetValue(folderName);
+    _master->SetValue(master);
+    _url->SetValue(url);
+    _path->SetValue(path);
+    _registry->SetValue(registry);
+}
+
+wxString GameEditDialog::GetName() const {
+    return _name->GetValue();
+}
+
+wxString GameEditDialog::GetType() const {
+    return _type->GetString(_type->GetSelection());
+}
+
+wxString GameEditDialog::GetFolderName() const {
+    return _folderName->GetValue();
+}
+
+wxString GameEditDialog::GetMaster() const {
+    return _master->GetValue();
+}
+
+wxString GameEditDialog::GetURL() const {
+    return _url->GetValue();
+}
+
+wxString GameEditDialog::GetPath() const {
+    return _path->GetValue();
+}
+
+wxString GameEditDialog::GetRegistryKey() const {
+    return _registry->GetValue();
+}
+

@@ -4,14 +4,14 @@
 Language:            eng    # An ISO 639-3 language string.
 
 Game:                auto   # auto, or one of the 'folder' values below.
-Last Game:           auto   # auto, oblivion, nehrim, skyrim, fallout3, falloutnv
+Last Game:           auto   # auto, or one of the 'folder' values below.
 Debug Verbosity:     0      # 0, 1, 2, 3. Logging takes place if > 0.
 Update Masterlist:   true
 View Report Externally: false
 
 # Games. The four archetypes are 'Oblivion', 'Skyrim', 'Fallout3' and 'FalloutNV'. They correspond to each base game's libespm and libloadorder settings.
 Games:
-  Oblivion:
+  - folder: Oblivion
     name: "TES IV: Oblivion"
     type: Oblivion
     master: Oblivion.esm
@@ -19,7 +19,7 @@ Games:
     path: ~
     registry: Software\Bethesda Softworks\Oblivion\Installed Path
     
-  Skyrim:
+  - folder: Skyrim
     name: "TES V: Skyrim"
     type: Skyrim
     master: Skyrim.esm
@@ -27,7 +27,7 @@ Games:
     path: ~
     registry: Software\Bethesda Softworks\Skyrim\Installed Path
     
-  Fallout3:
+  - folder: Fallout3
     name: Fallout 3
     type: Fallout3
     master: Fallout3.esm
@@ -35,7 +35,7 @@ Games:
     path: ~
     registry: Software\Bethesda Softworks\Fallout3\Installed Path
 
-  FalloutNV:
+  - folder: FalloutNV
     name: "Fallout: New Vegas"
     type: FalloutNV
     master: FalloutNV.esm
@@ -43,7 +43,7 @@ Games:
     path: ~
     registry: Software\Bethesda Softworks\FalloutNV\Installed Path
     
-  Nehrim:
+  - folder: Nehrim
     name: Nehrim - At Fate's Edge
     type: Oblivion
     master: Nehrim.esm
