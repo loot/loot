@@ -231,20 +231,33 @@ namespace boss {
         else if (Id() == GAME_FONV)
             ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str());
 
-        if (ret != LIBLO_OK)
-            throw error(ERROR_LIBLO_ERROR, "libloadorder game handle creation failed.");
+        if (ret != LIBLO_OK) {
+            const char * err;
+            lo_get_error_message(&err);
+            lo_cleanup();
+            throw error(ERROR_LIBLO_ERROR, err);
+        }
 
         ret = lo_set_game_master(gh, _masterFile.c_str());
 
-        if (ret != LIBLO_OK)
+        if (ret != LIBLO_OK) {
+            const char * err;
+            lo_get_error_message(&err);
+            lo_destroy_handle(gh);
+            lo_cleanup();
             throw error(ERROR_LIBLO_ERROR, "libloadorder total conversion support setup failed.");
+        }
                 
-        if (lo_get_active_plugins(gh, &pluginArr, &pluginArrSize) != LIBLO_OK)
-            throw error(ERROR_LIBLO_ERROR, "Active plugin list lookup failed.");
-        else {
-            for (size_t i=0; i < pluginArrSize; ++i) {
-                activePlugins.insert(string(pluginArr[i]));
-            }
+        if (lo_get_active_plugins(gh, &pluginArr, &pluginArrSize) != LIBLO_OK) {
+            const char * err;
+            lo_get_error_message(&err);
+            lo_destroy_handle(gh);
+            lo_cleanup();
+            throw error(ERROR_LIBLO_ERROR, err);
+        }
+        
+        for (size_t i=0; i < pluginArrSize; ++i) {
+            activePlugins.insert(string(pluginArr[i]));
         }
 
         lo_destroy_handle(gh);
@@ -269,13 +282,22 @@ namespace boss {
         else if (Id() == GAME_FONV)
             ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str());
 
-        if (ret != LIBLO_OK)
+        if (ret != LIBLO_OK) {
+            const char * err;
+            lo_get_error_message(&err);
+            lo_cleanup();
             throw error(ERROR_LIBLO_ERROR, "libloadorder game handle creation failed.");
+        }
 
         ret = lo_set_game_master(gh, _masterFile.c_str());
 
-        if (ret != LIBLO_OK)
+        if (ret != LIBLO_OK) {
+            const char * err;
+            lo_get_error_message(&err);
+            lo_destroy_handle(gh);
+            lo_cleanup();
             throw error(ERROR_LIBLO_ERROR, "libloadorder total conversion support setup failed.");
+        }
 
         pluginArrSize = loadOrder.size();
         pluginArr = new char*[pluginArrSize];
@@ -290,6 +312,10 @@ namespace boss {
             for (size_t i=0; i < pluginArrSize; i++)
                 delete [] pluginArr[i];
             delete [] pluginArr;
+            const char * err;
+            lo_get_error_message(&err);
+            lo_destroy_handle(gh);
+            lo_cleanup();
             throw error(ERROR_LIBLO_ERROR, "Setting load order failed.");
         }
         

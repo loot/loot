@@ -65,11 +65,6 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
     LanguageChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 1, Language);
     DebugVerbosityChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 4, DebugVerbosity);
 
-    OblivionURL = new wxTextCtrl(this, wxID_ANY);
-    SkyrimURL = new wxTextCtrl(this, wxID_ANY);
-    FO3URL = new wxTextCtrl(this, wxID_ANY);
-    FONVURL = new wxTextCtrl(this, wxID_ANY);
-
     UpdateMasterlistBox = new wxCheckBox(this, wxID_ANY, translate("Update masterlist before sorting."));
     reportViewBox = new wxCheckBox(this, wxID_ANY, translate("View reports externally in default browser."));
 
