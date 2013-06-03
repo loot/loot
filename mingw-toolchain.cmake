@@ -4,7 +4,7 @@
 set (CMAKE_SYSTEM_NAME Windows)
 
 IF (PROJECT_ARCH MATCHES "32")
-    set (MINGW i586-mingw32msvc)
+    set (MINGW i686-w64-mingw32)
 ELSE ()
     set (MINGW x86_64-w64-mingw32)
 ENDIF ()

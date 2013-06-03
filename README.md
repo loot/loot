@@ -15,7 +15,78 @@ The other obvious solution is to cut down on the number of mods that need to be 
 While that's being done, I might as well also make some improvements to other areas of BOSS.
 
 
-## Install Structure
+## Build Instructions
+
+BOSS uses [CMake](http://cmake.org) v2.8.9 or later for cross-platform building support, though it is developed on Linux and cross-compiled using Mingw, so its CMakeLists.txt might not produce correct results on Windows.
+
+BOSS requires the following libraries:
+
+* [Alphanum](http://www.davekoelle.com/files/alphanum.hpp)
+* [Boost](http://www.boost.org) v1.53.0 or later.
+* [Libespm](http://github.com/WrinklyNinja/libespm)
+* [Libloadorder](http://github.com/WrinklyNinja/libloadorder)
+* [PugiXML](http://code.google.com/p/pugixml/) v1.2 or later.
+* [wxWidgets](http://www.wxwidgets.org) v2.9.4 or later.
+* [yaml-cpp](http://code.google.com/p/yaml-cpp/) v0.5.1 or later.
+* [zlib](http://zlib.net) v1.2.7 or later.
+
+BOSS expects all libraries' folders to be present alongside the BOSS repository folder that contains this readme, or otherwise installed such that the compiler and linker used can find them without suppling additional paths.
+
+### Building Boost (Linux)
+
+Starting from the Boost root folder, run the following:
+
+```
+./bootstrap.sh
+echo "using gcc : 4.6.3 : i686-w64-mingw32-g++ : <rc>i686-w64-mingw32-windres <archiver>i686-w64-mingw32-ar <ranlib>i686-w64-mingw32-ranlib ;" > tools/build/v2/user-config.jam
+./b2 toolset=gcc-4.6.3 target-os=windows link=static runtime-link=static variant=release address-model=32 cxxflags=-fPIC --with-filesystem --with-locale --with-regex --with-program_options --with-system --stagedir=stage-mingw-32
+```
+
+### Building wxWidgets (Linux)
+
+Starting from the wxWidgets root folder, run the following:
+
+```
+./configure --prefix=/usr/local/i686-w64-mingw32 --host=i686-w64-mingw32 --build=x64_86-linux --disable-shared
+```
+
+### Building zlib (Linux)
+
+Starting from the zlib root folder, run the following:
+
+```
+cmake . -DCMAKE_C_FLAGS=-m32 -DPROJECT_ARCH=32 -DCMAKE_TOOLCHAIN_FILE=../BOSSv3/mingw-toolchain.cmake
+make
+```
+
+### Building yaml-cpp (Linux)
+
+Starting from the yaml-cpp root folder, run the following:
+
+```
+cmake .. -DCMAKE_C_FLAGS=-m32 -DPROJECT_ARCH=32 -DCMAKE_TOOLCHAIN_FILE=../BOSSv3/mingw-toolchain.cmake -DBOOST_ROOT=../boost
+```
+
+### Building BOSS (Linux)
+
+Starting from the BOSS root folder, run the following:
+
+```
+cd build
+cmake .. -DPROJECT_LIBS_DIR=.. -DPROJECT_ARCH=32 -DPROJECT_LINK=STATIC -DCMAKE_TOOLCHAIN_FILE=mingw-toolchain.cmake
+make
+```
+
+## Misc Notes
+
+Here is the full list of BOSS members at the end of 2012. Any of these who lose
+their membership status should still be credited in the BOSS readme:
+
+Random007, Arthmoor, WrinklyNinja, PacificMorrowind, aellis, Vacuity, Gabba,
+ZiggyX200, RiddlingLynx, AliTheLord, Tokc.D.K., Valda, Space Oden69, Televator,
+Leandro Conde, Psymon, Loucifer, Torrello, Malonn, Skyline, Sharlikran, Red Eye,
+iyumichan, Peste, Calen Ellefson, SilentSpike, Arkangel, zyp, v111, Chevenga,
+rowynyew
 
 LOOT will be a self-contained installation that can be dropped anywhere. It will have an installer option that also installs some Start menu shortcuts and a Registry entry, but these will not be required for LOOT to function.
 
@@ -41,30 +112,3 @@ Directory structure will be:
         report.html
     ...other game folders with same structure as Oblivion...
 ```
-
-
-## Required Libraries
-
-BOSS uses the following libraries:
-
-* Alphanum
-* Boost
-* Libespm
-* Libloadorder
-* PugiXML
-* wxWidgets
-* yaml-cpp
-
-Also uses [polyfill.js](https://github.com/inexorabletash/polyfill/blob/master/polyfill.js), [storage.js](https://github.com/inexorabletash/polyfill/blob/master/storage.js) and [DOM-shim](https://github.com/Raynos/DOM-shim/) for Internet Explorer 8 compatibility.
-
-
-## Misc
-
-Here is the full list of BOSS members at the end of 2012. Any of these who lose
-their membership status should still be credited in the BOSS readme:
-
-Random007, Arthmoor, WrinklyNinja, PacificMorrowind, aellis, Vacuity, Gabba,
-ZiggyX200, RiddlingLynx, AliTheLord, Tokc.D.K., Valda, Space Oden69, Televator,
-Leandro Conde, Psymon, Loucifer, Torrello, Malonn, Skyline, Sharlikran, Red Eye,
-iyumichan, Peste, Calen Ellefson, SilentSpike, Arkangel, zyp, v111, Chevenga,
-rowynyew

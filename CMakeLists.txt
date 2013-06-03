@@ -14,7 +14,7 @@ project (boss)
 set (BOSS_SRC "${CMAKE_SOURCE_DIR}/src/metadata.cpp" "${CMAKE_SOURCE_DIR}/src/game.cpp" "${CMAKE_SOURCE_DIR}/src/helpers.cpp" "${PROJECT_LIBS_DIR}/pugixml/src/pugixml.cpp")
 
 # Include source and library directories.
-include_directories ("${PROJECT_LIBS_DIR}/alphanum" "${PROJECT_LIBS_DIR}/boost" "${PROJECT_LIBS_DIR}/yaml-cpp/include" "${CMAKE_SOURCE_DIR}/src" "${PROJECT_LIBS_DIR}/libloadorder/src" "${PROJECT_LIBS_DIR}/libespm" "${PROJECT_LIBS_DIR}/zlib" "${PROJECT_LIBS_DIR}/pugixml/src")
+include_directories ("${PROJECT_LIBS_DIR}/alphanum" "${PROJECT_LIBS_DIR}/boost" "${PROJECT_LIBS_DIR}/yaml-cpp/include" "${CMAKE_SOURCE_DIR}/src" "${PROJECT_LIBS_DIR}/libloadorder/src" "${PROJECT_LIBS_DIR}/libespm" "${PROJECT_LIBS_DIR}/zlib" "${PROJECT_LIBS_DIR}/pugixml/src" "${PROJECT_LIBS_DIR}/wxWidgets/include")
 
 
 ##############################
@@ -41,7 +41,8 @@ ENDIF ()
 
 link_directories ("${PROJECT_LIBS_DIR}/yaml-cpp/build")
 link_directories ("${PROJECT_LIBS_DIR}/libloadorder/build")
-link_directories ("${PROJECT_LIBS_DIR}/zlib" )
+link_directories ("${PROJECT_LIBS_DIR}/zlib")
+link_directories ("${PROJECT_LIBS_DIR}/wxWidgets/lib")
 
 # Settings when compiling and cross-compiling on Linux.
 IF (CMAKE_HOST_SYSTEM_NAME MATCHES "Linux")
@@ -52,9 +53,9 @@ IF (CMAKE_HOST_SYSTEM_NAME MATCHES "Linux")
     set (CMAKE_MODULE_LINKER_FLAGS "-static-libstdc++ -static-libgcc")
 
     IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
-        link_directories ("${PROJECT_LIBS_DIR}/boost/stage-mingw-${PROJECT_ARCH}/lib" "${PROJECT_LIBS_DIR}/wxWidgets/build-msw/lib")
-        include_directories ("${PROJECT_LIBS_DIR}/wxWidgets/build-msw/lib/wx/include/i586-mingw32msvc-msw-unicode-static-2.9" "${PROJECT_LIBS_DIR}/wxWidgets/include")
-        set (BOSS_LIBS version wx_mswu_webview-2.9-i586-mingw32msvc wx_mswu_core-2.9-i586-mingw32msvc wx_baseu-2.9-i586-mingw32msvc wx_mswu_adv-2.9-i586-mingw32msvc wxpng-2.9-i586-mingw32msvc wxzlib-2.9-i586-mingw32msvc comctl32)
+        link_directories ("${PROJECT_LIBS_DIR}/boost/stage-mingw-${PROJECT_ARCH}/lib")
+        include_directories ("${PROJECT_LIBS_DIR}/wxWidgets/lib/wx/include/i686-w64-mingw32-msw-unicode-static-2.9")
+        set (BOSS_LIBS ${BOSS_LIBS} version wx_mswu_webview-2.9-i686-w64-mingw32 wx_mswu_core-2.9-i686-w64-mingw32 wx_baseu-2.9-i686-w64-mingw32 wx_mswu_adv-2.9-i686-w64-mingw32 wxpng-2.9-i686-w64-mingw32 wxzlib-2.9-i686-w64-mingw32 comctl32)
         set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--subsystem,windows")
     ENDIF ()
 
