@@ -11,7 +11,7 @@
 cmake_minimum_required (VERSION 2.8.9)
 project (boss)
 
-set (BOSS_SRC "${CMAKE_SOURCE_DIR}/src/metadata.cpp" "${CMAKE_SOURCE_DIR}/src/game.cpp" "${CMAKE_SOURCE_DIR}/src/helpers.cpp" "${PROJECT_LIBS_DIR}/pugixml/src/pugixml.cpp")
+set (BOSS_SRC "${CMAKE_SOURCE_DIR}/src/backend/metadata.cpp" "${CMAKE_SOURCE_DIR}/src/backend/game.cpp" "${CMAKE_SOURCE_DIR}/src/backend/helpers.cpp" "${PROJECT_LIBS_DIR}/pugixml/src/pugixml.cpp")
 
 # Include source and library directories.
 include_directories ("${PROJECT_LIBS_DIR}/alphanum" "${PROJECT_LIBS_DIR}/boost" "${PROJECT_LIBS_DIR}/yaml-cpp/include" "${CMAKE_SOURCE_DIR}/src" "${PROJECT_LIBS_DIR}/libloadorder/src" "${PROJECT_LIBS_DIR}/libespm" "${PROJECT_LIBS_DIR}/zlib" "${PROJECT_LIBS_DIR}/pugixml/src" "${PROJECT_LIBS_DIR}/wxWidgets/include")
@@ -24,7 +24,7 @@ include_directories ("${PROJECT_LIBS_DIR}/alphanum" "${PROJECT_LIBS_DIR}/boost" 
 # Settings when compiling for Windows.
 IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
     add_definitions (-DUNICODE -D_UNICODE)
-    set (BOSS_SRC ${BOSS_SRC} "${CMAKE_SOURCE_DIR}/resource.rc")
+    set (BOSS_SRC ${BOSS_SRC} "${CMAKE_SOURCE_DIR}/src/resource.rc")
     IF (${PROJECT_LINK} MATCHES "STATIC")
         add_definitions (-DLIBLO_STATIC)
         add_definitions (-DBOSS_STATIC)
@@ -74,7 +74,7 @@ ENDIF ()
 
 set (BOSS_GUI_SRC ${BOSS_SRC} "${CMAKE_SOURCE_DIR}/src/gui/ids.cpp" "${CMAKE_SOURCE_DIR}/src/gui/main.cpp" "${CMAKE_SOURCE_DIR}/src/gui/settings.cpp" "${CMAKE_SOURCE_DIR}/src/gui/editor.cpp" "${CMAKE_SOURCE_DIR}/src/gui/viewer.cpp")
 
-set (BOSS_API_SRC ${BOSS_SRC} "${CMAKE_SOURCE_DIR}/src/api.cpp")
+set (BOSS_API_SRC ${BOSS_SRC} "${CMAKE_SOURCE_DIR}/src/api/api.cpp")
 
 
 ##############################
@@ -82,9 +82,9 @@ set (BOSS_API_SRC ${BOSS_SRC} "${CMAKE_SOURCE_DIR}/src/api.cpp")
 ##############################
 
 # Build API.
-#add_library           (boss ${PROJECT_LINK} ${BOSS_API_SRC})
-#target_link_libraries (boss ${BOSS_LIBS})
+add_library           (boss ${PROJECT_LINK} ${BOSS_API_SRC})
+target_link_libraries (boss ${BOSS_LIBS})
 
-# Build tester.
+# Build application.
 add_executable        (BOSS ${BOSS_GUI_SRC})
 target_link_libraries (BOSS ${BOSS_LIBS})

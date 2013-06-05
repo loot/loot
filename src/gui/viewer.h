@@ -25,7 +25,6 @@
 #define __BOSS_GUI_VIEWER__
 
 #include "ids.h"
-#include "../game.h"
 
 class Viewer : public wxFrame {
 public:

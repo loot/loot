@@ -106,6 +106,9 @@ BOSS_API extern const unsigned int BOSS_API_MESSAGE_SAY;
 BOSS_API extern const unsigned int BOSS_API_MESSAGE_WARN;
 BOSS_API extern const unsigned int BOSS_API_MESSAGE_ERROR;
 
+// BOSS message languages.
+BOSS_API extern const unsigned int BOSS_API_LANG_AUTO;
+BOSS_API extern const unsigned int BOSS_API_LANG_ENG;
 
 
 //////////////////////////////
@@ -169,7 +172,7 @@ BOSS_API unsigned int boss_load_lists (boss_db db, const char * const masterlist
 // is called. Repeated calls re-evaluate the masterlist from scratch each time,
 // ignoring the results of any previous evaluations. Paths are case-sensitive
 // if the underlying filesystem is case-sensitive.
-BOSS_API unsigned int boss_eval_lists (boss_db db);
+BOSS_API unsigned int boss_eval_lists (boss_db db, const unsigned int language);
 
 
 //////////////////////////

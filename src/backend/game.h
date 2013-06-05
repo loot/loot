@@ -72,6 +72,8 @@ namespace boss {
 
         void SetLoadOrder(const std::list<Plugin>& loadOrder) const;
 
+        void RefreshActivePluginsList();
+
         //Caches for condition results, active plugins and CRCs.
         boost::unordered_map<std::string, bool> conditionCache;  //Holds lowercased strings.
         boost::unordered_map<std::string, uint32_t> crcCache;  //Holds lowercased strings.
@@ -92,8 +94,6 @@ namespace boss {
 
         //Creates directory in BOSS folder for BOSS's game-specific files.
         void CreateBOSSGameFolder();
-
-        void RefreshActivePluginsList();
     };
 
     std::vector<Game> GetGames(const YAML::Node& settings);

@@ -24,7 +24,7 @@
 #define __BOSS_GUI_EDITOR__
 
 #include "ids.h"
-#include "../metadata.h"
+#include "../backend/metadata.h"
 
 #include <string>
 #include <vector>

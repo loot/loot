@@ -172,6 +172,8 @@ namespace boss {
 
                 if (it->Type() == MESSAGE_SAY)
                     li.append_attribute("class").set_value("say");
+                if (it->Type() == MESSAGE_TAG)
+                    li.append_attribute("class").set_value("tag");
                 else if (it->Type() == MESSAGE_WARN) {
                     li.append_attribute("class").set_value("warn");
                     ++warnNo;

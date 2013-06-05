@@ -22,7 +22,7 @@
 */
 
 #include "editor.h"
-#include "../generators.h"
+#include "../backend/generators.h"
 
 #include <algorithm>
 #include <boost/algorithm/string.hpp>

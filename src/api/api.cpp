@@ -22,11 +22,12 @@
 */
 
 #include "api.h"
-#include "globals.h"
-#include "game.h"
-#include "metadata.h"
-#include "parsers.h"
-#include "error.h"
+#include "../backend/globals.h"
+#include "../backend/game.h"
+#include "../backend/metadata.h"
+#include "../backend/parsers.h"
+#include "../backend/generators.h"
+#include "../backend/error.h"
 
 #include <yaml-cpp/yaml.h>
 
@@ -62,9 +63,14 @@ const unsigned int BOSS_API_GAME_FO3                    = boss::GAME_FO3;
 const unsigned int BOSS_API_GAME_FONV                   = boss::GAME_FONV;
 
 // BOSS message types.
-const unsigned int BOSS_API_MESSAGE_SAY                 = 1;
-const unsigned int BOSS_API_MESSAGE_WARN                = 2;
-const unsigned int BOSS_API_MESSAGE_ERROR               = 3;
+const unsigned int BOSS_API_MESSAGE_SAY                 = boss::MESSAGE_SAY;
+const unsigned int BOSS_API_MESSAGE_WARN                = boss::MESSAGE_WARN;
+const unsigned int BOSS_API_MESSAGE_ERROR               = boss::MESSAGE_ERROR;
+
+// BOSS message languages.
+BOSS_API extern const unsigned int BOSS_API_LANG_AUTO   = boss::LANG_AUTO;
+BOSS_API extern const unsigned int BOSS_API_LANG_ENG    = boss::LANG_ENG;
+
 
 struct _boss_db_int {
     _boss_db_int()
@@ -270,13 +276,13 @@ BOSS_API unsigned int boss_load_lists (boss_db db, const char * const masterlist
 // is called. Repeated calls re-evaluate the masterlist from scratch each time,
 // ignoring the results of any previous evaluations. Paths are case-sensitive
 // if the underlying filesystem is case-sensitive.
-BOSS_API unsigned int boss_eval_lists (boss_db db) {
+BOSS_API unsigned int boss_eval_lists (boss_db db, const unsigned int language) {
 
     std::list<boss::Plugin> temp = db->rawMetadata;
     try {
         db->game.RefreshActivePluginsList();
         for (std::list<boss::Plugin>::iterator it=temp.begin(); it != temp.end(); ++it) {
-            it->EvalAllConditions(db->game);
+            it->EvalAllConditions(db->game, language);
             if (it->IsRegexPlugin()) {
                 boost::regex regex;
                 try {
@@ -307,7 +313,7 @@ BOSS_API unsigned int boss_eval_lists (boss_db db) {
     temp = db->rawUserMetadata;
     try {
         for (std::list<boss::Plugin>::iterator it=temp.begin(), endIt=temp.end(); it != endIt; ++it) {
-            it->EvalAllConditions(db->game);
+            it->EvalAllConditions(db->game, language);
             if (it->IsRegexPlugin()) {
                 boost::regex regex;
                 try {
@@ -365,14 +371,14 @@ BOSS_API unsigned int boss_get_tag_map (boss_db db, char *** const tagMap, size_
     boost::unordered_set<std::string> allTags;
 
     for (std::list<boss::Plugin>::iterator it=db->metadata.begin(), endIt=db->metadata.end(); it != endIt; ++it) {
-        std::list<boss::Tag> tags = it->Tags();
-        for (std::list<boss::Tag>::const_iterator jt=tags.begin(), endJt=tags.end(); jt != endJt; ++jt) {
+        std::set<boss::Tag> tags = it->Tags();
+        for (std::set<boss::Tag>::const_iterator jt=tags.begin(), endJt=tags.end(); jt != endJt; ++jt) {
             allTags.insert(jt->Name());
         }
     }
     for (std::list<boss::Plugin>::iterator it=db->userMetadata.begin(), endIt=db->userMetadata.end(); it != endIt; ++it) {
-        std::list<boss::Tag> tags = it->Tags();
-        for (std::list<boss::Tag>::const_iterator jt=tags.begin(), endJt=tags.end(); jt != endJt; ++jt) {
+        std::set<boss::Tag> tags = it->Tags();
+        for (std::set<boss::Tag>::const_iterator jt=tags.begin(), endJt=tags.end(); jt != endJt; ++jt) {
             allTags.insert(jt->Name());
         }
     }
@@ -440,8 +446,8 @@ BOSS_API unsigned int boss_get_plugin_tags (boss_db db, const char * const plugi
     boost::unordered_set<std::string> tagsAdded, tagsRemoved;
     std::list<boss::Plugin>::iterator pluginIt = std::find(db->metadata.begin(), db->metadata.end(), boss::Plugin(plugin));
     if (pluginIt != db->metadata.end()) {
-        std::list<boss::Tag> tags = pluginIt->Tags();
-        for (std::list<boss::Tag>::const_iterator it=tags.begin(), endIt=tags.end(); it != endIt; ++it) {
+        std::set<boss::Tag> tags = pluginIt->Tags();
+        for (std::set<boss::Tag>::const_iterator it=tags.begin(), endIt=tags.end(); it != endIt; ++it) {
             if (it->IsAddition())
                 tagsAdded.insert(it->Name());
             else
@@ -530,12 +536,7 @@ BOSS_API unsigned int boss_get_plugin_messages (boss_db db, const char * const p
         db->extMessageArray = new boss_message[db->extMessageArraySize];
         int i = 0;
         for (std::list<boss::Message>::const_iterator it=pluginMessages.begin(), endIt=pluginMessages.end(); it != endIt; ++it) {
-            if (it->Type() == "say")
-                db->extMessageArray[i].type = BOSS_API_MESSAGE_SAY;
-            else if (it->Type() == "warn")
-                db->extMessageArray[i].type = BOSS_API_MESSAGE_WARN;
-            else if (it->Type() == "error")
-                db->extMessageArray[i].type = BOSS_API_MESSAGE_ERROR;
+            db->extMessageArray[i].type = it->Type();
             db->extMessageArray[i].message = ToNewCString(it->Content());
         }
     } catch (std::bad_alloc& e) {
@@ -567,7 +568,7 @@ BOSS_API unsigned int boss_write_minimal_list (boss_db db, const char * const ou
 
         std::list<boss::Message> messages = it->Messages(), newMessages;
         for (std::list<boss::Message>::iterator messageIter = messages.begin(); messageIter != messages.end(); ++messageIter) {
-            if (messageIter->Type() == "warn") {
+            if (messageIter->Type() == BOSS_API_MESSAGE_WARN) {
                 const std::string content = messageIter->Content();
                 if (boost::contains(content, "Do not clean"))
                     newMessages.push_back(*messageIter);

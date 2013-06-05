@@ -25,12 +25,12 @@
 #include "editor.h"
 #include "viewer.h"
 
-#include "../globals.h"
-#include "../metadata.h"
-#include "../parsers.h"
-#include "../error.h"
-#include "../helpers.h"
-#include "../generators.h"
+#include "../backend/globals.h"
+#include "../backend/metadata.h"
+#include "../backend/parsers.h"
+#include "../backend/error.h"
+#include "../backend/helpers.h"
+#include "../backend/generators.h"
 
 #include <ostream>
 #include <algorithm>
@@ -134,9 +134,6 @@ bool BossGUI::OnInit() {
         locale loc(global_loc, new boost::filesystem::detail::utf8_codecvt_facet());
         boost::filesystem::path::imbue(loc);
     }
-
-    //Get games vector.
-    
 
     //Detect installed games.
     try {
@@ -534,7 +531,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     for (list<boss::Plugin>::iterator it=plugins.begin(), endIt = plugins.end(); it != endIt; ++it)
         out << it->Name() << endl;
 
-    out << "Writing results file..." << endl;
+    out << "Generating report..." << endl;
 
     try {
         GenerateReport(_game.ReportPath().string(),

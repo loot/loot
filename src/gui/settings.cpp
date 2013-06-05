@@ -22,7 +22,7 @@
 */
 
 #include "settings.h"
-#include "../globals.h"
+#include "../backend/globals.h"
 #include <fstream>
 #include <boost/algorithm/string.hpp>
 

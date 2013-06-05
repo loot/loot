@@ -25,7 +25,7 @@
 #define __BOSS_GUI_SETTINGS__
 
 #include "ids.h"
-#include "../game.h"
+#include "../backend/game.h"
 
 #include <yaml-cpp/yaml.h>
 #include <wx/listctrl.h>
