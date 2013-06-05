@@ -495,39 +495,6 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     progDia->Pulse();
 
-    out << "Printing plugin details..." << endl;    
-
-    for (list<boss::Plugin>::iterator it=plugins.begin(), endIt = plugins.end(); it != endIt; ++it) {
-		out << it->Name() << endl
-             << '\t' << "Number of records: " << it->FormIDs().size() << endl
-			 << '\t' << "Is Master: " << it->IsMaster() << endl
-			 << '\t' << "Masters:" << endl;
-			 
-		vector<std::string> masters = it->Masters();
-		for(int i = 0; i < masters.size(); ++i)
-			out << '\t' << '\t' << i << ": " << masters[i] << endl;
-
-        out << '\t' << "Conflicts with:" << endl;
-        for (list<boss::Plugin>::iterator jt=plugins.begin(), endJt = plugins.end(); jt != endJt; ++jt) {
-            if (*jt != *it && !it->MustLoadAfter(*jt) && !jt->MustLoadAfter(*it)) {
-                size_t overlap = jt->OverlapFormIDs(*it).size();
-                if (overlap > 0)
-                    out << '\t' << '\t' << jt->Name() << " (" << overlap << " records)" << endl;
-            }
-
-            progDia->Pulse();
-        }
-        
-
-        progDia->Pulse();
-	}
-
-    progDia->Pulse();
-    
-    end = time(NULL);
-	out << "Time taken to print plugins' details: " << (end - start) << " seconds." << endl;
-    start = time(NULL);
-    
     for (list<boss::Plugin>::iterator it=plugins.begin(), endIt = plugins.end(); it != endIt; ++it)
         out << it->Name() << endl;
 
