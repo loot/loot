@@ -201,7 +201,11 @@ namespace boss {
     }
 
     Plugin::Plugin() : enabled(true), priority(0), isMaster(false) {}
-    Plugin::Plugin(const std::string& n) : name(n), enabled(true), priority(0), isMaster(false) {}
+    Plugin::Plugin(const std::string& n) : name(n), enabled(true), priority(0), isMaster(false) {
+        //If the name passed ends in '.ghost', that should be trimmed.
+        if (boost::iends_with(name, ".ghost"))
+            name = name.substr(0, name.length() - 6);
+    }
 
 	Plugin::Plugin(boss::Game& game, const std::string& n, const bool headerOnly)
 		: name(n), enabled(true), priority(0) {
@@ -218,6 +222,10 @@ namespace boss {
         plugins.push_back(name);
 		for (vector<uint32_t>::const_iterator it = records.begin(),endIt = records.end(); it != endIt; ++it)
 			formIDs.insert(FormID(plugins, *it));
+            
+        //If the name passed ends in '.ghost', that should be trimmed.
+        if (boost::iends_with(name, ".ghost"))
+            name = name.substr(0, name.length() - 6);
 
         //Also read Bash Tags applied and version string in description.
         for(size_t i=0,max=file.fields.size(); i < max; ++i){
@@ -553,5 +561,13 @@ namespace boss {
             return lhs.FormIDs().size() > rhs.FormIDs().size();
 
         return boost::ilexicographical_compare(lhs.Name(), rhs.Name());
+    }
+
+    bool IsPlugin(const std::string& file) {
+        if (boost::iends_with(file, ".esp") || boost::iends_with(file, ".esm")
+         || boost::iends_with(file, ".esp.ghost") || boost::iends_with(file, ".esm.ghost"))
+            return true;
+        else
+            return false;
     }
 }

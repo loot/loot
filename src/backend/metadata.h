@@ -186,7 +186,7 @@ namespace boss {
 
     bool load_order_sort(const Plugin& lhs, const Plugin& rhs);
 
-    
+    bool IsPlugin(const std::string& file);
 }
 
 #endif

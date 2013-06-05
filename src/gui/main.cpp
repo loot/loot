@@ -326,7 +326,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     // Get a list of the plugins.
     list<boss::Plugin> plugins;
     for (fs::directory_iterator it(_game.DataPath()); it != fs::directory_iterator(); ++it) {
-        if (fs::is_regular_file(it->status()) && (it->path().extension().string() == ".esp" || it->path().extension().string() == ".esm")) {
+        if (fs::is_regular_file(it->status()) && IsPlugin(it->path().string())) {
 
             string filename = it->path().filename().string();
 			out << "Reading plugin: " << filename << endl;
@@ -577,7 +577,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
 
     //Scan for installed plugins.
     for (fs::directory_iterator it(_game.DataPath()); it != fs::directory_iterator(); ++it) {
-        if (fs::is_regular_file(it->status()) && (it->path().extension().string() == ".esp" || it->path().extension().string() == ".esm")) {
+        if (fs::is_regular_file(it->status()) && IsPlugin(it->path().string())) {
 			boss::Plugin plugin(_game, it->path().filename().string(), true);
             installed.push_back(plugin);
             

@@ -498,10 +498,6 @@ namespace boss {
             result = game->IsActive(file);
         }
 
-        bool IsPlugin(const std::string& file) {
-            return boost::iends_with(file, ".esm") || boost::iends_with(file, ".esp");
-        }
-
         void SyntaxError(Iterator const& /*first*/, Iterator const& last, Iterator const& errorpos, boost::spirit::info const& what) {
 
             std::string context(errorpos, min(errorpos +50, last));
