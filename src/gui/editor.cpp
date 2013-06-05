@@ -131,7 +131,12 @@ Editor::Editor(wxWindow *parent, const wxString& title, const char * userlistPat
     removeBtn->Enable(false);
     prioritySpin->Enable(false);
     enableUserEditsBox->Enable(false);
-    
+
+    //Make plugin name bold text.
+    wxFont font = pluginText->GetFont();
+    font.SetWeight(wxFONTWEIGHT_BOLD);
+    pluginText->SetFont(font);
+
     //Set up layout.
     wxBoxSizer * bigBox = new wxBoxSizer(wxHORIZONTAL);
 
