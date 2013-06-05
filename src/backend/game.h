@@ -52,7 +52,7 @@ namespace boss {
 
         bool IsInstalled() const;
 
-        bool operator == (const Game& rhs) const;
+        bool operator == (const Game& rhs) const;  //Compares names and folder names.
 
         unsigned int Id() const;
         std::string Name() const;  //Returns the game's name, eg. "TES IV: Oblivion".

@@ -65,8 +65,23 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
     LanguageChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 1, Language);
     DebugVerbosityChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 4, DebugVerbosity);
 
+    gamesList = new wxListView(this, LIST_Games, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL);
+    
+    addBtn = new wxButton(this, BUTTON_AddGame, translate("Add Game"));
+    editBtn = new wxButton(this, BUTTON_EditGame, translate("Edit Game"));
+    removeBtn = new wxButton(this, BUTTON_RemoveGame, translate("Remove Game"));
+
     UpdateMasterlistBox = new wxCheckBox(this, wxID_ANY, translate("Update masterlist before sorting."));
     reportViewBox = new wxCheckBox(this, wxID_ANY, translate("View reports externally in default browser."));
+
+    //Set up list columns.
+    gamesList->AppendColumn(translate("Name"));
+    gamesList->AppendColumn(translate("Base Game Type"));
+    gamesList->AppendColumn(translate("BOSS Folder Name"));
+    gamesList->AppendColumn(translate("Master File"));
+    gamesList->AppendColumn(translate("Online Masterlist URL"));
+    gamesList->AppendColumn(translate("Install Path"));
+    gamesList->AppendColumn(translate("Install Path Registry Key"));
 
     //Set up layout.
 	wxSizerFlags leftItem(0);
@@ -118,16 +133,22 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
     if (sizer != NULL)
         bigBox->Add(sizer, 0, wxEXPAND|wxLEFT|wxBOTTOM|wxRIGHT, 15);
 
+    cout << "FOO 4" << endl;
+
 	//Initialise options with values. For checkboxes, they are off by default.
 	SetDefaultValues();
 
 	//Tooltips.
 	DebugVerbosityChoice->SetToolTip(translate("The output is logged to the BOSSDebugLog.txt file"));
 
+    cout << "FOO 5" << endl;
+
 	//Now set the layout and sizes.
 	SetBackgroundColour(wxColour(255,255,255));
     SetIcon(wxIconLocation("BOSS.exe"));
 	SetSizerAndFit(bigBox);
+
+    cout << "FOO 6" << endl;
 }
 
 void SettingsFrame::SetDefaultValues() {
@@ -259,6 +280,25 @@ void SettingsFrame::OnAddGame(wxCommandEvent& event) {
                 wxOK | wxICON_ERROR,
                 this);
             return;
+        }
+
+        //Also check that name and folder name don't already exist in the list.
+        for (size_t i=0,max=gamesList->GetItemCount(); i < max; ++i) {
+            if (rowDialog->GetName() == gamesList->GetItemText(i, 0)) {
+                wxMessageBox(
+                    translate("Error: A game with this name is already defined. Row will not be added."),
+                    translate("BOSS: Error"),
+                    wxOK | wxICON_ERROR,
+                    this);
+                return;
+            } else if (rowDialog->GetFolderName() == gamesList->GetItemText(i, 2)) {
+                wxMessageBox(
+                    translate("Error: A game with this folder name is already defined. Row will not be added."),
+                    translate("BOSS: Error"),
+                    wxOK | wxICON_ERROR,
+                    this);
+                return;
+            }
         }
         
         long i = gamesList->GetItemCount();
@@ -411,6 +451,10 @@ void GameEditDialog::SetValues(unsigned int type, const wxString& name, const wx
     _url->SetValue(url);
     _path->SetValue(path);
     _registry->SetValue(registry);
+
+    //Also disable the name and folder name text controls to prevent them being changed for games that already exist.
+    _name->Enable(false);
+    _folderName->Enable(false);
 }
 
 wxString GameEditDialog::GetName() const {
