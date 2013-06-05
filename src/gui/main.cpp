@@ -533,13 +533,36 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     out << "Generating report..." << endl;
 
+    //Read the details section of the previous report, if it exists.
+    string oldDetails;
+    if (fs::exists(_game.ReportPath().string())) {
+        //Read the whole file in.
+        ifstream in(_game.ReportPath().string().c_str(), ios::binary);
+        in.seekg(0, std::ios::end);
+        oldDetails.resize(in.tellg());
+        in.seekg(0, std::ios::beg);
+        in.read(&oldDetails[0], oldDetails.size());
+        in.close();
+
+        //Slim down to only the details section.
+        size_t pos1 = oldDetails.find("<div id=\"plugins\"");
+        pos1 = oldDetails.find("<ul>", pos1);
+        size_t pos2 = oldDetails.find("</div>", pos1);
+        pos2 = oldDetails.rfind("</ul>", pos2) - 3;  //Remove the 3 tabs preceding the closing tag.
+
+        oldDetails = oldDetails.substr(pos1, pos2 - pos1);
+        boost::replace_all(oldDetails, "\t\t\t\t", "\t");
+        oldDetails += "</ul>\n";
+    }
+    
+
     try {
         GenerateReport(_game.ReportPath().string(),
                         messages,
                         plugins,
+                        oldDetails,
                         "4030 (2020-13-13)",
-                        _settings["Update Masterlist"].as<bool>(),
-                        true);
+                        _settings["Update Masterlist"].as<bool>());
     } catch (boss::error& e) {
         wxMessageBox(
             FromUTF8(format(loc::translate("Error: %1%")) % e.what()),

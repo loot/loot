@@ -36,6 +36,14 @@
 
 namespace boss {
 
+    struct xml_string_writer: pugi::xml_writer {
+        std::string result;
+
+        virtual void write(const void* data, size_t size) {
+            result += std::string(static_cast<const char*>(data), size);
+        }
+    };
+
     inline void WriteMessage(pugi::xml_node& listItem, unsigned int type, std::string content) {
 
         if (type == MESSAGE_SAY)
@@ -238,7 +246,7 @@ namespace boss {
         else
             cell.text().set("Disabled");
 
-        if (hasChanged) {
+        if (!hasChanged) {
             pugi::xml_node note = summary.append_child();
             note.set_name("div");
             note.append_attribute("id").set_value("noChanges");
@@ -276,7 +284,7 @@ namespace boss {
         cell.text().set(IntToString(errorNo).c_str());
     }
 
-    inline void AppendDetails(pugi::xml_node& main, const std::list<Plugin>& plugins, int& messageNo, int& warnNo, int& errorNo) {
+    inline bool AppendDetails(pugi::xml_node& main, const std::list<Plugin>& plugins, int& messageNo, int& warnNo, int& errorNo, const std::string& oldDetails) {
 
         pugi::xml_node details = main.append_child();
         details.set_name("div");
@@ -317,9 +325,9 @@ namespace boss {
                             remove += ", " + jt->Name();
                     }
                     if (!add.empty())
-                        content += "Bash Tags suggested for addition are " + add.substr(2) + ". ";
+                        content += "Add " + add.substr(2) + ". ";
                     if (!remove.empty())
-                        content += "Bash Tags suggested for removal are " + remove.substr(2) + ". ";
+                        content += "Remove " + remove.substr(2) + ". ";
                     messages.push_back(Message(MESSAGE_TAG, content));  //Special type just for tag suggestions.
                 }
 
@@ -327,11 +335,15 @@ namespace boss {
                 messageNo += messages.size();
             }
         }
-        
+
+        xml_string_writer writer;
+        details.print(writer, "\t", pugi::format_default | pugi::format_no_declaration);
+
+        return writer.result != oldDetails;
     }
 
     inline void AppendMain(pugi::xml_node& body,
-                        bool hasChanged,
+                        const std::string& oldDetails,
                         const std::string& masterlistVersion,
                         bool masterlistUpdateEnabled,
                         const std::list<Message>& messages,
@@ -352,7 +364,7 @@ namespace boss {
         div.text().set("The BOSS Report requires Javascript to be enabled in order to function.");
 
         int messageNo=0, warnNo=0, errorNo=0;
-        AppendDetails(main, plugins, messageNo, warnNo, errorNo);
+        bool hasChanged = AppendDetails(main, plugins, messageNo, warnNo, errorNo, oldDetails);
         pluginMessageNo = messageNo;
 
         AppendSummary(main, hasChanged, masterlistVersion, masterlistUpdateEnabled, messageNo, warnNo, errorNo, messages);
@@ -449,9 +461,9 @@ namespace boss {
     inline void GenerateReport(const std::string& file,
                         const std::list<Message>& messages,
                         const std::list<Plugin>& plugins,
+                        const std::string& oldDetails,
                         const std::string& masterlistVersion,
-                        const bool masterlistUpdateEnabled,
-                        const bool hasChanged) {
+                        const bool masterlistUpdateEnabled) {
 
         pugi::xml_document doc;
 
@@ -463,7 +475,7 @@ namespace boss {
         AppendNav(body);
 
         int messageNo=0;
-        AppendMain(body, hasChanged, masterlistVersion, masterlistUpdateEnabled, messages, plugins, messageNo);
+        AppendMain(body, oldDetails, masterlistVersion, masterlistUpdateEnabled, messages, plugins, messageNo);
         
         AppendFilters(body, messageNo, plugins.size());
         
