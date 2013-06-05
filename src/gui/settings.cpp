@@ -133,22 +133,16 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
     if (sizer != NULL)
         bigBox->Add(sizer, 0, wxEXPAND|wxLEFT|wxBOTTOM|wxRIGHT, 15);
 
-    cout << "FOO 4" << endl;
-
 	//Initialise options with values. For checkboxes, they are off by default.
 	SetDefaultValues();
 
 	//Tooltips.
 	DebugVerbosityChoice->SetToolTip(translate("The output is logged to the BOSSDebugLog.txt file"));
 
-    cout << "FOO 5" << endl;
-
 	//Now set the layout and sizes.
 	SetBackgroundColour(wxColour(255,255,255));
     SetIcon(wxIconLocation("BOSS.exe"));
 	SetSizerAndFit(bigBox);
-
-    cout << "FOO 6" << endl;
 }
 
 void SettingsFrame::SetDefaultValues() {
