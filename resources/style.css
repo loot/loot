@@ -10,7 +10,7 @@ noscript div {
     color:white;
 }
 #nav {
-    background:#eee;
+    background:#e3e3e3;
     position:fixed;
     top:0;
     left:0;
@@ -114,7 +114,7 @@ ul {margin-top:0.5em; margin-bottom:1em;}
 li {margin:0.75em 0;}
 
 #plugins > ul {list-style:none;}
-.hidden, #summary.hidden, #plugins.hidden {
+.hidden, li.hidden, #summary.hidden, #plugins.hidden {
     display:none;
 }
 

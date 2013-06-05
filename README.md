@@ -17,7 +17,7 @@ While that's being done, I might as well also make some improvements to other ar
 
 ## Build Instructions
 
-BOSS uses [CMake](http://cmake.org) v2.8.9 or later for cross-platform building support, though it is developed on Linux and cross-compiled using Mingw, so its CMakeLists.txt might not produce correct results on Windows.
+BOSS uses [CMake](http://cmake.org) v2.8.9 or later for cross-platform building support, though development takes place on Linux, and the instructions below reflect this. Building on Windows should be straightforward using analogous commands though.
 
 BOSS requires the following libraries:
 
@@ -30,11 +30,11 @@ BOSS requires the following libraries:
 * [yaml-cpp](http://code.google.com/p/yaml-cpp/) v0.5.1 or later.
 * [zlib](http://zlib.net) v1.2.7 or later.
 
-BOSS expects all libraries' folders to be present alongside the BOSS repository folder that contains this readme, or otherwise installed such that the compiler and linker used can find them without suppling additional paths.
+BOSS expects all libraries' folders to be present alongside the BOSS repository folder that contains this readme, or otherwise installed such that the compiler and linker used can find them without suppling additional paths. All paths below are relative to the folder(s) containing the libraries and BOSS.
 
-### Building Boost (Linux)
+Alphanum, Libespm and PugiXML do not require any additional setup. The rest of the libraries must be built separately.
 
-Starting from the Boost root folder, run the following:
+### Boost
 
 ```
 ./bootstrap.sh
@@ -42,34 +42,30 @@ echo "using gcc : 4.6.3 : i686-w64-mingw32-g++ : <rc>i686-w64-mingw32-windres <a
 ./b2 toolset=gcc-4.6.3 target-os=windows link=static runtime-link=static variant=release address-model=32 cxxflags=-fPIC --with-filesystem --with-locale --with-regex --with-program_options --with-system --stagedir=stage-mingw-32
 ```
 
-### Building wxWidgets (Linux)
-
-Starting from the wxWidgets root folder, run the following:
+### wxWidgets
 
 ```
 ./configure --prefix=/usr/local/i686-w64-mingw32 --host=i686-w64-mingw32 --build=x64_86-linux --disable-shared
 ```
 
-### Building zlib (Linux)
-
-Starting from the zlib root folder, run the following:
+### zlib
 
 ```
 cmake . -DCMAKE_C_FLAGS=-m32 -DPROJECT_ARCH=32 -DCMAKE_TOOLCHAIN_FILE=../BOSSv3/mingw-toolchain.cmake
 make
 ```
 
-### Building yaml-cpp (Linux)
-
-Starting from the yaml-cpp root folder, run the following:
+### yaml-cpp
 
 ```
 cmake .. -DCMAKE_C_FLAGS=-m32 -DPROJECT_ARCH=32 -DCMAKE_TOOLCHAIN_FILE=../BOSSv3/mingw-toolchain.cmake -DBOOST_ROOT=../boost
 ```
 
-### Building BOSS (Linux)
+### Libloadorder
 
-Starting from the BOSS root folder, run the following:
+Follow the instructions in libloadorder's README to build it as a static library.
+
+### BOSS
 
 ```
 cd build
