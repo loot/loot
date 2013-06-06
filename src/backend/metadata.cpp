@@ -536,15 +536,6 @@ namespace boss {
         for (set<File>::const_iterator it=incompatibilities.begin(), endit=incompatibilities.end(); it != endit; ++it) {
             incs.insert(boost::to_lower_copy(it->Name()));
         }
-        for (vector<string>::const_iterator it=masters.begin(), endit=masters.end(); it != endit; ++it) {
-            reqs.insert(boost::to_lower_copy(*it));
-        }
-        for (set<File>::const_iterator it=requirements.begin(), endit=requirements.end(); it != endit; ++it) {
-            reqs.insert(boost::to_lower_copy(it->Name()));
-        }
-        for (set<File>::const_iterator it=loadAfter.begin(), endIt=loadAfter.end(); it != endIt; ++it) {
-            reqs.insert(boost::to_lower_copy(it->Name()));
-        }
         
         //Check 1: None of this plugin's masters or requirements or 'load after' plugins may be in branch.
         //Check 2: None of this plugin's masters or requirements or 'load after' plugins may be in incs.
@@ -553,6 +544,7 @@ namespace boss {
         //Check 5: This plugin must not be present in branch (performed above).
         //Also check the consistency of the plugins this plugin is dependent on.
         for (vector<string>::const_iterator it=masters.begin(), endit=masters.end(); it != endit; ++it) {
+            reqs.insert(boost::to_lower_copy(*it));
             if (branch.find(boost::to_lower_copy(*it)) != branch.end())
                 issues.insert(pair<string, bool>(*it, true));
             if (incs.find(boost::to_lower_copy(*it)) != incs.end())
@@ -564,6 +556,7 @@ namespace boss {
             }
         }
         for (set<File>::const_iterator it=requirements.begin(), endIt=requirements.end(); it != endIt; ++it) {
+            reqs.insert(boost::to_lower_copy(it->Name()));
             if (branch.find(boost::to_lower_copy(it->Name())) != branch.end())
                 issues.insert(pair<string, bool>(it->Name(), true));
             if (incs.find(boost::to_lower_copy(it->Name())) != incs.end())
@@ -575,6 +568,7 @@ namespace boss {
             }
         }
         for (set<File>::const_iterator it=loadAfter.begin(), endIt=loadAfter.end(); it != endIt; ++it) {
+            reqs.insert(boost::to_lower_copy(it->Name()));
             if (branch.find(boost::to_lower_copy(it->Name())) != branch.end())
                 issues.insert(pair<string, bool>(it->Name(), true));
             if (incs.find(boost::to_lower_copy(it->Name())) != incs.end())

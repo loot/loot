@@ -395,6 +395,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     progDia->Pulse();
 
+    bool cyclicDependenciesExist = false;
     if (fs::exists(_game.MasterlistPath()) || fs::exists(_game.UserlistPath())) {
         out << "Merging plugin lists, evaluating conditions and and checking for install validity..." << endl;
 
@@ -408,6 +409,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             lang = boss::LANG_ENG;
 
         //Merge plugin list, masterlist and userlist plugin data.
+        map<string, bool> consistencyIssues;
         for (list<boss::Plugin>::iterator it=plugins.begin(), endIt=plugins.end(); it != endIt; ++it) {
             //Check if there is already a plugin in the 'plugins' list or not.
             list<boss::Plugin>::iterator pos = std::find(mlist_plugins.begin(), mlist_plugins.end(), *it);
@@ -441,28 +443,31 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             set<string> dependencies, incompatibilities, reqs;
             map<string, bool> issues;
             issues = it->CheckSelfConsistency(plugins, dependencies, incompatibilities, reqs);
-            for (map<string,bool>::const_iterator jt=issues.begin(), endJt=issues.end(); jt != endJt; ++jt) {
-                if (jt->second)
-                    messages.push_back(boss::Message(boss::MESSAGE_ERROR, "For \"" + it->Name() + "\", \"" + jt->first + "\" is a circular dependency."));
-                else
-                    messages.push_back(boss::Message(boss::MESSAGE_ERROR, "For \"" + it->Name() + "\", \"" + jt->first + "\" is given as a dependency and an incompatibility."));
-            }
+            consistencyIssues.insert(issues.begin(), issues.end());
 
             //Also check install validity.
             issues = it->CheckInstallValidity(_game);
-            list<boss::Message> messages = it->Messages();
+            list<boss::Message> pluginMessages = it->Messages();
             for (map<string,bool>::const_iterator jt=issues.begin(), endJt=issues.end(); jt != endJt; ++jt) {
                 if (jt->second)
-                    messages.push_back(boss::Message(boss::MESSAGE_ERROR, "\"" + jt->first + "\" is incompatible with \"" + it->Name() + "\" and is present."));
+                    pluginMessages.push_back(boss::Message(boss::MESSAGE_ERROR, "\"" + jt->first + "\" is incompatible with \"" + it->Name() + "\" and is present."));
                 else
-                    messages.push_back(boss::Message(boss::MESSAGE_ERROR, "\"" + jt->first + "\" is required by \"" + it->Name() + "\" but is missing."));
+                    pluginMessages.push_back(boss::Message(boss::MESSAGE_ERROR, "\"" + jt->first + "\" is required by \"" + it->Name() + "\" but is missing."));
             }
             if (!issues.empty())
-                it->Messages(messages);
+                it->Messages(pluginMessages);
 
             progDia->Pulse();
         }
 
+        for (map<string,bool>::const_iterator jt=consistencyIssues.begin(), endJt=consistencyIssues.end(); jt != endJt; ++jt) {
+            if (jt->second) {
+                messages.push_back(boss::Message(boss::MESSAGE_ERROR, "\"" + jt->first + "\" is a circular dependency. Plugins will not be sorted."));
+                cyclicDependenciesExist = true;
+            } else
+                messages.push_back(boss::Message(boss::MESSAGE_ERROR, "\"" + jt->first + "\" is given as a dependency and an incompatibility."));
+        }
+            
         end = time(NULL);
         out << "Time taken to merge lists, evaluate conditions and check for install validity: " << (end - start) << " seconds." << endl;
         start = time(NULL);
@@ -470,44 +475,46 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     progDia->Pulse();
 
-    out << "Sorting plugins..." << endl;
+    if (!cyclicDependenciesExist) {
+        out << "Sorting plugins..." << endl;
 
-    //std::sort doesn't compare each plugin to every other plugin, it seems to compare plugins until no movement is necessary, because it assumes that each plugin will be comparable on all tested data, which isn't the case when dealing with masters, etc. Therefore, loop through the list and move each plugin's dependencies directly before it, then apply std::sort.
-    list<boss::Plugin>::iterator it=plugins.begin();
-    while (it != plugins.end()) {
-        list<boss::Plugin>::iterator jt=it;
-        ++jt;
+        //std::sort doesn't compare each plugin to every other plugin, it seems to compare plugins until no movement is necessary, because it assumes that each plugin will be comparable on all tested data, which isn't the case when dealing with masters, etc. Therefore, loop through the list and move each plugin's dependencies directly before it, then apply std::sort.
+        list<boss::Plugin>::iterator it=plugins.begin();
+        while (it != plugins.end()) {
+            list<boss::Plugin>::iterator jt=it;
+            ++jt;
 
-        out << "Sorting for: " << it->Name() << endl;
+            out << "Sorting for: " << it->Name() << endl;
 
-        list<boss::Plugin> moved;
-        while (jt != plugins.end()) {
-            if (it->MustLoadAfter(*jt)) {
-                moved.push_back(*jt);
-                jt = plugins.erase(jt);
+            list<boss::Plugin> moved;
+            while (jt != plugins.end()) {
+                if (it->MustLoadAfter(*jt)) {
+                    moved.push_back(*jt);
+                    jt = plugins.erase(jt);
+                } else
+                    ++jt;
+
+                progDia->Pulse();
+            }
+            if (!moved.empty()) {
+                plugins.insert(it, moved.begin(), moved.end());
+                advance(it, -1*(int)moved.size());
             } else
-                ++jt;
+                ++it;
 
             progDia->Pulse();
         }
-        if (!moved.empty()) {
-            plugins.insert(it, moved.begin(), moved.end());
-            advance(it, -1*(int)moved.size());
-        } else
-            ++it;
+
+        plugins.sort(boss::load_order_sort);
+
+        end = time(NULL);
+        out << "Time taken to sort plugins: " << (end - start) << " seconds." << endl;
 
         progDia->Pulse();
+
+        for (list<boss::Plugin>::iterator it=plugins.begin(), endIt = plugins.end(); it != endIt; ++it)
+            out << it->Name() << endl;
     }
-
-    plugins.sort(boss::load_order_sort);
-
-    end = time(NULL);
-	out << "Time taken to sort plugins: " << (end - start) << " seconds." << endl;
-
-    progDia->Pulse();
-
-    for (list<boss::Plugin>::iterator it=plugins.begin(), endIt = plugins.end(); it != endIt; ++it)
-        out << it->Name() << endl;
 
     out << "Generating report..." << endl;
 
