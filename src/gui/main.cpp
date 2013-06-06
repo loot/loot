@@ -437,8 +437,19 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
             progDia->Pulse();
 
+            //Check that the metadata is self-consistent.
+            set<string> dependencies, incompatibilities, reqs;
+            map<string, bool> issues;
+            issues = it->CheckSelfConsistency(plugins, dependencies, incompatibilities, reqs);
+            for (map<string,bool>::const_iterator jt=issues.begin(), endJt=issues.end(); jt != endJt; ++jt) {
+                if (jt->second)
+                    messages.push_back(boss::Message(boss::MESSAGE_ERROR, "For \"" + it->Name() + "\", \"" + jt->first + "\" is a circular dependency."));
+                else
+                    messages.push_back(boss::Message(boss::MESSAGE_ERROR, "For \"" + it->Name() + "\", \"" + jt->first + "\" is given as a dependency and an incompatibility."));
+            }
+
             //Also check install validity.
-            map<string, bool> issues = it->CheckInstallValidity(_game);
+            issues = it->CheckInstallValidity(_game);
             list<boss::Message> messages = it->Messages();
             for (map<string,bool>::const_iterator jt=issues.begin(), endJt=issues.end(); jt != endJt; ++jt) {
                 if (jt->second)

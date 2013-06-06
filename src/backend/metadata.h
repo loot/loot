@@ -164,6 +164,7 @@ namespace boss {
 
         //Validity checks.
         std::map<std::string,bool> CheckInstallValidity(const Game& game) const;  //Checks that reqs and masters are all present, and that no incs are present. Returns a map of filenames and whether they are missing (if bool is true, then filename is a req or master, otherwise it's an inc).
+        std::map<std::string,bool> CheckSelfConsistency(const std::list<Plugin>& plugins, std::set<std::string> branch, std::set<std::string> incs, std::set<std::string> reqs) const;
     private:
         std::string name;
         bool enabled;  //Default to true.
@@ -181,6 +182,10 @@ namespace boss {
     };
     
     bool operator == (const File& lhs, const Plugin& rhs);
+    
+    bool operator == (const Plugin& lhs, const File& rhs);
+    
+    bool operator == (const std::string& lhs, const Plugin& rhs);
 
     bool alpha_sort(const Plugin& lhs, const Plugin& rhs);
 
