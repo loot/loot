@@ -383,8 +383,6 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 				this);
             return;
         }
-        if (ulist["globals"])
-            ulist_messages = ulist["globals"].as< list<boss::Message> >();
         if (ulist["plugins"])
             ulist_plugins = ulist["plugins"].as< list<boss::Plugin> >();
 
@@ -512,12 +510,46 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
         progDia->Pulse();
 
+        LoadOrderPreview preview(this, translate("BOSS: Calculated Load Order"), plugins);
+
+        if (preview.ShowModal() == wxID_OK) {
+            list<boss::Plugin> newPluginsList, editedPlugins;
+            newPluginsList = preview.GetLoadOrder();
+
+            for (list<boss::Plugin>::iterator it=newPluginsList.begin(),endit=newPluginsList.end(); it != endit; ++it) {
+                list<boss::Plugin>::const_iterator jt = find(plugins.begin(), plugins.end(), *it);
+                boss::Plugin diff = it->DiffMetadata(*jt);
+
+                if (!diff.HasNameOnly())
+                    editedPlugins.push_back(diff);
+            }
+            plugins = newPluginsList;
+
+            for (list<boss::Plugin>::iterator it=editedPlugins.begin(),endit=editedPlugins.end(); it != endit; ++it) {
+                list<boss::Plugin>::iterator jt = find(ulist_plugins.begin(), ulist_plugins.end(), *it);
+
+                if (jt != ulist_plugins.end()) {
+                    jt->Merge(*it);
+                } else {
+                    ulist_plugins.push_back(*it);
+                }
+            }
+
+            //Save edits to userlist.
+            YAML::Emitter yout;
+            yout.SetIndent(2);
+            yout << YAML::BeginMap
+                 << YAML::Key << "plugins" << YAML::Value << ulist_plugins
+                 << YAML::EndMap;
+
+            ofstream uout(_game.UserlistPath().string().c_str());
+            uout << yout.c_str();
+            uout.close();
+        }
+
+        out << "Post-preview load order:" << endl;
         for (list<boss::Plugin>::iterator it=plugins.begin(), endIt = plugins.end(); it != endIt; ++it)
-            out << it->Name() << endl;
-
-        LoadOrderPreview * preview = new LoadOrderPreview(this, translate("BOSS: Calculated Load Order"), plugins);
-
-        preview->ShowModal();
+            out << '\t' << it->Name() << endl;
     }
 
     out << "Generating report..." << endl;
@@ -747,7 +779,12 @@ LoadOrderPreview::LoadOrderPreview(wxWindow *parent, const wxChar *title, const 
     for (list<boss::Plugin>::const_iterator it=plugins.begin(), endit=plugins.end(); it != endit; ++it, ++i) {
         _loadOrder->InsertItem(i, FromUTF8(it->Name()));
     }
+    _loadOrder->SetColumnWidth(0, wxLIST_AUTOSIZE);
 
+    //Set up event handling.
+    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &LoadOrderPreview::OnMoveUp, this, BUTTON_MoveUp);
+    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &LoadOrderPreview::OnMoveDown, this, BUTTON_MoveDown);
+    
     //Set up layout.
     wxBoxSizer * bigBox = new wxBoxSizer(wxVERTICAL);
 
@@ -757,6 +794,8 @@ LoadOrderPreview::LoadOrderPreview(wxWindow *parent, const wxChar *title, const 
     hbox->Add(_moveUp, 0, wxRIGHT, 5);
     hbox->Add(_moveDown, 0, wxLEFT, 5);
     bigBox->Add(hbox, 0, wxALIGN_RIGHT|wxBOTTOM|wxRIGHT, 10);
+
+    bigBox->Add(new wxStaticText(this, wxID_ANY, translate("Please submit any alterations made for reasons other than user preference \nto the BOSS team so that they may include the changes in the masterlist.")), 0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 10); 
 
     //Need to add 'OK' and 'Cancel' buttons.
 	wxSizer * sizer = CreateSeparatedButtonSizer(wxOK|wxCANCEL);
@@ -769,4 +808,84 @@ LoadOrderPreview::LoadOrderPreview(wxWindow *parent, const wxChar *title, const 
 	SetBackgroundColour(wxColour(255,255,255));
     SetIcon(wxIconLocation("BOSS.exe"));
 	SetSizerAndFit(bigBox);
+}
+
+void LoadOrderPreview::OnMoveUp(wxCommandEvent& event) {
+    long selected = _loadOrder->GetFirstSelected();
+
+    while (selected != -1) {
+        if (selected > 0) {
+            wxString selectedText = _loadOrder->GetItemText(selected);
+            wxString aboveText = _loadOrder->GetItemText(selected - 1);
+
+            _loadOrder->SetItemText(selected, aboveText);
+            _loadOrder->SetItemText(selected - 1, selectedText);
+
+            _movedPlugins.insert(string(selectedText.ToUTF8()));
+            
+            _loadOrder->Select(selected, false);
+            _loadOrder->Select(selected - 1, true);
+        }
+        selected = _loadOrder->GetNextSelected(selected);
+    }
+}
+
+void LoadOrderPreview::OnMoveDown(wxCommandEvent& event) {
+    for (long i=_loadOrder->GetItemCount() - 1; i > -1; --i) {
+        if (_loadOrder->IsSelected(i)) {
+            wxString selectedText = _loadOrder->GetItemText(i);
+            wxString belowText = _loadOrder->GetItemText(i + 1);
+
+            _loadOrder->SetItemText(i, belowText);
+            _loadOrder->SetItemText(i + 1, selectedText);
+
+            _movedPlugins.insert(string(selectedText.ToUTF8()));
+
+            _loadOrder->Select(i, false);
+            _loadOrder->Select(i + 1, true);
+        }
+    }
+}
+
+std::list<boss::Plugin> LoadOrderPreview::GetLoadOrder() const {
+    list<boss::Plugin> plugins;
+    bool wasMovedUp = false;
+    for (size_t i=0,max=_loadOrder->GetItemCount(); i < max; ++i) {
+        string name = string(_loadOrder->GetItemText(i).ToUTF8());
+
+        list<boss::Plugin>::const_iterator it = find(_plugins.begin(), _plugins.end(), boss::Plugin(name));
+
+        plugins.push_back(*it);
+
+        if (wasMovedUp) {
+            list<boss::Plugin>::const_iterator jt = ----plugins.end();
+            set<boss::File> loadAfter = plugins.back().LoadAfter();
+            loadAfter.insert(File(jt->Name()));
+            plugins.back().LoadAfter(loadAfter);
+            wasMovedUp = false;
+        }
+
+        if (_movedPlugins.find(name) != _movedPlugins.end()) {
+            //Check if this plugin has been moved earlier or later by comparing distances in the original list and the new one.
+            size_t newDist = plugins.size() - 1;
+            size_t oldDist = distance(_plugins.begin(), it);
+
+            if (newDist > oldDist) {
+                //Record the preceding plugin in this plugin's "load after" set.
+                list<boss::Plugin>::const_iterator jt = ----plugins.end();
+                set<boss::File> loadAfter = plugins.back().LoadAfter();
+                loadAfter.insert(File(jt->Name()));
+                plugins.back().LoadAfter(loadAfter);
+            } else {
+                //Record this plugin in the following plugin's "load after" set.
+                wasMovedUp = true;
+            }
+        }
+    }
+
+    return plugins;
+}
+
+std::set<std::string> LoadOrderPreview::GetMovedPlugins() const {
+    return _movedPlugins;
 }
