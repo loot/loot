@@ -545,9 +545,12 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             ofstream uout(_game.UserlistPath().string().c_str());
             uout << yout.c_str();
             uout.close();
+
+            //Now set load order.
+            _game.SetLoadOrder(plugins);
         }
 
-        out << "Post-preview load order:" << endl;
+        out << "Set load order:" << endl;
         for (list<boss::Plugin>::iterator it=plugins.begin(), endIt = plugins.end(); it != endIt; ++it)
             out << '\t' << it->Name() << endl;
     }
