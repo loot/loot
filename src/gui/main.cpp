@@ -514,6 +514,10 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
         for (list<boss::Plugin>::iterator it=plugins.begin(), endIt = plugins.end(); it != endIt; ++it)
             out << it->Name() << endl;
+
+        LoadOrderPreview * preview = new LoadOrderPreview(this, translate("BOSS: Calculated Load Order"), plugins);
+
+        preview->ShowModal();
     }
 
     out << "Generating report..." << endl;
@@ -651,7 +655,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
     progDia->Pulse();
 
     //Sort into alphabetical order.
-    std::sort(installed.begin(), installed.end(), AlphaSortPlugins);
+    std::sort(installed.begin(), installed.end(), boss::alpha_sort);
     
     progDia->Pulse();
 
@@ -729,6 +733,40 @@ void Launcher::OnAbout(wxCommandEvent& event) {
     wxAboutBox(aboutInfo);
 }
 
-bool Launcher::AlphaSortPlugins(const boss::Plugin& lhs, const boss::Plugin& rhs) {
-    return boost::to_lower_copy(lhs.Name()) < boost::to_lower_copy(rhs.Name());
+LoadOrderPreview::LoadOrderPreview(wxWindow *parent, const wxChar *title, const std::list<boss::Plugin>& plugins) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER), _plugins(plugins) {
+
+    //Init controls.
+    _loadOrder = new wxListView(this, LIST_LoadOrder, wxDefaultPosition, wxDefaultSize, wxLC_REPORT);
+
+    _moveUp = new wxButton(this, BUTTON_MoveUp, translate("Up"));
+    _moveDown = new wxButton(this, BUTTON_MoveDown, translate("Down"));
+
+    //Populate list.
+    _loadOrder->AppendColumn(translate("Load Order"));
+    size_t i=0;
+    for (list<boss::Plugin>::const_iterator it=plugins.begin(), endit=plugins.end(); it != endit; ++it, ++i) {
+        _loadOrder->InsertItem(i, FromUTF8(it->Name()));
+    }
+
+    //Set up layout.
+    wxBoxSizer * bigBox = new wxBoxSizer(wxVERTICAL);
+
+    bigBox->Add(_loadOrder, 1, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 10);
+
+    wxBoxSizer * hbox = new wxBoxSizer(wxHORIZONTAL);
+    hbox->Add(_moveUp, 0, wxRIGHT, 5);
+    hbox->Add(_moveDown, 0, wxLEFT, 5);
+    bigBox->Add(hbox, 0, wxALIGN_RIGHT|wxBOTTOM|wxRIGHT, 10);
+
+    //Need to add 'OK' and 'Cancel' buttons.
+	wxSizer * sizer = CreateSeparatedButtonSizer(wxOK|wxCANCEL);
+
+	//Now add TabHolder and OK button to window sizer.
+    if (sizer != NULL)
+        bigBox->Add(sizer, 0, wxEXPAND|wxLEFT|wxBOTTOM|wxRIGHT, 15);
+
+    //Now set the layout and sizes.
+	SetBackgroundColour(wxColour(255,255,255));
+    SetIcon(wxIconLocation("BOSS.exe"));
+	SetSizerAndFit(bigBox);
 }

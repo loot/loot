@@ -61,6 +61,9 @@ enum {
     BOOK_Lists,
     //Main window - dynamically created IDs.
     MENU_LowestDynamicGameID,
+    LIST_LoadOrder,
+    BUTTON_MoveUp,
+    BUTTON_MoveDown,
 };
 
 wxString translate(const std::string& str);

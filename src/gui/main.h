@@ -29,6 +29,7 @@
 
 #include <vector>
 #include <yaml-cpp/yaml.h>
+#include <wx/listctrl.h>
 
 //Program class.
 class BossGUI : public wxApp {
@@ -64,8 +65,19 @@ private:
 	boss::Game& _game;
     YAML::Node& _settings;  //BOSS Settings.
     std::vector<boss::Game>& _games;
+};
 
-    static bool AlphaSortPlugins(const boss::Plugin& lhs, const boss::Plugin& rhs);
+class LoadOrderPreview : public wxDialog {
+public:
+    LoadOrderPreview(wxWindow *parent, const wxChar *title, const std::list<boss::Plugin>& plugins);
+
+    std::list<boss::Plugin> GetLoadOrder() const;
+private:
+    wxListView * _loadOrder;
+    wxButton * _moveUp;
+    wxButton * _moveDown;
+
+    std::list<boss::Plugin> _plugins;
 };
 
 #endif
