@@ -525,7 +525,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             }
             plugins = newPluginsList;
 
-            for (list<boss::Plugin>::iterator it=editedPlugins.begin(),endit=editedPlugins.end(); it != endit; ++it) {
+            for (list<boss::Plugin>::const_iterator it=editedPlugins.begin(),endit=editedPlugins.end(); it != endit; ++it) {
                 list<boss::Plugin>::iterator jt = find(ulist_plugins.begin(), ulist_plugins.end(), *it);
 
                 if (jt != ulist_plugins.end()) {
@@ -533,6 +533,30 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                 } else {
                     ulist_plugins.push_back(*it);
                 }
+            }
+
+            for (list<boss::Plugin>::iterator it=ulist_plugins.begin(),endit=ulist_plugins.end(); it != endit; ++it) {
+                //Double-check that the plugin is still loading after any other plugins already in its "load after" metadata.
+                list<boss::Plugin>::iterator mainPos = find(plugins.begin(), plugins.end(), *it);
+
+                if (mainPos == plugins.end())
+                    continue;
+
+                size_t mainDist = distance(plugins.begin(), mainPos);
+                
+                set<boss::File> loadAfter = it->LoadAfter();
+                set<boss::File>::iterator jt = loadAfter.begin();
+                while (jt != loadAfter.end()) {
+                    list<boss::Plugin>::iterator filePos = find(plugins.begin(), plugins.end(), *jt);
+
+                    size_t fileDist = distance(plugins.begin(), filePos);
+
+                    if (fileDist > mainDist)
+                        loadAfter.erase(jt++);
+                    else
+                        ++jt;
+                }
+                it->LoadAfter(loadAfter);
             }
 
             //Save edits to userlist.
