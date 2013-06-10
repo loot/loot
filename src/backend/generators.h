@@ -132,14 +132,6 @@ namespace boss {
         node.set_name("script");
         node.append_attribute("src").set_value("../resources/polyfill.js");
         node.text().set(" ");
-
-        node = head.append_child();
-        node.set_name("script");
-        node.append_attribute("src").set_value("../resources/storage.js");
-        node.text().set(" ");
-
-        node = head.append_child(pugi::node_comment);
-        node.set_value("[if IE 8]><script src='../resources/DOM-shim-ie8.js'></script><![endif]");
     }
 
     inline void AppendNav(pugi::xml_node& body) {

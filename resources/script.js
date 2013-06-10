@@ -9,7 +9,7 @@ function isStorageSupported() {
 function saveCheckboxState(evt) {
     if (evt.currentTarget.checked) {
         try {
-            localStorage.setItem(evt.currentTarget.id, evt.currentTarget.checked);
+            localStorage.setItem(evt.currentTarget.id, true);
         } catch (e) {
             if (e == QUOTA_EXCEEDED_ERR) {
                 alert('Web storage quota for this document has been exceeded. Please empty your browser\'s cache. Note that this will delete all locally stored data.');
@@ -24,8 +24,7 @@ function loadSettings() {
     while (i > -1) {
         var elem = document.getElementById(localStorage.key(i));
         if (elem != null && 'defaultChecked' in elem) {
-            elem.checked = true;
-            elem.dispatchEvent(new MouseEvent('click'));
+			elem.dispatchEvent(new MouseEvent('click'));
         }
         i--;
     }
@@ -102,7 +101,7 @@ function showSection(evt) {
 function toggleMessages(evt) {
     var listItems = document.getElementById('plugins').getElementsByTagName('li');
     var i = listItems.length - 1;
-    var hiddenNo = parseInt(document.getElementById('hiddenMessageNo').textContent);
+    var hiddenNo = parseInt(document.getElementById('hiddenMessageNo').innerHTML);
     while (i > -1) {
         var spans = listItems[i].getElementsByTagName('span');
         if (spans.length == 0 || spans[0].className.indexOf('mod') == -1) {
@@ -113,7 +112,7 @@ function toggleMessages(evt) {
                 filterMatch = true;
             } else if (evt.target.id == 'hideBashTags' && listItems[i].className.indexOf('tag') != -1) {
                 filterMatch = true;
-            } else if (evt.target.id == 'hideDoNotCleanMessages' && listItems[i].textContent.indexOf('Do not clean.') != -1) {
+            } else if (evt.target.id == 'hideDoNotCleanMessages' && listItems[i].innerHTML.indexOf('Do not clean.') != -1) {
                 filterMatch = true;
             }
             if (filterMatch) {
@@ -132,15 +131,13 @@ function toggleMessages(evt) {
         }
         i--;
     }
-    document.getElementById('hiddenMessageNo').textContent = hiddenNo;
-    var event = document.createEvent('Event');
-    event.initEvent('click', true, true);
-    document.getElementById('hideMessagelessPlugins').dispatchEvent(event);
+	document.getElementById('hiddenMessageNo').innerHTML = hiddenNo;
+	togglePlugins(evt);
 }
 function togglePlugins(evt) {
     var plugins = document.getElementById('plugins').getElementsByTagName('ul')[0].childNodes;
     var i = plugins.length - 1;
-    var hiddenNo = parseInt(document.getElementById('hiddenPluginNo').textContent);
+    var hiddenNo = parseInt(document.getElementById('hiddenPluginNo').innerHTML);
     while (i > -1) {
         if (plugins[i].nodeType == Node.ELEMENT_NODE) {
             var isMessageless = true;
@@ -165,7 +162,7 @@ function togglePlugins(evt) {
         }
         i--;
     }
-    document.getElementById('hiddenPluginNo').textContent = hiddenNo;
+    document.getElementById('hiddenPluginNo').innerHTML = hiddenNo;
 }
 function setupEventHandlers() {
     var i, elemArr;
