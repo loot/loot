@@ -30,9 +30,34 @@ BOSS requires the following libraries:
 * [yaml-cpp](http://code.google.com/p/yaml-cpp/) v0.5.1 or later.
 * [zlib](http://zlib.net) v1.2.7 or later.
 
+
 BOSS expects all libraries' folders to be present alongside the BOSS repository folder that contains this readme, or otherwise installed such that the compiler and linker used can find them without suppling additional paths. All paths below are relative to the folder(s) containing the libraries and BOSS.
 
+BOSS also requires Subversion binaries, which can be obtained [here](http://sourceforge.net/projects/win32svn) and should be installed as detailed below.
+
 Alphanum, Libespm and PugiXML do not require any additional setup. The rest of the libraries must be built separately.
+
+### Subversion
+
+Put the following binaries into ```resources/svn/``` in the BOSS repository root.
+
+* int3_svn.dll
+* libapr-1.dll
+* libapriconv-1.dll
+* libaprutil-1.dll
+* libdb48.dll
+* libeay32.dll
+* libsasl.dll
+* libsvn_client-1.dll
+* libsvn_delta-1.dll
+* libsvn_diff-1.dll
+* libsvn_fs-1.dll
+* libsvn_ra-1.dll
+* libsvn_repos-1.dll
+* libsvn_subr-1.dll
+* libsvn_wc-1.dll
+* ssleay32.dll
+* svn.exe
 
 ### Boost
 

@@ -31,6 +31,7 @@
 #include "../backend/error.h"
 #include "../backend/helpers.h"
 #include "../backend/generators.h"
+#include "../backend/network.h"
 
 #include <ostream>
 #include <algorithm>
@@ -318,6 +319,10 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     time_t t0 = time(NULL);
 
     ofstream out("out.txt");
+
+    out << "Updating masterlist..." << endl;
+
+    UpdateMasterlist(_game);
 
     out << "Reading plugins in Data folder..." << endl;
     time_t start, end;
