@@ -323,8 +323,9 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     out << "Updating masterlist..." << endl;
 
     vector<string> parsingErrors;
+    string revision;
     try {
-        UpdateMasterlist(_game, parsingErrors);
+        revision = UpdateMasterlist(_game, parsingErrors);
     } catch (boss::error& e) {
         //LOG_ERROR("Error: %s", e.what());
         wxMessageBox(
@@ -625,7 +626,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                         messages,
                         plugins,
                         oldDetails,
-                        "4030 (2020-13-13)",
+                        revision,
                         _settings["Update Masterlist"].as<bool>());
     } catch (boss::error& e) {
         wxMessageBox(

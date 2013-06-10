@@ -55,7 +55,6 @@ namespace boss {
     const boost::filesystem::path libespm_options_path  = "resources/libespm.yaml";
     const boost::filesystem::path svn_path              = "resources/svn/svn.exe";
     const boost::filesystem::path log_path              = "BOSSDebugLog.txt";
-    const boost::filesystem::path svn_log_path          = "svn.log";
 }
 
 #endif
