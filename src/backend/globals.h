@@ -50,10 +50,12 @@ namespace boss {
     const unsigned int VERSION_PATCH = 0;
 
     //Common paths.
-    const boost::filesystem::path settings_path        = "resources/settings.yaml";
-    const boost::filesystem::path log_path             = "BOSSDebugLog.txt";
-    const boost::filesystem::path readme_path          = boost::filesystem::path("Docs") / "BOSS Readme.html";
-    const char * const libespm_options_path            = "resources/libespm.yaml";
+    const boost::filesystem::path readme_path           = "Docs/BOSS Readme.html";
+    const boost::filesystem::path settings_path         = "resources/settings.yaml";
+    const boost::filesystem::path libespm_options_path  = "resources/libespm.yaml";
+    const boost::filesystem::path svn_path              = "resources/svn/svn.exe";
+    const boost::filesystem::path log_path              = "BOSSDebugLog.txt";
+    const boost::filesystem::path svn_log_path          = "svn.log";
 }
 
 #endif

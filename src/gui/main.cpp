@@ -322,7 +322,18 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     out << "Updating masterlist..." << endl;
 
-    UpdateMasterlist(_game);
+    vector<string> parsingErrors;
+    try {
+        UpdateMasterlist(_game, parsingErrors);
+    } catch (boss::error& e) {
+        //LOG_ERROR("Error: %s", e.what());
+        wxMessageBox(
+            FromUTF8(format(loc::translate("Error: Condition evaluation failed. %1%")) % e.what()),
+            translate("BOSS: Error"),
+            wxOK | wxICON_ERROR,
+            this);
+        return;
+    }
 
     out << "Reading plugins in Data folder..." << endl;
     time_t start, end;

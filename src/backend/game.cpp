@@ -98,7 +98,7 @@ namespace boss {
             bossFolderName = folder;
 
         if (fs::exists(libespm_options_path))
-            espm_settings = espm::Settings(libespm_options_path, libespmGame);
+            espm_settings = espm::Settings(libespm_options_path.string(), libespmGame);
         else
             throw error(ERROR_PATH_NOT_FOUND, "Libespm settings file could not be found.");
     }

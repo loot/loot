@@ -33,37 +33,46 @@ namespace fs = boost::filesystem;
 
 namespace boss {
 
-    unsigned int UpdateMasterlist(const Game& game) {
+    unsigned int UpdateMasterlist(const Game& game, std::vector<std::string>& parsingErrors) {
+        string command;
         //First check if the working copy is set up or not.
-        int ret = system(("resources\\svn\\svn.exe info " + game.MasterlistPath().parent_path().string() + " > svn.log").c_str());
+        command = svn_path.string() + " info " + game.MasterlistPath().parent_path().string() + " > " + svn_log_path.string();
         
-        if (ret != 0) {
+        if (system(command.c_str()) != 0) {
             //Working copy not set up, perform a checkout.
-            ret = system(("resources\\svn\\svn.exe co --depth empty " + game.URL().substr(0, game.URL().rfind('/')) + " " + game.MasterlistPath().parent_path().string() + "/. > svn.log").c_str());
+            command = svn_path.string() + " co --depth empty " + game.URL().substr(0, game.URL().rfind('/')) + " " + game.MasterlistPath().parent_path().string() + "/. > " + svn_log_path.string();
+            if (system(command.c_str()) != 0)
+                throw error(ERROR_SUBVERSION_ERROR, "Subversion could not perform a checkout. See " + svn_log_path.string() + " in the BOSS folder for details.");
         }
 
         //Now update masterlist.
-        ret = system(("resources\\svn\\svn.exe update " + game.MasterlistPath().string() + " > svn.log").c_str());
+        command = svn_path.string() + " update " + game.MasterlistPath().string() + " > " + svn_log_path.string();
+        if (system(command.c_str()) != 0)
+            throw error(ERROR_SUBVERSION_ERROR, "Subversion could not update the masterlist. See " + svn_log_path.string() + " in the BOSS folder for details.");
 
         //Now test masterlist to see if it parses OK.
-        ret = 1;
-        while (ret == 1) {
+        bool good = false;
+        while (!good) {
             try {
                 YAML::Node mlist = YAML::LoadFile(game.MasterlistPath().string());
-                ret = 0;
+                good = true;
             } catch (YAML::Exception& e) {
                 //Roll back one revision if there's an error.
-                ret = system(("resources\\svn\\svn.exe update --revision PREV " + game.MasterlistPath().string() + " > svn.log").c_str());
-                ret = 1;
+                parsingErrors.push_back(e.what());
+                command = svn_path.string() + " update --revision PREV " + game.MasterlistPath().string() + " > " + svn_log_path.string();
+                if (system(command.c_str()) != 0)
+                    throw error(ERROR_SUBVERSION_ERROR, "Subversion could not update the masterlist. See " + svn_log_path.string() + " in the BOSS folder for details.");
             }
         }
 
         //Now get the masterlist revision. Can either create a pipe using the Win32 API (http://msdn.microsoft.com/en-us/library/ms682499.aspx), or output to a file, read it, then delete it.
-        ret = system(("resources\\svn\\svn.exe info " + game.MasterlistPath().string() + " > svn.log").c_str());
+        command = svn_path.string() + " info " + game.MasterlistPath().parent_path().string() + " > " + svn_log_path.string();
+        if (system(command.c_str()) != 0)
+            throw error(ERROR_SUBVERSION_ERROR, "Subversion could not read the masterlist revision number. See " + svn_log_path.string() + " in the BOSS folder for details.");
 
-        ifstream in("svn.log");
+        ifstream in(svn_log_path.string().c_str());
 
-        int revision;
+        int revision = 0;
         while (in.good()) {
             string line;
             getline(in, line);
@@ -73,7 +82,7 @@ namespace boss {
         }
         in.close();
 
-        fs::remove("svn.log");
+        fs::remove(svn_log_path);
 
         return revision;
     }
