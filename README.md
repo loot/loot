@@ -109,17 +109,15 @@ Leandro Conde, Psymon, Loucifer, Torrello, Malonn, Skyline, Sharlikran, Red Eye,
 iyumichan, Peste, Calen Ellefson, SilentSpike, Arkangel, zyp, v111, Chevenga,
 rowynyew
 
-LOOT will be a self-contained installation that can be dropped anywhere. It will have an installer option that also installs some Start menu shortcuts and a Registry entry, but these will not be required for LOOT to function.
+BOSSv3's directory structure is split between a folder in %LOCALAPPDATA% and a folder wherever the user wants it:
 
-Directory structure will be:
-
+Program Files (or wherever):
 ```
-/
+BOSS/
     BOSS.exe
     resource/
         l10n/
             ...translation files...
-        settings.yaml
         libespm.yaml
         ...CSS and JS files...
     docs/
@@ -127,9 +125,18 @@ Directory structure will be:
             ...readme images...
         BOSS Readme.html
         ...other docs...
+```
+
+%LOCALAPPDATA%:
+```
+BOSS/
+    settings.yaml
+    BOSSDebugLog.txt
     Oblivion/
         masterlist.yaml
         userlist.yaml
         report.html
     ...other game folders with same structure as Oblivion...
 ```
+
+BOSSv3's installer will also add some Start menu shortucts and a Registry entry, but these are not required for BOSS to function.
