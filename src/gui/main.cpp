@@ -91,6 +91,19 @@ bool BossGUI::OnInit() {
 				NULL);
             return false;
         }
+    } else {
+        try {
+            if (!fs::exists(settings_path.parent_path()))
+                fs::create_directory(settings_path.parent_path());
+        } catch (fs::filesystem_error& e) {
+            wxMessageBox(
+				translate("Error: Could not create local app data BOSS folder."),
+				translate("BOSS: Error"),
+				wxOK | wxICON_ERROR,
+				NULL);
+            return false;
+        }
+        GenerateDefaultSettingsFile(settings_path.string());
     }
 
     //Skip logging initialisation for tester.
@@ -318,9 +331,11 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     
     time_t t0 = time(NULL);
 
-    ofstream out("out.txt");
+    ofstream out((local_path / "out.txt").string().c_str());
 
     out << "Updating masterlist..." << endl;
+    time_t start, end;
+    start = time(NULL);
 
     vector<string> parsingErrors;
     string revision;
@@ -336,8 +351,11 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         return;
     }
 
+    end = time(NULL);
+	out << "Time taken to update masterlist: " << (end - start) << " seconds." << endl;
+    start = time(NULL);
+
     out << "Reading plugins in Data folder..." << endl;
-    time_t start, end;
     start = time(NULL);
     
     // Get a list of the plugins.

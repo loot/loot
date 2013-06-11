@@ -57,7 +57,7 @@ namespace boss {
         return games;
     }
 
-    Game::Game() : id(0) {}
+    Game::Game() : id(GAME_AUTODETECT) {}
 
     Game::Game(const std::string& folder) : bossFolderName(folder) {}
 
@@ -206,15 +206,15 @@ namespace boss {
     }
 
     fs::path Game::MasterlistPath() const {
-        return fs::path(bossFolderName) / "masterlist.yaml";
+        return local_path / bossFolderName / "masterlist.yaml";
     }
     
     fs::path Game::UserlistPath() const {
-        return fs::path(bossFolderName) / "userlist.yaml";
+        return local_path / bossFolderName / "userlist.yaml";
     }
     
     fs::path Game::ReportPath() const {
-        return fs::path(bossFolderName) / "report.html";
+        return local_path / bossFolderName / "report.html";
     }
 
     void Game::RefreshActivePluginsList() {
@@ -329,8 +329,8 @@ namespace boss {
     void Game::CreateBOSSGameFolder() {
         //Make sure that the BOSS game path exists.
         try {
-            if (!fs::exists(bossFolderName))
-                fs::create_directory(bossFolderName);
+            if (!fs::exists(local_path / bossFolderName))
+                fs::create_directory(local_path / bossFolderName);
         } catch (fs::filesystem_error& e) {
             throw error(ERROR_PATH_WRITE_FAIL, "Could not create BOSS folder for game.");
         }

@@ -205,6 +205,22 @@ namespace boss {
 #endif
     }
 
+    boost::filesystem::path GetLocalAppDataPath() {
+#if _WIN32 || _WIN64
+        HWND owner;
+        TCHAR path[MAX_PATH];
+
+        HRESULT res = SHGetFolderPath(owner, CSIDL_LOCAL_APPDATA, NULL, SHGFP_TYPE_CURRENT, path);
+
+        if (res == S_OK)
+            return fs::path(path);
+        else
+            return fs::path("");
+#else
+        return fs::path("");
+#endif
+    }
+    
 
     //////////////////////////////
     // Version Class Functions

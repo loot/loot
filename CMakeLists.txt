@@ -11,7 +11,7 @@
 cmake_minimum_required (VERSION 2.8.9)
 project (boss)
 
-set (BOSS_SRC "${CMAKE_SOURCE_DIR}/src/backend/metadata.cpp" "${CMAKE_SOURCE_DIR}/src/backend/game.cpp" "${CMAKE_SOURCE_DIR}/src/backend/helpers.cpp" "${CMAKE_SOURCE_DIR}/src/backend/network.cpp" "${PROJECT_LIBS_DIR}/pugixml/src/pugixml.cpp")
+set (BOSS_SRC "${CMAKE_SOURCE_DIR}/src/backend/metadata.cpp" "${CMAKE_SOURCE_DIR}/src/backend/game.cpp" "${CMAKE_SOURCE_DIR}/src/backend/helpers.cpp" "${CMAKE_SOURCE_DIR}/src/backend/network.cpp" "${CMAKE_SOURCE_DIR}/src/backend/globals.cpp" "${PROJECT_LIBS_DIR}/pugixml/src/pugixml.cpp")
 
 # Include source and library directories.
 include_directories ("${PROJECT_LIBS_DIR}/alphanum" "${PROJECT_LIBS_DIR}/boost" "${PROJECT_LIBS_DIR}/yaml-cpp/include" "${CMAKE_SOURCE_DIR}/src" "${PROJECT_LIBS_DIR}/libloadorder/src" "${PROJECT_LIBS_DIR}/libespm" "${PROJECT_LIBS_DIR}/zlib" "${PROJECT_LIBS_DIR}/pugixml/src" "${PROJECT_LIBS_DIR}/wxWidgets/include")

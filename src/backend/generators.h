@@ -26,6 +26,7 @@
 #include "helpers.h"
 #include "metadata.h"
 #include "globals.h"
+#include "parsers.h"
 
 #include <pugixml.hpp>
 #include <yaml-cpp/yaml.h>
@@ -35,6 +36,8 @@
 #include <boost/algorithm/string.hpp>
 
 namespace boss {
+
+    //BOSS Report generation stuff.
 
     struct xml_string_writer: pugi::xml_writer {
         std::string result;
@@ -477,7 +480,38 @@ namespace boss {
             throw boss::error(ERROR_PATH_WRITE_FAIL, "Could not write BOSS report.");
 
     }
+
+    //Default settings file generation.
+
+    inline void GenerateDefaultSettingsFile(const std::string& file) {
+
+        YAML::Node root;
+        std::vector<Game> games;
+
+        root["Language"] = "eng";
+        root["Game"] = "auto";
+        root["Last Game"] = "auto";
+        root["Debug Verbosity"] = 0;
+        root["Update Masterlist"] = true;
+        root["View Report Externally"] = false;
+
+        games.push_back(Game(GAME_TES4));
+        games.push_back(Game(GAME_TES5));
+        games.push_back(Game(GAME_FO3));
+        games.push_back(Game(GAME_FONV));
+        games.push_back(Game(GAME_TES4, "Nehrim").SetDetails("Nehrim - At Fate's Edge", "Nehrim.esm", "http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-nehrim/masterlist.yaml", "", "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim - At Fate's Edge_is1"));
+
+        root["Games"] = games;
+
+        //Save settings.
+        YAML::Emitter yout;
+        yout.SetIndent(2);
+        yout << root;
         
+        std::ofstream out(file.c_str());
+        out << yout.c_str();
+        out.close();
+    }
 }
 
 #endif

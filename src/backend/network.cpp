@@ -112,17 +112,17 @@ namespace boss {
         
         string command, output;
         //First check if the working copy is set up or not.
-        command = svn_path.string() + " info " + game.MasterlistPath().parent_path().string();
+        command = svn_path.string() + " info \"" + game.MasterlistPath().parent_path().string() + "\"";
         
         if (!RunCommand(command, output)) {
             //Working copy not set up, perform a checkout.
-            command = svn_path.string() + " co --depth empty " + game.URL().substr(0, game.URL().rfind('/')) + " " + game.MasterlistPath().parent_path().string() + "/.";
+            command = svn_path.string() + " co --depth empty " + game.URL().substr(0, game.URL().rfind('/')) + " \"" + game.MasterlistPath().parent_path().string() + "\\.\"";
             if (!RunCommand(command, output))
                 throw error(ERROR_SUBVERSION_ERROR, "Subversion could not perform a checkout. Details: " + output);
         }
 
         //Now update masterlist.
-        command = svn_path.string() + " update " + game.MasterlistPath().string();
+        command = svn_path.string() + " update \"" + game.MasterlistPath().string() + "\"";
         if (!RunCommand(command, output))
             throw error(ERROR_SUBVERSION_ERROR, "Subversion could not update the masterlist. Details: " + output);
 
@@ -135,14 +135,14 @@ namespace boss {
             } catch (YAML::Exception& e) {
                 //Roll back one revision if there's an error.
                 parsingErrors.push_back(e.what());
-                command = svn_path.string() + " update --revision PREV " + game.MasterlistPath().string();
+                command = svn_path.string() + " update --revision PREV \"" + game.MasterlistPath().string() + "\"";
                 if (!RunCommand(command, output))
                     throw error(ERROR_SUBVERSION_ERROR, "Subversion could not update the masterlist. Details: " + output);
             }
         }
 
         //Now get the masterlist revision. Can either create a pipe using the Win32 API (http://msdn.microsoft.com/en-us/library/ms682499.aspx), or output to a file, read it, then delete it.
-        command = svn_path.string() + " info " + game.MasterlistPath().string();
+        command = svn_path.string() + " info \"" + game.MasterlistPath().string() + "\"";
         if (!RunCommand(command, output))
             throw error(ERROR_SUBVERSION_ERROR, "Subversion could not read the masterlist revision number. Details: " + output);
 

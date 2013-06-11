@@ -63,6 +63,9 @@ namespace boss {
     //Get registry subkey value string.
     std::string RegKeyStringValue(const std::string& keyStr, const std::string& subkey, const std::string& value);
 
+    //Get the local application data path.
+    boost::filesystem::path GetLocalAppDataPath();
+
     //Version class for more robust version comparisons.
     class Version {
     private:

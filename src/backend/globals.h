@@ -28,33 +28,34 @@
 namespace boss {
 
     //Game values.
-    const unsigned int GAME_AUTODETECT  = 0;
-    const unsigned int GAME_TES4        = 1;
-    const unsigned int GAME_TES5        = 2;
-    const unsigned int GAME_FO3         = 3;
-    const unsigned int GAME_FONV        = 4;
+    extern const unsigned int GAME_AUTODETECT;
+    extern const unsigned int GAME_TES4;
+    extern const unsigned int GAME_TES5;
+    extern const unsigned int GAME_FO3;
+    extern const unsigned int GAME_FONV;
 
     //Message types.
-    const unsigned int MESSAGE_SAY      = 0;
-    const unsigned int MESSAGE_WARN     = 1;
-    const unsigned int MESSAGE_ERROR    = 2;
-    const unsigned int MESSAGE_TAG      = 3;
+    extern const unsigned int MESSAGE_SAY;
+    extern const unsigned int MESSAGE_WARN;
+    extern const unsigned int MESSAGE_ERROR;
+    extern const unsigned int MESSAGE_TAG;
 
     //Languages
-    const unsigned int LANG_AUTO    = 0;
-    const unsigned int LANG_ENG     = 1;
+    extern const unsigned int LANG_AUTO;
+    extern const unsigned int LANG_ENG;
 
     //Version numbers.
-    const unsigned int VERSION_MAJOR = 3;
-    const unsigned int VERSION_MINOR = 0;
-    const unsigned int VERSION_PATCH = 0;
+    extern const unsigned int VERSION_MAJOR;
+    extern const unsigned int VERSION_MINOR;
+    extern const unsigned int VERSION_PATCH;
 
     //Common paths.
-    const boost::filesystem::path readme_path           = "Docs/BOSS Readme.html";
-    const boost::filesystem::path settings_path         = "resources/settings.yaml";
-    const boost::filesystem::path libespm_options_path  = "resources/libespm.yaml";
-    const boost::filesystem::path svn_path              = "resources/svn/svn.exe";
-    const boost::filesystem::path log_path              = "BOSSDebugLog.txt";
+    extern const boost::filesystem::path local_path;
+    extern const boost::filesystem::path readme_path;
+    extern const boost::filesystem::path settings_path;
+    extern const boost::filesystem::path libespm_options_path;
+    extern const boost::filesystem::path svn_path;
+    extern const boost::filesystem::path log_path;
 }
 
 #endif
