@@ -6,6 +6,7 @@
 	!include "MUI2.nsh"
 	!include "LogicLib.nsh"
 	!include "nsDialogs.nsh"
+    !include "TextReplace.nsh"  ;http://nsis.sourceforge.net/TextReplace_plugin
 
 ;--------------------------------
 ;General
@@ -48,7 +49,7 @@
 	!define MUI_FINISHPAGE_NOAUTOCLOSE
 	!define MUI_FINISHPAGE_RUN "$INSTDIR\BOSS.exe"
 	!define MUI_FINISHPAGE_RUN_TEXT "$(Text_Run)"
-	!define MUI_FINISHPAGE_SHOWREADME "$INSTDIR\Docs\BOSS ReadMe.html"
+	!define MUI_FINISHPAGE_SHOWREADME "$INSTDIR\Docs\BOSS Readme.html"
 	!define MUI_FINISHPAGE_SHOWREADME_TEXT "$(Text_ShowReadme)"
 	!insertmacro MUI_PAGE_FINISH
 
@@ -227,14 +228,12 @@ LangString TEXT_USERFILES ${LANG_SIMPCHINESE} "BOSS的userlist和BOSS.ini文件�
 		
 		;Silently move and remove files from past BOSS installs.
 		 ${If} $OB_Path != $Empty
-			IfFileExists "$OB_Path\Data\BOSS\userlist.txt" 0 +3
-				CreateDirectory "$INSTDIR\Oblivion"
-				Rename "$OB_Path\Data\BOSS\userlist.txt" "$INSTDIR\Oblivion\userlist.txt"
-			IfFileExists "$OB_Path\BOSS\userlist.txt" 0 +3
-				CreateDirectory "$INSTDIR\Oblivion"
-				Rename "$OB_Path\BOSS\userlist.txt" "$INSTDIR\Oblivion\userlist.txt"
-			IfFileExists "$OB_Path\BOSS\BOSS.ini" 0 +2
-				Rename "$OB_Path\BOSS\BOSS.ini" "$INSTDIR\BOSS.ini"
+;			IfFileExists "$OB_Path\Data\BOSS\userlist.txt" 0 +3
+;				CreateDirectory "$INSTDIR\Oblivion"
+;				Rename "$OB_Path\Data\BOSS\userlist.txt" "$INSTDIR\Oblivion\userlist.txt"
+;			IfFileExists "$OB_Path\BOSS\userlist.txt" 0 +3
+;				CreateDirectory "$INSTDIR\Oblivion"
+;				Rename "$OB_Path\BOSS\userlist.txt" "$INSTDIR\Oblivion\userlist.txt"
 			Delete "$OB_Path\Data\BOSS*" #Gets rid of readmes, logs and bat files in one fell swoop.
 			Delete "$OB_Path\Data\modlist.*"
 			Delete "$OB_Path\Data\masterlist.txt"
@@ -244,14 +243,12 @@ LangString TEXT_USERFILES ${LANG_SIMPCHINESE} "BOSS的userlist和BOSS.ini文件�
 			RMDir  "$OB_Path\Data\BOSS"
 		${EndIf}
 		${If} $NE_Path != $Empty
-			IfFileExists "$NE_Path\Data\BOSS\userlist.txt" 0 +3
-				CreateDirectory "$INSTDIR\Nehrim"
-				Rename "$NE_Path\Data\BOSS\userlist.txt" "$INSTDIR\Nehrim\userlist.txt"
-			IfFileExists "$NE_Path\BOSS\userlist.txt" 0 +3
-				CreateDirectory "$INSTDIR\Nehrim"
-				Rename "$NE_Path\BOSS\userlist.txt" "$INSTDIR\Nehrim\userlist.txt"
-			IfFileExists "$NE_Path\BOSS\BOSS.ini" 0 +2
-				Rename "$NE_Path\BOSS\BOSS.ini" "$INSTDIR\BOSS.ini"
+;			IfFileExists "$NE_Path\Data\BOSS\userlist.txt" 0 +3
+;				CreateDirectory "$INSTDIR\Nehrim"
+;				Rename "$NE_Path\Data\BOSS\userlist.txt" "$INSTDIR\Nehrim\userlist.txt"
+;			IfFileExists "$NE_Path\BOSS\userlist.txt" 0 +3
+;				CreateDirectory "$INSTDIR\Nehrim"
+;				Rename "$NE_Path\BOSS\userlist.txt" "$INSTDIR\Nehrim\userlist.txt"
 			Delete "$NE_Path\Data\BOSS*"
 			Delete "$NE_Path\Data\modlist.*"
 			Delete "$NE_Path\Data\masterlist.txt"
@@ -261,11 +258,9 @@ LangString TEXT_USERFILES ${LANG_SIMPCHINESE} "BOSS的userlist和BOSS.ini文件�
 			RMDir  "$NE_Path\Data\BOSS"
 		${EndIf}
 		${If} $SK_Path != $Empty
-			IfFileExists "$SK_Path\BOSS\userlist.txt" 0 +3
-				CreateDirectory "$INSTDIR\Skyrim"
-				Rename "$SK_Path\BOSS\userlist.txt" "$INSTDIR\Skyrim\userlist.txt"
-			IfFileExists "$SK_Path\BOSS\BOSS.ini" 0 +2
-				Rename "$SK_Path\BOSS\BOSS.ini" "$INSTDIR\BOSS.ini"
+;			IfFileExists "$SK_Path\BOSS\userlist.txt" 0 +3
+;				CreateDirectory "$INSTDIR\Skyrim"
+;				Rename "$SK_Path\BOSS\userlist.txt" "$INSTDIR\Skyrim\userlist.txt"
 			Delete "$SK_Path\Data\BOSS*" #Gets rid of readmes, logs and bat files in one fell swoop.
 			Delete "$SK_Path\Data\modlist.*"
 			Delete "$SK_Path\Data\masterlist.txt"
@@ -275,14 +270,12 @@ LangString TEXT_USERFILES ${LANG_SIMPCHINESE} "BOSS的userlist和BOSS.ini文件�
 			RMDir  "$SK_Path\Data\BOSS"
 		${EndIf}
 		${If} $FO_Path != $Empty
-			IfFileExists "$FO_Path\Data\BOSS\userlist.txt" 0 +3
-				CreateDirectory "$INSTDIR\Fallout 3"
-				Rename "$FO_Path\Data\BOSS\userlist.txt" "$INSTDIR\Fallout 3\userlist.txt"
-			IfFileExists "$FO_Path\BOSS\userlist.txt" 0 +3
-				CreateDirectory "$INSTDIR\Fallout 3"
-				Rename "$FO_Path\BOSS\userlist.txt" "$INSTDIR\Fallout 3\userlist.txt"
-			IfFileExists "$FO_Path\BOSS\BOSS.ini" 0 +2
-				Rename "$FO_Path\BOSS\BOSS.ini" "$INSTDIR\BOSS.ini"
+;			IfFileExists "$FO_Path\Data\BOSS\userlist.txt" 0 +3
+;				CreateDirectory "$INSTDIR\Fallout 3"
+;				Rename "$FO_Path\Data\BOSS\userlist.txt" "$INSTDIR\Fallout 3\userlist.txt"
+;			IfFileExists "$FO_Path\BOSS\userlist.txt" 0 +3
+;				CreateDirectory "$INSTDIR\Fallout 3"
+;				Rename "$FO_Path\BOSS\userlist.txt" "$INSTDIR\Fallout 3\userlist.txt"
 			Delete "$FO_Path\Data\BOSS*"
 			Delete "$FO_Path\Data\modlist.*"
 			Delete "$FO_Path\Data\masterlist.txt"
@@ -292,14 +285,12 @@ LangString TEXT_USERFILES ${LANG_SIMPCHINESE} "BOSS的userlist和BOSS.ini文件�
 			RMDir  "$FO_Path\Data\BOSS"
 		${EndIf}
 		${If} $NV_Path != $Empty
-			IfFileExists "$NV_Path\Data\BOSS\userlist.txt" 0 +3
-				CreateDirectory "$INSTDIR\Fallout New Vegas"
-				Rename "$NV_Path\Data\BOSS\userlist.txt" "$INSTDIR\Fallout New Vegas\userlist.txt"
-			IfFileExists "$NV_Path\BOSS\userlist.txt" 0 +3
-				CreateDirectory "$INSTDIR\Fallout New Vegas"
-				Rename "$NV_Path\BOSS\userlist.txt" "$INSTDIR\Fallout New Vegas\userlist.txt"
-			IfFileExists "$NV_Path\BOSS\BOSS.ini" 0 +2
-				Rename "$NV_Path\BOSS\BOSS.ini" "$INSTDIR\BOSS.ini"
+;			IfFileExists "$NV_Path\Data\BOSS\userlist.txt" 0 +3
+;				CreateDirectory "$INSTDIR\Fallout New Vegas"
+;				Rename "$NV_Path\Data\BOSS\userlist.txt" "$INSTDIR\Fallout New Vegas\userlist.txt"
+;			IfFileExists "$NV_Path\BOSS\userlist.txt" 0 +3
+;				CreateDirectory "$INSTDIR\Fallout New Vegas"
+;				Rename "$NV_Path\BOSS\userlist.txt" "$INSTDIR\Fallout New Vegas\userlist.txt"
 			Delete "$NV_Path\Data\BOSS*"
 			Delete "$NV_Path\Data\modlist.*"
 			Delete "$NV_Path\Data\masterlist.txt"
@@ -309,69 +300,59 @@ LangString TEXT_USERFILES ${LANG_SIMPCHINESE} "BOSS的userlist和BOSS.ini文件�
 			RMDir  "$NV_Path\Data\BOSS"
 		${EndIf}
 
-		;Rename BOSS.ini if it exists.
-		IfFileExists "BOSS.ini" 0 +3
-			Delete "BOSS.ini.old"
-			Rename "BOSS.ini" "BOSS.ini.old"
+        ;Delete BOSS.ini and BOSS.ini.old if they exist.
+        Delete "BOSS.ini*"
 			
-		;Install new BOSS ini.
-		SetOutPath "$INSTDIR"
-		File "data\boss-common\BOSS.ini"
+		;Install new BOSS settings.yaml.
+		SetOutPath "$LOCALAPPDATA\BOSS"
+		File "..\resources\settings.yaml"
 		
-		;Write language ini setting to BOSS.ini. The space is there because otherwise it would be printed as =russian or whatever. Purely to look good.
+		;Write language setting to settings.yaml.
 		StrCmp $LANGUAGE ${LANG_RUSSIAN} 0 +2
-		WriteINIStr $INSTDIR\BOSS.ini "General Settings" "sLanguage" " russian"
+        ${textreplace::ReplaceInFile} "$LOCALAPPDATA\BOSS\settings.yaml" "$LOCALAPPDATA\BOSS\settings.yaml" "eng" "rus" "/S=1 /C=0" 1
 		StrCmp $LANGUAGE ${LANG_GERMAN} 0 +2
-		WriteINIStr $INSTDIR\BOSS.ini "General Settings" "sLanguage" " german"
+        ${textreplace::ReplaceInFile} "$LOCALAPPDATA\BOSS\settings.yaml" "$LOCALAPPDATA\BOSS\settings.yaml" "eng" "deu" "/S=1 /C=0" 1
 		StrCmp $LANGUAGE ${LANG_SPANISH} 0 +2
-		WriteINIStr $INSTDIR\BOSS.ini "General Settings" "sLanguage" " spanish"
+        ${textreplace::ReplaceInFile} "$LOCALAPPDATA\BOSS\settings.yaml" "$LOCALAPPDATA\BOSS\settings.yaml" "eng" "spa" "/S=1 /C=0" 1
 		StrCmp $LANGUAGE ${LANG_SIMPCHINESE} 0 +2
-		WriteINIStr $INSTDIR\BOSS.ini "General Settings" "sLanguage" " chinese"
+        ${textreplace::ReplaceInFile} "$LOCALAPPDATA\BOSS\settings.yaml" "$LOCALAPPDATA\BOSS\settings.yaml" "eng" "cmn" "/S=1 /C=0" 1
 		
-		;Install main executables.
+		;Install executable.
 		SetOutPath "$INSTDIR"
-		File "code\trunk\bin\Release-32\BOSS.exe"
-		File "code\trunk\bin\Release-32\BOSS GUI.exe"
+		File "..\build\BOSS.exe"
 			  
 		;Now install API DLLs.
 		SetOutPath "$INSTDIR\API"
-		File "code\trunk\bin\Release-32\boss32.dll"
-		File "code\trunk\bin\Release-64\boss64.dll"
+		File "..\build\boss32.dll"
+		File "..\build\boss64.dll"
 		
 		;Now install readme files.
 		SetOutPath "$INSTDIR\Docs"
-		File "data\boss-common\Docs\BOSS API ReadMe.html"
-		File "data\boss-common\Docs\BOSS Masterlist Syntax.html"
-		File "data\boss-common\Docs\BOSS ReadMe.html"
-		File "data\boss-common\Docs\BOSS Userlist Syntax.html"
-		File "data\boss-common\Docs\BOSS Version History.html"
-		File "data\boss-common\Docs\Licenses.txt"
+		File "..\docs\BOSS API Readme.html"
+		File "..\docs\BOSS Metadata Syntax.html"
+		File "..\docs\BOSS Readme.html"
+		File "..\docs\Licenses.txt"
 		
 		;Now install readme images.
 		SetOutPath "$INSTDIR\Docs\images"
-		File "data\boss-common\Docs\images\GUI-Main.png"
-		File "data\boss-common\Docs\images\GUI-Select-Game.png"
-		File "data\boss-common\Docs\images\GUI-Settings-1.png"
-		File "data\boss-common\Docs\images\GUI-Settings-2.png"
-		File "data\boss-common\Docs\images\GUI-Settings-3.png"
-		File "data\boss-common\Docs\images\GUI-User-Rules-Manager.png"
-		File "data\boss-common\Docs\images\HTML-Log.png"
-		File "data\boss-common\Docs\images\Userlist.png"
-		File "data\boss-common\Docs\images\Ini.png"
-		File "data\boss-common\Docs\images\CLI.png"
+		File "..\docs\images\editor.png"
+		File "..\docs\images\main.png"
+		File "..\docs\images\settings.png"
+		File "..\docs\images\viewer-1.png"
+		File "..\docs\images\viewer-2.png"
   
 		;Now install language files.
-		SetOutPath "$INSTDIR\l10n\ru\LC_MESSAGES"
-		File "data\boss-common\l10n\ru\LC_MESSAGES\messages.mo"
-		File "data\boss-common\l10n\ru\LC_MESSAGES\wxstd.mo"
-		SetOutPath "$INSTDIR\l10n\es\LC_MESSAGES"
-		File "data\boss-common\l10n\es\LC_MESSAGES\wxstd.mo"
-		File "data\boss-common\l10n\es\LC_MESSAGES\messages.mo"
-		SetOutPath "$INSTDIR\l10n\de\LC_MESSAGES"
-		File "data\boss-common\l10n\de\LC_MESSAGES\wxstd.mo"
-		SetOutPath "$INSTDIR\l10n\zh\LC_MESSAGES"
-		File "data\boss-common\l10n\zh\LC_MESSAGES\messages.mo"
-		File "data\boss-common\l10n\zh\LC_MESSAGES\wxstd.mo"
+		SetOutPath "$INSTDIR\resources\l10n\ru\LC_MESSAGES"
+		File "..\resources\l10n\ru\LC_MESSAGES\messages.mo"
+		File "..\resources\l10n\ru\LC_MESSAGES\wxstd.mo"
+		SetOutPath "$INSTDIR\resources\l10n\es\LC_MESSAGES"
+		File "..\resources\l10n\es\LC_MESSAGES\wxstd.mo"
+		File "..\resources\l10n\es\LC_MESSAGES\messages.mo"
+		SetOutPath "$INSTDIR\resources\l10n\de\LC_MESSAGES"
+		File "..\resources\l10n\de\LC_MESSAGES\wxstd.mo"
+		SetOutPath "$INSTDIR\resources\l10n\zh\LC_MESSAGES"
+		File "..\resources\l10n\zh\LC_MESSAGES\messages.mo"
+		File "..\resources\l10n\zh\LC_MESSAGES\wxstd.mo"
 		
 		;Add Start Menu shortcuts. Set out path back to $INSTDIR otherwise the shortcuts start in the wrong place.
 		;Set Shell Var Context to all so that shortcuts are installed for all users, not just admin.
@@ -379,15 +360,8 @@ LangString TEXT_USERFILES ${LANG_SIMPCHINESE} "BOSS的userlist和BOSS.ini文件�
 		SetShellVarContext all
 		CreateDirectory "$SMPROGRAMS\BOSS"
 		CreateShortCut "$SMPROGRAMS\BOSS\BOSS.lnk" "$INSTDIR\BOSS.exe"
-		CreateShortCut "$SMPROGRAMS\BOSS\BOSS GUI.lnk" "$INSTDIR\BOSS GUI.exe"
 		CreateShortCut "$SMPROGRAMS\BOSS\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
-		CreateDirectory "$SMPROGRAMS\BOSS\Docs"
-		CreateShortCut "$SMPROGRAMS\BOSS\Docs\Main ReadMe.lnk" "$INSTDIR\Docs\BOSS Readme.html"
-		CreateShortCut "$SMPROGRAMS\BOSS\Docs\Userlist Syntax.lnk" "$INSTDIR\Docs\BOSS Userlist Syntax.html"
-		CreateShortCut "$SMPROGRAMS\BOSS\Docs\Version History.lnk" "$INSTDIR\Docs\BOSS Version History.html"
-		CreateShortCut "$SMPROGRAMS\BOSS\Docs\API ReadMe.lnk" "$INSTDIR\Docs\BOSS API ReadMe.html"
-		CreateShortCut "$SMPROGRAMS\BOSS\Docs\Masterlist Syntax.lnk" "$INSTDIR\Docs\BOSS Masterlist Syntax.html"
-		CreateShortCut "$SMPROGRAMS\BOSS\Docs\Copyright Licenses.lnk" "$INSTDIR\Docs\Licenses.txt"
+		CreateShortCut "$SMPROGRAMS\BOSS\Readme.lnk" "$INSTDIR\Docs\BOSS Readme.html"
 	  
 		
 		;Store installation folder in registry key.
@@ -398,7 +372,7 @@ LangString TEXT_USERFILES ${LANG_SIMPCHINESE} "BOSS的userlist和BOSS.ini文件�
 		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\BOSS" "URLInfoAbout" 'http://better-oblivion-sorting-software.googlecode.com/'
 		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\BOSS" "HelpLink" 'http://better-oblivion-sorting-software.googlecode.com/'
 		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\BOSS" "Publisher" 'BOSS Development Team'
-		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\BOSS" "DisplayVersion" '2.1.1'      
+		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\BOSS" "DisplayVersion" '3.0.0'      
 		WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\BOSS" "NoModify" 1
 		WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\BOSS" "NoRepair" 1
 		
@@ -415,31 +389,23 @@ LangString TEXT_USERFILES ${LANG_SIMPCHINESE} "BOSS的userlist和BOSS.ini文件�
 
 		;Remove main executables.
 		Delete "$INSTDIR\BOSS.exe"
-		Delete "$INSTDIR\BOSS GUI.exe"
 		
 		;Remove API DLLs.
 		Delete "$INSTDIR\API\boss32.dll"
 		Delete "$INSTDIR\API\boss64.dll"
 		
 		;Remove readme files.
-		Delete "$INSTDIR\Docs\BOSS API ReadMe.html"
-		Delete "$INSTDIR\Docs\BOSS Masterlist Syntax.html"
-		Delete "$INSTDIR\Docs\BOSS ReadMe.html"
-		Delete "$INSTDIR\Docs\BOSS Userlist Syntax.html"
-		Delete "$INSTDIR\Docs\BOSS Version History.html"
+		Delete "$INSTDIR\Docs\BOSS API Readme.html"
+		Delete "$INSTDIR\Docs\BOSS Metadata Syntax.html"
+		Delete "$INSTDIR\Docs\BOSS Readme.html"
 		Delete "$INSTDIR\Docs\Licenses.txt"
 		
 		;Remove readme images.
-		Delete "$INSTDIR\Docs\images\GUI-Main.png"
-		Delete "$INSTDIR\Docs\images\GUI-Select-Game.png"
-		Delete "$INSTDIR\Docs\images\GUI-Settings-1.png"
-		Delete "$INSTDIR\Docs\images\GUI-Settings-2.png"
-		Delete "$INSTDIR\Docs\images\GUI-Settings-3.png"
-		Delete "$INSTDIR\Docs\images\GUI-User-Rules-Manager.png"
-		Delete "$INSTDIR\Docs\images\HTML-Log.png"
-		Delete "$INSTDIR\Docs\images\Userlist.png"
-		Delete "$INSTDIR\Docs\images\Ini.png"
-		Delete "$INSTDIR\Docs\images\CLI.png"
+		Delete "$INSTDIR\Docs\images\editor.png"
+		Delete "$INSTDIR\Docs\images\main.png"
+		Delete "$INSTDIR\Docs\images\settings.png"
+		Delete "$INSTDIR\Docs\images\viewer-1.png"
+		Delete "$INSTDIR\Docs\images\viewer-2.png"
   
 		;Remove language files.
 		Delete "$INSTDIR\l10n\ru\LC_MESSAGES\messages.mo"
@@ -451,43 +417,24 @@ LangString TEXT_USERFILES ${LANG_SIMPCHINESE} "BOSS的userlist和BOSS.ini文件�
 		Delete "$INSTDIR\l10n\zh\LC_MESSAGES\wxstd.mo"
 		
 		;Now we have to remove the files BOSS generates when it runs.
-		Delete "$INSTDIR\BOSSDebugLog.txt"
+		Delete "$LOCALAPPDATA\BOSS\BOSSDebugLog.txt"
 		;Trying to delete a file that doesn't exist doesn't cause an error, so delete all games' files.
-		Delete "$INSTDIR\Oblivion\BOSSlog.txt"
-		Delete "$INSTDIR\Oblivion\BOSSlog.html"
-		Delete "$INSTDIR\Oblivion\masterlist.txt"
-		Delete "$INSTDIR\Oblivion\modlist.txt"
-		Delete "$INSTDIR\Oblivion\modlist.old"
-		Delete "$INSTDIR\Nehrim\BOSSlog.txt"
-		Delete "$INSTDIR\Nehrim\BOSSlog.html"
-		Delete "$INSTDIR\Nehrim\masterlist.txt"
-		Delete "$INSTDIR\Nehrim\modlist.txt"
-		Delete "$INSTDIR\Nehrim\modlist.old"
-		Delete "$INSTDIR\Skyrim\BOSSlog.txt"
-		Delete "$INSTDIR\Skyrim\BOSSlog.html"
-		Delete "$INSTDIR\Skyrim\masterlist.txt"
-		Delete "$INSTDIR\Skyrim\modlist.txt"
-		Delete "$INSTDIR\Skyrim\modlist.old"
-		Delete "$INSTDIR\Fallout 3\BOSSlog.txt"
-		Delete "$INSTDIR\Fallout 3\BOSSlog.html"
-		Delete "$INSTDIR\Fallout 3\masterlist.txt"
-		Delete "$INSTDIR\Fallout 3\modlist.txt"
-		Delete "$INSTDIR\Fallout 3\modlist.old"
-		Delete "$INSTDIR\Fallout New Vegas\BOSSlog.txt"
-		Delete "$INSTDIR\Fallout New Vegas\BOSSlog.html"
-		Delete "$INSTDIR\Fallout New Vegas\masterlist.txt"
-		Delete "$INSTDIR\Fallout New Vegas\modlist.txt"
-		Delete "$INSTDIR\Fallout New Vegas\modlist.old"
+        ;This doesn't handle user-defined games.
+		Delete "$LOCALAPPDATA\BOSS\Oblivion\report.html"
+		Delete "$LOCALAPPDATA\BOSS\Oblivion\masterlist.yaml"
+		Delete "$LOCALAPPDATA\BOSS\Nehrim\report.html"
+		Delete "$LOCALAPPDATA\BOSS\Nehrim\masterlist.yaml"
+		Delete "$LOCALAPPDATA\BOSS\Skyrim\report.html"
+		Delete "$LOCALAPPDATA\BOSS\Skyrim\masterlist.yaml"
+		Delete "$LOCALAPPDATA\BOSS\Fallout3\report.html"
+		Delete "$LOCALAPPDATA\BOSS\Fallout3\masterlist.yaml"
+		Delete "$LOCALAPPDATA\BOSS\FalloutNV\report.html"
+		Delete "$LOCALAPPDATA\BOSS\FalloutNV\masterlist.yaml"
 		
 		;Remove subfolders.
 		RMDir "$INSTDIR\API"
 		RMDir "$INSTDIR\Docs\images"
 		RMDir "$INSTDIR\Docs"
-		RMDir "$INSTDIR\Oblivion"
-		RMDir "$INSTDIR\Nehrim"
-		RMDir "$INSTDIR\Skyrim"
-		RMDir "$INSTDIR\Fallout 3"
-		RMDir "$INSTDIR\Fallout New Vegas"
 		RMDir "$INSTDIR\l10n\ru\LC_MESSAGES"
 		RMDir "$INSTDIR\l10n\ru"
 		RMDir "$INSTDIR\l10n\es\LC_MESSAGES"
@@ -497,12 +444,18 @@ LangString TEXT_USERFILES ${LANG_SIMPCHINESE} "BOSS的userlist和BOSS.ini文件�
 		RMDir "$INSTDIR\l10n\zh\LC_MESSAGES"
 		RMDir "$INSTDIR\l10n\zh"
 		RMDir "$INSTDIR\l10n"
+		RMDir "$LOCALAPPDATA\BOSS\Oblivion"
+		RMDir "$LOCALAPPDATA\BOSS\Nehrim"
+		RMDir "$LOCALAPPDATA\BOSS\Skyrim"
+		RMDir "$LOCALAPPDATA\BOSS\Fallout3"
+		RMDir "$LOCALAPPDATA\BOSS\FalloutNV"
 		
 		;Remove uninstaller.
 		Delete "$INSTDIR\Uninstall.exe"
 
 		;Remove install directory.
 		RMDir "$INSTDIR"
+        RMDir "$LOCALAPPDATA\BOSS"
 
 		;Delete registry key.
 		DeleteRegKey HKLM "Software\BOSS"
@@ -514,15 +467,12 @@ LangString TEXT_USERFILES ${LANG_SIMPCHINESE} "BOSS的userlist和BOSS.ini文件�
 		DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\App Management\ARPCache\BOSS"
 		DeleteRegValue HKCR "Local Settings\Software\Microsoft\Windows\Shell\MuiCache" "$INSTDIR"
 		DeleteRegValue HKCR "Local Settings\Software\Microsoft\Windows\Shell\MuiCache" "$INSTDIR\BOSS.exe"
-		DeleteRegValue HKCR "Local Settings\Software\Microsoft\Windows\Shell\MuiCache" "$INSTDIR\BOSS GUI.exe"
 		DeleteRegValue HKCR "Local Settings\Software\Microsoft\Windows\Shell\MuiCache" "$INSTDIR\Uninstall.exe"
 		DeleteRegValue HKCU "Software\Classes\Local Settings\Software\Microsoft\Windows\Shell\MuiCache" "$INSTDIR"
 		DeleteRegValue HKCU "Software\Classes\Local Settings\Software\Microsoft\Windows\Shell\MuiCache" "$INSTDIR\BOSS.exe"
-		DeleteRegValue HKCU "Software\Classes\Local Settings\Software\Microsoft\Windows\Shell\MuiCache" "$INSTDIR\BOSS GUI.exe"
 		DeleteRegValue HKCU "Software\Classes\Local Settings\Software\Microsoft\Windows\Shell\MuiCache" "$INSTDIR\Uninstall.exe"
 		DeleteRegValue HKCU "Software\Microsoft\Windows\ShellNoRoam\MuiCache" "$INSTDIR"
 		DeleteRegValue HKCU "Software\Microsoft\Windows\ShellNoRoam\MuiCache" "$INSTDIR\BOSS.exe"
-		DeleteRegValue HKCU "Software\Microsoft\Windows\ShellNoRoam\MuiCache" "$INSTDIR\BOSS GUI.exe"
 		DeleteRegValue HKCU "Software\Microsoft\Windows\ShellNoRoam\MuiCache" "$INSTDIR\Uninstall.exe"
 		
 		;Delete Start Menu folder.
@@ -533,21 +483,20 @@ LangString TEXT_USERFILES ${LANG_SIMPCHINESE} "BOSS的userlist和BOSS.ini文件�
 
 	Section /o "un.User Files" UserFiles
 		;The following user files are only removed if set to.
-		Delete "$INSTDIR\BOSS.ini"
-		Delete "$INSTDIR\BOSS.ini.old"
-		Delete "$INSTDIR\Oblivion\userlist.txt"
-		Delete "$INSTDIR\Nehrim\userlist.txt"
-		Delete "$INSTDIR\Skyrim\userlist.txt"
-		Delete "$INSTDIR\Fallout 3\userlist.txt"
-		Delete "$INSTDIR\Fallout New Vegas\userlist.txt"
+		Delete "$LOCALAPPDATA\BOSS\settings.yaml"
+		Delete "$LOCALAPPDATA\BOSS\Oblivion\userlist.yaml"
+		Delete "$LOCALAPPDATA\BOSS\Nehrim\userlist.yaml"
+		Delete "$LOCALAPPDATA\BOSS\Skyrim\userlist.yaml"
+		Delete "$LOCALAPPDATA\BOSS\Fallout3\userlist.yaml"
+		Delete "$LOCALAPPDATA\BOSS\FalloutNV\userlist.yaml"
 		;Also try removing the folders storing them, in case they are otherwise empty.
-		RMDir "$INSTDIR\Oblivion"
-		RMDir "$INSTDIR\Nehrim"
-		RMDir "$INSTDIR\Skyrim"
-		RMDir "$INSTDIR\Fallout 3"
-		RMDir "$INSTDIR\Fallout New Vegas"
+		RMDir "$LOCALAPPDATA\BOSS\Oblivion"
+		RMDir "$LOCALAPPDATA\BOSS\Nehrim"
+		RMDir "$LOCALAPPDATA\BOSS\Skyrim"
+		RMDir "$LOCALAPPDATA\BOSS\Fallout3"
+		RMDir "$LOCALAPPDATA\BOSS\FalloutNV"
 		;Try removing install directory.
-		RMDir "$INSTDIR"
+        RMDir "$LOCALAPPDATA\BOSS"
 	SectionEnd
 
 ;--------------------------------
