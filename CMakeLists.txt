@@ -82,8 +82,8 @@ set (BOSS_API_SRC ${BOSS_SRC} "${CMAKE_SOURCE_DIR}/src/api/api.cpp")
 ##############################
 
 # Build API.
-add_library           (boss ${PROJECT_LINK} ${BOSS_API_SRC})
-target_link_libraries (boss ${BOSS_LIBS})
+add_library           (boss${PROJECT_ARCH} ${PROJECT_LINK} ${BOSS_API_SRC})
+target_link_libraries (boss${PROJECT_ARCH} ${BOSS_LIBS})
 
 # Build application.
 add_executable        (BOSS ${BOSS_GUI_SRC})

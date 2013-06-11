@@ -6,14 +6,75 @@
 	!include "MUI2.nsh"
 	!include "LogicLib.nsh"
 	!include "nsDialogs.nsh"
-    !include "TextReplace.nsh"  ;http://nsis.sourceforge.net/TextReplace_plugin
+
+;--------------------------------
+; Helper Function
+
+Function ReplaceLineStr
+ Exch $R0 ; string to replace that whole line with
+ Exch
+ Exch $R1 ; string that line should start with
+ Exch
+ Exch 2
+ Exch $R2 ; file
+ Push $R3 ; file handle
+ Push $R4 ; temp file
+ Push $R5 ; temp file handle
+ Push $R6 ; global
+ Push $R7 ; input string length
+ Push $R8 ; line string length
+ Push $R9 ; global
+ 
+  StrLen $R7 $R1
+ 
+  GetTempFileName $R4
+ 
+  FileOpen $R5 $R4 w
+  FileOpen $R3 $R2 r
+ 
+  ReadLoop:
+  ClearErrors
+   FileRead $R3 $R6
+    IfErrors Done
+ 
+   StrLen $R8 $R6
+   StrCpy $R9 $R6 $R7 -$R8
+   StrCmp $R9 $R1 0 +3
+ 
+    FileWrite $R5 "$R0$\r$\n"
+    Goto ReadLoop
+ 
+    FileWrite $R5 $R6
+    Goto ReadLoop
+ 
+  Done:
+ 
+  FileClose $R3
+  FileClose $R5
+ 
+  SetDetailsPrint none
+   Delete $R2
+   Rename $R4 $R2
+  SetDetailsPrint both
+ 
+ Pop $R9
+ Pop $R8
+ Pop $R7
+ Pop $R6
+ Pop $R5
+ Pop $R4
+ Pop $R3
+ Pop $R2
+ Pop $R1
+ Pop $R0
+FunctionEnd
 
 ;--------------------------------
 ;General
 
 	;Name, file and version info for installer.
 	Name "BOSS v3.0.0"
-	OutFile "BOSS Installer.exe"
+	OutFile "..\build\BOSS Installer.exe"
 	VIProductVersion 3.0.0.0
 
 	;Request application privileges for Windows Vista/7
@@ -33,10 +94,9 @@
 	;The SOLID lzma compressor gives the best compression ratio.
 	SetCompressor /SOLID lzma
 
-;--------------------------------
-;Interface Settings
-
-	
+    ;Default install directory.
+    InstallDir "$PROGRAMFILES\BOSS"
+    InstallDirRegKey HKLM "Software\BOSS" "Installed Path"
 
 ;--------------------------------
 ;Pages
@@ -90,7 +150,7 @@
 	VIAddVersionKey /LANG=${LANG_RUSSIAN} "CompanyName" "BOSS Development Team"
 	VIAddVersionKey /LANG=${LANG_RUSSIAN} "LegalCopyright" "© 2009-2013 BOSS Development Team"
 	VIAddVersionKey /LANG=${LANG_RUSSIAN} "FileDescription" "Установщик для BOSS 3.0.0"
-	VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "3.0.0"
+	VIAddVersionKey /LANG=${LANG_RUSSIAN} "FileVersion" "3.0.0"
 
 	LangString TEXT_MESSAGEBOX ${LANG_RUSSIAN} "BOSS уже установлен и должен быть удален перед продолжением. $\n$\nНажмите `OK` для удаления предыдущей версии или `Отмена` для отмены обновления."
 	LangString TEXT_RUN ${LANG_RUSSIAN} "Запустить BOSS"
@@ -142,51 +202,19 @@ LangString TEXT_RUN ${LANG_SIMPCHINESE} "运行BOSS"
 LangString TEXT_SHOWREADME ${LANG_SIMPCHINESE} "查看说明"
 LangString TEXT_MAIN ${LANG_SIMPCHINESE} "所有BOSS文件（除userlist和BOSS.ini）"
 LangString TEXT_USERFILES ${LANG_SIMPCHINESE} "BOSS的userlist和BOSS.ini文件。"
-	
-;--------------------------------
-;Variables
-
-	Var OB_Path
-	Var NE_Path
-	Var SK_Path
-	Var FO_Path
-	Var NV_Path
-	Var Empty ;An empty string.
-	Var InstallPath ;Path to existing BOSS install.
 
 ;--------------------------------
 ;Initialisations
 
+    Var InstallPath ;Path to existing BOSS install.
+
 	Function .onInit
 	
 		!insertmacro MUI_LANGDLL_DISPLAY
-
-		StrCpy $Empty ""
-
-		; Look for games, setting their paths if found.
-		ReadRegStr $OB_Path HKLM "Software\Bethesda Softworks\Oblivion" "Installed Path"
-		${If} $OB_Path == $Empty ;Try 64 bit path.
-			ReadRegStr $OB_Path HKLM "Software\Wow6432Node\Bethesda Softworks\Oblivion" "Installed Path"
-		${EndIf}
-		ReadRegStr $NE_Path HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Nehrim - At Fate's Edge_is1" "InstallLocation" ;No 64 bit path.
-		ReadRegStr $SK_Path HKLM "Software\Bethesda Softworks\Skyrim" "Installed Path"
-		${If} $SK_Path == $Empty ;Try 64 bit path.
-			ReadRegStr $SK_Path HKLM "Software\Wow6432Node\Bethesda Softworks\Skyrim" "Installed Path"
-		${EndIf}
-		ReadRegStr $FO_Path HKLM "Software\Bethesda Softworks\Fallout3" "Installed Path"
-		${If} $FO_Path == $Empty ;Try 64 bit path.
-			ReadRegStr $FO_Path HKLM "Software\Wow6432Node\Bethesda Softworks\Fallout3" "Installed Path"
-		${EndIf}
-		ReadRegStr $NV_Path HKLM "Software\Bethesda Softworks\FalloutNV" "Installed Path"
-		${If} $NV_Path == $Empty ;Try 64 bit path.
-			ReadRegStr $NV_Path HKLM "Software\Wow6432Node\Bethesda Softworks\FalloutNV" "Installed Path"
-		${EndIf}
-		StrCpy $INSTDIR "C:\BOSS"
 		
 	FunctionEnd
 	
 	Function onGUIInit
-		; Have to do this now as language isn't actually set until 
 		; First check to see if BOSS is already installed via installer, and launch the existing uninstaller if so.
 		IfFileExists "$COMMONFILES\BOSS\uninstall.exe" 0 +8
 			MessageBox MB_OKCANCEL|MB_ICONQUESTION "$(Text_MessageBox)" IDOK oldCont IDCANCEL oldCancel
@@ -197,13 +225,11 @@ LangString TEXT_USERFILES ${LANG_SIMPCHINESE} "BOSS的userlist和BOSS.ini文件�
 				Delete "$COMMONFILES\BOSS\uninstall.exe"
 				RMDir "$COMMONFILES\BOSS"
 
+        
+
 		;That was the old uninstaller location, now see if the current version is already installed.
 		ReadRegStr $InstallPath HKLM "Software\BOSS" "Installed Path"
-		${If} $InstallPath == $Empty ;Try 64 bit path.
-			ReadRegStr $InstallPath HKLM "Software\Wow6432Node\BOSS" "Installed Path"
-		${EndIf}
-		${If} $InstallPath != $Empty
-			StrCpy $INSTDIR $InstallPath  ;Set the default install path to the previous install's path.
+		${If} $InstallPath != ""
 			IfFileExists "$InstallPath\Uninstall.exe" 0 +8
 				MessageBox MB_OKCANCEL|MB_ICONQUESTION "$(Text_MessageBox)" IDOK cont IDCANCEL cancel
 				cancel:
@@ -226,105 +252,14 @@ LangString TEXT_USERFILES ${LANG_SIMPCHINESE} "BOSS的userlist和BOSS.ini文件�
 
 	Section "Installer Section"
 		
-		;Silently move and remove files from past BOSS installs.
-		 ${If} $OB_Path != $Empty
-;			IfFileExists "$OB_Path\Data\BOSS\userlist.txt" 0 +3
-;				CreateDirectory "$INSTDIR\Oblivion"
-;				Rename "$OB_Path\Data\BOSS\userlist.txt" "$INSTDIR\Oblivion\userlist.txt"
-;			IfFileExists "$OB_Path\BOSS\userlist.txt" 0 +3
-;				CreateDirectory "$INSTDIR\Oblivion"
-;				Rename "$OB_Path\BOSS\userlist.txt" "$INSTDIR\Oblivion\userlist.txt"
-			Delete "$OB_Path\Data\BOSS*" #Gets rid of readmes, logs and bat files in one fell swoop.
-			Delete "$OB_Path\Data\modlist.*"
-			Delete "$OB_Path\Data\masterlist.txt"
-			Delete "$OB_Path\Data\BOSS\modlist.*"
-			Delete "$OB_Path\Data\BOSS\masterlist.txt"
-			Delete "$OB_Path\Data\BOSS\BOSS*" #Gets rid of readmes, logs and bat files in one fell swoop.
-			RMDir  "$OB_Path\Data\BOSS"
-		${EndIf}
-		${If} $NE_Path != $Empty
-;			IfFileExists "$NE_Path\Data\BOSS\userlist.txt" 0 +3
-;				CreateDirectory "$INSTDIR\Nehrim"
-;				Rename "$NE_Path\Data\BOSS\userlist.txt" "$INSTDIR\Nehrim\userlist.txt"
-;			IfFileExists "$NE_Path\BOSS\userlist.txt" 0 +3
-;				CreateDirectory "$INSTDIR\Nehrim"
-;				Rename "$NE_Path\BOSS\userlist.txt" "$INSTDIR\Nehrim\userlist.txt"
-			Delete "$NE_Path\Data\BOSS*"
-			Delete "$NE_Path\Data\modlist.*"
-			Delete "$NE_Path\Data\masterlist.txt"
-			Delete "$NE_Path\Data\BOSS\modlist.*"
-			Delete "$NE_Path\Data\BOSS\masterlist.txt"
-			Delete "$NE_Path\Data\BOSS\BOSS*" #Gets rid of readmes, logs and bat files in one fell swoop.
-			RMDir  "$NE_Path\Data\BOSS"
-		${EndIf}
-		${If} $SK_Path != $Empty
-;			IfFileExists "$SK_Path\BOSS\userlist.txt" 0 +3
-;				CreateDirectory "$INSTDIR\Skyrim"
-;				Rename "$SK_Path\BOSS\userlist.txt" "$INSTDIR\Skyrim\userlist.txt"
-			Delete "$SK_Path\Data\BOSS*" #Gets rid of readmes, logs and bat files in one fell swoop.
-			Delete "$SK_Path\Data\modlist.*"
-			Delete "$SK_Path\Data\masterlist.txt"
-			Delete "$SK_Path\Data\BOSS\modlist.*"
-			Delete "$SK_Path\Data\BOSS\masterlist.txt"
-			Delete "$SK_Path\Data\BOSS\BOSS*" #Gets rid of readmes, logs and bat files in one fell swoop.
-			RMDir  "$SK_Path\Data\BOSS"
-		${EndIf}
-		${If} $FO_Path != $Empty
-;			IfFileExists "$FO_Path\Data\BOSS\userlist.txt" 0 +3
-;				CreateDirectory "$INSTDIR\Fallout 3"
-;				Rename "$FO_Path\Data\BOSS\userlist.txt" "$INSTDIR\Fallout 3\userlist.txt"
-;			IfFileExists "$FO_Path\BOSS\userlist.txt" 0 +3
-;				CreateDirectory "$INSTDIR\Fallout 3"
-;				Rename "$FO_Path\BOSS\userlist.txt" "$INSTDIR\Fallout 3\userlist.txt"
-			Delete "$FO_Path\Data\BOSS*"
-			Delete "$FO_Path\Data\modlist.*"
-			Delete "$FO_Path\Data\masterlist.txt"
-			Delete "$FO_Path\Data\BOSS\modlist.*"
-			Delete "$FO_Path\Data\BOSS\masterlist.txt"
-			Delete "$FO_Path\Data\BOSS\BOSS*" #Gets rid of readmes, logs and bat files in one fell swoop.
-			RMDir  "$FO_Path\Data\BOSS"
-		${EndIf}
-		${If} $NV_Path != $Empty
-;			IfFileExists "$NV_Path\Data\BOSS\userlist.txt" 0 +3
-;				CreateDirectory "$INSTDIR\Fallout New Vegas"
-;				Rename "$NV_Path\Data\BOSS\userlist.txt" "$INSTDIR\Fallout New Vegas\userlist.txt"
-;			IfFileExists "$NV_Path\BOSS\userlist.txt" 0 +3
-;				CreateDirectory "$INSTDIR\Fallout New Vegas"
-;				Rename "$NV_Path\BOSS\userlist.txt" "$INSTDIR\Fallout New Vegas\userlist.txt"
-			Delete "$NV_Path\Data\BOSS*"
-			Delete "$NV_Path\Data\modlist.*"
-			Delete "$NV_Path\Data\masterlist.txt"
-			Delete "$NV_Path\Data\BOSS\modlist.*"
-			Delete "$NV_Path\Data\BOSS\masterlist.txt"
-			Delete "$NV_Path\Data\BOSS\BOSS*" #Gets rid of readmes, logs and bat files in one fell swoop.
-			RMDir  "$NV_Path\Data\BOSS"
-		${EndIf}
-
-        ;Delete BOSS.ini and BOSS.ini.old if they exist.
-        Delete "BOSS.ini*"
-			
-		;Install new BOSS settings.yaml.
-		SetOutPath "$LOCALAPPDATA\BOSS"
-		File "..\resources\settings.yaml"
-		
-		;Write language setting to settings.yaml.
-		StrCmp $LANGUAGE ${LANG_RUSSIAN} 0 +2
-        ${textreplace::ReplaceInFile} "$LOCALAPPDATA\BOSS\settings.yaml" "$LOCALAPPDATA\BOSS\settings.yaml" "eng" "rus" "/S=1 /C=0" 1
-		StrCmp $LANGUAGE ${LANG_GERMAN} 0 +2
-        ${textreplace::ReplaceInFile} "$LOCALAPPDATA\BOSS\settings.yaml" "$LOCALAPPDATA\BOSS\settings.yaml" "eng" "deu" "/S=1 /C=0" 1
-		StrCmp $LANGUAGE ${LANG_SPANISH} 0 +2
-        ${textreplace::ReplaceInFile} "$LOCALAPPDATA\BOSS\settings.yaml" "$LOCALAPPDATA\BOSS\settings.yaml" "eng" "spa" "/S=1 /C=0" 1
-		StrCmp $LANGUAGE ${LANG_SIMPCHINESE} 0 +2
-        ${textreplace::ReplaceInFile} "$LOCALAPPDATA\BOSS\settings.yaml" "$LOCALAPPDATA\BOSS\settings.yaml" "eng" "cmn" "/S=1 /C=0" 1
-		
 		;Install executable.
 		SetOutPath "$INSTDIR"
 		File "..\build\BOSS.exe"
 			  
 		;Now install API DLLs.
 		SetOutPath "$INSTDIR\API"
-		File "..\build\boss32.dll"
-		File "..\build\boss64.dll"
+		File "..\build\libboss32.dll"
+		File "..\build\libboss64.dll"
 		
 		;Now install readme files.
 		SetOutPath "$INSTDIR\Docs"
@@ -340,19 +275,71 @@ LangString TEXT_USERFILES ${LANG_SIMPCHINESE} "BOSS的userlist和BOSS.ini文件�
 		File "..\docs\images\settings.png"
 		File "..\docs\images\viewer-1.png"
 		File "..\docs\images\viewer-2.png"
+
+        ;Install resource files.
+        SetOutPath "$INSTDIR\resources"
+        File "..\resources\libespm.yaml"
+        File "..\resources\polyfill.js"
+        File "..\resources\script.js"
+        File "..\resources\style.css"
+        
+        SetOutPath "$INSTDIR\resources\svn"
+        File "..\resources\svn\intl3_svn.dll"
+        File "..\resources\svn\libapr-1.dll"
+        File "..\resources\svn\libapriconv-1.dll"
+        File "..\resources\svn\libaprutil-1.dll"
+        File "..\resources\svn\libdb48.dll"
+        File "..\resources\svn\libeay32.dll"
+        File "..\resources\svn\libsasl.dll"
+        File "..\resources\svn\libsvn_client-1.dll"
+        File "..\resources\svn\libsvn_delta-1.dll"
+        File "..\resources\svn\libsvn_diff-1.dll"
+        File "..\resources\svn\libsvn_fs-1.dll"
+        File "..\resources\svn\libsvn_ra-1.dll"
+        File "..\resources\svn\libsvn_repos-1.dll"
+        File "..\resources\svn\libsvn_subr-1.dll"
+        File "..\resources\svn\libsvn_wc-1.dll"
+        File "..\resources\svn\ssleay32.dll"
+        File "..\resources\svn\svn.exe"
   
 		;Now install language files.
 		SetOutPath "$INSTDIR\resources\l10n\ru\LC_MESSAGES"
-		File "..\resources\l10n\ru\LC_MESSAGES\messages.mo"
-		File "..\resources\l10n\ru\LC_MESSAGES\wxstd.mo"
+		;File "..\resources\l10n\ru\LC_MESSAGES\messages.mo"
+		;File "..\resources\l10n\ru\LC_MESSAGES\wxstd.mo"
 		SetOutPath "$INSTDIR\resources\l10n\es\LC_MESSAGES"
-		File "..\resources\l10n\es\LC_MESSAGES\wxstd.mo"
-		File "..\resources\l10n\es\LC_MESSAGES\messages.mo"
+		;File "..\resources\l10n\es\LC_MESSAGES\wxstd.mo"
+		;File "..\resources\l10n\es\LC_MESSAGES\messages.mo"
 		SetOutPath "$INSTDIR\resources\l10n\de\LC_MESSAGES"
-		File "..\resources\l10n\de\LC_MESSAGES\wxstd.mo"
+		;File "..\resources\l10n\de\LC_MESSAGES\wxstd.mo"
 		SetOutPath "$INSTDIR\resources\l10n\zh\LC_MESSAGES"
-		File "..\resources\l10n\zh\LC_MESSAGES\messages.mo"
-		File "..\resources\l10n\zh\LC_MESSAGES\wxstd.mo"
+		;File "..\resources\l10n\zh\LC_MESSAGES\messages.mo"
+		;File "..\resources\l10n\zh\LC_MESSAGES\wxstd.mo"
+
+        ;Install new BOSS settings.yaml.
+		SetOutPath "$LOCALAPPDATA\BOSS"
+		File "..\resources\settings.yaml"
+		
+		;Write language setting to settings.yaml.
+		StrCmp $LANGUAGE ${LANG_RUSSIAN} 0 +5
+            Push "$LOCALAPPDATA\BOSS\settings.yaml"
+            Push "Language:"
+            Push "Language: rus"
+            Call ReplaceLineStr
+		StrCmp $LANGUAGE ${LANG_GERMAN} 0 +5
+            Push "$LOCALAPPDATA\BOSS\settings.yaml"
+            Push "Language:"
+            Push "Language: deu"
+            Call ReplaceLineStr
+		StrCmp $LANGUAGE ${LANG_SPANISH} 0 +5
+            Push "$LOCALAPPDATA\BOSS\settings.yaml"
+            Push "Language:"
+            Push "Language: spa"
+            Call ReplaceLineStr
+		StrCmp $LANGUAGE ${LANG_SIMPCHINESE} 0 +5
+            Push "$LOCALAPPDATA\BOSS\settings.yaml"
+            Push "Language:"
+            Push "Language: cmn"
+            Call ReplaceLineStr
 		
 		;Add Start Menu shortcuts. Set out path back to $INSTDIR otherwise the shortcuts start in the wrong place.
 		;Set Shell Var Context to all so that shortcuts are installed for all users, not just admin.
@@ -391,14 +378,16 @@ LangString TEXT_USERFILES ${LANG_SIMPCHINESE} "BOSS的userlist和BOSS.ini文件�
 		Delete "$INSTDIR\BOSS.exe"
 		
 		;Remove API DLLs.
-		Delete "$INSTDIR\API\boss32.dll"
-		Delete "$INSTDIR\API\boss64.dll"
+		Delete "$INSTDIR\API\libboss32.dll"
+		Delete "$INSTDIR\API\libboss64.dll"
+		RMDir  "$INSTDIR\API"
 		
 		;Remove readme files.
 		Delete "$INSTDIR\Docs\BOSS API Readme.html"
 		Delete "$INSTDIR\Docs\BOSS Metadata Syntax.html"
 		Delete "$INSTDIR\Docs\BOSS Readme.html"
 		Delete "$INSTDIR\Docs\Licenses.txt"
+		RMDir  "$INSTDIR\Docs"
 		
 		;Remove readme images.
 		Delete "$INSTDIR\Docs\images\editor.png"
@@ -406,15 +395,50 @@ LangString TEXT_USERFILES ${LANG_SIMPCHINESE} "BOSS的userlist和BOSS.ini文件�
 		Delete "$INSTDIR\Docs\images\settings.png"
 		Delete "$INSTDIR\Docs\images\viewer-1.png"
 		Delete "$INSTDIR\Docs\images\viewer-2.png"
+		RMDir  "$INSTDIR\Docs\images"
+
+        ;Remove resource files.
+        Delete "$INSTDIR\resources\libespm.yaml"
+        Delete "$INSTDIR\resources\polyfill.js"
+        Delete "$INSTDIR\resources\script.js"
+        Delete "$INSTDIR\resources\style.css"
+        RMDir  "$INSTDIR\resources\svn"
+        Delete "$INSTDIR\resources\svn\intl3_svn.dll"
+        Delete "$INSTDIR\resources\svn\libapr-1.dll"
+        Delete "$INSTDIR\resources\svn\libapriconv-1.dll"
+        Delete "$INSTDIR\resources\svn\libaprutil-1.dll"
+        Delete "$INSTDIR\resources\svn\libdb48.dll"
+        Delete "$INSTDIR\resources\svn\libeay32.dll"
+        Delete "$INSTDIR\resources\svn\libsasl.dll"
+        Delete "$INSTDIR\resources\svn\libsvn_client-1.dll"
+        Delete "$INSTDIR\resources\svn\libsvn_delta-1.dll"
+        Delete "$INSTDIR\resources\svn\libsvn_diff-1.dll"
+        Delete "$INSTDIR\resources\svn\libsvn_fs-1.dll"
+        Delete "$INSTDIR\resources\svn\libsvn_ra-1.dll"
+        Delete "$INSTDIR\resources\svn\libsvn_repos-1.dll"
+        Delete "$INSTDIR\resources\svn\libsvn_subr-1.dll"
+        Delete "$INSTDIR\resources\svn\libsvn_wc-1.dll"
+        Delete "$INSTDIR\resources\svn\ssleay32.dll"
+        Delete "$INSTDIR\resources\svn\svn.exe"
   
 		;Remove language files.
-		Delete "$INSTDIR\l10n\ru\LC_MESSAGES\messages.mo"
-		Delete "$INSTDIR\l10n\ru\LC_MESSAGES\wxstd.mo"
-		Delete "$INSTDIR\l10n\es\LC_MESSAGES\messages.mo"
-		Delete "$INSTDIR\l10n\es\LC_MESSAGES\wxstd.mo"
-		Delete "$INSTDIR\l10n\de\LC_MESSAGES\wxstd.mo"
-		Delete "$INSTDIR\l10n\zh\LC_MESSAGES\messages.mo"
-		Delete "$INSTDIR\l10n\zh\LC_MESSAGES\wxstd.mo"
+		Delete "$INSTDIR\resources\l10n\ru\LC_MESSAGES\messages.mo"
+		Delete "$INSTDIR\resources\l10n\ru\LC_MESSAGES\wxstd.mo"
+		Delete "$INSTDIR\resources\l10n\es\LC_MESSAGES\messages.mo"
+		Delete "$INSTDIR\resources\l10n\es\LC_MESSAGES\wxstd.mo"
+		Delete "$INSTDIR\resources\l10n\de\LC_MESSAGES\wxstd.mo"
+		Delete "$INSTDIR\resources\l10n\zh\LC_MESSAGES\messages.mo"
+		Delete "$INSTDIR\resources\l10n\zh\LC_MESSAGES\wxstd.mo"
+		RMDir  "$INSTDIR\resources\l10n\ru\LC_MESSAGES"
+		RMDir  "$INSTDIR\resources\l10n\ru"
+		RMDir  "$INSTDIR\resources\l10n\es\LC_MESSAGES"
+		RMDir  "$INSTDIR\resources\l10n\es"
+		RMDir  "$INSTDIR\resources\l10n\de\LC_MESSAGES"
+		RMDir  "$INSTDIR\resources\l10n\de"
+		RMDir  "$INSTDIR\resources\l10n\zh\LC_MESSAGES"
+		RMDir  "$INSTDIR\resources\l10n\zh"
+		RMDir  "$INSTDIR\resources\l10n"
+        RMDir  "$INSTDIR\resources"
 		
 		;Now we have to remove the files BOSS generates when it runs.
 		Delete "$LOCALAPPDATA\BOSS\BOSSDebugLog.txt"
@@ -430,32 +454,18 @@ LangString TEXT_USERFILES ${LANG_SIMPCHINESE} "BOSS的userlist和BOSS.ini文件�
 		Delete "$LOCALAPPDATA\BOSS\Fallout3\masterlist.yaml"
 		Delete "$LOCALAPPDATA\BOSS\FalloutNV\report.html"
 		Delete "$LOCALAPPDATA\BOSS\FalloutNV\masterlist.yaml"
-		
-		;Remove subfolders.
-		RMDir "$INSTDIR\API"
-		RMDir "$INSTDIR\Docs\images"
-		RMDir "$INSTDIR\Docs"
-		RMDir "$INSTDIR\l10n\ru\LC_MESSAGES"
-		RMDir "$INSTDIR\l10n\ru"
-		RMDir "$INSTDIR\l10n\es\LC_MESSAGES"
-		RMDir "$INSTDIR\l10n\es"
-		RMDir "$INSTDIR\l10n\de\LC_MESSAGES"
-		RMDir "$INSTDIR\l10n\de"
-		RMDir "$INSTDIR\l10n\zh\LC_MESSAGES"
-		RMDir "$INSTDIR\l10n\zh"
-		RMDir "$INSTDIR\l10n"
-		RMDir "$LOCALAPPDATA\BOSS\Oblivion"
-		RMDir "$LOCALAPPDATA\BOSS\Nehrim"
-		RMDir "$LOCALAPPDATA\BOSS\Skyrim"
-		RMDir "$LOCALAPPDATA\BOSS\Fallout3"
-		RMDir "$LOCALAPPDATA\BOSS\FalloutNV"
+		RMDir  "$LOCALAPPDATA\BOSS\Oblivion"
+		RMDir  "$LOCALAPPDATA\BOSS\Nehrim"
+		RMDir  "$LOCALAPPDATA\BOSS\Skyrim"
+		RMDir  "$LOCALAPPDATA\BOSS\Fallout3"
+		RMDir  "$LOCALAPPDATA\BOSS\FalloutNV"
+        RMDir  "$LOCALAPPDATA\BOSS"
 		
 		;Remove uninstaller.
 		Delete "$INSTDIR\Uninstall.exe"
 
 		;Remove install directory.
 		RMDir "$INSTDIR"
-        RMDir "$LOCALAPPDATA\BOSS"
 
 		;Delete registry key.
 		DeleteRegKey HKLM "Software\BOSS"
@@ -490,13 +500,13 @@ LangString TEXT_USERFILES ${LANG_SIMPCHINESE} "BOSS的userlist和BOSS.ini文件�
 		Delete "$LOCALAPPDATA\BOSS\Fallout3\userlist.yaml"
 		Delete "$LOCALAPPDATA\BOSS\FalloutNV\userlist.yaml"
 		;Also try removing the folders storing them, in case they are otherwise empty.
-		RMDir "$LOCALAPPDATA\BOSS\Oblivion"
-		RMDir "$LOCALAPPDATA\BOSS\Nehrim"
-		RMDir "$LOCALAPPDATA\BOSS\Skyrim"
-		RMDir "$LOCALAPPDATA\BOSS\Fallout3"
-		RMDir "$LOCALAPPDATA\BOSS\FalloutNV"
+		RMDir  "$LOCALAPPDATA\BOSS\Oblivion"
+		RMDir  "$LOCALAPPDATA\BOSS\Nehrim"
+		RMDir  "$LOCALAPPDATA\BOSS\Skyrim"
+		RMDir  "$LOCALAPPDATA\BOSS\Fallout3"
+		RMDir  "$LOCALAPPDATA\BOSS\FalloutNV"
 		;Try removing install directory.
-        RMDir "$LOCALAPPDATA\BOSS"
+        RMDir  "$LOCALAPPDATA\BOSS"
 	SectionEnd
 
 ;--------------------------------
