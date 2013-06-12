@@ -384,14 +384,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         try {
             mlist = YAML::LoadFile(_game.MasterlistPath().string());
         } catch (YAML::ParserException& e) {
-            //LOG_ERROR("Error: %s", e.getString().c_str());
-            wxMessageBox(
-				FromUTF8(format(loc::translate("Error: Masterlist parsing failed. %1%")) % e.what()),
-				translate("BOSS: Error"),
-				wxOK | wxICON_ERROR,
-				this);
-            progDia->Destroy();
-            return;
+            messages.push_back(boss::Message(boss::MESSAGE_ERROR, string("Masterlist parsing failed. Details: ") + e.what()));
         }
         if (mlist["globals"])
             mlist_messages = mlist["globals"].as< list<boss::Message> >();
@@ -409,14 +402,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         try {
             ulist = YAML::LoadFile(_game.UserlistPath().string());
         } catch (YAML::ParserException& e) {
-            //LOG_ERROR("Error: %s", e.getString().c_str());
-            wxMessageBox(
-				FromUTF8(format(loc::translate("Error: Userlist parsing failed. %1%")) % e.what()),
-				translate("BOSS: Error"),
-				wxOK | wxICON_ERROR,
-				this);
-            progDia->Destroy();
-            return;
+            messages.push_back(boss::Message(boss::MESSAGE_ERROR, string("Userlist parsing failed. Details: ") + e.what()));
         }
         if (ulist["plugins"])
             ulist_plugins = ulist["plugins"].as< list<boss::Plugin> >();
@@ -601,7 +587,9 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
             //Now set load order.
             _game.SetLoadOrder(plugins);
-        }
+        } else
+            messages.push_back(boss::Message(boss::MESSAGE_WARN, "The load order displayed in the Details tab was not applied as sorting was canceled."));
+                cyclicDependenciesExist = true;
 
         out << "Set load order:" << endl;
         for (list<boss::Plugin>::iterator it=plugins.begin(), endIt = plugins.end(); it != endIt; ++it)
@@ -845,7 +833,7 @@ LoadOrderPreview::LoadOrderPreview(wxWindow *parent, const wxChar *title, const 
     //Set up layout.
     wxBoxSizer * bigBox = new wxBoxSizer(wxVERTICAL);
 
-    bigBox->Add(_loadOrder, 1, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 10);
+    bigBox->Add(_loadOrder, 1, wxEXPAND|wxALL, 10);
 
     wxBoxSizer * hbox = new wxBoxSizer(wxHORIZONTAL);
     hbox->Add(_moveUp, 0, wxRIGHT, 5);
