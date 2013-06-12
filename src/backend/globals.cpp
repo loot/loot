@@ -49,10 +49,13 @@ namespace boss {
     const unsigned int VERSION_PATCH = 0;
 
     //Common paths.
-    const boost::filesystem::path readme_path           = "Docs/BOSS Readme.html";
+    const boost::filesystem::path readme_path           = "docs/BOSS Readme.html";
     const boost::filesystem::path libespm_options_path  = "resources/libespm.yaml";
     const boost::filesystem::path svn_path              = "resources/svn/svn.exe";
     const boost::filesystem::path local_path            = GetLocalAppDataPath() / "BOSS";
+    const boost::filesystem::path css_path              = boost::filesystem::current_path() / "resources" / "style.css";
+    const boost::filesystem::path js_path               = boost::filesystem::current_path() / "resources" / "script.js";
+    const boost::filesystem::path polyfill_path         = boost::filesystem::current_path() / "resources" / "polyfill.js";
     const boost::filesystem::path settings_path         = local_path / "settings.yaml";
     const boost::filesystem::path log_path              = local_path / "BOSSDebugLog.txt";
 }

@@ -129,11 +129,11 @@ namespace boss {
         node = head.append_child();
         node.set_name("link");
         node.append_attribute("rel").set_value("stylesheet");
-        node.append_attribute("href").set_value("../resources/style.css");
+        node.append_attribute("href").set_value(ToFileURL(css_path).c_str());
 
         node = head.append_child();
         node.set_name("script");
-        node.append_attribute("src").set_value("../resources/polyfill.js");
+        node.append_attribute("src").set_value(ToFileURL(polyfill_path).c_str());
         node.text().set(" ");
     }
 
@@ -448,7 +448,7 @@ namespace boss {
 
         node = body.append_child();
         node.set_name("script");
-        node.append_attribute("src").set_value("../resources/script.js");
+        node.append_attribute("src").set_value(ToFileURL(js_path).c_str());
         node.text().set(" ");
         
     }

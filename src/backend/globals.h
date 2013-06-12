@@ -54,6 +54,9 @@ namespace boss {
     extern const boost::filesystem::path readme_path;
     extern const boost::filesystem::path settings_path;
     extern const boost::filesystem::path libespm_options_path;
+    extern const boost::filesystem::path css_path;
+    extern const boost::filesystem::path js_path;
+    extern const boost::filesystem::path polyfill_path;
     extern const boost::filesystem::path svn_path;
     extern const boost::filesystem::path log_path;
 }

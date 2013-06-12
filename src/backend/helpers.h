@@ -66,6 +66,9 @@ namespace boss {
     //Get the local application data path.
     boost::filesystem::path GetLocalAppDataPath();
 
+    //Turns an absolute filesystem path into a valid file:// URL.
+    std::string ToFileURL(const boost::filesystem::path& file);
+
     //Version class for more robust version comparisons.
     class Version {
     private:

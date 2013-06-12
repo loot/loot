@@ -262,14 +262,14 @@ LangString TEXT_USERFILES ${LANG_SIMPCHINESE} "BOSS的userlist和BOSS.ini文件�
 		File "..\build\libboss64.dll"
 		
 		;Now install readme files.
-		SetOutPath "$INSTDIR\Docs"
+		SetOutPath "$INSTDIR\docs"
 		File "..\docs\BOSS API Readme.html"
 		File "..\docs\BOSS Metadata Syntax.html"
 		File "..\docs\BOSS Readme.html"
 		File "..\docs\Licenses.txt"
 		
 		;Now install readme images.
-		SetOutPath "$INSTDIR\Docs\images"
+		SetOutPath "$INSTDIR\docs\images"
 		File "..\docs\images\editor.png"
 		File "..\docs\images\main.png"
 		File "..\docs\images\settings.png"
@@ -383,19 +383,19 @@ LangString TEXT_USERFILES ${LANG_SIMPCHINESE} "BOSS的userlist和BOSS.ini文件�
 		RMDir  "$INSTDIR\API"
 		
 		;Remove readme files.
-		Delete "$INSTDIR\Docs\BOSS API Readme.html"
-		Delete "$INSTDIR\Docs\BOSS Metadata Syntax.html"
-		Delete "$INSTDIR\Docs\BOSS Readme.html"
-		Delete "$INSTDIR\Docs\Licenses.txt"
-		RMDir  "$INSTDIR\Docs"
+		Delete "$INSTDIR\docs\BOSS API Readme.html"
+		Delete "$INSTDIR\docs\BOSS Metadata Syntax.html"
+		Delete "$INSTDIR\docs\BOSS Readme.html"
+		Delete "$INSTDIR\docs\Licenses.txt"
+		RMDir  "$INSTDIR\docs"
 		
 		;Remove readme images.
-		Delete "$INSTDIR\Docs\images\editor.png"
-		Delete "$INSTDIR\Docs\images\main.png"
-		Delete "$INSTDIR\Docs\images\settings.png"
-		Delete "$INSTDIR\Docs\images\viewer-1.png"
-		Delete "$INSTDIR\Docs\images\viewer-2.png"
-		RMDir  "$INSTDIR\Docs\images"
+		Delete "$INSTDIR\docs\images\editor.png"
+		Delete "$INSTDIR\docs\images\main.png"
+		Delete "$INSTDIR\docs\images\settings.png"
+		Delete "$INSTDIR\docs\images\viewer-1.png"
+		Delete "$INSTDIR\docs\images\viewer-2.png"
+		RMDir  "$INSTDIR\docs\images"
 
         ;Remove resource files.
         Delete "$INSTDIR\resources\libespm.yaml"

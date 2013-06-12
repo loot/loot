@@ -79,19 +79,7 @@ bool BossGUI::OnInit() {
 	}
 
     //Load settings.
-    if (fs::exists(settings_path)) {
-        try {
-            _settings = YAML::LoadFile(settings_path.string());
-        } catch (YAML::ParserException& e) {
-            //LOG_ERROR("Error: %s", e.getString().c_str());
-            wxMessageBox(
-				FromUTF8(format(loc::translate("Error: Settings parsing failed. %1%")) % e.what()),
-				translate("BOSS: Error"),
-				wxOK | wxICON_ERROR,
-				NULL);
-            return false;
-        }
-    } else {
+    if (!fs::exists(settings_path)) {
         try {
             if (!fs::exists(settings_path.parent_path()))
                 fs::create_directory(settings_path.parent_path());
@@ -104,6 +92,19 @@ bool BossGUI::OnInit() {
             return false;
         }
         GenerateDefaultSettingsFile(settings_path.string());
+    }
+    if (fs::exists(settings_path)) {
+        try {
+            _settings = YAML::LoadFile(settings_path.string());
+        } catch (YAML::ParserException& e) {
+            //LOG_ERROR("Error: %s", e.getString().c_str());
+            wxMessageBox(
+				FromUTF8(format(loc::translate("Error: Settings parsing failed. %1%")) % e.what()),
+				translate("BOSS: Error"),
+				wxOK | wxICON_ERROR,
+				NULL);
+            return false;
+        }
     }
 
     //Skip logging initialisation for tester.
@@ -327,6 +328,11 @@ void Launcher::OnClose(wxCloseEvent& event) {
 
 void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
+    YAML::Node mlist, ulist;
+    list<boss::Message> messages, mlist_messages, ulist_messages;
+    list<boss::Plugin> mlist_plugins, ulist_plugins;
+    time_t start, end;
+
     wxProgressDialog *progDia = new wxProgressDialog(translate("BOSS: Working..."),translate("BOSS working..."), 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_ELAPSED_TIME);
     
     time_t t0 = time(NULL);
@@ -334,7 +340,6 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     ofstream out((local_path / "out.txt").string().c_str());
 
     out << "Updating masterlist..." << endl;
-    time_t start, end;
     start = time(NULL);
 
     vector<string> parsingErrors;
@@ -342,13 +347,10 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     try {
         revision = UpdateMasterlist(_game, parsingErrors);
     } catch (boss::error& e) {
-        //LOG_ERROR("Error: %s", e.what());
-        wxMessageBox(
-            FromUTF8(format(loc::translate("Error: Condition evaluation failed. %1%")) % e.what()),
-            translate("BOSS: Error"),
-            wxOK | wxICON_ERROR,
-            this);
-        return;
+        messages.push_back(boss::Message(boss::MESSAGE_ERROR, string("Masterlist update failed. Details: ") + e.what()));
+    }
+    for (vector<string>::const_iterator it=parsingErrors.begin(), endit=parsingErrors.end(); it != endit; ++it) {
+        messages.push_back(boss::Message(boss::MESSAGE_ERROR, *it));
     }
 
     end = time(NULL);
@@ -376,10 +378,6 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 	out << "Time taken to read plugins: " << (end - start) << " seconds." << endl;
     start = time(NULL);
 
-    YAML::Node mlist, ulist;
-    list<boss::Message> messages, mlist_messages, ulist_messages;
-    list<boss::Plugin> mlist_plugins, ulist_plugins;
-
     if (fs::exists(_game.MasterlistPath())) {
         out << "Parsing masterlist..." << endl;
 
@@ -392,6 +390,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 				translate("BOSS: Error"),
 				wxOK | wxICON_ERROR,
 				this);
+            progDia->Destroy();
             return;
         }
         if (mlist["globals"])
@@ -416,6 +415,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 				translate("BOSS: Error"),
 				wxOK | wxICON_ERROR,
 				this);
+            progDia->Destroy();
             return;
         }
         if (ulist["plugins"])
@@ -461,13 +461,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             try {
                 it->EvalAllConditions(_game, lang);
             } catch (boss::error& e) {
-                //LOG_ERROR("Error: %s", e.what());
-                wxMessageBox(
-                    FromUTF8(format(loc::translate("Error: Condition evaluation failed. %1%")) % e.what()),
-                    translate("BOSS: Error"),
-                    wxOK | wxICON_ERROR,
-                    this);
-                return;
+                messages.push_back(boss::Message(boss::MESSAGE_ERROR, "\"" + it->Name() + "\" contains a condition that could not be evaluated. Details: " + e.what()));
             }
 
             progDia->Pulse();
@@ -652,6 +646,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             translate("BOSS: Error"),
             wxOK | wxICON_ERROR,
             this);
+        progDia->Destroy();
         return;
     }
 

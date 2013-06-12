@@ -73,7 +73,8 @@ namespace boss {
         siStartInfo.cb = sizeof(STARTUPINFO); 
         siStartInfo.hStdError = consoleWrite;
         siStartInfo.hStdOutput = consoleWrite;
-        siStartInfo.dwFlags |= STARTF_USESTDHANDLES;
+        siStartInfo.dwFlags |= STARTF_USESTDHANDLES | STARTF_USESHOWWINDOW;
+        siStartInfo.wShowWindow = SW_HIDE;
 
         const int utf16Len = MultiByteToWideChar(CP_UTF8, 0, command.c_str(), -1, NULL, 0);
         wchar_t * cmdLine = new wchar_t[utf16Len];
@@ -126,36 +127,37 @@ namespace boss {
         if (!RunCommand(command, output))
             throw error(ERROR_SUBVERSION_ERROR, "Subversion could not update the masterlist. Details: " + output);
 
-        //Now test masterlist to see if it parses OK.
-        bool good = false;
-        while (!good) {
+        
+        string revision;
+        while (true) {
             try {
+
+                //Now get the masterlist revision. 
+                command = svn_path.string() + " info \"" + game.MasterlistPath().string() + "\"";
+                if (!RunCommand(command, output))
+                    throw error(ERROR_SUBVERSION_ERROR, "Subversion could not read the masterlist revision number. Details: " + output);
+
+                size_t pos1 = output.rfind("Revision: ");
+                size_t pos2 = output.find('\n', pos1);
+
+                revision = output.substr(pos1+10, pos2-pos1-10);
+
+                pos1 = output.find("Last Changed Date: ", pos2);
+                pos2 = output.find(' ', pos1+19);
+
+                string date = output.substr(pos1+19, pos2-pos1-19);
+
+                //Now test masterlist to see if it parses OK.
                 YAML::Node mlist = YAML::LoadFile(game.MasterlistPath().string());
-                good = true;
+
+                return revision + " (" + date + ")";
             } catch (YAML::Exception& e) {
                 //Roll back one revision if there's an error.
-                parsingErrors.push_back(e.what());
+                parsingErrors.push_back("Masterlist revision " + revision + ": " + e.what());
                 command = svn_path.string() + " update --revision PREV \"" + game.MasterlistPath().string() + "\"";
                 if (!RunCommand(command, output))
                     throw error(ERROR_SUBVERSION_ERROR, "Subversion could not update the masterlist. Details: " + output);
             }
         }
-
-        //Now get the masterlist revision. Can either create a pipe using the Win32 API (http://msdn.microsoft.com/en-us/library/ms682499.aspx), or output to a file, read it, then delete it.
-        command = svn_path.string() + " info \"" + game.MasterlistPath().string() + "\"";
-        if (!RunCommand(command, output))
-            throw error(ERROR_SUBVERSION_ERROR, "Subversion could not read the masterlist revision number. Details: " + output);
-
-        size_t pos1 = output.rfind("Revision: ");
-        size_t pos2 = output.find('\n', pos1);
-
-        string revision = output.substr(pos1+10, pos2-pos1-10);
-
-        pos1 = output.find("Last Changed Date: ", pos2);
-        pos2 = output.find(' ', pos1+19);
-
-        string date = output.substr(pos1+19, pos2-pos1-19);
-
-        return revision + " (" + date + ")";
     }
 }
