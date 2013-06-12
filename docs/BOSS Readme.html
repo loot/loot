@@ -34,14 +34,15 @@ h3{
     thead {background:#99CCFF;}
     code.box {border-radius:5px; border:1px solid #ccc; padding:0.75em; white-space:pre; overflow-x:auto; display:table; margin:1.5em;}
 
-    blockquote {border-radius:3px; border:1px solid #0c0; padding:5px; background:#7e7; display:table;margin:1.5em;}
+    blockquote {border:1px solid #ccc; border-radius:3px; padding:5px; background:#eee; display:table;margin:1.5em;}
 
     a[href^="http"]:after {padding-left:2px; content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAVklEQVR4Xn3PgQkAMQhDUXfqTu7kTtkpd5RA8AInfArtQ2iRXFWT2QedAfttj2FsPIOE1eCOlEuoWWjgzYaB/IkeGOrxXhqB+uA9Bfcm0lAZuh+YIeAD+cAqSz4kCMUAAAAASUVORK5CYII=);}
 
     span[title] {border-bottom: 1px dotted; font-family: sans-serif; cursor:help;}
     abbr {cursor:help;}
 
-    #warning {background:#c00; padding:10px 5px;margin:-8px;}
+    #warning {background:#fbb; padding:10px 5px;margin:-8px;}
+    .warning {background:#fbb; padding:10px; border-color:#d00;}
     var {color:#8B4513;}
 
     #teamTableBody > tr > td:first-child {border-right:0;}
@@ -111,7 +112,7 @@ This documentation is a work in progress, covering an application that is also s
         <li><a href="#appendix-permissions">File Permissions</a>
     </ol>
     <li><a href="BOSS%20API%20Readme.html">API Readme</a> (separate document)
-    <li><a href="BOSS%20Metadata%20File%20Syntax.html">Metadata File Syntax</a> (separate document)
+    <li><a href="BOSS%20Metadata%20Syntax.html">Metadata File Syntax</a> (separate document)
 </ol>
 
 <h2 id="intro">Introduction</h2>
@@ -125,9 +126,9 @@ This documentation is a work in progress, covering an application that is also s
 <p>BOSS is intended to make using mods easier, and mod users should still possess a working knowledge of mod load ordering. See <a href="#appendix-intro">Introduction To Load Orders</a> for an overview.
 
 
-<h2 id="install">Installation</h2>
+<h2 id="install">Installation &amp; Uninstallation</h2>
 
-<blockquote>BOSS version 3 is not backwards compatible with version 2, as it makes a variety of major changes to how BOSS works. In particular, it will almost certainly set a different load order, and any user rules will have to be manually recreated in BOSS's user interface.</blockquote>
+<blockquote class="warning">BOSS version 3 is not backwards compatible with version 2, as it makes a variety of major changes to how BOSS works. In particular, it will almost certainly set a different load order, and any user rules will have to be manually recreated in BOSS's user interface. Version 2 should be uninstalled prior to installing version 3.</blockquote>
 
 <p>The simplest way to install BOSS is to use the installer. However, the instructions below are provided if a manual install method is preferred.
 <ol>
@@ -136,7 +137,7 @@ This documentation is a work in progress, covering an application that is also s
     <li>If any of the <abbr title="Wrye Bash, Wrye Flash or Wrye Flash NV">Wrye *ash</abbr> utilities are installed, make sure their <q>BOSS Disable Lock Load Order</q><span title="previously BOSS Disable Lock Times">*</span> setting is enabled.
     <li>If updating from an earlier version of BOSS and you moved any userlists you have to a temporary location, after you have run BOSS at least once for each game with a userlist, you will need to move your userlist(s) into the game(s) subfolders that are created within the BOSS folder.
 </ol>
-<p>If BOSS was installed using the installer, then use the uninstaller it provides a link to in the Start Menu to uninstall BOSS. If BOSS was installed manually, simply delete the <q>BOSS</q> folder you installed.
+<p>If BOSS was installed using the installer, then use the uninstaller it provides a link to in the Start Menu to uninstall BOSS. If BOSS was installed manually, simply delete the <q>BOSS</q> folder you installed and the BOSS folder in your local application data folder, which can be accessed by entering <code>%LOCALAPPDATA%</code> into Windows' File Explorer.
 
 
 <h2 id="usage">Using BOSS</h2>
@@ -145,11 +146,11 @@ This documentation is a work in progress, covering an application that is also s
     <img alt="BOSS's main window" src="images/main.png">
     <figcaption>BOSS's main window. The title bar displays which game BOSS is running for.</figcaption>
 </figure>
-<p>Clicking the <q>Edit Metadata</q> button will open BOSS's metadata editor, where you can make changes to the metadata BOSS uses to sort plugins, the messages that get displayed for plugins, and any Bash Tag suggestions BOSS makes. BOSS also gives you the opportunity to make any such changes when it sorts your plugins, but this option is useful for when you don't want to go through the full sorting process. See <a href="#usage-custom">Customising BOSS's Results</a> for more information.
-<p>Clicking the <q>Sort Plugins</q> button will begin the plugin sorting process. This will sort your plugins, allow you to make any changes, then display a report that details the results of BOSS's activity. See <a href="#usage-sort">Sorting Plugins</a> for more information.
-<p>Clicking the <q>View Last Report</q> button will display the report generated the last time BOSS sorted your plugins.  See <a href="usage-log">The Results Report</a> for more information.
+<p>Clicking the <q>Edit Metadata</q> button will open BOSS's <a href="#usage-custom">metadata editor</a>, where you can make changes to the metadata BOSS uses to sort plugins, the messages that get displayed for plugins, and any Bash Tag suggestions BOSS makes.
+<p>Clicking the <q>Sort Plugins</q> button will begin the <a href="#usage-sort">plugin sorting process</a>. This will sort your plugins, allow you to make any changes to the load order it produces, then display a report that details the results of BOSS's activity.
+<p>Clicking the <q>View Last Report</q> button will display the <a href="usage-log">report</a> generated the last time BOSS sorted your plugins.
 <p>The <q>File</q> menu provides menu items for sorting plugins, viewing the last report BOSS generated and quitting BOSS, while the <q>Edit</q> menu provides menu items for accessing BOSS's metadata editor and the <a href="usage-settings">settings window</a>.
-<p>The <q>Active Game</q> menu allows you to change which game BOSS is running for without having to close and re-open it. Games that BOSS cannot find are greyed out, and the the one BOSS is running for is marked with a dot to its left. To change the active game, simply select another game in the list.
+<p>The <q>Game</q> menu allows you to change which game BOSS is running for without having to close and re-open it. Games that BOSS cannot find are greyed out, and the the one BOSS is running for is marked with a dot to its left. To change the active game, simply select another game in the list.
 <p>The <q>Help</q> menu provides a link to this readme and an about page that contains the version of BOSS being run, some legal information and a link to the project repository.
 
 <h3 id="usage-sort">Sorting Plugins</h3>
@@ -217,13 +218,29 @@ This documentation is a work in progress, covering an application that is also s
         <tr><td id="settingsDefaultGame">Default Game<td>If set to something other than <q>Autodetect</q>, this overrides game autodetection. If the game specified is not detected, BOSS falls back to autodetection.
         <tr><td>Language<td>Controls the language BOSS uses in its interfaces. Debug messages are always displayed in English, and any plugin messages that do not have translations in the selected language will be displayed in English instead.
         <tr><td>Debug Verbosity<td>Controls the verbosity of the debug output, which is written to <q>BOSSDebugLog.txt</q>.
-        <tr><td>Oblivion Masterlist URL<td>The URL that BOSS uses to check for updates to its masterlist for TES IV: Oblivion.
-        <tr><td>Nehrim Masterlist URL<td>The URL that BOSS uses to check for updates to its masterlist for Nehrim: At Fate's Edge.
-        <tr><td>Skyrim Masterlist URL<td>The URL that BOSS uses to check for updates to its masterlist for TES V: Skyrim.
-        <tr><td>Fallout 3 Masterlist URL<td>The URL that BOSS uses to check for updates to its masterlist for Fallout 3.
-        <tr><td>Fallout: New Vegas Masterlist URL<td>The URL that BOSS uses to check for updates to its masterlist for Fallout: New Vegas.
         <tr><td>Update masterlist before sorting<td>If checked, BOSS will update its masterlist, should an update be available, before sorting mods.
+        <tr><td>Viewer reports externally in default browser.<td>If checked, BOSS will display its report using your default web browser instead of opening its own window.
 </table>
+<p>The games list allows the customisation of which games BOSS offers support for, trivialising support for multiple copies of a game and Total Conversions. The games listed here will be displayed in the main window's <q>Game</q> menu when BOSS is next run. The <q>Add Game</q>, <q>Edit Game</q> and <q>Remove Game</q> buttons are used to edit the list. Each game has several columns, which are explained below.
+<table>
+    <thead>
+        <tr><th>Column<th>Description
+    <tbody>
+        <tr><td>Name<td>The name of the game, or another identifying string, that is displayed in menus and the main window's title bar.
+        <tr><td>Base Game Type<td>Every game BOSS runs for must use the plugin file format and load order system of one of the following games:
+        <ul>
+            <li>TES IV: Oblivion
+            <li>TES V: Skyrim
+            <li>Fallout 3
+            <li>Fallout: New Vegas
+        <ul>
+        <tr><td>BOSS Folder<td>The sub-folder which BOSS uses to store the game's files in. Each game must be given a unique sub-folder.
+        <tr><td>Master File<td>The game's main master file. This is specified as it must load before all other plugins. Note that Skyrim-based games will always load Skyrim.esm first, so this column must always be set to <q>Skyrim.esm</q> for such games.
+        <tr><td>Online Masterlist<td>The URL of the online masterlist that BOSS uses to update its local copy. 
+        <tr><td>Install Path<td>The path to the game's folder, in which the Data folder lies. 
+        <tr><td>Install Path Registry Key<td>The registry key, in <code>HKEY_LOCAL_MACHINE</code>, that contains the install path of the game. This may be used to obtain the install path of a game the first time BOSS runs for it.
+</table>
+<p>Note that for Skyrim, multiple copies or Total Conversions will all edit the same <code>plugins.txt</code> file, and so they lack the level of independence that is achievable for other games.
 
 
 <h2 id="trouble">Troubleshooting</h2>
@@ -271,7 +288,7 @@ This documentation is a work in progress, covering an application that is also s
         <li>Zanderat
     </ul>
 </ul>
-<p>BOSS is written in C/C++ and makes use of the <a href="http://www.davekoelle.com/alphanum.html">Alphanum</a>, <a href="http://www.boost.org/">Boost</a>, <a href="https://github.com/WrinklyNinja/libespm">libespm</a>, <a href="https://github.com/WrinklyNinja/libloadorder">libloadorder</a>, <a href="http://www.wxwidgets.org/">wxWidgets</a> and <a href="https://code.google.com/p/yaml-cpp/">yaml-cpp</a> libraries.
+<p>BOSS is written in C/C++ and makes use of <a href="https://subversion.apache.org/">Subversion</a> and the <a href="http://www.davekoelle.com/alphanum.html">Alphanum</a>, <a href="http://www.boost.org/">Boost</a>, <a href="http://github.com/WrinklyNinja/libespm">libespm</a>, <a href="http://github.com/WrinklyNinja/libloadorder">libloadorder</a>, <a href="http://code.google.com/p/pugixml/">PugiXML</a>, <a href="http://www.wxwidgets.org/">wxWidgets</a> and <a href="http://code.google.com/p/yaml-cpp/">yaml-cpp</a> libraries. BOSS's reports are written in XHTML/CSS/Javascript and make use of <a href="http://github.com/inexorabletash/polyfill">Polyfill.js</a> to provide Internet Explorer 8 compatibility.
 
 
 <h2 id="project">Project Members</h2>
@@ -370,7 +387,7 @@ There are three key pieces of information that are used to accurately describe a
     <li>Install the game outside the <q>Program Files</q> (or <q>Program Files (x86)</q> if on 64-bit Windows). UAC prevents unauthorised edits to these folders, so by installing the game outside of them, you remove it from UAC's reach, allowing you to use mods more easily.
     <li>Deactivate UAC. This can be done from the Control Panel, and will turn UAC off across the whole of your computer. It is up to you whether you feel that you have adequate security measures in place to do this without risk.
     <li>Give yourself <q>Full Control</q> permissions over your game install folder. This will allow you to make any edits you desire while keeping UAC active and on guard for any edits made by programs you do not run, and also means that you do not need to reinstall your game to a new location.
-    <li>Run BOSS as an Administrator. Right-click the <q>BOSS.exe</q> and <q>BOSS GUI.exe</q>, and select <q>Run as administrator</q>.
+    <li>Run BOSS as an Administrator. Right-click the BOSS executable, or the shortcut if launching from a shortcut, and select <q>Run as administrator</q>.
 </ol>
 <p>For those that wish to take the third option and give themselves <q>Full Control</q> permissions, here is a guide:
 <ol>

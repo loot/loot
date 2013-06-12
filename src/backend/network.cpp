@@ -109,11 +109,40 @@ namespace boss {
         return exitCode == 0;
     }
 
+    //Gets revision + date string.
+    string GetRevision(const std::string& buffer) {
+        string revision, date;
+        size_t pos1, pos2;
+        
+        pos1 = buffer.rfind("Revision: ");
+        if (pos1 == string::npos)
+            return "";
+        
+        pos2 = buffer.find('\n', pos1);
+
+        revision = buffer.substr(pos1+10, pos2-pos1-10);
+
+        pos1 = buffer.find("Last Changed Date: ", pos2);
+        pos2 = buffer.find(' ', pos1+19);
+
+        date = buffer.substr(pos1+19, pos2-pos1-19);
+
+        return revision + " (" + date + ")";
+    }
+
     std::string UpdateMasterlist(const Game& game, std::vector<std::string>& parsingErrors) {
         
-        string command, output;
+        string command, output, revision;
         //First check if the working copy is set up or not.
-        command = svn_path.string() + " info \"" + game.MasterlistPath().parent_path().string() + "\"";
+        command = svn_path.string() + " info \"" + game.MasterlistPath().string() + "\"";
+
+        revision = GetRevision(output);
+
+        if (game.URL().empty()) {
+            if (!revision.empty())
+                return revision;
+            else
+                return "N/A";
         
         if (!RunCommand(command, output)) {
             //Working copy not set up, perform a checkout.
@@ -127,8 +156,6 @@ namespace boss {
         if (!RunCommand(command, output))
             throw error(ERROR_SUBVERSION_ERROR, "Subversion could not update the masterlist. Details: " + output);
 
-        
-        string revision;
         while (true) {
             try {
 
@@ -137,20 +164,12 @@ namespace boss {
                 if (!RunCommand(command, output))
                     throw error(ERROR_SUBVERSION_ERROR, "Subversion could not read the masterlist revision number. Details: " + output);
 
-                size_t pos1 = output.rfind("Revision: ");
-                size_t pos2 = output.find('\n', pos1);
-
-                revision = output.substr(pos1+10, pos2-pos1-10);
-
-                pos1 = output.find("Last Changed Date: ", pos2);
-                pos2 = output.find(' ', pos1+19);
-
-                string date = output.substr(pos1+19, pos2-pos1-19);
+                revision = GetRevision(output);
 
                 //Now test masterlist to see if it parses OK.
                 YAML::Node mlist = YAML::LoadFile(game.MasterlistPath().string());
 
-                return revision + " (" + date + ")";
+                return revision;
             } catch (YAML::Exception& e) {
                 //Roll back one revision if there's an error.
                 parsingErrors.push_back("Masterlist revision " + revision + ": " + e.what());
