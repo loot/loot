@@ -3,7 +3,7 @@
 <title>BOSS Metadata File Syntax</title>
 <style>
     body {
-        font:12pt/1.5 Helvetica,sans-serif;
+        font:10pt/1.5 Helvetica,sans-serif;
         text-rendering:optimizeLegibility;}
     p, ul, li {margin:1.5em 0;}
     h1,h3,h2 {font-weight:normal;}
@@ -39,9 +39,10 @@ h3{
     a[href^="http"]:after {padding-left:2px; content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAVklEQVR4Xn3PgQkAMQhDUXfqTu7kTtkpd5RA8AInfArtQ2iRXFWT2QedAfttj2FsPIOE1eCOlEuoWWjgzYaB/IkeGOrxXhqB+uA9Bfcm0lAZuh+YIeAD+cAqSz4kCMUAAAAASUVORK5CYII=);}
 
     span[title] {border-bottom: 1px dotted; font-family: sans-serif; cursor:help;}
-    abbr {cursor:help;}
+    abbr {cursor:help; border-bottom: 1px dotted black;}
 
-    #warning {background:#c00; padding:10px 5px;margin:-8px;}
+    #warning {background:#fbb; padding:10px 5px;margin:-8px;}
+    .warning {background:#fbb; border-color:#d00;}
     var {color:#8B4513;}
 </style>
 <!--  BOSS
@@ -160,7 +161,14 @@ plugins:
         <tr><td><code>type</code><td>&#x2713;<td>The type string can be one of three keywords, see the table below for their semantics.
         <tr><td><code>content</code><td>&#x2713;<td>The actual message content string. URLs in message content strings will be turned into hyperlinks in BOSS's user interface. Recognised URLs are those that start with <code>file:</code>, <code>http:</code> or <code>https:</code>. URLs can be labelled by writing the label after the URL, with a space separating them, and enclosing the URL and label in double quotes.
         <tr><td><code>condition</code><td>&#x2717;<td>A condition string that is evaluated to determine whether the message should be displayed: if it evaluates to true, the message is displayed, otherwise it is not. See <a href="#cond">Condition Strings</a> for details.
-        <tr><td><code>lang</code><td>&#x2717;<td>What language this message is written in, given as an ISO 639-3 language code. The languages BOSS supports are given in <a href="#lang">Language Codes</a>. If no language is given, then the message will always be displayed. If a language is given and it does not match the language BOSS is running for, the message will not be displayed, otherwise its display is dependent on the evaluation of the condition string, if present.
+        <tr><td><code>lang</code><td>&#x2717;<td>The language a message is written in, given as an ISO 639-3 language code. The languages BOSS supports are given in <a href="#lang">Language Codes</a>. The value of this key decides whether BOSS displays the message as follows:
+        <ol>
+            <li>If a language other than English is given, and it does not match BOSS's current language, the message will not be displayed.
+            <li>If another message with the same <code>id</code> value has a language that matches BOSS's current language, the message will not be displayed.
+            <li>If the message has a condition, its display is dependent on the evaluation of the condition string.
+            <li>Otherwise, the message will be displayed.
+        </ol>
+        <tr><td><code>id</code><td>&#x2717;<td>A string that identifies the message. If a message is present in multiple languages, they should be given the same <code>id</code> value, so that BOSS knows that they say the same thing. An <code>id</code> value is local to within the structure that contains the message, so one plugin's messages can use the same <code>id</code> values as another plugin's messages without conflicting.
 </table>
 
 <p>There are three message types:
@@ -350,7 +358,6 @@ msg:
     <thead><tr><th>Language<th>ISO 639-3 Code
     <tbody>
         <tr><td>English<td>eng
-        <tr><td>Russian<td>rus
 </table>
 
 <h2 id="license">License</h2>

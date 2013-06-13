@@ -3,7 +3,7 @@
 <title>BOSS API Readme</title>
 <style>
     body {
-        font:12pt/1.5 Helvetica,sans-serif;
+        font:10pt/1.5 Helvetica,sans-serif;
         text-rendering:optimizeLegibility;}
     p, ul, li {margin:1.5em 0;}
     h1,h3,h2 {font-weight:normal;}
@@ -39,9 +39,9 @@ h3{
     a[href^="http"]:after {padding-left:2px; content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAVklEQVR4Xn3PgQkAMQhDUXfqTu7kTtkpd5RA8AInfArtQ2iRXFWT2QedAfttj2FsPIOE1eCOlEuoWWjgzYaB/IkeGOrxXhqB+uA9Bfcm0lAZuh+YIeAD+cAqSz4kCMUAAAAASUVORK5CYII=);}
 
     span[title] {border-bottom: 1px dotted; font-family: sans-serif; cursor:help;}
-    abbr {cursor:help;}
+    abbr {cursor:help; border-bottom: 1px dotted black;}
 
-    #warning {background:#c00; padding:10px 5px;margin:-8px;}
+    #warning {background:#fbb; padding:10px 5px;margin:-8px;}
     var {color:#8B4513;}
     .dfn {display:block; margin-bottom:4.5em; font-style:normal;}
 </style>
@@ -155,6 +155,13 @@ This documentation is a work in progress, covering an API that is also still a w
         <tr><td>BOSS_API_MESSAGE_WARN<td>A warning message.
         <tr><td>BOSS_API_MESSAGE_ERROR<td>An error message.
 </table>
+<p>The following codes are used with <a href="#boss_eval_lists">boss_eval_lists</a> to specify the language that should be used when evaluating messages.
+<table>
+    <thead><tr><th>Language Code<th>Description
+    <tbody>
+        <tr><td>BOSS_API_LANG_AUTO<td>Allow any language messages.
+        <tr><td>BOSS_API_LANG_ENG<td>Allow only English language messages.
+</table>
 
 <h2 id="func">Functions</h2>
 
@@ -228,10 +235,11 @@ This documentation is a work in progress, covering an API that is also still a w
 </ul>
 </div>
 <div class="dfn" id="boss_eval_lists">
-<code class="box">unsigned int boss_eval_lists (boss_db db);</code>
+<code class="box">unsigned int boss_eval_lists (boss_db db, const unsigned int language);</code>
 <p>Refreshes the active plugin list used during evaluation then evaluates all conditional and regular expression metadata entries. Repeated calls re-evaluate the metadata from scratch. This function affects the output of all the database access functions.
 <ul>
     <li><var>db</var> - The database the function acts on.
+    <li><var>language</var> - The language code that is used for message language comparisons.
 </ul>
 </div>
 
