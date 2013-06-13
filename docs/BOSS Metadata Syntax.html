@@ -80,9 +80,9 @@ This documentation is a work in progress, covering a syntax that is also still a
     <li><a href="#filestruct">Metadata File Structure</a>
     <li><a href="#structs">Data Structures</a>
     <ol>
-        <li><a href="#structs-message">Message Data Structure</a>
-        <li><a href="#structs-file">File Data Structure</a>
         <li><a href="#structs-tag">Tag Data Structure</a>
+        <li><a href="#structs-file">File Data Structure</a>
+        <li><a href="#structs-message">Message Data Structure</a>
         <li><a href="#structs-plugin">Plugin Data Structure</a>
     </ol>
     <li><a href="#cond">Condition Strings</a>
@@ -153,46 +153,24 @@ plugins:
 <h2 id="structs">Data Structures</h2>
 <p>While you could write whatever you wanted in a metadata file without problems, so long as it was valid YAML, it would be pointless as BOSS expects the metadata to be laid out using a certain set of data structures, described in this section.
 
-<h3 id="structs-message">Message Data Structure</h3>
-<p>Messages are given as key-value maps.
+<h3 id="structs-tag">Tag Data Structure</h3>
+<p>BOSS metadata files can contain suggestions for the addition or removal of Bash Tags, and this is the structure used for them. It has two forms: the first is a simple string, and the second is a key-value map. All values in the map are strings.
+<p>The simple form:
+<code class="box"><var>tag</var></code>
+<p>where <code><var>tag</var></code> is the Bash Tag, preceded by a minus sign if it is suggested for removal.
+<p>The map form:
 <table>
     <thead><tr><th>Key Name<th>Required<th>Notes
     <tbody>
-        <tr><td><code>type</code><td>&#x2713;<td>The type string can be one of three keywords, see the table below for their semantics.
-        <tr><td><code>content</code><td>&#x2713;<td>The actual message content string. URLs in message content strings will be turned into hyperlinks in BOSS's user interface. Recognised URLs are those that start with <code>file:</code>, <code>http:</code> or <code>https:</code>. URLs can be labelled by writing the label after the URL, with a space separating them, and enclosing the URL and label in double quotes.
-        <tr><td><code>condition</code><td>&#x2717;<td>A condition string that is evaluated to determine whether the message should be displayed: if it evaluates to true, the message is displayed, otherwise it is not. See <a href="#cond">Condition Strings</a> for details.
-        <tr><td><code>lang</code><td>&#x2717;<td>The language a message is written in, given as an ISO 639-3 language code. The languages BOSS supports are given in <a href="#lang">Language Codes</a>. The value of this key decides whether BOSS displays the message as follows:
-        <ol>
-            <li>If a language other than English is given, and it does not match BOSS's current language, the message will not be displayed.
-            <li>If another message with the same <code>id</code> value has a language that matches BOSS's current language, the message will not be displayed.
-            <li>If the message has a condition, its display is dependent on the evaluation of the condition string.
-            <li>Otherwise, the message will be displayed.
-        </ol>
-        <tr><td><code>id</code><td>&#x2717;<td>A string that identifies the message. If a message is present in multiple languages, they should be given the same <code>id</code> value, so that BOSS knows that they say the same thing. An <code>id</code> value is local to within the structure that contains the message, so one plugin's messages can use the same <code>id</code> values as another plugin's messages without conflicting.
+        <tr><td><code>name</code><td>&#x2713;<td>A Bash Tag, preceded by a minus sign if it is suggested for removal.
+        <tr><td><code>condition</code><td>&#x2717;<td>A condition string that is evaluated to determine whether this Bash Tag should be suggested: if it evaluates to true, the Tag is suggested, otherwise it is ignored. See <a href="#cond">Condition Strings</a> for details.
 </table>
-
-<p>There are three message types:
-<table>
-    <thead><tr><th>Keyword<th>Description
-    <tbody>
-        <tr><td><code>say</code><td>A generic message, useful for miscellaneous notes.
-        <tr><td><code>warn</code><td>A warning message, describing a non-critical issue with the user's mods (eg. dirty mods).
-        <tr><td><code>error</code><td>An error message, decribing a critical installation issue (eg. missing masters).
-</table>
-
 <p>Examples:
-<code class="box">condition: 'file("Silgrad_Tower.esm")'
-type: warn
-content: Use either Silgrad_Tower.esm or Silgrad_Tower_T.esm but not both together.
+<code class="box">Relations</code>
+or
+<code class="box">name: -Relations
+condition: "file(\"Mart's Monster Mod for OOO.esm\") or file(\"FCOM_Convergence.esm\")"
 </code>
-A content string of
-<code class="box">See http://www.example.com for more information.</code>
-would be displayed as
-<blockquote>See <a href="http://www.example.com">http://www.example.com</a> for more information.</blockquote>
-while
-<code class="box">See "http://www.example.com example link" for more information.</code>
-would be displayed as
-<blockquote>See <a href="http://www.example.com">example link</a> for more information.</blockquote>
 
 <h3 id="structs-file">File Data Structure</h3>
 <p>Not to be confused with the structure of the metadata file itself, this structure can be used to hold filenames. It has two forms: the first is a simple string, and the second is a key-value map. All values in the map are strings.
@@ -216,24 +194,62 @@ condition: 'version("../obse_loader.exe", "0.0.18.0", &lt;)'
 display: OBSE v18+
 </code>
 
-<h3 id="structs-tag">Tag Data Structure</h3>
-<p>BOSS metadata files can contain suggestions for the addition or removal of Bash Tags, and this is the structure used for them. Like the file data structure, it has simple string and key-value map forms. All values in the map are strings.
-<p>The simple form:
-<code class="box"><var>tag</var></code>
-<p>where <code><var>tag</var></code> is the Bash Tag, preceded by a minus sign if it is suggested for removal.
-<p>The map form:
+<h3 id="structs-message">Message Data Structure</h3>
+<p>Messages are given as key-value maps.
 <table>
     <thead><tr><th>Key Name<th>Required<th>Notes
     <tbody>
-        <tr><td><code>name</code><td>&#x2713;<td>A Bash Tag, preceded by a minus sign if it is suggested for removal.
-        <tr><td><code>condition</code><td>&#x2717;<td>A condition string that is evaluated to determine whether this Bash Tag should be suggested: if it evaluates to true, the Tag is suggested, otherwise it is ignored. See <a href="#cond">Condition Strings</a> for details.
+        <tr><td><code>type</code><td>&#x2713;<td>The type string can be one of three keywords, see the table below for their semantics.
+        <tr><td><code>content</code><td>&#x2713;<td>Either simply a string, or a list of content data structures. If the latter, one of the structures must be for English.
+        <tr><td><code>condition</code><td>&#x2717;<td>A condition string that is evaluated to determine whether the message should be displayed: if it evaluates to true, the message is displayed, otherwise it is not. See <a href="#cond">Condition Strings</a> for details.
 </table>
-<p>Examples:
-<code class="box">Relations</code>
-or
-<code class="box">name: -Relations
-condition: "file(\"Mart's Monster Mod for OOO.esm\") or file(\"FCOM_Convergence.esm\")"
+
+<p>There are three message types:
+<table>
+    <thead><tr><th>Keyword<th>Description
+    <tbody>
+        <tr><td><code>say</code><td>A generic message, useful for miscellaneous notes.
+        <tr><td><code>warn</code><td>A warning message, describing a non-critical issue with the user's mods (eg. dirty mods).
+        <tr><td><code>error</code><td>An error message, decribing a critical installation issue (eg. missing masters).
+</table>
+<p>The content data structure is a key-value map, with all values being strings:
+<table>
+    <thead><tr><th>Key Name<th>Required<th>Notes
+    <tbody>
+        <tr><td><code>str</code><td>&#x2713;<td>The actual message content string. URLs in message content strings will be turned into hyperlinks in BOSS's user interface. Recognised URLs are those that start with <code>file:</code>, <code>http:</code> or <code>https:</code>. URLs can be labelled by writing the label after the URL, with a space separating them, and enclosing the URL and label in double quotes.
+        <tr><td><code>lang</code><td>&#x2713;<td>The language that <code>str</code> is written in, given as an ISO 639-3 language code. The languages BOSS supports are given in <a href="#lang">Language Codes</a>.
+</table>
+
+<p>BOSS handles messages and languages as follows:
+<ol>
+    <li>If a message's <code>content</code> value is a string, the message will the string as its content if displayed.
+    <li>If a message's <code>content</code> value is a list of content structures, then the first structure with a language that matches BOSS's current language will be used as the message's content if displayed. If there are no matches, then the first structure in English will be used.
+</ol>
+
+
+<p>Examples (translations by Google):
+<code class="box">type: say
+condition: file("foo.esp")
+content:
+  - lang: eng
+    str: An example link: http://www.example.com
+  - lang: rus
+    str: Это пример ссылки: http://www.example.com
+  - lang: ger
+    str: Ein Beispiel-Link: http://www.example.com
 </code>
+would be displayed as
+<blockquote>
+отмечать: Это пример ссылки: <a href="http://www.example.com">http://www.example.com</a>
+</blockquote>
+if the current language was Russian and <code>foo.esp</code> was installed, while
+<code class="box">type: say
+content: An alternative "http://www.example.com example link", with no translations.
+</code>
+would be displayed as
+<blockquote>
+отмечать: An alternative <a href="http://www.example.com">example link</a>, with no translations.
+</blockquote>
 
 <h3 id="structs-plugin">Plugin Data Structure</h3>
 <p>This is the structure that brings all the others together, and forms the main component of a metadata file. It is a key-value map.
