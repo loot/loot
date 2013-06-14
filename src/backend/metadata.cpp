@@ -29,6 +29,7 @@
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/regex.hpp>
 
 using namespace std;
 
@@ -69,34 +70,23 @@ namespace boss {
         return id;
     }
 
-    ConditionalData::ConditionalData() {}
+    ConditionStruct::ConditionStruct() {}
 
-    ConditionalData::ConditionalData(const string& c) : condition(c) {}
+    ConditionStruct::ConditionStruct(const string& condition) : _condition(condition) {}
 
-    ConditionalData::ConditionalData(const std::string& c, const std::string& d)
-        : condition(c), data(d) {}
-
-    bool ConditionalData::IsConditional() const {
-        return !condition.empty();
+    bool ConditionStruct::IsConditional() const {
+        return !_condition.empty();
     }
 
-    std::string ConditionalData::Condition() const {
-        return condition;
+    std::string ConditionStruct::Condition() const {
+        return _condition;
     }
 
-    std::string ConditionalData::Data() const {
-        return data;
-    }
-
-    void ConditionalData::Data(const std::string& d) {
-        data = d;
-    }
-
-    bool ConditionalData::EvalCondition(boss::Game& game) const {
-        if (condition.empty())
+    bool ConditionStruct::EvalCondition(boss::Game& game) const {
+        if (_condition.empty())
             return true;
 
-        boost::unordered_map<std::string, bool>::const_iterator it = game.conditionCache.find(boost::to_lower_copy(condition));
+        boost::unordered_map<std::string, bool>::const_iterator it = game.conditionCache.find(boost::to_lower_copy(_condition));
         if (it != game.conditionCache.end())
             return it->second;
 
@@ -106,60 +96,117 @@ namespace boss {
         bool eval;
 
         grammar.SetGame(game);
-        begin = condition.begin();
-        end = condition.end();
+        begin = _condition.begin();
+        end = _condition.end();
 
         bool r;
         try {
             r = boost::spirit::qi::phrase_parse(begin, end, grammar, skipper, eval);
         } catch (boss::error& e) {
-            throw boss::error(boss::ERROR_PATH_READ_FAIL, "Parsing of condition \"" + condition + "\" failed: " + e.what());
+            throw boss::error(boss::ERROR_PATH_READ_FAIL, "Parsing of condition \"" + _condition + "\" failed: " + e.what());
         }
 
         if (!r || begin != end)
-            throw boss::error(boss::ERROR_PATH_READ_FAIL, "Parsing of condition \"" + condition + "\" failed!");
+            throw boss::error(boss::ERROR_PATH_READ_FAIL, "Parsing of condition \"" + _condition + "\" failed!");
 
-        game.conditionCache.emplace(boost::to_lower_copy(condition), eval);
+        game.conditionCache.emplace(boost::to_lower_copy(_condition), eval);
 
         return eval;
+    }
+
+    MessageContent::MessageContent() : _language(LANG_AUTO) {}
+
+    MessageContent::MessageContent(const std::string& str, const unsigned int language) : _str(str), _language(language) {}
+    
+    std::string MessageContent::Str() const {
+        return _str;
+    }
+    
+    unsigned int MessageContent::Language() const {
+        return _language;
+    }
+
+    bool MessageContent::operator < (const MessageContent& rhs) const {
+        return boost::ilexicographical_compare(_str, rhs.Str());
+    }
+
+    bool MessageContent::operator == (const MessageContent& rhs) const {
+        return (_language == rhs.Language() && boost::iequals(_str, rhs.Str()));
     }
 
     Message::Message() {}
     
     Message::Message(const unsigned int type, const std::string& content,
-                     const std::string& condition, const unsigned int language)
-        : _type(type), _language(language), ConditionalData(condition, content) {}
+                     const std::string& condition) : _type(type), ConditionStruct(condition) {
+        _content.push_back(MessageContent(content));
+    }
+
+    Message::Message(const unsigned int type, const std::vector<MessageContent>& content,
+                const std::string& condition) : _type(type), _content(content), ConditionStruct(condition) {}
         
     bool Message::operator < (const Message& rhs) const {
-        return boost::ilexicographical_compare(Content(), rhs.Content());
+        return boost::ilexicographical_compare(_content.front().Str(), rhs.Content().front().Str());
     }
 
     bool Message::operator == (const Message& rhs) const {
-        return (_type == rhs.Type() && boost::iequals(Content(), rhs.Content()));
+        return (_type == rhs.Type() && _content == rhs.Content());
     }
 
-    bool Message::EvalCondition(boss::Game& game, const unsigned int lang) const {
-        if (_language == LANG_AUTO || _language == lang)
-            return ConditionalData::EvalCondition(game);
-        else
-            return false;
+    bool Message::EvalCondition(boss::Game& game, const unsigned int language) {
+        if (_content.size() > 1) {
+            if (language == LANG_AUTO)  //Can use a message of any language, so use the first string.
+                _content.resize(1);
+            else {
+                MessageContent english, match;
+                for (vector<MessageContent>::const_iterator it=_content.begin(), endit=_content.end(); it != endit; ++it) {
+                    if (it->Language() == language) {
+                        match = *it;
+                        break;
+                    } else if (it->Language() == LANG_ENG)
+                        english = *it;
+                }
+                _content.resize(1);
+                if (!match.Str().empty())
+                    _content[0] = match;
+                else
+                    _content[0] = english;
+            }
+        }
+        return ConditionStruct::EvalCondition(game);
+    }
+
+    MessageContent Message::ChooseContent(const unsigned int language) const {
+        if (_content.size() > 1) {
+            if (language == LANG_AUTO)  //Can use a message of any language, so use the first string.
+                return _content[0];
+            else {
+                MessageContent english, match;
+                for (vector<MessageContent>::const_iterator it=_content.begin(), endit=_content.end(); it != endit; ++it) {
+                    if (it->Language() == language) {
+                        match = *it;
+                        break;
+                    } else if (it->Language() == LANG_ENG)
+                        english = *it;
+                }
+                if (!match.Str().empty())
+                    return match;
+                else
+                    return english;
+            }
+        }
     }
 
     unsigned int Message::Type() const {
         return _type;
     }
 
-    unsigned int Message::Language() const {
-        return _language;
-    }
-
-    std::string Message::Content() const {
-        return Data();
+    std::vector<MessageContent> Message::Content() const {
+        return _content;
     }
 
     File::File() {}
     File::File(const std::string& name, const std::string& display, const std::string& condition)
-        : _display(display), ConditionalData(condition, name) {}
+        : _name(name), _display(display), ConditionStruct(condition) {}
 
     bool File::operator < (const File& rhs) const {
         return boost::ilexicographical_compare(Name(), rhs.Name());
@@ -170,7 +217,7 @@ namespace boss {
     }
 
     std::string File::Name() const {
-        return Data();
+        return _name;
     }
 
     std::string File::DisplayName() const {
@@ -179,7 +226,7 @@ namespace boss {
 
     Tag::Tag() : addTag(true) {}
 
-    Tag::Tag(const string& tag, const bool isAddition, const string& condition) : addTag(isAddition), ConditionalData(condition, tag) {}
+    Tag::Tag(const string& tag, const bool isAddition, const string& condition) : _name(tag), addTag(isAddition), ConditionStruct(condition) {}
 
     bool Tag::operator < (const Tag& rhs) const {
         if (addTag != rhs.IsAddition())
@@ -197,7 +244,7 @@ namespace boss {
     }
 
     std::string Tag::Name() const {
-        return Data();
+        return _name;
     }
 
     Plugin::Plugin() : enabled(true), priority(0), isMaster(false) {}
@@ -277,7 +324,7 @@ namespace boss {
 
     void Plugin::Merge(const Plugin& plugin, bool ifDisabled) {
         //If 'name' differs or if 'enabled' is false for the given plugin, don't change anything.
-        if (!boost::iequals(name, plugin.Name()) || (!plugin.Enabled() && !ifDisabled))
+        if ((!plugin.Enabled() && !ifDisabled))
             return;
 
         //The following should be replaced.
@@ -457,7 +504,9 @@ namespace boss {
     }
 
     bool Plugin::operator == (const Plugin& rhs) const {
-        return boost::iequals(name, rhs.Name());
+        return (boost::iequals(name, rhs.Name())
+            || (IsRegexPlugin() && boost::regex_match(rhs.Name(), boost::regex(name, boost::regex::extended|boost::regex::icase)))
+            || (rhs.IsRegexPlugin() && boost::regex_match(name, boost::regex(rhs.Name(), boost::regex::extended|boost::regex::icase))));
     }
 
     bool Plugin::operator != (const Plugin& rhs) const {

@@ -133,7 +133,7 @@ This documentation is a work in progress, covering a syntax that is also still a
 <code class="box">globals:
   - type: say
     content: You are using the latest version of BOSS.
-    condition: 'version("../BOSS/BOSS.exe", "2.1.1.0", ==)'
+    condition: 'version("BOSS", "3.0.0.0", ==)'
 plugins:
   - name: Armamentarium.esm
     tag:
@@ -181,7 +181,7 @@ condition: "file(\"Mart's Monster Mod for OOO.esm\") or file(\"FCOM_Convergence.
 <table>
     <thead><tr><th>Key Name<th>Required<th>Notes
     <tbody>
-        <tr><td><code>name</code><td>&#x2713;<td>A file path relative to the game's Data folder.
+        <tr><td><code>name</code><td>&#x2713;<td>A file path or name.
         <tr><td><code>display</code><td>&#x2717;<td>A substitute string to be displayed instead of the file path in any generated messages, eg. the name of the mod the file belongs to.
         <tr><td><code>condition</code><td>&#x2717;<td>A condition string that is evaluated to determine whether this file data should be used: if it evaluates to true, the data is used, otherwise it is ignored. See <a href="#cond">Condition Strings</a> for details.
 </table>
@@ -190,7 +190,7 @@ condition: "file(\"Mart's Monster Mod for OOO.esm\") or file(\"FCOM_Convergence.
 <code class="box">../obse_loader.exe</code>
 or
 <code class="box">name: ../obse_loader.exe
-condition: 'version("../obse_loader.exe", "0.0.18.0", &lt;)'
+condition: 'version("../obse_loader.exe", "0.0.18.0", &gt;=)'
 display: OBSE v18+
 </code>
 
@@ -222,7 +222,7 @@ display: OBSE v18+
 
 <p>BOSS handles messages and languages as follows:
 <ol>
-    <li>If a message's <code>content</code> value is a string, the message will the string as its content if displayed.
+    <li>If a message's <code>content</code> value is a string, the message will use the string as its content if displayed.
     <li>If a message's <code>content</code> value is a list of content structures, then the first structure with a language that matches BOSS's current language will be used as the message's content if displayed. If there are no matches, then the first structure in English will be used.
 </ol>
 
@@ -232,11 +232,11 @@ display: OBSE v18+
 condition: file("foo.esp")
 content:
   - lang: eng
-    str: An example link: http://www.example.com
+    str: 'An example link: http://www.example.com'
   - lang: rus
-    str: Это пример ссылки: http://www.example.com
+    str: 'Это пример ссылки: http://www.example.com'
   - lang: ger
-    str: Ein Beispiel-Link: http://www.example.com
+    str: 'Ein Beispiel-Link: http://www.example.com'
 </code>
 would be displayed as
 <blockquote>
@@ -295,7 +295,7 @@ msg:
         <tr><td>File<td><code>file("<var>filepath</var>")</code><td>Returns true if <var>filepath</var> is installed, false otherwise.
         <tr><td>File<td><code>regex("<var>regex</var>")</code><td>Returns true if a file matching <var>regex</var> is found, false otherwise.
         <tr><td>Checksum<td><code>checksum("<var>filepath</var>", <var>checksum</var>)</code><td>Returns true if the calculated checksum of <var>filepath</var> matches <var>checksum</var>, false otherwise. If <var>filepath</var> does not exist, returns false.
-        <tr><td>Version<td><code>version("<var>filepath</var>", "<var>version</var>", <var>comparator</var>)</code><td>Returns true if the boolean expression <code><var>version comparator</var> (actual version of <var>filepath</var>)</code> holds true, false otherwise. If <var>filepath</var> does not exist and <var>comparator</var> is <code>==</code>, <code>&gt;</code> or <code>&gt;=</code>, returns false. If <var>filepath</var> does not exist and <var>comparator</var> is <code>!=</code>, <code>&lt;</code> or <code>&lt;=</code>, returns true.
+        <tr><td>Version<td><code>version("<var>filepath</var>", "<var>version</var>", <var>comparator</var>)</code><td>Returns true if the boolean expression <code>(actual version of <var>filepath</var>) <var>comparator version</var></code> holds true, false otherwise. If <var>filepath</var> does not exist and <var>comparator</var> is <code>==</code>, <code>&gt;</code> or <code>&gt;=</code>, returns false. If <var>filepath</var> does not exist and <var>comparator</var> is <code>!=</code>, <code>&lt;</code> or <code>&lt;=</code>, returns true.
         <tr><td>Plugin Active Status<td><code>active("<var>filepath</var>")</code><td>Returns true if <var>filepath</var> is a <code>.esp</code> or <code>.esm</code> file that is both installed and active, false otherwise.
 </table>
 
@@ -303,7 +303,7 @@ msg:
 <table>
  <thead><tr><th>Variable Type<th>Description
  <tbody>
-  <tr><td><code>filepath</code><td>A Windows file path.
+  <tr><td><code>filepath</code><td>A Windows file path, or <code>BOSS</code>, which references the BOSS executable being run.
   <tr><td><code>regex</code><td>A regular expression string to match file paths to.
   <tr><td><code>checksum</code><td>A string of hexadecimal digits representing an unsigned integer that is the data checksum of a file. BOSS displays the checksums of plugins in its user interface after running.
   <tr><td><code>version</code><td>A string of characters representing the version of a plugin or executable. BOSS displays the versions of plugins in its user interface after running.
@@ -346,11 +346,11 @@ msg:
     <li>Logical <q>and</q>
     <li>Logical <q>or</q>
 </ol>
-<p>Below is a table that lists some combinations of conditions, showing for each the order of evaluation by explicit bracketing. To make it easier to read, the <code><var>keyword</var> <var>function</var></code> pair is replaced with <code><var>C</var></code> after the first example.
+<p>Below is a table that lists some combinations of conditions, showing for each the order of evaluation by explicit bracketing. To make it easier to read, the <code><var>negator</var> <var>function</var></code> pair is shortened to <code><var>C</var></code> after the first example.
 <table>
     <thead><tr><th>String Structure<th>Evaluated As
     <tbody>
-        <tr><td><code><var>keyword</var> <var>function</var></code><td><code>( <var>keyword</var> ( <var>function</var> ) )</code>
+        <tr><td><code><var>negator</var> <var>function</var></code><td><code>( <var>negator</var> ( <var>function</var> ) )</code>
         <tr><td><code><var>C</var> and <var>C</var></code><td><code>( <var>C</var> and <var>C</var> )</code>
         <tr><td><code><var>C</var> or <var>C</var></code><td><code>( <var>C</var> or <var>C</var> )</code>
         <tr><td><code><var>C</var> and <var>C</var> and <var>C</var></code><td><code>( ( <var>C</var> and <var>C</var> ) and <var>C</var> )</code>

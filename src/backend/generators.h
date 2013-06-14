@@ -186,7 +186,7 @@ namespace boss {
                 }
 
                 //Turn any urls into hyperlinks.
-                WriteMessage(li, it->Type(), it->Content());
+                WriteMessage(li, it->Type(), it->Content().front().Str());
             }
         }
     }
@@ -547,6 +547,17 @@ namespace YAML {
         out << EndMap;
     }
 
+    inline Emitter& operator << (Emitter& out, const boss::MessageContent& rhs) {
+        out << BeginMap;
+
+        if (rhs.Language() == boss::LANG_ENG)
+            out << Key << "lang" << Value << "eng";
+
+        out << Key << "str" << Value << rhs.Str();
+
+        out << EndMap;
+    }
+
     inline Emitter& operator << (Emitter& out, const boss::Message& rhs) {
         out << BeginMap;
 
@@ -557,10 +568,10 @@ namespace YAML {
         else
             out << Key << "type" << Value << "error";
 
-        out << Key << "content" << Value << rhs.Content();
-
-        if (rhs.Language() == boss::LANG_ENG)
-            out << Key << "lang" << Value << "eng";
+        if (rhs.Content().size() == 1)
+            out << Key << "content" << Value << rhs.Content().front().Str();
+        else
+            out << Key << "content" << Value << rhs.Content();
 
         if (!rhs.Condition().empty())
             out << Key << "condition" << Value << rhs.Condition();

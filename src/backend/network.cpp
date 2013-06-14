@@ -143,6 +143,7 @@ namespace boss {
                 return revision;
             else
                 return "N/A";
+        }
         
         if (!RunCommand(command, output)) {
             //Working copy not set up, perform a checkout.

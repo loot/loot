@@ -52,44 +52,56 @@ namespace boss {
         uint32_t id;
     };
 
-    class ConditionalData {
+    class ConditionStruct {
     public:
-        ConditionalData();
-        ConditionalData(const std::string& condition);
-        ConditionalData(const std::string& condition, const std::string& data);
+        ConditionStruct();
+        ConditionStruct(const std::string& condition);
 
         bool IsConditional() const;
         bool EvalCondition(boss::Game& game) const;
 
         std::string Condition() const;
-        std::string Data() const;
-
-        void Data(const std::string& data);
     private:
-        std::string condition;
-        std::string data;
+        std::string _condition;
     };
 
-    class Message : public ConditionalData {
+    class MessageContent {
+    public:
+        MessageContent();
+        MessageContent(const std::string& str, const unsigned int language = LANG_AUTO);
+
+        std::string Str() const;
+        unsigned int Language() const;
+
+        bool operator < (const MessageContent& rhs) const;
+        bool operator == (const MessageContent& rhs) const;
+    private:
+        std::string _str;
+        unsigned int _language;
+    };
+
+    class Message : public ConditionStruct {
     public:
         Message();
         Message(const unsigned int type, const std::string& content,
-                const std::string& condition = "", const unsigned int language = LANG_AUTO);
+                const std::string& condition = "");
+        Message(const unsigned int type, const std::vector<MessageContent>& content,
+                const std::string& condition = "");
                 
         bool operator < (const Message& rhs) const;
         bool operator == (const Message& rhs) const;
 
-        bool EvalCondition(boss::Game& game, const unsigned int language) const;
+        bool EvalCondition(boss::Game& game, const unsigned int language);
 
         unsigned int Type() const;
-        unsigned int Language() const;
-        std::string Content() const;
+        std::vector<MessageContent> Content() const;
+        MessageContent ChooseContent(const unsigned int language) const;
     private:
         unsigned int _type;
-        unsigned int _language;
+        std::vector<MessageContent> _content;
     };
 
-    class File : public ConditionalData {
+    class File : public ConditionStruct {
     public:
         File();
         File(const std::string& name, const std::string& display = "",
@@ -101,10 +113,11 @@ namespace boss {
         std::string Name() const;
         std::string DisplayName() const;
     private:
+        std::string _name;
         std::string _display;
     };
 
-    class Tag : public ConditionalData {
+    class Tag : public ConditionStruct {
     public:
         Tag();
         Tag(const std::string& tag, const bool isAddition = true, const std::string& condition = "");
@@ -115,6 +128,7 @@ namespace boss {
         bool IsAddition() const;
         std::string Name() const;
     private:
+        std::string _name;
         bool addTag;
     };
 

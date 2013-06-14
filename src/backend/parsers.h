@@ -104,6 +104,39 @@ namespace YAML {
     };
 
     template<>
+    struct convert<boss::MessageContent> {
+        static Node encode(const boss::MessageContent& rhs) {
+            Node node;
+            node["str"] = rhs.Str();
+
+            if (rhs.Language() == boss::LANG_AUTO)
+                node["lang"] = "";
+            else
+                node["lang"] = "eng";
+
+            return node;
+        }
+
+        static bool decode(const Node& node, boss::MessageContent& rhs) {
+            if (!node["str"] || !node["lang"])
+                return false;
+                
+            std::string str = node["str"].as<std::string>();
+            std::string lang = node["lang"].as<std::string>();
+            unsigned int langNo;
+
+            if (boost::iequals(lang, "eng"))
+                langNo = boss::LANG_ENG;
+            else
+                langNo = boss::LANG_AUTO;
+
+            rhs = boss::MessageContent(str, langNo);
+
+            return true;
+        }
+    };
+
+    template<>
     struct convert<boss::Message> {
         static Node encode(const boss::Message& rhs) {
             Node node;
@@ -116,26 +149,15 @@ namespace YAML {
                 node["type"] = "warn";
             else
                 node["type"] = "error";
-
-            if (rhs.Language() == boss::LANG_AUTO)
-                node["lang"] = "";
-            else
-                node["lang"] = "eng";
                 
             return node;
         }
 
         static bool decode(const Node& node, boss::Message& rhs) {
-            if(!node.IsMap())
+            if(!node.IsMap() || !node["type"] || !node["content"])
                 return false;
 
-            std::string condition, content;
-            unsigned int typeNo, langNo;
-            if (node["condition"])
-                condition = node["condition"].as<std::string>();
-            if (node["content"])
-                content = node["content"].as<std::string>();
-                
+            unsigned int typeNo;
             if (node["type"]) {
                 std::string type;
                 type = node["type"].as<std::string>();
@@ -148,19 +170,28 @@ namespace YAML {
                     typeNo = boss::MESSAGE_ERROR;
             }
 
-                
-            if (node["lang"]) {
-                std::string lang;
-                lang = node["lang"].as<std::string>();
+            std::vector<boss::MessageContent> content;
+            if (node["content"].IsSequence())
+                content = node["content"].as< std::vector<boss::MessageContent> >();
+            else
+                content.push_back(node["content"].as<std::string>());
 
-                if (boost::iequals(lang, "eng"))
-                    langNo = boss::LANG_ENG;
-                else
-                    langNo = boss::LANG_AUTO;
+            //Check now that at least one item in content is English if there are multiple items.
+            if (content.size() > 1) {
+                bool found = false;
+                for (std::vector<boss::MessageContent>::const_iterator it=content.begin(), endit=content.end(); it != endit; ++it) {
+                    if (it->Language() == boss::LANG_ENG)
+                        found = true;
+                }
+                if (!found)
+                    return false;
             }
-                
+            
+            std::string condition;
+            if (node["condition"])
+                condition = node["condition"].as<std::string>();
 
-            rhs = boss::Message(typeNo, content, condition, langNo);
+            rhs = boss::Message(typeNo, content, condition);
             return true;
         }
     };
@@ -383,6 +414,11 @@ namespace boss {
         //Eval's regex and exact paths. Check for files and ghosted plugins.
         void CheckFile(bool& result, const std::string& file) {
 
+            if (file == "BOSS") {
+                result = true;
+                return;
+            }
+
             if (!IsSafePath(file))
                 throw boss::error(boss::ERROR_INVALID_ARGS, "The file path \"" + file + "\" is invalid.");
 
@@ -458,6 +494,8 @@ namespace boss {
             if (it != game->crcCache.end())
                 crc = it->second;
             else {
+                if (file == "BOSS")
+                    crc = GetCrc32(boost::filesystem::absolute("BOSS.exe"));
                 if (boost::filesystem::exists(game->DataPath() / file))
                     crc = GetCrc32(game->DataPath() / file);
                 else if (IsPlugin(file) && boost::filesystem::exists(game->DataPath() / (file + ".ghost")))
@@ -483,7 +521,11 @@ namespace boss {
             }
 
             Version givenVersion = Version(version);
-            Version trueVersion = Version(game->DataPath() / file);
+            Version trueVersion;
+            if (file == "BOSS")
+                trueVersion = Version(boost::filesystem::absolute("BOSS.exe"));
+            else
+                trueVersion = Version(game->DataPath() / file);
 
             if (   (comparator == "==" && trueVersion != givenVersion)
                 || (comparator == "!=" && trueVersion == givenVersion)
@@ -495,7 +537,10 @@ namespace boss {
         }
 
         void CheckActive(bool& result, const std::string& file) {
-            result = game->IsActive(file);
+            if (file == "BOSS")
+                result = false;
+            else
+                result = game->IsActive(file);
         }
 
         void SyntaxError(Iterator const& /*first*/, Iterator const& last, Iterator const& errorpos, boost::spirit::info const& what) {
