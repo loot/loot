@@ -34,7 +34,7 @@
 
 class Editor : public wxFrame {
 public:
-    Editor(wxWindow *parent, const wxString& title, const char * userlistPath, const std::vector<boss::Plugin>& basePlugins, std::vector<boss::Plugin>& editedPlugins);
+    Editor(wxWindow *parent, const wxString& title, const std::string userlistPath, const std::vector<boss::Plugin>& basePlugins, std::vector<boss::Plugin>& editedPlugins, const unsigned int language);
 
     void OnPluginSelect(wxListEvent& event);
     void OnEnabledToggle(wxCommandEvent& event);
@@ -65,9 +65,11 @@ private:
     wxSpinCtrl * prioritySpin;
     wxStaticText * pluginText;
 
-    const char * _userlistPath;
+    const std::string _userlistPath;
     const std::vector<boss::Plugin> _basePlugins;
     std::vector<boss::Plugin> _editedPlugins;
+    const unsigned int _language;
+    std::vector<boss::Message> currentMessages;
 
     void ApplyEdits(const wxString& plugin);
     

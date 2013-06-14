@@ -735,9 +735,13 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
     std::sort(installed.begin(), installed.end(), boss::alpha_sort);
     
     progDia->Pulse();
+    
+    unsigned int lang = boss::LANG_AUTO;
+    if (_settings["Language"].as<string>() == "eng")
+        lang = boss::LANG_ENG;
 
     //Create editor window.
-    Editor *editor = new Editor(this, translate("BOSS: Metadata Editor"), _game.UserlistPath().string().c_str(), installed, ulist_plugins);
+    Editor *editor = new Editor(this, translate("BOSS: Metadata Editor"), _game.UserlistPath().string(), installed, ulist_plugins, lang);
     
     progDia->Destroy();
     
