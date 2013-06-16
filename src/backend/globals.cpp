@@ -27,36 +27,38 @@
 namespace boss {
 
     //Game values.
-    const unsigned int GAME_AUTODETECT  = 0;
-    const unsigned int GAME_TES4        = 1;
-    const unsigned int GAME_TES5        = 2;
-    const unsigned int GAME_FO3         = 3;
-    const unsigned int GAME_FONV        = 4;
+    const unsigned int g_game_autodetect  = 0;
+    const unsigned int g_game_tes4        = 1;
+    const unsigned int g_game_tes5        = 2;
+    const unsigned int g_game_fo3         = 3;
+    const unsigned int g_game_fonv        = 4;
 
     //Message types.
-    const unsigned int MESSAGE_SAY      = 0;
-    const unsigned int MESSAGE_WARN     = 1;
-    const unsigned int MESSAGE_ERROR    = 2;
-    const unsigned int MESSAGE_TAG      = 3;
+    const unsigned int g_message_say      = 0;
+    const unsigned int g_message_warn     = 1;
+    const unsigned int g_message_error    = 2;
+    const unsigned int g_message_tag      = 3;
 
     //Languages
-    const unsigned int LANG_AUTO    = 0;
-    const unsigned int LANG_ENG     = 1;
+    const unsigned int g_lang_any      = 0;
+    const unsigned int g_lang_english  = 1;
+    const unsigned int g_lang_spanish  = 2;
+    const unsigned int g_lang_russian  = 3;
 
     //Version numbers.
-    const unsigned int VERSION_MAJOR = 3;
-    const unsigned int VERSION_MINOR = 0;
-    const unsigned int VERSION_PATCH = 0;
+    const unsigned int g_version_major = 3;
+    const unsigned int g_version_minor = 0;
+    const unsigned int g_version_patch = 0;
 
     //Common paths.
-    const boost::filesystem::path readme_path           = "docs/BOSS Readme.html";
-    const boost::filesystem::path libespm_options_path  = "resources/libespm.yaml";
-    const boost::filesystem::path svn_path              = "resources/svn/svn.exe";
-    const boost::filesystem::path local_path            = GetLocalAppDataPath() / "BOSS";
-    const boost::filesystem::path css_path              = boost::filesystem::current_path() / "resources" / "style.css";
-    const boost::filesystem::path js_path               = boost::filesystem::current_path() / "resources" / "script.js";
-    const boost::filesystem::path polyfill_path         = boost::filesystem::current_path() / "resources" / "polyfill.js";
-    const boost::filesystem::path settings_path         = local_path / "settings.yaml";
-    const boost::filesystem::path log_path              = local_path / "BOSSDebugLog.txt";
-    const boost::filesystem::path l10n_path             = "resources/l10n";
+    const boost::filesystem::path g_path_readme           = "docs/BOSS Readme.html";
+    const boost::filesystem::path g_path_libespm_settings  = "resources/libespm.yaml";
+    const boost::filesystem::path g_path_svn              = "resources/svn/svn.exe";
+    const boost::filesystem::path g_path_local            = GetLocalAppDataPath() / "BOSS";
+    const boost::filesystem::path g_path_css              = boost::filesystem::current_path() / "resources" / "style.css";
+    const boost::filesystem::path g_path_js               = boost::filesystem::current_path() / "resources" / "script.js";
+    const boost::filesystem::path g_path_polyfill         = boost::filesystem::current_path() / "resources" / "polyfill.js";
+    const boost::filesystem::path g_path_settings         = g_path_local / "settings.yaml";
+    const boost::filesystem::path g_path_log              = g_path_local / "BOSSDebugLog.txt";
+    const boost::filesystem::path g_path_l10n             = "resources/l10n";
 }

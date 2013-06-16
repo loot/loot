@@ -42,7 +42,7 @@ namespace boss {
 
     class Game {
     public:
-        Game();  //Sets game to BOSS_GAME_AUTODETECT, with all other vars being empty.
+        Game();  //Sets game to BOSS_g_game_autodetect, with all other vars being empty.
         Game(const std::string& folder);
         Game(const unsigned int baseGameCode, const std::string& folder = "");
 

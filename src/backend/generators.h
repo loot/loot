@@ -49,11 +49,11 @@ namespace boss {
 
     inline void WriteMessage(pugi::xml_node& listItem, unsigned int type, std::string content) {
 
-        if (type == MESSAGE_SAY)
+        if (type == g_message_say)
             content = "Note: " + content;
-        else if (type == MESSAGE_TAG) {
+        else if (type == g_message_tag) {
             content = "Bash Tag Suggestion(s): " + content;
-        } else if (type == MESSAGE_WARN)
+        } else if (type == g_message_warn)
             content = "Warning: " + content;
         else
             content = "Error: " + content;
@@ -129,11 +129,11 @@ namespace boss {
         node = head.append_child();
         node.set_name("link");
         node.append_attribute("rel").set_value("stylesheet");
-        node.append_attribute("href").set_value(ToFileURL(css_path).c_str());
+        node.append_attribute("href").set_value(ToFileURL(g_path_css).c_str());
 
         node = head.append_child();
         node.set_name("script");
-        node.append_attribute("src").set_value(ToFileURL(polyfill_path).c_str());
+        node.append_attribute("src").set_value(ToFileURL(g_path_polyfill).c_str());
         node.text().set(" ");
     }
 
@@ -173,11 +173,11 @@ namespace boss {
                 pugi::xml_node li = list.append_child();
                 li.set_name("li");
 
-                if (it->Type() == MESSAGE_SAY)
+                if (it->Type() == g_message_say)
                     li.append_attribute("class").set_value("say");
-                if (it->Type() == MESSAGE_TAG)
+                if (it->Type() == g_message_tag)
                     li.append_attribute("class").set_value("tag");
-                else if (it->Type() == MESSAGE_WARN) {
+                else if (it->Type() == g_message_warn) {
                     li.append_attribute("class").set_value("warn");
                     ++warnNo;
                 } else {
@@ -218,7 +218,7 @@ namespace boss {
         cell.text().set("BOSS Version");
         cell = row.append_child();
         cell.set_name("td");
-        cell.text().set((IntToString(VERSION_MAJOR)+"."+IntToString(VERSION_MINOR)+"."+IntToString(VERSION_PATCH)).c_str());
+        cell.text().set((IntToString(g_version_major)+"."+IntToString(g_version_minor)+"."+IntToString(g_version_patch)).c_str());
 
         row = table.append_child();
         row.set_name("tr");
@@ -323,7 +323,7 @@ namespace boss {
                         content += "Add " + add.substr(2) + ". ";
                     if (!remove.empty())
                         content += "Remove " + remove.substr(2) + ". ";
-                    messages.push_back(Message(MESSAGE_TAG, content));  //Special type just for tag suggestions.
+                    messages.push_back(Message(g_message_tag, content));  //Special type just for tag suggestions.
                 }
 
                 AppendMessages(plugin, messages, warnNo, errorNo);
@@ -448,7 +448,7 @@ namespace boss {
 
         node = body.append_child();
         node.set_name("script");
-        node.append_attribute("src").set_value(ToFileURL(js_path).c_str());
+        node.append_attribute("src").set_value(ToFileURL(g_path_js).c_str());
         node.text().set(" ");
         
     }
@@ -495,11 +495,11 @@ namespace boss {
         root["Update Masterlist"] = true;
         root["View Report Externally"] = false;
 
-        games.push_back(Game(GAME_TES4));
-        games.push_back(Game(GAME_TES5));
-        games.push_back(Game(GAME_FO3));
-        games.push_back(Game(GAME_FONV));
-        games.push_back(Game(GAME_TES4, "Nehrim").SetDetails("Nehrim - At Fate's Edge", "Nehrim.esm", "http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-nehrim/masterlist.yaml", "", "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim - At Fate's Edge_is1"));
+        games.push_back(Game(g_game_tes4));
+        games.push_back(Game(g_game_tes5));
+        games.push_back(Game(g_game_fo3));
+        games.push_back(Game(g_game_fonv));
+        games.push_back(Game(g_game_tes4, "Nehrim").SetDetails("Nehrim - At Fate's Edge", "Nehrim.esm", "http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-nehrim/masterlist.yaml", "", "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim - At Fate's Edge_is1"));
 
         root["Games"] = games;
 
@@ -535,14 +535,14 @@ namespace YAML {
             << Key << "path" << Value << rhs.GamePath().string()
             << Key << "registry" << Value << rhs.RegistryKey();
 
-        if (rhs.Id() == boss::GAME_TES4)
-            out << Key << Value << boss::Game(boss::GAME_TES4).FolderName();
-        else if (rhs.Id() == boss::GAME_TES5)
-            out << Key << Value << boss::Game(boss::GAME_TES5).FolderName();
-        else if (rhs.Id() == boss::GAME_FO3)
-            out << Key << Value << boss::Game(boss::GAME_FO3).FolderName();
-        else if (rhs.Id() == boss::GAME_FONV)
-            out << Key << Value << boss::Game(boss::GAME_FONV).FolderName();
+        if (rhs.Id() == boss::g_game_tes4)
+            out << Key << Value << boss::Game(boss::g_game_tes4).FolderName();
+        else if (rhs.Id() == boss::g_game_tes5)
+            out << Key << Value << boss::Game(boss::g_game_tes5).FolderName();
+        else if (rhs.Id() == boss::g_game_fo3)
+            out << Key << Value << boss::Game(boss::g_game_fo3).FolderName();
+        else if (rhs.Id() == boss::g_game_fonv)
+            out << Key << Value << boss::Game(boss::g_game_fonv).FolderName();
 
         out << EndMap;
     }
@@ -550,7 +550,7 @@ namespace YAML {
     inline Emitter& operator << (Emitter& out, const boss::MessageContent& rhs) {
         out << BeginMap;
 
-        if (rhs.Language() == boss::LANG_ENG)
+        if (rhs.Language() == boss::g_lang_english)
             out << Key << "lang" << Value << "eng";
 
         out << Key << "str" << Value << rhs.Str();
@@ -561,9 +561,9 @@ namespace YAML {
     inline Emitter& operator << (Emitter& out, const boss::Message& rhs) {
         out << BeginMap;
 
-        if (rhs.Type() == boss::MESSAGE_SAY)
+        if (rhs.Type() == boss::g_message_say)
             out << Key << "type" << Value << "say";
-        else if (rhs.Type() == boss::MESSAGE_WARN)
+        else if (rhs.Type() == boss::g_message_warn)
             out << Key << "type" << Value << "warn";
         else
             out << Key << "type" << Value << "error";

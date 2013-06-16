@@ -96,9 +96,9 @@ wxString MessageList::OnGetItemText(long item, long column) const {
         return wxString();
 
     if (column == 0) {
-        if (_messages[item].Type() == boss::MESSAGE_SAY)
+        if (_messages[item].Type() == boss::g_message_say)
             return Type[0];
-        else if (_messages[item].Type() == boss::MESSAGE_WARN)
+        else if (_messages[item].Type() == boss::g_message_warn)
             return Type[1];
         else
             return Type[2];
@@ -107,7 +107,7 @@ wxString MessageList::OnGetItemText(long item, long column) const {
     } else if (column == 2) {
         return FromUTF8(_messages[item].Condition());
     } else {
-        if (_messages[item].ChooseContent(_language).Language() == boss::LANG_AUTO)
+        if (_messages[item].ChooseContent(_language).Language() == boss::g_lang_any)
             return Language[0];
         else
             return Language[1];
@@ -911,9 +911,9 @@ MessageEditDialog::MessageEditDialog(wxWindow *parent, const wxString& title) : 
 
 void MessageEditDialog::SetMessage(const boss::Message& message) {
 
-    if (message.Type() == boss::MESSAGE_SAY)
+    if (message.Type() == boss::g_message_say)
         _type->SetSelection(0);
-    else if (message.Type() == boss::MESSAGE_WARN)
+    else if (message.Type() == boss::g_message_warn)
         _type->SetSelection(1);
     else
         _type->SetSelection(2);
@@ -922,7 +922,7 @@ void MessageEditDialog::SetMessage(const boss::Message& message) {
 
     vector<boss::MessageContent> contents = message.Content();
     for (size_t i=0, max=contents.size(); i < max; ++i) {
-        if (contents[i].Language() == boss::LANG_AUTO)
+        if (contents[i].Language() == boss::g_lang_any)
             _content->InsertItem(i, Language[0]);
         else
             _content->InsertItem(i, Language[1]);
@@ -936,11 +936,11 @@ boss::Message MessageEditDialog::GetMessage() const {
     unsigned int type;
     string condition;
     if (_type->GetSelection() == 0)
-        type = boss::MESSAGE_SAY;
+        type = boss::g_message_say;
     else if (_type->GetSelection() == 1)
-        type = boss::MESSAGE_WARN;
+        type = boss::g_message_warn;
     else
-        type = boss::MESSAGE_ERROR;
+        type = boss::g_message_error;
 
     condition = string(_condition->GetValue().ToUTF8());
 
@@ -950,9 +950,9 @@ boss::Message MessageEditDialog::GetMessage() const {
         string str = string(_content->GetItemText(i, 1).ToUTF8());
         unsigned int lang;
         if (_content->GetItemText(i, 0) == Language[0])
-            lang = boss::LANG_AUTO;
+            lang = boss::g_lang_any;
         else
-            lang = boss::LANG_ENG;
+            lang = boss::g_lang_english;
         contents.push_back(boss::MessageContent(str, lang));
     }
     

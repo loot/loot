@@ -68,7 +68,7 @@ namespace boss {
     class MessageContent {
     public:
         MessageContent();
-        MessageContent(const std::string& str, const unsigned int language = LANG_AUTO);
+        MessageContent(const std::string& str, const unsigned int language = g_lang_any);
 
         std::string Str() const;
         unsigned int Language() const;

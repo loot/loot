@@ -134,7 +134,7 @@ namespace boss {
         
         string command, output, revision;
         //First check if the working copy is set up or not.
-        command = svn_path.string() + " info \"" + game.MasterlistPath().string() + "\"";
+        command = g_path_svn.string() + " info \"" + game.MasterlistPath().string() + "\"";
 
         revision = GetRevision(output);
 
@@ -147,13 +147,13 @@ namespace boss {
         
         if (!RunCommand(command, output)) {
             //Working copy not set up, perform a checkout.
-            command = svn_path.string() + " co --depth empty " + game.URL().substr(0, game.URL().rfind('/')) + " \"" + game.MasterlistPath().parent_path().string() + "\\.\"";
+            command = g_path_svn.string() + " co --depth empty " + game.URL().substr(0, game.URL().rfind('/')) + " \"" + game.MasterlistPath().parent_path().string() + "\\.\"";
             if (!RunCommand(command, output))
                 throw error(ERROR_SUBVERSION_ERROR, "Subversion could not perform a checkout. Details: " + output);
         }
 
         //Now update masterlist.
-        command = svn_path.string() + " update \"" + game.MasterlistPath().string() + "\"";
+        command = g_path_svn.string() + " update \"" + game.MasterlistPath().string() + "\"";
         if (!RunCommand(command, output))
             throw error(ERROR_SUBVERSION_ERROR, "Subversion could not update the masterlist. Details: " + output);
 
@@ -161,7 +161,7 @@ namespace boss {
             try {
 
                 //Now get the masterlist revision. 
-                command = svn_path.string() + " info \"" + game.MasterlistPath().string() + "\"";
+                command = g_path_svn.string() + " info \"" + game.MasterlistPath().string() + "\"";
                 if (!RunCommand(command, output))
                     throw error(ERROR_SUBVERSION_ERROR, "Subversion could not read the masterlist revision number. Details: " + output);
 
@@ -174,7 +174,7 @@ namespace boss {
             } catch (YAML::Exception& e) {
                 //Roll back one revision if there's an error.
                 parsingErrors.push_back("Masterlist revision " + revision + ": " + e.what());
-                command = svn_path.string() + " update --revision PREV \"" + game.MasterlistPath().string() + "\"";
+                command = g_path_svn.string() + " update --revision PREV \"" + game.MasterlistPath().string() + "\"";
                 if (!RunCommand(command, output))
                     throw error(ERROR_SUBVERSION_ERROR, "Subversion could not update the masterlist. Details: " + output);
             }

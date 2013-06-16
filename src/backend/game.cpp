@@ -42,49 +42,49 @@ namespace boss {
         if (settings["Games"])
             games = settings["Games"].as< vector<Game> >();
 
-        if (find(games.begin(), games.end(), Game(GAME_TES4)) == games.end())
-            games.push_back(Game(GAME_TES4));
+        if (find(games.begin(), games.end(), Game(g_game_tes4)) == games.end())
+            games.push_back(Game(g_game_tes4));
 
-        if (find(games.begin(), games.end(), Game(GAME_TES5)) == games.end())
-            games.push_back(Game(GAME_TES5));
+        if (find(games.begin(), games.end(), Game(g_game_tes5)) == games.end())
+            games.push_back(Game(g_game_tes5));
 
-        if (find(games.begin(), games.end(), Game(GAME_FO3)) == games.end())
-            games.push_back(Game(GAME_FO3));
+        if (find(games.begin(), games.end(), Game(g_game_fo3)) == games.end())
+            games.push_back(Game(g_game_fo3));
 
-        if (find(games.begin(), games.end(), Game(GAME_FONV)) == games.end())
-            games.push_back(Game(GAME_FONV));
+        if (find(games.begin(), games.end(), Game(g_game_fonv)) == games.end())
+            games.push_back(Game(g_game_fonv));
         
         return games;
     }
 
-    Game::Game() : id(GAME_AUTODETECT) {}
+    Game::Game() : id(g_game_autodetect) {}
 
     Game::Game(const std::string& folder) : bossFolderName(folder) {}
 
     Game::Game(const unsigned int gameCode, const std::string& folder) : id(gameCode) {
         string libespmGame;
-        if (Id() == GAME_TES4) {
+        if (Id() == g_game_tes4) {
             _name = "TES IV: Oblivion";
             registryKey = "Software\\Bethesda Softworks\\Oblivion\\Installed Path";
             bossFolderName = "Oblivion";
             _masterFile = "Oblivion.esm";
             libespmGame = "Oblivion";
             _masterlistURL = "http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-oblivion/masterlist.yaml";
-        } else if (Id() == GAME_TES5) {
+        } else if (Id() == g_game_tes5) {
             _name = "TES V: Skyrim";
             registryKey = "Software\\Bethesda Softworks\\Skyrim\\Installed Path";
             bossFolderName = "Skyrim";
             _masterFile = "Skyrim.esm";
             libespmGame = "Skyrim";
             _masterlistURL = "http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-skyrim/masterlist.yaml";
-        } else if (Id() == GAME_FO3) {
+        } else if (Id() == g_game_fo3) {
             _name = "Fallout 3";
             registryKey = "Software\\Bethesda Softworks\\Fallout3\\Installed Path";
             bossFolderName = "Fallout3";
             _masterFile = "Fallout3.esm";
             libespmGame = "Fallout3";
             _masterlistURL = "http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-fallout/masterlist.yaml";
-        } else if (Id() == GAME_FONV) {
+        } else if (Id() == g_game_fonv) {
             _name = "Fallout: New Vegas";
             registryKey = "Software\\Bethesda Softworks\\FalloutNV\\Installed Path";
             bossFolderName = "FalloutNV";
@@ -97,8 +97,8 @@ namespace boss {
         if (!folder.empty())
             bossFolderName = folder;
 
-        if (fs::exists(libespm_options_path))
-            espm_settings = espm::Settings(libespm_options_path.string(), libespmGame);
+        if (fs::exists(g_path_libespm_settings))
+            espm_settings = espm::Settings(g_path_libespm_settings.string(), libespmGame);
         else
             throw error(ERROR_PATH_NOT_FOUND, "Libespm settings file could not be found.");
     }
@@ -206,15 +206,15 @@ namespace boss {
     }
 
     fs::path Game::MasterlistPath() const {
-        return local_path / bossFolderName / "masterlist.yaml";
+        return g_path_local / bossFolderName / "masterlist.yaml";
     }
     
     fs::path Game::UserlistPath() const {
-        return local_path / bossFolderName / "userlist.yaml";
+        return g_path_local / bossFolderName / "userlist.yaml";
     }
     
     fs::path Game::ReportPath() const {
-        return local_path / bossFolderName / "report.html";
+        return g_path_local / bossFolderName / "report.html";
     }
 
     void Game::RefreshActivePluginsList() {
@@ -222,13 +222,13 @@ namespace boss {
         char ** pluginArr;
         size_t pluginArrSize;
         int ret;
-        if (Id() == GAME_TES4)
+        if (Id() == g_game_tes4)
             ret = lo_create_handle(&gh, LIBLO_GAME_TES4, gamePath.string().c_str());
-        else if (Id() == GAME_TES5)
+        else if (Id() == g_game_tes5)
             ret = lo_create_handle(&gh, LIBLO_GAME_TES5, gamePath.string().c_str());
-        else if (Id() == GAME_FO3)
+        else if (Id() == g_game_fo3)
             ret = lo_create_handle(&gh, LIBLO_GAME_FO3, gamePath.string().c_str());
-        else if (Id() == GAME_FONV)
+        else if (Id() == g_game_fonv)
             ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str());
 
         if (ret != LIBLO_OK) {
@@ -273,13 +273,13 @@ namespace boss {
         size_t pluginArrSize;
 
         int ret;
-        if (Id() == GAME_TES4)
+        if (Id() == g_game_tes4)
             ret = lo_create_handle(&gh, LIBLO_GAME_TES4, gamePath.string().c_str());
-        else if (Id() == GAME_TES5)
+        else if (Id() == g_game_tes5)
             ret = lo_create_handle(&gh, LIBLO_GAME_TES5, gamePath.string().c_str());
-        else if (Id() == GAME_FO3)
+        else if (Id() == g_game_fo3)
             ret = lo_create_handle(&gh, LIBLO_GAME_FO3, gamePath.string().c_str());
-        else if (Id() == GAME_FONV)
+        else if (Id() == g_game_fonv)
             ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str());
 
         if (ret != LIBLO_OK) {
@@ -329,8 +329,8 @@ namespace boss {
     void Game::CreateBOSSGameFolder() {
         //Make sure that the BOSS game path exists.
         try {
-            if (!fs::exists(local_path / bossFolderName))
-                fs::create_directory(local_path / bossFolderName);
+            if (!fs::exists(g_path_local / bossFolderName))
+                fs::create_directory(g_path_local / bossFolderName);
         } catch (fs::filesystem_error& e) {
             throw error(ERROR_PATH_WRITE_FAIL, "Could not create BOSS folder for game.");
         }

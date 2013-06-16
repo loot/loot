@@ -114,7 +114,7 @@ namespace boss {
         return eval;
     }
 
-    MessageContent::MessageContent() : _language(LANG_AUTO) {}
+    MessageContent::MessageContent() : _language(g_lang_any) {}
 
     MessageContent::MessageContent(const std::string& str, const unsigned int language) : _str(str), _language(language) {}
     
@@ -154,7 +154,7 @@ namespace boss {
 
     bool Message::EvalCondition(boss::Game& game, const unsigned int language) {
         if (_content.size() > 1) {
-            if (language == LANG_AUTO)  //Can use a message of any language, so use the first string.
+            if (language == g_lang_any)  //Can use a message of any language, so use the first string.
                 _content.resize(1);
             else {
                 MessageContent english, match;
@@ -162,7 +162,7 @@ namespace boss {
                     if (it->Language() == language) {
                         match = *it;
                         break;
-                    } else if (it->Language() == LANG_ENG)
+                    } else if (it->Language() == g_lang_english)
                         english = *it;
                 }
                 _content.resize(1);
@@ -176,7 +176,7 @@ namespace boss {
     }
 
     MessageContent Message::ChooseContent(const unsigned int language) const {
-        if (_content.size() == 1 || language == LANG_AUTO)
+        if (_content.size() == 1 || language == g_lang_any)
             return _content[0];
         else {
             MessageContent english, match;
@@ -184,7 +184,7 @@ namespace boss {
                 if (it->Language() == language) {
                     match = *it;
                     break;
-                } else if (it->Language() == LANG_ENG)
+                } else if (it->Language() == g_lang_english)
                     english = *it;
             }
             if (!match.Str().empty())

@@ -28,38 +28,40 @@
 namespace boss {
 
     //Game values.
-    extern const unsigned int GAME_AUTODETECT;
-    extern const unsigned int GAME_TES4;
-    extern const unsigned int GAME_TES5;
-    extern const unsigned int GAME_FO3;
-    extern const unsigned int GAME_FONV;
+    extern const unsigned int g_game_autodetect;
+    extern const unsigned int g_game_tes4;
+    extern const unsigned int g_game_tes5;
+    extern const unsigned int g_game_fo3;
+    extern const unsigned int g_game_fonv;
 
     //Message types.
-    extern const unsigned int MESSAGE_SAY;
-    extern const unsigned int MESSAGE_WARN;
-    extern const unsigned int MESSAGE_ERROR;
-    extern const unsigned int MESSAGE_TAG;
+    extern const unsigned int g_message_say;
+    extern const unsigned int g_message_warn;
+    extern const unsigned int g_message_error;
+    extern const unsigned int g_message_tag;
 
     //Languages
-    extern const unsigned int LANG_AUTO;
-    extern const unsigned int LANG_ENG;
+    extern const unsigned int g_lang_any;
+    extern const unsigned int g_lang_english;
+    extern const unsigned int g_lang_spanish;
+    extern const unsigned int g_lang_russian;
 
     //Version numbers.
-    extern const unsigned int VERSION_MAJOR;
-    extern const unsigned int VERSION_MINOR;
-    extern const unsigned int VERSION_PATCH;
+    extern const unsigned int g_version_major;
+    extern const unsigned int g_version_minor;
+    extern const unsigned int g_version_patch;
 
     //Common paths.
-    extern const boost::filesystem::path local_path;
-    extern const boost::filesystem::path readme_path;
-    extern const boost::filesystem::path settings_path;
-    extern const boost::filesystem::path libespm_options_path;
-    extern const boost::filesystem::path css_path;
-    extern const boost::filesystem::path js_path;
-    extern const boost::filesystem::path polyfill_path;
-    extern const boost::filesystem::path svn_path;
-    extern const boost::filesystem::path log_path;
-    extern const boost::filesystem::path l10n_path;
+    extern const boost::filesystem::path g_path_local;
+    extern const boost::filesystem::path g_path_readme;
+    extern const boost::filesystem::path g_path_settings;
+    extern const boost::filesystem::path g_path_libespm_settings;
+    extern const boost::filesystem::path g_path_css;
+    extern const boost::filesystem::path g_path_js;
+    extern const boost::filesystem::path g_path_polyfill;
+    extern const boost::filesystem::path g_path_svn;
+    extern const boost::filesystem::path g_path_log;
+    extern const boost::filesystem::path g_path_l10n;
 }
 
 #endif

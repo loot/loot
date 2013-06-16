@@ -79,10 +79,10 @@ bool BossGUI::OnInit() {
 	}
 
     //Load settings.
-    if (!fs::exists(settings_path)) {
+    if (!fs::exists(g_path_settings)) {
         try {
-            if (!fs::exists(settings_path.parent_path()))
-                fs::create_directory(settings_path.parent_path());
+            if (!fs::exists(g_path_settings.parent_path()))
+                fs::create_directory(g_path_settings.parent_path());
         } catch (fs::filesystem_error& e) {
             wxMessageBox(
 				translate("Error: Could not create local app data BOSS folder."),
@@ -91,11 +91,11 @@ bool BossGUI::OnInit() {
 				NULL);
             return false;
         }
-        GenerateDefaultSettingsFile(settings_path.string());
+        GenerateDefaultSettingsFile(g_path_settings.string());
     }
-    if (fs::exists(settings_path)) {
+    if (fs::exists(g_path_settings)) {
         try {
-            _settings = YAML::LoadFile(settings_path.string());
+            _settings = YAML::LoadFile(g_path_settings.string());
         } catch (YAML::ParserException& e) {
             //LOG_ERROR("Error: %s", e.getString().c_str());
             wxMessageBox(
@@ -109,7 +109,7 @@ bool BossGUI::OnInit() {
 
     //Skip logging initialisation for tester.
 /*    if (gl_log_debug_output)
-		g_logger.setStream(debug_log_path.string().c_str());
+		g_logger.setStream(debug_g_path_log.string().c_str());
 	g_logger.setOriginTracking(gl_debug_with_source);
 	// it's ok if this number is too high.  setVerbosity will handle it
 	g_logger.setVerbosity(static_cast<LogVerbosity>(LV_WARN + gl_debug_verbosity));
@@ -135,7 +135,7 @@ bool BossGUI::OnInit() {
             wxLoc = new wxLocale();
             if (!wxLoc->Init(lang, wxLOCALE_LOAD_DEFAULT))
                 throw runtime_error("System GUI text could not be set.");
-            wxLocale::AddCatalogLookupPathPrefix(l10n_path.string().c_str());
+            wxLocale::AddCatalogLookupPathPrefix(g_path_l10n.string().c_str());
             wxLoc->AddCatalog("wxstd");
         } catch(runtime_error &e) {
            // LOG_ERROR("could not implement translation: %s", e.what());
@@ -319,7 +319,7 @@ void Launcher::OnClose(wxCloseEvent& event) {
     yout.SetIndent(2);
     yout << _settings;
     
-    ofstream out(boss::settings_path.string().c_str());
+    ofstream out(boss::g_path_settings.string().c_str());
     out << yout.c_str();
     out.close();
 
@@ -337,7 +337,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     
     time_t t0 = time(NULL);
 
-    ofstream out((local_path / "out.txt").string().c_str());
+    ofstream out((g_path_local / "out.txt").string().c_str());
 
     out << "Updating masterlist..." << endl;
     start = time(NULL);
@@ -347,10 +347,10 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     try {
         revision = UpdateMasterlist(_game, parsingErrors);
     } catch (boss::error& e) {
-        messages.push_back(boss::Message(boss::MESSAGE_ERROR, string("Masterlist update failed. Details: ") + e.what()));
+        messages.push_back(boss::Message(boss::g_message_error, string("Masterlist update failed. Details: ") + e.what()));
     }
     for (vector<string>::const_iterator it=parsingErrors.begin(), endit=parsingErrors.end(); it != endit; ++it) {
-        messages.push_back(boss::Message(boss::MESSAGE_ERROR, *it));
+        messages.push_back(boss::Message(boss::g_message_error, *it));
     }
 
     end = time(NULL);
@@ -384,7 +384,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         try {
             mlist = YAML::LoadFile(_game.MasterlistPath().string());
         } catch (YAML::ParserException& e) {
-            messages.push_back(boss::Message(boss::MESSAGE_ERROR, string("Masterlist parsing failed. Details: ") + e.what()));
+            messages.push_back(boss::Message(boss::g_message_error, string("Masterlist parsing failed. Details: ") + e.what()));
         }
         if (mlist["globals"])
             mlist_messages = mlist["globals"].as< list<boss::Message> >();
@@ -402,7 +402,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         try {
             ulist = YAML::LoadFile(_game.UserlistPath().string());
         } catch (YAML::ParserException& e) {
-            messages.push_back(boss::Message(boss::MESSAGE_ERROR, string("Userlist parsing failed. Details: ") + e.what()));
+            messages.push_back(boss::Message(boss::g_message_error, string("Userlist parsing failed. Details: ") + e.what()));
         }
         if (ulist["plugins"])
             ulist_plugins = ulist["plugins"].as< list<boss::Plugin> >();
@@ -423,9 +423,9 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         messages.insert(messages.end(), ulist_messages.begin(), ulist_messages.end());
 
         //Set language.
-        unsigned int lang = boss::LANG_AUTO;
+        unsigned int lang = boss::g_lang_any;
         if (_settings["Language"].as<string>() == "eng")
-            lang = boss::LANG_ENG;
+            lang = boss::g_lang_english;
 
         //Merge plugin list, masterlist and userlist plugin data.
         map<string, bool> consistencyIssues;
@@ -447,7 +447,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             try {
                 it->EvalAllConditions(_game, lang);
             } catch (boss::error& e) {
-                messages.push_back(boss::Message(boss::MESSAGE_ERROR, "\"" + it->Name() + "\" contains a condition that could not be evaluated. Details: " + e.what()));
+                messages.push_back(boss::Message(boss::g_message_error, "\"" + it->Name() + "\" contains a condition that could not be evaluated. Details: " + e.what()));
             }
 
             progDia->Pulse();
@@ -463,9 +463,9 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             list<boss::Message> pluginMessages = it->Messages();
             for (map<string,bool>::const_iterator jt=issues.begin(), endJt=issues.end(); jt != endJt; ++jt) {
                 if (jt->second)
-                    pluginMessages.push_back(boss::Message(boss::MESSAGE_ERROR, "\"" + jt->first + "\" is incompatible with \"" + it->Name() + "\" and is present."));
+                    pluginMessages.push_back(boss::Message(boss::g_message_error, "\"" + jt->first + "\" is incompatible with \"" + it->Name() + "\" and is present."));
                 else
-                    pluginMessages.push_back(boss::Message(boss::MESSAGE_ERROR, "\"" + jt->first + "\" is required by \"" + it->Name() + "\" but is missing."));
+                    pluginMessages.push_back(boss::Message(boss::g_message_error, "\"" + jt->first + "\" is required by \"" + it->Name() + "\" but is missing."));
             }
             if (!issues.empty())
                 it->Messages(pluginMessages);
@@ -475,10 +475,10 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
         for (map<string,bool>::const_iterator jt=consistencyIssues.begin(), endJt=consistencyIssues.end(); jt != endJt; ++jt) {
             if (jt->second) {
-                messages.push_back(boss::Message(boss::MESSAGE_ERROR, "\"" + jt->first + "\" is a circular dependency. Plugins will not be sorted."));
+                messages.push_back(boss::Message(boss::g_message_error, "\"" + jt->first + "\" is a circular dependency. Plugins will not be sorted."));
                 cyclicDependenciesExist = true;
             } else
-                messages.push_back(boss::Message(boss::MESSAGE_ERROR, "\"" + jt->first + "\" is given as a dependency and an incompatibility."));
+                messages.push_back(boss::Message(boss::g_message_error, "\"" + jt->first + "\" is given as a dependency and an incompatibility."));
         }
             
         end = time(NULL);
@@ -588,7 +588,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             //Now set load order.
             _game.SetLoadOrder(plugins);
         } else
-            messages.push_back(boss::Message(boss::MESSAGE_WARN, "The load order displayed in the Details tab was not applied as sorting was canceled."));
+            messages.push_back(boss::Message(boss::g_message_warn, "The load order displayed in the Details tab was not applied as sorting was canceled."));
                 cyclicDependenciesExist = true;
 
         out << "Set load order:" << endl;
@@ -736,9 +736,9 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
     
     progDia->Pulse();
     
-    unsigned int lang = boss::LANG_AUTO;
+    unsigned int lang = boss::g_lang_any;
     if (_settings["Language"].as<string>() == "eng")
-        lang = boss::LANG_ENG;
+        lang = boss::g_lang_english;
 
     //Create editor window.
     Editor *editor = new Editor(this, translate("BOSS: Metadata Editor"), _game.UserlistPath().string(), installed, ulist_plugins, lang);
@@ -780,11 +780,11 @@ void Launcher::OnGameChange(wxCommandEvent& event) {
 
 void Launcher::OnHelp(wxCommandEvent& event) {
     //Look for file.
-    if (fs::exists(readme_path.string())) {
-        wxLaunchDefaultApplication(readme_path.string());
+    if (fs::exists(g_path_readme.string())) {
+        wxLaunchDefaultApplication(g_path_readme.string());
     } else  //No ReadMe exists, show a pop-up message saying so.
         wxMessageBox(
-            FromUTF8(format(loc::translate("Error: \"%1%\" cannot be found.")) % readme_path.string()),
+            FromUTF8(format(loc::translate("Error: \"%1%\" cannot be found.")) % g_path_readme.string()),
             translate("BOSS: Error"),
             wxOK | wxICON_ERROR,
             this);
@@ -793,7 +793,7 @@ void Launcher::OnHelp(wxCommandEvent& event) {
 void Launcher::OnAbout(wxCommandEvent& event) {
     wxAboutDialogInfo aboutInfo;
     aboutInfo.SetName("BOSS");
-    aboutInfo.SetVersion(IntToString(VERSION_MAJOR)+"."+IntToString(VERSION_MINOR)+"."+IntToString(VERSION_PATCH));
+    aboutInfo.SetVersion(IntToString(g_version_major)+"."+IntToString(g_version_minor)+"."+IntToString(g_version_patch));
     aboutInfo.SetDescription(translate(
     "A utility that optimises TES IV: Oblivion, Nehrim - At Fate's Edge,\nTES V: Skyrim, Fallout 3 and Fallout: New Vegas mod load orders."));
     aboutInfo.SetCopyright("Copyright (C) 2009-2013 BOSS Development Team.");

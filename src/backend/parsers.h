@@ -74,14 +74,14 @@ namespace YAML {
 
             boss::Game game(node["folder"].as<std::string>());
 
-            if (node["type"].as<std::string>() == boss::Game(boss::GAME_TES4).FolderName())
-                rhs = boss::Game(boss::GAME_TES4, game.FolderName());
-            else if (node["type"].as<std::string>() == boss::Game(boss::GAME_TES5).FolderName())
-                rhs = boss::Game(boss::GAME_TES5, game.FolderName());
-            else if (node["type"].as<std::string>() == boss::Game(boss::GAME_FO3).FolderName())
-                rhs = boss::Game(boss::GAME_FO3, game.FolderName());
-            else if (node["type"].as<std::string>() == boss::Game(boss::GAME_FONV).FolderName())
-                rhs = boss::Game(boss::GAME_FONV, game.FolderName());
+            if (node["type"].as<std::string>() == boss::Game(boss::g_game_tes4).FolderName())
+                rhs = boss::Game(boss::g_game_tes4, game.FolderName());
+            else if (node["type"].as<std::string>() == boss::Game(boss::g_game_tes5).FolderName())
+                rhs = boss::Game(boss::g_game_tes5, game.FolderName());
+            else if (node["type"].as<std::string>() == boss::Game(boss::g_game_fo3).FolderName())
+                rhs = boss::Game(boss::g_game_fo3, game.FolderName());
+            else if (node["type"].as<std::string>() == boss::Game(boss::g_game_fonv).FolderName())
+                rhs = boss::Game(boss::g_game_fonv, game.FolderName());
             else
                 return false;
 
@@ -109,9 +109,9 @@ namespace YAML {
             Node node;
             node["str"] = rhs.Str();
 
-            if (rhs.Language() == boss::LANG_AUTO)
+            if (rhs.Language() == boss::g_lang_any)
                 node["lang"] = "";
-            else
+            else if (rhs.Language() == boss::g_lang_english)
                 node["lang"] = "eng";
 
             return node;
@@ -126,9 +126,9 @@ namespace YAML {
             unsigned int langNo;
 
             if (boost::iequals(lang, "eng"))
-                langNo = boss::LANG_ENG;
+                langNo = boss::g_lang_english;
             else
-                langNo = boss::LANG_AUTO;
+                langNo = boss::g_lang_any;
 
             rhs = boss::MessageContent(str, langNo);
 
@@ -143,9 +143,9 @@ namespace YAML {
             node["condition"] = rhs.Condition();
             node["content"] = rhs.Content();
 
-            if (rhs.Type() == boss::MESSAGE_SAY)
+            if (rhs.Type() == boss::g_message_say)
                 node["type"] = "say";
-            else if (rhs.Type() == boss::MESSAGE_WARN)
+            else if (rhs.Type() == boss::g_message_warn)
                 node["type"] = "warn";
             else
                 node["type"] = "error";
@@ -163,11 +163,11 @@ namespace YAML {
                 type = node["type"].as<std::string>();
 
                 if (boost::iequals(type, "say"))
-                    typeNo = boss::MESSAGE_SAY;
+                    typeNo = boss::g_message_say;
                 else if (boost::iequals(type, "warn"))
-                    typeNo = boss::MESSAGE_WARN;
+                    typeNo = boss::g_message_warn;
                 else
-                    typeNo = boss::MESSAGE_ERROR;
+                    typeNo = boss::g_message_error;
             }
 
             std::vector<boss::MessageContent> content;
@@ -180,7 +180,7 @@ namespace YAML {
             if (content.size() > 1) {
                 bool found = false;
                 for (std::vector<boss::MessageContent>::const_iterator it=content.begin(), endit=content.end(); it != endit; ++it) {
-                    if (it->Language() == boss::LANG_ENG)
+                    if (it->Language() == boss::g_lang_english)
                         found = true;
                 }
                 if (!found)
