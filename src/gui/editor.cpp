@@ -64,7 +64,72 @@ wxString State[2] = {
     translate("Remove")
 };
 
-Editor::Editor(wxWindow *parent, const wxString& title, const std::string userlistPath, const std::vector<boss::Plugin>& basePlugins, std::vector<boss::Plugin>& editedPlugins, const unsigned int language) : wxFrame(parent, wxID_ANY, title), _userlistPath(userlistPath), _basePlugins(basePlugins), _editedPlugins(editedPlugins), _language(language) {
+MessageList::MessageList(wxWindow * parent, wxWindowID id, const unsigned int language) : wxListView(parent, id, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_VIRTUAL|wxLC_SINGLE_SEL), _language(language) {
+    InsertColumn(0, translate("Type"));
+    InsertColumn(1, translate("Content"));
+    InsertColumn(2, translate("Condition"));
+    InsertColumn(3, translate("Language"));
+
+    Bind(wxEVT_COMMAND_LIST_DELETE_ITEM, &MessageList::OnDeleteItem, this);
+
+    SetItemCount(0);
+}
+
+std::vector<boss::Message> MessageList::GetItems() const {
+    return _messages;
+}
+
+void MessageList::SetItems(const std::vector<boss::Message>& messages) {
+    _messages = messages;
+    SetItemCount(_messages.size());
+    RefreshItems(0, _messages.size() - 1);
+}
+
+boss::Message MessageList::GetItem(long item) const {
+    return _messages[item];
+}
+
+void MessageList::SetItem(long item, const boss::Message& message) {
+    _messages[item] = message;
+    RefreshItem(item);
+}
+
+void MessageList::AppendItem(const boss::Message& message) {
+    _messages.push_back(message);
+    SetItemCount(_messages.size());
+    RefreshItem(_messages.size() - 1);
+}
+
+void MessageList::OnDeleteItem(wxListEvent& event) {
+    _messages.erase(_messages.begin() + event.GetIndex());
+    SetItemCount(_messages.size());
+    RefreshItems(event.GetIndex(), _messages.size() - 1);
+}
+
+wxString MessageList::OnGetItemText(long item, long column) const {
+    if (column < 0 || column > 3 || item < 0 || item > _messages.size() - 1)
+        return wxString();
+
+    if (column == 0) {
+        if (_messages[item].Type() == boss::MESSAGE_SAY)
+            return Type[0];
+        else if (_messages[item].Type() == boss::MESSAGE_WARN)
+            return Type[1];
+        else
+            return Type[2];
+    } else if (column == 1) {
+        return FromUTF8(_messages[item].ChooseContent(_language).Str());
+    } else if (column == 2) {
+        return FromUTF8(_messages[item].Condition());
+    } else {
+        if (_messages[item].ChooseContent(_language).Language() == boss::LANG_AUTO)
+            return Language[0];
+        else
+            return Language[1];
+    }
+}
+
+Editor::Editor(wxWindow *parent, const wxString& title, const std::string userlistPath, const std::vector<boss::Plugin>& basePlugins, std::vector<boss::Plugin>& editedPlugins, const unsigned int language) : wxFrame(parent, wxID_ANY, title), _userlistPath(userlistPath), _basePlugins(basePlugins), _editedPlugins(editedPlugins) {
 
     //Initialise child windows.
     listBook = new wxNotebook(this, BOOK_Lists);
@@ -91,8 +156,8 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     reqsList = new wxListView(reqsTab, LIST_Reqs, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL);
     incsList = new wxListView(incsTab, LIST_Incs, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL);
     loadAfterList = new wxListView(loadAfterTab, LIST_LoadAfter, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL);
-    messageList = new wxListView(messagesTab, LIST_Messages, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL);
     tagsList = new wxListView(tagsTab, LIST_BashTags, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL);
+    messageList = new MessageList(messagesTab, LIST_Messages, language);
 
     //Tie together notebooks and panels.
     listBook->AddPage(reqsTab, translate("Requirements"), true);
@@ -115,11 +180,6 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     loadAfterList->AppendColumn(translate("Filename"));
     loadAfterList->AppendColumn(translate("Display Name"));
     loadAfterList->AppendColumn(translate("Condition"));
-
-    messageList->AppendColumn(translate("Type"));
-    messageList->AppendColumn(translate("Content"));
-    messageList->AppendColumn(translate("Condition"));
-    messageList->AppendColumn(translate("Language"));
 
     tagsList->AppendColumn(translate("Add/Remove"));
     tagsList->AppendColumn(translate("Bash Tag"));
@@ -260,26 +320,8 @@ void Editor::OnPluginSelect(wxListEvent& event) {
         }
 
         list<boss::Message> messages = plugin.Messages();
-        i=0;
-        for (list<boss::Message>::const_iterator it=messages.begin(), endit=messages.end(); it != endit; ++it) {
-
-            if (it->Type() == boss::MESSAGE_SAY)
-                messageList->InsertItem(i, Type[0]);
-            else if (it->Type() == boss::MESSAGE_WARN)
-                messageList->InsertItem(i, Type[1]);
-            else
-                messageList->InsertItem(i, Type[2]);
-            
-            messageList->SetItem(i, 1, FromUTF8(it->Content()));
-            messageList->SetItem(i, 2, FromUTF8(it->Condition()));
-
-            if (it->Language() == boss::LANG_AUTO)
-                messageList->SetItem(i, 3, Language[0]);
-            else
-                messageList->SetItem(i, 3, Language[1]);
-                
-            ++i;
-        }
+        vector<boss::Message> vec(messages.begin(), messages.end());
+        messageList->SetItems(vec);
 
         set<boss::Tag> tags = plugin.Tags();
         i=0;
@@ -365,7 +407,7 @@ void Editor::OnAddRow(wxCommandEvent& event) {
 
         if (rowDialog->ShowModal() == wxID_OK) {
 
-            if (rowDialog->GetContent().empty()) {
+            if (rowDialog->GetMessage().Content().empty()) {
                 wxMessageBox(
                     translate("Error: No content specified. Row will not be added."),
                     translate("BOSS: Error"),
@@ -373,12 +415,8 @@ void Editor::OnAddRow(wxCommandEvent& event) {
                     this);
                 return;
             }
-            
-            long i = messageList->GetItemCount();
-            messageList->InsertItem(i, rowDialog->GetType());
-            messageList->SetItem(i, 1, rowDialog->GetContent());
-            messageList->SetItem(i, 2, rowDialog->GetCondition());
-            messageList->SetItem(i, 3, rowDialog->GetLanguage());
+
+            messageList->AppendItem(rowDialog->GetMessage());
         }
     } else if (listBook->GetSelection() == 4) {
         TagEditDialog * rowDialog = new TagEditDialog(this, translate("BOSS: Add Tag"));
@@ -438,23 +476,11 @@ void Editor::OnEditRow(wxCommandEvent& event) {
 
         long i = messageList->GetFirstSelected();
 
-        int typeNo,langNo;
-        if (messageList->GetItemText(i, 0) == Type[0])
-            typeNo = 0;
-        else if  (messageList->GetItemText(i, 0) == Type[1])
-            typeNo = 1;
-        else
-            typeNo = 2;
-        if  (messageList->GetItemText(i, 3) == Language[0])
-            langNo = 0;
-        else
-            langNo = 1;
-
-        rowDialog->SetValues(typeNo, messageList->GetItemText(i, 1), messageList->GetItemText(i, 2), langNo);
+        rowDialog->SetMessage(messageList->GetItem(i));
 
         if (rowDialog->ShowModal() == wxID_OK) {
 
-            if (rowDialog->GetContent().empty()) {
+            if (rowDialog->GetMessage().Content().empty()) {
                 wxMessageBox(
                     translate("Error: No content specified. Row will not be edited."),
                     translate("BOSS: Error"),
@@ -462,11 +488,8 @@ void Editor::OnEditRow(wxCommandEvent& event) {
                     this);
                 return;
             }
-            
-            messageList->SetItem(i, 0, rowDialog->GetType());
-            messageList->SetItem(i, 1, rowDialog->GetContent());
-            messageList->SetItem(i, 2, rowDialog->GetCondition());
-            messageList->SetItem(i, 3, rowDialog->GetLanguage());
+
+            messageList->SetItem(i, rowDialog->GetMessage());
         }
     } else if (listBook->GetSelection() == 4) {
         TagEditDialog * rowDialog = new TagEditDialog(this, translate("BOSS: Edit Tag"));
@@ -582,7 +605,7 @@ void Editor::OnRowSelect(wxListEvent& event) {
 
     } else if (event.GetId() == LIST_Messages) {
 
-        boss::Message message = RowToMessage(messageList, event.GetIndex());
+        boss::Message message = messageList->GetItem(event.GetIndex());
         boss::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
 
         vector<boss::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
@@ -714,10 +737,8 @@ boss::Plugin Editor::GetNewData(const wxString& plugin) const {
     }
     p.Tags(tags);
 
-    list<boss::Message> messages;
-    for (int i=0,max=messageList->GetItemCount(); i < max; ++i) {
-        messages.push_back(RowToMessage(messageList, i));
-    }
+    vector<boss::Message> vec = messageList->GetItems();
+    list<boss::Message> messages(vec.begin(), vec.end());
     p.Messages(messages);
 
     return p;
@@ -728,27 +749,6 @@ boss::File Editor::RowToFile(wxListView * list, long row) const {
         string(list->GetItemText(row, 0).ToUTF8()),
         string(list->GetItemText(row, 1).ToUTF8()),
         string(list->GetItemText(row, 2).ToUTF8())
-    );
-}
-
-boss::Message Editor::RowToMessage(wxListView * list, long row) const {
-    unsigned int type,language;
-    if (list->GetItemText(row, 0) == Type[0])
-        type = boss::MESSAGE_SAY;
-    else if (list->GetItemText(row, 0) == Type[1])
-        type = boss::MESSAGE_WARN;
-    else
-        type = boss::MESSAGE_ERROR;
-    if (list->GetItemText(row, 3) == Language[0])
-        language = boss::LANG_AUTO;
-    else
-        language = boss::LANG_ENG;
-    
-    return boss::Message(
-        type,
-        string(list->GetItemText(row, 1).ToUTF8()),
-        string(list->GetItemText(row, 2).ToUTF8()),
-        language
     );
 }
 
@@ -835,15 +835,33 @@ MessageEditDialog::MessageEditDialog(wxWindow *parent, const wxString& title) : 
     _type = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 3, Type);
     _language = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 2, Language);
 
-    _content = new wxTextCtrl(this, wxID_ANY);
     _condition = new wxTextCtrl(this, wxID_ANY);
+    _str = new wxTextCtrl(this, wxID_ANY);
+
+    _content = new wxListView(this, LIST_MessageContent, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL);
+
+    addBtn = new wxButton(this, BUTTON_AddContent, translate("Add Content"));
+    editBtn = new wxButton(this, BUTTON_EditContent, translate("Edit Content"));
+    removeBtn = new wxButton(this, BUTTON_RemoveContent, translate("Remove Content"));
+
+    _content->InsertColumn(0, translate("Language"));
+    _content->InsertColumn(1, translate("String"));
+
+    //Set up event handling.
+    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MessageEditDialog::OnAdd, this, BUTTON_AddContent);
+    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MessageEditDialog::OnEdit, this, BUTTON_EditContent);
+    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MessageEditDialog::OnRemove, this, BUTTON_RemoveContent);
+    Bind(wxEVT_COMMAND_LIST_ITEM_SELECTED, &MessageEditDialog::OnSelect, this, LIST_MessageContent);
 
     wxSizerFlags leftItem(0);
-	leftItem.Left();
-
+    leftItem.Left();
+    
 	wxSizerFlags rightItem(1);
-	rightItem.Right().Expand();
-
+    rightItem.Right();
+    
+    wxSizerFlags wholeItem(0);
+    wholeItem.Expand().Border(wxLEFT|wxRIGHT|wxBOTTOM, 10);
+    
     wxBoxSizer * bigBox = new wxBoxSizer(wxVERTICAL);
 
 	wxFlexGridSizer * GridSizer = new wxFlexGridSizer(2, 5, 5);
@@ -852,16 +870,29 @@ MessageEditDialog::MessageEditDialog(wxWindow *parent, const wxString& title) : 
 	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Type:")), leftItem);
 	GridSizer->Add(_type, rightItem);
 
-	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Content:")), leftItem);
-	GridSizer->Add(_content, rightItem);
-
 	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Condition:")), leftItem);
 	GridSizer->Add(_condition, rightItem);
 
-	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Language:")), leftItem);
-	GridSizer->Add(_language, rightItem);
+    bigBox->Add(GridSizer, wholeItem);
 
-    bigBox->Add(GridSizer, 0, wxEXPAND|wxALL, 10);
+    bigBox->Add(_content, wholeItem);
+
+    wxFlexGridSizer * GridSizer2 = new wxFlexGridSizer(2, 5, 5);
+    GridSizer2->AddGrowableCol(1,1);
+
+	GridSizer2->Add(new wxStaticText(this, wxID_ANY, translate("Language:")), leftItem);
+	GridSizer2->Add(_language, rightItem);
+
+	GridSizer2->Add(new wxStaticText(this, wxID_ANY, translate("Content:")), leftItem);
+	GridSizer2->Add(_str, rightItem);
+
+    bigBox->Add(GridSizer2, wholeItem);
+
+    wxBoxSizer * hbox = new wxBoxSizer(wxHORIZONTAL);
+    hbox->Add(addBtn, 0, wxRIGHT, 5);
+    hbox->Add(editBtn, 0, wxLEFT|wxRIGHT, 5);
+    hbox->Add(removeBtn, 0, wxLEFT, 5);
+    bigBox->Add(hbox, 0, wxALIGN_RIGHT|wxRIGHT, 10);
 
     bigBox->AddSpacer(10);
     bigBox->AddStretchSpacer(1);
@@ -873,36 +904,89 @@ MessageEditDialog::MessageEditDialog(wxWindow *parent, const wxString& title) : 
 
     //Set defaults.
     _type->SetSelection(0);
-    _language->SetSelection(0);
 
     SetBackgroundColour(wxColour(255,255,255));
     SetIcon(wxIconLocation("BOSS.exe"));
 	SetSizerAndFit(bigBox);
-
 }
 
-void MessageEditDialog::SetValues(int type, const wxString& content, const wxString& condition, int language) {
+void MessageEditDialog::SetMessage(const boss::Message& message) {
 
-    _type->SetSelection(type);
-    _content->SetValue(content);
-    _condition->SetValue(condition);
-    _language->SetSelection(language);
+    if (message.Type() == boss::MESSAGE_SAY)
+        _type->SetSelection(0);
+    else if (message.Type() == boss::MESSAGE_WARN)
+        _type->SetSelection(1);
+    else
+        _type->SetSelection(2);
+
+    _condition->SetValue(FromUTF8(message.Condition()));
+
+    vector<boss::MessageContent> contents = message.Content();
+    for (size_t i=0, max=contents.size(); i < max; ++i) {
+        if (contents[i].Language() == boss::LANG_AUTO)
+            _content->InsertItem(i, Language[0]);
+        else
+            _content->InsertItem(i, Language[1]);
+
+        _content->SetItem(i, 1, FromUTF8(contents[i].Str()));
+    }
 }
 
-wxString MessageEditDialog::GetType() const {
-    return Type[_type->GetSelection()];
+boss::Message MessageEditDialog::GetMessage() const {
+
+    unsigned int type;
+    string condition;
+    if (_type->GetSelection() == 0)
+        type = boss::MESSAGE_SAY;
+    else if (_type->GetSelection() == 1)
+        type = boss::MESSAGE_WARN;
+    else
+        type = boss::MESSAGE_ERROR;
+
+    condition = string(_condition->GetValue().ToUTF8());
+
+    vector<boss::MessageContent> contents;
+    for (size_t i=0, max=_content->GetItemCount(); i < max; ++i) {
+
+        string str = string(_content->GetItemText(i, 1).ToUTF8());
+        unsigned int lang;
+        if (_content->GetItemText(i, 0) == Language[0])
+            lang = boss::LANG_AUTO;
+        else
+            lang = boss::LANG_ENG;
+        contents.push_back(boss::MessageContent(str, lang));
+    }
+    
+    return boss::Message(type, contents, condition);
 }
 
-wxString MessageEditDialog::GetContent() const {
-    return _content->GetValue();
+void MessageEditDialog::OnSelect(wxListEvent& event) {
+    if (_content->GetItemText(event.GetIndex(), 0) == Language[0])
+        _language->SetSelection(0);
+    else
+        _language->SetSelection(1);
+
+    _str->SetValue(_content->GetItemText(event.GetIndex(), 1));
 }
 
-wxString MessageEditDialog::GetCondition() const {
-    return _condition->GetValue();
+void MessageEditDialog::OnAdd(wxCommandEvent& event) {
+    long i = _content->GetItemCount();
+    _content->InsertItem(i, Language[_language->GetSelection()]);
+    _content->SetItem(i, 1, _str->GetValue());
 }
 
-wxString MessageEditDialog::GetLanguage() const {
-    return Language[_language->GetSelection()];
+void MessageEditDialog::OnEdit(wxCommandEvent& event) {
+    if (_content->GetFirstSelected() == -1)
+        return;
+    long i = _content->GetFirstSelected();
+    _content->SetItem(i, 0, Language[_language->GetSelection()]);
+    _content->SetItem(i, 1, _str->GetValue());
+}
+
+void MessageEditDialog::OnRemove(wxCommandEvent& event) {
+    if (_content->GetFirstSelected() == -1)
+        return;
+    _content->DeleteItem(_content->GetFirstSelected());
 }
 
 TagEditDialog::TagEditDialog(wxWindow *parent, const wxString& title) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER) {

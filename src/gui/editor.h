@@ -32,6 +32,26 @@
 #include <wx/notebook.h>
 #include <wx/listctrl.h>
 
+class MessageList : public wxListView {
+public:
+    MessageList(wxWindow * parent, wxWindowID id, const unsigned int language);
+
+    void SetItems(const std::vector<boss::Message>& messages);
+    std::vector<boss::Message> GetItems() const;
+
+    boss::Message GetItem(long item) const;
+    void SetItem(long item, const boss::Message& message);
+    void AppendItem(const boss::Message& message);
+
+    void OnDeleteItem(wxListEvent& event);
+protected:
+    wxString OnGetItemText(long item, long column) const;
+    
+private:
+    std::vector<boss::Message> _messages;
+    const unsigned int _language;
+};
+
 class Editor : public wxFrame {
 public:
     Editor(wxWindow *parent, const wxString& title, const std::string userlistPath, const std::vector<boss::Plugin>& basePlugins, std::vector<boss::Plugin>& editedPlugins, const unsigned int language);
@@ -58,7 +78,7 @@ private:
     wxListView * reqsList;
     wxListView * incsList;
     wxListView * loadAfterList;
-    wxListView * messageList;
+    MessageList * messageList;
     wxListView * tagsList;
     wxNotebook * listBook;
     wxCheckBox * enableUserEditsBox;
@@ -68,7 +88,6 @@ private:
     const std::string _userlistPath;
     const std::vector<boss::Plugin> _basePlugins;
     std::vector<boss::Plugin> _editedPlugins;
-    const unsigned int _language;
     std::vector<boss::Message> currentMessages;
 
     void ApplyEdits(const wxString& plugin);
@@ -78,7 +97,6 @@ private:
     boss::Plugin GetNewData(const wxString& plugin) const;
 
     boss::File RowToFile(wxListView * list, long row) const;
-    boss::Message RowToMessage(wxListView * list, long row) const;
     boss::Tag RowToTag(wxListView * list, long row) const;
 };
 
@@ -100,16 +118,22 @@ class MessageEditDialog : public wxDialog {
 public:
     MessageEditDialog(wxWindow *parent, const wxString& title);
 
-    void SetValues(int type, const wxString& content, const wxString& condition, int language);
-    wxString GetType() const;
-    wxString GetContent() const;
-    wxString GetCondition() const;
-    wxString GetLanguage() const;
+    void SetMessage(const boss::Message& message);
+    boss::Message GetMessage() const;
+
+    void OnSelect(wxListEvent& event);
+    void OnAdd(wxCommandEvent& event);
+    void OnEdit(wxCommandEvent& event);
+    void OnRemove(wxCommandEvent& event);
 private:
+    wxButton * addBtn;
+    wxButton * editBtn;
+    wxButton * removeBtn;
     wxChoice * _type;
-    wxTextCtrl * _content;
-    wxTextCtrl * _condition;
     wxChoice * _language;
+    wxListView * _content;
+    wxTextCtrl * _condition;
+    wxTextCtrl * _str;
 };
 
 class TagEditDialog : public wxDialog {

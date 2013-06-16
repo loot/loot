@@ -176,23 +176,21 @@ namespace boss {
     }
 
     MessageContent Message::ChooseContent(const unsigned int language) const {
-        if (_content.size() > 1) {
-            if (language == LANG_AUTO)  //Can use a message of any language, so use the first string.
-                return _content[0];
-            else {
-                MessageContent english, match;
-                for (vector<MessageContent>::const_iterator it=_content.begin(), endit=_content.end(); it != endit; ++it) {
-                    if (it->Language() == language) {
-                        match = *it;
-                        break;
-                    } else if (it->Language() == LANG_ENG)
-                        english = *it;
-                }
-                if (!match.Str().empty())
-                    return match;
-                else
-                    return english;
+        if (_content.size() == 1 || language == LANG_AUTO)
+            return _content[0];
+        else {
+            MessageContent english, match;
+            for (vector<MessageContent>::const_iterator it=_content.begin(), endit=_content.end(); it != endit; ++it) {
+                if (it->Language() == language) {
+                    match = *it;
+                    break;
+                } else if (it->Language() == LANG_ENG)
+                    english = *it;
             }
+            if (!match.Str().empty())
+                return match;
+            else
+                return english;
         }
     }
 
