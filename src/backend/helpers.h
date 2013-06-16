@@ -69,6 +69,10 @@ namespace boss {
     //Turns an absolute filesystem path into a valid file:// URL.
     std::string ToFileURL(const boost::filesystem::path& file);
 
+    //Converts between BOSS's global const value and the ISO 639-3 value for a language.
+    std::string GetLangString(const unsigned int num);
+    unsigned int GetLangNum(const std::string& str);
+
     //Version class for more robust version comparisons.
     class Version {
     private:

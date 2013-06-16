@@ -108,12 +108,8 @@ namespace YAML {
         static Node encode(const boss::MessageContent& rhs) {
             Node node;
             node["str"] = rhs.Str();
-
-            if (rhs.Language() == boss::g_lang_any)
-                node["lang"] = "";
-            else if (rhs.Language() == boss::g_lang_english)
-                node["lang"] = "eng";
-
+            node["lang"] = boss::GetLangString(rhs.Language());
+            
             return node;
         }
 
@@ -122,15 +118,9 @@ namespace YAML {
                 return false;
                 
             std::string str = node["str"].as<std::string>();
-            std::string lang = node["lang"].as<std::string>();
-            unsigned int langNo;
+            unsigned int lang = boss::GetLangNum(node["lang"].as<std::string>());
 
-            if (boost::iequals(lang, "eng"))
-                langNo = boss::g_lang_english;
-            else
-                langNo = boss::g_lang_any;
-
-            rhs = boss::MessageContent(str, langNo);
+            rhs = boss::MessageContent(str, lang);
 
             return true;
         }

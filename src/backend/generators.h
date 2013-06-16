@@ -550,8 +550,7 @@ namespace YAML {
     inline Emitter& operator << (Emitter& out, const boss::MessageContent& rhs) {
         out << BeginMap;
 
-        if (rhs.Language() == boss::g_lang_english)
-            out << Key << "lang" << Value << "eng";
+        out << Key << "lang" << Value << boss::GetLangString(rhs.Language());
 
         out << Key << "str" << Value << rhs.Str();
 

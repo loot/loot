@@ -423,9 +423,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         messages.insert(messages.end(), ulist_messages.begin(), ulist_messages.end());
 
         //Set language.
-        unsigned int lang = boss::g_lang_any;
-        if (_settings["Language"].as<string>() == "eng")
-            lang = boss::g_lang_english;
+        unsigned int lang = GetLangNum(_settings["Language"].as<string>());
 
         //Merge plugin list, masterlist and userlist plugin data.
         map<string, bool> consistencyIssues;
@@ -736,9 +734,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
     
     progDia->Pulse();
     
-    unsigned int lang = boss::g_lang_any;
-    if (_settings["Language"].as<string>() == "eng")
-        lang = boss::g_lang_english;
+    unsigned int lang = GetLangNum(_settings["Language"].as<string>());
 
     //Create editor window.
     Editor *editor = new Editor(this, translate("BOSS: Metadata Editor"), _game.UserlistPath().string(), installed, ulist_plugins, lang);

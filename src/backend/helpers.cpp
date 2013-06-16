@@ -245,6 +245,28 @@ namespace boss {
 
         return url;
     }
+
+    std::string GetLangString(const unsigned int num) {
+        if (num == g_lang_english)
+            return "eng";
+        else if (num == g_lang_spanish)
+            return "spa";
+        else if (num == g_lang_russian)
+            return "rus";
+        else
+            return "";
+    }
+
+    unsigned int GetLangNum(const std::string& str) {
+        if (boost::iequals(str, "eng"))
+            return g_lang_english;
+        else if (boost::iequals(str, "spa"))
+            return g_lang_spanish;
+        else if (boost::iequals(str, "rus"))
+            return g_lang_russian;
+        else
+            return g_lang_any;
+    }
     
 
     //////////////////////////////

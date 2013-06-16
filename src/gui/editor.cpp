@@ -29,15 +29,6 @@
 
 using namespace std;
 
-wxString Language[2] = {
-    translate("None Specified"),
-    wxT("English"),
-/*	wxString::FromUTF8("Español"),
-    wxT("Deutsch"),
-    wxString::FromUTF8("Русский"),
-    wxString::FromUTF8("简体中文")*/
-};
-
 wxString Type[3] = {
     translate("Note"),
     translate("Warning"),
@@ -107,10 +98,7 @@ wxString MessageList::OnGetItemText(long item, long column) const {
     } else if (column == 2) {
         return FromUTF8(_messages[item].Condition());
     } else {
-        if (_messages[item].ChooseContent(_language).Language() == boss::g_lang_any)
-            return Language[0];
-        else
-            return Language[1];
+        return Language[ GetLangIndex(boss::GetLangString(_messages[item].ChooseContent(_language).Language())) ];
     }
 }
 
@@ -832,7 +820,7 @@ MessageEditDialog::MessageEditDialog(wxWindow *parent, const wxString& title) : 
 
     //Initialise controls.
     _type = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 3, Type);
-    _language = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 2, Language);
+    _language = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 4, Language);
 
     _condition = new wxTextCtrl(this, wxID_ANY);
     _str = new wxTextCtrl(this, wxID_ANY);
@@ -922,11 +910,7 @@ void MessageEditDialog::SetMessage(const boss::Message& message) {
 
     vector<boss::MessageContent> contents = message.Content();
     for (size_t i=0, max=contents.size(); i < max; ++i) {
-        if (contents[i].Language() == boss::g_lang_any)
-            _content->InsertItem(i, Language[0]);
-        else
-            _content->InsertItem(i, Language[1]);
-
+        _content->InsertItem(i, Language[ GetLangIndex(boss::GetLangString(contents[i].Language())) ]);
         _content->SetItem(i, 1, FromUTF8(contents[i].Str()));
     }
 }
@@ -948,11 +932,8 @@ boss::Message MessageEditDialog::GetMessage() const {
     for (size_t i=0, max=_content->GetItemCount(); i < max; ++i) {
 
         string str = string(_content->GetItemText(i, 1).ToUTF8());
-        unsigned int lang;
-        if (_content->GetItemText(i, 0) == Language[0])
-            lang = boss::g_lang_any;
-        else
-            lang = boss::g_lang_english;
+        unsigned int lang = GetLangNum(_content->GetItemText(i, 0));
+        
         contents.push_back(boss::MessageContent(str, lang));
     }
     
@@ -960,11 +941,7 @@ boss::Message MessageEditDialog::GetMessage() const {
 }
 
 void MessageEditDialog::OnSelect(wxListEvent& event) {
-    if (_content->GetItemText(event.GetIndex(), 0) == Language[0])
-        _language->SetSelection(0);
-    else
-        _language->SetSelection(1);
-
+    _language->SetSelection(GetLangIndex(_content->GetItemText(event.GetIndex(), 0)));
     _str->SetValue(_content->GetItemText(event.GetIndex(), 1));
 }
 

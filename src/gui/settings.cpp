@@ -46,15 +46,13 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
 
 	wxString Language[] = {
 		wxT("English"),
-	/*	wxString::FromUTF8("Español"),
-		wxT("Deutsch"),
+		wxString::FromUTF8("Español"),
 		wxString::FromUTF8("Русский"),
-		wxString::FromUTF8("简体中文")*/
 	};
 
     //Initialise controls.
     GameChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, Games);
-    LanguageChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 1, Language);
+    LanguageChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 4, Language);
     DebugVerbosityChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 4, DebugVerbosity);
 
     gamesList = new wxListView(this, LIST_Games, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL);
@@ -147,9 +145,7 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
 void SettingsFrame::SetDefaultValues() {
 
     if (_settings["Language"]) {
-        string lang = _settings["Language"].as<string>();
-        if (lang == "eng")
-            LanguageChoice->SetSelection(0);
+        LanguageChoice->SetSelection(GetLangIndex(_settings["Language"].as<string>()));
     }
 
     if (_settings["Game"]) {
@@ -201,12 +197,8 @@ void SettingsFrame::OnQuit(wxCommandEvent& event) {
             _settings["Game"] = "auto";
         else
             _settings["Game"] = _games[GameChoice->GetSelection() - 1].FolderName();
-        
-        switch (LanguageChoice->GetSelection()) {
-        case 0:
-            _settings["Language"] = "eng";
-            break;
-        }
+
+        _settings["Language"] = GetLangStringFromIndex(LanguageChoice->GetSelection());
 
         _settings["Debug Verbosity"] = DebugVerbosityChoice->GetSelection();
 
