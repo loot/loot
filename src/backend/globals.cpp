@@ -58,4 +58,5 @@ namespace boss {
     const boost::filesystem::path polyfill_path         = boost::filesystem::current_path() / "resources" / "polyfill.js";
     const boost::filesystem::path settings_path         = local_path / "settings.yaml";
     const boost::filesystem::path log_path              = local_path / "BOSSDebugLog.txt";
+    const boost::filesystem::path l10n_path             = "resources/l10n";
 }

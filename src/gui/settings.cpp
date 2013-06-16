@@ -26,14 +26,6 @@
 #include <fstream>
 #include <boost/algorithm/string.hpp>
 
-BEGIN_EVENT_TABLE ( SettingsFrame, wxDialog )
-	EVT_BUTTON ( wxID_OK, SettingsFrame::OnQuit)
-    EVT_LIST_ITEM_SELECTED( LIST_Games, SettingsFrame::OnGameSelect )
-    EVT_BUTTON ( BUTTON_AddGame, SettingsFrame::OnAddGame )
-    EVT_BUTTON ( BUTTON_EditGame, SettingsFrame::OnEditGame )
-    EVT_BUTTON ( BUTTON_RemoveGame, SettingsFrame::OnRemoveGame )
-END_EVENT_TABLE()
-
 using namespace std;
 
 SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node& settings, std::vector<boss::Game>& games) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER), _settings(settings), _games(games) {
@@ -83,6 +75,13 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
     gamesList->AppendColumn(translate("Install Path"));
     gamesList->AppendColumn(translate("Install Path Registry Key"));
 
+    //Set up event handling.
+    Bind(wxEVT_COMMAND_LIST_ITEM_SELECTED, &SettingsFrame::OnGameSelect, this, LIST_Games);
+    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &SettingsFrame::OnQuit, this, wxID_OK);
+    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &SettingsFrame::OnAddGame, this, BUTTON_AddGame);
+    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &SettingsFrame::OnEditGame, this, BUTTON_EditGame);
+    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &SettingsFrame::OnRemoveGame, this, BUTTON_RemoveGame);
+
     //Set up layout.
 	wxSizerFlags leftItem(0);
 	leftItem.Left();
@@ -124,7 +123,7 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
     bigBox->AddSpacer(10);
     bigBox->AddStretchSpacer(1);
 	
-	bigBox->Add(new wxStaticText(this, wxID_ANY, translate("Language changes will be applied after BOSS is restarted.")), wholeItem);
+	bigBox->Add(new wxStaticText(this, wxID_ANY, translate("Language and game changes will be applied after BOSS is restarted.")), wholeItem);
 	
 	//Need to add 'OK' and 'Cancel' buttons.
 	wxSizer * sizer = CreateSeparatedButtonSizer(wxOK|wxCANCEL);

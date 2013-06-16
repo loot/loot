@@ -66,7 +66,6 @@ public:
     void OnRecalc(wxCommandEvent& event);
     void OnRowSelect(wxListEvent& event);
     void OnQuit(wxCommandEvent& event);
-    DECLARE_EVENT_TABLE()
 private:
     
     wxButton * addBtn;

@@ -135,7 +135,7 @@ bool BossGUI::OnInit() {
             wxLoc = new wxLocale();
             if (!wxLoc->Init(lang, wxLOCALE_LOAD_DEFAULT))
                 throw runtime_error("System GUI text could not be set.");
-            wxLocale::AddCatalogLookupPathPrefix(".\\l10n");
+            wxLocale::AddCatalogLookupPathPrefix(l10n_path.string().c_str());
             wxLoc->AddCatalog("wxstd");
         } catch(runtime_error &e) {
            // LOG_ERROR("could not implement translation: %s", e.what());

@@ -59,6 +59,7 @@ namespace boss {
     extern const boost::filesystem::path polyfill_path;
     extern const boost::filesystem::path svn_path;
     extern const boost::filesystem::path log_path;
+    extern const boost::filesystem::path l10n_path;
 }
 
 #endif

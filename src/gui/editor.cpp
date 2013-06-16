@@ -27,21 +27,6 @@
 #include <algorithm>
 #include <boost/algorithm/string.hpp>
 
-BEGIN_EVENT_TABLE( Editor, wxFrame )
-    EVT_LIST_ITEM_SELECTED( LIST_Plugins, Editor::OnPluginSelect )
-    EVT_LIST_ITEM_SELECTED( LIST_Reqs, Editor::OnRowSelect )
-    EVT_LIST_ITEM_SELECTED( LIST_Incs, Editor::OnRowSelect )
-    EVT_LIST_ITEM_SELECTED( LIST_LoadAfter, Editor::OnRowSelect )
-    EVT_LIST_ITEM_SELECTED( LIST_Messages, Editor::OnRowSelect )
-    EVT_LIST_ITEM_SELECTED( LIST_BashTags, Editor::OnRowSelect )
-    EVT_NOTEBOOK_PAGE_CHANGED( BOOK_Lists, Editor::OnListBookChange )
-	EVT_BUTTON ( BUTTON_Apply, Editor::OnQuit )
-	EVT_BUTTON ( BUTTON_Cancel, Editor::OnQuit )
-    EVT_BUTTON ( BUTTON_AddRow, Editor::OnAddRow )
-    EVT_BUTTON ( BUTTON_EditRow, Editor::OnEditRow )
-    EVT_BUTTON ( BUTTON_RemoveRow, Editor::OnRemoveRow )
-END_EVENT_TABLE()
-
 using namespace std;
 
 wxString Language[2] = {
@@ -196,6 +181,20 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     wxFont font = pluginText->GetFont();
     font.SetWeight(wxFONTWEIGHT_BOLD);
     pluginText->SetFont(font);
+
+    //Set up event handling.
+    Bind(wxEVT_COMMAND_LIST_ITEM_SELECTED, &Editor::OnPluginSelect, this, LIST_Plugins);
+    Bind(wxEVT_COMMAND_LIST_ITEM_SELECTED, &Editor::OnRowSelect, this, LIST_Reqs);
+    Bind(wxEVT_COMMAND_LIST_ITEM_SELECTED, &Editor::OnRowSelect, this, LIST_Incs);
+    Bind(wxEVT_COMMAND_LIST_ITEM_SELECTED, &Editor::OnRowSelect, this, LIST_LoadAfter);
+    Bind(wxEVT_COMMAND_LIST_ITEM_SELECTED, &Editor::OnRowSelect, this, LIST_Messages);
+    Bind(wxEVT_COMMAND_LIST_ITEM_SELECTED, &Editor::OnRowSelect, this, LIST_BashTags);
+    Bind(wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED, &Editor::OnListBookChange, this, BOOK_Lists);
+    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Editor::OnQuit, this, BUTTON_Apply);
+    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Editor::OnQuit, this, BUTTON_Cancel);
+    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Editor::OnAddRow, this, BUTTON_AddRow);
+    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Editor::OnEditRow, this, BUTTON_EditRow);
+    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Editor::OnRemoveRow, this, BUTTON_RemoveRow);
 
     //Set up layout.
     wxBoxSizer * bigBox = new wxBoxSizer(wxHORIZONTAL);
@@ -976,16 +975,28 @@ void MessageEditDialog::OnAdd(wxCommandEvent& event) {
 }
 
 void MessageEditDialog::OnEdit(wxCommandEvent& event) {
-    if (_content->GetFirstSelected() == -1)
+    if (_content->GetFirstSelected() == -1) {
+        wxMessageBox(
+            FromUTF8("Error: No content row selected."),
+            translate("BOSS: Error"),
+            wxOK | wxICON_ERROR,
+            NULL);
         return;
+    }
     long i = _content->GetFirstSelected();
     _content->SetItem(i, 0, Language[_language->GetSelection()]);
     _content->SetItem(i, 1, _str->GetValue());
 }
 
 void MessageEditDialog::OnRemove(wxCommandEvent& event) {
-    if (_content->GetFirstSelected() == -1)
+    if (_content->GetFirstSelected() == -1) {
+        wxMessageBox(
+            FromUTF8("Error: No content row selected."),
+            translate("BOSS: Error"),
+            wxOK | wxICON_ERROR,
+            NULL);
         return;
+    }
     _content->DeleteItem(_content->GetFirstSelected());
 }
 

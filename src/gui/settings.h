@@ -41,7 +41,6 @@ public:
     void OnRemoveGame(wxCommandEvent& event);
     
 	void SetDefaultValues();
-	DECLARE_EVENT_TABLE()
 private:
 	wxChoice *DebugVerbosityChoice;
 	wxChoice *GameChoice;
