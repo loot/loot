@@ -116,7 +116,7 @@ bool BossGUI::OnInit() {
 */
     //Specify location of language dictionaries
 	boost::locale::generator gen;
-	gen.add_messages_path(fs::path("l10n").string());
+	gen.add_messages_path(g_path_l10n.string());
 	gen.add_messages_domain("messages");
 
     //Set the locale to get encoding and language conversions working correctly.
@@ -347,7 +347,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     try {
         revision = UpdateMasterlist(_game, parsingErrors);
     } catch (boss::error& e) {
-        messages.push_back(boss::Message(boss::g_message_error, string("Masterlist update failed. Details: ") + e.what()));
+        messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("Masterlist update failed. Details: %1%")) % e.what()).str()));
     }
     for (vector<string>::const_iterator it=parsingErrors.begin(), endit=parsingErrors.end(); it != endit; ++it) {
         messages.push_back(boss::Message(boss::g_message_error, *it));
@@ -384,7 +384,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         try {
             mlist = YAML::LoadFile(_game.MasterlistPath().string());
         } catch (YAML::ParserException& e) {
-            messages.push_back(boss::Message(boss::g_message_error, string("Masterlist parsing failed. Details: ") + e.what()));
+            messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("Masterlist parsing failed. Details: %1%")) % e.what()).str()));
         }
         if (mlist["globals"])
             mlist_messages = mlist["globals"].as< list<boss::Message> >();
@@ -402,7 +402,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         try {
             ulist = YAML::LoadFile(_game.UserlistPath().string());
         } catch (YAML::ParserException& e) {
-            messages.push_back(boss::Message(boss::g_message_error, string("Userlist parsing failed. Details: ") + e.what()));
+            messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("Userlist parsing failed. Details: %1%")) % e.what()).str()));
         }
         if (ulist["plugins"])
             ulist_plugins = ulist["plugins"].as< list<boss::Plugin> >();
@@ -445,7 +445,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             try {
                 it->EvalAllConditions(_game, lang);
             } catch (boss::error& e) {
-                messages.push_back(boss::Message(boss::g_message_error, "\"" + it->Name() + "\" contains a condition that could not be evaluated. Details: " + e.what()));
+                messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % it->Name() % e.what()).str()));
             }
 
             progDia->Pulse();
@@ -461,9 +461,9 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             list<boss::Message> pluginMessages = it->Messages();
             for (map<string,bool>::const_iterator jt=issues.begin(), endJt=issues.end(); jt != endJt; ++jt) {
                 if (jt->second)
-                    pluginMessages.push_back(boss::Message(boss::g_message_error, "\"" + jt->first + "\" is incompatible with \"" + it->Name() + "\" and is present."));
+                    pluginMessages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("\"%1%\" is incompatible with \"%2%\" and is present.")) % jt->first % it->Name()).str()));
                 else
-                    pluginMessages.push_back(boss::Message(boss::g_message_error, "\"" + jt->first + "\" is required by \"" + it->Name() + "\" but is missing."));
+                    pluginMessages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("\"%1%\" is required by \"%2%\" but is missing.")) % jt->first % it->Name()).str()));
             }
             if (!issues.empty())
                 it->Messages(pluginMessages);
@@ -473,10 +473,10 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
         for (map<string,bool>::const_iterator jt=consistencyIssues.begin(), endJt=consistencyIssues.end(); jt != endJt; ++jt) {
             if (jt->second) {
-                messages.push_back(boss::Message(boss::g_message_error, "\"" + jt->first + "\" is a circular dependency. Plugins will not be sorted."));
+                messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("\"%1%\" is a circular dependency. Plugins will not be sorted.")) % jt->first).str()));
                 cyclicDependenciesExist = true;
             } else
-                messages.push_back(boss::Message(boss::g_message_error, "\"" + jt->first + "\" is given as a dependency and an incompatibility."));
+                messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("\"%1%\" is given as a dependency and an incompatibility.")) % jt->first).str()));
         }
             
         end = time(NULL);
@@ -586,7 +586,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             //Now set load order.
             _game.SetLoadOrder(plugins);
         } else
-            messages.push_back(boss::Message(boss::g_message_warn, "The load order displayed in the Details tab was not applied as sorting was canceled."));
+            messages.push_back(boss::Message(boss::g_message_warn, loc::translate("The load order displayed in the Details tab was not applied as sorting was canceled.")));
                 cyclicDependenciesExist = true;
 
         out << "Set load order:" << endl;
