@@ -232,8 +232,9 @@ namespace boss {
             ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str());
 
         if (ret != LIBLO_OK) {
-            const char * err;
-            lo_get_error_message(&err);
+            const char * e;
+            lo_get_error_message(&e);
+            string err = string("libloadorder failed to create a game handle. Details: ") + err;
             lo_cleanup();
             throw error(ERROR_LIBLO_ERROR, err);
         }
@@ -241,17 +242,19 @@ namespace boss {
         ret = lo_set_game_master(gh, _masterFile.c_str());
 
         if (ret != LIBLO_OK) {
-            const char * err;
-            lo_get_error_message(&err);
+            const char * e;
+            lo_get_error_message(&e);
             lo_destroy_handle(gh);
+            string err = string("libloadorder total conversion support setup failed. Details: ") + e;
             lo_cleanup();
-            throw error(ERROR_LIBLO_ERROR, "libloadorder total conversion support setup failed.");
+            throw error(ERROR_LIBLO_ERROR,err);
         }
                 
         if (lo_get_active_plugins(gh, &pluginArr, &pluginArrSize) != LIBLO_OK) {
-            const char * err;
-            lo_get_error_message(&err);
+            const char * e;
+            lo_get_error_message(&e);
             lo_destroy_handle(gh);
+            string err = string("libloadorder failed to get the active plugins list. Details: ") + e;
             lo_cleanup();
             throw error(ERROR_LIBLO_ERROR, err);
         }
@@ -283,20 +286,22 @@ namespace boss {
             ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str());
 
         if (ret != LIBLO_OK) {
-            const char * err;
-            lo_get_error_message(&err);
+            const char * e;
+            lo_get_error_message(&e);
+            string err = string("libloadorder game handle creation failed. Details: ") + e;
             lo_cleanup();
-            throw error(ERROR_LIBLO_ERROR, "libloadorder game handle creation failed.");
+            throw error(ERROR_LIBLO_ERROR, err);
         }
 
         ret = lo_set_game_master(gh, _masterFile.c_str());
 
         if (ret != LIBLO_OK) {
-            const char * err;
-            lo_get_error_message(&err);
+            const char * e;
+            lo_get_error_message(&e);
             lo_destroy_handle(gh);
+            string err = string("libloadorder total conversion support setup failed. Details: ") + e;
             lo_cleanup();
-            throw error(ERROR_LIBLO_ERROR, "libloadorder total conversion support setup failed.");
+            throw error(ERROR_LIBLO_ERROR, err);
         }
 
         pluginArrSize = loadOrder.size();
@@ -312,11 +317,12 @@ namespace boss {
             for (size_t i=0; i < pluginArrSize; i++)
                 delete [] pluginArr[i];
             delete [] pluginArr;
-            const char * err;
-            lo_get_error_message(&err);
+            const char * e;
+            lo_get_error_message(&e);
             lo_destroy_handle(gh);
+            string err = string("libloadorder failed to set the load order. Details: ") + e;
             lo_cleanup();
-            throw error(ERROR_LIBLO_ERROR, "Setting load order failed.");
+            throw error(ERROR_LIBLO_ERROR, err);
         }
         
         for (size_t i=0; i < pluginArrSize; i++)
@@ -332,7 +338,7 @@ namespace boss {
             if (!fs::exists(g_path_local / bossFolderName))
                 fs::create_directory(g_path_local / bossFolderName);
         } catch (fs::filesystem_error& e) {
-            throw error(ERROR_PATH_WRITE_FAIL, "Could not create BOSS folder for game.");
+            throw error(ERROR_PATH_WRITE_FAIL, string("Could not create BOSS folder for game. Details: ") + e.what());
         }
     }
 }

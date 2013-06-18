@@ -489,7 +489,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     if (!cyclicDependenciesExist) {
         out << "Sorting plugins..." << endl;
 
-        //std::sort doesn't compare each plugin to every other plugin, it seems to compare plugins until no movement is necessary, because it assumes that each plugin will be comparable on all tested data, which isn't the case when dealing with masters, etc. Therefore, loop through the list and move each plugin's dependencies directly before it, then apply std::sort.
+        //std::sort doesn't compare each plugin to every other plugin, it seems to compare plugins until no movement is necessary, because it assumes that each plugin will be comparable on all tested data, which isn't the case when dealing with masters, etc. 
         list<boss::Plugin>::iterator it=plugins.begin();
         while (it != plugins.end()) {
             list<boss::Plugin>::iterator jt=it;
@@ -499,7 +499,11 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
             list<boss::Plugin> moved;
             while (jt != plugins.end()) {
-                if (it->MustLoadAfter(*jt)) {
+               /* if (it->MustLoadAfter(*jt)
+                 || jt->Priority() < it->Priority()) {
+                 || (!jt->OverlapFormIDs(*it).empty() && jt->FormIDs().size() != it->FormIDs().size() && jt->FormIDs().size() > it->FormIDs().size())) {
+              */
+                if (load_order_sort(*jt, *it)) {
                     moved.push_back(*jt);
                     jt = plugins.erase(jt);
                 } else
@@ -515,9 +519,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
             progDia->Pulse();
         }
-
-        plugins.sort(boss::load_order_sort);
-
+        
         end = time(NULL);
         out << "Time taken to sort plugins: " << (end - start) << " seconds." << endl;
 
@@ -584,14 +586,25 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             uout.close();
 
             //Now set load order.
-            _game.SetLoadOrder(plugins);
+            try {
+                _game.SetLoadOrder(plugins);
+            } catch (boss::error& e) {
+                messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("Failed to set the load order. Details: %1%")) % e.what()).str()));
+            }
         } else
             messages.push_back(boss::Message(boss::g_message_warn, loc::translate("The load order displayed in the Details tab was not applied as sorting was canceled.")));
                 cyclicDependenciesExist = true;
 
         out << "Set load order:" << endl;
-        for (list<boss::Plugin>::iterator it=plugins.begin(), endIt = plugins.end(); it != endIt; ++it)
+        for (list<boss::Plugin>::iterator it=plugins.begin(), endIt = plugins.end(); it != endIt; ++it) {
             out << '\t' << it->Name() << endl;
+            /*vector<string> masters = it->Masters();
+            if (!masters.empty()) {
+                out << "\t" << "Masters:" << endl;
+                for (size_t i=0, max=masters.size(); i < max; ++i)
+                    out << "\t\t" << masters[i] << endl;
+            }*/
+        }
     }
 
     out << "Generating report..." << endl;
@@ -638,7 +651,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     progDia->Pulse();
     
-	out << "Tester finished. Total time taken: " << time(NULL) - t0 << endl;
+	out << "Sorting finished. Total time taken: " << time(NULL) - t0 << endl;
     out.close();
 
     //Now a results report definitely exists.

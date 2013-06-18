@@ -547,7 +547,8 @@ namespace boss {
     }
 
     bool Plugin::MustLoadAfter(const Plugin& plugin) const {
-        if (find(masters.begin(), masters.end(), plugin) != masters.end()
+        if ((!isMaster && plugin.IsMaster())
+         || find(masters.begin(), masters.end(), plugin) != masters.end()
          || find(requirements.begin(), requirements.end(), plugin) != requirements.end()
          || find(loadAfter.begin(), loadAfter.end(), plugin) != loadAfter.end())
             return true;
@@ -680,7 +681,8 @@ namespace boss {
         if (!lhs.OverlapFormIDs(rhs).empty() && lhs.FormIDs().size() != rhs.FormIDs().size())
             return lhs.FormIDs().size() > rhs.FormIDs().size();
 
-        return boost::ilexicographical_compare(lhs.Name(), rhs.Name());
+    //    return boost::ilexicographical_compare(lhs.Name(), rhs.Name());
+        return false;
     }
 
     bool IsPlugin(const std::string& file) {
