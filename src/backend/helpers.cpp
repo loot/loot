@@ -226,7 +226,7 @@ namespace boss {
         //URLs are UTF-8 encoded then any characters (equiv. their corresponding bytes) not in the unreserved set (equiv. their corresponding bytes) are replaced by a percentage sign followed by the hex representation of their binary value.
         string unreserved = "-.0123456789:ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~";  //Unreserved in byte value order, plus the colon character since that's allowed for drive paths.
 
-        string url = "file://";
+        string url = "file:///";
         for (boost::filesystem::path::const_iterator it=file.begin(), endit=file.end(); it != endit; ++it) {
             string part = it->string();
             if (part == "/") //Skip exta backslash after drive path.
