@@ -533,6 +533,15 @@ namespace boss {
 
         return overlap;
     }
+
+    std::set<FormID> Plugin::OverrideFormIDs() const {
+        set<FormID> fidSubset;
+		for (set<FormID>::const_iterator it = formIDs.begin(), endIt=formIDs.end(); it != endIt; ++it) {
+			if (!boost::iequals(it->Plugin(), name))
+				fidSubset.insert(*it);
+		}
+		return fidSubset;
+    }
     
 	std::vector<std::string> Plugin::Masters() const {
 		return masters;
@@ -660,17 +669,8 @@ namespace boss {
     }
 
     bool load_order_sort(const Plugin& lhs, const Plugin& rhs) {
-        if (lhs.IsMaster() && !rhs.IsMaster())
-			return true;
-
-        if (!lhs.IsMaster() && rhs.IsMaster())
-			return false;
-
-        if (rhs.MustLoadAfter(lhs))
-			return true;
-
         if (lhs.MustLoadAfter(rhs))
-			return false;
+            return false;
 
         if (lhs.Priority() < rhs.Priority())
             return true;
@@ -678,11 +678,10 @@ namespace boss {
         if (lhs.Priority() > rhs.Priority())
             return false;
 
-        if (!lhs.OverlapFormIDs(rhs).empty() && lhs.FormIDs().size() != rhs.FormIDs().size())
-            return lhs.FormIDs().size() > rhs.FormIDs().size();
+        if (!lhs.OverlapFormIDs(rhs).empty() && lhs.OverrideFormIDs().size() != rhs.OverrideFormIDs().size())
+            return lhs.OverrideFormIDs().size() > rhs.OverrideFormIDs().size();
 
-    //    return boost::ilexicographical_compare(lhs.Name(), rhs.Name());
-        return false;
+        return boost::ilexicographical_compare(lhs.Name(), rhs.Name());
     }
 
     bool IsPlugin(const std::string& file) {

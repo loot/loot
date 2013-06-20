@@ -174,6 +174,7 @@ namespace boss {
 
         //Load ordering functions.
         std::set<FormID> OverlapFormIDs(const Plugin& plugin) const;
+        std::set<FormID> OverrideFormIDs() const;
         bool MustLoadAfter(const Plugin& plugin) const;  //Checks masters, reqs and loadAfter.
 
         //Validity checks.

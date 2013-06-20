@@ -497,13 +497,22 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
             out << "Sorting for: " << it->Name() << endl;
 
+          /*  vector<string> masters = it->Masters();
+            if (!masters.empty()) {
+                out << "\t" << "Masters:" << endl;
+                for (size_t i=0, max=masters.size(); i < max; ++i)
+                    out << "\t\t" << masters[i] << endl;
+            }*/
+
             list<boss::Plugin> moved;
             while (jt != plugins.end()) {
                /* if (it->MustLoadAfter(*jt)
                  || jt->Priority() < it->Priority()) {
                  || (!jt->OverlapFormIDs(*it).empty() && jt->FormIDs().size() != it->FormIDs().size() && jt->FormIDs().size() > it->FormIDs().size())) {
               */
-                if (load_order_sort(*jt, *it)) {
+              //  if (load_order_sort(*jt, *it)) {
+                if (it->MustLoadAfter(*jt)) {
+                    out << jt->Name() << " should load before " << it->Name() << endl;
                     moved.push_back(*jt);
                     jt = plugins.erase(jt);
                 } else
@@ -519,6 +528,8 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
             progDia->Pulse();
         }
+
+        plugins.sort(boss::load_order_sort);
         
         end = time(NULL);
         out << "Time taken to sort plugins: " << (end - start) << " seconds." << endl;
