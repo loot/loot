@@ -22,7 +22,7 @@ BOSS uses [CMake](http://cmake.org) v2.8.9 or later for cross-platform building 
 BOSS requires the following libraries:
 
 * [Alphanum](http://www.davekoelle.com/files/alphanum.hpp)
-* [Boost](http://www.boost.org) v1.53.0 or later.
+* [Boost](http://www.boost.org) v1.54.0 or later.
 * [Libespm](http://github.com/WrinklyNinja/libespm)
 * [Libloadorder](http://github.com/WrinklyNinja/libloadorder)
 * [PugiXML](http://code.google.com/p/pugixml/) v1.2 or later.
@@ -64,7 +64,7 @@ Put the following binaries into ```resources/svn/``` in the BOSS repository root
 ```
 ./bootstrap.sh
 echo "using gcc : 4.6.3 : i686-w64-mingw32-g++ : <rc>i686-w64-mingw32-windres <archiver>i686-w64-mingw32-ar <ranlib>i686-w64-mingw32-ranlib ;" > tools/build/v2/user-config.jam
-./b2 toolset=gcc-4.6.3 target-os=windows link=static runtime-link=static variant=release address-model=32 cxxflags=-fPIC --with-filesystem --with-locale --with-regex --with-program_options --with-system --stagedir=stage-mingw-32
+./b2 toolset=gcc-4.6.3 target-os=windows threadapi=win32 link=static runtime-link=static variant=release address-model=32 cxxflags=-fPIC --with-thread --with-filesystem --with-locale --with-regex --with-program_options --with-system --stagedir=stage-mingw-32
 ```
 
 ### wxWidgets
