@@ -50,6 +50,8 @@
 #include <boost/log/core.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/log/expressions.hpp>
+#include <boost/log/utility/setup/file.hpp>
+#include <boost/log/utility/setup/common_attributes.hpp>
 
 #include <wx/snglinst.h>
 #include <wx/aboutdlg.h>
@@ -110,25 +112,46 @@ bool BossGUI::OnInit() {
         }
     }
 
-    //Skip logging initialisation for tester.
-/*    if (gl_log_debug_output)
-		g_logger.setStream(debug_g_path_log.string().c_str());
-	g_logger.setOriginTracking(gl_debug_with_source);
-	// it's ok if this number is too high.  setVerbosity will handle it
-	g_logger.setVerbosity(static_cast<LogVerbosity>(LV_WARN + gl_debug_verbosity));
-*/
+    //Set up logging.
+    unsigned int verbosity = _settings["Debug Verbosity"].as<unsigned int>();
+    if (verbosity > 0) {
+        boost::log::add_file_log(
+            boost::log::keywords::file_name = g_path_log.string().c_str(),
+            boost::log::keywords::format = "[%TimeStamp%] [%Severity%]: %Message%"
+            );
+        if (verbosity == 1)
+            boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::warning);  //Log all warnings, errors and fatals.
+        else if (verbosity == 2)
+            boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::debug);  //Log debugs, infos, warnings, errors and fatals.
+        else {
+            boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::trace);  //Log everything.
+        }
+        boost::log::add_common_attributes();
+    } else
+        boost::log::core::get()->set_logging_enabled(false);  //Disable all logging.
+
     //Specify location of language dictionaries
 	boost::locale::generator gen;
 	gen.add_messages_path(g_path_l10n.string());
 	gen.add_messages_domain("messages");
 
     //Set the locale to get encoding and language conversions working correctly.
+    BOOST_LOG_TRIVIAL(trace) << "Initialising language settings.";
     if (_settings["Language"]) {
         string localeId = "";
         wxLanguage lang;
         if (_settings["Language"].as<string>() == "eng") {
             localeId = "en.UTF-8";
             lang = wxLANGUAGE_ENGLISH;
+            BOOST_LOG_TRIVIAL(trace) << "Setting language to English.";
+        } else if (_settings["Language"].as<string>() == "spa") {
+            localeId = "es.UTF-8";
+            lang = wxLANGUAGE_SPANISH;
+            BOOST_LOG_TRIVIAL(trace) << "Setting language to Spanish.";
+        } else if (_settings["Language"].as<string>() == "spa") {
+            localeId = "ru.UTF-8";
+            lang = wxLANGUAGE_RUSSIAN;
+            BOOST_LOG_TRIVIAL(trace) << "Setting language to Russian.";
         }
 
         try {
@@ -141,7 +164,7 @@ bool BossGUI::OnInit() {
             wxLocale::AddCatalogLookupPathPrefix(g_path_l10n.string().c_str());
             wxLoc->AddCatalog("wxstd");
         } catch(runtime_error &e) {
-           // LOG_ERROR("could not implement translation: %s", e.what());
+            BOOST_LOG_TRIVIAL(error) << "Could not implement translation: " << e.what();
             wxMessageBox(
                 FromUTF8(format(loc::translate("Error: could not apply translation: %1%")) % e.what()),
                 translate("BOSS: Error"),
@@ -157,6 +180,7 @@ bool BossGUI::OnInit() {
     try {
         _games = GetGames(_settings);
     } catch (boss::error& e) {
+        BOOST_LOG_TRIVIAL(error) << "Game-specific settings could not be initialised. " << e.what();
         wxMessageBox(
             FromUTF8(format(loc::translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()),
             translate("BOSS: Error"),
@@ -164,7 +188,7 @@ bool BossGUI::OnInit() {
             NULL);
         return false;
     } catch (YAML::Exception& e) {
-        //LOG_ERROR("Error: %s", e.getString().c_str());
+        BOOST_LOG_TRIVIAL(error) << "Games' settings parsing failed. " << e.what();
         wxMessageBox(
             FromUTF8(format(loc::translate("Error: Games' settings parsing failed. %1%")) % e.what()),
             translate("BOSS: Error"),
@@ -194,6 +218,7 @@ bool BossGUI::OnInit() {
             }
         }
         if (_game == Game()) {
+            BOOST_LOG_TRIVIAL(error) << "None of the supported games were detected.";
             wxMessageBox(
                 translate("Error: None of the supported games were detected."),
                 translate("BOSS: Error"),
@@ -208,6 +233,7 @@ bool BossGUI::OnInit() {
         _game.Init();
         *find(_games.begin(), _games.end(), _game) = _game;  //Sync changes.
     } catch (boss::error& e) {
+        BOOST_LOG_TRIVIAL(error) << "Game-specific settings could not be initialised. " << e.what();
         wxMessageBox(
             FromUTF8(format(loc::translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()),
             translate("BOSS: Error"),
