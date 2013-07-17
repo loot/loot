@@ -92,7 +92,7 @@ namespace boss {
             libespmGame = "FalloutNV";
             _masterlistURL = "http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-fallout-nv/masterlist.yaml";
         } else
-            throw error(ERROR_INVALID_ARGS, "Invalid game ID supplied.");
+            throw error(error::invalid_args, "Invalid game ID supplied.");
 
         if (!folder.empty())
             bossFolderName = folder;
@@ -100,7 +100,7 @@ namespace boss {
         if (fs::exists(g_path_libespm_settings))
             espm_settings = espm::Settings(g_path_libespm_settings.string(), libespmGame);
         else
-            throw error(ERROR_PATH_NOT_FOUND, "Libespm settings file could not be found.");
+            throw error(error::path_not_found, "Libespm settings file could not be found.");
     }
 
     Game& Game::SetDetails(const std::string& name, const std::string& masterFile,
@@ -142,7 +142,7 @@ namespace boss {
         }
 
         if (gamePath.empty())
-            throw error(ERROR_PATH_NOT_FOUND, "Game path could not be detected.");
+            throw error(error::path_not_found, "Game path could not be detected.");
 
         RefreshActivePluginsList();
         CreateBOSSGameFolder();
@@ -236,7 +236,7 @@ namespace boss {
             lo_get_error_message(&e);
             string err = string("libloadorder failed to create a game handle. Details: ") + err;
             lo_cleanup();
-            throw error(ERROR_LIBLO_ERROR, err);
+            throw error(error::liblo_error, err);
         }
 
         ret = lo_set_game_master(gh, _masterFile.c_str());
@@ -247,7 +247,7 @@ namespace boss {
             lo_destroy_handle(gh);
             string err = string("libloadorder total conversion support setup failed. Details: ") + e;
             lo_cleanup();
-            throw error(ERROR_LIBLO_ERROR,err);
+            throw error(error::liblo_error, err);
         }
                 
         if (lo_get_active_plugins(gh, &pluginArr, &pluginArrSize) != LIBLO_OK) {
@@ -256,7 +256,7 @@ namespace boss {
             lo_destroy_handle(gh);
             string err = string("libloadorder failed to get the active plugins list. Details: ") + e;
             lo_cleanup();
-            throw error(ERROR_LIBLO_ERROR, err);
+            throw error(error::liblo_error, err);
         }
         
         for (size_t i=0; i < pluginArrSize; ++i) {
@@ -290,7 +290,7 @@ namespace boss {
             lo_get_error_message(&e);
             string err = string("libloadorder game handle creation failed. Details: ") + e;
             lo_cleanup();
-            throw error(ERROR_LIBLO_ERROR, err);
+            throw error(error::liblo_error, err);
         }
 
         ret = lo_set_game_master(gh, _masterFile.c_str());
@@ -301,7 +301,7 @@ namespace boss {
             lo_destroy_handle(gh);
             string err = string("libloadorder total conversion support setup failed. Details: ") + e;
             lo_cleanup();
-            throw error(ERROR_LIBLO_ERROR, err);
+            throw error(error::liblo_error, err);
         }
 
         pluginArrSize = loadOrder.size();
@@ -322,7 +322,7 @@ namespace boss {
             lo_destroy_handle(gh);
             string err = string("libloadorder failed to set the load order. Details: ") + e;
             lo_cleanup();
-            throw error(ERROR_LIBLO_ERROR, err);
+            throw error(error::liblo_error, err);
         }
         
         for (size_t i=0; i < pluginArrSize; i++)
@@ -338,7 +338,7 @@ namespace boss {
             if (!fs::exists(g_path_local / bossFolderName))
                 fs::create_directory(g_path_local / bossFolderName);
         } catch (fs::filesystem_error& e) {
-            throw error(ERROR_PATH_WRITE_FAIL, string("Could not create BOSS folder for game. Details: ") + e.what());
+            throw error(error::path_write_fail, string("Could not create BOSS folder for game. Details: ") + e.what());
         }
     }
 }

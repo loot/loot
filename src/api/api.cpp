@@ -44,32 +44,36 @@
 #include <boost/unordered_set.hpp>
 #include <boost/unordered_map.hpp>
 
-const unsigned int BOSS_API_OK                          = boss::OK;
-const unsigned int BOSS_API_ERROR_LIBLO_ERROR           = boss::ERROR_LIBLO_ERROR;
-const unsigned int BOSS_API_ERROR_FILE_WRITE_FAIL       = boss::ERROR_PATH_WRITE_FAIL;
-const unsigned int BOSS_API_ERROR_PARSE_FAIL            = boss::ERROR_PATH_READ_FAIL;
-const unsigned int BOSS_API_ERROR_CONDITION_EVAL_FAIL   = boss::ERROR_CONDITION_EVAL_FAIL;
-const unsigned int BOSS_API_ERROR_REGEX_EVAL_FAIL       = boss::ERROR_REGEX_EVAL_FAIL;
-const unsigned int BOSS_API_ERROR_NO_MEM                = boss::ERROR_NO_MEM;
-const unsigned int BOSS_API_ERROR_INVALID_ARGS          = boss::ERROR_INVALID_ARGS;
-const unsigned int BOSS_API_ERROR_NO_TAG_MAP            = boss::ERROR_NO_TAG_MAP;
-const unsigned int BOSS_API_ERROR_PATH_NOT_FOUND        = boss::ERROR_PATH_NOT_FOUND;
-const unsigned int BOSS_API_RETURN_MAX                  = BOSS_API_ERROR_PATH_NOT_FOUND;
+const unsigned int boss_ok                          = boss::error::ok;
+const unsigned int boss_error_liblo_error           = boss::error::liblo_error;
+const unsigned int boss_error_file_write_fail       = boss::error::path_write_fail;
+const unsigned int boss_error_parse_fail            = boss::error::path_read_fail;
+const unsigned int boss_error_condition_eval_fail   = boss::error::condition_eval_fail;
+const unsigned int boss_error_regex_eval_fail       = boss::error::regex_eval_fail;
+const unsigned int boss_error_no_mem                = boss::error::no_mem;
+const unsigned int boss_error_invalid_args          = boss::error::invalid_args;
+const unsigned int boss_error_no_tag_map            = boss::error::no_tag_map;
+const unsigned int boss_error_path_not_found        = boss::error::path_not_found;
+const unsigned int boss_error_no_game_detected      = boss::error::no_game_detected;
+const unsigned int boss_error_subversion_error      = boss::error::subversion_error;
+const unsigned int boss_return_max                  = boss_error_subversion_error;
 
 // The following are the games identifiers used by the API.
-const unsigned int BOSS_API_GAME_TES4                   = boss::GAME_TES4;
-const unsigned int BOSS_API_GAME_TES5                   = boss::GAME_TES5;
-const unsigned int BOSS_API_GAME_FO3                    = boss::GAME_FO3;
-const unsigned int BOSS_API_GAME_FONV                   = boss::GAME_FONV;
+const unsigned int boss_game_tes4                   = boss::g_game_tes4;
+const unsigned int boss_game_tes5                   = boss::g_game_tes5;
+const unsigned int boss_game_fo3                    = boss::g_game_fo3;
+const unsigned int boss_game_fonv                   = boss::g_game_fonv;
 
 // BOSS message types.
-const unsigned int BOSS_API_MESSAGE_SAY                 = boss::MESSAGE_SAY;
-const unsigned int BOSS_API_MESSAGE_WARN                = boss::MESSAGE_WARN;
-const unsigned int BOSS_API_MESSAGE_ERROR               = boss::MESSAGE_ERROR;
+const unsigned int boss_message_say                 = boss::g_message_say;
+const unsigned int boss_message_warn                = boss::g_message_warn;
+const unsigned int boss_message_error               = boss::g_message_error;
 
 // BOSS message languages.
-BOSS_API extern const unsigned int BOSS_API_LANG_AUTO   = boss::LANG_AUTO;
-BOSS_API extern const unsigned int BOSS_API_LANG_ENG    = boss::LANG_ENG;
+BOSS_API extern const unsigned int boss_lang_any        = boss::g_lang_any;
+BOSS_API extern const unsigned int boss_lang_english    = boss::g_lang_english;
+BOSS_API extern const unsigned int boss_lang_spanish    = boss::g_lang_spanish;
+BOSS_API extern const unsigned int boss_lang_russian    = boss::g_lang_russian;
 
 
 struct _boss_db_int {
@@ -129,11 +133,11 @@ char * ToNewCString(std::string str) {
 // until this function is called again or until CleanUpAPI is called.
 BOSS_API unsigned int boss_get_error_message (const char ** const message) {
     if (message == NULL)
-        return BOSS_API_ERROR_INVALID_ARGS;
+        return boss_error_invalid_args;
 
     *message = extMessageStr;
 
-    return BOSS_API_OK;
+    return boss_ok;
 }
 
 // Frees memory allocated to error string.
@@ -149,7 +153,7 @@ BOSS_API void     boss_cleanup () {
 // Returns whether this version of BOSS supports the API from the given
 // BOSS version. Abstracts BOSS API stability policy away from clients.
 BOSS_API bool boss_is_compatible (const unsigned int versionMajor, const unsigned int versionMinor, const unsigned int versionPatch) {
-    return versionMajor == boss::VERSION_MAJOR && versionMinor == boss::VERSION_MINOR;
+    return versionMajor == boss::g_version_major && versionMinor == boss::g_version_minor;
 }
 
 // Returns the version string for this version of BOSS.
@@ -157,13 +161,13 @@ BOSS_API bool boss_is_compatible (const unsigned int versionMajor, const unsigne
 // CleanUpAPI is called.
 BOSS_API unsigned int boss_get_version (unsigned int * const versionMajor, unsigned int * const versionMinor, unsigned int * const versionPatch) {
     if (versionMajor == NULL || versionMinor == NULL || versionPatch == NULL)
-        return BOSS_API_ERROR_INVALID_ARGS;
+        return boss_error_invalid_args;
 
-    *versionMajor = boss::VERSION_MAJOR;
-    *versionMinor = boss::VERSION_MINOR;
-    *versionPatch = boss::VERSION_PATCH;
+    *versionMajor = boss::g_version_major;
+    *versionMinor = boss::g_version_minor;
+    *versionPatch = boss::g_version_patch;
 
-    return BOSS_API_OK;
+    return boss_ok;
 }
 
 
@@ -179,8 +183,8 @@ BOSS_API unsigned int boss_get_version (unsigned int * const versionMajor, unsig
 // dataPath == NULL then the API will attempt to detect the data path of
 // the specified game.
 BOSS_API unsigned int boss_create_db (boss_db * const db, const unsigned int clientGame, const char * const gamePath) {
-    if (db == NULL || (clientGame != BOSS_API_GAME_TES4 && clientGame != BOSS_API_GAME_TES5 && clientGame != BOSS_API_GAME_FO3 && clientGame != BOSS_API_GAME_FONV))
-        return BOSS_API_ERROR_INVALID_ARGS;
+    if (db == NULL || (clientGame != boss_game_tes4 && clientGame != boss_game_tes5 && clientGame != boss_game_fo3 && clientGame != boss_game_fonv))
+        return boss_error_invalid_args;
 
     //Set the locale to get encoding conversions working correctly.
     std::setlocale(LC_CTYPE, "");
@@ -205,12 +209,12 @@ BOSS_API unsigned int boss_create_db (boss_db * const db, const unsigned int cli
         retVal = new _boss_db_int;
     } catch (std::bad_alloc& e) {
         extMessageStr = e.what();
-        return BOSS_API_ERROR_NO_MEM;
+        return boss_error_no_mem;
     }
     retVal->game = game;
     *db = retVal;
 
-    return BOSS_API_OK;
+    return boss_ok;
 }
 
 // Destroys the given DB, freeing any memory allocated as part of its use.
@@ -230,7 +234,7 @@ BOSS_API void     boss_destroy_db (boss_db db) {
 BOSS_API unsigned int boss_load_lists (boss_db db, const char * const masterlistPath,
                                     const char * const userlistPath) {
     if (db == NULL || masterlistPath == NULL)
-        return BOSS_API_ERROR_INVALID_ARGS;
+        return boss_error_invalid_args;
 
     std::list<boss::Plugin> temp;
     std::list<boss::Plugin> userTemp;
@@ -242,7 +246,7 @@ BOSS_API unsigned int boss_load_lists (boss_db db, const char * const masterlist
         userTemp = tempNode["plugins"].as< std::list<boss::Plugin> >();
     } catch (YAML::Exception& e) {
         extMessageStr = e.what();
-        return BOSS_API_ERROR_PARSE_FAIL;
+        return boss_error_parse_fail;
     }
 
     //Also free memory.
@@ -267,7 +271,7 @@ BOSS_API unsigned int boss_load_lists (boss_db db, const char * const masterlist
     db->userMetadata = userTemp;
     db->rawUserMetadata = userTemp;
 
-    return BOSS_API_OK;
+    return boss_ok;
 }
 
 // Evaluates all conditional lines and regex mods the loaded masterlist.
@@ -289,7 +293,7 @@ BOSS_API unsigned int boss_eval_lists (boss_db db, const unsigned int language) 
                     regex = boost::regex(it->Name(), boost::regex::extended|boost::regex::icase);
                 } catch (boost::regex_error& e) {
                     extMessageStr = e.what();
-                    return BOSS_API_ERROR_REGEX_EVAL_FAIL;
+                    return boss_error_regex_eval_fail;
                 }
 
                 for (boost::filesystem::directory_iterator itr(db->game.DataPath()); itr != boost::filesystem::directory_iterator(); ++itr) {
@@ -320,7 +324,7 @@ BOSS_API unsigned int boss_eval_lists (boss_db db, const unsigned int language) 
                     regex = boost::regex(it->Name(), boost::regex::extended|boost::regex::icase);
                 } catch (boost::regex_error& e) {
                     extMessageStr = e.what();
-                    return BOSS_API_ERROR_INVALID_ARGS;
+                    return boss_error_invalid_args;
                 }
 
                 for (boost::filesystem::directory_iterator itr(db->game.DataPath()); itr != boost::filesystem::directory_iterator(); ++itr) {
@@ -341,7 +345,7 @@ BOSS_API unsigned int boss_eval_lists (boss_db db, const unsigned int language) 
     }
     db->userMetadata = temp;
 
-    return BOSS_API_OK;
+    return boss_ok;
 }
 
 
@@ -354,7 +358,7 @@ BOSS_API unsigned int boss_eval_lists (boss_db db, const unsigned int language) 
 // its contents are static and should not be freed by the client.
 BOSS_API unsigned int boss_get_tag_map (boss_db db, char *** const tagMap, size_t * const numTags) {
     if (db == NULL || tagMap == NULL || numTags == NULL)
-        return BOSS_API_ERROR_INVALID_ARGS;
+        return boss_error_invalid_args;
 
     //Clear existing array allocation.
     if (db->extTagMap != NULL) {
@@ -384,13 +388,13 @@ BOSS_API unsigned int boss_get_tag_map (boss_db db, char *** const tagMap, size_
     }
 
     if (allTags.empty())
-        return BOSS_API_OK;
+        return boss_ok;
 
     try {
         db->extTagMap = new char*[allTags.size()];
     } catch (std::bad_alloc& e) {
         extMessageStr = e.what();
-        return BOSS_API_ERROR_NO_MEM;
+        return boss_error_no_mem;
     }
 
     unsigned int UID = 0;
@@ -403,13 +407,13 @@ BOSS_API unsigned int boss_get_tag_map (boss_db db, char *** const tagMap, size_
         }
     } catch (std::bad_alloc& e) {
         extMessageStr = e.what();
-        return BOSS_API_ERROR_NO_MEM;
+        return boss_error_no_mem;
     }
 
     *tagMap = db->extTagMap;
     *numTags = allTags.size();
 
-    return BOSS_API_OK;
+    return boss_ok;
 }
 
 // Returns arrays of Bash Tag UIDs for Bash Tags suggested for addition and removal
@@ -426,7 +430,7 @@ BOSS_API unsigned int boss_get_plugin_tags (boss_db db, const char * const plugi
                                             size_t * const numTags_removed,
                                             bool * const userlistModified) {
     if (db == NULL || plugin == NULL || tagIds_added == NULL || numTags_added == NULL || tagIds_removed == NULL || numTags_removed == NULL || userlistModified == NULL)
-        return BOSS_API_ERROR_INVALID_ARGS;
+        return boss_error_invalid_args;
 
 
     //Clear existing array allocations.
@@ -441,7 +445,7 @@ BOSS_API unsigned int boss_get_plugin_tags (boss_db db, const char * const plugi
     *numTags_removed = 0;
 
     if (db->bashTagMap.empty())
-        return BOSS_API_ERROR_NO_TAG_MAP;
+        return boss_error_no_tag_map;
 
     boost::unordered_set<std::string> tagsAdded, tagsRemoved;
     std::list<boss::Plugin>::iterator pluginIt = std::find(db->metadata.begin(), db->metadata.end(), boss::Plugin(plugin));
@@ -488,7 +492,7 @@ BOSS_API unsigned int boss_get_plugin_tags (boss_db db, const char * const plugi
         }
     } catch (std::bad_alloc& e) {
         extMessageStr = e.what();
-        return BOSS_API_ERROR_NO_MEM;
+        return boss_error_no_mem;
     }
 
     //Set outputs.
@@ -497,7 +501,7 @@ BOSS_API unsigned int boss_get_plugin_tags (boss_db db, const char * const plugi
     *numTags_added = numAdded;
     *numTags_removed = numRemoved;
 
-    return BOSS_API_OK;
+    return boss_ok;
 }
 
 // Returns the messages attached to the given plugin. Messages are valid until Load,
@@ -507,7 +511,7 @@ BOSS_API unsigned int boss_get_plugin_messages (boss_db db, const char * const p
                                                 boss_message ** const messages,
                                                 size_t * const numMessages) {
     if (db == NULL || plugin == NULL || messages == NULL || numMessages == NULL)
-        return BOSS_API_ERROR_INVALID_ARGS;
+        return boss_error_invalid_args;
 
     //Clear existing array allocation.
     if (db->extMessageArray != NULL) {
@@ -537,17 +541,17 @@ BOSS_API unsigned int boss_get_plugin_messages (boss_db db, const char * const p
         int i = 0;
         for (std::list<boss::Message>::const_iterator it=pluginMessages.begin(), endIt=pluginMessages.end(); it != endIt; ++it) {
             db->extMessageArray[i].type = it->Type();
-            db->extMessageArray[i].message = ToNewCString(it->Content());
+            db->extMessageArray[i].message = ToNewCString(it->ChooseContent(boss::g_lang_any).Str());
         }
     } catch (std::bad_alloc& e) {
         extMessageStr = e.what();
-        return BOSS_API_ERROR_NO_MEM;
+        return boss_error_no_mem;
     }
 
     *messages = db->extMessageArray;
     *numMessages = db->extMessageArraySize;
 
-    return BOSS_API_OK;
+    return boss_ok;
 }
 
 // Writes a minimal masterlist that only contains mods that have Bash Tag suggestions,
@@ -556,10 +560,10 @@ BOSS_API unsigned int boss_get_plugin_messages (boss_db db, const char * const p
 // for output. If outputFile already exists, it will only be overwritten if overwrite is true.
 BOSS_API unsigned int boss_write_minimal_list (boss_db db, const char * const outputFile, const bool overwrite) {
     if (db == NULL || outputFile == NULL)
-        return BOSS_API_ERROR_INVALID_ARGS;
+        return boss_error_invalid_args;
 
     if (boost::filesystem::exists(outputFile) && !overwrite)
-        return BOSS_API_ERROR_INVALID_ARGS;
+        return boss_error_invalid_args;
 
     std::list<boss::Plugin> temp = db->metadata;
     for (std::list<boss::Plugin>::iterator it=temp.begin(), endIt=temp.end(); it != endIt; ++it) {
@@ -568,8 +572,8 @@ BOSS_API unsigned int boss_write_minimal_list (boss_db db, const char * const ou
 
         std::list<boss::Message> messages = it->Messages(), newMessages;
         for (std::list<boss::Message>::iterator messageIter = messages.begin(); messageIter != messages.end(); ++messageIter) {
-            if (messageIter->Type() == BOSS_API_MESSAGE_WARN) {
-                const std::string content = messageIter->Content();
+            if (messageIter->Type() == boss_message_warn) {
+                const std::string content = messageIter->ChooseContent(boss::g_lang_any).Str();
                 if (boost::contains(content, "Do not clean"))
                     newMessages.push_back(*messageIter);
                 else if (boost::contains(content, "Contains dirty edits"))
@@ -589,9 +593,9 @@ BOSS_API unsigned int boss_write_minimal_list (boss_db db, const char * const ou
 
     std::ofstream out(outputFile);
     if (out.fail())
-        return BOSS_API_ERROR_INVALID_ARGS;
+        return boss_error_invalid_args;
     out << yout.c_str();
     out.close();
 
-    return BOSS_API_OK;
+    return boss_ok;
 }

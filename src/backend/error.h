@@ -29,19 +29,6 @@
 
 namespace boss {
 
-    const unsigned int OK                          = 0;
-    const unsigned int ERROR_LIBLO_ERROR           = 1;
-    const unsigned int ERROR_PATH_WRITE_FAIL       = 2;
-    const unsigned int ERROR_PATH_READ_FAIL        = 3;
-    const unsigned int ERROR_CONDITION_EVAL_FAIL   = 4;
-    const unsigned int ERROR_REGEX_EVAL_FAIL       = 5;
-    const unsigned int ERROR_NO_MEM                = 6;
-    const unsigned int ERROR_INVALID_ARGS          = 7;
-    const unsigned int ERROR_NO_TAG_MAP            = 8;
-    const unsigned int ERROR_PATH_NOT_FOUND        = 9;
-    const unsigned int ERROR_NO_GAME_DETECTED      = 10;
-    const unsigned int ERROR_SUBVERSION_ERROR      = 11;
-
     class error : public std::exception {
     public:
         error(const unsigned int code_arg, const std::string& what_arg) : _code(code_arg), _what(what_arg) {}
@@ -49,6 +36,20 @@ namespace boss {
 
         unsigned int code() const { return _code; }
         const char * what() const throw() { return _what.c_str(); }
+
+
+        static const unsigned int ok                    = 0;
+        static const unsigned int liblo_error           = 1;
+        static const unsigned int path_write_fail       = 2;
+        static const unsigned int path_read_fail        = 3;
+        static const unsigned int condition_eval_fail   = 4;
+        static const unsigned int regex_eval_fail       = 5;
+        static const unsigned int no_mem                = 6;
+        static const unsigned int invalid_args          = 7;
+        static const unsigned int no_tag_map            = 8;
+        static const unsigned int path_not_found        = 9;
+        static const unsigned int no_game_detected      = 10;
+        static const unsigned int subversion_error      = 11;
     private:
         std::string _what;
         unsigned int _code;

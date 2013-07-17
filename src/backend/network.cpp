@@ -64,7 +64,7 @@ namespace boss {
 
         //Create I/O pipes.
         if (!CreatePipe(&consoleRead, &consoleWrite, &saAttr, 0))
-            throw error(ERROR_SUBVERSION_ERROR, "Could not create pipe for Subversion process.");
+            throw error(error::subversion_error, "Could not create pipe for Subversion process.");
 
         //Create a child process.
         ZeroMemory(&piProcInfo, sizeof(PROCESS_INFORMATION));
@@ -94,15 +94,15 @@ namespace boss {
         delete [] cmdLine;
 
         if (!result)
-            throw error(ERROR_SUBVERSION_ERROR, "Could not create Subversion process.");
+            throw error(error::subversion_error, "Could not create Subversion process.");
 
         WaitForSingleObject(piProcInfo.hProcess, INFINITE);
 
         if (!GetExitCodeProcess(piProcInfo.hProcess, &exitCode))
-            throw error(ERROR_SUBVERSION_ERROR, "Could not get Subversion process exit code.");
+            throw error(error::subversion_error, "Could not get Subversion process exit code.");
         
         if (!ReadFile(consoleRead, chBuf, BUFSIZE, &dwRead, NULL))
-            throw error(ERROR_SUBVERSION_ERROR, "Could not read Subversion process output.");
+            throw error(error::subversion_error, "Could not read Subversion process output.");
             
         output = string(chBuf, dwRead);
         
@@ -149,13 +149,13 @@ namespace boss {
             //Working copy not set up, perform a checkout.
             command = g_path_svn.string() + " co --depth empty " + game.URL().substr(0, game.URL().rfind('/')) + " \"" + game.MasterlistPath().parent_path().string() + "\\.\"";
             if (!RunCommand(command, output))
-                throw error(ERROR_SUBVERSION_ERROR, "Subversion could not perform a checkout. Details: " + output);
+                throw error(error::subversion_error, "Subversion could not perform a checkout. Details: " + output);
         }
 
         //Now update masterlist.
         command = g_path_svn.string() + " update \"" + game.MasterlistPath().string() + "\"";
         if (!RunCommand(command, output))
-            throw error(ERROR_SUBVERSION_ERROR, "Subversion could not update the masterlist. Details: " + output);
+            throw error(error::subversion_error, "Subversion could not update the masterlist. Details: " + output);
 
         while (true) {
             try {
@@ -163,7 +163,7 @@ namespace boss {
                 //Now get the masterlist revision. 
                 command = g_path_svn.string() + " info \"" + game.MasterlistPath().string() + "\"";
                 if (!RunCommand(command, output))
-                    throw error(ERROR_SUBVERSION_ERROR, "Subversion could not read the masterlist revision number. Details: " + output);
+                    throw error(error::subversion_error, "Subversion could not read the masterlist revision number. Details: " + output);
 
                 revision = GetRevision(output);
 
@@ -176,7 +176,7 @@ namespace boss {
                 parsingErrors.push_back("Masterlist revision " + revision + ": " + e.what());
                 command = g_path_svn.string() + " update --revision PREV \"" + game.MasterlistPath().string() + "\"";
                 if (!RunCommand(command, output))
-                    throw error(ERROR_SUBVERSION_ERROR, "Subversion could not update the masterlist. Details: " + output);
+                    throw error(error::subversion_error, "Subversion could not update the masterlist. Details: " + output);
             }
         }
     }

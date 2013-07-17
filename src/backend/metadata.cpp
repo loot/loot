@@ -103,11 +103,11 @@ namespace boss {
         try {
             r = boost::spirit::qi::phrase_parse(begin, end, grammar, skipper, eval);
         } catch (boss::error& e) {
-            throw boss::error(boss::ERROR_PATH_READ_FAIL, "Parsing of condition \"" + _condition + "\" failed: " + e.what());
+            throw boss::error(boss::error::path_read_fail, "Parsing of condition \"" + _condition + "\" failed: " + e.what());
         }
 
         if (!r || begin != end)
-            throw boss::error(boss::ERROR_PATH_READ_FAIL, "Parsing of condition \"" + _condition + "\" failed!");
+            throw boss::error(boss::error::path_read_fail, "Parsing of condition \"" + _condition + "\" failed!");
 
         game.conditionCache.emplace(boost::to_lower_copy(_condition), eval);
 

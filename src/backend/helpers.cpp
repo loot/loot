@@ -135,7 +135,7 @@ namespace boss {
             } while (ifile);
             chksum = result.checksum();
         } else {
-            throw error(ERROR_PATH_READ_FAIL, "Unable to open \"" + filename.string() + "\" for CRC calculation.");
+            throw error(error::path_read_fail, "Unable to open \"" + filename.string() + "\" for CRC calculation.");
         }
     //    LOG_DEBUG("CRC32('%s'): 0x%x", filename.string().c_str(), chksum);
         return chksum;

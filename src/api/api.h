@@ -83,32 +83,37 @@ typedef struct {
 
 
 // The following are the possible codes that the API can return.
-BOSS_API extern const unsigned int BOSS_API_OK;
-BOSS_API extern const unsigned int BOSS_API_ERROR_LIBLO_ERROR;
-BOSS_API extern const unsigned int BOSS_API_ERROR_FILE_WRITE_FAIL;
-BOSS_API extern const unsigned int BOSS_API_ERROR_PARSE_FAIL;
-BOSS_API extern const unsigned int BOSS_API_ERROR_CONDITION_EVAL_FAIL;
-BOSS_API extern const unsigned int BOSS_API_ERROR_REGEX_EVAL_FAIL;
-BOSS_API extern const unsigned int BOSS_API_ERROR_NO_MEM;
-BOSS_API extern const unsigned int BOSS_API_ERROR_INVALID_ARGS;
-BOSS_API extern const unsigned int BOSS_API_ERROR_NO_TAG_MAP;
-BOSS_API extern const unsigned int BOSS_API_ERROR_PATH_NOT_FOUND;
-BOSS_API extern const unsigned int BOSS_API_RETURN_MAX;
+BOSS_API extern const unsigned int boss_ok;
+BOSS_API extern const unsigned int boss_error_liblo_error;
+BOSS_API extern const unsigned int boss_error_file_write_fail;
+BOSS_API extern const unsigned int boss_error_parse_fail;
+BOSS_API extern const unsigned int boss_error_condition_eval_fail;
+BOSS_API extern const unsigned int boss_error_regex_eval_fail;
+BOSS_API extern const unsigned int boss_error_no_mem;
+BOSS_API extern const unsigned int boss_error_invalid_args;
+BOSS_API extern const unsigned int boss_error_no_tag_map;
+BOSS_API extern const unsigned int boss_error_path_not_found;
+BOSS_API extern const unsigned int boss_error_no_game_detected;
+BOSS_API extern const unsigned int boss_error_subversion_error;
+BOSS_API extern const unsigned int boss_return_max;
 
 // The following are the games identifiers used by the API.
-BOSS_API extern const unsigned int BOSS_API_GAME_TES4;
-BOSS_API extern const unsigned int BOSS_API_GAME_TES5;
-BOSS_API extern const unsigned int BOSS_API_GAME_FO3;
-BOSS_API extern const unsigned int BOSS_API_GAME_FONV;
+BOSS_API extern const unsigned int boss_game_tes4;
+BOSS_API extern const unsigned int boss_game_tes5;
+BOSS_API extern const unsigned int boss_game_fo3;
+BOSS_API extern const unsigned int boss_game_fonv;
 
 // BOSS message types.
-BOSS_API extern const unsigned int BOSS_API_MESSAGE_SAY;
-BOSS_API extern const unsigned int BOSS_API_MESSAGE_WARN;
-BOSS_API extern const unsigned int BOSS_API_MESSAGE_ERROR;
+BOSS_API extern const unsigned int boss_message_say;
+BOSS_API extern const unsigned int boss_message_warn;
+BOSS_API extern const unsigned int boss_message_error;
+BOSS_API extern const unsigned int boss_message_tag;
 
 // BOSS message languages.
-BOSS_API extern const unsigned int BOSS_API_LANG_AUTO;
-BOSS_API extern const unsigned int BOSS_API_LANG_ENG;
+BOSS_API extern const unsigned int boss_lang_any;
+BOSS_API extern const unsigned int boss_lang_english;
+BOSS_API extern const unsigned int boss_lang_spanish;
+BOSS_API extern const unsigned int boss_lang_russian;
 
 
 //////////////////////////////
