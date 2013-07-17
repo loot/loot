@@ -69,7 +69,7 @@ private:
 
 class LoadOrderPreview : public wxDialog {
 public:
-    LoadOrderPreview(wxWindow *parent, const wxChar *title, const std::list<boss::Plugin>& plugins);
+    LoadOrderPreview(wxWindow *parent, const wxString title, const std::list<boss::Plugin>& plugins);
 
     void OnMoveUp(wxCommandEvent& event);
     void OnMoveDown(wxCommandEvent& event);

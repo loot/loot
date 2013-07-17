@@ -28,8 +28,6 @@
 #include <boost/format.hpp>
 #include "wx/wxprec.h"
 
-#include "../backend/error.h"  //Something in wxWidgets has a #define that conflicts with the error codes.
-
 #ifndef WX_PRECOMP
 #       include "wx/wx.h"
 #endif

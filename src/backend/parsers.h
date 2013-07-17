@@ -28,6 +28,10 @@
 #define BOOST_SPIRIT_UNICODE
 #endif
 
+#ifndef BOOST_SPIRIT_USE_PHOENIX_V3
+#define BOOST_SPIRIT_USE_PHOENIX_V3 1
+#endif
+
 #include "metadata.h"
 #include "helpers.h"
 #include "error.h"
@@ -43,7 +47,6 @@
 #include <boost/spirit/include/qi.hpp>
 #include <boost/spirit/include/phoenix_core.hpp>
 #include <boost/spirit/include/phoenix_operator.hpp>
-#include <boost/spirit/home/phoenix/object/construct.hpp>
 #include <boost/spirit/include/phoenix_bind.hpp>
 
 namespace YAML {
