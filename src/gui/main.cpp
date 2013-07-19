@@ -252,6 +252,7 @@ bool BossGUI::OnInit() {
     }
 
     //Create launcher window.
+    BOOST_LOG_TRIVIAL(debug) << "Opening the main BOSS window.";
     Launcher * launcher = new Launcher(wxT("BOSS"), _settings, _game, _games);
 
     launcher->SetIcon(wxIconLocation("BOSS.exe"));
@@ -440,6 +441,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         BOOST_LOG_TRIVIAL(trace) << "Merging plugin lists, evaluating conditions and and checking for install validity...";
 
         //Merge all global message lists.
+        BOOST_LOG_TRIVIAL(trace) << "Merging all global message lists.";
         messages = mlist_messages;
         messages.insert(messages.end(), ulist_messages.begin(), ulist_messages.end());
 
@@ -447,22 +449,29 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         unsigned int lang = GetLangNum(_settings["Language"].as<string>());
 
         //Merge plugin list, masterlist and userlist plugin data.
+        BOOST_LOG_TRIVIAL(trace) << "Merging plugin list, masterlist and userlist data.";
         map<string, bool> consistencyIssues;
         for (list<boss::Plugin>::iterator it=plugins.begin(), endIt=plugins.end(); it != endIt; ++it) {
+            BOOST_LOG_TRIVIAL(trace) << "Merging for plugin \"" << it->Name() << "\"";
             //Check if there is already a plugin in the 'plugins' list or not.
             list<boss::Plugin>::iterator pos = std::find(mlist_plugins.begin(), mlist_plugins.end(), *it);
 
-            if (pos != mlist_plugins.end())
+            if (pos != mlist_plugins.end()) {
+                BOOST_LOG_TRIVIAL(trace) << "Merging masterlist data down to plugin list data.";
                 it->Merge(*pos);
+            }
 
             pos = std::find(ulist_plugins.begin(), ulist_plugins.end(), *it);
 
-            if (pos != ulist_plugins.end())
+            if (pos != ulist_plugins.end()) {
+                BOOST_LOG_TRIVIAL(trace) << "Merging userlist data down to plugin list data.";
                 it->Merge(*pos);
+            }
 
             progDia->Pulse();
 
             //Now that items are merged, evaluate any conditions they have.
+            BOOST_LOG_TRIVIAL(trace) << "Evaluate conditions for merged plugin data.";
             try {
                 it->EvalAllConditions(_game, lang);
             } catch (boss::error& e) {
@@ -473,12 +482,14 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             progDia->Pulse();
 
             //Check that the metadata is self-consistent.
+            BOOST_LOG_TRIVIAL(trace) << "Checking that plugin data is self-consistent.";
             set<string> dependencies, incompatibilities, reqs;
             map<string, bool> issues;
             issues = it->CheckSelfConsistency(plugins, dependencies, incompatibilities, reqs);
             consistencyIssues.insert(issues.begin(), issues.end());
 
             //Also check install validity.
+            BOOST_LOG_TRIVIAL(trace) << "Checking that the current install is valid according to this plugin's data.";
             issues = it->CheckInstallValidity(_game);
             list<boss::Message> pluginMessages = it->Messages();
             for (map<string,bool>::const_iterator jt=issues.begin(), endJt=issues.end(); jt != endJt; ++jt) {
@@ -557,12 +568,15 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
         progDia->Pulse();
 
+        BOOST_LOG_TRIVIAL(debug) << "Displaying load order preview.";
         LoadOrderPreview preview(this, translate("BOSS: Calculated Load Order"), plugins);
 
         if (preview.ShowModal() == wxID_OK) {
+            BOOST_LOG_TRIVIAL(trace) << "Load order accepted.";
             list<boss::Plugin> newPluginsList, editedPlugins;
             newPluginsList = preview.GetLoadOrder();
 
+            BOOST_LOG_TRIVIAL(trace) << "Building list of edited plugins.";
             for (list<boss::Plugin>::iterator it=newPluginsList.begin(),endit=newPluginsList.end(); it != endit; ++it) {
                 list<boss::Plugin>::const_iterator jt = find(plugins.begin(), plugins.end(), *it);
                 boss::Plugin diff = it->DiffMetadata(*jt);
@@ -572,6 +586,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             }
             plugins = newPluginsList;
 
+            BOOST_LOG_TRIVIAL(trace) << "Merging down edits to the userlist.";
             for (list<boss::Plugin>::const_iterator it=editedPlugins.begin(),endit=editedPlugins.end(); it != endit; ++it) {
                 list<boss::Plugin>::iterator jt = find(ulist_plugins.begin(), ulist_plugins.end(), *it);
 
@@ -582,6 +597,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                 }
             }
 
+            BOOST_LOG_TRIVIAL(trace) << "Checking that any pre-existing 'load after' entries in the userlist are still valid.";
             for (list<boss::Plugin>::iterator it=ulist_plugins.begin(),endit=ulist_plugins.end(); it != endit; ++it) {
                 //Double-check that the plugin is still loading after any other plugins already in its "load after" metadata.
                 list<boss::Plugin>::iterator mainPos = find(plugins.begin(), plugins.end(), *it);
@@ -607,6 +623,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             }
 
             //Save edits to userlist.
+            BOOST_LOG_TRIVIAL(debug) << "Saving edited userlist."
             YAML::Emitter yout;
             yout.SetIndent(2);
             yout << YAML::BeginMap
@@ -618,6 +635,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             uout.close();
 
             //Now set load order.
+            BOOST_LOG_TRIVIAL(trace) << "Setting load order."
             try {
                 _game.SetLoadOrder(plugins);
             } catch (boss::error& e) {
@@ -629,7 +647,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             messages.push_back(boss::Message(boss::g_message_warn, loc::translate("The load order displayed in the Details tab was not applied as sorting was canceled.")));
         }
 
-        BOOST_LOG_TRIVIAL(trace) << "Set load order:";
+        BOOST_LOG_TRIVIAL(trace) << "Load order set:";
         for (list<boss::Plugin>::iterator it=plugins.begin(), endIt = plugins.end(); it != endIt; ++it) {
             BOOST_LOG_TRIVIAL(trace) << '\t' << it->Name();
             /*vector<string> masters = it->Masters();
@@ -641,11 +659,10 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         }
     }
 
-    BOOST_LOG_TRIVIAL(trace) << "Generating report...";
-
     //Read the details section of the previous report, if it exists.
     string oldDetails;
     if (fs::exists(_game.ReportPath().string())) {
+        BOOST_LOG_TRIVIAL(debug) << "Reading the previous report's details section.";
         //Read the whole file in.
         ifstream in(_game.ReportPath().string().c_str(), ios::binary);
         in.seekg(0, std::ios::end);
@@ -665,7 +682,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         oldDetails += "</ul>\n";
     }
     
-
+    BOOST_LOG_TRIVIAL(debug) << "Generating report...";
     try {
         GenerateReport(_game.ReportPath().string(),
                         messages,
@@ -690,6 +707,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     progDia->Destroy();
 
+    BOOST_LOG_TRIVIAL(debug) << "Displaying report...";
     if (_settings["View Report Externally"] && _settings["View Report Externally"].as<bool>()) {
         wxLaunchDefaultApplication(_game.ReportPath().string());
     } else {
@@ -697,6 +715,8 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         Viewer *viewer = new Viewer(this, translate("BOSS: Report Viewer"), _game.ReportPath().string());
         viewer->Show();
     }
+
+    BOOST_LOG_TRIVIAL(debug) << "Report display successful. Sorting process complete.";
 }
 
 void Launcher::OnEditMetadata(wxCommandEvent& event) {
@@ -719,6 +739,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
 
     //Parse masterlist.
     if (fs::exists(_game.MasterlistPath())) {
+        BOOST_LOG_TRIVIAL(debug) << "Parsing masterlist.";
         YAML::Node mlist;
         try {
             mlist = YAML::LoadFile(_game.MasterlistPath().string());
@@ -738,6 +759,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
 
     //Parse userlist.
     if (fs::exists(_game.UserlistPath())) {
+        BOOST_LOG_TRIVIAL(debug) << "Parsing userlist.";
         YAML::Node ulist;
         try {
             ulist = YAML::LoadFile(_game.UserlistPath().string());
@@ -768,6 +790,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
     progDia->Pulse();
 
     //Add empty entries for any userlist entries that aren't installed.
+    BOOST_LOG_TRIVIAL(debug) << "Padding the userlist to match the plugins in the installed mods list.";
     for (vector<boss::Plugin>::const_iterator it=ulist_plugins.begin(), endit=ulist_plugins.end(); it != endit; ++it) {
         if (find(installed.begin(), installed.end(), *it) == installed.end())
             installed.push_back(boss::Plugin(it->Name()));
@@ -790,29 +813,38 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
     progDia->Destroy();
     
 	editor->Show();
+    BOOST_LOG_TRIVIAL(debug) << "Editor window opened.";
 }
 
 void Launcher::OnViewLastReport(wxCommandEvent& event) {
     if (_settings["View Report Externally"] && _settings["View Report Externally"].as<bool>()) {
+        BOOST_LOG_TRIVIAL(debug) << "Opening report in external application...";
         wxLaunchDefaultApplication(_game.ReportPath().string());
     } else {
         //Create viewer window.
+        BOOST_LOG_TRIVIAL(debug) << "Opening viewer window...";
         Viewer *viewer = new Viewer(this, translate("BOSS: Report Viewer"), _game.ReportPath().string());
         viewer->Show();
     }
+    BOOST_LOG_TRIVIAL(debug) << "Report displayed.";
 }
 
 void Launcher::OnOpenSettings(wxCommandEvent& event) {
+    BOOST_LOG_TRIVIAL(debug) << "Opening settings window...";
 	SettingsFrame *settings = new SettingsFrame(this, translate("BOSS: Settings"), _settings, _games);
 	settings->ShowModal();
+    BOOST_LOG_TRIVIAL(debug) << "Editor window opened.";
 }
 
 void Launcher::OnGameChange(wxCommandEvent& event) {
+    BOOST_LOG_TRIVIAL(debug) << "Changing current game...";
     _game = _games[event.GetId() - MENU_LowestDynamicGameID];
     try {
         _game.Init();  //In case it hasn't already been done.
         *find(_games.begin(), _games.end(), _game) = _game;  //Sync changes.
+        BOOST_LOG_TRIVIAL(debug) << "New game is " << _game.Name();
     } catch (boss::error& e) {
+        BOOST_LOG_TRIVIAL(error) << "Game-specific settings could not be initialised." << e.what();
         wxMessageBox(
             FromUTF8(format(loc::translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()),
             translate("BOSS: Error"), 
@@ -824,17 +856,21 @@ void Launcher::OnGameChange(wxCommandEvent& event) {
 
 void Launcher::OnHelp(wxCommandEvent& event) {
     //Look for file.
+    BOOST_LOG_TRIVIAL(debug) << "Opening readme.";
     if (fs::exists(g_path_readme.string())) {
         wxLaunchDefaultApplication(g_path_readme.string());
-    } else  //No ReadMe exists, show a pop-up message saying so.
+    } else {  //No ReadMe exists, show a pop-up message saying so.
+        BOOST_LOG_TRIVIAL(error) << "File \"" << g_path_readme.string() << "\" could not be found.";
         wxMessageBox(
             FromUTF8(format(loc::translate("Error: \"%1%\" cannot be found.")) % g_path_readme.string()),
             translate("BOSS: Error"),
             wxOK | wxICON_ERROR,
             this);
+    }
 }
 
 void Launcher::OnAbout(wxCommandEvent& event) {
+    BOOST_LOG_TRIVIAL(debug) << "Opening About dialog.";
     wxAboutDialogInfo aboutInfo;
     aboutInfo.SetName("BOSS");
     aboutInfo.SetVersion(IntToString(g_version_major)+"."+IntToString(g_version_minor)+"."+IntToString(g_version_patch));
@@ -904,12 +940,15 @@ LoadOrderPreview::LoadOrderPreview(wxWindow *parent, const wxString title, const
 }
 
 void LoadOrderPreview::OnMoveUp(wxCommandEvent& event) {
+    BOOST_LOG_TRIVIAL(debug) << "Moving plugin(s) up the load order.";
     long selected = _loadOrder->GetFirstSelected();
 
     while (selected != -1) {
         if (selected > 0) {
             wxString selectedText = _loadOrder->GetItemText(selected);
             wxString aboveText = _loadOrder->GetItemText(selected - 1);
+            
+            BOOST_LOG_TRIVIAL(trace) << "Moving plugin \"" << string(selectedText.ToUTF8());
 
             _loadOrder->SetItemText(selected, aboveText);
             _loadOrder->SetItemText(selected - 1, selectedText);
@@ -921,13 +960,17 @@ void LoadOrderPreview::OnMoveUp(wxCommandEvent& event) {
         }
         selected = _loadOrder->GetNextSelected(selected);
     }
+    BOOST_LOG_TRIVIAL(debug) << "Plugin(s) moved up.";
 }
 
 void LoadOrderPreview::OnMoveDown(wxCommandEvent& event) {
+    BOOST_LOG_TRIVIAL(debug) << "Moving plugin(s) down the load order.";
     for (long i=_loadOrder->GetItemCount() - 1; i > -1; --i) {
         if (_loadOrder->IsSelected(i)) {
             wxString selectedText = _loadOrder->GetItemText(i);
             wxString belowText = _loadOrder->GetItemText(i + 1);
+            
+            BOOST_LOG_TRIVIAL(trace) << "Moving plugin \"" << string(selectedText.ToUTF8());
 
             _loadOrder->SetItemText(i, belowText);
             _loadOrder->SetItemText(i + 1, selectedText);
@@ -938,9 +981,11 @@ void LoadOrderPreview::OnMoveDown(wxCommandEvent& event) {
             _loadOrder->Select(i + 1, true);
         }
     }
+    BOOST_LOG_TRIVIAL(debug) << "Plugin(s) moved down.";
 }
 
 std::list<boss::Plugin> LoadOrderPreview::GetLoadOrder() const {
+    BOOST_LOG_TRIVIAL(debug) << "Getting full load order from preview window.";
     list<boss::Plugin> plugins;
     bool wasMovedUp = false;
     for (size_t i=0,max=_loadOrder->GetItemCount(); i < max; ++i) {
@@ -951,6 +996,7 @@ std::list<boss::Plugin> LoadOrderPreview::GetLoadOrder() const {
         plugins.push_back(*it);
 
         if (wasMovedUp) {
+            BOOST_LOG_TRIVIAL(trace) << "The previous plugin was moved up in the load order, so adding it to the 'load after' set for the current plugin.";
             list<boss::Plugin>::const_iterator jt = ----plugins.end();
             set<boss::File> loadAfter = plugins.back().LoadAfter();
             loadAfter.insert(File(jt->Name()));
@@ -959,17 +1005,20 @@ std::list<boss::Plugin> LoadOrderPreview::GetLoadOrder() const {
         }
 
         if (_movedPlugins.find(name) != _movedPlugins.end()) {
+            BOOST_LOG_TRIVIAL(trace) << "The current plugin was moved - checking if it was moved up or down."
             //Check if this plugin has been moved earlier or later by comparing distances in the original list and the new one.
             size_t newDist = plugins.size() - 1;
             size_t oldDist = distance(_plugins.begin(), it);
 
             if (newDist > oldDist) {
+                BOOST_LOG_TRIVIAL(trace) << "The current plugin was moved down, add the preceding plugin to the current plugin's 'load after' set."
                 //Record the preceding plugin in this plugin's "load after" set.
                 list<boss::Plugin>::const_iterator jt = ----plugins.end();
                 set<boss::File> loadAfter = plugins.back().LoadAfter();
                 loadAfter.insert(File(jt->Name()));
                 plugins.back().LoadAfter(loadAfter);
             } else {
+                BOOST_LOG_TRIVIAL(trace) << "The current plugin was moved up."
                 //Record this plugin in the following plugin's "load after" set.
                 wasMovedUp = true;
             }
