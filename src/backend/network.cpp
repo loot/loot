@@ -25,6 +25,8 @@
 #include "error.h"
 #include "parsers.h"
 
+#include <boost/log/trivial.hpp>
+
 #if _WIN32 || _WIN64
 #   ifndef UNICODE
 #       define UNICODE
@@ -63,10 +65,13 @@ namespace boss {
         saAttr.lpSecurityDescriptor = NULL;
 
         //Create I/O pipes.
-        if (!CreatePipe(&consoleRead, &consoleWrite, &saAttr, 0))
+        if (!CreatePipe(&consoleRead, &consoleWrite, &saAttr, 0)) {
+            BOOST_LOG_TRIVIAL(error) << "Could not create pipe for Subversion process.";
             throw error(error::subversion_error, "Could not create pipe for Subversion process.");
+        }
 
         //Create a child process.
+        BOOST_LOG_TRIVIAL(trace) << "Creating a child process.";
         ZeroMemory(&piProcInfo, sizeof(PROCESS_INFORMATION));
 
         ZeroMemory(&siStartInfo, sizeof(STARTUPINFO));
@@ -93,16 +98,22 @@ namespace boss {
 
         delete [] cmdLine;
 
-        if (!result)
+        if (!result) {
+            BOOST_LOG_TRIVIAL(error) << "Could not create Subversion process.";
             throw error(error::subversion_error, "Could not create Subversion process.");
+        }
 
         WaitForSingleObject(piProcInfo.hProcess, INFINITE);
 
-        if (!GetExitCodeProcess(piProcInfo.hProcess, &exitCode))
+        if (!GetExitCodeProcess(piProcInfo.hProcess, &exitCode)) {
+            BOOST_LOG_TRIVIAL(error) << "Could not get Subversion process exit code.";
             throw error(error::subversion_error, "Could not get Subversion process exit code.");
+        }
         
-        if (!ReadFile(consoleRead, chBuf, BUFSIZE, &dwRead, NULL))
+        if (!ReadFile(consoleRead, chBuf, BUFSIZE, &dwRead, NULL)) {
+            BOOST_LOG_TRIVIAL(error) << "Could not read Subversion process output.";
             throw error(error::subversion_error, "Could not read Subversion process output.");
+        }
             
         output = string(chBuf, dwRead);
         
@@ -136,6 +147,9 @@ namespace boss {
         //First check if the working copy is set up or not.
         command = g_path_svn.string() + " info \"" + game.MasterlistPath().string() + "\"";
 
+        BOOST_LOG_TRIVIAL(trace) << "Checking to see if the working copy is set up or not for the masterlist at \"" + game.MasterlistPath().string() + "\"";
+        bool success = RunCommand(command, output);
+
         revision = GetRevision(output);
 
         if (game.URL().empty()) {
@@ -145,38 +159,52 @@ namespace boss {
                 return "N/A";
         }
         
-        if (!RunCommand(command, output)) {
+        if (!success) {
+            BOOST_LOG_TRIVIAL(trace) << "Working copy is not set up, checking out repository.";
             //Working copy not set up, perform a checkout.
             command = g_path_svn.string() + " co --depth empty " + game.URL().substr(0, game.URL().rfind('/')) + " \"" + game.MasterlistPath().parent_path().string() + "\\.\"";
-            if (!RunCommand(command, output))
+            if (!RunCommand(command, output)) {
+                BOOST_LOG_TRIVIAL(error) << "Subversion could not perform a checkout. Details: " << output;
                 throw error(error::subversion_error, "Subversion could not perform a checkout. Details: " + output);
+            }
         }
 
         //Now update masterlist.
+        BOOST_LOG_TRIVIAL(trace) << "Performing Subversion update of masterlist.";
         command = g_path_svn.string() + " update \"" + game.MasterlistPath().string() + "\"";
-        if (!RunCommand(command, output))
+        if (!RunCommand(command, output)) {
+            BOOST_LOG_TRIVIAL(error) << "Subversion could not update the masterlist. Details: " << output;
             throw error(error::subversion_error, "Subversion could not update the masterlist. Details: " + output);
+        }
 
         while (true) {
             try {
 
-                //Now get the masterlist revision. 
+                //Now get the masterlist revision.
+                BOOST_LOG_TRIVIAL(trace) << "Getting the new masterlist version.";
                 command = g_path_svn.string() + " info \"" + game.MasterlistPath().string() + "\"";
-                if (!RunCommand(command, output))
+                if (!RunCommand(command, output)) {
+                    BOOST_LOG_TRIVIAL(error) << "Subversion could not read the masterlist revision number. Details: " << output;
                     throw error(error::subversion_error, "Subversion could not read the masterlist revision number. Details: " + output);
+                }
 
+                BOOST_LOG_TRIVIAL(trace) << "Reading the masterlist version from the svn info output.";
                 revision = GetRevision(output);
 
                 //Now test masterlist to see if it parses OK.
+                BOOST_LOG_TRIVIAL(trace) << "Testing the new masterlist to see if it parses OK.";
                 YAML::Node mlist = YAML::LoadFile(game.MasterlistPath().string());
 
                 return revision;
             } catch (YAML::Exception& e) {
                 //Roll back one revision if there's an error.
+                BOOST_LOG_TRIVIAL(error) << "Masterlist parsing failed. Masterlist revision " + revision + ": " + e.what();
                 parsingErrors.push_back("Masterlist revision " + revision + ": " + e.what());
                 command = g_path_svn.string() + " update --revision PREV \"" + game.MasterlistPath().string() + "\"";
-                if (!RunCommand(command, output))
+                if (!RunCommand(command, output)) {
+                    BOOST_LOG_TRIVIAL(error) << "Subversion could not update the masterlist. Details: " << output;
                     throw error(error::subversion_error, "Subversion could not update the masterlist. Details: " + output);
+                }
             }
         }
     }

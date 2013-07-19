@@ -623,7 +623,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             }
 
             //Save edits to userlist.
-            BOOST_LOG_TRIVIAL(debug) << "Saving edited userlist."
+            BOOST_LOG_TRIVIAL(debug) << "Saving edited userlist.";
             YAML::Emitter yout;
             yout.SetIndent(2);
             yout << YAML::BeginMap
@@ -635,7 +635,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             uout.close();
 
             //Now set load order.
-            BOOST_LOG_TRIVIAL(trace) << "Setting load order."
+            BOOST_LOG_TRIVIAL(trace) << "Setting load order.";
             try {
                 _game.SetLoadOrder(plugins);
             } catch (boss::error& e) {
@@ -1005,20 +1005,20 @@ std::list<boss::Plugin> LoadOrderPreview::GetLoadOrder() const {
         }
 
         if (_movedPlugins.find(name) != _movedPlugins.end()) {
-            BOOST_LOG_TRIVIAL(trace) << "The current plugin was moved - checking if it was moved up or down."
+            BOOST_LOG_TRIVIAL(trace) << "The current plugin was moved - checking if it was moved up or down.";
             //Check if this plugin has been moved earlier or later by comparing distances in the original list and the new one.
             size_t newDist = plugins.size() - 1;
             size_t oldDist = distance(_plugins.begin(), it);
 
             if (newDist > oldDist) {
-                BOOST_LOG_TRIVIAL(trace) << "The current plugin was moved down, add the preceding plugin to the current plugin's 'load after' set."
+                BOOST_LOG_TRIVIAL(trace) << "The current plugin was moved down, add the preceding plugin to the current plugin's 'load after' set.";
                 //Record the preceding plugin in this plugin's "load after" set.
                 list<boss::Plugin>::const_iterator jt = ----plugins.end();
                 set<boss::File> loadAfter = plugins.back().LoadAfter();
                 loadAfter.insert(File(jt->Name()));
                 plugins.back().LoadAfter(loadAfter);
             } else {
-                BOOST_LOG_TRIVIAL(trace) << "The current plugin was moved up."
+                BOOST_LOG_TRIVIAL(trace) << "The current plugin was moved up.";
                 //Record this plugin in the following plugin's "load after" set.
                 wasMovedUp = true;
             }

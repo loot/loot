@@ -48,6 +48,7 @@
 #include <boost/spirit/include/phoenix_core.hpp>
 #include <boost/spirit/include/phoenix_operator.hpp>
 #include <boost/spirit/include/phoenix_bind.hpp>
+#include <boost/log/trivial.hpp>
 
 namespace YAML {
 
@@ -404,21 +405,30 @@ namespace boss {
 
         boss::Game * game;
 
-        //Eval's regex and exact paths. Check for files and ghosted plugins.
+        //Eval's exact paths. Check for files and ghosted plugins.
         void CheckFile(bool& result, const std::string& file) {
+
+            BOOST_LOG_TRIVIAL(trace) << "Checking to see if the file \"" << file << "\" exists.";
 
             if (file == "BOSS") {
                 result = true;
                 return;
             }
 
-            if (!IsSafePath(file))
+            if (!IsSafePath(file)) {
+                BOOST_LOG_TRIVIAL(error) << "The file path is invalid.";
                 throw boss::error(boss::error::invalid_args, "The file path \"" + file + "\" is invalid.");
+            }
 
             if (IsPlugin(file))
                 result = boost::filesystem::exists(game->DataPath() / file) || boost::filesystem::exists(game->DataPath() / (file + ".ghost"));
             else
                 result = boost::filesystem::exists(game->DataPath() / file);
+
+            if (result)
+                BOOST_LOG_TRIVIAL(trace) << "The file does exist.";
+            else
+                BOOST_LOG_TRIVIAL(trace) << "The file does not exist.";
         }
 
         void CheckRegex(bool& result, const std::string& regexStr) {
@@ -434,6 +444,8 @@ namespace boss {
             Split the regex with another regex! */
 
             //Need to also check if the regex is for a safe path.
+
+            BOOST_LOG_TRIVIAL(trace) << "Checking to see if any files matching the regex \"" << regexStr << "\" exist.";
 
             boost::regex sepReg("/|(\\\\)", boost::regex::extended);
 
@@ -451,8 +463,10 @@ namespace boss {
                 parent += *it + '/';
             }
 
-            if (boost::contains(parent, "../../"))
+            if (boost::contains(parent, "../../")){
+                BOOST_LOG_TRIVIAL(error) << "The folder path \"" << parent << "\" is invalid.";
                 throw boss::error(boss::error::invalid_args, "The folder path \"" + parent + "\" is invalid.");
+            }
 
             //Now we have a valid parent path and a regex filename. Check that
             //the parent path exists and is a directory.
@@ -465,6 +479,7 @@ namespace boss {
             try {
                 regex = boost::regex(filename, boost::regex::extended|boost::regex::icase);
             } catch (boost::regex_error& e) {
+                BOOST_LOG_TRIVIAL(error) << "The regex string \"" << filename << "\" is invalid.";
                 throw boss::error(boss::error::invalid_args, "The regex string \"" + filename + "\" is invalid.");
             }
 
@@ -478,8 +493,12 @@ namespace boss {
 
         void CheckSum(bool& result, const std::string& file, const uint32_t checksum) {
 
-            if (!IsSafePath(file))
+            BOOST_LOG_TRIVIAL(trace) << "Checking the CRC of the file \"" << file << "\".";
+
+            if (!IsSafePath(file)) {
+                BOOST_LOG_TRIVIAL(error) << "The file path is invalid.";
                 throw boss::error(boss::error::invalid_args, "The file path \"" + file + "\" is invalid.");
+            }
 
             uint32_t crc;
             boost::unordered_map<std::string,uint32_t>::iterator it = game->crcCache.find(boost::to_lower_copy(file));
@@ -505,6 +524,8 @@ namespace boss {
         }
 
         void CheckVersion(bool& result, const std::string&  file, const std::string& version, const std::string& comparator) {
+
+            BOOST_LOG_TRIVIAL(trace) << "Checking version of file \"" << file << "\".";
 
             CheckFile(result, file);
             if (!result) {
@@ -540,6 +561,8 @@ namespace boss {
 
             std::string context(errorpos, min(errorpos +50, last));
             boost::trim(context);
+
+            BOOST_LOG_TRIVIAL(error) << "Error parsing condition at \"" << context << "\", expected \"" << what.tag << "\"";
 
             throw boss::error(boss::error::condition_eval_fail, "Error parsing condition at \"" + context + "\", expected \"" + what.tag + "\"");
         }
