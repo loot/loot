@@ -1,18 +1,37 @@
 # BOSSv3
 
-## Introduction
+## Introduction To BOSS
 
-See the [BOSS project page](http://code.google.com/p/better-oblivion-sorting-software/) for a general overview of BOSS.
+BOSS is a plugin load order optimiser for TES IV: Oblivion, TES V: Skyrim, Fallout 3 and Fallout: New Vegas. It is designed to assist mod users in avoiding detrimental conflicts, by automatically calculating a load order that satisfies all plugin dependencies and maximises each plugin's impact on the user's game.
 
-BOSSv3 is being developed on a separate repository from the rest of BOSS's code as it is essentially a new program, and is being designed to address the shortcomings that are inherent in how BOSS approaches load order optimisation.
+BOSS also provides some load order error checking, including checks for requirements, incompatibilities and cyclic dependencies. In addition, it provides a large number of plugin-specific usage notes, bug wawrnings and Bash Tag suggestions.
 
-Modding for Bethesda's games has proved to be incredibly popular, with over 25,000 mods each available for Oblivion and Skyrim.
+Although BOSS is able to calculate the correct load order positions for the vast majority of mods without any user input, some plugins are designed to load at certain positions in a load order, and BOSS may be unable to determine this from the plugins themselves. As such, BOSS provides a mechanism for supplying additional plugin metadata so that it may sort them correctly.
 
-For BOSS to be as useful as possible, it needs to be able to sort as many mods as possible. For Skyrim, the backlog of mods that need adding to its masterlist is at 5,800+ and growing. Recruiting extra team members isn't a real solution, as I've already done that and frankly copy/pasting filenames into a massive text file is not a whole load of fun and any analysis takes a while to do properly.
+BOSS is intended to make using mods easier, and mod users should still possess a working knowledge of mod load ordering. See the "Introduction To Load Orders" section of the BOSS readme for an overview.
+
+
+## About This Repository
+
+This repository holds the source code and documentation for BOSS v3. The masterlists, along with the source code and documentation for previous versions of BOSS, are stored in BOSS's [Google Code repository](http://code.google.com/p/better-oblivion-sorting-software/). 
+
+The reason for the split is that GitHub offers a more feature-rich project hosting service than Google Code, but BOSS has been using the latter site for most of its existence. As most of the BOSS team maintain the masterlists and don't develop the program itself, splitting the masterlists and everything else between the two sites minimises any disruption while taking advantage of GitHub's superior service. 
+
+
+## Why BOSSv3 Is So Different To Earlier Releases
+
+BOSSv3 is essentially a new program, and is being designed to address the shortcomings that are inherent in how BOSS approaches load order optimisation. 
+
+Modding for Bethesda's games has proved to be incredibly popular, with over 25,000 mods each available for Oblivion and Skyrim. For BOSS to be as useful as possible, it needs to be able to sort as many mods as possible. For Skyrim, the backlog of mods that need adding to its masterlist is at 5,800+ and growing. Recruiting extra team members isn't a real solution, as I've already done that and frankly copy/pasting filenames into a massive text file is not a whole load of fun and any analysis takes a while to do properly.
 
 The other obvious solution is to cut down on the number of mods that need to be added to the masterlist - instead of having every single mod listed, BOSS could be made to sort the 'simple' mods on its own, and then we could add to the masterlist only those that proved too tricky for it to position itself.
 
 While that's being done, I might as well also make some improvements to other areas of BOSS.
+
+
+## Downloading BOSS
+
+At the moment, BOSSv3 is in alpha testing, and so is not recommended for use unless for testing purposes. The load orders it produces should not be used in-game unless found to be valid by manual checking beforehand. Any releases can be found by clicking on the releases button above the coloured bar on the repository homepage.
 
 
 ## Build Instructions
@@ -26,7 +45,7 @@ BOSS requires the following libraries:
 * [Libespm](http://github.com/WrinklyNinja/libespm)
 * [Libloadorder](http://github.com/WrinklyNinja/libloadorder)
 * [PugiXML](http://code.google.com/p/pugixml/) v1.2 or later.
-* [wxWidgets](http://www.wxwidgets.org) v2.9.4 or later.
+* [wxWidgets](http://www.wxwidgets.org) v2.9.5 or later.
 * [yaml-cpp](http://code.google.com/p/yaml-cpp/) v0.5.1 or later.
 * [zlib](http://zlib.net) v1.2.7 or later.
 
@@ -64,13 +83,13 @@ Put the following binaries into ```resources/svn/``` in the BOSS repository root
 ```
 ./bootstrap.sh
 echo "using gcc : 4.6.3 : i686-w64-mingw32-g++ : <rc>i686-w64-mingw32-windres <archiver>i686-w64-mingw32-ar <ranlib>i686-w64-mingw32-ranlib ;" > tools/build/v2/user-config.jam
-./b2 toolset=gcc-4.6.3 target-os=windows threadapi=win32 link=static runtime-link=static variant=release address-model=32 cxxflags=-fPIC --with-thread --with-filesystem --with-locale --with-regex --with-program_options --with-system --stagedir=stage-mingw-32
+./b2 toolset=gcc-4.6.3 target-os=windows threadapi=win32 link=static runtime-link=static variant=release address-model=32 cxxflags=-fPIC --with-log --with-date_time --with-thread --with-filesystem --with-locale --with-regex --with-system --stagedir=stage-mingw-32
 ```
 
 ### wxWidgets
 
 ```
-./configure --prefix=/usr/local/i686-w64-mingw32 --host=i686-w64-mingw32 --build=x64_86-linux --disable-shared
+./configure --prefix=/usr/local/i686-w64-mingw32 --host=i686-w64-mingw32 --disable-shared --enable-stl
 ```
 
 ### zlib
