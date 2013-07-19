@@ -52,6 +52,7 @@
 #include <boost/log/expressions.hpp>
 #include <boost/log/utility/setup/file.hpp>
 #include <boost/log/utility/setup/common_attributes.hpp>
+#include <boost/log/support/date_time.hpp>
 
 #include <wx/snglinst.h>
 #include <wx/aboutdlg.h>
@@ -117,7 +118,12 @@ bool BossGUI::OnInit() {
     if (verbosity > 0) {
         boost::log::add_file_log(
             boost::log::keywords::file_name = g_path_log.string().c_str(),
-            boost::log::keywords::format = "[%TimeStamp%] [%Severity%]: %Message%"
+            boost::log::keywords::format = (
+                boost::log::expressions::stream
+                    << "[" << boost::log::expressions::format_date_time< boost::posix_time::ptime >("TimeStamp", "%H:%M:%S") << "]"
+                    << " [" << boost::log::trivial::severity << "]: "
+                    << boost::log::expressions::smessage
+                )
             );
         if (verbosity == 1)
             boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::warning);  //Log all warnings, errors and fatals.
@@ -136,22 +142,22 @@ bool BossGUI::OnInit() {
 	gen.add_messages_domain("messages");
 
     //Set the locale to get encoding and language conversions working correctly.
-    BOOST_LOG_TRIVIAL(trace) << "Initialising language settings.";
+    BOOST_LOG_TRIVIAL(debug) << "Initialising language settings.";
     if (_settings["Language"]) {
         string localeId = "";
         wxLanguage lang;
         if (_settings["Language"].as<string>() == "eng") {
             localeId = "en.UTF-8";
             lang = wxLANGUAGE_ENGLISH;
-            BOOST_LOG_TRIVIAL(trace) << "Setting language to English.";
+            BOOST_LOG_TRIVIAL(debug) << "Setting language to English.";
         } else if (_settings["Language"].as<string>() == "spa") {
             localeId = "es.UTF-8";
             lang = wxLANGUAGE_SPANISH;
-            BOOST_LOG_TRIVIAL(trace) << "Setting language to Spanish.";
+            BOOST_LOG_TRIVIAL(debug) << "Setting language to Spanish.";
         } else if (_settings["Language"].as<string>() == "spa") {
             localeId = "ru.UTF-8";
             lang = wxLANGUAGE_RUSSIAN;
-            BOOST_LOG_TRIVIAL(trace) << "Setting language to Russian.";
+            BOOST_LOG_TRIVIAL(debug) << "Setting language to Russian.";
         }
 
         try {
@@ -177,6 +183,7 @@ bool BossGUI::OnInit() {
     }
 
     //Detect installed games.
+    BOOST_LOG_TRIVIAL(debug) << "Detecting installed games.";
     try {
         _games = GetGames(_settings);
     } catch (boss::error& e) {
@@ -197,6 +204,7 @@ bool BossGUI::OnInit() {
         return false;
     }
 
+    BOOST_LOG_TRIVIAL(debug) << "Selecting game.";
     string target;
     if (_settings["Game"] && _settings["Game"].as<string>() != "auto")
         target = _settings["Game"].as<string>();
@@ -229,6 +237,7 @@ bool BossGUI::OnInit() {
     }
 
     //Now that game is selected, initialise it.
+    BOOST_LOG_TRIVIAL(debug) << "Initialising game-specific settings.";
     try {
         _game.Init();
         *find(_games.begin(), _games.end(), _game) = _game;  //Sync changes.
@@ -337,13 +346,14 @@ void Launcher::OnQuit(wxCommandEvent& event) {
 }
 
 void Launcher::OnClose(wxCloseEvent& event) {
-
+    BOOST_LOG_TRIVIAL(debug) << "Quiting BOSS.";
 
     _settings["Last Game"] = _game.FolderName();
 
     _settings["Games"] = _games;
     
     //Save settings.
+    BOOST_LOG_TRIVIAL(debug) << "Saving BOSS settings.";
     YAML::Emitter yout;
     yout.SetIndent(2);
     yout << _settings;
@@ -357,37 +367,29 @@ void Launcher::OnClose(wxCloseEvent& event) {
 
 void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
+    BOOST_LOG_TRIVIAL(debug) << "Beginning sorting process.";
+
     YAML::Node mlist, ulist;
     list<boss::Message> messages, mlist_messages, ulist_messages;
     list<boss::Plugin> mlist_plugins, ulist_plugins;
-    time_t start, end;
 
     wxProgressDialog *progDia = new wxProgressDialog(translate("BOSS: Working..."),translate("BOSS working..."), 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_ELAPSED_TIME);
-    
-    time_t t0 = time(NULL);
 
-    ofstream out((g_path_local / "out.txt").string().c_str());
-
-    out << "Updating masterlist..." << endl;
-    start = time(NULL);
+    BOOST_LOG_TRIVIAL(trace) << "Updating masterlist";
 
     vector<string> parsingErrors;
     string revision;
     try {
         revision = UpdateMasterlist(_game, parsingErrors);
     } catch (boss::error& e) {
+        BOOST_LOG_TRIVIAL(error) << "Masterlist update failed. Details: " << e.what();
         messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("Masterlist update failed. Details: %1%")) % e.what()).str()));
     }
     for (vector<string>::const_iterator it=parsingErrors.begin(), endit=parsingErrors.end(); it != endit; ++it) {
         messages.push_back(boss::Message(boss::g_message_error, *it));
     }
 
-    end = time(NULL);
-	out << "Time taken to update masterlist: " << (end - start) << " seconds." << endl;
-    start = time(NULL);
-
-    out << "Reading plugins in Data folder..." << endl;
-    start = time(NULL);
+    BOOST_LOG_TRIVIAL(trace) << "Reading plugins in Data folder...";
     
     // Get a list of the plugins.
     list<boss::Plugin> plugins;
@@ -395,7 +397,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         if (fs::is_regular_file(it->status()) && IsPlugin(it->path().string())) {
 
             string filename = it->path().filename().string();
-			out << "Reading plugin: " << filename << endl;
+			BOOST_LOG_TRIVIAL(trace) << "Reading plugin: " << filename;
 			boss::Plugin plugin(_game, filename, false);
             plugins.push_back(plugin);
 
@@ -403,49 +405,39 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         }
     }
 
-    end = time(NULL);
-	out << "Time taken to read plugins: " << (end - start) << " seconds." << endl;
-    start = time(NULL);
-
     if (fs::exists(_game.MasterlistPath())) {
-        out << "Parsing masterlist..." << endl;
+        BOOST_LOG_TRIVIAL(trace) << "Parsing masterlist...";
 
         try {
             mlist = YAML::LoadFile(_game.MasterlistPath().string());
         } catch (YAML::ParserException& e) {
+            BOOST_LOG_TRIVIAL(error) << "Masterlist parsing failed. Details: " << e.what();
             messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("Masterlist parsing failed. Details: %1%")) % e.what()).str()));
         }
         if (mlist["globals"])
             mlist_messages = mlist["globals"].as< list<boss::Message> >();
         if (mlist["plugins"])
             mlist_plugins = mlist["plugins"].as< list<boss::Plugin> >();
-
-        end = time(NULL);
-        out << "Time taken to parse masterlist: " << (end - start) << " seconds." << endl;
-        start = time(NULL);
     }
 
     if (fs::exists(_game.UserlistPath())) {
-        out << "Parsing userlist..." << endl;
+        BOOST_LOG_TRIVIAL(trace) << "Parsing userlist...";
 
         try {
             ulist = YAML::LoadFile(_game.UserlistPath().string());
         } catch (YAML::ParserException& e) {
+            BOOST_LOG_TRIVIAL(error) << "Userlist parsing failed. Details: " << e.what();
             messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("Userlist parsing failed. Details: %1%")) % e.what()).str()));
         }
         if (ulist["plugins"])
             ulist_plugins = ulist["plugins"].as< list<boss::Plugin> >();
-
-        end = time(NULL);
-        out << "Time taken to parse userlist: " << (end - start) << " seconds." << endl;
-        start = time(NULL);
     }
 
     progDia->Pulse();
 
     bool cyclicDependenciesExist = false;
     if (fs::exists(_game.MasterlistPath()) || fs::exists(_game.UserlistPath())) {
-        out << "Merging plugin lists, evaluating conditions and and checking for install validity..." << endl;
+        BOOST_LOG_TRIVIAL(trace) << "Merging plugin lists, evaluating conditions and and checking for install validity...";
 
         //Merge all global message lists.
         messages = mlist_messages;
@@ -474,6 +466,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             try {
                 it->EvalAllConditions(_game, lang);
             } catch (boss::error& e) {
+                BOOST_LOG_TRIVIAL(error) << "\"" << it->Name() << "\" contains a condition that could not be evaluated. Details: " << e.what();
                 messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % it->Name() % e.what()).str()));
             }
 
@@ -489,10 +482,13 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             issues = it->CheckInstallValidity(_game);
             list<boss::Message> pluginMessages = it->Messages();
             for (map<string,bool>::const_iterator jt=issues.begin(), endJt=issues.end(); jt != endJt; ++jt) {
-                if (jt->second)
+                if (jt->second) {
+                    BOOST_LOG_TRIVIAL(error) << "\"" << jt->first << "\" is incompatible with \"" << it->Name() << "\" and is present.";
                     pluginMessages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("\"%1%\" is incompatible with \"%2%\" and is present.")) % jt->first % it->Name()).str()));
-                else
+                } else {
+                    BOOST_LOG_TRIVIAL(error) << "\"" << jt->first << "\" is required by \"" << it->Name() << "\" but is missing.";
                     pluginMessages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("\"%1%\" is required by \"%2%\" but is missing.")) % jt->first % it->Name()).str()));
+                }
             }
             if (!issues.empty())
                 it->Messages(pluginMessages);
@@ -502,21 +498,20 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
         for (map<string,bool>::const_iterator jt=consistencyIssues.begin(), endJt=consistencyIssues.end(); jt != endJt; ++jt) {
             if (jt->second) {
+                BOOST_LOG_TRIVIAL(error) << "\"" << jt->first << "\" is a circular dependency. Plugins will not be sorted.";
                 messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("\"%1%\" is a circular dependency. Plugins will not be sorted.")) % jt->first).str()));
                 cyclicDependenciesExist = true;
-            } else
+            } else {
+                BOOST_LOG_TRIVIAL(error) << "\"" << jt->first << "\" is given as a dependency and an incompatibility.";
                 messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("\"%1%\" is given as a dependency and an incompatibility.")) % jt->first).str()));
+            }
         }
-            
-        end = time(NULL);
-        out << "Time taken to merge lists, evaluate conditions and check for install validity: " << (end - start) << " seconds." << endl;
-        start = time(NULL);
     }
 
     progDia->Pulse();
 
     if (!cyclicDependenciesExist) {
-        out << "Sorting plugins..." << endl;
+        BOOST_LOG_TRIVIAL(trace) << "Sorting plugins...";
 
         //std::sort doesn't compare each plugin to every other plugin, it seems to compare plugins until no movement is necessary, because it assumes that each plugin will be comparable on all tested data, which isn't the case when dealing with masters, etc. 
         list<boss::Plugin>::iterator it=plugins.begin();
@@ -524,7 +519,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             list<boss::Plugin>::iterator jt=it;
             ++jt;
 
-            out << "Sorting for: " << it->Name() << endl;
+            BOOST_LOG_TRIVIAL(trace) << "Sorting for: " << it->Name();
 
           /*  vector<string> masters = it->Masters();
             if (!masters.empty()) {
@@ -541,7 +536,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
               */
               //  if (load_order_sort(*jt, *it)) {
                 if (it->MustLoadAfter(*jt)) {
-                    out << jt->Name() << " should load before " << it->Name() << endl;
+                    BOOST_LOG_TRIVIAL(trace) << jt->Name() << " should load before " << it->Name();
                     moved.push_back(*jt);
                     jt = plugins.erase(jt);
                 } else
@@ -559,9 +554,6 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         }
 
         plugins.sort(boss::load_order_sort);
-        
-        end = time(NULL);
-        out << "Time taken to sort plugins: " << (end - start) << " seconds." << endl;
 
         progDia->Pulse();
 
@@ -629,15 +621,17 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             try {
                 _game.SetLoadOrder(plugins);
             } catch (boss::error& e) {
+                BOOST_LOG_TRIVIAL(error) << "Failed to set the load order. Details: " << e.what();
                 messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("Failed to set the load order. Details: %1%")) % e.what()).str()));
             }
-        } else
+        } else {
+            BOOST_LOG_TRIVIAL(debug) << "The load order calculated was not applied as sorting was canceled.";
             messages.push_back(boss::Message(boss::g_message_warn, loc::translate("The load order displayed in the Details tab was not applied as sorting was canceled.")));
-                cyclicDependenciesExist = true;
+        }
 
-        out << "Set load order:" << endl;
+        BOOST_LOG_TRIVIAL(trace) << "Set load order:";
         for (list<boss::Plugin>::iterator it=plugins.begin(), endIt = plugins.end(); it != endIt; ++it) {
-            out << '\t' << it->Name() << endl;
+            BOOST_LOG_TRIVIAL(trace) << '\t' << it->Name();
             /*vector<string> masters = it->Masters();
             if (!masters.empty()) {
                 out << "\t" << "Masters:" << endl;
@@ -647,7 +641,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         }
     }
 
-    out << "Generating report..." << endl;
+    BOOST_LOG_TRIVIAL(trace) << "Generating report...";
 
     //Read the details section of the previous report, if it exists.
     string oldDetails;
@@ -691,9 +685,6 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     progDia->Pulse();
     
-	out << "Sorting finished. Total time taken: " << time(NULL) - t0 << endl;
-    out.close();
-
     //Now a results report definitely exists.
     ViewButton->Enable(true);
 
@@ -716,6 +707,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
     wxProgressDialog *progDia = new wxProgressDialog(translate("BOSS: Working..."),translate("BOSS working..."), 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_ELAPSED_TIME);
 
     //Scan for installed plugins.
+    BOOST_LOG_TRIVIAL(debug) << "Reading installed plugins' headers.";
     for (fs::directory_iterator it(_game.DataPath()); it != fs::directory_iterator(); ++it) {
         if (fs::is_regular_file(it->status()) && IsPlugin(it->path().string())) {
 			boss::Plugin plugin(_game, it->path().filename().string(), true);
@@ -731,7 +723,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
         try {
             mlist = YAML::LoadFile(_game.MasterlistPath().string());
         } catch (YAML::ParserException& e) {
-            //LOG_ERROR("Error: %s", e.getString().c_str());
+            BOOST_LOG_TRIVIAL(error) << "Masterlist parsing failed. " << e.what();
             wxMessageBox(
                 FromUTF8(format(loc::translate("Error: Masterlist parsing failed. %1%")) % e.what()),
                 translate("BOSS: Error"),
@@ -750,7 +742,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
         try {
             ulist = YAML::LoadFile(_game.UserlistPath().string());
         } catch (YAML::ParserException& e) {
-            //LOG_ERROR("Error: %s", e.getString().c_str());
+            BOOST_LOG_TRIVIAL(error) << "Userlist parsing failed. " << e.what();
             wxMessageBox(
 				FromUTF8(format(loc::translate("Error: Userlist parsing failed. %1%")) % e.what()),
 				translate("BOSS: Error"),
@@ -764,6 +756,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
     progDia->Pulse();
 
     //Merge the masterlist down into the installed mods list.
+    BOOST_LOG_TRIVIAL(debug) << "Merging the masterlist down into the installed mods list.";
     for (vector<boss::Plugin>::const_iterator it=mlist_plugins.begin(), endit=mlist_plugins.end(); it != endit; ++it) {
         vector<boss::Plugin>::iterator pos = find(installed.begin(), installed.end(), *it);
 
@@ -783,6 +776,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
     progDia->Pulse();
 
     //Sort into alphabetical order.
+    BOOST_LOG_TRIVIAL(debug) << "Sorting plugin list into alphabetical order.";
     std::sort(installed.begin(), installed.end(), boss::alpha_sort);
     
     progDia->Pulse();
@@ -790,6 +784,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
     unsigned int lang = GetLangNum(_settings["Language"].as<string>());
 
     //Create editor window.
+    BOOST_LOG_TRIVIAL(debug) << "Opening editor window.";
     Editor *editor = new Editor(this, translate("BOSS: Metadata Editor"), _game.UserlistPath().string(), installed, ulist_plugins, lang);
     
     progDia->Destroy();
