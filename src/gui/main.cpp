@@ -53,10 +53,13 @@
 #include <boost/log/utility/setup/file.hpp>
 #include <boost/log/utility/setup/common_attributes.hpp>
 #include <boost/log/support/date_time.hpp>
+#include <boost/thread/thread.hpp>
 
 #include <wx/snglinst.h>
 #include <wx/aboutdlg.h>
 #include <wx/progdlg.h>
+
+#define BOOST_THREAD_VERSION 4
 
 IMPLEMENT_APP(BossGUI);
 
@@ -66,6 +69,20 @@ using boost::format;
 
 namespace fs = boost::filesystem;
 namespace loc = boost::locale;
+
+
+struct plugin_loader {
+    plugin_loader(boss::Plugin& plugin, boss::Game& game, const string& filename, bool b) : _plugin(plugin), _game(game), _filename(filename), _b(b) {}
+    
+    void operator () () {
+        _plugin = boss::Plugin(_game, _filename, _b);
+    }
+
+    boss::Plugin& _plugin;
+    boss::Game& _game;
+    string _filename;
+    bool _b;
+};
 
 bool BossGUI::OnInit() {
     
@@ -394,17 +411,22 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     
     // Get a list of the plugins.
     list<boss::Plugin> plugins;
+    boost::thread_group group;
     for (fs::directory_iterator it(_game.DataPath()); it != fs::directory_iterator(); ++it) {
         if (fs::is_regular_file(it->status()) && IsPlugin(it->path().string())) {
 
             string filename = it->path().filename().string();
 			BOOST_LOG_TRIVIAL(trace) << "Reading plugin: " << filename;
-			boss::Plugin plugin(_game, filename, false);
-            plugins.push_back(plugin);
+
+            plugins.push_back(boss::Plugin());
+            
+            plugin_loader pl(plugins.back(), _game, filename, false);
+            group.create_thread(pl);
 
             progDia->Pulse();
         }
     }
+    group.join_all();
 
     if (fs::exists(_game.MasterlistPath())) {
         BOOST_LOG_TRIVIAL(trace) << "Parsing masterlist...";
