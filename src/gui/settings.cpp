@@ -25,6 +25,7 @@
 #include "../backend/globals.h"
 #include <fstream>
 #include <boost/algorithm/string.hpp>
+#include <boost/log/trivial.hpp>
 
 using namespace std;
 
@@ -144,6 +145,8 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
 
 void SettingsFrame::SetDefaultValues() {
 
+    BOOST_LOG_TRIVIAL(debug) << "Setting default values for BOSS's settings.";
+
     if (_settings["Language"]) {
         LanguageChoice->SetSelection(GetLangIndex(_settings["Language"].as<string>()));
     }
@@ -192,6 +195,8 @@ void SettingsFrame::SetDefaultValues() {
 
 void SettingsFrame::OnQuit(wxCommandEvent& event) {
     if (event.GetId() == wxID_OK) {
+
+        BOOST_LOG_TRIVIAL(debug) << "Applying settings.";
 
         if (GameChoice->GetSelection() == 0)
             _settings["Game"] = "auto";
@@ -252,6 +257,7 @@ void SettingsFrame::OnAddGame(wxCommandEvent& event) {
     if (rowDialog->ShowModal() == wxID_OK) {
 
         if (rowDialog->GetName().empty()) {
+            BOOST_LOG_TRIVIAL(error) << "Tried to add a new game with no name given.";
             wxMessageBox(
                 translate("Error: Name is required. Row will not be added."),
                 translate("BOSS: Error"),
@@ -259,6 +265,7 @@ void SettingsFrame::OnAddGame(wxCommandEvent& event) {
                 this);
             return;
         } else if (rowDialog->GetFolderName().empty()) {
+            BOOST_LOG_TRIVIAL(error) << "Tried to add a new game with no folder given.";
             wxMessageBox(
                 translate("Error: Folder is required. Row will not be added."),
                 translate("BOSS: Error"),
@@ -270,6 +277,7 @@ void SettingsFrame::OnAddGame(wxCommandEvent& event) {
         //Also check that name and folder name don't already exist in the list.
         for (size_t i=0,max=gamesList->GetItemCount(); i < max; ++i) {
             if (rowDialog->GetName() == gamesList->GetItemText(i, 0)) {
+                BOOST_LOG_TRIVIAL(error) << "Tried to add a new game with the same name as one that is already defined.";
                 wxMessageBox(
                     translate("Error: A game with this name is already defined. Row will not be added."),
                     translate("BOSS: Error"),
@@ -277,6 +285,7 @@ void SettingsFrame::OnAddGame(wxCommandEvent& event) {
                     this);
                 return;
             } else if (rowDialog->GetFolderName() == gamesList->GetItemText(i, 2)) {
+                BOOST_LOG_TRIVIAL(error) << "Tried to add a new game with the same folder as one that is already defined.";
                 wxMessageBox(
                     translate("Error: A game with this folder name is already defined. Row will not be added."),
                     translate("BOSS: Error"),
@@ -317,6 +326,7 @@ void SettingsFrame::OnEditGame(wxCommandEvent& event) {
     if (rowDialog->ShowModal() == wxID_OK) {
 
         if (rowDialog->GetName().empty()) {
+            BOOST_LOG_TRIVIAL(error) << "Tried to blank a game's name field.";
             wxMessageBox(
                 translate("Error: Name is required. Row will not be added."),
                 translate("BOSS: Error"),
@@ -324,6 +334,7 @@ void SettingsFrame::OnEditGame(wxCommandEvent& event) {
                 this);
             return;
         } else if (rowDialog->GetFolderName().empty()) {
+            BOOST_LOG_TRIVIAL(error) << "Tried to blank a game's folder field.";
             wxMessageBox(
                 translate("Error: Folder is required. Row will not be added."),
                 translate("BOSS: Error"),
