@@ -28,11 +28,11 @@
 #include "../backend/parsers.h"
 #include "../backend/generators.h"
 #include "../backend/error.h"
+#include "../backend/streams.h"
 
 #include <yaml-cpp/yaml.h>
 
 #include <algorithm>
-#include <fstream>
 #include <clocale>
 #include <list>
 #include <vector>
@@ -591,7 +591,7 @@ BOSS_API unsigned int boss_write_minimal_list (boss_db db, const char * const ou
          << YAML::Key << "plugins" << YAML::Value << temp
          << YAML::EndMap;
 
-    std::ofstream out(outputFile);
+    boss::ofstream out(outputFile);
     if (out.fail())
         return boss_error_invalid_args;
     out << yout.c_str();
