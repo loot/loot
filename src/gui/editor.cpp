@@ -23,6 +23,7 @@
 
 #include "editor.h"
 #include "../backend/generators.h"
+#include "../backend/streams.h"
 
 #include <algorithm>
 #include <boost/algorithm/string.hpp>
@@ -649,7 +650,7 @@ void Editor::OnQuit(wxCommandEvent& event) {
              << YAML::Key << "plugins" << YAML::Value << _editedPlugins
              << YAML::EndMap;
 
-        ofstream out(_userlistPath.c_str());
+        boss::ofstream out(_userlistPath.c_str());
         out << yout.c_str();
         out.close();
     }
