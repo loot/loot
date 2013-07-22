@@ -125,7 +125,7 @@ namespace boss {
         uint32_t chksum = 0;
         static const size_t buffer_size = 8192;
         char buffer[buffer_size];
-        boss::ifstream ifile(filename.string().c_str(), ios::binary);
+        boss::ifstream ifile(filename, ios::binary);
     //    LOG_TRACE("calculating CRC for: '%s'", filename.string().c_str());
         boost::crc_32_type result;
         if (ifile) {

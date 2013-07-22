@@ -377,7 +377,7 @@ void Launcher::OnClose(wxCloseEvent& event) {
     yout.SetIndent(2);
     yout << _settings;
     
-    boss::ofstream out(boss::g_path_settings.string().c_str());
+    boss::ofstream out(boss::g_path_settings);
     out << yout.c_str();
     out.close();
 
@@ -653,7 +653,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                  << YAML::Key << "plugins" << YAML::Value << ulist_plugins
                  << YAML::EndMap;
 
-            boss::ofstream uout(_game.UserlistPath().string().c_str());
+            boss::ofstream uout(_game.UserlistPath());
             uout << yout.c_str();
             uout.close();
 
@@ -687,7 +687,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     if (fs::exists(_game.ReportPath().string())) {
         BOOST_LOG_TRIVIAL(debug) << "Reading the previous report's details section.";
         //Read the whole file in.
-        boss::ifstream in(_game.ReportPath().string().c_str(), ios::binary);
+        boss::ifstream in(_game.ReportPath(), ios::binary);
         in.seekg(0, std::ios::end);
         oldDetails.resize(in.tellg());
         in.seekg(0, std::ios::beg);

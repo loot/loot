@@ -101,6 +101,7 @@ Follow the instructions in libloadorder's README to build it as a static library
 ### BOSS
 
 ```
+mkdir build
 cd build
 cmake .. -DPROJECT_LIBS_DIR=.. -DPROJECT_ARCH=32 -DPROJECT_LINK=STATIC -DCMAKE_TOOLCHAIN_FILE=mingw-toolchain.cmake
 make

@@ -591,7 +591,7 @@ BOSS_API unsigned int boss_write_minimal_list (boss_db db, const char * const ou
          << YAML::Key << "plugins" << YAML::Value << temp
          << YAML::EndMap;
 
-    boss::ofstream out(outputFile);
+    boss::ofstream out(boost::filesystem::path(outputFile));
     if (out.fail())
         return boss_error_invalid_args;
     out << yout.c_str();

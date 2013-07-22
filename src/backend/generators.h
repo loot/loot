@@ -35,6 +35,7 @@
 #include <string>
 #include <list>
 #include <boost/algorithm/string.hpp>
+#include <boost/filesystem.hpp>
 
 namespace boss {
 
@@ -509,7 +510,7 @@ namespace boss {
         yout.SetIndent(2);
         yout << root;
         
-        boss::ofstream out(file.c_str());
+        boss::ofstream out(boost::filesystem::path(file));
         out << yout.c_str();
         out.close();
     }

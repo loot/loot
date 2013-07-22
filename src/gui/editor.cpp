@@ -650,7 +650,7 @@ void Editor::OnQuit(wxCommandEvent& event) {
              << YAML::Key << "plugins" << YAML::Value << _editedPlugins
              << YAML::EndMap;
 
-        boss::ofstream out(_userlistPath.c_str());
+        boss::ofstream out(fs::path(_userlistPath));
         out << yout.c_str();
         out.close();
     }
