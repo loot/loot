@@ -509,8 +509,9 @@ namespace boss {
         YAML::Emitter yout;
         yout.SetIndent(2);
         yout << root;
-        
-        boss::ofstream out(boost::filesystem::path(file));
+
+        boost::filesystem::path p(file);
+        boss::ofstream out(p);
         out << yout.c_str();
         out.close();
     }

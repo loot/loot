@@ -20,6 +20,8 @@
     along with BOSS.  If not, see
     <http://www.gnu.org/licenses/>.
 */
+#ifndef __BOSS_STREAMS__
+#define __BOSS_STREAMS__
 
 #include <boost/iostreams/stream.hpp>
 #include <boost/iostreams/device/file_descriptor.hpp>
@@ -29,3 +31,5 @@ namespace boss {
     typedef boost::iostreams::stream< boost::iostreams::file_descriptor_source > ifstream;
     typedef boost::iostreams::stream< boost::iostreams::file_descriptor > fstream;
 }
+
+#endif

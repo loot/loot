@@ -257,7 +257,7 @@ namespace boss {
 			
 		// Get data from file contents using libespm. Assumes libespm has already been initialised.
 		boost::filesystem::path filepath = game.DataPath() / n;
-        espm::File file(filepath.string(), game.espm_settings, false, headerOnly);
+        espm::File file(filepath, game.espm_settings, false, headerOnly);
 
 		isMaster = file.isMaster(game.espm_settings);
 		masters = file.getMasters();

@@ -84,14 +84,17 @@ echo "using gcc : 4.6.3 : i686-w64-mingw32-g++ : <rc>i686-w64-mingw32-windres <a
 ### zlib
 
 ```
-cmake . -DCMAKE_C_FLAGS=-m32 -DPROJECT_ARCH=32 -DCMAKE_TOOLCHAIN_FILE=../BOSSv3/mingw-toolchain.cmake
+mkdir build
+cd build
+cmake .. -DCMAKE_C_FLAGS=-m32 -DPROJECT_ARCH=32 -DCMAKE_TOOLCHAIN_FILE=../BOSSv3/mingw-toolchain.cmake
 make
+cp zconf.h ../zconf.h
 ```
 
 ### yaml-cpp
 
 ```
-cmake .. -DCMAKE_C_FLAGS=-m32 -DPROJECT_ARCH=32 -DCMAKE_TOOLCHAIN_FILE=../BOSSv3/mingw-toolchain.cmake -DBOOST_ROOT=../boost
+cmake . -DCMAKE_C_FLAGS=-m32 -DPROJECT_ARCH=32 -DCMAKE_TOOLCHAIN_FILE=../BOSSv3/mingw-toolchain.cmake -DBOOST_ROOT=../boost
 ```
 
 ### Libloadorder

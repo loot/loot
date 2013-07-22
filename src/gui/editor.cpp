@@ -27,6 +27,7 @@
 
 #include <algorithm>
 #include <boost/algorithm/string.hpp>
+#include <boost/filesystem.hpp>
 
 using namespace std;
 
@@ -650,7 +651,8 @@ void Editor::OnQuit(wxCommandEvent& event) {
              << YAML::Key << "plugins" << YAML::Value << _editedPlugins
              << YAML::EndMap;
 
-        boss::ofstream out(fs::path(_userlistPath));
+        boost::filesystem::path p(_userlistPath);
+        boss::ofstream out(p);
         out << yout.c_str();
         out.close();
     }
