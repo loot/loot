@@ -27,6 +27,7 @@
 #include "metadata.h"
 #include "globals.h"
 #include "parsers.h"
+#include "streams.h"
 
 #include <pugixml.hpp>
 #include <yaml-cpp/yaml.h>
@@ -508,7 +509,7 @@ namespace boss {
         yout.SetIndent(2);
         yout << root;
         
-        std::ofstream out(file.c_str());
+        boss::ofstream out(file.c_str());
         out << yout.c_str();
         out.close();
     }
