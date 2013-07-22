@@ -27,6 +27,7 @@
 
 #include "helpers.h"
 #include "error.h"
+#include "streams.h"
 
 #include <boost/spirit/include/karma.hpp>
 #include <boost/algorithm/string.hpp>
@@ -37,7 +38,6 @@
 
 #include <cstring>
 #include <iostream>
-#include <fstream>
 #include <ctype.h>
 #include <stdio.h>
 #include <time.h>
@@ -125,7 +125,7 @@ namespace boss {
         uint32_t chksum = 0;
         static const size_t buffer_size = 8192;
         char buffer[buffer_size];
-        ifstream ifile(filename.string().c_str(), ios::binary);
+        boss::ifstream ifile(filename.string().c_str(), ios::binary);
     //    LOG_TRACE("calculating CRC for: '%s'", filename.string().c_str());
         boost::crc_32_type result;
         if (ifile) {
