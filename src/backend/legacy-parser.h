@@ -32,14 +32,9 @@
 #define BOOST_SPIRIT_UNICODE 
 #endif
 
-#include "Parsing/Grammar.h"
-#include "Common/Globals.h"
-#include "Common/Error.h"
-#include "Support/Helpers.h"
-#include "Support/Logger.h"
-#include "Output/Output.h"
-#include "Common/Classes.h"
-#include "Common/Game.h"
+#include "metadata.h"
+#include "error.h"
+#include "game.h"
 
 #include <string>
 #include <vector>
@@ -55,33 +50,6 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/regex.hpp>
 #include <sstream>
-
-
-//////////////////////////////
-// Modlist data conversions
-//////////////////////////////
-
-BOOST_FUSION_ADAPT_STRUCT(
-    boss::MasterlistVar,
-	(std::string, conditions)
-    (std::string, data)
-)
-
-BOOST_FUSION_ADAPT_STRUCT(
-    boss::Message,
-	(std::string, conditions)
-    (uint32_t, key)
-    (std::string, data)
-)
-
-BOOST_FUSION_ADAPT_STRUCT(
-    boss::Item,
-	(std::string, conditions)
-	(uint32_t, type)
-    (std::string, data)
-    (std::vector<boss::Message>, messages)
-)
-
 
 namespace boss {
 	namespace fs = boost::filesystem;
@@ -126,28 +94,16 @@ namespace boss {
 	struct masterlistMsgKey_ : qi::symbols<char, uint32_t> {
 		masterlistMsgKey_::masterlistMsgKey_() {
 			add //New Message keywords.
-				("say",SAY)
-				("tag",TAG)
-				("req",REQ)
-				("inc", INC)
-				("dirty",DIRTY)
-				("warn",WARN)
-				("error",ERR)
+				("say",g_message_say)
+				("req",g_message_say)
+				("inc", g_message_say)
+				("dirty",g_message_warn)
+				("warn",g_message_warn)
+				("error",g_message_error)
 			;
 		}
 	};
 
-	struct typeKey_ : qi::symbols<char, uint32_t> {
-		typeKey_::typeKey_() {
-			add //Group keywords.
-				("begingroup:", BEGINGROUP)  //Needs the colon there unfortunately.
-				("endgroup:", ENDGROUP)  //Needs the colon there unfortunately.
-				("endgroup", ENDGROUP)
-				("mod:", MOD)  //Needs the colon there unfortunately.
-				("regex:", REGEX)
-			;
-		}
-	};
 
 
 	///////////////////////////////
@@ -155,7 +111,8 @@ namespace boss {
 	///////////////////////////////
 	
 	//Skipper for userlist, modlist and ini parsers.
-	class Skipper : public grammar<grammarIter> {
+	<template typename Iter>
+	class Skipper : public grammar<Iter> {
 	public:
 		Skipper::Skipper() : Skipper::base_type(start, "skipper grammar") {
 
@@ -195,25 +152,33 @@ namespace boss {
 	///////////////////////////////
 
 	//Modlist/Masterlist grammar.
-	class modlist_grammar : public grammar<grammarIter, vector<Item>(), Skipper> {
+	<template typename Iter>
+	class modlist_grammar : public grammar<Iter, list<Plugin>(), Skipper> {
 	public:
 		modlist_grammar::modlist_grammar() 
-			: modlist_grammar::base_type(modList, "modlist grammar"), 
-			  errorBuffer(NULL) {
+			: modlist_grammar::base_type(modList, "modlist grammar") {
 			masterlistMsgKey_ masterlistMsgKey;
-			typeKey_ typeKey;
-			const vector<Message> noMessages;  //An empty set of messages.
+			const list<Message> noMessages;  //An empty set of messages.
 
 			modList = 
 				*eol 
 				>
 				(
-					listVar			[phoenix::bind(&modlist_grammar::StoreVar, this, _1)] 
-					| globalMessage	[phoenix::bind(&modlist_grammar::StoreGlobalMessage, this, _1)] 
-					| listItem		[phoenix::bind(&modlist_grammar::StoreItem, this, _val, _1)]
+					listVar		
+					| globalMessage
+                    | groupLine
+					| listPlugin		[phoenix::bind(&modlist_grammar::StoreItem, this, _val, _1)]
 				) % +eol;
+                
+            groupLine = 
+                conditionals
+                > (
+                    no_case[lit("begingroup:")]
+                    | no_case[lit("endgroup")]
+                  )
+                > charString;
 
-			listVar %=
+			listVar =
 				conditionals
 				>> no_case[lit("set")]
 				>>	(
@@ -230,19 +195,24 @@ namespace boss {
 						>> charString
 					);
 
-			listItem %= 
+			listPlugin = 
 				conditionals
-				> ItemType
+				> no_case[lit("mod:") | lit("regex:")]
 				> itemName
-				> itemMessages;
-
-			ItemType %= 
-				no_case[typeKey]
-				| eps		[_val = MOD];
+				> (
+                    itemMessages
+                    | bashTagMessage
+                  ) % +eol;
 
 			itemName = 
-				charString	[phoenix::bind(&modlist_grammar::ToName, this, _val, _1)]
-				| eps		[phoenix::bind(&modlist_grammar::ToName, this, _val, "")];
+				charString	[_val = boost::algorithm::trim_copy(_1)];
+                
+            bashTagMessage = 
+                (conditionals
+                >> no_case[lit("tag")]
+                >> ':'
+                >> charString) [phoenix::bind(&modlist_grammar::ExtractTags, this, _val, _1, _2)] 
+                ;
 
 			itemMessages %= 
 				(
@@ -357,88 +327,29 @@ namespace boss {
 			on_error<fail>(regex,			phoenix::bind(&modlist_grammar::SyntaxError, this, _1, _2, _3, _4));
 			on_error<fail>(language,		phoenix::bind(&modlist_grammar::SyntaxError, this, _1, _2, _3, _4));
 		}
-		
-		void modlist_grammar::SetErrorBuffer(ParsingError * inErrorBuffer) { 
-			errorBuffer = inErrorBuffer; 
-		}
-		
-		void modlist_grammar::SetGlobalMessageBuffer(vector<Message> * inGlobalMessageBuffer) { 
-			globalMessageBuffer = inGlobalMessageBuffer; 
-		}
-		
-		void modlist_grammar::SetVarStore(vector<MasterlistVar> * varStore) { 
-			setVars = varStore; 
-		}
-		
-		void modlist_grammar::SetCRCStore(boost::unordered_map<string,uint32_t> * CRCStore) {
-			fileCRCs = CRCStore; 
-		}
-	
-		void modlist_grammar::SetParentGame(const Game * game) {
-			parentGame = game;
-		}
 	private:
 		qi::rule<grammarIter, vector<Item>(), Skipper> modList;
 		qi::rule<grammarIter, Item(), Skipper> listItem;
 		qi::rule<grammarIter, uint32_t(), Skipper> ItemType;
 		qi::rule<grammarIter, string(), Skipper> itemName;
-		qi::rule<grammarIter, vector<Message>(), Skipper> itemMessages;
+		qi::rule<grammarIter, list<Message>(), Skipper> itemMessages;
 		qi::rule<grammarIter, Message(), Skipper> itemMessage, globalMessage;
 		qi::rule<grammarIter, MasterlistVar(), Skipper> listVar;
 		qi::rule<grammarIter, string(), Skipper> charString, andOr, conditional, conditionals, functCondition, shortCondition, variable, file, checksum, version, comparator, regex, language;
 		qi::rule<grammarIter, uint32_t(), Skipper> messageKeyword;
-		ParsingError * errorBuffer;
-		vector<Message> * globalMessageBuffer;
-		vector<MasterlistVar> * setVars;					//Vars set by masterlist.
-		boost::unordered_map<string,uint32_t> * fileCRCs;	//CRCs calculated.
-		const Game * parentGame;
-		vector<string> openGroups;  //Need to keep track of which groups are open to match up endings properly in MF1.
-
+	
 		//Parser error reporter.
 		void modlist_grammar::SyntaxError(grammarIter const& /*first*/, grammarIter const& last, grammarIter const& errorpos, boost::spirit::info const& what) {
-			if (errorBuffer == NULL || !errorBuffer->Empty())
-				return;
+			std::string context(errorpos, min(errorpos +50, last));
+            		boost::trim(context);
 			
-			ostringstream out;
-			out << what;
-			string expect = out.str();
-
-			string context(errorpos, min(errorpos +50, last));
-			boost::trim_left(context);
-
-			ParsingError e(str(MasterlistParsingErrorHeader % expect), context, MasterlistParsingErrorFooter);
-			*errorBuffer = e;
-			LOG_ERROR(Outputter(PLAINTEXT, e).AsString().c_str());
-			return;
+			throw boss::error(boss::error::condition_eval_fail, "Error parsing condition at \"" + context + "\", expected \"" + what.tag + "\"");
 		}
 
 		//Stores the given item and records any changes to open groups.
 		void modlist_grammar::StoreItem(vector<Item>& list, Item currentItem) {
-			if (currentItem.Type() == BEGINGROUP)
-				openGroups.push_back(currentItem.Name());
-			else if (currentItem.Type() == ENDGROUP)
-				openGroups.pop_back();
 			if (!currentItem.Name().empty())  //A blank line can be confused with a mod entry. 
 				list.push_back(currentItem);
-		}
-
-		//Stores the masterlist variable.
-		void modlist_grammar::StoreVar(const MasterlistVar var) {
-			setVars->push_back(var);
-		}
-
-		//Stores the global message.
-		void modlist_grammar::StoreGlobalMessage(const Message message) {
-			globalMessageBuffer->push_back(message);
-		}
-
-		//Turns a given string into a path. Can't be done directly because of the openGroups checks.
-		void modlist_grammar::ToName(string& p, string itemName) {
-			boost::algorithm::trim(itemName);
-			if (itemName.empty() && !openGroups.empty()) 
-				p = openGroups.back();
-			else
-				p = itemName;
 		}
 	};
 }
