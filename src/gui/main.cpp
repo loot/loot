@@ -74,7 +74,7 @@ namespace loc = boost::locale;
 
 struct plugin_loader {
     plugin_loader(boss::Plugin& plugin, boss::Game& game, const string& filename, bool b) : _plugin(plugin), _game(game), _filename(filename), _b(b) {}
-    
+
     void operator () () {
         _plugin = boss::Plugin(_game, _filename, _b);
     }
@@ -85,8 +85,22 @@ struct plugin_loader {
     bool _b;
 };
 
+struct plugin_list_loader {
+    plugin_list_loader(list<boss::Plugin>& plugins, boss::Game& game) : _plugins(plugins), _game(game) {}
+
+    void operator () () {
+        for (list<boss::Plugin>::iterator it=_plugins.begin(), endit=_plugins.end(); it != endit; ++it) {
+            if (!boost::iequals(it->Name(), _game.Master()))
+                *it = boss::Plugin(_game, it->Name(), false);
+        }
+    }
+
+    list<boss::Plugin>& _plugins;
+    boss::Game& _game;
+};
+
 bool BossGUI::OnInit() {
-    
+
     //Check if GUI is already running.
 	wxSingleInstanceChecker *checker = new wxSingleInstanceChecker;
 
@@ -360,7 +374,7 @@ Launcher::Launcher(const wxChar *title, YAML::Node& settings, Game& game, vector
 
 //Called when the frame exits.
 void Launcher::OnQuit(wxCommandEvent& event) {
-    
+
 	Close(true); // Tells the OS to quit running this process
 }
 
@@ -370,13 +384,13 @@ void Launcher::OnClose(wxCloseEvent& event) {
     _settings["Last Game"] = _game.FolderName();
 
     _settings["Games"] = _games;
-    
+
     //Save settings.
     BOOST_LOG_TRIVIAL(debug) << "Saving BOSS settings.";
     YAML::Emitter yout;
     yout.SetIndent(2);
     yout << _settings;
-    
+
     boss::ofstream out(boss::g_path_settings);
     out << yout.c_str();
     out.close();
@@ -408,8 +422,6 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         messages.push_back(boss::Message(boss::g_message_error, *it));
     }
 
-    BOOST_LOG_TRIVIAL(trace) << "Reading plugins in Data folder...";
-    
     // Get a list of the plugins.
     list<boss::Plugin> plugins;
     boost::thread_group group;
@@ -419,14 +431,18 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             string filename = it->path().filename().string();
 			BOOST_LOG_TRIVIAL(trace) << "Reading plugin: " << filename;
 
-            plugins.push_back(boss::Plugin());
-            
-            plugin_loader pl(plugins.back(), _game, filename, false);
-            group.create_thread(pl);
+            plugins.push_back(boss::Plugin(filename));
+
+            if (filename == _game.Master()) {
+                plugin_loader pl(plugins.back(), _game, filename, false);
+                group.create_thread(pl);
+            }
 
             progDia->Pulse();
         }
     }
+    plugin_list_loader pll(plugins, _game);
+    group.create_thread(pll);
     group.join_all();
 
     if (fs::exists(_game.MasterlistPath())) {
@@ -547,7 +563,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     if (!cyclicDependenciesExist) {
         BOOST_LOG_TRIVIAL(trace) << "Sorting plugins...";
 
-        //std::sort doesn't compare each plugin to every other plugin, it seems to compare plugins until no movement is necessary, because it assumes that each plugin will be comparable on all tested data, which isn't the case when dealing with masters, etc. 
+        //std::sort doesn't compare each plugin to every other plugin, it seems to compare plugins until no movement is necessary, because it assumes that each plugin will be comparable on all tested data, which isn't the case when dealing with masters, etc.
         list<boss::Plugin>::iterator it=plugins.begin();
         while (it != plugins.end()) {
             list<boss::Plugin>::iterator jt=it;
@@ -629,7 +645,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                     continue;
 
                 size_t mainDist = distance(plugins.begin(), mainPos);
-                
+
                 set<boss::File> loadAfter = it->LoadAfter();
                 set<boss::File>::iterator jt = loadAfter.begin();
                 while (jt != loadAfter.end()) {
@@ -704,7 +720,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         boost::replace_all(oldDetails, "\t\t\t\t", "\t");
         oldDetails += "</ul>\n";
     }
-    
+
     BOOST_LOG_TRIVIAL(debug) << "Generating report...";
     try {
         GenerateReport(_game.ReportPath().string(),
@@ -724,7 +740,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     }
 
     progDia->Pulse();
-    
+
     //Now a results report definitely exists.
     ViewButton->Enable(true);
 
@@ -755,7 +771,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
         if (fs::is_regular_file(it->status()) && IsPlugin(it->path().string())) {
 			boss::Plugin plugin(_game, it->path().filename().string(), true);
             installed.push_back(plugin);
-            
+
             progDia->Pulse();
         }
     }
@@ -777,7 +793,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
         if (mlist["plugins"])
             mlist_plugins = mlist["plugins"].as< vector<boss::Plugin> >();
     }
-    
+
     progDia->Pulse();
 
     //Parse userlist.
@@ -797,7 +813,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
         if (ulist["plugins"])
             ulist_plugins = ulist["plugins"].as< vector<boss::Plugin> >();
     }
-    
+
     progDia->Pulse();
 
     //Merge the masterlist down into the installed mods list.
@@ -809,7 +825,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
             pos->Merge(*it);
     }
 
-    
+
     progDia->Pulse();
 
     //Add empty entries for any userlist entries that aren't installed.
@@ -818,23 +834,23 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
         if (find(installed.begin(), installed.end(), *it) == installed.end())
             installed.push_back(boss::Plugin(it->Name()));
     }
-    
+
     progDia->Pulse();
 
     //Sort into alphabetical order.
     BOOST_LOG_TRIVIAL(debug) << "Sorting plugin list into alphabetical order.";
     std::sort(installed.begin(), installed.end(), boss::alpha_sort);
-    
+
     progDia->Pulse();
-    
+
     unsigned int lang = GetLangNum(_settings["Language"].as<string>());
 
     //Create editor window.
     BOOST_LOG_TRIVIAL(debug) << "Opening editor window.";
     Editor *editor = new Editor(this, translate("BOSS: Metadata Editor"), _game.UserlistPath().string(), installed, ulist_plugins, lang);
-    
+
     progDia->Destroy();
-    
+
 	editor->Show();
     BOOST_LOG_TRIVIAL(debug) << "Editor window opened.";
 }
@@ -870,7 +886,7 @@ void Launcher::OnGameChange(wxCommandEvent& event) {
         BOOST_LOG_TRIVIAL(error) << "Game-specific settings could not be initialised." << e.what();
         wxMessageBox(
             FromUTF8(format(loc::translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()),
-            translate("BOSS: Error"), 
+            translate("BOSS: Error"),
             wxOK | wxICON_ERROR,
             NULL);
     }
@@ -936,7 +952,7 @@ LoadOrderPreview::LoadOrderPreview(wxWindow *parent, const wxString title, const
     //Set up event handling.
     Bind(wxEVT_COMMAND_BUTTON_CLICKED, &LoadOrderPreview::OnMoveUp, this, BUTTON_MoveUp);
     Bind(wxEVT_COMMAND_BUTTON_CLICKED, &LoadOrderPreview::OnMoveDown, this, BUTTON_MoveDown);
-    
+
     //Set up layout.
     wxBoxSizer * bigBox = new wxBoxSizer(wxVERTICAL);
 
@@ -947,7 +963,7 @@ LoadOrderPreview::LoadOrderPreview(wxWindow *parent, const wxString title, const
     hbox->Add(_moveDown, 0, wxLEFT, 5);
     bigBox->Add(hbox, 0, wxALIGN_RIGHT|wxBOTTOM|wxRIGHT, 10);
 
-    bigBox->Add(new wxStaticText(this, wxID_ANY, translate("Please submit any alterations made for reasons other than user preference \nto the BOSS team so that they may include the changes in the masterlist.")), 0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 10); 
+    bigBox->Add(new wxStaticText(this, wxID_ANY, translate("Please submit any alterations made for reasons other than user preference \nto the BOSS team so that they may include the changes in the masterlist.")), 0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 10);
 
     //Need to add 'OK' and 'Cancel' buttons.
 	wxSizer * sizer = CreateSeparatedButtonSizer(wxOK|wxCANCEL);
@@ -970,14 +986,14 @@ void LoadOrderPreview::OnMoveUp(wxCommandEvent& event) {
         if (selected > 0) {
             wxString selectedText = _loadOrder->GetItemText(selected);
             wxString aboveText = _loadOrder->GetItemText(selected - 1);
-            
+
             BOOST_LOG_TRIVIAL(trace) << "Moving plugin \"" << string(selectedText.ToUTF8());
 
             _loadOrder->SetItemText(selected, aboveText);
             _loadOrder->SetItemText(selected - 1, selectedText);
 
             _movedPlugins.insert(string(selectedText.ToUTF8()));
-            
+
             _loadOrder->Select(selected, false);
             _loadOrder->Select(selected - 1, true);
         }
@@ -992,7 +1008,7 @@ void LoadOrderPreview::OnMoveDown(wxCommandEvent& event) {
         if (_loadOrder->IsSelected(i)) {
             wxString selectedText = _loadOrder->GetItemText(i);
             wxString belowText = _loadOrder->GetItemText(i + 1);
-            
+
             BOOST_LOG_TRIVIAL(trace) << "Moving plugin \"" << string(selectedText.ToUTF8());
 
             _loadOrder->SetItemText(i, belowText);
