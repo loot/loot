@@ -71,7 +71,7 @@ namespace boss {
         size_t pos3 = content.find('"', pos1+1);
 
         while (pos1 != std::string::npos && pos2 != std::string::npos && pos3 != std::string::npos) {
-            
+
             std::string url = content.substr(pos1+1, pos2-pos1-1);
             std::string display = content.substr(pos2+1, pos3-pos2-1);
 
@@ -114,7 +114,7 @@ namespace boss {
 
         //Now add head elements.
         pugi::xml_node node;
-        
+
         node = head.append_child();
         node.set_name("meta");
         node.append_attribute("http-equiv").set_value("X-UA-Compatible");
@@ -452,7 +452,7 @@ namespace boss {
         node.set_name("script");
         node.append_attribute("src").set_value(ToFileURL(g_path_js).c_str());
         node.text().set(" ");
-        
+
     }
 
     inline void GenerateReport(const std::string& file,
@@ -473,11 +473,11 @@ namespace boss {
 
         int messageNo=0;
         AppendMain(body, oldDetails, masterlistVersion, masterlistUpdateEnabled, messages, plugins, messageNo);
-        
+
         AppendFilters(body, messageNo, plugins.size());
-        
+
         AppendScripts(body);
-        
+
         if (!doc.save_file(file.c_str(), "\t", pugi::format_default | pugi::format_no_declaration))
             throw boss::error(boss::error::path_write_fail, "Could not write BOSS report.");
 
@@ -551,13 +551,17 @@ namespace YAML {
     }
 
     inline Emitter& operator << (Emitter& out, const boss::MessageContent& rhs) {
-        out << BeginMap;
+        if (rhs.Language() == boss::g_lang_any)
+            out << rhs.Str();
+        else {
+            out << BeginMap;
 
-        out << Key << "lang" << Value << boss::GetLangString(rhs.Language());
+            out << Key << "lang" << Value << boss::GetLangString(rhs.Language());
 
-        out << Key << "str" << Value << rhs.Str();
+            out << Key << "str" << Value << rhs.Str();
 
-        out << EndMap;
+            out << EndMap;
+        }
     }
 
     inline Emitter& operator << (Emitter& out, const boss::Message& rhs) {
@@ -571,7 +575,7 @@ namespace YAML {
             out << Key << "type" << Value << "error";
 
         if (rhs.Content().size() == 1)
-            out << Key << "content" << Value << rhs.Content().front().Str();
+            out << Key << "content" << Value << rhs.Content().front();
         else
             out << Key << "content" << Value << rhs.Content();
 
@@ -610,7 +614,7 @@ namespace YAML {
                 out << Key << "name" << Value << rhs.Name();
             else
                 out << Key << "name" << Value << '-' << rhs.Name();
-            
+
             out << Key << "condition" << Value << rhs.Condition()
                 << EndMap;
         }
