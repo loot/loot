@@ -324,13 +324,13 @@ namespace boss {
                         while (pos2 != std::string::npos) {
                             name = boost::algorithm::trim_copy(addedList.substr(pos1,pos2-pos1));
                             if (tags.find(Tag(name)) == tags.end())
-                                tags.insert(Tag(name));
+                                tags.insert(Tag(name, true, it->Condition()));
                             pos1 = pos2+1;
                             pos2 = addedList.find(",", pos1);
                         }
                         name = boost::algorithm::trim_copy(addedList.substr(pos1));
                         if (tags.find(Tag(name)) == tags.end())
-                            tags.insert(Tag(name));
+                            tags.insert(Tag(name, true, it->Condition()));
                     }
 
                     if (!removedList.empty()) {
@@ -340,13 +340,13 @@ namespace boss {
                         while (pos2 != std::string::npos) {
                             name = boost::algorithm::trim_copy(removedList.substr(pos1,pos2-pos1));
                             if (tags.find(Tag(name, false)) == tags.end())
-                                tags.insert(Tag(name, false));
+                                tags.insert(Tag(name, false, it->Condition()));
                             pos1 = pos2+1;
                             pos2 = removedList.find(",", pos1);
                         }
                         name = boost::algorithm::trim_copy(removedList.substr(pos1));
                         if (tags.find(Tag(name, false)) == tags.end())
-                            tags.insert(Tag(name, false));
+                            tags.insert(Tag(name, false, it->Condition()));
                     }
 
                     it = messages.erase(it);
