@@ -50,7 +50,6 @@
 #include <boost/spirit/include/phoenix_stl.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/regex.hpp>
-#include <sstream>
 
 namespace boss {
 	namespace qi = boost::spirit::qi;
@@ -356,6 +355,7 @@ namespace boss {
             }
 
             plugin.Messages(messages);
+            plugin.Tags(tags);
         }
 
         void MakeMessage(Message& message, std::string& condition, unsigned int type, std::string& content) {
