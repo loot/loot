@@ -142,12 +142,13 @@ namespace boss {
 				) % +qi::eol;
 
 			listVar =
-				conditionals
+				(conditionals
 				>> unicode::no_case[qi::lit("set")]
 				>>	(
 						':'
 						> charString
-					);
+					))           [phoenix::bind(&LegacyMasterlistGrammar::RecordVarCondition, this, qi::_1, qi::_2)]
+                ;
 
 			globalMessage =
 				conditionals
@@ -196,16 +197,17 @@ namespace boss {
 				| unicode::no_case[unicode::string("else")][qi::_val = qi::_1]
 				| qi::eps [qi::_val = ""];
 
-			andOr %=
-				unicode::string("&&")
-				| unicode::string("||");
+			andOr =
+				qi::lit("&&")   [qi::_val = " and "]
+				| qi::lit("||") [qi::_val = " or "];
 
-			conditional %=
-				(
-					unicode::no_case[unicode::string("ifnot")
-					| unicode::string("if")]
-				)
-				> functCondition;
+			conditional =
+				(ifIfnot
+				> functCondition) [phoenix::bind(&LegacyMasterlistGrammar::ConvertVarCondition, this, qi::_val, qi::_1, qi::_2)];
+
+            ifIfnot %=
+                unicode::no_case[unicode::string("ifnot")
+                | unicode::string("if")];
 
 			functCondition %=
 				(
@@ -250,8 +252,8 @@ namespace boss {
 			conditionals.name("conditional");
 			andOr.name("andOr");
 			conditional.name("conditional");
+            ifIfnot.name("ifIfnot");
 			functCondition.name("condition");
-			shortCondition.name("condition");
 			variable.name("variable");
 			file.name("file");
 			checksum.name("checksum");
@@ -270,8 +272,8 @@ namespace boss {
 			qi::on_error<qi::fail>(conditionals,	phoenix::bind(&LegacyMasterlistGrammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
 			qi::on_error<qi::fail>(andOr,			phoenix::bind(&LegacyMasterlistGrammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
 			qi::on_error<qi::fail>(conditional,		phoenix::bind(&LegacyMasterlistGrammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
+			qi::on_error<qi::fail>(ifIfnot,	phoenix::bind(&LegacyMasterlistGrammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
 			qi::on_error<qi::fail>(functCondition,	phoenix::bind(&LegacyMasterlistGrammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
-			qi::on_error<qi::fail>(shortCondition,	phoenix::bind(&LegacyMasterlistGrammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
 			qi::on_error<qi::fail>(variable,		phoenix::bind(&LegacyMasterlistGrammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
 			qi::on_error<qi::fail>(file,			phoenix::bind(&LegacyMasterlistGrammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
 			qi::on_error<qi::fail>(checksum,		phoenix::bind(&LegacyMasterlistGrammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
@@ -286,8 +288,50 @@ namespace boss {
         qi::rule<Iter, Plugin(), Skipper<Iter> > listPlugin;
         qi::rule<Iter, std::list<Message>(), Skipper<Iter> > pluginMessages;
         qi::rule<Iter, Message(), Skipper<Iter> > pluginMessage;
-        qi::rule<Iter, unsigned int(), Skipper<Iter> > messageKeyword;
-		qi::rule<Iter, std::string(), Skipper<Iter> > charString, andOr, conditional, conditionals, functCondition, shortCondition, variable, file, checksum, version, comparator, regex, language;
+        qi::rule<Iter, unsigned int()> messageKeyword;
+		qi::rule<Iter, std::string(), Skipper<Iter> > charString, andOr, conditional, conditionals, ifIfnot, functCondition, variable, file, checksum, version, comparator, regex, language;
+
+        std::map<std::string, std::string> varConditionMap;
+
+        void RecordVarCondition(std::string& condition, std::string& var) {
+            boost::algorithm::to_lower(var);
+            boost::algorithm::to_lower(condition);
+            varConditionMap.insert(std::pair<std::string, std::string>(var, condition));
+        }
+
+        void ConvertVarCondition(std::string& output, std::string& ifIfnotStr, std::string& function) {
+            std::map<std::string, std::string>::const_iterator it;
+
+            boost::algorithm::to_lower(function);
+            boost::algorithm::to_lower(ifIfnotStr);
+
+            if (function.find("var(") == std::string::npos) {
+                output = ifIfnotStr + ' ' + function;
+                return;
+            }
+
+            size_t pos1 = function.find('(') + 1;
+            size_t pos2 = function.find(')');
+
+            std::string var = function.substr(pos1, pos2 - pos1);
+
+            it = varConditionMap.find(var);
+
+            if (it == varConditionMap.end())
+                throw boss::error(boss::error::condition_eval_fail, "The variable \"" + var + "\" was not previously defined.");
+
+            if (ifIfnotStr == "if")
+                output = it->second;
+            else {
+                std::string condition = it->second;
+
+                boost::algorithm::replace_all(condition, "if", "ifnot");
+                boost::algorithm::replace_all(condition, "ifnotnot", "if");
+
+                output = condition;
+            }
+
+        }
 
         void MakePlugin(Plugin& plugin, std::string& name, std::list<Message>& messages) {
             plugin.Name(boost::algorithm::trim_copy(name));
@@ -359,7 +403,36 @@ namespace boss {
         }
 
         void MakeMessage(Message& message, std::string& condition, unsigned int type, std::string& content) {
-            message = Message(type, content, condition);
+
+            //First check if the message has a language condition. If it does, remove it and use it to set the language of the message content.
+            boost::algorithm::to_lower(condition);
+
+            //Just in case there are multiple language conditions, erase them all and use the last.
+            std::string lang;
+            while (size_t pos1 = condition.find("lang(") != std::string::npos) {
+                pos1 += 6;
+                size_t pos2 = condition.find(')', pos1);
+
+                lang = condition.substr(pos1, pos2 - pos1);
+                pos1 -= 6;
+                condition.erase(pos1, pos2 + 1 - pos1);
+            }
+
+            //BOSSv2 supports Chinese and German in addition to English, Russian and Spanish, but they aren't used in any of the masterlists so don't bother mapping them.
+            unsigned int langInt;
+            if (lang == "english")
+                langInt = g_lang_any;
+            else if (lang == "russian")
+                langInt = g_lang_russian;
+            else if (lang == "spanish")
+                langInt = g_lang_spanish;
+            else
+                langInt = g_lang_any;
+
+            std::vector<MessageContent> mc_vec;
+            mc_vec.push_back(MessageContent(content, langInt));
+
+            message = Message(type, mc_vec, condition);
         }
 
 		//Parser error reporter.
@@ -371,7 +444,7 @@ namespace boss {
 		}
 	};
 
-    void Loadv2Masterlist(boost::filesystem::path& file, std::list<Plugin> plugins) {
+    void Loadv2Masterlist(boost::filesystem::path& file, std::list<Plugin>& plugins) {
         Skipper<std::string::const_iterator> skipper;
         LegacyMasterlistGrammar<std::string::const_iterator> grammar;
         std::string::const_iterator begin, end;
