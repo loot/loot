@@ -47,6 +47,7 @@
 #include <boost/spirit/include/phoenix_core.hpp>
 #include <boost/spirit/include/phoenix_operator.hpp>
 #include <boost/spirit/include/phoenix_bind.hpp>
+#include <boost/spirit/include/phoenix_stl.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/regex.hpp>
 #include <sstream>
@@ -130,14 +131,15 @@ namespace boss {
 			masterlistMsgKey_ masterlistMsgKey;
 			const std::list<Message> noMessages;  //An empty set of messages.
 
-			modList %=
+			modList =
 				*qi::eol
 				>
 				(
 					listVar
 					| globalMessage
                     | groupLine
-					| listPlugin
+					| listPlugin [phoenix::push_back(qi::_val, qi::_1)]
+                    | qi::eps
 				) % +qi::eol;
 
 			listVar =
@@ -159,15 +161,13 @@ namespace boss {
 
             groupLine =
                 conditionals
-                > (
-                    unicode::no_case[qi::lit("begingroup:")]
-                    | unicode::no_case[qi::lit("endgroup")]
-                  )
+                >> unicode::no_case[qi::lit("begingroup:")
+                    | qi::lit("endgroup")]
                 > charString;
 
 			listPlugin =
 				conditionals
-				> unicode::no_case[qi::lit("mod:") | qi::lit("regex:")]
+				> -unicode::no_case[qi::lit("mod:") | qi::lit("regex:")]
 				> (charString
 				> pluginMessages)  [phoenix::bind(&modlist_grammar::MakePlugin, this, qi::_val, qi::_1, qi::_2)]
                 ;
@@ -367,7 +367,7 @@ namespace boss {
 			std::string context(errorpos, min(errorpos +50, last));
             		boost::trim(context);
 
-			throw boss::error(boss::error::condition_eval_fail, "Error parsing condition at \"" + context + "\", expected \"" + what.tag + "\"");
+			throw boss::error(boss::error::condition_eval_fail, "Error parsing at \"" + context + "\", expected \"" + what.tag + "\"");
 		}
 	};
 }
