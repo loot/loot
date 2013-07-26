@@ -123,10 +123,10 @@ namespace boss {
 
 	//Modlist/Masterlist grammar.
 	template<typename Iter>
-	class modlist_grammar : public qi::grammar<Iter, std::list<Plugin>(), Skipper<Iter> > {
+	class LegacyMasterlistGrammar : public qi::grammar<Iter, std::list<Plugin>(), Skipper<Iter> > {
 	public:
-		modlist_grammar()
-			: modlist_grammar::base_type(modList, "modlist grammar") {
+		LegacyMasterlistGrammar()
+			: LegacyMasterlistGrammar::base_type(modList, "modlist grammar") {
 			masterlistMsgKey_ masterlistMsgKey;
 			const std::list<Message> noMessages;  //An empty set of messages.
 
@@ -168,7 +168,7 @@ namespace boss {
 				conditionals
 				> -unicode::no_case[qi::lit("mod:") | qi::lit("regex:")]
 				> (charString
-				> pluginMessages)  [phoenix::bind(&modlist_grammar::MakePlugin, this, qi::_val, qi::_1, qi::_2)]
+				> pluginMessages)  [phoenix::bind(&LegacyMasterlistGrammar::MakePlugin, this, qi::_val, qi::_1, qi::_2)]
                 ;
 
 			pluginMessages %=
@@ -181,7 +181,7 @@ namespace boss {
 				(conditionals
 				>> messageKeyword
 				>> ':'
-				>> charString) [phoenix::bind(&modlist_grammar::MakeMessage, this, qi::_val, qi::_1, qi::_2, qi::_3)]	//The double >> matters. A single > doesn't work.
+				>> charString) [phoenix::bind(&LegacyMasterlistGrammar::MakeMessage, this, qi::_val, qi::_1, qi::_2, qi::_3)]	//The double >> matters. A single > doesn't work.
 				;
 
 			charString %= qi::lexeme[+(unicode::char_ - qi::eol)]; //String, with no skipper.
@@ -260,25 +260,25 @@ namespace boss {
 			regex.name("regex file");
 			file.name("language");
 
-			qi::on_error<qi::fail>(modList,			phoenix::bind(&modlist_grammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
-			qi::on_error<qi::fail>(listVar,			phoenix::bind(&modlist_grammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
-			qi::on_error<qi::fail>(listPlugin,		phoenix::bind(&modlist_grammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
-			qi::on_error<qi::fail>(pluginMessages,	phoenix::bind(&modlist_grammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
-			qi::on_error<qi::fail>(pluginMessage,		phoenix::bind(&modlist_grammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
-			qi::on_error<qi::fail>(charString,		phoenix::bind(&modlist_grammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
-			qi::on_error<qi::fail>(messageKeyword,	phoenix::bind(&modlist_grammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
-			qi::on_error<qi::fail>(conditionals,	phoenix::bind(&modlist_grammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
-			qi::on_error<qi::fail>(andOr,			phoenix::bind(&modlist_grammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
-			qi::on_error<qi::fail>(conditional,		phoenix::bind(&modlist_grammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
-			qi::on_error<qi::fail>(functCondition,	phoenix::bind(&modlist_grammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
-			qi::on_error<qi::fail>(shortCondition,	phoenix::bind(&modlist_grammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
-			qi::on_error<qi::fail>(variable,		phoenix::bind(&modlist_grammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
-			qi::on_error<qi::fail>(file,			phoenix::bind(&modlist_grammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
-			qi::on_error<qi::fail>(checksum,		phoenix::bind(&modlist_grammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
-			qi::on_error<qi::fail>(version,			phoenix::bind(&modlist_grammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
-			qi::on_error<qi::fail>(comparator,		phoenix::bind(&modlist_grammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
-			qi::on_error<qi::fail>(regex,			phoenix::bind(&modlist_grammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
-			qi::on_error<qi::fail>(language,		phoenix::bind(&modlist_grammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
+			qi::on_error<qi::fail>(modList,			phoenix::bind(&LegacyMasterlistGrammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
+			qi::on_error<qi::fail>(listVar,			phoenix::bind(&LegacyMasterlistGrammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
+			qi::on_error<qi::fail>(listPlugin,		phoenix::bind(&LegacyMasterlistGrammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
+			qi::on_error<qi::fail>(pluginMessages,	phoenix::bind(&LegacyMasterlistGrammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
+			qi::on_error<qi::fail>(pluginMessage,		phoenix::bind(&LegacyMasterlistGrammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
+			qi::on_error<qi::fail>(charString,		phoenix::bind(&LegacyMasterlistGrammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
+			qi::on_error<qi::fail>(messageKeyword,	phoenix::bind(&LegacyMasterlistGrammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
+			qi::on_error<qi::fail>(conditionals,	phoenix::bind(&LegacyMasterlistGrammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
+			qi::on_error<qi::fail>(andOr,			phoenix::bind(&LegacyMasterlistGrammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
+			qi::on_error<qi::fail>(conditional,		phoenix::bind(&LegacyMasterlistGrammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
+			qi::on_error<qi::fail>(functCondition,	phoenix::bind(&LegacyMasterlistGrammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
+			qi::on_error<qi::fail>(shortCondition,	phoenix::bind(&LegacyMasterlistGrammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
+			qi::on_error<qi::fail>(variable,		phoenix::bind(&LegacyMasterlistGrammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
+			qi::on_error<qi::fail>(file,			phoenix::bind(&LegacyMasterlistGrammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
+			qi::on_error<qi::fail>(checksum,		phoenix::bind(&LegacyMasterlistGrammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
+			qi::on_error<qi::fail>(version,			phoenix::bind(&LegacyMasterlistGrammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
+			qi::on_error<qi::fail>(comparator,		phoenix::bind(&LegacyMasterlistGrammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
+			qi::on_error<qi::fail>(regex,			phoenix::bind(&LegacyMasterlistGrammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
+			qi::on_error<qi::fail>(language,		phoenix::bind(&LegacyMasterlistGrammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
 		}
 	private:
 		qi::rule<Iter, std::list<Plugin>(), Skipper<Iter> > modList;
@@ -370,5 +370,29 @@ namespace boss {
 			throw boss::error(boss::error::condition_eval_fail, "Error parsing at \"" + context + "\", expected \"" + what.tag + "\"");
 		}
 	};
+
+    void Loadv2Masterlist(boost::filesystem::path& file, std::list<Plugin> plugins) {
+        Skipper<std::string::const_iterator> skipper;
+        LegacyMasterlistGrammar<std::string::const_iterator> grammar;
+        std::string::const_iterator begin, end;
+        std::string contents;
+
+        boss::ifstream ifile(file);
+        ifile.unsetf(std::ios::skipws); // No white space skipping!
+
+        std::copy(
+            std::istream_iterator<char>(ifile),
+            std::istream_iterator<char>(),
+            std::back_inserter(contents)
+        );
+
+        begin = contents.begin();
+        end = contents.end();
+
+        bool r = phrase_parse(begin, end, grammar, skipper, plugins);
+
+        if (!r || begin != end)
+            throw boss::error(boss::error::path_read_fail, file.string());
+    }
 }
 #endif
