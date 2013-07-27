@@ -36,9 +36,9 @@ using namespace std;
 namespace boss {
 
     FormID::FormID() : id(0) {}
-    
+
     FormID::FormID(const std::string& sourcePlugin, const uint32_t objectID) : plugin(sourcePlugin), id(objectID) {}
-    
+
     FormID::FormID(const std::vector<std::string>& sourcePlugins, const uint32_t formID) {
         int index = formID >> 24;
         id = formID & ~((uint32_t)index << 24);
@@ -54,18 +54,18 @@ namespace boss {
     bool FormID::operator == (const FormID& rhs) const {
         return (id == rhs.Id() && boost::iequals(plugin, rhs.Plugin()));
     }
-    
+
     bool FormID::operator < (const FormID& rhs) const {
         if (id != rhs.Id())
             return id < rhs.Id();
         else
             return boost::ilexicographical_compare(plugin, rhs.Plugin());
     }
-    
+
     std::string FormID::Plugin() const {
         return plugin;
     }
-    
+
     uint32_t FormID::Id() const {
         return id;
     }
@@ -117,11 +117,11 @@ namespace boss {
     MessageContent::MessageContent() : _language(g_lang_any) {}
 
     MessageContent::MessageContent(const std::string& str, const unsigned int language) : _str(str), _language(language) {}
-    
+
     std::string MessageContent::Str() const {
         return _str;
     }
-    
+
     unsigned int MessageContent::Language() const {
         return _language;
     }
@@ -135,7 +135,7 @@ namespace boss {
     }
 
     Message::Message() {}
-    
+
     Message::Message(const unsigned int type, const std::string& content,
                      const std::string& condition) : _type(type), ConditionStruct(condition) {
         _content.push_back(MessageContent(content));
@@ -143,7 +143,7 @@ namespace boss {
 
     Message::Message(const unsigned int type, const std::vector<MessageContent>& content,
                 const std::string& condition) : _type(type), _content(content), ConditionStruct(condition) {}
-        
+
     bool Message::operator < (const Message& rhs) const {
         return boost::ilexicographical_compare(_content.front().Str(), rhs.Content().front().Str());
     }
@@ -254,20 +254,23 @@ namespace boss {
 
 	Plugin::Plugin(boss::Game& game, const std::string& n, const bool headerOnly)
 		: name(n), enabled(true), priority(0) {
-			
+
 		// Get data from file contents using libespm. Assumes libespm has already been initialised.
 		boost::filesystem::path filepath = game.DataPath() / n;
         espm::File file(filepath, game.espm_settings, false, headerOnly);
 
 		isMaster = file.isMaster(game.espm_settings);
 		masters = file.getMasters();
-		
+
+        crc = file.crc;
+        game.crcCache.insert(pair<string, uint32_t>(n, crc));
+
 		vector<uint32_t> records = file.getFormIDs();
         vector<string> plugins = masters;
         plugins.push_back(name);
 		for (vector<uint32_t>::const_iterator it = records.begin(),endIt = records.end(); it != endIt; ++it)
 			formIDs.insert(FormID(plugins, *it));
-            
+
         //If the name passed ends in '.ghost', that should be trimmed.
         if (boost::iends_with(name, ".ghost"))
             name = name.substr(0, name.length() - 6);
@@ -279,7 +282,7 @@ namespace boss {
 
                 string::const_iterator begin, end;
                 begin = text.begin();
-                end = text.end(); 
+                end = text.end();
 
                 for(int j = 0; j < 7 && version.empty(); j++) {
                     boost::smatch what;
@@ -295,7 +298,7 @@ namespace boss {
                         break;
                     }
                 }
-                
+
                 size_t pos1 = text.find("{{BASH:");
                 if (pos1 == string::npos)
                     break;
@@ -352,10 +355,10 @@ namespace boss {
         //Messages are in an ordered list, and should be fully merged.
         std::list<Message> pMessages = plugin.Messages();
         messages.insert(messages.end(), pMessages.begin(), pMessages.end());
-        
+
         return;
     }
-    
+
     Plugin Plugin::DiffMetadata(const Plugin& plugin) const {
         Plugin p(name);
         p.Priority(priority);
@@ -510,7 +513,7 @@ namespace boss {
     bool Plugin::operator != (const Plugin& rhs) const {
         return !(*this == rhs);
     }
-    
+
     std::set<FormID> Plugin::FormIDs() const {
 		return formIDs;
 	}
@@ -542,17 +545,21 @@ namespace boss {
 		}
 		return fidSubset;
     }
-    
+
 	std::vector<std::string> Plugin::Masters() const {
 		return masters;
 	}
-	
+
 	bool Plugin::IsMaster() const {
 		return isMaster;
 	}
 
     std::string Plugin::Version() const {
         return version;
+    }
+
+    uint32_t Plugin::Crc() const {
+        return crc;
     }
 
     bool Plugin::MustLoadAfter(const Plugin& plugin) const {
@@ -593,7 +600,7 @@ namespace boss {
         for (set<File>::const_iterator it=incompatibilities.begin(), endit=incompatibilities.end(); it != endit; ++it) {
             incs.insert(boost::to_lower_copy(it->Name()));
         }
-        
+
         //Check 1: None of this plugin's masters or requirements or 'load after' plugins may be in branch.
         //Check 2: None of this plugin's masters or requirements or 'load after' plugins may be in incs.
         //Check 3: None of this plugin's incompatibilities may be present in branch.
@@ -651,7 +658,7 @@ namespace boss {
     bool operator == (const File& lhs, const Plugin& rhs) {
         return boost::iequals(lhs.Name(), rhs.Name());
     }
-    
+
     bool operator == (const Plugin& lhs, const File& rhs) {
         return rhs == lhs;
     }
@@ -674,7 +681,7 @@ namespace boss {
 
         if (lhs.Priority() < rhs.Priority())
             return true;
-            
+
         if (lhs.Priority() > rhs.Priority())
             return false;
 

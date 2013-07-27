@@ -87,7 +87,7 @@ namespace boss {
                 const std::string& condition = "");
         Message(const unsigned int type, const std::vector<MessageContent>& content,
                 const std::string& condition = "");
-                
+
         bool operator < (const Message& rhs) const;
         bool operator == (const Message& rhs) const;
 
@@ -149,11 +149,12 @@ namespace boss {
         std::set<File> Incs() const;
         std::list<Message> Messages() const;
         std::set<Tag> Tags() const;
-        
+
         std::set<FormID> FormIDs() const;
         std::vector<std::string> Masters() const;
         bool IsMaster() const;  //Checks master bit flag.
         std::string Version() const;
+        uint32_t Crc() const;
 
         void Name(const std::string& name);
         void Enabled(const bool enabled);
@@ -189,17 +190,18 @@ namespace boss {
         std::set<File> incompatibilities;
         std::list<Message> messages;
         std::set<Tag> tags;
-        
+
         std::vector<std::string> masters;
         std::set<FormID> formIDs;
         std::string version;  //Obtained from description field.
         bool isMaster;
+        uint32_t crc;
     };
-    
+
     bool operator == (const File& lhs, const Plugin& rhs);
-    
+
     bool operator == (const Plugin& lhs, const File& rhs);
-    
+
     bool operator == (const std::string& lhs, const Plugin& rhs);
 
     bool alpha_sort(const Plugin& lhs, const Plugin& rhs);
