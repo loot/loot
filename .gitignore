@@ -46,6 +46,8 @@ Thumbs.db
 *.opensdf
 externals/
 build/
+docs/html
+docs/latex
 out/
 bin/
 ipch/

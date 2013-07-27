@@ -114,7 +114,6 @@ This documentation is a work in progress, covering an application that is also s
         <li><a href="#appendix-permissions">File Permissions</a>
     </ol>
     <li><a href="#history">Version History</a>
-    <li><a href="BOSS%20API%20Readme.html">API Readme</a> (separate document)
     <li><a href="BOSS%20Metadata%20Syntax.html">Metadata Syntax</a> (separate document)
 </ol>
 
@@ -221,7 +220,7 @@ This documentation is a work in progress, covering an application that is also s
     <tbody>
         <tr><td>Enable User Changes<td>If this is checked, BOSS will use the metadata you supplied when sorting the current plugin. Otherwise, your metadata will be ignored.
         <tr><td>Priority<td>This is a very rough control for determining how far up or down the load order a plugin should go. Plugins with equal priority will be compared as normal by the sorting algorithm, but plugins with a larger priority value will load later in the load order than plugins with a smaller priority value, unless the former depends on the latter or the latter is explicity told to load after the former. Plugins have a default priority of <code>0</code>.
-        <tr><td>Requirements<td>This is a list of files that are required by the current plugin for it to function correctly. BOSS will refuse to sort your load order if any of the listed files are missing, and will instead display an error message detailing the problem. 
+        <tr><td>Requirements<td>This is a list of files that are required by the current plugin for it to function correctly. BOSS will refuse to sort your load order if any of the listed files are missing, and will instead display an error message detailing the problem.
         <p>Any file, not just plugins, can be listed here, and each file has three sub-fields:
         <ul>
             <li>The <var>filename</var> is the path, relative to the game's Data folder, of the file to be checked for. This sub-field is required.
@@ -238,7 +237,7 @@ This documentation is a work in progress, covering an application that is also s
             <li>The <var>type</var> is fairly self-explanatory, and is used to provide messages of varying severity with appropriate emphasis in BOSS's report.
             <li>The <var>content</var> is the actual message text.
             <li>The <var>condition</var> is, like for the corresponding file sub-field, used to determine if the message should be displayed. If left blank, the message is displayed.
-            <li>The <var>language</var> is the language BOSS runs in that the message will be displayed for. For example, if the message language is set to <code>English</code> and BOSS is running in German, then the message will not be displayed. If left unspecified, the message will be shown no matter what language BOSS is running in. 
+            <li>The <var>language</var> is the language BOSS runs in that the message will be displayed for. For example, if the message language is set to <code>English</code> and BOSS is running in German, then the message will not be displayed. If left unspecified, the message will be shown no matter what language BOSS is running in.
         </ul>
         <p>If a message's condition determines that the message should be displayed, but the language is specified and doesn't match the language BOSS is running in, then the message will not be displayed. However, if the condition determines the message should not be displayed and the language matches the language BOSS is running in, the message will still not be displayed.
         <tr><td>Bash Tags<td>A list of Bash Tags. These are used by the <abbr title="Wrye Bash, Wrye Flash or Wrye Flash NV">Wrye *ash</abbr> utilities when generating a Bashed Patch. BOSS's metadata includes Bash Tag addition and removal suggestions, and any Bash Tags that came with the plugin are also displayed.
@@ -285,7 +284,7 @@ This documentation is a work in progress, covering an application that is also s
         <tr><td>BOSS Folder Name<td>The sub-folder which BOSS uses to store the game's files in. Each game must be given a unique sub-folder.
         <tr><td>Master File<td>The game's main master file. This is specified as it must load before all other plugins. Note that Skyrim-based games will always load Skyrim.esm first, so this column must always be set to <q>Skyrim.esm</q> for such games.
         <tr><td id="settingsMasterlistURL">Online Masterlist URL<td>The URL of the online masterlist that BOSS uses to update its local copy. If set to an empty string, masterlist updating will be skipped.
-        <tr><td>Install Path<td>The path to the game's folder, in which the Data folder lies. 
+        <tr><td>Install Path<td>The path to the game's folder, in which the Data folder lies.
         <tr><td>Install Path Registry Key<td>The registry key, in <code>HKEY_LOCAL_MACHINE</code>, that contains the install path of the game. This may be used to obtain the install path of a game the first time BOSS runs for it.
 </table>
 <p>Note that for Skyrim, multiple copies or Total Conversions will all edit the same <code>plugins.txt</code> file, and so they lack the level of independence that is achievable for other games.
