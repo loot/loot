@@ -84,11 +84,15 @@ struct _boss_db_int {
         extRemovedTagIds(NULL),
         extMessageArray(NULL),
         extMessageArraySize(0) {
+
+        extMessage.type = boss_message_say;
+        extMessage.message = NULL;
     }
 
     ~_boss_db_int() {
         delete [] extAddedTagIds;
         delete [] extRemovedTagIds;
+        delete [] extMessage.message;
 
         if (extTagMap != NULL) {
             for (size_t i=0; i < bashTagMap.size(); i++)
@@ -113,6 +117,7 @@ struct _boss_db_int {
     unsigned int * extAddedTagIds;
     unsigned int * extRemovedTagIds;
 
+    boss_message extMessage;
     boss_message * extMessageArray;
     size_t extMessageArraySize;
 };
@@ -548,6 +553,8 @@ BOSS_API unsigned int boss_get_plugin_messages (boss_db db, const char * const p
 
     pluginIt = std::find(db->userMetadata.begin(), db->userMetadata.end(), boss::Plugin(plugin));
     if (pluginIt != db->userMetadata.end()) {
+        std::list<boss::Message> temp = pluginIt->Messages();
+        pluginMessages.insert(pluginMessages.end(), temp.begin(), temp.end());
     }
 
     db->extMessageArraySize = pluginMessages.size();
@@ -568,6 +575,64 @@ BOSS_API unsigned int boss_get_plugin_messages (boss_db db, const char * const p
 
     return boss_ok;
 }
+
+// Outputs the first warning message found for the given plugin that warns about dirty edits, and also whether the plugin should be cleaned or not, or if BOSS doesn't know (ie. no message, in which case *message == NULL). needsCleaning is one of the plugin cleanliness codes above.
+BOSS_API unsigned int boss_get_dirty_message (boss_db db, const char * const plugin,
+                                              boss_message * const message,
+                                              unsigned int * const needsCleaning) {
+    if (db == NULL || plugin == NULL || message == NULL || needsCleaning == NULL)
+        return boss_error_invalid_args;
+
+    //Clear existing allocation.
+    if (db->extMessage.message != NULL) {
+        delete [] db->extMessage.message;
+    }
+
+    *message = db->extMessage;
+    *needsCleaning = boss_needs_cleaning_unknown;
+
+    //Get all messages.
+    std::list<boss::Message> pluginMessages;
+    std::list<boss::Plugin>::iterator pluginIt = std::find(db->metadata.begin(), db->metadata.end(), boss::Plugin(plugin));
+    if (pluginIt != db->metadata.end()) {
+        pluginMessages = pluginIt->Messages();
+    }
+
+    pluginIt = std::find(db->userMetadata.begin(), db->userMetadata.end(), boss::Plugin(plugin));
+    if (pluginIt != db->userMetadata.end()) {
+        std::list<boss::Message> temp = pluginIt->Messages();
+        pluginMessages.insert(pluginMessages.end(), temp.begin(), temp.end());
+    }
+
+    //Now discard any that aren't warnings about dirty edits.
+    std::list<boss::Message>::iterator it=pluginMessages.begin();
+    while (it != pluginMessages.end()) {
+        if (it->ChooseContent(boss::g_lang_any).Str().find("dirty edits") == std::string::npos)
+            it = pluginMessages.erase(it);
+    }
+
+    if (!pluginMessages.empty()) {
+        boss::Message dirtyMessage = pluginMessages.front();
+
+        try {
+            db->extMessage.type = dirtyMessage.Type();
+            db->extMessage.message = ToNewCString(dirtyMessage.ChooseContent(boss::g_lang_any).Str());
+        } catch (std::bad_alloc& e) {
+            extMessageStr = e.what();
+            return boss_error_no_mem;
+        }
+
+        *message = db->extMessage;
+        if (dirtyMessage.Type() == boss_message_say)
+            *needsCleaning = boss_needs_cleaning_no;
+        else
+            *needsCleaning = boss_needs_cleaning_yes;
+
+    }
+
+    return boss_ok;
+}
+
 
 // Writes a minimal masterlist that only contains mods that have Bash Tag suggestions,
 // and/or dirty messages, plus the Tag suggestions and/or messages themselves and their

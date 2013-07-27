@@ -115,6 +115,11 @@ BOSS_API extern const unsigned int boss_lang_english;
 BOSS_API extern const unsigned int boss_lang_spanish;
 BOSS_API extern const unsigned int boss_lang_russian;
 
+// BOSS plugin cleanliness codes.
+BOSS_API extern const unsigned int boss_needs_cleaning_no;
+BOSS_API extern const unsigned int boss_needs_cleaning_yes;
+BOSS_API extern const unsigned int boss_needs_cleaning_unknown;
+
 
 //////////////////////////////
 // Error Handling Functions
@@ -210,6 +215,11 @@ BOSS_API unsigned int boss_get_plugin_tags (boss_db db, const char * const plugi
 BOSS_API unsigned int boss_get_plugin_messages (boss_db db, const char * const plugin,
                                                 boss_message ** const messages,
                                                 size_t * const numMessages);
+
+// Outputs the first warning message found for the given plugin that warns about dirty edits, and also whether the plugin should be cleaned or not, or if BOSS doesn't know (ie. no message, in which case *message == NULL). needsCleaning is one of the plugin cleanliness codes above.
+BOSS_API unsigned int boss_get_dirty_message (boss_db db, const char * const plugin,
+                                              boss_message * const message,
+                                              unsigned int * const needsCleaning);
 
 // Writes a minimal masterlist that only contains mods that have Bash Tag suggestions,
 // and/or dirty messages, plus the Tag suggestions and/or messages themselves and their
