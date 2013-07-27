@@ -421,7 +421,7 @@ namespace boss {
             //BOSSv2 supports Chinese and German in addition to English, Russian and Spanish, but they aren't used in any of the masterlists so don't bother mapping them.
             unsigned int langInt;
             if (lang == "english")
-                langInt = g_lang_any;
+                langInt = g_lang_english;
             else if (lang == "russian")
                 langInt = g_lang_russian;
             else if (lang == "spanish")

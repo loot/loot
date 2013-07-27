@@ -29,6 +29,7 @@
 #include "../backend/generators.h"
 #include "../backend/error.h"
 #include "../backend/streams.h"
+#include "../backend/legacy-parser.h"
 
 #include <yaml-cpp/yaml.h>
 
@@ -238,11 +239,25 @@ BOSS_API unsigned int boss_load_lists (boss_db db, const char * const masterlist
 
     std::list<boss::Plugin> temp;
     std::list<boss::Plugin> userTemp;
-    try {
-        YAML::Node tempNode = YAML::LoadFile(masterlistPath);
-        temp = tempNode["plugins"].as< std::list<boss::Plugin> >();
 
-        tempNode = YAML::LoadFile(userlistPath);
+    try {
+        if (boost::algorithm::iends_with(masterlistPath, ".yaml")) {
+            YAML::Node tempNode = YAML::LoadFile(masterlistPath);
+            temp = tempNode["plugins"].as< std::list<boss::Plugin> >();
+        } else {
+            boost::filesystem::path p(masterlistPath);
+            Loadv2Masterlist(p, temp);
+        }
+    } catch (YAML::Exception& e) {
+        extMessageStr = e.what();
+        return boss_error_parse_fail;
+    } catch (boss::error& e) {
+        extMessageStr = e.what();
+        return boss_error_parse_fail;
+    }
+
+    try {
+        YAML::Node tempNode = YAML::LoadFile(userlistPath);
         userTemp = tempNode["plugins"].as< std::list<boss::Plugin> >();
     } catch (YAML::Exception& e) {
         extMessageStr = e.what();
