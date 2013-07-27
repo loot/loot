@@ -302,6 +302,11 @@ namespace boss {
                 node.append_attribute("class").set_value("mod");
                 node.text().set(it->Name().c_str());
 
+                node = plugin.append_child();
+                node.set_name("span");
+                node.append_attribute("class").set_value("crc");
+                node.text().set(("CRC: " + IntToHexString(it->Crc())).c_str());
+
                 if (!it->Version().empty()) {
                     node = plugin.append_child();
                     node.set_name("span");
@@ -384,6 +389,15 @@ namespace boss {
         input.append_attribute("id").set_value("hideVersionNumbers");
         input.append_attribute("data-class").set_value("version");
         input.text().set("Hide Version Numbers");
+
+        label = filters.append_child();
+        label.set_name("label");
+        input = label.append_child();
+        input.set_name("input");
+        input.append_attribute("type").set_value("checkbox");
+        input.append_attribute("id").set_value("hideCRCs");
+        input.append_attribute("data-class").set_value("crc");
+        input.text().set("Hide CRCs");
 
         label = filters.append_child();
         label.set_name("label");

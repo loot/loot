@@ -183,6 +183,7 @@ function setupEventHandlers() {
         i--;
     }
     document.getElementById('hideVersionNumbers').addEventListener('click', toggleDisplayCSS, false);
+    document.getElementById('hideCRCs').addEventListener('click', toggleDisplayCSS, false);
     document.getElementById('hideNotes').addEventListener('click', toggleMessages, false);
     document.getElementById('hideBashTags').addEventListener('click', toggleMessages, false);
     document.getElementById('hideDoNotCleanMessages').addEventListener('click', toggleMessages, false);
