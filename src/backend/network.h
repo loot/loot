@@ -31,7 +31,7 @@
 
 namespace boss {
 
-    /* Masterlist updating is carried out using subversion. Haven't decided whether to use its API (which is in C and a bit complex) or call its executables via system().
+    /* Masterlist updating is carried out using subversion's executables via system() since it's API has too many dependencies to build myself.
 
     Basic workflow is:
 
@@ -55,6 +55,25 @@ namespace boss {
     would then roll the masterlist back one revision.
 
     ```svn info masterlist.txt``` returns a bunch of info: the line "Revision: XXXX" contains the revision number.
+    */
+
+    /* Also looking into adding Git support (issue #29). Git support would involve sparse checkouts of the masterlists into each game folder, with the masterlists sitting in the root of each game's repository online.
+
+    Not sure how to handle the URL stuff with Git, because while Subversion allows you to pass it a URL and assumes that it goes to a location on a SVN server, with Git it needs to know the repository URL (with git extension), and then also the relative path of the file you want to checkout within the repository.
+
+    Perhaps it's best to use a false URL that includes the ".git" extension at the location of the repository, eg.
+
+    https://github.com/WrinklyNinja/BOSSv3.git/README.md
+
+    That's not actually a valid URL, but it means that it can be split up in code into
+
+    https://github.com/WrinklyNinja/BOSSv3.git
+
+    and
+
+    /README.md
+
+    which is what is needed, AFAIK.
     */
 
     std::string UpdateMasterlist(const Game& game, std::vector<std::string>& parsingErrors);

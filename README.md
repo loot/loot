@@ -18,9 +18,9 @@ At the moment, BOSSv3 is in alpha testing, and so is not recommended for use unl
 
 ## About This Repository
 
-This repository holds the source code and documentation for BOSS v3. The masterlists, along with the source code and documentation for previous versions of BOSS, are stored in BOSS's [Google Code repository](http://code.google.com/p/better-oblivion-sorting-software/). 
+This repository holds the source code and documentation for BOSS v3. The masterlists, along with the source code and documentation for previous versions of BOSS, are stored in BOSS's [Google Code repository](http://code.google.com/p/better-oblivion-sorting-software/).
 
-The reason for the split is that GitHub offers a more feature-rich project hosting service than Google Code, but BOSS has been using the latter site for most of its existence. As most of the BOSS team maintain the masterlists and don't develop the program itself, splitting the masterlists and everything else between the two sites minimises any disruption while taking advantage of GitHub's superior service. 
+The reason for the split is that GitHub offers a more feature-rich project hosting service than Google Code, but BOSS has been using the latter site for most of its existence. As most of the BOSS team maintain the masterlists and don't develop the program itself, splitting the masterlists and everything else between the two sites minimises any disruption while taking advantage of GitHub's superior service.
 
 
 ## Build Instructions
@@ -32,6 +32,7 @@ BOSS requires the following libraries:
 * [Alphanum](http://www.davekoelle.com/files/alphanum.hpp)
 * [Boost](http://www.boost.org) v1.54.0 or later.
 * [Libespm](http://github.com/WrinklyNinja/libespm)
+* [Libgit2](https://github.com/libgit2) v0.19.0.
 * [Libloadorder](http://github.com/WrinklyNinja/libloadorder)
 * [PugiXML](http://code.google.com/p/pugixml/) v1.2 or later.
 * [wxWidgets](http://www.wxwidgets.org) v2.9.5 or later.

@@ -37,7 +37,7 @@
 #   include "windows.h"
 #   include "shlobj.h"
 #endif
-#define BUFSIZE 4096 
+#define BUFSIZE 4096
 
 using namespace std;
 
@@ -51,14 +51,14 @@ namespace boss {
 
         SECURITY_ATTRIBUTES saAttr;
 
-        PROCESS_INFORMATION piProcInfo; 
+        PROCESS_INFORMATION piProcInfo;
         STARTUPINFO siStartInfo;
 
         CHAR chBuf[BUFSIZE];
         DWORD dwRead;
-        
+
         DWORD exitCode;
-        
+
         //Init attributes.
         saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
         saAttr.bInheritHandle = TRUE;
@@ -75,7 +75,7 @@ namespace boss {
         ZeroMemory(&piProcInfo, sizeof(PROCESS_INFORMATION));
 
         ZeroMemory(&siStartInfo, sizeof(STARTUPINFO));
-        siStartInfo.cb = sizeof(STARTUPINFO); 
+        siStartInfo.cb = sizeof(STARTUPINFO);
         siStartInfo.hStdError = consoleWrite;
         siStartInfo.hStdOutput = consoleWrite;
         siStartInfo.dwFlags |= STARTF_USESTDHANDLES | STARTF_USESHOWWINDOW;
@@ -85,15 +85,15 @@ namespace boss {
         wchar_t * cmdLine = new wchar_t[utf16Len];
         MultiByteToWideChar(CP_UTF8, 0, command.c_str(), -1, cmdLine, utf16Len);
 
-        bool result = CreateProcess(NULL, 
-            cmdLine,     // command line 
-            NULL,          // process security attributes 
-            NULL,          // primary thread security attributes 
-            TRUE,          // handles are inherited 
-            0,             // creation flags 
-            NULL,          // use parent's environment 
-            NULL,          // use parent's current directory 
-            &siStartInfo,  // STARTUPINFO pointer 
+        bool result = CreateProcess(NULL,
+            cmdLine,     // command line
+            NULL,          // process security attributes
+            NULL,          // primary thread security attributes
+            TRUE,          // handles are inherited
+            0,             // creation flags
+            NULL,          // use parent's environment
+            NULL,          // use parent's current directory
+            &siStartInfo,  // STARTUPINFO pointer
             &piProcInfo);  // receives PROCESS_INFORMATION
 
         delete [] cmdLine;
@@ -109,14 +109,14 @@ namespace boss {
             BOOST_LOG_TRIVIAL(error) << "Could not get Subversion process exit code.";
             throw error(error::subversion_error, "Could not get Subversion process exit code.");
         }
-        
+
         if (!ReadFile(consoleRead, chBuf, BUFSIZE, &dwRead, NULL)) {
             BOOST_LOG_TRIVIAL(error) << "Could not read Subversion process output.";
             throw error(error::subversion_error, "Could not read Subversion process output.");
         }
-            
+
         output = string(chBuf, dwRead);
-        
+
         return exitCode == 0;
     }
 
@@ -124,11 +124,11 @@ namespace boss {
     string GetRevision(const std::string& buffer) {
         string revision, date;
         size_t pos1, pos2;
-        
+
         pos1 = buffer.rfind("Revision: ");
         if (pos1 == string::npos)
             return "";
-        
+
         pos2 = buffer.find('\n', pos1);
 
         revision = buffer.substr(pos1+10, pos2-pos1-10);
@@ -142,7 +142,7 @@ namespace boss {
     }
 
     std::string UpdateMasterlist(const Game& game, std::vector<std::string>& parsingErrors) {
-        
+
         string command, output, revision;
         //First check if the working copy is set up or not.
         command = g_path_svn.string() + " info \"" + game.MasterlistPath().string() + "\"";
@@ -158,7 +158,7 @@ namespace boss {
             else
                 return "N/A";
         }
-        
+
         if (!success) {
             BOOST_LOG_TRIVIAL(trace) << "Working copy is not set up, checking out repository.";
             //Working copy not set up, perform a checkout.
