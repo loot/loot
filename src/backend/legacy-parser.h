@@ -69,8 +69,8 @@ namespace boss {
 			add //New Message keywords.
 				("say",g_message_say)
                 ("tag",g_message_tag)
-				("req",g_message_say)
-				("inc", g_message_say)
+			//	("req",g_message_say)
+			//	("inc", g_message_say)
 				("dirty",g_message_warn)
 				("warn",g_message_warn)
 				("error",g_message_error)
@@ -181,7 +181,7 @@ namespace boss {
 			pluginMessages %=
 				(
 					+qi::eol
-					>> pluginMessage % +qi::eol
+					>> ( pluginMessage | pluginReqMessage | pluginIncMessage ) % +qi::eol
 				) | qi::eps		[qi::_1 = noMessages];
 
 			pluginMessage =
@@ -190,6 +190,30 @@ namespace boss {
 				>> ':'
 				>> charString) [phoenix::bind(&LegacyMasterlistGrammar::MakeMessage, this, qi::_val, qi::_1, qi::_2, qi::_3)]	//The double >> matters. A single > doesn't work.
 				;
+
+            pluginReqMessage =
+				(
+                conditionals       [phoenix::ref(lastConditional) = qi::_1]
+				>> reqMessageKeyword
+                >> ':'
+				>> charString[qi::_1 = "Requires: " + qi::_1]
+                ) [phoenix::bind(&LegacyMasterlistGrammar::MakeMessage, this, qi::_val, qi::_1, qi::_2, qi::_3)]	//The double >> matters. A single > doesn't work.
+				;
+
+            pluginIncMessage =
+				(
+                conditionals       [phoenix::ref(lastConditional) = qi::_1]
+				>> incMessageKeyword
+				>> ':'
+				>> charString[qi::_1 = "Incompatible with: " + qi::_1]
+                ) [phoenix::bind(&LegacyMasterlistGrammar::MakeMessage, this, qi::_val, qi::_1, qi::_2, qi::_3)]	//The double >> matters. A single > doesn't work.
+				;
+
+            incMessageKeyword =
+                unicode::no_case[qi::lit("inc")]    [qi::_val = g_message_say];
+
+            reqMessageKeyword =
+                unicode::no_case[qi::lit("req")]    [qi::_val = g_message_say];
 
 			charString %= qi::lexeme[+(unicode::char_ - qi::eol)]; //String, with no skipper.
 
@@ -318,8 +342,8 @@ namespace boss {
         qi::rule<Iter, Skipper<Iter> > listVar, groupLine;
         qi::rule<Iter, Plugin(), Skipper<Iter> > listPlugin;
         qi::rule<Iter, std::list<Message>(), Skipper<Iter> > pluginMessages;
-        qi::rule<Iter, Message(), Skipper<Iter> > globalMessage, pluginMessage;
-        qi::rule<Iter, unsigned int()> messageKeyword;
+        qi::rule<Iter, Message(), Skipper<Iter> > globalMessage, pluginMessage, pluginReqMessage, pluginIncMessage;
+        qi::rule<Iter, unsigned int()> messageKeyword, reqMessageKeyword, incMessageKeyword;
 		qi::rule<Iter, std::string(), Skipper<Iter> > charString, andOr, conditional, conditionals, ifIfnot, functCondition, variable, file, checksum, version, comparator, regex, language;
 
         std::map<std::string, std::string> varConditionMap;
