@@ -85,8 +85,7 @@ echo "using gcc : 4.6.3 : i686-w64-mingw32-g++ : <rc>i686-w64-mingw32-windres <a
 ### zlib
 
 ```
-mkdir build
-cd build
+mkdir build && cd build
 cmake .. -DCMAKE_C_FLAGS=-m32 -DPROJECT_ARCH=32 -DCMAKE_TOOLCHAIN_FILE=../BOSSv3/mingw-toolchain.cmake
 make
 cp zconf.h ../zconf.h
@@ -100,13 +99,20 @@ cmake . -DCMAKE_C_FLAGS=-m32 -DPROJECT_ARCH=32 -DCMAKE_TOOLCHAIN_FILE=../BOSSv3/
 
 ### Libloadorder
 
-Follow the instructions in libloadorder's README to build it as a static library.
+Follow the instructions in libloadorder's README.md to build it as a static library.
+
+### Libgit2
+
+```
+mkdir build && cd build
+cmake .. -DBUILD_SHARED_LIBS=OFF -DCMAKE_C_FLAGS=-m32 -DPROJECT_ARCH=32 -DCMAKE_TOOLCHAIN_FILE=../BOSSv3/mingw-toolchain.cmake
+
+```
 
 ### BOSS
 
 ```
-mkdir build
-cd build
+mkdir build && cd build
 cmake .. -DPROJECT_LIBS_DIR=.. -DPROJECT_ARCH=32 -DPROJECT_LINK=STATIC -DCMAKE_TOOLCHAIN_FILE=mingw-toolchain.cmake
 make
 ```

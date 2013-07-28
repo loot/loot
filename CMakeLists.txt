@@ -16,7 +16,7 @@ set (BOSS_SRC "${CMAKE_SOURCE_DIR}/src/backend/metadata.cpp" "${CMAKE_SOURCE_DIR
 set (BOSS_SRC ${BOSS_SRC} "${PROJECT_LIBS_DIR}/boost/libs/iostreams/src/file_descriptor.cpp")
 
 # Include source and library directories.
-include_directories ("${PROJECT_LIBS_DIR}/alphanum" "${PROJECT_LIBS_DIR}/boost" "${PROJECT_LIBS_DIR}/yaml-cpp/include" "${CMAKE_SOURCE_DIR}/src" "${PROJECT_LIBS_DIR}/libloadorder/src" "${PROJECT_LIBS_DIR}/libespm" "${PROJECT_LIBS_DIR}/zlib" "${PROJECT_LIBS_DIR}/pugixml/src" "${PROJECT_LIBS_DIR}/wxWidgets/include")
+include_directories ("${PROJECT_LIBS_DIR}/alphanum" "${PROJECT_LIBS_DIR}/boost" "${PROJECT_LIBS_DIR}/yaml-cpp/include" "${CMAKE_SOURCE_DIR}/src" "${PROJECT_LIBS_DIR}/libloadorder/src" "${PROJECT_LIBS_DIR}/libespm" "${PROJECT_LIBS_DIR}/zlib" "${PROJECT_LIBS_DIR}/pugixml/src" "${PROJECT_LIBS_DIR}/wxWidgets/include" "${PROJECT_LIBS_DIR}/libgit2/include")
 
 
 ##############################
@@ -61,7 +61,7 @@ IF (CMAKE_HOST_SYSTEM_NAME MATCHES "Linux")
         set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--subsystem,windows")
     ENDIF ()
 
-    set (BOSS_LIBS ${BOSS_LIBS} zlibstatic loadorder${PROJECT_ARCH} yaml-cpp boost_log_setup boost_log boost_locale  boost_thread_win32 boost_chrono boost_date_time boost_filesystem boost_system boost_regex)
+    set (BOSS_LIBS ${BOSS_LIBS} git2 zlibstatic loadorder${PROJECT_ARCH} yaml-cpp boost_log_setup boost_log boost_locale  boost_thread_win32 boost_chrono boost_date_time boost_filesystem boost_system boost_regex)
 ENDIF ()
 
 # Settings when compiling on Windows.
