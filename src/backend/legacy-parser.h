@@ -130,13 +130,14 @@ namespace boss {
 			: LegacyMasterlistGrammar::base_type(modList, "modlist grammar") {
 			masterlistMsgKey_ masterlistMsgKey;
 			const std::list<Message> noMessages;  //An empty set of messages.
+            globalMessageBuffer = NULL;
 
 			modList =
 				*qi::eol
 				>
 				(
 					listVar
-					| globalMessage
+					| globalMessage     [phoenix::bind(&LegacyMasterlistGrammar::StoreGlobalMessage, this, qi::_1)]
                     | groupLine
 					| listPlugin [phoenix::push_back(qi::_val, qi::_1)]
                     | qi::eps
@@ -152,13 +153,15 @@ namespace boss {
                 ;
 
 			globalMessage =
-				conditionals       [phoenix::ref(lastConditional) = qi::_1]
+				(conditionals       [phoenix::ref(lastConditional) = qi::_1]
 				>> unicode::no_case[qi::lit("global")]
 				>>	(
 						messageKeyword
 						>> ':'
 						>> charString
-					);
+                    )
+                )[phoenix::bind(&LegacyMasterlistGrammar::MakeMessage, this, qi::_val, qi::_1, qi::_2, qi::_3)]
+                ;
 
             groupLine =
                 conditionals       [phoenix::ref(lastConditional) = qi::_1]
@@ -304,17 +307,27 @@ namespace boss {
 			qi::on_error<qi::fail>(regex,			phoenix::bind(&LegacyMasterlistGrammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
 			qi::on_error<qi::fail>(language,		phoenix::bind(&LegacyMasterlistGrammar::SyntaxError, this, qi::_1, qi::_2, qi::_3, qi::_4));
 		}
+
+        void SetGlobalMessageBuffer(std::list<Message> * buffer) {
+            globalMessageBuffer = buffer;
+        }
 	private:
 		qi::rule<Iter, std::list<Plugin>(), Skipper<Iter> > modList;
-        qi::rule<Iter, Skipper<Iter> > listVar, globalMessage, groupLine;
+        qi::rule<Iter, Skipper<Iter> > listVar, groupLine;
         qi::rule<Iter, Plugin(), Skipper<Iter> > listPlugin;
         qi::rule<Iter, std::list<Message>(), Skipper<Iter> > pluginMessages;
-        qi::rule<Iter, Message(), Skipper<Iter> > pluginMessage;
+        qi::rule<Iter, Message(), Skipper<Iter> > globalMessage, pluginMessage;
         qi::rule<Iter, unsigned int()> messageKeyword;
 		qi::rule<Iter, std::string(), Skipper<Iter> > charString, andOr, conditional, conditionals, ifIfnot, functCondition, variable, file, checksum, version, comparator, regex, language;
 
         std::map<std::string, std::string> varConditionMap;
         std::string lastConditional;
+        std::list<Message> * globalMessageBuffer;
+
+        void StoreGlobalMessage(Message& message) {
+            if (globalMessageBuffer != NULL)
+                globalMessageBuffer->push_back(message);
+        }
 
         void RecordVarCondition(std::string& condition, std::string& var) {
             varConditionMap.insert(std::pair<std::string, std::string>(boost::to_lower_copy(var), condition));
@@ -607,11 +620,13 @@ namespace boss {
 		}
 	};
 
-    void Loadv2Masterlist(boost::filesystem::path& file, std::list<Plugin>& plugins) {
+    void Loadv2Masterlist(boost::filesystem::path& file, std::list<Plugin>& plugins, std::list<Message>& globalMessages) {
         Skipper<std::string::const_iterator> skipper;
         LegacyMasterlistGrammar<std::string::const_iterator> grammar;
         std::string::const_iterator begin, end;
         std::string contents;
+
+        grammar.SetGlobalMessageBuffer(&globalMessages);
 
         boss::ifstream ifile(file);
         ifile.unsetf(std::ios::skipws); // No white space skipping!
