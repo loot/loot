@@ -59,6 +59,11 @@ namespace boss {
 	namespace unicode = boost::spirit::unicode;
 	namespace phoenix = boost::phoenix;
 
+    //Message types for those that will be converted, but need identifying in the interim. Must not conflict with the values for the global types.
+    unsigned int message_inc = 1000;
+    unsigned int message_req = 1001;
+    unsigned int message_dirty = 1002;
+
 
 	///////////////////////////////
 	// Keyword structures
@@ -69,9 +74,9 @@ namespace boss {
 			add //New Message keywords.
 				("say",g_message_say)
                 ("tag",g_message_tag)
-			//	("req",g_message_say)
-			//	("inc", g_message_say)
-				("dirty",g_message_warn)
+				("req",message_req)
+				("inc", message_inc)
+				("dirty",message_dirty)
 				("warn",g_message_warn)
 				("error",g_message_error)
 			;
@@ -181,7 +186,7 @@ namespace boss {
 			pluginMessages %=
 				(
 					+qi::eol
-					>> ( pluginMessage | pluginReqMessage | pluginIncMessage ) % +qi::eol
+					>> pluginMessage % +qi::eol
 				) | qi::eps		[qi::_1 = noMessages];
 
 			pluginMessage =
@@ -190,30 +195,6 @@ namespace boss {
 				>> ':'
 				>> charString) [phoenix::bind(&LegacyMasterlistGrammar::MakeMessage, this, qi::_val, qi::_1, qi::_2, qi::_3)]	//The double >> matters. A single > doesn't work.
 				;
-
-            pluginReqMessage =
-				(
-                conditionals       [phoenix::ref(lastConditional) = qi::_1]
-				>> reqMessageKeyword
-                >> ':'
-				>> charString[qi::_1 = "Requires: " + qi::_1]
-                ) [phoenix::bind(&LegacyMasterlistGrammar::MakeMessage, this, qi::_val, qi::_1, qi::_2, qi::_3)]	//The double >> matters. A single > doesn't work.
-				;
-
-            pluginIncMessage =
-				(
-                conditionals       [phoenix::ref(lastConditional) = qi::_1]
-				>> incMessageKeyword
-				>> ':'
-				>> charString[qi::_1 = "Incompatible with: " + qi::_1]
-                ) [phoenix::bind(&LegacyMasterlistGrammar::MakeMessage, this, qi::_val, qi::_1, qi::_2, qi::_3)]	//The double >> matters. A single > doesn't work.
-				;
-
-            incMessageKeyword =
-                unicode::no_case[qi::lit("inc")]    [qi::_val = g_message_say];
-
-            reqMessageKeyword =
-                unicode::no_case[qi::lit("req")]    [qi::_val = g_message_say];
 
 			charString %= qi::lexeme[+(unicode::char_ - qi::eol)]; //String, with no skipper.
 
@@ -342,8 +323,8 @@ namespace boss {
         qi::rule<Iter, Skipper<Iter> > listVar, groupLine;
         qi::rule<Iter, Plugin(), Skipper<Iter> > listPlugin;
         qi::rule<Iter, std::list<Message>(), Skipper<Iter> > pluginMessages;
-        qi::rule<Iter, Message(), Skipper<Iter> > globalMessage, pluginMessage, pluginReqMessage, pluginIncMessage;
-        qi::rule<Iter, unsigned int()> messageKeyword, reqMessageKeyword, incMessageKeyword;
+        qi::rule<Iter, Message(), Skipper<Iter> > globalMessage, pluginMessage;
+        qi::rule<Iter, unsigned int()> messageKeyword;
 		qi::rule<Iter, std::string(), Skipper<Iter> > charString, andOr, conditional, conditionals, ifIfnot, functCondition, variable, file, checksum, version, comparator, regex, language;
 
         std::map<std::string, std::string> varConditionMap;
@@ -641,7 +622,7 @@ namespace boss {
 
             //BOSSv2 supports Chinese and German in addition to English, Russian and Spanish, but they aren't used in any of the masterlists so don't bother mapping them.
             unsigned int langInt;
-            if (lang == "english")
+            if (lang == "english" || lang == "chinese" || lang == "german")
                 langInt = g_lang_english;
             else if (lang == "russian")
                 langInt = g_lang_russian;
@@ -650,15 +631,57 @@ namespace boss {
             else
                 langInt = g_lang_any;
 
-            //Also convert warning messages about dirty edits that say "do not clean" to notes.
 
-            if (type == g_message_warn && content.find("dirty edits") != std::string::npos) {
-                std::string search = "do not clean";
+            /* Now convert the temporary message types into say or warning messages as appropriate. Translations were obtained from the BOSSv2 translation files. Thanks to the translators for them. */
+
+            if (type == message_dirty) {
+
+                std::string search;
+                std::string opener;
+                if (langInt == g_lang_english || langInt == g_lang_any) {
+                    search = "do not clean";
+                    opener = "Contains dirty edits: ";
+                } else if (langInt == g_lang_spanish) {
+                    search = "no se limpia";
+                    opener = "Contiene ediciones sucia: ";
+                } else if (langInt == g_lang_russian) {
+                    search = "Не очищать";
+                    opener = "\"Грязные\" правки: ";
+                }
+
                 const boost::iterator_range<std::string::const_iterator> ir1(content.begin(), content.end());
                 const boost::iterator_range<std::string::const_iterator> ir2(search.begin(), search.end());
 
                 if (boost::ifind_first(ir1, ir2))
                     type = g_message_say;
+                else
+                    type = g_message_warn;
+
+                content = opener + content;
+            } else if (type == message_req) {
+                type = g_message_say;
+
+                std::string opener;
+                if (langInt == g_lang_english || langInt == g_lang_any)
+                    opener = "Requires: ";
+                else if (langInt == g_lang_spanish)
+                    opener = "Requiere: ";
+                else if (langInt == g_lang_russian)
+                    opener = "Требуется: ";
+
+                content = opener + content;
+            } else if (type == message_inc) {
+                type = g_message_say;
+
+                std::string opener;
+                if (langInt == g_lang_english || langInt == g_lang_any)
+                    opener = "Incompatible with: ";
+                else if (langInt == g_lang_spanish)
+                    opener = "Incompatible con: ";
+                else if (langInt == g_lang_russian)
+                    opener = "Несовместим с: ";
+
+                content = opener + content;
             }
 
             std::vector<MessageContent> mc_vec;
