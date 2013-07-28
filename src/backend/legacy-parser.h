@@ -39,6 +39,7 @@
 #include <string>
 #include <vector>
 #include <utility>
+#include <algorithm>
 
 #include <boost/fusion/include/adapt_struct.hpp>
 #include <boost/fusion/include/io.hpp>
@@ -142,7 +143,7 @@ namespace boss {
 				) % +qi::eol;
 
 			listVar =
-				(conditionals
+				(conditionals       [phoenix::ref(lastConditional) = qi::_1]
 				>> unicode::no_case[qi::lit("set")]
 				>>	(
 						':'
@@ -151,7 +152,7 @@ namespace boss {
                 ;
 
 			globalMessage =
-				conditionals
+				conditionals       [phoenix::ref(lastConditional) = qi::_1]
 				>> unicode::no_case[qi::lit("global")]
 				>>	(
 						messageKeyword
@@ -160,13 +161,13 @@ namespace boss {
 					);
 
             groupLine =
-                conditionals
+                conditionals       [phoenix::ref(lastConditional) = qi::_1]
                 >> unicode::no_case[qi::lit("begingroup:")
                     | qi::lit("endgroup")]
                 > charString;
 
 			listPlugin =
-				conditionals
+				conditionals       [phoenix::ref(lastConditional) = qi::_1]
 				> -unicode::no_case[qi::lit("mod:") | qi::lit("regex:")]
 				> (charString
 				> pluginMessages)  [phoenix::bind(&LegacyMasterlistGrammar::MakePlugin, this, qi::_val, qi::_1, qi::_2)]
@@ -179,7 +180,7 @@ namespace boss {
 				) | qi::eps		[qi::_1 = noMessages];
 
 			pluginMessage =
-				(conditionals
+				(conditionals       [phoenix::ref(lastConditional) = qi::_1]
 				>> messageKeyword
 				>> ':'
 				>> charString) [phoenix::bind(&LegacyMasterlistGrammar::MakeMessage, this, qi::_val, qi::_1, qi::_2, qi::_3)]	//The double >> matters. A single > doesn't work.
@@ -194,7 +195,7 @@ namespace boss {
 					conditional								[qi::_val = qi::_1]
 					> *((andOr > conditional)				[qi::_val += qi::_1 + qi::_2])
 				)
-				| unicode::no_case[unicode::string("else")][qi::_val = qi::_1]
+				| unicode::no_case[unicode::string("else")][phoenix::bind(&LegacyMasterlistGrammar::InvertCondition, this, qi::_val, phoenix::ref(lastConditional))]
 				| qi::eps [qi::_val = ""];
 
 			andOr =
@@ -206,36 +207,57 @@ namespace boss {
 				> functCondition) [phoenix::bind(&LegacyMasterlistGrammar::ConvertVarCondition, this, qi::_val, qi::_1, qi::_2)];
 
             ifIfnot %=
-                unicode::no_case[unicode::string("ifnot")
-                | unicode::string("if")];
+                unicode::no_case[
+                    unicode::string("ifnot")[qi::_val = "ifnot "]
+                    | unicode::string("if") [qi::_val = "if "]
+                ];
 
 			functCondition %=
 				(
-					unicode::no_case[unicode::string("var")] > unicode::char_('(') > variable > unicode::char_(')')													//Variable condition.
+					unicode::no_case[unicode::string("var")][qi::_1 = "var"] > unicode::char_('(') > variable > unicode::char_(')')													//Variable condition.
 				) | (
-					unicode::no_case[unicode::string("file")] > unicode::char_('(') > file > unicode::char_(')')														//File condition.
+					unicode::no_case[unicode::string("file")][qi::_1 = "file"] > unicode::char_('(') > file > unicode::char_(')')														//File condition.
 				) | (
-					unicode::no_case[unicode::string("checksum")] > unicode::char_('(') > file > unicode::char_(',') > checksum > unicode::char_(')')							//Checksum condition.
+					unicode::no_case[unicode::string("checksum")][qi::_1 = "checksum"] > unicode::char_('(') > file > unicode::char_(',') > checksum > unicode::char_(')')							//Checksum condition.
 				) | (
-					unicode::no_case[unicode::string("version")] > unicode::char_('(') > file > unicode::char_(',') > version > unicode::char_(',') > comparator > unicode::char_(')')	//Version condition.
+					unicode::no_case[unicode::string("version")][qi::_1 = "version"] > unicode::char_('(') > file > unicode::char_(',') > version > unicode::char_(',') > comparator > unicode::char_(')')	//Version condition.
 				) | (
-					unicode::no_case[unicode::string("regex")] > unicode::char_('(') > regex > unicode::char_(')')														//Regex condition.
+					unicode::no_case[unicode::string("regex")][qi::_1 = "regex"] > unicode::char_('(') > regex > unicode::char_(')')														//Regex condition.
 				) | (
-					unicode::no_case[unicode::string("active")] > unicode::char_('(') > file > unicode::char_(')')														//Active condition.
+					unicode::no_case[unicode::string("active")][qi::_1 = "active"] > unicode::char_('(') > file > unicode::char_(')')														//Active condition.
 				) | (
-					unicode::no_case[unicode::string("lang")] > unicode::char_('(') > language > unicode::char_(')')													//Language condition.
+					unicode::no_case[unicode::string("lang")][qi::_1 = "lang"] > unicode::char_('(') > language > unicode::char_(')')													//Language condition.
 				)
 				;
 
 			variable %= +(unicode::char_ - (')' | qi::eol));
 
-			file %= qi::lexeme[unicode::char_('"') > +(unicode::char_ - ('"' | qi::eol)) > unicode::char_('"')];
+			file %=
+                qi::lit("OBSE")   [qi::_val = "..\\obse_1_2_416.dll"]
+                | qi::lit("FOSE")   [qi::_val = "..\\fose_loader.dll"]
+                | qi::lit("NVSE")   [qi::_val = "..\\nvse_loader.dll"]
+                | qi::lit("SKSE")   [qi::_val = "..\\skse_loader.dll"]
+                | qi::lit("MWSE")   [qi::_val = "..\\MWSE.dll"]
+                | qi::lit("TES3")   [qi::_val = "..\\Morrowind.exe"]
+                | qi::lit("TES4")   [qi::_val = "..\\Oblivion.exe"]
+                | qi::lit("TES5")   [qi::_val = "..\\TESV.exe"]
+                | qi::lit("FO3")    [qi::_val = "..\\Fallout3.exe"]
+                | qi::lit("FONV")   [qi::_val = "..\\FalloutNV.exe"]
+                |
+                (
+                    qi::lexeme[unicode::char_('"') > +(unicode::char_ - ('"' | qi::eol)) > unicode::char_('"')]
+                )
+                ;
 
 			checksum %= +unicode::xdigit;
 
 			version %= file;
 
-			comparator %= unicode::char_('=') | unicode::char_('>') | unicode::char_('<');
+			comparator %=
+                unicode::string("=") //   [qi::_val = "~="]
+                | unicode::string(">")
+                | unicode::string("<")
+                ;
 
 			regex %= file;
 
@@ -292,45 +314,133 @@ namespace boss {
 		qi::rule<Iter, std::string(), Skipper<Iter> > charString, andOr, conditional, conditionals, ifIfnot, functCondition, variable, file, checksum, version, comparator, regex, language;
 
         std::map<std::string, std::string> varConditionMap;
+        std::string lastConditional;
 
         void RecordVarCondition(std::string& condition, std::string& var) {
-            boost::algorithm::to_lower(var);
-            boost::algorithm::to_lower(condition);
-            varConditionMap.insert(std::pair<std::string, std::string>(var, condition));
+            varConditionMap.insert(std::pair<std::string, std::string>(boost::to_lower_copy(var), condition));
+        }
+
+        bool IsPosInQuotedText(const std::string& text, size_t pos) {
+            std::string::const_iterator last = text.begin();
+            std::advance(last, pos);
+
+            return (std::count(text.begin(), last, '"') % 2);
+        }
+
+        void InvertCondition(std::string& output, const std::string& input) {
+            //Want to swap all the "if" and "ifnot" instances that occur outside of quoted strings (in case a filename contains them).
+
+            output = input;
+
+            size_t pos;
+            while (pos = output.find("if", pos) != std::string::npos) {
+
+                if (IsPosInQuotedText(output, pos)) {
+                    pos += 2;
+                    continue;
+                }
+
+                if (output.substr(pos, 5) == "ifnot")
+                    output.erase(pos + 2, 3);
+                else
+                    output.insert(pos + 2, "not");
+
+                pos += 2;
+            }
+
         }
 
         void ConvertVarCondition(std::string& output, std::string& ifIfnotStr, std::string& function) {
-            std::map<std::string, std::string>::const_iterator it;
-
-            boost::algorithm::to_lower(function);
-            boost::algorithm::to_lower(ifIfnotStr);
 
             if (function.find("var(") == std::string::npos) {
-                output = ifIfnotStr + ' ' + function;
+                output = ifIfnotStr + function;
                 return;
             }
 
-            size_t pos1 = function.find('(') + 1;
-            size_t pos2 = function.find(')');
+            size_t pos1 = function.find("var(") + 4;
+            size_t pos2 = function.find(')', pos1);
 
             std::string var = function.substr(pos1, pos2 - pos1);
 
-            it = varConditionMap.find(var);
+            std::map<std::string, std::string>::const_iterator it = varConditionMap.find(boost::to_lower_copy(var));
 
             if (it == varConditionMap.end())
                 throw boss::error(boss::error::condition_eval_fail, "The variable \"" + var + "\" was not previously defined.");
 
-            if (ifIfnotStr == "if")
+            if (ifIfnotStr == "if ")
                 output = it->second;
             else {
-                std::string condition = it->second;
+                if (!it->second.empty())
+                    InvertCondition(output, it->second);
+            }
+        }
 
-                boost::algorithm::replace_all(condition, "if", "ifnot");
-                boost::algorithm::replace_all(condition, "ifnotnot", "if");
+        void ConvertCondition(std::string& condition) {
+            /*Convert the v2 order of evaluation to the standard order.
+              The only consistent way to do this is to bracket everything,
+              which is supported by the v3 syntax. */
 
-                output = condition;
+            int bracketNo = 0;
+            size_t pos;
+
+            while ((pos = condition.find(" and ", pos)) != std::string::npos) {
+
+                if (IsPosInQuotedText(condition, pos)) {
+                    pos += 7;
+                    continue;
+                }
+
+                condition.insert(pos, " )");
+                bracketNo++;
+                pos += 7;
+
             }
 
+            pos = 0;
+            while ((pos = condition.find(" or ", pos)) != std::string::npos) {
+
+                if (IsPosInQuotedText(condition, pos)) {
+                    pos += 6;
+                    continue;
+                }
+
+                condition.insert(pos, " )");
+                bracketNo++;
+                pos += 6;
+            }
+
+            for (int i=0; i < bracketNo; ++i) {
+                condition.insert(0, "( ");
+            }
+
+            //Convert "if" and "ifnot" to "" and "not".
+
+            while ((pos = condition.find("if ")) != std::string::npos) {
+
+                if (IsPosInQuotedText(condition, pos))
+                    continue;
+
+                condition.erase(pos, 3);
+
+            }
+
+            while ((pos = condition.find("ifnot ")) != std::string::npos) {
+
+                if (IsPosInQuotedText(condition, pos))
+                    continue;
+
+                condition.erase(pos, 2);
+            }
+
+            //Also convert the "=" comparator in version conditions to "==". For some reason doing this in-parser causes most of the version condition to disappear...
+
+            pos = condition.find("version(");
+            if (pos != std::string::npos) {
+                pos = condition.find(",=)", pos);
+
+                if (pos != std::string::npos)
+                    condition.insert(pos + 1, "=");
+            }
         }
 
         void MakePlugin(Plugin& plugin, std::string& name, std::list<Message>& messages) {
@@ -340,6 +450,12 @@ namespace boss {
             std::set<Tag> tags;
             std::list<Message>::iterator it = messages.begin();
             while (it != messages.end()) {
+
+                std::string condition = it->Condition();
+                ConvertCondition(condition);
+
+                *it = Message(it->Type(), it->Content(), condition);
+
                 if (it->Type() == g_message_tag) {
                     std::string message = it->ChooseContent(g_lang_any).Str();
 
@@ -405,17 +521,53 @@ namespace boss {
         void MakeMessage(Message& message, std::string& condition, unsigned int type, std::string& content) {
 
             //First check if the message has a language condition. If it does, remove it and use it to set the language of the message content.
-            boost::algorithm::to_lower(condition);
 
             //Just in case there are multiple language conditions, erase them all and use the last.
             std::string lang;
-            while (size_t pos1 = condition.find("lang(") != std::string::npos) {
-                pos1 += 6;
+            size_t pos1;
+            while ((pos1 = condition.find("lang(")) != std::string::npos) {
+
+                if (IsPosInQuotedText(condition, pos1)) {
+                    pos1 += 5;
+                    continue;
+                }
+
                 size_t pos2 = condition.find(')', pos1);
 
-                lang = condition.substr(pos1, pos2 - pos1);
-                pos1 -= 6;
+                lang = condition.substr(pos1 + 6, pos2 - 1 - (pos1 + 6));
                 condition.erase(pos1, pos2 + 1 - pos1);
+
+                //Also need to trim any leftover "and", "or", "if" and "ifnot".
+
+                //First erase "if" and "ifnot".
+                if (pos1 >= 6) {
+                    if (condition.substr(pos1 - 6, 5) == "ifnot") {
+                        condition.erase(pos1 - 6, 6);
+                        pos1 -= 6;
+                    } else if (condition.substr(pos1 - 3, 2) == "if") {
+                        condition.erase(pos1 - 3, 3);
+                        pos1 -= 3;
+                    }
+                } else if (pos1 == 3) {  //First "if" condition.
+                    condition.erase(0, 3);
+                    pos1 = 0;
+                }
+
+                //Now look immediately before the erased conditional for "and" and "or" and erase any found. If the conditional is the first, then do the same for any "and" and "or" immediately after it.
+
+                if (pos1 == 0) {
+                    if (condition.substr(pos1, 5) == " and ")
+                        condition.erase(pos1, 5);
+                    else if (condition.substr(pos1, 4) == " or ")
+                        condition.erase(pos1, 4);
+                } else {
+
+                    assert(pos1 > 5);  //Shouldn't be anything <= 5 here, but just to be safe.
+                    if (condition.substr(pos1 - 5, 5) == " and ")
+                        condition.erase(pos1 - 5, 5);
+                    else if (condition.substr(pos1 - 4, 4) == " or ")
+                        condition.erase(pos1 - 4, 4);
+                }
             }
 
             //BOSSv2 supports Chinese and German in addition to English, Russian and Spanish, but they aren't used in any of the masterlists so don't bother mapping them.
@@ -428,6 +580,17 @@ namespace boss {
                 langInt = g_lang_spanish;
             else
                 langInt = g_lang_any;
+
+            //Also convert warning messages about dirty edits that say "do not clean" to notes.
+
+            if (type == g_message_warn && content.find("dirty edits") != std::string::npos) {
+                std::string search = "do not clean";
+                const boost::iterator_range<std::string::const_iterator> ir1(content.begin(), content.end());
+                const boost::iterator_range<std::string::const_iterator> ir2(search.begin(), search.end());
+
+                if (boost::ifind_first(ir1, ir2))
+                    type = g_message_say;
+            }
 
             std::vector<MessageContent> mc_vec;
             mc_vec.push_back(MessageContent(content, langInt));
