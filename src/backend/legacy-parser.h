@@ -25,8 +25,10 @@
 	$Revision: 2188 $, $Date: 2011-01-20 10:05:16 +0000 (Thu, 20 Jan 2011) $
 */
 
-#ifndef __BOSS_GRAMMAR_H__
-#define __BOSS_GRAMMAR_H__
+#ifndef __BOSS_LEGACY_PARSER__
+#define __BOSS_LEGACY_PARSER__
+
+// This file holds the code necessary for inputting a v2 masterlist and getting a list of plugins and a list of global messages from it.
 
 #ifndef BOOST_SPIRIT_UNICODE
 #define BOOST_SPIRIT_UNICODE
