@@ -361,6 +361,36 @@ namespace boss {
                 pos += 2;
             }
 
+            //Also want to swap all instances of "or" and "and" outside of quoted strings.
+            pos = 0;
+            while (pos < output.length()) {
+                size_t pos1 = output.find("and", pos);
+                size_t pos2 = output.find("or", pos);
+
+                if (pos1 == std::string::npos && pos2 == std::string::npos)
+                    break;
+
+                if (pos2 == std::string::npos || pos1 < pos2)
+                    pos = pos1;
+                else if (pos1 == std::string::npos || pos2 < pos1)
+                    pos = pos2;
+
+                if (IsPosInQuotedText(output, pos)) {
+                    pos += 3;
+                    continue;
+                }
+
+                if (pos == pos1) {
+                    output.erase(pos, 3);
+                    output.insert(pos, "or");
+                } else {
+                    output.erase(pos, 2);
+                    output.insert(pos, "and");
+                }
+
+                pos += 3;
+            }
+
         }
 
         void ConvertVarCondition(std::string& output, std::string& ifIfnotStr, std::string& function) {
