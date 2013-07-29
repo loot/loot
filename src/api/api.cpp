@@ -251,7 +251,8 @@ BOSS_API unsigned int boss_load_lists (boss_db db, const char * const masterlist
             temp = tempNode["plugins"].as< std::list<boss::Plugin> >();
         } else {
             boost::filesystem::path p(masterlistPath);
-            Loadv2Masterlist(p, temp);
+            std::list<boss::Message> filler;
+            Loadv2Masterlist(p, temp, filler);
         }
     } catch (YAML::Exception& e) {
         extMessageStr = e.what();
