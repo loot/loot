@@ -487,6 +487,15 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         //Set language.
         unsigned int lang = GetLangNum(_settings["Language"].as<string>());
 
+        //Evaluate any conditions in the global messages.
+        list<boss::Message>::iterator it=messages.begin();
+        while (it != messages.end()) {
+            if (!it->EvalCondition(_game, lang))
+                it = messages.erase(it);
+            else
+                ++it;
+        }
+
         //Merge plugin list, masterlist and userlist plugin data.
         BOOST_LOG_TRIVIAL(trace) << "Merging plugin list, masterlist and userlist data.";
         map<string, bool> consistencyIssues;
