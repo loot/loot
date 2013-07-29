@@ -24,6 +24,7 @@
 #include "network.h"
 #include "error.h"
 #include "parsers.h"
+#include "streams.h"
 
 #include <boost/log/trivial.hpp>
 
@@ -148,7 +149,7 @@ namespace boss {
         //First need to decide how the masterlist is updated: using Git or Subversion?
         //Look at the update URL to decide.
 
-        if (game.URL().find(".git") == string::npos) {  //Subversion
+        if (!boost::iends_with(game.URL(), ".git")) {  //Subversion
 
             string command, output, revision;
             //First check if the working copy is set up or not.
@@ -238,7 +239,7 @@ namespace boss {
 
                 3b. Now set up sparse checkout support, so that even if the repository has other files, the user's BOSS install only gets the masterlist added to it.
 
-                    `git config core.sparsecheckout true`
+                    `git config core.sparseCheckout true`
                     `echo masterlist.yaml >> .git/info/sparse-checkout`
 
                 4.  Now update the repository.
@@ -259,6 +260,93 @@ namespace boss {
                 8a. Now go back to step (5).
 
                 7b. If it isn't broken, finish.
+            */
+            int error_code;
+            git_repository * repo;
+            git_remote * remote;
+            git_config * cfg;
+
+            //Checking for a ".git folder.
+            if (fs::exists(game.MasterlistPath().parent_path() / ".git")) {
+                //Repository exists. Open it.
+                error_code = git_repository_open(&repo, game.MasterlistPath().parent_path().string().c_str());
+
+                if (error_code) {
+                    const git_error * error = giterr_last();
+                    BOOST_LOG_TRIVIAL(error) << error->message;
+                }
+
+                //Now get remote info.
+                error_code = git_remote_load(&remote, repo, "origin");
+
+                if (error_code) {
+                    const git_error * error = giterr_last();
+                    BOOST_LOG_TRIVIAL(error) << error->message;
+                }
+
+                //Get the remote URL.
+                const char * url = git_remote_url(remote);
+
+                //Check if the URLs match.
+                if (url != game.URL().c_str()) {
+                    //The URLs don't match. Change the remote URL to match the one BOSS has.
+                    error_code = git_remote_set_url(remote, game.URL().c_str());
+
+                    if (error_code) {
+                        const git_error * error = giterr_last();
+                        BOOST_LOG_TRIVIAL(error) << error->message;
+                    }
+                }
+            } else {
+                //Repository doesn't exist. Set up a repository.
+                error_code = git_repository_init(&repo, game.MasterlistPath().parent_path().string().c_str(), false);
+
+                if (error_code) {
+                    const git_error * error = giterr_last();
+                    BOOST_LOG_TRIVIAL(error) << error->message;
+                }
+
+                //Now set the repository's remote.
+                error_code = git_remote_create(&remote, repo, "origin", game.URL().c_str());
+
+                if (error_code) {
+                    const git_error * error = giterr_last();
+                    BOOST_LOG_TRIVIAL(error) << error->message;
+                }
+
+                //Now set up the repository for sparse checkouts.
+                error_code = git_repository_config(&cfg, repo);
+
+                if (error_code) {
+                    const git_error * error = giterr_last();
+                    BOOST_LOG_TRIVIAL(error) << error->message;
+                }
+
+                error_code = git_config_set_bool(cfg, "core.sparseCheckout", true);
+
+                if (error_code) {
+                    const git_error * error = giterr_last();
+                    BOOST_LOG_TRIVIAL(error) << error->message;
+                }
+
+                //Now add the masterlist file to the list of files to be checked out. We can actually just overwrite anything that was there previously, since it's only one file.
+
+                boss::ofstream out(game.MasterlistPath().parent_path() / ".git/info/sparse-checkout");
+
+                out << "masterlist.yaml";
+
+                out.close();
+
+            }
+
+            //Now perform a hard reset to the repository HEAD, in case we rolled back any previous updates.
+
+
+
+            //Finally, free memory.
+            git_remote_free(remote);  //Not sure if git_repository_free calls this, so just being safe.
+            git_repository_free(repo);
+
 
         }
     }
