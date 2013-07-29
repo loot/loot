@@ -44,6 +44,7 @@ ENDIF ()
 link_directories ("${PROJECT_LIBS_DIR}/yaml-cpp/build")
 link_directories ("${PROJECT_LIBS_DIR}/libloadorder/build")
 link_directories ("${PROJECT_LIBS_DIR}/zlib/build")
+link_directories ("${PROJECT_LIBS_DIR}/libgit2/build")
 link_directories ("${PROJECT_LIBS_DIR}/wxWidgets/lib")
 
 # Settings when compiling and cross-compiling on Linux.
