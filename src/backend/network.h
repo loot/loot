@@ -62,6 +62,6 @@ namespace boss {
     So when using Git, the Game::URL() function would return the path to the repository, and BOSS would expect that the masterlist be in the root directory of the repository, which is not unreasonable.
     */
 
-    std::string UpdateMasterlist(const Game& game, std::vector<std::string>& parsingErrors);
+    std::string UpdateMasterlist(Game& game, std::vector<std::string>& parsingErrors);
 }
 #endif

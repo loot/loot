@@ -62,7 +62,7 @@ IF (CMAKE_HOST_SYSTEM_NAME MATCHES "Linux")
         set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--subsystem,windows")
     ENDIF ()
 
-    set (BOSS_LIBS ${BOSS_LIBS} git2 zlibstatic loadorder${PROJECT_ARCH} yaml-cpp boost_log_setup boost_log boost_locale  boost_thread_win32 boost_chrono boost_date_time boost_filesystem boost_system boost_regex)
+    set (BOSS_LIBS ${BOSS_LIBS} git2 ws2_32 zlibstatic loadorder${PROJECT_ARCH} yaml-cpp boost_log_setup boost_log boost_locale  boost_thread_win32 boost_chrono boost_date_time boost_filesystem boost_system boost_regex)
 ENDIF ()
 
 # Settings when compiling on Windows.

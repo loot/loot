@@ -25,6 +25,7 @@
 #include "error.h"
 #include "parsers.h"
 #include "streams.h"
+#include "helpers.h"
 
 #include <boost/log/trivial.hpp>
 
@@ -144,7 +145,7 @@ namespace boss {
         return revision + " (" + date + ")";
     }
 
-    std::string UpdateMasterlist(const Game& game, std::vector<std::string>& parsingErrors) {
+    std::string UpdateMasterlist(Game& game, std::vector<std::string>& parsingErrors) {
 
         //First need to decide how the masterlist is updated: using Git or Subversion?
         //Look at the update URL to decide.
@@ -234,7 +235,7 @@ namespace boss {
                 2b. If there isn't already a Git repo present, initialise one using the URL given (remembering to split the URL so that it ends in `.git`).
 
                     `git init`
-                    `git remote add -f origin <URL>`
+                    `git remote add origin <URL>`
 
 
                 3b. Now set up sparse checkout support, so that even if the repository has other files, the user's BOSS install only gets the masterlist added to it.
@@ -247,24 +248,26 @@ namespace boss {
                     `git reset --hard HEAD` is required to undo any roll-backs that were done in the local repository.
                     `git pull origin master`
 
-                5.  Now get the revision hash of the masterlist.
+                5. Get the masterlist's commit hash.
 
-                    `git ls-files -s masterlist.yaml`. This also gives the file type and path though, so it's not a 1:1 match to what we really want.
+                6. Test the masterlist to see if it parses OK (and evals conditions OK).
 
-                6.  Test the updated masterlist parsing, to make sure it isn't broken.
+                7a. If it has errors, checkout one revision earlier.
 
-                7a. If it is broken, roll back the masterlist one revision, according to the remote history.
+                    `git checkout HEAD~1 masterlist.yaml`
 
-                    `git checkout HEAD~1 masterlist.yaml` to roll back one revision. HEAD stays in the same place, so need to increment the number if rolling back multiple times.
+                8a. Go back to step (5).
 
-                8a. Now go back to step (5).
+                7b. If it doesn't have errors, finish.
 
-                7b. If it isn't broken, finish.
             */
             int error_code;
             git_repository * repo;
             git_remote * remote;
             git_config * cfg;
+            git_object * obj;
+            git_commit * commit;
+            const git_transfer_progress *stats;
 
             //Checking for a ".git folder.
             if (fs::exists(game.MasterlistPath().parent_path() / ".git")) {
@@ -341,9 +344,147 @@ namespace boss {
 
             //Now perform a hard reset to the repository HEAD, in case we rolled back any previous updates.
 
+            //First look up HEAD.
+            error_code = git_revparse_single(&obj, repo, "HEAD");
+
+            if (error_code) {
+                const git_error * error = giterr_last();
+                BOOST_LOG_TRIVIAL(error) << error->message;
+            }
+
+            error_code = git_reset(repo, obj, GIT_RESET_HARD);
+
+            if (error_code) {
+                const git_error * error = giterr_last();
+                BOOST_LOG_TRIVIAL(error) << error->message;
+            }
+
+            //Now pull from the remote repository. This involves a fetch followed by a merge. First perform the fetch.
+
+            stats = git_remote_stats(remote);
+
+            //Open a connection to the remote repository.
+
+            error_code = git_remote_connect(remote, GIT_DIRECTION_FETCH);
+
+            if (error_code) {
+                const git_error * error = giterr_last();
+                BOOST_LOG_TRIVIAL(error) << error->message;
+            }
+
+            // Download the files needed. Skipping progress info for now, see <http://libgit2.github.com/libgit2/ex/v0.19.0/network/fetch.html> for an example of how to do that. It uses pthreads, but Boost.Thread should work fine.
+
+            error_code = git_remote_download(remote, NULL, NULL);
+
+            if (error_code) {
+                const git_error * error = giterr_last();
+                BOOST_LOG_TRIVIAL(error) << error->message;
+            }
+
+            BOOST_LOG_TRIVIAL(info) << "Received " << stats->indexed_objects << " of " << stats->total_objects << " objects in " << stats->received_bytes << " bytes.";
+
+            // Disconnect from the remote repository.
+
+            git_remote_disconnect(remote);
+
+            if (error_code) {
+                const git_error * error = giterr_last();
+                BOOST_LOG_TRIVIAL(error) << error->message;
+            }
+
+            // Update references in case they've changed.
+
+            error_code = git_remote_update_tips(remote);
+
+            // Now start the merging. Not entirely sure what's going on here, but it looks like libgit2's merge API is incomplete, you can create some git_merge_head objects, but can't do anything with them...
+
+            // Thankfully, we don't really need a merge, we just need to replace whatever's in the working directory with the relevant file from FETCH_HEAD, which was updated in the fetching step before.
+
+            // The porcelain equivalent is `git checkout FETCH_HEAD masterlist.yaml`
+
+            char * paths[] = { "masterlist.yaml" };
+
+            git_checkout_opts opts = GIT_CHECKOUT_OPTS_INIT;
+            opts.checkout_strategy = GIT_CHECKOUT_FORCE;  //Make sure the existing file gets overwritten.
+            opts.paths.strings = paths;
+            opts.paths.count = 1;
+
+            //First need to find out where FETCH_HEAD is in Git's internal tree structure.
+
+            error_code = git_revparse_single((git_object**)&commit, repo, "FETCH_HEAD");
+
+            if (error_code) {
+                const git_error * error = giterr_last();
+                BOOST_LOG_TRIVIAL(error) << error->message;
+            }
+
+            //Now we can do the checkout.
+            error_code = git_checkout_tree(repo, (git_object*)commit, &opts);
+
+            if (error_code) {
+                const git_error * error = giterr_last();
+                BOOST_LOG_TRIVIAL(error) << error->message;
+            }
+
+            //Whew, that's done. Next, we need to do a looping parsing check / roll-back.
+
+            bool parsingFailed = false;
+            unsigned int rollbacks = 0;
+            do {
+                //Get the commit hash so that we can report the revision if there is an error.
+                string filespec = "FETCH_HEAD~" + IntToString(rollbacks) + ":masterlist.yaml";
+                git_object * mlistObj;
+                char revision[10];
+                list<boss::Message> messages;
+                list<boss::Plugin> plugins;
+
+                error_code = git_revparse_single(&mlistObj, repo, filespec.c_str());
+
+                if (error_code) {
+                    const git_error * error = giterr_last();
+                    BOOST_LOG_TRIVIAL(error) << error->message;
+                }
+
+                const git_oid * mlistOid = git_object_id(mlistObj);
+
+                git_oid_tostr(&revision[0], 10, mlistOid);
+
+                git_object_free(mlistObj);
+
+                //Now try parsing the masterlist.
+                try {
+                    YAML::Node mlist = YAML::LoadFile(game.MasterlistPath().string());
+
+                    if (mlist["globals"])
+                        messages = mlist["globals"].as< list<boss::Message> >();
+                    if (mlist["plugins"])
+                        plugins = mlist["plugins"].as< list<boss::Plugin> >();
+
+                    for (list<boss::Plugin>::iterator it=plugins.begin(), endIt=plugins.end(); it != endIt; ++it) {
+                        it->EvalAllConditions(game, g_lang_any);
+                    }
+
+                    for (list<boss::Message>::iterator it=messages.begin(), endIt=messages.end(); it != endIt; ++it) {
+                        it->EvalCondition(game, g_lang_any);
+                    }
+
+                } catch (std::exception& e) {
+                    parsingFailed = true;
+                    rollbacks++;
+
+                    //Roll back one revision if there's an error.
+                    BOOST_LOG_TRIVIAL(error) << "Masterlist parsing failed. Masterlist revision " + string(revision) + ": " + e.what();
+
+                    parsingErrors.push_back("Masterlist revision " + string(revision) + ": " + e.what());
+                }
+            } while (parsingFailed);
+
 
 
             //Finally, free memory.
+            git_commit_free(commit);
+            git_object_free(obj);
+            git_config_free(cfg);
             git_remote_free(remote);  //Not sure if git_repository_free calls this, so just being safe.
             git_repository_free(repo);
 
