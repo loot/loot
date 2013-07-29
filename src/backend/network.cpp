@@ -215,6 +215,50 @@ namespace boss {
                 }
             }
         } else {  //Git.
+            /*  List of operations (porcelain commands shown, will need to implement using plumbing in the API though):
+
+                1. Check if there is already a Git repository in the game's BOSS subfolder.
+
+                    Since the masterlists will each be in the root of a separate repository, just check if there is a `.git` folder present.
+
+                2a. If there is, compare its remote URL with the URL that BOSS is currently set to use.
+
+                    The current remote can be gotten using `git config --get remote.origin.url`.
+
+
+                3a. If the URLs are different, then update the remote URL to the one given by BOSS.
+
+                    The remote URL can be changed using `git remote set-url origin <URL>`
+
+                2b. If there isn't already a Git repo present, initialise one using the URL given (remembering to split the URL so that it ends in `.git`).
+
+                    `git init`
+                    `git remote add -f origin <URL>`
+
+
+                3b. Now set up sparse checkout support, so that even if the repository has other files, the user's BOSS install only gets the masterlist added to it.
+
+                    `git config core.sparsecheckout true`
+                    `echo masterlist.yaml >> .git/info/sparse-checkout`
+
+                4.  Now update the repository.
+
+                    `git reset --hard HEAD` is required to undo any roll-backs that were done in the local repository.
+                    `git pull origin master`
+
+                5.  Now get the revision hash of the masterlist.
+
+                    `git ls-files -s masterlist.yaml`. This also gives the file type and path though, so it's not a 1:1 match to what we really want.
+
+                6.  Test the updated masterlist parsing, to make sure it isn't broken.
+
+                7a. If it is broken, roll back the masterlist one revision, according to the remote history.
+
+                    `git checkout HEAD~1 masterlist.yaml` to roll back one revision. HEAD stays in the same place, so need to increment the number if rolling back multiple times.
+
+                8a. Now go back to step (5).
+
+                7b. If it isn't broken, finish.
 
         }
     }
