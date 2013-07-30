@@ -278,7 +278,15 @@ namespace boss {
             git_object * obj = NULL;
             git_commit * commit = NULL;
             const git_transfer_progress * stats = NULL;
-            const char * url = NULL;
+            std::string httpURL;
+
+            //If the URL is a HTTPS URL, convert it to a HTTP URL, because the build of libgit2 BOSS uses doesn't support HTTPS.
+            BOOST_LOG_TRIVIAL(trace) << "Checking URL type.";
+            httpURL = game.URL();
+            if (boost::istarts_with(httpURL, "https")) {
+                BOOST_LOG_TRIVIAL(info) << "HTTPS URL found. Converting to a HTTP URL.";
+                httpURL.erase(4, 1);
+            }
 
             BOOST_LOG_TRIVIAL(trace) << "Checking for a Git repository.";
 
@@ -296,15 +304,15 @@ namespace boss {
                 BOOST_LOG_TRIVIAL(trace) << "Getting the remote URL.";
 
                 //Get the remote URL.
-                url = git_remote_url(remote);
+                const char * url = git_remote_url(remote);
 
                 BOOST_LOG_TRIVIAL(trace) << "Checking to see if remote URL matches URL in settings.";
 
                 //Check if the URLs match.
-                if (url != game.URL().c_str()) {
+                if (url != httpURL) {
                     BOOST_LOG_TRIVIAL(trace) << "URLs do not match, setting repository URL to URL in settings.";
                     //The URLs don't match. Change the remote URL to match the one BOSS has.
-                    handle_error(git_remote_set_url(remote, game.URL().c_str()));
+                    handle_error(git_remote_set_url(remote, httpURL.c_str()));
                 }
             } else {
                 BOOST_LOG_TRIVIAL(trace) << "Repository doesn't exist, initialising a new repository.";
@@ -314,7 +322,7 @@ namespace boss {
                 BOOST_LOG_TRIVIAL(trace) << "Setting the new repository's remote.";
 
                 //Now set the repository's remote.
-                handle_error(git_remote_create(&remote, repo, "origin", game.URL().c_str()));
+                handle_error(git_remote_create(&remote, repo, "origin", httpURL.c_str()));
 
                 BOOST_LOG_TRIVIAL(trace) << "Getting the repository config.";
 
