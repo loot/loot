@@ -145,6 +145,17 @@ namespace boss {
         return revision + " (" + date + ")";
     }
 
+    void handle_error(int error_code) {
+        if (!error_code)
+            return;
+
+        const git_error * error = giterr_last();
+        if (error != NULL)
+            BOOST_LOG_TRIVIAL(error) << "Operation failed, error code: " << error_code << ". Message: " << error->message;
+        else
+            BOOST_LOG_TRIVIAL(error) << "Operation failed, error code: " << error_code;
+    }
+
     std::string UpdateMasterlist(Game& game, std::vector<std::string>& parsingErrors) {
 
         //First need to decide how the masterlist is updated: using Git or Subversion?
@@ -261,78 +272,61 @@ namespace boss {
                 7b. If it doesn't have errors, finish.
 
             */
-            int error_code;
-            git_repository * repo;
-            git_remote * remote;
-            git_config * cfg;
-            git_object * obj;
-            git_commit * commit;
-            const git_transfer_progress *stats;
+            git_repository * repo = NULL;
+            git_remote * remote = NULL;
+            git_config * cfg = NULL;
+            git_object * obj = NULL;
+            git_commit * commit = NULL;
+            const git_transfer_progress * stats = NULL;
+            const char * url = NULL;
 
-            //Checking for a ".git folder.
+            BOOST_LOG_TRIVIAL(trace) << "Checking for a Git repository.";
+
+            //Checking for a ".git" folder.
             if (fs::exists(game.MasterlistPath().parent_path() / ".git")) {
                 //Repository exists. Open it.
-                error_code = git_repository_open(&repo, game.MasterlistPath().parent_path().string().c_str());
+                BOOST_LOG_TRIVIAL(trace) << "Existing repository found, attempting to open it.";
+                handle_error(git_repository_open(&repo, game.MasterlistPath().parent_path().string().c_str()));
 
-                if (error_code) {
-                    const git_error * error = giterr_last();
-                    BOOST_LOG_TRIVIAL(error) << error->message;
-                }
+                BOOST_LOG_TRIVIAL(trace) << "Attempting to get info on the repository remote.";
 
                 //Now get remote info.
-                error_code = git_remote_load(&remote, repo, "origin");
+                handle_error(git_remote_load(&remote, repo, "origin"));
 
-                if (error_code) {
-                    const git_error * error = giterr_last();
-                    BOOST_LOG_TRIVIAL(error) << error->message;
-                }
+                BOOST_LOG_TRIVIAL(trace) << "Getting the remote URL.";
 
                 //Get the remote URL.
-                const char * url = git_remote_url(remote);
+                url = git_remote_url(remote);
+
+                BOOST_LOG_TRIVIAL(trace) << "Checking to see if remote URL matches URL in settings.";
 
                 //Check if the URLs match.
                 if (url != game.URL().c_str()) {
+                    BOOST_LOG_TRIVIAL(trace) << "URLs do not match, setting repository URL to URL in settings.";
                     //The URLs don't match. Change the remote URL to match the one BOSS has.
-                    error_code = git_remote_set_url(remote, game.URL().c_str());
-
-                    if (error_code) {
-                        const git_error * error = giterr_last();
-                        BOOST_LOG_TRIVIAL(error) << error->message;
-                    }
+                    handle_error(git_remote_set_url(remote, game.URL().c_str()));
                 }
             } else {
+                BOOST_LOG_TRIVIAL(trace) << "Repository doesn't exist, initialising a new repository.";
                 //Repository doesn't exist. Set up a repository.
-                error_code = git_repository_init(&repo, game.MasterlistPath().parent_path().string().c_str(), false);
+                handle_error(git_repository_init(&repo, game.MasterlistPath().parent_path().string().c_str(), false));
 
-                if (error_code) {
-                    const git_error * error = giterr_last();
-                    BOOST_LOG_TRIVIAL(error) << error->message;
-                }
+                BOOST_LOG_TRIVIAL(trace) << "Setting the new repository's remote.";
 
                 //Now set the repository's remote.
-                error_code = git_remote_create(&remote, repo, "origin", game.URL().c_str());
+                handle_error(git_remote_create(&remote, repo, "origin", game.URL().c_str()));
 
-                if (error_code) {
-                    const git_error * error = giterr_last();
-                    BOOST_LOG_TRIVIAL(error) << error->message;
-                }
+                BOOST_LOG_TRIVIAL(trace) << "Getting the repository config.";
 
-                //Now set up the repository for sparse checkouts.
-                error_code = git_repository_config(&cfg, repo);
+                handle_error(git_repository_config(&cfg, repo));
 
-                if (error_code) {
-                    const git_error * error = giterr_last();
-                    BOOST_LOG_TRIVIAL(error) << error->message;
-                }
+                BOOST_LOG_TRIVIAL(trace) << "Setting the repository up for sparse checkouts.";
 
-                error_code = git_config_set_bool(cfg, "core.sparseCheckout", true);
-
-                if (error_code) {
-                    const git_error * error = giterr_last();
-                    BOOST_LOG_TRIVIAL(error) << error->message;
-                }
+                handle_error(git_config_set_bool(cfg, "core.sparseCheckout", true));
 
                 //Now add the masterlist file to the list of files to be checked out. We can actually just overwrite anything that was there previously, since it's only one file.
+
+                BOOST_LOG_TRIVIAL(trace) << "Adding the masterlist to the list of files to be checked out.";
 
                 boss::ofstream out(game.MasterlistPath().parent_path() / ".git/info/sparse-checkout");
 
@@ -342,22 +336,7 @@ namespace boss {
 
             }
 
-            //Now perform a hard reset to the repository HEAD, in case we rolled back any previous updates.
-
-            //First look up HEAD.
-            error_code = git_revparse_single(&obj, repo, "HEAD");
-
-            if (error_code) {
-                const git_error * error = giterr_last();
-                BOOST_LOG_TRIVIAL(error) << error->message;
-            }
-
-            error_code = git_reset(repo, obj, GIT_RESET_HARD);
-
-            if (error_code) {
-                const git_error * error = giterr_last();
-                BOOST_LOG_TRIVIAL(error) << error->message;
-            }
+            BOOST_LOG_TRIVIAL(trace) << "Looking up the HEAD revision.";
 
             //Now pull from the remote repository. This involves a fetch followed by a merge. First perform the fetch.
 
@@ -365,21 +344,11 @@ namespace boss {
 
             //Open a connection to the remote repository.
 
-            error_code = git_remote_connect(remote, GIT_DIRECTION_FETCH);
-
-            if (error_code) {
-                const git_error * error = giterr_last();
-                BOOST_LOG_TRIVIAL(error) << error->message;
-            }
+            handle_error(git_remote_connect(remote, GIT_DIRECTION_FETCH));
 
             // Download the files needed. Skipping progress info for now, see <http://libgit2.github.com/libgit2/ex/v0.19.0/network/fetch.html> for an example of how to do that. It uses pthreads, but Boost.Thread should work fine.
 
-            error_code = git_remote_download(remote, NULL, NULL);
-
-            if (error_code) {
-                const git_error * error = giterr_last();
-                BOOST_LOG_TRIVIAL(error) << error->message;
-            }
+            handle_error(git_remote_download(remote, NULL, NULL));
 
             BOOST_LOG_TRIVIAL(info) << "Received " << stats->indexed_objects << " of " << stats->total_objects << " objects in " << stats->received_bytes << " bytes.";
 
@@ -387,14 +356,9 @@ namespace boss {
 
             git_remote_disconnect(remote);
 
-            if (error_code) {
-                const git_error * error = giterr_last();
-                BOOST_LOG_TRIVIAL(error) << error->message;
-            }
-
             // Update references in case they've changed.
 
-            error_code = git_remote_update_tips(remote);
+            handle_error(git_remote_update_tips(remote));
 
             // Now start the merging. Not entirely sure what's going on here, but it looks like libgit2's merge API is incomplete, you can create some git_merge_head objects, but can't do anything with them...
 
@@ -411,20 +375,10 @@ namespace boss {
 
             //First need to find out where FETCH_HEAD is in Git's internal tree structure.
 
-            error_code = git_revparse_single((git_object**)&commit, repo, "FETCH_HEAD");
-
-            if (error_code) {
-                const git_error * error = giterr_last();
-                BOOST_LOG_TRIVIAL(error) << error->message;
-            }
+            handle_error(git_revparse_single((git_object**)&commit, repo, "FETCH_HEAD"));
 
             //Now we can do the checkout.
-            error_code = git_checkout_tree(repo, (git_object*)commit, &opts);
-
-            if (error_code) {
-                const git_error * error = giterr_last();
-                BOOST_LOG_TRIVIAL(error) << error->message;
-            }
+            handle_error(git_checkout_tree(repo, (git_object*)commit, &opts));
 
             //Whew, that's done. Next, we need to do a looping parsing check / roll-back.
 
@@ -438,12 +392,7 @@ namespace boss {
                 list<boss::Message> messages;
                 list<boss::Plugin> plugins;
 
-                error_code = git_revparse_single(&mlistObj, repo, filespec.c_str());
-
-                if (error_code) {
-                    const git_error * error = giterr_last();
-                    BOOST_LOG_TRIVIAL(error) << error->message;
-                }
+                handle_error(git_revparse_single(&mlistObj, repo, filespec.c_str()));
 
                 const git_oid * mlistOid = git_object_id(mlistObj);
 
@@ -478,8 +427,6 @@ namespace boss {
                     parsingErrors.push_back("Masterlist revision " + string(revision) + ": " + e.what());
                 }
             } while (parsingFailed);
-
-
 
             //Finally, free memory.
             git_commit_free(commit);
