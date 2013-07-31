@@ -469,6 +469,8 @@ namespace boss {
                         it->EvalCondition(game, g_lang_any);
                     }
 
+                    parsingFailed = false;
+
                 } catch (std::exception& e) {
                     parsingFailed = true;
                     rollbacks++;
