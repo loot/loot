@@ -649,10 +649,7 @@ namespace boss {
                     opener = "\"Грязные\" правки: ";
                 }
 
-                const boost::iterator_range<std::string::const_iterator> ir1(content.begin(), content.end());
-                const boost::iterator_range<std::string::const_iterator> ir2(search.begin(), search.end());
-
-                if (boost::ifind_first(ir1, ir2))
+                if (boost::icontains(content, search))
                     type = g_message_say;
                 else
                     type = g_message_warn;
