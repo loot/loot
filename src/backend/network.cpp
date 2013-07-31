@@ -141,6 +141,19 @@ namespace boss {
         return revision + " (" + date + ")";
     }
 
+    //Gets repository URL string.
+    string GetURL(const std::string& buffer) {
+        size_t pos1, pos2;
+
+        pos1 = buffer.rfind("Repository Root: ");
+        if (pos1 == string::npos)
+            return "";
+
+        pos2 = buffer.find('\n', pos1);
+
+        return buffer.substr(pos1+17, pos2-pos1-17);
+    }
+
     std::string UpdateMasterlist(Game& game, std::vector<std::string>& parsingErrors) {
 
         string command, output, revision;
@@ -166,6 +179,30 @@ namespace boss {
             if (!RunCommand(command, output)) {
                 BOOST_LOG_TRIVIAL(error) << "Subversion could not perform a checkout. Details: " << output;
                 throw error(error::subversion_error, "Subversion could not perform a checkout. Details: " + output);
+            }
+        } else {
+            //A working copy exists, but we need to make sure that it points to the right repository.
+            BOOST_LOG_TRIVIAL(trace) << "Comparing working copy repository URL with BOSS's URL";
+
+            command = g_path_svn.string() + " info \"" + game.MasterlistPath().string() + "\"";
+
+            if (!RunCommand(command, output)) {
+                BOOST_LOG_TRIVIAL(error) << "Subversion could not get the repository URL. Details: " << output;
+                throw error(error::subversion_error, "Subversion could not get the repository URL. Details: " + output);
+            }
+
+            string url = GetURL(output);
+
+            //Now compare URLs.
+            if (url != game.URL()) {
+                BOOST_LOG_TRIVIAL(trace) << "URLs do not match: relocating the working copy.";
+
+                command = g_path_svn.string() + " relocate " + game.URL();
+
+                 if (!RunCommand(command, output)) {
+                BOOST_LOG_TRIVIAL(error) << "Subversion could not relocate the working copy. Details: " << output;
+                throw error(error::subversion_error, "Subversion could not relocate the working copy. Details: " + output);
+                }
             }
         }
 
