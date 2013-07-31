@@ -298,7 +298,7 @@ try {
          << YAML::Key << "plugins" << YAML::Value << plugins
          << YAML::EndMap;
 
-    boss::ofstream out("foo.txt");
+    boss::ofstream out(_game.MasterlistPath());
     out << yout.c_str();
     out.close();
 
