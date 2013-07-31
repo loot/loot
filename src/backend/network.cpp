@@ -334,6 +334,9 @@ namespace boss {
                     BOOST_LOG_TRIVIAL(trace) << "URLs do not match, setting repository URL to URL in settings.";
                     //The URLs don't match. Change the remote URL to match the one BOSS has.
                     handle_error(git_remote_set_url(ptrs.remote, httpURL.c_str()), ptrs);
+
+                    //Now save change.
+                    handle_error(git_remote_save(ptrs.remote), ptrs);
                 }
             } else {
                 BOOST_LOG_TRIVIAL(trace) << "Repository doesn't exist, initialising a new repository.";
