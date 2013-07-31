@@ -344,7 +344,7 @@ namespace boss {
 
             }
 
-            BOOST_LOG_TRIVIAL(trace) << "Looking up the HEAD revision.";
+            BOOST_LOG_TRIVIAL(trace) << "Fetching updates from remote.";
 
             //Now pull from the remote repository. This involves a fetch followed by a merge. First perform the fetch.
 
@@ -352,9 +352,13 @@ namespace boss {
 
             //Open a connection to the remote repository.
 
+            BOOST_LOG_TRIVIAL(trace) << "Connecting to remote.";
+
             handle_error(git_remote_connect(remote, GIT_DIRECTION_FETCH));
 
             // Download the files needed. Skipping progress info for now, see <http://libgit2.github.com/libgit2/ex/v0.19.0/network/fetch.html> for an example of how to do that. It uses pthreads, but Boost.Thread should work fine.
+
+            BOOST_LOG_TRIVIAL(trace) << "Downloading changes from remote.";
 
             handle_error(git_remote_download(remote, NULL, NULL));
 
@@ -362,9 +366,13 @@ namespace boss {
 
             // Disconnect from the remote repository.
 
+            BOOST_LOG_TRIVIAL(trace) << "Disconnecting from remote.";
+
             git_remote_disconnect(remote);
 
             // Update references in case they've changed.
+
+            BOOST_LOG_TRIVIAL(trace) << "Updating references for remote.";
 
             handle_error(git_remote_update_tips(remote));
 
@@ -374,6 +382,8 @@ namespace boss {
 
             // The porcelain equivalent is `git checkout FETCH_HEAD masterlist.yaml`
 
+            BOOST_LOG_TRIVIAL(trace) << "Setting up checkout parameters.";
+
             char * paths[] = { "masterlist.yaml" };
 
             git_checkout_opts opts = GIT_CHECKOUT_OPTS_INIT;
@@ -381,32 +391,40 @@ namespace boss {
             opts.paths.strings = paths;
             opts.paths.count = 1;
 
-            //First need to find out where FETCH_HEAD is in Git's internal tree structure.
-
-            handle_error(git_revparse_single((git_object**)&commit, repo, "FETCH_HEAD"));
-
-            //Now we can do the checkout.
-            handle_error(git_checkout_tree(repo, (git_object*)commit, &opts));
-
-            //Whew, that's done. Next, we need to do a looping parsing check / roll-back.
+            //Next, we need to do a looping checkout / parsing check / roll-back.
 
             bool parsingFailed = false;
             unsigned int rollbacks = 0;
+            char revision[10];
             do {
+                BOOST_LOG_TRIVIAL(trace) << "Getting the Git object for the tree at FETCH_HEAD - " << rollbacks << ".";
+
                 //Get the commit hash so that we can report the revision if there is an error.
-                string filespec = "FETCH_HEAD~" + IntToString(rollbacks) + ":masterlist.yaml";
+                string filespec = "FETCH_HEAD~" + IntToString(rollbacks);
                 git_object * mlistObj;
-                char revision[10];
+
                 list<boss::Message> messages;
                 list<boss::Plugin> plugins;
+                handle_error(git_revparse_single(&mlistObj, repo, filespec.c_str()));  //Check for error val -3.
 
-                handle_error(git_revparse_single(&mlistObj, repo, filespec.c_str()));
+                BOOST_LOG_TRIVIAL(trace) << "Checking out the tree at FETCH_HEAD - " << rollbacks << ".";
+
+                //Now we can do the checkout.
+                handle_error(git_checkout_tree(repo, mlistObj, &opts));
+
+                BOOST_LOG_TRIVIAL(trace) << "Getting the hash for the tree.";
 
                 const git_oid * mlistOid = git_object_id(mlistObj);
 
+                BOOST_LOG_TRIVIAL(trace) << "Converting and recording the first 10 hex characters of the hash.";
+
                 git_oid_tostr(&revision[0], 10, mlistOid);
 
+                BOOST_LOG_TRIVIAL(trace) << "Freeing the masterlist object.";
+
                 git_object_free(mlistObj);
+
+                BOOST_LOG_TRIVIAL(trace) << "Testing masterlist parsing.";
 
                 //Now try parsing the masterlist.
                 try {
@@ -443,7 +461,7 @@ namespace boss {
             git_remote_free(remote);  //Not sure if git_repository_free calls this, so just being safe.
             git_repository_free(repo);
 
-
+            return string(revision);
         }
     }
 }
