@@ -57,6 +57,6 @@ namespace boss {
     ```svn info masterlist.txt``` returns a bunch of info: the line "Revision: XXXX" contains the revision number.
     */
 
-    std::string UpdateMasterlist(const Game& game, std::vector<std::string>& parsingErrors);
+    std::string UpdateMasterlist(Game& game, std::vector<std::string>& parsingErrors);
 }
 #endif
