@@ -130,6 +130,21 @@ char * ToNewCString(std::string str) {
     return strcpy(p, str.c_str());
 }
 
+bool IsDirtyMessage(std::string message) {
+    const std::string local[3] = {
+        "Contains dirty edits: ",
+        "Contiene ediciones sucia: ",
+        "\"Грязные\" правки: "
+    };
+
+    for (int i=0; i < 3; ++i) {
+        if (boost::icontains(message, local[i]))
+            return true;
+    }
+
+    return false;
+}
+
 //////////////////////////////
 // Error Handling Functions
 //////////////////////////////
@@ -605,10 +620,10 @@ BOSS_API unsigned int boss_get_dirty_message (boss_db db, const char * const plu
         pluginMessages.insert(pluginMessages.end(), temp.begin(), temp.end());
     }
 
-    //Now discard any that aren't warnings about dirty edits.
+    //Now discard any that aren't about dirty edits.
     std::list<boss::Message>::iterator it=pluginMessages.begin();
     while (it != pluginMessages.end()) {
-        if (it->ChooseContent(boss::g_lang_any).Str().find("dirty edits") == std::string::npos)
+        if (IsDirtyMessage(it->ChooseContent(boss::g_lang_any).Str()))
             it = pluginMessages.erase(it);
     }
 
@@ -654,10 +669,7 @@ BOSS_API unsigned int boss_write_minimal_list (boss_db db, const char * const ou
         std::list<boss::Message> messages = it->Messages(), newMessages;
         for (std::list<boss::Message>::iterator messageIter = messages.begin(); messageIter != messages.end(); ++messageIter) {
             if (messageIter->Type() == boss_message_warn) {
-                const std::string content = messageIter->ChooseContent(boss::g_lang_any).Str();
-                if (boost::contains(content, "Do not clean"))
-                    newMessages.push_back(*messageIter);
-                else if (boost::contains(content, "Contains dirty edits"))
+                if (IsDirtyMessage(messageIter->ChooseContent(boss::g_lang_any).Str()))
                     newMessages.push_back(*messageIter);
             }
         }
