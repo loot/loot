@@ -249,6 +249,14 @@ namespace boss {
                 }
             }
 
+            //Now update masterlist.
+            BOOST_LOG_TRIVIAL(trace) << "Performing Subversion update of masterlist.";
+            command = g_path_svn.string() + " update \"" + game.MasterlistPath().string() + "\"";
+            if (!RunCommand(command, output)) {
+                BOOST_LOG_TRIVIAL(error) << "Subversion could not update the masterlist. Details: " << output;
+                throw error(error::subversion_error, "Subversion could not update the masterlist. Details: " + output);
+            }
+
             bool parsingFailed = false;
             do {
                 //Now get the masterlist revision.
