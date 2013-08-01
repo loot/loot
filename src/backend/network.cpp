@@ -145,6 +145,19 @@ namespace boss {
         return revision + " (" + date + ")";
     }
 
+    //Gets repository URL string.
+    string GetURL(const std::string& buffer) {
+        size_t pos1, pos2;
+
+        pos1 = buffer.rfind("Repository Root: ");
+        if (pos1 == string::npos)
+            return "";
+
+        pos2 = buffer.find('\n', pos1);
+
+        return buffer.substr(pos1+17, pos2-pos1-17);
+    }
+
     struct pointers_struct {
         pointers_struct() : repo(NULL), remote(NULL), cfg(NULL), obj(NULL), commit(NULL) {}
 
@@ -178,7 +191,6 @@ namespace boss {
         pointers.free();
         giterr_clear();
         throw boss::error(boss::error::git_error, error_message);
-
     }
 
     std::string UpdateMasterlist(Game& game, std::vector<std::string>& parsingErrors) {
@@ -187,7 +199,6 @@ namespace boss {
         //Look at the update URL to decide.
 
         if (!boost::iends_with(game.URL(), ".git")) {  //Subversion
-
             string command, output, revision;
             //First check if the working copy is set up or not.
             command = g_path_svn.string() + " info \"" + game.MasterlistPath().string() + "\"";
@@ -212,46 +223,85 @@ namespace boss {
                     BOOST_LOG_TRIVIAL(error) << "Subversion could not perform a checkout. Details: " << output;
                     throw error(error::subversion_error, "Subversion could not perform a checkout. Details: " + output);
                 }
-            }
+            } else {
+                //A working copy exists, but we need to make sure that it points to the right repository.
+                BOOST_LOG_TRIVIAL(trace) << "Comparing working copy repository URL with BOSS's URL";
 
-            //Now update masterlist.
-            BOOST_LOG_TRIVIAL(trace) << "Performing Subversion update of masterlist.";
-            command = g_path_svn.string() + " update \"" + game.MasterlistPath().string() + "\"";
-            if (!RunCommand(command, output)) {
-                BOOST_LOG_TRIVIAL(error) << "Subversion could not update the masterlist. Details: " << output;
-                throw error(error::subversion_error, "Subversion could not update the masterlist. Details: " + output);
-            }
+                command = g_path_svn.string() + " info \"" + game.MasterlistPath().string() + "\"";
 
-            while (true) {
-                try {
+                if (!RunCommand(command, output)) {
+                    BOOST_LOG_TRIVIAL(error) << "Subversion could not get the repository URL. Details: " << output;
+                    throw error(error::subversion_error, "Subversion could not get the repository URL. Details: " + output);
+                }
 
-                    //Now get the masterlist revision.
-                    BOOST_LOG_TRIVIAL(trace) << "Getting the new masterlist version.";
-                    command = g_path_svn.string() + " info \"" + game.MasterlistPath().string() + "\"";
-                    if (!RunCommand(command, output)) {
-                        BOOST_LOG_TRIVIAL(error) << "Subversion could not read the masterlist revision number. Details: " << output;
-                        throw error(error::subversion_error, "Subversion could not read the masterlist revision number. Details: " + output);
+                string url = GetURL(output);
+
+                //Now compare URLs.
+                if (url != game.URL()) {
+                    BOOST_LOG_TRIVIAL(trace) << "URLs do not match: relocating the working copy.";
+
+                    command = g_path_svn.string() + " relocate " + game.URL();
+
+                     if (!RunCommand(command, output)) {
+                    BOOST_LOG_TRIVIAL(error) << "Subversion could not relocate the working copy. Details: " << output;
+                    throw error(error::subversion_error, "Subversion could not relocate the working copy. Details: " + output);
                     }
+                }
+            }
 
-                    BOOST_LOG_TRIVIAL(trace) << "Reading the masterlist version from the svn info output.";
-                    revision = GetRevision(output);
+            bool parsingFailed = false;
+            do {
+                //Now get the masterlist revision.
+                BOOST_LOG_TRIVIAL(trace) << "Getting the new masterlist version.";
+                command = g_path_svn.string() + " info \"" + game.MasterlistPath().string() + "\"";
+                if (!RunCommand(command, output)) {
+                    BOOST_LOG_TRIVIAL(error) << "Subversion could not read the masterlist revision number. Details: " << output;
+                    throw error(error::subversion_error, "Subversion could not read the masterlist revision number. Details: " + output);
+                }
 
+                BOOST_LOG_TRIVIAL(trace) << "Reading the masterlist version from the svn info output.";
+                revision = GetRevision(output);
+
+                try {
                     //Now test masterlist to see if it parses OK.
                     BOOST_LOG_TRIVIAL(trace) << "Testing the new masterlist to see if it parses OK.";
                     YAML::Node mlist = YAML::LoadFile(game.MasterlistPath().string());
 
-                    return revision;
-                } catch (YAML::Exception& e) {
+                    list<boss::Message> messages;
+                    list<boss::Plugin> plugins;
+
+                    if (mlist["globals"])
+                        messages = mlist["globals"].as< list<boss::Message> >();
+                    if (mlist["plugins"])
+                        plugins = mlist["plugins"].as< list<boss::Plugin> >();
+
+                    for (list<boss::Plugin>::iterator it=plugins.begin(), endIt=plugins.end(); it != endIt; ++it) {
+                        it->EvalAllConditions(game, g_lang_any);
+                    }
+
+                    for (list<boss::Message>::iterator it=messages.begin(), endIt=messages.end(); it != endIt; ++it) {
+                        it->EvalCondition(game, g_lang_any);
+                    }
+
+                    parsingFailed = false;
+
+                } catch (exception& e) {
+                    parsingFailed = true;
+
                     //Roll back one revision if there's an error.
                     BOOST_LOG_TRIVIAL(error) << "Masterlist parsing failed. Masterlist revision " + revision + ": " + e.what();
                     parsingErrors.push_back("Masterlist revision " + revision + ": " + e.what());
+
+
                     command = g_path_svn.string() + " update --revision PREV \"" + game.MasterlistPath().string() + "\"";
                     if (!RunCommand(command, output)) {
                         BOOST_LOG_TRIVIAL(error) << "Subversion could not update the masterlist. Details: " << output;
                         throw error(error::subversion_error, "Subversion could not update the masterlist. Details: " + output);
                     }
                 }
-            }
+            } while (parsingFailed);
+
+            return revision;
         } else {  //Git.
             /*  List of operations (porcelain commands shown, will need to implement using plumbing in the API though):
 
