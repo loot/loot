@@ -565,17 +565,13 @@ namespace YAML {
     }
 
     inline Emitter& operator << (Emitter& out, const boss::MessageContent& rhs) {
-        if (rhs.Language() == boss::g_lang_any)
-            out << rhs.Str();
-        else {
-            out << BeginMap;
+        out << BeginMap;
 
-            out << Key << "lang" << Value << boss::GetLangString(rhs.Language());
+        out << Key << "lang" << Value << boss::GetLangString(rhs.Language());
 
-            out << Key << "str" << Value << rhs.Str();
+        out << Key << "str" << Value << rhs.Str();
 
-            out << EndMap;
-        }
+        out << EndMap;
     }
 
     inline Emitter& operator << (Emitter& out, const boss::Message& rhs) {
@@ -588,7 +584,10 @@ namespace YAML {
         else
             out << Key << "type" << Value << "error";
 
-        out << Key << "content" << Value << rhs.Content();
+        if (rhs.Content().size() == 1 && rhs.Content().front().Language() == boss::g_lang_any)
+            out << Key << "content" << Value << rhs.Content().front().Str();
+        else
+            out << Key << "content" << Value << rhs.Content();
 
         if (!rhs.Condition().empty())
             out << Key << "condition" << Value << rhs.Condition();
