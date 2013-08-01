@@ -193,7 +193,7 @@ namespace boss {
         throw boss::error(boss::error::git_error, error_message);
     }
 
-    std::string UpdateMasterlist(Game& game, std::vector<std::string>& parsingErrors) {
+    std::string UpdateMasterlist(Game& game, std::vector<std::string>& parsingErrors, std::list<Plugin>& plugins, std::list<Message>& messages) {
 
         //First need to decide how the masterlist is updated: using Git or Subversion?
         //Look at the update URL to decide.
@@ -268,15 +268,18 @@ namespace boss {
                 }
 
                 BOOST_LOG_TRIVIAL(trace) << "Reading the masterlist version from the svn info output.";
-                revision = GetRevision(output);
+                std::string newRevision = GetRevision(output);
+
+                //Check if revision has changed. If it hasn't, exit early.
+                if (newRevision == revision)
+                    return revision;
+                else
+                    revision = newRevision;
 
                 try {
                     //Now test masterlist to see if it parses OK.
                     BOOST_LOG_TRIVIAL(trace) << "Testing the new masterlist to see if it parses OK.";
                     YAML::Node mlist = YAML::LoadFile(game.MasterlistPath().string());
-
-                    list<boss::Message> messages;
-                    list<boss::Plugin> plugins;
 
                     if (mlist["globals"])
                         messages = mlist["globals"].as< list<boss::Message> >();
@@ -446,6 +449,10 @@ namespace boss {
 
             BOOST_LOG_TRIVIAL(info) << "Received " << stats->indexed_objects << " of " << stats->total_objects << " objects in " << stats->received_bytes << " bytes.";
 
+            bool exitEarly = false;
+            if (stats->received_bytes == 0)  //No update received.
+                exitEarly = true;
+
             // Disconnect from the remote repository.
 
             BOOST_LOG_TRIVIAL(trace) << "Disconnecting from remote.";
@@ -507,6 +514,11 @@ namespace boss {
                 BOOST_LOG_TRIVIAL(trace) << "Freeing the masterlist object.";
 
                 git_object_free(ptrs.obj);
+
+                if (exitEarly) {
+                    ptrs.free();
+                    return string(revision);
+                }
 
                 BOOST_LOG_TRIVIAL(trace) << "Testing masterlist parsing.";
 

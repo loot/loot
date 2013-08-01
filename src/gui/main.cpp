@@ -408,13 +408,33 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     wxProgressDialog *progDia = new wxProgressDialog(translate("BOSS: Working..."),translate("BOSS working..."), 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_ELAPSED_TIME);
 
+    /* MULTITHREADING
+
+        The following things are quite slow:
+
+        * Masterlist updating (need to fetch over network, parse masterlist possibly several times)
+        * Masterlist parsing (at least when it's big).
+        * Large plugin loading.
+
+        As such, the following items will each have a separate thread:
+
+        * Each plugin which has a size greater than the mean plugin size.
+        * All the plugins with sizes less than or equal to the mean plugin size.
+        * Masterlist updating.
+
+        Userlist parsing could also get its own thread, but userlists are generally quite small so it probably isn't worth it.
+
+    */
+
     BOOST_LOG_TRIVIAL(trace) << "Updating masterlist";
 
     vector<string> parsingErrors;
     string revision;
     try {
-        revision = UpdateMasterlist(_game, parsingErrors);
+        revision = UpdateMasterlist(_game, parsingErrors, mlist_plugins, mlist_messages);
     } catch (boss::error& e) {
+        mlist_plugins.clear();
+        mlist_messages.clear();
         BOOST_LOG_TRIVIAL(error) << "Masterlist update failed. Details: " << e.what();
         messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("Masterlist update failed. Details: %1%")) % e.what()).str()));
     }
@@ -445,7 +465,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     group.create_thread(pll);
     group.join_all();
 
-    if (fs::exists(_game.MasterlistPath())) {
+    if (mlist_plugins.empty() && mlist_messages.empty() && fs::exists(_game.MasterlistPath())) {
         BOOST_LOG_TRIVIAL(trace) << "Parsing masterlist...";
 
         try {
