@@ -92,14 +92,56 @@ struct plugin_list_loader {
 
     void operator () () {
         for (list<boss::Plugin>::iterator it=_plugins.begin(), endit=_plugins.end(); it != endit; ++it) {
-            if (skipPlugins.find(it->Name()) == skipPlugins.end())
+            if (skipPlugins.find(it->Name()) == skipPlugins.end()) {
+                BOOST_LOG_TRIVIAL(info) << "Loading: " << it->Name();
                 *it = boss::Plugin(_game, it->Name(), false);
+            }
         }
     }
 
     list<boss::Plugin>& _plugins;
     boss::Game& _game;
     set<string> skipPlugins;
+};
+
+struct masterlist_updater_parser {
+    masterlist_updater_parser(boss::Game& game, list<boss::Message>& errors, list<boss::Plugin>& plugins, list<boss::Message>& messages, string& revision) : _game(game), _errors(errors), _plugins(plugins), _messages(messages), _revision(revision) {}
+
+    void operator () () {
+
+        BOOST_LOG_TRIVIAL(trace) << "Updating masterlist";
+        try {
+            _revision = UpdateMasterlist(_game, _errors, _plugins, _messages);
+        } catch (boss::error& e) {
+            _plugins.clear();
+            _messages.clear();
+            BOOST_LOG_TRIVIAL(error) << "Masterlist update failed. Details: " << e.what();
+            _errors.push_back(boss::Message(boss::g_message_error, (format(loc::translate("Masterlist update failed. Details: %1%")) % e.what()).str()));
+        }
+
+        if (_plugins.empty() && _messages.empty() && fs::exists(_game.MasterlistPath())) {
+
+            BOOST_LOG_TRIVIAL(trace) << "Parsing masterlist...";
+            try {
+                YAML::Node mlist = YAML::LoadFile(_game.MasterlistPath().string());
+
+                if (mlist["globals"])
+                    _messages = mlist["globals"].as< list<boss::Message> >();
+                if (mlist["plugins"])
+                    _plugins = mlist["plugins"].as< list<boss::Plugin> >();
+            } catch (YAML::Exception& e) {
+                BOOST_LOG_TRIVIAL(error) << "Masterlist parsing failed. Details: " << e.what();
+                _errors.push_back(boss::Message(boss::g_message_error, (format(loc::translate("Masterlist parsing failed. Details: %1%")) % e.what()).str()));
+            }
+            BOOST_LOG_TRIVIAL(trace) << "Finished parsing masterlist.";
+        }
+    }
+
+    boss::Game& _game;
+    list<boss::Message>& _errors;
+    list<boss::Plugin>& _plugins;
+    list<boss::Message>& _messages;
+    string& _revision;
 };
 
 bool BossGUI::OnInit() {
@@ -405,45 +447,16 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     BOOST_LOG_TRIVIAL(debug) << "Beginning sorting process.";
 
-    YAML::Node mlist, ulist;
     list<boss::Message> messages, mlist_messages, ulist_messages;
     list<boss::Plugin> mlist_plugins, ulist_plugins;
+    boost::thread_group group;
+    list<boss::Plugin> plugins;
+    string revision;
 
     wxProgressDialog *progDia = new wxProgressDialog(translate("BOSS: Working..."),translate("BOSS working..."), 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_ELAPSED_TIME);
 
-    /* MULTITHREADING
-
-        The following things are quite slow:
-
-        * Masterlist updating (need to fetch over network, parse masterlist possibly several times)
-        * Masterlist parsing (at least when it's big).
-        * Large plugin loading.
-
-        As such, the following items will each have a separate thread:
-
-        * Each plugin which has a size greater than the mean plugin size.
-        * All the plugins with sizes less than or equal to the mean plugin size.
-        * Masterlist updating.
-
-        Userlist parsing could also get its own thread, but userlists are generally quite small so it probably isn't worth it.
-
-    */
-
-    BOOST_LOG_TRIVIAL(trace) << "Updating masterlist";
-
-    vector<string> parsingErrors;
-    string revision;
-    try {
-        revision = UpdateMasterlist(_game, parsingErrors, mlist_plugins, mlist_messages);
-    } catch (boss::error& e) {
-        mlist_plugins.clear();
-        mlist_messages.clear();
-        BOOST_LOG_TRIVIAL(error) << "Masterlist update failed. Details: " << e.what();
-        messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("Masterlist update failed. Details: %1%")) % e.what()).str()));
-    }
-    for (vector<string>::const_iterator it=parsingErrors.begin(), endit=parsingErrors.end(); it != endit; ++it) {
-        messages.push_back(boss::Message(boss::g_message_error, *it));
-    }
+    masterlist_updater_parser mup(_game, messages, mlist_plugins, mlist_messages, revision);
+    group.create_thread(mup);
 
     //First calculate the mean plugin size. Store it temporarily in a map to reduce filesystem lookups and file size recalculation.
     size_t meanFileSize = 0;
@@ -459,8 +472,6 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     meanFileSize /= tempMap.size();
 
     //Now load plugins.
-    list<boss::Plugin> plugins;
-    boost::thread_group group;
     plugin_list_loader pll(plugins, _game);
     for (boost::unordered_map<size_t, boss::Plugin>::const_iterator it=tempMap.begin(), endit=tempMap.end(); it != endit; ++it) {
 
@@ -479,50 +490,40 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     group.create_thread(pll);
     group.join_all();
 
-    //Now load masterlist if it hasn't already been parsed.
-    if (mlist_plugins.empty() && mlist_messages.empty() && fs::exists(_game.MasterlistPath())) {
-        BOOST_LOG_TRIVIAL(trace) << "Parsing masterlist...";
-
-        try {
-            mlist = YAML::LoadFile(_game.MasterlistPath().string());
-        } catch (YAML::ParserException& e) {
-            BOOST_LOG_TRIVIAL(error) << "Masterlist parsing failed. Details: " << e.what();
-            messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("Masterlist parsing failed. Details: %1%")) % e.what()).str()));
-        }
-        if (mlist["globals"])
-            mlist_messages = mlist["globals"].as< list<boss::Message> >();
-        if (mlist["plugins"])
-            mlist_plugins = mlist["plugins"].as< list<boss::Plugin> >();
-    }
-
+    //Now load userlist.
     if (fs::exists(_game.UserlistPath())) {
         BOOST_LOG_TRIVIAL(trace) << "Parsing userlist...";
 
         try {
-            ulist = YAML::LoadFile(_game.UserlistPath().string());
+            YAML::Node ulist = YAML::LoadFile(_game.UserlistPath().string());
+
+            if (ulist["plugins"])
+                ulist_plugins = ulist["plugins"].as< list<boss::Plugin> >();
         } catch (YAML::ParserException& e) {
             BOOST_LOG_TRIVIAL(error) << "Userlist parsing failed. Details: " << e.what();
             messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("Userlist parsing failed. Details: %1%")) % e.what()).str()));
         }
-        if (ulist["plugins"])
-            ulist_plugins = ulist["plugins"].as< list<boss::Plugin> >();
     }
 
     progDia->Pulse();
 
     bool cyclicDependenciesExist = false;
     if (fs::exists(_game.MasterlistPath()) || fs::exists(_game.UserlistPath())) {
-        BOOST_LOG_TRIVIAL(trace) << "Merging plugin lists, evaluating conditions and and checking for install validity...";
+        BOOST_LOG_TRIVIAL(trace) << "Merging plugin lists, evaluating conditions and checking for install validity...";
+
+         //Set language.
+        unsigned int lang = GetLangNum(_settings["Language"].as<string>());
+
 
         //Merge all global message lists.
         BOOST_LOG_TRIVIAL(trace) << "Merging all global message lists.";
-        messages = mlist_messages;
-        messages.insert(messages.end(), ulist_messages.begin(), ulist_messages.end());
-
-        //Set language.
-        unsigned int lang = GetLangNum(_settings["Language"].as<string>());
+        if (!mlist_messages.empty())
+            messages.insert(messages.end(), mlist_messages.begin(), mlist_messages.end());
+        if (!ulist_messages.empty())
+            messages.insert(messages.end(), ulist_messages.begin(), ulist_messages.end());
 
         //Evaluate any conditions in the global messages.
+        BOOST_LOG_TRIVIAL(trace) << "Evaluating global message conditions...";
         list<boss::Message>::iterator it=messages.begin();
         while (it != messages.end()) {
             if (!it->EvalCondition(_game, lang))
