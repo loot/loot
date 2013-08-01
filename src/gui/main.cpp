@@ -33,7 +33,6 @@
 #include "../backend/generators.h"
 #include "../backend/network.h"
 #include "../backend/streams.h"
-#include "../backend/legacy-parser.h"
 
 #include <ostream>
 #include <algorithm>
