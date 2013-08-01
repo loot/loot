@@ -284,31 +284,6 @@ bool BossGUI::OnInit() {
         return false;
     }
 
-    //Legacy parser test.
-try {
-    fs::path v2masterlist("../../BOSS/data/boss-skyrim/masterlist.txt");
-    list<boss::Plugin> plugins;
-    list<boss::Message> globalMessages;
-    Loadv2Masterlist(v2masterlist, plugins, globalMessages);
-
-    YAML::Emitter yout;
-    yout.SetIndent(2);
-    yout << YAML::BeginMap
-         << YAML::Key << "globals" << YAML::Value << globalMessages
-         << YAML::Key << "plugins" << YAML::Value << plugins
-         << YAML::EndMap;
-
-    boss::ofstream out(_game.MasterlistPath());
-    out << yout.c_str();
-    out.close();
-
-    for (list<boss::Plugin>::iterator it=plugins.begin(), endIt=plugins.end(); it != endIt; ++it) {
-        it->EvalAllConditions(_game, boss::g_lang_any);
-    }
-} catch (boss::error& e) {
-    BOOST_LOG_TRIVIAL(error) << "Error using legacy parser: " << e.what();
-}
-
     //Create launcher window.
     BOOST_LOG_TRIVIAL(debug) << "Opening the main BOSS window.";
     Launcher * launcher = new Launcher(wxT("BOSS"), _settings, _game, _games);
