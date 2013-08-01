@@ -193,7 +193,7 @@ namespace boss {
         throw boss::error(boss::error::git_error, error_message);
     }
 
-    std::string UpdateMasterlist(Game& game, std::vector<std::string>& parsingErrors, std::list<Plugin>& plugins, std::list<Message>& messages) {
+    std::string UpdateMasterlist(Game& game, std::list<Message>& parsingErrors, std::list<Plugin>& plugins, std::list<Message>& messages) {
 
         //First need to decide how the masterlist is updated: using Git or Subversion?
         //Look at the update URL to decide.
@@ -301,7 +301,7 @@ namespace boss {
 
                     //Roll back one revision if there's an error.
                     BOOST_LOG_TRIVIAL(error) << "Masterlist parsing failed. Masterlist revision " + revision + ": " + e.what();
-                    parsingErrors.push_back("Masterlist revision " + revision + ": " + e.what());
+                    parsingErrors.push_back(boss::Message(boss::g_message_error, "Masterlist revision " + revision + ": " + e.what()));
 
 
                     command = g_path_svn.string() + " update --revision PREV \"" + game.MasterlistPath().string() + "\"";
@@ -548,7 +548,7 @@ namespace boss {
                     //Roll back one revision if there's an error.
                     BOOST_LOG_TRIVIAL(error) << "Masterlist parsing failed. Masterlist revision " + string(revision) + ": " + e.what();
 
-                    parsingErrors.push_back("Masterlist revision " + string(revision) + ": " + e.what());
+                    parsingErrors.push_back(boss::Message(boss::g_message_error, "Masterlist revision " + string(revision) + ": " + e.what()));
                 }
             } while (parsingFailed);
 
