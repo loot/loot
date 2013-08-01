@@ -113,14 +113,14 @@ namespace YAML {
             Node node;
             node["str"] = rhs.Str();
             node["lang"] = boss::GetLangString(rhs.Language());
-            
+
             return node;
         }
 
         static bool decode(const Node& node, boss::MessageContent& rhs) {
-            if (!node["str"] || !node["lang"])
+            if (!node.IsMap() || !node["str"] || !node["lang"])
                 return false;
-                
+
             std::string str = node["str"].as<std::string>();
             unsigned int lang = boss::GetLangNum(node["lang"].as<std::string>());
 
@@ -143,7 +143,7 @@ namespace YAML {
                 node["type"] = "warn";
             else
                 node["type"] = "error";
-                
+
             return node;
         }
 
@@ -177,10 +177,11 @@ namespace YAML {
                     if (it->Language() == boss::g_lang_english)
                         found = true;
                 }
-                if (!found)
-                    return false;
+     //Commented out because the auto-converted masterlist has localisations as separate messages and so will always fail.
+     //           if (!found)
+     //               return false;
             }
-            
+
             std::string condition;
             if (node["condition"])
                 condition = node["condition"].as<std::string>();
@@ -242,7 +243,7 @@ namespace YAML {
                 rhs = boss::Tag(tag.substr(1), false, condition);
             else
                 rhs = boss::Tag(tag, true, condition);
-            
+
             return true;
         }
     };

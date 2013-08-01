@@ -588,10 +588,7 @@ namespace YAML {
         else
             out << Key << "type" << Value << "error";
 
-        if (rhs.Content().size() == 1)
-            out << Key << "content" << Value << rhs.Content().front();
-        else
-            out << Key << "content" << Value << rhs.Content();
+        out << Key << "content" << Value << rhs.Content();
 
         if (!rhs.Condition().empty())
             out << Key << "condition" << Value << rhs.Condition();
