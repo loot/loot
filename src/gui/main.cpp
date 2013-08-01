@@ -55,6 +55,7 @@
 #include <boost/log/utility/setup/common_attributes.hpp>
 #include <boost/log/support/date_time.hpp>
 #include <boost/thread/thread.hpp>
+#include <boost/unordered_map.hpp>
 
 #include <wx/snglinst.h>
 #include <wx/aboutdlg.h>
@@ -73,16 +74,17 @@ namespace loc = boost::locale;
 
 
 struct plugin_loader {
-    plugin_loader(boss::Plugin& plugin, boss::Game& game, const string& filename, bool b) : _plugin(plugin), _game(game), _filename(filename), _b(b) {}
+    plugin_loader(boss::Plugin& plugin, boss::Game& game) : _plugin(plugin), _game(game) {
+        BOOST_LOG_TRIVIAL(info) << "Creating loader for: " << plugin.Name();
+    }
 
     void operator () () {
-        _plugin = boss::Plugin(_game, _filename, _b);
+        BOOST_LOG_TRIVIAL(info) << "Loading: " << _plugin.Name();
+        _plugin = boss::Plugin(_game, _plugin.Name(), false);
     }
 
     boss::Plugin& _plugin;
     boss::Game& _game;
-    string _filename;
-    bool _b;
 };
 
 struct plugin_list_loader {
@@ -90,13 +92,14 @@ struct plugin_list_loader {
 
     void operator () () {
         for (list<boss::Plugin>::iterator it=_plugins.begin(), endit=_plugins.end(); it != endit; ++it) {
-            if (!boost::iequals(it->Name(), _game.Master()))
+            if (skipPlugins.find(it->Name()) == skipPlugins.end())
                 *it = boss::Plugin(_game, it->Name(), false);
         }
     }
 
     list<boss::Plugin>& _plugins;
     boss::Game& _game;
+    set<string> skipPlugins;
 };
 
 bool BossGUI::OnInit() {
@@ -442,29 +445,41 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         messages.push_back(boss::Message(boss::g_message_error, *it));
     }
 
-    // Get a list of the plugins.
-    list<boss::Plugin> plugins;
-    boost::thread_group group;
+    //First calculate the mean plugin size. Store it temporarily in a map to reduce filesystem lookups and file size recalculation.
+    size_t meanFileSize = 0;
+    boost::unordered_map<size_t, boss::Plugin> tempMap;
     for (fs::directory_iterator it(_game.DataPath()); it != fs::directory_iterator(); ++it) {
         if (fs::is_regular_file(it->status()) && IsPlugin(it->path().string())) {
+            size_t fileSize = fs::file_size(it->path());
+            meanFileSize += fileSize;
 
-            string filename = it->path().filename().string();
-			BOOST_LOG_TRIVIAL(trace) << "Reading plugin: " << filename;
-
-            plugins.push_back(boss::Plugin(filename));
-
-            if (filename == _game.Master()) {
-                plugin_loader pl(plugins.back(), _game, filename, false);
-                group.create_thread(pl);
-            }
-
-            progDia->Pulse();
+            tempMap.emplace(fileSize, boss::Plugin(it->path().filename().string()));
         }
     }
+    meanFileSize /= tempMap.size();
+
+    //Now load plugins.
+    list<boss::Plugin> plugins;
+    boost::thread_group group;
     plugin_list_loader pll(plugins, _game);
+    for (boost::unordered_map<size_t, boss::Plugin>::const_iterator it=tempMap.begin(), endit=tempMap.end(); it != endit; ++it) {
+
+        BOOST_LOG_TRIVIAL(trace) << "Found plugin: " << it->second.Name();
+
+        plugins.push_back(it->second);
+
+        if (it->first > meanFileSize) {
+            plugin_loader pl(plugins.back(), _game);
+            pll.skipPlugins.insert(it->second.Name());
+            group.create_thread(pl);
+        }
+
+        progDia->Pulse();
+    }
     group.create_thread(pll);
     group.join_all();
 
+    //Now load masterlist if it hasn't already been parsed.
     if (mlist_plugins.empty() && mlist_messages.empty() && fs::exists(_game.MasterlistPath())) {
         BOOST_LOG_TRIVIAL(trace) << "Parsing masterlist...";
 
