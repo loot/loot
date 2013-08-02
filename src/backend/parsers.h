@@ -570,6 +570,9 @@ namespace boss {
 
         //Checks that the path (not regex) doesn't go outside any game folders.
         bool IsSafePath(const std::string& path) {
+
+            BOOST_LOG_TRIVIAL(trace) << "Checking to see if the path \"" << path << "\" is safe.";
+
             std::vector<std::string> components;
             boost::split(components, path, boost::is_any_of("/\\"));
             components.pop_back();

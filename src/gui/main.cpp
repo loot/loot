@@ -75,12 +75,12 @@ namespace loc = boost::locale;
 
 struct plugin_loader {
     plugin_loader(boss::Plugin& plugin, boss::Game& game) : _plugin(plugin), _game(game) {
-        BOOST_LOG_TRIVIAL(info) << "Creating loader for: " << plugin.Name();
     }
 
     void operator () () {
         BOOST_LOG_TRIVIAL(info) << "Loading: " << _plugin.Name();
         _plugin = boss::Plugin(_game, _plugin.Name(), false);
+        BOOST_LOG_TRIVIAL(info) << "Finished loading: " << _plugin.Name();
     }
 
     boss::Plugin& _plugin;
@@ -95,6 +95,7 @@ struct plugin_list_loader {
             if (skipPlugins.find(it->Name()) == skipPlugins.end()) {
                 BOOST_LOG_TRIVIAL(info) << "Loading: " << it->Name();
                 *it = boss::Plugin(_game, it->Name(), false);
+                BOOST_LOG_TRIVIAL(info) << "Finished loading: " << it->Name();
             }
         }
     }
@@ -524,12 +525,17 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
         //Evaluate any conditions in the global messages.
         BOOST_LOG_TRIVIAL(trace) << "Evaluating global message conditions...";
-        list<boss::Message>::iterator it=messages.begin();
-        while (it != messages.end()) {
-            if (!it->EvalCondition(_game, lang))
-                it = messages.erase(it);
-            else
-                ++it;
+        try {
+            list<boss::Message>::iterator it=messages.begin();
+            while (it != messages.end()) {
+                if (!it->EvalCondition(_game, lang))
+                    it = messages.erase(it);
+                else
+                    ++it;
+            }
+        } catch (boss::error& e) {
+            BOOST_LOG_TRIVIAL(error) << "A global message contains a condition that could not be evaluated. Details: " << e.what();
+            messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("A global message contains a condition that could not be evaluated. Details: %1%")) % e.what()).str()));
         }
 
         //Merge plugin list, masterlist and userlist plugin data.
