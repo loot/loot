@@ -213,12 +213,12 @@ namespace boss {
 
     bool alpha_sort(const Plugin& lhs, const Plugin& rhs);
 
-    bool load_order_sort(const Plugin& lhs, const Plugin& rhs);
-
     bool IsPlugin(const std::string& file);
 
     //The map maps each plugin name to a vector of names of plugins that overlap with it and should load before it.
     void CalcPluginOverlaps(const std::list<Plugin>& plugins, boost::unordered_map< std::string, std::vector<std::string> >& overlapMap);
+
+    void GetPluginInVertices(const Plugin& plugin, const boost::unordered_map< std::string, std::vector<std::string> >& overlapMap, std::set<std::string>& inVertices);
 }
 
 #endif

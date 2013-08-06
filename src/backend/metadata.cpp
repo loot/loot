@@ -705,22 +705,6 @@ namespace boss {
         return boost::ilexicographical_compare(lhs.Name(), rhs.Name());
     }
 
-    bool load_order_sort(const Plugin& lhs, const Plugin& rhs) {
-        if (lhs.MustLoadAfter(rhs))
-            return false;
-
-        if (lhs.Priority() < rhs.Priority())
-            return true;
-
-        if (lhs.Priority() > rhs.Priority())
-            return false;
-
-        if (!lhs.OverlapFormIDs(rhs).empty() && lhs.OverrideFormIDs().size() != rhs.OverrideFormIDs().size())
-            return lhs.OverrideFormIDs().size() > rhs.OverrideFormIDs().size();
-
-        return boost::ilexicographical_compare(lhs.Name(), rhs.Name());
-    }
-
     bool IsPlugin(const std::string& file) {
         if (boost::iends_with(file, ".esp") || boost::iends_with(file, ".esm")
          || boost::iends_with(file, ".esp.ghost") || boost::iends_with(file, ".esm.ghost"))
@@ -742,7 +726,14 @@ namespace boss {
                 if (it->DoFormIDsOverlap(*jt)) {
                     std::string key;
                     std::string value;
-                    if (it->NumOverrideFormIDs() >= jt->NumOverrideFormIDs()) {
+                    //Priority values should override the number of override records as the deciding factor if they differ.
+                    if (it->Priority() < jt->Priority())
+                        key = jt->Name();
+                        value = it->Name();
+                    else if (jt->Priority() < it->Priority())
+                        key = it->Name();
+                        value = jt->Name();
+                    else if (it->NumOverrideFormIDs() >= jt->NumOverrideFormIDs()) {
                         key = jt->Name();
                         value = it->Name();
                     } else {
@@ -758,5 +749,24 @@ namespace boss {
                 }
             }
         }
+    }
+
+    void GetPluginInVertices(const Plugin& plugin, const boost::unordered_map< std::string, std::vector<std::string> >& overlapMap, std::set<std::string>& inVertices) {
+        //In-vertices are named in the plugin's entry in the overlap map, and in the plugin's requirements, masters and loadAfter members.
+
+        vector<string> strVec = plugin.Masters();
+        inVertices.insert(strVec.begin(), strVec.end());
+
+        boost::unordered_map< std::string, std::vector<std::string> >::iterator it = overlapMap.find(plugin.Name());
+        if (it != overlapMap.end())
+            inVertices.insert(it->second.begin(), it->second.end());
+
+        set<File> fileset = plugin.Reqs();
+        inVertices.insert(fileset.begin(), fileset.end());
+
+        fileset = plugin.LoadAfter();
+        inVertices.insert(fileset.begin(), fileset.end());
+
+
     }
 }
