@@ -727,13 +727,13 @@ namespace boss {
                     std::string key;
                     std::string value;
                     //Priority values should override the number of override records as the deciding factor if they differ.
-                    if (it->Priority() < jt->Priority())
+                    if (it->Priority() < jt->Priority()) {
                         key = jt->Name();
                         value = it->Name();
-                    else if (jt->Priority() < it->Priority())
+                    } else if (jt->Priority() < it->Priority()) {
                         key = it->Name();
                         value = jt->Name();
-                    else if (it->NumOverrideFormIDs() >= jt->NumOverrideFormIDs()) {
+                    } else if (it->NumOverrideFormIDs() >= jt->NumOverrideFormIDs()) {
                         key = jt->Name();
                         value = it->Name();
                     } else {
@@ -757,15 +757,19 @@ namespace boss {
         vector<string> strVec = plugin.Masters();
         inVertices.insert(strVec.begin(), strVec.end());
 
-        boost::unordered_map< std::string, std::vector<std::string> >::iterator it = overlapMap.find(plugin.Name());
+        boost::unordered_map< std::string, std::vector<std::string> >::const_iterator it = overlapMap.find(plugin.Name());
         if (it != overlapMap.end())
             inVertices.insert(it->second.begin(), it->second.end());
 
         set<File> fileset = plugin.Reqs();
-        inVertices.insert(fileset.begin(), fileset.end());
+        for (set<File>::const_iterator it=fileset.begin(), endIt=fileset.end(); it != endIt; ++it) {
+            inVertices.insert(it->Name());
+        }
 
         fileset = plugin.LoadAfter();
-        inVertices.insert(fileset.begin(), fileset.end());
+        for (set<File>::const_iterator it=fileset.begin(), endIt=fileset.end(); it != endIt; ++it) {
+            inVertices.insert(it->Name());
+        }
 
 
     }
