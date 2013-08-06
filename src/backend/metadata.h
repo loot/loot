@@ -32,6 +32,8 @@
 #include <list>
 #include <set>
 
+#include <boost/unordered_map.hpp>
+
 namespace boss {
 
 
@@ -150,7 +152,7 @@ namespace boss {
         std::list<Message> Messages() const;
         std::set<Tag> Tags() const;
 
-        std::set<FormID> FormIDs() const;
+        const std::set<FormID>& FormIDs() const;
         std::vector<std::string> Masters() const;
         bool IsMaster() const;  //Checks master bit flag.
         std::string Version() const;
@@ -198,6 +200,9 @@ namespace boss {
         std::string version;  //Obtained from description field.
         bool isMaster;
         uint32_t crc;
+
+        //Useful caches.
+        size_t numOverrideRecords;
     };
 
     bool operator == (const File& lhs, const Plugin& rhs);
@@ -213,7 +218,7 @@ namespace boss {
     bool IsPlugin(const std::string& file);
 
     //The map maps each plugin name to a vector of names of plugins that overlap with it and should load before it.
-    void CalcPluginOverlaps(const std::list<Plugin>& plugins, std::map< std::string, std::vector<std::string> >& overlapMap);
+    void CalcPluginOverlaps(const std::list<Plugin>& plugins, boost::unordered_map< std::string, std::vector<std::string> >& overlapMap);
 }
 
 #endif

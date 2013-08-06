@@ -271,6 +271,12 @@ namespace boss {
 		for (vector<uint32_t>::const_iterator it = records.begin(),endIt = records.end(); it != endIt; ++it)
 			formIDs.insert(FormID(plugins, *it));
 
+        //Calculate how many records are override records.
+        for (set<FormID>::const_iterator it = formIDs.begin(), endIt=formIDs.end(); it != endIt; ++it) {
+			if (!boost::iequals(it->Plugin(), name))
+                ++numOverrideRecords;
+        }
+
         //If the name passed ends in '.ghost', that should be trimmed.
         if (boost::iends_with(name, ".ghost"))
             name = name.substr(0, name.length() - 6);
@@ -514,19 +520,17 @@ namespace boss {
         return !(*this == rhs);
     }
 
-    std::set<FormID> Plugin::FormIDs() const {
+    const std::set<FormID>& Plugin::FormIDs() const {
 		return formIDs;
 	}
 
     bool Plugin::DoFormIDsOverlap(const Plugin& plugin) const {
         //Basically std::set_intersection except with an early exit instead of an append to results.
 
-        set<FormID> otherFormIDs = plugin.FormIDs();
-
         set<FormID>::const_iterator i = formIDs.begin(),
-                                    j = otherFormIDs.begin(),
+                                    j = plugin.FormIDs().begin(),
                                     iend = formIDs.end(),
-                                    jend = otherFormIDs.end();
+                                    jend = plugin.FormIDs().end();
 
         while (i != iend && j != jend) {
             if (*i < *j)
@@ -541,12 +545,7 @@ namespace boss {
     }
 
     size_t Plugin::NumOverrideFormIDs() const {
-        size_t num = 0;
-        for (set<FormID>::const_iterator it = formIDs.begin(), endIt=formIDs.end(); it != endIt; ++it) {
-			if (!boost::iequals(it->Plugin(), name))
-                ++num;
-        }
-        return num;
+        return numOverrideRecords;
     }
 
     std::set<FormID> Plugin::OverlapFormIDs(const Plugin& plugin) const {
@@ -731,7 +730,7 @@ namespace boss {
     }
 
     //The map maps each plugin name to a vector of names of plugins that overlap with it and should load before it.
-    void CalcPluginOverlaps(const std::list<Plugin>& plugins, std::map< std::string, std::vector<std::string> >& overlapMap) {
+    void CalcPluginOverlaps(const std::list<Plugin>& plugins, boost::unordered_map< std::string, std::vector<std::string> >& overlapMap) {
         for (list<Plugin>::const_iterator it=plugins.begin(),
                                           endit=plugins.end();
                                           it != endit;
@@ -739,6 +738,7 @@ namespace boss {
             list<Plugin>::const_iterator jt = it;
             ++jt;
             for (jt, endit; jt != endit; ++jt) {
+                    BOOST_LOG_TRIVIAL(trace) << "Checking for FormID overlap between \"" << it->Name() << "\" and \"" << jt->Name() << "\".";
                 if (it->DoFormIDsOverlap(*jt)) {
                     std::string key;
                     std::string value;
@@ -749,7 +749,7 @@ namespace boss {
                         key = it->Name();
                         value = jt->Name();
                     }
-                    map< string, vector<string> >::iterator mapIt = overlapMap.find(key);
+                    boost::unordered_map< string, vector<string> >::iterator mapIt = overlapMap.find(key);
                     if (mapIt == overlapMap.end()) {
                         overlapMap.insert(pair<string, vector<string> >(key, vector<string>(1, value)));
                     } else {
