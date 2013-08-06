@@ -518,6 +518,37 @@ namespace boss {
 		return formIDs;
 	}
 
+    bool Plugin::DoFormIDsOverlap(const Plugin& plugin) const {
+        //Basically std::set_intersection except with an early exit instead of an append to results.
+
+        set<FormID> otherFormIDs = plugin.FormIDs();
+
+        set<FormID>::const_iterator i = formIDs.begin(),
+                                    j = otherFormIDs.begin(),
+                                    iend = formIDs.end(),
+                                    jend = otherFormIDs.end();
+
+        while (i != iend && j != jend) {
+            if (*i < *j)
+                ++i;
+            else if (*j < *i)
+                ++j;
+            else
+                return true;
+        }
+
+        return false;
+    }
+
+    size_t Plugin::NumOverrideFormIDs() const {
+        size_t num = 0;
+        for (set<FormID>::const_iterator it = formIDs.begin(), endIt=formIDs.end(); it != endIt; ++it) {
+			if (!boost::iequals(it->Plugin(), name))
+                ++num;
+        }
+        return num;
+    }
+
     std::set<FormID> Plugin::OverlapFormIDs(const Plugin& plugin) const {
         set<FormID> otherFormIDs = plugin.FormIDs();
         set<FormID> overlap;
@@ -697,5 +728,35 @@ namespace boss {
             return true;
         else
             return false;
+    }
+
+    //The map maps each plugin name to a vector of names of plugins that overlap with it and should load before it.
+    void CalcPluginOverlaps(const std::list<Plugin>& plugins, std::map< std::string, std::vector<std::string> >& overlapMap) {
+        for (list<Plugin>::const_iterator it=plugins.begin(),
+                                          endit=plugins.end();
+                                          it != endit;
+                                          ++it) {
+            list<Plugin>::const_iterator jt = it;
+            ++jt;
+            for (jt, endit; jt != endit; ++jt) {
+                if (it->DoFormIDsOverlap(*jt)) {
+                    std::string key;
+                    std::string value;
+                    if (it->NumOverrideFormIDs() >= jt->NumOverrideFormIDs()) {
+                        key = jt->Name();
+                        value = it->Name();
+                    } else {
+                        key = it->Name();
+                        value = jt->Name();
+                    }
+                    map< string, vector<string> >::iterator mapIt = overlapMap.find(key);
+                    if (mapIt == overlapMap.end()) {
+                        overlapMap.insert(pair<string, vector<string> >(key, vector<string>(1, value)));
+                    } else {
+                        mapIt->second.push_back(value);
+                    }
+                }
+            }
+        }
     }
 }

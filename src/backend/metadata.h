@@ -174,6 +174,8 @@ namespace boss {
         bool operator != (const Plugin& rhs) const;
 
         //Load ordering functions.
+        bool DoFormIDsOverlap(const Plugin& plugin) const;
+        size_t NumOverrideFormIDs() const;
         std::set<FormID> OverlapFormIDs(const Plugin& plugin) const;
         std::set<FormID> OverrideFormIDs() const;
         bool MustLoadAfter(const Plugin& plugin) const;  //Checks masters, reqs and loadAfter.
@@ -209,6 +211,9 @@ namespace boss {
     bool load_order_sort(const Plugin& lhs, const Plugin& rhs);
 
     bool IsPlugin(const std::string& file);
+
+    //The map maps each plugin name to a vector of names of plugins that overlap with it and should load before it.
+    void CalcPluginOverlaps(const std::list<Plugin>& plugins, std::map< std::string, std::vector<std::string> >& overlapMap);
 }
 
 #endif
