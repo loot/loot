@@ -751,7 +751,7 @@ namespace boss {
         }
     }
 
-    void GetPluginInVertices(const Plugin& plugin, const boost::unordered_map< std::string, std::vector<std::string> >& overlapMap, std::set<std::string>& inVertices) {
+    void GetPluginInEdges(const Plugin& plugin, const boost::unordered_map< std::string, std::vector<std::string> >& overlapMap, std::set<std::string>& inVertices) {
         //In-vertices are named in the plugin's entry in the overlap map, and in the plugin's requirements, masters and loadAfter members.
 
         vector<string> strVec = plugin.Masters();
