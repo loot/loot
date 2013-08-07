@@ -598,8 +598,12 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             BOOST_LOG_TRIVIAL(trace) << "Adding out-edges for non-master plugins.";
             //Need to add out-edges to all non-master plugins.
             for (list<boss::Plugin>::const_iterator jt=firstNonMaster, endIt; jt != endIt; ++jt) {
+                size_t pos = std::distance(beginIt, jt);
+                BOOST_LOG_TRIVIAL(trace) << "Current position: " << pos << ", list size: " << plugins.size() << ", number of vertices: " << boost::num_vertices(graph);
+                if (pos == plugins.size() - 1)
+                    break;
                 BOOST_LOG_TRIVIAL(trace) << "Getting vertex for \"" << jt->Name() << "\".";
-                boss::vertex_t childVertex = boost::vertex( std::distance(beginIt, jt), graph );
+                boss::vertex_t childVertex = boost::vertex(pos , graph );
 
                 //Now that we have the non-master plugin's vertex, create an edge between the two.
                 BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << it->Name() << "\" to \"" << jt->Name() << "\".";
@@ -612,6 +616,8 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         for (vector<string>::const_iterator jt=strVec.begin(), endjt=strVec.end(); jt != endjt; ++jt) {
             //Find the other plugin.
             result = std::find(plugins.begin(), plugins.end(), boss::Plugin(*jt));
+            if (result == plugins.end())
+                continue;
             //Add the vertex (again assuming that duplicates won't be created).
             boss::vertex_t parentVertex = boost::vertex( std::distance(beginIt, result), graph);
             boost::add_edge(parentVertex, vertex, graph);
@@ -624,6 +630,8 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             if (boss::IsPlugin(jt->Name())) {
                 //Find the other plugin.
                 result = std::find(plugins.begin(), plugins.end(), *jt);
+                if (result == plugins.end())
+                    continue;
                 //Add the vertex (again assuming that duplicates won't be created).
                 boss::vertex_t parentVertex = boost::vertex( std::distance(beginIt, result), graph);
                 boost::add_edge(parentVertex, vertex, graph);
@@ -637,6 +645,8 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             if (boss::IsPlugin(jt->Name())) {
                 //Find the other plugin.
                 result = std::find(plugins.begin(), plugins.end(), *jt);
+                if (result == plugins.end())
+                    continue;
                 //Add the vertex (again assuming that duplicates won't be created).
                 boss::vertex_t parentVertex = boost::vertex( std::distance(beginIt, result), graph);
                 boost::add_edge(parentVertex, vertex, graph);
@@ -648,8 +658,10 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         boost::unordered_map< std::string, std::vector<list<Plugin>::const_iterator> >::const_iterator overlapIt = overlapMap.find(it->Name());
         if (overlapIt != overlapMap.end()) {
             for (vector<list<Plugin>::const_iterator>::const_iterator jt=overlapIt->second.begin(), endjt=overlapIt->second.end(); jt != endjt; ++jt) {
+                BOOST_LOG_TRIVIAL(trace) << "Getting vertex for \"" << (*jt)->Name() << "\".";
                 boss::vertex_t parentVertex = boost::vertex( std::distance(beginIt, *jt), graph);
 
+                BOOST_LOG_TRIVIAL(trace) << "Checking if there is already a vertex between the plugins in the opposite direction.";
                 if (!boost::edge(vertex, parentVertex, graph).second) {
                     //No edge going the other way, OK to add this edge.
                     boost::add_edge(parentVertex, vertex, graph);

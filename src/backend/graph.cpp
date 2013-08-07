@@ -61,6 +61,8 @@ namespace boss {
                     std::string key;
                     list<Plugin>::const_iterator value;
                     //Priority values should override the number of override records as the deciding factor if they differ.
+                    if (it->MustLoadAfter(*jt) || jt->MustLoadAfter(*it))
+                        break;
                     if (it->Priority() < jt->Priority()) {
                         key = jt->Name();
                         value = it;
