@@ -33,6 +33,7 @@
 #include "../backend/generators.h"
 #include "../backend/network.h"
 #include "../backend/streams.h"
+#include "../backend/graph.h"
 
 #include <ostream>
 #include <algorithm>
@@ -55,6 +56,7 @@
 #include <boost/log/utility/setup/common_attributes.hpp>
 #include <boost/log/support/date_time.hpp>
 #include <boost/thread/thread.hpp>
+
 
 #include <wx/snglinst.h>
 #include <wx/aboutdlg.h>
@@ -475,7 +477,6 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     progDia->Pulse();
 
-    bool cyclicDependenciesExist = false;
     if (fs::exists(_game.MasterlistPath()) || fs::exists(_game.UserlistPath())) {
         BOOST_LOG_TRIVIAL(trace) << "Merging plugin lists, evaluating conditions and and checking for install validity...";
 
@@ -529,16 +530,9 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
             progDia->Pulse();
 
-            //Check that the metadata is self-consistent.
-            BOOST_LOG_TRIVIAL(trace) << "Checking that plugin data is self-consistent.";
-            set<string> dependencies, incompatibilities, reqs;
-            map<string, bool> issues;
-            issues = it->CheckSelfConsistency(plugins, dependencies, incompatibilities, reqs);
-            consistencyIssues.insert(issues.begin(), issues.end());
-
             //Also check install validity.
             BOOST_LOG_TRIVIAL(trace) << "Checking that the current install is valid according to this plugin's data.";
-            issues = it->CheckInstallValidity(_game);
+            map<string, bool> issues = it->CheckInstallValidity(_game);
             list<boss::Message> pluginMessages = it->Messages();
             for (map<string,bool>::const_iterator jt=issues.begin(), endJt=issues.end(); jt != endJt; ++jt) {
                 if (jt->second) {
@@ -554,66 +548,119 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
             progDia->Pulse();
         }
-
-        for (map<string,bool>::const_iterator jt=consistencyIssues.begin(), endJt=consistencyIssues.end(); jt != endJt; ++jt) {
-            if (jt->second) {
-                BOOST_LOG_TRIVIAL(error) << "\"" << jt->first << "\" is a circular dependency. Plugins will not be sorted.";
-                messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("\"%1%\" is a circular dependency. Plugins will not be sorted.")) % jt->first).str()));
-                cyclicDependenciesExist = true;
-            } else {
-                BOOST_LOG_TRIVIAL(error) << "\"" << jt->first << "\" is given as a dependency and an incompatibility.";
-                messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("\"%1%\" is given as a dependency and an incompatibility.")) % jt->first).str()));
-            }
-        }
     }
 
     progDia->Pulse();
 
-    if (!cyclicDependenciesExist) {
-        BOOST_LOG_TRIVIAL(trace) << "Sorting plugins...";
+    //First sort the plugins list so that masters come before non-masters.
+    BOOST_LOG_TRIVIAL(trace) << "Moving masters before non-masters.";
+    plugins.sort(boss::master_sort);
 
-        //std::sort doesn't compare each plugin to every other plugin, it seems to compare plugins until no movement is necessary, because it assumes that each plugin will be comparable on all tested data, which isn't the case when dealing with masters, etc.
-        list<boss::Plugin>::iterator it=plugins.begin();
-        while (it != plugins.end()) {
-            list<boss::Plugin>::iterator jt=it;
-            ++jt;
+    list<boss::Plugin>::const_iterator firstNonMaster;
+    for (list<boss::Plugin>::const_iterator it=plugins.begin(), endIt=plugins.end(); it != endIt; ++it) {
+        if (!it->IsMaster()) {
+            firstNonMaster = it;
+            break;
+        }
+    }
 
-            BOOST_LOG_TRIVIAL(trace) << "Sorting for: " << it->Name();
+    //Now build overlap map.
+    BOOST_LOG_TRIVIAL(trace) << "Building plugin overlap map.";
+    boost::unordered_map< string, vector<list<Plugin>::const_iterator> > overlapMap;
+    CalcPluginOverlaps(plugins, overlapMap);
 
-          /*  vector<string> masters = it->Masters();
-            if (!masters.empty()) {
-                out << "\t" << "Masters:" << endl;
-                for (size_t i=0, max=masters.size(); i < max; ++i)
-                    out << "\t\t" << masters[i] << endl;
-            }*/
+    BOOST_LOG_TRIVIAL(trace) << "Building the plugin dependency graph...";
+    bool cyclicDependenciesExist = false;
 
-            list<boss::Plugin> moved;
-            while (jt != plugins.end()) {
-               /* if (it->MustLoadAfter(*jt)
-                 || jt->Priority() < it->Priority()) {
-                 || (!jt->OverlapFormIDs(*it).empty() && jt->FormIDs().size() != it->FormIDs().size() && jt->FormIDs().size() > it->FormIDs().size())) {
-              */
-              //  if (load_order_sort(*jt, *it)) {
-                if (it->MustLoadAfter(*jt)) {
-                    BOOST_LOG_TRIVIAL(trace) << jt->Name() << " should load before " << it->Name();
-                    moved.push_back(*jt);
-                    jt = plugins.erase(jt);
-                } else
-                    ++jt;
+    //Use an adjacency list (don't know yet if list or matrix is the better choice), and use "listS" as the VertexList type. We need a possible multi-graph to catch some forms of cyclic dependency (a working graph would not be a multi-graph though), so use "listS". Want a directed graph where we can access in-edges, so use "bidirectionalS". Also provide the boss::Plugin class as the vertex property type.
 
-                progDia->Pulse();
+    boss::PluginGraph graph;
+
+    //Now add the plugins in order to the graph as vertices.
+    for (list<boss::Plugin>::const_iterator it=plugins.begin(), endIt=plugins.end(); it != endIt; ++it) {
+        BOOST_LOG_TRIVIAL(trace) << "Creating vertex for \"" << it->Name() << "\".";
+        boost::add_vertex(it, graph);
+    }
+
+    //Vertices are numbered from 0 to (N - 1), where N is the number of vertices in the graph. A plugin's vertex number is therefore the same as its position in the list, and this can be used to create edges between plugins.
+    list<boss::Plugin>::const_iterator beginIt = plugins.begin();
+    for (list<boss::Plugin>::const_iterator it=plugins.begin(), endIt=plugins.end(); it != endIt; ++it) {
+        BOOST_LOG_TRIVIAL(trace) << "Editing vertex for \"" << it->Name() << "\".";
+        //Check if this plugin already has a vertex, and if not, create one.
+        boss::vertex_t vertex = boost::vertex( std::distance(beginIt, it), graph);
+
+        //Now add edges for everything.
+        list<boss::Plugin>::const_iterator result;
+        set<File> fileset;
+        vector<string> strVec = it->Masters();
+
+        if (it->IsMaster()) {
+            BOOST_LOG_TRIVIAL(trace) << "Adding out-edges for non-master plugins.";
+            //Need to add out-edges to all non-master plugins.
+            for (list<boss::Plugin>::const_iterator jt=firstNonMaster, endIt; jt != endIt; ++jt) {
+                BOOST_LOG_TRIVIAL(trace) << "Getting vertex for \"" << jt->Name() << "\".";
+                boss::vertex_t childVertex = boost::vertex( std::distance(beginIt, jt), graph );
+
+                //Now that we have the non-master plugin's vertex, create an edge between the two.
+                BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << it->Name() << "\" to \"" << jt->Name() << "\".";
+                boost::add_edge(vertex, childVertex, graph);
             }
-            if (!moved.empty()) {
-                plugins.insert(it, moved.begin(), moved.end());
-                advance(it, -1*(int)moved.size());
-            } else
-                ++it;
-
-            progDia->Pulse();
         }
 
-        plugins.sort(boss::load_order_sort);
+        //Now add masters.
+        BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for masters.";
+        for (vector<string>::const_iterator jt=strVec.begin(), endjt=strVec.end(); jt != endjt; ++jt) {
+            //Find the other plugin.
+            result = std::find(plugins.begin(), plugins.end(), boss::Plugin(*jt));
+            //Add the vertex (again assuming that duplicates won't be created).
+            boss::vertex_t parentVertex = boost::vertex( std::distance(beginIt, result), graph);
+            boost::add_edge(parentVertex, vertex, graph);
+        }
 
+        //Now add requirements.
+        BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for requirements.";
+        fileset = it->Reqs();
+        for (set<File>::const_iterator jt=fileset.begin(), endjt=fileset.end(); jt != endjt; ++jt) {
+            if (boss::IsPlugin(jt->Name())) {
+                //Find the other plugin.
+                result = std::find(plugins.begin(), plugins.end(), *jt);
+                //Add the vertex (again assuming that duplicates won't be created).
+                boss::vertex_t parentVertex = boost::vertex( std::distance(beginIt, result), graph);
+                boost::add_edge(parentVertex, vertex, graph);
+            }
+        }
+
+        //Now add "load after" plugins.
+        BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for 'load after's.";
+        fileset = it->LoadAfter();
+        for (set<File>::const_iterator jt=fileset.begin(), endjt=fileset.end(); jt != endjt; ++jt) {
+            if (boss::IsPlugin(jt->Name())) {
+                //Find the other plugin.
+                result = std::find(plugins.begin(), plugins.end(), *jt);
+                //Add the vertex (again assuming that duplicates won't be created).
+                boss::vertex_t parentVertex = boost::vertex( std::distance(beginIt, result), graph);
+                boost::add_edge(parentVertex, vertex, graph);
+            }
+        }
+
+        //Now add any overlaps, except where an edge already exists between the two plugins, going the other way, since overlap-based edges have the lowest priority and are not a candidate for causing cyclic loop errors.
+        BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for overlaps.";
+        boost::unordered_map< std::string, std::vector<list<Plugin>::const_iterator> >::const_iterator overlapIt = overlapMap.find(it->Name());
+        if (overlapIt != overlapMap.end()) {
+            for (vector<list<Plugin>::const_iterator>::const_iterator jt=overlapIt->second.begin(), endjt=overlapIt->second.end(); jt != endjt; ++jt) {
+                boss::vertex_t parentVertex = boost::vertex( std::distance(beginIt, *jt), graph);
+
+                if (!boost::edge(vertex, parentVertex, graph).second) {
+                    //No edge going the other way, OK to add this edge.
+                    boost::add_edge(parentVertex, vertex, graph);
+                }
+            }
+        }
+    }
+
+
+
+    if (!cyclicDependenciesExist) {
         progDia->Pulse();
 
         BOOST_LOG_TRIVIAL(debug) << "Displaying load order preview.";

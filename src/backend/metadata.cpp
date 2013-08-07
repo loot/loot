@@ -706,7 +706,7 @@ namespace boss {
     }
 
     bool master_sort(const Plugin& lhs, const Plugin& rhs) {
-        if ((lhs.IsMaster() && !rhs.IsMaster()) || (!lhs.IsMaster() && rhs.IsMaster()))
+        if (lhs.IsMaster() && !rhs.IsMaster())
             return true;
         else
             return false;
@@ -718,66 +718,5 @@ namespace boss {
             return true;
         else
             return false;
-    }
-
-    //The map maps each plugin name to a vector of names of plugins that overlap with it and should load before it.
-    void CalcPluginOverlaps(const std::list<Plugin>& plugins, boost::unordered_map< std::string, std::vector<std::string> >& overlapMap) {
-        for (list<Plugin>::const_iterator it=plugins.begin(),
-                                          endit=plugins.end();
-                                          it != endit;
-                                          ++it) {
-            list<Plugin>::const_iterator jt = it;
-            ++jt;
-            for (jt, endit; jt != endit; ++jt) {
-                    BOOST_LOG_TRIVIAL(trace) << "Checking for FormID overlap between \"" << it->Name() << "\" and \"" << jt->Name() << "\".";
-                if (it->DoFormIDsOverlap(*jt)) {
-                    std::string key;
-                    std::string value;
-                    //Priority values should override the number of override records as the deciding factor if they differ.
-                    if (it->Priority() < jt->Priority()) {
-                        key = jt->Name();
-                        value = it->Name();
-                    } else if (jt->Priority() < it->Priority()) {
-                        key = it->Name();
-                        value = jt->Name();
-                    } else if (it->NumOverrideFormIDs() >= jt->NumOverrideFormIDs()) {
-                        key = jt->Name();
-                        value = it->Name();
-                    } else {
-                        key = it->Name();
-                        value = jt->Name();
-                    }
-                    boost::unordered_map< string, vector<string> >::iterator mapIt = overlapMap.find(key);
-                    if (mapIt == overlapMap.end()) {
-                        overlapMap.insert(pair<string, vector<string> >(key, vector<string>(1, value)));
-                    } else {
-                        mapIt->second.push_back(value);
-                    }
-                }
-            }
-        }
-    }
-
-    void GetPluginInEdges(const Plugin& plugin, const boost::unordered_map< std::string, std::vector<std::string> >& overlapMap, std::set<std::string>& inVertices) {
-        //In-vertices are named in the plugin's entry in the overlap map, and in the plugin's requirements, masters and loadAfter members.
-
-        vector<string> strVec = plugin.Masters();
-        inVertices.insert(strVec.begin(), strVec.end());
-
-        boost::unordered_map< std::string, std::vector<std::string> >::const_iterator it = overlapMap.find(plugin.Name());
-        if (it != overlapMap.end())
-            inVertices.insert(it->second.begin(), it->second.end());
-
-        set<File> fileset = plugin.Reqs();
-        for (set<File>::const_iterator it=fileset.begin(), endIt=fileset.end(); it != endIt; ++it) {
-            inVertices.insert(it->Name());
-        }
-
-        fileset = plugin.LoadAfter();
-        for (set<File>::const_iterator it=fileset.begin(), endIt=fileset.end(); it != endIt; ++it) {
-            inVertices.insert(it->Name());
-        }
-
-
     }
 }
