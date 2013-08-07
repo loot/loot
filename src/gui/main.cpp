@@ -607,7 +607,8 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
                 //Now that we have the non-master plugin's vertex, create an edge between the two.
                 BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << it->Name() << "\" to \"" << jt->Name() << "\".";
-                boost::add_edge(vertex, childVertex, graph);
+                if (!boost::edge(vertex, childVertex, graph).second)  //To avoid duplicates (helps visualisation).
+                    boost::add_edge(vertex, childVertex, graph);
             }
         }
 
@@ -620,7 +621,8 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                 continue;
             //Add the vertex (again assuming that duplicates won't be created).
             boss::vertex_t parentVertex = boost::vertex( std::distance(beginIt, result), graph);
-            boost::add_edge(parentVertex, vertex, graph);
+            if (!boost::edge(parentVertex, vertex, graph).second)  //To avoid duplicates (helps visualisation).
+                    boost::add_edge(parentVertex, vertex, graph);
         }
 
         //Now add requirements.
@@ -634,7 +636,8 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                     continue;
                 //Add the vertex (again assuming that duplicates won't be created).
                 boss::vertex_t parentVertex = boost::vertex( std::distance(beginIt, result), graph);
-                boost::add_edge(parentVertex, vertex, graph);
+                if (!boost::edge(parentVertex, vertex, graph).second)  //To avoid duplicates (helps visualisation).
+                    boost::add_edge(parentVertex, vertex, graph);
             }
         }
 
@@ -649,7 +652,8 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                     continue;
                 //Add the vertex (again assuming that duplicates won't be created).
                 boss::vertex_t parentVertex = boost::vertex( std::distance(beginIt, result), graph);
-                boost::add_edge(parentVertex, vertex, graph);
+                if (!boost::edge(parentVertex, vertex, graph).second)  //To avoid duplicates (helps visualisation).
+                    boost::add_edge(parentVertex, vertex, graph);
             }
         }
 
@@ -669,6 +673,14 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             }
         }
     }
+
+    //Just for fun - output the graph as a ".dot" file for external rendering. If I can get this pretty, I might add it to a tab in the BOSS Report - I think there's a Javascript library for displaying .dot files (though stuff of this complexity might make it explode...).
+    vector<string> names;
+    for (list<boss::Plugin>::const_iterator it=plugins.begin(), endIt=plugins.end(); it != endIt; ++it) {
+        names.push_back(it->Name());
+    }
+    boss::ofstream outfun("fun.dot");
+    boost::write_graphviz(outfun, graph, boost::make_label_writer(&names[0]));
 
 
 
