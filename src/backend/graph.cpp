@@ -93,7 +93,8 @@ namespace boss {
         boost::tie(vit, vit_end) = boost::vertices(graph);
 
         for (vit, vit_end; vit != vit_end; ++vit) {
-            if (boost::iequals(graph[*vit]->Name(), name)) {
+       //     if (boost::iequals(graph[*vit]->Name(), name)) {
+            if (graph[*vit]->Name() == name) {
                 vertex = *vit;
                 return true;
             }
@@ -104,22 +105,41 @@ namespace boss {
 
     void SaveGraph(const PluginGraph& graph, const boost::filesystem::path outpath) {
         //First need to extract vertex names, since their stored as private members otherwise.
-  /*      vector<string> names;
+        vector<string> names;
         vertex_it vit, vit_end;
         boost::tie(vit, vit_end) = boost::vertices(graph);
 
         for (vit, vit_end; vit != vit_end; ++vit) {
             names.push_back(graph[*vit]->Name());
         }
+
+        //Also, writing the graph requires an index map, which std::list-based VertexList graphs don't have, so one needs to be built separately.
+
+        map<vertex_t, string> index_map;
+        boost::associative_property_map< map<vertex_t, string> > v_index_map(index_map);
+        BGL_FORALL_VERTICES(v, graph, PluginGraph)
+            put(v_index_map, v, graph[v]->Name());
+
         //Now write graph to file.
         boss::ofstream out(outpath);
-        boost::write_graphviz(out, graph, boost::make_label_writer(&names[0]));
+        boost::write_graphviz(out, graph, boost::default_writer(), boost::default_writer(), boost::default_writer(), v_index_map);
         out.close();
- */   }
+    }
 
     void Sort(const PluginGraph& graph, std::list<Plugin>& plugins) {
- /*       std::list<vertex_t> sortedVertices;
-        boost::topological_sort(graph, std::front_inserter(sortedVertices));
+
+        //Topological sort requires an index map, which std::list-based VertexList graphs don't have, so one needs to be built separately.
+
+        map<vertex_t, size_t> index_map;
+        boost::associative_property_map< map<vertex_t, size_t> > v_index_map(index_map);
+        size_t i=0;
+        BGL_FORALL_VERTICES(v, graph, PluginGraph)
+            put(v_index_map, v, i++);
+
+        //Now we can sort.
+
+        std::list<vertex_t> sortedVertices;
+        boost::topological_sort(graph, std::front_inserter(sortedVertices), boost::vertex_index_map(v_index_map));
 
         BOOST_LOG_TRIVIAL(info) << "Calculated order: ";
         list<boss::Plugin> tempPlugins;
@@ -128,5 +148,19 @@ namespace boss {
             tempPlugins.push_back(*graph[*it]);
         }
         plugins.swap(tempPlugins);
- */   }
+    }
+
+    void CheckForCycles(const PluginGraph& graph) {
+
+        //Depth-first search requires an index map, which std::list-based VertexList graphs don't have, so one needs to be built separately.
+
+        map<vertex_t, size_t> index_map;
+        boost::associative_property_map< map<vertex_t, size_t> > v_index_map(index_map);
+        size_t i=0;
+        BGL_FORALL_VERTICES(v, graph, PluginGraph)
+            put(v_index_map, v, i++);
+
+        boss::cycle_detector vis;
+        boost::depth_first_search(graph, visitor(vis).vertex_index_map(v_index_map));
+    }
 }
