@@ -93,8 +93,8 @@ namespace boss {
         boost::tie(vit, vit_end) = boost::vertices(graph);
 
         for (vit, vit_end; vit != vit_end; ++vit) {
-       //     if (boost::iequals(graph[*vit]->Name(), name)) {
-            if (graph[*vit]->Name() == name) {
+            if (boost::iequals(graph[*vit]->Name(), name)) {
+      //      if (graph[*vit]->Name() == name) {
                 vertex = *vit;
                 return true;
             }
