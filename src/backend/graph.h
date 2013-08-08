@@ -30,18 +30,25 @@
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/topological_sort.hpp>
+#include <boost/graph/graphviz.hpp>
 
 namespace boss {
 
-    typedef boost::adjacency_list<boost::listS, boost::listS, boost::bidirectionalS, std::list<boss::Plugin>::const_iterator> PluginGraph;
+    typedef boost::adjacency_list<boost::listS, boost::listS, boost::bidirectionalS, std::list<boss::Plugin>::iterator> PluginGraph;
     typedef boost::graph_traits<PluginGraph>::vertex_descriptor vertex_t;
+    typedef boost::graph_traits<PluginGraph>::vertex_iterator vertex_it;
 
     //Gets the vertex for the plugin if it exists, or creates one if it doesn't.
     vertex_t GetPluginVertex(PluginGraph& graph, const Plugin& plugin, boost::unordered_map<std::string, vertex_t>& pluginVertexMap);
 
     //The map maps each plugin name to a vector of names of plugins that overlap with it and should load before it.
-    void CalcPluginOverlaps(const std::list<Plugin>& plugins, boost::unordered_map< std::string, std::vector<std::list<Plugin>::const_iterator> >& overlapMap);
+    void CalcPluginOverlaps(const std::list<Plugin>& plugins, boost::unordered_map< std::string, std::vector<std::string> >& overlapMap);
 
+    bool GetVertexByName(const PluginGraph& graph, const std::string& name, vertex_t& vertex);
+
+    void SaveGraph(const PluginGraph& graph, const boost::filesystem::path outpath);
+
+    void Sort(const PluginGraph& graph, std::list<Plugin>& plugins);
 }
 
 #endif

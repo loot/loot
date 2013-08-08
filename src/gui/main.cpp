@@ -556,17 +556,9 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     BOOST_LOG_TRIVIAL(trace) << "Moving masters before non-masters.";
     plugins.sort(boss::master_sort);
 
-    list<boss::Plugin>::const_iterator firstNonMaster;
-    for (list<boss::Plugin>::const_iterator it=plugins.begin(), endIt=plugins.end(); it != endIt; ++it) {
-        if (!it->IsMaster()) {
-            firstNonMaster = it;
-            break;
-        }
-    }
-
     //Now build overlap map.
     BOOST_LOG_TRIVIAL(trace) << "Building plugin overlap map.";
-    boost::unordered_map< string, vector<list<Plugin>::const_iterator> > overlapMap;
+    boost::unordered_map< string, vector<string> > overlapMap;
     CalcPluginOverlaps(plugins, overlapMap);
 
     BOOST_LOG_TRIVIAL(trace) << "Building the plugin dependency graph...";
@@ -577,110 +569,94 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     boss::PluginGraph graph;
 
     //Now add the plugins in order to the graph as vertices.
-    for (list<boss::Plugin>::const_iterator it=plugins.begin(), endIt=plugins.end(); it != endIt; ++it) {
+    for (list<boss::Plugin>::iterator it=plugins.begin(), endIt=plugins.end(); it != endIt; ++it) {
         BOOST_LOG_TRIVIAL(trace) << "Creating vertex for \"" << it->Name() << "\".";
         boost::add_vertex(it, graph);
     }
 
     //Vertices are numbered from 0 to (N - 1), where N is the number of vertices in the graph. A plugin's vertex number is therefore the same as its position in the list, and this can be used to create edges between plugins.
-    list<boss::Plugin>::const_iterator beginIt = plugins.begin();
-    for (list<boss::Plugin>::const_iterator it=plugins.begin(), endIt=plugins.end(); it != endIt; ++it) {
-        BOOST_LOG_TRIVIAL(trace) << "Editing vertex for \"" << it->Name() << "\".";
-        //Check if this plugin already has a vertex, and if not, create one.
-        boss::vertex_t vertex = boost::vertex( std::distance(beginIt, it), graph);
 
-        //Now add edges for everything.
-        list<boss::Plugin>::const_iterator result;
-        set<File> fileset;
-        vector<string> strVec = it->Masters();
 
-        if (it->IsMaster()) {
+    boss::vertex_it vitFirstNonMaster, vit, vitend;
+    for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
+        if (!graph[*vit]->IsMaster()) {
+            vitFirstNonMaster = vit;
+            break;
+        }
+    }
+
+    for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
+        vertex_t parentVertex;
+
+        BOOST_LOG_TRIVIAL(trace) << "Adding edges to vertex for \"" << graph[*vit]->Name() << "\".";
+
+        if (graph[*vit]->IsMaster()) {
             BOOST_LOG_TRIVIAL(trace) << "Adding out-edges for non-master plugins.";
-            //Need to add out-edges to all non-master plugins.
-            for (list<boss::Plugin>::const_iterator jt=firstNonMaster, endIt; jt != endIt; ++jt) {
-                size_t pos = std::distance(beginIt, jt);
-                BOOST_LOG_TRIVIAL(trace) << "Current position: " << pos << ", list size: " << plugins.size() << ", number of vertices: " << boost::num_vertices(graph);
-                if (pos == plugins.size() - 1)
-                    break;
-                BOOST_LOG_TRIVIAL(trace) << "Getting vertex for \"" << jt->Name() << "\".";
-                boss::vertex_t childVertex = boost::vertex(pos , graph );
 
-                //Now that we have the non-master plugin's vertex, create an edge between the two.
-                BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << it->Name() << "\" to \"" << jt->Name() << "\".";
-                if (!boost::edge(vertex, childVertex, graph).second)  //To avoid duplicates (helps visualisation).
-                    boost::add_edge(vertex, childVertex, graph);
+            for (boss::vertex_it vit2 = vitFirstNonMaster; vit2 != vitend; ++vit2) {
+                BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[*vit]->Name() << "\" to \"" << graph[*vit2]->Name() << "\".";
+
+                if (!boost::edge(*vit, *vit2, graph).second)  //To avoid duplicates (helps visualisation).
+                    boost::add_edge(*vit, *vit2, graph);
             }
         }
 
-        //Now add masters.
         BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for masters.";
-        for (vector<string>::const_iterator jt=strVec.begin(), endjt=strVec.end(); jt != endjt; ++jt) {
-            //Find the other plugin.
-            result = std::find(plugins.begin(), plugins.end(), boss::Plugin(*jt));
-            if (result == plugins.end())
-                continue;
-            //Add the vertex (again assuming that duplicates won't be created).
-            boss::vertex_t parentVertex = boost::vertex( std::distance(beginIt, result), graph);
-            if (!boost::edge(parentVertex, vertex, graph).second)  //To avoid duplicates (helps visualisation).
-                    boost::add_edge(parentVertex, vertex, graph);
-        }
+        vector<string> strVec(graph[*vit]->Masters());
+        for (vector<string>::const_iterator it=strVec.begin(), itend=strVec.end(); it != itend; ++it) {
+            BOOST_LOG_TRIVIAL(trace) << "Adding in-edge from \"" << *it << "\".";
+            if (boss::GetVertexByName(graph, *it, parentVertex) &&
+                !boost::edge(parentVertex, *vit, graph).second) {
 
-        //Now add requirements.
+                boost::add_edge(parentVertex, *vit, graph);
+            }
+        }
         BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for requirements.";
-        fileset = it->Reqs();
-        for (set<File>::const_iterator jt=fileset.begin(), endjt=fileset.end(); jt != endjt; ++jt) {
-            if (boss::IsPlugin(jt->Name())) {
-                //Find the other plugin.
-                result = std::find(plugins.begin(), plugins.end(), *jt);
-                if (result == plugins.end())
-                    continue;
-                //Add the vertex (again assuming that duplicates won't be created).
-                boss::vertex_t parentVertex = boost::vertex( std::distance(beginIt, result), graph);
-                if (!boost::edge(parentVertex, vertex, graph).second)  //To avoid duplicates (helps visualisation).
-                    boost::add_edge(parentVertex, vertex, graph);
+        set<File> fileset(graph[*vit]->Reqs());
+        for (set<File>::const_iterator it=fileset.begin(), itend=fileset.end(); it != itend; ++it) {
+            BOOST_LOG_TRIVIAL(trace) << "Adding in-edge from \"" << it->Name() << "\".";
+            if (boss::IsPlugin(it->Name()) &&
+                boss::GetVertexByName(graph, it->Name(), parentVertex) &&
+                !boost::edge(parentVertex, *vit, graph).second) {
+
+                boost::add_edge(parentVertex, *vit, graph);
             }
         }
 
-        //Now add "load after" plugins.
         BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for 'load after's.";
-        fileset = it->LoadAfter();
-        for (set<File>::const_iterator jt=fileset.begin(), endjt=fileset.end(); jt != endjt; ++jt) {
-            if (boss::IsPlugin(jt->Name())) {
-                //Find the other plugin.
-                result = std::find(plugins.begin(), plugins.end(), *jt);
-                if (result == plugins.end())
-                    continue;
-                //Add the vertex (again assuming that duplicates won't be created).
-                boss::vertex_t parentVertex = boost::vertex( std::distance(beginIt, result), graph);
-                if (!boost::edge(parentVertex, vertex, graph).second)  //To avoid duplicates (helps visualisation).
-                    boost::add_edge(parentVertex, vertex, graph);
+        fileset = graph[*vit]->LoadAfter();
+        for (set<File>::const_iterator it=fileset.begin(), itend=fileset.end(); it != itend; ++it) {
+            BOOST_LOG_TRIVIAL(trace) << "Adding in-edge from \"" << it->Name() << "\".";
+            if (boss::IsPlugin(it->Name()) &&
+                boss::GetVertexByName(graph, it->Name(), parentVertex) &&
+                !boost::edge(parentVertex, *vit, graph).second) {
+
+                boost::add_edge(parentVertex, *vit, graph);
             }
         }
+
 
         //Now add any overlaps, except where an edge already exists between the two plugins, going the other way, since overlap-based edges have the lowest priority and are not a candidate for causing cyclic loop errors.
         BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for overlaps.";
-        boost::unordered_map< std::string, std::vector<list<Plugin>::const_iterator> >::const_iterator overlapIt = overlapMap.find(it->Name());
+        boost::unordered_map< std::string, std::vector<string> >::const_iterator overlapIt = overlapMap.find(graph[*vit]->Name());
         if (overlapIt != overlapMap.end()) {
-            for (vector<list<Plugin>::const_iterator>::const_iterator jt=overlapIt->second.begin(), endjt=overlapIt->second.end(); jt != endjt; ++jt) {
-                BOOST_LOG_TRIVIAL(trace) << "Getting vertex for \"" << (*jt)->Name() << "\".";
-                boss::vertex_t parentVertex = boost::vertex( std::distance(beginIt, *jt), graph);
-
-                BOOST_LOG_TRIVIAL(trace) << "Checking if there is already a vertex between the plugins in the opposite direction.";
-                if (!boost::edge(vertex, parentVertex, graph).second) {
-                    //No edge going the other way, OK to add this edge.
-                    boost::add_edge(parentVertex, vertex, graph);
+            for (vector<string>::const_iterator it=overlapIt->second.begin(), itend=overlapIt->second.end(); it != itend; ++it) {
+                BOOST_LOG_TRIVIAL(trace) << "Adding in-edge from \"" << *it << "\".";
+                if (boss::GetVertexByName(graph, *it, parentVertex) &&
+                    !boost::edge(*vit, parentVertex, graph).second) {  //No edge going the other way, OK to add this edge.
+                    boost::add_edge(parentVertex, *vit, graph);
                 }
             }
         }
+
     }
 
-    //Just for fun - output the graph as a ".dot" file for external rendering. If I can get this pretty, I might add it to a tab in the BOSS Report - I think there's a Javascript library for displaying .dot files (though stuff of this complexity might make it explode...).
-    vector<string> names;
-    for (list<boss::Plugin>::const_iterator it=plugins.begin(), endIt=plugins.end(); it != endIt; ++it) {
-        names.push_back(it->Name());
-    }
-    boss::ofstream outfun("fun.dot");
-    boost::write_graphviz(outfun, graph, boost::make_label_writer(&names[0]));
+    //Just for fun - output the graph as a ".dot" file for external rendering. If I can get this pretty, I might add it to a tab in the BOSS Report - here's a few Javascript libraries for displaying .dot files, but in my test case the graph is too complex and both libraries I found ran out of memory.
+    //The .dot file can be converted to an SVG using Graphviz: the command is `dot -Tsvg output.dot -o output.svg`.
+    boss::SaveGraph(graph, "output.dot");
+
+    //Now perform a topological sort.
+    boss::Sort(graph, plugins);
 
 
 

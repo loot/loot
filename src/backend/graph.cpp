@@ -22,6 +22,7 @@
 */
 
 #include "graph.h"
+#include "streams.h"
 
 #include <boost/algorithm/string.hpp>
 #include <boost/log/trivial.hpp>
@@ -47,8 +48,8 @@ namespace boss {
         return vertex;
     }
 
-        //The map maps each plugin name to a vector of names of plugins that overlap with it and should load before it.
-    void CalcPluginOverlaps(const std::list<Plugin>& plugins, boost::unordered_map< std::string, std::vector<list<Plugin>::const_iterator> >& overlapMap) {
+    //The map maps each plugin name to a vector of names of plugins that overlap with it and should load before it.
+    void CalcPluginOverlaps(const std::list<Plugin>& plugins, boost::unordered_map< std::string, std::vector<std::string> >& overlapMap) {
         for (list<Plugin>::const_iterator it=plugins.begin(),
                                           endit=plugins.end();
                                           it != endit;
@@ -59,26 +60,26 @@ namespace boss {
                     BOOST_LOG_TRIVIAL(trace) << "Checking for FormID overlap between \"" << it->Name() << "\" and \"" << jt->Name() << "\".";
                 if (it->DoFormIDsOverlap(*jt)) {
                     std::string key;
-                    list<Plugin>::const_iterator value;
+                    std::string value;
                     //Priority values should override the number of override records as the deciding factor if they differ.
                     if (it->MustLoadAfter(*jt) || jt->MustLoadAfter(*it))
                         break;
                     if (it->Priority() < jt->Priority()) {
                         key = jt->Name();
-                        value = it;
+                        value = it->Name();
                     } else if (jt->Priority() < it->Priority()) {
                         key = it->Name();
-                        value = jt;
+                        value = jt->Name();
                     } else if (it->NumOverrideFormIDs() >= jt->NumOverrideFormIDs()) {
                         key = jt->Name();
-                        value = it;
+                        value = it->Name();
                     } else {
                         key = it->Name();
-                        value = jt;
+                        value = jt->Name();
                     }
-                    boost::unordered_map< string, vector<list<Plugin>::const_iterator> >::iterator mapIt = overlapMap.find(key);
+                    boost::unordered_map< string, vector<string> >::iterator mapIt = overlapMap.find(key);
                     if (mapIt == overlapMap.end()) {
-                        overlapMap.insert(pair<string, vector<list<Plugin>::const_iterator> >(key, vector<list<Plugin>::const_iterator>(1, value)));
+                        overlapMap.insert(pair<string, vector<string> >(key, vector<string>(1, value)));
                     } else {
                         mapIt->second.push_back(value);
                     }
@@ -86,4 +87,46 @@ namespace boss {
             }
         }
     }
+
+    bool GetVertexByName(const PluginGraph& graph, const std::string& name, vertex_t& vertex) {
+        vertex_it vit, vit_end;
+        boost::tie(vit, vit_end) = boost::vertices(graph);
+
+        for (vit, vit_end; vit != vit_end; ++vit) {
+            if (boost::iequals(graph[*vit]->Name(), name)) {
+                vertex = *vit;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    void SaveGraph(const PluginGraph& graph, const boost::filesystem::path outpath) {
+        //First need to extract vertex names, since their stored as private members otherwise.
+  /*      vector<string> names;
+        vertex_it vit, vit_end;
+        boost::tie(vit, vit_end) = boost::vertices(graph);
+
+        for (vit, vit_end; vit != vit_end; ++vit) {
+            names.push_back(graph[*vit]->Name());
+        }
+        //Now write graph to file.
+        boss::ofstream out(outpath);
+        boost::write_graphviz(out, graph, boost::make_label_writer(&names[0]));
+        out.close();
+ */   }
+
+    void Sort(const PluginGraph& graph, std::list<Plugin>& plugins) {
+ /*       std::list<vertex_t> sortedVertices;
+        boost::topological_sort(graph, std::front_inserter(sortedVertices));
+
+        BOOST_LOG_TRIVIAL(info) << "Calculated order: ";
+        list<boss::Plugin> tempPlugins;
+        for (std::list<vertex_t>::iterator it = sortedVertices.begin(), endit = sortedVertices.end(); it != endit; ++it) {
+            BOOST_LOG_TRIVIAL(info) << '\t' << graph[*it]->Name();
+            tempPlugins.push_back(*graph[*it]);
+        }
+        plugins.swap(tempPlugins);
+ */   }
 }
