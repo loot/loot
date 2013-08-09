@@ -30,6 +30,7 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/regex.hpp>
+#include <boost/log/trivial.hpp>
 
 using namespace std;
 
@@ -83,6 +84,8 @@ namespace boss {
     }
 
     bool ConditionStruct::EvalCondition(boss::Game& game) const {
+        BOOST_LOG_TRIVIAL(trace) << "Evaluating condition: " << _condition;
+
         if (_condition.empty())
             return true;
 
@@ -153,6 +156,10 @@ namespace boss {
     }
 
     bool Message::EvalCondition(boss::Game& game, const unsigned int language) {
+
+        BOOST_LOG_TRIVIAL(trace) << "Choosing message language.";
+
+
         if (_content.size() > 1) {
             if (language == g_lang_any)  //Can use a message of any language, so use the first string.
                 _content.resize(1);

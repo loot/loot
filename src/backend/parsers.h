@@ -167,8 +167,9 @@ namespace YAML {
             std::vector<boss::MessageContent> content;
             if (node["content"].IsSequence())
                 content = node["content"].as< std::vector<boss::MessageContent> >();
-            else
-                content.push_back(node["content"].as<std::string>());
+            else {
+                content.push_back(boss::MessageContent(node["content"].as<std::string>()));
+            }
 
             //Check now that at least one item in content is English if there are multiple items.
             if (content.size() > 1) {
@@ -177,9 +178,8 @@ namespace YAML {
                     if (it->Language() == boss::g_lang_english)
                         found = true;
                 }
-     //Commented out because the auto-converted masterlist has localisations as separate messages and so will always fail.
-     //           if (!found)
-     //               return false;
+                if (!found)
+                    return false;
             }
 
             std::string condition;
@@ -570,6 +570,9 @@ namespace boss {
 
         //Checks that the path (not regex) doesn't go outside any game folders.
         bool IsSafePath(const std::string& path) {
+
+            BOOST_LOG_TRIVIAL(trace) << "Checking to see if the path \"" << path << "\" is safe.";
+
             std::vector<std::string> components;
             boost::split(components, path, boost::is_any_of("/\\"));
             components.pop_back();

@@ -56,7 +56,7 @@
 #include <boost/log/utility/setup/common_attributes.hpp>
 #include <boost/log/support/date_time.hpp>
 #include <boost/thread/thread.hpp>
-
+#include <boost/unordered_map.hpp>
 
 #include <wx/snglinst.h>
 #include <wx/aboutdlg.h>
@@ -75,10 +75,13 @@ namespace loc = boost::locale;
 
 
 struct plugin_loader {
-    plugin_loader(boss::Plugin& plugin, boss::Game& game, const string& filename, bool b) : _plugin(plugin), _game(game), _filename(filename), _b(b) {}
+    plugin_loader(boss::Plugin& plugin, boss::Game& game) : _plugin(plugin), _game(game) {
+    }
 
     void operator () () {
-        _plugin = boss::Plugin(_game, _filename, _b);
+        BOOST_LOG_TRIVIAL(info) << "Loading: " << _plugin.Name();
+        _plugin = boss::Plugin(_game, _plugin.Name(), false);
+        BOOST_LOG_TRIVIAL(info) << "Finished loading: " << _plugin.Name();
     }
 
     boss::Plugin& _plugin;
@@ -92,13 +95,57 @@ struct plugin_list_loader {
 
     void operator () () {
         for (list<boss::Plugin>::iterator it=_plugins.begin(), endit=_plugins.end(); it != endit; ++it) {
-            if (!boost::iequals(it->Name(), _game.Master()))
+            if (skipPlugins.find(it->Name()) == skipPlugins.end()) {
+                BOOST_LOG_TRIVIAL(info) << "Loading: " << it->Name();
                 *it = boss::Plugin(_game, it->Name(), false);
+                BOOST_LOG_TRIVIAL(info) << "Finished loading: " << it->Name();
+            }
         }
     }
 
     list<boss::Plugin>& _plugins;
     boss::Game& _game;
+    set<string> skipPlugins;
+};
+
+struct masterlist_updater_parser {
+    masterlist_updater_parser(boss::Game& game, list<boss::Message>& errors, list<boss::Plugin>& plugins, list<boss::Message>& messages, string& revision) : _game(game), _errors(errors), _plugins(plugins), _messages(messages), _revision(revision) {}
+
+    void operator () () {
+
+        BOOST_LOG_TRIVIAL(trace) << "Updating masterlist";
+        try {
+            _revision = UpdateMasterlist(_game, _errors, _plugins, _messages);
+        } catch (boss::error& e) {
+            _plugins.clear();
+            _messages.clear();
+            BOOST_LOG_TRIVIAL(error) << "Masterlist update failed. Details: " << e.what();
+            _errors.push_back(boss::Message(boss::g_message_error, (format(loc::translate("Masterlist update failed. Details: %1%")) % e.what()).str()));
+        }
+
+        if (_plugins.empty() && _messages.empty() && fs::exists(_game.MasterlistPath())) {
+
+            BOOST_LOG_TRIVIAL(trace) << "Parsing masterlist...";
+            try {
+                YAML::Node mlist = YAML::LoadFile(_game.MasterlistPath().string());
+
+                if (mlist["globals"])
+                    _messages = mlist["globals"].as< list<boss::Message> >();
+                if (mlist["plugins"])
+                    _plugins = mlist["plugins"].as< list<boss::Plugin> >();
+            } catch (YAML::Exception& e) {
+                BOOST_LOG_TRIVIAL(error) << "Masterlist parsing failed. Details: " << e.what();
+                _errors.push_back(boss::Message(boss::g_message_error, (format(loc::translate("Masterlist parsing failed. Details: %1%")) % e.what()).str()));
+            }
+            BOOST_LOG_TRIVIAL(trace) << "Finished parsing masterlist.";
+        }
+    }
+
+    boss::Game& _game;
+    list<boss::Message>& _errors;
+    list<boss::Plugin>& _plugins;
+    list<boss::Message>& _messages;
+    string& _revision;
 };
 
 bool BossGUI::OnInit() {
@@ -407,66 +454,56 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     YAML::Node mlist, ulist;
     list<boss::Message> messages, mlist_messages, ulist_messages;
     list<boss::Plugin> mlist_plugins, ulist_plugins;
+    boost::thread_group group;
+    list<boss::Plugin> plugins;
+    string revision;
 
     wxProgressDialog *progDia = new wxProgressDialog(translate("BOSS: Working..."),translate("BOSS working..."), 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_ELAPSED_TIME);
 
-    BOOST_LOG_TRIVIAL(trace) << "Updating masterlist";
+    masterlist_updater_parser mup(_game, messages, mlist_plugins, mlist_messages, revision);
+    group.create_thread(mup);
 
-    vector<string> parsingErrors;
-    string revision;
-    try {
-//        revision = UpdateMasterlist(_game, parsingErrors);
-    } catch (boss::error& e) {
-        BOOST_LOG_TRIVIAL(error) << "Masterlist update failed. Details: " << e.what();
-        messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("Masterlist update failed. Details: %1%")) % e.what()).str()));
-    }
-    for (vector<string>::const_iterator it=parsingErrors.begin(), endit=parsingErrors.end(); it != endit; ++it) {
-        messages.push_back(boss::Message(boss::g_message_error, *it));
-    }
-
-    // Get a list of the plugins.
-    list<boss::Plugin> plugins;
-    boost::thread_group group;
+    //First calculate the mean plugin size. Store it temporarily in a map to reduce filesystem lookups and file size recalculation.
+    size_t meanFileSize = 0;
+    boost::unordered_map<size_t, boss::Plugin> tempMap;
     for (fs::directory_iterator it(_game.DataPath()); it != fs::directory_iterator(); ++it) {
         if (fs::is_regular_file(it->status()) && IsPlugin(it->path().string())) {
+            size_t fileSize = fs::file_size(it->path());
+            meanFileSize += fileSize;
 
-            string filename = it->path().filename().string();
-			BOOST_LOG_TRIVIAL(trace) << "Reading plugin: " << filename;
-
-            plugins.push_back(boss::Plugin(filename));
-
-            if (filename == _game.Master()) {
-                plugin_loader pl(plugins.back(), _game, filename, false);
-                group.create_thread(pl);
-            }
-
-            progDia->Pulse();
+            tempMap.emplace(fileSize, boss::Plugin(it->path().filename().string()));
         }
     }
+    meanFileSize /= tempMap.size();
+
+    //Now load plugins.
     plugin_list_loader pll(plugins, _game);
+    for (boost::unordered_map<size_t, boss::Plugin>::const_iterator it=tempMap.begin(), endit=tempMap.end(); it != endit; ++it) {
+
+        BOOST_LOG_TRIVIAL(trace) << "Found plugin: " << it->second.Name();
+
+        plugins.push_back(it->second);
+
+        if (it->first > meanFileSize) {
+            plugin_loader pl(plugins.back(), _game);
+            pll.skipPlugins.insert(it->second.Name());
+            group.create_thread(pl);
+        }
+
+        progDia->Pulse();
+    }
     group.create_thread(pll);
     group.join_all();
 
-    if (fs::exists(_game.MasterlistPath())) {
-        BOOST_LOG_TRIVIAL(trace) << "Parsing masterlist...";
-
-        try {
-            mlist = YAML::LoadFile(_game.MasterlistPath().string());
-        } catch (YAML::ParserException& e) {
-            BOOST_LOG_TRIVIAL(error) << "Masterlist parsing failed. Details: " << e.what();
-            messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("Masterlist parsing failed. Details: %1%")) % e.what()).str()));
-        }
-        if (mlist["globals"])
-            mlist_messages = mlist["globals"].as< list<boss::Message> >();
-        if (mlist["plugins"])
-            mlist_plugins = mlist["plugins"].as< list<boss::Plugin> >();
-    }
-
+    //Now load userlist.
     if (fs::exists(_game.UserlistPath())) {
         BOOST_LOG_TRIVIAL(trace) << "Parsing userlist...";
 
         try {
-            ulist = YAML::LoadFile(_game.UserlistPath().string());
+            YAML::Node ulist = YAML::LoadFile(_game.UserlistPath().string());
+
+            if (ulist["plugins"])
+                ulist_plugins = ulist["plugins"].as< list<boss::Plugin> >();
         } catch (YAML::ParserException& e) {
             BOOST_LOG_TRIVIAL(error) << "Userlist parsing failed. Details: " << e.what();
             messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("Userlist parsing failed. Details: %1%")) % e.what()).str()));
@@ -477,24 +514,34 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     progDia->Pulse();
 
+    bool cyclicDependenciesExist = false;
     if (fs::exists(_game.MasterlistPath()) || fs::exists(_game.UserlistPath())) {
-        BOOST_LOG_TRIVIAL(trace) << "Merging plugin lists, evaluating conditions and and checking for install validity...";
+        BOOST_LOG_TRIVIAL(trace) << "Merging plugin lists, evaluating conditions and checking for install validity...";
+
+         //Set language.
+        unsigned int lang = GetLangNum(_settings["Language"].as<string>());
+
 
         //Merge all global message lists.
         BOOST_LOG_TRIVIAL(trace) << "Merging all global message lists.";
-        messages = mlist_messages;
-        messages.insert(messages.end(), ulist_messages.begin(), ulist_messages.end());
-
-        //Set language.
-        unsigned int lang = GetLangNum(_settings["Language"].as<string>());
+        if (!mlist_messages.empty())
+            messages.insert(messages.end(), mlist_messages.begin(), mlist_messages.end());
+        if (!ulist_messages.empty())
+            messages.insert(messages.end(), ulist_messages.begin(), ulist_messages.end());
 
         //Evaluate any conditions in the global messages.
-        list<boss::Message>::iterator it=messages.begin();
-        while (it != messages.end()) {
-            if (!it->EvalCondition(_game, lang))
-                it = messages.erase(it);
-            else
-                ++it;
+        BOOST_LOG_TRIVIAL(trace) << "Evaluating global message conditions...";
+        try {
+            list<boss::Message>::iterator it=messages.begin();
+            while (it != messages.end()) {
+                if (!it->EvalCondition(_game, lang))
+                    it = messages.erase(it);
+                else
+                    ++it;
+            }
+        } catch (boss::error& e) {
+            BOOST_LOG_TRIVIAL(error) << "A global message contains a condition that could not be evaluated. Details: " << e.what();
+            messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("A global message contains a condition that could not be evaluated. Details: %1%")) % e.what()).str()));
         }
 
         //Merge plugin list, masterlist and userlist plugin data.

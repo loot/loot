@@ -501,11 +501,6 @@ namespace boss {
             std::list<Message>::iterator it = messages.begin();
             while (it != messages.end()) {
 
-                std::string condition = it->Condition();
-                ConvertCondition(condition);
-
-                *it = Message(it->Type(), it->Content(), condition);
-
                 if (it->Type() == g_message_tag) {
                     std::string message = it->ChooseContent(g_lang_any).Str();
 
@@ -683,6 +678,8 @@ namespace boss {
 
             std::vector<MessageContent> mc_vec;
             mc_vec.push_back(MessageContent(content, langInt));
+
+            ConvertCondition(condition);
 
             message = Message(type, mc_vec, condition);
         }
