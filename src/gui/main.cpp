@@ -514,7 +514,6 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     progDia->Pulse();
 
-    bool cyclicDependenciesExist = false;
     if (fs::exists(_game.MasterlistPath()) || fs::exists(_game.UserlistPath())) {
         BOOST_LOG_TRIVIAL(trace) << "Merging plugin lists, evaluating conditions and checking for install validity...";
 
