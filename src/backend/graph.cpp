@@ -56,14 +56,14 @@ namespace boss {
                                           ++it) {
             list<Plugin>::const_iterator jt = it;
             ++jt;
-            for (jt, endit; jt != endit; ++jt) {
-                    BOOST_LOG_TRIVIAL(trace) << "Checking for FormID overlap between \"" << it->Name() << "\" and \"" << jt->Name() << "\".";
+            for (; jt != endit; ++jt) {
+                BOOST_LOG_TRIVIAL(trace) << "Checking for FormID overlap between \"" << it->Name() << "\" and \"" << jt->Name() << "\".";
                 if (it->DoFormIDsOverlap(*jt)) {
                     std::string key;
                     std::string value;
                     //Priority values should override the number of override records as the deciding factor if they differ.
                     if (it->MustLoadAfter(*jt) || jt->MustLoadAfter(*it))
-                        break;
+                        continue;
                     if (it->Priority() < jt->Priority()) {
                         key = jt->Name();
                         value = it->Name();
