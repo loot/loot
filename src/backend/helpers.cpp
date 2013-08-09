@@ -1,10 +1,8 @@
 /*  BOSS
 
-    A "one-click" program for users that quickly optimises and avoids
-    detrimental conflicts in their TES IV: Oblivion, Nehrim - At Fate's Edge,
-    TES V: Skyrim, Fallout 3 and Fallout: New Vegas mod load orders.
+    A plugin load order optimiser for games that use the esp/esm plugin system.
 
-    Copyright (C) 2009-2012    BOSS Development Team.
+    Copyright (C) 2012-2013    WrinklyNinja
 
     This file is part of BOSS.
 
@@ -21,8 +19,6 @@
     You should have received a copy of the GNU General Public License
     along with BOSS.  If not, see
     <http://www.gnu.org/licenses/>.
-
-    $Revision: 3184 $, $Date: 2011-08-26 20:52:13 +0100 (Fri, 26 Aug 2011) $
 */
 
 #include "helpers.h"
@@ -61,50 +57,50 @@ namespace boss {
     using boost::algorithm::replace_first;
     namespace karma = boost::spirit::karma;
     namespace fs = boost::filesystem;
-    
+
 
 	/// REGEX expression definition
 	///  Each expression is composed of three parts:
 	///    1. The marker string "version", "ver", "rev", "v" or "r"
 	///    2. The version string itself.
 
-	const char* regex1 = 
+	const char* regex1 =
 		"^(?:\\bversion\\b[ ]*(?:[:.\\-]?)|\\brevision\\b(?:[:.\\-]?))[ ]*"
 		"((?:alpha|beta|test|debug)?\\s*[-0-9a-zA-Z._+]+\\s*(?:alpha|beta|test|debug)?\\s*(?:[0-9]*))$"
 		;
 
-	const char* regex2 = 
+	const char* regex2 =
 		"(?:\\bversion\\b(?:[ :]?)|\\brevision\\b(?:[:.\\-]?))[ ]*"
 		"([0-9][-0-9a-zA-Z._]+\\+?)"
 		;
 
-	const char* regex3 = 
+	const char* regex3 =
 		"(?:\\bver(?:[:.]?)|\\brev(?:[:.]?))\\s*"
 		"([0-9][-0-9a-zA-Z._]*\\+?)"
 		;
 
 	// Matches "Updated: <date>" for the Bashed patch
-	const char* regex4 = 
+	const char* regex4 =
 		"(?:Updated:)\\s*"
 		"([-0-9aAmMpP/ :]+)$"
 		;
 
 	// Matches isolated versions as last resort
-	const char* regex5 = 
+	const char* regex5 =
 		"(?:(?:\\bv|\\br)(?:\\s?)(?:[-.:])?(?:\\s*))"
 		"((?:(?:\\balpha\\b)?|(?:\\bbeta\\b)?)\\s*[0-9][-0-9a-zA-Z._]*\\+?)"
 		;
 
 	// Matches isolated versions as last resort
-	const char* regex6 = 
+	const char* regex6 =
 		"((?:(?:\\balpha\\b)?|(?:\\bbeta\\b)?)\\s*\\b[0-9][-0-9a-zA-Z._]*\\+?)$"
 		;
 
-	const char* regex7 = 
+	const char* regex7 =
 		"(^\\bmark\\b\\s*\\b[IVX0-9][-0-9a-zA-Z._+]*\\s*(?:alpha|beta|test|debug)?\\s*(?:[0-9]*)?)$"
 		;
 
-	/// Array used to try each of the expressions defined above using 
+	/// Array used to try each of the expressions defined above using
 	/// an iteration for each of them.
 	boost::regex version_checks[7] = {
 			boost::regex(regex1, boost::regex::icase),
@@ -267,7 +263,7 @@ namespace boss {
         else
             return g_lang_any;
     }
-    
+
 
     //////////////////////////////
     // Version Class Functions

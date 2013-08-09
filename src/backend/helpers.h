@@ -1,10 +1,8 @@
 /*  BOSS
 
-    A "one-click" program for users that quickly optimises and avoids
-    detrimental conflicts in their TES IV: Oblivion, Nehrim - At Fate's Edge,
-    TES V: Skyrim, Fallout 3 and Fallout: New Vegas mod load orders.
+    A plugin load order optimiser for games that use the esp/esm plugin system.
 
-    Copyright (C) 2009-2012    BOSS Development Team.
+    Copyright (C) 2012-2013    WrinklyNinja
 
     This file is part of BOSS.
 
@@ -21,8 +19,6 @@
     You should have received a copy of the GNU General Public License
     along with BOSS.  If not, see
     <http://www.gnu.org/licenses/>.
-
-    $Revision: 3163 $, $Date: 2011-08-21 22:03:18 +0100 (Sun, 21 Aug 2011) $
 */
 
 #ifndef __BOSS_HELPERS__
@@ -37,7 +33,7 @@
 
 namespace boss {
 
-    /// Array used to try each of the expressions defined using 
+    /// Array used to try each of the expressions defined using
 	/// an iteration for each of them.
 	extern boost::regex version_checks[7];
 

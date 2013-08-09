@@ -2,7 +2,7 @@
 
     A plugin load order optimiser for games that use the esp/esm plugin system.
 
-    Copyright (C) 2012    WrinklyNinja
+    Copyright (C) 2012-2013    WrinklyNinja
 
     This file is part of BOSS.
 
@@ -53,7 +53,7 @@ namespace boss {
 
         if (find(games.begin(), games.end(), Game(g_game_fonv)) == games.end())
             games.push_back(Game(g_game_fonv));
-        
+
         return games;
     }
 
@@ -123,7 +123,7 @@ namespace boss {
 
         return *this;
     }
-                      
+
     Game& Game::Init() {
         //First look for local install, then look for Registry.
         if (gamePath.empty() || !fs::exists(gamePath / "Data" / _masterFile)) {
@@ -149,7 +149,7 @@ namespace boss {
 
         return *this;
     }
-    
+
     bool Game::IsInstalled() const {
         if (!gamePath.empty() && fs::exists(gamePath / "Data" / _masterFile))
             return true;
@@ -208,11 +208,11 @@ namespace boss {
     fs::path Game::MasterlistPath() const {
         return g_path_local / bossFolderName / "masterlist.yaml";
     }
-    
+
     fs::path Game::UserlistPath() const {
         return g_path_local / bossFolderName / "userlist.yaml";
     }
-    
+
     fs::path Game::ReportPath() const {
         return g_path_local / bossFolderName / "report.html";
     }
@@ -249,7 +249,7 @@ namespace boss {
             lo_cleanup();
             throw error(error::liblo_error, err);
         }
-                
+
         if (lo_get_active_plugins(gh, &pluginArr, &pluginArrSize) != LIBLO_OK) {
             const char * e;
             lo_get_error_message(&e);
@@ -258,7 +258,7 @@ namespace boss {
             lo_cleanup();
             throw error(error::liblo_error, err);
         }
-        
+
         for (size_t i=0; i < pluginArrSize; ++i) {
             activePlugins.insert(string(pluginArr[i]));
         }
@@ -312,7 +312,7 @@ namespace boss {
             strcpy(pluginArr[i], it->Name().c_str());
             ++i;
         }
-                
+
         if (lo_set_load_order(gh, pluginArr, pluginArrSize) != LIBLO_OK) {
             for (size_t i=0; i < pluginArrSize; i++)
                 delete [] pluginArr[i];
@@ -324,11 +324,11 @@ namespace boss {
             lo_cleanup();
             throw error(error::liblo_error, err);
         }
-        
+
         for (size_t i=0; i < pluginArrSize; i++)
             delete [] pluginArr[i];
         delete [] pluginArr;
-    
+
         lo_destroy_handle(gh);
     }
 

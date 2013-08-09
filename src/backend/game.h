@@ -2,7 +2,7 @@
 
     A plugin load order optimiser for games that use the esp/esm plugin system.
 
-    Copyright (C) 2012    WrinklyNinja
+    Copyright (C) 2012-2013    WrinklyNinja
 
     This file is part of BOSS.
 
@@ -60,14 +60,14 @@ namespace boss {
         std::string Master() const;
         std::string RegistryKey() const;
         std::string URL() const;
-        
+
 
         boost::filesystem::path GamePath() const;
         boost::filesystem::path DataPath() const;
         boost::filesystem::path MasterlistPath() const;
         boost::filesystem::path UserlistPath() const;
         boost::filesystem::path ReportPath() const;
-        
+
         bool IsActive(const std::string& plugin) const;
 
         void SetLoadOrder(const std::list<Plugin>& loadOrder) const;
