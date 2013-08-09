@@ -556,10 +556,14 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     BOOST_LOG_TRIVIAL(trace) << "Moving masters before non-masters.";
     plugins.sort(boss::master_sort);
 
+    progDia->Pulse();
+
     //Now build overlap map.
     BOOST_LOG_TRIVIAL(trace) << "Building plugin overlap map.";
     boost::unordered_map< string, vector<string> > overlapMap;
     CalcPluginOverlaps(plugins, overlapMap);
+
+    progDia->Pulse();
 
     BOOST_LOG_TRIVIAL(trace) << "Building the plugin dependency graph...";
     bool cyclicDependenciesExist = false;
@@ -654,6 +658,8 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             }
         }
 
+        progDia->Pulse();
+
     }
 
     //Just for fun - output the graph as a ".dot" file for external rendering. If I can get this pretty, I might add it to a tab in the BOSS Report - here's a few Javascript libraries for displaying .dot files, but in my test case the graph is too complex and both libraries I found ran out of memory.
@@ -661,23 +667,16 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     BOOST_LOG_TRIVIAL(trace) << "Outputting the graph.";
     boss::SaveGraph(graph, "output.dot");
 
-    //Check for back-edges.
+    //Check for back-edges, then perform a topological sort.
     try {
+        BOOST_LOG_TRIVIAL(trace) << "Checking to see if the graph is cyclic.";
         boss::CheckForCycles(graph);
-    } catch (boss::error& e) {
-        BOOST_LOG_TRIVIAL(error) << e.what();
-    }
 
-    //Now perform a topological sort.
-    BOOST_LOG_TRIVIAL(trace) << "Performing a topological sort on the graph.";
-    try {
+        progDia->Pulse();
+
+        BOOST_LOG_TRIVIAL(trace) << "Performing a topological sort.";
         boss::Sort(graph, plugins);
-    } catch (boost::not_a_dag& e) {
-        BOOST_LOG_TRIVIAL(error) << e.what();
-    }
 
-
-    if (!cyclicDependenciesExist) {
         progDia->Pulse();
 
         BOOST_LOG_TRIVIAL(debug) << "Displaying load order preview.";
@@ -762,13 +761,10 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         BOOST_LOG_TRIVIAL(trace) << "Load order set:";
         for (list<boss::Plugin>::iterator it=plugins.begin(), endIt = plugins.end(); it != endIt; ++it) {
             BOOST_LOG_TRIVIAL(trace) << '\t' << it->Name();
-            /*vector<string> masters = it->Masters();
-            if (!masters.empty()) {
-                out << "\t" << "Masters:" << endl;
-                for (size_t i=0, max=masters.size(); i < max; ++i)
-                    out << "\t\t" << masters[i] << endl;
-            }*/
         }
+    } catch (std::exception& e) {
+        BOOST_LOG_TRIVIAL(error) << "Failed to calculate the load order. Details: " << e.what();
+         messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("Failed to calculate the load order. Details: %1%")) % e.what()).str()));
     }
 
     //Read the details section of the previous report, if it exists.
