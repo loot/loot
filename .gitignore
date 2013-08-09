@@ -51,4 +51,4 @@ docs/latex
 out/
 bin/
 ipch/
-libstrings-tester.txt
+resources/graphvis
