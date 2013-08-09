@@ -44,19 +44,13 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
         Games.Add(FromUTF8(_games[i].Name()));
     }
 
-	wxString Language[] = {
-		wxT("English"),
-		wxString::FromUTF8("Español"),
-		wxString::FromUTF8("Русский"),
-	};
-
     //Initialise controls.
     GameChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, Games);
     LanguageChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 4, Language);
     DebugVerbosityChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 4, DebugVerbosity);
 
     gamesList = new wxListView(this, LIST_Games, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL);
-    
+
     addBtn = new wxButton(this, BUTTON_AddGame, translate("Add Game"));
     editBtn = new wxButton(this, BUTTON_EditGame, translate("Edit Game"));
     removeBtn = new wxButton(this, BUTTON_RemoveGame, translate("Remove Game"));
@@ -97,15 +91,15 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
 
 	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Default Game:")), leftItem);
 	GridSizer->Add(GameChoice, rightItem);
-    
+
 	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Language:")), leftItem);
 	GridSizer->Add(LanguageChoice, rightItem);
-	
+
     GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Debug Verbosity:")), leftItem);
 	GridSizer->Add(DebugVerbosityChoice, rightItem);
 
 	bigBox->Add(GridSizer, 0, wxEXPAND|wxALL, 10);
-    
+
     bigBox->Add(gamesList, wholeItem);
 
     wxBoxSizer * hbox2 = new wxBoxSizer(wxHORIZONTAL);
@@ -113,16 +107,16 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
     hbox2->Add(editBtn, 0, wxLEFT|wxRIGHT, 5);
     hbox2->Add(removeBtn, 0, wxLEFT, 5);
     bigBox->Add(hbox2, 0, wxALIGN_RIGHT|wxBOTTOM|wxRIGHT, 10);
-   
+
     bigBox->Add(UpdateMasterlistBox, wholeItem);
 
     bigBox->Add(reportViewBox, wholeItem);
-    
+
     bigBox->AddSpacer(10);
     bigBox->AddStretchSpacer(1);
-	
+
 	bigBox->Add(new wxStaticText(this, wxID_ANY, translate("Language and game changes will be applied after BOSS is restarted.")), wholeItem);
-	
+
 	//Need to add 'OK' and 'Cancel' buttons.
 	wxSizer * sizer = CreateSeparatedButtonSizer(wxOK|wxCANCEL);
 
@@ -186,7 +180,7 @@ void SettingsFrame::SetDefaultValues() {
         gamesList->SetItem(i, 5, FromUTF8(_games[i].GamePath().string()));
         gamesList->SetItem(i, 6, FromUTF8(_games[i].RegistryKey()));
     }
-    
+
     addBtn->Enable(true);
     editBtn->Enable(false);
     removeBtn->Enable(false);
@@ -213,7 +207,7 @@ void SettingsFrame::OnQuit(wxCommandEvent& event) {
         for (size_t i=0,max=gamesList->GetItemCount(); i < max; ++i) {
             string name, folder, master, url, path, registry;
             unsigned int id;
-            
+
             name = gamesList->GetItemText(i, 0).ToUTF8();
             folder = gamesList->GetItemText(i, 2).ToUTF8();
             master = gamesList->GetItemText(i, 3).ToUTF8();
@@ -293,7 +287,7 @@ void SettingsFrame::OnAddGame(wxCommandEvent& event) {
                 return;
             }
         }
-        
+
         long i = gamesList->GetItemCount();
         gamesList->InsertItem(i, rowDialog->GetName());
         gamesList->SetItem(i, 1, FromUTF8(boss::Game(string(rowDialog->GetType().ToUTF8())).FolderName()));
@@ -341,7 +335,7 @@ void SettingsFrame::OnEditGame(wxCommandEvent& event) {
                 this);
             return;
         }
-            
+
         gamesList->SetItem(i, 0, rowDialog->GetName());
         gamesList->SetItem(i, 1, FromUTF8(boss::Game(string(rowDialog->GetType().ToUTF8())).FolderName()));
         gamesList->SetItem(i, 2, rowDialog->GetFolderName());

@@ -225,8 +225,9 @@ bool BossGUI::OnInit() {
     //Set the locale to get encoding and language conversions working correctly.
     BOOST_LOG_TRIVIAL(debug) << "Initialising language settings.";
     if (_settings["Language"]) {
-        string localeId = "";
-        wxLanguage lang;
+        //Defaults in case language string is empty.
+        string localeId = "en.UTF-8";
+        wxLanguage lang = wxLANGUAGE_ENGLISH;
         if (_settings["Language"].as<string>() == "eng") {
             localeId = "en.UTF-8";
             lang = wxLANGUAGE_ENGLISH;
@@ -235,7 +236,7 @@ bool BossGUI::OnInit() {
             localeId = "es.UTF-8";
             lang = wxLANGUAGE_SPANISH;
             BOOST_LOG_TRIVIAL(debug) << "Setting language to Spanish.";
-        } else if (_settings["Language"].as<string>() == "spa") {
+        } else if (_settings["Language"].as<string>() == "rus") {
             localeId = "ru.UTF-8";
             lang = wxLANGUAGE_RUSSIAN;
             BOOST_LOG_TRIVIAL(debug) << "Setting language to Russian.";
