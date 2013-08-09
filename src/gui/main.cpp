@@ -415,7 +415,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     vector<string> parsingErrors;
     string revision;
     try {
-        revision = UpdateMasterlist(_game, parsingErrors);
+//        revision = UpdateMasterlist(_game, parsingErrors);
     } catch (boss::error& e) {
         BOOST_LOG_TRIVIAL(error) << "Masterlist update failed. Details: " << e.what();
         messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("Masterlist update failed. Details: %1%")) % e.what()).str()));
@@ -664,8 +664,11 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     //Just for fun - output the graph as a ".dot" file for external rendering. If I can get this pretty, I might add it to a tab in the BOSS Report - here's a few Javascript libraries for displaying .dot files, but in my test case the graph is too complex and both libraries I found ran out of memory.
     //The .dot file can be converted to an SVG using Graphviz: the command is `dot -Tsvg output.dot -o output.svg`.
-    BOOST_LOG_TRIVIAL(trace) << "Outputting the graph.";
-    boss::SaveGraph(graph, "output.dot");
+    if (fs::exists(g_path_graphvis)) {
+        BOOST_LOG_TRIVIAL(trace) << "Outputting the graph.";
+        boss::SaveGraph(graph, "output.dot");
+
+    }
 
     //Check for back-edges, then perform a topological sort.
     try {

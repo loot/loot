@@ -61,4 +61,6 @@ namespace boss {
     const boost::filesystem::path g_path_settings         = g_path_local / "settings.yaml";
     const boost::filesystem::path g_path_log              = g_path_local / "BOSSDebugLog.txt";
     const boost::filesystem::path g_path_l10n             = "resources/l10n";
+    const boost::filesystem::path g_path_graphvis         = "resources/graphvis/dot.exe";
+    const boost::filesystem::path g_path_graph            = g_path_local / "graph.svg";
 }
