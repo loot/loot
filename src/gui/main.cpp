@@ -613,7 +613,6 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     progDia->Pulse();
 
     BOOST_LOG_TRIVIAL(trace) << "Building the plugin dependency graph...";
-    bool cyclicDependenciesExist = false;
 
     //Use an adjacency list (don't know yet if list or matrix is the better choice), and use "listS" as the VertexList type. We need a possible multi-graph to catch some forms of cyclic dependency (a working graph would not be a multi-graph though), so use "listS". Want a directed graph where we can access in-edges, so use "bidirectionalS". Also provide the boss::Plugin class as the vertex property type.
 
@@ -713,8 +712,20 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     //The .dot file can be converted to an SVG using Graphviz: the command is `dot -Tsvg output.dot -o output.svg`.
     if (fs::exists(g_path_graphvis)) {
         BOOST_LOG_TRIVIAL(trace) << "Outputting the graph.";
-        boss::SaveGraph(graph, "output.dot");
+        fs::path temp = fs::path(_game.GraphPath().string() + ".temp");
+        boss::SaveGraph(graph, temp);
 
+        string command = g_path_graphvis.string() + " -Tsvg \"" + temp.string() + "\" -o \"" + _game.GraphPath().string() + "\"";
+        string output;
+
+        try {
+            system(command.c_str());
+
+  //          if (RunCommand(command, output))  //This hangs for graphvis, for some reason. Works for svn though...
+            fs::remove(temp);
+        } catch(boss::error& e) {
+            messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("Failed to generate graph image. Details: %1%")) % e.what()).str()));
+        }
     }
 
     //Check for back-edges, then perform a topological sort.
