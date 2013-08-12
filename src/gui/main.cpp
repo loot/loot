@@ -461,8 +461,8 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     wxProgressDialog *progDia = new wxProgressDialog(translate("BOSS: Working..."),translate("BOSS working..."), 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_ELAPSED_TIME);
 
-    masterlist_updater_parser mup(_game, messages, mlist_plugins, mlist_messages, revision);
-    group.create_thread(mup);
+  //  masterlist_updater_parser mup(_game, messages, mlist_plugins, mlist_messages, revision);
+ //   group.create_thread(mup);
 
     //First calculate the mean plugin size. Store it temporarily in a map to reduce filesystem lookups and file size recalculation.
     size_t meanFileSize = 0;
