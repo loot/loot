@@ -67,6 +67,7 @@ namespace boss {
         boost::filesystem::path MasterlistPath() const;
         boost::filesystem::path UserlistPath() const;
         boost::filesystem::path ReportPath() const;
+        boost::filesystem::path GraphPath() const;
 
         bool IsActive(const std::string& plugin) const;
 

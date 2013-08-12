@@ -47,7 +47,7 @@ namespace boss {
             vertex_t vSource = boost::source(e, g);
             vertex_t vTarget = boost::target(e, g);
 
-            throw boss::error(boss::error::invalid_args, "Back edge detected between plugins \"" + g[vSource]->Name() + "\" and \"" + g[vTarget]->Name() + "\".");
+            throw boss::error(boss::error::sorting_error, "Back edge detected between plugins \"" + g[vSource]->Name() + "\" and \"" + g[vTarget]->Name() + "\".");
         }
     };
 
