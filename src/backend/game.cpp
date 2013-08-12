@@ -217,6 +217,10 @@ namespace boss {
         return g_path_local / bossFolderName / "report.html";
     }
 
+    fs::path Game::GraphPath() const {
+        return g_path_local / bossFolderName / "graph.svg";
+    }
+
     void Game::RefreshActivePluginsList() {
         lo_game_handle gh;
         char ** pluginArr;

@@ -51,6 +51,8 @@ namespace boss {
         static const unsigned int no_game_detected      = 10;
         static const unsigned int subversion_error      = 11;
         static const unsigned int git_error             = 12;
+        static const unsigned int windows_error         = 13;
+        static const unsigned int sorting_error         = 14;
     private:
         std::string _what;
         unsigned int _code;

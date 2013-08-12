@@ -31,98 +31,11 @@
 
 #include <git2.h>
 
-#if _WIN32 || _WIN64
-#   ifndef UNICODE
-#       define UNICODE
-#   endif
-#   ifndef _UNICODE
-#      define _UNICODE
-#   endif
-#   include "windows.h"
-#   include "shlobj.h"
-#endif
-#define BUFSIZE 4096
-
 using namespace std;
 
 namespace fs = boost::filesystem;
 
 namespace boss {
-
-    bool RunCommand(const std::string& command, std::string& output) {
-        HANDLE consoleWrite = NULL;
-        HANDLE consoleRead = NULL;
-
-        SECURITY_ATTRIBUTES saAttr;
-
-        PROCESS_INFORMATION piProcInfo;
-        STARTUPINFO siStartInfo;
-
-        CHAR chBuf[BUFSIZE];
-        DWORD dwRead;
-
-        DWORD exitCode;
-
-        //Init attributes.
-        saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
-        saAttr.bInheritHandle = TRUE;
-        saAttr.lpSecurityDescriptor = NULL;
-
-        //Create I/O pipes.
-        if (!CreatePipe(&consoleRead, &consoleWrite, &saAttr, 0)) {
-            BOOST_LOG_TRIVIAL(error) << "Could not create pipe for Subversion process.";
-            throw error(error::subversion_error, "Could not create pipe for Subversion process.");
-        }
-
-        //Create a child process.
-        BOOST_LOG_TRIVIAL(trace) << "Creating a child process.";
-        ZeroMemory(&piProcInfo, sizeof(PROCESS_INFORMATION));
-
-        ZeroMemory(&siStartInfo, sizeof(STARTUPINFO));
-        siStartInfo.cb = sizeof(STARTUPINFO);
-        siStartInfo.hStdError = consoleWrite;
-        siStartInfo.hStdOutput = consoleWrite;
-        siStartInfo.dwFlags |= STARTF_USESTDHANDLES | STARTF_USESHOWWINDOW;
-        siStartInfo.wShowWindow = SW_HIDE;
-
-        const int utf16Len = MultiByteToWideChar(CP_UTF8, 0, command.c_str(), -1, NULL, 0);
-        wchar_t * cmdLine = new wchar_t[utf16Len];
-        MultiByteToWideChar(CP_UTF8, 0, command.c_str(), -1, cmdLine, utf16Len);
-
-        bool result = CreateProcess(NULL,
-            cmdLine,     // command line
-            NULL,          // process security attributes
-            NULL,          // primary thread security attributes
-            TRUE,          // handles are inherited
-            0,             // creation flags
-            NULL,          // use parent's environment
-            NULL,          // use parent's current directory
-            &siStartInfo,  // STARTUPINFO pointer
-            &piProcInfo);  // receives PROCESS_INFORMATION
-
-        delete [] cmdLine;
-
-        if (!result) {
-            BOOST_LOG_TRIVIAL(error) << "Could not create Subversion process.";
-            throw error(error::subversion_error, "Could not create Subversion process.");
-        }
-
-        WaitForSingleObject(piProcInfo.hProcess, INFINITE);
-
-        if (!GetExitCodeProcess(piProcInfo.hProcess, &exitCode)) {
-            BOOST_LOG_TRIVIAL(error) << "Could not get Subversion process exit code.";
-            throw error(error::subversion_error, "Could not get Subversion process exit code.");
-        }
-
-        if (!ReadFile(consoleRead, chBuf, BUFSIZE, &dwRead, NULL)) {
-            BOOST_LOG_TRIVIAL(error) << "Could not read Subversion process output.";
-            throw error(error::subversion_error, "Could not read Subversion process output.");
-        }
-
-        output = string(chBuf, dwRead);
-
-        return exitCode == 0;
-    }
 
     //Gets revision + date string.
     string GetRevision(const std::string& buffer) {
