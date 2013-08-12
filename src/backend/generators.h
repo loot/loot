@@ -161,6 +161,12 @@ namespace boss {
         div = nav.append_child();
         div.set_name("div");
         div.append_attribute("class").set_value("button");
+        div.append_attribute("data-section").set_value("graph");
+        div.text().set("Graph");
+
+        div = nav.append_child();
+        div.set_name("div");
+        div.append_attribute("class").set_value("button");
         div.append_attribute("id").set_value("filtersToggle");
         div.text().set("Filters");
     }
@@ -347,6 +353,7 @@ namespace boss {
     inline void AppendMain(pugi::xml_node& body,
                         const std::string& oldDetails,
                         const std::string& masterlistVersion,
+                        const std::string& graphPath,
                         bool masterlistUpdateEnabled,
                         const std::list<Message>& messages,
                         const std::list<Plugin>& plugins,
@@ -370,6 +377,17 @@ namespace boss {
         pluginMessageNo = messageNo;
 
         AppendSummary(main, hasChanged, masterlistVersion, masterlistUpdateEnabled, messageNo, warnNo, errorNo, messages);
+
+        //Append graph tag.
+        pugi::xml_node graph = main.append_child();
+        graph.set_name("div");
+        graph.append_attribute("id").set_value("graph");
+        graph.append_attribute("class").set_value("hidden");
+
+        pugi::xml_node img = graph.append_child();
+        img.set_name("img");
+        img.append_attribute("src").set_value(ToFileURL(graphPath).c_str());
+        img.append_attribute("alt").set_value("Plugin interactions graph.");
     }
 
     inline void AppendFilters(pugi::xml_node& body, int messageNo, int pluginNo) {
@@ -474,7 +492,8 @@ namespace boss {
                         const std::list<Plugin>& plugins,
                         const std::string& oldDetails,
                         const std::string& masterlistVersion,
-                        const bool masterlistUpdateEnabled) {
+                        const bool masterlistUpdateEnabled,
+                        const std::string& graphPath) {
 
         pugi::xml_document doc;
 
@@ -486,7 +505,7 @@ namespace boss {
         AppendNav(body);
 
         int messageNo=0;
-        AppendMain(body, oldDetails, masterlistVersion, masterlistUpdateEnabled, messages, plugins, messageNo);
+        AppendMain(body, oldDetails, masterlistVersion, graphPath, masterlistUpdateEnabled, messages, plugins, messageNo);
 
         AppendFilters(body, messageNo, plugins.size());
 

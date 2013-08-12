@@ -858,7 +858,8 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                         plugins,
                         oldDetails,
                         revision,
-                        _settings["Update Masterlist"].as<bool>());
+                        _settings["Update Masterlist"].as<bool>(),
+                        _game.GraphPath().string());
     } catch (boss::error& e) {
         wxMessageBox(
             FromUTF8(format(loc::translate("Error: %1%")) % e.what()),
