@@ -49,6 +49,29 @@ namespace boss {
         }
     };
 
+    inline void GetGraphWidthHeight(const boost::filesystem::path& filepath, std::string& width, std::string& height) {
+
+        boss::ifstream in(filepath);
+
+        std::string line;
+        while (std::getline(in, line)) {
+            if (boost::contains(line, "width=\"") && boost::contains(line, "length=\"")) {
+
+                size_t pos1, pos2;
+                pos1 = line.find("width=\"");
+                pos2 = line.find("\"", pos1 + 8);
+                width = line.substr(pos1 + 7, pos2-pos1-7);
+
+                pos1 = line.find("length=\"");
+                pos2 = line.find("\"", pos1 + 9);
+                height = line.substr(pos1 + 8, pos2-pos1-8);
+
+                break;
+            }
+        }
+
+    }
+
     inline void WriteMessage(pugi::xml_node& listItem, unsigned int type, std::string content) {
 
         if (type == g_message_say)
@@ -118,7 +141,7 @@ namespace boss {
         node = head.append_child();
         node.set_name("meta");
         node.append_attribute("http-equiv").set_value("X-UA-Compatible");
-        node.append_attribute("content").set_value("IE=8");
+        node.append_attribute("content").set_value("IE=9");
 
         node = head.append_child();
         node.set_name("meta");
@@ -136,6 +159,12 @@ namespace boss {
         node = head.append_child();
         node.set_name("script");
         node.append_attribute("src").set_value(ToFileURL(g_path_polyfill).c_str());
+        node.text().set(" ");
+
+        node = head.append_child();
+        node.set_name("script");
+        node.append_attribute("src").set_value(ToFileURL(g_path_svgweb).c_str());
+        node.append_attribute("data-path").set_value(ToFileURL(g_path_svgweb.parent_path()).c_str());
         node.text().set(" ");
     }
 
@@ -385,9 +414,16 @@ namespace boss {
         graph.append_attribute("class").set_value("hidden");
 
         pugi::xml_node img = graph.append_child();
-        img.set_name("img");
-        img.append_attribute("src").set_value(ToFileURL(graphPath).c_str());
-        img.append_attribute("alt").set_value("Plugin interactions graph.");
+        img.set_name("object");
+        img.append_attribute("data").set_value(ToFileURL(graphPath).c_str());
+        img.append_attribute("type").set_value("image/svg+xml");
+
+        //Also need to set image dimensions, get them from the graph file.
+        std::string width, height;
+        GetGraphWidthHeight(graphPath, width, height);
+
+        img.append_attribute("width").set_value(width.c_str());
+        img.append_attribute("height").set_value(height.c_str());
     }
 
     inline void AppendFilters(pugi::xml_node& body, int messageNo, int pluginNo) {
