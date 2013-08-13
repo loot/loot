@@ -185,14 +185,16 @@ This documentation is a work in progress, covering an application that is also s
     <figcaption>BOSS's report viewer.</figcaption>
 </figure>
 <p>BOSS's results report can be displayed either in BOSS's own report viewer, or in your default web browser, according to the value of the <a href="#settingsViewReports">relevant setting</a>.
-<p>The report is comprised of two main sections:
+<p>The report is comprised of three main sections:
 <ul>
     <li>The <q>Summary</q> tab gives information on the versions of BOSS and the masterlist used, whether masterlist updating is enabled, and breaks down the numbers of each message type in the Summary and Details tabs. It also notifies you if there have been no changes in the <q>Details</q> tab since you last ran BOSS for the same game. Finally, the <q>Summary</q> tab is also where any global messages supplied in the masterlist and any errors encountered during sorting are displayed.
     <li>The <q>Details</q> tab lists the plugins BOSS sorted in their new load order, along with any messages BOSS has provided for them. BOSS will also display plugin version according to what it found in each plugin's description field.
+    <li>The <q>Graph</q> tab displays a graph of all the interactions between the plugins in your load order. It's not very useful to the average user, but may contain information that would aid in debugging any issues encountered, and is also provided as an item of interest.
 </ul>
 <p>In addition, there are a few filters that can be used to selectively hide items in the <q>Details</q> tab. These filters are:
 <ul>
     <li><i>Hide Version Numbers</i>: Hides the version numbers printed in blue next to those plugins that provide them.
+    <li><i>Hide CRCs</i>: Hides the CRCs printed in orange next to those plugins that provide them.
     <li><i>Hide Notes</i>: Hides all messages attached to plugins that have the <i>Note:</i> prefix.
     <li><i>Hide Bash Tag Suggestions</i>: Hides all Bash Tag suggestions.
     <li><i>Hide 'Do Not Clean' Messages</i>: Hides any messages that contain the string <q>Do not clean.</q>.
@@ -391,7 +393,7 @@ To translate the BOSS application:
         <li>Zanderat
     </ul>
 </ul>
-<p>BOSS is written in C/C++ and makes use of <a href="https://subversion.apache.org/">Subversion</a> and the <a href="http://www.davekoelle.com/alphanum.html">Alphanum</a>, <a href="http://www.boost.org/">Boost</a>, <a href="http://github.com/WrinklyNinja/libespm">libespm</a>, <a href="http://github.com/WrinklyNinja/libloadorder">libloadorder</a>, <a href="http://code.google.com/p/pugixml/">PugiXML</a>, <a href="http://www.wxwidgets.org/">wxWidgets</a> and <a href="http://code.google.com/p/yaml-cpp/">yaml-cpp</a> libraries. BOSS's reports are written in XHTML/CSS/Javascript and make use of <a href="http://github.com/inexorabletash/polyfill">Polyfill.js</a> to provide Internet Explorer 8 compatibility. Copyright license information for all these may be found <a href="licenses/Licenses.txt">here</a>.
+<p>BOSS is written in C/C++ and makes use of <a href="https://subversion.apache.org/">Subversion</a> and the <a href="http://www.davekoelle.com/alphanum.html">Alphanum</a>, <a href="http://www.boost.org/">Boost</a>, <a href="http://github.com/WrinklyNinja/libespm">libespm</a>, <a href="http://github.com/WrinklyNinja/libloadorder">libloadorder</a>, <a href="http://code.google.com/p/pugixml/">PugiXML</a>, <a href="https://code.google.com/p/svgweb/">svgweb</a>, <a href="http://www.wxwidgets.org/">wxWidgets</a> and <a href="http://code.google.com/p/yaml-cpp/">yaml-cpp</a> libraries. BOSS's reports are written in XHTML/CSS/Javascript and make use of <a href="http://github.com/inexorabletash/polyfill">Polyfill.js</a> to provide Internet Explorer 8 compatibility. Copyright license information for all these may be found <a href="licenses/Licenses.txt">here</a>.
 
 
 <h2 id="project">Project Members</h2>

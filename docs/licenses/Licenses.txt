@@ -9,13 +9,14 @@ BOSS uses a number of libraries, and their licenses are listed in this file.
 * Libloadorder - GNU GPL v3; see "GNU GPL v3.txt" for the text.
 * Polyfill.js - This code has been placed in the public domain.
 * PugiXML - MIT License; see "MIT License (PugiXML).txt" for the text.
+* svgweb - Apache License v2.0; see "Apache License v2.0.txt" for the text.
 * wxWidgets - wxWindows License; the text is not included as allowed by the license.
 * yaml-cpp - MIT License; see "MIT License (yaml-cpp).txt" for the text.
 * zlib - zlib license; the text is not included as allowed by the license.
 
 BOSS is also distributed with some binaries for the following programs:
 
-* Subversion - Apache License v1.0; see "Apache License v1.0.txt" for the text.
+* Subversion - Apache License v2.0; see "Apache License v2.0.txt" for the text.
 * GraphViz - Eclipse Public License v1.0; the text is not included as allowed by the license.
 
 Going by what the EPL FAQ page says, simply running the GraphVis binaries through system calls does not make BOSS a "derivative work", and so it is not bound by the EPL, and so it's OK for BOSS to use GraphVis even though the EPL and GPL are incompatible.
