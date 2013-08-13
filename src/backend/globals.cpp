@@ -51,15 +51,16 @@ namespace boss {
     const unsigned int g_version_patch = 0;
 
     //Common paths.
-    const boost::filesystem::path g_path_readme           = "docs/BOSS Readme.html";
-    const boost::filesystem::path g_path_libespm_settings  = "resources/libespm.yaml";
-    const boost::filesystem::path g_path_svn              = "resources/svn/svn.exe";
-    const boost::filesystem::path g_path_local            = GetLocalAppDataPath() / "BOSS";
+    const boost::filesystem::path g_path_readme           = boost::filesystem::current_path() / "docs" / "BOSS Readme.html";
+    const boost::filesystem::path g_path_libespm_settings = boost::filesystem::current_path() / "resources" / "libespm.yaml";
     const boost::filesystem::path g_path_css              = boost::filesystem::current_path() / "resources" / "style.css";
     const boost::filesystem::path g_path_js               = boost::filesystem::current_path() / "resources" / "script.js";
     const boost::filesystem::path g_path_polyfill         = boost::filesystem::current_path() / "resources" / "polyfill.js";
+    const boost::filesystem::path g_path_l10n             = boost::filesystem::current_path() / "resources" / "l10n";
+    const boost::filesystem::path g_path_svn              = boost::filesystem::current_path() / "resources" / "svn" / "svn.exe";
+    const boost::filesystem::path g_path_graphvis         = boost::filesystem::current_path() / "resources" / "graphvis" / "dot.exe";
+    const boost::filesystem::path g_path_svgweb           = boost::filesystem::current_path() / "resources" / "svgweb" / "svg.js";
+    const boost::filesystem::path g_path_local            = GetLocalAppDataPath() / "BOSS";
     const boost::filesystem::path g_path_settings         = g_path_local / "settings.yaml";
     const boost::filesystem::path g_path_log              = g_path_local / "BOSSDebugLog.txt";
-    const boost::filesystem::path g_path_l10n             = "resources/l10n";
-    const boost::filesystem::path g_path_graphvis         = "resources/graphvis/dot.exe";
 }
