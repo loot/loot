@@ -39,6 +39,7 @@ namespace boss {
     typedef boost::graph_traits<PluginGraph>::vertex_descriptor vertex_t;
     typedef boost::graph_traits<PluginGraph>::vertex_iterator vertex_it;
     typedef boost::graph_traits<PluginGraph>::edge_descriptor edge_t;
+    typedef boost::graph_traits<PluginGraph>::edge_iterator edge_it;
 
     struct cycle_detector : public boost::dfs_visitor<> {
         inline cycle_detector() { }
@@ -63,7 +64,13 @@ namespace boss {
 
     void Sort(const PluginGraph& graph, std::list<Plugin>& plugins);
 
-  void CheckForCycles(const PluginGraph& graph);
+    void CheckForCycles(const PluginGraph& graph);
+
+    void AddNonOverlapEdges(PluginGraph& graph);
+
+    void AddOverlapEdges(PluginGraph& graph, const boost::unordered_map< std::string, std::vector<std::string> >& overlapMap);
+
+    void ClearEdges(PluginGraph& graph);
 }
 
 #endif

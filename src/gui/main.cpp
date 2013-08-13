@@ -624,89 +624,9 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         boost::add_vertex(it, graph);
     }
 
-    //Vertices are numbered from 0 to (N - 1), where N is the number of vertices in the graph. A plugin's vertex number is therefore the same as its position in the list, and this can be used to create edges between plugins.
+    AddNonOverlapEdges(graph);
+    AddOverlapEdges(graph, overlapMap);
 
-
-    boss::vertex_it vitFirstNonMaster, vit, vitend;
-    for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
-        if (!graph[*vit]->IsMaster()) {
-            vitFirstNonMaster = vit;
-            break;
-        }
-    }
-
-    for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
-        vertex_t parentVertex;
-
-        BOOST_LOG_TRIVIAL(trace) << "Adding edges to vertex for \"" << graph[*vit]->Name() << "\".";
-
-        if (graph[*vit]->IsMaster()) {
-            BOOST_LOG_TRIVIAL(trace) << "Adding out-edges for non-master plugins.";
-
-            for (boss::vertex_it vit2 = vitFirstNonMaster; vit2 != vitend; ++vit2) {
-                BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[*vit]->Name() << "\" to \"" << graph[*vit2]->Name() << "\".";
-
-                if (!boost::edge(*vit, *vit2, graph).second)  //To avoid duplicates (helps visualisation).
-                    boost::add_edge(*vit, *vit2, graph);
-            }
-        }
-
-        BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for masters.";
-        vector<string> strVec(graph[*vit]->Masters());
-        for (vector<string>::const_iterator it=strVec.begin(), itend=strVec.end(); it != itend; ++it) {
-            if (boss::GetVertexByName(graph, *it, parentVertex) &&
-                !boost::edge(parentVertex, *vit, graph).second) {
-
-                BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex]->Name() << "\" to \"" << graph[*vit]->Name() << "\".";
-
-                boost::add_edge(parentVertex, *vit, graph);
-            }
-        }
-        BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for requirements.";
-        set<File> fileset(graph[*vit]->Reqs());
-        for (set<File>::const_iterator it=fileset.begin(), itend=fileset.end(); it != itend; ++it) {
-            if (boss::IsPlugin(it->Name()) &&
-                boss::GetVertexByName(graph, it->Name(), parentVertex) &&
-                !boost::edge(parentVertex, *vit, graph).second) {
-
-                BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex]->Name() << "\" to \"" << graph[*vit]->Name() << "\".";
-
-                boost::add_edge(parentVertex, *vit, graph);
-            }
-        }
-
-        BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for 'load after's.";
-        fileset = graph[*vit]->LoadAfter();
-        for (set<File>::const_iterator it=fileset.begin(), itend=fileset.end(); it != itend; ++it) {
-            if (boss::IsPlugin(it->Name()) &&
-                boss::GetVertexByName(graph, it->Name(), parentVertex) &&
-                !boost::edge(parentVertex, *vit, graph).second) {
-
-                BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex]->Name() << "\" to \"" << graph[*vit]->Name() << "\".";
-
-                boost::add_edge(parentVertex, *vit, graph);
-            }
-        }
-
-
-        //Now add any overlaps, except where an edge already exists between the two plugins, going the other way, since overlap-based edges have the lowest priority and are not a candidate for causing cyclic loop errors.
-        BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for overlaps.";
-        boost::unordered_map< string, vector<string> >::const_iterator overlapIt = overlapMap.find(graph[*vit]->Name());
-        if (overlapIt != overlapMap.end()) {
-            for (vector<string>::const_iterator it=overlapIt->second.begin(), itend=overlapIt->second.end(); it != itend; ++it) {
-                if (boss::GetVertexByName(graph, *it, parentVertex) &&
-                    !boost::edge(*vit, parentVertex, graph).second) {  //No edge going the other way, OK to add this edge.
-
-                    BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex]->Name() << "\" to \"" << graph[*vit]->Name() << "\".";
-
-                    boost::add_edge(parentVertex, *vit, graph);
-                }
-            }
-        }
-
-        progDia->Pulse();
-
-    }
 
     //Just for fun - output the graph as a ".dot" file for external rendering. If I can get this pretty, I might add it to a tab in the BOSS Report - here's a few Javascript libraries for displaying .dot files, but in my test case the graph is too complex and both libraries I found ran out of memory.
     //The .dot file can be converted to an SVG using Graphviz: the command is `dot -Tsvg output.dot -o output.svg`.
