@@ -466,28 +466,29 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     //First calculate the mean plugin size. Store it temporarily in a map to reduce filesystem lookups and file size recalculation.
     size_t meanFileSize = 0;
-    boost::unordered_map<size_t, boss::Plugin> tempMap;
+    boost::unordered_map<boss::Plugin, size_t, plugin_hash> tempMap;
     for (fs::directory_iterator it(_game.DataPath()); it != fs::directory_iterator(); ++it) {
         if (fs::is_regular_file(it->status()) && IsPlugin(it->path().string())) {
+
             size_t fileSize = fs::file_size(it->path());
             meanFileSize += fileSize;
 
-            tempMap.emplace(fileSize, boss::Plugin(it->path().filename().string()));
+            tempMap.emplace(boss::Plugin(it->path().filename().string()), fileSize);
         }
     }
     meanFileSize /= tempMap.size();
 
     //Now load plugins.
     plugin_list_loader pll(plugins, _game);
-    for (boost::unordered_map<size_t, boss::Plugin>::const_iterator it=tempMap.begin(), endit=tempMap.end(); it != endit; ++it) {
+    for (boost::unordered_map<boss::Plugin, size_t, plugin_hash>::const_iterator it=tempMap.begin(), endit=tempMap.end(); it != endit; ++it) {
 
-        BOOST_LOG_TRIVIAL(trace) << "Found plugin: " << it->second.Name();
+        BOOST_LOG_TRIVIAL(trace) << "Found plugin: " << it->first.Name();
 
-        plugins.push_back(it->second);
+        plugins.push_back(it->first);
 
-        if (it->first > meanFileSize) {
+        if (it->second > meanFileSize) {
             plugin_loader pl(plugins.back(), _game);
-            pll.skipPlugins.insert(it->second.Name());
+            pll.skipPlugins.insert(it->first.Name());
             group.create_thread(pl);
         }
 

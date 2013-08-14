@@ -26,6 +26,7 @@
 
 #include <boost/algorithm/string.hpp>
 #include <boost/log/trivial.hpp>
+#include <boost/graph/breadth_first_search.hpp>
 
 using namespace std;
 
@@ -244,8 +245,8 @@ namespace boss {
             if (overlapIt != overlapMap.end()) {
                 for (vector<string>::const_iterator it=overlapIt->second.begin(), itend=overlapIt->second.end(); it != itend; ++it) {
                     if (boss::GetVertexByName(graph, *it, parentVertex) &&
-                        !boost::edge(*vit, parentVertex, graph).second &&
-                        !boost::edge(parentVertex, *vit, graph).second) {  //No edge going the other way, OK to add this edge.
+                        !boost::edge(parentVertex, *vit, graph).second &&
+                        !EdgeCreatesCycle(graph, parentVertex, *vit)) {  //No edge going the other way, OK to add this edge.
 
                         BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex]->Name() << "\" to \"" << graph[*vit]->Name() << "\".";
 
@@ -262,5 +263,24 @@ namespace boss {
         for (boost::tie(it, itend) = boost::edges(graph); it != itend; ++it) {
             boost::remove_edge(*it, graph);
         }
+    }
+
+    bool EdgeCreatesCycle(PluginGraph& graph, vertex_t u, vertex_t v) {
+        //A cycle is created when adding the edge (u,v) if there already exists a path from v to u, so check for that using a breadth-first search.
+
+        //Breadth-first search requires an index map, which std::list-based VertexList graphs don't have, so one needs to be built separately.
+
+        map<vertex_t, size_t> index_map;
+        boost::associative_property_map< map<vertex_t, size_t> > v_index_map(index_map);
+        size_t i=0;
+        BGL_FORALL_VERTICES(v, graph, PluginGraph)
+            put(v_index_map, v, i++);
+
+        map<vertex_t, vertex_t> predecessor_map;
+        boost::associative_property_map< map<vertex_t, vertex_t> > v_predecessor_map(predecessor_map);
+
+        boost::breadth_first_search(graph, v, visitor(boost::make_bfs_visitor(boost::record_predecessors(v_predecessor_map, boost::on_tree_edge()))).vertex_index_map(v_index_map));
+
+        return predecessor_map.find(u) != predecessor_map.end();
     }
 }

@@ -71,6 +71,8 @@ namespace boss {
     void AddOverlapEdges(PluginGraph& graph, const boost::unordered_map< std::string, std::vector<std::string> >& overlapMap);
 
     void ClearEdges(PluginGraph& graph);
+
+    bool EdgeCreatesCycle(PluginGraph& graph, vertex_t u, vertex_t v);
 }
 
 #endif
