@@ -58,6 +58,8 @@ namespace boss {
     //The map maps each plugin name to a vector of names of plugins that overlap with it and should load before it.
     void CalcPluginOverlaps(const std::list<Plugin>& plugins, boost::unordered_map< std::string, std::vector<std::string> >& overlapMap);
 
+    void CalcPriorityMap(const std::list<Plugin>& plugins, boost::unordered_map< std::string, std::vector<std::string> >& priorityMap);
+
     bool GetVertexByName(const PluginGraph& graph, const std::string& name, vertex_t& vertex);
 
     void SaveGraph(const PluginGraph& graph, const boost::filesystem::path outpath);
@@ -66,7 +68,7 @@ namespace boss {
 
     void CheckForCycles(const PluginGraph& graph);
 
-    void AddNonOverlapEdges(PluginGraph& graph);
+    void AddNonOverlapEdges(PluginGraph& graph, const boost::unordered_map< std::string, std::vector<std::string> >& priorityMap);
 
     void AddOverlapEdges(PluginGraph& graph, const boost::unordered_map< std::string, std::vector<std::string> >& overlapMap);
 

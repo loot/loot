@@ -63,15 +63,9 @@ namespace boss {
                     std::string key;
                     std::string value;
                     //Priority values should override the number of override records as the deciding factor if they differ.
-                    if (it->MustLoadAfter(*jt) || jt->MustLoadAfter(*it))
+                    if (it->MustLoadAfter(*jt) || jt->MustLoadAfter(*it) || it->Priority() != jt->Priority())
                         continue;
-                    if (it->Priority() < jt->Priority()) {
-                        key = jt->Name();
-                        value = it->Name();
-                    } else if (jt->Priority() < it->Priority()) {
-                        key = it->Name();
-                        value = jt->Name();
-                    } else if (it->NumOverrideFormIDs() >= jt->NumOverrideFormIDs()) {
+                    if (it->NumOverrideFormIDs() >= jt->NumOverrideFormIDs()) {
                         key = jt->Name();
                         value = it->Name();
                     } else {
@@ -84,6 +78,37 @@ namespace boss {
                     } else {
                         mapIt->second.push_back(value);
                     }
+                }
+            }
+        }
+    }
+
+    void CalcPriorityMap(const std::list<Plugin>& plugins, boost::unordered_map< std::string, std::vector<std::string> >& priorityMap) {
+        for (list<Plugin>::const_iterator it=plugins.begin(),
+                                          endit=plugins.end();
+                                          it != endit;
+                                          ++it) {
+            list<Plugin>::const_iterator jt = it;
+            ++jt;
+            for (; jt != endit; ++jt) {
+                BOOST_LOG_TRIVIAL(trace) << "Checking for priority difference between \"" << it->Name() << "\" and \"" << jt->Name() << "\".";
+                if (it->MustLoadAfter(*jt) || jt->MustLoadAfter(*it) || it->Priority() == jt->Priority())
+                    continue;
+
+                std::string key;
+                std::string value;
+                if (it->Priority() < jt->Priority()) {
+                    key = jt->Name();
+                    value = it->Name();
+                } else if (jt->Priority() < it->Priority()) {
+                    key = it->Name();
+                    value = jt->Name();
+                }
+                boost::unordered_map< string, vector<string> >::iterator mapIt = priorityMap.find(key);
+                if (mapIt == priorityMap.end()) {
+                    priorityMap.insert(pair<string, vector<string> >(key, vector<string>(1, value)));
+                } else {
+                    mapIt->second.push_back(value);
                 }
             }
         }
@@ -165,7 +190,7 @@ namespace boss {
         boost::depth_first_search(graph, visitor(vis).vertex_index_map(v_index_map));
     }
 
-    void AddNonOverlapEdges(PluginGraph& graph) {
+    void AddNonOverlapEdges(PluginGraph& graph, const boost::unordered_map< std::string, std::vector<std::string> >& priorityMap) {
         //First find the position of the first non-master.
         boss::vertex_it vitFirstNonMaster, vit, vitend;
         for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
@@ -226,6 +251,21 @@ namespace boss {
                     BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex]->Name() << "\" to \"" << graph[*vit]->Name() << "\".";
 
                     boost::add_edge(parentVertex, *vit, graph);
+                }
+            }
+
+            BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for priority differences.";
+            boost::unordered_map< string, vector<string> >::const_iterator priorityIt = priorityMap.find(graph[*vit]->Name());
+            if (priorityIt != priorityMap.end()) {
+                for (vector<string>::const_iterator it=priorityIt->second.begin(), itend=priorityIt->second.end(); it != itend; ++it) {
+                    if (boss::GetVertexByName(graph, *it, parentVertex) &&
+                        !boost::edge(parentVertex, *vit, graph).second &&
+                        !EdgeCreatesCycle(graph, parentVertex, *vit)) {  //No edge going the other way, OK to add this edge.
+
+                        BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex]->Name() << "\" to \"" << graph[*vit]->Name() << "\".";
+
+                        boost::add_edge(parentVertex, *vit, graph);
+                    }
                 }
             }
         }

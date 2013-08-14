@@ -600,16 +600,19 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     progDia->Pulse();
 
-    //First sort the plugins list so that masters come before non-masters.
     BOOST_LOG_TRIVIAL(trace) << "Moving masters before non-masters.";
     plugins.sort(boss::master_sort);
 
     progDia->Pulse();
 
-    //Now build overlap map.
+
     BOOST_LOG_TRIVIAL(trace) << "Building plugin overlap map.";
     boost::unordered_map< string, vector<string> > overlapMap;
     CalcPluginOverlaps(plugins, overlapMap);
+
+    BOOST_LOG_TRIVIAL(trace) << "Building plugin priority map.";
+    boost::unordered_map< string, vector<string> > priorityMap;
+    CalcPriorityMap(plugins, priorityMap);
 
     progDia->Pulse();
 
@@ -625,7 +628,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         boost::add_vertex(it, graph);
     }
 
-    AddNonOverlapEdges(graph);
+    AddNonOverlapEdges(graph, priorityMap);
     AddOverlapEdges(graph, overlapMap);
 
 
