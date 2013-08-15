@@ -1,15 +1,16 @@
-# BOSS Settings File
+# Example Default BOSS Settings File
 # This file is written in YAML <http://www.yaml.org/>.
 
-Language:            eng    # An ISO 639-3 language string.
+Language:            eng    # One of 'eng', 'spa', 'rus' or ''.
 
 Game:                auto   # auto, or one of the 'folder' values below.
 Last Game:           auto   # auto, or one of the 'folder' values below.
 Debug Verbosity:     0      # 0, 1, 2, 3. Logging takes place if > 0.
 Update Masterlist:   true
 View Report Externally: false
+Generate Graph Image: false
 
-# Games. The four archetypes are 'Oblivion', 'Skyrim', 'Fallout3' and 'FalloutNV'. They correspond to each base game's libespm and libloadorder settings.
+# Games. The four types are 'Oblivion', 'Skyrim', 'Fallout3' and 'FalloutNV'. They correspond to each base game's libespm and libloadorder settings.
 Games:
   - folder: Oblivion
     name: "TES IV: Oblivion"
@@ -18,7 +19,7 @@ Games:
     url: http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-oblivion/masterlist.yaml
     path: ~
     registry: Software\Bethesda Softworks\Oblivion\Installed Path
-    
+
   - folder: Skyrim
     name: "TES V: Skyrim"
     type: Skyrim
@@ -26,7 +27,7 @@ Games:
     url: http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-skyrim/masterlist.yaml
     path: ~
     registry: Software\Bethesda Softworks\Skyrim\Installed Path
-    
+
   - folder: Fallout3
     name: Fallout 3
     type: Fallout3
@@ -42,7 +43,7 @@ Games:
     url: http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-fallout-nv/masterlist.yaml
     path: ~
     registry: Software\Bethesda Softworks\FalloutNV\Installed Path
-    
+
   - folder: Nehrim
     name: Nehrim - At Fate's Edge
     type: Oblivion

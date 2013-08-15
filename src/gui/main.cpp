@@ -631,10 +631,9 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     AddNonOverlapEdges(graph, priorityMap);
     AddOverlapEdges(graph, overlapMap);
 
-
-    //Just for fun - output the graph as a ".dot" file for external rendering. If I can get this pretty, I might add it to a tab in the BOSS Report - here's a few Javascript libraries for displaying .dot files, but in my test case the graph is too complex and both libraries I found ran out of memory.
-    //The .dot file can be converted to an SVG using Graphviz: the command is `dot -Tsvg output.dot -o output.svg`.
-    if (fs::exists(g_path_graphvis)) {
+    //First delete any existing graph file.
+    fs::remove(_game.GraphPath());
+    if (_settings["Generate Graph Image"].as<bool>() && fs::exists(g_path_graphvis)) {
         BOOST_LOG_TRIVIAL(trace) << "Outputting the graph.";
         fs::path temp = fs::path(_game.GraphPath().string() + ".temp");
         boss::SaveGraph(graph, temp);

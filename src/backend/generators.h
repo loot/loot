@@ -168,7 +168,7 @@ namespace boss {
         node.text().set(" ");
     }
 
-    inline void AppendNav(pugi::xml_node& body) {
+    inline void AppendNav(pugi::xml_node& body, bool createGraphTab) {
         pugi::xml_node nav, div;
 
         nav = body.append_child();
@@ -187,11 +187,13 @@ namespace boss {
         div.append_attribute("data-section").set_value("plugins");
         div.text().set("Details");
 
-        div = nav.append_child();
-        div.set_name("div");
-        div.append_attribute("class").set_value("button");
-        div.append_attribute("data-section").set_value("graph");
-        div.text().set("Graph");
+        if (createGraphTab) {
+            div = nav.append_child();
+            div.set_name("div");
+            div.append_attribute("class").set_value("button");
+            div.append_attribute("data-section").set_value("graph");
+            div.text().set("Graph");
+        }
 
         div = nav.append_child();
         div.set_name("div");
@@ -407,23 +409,25 @@ namespace boss {
 
         AppendSummary(main, hasChanged, masterlistVersion, masterlistUpdateEnabled, messageNo, warnNo, errorNo, messages);
 
-        //Append graph tag.
-        pugi::xml_node graph = main.append_child();
-        graph.set_name("div");
-        graph.append_attribute("id").set_value("graph");
-        graph.append_attribute("class").set_value("hidden");
+        if (boost::filesystem::exists(graphPath)) {
+            //Append graph tag.
+            pugi::xml_node graph = main.append_child();
+            graph.set_name("div");
+            graph.append_attribute("id").set_value("graph");
+            graph.append_attribute("class").set_value("hidden");
 
-        pugi::xml_node img = graph.append_child();
-        img.set_name("object");
-        img.append_attribute("data").set_value(ToFileURL(graphPath).c_str());
-        img.append_attribute("type").set_value("image/svg+xml");
+            pugi::xml_node img = graph.append_child();
+            img.set_name("object");
+            img.append_attribute("data").set_value(ToFileURL(graphPath).c_str());
+            img.append_attribute("type").set_value("image/svg+xml");
 
-        //Also need to set image dimensions, get them from the graph file.
-        std::string width, height;
-        GetGraphWidthHeight(graphPath, width, height);
+            //Also need to set image dimensions, get them from the graph file.
+            std::string width, height;
+            GetGraphWidthHeight(graphPath, width, height);
 
-        img.append_attribute("width").set_value(width.c_str());
-        img.append_attribute("height").set_value(height.c_str());
+            img.append_attribute("width").set_value(width.c_str());
+            img.append_attribute("height").set_value(height.c_str());
+        }
     }
 
     inline void AppendFilters(pugi::xml_node& body, int messageNo, int pluginNo) {
@@ -538,7 +542,7 @@ namespace boss {
         pugi::xml_node body = doc.append_child();
         body.set_name("body");
 
-        AppendNav(body);
+        AppendNav(body, boost::filesystem::exists(graphPath));
 
         int messageNo=0;
         AppendMain(body, oldDetails, masterlistVersion, graphPath, masterlistUpdateEnabled, messages, plugins, messageNo);
@@ -565,6 +569,7 @@ namespace boss {
         root["Debug Verbosity"] = 0;
         root["Update Masterlist"] = true;
         root["View Report Externally"] = false;
+        root["Generate Graph Image"] = false;
 
         games.push_back(Game(g_game_tes4));
         games.push_back(Game(g_game_tes5));

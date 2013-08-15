@@ -33,13 +33,13 @@
 class SettingsFrame : public wxDialog {
 public:
 	SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node& settings, std::vector<boss::Game>& games);
-    
+
 	void OnQuit(wxCommandEvent& event);
     void OnGameSelect(wxListEvent& event);
     void OnAddGame(wxCommandEvent& event);
     void OnEditGame(wxCommandEvent& event);
     void OnRemoveGame(wxCommandEvent& event);
-    
+
 	void SetDefaultValues();
 private:
 	wxChoice *DebugVerbosityChoice;
@@ -47,6 +47,7 @@ private:
 	wxChoice *LanguageChoice;
     wxCheckBox *UpdateMasterlistBox;
     wxCheckBox *reportViewBox;
+    wxCheckBox *displayGraphImageBox;
 
     wxListView *gamesList;
     wxButton * addBtn;
