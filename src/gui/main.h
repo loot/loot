@@ -37,7 +37,7 @@ public:
 	bool OnInit();  //Load settings, apply logging and language settings, check if BOSS is already running, detect games, set game to last game or to first detected game if auto, create launcher window.
 private:
     wxLocale * wxLoc;
-    
+
     YAML::Node _settings;
     std::vector<boss::Game> _games;
     boss::Game _game;
@@ -46,11 +46,11 @@ private:
 class Launcher : public wxFrame {
 public:
     Launcher(const wxChar *title, YAML::Node& settings, boss::Game& inGame, std::vector<boss::Game>& games);
-    
+
 	void OnSortPlugins(wxCommandEvent& event);
     void OnEditMetadata(wxCommandEvent& event);
     void OnViewLastReport(wxCommandEvent& event);
-    
+
     void OnOpenSettings(wxCommandEvent& event);
     void OnGameChange(wxCommandEvent& event);
 	void OnHelp(wxCommandEvent& event);
@@ -61,7 +61,7 @@ public:
 private:
     wxMenu * GameMenu;
 	wxButton * ViewButton;
-    
+
 	boss::Game& _game;
     YAML::Node& _settings;  //BOSS Settings.
     std::vector<boss::Game>& _games;
@@ -71,6 +71,7 @@ class LoadOrderPreview : public wxDialog {
 public:
     LoadOrderPreview(wxWindow *parent, const wxString title, const std::list<boss::Plugin>& plugins);
 
+    void OnPluginSelect(wxListEvent& event);
     void OnMoveUp(wxCommandEvent& event);
     void OnMoveDown(wxCommandEvent& event);
 

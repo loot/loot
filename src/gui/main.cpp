@@ -1007,6 +1007,7 @@ LoadOrderPreview::LoadOrderPreview(wxWindow *parent, const wxString title, const
     //Set up event handling.
     Bind(wxEVT_COMMAND_BUTTON_CLICKED, &LoadOrderPreview::OnMoveUp, this, BUTTON_MoveUp);
     Bind(wxEVT_COMMAND_BUTTON_CLICKED, &LoadOrderPreview::OnMoveDown, this, BUTTON_MoveDown);
+    Bind(wxEVT_COMMAND_LIST_ITEM_SELECTED, &LoadOrderPreview::OnPluginSelect, this, LIST_LoadOrder);
 
     //Set up layout.
     wxBoxSizer * bigBox = new wxBoxSizer(wxVERTICAL);
@@ -1027,10 +1028,19 @@ LoadOrderPreview::LoadOrderPreview(wxWindow *parent, const wxString title, const
     if (sizer != NULL)
         bigBox->Add(sizer, 0, wxEXPAND|wxLEFT|wxBOTTOM|wxRIGHT, 15);
 
+    //Set initial up/down button states.
+    _moveUp->Enable(false);
+    _moveDown->Enable(false);
+
     //Now set the layout and sizes.
 	SetBackgroundColour(wxColour(255,255,255));
     SetIcon(wxIconLocation("BOSS.exe"));
 	SetSizerAndFit(bigBox);
+}
+
+void LoadOrderPreview::OnPluginSelect(wxListEvent& event) {
+    _moveUp->Enable(true);
+    _moveDown->Enable(true);
 }
 
 void LoadOrderPreview::OnMoveUp(wxCommandEvent& event) {
