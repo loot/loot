@@ -112,6 +112,12 @@ namespace boss {
         //Look at the update URL to decide.
 
         if (!boost::iends_with(game.URL(), ".git")) {  //Subversion
+
+            //Check if the Subversion binary exists.
+            if (!fs::exists(g_path_svn)) {
+                throw boss::error(boss::error::path_not_found, "Could not find \"svn.exe\". Subversion cannot be used to update the masterlist.");
+            }
+
             string command, output, revision;
             //First check if the working copy is set up or not.
             command = g_path_svn.string() + " info \"" + game.MasterlistPath().string() + "\"";
