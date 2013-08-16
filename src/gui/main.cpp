@@ -41,9 +41,6 @@
 #include <ctime>
 #include <clocale>
 
-#include <libloadorder.h>
-#include <src/playground.h>
-
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/detail/utf8_codecvt_facet.hpp>
 #include <boost/algorithm/string.hpp>

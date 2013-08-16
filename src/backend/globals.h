@@ -55,7 +55,6 @@ namespace boss {
     extern const boost::filesystem::path g_path_local;
     extern const boost::filesystem::path g_path_readme;
     extern const boost::filesystem::path g_path_settings;
-    extern const boost::filesystem::path g_path_libespm_settings;
     extern const boost::filesystem::path g_path_css;
     extern const boost::filesystem::path g_path_js;
     extern const boost::filesystem::path g_path_polyfill;

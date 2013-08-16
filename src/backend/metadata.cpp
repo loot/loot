@@ -25,7 +25,7 @@
 #include "metadata.h"
 #include "parsers.h"
 
-#include <src/playground.h>
+#include <src/files.h>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>

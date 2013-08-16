@@ -52,7 +52,6 @@ namespace boss {
 
     //Common paths.
     const boost::filesystem::path g_path_readme           = boost::filesystem::current_path() / "docs" / "BOSS Readme.html";
-    const boost::filesystem::path g_path_libespm_settings = boost::filesystem::current_path() / "resources" / "libespm.yaml";
     const boost::filesystem::path g_path_css              = boost::filesystem::current_path() / "resources" / "style.css";
     const boost::filesystem::path g_path_js               = boost::filesystem::current_path() / "resources" / "script.js";
     const boost::filesystem::path g_path_polyfill         = boost::filesystem::current_path() / "resources" / "polyfill.js";

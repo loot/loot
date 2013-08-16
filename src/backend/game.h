@@ -33,8 +33,8 @@
 #include <boost/unordered_map.hpp>
 #include <boost/unordered_set.hpp>
 
-#include <libloadorder.h>
-#include <src/playground.h>
+#include <api/libloadorder.h>
+#include <src/files.h>
 
 namespace boss {
 

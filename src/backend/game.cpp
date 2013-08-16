@@ -62,45 +62,39 @@ namespace boss {
     Game::Game(const std::string& folder) : bossFolderName(folder) {}
 
     Game::Game(const unsigned int gameCode, const std::string& folder) : id(gameCode) {
-        string libespmGame;
         if (Id() == g_game_tes4) {
             _name = "TES IV: Oblivion";
             registryKey = "Software\\Bethesda Softworks\\Oblivion\\Installed Path";
             bossFolderName = "Oblivion";
             _masterFile = "Oblivion.esm";
-            libespmGame = "Oblivion";
+            espm::InitPredefinedSettings("Oblivion", espm_settings);
             _masterlistURL = "http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-oblivion/masterlist.yaml";
         } else if (Id() == g_game_tes5) {
             _name = "TES V: Skyrim";
             registryKey = "Software\\Bethesda Softworks\\Skyrim\\Installed Path";
             bossFolderName = "Skyrim";
             _masterFile = "Skyrim.esm";
-            libespmGame = "Skyrim";
+            espm::InitPredefinedSettings("Skyrim", espm_settings);
             _masterlistURL = "http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-skyrim/masterlist.yaml";
         } else if (Id() == g_game_fo3) {
             _name = "Fallout 3";
             registryKey = "Software\\Bethesda Softworks\\Fallout3\\Installed Path";
             bossFolderName = "Fallout3";
             _masterFile = "Fallout3.esm";
-            libespmGame = "Fallout3";
+            espm::InitPredefinedSettings("Fallout3", espm_settings);
             _masterlistURL = "http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-fallout/masterlist.yaml";
         } else if (Id() == g_game_fonv) {
             _name = "Fallout: New Vegas";
             registryKey = "Software\\Bethesda Softworks\\FalloutNV\\Installed Path";
             bossFolderName = "FalloutNV";
             _masterFile = "FalloutNV.esm";
-            libespmGame = "FalloutNV";
+            espm::InitPredefinedSettings("FalloutNV", espm_settings);
             _masterlistURL = "http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-fallout-nv/masterlist.yaml";
         } else
             throw error(error::invalid_args, "Invalid game ID supplied.");
 
         if (!folder.empty())
             bossFolderName = folder;
-
-        if (fs::exists(g_path_libespm_settings))
-            espm_settings = espm::Settings(g_path_libespm_settings.string(), libespmGame);
-        else
-            throw error(error::path_not_found, "Libespm settings file could not be found.");
     }
 
     Game& Game::SetDetails(const std::string& name, const std::string& masterFile,
