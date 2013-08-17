@@ -262,8 +262,14 @@ namespace boss {
 	Plugin::Plugin(boss::Game& game, const std::string& n, const bool headerOnly)
 		: name(n), enabled(true), priority(0) {
 
+        //If the name passed ends in '.ghost', that should be trimmed.
+        if (boost::iends_with(name, ".ghost"))
+            name = name.substr(0, name.length() - 6);
+
 		// Get data from file contents using libespm. Assumes libespm has already been initialised.
-		boost::filesystem::path filepath = game.DataPath() / n;
+		boost::filesystem::path filepath = game.DataPath() / name;
+        if (!boost::filesystem::exists(filepath) && boost::filesystem::exists(filepath.string() + ".ghost"))
+            filepath += ".ghost";
         espm::File file(filepath, game.espm_settings, false, headerOnly);
 
 		isMaster = file.isMaster(game.espm_settings);
@@ -283,10 +289,6 @@ namespace boss {
 			if (!boost::iequals(it->Plugin(), name))
                 ++numOverrideRecords;
         }
-
-        //If the name passed ends in '.ghost', that should be trimmed.
-        if (boost::iends_with(name, ".ghost"))
-            name = name.substr(0, name.length() - 6);
 
         //Also read Bash Tags applied and version string in description.
         for(size_t i=0,max=file.fields.size(); i < max; ++i){
