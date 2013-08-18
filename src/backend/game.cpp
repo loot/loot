@@ -232,7 +232,7 @@ namespace boss {
         if (ret != LIBLO_OK) {
             const char * e;
             lo_get_error_message(&e);
-            string err = string("libloadorder failed to create a game handle. Details: ") + err;
+            string err = string("libloadorder failed to create a game handle. Details: ") + e;
             lo_cleanup();
             throw error(error::liblo_error, err);
         }
