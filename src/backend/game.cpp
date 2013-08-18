@@ -229,7 +229,7 @@ namespace boss {
         else if (Id() == g_game_fonv)
             ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str());
 
-        if (ret != LIBLO_OK) {
+        if (ret != LIBLO_OK && ret != LIBLO_WARN_LO_MISMATCH) {
             const char * e;
             lo_get_error_message(&e);
             string err = string("libloadorder failed to create a game handle. Details: ") + e;
@@ -283,7 +283,7 @@ namespace boss {
         else if (Id() == g_game_fonv)
             ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str());
 
-        if (ret != LIBLO_OK) {
+        if (ret != LIBLO_OK && ret != LIBLO_WARN_LO_MISMATCH) {
             const char * e;
             lo_get_error_message(&e);
             string err = string("libloadorder game handle creation failed. Details: ") + e;
