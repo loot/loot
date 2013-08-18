@@ -25,7 +25,7 @@
 #include "metadata.h"
 #include "parsers.h"
 
-#include <src/files.h>
+#include <src/libespm.h>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
@@ -270,15 +270,23 @@ namespace boss {
 		boost::filesystem::path filepath = game.DataPath() / name;
         if (!boost::filesystem::exists(filepath) && boost::filesystem::exists(filepath.string() + ".ghost"))
             filepath += ".ghost";
-        espm::File file(filepath, game.espm_settings, false, headerOnly);
+        espm::File * file;
+        if (game.Id() == g_game_tes4)
+            file = new espm::tes4::File(filepath, game.espm_settings, false, headerOnly);
+        else if (game.Id() == g_game_tes5)
+            file = new espm::tes5::File(filepath, game.espm_settings, false, headerOnly);
+        else if (game.Id() == g_game_fo3)
+            file = new espm::fo3::File(filepath, game.espm_settings, false, headerOnly);
+        else
+            file = new espm::fonv::File(filepath, game.espm_settings, false, headerOnly);
 
-		isMaster = file.isMaster(game.espm_settings);
-		masters = file.getMasters();
+		isMaster = file->isMaster(game.espm_settings);
+		masters = file->getMasters();
 
-        crc = file.crc;
+        crc = file->crc;
         game.crcCache.insert(pair<string, uint32_t>(n, crc));
 
-		vector<uint32_t> records = file.getFormIDs();
+		vector<uint32_t> records = file->getFormIDs();
         vector<string> plugins = masters;
         plugins.push_back(name);
 		for (vector<uint32_t>::const_iterator it = records.begin(),endIt = records.end(); it != endIt; ++it)
@@ -291,51 +299,49 @@ namespace boss {
         }
 
         //Also read Bash Tags applied and version string in description.
-        for(size_t i=0,max=file.fields.size(); i < max; ++i){
-            if (strncmp(file.fields[i].type,"SNAM", 4) == 0) {
-                string text = file.fields[i].data;
+        string text = file->getDescription();
 
-                string::const_iterator begin, end;
-                begin = text.begin();
-                end = text.end();
+        delete file;
 
-                for(int j = 0; j < 7 && version.empty(); j++) {
-                    boost::smatch what;
-                    while (boost::regex_search(begin, end, what, version_checks[j])) {
-                        if (what.empty())
-                            continue;
+        string::const_iterator begin, end;
+        begin = text.begin();
+        end = text.end();
 
-                        boost::ssub_match match = what[1];
-                        if (!match.matched)
-                            continue;
+        for(int j = 0; j < 7 && version.empty(); j++) {
+            boost::smatch what;
+            while (boost::regex_search(begin, end, what, version_checks[j])) {
+                if (what.empty())
+                    continue;
 
-                        version = boost::trim_copy(string(match.first, match.second));
-                        break;
-                    }
-                }
+                boost::ssub_match match = what[1];
+                if (!match.matched)
+                    continue;
 
-                size_t pos1 = text.find("{{BASH:");
-                if (pos1 == string::npos)
-                    break;
-
-                pos1 += 7;
-
-                size_t pos2 = text.find("}}", pos1);
-                if (pos2 == string::npos)
-                    break;
-
-                text = text.substr(pos1, pos2-pos1);
-
-                vector<string> bashTags;
-                boost::split(bashTags, text, boost::is_any_of(","));
-
-                for (int i=0,max=bashTags.size(); i<max; ++i) {
-                    tags.insert(Tag(bashTags[i]));
-                }
-
+                version = boost::trim_copy(string(match.first, match.second));
                 break;
             }
         }
+
+        size_t pos1 = text.find("{{BASH:");
+        if (pos1 == string::npos)
+            return;
+
+        pos1 += 7;
+
+        size_t pos2 = text.find("}}", pos1);
+        if (pos2 == string::npos)
+            return;
+
+        text = text.substr(pos1, pos2-pos1);
+
+        vector<string> bashTags;
+        boost::split(bashTags, text, boost::is_any_of(","));
+
+        for (int i=0,max=bashTags.size(); i<max; ++i) {
+            tags.insert(Tag(bashTags[i]));
+        }
+
+        delete file;
 	}
 
     void Plugin::Merge(const Plugin& plugin, bool ifDisabled) {

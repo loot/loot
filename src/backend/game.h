@@ -34,7 +34,7 @@
 #include <boost/unordered_set.hpp>
 
 #include <api/libloadorder.h>
-#include <src/files.h>
+#include <src/libespm.h>
 
 namespace boss {
 
