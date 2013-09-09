@@ -88,19 +88,22 @@ struct plugin_loader {
 };
 
 struct plugin_list_loader {
-    plugin_list_loader(list<boss::Plugin>& plugins, boss::Game& game) : _plugins(plugins), _game(game) {}
+    plugin_list_loader(PluginGraph& graph, boss::Game& game) : _graph(graph), _game(game) {}
 
     void operator () () {
-        for (list<boss::Plugin>::iterator it=_plugins.begin(), endit=_plugins.end(); it != endit; ++it) {
-            if (skipPlugins.find(it->Name()) == skipPlugins.end()) {
-                BOOST_LOG_TRIVIAL(info) << "Loading: " << it->Name();
-                *it = boss::Plugin(_game, it->Name(), false);
-                BOOST_LOG_TRIVIAL(info) << "Finished loading: " << it->Name();
+        boss::vertex_it vit, vitend;
+        for (boost::tie(vit, vitend) = boost::vertices(_graph); vit != vitend; ++vit) {
+            if (skipPlugins.find(_graph[*vit].Name()) == skipPlugins.end()) {
+                BOOST_LOG_TRIVIAL(info) << "Loading: " << _graph[*vit].Name();
+                boss::Plugin plugin(_game, _graph[*vit].Name(), false);
+                BOOST_LOG_TRIVIAL(trace) << "Merging plugin into existing data.";
+                _graph[*vit].Merge(plugin);
+                BOOST_LOG_TRIVIAL(info) << "Finished loading: " << _graph[*vit].Name();
             }
         }
     }
 
-    list<boss::Plugin>& _plugins;
+    PluginGraph& _graph;
     boss::Game& _game;
     set<string> skipPlugins;
 };
@@ -452,8 +455,9 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     YAML::Node mlist, ulist;
     list<boss::Message> messages, mlist_messages, ulist_messages;
     list<boss::Plugin> mlist_plugins, ulist_plugins;
-    boost::thread_group group;
     list<boss::Plugin> plugins;
+    boost::thread_group group;
+    boss::PluginGraph graph;
     string revision;
 
     wxProgressDialog *progDia = new wxProgressDialog(translate("BOSS: Working..."),translate("BOSS working..."), 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_ELAPSED_TIME);
@@ -463,29 +467,30 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     //First calculate the mean plugin size. Store it temporarily in a map to reduce filesystem lookups and file size recalculation.
     size_t meanFileSize = 0;
-    boost::unordered_map<boss::Plugin, size_t, plugin_hash> tempMap;
+    boost::unordered_map<std::string, size_t> tempMap;
     for (fs::directory_iterator it(_game.DataPath()); it != fs::directory_iterator(); ++it) {
         if (fs::is_regular_file(it->status()) && IsPlugin(it->path().string())) {
 
             size_t fileSize = fs::file_size(it->path());
             meanFileSize += fileSize;
 
-            tempMap.emplace(boss::Plugin(it->path().filename().string()), fileSize);
+            tempMap.emplace(it->path().filename().string(), fileSize);
+            plugins.push_back(boss::Plugin(it->path().filename().string()));  //Just in case there's an error with the graph.
         }
     }
     meanFileSize /= tempMap.size();
 
     //Now load plugins.
-    plugin_list_loader pll(plugins, _game);
-    for (boost::unordered_map<boss::Plugin, size_t, plugin_hash>::const_iterator it=tempMap.begin(), endit=tempMap.end(); it != endit; ++it) {
+    plugin_list_loader pll(graph, _game);
+    for (boost::unordered_map<string, size_t>::const_iterator it=tempMap.begin(), endit=tempMap.end(); it != endit; ++it) {
 
-        BOOST_LOG_TRIVIAL(trace) << "Found plugin: " << it->first.Name();
+        BOOST_LOG_TRIVIAL(trace) << "Found plugin: " << it->first;
 
-        plugins.push_back(it->first);
+        vertex_t v = boost::add_vertex(boss::Plugin(_game, it->first, false), graph);
 
         if (it->second > meanFileSize) {
-            plugin_loader pl(plugins.back(), _game);
-            pll.skipPlugins.insert(it->first.Name());
+            plugin_loader pl(graph[v], _game);
+            pll.skipPlugins.insert(it->first);
             group.create_thread(pl);
         }
 
@@ -544,22 +549,22 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
         //Merge plugin list, masterlist and userlist plugin data.
         BOOST_LOG_TRIVIAL(trace) << "Merging plugin list, masterlist and userlist data.";
-        map<string, bool> consistencyIssues;
-        for (list<boss::Plugin>::iterator it=plugins.begin(), endIt=plugins.end(); it != endIt; ++it) {
-            BOOST_LOG_TRIVIAL(trace) << "Merging for plugin \"" << it->Name() << "\"";
+        boss::vertex_it vit, vitend;
+        for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
+            BOOST_LOG_TRIVIAL(trace) << "Merging for plugin \"" << graph[*vit].Name() << "\"";
             //Check if there is already a plugin in the 'plugins' list or not.
-            list<boss::Plugin>::iterator pos = std::find(mlist_plugins.begin(), mlist_plugins.end(), *it);
+            list<boss::Plugin>::iterator pos = std::find(mlist_plugins.begin(), mlist_plugins.end(), graph[*vit]);
 
             if (pos != mlist_plugins.end()) {
                 BOOST_LOG_TRIVIAL(trace) << "Merging masterlist data down to plugin list data.";
-                it->Merge(*pos);
+                graph[*vit].Merge(*pos);
             }
 
-            pos = std::find(ulist_plugins.begin(), ulist_plugins.end(), *it);
+            pos = std::find(ulist_plugins.begin(), ulist_plugins.end(), graph[*vit]);
 
             if (pos != ulist_plugins.end()) {
                 BOOST_LOG_TRIVIAL(trace) << "Merging userlist data down to plugin list data.";
-                it->Merge(*pos);
+                graph[*vit].Merge(*pos);
             }
 
             progDia->Pulse();
@@ -567,29 +572,29 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             //Now that items are merged, evaluate any conditions they have.
             BOOST_LOG_TRIVIAL(trace) << "Evaluate conditions for merged plugin data.";
             try {
-                it->EvalAllConditions(_game, lang);
+                graph[*vit].EvalAllConditions(_game, lang);
             } catch (boss::error& e) {
-                BOOST_LOG_TRIVIAL(error) << "\"" << it->Name() << "\" contains a condition that could not be evaluated. Details: " << e.what();
-                messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % it->Name() % e.what()).str()));
+                BOOST_LOG_TRIVIAL(error) << "\"" << graph[*vit].Name() << "\" contains a condition that could not be evaluated. Details: " << e.what();
+                messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % graph[*vit].Name() % e.what()).str()));
             }
 
             progDia->Pulse();
 
             //Also check install validity.
             BOOST_LOG_TRIVIAL(trace) << "Checking that the current install is valid according to this plugin's data.";
-            map<string, bool> issues = it->CheckInstallValidity(_game);
-            list<boss::Message> pluginMessages = it->Messages();
+            map<string, bool> issues = graph[*vit].CheckInstallValidity(_game);
+            list<boss::Message> pluginMessages = graph[*vit].Messages();
             for (map<string,bool>::const_iterator jt=issues.begin(), endJt=issues.end(); jt != endJt; ++jt) {
                 if (jt->second) {
-                    BOOST_LOG_TRIVIAL(error) << "\"" << jt->first << "\" is incompatible with \"" << it->Name() << "\" and is present.";
-                    pluginMessages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("\"%1%\" is incompatible with \"%2%\" and is present.")) % jt->first % it->Name()).str()));
+                    BOOST_LOG_TRIVIAL(error) << "\"" << jt->first << "\" is incompatible with \"" << graph[*vit].Name() << "\" and is present.";
+                    pluginMessages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("\"%1%\" is incompatible with \"%2%\" and is present.")) % jt->first % graph[*vit].Name()).str()));
                 } else {
-                    BOOST_LOG_TRIVIAL(error) << "\"" << jt->first << "\" is required by \"" << it->Name() << "\" but is missing.";
-                    pluginMessages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("\"%1%\" is required by \"%2%\" but is missing.")) % jt->first % it->Name()).str()));
+                    BOOST_LOG_TRIVIAL(error) << "\"" << jt->first << "\" is required by \"" << graph[*vit].Name() << "\" but is missing.";
+                    pluginMessages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("\"%1%\" is required by \"%2%\" but is missing.")) % jt->first % graph[*vit].Name()).str()));
                 }
             }
             if (!issues.empty())
-                it->Messages(pluginMessages);
+                graph[*vit].Messages(pluginMessages);
 
             progDia->Pulse();
         }
@@ -597,36 +602,17 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     progDia->Pulse();
 
-    BOOST_LOG_TRIVIAL(trace) << "Moving masters before non-masters.";
-    plugins.sort(boss::master_sort);
-
-    progDia->Pulse();
-
-
-    BOOST_LOG_TRIVIAL(trace) << "Building plugin overlap map.";
-    boost::unordered_map< string, vector<string> > overlapMap;
-    CalcPluginOverlaps(plugins, overlapMap);
-
-    BOOST_LOG_TRIVIAL(trace) << "Building plugin priority map.";
-    boost::unordered_map< string, vector<string> > priorityMap;
-    CalcPriorityMap(plugins, priorityMap);
-
-    progDia->Pulse();
-
     BOOST_LOG_TRIVIAL(trace) << "Building the plugin dependency graph...";
 
     //Use an adjacency list (don't know yet if list or matrix is the better choice), and use "listS" as the VertexList type. We need a possible multi-graph to catch some forms of cyclic dependency (a working graph would not be a multi-graph though), so use "listS". Want a directed graph where we can access in-edges, so use "bidirectionalS". Also provide the boss::Plugin class as the vertex property type.
 
-    boss::PluginGraph graph;
 
-    //Now add the plugins in order to the graph as vertices.
-    for (list<boss::Plugin>::iterator it=plugins.begin(), endIt=plugins.end(); it != endIt; ++it) {
-        BOOST_LOG_TRIVIAL(trace) << "Creating vertex for \"" << it->Name() << "\".";
-        boost::add_vertex(it, graph);
-    }
+    //Now add the interactions between plugins to the graph as edges.
+    BOOST_LOG_TRIVIAL(trace) << "Adding non-overlap edges.";
+    AddNonOverlapEdges(graph);
 
-    AddNonOverlapEdges(graph, priorityMap);
-    AddOverlapEdges(graph, overlapMap);
+    BOOST_LOG_TRIVIAL(trace) << "Adding overlap edges.";
+    AddOverlapEdges(graph);
 
     //First delete any existing graph file.
     fs::remove(_game.GraphPath());

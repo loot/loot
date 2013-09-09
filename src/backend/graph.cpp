@@ -31,96 +31,13 @@
 using namespace std;
 
 namespace boss {
-    vertex_t GetPluginVertex(PluginGraph& graph, const Plugin& plugin, boost::unordered_map<std::string, vertex_t>& pluginVertexMap) {
-
-        vertex_t vertex;
-        string name = boost::to_lower_copy(plugin.Name());
-
-        boost::unordered_map<string, vertex_t>::iterator vertexMapIt = pluginVertexMap.find(name);
-        if (vertexMapIt == pluginVertexMap.end()) {
-            BOOST_LOG_TRIVIAL(trace) << "Vertex for \"" << name << "\" doesn't exist, creating one.";
-            Plugin p;
-           // vertex = boost::add_vertex(p, graph);
-            BOOST_LOG_TRIVIAL(trace) << "Adding vertex to map.";
-            pluginVertexMap.emplace(name, vertex);
-        } else
-            vertex = vertexMapIt->second;
-
-        return vertex;
-    }
-
-    //The map maps each plugin name to a vector of names of plugins that overlap with it and should load before it.
-    void CalcPluginOverlaps(const std::list<Plugin>& plugins, boost::unordered_map< std::string, std::vector<std::string> >& overlapMap) {
-        for (list<Plugin>::const_iterator it=plugins.begin(),
-                                          endit=plugins.end();
-                                          it != endit;
-                                          ++it) {
-            list<Plugin>::const_iterator jt = it;
-            ++jt;
-            for (; jt != endit; ++jt) {
-                BOOST_LOG_TRIVIAL(trace) << "Checking for FormID overlap between \"" << it->Name() << "\" and \"" << jt->Name() << "\".";
-                if (it->DoFormIDsOverlap(*jt)) {
-                    std::string key;
-                    std::string value;
-                    //Priority values should override the number of override records as the deciding factor if they differ.
-                    if (it->MustLoadAfter(*jt) || jt->MustLoadAfter(*it) || it->Priority() != jt->Priority())
-                        continue;
-                    if (it->NumOverrideFormIDs() >= jt->NumOverrideFormIDs()) {
-                        key = jt->Name();
-                        value = it->Name();
-                    } else {
-                        key = it->Name();
-                        value = jt->Name();
-                    }
-                    boost::unordered_map< string, vector<string> >::iterator mapIt = overlapMap.find(key);
-                    if (mapIt == overlapMap.end()) {
-                        overlapMap.insert(pair<string, vector<string> >(key, vector<string>(1, value)));
-                    } else {
-                        mapIt->second.push_back(value);
-                    }
-                }
-            }
-        }
-    }
-
-    void CalcPriorityMap(const std::list<Plugin>& plugins, boost::unordered_map< std::string, std::vector<std::string> >& priorityMap) {
-        for (list<Plugin>::const_iterator it=plugins.begin(),
-                                          endit=plugins.end();
-                                          it != endit;
-                                          ++it) {
-            list<Plugin>::const_iterator jt = it;
-            ++jt;
-            for (; jt != endit; ++jt) {
-                BOOST_LOG_TRIVIAL(trace) << "Checking for priority difference between \"" << it->Name() << "\" and \"" << jt->Name() << "\".";
-                if (it->MustLoadAfter(*jt) || jt->MustLoadAfter(*it) || it->Priority() == jt->Priority())
-                    continue;
-
-                std::string key;
-                std::string value;
-                if (it->Priority() < jt->Priority()) {
-                    key = jt->Name();
-                    value = it->Name();
-                } else if (jt->Priority() < it->Priority()) {
-                    key = it->Name();
-                    value = jt->Name();
-                }
-                boost::unordered_map< string, vector<string> >::iterator mapIt = priorityMap.find(key);
-                if (mapIt == priorityMap.end()) {
-                    priorityMap.insert(pair<string, vector<string> >(key, vector<string>(1, value)));
-                } else {
-                    mapIt->second.push_back(value);
-                }
-            }
-        }
-    }
 
     bool GetVertexByName(const PluginGraph& graph, const std::string& name, vertex_t& vertex) {
         vertex_it vit, vit_end;
         boost::tie(vit, vit_end) = boost::vertices(graph);
 
         for (vit, vit_end; vit != vit_end; ++vit) {
-            if (boost::iequals(graph[*vit]->Name(), name)) {
-      //      if (graph[*vit]->Name() == name) {
+            if (boost::iequals(graph[*vit].Name(), name)) {
                 vertex = *vit;
                 return true;
             }
@@ -136,7 +53,7 @@ namespace boss {
         boost::tie(vit, vit_end) = boost::vertices(graph);
 
         for (vit, vit_end; vit != vit_end; ++vit) {
-            names.push_back(graph[*vit]->Name());
+            names.push_back(graph[*vit].Name());
         }
 
         //Also, writing the graph requires an index map, which std::list-based VertexList graphs don't have, so one needs to be built separately.
@@ -144,7 +61,7 @@ namespace boss {
         map<vertex_t, string> index_map;
         boost::associative_property_map< map<vertex_t, string> > v_index_map(index_map);
         BGL_FORALL_VERTICES(v, graph, PluginGraph)
-            put(v_index_map, v, graph[v]->Name());
+            put(v_index_map, v, graph[v].Name());
 
         //Now write graph to file.
         boss::ofstream out(outpath);
@@ -170,8 +87,8 @@ namespace boss {
         BOOST_LOG_TRIVIAL(info) << "Calculated order: ";
         list<boss::Plugin> tempPlugins;
         for (std::list<vertex_t>::iterator it = sortedVertices.begin(), endit = sortedVertices.end(); it != endit; ++it) {
-            BOOST_LOG_TRIVIAL(info) << '\t' << graph[*it]->Name();
-            tempPlugins.push_back(*graph[*it]);
+            BOOST_LOG_TRIVIAL(info) << '\t' << graph[*it].Name();
+            tempPlugins.push_back(graph[*it]);
         }
         plugins.swap(tempPlugins);
     }
@@ -190,11 +107,11 @@ namespace boss {
         boost::depth_first_search(graph, visitor(vis).vertex_index_map(v_index_map));
     }
 
-    void AddNonOverlapEdges(PluginGraph& graph, const boost::unordered_map< std::string, std::vector<std::string> >& priorityMap) {
+    void AddNonOverlapEdges(PluginGraph& graph) {
         //First find the position of the first non-master.
         boss::vertex_it vitFirstNonMaster, vit, vitend;
         for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
-            if (!graph[*vit]->IsMaster()) {
+            if (!graph[*vit].IsMaster()) {
                 vitFirstNonMaster = vit;
                 break;
             }
@@ -204,104 +121,135 @@ namespace boss {
         for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
             vertex_t parentVertex;
 
-            BOOST_LOG_TRIVIAL(trace) << "Adding non-overlap in-edges to vertex for \"" << graph[*vit]->Name() << "\".";
+            BOOST_LOG_TRIVIAL(trace) << "Adding non-overlap edges to vertex for \"" << graph[*vit].Name() << "\".";
 
-            if (graph[*vit]->IsMaster()) {
-                BOOST_LOG_TRIVIAL(trace) << "Adding out-edges for non-master plugins.";
+            BOOST_LOG_TRIVIAL(trace) << "Adding edges for master flag differences.";
 
-                for (boss::vertex_it vit2 = vitFirstNonMaster; vit2 != vitend; ++vit2) {
-                    BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[*vit]->Name() << "\" to \"" << graph[*vit2]->Name() << "\".";
+            boss::vertex_it vit2 = vit;
+            ++vit2;
+            for (vit2,vitend; vit2 != vitend; ++vit2) {
 
-                    if (!boost::edge(*vit, *vit2, graph).second)  //To avoid duplicates (helps visualisation).
-                        boost::add_edge(*vit, *vit2, graph);
+                if (graph[*vit].IsMaster() == graph[*vit2].IsMaster())
+                    continue;
+
+                vertex_t vertex, parentVertex;
+                if (graph[*vit2].IsMaster()) {
+                    parentVertex = *vit2;
+                    vertex = *vit;
+                } else {
+                    parentVertex = *vit;
+                    vertex = *vit2;
+                }
+
+                if (!boost::edge(parentVertex, vertex, graph).second) {
+
+                    BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[vertex].Name() << "\".";
+
+                    boost::add_edge(parentVertex, vertex, graph);
                 }
             }
 
             BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for masters.";
-            vector<string> strVec(graph[*vit]->Masters());
+            vector<string> strVec(graph[*vit].Masters());
             for (vector<string>::const_iterator it=strVec.begin(), itend=strVec.end(); it != itend; ++it) {
                 if (boss::GetVertexByName(graph, *it, parentVertex) &&
                     !boost::edge(parentVertex, *vit, graph).second) {
 
-                    BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex]->Name() << "\" to \"" << graph[*vit]->Name() << "\".";
+                    BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[*vit].Name() << "\".";
 
                     boost::add_edge(parentVertex, *vit, graph);
                 }
             }
             BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for requirements.";
-            set<File> fileset(graph[*vit]->Reqs());
+            set<File> fileset(graph[*vit].Reqs());
             for (set<File>::const_iterator it=fileset.begin(), itend=fileset.end(); it != itend; ++it) {
                 if (boss::IsPlugin(it->Name()) &&
                     boss::GetVertexByName(graph, it->Name(), parentVertex) &&
                     !boost::edge(parentVertex, *vit, graph).second) {
 
-                    BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex]->Name() << "\" to \"" << graph[*vit]->Name() << "\".";
+                    BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[*vit].Name() << "\".";
 
                     boost::add_edge(parentVertex, *vit, graph);
                 }
             }
 
             BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for 'load after's.";
-            fileset = graph[*vit]->LoadAfter();
+            fileset = graph[*vit].LoadAfter();
             for (set<File>::const_iterator it=fileset.begin(), itend=fileset.end(); it != itend; ++it) {
                 if (boss::IsPlugin(it->Name()) &&
                     boss::GetVertexByName(graph, it->Name(), parentVertex) &&
                     !boost::edge(parentVertex, *vit, graph).second) {
 
-                    BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex]->Name() << "\" to \"" << graph[*vit]->Name() << "\".";
+                    BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[*vit].Name() << "\".";
 
                     boost::add_edge(parentVertex, *vit, graph);
                 }
             }
 
-            BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for priority differences.";
-            boost::unordered_map< string, vector<string> >::const_iterator priorityIt = priorityMap.find(graph[*vit]->Name());
-            if (priorityIt != priorityMap.end()) {
-                for (vector<string>::const_iterator it=priorityIt->second.begin(), itend=priorityIt->second.end(); it != itend; ++it) {
-                    if (boss::GetVertexByName(graph, *it, parentVertex) &&
-                        !boost::edge(parentVertex, *vit, graph).second &&
-                        !EdgeCreatesCycle(graph, parentVertex, *vit)) {  //No edge going the other way, OK to add this edge.
+            BOOST_LOG_TRIVIAL(trace) << "Adding edges for priority differences.";
+            vit2 = vit;
+            ++vit2;
+            for (vit2,vitend; vit2 != vitend; ++vit2) {
+                BOOST_LOG_TRIVIAL(trace) << "Checking for priority difference between \"" << graph[*vit].Name() << "\" and \"" << graph[*vit2].Name() << "\".";
+                if (graph[*vit].MustLoadAfter(graph[*vit2]) || graph[*vit2].MustLoadAfter(graph[*vit]) || graph[*vit].Priority() == graph[*vit2].Priority())
+                    continue;
 
-                        BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex]->Name() << "\" to \"" << graph[*vit]->Name() << "\".";
+                vertex_t vertex, parentVertex;
+                if (graph[*vit].Priority() < graph[*vit2].Priority()) {
+                    parentVertex = *vit2;
+                    vertex = *vit;
+                } else {
+                    parentVertex = *vit;
+                    vertex = *vit2;
+                }
 
-                        boost::add_edge(parentVertex, *vit, graph);
-                    }
+                if (!boost::edge(parentVertex, vertex, graph).second &&
+                    !EdgeCreatesCycle(graph, parentVertex, vertex)) {  //No edge going the other way, OK to add this edge.
+
+                    BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[vertex].Name() << "\".";
+
+                    boost::add_edge(parentVertex, vertex, graph);
                 }
             }
         }
     }
 
-    void AddOverlapEdges(PluginGraph& graph, const boost::unordered_map< std::string, std::vector<std::string> >& overlapMap) {
+    void AddOverlapEdges(PluginGraph& graph) {
         boss::vertex_it vit, vitend;
 
         for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
             vertex_t parentVertex;
 
-            BOOST_LOG_TRIVIAL(trace) << "Adding overlap in-edges to vertex for \"" << graph[*vit]->Name() << "\".";
+            BOOST_LOG_TRIVIAL(trace) << "Adding overlap edges to vertex for \"" << graph[*vit].Name() << "\".";
 
+            boss::vertex_it vit2 = vit;
+            ++vit2;
+            for (vit2,vitend; vit2 != vitend; ++vit2) {
+                BOOST_LOG_TRIVIAL(trace) << "Checking for FormID overlap between \"" << graph[*vit].Name() << "\" and \"" << graph[*vit2].Name() << "\".";
 
-            //Now add any overlaps, except where an edge already exists between the two plugins, going the other way, since overlap-based edges have the lowest priority and are not a candidate for causing cyclic loop errors.
-            boost::unordered_map< string, vector<string> >::const_iterator overlapIt = overlapMap.find(graph[*vit]->Name());
-            if (overlapIt != overlapMap.end()) {
-                for (vector<string>::const_iterator it=overlapIt->second.begin(), itend=overlapIt->second.end(); it != itend; ++it) {
-                    if (boss::GetVertexByName(graph, *it, parentVertex) &&
-                        !boost::edge(parentVertex, *vit, graph).second &&
-                        !EdgeCreatesCycle(graph, parentVertex, *vit)) {  //No edge going the other way, OK to add this edge.
+                if (graph[*vit].DoFormIDsOverlap(graph[*vit2])) {
 
-                        BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex]->Name() << "\" to \"" << graph[*vit]->Name() << "\".";
+                    if (graph[*vit].MustLoadAfter(graph[*vit2]) || graph[*vit2].MustLoadAfter(graph[*vit]) || graph[*vit].Priority() != graph[*vit2].Priority())
+                        continue;
 
-                        boost::add_edge(parentVertex, *vit, graph);
+                    vertex_t vertex, parentVertex;
+                    if (graph[*vit].NumOverrideFormIDs() >= graph[*vit2].NumOverrideFormIDs()) {
+                        parentVertex = *vit2;
+                        vertex = *vit;
+                    } else {
+                        parentVertex = *vit;
+                        vertex = *vit2;
+                    }
+
+                    if (!boost::edge(parentVertex, vertex, graph).second &&
+                        !EdgeCreatesCycle(graph, parentVertex, vertex)) {  //No edge going the other way, OK to add this edge.
+
+                        BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[vertex].Name() << "\".";
+
+                        boost::add_edge(parentVertex, vertex, graph);
                     }
                 }
             }
-        }
-    }
-
-    void ClearEdges(PluginGraph& graph) {
-
-        edge_it it, itend;
-        for (boost::tie(it, itend) = boost::edges(graph); it != itend; ++it) {
-            boost::remove_edge(*it, graph);
         }
     }
 

@@ -35,7 +35,7 @@
 
 namespace boss {
 
-    typedef boost::adjacency_list<boost::listS, boost::listS, boost::bidirectionalS, std::list<boss::Plugin>::iterator> PluginGraph;
+    typedef boost::adjacency_list<boost::listS, boost::listS, boost::bidirectionalS, boss::Plugin> PluginGraph;
     typedef boost::graph_traits<PluginGraph>::vertex_descriptor vertex_t;
     typedef boost::graph_traits<PluginGraph>::vertex_iterator vertex_it;
     typedef boost::graph_traits<PluginGraph>::edge_descriptor edge_t;
@@ -48,17 +48,9 @@ namespace boss {
             vertex_t vSource = boost::source(e, g);
             vertex_t vTarget = boost::target(e, g);
 
-            throw boss::error(boss::error::sorting_error, "Back edge detected between plugins \"" + g[vSource]->Name() + "\" and \"" + g[vTarget]->Name() + "\".");
+            throw boss::error(boss::error::sorting_error, "Back edge detected between plugins \"" + g[vSource].Name() + "\" and \"" + g[vTarget].Name() + "\".");
         }
     };
-
-    //Gets the vertex for the plugin if it exists, or creates one if it doesn't.
-    vertex_t GetPluginVertex(PluginGraph& graph, const Plugin& plugin, boost::unordered_map<std::string, vertex_t>& pluginVertexMap);
-
-    //The map maps each plugin name to a vector of names of plugins that overlap with it and should load before it.
-    void CalcPluginOverlaps(const std::list<Plugin>& plugins, boost::unordered_map< std::string, std::vector<std::string> >& overlapMap);
-
-    void CalcPriorityMap(const std::list<Plugin>& plugins, boost::unordered_map< std::string, std::vector<std::string> >& priorityMap);
 
     bool GetVertexByName(const PluginGraph& graph, const std::string& name, vertex_t& vertex);
 
@@ -68,11 +60,9 @@ namespace boss {
 
     void CheckForCycles(const PluginGraph& graph);
 
-    void AddNonOverlapEdges(PluginGraph& graph, const boost::unordered_map< std::string, std::vector<std::string> >& priorityMap);
+    void AddNonOverlapEdges(PluginGraph& graph);
 
-    void AddOverlapEdges(PluginGraph& graph, const boost::unordered_map< std::string, std::vector<std::string> >& overlapMap);
-
-    void ClearEdges(PluginGraph& graph);
+    void AddOverlapEdges(PluginGraph& graph);
 
     bool EdgeCreatesCycle(PluginGraph& graph, vertex_t u, vertex_t v);
 }
