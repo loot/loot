@@ -262,14 +262,9 @@ namespace boss {
 	Plugin::Plugin(boss::Game& game, const std::string& n, const bool headerOnly)
 		: name(n), enabled(true), priority(0) {
 
-        //If the name passed ends in '.ghost', that should be trimmed.
-        if (boost::iends_with(name, ".ghost"))
-            name = name.substr(0, name.length() - 6);
-
 		// Get data from file contents using libespm. Assumes libespm has already been initialised.
+        BOOST_LOG_TRIVIAL(trace) << "Opening plugin with libespm...";
 		boost::filesystem::path filepath = game.DataPath() / name;
-        if (!boost::filesystem::exists(filepath) && boost::filesystem::exists(filepath.string() + ".ghost"))
-            filepath += ".ghost";
         espm::File * file;
         if (game.Id() == g_game_tes4)
             file = new espm::tes4::File(filepath, game.espm_settings, false, headerOnly);
@@ -280,25 +275,33 @@ namespace boss {
         else
             file = new espm::fonv::File(filepath, game.espm_settings, false, headerOnly);
 
+        //If the name passed ends in '.ghost', that should be trimmed.
+        BOOST_LOG_TRIVIAL(trace) << "Trimming '.ghost' extension.";
+        if (boost::iends_with(name, ".ghost"))
+            name = name.substr(0, name.length() - 6);
+
+        BOOST_LOG_TRIVIAL(trace) << "Checking to see if plugin is a master or not.";
 		isMaster = file->isMaster(game.espm_settings);
+
+        BOOST_LOG_TRIVIAL(trace) << "Getting the plugin's masters.";
 		masters = file->getMasters();
 
         crc = file->crc;
         game.crcCache.insert(pair<string, uint32_t>(n, crc));
 
+        BOOST_LOG_TRIVIAL(trace) << "Getting the plugin's FormIDs.";
 		vector<uint32_t> records = file->getFormIDs();
         vector<string> plugins = masters;
         plugins.push_back(name);
-		for (vector<uint32_t>::const_iterator it = records.begin(),endIt = records.end(); it != endIt; ++it)
-			formIDs.insert(FormID(plugins, *it));
-
-        //Calculate how many records are override records.
-        for (set<FormID>::const_iterator it = formIDs.begin(), endIt=formIDs.end(); it != endIt; ++it) {
-			if (!boost::iequals(it->Plugin(), name))
+		for (vector<uint32_t>::const_iterator it = records.begin(),endIt = records.end(); it != endIt; ++it) {
+            FormID fid = FormID(plugins, *it);
+			formIDs.insert(fid);
+            if (!boost::iequals(fid.Plugin(), name))
                 ++numOverrideRecords;
         }
 
         //Also read Bash Tags applied and version string in description.
+        BOOST_LOG_TRIVIAL(trace) << "Reading the plugin description.";
         string text = file->getDescription();
 
         delete file;
@@ -307,6 +310,7 @@ namespace boss {
         begin = text.begin();
         end = text.end();
 
+        BOOST_LOG_TRIVIAL(trace) << "Attempting to read the plugin version from its description.";
         for(int j = 0; j < 7 && version.empty(); j++) {
             boost::smatch what;
             while (boost::regex_search(begin, end, what, version_checks[j])) {
@@ -322,6 +326,7 @@ namespace boss {
             }
         }
 
+        BOOST_LOG_TRIVIAL(trace) << "Attempting to extract Bash Tags from the description.";
         size_t pos1 = text.find("{{BASH:");
         if (pos1 == string::npos)
             return;
@@ -340,8 +345,6 @@ namespace boss {
         for (int i=0,max=bashTags.size(); i<max; ++i) {
             tags.insert(Tag(bashTags[i]));
         }
-
-        delete file;
 	}
 
     void Plugin::Merge(const Plugin& plugin, bool ifDisabled) {
