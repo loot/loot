@@ -113,7 +113,7 @@ echo "using gcc : 4.6.3 : i686-w64-mingw32-g++ : <rc>i686-w64-mingw32-windres <a
 ### wxWidgets
 
 ```
-./configure --prefix=/usr/local/i686-w64-mingw32 --host=i686-w64-mingw32 --disable-shared --enable-stl
+./configure --host=i686-w64-mingw32 --disable-shared --enable-stl
 ```
 
 ### zlib
@@ -147,6 +147,6 @@ cmake .. -DBUILD_SHARED_LIBS=OFF -DCMAKE_C_FLAGS=-m32 -DPROJECT_ARCH=32 -DCMAKE_
 
 ```
 mkdir build && cd build
-cmake .. -DPROJECT_LIBS_DIR=.. -DPROJECT_ARCH=32 -DPROJECT_LINK=STATIC -DCMAKE_TOOLCHAIN_FILE=mingw-toolchain.cmake
+cmake .. -DPROJECT_LIBS_DIR=".." -DPROJECT_ARCH=32 -DPROJECT_LINK=STATIC -DCMAKE_TOOLCHAIN_FILE="mingw-toolchain.cmake"
 make
 ```
