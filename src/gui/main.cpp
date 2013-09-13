@@ -617,7 +617,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     //First delete any existing graph file.
     fs::remove(_game.GraphPath());
-    if (_settings["generate Graph Image"] && _settings["Generate Graph Image"].as<bool>() && fs::exists(g_path_graphvis)) {
+    if (_settings["Generate Graph Image"] && _settings["Generate Graph Image"].as<bool>() && fs::exists(g_path_graphvis)) {
         BOOST_LOG_TRIVIAL(trace) << "Outputting the graph.";
         fs::path temp = fs::path(_game.GraphPath().string() + ".temp");
         boss::SaveGraph(graph, temp);
