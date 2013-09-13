@@ -22,14 +22,12 @@
 */
 
 #include "viewer.h"
+#include "../backend/helpers.h"
 
 #include <wx/webview.h>
-#include <boost/filesystem.hpp>
-
-namespace fs = boost::filesystem;
 
 Viewer::Viewer(wxWindow *parent, const wxString& title, const std::string& path) : wxFrame(parent, wxID_ANY, title) {
-    wxWebView * web = wxWebView::New(this, wxID_ANY, "file://" + fs::absolute(path).string());
+    wxWebView * web = wxWebView::New(this, wxID_ANY, boss::ToFileURL(path));
 
     wxBoxSizer* topsizer = new wxBoxSizer(wxVERTICAL);
 
