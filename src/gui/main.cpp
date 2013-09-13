@@ -487,11 +487,11 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
         BOOST_LOG_TRIVIAL(trace) << "Found plugin: " << it->first;
 
-        vertex_t v = boost::add_vertex(boss::Plugin(_game, it->first, false), graph);
+        vertex_t v = boost::add_vertex(boss::Plugin(it->first), graph);
 
         if (it->second > meanFileSize) {
-            plugin_loader pl(graph[v], _game);
             pll.skipPlugins.insert(it->first);
+            plugin_loader pl(graph[v], _game);
             group.create_thread(pl);
         }
 
