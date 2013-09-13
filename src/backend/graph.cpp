@@ -108,16 +108,8 @@ namespace boss {
     }
 
     void AddNonOverlapEdges(PluginGraph& graph) {
-        //First find the position of the first non-master.
-        boss::vertex_it vitFirstNonMaster, vit, vitend;
-        for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
-            if (!graph[*vit].IsMaster()) {
-                vitFirstNonMaster = vit;
-                break;
-            }
-        }
-
-        //Now add edges for all relationships that aren't overlaps.
+        //Add edges for all relationships that aren't overlaps.
+        boss::vertex_it vit, vitend;
         for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
             vertex_t parentVertex;
 

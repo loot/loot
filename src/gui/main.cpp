@@ -317,6 +317,7 @@ bool BossGUI::OnInit() {
             return false;
         }
     }
+    BOOST_LOG_TRIVIAL(debug) << "Game selected is " << _game.Name();
 
     //Now that game is selected, initialise it.
     BOOST_LOG_TRIVIAL(debug) << "Initialising game-specific settings.";

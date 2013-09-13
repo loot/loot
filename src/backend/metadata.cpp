@@ -84,10 +84,10 @@ namespace boss {
     }
 
     bool ConditionStruct::EvalCondition(boss::Game& game) const {
-        BOOST_LOG_TRIVIAL(trace) << "Evaluating condition: " << _condition;
-
         if (_condition.empty())
             return true;
+
+        BOOST_LOG_TRIVIAL(trace) << "Evaluating condition: " << _condition;
 
         boost::unordered_map<std::string, bool>::const_iterator it = game.conditionCache.find(boost::to_lower_copy(_condition));
         if (it != game.conditionCache.end())
@@ -276,15 +276,18 @@ namespace boss {
             file = new espm::fonv::File(filepath, game.espm_settings, false, headerOnly);
 
         //If the name passed ends in '.ghost', that should be trimmed.
-        BOOST_LOG_TRIVIAL(trace) << "Trimming '.ghost' extension.";
-        if (boost::iends_with(name, ".ghost"))
+        if (boost::iends_with(name, ".ghost")) {
+            BOOST_LOG_TRIVIAL(trace) << "Trimming '.ghost' extension.";
             name = name.substr(0, name.length() - 6);
+        }
 
         BOOST_LOG_TRIVIAL(trace) << "Checking to see if plugin is a master or not.";
 		isMaster = file->isMaster(game.espm_settings);
 
         BOOST_LOG_TRIVIAL(trace) << "Getting the plugin's masters.";
 		masters = file->getMasters();
+
+        BOOST_LOG_TRIVIAL(trace) << "Number of masters: " << masters.size();
 
         crc = file->crc;
         game.crcCache.insert(pair<string, uint32_t>(n, crc));
@@ -328,7 +331,7 @@ namespace boss {
 
         BOOST_LOG_TRIVIAL(trace) << "Attempting to extract Bash Tags from the description.";
         size_t pos1 = text.find("{{BASH:");
-        if (pos1 == string::npos)
+        if (pos1 == string::npos || pos1 + 7 == text.length())
             return;
 
         pos1 += 7;
