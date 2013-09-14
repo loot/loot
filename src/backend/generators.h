@@ -691,7 +691,7 @@ namespace YAML {
     }
 
     inline Emitter& operator << (Emitter& out, const boss::Plugin& rhs) {
-        //if (!rhs.HasNameOnly()) {
+        if (!rhs.HasNameOnly()) {
 
             out << BeginMap
                 << Key << "name" << Value << rhs.Name();
@@ -718,6 +718,6 @@ namespace YAML {
                 out << Key << "tag" << Value << rhs.Tags();
 
             out << EndMap;
-        //}
+        }
     }
 }
