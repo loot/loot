@@ -811,7 +811,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
     BOOST_LOG_TRIVIAL(debug) << "Reading installed plugins' headers.";
     for (fs::directory_iterator it(_game.DataPath()); it != fs::directory_iterator(); ++it) {
         if (fs::is_regular_file(it->status()) && IsPlugin(it->path().string())) {
-            installed.push_back(boss::Plugin(it->path().filename().string()));
+            installed.push_back(boss::Plugin(_game, it->path().filename().string(), true));
 
             progDia->Pulse();
         }
@@ -957,7 +957,7 @@ void Launcher::OnAbout(wxCommandEvent& event) {
     aboutInfo.SetDescription(translate(
     "A utility that optimises TES IV: Oblivion, Nehrim - At Fate's Edge,\nTES V: Skyrim, Fallout 3 and Fallout: New Vegas mod load orders."));
     aboutInfo.SetCopyright("Copyright (C) 2009-2013 BOSS Development Team.");
-    aboutInfo.SetWebSite("http://code.google.com/p/better-oblivion-sorting-software/");
+    aboutInfo.SetWebSite("https://github.com/WrinklyNinja/BOSSv3");
 	aboutInfo.SetLicence("This program is free software: you can redistribute it and/or modify\n"
     "it under the terms of the GNU General Public License as published by\n"
     "the Free Software Foundation, either version 3 of the License, or\n"
