@@ -29,6 +29,8 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 
+#include <wx/clipbrd.h>
+
 using namespace std;
 
 wxString Type[3] = {
@@ -126,7 +128,7 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     removeBtn = new wxButton(this, BUTTON_RemoveRow, translate("Remove File"));
     applyBtn = new wxButton(this, BUTTON_Apply, translate("Save Changes"));
     cancelBtn = new wxButton(this, BUTTON_Cancel, translate("Cancel"));
-    exportBtn = new wxButton(this, BUTTON_Export, translate("Export Plugin Metadata"));
+    exportBtn = new wxButton(this, BUTTON_Export, translate("Copy Metadata As Text"));
 
     pluginList = new wxListView(this, LIST_Plugins, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL);
     reqsList = new wxListView(reqsTab, LIST_Reqs, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL);
@@ -167,6 +169,7 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     removeBtn->Enable(false);
     prioritySpin->Enable(false);
     enableUserEditsBox->Enable(false);
+    exportBtn->Enable(false);
 
     //Make plugin name bold text.
     wxFont font = pluginText->GetFont();
@@ -334,6 +337,7 @@ void Editor::OnPluginSelect(wxListEvent& event) {
         addBtn->Enable(true);
         editBtn->Enable(false);
         removeBtn->Enable(false);
+        exportBtn->Enable(true);
     }
 }
 
@@ -650,18 +654,12 @@ void Editor::OnExport(wxCommandEvent& event) {
     YAML::Emitter yout;
     yout.SetIndent(2);
     yout << diff;
+    string text = yout.c_str();
 
-    wxFrame * mini = new wxFrame(this, wxID_ANY, translate("Exported Plugin Metadata"), wxDefaultPosition, wxDefaultSize, wxFRAME_TOOL_WINDOW|wxRESIZE_BORDER|wxCAPTION|wxCLOSE_BOX|wxSTAY_ON_TOP);
-
-    wxTextCtrl * text = new wxTextCtrl(mini, wxID_ANY, yout.c_str(), wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY);
-
-    wxBoxSizer * box = new wxBoxSizer(wxHORIZONTAL);
-
-    box->Add(text, 1, wxEXPAND);
-
-    mini->SetSizerAndFit(box);
-    mini->Layout();
-    mini->Show();
+    if (!text.empty() && wxTheClipboard->Open()) {
+        wxTheClipboard->SetData( new wxTextDataObject(FromUTF8(text)) );
+        wxTheClipboard->Close();
+    }
 }
 
 void Editor::OnQuit(wxCommandEvent& event) {
