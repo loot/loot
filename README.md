@@ -18,9 +18,7 @@ At the moment, BOSSv3 is in alpha testing, and so is not recommended for use unl
 
 ## About This Repository
 
-This repository holds the source code and documentation for BOSS v3. The masterlists, along with the source code and documentation for previous versions of BOSS, are stored in BOSS's [Google Code repository](http://code.google.com/p/better-oblivion-sorting-software/).
-
-The reason for the split is that GitHub offers a more feature-rich project hosting service than Google Code, but BOSS has been using the latter site for most of its existence. As most of the BOSS team maintain the masterlists and don't develop the program itself, splitting the masterlists and everything else between the two sites minimises any disruption while taking advantage of GitHub's superior service.
+This repository holds the source code and documentation for BOSS v3. The masterlists for v3 are stored in separate repostories on [GitHub](https://github.com/boss-developers). The source code, documentation and masterlists for previous versions of BOSS are stored on [Google Code](http://code.google.com/p/better-oblivion-sorting-software/).
 
 
 ## Build Instructions
