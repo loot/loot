@@ -811,8 +811,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
     BOOST_LOG_TRIVIAL(debug) << "Reading installed plugins' headers.";
     for (fs::directory_iterator it(_game.DataPath()); it != fs::directory_iterator(); ++it) {
         if (fs::is_regular_file(it->status()) && IsPlugin(it->path().string())) {
-			boss::Plugin plugin(_game, it->path().filename().string(), true);
-            installed.push_back(plugin);
+            installed.push_back(boss::Plugin(it->path().filename().string()));
 
             progDia->Pulse();
         }
