@@ -98,10 +98,6 @@ This documentation is a work in progress, covering an application that is also s
         <li><a href="#usage-settings">Editing Settings</a>
     </ol>
     <li><a href="#trouble">Troubleshooting</a>
-    <ol>
-        <li><a href="#trouble-general">General Issues</a>
-        <li><a href="#trouble-errors">Error Messages</a>
-    </ol>
     <li><a href="#contrib">Contributing To BOSS</a>
     <li><a href="#translate">Translating BOSS</a>
     <li><a href="#credits">Credits</a>
@@ -126,6 +122,8 @@ This documentation is a work in progress, covering an application that is also s
 <p>Although BOSS is able to calculate the correct load order positions for the vast majority of mods without any user input, some plugins are designed to load at certain positions in a load order, and BOSS may be unable to determine this from the plugins themselves. As such, BOSS provides a mechanism for supplying additional plugin metadata so that it may sort them correctly.
 
 <p>BOSS is intended to make using mods easier, and mod users should still possess a working knowledge of mod load ordering. See <a href="#appendix-intro">Introduction To Load Orders</a> for an overview.
+
+<p><b>Note:</b> BOSS version 3 is an almost complete redesign and rewrite of v2. As such, it generally produces different load orders compared to v2. Although much of the v2 masterlist data has been converted for v3, some load order metadata must be rebuilt from scratch, and so some plugins that were sorted correctly by v2 may be sorted incorrectly by v3 until their metadata has been recorded. Users can aid this process by submitting any mistakes they spot to the BOSS team, along with their corrections.
 
 
 <h2 id="install">Installation &amp; Uninstallation</h2>
@@ -154,7 +152,7 @@ This documentation is a work in progress, covering an application that is also s
 <p>Clicking the <q>View Last Report</q> button will display the <a href="usage-log">report</a> generated the last time BOSS sorted your plugins.
 <p>The <q>File</q> menu provides menu items for sorting plugins, viewing the last report BOSS generated and quitting BOSS, while the <q>Edit</q> menu provides menu items for accessing BOSS's metadata editor and the <a href="usage-settings">settings window</a>.
 <p>The <q>Game</q> menu allows you to change which game BOSS is running for without having to close and re-open it. Games that BOSS cannot find are greyed out, and the the one BOSS is running for is marked with a dot to its left. To change the active game, simply select another game in the list.
-<p>The <q>Help</q> menu provides a link to this readme and an about page that contains the version of BOSS being run, some legal information and a link to the <a href="http://code.google.com/p/better-oblivion-sorting-software/">project repository</a>.
+<p>The <q>Help</q> menu provides a link to this readme and an about page that contains the version of BOSS being run, some legal information and a link to the <a href="https://github.com/WrinklyNinja/BOSSv3">code repository</a>.
 
 <h3 id="usage-sort">Sorting Plugins</h3>
 <figure>
@@ -168,9 +166,11 @@ This documentation is a work in progress, covering an application that is also s
     <li>The masterlist and userlist are read. Any errors encountered will be detailed in BOSS's report.
     <li>For each plugin, any userlist data present is merged down to any masterlist data present, which is then in turn combined with the data read from the plugin.
     <li>For each plugin, any data conditions are evaluated and irrelevant data discarded. Any errors encountered during evaluation will be detailed in BOSS's report.
-    <li>The self-consistency of the plugin data is checked to ensure that there are no cyclic dependencies or dependencies that are also given as incompatibilities. If any such issues are present, sorting will not take place (as it becomes impossible), and the issues will be detailed in BOSS's report.
     <li>Checks are performed to ensure that all dependencies are present in the game's Data folder, and that no incompatibilities are present. If a dependency is missing or an incompatibility is present, an error message will be displayed in BOSS's report.
-    <li>The plugins are sorted according to BOSS's sorting algorithm.
+    <li>A directed graph of all the plugins and their interactions is built.
+    <li>If it <a href="#settingsGenerateGraphImage">is enabled</a>, an SVG image of the graph is generated for display in the report.
+    <li>The graph is checked to ensure that it is acyclic, ie. that it contains no cyclic dependencies or similar. If any cycles are found, sorting is aborted, and the cycles will be detailed in BOSS's report.
+    <li>A load order is produced by performing a topological sort of the graph.
     <li>The dialog shown above is displayed, allowing you to move plugins up or down the load order. The dialog allows multiple plugins to be selected and moved at once.
     <li>If the <q>OK</q> button is pressed, the final load order will be applied. Otherwise, no load order changes will be made.
     <li>BOSS's report will be generated and displayed either in a new window or in your default browser, according to the value of the <a href="#settingsViewReports">relevant setting</a>. See the next section for more information on the report.
@@ -212,9 +212,10 @@ This documentation is a work in progress, covering an application that is also s
     <figcaption>BOSS's metadata editor.</figcaption>
 </figure>
 <p>BOSS's sorting algorithm uses the contents of plugins to work out where they should load relative to one another. However, this is sometimes not enough for it to produce a correct load order. In such cases, additional metadata can be supplied so that the plugins get sorted correctly.
-<p>This metadata is supplied to BOSS by two sources: one is the masterlist, which is maintained by the BOSS Team, and the other is the userlist, which you can edit as you desire.
+<p>This metadata is supplied to BOSS by two sources: one is the masterlist, which is maintained by the BOSS team, and the other is the userlist, which you can edit as you desire.
 <p>The metadata editor allows you to manage the metadata stored in your userlist. When opened, it lists all the plugins you have installed, and any that are missing but have existing user-added metadata, in alphabetical order. Clicking on a plugin then opens its metadata for editing, and displays any existing metadata in the fields to the right of the plugin list. These fields are explained in the table below.
 <p>The <q>Add &#x2026;</q>, <q>Edit &#x2026;</q> and <q>Remove &#x2026;</q> buttons are used to edit the contents of the list currently visible. The <q>Edit &#x2026;</q> and <q>Remove &#x2026;</q> buttons are greyed out if no row is selected or if the selected row is not user-added metadata, but comes from the masterlist or the plugin itself. Metadata that comes from the masterlist or the plugin itself cannot be edited or removed, only added to. This is to prevent users from accidently overriding important metadata.
+<p>The <q>Copy Metadata As Text</q> copies the selected plugin's current metadata, as it appears in the userlist, to the clipboard. This makes it easier to share your metadata changes with the BOSS team, as they can then paste this text directly into the masterlist, and also avoids any typos being introduced. If posting the text in an online forum that supports BBCode (as most forums do), be sure to wrap it in <code>[code]</code> tags, eg. <code>[code]copied text[/code]</code>, so that the spaces are not removed by the forum software.
 <p>The <q>Save Changes</q> button will save any user-added metadata to your userlist, including any changes made, then exit the metadata editor. The <q>Cancel</q> button will exit the editor without saving any changes.
 <table>
     <thead>
@@ -269,6 +270,7 @@ This documentation is a work in progress, covering an application that is also s
         <tr><td>Debug Verbosity<td>Controls the verbosity of the debug output, which is written to <q>BOSSDebugLog.txt</q>.
         <tr><td id="settingsUpdateMasterlist">Update masterlist before sorting<td>If checked, BOSS will update its masterlist, should an update be available, before sorting mods.
         <tr><td id="settingsViewReports">View reports externally in default browser.<td>If checked, BOSS will display its report using your default web browser instead of opening its own window.
+        <tr><td id="settingsGenerateGraphImage">Generate and display plugin graph images.<td>If checked, BOSS will generate an SVG image of the plugin interaction graph and display it in its report. Image generation can take a long time, so this is disabled by default.
 </table>
 <p>The games list allows the customisation of which games BOSS offers support for, trivialising support for multiple copies of a game and Total Conversions. The games listed here will be displayed in the main window's <q>Game</q> menu when BOSS is next run. The <q>Add Game</q>, <q>Edit Game</q> and <q>Remove Game</q> buttons are used to edit the list. Each game has several columns, which are explained below.
 <table>
@@ -295,7 +297,6 @@ This documentation is a work in progress, covering an application that is also s
 <h2 id="trouble">Troubleshooting</h2>
 <p>If BOSS encounters a problem at any point, it should provide an error message, either in a dialog (as is generally the case) or in its report (as for errors encountered during the sorting process). If BOSS unexpectedly crashes, or you experience a problem for which no error message is given, please report the crash or problem to an official BOSS thread (see <a href="#contrib">Contributing To BOSS</a>), so that it can be fixed.
 <p>If the information below does not help you to solve any problems you are experiencing, please seek further support in one of the official BOSS threads.
-<h3 id="trouble-general">General Issues</h3>
 <p>There are a few general reasons why BOSS may fail to function correctly. Check if any of the symptoms listed below fit your issue.
 <dl>
     <dt>No change in load order.
@@ -307,8 +308,6 @@ This documentation is a work in progress, covering an application that is also s
     <dt>A game is installed, but BOSS cannot detect it.
         <dd>The game's Registry entry is missing. This happens to a lot of people, because Steam likes to remove it whenever the game is updated or its game cache is verified. Run the game's launcher to add the Registry entry back again.
 </dl>
-<h3 id="trouble-errors">Error Messages</h3>
-<p>If BOSS can detect a specific reason for being unable to function correctly, it will print an error message detailing the problem. BOSS's error messages are listed below, along with details of the issues and possible solutions.
 
 
 <h2 id="contrib">Contributing To BOSS</h2>
