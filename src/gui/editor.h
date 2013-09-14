@@ -46,7 +46,7 @@ public:
     void OnDeleteItem(wxListEvent& event);
 protected:
     wxString OnGetItemText(long item, long column) const;
-    
+
 private:
     std::vector<boss::Message> _messages;
     const unsigned int _language;
@@ -63,16 +63,18 @@ public:
     void OnAddRow(wxCommandEvent& event);
     void OnEditRow(wxCommandEvent& event);
     void OnRemoveRow(wxCommandEvent& event);
+    void OnExport(wxCommandEvent& event);
     void OnRecalc(wxCommandEvent& event);
     void OnRowSelect(wxListEvent& event);
     void OnQuit(wxCommandEvent& event);
 private:
-    
+
     wxButton * addBtn;
     wxButton * editBtn;
     wxButton * removeBtn;
     wxButton * applyBtn;
     wxButton * cancelBtn;
+    wxButton * exportBtn;
     wxListView * pluginList;
     wxListView * reqsList;
     wxListView * incsList;
@@ -90,7 +92,7 @@ private:
     std::vector<boss::Message> currentMessages;
 
     void ApplyEdits(const wxString& plugin);
-    
+
     boss::Plugin GetMasterData(const wxString& plugin) const;
     boss::Plugin GetUserData(const wxString& plugin) const;
     boss::Plugin GetNewData(const wxString& plugin) const;

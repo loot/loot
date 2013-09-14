@@ -120,12 +120,13 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     prioritySpin = new wxSpinCtrl(this, wxID_ANY, "0");
     prioritySpin->SetRange(-10,10);
     enableUserEditsBox = new wxCheckBox(this, wxID_ANY, translate("Enable User Changes"));
-    
+
     addBtn = new wxButton(this, BUTTON_AddRow, translate("Add File"));
     editBtn = new wxButton(this, BUTTON_EditRow, translate("Edit File"));
     removeBtn = new wxButton(this, BUTTON_RemoveRow, translate("Remove File"));
     applyBtn = new wxButton(this, BUTTON_Apply, translate("Save Changes"));
     cancelBtn = new wxButton(this, BUTTON_Cancel, translate("Cancel"));
+    exportBtn = new wxButton(this, BUTTON_Export, translate("Export Plugin Metadata"));
 
     pluginList = new wxListView(this, LIST_Plugins, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL);
     reqsList = new wxListView(reqsTab, LIST_Reqs, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL);
@@ -143,15 +144,15 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
 
     //Set up list columns.
     pluginList->AppendColumn(translate("Plugins"));
-    
+
     reqsList->AppendColumn(translate("Filename"));
     reqsList->AppendColumn(translate("Display Name"));
     reqsList->AppendColumn(translate("Condition"));
-    
+
     incsList->AppendColumn(translate("Filename"));
     incsList->AppendColumn(translate("Display Name"));
     incsList->AppendColumn(translate("Condition"));
-    
+
     loadAfterList->AppendColumn(translate("Filename"));
     loadAfterList->AppendColumn(translate("Display Name"));
     loadAfterList->AppendColumn(translate("Condition"));
@@ -185,6 +186,7 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Editor::OnAddRow, this, BUTTON_AddRow);
     Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Editor::OnEditRow, this, BUTTON_EditRow);
     Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Editor::OnRemoveRow, this, BUTTON_RemoveRow);
+    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Editor::OnExport, this, BUTTON_Export);
 
     //Set up layout.
     wxBoxSizer * bigBox = new wxBoxSizer(wxHORIZONTAL);
@@ -195,7 +197,7 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
 
     mainBox->Add(pluginText, 0, wxTOP|wxBOTTOM, 10);
 
-    
+
     wxBoxSizer * hbox1 = new wxBoxSizer(wxHORIZONTAL);
     hbox1->Add(enableUserEditsBox, 0, wxALIGN_LEFT|wxRIGHT, 10);
     hbox1->AddStretchSpacer(1);
@@ -211,7 +213,7 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     wxBoxSizer * tabBox2 = new wxBoxSizer(wxVERTICAL);
     tabBox2->Add(incsList, 1, wxEXPAND);
     incsTab->SetSizer(tabBox2);
-    
+
     wxBoxSizer * tabBox3 = new wxBoxSizer(wxVERTICAL);
     tabBox3->Add(loadAfterList, 1, wxEXPAND);
     loadAfterTab->SetSizer(tabBox3);
@@ -231,7 +233,9 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     hbox2->Add(editBtn, 0, wxLEFT|wxRIGHT, 5);
     hbox2->Add(removeBtn, 0, wxLEFT, 5);
     mainBox->Add(hbox2, 0, wxALIGN_RIGHT);
-    
+
+    mainBox->Add(exportBtn, 0, wxALIGN_RIGHT|wxTOP, 10);
+
     mainBox->AddSpacer(30);
 
     wxBoxSizer * hbox6 = new wxBoxSizer(wxHORIZONTAL);
@@ -246,7 +250,7 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
         pluginList->InsertItem(i, FromUTF8(_basePlugins[i].Name()));
     }
     pluginList->SetColumnWidth(0, wxLIST_AUTOSIZE);
-        
+
     SetBackgroundColour(wxColour(255,255,255));
     SetIcon(wxIconLocation("BOSS.exe"));
 
@@ -258,7 +262,7 @@ void Editor::OnPluginSelect(wxListEvent& event) {
     //Create Plugin object for selected plugin.
     wxString selectedPlugin = pluginList->GetItemText(event.GetIndex());
     wxString currentPlugin = pluginText->GetLabelText();
-    
+
     //Check if the selected plugin is the same as the current plugin.
     if (selectedPlugin != currentPlugin) {
         //Apply any current edits.
@@ -359,7 +363,7 @@ void Editor::OnListBookChange(wxBookCtrlEvent& event) {
     loadAfterList->Select(loadAfterList->GetFirstSelected(), false);
     messageList->Select(messageList->GetFirstSelected(), false);
     tagsList->Select(tagsList->GetFirstSelected(), false);
-    
+
     Layout();
 }
 
@@ -420,7 +424,7 @@ void Editor::OnAddRow(wxCommandEvent& event) {
                     this);
                 return;
             }
-            
+
             long i = tagsList->GetItemCount();
             tagsList->InsertItem(i, rowDialog->GetState());
             tagsList->SetItem(i, 1, rowDialog->GetName());
@@ -455,7 +459,7 @@ void Editor::OnEditRow(wxCommandEvent& event) {
                     this);
                 return;
             }
-            
+
             list->SetItem(i, 0, rowDialog->GetName());
             list->SetItem(i, 1, rowDialog->GetDisplayName());
             list->SetItem(i, 2, rowDialog->GetCondition());
@@ -503,7 +507,7 @@ void Editor::OnEditRow(wxCommandEvent& event) {
                     this);
                 return;
             }
-            
+
             tagsList->SetItem(i, 0, rowDialog->GetState());
             tagsList->SetItem(i, 1, rowDialog->GetName());
             tagsList->SetItem(i, 2, rowDialog->GetCondition());
@@ -551,7 +555,7 @@ void Editor::OnRowSelect(wxListEvent& event) {
             editBtn->Enable(false);
             removeBtn->Enable(false);
         }
-        
+
     } else if (event.GetId() == LIST_Incs) {
 
         boss::File file = RowToFile(incsList, event.GetIndex());
@@ -635,6 +639,30 @@ void Editor::OnRowSelect(wxListEvent& event) {
     }
 }
 
+void Editor::OnExport(wxCommandEvent& event) {
+    wxString currentPlugin = pluginText->GetLabelText();
+
+    boss::Plugin initial = GetMasterData(currentPlugin);
+    boss::Plugin edited = GetNewData(currentPlugin);
+
+    boss::Plugin diff = edited.DiffMetadata(initial);
+
+    YAML::Emitter yout;
+    yout.SetIndent(2);
+    yout << diff;
+
+    wxFrame * mini = new wxFrame(this, wxID_ANY, translate("Exported Plugin Metadata"), wxDefaultPosition, wxDefaultSize, wxFRAME_TOOL_WINDOW|wxRESIZE_BORDER|wxCAPTION|wxCLOSE_BOX|wxSTAY_ON_TOP);
+
+    wxTextCtrl * text = new wxTextCtrl(mini, wxID_ANY, yout.c_str(), wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY);
+
+    wxBoxSizer * box = new wxBoxSizer(wxHORIZONTAL);
+
+    box->Add(text, 1, wxEXPAND);
+
+    mini->SetSizerAndFit(box);
+    mini->Layout();
+    mini->Show();
+}
 
 void Editor::OnQuit(wxCommandEvent& event) {
     if (event.GetId() == BUTTON_Apply) {
@@ -643,7 +671,7 @@ void Editor::OnQuit(wxCommandEvent& event) {
         wxString currentPlugin = pluginText->GetLabelText();
         if (!currentPlugin.empty())
             ApplyEdits(currentPlugin);
-        
+
         //Save edits to userlist.
         YAML::Emitter yout;
         yout.SetIndent(2);
@@ -662,9 +690,9 @@ void Editor::OnQuit(wxCommandEvent& event) {
 void Editor::ApplyEdits(const wxString& plugin) {
     boss::Plugin initial = GetMasterData(plugin);
     boss::Plugin edited = GetNewData(plugin);
-    
+
     boss::Plugin diff = edited.DiffMetadata(initial);
-    
+
     vector<boss::Plugin>::iterator it = std::find(_editedPlugins.begin(), _editedPlugins.end(), diff);
 
     if (it != _editedPlugins.end())
@@ -709,13 +737,13 @@ boss::Plugin Editor::GetNewData(const wxString& plugin) const {
     }
     p.Reqs(files);
     files.clear();
-    
+
     for (int i=0,max=incsList->GetItemCount(); i < max; ++i) {
         files.insert(RowToFile(incsList, i));
     }
     p.Incs(files);
     files.clear();
-    
+
     for (int i=0,max=loadAfterList->GetItemCount(); i < max; ++i) {
         files.insert(RowToFile(loadAfterList, i));
     }
@@ -845,13 +873,13 @@ MessageEditDialog::MessageEditDialog(wxWindow *parent, const wxString& title) : 
 
     wxSizerFlags leftItem(0);
     leftItem.Left();
-    
+
 	wxSizerFlags rightItem(1);
     rightItem.Right();
-    
+
     wxSizerFlags wholeItem(0);
     wholeItem.Expand().Border(wxLEFT|wxRIGHT|wxBOTTOM, 10);
-    
+
     wxBoxSizer * bigBox = new wxBoxSizer(wxVERTICAL);
 
 	wxFlexGridSizer * GridSizer = new wxFlexGridSizer(2, 5, 5);
@@ -984,7 +1012,7 @@ TagEditDialog::TagEditDialog(wxWindow *parent, const wxString& title) : wxDialog
 
     //Initialise controls.
     _state = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 2, State);
-    
+
     _name = new wxTextCtrl(this, wxID_ANY);
     _condition = new wxTextCtrl(this, wxID_ANY);
 
