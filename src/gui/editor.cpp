@@ -935,11 +935,11 @@ boss::Message MessageEditDialog::GetMessage() const {
     for (size_t i=0, max=_content->GetItemCount(); i < max; ++i) {
 
         string str = string(_content->GetItemText(i, 1).ToUTF8());
-        unsigned int lang = GetLangNum(_content->GetItemText(i, 0));
-        
+        unsigned int lang = GetLangIndex(_content->GetItemText(i, 0));
+
         contents.push_back(boss::MessageContent(str, lang));
     }
-    
+
     return boss::Message(type, contents, condition);
 }
 
