@@ -1033,21 +1033,23 @@ void LoadOrderPreview::OnMoveUp(wxCommandEvent& event) {
     BOOST_LOG_TRIVIAL(debug) << "Moving plugin(s) up the load order.";
     long selected = _loadOrder->GetFirstSelected();
 
+    if (selected == 0)
+        return;
+
     while (selected != -1) {
-        if (selected > 0) {
-            wxString selectedText = _loadOrder->GetItemText(selected);
-            wxString aboveText = _loadOrder->GetItemText(selected - 1);
+        wxString selectedText = _loadOrder->GetItemText(selected);
+        wxString aboveText = _loadOrder->GetItemText(selected - 1);
 
-            BOOST_LOG_TRIVIAL(trace) << "Moving plugin \"" << string(selectedText.ToUTF8());
+        BOOST_LOG_TRIVIAL(trace) << "Moving plugin \"" << string(selectedText.ToUTF8());
 
-            _loadOrder->SetItemText(selected, aboveText);
-            _loadOrder->SetItemText(selected - 1, selectedText);
+        _loadOrder->SetItemText(selected, aboveText);
+        _loadOrder->SetItemText(selected - 1, selectedText);
 
-            _movedPlugins.insert(string(selectedText.ToUTF8()));
+        _movedPlugins.insert(string(selectedText.ToUTF8()));
 
-            _loadOrder->Select(selected, false);
-            _loadOrder->Select(selected - 1, true);
-        }
+        _loadOrder->Select(selected, false);
+        _loadOrder->Select(selected - 1, true);
+
         selected = _loadOrder->GetNextSelected(selected);
     }
     BOOST_LOG_TRIVIAL(debug) << "Plugin(s) moved up.";
@@ -1055,7 +1057,13 @@ void LoadOrderPreview::OnMoveUp(wxCommandEvent& event) {
 
 void LoadOrderPreview::OnMoveDown(wxCommandEvent& event) {
     BOOST_LOG_TRIVIAL(debug) << "Moving plugin(s) down the load order.";
-    for (long i=_loadOrder->GetItemCount() - 1; i > -1; --i) {
+    long i=_loadOrder->GetItemCount() - 1;
+
+    if (_loadOrder->IsSelected(i))
+        return;
+    --i;
+
+    for (i; i > -1; --i) {
         if (_loadOrder->IsSelected(i)) {
             wxString selectedText = _loadOrder->GetItemText(i);
             wxString belowText = _loadOrder->GetItemText(i + 1);
