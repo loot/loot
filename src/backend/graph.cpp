@@ -226,11 +226,11 @@ namespace boss {
 
                     vertex_t vertex, parentVertex;
                     if (graph[*vit].NumOverrideFormIDs() >= graph[*vit2].NumOverrideFormIDs()) {
-                        parentVertex = *vit2;
-                        vertex = *vit;
-                    } else {
                         parentVertex = *vit;
                         vertex = *vit2;
+                    } else {
+                        parentVertex = *vit2;
+                        vertex = *vit;
                     }
 
                     if (!boost::edge(parentVertex, vertex, graph).second &&
