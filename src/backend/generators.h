@@ -339,10 +339,12 @@ namespace boss {
                 node.append_attribute("class").set_value("mod");
                 node.text().set(it->Name().c_str());
 
-                node = plugin.append_child();
-                node.set_name("span");
-                node.append_attribute("class").set_value("crc");
-                node.text().set(("CRC: " + IntToHexString(it->Crc())).c_str());
+                if (it->Crc() != 0) {
+                    node = plugin.append_child();
+                    node.set_name("span");
+                    node.append_attribute("class").set_value("crc");
+                    node.text().set(("CRC: " + IntToHexString(it->Crc())).c_str());
+                }
 
                 if (!it->Version().empty()) {
                     node = plugin.append_child();
