@@ -107,18 +107,20 @@ struct plugin_list_loader {
 };
 
 struct masterlist_updater_parser {
-    masterlist_updater_parser(boss::Game& game, list<boss::Message>& errors, list<boss::Plugin>& plugins, list<boss::Message>& messages, string& revision) : _game(game), _errors(errors), _plugins(plugins), _messages(messages), _revision(revision) {}
+    masterlist_updater_parser(bool doUpdate, boss::Game& game, list<boss::Message>& errors, list<boss::Plugin>& plugins, list<boss::Message>& messages, string& revision) : _doUpdate(doUpdate), _game(game), _errors(errors), _plugins(plugins), _messages(messages), _revision(revision) {}
 
     void operator () () {
 
-        BOOST_LOG_TRIVIAL(trace) << "Updating masterlist";
-        try {
-            _revision = UpdateMasterlist(_game, _errors, _plugins, _messages);
-        } catch (boss::error& e) {
-            _plugins.clear();
-            _messages.clear();
-            BOOST_LOG_TRIVIAL(error) << "Masterlist update failed. Details: " << e.what();
-            _errors.push_back(boss::Message(boss::g_message_error, (format(loc::translate("Masterlist update failed. Details: %1%")) % e.what()).str()));
+        if (_doUpdate) {
+            BOOST_LOG_TRIVIAL(trace) << "Updating masterlist";
+            try {
+                _revision = UpdateMasterlist(_game, _errors, _plugins, _messages);
+            } catch (boss::error& e) {
+                _plugins.clear();
+                _messages.clear();
+                BOOST_LOG_TRIVIAL(error) << "Masterlist update failed. Details: " << e.what();
+                _errors.push_back(boss::Message(boss::g_message_error, (format(loc::translate("Masterlist update failed. Details: %1%")) % e.what()).str()));
+            }
         }
 
         if (_plugins.empty() && _messages.empty() && fs::exists(_game.MasterlistPath())) {
@@ -139,6 +141,7 @@ struct masterlist_updater_parser {
         }
     }
 
+    bool _doUpdate;
     boss::Game& _game;
     list<boss::Message>& _errors;
     list<boss::Plugin>& _plugins;
@@ -461,8 +464,9 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     wxProgressDialog *progDia = new wxProgressDialog(translate("BOSS: Working..."),translate("BOSS working..."), 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_ELAPSED_TIME);
 
-  //  masterlist_updater_parser mup(_game, messages, mlist_plugins, mlist_messages, revision);
- //   group.create_thread(mup);
+    bool doUpdate = _settings["Update Masterlist"] && _settings["Update Masterlist"].as<bool>();
+    masterlist_updater_parser mup(doUpdate, _game, messages, mlist_plugins, mlist_messages, revision);
+    group.create_thread(mup);
 
     //First calculate the mean plugin size. Store it temporarily in a map to reduce filesystem lookups and file size recalculation.
     size_t meanFileSize = 0;
