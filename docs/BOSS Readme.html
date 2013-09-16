@@ -149,10 +149,10 @@ This documentation is a work in progress, covering an application that is also s
 </figure>
 <p>Clicking the <q>Edit Metadata</q> button will open BOSS's <a href="#usage-custom">metadata editor</a>, where you can make changes to the metadata BOSS uses to sort plugins, the messages that get displayed for plugins, and any Bash Tag suggestions BOSS makes.
 <p>Clicking the <q>Sort Plugins</q> button will begin the <a href="#usage-sort">plugin sorting process</a>. This will sort your plugins, allow you to make any changes to the load order it produces, then display a report that details the results of BOSS's activity.
-<p>Clicking the <q>View Last Report</q> button will display the <a href="usage-log">report</a> generated the last time BOSS sorted your plugins.
-<p>The <q>File</q> menu provides menu items for sorting plugins, viewing the last report BOSS generated and quitting BOSS, while the <q>Edit</q> menu provides menu items for accessing BOSS's metadata editor and the <a href="usage-settings">settings window</a>.
+<p>Clicking the <q>View Last Report</q> button will display the <a href="#usage-log">report</a> generated the last time BOSS sorted your plugins.
+<p>The <q>File</q> menu provides menu items for sorting plugins, viewing the last report BOSS generated and quitting BOSS, while the <q>Edit</q> menu provides menu items for accessing BOSS's metadata editor and the <a href="#usage-settings">settings window</a>.
 <p>The <q>Game</q> menu allows you to change which game BOSS is running for without having to close and re-open it. Games that BOSS cannot find are greyed out, and the the one BOSS is running for is marked with a dot to its left. To change the active game, simply select another game in the list.
-<p>The <q>Help</q> menu provides a link to this readme and an about page that contains the version of BOSS being run, some legal information and a link to the <a href="https://github.com/WrinklyNinja/BOSSv3">code repository</a>.
+<p>The <q>Help</q> menu provides a link to this readme and an about page that contains the version of BOSS being run, some legal information and a link to the <a href="http://boss-developers.github.io">project homepage</a>.
 
 <h3 id="usage-sort">Sorting Plugins</h3>
 <figure>
@@ -331,10 +331,10 @@ This documentation is a work in progress, covering an application that is also s
     <li>Masterlist messages can be translated, but translations must be submitted to the masterlist maintainers for addition.
     <li>The languages BOSS supports is hardcoded, so BOSS must be updated to include new translations.
 </ul>
-<p>Translations can be submitted for inclusion into BOSS as an issue in <a href="https://code.google.com/p/better-oblivion-sorting-software/issues/list">BOSS's Google Code bug tracker</a>, by posting it in one of BOSS's official threads (see <a href="#contrib">Contributing To BOSS</a>), or by contacting one of the BOSS team directly (see <a href="#project">Project Members</a>). Submitting your translation to BOSS's bug tracker requires a Google account, but is the preferred method.
+<p>Translations can be submitted for inclusion into BOSS as an issue in <a href="https://github.com/boss-developers/boss-code/issues">BOSS's code issue tracker</a>, by posting it in one of BOSS's official threads (see <a href="#contrib">Contributing To BOSS</a>), or by contacting one of the BOSS team directly (see <a href="#project">Project Members</a>).
 <p>To translate BOSS's installer:
 <ol>
-    <li>Download the <a href="">installer script</a>.
+    <li>Download the <a href="https://github.com/boss-developers/boss-code/blob/master/src/installer.nsi">installer script</a>.
     <li>Open the downloaded installer script in a text editor of your choice.
     <li>The English strings are located in the section with the heading <q>English Strings</q>. Copy and paste this section into a new text file, and translate the quoted strings, replacing the English text. For the lines beginning <code>VIAddVersionKey</code>, only translate the second quoted string.
     <li>Save the text file containing your translated strings.
@@ -374,7 +374,7 @@ To translate the BOSS application:
 <p>As BOSS is very much a community project, credit is due to a very large number of sources and people outside of the BOSS Development Team. Some people have gone out of their way and provided continuing, expert and detailed help - <b>thank you very much</b>!
 <p>In addition to the above data-related support, the following are credited with application-related support:
 <ul>
-    <li><a href="http://www.darkcreations.org">Dark Creations</a>: For hosting BOSS's Bugzilla bug tracker that is used to collect anonymous unrecognised plugin reports. Particular thanks to its administrators Andalaybay and Xae for offering to host the tracker and helping to work around Firefox and Bugzilla bugs encountered.
+    <li><a href="http://www.darkcreations.org">Dark Creations</a>: For hosting BOSS's Bugzilla bug tracker that was used by v2 to collect anonymous unrecognised plugin reports. Particular thanks to its administrators Andalaybay and Xae for offering to host the tracker and helping to work around Firefox and Bugzilla bugs encountered.
     <li>Surazal: For extensive testing of v1.6+ prior to release and for providing the inspiration for many features through his BOSS Masterlist Manager macro for Microsoft Word.
     <li>myk002: For extensive testing and code contributions during development of v1.6+.
     <li>Hickory: For extensive testing and for providing the icon used by the executables.
@@ -396,33 +396,34 @@ To translate the BOSS application:
 
 
 <h2 id="project">Project Members</h2>
-<p>Since June 2009, BOSS has been a collaborative project on <a href="http://code.google.com/p/better-oblivion-sorting-software/">Google Code</a> using the Subversion version control system. In alphabetical order, the project members are:
+<p>Since June 2009, BOSS has been a collaborative project, first on <a href="http://code.google.com/p/better-oblivion-sorting-software/">Google Code</a> and now on <a href="https://github.com/boss-developers/">GitHub</a>. In alphabetical order, the project members are:
 <table>
     <thead class="c"><tr><th colspan="2" rowspan="2">Member<th rowspan="2">Admin<th rowspan="2">Programmer<th colspan="5">Masterlists Member Contributes To
         <tr><th>Oblivion<th>Nehrim<th>Fallout 3<th>Fallout: New Vegas<th>Skyrim
     <tbody id="teamTableBody">
+        <tr class="inactive"><td>Aellis<td><td class="t"><td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t">
         <tr class="inactive"><td>AliTheLord<td><td class="c"><td class="t"><td class="t"><td class="c"><td class="t"><td class="c"><td class="t">
-        <tr><td>Arkangel<td>(Krhanal on Nexus)<td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t">
-        <tr><td>Arthmoor<td><td class="t"><td class="c"><td class="t"><td class="c"><td class="c"><td class="c"><td class="t">
-        <tr><td>Calen Ellefson<td>(Bethesda Softworks only)<td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t">
+        <tr class="inactive"><td>Arkangel<td>(Krhanal on Nexus)<td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t">
+        <tr class="inactive"><td>Arthmoor<td><td class="t"><td class="c"><td class="t"><td class="c"><td class="c"><td class="c"><td class="t">
+        <tr class="inactive"><td>Calen Ellefson<td>(Bethesda Softworks only)<td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t">
         <tr class="inactive"><td>Gabba<td>(Bethesda Softworks only)<td class="c"><td class="c"><td class="t"><td class="c"><td class="c"><td class="c"><td class="c">
-        <tr><td>iyumichan<td><td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t"><td class="c">
+        <tr class="inactive"><td>iyumichan<td><td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t"><td class="c">
         <tr class="inactive"><td>Leandro Conde<td>(Bethesda Softworks only)<td class="c"><td class="t"><td class="c"><td class="c"><td class="c"><td class="c"><td class="c">
         <tr class="inactive"><td>Loucifer<td>(Linmor on Nexus)<td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t"><td class="c">
         <tr class="inactive"><td>Malonn<td><td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t"><td class="c">
         <tr class="inactive"><td>PacificMorrowind<td><td class="t"><td class="t"><td class="t"><td class="c"><td class="t"><td class="c"><td class="c">
-        <tr><td>Peste<td>(ztrathego on Nexus)<td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t">
+        <tr class="inactive"><td>Peste<td>(ztrathego on Nexus)<td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t">
         <tr class="inactive"><td>Psymon<td>(Bethesda Softworks only)<td class="c"><td class="c"><td class="c"><td class="t"><td class="c"><td class="c"><td class="c">
         <tr class="inactive"><td>Random007<td><td class="t"><td class="t"><td class="t"><td class="c"><td class="c"><td class="c"><td class="c">
-        <tr><td>Red Eye<td>(redeye85 on Nexus)<td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t"><td class="c">
+        <tr class="inactive"><td>Red Eye<td>(redeye85 on Nexus)<td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t"><td class="c">
         <tr class="inactive"><td>RiddlingLynx<td>(Nexus only)<td class="c"><td class="c"><td class="t"><td class="c"><td class="c"><td class="c"><td class="c">
-        <tr><td>Sharlikran<td><td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t">
+        <tr class="inactive"><td>Sharlikran<td><td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t">
         <tr><td>SilentSpike<td>(SilentSpike69 on Nexus)<td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t">
         <tr class="inactive"><td>Skyline<td>(skyline99 on Nexus)<td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t"><td class="c">
-        <tr><td>Space Oden69<td>(SpaceOden on Nexus)<td class="c"><td class="c"><td class="c"><td class="c"><td class="t"><td class="c"><td class="c">
+        <tr class="inactive"><td>Space Oden69<td>(SpaceOden on Nexus)<td class="c"><td class="c"><td class="c"><td class="c"><td class="t"><td class="c"><td class="c">
         <tr class="inactive"><td>Televator<td><td class="c"><td class="c"><td class="c"><td class="c"><td class="t"><td class="c"><td class="c">
-        <tr><td>Tokc.D.K.<td>(Bethesda Softworks only)<td class="c"><td class="c"><td class="t"><td class="c"><td class="c"><td class="c"><td class="t">
-        <tr><td>Torrello<td><td class="c"><td class="c"><td class="c"><td class="c"><td class="t"><td class="c"><td class="t">
+        <tr class="inactive"><td>Tokc.D.K.<td>(Bethesda Softworks only)<td class="c"><td class="c"><td class="t"><td class="c"><td class="c"><td class="c"><td class="t">
+        <tr class="inactive"><td>Torrello<td><td class="c"><td class="c"><td class="c"><td class="c"><td class="t"><td class="c"><td class="t">
         <tr class="inactive"><td>Vacuity<td><td class="c"><td class="c"><td class="t"><td class="c"><td class="c"><td class="c"><td class="c">
         <tr class="inactive"><td>Valda<td><td class="c"><td class="c"><td class="c"><td class="c"><td class="t"><td class="t"><td class="c">
         <tr><td>WrinklyNinja<td><td class="t"><td class="t"><td class="c"><td class="c"><td class="c"><td class="c"><td class="c">
