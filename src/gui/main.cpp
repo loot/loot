@@ -95,9 +95,7 @@ struct plugin_list_loader {
         for (boost::tie(vit, vitend) = boost::vertices(_graph); vit != vitend; ++vit) {
             if (skipPlugins.find(_graph[*vit].Name()) == skipPlugins.end()) {
                 BOOST_LOG_TRIVIAL(info) << "Loading: " << _graph[*vit].Name();
-                boss::Plugin plugin(_game, _graph[*vit].Name(), false);
-                BOOST_LOG_TRIVIAL(trace) << "Merging plugin into existing data.";
-                _graph[*vit].Merge(plugin);
+                _graph[*vit] = boss::Plugin(_game, _graph[*vit].Name(), false);
                 BOOST_LOG_TRIVIAL(info) << "Finished loading: " << _graph[*vit].Name();
             }
         }
