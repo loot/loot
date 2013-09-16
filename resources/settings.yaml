@@ -16,7 +16,7 @@ Games:
     name: "TES IV: Oblivion"
     type: Oblivion
     master: Oblivion.esm
-    url: http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-oblivion/masterlist.yaml
+    url: https://github.com/boss-developers/boss-oblivion.git
     path: ~
     registry: Software\Bethesda Softworks\Oblivion\Installed Path
 
@@ -24,7 +24,7 @@ Games:
     name: "TES V: Skyrim"
     type: Skyrim
     master: Skyrim.esm
-    url: http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-skyrim/masterlist.yaml
+    url: https://github.com/boss-developers/boss-skyrim.git
     path: ~
     registry: Software\Bethesda Softworks\Skyrim\Installed Path
 
@@ -32,7 +32,7 @@ Games:
     name: Fallout 3
     type: Fallout3
     master: Fallout3.esm
-    url: http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-fallout/masterlist.yaml
+    url: https://github.com/boss-developers/boss-fallout3.git
     path: ~
     registry: Software\Bethesda Softworks\Fallout3\Installed Path
 
@@ -40,7 +40,7 @@ Games:
     name: "Fallout: New Vegas"
     type: FalloutNV
     master: FalloutNV.esm
-    url: http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-fallout-nv/masterlist.yaml
+    url: https://github.com/boss-developers/boss-fallout-new-vegas.git
     path: ~
     registry: Software\Bethesda Softworks\FalloutNV\Installed Path
 
@@ -48,6 +48,6 @@ Games:
     name: Nehrim - At Fate's Edge
     type: Oblivion
     master: Nehrim.esm
-    url: http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-oblivion/masterlist.yaml
+    url: https://github.com/boss-developers/boss-oblivion.git
     path: ~
     registry: Software\Microsoft\Windows\CurrentVersion\Uninstall\Nehrim - At Fate's Edge_is1

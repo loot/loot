@@ -68,28 +68,28 @@ namespace boss {
             bossFolderName = "Oblivion";
             _masterFile = "Oblivion.esm";
             espm::InitPredefinedSettings("Oblivion", espm_settings);
-            _masterlistURL = "http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-oblivion/masterlist.yaml";
+            _masterlistURL = "https://github.com/boss-developers/boss-oblivion.git";
         } else if (Id() == g_game_tes5) {
             _name = "TES V: Skyrim";
             registryKey = "Software\\Bethesda Softworks\\Skyrim\\Installed Path";
             bossFolderName = "Skyrim";
             _masterFile = "Skyrim.esm";
             espm::InitPredefinedSettings("Skyrim", espm_settings);
-            _masterlistURL = "http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-skyrim/masterlist.yaml";
+            _masterlistURL = "https://github.com/boss-developers/boss-skyrim.git";
         } else if (Id() == g_game_fo3) {
             _name = "Fallout 3";
             registryKey = "Software\\Bethesda Softworks\\Fallout3\\Installed Path";
             bossFolderName = "Fallout3";
             _masterFile = "Fallout3.esm";
             espm::InitPredefinedSettings("Fallout3", espm_settings);
-            _masterlistURL = "http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-fallout/masterlist.yaml";
+            _masterlistURL = "https://github.com/boss-developers/boss-fallout3.git";
         } else if (Id() == g_game_fonv) {
             _name = "Fallout: New Vegas";
             registryKey = "Software\\Bethesda Softworks\\FalloutNV\\Installed Path";
             bossFolderName = "FalloutNV";
             _masterFile = "FalloutNV.esm";
             espm::InitPredefinedSettings("FalloutNV", espm_settings);
-            _masterlistURL = "http://better-oblivion-sorting-software.googlecode.com/svn/data/boss-fallout-nv/masterlist.yaml";
+            _masterlistURL = "https://github.com/boss-developers/boss-fallout-new-vegas.git";
         } else
             throw error(error::invalid_args, "Invalid game ID supplied.");
 
