@@ -33,6 +33,7 @@
 #include "metadata.h"
 #include "error.h"
 #include "game.h"
+#include "streams.h"
 
 #include <string>
 #include <vector>

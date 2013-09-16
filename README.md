@@ -148,3 +148,9 @@ mkdir build && cd build
 cmake .. -DPROJECT_LIBS_DIR=".." -DPROJECT_ARCH=32 -DPROJECT_LINK=STATIC -DCMAKE_TOOLCHAIN_FILE="mingw-toolchain.cmake"
 make
 ```
+
+## Using The Masterlist Converter
+
+The `masterlist-converter.exe` expects a v2 masterlist named `masterlist.txt` to be present in the same directory as it, and produces a v3 masterlist named `masterlist.txt.yaml`.
+
+The converter is a command line utility and will print any errors in encounters to the console. It also won't create a v3 masterlist file if errors are encountered.

@@ -95,14 +95,17 @@ set (BOSS_LIBS version
                boost_date_time${BOOST_SUFFIX}
                boost_filesystem${BOOST_SUFFIX}
                boost_system${BOOST_SUFFIX}
-               boost_regex${BOOST_SUFFIX}
-               wx_mswu_webview-2.9-${COMPILER_PREFIX}
-               wx_mswu_core-2.9-${COMPILER_PREFIX}
-               wx_baseu-2.9-${COMPILER_PREFIX}
-               wx_mswu_adv-2.9-${COMPILER_PREFIX}
-               wxpng-2.9-${COMPILER_PREFIX}
-               wxzlib-2.9-${COMPILER_PREFIX}
-               comctl32)
+               boost_regex${BOOST_SUFFIX})
+
+set (BOSS_GUI_LIBS  ${BOSS_LIBS}
+                    wx_mswu_webview-2.9-${COMPILER_PREFIX}
+                    wx_mswu_core-2.9-${COMPILER_PREFIX}
+                    wx_baseu-2.9-${COMPILER_PREFIX}
+                    wx_mswu_adv-2.9-${COMPILER_PREFIX}
+                    wxpng-2.9-${COMPILER_PREFIX}
+                    wxzlib-2.9-${COMPILER_PREFIX}
+                    comctl32)
+
 
 
 ##############################
@@ -115,4 +118,9 @@ target_link_libraries (boss${PROJECT_ARCH} ${BOSS_LIBS})
 
 # Build application.
 add_executable        (BOSS ${BOSS_GUI_SRC})
-target_link_libraries (BOSS ${BOSS_LIBS})
+target_link_libraries (BOSS ${BOSS_GUI_LIBS})
+
+# Build converter.
+add_executable        (masterlist-converter ${BOSS_SRC} "${CMAKE_SOURCE_DIR}/src/converter.cpp")
+target_link_libraries (masterlist-converter ${BOSS_LIBS})
+

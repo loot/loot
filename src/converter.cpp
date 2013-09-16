@@ -29,10 +29,15 @@
 using namespace std;
 
 int main(int argc, char * argv[]) {
-    fs::path v2masterlist("../../BOSS/data/boss-skyrim/masterlist.txt");
+    boost::filesystem::path v2masterlist("masterlist.txt");
     list<boss::Plugin> test_plugins;
     list<boss::Message> globalMessages;
-    Loadv2Masterlist(v2masterlist, test_plugins, globalMessages);
+    try {
+        Loadv2Masterlist(v2masterlist, test_plugins, globalMessages);
+    } catch (boss::error& e) {
+        cout << "An error was encountered during masterlist parsing. Message: " << e.what() << endl;
+        return 1;
+    }
 
     YAML::Emitter yout;
     yout.SetIndent(2);
@@ -41,7 +46,8 @@ int main(int argc, char * argv[]) {
          << YAML::Key << "plugins" << YAML::Value << test_plugins
          << YAML::EndMap;
 
-    boss::ofstream out(_game.MasterlistPath());
+    boost::filesystem::path v3masterlist = v2masterlist.string() + ".yaml";
+    boss::ofstream out(v3masterlist);
     out << yout.c_str();
     out.close();
 
