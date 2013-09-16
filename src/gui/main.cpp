@@ -955,7 +955,7 @@ void Launcher::OnAbout(wxCommandEvent& event) {
     aboutInfo.SetDescription(translate(
     "A utility that optimises TES IV: Oblivion, Nehrim - At Fate's Edge,\nTES V: Skyrim, Fallout 3 and Fallout: New Vegas mod load orders."));
     aboutInfo.SetCopyright("Copyright (C) 2009-2013 BOSS Development Team.");
-    aboutInfo.SetWebSite("https://github.com/WrinklyNinja/BOSSv3");
+    aboutInfo.SetWebSite("http://boss-developers.github.io");
 	aboutInfo.SetLicence("This program is free software: you can redistribute it and/or modify\n"
     "it under the terms of the GNU General Public License as published by\n"
     "the Free Software Foundation, either version 3 of the License, or\n"
