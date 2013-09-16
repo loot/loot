@@ -154,3 +154,7 @@ make
 The `masterlist-converter.exe` expects a v2 masterlist named `masterlist.txt` to be present in the same directory as it, and produces a v3 masterlist named `masterlist.txt.yaml`.
 
 The converter is a command line utility and will print any errors in encounters to the console. It also won't create a v3 masterlist file if errors are encountered.
+
+## Packaging Releases
+
+Installer and zip archive releases for the main BOSS application can be handled by running the scripts `installer.nsi` and `archive.py` in the `src` folder respectively. The installer script requires [NSIS Unicode](http://www.scratchpaper.com/) to be installed, while the archive script requires [Python](http://www.python.org/) to be installed.
