@@ -196,27 +196,31 @@ bool BossGUI::OnInit() {
     }
 
     //Set up logging.
-    unsigned int verbosity = _settings["Debug Verbosity"].as<unsigned int>();
-    if (verbosity > 0) {
-        boost::log::add_file_log(
-            boost::log::keywords::file_name = g_path_log.string().c_str(),
-            boost::log::keywords::format = (
-                boost::log::expressions::stream
-                    << "[" << boost::log::expressions::format_date_time< boost::posix_time::ptime >("TimeStamp", "%H:%M:%S") << "]"
-                    << " [" << boost::log::trivial::severity << "]: "
-                    << boost::log::expressions::smessage
-                )
-            );
-        if (verbosity == 1)
-            boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::warning);  //Log all warnings, errors and fatals.
-        else if (verbosity == 2)
-            boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::debug);  //Log debugs, infos, warnings, errors and fatals.
+    boost::log::add_file_log(
+        boost::log::keywords::file_name = g_path_log.string().c_str(),
+        boost::log::keywords::format = (
+            boost::log::expressions::stream
+                << "[" << boost::log::expressions::format_date_time< boost::posix_time::ptime >("TimeStamp", "%H:%M:%S") << "]"
+                << " [" << boost::log::trivial::severity << "]: "
+                << boost::log::expressions::smessage
+            )
+        );
+    boost::log::add_common_attributes();
+    if (_settings["Debug Verbosity"]) {
+        unsigned int verbosity = _settings["Debug Verbosity"].as<unsigned int>();
+        if (verbosity == 0)
+            boost::log::core::get()->set_logging_enabled(false);
         else {
-            boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::trace);  //Log everything.
+            boost::log::core::get()->set_logging_enabled(true);
+
+            if (verbosity == 1)
+                boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::warning);  //Log all warnings, errors and fatals.
+            else if (verbosity == 2)
+                boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::debug);  //Log debugs, infos, warnings, errors and fatals.
+            else
+                boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::trace);  //Log everything.
         }
-        boost::log::add_common_attributes();
-    } else
-        boost::log::core::get()->set_logging_enabled(false);  //Disable all logging.
+    }
 
     //Specify location of language dictionaries
 	boost::locale::generator gen;

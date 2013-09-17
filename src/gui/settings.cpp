@@ -25,6 +25,11 @@
 #include "../backend/globals.h"
 #include <boost/algorithm/string.hpp>
 #include <boost/log/trivial.hpp>
+#include <boost/log/core.hpp>
+#include <boost/log/expressions.hpp>
+#include <boost/log/utility/setup/file.hpp>
+#include <boost/log/utility/setup/common_attributes.hpp>
+#include <boost/log/support/date_time.hpp>
 
 using namespace std;
 
@@ -207,6 +212,20 @@ void SettingsFrame::OnQuit(wxCommandEvent& event) {
         _settings["Language"] = GetLangStringFromIndex(LanguageChoice->GetSelection());
 
         _settings["Debug Verbosity"] = DebugVerbosityChoice->GetSelection();
+
+        unsigned int verbosity = _settings["Debug Verbosity"].as<unsigned int>();
+        if (verbosity == 0)
+            boost::log::core::get()->set_logging_enabled(false);
+        else {
+            boost::log::core::get()->set_logging_enabled(true);
+
+            if (verbosity == 1)
+                boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::warning);  //Log all warnings, errors and fatals.
+            else if (verbosity == 2)
+                boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::debug);  //Log debugs, infos, warnings, errors and fatals.
+            else
+                boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::trace);  //Log everything.
+        }
 
         _settings["Update Masterlist"] = UpdateMasterlistBox->IsChecked();
 
