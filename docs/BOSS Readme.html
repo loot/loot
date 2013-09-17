@@ -29,9 +29,10 @@ h3{
     ol ol {list-style:lower-alpha;}
 
     code {display:inline-block; padding:0 3px; background:#eee;}
-    td, th {border:1px solid #ddd; padding: 5px; vertical-align:top;}
+    td, th {border:1px solid #ddd; padding: 5px 10px; vertical-align:top;}
     table {border-collapse:collapse; margin:1.5em; margin-bottom: 3em; background:#fafafa;}
-    thead {background:#99CCFF;}
+    thead {background:#6badf6;}
+    th {font-weight:normal;}
     code.box {border-radius:5px; border:1px solid #ccc; padding:0.75em; white-space:pre; overflow-x:auto; display:table; margin:1.5em;}
 
     blockquote {border:1px solid #ccc; border-radius:3px; padding:10px; background:#eee; display:table;margin:1.5em;}
@@ -45,14 +46,8 @@ h3{
     .warning {background:#fbb; border-color:#d00;}
     var {color:#8B4513;}
 
-    .teamTableBody > tr > td:first-child {border-right:0;}
-    .teamTableBody > tr > td:nth-child(2) {border-left:0;font-style:italic;}
-    td.t {background:#90ff90;text-align:center;}
-    td.c {background:#ff9090;text-align:center;}
-    td.t:after {content: '\2713';}
-    td.c:after {content: '\2717';}
+    .teamTableBody td:not(:first-child) {text-align:center;}
     tr.inactive {color:#888;}
-    tr.inactive td.c, tr.inactive td.t {background:#E3E3E3;}
     dt {margin-bottom:0.5em; margin-top:1em; font-style:italic;}
     dd {margin-bottom:0.75em;}
 </style>
@@ -397,60 +392,64 @@ To translate the BOSS application:
 
 <h2 id="project">Project Members</h2>
 <p>Since June 2009, BOSS has been a collaborative project, first on <a href="http://code.google.com/p/better-oblivion-sorting-software/">Google Code</a> and now on <a href="https://github.com/boss-developers/">GitHub</a>. In alphabetical order, the project members are:
+
 <table>
-    <thead class="c"><tr><th colspan="2" rowspan="2">Member<th rowspan="2">Admin<th rowspan="2">Code<th colspan="5">Masterlists Member Contributes To
-        <tr><th>Oblivion<th>Skyrim<th>Fallout 3<th>Fallout: New Vegas
+    <thead>
+        <tr><th colspan="3">Member<th rowspan="2">Admin<th rowspan="2">Code<th colspan="5">Contributes To Masterlist
+        <tr><th>GitHub<th>Bethesda<th>Nexus<th>Oblivion<th>Nehrim<th>Skyrim<th>Fallout 3<th>Fallout: New Vegas
     <tbody class="teamTableBody">
-        <tr><td colspan="2">Freso<td class="c"><td class="c"><td class="c"><td class="t"><td class="c"><td class="c">
-        <tr><td colspan="2">ineedbettername<td class="c"><td class="c"><td class="c"><td class="t"><td class="c"><td class="c">
-        <tr><td colspan="2">LotteryDiscountz<td class="c"><td class="c"><td class="c"><td class="t"><td class="c"><td class="c">
-        <tr><td colspan="2">Sharlikran<td class="c"><td class="c"><td class="c"><td class="t"><td class="c"><td class="c">
-        <tr><td>SilentSpike<td>(SilentSpike69 on Nexus)<td class="c"><td class="c"><td class="c"><td class="t"><td class="c"><td class="c">
-        <tr><td colspan="2">William Imm<td class="c"><td class="c"><td class="t"><td class="t"><td class="c"><td class="c">
-        <tr><td colspan="2">WrinklyNinja<td class="t"><td class="t"><td class="c"><td class="c"><td class="c"><td class="c">
+        <tr><td colspan="3">Freso<td><td><td><td><td>&#x2713;<td><td>
+        <tr><td colspan="2">ineedbettername<td>-<td><td><td><td><td>&#x2713;<td><td>
+        <tr><td colspan="3">LotteryDiscountz<td><td><td><td><td>&#x2713;<td><td>
+        <tr><td colspan="3">niveuseverto<td><td><td><td><td><td><td>&#x2713;
+        <tr><td colspan="3">Sharlikran<td><td><td><td><td>&#x2713;<td><td>
+        <tr><td colspan="2">SilentSpike<td>SilentSpike69<td><td><td><td><td>&#x2713;<td><td>
+        <tr><td colspan="3">William Imm<td><td><td>&#x2713;<td><td>&#x2713;<td><td>
+        <tr><td colspan="3">WrinklyNinja<td>&#x2713;<td>&#x2713;<td><td><td><td><td>
 </table>
 
 <p>The status of the following members is currently unknown:
 <table>
-    <thead class="c"><tr><th colspan="2" rowspan="2">Member<th rowspan="2">Admin<th rowspan="2">Code<th colspan="4">Masterlists Member Contributes To
+    <thead>
+        <tr><th rowspan="2">Member<th rowspan="2">Admin<th rowspan="2">Code<th colspan="4">Contributes To Masterlist
         <tr><th>Oblivion<th>Skyrim<th>Fallout 3<th>Fallout: New Vegas
     <tbody class="teamTableBody">
-        <tr><td>Aellis<td><td class="t"><td class="c"><td class="c"><td class="t"><td class="c"><td class="c">
-        <tr class="inactive"><td>PacificMorrowind<td><td class="t"><td class="t"><td class="t"><td class="c"><td class="t"><td class="c">
-        <tr class="inactive"><td>Random007<td><td class="t"><td class="t"><td class="t"><td class="c"><td class="c"><td class="c">
-        <tr><td>scrapperrm<td><td class="c"><td class="c"><td class="c"><td class="t"><td class="c"><td class="c">
-        <tr><td>Tokc.D.K.<td>(Bethesda Softworks only)<td class="c"><td class="c"><td class="t"><td class="t"><td class="c"><td class="c">
+        <tr><td>Aellis<td>&#x2713;<td><td><td>&#x2713;<td><td>
+        <tr><td>iyumichan<td><td><td><td><td><td>&#x2713;
+        <tr class="inactive"><td>PacificMorrowind<td>&#x2713;<td>&#x2713;<td>&#x2713;<td><td>&#x2713;<td>
+        <tr class="inactive"><td>Random007<td>&#x2713;<td>&#x2713;<td>&#x2713;<td><td><td>
+        <tr><td>scrapperrm<td><td><td><td>&#x2713;<td><td>
+        <tr><td>Tokc.D.K.<td><td><td>&#x2713;<td>&#x2713;<td><td>
 </table>
 
-<p>Many members have since left the project, they are credited below:
+<p>Members who have since left the project are credited below:
 
 <table>
-    <thead class="c"><tr><th rowspan="2">Ex-Member<th rowspan="2">Admin<th rowspan="2">Code<th colspan="5">Masterlists Member Contributed To
+    <thead><tr><th rowspan="2">Ex-Member<th rowspan="2">Admin<th rowspan="2">Code<th colspan="5">Contributed To Masterlist
         <tr><th>Oblivion<th>Skyrim<th>Fallout 3<th>Fallout: New Vegas
     <tbody class="teamTableBody">
-        <tr><td>AliTheLord<td class="c"><td class="t"><td class="t"><td class="t"><td class="t"><td class="c">
-        <tr><td>Arkangel<td class="c"><td class="c"><td class="c"><td class="t"><td class="c"><td class="c">
-        <tr><td>Arthmoor<td class="t"><td class="c"><td class="t"><td class="t"><td class="c"><td class="c">
-        <tr><td>Calen Ellefson<td class="c"><td class="c"><td class="c"><td class="t"><td class="c"><td class="c">
-        <tr><td>Desidemona<td class="c"><td class="c"><td class="c"><td class="t"><td class="c"><td class="c">
-        <tr><td>Gabba<td class="c"><td class="c"><td class="t"><td class="c"><td class="c"><td class="c">
-        <tr><td>iyumichan<td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t">
-        <tr><td>Leandro Conde<td class="c"><td class="t"><td class="c"><td class="c"><td class="c"><td class="c">
-        <tr><td>Loucifer<td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t">
-        <tr><td>lucascomamala<td class="c"><td class="c"><td class="c"><td class="t"><td class="c"><td class="c">
-        <tr><td>Malonn<td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t">
-        <tr><td>Peste<td class="c"><td class="c"><td class="c"><td class="t"><td class="c"><td class="c">
-        <tr><td>Psymon<td class="c"><td class="c"><td class="t"><td class="c"><td class="c"><td class="c">
-        <tr><td>Red Eye<td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t">
-        <tr><td>RiddlingLynx<td class="c"><td class="c"><td class="t"><td class="c"><td class="c"><td class="c">
-        <tr><td>Skyline<td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t">
-        <tr><td>Space Oden69<td class="c"><td class="c"><td class="c"><td class="c"><td class="t"><td class="c">
-        <tr><td>Televator<td class="c"><td class="c"><td class="c"><td class="c"><td class="t"><td class="c">
-        <tr><td>Torrello<td class="c"><td class="c"><td class="c"><td class="t"><td class="t"><td class="c">
-        <tr><td>Vacuity<td class="c"><td class="c"><td class="t"><td class="c"><td class="c"><td class="c">
-        <tr><td>Valda<td class="c"><td class="c"><td class="c"><td class="c"><td class="t"><td class="t">
-        <tr><td>ZiggyX200<td class="c"><td class="c"><td class="t"><td class="t"><td class="c"><td class="c">
-        <tr><td>Zoe.Alice.Kahala<td class="c"><td class="c"><td class="c"><td class="t"><td class="c"><td class="c">
+        <tr><td>AliTheLord<td><td>&#x2713;<td>&#x2713;<td>&#x2713;<td>&#x2713;<td>
+        <tr><td>Arkangel<td><td><td><td>&#x2713;<td><td>
+        <tr><td>Arthmoor<td>&#x2713;<td><td>&#x2713;<td>&#x2713;<td><td>
+        <tr><td>Calen Ellefson<td><td><td><td>&#x2713;<td><td>
+        <tr><td>Desidemona<td><td><td><td>&#x2713;<td><td>
+        <tr><td>Gabba<td><td><td>&#x2713;<td><td><td>
+        <tr><td>Leandro Conde<td><td>&#x2713;<td><td><td><td>
+        <tr><td>Loucifer<td><td><td><td><td><td>&#x2713;
+        <tr><td>lucascomamala<td><td><td><td>&#x2713;<td><td>
+        <tr><td>Malonn<td><td><td><td><td><td>&#x2713;
+        <tr><td>Peste<td><td><td><td>&#x2713;<td><td>
+        <tr><td>Psymon<td><td><td>&#x2713;<td><td><td>
+        <tr><td>Red Eye<td><td><td><td><td><td>&#x2713;
+        <tr><td>RiddlingLynx<td><td><td>&#x2713;<td><td><td>
+        <tr><td>Skyline<td><td><td><td><td><td>&#x2713;
+        <tr><td>Space Oden69<td><td><td><td><td>&#x2713;<td>
+        <tr><td>Televator<td><td><td><td><td>&#x2713;<td>
+        <tr><td>Torrello<td><td><td><td>&#x2713;<td>&#x2713;<td>
+        <tr><td>Vacuity<td><td><td>&#x2713;<td><td><td>
+        <tr><td>Valda<td><td><td><td><td>&#x2713;<td>&#x2713;
+        <tr><td>ZiggyX200<td><td><td>&#x2713;<td>&#x2713;<td><td>
+        <tr><td>Zoe.Alice.Kahala<td><td><td><td>&#x2713;<td><td>
 </table>
 
 <p>Members with greyed-out rows are currently inactive, with no contributions in the two months before release of this version of BOSS. Unless otherwise noted, project members can be contacted on the <a href="http://forums.bethsoft.com/index.php">Bethesda Softworks Forums</a> or on <a href="http://forums.nexusmods.com/">The Nexus Forums</a> via the private messaging system.
