@@ -82,7 +82,7 @@ private:
     wxButton * _moveUp;
     wxButton * _moveDown;
 
-    std::list<boss::Plugin> _plugins;
+    const std::list<boss::Plugin> _plugins;
     std::set<std::string> _movedPlugins;
 };
 
