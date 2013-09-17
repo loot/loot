@@ -528,8 +528,12 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     if (fs::exists(_game.MasterlistPath()) || fs::exists(_game.UserlistPath())) {
         BOOST_LOG_TRIVIAL(trace) << "Merging plugin lists, evaluating conditions and checking for install validity...";
 
-         //Set language.
-        unsigned int lang = GetLangNum(_settings["Language"].as<string>());
+        //Set language.
+        unsigned int lang;
+        if (_settings["Language"])
+            lang = GetLangNum(_settings["Language"].as<string>());
+        else
+            lang = boss::g_lang_any;
 
 
         //Merge all global message lists.
@@ -778,7 +782,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                         plugins,
                         oldDetails,
                         revision,
-                        _settings["Update Masterlist"].as<bool>(),
+                        doUpdate,
                         _game.GraphPath().string());
     } catch (boss::error& e) {
         wxMessageBox(
@@ -893,7 +897,12 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
 
     progDia->Pulse();
 
-    unsigned int lang = GetLangNum(_settings["Language"].as<string>());
+    //Set language.
+    unsigned int lang;
+    if (_settings["Language"])
+        lang = GetLangNum(_settings["Language"].as<string>());
+    else
+        lang = boss::g_lang_any;
 
     //Create editor window.
     BOOST_LOG_TRIVIAL(debug) << "Opening editor window.";
