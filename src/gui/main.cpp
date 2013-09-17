@@ -671,53 +671,56 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             }
             plugins = newPluginsList;
 
-            BOOST_LOG_TRIVIAL(trace) << "Merging down edits to the userlist.";
-            for (list<boss::Plugin>::const_iterator it=editedPlugins.begin(),endit=editedPlugins.end(); it != endit; ++it) {
-                list<boss::Plugin>::iterator jt = find(ulist_plugins.begin(), ulist_plugins.end(), *it);
+            if (!editedPlugins.empty()) {
 
-                if (jt != ulist_plugins.end()) {
-                    jt->Merge(*it);
-                } else {
-                    ulist_plugins.push_back(*it);
+                BOOST_LOG_TRIVIAL(trace) << "Merging down edits to the userlist.";
+                for (list<boss::Plugin>::const_iterator it=editedPlugins.begin(),endit=editedPlugins.end(); it != endit; ++it) {
+                    list<boss::Plugin>::iterator jt = find(ulist_plugins.begin(), ulist_plugins.end(), *it);
+
+                    if (jt != ulist_plugins.end()) {
+                        jt->Merge(*it);
+                    } else {
+                        ulist_plugins.push_back(*it);
+                    }
                 }
-            }
 
-            BOOST_LOG_TRIVIAL(trace) << "Checking that any pre-existing 'load after' entries in the userlist are still valid.";
-            for (list<boss::Plugin>::iterator it=ulist_plugins.begin(),endit=ulist_plugins.end(); it != endit; ++it) {
-                //Double-check that the plugin is still loading after any other plugins already in its "load after" metadata.
-                list<boss::Plugin>::iterator mainPos = find(plugins.begin(), plugins.end(), *it);
+                BOOST_LOG_TRIVIAL(trace) << "Checking that any pre-existing 'load after' entries in the userlist are still valid.";
+                for (list<boss::Plugin>::iterator it=ulist_plugins.begin(),endit=ulist_plugins.end(); it != endit; ++it) {
+                    //Double-check that the plugin is still loading after any other plugins already in its "load after" metadata.
+                    list<boss::Plugin>::iterator mainPos = find(plugins.begin(), plugins.end(), *it);
 
-                if (mainPos == plugins.end())
-                    continue;
+                    if (mainPos == plugins.end())
+                        continue;
 
-                size_t mainDist = distance(plugins.begin(), mainPos);
+                    size_t mainDist = distance(plugins.begin(), mainPos);
 
-                set<boss::File> loadAfter = it->LoadAfter();
-                set<boss::File>::iterator jt = loadAfter.begin();
-                while (jt != loadAfter.end()) {
-                    list<boss::Plugin>::iterator filePos = find(plugins.begin(), plugins.end(), *jt);
+                    set<boss::File> loadAfter = it->LoadAfter();
+                    set<boss::File>::iterator jt = loadAfter.begin();
+                    while (jt != loadAfter.end()) {
+                        list<boss::Plugin>::iterator filePos = find(plugins.begin(), plugins.end(), *jt);
 
-                    size_t fileDist = distance(plugins.begin(), filePos);
+                        size_t fileDist = distance(plugins.begin(), filePos);
 
-                    if (fileDist > mainDist)
-                        loadAfter.erase(jt++);
-                    else
-                        ++jt;
+                        if (fileDist > mainDist)
+                            loadAfter.erase(jt++);
+                        else
+                            ++jt;
+                    }
+                    it->LoadAfter(loadAfter);
                 }
-                it->LoadAfter(loadAfter);
+
+                //Save edits to userlist.
+                BOOST_LOG_TRIVIAL(debug) << "Saving edited userlist.";
+                YAML::Emitter yout;
+                yout.SetIndent(2);
+                yout << YAML::BeginMap
+                     << YAML::Key << "plugins" << YAML::Value << ulist_plugins
+                     << YAML::EndMap;
+
+                boss::ofstream uout(_game.UserlistPath());
+                uout << yout.c_str();
+                uout.close();
             }
-
-            //Save edits to userlist.
-            BOOST_LOG_TRIVIAL(debug) << "Saving edited userlist.";
-            YAML::Emitter yout;
-            yout.SetIndent(2);
-            yout << YAML::BeginMap
-                 << YAML::Key << "plugins" << YAML::Value << ulist_plugins
-                 << YAML::EndMap;
-
-            boss::ofstream uout(_game.UserlistPath());
-            uout << yout.c_str();
-            uout.close();
 
             //Now set load order.
             BOOST_LOG_TRIVIAL(trace) << "Setting load order.";
