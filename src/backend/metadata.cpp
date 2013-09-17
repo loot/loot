@@ -265,6 +265,11 @@ namespace boss {
 		// Get data from file contents using libespm. Assumes libespm has already been initialised.
         BOOST_LOG_TRIVIAL(trace) << "Opening plugin with libespm...";
 		boost::filesystem::path filepath = game.DataPath() / name;
+
+        //In case the plugin is ghosted, but the extension already got trimmed.
+        if (!boost::filesystem::exists(filepath) && boost::filesystem::exists(filepath.string() + ".ghost"))
+            filepath += ".ghost";
+
         espm::File * file;
         if (game.Id() == g_game_tes4)
             file = new espm::tes4::File(filepath, game.espm_settings, false, headerOnly);
