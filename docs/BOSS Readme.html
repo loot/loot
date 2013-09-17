@@ -45,8 +45,8 @@ h3{
     .warning {background:#fbb; border-color:#d00;}
     var {color:#8B4513;}
 
-    #teamTableBody > tr > td:first-child {border-right:0;}
-    #teamTableBody > tr > td:nth-child(2) {border-left:0;font-style:italic;}
+    .teamTableBody > tr > td:first-child {border-right:0;}
+    .teamTableBody > tr > td:nth-child(2) {border-left:0;font-style:italic;}
     td.t {background:#90ff90;text-align:center;}
     td.c {background:#ff9090;text-align:center;}
     td.t:after {content: '\2713';}
@@ -398,13 +398,34 @@ To translate the BOSS application:
 <h2 id="project">Project Members</h2>
 <p>Since June 2009, BOSS has been a collaborative project, first on <a href="http://code.google.com/p/better-oblivion-sorting-software/">Google Code</a> and now on <a href="https://github.com/boss-developers/">GitHub</a>. In alphabetical order, the project members are:
 <table>
+    <thead class="c"><tr><th colspan="2" rowspan="2">Member<th rowspan="2">Admin<th rowspan="2">Code<th colspan="5">Masterlists Member Contributes To
+        <tr><th>Oblivion<th>Skyrim<th>Fallout 3<th>Fallout: New Vegas
+    <tbody class="teamTableBody">
+        <tr><td colspan="2">Freso<td class="c"><td class="c"><td class="c"><td class="t"><td class="c"><td class="c">
+        <tr><td colspan="2">ineedbettername<td class="c"><td class="c"><td class="c"><td class="t"><td class="c"><td class="c">
+        <tr><td colspan="2">LotteryDiscountz<td class="c"><td class="c"><td class="c"><td class="t"><td class="c"><td class="c">
+        <tr><td colspan="2">Sharlikran<td class="c"><td class="c"><td class="c"><td class="t"><td class="c"><td class="c">
+        <tr><td>SilentSpike<td>(SilentSpike69 on Nexus)<td class="c"><td class="c"><td class="c"><td class="t"><td class="c"><td class="c">
+        <tr><td colspan="2">William Imm<td class="c"><td class="c"><td class="t"><td class="t"><td class="c"><td class="c">
+        <tr><td colspan="2">WrinklyNinja<td class="t"><td class="t"><td class="c"><td class="c"><td class="c"><td class="c">
+</table>
+
+<p>Some members have since left the project, they are credited below:
+
+<table>
+    <thead class="c"><tr><th colspan="2" rowspan="2">Ex-Member<th rowspan="2">Admin<th rowspan="2">Code<th colspan="5">Masterlists Member Contributed To
+        <tr><th>Oblivion<th>Skyrim<th>Fallout 3<th>Fallout: New Vegas
+    <tbody class="teamTableBody">
+        <tr><td colspan="2">Arthmoor<td class="t"><td class="c"><td class="t"><td class="t"><td class="c"><td class="c">
+</table>
+
+<table>
     <thead class="c"><tr><th colspan="2" rowspan="2">Member<th rowspan="2">Admin<th rowspan="2">Programmer<th colspan="5">Masterlists Member Contributes To
         <tr><th>Oblivion<th>Nehrim<th>Fallout 3<th>Fallout: New Vegas<th>Skyrim
-    <tbody id="teamTableBody">
+    <tbody class="teamTableBody">
         <tr class="inactive"><td>Aellis<td><td class="t"><td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t">
         <tr class="inactive"><td>AliTheLord<td><td class="c"><td class="t"><td class="t"><td class="c"><td class="t"><td class="c"><td class="t">
         <tr class="inactive"><td>Arkangel<td>(Krhanal on Nexus)<td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t">
-        <tr class="inactive"><td>Arthmoor<td><td class="t"><td class="c"><td class="t"><td class="c"><td class="c"><td class="c"><td class="t">
         <tr class="inactive"><td>Calen Ellefson<td>(Bethesda Softworks only)<td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t">
         <tr class="inactive"><td>Gabba<td>(Bethesda Softworks only)<td class="c"><td class="c"><td class="t"><td class="c"><td class="c"><td class="c"><td class="c">
         <tr class="inactive"><td>iyumichan<td><td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t"><td class="c">
@@ -417,8 +438,6 @@ To translate the BOSS application:
         <tr class="inactive"><td>Random007<td><td class="t"><td class="t"><td class="t"><td class="c"><td class="c"><td class="c"><td class="c">
         <tr class="inactive"><td>Red Eye<td>(redeye85 on Nexus)<td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t"><td class="c">
         <tr class="inactive"><td>RiddlingLynx<td>(Nexus only)<td class="c"><td class="c"><td class="t"><td class="c"><td class="c"><td class="c"><td class="c">
-        <tr class="inactive"><td>Sharlikran<td><td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t">
-        <tr><td>SilentSpike<td>(SilentSpike69 on Nexus)<td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t">
         <tr class="inactive"><td>Skyline<td>(skyline99 on Nexus)<td class="c"><td class="c"><td class="c"><td class="c"><td class="c"><td class="t"><td class="c">
         <tr class="inactive"><td>Space Oden69<td>(SpaceOden on Nexus)<td class="c"><td class="c"><td class="c"><td class="c"><td class="t"><td class="c"><td class="c">
         <tr class="inactive"><td>Televator<td><td class="c"><td class="c"><td class="c"><td class="c"><td class="t"><td class="c"><td class="c">
@@ -426,7 +445,6 @@ To translate the BOSS application:
         <tr class="inactive"><td>Torrello<td><td class="c"><td class="c"><td class="c"><td class="c"><td class="t"><td class="c"><td class="t">
         <tr class="inactive"><td>Vacuity<td><td class="c"><td class="c"><td class="t"><td class="c"><td class="c"><td class="c"><td class="c">
         <tr class="inactive"><td>Valda<td><td class="c"><td class="c"><td class="c"><td class="c"><td class="t"><td class="t"><td class="c">
-        <tr><td>WrinklyNinja<td><td class="t"><td class="t"><td class="c"><td class="c"><td class="c"><td class="c"><td class="c">
         <tr class="inactive"><td>ZiggyX200<td><td class="c"><td class="c"><td class="t"><td class="c"><td class="c"><td class="c"><td class="t">
 </table>
 <p>Members with greyed-out rows are currently inactive, with no contributions in the three months before release of this version of BOSS. Unless otherwise noted, project members can be contacted on the <a href="http://forums.bethsoft.com/index.php">Bethesda Softworks Forums</a> or on <a href="http://forums.nexusmods.com/">The Nexus Forums</a> via the private messaging system.
@@ -505,7 +523,7 @@ There are three key pieces of information that are used to accurately describe a
 <h2 id="history">Version History</h2>
 <p>Only the history of version 3 is given, as changes prior to version 3 are irrelevant due to the complete redesign that occurred. The masterlists are updated far too frequently for their changes to be concisely recorded here, but a full history of changes to them may be viewed by browsing the Google Code repository.
 
-<h3>3.0.0 - <i>Day Month 2012</i></h3>
+<h3>3.0.0 - <i>Day Month 2013</i></h3>
 <ul>
 	<li>BOSS completely redesigned from scratch and almost completely rewritten.
 	<li>Command Line Interface removed.
