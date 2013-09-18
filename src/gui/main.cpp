@@ -668,12 +668,16 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             BOOST_LOG_TRIVIAL(trace) << "Building list of edited plugins.";
             for (list<boss::Plugin>::iterator it=newPluginsList.begin(),endit=newPluginsList.end(); it != endit; ++it) {
                 list<boss::Plugin>::const_iterator jt = find(plugins.begin(), plugins.end(), *it);
+
+                if (jt == plugins.end())
+                    continue;
+
                 boss::Plugin diff = it->DiffMetadata(*jt);
 
                 if (!diff.HasNameOnly())
                     editedPlugins.push_back(diff);
             }
-            plugins = newPluginsList;
+            plugins.swap(newPluginsList);
 
             if (!editedPlugins.empty()) {
 
@@ -1108,6 +1112,9 @@ std::list<boss::Plugin> LoadOrderPreview::GetLoadOrder() const {
         string name = string(_loadOrder->GetItemText(i).ToUTF8());
 
         list<boss::Plugin>::const_iterator it = find(_plugins.begin(), _plugins.end(), boss::Plugin(name));
+
+        if (it == _plugins.end())
+            continue;
 
         plugins.push_back(*it);
 

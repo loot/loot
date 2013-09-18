@@ -148,7 +148,12 @@ namespace boss {
                 const std::string& condition) : _type(type), _content(content), ConditionStruct(condition) {}
 
     bool Message::operator < (const Message& rhs) const {
-        return boost::ilexicographical_compare(_content.front().Str(), rhs.Content().front().Str());
+        if (!_content.empty() && !rhs.Content().empty())
+            return boost::ilexicographical_compare(_content.front().Str(), rhs.Content().front().Str());
+        else if (_content.empty())
+            return true;
+        else
+            return false;
     }
 
     bool Message::operator == (const Message& rhs) const {
@@ -392,8 +397,7 @@ namespace boss {
     }
 
     Plugin Plugin::DiffMetadata(const Plugin& plugin) const {
-        Plugin p(name);
-        p.Priority(priority);
+        Plugin p(*this);
 
         //Compare this plugin against the given plugin.
         set<File> files = plugin.LoadAfter();
