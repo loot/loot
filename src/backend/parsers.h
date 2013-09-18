@@ -448,7 +448,7 @@ namespace boss {
 
             BOOST_LOG_TRIVIAL(trace) << "Checking to see if any files matching the regex \"" << regexStr << "\" exist.";
 
-            boost::regex sepReg("/|(\\\\)", boost::regex::extended);
+            boost::regex sepReg("/|(\\\\)", boost::regex::perl);
 
             std::vector<std::string> components;
             boost::algorithm::split_regex(components, regexStr, sepReg);
@@ -478,7 +478,7 @@ namespace boss {
 
             boost::regex regex;
             try {
-                regex = boost::regex(filename, boost::regex::extended|boost::regex::icase);
+                regex = boost::regex(filename, boost::regex::perl|boost::regex::icase);
             } catch (boost::regex_error& e) {
                 BOOST_LOG_TRIVIAL(error) << "The regex string \"" << filename << "\" is invalid.";
                 throw boss::error(boss::error::invalid_args, "The regex string \"" + filename + "\" is invalid.");

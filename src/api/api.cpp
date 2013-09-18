@@ -326,7 +326,7 @@ BOSS_API unsigned int boss_eval_lists (boss_db db, const unsigned int language) 
             if (it->IsRegexPlugin()) {
                 boost::regex regex;
                 try {
-                    regex = boost::regex(it->Name(), boost::regex::extended|boost::regex::icase);
+                    regex = boost::regex(it->Name(), boost::regex::perl|boost::regex::icase);
                 } catch (boost::regex_error& e) {
                     extMessageStr = e.what();
                     return boss_error_regex_eval_fail;
@@ -357,7 +357,7 @@ BOSS_API unsigned int boss_eval_lists (boss_db db, const unsigned int language) 
             if (it->IsRegexPlugin()) {
                 boost::regex regex;
                 try {
-                    regex = boost::regex(it->Name(), boost::regex::extended|boost::regex::icase);
+                    regex = boost::regex(it->Name(), boost::regex::perl|boost::regex::icase);
                 } catch (boost::regex_error& e) {
                     extMessageStr = e.what();
                     return boss_error_invalid_args;
