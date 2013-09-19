@@ -354,6 +354,7 @@ namespace boss {
                 }
 
                 std::list<Message> messages = it->Messages();
+                messageNo += messages.size();
 
                 std::set<Tag> tags = it->Tags();
 
@@ -373,7 +374,6 @@ namespace boss {
                 }
 
                 AppendMessages(plugin, messages, warnNo, errorNo);
-                messageNo += messages.size();
             }
         }
 
@@ -593,8 +593,6 @@ namespace boss {
     }
 }
 
-#endif
-
 namespace YAML {
     template<class T, class Compare>
     Emitter& operator << (Emitter& out, const std::set<T, Compare>& rhs) {
@@ -723,3 +721,5 @@ namespace YAML {
         }
     }
 }
+
+#endif
