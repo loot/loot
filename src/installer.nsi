@@ -24,39 +24,39 @@ Function ReplaceLineStr
  Push $R7 ; input string length
  Push $R8 ; line string length
  Push $R9 ; global
- 
+
   StrLen $R7 $R1
- 
+
   GetTempFileName $R4
- 
+
   FileOpen $R5 $R4 w
   FileOpen $R3 $R2 r
- 
+
   ReadLoop:
   ClearErrors
    FileRead $R3 $R6
     IfErrors Done
- 
+
    StrLen $R8 $R6
    StrCpy $R9 $R6 $R7 -$R8
    StrCmp $R9 $R1 0 +3
- 
+
     FileWrite $R5 "$R0$\r$\n"
     Goto ReadLoop
- 
+
     FileWrite $R5 $R6
     Goto ReadLoop
- 
+
   Done:
- 
+
   FileClose $R3
   FileClose $R5
- 
+
   SetDetailsPrint none
    Delete $R2
    Rename $R4 $R2
   SetDetailsPrint both
- 
+
  Pop $R9
  Pop $R8
  Pop $R7
@@ -79,18 +79,18 @@ FunctionEnd
 
 	;Request application privileges for Windows Vista/7
 	RequestExecutionLevel admin
-	
+
 	;Icon for installer\uninstaller
 	!define MUI_ICON "..\resources\icon.ico"
 	!define MUI_UNICON "..\resources\icon.ico"
-	
+
 	; This causes an "are you sure?" message to be displayed if you try to quit the installer or uninstaller.
 	!define MUI_ABORTWARNING
 	!define MUI_UNABORTWARNING
-	
+
 	;Checks that the installer's CRC is correct (means we can remove installer CRC checking from BOSS).
 	CRCCheck force
-	
+
 	;The SOLID lzma compressor gives the best compression ratio.
 	SetCompressor /SOLID lzma
 
@@ -117,7 +117,7 @@ FunctionEnd
 	!insertmacro MUI_UNPAGE_COMPONENTS
 	!insertmacro MUI_UNPAGE_CONFIRM
 	!insertmacro MUI_UNPAGE_INSTFILES
-  
+
 ;--------------------------------
 ;Languages
 
@@ -157,7 +157,7 @@ FunctionEnd
 	LangString TEXT_SHOWREADME ${LANG_RUSSIAN} "Смотреть BOSS-Readme"
 	LangString TEXT_MAIN ${LANG_RUSSIAN} "Все файлы BOSS, кроме пользовательских списков и BOSS.ini"
 	LangString TEXT_USERFILES ${LANG_RUSSIAN} "Файлы пользовательских списков и BOSS.ini."
- 
+
 ;--------------------------------
 ;German (Deutsch) Strings
 
@@ -172,7 +172,7 @@ FunctionEnd
 	;LangString TEXT_SHOWREADME ${LANG_GERMAN} "Readme lesen"
 	;LangString TEXT_MAIN ${LANG_GERMAN} "Alle Dateien von BOSS ohne die Benutzerlisten und die BOSS.ini."
 	;LangString TEXT_USERFILES ${LANG_GERMAN} "Benutzerliste von BOSS und die BOSS.ini-Datei."
-	
+
 ;--------------------------------
 ;Spanish (castellano) Strings
 
@@ -187,7 +187,7 @@ FunctionEnd
 	LangString TEXT_SHOWREADME ${LANG_SPANISH} "Ver Léame"
 	LangString TEXT_MAIN ${LANG_SPANISH} "Todos los archivos de BOSS, menos BOSS.ini y listas de usuarios."
 	LangString TEXT_USERFILES ${LANG_SPANISH} "BOSS.ini y listas de usuarios."
- 
+
 ;--------------------------------
 ;Simplified Chinese (简体中文) Strings
 
@@ -209,11 +209,11 @@ FunctionEnd
     Var InstallPath ;Path to existing BOSS install.
 
 	Function .onInit
-	
+
 		!insertmacro MUI_LANGDLL_DISPLAY
-		
+
 	FunctionEnd
-	
+
 	Function onGUIInit
 		; First check to see if BOSS is already installed via installer, and launch the existing uninstaller if so.
 		IfFileExists "$COMMONFILES\BOSS\uninstall.exe" 0 +8
@@ -225,7 +225,7 @@ FunctionEnd
 				Delete "$COMMONFILES\BOSS\uninstall.exe"
 				RMDir "$COMMONFILES\BOSS"
 
-        
+
 
 		;That was the old uninstaller location, now see if the current version is already installed.
 		ReadRegStr $InstallPath HKLM "Software\BOSS" "Installed Path"
@@ -244,64 +244,56 @@ FunctionEnd
 	Function un.onInit
 
 		!insertmacro MUI_LANGDLL_DISPLAY
-		
+
 	FunctionEnd
 
 ;--------------------------------
 ;Installer Sections
 
 	Section "Installer Section"
-		
+
 		;Install executable.
 		SetOutPath "$INSTDIR"
 		File "..\build\BOSS.exe"
-			  
+
 		;Now install API DLLs.
-		SetOutPath "$INSTDIR\API"
-		File "..\build\libboss32.dll"
-		File "..\build\libboss64.dll"
-		
-		;Now install readme files.
-		SetOutPath "$INSTDIR\docs"
-		File "..\docs\BOSS API Readme.html"
-		File "..\docs\BOSS Metadata Syntax.html"
-		File "..\docs\BOSS Readme.html"
-		File "..\docs\Licenses.txt"
-		
-		;Now install readme images.
-		SetOutPath "$INSTDIR\docs\images"
-		File "..\docs\images\editor.png"
-		File "..\docs\images\main.png"
-		File "..\docs\images\settings.png"
-		File "..\docs\images\viewer-1.png"
-		File "..\docs\images\viewer-2.png"
+		;SetOutPath "$INSTDIR\API"
+		;File "..\build\libboss32.dll"
+		;File "..\build\libboss64.dll"
+
+        ;Install graphvis files.
+        SetOutPath "$INSTDIR\resources\graphvis"
+        File "..\resources\graphvis\*"
+
+        ;Install svgweb files.
+        SetOutPath "$INSTDIR\resources\svgweb"
+        File "..\resources\svgweb\*"
+
+        ;Install svn files.
+        SetOutPath "$INSTDIR\resources\svn"
+        File "..\resources\svn\*"
 
         ;Install resource files.
         SetOutPath "$INSTDIR\resources"
-        File "..\resources\libespm.yaml"
+        File "..\resources\icon.ico"
         File "..\resources\polyfill.js"
         File "..\resources\script.js"
         File "..\resources\style.css"
-        
-        SetOutPath "$INSTDIR\resources\svn"
-        File "..\resources\svn\intl3_svn.dll"
-        File "..\resources\svn\libapr-1.dll"
-        File "..\resources\svn\libapriconv-1.dll"
-        File "..\resources\svn\libaprutil-1.dll"
-        File "..\resources\svn\libdb48.dll"
-        File "..\resources\svn\libeay32.dll"
-        File "..\resources\svn\libsasl.dll"
-        File "..\resources\svn\libsvn_client-1.dll"
-        File "..\resources\svn\libsvn_delta-1.dll"
-        File "..\resources\svn\libsvn_diff-1.dll"
-        File "..\resources\svn\libsvn_fs-1.dll"
-        File "..\resources\svn\libsvn_ra-1.dll"
-        File "..\resources\svn\libsvn_repos-1.dll"
-        File "..\resources\svn\libsvn_subr-1.dll"
-        File "..\resources\svn\libsvn_wc-1.dll"
-        File "..\resources\svn\ssleay32.dll"
-        File "..\resources\svn\svn.exe"
-  
+
+        ;Install documentation images.
+		SetOutPath "$INSTDIR\docs\images"
+        File "..\docs\images\*"
+
+        ;Install licenses.
+		SetOutPath "$INSTDIR\docs\licenses"
+        File "..\docs\licenses\*"
+
+		;Now install readme files.
+		SetOutPath "$INSTDIR\docs"
+		;File "..\docs\BOSS API Readme.html"
+		File "..\docs\BOSS Metadata Syntax.html"
+		File "..\docs\BOSS Readme.html"
+
 		;Now install language files.
 		SetOutPath "$INSTDIR\resources\l10n\ru\LC_MESSAGES"
 		;File "..\resources\l10n\ru\LC_MESSAGES\messages.mo"
@@ -315,32 +307,32 @@ FunctionEnd
 		;File "..\resources\l10n\zh\LC_MESSAGES\messages.mo"
 		;File "..\resources\l10n\zh\LC_MESSAGES\wxstd.mo"
 
-        ;Install new BOSS settings.yaml.
-		SetOutPath "$LOCALAPPDATA\BOSS"
-		File "..\resources\settings.yaml"
-		
+        ;Install settings file.
+        SetOutPath "$LOCALAPPDATA\BOSS"
+        File "..\resources\settings.yaml"
+
 		;Write language setting to settings.yaml.
 		StrCmp $LANGUAGE ${LANG_RUSSIAN} 0 +5
             Push "$LOCALAPPDATA\BOSS\settings.yaml"
             Push "Language:"
             Push "Language: rus"
             Call ReplaceLineStr
-		StrCmp $LANGUAGE ${LANG_GERMAN} 0 +5
-            Push "$LOCALAPPDATA\BOSS\settings.yaml"
-            Push "Language:"
-            Push "Language: deu"
-            Call ReplaceLineStr
+		;StrCmp $LANGUAGE ${LANG_GERMAN} 0 +5
+        ;    Push "$LOCALAPPDATA\BOSS\settings.yaml"
+        ;    Push "Language:"
+        ;    Push "Language: deu"
+        ;    Call ReplaceLineStr
 		StrCmp $LANGUAGE ${LANG_SPANISH} 0 +5
             Push "$LOCALAPPDATA\BOSS\settings.yaml"
             Push "Language:"
             Push "Language: spa"
             Call ReplaceLineStr
-		StrCmp $LANGUAGE ${LANG_SIMPCHINESE} 0 +5
-            Push "$LOCALAPPDATA\BOSS\settings.yaml"
-            Push "Language:"
-            Push "Language: cmn"
-            Call ReplaceLineStr
-		
+		;StrCmp $LANGUAGE ${LANG_SIMPCHINESE} 0 +5
+        ;    Push "$LOCALAPPDATA\BOSS\settings.yaml"
+        ;    Push "Language:"
+        ;    Push "Language: cmn"
+        ;    Call ReplaceLineStr
+
 		;Add Start Menu shortcuts. Set out path back to $INSTDIR otherwise the shortcuts start in the wrong place.
 		;Set Shell Var Context to all so that shortcuts are installed for all users, not just admin.
 		SetOutPath "$INSTDIR"
@@ -349,8 +341,8 @@ FunctionEnd
 		CreateShortCut "$SMPROGRAMS\BOSS\BOSS.lnk" "$INSTDIR\BOSS.exe"
 		CreateShortCut "$SMPROGRAMS\BOSS\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
 		CreateShortCut "$SMPROGRAMS\BOSS\Readme.lnk" "$INSTDIR\Docs\BOSS Readme.html"
-	  
-		
+
+
 		;Store installation folder in registry key.
 		WriteRegStr HKLM "Software\BOSS" "Installed Path" "$INSTDIR"
 		;Write registry keys for Windows' uninstaller.
@@ -359,10 +351,10 @@ FunctionEnd
 		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\BOSS" "URLInfoAbout" 'http://better-oblivion-sorting-software.googlecode.com/'
 		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\BOSS" "HelpLink" 'http://better-oblivion-sorting-software.googlecode.com/'
 		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\BOSS" "Publisher" 'BOSS Development Team'
-		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\BOSS" "DisplayVersion" '3.0.0'      
+		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\BOSS" "DisplayVersion" '3.0.0'
 		WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\BOSS" "NoModify" 1
 		WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\BOSS" "NoRepair" 1
-		
+
 		;Create uninstaller
 		WriteUninstaller "$INSTDIR\Uninstall.exe"
 
@@ -376,51 +368,39 @@ FunctionEnd
 
 		;Remove main executables.
 		Delete "$INSTDIR\BOSS.exe"
-		
+
 		;Remove API DLLs.
-		Delete "$INSTDIR\API\libboss32.dll"
-		Delete "$INSTDIR\API\libboss64.dll"
-		RMDir  "$INSTDIR\API"
-		
+		;Delete "$INSTDIR\API\libboss32.dll"
+		;Delete "$INSTDIR\API\libboss64.dll"
+		;RMDir  "$INSTDIR\API"
+
+		;Remove readme images.
+		RMDir /r "$INSTDIR\docs\images"
+
+        ;Remove licenses.
+        RMDir /r "$INSTDIR\docs\licenses"
+
 		;Remove readme files.
-		Delete "$INSTDIR\docs\BOSS API Readme.html"
+		;Delete "$INSTDIR\docs\BOSS API Readme.html"
 		Delete "$INSTDIR\docs\BOSS Metadata Syntax.html"
 		Delete "$INSTDIR\docs\BOSS Readme.html"
-		Delete "$INSTDIR\docs\Licenses.txt"
 		RMDir  "$INSTDIR\docs"
-		
-		;Remove readme images.
-		Delete "$INSTDIR\docs\images\editor.png"
-		Delete "$INSTDIR\docs\images\main.png"
-		Delete "$INSTDIR\docs\images\settings.png"
-		Delete "$INSTDIR\docs\images\viewer-1.png"
-		Delete "$INSTDIR\docs\images\viewer-2.png"
-		RMDir  "$INSTDIR\docs\images"
 
         ;Remove resource files.
-        Delete "$INSTDIR\resources\libespm.yaml"
+        Delete "$INSTDIR\resources\icon.ico"
         Delete "$INSTDIR\resources\polyfill.js"
         Delete "$INSTDIR\resources\script.js"
         Delete "$INSTDIR\resources\style.css"
-        RMDir  "$INSTDIR\resources\svn"
-        Delete "$INSTDIR\resources\svn\intl3_svn.dll"
-        Delete "$INSTDIR\resources\svn\libapr-1.dll"
-        Delete "$INSTDIR\resources\svn\libapriconv-1.dll"
-        Delete "$INSTDIR\resources\svn\libaprutil-1.dll"
-        Delete "$INSTDIR\resources\svn\libdb48.dll"
-        Delete "$INSTDIR\resources\svn\libeay32.dll"
-        Delete "$INSTDIR\resources\svn\libsasl.dll"
-        Delete "$INSTDIR\resources\svn\libsvn_client-1.dll"
-        Delete "$INSTDIR\resources\svn\libsvn_delta-1.dll"
-        Delete "$INSTDIR\resources\svn\libsvn_diff-1.dll"
-        Delete "$INSTDIR\resources\svn\libsvn_fs-1.dll"
-        Delete "$INSTDIR\resources\svn\libsvn_ra-1.dll"
-        Delete "$INSTDIR\resources\svn\libsvn_repos-1.dll"
-        Delete "$INSTDIR\resources\svn\libsvn_subr-1.dll"
-        Delete "$INSTDIR\resources\svn\libsvn_wc-1.dll"
-        Delete "$INSTDIR\resources\svn\ssleay32.dll"
-        Delete "$INSTDIR\resources\svn\svn.exe"
-  
+
+        ;Remove SVN files.
+        RMDir /r "$INSTDIR\resources\svn"
+
+        ;Remove graphvis files.
+        RMDir /r "$INSTDIR\resources\graphvis"
+
+        ;Remove svgweb files.
+        RMDir /r "$INSTDIR\resources\svgweb"
+
 		;Remove language files.
 		Delete "$INSTDIR\resources\l10n\ru\LC_MESSAGES\messages.mo"
 		Delete "$INSTDIR\resources\l10n\ru\LC_MESSAGES\wxstd.mo"
@@ -439,7 +419,7 @@ FunctionEnd
 		RMDir  "$INSTDIR\resources\l10n\zh"
 		RMDir  "$INSTDIR\resources\l10n"
         RMDir  "$INSTDIR\resources"
-		
+
 		;Now we have to remove the files BOSS generates when it runs.
 		Delete "$LOCALAPPDATA\BOSS\BOSSDebugLog.txt"
 		;Trying to delete a file that doesn't exist doesn't cause an error, so delete all games' files.
@@ -460,7 +440,7 @@ FunctionEnd
 		RMDir  "$LOCALAPPDATA\BOSS\Fallout3"
 		RMDir  "$LOCALAPPDATA\BOSS\FalloutNV"
         RMDir  "$LOCALAPPDATA\BOSS"
-		
+
 		;Remove uninstaller.
 		Delete "$INSTDIR\Uninstall.exe"
 
@@ -469,7 +449,7 @@ FunctionEnd
 
 		;Delete registry key.
 		DeleteRegKey HKLM "Software\BOSS"
-		
+
 		;Delete stupid Windows created registry keys:
 		DeleteRegKey HKCU "Software\BOSS"
 		DeleteRegKey HKLM "Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\BOSS"
@@ -484,7 +464,7 @@ FunctionEnd
 		DeleteRegValue HKCU "Software\Microsoft\Windows\ShellNoRoam\MuiCache" "$INSTDIR"
 		DeleteRegValue HKCU "Software\Microsoft\Windows\ShellNoRoam\MuiCache" "$INSTDIR\BOSS.exe"
 		DeleteRegValue HKCU "Software\Microsoft\Windows\ShellNoRoam\MuiCache" "$INSTDIR\Uninstall.exe"
-		
+
 		;Delete Start Menu folder.
 		SetShellVarContext all
 		RMDir /r "$SMPROGRAMS\BOSS"
@@ -516,5 +496,5 @@ FunctionEnd
 	  !insertmacro MUI_DESCRIPTION_TEXT ${Main} "$(Text_Main)"
 	  !insertmacro MUI_DESCRIPTION_TEXT ${UserFiles} "$(Text_UserFiles)"
 	!insertmacro MUI_UNFUNCTION_DESCRIPTION_END
-	
+
 ;--------------------------------
