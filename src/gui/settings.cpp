@@ -88,7 +88,7 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
 	rightItem.Right();
 
 	wxSizerFlags wholeItem(0);
-	wholeItem.Border(wxLEFT|wxRIGHT|wxBOTTOM, 10);
+	wholeItem.Border(wxLEFT|wxRIGHT|wxBOTTOM, 15);
 
     wxBoxSizer * bigBox = new wxBoxSizer(wxVERTICAL);
 
@@ -104,7 +104,7 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
     GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Debug Verbosity:")), leftItem);
 	GridSizer->Add(DebugVerbosityChoice, rightItem);
 
-	bigBox->Add(GridSizer, 0, wxEXPAND|wxALL, 10);
+	bigBox->Add(GridSizer, 0, wxEXPAND|wxALL, 15);
 
     bigBox->Add(gamesList, wholeItem);
 
@@ -112,7 +112,7 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
     hbox2->Add(addBtn, 0, wxRIGHT, 5);
     hbox2->Add(editBtn, 0, wxLEFT|wxRIGHT, 5);
     hbox2->Add(removeBtn, 0, wxLEFT, 5);
-    bigBox->Add(hbox2, 0, wxALIGN_RIGHT|wxBOTTOM|wxRIGHT, 10);
+    bigBox->Add(hbox2, 0, wxALIGN_RIGHT|wxBOTTOM|wxRIGHT, 15);
 
     bigBox->Add(UpdateMasterlistBox, wholeItem);
 
@@ -434,7 +434,7 @@ GameEditDialog::GameEditDialog(wxWindow *parent, const wxString& title) : wxDial
 	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Install Path Registry Key:")), leftItem);
 	GridSizer->Add(_registry, rightItem);
 
-    bigBox->Add(GridSizer, 0, wxEXPAND|wxALL, 10);
+    bigBox->Add(GridSizer, 0, wxEXPAND|wxALL, 15);
 
     bigBox->AddSpacer(10);
     bigBox->AddStretchSpacer(1);

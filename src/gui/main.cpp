@@ -1037,14 +1037,14 @@ LoadOrderPreview::LoadOrderPreview(wxWindow *parent, const wxString title, const
     //Set up layout.
     wxBoxSizer * bigBox = new wxBoxSizer(wxVERTICAL);
 
-    bigBox->Add(_loadOrder, 1, wxEXPAND|wxALL, 10);
+    bigBox->Add(_loadOrder, 1, wxEXPAND|wxALL, 15);
 
     wxBoxSizer * hbox = new wxBoxSizer(wxHORIZONTAL);
     hbox->Add(_moveUp, 0, wxRIGHT, 5);
     hbox->Add(_moveDown, 0, wxLEFT, 5);
-    bigBox->Add(hbox, 0, wxALIGN_RIGHT|wxBOTTOM|wxRIGHT, 10);
+    bigBox->Add(hbox, 0, wxALIGN_RIGHT|wxBOTTOM|wxRIGHT, 15);
 
-    bigBox->Add(new wxStaticText(this, wxID_ANY, translate("Please submit any alterations made for reasons other than user preference \nto the BOSS team so that they may include the changes in the masterlist.")), 0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 10);
+    bigBox->Add(new wxStaticText(this, wxID_ANY, translate("Please submit any alterations made for reasons other than user preference \nto the BOSS team so that they may include the changes in the masterlist.")), 0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 15);
 
     //Need to add 'OK' and 'Cancel' buttons.
 	wxSizer * sizer = CreateSeparatedButtonSizer(wxOK|wxCANCEL);

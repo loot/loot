@@ -811,7 +811,7 @@ FileEditDialog::FileEditDialog(wxWindow *parent, const wxString& title) : wxDial
 	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Condition:")), leftItem);
 	GridSizer->Add(_condition, rightItem);
 
-    bigBox->Add(GridSizer, 0, wxEXPAND|wxALL, 10);
+    bigBox->Add(GridSizer, 0, wxEXPAND|wxALL, 15);
 
     bigBox->AddSpacer(10);
     bigBox->AddStretchSpacer(1);
@@ -876,7 +876,7 @@ MessageEditDialog::MessageEditDialog(wxWindow *parent, const wxString& title) : 
     rightItem.Right();
 
     wxSizerFlags wholeItem(0);
-    wholeItem.Expand().Border(wxLEFT|wxRIGHT|wxBOTTOM, 10);
+    wholeItem.Expand().Border(wxLEFT|wxRIGHT|wxBOTTOM, 15);
 
     wxBoxSizer * bigBox = new wxBoxSizer(wxVERTICAL);
 
@@ -888,6 +888,8 @@ MessageEditDialog::MessageEditDialog(wxWindow *parent, const wxString& title) : 
 
 	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Condition:")), leftItem);
 	GridSizer->Add(_condition, rightItem);
+
+    bigBox->AddSpacer(15);
 
     bigBox->Add(GridSizer, wholeItem);
 
@@ -908,7 +910,7 @@ MessageEditDialog::MessageEditDialog(wxWindow *parent, const wxString& title) : 
     hbox->Add(addBtn, 0, wxRIGHT, 5);
     hbox->Add(editBtn, 0, wxLEFT|wxRIGHT, 5);
     hbox->Add(removeBtn, 0, wxLEFT, 5);
-    bigBox->Add(hbox, 0, wxALIGN_RIGHT|wxRIGHT, 10);
+    bigBox->Add(hbox, 0, wxALIGN_RIGHT|wxLEFT|wxRIGHT, 15);
 
     bigBox->AddSpacer(10);
     bigBox->AddStretchSpacer(1);
@@ -920,6 +922,7 @@ MessageEditDialog::MessageEditDialog(wxWindow *parent, const wxString& title) : 
 
     //Set defaults.
     _type->SetSelection(0);
+    _language->SetSelection(0);
 
     SetBackgroundColour(wxColour(255,255,255));
     SetIcon(wxIconLocation("BOSS.exe"));
@@ -1034,7 +1037,7 @@ TagEditDialog::TagEditDialog(wxWindow *parent, const wxString& title) : wxDialog
 	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Condition:")), leftItem);
 	GridSizer->Add(_condition, rightItem);
 
-    bigBox->Add(GridSizer, 0, wxEXPAND|wxALL, 10);
+    bigBox->Add(GridSizer, 0, wxEXPAND|wxALL, 15);
 
     bigBox->AddSpacer(10);
     bigBox->AddStretchSpacer(1);
