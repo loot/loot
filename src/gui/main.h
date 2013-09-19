@@ -52,6 +52,7 @@ public:
     void OnViewLastReport(wxCommandEvent& event);
 
     void OnOpenSettings(wxCommandEvent& event);
+    void OnOpenDebugLog(wxCommandEvent& event);
     void OnGameChange(wxCommandEvent& event);
 	void OnHelp(wxCommandEvent& event);
 	void OnAbout(wxCommandEvent& event);

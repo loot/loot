@@ -367,6 +367,7 @@ Launcher::Launcher(const wxChar *title, YAML::Node& settings, Game& game, vector
     //Construct menus.
     //File Menu
 	FileMenu->Append(OPTION_ViewLastReport, translate("&View Last Report"));
+	FileMenu->Append(OPTION_ViewDebugLog, translate("View &Debug Log"));
     FileMenu->Append(OPTION_SortPlugins, translate("&Sort Plugins"));
     FileMenu->AppendSeparator();
     FileMenu->Append(wxID_EXIT);
@@ -402,6 +403,7 @@ Launcher::Launcher(const wxChar *title, YAML::Node& settings, Game& game, vector
     //Bind event handlers.
     Bind(wxEVT_COMMAND_MENU_SELECTED, &Launcher::OnQuit, this, wxID_EXIT);
     Bind(wxEVT_COMMAND_MENU_SELECTED, &Launcher::OnViewLastReport, this, OPTION_ViewLastReport);
+    Bind(wxEVT_COMMAND_MENU_SELECTED, &Launcher::OnOpenDebugLog, this, OPTION_ViewDebugLog);
     Bind(wxEVT_COMMAND_MENU_SELECTED, &Launcher::OnSortPlugins, this, OPTION_SortPlugins);
     Bind(wxEVT_COMMAND_MENU_SELECTED, &Launcher::OnEditMetadata, this, OPTION_EditMetadata);
     Bind(wxEVT_COMMAND_MENU_SELECTED, &Launcher::OnOpenSettings, this, MENU_ShowSettings);
@@ -959,12 +961,27 @@ void Launcher::OnGameChange(wxCommandEvent& event) {
 void Launcher::OnHelp(wxCommandEvent& event) {
     //Look for file.
     BOOST_LOG_TRIVIAL(debug) << "Opening readme.";
-    if (fs::exists(g_path_readme.string())) {
+    if (fs::exists(g_path_readme)) {
         wxLaunchDefaultApplication(g_path_readme.string());
-    } else {  //No ReadMe exists, show a pop-up message saying so.
+    } else {  //No readme exists, show a pop-up message saying so.
         BOOST_LOG_TRIVIAL(error) << "File \"" << g_path_readme.string() << "\" could not be found.";
         wxMessageBox(
             FromUTF8(format(loc::translate("Error: \"%1%\" cannot be found.")) % g_path_readme.string()),
+            translate("BOSS: Error"),
+            wxOK | wxICON_ERROR,
+            this);
+    }
+}
+
+void Launcher::OnOpenDebugLog(wxCommandEvent& event) {
+    //Look for file.
+    BOOST_LOG_TRIVIAL(debug) << "Opening readme.";
+    if (fs::exists(g_path_log)) {
+        wxLaunchDefaultApplication(g_path_log.string());
+    } else {  //No log exists, show a pop-up message saying so.
+        BOOST_LOG_TRIVIAL(error) << "File \"" << g_path_log.string() << "\" could not be found.";
+        wxMessageBox(
+            FromUTF8(format(loc::translate("Error: \"%1%\" cannot be found.")) % g_path_log.string()),
             translate("BOSS: Error"),
             wxOK | wxICON_ERROR,
             this);
