@@ -1064,6 +1064,23 @@ void LoadOrderPreview::OnMoveUp(wxCommandEvent& event) {
 
         BOOST_LOG_TRIVIAL(trace) << "Moving plugin \"" << string(selectedText.ToUTF8());
 
+        //Check that move is OK.
+        list<boss::Plugin>::const_iterator selectedPlugin = find(_plugins.begin(), _plugins.end(), boss::Plugin(string(selectedText.ToUTF8())));
+        list<boss::Plugin>::const_iterator abovePlugin = find(_plugins.begin(), _plugins.end(), boss::Plugin(string(aboveText.ToUTF8())));
+
+        if (selectedPlugin != _plugins.end() && abovePlugin != _plugins.end()) {
+            if (selectedPlugin->MustLoadAfter(*abovePlugin)) {
+                BOOST_LOG_TRIVIAL(error) << "Cannot load \"" << selectedPlugin->Name() << "\" before \"" << abovePlugin->Name() << "\".";
+                wxMessageBox(
+                    FromUTF8(format(loc::translate("Error: Cannot load \"%1%\" before \"%2%\".")) % selectedPlugin->Name() % abovePlugin->Name()),
+                    translate("BOSS: Error"),
+                    wxOK | wxICON_ERROR,
+                    NULL);
+                selected = _loadOrder->GetNextSelected(selected);
+                continue;
+            }
+        }
+
         _loadOrder->SetItemText(selected, aboveText);
         _loadOrder->SetItemText(selected - 1, selectedText);
 
@@ -1091,6 +1108,22 @@ void LoadOrderPreview::OnMoveDown(wxCommandEvent& event) {
             wxString belowText = _loadOrder->GetItemText(i + 1);
 
             BOOST_LOG_TRIVIAL(trace) << "Moving plugin \"" << string(selectedText.ToUTF8());
+
+            //Check that move is OK.
+            list<boss::Plugin>::const_iterator selectedPlugin = find(_plugins.begin(), _plugins.end(), boss::Plugin(string(selectedText.ToUTF8())));
+            list<boss::Plugin>::const_iterator belowPlugin = find(_plugins.begin(), _plugins.end(), boss::Plugin(string(belowText.ToUTF8())));
+
+            if (selectedPlugin != _plugins.end() && belowPlugin != _plugins.end()) {
+                if (belowPlugin->MustLoadAfter(*selectedPlugin)) {
+                    BOOST_LOG_TRIVIAL(error) << "Cannot load \"" << belowPlugin->Name() << "\" before \"" << selectedPlugin->Name() << "\".";
+                    wxMessageBox(
+                        FromUTF8(format(loc::translate("Error: Cannot load \"%1%\" before \"%2%\".")) % belowPlugin->Name() % selectedPlugin->Name()),
+                        translate("BOSS: Error"),
+                        wxOK | wxICON_ERROR,
+                        NULL);
+                    continue;
+                }
+            }
 
             _loadOrder->SetItemText(i, belowText);
             _loadOrder->SetItemText(i + 1, selectedText);
