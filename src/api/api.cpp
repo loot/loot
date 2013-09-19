@@ -56,8 +56,9 @@ const unsigned int boss_error_invalid_args          = boss::error::invalid_args;
 const unsigned int boss_error_no_tag_map            = boss::error::no_tag_map;
 const unsigned int boss_error_path_not_found        = boss::error::path_not_found;
 const unsigned int boss_error_no_game_detected      = boss::error::no_game_detected;
-const unsigned int boss_error_subversion_error      = boss::error::subversion_error;
-const unsigned int boss_return_max                  = boss_error_subversion_error;
+const unsigned int boss_error_windows_error      = boss::error::windows_error;
+const unsigned int boss_error_sorting_error      = boss::error::windows_error;
+const unsigned int boss_return_max                  = boss_error_sorting_error;
 
 // The following are the games identifiers used by the API.
 const unsigned int boss_game_tes4                   = boss::g_game_tes4;

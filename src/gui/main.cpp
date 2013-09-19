@@ -640,7 +640,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         try {
             system(command.c_str());
 
-  //          if (RunCommand(command, output))  //This hangs for graphvis, for some reason. Works for svn though...
+    //        if (RunCommand(command, output))  //This hangs for graphvis, for some reason.
             fs::remove(temp);
         } catch(boss::error& e) {
             messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("Failed to generate graph image. Details: %1%")) % e.what()).str()));

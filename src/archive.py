@@ -8,7 +8,6 @@
 # build/BOSS.exe
 # resources/graphvis
 # resources/svgweb
-# resources/svn
 # resources/icon.ico
 # resources/polyfill.js
 # resources/script.js
@@ -40,7 +39,6 @@ shutil.copy( os.path.join('..', 'build', 'BOSS.exe'), temp_path )
 
 shutil.copytree( os.path.join('..', 'resources', 'graphvis'), os.path.join(temp_path, 'resources', 'graphvis') )
 shutil.copytree( os.path.join('..', 'resources', 'svgweb'), os.path.join(temp_path, 'resources', 'svgweb') )
-shutil.copytree( os.path.join('..', 'resources', 'svn'), os.path.join(temp_path, 'resources', 'svn') )
 shutil.copy( os.path.join('..', 'resources', 'icon.ico'), os.path.join(temp_path, 'resources') )
 shutil.copy( os.path.join('..', 'resources', 'polyfill.js'), os.path.join(temp_path, 'resources') )
 shutil.copy( os.path.join('..', 'resources', 'script.js'), os.path.join(temp_path, 'resources') )

@@ -37,7 +37,7 @@ namespace boss {
         unsigned int code() const { return _code; }
         const char * what() const throw() { return _what.c_str(); }
 
-
+        /* These must not be changed for API stability. */
         static const unsigned int ok                    = 0;
         static const unsigned int liblo_error           = 1;
         static const unsigned int path_write_fail       = 2;
@@ -49,7 +49,7 @@ namespace boss {
         static const unsigned int no_tag_map            = 8;
         static const unsigned int path_not_found        = 9;
         static const unsigned int no_game_detected      = 10;
-        static const unsigned int subversion_error      = 11;
+        //11 was subversion_error, and was removed along with svn support.
         static const unsigned int git_error             = 12;
         static const unsigned int windows_error         = 13;
         static const unsigned int sorting_error         = 14;

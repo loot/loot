@@ -123,12 +123,8 @@ BOSS_API extern const unsigned int boss_error_invalid_args;  ///< Invalid argume
 BOSS_API extern const unsigned int boss_error_no_tag_map;  ///< No Bash Tag map has been generated yet.
 BOSS_API extern const unsigned int boss_error_path_not_found;  ///< A file or folder path could not be found.
 BOSS_API extern const unsigned int boss_error_no_game_detected;  ///< The given game could not be found.
-
-/**
-    @brief An error occurred during a Subversion operation.
-    @details This code should never be seen client-side, as the API does not use any Subversion processes, but is provided in the interests of completeness and in case of library bugs returning it.
-*/
-BOSS_API extern const unsigned int boss_error_subversion_error;
+BOSS_API extern const unsigned int boss_error_windows_error;  ///< An error occurred during a call to the Windows API.
+BOSS_API extern const unsigned int boss_error_sorting_error;  ///< An error occurred while sorting plugins.
 
 /**
     @brief Matches the value of the highest-numbered return code.

@@ -269,10 +269,6 @@ FunctionEnd
         SetOutPath "$INSTDIR\resources\svgweb"
         File "..\resources\svgweb\*"
 
-        ;Install svn files.
-        SetOutPath "$INSTDIR\resources\svn"
-        File "..\resources\svn\*"
-
         ;Install resource files.
         SetOutPath "$INSTDIR\resources"
         File "..\resources\icon.ico"
@@ -391,9 +387,6 @@ FunctionEnd
         Delete "$INSTDIR\resources\polyfill.js"
         Delete "$INSTDIR\resources\script.js"
         Delete "$INSTDIR\resources\style.css"
-
-        ;Remove SVN files.
-        RMDir /r "$INSTDIR\resources\svn"
 
         ;Remove graphvis files.
         RMDir /r "$INSTDIR\resources\graphvis"
