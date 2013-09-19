@@ -80,6 +80,7 @@ h3{
         <li><a href="#structs-file">File Data Structure</a>
         <li><a href="#structs-message">Message Data Structure</a>
         <li><a href="#structs-plugin">Plugin Data Structure</a>
+        <li><a href="#structs-location">Location Data Structure</a>
     </ol>
     <li><a href="#cond">Condition Strings</a>
     <ol>
@@ -103,10 +104,11 @@ h3{
 <p>Some important points that are more specific to how BOSS uses YAML:
 <ul>
     <li>Child data nodes should be indented two spaces from their parents. This isn't a strict requirement, but is the best trade-off between compactness and readability.
-    <li>Strings should be enclosed in single quotes if they contain any of the following characters: <code>-?:,[]{}#&amp;*!|&gt;"%@`</code>, unless they also contain any single quotes, in which case the string should be enclosed in double quotes instead. Any backslashes or double quotes within a double-quoted string should be escaped with a backslash, ie. <code>"</code> &#x2192; <code>\"</code> and <code>\</code> &#x2192; <code>\\</code>.
+    <li>Strings should be enclosed in single quotes if they contain any of the following characters: <code>-?:,[]{}#&amp;*!|&gt;"%@`</code>, unless they also contain any single quotes, in which case the string should be enclosed in double quotes instead. This isn't always strictly necessary, but it's better to err on the side of caution. If you really want to only quote strings when absolutely neccessary, be sure to check what you write by copy/pasting the whole data structure the string appears into a YAML parser such as <a href="http://yaml-online-parser.appspot.com/">this one</a> and making sure that what it outputs is correct.
+    <li>Any backslashes or double quotes within a double-quoted string should be escaped with a backslash, ie. <code>"</code> &#x2192; <code>\"</code> and <code>\</code> &#x2192; <code>\\</code>.
     <li>Strings are case-sensitive, apart from file paths, regular expressions and checksums.
 </ul>
-<p>These docs give all example syntax in YAML's least compact representation: you can also use a more compact representation, but it's better for the masterlist to be readable than compact.
+<p>These docs give all example syntax in YAML's least compact representation: you can also use a more compact representation, but make sure that you do not sacrifice readability when doing so.
 <p>Some properties of file paths as used by BOSS:
 <ul>
     <li>They are evaluated as paths relative to the game's Data folder.
@@ -147,7 +149,7 @@ plugins:
 
 
 <h2 id="structs">Data Structures</h2>
-<p>While you could write whatever you wanted in a metadata file without problems, so long as it was valid YAML, it would be pointless as BOSS expects the metadata to be laid out using a certain set of data structures, described in this section.
+<p>BOSS expects metadata to be laid out using a certain set of data structures, described in this section.
 
 <h3 id="structs-tag">Tag Data Structure</h3>
 <p>BOSS metadata files can contain suggestions for the addition or removal of Bash Tags, and this is the structure used for them. It has two forms: the first is a simple string, and the second is a key-value map. All values in the map are strings.
@@ -206,7 +208,7 @@ display: OBSE v18+
     <tbody>
         <tr><td><code>say</code><td>A generic message, useful for miscellaneous notes.
         <tr><td><code>warn</code><td>A warning message, describing a non-critical issue with the user's mods (eg. dirty mods).
-        <tr><td><code>error</code><td>An error message, decribing a critical installation issue (eg. missing masters).
+        <tr><td><code>error</code><td>An error message, decribing a critical installation issue (eg. missing masters, corrupt plugins).
 </table>
 <p>The content data structure is a key-value map, with all values being strings:
 <table>
@@ -260,6 +262,7 @@ would be displayed as
         <tr><td><code>inc</code><td>file list<td>&#x2717;<td>An unordered list of files that this plugin is incompatible with. If any of these files are present, an error message will be displayed.
         <tr><td><code>msg</code><td>message list<td>&#x2717;<td>The messages attached to this plugin. The messages will be displayed in the order that they are listed.
         <tr><td><code>tag</code><td>tag list<td>&#x2717;<td>An unordered list of Bash Tags suggested for this plugin. If a Bash Tag is suggested for both addition and removal, the latter will override the former when the list is evaluated.
+        <tr><td><code>url</code><td>location list<td>&#x2717;<td>An unordered list of location data structures (see below) for this plugin. If the same version can be found at multiple locations, only one location should be recorded. This metadata is not currently used by BOSS.
 </table>
 <p>Example:
 <code class="box">name: "Oscuro's_Oblivion_Overhaul.esm"
@@ -275,6 +278,27 @@ tag:
 msg:
   - type: say
     content: 'Do not clean. "Dirty" edits are intentional and required for the mod to function.'
+</code>
+
+<h3 id="structs-location">Location Data Structure</h3>
+<p>This data structure is used to hold information on where plugins are hosted online. It is not currently used by BOSS, but it was suggested that since the BOSS team receives a considerable number of plugin URLs, they should be recorded in a standard format, as there is no existing store of such information and it could prove useful in the future.
+<p>The data structure has two forms: the first is a simple string, and the second is a key-value map. The first form should be used for a URL without any associated version data, such as when it is not clear which version is found there, or when it is the only known hosting location for the plugin and as such hosts all available versions. The second form should be used when version data can be associated with the URL, such as when the URL only hosts a subset of the available versions of the plugin.
+<p>The simple form:
+<code class="box"><var>URL</var></code>
+<p>where <code><var>URL</var></code> is a URL at which the plugin may be found.
+<p>The map form:
+<table>
+    <thead><tr><th>Key Name<th>Data Type<th>Required<th>Notes
+    <tbody>
+        <tr><td><code>link</code><td>string<td>&#x2713;<td>A URL at which the plugin may be found.
+        <tr><td><code>ver</code><td>string list<td>&#x2713;<td>A list of versions that can be found at the URL.
+</table>
+<p>Examples:
+<code class="box">http://skyrim.nexusmods.com/mods/19/</code>
+or
+<code class="box">link: http://steamcommunity.com/sharedfiles/filedetails/?id=87144366
+ver: 
+  - 1.3.2c
 </code>
 
 <h2 id="cond">Condition Strings</h2>

@@ -40,7 +40,7 @@ BOSS requires the following libraries:
 
 BOSS expects all libraries' folders to be present alongside the BOSS repository folder that contains this readme, or otherwise installed such that the compiler and linker used can find them without suppling additional paths. All paths below are relative to the folder(s) containing the libraries and BOSS.
 
-BOSS also requires GraphVis and Subversion binaries, which can be obtained [here](http://sourceforge.net/projects/win32svn) and [here](http://www.graphviz.org/Download_windows.php) respectively and should be installed as detailed below.
+BOSS can also make use of [GraphVis](http://www.graphviz.org/Download_windows.php) and [Subversion](http://sourceforge.net/projects/win32svn) binaries. If provided, they should be installed as detailed below.
 
 Alphanum, Libespm and PugiXML do not require any additional setup. The rest of the libraries must be built separately.
 

@@ -74,10 +74,6 @@ h3{
     <http://www.gnu.org/licenses/>.
 -->
 
-<div id="warning">
-This documentation is a work in progress, covering an application that is also still a work in progress, and is subject to change.
-</div>
-
 <h1>BOSS</h1>
 
 <h2>Contents</h2>
@@ -170,7 +166,8 @@ This documentation is a work in progress, covering an application that is also s
     <li>If the <q>OK</q> button is pressed, the final load order will be applied. Otherwise, no load order changes will be made.
     <li>BOSS's report will be generated and displayed either in a new window or in your default browser, according to the value of the <a href="#settingsViewReports">relevant setting</a>. See the next section for more information on the report.
 </ol>
-<p>Sorting around 90 plugins generally takes under 30 seconds, depending on the sizes of the plugins that are installed. For very large plugins, such as the game's main master file, BOSS may appear to stop responding while the plugin is read: this is not an issue.
+<p>While reading very large plugins, such as the game's main master file, BOSS may appear to stop responding: this is not an issue.
+<p>The time it takes for BOSS to sort your load order depends primarily on the size of the masterlist being used, the total size of the files in your load order, and the number of plugins in your load order. The first run is likely to be longer than subsequent runs as BOSS needs to download the full masterlist, rather than just the changes made by updates. In testing, it was found that sorting ~90 plugins with a total size of ~350 MB and a 5 MB masterlist takes around 15 seconds, though performance will vary with computer hardware.
 
 
 <h3 id="usage-log">The Results Report</h3>
@@ -183,8 +180,8 @@ This documentation is a work in progress, covering an application that is also s
 <p>The report is comprised of three main sections:
 <ul>
     <li>The <q>Summary</q> tab gives information on the versions of BOSS and the masterlist used, whether masterlist updating is enabled, and breaks down the numbers of each message type in the Summary and Details tabs. It also notifies you if there have been no changes in the <q>Details</q> tab since you last ran BOSS for the same game. Finally, the <q>Summary</q> tab is also where any global messages supplied in the masterlist and any errors encountered during sorting are displayed.
-    <li>The <q>Details</q> tab lists the plugins BOSS sorted in their new load order, along with any messages BOSS has provided for them. BOSS will also display plugin version according to what it found in each plugin's description field.
-    <li>The <q>Graph</q> tab displays a graph of all the interactions between the plugins in your load order. It's not very useful to the average user, but may contain information that would aid in debugging any issues encountered, and is also provided as an item of interest.
+    <li>The <q>Details</q> tab lists the plugins BOSS sorted in their new load order, along with any messages BOSS has provided for them. BOSS will also display the plugin's <abbr title="Cyclic Redundancy Check">CRC</abbr> value and extract its version if found in the plugin's description field.
+    <li>The <q>Graph</q> tab displays a graph of all the interactions between the plugins in your load order. It's not very useful to the average user, but may contain information that would aid in debugging any issues encountered, and is also provided as an item of interest. Graph image generation typically takes a long time, so it is disabled by default.
 </ul>
 <p>In addition, there are a few filters that can be used to selectively hide items in the <q>Details</q> tab. These filters are:
 <ul>
@@ -197,8 +194,8 @@ This documentation is a work in progress, covering an application that is also s
     <li><i>Hide Messageless Plugins</i>: Hides any plugins that have no visible messages.
 </ul>
 <p>BOSS will display the version numbers of any plugins that provide them in their description fields. If a plugin supplies no version number, it cannot be displayed. The version numbers may not reflect the actual version of the mod installed - this could either be due to the mod author forgetting to update the description, or due to a mistake in BOSS's detection. As version numbers are supplied by mod authors in a wide range of formats and BOSS has to detect as many as possible, it occasionally identifies parts of some descriptions as version numbers incorrectly. When in doubt, check the version number given in a mod's readme.
-<p>BOSS's mod messages are one of the most important features BOSS provides, acting as a means of providing users with information that they might otherwise not obtain. It is important for a stable, healthy game that you act on any messages that require action.
-<p>If you think a message suggests an unnecessary action, report it to an official BOSS thread. If you encounter a message that is non-conditional, ie. it suggests an action but is still displayed on subsequent runs of BOSS after the action has been carried out, or that it suggests an action that is not necessary, also report it to an official BOSS thread, so that it can be made conditional.
+<p>BOSS's mod messages are a valuable resource, acting as a means of providing users with information that they might otherwise not obtain. It is important for a stable, healthy game that you act on any messages that require action.
+<p>If you think a message suggests an unnecessary action, report it to an official BOSS thread. If you encounter a message that is non-conditional, ie. it suggests an action but is still displayed on subsequent runs of BOSS after the action has been carried out, also report it to an official BOSS thread, so that it can be made conditional.
 
 
 <h3 id="usage-custom">Customising BOSS's Results</h3>
@@ -229,7 +226,7 @@ This documentation is a work in progress, covering an application that is also s
         <tr><td>Incompatibilities<td>This is a list of files that are incompatible with the plugin. BOSS will refuse to sort your load order if any of the listed files are found, and will instead display an error message detailing the problem.
         <p>Any file, not just plugins, can be listed here, and each file has the same three sub-fields as for the requirements field.
         <tr><td>Load After<td>This is a list of plugins which, if present, the current plugin must load after, but which are not required. This field can be used for resolving specific compatibility issues.
-        <tr><td>Messages<td>A list of messages that are to be displayed for the plugin in BOSS's report. These have no bearing on a plugin's position in the load order, but the messages BOSS provides for plugins are one of its most important features.
+        <tr><td>Messages<td>A list of messages that are to be displayed for the plugin in BOSS's report. These have no bearing on a plugin's position in the load order.
         <p>Each message has four sub-fields:
         <ul>
             <li>The <var>type</var> is fairly self-explanatory, and is used to provide messages of varying severity with appropriate emphasis in BOSS's report.
@@ -337,7 +334,7 @@ This documentation is a work in progress, covering an application that is also s
 To translate the BOSS application:
 <ol>
  <li>Download and install the latest version of <a href="http://www.poedit.net/">Poedit</a>.
- <li>Download <a href="">BOSS's translation template file</a>.
+ <li>Download <a href="https://github.com/boss-developers/boss-code/blob/master/resources/l10n/template.pot">BOSS's translation template file</a>.
  <li>If you are updating an existing translation, download the relevant translation file for the language you're interested in:
  <ul>
   <li><a href="">Russian</a>
@@ -387,7 +384,7 @@ To translate the BOSS application:
         <li>Zanderat
     </ul>
 </ul>
-<p>BOSS is written in C/C++ and makes use of <a href="https://subversion.apache.org/">Subversion</a> and the <a href="http://www.davekoelle.com/alphanum.html">Alphanum</a>, <a href="http://www.boost.org/">Boost</a>, <a href="http://github.com/WrinklyNinja/libespm">libespm</a>, <a href="http://github.com/WrinklyNinja/libloadorder">libloadorder</a>, <a href="http://code.google.com/p/pugixml/">PugiXML</a>, <a href="https://code.google.com/p/svgweb/">svgweb</a>, <a href="http://www.wxwidgets.org/">wxWidgets</a> and <a href="http://code.google.com/p/yaml-cpp/">yaml-cpp</a> libraries. BOSS's reports are written in XHTML/CSS/Javascript and make use of <a href="http://github.com/inexorabletash/polyfill">Polyfill.js</a> to provide Internet Explorer 8 compatibility. Copyright license information for all these may be found <a href="licenses/Licenses.txt">here</a>.
+<p>BOSS is written in C/C++ and makes use of <a href="https://subversion.apache.org/">Subversion</a> and the <a href="http://www.davekoelle.com/alphanum.html">Alphanum</a>, <a href="http://www.boost.org/">Boost</a>, <a href="http://github.com/WrinklyNinja/libespm">libespm</a>, <a href="http://github.com/libgit2/libgit2">libgit2</a>, <a href="http://github.com/WrinklyNinja/libloadorder">libloadorder</a>, <a href="http://code.google.com/p/pugixml/">PugiXML</a>, <a href="http://www.wxwidgets.org/">wxWidgets</a> and <a href="http://code.google.com/p/yaml-cpp/">yaml-cpp</a> libraries. BOSS's reports are written in XHTML/CSS/Javascript and make use of <a href="http://github.com/inexorabletash/polyfill">Polyfill.js</a> and <a href="https://code.google.com/p/svgweb/">svgweb</a> to provide Internet Explorer 8 compatibility. Copyright license information for all these may be found <a href="licenses/Licenses.txt">here</a>.
 
 
 <h2 id="project">Project Members</h2>
