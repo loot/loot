@@ -52,3 +52,4 @@ out/
 bin/
 ipch/
 resources/graphvis
+*.mo
