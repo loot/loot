@@ -241,9 +241,9 @@ namespace boss {
 
 			file %=
                 qi::lit("OBSE")   [qi::_val = "..\\obse_1_2_416.dll"]
-                | qi::lit("FOSE")   [qi::_val = "..\\fose_loader.dll"]
-                | qi::lit("NVSE")   [qi::_val = "..\\nvse_loader.dll"]
-                | qi::lit("SKSE")   [qi::_val = "..\\skse_loader.dll"]
+                | qi::lit("FOSE")   [qi::_val = "..\\fose_loader.exe"]
+                | qi::lit("NVSE")   [qi::_val = "..\\nvse_loader.exe"]
+                | qi::lit("SKSE")   [qi::_val = "..\\skse_loader.exe"]
                 | qi::lit("MWSE")   [qi::_val = "..\\MWSE.dll"]
                 | qi::lit("TES3")   [qi::_val = "..\\Morrowind.exe"]
                 | qi::lit("TES4")   [qi::_val = "..\\Oblivion.exe"]
