@@ -337,9 +337,9 @@ To translate the BOSS application:
  <li>Download <a href="https://github.com/boss-developers/boss-code/blob/master/resources/l10n/template.pot">BOSS's translation template file</a>.
  <li>If you are updating an existing translation, download the relevant translation file for the language you're interested in:
  <ul>
-  <li><a href="">Russian</a>
-  <li><a href="">Spanish</a>
-  <li><a href="">Simplified Chinese</a>
+  <li><a href="https://github.com/boss-developers/boss-code/blob/master/resources/l10n/ru/LC_MESSAGES/boss.po">Russian</a>
+  <li><a href="https://github.com/boss-developers/boss-code/blob/master/resources/l10n/es/LC_MESSAGES/boss.po">Spanish</a>
+  <li><a href="https://github.com/boss-developers/boss-code/blob/master/resources/l10n/zh/LC_MESSAGES/boss.po">Simplified Chinese</a>
  </ul>
  <li>Open Poedit and select <q>File->Preferences</q>, then in the <q>Editor</q> tab ensure that the checkbox for the <q>Automatically compile .mo file on save</q> setting is checked. Click <q>OK</q> to close the preferences window.
  <li>If you are starting a new translation, select <q>File->New catalogue from POT file...</q> and choose the template file you downloaded. In the <q>Catalog properties</q> dialog, just click <q>OK</q> without changing anything.
@@ -349,16 +349,12 @@ To translate the BOSS application:
 <p>Some strings to be translated may contain special characters. Different types of special character that may be encountered are:
 <ul>
  <li>Backslashes <code>\</code>. Backslashes must be escaped using another backslash, so if you wanted to display a single backslash <code>\</code>, you would put <code>\\</code> in your translated string.
+ <li>Double-quotation marks <code>"</code>. Double-quotation marks must be preceded by a backslash, ie. <code>\"</code>, or BOSS will crash when it tries to display the string.
  <li>New line characters <code>\n</code>. Do not change the position of these characters relative to the surrounding text, they are responsible for creating new lines.
  <li>Words containing an ampersand <code>&amp;</code>. If a string contains a word that begins with or includes an ampersand, the string is for a menu item and the ampersand is a symbol placed before a specific letter and used to show which keyboard key can be used to select that menu item. The ampersand can be moved to be placed before a more appropriate letter in the translated text.
- <li>Formatting placeholders. Placeholders are used so that BOSS can substitute text or numbers that are generated at runtime into pre-made strings. Two styles of formatting placeholder are used:
- <ol>
-  <li>A number surrounded by percentage signs, eg. <code>%1%</code>.
-  <li>A percentage sign followed by a letter or a number then a letter, eg. <code>%s</code> or <code>%3.0f</code>.
- </ol>
- If formatting placeholders are used in the untranslated string, they <strong>must all</strong> be present in the translated string, or BOSS will crash when it tries to display the translated string. Placeholders can be moved around so that the sentence makes grammatical sense in the target language, though placeholders of the second type <strong>must not</strong> have their order changed.
+ <li>Formatting placeholders. Placeholders are used so that BOSS can substitute text or numbers that are generated at runtime into pre-made strings. They appear as a number surrounded by percentage signs, eg. <code>%1%</code>. If formatting placeholders are used in the untranslated string, they <strong>must all</strong> be present in the translated string, or BOSS will crash when it tries to display the translated string. Placeholders can be moved around so that the sentence makes grammatical sense in the target language.
 </ul>
- <li>Save the translation file with the filename <code>messages.po</code> in a location of your choosing. This will also create a <code>messages.mo</code> file in the same location.
+ <li>Save the translation file with the filename <code>boss.po</code> in a location of your choosing. This will also create a <code>boss.mo</code> file in the same location.
 </ol>
 
 
