@@ -190,9 +190,11 @@ namespace boss {
         else if (keyStr == "HKEY_USERS")
             key = HKEY_USERS;
 
+        BOOST_LOG_TRIVIAL(trace) << "Getting registry object for key and subkey: " << keyStr << " + " << subkey;
         LONG ret = RegOpenKeyEx(key, fs::path(subkey).wstring().c_str(), 0, KEY_READ|KEY_WOW64_32KEY, &hKey);
 
         if (ret == ERROR_SUCCESS) {
+            BOOST_LOG_TRIVIAL(trace) << "Getting value for entry: " << value;
             ret = RegQueryValueEx(hKey, fs::path(value).wstring().c_str(), NULL, NULL, (LPBYTE)&val, &BufferSize);
             RegCloseKey(hKey);
 
@@ -212,6 +214,7 @@ namespace boss {
         HWND owner;
         TCHAR path[MAX_PATH];
 
+        BOOST_LOG_TRIVIAL(trace) << "Getting path to %LOCALAPPDATA%.";
         HRESULT res = SHGetFolderPath(owner, CSIDL_LOCAL_APPDATA, NULL, SHGFP_TYPE_CURRENT, path);
 
         if (res == S_OK)
@@ -225,6 +228,7 @@ namespace boss {
 
     //Turns an absolute filesystem path into a valid file:// URL.
     std::string ToFileURL(const fs::path& file) {
+        BOOST_LOG_TRIVIAL(trace) << "Converting file path " << file << " to a URL.";
         //URLs are UTF-8 encoded then any characters (equiv. their corresponding bytes) not in the unreserved set (equiv. their corresponding bytes) are replaced by a percentage sign followed by the hex representation of their binary value.
         string unreserved = "-.0123456789:ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~";  //Unreserved in byte value order, plus the colon character since that's allowed for drive paths.
 

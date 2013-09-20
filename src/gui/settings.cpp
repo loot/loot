@@ -274,6 +274,8 @@ void SettingsFrame::OnGameSelect(wxListEvent& event) {
 }
 
 void SettingsFrame::OnAddGame(wxCommandEvent& event) {
+    BOOST_LOG_TRIVIAL(debug) << "Adding new game to settings.";
+
     GameEditDialog * rowDialog = new GameEditDialog(this, translate("BOSS: Add Game"));
 
     if (rowDialog->ShowModal() == wxID_OK) {
@@ -329,6 +331,8 @@ void SettingsFrame::OnAddGame(wxCommandEvent& event) {
 }
 
 void SettingsFrame::OnEditGame(wxCommandEvent& event) {
+    BOOST_LOG_TRIVIAL(debug) << "Editing game settings.";
+
     GameEditDialog * rowDialog = new GameEditDialog(this, translate("BOSS: Edit Game"));
 
     long i = gamesList->GetFirstSelected();
@@ -376,6 +380,8 @@ void SettingsFrame::OnEditGame(wxCommandEvent& event) {
 }
 
 void SettingsFrame::OnRemoveGame(wxCommandEvent& event) {
+    BOOST_LOG_TRIVIAL(debug) << "Removing game from settings.";
+
     gamesList->DeleteItem(gamesList->GetFirstSelected());
 
     editBtn->Enable(false);

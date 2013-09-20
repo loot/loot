@@ -77,7 +77,6 @@ public:
     void OnMoveDown(wxCommandEvent& event);
 
     std::list<boss::Plugin> GetLoadOrder() const;
-    std::set<std::string> GetMovedPlugins() const;
 private:
     wxListView * _loadOrder;
     wxButton * _moveUp;

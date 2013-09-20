@@ -48,7 +48,7 @@ namespace boss {
         id = formID & ~((uint32_t)index << 24);
 
         if (index >= sourcePlugins.size()) {
-            //cout << hex << formID << dec << " in " << sourcePlugins.back() << " has a higher modIndex than expected." << endl;
+            BOOST_LOG_TRIVIAL(trace) << hex << formID << dec << " in " << sourcePlugins.back() << " has a higher modIndex than expected.";
             index = sourcePlugins.size() - 1;
         }
 
@@ -170,7 +170,6 @@ namespace boss {
 
         BOOST_LOG_TRIVIAL(trace) << "Choosing message language.";
 
-
         if (_content.size() > 1) {
             if (language == g_lang_any)  //Can use a message of any language, so use the first string.
                 _content.resize(1);
@@ -194,6 +193,7 @@ namespace boss {
     }
 
     MessageContent Message::ChooseContent(const unsigned int language) const {
+        BOOST_LOG_TRIVIAL(trace) << "Choosing message content.";
         if (_content.size() == 1 || language == g_lang_any)
             return _content[0];
         else {
@@ -367,6 +367,7 @@ namespace boss {
 	}
 
     void Plugin::Merge(const Plugin& plugin, bool ifDisabled) {
+        BOOST_LOG_TRIVIAL(trace) << "Merging plugin metadata.";
         //If 'name' differs or if 'enabled' is false for the given plugin, don't change anything.
         if ((!plugin.Enabled() && !ifDisabled))
             return;
@@ -403,6 +404,7 @@ namespace boss {
     }
 
     Plugin Plugin::DiffMetadata(const Plugin& plugin) const {
+        BOOST_LOG_TRIVIAL(trace) << "Calculating metadata difference between plugins.";
         Plugin p(*this);
 
         //Compare this plugin against the given plugin.
@@ -562,6 +564,7 @@ namespace boss {
 
     bool Plugin::DoFormIDsOverlap(const Plugin& plugin) const {
         //Basically std::set_intersection except with an early exit instead of an append to results.
+        BOOST_LOG_TRIVIAL(trace) << "Checking for FormID overlap between \"" << name << "\" and \"" << plugin.Name() << "\".";
 
         set<FormID>::const_iterator i = formIDs.begin(),
                                     j = plugin.FormIDs().begin(),
@@ -588,16 +591,6 @@ namespace boss {
         set<FormID> otherFormIDs = plugin.FormIDs();
         set<FormID> overlap;
 
-  /*      for (set<FormID>::iterator it=formIDs.begin(),endit=formIDs.end(); it != endit; ++it) {
-            if (otherFormIDs.find(*it) != otherFormIDs.end())
-                overlap.insert(*it);
-        }
-
-        for (set<FormID>::iterator it=otherFormIDs.begin(),endit=otherFormIDs.end(); it != endit; ++it) {
-            if (formIDs.find(*it) != formIDs.end())
-                overlap.insert(*it);
-        }
-*/
         set_intersection(formIDs.begin(), formIDs.end(), otherFormIDs.begin(), otherFormIDs.end(), inserter(overlap, overlap.end()));
 
         return overlap;

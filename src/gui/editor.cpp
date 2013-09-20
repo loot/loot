@@ -268,6 +268,8 @@ void Editor::OnPluginSelect(wxListEvent& event) {
 
     //Check if the selected plugin is the same as the current plugin.
     if (selectedPlugin != currentPlugin) {
+        BOOST_LOG_TRIVIAL(debug) << "User selected plugin: " << selectedPlugin.ToUTF8();
+
         //Apply any current edits.
         if (!currentPlugin.empty())
             ApplyEdits(currentPlugin);
@@ -276,6 +278,7 @@ void Editor::OnPluginSelect(wxListEvent& event) {
         plugin.Merge(GetUserData(selectedPlugin), true);
 
         //Now fill editor fields with new plugin's info and update control states.
+        BOOST_LOG_TRIVIAL(debug) << "Filling editor fields with plugin info.";
         pluginText->SetLabelText(FromUTF8(plugin.Name()));
 
         prioritySpin->SetValue(plugin.Priority());
@@ -342,6 +345,7 @@ void Editor::OnPluginSelect(wxListEvent& event) {
 }
 
 void Editor::OnListBookChange(wxBookCtrlEvent& event) {
+    BOOST_LOG_TRIVIAL(trace) << "Changed list tab.";
     if (event.GetSelection() == 0 || event.GetSelection() == 1) {
         addBtn->SetLabel(translate("Add File"));
         editBtn->SetLabel(translate("Edit File"));
@@ -373,72 +377,88 @@ void Editor::OnListBookChange(wxBookCtrlEvent& event) {
 
 void Editor::OnAddRow(wxCommandEvent& event) {
     if (listBook->GetSelection() < 3) {
+        BOOST_LOG_TRIVIAL(debug) << "Adding new file row.";
+
         FileEditDialog * rowDialog = new FileEditDialog(this, translate("BOSS: Add File/Plugin"));
 
-        if (rowDialog->ShowModal() == wxID_OK) {
-
-            if (rowDialog->GetName().empty()) {
-                wxMessageBox(
-                    translate("Error: No filename specified. Row will not be added."),
-                    translate("BOSS: Error"),
-                    wxOK | wxICON_ERROR,
-                    this);
-                return;
-            }
-
-            wxListView * list;
-            if (listBook->GetSelection() == 0)
-                list = reqsList;
-            else if (listBook->GetSelection() == 1)
-                list = incsList;
-            else
-                list = loadAfterList;
-
-            long i = list->GetItemCount();
-            list->InsertItem(i, rowDialog->GetName());
-            list->SetItem(i, 1, rowDialog->GetDisplayName());
-            list->SetItem(i, 2, rowDialog->GetCondition());
+        if (rowDialog->ShowModal() != wxID_OK) {
+            BOOST_LOG_TRIVIAL(debug) << "Cancelled adding new file row.";
+            return;
         }
+
+        if (rowDialog->GetName().empty()) {
+            BOOST_LOG_TRIVIAL(error) << "No filename specified. Row will not be added.";
+            wxMessageBox(
+                translate("Error: No filename specified. Row will not be added."),
+                translate("BOSS: Error"),
+                wxOK | wxICON_ERROR,
+                this);
+            return;
+        }
+
+        wxListView * list;
+        if (listBook->GetSelection() == 0)
+            list = reqsList;
+        else if (listBook->GetSelection() == 1)
+            list = incsList;
+        else
+            list = loadAfterList;
+
+        long i = list->GetItemCount();
+        list->InsertItem(i, rowDialog->GetName());
+        list->SetItem(i, 1, rowDialog->GetDisplayName());
+        list->SetItem(i, 2, rowDialog->GetCondition());
     } else if (listBook->GetSelection() == 3) {
+        BOOST_LOG_TRIVIAL(debug) << "Adding new message row.";
+
         MessageEditDialog * rowDialog = new MessageEditDialog(this, translate("BOSS: Add Message"));
 
-        if (rowDialog->ShowModal() == wxID_OK) {
-
-            if (rowDialog->GetMessage().Content().empty()) {
-                wxMessageBox(
-                    translate("Error: No content specified. Row will not be added."),
-                    translate("BOSS: Error"),
-                    wxOK | wxICON_ERROR,
-                    this);
-                return;
-            }
-
-            messageList->AppendItem(rowDialog->GetMessage());
+        if (rowDialog->ShowModal() != wxID_OK) {
+            BOOST_LOG_TRIVIAL(debug) << "Cancelled adding new message row.";
+            return;
         }
+
+        if (rowDialog->GetMessage().Content().empty()) {
+            BOOST_LOG_TRIVIAL(error) << "No content specified. Row will not be added.";
+            wxMessageBox(
+                translate("Error: No content specified. Row will not be added."),
+                translate("BOSS: Error"),
+                wxOK | wxICON_ERROR,
+                this);
+            return;
+        }
+
+        messageList->AppendItem(rowDialog->GetMessage());
     } else if (listBook->GetSelection() == 4) {
+        BOOST_LOG_TRIVIAL(debug) << "Adding new tag row.";
+
         TagEditDialog * rowDialog = new TagEditDialog(this, translate("BOSS: Add Tag"));
 
-        if (rowDialog->ShowModal() == wxID_OK) {
-
-            if (rowDialog->GetName().empty()) {
-                wxMessageBox(
-                    translate("Error: No Bash Tag specified. Row will not be added."),
-                    translate("BOSS: Error"),
-                    wxOK | wxICON_ERROR,
-                    this);
-                return;
-            }
-
-            long i = tagsList->GetItemCount();
-            tagsList->InsertItem(i, rowDialog->GetState());
-            tagsList->SetItem(i, 1, rowDialog->GetName());
-            tagsList->SetItem(i, 2, rowDialog->GetCondition());
+        if (rowDialog->ShowModal() != wxID_OK) {
+            BOOST_LOG_TRIVIAL(debug) << "Cancelled adding new tag row.";
+            return;
         }
+
+        if (rowDialog->GetName().empty()) {
+            BOOST_LOG_TRIVIAL(error) << "No Bash Tag specified. Row will not be added.";
+            wxMessageBox(
+                translate("Error: No Bash Tag specified. Row will not be added."),
+                translate("BOSS: Error"),
+                wxOK | wxICON_ERROR,
+                this);
+            return;
+        }
+
+        long i = tagsList->GetItemCount();
+        tagsList->InsertItem(i, rowDialog->GetState());
+        tagsList->SetItem(i, 1, rowDialog->GetName());
+        tagsList->SetItem(i, 2, rowDialog->GetCondition());
     }
 }
 
 void Editor::OnEditRow(wxCommandEvent& event) {
     if (listBook->GetSelection() < 3) {
+        BOOST_LOG_TRIVIAL(debug) << "Editing file row.";
         FileEditDialog * rowDialog = new FileEditDialog(this, translate("BOSS: Edit File/Plugin"));
 
         wxListView * list;
@@ -453,42 +473,50 @@ void Editor::OnEditRow(wxCommandEvent& event) {
 
         rowDialog->SetValues(list->GetItemText(i, 0), list->GetItemText(i, 1), list->GetItemText(i, 2));
 
-        if (rowDialog->ShowModal() == wxID_OK) {
-
-            if (rowDialog->GetName().empty()) {
-                wxMessageBox(
-                    translate("Error: No filename specified. Row will not be edited."),
-                    translate("BOSS: Error"),
-                    wxOK | wxICON_ERROR,
-                    this);
-                return;
-            }
-
-            list->SetItem(i, 0, rowDialog->GetName());
-            list->SetItem(i, 1, rowDialog->GetDisplayName());
-            list->SetItem(i, 2, rowDialog->GetCondition());
+        if (rowDialog->ShowModal() != wxID_OK) {
+            BOOST_LOG_TRIVIAL(debug) << "Cancelled editing file row.";
+            return;
         }
+
+        if (rowDialog->GetName().empty()) {
+            BOOST_LOG_TRIVIAL(error) << "No filename specified. Row will not be edited.";
+            wxMessageBox(
+                translate("Error: No filename specified. Row will not be edited."),
+                translate("BOSS: Error"),
+                wxOK | wxICON_ERROR,
+                this);
+            return;
+        }
+
+        list->SetItem(i, 0, rowDialog->GetName());
+        list->SetItem(i, 1, rowDialog->GetDisplayName());
+        list->SetItem(i, 2, rowDialog->GetCondition());
     } else if (listBook->GetSelection() == 3) {
+        BOOST_LOG_TRIVIAL(debug) << "Editing message row.";
         MessageEditDialog * rowDialog = new MessageEditDialog(this, translate("BOSS: Edit Message"));
 
         long i = messageList->GetFirstSelected();
 
         rowDialog->SetMessage(messageList->GetItem(i));
 
-        if (rowDialog->ShowModal() == wxID_OK) {
-
-            if (rowDialog->GetMessage().Content().empty()) {
-                wxMessageBox(
-                    translate("Error: No content specified. Row will not be edited."),
-                    translate("BOSS: Error"),
-                    wxOK | wxICON_ERROR,
-                    this);
-                return;
-            }
-
-            messageList->SetItem(i, rowDialog->GetMessage());
+        if (rowDialog->ShowModal() != wxID_OK) {
+            BOOST_LOG_TRIVIAL(debug) << "Cancelled editing message row.";
+            return;
         }
+
+        if (rowDialog->GetMessage().Content().empty()) {
+            BOOST_LOG_TRIVIAL(error) << "No content specified. Row will not be edited.";
+            wxMessageBox(
+                translate("Error: No content specified. Row will not be edited."),
+                translate("BOSS: Error"),
+                wxOK | wxICON_ERROR,
+                this);
+            return;
+        }
+
+        messageList->SetItem(i, rowDialog->GetMessage());
     } else if (listBook->GetSelection() == 4) {
+        BOOST_LOG_TRIVIAL(debug) << "Editing tag row.";
         TagEditDialog * rowDialog = new TagEditDialog(this, translate("BOSS: Edit Tag"));
 
         long i = tagsList->GetFirstSelected();
@@ -501,25 +529,29 @@ void Editor::OnEditRow(wxCommandEvent& event) {
 
         rowDialog->SetValues(stateNo, tagsList->GetItemText(i, 1), tagsList->GetItemText(i, 2));
 
-        if (rowDialog->ShowModal() == wxID_OK) {
-
-            if (rowDialog->GetName().empty()) {
-                wxMessageBox(
-                    translate("Error: No Bash Tag specified. Row will not be edited."),
-                    translate("BOSS: Error"),
-                    wxOK | wxICON_ERROR,
-                    this);
-                return;
-            }
-
-            tagsList->SetItem(i, 0, rowDialog->GetState());
-            tagsList->SetItem(i, 1, rowDialog->GetName());
-            tagsList->SetItem(i, 2, rowDialog->GetCondition());
+        if (rowDialog->ShowModal() != wxID_OK) {
+            BOOST_LOG_TRIVIAL(debug) << "Cancelled editing tag row.";
+            return;
         }
+
+        if (rowDialog->GetName().empty()) {
+            BOOST_LOG_TRIVIAL(error) << "No Bash Tag specified. Row will not be edited.";
+            wxMessageBox(
+                translate("Error: No Bash Tag specified. Row will not be edited."),
+                translate("BOSS: Error"),
+                wxOK | wxICON_ERROR,
+                this);
+            return;
+        }
+
+        tagsList->SetItem(i, 0, rowDialog->GetState());
+        tagsList->SetItem(i, 1, rowDialog->GetName());
+        tagsList->SetItem(i, 2, rowDialog->GetCondition());
     }
 }
 
 void Editor::OnRemoveRow(wxCommandEvent& event) {
+    BOOST_LOG_TRIVIAL(debug) << "Removing row.";
     wxListView * list;
     if (listBook->GetSelection() == 0)
         list = reqsList;
@@ -549,13 +581,17 @@ void Editor::OnRowSelect(wxListEvent& event) {
 
         if (it != _basePlugins.end())
             plugin = *it;
+        else
+            BOOST_LOG_TRIVIAL(warning) << "Could not find plugin in base list: " << plugin.Name();
 
         set<boss::File> reqs = plugin.Reqs();
 
         if (reqs.find(file) == reqs.end()) {
+            BOOST_LOG_TRIVIAL(trace) << "File \"" << file.Name() << "\" was not found in base plugin metadata. Editing enabled.";
             editBtn->Enable(true);
             removeBtn->Enable(true);
         } else {
+            BOOST_LOG_TRIVIAL(trace) << "File \"" << file.Name() << "\" was found in base plugin metadata. Editing disabled.";
             editBtn->Enable(false);
             removeBtn->Enable(false);
         }
@@ -569,13 +605,17 @@ void Editor::OnRowSelect(wxListEvent& event) {
 
         if (it != _basePlugins.end())
             plugin = *it;
+        else
+            BOOST_LOG_TRIVIAL(warning) << "Could not find plugin in base list: " << plugin.Name();
 
         set<boss::File> incs = plugin.Incs();
 
         if (incs.find(file) == incs.end()) {
+            BOOST_LOG_TRIVIAL(trace) << "File \"" << file.Name() << "\" was not found in base plugin metadata. Editing enabled.";
             editBtn->Enable(true);
             removeBtn->Enable(true);
         } else {
+            BOOST_LOG_TRIVIAL(trace) << "File \"" << file.Name() << "\" was found in base plugin metadata. Editing disabled.";
             editBtn->Enable(false);
             removeBtn->Enable(false);
         }
@@ -589,13 +629,17 @@ void Editor::OnRowSelect(wxListEvent& event) {
 
         if (it != _basePlugins.end())
             plugin = *it;
+        else
+            BOOST_LOG_TRIVIAL(warning) << "Could not find plugin in base list: " << plugin.Name();
 
         set<boss::File> loadAfter = plugin.LoadAfter();
 
         if (loadAfter.find(file) == loadAfter.end()) {
+            BOOST_LOG_TRIVIAL(trace) << "File \"" << file.Name() << "\" was not found in base plugin metadata. Editing enabled.";
             editBtn->Enable(true);
             removeBtn->Enable(true);
         } else {
+            BOOST_LOG_TRIVIAL(trace) << "File \"" << file.Name() << "\" was found in base plugin metadata. Editing disabled.";
             editBtn->Enable(false);
             removeBtn->Enable(false);
         }
@@ -609,13 +653,17 @@ void Editor::OnRowSelect(wxListEvent& event) {
 
         if (it != _basePlugins.end())
             plugin = *it;
+        else
+            BOOST_LOG_TRIVIAL(warning) << "Could not find plugin in base list: " << plugin.Name();
 
         list<boss::Message> messages = plugin.Messages();
 
         if (find(messages.begin(), messages.end(), message) == messages.end()) {
+            BOOST_LOG_TRIVIAL(trace) << "Message \"" << message.ChooseContent(boss::g_lang_any).Str() << "\" was not found in base plugin metadata. Editing enabled.";
             editBtn->Enable(true);
             removeBtn->Enable(true);
         } else {
+            BOOST_LOG_TRIVIAL(trace) << "Message \"" << message.ChooseContent(boss::g_lang_any).Str() << "\" was found in base plugin metadata. Editing disabled.";
             editBtn->Enable(false);
             removeBtn->Enable(false);
         }
@@ -629,13 +677,17 @@ void Editor::OnRowSelect(wxListEvent& event) {
 
         if (it != _basePlugins.end())
             plugin = *it;
+        else
+            BOOST_LOG_TRIVIAL(warning) << "Could not find plugin in base list: " << plugin.Name();
 
         set<boss::Tag> tags = plugin.Tags();
 
         if (tags.find(tag) == tags.end()) {
+            BOOST_LOG_TRIVIAL(trace) << "Bash Tag \"" << tag.Name() << "\" was not found in base plugin metadata. Editing enabled.";
             editBtn->Enable(true);
             removeBtn->Enable(true);
         } else {
+            BOOST_LOG_TRIVIAL(trace) << "Bash Tag \"" << tag.Name() << "\" was found in base plugin metadata. Editing disabled.";
             editBtn->Enable(false);
             removeBtn->Enable(false);
         }
@@ -656,6 +708,8 @@ void Editor::OnExport(wxCommandEvent& event) {
     yout << diff;
     string text = yout.c_str();
 
+    BOOST_LOG_TRIVIAL(info) << "Exported metadata text for \"" << currentPlugin.ToUTF8() << "\": " << text;
+
     if (!text.empty() && wxTheClipboard->Open()) {
         wxTheClipboard->SetData( new wxTextDataObject(FromUTF8(text)) );
         wxTheClipboard->Close();
@@ -663,12 +717,15 @@ void Editor::OnExport(wxCommandEvent& event) {
 }
 
 void Editor::OnQuit(wxCommandEvent& event) {
+    BOOST_LOG_TRIVIAL(debug) << "Exiting metadata editor.";
     if (event.GetId() == BUTTON_Apply) {
 
         //Apply any current edits.
         wxString currentPlugin = pluginText->GetLabelText();
         if (!currentPlugin.empty())
             ApplyEdits(currentPlugin);
+
+        BOOST_LOG_TRIVIAL(debug) << "Saving metadata edits to userlist.";
 
         //Save edits to userlist.
         YAML::Emitter yout;
@@ -686,6 +743,7 @@ void Editor::OnQuit(wxCommandEvent& event) {
 }
 
 void Editor::ApplyEdits(const wxString& plugin) {
+    BOOST_LOG_TRIVIAL(debug) << "Applying edits to plugin: " << plugin.ToUTF8();
     boss::Plugin initial = GetMasterData(plugin);
     boss::Plugin edited = GetNewData(plugin);
 
@@ -700,6 +758,7 @@ void Editor::ApplyEdits(const wxString& plugin) {
 }
 
 boss::Plugin Editor::GetMasterData(const wxString& plugin) const {
+    BOOST_LOG_TRIVIAL(debug) << "Getting hardcoded and masterlist metadata for plugin: " << plugin.ToUTF8();
     boss::Plugin p;
     boss::Plugin p_in(string(plugin.ToUTF8()));
 
@@ -712,6 +771,7 @@ boss::Plugin Editor::GetMasterData(const wxString& plugin) const {
 }
 
 boss::Plugin Editor::GetUserData(const wxString& plugin) const {
+    BOOST_LOG_TRIVIAL(debug) << "Getting userlist metadata for plugin: " << plugin.ToUTF8();
     boss::Plugin p;
     boss::Plugin p_in(string(plugin.ToUTF8()));
 
@@ -724,6 +784,7 @@ boss::Plugin Editor::GetUserData(const wxString& plugin) const {
 }
 
 boss::Plugin Editor::GetNewData(const wxString& plugin) const {
+    BOOST_LOG_TRIVIAL(debug) << "Getting metadata from editor fields for plugin: " << plugin.ToUTF8();
     boss::Plugin p(string(plugin.ToUTF8()));
 
     p.Priority(prioritySpin->GetValue());
@@ -985,6 +1046,7 @@ void MessageEditDialog::OnAdd(wxCommandEvent& event) {
 
 void MessageEditDialog::OnEdit(wxCommandEvent& event) {
     if (_content->GetFirstSelected() == -1) {
+        BOOST_LOG_TRIVIAL(error) << "Attempting to edit message content, but no content row selected.";
         wxMessageBox(
             translate("Error: No content row selected."),
             translate("BOSS: Error"),
@@ -999,6 +1061,7 @@ void MessageEditDialog::OnEdit(wxCommandEvent& event) {
 
 void MessageEditDialog::OnRemove(wxCommandEvent& event) {
     if (_content->GetFirstSelected() == -1) {
+        BOOST_LOG_TRIVIAL(error) << "Attempting to remove message content, but no content row selected.";
         wxMessageBox(
             translate("Error: No content row selected."),
             translate("BOSS: Error"),

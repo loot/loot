@@ -76,9 +76,7 @@ struct plugin_loader {
     }
 
     void operator () () {
-        BOOST_LOG_TRIVIAL(info) << "Loading: " << _plugin.Name();
         _plugin = boss::Plugin(_game, _plugin.Name(), false);
-        BOOST_LOG_TRIVIAL(info) << "Finished loading: " << _plugin.Name();
     }
 
     boss::Plugin& _plugin;
@@ -94,9 +92,7 @@ struct plugin_list_loader {
         boss::vertex_it vit, vitend;
         for (boost::tie(vit, vitend) = boost::vertices(_graph); vit != vitend; ++vit) {
             if (skipPlugins.find(_graph[*vit].Name()) == skipPlugins.end()) {
-                BOOST_LOG_TRIVIAL(info) << "Loading: " << _graph[*vit].Name();
                 _graph[*vit] = boss::Plugin(_game, _graph[*vit].Name(), false);
-                BOOST_LOG_TRIVIAL(info) << "Finished loading: " << _graph[*vit].Name();
             }
         }
     }
@@ -112,7 +108,7 @@ struct masterlist_updater_parser {
     void operator () () {
 
         if (_doUpdate) {
-            BOOST_LOG_TRIVIAL(trace) << "Updating masterlist";
+            BOOST_LOG_TRIVIAL(debug) << "Updating masterlist";
             try {
                 _revision = UpdateMasterlist(_game, _errors, _plugins, _messages);
             } catch (boss::error& e) {
@@ -125,7 +121,7 @@ struct masterlist_updater_parser {
 
         if (_plugins.empty() && _messages.empty() && fs::exists(_game.MasterlistPath())) {
 
-            BOOST_LOG_TRIVIAL(trace) << "Parsing masterlist...";
+            BOOST_LOG_TRIVIAL(debug) << "Parsing masterlist...";
             try {
                 YAML::Node mlist = YAML::LoadFile(_game.MasterlistPath().string());
 
@@ -137,7 +133,7 @@ struct masterlist_updater_parser {
                 BOOST_LOG_TRIVIAL(error) << "Masterlist parsing failed. Details: " << e.what();
                 _errors.push_back(boss::Message(boss::g_message_error, (format(loc::translate("Masterlist parsing failed. Details: %1%")) % e.what()).str()));
             }
-            BOOST_LOG_TRIVIAL(trace) << "Finished parsing masterlist.";
+            BOOST_LOG_TRIVIAL(debug) << "Finished parsing masterlist.";
         }
     }
 
@@ -185,7 +181,6 @@ bool BossGUI::OnInit() {
         try {
             _settings = YAML::LoadFile(g_path_settings.string());
         } catch (YAML::ParserException& e) {
-            //LOG_ERROR("Error: %s", e.getString().c_str());
             wxMessageBox(
 				FromUTF8(format(loc::translate("Error: Settings parsing failed. %1%")) % e.what()),
 				translate("BOSS: Error"),
@@ -512,7 +507,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     //Now load userlist.
     if (fs::exists(_game.UserlistPath())) {
-        BOOST_LOG_TRIVIAL(trace) << "Parsing userlist...";
+        BOOST_LOG_TRIVIAL(debug) << "Parsing userlist...";
 
         try {
             YAML::Node ulist = YAML::LoadFile(_game.UserlistPath().string());
@@ -530,7 +525,6 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     progDia->Pulse();
 
     if (fs::exists(_game.MasterlistPath()) || fs::exists(_game.UserlistPath())) {
-        BOOST_LOG_TRIVIAL(trace) << "Merging plugin lists, evaluating conditions and checking for install validity...";
 
         //Set language.
         unsigned int lang;
@@ -548,7 +542,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             messages.insert(messages.end(), ulist_messages.begin(), ulist_messages.end());
 
         //Evaluate any conditions in the global messages.
-        BOOST_LOG_TRIVIAL(trace) << "Evaluating global message conditions...";
+        BOOST_LOG_TRIVIAL(trace) << "Evaluating global message conditions.";
         try {
             list<boss::Message>::iterator it=messages.begin();
             while (it != messages.end()) {
@@ -563,7 +557,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         }
 
         //Merge plugin list, masterlist and userlist plugin data.
-        BOOST_LOG_TRIVIAL(trace) << "Merging plugin list, masterlist and userlist data.";
+        BOOST_LOG_TRIVIAL(debug) << "Merging plugin list, masterlist and userlist data, evaluating conditions and checking for install validity.";
         boss::vertex_it vit, vitend;
         for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
             BOOST_LOG_TRIVIAL(trace) << "Merging for plugin \"" << graph[*vit].Name() << "\"";
@@ -617,10 +611,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     progDia->Pulse();
 
-    BOOST_LOG_TRIVIAL(trace) << "Building the plugin dependency graph...";
-
-    //Use an adjacency list (don't know yet if list or matrix is the better choice), and use "listS" as the VertexList type. We need a possible multi-graph to catch some forms of cyclic dependency (a working graph would not be a multi-graph though), so use "listS". Want a directed graph where we can access in-edges, so use "bidirectionalS". Also provide the boss::Plugin class as the vertex property type.
-
+    BOOST_LOG_TRIVIAL(debug) << "Building the plugin dependency graph...";
 
     //Now add the interactions between plugins to the graph as edges.
     BOOST_LOG_TRIVIAL(trace) << "Adding non-overlap edges.";
@@ -632,7 +623,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     //First delete any existing graph file.
     fs::remove(_game.GraphPath());
     if (_settings["Generate Graph Image"] && _settings["Generate Graph Image"].as<bool>() && fs::exists(g_path_graphvis)) {
-        BOOST_LOG_TRIVIAL(trace) << "Outputting the graph.";
+        BOOST_LOG_TRIVIAL(debug) << "Generating the graph image.";
         fs::path temp = fs::path(_game.GraphPath().string() + ".temp");
         boss::SaveGraph(graph, temp);
 
@@ -651,12 +642,12 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     //Check for back-edges, then perform a topological sort.
     try {
-        BOOST_LOG_TRIVIAL(trace) << "Checking to see if the graph is cyclic.";
+        BOOST_LOG_TRIVIAL(debug) << "Checking to see if the graph is cyclic.";
         boss::CheckForCycles(graph);
 
         progDia->Pulse();
 
-        BOOST_LOG_TRIVIAL(trace) << "Performing a topological sort.";
+        BOOST_LOG_TRIVIAL(debug) << "Performing a topological sort.";
         boss::Sort(graph, plugins);
 
         progDia->Pulse();
@@ -665,7 +656,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         LoadOrderPreview preview(this, translate("BOSS: Calculated Load Order"), plugins);
 
         if (preview.ShowModal() == wxID_OK) {
-            BOOST_LOG_TRIVIAL(trace) << "Load order accepted.";
+            BOOST_LOG_TRIVIAL(debug) << "Load order accepted.";
             list<boss::Plugin> newPluginsList, editedPlugins;
             newPluginsList = preview.GetLoadOrder();
 
@@ -735,7 +726,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             }
 
             //Now set load order.
-            BOOST_LOG_TRIVIAL(trace) << "Setting load order.";
+            BOOST_LOG_TRIVIAL(debug) << "Setting load order.";
             try {
                 _game.SetLoadOrder(plugins);
             } catch (boss::error& e) {
@@ -743,7 +734,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                 messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("Failed to set the load order. Details: %1%")) % e.what()).str()));
             }
         } else {
-            BOOST_LOG_TRIVIAL(debug) << "The load order calculated was not applied as sorting was canceled.";
+            BOOST_LOG_TRIVIAL(info) << "The load order calculated was not applied as sorting was canceled.";
             messages.push_back(boss::Message(boss::g_message_warn, loc::translate("The load order displayed in the Details tab was not applied as sorting was canceled.")));
         }
 
@@ -1201,8 +1192,4 @@ std::list<boss::Plugin> LoadOrderPreview::GetLoadOrder() const {
     }
 
     return plugins;
-}
-
-std::set<std::string> LoadOrderPreview::GetMovedPlugins() const {
-    return _movedPlugins;
 }

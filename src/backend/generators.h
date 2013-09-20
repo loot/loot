@@ -51,6 +51,7 @@ namespace boss {
     };
 
     inline void GetGraphWidthHeight(const boost::filesystem::path& filepath, std::string& width, std::string& height) {
+        BOOST_LOG_TRIVIAL(trace) << "Getting the dimensions of the plugin interactions graph image.";
 
         boss::ifstream in(filepath);
 
@@ -128,6 +129,7 @@ namespace boss {
     }
 
     inline void GenerateHead(pugi::xml_document& doc) {
+        BOOST_LOG_TRIVIAL(trace) << "Creating BOSS report head.";
 
         //Add DOCTYPE node.
         doc.append_child(pugi::node_doctype).set_value("html");
@@ -170,6 +172,8 @@ namespace boss {
     }
 
     inline void AppendNav(pugi::xml_node& body, bool createGraphTab) {
+        BOOST_LOG_TRIVIAL(trace) << "Appending navigation bar to BOSS report.";
+
         pugi::xml_node nav, div;
 
         nav = body.append_child();
@@ -240,6 +244,8 @@ namespace boss {
                         int errorNo,
                         const std::list<Message>& messages) {
 
+        BOOST_LOG_TRIVIAL(trace) << "Appending summary tab to BOSS report.";
+
         pugi::xml_node summary = main.append_child();
         summary.set_name("div");
         summary.append_attribute("id").set_value("summary");
@@ -282,6 +288,7 @@ namespace boss {
             cell.text().set(boost::locale::translate("Disabled").str().c_str());
 
         if (!hasChanged) {
+            BOOST_LOG_TRIVIAL(info) << "No changes in the BOSS report details tab since the last run.";
             pugi::xml_node note = summary.append_child();
             note.set_name("div");
             note.append_attribute("id").set_value("noChanges");
@@ -321,6 +328,8 @@ namespace boss {
 
     inline bool AppendDetails(pugi::xml_node& main, const std::list<Plugin>& plugins, int& messageNo, int& warnNo, int& errorNo, const std::string& oldDetails) {
 
+        BOOST_LOG_TRIVIAL(trace) << "Appending details tab to BOSS report.";
+
         pugi::xml_node details = main.append_child();
         details.set_name("div");
         details.append_attribute("id").set_value("plugins");
@@ -332,6 +341,7 @@ namespace boss {
             details.set_name("ul");
 
             for (std::list<Plugin>::const_iterator it=plugins.begin(), endit=plugins.end(); it != endit; ++it) {
+                BOOST_LOG_TRIVIAL(trace) << "Appending details for plugin: " << it->Name();
                 pugi::xml_node plugin = details.append_child();
                 plugin.set_name("li");
 
@@ -394,6 +404,8 @@ namespace boss {
                         int& pluginMessageNo
                         ) {
 
+        BOOST_LOG_TRIVIAL(trace) << "Appending main content to BOSS report.";
+
         pugi::xml_node main = body.append_child();
         main.set_name("div");
         main.append_attribute("id").set_value("main");
@@ -434,6 +446,8 @@ namespace boss {
     }
 
     inline void AppendFilters(pugi::xml_node& body, int messageNo, int pluginNo) {
+
+        BOOST_LOG_TRIVIAL(trace) << "Appending filters to BOSS report.";
 
         pugi::xml_node filters = body.append_child();
         filters.set_name("div");
@@ -521,6 +535,8 @@ namespace boss {
 
     inline void AppendScripts(pugi::xml_node& body) {
 
+        BOOST_LOG_TRIVIAL(trace) << "Appending scripts to BOSS report.";
+
         pugi::xml_node node;
 
         node = body.append_child();
@@ -564,6 +580,8 @@ namespace boss {
     //Default settings file generation.
 
     inline void GenerateDefaultSettingsFile(const std::string& file) {
+
+        BOOST_LOG_TRIVIAL(info) << "Generating default settings file.";
 
         YAML::Node root;
         std::vector<Game> games;
