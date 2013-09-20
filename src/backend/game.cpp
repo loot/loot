@@ -266,7 +266,7 @@ namespace boss {
         }
 
         for (size_t i=0; i < pluginArrSize; ++i) {
-            activePlugins.insert(string(pluginArr[i]));
+            activePlugins.insert(boost::to_lower_copy(string(pluginArr[i])));
         }
 
         lo_destroy_handle(gh);

@@ -450,7 +450,7 @@ namespace boss {
 
             BOOST_LOG_TRIVIAL(trace) << "Checking to see if any files matching the regex \"" << regexStr << "\" exist.";
 
-            boost::regex sepReg("/|(\\\\)", boost::regex::perl);
+            boost::regex sepReg("/|(\\\\\\\\)", boost::regex::perl);
 
             std::vector<std::string> components;
             boost::algorithm::split_regex(components, regexStr, sepReg);
@@ -475,8 +475,10 @@ namespace boss {
             //the parent path exists and is a directory.
 
             boost::filesystem::path parent_path = game->DataPath() / parent;
-            if (!boost::filesystem::exists(parent_path) || !boost::filesystem::is_directory(parent_path))
+            if (!boost::filesystem::exists(parent_path) || !boost::filesystem::is_directory(parent_path)) {
+                BOOST_LOG_TRIVIAL(trace) << "The path \"" << parent_path << "\" does not exist or is not a directory.";
                 return;
+            }
 
             boost::regex regex;
             try {
@@ -489,6 +491,7 @@ namespace boss {
             for (boost::filesystem::directory_iterator itr(parent_path); itr != boost::filesystem::directory_iterator(); ++itr) {
                 if (boost::regex_match(itr->path().filename().string(), regex)) {
                     result = true;
+                    BOOST_LOG_TRIVIAL(trace) << "Matching file found: " << itr->path();
                     return;
                 }
             }
@@ -534,6 +537,7 @@ namespace boss {
             if (!result) {
                 if (comparator == "!=" || comparator == "<" || comparator == "<=")
                     result = true;
+                BOOST_LOG_TRIVIAL(trace) << "Version check result: " << result;
                 return;
             }
 
@@ -541,8 +545,13 @@ namespace boss {
             Version trueVersion;
             if (file == "BOSS")
                 trueVersion = Version(boost::filesystem::absolute("BOSS.exe"));
-            else
+            else if (IsPlugin(file)) {
+                Plugin plugin(*game, file, true);
+                trueVersion = Version(plugin.Version());
+            } else
                 trueVersion = Version(game->DataPath() / file);
+
+            BOOST_LOG_TRIVIAL(trace) << "Version extracted: " << trueVersion.AsString();
 
             if (   (comparator == "==" && trueVersion != givenVersion)
                 || (comparator == "!=" && trueVersion == givenVersion)
@@ -551,6 +560,8 @@ namespace boss {
                 || (comparator == "<=" && trueVersion > givenVersion)
                 || (comparator == ">=" && trueVersion < givenVersion))
                 result = false;
+
+            BOOST_LOG_TRIVIAL(trace) << "Version check result: " << result;
         }
 
         void CheckActive(bool& result, const std::string& file) {
@@ -558,6 +569,8 @@ namespace boss {
                 result = false;
             else
                 result = game->IsActive(file);
+
+            BOOST_LOG_TRIVIAL(trace) << "Active check result: " << result;
         }
 
         void SyntaxError(Iterator const& /*first*/, Iterator const& last, Iterator const& errorpos, boost::spirit::info const& what) {
