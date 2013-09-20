@@ -42,14 +42,9 @@ namespace boss {
     typedef boost::graph_traits<PluginGraph>::edge_iterator edge_it;
 
     struct cycle_detector : public boost::dfs_visitor<> {
-        inline cycle_detector() { }
+        cycle_detector();
 
-        inline void back_edge(edge_t e, const PluginGraph& g) {
-            vertex_t vSource = boost::source(e, g);
-            vertex_t vTarget = boost::target(e, g);
-
-            throw boss::error(boss::error::sorting_error, "Back edge detected between plugins \"" + g[vSource].Name() + "\" and \"" + g[vTarget].Name() + "\".");
-        }
+        void back_edge(edge_t e, const PluginGraph& g);
     };
 
     bool GetVertexByName(const PluginGraph& graph, const std::string& name, vertex_t& vertex);

@@ -554,8 +554,10 @@ namespace boss {
 
         AppendScripts(body);
 
-        if (!doc.save_file(file.c_str(), "\t", pugi::format_default | pugi::format_no_declaration))
-            throw boss::error(boss::error::path_write_fail, "Could not write BOSS report.");
+        if (!doc.save_file(file.c_str(), "\t", pugi::format_default | pugi::format_no_declaration)) {
+            BOOST_LOG_TRIVIAL(error) << "Could not write BOSS report.";
+            throw boss::error(boss::error::path_write_fail, boost::locale::translate("Could not write BOSS report.").str());
+        }
 
     }
 

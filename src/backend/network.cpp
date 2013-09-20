@@ -29,12 +29,14 @@
 
 #include <boost/log/trivial.hpp>
 #include <boost/locale.hpp>
+#include <boost/format.hpp>
 
 #include <git2.h>
 
 using namespace std;
 
 namespace fs = boost::filesystem;
+namespace lc = boost::locale;
 
 namespace boss {
 
@@ -56,21 +58,21 @@ namespace boss {
         git_commit * commit;
     };
 
-    //Returns false for errors, true for OK.
     void handle_error(int error_code, pointers_struct& pointers) {
         if (!error_code)
             return;
 
         const git_error * error = giterr_last();
-        std::string error_message = "An error occurred during a Git operation. Error code: " + IntToString(error_code) + ".";
-        if (error != NULL)
-            error_message += string(" Message: ") + error->message;
-
-        BOOST_LOG_TRIVIAL(error) << error_message;
-
+        std::string error_message;
+        if (error == NULL)
+            error_message = IntToString(error_code) + ".";
+        else
+            error_message = IntToString(error_code) + "; " + error->message;
         pointers.free();
         giterr_clear();
-        throw boss::error(boss::error::git_error, error_message);
+
+        BOOST_LOG_TRIVIAL(error) << "Git operation failed. Error: " << error_message;
+        throw boss::error(boss::error::git_error, (boost::format(lc::translate("Git operation failed. Error: %1%")) % error_message).str());
     }
 
     std::string UpdateMasterlist(Game& game, std::list<Message>& parsingErrors, std::list<Plugin>& plugins, std::list<Message>& messages) {

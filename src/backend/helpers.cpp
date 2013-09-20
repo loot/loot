@@ -30,6 +30,8 @@
 #include <boost/crc.hpp>
 #include <boost/regex.hpp>
 #include <boost/log/trivial.hpp>
+#include <boost/format.hpp>
+#include <boost/locale.hpp>
 
 #include <alphanum.hpp>
 
@@ -59,6 +61,7 @@ namespace boss {
     using boost::algorithm::replace_first;
     namespace karma = boost::spirit::karma;
     namespace fs = boost::filesystem;
+    namespace lc = boost::locale;
 
 
 	/// REGEX expression definition
@@ -124,7 +127,7 @@ namespace boss {
         static const size_t buffer_size = 8192;
         char buffer[buffer_size];
         boss::ifstream ifile(filename, ios::binary);
-    //    LOG_TRACE("calculating CRC for: '%s'", filename.string().c_str());
+        BOOST_LOG_TRIVIAL(trace) << "Calculating CRC for: " << filename.string();
         boost::crc_32_type result;
         if (ifile) {
             do {
@@ -133,9 +136,10 @@ namespace boss {
             } while (ifile);
             chksum = result.checksum();
         } else {
-            throw error(error::path_read_fail, "Unable to open \"" + filename.string() + "\" for CRC calculation.");
+            BOOST_LOG_TRIVIAL(error) << "Unable to open \"" << filename.string() << "\" for CRC calculation.";
+            throw error(error::path_read_fail, (boost::format(lc::translate("Unable to open \"%1%\" for CRC calculation.")) % filename.string()).str());
         }
-    //    LOG_DEBUG("CRC32('%s'): 0x%x", filename.string().c_str(), chksum);
+        BOOST_LOG_TRIVIAL(debug) << "CRC32(\"" << filename.string() << "\"):" << chksum;
         return chksum;
     }
 
@@ -291,7 +295,7 @@ namespace boss {
         //Create I/O pipes.
         if (!CreatePipe(&consoleRead, &consoleWrite, &saAttr, 0)) {
             BOOST_LOG_TRIVIAL(error) << "Could not create pipe for process.";
-            throw error(error::windows_error, "Could not create pipe for process.");
+            throw error(error::windows_error, lc::translate("Could not create pipe for process."));
         }
 
         //Create a child process.
@@ -324,7 +328,7 @@ namespace boss {
 
         if (!result) {
             BOOST_LOG_TRIVIAL(error) << "Could not create process.";
-            throw error(error::windows_error, "Could not create process.");
+            throw error(error::windows_error, lc::translate("Could not create process."));
         }
 
         BOOST_LOG_TRIVIAL(trace) << "Waiting for process to complete.";
@@ -335,14 +339,14 @@ namespace boss {
 
         if (!GetExitCodeProcess(piProcInfo.hProcess, &exitCode)) {
             BOOST_LOG_TRIVIAL(error) << "Could not get process exit code.";
-            throw error(error::windows_error, "Could not get process exit code.");
+            throw error(error::windows_error, lc::translate("Could not get process exit code."));
         }
 
         BOOST_LOG_TRIVIAL(trace) << "Getting the process output.";
 
         if (!ReadFile(consoleRead, chBuf, BUFSIZE, &dwRead, NULL)) {
             BOOST_LOG_TRIVIAL(error) << "Could not read process output.";
-            throw error(error::windows_error, "Could not read process output.");
+            throw error(error::windows_error, lc::translate("Could not read process output."));
         }
 
         output = string(chBuf, dwRead);

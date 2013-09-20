@@ -411,8 +411,10 @@ namespace boss {
 
             std::map<std::string, std::string>::const_iterator it = varConditionMap.find(boost::to_lower_copy(var));
 
-            if (it == varConditionMap.end())
-                throw boss::error(boss::error::condition_eval_fail, "The variable \"" + var + "\" was not previously defined.");
+            if (it == varConditionMap.end()) {
+                BOOST_LOG_TRIVIAL(error) << "The variable \"" << var << "\" was not previously defined.";
+                throw boss::error(boss::error::condition_eval_fail, "The variable \"" + var + "\" was not previously defined.");  //Isn't used by BOSS application, so don't need to translate.
+            }
 
             if (ifIfnotStr == "if ")
                 output = it->second;
@@ -686,7 +688,8 @@ namespace boss {
 			std::string context(errorpos, min(errorpos +50, last));
             		boost::trim(context);
 
-			throw boss::error(boss::error::condition_eval_fail, "Error parsing at \"" + context + "\", expected \"" + what.tag + "\"");
+            BOOST_LOG_TRIVIAL(error) << "Error parsing at \"" << context << "\", expected \"" << what.tag << "\".";
+			throw boss::error(boss::error::condition_eval_fail, "Expected \"" + what.tag + "\" at \"" + context + "\".");  //Isn't used by BOSS application, so don't need to translate.
 		}
 	};
 
@@ -712,8 +715,10 @@ namespace boss {
 
         bool r = phrase_parse(begin, end, grammar, skipper, plugins);
 
-        if (!r || begin != end)
+        if (!r || begin != end) {
+            BOOST_LOG_TRIVIAL(error) << "Failed to read file: " << file.string();
             throw boss::error(boss::error::path_read_fail, file.string());
+        }
     }
 }
 #endif

@@ -49,6 +49,8 @@
 #include <boost/spirit/include/phoenix_operator.hpp>
 #include <boost/spirit/include/phoenix_bind.hpp>
 #include <boost/log/trivial.hpp>
+#include <boost/locale.hpp>
+#include <boost/format.hpp>
 
 namespace YAML {
 
@@ -417,8 +419,8 @@ namespace boss {
             }
 
             if (!IsSafePath(file)) {
-                BOOST_LOG_TRIVIAL(error) << "The file path is invalid.";
-                throw boss::error(boss::error::invalid_args, "The file path \"" + file + "\" is invalid.");
+                BOOST_LOG_TRIVIAL(error) << "Invalid file path: " << file;
+                throw boss::error(boss::error::invalid_args, boost::locale::translate("Invalid file path: ").str() + file);
             }
 
             if (IsPlugin(file))
@@ -465,8 +467,8 @@ namespace boss {
             }
 
             if (boost::contains(parent, "../../")){
-                BOOST_LOG_TRIVIAL(error) << "The folder path \"" << parent << "\" is invalid.";
-                throw boss::error(boss::error::invalid_args, "The folder path \"" + parent + "\" is invalid.");
+                BOOST_LOG_TRIVIAL(error) << "Invalid folder path: " << parent;
+                throw boss::error(boss::error::invalid_args, boost::locale::translate("Invalid folder path: ").str() + parent);
             }
 
             //Now we have a valid parent path and a regex filename. Check that
@@ -480,8 +482,8 @@ namespace boss {
             try {
                 regex = boost::regex(filename, boost::regex::perl|boost::regex::icase);
             } catch (boost::regex_error& e) {
-                BOOST_LOG_TRIVIAL(error) << "The regex string \"" << filename << "\" is invalid.";
-                throw boss::error(boss::error::invalid_args, "The regex string \"" + filename + "\" is invalid.");
+                BOOST_LOG_TRIVIAL(error) << "Invalid regex string:" << filename;
+                throw boss::error(boss::error::invalid_args, boost::locale::translate("Invalid regex string:").str() + filename);
             }
 
             for (boost::filesystem::directory_iterator itr(parent_path); itr != boost::filesystem::directory_iterator(); ++itr) {
@@ -497,8 +499,8 @@ namespace boss {
             BOOST_LOG_TRIVIAL(trace) << "Checking the CRC of the file \"" << file << "\".";
 
             if (!IsSafePath(file)) {
-                BOOST_LOG_TRIVIAL(error) << "The file path is invalid.";
-                throw boss::error(boss::error::invalid_args, "The file path \"" + file + "\" is invalid.");
+                BOOST_LOG_TRIVIAL(error) << "Invalid file path: " << file;
+                throw boss::error(boss::error::invalid_args, boost::locale::translate("Invalid file path: ").str() + file);
             }
 
             uint32_t crc;
@@ -563,9 +565,9 @@ namespace boss {
             std::string context(errorpos, min(errorpos +50, last));
             boost::trim(context);
 
-            BOOST_LOG_TRIVIAL(error) << "Error parsing condition at \"" << context << "\", expected \"" << what.tag << "\"";
+            BOOST_LOG_TRIVIAL(error) << "Expected \"" << what.tag << "\" at \"" << context << "\".";
 
-            throw boss::error(boss::error::condition_eval_fail, "Error parsing condition at \"" + context + "\", expected \"" + what.tag + "\"");
+            throw boss::error(boss::error::condition_eval_fail, (boost::format(boost::locale::translate("Expected \"%1%\" at \"%2%\".")) % what.tag % context).str());
         }
 
         //Checks that the path (not regex) doesn't go outside any game folders.

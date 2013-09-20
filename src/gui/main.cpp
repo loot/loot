@@ -253,7 +253,7 @@ bool BossGUI::OnInit() {
             //Need to also set up wxWidgets locale so that its default interface text comes out in the right language.
             wxLoc = new wxLocale();
             if (!wxLoc->Init(lang, wxLOCALE_LOAD_DEFAULT))
-                throw runtime_error("System GUI text could not be set.");
+                throw runtime_error(loc::translate("System GUI text could not be set.").str().c_str());
             wxLocale::AddCatalogLookupPathPrefix(g_path_l10n.string().c_str());
             wxLoc->AddCatalog("wxstd");
         } catch(runtime_error &e) {

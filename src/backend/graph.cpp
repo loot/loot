@@ -27,10 +27,24 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/graph/breadth_first_search.hpp>
+#include <boost/locale.hpp>
+#include <boost/format.hpp>
 
 using namespace std;
 
+namespace lc = boost::locale;
+
 namespace boss {
+
+    cycle_detector::cycle_detector() {}
+
+    void cycle_detector::back_edge(edge_t e, const PluginGraph& g) {
+        vertex_t vSource = boost::source(e, g);
+        vertex_t vTarget = boost::target(e, g);
+
+        BOOST_LOG_TRIVIAL(error) << "Back edge detected between plugins \"" << g[vSource].Name() << "\" and \"" << g[vTarget].Name() << "\".";
+        throw boss::error(boss::error::sorting_error, (boost::format(lc::translate("Back edge detected between plugins \"%1%\" and \"%2%\".")) % g[vSource].Name() % g[vTarget].Name()).str());
+    }
 
     bool GetVertexByName(const PluginGraph& graph, const std::string& name, vertex_t& vertex) {
         vertex_it vit, vit_end;

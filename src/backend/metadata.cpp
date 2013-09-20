@@ -31,10 +31,13 @@
 #include <boost/filesystem.hpp>
 #include <boost/regex.hpp>
 #include <boost/log/trivial.hpp>
+#include <boost/locale.hpp>
 
 using namespace std;
 
 namespace boss {
+
+    namespace lc = boost::locale;
 
     FormID::FormID() : id(0) {}
 
@@ -106,11 +109,14 @@ namespace boss {
         try {
             r = boost::spirit::qi::phrase_parse(begin, end, grammar, skipper, eval);
         } catch (boss::error& e) {
-            throw boss::error(boss::error::path_read_fail, "Parsing of condition \"" + _condition + "\" failed: " + e.what());
+            BOOST_LOG_TRIVIAL(error) << "Failed to parse condition \"" << _condition << "\": " << e.what();
+            throw boss::error(boss::error::path_read_fail, (boost::format(lc::translate("Failed to parse condition \"%1%\": %2%")) % _condition % e.what()).str());
         }
 
-        if (!r || begin != end)
-            throw boss::error(boss::error::path_read_fail, "Parsing of condition \"" + _condition + "\" failed!");
+        if (!r || begin != end) {
+            BOOST_LOG_TRIVIAL(error) << "Failed to parse condition \"" << _condition << "\".";
+            throw boss::error(boss::error::path_read_fail, (boost::format(lc::translate("Failed to parse condition \"%1%\".")) % _condition).str());
+        }
 
         game.conditionCache.emplace(boost::to_lower_copy(_condition), eval);
 
