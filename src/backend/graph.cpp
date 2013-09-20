@@ -188,11 +188,11 @@ namespace boss {
 
                 vertex_t vertex, parentVertex;
                 if (graph[*vit].Priority() < graph[*vit2].Priority()) {
-                    parentVertex = *vit2;
-                    vertex = *vit;
-                } else {
                     parentVertex = *vit;
                     vertex = *vit2;
+                } else {
+                    parentVertex = *vit2;
+                    vertex = *vit;
                 }
 
                 if (!boost::edge(parentVertex, vertex, graph).second &&
