@@ -986,7 +986,7 @@ void MessageEditDialog::OnAdd(wxCommandEvent& event) {
 void MessageEditDialog::OnEdit(wxCommandEvent& event) {
     if (_content->GetFirstSelected() == -1) {
         wxMessageBox(
-            FromUTF8("Error: No content row selected."),
+            translate("Error: No content row selected."),
             translate("BOSS: Error"),
             wxOK | wxICON_ERROR,
             NULL);
@@ -1000,7 +1000,7 @@ void MessageEditDialog::OnEdit(wxCommandEvent& event) {
 void MessageEditDialog::OnRemove(wxCommandEvent& event) {
     if (_content->GetFirstSelected() == -1) {
         wxMessageBox(
-            FromUTF8("Error: No content row selected."),
+            translate("Error: No content row selected."),
             translate("BOSS: Error"),
             wxOK | wxICON_ERROR,
             NULL);

@@ -36,6 +36,7 @@
 #include <list>
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/locale.hpp>
 
 namespace boss {
 
@@ -75,13 +76,13 @@ namespace boss {
     inline void WriteMessage(pugi::xml_node& listItem, unsigned int type, std::string content) {
 
         if (type == g_message_say)
-            content = "Note: " + content;
+            content = boost::locale::translate("Note: ").str() + content;
         else if (type == g_message_tag) {
-            content = "Bash Tag Suggestion(s): " + content;
+            content = boost::locale::translate("Bash Tag Suggestion(s): ").str() + content;
         } else if (type == g_message_warn)
-            content = "Warning: " + content;
+            content = boost::locale::translate("Warning: ").str() + content;
         else
-            content = "Error: " + content;
+            content = boost::locale::translate("Error: ").str() + content;
 
         size_t pos1f = content.find("\"file:");
         size_t pos1h = content.find("\"http");
@@ -149,7 +150,7 @@ namespace boss {
 
         node = head.append_child();
         node.set_name("title");
-        node.text().set("BOSS Report");
+        node.text().set(boost::locale::translate("BOSS Report").str().c_str());
 
         node = head.append_child();
         node.set_name("link");
@@ -179,27 +180,27 @@ namespace boss {
         div.set_name("div");
         div.append_attribute("class").set_value("button current");
         div.append_attribute("data-section").set_value("summary");
-        div.text().set("Summary");
+        div.text().set(boost::locale::translate("Summary").str().c_str());
 
         div = nav.append_child();
         div.set_name("div");
         div.append_attribute("class").set_value("button");
         div.append_attribute("data-section").set_value("plugins");
-        div.text().set("Details");
+        div.text().set(boost::locale::translate("Details").str().c_str());
 
         if (createGraphTab) {
             div = nav.append_child();
             div.set_name("div");
             div.append_attribute("class").set_value("button");
             div.append_attribute("data-section").set_value("graph");
-            div.text().set("Graph");
+            div.text().set(boost::locale::translate("Graph").str().c_str());
         }
 
         div = nav.append_child();
         div.set_name("div");
         div.append_attribute("class").set_value("button");
         div.append_attribute("id").set_value("filtersToggle");
-        div.text().set("Filters");
+        div.text().set(boost::locale::translate("Filters").str().c_str());
     }
 
     inline void AppendMessages(pugi::xml_node& parent, const std::list<Message>& messages, int& warnNo, int& errorNo) {
@@ -254,7 +255,7 @@ namespace boss {
         row.set_name("tr");
         cell = row.append_child();
         cell.set_name("td");
-        cell.text().set("BOSS Version");
+        cell.text().set(boost::locale::translate("BOSS Version").str().c_str());
         cell = row.append_child();
         cell.set_name("td");
         cell.text().set((IntToString(g_version_major)+"."+IntToString(g_version_minor)+"."+IntToString(g_version_patch)).c_str());
@@ -263,7 +264,7 @@ namespace boss {
         row.set_name("tr");
         cell = row.append_child();
         cell.set_name("td");
-        cell.text().set("Masterlist Version");
+        cell.text().set(boost::locale::translate("Masterlist Version").str().c_str());
         cell = row.append_child();
         cell.set_name("td");
         cell.text().set(masterlistVersion.c_str());
@@ -272,19 +273,19 @@ namespace boss {
         row.set_name("tr");
         cell = row.append_child();
         cell.set_name("td");
-        cell.text().set("Masterlist Updating");
+        cell.text().set(boost::locale::translate("Masterlist Updating").str().c_str());
         cell = row.append_child();
         cell.set_name("td");
         if (masterlistUpdateEnabled)
-            cell.text().set("Enabled");
+            cell.text().set(boost::locale::translate("Enabled").str().c_str());
         else
-            cell.text().set("Disabled");
+            cell.text().set(boost::locale::translate("Disabled").str().c_str());
 
         if (!hasChanged) {
             pugi::xml_node note = summary.append_child();
             note.set_name("div");
             note.append_attribute("id").set_value("noChanges");
-            note.text().set("No change in details since last run.");
+            note.text().set(boost::locale::translate("No change in details since last run.").str().c_str());
         }
 
         AppendMessages(summary, messages, warnNo, errorNo);
@@ -294,7 +295,7 @@ namespace boss {
         row.set_name("tr");
         cell = row.append_child();
         cell.set_name("td");
-        cell.text().set("Total Number of Messages");
+        cell.text().set(boost::locale::translate("Total Number of Messages").str().c_str());
         cell = row.append_child();
         cell.set_name("td");
         cell.text().set(IntToString(messageNo).c_str());
@@ -303,7 +304,7 @@ namespace boss {
         row.set_name("tr");
         cell = row.append_child();
         cell.set_name("td");
-        cell.text().set("Number of Warnings");
+        cell.text().set(boost::locale::translate("Number of Warnings").str().c_str());
         cell = row.append_child();
         cell.set_name("td");
         cell.text().set(IntToString(warnNo).c_str());
@@ -312,7 +313,7 @@ namespace boss {
         row.set_name("tr");
         cell = row.append_child();
         cell.set_name("td");
-        cell.text().set("Number of Errors");
+        cell.text().set(boost::locale::translate("Number of Errors").str().c_str());
         cell = row.append_child();
         cell.set_name("td");
         cell.text().set(IntToString(errorNo).c_str());
@@ -350,7 +351,7 @@ namespace boss {
                     node = plugin.append_child();
                     node.set_name("span");
                     node.append_attribute("class").set_value("version");
-                    node.text().set(("Version: " + it->Version()).c_str());
+                    node.text().set((boost::locale::translate("Version:").str() + " " + it->Version()).c_str());
                 }
 
                 std::list<Message> messages = it->Messages();
@@ -367,9 +368,9 @@ namespace boss {
                             remove += ", " + jt->Name();
                     }
                     if (!add.empty())
-                        content += "Add " + add.substr(2) + ". ";
+                        content += boost::locale::translate("Add ").str() + add.substr(2) + ". ";
                     if (!remove.empty())
-                        content += "Remove " + remove.substr(2) + ". ";
+                        content += boost::locale::translate("Remove ").str() + remove.substr(2) + ". ";
                     messages.push_back(Message(g_message_tag, content));  //Special type just for tag suggestions.
                 }
 
@@ -403,7 +404,7 @@ namespace boss {
         noscript.set_name("noscript");
         div = noscript.append_child();
         div.set_name("div");
-        div.text().set("The BOSS Report requires Javascript to be enabled in order to function.");
+        div.text().set(boost::locale::translate("The BOSS Report requires Javascript to be enabled in order to function.").str().c_str());
 
         int messageNo=0, warnNo=0, errorNo=0;
         bool hasChanged = AppendDetails(main, plugins, messageNo, warnNo, errorNo, oldDetails);
@@ -448,7 +449,7 @@ namespace boss {
         input.append_attribute("type").set_value("checkbox");
         input.append_attribute("id").set_value("hideVersionNumbers");
         input.append_attribute("data-class").set_value("version");
-        input.text().set("Hide Version Numbers");
+        input.text().set(boost::locale::translate("Hide Version Numbers").str().c_str());
 
         label = filters.append_child();
         label.set_name("label");
@@ -457,7 +458,7 @@ namespace boss {
         input.append_attribute("type").set_value("checkbox");
         input.append_attribute("id").set_value("hideCRCs");
         input.append_attribute("data-class").set_value("crc");
-        input.text().set("Hide CRCs");
+        input.text().set(boost::locale::translate("Hide CRCs").str().c_str());
 
         label = filters.append_child();
         label.set_name("label");
@@ -465,7 +466,7 @@ namespace boss {
         input.set_name("input");
         input.append_attribute("type").set_value("checkbox");
         input.append_attribute("id").set_value("hideNotes");
-        input.text().set("Hide Notes");
+        input.text().set(boost::locale::translate("Hide Notes").str().c_str());
 
         label = filters.append_child();
         label.set_name("label");
@@ -473,7 +474,7 @@ namespace boss {
         input.set_name("input");
         input.append_attribute("type").set_value("checkbox");
         input.append_attribute("id").set_value("hideBashTags");
-        input.text().set("Hide Bash Tag Suggestions");
+        input.text().set(boost::locale::translate("Hide Bash Tag Suggestions").str().c_str());
 
         label = filters.append_child();
         label.set_name("label");
@@ -481,7 +482,7 @@ namespace boss {
         input.set_name("input");
         input.append_attribute("type").set_value("checkbox");
         input.append_attribute("id").set_value("hideDoNotCleanMessages");
-        input.text().set("Hide 'Do Not Clean' Messages");
+        input.text().set(boost::locale::translate("Hide 'Do Not Clean' Messages").str().c_str());
 
         label = filters.append_child();
         label.set_name("label");
@@ -489,7 +490,7 @@ namespace boss {
         input.set_name("input");
         input.append_attribute("type").set_value("checkbox");
         input.append_attribute("id").set_value("hideAllPluginMessages");
-        input.text().set("Hide All Plugin Messages");
+        input.text().set(boost::locale::translate("Hide All Plugin Messages").str().c_str());
 
         label = filters.append_child();
         label.set_name("label");
@@ -497,7 +498,7 @@ namespace boss {
         input.set_name("input");
         input.append_attribute("type").set_value("checkbox");
         input.append_attribute("id").set_value("hideMessagelessPlugins");
-        input.text().set("Hide Messageless Plugins");
+        input.text().set(boost::locale::translate("Hide Messageless Plugins").str().c_str());
 
         pugi::xml_node span;
 
@@ -507,7 +508,7 @@ namespace boss {
         span.set_name("span");
         span.append_attribute("id").set_value("hiddenPluginNo");
         span.text().set("0");
-        label.append_child(pugi::node_pcdata).set_value((" of " + IntToString(pluginNo) + " plugins hidden.").c_str());
+        label.append_child(pugi::node_pcdata).set_value((boost::format(boost::locale::translate("%1% of %2% plugins hidden.")) % "" % IntToString(pluginNo)).str().c_str());  //Blank string is so that translators get full string format.
 
         label = filters.append_child();
         label.set_name("div");
@@ -515,7 +516,7 @@ namespace boss {
         span.set_name("span");
         span.append_attribute("id").set_value("hiddenMessageNo");
         span.text().set("0");
-        label.append_child(pugi::node_pcdata).set_value((" of " + IntToString(messageNo) + " messages hidden.").c_str());
+        label.append_child(pugi::node_pcdata).set_value((boost::format(boost::locale::translate("%1% of %2% messages hidden.")) % "" % IntToString(messageNo)).str().c_str());  //Blank string is so that translators get full string format.
     }
 
     inline void AppendScripts(pugi::xml_node& body) {
