@@ -217,51 +217,64 @@ bool BossGUI::OnInit() {
         }
     }
 
-    //Specify location of language dictionaries
-	boost::locale::generator gen;
-	gen.add_messages_path(g_path_l10n.string());
-	gen.add_messages_domain("messages");
 
     //Set the locale to get encoding and language conversions working correctly.
     BOOST_LOG_TRIVIAL(debug) << "Initialising language settings.";
+    //Defaults in case language string is empty or setting is missing.
+    string localeId = "en.UTF-8";
+    wxLanguage lang = wxLANGUAGE_ENGLISH;
     if (_settings["Language"]) {
-        //Defaults in case language string is empty.
-        string localeId = "en.UTF-8";
-        wxLanguage lang = wxLANGUAGE_ENGLISH;
         if (_settings["Language"].as<string>() == "eng") {
+            BOOST_LOG_TRIVIAL(debug) << "Selected language: English.";
             localeId = "en.UTF-8";
             lang = wxLANGUAGE_ENGLISH;
-            BOOST_LOG_TRIVIAL(debug) << "Setting language to English.";
         } else if (_settings["Language"].as<string>() == "spa") {
+            BOOST_LOG_TRIVIAL(debug) << "Selected language: Spanish.";
             localeId = "es.UTF-8";
             lang = wxLANGUAGE_SPANISH;
-            BOOST_LOG_TRIVIAL(debug) << "Setting language to Spanish.";
         } else if (_settings["Language"].as<string>() == "rus") {
+            BOOST_LOG_TRIVIAL(debug) << "Selected language: Russian.";
             localeId = "ru.UTF-8";
             lang = wxLANGUAGE_RUSSIAN;
-            BOOST_LOG_TRIVIAL(debug) << "Setting language to Russian.";
         }
+    }
 
-        try {
-            locale::global(gen(localeId));
-            cout.imbue(locale());
-            //Need to also set up wxWidgets locale so that its default interface text comes out in the right language.
-            wxLoc = new wxLocale();
-            if (!wxLoc->Init(lang, wxLOCALE_LOAD_DEFAULT))
-                throw runtime_error(loc::translate("System GUI text could not be set.").str().c_str());
-            wxLocale::AddCatalogLookupPathPrefix(g_path_l10n.string().c_str());
-            wxLoc->AddCatalog("wxstd");
-        } catch(runtime_error &e) {
-            BOOST_LOG_TRIVIAL(error) << "Could not implement translation: " << e.what();
+    //Boost.Locale initialisation: Specify location of language dictionaries.
+    boost::locale::generator gen;
+    gen.add_messages_path(g_path_l10n.string());
+    gen.add_messages_domain("boss");
+
+    //Boost.Locale initialisation: Generate and imbue locales.
+    locale::global(gen(localeId));
+    cout.imbue(locale());
+    boost::filesystem::path::imbue(locale());
+
+    //wxWidgets initalisation.
+    if (wxLocale::IsAvailable(lang)) {
+        BOOST_LOG_TRIVIAL(trace) << "Selected language is available, setting language file paths.";
+        wxLoc = new wxLocale(lang);
+
+        wxLocale::AddCatalogLookupPathPrefix(g_path_l10n.string().c_str());
+
+        wxLoc->AddCatalog("wxstd");
+
+        if (!wxLoc->IsOk()) {
+            BOOST_LOG_TRIVIAL(error) << "Could not load translations.";
             wxMessageBox(
-                FromUTF8(format(loc::translate("Error: could not apply translation: %1%")) % e.what()),
+                translate("Error: could not apply translation."),
                 translate("BOSS: Error"),
                 wxOK | wxICON_ERROR,
                 NULL);
         }
-        locale global_loc = locale();
-        locale loc(global_loc, new boost::filesystem::detail::utf8_codecvt_facet());
-        boost::filesystem::path::imbue(loc);
+    } else {
+        wxLoc = new wxLocale(wxLANGUAGE_ENGLISH);
+
+        BOOST_LOG_TRIVIAL(error) << "The selected language is not available on this system.";
+        wxMessageBox(
+            translate("Error: the selected language is not available on this system."),
+            translate("BOSS: Error"),
+            wxOK | wxICON_ERROR,
+            NULL);
     }
 
     //Detect installed games.
