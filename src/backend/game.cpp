@@ -245,7 +245,7 @@ namespace boss {
             const char * e;
             lo_get_error_message(&e);
             BOOST_LOG_TRIVIAL(error) << "libloadorder failed to create a game handle. Details: " << e;
-            string err = lc::translate("libloadorder failed to create a game handle. Details: ").str() + e;
+            string err = lc::translate("libloadorder failed to create a game handle. Details:").str() + " " + e;
             lo_cleanup();
             throw error(error::liblo_error, err);
         }
@@ -257,7 +257,7 @@ namespace boss {
             lo_get_error_message(&e);
             lo_destroy_handle(gh);
             BOOST_LOG_TRIVIAL(error) << "libloadorder failed to initialise game master file support. Details: " << e;
-            string err = lc::translate("libloadorder failed to initialise game master file support. Details: ").str() + e;
+            string err = lc::translate("libloadorder failed to initialise game master file support. Details:").str() + " " + e;
             lo_cleanup();
             throw error(error::liblo_error, err);
         }
@@ -267,7 +267,7 @@ namespace boss {
             lo_get_error_message(&e);
             lo_destroy_handle(gh);
             BOOST_LOG_TRIVIAL(error) << "libloadorder failed to get the active plugins list. Details: " << e;
-            string err = lc::translate("libloadorder failed to get the active plugins list. Details: ").str() + e;
+            string err = lc::translate("libloadorder failed to get the active plugins list. Details:").str() + " " + e;
             lo_cleanup();
             throw error(error::liblo_error, err);
         }
@@ -304,7 +304,7 @@ namespace boss {
             const char * e;
             lo_get_error_message(&e);
             BOOST_LOG_TRIVIAL(error) << "libloadorder failed to create a game handle. Details: " << e;
-            string err = lc::translate("libloadorder failed to create a game handle. Details: ").str() + e;
+            string err = lc::translate("libloadorder failed to create a game handle. Details:").str() + " " + e;
             lo_cleanup();
             throw error(error::liblo_error, err);
         }
@@ -316,7 +316,7 @@ namespace boss {
             lo_get_error_message(&e);
             lo_destroy_handle(gh);
             BOOST_LOG_TRIVIAL(error) << "libloadorder failed to initialise game master file support. Details: " << e;
-            string err = lc::translate("libloadorder failed to initialise game master file support. Details: ").str() + e;
+            string err = lc::translate("libloadorder failed to initialise game master file support. Details:").str() + " " + e;
             lo_cleanup();
             throw error(error::liblo_error, err);
         }
@@ -338,7 +338,7 @@ namespace boss {
             lo_get_error_message(&e);
             lo_destroy_handle(gh);
             BOOST_LOG_TRIVIAL(error) << "libloadorder failed to set the load order. Details: " << e;
-            string err = lc::translate("libloadorder failed to set the load order. Details: ").str() + e;
+            string err = lc::translate("libloadorder failed to set the load order. Details:").str() + " " + e;
             lo_cleanup();
             throw error(error::liblo_error, err);
         }
@@ -357,7 +357,7 @@ namespace boss {
                 fs::create_directory(g_path_local / bossFolderName);
         } catch (fs::filesystem_error& e) {
             BOOST_LOG_TRIVIAL(error) << "Could not create BOSS folder for game. Details: " << e.what();
-            throw error(error::path_write_fail, lc::translate("Could not create BOSS folder for game. Details: ").str() + e.what());
+            throw error(error::path_write_fail, lc::translate("Could not create BOSS folder for game. Details:").str() + " " + e.what());
         }
     }
 }

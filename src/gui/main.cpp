@@ -261,7 +261,7 @@ bool BossGUI::OnInit() {
         if (!wxLoc->IsOk()) {
             BOOST_LOG_TRIVIAL(error) << "Could not load translations.";
             wxMessageBox(
-                translate("Error: could not apply translation."),
+                translate("Error: Could not apply translation."),
                 translate("BOSS: Error"),
                 wxOK | wxICON_ERROR,
                 NULL);
@@ -271,7 +271,7 @@ bool BossGUI::OnInit() {
 
         BOOST_LOG_TRIVIAL(error) << "The selected language is not available on this system.";
         wxMessageBox(
-            translate("Error: the selected language is not available on this system."),
+            translate("Error: The selected language is not available on this system."),
             translate("BOSS: Error"),
             wxOK | wxICON_ERROR,
             NULL);
@@ -999,8 +999,7 @@ void Launcher::OnAbout(wxCommandEvent& event) {
     wxAboutDialogInfo aboutInfo;
     aboutInfo.SetName("BOSS");
     aboutInfo.SetVersion(IntToString(g_version_major)+"."+IntToString(g_version_minor)+"."+IntToString(g_version_patch));
-    aboutInfo.SetDescription(translate(
-    "A load order optimisation tool for games using the Elder Scrolls Plugin/Master system."));
+    aboutInfo.SetDescription(translate("A load order optimisation tool for games using the Elder Scrolls Plugin/Master system."));
     aboutInfo.SetCopyright("Copyright (C) 2009-2013 BOSS Development Team.");
     aboutInfo.SetWebSite("http://boss-developers.github.io");
 	aboutInfo.SetLicence("This program is free software: you can redistribute it and/or modify\n"

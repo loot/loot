@@ -420,7 +420,7 @@ namespace boss {
 
             if (!IsSafePath(file)) {
                 BOOST_LOG_TRIVIAL(error) << "Invalid file path: " << file;
-                throw boss::error(boss::error::invalid_args, boost::locale::translate("Invalid file path: ").str() + file);
+                throw boss::error(boss::error::invalid_args, boost::locale::translate("Invalid file path:").str() + " " + file);
             }
 
             if (IsPlugin(file))
@@ -468,7 +468,7 @@ namespace boss {
 
             if (boost::contains(parent, "../../")){
                 BOOST_LOG_TRIVIAL(error) << "Invalid folder path: " << parent;
-                throw boss::error(boss::error::invalid_args, boost::locale::translate("Invalid folder path: ").str() + parent);
+                throw boss::error(boss::error::invalid_args, boost::locale::translate("Invalid folder path:").str() + " " + parent);
             }
 
             //Now we have a valid parent path and a regex filename. Check that
@@ -485,7 +485,7 @@ namespace boss {
                 regex = boost::regex(filename, boost::regex::perl|boost::regex::icase);
             } catch (boost::regex_error& e) {
                 BOOST_LOG_TRIVIAL(error) << "Invalid regex string:" << filename;
-                throw boss::error(boss::error::invalid_args, boost::locale::translate("Invalid regex string:").str() + filename);
+                throw boss::error(boss::error::invalid_args, boost::locale::translate("Invalid regex string:").str() + " " + filename);
             }
 
             for (boost::filesystem::directory_iterator itr(parent_path); itr != boost::filesystem::directory_iterator(); ++itr) {
@@ -503,7 +503,7 @@ namespace boss {
 
             if (!IsSafePath(file)) {
                 BOOST_LOG_TRIVIAL(error) << "Invalid file path: " << file;
-                throw boss::error(boss::error::invalid_args, boost::locale::translate("Invalid file path: ").str() + file);
+                throw boss::error(boss::error::invalid_args, boost::locale::translate("Invalid file path:").str() + " " + file);
             }
 
             uint32_t crc;

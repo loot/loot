@@ -77,13 +77,13 @@ namespace boss {
     inline void WriteMessage(pugi::xml_node& listItem, unsigned int type, std::string content) {
 
         if (type == g_message_say)
-            content = boost::locale::translate("Note: ").str() + content;
+            content = boost::locale::translate("Note:").str() + " " + content;
         else if (type == g_message_tag) {
-            content = boost::locale::translate("Bash Tag Suggestion(s): ").str() + content;
+            content = boost::locale::translate("Bash Tag Suggestion(s):").str() + " " + content;
         } else if (type == g_message_warn)
-            content = boost::locale::translate("Warning: ").str() + content;
+            content = boost::locale::translate("Warning:").str() + " " + content;
         else
-            content = boost::locale::translate("Error: ").str() + content;
+            content = boost::locale::translate("Error:").str() + " " + content;
 
         size_t pos1f = content.find("\"file:");
         size_t pos1h = content.find("\"http");
@@ -378,9 +378,9 @@ namespace boss {
                             remove += ", " + jt->Name();
                     }
                     if (!add.empty())
-                        content += boost::locale::translate("Add ").str() + add.substr(2) + ". ";
+                        content += (boost::format(boost::locale::translate("Add %1%.")) % add.substr(2)).str() + " ";
                     if (!remove.empty())
-                        content += boost::locale::translate("Remove ").str() + remove.substr(2) + ". ";
+                        content += (boost::format(boost::locale::translate("Remove")) % remove.substr(2)).str() + " ";
                     messages.push_back(Message(g_message_tag, content));  //Special type just for tag suggestions.
                 }
 
