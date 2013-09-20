@@ -271,7 +271,6 @@ FunctionEnd
 
         ;Install resource files.
         SetOutPath "$INSTDIR\resources"
-        File "..\resources\icon.ico"
         File "..\resources\polyfill.js"
         File "..\resources\script.js"
         File "..\resources\style.css"
@@ -383,7 +382,6 @@ FunctionEnd
 		RMDir  "$INSTDIR\docs"
 
         ;Remove resource files.
-        Delete "$INSTDIR\resources\icon.ico"
         Delete "$INSTDIR\resources\polyfill.js"
         Delete "$INSTDIR\resources\script.js"
         Delete "$INSTDIR\resources\style.css"
