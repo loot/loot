@@ -134,6 +134,14 @@ struct masterlist_updater_parser {
                 _errors.push_back(boss::Message(boss::g_message_error, (format(loc::translate("Masterlist parsing failed. Details: %1%")) % e.what()).str()));
             }
             BOOST_LOG_TRIVIAL(debug) << "Finished parsing masterlist.";
+
+        }
+
+        if (_revision.empty()) {
+            if (fs::exists(_game.MasterlistPath()))
+                _revision = loc::translate("Unknown");
+            else
+                _revision = loc::translate("No masterlist");
         }
     }
 
