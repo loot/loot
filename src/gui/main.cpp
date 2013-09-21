@@ -628,7 +628,10 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     //Now add the interactions between plugins to the graph as edges.
     BOOST_LOG_TRIVIAL(trace) << "Adding non-overlap edges.";
-    AddNonOverlapEdges(graph);
+    AddSpecificEdges(graph);
+
+    BOOST_LOG_TRIVIAL(trace) << "Adding priority edges.";
+    AddPriorityEdges(graph);
 
     BOOST_LOG_TRIVIAL(trace) << "Adding overlap edges.";
     AddOverlapEdges(graph);

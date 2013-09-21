@@ -121,13 +121,13 @@ namespace boss {
         boost::depth_first_search(graph, visitor(vis).vertex_index_map(v_index_map));
     }
 
-    void AddNonOverlapEdges(PluginGraph& graph) {
-        //Add edges for all relationships that aren't overlaps.
+    void AddSpecificEdges(PluginGraph& graph) {
+        //Add edges for all relationships that aren't overlaps or priority differences.
         boss::vertex_it vit, vitend;
         for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
             vertex_t parentVertex;
 
-            BOOST_LOG_TRIVIAL(trace) << "Adding non-overlap edges to vertex for \"" << graph[*vit].Name() << "\".";
+            BOOST_LOG_TRIVIAL(trace) << "Adding specific edges to vertex for \"" << graph[*vit].Name() << "\".";
 
             BOOST_LOG_TRIVIAL(trace) << "Adding edges for master flag differences.";
 
@@ -191,9 +191,17 @@ namespace boss {
                     boost::add_edge(parentVertex, *vit, graph);
                 }
             }
+        }
+    }
 
-            BOOST_LOG_TRIVIAL(trace) << "Adding edges for priority differences.";
-            vit2 = vit;
+    void AddPriorityEdges(PluginGraph& graph) {
+        boss::vertex_it vit, vitend;
+
+        for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
+            vertex_t parentVertex;
+
+            BOOST_LOG_TRIVIAL(trace) << "Adding priority difference edges to vertex for \"" << graph[*vit].Name() << "\".";
+            boss::vertex_it vit2 = vit;
             ++vit2;
             for (vit2,vitend; vit2 != vitend; ++vit2) {
                 BOOST_LOG_TRIVIAL(trace) << "Checking for priority difference between \"" << graph[*vit].Name() << "\" and \"" << graph[*vit2].Name() << "\".";

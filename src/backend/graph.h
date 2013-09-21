@@ -55,7 +55,9 @@ namespace boss {
 
     void CheckForCycles(const PluginGraph& graph);
 
-    void AddNonOverlapEdges(PluginGraph& graph);
+    void AddSpecificEdges(PluginGraph& graph);
+
+    void AddPriorityEdges(PluginGraph& graph);
 
     void AddOverlapEdges(PluginGraph& graph);
 
