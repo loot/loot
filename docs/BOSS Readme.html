@@ -99,9 +99,9 @@ h3{
         <li><a href="#appendix-intro">Introduction To Load Orders</a>
         <li><a href="#appendix-dirty">Dirty Edits, Mod Cleaning &amp; CRCs</a>
         <li><a href="#appendix-permissions">File Permissions</a>
+        <li><a href="#appendix-diff">Differences between BOSS v2 and v3</a>
     </ol>
     <li><a href="#history">Version History</a>
-    <li><a href="BOSS%20Metadata%20Syntax.html">Metadata Syntax</a> (separate document)
 </ol>
 
 <h2 id="intro">Introduction</h2>
@@ -518,33 +518,61 @@ There are three key pieces of information that are used to accurately describe a
     <li>In the lower box, check the box opposite <q>Full Control</q> in the <q>Allow</q> column. Press OK to exit. If a UAC prompt appears, allow the change.
     <li>In the <q>Properties</q> window, select OK to exit. You should now have Full Control permissions over your chosen folder.
 </ol>
+<h3 id="appendix-diff">Differences between BOSS v2 and v3</h3>
+<p>BOSS version 3 is an almost complete redesign and rewrite of v2. As part of its development, many features present in v2 have been changed or removed, and the table below provides an overview of these changes.
+<table>
+    <thead>
+        <tr><td>Feature / Component<td>BOSS v2<td>BOSS v3
+    <tbody>
+        <tr><td>Plugin sorting mechanism<td>BOSS scans the game plugin folder for plugins, and arranges those found in the order that they appear in the masterlist. This order is then altered according to any user rules present in the userlist.<td>BOSS scans the game plugin folder for plugins, reads their contents, and uses this data on their masters and the records they change in conjunction with any additional metadata supplied by the masterlist and userlist to calculate the optimal load order according to its sorting algorithm. The load order produced is generally different to that provided by v2.
+        <tr><td>Masterlist updating<td>BOSS downloads a masterlist and inserts into it version information that is scraped from Google Code.<td>BOSS uses Git to update masterlists, benefiting from a more robust mechanism with support for differential updates (reducing the amount of data that needs to be downloaded) and rolling back revisions in case of parsing errors.
+        <tr><td>Masterlist structure &amp; syntax<td>Uses a custom file format.<td>Uses YAML 1.2, with custom condition string syntax modelled after Python's condition expressions.
+        <tr><td>Userlist structure &amp; syntax<td>Uses a custom file format, different from the masterlist format.<td>Uses the same format and syntax as the masterlist.
+        <tr><td>Morrowind support<td>Technically supports Morrowind, though its masterlist is near-empty.<td>Does not support Morrowind.
+        <tr><td>BOSS file locations<td>All BOSS's files are stored in the BOSS folder first installed.<td>BOSS stores any files it creates (reports, masterlists, userlists, settings, graphs) in the <code>%LOCALAPPDATA%\BOSS</code> folder.
+        <tr><td>Game selection on first run.<td>BOSS asks the user to select a game from a list.<td>BOSS selects the first game detected.
+        <tr><td>File CRC calculation<td>File CRC calculation is optional.<td>File CRC calculation is always-on, as it no longer presents any significant additional performance impact.
+        <tr><td>BOSS Log / Report format<td>The BOSS Log can either be generated as plain text or as HTML.<td>The BOSS Report can only be generated as HTML.
+        <tr><td>Perform trial run<td>BOSS can perform a trial run, in which it displays the load order it would set, but does not set it.<td>The option to perform a trial run has been removed, as equivalent functionality is provided by cancelling sorting at the confirmation dialog.
+        <tr><td>Update masterlist only<td>BOSS can be run to update a game's masterlist without then sorting any plugins, even if that game is not installed.<td>BOSS can only update a masterlist as part of the sorting process, and cannot run for games that are not installed. This is because BOSS's updating process no longer inserts version information into the masterlists, and so the exact same masterlists that BOSS uses can now be downloaded from BOSS's online repositories using a web browser, removing the need for BOSS to include this functionality.
+        <tr><td>Undo changes<td>It is possible to run BOSS to undo its changes back one run or two.<td>It is no longer possible to undo load order changes through BOSS. Instead a confirmation dialog is provided to allow users to make sure that BOSS will set a load order they want, and to give them a last-minute opportunity to backup their existing load order, perhaps using a mod manager of their choice.
+        <tr><td>Optionally suppress BOSS Log / Report display<td>BOSS allows the user to stop the BOSS Log being automatically displayed after sorting.<td>The BOSS Report is always displayed after sorting, as it is more important for the user to verify that the automated sorting process completed successfully and correctly.
+        <tr><td>Nehrim support<td>BOSS provides first-class support for  Nehrim alongside Oblivion, Skyrim, Fallout 3 and Fallout: New Vegas<td>BOSS supports Nehrim as an Oblivion-derived game instance, and the Nehrim and Oblivion masterlists have been merged. This is due to v3's generalised support for Total Conversion mods across the games it supports. In practice Nehrim support appears the same.
+        <tr><td>User rules<td>BOSS allows the user to customise its output by providing user rules for specifying relative plugin positions and for adding to or replacing the messages attached to mods.<td>BOSS allows the user to add to any metadata provided by the masterlist.
+        <ul>
+            <li>It is no longer possible to specify a plugin A to load before another plugin B, though an identical effect may be produced by loading B after A.
+            <li>It is no longer possible to sort or insert into groups, as groups no longer exist.
+            <li>It is no longer possible to replace messages provided by the masterlist.
+            <li>Knowledge of message syntax is no longer required to add new messages.
+            <li>It is now possible to provide conditions for user-added messages.
+        </ul>
+        <tr><td>Updating BOSS<td>BOSS includes an update checker and a semi-automated update process.<td>BOSS no longer includes an update checker or a semi-automated update process. This is because new releases are announced in the masterlists anyway, and the semi-automated update process is not as efficient as using the installer.
+        <tr><td>Manual editing of user rules / metadata<td>BOSS allows the user to open the userlist file for manual editing from the GUI.<td>BOSS only provides the GUI metadata editor for editing the userlist. Users may still edit the userlist file manually, but it must also be located manually.
+        <tr><td>Proxy Support<td>BOSS includes support for proxies, allowing users to specify the proxy hostname and port number and provide authentication details.<td>BOSS no longer includes any proxy support, as the proxy support in v2 was reported broken a few times and it was deemed not worth fixing due to very low usage.
+        <tr><td>BOSS Log / Report content<td>The BOSS Log includes the following sections:
+        <ul>
+            <li>Summary
+            <li>User Rules
+            <li>Script Extender Plugins
+            <li>Recognised Plugins
+            <li>Unrecognised Plugins
+        </ul>
+        <td>The user rules and script extender plugins sections have been removed as user metadata cannot fail to be applied, and the script extender plugins information was deemed irrelevant. The recognised and unrecognised plugins sections have been combined into one Details section, as there is no longer any such thing as an unrecognised plugin.
+        <tr><td>BOSS Log / Report Filters<td>The HTML BOSS Log includes a large number of filters to selectively hide content.<td>The number of filters has been reduced, as some are no longer applicable:
+        <ul>
+            <li>BOSS no longer labels active plugins as such, so the active label filter has been removed.
+            <li>Requirement and incompatibility messages no longer exist (instead warnings are displayed if the relevant files are missing / present), so their corresponding filters have been removed.
+            <li>The hide clean plugins filter has been removed as it was misleading, since the plugins hidden were not necessary clean.
+        </ul>
+        <tr><td>BOSS Log plugin submission<td>BOSS allows users to submit unrecognised plugins from the HTML BOSS Log.<td>As there is no longer any such thing as an unrecognised plugin, the submission system has been removed.
+        <tr><td>BOSS Log display customisation<td>BOSS allows users to customise the colour scheme used by the BOSS Log.<td>BOSS does not allow customisation of the colour scheme used by the BOSS report. However, the styling is now provided by a static stylesheet instead of being dynamically generated within the report every time BOSS is run, so this static stylesheet can be edited to achieve the same effect.
+        <tr><td>Command line interface<td>BOSS provides a command line interface.<td>BOSS does not provide a command line interface, as the greater need for user interaction makes it unweildy.
+</table>
 
 <h2 id="history">Version History</h2>
-<p>Only the history of version 3 is given, as changes prior to version 3 are irrelevant due to the complete redesign that occurred. The masterlists are updated far too frequently for their changes to be concisely recorded here, but a full history of changes to them may be viewed by browsing the Google Code repository.
+<p>Only the history of version 3 is given, as changes prior to version 3 are irrelevant due to the complete redesign that occurred. The masterlists are updated far too frequently for their changes to be concisely recorded here, but a full history of changes to them may be viewed by browsing the GitHub repositories.
 
 <h3>3.0.0 - <i>Day Month 2013</i></h3>
 <ul>
-	<li>BOSS completely redesigned from scratch and almost completely rewritten.
-	<li>Command Line Interface removed.
-	<li>Command line arguments removed.
-	<li>Plain text BOSS Log removed.
-	<li>Support for Morrowind removed.
-	<li>BOSS Log Display Settings removed.
-	<li>BOSS Log Filters Hide 'Active' Label, Hide Checksums, Hide Requirements, Hide Incompatibilities, Hide Inactive Plugins and Hide Clean Plugins removed.
-	<li>BOSS Log sections User Rules, Script Extender Plugins and Unrecognised Plugins removed.
-	<li>BOSS Log unrecognised plugin submission removed.
-	<li>Proxy support removed.
-	<li>BOSS program updater removed.
-	<li>Display of file CRCs in BOSS Log removed.
-	<li>Undo Changes functionality removed.
-	<li>Update Masterlist Only functionality removed.
-	<li>Dirty plugin, incompatibility and requirement message types removed.
-	<li>Masterlist format completely changed.
-	<li>Userlist format completely changed.
-	<li>BOSS settings file format completely changed.
-	<li>BOSS files that are edited are now stored in a folder within %LOCALAPPDATA%.
-	<li>BOSS Log retitled BOSS Report.
-    <li>BOSS Log redesigned.
-	<li>Masterlist updater now uses Git.
-	<li>BOSS now sorts plugins according to their parsed contents, supplemented by metadata supplied by the masterlist and userlist.
+	<li>BOSS completely redesigned from scratch and almost completely rewritten. See <a href="#appendix-diff">Differences between BOSS v2 and v3</a> for an overview of the changes.
 </ul>
