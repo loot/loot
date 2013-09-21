@@ -362,6 +362,8 @@ namespace boss {
         boost::split(bashTags, text, boost::is_any_of(","));
 
         for (int i=0,max=bashTags.size(); i<max; ++i) {
+            boost::trim(bashTags[i]);
+            BOOST_LOG_TRIVIAL(trace) << "Extracted Bash Tag: " << bashTags[i];
             tags.insert(Tag(bashTags[i]));
         }
 	}
