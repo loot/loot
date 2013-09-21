@@ -154,9 +154,9 @@ FunctionEnd
 
 	LangString TEXT_MESSAGEBOX ${LANG_RUSSIAN} "BOSS уже установлен и должен быть удален перед продолжением. $\n$\nНажмите `OK` для удаления предыдущей версии или `Отмена` для отмены обновления."
 	LangString TEXT_RUN ${LANG_RUSSIAN} "Запустить BOSS"
-	LangString TEXT_SHOWREADME ${LANG_RUSSIAN} "Смотреть BOSS-Readme"
-	LangString TEXT_MAIN ${LANG_RUSSIAN} "Все файлы BOSS, кроме пользовательских списков и BOSS.ini"
-	LangString TEXT_USERFILES ${LANG_RUSSIAN} "Файлы пользовательских списков и BOSS.ini."
+	LangString TEXT_SHOWREADME ${LANG_RUSSIAN} "Просмотр документации"
+	LangString TEXT_MAIN ${LANG_RUSSIAN} "Все файлы BOSS, кроме пользовательских списков и файла настроек"
+	LangString TEXT_USERFILES ${LANG_RUSSIAN} "Файлы пользовательских списков BOSS и файл настроек."
 
 ;--------------------------------
 ;German (Deutsch) Strings
