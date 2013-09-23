@@ -237,7 +237,10 @@ namespace boss {
     }
 
     std::string File::DisplayName() const {
-        return _display;
+        if (_display.empty())
+            return _name;
+        else
+            return _display;
     }
 
     Tag::Tag() : addTag(true) {}
@@ -642,11 +645,11 @@ namespace boss {
         }
         for (set<File>::const_iterator it=requirements.begin(), endIt=requirements.end(); it != endIt; ++it) {
             if (!boost::filesystem::exists(game.DataPath() / it->Name()))
-                issues.insert(pair<string,bool>(it->Name(),false));
+                issues.insert(pair<string,bool>(it->DisplayName(),false));
         }
         for (set<File>::const_iterator it=incompatibilities.begin(), endIt=incompatibilities.end(); it != endIt; ++it) {
             if (boost::filesystem::exists(game.DataPath() / it->Name()))
-                issues.insert(pair<string,bool>(it->Name(),true));
+                issues.insert(pair<string,bool>(it->DisplayName(),true));
         }
         return issues;
     }
