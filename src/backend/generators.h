@@ -92,13 +92,18 @@ namespace boss {
             pos1 = pos1f;
         else
             pos1 = pos1h;
-        size_t pos2 = content.find(' ', pos1+1);
         size_t pos3 = content.find('"', pos1+1);
 
-        while (pos1 != std::string::npos && pos2 != std::string::npos && pos3 != std::string::npos) {
-
-            std::string url = content.substr(pos1+1, pos2-pos1-1);
-            std::string display = content.substr(pos2+1, pos3-pos2-1);
+        while (pos1 != std::string::npos && pos3 != std::string::npos) {
+            std::string url, display;
+            size_t pos2 = content.substr(pos1, pos3 - pos1).find(' ', pos1);
+            if (pos2 != std::string::npos) {  //Labelled
+                url = content.substr(pos1 + 1, pos2 - 1);
+                display = content.substr(pos1 + pos2 + 1, pos3 - pos1 - pos2 - 1);
+            } else {  //Unlabelled.
+                url = content.substr(pos1 + 1, pos3 - pos1 - 1);
+                display = url;
+            }
 
             //Insert normal text preceding hyperlink.
             listItem.append_child(pugi::node_pcdata).set_value(content.substr(0, pos1).c_str());
@@ -119,7 +124,6 @@ namespace boss {
                 pos1 = pos1f;
             else
                 pos1 = pos1h;
-            pos2 = content.find(' ', pos1+1);
             pos3 = content.find('"', pos1+1);
         }
 
