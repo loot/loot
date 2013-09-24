@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: BOSS v3.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-09-21 17:19+0100\n"
-"PO-Revision-Date: 2013-09-23 18:11+0600\n"
+"PO-Revision-Date: 2013-09-24 22:08+0600\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: \n"
@@ -770,7 +770,7 @@ msgstr "Имя файла:"
 
 #: gui/editor.cpp:869
 msgid "Displayed Name:"
-msgstr "Отобрааемое имя:"
+msgstr "Отображаемое имя:"
 
 #: gui/editor.cpp:872
 #: gui/editor.cpp:950
@@ -801,7 +801,7 @@ msgstr "Содержимое:"
 #: gui/editor.cpp:1051
 #: gui/editor.cpp:1066
 msgid "Error: No content row selected."
-msgstr "Error: No content row selected."
+msgstr "Ошибка: Не выбрана строка с содержимым."
 
 #: gui/editor.cpp:1094
 msgid "Add/Remove:"
