@@ -73,7 +73,7 @@ h3{
 <h2>Contents</h2>
 <ol>
     <li><a href="#intro">Introduction</a>
-    <li><a href="#filestruct">Metadata File Structure</a>
+    <li><a href="#filestruct">Metadata File Contents</a>
     <li><a href="#structs">Data Structures</a>
     <ol>
         <li><a href="#structs-tag">Tag Data Structure</a>
@@ -82,6 +82,7 @@ h3{
         <li><a href="#structs-plugin">Plugin Data Structure</a>
         <li><a href="#structs-location">Location Data Structure</a>
     </ol>
+    <li><a href="#links">URL Hyperlinking</a>
     <li><a href="#cond">Condition Strings</a>
     <ol>
         <li><a href="#cond-function">Functions</a>
@@ -118,7 +119,7 @@ h3{
 </ul>
 <p>Please test any changes you make before uploading them. One way of doing this is to run BOSS, another is to copy/paste what you've changed into an online parser such as <a href="https://yaml-online-parser.appspot.com/">this one</a>, though it won't catch condition syntax errors or non-syntax errors such as having the same file both required and incompatible.
 
-<h2 id="filestruct">Metadata File Structure</h2>
+<h2 id="filestruct">Metadata File Contents</h2>
 <p>The root of a metadata file is a key-value map. BOSS will recognise the following keys, none of which are required:
 <table>
     <thead><tr><th>Key Name<th>Value Type<th>Notes
@@ -171,16 +172,16 @@ condition: "file(\"Mart's Monster Mod for OOO.esm\") or file(\"FCOM_Convergence.
 </code>
 
 <h3 id="structs-file">File Data Structure</h3>
-<p>Not to be confused with the structure of the metadata file itself, this structure can be used to hold filenames. It has two forms: the first is a simple string, and the second is a key-value map. All values in the map are strings.
+<p>Not to be confused with the structure of the metadata file itself, this structure can be used to hold file paths. It has two forms: the first is a simple string, and the second is a key-value map. All values in the map are strings.
 <p>The simple form:
 <code class="box"><var>filepath</var></code>
-<p>where <code><var>filepath</var></code> is a file path relative to the game's Data folder.
+<p>where <code><var>filepath</var></code> is an exact (ie. not regex) file path relative to the game's Data folder.
 <p>The map form:
 <table>
     <thead><tr><th>Key Name<th>Required<th>Notes
     <tbody>
-        <tr><td><code>name</code><td>&#x2713;<td>A file path or name.
-        <tr><td><code>display</code><td>&#x2717;<td>A substitute string to be displayed instead of the file path in any generated messages, eg. the name of the mod the file belongs to.
+        <tr><td><code>name</code><td>&#x2713;<td>An exact (ie. not regex) file path or name.
+        <tr><td><code>display</code><td>&#x2717;<td>A substitute string to be displayed instead of the file path in any generated messages, eg. the name of the mod the file belongs to. Double-quoted URLs will be hyperlinked in the BOSS report. See <a href="#links">URL Hyperlinking</a> for details.
         <tr><td><code>condition</code><td>&#x2717;<td>A condition string that is evaluated to determine whether this file data should be used: if it evaluates to true, the data is used, otherwise it is ignored. See <a href="#cond">Condition Strings</a> for details.
 </table>
 
@@ -198,7 +199,7 @@ display: OBSE v18+
     <thead><tr><th>Key Name<th>Required<th>Notes
     <tbody>
         <tr><td><code>type</code><td>&#x2713;<td>The type string can be one of three keywords, see the table below for their semantics.
-        <tr><td><code>content</code><td>&#x2713;<td>Either simply a string, or a list of content data structures. If the latter, one of the structures must be for English.
+        <tr><td><code>content</code><td>&#x2713;<td>Either simply a string, or a list of localised content data structures. If the latter, one of the structures must be for English.
         <tr><td><code>condition</code><td>&#x2717;<td>A condition string that is evaluated to determine whether the message should be displayed: if it evaluates to true, the message is displayed, otherwise it is not. See <a href="#cond">Condition Strings</a> for details.
 </table>
 
@@ -210,18 +211,18 @@ display: OBSE v18+
         <tr><td><code>warn</code><td>A warning message, describing a non-critical issue with the user's mods (eg. dirty mods).
         <tr><td><code>error</code><td>An error message, decribing a critical installation issue (eg. missing masters, corrupt plugins).
 </table>
-<p>The content data structure is a key-value map, with all values being strings:
+<p>The localised content data structure is a key-value map, with all values being strings:
 <table>
     <thead><tr><th>Key Name<th>Required<th>Notes
     <tbody>
-        <tr><td><code>str</code><td>&#x2713;<td>The actual message content string. URLs in message content strings will be turned into hyperlinks in BOSS's user interface. Recognised URLs are those that start with <code>file:</code>, <code>http:</code> or <code>https:</code>. URLs can be labelled by writing the label after the URL, with a space separating them, and enclosing the URL and label in double quotes.
+        <tr><td><code>str</code><td>&#x2713;<td>The actual message content string. Double-quoted URLs will be hyperlinked in the BOSS report. See <a href="#links">URL Hyperlinking</a> for details.
         <tr><td><code>lang</code><td>&#x2713;<td>The language that <code>str</code> is written in, given as an ISO 639-3 language code. The languages BOSS supports are given in <a href="#lang">Language Codes</a>.
 </table>
 
 <p>BOSS handles messages and languages as follows:
 <ol>
     <li>If a message's <code>content</code> value is a string, the message will use the string as its content if displayed.
-    <li>If a message's <code>content</code> value is a list of content structures, then the first structure with a language that matches BOSS's current language will be used as the message's content if displayed. If there are no matches, then the first structure in English will be used.
+    <li>If a message's <code>content</code> value is a list of localised content structures, then the first structure with a language that matches BOSS's current language will be used as the message's content if displayed. If there are no matches, then the first structure in English will be used.
 </ol>
 
 
@@ -266,6 +267,11 @@ would be displayed as
 </table>
 <p>Example:
 <code class="box">name: "Oscuro's_Oblivion_Overhaul.esm"
+req:
+  - Oblivion.esm  # Don't do this, Oblivion.esm is a master of Oscuro's_Oblivion_Overhaul.esm, so BOSS already knows it's required.
+  - name: example.esp
+    display: "http://www.example.com Example Mod"
+    condition: "version(\"Oscuro's_Oblivion_Overhaul.esm\", \"15.0\", ==)"
 tag:
   - Actors.Spells
   - Graphics
@@ -297,9 +303,21 @@ msg:
 <code class="box">http://skyrim.nexusmods.com/mods/19/</code>
 or
 <code class="box">link: http://steamcommunity.com/sharedfiles/filedetails/?id=87144366
-ver: 
+ver:
   - 1.3.2c
 </code>
+
+<h2 id="links">URL Hyperlinking</h2>
+<p>File <code>display</code> strings and message <code>content</code> strings (including the strings in localised content structures) that contain recognised URLs have them displayed as hyperlinks in the BOSS report. Recognised URLs are those that are enclosed in double quotes and that begin with <code>file:</code>, <code>http:</code> or <code>https:</code>.
+<p>Hyperlinks may be labelled by writing the label after the URL inside the double quotes, with a space separating the label and URL. If a label is not provided, then the hyperlink will use the URL as its own label.
+<p>Examples:
+<code class="box">"This \"https://en.wikipedia.org/wiki/String_(computer_science) string\" contains a labelled hyperlink."</code>
+would be displayed as
+<blockquote>This <a href="https://en.wikipedia.org/wiki/String_(computer_science)">string</a> contains a labelled hyperlink.</code></blockquote>
+<p>While
+<code class="box">"This string (see: \"https://en.wikipedia.org/wiki/String_(computer_science)\") contains an unlabelled hyperlink."</code>
+both get displayed as
+<blockquote>This string (see: <a href="https://en.wikipedia.org/wiki/String_(computer_science)">https://en.wikipedia.org/wiki/String_(computer_science)</a>) contains an unlabelled hyperlink.</code></blockquote>
 
 <h2 id="cond">Condition Strings</h2>
 <p>Condition strings can be used to ensure that data is only acted on by BOSS under certain circumstances. They are very similar to boolean conditional expressions in programming languages such as Python, though more limited. Their <a href="https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_Form">EBNF</a> grammar is:
