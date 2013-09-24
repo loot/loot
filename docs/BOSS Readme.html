@@ -39,6 +39,14 @@ h3{
 
     a[href^="http"]:after {padding-left:2px; content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAVklEQVR4Xn3PgQkAMQhDUXfqTu7kTtkpd5RA8AInfArtQ2iRXFWT2QedAfttj2FsPIOE1eCOlEuoWWjgzYaB/IkeGOrxXhqB+uA9Bfcm0lAZuh+YIeAD+cAqSz4kCMUAAAAASUVORK5CYII=);}
 
+    .slideshow img {opacity:0;
+        position:absolute;
+        transition: opacity 1.5s;
+        -moz-transition: opacity 1.5s;
+        -webkit-transition: opacity 1.5s;
+        -o-transition: opacity 1.5s;}
+    .slideshow img:first-child {opacity:1;}
+
     span[title] {border-bottom: 1px dotted; font-family: sans-serif; cursor:help;}
     abbr {cursor:help; border-bottom: 1px dotted black;}
 
@@ -114,12 +122,10 @@ h3{
 
 <p>BOSS is intended to make using mods easier, and mod users should still possess a working knowledge of mod load ordering. See <a href="#appendix-intro">Introduction To Load Orders</a> for an overview.
 
-<p><b>Note:</b> BOSS version 3 is an almost complete redesign and rewrite of v2. As such, it generally produces different load orders compared to v2. Although much of the v2 masterlist data has been converted for v3, some load order metadata must be rebuilt from scratch, and so some plugins that were sorted correctly by v2 may be sorted incorrectly by v3 until their metadata has been recorded. Users can aid this process by submitting any mistakes they spot to the BOSS team, along with their corrections.
-
 
 <h2 id="install">Installation &amp; Uninstallation</h2>
 
-<blockquote class="warning">BOSS version 3 is incompatible with earlier versions, which should be removed. Any existing user rules must be manually recreated in BOSS's user interface.</blockquote>
+<blockquote class="warning">BOSS version 3 is incompatible with earlier versions, which should be removed. Any existing user rules must be manually recreated in BOSS's user interface. Some plugins sorted correctly in v2 may be sorted incorrectly by v3 until their metadata has been recorded. Please <a href="#contrib">notify the team</a> if you observe any load order issues.</blockquote>
 
 <p>BOSS can be installed either using its automated installer or manually. To install BOSS manually:
 <ol>
@@ -162,11 +168,12 @@ h3{
 
 
 <h3 id="usage-log">The Results Report</h3>
-<figure>
-    <img src="images/viewer-1.png">
-    <img src="images/viewer-2.png">
-    <figcaption>BOSS's report viewer.</figcaption>
+<figure class="slideshow">
+    <img alt="BOSS report summary tab" src="images/viewer-1.png">
+    <img alt="BOSS report details tab" src="images/viewer-2.png">
+    <figcaption style="padding-top:610px;">BOSS's report viewer.</figcaption>
 </figure>
+
 <p>BOSS's results report can be displayed either in BOSS's own report viewer, or in your default web browser, according to the value of the <a href="#settingsViewReports">relevant setting</a>.
 <p>The report is comprised of three main sections:
 <ul>
@@ -382,6 +389,7 @@ To translate the BOSS application:
         <tr><th colspan="3">Member<th rowspan="2">Admin<th rowspan="2">Code<th colspan="4">Contributes To Masterlist
         <tr><th>GitHub<th>Bethesda<th>Nexus<th>Oblivion<th>Skyrim<th>Fallout 3<th>Fallout: New Vegas
     <tbody class="teamTableBody">
+        <tr><td>Aellis-BOSS<td colspan="2">Aellis<td>&#x2713;<td><td><td>&#x2713;<td><td>
         <tr><td colspan="3">Freso<td><td><td><td>&#x2713;<td><td>
         <tr><td colspan="2">ineedbettername<td>-<td><td><td><td>&#x2713;<td><td>
         <tr><td colspan="3">LotteryDiscountz<td><td><td><td>&#x2713;<td><td>
@@ -401,7 +409,6 @@ To translate the BOSS application:
         <tr><th rowspan="2">Member<th rowspan="2">Admin<th rowspan="2">Code<th colspan="4">Contributes To Masterlist
         <tr><th>Oblivion<th>Skyrim<th>Fallout 3<th>Fallout: New Vegas
     <tbody class="teamTableBody">
-        <tr><td>Aellis<td>&#x2713;<td><td><td>&#x2713;<td><td>
         <tr class="inactive"><td>PacificMorrowind<td>&#x2713;<td>&#x2713;<td>&#x2713;<td><td>&#x2713;<td>
         <tr class="inactive"><td>Random007<td>&#x2713;<td>&#x2713;<td>&#x2713;<td><td><td>
         <tr><td>scrapperrm<td><td><td><td>&#x2713;<td><td>
@@ -509,6 +516,7 @@ There are three key pieces of information that are used to accurately describe a
     <li>In the lower box, check the box opposite <q>Full Control</q> in the <q>Allow</q> column. Press OK to exit. If a UAC prompt appears, allow the change.
     <li>In the <q>Properties</q> window, select OK to exit. You should now have Full Control permissions over your chosen folder.
 </ol>
+
 <h3 id="appendix-diff">Differences between BOSS v2 and v3</h3>
 <p>BOSS version 3 is an almost complete redesign and rewrite of v2. As part of its development, many features present in v2 have been changed or removed, and the table below provides an overview of these changes.
 <table>
@@ -567,3 +575,30 @@ There are three key pieces of information that are used to accurately describe a
 <ul>
 	<li>BOSS completely redesigned from scratch and almost completely rewritten. See <a href="#appendix-diff">Differences between BOSS v2 and v3</a> for an overview of the changes.
 </ul>
+
+<script>
+"use strict";
+function nextImage(imgs, i){
+    for(var i=0;i<imgs.length;i++){
+        if(imgs[i].style.opacity=='1' || imgs[i].style.opacity==''){
+            imgs[i].style.opacity='0';
+            if(i+1<imgs.length){
+                imgs[i+1].style.opacity='1';
+            }else{
+                imgs[0].style.opacity='1';
+            }
+            break;
+        }
+    }
+    var t=setTimeout(nextImage, 5000, imgs);
+}
+
+var figures = document.getElementsByTagName('figure');
+if(figures!=null){
+    for (var i=0; i < figures.length; i++) {
+        if (figures[i].className == 'slideshow'){
+            var t=setTimeout(nextImage,5000, figures[i].getElementsByTagName('img'));
+        }
+    }
+}
+</script>
