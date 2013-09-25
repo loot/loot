@@ -434,11 +434,11 @@ msgstr ""
 
 #: gui/main.cpp:1037
 msgid "Up"
-msgstr "Вверх"
+msgstr "Выше"
 
 #: gui/main.cpp:1038
 msgid "Down"
-msgstr "Вниз"
+msgstr "Ниже"
 
 #: gui/main.cpp:1041
 msgid "Load Order"
