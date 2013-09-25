@@ -205,7 +205,7 @@ namespace boss {
             ++vit2;
             for (vit2,vitend; vit2 != vitend; ++vit2) {
                 BOOST_LOG_TRIVIAL(trace) << "Checking for priority difference between \"" << graph[*vit].Name() << "\" and \"" << graph[*vit2].Name() << "\".";
-                if (graph[*vit].MustLoadAfter(graph[*vit2]) || graph[*vit2].MustLoadAfter(graph[*vit]) || graph[*vit].Priority() == graph[*vit2].Priority())
+                if (graph[*vit].Priority() == graph[*vit2].Priority())
                     continue;
 
                 vertex_t vertex, parentVertex;
