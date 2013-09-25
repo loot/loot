@@ -82,19 +82,19 @@ msgstr "Версия мастерлиста"
 
 #: gui/settings.cpp:40
 msgid "None"
-msgstr "Ничего"
+msgstr "Нет"
 
 #: gui/settings.cpp:41
 msgid "Low"
-msgstr "Низкий"
+msgstr "Низкая"
 
 #: gui/settings.cpp:42
 msgid "Medium"
-msgstr "Средний"
+msgstr "Средняя"
 
 #: gui/settings.cpp:43
 msgid "High"
-msgstr "Высокий"
+msgstr "Высокая"
 
 #: gui/settings.cpp:47
 msgid "Autodetect"
@@ -154,7 +154,7 @@ msgstr "Ключ реестра для путя установки"
 
 #: gui/settings.cpp:98
 msgid "Default Game:"
-msgstr "Игра по умолч.:"
+msgstr "Игра по умолчанию:"
 
 #: gui/settings.cpp:101 gui/editor.cpp:962
 msgid "Language:"
@@ -521,7 +521,7 @@ msgstr "Отмена"
 
 #: gui/editor.cpp:131
 msgid "Copy Metadata As Text"
-msgstr "Копировать метаданные как текстasdf"
+msgstr "Копировать метаданные как текст"
 
 #: gui/editor.cpp:141
 msgid "Requirements"
