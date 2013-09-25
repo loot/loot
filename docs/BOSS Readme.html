@@ -116,16 +116,16 @@ h3{
 
 <p>BOSS is a plugin load order optimiser for TES IV: Oblivion, TES V: Skyrim, Fallout 3 and Fallout: New Vegas. It is designed to assist mod users in avoiding detrimental conflicts, by automatically calculating a load order that satisfies all plugin dependencies and maximises each plugin's impact on the user's game.
 
-<p>BOSS also provides some load order error checking, including checks for requirements, incompatibilities and cyclic dependencies. In addition, it provides a large number of plugin-specific usage notes, bug wawrnings and Bash Tag suggestions.
+<p>BOSS also provides some load order error checking, including checks for requirements, incompatibilities and cyclic dependencies. In addition, it provides a large number of plugin-specific usage notes, bug warnings and Bash Tag suggestions.
 
-<p>Although BOSS is able to calculate the correct load order positions for the vast majority of mods without any user input, some plugins are designed to load at certain positions in a load order, and BOSS may be unable to determine this from the plugins themselves. As such, BOSS provides a mechanism for supplying additional plugin metadata so that it may sort them correctly.
+<p>While BOSS is able to calculate correct load order positions for the vast majority of plugins using only their content, it cannot do so for all plugins. As such, BOSS provides a mechanism for supplying additional plugin metadata so that it may sort them correctly.
 
 <p>BOSS is intended to make using mods easier, and mod users should still possess a working knowledge of mod load ordering. See <a href="#appendix-intro">Introduction To Load Orders</a> for an overview.
 
 
 <h2 id="install">Installation &amp; Uninstallation</h2>
 
-<blockquote class="warning">BOSS version 3 is incompatible with earlier versions, which should be removed. Any existing user rules must be manually recreated in BOSS's user interface. Some plugins sorted correctly in v2 may be sorted incorrectly by v3 until their metadata has been recorded. Please <a href="#contrib">notify the team</a> if you observe any load order issues.</blockquote>
+<blockquote class="warning">Version 3 is incompatible with earlier versions, which should be removed. Any existing user rules must be manually recreated in BOSS's user interface. Some plugins sorted correctly in v2 may be sorted incorrectly by v3 until their metadata has been recorded. Please <a href="#contrib">notify the team</a> if you observe any load order issues.</blockquote>
 
 <p>BOSS can be installed either using its automated installer or manually. To install BOSS manually:
 <ol>
@@ -148,7 +148,7 @@ h3{
 <p>Clicking the <q>Sort Plugins</q> button will begin the <a href="#usage-sort">plugin sorting process</a>. This will sort your plugins, allow you to make any changes to the load order it produces, then display a report that details the results of BOSS's activity.
 <p>Clicking the <q>View Last Report</q> button will display the <a href="#usage-log">report</a> generated the last time BOSS sorted your plugins.
 <p>The <q>File</q> menu provides menu items for sorting plugins, viewing the debug log and the last report BOSS generated, and quitting BOSS, while the <q>Edit</q> menu provides menu items for accessing BOSS's metadata editor and the <a href="#usage-settings">settings window</a>.
-<p>The <q>Game</q> menu allows you to change which game BOSS is running for without having to close and re-open it. Games that BOSS cannot find are greyed out, and the the one BOSS is running for is marked with a dot to its left. To change the active game, simply select another game in the list.
+<p>The <q>Game</q> menu allows you to change which game BOSS is running for. Games that BOSS cannot find are greyed out, and the the one BOSS is running for is marked with a dot to its left. To change the active game, simply select another game in the list.
 <p>The <q>Help</q> menu provides a link to this readme and an about page that contains the version of BOSS being run, some legal information and a link to the <a href="http://boss-developers.github.io">project homepage</a>.
 
 <h3 id="usage-sort">Sorting Plugins</h3>
@@ -163,7 +163,7 @@ h3{
 <p>During the sorting process, BOSS extracts information from each of the plugins installed in the game's Data folder and combines this information with any relevant metadata provided by the masterlist and userlist. It then uses the combined data to build a graph (as in <i>graph theory</i>, not <i>drawing</i>) of all the interactions between all the installed plugins. A topological sort is then carried out on the graph to produce a list of plugins in their optimal load order, according to BOSS's criteria. If a cycle is detected (eg. A depends on B depends on A), then sorting is cancelled as it becomes impossible to generate a load order that satisfies all conditions.
 <p>If successful, the calculated load order is then displayed in the dialog shown above, which allows the user to edit the load order before it is applied. Multiple plugins may be selected and moved at once. If <q>OK</q> button is clicked, it is then applied, and any edits made are recorded in the userlist for re-application when BOSS next sorts the game's plugins. If the <q>Cancel</q> button is clicked, then the load order and any edits made are discarded.
 <p>BOSS then generates a report and displays it either in a new window or in your default browser, according to the value of the <a href="#settingsViewReports">relevant setting</a>. Any errors encountered during the sorting process will be displayed in this report, including those due to graph cycles, missing dependencies or installed incompatible plugins. If it <a href="#settingsGenerateGraphImage">is enabled</a>, an SVG image of the graph is generated for display in the report. See the next section for more information on the report.
-<p>BOSS is able to sort plugins ghosted by <abbr title="Wrye Bash, Wrye Flash or Wrye Flash NV">Wrye *ash</abbr>, and can extract Bash Tags and version numbers from plugin descriptions. Providing they have the <code>Filter</code> Bash Tag present in their description, BOSS can recognise filter patches and so avoid displaying unnecessary error messages for any of their masters that may be missing.
+<p>BOSS is able to sort plugins ghosted by <abbr title="Wrye Bash, Wrye Flash or Wrye Flash NV">Wrye *ash</abbr>, and can extract Bash Tags and version numbers from plugin descriptions. Provided that they have the <code>Filter</code> Bash Tag present in their description, BOSS can recognise filter patches and so avoid displaying unnecessary error messages for any of their masters that may be missing.
 <p>While reading very large plugins, such as the game's main master file, BOSS may appear to stop responding: this is not an issue. The time it takes for BOSS to sort your load order depends primarily on the size of the masterlist being used, the total size of the files in your load order, and the number of plugins in your load order. The first run is likely to be longer than subsequent runs as BOSS needs to download the full masterlist, rather than just the changes made by updates. In testing, it was found that sorting ~90 plugins with a total size of ~350 MB and a 5 MB masterlist takes around 15 seconds, though performance will vary with computer hardware.
 
 
@@ -192,7 +192,7 @@ h3{
     <li><i>Hide Messageless Plugins</i>: Hides any plugins that have no visible messages.
 </ul>
 <p>BOSS will display the version numbers of any plugins that provide them in their description fields. If a plugin supplies no version number, it cannot be displayed. The version numbers may not reflect the actual version of the mod installed - this could either be due to the mod author forgetting to update the description, or due to a mistake in BOSS's detection. As version numbers are supplied by mod authors in a wide range of formats and BOSS has to detect as many as possible, it occasionally identifies parts of some descriptions as version numbers incorrectly. When in doubt, check the version number given in a mod's readme.
-<p>BOSS's mod messages are a valuable resource, acting as a means of providing users with information that they might otherwise not obtain. It is important for a stable, healthy game that you act on any messages that require action.
+<p>BOSS's plugin messages are a valuable resource, acting as a means of providing users with information that they might otherwise not obtain. It is important for a stable, healthy game that you act on any messages that require action.
 <p>If you think a message suggests an unnecessary action, report it to an official BOSS thread. If you encounter a message that is non-conditional, ie. it suggests an action but is still displayed on subsequent runs of BOSS after the action has been carried out, also report it to an official BOSS thread, so that it can be made conditional.
 
 
@@ -201,8 +201,7 @@ h3{
     <img src="images/editor.png">
     <figcaption>BOSS's metadata editor.</figcaption>
 </figure>
-<p>BOSS's sorting algorithm uses the contents of plugins to work out where they should load relative to one another. However, this is sometimes not enough for it to produce a correct load order. In such cases, additional metadata can be supplied so that the plugins get sorted correctly.
-<p>This metadata is supplied to BOSS by two sources: one is the masterlist, which is maintained by the BOSS team, and the other is the userlist, which you can edit as you desire.
+<p>BOSS's sorting algorithm uses the contents of plugins to work out where they should load relative to one another. However, this is sometimes not enough for it to produce a correct load order. In such cases, additional metadata can be supplied so that the plugins get sorted correctly. This metadata is supplied to BOSS by two sources: one is the masterlist, which is maintained by the BOSS team, and the other is the userlist, which you can edit as you desire.
 <p>The metadata editor allows you to manage the metadata stored in your userlist. When opened, it lists all the plugins you have installed, and any that are missing but have existing user-added metadata, in alphabetical order. Clicking on a plugin then opens its metadata for editing, and displays any existing metadata in the fields to the right of the plugin list. These fields are explained in the table below.
 <p>The <q>Add &#x2026;</q>, <q>Edit &#x2026;</q> and <q>Remove &#x2026;</q> buttons are used to edit the contents of the list currently visible. The <q>Edit &#x2026;</q> and <q>Remove &#x2026;</q> buttons are greyed out if no row is selected or if the selected row is not user-added metadata, but comes from the masterlist or the plugin itself. Metadata that comes from the masterlist or the plugin itself cannot be edited or removed, only added to. This is to prevent users from accidently overriding important metadata.
 <p>The <q>Copy Metadata As Text</q> copies the selected plugin's current metadata, as it appears in the userlist, to the clipboard. This makes it easier to share your metadata changes with the BOSS team, as they can then paste this text directly into the masterlist, and also avoids any typos being introduced. If posting the text in an online forum that supports BBCode (as most forums do), be sure to wrap it in <code>[code]</code> tags, eg. <code>[code]copied text[/code]</code>, so that the spaces are not removed by the forum software.
@@ -213,7 +212,7 @@ h3{
     <tbody>
         <tr><td>Enable User Changes<td>If this is checked, BOSS will use the metadata you supplied when sorting the current plugin. Otherwise, your metadata will be ignored.
         <tr><td>Priority<td>This is a very rough control for determining how far up or down the load order a plugin should go. Plugins with equal priority will be compared as normal by the sorting algorithm, but plugins with a larger priority value will load later in the load order than plugins with a smaller priority value, unless the former depends on the latter or the latter is explicity told to load after the former. Plugins have a default priority of <code>0</code>.
-        <tr><td>Requirements<td>This is a list of files that are required by the current plugin for it to function correctly. BOSS will refuse to sort your load order if any of the listed files are missing, and will instead display an error message detailing the problem.
+        <tr><td>Requirements<td>This is a list of files that are required by the current plugin for it to function correctly. BOSS will display an error message if any of the listed files are missing.
         <p>Any file, not just plugins, can be listed here, and each file has three sub-fields:
         <ul>
             <li>The <var>filename</var> is the path, relative to the game's Data folder, of the file to be checked for. This sub-field is required.
@@ -221,7 +220,7 @@ h3{
             <li>The <var>condition</var> is the optional condition string that is used to determine if the file should be checked for. If left blank, the file will always be checked for. Condition strings are a relatively advanced part of BOSS's functionality, and their syntax is covered in the <a href="BOSS%20Metadata%20File%20Syntax.html">Metadata File Syntax</a> documentation.
         </ul>
         <p>Note that listing a plugin's masters as requirements is pointless, as BOSS already checks them.
-        <tr><td>Incompatibilities<td>This is a list of files that are incompatible with the plugin. BOSS will refuse to sort your load order if any of the listed files are found, and will instead display an error message detailing the problem.
+        <tr><td>Incompatibilities<td>This is a list of files that are incompatible with the plugin. BOSS will display an error message if any of the listed files are found.
         <p>Any file, not just plugins, can be listed here, and each file has the same three sub-fields as for the requirements field.
         <tr><td>Load After<td>This is a list of plugins which, if present, the current plugin must load after, but which are not required. This field can be used for resolving specific compatibility issues.
         <tr><td>Messages<td>A list of messages that are to be displayed for the plugin in BOSS's report. These have no bearing on a plugin's position in the load order.
@@ -230,9 +229,9 @@ h3{
             <li>The <var>type</var> is fairly self-explanatory, and is used to provide messages of varying severity with appropriate emphasis in BOSS's report.
             <li>The <var>content</var> is the actual message text.
             <li>The <var>condition</var> is, like for the corresponding file sub-field, used to determine if the message should be displayed. If left blank, the message is displayed.
-            <li>The <var>language</var> is the language BOSS runs in that the message will be displayed for. For example, if the message language is set to <code>English</code> and BOSS is running in German, then the message will not be displayed. If left unspecified, the message will be shown no matter what language BOSS is running in.
+            <li>The <var>language</var> is the language BOSS runs in that the message will be displayed for. For example, if the message language is set to <q>English</q> and BOSS is running in German, then the message will not be displayed. If left unspecified, the message will be shown no matter what language BOSS is running in.
         </ul>
-        <p>If a message's condition determines that the message should be displayed, but the language is specified and doesn't match the language BOSS is running in, then the message will not be displayed. However, if the condition determines the message should not be displayed and the language matches the language BOSS is running in, the message will still not be displayed.
+        <p>If a message's condition determines that it should not be displayed, then it will not be displayed, no matter the language. However, if a message's condition determines that it should be displayed, but the language is specified and doesn't match the language BOSS is running in, the message will not be displayed.
         <tr><td>Bash Tags<td>A list of Bash Tags. These are used by the <abbr title="Wrye Bash, Wrye Flash or Wrye Flash NV">Wrye *ash</abbr> utilities when generating a Bashed Patch. BOSS's metadata includes Bash Tag addition and removal suggestions, and any Bash Tags that came with the plugin are also displayed.
         <p>As BOSS can suggest Bash Tags be added or removed, it is possible for the same Tag to appear twice, being suggested for addition and removal. In such cases, removal overrides addition.
         <p>Each Bash Tag has three sub-fields:
@@ -257,8 +256,8 @@ h3{
     <tbody>
         <tr><td id="settingsDefaultGame">Default Game<td>If set to something other than <q>Autodetect</q>, this overrides game autodetection. If the game specified is not detected, BOSS falls back to autodetection.
         <tr><td>Language<td>Controls the language BOSS uses in its interfaces. Debug messages are always displayed in English, and any plugin messages that do not have translations in the selected language will be displayed in English instead.
-        <tr><td>Debug Verbosity<td>Controls the verbosity of the debug output, which is written to <q>BOSSDebugLog.txt</q>.
-        <tr><td id="settingsUpdateMasterlist">Update masterlist before sorting<td>If checked, BOSS will update its masterlist, should an update be available, before sorting mods.
+        <tr><td>Debug Verbosity<td>Controls the verbosity of the debug output, which is written to <code>%LOCALAPPDATA%\BOSS\BOSSDebugLog.txt</code>.
+        <tr><td id="settingsUpdateMasterlist">Update masterlist before sorting<td>If checked, BOSS will update its masterlist, should an update be available, before sorting plugins.
         <tr><td id="settingsViewReports">View reports externally in default browser.<td>If checked, BOSS will display its report using your default web browser instead of opening its own window.
         <tr><td id="settingsGenerateGraphImage">Generate and display plugin graph images.<td>If checked, BOSS will generate an SVG image of the plugin interaction graph and display it in its report. Image generation can take a long time, so this is disabled by default.
 </table>
@@ -305,7 +304,7 @@ h3{
 
 <p>General discussion and the submission of questions, suggestions and metadata takes place in BOSS's official threads for <a href="http://forums.bethsoft.com/topic/1434397-rel-boss-for-oblivion/">Oblivion</a>, <a href="http://forums.bethsoft.com/topic/1472899-relz-boss-for-skyrim/">Skyrim</a>, <a href="http://forums.bethsoft.com/topic/1282711-relz-boss-for-fo3-thread-4/">Fallout 3</a> and <a href="http://forums.bethsoft.com/topic/1313081-rel-boss-for-fallout-new-vegas/">Fallout: New Vegas</a>.
 
-<p>Notifications of dirty plugins are very welcome, but for such information to be useful we require:
+<p>Information on dirty plugins is very welcome, but for such information to be useful we require:
 <ul>
     <li>The plugin filename.
     <li>The number of records removed (the ITM count) as shown by TES4Edit/TES5Edit/FO3Edit/FNVEdit or <abbr title="Wrye Bash, Wrye Flash or Wrye Flash NV">Wrye *ash</abbr> (not the number of records processed).
@@ -317,7 +316,7 @@ h3{
 <h2 id="translate">Translating BOSS</h2>
 <p>BOSS supports translation into other languages, with the following limitations:
 <ul>
-    <li>Debug log messages and error messages generated by the third-party libraries BOSS uses cannot be translated.
+    <li>Debug log messages and error messages generated by the libraries BOSS uses cannot be translated.
     <li>Masterlist messages can be translated, but translations must be submitted to the masterlist maintainers for addition.
     <li>The languages BOSS supports is hardcoded, so BOSS must be updated to include new translations.
 </ul>
@@ -361,24 +360,15 @@ To translate the BOSS application:
 <p>In addition to the above data-related support, the following are credited with application-related support:
 <ul>
     <li><a href="http://www.darkcreations.org">Dark Creations</a>: For hosting BOSS's Bugzilla bug tracker that was used by v2 to collect anonymous unrecognised plugin reports. Particular thanks to its administrators Andalaybay and Xae for offering to host the tracker and helping to work around Firefox and Bugzilla bugs encountered.
-    <li>Surazal: For extensive testing of v1.6+ prior to release and for providing the inspiration for many features through his BOSS Masterlist Manager macro for Microsoft Word.
-    <li>myk002: For extensive testing and code contributions during development of v1.6+.
+    <li>Surazal: For extensive testing of v1.6&ndash;2.1 prior to release and for providing the inspiration for many features through his BOSS Masterlist Manager macro for Microsoft Word.
+    <li>myk002: For extensive testing and code contributions during development of v1.6&ndash;2.1.
     <li>Hickory: For extensive testing and for providing the icon used by the executables.
     <li>Scharesoft: For the installer/uninstaller German translation.
     <li>Ysne58: For testing and keeping the thread links on BOSS's Nexus site pages up to date.
-    <li>For testing and feedback prior to releases:
-    <ul>
-        <li>The Beta Testing &amp; Analysis Guild at <a href="http://tesalliance.org/forums/">TES Alliance</a>
-        <li>AndalayBay
-        <li>dj2005
-        <li>Dubiousness
-        <li>saebel
-        <li>Telyn
-        <li>wiz0floyd
-        <li>Zanderat
+    <li>For testing and feedback prior to releases: The Beta Testing &amp; Analysis Guild at <a href="http://tesalliance.org/forums/">TES Alliance</a>, AndalayBay, dAb, dj2005, Dubiousness, hyno111, Invader, matter2003, NightStar, olminator, saebel, Telyn, wiz0floyd, wormheart, Zanderat and zone22.
     </ul>
 </ul>
-<p>BOSS is written in C/C++ and makes use of <a href="http://www.graphviz.org/">GraphVis</a> and the <a href="http://www.davekoelle.com/alphanum.html">Alphanum</a>, <a href="http://www.boost.org/">Boost</a>, <a href="http://github.com/WrinklyNinja/libespm">libespm</a>, <a href="http://github.com/libgit2/libgit2">libgit2</a>, <a href="http://github.com/WrinklyNinja/libloadorder">libloadorder</a>, <a href="http://code.google.com/p/pugixml/">PugiXML</a>, <a href="http://www.wxwidgets.org/">wxWidgets</a> and <a href="http://code.google.com/p/yaml-cpp/">yaml-cpp</a> libraries. BOSS's reports are written in XHTML/CSS/Javascript and make use of <a href="http://github.com/inexorabletash/polyfill">Polyfill.js</a> and <a href="https://code.google.com/p/svgweb/">svgweb</a> to provide Internet Explorer 8 compatibility. Copyright license information for all these may be found <a href="licenses/Licenses.txt">here</a>.
+<p>BOSS is written in C++ and makes use of <a href="http://www.graphviz.org/">GraphVis</a> and the <a href="http://www.davekoelle.com/alphanum.html">Alphanum</a>, <a href="http://www.boost.org/">Boost</a>, <a href="http://github.com/WrinklyNinja/libespm">libespm</a>, <a href="http://github.com/libgit2/libgit2">libgit2</a>, <a href="http://github.com/WrinklyNinja/libloadorder">libloadorder</a>, <a href="http://code.google.com/p/pugixml/">PugiXML</a>, <a href="http://www.wxwidgets.org/">wxWidgets</a> and <a href="http://code.google.com/p/yaml-cpp/">yaml-cpp</a> libraries. BOSS's reports are written in XHTML/CSS/Javascript and make use of <a href="http://github.com/inexorabletash/polyfill">Polyfill.js</a> and <a href="https://code.google.com/p/svgweb/">svgweb</a> to provide Internet Explorer 8 compatibility. Copyright license information for all these may be found <a href="licenses/Licenses.txt">here</a>.
 
 
 <h2 id="project">Project Members</h2>
@@ -409,8 +399,8 @@ To translate the BOSS application:
         <tr><th rowspan="2">Member<th rowspan="2">Admin<th rowspan="2">Code<th colspan="4">Contributes To Masterlist
         <tr><th>Oblivion<th>Skyrim<th>Fallout 3<th>Fallout: New Vegas
     <tbody class="teamTableBody">
-        <tr class="inactive"><td>PacificMorrowind<td>&#x2713;<td>&#x2713;<td>&#x2713;<td><td>&#x2713;<td>
-        <tr class="inactive"><td>Random007<td>&#x2713;<td>&#x2713;<td>&#x2713;<td><td><td>
+        <tr><td>PacificMorrowind<td>&#x2713;<td>&#x2713;<td>&#x2713;<td><td>&#x2713;<td>
+        <tr><td>Random007<td>&#x2713;<td>&#x2713;<td>&#x2713;<td><td><td>
         <tr><td>scrapperrm<td><td><td><td>&#x2713;<td><td>
 </table>
 
@@ -444,13 +434,13 @@ To translate the BOSS application:
         <tr><td>Zoe.Alice.Kahala<td><td><td><td>&#x2713;<td><td>
 </table>
 
-<p>Members with greyed-out rows are currently inactive, with no contributions in the two months before release of this version of BOSS. Unless otherwise noted, project members can be contacted on the <a href="http://forums.bethsoft.com/index.php">Bethesda Softworks Forums</a> or on <a href="http://forums.nexusmods.com/">The Nexus Forums</a> via the private messaging system.
+<p>Unless otherwise noted, project members can be contacted on the <a href="http://forums.bethsoft.com/index.php">Bethesda Softworks Forums</a> or on <a href="http://forums.nexusmods.com/">The Nexus Forums</a> via the private messaging system.
 
 <h2 id="license">License</h2>
 <p>BOSS is distributed under the <a href="http://www.gnu.org/licenses/gpl.html">GNU General Public License v3.0</a>, aside from the documentation, which is distributed under the <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License v1.3</a>. The full texts of the licenses are included with BOSS in the accompanying <a href="licenses/GNU%20GPL%20v3.txt">GNU GPL v3.txt</a> and <a href="licenses/GNU%20FDL%20v1.3.txt">GNU FDL v1.3.txt</a> files.
 
 <p>While the GPL license allows anyone to make derivative works of BOSS, the BOSS Development Team encourages those thinking of doing so to first discuss their reasoning for such an endevour with the Team. It may be that what the derivative work would do differently from BOSS itself is already planned for a future version of BOSS or would be happily integrated into BOSS by the Team, thus avoiding any extra effort by others.
-<p>The BOSS Team also appeals to the community to avoid the distribution and development of alternative masterlists, as this would only hamper the community effort to create one universally-optimised load order for all plugins available for download. Any issues with a masterlist are best brought to the attention of the BOSS Team so that we may remedy them ourselves.
+<p>The BOSS Team also appeals to the community to avoid the distribution and development of alternative masterlists, as this would only hamper the community effort to create one set of stores for load order information. Any issues with a masterlist are best brought to the attention of the BOSS Team so that we may remedy them ourselves.
 <p>GNU Free Documentation License Version 1.3 Notice:
 <blockquote>Copyright (C)  2012-2013  WrinklyNinja<br />
 Permission is granted to copy, distribute and/or modify this document
@@ -536,10 +526,11 @@ There are three key pieces of information that are used to accurately describe a
         <tr><td>Update masterlist only<td>BOSS can be run to update a game's masterlist without then sorting any plugins, even if that game is not installed.<td>BOSS can only update a masterlist as part of the sorting process, and cannot run for games that are not installed. This is because BOSS's updating process no longer inserts version information into the masterlists, and so the exact same masterlists that BOSS uses can now be downloaded from BOSS's online repositories using a web browser, removing the need for BOSS to include this functionality.
         <tr><td>Undo changes<td>It is possible to run BOSS to undo its changes back one run or two.<td>It is no longer possible to undo load order changes through BOSS. Instead a confirmation dialog is provided to allow users to make sure that BOSS will set a load order they want, and to give them a last-minute opportunity to backup their existing load order, perhaps using a mod manager of their choice.
         <tr><td>Optionally suppress BOSS Log / Report display<td>BOSS allows the user to stop the BOSS Log being automatically displayed after sorting.<td>The BOSS Report is always displayed after sorting, as it is more important for the user to verify that the automated sorting process completed successfully and correctly.
-        <tr><td>Nehrim support<td>BOSS provides first-class support for  Nehrim alongside Oblivion, Skyrim, Fallout 3 and Fallout: New Vegas<td>BOSS supports Nehrim as an Oblivion-derived game instance, and the Nehrim and Oblivion masterlists have been merged. This is due to v3's generalised support for Total Conversion mods across the games it supports. In practice Nehrim support appears the same.
+        <tr><td>Nehrim support<td>BOSS provides first-class support for  Nehrim alongside Oblivion, Skyrim, Fallout 3 and Fallout: New Vegas.<td>BOSS supports Nehrim as an Oblivion-derived game instance, and the Nehrim and Oblivion masterlists have been merged. This is due to v3's generalised support for Total Conversion mods across the games it supports. In practice Nehrim support appears the same.
         <tr><td>User rules<td>BOSS allows the user to customise its output by providing user rules for specifying relative plugin positions and for adding to or replacing the messages attached to mods.<td>BOSS allows the user to add to any metadata provided by the masterlist.
         <ul>
-            <li>It is no longer possible to specify a plugin A to load before another plugin B, though an identical effect may be produced by loading B after A.
+            <li>It is no longer possible to precisely set a plugin's load order position. BOSS can be told that a plugin A has to load after another plugin B, but where exactly after B that plugin A is positioned is decided by the sorting algorithm.
+            <li>It is no longer possible to specify a plugin A to load before another plugin B, though a similar effect may be produced by loading B after A.
             <li>It is no longer possible to sort or insert into groups, as groups no longer exist.
             <li>It is no longer possible to replace messages provided by the masterlist.
             <li>Knowledge of message syntax is no longer required to add new messages.
