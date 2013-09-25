@@ -533,7 +533,7 @@ msgstr "Несовместимости"
 
 #: gui/editor.cpp:143
 msgid "Load After"
-msgstr "после"
+msgstr "Грузить после"
 
 #: gui/editor.cpp:144
 msgid "Messages"
