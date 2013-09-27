@@ -2,17 +2,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BOSS v3.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-21 17:19+0100\n"
-"PO-Revision-Date: 2013-09-21 17:19+0100\n"
+"POT-Creation-Date: 2013-09-27 17:57+0100\n"
+"PO-Revision-Date: 2013-09-27 17:59+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: Spanish\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
 
 #: backend/graph.cpp:46
-msgid "Back edge detected between plugins \"%1%\" and \"%2%\"."
+msgid "Cyclic interaction detected between plugins \"%1%\" and \"%2%\"."
 msgstr ""
 
 #: backend/game.cpp:96
@@ -23,13 +24,11 @@ msgstr ""
 msgid "Game path could not be detected."
 msgstr ""
 
-#: backend/game.cpp:248
-#: backend/game.cpp:310
+#: backend/game.cpp:248 backend/game.cpp:307
 msgid "libloadorder failed to create a game handle. Details:"
 msgstr ""
 
-#: backend/game.cpp:260
-#: backend/game.cpp:322
+#: backend/game.cpp:260 backend/game.cpp:319
 msgid "libloadorder failed to initialise game master file support. Details:"
 msgstr ""
 
@@ -37,12 +36,20 @@ msgstr ""
 msgid "libloadorder failed to get the active plugins list. Details:"
 msgstr ""
 
-#: backend/game.cpp:344
+#: backend/game.cpp:341
 msgid "libloadorder failed to set the load order. Details:"
 msgstr ""
 
-#: backend/game.cpp:363
+#: backend/game.cpp:360
 msgid "Could not create BOSS folder for game. Details:"
+msgstr ""
+
+#: backend/network.cpp:75
+msgid "Git operation failed. Error: %1%"
+msgstr ""
+
+#: backend/network.cpp:335
+msgid "Masterlist revision"
 msgstr ""
 
 #: backend/helpers.cpp:140
@@ -71,14 +78,6 @@ msgstr ""
 
 #: backend/metadata.cpp:118
 msgid "Failed to parse condition \"%1%\"."
-msgstr ""
-
-#: backend/network.cpp:75
-msgid "Git operation failed. Error: %1%"
-msgstr ""
-
-#: backend/network.cpp:314
-msgid "Masterlist revision"
 msgstr ""
 
 #: gui/settings.cpp:40
@@ -157,8 +156,7 @@ msgstr ""
 msgid "Default Game:"
 msgstr "Juego por defecto:"
 
-#: gui/settings.cpp:101
-#: gui/editor.cpp:962
+#: gui/settings.cpp:101 gui/editor.cpp:962
 msgid "Language:"
 msgstr "Idioma:"
 
@@ -178,47 +176,23 @@ msgstr "La salida se registra en el archivo BOSSDebugLog.txt"
 msgid "BOSS: Add Game"
 msgstr ""
 
-#: gui/settings.cpp:286
-#: gui/settings.cpp:357
+#: gui/settings.cpp:286 gui/settings.cpp:357
 msgid "Error: Name is required. Row will not be added."
 msgstr ""
 
-#: gui/settings.cpp:287
-#: gui/settings.cpp:295
-#: gui/settings.cpp:307
-#: gui/settings.cpp:315
-#: gui/settings.cpp:358
-#: gui/settings.cpp:366
-#: gui/main.cpp:164
-#: gui/main.cpp:181
-#: gui/main.cpp:194
-#: gui/main.cpp:273
-#: gui/main.cpp:283
-#: gui/main.cpp:296
-#: gui/main.cpp:304
-#: gui/main.cpp:335
-#: gui/main.cpp:352
-#: gui/main.cpp:813
-#: gui/main.cpp:866
-#: gui/main.cpp:886
-#: gui/main.cpp:971
-#: gui/main.cpp:987
-#: gui/main.cpp:1002
-#: gui/main.cpp:1109
-#: gui/main.cpp:1154
-#: gui/editor.cpp:393
-#: gui/editor.cpp:425
-#: gui/editor.cpp:446
-#: gui/editor.cpp:485
-#: gui/editor.cpp:511
-#: gui/editor.cpp:541
-#: gui/editor.cpp:1052
-#: gui/editor.cpp:1067
+#: gui/settings.cpp:287 gui/settings.cpp:295 gui/settings.cpp:307
+#: gui/settings.cpp:315 gui/settings.cpp:358 gui/settings.cpp:366
+#: gui/editor.cpp:393 gui/editor.cpp:425 gui/editor.cpp:446 gui/editor.cpp:485
+#: gui/editor.cpp:511 gui/editor.cpp:541 gui/editor.cpp:1052
+#: gui/editor.cpp:1067 gui/main.cpp:164 gui/main.cpp:181 gui/main.cpp:194
+#: gui/main.cpp:273 gui/main.cpp:283 gui/main.cpp:296 gui/main.cpp:304
+#: gui/main.cpp:335 gui/main.cpp:352 gui/main.cpp:813 gui/main.cpp:866
+#: gui/main.cpp:886 gui/main.cpp:971 gui/main.cpp:987 gui/main.cpp:1002
+#: gui/main.cpp:1109 gui/main.cpp:1154
 msgid "BOSS: Error"
 msgstr "Error de BOSS:"
 
-#: gui/settings.cpp:294
-#: gui/settings.cpp:365
+#: gui/settings.cpp:294 gui/settings.cpp:365
 msgid "Error: Folder is required. Row will not be added."
 msgstr ""
 
@@ -227,20 +201,20 @@ msgid "Error: A game with this name is already defined. Row will not be added."
 msgstr ""
 
 #: gui/settings.cpp:314
-msgid "Error: A game with this folder name is already defined. Row will not be added."
+msgid ""
+"Error: A game with this folder name is already defined. Row will not be "
+"added."
 msgstr ""
 
 #: gui/settings.cpp:336
 msgid "BOSS: Edit Game"
 msgstr ""
 
-#: gui/settings.cpp:422
-#: gui/editor.cpp:1097
+#: gui/settings.cpp:422 gui/editor.cpp:1097
 msgid "Name:"
 msgstr ""
 
-#: gui/settings.cpp:425
-#: gui/editor.cpp:947
+#: gui/settings.cpp:425 gui/editor.cpp:947
 msgid "Type:"
 msgstr ""
 
@@ -264,216 +238,6 @@ msgstr ""
 msgid "Install Path Registry Key:"
 msgstr ""
 
-#: gui/ids.cpp:31
-msgid "None Specified"
-msgstr ""
-
-#: gui/main.cpp:118
-msgid "Masterlist update failed. Details: %1%"
-msgstr "Falló actualización del masterlist. Detalles: %1%"
-
-#: gui/main.cpp:134
-msgid "Masterlist parsing failed. Details: %1%"
-msgstr ""
-
-#: gui/main.cpp:142
-msgid "Unknown"
-msgstr ""
-
-#: gui/main.cpp:144
-#, fuzzy
-msgid "No masterlist"
-msgstr "Actualizar Masterlist"
-
-#: gui/main.cpp:163
-msgid "Error: BOSS is already running. This instance will now quit."
-msgstr "Error: La interfaz gráfica de usuario de BOSS ya se está ejecutando. Esta instancia ahora se cerrará."
-
-#: gui/main.cpp:180
-msgid "Error: Could not create local app data BOSS folder."
-msgstr ""
-
-#: gui/main.cpp:193
-msgid "Error: Settings parsing failed. %1%"
-msgstr ""
-
-#: gui/main.cpp:272
-msgid "Error: Could not apply translation."
-msgstr "Error: No se pudo aplicar la traducción."
-
-#: gui/main.cpp:282
-msgid "Error: The selected language is not available on this system."
-msgstr ""
-
-#: gui/main.cpp:295
-#: gui/main.cpp:351
-#: gui/main.cpp:970
-msgid "Error: Game-specific settings could not be initialised. %1%"
-msgstr ""
-
-#: gui/main.cpp:303
-msgid "Error: Games' settings parsing failed. %1%"
-msgstr ""
-
-#: gui/main.cpp:334
-msgid "Error: None of the supported games were detected."
-msgstr ""
-
-#: gui/main.cpp:379
-msgid "Edit Metadata"
-msgstr ""
-
-#: gui/main.cpp:380
-msgid "Sort Plugins"
-msgstr "Ordenar Plugins"
-
-#: gui/main.cpp:381
-msgid "View Last Report"
-msgstr ""
-
-#: gui/main.cpp:385
-msgid "&View Last Report"
-msgstr ""
-
-#: gui/main.cpp:386
-msgid "View &Debug Log"
-msgstr ""
-
-#: gui/main.cpp:387
-msgid "&Sort Plugins"
-msgstr "&Ordenar Plugins"
-
-#: gui/main.cpp:390
-msgid "&File"
-msgstr "&Archivo"
-
-#: gui/main.cpp:392
-msgid "&Metadata..."
-msgstr ""
-
-#: gui/main.cpp:393
-msgid "&Settings..."
-msgstr "&Configuración..."
-
-#: gui/main.cpp:394
-msgid "&Edit"
-msgstr "&Editar"
-
-#: gui/main.cpp:406
-msgid "&Game"
-msgstr ""
-
-#: gui/main.cpp:411
-msgid "&Help"
-msgstr "&Ayuda"
-
-#: gui/main.cpp:489
-#: gui/main.cpp:844
-msgid "BOSS: Working..."
-msgstr "BOSS: Trabajando..."
-
-#: gui/main.cpp:489
-#: gui/main.cpp:844
-msgid "BOSS working..."
-msgstr "BOSS trabajando..."
-
-#: gui/main.cpp:540
-msgid "Userlist parsing failed. Details: %1%"
-msgstr ""
-
-#: gui/main.cpp:577
-msgid "A global message contains a condition that could not be evaluated. Details: %1%"
-msgstr ""
-
-#: gui/main.cpp:608
-msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
-msgstr ""
-
-#: gui/main.cpp:620
-msgid "\"%1%\" is incompatible with \"%2%\" and is present."
-msgstr ""
-
-#: gui/main.cpp:623
-msgid "\"%1%\" is required by \"%2%\" but is missing."
-msgstr ""
-
-#: gui/main.cpp:663
-msgid "Failed to generate graph image. Details: %1%"
-msgstr ""
-
-#: gui/main.cpp:680
-msgid "BOSS: Calculated Load Order"
-msgstr ""
-
-#: gui/main.cpp:758
-msgid "Failed to set the load order. Details: %1%"
-msgstr ""
-
-#: gui/main.cpp:762
-msgid "The load order displayed in the Details tab was not applied as sorting was canceled."
-msgstr ""
-
-#: gui/main.cpp:771
-msgid "Failed to calculate the load order. Details: %1%"
-msgstr ""
-
-#: gui/main.cpp:812
-msgid "Error: %1%"
-msgstr "Error: %1%"
-
-#: gui/main.cpp:832
-#: gui/main.cpp:947
-msgid "BOSS: Report Viewer"
-msgstr ""
-
-#: gui/main.cpp:865
-msgid "Error: Masterlist parsing failed. %1%"
-msgstr ""
-
-#: gui/main.cpp:885
-msgid "Error: Userlist parsing failed. %1%"
-msgstr ""
-
-#: gui/main.cpp:932
-msgid "BOSS: Metadata Editor"
-msgstr ""
-
-#: gui/main.cpp:955
-msgid "BOSS: Settings"
-msgstr "BOSS: Configuracion"
-
-#: gui/main.cpp:986
-#: gui/main.cpp:1001
-msgid "Error: \"%1%\" cannot be found."
-msgstr "Error: \"%1%\" no se puede encontrar."
-
-#: gui/main.cpp:1013
-msgid "A load order optimisation tool for games using the Elder Scrolls Plugin/Master system."
-msgstr ""
-
-#: gui/main.cpp:1037
-msgid "Up"
-msgstr ""
-
-#: gui/main.cpp:1038
-msgid "Down"
-msgstr ""
-
-#: gui/main.cpp:1041
-msgid "Load Order"
-msgstr ""
-
-#: gui/main.cpp:1063
-msgid ""
-"Please submit any alterations made for reasons other than user preference \n"
-"to the BOSS team so that they may include the changes in the masterlist."
-msgstr ""
-
-#: gui/main.cpp:1108
-#: gui/main.cpp:1153
-msgid "Error: Cannot load \"%1%\" before \"%2%\"."
-msgstr "Error: Ordenar %1% antes de %2%"
-
 #: gui/editor.cpp:37
 msgid "Note"
 msgstr "Nota"
@@ -490,7 +254,7 @@ msgstr "Errores"
 msgid "Add"
 msgstr ""
 
-#: gui/editor.cpp:44
+#: gui/editor.cpp:44 backend/generators.h:387
 msgid "Remove"
 msgstr ""
 
@@ -502,16 +266,12 @@ msgstr ""
 msgid "Content"
 msgstr ""
 
-#: gui/editor.cpp:50
-#: gui/editor.cpp:152
-#: gui/editor.cpp:156
-#: gui/editor.cpp:160
+#: gui/editor.cpp:50 gui/editor.cpp:152 gui/editor.cpp:156 gui/editor.cpp:160
 #: gui/editor.cpp:164
 msgid "Condition"
 msgstr ""
 
-#: gui/editor.cpp:51
-#: gui/editor.cpp:924
+#: gui/editor.cpp:51 gui/editor.cpp:924
 msgid "Language"
 msgstr "Idioma"
 
@@ -519,18 +279,15 @@ msgstr "Idioma"
 msgid "Enable User Changes"
 msgstr ""
 
-#: gui/editor.cpp:126
-#: gui/editor.cpp:350
+#: gui/editor.cpp:126 gui/editor.cpp:350
 msgid "Add File"
 msgstr ""
 
-#: gui/editor.cpp:127
-#: gui/editor.cpp:351
+#: gui/editor.cpp:127 gui/editor.cpp:351
 msgid "Edit File"
 msgstr ""
 
-#: gui/editor.cpp:128
-#: gui/editor.cpp:352
+#: gui/editor.cpp:128 gui/editor.cpp:352
 msgid "Remove File"
 msgstr ""
 
@@ -570,15 +327,11 @@ msgstr ""
 msgid "Plugins"
 msgstr "Plugins"
 
-#: gui/editor.cpp:150
-#: gui/editor.cpp:154
-#: gui/editor.cpp:158
+#: gui/editor.cpp:150 gui/editor.cpp:154 gui/editor.cpp:158
 msgid "Filename"
 msgstr ""
 
-#: gui/editor.cpp:151
-#: gui/editor.cpp:155
-#: gui/editor.cpp:159
+#: gui/editor.cpp:151 gui/editor.cpp:155 gui/editor.cpp:159
 msgid "Display Name"
 msgstr ""
 
@@ -686,9 +439,7 @@ msgstr ""
 msgid "Displayed Name:"
 msgstr ""
 
-#: gui/editor.cpp:872
-#: gui/editor.cpp:950
-#: gui/editor.cpp:1100
+#: gui/editor.cpp:872 gui/editor.cpp:950 gui/editor.cpp:1100
 msgid "Condition:"
 msgstr ""
 
@@ -712,8 +463,7 @@ msgstr ""
 msgid "Content:"
 msgstr ""
 
-#: gui/editor.cpp:1051
-#: gui/editor.cpp:1066
+#: gui/editor.cpp:1051 gui/editor.cpp:1066
 msgid "Error: No content row selected."
 msgstr ""
 
@@ -721,21 +471,214 @@ msgstr ""
 msgid "Add/Remove:"
 msgstr ""
 
-#: backend/parsers.h:423
-#: backend/parsers.h:506
-msgid "Invalid file path:"
+#: gui/main.cpp:118
+msgid "Masterlist update failed. Details: %1%"
+msgstr "Falló actualización del masterlist. Detalles: %1%"
+
+#: gui/main.cpp:134
+msgid "Masterlist parsing failed. Details: %1%"
 msgstr ""
 
-#: backend/parsers.h:471
-msgid "Invalid folder path:"
+#: gui/main.cpp:142
+msgid "Unknown"
 msgstr ""
 
-#: backend/parsers.h:488
-msgid "Invalid regex string:"
+#: gui/main.cpp:144
+msgid "No masterlist"
 msgstr ""
 
-#: backend/parsers.h:583
-msgid "Expected \"%1%\" at \"%2%\"."
+#: gui/main.cpp:163
+msgid "Error: BOSS is already running. This instance will now quit."
+msgstr ""
+"Error: La interfaz gráfica de usuario de BOSS ya se está ejecutando. Esta "
+"instancia ahora se cerrará."
+
+#: gui/main.cpp:180
+msgid "Error: Could not create local app data BOSS folder."
+msgstr ""
+
+#: gui/main.cpp:193
+msgid "Error: Settings parsing failed. %1%"
+msgstr ""
+
+#: gui/main.cpp:272
+msgid "Error: Could not apply translation."
+msgstr "Error: No se pudo aplicar la traducción."
+
+#: gui/main.cpp:282
+msgid "Error: The selected language is not available on this system."
+msgstr ""
+
+#: gui/main.cpp:295 gui/main.cpp:351 gui/main.cpp:970
+msgid "Error: Game-specific settings could not be initialised. %1%"
+msgstr ""
+
+#: gui/main.cpp:303
+msgid "Error: Games' settings parsing failed. %1%"
+msgstr ""
+
+#: gui/main.cpp:334
+msgid "Error: None of the supported games were detected."
+msgstr ""
+
+#: gui/main.cpp:379
+msgid "Edit Metadata"
+msgstr ""
+
+#: gui/main.cpp:380
+msgid "Sort Plugins"
+msgstr "Ordenar Plugins"
+
+#: gui/main.cpp:381
+msgid "View Last Report"
+msgstr ""
+
+#: gui/main.cpp:385
+msgid "&View Last Report"
+msgstr ""
+
+#: gui/main.cpp:386
+msgid "View &Debug Log"
+msgstr ""
+
+#: gui/main.cpp:387
+msgid "&Sort Plugins"
+msgstr "&Ordenar Plugins"
+
+#: gui/main.cpp:390
+msgid "&File"
+msgstr "&Archivo"
+
+#: gui/main.cpp:392
+msgid "&Metadata..."
+msgstr ""
+
+#: gui/main.cpp:393
+msgid "&Settings..."
+msgstr "&Configuración..."
+
+#: gui/main.cpp:394
+msgid "&Edit"
+msgstr "&Editar"
+
+#: gui/main.cpp:406
+msgid "&Game"
+msgstr ""
+
+#: gui/main.cpp:411
+msgid "&Help"
+msgstr "&Ayuda"
+
+#: gui/main.cpp:489 gui/main.cpp:844
+msgid "BOSS: Working..."
+msgstr "BOSS: Trabajando..."
+
+#: gui/main.cpp:489 gui/main.cpp:844
+msgid "BOSS working..."
+msgstr "BOSS trabajando..."
+
+#: gui/main.cpp:540
+msgid "Userlist parsing failed. Details: %1%"
+msgstr ""
+
+#: gui/main.cpp:577
+msgid ""
+"A global message contains a condition that could not be evaluated. Details: "
+"%1%"
+msgstr ""
+
+#: gui/main.cpp:608
+msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
+msgstr ""
+
+#: gui/main.cpp:620
+msgid "\"%1%\" is incompatible with \"%2%\" and is present."
+msgstr ""
+
+#: gui/main.cpp:623
+msgid "\"%1%\" is required by \"%2%\" but is missing."
+msgstr ""
+
+#: gui/main.cpp:663
+msgid "Failed to generate graph image. Details: %1%"
+msgstr ""
+
+#: gui/main.cpp:680
+msgid "BOSS: Calculated Load Order"
+msgstr ""
+
+#: gui/main.cpp:758
+msgid "Failed to set the load order. Details: %1%"
+msgstr ""
+
+#: gui/main.cpp:762
+msgid ""
+"The load order displayed in the Details tab was not applied as sorting was "
+"canceled."
+msgstr ""
+
+#: gui/main.cpp:771
+msgid "Failed to calculate the load order. Details: %1%"
+msgstr ""
+
+#: gui/main.cpp:812
+msgid "Error: %1%"
+msgstr "Error: %1%"
+
+#: gui/main.cpp:832 gui/main.cpp:947
+msgid "BOSS: Report Viewer"
+msgstr ""
+
+#: gui/main.cpp:865
+msgid "Error: Masterlist parsing failed. %1%"
+msgstr ""
+
+#: gui/main.cpp:885
+msgid "Error: Userlist parsing failed. %1%"
+msgstr ""
+
+#: gui/main.cpp:932
+msgid "BOSS: Metadata Editor"
+msgstr ""
+
+#: gui/main.cpp:955
+msgid "BOSS: Settings"
+msgstr "BOSS: Configuracion"
+
+#: gui/main.cpp:986 gui/main.cpp:1001
+msgid "Error: \"%1%\" cannot be found."
+msgstr "Error: \"%1%\" no se puede encontrar."
+
+#: gui/main.cpp:1013
+msgid ""
+"A load order optimisation tool for games using the Elder Scrolls Plugin/"
+"Master system."
+msgstr ""
+
+#: gui/main.cpp:1037
+msgid "Up"
+msgstr ""
+
+#: gui/main.cpp:1038
+msgid "Down"
+msgstr ""
+
+#: gui/main.cpp:1041
+msgid "Load Order"
+msgstr ""
+
+#: gui/main.cpp:1063
+msgid ""
+"Please submit any alterations made for reasons other than user preference \n"
+"to the BOSS team so that they may include the changes in the masterlist."
+msgstr ""
+
+#: gui/main.cpp:1108 gui/main.cpp:1153
+msgid "Error: Cannot load \"%1%\" before \"%2%\"."
+msgstr "Error: Ordenar %1% antes de %2%"
+
+#: gui/ids.cpp:31
+msgid "None Specified"
 msgstr ""
 
 #: backend/generators.h:80
@@ -754,110 +697,127 @@ msgstr "Adverten:"
 msgid "Error:"
 msgstr "Errores:"
 
-#: backend/generators.h:155
+#: backend/generators.h:159
 msgid "BOSS Report"
 msgstr ""
 
-#: backend/generators.h:187
+#: backend/generators.h:191
 msgid "Summary"
 msgstr "Resumen"
 
-#: backend/generators.h:193
+#: backend/generators.h:197
 msgid "Details"
 msgstr "Detalles"
 
-#: backend/generators.h:200
+#: backend/generators.h:204
 msgid "Graph"
 msgstr ""
 
-#: backend/generators.h:207
+#: backend/generators.h:211
 msgid "Filters"
 msgstr "Filtros"
 
-#: backend/generators.h:264
+#: backend/generators.h:268
 msgid "BOSS Version"
 msgstr "BOSS Version"
 
-#: backend/generators.h:273
+#: backend/generators.h:277
 msgid "Masterlist Version"
 msgstr ""
 
-#: backend/generators.h:282
+#: backend/generators.h:286
 msgid "Masterlist Updating"
 msgstr ""
 
-#: backend/generators.h:286
+#: backend/generators.h:290
 msgid "Enabled"
 msgstr ""
 
-#: backend/generators.h:288
+#: backend/generators.h:292
 msgid "Disabled"
 msgstr ""
 
-#: backend/generators.h:295
+#: backend/generators.h:299
 msgid "No change in details since last run."
 msgstr "Ningún cambio desde la última ejecución."
 
-#: backend/generators.h:305
+#: backend/generators.h:309
 msgid "Total Number of Messages"
 msgstr ""
 
-#: backend/generators.h:314
+#: backend/generators.h:318
 msgid "Number of Warnings"
 msgstr ""
 
-#: backend/generators.h:323
+#: backend/generators.h:327
 msgid "Number of Errors"
 msgstr ""
 
-#: backend/generators.h:364
+#: backend/generators.h:368
 msgid "Version:"
 msgstr "Version:"
 
-#: backend/generators.h:381
+#: backend/generators.h:385
 msgid "Add %1%."
 msgstr ""
 
-#: backend/generators.h:419
+#: backend/generators.h:423
 msgid "The BOSS Report requires Javascript to be enabled in order to function."
-msgstr "El reportar de BOSS requiere que Javascript esté habilitado para funcionar."
+msgstr ""
+"El reportar de BOSS requiere que Javascript esté habilitado para funcionar."
 
-#: backend/generators.h:466
+#: backend/generators.h:470
 msgid "Hide Version Numbers"
 msgstr "Ocultar los números de versión"
 
-#: backend/generators.h:475
+#: backend/generators.h:479
 msgid "Hide CRCs"
 msgstr ""
 
-#: backend/generators.h:483
+#: backend/generators.h:487
 msgid "Hide Notes"
 msgstr "Ocultar Notas"
 
-#: backend/generators.h:491
+#: backend/generators.h:495
 msgid "Hide Bash Tag Suggestions"
 msgstr "Ocultar Sugerencias Bash Tag(s)"
 
-#: backend/generators.h:499
+#: backend/generators.h:503
 msgid "Hide 'Do Not Clean' Messages"
 msgstr "Ocultar mensajes 'No Se Limpia'"
 
-#: backend/generators.h:507
+#: backend/generators.h:511
 msgid "Hide All Plugin Messages"
 msgstr "Ocultar todos los mensajes de los Plugins"
 
-#: backend/generators.h:515
+#: backend/generators.h:519
 msgid "Hide Messageless Plugins"
 msgstr "Ocultar Plugins sin mensajes"
 
-#: backend/generators.h:525
+#: backend/generators.h:529
 msgid "%1% of %2% plugins hidden."
 msgstr "%1% de %2% los plugins ocultos."
 
-#: backend/generators.h:533
+#: backend/generators.h:537
 msgid "%1% of %2% messages hidden."
 msgstr "%1% de %2% los mensajes ocultos."
 
-#: backend/generators.h:575
+#: backend/generators.h:579
 msgid "Could not write BOSS report."
+msgstr ""
+
+#: backend/parsers.h:423 backend/parsers.h:506
+msgid "Invalid file path:"
+msgstr ""
+
+#: backend/parsers.h:471
+msgid "Invalid folder path:"
+msgstr ""
+
+#: backend/parsers.h:488
+msgid "Invalid regex string:"
+msgstr ""
+
+#: backend/parsers.h:583
+msgid "Expected \"%1%\" at \"%2%\"."
 msgstr ""

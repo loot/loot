@@ -42,8 +42,8 @@ namespace boss {
         vertex_t vSource = boost::source(e, g);
         vertex_t vTarget = boost::target(e, g);
 
-        BOOST_LOG_TRIVIAL(error) << "Back edge detected between plugins \"" << g[vSource].Name() << "\" and \"" << g[vTarget].Name() << "\".";
-        throw boss::error(boss::error::sorting_error, (boost::format(lc::translate("Back edge detected between plugins \"%1%\" and \"%2%\".")) % g[vSource].Name() % g[vTarget].Name()).str());
+        BOOST_LOG_TRIVIAL(error) << "Cyclic interaction detected between plugins \"" << g[vSource].Name() << "\" and \"" << g[vTarget].Name() << "\".";
+        throw boss::error(boss::error::sorting_error, (boost::format(lc::translate("Cyclic interaction detected between plugins \"%1%\" and \"%2%\".")) % g[vSource].Name() % g[vTarget].Name()).str());
     }
 
     bool GetVertexByName(const PluginGraph& graph, const std::string& name, vertex_t& vertex) {
