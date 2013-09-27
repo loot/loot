@@ -205,7 +205,7 @@ msgid ""
 "Error: A game with this folder name is already defined. Row will not be "
 "added."
 msgstr ""
-"Ошибка: Игра сэтим именем папки уже определена. Строка не будет добавлена."
+"Ошибка: Игра с этим именем папки уже определена. Строка не будет добавлена."
 
 #: gui/settings.cpp:336
 msgid "BOSS: Edit Game"
@@ -429,7 +429,7 @@ msgid ""
 "A load order optimisation tool for games using the Elder Scrolls Plugin/"
 "Master system."
 msgstr ""
-"Инструмент для оптимизации порядка загрузки для игр, использующих систему "
+"Инструмент для оптимизации порядка загрузки, для игр, использующих систему "
 "Плагин/Мастер Elder Scrolls."
 
 #: gui/main.cpp:1037
@@ -617,7 +617,7 @@ msgstr "BOSS: Добавить сообщение"
 
 #: gui/editor.cpp:424
 msgid "Error: No content specified. Row will not be added."
-msgstr "Ошибка:  Не определенного содержимого. Строка не будет добавлена."
+msgstr "Ошибка:  Не соответствующего содержимого. Строка не будет добавлена."
 
 #: gui/editor.cpp:435
 msgid "BOSS: Add Tag"
@@ -625,7 +625,7 @@ msgstr "BOSS: Добавить тег"
 
 #: gui/editor.cpp:445
 msgid "Error: No Bash Tag specified. Row will not be added."
-msgstr "Ошибка: Нет определенного Bash-тега. Строка не будет добавлена"
+msgstr "Ошибка: Нет соответствующего Bash-тега. Строка не будет добавлена"
 
 #: gui/editor.cpp:462
 msgid "BOSS: Edit File/Plugin"
@@ -649,7 +649,7 @@ msgstr "BOSS: Править тег"
 
 #: gui/editor.cpp:540
 msgid "Error: No Bash Tag specified. Row will not be edited."
-msgstr "Ошибка: Нет определенного Bash-тега. Строка не будет добавлена"
+msgstr "Ошибка: Нет соответствующего Bash-тега. Строка не будет добавлена"
 
 #: gui/editor.cpp:866
 msgid "Filename:"
@@ -745,7 +745,7 @@ msgstr "Фильтры"
 
 #: backend/generators.h:264
 msgid "BOSS Version"
-msgstr "Версия BOSS "
+msgstr "Версия BOSS"
 
 #: backend/generators.h:273
 msgid "Masterlist Version"
