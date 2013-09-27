@@ -26,7 +26,7 @@ import shutil
 import zipfile
 
 temp_path = os.path.join('..', 'build', 'archive.tmp')
-archive_name = 'archive.zip'
+archive_name = 'BOSS Archive.zip'
 
 # Set archive name if alternative is given.
 if (len(sys.argv) > 1):

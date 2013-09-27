@@ -216,18 +216,6 @@ FunctionEnd
 
 	Function onGUIInit
 		; First check to see if BOSS is already installed via installer, and launch the existing uninstaller if so.
-		IfFileExists "$COMMONFILES\BOSS\uninstall.exe" 0 +8
-			MessageBox MB_OKCANCEL|MB_ICONQUESTION "$(Text_MessageBox)" IDOK oldCont IDCANCEL oldCancel
-			oldCancel:
-				Quit
-			oldCont:
-				ExecWait '$COMMONFILES\BOSS\uninstall.exe _?=$COMMONFILES\BOSS' ;Run the uninstaller in its folder and wait until it's done.
-				Delete "$COMMONFILES\BOSS\uninstall.exe"
-				RMDir "$COMMONFILES\BOSS"
-
-
-
-		;That was the old uninstaller location, now see if the current version is already installed.
 		ReadRegStr $InstallPath HKLM "Software\BOSS" "Installed Path"
 		${If} $InstallPath != ""
 			IfFileExists "$InstallPath\Uninstall.exe" 0 +8
@@ -343,8 +331,8 @@ FunctionEnd
 		;Write registry keys for Windows' uninstaller.
 		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\BOSS" "DisplayName" "BOSS"
 		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\BOSS" "UninstallString" '"$INSTDIR\Uninstall.exe"'
-		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\BOSS" "URLInfoAbout" 'http://better-oblivion-sorting-software.googlecode.com/'
-		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\BOSS" "HelpLink" 'http://better-oblivion-sorting-software.googlecode.com/'
+		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\BOSS" "URLInfoAbout" 'http://boss-developers.github.io/'
+		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\BOSS" "HelpLink" 'http://boss-developers.github.io/'
 		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\BOSS" "Publisher" 'BOSS Development Team'
 		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\BOSS" "DisplayVersion" '3.0.0'
 		WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\BOSS" "NoModify" 1
