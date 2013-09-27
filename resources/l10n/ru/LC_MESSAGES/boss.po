@@ -617,7 +617,7 @@ msgstr "BOSS: Добавить сообщение"
 
 #: gui/editor.cpp:424
 msgid "Error: No content specified. Row will not be added."
-msgstr "Ошибка:  Не соответствующего содержимого. Строка не будет добавлена."
+msgstr "Ошибка:  Нет соответствующего содержимого. Строка не будет добавлена."
 
 #: gui/editor.cpp:435
 msgid "BOSS: Add Tag"
