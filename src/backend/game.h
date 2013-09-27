@@ -35,6 +35,7 @@
 
 #include <api/libloadorder.h>
 #include <src/libespm.h>
+#include <yaml-cpp/yaml.h>
 
 namespace boss {
 
