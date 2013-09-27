@@ -503,7 +503,7 @@ msgstr "Ошибка: Обработка настроек не удалась. %
 
 #: gui/main.cpp:272
 msgid "Error: Could not apply translation."
-msgstr "Ошибка: Невозможно применить перевод: %1%"
+msgstr "Ошибка: Невозможно применить перевод."
 
 #: gui/main.cpp:282
 msgid "Error: The selected language is not available on this system."
@@ -652,7 +652,7 @@ msgstr "BOSS: Настройки"
 
 #: gui/main.cpp:986 gui/main.cpp:1001
 msgid "Error: \"%1%\" cannot be found."
-msgstr "Ошибка: \"%1%\" не найден"
+msgstr "Ошибка: \"%1%\" не найден."
 
 #: gui/main.cpp:1013
 msgid ""
