@@ -75,6 +75,13 @@ namespace boss {
         throw boss::error(boss::error::git_error, (boost::format(lc::translate("Git operation failed. Error: %1%")) % error_message).str());
     }
 
+    int downloadProg(const git_transfer_progress *stats, void *payload) {
+        float receivedKB = (float)stats->received_bytes / 1024.0;
+        float progress = 100.0 * (float)stats->received_objects / (float)stats->total_objects;
+        BOOST_LOG_TRIVIAL(info) << "Loading: " << progress << "% (" << receivedKB << " KB)";
+        return 0;
+    }
+
     std::string UpdateMasterlist(Game& game, std::list<Message>& parsingErrors, std::list<Plugin>& plugins, std::list<Message>& messages) {
 
         /*  List of Git operations (porcelain commands shown, will need to implement using plumbing in the API though):
@@ -202,7 +209,7 @@ namespace boss {
 
         BOOST_LOG_TRIVIAL(trace) << "Downloading changes from remote.";
 
-        handle_error(git_remote_download(ptrs.remote, NULL, NULL), ptrs);
+        handle_error(git_remote_download(ptrs.remote, &downloadProg, NULL), ptrs);
 
         BOOST_LOG_TRIVIAL(info) << "Received " << stats->indexed_objects << " of " << stats->total_objects << " objects in " << stats->received_bytes << " bytes.";
 
