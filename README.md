@@ -148,4 +148,4 @@ The converter is a command line utility and will print any errors in encounters 
 
 ## Packaging Releases
 
-Installer and zip archive releases for the main BOSS application can be handled by running the scripts `installer.nsi` and `archive.py` in the `src` folder respectively. The installer script requires [NSIS Unicode](http://www.scratchpaper.com/) to be installed, while the archive script requires [Python](http://www.python.org/) to be installed.
+Installer and zip archive releases for the main BOSS application can be handled by running the scripts `installer.nsi` and `archive.py` in the `src` folder respectively. The installer script requires [NSIS 3](http://nsis.sourceforge.net/Main_Page) to be installed, while the archive script requires [Python](http://www.python.org/) to be installed.
