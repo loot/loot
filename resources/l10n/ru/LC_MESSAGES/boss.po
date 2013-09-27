@@ -13,7 +13,7 @@ msgstr ""
 
 #: backend/graph.cpp:46
 msgid "Back edge detected between plugins \"%1%\" and \"%2%\"."
-msgstr "Back edge обнаружен между плагинами \"%1%\" и \"%2%\"."
+msgstr "Циклическое взаимодействие обнаружено между плагинами \"%1%\" и \"%2%\"."
 
 #: backend/game.cpp:96
 msgid "Invalid game ID supplied."
@@ -82,19 +82,19 @@ msgstr "Версия мастерлиста"
 
 #: gui/settings.cpp:40
 msgid "None"
-msgstr "Ничего"
+msgstr "Нет"
 
 #: gui/settings.cpp:41
 msgid "Low"
-msgstr "Низкий"
+msgstr "Низкая"
 
 #: gui/settings.cpp:42
 msgid "Medium"
-msgstr "Средний"
+msgstr "Средняя"
 
 #: gui/settings.cpp:43
 msgid "High"
-msgstr "Высокий"
+msgstr "Высокая"
 
 #: gui/settings.cpp:47
 msgid "Autodetect"
@@ -154,7 +154,7 @@ msgstr "Ключ реестра для путя установки"
 
 #: gui/settings.cpp:98
 msgid "Default Game:"
-msgstr "Игра по умолч.:"
+msgstr "Игра по умолчанию:"
 
 #: gui/settings.cpp:101 gui/editor.cpp:962
 msgid "Language:"
@@ -205,7 +205,7 @@ msgid ""
 "Error: A game with this folder name is already defined. Row will not be "
 "added."
 msgstr ""
-"Ошибка: Игра сэтим именем папки уже определена. Строка не будет добавлена."
+"Ошибка: Игра с этим именем папки уже определена. Строка не будет добавлена."
 
 #: gui/settings.cpp:336
 msgid "BOSS: Edit Game"
@@ -429,16 +429,16 @@ msgid ""
 "A load order optimisation tool for games using the Elder Scrolls Plugin/"
 "Master system."
 msgstr ""
-"Инструмент для оптимизации порядка загрузки для игр, использующих систему "
+"Инструмент для оптимизации порядка загрузки, для игр, использующих систему "
 "Плагин/Мастер Elder Scrolls."
 
 #: gui/main.cpp:1037
 msgid "Up"
-msgstr "Вверх"
+msgstr "Выше"
 
 #: gui/main.cpp:1038
 msgid "Down"
-msgstr "Вниз"
+msgstr "Ниже"
 
 #: gui/main.cpp:1041
 msgid "Load Order"
@@ -521,7 +521,7 @@ msgstr "Отмена"
 
 #: gui/editor.cpp:131
 msgid "Copy Metadata As Text"
-msgstr "Копировать метаданные как текстasdf"
+msgstr "Копировать метаданные как текст"
 
 #: gui/editor.cpp:141
 msgid "Requirements"
@@ -533,7 +533,7 @@ msgstr "Несовместимости"
 
 #: gui/editor.cpp:143
 msgid "Load After"
-msgstr "после"
+msgstr "Грузить после"
 
 #: gui/editor.cpp:144
 msgid "Messages"
@@ -617,7 +617,7 @@ msgstr "BOSS: Добавить сообщение"
 
 #: gui/editor.cpp:424
 msgid "Error: No content specified. Row will not be added."
-msgstr "Ошибка:  Не определенного содержимого. Строка не будет добавлена."
+msgstr "Ошибка:  Нет соответствующего содержимого. Строка не будет добавлена."
 
 #: gui/editor.cpp:435
 msgid "BOSS: Add Tag"
@@ -625,7 +625,7 @@ msgstr "BOSS: Добавить тег"
 
 #: gui/editor.cpp:445
 msgid "Error: No Bash Tag specified. Row will not be added."
-msgstr "Ошибка: Нет определенного Bash-тега. Строка не будет добавлена"
+msgstr "Ошибка: Нет соответствующего Bash-тега. Строка не будет добавлена"
 
 #: gui/editor.cpp:462
 msgid "BOSS: Edit File/Plugin"
@@ -649,7 +649,7 @@ msgstr "BOSS: Править тег"
 
 #: gui/editor.cpp:540
 msgid "Error: No Bash Tag specified. Row will not be edited."
-msgstr "Ошибка: Нет определенного Bash-тега. Строка не будет добавлена"
+msgstr "Ошибка: Нет соответствующего Bash-тега. Строка не будет добавлена"
 
 #: gui/editor.cpp:866
 msgid "Filename:"
@@ -745,7 +745,7 @@ msgstr "Фильтры"
 
 #: backend/generators.h:264
 msgid "BOSS Version"
-msgstr "Версия BOSS "
+msgstr "Версия BOSS"
 
 #: backend/generators.h:273
 msgid "Masterlist Version"
