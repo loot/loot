@@ -13,7 +13,7 @@ msgstr ""
 
 #: backend/graph.cpp:46
 msgid "Back edge detected between plugins \"%1%\" and \"%2%\"."
-msgstr "Back edge обнаружен между плагинами \"%1%\" и \"%2%\"."
+msgstr "Циклическое взаимодействие обнаружено между плагинами \"%1%\" и \"%2%\"."
 
 #: backend/game.cpp:96
 msgid "Invalid game ID supplied."
