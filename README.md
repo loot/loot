@@ -32,6 +32,7 @@ BOSS requires the following libraries:
 * [Libespm](http://github.com/WrinklyNinja/libespm)
 * [Libgit2](https://github.com/libgit2) v0.19.0.
 * [Libloadorder](http://github.com/WrinklyNinja/libloadorder)
+* [OpenSSL](https://www.openssl.org) - only if HTTPS support in libgit2 is required using compilers other than MSVC.
 * [PugiXML](http://code.google.com/p/pugixml/) v1.2 or later.
 * [wxWidgets](http://www.wxwidgets.org) v2.9.5 or later.
 * [yaml-cpp](http://code.google.com/p/yaml-cpp/) v0.5.1 or later.
@@ -107,17 +108,29 @@ cp zconf.h ../zconf.h
 cmake . -DCMAKE_C_FLAGS=-m32 -DPROJECT_ARCH=32 -DCMAKE_TOOLCHAIN_FILE=../BOSSv3/mingw-toolchain.cmake -DBOOST_ROOT=../boost
 ```
 
+### Libespm
+
+Follow the instructions in libespm's README.md to build it as a static library.
+
 ### Libloadorder
 
 Follow the instructions in libloadorder's README.md to build it as a static library.
+
+### OpenSSL
+
+```
+./Configure --cross-compile-prefix=i686-w64-mingw32- mingw
+make
+```
 
 ### Libgit2
 
 ```
 mkdir build && cd build
 cmake .. -DBUILD_SHARED_LIBS=OFF -DCMAKE_C_FLAGS=-m32 -DPROJECT_ARCH=32 -DCMAKE_TOOLCHAIN_FILE=../BOSSv3/mingw-toolchain.cmake
-
+make
 ```
+If building with SSL support using OpenSSL, also pass `-DOPENSSL_ROOT_DIR=../openssl`.
 
 ### BOSS
 

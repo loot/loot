@@ -123,15 +123,6 @@ namespace boss {
         */
         pointers_struct ptrs;
         const git_transfer_progress * stats = NULL;
-        std::string httpURL;
-
-        //If the URL is a HTTPS URL, convert it to a HTTP URL, because the build of libgit2 BOSS uses doesn't support HTTPS.
-        BOOST_LOG_TRIVIAL(trace) << "Checking URL type.";
-        httpURL = game.URL();
-        if (boost::istarts_with(httpURL, "https")) {
-            BOOST_LOG_TRIVIAL(info) << "HTTPS URL found. Converting to a HTTP URL.";
-            httpURL.erase(4, 1);
-        }
 
         BOOST_LOG_TRIVIAL(trace) << "Checking for a Git repository.";
 
@@ -154,10 +145,10 @@ namespace boss {
             BOOST_LOG_TRIVIAL(trace) << "Checking to see if remote URL matches URL in settings.";
 
             //Check if the URLs match.
-            if (url != httpURL) {
+            if (url != game.URL()) {
                 BOOST_LOG_TRIVIAL(trace) << "URLs do not match, setting repository URL to URL in settings.";
                 //The URLs don't match. Change the remote URL to match the one BOSS has.
-                handle_error(git_remote_set_url(ptrs.remote, httpURL.c_str()), ptrs);
+                handle_error(git_remote_set_url(ptrs.remote, game.URL().c_str()), ptrs);
 
                 //Now save change.
                 handle_error(git_remote_save(ptrs.remote), ptrs);
@@ -170,7 +161,10 @@ namespace boss {
             BOOST_LOG_TRIVIAL(trace) << "Setting the new repository's remote.";
 
             //Now set the repository's remote.
-            handle_error(git_remote_create(&ptrs.remote, ptrs.repo, "origin", httpURL.c_str()), ptrs);
+            handle_error(git_remote_create(&ptrs.remote, ptrs.repo, "origin", game.URL().c_str()), ptrs);
+
+            //WARNING: This is generally a very bad idea, since it makes HTTPS a little bit pointless, but in this case because we're only reading data and not really concerned about its integrity, it's acceptable. A better solution would be to figure out why GitHub's certificate appears to be invalid to OpenSSL.
+            git_remote_check_cert(ptrs.remote, 0);
 
             BOOST_LOG_TRIVIAL(trace) << "Getting the repository config.";
 

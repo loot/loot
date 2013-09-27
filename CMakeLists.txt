@@ -68,6 +68,7 @@ ENDIF ()
 
 # MinGW settings.
 IF (MINGW)
+    link_directories("${PROJECT_LIBS_DIR}/openssl")
     set (CMAKE_C_FLAGS  "-m${PROJECT_ARCH} -O3")
     set (CMAKE_CXX_FLAGS "-m${PROJECT_ARCH} -O3")
     set (CMAKE_EXE_LINKER_FLAGS "-static-libstdc++ -static-libgcc -Wl,--subsystem,windows")
@@ -81,9 +82,9 @@ IF (MSVC)
     set (BOOST_SUFFIX "-vc110-mt-1_52")
 ENDIF ()
 
-set (BOSS_LIBS version
+set (BOSS_LIBS ${BOSS_LIBS}
+               version
                git2
-               ws2_32
                zlibstatic
                loadorder${PROJECT_ARCH}
                yaml-cpp
@@ -96,6 +97,16 @@ set (BOSS_LIBS version
                boost_filesystem${BOOST_SUFFIX}
                boost_system${BOOST_SUFFIX}
                boost_regex${BOOST_SUFFIX})
+
+IF (MINGW)
+    set (BOSS_LIBS ${BOSS_LIBS}
+                   ssl
+                   crypto
+                   ws2_32)
+ELSE ()
+    set (BOSS_LIBS ${BOSS_LIBS}
+                   ws2_32)
+ENDIF ()
 
 set (BOSS_GUI_LIBS  ${BOSS_LIBS}
                     wx_mswu_webview-2.9-${COMPILER_PREFIX}
