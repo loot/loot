@@ -163,9 +163,6 @@ namespace boss {
             //Now set the repository's remote.
             handle_error(git_remote_create(&ptrs.remote, ptrs.repo, "origin", game.URL().c_str()), ptrs);
 
-            //WARNING: This is generally a very bad idea, since it makes HTTPS a little bit pointless, but in this case because we're only reading data and not really concerned about its integrity, it's acceptable. A better solution would be to figure out why GitHub's certificate appears to be invalid to OpenSSL.
-            git_remote_check_cert(ptrs.remote, 0);
-
             BOOST_LOG_TRIVIAL(trace) << "Getting the repository config.";
 
             handle_error(git_repository_config(&ptrs.cfg, ptrs.repo), ptrs);
@@ -185,6 +182,9 @@ namespace boss {
             out.close();
 
         }
+
+        //WARNING: This is generally a very bad idea, since it makes HTTPS a little bit pointless, but in this case because we're only reading data and not really concerned about its integrity, it's acceptable. A better solution would be to figure out why GitHub's certificate appears to be invalid to OpenSSL.
+        git_remote_check_cert(ptrs.remote, 0);
 
         BOOST_LOG_TRIVIAL(trace) << "Fetching updates from remote.";
 
