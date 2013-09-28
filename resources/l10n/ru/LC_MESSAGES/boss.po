@@ -63,7 +63,7 @@ msgstr "Невозможно создать канал для процесса."
 
 #: backend/helpers.cpp:335
 msgid "Could not create process."
-msgstr "Невозможно создать процесс"
+msgstr "Невозможно создать процесс."
 
 #: backend/helpers.cpp:346
 msgid "Could not get process exit code."
@@ -71,7 +71,7 @@ msgstr "Не удалось получить код выхода процесс�
 
 #: backend/helpers.cpp:353
 msgid "Could not read process output."
-msgstr "Не удалось прочесть выходной поток процесса"
+msgstr "Не удалось прочесть выходной поток процесса."
 
 #: backend/metadata.cpp:113
 msgid "Failed to parse condition \"%1%\": %2%"
@@ -115,11 +115,11 @@ msgstr "Удалить игру"
 
 #: gui/settings.cpp:63
 msgid "Update masterlist before sorting."
-msgstr "Обновить мастерлист перед сортировкой"
+msgstr "Обновить мастерлист перед сортировкой."
 
 #: gui/settings.cpp:64
 msgid "View reports externally in default browser."
-msgstr "Просмотреть отчет во внешнем браузере по умолчанию"
+msgstr "Просмотреть отчет во внешнем браузере по умолчанию."
 
 #: gui/settings.cpp:65
 msgid "Generate and display plugin graph images."
@@ -151,7 +151,7 @@ msgstr "Путь установки"
 
 #: gui/settings.cpp:74
 msgid "Install Path Registry Key"
-msgstr "Ключ реестра для путя установки"
+msgstr "Ключ реестра для пути установки"
 
 #: gui/settings.cpp:98
 msgid "Default Game:"
@@ -199,7 +199,7 @@ msgstr "Ошибка: Требуется папка. Строка не буде�
 
 #: gui/settings.cpp:306
 msgid "Error: A game with this name is already defined. Row will not be added."
-msgstr "Ошибка: Игра с этим именем уже определена Строка не будет добавлена."
+msgstr "Ошибка: Игра с этим именем уже определена. Строка не будет добавлена."
 
 #: gui/settings.cpp:314
 msgid ""
@@ -218,7 +218,7 @@ msgstr "Имя:"
 
 #: gui/settings.cpp:425 gui/editor.cpp:947
 msgid "Type:"
-msgstr "Тип"
+msgstr "Тип:"
 
 #: gui/settings.cpp:428
 msgid "BOSS Folder Name:"
@@ -238,7 +238,7 @@ msgstr "Путь установки:"
 
 #: gui/settings.cpp:440
 msgid "Install Path Registry Key:"
-msgstr "Ключ реестра для путя установки:"
+msgstr "Ключ реестра для пути установки:"
 
 #: gui/editor.cpp:37
 msgid "Note"
@@ -347,7 +347,7 @@ msgstr "Bash-тег"
 
 #: gui/editor.cpp:207
 msgid "Priority: "
-msgstr "Приоритет:"
+msgstr "Приоритет: "
 
 #: gui/editor.cpp:354
 msgid "Add Plugin"
@@ -391,7 +391,7 @@ msgstr "BOSS: Добавить файл/плагин"
 
 #: gui/editor.cpp:392
 msgid "Error: No filename specified. Row will not be added."
-msgstr "Ошибка: Нет соответствующего файла. Строка не будет добавлена."
+msgstr "Ошибка: Не указано имя файла. Строка не будет добавлена."
 
 #: gui/editor.cpp:414
 msgid "BOSS: Add Message"
@@ -399,7 +399,7 @@ msgstr "BOSS: Добавить сообщение"
 
 #: gui/editor.cpp:424
 msgid "Error: No content specified. Row will not be added."
-msgstr "Ошибка:  Нет соответствующего содержимого. Строка не будет добавлена."
+msgstr "Ошибка:  Не указано содержимое. Строка не будет добавлена."
 
 #: gui/editor.cpp:435
 msgid "BOSS: Add Tag"
@@ -407,7 +407,7 @@ msgstr "BOSS: Добавить тег"
 
 #: gui/editor.cpp:445
 msgid "Error: No Bash Tag specified. Row will not be added."
-msgstr "Ошибка: Нет соответствующего Bash-тега. Строка не будет добавлена"
+msgstr "Ошибка: Не указан Bash-тег. Строка не будет добавлена."
 
 #: gui/editor.cpp:462
 msgid "BOSS: Edit File/Plugin"
@@ -415,7 +415,7 @@ msgstr "BOSS: Править файл/плагин"
 
 #: gui/editor.cpp:484
 msgid "Error: No filename specified. Row will not be edited."
-msgstr "Ошибка: Нет соответствующего файла. Строка не будет добавлена."
+msgstr "Ошибка: Не указано имя файла. Строка не будет добавлена."
 
 #: gui/editor.cpp:496
 msgid "BOSS: Edit Message"
@@ -423,7 +423,7 @@ msgstr "BOSS: Править сообщение"
 
 #: gui/editor.cpp:510
 msgid "Error: No content specified. Row will not be edited."
-msgstr "Ошибка: Нет соответствующего содержимого. Строка не будет добавлена."
+msgstr "Ошибка: Не указано содержимое. Строка не будет добавлена."
 
 #: gui/editor.cpp:520
 msgid "BOSS: Edit Tag"
@@ -431,7 +431,7 @@ msgstr "BOSS: Править тег"
 
 #: gui/editor.cpp:540
 msgid "Error: No Bash Tag specified. Row will not be edited."
-msgstr "Ошибка: Нет соответствующего Bash-тега. Строка не будет добавлена"
+msgstr "Ошибка: Не указан Bash-тег. Строка не будет добавлена"
 
 #: gui/editor.cpp:866
 msgid "Filename:"
@@ -471,7 +471,7 @@ msgstr "Ошибка: Не выбрана строка с содержимым."
 
 #: gui/editor.cpp:1094
 msgid "Add/Remove:"
-msgstr "Добавить/Удалить"
+msgstr "Добавить/Удалить:"
 
 #: gui/main.cpp:118
 msgid "Masterlist update failed. Details: %1%"
@@ -507,7 +507,7 @@ msgstr "Ошибка: Невозможно применить перевод."
 
 #: gui/main.cpp:282
 msgid "Error: The selected language is not available on this system."
-msgstr "Ошибка: Выбранный язык не доступеен на этой системе."
+msgstr "Ошибка: Выбранный язык не доступен на этой системе."
 
 #: gui/main.cpp:295 gui/main.cpp:351 gui/main.cpp:970
 msgid "Error: Game-specific settings could not be initialised. %1%"
@@ -592,7 +592,7 @@ msgstr ""
 
 #: gui/main.cpp:608
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
-msgstr "\"%1%\" включает выражение, которое не может быть оценено. Детали: %1%"
+msgstr "\"%1%\" включает выражение, которое не может быть оценено. Детали: %2%"
 
 #: gui/main.cpp:620
 msgid "\"%1%\" is incompatible with \"%2%\" and is present."
@@ -636,11 +636,11 @@ msgstr "BOSS: Просмотрщик отчета"
 
 #: gui/main.cpp:865
 msgid "Error: Masterlist parsing failed. %1%"
-msgstr "Ошибка: обработка мастерлиста не удалась. %1%"
+msgstr "Ошибка: Обработка мастерлиста не удалась. %1%"
 
 #: gui/main.cpp:885
 msgid "Error: Userlist parsing failed. %1%"
-msgstr "Ошибка: обработка пользовательского списка не удалась. %1%"
+msgstr "Ошибка: Обработка пользовательского списка не удалась. %1%"
 
 #: gui/main.cpp:932
 msgid "BOSS: Metadata Editor"
@@ -758,7 +758,7 @@ msgstr "Общее число сообщений"
 
 #: backend/generators.h:318
 msgid "Number of Warnings"
-msgstr "Количество предупреждений:"
+msgstr "Количество предупреждений"
 
 #: backend/generators.h:327
 msgid "Number of Errors"
@@ -766,7 +766,7 @@ msgstr "Количество ошибок"
 
 #: backend/generators.h:368
 msgid "Version:"
-msgstr "Версия: "
+msgstr "Версия:"
 
 #: backend/generators.h:385
 msgid "Add %1%."
