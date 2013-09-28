@@ -147,7 +147,8 @@ h3{
 <p>Clicking the <q>Edit Metadata</q> button will open BOSS's <a href="#usage-custom">metadata editor</a>, where you can make changes to the metadata BOSS uses to sort plugins, the messages that get displayed for plugins, and any Bash Tag suggestions BOSS makes.
 <p>Clicking the <q>Sort Plugins</q> button will begin the <a href="#usage-sort">plugin sorting process</a>. This will sort your plugins, allow you to make any changes to the load order it produces, then display a report that details the results of BOSS's activity.
 <p>Clicking the <q>View Last Report</q> button will display the <a href="#usage-log">report</a> generated the last time BOSS sorted your plugins.
-<p>The <q>File</q> menu provides menu items for sorting plugins, viewing the debug log and the last report BOSS generated, and quitting BOSS, while the <q>Edit</q> menu provides menu items for accessing BOSS's metadata editor and the <a href="#usage-settings">settings window</a>.
+<p>The <q>File</q> menu provides menu items for sorting plugins, viewing the debug log and the last report BOSS generated, and quitting BOSS. The menu's <q>Redate Plugins</q> option is provided so that Skyrim modders may set the load order for the Creation Kit. It is only enabled for Skyrim, and changes the timestamps of the plugins in its Data folder to match their current load order. A side effect of changing the timestamps is that any Steam Workshop mods installed will be re-downloaded.
+<p>The <q>Edit</q> menu provides menu items for accessing BOSS's metadata editor and the <a href="#usage-settings">settings window</a>.
 <p>The <q>Game</q> menu allows you to change which game BOSS is running for. Games that BOSS cannot find are greyed out, and the the one BOSS is running for is marked with a dot to its left. To change the active game, simply select another game in the list.
 <p>The <q>Help</q> menu provides a link to this readme and an about page that contains the version of BOSS being run, some legal information and a link to the <a href="http://boss-developers.github.io">project homepage</a>.
 
@@ -277,8 +278,8 @@ h3{
         <tr><td>BOSS Folder Name<td>The sub-folder which BOSS uses to store the game's files in. Each game must be given a unique sub-folder.
         <tr><td>Master File<td>The game's main master file. This is specified as it must load before all other plugins. Note that Skyrim-based games will always load Skyrim.esm first, so this column must always be set to <q>Skyrim.esm</q> for such games.
         <tr><td id="settingsMasterlistURL">Online Masterlist URL<td>The URL of the online masterlist that BOSS uses to update its local copy. If set to an empty string, masterlist updating will be skipped.
-        <tr><td>Install Path<td>The path to the game's folder, in which the Data folder lies.
-        <tr><td>Install Path Registry Key<td>The registry key, in <code>HKEY_LOCAL_MACHINE</code>, that contains the install path of the game. This may be used to obtain the install path of a game the first time BOSS runs for it.
+        <tr><td>Install Path<td>The path to the game's folder, in which the Data folder lies. Either this or a registry key must be supplied.
+        <tr><td>Install Path Registry Key<td>The registry key, in <code>HKEY_LOCAL_MACHINE</code>, that contains the install path of the game. This is used to obtain the install path if BOSS has no previous record of the game's install path, or BOSS's stored install path is invalid. Either this or an install path must be supplied.
 </table>
 <p>Note that for Skyrim, multiple copies or Total Conversions will all edit the same <code>plugins.txt</code> file, and so they lack the level of independence that is achievable for other games.
 
