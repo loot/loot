@@ -72,6 +72,7 @@ namespace boss {
 
         bool IsActive(const std::string& plugin) const;
 
+        void GetLoadOrder(std::list<Plugin>& loadOrder) const;
         void SetLoadOrder(const std::list<Plugin>& loadOrder) const;
 
         void RefreshActivePluginsList();

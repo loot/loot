@@ -36,10 +36,11 @@
 enum {
 	//Main window.
     OPTION_EditMetadata = wxID_HIGHEST + 1, // declares an id which will be used to call our button
-	OPTION_ViewLastReport,
-	OPTION_ViewDebugLog,
-	OPTION_SortPlugins,
-	MENU_ShowSettings,
+    OPTION_ViewLastReport,
+    OPTION_SortPlugins,
+    MENU_ViewDebugLog,
+    MENU_ShowSettings,
+    MENU_RedatePlugins,
     //Settings window.
     LIST_Games,
     BUTTON_AddGame,

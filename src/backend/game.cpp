@@ -272,6 +272,7 @@ namespace boss {
             throw error(error::liblo_error, err);
         }
 
+        activePlugins.clear();
         for (size_t i=0; i < pluginArrSize; ++i) {
             activePlugins.insert(boost::to_lower_copy(string(pluginArr[i])));
         }
@@ -281,6 +282,62 @@ namespace boss {
 
     bool Game::IsActive(const std::string& plugin) const {
         return activePlugins.find(boost::to_lower_copy(plugin)) != activePlugins.end();
+    }
+
+    void Game::GetLoadOrder(std::list<Plugin>& loadOrder) const {
+        BOOST_LOG_TRIVIAL(trace) << "Setting load order for game: " << _name;
+
+        lo_game_handle gh;
+        char ** pluginArr;
+        size_t pluginArrSize;
+
+        int ret;
+        if (Id() == g_game_tes4)
+            ret = lo_create_handle(&gh, LIBLO_GAME_TES4, gamePath.string().c_str());
+        else if (Id() == g_game_tes5)
+            ret = lo_create_handle(&gh, LIBLO_GAME_TES5, gamePath.string().c_str());
+        else if (Id() == g_game_fo3)
+            ret = lo_create_handle(&gh, LIBLO_GAME_FO3, gamePath.string().c_str());
+        else if (Id() == g_game_fonv)
+            ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str());
+
+        if (ret != LIBLO_OK && ret != LIBLO_WARN_LO_MISMATCH) {
+            const char * e;
+            lo_get_error_message(&e);
+            BOOST_LOG_TRIVIAL(error) << "libloadorder failed to create a game handle. Details: " << e;
+            string err = lc::translate("libloadorder failed to create a game handle. Details:").str() + " " + e;
+            lo_cleanup();
+            throw error(error::liblo_error, err);
+        }
+
+        ret = lo_set_game_master(gh, _masterFile.c_str());
+
+        if (ret != LIBLO_OK) {
+            const char * e;
+            lo_get_error_message(&e);
+            lo_destroy_handle(gh);
+            BOOST_LOG_TRIVIAL(error) << "libloadorder failed to initialise game master file support. Details: " << e;
+            string err = lc::translate("libloadorder failed to initialise game master file support. Details:").str() + " " + e;
+            lo_cleanup();
+            throw error(error::liblo_error, err);
+        }
+
+        if (lo_get_load_order(gh, &pluginArr, &pluginArrSize) != LIBLO_OK) {
+            const char * e;
+            lo_get_error_message(&e);
+            lo_destroy_handle(gh);
+            BOOST_LOG_TRIVIAL(error) << "libloadorder failed to set the load order. Details: " << e;
+            string err = lc::translate("libloadorder failed to set the load order. Details:").str() + " " + e;
+            lo_cleanup();
+            throw error(error::liblo_error, err);
+        }
+
+        loadOrder.clear();
+        for (size_t i=0; i < pluginArrSize; ++i) {
+            loadOrder.push_back(string(pluginArr[i]));
+        }
+
+        lo_destroy_handle(gh);
     }
 
     void Game::SetLoadOrder(const std::list<Plugin>& loadOrder) const {

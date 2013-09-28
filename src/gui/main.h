@@ -50,6 +50,7 @@ public:
 	void OnSortPlugins(wxCommandEvent& event);
     void OnEditMetadata(wxCommandEvent& event);
     void OnViewLastReport(wxCommandEvent& event);
+    void OnRedatePlugins(wxCommandEvent& event);
 
     void OnOpenSettings(wxCommandEvent& event);
     void OnOpenDebugLog(wxCommandEvent& event);
@@ -61,6 +62,7 @@ public:
     void OnClose(wxCloseEvent& event);
 private:
     wxMenu * GameMenu;
+    wxMenuItem * RedatePluginsItem;
 	wxButton * ViewButton;
 
 	boss::Game& _game;

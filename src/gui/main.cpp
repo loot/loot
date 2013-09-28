@@ -383,8 +383,9 @@ Launcher::Launcher(const wxChar *title, YAML::Node& settings, Game& game, vector
     //Construct menus.
     //File Menu
 	FileMenu->Append(OPTION_ViewLastReport, translate("&View Last Report"));
-	FileMenu->Append(OPTION_ViewDebugLog, translate("View &Debug Log"));
+	FileMenu->Append(MENU_ViewDebugLog, translate("View &Debug Log"));
     FileMenu->Append(OPTION_SortPlugins, translate("&Sort Plugins"));
+    RedatePluginsItem = FileMenu->Append(MENU_RedatePlugins, translate("&Redate Plugins"));
     FileMenu->AppendSeparator();
     FileMenu->Append(wxID_EXIT);
     MenuBar->Append(FileMenu, translate("&File"));
@@ -419,9 +420,10 @@ Launcher::Launcher(const wxChar *title, YAML::Node& settings, Game& game, vector
     //Bind event handlers.
     Bind(wxEVT_COMMAND_MENU_SELECTED, &Launcher::OnQuit, this, wxID_EXIT);
     Bind(wxEVT_COMMAND_MENU_SELECTED, &Launcher::OnViewLastReport, this, OPTION_ViewLastReport);
-    Bind(wxEVT_COMMAND_MENU_SELECTED, &Launcher::OnOpenDebugLog, this, OPTION_ViewDebugLog);
+    Bind(wxEVT_COMMAND_MENU_SELECTED, &Launcher::OnOpenDebugLog, this, MENU_ViewDebugLog);
     Bind(wxEVT_COMMAND_MENU_SELECTED, &Launcher::OnSortPlugins, this, OPTION_SortPlugins);
     Bind(wxEVT_COMMAND_MENU_SELECTED, &Launcher::OnEditMetadata, this, OPTION_EditMetadata);
+    Bind(wxEVT_COMMAND_MENU_SELECTED, &Launcher::OnRedatePlugins, this, MENU_RedatePlugins);
     Bind(wxEVT_COMMAND_MENU_SELECTED, &Launcher::OnOpenSettings, this, MENU_ShowSettings);
     Bind(wxEVT_COMMAND_MENU_SELECTED, &Launcher::OnHelp, this, wxID_HELP);
     Bind(wxEVT_COMMAND_MENU_SELECTED, &Launcher::OnAbout, this, wxID_ABOUT);
@@ -435,6 +437,11 @@ Launcher::Launcher(const wxChar *title, YAML::Node& settings, Game& game, vector
 
     if (!fs::exists(_game.ReportPath()))
         ViewButton->Enable(false);
+
+    if (_game.Id() == boss::g_game_tes5)
+        RedatePluginsItem->Enable(true);
+    else
+        RedatePluginsItem->Enable(false);
 
     //Set title bar text.
 	SetTitle(FromUTF8("BOSS - " + _game.Name()));
@@ -950,6 +957,59 @@ void Launcher::OnViewLastReport(wxCommandEvent& event) {
     BOOST_LOG_TRIVIAL(debug) << "Report displayed.";
 }
 
+void Launcher::OnRedatePlugins(wxCommandEvent& event) {
+    wxMessageDialog * dia = new wxMessageDialog(this, translate("This feature is provided so that modders using the Creation Kit may set the load order it uses. A side-effect is that any subscribed Steam Workshop mods will be re-downloaded by Steam. Do you wish to continue?"), translate("BOSS: Warning"), wxYES_NO|wxCANCEL|wxICON_EXCLAMATION);
+
+    if (dia->ShowModal() == wxID_YES) {
+        BOOST_LOG_TRIVIAL(debug) << "Redating plugins.";
+        list<boss::Plugin> loadorder;
+        try {
+            _game.GetLoadOrder(loadorder);
+        } catch (boss::error& e) {
+            BOOST_LOG_TRIVIAL(error) << "Failed to get load order. " << e.what();
+            wxMessageBox(
+                FromUTF8(format(loc::translate("Error: Failed to get load order. %1%")) % e.what()),
+                translate("BOSS: Error"),
+                wxOK | wxICON_ERROR,
+                this);
+        }
+
+        try {
+            if (!loadorder.empty()) {
+
+                time_t lastTime, thisTime;
+                fs::path filepath = _game.DataPath() / loadorder.begin()->Name();
+                if (!fs::exists(filepath) && fs::exists(filepath.string() + ".ghost"))
+                    filepath += ".ghost";
+
+                lastTime = fs::last_write_time(filepath);
+
+                for (list<boss::Plugin>::const_iterator it=loadorder.begin(), itend=loadorder.end(); it != itend; ++it) {
+
+                    filepath = _game.DataPath() / loadorder.begin()->Name();
+                    if (!fs::exists(filepath) && fs::exists(filepath.string() + ".ghost"))
+                        filepath += ".ghost";
+
+                    time_t thisTime = fs::last_write_time(filepath);
+                    if (thisTime > lastTime)
+                        lastTime = thisTime;
+                    else {
+                        lastTime += 60;
+                        fs::last_write_time(filepath, lastTime);  //Space timestamps by a minute.
+                    }
+                }
+            }
+        } catch(fs::filesystem_error& e) {
+            BOOST_LOG_TRIVIAL(error) << "Failed to set plugin timestamps. " << e.what();
+            wxMessageBox(
+                FromUTF8(format(loc::translate("Error: Failed to set plugin timestamps. %1%")) % e.what()),
+                translate("BOSS: Error"),
+                wxOK | wxICON_ERROR,
+                this);
+        }
+    }
+}
+
 void Launcher::OnOpenSettings(wxCommandEvent& event) {
     BOOST_LOG_TRIVIAL(debug) << "Opening settings window...";
 	SettingsFrame *settings = new SettingsFrame(this, translate("BOSS: Settings"), _settings, _games);
@@ -973,6 +1033,10 @@ void Launcher::OnGameChange(wxCommandEvent& event) {
             NULL);
     }
 	SetTitle(FromUTF8("BOSS - " + _game.Name()));
+    if (_game.Id() == boss::g_game_tes5)
+        RedatePluginsItem->Enable(true);
+    else
+        RedatePluginsItem->Enable(false);
 }
 
 void Launcher::OnHelp(wxCommandEvent& event) {
