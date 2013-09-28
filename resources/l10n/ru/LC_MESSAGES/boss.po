@@ -431,7 +431,7 @@ msgstr "BOSS: Править тег"
 
 #: gui/editor.cpp:540
 msgid "Error: No Bash Tag specified. Row will not be edited."
-msgstr "Ошибка: Не указан Bash-тег. Строка не будет добавлена"
+msgstr "Ошибка: Не указан Bash-тег. Строка не будет добавлена."
 
 #: gui/editor.cpp:866
 msgid "Filename:"
