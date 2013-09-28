@@ -296,6 +296,14 @@ void SettingsFrame::OnAddGame(wxCommandEvent& event) {
                 wxOK | wxICON_ERROR,
                 this);
             return;
+        } else if (rowDialog->GetPath().empty() && rowDialog->GetRegistryKey().empty()) {
+            BOOST_LOG_TRIVIAL(error) << "Tried to add a new game with no path or registry key given.";
+            wxMessageBox(
+                translate("Error: A path and/or registry key is required. Row will not be added."),
+                translate("BOSS: Error"),
+                wxOK | wxICON_ERROR,
+                this);
+            return;
         }
 
         //Also check that name and folder name don't already exist in the list.
@@ -363,6 +371,14 @@ void SettingsFrame::OnEditGame(wxCommandEvent& event) {
             BOOST_LOG_TRIVIAL(error) << "Tried to blank a game's folder field.";
             wxMessageBox(
                 translate("Error: Folder is required. Row will not be added."),
+                translate("BOSS: Error"),
+                wxOK | wxICON_ERROR,
+                this);
+            return;
+        } else if (rowDialog->GetPath().empty() && rowDialog->GetRegistryKey().empty()) {
+            BOOST_LOG_TRIVIAL(error) << "Tried to edit a game with no path or registry key given.";
+            wxMessageBox(
+                translate("Error: A path and/or registry key is required. Row will not be added."),
                 translate("BOSS: Error"),
                 wxOK | wxICON_ERROR,
                 this);
