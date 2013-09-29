@@ -206,7 +206,7 @@ namespace boss {
 
         div = nav.append_child();
         div.set_name("div");
-        div.append_attribute("class").set_value("button");
+        div.append_attribute("class").set_value("button hidden");
         div.append_attribute("id").set_value("filtersToggle");
         div.text().set(boost::locale::translate("Filters").str().c_str());
     }
@@ -254,7 +254,14 @@ namespace boss {
         summary.set_name("div");
         summary.append_attribute("id").set_value("summary");
 
-        pugi::xml_node table = summary.append_child();
+        pugi::xml_node div = summary.append_child();
+        div.set_name("div");
+
+        pugi::xml_node heading = div.append_child();
+        heading.set_name("h2");
+        heading.text().set(boost::locale::translate("Summary").str().c_str());
+
+        pugi::xml_node table = div.append_child();
         table.set_name("table");
         table = table.append_child();
         table.set_name("tbody");
@@ -299,8 +306,17 @@ namespace boss {
             note.text().set(boost::locale::translate("No change in details since last run.").str().c_str());
         }
 
-        AppendMessages(summary, messages, warnNo, errorNo);
-        messageNo += messages.size();
+        div = summary.append_child();
+        div.set_name("div");
+
+        if (!messages.empty()) {
+            heading = div.append_child();
+            heading.set_name("h2");
+            heading.text().set(boost::locale::translate("General Messages").str().c_str());
+
+            AppendMessages(div, messages, warnNo, errorNo);
+            messageNo += messages.size();
+        }
 
         row = table.append_child();
         row.set_name("tr");
@@ -356,14 +372,14 @@ namespace boss {
 
                 if (it->Crc() != 0) {
                     node = plugin.append_child();
-                    node.set_name("span");
+                    node.set_name("div");
                     node.append_attribute("class").set_value("crc");
                     node.text().set(("CRC: " + IntToHexString(it->Crc())).c_str());
                 }
 
                 if (!it->Version().empty()) {
                     node = plugin.append_child();
-                    node.set_name("span");
+                    node.set_name("div");
                     node.append_attribute("class").set_value("version");
                     node.text().set((boost::locale::translate("Version:").str() + " " + it->Version()).c_str());
                 }
@@ -381,11 +397,18 @@ namespace boss {
                         else
                             remove += ", " + jt->Name();
                     }
-                    if (!add.empty())
-                        content += (boost::format(boost::locale::translate("Add %1%.")) % add.substr(2)).str() + " ";
-                    if (!remove.empty())
-                        content += (boost::format(boost::locale::translate("Remove")) % remove.substr(2)).str() + " ";
-                    messages.push_back(Message(g_message_tag, content));  //Special type just for tag suggestions.
+                    if (!add.empty()) {
+                        node = plugin.append_child();
+                        node.set_name("div");
+                        node.append_attribute("class").set_value("tagAdd");
+                        node.text().set((boost::locale::translate("Add:").str() + " " + add.substr(2)).c_str());
+                    }
+                    if (!remove.empty()) {
+                        node = plugin.append_child();
+                        node.set_name("div");
+                        node.append_attribute("class").set_value("tagRemove");
+                        node.text().set((boost::locale::translate("Remove:").str() + " " + add.substr(2)).c_str());
+                    }
                 }
 
                 AppendMessages(plugin, messages, warnNo, errorNo);
