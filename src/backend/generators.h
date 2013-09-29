@@ -411,6 +411,32 @@ namespace boss {
                     }
                 }
 
+                std::set<DirtData> dirtyInfo = it->DirtyInfo();
+                for (std::set<DirtData>::const_iterator jt=dirtyInfo.begin(), endjt=dirtyInfo.end(); jt != endjt; ++jt) {
+                    boost::format f;
+                    if (jt->ITMs() > -1 && jt->UDRs() > -1 && jt->DeletedNavmeshes() > -1)
+                        f = boost::format(boost::locale::translate("Contains %1% ITM records, %2% UDR records and %3% deleted navmeshes. Needs %4% cleaning, a guide is available \"%5% here\".")) % jt->ITMs() % jt->UDRs() % jt->DeletedNavmeshes() % jt->CleaningUtility() % jt->CleaningGuideURL();
+                    else if (jt->ITMs() == -1 && jt->UDRs() == -1 && jt->DeletedNavmeshes() == -1)
+                        f = boost::format(boost::locale::translate("Needs %1% cleaning, a guide is available \"%2% here\".")) % jt->CleaningUtility() % jt->CleaningGuideURL();
+
+                    else if (jt->ITMs() == -1 && jt->UDRs() > -1 && jt->DeletedNavmeshes() > -1)
+                        f = boost::format(boost::locale::translate("Contains %1% UDR records and %2% deleted navmeshes. Needs %3% cleaning, a guide is available \"%4% here\".")) % jt->UDRs() % jt->DeletedNavmeshes() % jt->CleaningUtility() % jt->CleaningGuideURL();
+                    else if (jt->ITMs() == -1 && jt->UDRs() == -1 && jt->DeletedNavmeshes() > -1)
+                        f = boost::format(boost::locale::translate("Contains %1% deleted navmeshes. Needs %2% cleaning, a guide is available \"%3% here\".")) % jt->DeletedNavmeshes() % jt->CleaningUtility() % jt->CleaningGuideURL();
+                    else if (jt->ITMs() == -1 && jt->UDRs() > -1 && jt->DeletedNavmeshes() == -1)
+                        f = boost::format(boost::locale::translate("Contains %1% UDR records. Needs %2% cleaning, a guide is available \"%3% here\".")) % jt->UDRs() % jt->CleaningUtility() % jt->CleaningGuideURL();
+
+                    else if (jt->ITMs() > -1 && jt->UDRs() == -1 && jt->DeletedNavmeshes() > -1)
+                        f = boost::format(boost::locale::translate("Contains %1% ITM records and %2% deleted navmeshes. Needs %3% cleaning, a guide is available \"%4% here\".")) % jt->ITMs() % jt->DeletedNavmeshes() % jt->CleaningUtility() % jt->CleaningGuideURL();
+                    else if (jt->ITMs() > -1 && jt->UDRs() == -1 && jt->DeletedNavmeshes() == -1)
+                        f = boost::format(boost::locale::translate("Contains %1% ITM records. Needs %2% cleaning, a guide is available \"%3% here\".")) % jt->ITMs() % jt->CleaningUtility() % jt->CleaningGuideURL();
+
+                    else if (jt->ITMs() > -1 && jt->UDRs() > -1 && jt->DeletedNavmeshes() == -1)
+                        f = boost::format(boost::locale::translate("Contains %1% ITM records and %2% UDR records. Needs %3% cleaning, a guide is available \"%4% here\".")) % jt->ITMs() % jt->UDRs() % jt->CleaningUtility() % jt->CleaningGuideURL();
+
+                    messages.push_back(boss::Message(boss::g_message_warn, f.str()));
+                }
+
                 AppendMessages(plugin, messages, warnNo, errorNo);
             }
         }
@@ -649,6 +675,17 @@ namespace YAML {
             out << *it;
         }
         out << EndSeq;
+    }
+
+    inline Emitter& operator << (Emitter& out, const boss::DirtData& rhs) {
+        out << BeginMap
+            << Key << "crc" << Value << rhs.CRC()
+            << Key << "itm" << Value << rhs.ITMs()
+            << Key << "udr" << Value << rhs.UDRs()
+            << Key << "nav" << Value << rhs.DeletedNavmeshes()
+            << Key << "util" << Value << rhs.CleaningUtility()
+            << Key << "guide" << Value << rhs.CleaningGuideURL()
+            << EndMap;
     }
 
     inline Emitter& operator << (Emitter& out, const boss::Game& rhs) {

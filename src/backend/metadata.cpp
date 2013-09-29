@@ -74,6 +74,39 @@ namespace boss {
         return id;
     }
 
+    DirtData::DirtData() : _crc(0), _itm(-1), _udr(-1), _nav(-1) {}
+
+    DirtData::DirtData(uint32_t crc, int itm, int udr, int nav, const std::string& utility, const std::string& guideURL) : _crc(crc), _itm(itm), _udr(udr), _nav(nav), _utility(utility), _guideURL(guideURL) {}
+
+    bool DirtData::operator < (const DirtData& rhs) const {
+        return _crc < rhs.CRC();
+    }
+
+    uint32_t DirtData::CRC() const {
+        return _crc;
+    }
+
+    int DirtData::ITMs() const {
+        return _itm;
+    }
+
+    int DirtData::UDRs() const {
+        return _udr;
+    }
+
+    int DirtData::DeletedNavmeshes() const {
+        return _nav;
+    }
+
+    std::string DirtData::CleaningUtility() const {
+        return _utility;
+    }
+
+    std::string DirtData::CleaningGuideURL() const {
+        return _guideURL;
+    }
+
+
     ConditionStruct::ConditionStruct() {}
 
     ConditionStruct::ConditionStruct(const string& condition) : _condition(condition) {}
@@ -405,6 +438,9 @@ namespace boss {
         std::list<Message> pMessages = plugin.Messages();
         messages.insert(messages.end(), pMessages.begin(), pMessages.end());
 
+        set<DirtData> dirtyInfo = plugin.DirtyInfo();
+        _dirtyInfo.insert(dirtyInfo.begin(), dirtyInfo.end());
+
         return;
     }
 
@@ -441,6 +477,11 @@ namespace boss {
         set_symmetric_difference(bashTags.begin(), bashTags.end(), tags.begin(), tags.end(), inserter(tagDiff, tagDiff.begin()));
         p.Tags(tagDiff);
 
+        set<DirtData> dirtyInfo = plugin.DirtyInfo();
+        set<DirtData> dirtDiff;
+        set_symmetric_difference(dirtyInfo.begin(), dirtyInfo.end(), _dirtyInfo.begin(), _dirtyInfo.end(), inserter(dirtDiff, dirtDiff.begin()));
+        p.DirtyInfo(dirtDiff);
+
         return p;
     }
 
@@ -476,6 +517,10 @@ namespace boss {
         return tags;
     }
 
+    std::set<DirtData> Plugin::DirtyInfo() const {
+        return _dirtyInfo;
+    }
+
     void Plugin::Name(const std::string& n) {
         name = n;
     }
@@ -506,6 +551,10 @@ namespace boss {
 
     void Plugin::Tags(const std::set<Tag>& t) {
         tags = t;
+    }
+
+    void Plugin::DirtyInfo(const std::set<DirtData>& dirtyInfo) {
+        _dirtyInfo = dirtyInfo;
     }
 
     void Plugin::EvalAllConditions(boss::Game& game, const unsigned int language) {
@@ -540,6 +589,27 @@ namespace boss {
         for (set<Tag>::iterator it = tags.begin(); it != tags.end();) {
             if (!it->EvalCondition(game))
                 tags.erase(it++);
+            else
+                ++it;
+        }
+
+        //First need to get plugin's CRC.
+        uint32_t crc = 0;
+        boost::unordered_map<std::string,uint32_t>::iterator it = game.crcCache.find(boost::to_lower_copy(name));
+        if (it != game.crcCache.end())
+            crc = it->second;
+        else if (boost::filesystem::exists(game.DataPath() / name)) {
+            crc = GetCrc32(game.DataPath() / name);
+            game.crcCache.emplace(boost::to_lower_copy(name), crc);
+        } else if (boost::filesystem::exists(game.DataPath() / (name + ".ghost"))) {
+            crc = GetCrc32(game.DataPath() / (name + ".ghost"));
+            game.crcCache.emplace(boost::to_lower_copy(name), crc);
+        } else
+            _dirtyInfo.clear();
+
+        for (set<DirtData>::iterator it = _dirtyInfo.begin(); it != _dirtyInfo.end();) {
+            if (it->CRC() != crc)
+                _dirtyInfo.erase(it++);
             else
                 ++it;
         }

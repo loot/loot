@@ -110,6 +110,38 @@ namespace YAML {
     };
 
     template<>
+    struct convert<boss::DirtData> {
+        static Node encode(const boss::DirtData& rhs) {
+            Node node;
+            node["crc"] = rhs.CRC();
+            node["itm"] = rhs.ITMs();
+            node["udr"] = rhs.UDRs();
+            node["nav"] = rhs.DeletedNavmeshes();
+            node["util"] = rhs.CleaningUtility();
+            node["guide"] = rhs.CleaningGuideURL();
+
+            return node;
+        }
+
+        static bool decode(const Node& node, boss::DirtData& rhs) {
+            if (!node.IsMap() || !node["crc"] || !node["util"] || !node["guide"])
+                return false;
+
+            uint32_t crc = node["crc"].as<uint32_t>();
+            int itm = node["itm"].as<int>();
+            int udr = node["udr"].as<int>();
+            int nav = node["nav"].as<int>();
+
+            std::string util = node["util"].as<std::string>();
+            std::string guide = node["guide"].as<std::string>();
+
+            rhs = boss::DirtData(crc, itm, udr, nav, util, guide);
+
+            return true;
+        }
+    };
+
+    template<>
     struct convert<boss::MessageContent> {
         static Node encode(const boss::MessageContent& rhs) {
             Node node;

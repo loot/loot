@@ -52,6 +52,28 @@ namespace boss {
         uint32_t id;
     };
 
+    class DirtData {
+    public:
+        DirtData();
+        DirtData(uint32_t crc, int itm, int udr, int nav, const std::string& utility, const std::string& guideURL);
+
+        bool operator < (const DirtData& rhs) const;
+
+        uint32_t CRC() const;
+        int ITMs() const;
+        int UDRs() const;
+        int DeletedNavmeshes() const;
+        std::string CleaningUtility() const;
+        std::string CleaningGuideURL() const;
+    private:
+        uint32_t _crc;
+        int _itm;
+        int _udr;
+        int _nav;
+        std::string _utility;
+        std::string _guideURL;
+    };
+
     class ConditionStruct {
     public:
         ConditionStruct();
@@ -149,6 +171,7 @@ namespace boss {
         std::set<File> Incs() const;
         std::list<Message> Messages() const;
         std::set<Tag> Tags() const;
+        std::set<DirtData> DirtyInfo() const;
 
         const std::set<FormID>& FormIDs() const;
         std::vector<std::string> Masters() const;
@@ -164,6 +187,7 @@ namespace boss {
         void Incs(const std::set<File>& incs);
         void Messages(const std::list<Message>& messages);
         void Tags(const std::set<Tag>& tags);
+        void DirtyInfo(const std::set<DirtData>& info);
 
         void EvalAllConditions(boss::Game& game, const unsigned int language);
         bool HasNameOnly() const;
@@ -191,6 +215,7 @@ namespace boss {
         std::set<File> incompatibilities;
         std::list<Message> messages;
         std::set<Tag> tags;
+        std::set<DirtData> _dirtyInfo;
 
         std::vector<std::string> masters;
         std::set<FormID> formIDs;
