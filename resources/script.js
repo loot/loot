@@ -88,6 +88,7 @@ function toggleDisplayCSS(evt) {
     }
 }
 function toggleFilters(evt) {
+    var filters = document.getElementById('filters');
     if (document.getElementById('filtersToggle').className.indexOf('current') == -1) {
         showElement(filters);
         evt.target.className += ' current';
@@ -97,7 +98,7 @@ function toggleFilters(evt) {
     }
 }
 function showSection(evt) {
-    elemArr = document.getElementById('nav').querySelectorAll('.button[data-section]');
+    var elemArr = document.getElementById('nav').querySelectorAll('.button[data-section]');
     var i = elemArr.length - 1;
     while (i > -1) {
         hideElement(document.getElementById(elemArr[i].getAttribute('data-section')));
@@ -111,13 +112,15 @@ function showSection(evt) {
     if (evt.target.className.indexOf('current') == -1) {
         evt.target.className += ' current';
     } /*Also enable/disable filters based on current page.*/
-    var elemArr = document.getElementById('filters').getElementsByTagName('input');
-    for (var i = 0, z = elemArr.length; i < z; i++) {
-        if (evt.target.getAttribute('data-section') == 'plugins') {
-            elemArr[i].disabled = false;
-        } else {
-            elemArr[i].disabled = true;
+    if (evt.target.getAttribute('data-section') == 'plugins') {
+        showElement(document.getElementById('filtersToggle'));
+        if (document.getElementById('filtersToggle').className.indexOf('current') != -1) {
+            showElement(filters);
         }
+    } else {
+        hideElement(document.getElementById('filtersToggle'));
+        hideElement(document.getElementById('filters'));
+
     }
 }
 function toggleMessages(evt) {
@@ -216,10 +219,6 @@ function init() {
     setupEventHandlers();
     if (isStorageSupported()) {
         loadSettings();
-    }
-    var elemArr = document.getElementById('filters').getElementsByTagName('input');
-    for (var i = 0, z = elemArr.length; i < z; i++) {
-        elemArr[i].disabled = true;
     }
     showElement(document.getElementsByTagName('section')[0])
 }
