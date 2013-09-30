@@ -680,12 +680,17 @@ namespace YAML {
     inline Emitter& operator << (Emitter& out, const boss::DirtData& rhs) {
         out << BeginMap
             << Key << "crc" << Value << rhs.CRC()
-            << Key << "itm" << Value << rhs.ITMs()
-            << Key << "udr" << Value << rhs.UDRs()
-            << Key << "nav" << Value << rhs.DeletedNavmeshes()
             << Key << "util" << Value << rhs.CleaningUtility()
-            << Key << "guide" << Value << rhs.CleaningGuideURL()
-            << EndMap;
+            << Key << "guide" << Value << rhs.CleaningGuideURL();
+
+        if (rhs.ITMs() > -1)
+            out << Key << "itm" << Value << rhs.ITMs();
+        if (rhs.UDRs() > -1)
+            out << Key << "udr" << Value << rhs.UDRs();
+        if (rhs.DeletedNavmeshes() > -1)
+            out << Key << "nav" << Value << rhs.DeletedNavmeshes();
+
+        out << EndMap;
     }
 
     inline Emitter& operator << (Emitter& out, const boss::Game& rhs) {

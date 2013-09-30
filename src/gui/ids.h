@@ -53,6 +53,7 @@ enum {
     LIST_LoadAfter,
     LIST_Messages,
     LIST_BashTags,
+    LIST_DirtyInfo,
     LIST_MessageContent,
     BUTTON_AddRow,
     BUTTON_EditRow,

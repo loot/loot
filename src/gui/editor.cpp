@@ -26,6 +26,7 @@
 #include "../backend/streams.h"
 
 #include <algorithm>
+#include <sstream>
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 
@@ -116,6 +117,7 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     wxPanel * loadAfterTab = new wxPanel(listBook);
     wxPanel * messagesTab = new wxPanel(listBook);
     wxPanel * tagsTab = new wxPanel(listBook);
+    wxPanel * dirtyTab = new wxPanel(listBook);
 
     //Initialise controls.
     pluginText = new wxStaticText(this, wxID_ANY, "");
@@ -135,6 +137,7 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     incsList = new wxListView(incsTab, LIST_Incs, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL);
     loadAfterList = new wxListView(loadAfterTab, LIST_LoadAfter, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL);
     tagsList = new wxListView(tagsTab, LIST_BashTags, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL);
+    dirtyList = new wxListView(dirtyTab, LIST_DirtyInfo, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL);
     messageList = new MessageList(messagesTab, LIST_Messages, language);
 
     //Tie together notebooks and panels.
@@ -143,6 +146,7 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     listBook->AddPage(loadAfterTab, translate("Load After"));
     listBook->AddPage(messagesTab, translate("Messages"));
     listBook->AddPage(tagsTab, translate("Bash Tags"));
+    listBook->AddPage(dirtyTab, translate("Dirty Info"));
 
     //Set up list columns.
     pluginList->AppendColumn(translate("Plugins"));
@@ -162,6 +166,13 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     tagsList->AppendColumn(translate("Add/Remove"));
     tagsList->AppendColumn(translate("Bash Tag"));
     tagsList->AppendColumn(translate("Condition"));
+
+    dirtyList->AppendColumn(translate("CRC"));
+    dirtyList->AppendColumn(translate("ITM Count"));
+    dirtyList->AppendColumn(translate("UDR Count"));
+    dirtyList->AppendColumn(translate("Deleted Navmesh Count"));
+    dirtyList->AppendColumn(translate("Cleaning Utility"));
+    dirtyList->AppendColumn(translate("Cleaning Guide URL"));
 
     //Initialise control states.
     addBtn->Enable(false);
@@ -183,6 +194,7 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     Bind(wxEVT_COMMAND_LIST_ITEM_SELECTED, &Editor::OnRowSelect, this, LIST_LoadAfter);
     Bind(wxEVT_COMMAND_LIST_ITEM_SELECTED, &Editor::OnRowSelect, this, LIST_Messages);
     Bind(wxEVT_COMMAND_LIST_ITEM_SELECTED, &Editor::OnRowSelect, this, LIST_BashTags);
+    Bind(wxEVT_COMMAND_LIST_ITEM_SELECTED, &Editor::OnRowSelect, this, LIST_DirtyInfo);
     Bind(wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED, &Editor::OnListBookChange, this, BOOK_Lists);
     Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Editor::OnQuit, this, BUTTON_Apply);
     Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Editor::OnQuit, this, BUTTON_Cancel);
@@ -228,6 +240,10 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     wxBoxSizer * tabBox5 = new wxBoxSizer(wxVERTICAL);
     tabBox5->Add(tagsList, 1, wxEXPAND);
     tagsTab->SetSizer(tabBox5);
+
+    wxBoxSizer * tabBox6 = new wxBoxSizer(wxVERTICAL);
+    tabBox6->Add(dirtyList, 1, wxEXPAND);
+    dirtyTab->SetSizer(tabBox6);
 
     mainBox->Add(listBook, 1, wxEXPAND|wxTOP|wxBOTTOM, 10);
 
@@ -334,6 +350,18 @@ void Editor::OnPluginSelect(wxListEvent& event) {
             ++i;
         }
 
+        set<boss::DirtData> dirtyInfo = plugin.DirtyInfo();
+        i=0;
+        for (set<boss::DirtData>::const_iterator it=dirtyInfo.begin(), endit=dirtyInfo.end(); it != endit; ++it) {
+            dirtyList->InsertItem(i, FromUTF8(boss::IntToHexString(it->CRC())));
+            dirtyList->SetItem(i, 1, FromUTF8(boss::IntToString(it->ITMs())));
+            dirtyList->SetItem(i, 2, FromUTF8(boss::IntToString(it->UDRs())));
+            dirtyList->SetItem(i, 2, FromUTF8(boss::IntToString(it->DeletedNavmeshes())));
+            dirtyList->SetItem(i, 2, FromUTF8(it->CleaningUtility()));
+            dirtyList->SetItem(i, 2, FromUTF8(it->CleaningGuideURL()));
+            ++i;
+        }
+
         //Set control states.
         prioritySpin->Enable(true);
         enableUserEditsBox->Enable(true);
@@ -362,6 +390,10 @@ void Editor::OnListBookChange(wxBookCtrlEvent& event) {
         addBtn->SetLabel(translate("Add Bash Tag"));
         editBtn->SetLabel(translate("Edit Bash Tag"));
         removeBtn->SetLabel(translate("Remove Bash Tag"));
+    } else if (event.GetSelection() == 5) {
+        addBtn->SetLabel(translate("Add Dirty Info"));
+        editBtn->SetLabel(translate("Edit Dirty Info"));
+        removeBtn->SetLabel(translate("Remove Dirty Info"));
     }
     editBtn->Enable(false);
     removeBtn->Enable(false);
@@ -453,6 +485,49 @@ void Editor::OnAddRow(wxCommandEvent& event) {
         tagsList->InsertItem(i, rowDialog->GetState());
         tagsList->SetItem(i, 1, rowDialog->GetName());
         tagsList->SetItem(i, 2, rowDialog->GetCondition());
+    } else if (listBook->GetSelection() == 5) {
+        BOOST_LOG_TRIVIAL(debug) << "Adding new dirty info row.";
+
+        DirtInfoEditDialog * rowDialog = new DirtInfoEditDialog(this, translate("BOSS: Add Dirty Info"));
+
+        if (rowDialog->ShowModal() != wxID_OK) {
+            BOOST_LOG_TRIVIAL(debug) << "Cancelled adding dirty info row.";
+            return;
+        }
+
+        if (rowDialog->GetCRC().empty()) {
+            BOOST_LOG_TRIVIAL(error) << "No CRC specified. Row will not be added.";
+            wxMessageBox(
+                translate("Error: No CRC specified. Row will not be added."),
+                translate("BOSS: Error"),
+                wxOK | wxICON_ERROR,
+                this);
+            return;
+        } else if (rowDialog->GetUtility().empty()) {
+            BOOST_LOG_TRIVIAL(error) << "No cleaning utility specified. Row will not be added.";
+            wxMessageBox(
+                translate("Error: No cleaning utility specified. Row will not be added."),
+                translate("BOSS: Error"),
+                wxOK | wxICON_ERROR,
+                this);
+            return;
+        } else if (rowDialog->GetGuideURL().empty()) {
+            BOOST_LOG_TRIVIAL(error) << "No cleaning guide URL specified. Row will not be added.";
+            wxMessageBox(
+                translate("Error: No cleaning guide URL specified. Row will not be added."),
+                translate("BOSS: Error"),
+                wxOK | wxICON_ERROR,
+                this);
+            return;
+        }
+
+        long i = tagsList->GetItemCount();
+        dirtyList->InsertItem(i, rowDialog->GetCRC());
+        dirtyList->SetItem(i, 1, FromUTF8(boss::IntToString(rowDialog->GetITMs())));
+        dirtyList->SetItem(i, 2, FromUTF8(boss::IntToString(rowDialog->GetUDRs())));
+        dirtyList->SetItem(i, 2, FromUTF8(boss::IntToString(rowDialog->GetDeletedNavmeshes())));
+        dirtyList->SetItem(i, 2, rowDialog->GetUtility());
+        dirtyList->SetItem(i, 2, rowDialog->GetGuideURL());
     }
 }
 
@@ -547,6 +622,56 @@ void Editor::OnEditRow(wxCommandEvent& event) {
         tagsList->SetItem(i, 0, rowDialog->GetState());
         tagsList->SetItem(i, 1, rowDialog->GetName());
         tagsList->SetItem(i, 2, rowDialog->GetCondition());
+    } else if (listBook->GetSelection() == 5) {
+        BOOST_LOG_TRIVIAL(debug) << "Editing dirty info row.";
+        DirtInfoEditDialog * rowDialog = new DirtInfoEditDialog(this, translate("BOSS: Edit Dirty Info"));
+
+        long i = tagsList->GetFirstSelected();
+
+        rowDialog->SetValues(tagsList->GetItemText(i, 0),
+                             atoi(string(tagsList->GetItemText(i, 1)).c_str()),
+                             atoi(string(tagsList->GetItemText(i, 2)).c_str()),
+                             atoi(string(tagsList->GetItemText(i, 3)).c_str()),
+                             tagsList->GetItemText(i, 4),
+                             tagsList->GetItemText(i, 5));
+
+        if (rowDialog->ShowModal() != wxID_OK) {
+            BOOST_LOG_TRIVIAL(debug) << "Cancelled editing tag row.";
+            return;
+        }
+
+        if (rowDialog->GetCRC().empty()) {
+            BOOST_LOG_TRIVIAL(error) << "No CRC specified. Row will not be edited.";
+            wxMessageBox(
+                translate("Error: No CRC specified. Row will not be edited."),
+                translate("BOSS: Error"),
+                wxOK | wxICON_ERROR,
+                this);
+            return;
+        } else if (rowDialog->GetUtility().empty()) {
+            BOOST_LOG_TRIVIAL(error) << "No cleaning utility specified. Row will not be edited.";
+            wxMessageBox(
+                translate("Error: No cleaning utility specified. Row will not be edited."),
+                translate("BOSS: Error"),
+                wxOK | wxICON_ERROR,
+                this);
+            return;
+        } else if (rowDialog->GetGuideURL().empty()) {
+            BOOST_LOG_TRIVIAL(error) << "No cleaning guide URL specified. Row will not be edited.";
+            wxMessageBox(
+                translate("Error: No cleaning guide URL specified. Row will not be edited."),
+                translate("BOSS: Error"),
+                wxOK | wxICON_ERROR,
+                this);
+            return;
+        }
+
+        dirtyList->SetItem(i, 0, rowDialog->GetCRC());
+        dirtyList->SetItem(i, 1, FromUTF8(boss::IntToString(rowDialog->GetITMs())));
+        dirtyList->SetItem(i, 2, FromUTF8(boss::IntToString(rowDialog->GetUDRs())));
+        dirtyList->SetItem(i, 2, FromUTF8(boss::IntToString(rowDialog->GetDeletedNavmeshes())));
+        dirtyList->SetItem(i, 2, rowDialog->GetUtility());
+        dirtyList->SetItem(i, 2, rowDialog->GetGuideURL());
     }
 }
 
@@ -668,7 +793,7 @@ void Editor::OnRowSelect(wxListEvent& event) {
             removeBtn->Enable(false);
         }
 
-    } else {
+    } else if (event.GetId() == LIST_BashTags) {
 
         boss::Tag tag = RowToTag(tagsList, event.GetIndex());
         boss::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
@@ -692,6 +817,28 @@ void Editor::OnRowSelect(wxListEvent& event) {
             removeBtn->Enable(false);
         }
 
+    } else {
+        boss::DirtData dirtyData = RowToDirtData(dirtyList, event.GetIndex());
+        boss::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
+
+        vector<boss::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
+
+        if (it != _basePlugins.end())
+            plugin = *it;
+        else
+            BOOST_LOG_TRIVIAL(warning) << "Could not find plugin in base list: " << plugin.Name();
+
+        set<boss::DirtData> dirtyInfo = plugin.DirtyInfo();
+
+        if (dirtyInfo.find(dirtyData) == dirtyInfo.end()) {
+            BOOST_LOG_TRIVIAL(trace) << "Dirty info for CRC \"" << dirtyData.CRC() << "\" was not found in base plugin metadata. Editing enabled.";
+            editBtn->Enable(true);
+            removeBtn->Enable(true);
+        } else {
+            BOOST_LOG_TRIVIAL(trace) << "Dirty info for CRC \"" << dirtyData.CRC() << "\" was found in base plugin metadata. Editing disabled.";
+            editBtn->Enable(false);
+            removeBtn->Enable(false);
+        }
     }
 }
 
@@ -814,6 +961,12 @@ boss::Plugin Editor::GetNewData(const wxString& plugin) const {
     }
     p.Tags(tags);
 
+    set<boss::DirtData> dirtyData;
+    for (int i=0,max=dirtyList->GetItemCount(); i < max; ++i) {
+        dirtyData.insert(RowToDirtData(dirtyList, i));
+    }
+    p.DirtyInfo(dirtyData);
+
     vector<boss::Message> vec = messageList->GetItems();
     list<boss::Message> messages(vec.begin(), vec.end());
     p.Messages(messages);
@@ -844,6 +997,22 @@ boss::Tag Editor::RowToTag(wxListView * list, long row) const {
             true,
             string(list->GetItemText(row, 2).ToUTF8())
         );
+}
+
+boss::DirtData Editor::RowToDirtData(wxListView * list, long row) const {
+    string text(list->GetItemText(row, 0).ToUTF8());
+    uint32_t crc;
+    std::stringstream ss;
+    ss << std::hex << text;
+    ss >> crc;
+    return boss::DirtData(
+        crc,
+        atoi(string(list->GetItemText(row, 1).ToUTF8()).c_str()),
+        atoi(string(list->GetItemText(row, 2).ToUTF8()).c_str()),
+        atoi(string(list->GetItemText(row, 3).ToUTF8()).c_str()),
+        string(list->GetItemText(row, 4).ToUTF8()),
+        string(list->GetItemText(row, 5).ToUTF8())
+    );
 }
 
 FileEditDialog::FileEditDialog(wxWindow *parent, const wxString& title) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER) {
@@ -1135,4 +1304,90 @@ wxString TagEditDialog::GetName() const {
 
 wxString TagEditDialog::GetCondition() const {
     return _condition->GetValue();
+}
+
+DirtInfoEditDialog::DirtInfoEditDialog(wxWindow * parent, const wxString& title) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER) {
+    //Initialise controls.
+    _itm = new wxSpinCtrl(this, wxID_ANY, "0");
+    _udr = new wxSpinCtrl(this, wxID_ANY, "0");
+    _nav = new wxSpinCtrl(this, wxID_ANY, "0");
+    _crc = new wxTextCtrl(this, wxID_ANY);
+    _utility = new wxTextCtrl(this, wxID_ANY);
+    _guideURL = new wxTextCtrl(this, wxID_ANY);
+
+    wxSizerFlags leftItem(0);
+	leftItem.Left();
+
+	wxSizerFlags rightItem(1);
+	rightItem.Right().Expand();
+
+    wxBoxSizer * bigBox = new wxBoxSizer(wxVERTICAL);
+
+	wxFlexGridSizer * GridSizer = new wxFlexGridSizer(2, 5, 5);
+    GridSizer->AddGrowableCol(1,1);
+
+	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("CRC:")), leftItem);
+	GridSizer->Add(_crc, rightItem);
+
+	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("ITM Count:")), leftItem);
+	GridSizer->Add(_itm, rightItem);
+
+	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("UDR Count:")), leftItem);
+	GridSizer->Add(_udr, rightItem);
+
+	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Deleted Navmesh Count:")), leftItem);
+	GridSizer->Add(_nav, rightItem);
+
+	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Cleaning Utility:")), leftItem);
+	GridSizer->Add(_utility, rightItem);
+
+	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Cleaning Guide URL:")), leftItem);
+	GridSizer->Add(_guideURL, rightItem);
+
+    bigBox->Add(GridSizer, 0, wxEXPAND|wxALL, 15);
+
+    bigBox->AddSpacer(10);
+    bigBox->AddStretchSpacer(1);
+
+    //Need to add 'OK' and 'Cancel' buttons.
+	wxSizer * sizer = CreateSeparatedButtonSizer(wxOK|wxCANCEL);
+    if (sizer != NULL)
+        bigBox->Add(sizer, 0, wxEXPAND|wxLEFT|wxBOTTOM|wxRIGHT, 15);
+
+    SetBackgroundColour(wxColour(255,255,255));
+    SetIcon(wxIconLocation("BOSS.exe"));
+	SetSizerAndFit(bigBox);
+}
+
+void DirtInfoEditDialog::SetValues(const wxString& crc, int itm, int udr, int nav, const wxString& utility, const wxString& guideURL) {
+    _crc->SetValue(crc);
+    _itm->SetValue(itm);
+    _udr->SetValue(udr);
+    _nav->SetValue(nav);
+    _utility->SetValue(utility);
+    _guideURL->SetValue(guideURL);
+}
+
+wxString DirtInfoEditDialog::GetCRC() const {
+    return _crc->GetValue();
+}
+
+int DirtInfoEditDialog::GetITMs() const {
+    return _itm->GetValue();
+}
+
+int DirtInfoEditDialog::GetUDRs() const {
+    return _udr->GetValue();
+}
+
+int DirtInfoEditDialog::GetDeletedNavmeshes() const {
+    return _nav->GetValue();
+}
+
+wxString DirtInfoEditDialog::GetUtility() const {
+    return _utility->GetValue();
+}
+
+wxString DirtInfoEditDialog::GetGuideURL() const {
+    return _guideURL->GetValue();
 }

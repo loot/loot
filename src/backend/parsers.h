@@ -114,9 +114,12 @@ namespace YAML {
         static Node encode(const boss::DirtData& rhs) {
             Node node;
             node["crc"] = rhs.CRC();
-            node["itm"] = rhs.ITMs();
-            node["udr"] = rhs.UDRs();
-            node["nav"] = rhs.DeletedNavmeshes();
+            if (rhs.ITMs() > -1)
+                node["itm"] = rhs.ITMs();
+            if (rhs.UDRs() > -1)
+                node["udr"] = rhs.UDRs();
+            if (rhs.DeletedNavmeshes() > -1)
+                node["nav"] = rhs.DeletedNavmeshes();
             node["util"] = rhs.CleaningUtility();
             node["guide"] = rhs.CleaningGuideURL();
 
@@ -128,9 +131,14 @@ namespace YAML {
                 return false;
 
             uint32_t crc = node["crc"].as<uint32_t>();
-            int itm = node["itm"].as<int>();
-            int udr = node["udr"].as<int>();
-            int nav = node["nav"].as<int>();
+            int itm = -1, udr = -1, nav = -1;
+
+            if (node["itm"])
+                itm = node["itm"].as<int>();
+            if (node["udr"])
+                udr = node["udr"].as<int>();
+            if (node["nav"])
+                nav = node["nav"].as<int>();
 
             std::string util = node["util"].as<std::string>();
             std::string guide = node["guide"].as<std::string>();

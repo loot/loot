@@ -81,6 +81,7 @@ private:
     wxListView * loadAfterList;
     MessageList * messageList;
     wxListView * tagsList;
+    wxListView * dirtyList;
     wxNotebook * listBook;
     wxCheckBox * enableUserEditsBox;
     wxSpinCtrl * prioritySpin;
@@ -99,6 +100,7 @@ private:
 
     boss::File RowToFile(wxListView * list, long row) const;
     boss::Tag RowToTag(wxListView * list, long row) const;
+    boss::DirtData RowToDirtData(wxListView * list, long row) const;
 };
 
 class FileEditDialog : public wxDialog {
@@ -149,6 +151,26 @@ private:
     wxChoice * _state;
     wxTextCtrl * _name;
     wxTextCtrl * _condition;
+};
+
+class DirtInfoEditDialog : public wxDialog {
+public:
+    DirtInfoEditDialog(wxWindow * parent, const wxString& title);
+
+    void SetValues(const wxString& crc, int itm, int udr, int nav, const wxString& utility, const wxString& guideURL);
+    wxString GetCRC() const;
+    int GetITMs() const;
+    int GetUDRs() const;
+    int GetDeletedNavmeshes() const;
+    wxString GetUtility() const;
+    wxString GetGuideURL() const;
+private:
+    wxTextCtrl * _crc;
+    wxSpinCtrl * _itm;
+    wxSpinCtrl * _udr;
+    wxSpinCtrl * _nav;
+    wxTextCtrl * _utility;
+    wxTextCtrl * _guideURL;
 };
 
 #endif
