@@ -306,10 +306,11 @@ namespace boss {
             note.text().set(boost::locale::translate("No change in details since last run.").str().c_str());
         }
 
-        div = summary.append_child();
-        div.set_name("div");
-
         if (!messages.empty()) {
+
+            div = summary.append_child();
+            div.set_name("div");
+
             heading = div.append_child();
             heading.set_name("h2");
             heading.text().set(boost::locale::translate("General Messages").str().c_str());
@@ -400,13 +401,13 @@ namespace boss {
                     if (!add.empty()) {
                         node = plugin.append_child();
                         node.set_name("div");
-                        node.append_attribute("class").set_value("tagAdd");
+                        node.append_attribute("class").set_value("tag add");
                         node.text().set((boost::locale::translate("Add:").str() + " " + add.substr(2)).c_str());
                     }
                     if (!remove.empty()) {
                         node = plugin.append_child();
                         node.set_name("div");
-                        node.append_attribute("class").set_value("tagRemove");
+                        node.append_attribute("class").set_value("tag remove");
                         node.text().set((boost::locale::translate("Remove:").str() + " " + add.substr(2)).c_str());
                     }
                 }
@@ -533,16 +534,17 @@ namespace boss {
         input = label.append_child();
         input.set_name("input");
         input.append_attribute("type").set_value("checkbox");
-        input.append_attribute("id").set_value("hideNotes");
-        input.text().set(boost::locale::translate("Hide Notes").str().c_str());
+        input.append_attribute("id").set_value("hideBashTags");
+        input.append_attribute("data-class").set_value("tag");
+        input.text().set(boost::locale::translate("Hide Bash Tag Suggestions").str().c_str());
 
         label = filters.append_child();
         label.set_name("label");
         input = label.append_child();
         input.set_name("input");
         input.append_attribute("type").set_value("checkbox");
-        input.append_attribute("id").set_value("hideBashTags");
-        input.text().set(boost::locale::translate("Hide Bash Tag Suggestions").str().c_str());
+        input.append_attribute("id").set_value("hideNotes");
+        input.text().set(boost::locale::translate("Hide Notes").str().c_str());
 
         label = filters.append_child();
         label.set_name("label");

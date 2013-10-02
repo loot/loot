@@ -135,8 +135,6 @@ function toggleMessages(evt) {
                 filterMatch = true;
             } else if (evt.target.id == 'hideNotes' && listItems[i].className.indexOf('say') != -1) {
                 filterMatch = true;
-            } else if (evt.target.id == 'hideBashTags' && listItems[i].className.indexOf('tag') != -1) {
-                filterMatch = true;
             } else if (evt.target.id == 'hideDoNotCleanMessages' && listItems[i].innerHTML.indexOf('Do not clean.') != -1) {
                 filterMatch = true;
             }
@@ -209,8 +207,8 @@ function setupEventHandlers() {
     }
     document.getElementById('hideVersionNumbers').addEventListener('click', toggleDisplayCSS, false);
     document.getElementById('hideCRCs').addEventListener('click', toggleDisplayCSS, false);
+    document.getElementById('hideBashTags').addEventListener('click', toggleDisplayCSS, false);
     document.getElementById('hideNotes').addEventListener('click', toggleMessages, false);
-    document.getElementById('hideBashTags').addEventListener('click', toggleMessages, false);
     document.getElementById('hideDoNotCleanMessages').addEventListener('click', toggleMessages, false);
     document.getElementById('hideAllPluginMessages').addEventListener('click', toggleMessages, false);
     document.getElementById('hideMessagelessPlugins').addEventListener('click', togglePlugins, false);

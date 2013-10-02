@@ -74,7 +74,7 @@ td {
 }
 table td:first-child {
     text-align:left;
-    padding-left:0.5em;
+    padding-left:0;
 }
 #noChanges {
 	font-weight:bold;
@@ -116,12 +116,10 @@ ul {margin-top:0.5em;list-style:none;padding-left:0;}
 
 #plugins > ul > li, #summary > div {background:white; overflow:hidden; margin:1em; box-shadow:0 0 3px 0px rgba(0,0,0,0.5); padding:1em;}
 .mod {font-size:1.5em; display:block; font-weight:normal; margin-bottom:0.5em; margin-top:0; }
-.meta {padding-left:0; display:block;}
-.crc, .version, .tagAdd, .tagRemove {display:list-item;}
 .version{color:#6394F8;}
 .crc{color:#BC8923;}
-.tagAdd {color:green;}
-.tagRemove {color:red;}
+.tag.add {color:green;}
+.tag.remove {color:red;}
 .meta + ul {margin-top:1em;}
 
 .hidden, li.hidden, #summary.hidden, #plugins.hidden {
@@ -136,7 +134,7 @@ ul {margin-top:0.5em;list-style:none;padding-left:0;}
 
 .error{background:#ff9090;padding:0.5em 1em;list-style:disc inside;}
 
-.warn{background:#FFDD55;display:table;padding:0.5em 1em;border-radius:5px;}
+.warn{background:#FFDD55;padding:0.5em 1em;list-style:disc inside;}
 
 .good > td {background: #90ff90;}
 
