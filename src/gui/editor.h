@@ -100,7 +100,7 @@ private:
 
     boss::File RowToFile(wxListView * list, long row) const;
     boss::Tag RowToTag(wxListView * list, long row) const;
-    boss::DirtData RowToDirtData(wxListView * list, long row) const;
+    boss::PluginDirtyInfo RowToPluginDirtyInfo(wxListView * list, long row) const;
 };
 
 class FileEditDialog : public wxDialog {
@@ -157,20 +157,18 @@ class DirtInfoEditDialog : public wxDialog {
 public:
     DirtInfoEditDialog(wxWindow * parent, const wxString& title);
 
-    void SetValues(const wxString& crc, int itm, int udr, int nav, const wxString& utility, const wxString& guideURL);
+    void SetValues(const wxString& crc, unsigned int itm, unsigned int udr, unsigned int nav, const wxString& utility);
     wxString GetCRC() const;
-    int GetITMs() const;
-    int GetUDRs() const;
-    int GetDeletedNavmeshes() const;
     wxString GetUtility() const;
-    wxString GetGuideURL() const;
+    unsigned int GetITMs() const;
+    unsigned int GetUDRs() const;
+    unsigned int GetDeletedNavmeshes() const;
 private:
     wxTextCtrl * _crc;
     wxSpinCtrl * _itm;
     wxSpinCtrl * _udr;
     wxSpinCtrl * _nav;
     wxTextCtrl * _utility;
-    wxTextCtrl * _guideURL;
 };
 
 #endif

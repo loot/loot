@@ -172,7 +172,6 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     dirtyList->AppendColumn(translate("UDR Count"));
     dirtyList->AppendColumn(translate("Deleted Navmesh Count"));
     dirtyList->AppendColumn(translate("Cleaning Utility"));
-    dirtyList->AppendColumn(translate("Cleaning Guide URL"));
 
     //Initialise control states.
     addBtn->Enable(false);
@@ -350,15 +349,14 @@ void Editor::OnPluginSelect(wxListEvent& event) {
             ++i;
         }
 
-        set<boss::DirtData> dirtyInfo = plugin.DirtyInfo();
+        set<boss::PluginDirtyInfo> dirtyInfo = plugin.DirtyInfo();
         i=0;
-        for (set<boss::DirtData>::const_iterator it=dirtyInfo.begin(), endit=dirtyInfo.end(); it != endit; ++it) {
+        for (set<boss::PluginDirtyInfo>::const_iterator it=dirtyInfo.begin(), endit=dirtyInfo.end(); it != endit; ++it) {
             dirtyList->InsertItem(i, FromUTF8(boss::IntToHexString(it->CRC())));
             dirtyList->SetItem(i, 1, FromUTF8(boss::IntToString(it->ITMs())));
             dirtyList->SetItem(i, 2, FromUTF8(boss::IntToString(it->UDRs())));
-            dirtyList->SetItem(i, 2, FromUTF8(boss::IntToString(it->DeletedNavmeshes())));
-            dirtyList->SetItem(i, 2, FromUTF8(it->CleaningUtility()));
-            dirtyList->SetItem(i, 2, FromUTF8(it->CleaningGuideURL()));
+            dirtyList->SetItem(i, 3, FromUTF8(boss::IntToString(it->DeletedNavmeshes())));
+            dirtyList->SetItem(i, 4, FromUTF8(it->CleaningUtility()));
             ++i;
         }
 
@@ -511,23 +509,14 @@ void Editor::OnAddRow(wxCommandEvent& event) {
                 wxOK | wxICON_ERROR,
                 this);
             return;
-        } else if (rowDialog->GetGuideURL().empty()) {
-            BOOST_LOG_TRIVIAL(error) << "No cleaning guide URL specified. Row will not be added.";
-            wxMessageBox(
-                translate("Error: No cleaning guide URL specified. Row will not be added."),
-                translate("BOSS: Error"),
-                wxOK | wxICON_ERROR,
-                this);
-            return;
         }
 
         long i = tagsList->GetItemCount();
         dirtyList->InsertItem(i, rowDialog->GetCRC());
         dirtyList->SetItem(i, 1, FromUTF8(boss::IntToString(rowDialog->GetITMs())));
         dirtyList->SetItem(i, 2, FromUTF8(boss::IntToString(rowDialog->GetUDRs())));
-        dirtyList->SetItem(i, 2, FromUTF8(boss::IntToString(rowDialog->GetDeletedNavmeshes())));
-        dirtyList->SetItem(i, 2, rowDialog->GetUtility());
-        dirtyList->SetItem(i, 2, rowDialog->GetGuideURL());
+        dirtyList->SetItem(i, 3, FromUTF8(boss::IntToString(rowDialog->GetDeletedNavmeshes())));
+        dirtyList->SetItem(i, 4, rowDialog->GetUtility());
     }
 }
 
@@ -632,8 +621,7 @@ void Editor::OnEditRow(wxCommandEvent& event) {
                              atoi(string(tagsList->GetItemText(i, 1)).c_str()),
                              atoi(string(tagsList->GetItemText(i, 2)).c_str()),
                              atoi(string(tagsList->GetItemText(i, 3)).c_str()),
-                             tagsList->GetItemText(i, 4),
-                             tagsList->GetItemText(i, 5));
+                             tagsList->GetItemText(i, 4));
 
         if (rowDialog->ShowModal() != wxID_OK) {
             BOOST_LOG_TRIVIAL(debug) << "Cancelled editing tag row.";
@@ -656,22 +644,13 @@ void Editor::OnEditRow(wxCommandEvent& event) {
                 wxOK | wxICON_ERROR,
                 this);
             return;
-        } else if (rowDialog->GetGuideURL().empty()) {
-            BOOST_LOG_TRIVIAL(error) << "No cleaning guide URL specified. Row will not be edited.";
-            wxMessageBox(
-                translate("Error: No cleaning guide URL specified. Row will not be edited."),
-                translate("BOSS: Error"),
-                wxOK | wxICON_ERROR,
-                this);
-            return;
         }
 
         dirtyList->SetItem(i, 0, rowDialog->GetCRC());
         dirtyList->SetItem(i, 1, FromUTF8(boss::IntToString(rowDialog->GetITMs())));
         dirtyList->SetItem(i, 2, FromUTF8(boss::IntToString(rowDialog->GetUDRs())));
-        dirtyList->SetItem(i, 2, FromUTF8(boss::IntToString(rowDialog->GetDeletedNavmeshes())));
-        dirtyList->SetItem(i, 2, rowDialog->GetUtility());
-        dirtyList->SetItem(i, 2, rowDialog->GetGuideURL());
+        dirtyList->SetItem(i, 3, FromUTF8(boss::IntToString(rowDialog->GetDeletedNavmeshes())));
+        dirtyList->SetItem(i, 4, rowDialog->GetUtility());
     }
 }
 
@@ -818,7 +797,7 @@ void Editor::OnRowSelect(wxListEvent& event) {
         }
 
     } else {
-        boss::DirtData dirtyData = RowToDirtData(dirtyList, event.GetIndex());
+        boss::PluginDirtyInfo dirtyData = RowToPluginDirtyInfo(dirtyList, event.GetIndex());
         boss::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
 
         vector<boss::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
@@ -828,7 +807,7 @@ void Editor::OnRowSelect(wxListEvent& event) {
         else
             BOOST_LOG_TRIVIAL(warning) << "Could not find plugin in base list: " << plugin.Name();
 
-        set<boss::DirtData> dirtyInfo = plugin.DirtyInfo();
+        set<boss::PluginDirtyInfo> dirtyInfo = plugin.DirtyInfo();
 
         if (dirtyInfo.find(dirtyData) == dirtyInfo.end()) {
             BOOST_LOG_TRIVIAL(trace) << "Dirty info for CRC \"" << dirtyData.CRC() << "\" was not found in base plugin metadata. Editing enabled.";
@@ -961,11 +940,11 @@ boss::Plugin Editor::GetNewData(const wxString& plugin) const {
     }
     p.Tags(tags);
 
-    set<boss::DirtData> dirtyData;
+    set<boss::PluginDirtyInfo> dirtyInfo;
     for (int i=0,max=dirtyList->GetItemCount(); i < max; ++i) {
-        dirtyData.insert(RowToDirtData(dirtyList, i));
+        dirtyInfo.insert(RowToPluginDirtyInfo(dirtyList, i));
     }
-    p.DirtyInfo(dirtyData);
+    p.DirtyInfo(dirtyInfo);
 
     vector<boss::Message> vec = messageList->GetItems();
     list<boss::Message> messages(vec.begin(), vec.end());
@@ -999,20 +978,18 @@ boss::Tag Editor::RowToTag(wxListView * list, long row) const {
         );
 }
 
-boss::DirtData Editor::RowToDirtData(wxListView * list, long row) const {
+boss::PluginDirtyInfo Editor::RowToPluginDirtyInfo(wxListView * list, long row) const {
     string text(list->GetItemText(row, 0).ToUTF8());
     uint32_t crc;
     std::stringstream ss;
     ss << std::hex << text;
     ss >> crc;
-    return boss::DirtData(
+    return boss::PluginDirtyInfo(
         crc,
         atoi(string(list->GetItemText(row, 1).ToUTF8()).c_str()),
         atoi(string(list->GetItemText(row, 2).ToUTF8()).c_str()),
         atoi(string(list->GetItemText(row, 3).ToUTF8()).c_str()),
-        string(list->GetItemText(row, 4).ToUTF8()),
-        string(list->GetItemText(row, 5).ToUTF8())
-    );
+        string(list->GetItemText(row, 4).ToUTF8()));
 }
 
 FileEditDialog::FileEditDialog(wxWindow *parent, const wxString& title) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER) {
@@ -1313,7 +1290,6 @@ DirtInfoEditDialog::DirtInfoEditDialog(wxWindow * parent, const wxString& title)
     _nav = new wxSpinCtrl(this, wxID_ANY, "0");
     _crc = new wxTextCtrl(this, wxID_ANY);
     _utility = new wxTextCtrl(this, wxID_ANY);
-    _guideURL = new wxTextCtrl(this, wxID_ANY);
 
     wxSizerFlags leftItem(0);
 	leftItem.Left();
@@ -1341,9 +1317,6 @@ DirtInfoEditDialog::DirtInfoEditDialog(wxWindow * parent, const wxString& title)
 	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Cleaning Utility:")), leftItem);
 	GridSizer->Add(_utility, rightItem);
 
-	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Cleaning Guide URL:")), leftItem);
-	GridSizer->Add(_guideURL, rightItem);
-
     bigBox->Add(GridSizer, 0, wxEXPAND|wxALL, 15);
 
     bigBox->AddSpacer(10);
@@ -1359,35 +1332,30 @@ DirtInfoEditDialog::DirtInfoEditDialog(wxWindow * parent, const wxString& title)
 	SetSizerAndFit(bigBox);
 }
 
-void DirtInfoEditDialog::SetValues(const wxString& crc, int itm, int udr, int nav, const wxString& utility, const wxString& guideURL) {
+void DirtInfoEditDialog::SetValues(const wxString& crc, unsigned int itm, unsigned int udr, unsigned int nav, const wxString& utility) {
     _crc->SetValue(crc);
     _itm->SetValue(itm);
     _udr->SetValue(udr);
     _nav->SetValue(nav);
     _utility->SetValue(utility);
-    _guideURL->SetValue(guideURL);
 }
 
 wxString DirtInfoEditDialog::GetCRC() const {
     return _crc->GetValue();
 }
 
-int DirtInfoEditDialog::GetITMs() const {
+unsigned int DirtInfoEditDialog::GetITMs() const {
     return _itm->GetValue();
 }
 
-int DirtInfoEditDialog::GetUDRs() const {
+unsigned int DirtInfoEditDialog::GetUDRs() const {
     return _udr->GetValue();
 }
 
-int DirtInfoEditDialog::GetDeletedNavmeshes() const {
+unsigned int DirtInfoEditDialog::GetDeletedNavmeshes() const {
     return _nav->GetValue();
 }
 
 wxString DirtInfoEditDialog::GetUtility() const {
     return _utility->GetValue();
-}
-
-wxString DirtInfoEditDialog::GetGuideURL() const {
-    return _guideURL->GetValue();
 }

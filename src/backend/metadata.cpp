@@ -74,36 +74,32 @@ namespace boss {
         return id;
     }
 
-    DirtData::DirtData() : _crc(0), _itm(-1), _udr(-1), _nav(-1) {}
+    PluginDirtyInfo::PluginDirtyInfo() : _crc(0), _itm(0), _udr(0), _nav(0) {}
 
-    DirtData::DirtData(uint32_t crc, int itm, int udr, int nav, const std::string& utility, const std::string& guideURL) : _crc(crc), _itm(itm), _udr(udr), _nav(nav), _utility(utility), _guideURL(guideURL) {}
+    PluginDirtyInfo::PluginDirtyInfo(uint32_t crc, unsigned int itm, unsigned int udr, unsigned int nav, const std::string& utility) : _crc(crc), _itm(itm), _udr(udr), _nav(nav), _utility(utility) {}
 
-    bool DirtData::operator < (const DirtData& rhs) const {
+    bool PluginDirtyInfo::operator < (const PluginDirtyInfo& rhs) const {
         return _crc < rhs.CRC();
     }
 
-    uint32_t DirtData::CRC() const {
+    uint32_t PluginDirtyInfo::CRC() const {
         return _crc;
     }
 
-    int DirtData::ITMs() const {
+    unsigned int PluginDirtyInfo::ITMs() const {
         return _itm;
     }
 
-    int DirtData::UDRs() const {
+    unsigned int PluginDirtyInfo::UDRs() const {
         return _udr;
     }
 
-    int DirtData::DeletedNavmeshes() const {
+    unsigned int PluginDirtyInfo::DeletedNavmeshes() const {
         return _nav;
     }
 
-    std::string DirtData::CleaningUtility() const {
+    std::string PluginDirtyInfo::CleaningUtility() const {
         return _utility;
-    }
-
-    std::string DirtData::CleaningGuideURL() const {
-        return _guideURL;
     }
 
 
@@ -438,7 +434,7 @@ namespace boss {
         std::list<Message> pMessages = plugin.Messages();
         messages.insert(messages.end(), pMessages.begin(), pMessages.end());
 
-        set<DirtData> dirtyInfo = plugin.DirtyInfo();
+        set<PluginDirtyInfo> dirtyInfo = plugin.DirtyInfo();
         _dirtyInfo.insert(dirtyInfo.begin(), dirtyInfo.end());
 
         return;
@@ -477,8 +473,8 @@ namespace boss {
         set_symmetric_difference(bashTags.begin(), bashTags.end(), tags.begin(), tags.end(), inserter(tagDiff, tagDiff.begin()));
         p.Tags(tagDiff);
 
-        set<DirtData> dirtyInfo = plugin.DirtyInfo();
-        set<DirtData> dirtDiff;
+        set<PluginDirtyInfo> dirtyInfo = plugin.DirtyInfo();
+        set<PluginDirtyInfo> dirtDiff;
         set_symmetric_difference(dirtyInfo.begin(), dirtyInfo.end(), _dirtyInfo.begin(), _dirtyInfo.end(), inserter(dirtDiff, dirtDiff.begin()));
         p.DirtyInfo(dirtDiff);
 
@@ -517,7 +513,7 @@ namespace boss {
         return tags;
     }
 
-    std::set<DirtData> Plugin::DirtyInfo() const {
+    std::set<PluginDirtyInfo> Plugin::DirtyInfo() const {
         return _dirtyInfo;
     }
 
@@ -553,7 +549,7 @@ namespace boss {
         tags = t;
     }
 
-    void Plugin::DirtyInfo(const std::set<DirtData>& dirtyInfo) {
+    void Plugin::DirtyInfo(const std::set<PluginDirtyInfo>& dirtyInfo) {
         _dirtyInfo = dirtyInfo;
     }
 
@@ -607,7 +603,7 @@ namespace boss {
         } else
             _dirtyInfo.clear();
 
-        for (set<DirtData>::iterator it = _dirtyInfo.begin(); it != _dirtyInfo.end();) {
+        for (set<PluginDirtyInfo>::iterator it = _dirtyInfo.begin(); it != _dirtyInfo.end();) {
             if (it->CRC() != crc)
                 _dirtyInfo.erase(it++);
             else

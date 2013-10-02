@@ -110,40 +110,39 @@ namespace YAML {
     };
 
     template<>
-    struct convert<boss::DirtData> {
-        static Node encode(const boss::DirtData& rhs) {
+    struct convert<boss::PluginDirtyInfo> {
+        static Node encode(const boss::PluginDirtyInfo& rhs) {
             Node node;
             node["crc"] = rhs.CRC();
-            if (rhs.ITMs() > -1)
-                node["itm"] = rhs.ITMs();
-            if (rhs.UDRs() > -1)
-                node["udr"] = rhs.UDRs();
-            if (rhs.DeletedNavmeshes() > -1)
-                node["nav"] = rhs.DeletedNavmeshes();
             node["util"] = rhs.CleaningUtility();
-            node["guide"] = rhs.CleaningGuideURL();
+
+            if (rhs.ITMs() > 0)
+                node["itm"] = rhs.ITMs();
+            if (rhs.UDRs() > 0)
+                node["udr"] = rhs.UDRs();
+            if (rhs.DeletedNavmeshes() > 0)
+                node["nav"] = rhs.DeletedNavmeshes();
 
             return node;
         }
 
-        static bool decode(const Node& node, boss::DirtData& rhs) {
-            if (!node.IsMap() || !node["crc"] || !node["util"] || !node["guide"])
+        static bool decode(const Node& node, boss::PluginDirtyInfo& rhs) {
+            if (!node.IsMap() || !node["crc"] || !node["util"])
                 return false;
 
             uint32_t crc = node["crc"].as<uint32_t>();
-            int itm = -1, udr = -1, nav = -1;
+            int itm = 0, udr = 0, nav = 0;
 
             if (node["itm"])
-                itm = node["itm"].as<int>();
+                itm = node["itm"].as<unsigned int>();
             if (node["udr"])
-                udr = node["udr"].as<int>();
+                udr = node["udr"].as<unsigned int>();
             if (node["nav"])
-                nav = node["nav"].as<int>();
+                nav = node["nav"].as<unsigned int>();
 
-            std::string util = node["util"].as<std::string>();
-            std::string guide = node["guide"].as<std::string>();
+            std::string utility = node["util"].as<std::string>();
 
-            rhs = boss::DirtData(crc, itm, udr, nav, util, guide);
+            rhs = boss::PluginDirtyInfo(crc, itm, udr, nav, utility);
 
             return true;
         }
