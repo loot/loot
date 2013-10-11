@@ -280,23 +280,7 @@ void SettingsFrame::OnAddGame(wxCommandEvent& event) {
 
     if (rowDialog->ShowModal() == wxID_OK) {
 
-        if (rowDialog->GetName().empty()) {
-            BOOST_LOG_TRIVIAL(error) << "Tried to add a new game with no name given.";
-            wxMessageBox(
-                translate("Error: Name is required. Row will not be added."),
-                translate("BOSS: Error"),
-                wxOK | wxICON_ERROR,
-                this);
-            return;
-        } else if (rowDialog->GetFolderName().empty()) {
-            BOOST_LOG_TRIVIAL(error) << "Tried to add a new game with no folder given.";
-            wxMessageBox(
-                translate("Error: Folder is required. Row will not be added."),
-                translate("BOSS: Error"),
-                wxOK | wxICON_ERROR,
-                this);
-            return;
-        } else if (rowDialog->GetPath().empty() && rowDialog->GetRegistryKey().empty()) {
+        if (rowDialog->GetPath().empty() && rowDialog->GetRegistryKey().empty()) {
             BOOST_LOG_TRIVIAL(error) << "Tried to add a new game with no path or registry key given.";
             wxMessageBox(
                 translate("Error: A path and/or registry key is required. Row will not be added."),
@@ -416,8 +400,8 @@ GameEditDialog::GameEditDialog(wxWindow *parent, const wxString& title) : wxDial
     //Initialise controls.
     _type = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 4, Types);
 
-    _name = new wxTextCtrl(this, wxID_ANY);
-    _folderName = new wxTextCtrl(this, wxID_ANY);
+    _name = new wxTextCtrl(this, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, 0, wxTextValidator(wxFILTER_EMPTY));
+    _folderName = new wxTextCtrl(this, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, 0, wxTextValidator(wxFILTER_EMPTY));
     _master = new wxTextCtrl(this, wxID_ANY);
     _url = new wxTextCtrl(this, wxID_ANY);
     _path = new wxTextCtrl(this, wxID_ANY);
@@ -435,13 +419,13 @@ GameEditDialog::GameEditDialog(wxWindow *parent, const wxString& title) : wxDial
 	wxFlexGridSizer * GridSizer = new wxFlexGridSizer(2, 5, 5);
     GridSizer->AddGrowableCol(1,1);
 
-	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Name:")), leftItem);
+	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Name (required):")), leftItem);
 	GridSizer->Add(_name, rightItem);
 
 	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Type:")), leftItem);
 	GridSizer->Add(_type, rightItem);
 
-	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("BOSS Folder Name:")), leftItem);
+	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("BOSS Folder Name (required):")), leftItem);
 	GridSizer->Add(_folderName, rightItem);
 
 	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Master File:")), leftItem);

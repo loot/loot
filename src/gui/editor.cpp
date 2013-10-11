@@ -416,16 +416,6 @@ void Editor::OnAddRow(wxCommandEvent& event) {
             return;
         }
 
-        if (rowDialog->GetName().empty()) {
-            BOOST_LOG_TRIVIAL(error) << "No filename specified. Row will not be added.";
-            wxMessageBox(
-                translate("Error: No filename specified. Row will not be added."),
-                translate("BOSS: Error"),
-                wxOK | wxICON_ERROR,
-                this);
-            return;
-        }
-
         wxListView * list;
         if (listBook->GetSelection() == 0)
             list = reqsList;
@@ -469,16 +459,6 @@ void Editor::OnAddRow(wxCommandEvent& event) {
             return;
         }
 
-        if (rowDialog->GetName().empty()) {
-            BOOST_LOG_TRIVIAL(error) << "No Bash Tag specified. Row will not be added.";
-            wxMessageBox(
-                translate("Error: No Bash Tag specified. Row will not be added."),
-                translate("BOSS: Error"),
-                wxOK | wxICON_ERROR,
-                this);
-            return;
-        }
-
         long i = tagsList->GetItemCount();
         tagsList->InsertItem(i, rowDialog->GetState());
         tagsList->SetItem(i, 1, rowDialog->GetName());
@@ -490,24 +470,6 @@ void Editor::OnAddRow(wxCommandEvent& event) {
 
         if (rowDialog->ShowModal() != wxID_OK) {
             BOOST_LOG_TRIVIAL(debug) << "Cancelled adding dirty info row.";
-            return;
-        }
-
-        if (rowDialog->GetCRC().empty()) {
-            BOOST_LOG_TRIVIAL(error) << "No CRC specified. Row will not be added.";
-            wxMessageBox(
-                translate("Error: No CRC specified. Row will not be added."),
-                translate("BOSS: Error"),
-                wxOK | wxICON_ERROR,
-                this);
-            return;
-        } else if (rowDialog->GetUtility().empty()) {
-            BOOST_LOG_TRIVIAL(error) << "No cleaning utility specified. Row will not be added.";
-            wxMessageBox(
-                translate("Error: No cleaning utility specified. Row will not be added."),
-                translate("BOSS: Error"),
-                wxOK | wxICON_ERROR,
-                this);
             return;
         }
 
@@ -539,16 +501,6 @@ void Editor::OnEditRow(wxCommandEvent& event) {
 
         if (rowDialog->ShowModal() != wxID_OK) {
             BOOST_LOG_TRIVIAL(debug) << "Cancelled editing file row.";
-            return;
-        }
-
-        if (rowDialog->GetName().empty()) {
-            BOOST_LOG_TRIVIAL(error) << "No filename specified. Row will not be edited.";
-            wxMessageBox(
-                translate("Error: No filename specified. Row will not be edited."),
-                translate("BOSS: Error"),
-                wxOK | wxICON_ERROR,
-                this);
             return;
         }
 
@@ -598,16 +550,6 @@ void Editor::OnEditRow(wxCommandEvent& event) {
             return;
         }
 
-        if (rowDialog->GetName().empty()) {
-            BOOST_LOG_TRIVIAL(error) << "No Bash Tag specified. Row will not be edited.";
-            wxMessageBox(
-                translate("Error: No Bash Tag specified. Row will not be edited."),
-                translate("BOSS: Error"),
-                wxOK | wxICON_ERROR,
-                this);
-            return;
-        }
-
         tagsList->SetItem(i, 0, rowDialog->GetState());
         tagsList->SetItem(i, 1, rowDialog->GetName());
         tagsList->SetItem(i, 2, rowDialog->GetCondition());
@@ -625,24 +567,6 @@ void Editor::OnEditRow(wxCommandEvent& event) {
 
         if (rowDialog->ShowModal() != wxID_OK) {
             BOOST_LOG_TRIVIAL(debug) << "Cancelled editing tag row.";
-            return;
-        }
-
-        if (rowDialog->GetCRC().empty()) {
-            BOOST_LOG_TRIVIAL(error) << "No CRC specified. Row will not be edited.";
-            wxMessageBox(
-                translate("Error: No CRC specified. Row will not be edited."),
-                translate("BOSS: Error"),
-                wxOK | wxICON_ERROR,
-                this);
-            return;
-        } else if (rowDialog->GetUtility().empty()) {
-            BOOST_LOG_TRIVIAL(error) << "No cleaning utility specified. Row will not be edited.";
-            wxMessageBox(
-                translate("Error: No cleaning utility specified. Row will not be edited."),
-                translate("BOSS: Error"),
-                wxOK | wxICON_ERROR,
-                this);
             return;
         }
 
@@ -994,7 +918,7 @@ boss::PluginDirtyInfo Editor::RowToPluginDirtyInfo(wxListView * list, long row) 
 
 FileEditDialog::FileEditDialog(wxWindow *parent, const wxString& title) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER) {
 
-    _name = new wxTextCtrl(this, wxID_ANY);
+    _name = new wxTextCtrl(this, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, 0, wxTextValidator(wxFILTER_EMPTY));
     _display = new wxTextCtrl(this, wxID_ANY);
     _condition = new wxTextCtrl(this, wxID_ANY);
 
@@ -1009,7 +933,7 @@ FileEditDialog::FileEditDialog(wxWindow *parent, const wxString& title) : wxDial
 	wxFlexGridSizer * GridSizer = new wxFlexGridSizer(2, 5, 5);
     GridSizer->AddGrowableCol(1,1);
 
-	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Filename:")), leftItem);
+	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Filename (required):")), leftItem);
 	GridSizer->Add(_name, rightItem);
 
 	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Displayed Name:")), leftItem);
@@ -1130,6 +1054,8 @@ MessageEditDialog::MessageEditDialog(wxWindow *parent, const wxString& title) : 
     //Set defaults.
     _type->SetSelection(0);
     _language->SetSelection(0);
+    editBtn->Enable(false);
+    removeBtn->Enable(false);
 
     SetBackgroundColour(wxColour(255,255,255));
     SetIcon(wxIconLocation("BOSS.exe"));
@@ -1182,6 +1108,8 @@ boss::Message MessageEditDialog::GetMessage() const {
 void MessageEditDialog::OnSelect(wxListEvent& event) {
     _language->SetSelection(GetLangIndex(_content->GetItemText(event.GetIndex(), 0)));
     _str->SetValue(_content->GetItemText(event.GetIndex(), 1));
+    editBtn->Enable(true);
+    removeBtn->Enable(true);
 }
 
 void MessageEditDialog::OnAdd(wxCommandEvent& event) {
@@ -1216,6 +1144,8 @@ void MessageEditDialog::OnRemove(wxCommandEvent& event) {
         return;
     }
     _content->DeleteItem(_content->GetFirstSelected());
+    editBtn->Enable(false);
+    removeBtn->Enable(false);
 }
 
 TagEditDialog::TagEditDialog(wxWindow *parent, const wxString& title) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER) {
@@ -1223,7 +1153,7 @@ TagEditDialog::TagEditDialog(wxWindow *parent, const wxString& title) : wxDialog
     //Initialise controls.
     _state = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 2, State);
 
-    _name = new wxTextCtrl(this, wxID_ANY);
+    _name = new wxTextCtrl(this, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, 0, wxTextValidator(wxFILTER_EMPTY));
     _condition = new wxTextCtrl(this, wxID_ANY);
 
     wxSizerFlags leftItem(0);
@@ -1240,7 +1170,7 @@ TagEditDialog::TagEditDialog(wxWindow *parent, const wxString& title) : wxDialog
 	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Add/Remove:")), leftItem);
 	GridSizer->Add(_state, rightItem);
 
-	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Name:")), leftItem);
+	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Name (required):")), leftItem);
 	GridSizer->Add(_name, rightItem);
 
 	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Condition:")), leftItem);
@@ -1285,11 +1215,14 @@ wxString TagEditDialog::GetCondition() const {
 
 DirtInfoEditDialog::DirtInfoEditDialog(wxWindow * parent, const wxString& title) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER) {
     //Initialise controls.
+    wxTextValidator val(wxFILTER_EMPTY | wxFILTER_INCLUDE_CHAR_LIST);
+    val.SetCharIncludes("0123456789ABCDEFabcdef");
+
     _itm = new wxSpinCtrl(this, wxID_ANY, "0");
     _udr = new wxSpinCtrl(this, wxID_ANY, "0");
     _nav = new wxSpinCtrl(this, wxID_ANY, "0");
-    _crc = new wxTextCtrl(this, wxID_ANY);
-    _utility = new wxTextCtrl(this, wxID_ANY);
+    _crc = new wxTextCtrl(this, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, 0, val);
+    _utility = new wxTextCtrl(this, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, 0, wxTextValidator(wxFILTER_EMPTY));
 
     wxSizerFlags leftItem(0);
 	leftItem.Left();
@@ -1302,7 +1235,7 @@ DirtInfoEditDialog::DirtInfoEditDialog(wxWindow * parent, const wxString& title)
 	wxFlexGridSizer * GridSizer = new wxFlexGridSizer(2, 5, 5);
     GridSizer->AddGrowableCol(1,1);
 
-	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("CRC:")), leftItem);
+	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("CRC (required):")), leftItem);
 	GridSizer->Add(_crc, rightItem);
 
 	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("ITM Count:")), leftItem);
@@ -1314,7 +1247,7 @@ DirtInfoEditDialog::DirtInfoEditDialog(wxWindow * parent, const wxString& title)
 	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Deleted Navmesh Count:")), leftItem);
 	GridSizer->Add(_nav, rightItem);
 
-	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Cleaning Utility:")), leftItem);
+	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Cleaning Utility (required):")), leftItem);
 	GridSizer->Add(_utility, rightItem);
 
     bigBox->Add(GridSizer, 0, wxEXPAND|wxALL, 15);
