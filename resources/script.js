@@ -120,7 +120,6 @@ function showSection(evt) {
     } else {
         hideElement(document.getElementById('filtersToggle'));
         hideElement(document.getElementById('filters'));
-
     }
 }
 function toggleMessages(evt) {

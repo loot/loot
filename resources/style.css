@@ -110,36 +110,61 @@ input[type='checkbox'] {
     top:0.15em;
     margin-right:0.5em;
 }
-
-ul {margin-top:0.5em;list-style:none;padding-left:0;}
-
-
-#plugins > ul > li, #summary > div {background:white; overflow:hidden; margin:1em; box-shadow:0 0 3px 0px rgba(0,0,0,0.5); padding:1em;}
-.mod {font-size:1.5em; display:block; font-weight:normal; margin-bottom:0.5em; margin-top:0; }
-.version{color:#6394F8;}
-.crc{color:#BC8923;}
-.tag.add {color:green;}
-.tag.remove {color:red;}
-.meta + ul {margin-top:1em;}
-
-.hidden, li.hidden, #summary.hidden, #plugins.hidden {
-    display:none;
+ul {
+    margin-top:0.5em;
+    list-style:none;
+    padding-left:0;
 }
 
-/* Old BOSS Log CSS */
 
-#summary div {
-    float:left;}
-#summary li, li > ul > li {padding:0.5em 1em;list-style:disc inside;}
-
-.error{background:#ff9090;padding:0.5em 1em;list-style:disc inside;}
-
-.warn{background:#FFDD55;padding:0.5em 1em;list-style:disc inside;}
-
-.good > td {background: #90ff90;}
-
-.warn > td {background: #FFDD55;}
-
-.error > td {background:#ff9090;}
-
-h2 {font-weight: normal; margin:0; display:block;}
+#plugins > ul > li, #summary > div {
+    background:white;
+    overflow:hidden;
+    margin:1em;
+    box-shadow:0 0 3px 0px rgba(0,0,0,0.5);
+    padding:1em;
+}
+.mod {
+    font-size:1.3em;
+    display:block;
+    font-weight:normal;
+    margin-bottom:0em;
+    margin-top:0;
+}
+.version{
+    color:#6394F8;
+}
+.crc{
+    color:#BC8923;
+}
+.tag.add {
+    color:green;
+}
+.tag.remove {
+    color:red;
+}
+.hidden {
+    display:none;
+}
+#summary > div {
+    float:left;
+}
+#summary li, li > ul > li {
+    padding:0.5em 1em;
+    list-style:disc inside;
+}
+.error, .warn {
+    padding:0.5em 1em;
+    list-style:disc inside;
+}
+.error{
+    background:#ff9090;
+}
+.warn{
+    background:#FFDD55;
+}
+h2 {
+    font-weight: normal;
+    margin:0;
+    display:block;
+}
