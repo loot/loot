@@ -32,9 +32,12 @@ int main(int argc, char * argv[]) {
     boost::filesystem::path v2masterlist("masterlist.txt");
     list<boss::Plugin> test_plugins;
     list<boss::Message> globalMessages;
+
+    boost::log::core::get()->set_logging_enabled(false);
+
     try {
         Loadv2Masterlist(v2masterlist, test_plugins, globalMessages);
-    } catch (boss::error& e) {
+    } catch (exception& e) {
         cout << "An error was encountered during masterlist parsing. Message: " << e.what() << endl;
         return 1;
     }

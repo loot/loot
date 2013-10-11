@@ -50,6 +50,7 @@
 #include <boost/spirit/include/phoenix_stl.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/regex.hpp>
+#include <boost/log/trivial.hpp>
 
 namespace boss {
 	namespace qi = boost::spirit::qi;
@@ -554,6 +555,22 @@ namespace boss {
                     }
 
                     it = messages.erase(it);
+                } else if (it->Type() == g_message_say) {
+                    std::string content = it->ChooseContent(g_lang_any).Str();
+                    unsigned int langInt = it->ChooseContent(g_lang_any).Language();
+                    std::string opener;
+                    if (langInt == g_lang_english || langInt == g_lang_any)
+                        opener = "Requires: ";
+                    else if (langInt == g_lang_spanish)
+                        opener = "Requiere: ";
+                    else if (langInt == g_lang_russian)
+                        opener = "Требуется: ";
+
+                    if (boost::starts_with(content, opener) && (boost::icontains(content, ".esp") || boost::icontains(content, ".esm"))) {
+                        //Remove any requirement messages that contain a plugin filename, since it's probably a master, according to SilentSpike's experience.
+                        it = messages.erase(it);
+                    } else
+                        ++it;
                 } else
                     ++it;
             }
