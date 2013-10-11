@@ -79,8 +79,9 @@ h3{
         <li><a href="#structs-tag">Tag Data Structure</a>
         <li><a href="#structs-file">File Data Structure</a>
         <li><a href="#structs-message">Message Data Structure</a>
-        <li><a href="#structs-plugin">Plugin Data Structure</a>
         <li><a href="#structs-location">Location Data Structure</a>
+        <li><a href="#structs-dirty">Dirty Info Data Structure</a>
+        <li><a href="#structs-plugin">Plugin Data Structure</a>
     </ol>
     <li><a href="#links">URL Hyperlinking</a>
     <li><a href="#cond">Condition Strings</a>
@@ -196,11 +197,11 @@ display: OBSE v18+
 <h3 id="structs-message">Message Data Structure</h3>
 <p>Messages are given as key-value maps.
 <table>
-    <thead><tr><th>Key Name<th>Required<th>Notes
+    <thead><tr><th>Key Name<th>Data Type<th>Required<th>Notes
     <tbody>
-        <tr><td><code>type</code><td>&#x2713;<td>The type string can be one of three keywords, see the table below for their semantics.
-        <tr><td><code>content</code><td>&#x2713;<td>Either simply a string, or a list of localised content data structures. If the latter, one of the structures must be for English.
-        <tr><td><code>condition</code><td>&#x2717;<td>A condition string that is evaluated to determine whether the message should be displayed: if it evaluates to true, the message is displayed, otherwise it is not. See <a href="#cond">Condition Strings</a> for details.
+        <tr><td><code>type</code><td>string<td>&#x2713;<td>The type string can be one of three keywords, see the table below for their semantics.
+        <tr><td><code>content</code><td>string <i>or</i> localised content list<td>&#x2713;<td>Either simply a string, or a list of localised content data structures. If the latter, one of the structures must be for English.
+        <tr><td><code>condition</code><td>string<td>&#x2717;<td>A condition string that is evaluated to determine whether the message should be displayed: if it evaluates to true, the message is displayed, otherwise it is not. See <a href="#cond">Condition Strings</a> for details.
 </table>
 
 <p>There are three message types:
@@ -250,6 +251,48 @@ would be displayed as
 отмечать: An alternative <a href="http://www.example.com">example link</a>, with no translations.
 </blockquote>
 
+
+<h3 id="structs-location">Location Data Structure</h3>
+<p>This data structure is used to hold information on where a plugin is hosted online. It is not currently used by BOSS, but it was suggested that since the BOSS team receives a considerable number of plugin URLs, they should be recorded in a standard format, as there is no existing store of such information and it could prove useful in the future.
+<p>The data structure has two forms: the first is a simple string, and the second is a key-value map. The first form should be used for a URL without any associated version data, such as when it is not clear which version is found there, or when it is the only known hosting location for the plugin and as such hosts all available versions. The second form should be used when version data can be associated with the URL, such as when the URL only hosts a subset of the available versions of the plugin.
+<p>The simple form:
+<code class="box"><var>URL</var></code>
+<p>where <code><var>URL</var></code> is a URL at which the plugin may be found.
+<p>The map form:
+<table>
+    <thead><tr><th>Key Name<th>Data Type<th>Required<th>Notes
+    <tbody>
+        <tr><td><code>link</code><td>string<td>&#x2713;<td>A URL at which the plugin may be found.
+        <tr><td><code>ver</code><td>string list<td>&#x2713;<td>A list of versions that can be found at the URL.
+</table>
+<p>Examples:
+<code class="box">http://skyrim.nexusmods.com/mods/19/</code>
+or
+<code class="box">link: http://steamcommunity.com/sharedfiles/filedetails/?id=87144366
+ver:
+  - 1.3.2c
+</code>
+
+<h3 id="structs-dirty">Dirty Info Data Structure</h3>
+<p>This structure holds information on which versions of a plugin are dirty, and how many identical-to-master records, deleted records and deleted navmeshes (if applicable) it contains. Dirty info is given as a key-value map.
+<table>
+    <thead><tr><th>Key Name<th>Data Type<th>Required<th>Notes
+    <tbody>
+        <tr><td><code>crc</code><td>hexadecimal integer<td>&#x2713;<td>The CRC checksum of the dirty plugin, before cleaning. BOSS displays the CRCs of installed plugins in its report. The 8-character CRC should be preceded by <code>0x</code> so that it is correctly interpreted.
+        <tr><td><code>util</code><td>string<td>&#x2713;<td>The utility that should be used to clean the plugin. This field supports <a href="#links">URL Hyperlinking</a>, and it is recommended that a URL to the game's cleaning guide is supplied.
+        <tr><td><code>itm</code><td>integer<td>&#x2717;<td>The number of identical-to-master records reported for the dirty plugin. If the number is unknown, this field should not be supplied. If the number is known and zero, this field should be supplied.
+        <tr><td><code>udr</code><td>integer<td>&#x2717;<td>The number of undeleted records reported for the dirty plugin. If the number is unknown, this field should not be supplied. If the number is known and zero, this field should be supplied.
+        <tr><td><code>nav</code><td>integer<td>&#x2717;<td>The number of deleted navmeshes reported for the dirty plugin. If the number is unknown, this field should not be supplied. If the number is known and zero, this field should be supplied.
+</table>
+<p>Examples:
+<code class="box">crc: 0x3DF62AB
+util: "http://www.creationkit.com/TES5Edit_Cleaning_Guide_-_TES5Edit TES5Edit"
+itm: 4
+udr: 160
+nav: 0
+</code>
+
+
 <h3 id="structs-plugin">Plugin Data Structure</h3>
 <p>This is the structure that brings all the others together, and forms the main component of a metadata file. It is a key-value map.
 <table>
@@ -263,7 +306,8 @@ would be displayed as
         <tr><td><code>inc</code><td>file list<td>&#x2717;<td>An unordered list of files that this plugin is incompatible with. If any of these files are present, an error message will be displayed.
         <tr><td><code>msg</code><td>message list<td>&#x2717;<td>The messages attached to this plugin. The messages will be displayed in the order that they are listed.
         <tr><td><code>tag</code><td>tag list<td>&#x2717;<td>An unordered list of Bash Tags suggested for this plugin. If a Bash Tag is suggested for both addition and removal, the latter will override the former when the list is evaluated.
-        <tr><td><code>url</code><td>location list<td>&#x2717;<td>An unordered list of location data structures (see below) for this plugin. If the same version can be found at multiple locations, only one location should be recorded. This metadata is not currently used by BOSS.
+        <tr><td><code>url</code><td>location list<td>&#x2717;<td>An unordered list of locations for this plugin. If the same version can be found at multiple locations, only one location should be recorded. This metadata is not currently used by BOSS.
+        <tr><td><code>dirty</code><td>dirty info list<td>&#x2717;<td>An unordered list of dirty info structures for this plugin.
 </table>
 <p>Example:
 <code class="box">name: "Oscuro's_Oblivion_Overhaul.esm"
@@ -286,26 +330,6 @@ msg:
     content: 'Do not clean. "Dirty" edits are intentional and required for the mod to function.'
 </code>
 
-<h3 id="structs-location">Location Data Structure</h3>
-<p>This data structure is used to hold information on where plugins are hosted online. It is not currently used by BOSS, but it was suggested that since the BOSS team receives a considerable number of plugin URLs, they should be recorded in a standard format, as there is no existing store of such information and it could prove useful in the future.
-<p>The data structure has two forms: the first is a simple string, and the second is a key-value map. The first form should be used for a URL without any associated version data, such as when it is not clear which version is found there, or when it is the only known hosting location for the plugin and as such hosts all available versions. The second form should be used when version data can be associated with the URL, such as when the URL only hosts a subset of the available versions of the plugin.
-<p>The simple form:
-<code class="box"><var>URL</var></code>
-<p>where <code><var>URL</var></code> is a URL at which the plugin may be found.
-<p>The map form:
-<table>
-    <thead><tr><th>Key Name<th>Data Type<th>Required<th>Notes
-    <tbody>
-        <tr><td><code>link</code><td>string<td>&#x2713;<td>A URL at which the plugin may be found.
-        <tr><td><code>ver</code><td>string list<td>&#x2713;<td>A list of versions that can be found at the URL.
-</table>
-<p>Examples:
-<code class="box">http://skyrim.nexusmods.com/mods/19/</code>
-or
-<code class="box">link: http://steamcommunity.com/sharedfiles/filedetails/?id=87144366
-ver:
-  - 1.3.2c
-</code>
 
 <h2 id="links">URL Hyperlinking</h2>
 <p>File <code>display</code> strings and message <code>content</code> strings (including the strings in localised content structures) that contain recognised URLs have them displayed as hyperlinks in the BOSS report. Recognised URLs are those that are enclosed in double quotes and that begin with <code>file:</code>, <code>http:</code> or <code>https:</code>.
