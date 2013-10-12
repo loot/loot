@@ -496,6 +496,7 @@ namespace boss {
 
             //Need to remove any Bash Tag suggestion messages and apply them properly.
             std::set<Tag> tags;
+            std::set<PluginDirtyInfo> dirtyInfo;
             std::list<Message>::iterator it = messages.begin();
             while (it != messages.end()) {
 
@@ -569,10 +570,91 @@ namespace boss {
                         it = messages.erase(it);
                     } else
                         ++it;
+                } else if (it->Type() == g_message_warn) {
+                    std::string content = it->ChooseContent(g_lang_any).Str();
+                    unsigned int langInt = it->ChooseContent(g_lang_any).Language();
+                    std::string opener;
+                    if (langInt == g_lang_english || langInt == g_lang_any) {
+                        opener = "Contains dirty edits: ";
+                    } else if (langInt == g_lang_spanish) {
+                        opener = "Contiene ediciones sucia: ";
+                    } else if (langInt == g_lang_russian) {
+                        opener = "\"Грязные\" правки: ";
+                    }
+
+                    if (boost::starts_with(content, opener)) {
+                        //Convert to new data structure.
+                        //Extract ITM, UDR counts from message, CRC from condition, and utility + link from message.
+                        unsigned int itm = 0;
+                        unsigned int udr = 0;
+                        uint32_t crc;
+                        std::string utility;
+                        size_t pos1, pos2;
+                        std::string content = it->ChooseContent(g_lang_any).Str();
+                        std::string condition = it->Condition();
+
+                        //Extract CRC.
+                        pos1 = condition.find("checksum(");
+                        if (pos1 == std::string::npos) {
+                            ++it;
+                            continue;
+                        }
+                        pos1 = condition.find(',', pos1);
+                        if (pos1 == std::string::npos) {
+                            ++it;
+                            continue;
+                        }
+                        pos2 = condition.find(')', pos1);
+                        if (pos2 == std::string::npos) {
+                            ++it;
+                            continue;
+                        }
+                        crc = strtoul(condition.substr(pos1+1, pos2-pos1-1).c_str(), NULL, 16);
+
+                        //Extract ITM count.
+                        pos1 = content.find("ITM");
+                        if (pos1 != std::string::npos) {
+                            itm = atoi(content.substr(0, pos1).c_str());
+                        }
+
+                        //Extract UDR count.
+                        pos2 = content.find("UDR");
+                        if (pos2 != std::string::npos) {
+                            pos1 = content.rfind(',', pos2);
+                            if (pos1 != std::string::npos) {
+                                udr = atoi(content.substr(pos1+1, pos2-pos1-1).c_str());
+                            }
+                        }
+
+                        //Extract utility and link.
+                        pos1 = content.find('"');
+                        if (pos1 != std::string::npos) {
+                            pos2 = content.find(' ', pos1);
+                            if (pos2 == std::string::npos)
+                                pos2 = content.find('"', pos1+1);
+                            if (pos2 != std::string::npos) {
+                                utility = content.substr(pos1, pos2-pos1);
+                            }
+                        }
+                        pos2 = content.find("Edit");
+                        if (pos2 != std::string::npos) {
+                            pos1 = content.rfind(' ', pos2);
+                            if (pos1 != std::string::npos) {
+                                if (utility.empty())
+                                    utility = content.substr(pos1 + 1, pos2 + 3 - pos1);
+                                else
+                                    utility += " " + content.substr(pos1 + 1, pos2 + 3 - pos1) + '"';
+                            }
+                        }
+                        dirtyInfo.insert(PluginDirtyInfo(crc, itm, udr, 0, utility));
+                        it = messages.erase(it);
+                    } else
+                        ++it;
                 } else
                     ++it;
             }
 
+            plugin.DirtyInfo(dirtyInfo);
             plugin.Messages(messages);
             plugin.Tags(tags);
         }
