@@ -26,7 +26,6 @@
 #include "../backend/streams.h"
 
 #include <algorithm>
-#include <sstream>
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 
@@ -904,10 +903,7 @@ boss::Tag Editor::RowToTag(wxListView * list, long row) const {
 
 boss::PluginDirtyInfo Editor::RowToPluginDirtyInfo(wxListView * list, long row) const {
     string text(list->GetItemText(row, 0).ToUTF8());
-    uint32_t crc;
-    std::stringstream ss;
-    ss << std::hex << text;
-    ss >> crc;
+    uint32_t crc = strtoul(text.c_str(), NULL, 16);
     return boss::PluginDirtyInfo(
         crc,
         atoi(string(list->GetItemText(row, 1).ToUTF8()).c_str()),

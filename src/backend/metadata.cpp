@@ -612,7 +612,7 @@ namespace boss {
     }
 
     bool Plugin::HasNameOnly() const {
-        return priority == 0 && enabled == true && loadAfter.empty() && requirements.empty() && incompatibilities.empty() && messages.empty() && tags.empty();
+        return priority == 0 && enabled == true && loadAfter.empty() && requirements.empty() && incompatibilities.empty() && messages.empty() && tags.empty() && _dirtyInfo.empty();
     }
 
     bool Plugin::IsRegexPlugin() const {

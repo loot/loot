@@ -682,7 +682,7 @@ namespace YAML {
 
     inline Emitter& operator << (Emitter& out, const boss::PluginDirtyInfo& rhs) {
         out << BeginMap
-            << Key << "crc" << Value << rhs.CRC()
+            << Key << "crc" << Value << Hex << rhs.CRC() << Dec
             << Key << "util" << Value << rhs.CleaningUtility();
 
         if (rhs.ITMs() > 0)
@@ -808,6 +808,9 @@ namespace YAML {
 
             if (!rhs.Tags().empty())
                 out << Key << "tag" << Value << rhs.Tags();
+
+            if (!rhs.DirtyInfo().empty())
+                out << Key << "dirty" << Value << rhs.DirtyInfo();
 
             out << EndMap;
         }
