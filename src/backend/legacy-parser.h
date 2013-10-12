@@ -240,29 +240,16 @@ namespace boss {
 
 			variable %= +(unicode::char_ - (')' | qi::eol));
 
-			file %=
-                qi::lit("OBSE")   [qi::_val = "..\\obse_1_2_416.dll"]
-                | qi::lit("FOSE")   [qi::_val = "..\\fose_loader.exe"]
-                | qi::lit("NVSE")   [qi::_val = "..\\nvse_loader.exe"]
-                | qi::lit("SKSE")   [qi::_val = "..\\skse_loader.exe"]
-                | qi::lit("MWSE")   [qi::_val = "..\\MWSE.dll"]
-                | qi::lit("TES3")   [qi::_val = "..\\Morrowind.exe"]
-                | qi::lit("TES4")   [qi::_val = "..\\Oblivion.exe"]
-                | qi::lit("TES5")   [qi::_val = "..\\TESV.exe"]
-                | qi::lit("FO3")    [qi::_val = "..\\Fallout3.exe"]
-                | qi::lit("FONV")   [qi::_val = "..\\FalloutNV.exe"]
-                |
-                (
-                    qi::lexeme[unicode::char_('"') > +(unicode::char_ - ('"' | qi::eol)) > unicode::char_('"')]
-                )
-                ;
+			file %= qi::lexeme[unicode::char_('"') >
+                +(unicode::char_ - ('"' | qi::eol))
+                > unicode::char_('"')];
 
 			checksum %= +unicode::xdigit;
 
 			version %= file;
 
 			comparator %=
-                unicode::string("=") //   [qi::_val = "~="]
+                unicode::string("=") //   [qi::_val = "=="]
                 | unicode::string(">")
                 | unicode::string("<")
                 ;
@@ -350,18 +337,19 @@ namespace boss {
 
             output = input;
 
-            size_t pos;
-            while (pos = output.find("if", pos) != std::string::npos) {
+            size_t pos = 0;
+            while (pos < output.length()) {
+                pos = output.find("if", pos);
 
-                if (IsPosInQuotedText(output, pos)) {
-                    pos += 2;
-                    continue;
+                if (pos == std::string::npos)
+                    break;
+
+                if (!IsPosInQuotedText(output, pos)) {
+                    if (output.substr(pos, 5) == "ifnot")
+                        output.erase(pos + 2, 3);
+                    else
+                        output.insert(pos + 2, "not");
                 }
-
-                if (output.substr(pos, 5) == "ifnot")
-                    output.erase(pos + 2, 3);
-                else
-                    output.insert(pos + 2, "not");
 
                 pos += 2;
             }
@@ -380,17 +368,14 @@ namespace boss {
                 else if (pos1 == std::string::npos || pos2 < pos1)
                     pos = pos2;
 
-                if (IsPosInQuotedText(output, pos)) {
-                    pos += 3;
-                    continue;
-                }
-
-                if (pos == pos1) {
-                    output.erase(pos, 3);
-                    output.insert(pos, "or");
-                } else {
-                    output.erase(pos, 2);
-                    output.insert(pos, "and");
+                if (!IsPosInQuotedText(output, pos)) {
+                    if (pos == pos1) {
+                        output.erase(pos, 3);
+                        output.insert(pos, "or");
+                    } else {
+                        output.erase(pos, 2);
+                        output.insert(pos, "and");
+                    }
                 }
 
                 pos += 3;
@@ -491,6 +476,19 @@ namespace boss {
                 if (pos != std::string::npos)
                     condition.insert(pos + 1, "=");
             }
+
+            //Also convert file placeholders.
+            boost::replace_all(condition, "\"OBSE\"", "\"..\\obse_1_2_416.dll\"");
+            boost::replace_all(condition, "\"FOSE\"", "\"..\\fose_loader.exe\"");
+            boost::replace_all(condition, "\"NVSE\"", "\"..\\nvse_loader.exe\"");
+            boost::replace_all(condition, "\"SKSE\"", "\"..\\skse_loader.exe\"");
+            boost::replace_all(condition, "\"MWSE\"", "\"..\\MWSE.dll\"");
+            boost::replace_all(condition, "\"TES3\"", "\"..\\Morrowind.exe\"");
+            boost::replace_all(condition, "\"TES4\"", "\"..\\Oblivion.exe\"");
+            boost::replace_all(condition, "\"TES5\"", "\"..\\TESV.exe\"");
+            boost::replace_all(condition, "\"FO3\"", "\"..\\Fallout3.exe\"");
+            boost::replace_all(condition, "\"FONV\"", "\"..\\FalloutNV.exe\"");
+
         }
 
         void MakePlugin(Plugin& plugin, std::string& name, std::list<Message>& messages) {
@@ -695,7 +693,8 @@ namespace boss {
             std::vector<MessageContent> mc_vec;
             mc_vec.push_back(MessageContent(content, langInt));
 
-            ConvertCondition(condition);
+            if (!condition.empty())
+                ConvertCondition(condition);
 
             message = Message(type, mc_vec, condition);
         }
