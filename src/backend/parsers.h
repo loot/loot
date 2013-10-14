@@ -324,6 +324,7 @@ namespace YAML {
             node["inc"] = rhs.Incs();
             node["msg"] = rhs.Messages();
             node["tag"] = rhs.Tags();
+            node["dirty"] = rhs.DirtyInfo();
 
             return node;
         }
@@ -350,6 +351,9 @@ namespace YAML {
                 rhs.Messages(node["msg"].as< std::list<boss::Message> >());
             if (node["tag"])
                 rhs.Tags(node["tag"].as< std::set<boss::Tag> >());
+            if (node["dirty"])
+                rhs.DirtyInfo(node["dirty"].as< std::set<boss::PluginDirtyInfo> >());
+
             return true;
         }
     };
