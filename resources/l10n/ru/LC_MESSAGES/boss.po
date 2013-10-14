@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: BOSS v3.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-10-13 13:34+0100\n"
-"PO-Revision-Date: 2013-10-13 13:34+0100\n"
+"PO-Revision-Date: 2013-10-13 20:51+0600\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
@@ -178,9 +178,8 @@ msgid "BOSS: Add Game"
 msgstr "BOSS: Добавить игру"
 
 #: gui/settings.cpp:286 gui/settings.cpp:365
-#, fuzzy
 msgid "Error: A path and/or registry key is required. Row will not be added."
-msgstr "Ошибка: Требуется папка. Строка не будет добавлена."
+msgstr "Ошибка: Требуется путь и/или ключ реестра. Строка не будет добавлена."
 
 #: gui/settings.cpp:287 gui/settings.cpp:299 gui/settings.cpp:307
 #: gui/settings.cpp:350 gui/settings.cpp:358 gui/settings.cpp:366
@@ -218,16 +217,15 @@ msgstr "Ошибка: Требуется папка. Строка не буде�
 
 #: gui/settings.cpp:422 gui/editor.cpp:1169
 msgid "Name (required):"
-msgstr ""
+msgstr "Имя (требуется):"
 
 #: gui/settings.cpp:425 gui/editor.cpp:1013
 msgid "Type:"
 msgstr "Тип:"
 
 #: gui/settings.cpp:428
-#, fuzzy
 msgid "BOSS Folder Name (required):"
-msgstr "BOSS: Имя папки:"
+msgstr "BOSS: Имя папки (требуется):"
 
 #: gui/settings.cpp:431
 msgid "Master File:"
@@ -332,7 +330,7 @@ msgstr "Bash-теги"
 
 #: gui/editor.cpp:148
 msgid "Dirty Info"
-msgstr ""
+msgstr "Инфо. о \"грязных\" правках"
 
 #: gui/editor.cpp:151
 msgid "Plugins"
@@ -360,19 +358,19 @@ msgstr ""
 
 #: gui/editor.cpp:170
 msgid "ITM Count"
-msgstr ""
+msgstr "Количество ITM"
 
 #: gui/editor.cpp:171
 msgid "UDR Count"
-msgstr ""
+msgstr "Количество UDR"
 
 #: gui/editor.cpp:172
 msgid "Deleted Navmesh Count"
-msgstr ""
+msgstr "Количество удаленных Navmesh-записей"
 
 #: gui/editor.cpp:173
 msgid "Cleaning Utility"
-msgstr ""
+msgstr "Утилита для очистки"
 
 #: gui/editor.cpp:217
 msgid "Priority: "
@@ -392,7 +390,7 @@ msgstr "Удалить плагин"
 
 #: gui/editor.cpp:383
 msgid "Add Message"
-msgstr "Добавить ообщение"
+msgstr "Добавить сообщение"
 
 #: gui/editor.cpp:384
 msgid "Edit Message"
@@ -416,16 +414,15 @@ msgstr "Удалить Bash-тег"
 
 #: gui/editor.cpp:391
 msgid "Add Dirty Info"
-msgstr ""
+msgstr "Добавить инфо. о \"грязных\" правках"
 
 #: gui/editor.cpp:392
 msgid "Edit Dirty Info"
-msgstr ""
+msgstr "Править инфо. о \"грязных\" правках"
 
 #: gui/editor.cpp:393
-#, fuzzy
 msgid "Remove Dirty Info"
-msgstr "Удалить плагин"
+msgstr "Удалить инфо. о \"грязных\" правках"
 
 #: gui/editor.cpp:411
 msgid "BOSS: Add File/Plugin"
@@ -444,9 +441,8 @@ msgid "BOSS: Add Tag"
 msgstr "BOSS: Добавить тег"
 
 #: gui/editor.cpp:468
-#, fuzzy
 msgid "BOSS: Add Dirty Info"
-msgstr "BOSS: Добавить тег"
+msgstr "BOSS: Добавить инфо. о \"грязных\" правках"
 
 #: gui/editor.cpp:487
 msgid "BOSS: Edit File/Plugin"
@@ -465,14 +461,12 @@ msgid "BOSS: Edit Tag"
 msgstr "BOSS: Править тег"
 
 #: gui/editor.cpp:557
-#, fuzzy
 msgid "BOSS: Edit Dirty Info"
-msgstr "BOSS: Править тег"
+msgstr "BOSS: Править инфо. о \"грязных\" правках"
 
 #: gui/editor.cpp:932
-#, fuzzy
 msgid "Filename (required):"
-msgstr "Имя файла:"
+msgstr "Имя файла (требуется):"
 
 #: gui/editor.cpp:935
 msgid "Displayed Name:"
@@ -512,23 +506,23 @@ msgstr "Добавить/Удалить:"
 
 #: gui/editor.cpp:1234
 msgid "CRC (required):"
-msgstr ""
+msgstr "CRC (требуется):"
 
 #: gui/editor.cpp:1237
 msgid "ITM Count:"
-msgstr ""
+msgstr "Количество ITM:"
 
 #: gui/editor.cpp:1240
 msgid "UDR Count:"
-msgstr ""
+msgstr "Количество UDR:"
 
 #: gui/editor.cpp:1243
 msgid "Deleted Navmesh Count:"
-msgstr ""
+msgstr "Количество удаленных Navmesh-записей:"
 
 #: gui/editor.cpp:1246
 msgid "Cleaning Utility (required):"
-msgstr ""
+msgstr "Утилита для очистки (требуется):"
 
 #: gui/main.cpp:118
 msgid "Masterlist update failed. Details: %1%"
@@ -604,9 +598,8 @@ msgid "&Sort Plugins"
 msgstr "&Сортировать плагины"
 
 #: gui/main.cpp:388
-#, fuzzy
 msgid "&Redate Plugins"
-msgstr "Удалить плагин"
+msgstr "&Ре-датировать плагины"
 
 #: gui/main.cpp:391
 msgid "&File"
@@ -694,7 +687,7 @@ msgstr "Ошибка: %1%"
 
 #: gui/main.cpp:839 gui/main.cpp:954
 msgid "BOSS: Report Viewer"
-msgstr "BOSS: Просмотрщик отчета"
+msgstr "BOSS: Средство просмотра отчетов"
 
 #: gui/main.cpp:872
 msgid "Error: Masterlist parsing failed. %1%"
@@ -714,20 +707,22 @@ msgid ""
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
 "will be re-downloaded by Steam. Do you wish to continue?"
 msgstr ""
+"Эта возможность предоставлена для того, чтобы моддеры, использующие Creation "
+"Kit, могли установить свой порядок загрузки. Обратная сторона этого то, что "
+"любые подписанные в Steam Workshop моды могут быть заново загружены с "
+"помощью Steam. Вы желаете продолжить?"
 
 #: gui/main.cpp:961
-#, fuzzy
 msgid "BOSS: Warning"
-msgstr "BOSS: Работает..."
+msgstr "BOSS: Внимание"
 
 #: gui/main.cpp:971
-#, fuzzy
 msgid "Error: Failed to get load order. %1%"
-msgstr "Не удалось установить порядок загрузки. Детали: %1%"
+msgstr "Ошибка: Не удалось получить порядок загрузки. %1%"
 
 #: gui/main.cpp:1005
 msgid "Error: Failed to set plugin timestamps. %1%"
-msgstr ""
+msgstr "Ошибка: Не удалось присвоить временные метки плагинам. %1%"
 
 #: gui/main.cpp:1015
 msgid "BOSS: Settings"
@@ -743,7 +738,7 @@ msgid ""
 "Master system."
 msgstr ""
 "Инструмент для оптимизации порядка загрузки, для игр, использующих систему "
-"Плагин/Мастер Elder Scrolls."
+"плагин/мастер Elder Scrolls."
 
 #: gui/main.cpp:1101
 msgid "Up"
@@ -762,8 +757,8 @@ msgid ""
 "Please submit any alterations made for reasons other than user preference \n"
 "to the BOSS team so that they may include the changes in the masterlist."
 msgstr ""
-"Пожалуйста, сообщайте команде BOSS о любых изменениях, сделанных по любым "
-"причинам, кроме \n"
+"Пожалуйста, сообщайте команде BOSS о любых изменениях, сделанных вами в  "
+"порядке загрузки, по любым причинам, кроме \n"
 "личных предпочтений, для того, чтобы эти изменения были включены в "
 "мастерлист."
 
@@ -836,9 +831,8 @@ msgid "No change in details since last run."
 msgstr "Никаких изменений в деталях с последнего запуска."
 
 #: backend/generators.h:316
-#, fuzzy
 msgid "General Messages"
-msgstr "Сообщения"
+msgstr "Сообщения общего назначения"
 
 #: backend/generators.h:326
 msgid "Total Number of Messages"
@@ -858,46 +852,51 @@ msgstr "Версия:"
 
 #: backend/generators.h:405
 msgid "Add:"
-msgstr ""
+msgstr "Добавить:"
 
 #: backend/generators.h:411
-#, fuzzy
 msgid "Remove:"
-msgstr "Удалить"
+msgstr "Удалить:"
 
 #: backend/generators.h:419
 msgid ""
 "Contains %1% ITM records, %2% UDR records and %3% deleted navmeshes. Clean "
 "with %4%."
 msgstr ""
+"Содержит %1% ITM записей, %2% UDR записей и %3% удаленных navmesh-записей. "
+"Очистить с помощью %1%."
 
 #: backend/generators.h:421
 msgid "Clean with %1%."
-msgstr ""
+msgstr "Очистить с помощью %1%."
 
 #: backend/generators.h:425
 msgid "Contains %1% UDR records and %2% deleted navmeshes. Clean with %3%."
 msgstr ""
+"Содержит %1% ITM записей и %2% удаленных navmesh-записей. Очистить с помощью "
+"%1%."
 
 #: backend/generators.h:427
 msgid "Contains %1% deleted navmeshes. Clean with %2%."
-msgstr ""
+msgstr "Содержит %1% удаленных navmesh-записей. Очистить с помощью %1%."
 
 #: backend/generators.h:429
 msgid "Contains %1% UDR records. Clean with %2%."
-msgstr ""
+msgstr "Содержит %1% UDR записей. Очистить с помощью %1%."
 
 #: backend/generators.h:432
 msgid "Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%."
 msgstr ""
+"Содержит %1% ITM записей и %2% удаленных navmesh-записей. Очистить с помощью "
+"%1%."
 
 #: backend/generators.h:434
 msgid "Contains %1% ITM records. Clean with %2%."
-msgstr ""
+msgstr "Содержит %1% ITM записей. Очистить с помощью %1%."
 
 #: backend/generators.h:437
 msgid "Contains %1% ITM records and %2% UDR records. Clean with %3%."
-msgstr ""
+msgstr "Содержит %1% ITM записей и %2% UDR записей. Очистить с помощью %1%."
 
 #: backend/generators.h:474
 msgid "The BOSS Report requires Javascript to be enabled in order to function."
