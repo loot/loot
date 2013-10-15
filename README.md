@@ -34,7 +34,7 @@ BOSS requires the following libraries:
 * [Libloadorder](http://github.com/WrinklyNinja/libloadorder)
 * [OpenSSL](https://www.openssl.org) - only if HTTPS support in libgit2 is required using compilers other than MSVC.
 * [PugiXML](http://code.google.com/p/pugixml/) v1.2 or later.
-* [wxWidgets](http://www.wxwidgets.org) v2.9.5 or later.
+* [wxWidgets](http://www.wxwidgets.org) v3.0 RC 1 or later.
 * [yaml-cpp](http://code.google.com/p/yaml-cpp/) v0.5.1 or later.
 * [zlib](http://zlib.net) v1.2.7 or later.
 
@@ -91,6 +91,7 @@ echo "using gcc : 4.6.3 : i686-w64-mingw32-g++ : <rc>i686-w64-mingw32-windres <a
 
 ```
 ./configure --host=i686-w64-mingw32 --disable-shared --enable-stl
+make
 ```
 
 ### zlib

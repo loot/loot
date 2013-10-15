@@ -42,7 +42,7 @@ include_directories ("${CMAKE_SOURCE_DIR}/src"
                      "${PROJECT_LIBS_DIR}/pugixml/src"
                      "${PROJECT_LIBS_DIR}/libgit2/include"
                      "${PROJECT_LIBS_DIR}/wxWidgets/include"
-                     "${PROJECT_LIBS_DIR}/wxWidgets/lib/wx/include/${COMPILER_PREFIX}-msw-unicode-static-2.9")
+                     "${PROJECT_LIBS_DIR}/wxWidgets/lib/wx/include/${COMPILER_PREFIX}-msw-unicode-static-3.0")
 
 link_directories ("${PROJECT_LIBS_DIR}/yaml-cpp/build"
                   "${PROJECT_LIBS_DIR}/libloadorder/build"
@@ -58,7 +58,7 @@ link_directories ("${PROJECT_LIBS_DIR}/yaml-cpp/build"
 
 # Settings when compiling for Windows. Since it's a Windows-only app this is always true, but useful to check for copy/paste into other projects.
 IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
-    add_definitions (-DUNICODE -D_UNICODE -DLIBLO_STATIC)
+    add_definitions (-DUNICODE -D_UNICODE -D__WXMSW__ -DNDEBUG -DLIBLO_STATIC)
     IF (${PROJECT_LINK} MATCHES "STATIC")
         add_definitions (-DBOSS_STATIC)
     ELSE ()
@@ -109,12 +109,12 @@ ELSE ()
 ENDIF ()
 
 set (BOSS_GUI_LIBS  ${BOSS_LIBS}
-                    wx_mswu_webview-2.9-${COMPILER_PREFIX}
-                    wx_mswu_core-2.9-${COMPILER_PREFIX}
-                    wx_baseu-2.9-${COMPILER_PREFIX}
-                    wx_mswu_adv-2.9-${COMPILER_PREFIX}
-                    wxpng-2.9-${COMPILER_PREFIX}
-                    wxzlib-2.9-${COMPILER_PREFIX}
+                    wx_mswu_webview-3.0-${COMPILER_PREFIX}
+                    wx_mswu_core-3.0-${COMPILER_PREFIX}
+                    wx_baseu-3.0-${COMPILER_PREFIX}
+                    wx_mswu_adv-3.0-${COMPILER_PREFIX}
+                    wxpng-3.0-${COMPILER_PREFIX}
+                    wxzlib-3.0-${COMPILER_PREFIX}
                     comctl32)
 
 

@@ -74,11 +74,11 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
     gamesList->AppendColumn(translate("Install Path Registry Key"));
 
     //Set up event handling.
-    Bind(wxEVT_COMMAND_LIST_ITEM_SELECTED, &SettingsFrame::OnGameSelect, this, LIST_Games);
-    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &SettingsFrame::OnQuit, this, wxID_OK);
-    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &SettingsFrame::OnAddGame, this, BUTTON_AddGame);
-    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &SettingsFrame::OnEditGame, this, BUTTON_EditGame);
-    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &SettingsFrame::OnRemoveGame, this, BUTTON_RemoveGame);
+    Bind(wxEVT_LIST_ITEM_SELECTED, &SettingsFrame::OnGameSelect, this, LIST_Games);
+    Bind(wxEVT_BUTTON, &SettingsFrame::OnQuit, this, wxID_OK);
+    Bind(wxEVT_BUTTON, &SettingsFrame::OnAddGame, this, BUTTON_AddGame);
+    Bind(wxEVT_BUTTON, &SettingsFrame::OnEditGame, this, BUTTON_EditGame);
+    Bind(wxEVT_BUTTON, &SettingsFrame::OnRemoveGame, this, BUTTON_RemoveGame);
 
     //Set up layout.
 	wxSizerFlags leftItem(0);

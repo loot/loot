@@ -400,7 +400,7 @@ Launcher::Launcher(const wxChar *title, YAML::Node& settings, Game& game, vector
             item->Check();
 
         if (_games[i].IsInstalled())
-            Bind(wxEVT_COMMAND_MENU_SELECTED, &Launcher::OnGameChange, this, MENU_LowestDynamicGameID + i);
+            Bind(wxEVT_MENU, &Launcher::OnGameChange, this, MENU_LowestDynamicGameID + i);
         else
             item->Enable(false);
     }
@@ -418,18 +418,18 @@ Launcher::Launcher(const wxChar *title, YAML::Node& settings, Game& game, vector
 	buttonBox->Add(ViewButton, 1, wxEXPAND|wxALIGN_CENTRE|wxALL, 10);
 
     //Bind event handlers.
-    Bind(wxEVT_COMMAND_MENU_SELECTED, &Launcher::OnQuit, this, wxID_EXIT);
-    Bind(wxEVT_COMMAND_MENU_SELECTED, &Launcher::OnViewLastReport, this, OPTION_ViewLastReport);
-    Bind(wxEVT_COMMAND_MENU_SELECTED, &Launcher::OnOpenDebugLog, this, MENU_ViewDebugLog);
-    Bind(wxEVT_COMMAND_MENU_SELECTED, &Launcher::OnSortPlugins, this, OPTION_SortPlugins);
-    Bind(wxEVT_COMMAND_MENU_SELECTED, &Launcher::OnEditMetadata, this, OPTION_EditMetadata);
-    Bind(wxEVT_COMMAND_MENU_SELECTED, &Launcher::OnRedatePlugins, this, MENU_RedatePlugins);
-    Bind(wxEVT_COMMAND_MENU_SELECTED, &Launcher::OnOpenSettings, this, MENU_ShowSettings);
-    Bind(wxEVT_COMMAND_MENU_SELECTED, &Launcher::OnHelp, this, wxID_HELP);
-    Bind(wxEVT_COMMAND_MENU_SELECTED, &Launcher::OnAbout, this, wxID_ABOUT);
-    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Launcher::OnSortPlugins, this, OPTION_SortPlugins);
-    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Launcher::OnEditMetadata, this, OPTION_EditMetadata);
-    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Launcher::OnViewLastReport, this, OPTION_ViewLastReport);
+    Bind(wxEVT_MENU, &Launcher::OnQuit, this, wxID_EXIT);
+    Bind(wxEVT_MENU, &Launcher::OnViewLastReport, this, OPTION_ViewLastReport);
+    Bind(wxEVT_MENU, &Launcher::OnOpenDebugLog, this, MENU_ViewDebugLog);
+    Bind(wxEVT_MENU, &Launcher::OnSortPlugins, this, OPTION_SortPlugins);
+    Bind(wxEVT_MENU, &Launcher::OnEditMetadata, this, OPTION_EditMetadata);
+    Bind(wxEVT_MENU, &Launcher::OnRedatePlugins, this, MENU_RedatePlugins);
+    Bind(wxEVT_MENU, &Launcher::OnOpenSettings, this, MENU_ShowSettings);
+    Bind(wxEVT_MENU, &Launcher::OnHelp, this, wxID_HELP);
+    Bind(wxEVT_MENU, &Launcher::OnAbout, this, wxID_ABOUT);
+    Bind(wxEVT_BUTTON, &Launcher::OnSortPlugins, this, OPTION_SortPlugins);
+    Bind(wxEVT_BUTTON, &Launcher::OnEditMetadata, this, OPTION_EditMetadata);
+    Bind(wxEVT_BUTTON, &Launcher::OnViewLastReport, this, OPTION_ViewLastReport);
     Bind(wxEVT_CLOSE_WINDOW, &Launcher::OnClose, this);
 
     //Set up initial state.
@@ -1110,9 +1110,9 @@ LoadOrderPreview::LoadOrderPreview(wxWindow *parent, const wxString title, const
     _loadOrder->SetColumnWidth(0, wxLIST_AUTOSIZE);
 
     //Set up event handling.
-    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &LoadOrderPreview::OnMoveUp, this, BUTTON_MoveUp);
-    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &LoadOrderPreview::OnMoveDown, this, BUTTON_MoveDown);
-    Bind(wxEVT_COMMAND_LIST_ITEM_SELECTED, &LoadOrderPreview::OnPluginSelect, this, LIST_LoadOrder);
+    Bind(wxEVT_BUTTON, &LoadOrderPreview::OnMoveUp, this, BUTTON_MoveUp);
+    Bind(wxEVT_BUTTON, &LoadOrderPreview::OnMoveDown, this, BUTTON_MoveDown);
+    Bind(wxEVT_LIST_ITEM_SELECTED, &LoadOrderPreview::OnPluginSelect, this, LIST_LoadOrder);
 
     //Set up layout.
     wxBoxSizer * bigBox = new wxBoxSizer(wxVERTICAL);

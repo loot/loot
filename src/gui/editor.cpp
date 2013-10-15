@@ -50,7 +50,7 @@ MessageList::MessageList(wxWindow * parent, wxWindowID id, const unsigned int la
     InsertColumn(2, translate("Condition"));
     InsertColumn(3, translate("Language"));
 
-    Bind(wxEVT_COMMAND_LIST_DELETE_ITEM, &MessageList::OnDeleteItem, this);
+    Bind(wxEVT_LIST_DELETE_ITEM, &MessageList::OnDeleteItem, this);
 
     SetItemCount(0);
 }
@@ -186,20 +186,20 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     pluginText->SetFont(font);
 
     //Set up event handling.
-    Bind(wxEVT_COMMAND_LIST_ITEM_SELECTED, &Editor::OnPluginSelect, this, LIST_Plugins);
-    Bind(wxEVT_COMMAND_LIST_ITEM_SELECTED, &Editor::OnRowSelect, this, LIST_Reqs);
-    Bind(wxEVT_COMMAND_LIST_ITEM_SELECTED, &Editor::OnRowSelect, this, LIST_Incs);
-    Bind(wxEVT_COMMAND_LIST_ITEM_SELECTED, &Editor::OnRowSelect, this, LIST_LoadAfter);
-    Bind(wxEVT_COMMAND_LIST_ITEM_SELECTED, &Editor::OnRowSelect, this, LIST_Messages);
-    Bind(wxEVT_COMMAND_LIST_ITEM_SELECTED, &Editor::OnRowSelect, this, LIST_BashTags);
-    Bind(wxEVT_COMMAND_LIST_ITEM_SELECTED, &Editor::OnRowSelect, this, LIST_DirtyInfo);
-    Bind(wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED, &Editor::OnListBookChange, this, BOOK_Lists);
-    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Editor::OnQuit, this, BUTTON_Apply);
-    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Editor::OnQuit, this, BUTTON_Cancel);
-    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Editor::OnAddRow, this, BUTTON_AddRow);
-    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Editor::OnEditRow, this, BUTTON_EditRow);
-    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Editor::OnRemoveRow, this, BUTTON_RemoveRow);
-    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Editor::OnExport, this, BUTTON_Export);
+    Bind(wxEVT_LIST_ITEM_SELECTED, &Editor::OnPluginSelect, this, LIST_Plugins);
+    Bind(wxEVT_LIST_ITEM_SELECTED, &Editor::OnRowSelect, this, LIST_Reqs);
+    Bind(wxEVT_LIST_ITEM_SELECTED, &Editor::OnRowSelect, this, LIST_Incs);
+    Bind(wxEVT_LIST_ITEM_SELECTED, &Editor::OnRowSelect, this, LIST_LoadAfter);
+    Bind(wxEVT_LIST_ITEM_SELECTED, &Editor::OnRowSelect, this, LIST_Messages);
+    Bind(wxEVT_LIST_ITEM_SELECTED, &Editor::OnRowSelect, this, LIST_BashTags);
+    Bind(wxEVT_LIST_ITEM_SELECTED, &Editor::OnRowSelect, this, LIST_DirtyInfo);
+    Bind(wxEVT_NOTEBOOK_PAGE_CHANGED, &Editor::OnListBookChange, this, BOOK_Lists);
+    Bind(wxEVT_BUTTON, &Editor::OnQuit, this, BUTTON_Apply);
+    Bind(wxEVT_BUTTON, &Editor::OnQuit, this, BUTTON_Cancel);
+    Bind(wxEVT_BUTTON, &Editor::OnAddRow, this, BUTTON_AddRow);
+    Bind(wxEVT_BUTTON, &Editor::OnEditRow, this, BUTTON_EditRow);
+    Bind(wxEVT_BUTTON, &Editor::OnRemoveRow, this, BUTTON_RemoveRow);
+    Bind(wxEVT_BUTTON, &Editor::OnExport, this, BUTTON_Export);
 
     //Set up layout.
     wxBoxSizer * bigBox = new wxBoxSizer(wxHORIZONTAL);
@@ -991,10 +991,10 @@ MessageEditDialog::MessageEditDialog(wxWindow *parent, const wxString& title) : 
     _content->InsertColumn(1, translate("String"));
 
     //Set up event handling.
-    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MessageEditDialog::OnAdd, this, BUTTON_AddContent);
-    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MessageEditDialog::OnEdit, this, BUTTON_EditContent);
-    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MessageEditDialog::OnRemove, this, BUTTON_RemoveContent);
-    Bind(wxEVT_COMMAND_LIST_ITEM_SELECTED, &MessageEditDialog::OnSelect, this, LIST_MessageContent);
+    Bind(wxEVT_BUTTON, &MessageEditDialog::OnAdd, this, BUTTON_AddContent);
+    Bind(wxEVT_BUTTON, &MessageEditDialog::OnEdit, this, BUTTON_EditContent);
+    Bind(wxEVT_BUTTON, &MessageEditDialog::OnRemove, this, BUTTON_RemoveContent);
+    Bind(wxEVT_LIST_ITEM_SELECTED, &MessageEditDialog::OnSelect, this, LIST_MessageContent);
 
     wxSizerFlags leftItem(0);
     leftItem.Left();
