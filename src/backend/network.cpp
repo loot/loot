@@ -75,12 +75,27 @@ namespace boss {
         throw boss::error(boss::error::git_error, (boost::format(lc::translate("Git operation failed. Error: %1%")) % error_message).str());
     }
 
-    int downloadProg(const git_transfer_progress *stats, void *payload) {
-        float receivedKB = (float)stats->received_bytes / 1024.0;
-        float progress = 100.0 * (float)stats->received_objects / (float)stats->total_objects;
-        BOOST_LOG_TRIVIAL(info) << "Loading: " << progress << "% (" << receivedKB << " KB)";
-        return 0;
-    }
+	void progress_cb(const char *str, int len, void *data) {
+		BOOST_LOG_TRIVIAL(info) << string(str, len);
+	}
+
+	int update_cb(const char *refname, const git_oid *a, const git_oid *b, void *data) {
+		char a_str[GIT_OID_HEXSZ + 1], b_str[GIT_OID_HEXSZ + 1];
+		(void)data;
+
+		git_oid_fmt(b_str, b);
+		b_str[GIT_OID_HEXSZ] = '\0';
+
+		if (git_oid_iszero(a)) {
+			BOOST_LOG_TRIVIAL(info) << "[new]    " << b_str << " " << refname;
+		} else {
+			git_oid_fmt(a_str, a);
+			a_str[GIT_OID_HEXSZ] = '\0';
+			BOOST_LOG_TRIVIAL(info) << "[updated] " << a_str << ".." << b_str << " " << refname;
+		}
+
+		return 0;
+	}
 
     std::string UpdateMasterlist(Game& game, std::list<Message>& parsingErrors, std::list<Plugin>& plugins, std::list<Message>& messages) {
 
@@ -191,11 +206,19 @@ namespace boss {
         }
 
         //WARNING: This is generally a very bad idea, since it makes HTTPS a little bit pointless, but in this case because we're only reading data and not really concerned about its integrity, it's acceptable. A better solution would be to figure out why GitHub's certificate appears to be invalid to OpenSSL.
-        git_remote_check_cert(ptrs.remote, 0);
+#ifndef _WIN32
+		git_remote_check_cert(ptrs.remote, 0);
+#endif
 
         BOOST_LOG_TRIVIAL(trace) << "Fetching updates from remote.";
 
         //Now pull from the remote repository. This involves a fetch followed by a merge. First perform the fetch.
+
+		//Set up callbacks.
+		git_remote_callbacks callbacks = GIT_REMOTE_CALLBACKS_INIT;
+		callbacks.update_tips = &update_cb;
+		callbacks.progress = &progress_cb;
+		git_remote_set_callbacks(ptrs.remote, &callbacks);
 
         stats = git_remote_stats(ptrs.remote);
 
@@ -209,7 +232,7 @@ namespace boss {
 
         BOOST_LOG_TRIVIAL(trace) << "Downloading changes from remote.";
 
-        handle_error(git_remote_download(ptrs.remote, &downloadProg, NULL), ptrs);
+        handle_error(git_remote_download(ptrs.remote), ptrs);
 
         BOOST_LOG_TRIVIAL(info) << "Received " << stats->indexed_objects << " of " << stats->total_objects << " objects in " << stats->received_bytes << " bytes.";
 
