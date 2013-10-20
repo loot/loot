@@ -61,7 +61,7 @@
 
 #define BOOST_THREAD_VERSION 4
 
-IMPLEMENT_APP(BossGUI);
+wxIMPLEMENT_APP(BossGUI);
 
 using namespace boss;
 using namespace std;

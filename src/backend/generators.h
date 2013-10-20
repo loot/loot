@@ -677,7 +677,9 @@ namespace YAML {
         for (typename std::set<T, Compare>::const_iterator it=rhs.begin(), endIt=rhs.end(); it != endIt; ++it) {
             out << *it;
         }
-        out << EndSeq;
+		out << EndSeq;
+
+		return out;
     }
 
     inline Emitter& operator << (Emitter& out, const boss::PluginDirtyInfo& rhs) {
@@ -692,7 +694,9 @@ namespace YAML {
         if (rhs.DeletedNavmeshes() > 0)
             out << Key << "nav" << Value << rhs.DeletedNavmeshes();
 
-        out << EndMap;
+		out << EndMap;
+
+		return out;
     }
 
     inline Emitter& operator << (Emitter& out, const boss::Game& rhs) {
@@ -713,7 +717,9 @@ namespace YAML {
         else if (rhs.Id() == boss::g_game_fonv)
             out << Key << Value << boss::Game(boss::g_game_fonv).FolderName();
 
-        out << EndMap;
+		out << EndMap;
+
+		return out;
     }
 
     inline Emitter& operator << (Emitter& out, const boss::MessageContent& rhs) {
@@ -723,7 +729,9 @@ namespace YAML {
 
         out << Key << "str" << Value << rhs.Str();
 
-        out << EndMap;
+		out << EndMap;
+
+		return out;
     }
 
     inline Emitter& operator << (Emitter& out, const boss::Message& rhs) {
@@ -744,7 +752,9 @@ namespace YAML {
         if (!rhs.Condition().empty())
             out << Key << "condition" << Value << rhs.Condition();
 
-        out << EndMap;
+		out << EndMap;
+
+		return out;
     }
 
     inline Emitter& operator << (Emitter& out, const boss::File& rhs) {
@@ -762,6 +772,8 @@ namespace YAML {
 
             out << EndMap;
         }
+
+		return out;
     }
 
     inline Emitter& operator << (Emitter& out, const boss::Tag& rhs) {
@@ -779,7 +791,9 @@ namespace YAML {
 
             out << Key << "condition" << Value << rhs.Condition()
                 << EndMap;
-        }
+		}
+
+		return out;
     }
 
     inline Emitter& operator << (Emitter& out, const boss::Plugin& rhs) {
@@ -813,7 +827,9 @@ namespace YAML {
                 out << Key << "dirty" << Value << rhs.DirtyInfo();
 
             out << EndMap;
-        }
+		}
+
+		return out;
     }
 }
 

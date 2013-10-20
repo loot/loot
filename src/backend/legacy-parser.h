@@ -416,7 +416,7 @@ namespace boss {
               which is supported by the v3 syntax. */
 
             int bracketNo = 0;
-            size_t pos;
+            size_t pos = 0;
 
             while ((pos = condition.find(" and ", pos)) != std::string::npos) {
 
