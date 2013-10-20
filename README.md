@@ -21,9 +21,9 @@ At the moment, BOSSv3 is in beta testing, and so is not recommended for use unle
 This repository holds the source code and documentation for BOSS v3. The masterlists for v3 are stored in separate repostories on [GitHub](https://github.com/boss-developers). The source code, documentation and masterlists for previous versions of BOSS are stored on [Google Code](http://code.google.com/p/better-oblivion-sorting-software/).
 
 
-## Build Instructions
+## Building BOSS
 
-BOSS uses [CMake](http://cmake.org) v2.8.9 or later for cross-platform building support, though development takes place on Linux, and the instructions below reflect this. Building on Windows should be straightforward using analogous commands though.
+BOSS uses [CMake](http://cmake.org) v2.8.9 or later for cross-platform building support, as though it is a Windows application, development has taken place on Windows and Linux.
 
 BOSS requires the following libraries:
 
@@ -38,16 +38,9 @@ BOSS requires the following libraries:
 * [yaml-cpp](http://code.google.com/p/yaml-cpp/) v0.5.1 or later.
 * [zlib](http://zlib.net) v1.2.7 or later.
 
-
 BOSS expects all libraries' folders to be present alongside the BOSS repository folder that contains this readme, or otherwise installed such that the compiler and linker used can find them without suppling additional paths. All paths below are relative to the folder(s) containing the libraries and BOSS.
 
-BOSS can also make use of [GraphVis](http://www.graphviz.org/Download_windows.php) binaries. If provided, they should be installed as detailed below.
-
-Alphanum, Libespm and PugiXML do not require any additional setup. The rest of the libraries must be built separately.
-
-### GraphVis
-
-Put the following binaries into `resources/graphvis/` in the BOSS repository root, then run `dot.exe -c`.
+BOSS can also make use of [GraphVis](http://www.graphviz.org/Download_windows.php) binaries. If provided, the following binaries should be placed into `resources/graphvis/` in the BOSS repository root:
 
 * cdt.dll
 * cgraph.dll
@@ -79,22 +72,75 @@ Put the following binaries into `resources/graphvis/` in the BOSS repository roo
 * Pathplan.dll
 * zlib1.dll
 
-### Boost
+Once the binaries have been placed there, run `dot.exe -c`.
+
+Alphanum, Libespm and PugiXML do not require any additional setup. The rest of the libraries must be built separately. Instructions for building them and BOSS itself on Windows and Linux are given below. They assume that Visual C++ 2013 is being used on Windows, and mingw-w64 is being used on Linux, though they should be similar for other compilers.
+
+### Windows
+
+#### Boost
+
+```
+bootstrap.bat
+b2 toolset=msvc-12.0 threadapi=win32 link=static variant=release address-model=32 --with-log --with-date_time --with-thread --with-filesystem --with-locale --with-regex --with-system  --with-iostreams --stagedir=stage-32
+```
+
+#### wxWidgets
+
+Just build the solution provided by wxWidgets.
+
+#### zlib
+
+1. Add `/safeseh` to both lines in `contrib\masmx86\bld_ml32.bat`. 
+2. Build the solution in `contrib\vstudio`.
+3. Copy `build\zconf.h` to `.\zconf.h`.
+
+#### yaml-cpp
+
+1. Set CMake up so that it builds the binaries in the `build` subdirectory of the yaml-cpp folder.
+2. Define `BOOST_ROOT` to point to where the Boost folder is. 
+3. Configure CMake, then generate a build system for Visual Studio 12.
+4. Open the generated solution file, and build it.
+
+#### Libloadorder
+
+Follow the instructions in libloadorder's README.md to build it as a static library.
+
+#### Libgit2
+
+1. Set CMake up so that it builds the binaries in the `build` subdirectory of the libgit2 folder.
+2. Configure CMake.
+3. Undefine `BUILD_SHARED_LIBS`.
+4. Generate a build system for Visual Studio 12.
+5. Open the generated solution file, and build it.
+
+#### BOSS
+
+1. Set CMake up so that it builds the binaries in the `build` subdirectory of the BOSS folder.
+2. Define `PROJECT_ARCH=32` or `PROJECT_ARCH=64` to build 32 or 64 bit executables respectively.
+3. Define `PROJECT_LINK=STATIC` to build a static API, or `PROJECT_LINK=SHARED` to build a DLL API.
+4. Define `PROEJCT_LIBS_DIR` to point to the folder holding all the required libraries' folders.
+5. Configure CMake, then generate a build system for Visual Studio 12.
+6. Open the generated solution file, and build it.
+
+### Linux
+
+#### Boost
 
 ```
 ./bootstrap.sh
 echo "using gcc : 4.6.3 : i686-w64-mingw32-g++ : <rc>i686-w64-mingw32-windres <archiver>i686-w64-mingw32-ar <ranlib>i686-w64-mingw32-ranlib ;" > tools/build/v2/user-config.jam
-./b2 toolset=gcc-4.6.3 target-os=windows threadapi=win32 link=static runtime-link=static variant=release address-model=32 cxxflags=-fPIC --with-log --with-date_time --with-thread --with-filesystem --with-locale --with-regex --with-system --stagedir=stage-mingw-32
+./b2 toolset=gcc-4.6.3 target-os=windows threadapi=win32 link=static runtime-link=static variant=release address-model=32 cxxflags=-fPIC --with-log --with-date_time --with-thread --with-filesystem --with-locale --with-regex --with-system --with-iostreams --stagedir=stage-32
 ```
 
-### wxWidgets
+#### wxWidgets
 
 ```
 ./configure --host=i686-w64-mingw32 --disable-shared --enable-stl
 make
 ```
 
-### zlib
+#### zlib
 
 ```
 mkdir build && cd build
@@ -103,37 +149,34 @@ make
 cp zconf.h ../zconf.h
 ```
 
-### yaml-cpp
+#### yaml-cpp
 
 ```
 cmake . -DCMAKE_C_FLAGS=-m32 -DPROJECT_ARCH=32 -DCMAKE_TOOLCHAIN_FILE=../BOSSv3/mingw-toolchain.cmake -DBOOST_ROOT=../boost
+make
 ```
 
-### Libespm
-
-Follow the instructions in libespm's README.md to build it as a static library.
-
-### Libloadorder
+#### Libloadorder
 
 Follow the instructions in libloadorder's README.md to build it as a static library.
 
-### OpenSSL
+#### OpenSSL
 
 ```
 ./Configure --cross-compile-prefix=i686-w64-mingw32- mingw
 make
 ```
 
-### Libgit2
+#### Libgit2
 
 ```
 mkdir build && cd build
-cmake .. -DBUILD_SHARED_LIBS=OFF -DCMAKE_C_FLAGS=-m32 -DPROJECT_ARCH=32 -DCMAKE_TOOLCHAIN_FILE=../BOSSv3/mingw-toolchain.cmake
+cmake .. -DBUILD_SHARED_LIBS=OFF -DOPENSSL_ROOT_DIR=../openssl -DCMAKE_C_FLAGS=-m32 -DPROJECT_ARCH=32 -DCMAKE_TOOLCHAIN_FILE=../BOSSv3/mingw-toolchain.cmake
 make
 ```
-If building with SSL support using OpenSSL, also pass `-DOPENSSL_ROOT_DIR=../openssl`.
+If building with SSL support using OpenSSL, also pass ``.
 
-### BOSS
+#### BOSS
 
 ```
 mkdir build && cd build

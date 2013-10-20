@@ -17,8 +17,7 @@ set (BOSS_SRC   "${CMAKE_SOURCE_DIR}/src/backend/metadata.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/network.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/globals.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/graph.cpp"
-                "${PROJECT_LIBS_DIR}/pugixml/src/pugixml.cpp"
-                "${PROJECT_LIBS_DIR}/boost/libs/iostreams/src/file_descriptor.cpp")
+                "${PROJECT_LIBS_DIR}/pugixml/src/pugixml.cpp")
 
 set (BOSS_GUI_SRC ${BOSS_SRC}
                   "${CMAKE_SOURCE_DIR}/src/gui/ids.cpp"
@@ -41,14 +40,11 @@ include_directories ("${CMAKE_SOURCE_DIR}/src"
                      "${PROJECT_LIBS_DIR}/zlib"
                      "${PROJECT_LIBS_DIR}/pugixml/src"
                      "${PROJECT_LIBS_DIR}/libgit2/include"
-                     "${PROJECT_LIBS_DIR}/wxWidgets/include"
-                     "${PROJECT_LIBS_DIR}/wxWidgets/lib/wx/include/${COMPILER_PREFIX}-msw-unicode-static-3.0")
+                     "${PROJECT_LIBS_DIR}/wxWidgets/include")
 
-link_directories ("${PROJECT_LIBS_DIR}/yaml-cpp/build"
-                  "${PROJECT_LIBS_DIR}/libloadorder/build"
+link_directories ("${PROJECT_LIBS_DIR}/libloadorder/build"
                   "${PROJECT_LIBS_DIR}/zlib/build"
                   "${PROJECT_LIBS_DIR}/libgit2/build"
-                  "${PROJECT_LIBS_DIR}/wxWidgets/lib"
                   "${PROJECT_LIBS_DIR}/boost/stage-${PROJECT_ARCH}/lib")
 
 
@@ -58,7 +54,7 @@ link_directories ("${PROJECT_LIBS_DIR}/yaml-cpp/build"
 
 # Settings when compiling for Windows. Since it's a Windows-only app this is always true, but useful to check for copy/paste into other projects.
 IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
-    add_definitions (-DUNICODE -D_UNICODE -D__WXMSW__ -DNDEBUG -DLIBLO_STATIC)
+    add_definitions (-DUNICODE -D_UNICODE -D__WXMSW__ -DNDEBUG -DLIBLO_STATIC -DWIN32 -D_WINDOWS)
     IF (${PROJECT_LINK} MATCHES "STATIC")
         add_definitions (-DBOSS_STATIC)
     ELSE ()
@@ -68,55 +64,73 @@ ENDIF ()
 
 # MinGW settings.
 IF (MINGW)
-    link_directories("${PROJECT_LIBS_DIR}/openssl")
+    include_directories("${PROJECT_LIBS_DIR}/wxWidgets/lib/wx/include/${COMPILER_PREFIX}-msw-unicode-static-3.0")
+    link_directories("${PROJECT_LIBS_DIR}/yaml-cpp/build"
+                     "${PROJECT_LIBS_DIR}/openssl"
+                     "${PROJECT_LIBS_DIR}/wxWidgets/lib")
     set (CMAKE_C_FLAGS  "-m${PROJECT_ARCH} -O3")
     set (CMAKE_CXX_FLAGS "-m${PROJECT_ARCH} -O3")
     set (CMAKE_EXE_LINKER_FLAGS "-static-libstdc++ -static-libgcc -Wl,--subsystem,windows")
     set (CMAKE_SHARED_LINKER_FLAGS "-static-libstdc++ -static-libgcc -Wl,--subsystem,windows")
     set (CMAKE_MODULE_LINKER_FLAGS "-static-libstdc++ -static-libgcc -Wl,--subsystem,windows")
-ENDIF ()
-
-# MSVC settings.
-IF (MSVC)
-	set (CMAKE_CXX_FLAGS "/EHsc")
-    set (BOOST_SUFFIX "-vc110-mt-1_52")
-ENDIF ()
-
-set (BOSS_LIBS ${BOSS_LIBS}
-               version
-               git2
-               zlibstatic
-               loadorder${PROJECT_ARCH}
-               yaml-cpp
-               boost_log_setup${BOOST_SUFFIX}
-               boost_log${BOOST_SUFFIX}
-               boost_locale${BOOST_SUFFIX}
-               boost_thread_win32${BOOST_SUFFIX}
-               boost_chrono${BOOST_SUFFIX}
-               boost_date_time${BOOST_SUFFIX}
-               boost_filesystem${BOOST_SUFFIX}
-               boost_system${BOOST_SUFFIX}
-               boost_regex${BOOST_SUFFIX})
-
-IF (MINGW)
     set (BOSS_LIBS ${BOSS_LIBS}
+                   yaml-cpp
+                   boost_log_setup
+                   boost_log
+                   boost_locale
+                   boost_thread_win32
+                   boost_chrono
+                   boost_date_time
+                   boost_filesystem
+                   boost_system
+                   boost_regex
+                   version
+                   git2
+                   zlibstatic
+                   loadorder${PROJECT_ARCH}
                    ssl
                    crypto
                    ws2_32)
-ELSE ()
+    set (BOSS_GUI_LIBS ${BOSS_LIBS}
+                       wx_mswu_webview-3.0-${COMPILER_PREFIX}
+                       wx_mswu_core-3.0-${COMPILER_PREFIX}
+                       wx_baseu-3.0-${COMPILER_PREFIX}
+                       wx_mswu_adv-3.0-${COMPILER_PREFIX}
+                       wxpng-3.0-${COMPILER_PREFIX}
+                       wxzlib-3.0-${COMPILER_PREFIX}
+                       comctl32)
+ELSEIF (MSVC)
+    include_directories("${PROJECT_LIBS_DIR}/wxWidgets/lib/vc_lib/mswu")
+    link_directories("${PROJECT_LIBS_DIR}/yaml-cpp/build/Release"
+                     "${PROJECT_LIBS_DIR}/wxWidgets/lib/vc_lib")
+	set (CMAKE_CXX_FLAGS "/EHsc")
+    set (CMAKE_EXE_LINKER_FLAGS "/SUBSYSTEM:WINDOWS")
+    set (BOOST_SUFFIX "-vc120-mt-1_55")
     set (BOSS_LIBS ${BOSS_LIBS}
+                   libyaml-cppmd
+                   libboost_log_setup${BOOST_SUFFIX}
+                   libboost_log${BOOST_SUFFIX}
+                   libboost_locale${BOOST_SUFFIX}
+                   libboost_thread${BOOST_SUFFIX}
+                   libboost_chrono${BOOST_SUFFIX}
+                   libboost_date_time${BOOST_SUFFIX}
+                   libboost_filesystem${BOOST_SUFFIX}
+                   libboost_system${BOOST_SUFFIX}
+                   libboost_regex${BOOST_SUFFIX}
+                   version
+                   git2
+                   zlibstatic
+                   loadorder${PROJECT_ARCH}
                    ws2_32)
+    set (BOSS_GUI_LIBS ${BOSS_LIBS}
+                       wxmsw30u_webview
+                       wxmsw30u_adv
+                       wxmsw30u_core
+                       wxbase30u
+                       wxpng
+                       wxzlib
+                       comctl32)
 ENDIF ()
-
-set (BOSS_GUI_LIBS  ${BOSS_LIBS}
-                    wx_mswu_webview-3.0-${COMPILER_PREFIX}
-                    wx_mswu_core-3.0-${COMPILER_PREFIX}
-                    wx_baseu-3.0-${COMPILER_PREFIX}
-                    wx_mswu_adv-3.0-${COMPILER_PREFIX}
-                    wxpng-3.0-${COMPILER_PREFIX}
-                    wxzlib-3.0-${COMPILER_PREFIX}
-                    comctl32)
-
 
 
 ##############################
