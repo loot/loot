@@ -714,7 +714,7 @@ msgstr ""
 
 #: gui/main.cpp:961
 msgid "BOSS: Warning"
-msgstr "BOSS: Внимание"
+msgstr "BOSS: Предупреждение"
 
 #: gui/main.cpp:971
 msgid "Error: Failed to get load order. %1%"
