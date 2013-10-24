@@ -45,6 +45,7 @@ include_directories ("${CMAKE_SOURCE_DIR}/src"
 link_directories ("${PROJECT_LIBS_DIR}/libloadorder/build"
                   "${PROJECT_LIBS_DIR}/zlib/build"
                   "${PROJECT_LIBS_DIR}/libgit2/build"
+                  "${PROJECT_LIBS_DIR}/yaml-cpp/build"
                   "${PROJECT_LIBS_DIR}/boost/stage-${PROJECT_ARCH}/lib")
 
 
@@ -65,8 +66,7 @@ ENDIF ()
 # MinGW settings.
 IF (MINGW)
     include_directories("${PROJECT_LIBS_DIR}/wxWidgets/lib/wx/include/${COMPILER_PREFIX}-msw-unicode-static-3.0")
-    link_directories("${PROJECT_LIBS_DIR}/yaml-cpp/build"
-                     "${PROJECT_LIBS_DIR}/openssl"
+    link_directories("${PROJECT_LIBS_DIR}/openssl"
                      "${PROJECT_LIBS_DIR}/wxWidgets/lib")
     set (CMAKE_C_FLAGS  "-m${PROJECT_ARCH} -O3")
     set (CMAKE_CXX_FLAGS "-m${PROJECT_ARCH} -O3")
@@ -101,8 +101,7 @@ IF (MINGW)
                        comctl32)
 ELSEIF (MSVC)
     include_directories("${PROJECT_LIBS_DIR}/wxWidgets/lib/vc_lib/mswu")
-    link_directories("${PROJECT_LIBS_DIR}/yaml-cpp/build/Release"
-                     "${PROJECT_LIBS_DIR}/wxWidgets/lib/vc_lib")
+    link_directories("${PROJECT_LIBS_DIR}/wxWidgets/lib/vc_lib")
 	set (CMAKE_CXX_FLAGS "/EHsc")
     set (CMAKE_EXE_LINKER_FLAGS "/SUBSYSTEM:WINDOWS")
     set (BOOST_SUFFIX "-vc120-mt-1_55")
