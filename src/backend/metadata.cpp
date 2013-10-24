@@ -401,7 +401,7 @@ namespace boss {
 	}
 
     void Plugin::Merge(const Plugin& plugin, bool ifDisabled) {
-        BOOST_LOG_TRIVIAL(trace) << "Merging plugin metadata.";
+        BOOST_LOG_TRIVIAL(trace) << "Merging metadata for: " << name;
         //If 'name' differs or if 'enabled' is false for the given plugin, don't change anything.
         if ((!plugin.Enabled() && !ifDisabled))
             return;
@@ -441,7 +441,7 @@ namespace boss {
     }
 
     Plugin Plugin::DiffMetadata(const Plugin& plugin) const {
-        BOOST_LOG_TRIVIAL(trace) << "Calculating metadata difference between plugins.";
+        BOOST_LOG_TRIVIAL(trace) << "Calculating metadata difference for: " << name;
         Plugin p(*this);
 
         //Compare this plugin against the given plugin.

@@ -302,7 +302,7 @@ namespace boss {
             ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str());
 
         if (ret != LIBLO_OK && ret != LIBLO_WARN_LO_MISMATCH) {
-            const char * e;
+            const char * e = NULL;
             lo_get_error_message(&e);
             BOOST_LOG_TRIVIAL(error) << "libloadorder failed to create a game handle. Details: " << e;
             string err = lc::translate("libloadorder failed to create a game handle. Details:").str() + " " + e;
@@ -313,7 +313,7 @@ namespace boss {
         ret = lo_set_game_master(gh, _masterFile.c_str());
 
         if (ret != LIBLO_OK) {
-            const char * e;
+            const char * e = NULL;
             lo_get_error_message(&e);
             lo_destroy_handle(gh);
             BOOST_LOG_TRIVIAL(error) << "libloadorder failed to initialise game master file support. Details: " << e;
@@ -323,7 +323,7 @@ namespace boss {
         }
 
         if (lo_get_load_order(gh, &pluginArr, &pluginArrSize) != LIBLO_OK) {
-            const char * e;
+            const char * e = NULL;
             lo_get_error_message(&e);
             lo_destroy_handle(gh);
             BOOST_LOG_TRIVIAL(error) << "libloadorder failed to set the load order. Details: " << e;
@@ -343,10 +343,9 @@ namespace boss {
     void Game::SetLoadOrder(const std::list<Plugin>& loadOrder) const {
         BOOST_LOG_TRIVIAL(trace) << "Setting load order for game: " << _name;
 
-        lo_game_handle gh;
-        char ** pluginArr;
-        size_t pluginArrSize;
-
+        lo_game_handle gh = NULL;
+        char ** pluginArr = NULL;
+        size_t pluginArrSize = 0;
         int ret;
         if (Id() == g_game_tes4)
             ret = lo_create_handle(&gh, LIBLO_GAME_TES4, gamePath.string().c_str());
@@ -358,7 +357,7 @@ namespace boss {
             ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str());
 
         if (ret != LIBLO_OK && ret != LIBLO_WARN_LO_MISMATCH) {
-            const char * e;
+            const char * e = NULL;
             lo_get_error_message(&e);
             BOOST_LOG_TRIVIAL(error) << "libloadorder failed to create a game handle. Details: " << e;
             string err = lc::translate("libloadorder failed to create a game handle. Details:").str() + " " + e;
@@ -367,9 +366,8 @@ namespace boss {
         }
 
         ret = lo_set_game_master(gh, _masterFile.c_str());
-
         if (ret != LIBLO_OK) {
-            const char * e;
+            const char * e = NULL;
             lo_get_error_message(&e);
             lo_destroy_handle(gh);
             BOOST_LOG_TRIVIAL(error) << "libloadorder failed to initialise game master file support. Details: " << e;
@@ -391,7 +389,7 @@ namespace boss {
             for (size_t i=0; i < pluginArrSize; i++)
                 delete [] pluginArr[i];
             delete [] pluginArr;
-            const char * e;
+            const char * e = NULL;
             lo_get_error_message(&e);
             lo_destroy_handle(gh);
             BOOST_LOG_TRIVIAL(error) << "libloadorder failed to set the load order. Details: " << e;
