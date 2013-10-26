@@ -787,7 +787,7 @@ namespace YAML {
             if (rhs.IsAddition())
                 out << Key << "name" << Value << rhs.Name();
             else
-                out << Key << "name" << Value << '-' << rhs.Name();
+                out << Key << "name" << Value << ('-' + rhs.Name());
 
             out << Key << "condition" << Value << rhs.Condition()
                 << EndMap;
