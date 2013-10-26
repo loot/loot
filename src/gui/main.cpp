@@ -986,16 +986,19 @@ void Launcher::OnRedatePlugins(wxCommandEvent& event) {
 
                 for (list<boss::Plugin>::const_iterator it=loadorder.begin(), itend=loadorder.end(); it != itend; ++it) {
 
-                    filepath = _game.DataPath() / loadorder.begin()->Name();
+                    filepath = _game.DataPath() / it->Name();
                     if (!fs::exists(filepath) && fs::exists(filepath.string() + ".ghost"))
                         filepath += ".ghost";
 
                     time_t thisTime = fs::last_write_time(filepath);
-                    if (thisTime > lastTime)
+                    BOOST_LOG_TRIVIAL(info) << "Current timestamp for \"" << filepath.filename().string() << "\": " << thisTime;
+                    if (thisTime >= lastTime) {
                         lastTime = thisTime;
-                    else {
+                        BOOST_LOG_TRIVIAL(trace) << "No need to redate \"" << filepath.filename().string() << "\".";
+                    } else {
                         lastTime += 60;
                         fs::last_write_time(filepath, lastTime);  //Space timestamps by a minute.
+                        BOOST_LOG_TRIVIAL(info) << "Redated \"" << filepath.filename().string() << "\" to: " << lastTime;
                     }
                 }
             }
@@ -1007,6 +1010,12 @@ void Launcher::OnRedatePlugins(wxCommandEvent& event) {
                 wxOK | wxICON_ERROR,
                 this);
         }
+
+        wxMessageBox(
+            translate("Plugins were successfully redated."),
+            translate("BOSS: Plugin Redate"),
+            wxOK|wxCENTRE,
+            this);
     }
 }
 
