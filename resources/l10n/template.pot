@@ -2,24 +2,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BOSS v3.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-13 13:34+0100\n"
-"PO-Revision-Date: 2013-10-13 13:34+0100\n"
+"POT-Creation-Date: 2013-10-26 11:41-0000\n"
+"PO-Revision-Date: 2013-10-26 11:41-0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: English\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.5.7\n"
 "X-Poedit-KeywordsList: translate:1,1t;translate:1c,2,t\n"
 "X-Poedit-Basepath: ../../src\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: backend\n"
 "X-Poedit-SearchPath-1: gui\n"
-
-#: backend/graph.cpp:46
-msgid "Cyclic interaction detected between plugins \"%1%\" and \"%2%\"."
-msgstr ""
 
 #: backend/game.cpp:96
 msgid "Invalid game ID supplied."
@@ -29,11 +25,11 @@ msgstr ""
 msgid "Game path could not be detected."
 msgstr ""
 
-#: backend/game.cpp:248 backend/game.cpp:308 backend/game.cpp:364
+#: backend/game.cpp:248 backend/game.cpp:308 backend/game.cpp:363
 msgid "libloadorder failed to create a game handle. Details:"
 msgstr ""
 
-#: backend/game.cpp:260 backend/game.cpp:320 backend/game.cpp:376
+#: backend/game.cpp:260 backend/game.cpp:320 backend/game.cpp:374
 msgid "libloadorder failed to initialise game master file support. Details:"
 msgstr ""
 
@@ -41,20 +37,16 @@ msgstr ""
 msgid "libloadorder failed to get the active plugins list. Details:"
 msgstr ""
 
-#: backend/game.cpp:330 backend/game.cpp:398
+#: backend/game.cpp:330 backend/game.cpp:396
 msgid "libloadorder failed to set the load order. Details:"
 msgstr ""
 
-#: backend/game.cpp:417
+#: backend/game.cpp:415
 msgid "Could not create BOSS folder for game. Details:"
 msgstr ""
 
-#: backend/network.cpp:75
-msgid "Git operation failed. Error: %1%"
-msgstr ""
-
-#: backend/network.cpp:315
-msgid "Masterlist revision"
+#: backend/graph.cpp:46
+msgid "Cyclic interaction detected between plugins \"%1%\" and \"%2%\"."
 msgstr ""
 
 #: backend/helpers.cpp:140
@@ -85,165 +77,12 @@ msgstr ""
 msgid "Failed to parse condition \"%1%\"."
 msgstr ""
 
-#: gui/settings.cpp:40
-msgid "None"
+#: backend/network.cpp:75
+msgid "Git operation failed. Error: %1%"
 msgstr ""
 
-#: gui/settings.cpp:41
-msgid "Low"
-msgstr ""
-
-#: gui/settings.cpp:42
-msgid "Medium"
-msgstr ""
-
-#: gui/settings.cpp:43
-msgid "High"
-msgstr ""
-
-#: gui/settings.cpp:47
-msgid "Autodetect"
-msgstr ""
-
-#: gui/settings.cpp:59
-msgid "Add Game"
-msgstr ""
-
-#: gui/settings.cpp:60
-msgid "Edit Game"
-msgstr ""
-
-#: gui/settings.cpp:61
-msgid "Remove Game"
-msgstr ""
-
-#: gui/settings.cpp:63
-msgid "Update masterlist before sorting."
-msgstr ""
-
-#: gui/settings.cpp:64
-msgid "View reports externally in default browser."
-msgstr ""
-
-#: gui/settings.cpp:65
-msgid "Generate and display plugin graph images."
-msgstr ""
-
-#: gui/settings.cpp:68
-msgid "Name"
-msgstr ""
-
-#: gui/settings.cpp:69
-msgid "Base Game Type"
-msgstr ""
-
-#: gui/settings.cpp:70
-msgid "BOSS Folder Name"
-msgstr ""
-
-#: gui/settings.cpp:71
-msgid "Master File"
-msgstr ""
-
-#: gui/settings.cpp:72
-msgid "Online Masterlist URL"
-msgstr ""
-
-#: gui/settings.cpp:73
-msgid "Install Path"
-msgstr ""
-
-#: gui/settings.cpp:74
-msgid "Install Path Registry Key"
-msgstr ""
-
-#: gui/settings.cpp:98
-msgid "Default Game:"
-msgstr ""
-
-#: gui/settings.cpp:101 gui/editor.cpp:1028
-msgid "Language:"
-msgstr ""
-
-#: gui/settings.cpp:104
-msgid "Debug Verbosity:"
-msgstr ""
-
-#: gui/settings.cpp:126
-msgid "Language and game changes will be applied after BOSS is restarted."
-msgstr ""
-
-#: gui/settings.cpp:139
-msgid "The output is logged to the BOSSDebugLog.txt file."
-msgstr ""
-
-#: gui/settings.cpp:279
-msgid "BOSS: Add Game"
-msgstr ""
-
-#: gui/settings.cpp:286 gui/settings.cpp:365
-msgid "Error: A path and/or registry key is required. Row will not be added."
-msgstr ""
-
-#: gui/settings.cpp:287 gui/settings.cpp:299 gui/settings.cpp:307
-#: gui/settings.cpp:350 gui/settings.cpp:358 gui/settings.cpp:366
-#: gui/editor.cpp:444 gui/editor.cpp:526 gui/editor.cpp:1122
-#: gui/editor.cpp:1137 gui/main.cpp:164 gui/main.cpp:181 gui/main.cpp:194
-#: gui/main.cpp:273 gui/main.cpp:283 gui/main.cpp:296 gui/main.cpp:304
-#: gui/main.cpp:335 gui/main.cpp:352 gui/main.cpp:820 gui/main.cpp:873
-#: gui/main.cpp:893 gui/main.cpp:972 gui/main.cpp:1006 gui/main.cpp:1031
-#: gui/main.cpp:1051 gui/main.cpp:1066 gui/main.cpp:1173 gui/main.cpp:1218
-msgid "BOSS: Error"
-msgstr ""
-
-#: gui/settings.cpp:298
-msgid "Error: A game with this name is already defined. Row will not be added."
-msgstr ""
-
-#: gui/settings.cpp:306
-msgid ""
-"Error: A game with this folder name is already defined. Row will not be "
-"added."
-msgstr ""
-
-#: gui/settings.cpp:328
-msgid "BOSS: Edit Game"
-msgstr ""
-
-#: gui/settings.cpp:349
-msgid "Error: Name is required. Row will not be added."
-msgstr ""
-
-#: gui/settings.cpp:357
-msgid "Error: Folder is required. Row will not be added."
-msgstr ""
-
-#: gui/settings.cpp:422 gui/editor.cpp:1169
-msgid "Name (required):"
-msgstr ""
-
-#: gui/settings.cpp:425 gui/editor.cpp:1013
-msgid "Type:"
-msgstr ""
-
-#: gui/settings.cpp:428
-msgid "BOSS Folder Name (required):"
-msgstr ""
-
-#: gui/settings.cpp:431
-msgid "Master File:"
-msgstr ""
-
-#: gui/settings.cpp:434
-msgid "Masterlist URL:"
-msgstr ""
-
-#: gui/settings.cpp:437
-msgid "Install Path:"
-msgstr ""
-
-#: gui/settings.cpp:440
-msgid "Install Path Registry Key:"
+#: backend/network.cpp:338
+msgid "Masterlist revision"
 msgstr ""
 
 #: gui/editor.cpp:37
@@ -439,6 +278,17 @@ msgstr ""
 msgid "Error: No content specified. Row will not be added."
 msgstr ""
 
+#: gui/editor.cpp:444 gui/editor.cpp:526 gui/editor.cpp:1122
+#: gui/editor.cpp:1137 gui/main.cpp:164 gui/main.cpp:181 gui/main.cpp:194
+#: gui/main.cpp:273 gui/main.cpp:283 gui/main.cpp:296 gui/main.cpp:304
+#: gui/main.cpp:335 gui/main.cpp:352 gui/main.cpp:820 gui/main.cpp:873
+#: gui/main.cpp:893 gui/main.cpp:972 gui/main.cpp:1009 gui/main.cpp:1040
+#: gui/main.cpp:1060 gui/main.cpp:1075 gui/main.cpp:1182 gui/main.cpp:1227
+#: gui/settings.cpp:287 gui/settings.cpp:299 gui/settings.cpp:307
+#: gui/settings.cpp:350 gui/settings.cpp:358 gui/settings.cpp:366
+msgid "BOSS: Error"
+msgstr ""
+
 #: gui/editor.cpp:454
 msgid "BOSS: Add Tag"
 msgstr ""
@@ -495,6 +345,14 @@ msgstr ""
 msgid "String"
 msgstr ""
 
+#: gui/editor.cpp:1013 gui/settings.cpp:425
+msgid "Type:"
+msgstr ""
+
+#: gui/editor.cpp:1028 gui/settings.cpp:101
+msgid "Language:"
+msgstr ""
+
 #: gui/editor.cpp:1031
 msgid "Content:"
 msgstr ""
@@ -505,6 +363,10 @@ msgstr ""
 
 #: gui/editor.cpp:1166
 msgid "Add/Remove:"
+msgstr ""
+
+#: gui/editor.cpp:1169 gui/settings.cpp:422
+msgid "Name (required):"
 msgstr ""
 
 #: gui/editor.cpp:1234
@@ -525,6 +387,10 @@ msgstr ""
 
 #: gui/editor.cpp:1246
 msgid "Cleaning Utility (required):"
+msgstr ""
+
+#: gui/ids.cpp:31
+msgid "None Specified"
 msgstr ""
 
 #: gui/main.cpp:118
@@ -563,7 +429,7 @@ msgstr ""
 msgid "Error: The selected language is not available on this system."
 msgstr ""
 
-#: gui/main.cpp:295 gui/main.cpp:351 gui/main.cpp:1030
+#: gui/main.cpp:295 gui/main.cpp:351 gui/main.cpp:1039
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr ""
 
@@ -714,48 +580,190 @@ msgstr ""
 msgid "Error: Failed to get load order. %1%"
 msgstr ""
 
-#: gui/main.cpp:1005
+#: gui/main.cpp:1008
 msgid "Error: Failed to set plugin timestamps. %1%"
 msgstr ""
 
 #: gui/main.cpp:1015
+msgid "Plugins were successfully redated."
+msgstr ""
+
+#: gui/main.cpp:1016
+msgid "BOSS: Plugin Redate"
+msgstr ""
+
+#: gui/main.cpp:1024
 msgid "BOSS: Settings"
 msgstr ""
 
-#: gui/main.cpp:1050 gui/main.cpp:1065
+#: gui/main.cpp:1059 gui/main.cpp:1074
 msgid "Error: \"%1%\" cannot be found."
 msgstr ""
 
-#: gui/main.cpp:1077
+#: gui/main.cpp:1086
 msgid ""
 "A load order optimisation tool for games using the Elder Scrolls Plugin/"
 "Master system."
 msgstr ""
 
-#: gui/main.cpp:1101
+#: gui/main.cpp:1110
 msgid "Up"
 msgstr ""
 
-#: gui/main.cpp:1102
+#: gui/main.cpp:1111
 msgid "Down"
 msgstr ""
 
-#: gui/main.cpp:1105
+#: gui/main.cpp:1114
 msgid "Load Order"
 msgstr ""
 
-#: gui/main.cpp:1127
+#: gui/main.cpp:1136
 msgid ""
 "Please submit any alterations made for reasons other than user preference \n"
 "to the BOSS team so that they may include the changes in the masterlist."
 msgstr ""
 
-#: gui/main.cpp:1172 gui/main.cpp:1217
+#: gui/main.cpp:1181 gui/main.cpp:1226
 msgid "Error: Cannot load \"%1%\" before \"%2%\"."
 msgstr ""
 
-#: gui/ids.cpp:31
-msgid "None Specified"
+#: gui/settings.cpp:40
+msgid "None"
+msgstr ""
+
+#: gui/settings.cpp:41
+msgid "Low"
+msgstr ""
+
+#: gui/settings.cpp:42
+msgid "Medium"
+msgstr ""
+
+#: gui/settings.cpp:43
+msgid "High"
+msgstr ""
+
+#: gui/settings.cpp:47
+msgid "Autodetect"
+msgstr ""
+
+#: gui/settings.cpp:59
+msgid "Add Game"
+msgstr ""
+
+#: gui/settings.cpp:60
+msgid "Edit Game"
+msgstr ""
+
+#: gui/settings.cpp:61
+msgid "Remove Game"
+msgstr ""
+
+#: gui/settings.cpp:63
+msgid "Update masterlist before sorting."
+msgstr ""
+
+#: gui/settings.cpp:64
+msgid "View reports externally in default browser."
+msgstr ""
+
+#: gui/settings.cpp:65
+msgid "Generate and display plugin graph images."
+msgstr ""
+
+#: gui/settings.cpp:68
+msgid "Name"
+msgstr ""
+
+#: gui/settings.cpp:69
+msgid "Base Game Type"
+msgstr ""
+
+#: gui/settings.cpp:70
+msgid "BOSS Folder Name"
+msgstr ""
+
+#: gui/settings.cpp:71
+msgid "Master File"
+msgstr ""
+
+#: gui/settings.cpp:72
+msgid "Online Masterlist URL"
+msgstr ""
+
+#: gui/settings.cpp:73
+msgid "Install Path"
+msgstr ""
+
+#: gui/settings.cpp:74
+msgid "Install Path Registry Key"
+msgstr ""
+
+#: gui/settings.cpp:98
+msgid "Default Game:"
+msgstr ""
+
+#: gui/settings.cpp:104
+msgid "Debug Verbosity:"
+msgstr ""
+
+#: gui/settings.cpp:126
+msgid "Language and game changes will be applied after BOSS is restarted."
+msgstr ""
+
+#: gui/settings.cpp:139
+msgid "The output is logged to the BOSSDebugLog.txt file."
+msgstr ""
+
+#: gui/settings.cpp:279
+msgid "BOSS: Add Game"
+msgstr ""
+
+#: gui/settings.cpp:286 gui/settings.cpp:365
+msgid "Error: A path and/or registry key is required. Row will not be added."
+msgstr ""
+
+#: gui/settings.cpp:298
+msgid "Error: A game with this name is already defined. Row will not be added."
+msgstr ""
+
+#: gui/settings.cpp:306
+msgid ""
+"Error: A game with this folder name is already defined. Row will not be "
+"added."
+msgstr ""
+
+#: gui/settings.cpp:328
+msgid "BOSS: Edit Game"
+msgstr ""
+
+#: gui/settings.cpp:349
+msgid "Error: Name is required. Row will not be added."
+msgstr ""
+
+#: gui/settings.cpp:357
+msgid "Error: Folder is required. Row will not be added."
+msgstr ""
+
+#: gui/settings.cpp:428
+msgid "BOSS Folder Name (required):"
+msgstr ""
+
+#: gui/settings.cpp:431
+msgid "Master File:"
+msgstr ""
+
+#: gui/settings.cpp:434
+msgid "Masterlist URL:"
+msgstr ""
+
+#: gui/settings.cpp:437
+msgid "Install Path:"
+msgstr ""
+
+#: gui/settings.cpp:440
+msgid "Install Path Registry Key:"
 msgstr ""
 
 #: backend/generators.h:80
@@ -924,18 +932,18 @@ msgstr ""
 msgid "Could not write BOSS report."
 msgstr ""
 
-#: backend/parsers.h:462 backend/parsers.h:545
+#: backend/parsers.h:466 backend/parsers.h:549
 msgid "Invalid file path:"
 msgstr ""
 
-#: backend/parsers.h:510
+#: backend/parsers.h:514
 msgid "Invalid folder path:"
 msgstr ""
 
-#: backend/parsers.h:527
+#: backend/parsers.h:531
 msgid "Invalid regex string:"
 msgstr ""
 
-#: backend/parsers.h:622
+#: backend/parsers.h:626
 msgid "Expected \"%1%\" at \"%2%\"."
 msgstr ""
