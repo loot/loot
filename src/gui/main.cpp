@@ -1083,7 +1083,7 @@ void Launcher::OnAbout(wxCommandEvent& event) {
     wxAboutDialogInfo aboutInfo;
     aboutInfo.SetName("BOSS");
     aboutInfo.SetVersion(IntToString(g_version_major)+"."+IntToString(g_version_minor)+"."+IntToString(g_version_patch));
-    aboutInfo.SetDescription(translate("A load order optimisation tool for games using the Elder Scrolls Plugin/Master system."));
+    aboutInfo.SetDescription(translate("Load order optimisation for Oblivion, Skyrim, Fallout 3 and Fallout: New Vegas."));
     aboutInfo.SetCopyright("Copyright (C) 2009-2013 BOSS Development Team.");
     aboutInfo.SetWebSite("http://boss-developers.github.io");
 	aboutInfo.SetLicence("This program is free software: you can redistribute it and/or modify\n"
