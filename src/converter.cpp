@@ -29,9 +29,13 @@
 using namespace std;
 
 int main(int argc, char * argv[]) {
+    string in_str, out_str;
     if (argc < 3) {
-        cout << "Error! Too few arguments supplied. Exiting...";
-        return -1;
+        in_str = "masterlist.txt";
+        out_str = "masterlist.yaml";
+    } else {
+        in_str = argv[1];
+        out_str = argv[2];
     }
 
     boost::log::core::get()->set_logging_enabled(false);
@@ -39,33 +43,25 @@ int main(int argc, char * argv[]) {
     // Set up emitter.
     YAML::Emitter yout;
     yout.SetIndent(2);
-    yout.SetStringFormat(YAML::SingleQuoted);
 
-    if (boost::iends_with(argv[1], ".yaml")) {
-        // Parse the YAML masterlist and output it again.
-        YAML::Node doc = YAML::LoadFile(argv[1]);
-        
-        yout << doc;
-    } else {
-        list<boss::Plugin> test_plugins;
-        list<boss::Message> globalMessages;
+    list<boss::Plugin> test_plugins;
+    list<boss::Message> globalMessages;
 
-        //Parse the v2 masterlist and output it as a YAML masterlist.
-        try {
-            Loadv2Masterlist(boost::filesystem::path(argv[1]), test_plugins, globalMessages);
-        } catch (exception& e) {
-            cout << "An error was encountered during masterlist parsing. Message: " << e.what() << endl;
-            return 1;
-        }
-
-        yout << YAML::BeginMap
-            << YAML::Key << "globals" << YAML::Value << globalMessages
-            << YAML::Key << "plugins" << YAML::Value << test_plugins
-            << YAML::EndMap;
+    //Parse the v2 masterlist and output it as a YAML masterlist.
+    try {
+        Loadv2Masterlist(boost::filesystem::path(in_str), test_plugins, globalMessages);
+    } catch (exception& e) {
+        cout << "An error was encountered during masterlist parsing. Message: " << e.what() << endl;
+        return 1;
     }
 
+    yout << YAML::BeginMap
+        << YAML::Key << "globals" << YAML::Value << globalMessages
+        << YAML::Key << "plugins" << YAML::Value << test_plugins
+        << YAML::EndMap;
+
     // Save output.
-    boost::filesystem::path out_path(argv[2]);
+    boost::filesystem::path out_path(out_str);
     boss::ofstream out(out_path);
     out << yout.c_str();
     out.close();
