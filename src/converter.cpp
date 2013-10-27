@@ -29,28 +29,44 @@
 using namespace std;
 
 int main(int argc, char * argv[]) {
-    boost::filesystem::path v2masterlist("masterlist.txt");
-    list<boss::Plugin> test_plugins;
-    list<boss::Message> globalMessages;
+    if (argc < 3) {
+        cout << "Error! Too few arguments supplied. Exiting...";
+        return -1;
+    }
 
     boost::log::core::get()->set_logging_enabled(false);
 
-    try {
-        Loadv2Masterlist(v2masterlist, test_plugins, globalMessages);
-    } catch (exception& e) {
-        cout << "An error was encountered during masterlist parsing. Message: " << e.what() << endl;
-        return 1;
-    }
-
+    // Set up emitter.
     YAML::Emitter yout;
     yout.SetIndent(2);
-    yout << YAML::BeginMap
-         << YAML::Key << "globals" << YAML::Value << globalMessages
-         << YAML::Key << "plugins" << YAML::Value << test_plugins
-         << YAML::EndMap;
+    yout.SetStringFormat(YAML::SingleQuoted);
 
-    boost::filesystem::path v3masterlist = v2masterlist.string() + ".yaml";
-    boss::ofstream out(v3masterlist);
+    if (boost::iends_with(argv[1], ".yaml")) {
+        // Parse the YAML masterlist and output it again.
+        YAML::Node doc = YAML::LoadFile(argv[1]);
+        
+        yout << doc;
+    } else {
+        list<boss::Plugin> test_plugins;
+        list<boss::Message> globalMessages;
+
+        //Parse the v2 masterlist and output it as a YAML masterlist.
+        try {
+            Loadv2Masterlist(boost::filesystem::path(argv[1]), test_plugins, globalMessages);
+        } catch (exception& e) {
+            cout << "An error was encountered during masterlist parsing. Message: " << e.what() << endl;
+            return 1;
+        }
+
+        yout << YAML::BeginMap
+            << YAML::Key << "globals" << YAML::Value << globalMessages
+            << YAML::Key << "plugins" << YAML::Value << test_plugins
+            << YAML::EndMap;
+    }
+
+    // Save output.
+    boost::filesystem::path out_path(argv[2]);
+    boss::ofstream out(out_path);
     out << yout.c_str();
     out.close();
 
