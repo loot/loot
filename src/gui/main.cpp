@@ -681,7 +681,8 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         BOOST_LOG_TRIVIAL(debug) << "Performing a topological sort.";
         boss::Sort(graph, plugins);
 
-        progDia->Pulse();
+        progDia->Destroy();
+        progDia = NULL;
 
         BOOST_LOG_TRIVIAL(debug) << "Displaying load order preview.";
         LoadOrderPreview preview(this, translate("BOSS: Calculated Load Order"), plugins);
@@ -820,16 +821,13 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             translate("BOSS: Error"),
             wxOK | wxICON_ERROR,
             this);
-        progDia->Destroy();
+        if (progDia != NULL)
+            progDia->Destroy();
         return;
     }
 
-    progDia->Pulse();
-
     //Now a results report definitely exists.
     ViewButton->Enable(true);
-
-    progDia->Destroy();
 
     BOOST_LOG_TRIVIAL(debug) << "Displaying report...";
     if (_settings["View Report Externally"] && _settings["View Report Externally"].as<bool>()) {
