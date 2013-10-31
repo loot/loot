@@ -408,7 +408,7 @@ namespace boss {
                         node = plugin.append_child();
                         node.set_name("div");
                         node.append_attribute("class").set_value("tag remove");
-                        node.text().set((boost::locale::translate("Remove:").str() + " " + add.substr(2)).c_str());
+                        node.text().set((boost::locale::translate("Remove:").str() + " " + remove.substr(2)).c_str());
                     }
                 }
 
