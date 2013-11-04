@@ -86,7 +86,7 @@ namespace boss {
             content = boost::locale::translate("Error:").str() + " " + content;
 
         //Now look for Markdown URL syntax and convert any found.
-        boost::regex regex("(\\[(.+)\\]\\s?\\(|<)((file|https?)://\\S+)(\\)|>)", boost::regex::perl | boost::regex::icase);  // \2 is the label, \3 is the URL.
+        boost::regex regex("(\\[([^\\]]+)\\]\\s?\\(|<)((file|https?)://\\S+)(\\)|>)", boost::regex::perl | boost::regex::icase);  // \2 is the label, \3 is the URL.
 
         boost::match_results<std::string::iterator> results;
         std::string::iterator start, end;
@@ -94,31 +94,35 @@ namespace boss {
         end = content.end();
 
         while (boost::regex_search(start, end, results, regex)) {
+
+            BOOST_LOG_TRIVIAL(trace) << "Results size: " << results.size();
             
             //Get data from match.
             std::string url, label;
-            url = std::string(results[3].first, results[3].second);
+            if (results[3].matched)
+                url = std::string(results[3].first, results[3].second);
             if (results[2].matched)
                 label = std::string(results[2].first, results[2].second);
             else
                 label = url;
 
-            //Cut matched substring from string.
-            content = std::string(results[0].second, content.end());
-            start = content.begin();
-
             //Insert normal text preceding hyperlink.
-            listItem.append_child(pugi::node_pcdata).set_value(std::string(content.begin(), results[0].first).c_str());
+            listItem.append_child(pugi::node_pcdata).set_value(std::string(results.prefix().first, results.prefix().second).c_str());
 
             //Insert hyperlink.
             pugi::xml_node a = listItem.append_child();
             a.set_name("a");
             a.append_attribute("href").set_value(url.c_str());
             a.text().set(label.c_str());
+
+            BOOST_LOG_TRIVIAL(trace) << "FOO";
+
+            //Set string to end of matched section.
+            start = results.suffix().first;
         }
 
         //Insert any leftover text.
-        listItem.append_child(pugi::node_pcdata).set_value(content.c_str());
+        listItem.append_child(pugi::node_pcdata).set_value(std::string(start, end).c_str());
 
     }
 
