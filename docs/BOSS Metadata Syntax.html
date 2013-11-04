@@ -128,22 +128,22 @@ h3{
 <p>Other keys may also be present, but are not processed by BOSS. The message and plugin data structures are detailed in the next section.
 <p>An example metadata file:
 <code class="box">globals:
-  - type: 'say'
+  - type: say
     content: 'You are using the latest version of BOSS.'
     condition: 'version("BOSS", "3.0.0.0", ==)'
 plugins:
   - name: 'Armamentarium.esm'
     tag:
-      - 'Relev'
+      - Relev
   - name: 'ArmamentariumFran.esm'
     tag:
-      - 'Relev'
+      - Relev
   - name: 'Beautiful People 2ch-Ed.esm'
     tag:
-      - 'Eyes'
-      - 'Graphics'
-      - 'Hair'
-      - 'R.Relations'
+      - Eyes
+      - Graphics
+      - Hair
+      - R.Relations
 </code>
 
 
@@ -163,9 +163,9 @@ plugins:
         <tr><td><code>condition</code><td>&#x2717;<td>A condition string that is evaluated to determine whether this Bash Tag should be suggested: if it evaluates to true, the Tag is suggested, otherwise it is ignored. See <a href="#cond">Condition Strings</a> for details.
 </table>
 <p>Examples:
-<code class="box">'Relations'</code>
+<code class="box">Relations</code>
 or
-<code class="box">name: '-Relations'
+<code class="box">name: -Relations
 condition: 'file("Mart''s Monster Mod for OOO.esm") or file("FCOM_Convergence.esm")'
 </code>
 
@@ -225,14 +225,14 @@ display: 'OBSE v18+'
 
 
 <p>Examples (translations by Google):
-<code class="box">type: 'say'
+<code class="box">type: say
 condition: 'file("foo.esp")'
 content:
-  - lang: 'eng'
+  - lang: eng
     str: 'An example link: &lt;http://www.example.com&gt;'
-  - lang: 'rus'
+  - lang: rus
     str: 'Это пример ссылки: &lt;http://www.example.com&gt;'
-  - lang: 'ger'
+  - lang: ger
     str: 'Ein Beispiel-Link: &lt;http://www.example.com&gt;'
 </code>
 would be displayed as
@@ -240,7 +240,7 @@ would be displayed as
 отмечать: Это пример ссылки: <a href="http://www.example.com">http://www.example.com</a>
 </blockquote>
 if the current language was Russian and <code>foo.esp</code> was installed, while
-<code class="box">type: 'say'
+<code class="box">type: say
 content: 'An alternative [example link](http://www.example.com), with no translations.'
 </code>
 would be displayed as
@@ -263,9 +263,9 @@ would be displayed as
         <tr><td><code>ver</code><td>string list<td>&#x2713;<td>A list of versions that can be found at the URL.
 </table>
 <p>Examples:
-<code class="box">'http://skyrim.nexusmods.com/mods/19/'</code>
+<code class="box">http://skyrim.nexusmods.com/mods/19/</code>
 or
-<code class="box">link: 'http://steamcommunity.com/sharedfiles/filedetails/?id=87144366'
+<code class="box">link: http://steamcommunity.com/sharedfiles/filedetails/?id=87144366
 ver:
   - '1.3.2c'
 </code>
@@ -314,16 +314,16 @@ req:
     display: '[Example Mod](http://www.example.com)'
     condition: 'version("Oscuro''s_Oblivion_Overhaul.esm", "15.0", ==)'
 tag:
-  - 'Actors.Spells'
-  - 'Graphics'
-  - 'Invent'
-  - 'Relations'
-  - 'Scripts'
-  - 'Stats'
-  - name: '-Relations'
+  - Actors.Spells
+  - Graphics
+  - Invent
+  - Relations
+  - Scripts
+  - Stats
+  - name: -Relations
     condition: 'file("Mart''s Monster Mod for OOO.esm") or file("FCOM_Convergence.esm")'
 msg:
-  - type: 'say'
+  - type: say
     content: 'Do not clean. "Dirty" edits are intentional and required for the mod to function.'
 </code>
 
