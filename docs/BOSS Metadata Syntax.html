@@ -229,11 +229,11 @@ display: 'OBSE v18+'
 condition: 'file("foo.esp")'
 content:
   - lang: 'eng'
-    str: 'An example link: http://www.example.com'
+    str: 'An example link: &lt;http://www.example.com&gt;'
   - lang: 'rus'
-    str: 'Это пример ссылки: http://www.example.com'
+    str: 'Это пример ссылки: &lt;http://www.example.com&gt;'
   - lang: 'ger'
-    str: 'Ein Beispiel-Link: http://www.example.com'
+    str: 'Ein Beispiel-Link: &lt;http://www.example.com&gt;'
 </code>
 would be displayed as
 <blockquote>
@@ -241,7 +241,7 @@ would be displayed as
 </blockquote>
 if the current language was Russian and <code>foo.esp</code> was installed, while
 <code class="box">type: 'say'
-content: 'An alternative "http://www.example.com example link", with no translations.'
+content: 'An alternative [example link](http://www.example.com), with no translations.'
 </code>
 would be displayed as
 <blockquote>
@@ -283,7 +283,7 @@ ver:
 </table>
 <p>Examples:
 <code class="box">crc: 0x3DF62ABC
-util: '"http://www.creationkit.com/TES5Edit_Cleaning_Guide_-_TES5Edit TES5Edit"'
+util: '[TES5Edit](http://www.creationkit.com/TES5Edit_Cleaning_Guide_-_TES5Edit)'
 itm: 4
 udr: 160
 nav: 0
@@ -311,7 +311,7 @@ nav: 0
 req:
   - 'Oblivion.esm'  # Don't do this, Oblivion.esm is a master of Oscuro's_Oblivion_Overhaul.esm, so BOSS already knows it's required.
   - name: 'example.esp'
-    display: '"http://www.example.com Example Mod"'
+    display: '[Example Mod](http://www.example.com)'
     condition: 'version("Oscuro''s_Oblivion_Overhaul.esm", "15.0", ==)'
 tag:
   - 'Actors.Spells'
@@ -329,14 +329,17 @@ msg:
 
 
 <h2 id="links">URL Hyperlinking</h2>
-<p>File <code>display</code> strings and message <code>content</code> strings (including the strings in localised content structures) that contain recognised URLs have them displayed as hyperlinks in the BOSS report. Recognised URLs are those that are enclosed in double quotes and that begin with <code>file:</code>, <code>http:</code> or <code>https:</code>.
-<p>Hyperlinks may be labelled by writing the label after the URL inside the double quotes, with a space separating the label and URL. If a label is not provided, then the hyperlink will use the URL as its own label.
+<p>File <code>display</code> strings and message <code>content</code> strings (including the strings in localised content structures) that contain recognised URLs have them displayed as hyperlinks in the BOSS report. 
+<p>URLs must begin with <code>file:</code>, <code>http:</code> or <code>https:</code>, and be written according to the following subset of <a href="http://daringfireball.net/projects/markdown/syntax">Markdown</a> syntax. Note that BOSS does not recognise additional Markdown syntaxes to those given below.
+<p>For labelled URLs, the syntax is <code>[<var>label</var>](<var>url</var>)</code>. A single optional space may be included between the closing square bracket and the opening parenthesis, ie. <code>[<var>label</var>] (<var>url</var>)</code>.
+<p>For unlabelled URLs, the syntax is <code>&lt;<var>url</var>&gt;</code>. The URL shall be used as its own label.
+<p>Note that the URLs given as part of a location data structure should not be labelled or enclosed in less-than or greater-than signs, as they consist of raw URL data, rather than URLs within arbitrary strings.
 <p>Examples:
-<code class="box">'This "https://en.wikipedia.org/wiki/String_(computer_science) string" contains a labelled hyperlink.'</code>
+<code class="box">'This [string](https://en.wikipedia.org/wiki/String_(computer_science)) contains a labelled hyperlink.'</code>
 would be displayed as
 <blockquote>This <a href="https://en.wikipedia.org/wiki/String_(computer_science)">string</a> contains a labelled hyperlink.</code></blockquote>
 <p>While
-<code class="box">'This string (see: "https://en.wikipedia.org/wiki/String_(computer_science)") contains an unlabelled hyperlink.'</code>
+<code class="box">'This string (see: &lt;https://en.wikipedia.org/wiki/String_(computer_science)&gt;) contains an unlabelled hyperlink.'</code>
 both get displayed as
 <blockquote>This string (see: <a href="https://en.wikipedia.org/wiki/String_(computer_science)">https://en.wikipedia.org/wiki/String_(computer_science)</a>) contains an unlabelled hyperlink.</code></blockquote>
 

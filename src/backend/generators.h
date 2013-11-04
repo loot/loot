@@ -85,46 +85,36 @@ namespace boss {
         else
             content = boost::locale::translate("Error:").str() + " " + content;
 
-        size_t pos1f = content.find("\"file:");
-        size_t pos1h = content.find("\"http");
-        size_t pos1;
-        if (pos1f < pos1h)
-            pos1 = pos1f;
-        else
-            pos1 = pos1h;
-        size_t pos3 = content.find('"', pos1+1);
+        //Now look for Markdown URL syntax and convert any found.
+        boost::regex regex("(\\[(.+)\\]\\s?\\(|<)((file|https?)://\\S+)(\\)|>)", boost::regex::perl | boost::regex::icase);  // \2 is the label, \3 is the URL.
 
-        while (pos1 != std::string::npos && pos3 != std::string::npos) {
-            std::string url, display;
-            size_t pos2 = content.substr(pos1, pos3 - pos1).find(' ', pos1);
-            if (pos2 != std::string::npos) {  //Labelled
-                url = content.substr(pos1 + 1, pos2 - 1);
-                display = content.substr(pos1 + pos2 + 1, pos3 - pos1 - pos2 - 1);
-            } else {  //Unlabelled.
-                url = content.substr(pos1 + 1, pos3 - pos1 - 1);
-                display = url;
-            }
+        boost::match_results<std::string::iterator> results;
+        std::string::iterator start, end;
+        start = content.begin();
+        end = content.end();
+
+        while (boost::regex_search(start, end, results, regex)) {
+            
+            //Get data from match.
+            std::string url, label;
+            url = std::string(results[3].first, results[3].second);
+            if (results[2].matched)
+                label = std::string(results[2].first, results[2].second);
+            else
+                label = url;
+
+            //Cut matched substring from string.
+            content = std::string(results[0].second, content.end());
+            start = content.begin();
 
             //Insert normal text preceding hyperlink.
-            listItem.append_child(pugi::node_pcdata).set_value(content.substr(0, pos1).c_str());
+            listItem.append_child(pugi::node_pcdata).set_value(std::string(content.begin(), results[0].first).c_str());
 
             //Insert hyperlink.
             pugi::xml_node a = listItem.append_child();
             a.set_name("a");
             a.append_attribute("href").set_value(url.c_str());
-            a.text().set(display.c_str());
-
-            //Remove all the processed text from the string.
-            content = content.substr(pos3+1);
-
-            //Look for the next hyperlink.
-            pos1f = content.find("\"file:");
-            pos1h = content.find("\"http");
-            if (pos1f < pos1h)
-                pos1 = pos1f;
-            else
-                pos1 = pos1h;
-            pos3 = content.find('"', pos1+1);
+            a.text().set(label.c_str());
         }
 
         //Insert any leftover text.
