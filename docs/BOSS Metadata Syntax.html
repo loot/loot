@@ -263,9 +263,9 @@ would be displayed as
         <tr><td><code>ver</code><td>string list<td>&#x2713;<td>A list of versions that can be found at the URL.
 </table>
 <p>Examples:
-<code class="box">http://skyrim.nexusmods.com/mods/19/</code>
+<code class="box">'http://skyrim.nexusmods.com/mods/19/'</code>
 or
-<code class="box">link: http://steamcommunity.com/sharedfiles/filedetails/?id=87144366
+<code class="box">link: 'http://steamcommunity.com/sharedfiles/filedetails/?id=87144366'
 ver:
   - '1.3.2c'
 </code>
@@ -333,7 +333,7 @@ msg:
 <p>URLs must begin with <code>file:</code>, <code>http:</code> or <code>https:</code>, and be written according to the following subset of <a href="http://daringfireball.net/projects/markdown/syntax">Markdown</a> syntax. Note that BOSS does not recognise additional Markdown syntaxes to those given below.
 <p>For labelled URLs, the syntax is <code>[<var>label</var>](<var>url</var>)</code>. A single optional space may be included between the closing square bracket and the opening parenthesis, ie. <code>[<var>label</var>] (<var>url</var>)</code>.
 <p>For unlabelled URLs, the syntax is <code>&lt;<var>url</var>&gt;</code>. The URL shall be used as its own label.
-<p>Note that the URLs given as part of a location data structure should not be labelled or enclosed in less-than or greater-than signs, as they consist of raw URL data, rather than URLs within arbitrary strings.
+<p>Note that the URLs given as part of a location data structure should not be labelled or enclosed in less-than or greater-than signs, as they consist of raw URL data, rather than text to be displayed in a message.
 <p>Examples:
 <code class="box">'This [string](https://en.wikipedia.org/wiki/String_(computer_science)) contains a labelled hyperlink.'</code>
 would be displayed as
@@ -357,7 +357,7 @@ both get displayed as
         <tr><td>File<td><code>file("<var>filepath</var>")</code><td>Returns true if <var>filepath</var> is installed, false otherwise.
         <tr><td>File<td><code>regex("<var>regex</var>")</code><td>Returns true if a file matching <var>regex</var> is found, false otherwise.
         <tr><td>Checksum<td><code>checksum("<var>filepath</var>", <var>checksum</var>)</code><td>Returns true if the calculated checksum of <var>filepath</var> matches <var>checksum</var>, false otherwise. If <var>filepath</var> does not exist, returns false.
-        <tr><td>Version<td><code>version("<var>filepath</var>", "<var>version</var>", <var>comparator</var>)</code><td>Returns true if the boolean expression <code>(actual version of <var>filepath</var>) <var>comparator version</var></code> holds true, false otherwise. If <var>filepath</var> does not exist and <var>comparator</var> is <code>==</code>, <code>&gt;</code> or <code>&gt;=</code>, returns false. If <var>filepath</var> does not exist and <var>comparator</var> is <code>!=</code>, <code>&lt;</code> or <code>&lt;=</code>, returns true.
+        <tr><td>Version<td><code>version("<var>filepath</var>", "<var>version</var>", <var>comparator</var>)</code><td>Returns true if the boolean expression <code>(actual version of <var>filepath</var>) <var>comparator version</var></code> holds true, false otherwise. If <var>filepath</var> does not exist and <var>comparator</var> is <code>==</code>, <code>&gt;</code> or <code>&gt;=</code>, returns false. If <var>filepath</var> does not exist and <var>comparator</var> is <code>!=</code>, <code>&lt;</code> or <code>&lt;=</code>, returns true. The comparison is not a straightforward per-character comparison, but instead uses the <a href="http://www.davekoelle.com/alphanum.html">Alphanum</a> algorithm.
         <tr><td>Plugin Active Status<td><code>active("<var>filepath</var>")</code><td>Returns true if <var>filepath</var> is a <code>.esp</code> or <code>.esm</code> file that is both installed and active, false otherwise.
 </table>
 
