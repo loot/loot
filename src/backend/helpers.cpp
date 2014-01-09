@@ -211,7 +211,7 @@ namespace boss {
 
     boost::filesystem::path GetLocalAppDataPath() {
 #if _WIN32 || _WIN64
-        HWND owner = 0;
+        HWND owner;
         TCHAR path[MAX_PATH];
 
         BOOST_LOG_TRIVIAL(trace) << "Getting path to %LOCALAPPDATA%.";

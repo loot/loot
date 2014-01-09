@@ -25,18 +25,18 @@ This repository holds the source code and documentation for BOSS v3. The masterl
 
 BOSS uses [CMake](http://cmake.org) v2.8.9 or later for cross-platform building support, as though it is a Windows application, development has taken place on Windows and Linux.
 
-BOSS requires the following libraries:
+BOSS requires the following libraries (version numbers used in latest development revision given):
 
 * [Alphanum](http://www.davekoelle.com/files/alphanum.hpp)
-* [Boost](http://www.boost.org) v1.54.0 or later.
+* [Boost](http://www.boost.org) v1.55.0.
 * [Libespm](http://github.com/WrinklyNinja/libespm)
-* [Libgit2](https://github.com/libgit2) v0.19.0.
+* [Libgit2](https://github.com/libgit2) v0.20.0.
 * [Libloadorder](http://github.com/WrinklyNinja/libloadorder)
 * [OpenSSL](https://www.openssl.org) - only if HTTPS support in libgit2 is required using compilers other than MSVC.
-* [PugiXML](http://code.google.com/p/pugixml/) v1.2 or later.
-* [wxWidgets](http://www.wxwidgets.org) v3.0 RC 1 or later.
-* [yaml-cpp](http://code.google.com/p/yaml-cpp/) v0.5.1 or later.
-* [zlib](http://zlib.net) v1.2.7 or later.
+* [PugiXML](http://code.google.com/p/pugixml/) v1.2.
+* [wxWidgets](http://www.wxwidgets.org) v3.0.0.
+* [yaml-cpp](http://github.com/WrinklyNinja/yaml-cpp).
+* [zlib](http://zlib.net) v1.2.8.
 
 BOSS expects all libraries' folders to be present alongside the BOSS repository folder that contains this readme, or otherwise installed such that the compiler and linker used can find them without suppling additional paths. All paths below are relative to the folder(s) containing the libraries and BOSS.
 
@@ -113,6 +113,8 @@ Follow the instructions in libloadorder's README.md to build it as a static libr
 3. Undefine `BUILD_SHARED_LIBS`.
 4. Generate a build system for Visual Studio 12.
 5. Open the generated solution file, and build it.
+
+You may need to make sure that the configuration properties for the Visual Studio project are set to use the multithreaded DLL runtime library (C/C++->Code Generation).
 
 #### BOSS
 

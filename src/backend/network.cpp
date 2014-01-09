@@ -75,8 +75,9 @@ namespace boss {
         throw boss::error(boss::error::git_error, (boost::format(lc::translate("Git operation failed. Error: %1%")) % error_message).str());
     }
 
-	void progress_cb(const char *str, int len, void *data) {
+	int progress_cb(const char *str, int len, void *data) {
 		BOOST_LOG_TRIVIAL(info) << string(str, len);
+		return 0;
 	}
 
 	int update_cb(const char *refname, const git_oid *a, const git_oid *b, void *data) {
