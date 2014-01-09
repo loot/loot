@@ -3,13 +3,14 @@ msgstr ""
 "Project-Id-Version: BOSS v3.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-10-26 11:41-0000\n"
-"PO-Revision-Date: 2013-10-26 11:42-0000\n"
+"PO-Revision-Date: 2014-01-09 18:07+0600\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.7\n"
+"X-Generator: Poedit 1.6.3\n"
+"Language: ru\n"
 
 #: backend/game.cpp:96
 msgid "Invalid game ID supplied."
@@ -196,15 +197,15 @@ msgstr ""
 
 #: gui/editor.cpp:170
 msgid "ITM Count"
-msgstr "Количество ITM"
+msgstr "Число ITM"
 
 #: gui/editor.cpp:171
 msgid "UDR Count"
-msgstr "Количество UDR"
+msgstr "Число UDR"
 
 #: gui/editor.cpp:172
 msgid "Deleted Navmesh Count"
-msgstr "Количество удаленных Navmesh-записей"
+msgstr "Число удаленных Navmesh-записей"
 
 #: gui/editor.cpp:173
 msgid "Cleaning Utility"
@@ -371,15 +372,15 @@ msgstr "CRC (требуется):"
 
 #: gui/editor.cpp:1237
 msgid "ITM Count:"
-msgstr "Количество ITM:"
+msgstr "Число ITM:"
 
 #: gui/editor.cpp:1240
 msgid "UDR Count:"
-msgstr "Количество UDR:"
+msgstr "Число UDR:"
 
 #: gui/editor.cpp:1243
 msgid "Deleted Navmesh Count:"
-msgstr "Количество удаленных Navmesh-записей:"
+msgstr "Число удаленных Navmesh-записей:"
 
 #: gui/editor.cpp:1246
 msgid "Cleaning Utility (required):"
@@ -464,7 +465,7 @@ msgstr "&Сортировать плагины"
 
 #: gui/main.cpp:388
 msgid "&Redate Plugins"
-msgstr "&Ре-датировать плагины"
+msgstr "&Редатировать плагины"
 
 #: gui/main.cpp:391
 msgid "&File"
@@ -591,12 +592,11 @@ msgstr "Ошибка: Не удалось присвоить временные 
 
 #: gui/main.cpp:1015
 msgid "Plugins were successfully redated."
-msgstr ""
+msgstr "Плагины были успешно редатированы."
 
 #: gui/main.cpp:1016
-#, fuzzy
 msgid "BOSS: Plugin Redate"
-msgstr "BOSS: Добавить файл/плагин"
+msgstr "BOSS: Редатирование плагинов"
 
 #: gui/main.cpp:1024
 msgid "BOSS: Settings"
