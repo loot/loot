@@ -60,8 +60,6 @@ namespace boss {
 
     Game::Game() : id(g_game_autodetect) {}
 
-    Game::Game(const std::string& folder) : bossFolderName(folder) {}
-
     Game::Game(const unsigned int gameCode, const std::string& folder) : id(gameCode) {
         if (Id() == g_game_tes4) {
             _name = "TES IV: Oblivion";
@@ -119,6 +117,12 @@ namespace boss {
 
         if (!registry.empty())
             registryKey = registry;
+
+        return *this;
+    }
+
+    Game& Game::SetPath(const std::string& path) {
+        gamePath = path;
 
         return *this;
     }

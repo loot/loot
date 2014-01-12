@@ -44,11 +44,11 @@ namespace boss {
     class Game {
     public:
         Game();  //Sets game to BOSS_g_game_autodetect, with all other vars being empty.
-        Game(const std::string& folder);
-        Game(const unsigned int baseGameCode, const std::string& folder = "");
+        Game(const unsigned int baseGameCode, const std::string& bossFolder = "");
 
         Game& SetDetails(const std::string& name, const std::string& masterFile,
                         const std::string& url, const std::string& path, const std::string& registry);
+        Game& SetPath(const std::string& path);  //Used by API.
         Game& Init();
 
         bool IsInstalled() const;

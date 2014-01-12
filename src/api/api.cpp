@@ -56,8 +56,8 @@ const unsigned int boss_error_invalid_args          = boss::error::invalid_args;
 const unsigned int boss_error_no_tag_map            = boss::error::no_tag_map;
 const unsigned int boss_error_path_not_found        = boss::error::path_not_found;
 const unsigned int boss_error_no_game_detected      = boss::error::no_game_detected;
-const unsigned int boss_error_windows_error      = boss::error::windows_error;
-const unsigned int boss_error_sorting_error      = boss::error::windows_error;
+const unsigned int boss_error_windows_error         = boss::error::windows_error;
+const unsigned int boss_error_sorting_error         = boss::error::windows_error;
 const unsigned int boss_return_max                  = boss_error_sorting_error;
 
 // The following are the games identifiers used by the API.
@@ -70,12 +70,18 @@ const unsigned int boss_game_fonv                   = boss::g_game_fonv;
 const unsigned int boss_message_say                 = boss::g_message_say;
 const unsigned int boss_message_warn                = boss::g_message_warn;
 const unsigned int boss_message_error               = boss::g_message_error;
+const unsigned int boss_message_tag                 = boss::g_message_tag;
 
 // BOSS message languages.
-BOSS_API extern const unsigned int boss_lang_any        = boss::g_lang_any;
-BOSS_API extern const unsigned int boss_lang_english    = boss::g_lang_english;
-BOSS_API extern const unsigned int boss_lang_spanish    = boss::g_lang_spanish;
-BOSS_API extern const unsigned int boss_lang_russian    = boss::g_lang_russian;
+const unsigned int boss_lang_any        = boss::g_lang_any;
+const unsigned int boss_lang_english    = boss::g_lang_english;
+const unsigned int boss_lang_spanish    = boss::g_lang_spanish;
+const unsigned int boss_lang_russian    = boss::g_lang_russian;
+
+// BOSS cleanliness codes.
+const unsigned int boss_needs_cleaning_no       = 0;
+const unsigned int boss_needs_cleaning_yes      = 1;
+const unsigned int boss_needs_cleaning_unknown  = 2;
 
 
 struct _boss_db_int {
@@ -214,13 +220,16 @@ BOSS_API unsigned int boss_create_db (boss_db * const db, const unsigned int cli
     std::locale loc(global_loc, new boost::filesystem::detail::utf8_codecvt_facet());
     boost::filesystem::path::imbue(loc);
 
+    //Disable logging or else stdout will get overrun.
+    boost::log::core::get()->set_logging_enabled(false);
+
     std::string game_path = "";
     if (gamePath != NULL)
         game_path = gamePath;
 
     boss::Game game;
     try {
-        game = boss::Game(clientGame, game_path);  //This also checks to see if the game is installed if game_path is empty and throws an exception if it is not detected.
+        game = boss::Game(clientGame).SetPath(game_path).Init();  //This also checks to see if the game is installed if game_path is empty and throws an exception if it is not detected. It also creates a folder in %LOCALAPPDATA% and reads the active plugins list, but that shouldn't be an issue.
     } catch (boss::error& e) {
         extMessageStr = e.what();
         return e.code();
@@ -278,12 +287,15 @@ BOSS_API unsigned int boss_load_lists (boss_db db, const char * const masterlist
         return boss_error_parse_fail;
     }
 
-    try {
-        YAML::Node tempNode = YAML::LoadFile(userlistPath);
-        userTemp = tempNode["plugins"].as< std::list<boss::Plugin> >();
-    } catch (YAML::Exception& e) {
-        extMessageStr = e.what();
-        return boss_error_parse_fail;
+    if (userlistPath != NULL) {
+        try {
+            YAML::Node tempNode = YAML::LoadFile(userlistPath);
+            userTemp = tempNode["plugins"].as< std::list<boss::Plugin> >();
+        }
+        catch (YAML::Exception& e) {
+            extMessageStr = e.what();
+            return boss_error_parse_fail;
+        }
     }
 
     //Also free memory.
