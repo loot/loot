@@ -264,11 +264,6 @@ BOSS_API void     boss_destroy_db (boss_db db);
 ***************************************/
 ///@{
 
-//
-// Can be called multiple times. On error, the database is unchanged.
-// Paths are case-sensitive if the underlying filesystem is case-sensitive.
-// masterlistPath and userlistPath are files.
-
 /**
     @brief Loads the masterlist and userlist from the paths specified.
     @details Can be called multiple times, each time replacing the previously-loaded data.
@@ -349,8 +344,6 @@ BOSS_API unsigned int boss_get_plugin_messages (boss_db db, const char * const p
     @param needsCleaning A pointer to a plugin cleanliness code.
     @returns A return code.
 */
-
-// Outputs the first warning message found for the given plugin that warns about dirty edits (ie. no message, in which case *message == NULL). needsCleaning is one of the plugin cleanliness codes above.
 
 BOSS_API unsigned int boss_get_dirty_message (boss_db db, const char * const plugin,
                                               boss_message * const message,

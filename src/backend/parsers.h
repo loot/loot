@@ -78,16 +78,14 @@ namespace YAML {
             if (!node.IsMap() || !node["folder"] || !node["type"])
                 return false;
 
-            boss::Game game(node["folder"].as<std::string>());
-
             if (node["type"].as<std::string>() == boss::Game(boss::g_game_tes4).FolderName())
-                rhs = boss::Game(boss::g_game_tes4, game.FolderName());
+                rhs = boss::Game(boss::g_game_tes4, node["folder"].as<std::string>());
             else if (node["type"].as<std::string>() == boss::Game(boss::g_game_tes5).FolderName())
-                rhs = boss::Game(boss::g_game_tes5, game.FolderName());
+                rhs = boss::Game(boss::g_game_tes5, node["folder"].as<std::string>());
             else if (node["type"].as<std::string>() == boss::Game(boss::g_game_fo3).FolderName())
-                rhs = boss::Game(boss::g_game_fo3, game.FolderName());
+                rhs = boss::Game(boss::g_game_fo3, node["folder"].as<std::string>());
             else if (node["type"].as<std::string>() == boss::Game(boss::g_game_fonv).FolderName())
-                rhs = boss::Game(boss::g_game_fonv, game.FolderName());
+                rhs = boss::Game(boss::g_game_fonv, node["folder"].as<std::string>());
             else
                 return false;
 
