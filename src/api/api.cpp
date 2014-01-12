@@ -137,20 +137,6 @@ char * ToNewCString(std::string str) {
     return strcpy(p, str.c_str());
 }
 
-bool IsDirtyMessage(std::string message) {
-    const std::string local[3] = {
-        "Contains dirty edits: ",
-        "Contiene ediciones sucia: ",
-        "\"Грязные\" правки: "
-    };
-
-    for (int i=0; i < 3; ++i) {
-        if (boost::icontains(message, local[i]))
-            return true;
-    }
-
-    return false;
-}
 
 //////////////////////////////
 // Error Handling Functions
@@ -493,9 +479,6 @@ BOSS_API unsigned int boss_get_plugin_tags (boss_db db, const char * const plugi
     *numTags_added = 0;
     *numTags_removed = 0;
 
-    if (db->bashTagMap.empty())
-        return boss_error_no_tag_map;
-
     boost::unordered_set<std::string> tagsAdded, tagsRemoved;
     std::list<boss::Plugin>::iterator pluginIt = std::find(db->metadata.begin(), db->metadata.end(), boss::Plugin(plugin));
     if (pluginIt != db->metadata.end()) {
@@ -511,6 +494,11 @@ BOSS_API unsigned int boss_get_plugin_tags (boss_db db, const char * const plugi
     pluginIt = std::find(db->userMetadata.begin(), db->userMetadata.end(), boss::Plugin(plugin));
     if (pluginIt != db->userMetadata.end()) {
         *userlistModified = true;
+    }
+
+    if ((!tagsAdded.empty() || !tagsRemoved.empty()) && db->bashTagMap.empty()) {
+        extMessageStr = "No Bash Tag map has been previously generated.";
+        return boss_error_no_tag_map;
     }
 
     std::vector<unsigned int> tagsAddedIDs, tagsRemovedIDs;
@@ -605,58 +593,26 @@ BOSS_API unsigned int boss_get_plugin_messages (boss_db db, const char * const p
     return boss_ok;
 }
 
-// Outputs the first warning message found for the given plugin that warns about dirty edits, and also whether the plugin should be cleaned or not, or if BOSS doesn't know (ie. no message, in which case *message == NULL). needsCleaning is one of the plugin cleanliness codes above.
-BOSS_API unsigned int boss_get_dirty_message (boss_db db, const char * const plugin,
-                                              boss_message * const message,
-                                              unsigned int * const needsCleaning) {
-    if (db == NULL || plugin == NULL || message == NULL || needsCleaning == NULL)
+BOSS_API unsigned int boss_get_dirty_info(boss_db db, const char * const plugin, unsigned int * const needsCleaning) {
+    if (db == NULL || plugin == NULL || needsCleaning == NULL)
         return boss_error_invalid_args;
 
-    //Clear existing allocation.
-    if (db->extMessage.message != NULL) {
-        delete [] db->extMessage.message;
-    }
-
-    *message = db->extMessage;
     *needsCleaning = boss_needs_cleaning_unknown;
 
-    //Get all messages.
-    std::list<boss::Message> pluginMessages;
+    //Get all dirty info.
+    std::set<boss::PluginDirtyInfo> dirtyInfo;
     std::list<boss::Plugin>::iterator pluginIt = std::find(db->metadata.begin(), db->metadata.end(), boss::Plugin(plugin));
     if (pluginIt != db->metadata.end()) {
-        pluginMessages = pluginIt->Messages();
+        dirtyInfo = pluginIt->DirtyInfo();
     }
-
     pluginIt = std::find(db->userMetadata.begin(), db->userMetadata.end(), boss::Plugin(plugin));
     if (pluginIt != db->userMetadata.end()) {
-        std::list<boss::Message> temp = pluginIt->Messages();
-        pluginMessages.insert(pluginMessages.end(), temp.begin(), temp.end());
+        std::set<boss::PluginDirtyInfo> temp = pluginIt->DirtyInfo();
+        dirtyInfo.insert(temp.begin(), temp.end());
     }
 
-    //Now discard any that aren't about dirty edits.
-    std::list<boss::Message>::iterator it=pluginMessages.begin();
-    while (it != pluginMessages.end()) {
-        if (IsDirtyMessage(it->ChooseContent(boss::g_lang_any).Str()))
-            it = pluginMessages.erase(it);
-    }
-
-    if (!pluginMessages.empty()) {
-        boss::Message dirtyMessage = pluginMessages.front();
-
-        try {
-            db->extMessage.type = dirtyMessage.Type();
-            db->extMessage.message = ToNewCString(dirtyMessage.ChooseContent(boss::g_lang_any).Str());
-        } catch (std::bad_alloc& e) {
-            extMessageStr = e.what();
-            return boss_error_no_mem;
-        }
-
-        *message = db->extMessage;
-        if (dirtyMessage.Type() == boss_message_say)
-            *needsCleaning = boss_needs_cleaning_no;
-        else
-            *needsCleaning = boss_needs_cleaning_yes;
-
+    if (!dirtyInfo.empty()) {
+        *needsCleaning = boss_needs_cleaning_yes;
     }
 
     return boss_ok;
@@ -678,15 +634,7 @@ BOSS_API unsigned int boss_write_minimal_list (boss_db db, const char * const ou
     for (std::list<boss::Plugin>::iterator it=temp.begin(), endIt=temp.end(); it != endIt; ++it) {
         boss::Plugin p(it->Name());
         p.Tags(it->Tags());
-
-        std::list<boss::Message> messages = it->Messages(), newMessages;
-        for (std::list<boss::Message>::iterator messageIter = messages.begin(); messageIter != messages.end(); ++messageIter) {
-            if (messageIter->Type() == boss_message_warn) {
-                if (IsDirtyMessage(messageIter->ChooseContent(boss::g_lang_any).Str()))
-                    newMessages.push_back(*messageIter);
-            }
-        }
-        it->Messages(newMessages);
+        p.DirtyInfo(it->DirtyInfo());
 
         *it = p;
     }

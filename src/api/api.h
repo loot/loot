@@ -336,21 +336,18 @@ BOSS_API unsigned int boss_get_plugin_messages (boss_db db, const char * const p
 /**
     @brief Determines the database's knowledge of a plugin's dirtiness.
 
-
-    @details Outputs the first message associated with the specified plugin that is about dirty edits, and also whether the plugin should be cleaned or not, or if no data is available.
+    @details Outputs whether the plugin should be cleaned or not, or if no data is available.
     @param db The database the function acts on.
     @param plugin The plugin to look up dirty status information for.
-    @param message A pointer to the message outputted.
     @param needsCleaning A pointer to a plugin cleanliness code.
-    @returns A return code.
+    @returns A return code. 
 */
 
-BOSS_API unsigned int boss_get_dirty_message (boss_db db, const char * const plugin,
-                                              boss_message * const message,
-                                              unsigned int * const needsCleaning);
+BOSS_API unsigned int boss_get_dirty_info (boss_db db, const char * const plugin,
+                                            unsigned int * const needsCleaning);
 
 /**
-    @brief Writes a minimal metadata file that only contains plugins with Bash Tag suggestions and/or warning messages about dirtiness, plus the suggestions and messages themselves.
+    @brief Writes a minimal metadata file that only contains plugins with Bash Tag suggestions and/or dirty info, plus the suggestions and info themselves.
     @param db The database the function acts on.
     @param outputFile The path to which the file shall be written.
     @param overwrite If `false` and `outputFile` already exists, no data will be written. Otherwise, data will be written.
