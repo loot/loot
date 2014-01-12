@@ -589,7 +589,8 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         boss::vertex_it vit, vitend;
         for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
             BOOST_LOG_TRIVIAL(trace) << "Merging for plugin \"" << graph[*vit].Name() << "\"";
-            //Check if there is already a plugin in the 'plugins' list or not.
+
+            //Check if there is a plugin entry in the masterlist. This will also find matching regex entries.
             list<boss::Plugin>::iterator pos = std::find(mlist_plugins.begin(), mlist_plugins.end(), graph[*vit]);
 
             if (pos != mlist_plugins.end()) {
@@ -597,6 +598,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                 graph[*vit].Merge(*pos);
             }
 
+            //Check if there is a plugin entry in the userlist. This will also find matching regex entries.
             pos = std::find(ulist_plugins.begin(), ulist_plugins.end(), graph[*vit]);
 
             if (pos != ulist_plugins.end()) {
