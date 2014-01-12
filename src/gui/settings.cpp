@@ -313,7 +313,7 @@ void SettingsFrame::OnAddGame(wxCommandEvent& event) {
 
         long i = gamesList->GetItemCount();
         gamesList->InsertItem(i, rowDialog->GetName());
-        gamesList->SetItem(i, 1, FromUTF8(boss::Game(string(rowDialog->GetType().ToUTF8())).FolderName()));
+        gamesList->SetItem(i, 1, rowDialog->GetType().ToUTF8());
         gamesList->SetItem(i, 2, rowDialog->GetFolderName());
         gamesList->SetItem(i, 3, rowDialog->GetMaster());
         gamesList->SetItem(i, 4, rowDialog->GetURL());
@@ -370,7 +370,7 @@ void SettingsFrame::OnEditGame(wxCommandEvent& event) {
         }
 
         gamesList->SetItem(i, 0, rowDialog->GetName());
-        gamesList->SetItem(i, 1, FromUTF8(boss::Game(string(rowDialog->GetType().ToUTF8())).FolderName()));
+        gamesList->SetItem(i, 1, rowDialog->GetType());
         gamesList->SetItem(i, 2, rowDialog->GetFolderName());
         gamesList->SetItem(i, 3, rowDialog->GetMaster());
         gamesList->SetItem(i, 4, rowDialog->GetURL());
