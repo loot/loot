@@ -188,9 +188,27 @@ make
 
 ## Using The Masterlist Converter
 
-The `masterlist-converter.exe` expects a v2 masterlist named `masterlist.txt` to be present in the same directory as it, and produces a v3 masterlist named `masterlist.txt.yaml`.
+The masterlist converter is a command line utility that takes two optional command line arguments:
 
-The converter is a command line utility and will print any errors in encounters to the console. It also won't create a v3 masterlist file if errors are encountered.
+```
+masterlist-converter.exe [v2 masterlist input file] [v3 masterlist output file]
+```
+
+If only one argument is given, or if no arguments are given, the converter assumes it was called as
+
+```
+masterlist-converter.exe masterlist.txt masterlist.yaml
+```
+
+On encountering an error, it will print an error message to the console, and will not output a v3 masterlist.
+
+The converter does not perform a lossless conversion. The following do not get transferred into the new masterlist:
+
+* Silent comments.
+* Requirement messages containing plugin filenames.
+* Dirty message content. The ITM, UDR and Navmesh counts, along with CRCs and the dirty utility referenced are transferred, but any additional content, such as links to additional instructions, are lost.
+
+In addition, while other data is retained, it needs some manual adjustment, eg. translated messages need are converted as separate messages and should be placed into message content objects.
 
 ## Packaging Releases
 

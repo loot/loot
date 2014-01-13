@@ -614,7 +614,10 @@ namespace boss {
                         //Extract ITM count.
                         pos1 = content.find("ITM");
                         if (pos1 != std::string::npos) {
-                            itm = atoi(content.substr(0, pos1).c_str());
+                            pos2 = content.rfind(':', pos1);
+                            if (pos2 != std::string::npos) {
+                                itm = atoi(content.substr(pos2+1, pos1-pos2-1).c_str());
+                            }
                         }
 
                         //Extract UDR count.
@@ -648,6 +651,7 @@ namespace boss {
                         }
                         dirtyInfo.insert(PluginDirtyInfo(crc, itm, udr, 0, utility));
                         it = messages.erase(it);
+
                     } else
                         ++it;
                 } else
