@@ -496,6 +496,14 @@ BOSS_API unsigned int boss_get_plugin_tags (boss_db db, const char * const plugi
     pluginIt = std::find(db->userMetadata.begin(), db->userMetadata.end(), boss::Plugin(plugin));
     if (pluginIt != db->userMetadata.end()) {
         *userlistModified = true;
+        std::set<boss::Tag> tags = pluginIt->Tags();
+        for (std::set<boss::Tag>::const_iterator it = tags.begin(), endIt = tags.end(); it != endIt; ++it) {
+            if (it->IsAddition())
+                tagsAdded.insert(it->Name());
+            else
+                tagsRemoved.insert(it->Name());
+
+        }
     }
 
     if ((!tagsAdded.empty() || !tagsRemoved.empty()) && db->bashTagMap.empty()) {
