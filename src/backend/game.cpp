@@ -412,7 +412,7 @@ namespace boss {
     void Game::CreateBOSSGameFolder() {
         //Make sure that the BOSS game path exists.
         try {
-            if (!fs::exists(g_path_local / bossFolderName))
+            if (fs::exists(g_path_local) && !fs::exists(g_path_local / bossFolderName))
                 fs::create_directory(g_path_local / bossFolderName);
         } catch (fs::filesystem_error& e) {
             BOOST_LOG_TRIVIAL(error) << "Could not create BOSS folder for game. Details: " << e.what();
