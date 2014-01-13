@@ -152,7 +152,7 @@ namespace boss {
         //Checking for a ".git" folder.
         if (fs::exists(game.MasterlistPath().parent_path() / ".git")) {
             //Repository exists. Open it.
-            BOOST_LOG_TRIVIAL(trace) << "Existing repository found, attempting to open it.";
+            BOOST_LOG_TRIVIAL(info) << "Existing repository found, attempting to open it.";
             handle_error(git_repository_open(&ptrs.repo, game.MasterlistPath().parent_path().string().c_str()), ptrs);
 
             BOOST_LOG_TRIVIAL(trace) << "Attempting to get info on the repository remote.";
@@ -168,6 +168,8 @@ namespace boss {
             BOOST_LOG_TRIVIAL(trace) << "Checking to see if remote URL matches URL in settings.";
 
             //Check if the URLs match.
+            BOOST_LOG_TRIVIAL(info) << "Remote URL given: " << game.URL();
+            BOOST_LOG_TRIVIAL(info) << "Remote URL in repository settings: " << url;
             if (url != game.URL()) {
                 BOOST_LOG_TRIVIAL(trace) << "URLs do not match, setting repository URL to URL in settings.";
                 //The URLs don't match. Change the remote URL to match the one BOSS has.
@@ -177,11 +179,11 @@ namespace boss {
                 handle_error(git_remote_save(ptrs.remote), ptrs);
             }
         } else {
-            BOOST_LOG_TRIVIAL(trace) << "Repository doesn't exist, initialising a new repository.";
+            BOOST_LOG_TRIVIAL(info) << "Repository doesn't exist, initialising a new repository.";
             //Repository doesn't exist. Set up a repository.
             handle_error(git_repository_init(&ptrs.repo, game.MasterlistPath().parent_path().string().c_str(), false), ptrs);
 
-            BOOST_LOG_TRIVIAL(trace) << "Setting the new repository's remote.";
+            BOOST_LOG_TRIVIAL(info) << "Setting the new repository's remote to: " << game.URL();
 
             //Now set the repository's remote.
             handle_error(git_remote_create(&ptrs.remote, ptrs.repo, "origin", game.URL().c_str()), ptrs);
@@ -223,41 +225,15 @@ namespace boss {
 
         stats = git_remote_stats(ptrs.remote);
 
-        //Open a connection to the remote repository.
-
-        BOOST_LOG_TRIVIAL(trace) << "Connecting to remote.";
-
-        handle_error(git_remote_connect(ptrs.remote, GIT_DIRECTION_FETCH), ptrs);
-
-        // Download the files needed. Skipping progress info for now, see <http://libgit2.github.com/libgit2/ex/v0.19.0/network/fetch.html> for an example of how to do that. It uses pthreads, but Boost.Thread should work fine.
-
-        BOOST_LOG_TRIVIAL(trace) << "Downloading changes from remote.";
-
-        handle_error(git_remote_download(ptrs.remote), ptrs);
+        //Fetch from remote.
+        BOOST_LOG_TRIVIAL(trace) << "Fetching from remote.";
+        handle_error(git_remote_fetch(ptrs.remote), ptrs);
 
         BOOST_LOG_TRIVIAL(info) << "Received " << stats->indexed_objects << " of " << stats->total_objects << " objects in " << stats->received_bytes << " bytes.";
 
-        bool exitEarly = false;
-        if (stats->received_bytes == 0)  //No update received.
-            exitEarly = true;
-
-        // Disconnect from the remote repository.
-
-        BOOST_LOG_TRIVIAL(trace) << "Disconnecting from remote.";
-
-        git_remote_disconnect(ptrs.remote);
-
-        // Update references in case they've changed.
-
-        BOOST_LOG_TRIVIAL(trace) << "Updating references for remote.";
-
-        handle_error(git_remote_update_tips(ptrs.remote), ptrs);
-
         // Now start the merging. Not entirely sure what's going on here, but it looks like libgit2's merge API is incomplete, you can create some git_merge_head objects, but can't do anything with them...
-
         // Thankfully, we don't really need a merge, we just need to replace whatever's in the working directory with the relevant file from FETCH_HEAD, which was updated in the fetching step before.
-
-        // The porcelain equivalent is `git checkout FETCH_HEAD masterlist.yaml`
+        // The porcelain equivalent is `git checkout refs/remotes/origin/gh-pages masterlist.yaml`
 
         BOOST_LOG_TRIVIAL(trace) << "Setting up checkout parameters.";
 
@@ -276,17 +252,15 @@ namespace boss {
         unsigned int rollbacks = 0;
         char revision[10];
         do {
-            BOOST_LOG_TRIVIAL(trace) << "Getting the Git object for the tree at FETCH_HEAD - " << rollbacks << ".";
+            BOOST_LOG_TRIVIAL(trace) << "Getting the Git object for the tree at refs/remotes/origin/gh-pages~" << rollbacks << ".";
 
             //Get the commit hash so that we can report the revision if there is an error.
-            string filespec = "FETCH_HEAD~" + IntToString(rollbacks);
+            string filespec = "refs/remotes/origin/gh-pages~" + IntToString(rollbacks);
             git_object * mlistObj;
 
-            list<boss::Message> messages;
-            list<boss::Plugin> plugins;
             handle_error(git_revparse_single(&ptrs.obj, ptrs.repo, filespec.c_str()), ptrs);
 
-            BOOST_LOG_TRIVIAL(trace) << "Checking out the tree at FETCH_HEAD - " << rollbacks << ".";
+            BOOST_LOG_TRIVIAL(trace) << "Checking out the tree at refs/remotes/origin/gh-pages~" << rollbacks << ".";
 
             //Now we can do the checkout.
             handle_error(git_checkout_tree(ptrs.repo, ptrs.obj, &opts), ptrs);
@@ -297,20 +271,18 @@ namespace boss {
 
             BOOST_LOG_TRIVIAL(trace) << "Converting and recording the first 10 hex characters of the hash.";
 
-            git_oid_tostr(&revision[0], 10, mlistOid);
+            git_oid_tostr(revision, 10, mlistOid);
 
+            BOOST_LOG_TRIVIAL(info) << "Tree hash is: " << revision;
             BOOST_LOG_TRIVIAL(trace) << "Freeing the masterlist object.";
 
             git_object_free(ptrs.obj);
 
-            if (exitEarly) {
-                ptrs.free();
-                return string(revision);
-            }
-
             BOOST_LOG_TRIVIAL(trace) << "Testing masterlist parsing.";
 
             //Now try parsing the masterlist.
+            list<boss::Message> messages;
+            list<boss::Plugin> plugins;
             try {
                 YAML::Node mlist = YAML::LoadFile(game.MasterlistPath().string());
 
