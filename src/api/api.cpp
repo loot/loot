@@ -275,8 +275,10 @@ BOSS_API unsigned int boss_load_lists (boss_db db, const char * const masterlist
 
     if (userlistPath != NULL) {
         try {
-            YAML::Node tempNode = YAML::LoadFile(userlistPath);
-            userTemp = tempNode["plugins"].as< std::list<boss::Plugin> >();
+            if (boost::algorithm::iends_with(userlistPath, ".yaml")) {
+                YAML::Node tempNode = YAML::LoadFile(userlistPath);
+                userTemp = tempNode["plugins"].as< std::list<boss::Plugin> >();
+            }
         }
         catch (YAML::Exception& e) {
             extMessageStr = e.what();
