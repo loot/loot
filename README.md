@@ -204,9 +204,10 @@ On encountering an error, it will print an error message to the console, and wil
 
 The converter does not perform a lossless conversion. The following do not get transferred into the new masterlist:
 
-* Silent comments.
-* Requirement messages containing plugin filenames.
-* Dirty message content. The ITM, UDR and Navmesh counts, along with CRCs and the dirty utility referenced are transferred, but any additional content, such as links to additional instructions, are lost.
+* Silent comments. (Search regex: `^IF(NOT)?.+MOD:`.)
+* Plugin conditions. (Search regex: `REQ:.+(\.esp|\.esm).`)
+* Requirement messages containing plugin filenames. (Search regex: `^(/\*|//)`.)
+* Dirty message content. The ITM, UDR and Navmesh counts, along with CRCs and the dirty utility referenced are transferred, but any additional content, such as links to additional instructions, are lost. (Search regex: `DIRTY:`.)
 
 In addition, while other data is retained, it needs some manual adjustment, eg. translated messages need are converted as separate messages and should be placed into message content objects.
 
