@@ -833,7 +833,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     BOOST_LOG_TRIVIAL(debug) << "Displaying report...";
     if (_settings["View Report Externally"] && _settings["View Report Externally"].as<bool>()) {
-        wxLaunchDefaultApplication(_game.ReportPath().string());
+        wxLaunchDefaultBrowser(_game.ReportPath().string());
     } else {
         //Create viewer window.
         Viewer *viewer = new Viewer(this, translate("BOSS: Report Viewer"), _game.ReportPath().string());
@@ -947,7 +947,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
 void Launcher::OnViewLastReport(wxCommandEvent& event) {
     if (_settings["View Report Externally"] && _settings["View Report Externally"].as<bool>()) {
         BOOST_LOG_TRIVIAL(debug) << "Opening report in external application...";
-        wxLaunchDefaultApplication(_game.ReportPath().string());
+        wxLaunchDefaultBrowser(_game.ReportPath().string());
     } else {
         //Create viewer window.
         BOOST_LOG_TRIVIAL(debug) << "Opening viewer window...";
@@ -1052,7 +1052,7 @@ void Launcher::OnHelp(wxCommandEvent& event) {
     //Look for file.
     BOOST_LOG_TRIVIAL(debug) << "Opening readme.";
     if (fs::exists(g_path_readme)) {
-        wxLaunchDefaultApplication(g_path_readme.string());
+        wxLaunchDefaultBrowser(g_path_readme.string());
     } else {  //No readme exists, show a pop-up message saying so.
         BOOST_LOG_TRIVIAL(error) << "File \"" << g_path_readme.string() << "\" could not be found.";
         wxMessageBox(
@@ -1067,7 +1067,7 @@ void Launcher::OnOpenDebugLog(wxCommandEvent& event) {
     //Look for file.
     BOOST_LOG_TRIVIAL(debug) << "Opening readme.";
     if (fs::exists(g_path_log)) {
-        wxLaunchDefaultApplication(g_path_log.string());
+        wxLaunchDefaultBrowser(g_path_log.string());
     } else {  //No log exists, show a pop-up message saying so.
         BOOST_LOG_TRIVIAL(error) << "File \"" << g_path_log.string() << "\" could not be found.";
         wxMessageBox(
