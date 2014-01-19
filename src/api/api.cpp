@@ -57,7 +57,7 @@ const unsigned int boss_error_no_tag_map            = boss::error::no_tag_map;
 const unsigned int boss_error_path_not_found        = boss::error::path_not_found;
 const unsigned int boss_error_no_game_detected      = boss::error::no_game_detected;
 const unsigned int boss_error_windows_error         = boss::error::windows_error;
-const unsigned int boss_error_sorting_error         = boss::error::windows_error;
+const unsigned int boss_error_sorting_error         = boss::error::sorting_error;
 const unsigned int boss_return_max                  = boss_error_sorting_error;
 
 // The following are the games identifiers used by the API.
@@ -322,6 +322,8 @@ BOSS_API unsigned int boss_load_lists (boss_db db, const char * const masterlist
 // ignoring the results of any previous evaluations. Paths are case-sensitive
 // if the underlying filesystem is case-sensitive.
 BOSS_API unsigned int boss_eval_lists (boss_db db, const unsigned int language) {
+    if (db == NULL)
+        return boss_error_invalid_args;
 
     std::list<boss::Plugin> temp = db->rawMetadata;
     try {
@@ -345,8 +347,7 @@ BOSS_API unsigned int boss_eval_lists (boss_db db, const unsigned int language) 
                         temp.push_back(p);
                     }
                 }
-                it = temp.erase(it);
-                --it;
+                temp.erase(it--);
             }
         }
     } catch (boss::error& e) {
@@ -357,7 +358,7 @@ BOSS_API unsigned int boss_eval_lists (boss_db db, const unsigned int language) 
 
     temp = db->rawUserMetadata;
     try {
-        for (std::list<boss::Plugin>::iterator it=temp.begin(), endIt=temp.end(); it != endIt; ++it) {
+        for (std::list<boss::Plugin>::iterator it=temp.begin(); it != temp.end(); ++it) {
             it->EvalAllConditions(db->game, language);
             if (it->IsRegexPlugin()) {
                 boost::regex regex;
@@ -376,8 +377,7 @@ BOSS_API unsigned int boss_eval_lists (boss_db db, const unsigned int language) 
                         temp.push_back(p);
                     }
                 }
-                it = temp.erase(it);
-                --it;
+                temp.erase(it--);
             }
         }
     } catch (boss::error& e) {
