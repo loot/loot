@@ -257,13 +257,16 @@ BOSS_API unsigned int boss_load_lists (boss_db db, const char * const masterlist
     std::list<boss::Plugin> userTemp;
 
     try {
-        if (boost::algorithm::iends_with(masterlistPath, ".yaml")) {
-            YAML::Node tempNode = YAML::LoadFile(masterlistPath);
-            temp = tempNode["plugins"].as< std::list<boss::Plugin> >();
-        } else {
-            boost::filesystem::path p(masterlistPath);
-            std::list<boss::Message> filler;
-            Loadv2Masterlist(p, temp, filler);
+        if (boost::filesystem::exists(masterlistPath)) {
+            if (boost::algorithm::iends_with(masterlistPath, ".yaml")) {
+                YAML::Node tempNode = YAML::LoadFile(masterlistPath);
+                temp = tempNode["plugins"].as< std::list<boss::Plugin> >();
+            }
+            else {
+                boost::filesystem::path p(masterlistPath);
+                std::list<boss::Message> filler;
+                Loadv2Masterlist(p, temp, filler);
+            }
         }
     } catch (YAML::Exception& e) {
         extMessageStr = e.what();
@@ -273,17 +276,18 @@ BOSS_API unsigned int boss_load_lists (boss_db db, const char * const masterlist
         return boss_error_parse_fail;
     }
 
-    if (userlistPath != NULL) {
-        try {
-            if (boost::algorithm::iends_with(userlistPath, ".yaml")) {
-                YAML::Node tempNode = YAML::LoadFile(userlistPath);
-                userTemp = tempNode["plugins"].as< std::list<boss::Plugin> >();
+    try {
+        if (userlistPath != NULL) {
+            if (boost::filesystem::exists(userlistPath)) {
+                if (boost::algorithm::iends_with(userlistPath, ".yaml")) {
+                    YAML::Node tempNode = YAML::LoadFile(userlistPath);
+                    userTemp = tempNode["plugins"].as< std::list<boss::Plugin> >();
+                }
             }
         }
-        catch (YAML::Exception& e) {
-            extMessageStr = e.what();
-            return boss_error_parse_fail;
-        }
+    } catch (YAML::Exception& e) {
+        extMessageStr = e.what();
+        return boss_error_parse_fail;
     }
 
     //Also free memory.
