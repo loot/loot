@@ -106,7 +106,7 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
 
 	bigBox->Add(GridSizer, 0, wxEXPAND|wxALL, 15);
 
-    bigBox->Add(gamesList, wholeItem);
+    bigBox->Add(gamesList, 1, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 15);
 
     wxBoxSizer * hbox2 = new wxBoxSizer(wxHORIZONTAL);
     hbox2->Add(addBtn, 0, wxRIGHT, 5);
@@ -121,7 +121,6 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
     bigBox->Add(displayGraphImageBox, wholeItem);
 
     bigBox->AddSpacer(10);
-    bigBox->AddStretchSpacer(1);
 
 	bigBox->Add(new wxStaticText(this, wxID_ANY, translate("Language and game changes will be applied after BOSS is restarted.")), wholeItem);
 
