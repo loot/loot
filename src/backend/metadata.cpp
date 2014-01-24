@@ -714,7 +714,7 @@ namespace boss {
                 issues.insert(pair<string,bool>(it->DisplayName(),false));
         }
         for (set<File>::const_iterator it=incompatibilities.begin(), endIt=incompatibilities.end(); it != endIt; ++it) {
-            if (!boost::filesystem::exists(game.DataPath() / it->Name()) && !(IsPlugin(it->Name()) && boost::filesystem::exists(game.DataPath() / (it->Name() + ".ghost"))))
+            if (boost::filesystem::exists(game.DataPath() / it->Name()) || (IsPlugin(it->Name()) && boost::filesystem::exists(game.DataPath() / (it->Name() + ".ghost"))))
                 issues.insert(pair<string,bool>(it->DisplayName(),true));
         }
         return issues;
