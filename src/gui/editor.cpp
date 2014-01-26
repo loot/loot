@@ -106,7 +106,7 @@ wxString MessageList::OnGetItemText(long item, long column) const {
     }
 }
 
-Editor::Editor(wxWindow *parent, const wxString& title, const std::string userlistPath, const std::vector<boss::Plugin>& basePlugins, std::vector<boss::Plugin>& editedPlugins, const unsigned int language) : wxFrame(parent, wxID_ANY, title), _userlistPath(userlistPath), _basePlugins(basePlugins), _editedPlugins(editedPlugins) {
+Editor::Editor(wxWindow *parent, const wxString& title, const std::string userlistPath, const std::vector<boss::Plugin>& basePlugins, std::vector<boss::Plugin>& editedPlugins, const unsigned int language, const boss::Game& game) : wxFrame(parent, wxID_ANY, title), _userlistPath(userlistPath), _basePlugins(basePlugins), _editedPlugins(editedPlugins), _game(game) {
 
     //Initialise child windows.
     listBook = new wxNotebook(this, BOOK_Lists);
@@ -265,6 +265,9 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     //Fill pluginList with the contents of basePlugins.
     for (int i=0, max=_basePlugins.size(); i < max; ++i) {
         pluginList->InsertItem(i, FromUTF8(_basePlugins[i].Name()));
+        if (_basePlugins[i].HasBSA(_game)) {
+            pluginList->SetItemTextColour(i, wxColour(0, 142, 219));
+        }
     }
     pluginList->SetColumnWidth(0, wxLIST_AUTOSIZE);
 

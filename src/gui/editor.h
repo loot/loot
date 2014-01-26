@@ -54,7 +54,7 @@ private:
 
 class Editor : public wxFrame {
 public:
-    Editor(wxWindow *parent, const wxString& title, const std::string userlistPath, const std::vector<boss::Plugin>& basePlugins, std::vector<boss::Plugin>& editedPlugins, const unsigned int language);
+    Editor(wxWindow *parent, const wxString& title, const std::string userlistPath, const std::vector<boss::Plugin>& basePlugins, std::vector<boss::Plugin>& editedPlugins, const unsigned int language, const boss::Game& game);
 
     void OnPluginSelect(wxListEvent& event);
     void OnEnabledToggle(wxCommandEvent& event);
@@ -89,6 +89,7 @@ private:
 
     const std::string _userlistPath;
     const std::vector<boss::Plugin> _basePlugins;
+    const boss::Game& _game;
     std::vector<boss::Plugin> _editedPlugins;
     std::vector<boss::Message> currentMessages;
 

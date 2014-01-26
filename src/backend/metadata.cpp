@@ -621,8 +621,8 @@ namespace boss {
 
     bool Plugin::operator == (const Plugin& rhs) const {
         return (boost::iequals(name, rhs.Name())
-            || (IsRegexPlugin() && boost::regex_match(rhs.Name(), boost::regex(name, boost::regex::extended|boost::regex::icase)))
-            || (rhs.IsRegexPlugin() && boost::regex_match(name, boost::regex(rhs.Name(), boost::regex::extended|boost::regex::icase))));
+            || (IsRegexPlugin() && boost::regex_match(rhs.Name(), boost::regex(name, boost::regex::perl|boost::regex::icase)))
+            || (rhs.IsRegexPlugin() && boost::regex_match(name, boost::regex(rhs.Name(), boost::regex::perl|boost::regex::icase))));
     }
 
     bool Plugin::operator != (const Plugin& rhs) const {
@@ -718,6 +718,21 @@ namespace boss {
                 issues.insert(pair<string,bool>(it->DisplayName(),true));
         }
         return issues;
+    }
+
+    bool Plugin::HasBSA(const Game& game) const {
+        //BSAs must start with the plugin basename and have the extension .bsa.
+        for (boost::filesystem::directory_iterator it(game.DataPath()); it != boost::filesystem::directory_iterator(); ++it) {
+            if (boost::filesystem::is_regular_file(it->status()) && boost::iequals(it->path().extension().string(), ".bsa")) {
+                BOOST_LOG_TRIVIAL(info) << name << " | " << it->path().filename().string();
+                if (!IsRegexPlugin() && boost::istarts_with(it->path().filename().string(), name.substr(0, name.length() - 4)))
+                    return true;
+                else if (IsRegexPlugin() && boost::regex_search(it->path().filename().string(), boost::regex(name.substr(0, name.length() - 5), boost::regex::perl | boost::regex::icase), boost::match_continuous)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     bool operator == (const File& lhs, const Plugin& rhs) {
