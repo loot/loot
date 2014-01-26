@@ -936,7 +936,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
 
     //Create editor window.
     BOOST_LOG_TRIVIAL(debug) << "Opening editor window.";
-    Editor *editor = new Editor(this, translate("BOSS: Metadata Editor"), _game.UserlistPath().string(), installed, ulist_plugins, lang);
+    Editor *editor = new Editor(this, translate("BOSS: Metadata Editor"), _game.UserlistPath().string(), installed, ulist_plugins, lang, _game);
 
     progDia->Destroy();
 
@@ -1023,7 +1023,7 @@ void Launcher::OnOpenSettings(wxCommandEvent& event) {
     BOOST_LOG_TRIVIAL(debug) << "Opening settings window...";
 	SettingsFrame *settings = new SettingsFrame(this, translate("BOSS: Settings"), _settings, _games);
 	settings->ShowModal();
-    BOOST_LOG_TRIVIAL(debug) << "Editor window opened.";
+    BOOST_LOG_TRIVIAL(debug) << "Settings window opened.";
 }
 
 void Launcher::OnGameChange(wxCommandEvent& event) {
