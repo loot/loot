@@ -265,7 +265,7 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     //Fill pluginList with the contents of basePlugins.
     for (int i=0, max=_basePlugins.size(); i < max; ++i) {
         pluginList->InsertItem(i, FromUTF8(_basePlugins[i].Name()));
-        if (_basePlugins[i].HasBSA(_game)) {
+        if (_basePlugins[i].LoadsBSA(_game)) {
             pluginList->SetItemTextColour(i, wxColour(0, 142, 219));
         }
     }

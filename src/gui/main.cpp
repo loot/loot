@@ -1117,7 +1117,8 @@ LoadOrderPreview::LoadOrderPreview(wxWindow *parent, const wxString title, const
         _loadOrder->InsertItem(i, FromUTF8(it->Name()));
         if (it->FormIDs().empty()) {
             _loadOrder->SetItemTextColour(i, wxColour(122, 122, 122));
-        } else if (it->HasBSA(_game)) {
+        }
+        else if (it->LoadsBSA(_game)) {
             _loadOrder->SetItemTextColour(i, wxColour(0, 142, 219));
         }
     }

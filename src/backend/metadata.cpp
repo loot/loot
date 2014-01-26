@@ -720,7 +720,9 @@ namespace boss {
         return issues;
     }
 
-    bool Plugin::HasBSA(const Game& game) const {
+    bool Plugin::LoadsBSA(const Game& game) const {
+        if (game.Id() != g_game_tes5)
+            return false;
         //BSAs must start with the plugin basename and have the extension .bsa.
         for (boost::filesystem::directory_iterator it(game.DataPath()); it != boost::filesystem::directory_iterator(); ++it) {
             if (boost::filesystem::is_regular_file(it->status()) && boost::iequals(it->path().extension().string(), ".bsa")) {

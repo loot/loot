@@ -190,7 +190,7 @@ namespace boss {
         void EvalAllConditions(boss::Game& game, const unsigned int language);
         bool HasNameOnly() const;
         bool IsRegexPlugin() const;
-        bool HasBSA(const Game& game) const;
+        bool LoadsBSA(const Game& game) const;
 
         //Compare name strings.
         bool operator == (const Plugin& rhs) const;
