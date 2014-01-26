@@ -720,6 +720,10 @@ namespace boss {
         return issues;
     }
 
+    bool Plugin::HasBSA(const Game& game) const {
+        return boost::filesystem::exists(game.DataPath() / (name.substr(0, name.length() - 4) + ".bsa"));
+    }
+
     bool operator == (const File& lhs, const Plugin& rhs) {
         return boost::iequals(lhs.Name(), rhs.Name());
     }

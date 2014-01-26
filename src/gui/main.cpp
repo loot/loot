@@ -687,7 +687,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         progDia = NULL;
 
         BOOST_LOG_TRIVIAL(debug) << "Displaying load order preview.";
-        LoadOrderPreview preview(this, translate("BOSS: Calculated Load Order"), plugins);
+        LoadOrderPreview preview(this, translate("BOSS: Calculated Load Order"), plugins, _game);
 
         if (preview.ShowModal() == wxID_OK) {
             BOOST_LOG_TRIVIAL(debug) << "Load order accepted.";
@@ -1102,7 +1102,7 @@ void Launcher::OnAbout(wxCommandEvent& event) {
     wxAboutBox(aboutInfo);
 }
 
-LoadOrderPreview::LoadOrderPreview(wxWindow *parent, const wxString title, const std::list<boss::Plugin>& plugins) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER), _plugins(plugins) {
+LoadOrderPreview::LoadOrderPreview(wxWindow *parent, const wxString title, const std::list<boss::Plugin>& plugins, const boss::Game& game) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER), _plugins(plugins), _game(game) {
 
     //Init controls.
     _loadOrder = new wxListView(this, LIST_LoadOrder, wxDefaultPosition, wxDefaultSize, wxLC_REPORT);
@@ -1115,6 +1115,11 @@ LoadOrderPreview::LoadOrderPreview(wxWindow *parent, const wxString title, const
     size_t i=0;
     for (list<boss::Plugin>::const_iterator it=plugins.begin(), endit=plugins.end(); it != endit; ++it, ++i) {
         _loadOrder->InsertItem(i, FromUTF8(it->Name()));
+        if (it->FormIDs().empty()) {
+            _loadOrder->SetItemTextColour(i, wxColour(122, 122, 122));
+        } else if (it->HasBSA(_game)) {
+            _loadOrder->SetItemTextColour(i, wxColour(0, 142, 219));
+        }
     }
     _loadOrder->SetColumnWidth(0, wxLIST_AUTOSIZE);
 
