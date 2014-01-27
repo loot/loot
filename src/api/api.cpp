@@ -328,7 +328,7 @@ BOSS_API unsigned int boss_eval_lists (boss_db db, const unsigned int language) 
     std::list<boss::Plugin> temp = db->rawMetadata;
     try {
         db->game.RefreshActivePluginsList();
-        for (std::list<boss::Plugin>::iterator it=temp.begin(); it != temp.end(); ++it) {
+        for (std::list<boss::Plugin>::iterator it=temp.begin(); it != temp.end();) {
             it->EvalAllConditions(db->game, language);
             if (it->IsRegexPlugin()) {
                 boost::regex regex;
@@ -347,7 +347,9 @@ BOSS_API unsigned int boss_eval_lists (boss_db db, const unsigned int language) 
                         temp.push_back(p);
                     }
                 }
-                temp.erase(it--);
+                it = temp.erase(it);
+            } else {
+                ++it;
             }
         }
     } catch (boss::error& e) {
@@ -358,7 +360,7 @@ BOSS_API unsigned int boss_eval_lists (boss_db db, const unsigned int language) 
 
     temp = db->rawUserMetadata;
     try {
-        for (std::list<boss::Plugin>::iterator it=temp.begin(); it != temp.end(); ++it) {
+        for (std::list<boss::Plugin>::iterator it=temp.begin(); it != temp.end();) {
             it->EvalAllConditions(db->game, language);
             if (it->IsRegexPlugin()) {
                 boost::regex regex;
@@ -377,7 +379,9 @@ BOSS_API unsigned int boss_eval_lists (boss_db db, const unsigned int language) 
                         temp.push_back(p);
                     }
                 }
-                temp.erase(it--);
+                it = temp.erase(it);
+            } else {
+                ++it;
             }
         }
     } catch (boss::error& e) {
