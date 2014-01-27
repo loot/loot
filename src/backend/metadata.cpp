@@ -721,20 +721,9 @@ namespace boss {
     }
 
     bool Plugin::LoadsBSA(const Game& game) const {
-        if (game.Id() != g_game_tes5)
+        if (game.Id() != g_game_tes5 || IsRegexPlugin())
             return false;
-        //BSAs must start with the plugin basename and have the extension .bsa.
-        for (boost::filesystem::directory_iterator it(game.DataPath()); it != boost::filesystem::directory_iterator(); ++it) {
-            if (boost::filesystem::is_regular_file(it->status()) && boost::iequals(it->path().extension().string(), ".bsa")) {
-                BOOST_LOG_TRIVIAL(info) << name << " | " << it->path().filename().string();
-                if (!IsRegexPlugin() && boost::istarts_with(it->path().filename().string(), name.substr(0, name.length() - 4)))
-                    return true;
-                else if (IsRegexPlugin() && boost::regex_search(it->path().filename().string(), boost::regex(name.substr(0, name.length() - 5), boost::regex::perl | boost::regex::icase), boost::match_continuous)) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return boost::filesystem::exists(game.DataPath() / (name.substr(0, name.length() - 3) + "bsa"));
     }
 
     bool operator == (const File& lhs, const Plugin& rhs) {
