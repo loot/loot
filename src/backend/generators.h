@@ -761,7 +761,7 @@ namespace YAML {
             if (rhs.IsConditional())
                 out << Key << "condition" << Value << rhs.Condition();
 
-            if (!rhs.DisplayName().empty())
+            if (rhs.DisplayName() != rhs.Name())
                 out << Key << "display" << Value << rhs.DisplayName();
 
             out << EndMap;
