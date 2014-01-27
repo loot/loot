@@ -268,6 +268,9 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
         if (_basePlugins[i].LoadsBSA(_game)) {
             pluginList->SetItemTextColour(i, wxColour(0, 142, 219));
         }
+        if (std::find(_editedPlugins.begin(), _editedPlugins.end(), _basePlugins[i]) != _editedPlugins.end()) {
+            pluginList->SetItemFont(i, wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT).Bold());
+        }
     }
     pluginList->SetColumnWidth(0, wxLIST_AUTOSIZE);
 
@@ -307,6 +310,7 @@ void Editor::OnPluginSelect(wxListEvent& event) {
         incsList->DeleteAllItems();
         messageList->DeleteAllItems();
         tagsList->DeleteAllItems();
+        dirtyList->DeleteAllItems();
 
         set<boss::File> files = plugin.LoadAfter();
         int i=0;
@@ -807,6 +811,12 @@ void Editor::ApplyEdits(const wxString& plugin) {
         *it = diff;
     else
         _editedPlugins.push_back(diff);
+
+    //Also mark plugin as edited in list.
+    if (!diff.HasNameOnly()) {
+        long i = pluginList->FindItem(-1, plugin);
+        pluginList->SetItemFont(i, wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT).Bold());
+    }
 }
 
 boss::Plugin Editor::GetMasterData(const wxString& plugin) const {
