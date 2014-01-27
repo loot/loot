@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: BOSS v3.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-10-26 11:41-0000\n"
-"PO-Revision-Date: 2014-01-09 18:07+0600\n"
+"PO-Revision-Date: 2014-01-27 15:05+0600\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
@@ -517,7 +517,7 @@ msgstr "\"%1%\" включает выражение, которое не мож�
 
 #: gui/main.cpp:627
 msgid "\"%1%\" is incompatible with \"%2%\" and is present."
-msgstr "\"%1%\" совместим с \"%2%\" и присутствует."
+msgstr "\"%1%\" несовместим с \"%2%\" и присутствует."
 
 #: gui/main.cpp:630
 msgid "\"%1%\" is required by \"%2%\" but is missing."
