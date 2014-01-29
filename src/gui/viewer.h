@@ -30,7 +30,7 @@
 
 class Viewer : public wxFrame {
 public:
-    Viewer(wxWindow *parent, const wxString& title, const std::string& path);
+    Viewer(wxWindow *parent, const wxString& title, const wxString& url);
 
     void OnNavigationStart(wxWebViewEvent& event);
 };

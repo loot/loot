@@ -26,8 +26,8 @@
 
 #include <wx/webview.h>
 
-Viewer::Viewer(wxWindow *parent, const wxString& title, const std::string& path) : wxFrame(parent, wxID_ANY, title) {
-    wxWebView * web = wxWebView::New(this, wxID_ANY, boss::ToFileURL(path));
+Viewer::Viewer(wxWindow *parent, const wxString& title, const wxString& url) : wxFrame(parent, wxID_ANY, title) {
+    wxWebView * web = wxWebView::New(this, wxID_ANY, url);
 
     web->Bind(wxEVT_WEBVIEW_NAVIGATING, &Viewer::OnNavigationStart, this);
 
