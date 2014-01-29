@@ -60,8 +60,6 @@ namespace boss {
     extern const boost::filesystem::path g_path_polyfill;
     extern const boost::filesystem::path g_path_log;
     extern const boost::filesystem::path g_path_l10n;
-    extern const boost::filesystem::path g_path_graphvis;
-    extern const boost::filesystem::path g_path_svgweb;
 }
 
 #endif

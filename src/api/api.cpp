@@ -259,7 +259,9 @@ BOSS_API unsigned int boss_load_lists (boss_db db, const char * const masterlist
     try {
         if (boost::filesystem::exists(masterlistPath)) {
             if (boost::algorithm::iends_with(masterlistPath, ".yaml")) {
-                YAML::Node tempNode = YAML::LoadFile(masterlistPath);
+                boss::ifstream in(masterlistPath);
+                YAML::Node tempNode = YAML::Load(in);
+                in.close();
                 temp = tempNode["plugins"].as< std::list<boss::Plugin> >();
             }
             else {
@@ -280,7 +282,9 @@ BOSS_API unsigned int boss_load_lists (boss_db db, const char * const masterlist
         if (userlistPath != NULL) {
             if (boost::filesystem::exists(userlistPath)) {
                 if (boost::algorithm::iends_with(userlistPath, ".yaml")) {
-                    YAML::Node tempNode = YAML::LoadFile(userlistPath);
+                    boss::ifstream in(userlistPath);
+                    YAML::Node tempNode = YAML::Load(in);
+                    in.close();
                     userTemp = tempNode["plugins"].as< std::list<boss::Plugin> >();
                 }
             }

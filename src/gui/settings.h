@@ -47,7 +47,6 @@ private:
 	wxChoice *LanguageChoice;
     wxCheckBox *UpdateMasterlistBox;
     wxCheckBox *reportViewBox;
-    wxCheckBox *displayGraphImageBox;
 
     wxListView *gamesList;
     wxButton * addBtn;

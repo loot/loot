@@ -6,8 +6,6 @@
 # Files and folders that need to go in (relative to repository root):
 #
 # build/BOSS.exe
-# resources/graphvis
-# resources/svgweb
 # resources/l10n/es/LC_MESSAGES/boss.mo
 # resources/l10n/es/LC_MESSAGES/wxstd.mo
 # resources/l10n/ru/LC_MESSAGES/boss.mo
@@ -38,10 +36,6 @@ if not os.path.exists(temp_path):
 
 # Now copy everything into the temporary folder.
 shutil.copy( os.path.join('..', 'build', 'BOSS.exe'), temp_path )
-
-shutil.copytree( os.path.join('..', 'resources', 'graphvis'), os.path.join(temp_path, 'resources', 'graphvis') )
-shutil.copytree( os.path.join('..', 'resources', 'svgweb'), os.path.join(temp_path, 'resources', 'svgweb') )
-
 
 os.makedirs(os.path.join(temp_path, 'resources', 'l10n', 'es', 'LC_MESSAGES'))
 os.makedirs(os.path.join(temp_path, 'resources', 'l10n', 'ru', 'LC_MESSAGES'))

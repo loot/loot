@@ -229,27 +229,7 @@ namespace boss {
     //Turns an absolute filesystem path into a valid file:// URL.
     std::string ToFileURL(const fs::path& file) {
         BOOST_LOG_TRIVIAL(trace) << "Converting file path " << file << " to a URL.";
-        //URLs are UTF-8 encoded then any characters (equiv. their corresponding bytes) not in the unreserved set (equiv. their corresponding bytes) are replaced by a percentage sign followed by the hex representation of their binary value.
-        string unreserved = "-.0123456789:ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~";  //Unreserved in byte value order, plus the colon character since that's allowed for drive paths.
-
-        string url = "file:///";
-        for (boost::filesystem::path::const_iterator it=file.begin(), endit=file.end(); it != endit; ++it) {
-            string part = it->string();
-            if (part == "/") //Skip exta backslash after drive path.
-                continue;
-            //String iterator is byte-by-byte, not character-by-character, which is good.
-            for (string::const_iterator jt=part.begin(), endjt=part.end(); jt != endjt; ++jt) {
-                if (!binary_search(unreserved.begin(), unreserved.end(), *jt))
-                    //Replace with percentage-hex value.
-                    url += '%' + IntToHexString(*jt);
-                else
-                    url += *jt;
-            }
-            url += '/';
-        }
-        url.resize(url.length()-1);  //Get rid of trailing forward slash.
-
-        return url;
+        return "file:///" + file.string();  //Seems that we don't need to worry about encoding, tested with Unicode paths.
     }
 
     std::string GetLangString(const unsigned int num) {
@@ -272,90 +252,6 @@ namespace boss {
             return g_lang_russian;
         else
             return g_lang_any;
-    }
-
-    //Runs a command using the Win32 API.
-    bool RunCommand(const std::string& command, std::string& output) {
-        HANDLE consoleWrite = NULL;
-        HANDLE consoleRead = NULL;
-
-        SECURITY_ATTRIBUTES saAttr;
-
-        PROCESS_INFORMATION piProcInfo;
-        STARTUPINFO siStartInfo;
-
-        CHAR chBuf[BUFSIZE];
-        DWORD dwRead;
-
-        DWORD exitCode;
-
-        //Init attributes.
-        saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
-        saAttr.bInheritHandle = TRUE;
-        saAttr.lpSecurityDescriptor = NULL;
-
-        BOOST_LOG_TRIVIAL(trace) << "Creating a pipe for the process.";
-
-        //Create I/O pipes.
-        if (!CreatePipe(&consoleRead, &consoleWrite, &saAttr, 0)) {
-            BOOST_LOG_TRIVIAL(error) << "Could not create pipe for process.";
-            throw error(error::windows_error, lc::translate("Could not create pipe for process."));
-        }
-
-        //Create a child process.
-        BOOST_LOG_TRIVIAL(trace) << "Creating a child process.";
-        ZeroMemory(&piProcInfo, sizeof(PROCESS_INFORMATION));
-
-        ZeroMemory(&siStartInfo, sizeof(STARTUPINFO));
-        siStartInfo.cb = sizeof(STARTUPINFO);
-        siStartInfo.hStdError = consoleWrite;
-        siStartInfo.hStdOutput = consoleWrite;
-        siStartInfo.dwFlags |= STARTF_USESTDHANDLES | STARTF_USESHOWWINDOW;
-        siStartInfo.wShowWindow = SW_HIDE;
-
-        const int utf16Len = MultiByteToWideChar(CP_UTF8, 0, command.c_str(), -1, NULL, 0);
-        wchar_t * cmdLine = new wchar_t[utf16Len];
-        MultiByteToWideChar(CP_UTF8, 0, command.c_str(), -1, cmdLine, utf16Len);
-
-        bool result = CreateProcess(NULL,
-            cmdLine,     // command line
-            NULL,          // process security attributes
-            NULL,          // primary thread security attributes
-            TRUE,          // handles are inherited
-            CREATE_NO_WINDOW,             // creation flags
-            NULL,          // use parent's environment
-            NULL,          // use parent's current directory
-            &siStartInfo,  // STARTUPINFO pointer
-            &piProcInfo);  // receives PROCESS_INFORMATION
-
-        delete [] cmdLine;
-
-        if (!result) {
-            BOOST_LOG_TRIVIAL(error) << "Could not create process.";
-            throw error(error::windows_error, lc::translate("Could not create process."));
-        }
-
-        BOOST_LOG_TRIVIAL(trace) << "Waiting for process to complete.";
-
-        WaitForSingleObject(piProcInfo.hProcess, INFINITE);
-
-        BOOST_LOG_TRIVIAL(trace) << "Getting the process exit code.";
-
-        if (!GetExitCodeProcess(piProcInfo.hProcess, &exitCode)) {
-            BOOST_LOG_TRIVIAL(error) << "Could not get process exit code.";
-            throw error(error::windows_error, lc::translate("Could not get process exit code."));
-        }
-
-        BOOST_LOG_TRIVIAL(trace) << "Getting the process output.";
-
-        if (!ReadFile(consoleRead, chBuf, BUFSIZE, &dwRead, NULL)) {
-            BOOST_LOG_TRIVIAL(error) << "Could not read process output.";
-            throw error(error::windows_error, lc::translate("Could not read process output."));
-        }
-
-        output = string(chBuf, dwRead);
-
-        return exitCode == 0;
     }
 
 

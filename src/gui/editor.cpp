@@ -30,6 +30,7 @@
 #include <boost/filesystem.hpp>
 
 #include <wx/clipbrd.h>
+#include <wx/msgdlg.h>
 
 using namespace std;
 
@@ -121,7 +122,7 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     //Initialise controls.
     pluginText = new wxStaticText(this, wxID_ANY, "");
     prioritySpin = new wxSpinCtrl(this, wxID_ANY, "0");
-    prioritySpin->SetRange(-10,10);
+    prioritySpin->SetRange(std::numeric_limits<int>::min(), std::numeric_limits<int>::max());
     enableUserEditsBox = new wxCheckBox(this, wxID_ANY, translate("Enable User Changes"));
 
     addBtn = new wxButton(this, BUTTON_AddRow, translate("Add File"));
@@ -129,7 +130,6 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     removeBtn = new wxButton(this, BUTTON_RemoveRow, translate("Remove File"));
     applyBtn = new wxButton(this, BUTTON_Apply, translate("Save Changes"));
     cancelBtn = new wxButton(this, BUTTON_Cancel, translate("Cancel"));
-    exportBtn = new wxButton(this, BUTTON_Export, translate("Copy Metadata As Text"));
 
     pluginList = new wxListView(this, LIST_Plugins, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL);
     reqsList = new wxListView(reqsTab, LIST_Reqs, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL);
@@ -138,6 +138,8 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     tagsList = new wxListView(tagsTab, LIST_BashTags, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL);
     dirtyList = new wxListView(dirtyTab, LIST_DirtyInfo, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL);
     messageList = new MessageList(messagesTab, LIST_Messages, language);
+
+    pluginMenu = new wxMenu();
 
     //Tie together notebooks and panels.
     listBook->AddPage(reqsTab, translate("Requirements"), true);
@@ -172,13 +174,17 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     dirtyList->AppendColumn(translate("Deleted Navmesh Count"));
     dirtyList->AppendColumn(translate("Cleaning Utility"));
 
+    //Set up plugin right-click menu.
+    pluginMenu->Append(MENU_CopyName, translate("Copy Name"));
+    pluginMenu->Append(MENU_CopyMetadata, translate("Copy Metadata As Text"));
+    pluginMenu->Append(MENU_ClearMetadata, translate("Remove All User-Added Metadata"));
+
     //Initialise control states.
     addBtn->Enable(false);
     editBtn->Enable(false);
     removeBtn->Enable(false);
     prioritySpin->Enable(false);
     enableUserEditsBox->Enable(false);
-    exportBtn->Enable(false);
 
     //Make plugin name bold text.
     wxFont font = pluginText->GetFont();
@@ -199,7 +205,10 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     Bind(wxEVT_BUTTON, &Editor::OnAddRow, this, BUTTON_AddRow);
     Bind(wxEVT_BUTTON, &Editor::OnEditRow, this, BUTTON_EditRow);
     Bind(wxEVT_BUTTON, &Editor::OnRemoveRow, this, BUTTON_RemoveRow);
-    Bind(wxEVT_BUTTON, &Editor::OnExport, this, BUTTON_Export);
+    Bind(wxEVT_LIST_ITEM_RIGHT_CLICK, &Editor::OnPluginListRightClick, this);
+    Bind(wxEVT_MENU, &Editor::OnPluginCopyName, this, MENU_CopyName);
+    Bind(wxEVT_MENU, &Editor::OnPluginCopyMetadata, this, MENU_CopyMetadata);
+    Bind(wxEVT_MENU, &Editor::OnPluginClearMetadata, this, MENU_ClearMetadata);
 
     //Set up layout.
     wxBoxSizer * bigBox = new wxBoxSizer(wxHORIZONTAL);
@@ -251,8 +260,6 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     hbox2->Add(removeBtn, 0, wxLEFT, 5);
     mainBox->Add(hbox2, 0, wxALIGN_RIGHT);
 
-    mainBox->Add(exportBtn, 0, wxALIGN_RIGHT|wxTOP, 10);
-
     mainBox->AddSpacer(30);
 
     wxBoxSizer * hbox6 = new wxBoxSizer(wxHORIZONTAL);
@@ -267,6 +274,9 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
         pluginList->InsertItem(i, FromUTF8(_basePlugins[i].Name()));
         if (_basePlugins[i].LoadsBSA(_game)) {
             pluginList->SetItemTextColour(i, wxColour(0, 142, 219));
+        }
+        if (std::find(_editedPlugins.begin(), _editedPlugins.end(), _basePlugins[i]) != _editedPlugins.end()) {
+            pluginList->SetItemFont(i, wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT).Bold());
         }
     }
     pluginList->SetColumnWidth(0, wxLIST_AUTOSIZE);
@@ -307,6 +317,7 @@ void Editor::OnPluginSelect(wxListEvent& event) {
         incsList->DeleteAllItems();
         messageList->DeleteAllItems();
         tagsList->DeleteAllItems();
+        dirtyList->DeleteAllItems();
 
         set<boss::File> files = plugin.LoadAfter();
         int i=0;
@@ -368,7 +379,66 @@ void Editor::OnPluginSelect(wxListEvent& event) {
         addBtn->Enable(true);
         editBtn->Enable(false);
         removeBtn->Enable(false);
-        exportBtn->Enable(true);
+    }
+}
+
+void Editor::OnPluginListRightClick(wxListEvent& event) {
+    PopupMenu(pluginMenu);
+}
+
+void Editor::OnPluginCopyName(wxCommandEvent& event) {
+    if (wxTheClipboard->Open()) {
+        wxTheClipboard->SetData(new wxTextDataObject(pluginList->GetItemText(pluginList->GetFirstSelected())));
+        wxTheClipboard->Close();
+    }
+}
+
+void Editor::OnPluginCopyMetadata(wxCommandEvent& event) {
+    wxString selectedPlugin = pluginList->GetItemText(pluginList->GetFirstSelected());
+    boss::Plugin plugin = GetUserData(selectedPlugin);
+
+    string text;
+    if (plugin.HasNameOnly())
+        text = "name: " + plugin.Name();
+    else {
+        YAML::Emitter yout;
+        yout.SetIndent(2);
+        yout << plugin;
+        text = yout.c_str();
+    }
+
+    BOOST_LOG_TRIVIAL(info) << "Exported userlist metadata text for \"" << selectedPlugin.ToUTF8() << "\": " << text;
+    
+    if (!text.empty() && wxTheClipboard->Open()) {
+        wxTheClipboard->SetData(new wxTextDataObject(FromUTF8(text)));
+        wxTheClipboard->Close();
+    }
+}
+
+void Editor::OnPluginClearMetadata(wxCommandEvent& event) {
+    wxMessageDialog dialog(this, 
+                            translate("Are you sure you want to clear all existing user-added metadata from this plugin?"), 
+                            translate("BOSS: Warning"), 
+                            wxYES_NO | wxCANCEL | wxICON_EXCLAMATION);
+
+    if (dialog.ShowModal() == wxID_YES) {
+        long i = pluginList->GetFirstSelected();
+        wxString selectedPlugin = pluginList->GetItemText(i);
+        boss::Plugin p(string(selectedPlugin.ToUTF8()));
+
+        //Need to clear what's currently in the editor and what's from the userlist.
+
+        vector<boss::Plugin>::const_iterator it = std::find(_editedPlugins.begin(), _editedPlugins.end(), p);
+
+        //Delete existing userlist entry.
+        if (it != _editedPlugins.end())
+            _editedPlugins.erase(it);
+
+        //Also clear any unapplied data. Easiest way to do this is to simulate loading the plugin's data again.
+        pluginText->SetLabelText("");
+        pluginList->Select(i, false);
+        pluginList->Select(i, true);
+        pluginList->SetItemFont(i, wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT));
     }
 }
 
@@ -747,27 +817,6 @@ void Editor::OnRowSelect(wxListEvent& event) {
     }
 }
 
-void Editor::OnExport(wxCommandEvent& event) {
-    wxString currentPlugin = pluginText->GetLabelText();
-
-    boss::Plugin initial = GetMasterData(currentPlugin);
-    boss::Plugin edited = GetNewData(currentPlugin);
-
-    boss::Plugin diff = edited.DiffMetadata(initial);
-
-    YAML::Emitter yout;
-    yout.SetIndent(2);
-    yout << diff;
-    string text = yout.c_str();
-
-    BOOST_LOG_TRIVIAL(info) << "Exported metadata text for \"" << currentPlugin.ToUTF8() << "\": " << text;
-
-    if (!text.empty() && wxTheClipboard->Open()) {
-        wxTheClipboard->SetData( new wxTextDataObject(FromUTF8(text)) );
-        wxTheClipboard->Close();
-    }
-}
-
 void Editor::OnQuit(wxCommandEvent& event) {
     BOOST_LOG_TRIVIAL(debug) << "Exiting metadata editor.";
     if (event.GetId() == BUTTON_Apply) {
@@ -807,6 +856,14 @@ void Editor::ApplyEdits(const wxString& plugin) {
         *it = diff;
     else
         _editedPlugins.push_back(diff);
+
+    //Also mark plugin as edited in list.
+    long i = pluginList->FindItem(-1, plugin);
+    if (!diff.HasNameOnly())
+        pluginList->SetItemFont(i, wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT).Bold());
+    else
+        pluginList->SetItemFont(i, wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT));
+
 }
 
 boss::Plugin Editor::GetMasterData(const wxString& plugin) const {
@@ -824,10 +881,9 @@ boss::Plugin Editor::GetMasterData(const wxString& plugin) const {
 
 boss::Plugin Editor::GetUserData(const wxString& plugin) const {
     BOOST_LOG_TRIVIAL(debug) << "Getting userlist metadata for plugin: " << plugin.ToUTF8();
-    boss::Plugin p;
-    boss::Plugin p_in(string(plugin.ToUTF8()));
+    boss::Plugin p(string(plugin.ToUTF8()));
 
-    vector<boss::Plugin>::const_iterator it = std::find(_editedPlugins.begin(), _editedPlugins.end(), p_in);
+    vector<boss::Plugin>::const_iterator it = std::find(_editedPlugins.begin(), _editedPlugins.end(), p);
 
     if (it != _editedPlugins.end())
         p = *it;

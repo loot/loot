@@ -162,9 +162,9 @@ Visual C++ Redistributable for Visual Studio 2013 (x86)</a>. BOSS can be install
 
 <p>Provided that masterlist updating <a href="#settingsUpdateMasterlist">is enabled</a> and that an online masterlist URL <a href="#settingsMasterlistURL">is set</a>, BOSS checks for updates to its masterlist and downloads any that are available. If there are any syntax errors in the latest masterlist (due to human error by its maintainers), the updater rolls back one version at a time until it finds a version that works. If any other errors are encountered, updating is cancelled.
 
-<p>During the sorting process, BOSS extracts information from each of the plugins installed in the game's Data folder and combines this information with any relevant metadata provided by the masterlist and userlist. It then uses the combined data to build a graph (as in <i>graph theory</i>, not <i>drawing</i>) of all the interactions between all the installed plugins. A topological sort is then carried out on the graph to produce a list of plugins in their optimal load order, according to BOSS's criteria. If a cycle is detected (eg. A depends on B depends on A), then sorting is cancelled as it becomes impossible to generate a load order that satisfies all conditions.
+<p>During the sorting process, BOSS extracts information from each of the plugins installed in the game's Data folder and combines this information with any relevant metadata provided by the masterlist and userlist. It then uses the combined data to build a directed graph of all the interactions between all the installed plugins. A topological sort is then carried out on the graph to produce a list of plugins in their optimal load order, according to BOSS's criteria. If a cycle is detected (eg. A depends on B depends on A), then sorting is cancelled as it becomes impossible to generate a load order that satisfies all conditions.
 <p>If successful, the calculated load order is then displayed in the dialog shown above, which allows the user to edit the load order before it is applied. Multiple plugins may be selected and moved at once. Plugins which are empty (ie. only contain a header record) are displayed in grey text, and plugins that are not empty and load BSAs are displayed in blue text. If <q>OK</q> button is clicked, it is then applied, and any edits made are recorded in the userlist for re-application when BOSS next sorts the game's plugins. If the <q>Cancel</q> button is clicked, then the load order and any edits made are discarded.
-<p>BOSS then generates a report and displays it either in a new window or in your default browser, according to the value of the <a href="#settingsViewReports">relevant setting</a>. Any errors encountered during the sorting process will be displayed in this report, including those due to graph cycles, missing dependencies or installed incompatible plugins. If it <a href="#settingsGenerateGraphImage">is enabled</a>, an SVG image of the graph is generated for display in the report. See the next section for more information on the report.
+<p>BOSS then generates a report and displays it either in a new window or in your default browser, according to the value of the <a href="#settingsViewReports">relevant setting</a>. Any errors encountered during the sorting process will be displayed in this report, including those due to graph cycles, missing dependencies or installed incompatible plugins. See the next section for more information on the report.
 <p>BOSS is able to sort plugins ghosted by <abbr title="Wrye Bash, Wrye Flash or Wrye Flash NV">Wrye *ash</abbr>, and can extract Bash Tags and version numbers from plugin descriptions. Provided that they have the <code>Filter</code> Bash Tag present in their description, BOSS can recognise filter patches and so avoid displaying unnecessary error messages for any of their masters that may be missing.
 <p>While reading very large plugins, such as the game's main master file, BOSS may appear to stop responding: this is not an issue. The time it takes for BOSS to sort your load order depends primarily on the size of the masterlist being used, the total size of the files in your load order, and the number of plugins in your load order. The first run is likely to be longer than subsequent runs as BOSS needs to download the full masterlist, rather than just the changes made by updates. In testing, it was found that sorting ~90 plugins with a total size of ~350 MB and a 5 MB masterlist takes around 15 seconds, though performance will vary with computer hardware.
 
@@ -181,7 +181,6 @@ Visual C++ Redistributable for Visual Studio 2013 (x86)</a>. BOSS can be install
 <ul>
     <li>The <q>Summary</q> tab gives information on the versions of BOSS and the masterlist used, whether masterlist updating is enabled, and breaks down the numbers of each message type in the Summary and Details tabs. It also notifies you if there have been no changes in the <q>Details</q> tab since you last ran BOSS for the same game. Finally, the <q>Summary</q> tab is also where any global messages supplied in the masterlist and any errors encountered during sorting are displayed.
     <li>The <q>Details</q> tab lists the plugins BOSS sorted in their new load order, along with any messages BOSS has provided for them. BOSS will also display the plugin's <abbr title="Cyclic Redundancy Check">CRC</abbr> value and extract its version if found in the plugin's description field.
-    <li>The <q>Graph</q> tab displays a graph of all the interactions between the plugins in your load order. It's not very useful to the average user, but may contain information that would aid in debugging any issues encountered, and is also provided as an item of interest. Graph image generation typically takes a long time, so it is disabled by default.
 </ul>
 <p>In addition, there are a few filters that can be used to selectively hide items in the <q>Details</q> tab. These filters are:
 <ul>
@@ -204,9 +203,8 @@ Visual C++ Redistributable for Visual Studio 2013 (x86)</a>. BOSS can be install
     <figcaption>BOSS's metadata editor.</figcaption>
 </figure>
 <p>BOSS's sorting algorithm uses the contents of plugins to work out where they should load relative to one another. However, this is sometimes not enough for it to produce a correct load order. In such cases, additional metadata can be supplied so that the plugins get sorted correctly. This metadata is supplied to BOSS by two sources: one is the masterlist, which is maintained by the BOSS team, and the other is the userlist, which you can edit as you desire.
-<p>The metadata editor allows you to manage the metadata stored in your userlist. When opened, it lists all the plugins you have installed, and any that are missing but have existing user-added metadata, in alphabetical order. Plugins that load BSAs are displayed in blue text. Clicking on a plugin then opens its metadata for editing, and displays any existing metadata in the fields to the right of the plugin list. These fields are explained in the table below.
+<p>The metadata editor allows you to manage the metadata stored in your userlist. When opened, it lists all the plugins you have installed, and any that are missing but have existing user-added metadata, in alphabetical order. Plugins that load BSAs are displayed in <span style="color: #008EDB;">blue text</span>, and plugins with user-added metadata are displayed in <b>bold text</b>. Selecting a plugin then opens its metadata for editing, and displays any existing metadata in the fields to the right of the plugin list. Right-clicking a plugin displays a context menu containing a few commands. The editor fields and context menu commands are explained in the tables below.
 <p>The <q>Add &#x2026;</q>, <q>Edit &#x2026;</q> and <q>Remove &#x2026;</q> buttons are used to edit the contents of the list currently visible. The <q>Edit &#x2026;</q> and <q>Remove &#x2026;</q> buttons are greyed out if no row is selected or if the selected row is not user-added metadata, but comes from the masterlist or the plugin itself. Metadata that comes from the masterlist or the plugin itself cannot be edited or removed, only added to. This is to prevent users from accidently overriding important metadata.
-<p>The <q>Copy Metadata As Text</q> copies the selected plugin's current metadata, as it appears in the userlist, to the clipboard. This makes it easier to share your metadata changes with the BOSS team, as they can then paste this text directly into the masterlist, and also avoids any typos being introduced. If posting the text in an online forum that supports BBCode (as most forums do), be sure to wrap it in <code>[code]</code> tags, eg. <code>[code]copied text[/code]</code>, so that the spaces are not removed by the forum software.
 <p>The <q>Save Changes</q> button will save any user-added metadata to your userlist, including any changes made, then exit the metadata editor. The <q>Cancel</q> button will exit the editor without saving any changes.
 <table>
     <thead>
@@ -244,8 +242,15 @@ Visual C++ Redistributable for Visual Studio 2013 (x86)</a>. BOSS can be install
         </ul>
         <p>If a plugin's masters are missing, an error message will be displayed for it. Filter patches are special mods designed for use with a Bashed Patch that do not require all their masters to be present, and so any plugin with the <code>Filter</code> tag applied and missing masters will not cause any errors to be displayed.
 </table>
-
-
+<table>
+    <thead>
+        <tr><th>Context Menu Command<th>Description
+    <tbody>
+        <tr><td>Copy Name<td>Copies the selected plugin's filename to the clipboard.
+        <tr><td>Copy Metadata As Text<td>Copies the selected plugin's current metadata, as it appears in the userlist, to the clipboard. This makes it easier to share your metadata changes with the BOSS team, as they can then paste this text directly into the masterlist, and also avoids any typos being introduced. If posting the text in an online forum that supports BBCode (as most forums do), be sure to wrap it in <code>[code]</code> tags, eg. <code>[code]copied text[/code]</code>, so that the spaces are not removed by the forum software.
+        <tr><td>Remove All User-Added Metadata<td>This removes all saved user-added metadata from the selected plugin, <b>and</b> any unsaved data added to the plugin since the Metadata Editor window was opened.
+</table>
+        
 <h3 id="usage-settings">Editing Settings</h3>
 <figure>
     <img src="images/settings.png">
@@ -261,7 +266,6 @@ Visual C++ Redistributable for Visual Studio 2013 (x86)</a>. BOSS can be install
         <tr><td>Debug Verbosity<td>Controls the verbosity of the debug output, which is written to <code>%LOCALAPPDATA%\BOSS\BOSSDebugLog.txt</code>.
         <tr><td id="settingsUpdateMasterlist">Update masterlist before sorting<td>If checked, BOSS will update its masterlist, should an update be available, before sorting plugins.
         <tr><td id="settingsViewReports">View reports externally in default browser.<td>If checked, BOSS will display its report using your default web browser instead of opening its own window.
-        <tr><td id="settingsGenerateGraphImage">Generate and display plugin graph images.<td>If checked, BOSS will generate an SVG image of the plugin interaction graph and display it in its report. Image generation can take a long time, so this is disabled by default.
 </table>
 <p>The games list allows the customisation of which games BOSS offers support for, trivialising support for multiple copies of a game and Total Conversions. The games listed here will be displayed in the main window's <q>Game</q> menu when BOSS is next run. The <q>Add Game</q>, <q>Edit Game</q> and <q>Remove Game</q> buttons are used to edit the list. Each game has several columns, which are explained below.
 <table>
@@ -370,7 +374,7 @@ To translate the BOSS application:
     <li>For testing and feedback prior to releases: The Beta Testing &amp; Analysis Guild at <a href="http://tesalliance.org/forums/">TES Alliance</a>, AndalayBay, dAb, dj2005, Dubiousness, hyno111, Invader, matter2003, NightStar, olminator, saebel, Telyn, wiz0floyd, wormheart, Zanderat and zone22.
     </ul>
 </ul>
-<p>BOSS is written in C++ and makes use of <a href="http://www.graphviz.org/">GraphVis</a> and the <a href="http://www.davekoelle.com/alphanum.html">Alphanum</a>, <a href="http://www.boost.org/">Boost</a>, <a href="http://github.com/WrinklyNinja/libespm">libespm</a>, <a href="http://github.com/libgit2/libgit2">libgit2</a>, <a href="http://github.com/WrinklyNinja/libloadorder">libloadorder</a>, <a href="http://code.google.com/p/pugixml/">PugiXML</a>, <a href="http://www.wxwidgets.org/">wxWidgets</a> and <a href="http://code.google.com/p/yaml-cpp/">yaml-cpp</a> libraries. BOSS's reports are written in XHTML/CSS/Javascript and make use of <a href="http://github.com/inexorabletash/polyfill">Polyfill.js</a> and <a href="https://code.google.com/p/svgweb/">svgweb</a> to provide Internet Explorer 8 compatibility. Copyright license information for all these may be found <a href="licenses/Licenses.txt">here</a>.
+<p>BOSS is written in C++ and makes use of the <a href="http://www.davekoelle.com/alphanum.html">Alphanum</a>, <a href="http://www.boost.org/">Boost</a>, <a href="http://github.com/WrinklyNinja/libespm">libespm</a>, <a href="http://github.com/libgit2/libgit2">libgit2</a>, <a href="http://github.com/WrinklyNinja/libloadorder">libloadorder</a>, <a href="http://code.google.com/p/pugixml/">PugiXML</a>, <a href="http://www.wxwidgets.org/">wxWidgets</a> and <a href="http://code.google.com/p/yaml-cpp/">yaml-cpp</a> libraries. BOSS's reports are written in XHTML/CSS/Javascript and make use of <a href="http://github.com/inexorabletash/polyfill">Polyfill.js</a> to provide Internet Explorer 8 compatibility. Copyright license information for all these may be found <a href="licenses/Licenses.txt">here</a>.
 
 
 <h2 id="project">Project Members</h2>
@@ -382,28 +386,18 @@ To translate the BOSS application:
         <tr><th>GitHub<th>Bethesda<th>Nexus<th>Oblivion<th>Skyrim<th>Fallout 3<th>Fallout: New Vegas
     <tbody class="teamTableBody">
         <tr><td>Aellis-BOSS<td colspan="2">Aellis<td>&#x2713;<td><td><td>&#x2713;<td><td>
+        <tr><td>egocarib<td>egocarib<td>-<td><td><td><td>&#x2713;<td><td>
         <tr><td colspan="3">Freso<td><td><td><td>&#x2713;<td><td>
         <tr><td colspan="2">ineedbettername<td>-<td><td><td><td>&#x2713;<td><td>
         <tr><td colspan="3">LotteryDiscountz<td><td><td><td>&#x2713;<td><td>
         <tr><td colspan="3">niveuseverto<td><td><td><td><td><td>&#x2713;
         <tr><td>noxwyll<td colspan="2">iyumichan<td>&#x2713;<td><td><td><td><td>&#x2713;
+        <tr><td colspan="3">PacificMorrowind<td>&#x2713;<td><td>&#x2713;<td><td><td>
         <tr><td colspan="3">Sharlikran<td><td><td><td>&#x2713;<td><td>
         <tr><td colspan="2">SilentSpike<td>SilentSpike69<td><td><td><td>&#x2713;<td><td>
         <tr><td>TokcDK<td colspan="2">Tokc.D.K.<td><td><td>&#x2713;<td>&#x2713;<td><td>
-        <tr><td colspan="3">William Imm<td><td><td>&#x2713;<td>&#x2713;<td><td>
+        <tr><td>William-Imm<td>William Imm<td>WilliamImm<td><td><td>&#x2713;<td>&#x2713;<td><td>
         <tr><td colspan="3">WrinklyNinja<td>&#x2713;<td>&#x2713;<td><td><td><td>
-</table>
-
-<p>The status of the following members is currently unknown:
-
-<table>
-    <thead>
-        <tr><th rowspan="2">Member<th rowspan="2">Admin<th rowspan="2">Code<th colspan="4">Contributes To Masterlist
-        <tr><th>Oblivion<th>Skyrim<th>Fallout 3<th>Fallout: New Vegas
-    <tbody class="teamTableBody">
-        <tr><td>PacificMorrowind<td>&#x2713;<td>&#x2713;<td>&#x2713;<td><td>&#x2713;<td>
-        <tr><td>Random007<td>&#x2713;<td>&#x2713;<td>&#x2713;<td><td><td>
-        <tr><td>scrapperrm<td><td><td><td>&#x2713;<td><td>
 </table>
 
 <p>Members who have since left the project are credited below:
@@ -424,8 +418,10 @@ To translate the BOSS application:
         <tr><td>Malonn<td><td><td><td><td><td>&#x2713;
         <tr><td>Peste<td><td><td><td>&#x2713;<td><td>
         <tr><td>Psymon<td><td><td>&#x2713;<td><td><td>
+        <tr class="inactive"><td>Random007<td>&#x2713;<td>&#x2713;<td>&#x2713;<td><td><td>
         <tr><td>Red Eye<td><td><td><td><td><td>&#x2713;
         <tr><td>RiddlingLynx<td><td><td>&#x2713;<td><td><td>
+        <tr><td>scrapperrm<td><td><td><td>&#x2713;<td><td>
         <tr><td>Skyline<td><td><td><td><td><td>&#x2713;
         <tr><td>Space Oden69<td><td><td><td><td>&#x2713;<td>
         <tr><td>Televator<td><td><td><td><td>&#x2713;<td>
@@ -520,7 +516,7 @@ There are three key pieces of information that are used to accurately describe a
         <tr><td>Masterlist structure &amp; syntax<td>Uses a custom file format.<td>Uses YAML 1.2, with custom condition string syntax modelled after Python's condition expressions.
         <tr><td>Userlist structure &amp; syntax<td>Uses a custom file format, different from the masterlist format.<td>Uses the same format and syntax as the masterlist.
         <tr><td>Morrowind support<td>Technically supports Morrowind, though its masterlist is near-empty.<td>Does not support Morrowind.
-        <tr><td>BOSS file locations<td>All BOSS's files are stored in the BOSS folder first installed.<td>BOSS stores any files it creates (reports, masterlists, userlists, settings, graphs) in the <code>%LOCALAPPDATA%\BOSS</code> folder.
+        <tr><td>BOSS file locations<td>All BOSS's files are stored in the BOSS folder first installed.<td>BOSS stores any files it creates (reports, masterlists, userlists, settings) in the <code>%LOCALAPPDATA%\BOSS</code> folder.
         <tr><td>Game selection on first run.<td>BOSS asks the user to select a game from a list.<td>BOSS selects the first game detected.
         <tr><td>File CRC calculation<td>File CRC calculation is optional.<td>File CRC calculation is always-on, as it no longer presents any significant additional performance impact.
         <tr><td>BOSS Log / Report format<td>The BOSS Log can either be generated as plain text or as HTML.<td>The BOSS Report can only be generated as HTML.

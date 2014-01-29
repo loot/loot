@@ -50,30 +50,6 @@ namespace boss {
         }
     };
 
-    inline void GetGraphWidthHeight(const boost::filesystem::path& filepath, std::string& width, std::string& height) {
-        BOOST_LOG_TRIVIAL(trace) << "Getting the dimensions of the plugin interactions graph image.";
-
-        boss::ifstream in(filepath);
-
-        std::string line;
-        while (std::getline(in, line)) {
-            if (boost::contains(line, "width=\"") && boost::contains(line, "length=\"")) {
-
-                size_t pos1, pos2;
-                pos1 = line.find("width=\"");
-                pos2 = line.find("\"", pos1 + 8);
-                width = line.substr(pos1 + 7, pos2-pos1-7);
-
-                pos1 = line.find("length=\"");
-                pos2 = line.find("\"", pos1 + 9);
-                height = line.substr(pos1 + 8, pos2-pos1-8);
-
-                break;
-            }
-        }
-
-    }
-
     inline void WriteMessage(pugi::xml_node& listItem, unsigned int type, std::string content) {
 
         if (type == g_message_say)
@@ -161,15 +137,9 @@ namespace boss {
         node.set_name("script");
         node.append_attribute("src").set_value(ToFileURL(g_path_polyfill).c_str());
         node.text().set(" ");
-
-        node = head.append_child();
-        node.set_name("script");
-        node.append_attribute("src").set_value(ToFileURL(g_path_svgweb).c_str());
-        node.append_attribute("data-path").set_value(ToFileURL(g_path_svgweb.parent_path()).c_str());
-        node.text().set(" ");
     }
 
-    inline void AppendNav(pugi::xml_node& body, bool createGraphTab) {
+    inline void AppendNav(pugi::xml_node& body) {
         BOOST_LOG_TRIVIAL(trace) << "Appending navigation bar to BOSS report.";
 
         pugi::xml_node nav, div;
@@ -189,14 +159,6 @@ namespace boss {
         div.append_attribute("class").set_value("button");
         div.append_attribute("data-section").set_value("plugins");
         div.text().set(boost::locale::translate("Details").str().c_str());
-
-        if (createGraphTab) {
-            div = nav.append_child();
-            div.set_name("div");
-            div.append_attribute("class").set_value("button");
-            div.append_attribute("data-section").set_value("graph");
-            div.text().set(boost::locale::translate("Graph").str().c_str());
-        }
 
         div = nav.append_child();
         div.set_name("div");
@@ -446,7 +408,6 @@ namespace boss {
     inline void AppendMain(pugi::xml_node& body,
                         const std::string& oldDetails,
                         const std::string& masterlistVersion,
-                        const std::string& graphPath,
                         bool masterlistUpdateEnabled,
                         const std::list<Message>& messages,
                         const std::list<Plugin>& plugins,
@@ -472,26 +433,6 @@ namespace boss {
         pluginMessageNo = messageNo;
 
         AppendSummary(main, hasChanged, masterlistVersion, masterlistUpdateEnabled, messageNo, warnNo, errorNo, messages);
-
-        if (boost::filesystem::exists(graphPath)) {
-            //Append graph tag.
-            pugi::xml_node graph = main.append_child();
-            graph.set_name("div");
-            graph.append_attribute("id").set_value("graph");
-            graph.append_attribute("class").set_value("hidden");
-
-            pugi::xml_node img = graph.append_child();
-            img.set_name("object");
-            img.append_attribute("data").set_value(ToFileURL(graphPath).c_str());
-            img.append_attribute("type").set_value("image/svg+xml");
-
-            //Also need to set image dimensions, get them from the graph file.
-            std::string width, height;
-            GetGraphWidthHeight(graphPath, width, height);
-
-            img.append_attribute("width").set_value(width.c_str());
-            img.append_attribute("height").set_value(height.c_str());
-        }
     }
 
     inline void AppendFilters(pugi::xml_node& body, int messageNo, int pluginNo) {
@@ -596,13 +537,12 @@ namespace boss {
 
     }
 
-    inline void GenerateReport(const std::string& file,
+    inline void GenerateReport(const boost::filesystem::path& file,
                         const std::list<Message>& messages,
                         const std::list<Plugin>& plugins,
                         const std::string& oldDetails,
                         const std::string& masterlistVersion,
-                        const bool masterlistUpdateEnabled,
-                        const std::string& graphPath) {
+                        const bool masterlistUpdateEnabled) {
 
         pugi::xml_document doc;
 
@@ -611,19 +551,25 @@ namespace boss {
         pugi::xml_node body = doc.append_child();
         body.set_name("body");
 
-        AppendNav(body, boost::filesystem::exists(graphPath));
+        AppendNav(body);
 
         int messageNo=0;
-        AppendMain(body, oldDetails, masterlistVersion, graphPath, masterlistUpdateEnabled, messages, plugins, messageNo);
+        AppendMain(body, oldDetails, masterlistVersion, masterlistUpdateEnabled, messages, plugins, messageNo);
 
         AppendFilters(body, messageNo, plugins.size());
 
         AppendScripts(body);
-
+        //PugiXML's save_file doesn't handle Unicode paths right (it can't open them right), so use a stream instead.
+        /*
         if (!doc.save_file(file.c_str(), "\t", pugi::format_default | pugi::format_no_declaration | pugi::format_raw)) {
-            BOOST_LOG_TRIVIAL(error) << "Could not write BOSS report.";
+            BOOST_LOG_TRIVIAL(error) << "Could not write BOSS report to: " << file;
             throw boss::error(boss::error::path_write_fail, boost::locale::translate("Could not write BOSS report.").str());
         }
+        */
+        boost::filesystem::path outpath(file);
+        boss::ofstream out(outpath);
+        doc.save(out, "\t", pugi::format_default | pugi::format_no_declaration | pugi::format_raw);
+        out.close();
 
     }
 
@@ -642,7 +588,6 @@ namespace boss {
         root["Debug Verbosity"] = 0;
         root["Update Masterlist"] = true;
         root["View Report Externally"] = false;
-        root["Generate Graph Image"] = false;
 
         games.push_back(Game(g_game_tes4));
         games.push_back(Game(g_game_tes5));
@@ -761,7 +706,7 @@ namespace YAML {
             if (rhs.IsConditional())
                 out << Key << "condition" << Value << rhs.Condition();
 
-            if (!rhs.DisplayName().empty())
+            if (rhs.DisplayName() != rhs.Name())
                 out << Key << "display" << Value << rhs.DisplayName();
 
             out << EndMap;

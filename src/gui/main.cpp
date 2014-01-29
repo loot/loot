@@ -123,7 +123,9 @@ struct masterlist_updater_parser {
 
             BOOST_LOG_TRIVIAL(debug) << "Parsing masterlist...";
             try {
-                YAML::Node mlist = YAML::LoadFile(_game.MasterlistPath().string());
+                boss::ifstream in(_game.MasterlistPath());
+                YAML::Node mlist = YAML::Load(in);
+                in.close();
 
                 if (mlist["globals"])
                     _messages = mlist["globals"].as< list<boss::Message> >();
@@ -187,7 +189,9 @@ bool BossGUI::OnInit() {
     }
     if (fs::exists(g_path_settings)) {
         try {
-            _settings = YAML::LoadFile(g_path_settings.string());
+            boss::ifstream in(g_path_settings);
+            _settings = YAML::Load(in);
+            in.close();
         } catch (YAML::ParserException& e) {
             wxMessageBox(
 				FromUTF8(format(loc::translate("Error: Settings parsing failed. %1%")) % e.what()),
@@ -535,10 +539,12 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     //Now load userlist.
     if (fs::exists(_game.UserlistPath())) {
-        BOOST_LOG_TRIVIAL(debug) << "Parsing userlist...";
+        BOOST_LOG_TRIVIAL(debug) << "Parsing userlist at: " << _game.UserlistPath();
 
         try {
-            YAML::Node ulist = YAML::LoadFile(_game.UserlistPath().string());
+            boss::ifstream in(_game.UserlistPath());
+            YAML::Node ulist = YAML::Load(in);
+            in.close();
 
             if (ulist["plugins"])
                 ulist_plugins = ulist["plugins"].as< list<boss::Plugin> >();
@@ -653,26 +659,6 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     BOOST_LOG_TRIVIAL(trace) << "Adding overlap edges.";
     AddOverlapEdges(graph);
 
-    //First delete any existing graph file.
-    fs::remove(_game.GraphPath());
-    if (_settings["Generate Graph Image"] && _settings["Generate Graph Image"].as<bool>() && fs::exists(g_path_graphvis)) {
-        BOOST_LOG_TRIVIAL(debug) << "Generating the graph image.";
-        fs::path temp = fs::path(_game.GraphPath().string() + ".temp");
-        boss::SaveGraph(graph, temp);
-
-        string command = g_path_graphvis.string() + " -Tsvg \"" + temp.string() + "\" -o \"" + _game.GraphPath().string() + "\"";
-        string output;
-
-        try {
-            system(command.c_str());
-
-    //        if (RunCommand(command, output))  //This hangs for graphvis, for some reason.
-            fs::remove(temp);
-        } catch(boss::error& e) {
-            messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("Failed to generate graph image. Details: %1%")) % e.what()).str()));
-        }
-    }
-
     //Check for back-edges, then perform a topological sort.
     try {
         BOOST_LOG_TRIVIAL(debug) << "Checking to see if the graph is cyclic.";
@@ -778,7 +764,10 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         }
     } catch (std::exception& e) {
         BOOST_LOG_TRIVIAL(error) << "Failed to calculate the load order. Details: " << e.what();
-         messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("Failed to calculate the load order. Details: %1%")) % e.what()).str()));
+        messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("Failed to calculate the load order. Details: %1%")) % e.what()).str()));
+
+        progDia->Destroy();
+        progDia = NULL;
     }
 
     //Read the details section of the previous report, if it exists.
@@ -810,13 +799,12 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     BOOST_LOG_TRIVIAL(debug) << "Generating report...";
     try {
-        GenerateReport(_game.ReportPath().string(),
+        GenerateReport(_game.ReportPath(),
                         messages,
                         plugins,
                         oldDetails,
                         revision,
-                        doUpdate,
-                        _game.GraphPath().string());
+                        doUpdate);
     } catch (boss::error& e) {
         wxMessageBox(
             FromUTF8(format(loc::translate("Error: %1%")) % e.what()),
@@ -833,10 +821,10 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     BOOST_LOG_TRIVIAL(debug) << "Displaying report...";
     if (_settings["View Report Externally"] && _settings["View Report Externally"].as<bool>()) {
-        wxLaunchDefaultBrowser(_game.ReportPath().string());
+        wxLaunchDefaultBrowser(FromUTF8(ToFileURL(_game.ReportPath().string())));
     } else {
         //Create viewer window.
-        Viewer *viewer = new Viewer(this, translate("BOSS: Report Viewer"), _game.ReportPath().string());
+        Viewer *viewer = new Viewer(this, translate("BOSS: Report Viewer"), FromUTF8(ToFileURL(_game.ReportPath().string())));
         viewer->Show();
     }
 
@@ -865,7 +853,9 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
         BOOST_LOG_TRIVIAL(debug) << "Parsing masterlist.";
         YAML::Node mlist;
         try {
-            mlist = YAML::LoadFile(_game.MasterlistPath().string());
+            boss::ifstream in(_game.MasterlistPath());
+            mlist = YAML::Load(in);
+            in.close();
         } catch (YAML::ParserException& e) {
             BOOST_LOG_TRIVIAL(error) << "Masterlist parsing failed. " << e.what();
             wxMessageBox(
@@ -885,7 +875,9 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
         BOOST_LOG_TRIVIAL(debug) << "Parsing userlist.";
         YAML::Node ulist;
         try {
-            ulist = YAML::LoadFile(_game.UserlistPath().string());
+            boss::ifstream in(_game.UserlistPath());
+            ulist = YAML::Load(in);
+            in.close();
         } catch (YAML::ParserException& e) {
             BOOST_LOG_TRIVIAL(error) << "Userlist parsing failed. " << e.what();
             wxMessageBox(
@@ -947,11 +939,11 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
 void Launcher::OnViewLastReport(wxCommandEvent& event) {
     if (_settings["View Report Externally"] && _settings["View Report Externally"].as<bool>()) {
         BOOST_LOG_TRIVIAL(debug) << "Opening report in external application...";
-        wxLaunchDefaultBrowser(_game.ReportPath().string());
+        wxLaunchDefaultBrowser(FromUTF8(ToFileURL(_game.ReportPath().string())));
     } else {
         //Create viewer window.
         BOOST_LOG_TRIVIAL(debug) << "Opening viewer window...";
-        Viewer *viewer = new Viewer(this, translate("BOSS: Report Viewer"), _game.ReportPath().string());
+        Viewer *viewer = new Viewer(this, translate("BOSS: Report Viewer"), FromUTF8(ToFileURL(_game.ReportPath().string())));
         viewer->Show();
     }
     BOOST_LOG_TRIVIAL(debug) << "Report displayed.";
@@ -1050,9 +1042,9 @@ void Launcher::OnGameChange(wxCommandEvent& event) {
 
 void Launcher::OnHelp(wxCommandEvent& event) {
     //Look for file.
-    BOOST_LOG_TRIVIAL(debug) << "Opening readme.";
+    BOOST_LOG_TRIVIAL(debug) << "Opening readme at: " << g_path_readme;
     if (fs::exists(g_path_readme)) {
-        wxLaunchDefaultBrowser(g_path_readme.string());
+        wxLaunchDefaultBrowser(FromUTF8(ToFileURL(g_path_readme.string())));
     } else {  //No readme exists, show a pop-up message saying so.
         BOOST_LOG_TRIVIAL(error) << "File \"" << g_path_readme.string() << "\" could not be found.";
         wxMessageBox(
@@ -1065,9 +1057,9 @@ void Launcher::OnHelp(wxCommandEvent& event) {
 
 void Launcher::OnOpenDebugLog(wxCommandEvent& event) {
     //Look for file.
-    BOOST_LOG_TRIVIAL(debug) << "Opening readme.";
+    BOOST_LOG_TRIVIAL(debug) << "Opening debug log at: " << g_path_log;
     if (fs::exists(g_path_log)) {
-        wxLaunchDefaultBrowser(g_path_log.string());
+        wxLaunchDefaultApplication(FromUTF8(g_path_log.string()));
     } else {  //No log exists, show a pop-up message saying so.
         BOOST_LOG_TRIVIAL(error) << "File \"" << g_path_log.string() << "\" could not be found.";
         wxMessageBox(

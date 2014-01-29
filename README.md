@@ -40,40 +40,6 @@ BOSS requires the following libraries (version numbers used in latest developmen
 
 BOSS expects all libraries' folders to be present alongside the BOSS repository folder that contains this readme, or otherwise installed such that the compiler and linker used can find them without suppling additional paths. All paths below are relative to the folder(s) containing the libraries and BOSS.
 
-BOSS can also make use of [GraphVis](http://www.graphviz.org/Download_windows.php) binaries. If provided, the following binaries should be placed into `resources/graphvis/` in the BOSS repository root:
-
-* cdt.dll
-* cgraph.dll
-* dot.exe
-* freetype6.dll
-* gvc.dll
-* gvplugin_core.dll
-* gvplugin_dot_layout.dll
-* gvplugin_gd.dll
-* gvplugin_pango.dll
-* iconv.dll
-* jpeg62.dll
-* libcairo-2.dll
-* libexpat.dll
-* libfontconfig-1.dll
-* libfreetype-6.dll
-* libglib-2.0-0.dll
-* libgmodule-2.0-0.dll
-* libgobject-2.0-0.dll
-* libgthread-2.0-0.dll
-* libpango-1.0-0.dll
-* libpangocairo-1.0-0.dll
-* libpangoft2-1.0-0.dll
-* libpangowin32-1.0-0.dll
-* libpng12.dll
-* libpng14-14.dll
-* libxml2.dll
-* ltdl.dll
-* Pathplan.dll
-* zlib1.dll
-
-Once the binaries have been placed there, run `dot.exe -c`.
-
 Alphanum, Libespm and PugiXML do not require any additional setup. The rest of the libraries must be built separately. Instructions for building them and BOSS itself on Windows and Linux are given below. They assume that Visual C++ 2013 is being used on Windows, and mingw-w64 is being used on Linux, though they should be similar for other compilers.
 
 ### Windows

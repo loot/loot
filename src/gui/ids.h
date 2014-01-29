@@ -63,8 +63,10 @@ enum {
     BUTTON_RemoveContent,
     BUTTON_Apply,
     BUTTON_Cancel,
-    BUTTON_Export,
     BOOK_Lists,
+    MENU_CopyName,
+    MENU_CopyMetadata,
+    MENU_ClearMetadata,
     //Main window - dynamically created IDs.
     MENU_LowestDynamicGameID,
     LIST_LoadOrder,

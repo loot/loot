@@ -57,24 +57,27 @@ public:
     Editor(wxWindow *parent, const wxString& title, const std::string userlistPath, const std::vector<boss::Plugin>& basePlugins, std::vector<boss::Plugin>& editedPlugins, const unsigned int language, const boss::Game& game);
 
     void OnPluginSelect(wxListEvent& event);
+    void OnPluginListRightClick(wxListEvent& event);
+    void OnPluginCopyName(wxCommandEvent& event);
+    void OnPluginCopyMetadata(wxCommandEvent& event);
+    void OnPluginClearMetadata(wxCommandEvent& event);
     void OnEnabledToggle(wxCommandEvent& event);
     void OnPriorityChange(wxSpinEvent& event);
     void OnListBookChange(wxBookCtrlEvent& event);
     void OnAddRow(wxCommandEvent& event);
     void OnEditRow(wxCommandEvent& event);
     void OnRemoveRow(wxCommandEvent& event);
-    void OnExport(wxCommandEvent& event);
     void OnRecalc(wxCommandEvent& event);
     void OnRowSelect(wxListEvent& event);
     void OnQuit(wxCommandEvent& event);
 private:
 
+    wxMenu * pluginMenu;
     wxButton * addBtn;
     wxButton * editBtn;
     wxButton * removeBtn;
     wxButton * applyBtn;
     wxButton * cancelBtn;
-    wxButton * exportBtn;
     wxListView * pluginList;
     wxListView * reqsList;
     wxListView * incsList;

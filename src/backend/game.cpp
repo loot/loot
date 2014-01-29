@@ -225,10 +225,6 @@ namespace boss {
         return g_path_local / bossFolderName / "report.html";
     }
 
-    fs::path Game::GraphPath() const {
-        return g_path_local / bossFolderName / "graph.svg";
-    }
-
     void Game::RefreshActivePluginsList() {
         BOOST_LOG_TRIVIAL(trace) << "Refreshing active plugins list for game: " << _name;
 

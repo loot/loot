@@ -249,14 +249,6 @@ FunctionEnd
 		;File "..\build\libboss32.dll"
 		;File "..\build\libboss64.dll"
 
-        ;Install graphvis files.
-        SetOutPath "$INSTDIR\resources\graphvis"
-        File "..\resources\graphvis\*"
-
-        ;Install svgweb files.
-        SetOutPath "$INSTDIR\resources\svgweb"
-        File "..\resources\svgweb\*"
-
         ;Install resource files.
         SetOutPath "$INSTDIR\resources"
         File "..\resources\polyfill.js"
@@ -373,12 +365,6 @@ FunctionEnd
         Delete "$INSTDIR\resources\polyfill.js"
         Delete "$INSTDIR\resources\script.js"
         Delete "$INSTDIR\resources\style.css"
-
-        ;Remove graphvis files.
-        RMDir /r "$INSTDIR\resources\graphvis"
-
-        ;Remove svgweb files.
-        RMDir /r "$INSTDIR\resources\svgweb"
 
 		;Remove language files.
 		Delete "$INSTDIR\resources\l10n\ru\LC_MESSAGES\boss.mo"
