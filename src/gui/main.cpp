@@ -653,26 +653,6 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     BOOST_LOG_TRIVIAL(trace) << "Adding overlap edges.";
     AddOverlapEdges(graph);
 
-    //First delete any existing graph file.
-    fs::remove(_game.GraphPath());
-    if (_settings["Generate Graph Image"] && _settings["Generate Graph Image"].as<bool>() && fs::exists(g_path_graphvis)) {
-        BOOST_LOG_TRIVIAL(debug) << "Generating the graph image.";
-        fs::path temp = fs::path(_game.GraphPath().string() + ".temp");
-        boss::SaveGraph(graph, temp);
-
-        string command = g_path_graphvis.string() + " -Tsvg \"" + temp.string() + "\" -o \"" + _game.GraphPath().string() + "\"";
-        string output;
-
-        try {
-            system(command.c_str());
-
-    //        if (RunCommand(command, output))  //This hangs for graphvis, for some reason.
-            fs::remove(temp);
-        } catch(boss::error& e) {
-            messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("Failed to generate graph image. Details: %1%")) % e.what()).str()));
-        }
-    }
-
     //Check for back-edges, then perform a topological sort.
     try {
         BOOST_LOG_TRIVIAL(debug) << "Checking to see if the graph is cyclic.";
@@ -815,8 +795,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                         plugins,
                         oldDetails,
                         revision,
-                        doUpdate,
-                        _game.GraphPath().string());
+                        doUpdate);
     } catch (boss::error& e) {
         wxMessageBox(
             FromUTF8(format(loc::translate("Error: %1%")) % e.what()),
