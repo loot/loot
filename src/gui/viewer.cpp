@@ -29,6 +29,8 @@
 Viewer::Viewer(wxWindow *parent, const wxString& title, const std::string& path) : wxFrame(parent, wxID_ANY, title) {
     wxWebView * web = wxWebView::New(this, wxID_ANY, boss::ToFileURL(path));
 
+    web->Bind(wxEVT_WEBVIEW_NAVIGATING, &Viewer::OnNavigationStart, this);
+
     wxBoxSizer* topsizer = new wxBoxSizer(wxVERTICAL);
 
     topsizer->Add(web, 1, wxEXPAND);
@@ -36,4 +38,9 @@ Viewer::Viewer(wxWindow *parent, const wxString& title, const std::string& path)
     SetSizer(topsizer);
     SetSize(800,600);
     SetIcon(wxIconLocation("BOSS.exe"));
+}
+
+void Viewer::OnNavigationStart(wxWebViewEvent& event) {
+    wxLaunchDefaultBrowser(event.GetURL());
+    event.Veto();
 }
