@@ -537,7 +537,7 @@ namespace boss {
 
     }
 
-    inline void GenerateReport(const std::string& file,
+    inline void GenerateReport(const boost::filesystem::path& file,
                         const std::list<Message>& messages,
                         const std::list<Plugin>& plugins,
                         const std::string& oldDetails,
@@ -559,11 +559,17 @@ namespace boss {
         AppendFilters(body, messageNo, plugins.size());
 
         AppendScripts(body);
-
+        //PugiXML's save_file doesn't handle Unicode paths right (it can't open them right), so use a stream instead.
+        /*
         if (!doc.save_file(file.c_str(), "\t", pugi::format_default | pugi::format_no_declaration | pugi::format_raw)) {
-            BOOST_LOG_TRIVIAL(error) << "Could not write BOSS report.";
+            BOOST_LOG_TRIVIAL(error) << "Could not write BOSS report to: " << file;
             throw boss::error(boss::error::path_write_fail, boost::locale::translate("Could not write BOSS report.").str());
         }
+        */
+        boost::filesystem::path outpath(file);
+        boss::ofstream out(outpath);
+        doc.save(out, "\t", pugi::format_default | pugi::format_no_declaration | pugi::format_raw);
+        out.close();
 
     }
 
