@@ -535,7 +535,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     //Now load userlist.
     if (fs::exists(_game.UserlistPath())) {
-        BOOST_LOG_TRIVIAL(debug) << "Parsing userlist...";
+        BOOST_LOG_TRIVIAL(debug) << "Parsing userlist at: " << _game.UserlistPath();
 
         try {
             YAML::Node ulist = YAML::LoadFile(_game.UserlistPath().string());
@@ -1046,7 +1046,7 @@ void Launcher::OnOpenDebugLog(wxCommandEvent& event) {
     //Look for file.
     BOOST_LOG_TRIVIAL(debug) << "Opening readme.";
     if (fs::exists(g_path_log)) {
-        wxLaunchDefaultBrowser(g_path_log.string());
+        wxLaunchDefaultApplication(g_path_log.string());
     } else {  //No log exists, show a pop-up message saying so.
         BOOST_LOG_TRIVIAL(error) << "File \"" << g_path_log.string() << "\" could not be found.";
         wxMessageBox(
