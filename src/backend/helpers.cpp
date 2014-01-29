@@ -229,27 +229,7 @@ namespace boss {
     //Turns an absolute filesystem path into a valid file:// URL.
     std::string ToFileURL(const fs::path& file) {
         BOOST_LOG_TRIVIAL(trace) << "Converting file path " << file << " to a URL.";
-        //URLs are UTF-8 encoded then any characters (equiv. their corresponding bytes) not in the unreserved set (equiv. their corresponding bytes) are replaced by a percentage sign followed by the hex representation of their binary value.
-        string unreserved = "-.0123456789:ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~";  //Unreserved in byte value order, plus the colon character since that's allowed for drive paths.
-
-        string url = "file:///";
-        for (boost::filesystem::path::const_iterator it=file.begin(), endit=file.end(); it != endit; ++it) {
-            string part = it->string();
-            if (part == "/") //Skip exta backslash after drive path.
-                continue;
-            //String iterator is byte-by-byte, not character-by-character, which is good.
-            for (string::const_iterator jt=part.begin(), endjt=part.end(); jt != endjt; ++jt) {
-                if (!binary_search(unreserved.begin(), unreserved.end(), *jt))
-                    //Replace with percentage-hex value.
-                    url += '%' + IntToHexString(*jt);
-                else
-                    url += *jt;
-            }
-            url += '/';
-        }
-        url.resize(url.length()-1);  //Get rid of trailing forward slash.
-
-        return url;
+        return "file:///" + file.string();  //Seems that we don't need to worry about encoding, tested with Unicode paths.
     }
 
     std::string GetLangString(const unsigned int num) {
