@@ -49,8 +49,6 @@ namespace boss {
 
     bool GetVertexByName(const PluginGraph& graph, const std::string& name, vertex_t& vertex);
 
-    void SaveGraph(const PluginGraph& graph, const boost::filesystem::path outpath);
-
     void Sort(const PluginGraph& graph, std::list<Plugin>& plugins);
 
     void CheckForCycles(const PluginGraph& graph);
