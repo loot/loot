@@ -123,7 +123,9 @@ struct masterlist_updater_parser {
 
             BOOST_LOG_TRIVIAL(debug) << "Parsing masterlist...";
             try {
-                YAML::Node mlist = YAML::LoadFile(_game.MasterlistPath().string());
+                boss::ifstream in(_game.MasterlistPath());
+                YAML::Node mlist = YAML::Load(in);
+                in.close();
 
                 if (mlist["globals"])
                     _messages = mlist["globals"].as< list<boss::Message> >();
@@ -187,7 +189,9 @@ bool BossGUI::OnInit() {
     }
     if (fs::exists(g_path_settings)) {
         try {
-            _settings = YAML::LoadFile(g_path_settings.string());
+            boss::ifstream in(g_path_settings);
+            _settings = YAML::Load(in);
+            in.close();
         } catch (YAML::ParserException& e) {
             wxMessageBox(
 				FromUTF8(format(loc::translate("Error: Settings parsing failed. %1%")) % e.what()),
@@ -538,7 +542,9 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         BOOST_LOG_TRIVIAL(debug) << "Parsing userlist at: " << _game.UserlistPath();
 
         try {
-            YAML::Node ulist = YAML::LoadFile(_game.UserlistPath().string());
+            boss::ifstream in(_game.UserlistPath());
+            YAML::Node ulist = YAML::Load(in);
+            in.close();
 
             if (ulist["plugins"])
                 ulist_plugins = ulist["plugins"].as< list<boss::Plugin> >();
@@ -844,7 +850,9 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
         BOOST_LOG_TRIVIAL(debug) << "Parsing masterlist.";
         YAML::Node mlist;
         try {
-            mlist = YAML::LoadFile(_game.MasterlistPath().string());
+            boss::ifstream in(_game.MasterlistPath());
+            mlist = YAML::Load(in);
+            in.close();
         } catch (YAML::ParserException& e) {
             BOOST_LOG_TRIVIAL(error) << "Masterlist parsing failed. " << e.what();
             wxMessageBox(
@@ -864,7 +872,9 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
         BOOST_LOG_TRIVIAL(debug) << "Parsing userlist.";
         YAML::Node ulist;
         try {
-            ulist = YAML::LoadFile(_game.UserlistPath().string());
+            boss::ifstream in(_game.UserlistPath());
+            ulist = YAML::Load(in);
+            in.close();
         } catch (YAML::ParserException& e) {
             BOOST_LOG_TRIVIAL(error) << "Userlist parsing failed. " << e.what();
             wxMessageBox(

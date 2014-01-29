@@ -284,7 +284,9 @@ namespace boss {
             list<boss::Message> messages;
             list<boss::Plugin> plugins;
             try {
-                YAML::Node mlist = YAML::LoadFile(game.MasterlistPath().string());
+                boss::ifstream in(game.MasterlistPath());
+                YAML::Node mlist = YAML::Load(in);
+                in.close();
 
                 if (mlist["globals"])
                     messages = mlist["globals"].as< list<boss::Message> >();
