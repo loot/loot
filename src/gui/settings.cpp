@@ -62,7 +62,6 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
 
     UpdateMasterlistBox = new wxCheckBox(this, wxID_ANY, translate("Update masterlist before sorting."));
     reportViewBox = new wxCheckBox(this, wxID_ANY, translate("View reports externally in default browser."));
-    displayGraphImageBox = new wxCheckBox(this, wxID_ANY, translate("Generate and display plugin graph images."));
 
     //Set up list columns.
     gamesList->AppendColumn(translate("Name"));
@@ -117,8 +116,6 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
     bigBox->Add(UpdateMasterlistBox, wholeItem);
 
     bigBox->Add(reportViewBox, wholeItem);
-
-    bigBox->Add(displayGraphImageBox, wholeItem);
 
     bigBox->AddSpacer(10);
 
@@ -178,11 +175,6 @@ void SettingsFrame::SetDefaultValues() {
         reportViewBox->SetValue(view);
     }
 
-    if (_settings["Generate Graph Image"]) {
-        bool graph = _settings["Generate Graph Image"].as<bool>();
-        displayGraphImageBox->SetValue(graph);
-    }
-
     for (size_t i=0, max=_games.size(); i < max; ++i) {
         gamesList->InsertItem(i, FromUTF8(_games[i].Name()));
         gamesList->SetItem(i, 1, FromUTF8(boss::Game(_games[i].Id()).FolderName()));
@@ -229,8 +221,6 @@ void SettingsFrame::OnQuit(wxCommandEvent& event) {
         _settings["Update Masterlist"] = UpdateMasterlistBox->IsChecked();
 
         _settings["View Report Externally"] = reportViewBox->IsChecked();
-
-        _settings["Generate Graph Image"] = displayGraphImageBox->IsChecked();
 
         for (size_t i=0,max=gamesList->GetItemCount(); i < max; ++i) {
             string name, folder, master, url, path, registry;
