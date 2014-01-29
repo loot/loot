@@ -764,7 +764,10 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         }
     } catch (std::exception& e) {
         BOOST_LOG_TRIVIAL(error) << "Failed to calculate the load order. Details: " << e.what();
-         messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("Failed to calculate the load order. Details: %1%")) % e.what()).str()));
+        messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("Failed to calculate the load order. Details: %1%")) % e.what()).str()));
+
+        progDia->Destroy();
+        progDia = NULL;
     }
 
     //Read the details section of the previous report, if it exists.
