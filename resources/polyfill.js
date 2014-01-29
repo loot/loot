@@ -18,7 +18,7 @@
 // since the constructor property is destroyed.
 if (!Object.getPrototypeOf) {
   Object.getPrototypeOf = function (o) {
-    if (o !== Object(o)) { throw new TypeError("Object.getPrototypeOf called on non-object"); }
+    if (o !== Object(o)) { throw TypeError("Object.getPrototypeOf called on non-object"); }
     return o.__proto__ || o.constructor.prototype || Object.prototype;
   };
 }
@@ -26,7 +26,7 @@ if (!Object.getPrototypeOf) {
 //    // ES5 15.2.3.3 Object.getOwnPropertyDescriptor ( O, P )
 //    if (typeof Object.getOwnPropertyDescriptor !== "function") {
 //        Object.getOwnPropertyDescriptor = function (o, name) {
-//            if (o !== Object(o)) { throw new TypeError(); }
+//            if (o !== Object(o)) { throw TypeError(); }
 //            if (o.hasOwnProperty(name)) {
 //                return {
 //                    value: o[name],
@@ -41,7 +41,7 @@ if (!Object.getPrototypeOf) {
 // ES5 15.2.3.4 Object.getOwnPropertyNames ( O )
 if (typeof Object.getOwnPropertyNames !== "function") {
   Object.getOwnPropertyNames = function (o) {
-    if (o !== Object(o)) { throw new TypeError("Object.getOwnPropertyNames called on non-object"); }
+    if (o !== Object(o)) { throw TypeError("Object.getOwnPropertyNames called on non-object"); }
     var props = [], p;
     for (p in o) {
       if (Object.prototype.hasOwnProperty.call(o, p)) {
@@ -55,15 +55,14 @@ if (typeof Object.getOwnPropertyNames !== "function") {
 // ES5 15.2.3.5 Object.create ( O [, Properties] )
 if (typeof Object.create !== "function") {
   Object.create = function (prototype, properties) {
-    "use strict";
-    if (typeof prototype !== "object") { throw new TypeError(); }
+    if (typeof prototype !== "object") { throw TypeError(); }
     /** @constructor */
     function Ctor() {}
     Ctor.prototype = prototype;
     var o = new Ctor();
     if (prototype) { o.constructor = Ctor; }
-    if (arguments.length > 1) {
-      if (properties !== Object(properties)) { throw new TypeError(); }
+    if (properties !== undefined) {
+      if (properties !== Object(properties)) { throw TypeError(); }
       Object.defineProperties(o, properties);
     }
     return o;
@@ -77,12 +76,10 @@ if (typeof Object.create !== "function") {
       !(function () { try { Object.defineProperty({}, 'x', {}); return true; } catch (e) { return false; } } ())) {
     var orig = Object.defineProperty;
     Object.defineProperty = function (o, prop, desc) {
-      "use strict";
-
       // In IE8 try built-in implementation for defining properties on DOM prototypes.
       if (orig) { try { return orig(o, prop, desc); } catch (e) {} }
 
-      if (o !== Object(o)) { throw new TypeError("Object.defineProperty called on non-object"); }
+      if (o !== Object(o)) { throw TypeError("Object.defineProperty called on non-object"); }
       if (Object.prototype.__defineGetter__ && ('get' in desc)) {
         Object.prototype.__defineGetter__.call(o, prop, desc.get);
       }
@@ -100,8 +97,7 @@ if (typeof Object.create !== "function") {
 // ES 15.2.3.7 Object.defineProperties ( O, Properties )
 if (typeof Object.defineProperties !== "function") {
   Object.defineProperties = function (o, properties) {
-    "use strict";
-    if (o !== Object(o)) { throw new TypeError("Object.defineProperties called on non-object"); }
+    if (o !== Object(o)) { throw TypeError("Object.defineProperties called on non-object"); }
     var name;
     for (name in properties) {
       if (Object.prototype.hasOwnProperty.call(properties, name)) {
@@ -117,7 +113,7 @@ if (typeof Object.defineProperties !== "function") {
 // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object/keys
 if (!Object.keys) {
   Object.keys = function (o) {
-    if (o !== Object(o)) { throw new TypeError('Object.keys called on non-object'); }
+    if (o !== Object(o)) { throw TypeError('Object.keys called on non-object'); }
     var ret = [], p;
     for (p in o) {
       if (Object.prototype.hasOwnProperty.call(o, p)) {
@@ -140,7 +136,7 @@ if (!Object.keys) {
 // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/bind
 if (!Function.prototype.bind) {
   Function.prototype.bind = function (o) {
-    if (typeof this !== 'function') { throw new TypeError("Bind must be called on a function"); }
+    if (typeof this !== 'function') { throw TypeError("Bind must be called on a function"); }
     var slice = [].slice,
         args = slice.call(arguments, 1),
         self = this,
@@ -182,9 +178,7 @@ Array.isArray = Array.isArray || function (o) { return Boolean(o && Object.proto
 // From https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/indexOf
 if (!Array.prototype.indexOf) {
   Array.prototype.indexOf = function (searchElement /*, fromIndex */) {
-    "use strict";
-
-    if (this === void 0 || this === null) { throw new TypeError(); }
+    if (this === void 0 || this === null) { throw TypeError(); }
 
     var t = Object(this);
     var len = t.length >>> 0;
@@ -217,9 +211,7 @@ if (!Array.prototype.indexOf) {
 // From https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/lastIndexOf
 if (!Array.prototype.lastIndexOf) {
   Array.prototype.lastIndexOf = function (searchElement /*, fromIndex*/) {
-    "use strict";
-
-    if (this === void 0 || this === null) { throw new TypeError(); }
+    if (this === void 0 || this === null) { throw TypeError(); }
 
     var t = Object(this);
     var len = t.length >>> 0;
@@ -250,13 +242,11 @@ if (!Array.prototype.lastIndexOf) {
 // From https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/every
 if (!Array.prototype.every) {
   Array.prototype.every = function (fun /*, thisp */) {
-    "use strict";
-
-    if (this === void 0 || this === null) { throw new TypeError(); }
+    if (this === void 0 || this === null) { throw TypeError(); }
 
     var t = Object(this);
     var len = t.length >>> 0;
-    if (typeof fun !== "function") { throw new TypeError(); }
+    if (typeof fun !== "function") { throw TypeError(); }
 
     var thisp = arguments[1], i;
     for (i = 0; i < len; i++) {
@@ -273,13 +263,11 @@ if (!Array.prototype.every) {
 // From https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/some
 if (!Array.prototype.some) {
   Array.prototype.some = function (fun /*, thisp */) {
-    "use strict";
-
-    if (this === void 0 || this === null) { throw new TypeError(); }
+    if (this === void 0 || this === null) { throw TypeError(); }
 
     var t = Object(this);
     var len = t.length >>> 0;
-    if (typeof fun !== "function") { throw new TypeError(); }
+    if (typeof fun !== "function") { throw TypeError(); }
 
     var thisp = arguments[1], i;
     for (i = 0; i < len; i++) {
@@ -296,13 +284,11 @@ if (!Array.prototype.some) {
 // From https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/forEach
 if (!Array.prototype.forEach) {
   Array.prototype.forEach = function (fun /*, thisp */) {
-    "use strict";
-
-    if (this === void 0 || this === null) { throw new TypeError(); }
+    if (this === void 0 || this === null) { throw TypeError(); }
 
     var t = Object(this);
     var len = t.length >>> 0;
-    if (typeof fun !== "function") { throw new TypeError(); }
+    if (typeof fun !== "function") { throw TypeError(); }
 
     var thisp = arguments[1], i;
     for (i = 0; i < len; i++) {
@@ -318,13 +304,11 @@ if (!Array.prototype.forEach) {
 // From https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/Map
 if (!Array.prototype.map) {
   Array.prototype.map = function (fun /*, thisp */) {
-    "use strict";
-
-    if (this === void 0 || this === null) { throw new TypeError(); }
+    if (this === void 0 || this === null) { throw TypeError(); }
 
     var t = Object(this);
     var len = t.length >>> 0;
-    if (typeof fun !== "function") { throw new TypeError(); }
+    if (typeof fun !== "function") { throw TypeError(); }
 
     var res = []; res.length = len;
     var thisp = arguments[1], i;
@@ -342,13 +326,11 @@ if (!Array.prototype.map) {
 // From https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/Filter
 if (!Array.prototype.filter) {
   Array.prototype.filter = function (fun /*, thisp */) {
-    "use strict";
-
-    if (this === void 0 || this === null) { throw new TypeError(); }
+    if (this === void 0 || this === null) { throw TypeError(); }
 
     var t = Object(this);
     var len = t.length >>> 0;
-    if (typeof fun !== "function") { throw new TypeError(); }
+    if (typeof fun !== "function") { throw TypeError(); }
 
     var res = [];
     var thisp = arguments[1], i;
@@ -370,16 +352,14 @@ if (!Array.prototype.filter) {
 // From https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/Reduce
 if (!Array.prototype.reduce) {
   Array.prototype.reduce = function (fun /*, initialValue */) {
-    "use strict";
-
-    if (this === void 0 || this === null) { throw new TypeError(); }
+    if (this === void 0 || this === null) { throw TypeError(); }
 
     var t = Object(this);
     var len = t.length >>> 0;
-    if (typeof fun !== "function") { throw new TypeError(); }
+    if (typeof fun !== "function") { throw TypeError(); }
 
     // no value to return if no initial value and an empty array
-    if (len === 0 && arguments.length === 1) { throw new TypeError(); }
+    if (len === 0 && arguments.length === 1) { throw TypeError(); }
 
     var k = 0;
     var accumulator;
@@ -393,7 +373,7 @@ if (!Array.prototype.reduce) {
         }
 
         // if array contains no values, no initial value to return
-        if (++k >= len) { throw new TypeError(); }
+        if (++k >= len) { throw TypeError(); }
       }
       while (true);
     }
@@ -414,16 +394,14 @@ if (!Array.prototype.reduce) {
 // From https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/ReduceRight
 if (!Array.prototype.reduceRight) {
   Array.prototype.reduceRight = function (callbackfn /*, initialValue */) {
-    "use strict";
-
-    if (this === void 0 || this === null) { throw new TypeError(); }
+    if (this === void 0 || this === null) { throw TypeError(); }
 
     var t = Object(this);
     var len = t.length >>> 0;
-    if (typeof callbackfn !== "function") { throw new TypeError(); }
+    if (typeof callbackfn !== "function") { throw TypeError(); }
 
     // no value to return if no initial value, empty array
-    if (len === 0 && arguments.length === 1) { throw new TypeError(); }
+    if (len === 0 && arguments.length === 1) { throw TypeError(); }
 
     var k = len - 1;
     var accumulator;
@@ -437,7 +415,7 @@ if (!Array.prototype.reduceRight) {
         }
 
         // if array contains no values, no initial value to return
-        if (--k < 0) { throw new TypeError(); }
+        if (--k < 0) { throw TypeError(); }
       }
       while (true);
     }
@@ -510,53 +488,12 @@ if (!Date.prototype.toISOString) {
       pad3(this.getUTCMilliseconds()) + 'Z';
   };
 }
-
-
-//----------------------------------------------------------------------
-//
-// Non-standard JavaScript (Mozilla) functions
-//
-//----------------------------------------------------------------------
-
-(function () {
-  // JavaScript 1.8.1
-  String.prototype.trimLeft = String.prototype.trimLeft || function () {
-    return String(this).replace(/^\s+/, '');
-  };
-
-  // JavaScript 1.8.1
-  String.prototype.trimRight = String.prototype.trimRight || function () {
-    return String(this).replace(/\s+$/, '');
-  };
-
-  // JavaScript 1.?
-  var ESCAPES = {
-    //'\x00': '\\0', Special case in FF3.6, removed by FF10
-    '\b': '\\b',
-    '\t': '\\t',
-    '\n': '\\n',
-    '\f': '\\f',
-    '\r': '\\r',
-    '"' : '\\"',
-    '\\': '\\\\'
-  };
-  String.prototype.quote = String.prototype.quote || function() {
-    return '"' + String(this).replace(/[\x00-\x1F"\\\x7F-\uFFFF]/g, function(c) {
-      if (Object.prototype.hasOwnProperty.call(ESCAPES, c)) {
-        return ESCAPES[c];
-      } else if (c.charCodeAt(0) <= 0xFF) {
-        return '\\x' + ('00' + c.charCodeAt(0).toString(16).toUpperCase()).slice(-2);
-      } else {
-        return '\\u' + ('0000' + c.charCodeAt(0).toString(16).toUpperCase()).slice(-4);
-      }
-    }) + '"';
-  };
-}());
-
-
 //----------------------------------------------------------------------
 //
 // Browser Polyfills
+//
+// This assumes ES5 or ES3 + es5.js
+// (polyfill.js is es5.js + web.js for convenience)
 //
 //----------------------------------------------------------------------
 
@@ -581,13 +518,50 @@ if ('window' in this && 'document' in this) {
     try { return new ActiveXObject("Msxml2.XMLHTTP.6.0"); } catch (e1) { }
     try { return new ActiveXObject("Msxml2.XMLHTTP.3.0"); } catch (e2) { }
     try { return new ActiveXObject("Msxml2.XMLHTTP"); } catch (e3) { }
-    throw new Error("This browser does not support XMLHttpRequest.");
+    throw Error("This browser does not support XMLHttpRequest.");
   };
   XMLHttpRequest.UNSENT = 0;
   XMLHttpRequest.OPENED = 1;
   XMLHttpRequest.HEADERS_RECEIVED = 2;
   XMLHttpRequest.LOADING = 3;
   XMLHttpRequest.DONE = 4;
+
+  //
+  // FormData (http://www.w3.org/TR/XMLHttpRequest2/#interface-formdata)
+  //
+  if (!('FormData' in window)) {
+    (function(global) {
+      function FormData(form) {
+        this._data = [];
+        if (!form) return;
+        for (var i = 0; i < form.elements.length; ++i)
+          this.append(form.elements[i].name, form.elements[i].value);
+      }
+
+      FormData.prototype.append = function(name, value /*, filename */) {
+        if ('Blob' in global && value instanceof global.Blob) throw TypeError("Blob not supported");
+        name = String(name);
+        this._data.push([name, value]);
+      };
+
+      FormData.prototype.toString = function() {
+        return this._data.map(function(pair) {
+          return encodeURIComponent(pair[0]) + '=' + encodeURIComponent(pair[1]);
+        }).join('&');
+      };
+
+      global.FormData = FormData;
+      var send = global.XMLHttpRequest.prototype.send;
+      global.XMLHttpRequest.prototype.send = function(body) {
+        if (body instanceof FormData) {
+          this.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+          arguments[0] = body.toString();
+        }
+        return send.apply(this, arguments);
+      };
+    }(this));
+  }
+
 
   //----------------------------------------------------------------------
   //
@@ -597,7 +571,7 @@ if ('window' in this && 'document' in this) {
 
   // requestAnimationFrame
   // http://www.w3.org/TR/animation-timing/
-  (function() {
+  (function(global) {
     var TARGET_FPS = 60,
         requests = Object.create(null),
         raf_handle = 1,
@@ -626,7 +600,7 @@ if ('window' in this && 'document' in this) {
       requests[cb_handle] = {callback: callback, element: element};
 
       if (timeout_handle === -1) {
-        timeout_handle = window.setTimeout(onFrameTimer, 1000 / TARGET_FPS);
+        timeout_handle = global.setTimeout(onFrameTimer, 1000 / TARGET_FPS);
       }
 
       return cb_handle;
@@ -636,53 +610,53 @@ if ('window' in this && 'document' in this) {
       delete requests[handle];
 
       if (Object.keys(requests).length === 0) {
-        window.clearTimeout(timeout_handle);
+        global.clearTimeout(timeout_handle);
         timeout_handle = -1;
       }
     }
 
-    window.requestAnimationFrame =
-      window.requestAnimationFrame ||
-      window.webkitRequestAnimationFrame ||
-      window.mozRequestAnimationFrame ||
-      window.oRequestAnimationFrame ||
-      window.msRequestAnimationFrame ||
+    global.requestAnimationFrame =
+      global.requestAnimationFrame ||
+      global.webkitRequestAnimationFrame ||
+      global.mozRequestAnimationFrame ||
+      global.oRequestAnimationFrame ||
+      global.msRequestAnimationFrame ||
       requestAnimationFrame;
 
     // NOTE: Older versions of the spec called this "cancelRequestAnimationFrame"
-    window.cancelAnimationFrame = window.cancelRequestAnimationFrame =
-      window.cancelAnimationFrame || window.cancelRequestAnimationFrame ||
-      window.webkitCancelAnimationFrame || window.webkitCancelRequestAnimationFrame ||
-      window.mozCancelAnimationFrame || window.mozCancelRequestAnimationFrame ||
-      window.oCancelAnimationFrame || window.oCancelRequestAnimationFrame ||
-      window.msCancelAnimationFrame || window.msCancelRequestAnimationFrame ||
+    global.cancelAnimationFrame = global.cancelRequestAnimationFrame =
+      global.cancelAnimationFrame || global.cancelRequestAnimationFrame ||
+      global.webkitCancelAnimationFrame || global.webkitCancelRequestAnimationFrame ||
+      global.mozCancelAnimationFrame || global.mozCancelRequestAnimationFrame ||
+      global.oCancelAnimationFrame || global.oCancelRequestAnimationFrame ||
+      global.msCancelAnimationFrame || global.msCancelRequestAnimationFrame ||
       cancelAnimationFrame;
-  }());
+  }(this));
 
   // setImmediate
   // https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/setImmediate/Overview.html
-  (function () {
-    function setImmediate(callback, args) {
-      var params = [].slice.call(arguments, 1), i;
-      return window.setTimeout(function() {
+  (function (global) {
+    function setImmediate(callback/*, args*/) {
+      var params = [].slice.call(arguments, 1);
+      return global.setTimeout(function() {
         callback.apply(null, params);
       }, 0);
     }
 
     function clearImmediate(handle) {
-      window.clearTimeout(handle);
+      global.clearTimeout(handle);
     }
 
-    window.setImmediate =
-      window.setImmediate ||
-      window.msSetImmediate ||
+    global.setImmediate =
+      global.setImmediate ||
+      global.msSetImmediate ||
       setImmediate;
 
-    window.clearImmediate =
-      window.clearImmediate ||
-      window.msClearImmediate ||
+    global.clearImmediate =
+      global.clearImmediate ||
+      global.msClearImmediate ||
       clearImmediate;
-  } ());
+  }(this));
 
   //----------------------------------------------------------------------
   //
@@ -728,10 +702,18 @@ if ('window' in this && 'document' in this) {
     };
   }
 
+  // Fix for IE8-'s Element.getBoundingClientRect()
+  if ('TextRectangle' in this && !('width' in TextRectangle.prototype)) {
+    Object.defineProperties(TextRectangle.prototype, {
+      'width': { get: function() { return this.right - this.left; } },
+      'height': { get: function() { return this.bottom - this.top; } }
+    });
+  }
+
   //
   // DOM Enumerations (http://www.w3.org/TR/DOM-Level-2-Core/)
   //
-  window.Node = window.Node || function Node() { throw new TypeError("Illegal constructor"); };
+  window.Node = window.Node || function Node() { throw TypeError("Illegal constructor"); };
   Node.ELEMENT_NODE = 1;
   Node.ATTRIBUTE_NODE = 2;
   Node.TEXT_NODE = 3;
@@ -745,7 +727,7 @@ if ('window' in this && 'document' in this) {
   Node.DOCUMENT_FRAGMENT_NODE = 11;
   Node.NOTATION_NODE = 12;
 
-  window.DOMException = window.DOMException || function DOMException() { throw new TypeError("Illegal constructor"); };
+  window.DOMException = window.DOMException || function DOMException() { throw TypeError("Illegal constructor"); };
   DOMException.INDEX_SIZE_ERR = 1;
   DOMException.DOMSTRING_SIZE_ERR = 2;
   DOMException.HIERARCHY_REQUEST_ERR = 3;
@@ -777,108 +759,96 @@ if ('window' in this && 'document' in this) {
     Event.AT_TARGET       = 2;
     Event.BUBBLING_PHASE  = 3;
 
-    Object.defineProperty(Event.prototype, 'CAPTURING_PHASE', { get: function() { return 1; } });
-    Object.defineProperty(Event.prototype, 'AT_TARGET',       { get: function() { return 2; } });
-    Object.defineProperty(Event.prototype, 'BUBBLING_HASE',   { get: function() { return 3; } });
-
-    Object.defineProperty(Event.prototype, 'target', {
-      get: function() {
-        return this.srcElement;
-      }
+    Object.defineProperties(Event.prototype, {
+      CAPTURING_PHASE: { get: function() { return 1; } },
+      AT_TARGET:       { get: function() { return 2; } },
+      BUBBLING_HASE:   { get: function() { return 3; } },
+      target: {
+        get: function() {
+          return this.srcElement;
+        }},
+      currentTarget: {
+        get: function() {
+          return this._currentTarget;
+        }},
+      eventPhase: {
+        get: function() {
+          return (this.srcElement === this.currentTarget) ? Event.AT_TARGET : Event.BUBBLING_PHASE;
+        }},
+      bubbles: {
+        get: function() {
+          switch (this.type) {
+            // Mouse
+          case 'click':
+          case 'dblclick':
+          case 'mousedown':
+          case 'mouseup':
+          case 'mouseover':
+          case 'mousemove':
+          case 'mouseout':
+          case 'mousewheel':
+            // Keyboard
+          case 'keydown':
+          case 'keypress':
+          case 'keyup':
+            // Frame/Object
+          case 'resize':
+          case 'scroll':
+            // Form
+          case 'select':
+          case 'change':
+          case 'submit':
+          case 'reset':
+            return true;
+          }
+          return false;
+        }},
+      cancelable: {
+        get: function() {
+          switch (this.type) {
+            // Mouse
+          case 'click':
+          case 'dblclick':
+          case 'mousedown':
+          case 'mouseup':
+          case 'mouseover':
+          case 'mouseout':
+          case 'mousewheel':
+            // Keyboard
+          case 'keydown':
+          case 'keypress':
+          case 'keyup':
+            // Form
+          case 'submit':
+            return true;
+          }
+          return false;
+        }},
+      timeStamp: {
+        get: function() {
+          return this._timeStamp;
+        }},
+      stopPropagation: {
+        value: function() {
+          this.cancelBubble = true;
+        }},
+      preventDefault: {
+        value: function() {
+          this.returnValue = false;
+        }},
+      defaultPrevented: {
+        get: function() {
+          return this.returnValue === false;
+        }}
     });
-
-    Object.defineProperty(Event.prototype, 'currentTarget', {
-      get: function() {
-        return this._currentTarget;
-      }
-    });
-
-    Object.defineProperty(Event.prototype, 'eventPhase', {
-      get: function() {
-        return (this.srcElement === this.currentTarget) ? Event.AT_TARGET : Event.BUBBLING_PHASE;
-      }
-    });
-
-    Object.defineProperty(Event.prototype, 'bubbles', {
-      get: function() {
-        switch (this.type) {
-          // Mouse
-        case 'click':
-        case 'dblclick':
-        case 'mousedown':
-        case 'mouseup':
-        case 'mouseover':
-        case 'mousemove':
-        case 'mouseout':
-        case 'mousewheel':
-          // Keyboard
-        case 'keydown':
-        case 'keypress':
-        case 'keyup':
-          // Frame/Object
-        case 'resize':
-        case 'scroll':
-          // Form
-        case 'select':
-        case 'change':
-        case 'submit':
-        case 'reset':
-          return true;
-        }
-        return false;
-      }
-    });
-
-    Object.defineProperty(Event.prototype, 'cancelable', {
-      get: function() {
-        switch (this.type) {
-          // Mouse
-        case 'click':
-        case 'dblclick':
-        case 'mousedown':
-        case 'mouseup':
-        case 'mouseover':
-        case 'mouseout':
-        case 'mousewheel':
-          // Keyboard
-        case 'keydown':
-        case 'keypress':
-        case 'keyup':
-          // Form
-        case 'submit':
-          return true;
-        }
-        return false;
-      }
-    });
-
-    Object.defineProperty(Event.prototype, 'timeStamp', {
-      get: function() {
-        return this._timeStamp;
-      }
-    });
-
-    Event.prototype.stopPropagation = function() {
-      this.cancelBubble = true;
-    };
-
-    Event.prototype.preventDefault = function() {
-      this.returnValue = false;
-    };
-
-    Object.defineProperty(Event.prototype, 'defaultPrevented', {
-      get: function() {
-        return this.returnValue === false;
-      }
-    });
-
 
     // interface EventTarget
 
     function addEventListener(type, listener, useCapture) {
+      if (type === 'DOMContentLoaded') type = 'load';
       var target = this;
       var f = function(e) {
-        e._timeStamp = Number(new Date);
+        e._timeStamp = Date.now();
         e._currentTarget = target;
         listener.call(this, e);
         e._currentTarget = null;
@@ -888,6 +858,7 @@ if ('window' in this && 'document' in this) {
     }
 
     function removeEventListener(type, listener, useCapture) {
+      if (type === 'DOMContentLoaded') type = 'load';
       var f = this['_' + type + listener];
       if (f) {
         this.detachEvent('on' + type, f);
@@ -895,9 +866,10 @@ if ('window' in this && 'document' in this) {
       }
     }
 
-    var p1 = Window.prototype, p2 = HTMLDocument.prototype, p3 = Element.prototype;
-    p1.addEventListener    = p2.addEventListener    = p3.addEventListener    = addEventListener;
-    p1.removeEventListener = p2.removeEventListener = p3.removeEventListener = removeEventListener;
+    [Window, HTMLDocument, Element].forEach(function(o) {
+      o.prototype.addEventListener = addEventListener;
+      o.prototype.removeEventListener = removeEventListener;
+    });
 
   }());
 
@@ -916,7 +888,7 @@ if ('window' in this && 'document' in this) {
         e.preventDefault = function () { e.returnValue = false; };
         e.stopPropagation = function () { e.cancelBubble = true; };
         e.target = e.srcElement;
-        e.timeStamp = Number(new Date);
+        e.timeStamp = Date.now();
         obj["e" + type + fn].call(this, e);
       };
       obj.attachEvent("on" + type, obj[type + fn]);
@@ -976,8 +948,8 @@ if ('window' in this && 'document' in this) {
           contains: {
             value: function (token) {
               token = String(token);
-              if (token.length === 0) { throw new SyntaxError(); }
-              if (/\s/.test(token)) { throw new Error("InvalidCharacterError"); }
+              if (token.length === 0) { throw SyntaxError(); }
+              if (/\s/.test(token)) { throw Error("InvalidCharacterError"); }
               var tokens = split(o[p]);
 
               return tokens.indexOf(token) !== -1;
@@ -985,13 +957,13 @@ if ('window' in this && 'document' in this) {
           },
 
           add: {
-            value: function (tokens___) {
-              tokens = Array.prototype.slice.call(arguments).map(String);
+            value: function (/*tokens...*/) {
+              var tokens = Array.prototype.slice.call(arguments).map(String);
               if (tokens.some(function(token) { return token.length === 0; })) {
-                throw new SyntaxError();
+                throw SyntaxError();
               }
-              if (tokens.some(function(token) { return /\s/.test(token); })) {
-                throw new Error("InvalidCharacterError");
+              if (tokens.some(function(token) { return (/\s/).test(token); })) {
+                throw Error("InvalidCharacterError");
               }
 
               try {
@@ -1001,7 +973,7 @@ if ('window' in this && 'document' in this) {
                 if (tokens.length === 0) {
                   return;
                 }
-                if (underlying_string.length !== 0 && !/\s$/.test(underlying_string)) {
+                if (underlying_string.length !== 0 && !(/\s$/).test(underlying_string)) {
                   underlying_string += ' ';
                 }
                 underlying_string += tokens.join(' ');
@@ -1014,13 +986,13 @@ if ('window' in this && 'document' in this) {
           },
 
           remove: {
-            value: function (tokens___) {
-              tokens = Array.prototype.slice.call(arguments).map(String);
+            value: function (/*tokens...*/) {
+              var tokens = Array.prototype.slice.call(arguments).map(String);
               if (tokens.some(function(token) { return token.length === 0; })) {
-                throw new SyntaxError();
+                throw SyntaxError();
               }
-              if (tokens.some(function(token) { return /\s/.test(token); })) {
-                throw new Error("InvalidCharacterError");
+              if (tokens.some(function(token) { return (/\s/).test(token); })) {
+                throw Error("InvalidCharacterError");
               }
 
               try {
@@ -1040,8 +1012,8 @@ if ('window' in this && 'document' in this) {
             value: function (token, force) {
               try {
                 token = String(token);
-                if (token.length === 0) { throw new SyntaxError(); }
-                if (/\s/.test(token)) { throw new Error("InvalidCharacterError"); }
+                if (token.length === 0) { throw SyntaxError(); }
+                if (/\s/.test(token)) { throw Error("InvalidCharacterError"); }
                 var tokens = split(o[p]),
                     index = tokens.indexOf(token);
 
@@ -1114,6 +1086,7 @@ if ('window' in this && 'document' in this) {
         var attr = this.attributes[i];
         if (attr.specified && attr.name.substring(0, 5) === 'data-') {
           (function(element, name) {
+            result[name] = element.getAttribute('data-' + name); // Read-only, for IE8-
             Object.defineProperty(result, name, {
               get: function() {
                 return element.getAttribute('data-' + name);
@@ -1124,7 +1097,7 @@ if ('window' in this && 'document' in this) {
           }(this, attr.name.substring(5)));
         }
       }
-        return result;
+      return result;
     }});
   }
 }
@@ -1142,8 +1115,8 @@ if ('window' in this && 'document' in this) {
 
     input = input.replace(/\s/g, '');
     if ((input.length % 4) === 0) { input = input.replace(/=+$/, ''); }
-    if ((input.length % 4) === 1) { throw new Error("InvalidCharacterError"); }
-    if (/[^+/0-9A-Za-z]/.test(input)) { throw new Error("InvalidCharacterError"); }
+    if ((input.length % 4) === 1) { throw Error("InvalidCharacterError"); }
+    if (/[^+/0-9A-Za-z]/.test(input)) { throw Error("InvalidCharacterError"); }
 
     while (position < input.length) {
       n = B64_ALPHABET.indexOf(input.charAt(position));
@@ -1179,7 +1152,7 @@ if ('window' in this && 'document' in this) {
         o1, o2, o3,
         e1, e2, e3, e4;
 
-    if (/[^\x00-\xFF]/.test(input)) { throw new Error("InvalidCharacterError"); }
+    if (/[^\x00-\xFF]/.test(input)) { throw Error("InvalidCharacterError"); }
 
     while (position < input.length) {
       o1 = input.charCodeAt(position++);
@@ -1207,4 +1180,46 @@ if ('window' in this && 'document' in this) {
 
     return out.join('');
   };
-} (this));
+}(this));
+
+
+//----------------------------------------------------------------------
+//
+// Non-standard JavaScript (Mozilla) functions
+//
+//----------------------------------------------------------------------
+
+(function () {
+  // JavaScript 1.8.1
+  String.prototype.trimLeft = String.prototype.trimLeft || function () {
+    return String(this).replace(/^\s+/, '');
+  };
+
+  // JavaScript 1.8.1
+  String.prototype.trimRight = String.prototype.trimRight || function () {
+    return String(this).replace(/\s+$/, '');
+  };
+
+  // JavaScript 1.?
+  var ESCAPES = {
+    //'\x00': '\\0', Special case in FF3.6, removed by FF10
+    '\b': '\\b',
+    '\t': '\\t',
+    '\n': '\\n',
+    '\f': '\\f',
+    '\r': '\\r',
+    '"' : '\\"',
+    '\\': '\\\\'
+  };
+  String.prototype.quote = String.prototype.quote || function() {
+    return '"' + String(this).replace(/[\x00-\x1F"\\\x7F-\uFFFF]/g, function(c) {
+      if (Object.prototype.hasOwnProperty.call(ESCAPES, c)) {
+        return ESCAPES[c];
+      } else if (c.charCodeAt(0) <= 0xFF) {
+        return '\\x' + ('00' + c.charCodeAt(0).toString(16).toUpperCase()).slice(-2);
+      } else {
+        return '\\u' + ('0000' + c.charCodeAt(0).toString(16).toUpperCase()).slice(-4);
+      }
+    }) + '"';
+  };
+}());
