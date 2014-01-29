@@ -44,12 +44,7 @@ Thumbs.db
 *.suo
 *.sdf
 *.opensdf
-externals/
 build/
 docs/html
 docs/latex
-out/
-bin/
-ipch/
-resources/graphvis
 *.mo
