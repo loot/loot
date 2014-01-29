@@ -56,8 +56,6 @@ namespace boss {
     const boost::filesystem::path g_path_js               = boost::filesystem::current_path() / "resources" / "script.js";
     const boost::filesystem::path g_path_polyfill         = boost::filesystem::current_path() / "resources" / "polyfill.js";
     const boost::filesystem::path g_path_l10n             = boost::filesystem::current_path() / "resources" / "l10n";
-    const boost::filesystem::path g_path_graphvis         = boost::filesystem::current_path() / "resources" / "graphvis" / "dot.exe";
-    const boost::filesystem::path g_path_svgweb           = boost::filesystem::current_path() / "resources" / "svgweb" / "svg.js";
     const boost::filesystem::path g_path_local            = GetLocalAppDataPath() / "BOSS";
     const boost::filesystem::path g_path_settings         = g_path_local / "settings.yaml";
     const boost::filesystem::path g_path_log              = g_path_local / "BOSSDebugLog.txt";
