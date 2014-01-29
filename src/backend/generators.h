@@ -582,7 +582,6 @@ namespace boss {
         root["Debug Verbosity"] = 0;
         root["Update Masterlist"] = true;
         root["View Report Externally"] = false;
-        root["Generate Graph Image"] = false;
 
         games.push_back(Game(g_game_tes4));
         games.push_back(Game(g_game_tes5));
