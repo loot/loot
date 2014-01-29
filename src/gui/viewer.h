@@ -26,9 +26,13 @@
 
 #include "ids.h"
 
+#include <wx/webview.h>
+
 class Viewer : public wxFrame {
 public:
     Viewer(wxWindow *parent, const wxString& title, const std::string& path);
+
+    void OnNavigationStart(wxWebViewEvent& event);
 };
 
 #endif
