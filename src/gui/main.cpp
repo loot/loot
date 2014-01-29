@@ -790,7 +790,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     BOOST_LOG_TRIVIAL(debug) << "Generating report...";
     try {
-        GenerateReport(_game.ReportPath().string(),
+        GenerateReport(_game.ReportPath(),
                         messages,
                         plugins,
                         oldDetails,
@@ -812,10 +812,10 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     BOOST_LOG_TRIVIAL(debug) << "Displaying report...";
     if (_settings["View Report Externally"] && _settings["View Report Externally"].as<bool>()) {
-        wxLaunchDefaultBrowser(_game.ReportPath().string());
+        wxLaunchDefaultBrowser(FromUTF8(ToFileURL(_game.ReportPath().string())));
     } else {
         //Create viewer window.
-        Viewer *viewer = new Viewer(this, translate("BOSS: Report Viewer"), _game.ReportPath().string());
+        Viewer *viewer = new Viewer(this, translate("BOSS: Report Viewer"), FromUTF8(ToFileURL(_game.ReportPath().string())));
         viewer->Show();
     }
 
@@ -926,11 +926,11 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
 void Launcher::OnViewLastReport(wxCommandEvent& event) {
     if (_settings["View Report Externally"] && _settings["View Report Externally"].as<bool>()) {
         BOOST_LOG_TRIVIAL(debug) << "Opening report in external application...";
-        wxLaunchDefaultBrowser(_game.ReportPath().string());
+        wxLaunchDefaultBrowser(FromUTF8(ToFileURL(_game.ReportPath().string())));
     } else {
         //Create viewer window.
         BOOST_LOG_TRIVIAL(debug) << "Opening viewer window...";
-        Viewer *viewer = new Viewer(this, translate("BOSS: Report Viewer"), _game.ReportPath().string());
+        Viewer *viewer = new Viewer(this, translate("BOSS: Report Viewer"), FromUTF8(ToFileURL(_game.ReportPath().string())));
         viewer->Show();
     }
     BOOST_LOG_TRIVIAL(debug) << "Report displayed.";
@@ -1029,9 +1029,9 @@ void Launcher::OnGameChange(wxCommandEvent& event) {
 
 void Launcher::OnHelp(wxCommandEvent& event) {
     //Look for file.
-    BOOST_LOG_TRIVIAL(debug) << "Opening readme.";
+    BOOST_LOG_TRIVIAL(debug) << "Opening readme at: " << g_path_readme;
     if (fs::exists(g_path_readme)) {
-        wxLaunchDefaultBrowser(g_path_readme.string());
+        wxLaunchDefaultBrowser(FromUTF8(ToFileURL(g_path_readme.string())));
     } else {  //No readme exists, show a pop-up message saying so.
         BOOST_LOG_TRIVIAL(error) << "File \"" << g_path_readme.string() << "\" could not be found.";
         wxMessageBox(
@@ -1044,9 +1044,9 @@ void Launcher::OnHelp(wxCommandEvent& event) {
 
 void Launcher::OnOpenDebugLog(wxCommandEvent& event) {
     //Look for file.
-    BOOST_LOG_TRIVIAL(debug) << "Opening readme.";
+    BOOST_LOG_TRIVIAL(debug) << "Opening debug log at: " << g_path_log;
     if (fs::exists(g_path_log)) {
-        wxLaunchDefaultApplication(g_path_log.string());
+        wxLaunchDefaultApplication(FromUTF8(g_path_log.string()));
     } else {  //No log exists, show a pop-up message saying so.
         BOOST_LOG_TRIVIAL(error) << "File \"" << g_path_log.string() << "\" could not be found.";
         wxMessageBox(
