@@ -69,9 +69,6 @@ namespace boss {
     std::string GetLangString(const unsigned int num);
     unsigned int GetLangNum(const std::string& str);
 
-    //Runs a command using the Win32 API.
-    bool RunCommand(const std::string& command, std::string& output);
-
     //Version class for more robust version comparisons.
     class Version {
     private:
