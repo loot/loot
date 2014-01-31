@@ -222,6 +222,7 @@ void SettingsFrame::OnQuit(wxCommandEvent& event) {
 
         _settings["View Report Externally"] = reportViewBox->IsChecked();
 
+        _games.clear();
         for (size_t i=0,max=gamesList->GetItemCount(); i < max; ++i) {
             string name, folder, master, url, path, registry;
             unsigned int id;
@@ -242,7 +243,7 @@ void SettingsFrame::OnQuit(wxCommandEvent& event) {
             else
                 id = boss::g_game_fonv;
 
-            _games[i] = boss::Game(id, folder).SetDetails(name, master, url, path, registry);
+            _games.push_back(boss::Game(id, folder).SetDetails(name, master, url, path, registry));
         }
     }
 
