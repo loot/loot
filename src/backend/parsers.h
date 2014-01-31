@@ -384,7 +384,7 @@ namespace boss {
 
             condition =
                   function                          [qi::labels::_val = qi::labels::_1]
-                | ( qi::lit("not") > function )     [qi::labels::_val = !qi::labels::_1]
+                | ( qi::lit("not") > condition )     [qi::labels::_val = !qi::labels::_1]
                 | ( '(' > expression > ')' )        [qi::labels::_val = qi::labels::_1]
                 ;
 
