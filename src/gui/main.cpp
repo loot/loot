@@ -787,14 +787,13 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         if (pos1 != string::npos) {
             pos1 = oldDetails.find("<ul>", pos1);
             if (pos1 != string::npos) {
-                size_t pos2 = oldDetails.find("</div>", pos1);
-                pos2 = oldDetails.rfind("</ul>", pos2) - 3;  //Remove the 3 tabs preceding the closing tag.
-
-                oldDetails = oldDetails.substr(pos1, pos2 - pos1);
+                size_t pos2 = oldDetails.find("<div id=\"summary\">", pos1);
+                if (pos2 != string::npos) {
+                    pos2 -= 6; // "</div>"
+                    oldDetails = oldDetails.substr(pos1, pos2 - pos1);
+                }
             }
         }
-        boost::replace_all(oldDetails, "\t\t\t\t", "\t");
-        oldDetails += "</ul>\n";
     }
 
     BOOST_LOG_TRIVIAL(debug) << "Generating report...";

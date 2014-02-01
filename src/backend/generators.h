@@ -202,7 +202,7 @@ namespace boss {
                         int messageNo,
                         int warnNo,
                         int errorNo,
-                        const std::list<Message>& messages) {
+                        std::list<Message>& messages) {
 
         BOOST_LOG_TRIVIAL(trace) << "Appending summary tab to BOSS report.";
 
@@ -256,10 +256,12 @@ namespace boss {
 
         if (!hasChanged) {
             BOOST_LOG_TRIVIAL(info) << "No changes in the BOSS report details tab since the last run.";
-            pugi::xml_node note = summary.append_child();
+            /*pugi::xml_node note = summary.append_child();
             note.set_name("div");
             note.append_attribute("id").set_value("noChanges");
             note.text().set(boost::locale::translate("No change in details since last run.").str().c_str());
+            */
+            messages.push_front(boss::Message(boss::g_message_say, "There have been no changes in the Details tab since BOSS was last run."));
         }
 
         if (!messages.empty()) {
@@ -400,7 +402,7 @@ namespace boss {
         }
 
         xml_string_writer writer;
-        details.print(writer, "\t", pugi::format_default | pugi::format_no_declaration);
+        details.print(writer, "", pugi::format_default | pugi::format_no_declaration | pugi::format_raw);
 
         return writer.result != oldDetails;
     }
@@ -409,7 +411,7 @@ namespace boss {
                         const std::string& oldDetails,
                         const std::string& masterlistVersion,
                         bool masterlistUpdateEnabled,
-                        const std::list<Message>& messages,
+                        std::list<Message>& messages,
                         const std::list<Plugin>& plugins,
                         int& pluginMessageNo
                         ) {
@@ -538,7 +540,7 @@ namespace boss {
     }
 
     inline void GenerateReport(const boost::filesystem::path& file,
-                        const std::list<Message>& messages,
+                        std::list<Message>& messages,
                         const std::list<Plugin>& plugins,
                         const std::string& oldDetails,
                         const std::string& masterlistVersion,
