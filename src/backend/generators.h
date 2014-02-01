@@ -118,7 +118,7 @@ namespace boss {
         node = head.append_child();
         node.set_name("meta");
         node.append_attribute("http-equiv").set_value("X-UA-Compatible");
-        node.append_attribute("content").set_value("IE=9");
+        node.append_attribute("content").set_value("IE=edge");
 
         node = head.append_child();
         node.set_name("meta");
@@ -453,7 +453,7 @@ namespace boss {
         input.append_attribute("type").set_value("checkbox");
         input.append_attribute("id").set_value("hideVersionNumbers");
         input.append_attribute("data-class").set_value("version");
-        input.text().set(boost::locale::translate("Hide Version Numbers").str().c_str());
+        label.text().set(boost::locale::translate("Hide Version Numbers").str().c_str());
 
         label = filters.append_child();
         label.set_name("label");
@@ -462,7 +462,7 @@ namespace boss {
         input.append_attribute("type").set_value("checkbox");
         input.append_attribute("id").set_value("hideCRCs");
         input.append_attribute("data-class").set_value("crc");
-        input.text().set(boost::locale::translate("Hide CRCs").str().c_str());
+        label.text().set(boost::locale::translate("Hide CRCs").str().c_str());
 
         label = filters.append_child();
         label.set_name("label");
@@ -471,7 +471,7 @@ namespace boss {
         input.append_attribute("type").set_value("checkbox");
         input.append_attribute("id").set_value("hideBashTags");
         input.append_attribute("data-class").set_value("tag");
-        input.text().set(boost::locale::translate("Hide Bash Tag Suggestions").str().c_str());
+        label.text().set(boost::locale::translate("Hide Bash Tag Suggestions").str().c_str());
 
         label = filters.append_child();
         label.set_name("label");
@@ -479,7 +479,7 @@ namespace boss {
         input.set_name("input");
         input.append_attribute("type").set_value("checkbox");
         input.append_attribute("id").set_value("hideNotes");
-        input.text().set(boost::locale::translate("Hide Notes").str().c_str());
+        label.text().set(boost::locale::translate("Hide Notes").str().c_str());
 
         label = filters.append_child();
         label.set_name("label");
@@ -487,7 +487,7 @@ namespace boss {
         input.set_name("input");
         input.append_attribute("type").set_value("checkbox");
         input.append_attribute("id").set_value("hideDoNotCleanMessages");
-        input.text().set(boost::locale::translate("Hide 'Do Not Clean' Messages").str().c_str());
+        label.text().set(boost::locale::translate("Hide 'Do Not Clean' Messages").str().c_str());
 
         label = filters.append_child();
         label.set_name("label");
@@ -495,7 +495,7 @@ namespace boss {
         input.set_name("input");
         input.append_attribute("type").set_value("checkbox");
         input.append_attribute("id").set_value("hideAllPluginMessages");
-        input.text().set(boost::locale::translate("Hide All Plugin Messages").str().c_str());
+        label.text().set(boost::locale::translate("Hide All Plugin Messages").str().c_str());
 
         label = filters.append_child();
         label.set_name("label");
@@ -503,7 +503,7 @@ namespace boss {
         input.set_name("input");
         input.append_attribute("type").set_value("checkbox");
         input.append_attribute("id").set_value("hideMessagelessPlugins");
-        input.text().set(boost::locale::translate("Hide Messageless Plugins").str().c_str());
+        label.text().set(boost::locale::translate("Hide Messageless Plugins").str().c_str());
 
         pugi::xml_node span;
 
