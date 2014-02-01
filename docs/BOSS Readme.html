@@ -160,10 +160,10 @@ Visual C++ Redistributable for Visual Studio 2013 (x86)</a>. BOSS can be install
 </figure>
 <p>Clicking the <q>Sort Plugins</q> button in the main window will begin the sorting process.
 
-<p>Provided that masterlist updating <a href="#settingsUpdateMasterlist">is enabled</a> and that an online masterlist URL <a href="#settingsMasterlistURL">is set</a>, BOSS checks for updates to its masterlist and downloads any that are available. If there are any syntax errors in the latest masterlist (due to human error by its maintainers), the updater rolls back one version at a time until it finds a version that works. If any other errors are encountered, updating is cancelled.
+<p>Provided that masterlist updating <a href="#settingsUpdateMasterlist">is enabled</a> and that a masterlist repository URL <a href="#settingsMasterlistURL">is set</a>, BOSS checks for updates to its masterlist and downloads any that are available. If there are any syntax errors in the latest masterlist (due to human error by its maintainers), the updater rolls back one version at a time until it finds a version that works. If any other errors are encountered, updating is cancelled.
 
 <p>During the sorting process, BOSS extracts information from each of the plugins installed in the game's Data folder and combines this information with any relevant metadata provided by the masterlist and userlist. It then uses the combined data to build a directed graph of all the interactions between all the installed plugins. A topological sort is then carried out on the graph to produce a list of plugins in their optimal load order, according to BOSS's criteria. If a cycle is detected (eg. A depends on B depends on A), then sorting is cancelled as it becomes impossible to generate a load order that satisfies all conditions.
-<p>If successful, the calculated load order is then displayed in the dialog shown above, which allows the user to edit the load order before it is applied. Multiple plugins may be selected and moved at once. Plugins which are empty (ie. only contain a header record) are displayed in grey text, and plugins that are not empty and load BSAs are displayed in blue text. If <q>OK</q> button is clicked, it is then applied, and any edits made are recorded in the userlist for re-application when BOSS next sorts the game's plugins. If the <q>Cancel</q> button is clicked, then the load order and any edits made are discarded.
+<p>If successful, the calculated load order is then displayed in the dialog shown above, which allows the user to edit the load order before it is applied. Multiple plugins may be selected and moved at once. Plugins which are empty (ie. only contain a header record) are displayed in <span style="color: #7A7A7A;">grey text</span>, and plugins that are not empty and load BSAs are displayed in <span style="color: #008EDB;">blue text</span>. If <q>OK</q> button is clicked, it is then applied, and any edits made are recorded in the userlist for re-application when BOSS next sorts the game's plugins. If the <q>Cancel</q> button is clicked, then the load order and any edits made are discarded.
 <p>BOSS then generates a report and displays it either in a new window or in your default browser, according to the value of the <a href="#settingsViewReports">relevant setting</a>. Any errors encountered during the sorting process will be displayed in this report, including those due to graph cycles, missing dependencies or installed incompatible plugins. See the next section for more information on the report.
 <p>BOSS is able to sort plugins ghosted by <abbr title="Wrye Bash, Wrye Flash or Wrye Flash NV">Wrye *ash</abbr>, and can extract Bash Tags and version numbers from plugin descriptions. Provided that they have the <code>Filter</code> Bash Tag present in their description, BOSS can recognise filter patches and so avoid displaying unnecessary error messages for any of their masters that may be missing.
 <p>While reading very large plugins, such as the game's main master file, BOSS may appear to stop responding: this is not an issue. The time it takes for BOSS to sort your load order depends primarily on the size of the masterlist being used, the total size of the files in your load order, and the number of plugins in your load order. The first run is likely to be longer than subsequent runs as BOSS needs to download the full masterlist, rather than just the changes made by updates. In testing, it was found that sorting ~90 plugins with a total size of ~350 MB and a 5 MB masterlist takes around 15 seconds, though performance will vary with computer hardware.
@@ -279,10 +279,13 @@ Visual C++ Redistributable for Visual Studio 2013 (x86)</a>. BOSS can be install
             <li>TES V: Skyrim
             <li>Fallout 3
             <li>Fallout: New Vegas
-        <ul>
+        </ul>
         <tr><td>BOSS Folder Name<td>The sub-folder which BOSS uses to store the game's files in. Each game must be given a unique sub-folder.
         <tr><td>Master File<td>The game's main master file. This is specified as it must load before all other plugins. Note that Skyrim-based games will always load Skyrim.esm first, so this column must always be set to <q>Skyrim.esm</q> for such games.
-        <tr><td id="settingsMasterlistURL">Online Masterlist URL<td>The URL of the online masterlist that BOSS uses to update its local copy. If set to an empty string, masterlist updating will be skipped.
+        <tr><td id="settingsMasterlistURL">Masterlist Repository URL<td>The URL of the repository that BOSS uses to update its local copy of the masterlist. If set to an empty string, masterlist updating will be skipped.
+        <br><br>
+        Masterlist repositories are <a href="http://git-scm.com/">Git</a> repositories that are configured to allow unauthenticated read access and contain a masterlist file named <code>masterlist.yaml</code> in their root directory. The BOSS team maintains a set of official repositories for the games that BOSS supports by default.
+        <tr><td>Masterlist Repository Branch<td>The branch of the masterlist repository that BOSS should get masterlist updates from.
         <tr><td>Install Path<td>The path to the game's folder, in which the Data folder lies. Either this or a registry key must be supplied.
         <tr><td>Install Path Registry Key<td>The registry key, in <code>HKEY_LOCAL_MACHINE</code>, that contains the install path of the game. This is used to obtain the install path if BOSS has no previous record of the game's install path, or BOSS's stored install path is invalid. Either this or an install path must be supplied.
 </table>
@@ -362,7 +365,7 @@ To translate the BOSS application:
 
 
 <h2 id="credits">Credits</h2>
-<p>As BOSS is very much a community project, credit is due to a very large number of sources and people outside of the BOSS Development Team. Some people have gone out of their way and provided continuing, expert and detailed help - <b>thank you very much</b>!
+<p>As BOSS is very much a community project, credit is due to a very large number of sources and people outside of the BOSS Team. Some people have gone out of their way and provided continuing, expert and detailed help - <b>thank you very much</b>!
 <p>In addition to the above data-related support, the following are credited with application-related support:
 <ul>
     <li><a href="http://www.darkcreations.org">Dark Creations</a>: For hosting BOSS's Bugzilla bug tracker that was used by v2 to collect anonymous unrecognised plugin reports. Particular thanks to its administrators Andalaybay and Xae for offering to host the tracker and helping to work around Firefox and Bugzilla bugs encountered.
@@ -372,7 +375,6 @@ To translate the BOSS application:
     <li>Scharesoft: For the installer/uninstaller German translation.
     <li>Ysne58: For testing and keeping the thread links on BOSS's Nexus site pages up to date.
     <li>For testing and feedback prior to releases: The Beta Testing &amp; Analysis Guild at <a href="http://tesalliance.org/forums/">TES Alliance</a>, AndalayBay, dAb, dj2005, Dubiousness, hyno111, Invader, matter2003, NightStar, olminator, saebel, Telyn, wiz0floyd, wormheart, Zanderat and zone22.
-    </ul>
 </ul>
 <p>BOSS is written in C++ and makes use of the <a href="http://www.davekoelle.com/alphanum.html">Alphanum</a>, <a href="http://www.boost.org/">Boost</a>, <a href="http://github.com/WrinklyNinja/libespm">libespm</a>, <a href="http://github.com/libgit2/libgit2">libgit2</a>, <a href="http://github.com/WrinklyNinja/libloadorder">libloadorder</a>, <a href="http://code.google.com/p/pugixml/">PugiXML</a>, <a href="http://www.wxwidgets.org/">wxWidgets</a> and <a href="http://code.google.com/p/yaml-cpp/">yaml-cpp</a> libraries. BOSS's reports are written in XHTML/CSS/Javascript and make use of <a href="http://github.com/inexorabletash/polyfill">Polyfill.js</a> to provide Internet Explorer 8 compatibility. Copyright license information for all these may be found <a href="licenses/Licenses.txt">here</a>.
 
@@ -403,7 +405,7 @@ To translate the BOSS application:
 <p>Members who have since left the project are credited below:
 
 <table>
-    <thead><tr><th rowspan="2">Ex-Member<th rowspan="2">Admin<th rowspan="2">Code<th colspan="5">Contributed To Masterlist
+    <thead><tr><th rowspan="2">Ex-Member<th rowspan="2">Admin<th rowspan="2">Code<th colspan="4">Contributed To Masterlist
         <tr><th>Oblivion<th>Skyrim<th>Fallout 3<th>Fallout: New Vegas
     <tbody class="teamTableBody">
         <tr><td>AliTheLord<td><td>&#x2713;<td>&#x2713;<td>&#x2713;<td>&#x2713;<td>
@@ -437,8 +439,10 @@ To translate the BOSS application:
 <h2 id="license">License</h2>
 <p>BOSS is distributed under the <a href="http://www.gnu.org/licenses/gpl.html">GNU General Public License v3.0</a>, aside from the documentation, which is distributed under the <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License v1.3</a>. The full texts of the licenses are included with BOSS in the accompanying <a href="licenses/GNU%20GPL%20v3.txt">GNU GPL v3.txt</a> and <a href="licenses/GNU%20FDL%20v1.3.txt">GNU FDL v1.3.txt</a> files.
 
-<p>While the GPL license allows anyone to make derivative works of BOSS, the BOSS Development Team encourages those thinking of doing so to first discuss their reasoning for such an endevour with the Team. It may be that what the derivative work would do differently from BOSS itself is already planned for a future version of BOSS or would be happily integrated into BOSS by the Team, thus avoiding any extra effort by others.
-<p>The BOSS Team also appeals to the community to avoid the distribution and development of alternative masterlists, as this would only hamper the community effort to create one set of stores for load order information. Any issues with a masterlist are best brought to the attention of the BOSS Team so that we may remedy them ourselves.
+<p>While the GPL license allows anyone to make derivative works of BOSS, the BOSS Team encourages those thinking of doing so to first discuss their reasoning for such an endeavour with the Team. It may be that what the derivative work would do differently is already planned for a future version of BOSS or would be happily integrated into BOSS, thus avoiding any extra effort by others.
+
+<p>BOSS has been specifically designed to prevent it being locked into the BOSS Team's official masterlist repositories. Nevertheless, the BOSS Team appeals to the community to avoid the distribution of unofficial masterlists, as this would only hamper the effort to create one set of stores for load order information. Any issues with a masterlist are best brought to the attention of the BOSS Team so that they may be remedied.
+
 <p>GNU Free Documentation License Version 1.3 Notice:
 <blockquote>Copyright (C)  2012-2013  WrinklyNinja<br />
 Permission is granted to copy, distribute and/or modify this document
@@ -515,7 +519,7 @@ There are three key pieces of information that are used to accurately describe a
         <tr><td>Masterlist updating<td>BOSS downloads a masterlist and inserts into it version information that is scraped from Google Code.<td>BOSS uses Git to update masterlists, benefiting from a more robust mechanism with support for differential updates (reducing the amount of data that needs to be downloaded) and rolling back revisions in case of parsing errors.
         <tr><td>Masterlist structure &amp; syntax<td>Uses a custom file format.<td>Uses YAML 1.2, with custom condition string syntax modelled after Python's condition expressions.
         <tr><td>Userlist structure &amp; syntax<td>Uses a custom file format, different from the masterlist format.<td>Uses the same format and syntax as the masterlist.
-        <tr><td>Morrowind support<td>Technically supports Morrowind, though its masterlist is near-empty.<td>Does not support Morrowind.
+        <tr><td>Morrowind support<td>Technically supports Morrowind, though its masterlist is near-empty.<td>Does not support Morrowind. Morrowind mod users are advised to use <a href="https://code.google.com/p/mlox/wiki/Mlox">mlox</a>.
         <tr><td>BOSS file locations<td>All BOSS's files are stored in the BOSS folder first installed.<td>BOSS stores any files it creates (reports, masterlists, userlists, settings) in the <code>%LOCALAPPDATA%\BOSS</code> folder.
         <tr><td>Game selection on first run.<td>BOSS asks the user to select a game from a list.<td>BOSS selects the first game detected.
         <tr><td>File CRC calculation<td>File CRC calculation is optional.<td>File CRC calculation is always-on, as it no longer presents any significant additional performance impact.
@@ -554,7 +558,7 @@ There are three key pieces of information that are used to accurately describe a
         </ul>
         <tr><td>BOSS Log plugin submission<td>BOSS allows users to submit unrecognised plugins from the HTML BOSS Log.<td>As there is no longer any such thing as an unrecognised plugin, the submission system has been removed.
         <tr><td>BOSS Log display customisation<td>BOSS allows users to customise the colour scheme used by the BOSS Log.<td>BOSS does not allow customisation of the colour scheme used by the BOSS report. However, the styling is now provided by a static stylesheet instead of being dynamically generated within the report every time BOSS is run, so this static stylesheet can be edited to achieve the same effect.
-        <tr><td>Command line interface<td>BOSS provides a command line interface.<td>BOSS does not provide a command line interface, as the greater need for user interaction makes it unweildy.
+        <tr><td>Command line interface<td>BOSS provides a command line interface.<td>BOSS does not provide a command line interface, as the greater need for user interaction makes it unwieldy.
 </table>
 
 <h2 id="history">Version History</h2>

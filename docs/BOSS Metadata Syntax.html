@@ -105,7 +105,7 @@ h3{
 </ul>
 <p>Some important points that are more specific to how BOSS uses YAML:
 <ul>
-    <li>BOSS's support for YAML syntax is incomplete. A list of known limitations can be found <a href="https://github.com/WrinklyNinja/yaml-cpp/issues?labels=bug&state=open">here</a>. The only major missing piece is support for merge keys (<code>&lt;&lt;:</code>).
+    <li>BOSS's support for YAML syntax is incomplete. A list of known limitations can be found <a href="https://github.com/WrinklyNinja/yaml-cpp/issues?labels=bug&amp;state=open">here</a>. The only major missing piece is support for merge keys (<code>&lt;&lt;:</code>).
     <li>Strings are case-sensitive, apart from file paths, regular expressions and checksums.
 </ul>
 <p>Some properties of file paths as used by BOSS:
@@ -337,11 +337,11 @@ msg:
 <p>Examples:
 <code class="box">'This [string](https://en.wikipedia.org/wiki/String_(computer_science)) contains a labelled hyperlink.'</code>
 would be displayed as
-<blockquote>This <a href="https://en.wikipedia.org/wiki/String_(computer_science)">string</a> contains a labelled hyperlink.</code></blockquote>
+<blockquote>This <a href="https://en.wikipedia.org/wiki/String_(computer_science)">string</a> contains a labelled hyperlink.</blockquote>
 <p>While
 <code class="box">'This string (see: &lt;https://en.wikipedia.org/wiki/String_(computer_science)&gt;) contains an unlabelled hyperlink.'</code>
 both get displayed as
-<blockquote>This string (see: <a href="https://en.wikipedia.org/wiki/String_(computer_science)">https://en.wikipedia.org/wiki/String_(computer_science)</a>) contains an unlabelled hyperlink.</code></blockquote>
+<blockquote>This string (see: <a href="https://en.wikipedia.org/wiki/String_(computer_science)">https://en.wikipedia.org/wiki/String_(computer_science)</a>) contains an unlabelled hyperlink.</blockquote>
 
 <h2 id="cond">Condition Strings</h2>
 <p>Condition strings can be used to ensure that data is only acted on by BOSS under certain circumstances. They are very similar to boolean conditional expressions in programming languages such as Python, though more limited. Their <a href="https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_Form">EBNF</a> grammar is:
