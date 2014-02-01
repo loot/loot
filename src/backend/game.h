@@ -47,7 +47,8 @@ namespace boss {
         Game(const unsigned int baseGameCode, const std::string& bossFolder = "");
 
         Game& SetDetails(const std::string& name, const std::string& masterFile,
-                        const std::string& url, const std::string& path, const std::string& registry);
+                        const std::string& repositoryURL, const std::string& repositoryBranch, 
+                        const std::string& path, const std::string& registry);
         Game& SetPath(const std::string& path);  //Used by API.
         Game& Init();
 
@@ -60,7 +61,8 @@ namespace boss {
         std::string FolderName() const;
         std::string Master() const;
         std::string RegistryKey() const;
-        std::string URL() const;
+        std::string RepoURL() const;
+        std::string RepoBranch() const;
 
 
         boost::filesystem::path GamePath() const;
@@ -89,7 +91,8 @@ namespace boss {
         std::string registryKey;
 
         std::string bossFolderName;
-        std::string _masterlistURL;
+        std::string _repositoryURL;
+        std::string _repositoryBranch;
 
         boost::filesystem::path gamePath;  //Path to the game's folder.
         boost::unordered_set<std::string> activePlugins;  //Holds lowercased strings.

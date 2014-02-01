@@ -67,28 +67,32 @@ namespace boss {
             bossFolderName = "Oblivion";
             _masterFile = "Oblivion.esm";
             espm_settings = espm::Settings("tes4");
-            _masterlistURL = "https://github.com/boss-developers/boss-oblivion.git";
+            _repositoryURL = "https://github.com/boss-developers/boss-oblivion.git";
+            _repositoryBranch = "gh-pages";
         } else if (Id() == g_game_tes5) {
             _name = "TES V: Skyrim";
             registryKey = "Software\\Bethesda Softworks\\Skyrim\\Installed Path";
             bossFolderName = "Skyrim";
             _masterFile = "Skyrim.esm";
             espm_settings = espm::Settings("tes5");
-            _masterlistURL = "https://github.com/boss-developers/boss-skyrim.git";
+            _repositoryURL = "https://github.com/boss-developers/boss-skyrim.git";
+            _repositoryBranch = "gh-pages";
         } else if (Id() == g_game_fo3) {
             _name = "Fallout 3";
             registryKey = "Software\\Bethesda Softworks\\Fallout3\\Installed Path";
             bossFolderName = "Fallout3";
             _masterFile = "Fallout3.esm";
             espm_settings = espm::Settings("fo3");
-            _masterlistURL = "https://github.com/boss-developers/boss-fallout3.git";
+            _repositoryURL = "https://github.com/boss-developers/boss-fallout3.git";
+            _repositoryBranch = "gh-pages";
         } else if (Id() == g_game_fonv) {
             _name = "Fallout: New Vegas";
             registryKey = "Software\\Bethesda Softworks\\FalloutNV\\Installed Path";
             bossFolderName = "FalloutNV";
             _masterFile = "FalloutNV.esm";
             espm_settings = espm::Settings("fonv");
-            _masterlistURL = "https://github.com/boss-developers/boss-fallout-new-vegas.git";
+            _repositoryURL = "https://github.com/boss-developers/boss-fallout-new-vegas.git";
+            _repositoryBranch = "gh-pages";
         } else {
             BOOST_LOG_TRIVIAL(error) << "Invalid game ID supplied.";
             throw error(error::invalid_args, lc::translate("Invalid game ID supplied.").str());
@@ -99,7 +103,7 @@ namespace boss {
     }
 
     Game& Game::SetDetails(const std::string& name, const std::string& masterFile,
-                        const std::string& url, const std::string& path, const std::string& registry) {
+        const std::string& repositoryURL, const std::string& repositoryBranch, const std::string& path, const std::string& registry) {
 
         BOOST_LOG_TRIVIAL(trace) << "Setting new details for game: " << _name;
 
@@ -109,8 +113,11 @@ namespace boss {
         if (!masterFile.empty())
             _masterFile = masterFile;
 
-        if (!url.empty())
-            _masterlistURL = url;
+        if (!repositoryURL.empty())
+            _repositoryURL = repositoryURL;
+
+        if (!repositoryBranch.empty())
+            _repositoryBranch = repositoryBranch;
 
         if (!path.empty())
             gamePath = path;
@@ -201,8 +208,12 @@ namespace boss {
         return registryKey;
     }
 
-    std::string Game::URL() const {
-        return _masterlistURL;
+    std::string Game::RepoURL() const {
+        return _repositoryURL;
+    }
+
+    std::string Game::RepoBranch() const {
+        return _repositoryBranch;
     }
 
     fs::path Game::GamePath() const {

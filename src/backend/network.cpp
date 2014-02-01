@@ -167,13 +167,13 @@ namespace boss {
 
             BOOST_LOG_TRIVIAL(trace) << "Checking to see if remote URL matches URL in settings.";
 
-            //Check if the URLs match.
-            BOOST_LOG_TRIVIAL(info) << "Remote URL given: " << game.URL();
+            //Check if the repo URLs match.
+            BOOST_LOG_TRIVIAL(info) << "Remote URL given: " << game.RepoURL();
             BOOST_LOG_TRIVIAL(info) << "Remote URL in repository settings: " << url;
-            if (url != game.URL()) {
+            if (url != game.RepoURL()) {
                 BOOST_LOG_TRIVIAL(trace) << "URLs do not match, setting repository URL to URL in settings.";
                 //The URLs don't match. Change the remote URL to match the one BOSS has.
-                handle_error(git_remote_set_url(ptrs.remote, game.URL().c_str()), ptrs);
+                handle_error(git_remote_set_url(ptrs.remote, game.RepoURL().c_str()), ptrs);
 
                 //Now save change.
                 handle_error(git_remote_save(ptrs.remote), ptrs);
@@ -183,10 +183,10 @@ namespace boss {
             //Repository doesn't exist. Set up a repository.
             handle_error(git_repository_init(&ptrs.repo, game.MasterlistPath().parent_path().string().c_str(), false), ptrs);
 
-            BOOST_LOG_TRIVIAL(info) << "Setting the new repository's remote to: " << game.URL();
+            BOOST_LOG_TRIVIAL(info) << "Setting the new repository's remote to: " << game.RepoURL();
 
             //Now set the repository's remote.
-            handle_error(git_remote_create(&ptrs.remote, ptrs.repo, "origin", game.URL().c_str()), ptrs);
+            handle_error(git_remote_create(&ptrs.remote, ptrs.repo, "origin", game.RepoURL().c_str()), ptrs);
 
             BOOST_LOG_TRIVIAL(trace) << "Getting the repository config.";
 
@@ -252,15 +252,15 @@ namespace boss {
         unsigned int rollbacks = 0;
         char revision[10];
         do {
-            BOOST_LOG_TRIVIAL(trace) << "Getting the Git object for the tree at refs/remotes/origin/gh-pages~" << rollbacks << ".";
+            BOOST_LOG_TRIVIAL(trace) << "Getting the Git object for the tree at refs/remotes/origin/" << game.RepoBranch() << "~" << rollbacks << ".";
 
             //Get the commit hash so that we can report the revision if there is an error.
-            string filespec = "refs/remotes/origin/gh-pages~" + IntToString(rollbacks);
+            string filespec = "refs/remotes/origin/" + game.RepoBranch() + "~" + IntToString(rollbacks);
             git_object * mlistObj;
 
             handle_error(git_revparse_single(&ptrs.obj, ptrs.repo, filespec.c_str()), ptrs);
 
-            BOOST_LOG_TRIVIAL(trace) << "Checking out the tree at refs/remotes/origin/gh-pages~" << rollbacks << ".";
+            BOOST_LOG_TRIVIAL(trace) << "Checking out the tree at refs/remotes/origin/" << game.RepoBranch() << "~" << rollbacks << ".";
 
             //Now we can do the checkout.
             handle_error(git_checkout_tree(ptrs.repo, ptrs.obj, &opts), ptrs);

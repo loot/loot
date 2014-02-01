@@ -587,7 +587,7 @@ namespace boss {
         games.push_back(Game(g_game_tes5));
         games.push_back(Game(g_game_fo3));
         games.push_back(Game(g_game_fonv));
-        games.push_back(Game(g_game_tes4, "Nehrim").SetDetails("Nehrim - At Fate's Edge", "Nehrim.esm", "https://github.com/boss-developers/boss-oblivion.git", "", "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim - At Fate's Edge_is1"));
+        games.push_back(Game(g_game_tes4, "Nehrim").SetDetails("Nehrim - At Fate's Edge", "Nehrim.esm", "https://github.com/boss-developers/boss-oblivion.git", "gh-pages", "", "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim - At Fate's Edge_is1"));
 
         root["Games"] = games;
 
@@ -637,7 +637,8 @@ namespace YAML {
             << Key << "folder" << Value << rhs.FolderName()
             << Key << "name" << Value << rhs.Name()
             << Key << "master" << Value << rhs.Master()
-            << Key << "url" << Value << rhs.URL()
+            << Key << "repo" << Value << rhs.RepoURL()
+            << Key << "branch" << Value << rhs.RepoBranch()
             << Key << "path" << Value << rhs.GamePath().string()
             << Key << "registry" << Value << rhs.RegistryKey();
 
