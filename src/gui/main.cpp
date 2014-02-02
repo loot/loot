@@ -2,7 +2,7 @@
 
     A plugin load order optimiser for games that use the esp/esm plugin system.
 
-    Copyright (C) 2013    WrinklyNinja
+    Copyright (C) 2013-2014    WrinklyNinja
 
     This file is part of BOSS.
 
@@ -787,14 +787,13 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         if (pos1 != string::npos) {
             pos1 = oldDetails.find("<ul>", pos1);
             if (pos1 != string::npos) {
-                size_t pos2 = oldDetails.find("</div>", pos1);
-                pos2 = oldDetails.rfind("</ul>", pos2) - 3;  //Remove the 3 tabs preceding the closing tag.
-
-                oldDetails = oldDetails.substr(pos1, pos2 - pos1);
+                size_t pos2 = oldDetails.find("<div id=\"summary\">", pos1);
+                if (pos2 != string::npos) {
+                    pos2 -= 6; // "</div>"
+                    oldDetails = oldDetails.substr(pos1, pos2 - pos1);
+                }
             }
         }
-        boost::replace_all(oldDetails, "\t\t\t\t", "\t");
-        oldDetails += "</ul>\n";
     }
 
     BOOST_LOG_TRIVIAL(debug) << "Generating report...";
@@ -1076,7 +1075,7 @@ void Launcher::OnAbout(wxCommandEvent& event) {
     aboutInfo.SetName("BOSS");
     aboutInfo.SetVersion(IntToString(g_version_major)+"."+IntToString(g_version_minor)+"."+IntToString(g_version_patch));
     aboutInfo.SetDescription(translate("Load order optimisation for Oblivion, Skyrim, Fallout 3 and Fallout: New Vegas."));
-    aboutInfo.SetCopyright("Copyright (C) 2009-2013 BOSS Development Team.");
+    aboutInfo.SetCopyright("Copyright (C) 2009-2014 BOSS Development Team.");
     aboutInfo.SetWebSite("http://boss-developers.github.io");
 	aboutInfo.SetLicence("This program is free software: you can redistribute it and/or modify\n"
     "it under the terms of the GNU General Public License as published by\n"

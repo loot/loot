@@ -2,7 +2,7 @@
 
     A plugin load order optimiser for games that use the esp/esm plugin system.
 
-    Copyright (C) 2013    WrinklyNinja
+    Copyright (C) 2013-2014    WrinklyNinja
 
     This file is part of BOSS.
 
@@ -68,7 +68,8 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
     gamesList->AppendColumn(translate("Base Game Type"));
     gamesList->AppendColumn(translate("BOSS Folder Name"));
     gamesList->AppendColumn(translate("Master File"));
-    gamesList->AppendColumn(translate("Online Masterlist URL"));
+    gamesList->AppendColumn(translate("Masterlist Repository URL"));
+    gamesList->AppendColumn(translate("Masterlist Repository Branch"));
     gamesList->AppendColumn(translate("Install Path"));
     gamesList->AppendColumn(translate("Install Path Registry Key"));
 
@@ -180,9 +181,10 @@ void SettingsFrame::SetDefaultValues() {
         gamesList->SetItem(i, 1, FromUTF8(boss::Game(_games[i].Id()).FolderName()));
         gamesList->SetItem(i, 2, FromUTF8(_games[i].FolderName()));
         gamesList->SetItem(i, 3, FromUTF8(_games[i].Master()));
-        gamesList->SetItem(i, 4, FromUTF8(_games[i].URL()));
-        gamesList->SetItem(i, 5, FromUTF8(_games[i].GamePath().string()));
-        gamesList->SetItem(i, 6, FromUTF8(_games[i].RegistryKey()));
+        gamesList->SetItem(i, 4, FromUTF8(_games[i].RepoURL()));
+        gamesList->SetItem(i, 5, FromUTF8(_games[i].RepoBranch()));
+        gamesList->SetItem(i, 6, FromUTF8(_games[i].GamePath().string()));
+        gamesList->SetItem(i, 7, FromUTF8(_games[i].RegistryKey()));
     }
 
     addBtn->Enable(true);
@@ -222,16 +224,18 @@ void SettingsFrame::OnQuit(wxCommandEvent& event) {
 
         _settings["View Report Externally"] = reportViewBox->IsChecked();
 
+        _games.clear();
         for (size_t i=0,max=gamesList->GetItemCount(); i < max; ++i) {
-            string name, folder, master, url, path, registry;
+            string name, folder, master, repo, branch, path, registry;
             unsigned int id;
 
             name = gamesList->GetItemText(i, 0).ToUTF8();
             folder = gamesList->GetItemText(i, 2).ToUTF8();
             master = gamesList->GetItemText(i, 3).ToUTF8();
-            url = gamesList->GetItemText(i, 4).ToUTF8();
-            path = gamesList->GetItemText(i, 5).ToUTF8();
-            registry = gamesList->GetItemText(i, 6).ToUTF8();
+            repo = gamesList->GetItemText(i, 4).ToUTF8();
+            branch = gamesList->GetItemText(i, 5).ToUTF8();
+            path = gamesList->GetItemText(i, 6).ToUTF8();
+            registry = gamesList->GetItemText(i, 7).ToUTF8();
 
             if (gamesList->GetItemText(i, 1).ToUTF8() == boss::Game(boss::g_game_tes4).FolderName())
                 id = boss::g_game_tes4;
@@ -242,7 +246,7 @@ void SettingsFrame::OnQuit(wxCommandEvent& event) {
             else
                 id = boss::g_game_fonv;
 
-            _games[i] = boss::Game(id, folder).SetDetails(name, master, url, path, registry);
+            _games.push_back(boss::Game(id, folder).SetDetails(name, master, repo, branch, path, registry));
         }
     }
 
@@ -305,9 +309,10 @@ void SettingsFrame::OnAddGame(wxCommandEvent& event) {
         gamesList->SetItem(i, 1, rowDialog->GetType().ToUTF8());
         gamesList->SetItem(i, 2, rowDialog->GetFolderName());
         gamesList->SetItem(i, 3, rowDialog->GetMaster());
-        gamesList->SetItem(i, 4, rowDialog->GetURL());
-        gamesList->SetItem(i, 5, rowDialog->GetPath());
-        gamesList->SetItem(i, 6, rowDialog->GetRegistryKey());
+        gamesList->SetItem(i, 4, rowDialog->GetRepoURL());
+        gamesList->SetItem(i, 5, rowDialog->GetRepoBranch());
+        gamesList->SetItem(i, 6, rowDialog->GetPath());
+        gamesList->SetItem(i, 7, rowDialog->GetRegistryKey());
     }
 }
 
@@ -328,7 +333,7 @@ void SettingsFrame::OnEditGame(wxCommandEvent& event) {
     else
         stateNo = boss::g_game_fonv;
 
-    rowDialog->SetValues(stateNo, gamesList->GetItemText(i, 0), gamesList->GetItemText(i, 2), gamesList->GetItemText(i, 3), gamesList->GetItemText(i, 4), gamesList->GetItemText(i, 5), gamesList->GetItemText(i, 6));
+    rowDialog->SetValues(stateNo, gamesList->GetItemText(i, 0), gamesList->GetItemText(i, 2), gamesList->GetItemText(i, 3), gamesList->GetItemText(i, 4), gamesList->GetItemText(i, 5), gamesList->GetItemText(i, 6), gamesList->GetItemText(i, 7));
 
     if (rowDialog->ShowModal() == wxID_OK) {
 
@@ -362,9 +367,10 @@ void SettingsFrame::OnEditGame(wxCommandEvent& event) {
         gamesList->SetItem(i, 1, rowDialog->GetType());
         gamesList->SetItem(i, 2, rowDialog->GetFolderName());
         gamesList->SetItem(i, 3, rowDialog->GetMaster());
-        gamesList->SetItem(i, 4, rowDialog->GetURL());
-        gamesList->SetItem(i, 5, rowDialog->GetPath());
-        gamesList->SetItem(i, 6, rowDialog->GetRegistryKey());
+        gamesList->SetItem(i, 4, rowDialog->GetRepoURL());
+        gamesList->SetItem(i, 5, rowDialog->GetRepoBranch());
+        gamesList->SetItem(i, 6, rowDialog->GetPath());
+        gamesList->SetItem(i, 7, rowDialog->GetRegistryKey());
     }
 }
 
@@ -392,7 +398,8 @@ GameEditDialog::GameEditDialog(wxWindow *parent, const wxString& title) : wxDial
     _name = new wxTextCtrl(this, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, 0, wxTextValidator(wxFILTER_EMPTY));
     _folderName = new wxTextCtrl(this, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, 0, wxTextValidator(wxFILTER_EMPTY));
     _master = new wxTextCtrl(this, wxID_ANY);
-    _url = new wxTextCtrl(this, wxID_ANY);
+    _repo = new wxTextCtrl(this, wxID_ANY);
+    _branch = new wxTextCtrl(this, wxID_ANY);
     _path = new wxTextCtrl(this, wxID_ANY);
     _registry = new wxTextCtrl(this, wxID_ANY);
 
@@ -420,8 +427,11 @@ GameEditDialog::GameEditDialog(wxWindow *parent, const wxString& title) : wxDial
 	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Master File:")), leftItem);
 	GridSizer->Add(_master, rightItem);
 
-	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Masterlist URL:")), leftItem);
-	GridSizer->Add(_url, rightItem);
+	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Masterlist Repository URL:")), leftItem);
+    GridSizer->Add(_repo, rightItem);
+
+    GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Masterlist Repository Branch:")), leftItem);
+    GridSizer->Add(_branch, rightItem);
 
 	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Install Path:")), leftItem);
 	GridSizer->Add(_path, rightItem);
@@ -448,7 +458,7 @@ GameEditDialog::GameEditDialog(wxWindow *parent, const wxString& title) : wxDial
 }
 
 void GameEditDialog::SetValues(unsigned int type, const wxString& name, const wxString& folderName, const wxString& master,
-                const wxString& url, const wxString& path, const wxString& registry) {
+    const wxString& repo, const wxString& branch, const wxString& path, const wxString& registry) {
     if (type == boss::g_game_tes4)
         _type->SetSelection(0);
     else if (type == boss::g_game_tes5)
@@ -461,7 +471,8 @@ void GameEditDialog::SetValues(unsigned int type, const wxString& name, const wx
     _name->SetValue(name);
     _folderName->SetValue(folderName);
     _master->SetValue(master);
-    _url->SetValue(url);
+    _repo->SetValue(repo);
+    _branch->SetValue(branch);
     _path->SetValue(path);
     _registry->SetValue(registry);
 
@@ -486,8 +497,12 @@ wxString GameEditDialog::GetMaster() const {
     return _master->GetValue();
 }
 
-wxString GameEditDialog::GetURL() const {
-    return _url->GetValue();
+wxString GameEditDialog::GetRepoURL() const {
+    return _repo->GetValue();
+}
+
+wxString GameEditDialog::GetRepoBranch() const {
+    return _branch->GetValue();
 }
 
 wxString GameEditDialog::GetPath() const {

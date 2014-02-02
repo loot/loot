@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: BOSS v3.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-10-26 11:41-0000\n"
-"PO-Revision-Date: 2014-01-27 15:05+0600\n"
+"PO-Revision-Date: 2014-02-01 23:09+0600\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
@@ -273,7 +273,7 @@ msgstr "BOSS: Добавить сообщение"
 
 #: gui/editor.cpp:443
 msgid "Error: No content specified. Row will not be added."
-msgstr "Ошибка:  Не указано содержимое. Строка не будет добавлена."
+msgstr "Ошибка: Не указано содержимое. Строка не будет добавлена."
 
 #: gui/editor.cpp:444 gui/editor.cpp:526 gui/editor.cpp:1122
 #: gui/editor.cpp:1137 gui/main.cpp:164 gui/main.cpp:181 gui/main.cpp:194
@@ -573,10 +573,10 @@ msgid ""
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
 "will be re-downloaded by Steam. Do you wish to continue?"
 msgstr ""
-"Эта возможность предоставлена для того, чтобы моддеры, использующие Creation "
-"Kit, могли установить там используемый ими порядок загрузки. Обратная "
-"сторона этого то, что любые подписанные в Steam Workshop моды могут быть "
-"заново загружены с помощью Steam. Вы желаете продолжить?"
+"Эта возможность предоставлена для того, чтобы авторы модов, использующие "
+"Creation Kit, могли установить там используемый ими порядок загрузки. "
+"Обратная сторона этого то, что любые, подписанные в Steam Workshop моды, "
+"могут быть заново загружены с помощью Steam. Вы желаете продолжить?"
 
 #: gui/main.cpp:961
 msgid "BOSS: Warning"

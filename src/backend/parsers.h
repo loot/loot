@@ -2,7 +2,7 @@
 
     A plugin load order optimiser for games that use the esp/esm plugin system.
 
-    Copyright (C) 2012-2013    WrinklyNinja
+    Copyright (C) 2012-2014    WrinklyNinja
 
     This file is part of BOSS.
 
@@ -67,7 +67,8 @@ namespace YAML {
             node["name"] = rhs.Name();
             node["folder"] = rhs.FolderName();
             node["master"] = rhs.Master();
-            node["url"] = rhs.URL();
+            node["repo"] = rhs.RepoURL();
+            node["branch"] = rhs.RepoBranch();
             node["path"] = rhs.GamePath().string();
             node["registry"] = rhs.RegistryKey();
 
@@ -89,19 +90,21 @@ namespace YAML {
             else
                 return false;
 
-            std::string name, master, url, path, registry;
+            std::string name, master, repo, branch, path, registry;
             if (node["name"])
                 name = node["name"].as<std::string>();
             if (node["master"])
                 master = node["master"].as<std::string>();
-            if (node["url"])
-                url = node["url"].as<std::string>();
+            if (node["repo"])
+                repo = node["repo"].as<std::string>();
+            if (node["branch"])
+                branch = node["branch"].as<std::string>();
             if (node["path"])
                 path = node["path"].as<std::string>();
             if (node["registry"])
                 registry = node["registry"].as<std::string>();
 
-            rhs.SetDetails(name, master, url, path, registry);
+            rhs.SetDetails(name, master, repo, branch, path, registry);
 
             return true;
         }
@@ -384,7 +387,7 @@ namespace boss {
 
             condition =
                   function                          [qi::labels::_val = qi::labels::_1]
-                | ( qi::lit("not") > function )     [qi::labels::_val = !qi::labels::_1]
+                | ( qi::lit("not") > condition )     [qi::labels::_val = !qi::labels::_1]
                 | ( '(' > expression > ')' )        [qi::labels::_val = qi::labels::_1]
                 ;
 

@@ -133,7 +133,7 @@ FunctionEnd
 
 	VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "BOSS"
 	VIAddVersionKey /LANG=${LANG_ENGLISH} "CompanyName" "BOSS Development Team"
-	VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "© 2009-2013 BOSS Development Team"
+	VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "© 2009-2014 BOSS Development Team"
 	VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "Installer for BOSS 3.0.0"
 	VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "3.0.0"
 
@@ -148,7 +148,7 @@ FunctionEnd
 
 	VIAddVersionKey /LANG=${LANG_RUSSIAN} "ProductName" "BOSS"
 	VIAddVersionKey /LANG=${LANG_RUSSIAN} "CompanyName" "BOSS Development Team"
-	VIAddVersionKey /LANG=${LANG_RUSSIAN} "LegalCopyright" "© 2009-2013 BOSS Development Team"
+	VIAddVersionKey /LANG=${LANG_RUSSIAN} "LegalCopyright" "© 2009-2014 BOSS Development Team"
 	VIAddVersionKey /LANG=${LANG_RUSSIAN} "FileDescription" "Установщик для BOSS 3.0.0"
 	VIAddVersionKey /LANG=${LANG_RUSSIAN} "FileVersion" "3.0.0"
 
@@ -163,7 +163,7 @@ FunctionEnd
 
 	;VIAddVersionKey /LANG=${LANG_GERMAN} "ProductName" "BOSS"
 	;VIAddVersionKey /LANG=${LANG_GERMAN} "CompanyName" "BOSS Development Team"
-	;VIAddVersionKey /LANG=${LANG_GERMAN} "LegalCopyright" "© 2009-2013 BOSS Development Team"
+	;VIAddVersionKey /LANG=${LANG_GERMAN} "LegalCopyright" "© 2009-2014 BOSS Development Team"
 	;VIAddVersionKey /LANG=${LANG_GERMAN} "FileDescription" "Installer für BOSS 3.0.0"
 	;VIAddVersionKey /LANG=${LANG_GERMAN} "FileVersion" "3.0.0"
 
@@ -178,7 +178,7 @@ FunctionEnd
 
 	VIAddVersionKey /LANG=${LANG_SPANISH} "ProductName" "BOSS"
 	VIAddVersionKey /LANG=${LANG_SPANISH} "CompanyName" "BOSS Development Team"
-	VIAddVersionKey /LANG=${LANG_SPANISH} "LegalCopyright" "© 2009-2013 BOSS Development Team"
+	VIAddVersionKey /LANG=${LANG_SPANISH} "LegalCopyright" "© 2009-2014 BOSS Development Team"
 	VIAddVersionKey /LANG=${LANG_SPANISH} "FileDescription" "El instalador para BOSS 3.0.0"
 	VIAddVersionKey /LANG=${LANG_SPANISH} "FileVersion" "3.0.0"
 
@@ -193,7 +193,7 @@ FunctionEnd
 
     ;VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "ProductName" "BOSS"
     ;VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "CompanyName" "BOSS Development Team"
-    ;VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "LegalCopyright" "© 2009-2013 BOSS Development Team"
+    ;VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "LegalCopyright" "© 2009-2014 BOSS Development Team"
     ;VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "FileDescription" "BOSS 3.0.0安装包"
     ;VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "FileVersion" "3.0.0"
 

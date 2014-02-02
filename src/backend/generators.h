@@ -2,7 +2,7 @@
 
     A plugin load order optimiser for games that use the esp/esm plugin system.
 
-    Copyright (C) 2013    WrinklyNinja
+    Copyright (C) 2013-2014    WrinklyNinja
 
     This file is part of BOSS.
 
@@ -118,7 +118,7 @@ namespace boss {
         node = head.append_child();
         node.set_name("meta");
         node.append_attribute("http-equiv").set_value("X-UA-Compatible");
-        node.append_attribute("content").set_value("IE=9");
+        node.append_attribute("content").set_value("IE=edge");
 
         node = head.append_child();
         node.set_name("meta");
@@ -202,7 +202,7 @@ namespace boss {
                         int messageNo,
                         int warnNo,
                         int errorNo,
-                        const std::list<Message>& messages) {
+                        std::list<Message>& messages) {
 
         BOOST_LOG_TRIVIAL(trace) << "Appending summary tab to BOSS report.";
 
@@ -256,10 +256,12 @@ namespace boss {
 
         if (!hasChanged) {
             BOOST_LOG_TRIVIAL(info) << "No changes in the BOSS report details tab since the last run.";
-            pugi::xml_node note = summary.append_child();
+            /*pugi::xml_node note = summary.append_child();
             note.set_name("div");
             note.append_attribute("id").set_value("noChanges");
             note.text().set(boost::locale::translate("No change in details since last run.").str().c_str());
+            */
+            messages.push_front(boss::Message(boss::g_message_say, "There have been no changes in the Details tab since BOSS was last run."));
         }
 
         if (!messages.empty()) {
@@ -400,7 +402,7 @@ namespace boss {
         }
 
         xml_string_writer writer;
-        details.print(writer, "\t", pugi::format_default | pugi::format_no_declaration);
+        details.print(writer, "", pugi::format_default | pugi::format_no_declaration | pugi::format_raw);
 
         return writer.result != oldDetails;
     }
@@ -409,7 +411,7 @@ namespace boss {
                         const std::string& oldDetails,
                         const std::string& masterlistVersion,
                         bool masterlistUpdateEnabled,
-                        const std::list<Message>& messages,
+                        std::list<Message>& messages,
                         const std::list<Plugin>& plugins,
                         int& pluginMessageNo
                         ) {
@@ -453,7 +455,7 @@ namespace boss {
         input.append_attribute("type").set_value("checkbox");
         input.append_attribute("id").set_value("hideVersionNumbers");
         input.append_attribute("data-class").set_value("version");
-        input.text().set(boost::locale::translate("Hide Version Numbers").str().c_str());
+        label.text().set(boost::locale::translate("Hide Version Numbers").str().c_str());
 
         label = filters.append_child();
         label.set_name("label");
@@ -462,7 +464,7 @@ namespace boss {
         input.append_attribute("type").set_value("checkbox");
         input.append_attribute("id").set_value("hideCRCs");
         input.append_attribute("data-class").set_value("crc");
-        input.text().set(boost::locale::translate("Hide CRCs").str().c_str());
+        label.text().set(boost::locale::translate("Hide CRCs").str().c_str());
 
         label = filters.append_child();
         label.set_name("label");
@@ -471,7 +473,7 @@ namespace boss {
         input.append_attribute("type").set_value("checkbox");
         input.append_attribute("id").set_value("hideBashTags");
         input.append_attribute("data-class").set_value("tag");
-        input.text().set(boost::locale::translate("Hide Bash Tag Suggestions").str().c_str());
+        label.text().set(boost::locale::translate("Hide Bash Tag Suggestions").str().c_str());
 
         label = filters.append_child();
         label.set_name("label");
@@ -479,7 +481,7 @@ namespace boss {
         input.set_name("input");
         input.append_attribute("type").set_value("checkbox");
         input.append_attribute("id").set_value("hideNotes");
-        input.text().set(boost::locale::translate("Hide Notes").str().c_str());
+        label.text().set(boost::locale::translate("Hide Notes").str().c_str());
 
         label = filters.append_child();
         label.set_name("label");
@@ -487,7 +489,7 @@ namespace boss {
         input.set_name("input");
         input.append_attribute("type").set_value("checkbox");
         input.append_attribute("id").set_value("hideDoNotCleanMessages");
-        input.text().set(boost::locale::translate("Hide 'Do Not Clean' Messages").str().c_str());
+        label.text().set(boost::locale::translate("Hide 'Do Not Clean' Messages").str().c_str());
 
         label = filters.append_child();
         label.set_name("label");
@@ -495,7 +497,7 @@ namespace boss {
         input.set_name("input");
         input.append_attribute("type").set_value("checkbox");
         input.append_attribute("id").set_value("hideAllPluginMessages");
-        input.text().set(boost::locale::translate("Hide All Plugin Messages").str().c_str());
+        label.text().set(boost::locale::translate("Hide All Plugin Messages").str().c_str());
 
         label = filters.append_child();
         label.set_name("label");
@@ -503,7 +505,7 @@ namespace boss {
         input.set_name("input");
         input.append_attribute("type").set_value("checkbox");
         input.append_attribute("id").set_value("hideMessagelessPlugins");
-        input.text().set(boost::locale::translate("Hide Messageless Plugins").str().c_str());
+        label.text().set(boost::locale::translate("Hide Messageless Plugins").str().c_str());
 
         pugi::xml_node span;
 
@@ -538,7 +540,7 @@ namespace boss {
     }
 
     inline void GenerateReport(const boost::filesystem::path& file,
-                        const std::list<Message>& messages,
+                        std::list<Message>& messages,
                         const std::list<Plugin>& plugins,
                         const std::string& oldDetails,
                         const std::string& masterlistVersion,
@@ -560,12 +562,6 @@ namespace boss {
 
         AppendScripts(body);
         //PugiXML's save_file doesn't handle Unicode paths right (it can't open them right), so use a stream instead.
-        /*
-        if (!doc.save_file(file.c_str(), "\t", pugi::format_default | pugi::format_no_declaration | pugi::format_raw)) {
-            BOOST_LOG_TRIVIAL(error) << "Could not write BOSS report to: " << file;
-            throw boss::error(boss::error::path_write_fail, boost::locale::translate("Could not write BOSS report.").str());
-        }
-        */
         boost::filesystem::path outpath(file);
         boss::ofstream out(outpath);
         doc.save(out, "\t", pugi::format_default | pugi::format_no_declaration | pugi::format_raw);
@@ -593,7 +589,7 @@ namespace boss {
         games.push_back(Game(g_game_tes5));
         games.push_back(Game(g_game_fo3));
         games.push_back(Game(g_game_fonv));
-        games.push_back(Game(g_game_tes4, "Nehrim").SetDetails("Nehrim - At Fate's Edge", "Nehrim.esm", "https://github.com/boss-developers/boss-oblivion.git", "", "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim - At Fate's Edge_is1"));
+        games.push_back(Game(g_game_tes4, "Nehrim").SetDetails("Nehrim - At Fate's Edge", "Nehrim.esm", "https://github.com/boss-developers/boss-oblivion.git", "gh-pages", "", "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim - At Fate's Edge_is1"));
 
         root["Games"] = games;
 
@@ -643,7 +639,8 @@ namespace YAML {
             << Key << "folder" << Value << rhs.FolderName()
             << Key << "name" << Value << rhs.Name()
             << Key << "master" << Value << rhs.Master()
-            << Key << "url" << Value << rhs.URL()
+            << Key << "repo" << Value << rhs.RepoURL()
+            << Key << "branch" << Value << rhs.RepoBranch()
             << Key << "path" << Value << rhs.GamePath().string()
             << Key << "registry" << Value << rhs.RegistryKey();
 

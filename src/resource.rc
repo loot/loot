@@ -10,7 +10,7 @@ BEGIN
         BLOCK "040904b0"
         BEGIN
             VALUE "FileVersion", "3.0.0"
-            VALUE "LegalCopyright", "Copyright (C) 2013 WrinklyNinja"
+            VALUE "LegalCopyright", "Copyright (C) 2013-2014 WrinklyNinja"
             VALUE "ProductVersion", "3.0.0"
         END
     END
