@@ -2,7 +2,7 @@
 
     A plugin load order optimiser for games that use the esp/esm plugin system.
 
-    Copyright (C) 2012-2013    WrinklyNinja
+    Copyright (C) 2012-2014    WrinklyNinja
 
     This file is part of BOSS.
 
