@@ -74,7 +74,9 @@ enum {
     BUTTON_MoveDown,
 };
 
-extern wxString Language[4];
+const unsigned int LanguageSize = 5;
+
+extern const wxString Language[LanguageSize];
 
 wxString translate(const std::string& str);
 

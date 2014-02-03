@@ -1035,7 +1035,7 @@ MessageEditDialog::MessageEditDialog(wxWindow *parent, const wxString& title) : 
 
     //Initialise controls.
     _type = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 3, Type);
-    _language = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 4, Language);
+    _language = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, LanguageSize, Language);
 
     _condition = new wxTextCtrl(this, wxID_ANY);
     _str = new wxTextCtrl(this, wxID_ANY);

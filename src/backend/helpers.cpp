@@ -239,6 +239,8 @@ namespace boss {
             return "spa";
         else if (num == g_lang_russian)
             return "rus";
+        else if (num == g_lang_french)
+            return "fra";
         else
             return "";
     }
@@ -250,6 +252,8 @@ namespace boss {
             return g_lang_spanish;
         else if (boost::iequals(str, "rus"))
             return g_lang_russian;
+        else if (boost::iequals(str, "fra"))
+            return g_lang_french;
         else
             return g_lang_any;
     }

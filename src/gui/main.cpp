@@ -249,6 +249,11 @@ bool BossGUI::OnInit() {
             localeId = "ru.UTF-8";
             lang = wxLANGUAGE_RUSSIAN;
         }
+        else if (_settings["Language"].as<string>() == "fra") {
+            BOOST_LOG_TRIVIAL(debug) << "Selected language: French.";
+            localeId = "fr.UTF-8";
+            lang = wxLANGUAGE_FRENCH;
+        }
     }
 
     //Boost.Locale initialisation: Specify location of language dictionaries.
