@@ -253,10 +253,17 @@ namespace boss {
             ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str());
 
         if (ret != LIBLO_OK && ret != LIBLO_WARN_LO_MISMATCH) {
-            const char * e;
+            const char * e = NULL;
+            string err;
             lo_get_error_message(&e);
-            BOOST_LOG_TRIVIAL(error) << "libloadorder failed to create a game handle. Details: " << e;
-            string err = lc::translate("libloadorder failed to create a game handle. Details:").str() + " " + e;
+            if (e == NULL) {
+                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to create a game handle. Details could not be fetched.";
+                err = lc::translate("libloadorder failed to create a game handle. Details could not be fetched.").str();
+            }
+            else {
+                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to create a game handle. Details: " << e;
+                err = lc::translate("libloadorder failed to create a game handle. Details:").str() + " " + e;
+            }
             lo_cleanup();
             throw error(error::liblo_error, err);
         }
@@ -264,21 +271,35 @@ namespace boss {
         ret = lo_set_game_master(gh, _masterFile.c_str());
 
         if (ret != LIBLO_OK) {
-            const char * e;
+            const char * e = NULL;
+            string err;
             lo_get_error_message(&e);
             lo_destroy_handle(gh);
-            BOOST_LOG_TRIVIAL(error) << "libloadorder failed to initialise game master file support. Details: " << e;
-            string err = lc::translate("libloadorder failed to initialise game master file support. Details:").str() + " " + e;
+            if (e == NULL) {
+                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to initialise game master file support. Details could not be fetched.";
+                err = lc::translate("libloadorder failed to initialise game master file support. Details could not be fetched.").str();
+            }
+            else {
+                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to initialise game master file support. Details: " << e;
+                err = lc::translate("libloadorder failed to initialise game master file support. Details:").str() + " " + e;
+            }
             lo_cleanup();
             throw error(error::liblo_error, err);
         }
 
         if (lo_get_active_plugins(gh, &pluginArr, &pluginArrSize) != LIBLO_OK) {
-            const char * e;
+            const char * e = NULL;
+            string err;
             lo_get_error_message(&e);
             lo_destroy_handle(gh);
-            BOOST_LOG_TRIVIAL(error) << "libloadorder failed to get the active plugins list. Details: " << e;
-            string err = lc::translate("libloadorder failed to get the active plugins list. Details:").str() + " " + e;
+            if (e == NULL) {
+                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to get the active plugins list. Details could not be fetched.";
+                err = lc::translate("libloadorder failed to get the active plugins list. Details could not be fetched.").str();
+            }
+            else {
+                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to get the active plugins list. Details: " << e;
+                string err = lc::translate("libloadorder failed to get the active plugins list. Details:").str() + " " + e;
+            }
             lo_cleanup();
             throw error(error::liblo_error, err);
         }
@@ -314,9 +335,16 @@ namespace boss {
 
         if (ret != LIBLO_OK && ret != LIBLO_WARN_LO_MISMATCH) {
             const char * e = NULL;
+            string err;
             lo_get_error_message(&e);
-            BOOST_LOG_TRIVIAL(error) << "libloadorder failed to create a game handle. Details: " << e;
-            string err = lc::translate("libloadorder failed to create a game handle. Details:").str() + " " + e;
+            if (e == NULL) {
+                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to create a game handle. Details could not be fetched.";
+                err = lc::translate("libloadorder failed to create a game handle. Details could not be fetched.").str();
+            }
+            else {
+                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to create a game handle. Details: " << e;
+                string err = lc::translate("libloadorder failed to create a game handle. Details:").str() + " " + e;
+            }
             lo_cleanup();
             throw error(error::liblo_error, err);
         }
@@ -325,20 +353,34 @@ namespace boss {
 
         if (ret != LIBLO_OK) {
             const char * e = NULL;
+            string err;
             lo_get_error_message(&e);
             lo_destroy_handle(gh);
-            BOOST_LOG_TRIVIAL(error) << "libloadorder failed to initialise game master file support. Details: " << e;
-            string err = lc::translate("libloadorder failed to initialise game master file support. Details:").str() + " " + e;
+            if (e == NULL) {
+                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to initialise game master file support. Details could not be fetched.";
+                err = lc::translate("libloadorder failed to initialise game master file support. Details could not be fetched.").str();
+            }
+            else {
+                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to initialise game master file support. Details: " << e;
+                string err = lc::translate("libloadorder failed to initialise game master file support. Details:").str() + " " + e;
+            }
             lo_cleanup();
             throw error(error::liblo_error, err);
         }
 
         if (lo_get_load_order(gh, &pluginArr, &pluginArrSize) != LIBLO_OK) {
             const char * e = NULL;
+            string err;
             lo_get_error_message(&e);
             lo_destroy_handle(gh);
-            BOOST_LOG_TRIVIAL(error) << "libloadorder failed to set the load order. Details: " << e;
-            string err = lc::translate("libloadorder failed to set the load order. Details:").str() + " " + e;
+            if (e == NULL) {
+                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to set the load order. Details could not be fetched.";
+                err = lc::translate("libloadorder failed to set the load order. Details could not be fetched.").str();
+            }
+            else {
+                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to get the load order. Details: " << e;
+                string err = lc::translate("libloadorder failed to get the load order. Details:").str() + " " + e;
+            }
             lo_cleanup();
             throw error(error::liblo_error, err);
         }
@@ -369,9 +411,16 @@ namespace boss {
 
         if (ret != LIBLO_OK && ret != LIBLO_WARN_LO_MISMATCH) {
             const char * e = NULL;
+            string err;
             lo_get_error_message(&e);
-            BOOST_LOG_TRIVIAL(error) << "libloadorder failed to create a game handle. Details: " << e;
-            string err = lc::translate("libloadorder failed to create a game handle. Details:").str() + " " + e;
+            if (e == NULL) {
+                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to create a game handle. Details could not be fetched.";
+                err = lc::translate("libloadorder failed to create a game handle. Details could not be fetched.").str();
+            }
+            else {
+                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to create a game handle. Details: " << e;
+                string err = lc::translate("libloadorder failed to create a game handle. Details:").str() + " " + e;
+            }
             lo_cleanup();
             throw error(error::liblo_error, err);
         }
@@ -379,10 +428,17 @@ namespace boss {
         ret = lo_set_game_master(gh, _masterFile.c_str());
         if (ret != LIBLO_OK) {
             const char * e = NULL;
+            string err;
             lo_get_error_message(&e);
             lo_destroy_handle(gh);
-            BOOST_LOG_TRIVIAL(error) << "libloadorder failed to initialise game master file support. Details: " << e;
-            string err = lc::translate("libloadorder failed to initialise game master file support. Details:").str() + " " + e;
+            if (e == NULL) {
+                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to initialise game master file support. Details could not be fetched.";
+                err = lc::translate("libloadorder failed to initialise game master file support. Details could not be fetched.").str();
+            }
+            else {
+                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to initialise game master file support. Details: " << e;
+                string err = lc::translate("libloadorder failed to initialise game master file support. Details:").str() + " " + e;
+            }
             lo_cleanup();
             throw error(error::liblo_error, err);
         }
@@ -401,10 +457,17 @@ namespace boss {
                 delete [] pluginArr[i];
             delete [] pluginArr;
             const char * e = NULL;
+            string err;
             lo_get_error_message(&e);
             lo_destroy_handle(gh);
-            BOOST_LOG_TRIVIAL(error) << "libloadorder failed to set the load order. Details: " << e;
-            string err = lc::translate("libloadorder failed to set the load order. Details:").str() + " " + e;
+            if (e == NULL) {
+                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to set the load order. Details could not be fetched.";
+                err = lc::translate("libloadorder failed to set the load order. Details could not be fetched.").str();
+            }
+            else {
+                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to set the load order. Details: " << e;
+                string err = lc::translate("libloadorder failed to set the load order. Details:").str() + " " + e;
+            }
             lo_cleanup();
             throw error(error::liblo_error, err);
         }

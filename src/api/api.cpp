@@ -129,12 +129,28 @@ struct _boss_db_int {
     size_t extMessageArraySize;
 };
 
-const char * extMessageStr = NULL;
+char * extMessageStr = NULL;
 
 // std::string to null-terminated char string converter.
 char * ToNewCString(std::string str) {
     char * p = new char[str.length() + 1];
     return strcpy(p, str.c_str());
+}
+
+unsigned int c_error(const boss::error& e) {
+    delete[] extMessageStr;
+    try {
+        extMessageStr = new char[strlen(e.what()) + 1];
+        strcpy(extMessageStr, e.what());
+    }
+    catch (std::bad_alloc& e) {
+        extMessageStr = NULL;
+    }
+    return e.code();
+}
+
+unsigned int c_error(const unsigned int code, const std::string& what) {
+    return c_error(boss::error(code, what.c_str()));
 }
 
 
@@ -147,7 +163,7 @@ char * ToNewCString(std::string str) {
 // until this function is called again or until CleanUpAPI is called.
 BOSS_API unsigned int boss_get_error_message (const char ** const message) {
     if (message == NULL)
-        return boss_error_invalid_args;
+        return c_error(boss_error_invalid_args, "Null message pointer passed.");
 
     *message = extMessageStr;
 
@@ -157,6 +173,7 @@ BOSS_API unsigned int boss_get_error_message (const char ** const message) {
 // Frees memory allocated to error string.
 BOSS_API void     boss_cleanup () {
     delete [] extMessageStr;
+    extMessageStr = NULL;
 }
 
 
@@ -175,7 +192,7 @@ BOSS_API bool boss_is_compatible (const unsigned int versionMajor, const unsigne
 // CleanUpAPI is called.
 BOSS_API unsigned int boss_get_version (unsigned int * const versionMajor, unsigned int * const versionMinor, unsigned int * const versionPatch) {
     if (versionMajor == NULL || versionMinor == NULL || versionPatch == NULL)
-        return boss_error_invalid_args;
+        return c_error(boss_error_invalid_args, "Null pointer passed.");
 
     *versionMajor = boss::g_version_major;
     *versionMinor = boss::g_version_minor;
@@ -198,7 +215,7 @@ BOSS_API unsigned int boss_get_version (unsigned int * const versionMajor, unsig
 // the specified game.
 BOSS_API unsigned int boss_create_db (boss_db * const db, const unsigned int clientGame, const char * const gamePath) {
     if (db == NULL || (clientGame != boss_game_tes4 && clientGame != boss_game_tes5 && clientGame != boss_game_fo3 && clientGame != boss_game_fonv))
-        return boss_error_invalid_args;
+        return c_error(boss_error_invalid_args, "Null pointer passed.");
 
     //Set the locale to get encoding conversions working correctly.
     std::setlocale(LC_CTYPE, "");
@@ -217,16 +234,14 @@ BOSS_API unsigned int boss_create_db (boss_db * const db, const unsigned int cli
     try {
         game = boss::Game(clientGame).SetPath(game_path).Init();  //This also checks to see if the game is installed if game_path is empty and throws an exception if it is not detected. It also creates a folder in %LOCALAPPDATA% and reads the active plugins list, but that shouldn't be an issue.
     } catch (boss::error& e) {
-        extMessageStr = e.what();
-        return e.code();
+        return c_error(e);
     }
 
     boss_db retVal;
     try {
         retVal = new _boss_db_int;
     } catch (std::bad_alloc& e) {
-        extMessageStr = e.what();
-        return boss_error_no_mem;
+        return c_error(boss_error_no_mem, e.what());
     }
     retVal->game = game;
     *db = retVal;
@@ -251,7 +266,7 @@ BOSS_API void     boss_destroy_db (boss_db db) {
 BOSS_API unsigned int boss_load_lists (boss_db db, const char * const masterlistPath,
                                     const char * const userlistPath) {
     if (db == NULL || masterlistPath == NULL)
-        return boss_error_invalid_args;
+        return c_error(boss_error_invalid_args, "Null pointer passed.");
 
     std::list<boss::Plugin> temp;
     std::list<boss::Plugin> userTemp;
@@ -270,12 +285,8 @@ BOSS_API unsigned int boss_load_lists (boss_db db, const char * const masterlist
                 Loadv2Masterlist(p, temp, filler);
             }
         }
-    } catch (YAML::Exception& e) {
-        extMessageStr = e.what();
-        return boss_error_parse_fail;
-    } catch (boss::error& e) {
-        extMessageStr = e.what();
-        return boss_error_parse_fail;
+    } catch (std::exception& e) {
+        return c_error(boss_error_parse_fail, e.what());
     }
 
     try {
@@ -290,8 +301,7 @@ BOSS_API unsigned int boss_load_lists (boss_db db, const char * const masterlist
             }
         }
     } catch (YAML::Exception& e) {
-        extMessageStr = e.what();
-        return boss_error_parse_fail;
+        return c_error(boss_error_parse_fail, e.what());
     }
 
     //Also free memory.
@@ -311,6 +321,11 @@ BOSS_API unsigned int boss_load_lists (boss_db db, const char * const masterlist
         delete [] db->extMessageArray;
     }
 
+    db->extAddedTagIds = NULL;
+    db->extRemovedTagIds = NULL;
+    db->extTagMap = NULL;
+    db->extMessageArray = NULL;
+
     db->rawMetadata = temp;
     db->metadata = temp;
     db->userMetadata = userTemp;
@@ -327,20 +342,19 @@ BOSS_API unsigned int boss_load_lists (boss_db db, const char * const masterlist
 // if the underlying filesystem is case-sensitive.
 BOSS_API unsigned int boss_eval_lists (boss_db db, const unsigned int language) {
     if (db == NULL)
-        return boss_error_invalid_args;
+        return c_error(boss_error_invalid_args, "Null pointer passed.");
 
     std::list<boss::Plugin> temp = db->rawMetadata;
     try {
         db->game.RefreshActivePluginsList();
-        for (std::list<boss::Plugin>::iterator it=temp.begin(); it != temp.end(); ++it) {
+        for (std::list<boss::Plugin>::iterator it=temp.begin(); it != temp.end();) {
             it->EvalAllConditions(db->game, language);
             if (it->IsRegexPlugin()) {
                 boost::regex regex;
                 try {
                     regex = boost::regex(it->Name(), boost::regex::perl|boost::regex::icase);
                 } catch (boost::regex_error& e) {
-                    extMessageStr = e.what();
-                    return boss_error_regex_eval_fail;
+                    return c_error(boss_error_regex_eval_fail, e.what());
                 }
 
                 for (boost::filesystem::directory_iterator itr(db->game.DataPath()); itr != boost::filesystem::directory_iterator(); ++itr) {
@@ -351,26 +365,26 @@ BOSS_API unsigned int boss_eval_lists (boss_db db, const unsigned int language) 
                         temp.push_back(p);
                     }
                 }
-                temp.erase(it--);
+                it = temp.erase(it);
+            } else {
+                ++it;
             }
         }
     } catch (boss::error& e) {
-        extMessageStr = e.what();
-        return e.code();
+        return c_error(e);
     }
     db->metadata = temp;
 
     temp = db->rawUserMetadata;
     try {
-        for (std::list<boss::Plugin>::iterator it=temp.begin(); it != temp.end(); ++it) {
+        for (std::list<boss::Plugin>::iterator it=temp.begin(); it != temp.end();) {
             it->EvalAllConditions(db->game, language);
             if (it->IsRegexPlugin()) {
                 boost::regex regex;
                 try {
                     regex = boost::regex(it->Name(), boost::regex::perl|boost::regex::icase);
                 } catch (boost::regex_error& e) {
-                    extMessageStr = e.what();
-                    return boss_error_invalid_args;
+                    return c_error(boss_error_regex_eval_fail, e.what());
                 }
 
                 for (boost::filesystem::directory_iterator itr(db->game.DataPath()); itr != boost::filesystem::directory_iterator(); ++itr) {
@@ -381,12 +395,13 @@ BOSS_API unsigned int boss_eval_lists (boss_db db, const unsigned int language) 
                         temp.push_back(p);
                     }
                 }
-                temp.erase(it--);
+                it = temp.erase(it);
+            } else {
+                ++it;
             }
         }
     } catch (boss::error& e) {
-        extMessageStr = e.what();
-        return e.code();
+        return c_error(e);
     }
     db->userMetadata = temp;
 
@@ -403,7 +418,7 @@ BOSS_API unsigned int boss_eval_lists (boss_db db, const unsigned int language) 
 // its contents are static and should not be freed by the client.
 BOSS_API unsigned int boss_get_tag_map (boss_db db, char *** const tagMap, size_t * const numTags) {
     if (db == NULL || tagMap == NULL || numTags == NULL)
-        return boss_error_invalid_args;
+        return c_error(boss_error_invalid_args, "Null pointer passed.");
 
     //Clear existing array allocation.
     if (db->extTagMap != NULL) {
@@ -411,6 +426,7 @@ BOSS_API unsigned int boss_get_tag_map (boss_db db, char *** const tagMap, size_
             delete [] db->extTagMap[i];
         }
         delete [] db->extTagMap;
+        db->extTagMap = NULL;
     }
 
     //Initialise output.
@@ -438,8 +454,7 @@ BOSS_API unsigned int boss_get_tag_map (boss_db db, char *** const tagMap, size_
     try {
         db->extTagMap = new char*[allTags.size()];
     } catch (std::bad_alloc& e) {
-        extMessageStr = e.what();
-        return boss_error_no_mem;
+        return c_error(boss_error_no_mem, e.what());
     }
 
     unsigned int UID = 0;
@@ -451,8 +466,7 @@ BOSS_API unsigned int boss_get_tag_map (boss_db db, char *** const tagMap, size_
             UID++;
         }
     } catch (std::bad_alloc& e) {
-        extMessageStr = e.what();
-        return boss_error_no_mem;
+        return c_error(boss_error_no_mem, e.what());
     }
 
     *tagMap = db->extTagMap;
@@ -475,12 +489,14 @@ BOSS_API unsigned int boss_get_plugin_tags (boss_db db, const char * const plugi
                                             size_t * const numTags_removed,
                                             bool * const userlistModified) {
     if (db == NULL || plugin == NULL || tagIds_added == NULL || numTags_added == NULL || tagIds_removed == NULL || numTags_removed == NULL || userlistModified == NULL)
-        return boss_error_invalid_args;
+        return c_error(boss_error_invalid_args, "Null pointer passed.");
 
 
     //Clear existing array allocations.
     delete [] db->extAddedTagIds;
     delete [] db->extRemovedTagIds;
+    db->extAddedTagIds = NULL;
+    db->extRemovedTagIds = NULL;
 
     //Initialise output.
     *tagIds_added = NULL;
@@ -515,8 +531,7 @@ BOSS_API unsigned int boss_get_plugin_tags (boss_db db, const char * const plugi
     }
 
     if ((!tagsAdded.empty() || !tagsRemoved.empty()) && db->bashTagMap.empty()) {
-        extMessageStr = "No Bash Tag map has been previously generated.";
-        return boss_error_no_tag_map;
+        return c_error(boss_error_no_tag_map, "No Bash Tag map has been previously generated.");
     }
 
     std::vector<unsigned int> tagsAddedIDs, tagsRemovedIDs;
@@ -546,8 +561,7 @@ BOSS_API unsigned int boss_get_plugin_tags (boss_db db, const char * const plugi
                 db->extRemovedTagIds[i] = tagsRemovedIDs[i];
         }
     } catch (std::bad_alloc& e) {
-        extMessageStr = e.what();
-        return boss_error_no_mem;
+        return c_error(boss_error_no_mem, e.what());
     }
 
     //Set outputs.
@@ -566,7 +580,7 @@ BOSS_API unsigned int boss_get_plugin_messages (boss_db db, const char * const p
                                                 boss_message ** const messages,
                                                 size_t * const numMessages) {
     if (db == NULL || plugin == NULL || messages == NULL || numMessages == NULL)
-        return boss_error_invalid_args;
+        return c_error(boss_error_invalid_args, "Null pointer passed.");
 
     //Clear existing array allocation.
     if (db->extMessageArray != NULL) {
@@ -574,6 +588,7 @@ BOSS_API unsigned int boss_get_plugin_messages (boss_db db, const char * const p
             delete [] db->extMessageArray[i].message;
         }
         delete [] db->extMessageArray;
+        db->extMessageArray = NULL;
     }
 
     //Initialise output.
@@ -601,8 +616,7 @@ BOSS_API unsigned int boss_get_plugin_messages (boss_db db, const char * const p
             db->extMessageArray[i].message = ToNewCString(it->ChooseContent(boss::g_lang_any).Str());
         }
     } catch (std::bad_alloc& e) {
-        extMessageStr = e.what();
-        return boss_error_no_mem;
+        return c_error(boss_error_no_mem, e.what());
     }
 
     *messages = db->extMessageArray;
@@ -613,7 +627,7 @@ BOSS_API unsigned int boss_get_plugin_messages (boss_db db, const char * const p
 
 BOSS_API unsigned int boss_get_dirty_info(boss_db db, const char * const plugin, unsigned int * const needsCleaning) {
     if (db == NULL || plugin == NULL || needsCleaning == NULL)
-        return boss_error_invalid_args;
+        return c_error(boss_error_invalid_args, "Null pointer passed.");
 
     *needsCleaning = boss_needs_cleaning_unknown;
 
@@ -643,10 +657,10 @@ BOSS_API unsigned int boss_get_dirty_info(boss_db db, const char * const plugin,
 // for output. If outputFile already exists, it will only be overwritten if overwrite is true.
 BOSS_API unsigned int boss_write_minimal_list (boss_db db, const char * const outputFile, const bool overwrite) {
     if (db == NULL || outputFile == NULL)
-        return boss_error_invalid_args;
+        return c_error(boss_error_invalid_args, "Null pointer passed.");
 
     if (boost::filesystem::exists(outputFile) && !overwrite)
-        return boss_error_invalid_args;
+        return c_error(boss_error_invalid_args, "Output file exists but overwrite is not set to true.");
 
     std::list<boss::Plugin> temp = db->metadata;
     for (std::list<boss::Plugin>::iterator it=temp.begin(), endIt=temp.end(); it != endIt; ++it) {
@@ -666,7 +680,7 @@ BOSS_API unsigned int boss_write_minimal_list (boss_db db, const char * const ou
     boost::filesystem::path p(outputFile);
     boss::ofstream out(p);
     if (out.fail())
-        return boss_error_invalid_args;
+        return c_error(boss_error_invalid_args, "Couldn't open output file");
     out << yout.c_str();
     out.close();
 
