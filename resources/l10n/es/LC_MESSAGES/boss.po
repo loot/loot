@@ -219,59 +219,59 @@ msgstr "Agregar un plugin"
 
 #: gui/editor.cpp:380
 msgid "Edit Plugin"
-msgstr ""
+msgstr "Editar el plugin"
 
 #: gui/editor.cpp:381
 msgid "Remove Plugin"
-msgstr ""
+msgstr "Eliminar plugin"
 
 #: gui/editor.cpp:383
 msgid "Add Message"
-msgstr ""
+msgstr "Añadir un mensaje"
 
 #: gui/editor.cpp:384
 msgid "Edit Message"
-msgstr ""
+msgstr "Editar mensaje"
 
 #: gui/editor.cpp:385
 msgid "Remove Message"
-msgstr ""
+msgstr "Eliminar mensaje"
 
 #: gui/editor.cpp:387
 msgid "Add Bash Tag"
-msgstr ""
+msgstr "Añadir una etiqueta Bash"
 
 #: gui/editor.cpp:388
 msgid "Edit Bash Tag"
-msgstr ""
+msgstr "Editar una etiqueta Bash"
 
 #: gui/editor.cpp:389
 msgid "Remove Bash Tag"
-msgstr ""
+msgstr "Eliminar una etiqueta Bash"
 
 #: gui/editor.cpp:391
 msgid "Add Dirty Info"
-msgstr ""
+msgstr "Añadir informacion de ediciones sucias"
 
 #: gui/editor.cpp:392
 msgid "Edit Dirty Info"
-msgstr ""
+msgstr "Editar informacion de ediciones sucias"
 
 #: gui/editor.cpp:393
 msgid "Remove Dirty Info"
-msgstr ""
+msgstr "Eliminar informacion de ediciones sucias"
 
 #: gui/editor.cpp:411
 msgid "BOSS: Add File/Plugin"
-msgstr ""
+msgstr "BOSS: Agregar Archivo / Plugin"
 
 #: gui/editor.cpp:433
 msgid "BOSS: Add Message"
-msgstr ""
+msgstr "BOSS: Añadir un mensaje"
 
 #: gui/editor.cpp:443
 msgid "Error: No content specified. Row will not be added."
-msgstr ""
+msgstr "Error: Ningun contenido especificado.  La fila no se añadirá."
 
 #: gui/editor.cpp:444 gui/editor.cpp:526 gui/editor.cpp:1122
 #: gui/editor.cpp:1137 gui/main.cpp:164 gui/main.cpp:181 gui/main.cpp:194
@@ -282,15 +282,15 @@ msgstr ""
 #: gui/settings.cpp:287 gui/settings.cpp:299 gui/settings.cpp:307
 #: gui/settings.cpp:350 gui/settings.cpp:358 gui/settings.cpp:366
 msgid "BOSS: Error"
-msgstr "Error de BOSS:"
+msgstr "BOSS: Error de"
 
 #: gui/editor.cpp:454
 msgid "BOSS: Add Tag"
-msgstr ""
+msgstr "BOSS: Añadir una etiqueta"
 
 #: gui/editor.cpp:468
 msgid "BOSS: Add Dirty Info"
-msgstr ""
+msgstr "BOSS: Añadir informacion de ediciones sucias"
 
 #: gui/editor.cpp:487
 msgid "BOSS: Edit File/Plugin"
