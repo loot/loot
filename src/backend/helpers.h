@@ -75,11 +75,23 @@ namespace boss {
         std::string Name() const;
         std::string ISOCode() const;
         std::string Locale() const;
+
+        static std::vector<std::string> Names() {
+            std::vector<std::string> vec;
+            vec.push_back(Language(g_lang_any).Name());
+            vec.push_back(Language(g_lang_english).Name());
+            vec.push_back(Language(g_lang_spanish).Name());
+            vec.push_back(Language(g_lang_russian).Name());
+            vec.push_back(Language(g_lang_french).Name());
+            return vec;
+        }
     private:
         unsigned int _code;
         std::string _isoCode;
         std::string _name;
         std::string _locale;
+
+        void Construct(const unsigned int code);
     };
 
     //Version class for more robust version comparisons.

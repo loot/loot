@@ -232,9 +232,27 @@ namespace boss {
         return "file:///" + file.string();  //Seems that we don't need to worry about encoding, tested with Unicode paths.
     }
 
-    Language::Language(const unsigned int code) : _code(code) {
+    Language::Language(const unsigned int code) {
+        Construct(_code);
+    }
+
+    Language::Language(const std::string& nameOrISOCode) {
+        if (nameOrISOCode == "English" || nameOrISOCode == "eng")
+            Construct(g_lang_english);
+        else if (nameOrISOCode == "Español" || nameOrISOCode == "spa")
+            Construct(g_lang_spanish);
+        else if (nameOrISOCode == "Русский" || nameOrISOCode == "rus")
+            Construct(g_lang_russian);
+        else if (nameOrISOCode == "Français" || nameOrISOCode == "fra")
+            Construct(g_lang_french);
+        else
+            Construct(g_lang_any);
+    }
+
+    void Language::Construct(const unsigned int code) {
+        _code = code;
         if (_code == g_lang_any) {
-            _name = "None Specified";
+            _name = boost::locale::translate("None Specified");
             _isoCode = "";
             _locale = "en.UTF-8";
         }
@@ -257,39 +275,6 @@ namespace boss {
             _name = "Français";
             _isoCode = "fra";
             _locale = "fr.UTF-8";
-        }
-    }
-
-    Language::Language(const std::string& nameOrISOCode) {
-        if (nameOrISOCode == "English" || nameOrISOCode == "eng") {
-            _name = "English";
-            _isoCode = "eng";
-            _code = g_lang_english;
-            _locale = "en.UTF-8";
-        }
-        else if (nameOrISOCode == "Español" || nameOrISOCode == "spa") {
-            _name = "Español";
-            _isoCode = "spa";
-            _code = g_lang_spanish;
-            _locale = "es.UTF-8";
-        }
-        else if (nameOrISOCode == "Русский" || nameOrISOCode == "rus") {
-            _name = "Русский";
-            _isoCode = "rus";
-            _code = g_lang_russian;
-            _locale = "ru.UTF-8";
-        }
-        else if (nameOrISOCode == "Français" || nameOrISOCode == "fra") {
-            _name = "Français";
-            _isoCode = "fra";
-            _code = g_lang_french;
-            _locale = "fr.UTF-8";
-        }
-        else {
-            _name = boost::locale::translate("None Specified");
-            _isoCode = "";
-            _code = g_lang_any;
-            _locale = "en.UTF-8";
         }
     }
 

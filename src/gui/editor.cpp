@@ -1034,11 +1034,10 @@ wxString FileEditDialog::GetCondition() const {
 MessageEditDialog::MessageEditDialog(wxWindow *parent, const wxString& title) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER) {
 
     wxArrayString languages;
-    languages.Add(FromUTF8(boss::Language(boss::g_lang_any).Name()));
-    languages.Add(FromUTF8(boss::Language(boss::g_lang_english).Name()));
-    languages.Add(FromUTF8(boss::Language(boss::g_lang_spanish).Name()));
-    languages.Add(FromUTF8(boss::Language(boss::g_lang_russian).Name()));
-    languages.Add(FromUTF8(boss::Language(boss::g_lang_french).Name()));
+    vector<string> langs = boss::Language::Names();
+    for (size_t i = 0; i < langs.size(); i++) {
+        languages.Add(FromUTF8(langs[i]));
+    }
 
     //Initialise controls.
     _type = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 3, Type);
