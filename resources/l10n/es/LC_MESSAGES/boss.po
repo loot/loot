@@ -14,71 +14,71 @@ msgstr ""
 
 #: backend/game.cpp:96
 msgid "Invalid game ID supplied."
-msgstr ""
+msgstr "ID del juego suministra incorrecto."
 
 #: backend/game.cpp:147
 msgid "Game path could not be detected."
-msgstr ""
+msgstr "Ruta del juego no se pudo encontrar."
 
 #: backend/game.cpp:248 backend/game.cpp:308 backend/game.cpp:363
 msgid "libloadorder failed to create a game handle. Details:"
-msgstr ""
+msgstr "libloadorder no pudo crear un puñado del juego. Detalles:"
 
 #: backend/game.cpp:260 backend/game.cpp:320 backend/game.cpp:374
 msgid "libloadorder failed to initialise game master file support. Details:"
-msgstr ""
+msgstr "libloadorder falló de iniciar apoyo del archivo master. Detalles:"
 
 #: backend/game.cpp:270
 msgid "libloadorder failed to get the active plugins list. Details:"
-msgstr ""
+msgstr "libloadorer no pudo obtener la lista de plugins activos. Detalles:"
 
 #: backend/game.cpp:330 backend/game.cpp:396
 msgid "libloadorder failed to set the load order. Details:"
-msgstr ""
+msgstr "libloadorder no podría establecer el orden de carga. Detalles:"
 
 #: backend/game.cpp:415
 msgid "Could not create BOSS folder for game. Details:"
-msgstr ""
+msgstr "No se puede crear la carpeta datos de BOSS para este juego"
 
 #: backend/graph.cpp:46
 msgid "Cyclic interaction detected between plugins \"%1%\" and \"%2%\"."
-msgstr ""
+msgstr "Interacción cíclica detectada entre plugins \"%1%\" y \"%2%\"."
 
 #: backend/helpers.cpp:140
 msgid "Unable to open \"%1%\" for CRC calculation."
-msgstr ""
+msgstr "No se pudo abrir \"%1%\" para la cálculacion CDN."
 
 #: backend/helpers.cpp:302
 msgid "Could not create pipe for process."
-msgstr ""
+msgstr "No se puede crear la tubería de proceso"
 
 #: backend/helpers.cpp:335
 msgid "Could not create process."
-msgstr ""
+msgstr "No se puede crear el proceso."
 
 #: backend/helpers.cpp:346
 msgid "Could not get process exit code."
-msgstr ""
+msgstr "No se puede obtener el código para detener el proceso."
 
 #: backend/helpers.cpp:353
 msgid "Could not read process output."
-msgstr ""
+msgstr "No se puede leer la salida del proceso."
 
 #: backend/metadata.cpp:142
 msgid "Failed to parse condition \"%1%\": %2%"
-msgstr ""
+msgstr "No se ha podido analizar la condición \"%1%\": %2%"
 
 #: backend/metadata.cpp:147
 msgid "Failed to parse condition \"%1%\"."
-msgstr ""
+msgstr "No se ha podido analizar la condición \"%1%\"."
 
 #: backend/network.cpp:75
 msgid "Git operation failed. Error: %1%"
-msgstr ""
+msgstr "Operación Git falló. Error: %1%"
 
 #: backend/network.cpp:338
 msgid "Masterlist revision"
-msgstr ""
+msgstr "Revisión de la MasterList"
 
 #: gui/editor.cpp:37
 msgid "Note"
@@ -86,32 +86,32 @@ msgstr "Nota"
 
 #: gui/editor.cpp:38
 msgid "Warning"
-msgstr "Adverten"
+msgstr "Advertencia"
 
 #: gui/editor.cpp:39
 msgid "Error"
-msgstr "Errores"
+msgstr "Error"
 
 #: gui/editor.cpp:43
 msgid "Add"
-msgstr ""
+msgstr "Agregar"
 
 #: gui/editor.cpp:44
 msgid "Remove"
-msgstr ""
+msgstr "Eliminar"
 
 #: gui/editor.cpp:48
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
 
 #: gui/editor.cpp:49
 msgid "Content"
-msgstr ""
+msgstr "Contenido"
 
 #: gui/editor.cpp:50 gui/editor.cpp:155 gui/editor.cpp:159 gui/editor.cpp:163
 #: gui/editor.cpp:167
 msgid "Condition"
-msgstr ""
+msgstr "Condición"
 
 #: gui/editor.cpp:51 gui/editor.cpp:990
 msgid "Language"
@@ -119,30 +119,30 @@ msgstr "Idioma"
 
 #: gui/editor.cpp:125
 msgid "Enable User Changes"
-msgstr ""
+msgstr "Activar Cambios de usuario"
 
 #: gui/editor.cpp:127 gui/editor.cpp:375
 msgid "Add File"
-msgstr ""
+msgstr "Agregar un Archivo"
 
 #: gui/editor.cpp:128 gui/editor.cpp:376
 msgid "Edit File"
-msgstr ""
+msgstr "Editar un archivo"
 
 #: gui/editor.cpp:129 gui/editor.cpp:377
 msgid "Remove File"
-msgstr ""
+msgstr "Eliminar archivo"
 
 #: gui/editor.cpp:130
 msgid "Save Changes"
-msgstr ""
+msgstr "Guardar cambios"
 
 #: gui/editor.cpp:131
 msgid "Cancel"
 msgstr "Cancelar"
 
 #: gui/editor.cpp:132
-msgid "Copy Metadata As Text"
+msgid "Copiar Mmetadatos como texto"
 msgstr ""
 
 #: gui/editor.cpp:143
