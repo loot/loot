@@ -179,7 +179,7 @@ msgstr "Nombre del archivo"
 
 #: gui/editor.cpp:154 gui/editor.cpp:158 gui/editor.cpp:162
 msgid "Display Name"
-msgstr "Nombre Desplegada"
+msgstr "Nombre para Mostrar"
 
 #: gui/editor.cpp:165
 msgid "Add/Remove"
@@ -294,55 +294,55 @@ msgstr "BOSS: Añadir informacion de ediciones sucias"
 
 #: gui/editor.cpp:487
 msgid "BOSS: Edit File/Plugin"
-msgstr ""
+msgstr "BOSS: Editar Archivo o Plugin"
 
 #: gui/editor.cpp:511
 msgid "BOSS: Edit Message"
-msgstr ""
+msgstr "BOSS: Editar mensaje"
 
 #: gui/editor.cpp:525
 msgid "Error: No content specified. Row will not be edited."
-msgstr ""
+msgstr "Error:  Ningun contenido especificado. La fila no se editará."
 
 #: gui/editor.cpp:535
 msgid "BOSS: Edit Tag"
-msgstr ""
+msgstr "BOSS: Editar etiqueta Bash"
 
 #: gui/editor.cpp:557
 msgid "BOSS: Edit Dirty Info"
-msgstr ""
+msgstr "BOSS: Editar informacion de ediciones sucias"
 
 #: gui/editor.cpp:932
 msgid "Filename (required):"
-msgstr ""
+msgstr "Nombre de archivo (requerido):"
 
 #: gui/editor.cpp:935
 msgid "Displayed Name:"
-msgstr ""
+msgstr "Nombre Mostrada:"
 
 #: gui/editor.cpp:938 gui/editor.cpp:1016 gui/editor.cpp:1172
 msgid "Condition:"
-msgstr ""
+msgstr "Condición:"
 
 #: gui/editor.cpp:986
 msgid "Add Content"
-msgstr ""
+msgstr "Añadir contenido:"
 
 #: gui/editor.cpp:987
 msgid "Edit Content"
-msgstr ""
+msgstr "Editar contenido:"
 
 #: gui/editor.cpp:988
 msgid "Remove Content"
-msgstr ""
+msgstr "Eliminar contenido:"
 
 #: gui/editor.cpp:991
 msgid "String"
-msgstr ""
+msgstr "Cadena"
 
 #: gui/editor.cpp:1013 gui/settings.cpp:425
 msgid "Type:"
-msgstr ""
+msgstr "Tipo:"
 
 #: gui/editor.cpp:1028 gui/settings.cpp:101
 msgid "Language:"
@@ -350,43 +350,43 @@ msgstr "Idioma:"
 
 #: gui/editor.cpp:1031
 msgid "Content:"
-msgstr ""
+msgstr "Contenido:"
 
 #: gui/editor.cpp:1121 gui/editor.cpp:1136
 msgid "Error: No content row selected."
-msgstr ""
+msgstr "Error: No fila de contenido seleccionado."
 
 #: gui/editor.cpp:1166
 msgid "Add/Remove:"
-msgstr ""
+msgstr "Agregar o Quitar:"
 
 #: gui/editor.cpp:1169 gui/settings.cpp:422
 msgid "Name (required):"
-msgstr ""
+msgstr "Nombre (requerido):"
 
 #: gui/editor.cpp:1234
 msgid "CRC (required):"
-msgstr ""
+msgstr "CDN (requerido):"
 
 #: gui/editor.cpp:1237
 msgid "ITM Count:"
-msgstr ""
+msgstr "La enumeración de ITM:"
 
 #: gui/editor.cpp:1240
 msgid "UDR Count:"
-msgstr ""
+msgstr "La enumeración de UDR:"
 
 #: gui/editor.cpp:1243
 msgid "Deleted Navmesh Count:"
-msgstr ""
+msgstr "Enumeración Navmesh eliminado:"
 
 #: gui/editor.cpp:1246
 msgid "Cleaning Utility (required):"
-msgstr ""
+msgstr "Utilidad de limpieza (requerido):"
 
 #: gui/ids.cpp:31
 msgid "None Specified"
-msgstr ""
+msgstr "Ninguno Especificado"
 
 #: gui/main.cpp:118
 msgid "Masterlist update failed. Details: %1%"
@@ -394,15 +394,15 @@ msgstr "Falló actualización del masterlist. Detalles: %1%"
 
 #: gui/main.cpp:134
 msgid "Masterlist parsing failed. Details: %1%"
-msgstr ""
+msgstr "Falla en la lectura del archivo de reglas 'master'. Detalles: %1%"
 
 #: gui/main.cpp:142
 msgid "Unknown"
-msgstr ""
+msgstr "Desconocido"
 
 #: gui/main.cpp:144
 msgid "No masterlist"
-msgstr ""
+msgstr "No existe el archivo Masterlist"
 
 #: gui/main.cpp:163
 msgid "Error: BOSS is already running. This instance will now quit."
@@ -412,11 +412,11 @@ msgstr ""
 
 #: gui/main.cpp:180
 msgid "Error: Could not create local app data BOSS folder."
-msgstr ""
+msgstr "Error: No se puede crear una carpeta local para datos del aplicación BOSS."
 
 #: gui/main.cpp:193
 msgid "Error: Settings parsing failed. %1%"
-msgstr ""
+msgstr "Error: Falla en la lectura del configuración. %1%"
 
 #: gui/main.cpp:272
 msgid "Error: Could not apply translation."
