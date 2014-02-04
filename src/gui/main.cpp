@@ -601,15 +601,15 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
             if (pos != mlist_plugins.end()) {
                 BOOST_LOG_TRIVIAL(trace) << "Merging masterlist data down to plugin list data.";
-                graph[*vit].Merge(*pos);
+                graph[*vit].MergeMetadata(*pos);
             }
 
             //Check if there is a plugin entry in the userlist. This will also find matching regex entries.
             pos = std::find(ulist_plugins.begin(), ulist_plugins.end(), graph[*vit]);
 
-            if (pos != ulist_plugins.end()) {
+            if (pos != ulist_plugins.end() && pos->Enabled()) {
                 BOOST_LOG_TRIVIAL(trace) << "Merging userlist data down to plugin list data.";
-                graph[*vit].Merge(*pos);
+                graph[*vit].MergeMetadata(*pos);
             }
 
             progDia->Pulse();
@@ -701,7 +701,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                     list<boss::Plugin>::iterator jt = find(ulist_plugins.begin(), ulist_plugins.end(), *it);
 
                     if (jt != ulist_plugins.end()) {
-                        jt->Merge(*it);
+                        jt->MergeMetadata(*it);
                     } else {
                         ulist_plugins.push_back(*it);
                     }
@@ -897,7 +897,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
         vector<boss::Plugin>::iterator pos = find(installed.begin(), installed.end(), *it);
 
         if (pos != installed.end())
-            pos->Merge(*it);
+            pos->MergeMetadata(*it);
     }
 
 

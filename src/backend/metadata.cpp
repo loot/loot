@@ -400,21 +400,13 @@ namespace boss {
         }
 	}
 
-    void Plugin::Merge(const Plugin& plugin, bool ifDisabled) {
+    void Plugin::MergeMetadata(const Plugin& plugin) {
         BOOST_LOG_TRIVIAL(trace) << "Merging metadata for: " << name;
-        //If 'name' differs or if 'enabled' is false for the given plugin, don't change anything.
-        if ((!plugin.Enabled() && !ifDisabled))
-            return;
 
-        //The following should be replaced.
+        //For 'enabled' and 'priority' metadata, use the given plugin's values, but if the 'priority' user value is zero, ignore it.
         enabled = plugin.Enabled();
-        priority = plugin.Priority();
-        if (!plugin.Masters().empty())
-            masters = plugin.Masters();
-        if (!plugin.FormIDs().empty())
-            formIDs = plugin.FormIDs();
-        if (!isMaster)
-            isMaster = plugin.IsMaster();
+        if (plugin.Priority() != 0)
+            priority = plugin.Priority();
 
         //Merge the following. If any files in the source already exist in the destination, they will be skipped. Files have display strings and condition strings which aren't considered when comparing them, so will be lost if the plugin being merged in has additional data in these strings.
         std::set<File> files = plugin.LoadAfter();
@@ -444,8 +436,11 @@ namespace boss {
         BOOST_LOG_TRIVIAL(trace) << "Calculating metadata difference for: " << name;
         Plugin p(*this);
 
-        if (p.Priority() == plugin.Priority())
-            p.Priority(0);  //So that non-zero priorities don't get written to the userlist if they're already in the masterlist.
+        p.Enabled(plugin.Enabled());
+        if (priority != plugin.Priority())
+            p.Priority(plugin.Priority());
+        else
+            p.Priority(0);
 
         //Compare this plugin against the given plugin.
         set<File> files = plugin.LoadAfter();

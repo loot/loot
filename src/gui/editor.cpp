@@ -301,8 +301,9 @@ void Editor::OnPluginSelect(wxListEvent& event) {
         if (!currentPlugin.empty())
             ApplyEdits(currentPlugin);
 
-        boss::Plugin plugin = GetUserData(selectedPlugin);
-        plugin.Merge(GetMasterData(selectedPlugin), true);
+        //Merge metadata.
+        boss::Plugin plugin = GetMasterData(selectedPlugin);
+        plugin.MergeMetadata(GetUserData(selectedPlugin));
 
         //Now fill editor fields with new plugin's info and update control states.
         BOOST_LOG_TRIVIAL(debug) << "Filling editor fields with plugin info.";
@@ -845,10 +846,10 @@ void Editor::OnQuit(wxCommandEvent& event) {
 
 void Editor::ApplyEdits(const wxString& plugin) {
     BOOST_LOG_TRIVIAL(debug) << "Applying edits to plugin: " << plugin.ToUTF8();
-    boss::Plugin initial = GetMasterData(plugin);
+    boss::Plugin master = GetMasterData(plugin);
     boss::Plugin edited = GetNewData(plugin);
 
-    boss::Plugin diff = edited.DiffMetadata(initial);
+    boss::Plugin diff = master.DiffMetadata(edited);
 
     vector<boss::Plugin>::iterator it = std::find(_editedPlugins.begin(), _editedPlugins.end(), diff);
 
