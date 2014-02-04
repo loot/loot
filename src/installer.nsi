@@ -179,14 +179,14 @@ FunctionEnd
 	;VIAddVersionKey /LANG=${LANG_FRENCH} "ProductName" "BOSS"
 	;VIAddVersionKey /LANG=${LANG_FRENCH} "CompanyName" "BOSS Development Team"
 	;VIAddVersionKey /LANG=${LANG_FRENCH} "LegalCopyright" "© 2009-2014 BOSS Development Team"
-	;VIAddVersionKey /LANG=${LANG_FRENCH} "FileDescription" "Le programme d'installation pour BOSS 3.0.0"
+	;VIAddVersionKey /LANG=${LANG_FRENCH} "FileDescription" "Programme d'installation pour BOSS 3.0.0"
 	;VIAddVersionKey /LANG=${LANG_FRENCH} "FileVersion" "3.0.0"
 
-	;LangString TEXT_MESSAGEBOX ${LANG_FRENCH} "BOSS est installé et doit être désinstallé avant de procéder. $\n$\nAppuyez sur `OK` pour supprimer la version précédente ou `Annuler` annuler la mise à jour."
-	;LangString TEXT_RUN ${LANG_FRENCH} "Exécuter BOSS"
-	;LangString TEXT_SHOWREADME ${LANG_FRENCH} "Afficher le fichier Readme"
-	;LangString TEXT_MAIN ${LANG_FRENCH} "Tous les fichiers BOSS moins BOSS.ini et listes d'utilisateurs."
-	;LangString TEXT_USERFILES ${LANG_FRENCH} "BOSS.ini et listes d'utilisateurs."
+	;LangString TEXT_MESSAGEBOX ${LANG_FRENCH} "BOSS est déjà installé, et doit être désinstallé avant de continuer. $\n$\nCliquer sur `OK` pour désinstaller la version précédente ou 'Annuler' pour annuler la mise à jour."
+	;LangString TEXT_RUN ${LANG_FRENCH} "Lancer BOSS"
+	;LangString TEXT_SHOWREADME ${LANG_FRENCH} "Afficher la documentation"
+	;LangString TEXT_MAIN ${LANG_FRENCH} "Tous les fichiers de BOSS, sauf les userlists et les règlages."
+	;LangString TEXT_USERFILES ${LANG_FRENCH} "L'userlist de BOSS et les règlages."
 
 ;--------------------------------
 ;Spanish (castellano) Strings
