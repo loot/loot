@@ -22,6 +22,7 @@
 */
 
 #include "settings.h"
+#include "../backend/helpers.h"
 #include "../backend/globals.h"
 #include <boost/algorithm/string.hpp>
 #include <boost/log/trivial.hpp>
@@ -49,9 +50,16 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
         Games.Add(FromUTF8(_games[i].Name()));
     }
 
+    wxArrayString languages;
+    languages.Add(FromUTF8(boss::Language(boss::g_lang_any).Name()));
+    languages.Add(FromUTF8(boss::Language(boss::g_lang_english).Name()));
+    languages.Add(FromUTF8(boss::Language(boss::g_lang_spanish).Name()));
+    languages.Add(FromUTF8(boss::Language(boss::g_lang_russian).Name()));
+    languages.Add(FromUTF8(boss::Language(boss::g_lang_french).Name()));
+
     //Initialise controls.
     GameChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, Games);
-    LanguageChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, LanguageSize, Language);
+    LanguageChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, languages);
     DebugVerbosityChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 4, DebugVerbosity);
 
     gamesList = new wxListView(this, LIST_Games, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL);
@@ -146,7 +154,7 @@ void SettingsFrame::SetDefaultValues() {
     BOOST_LOG_TRIVIAL(debug) << "Setting default values for BOSS's settings.";
 
     if (_settings["Language"]) {
-        LanguageChoice->SetSelection(GetLangIndex(_settings["Language"].as<string>()));
+        LanguageChoice->SetSelection(boss::Language(_settings["Language"].as<string>()).Code());
     }
 
     if (_settings["Game"]) {
@@ -202,7 +210,7 @@ void SettingsFrame::OnQuit(wxCommandEvent& event) {
         else
             _settings["Game"] = _games[GameChoice->GetSelection() - 1].FolderName();
 
-        _settings["Language"] = GetLangStringFromIndex(LanguageChoice->GetSelection());
+        _settings["Language"] = boss::Language(LanguageChoice->GetSelection()).ISOCode();
 
         _settings["Debug Verbosity"] = DebugVerbosityChoice->GetSelection();
 

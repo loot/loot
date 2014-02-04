@@ -154,7 +154,7 @@ namespace YAML {
         static Node encode(const boss::MessageContent& rhs) {
             Node node;
             node["str"] = rhs.Str();
-            node["lang"] = boss::GetLangString(rhs.Language());
+            node["lang"] = boss::Language(rhs.Language()).ISOCode();
 
             return node;
         }
@@ -164,7 +164,7 @@ namespace YAML {
                 return false;
 
             std::string str = node["str"].as<std::string>();
-            unsigned int lang = boss::GetLangNum(node["lang"].as<std::string>());
+            unsigned int lang = boss::Language(node["lang"].as<std::string>()).Code();
 
             rhs = boss::MessageContent(str, lang);
 

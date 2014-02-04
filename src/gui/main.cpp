@@ -568,7 +568,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         //Set language.
         unsigned int lang;
         if (_settings["Language"])
-            lang = GetLangNum(_settings["Language"].as<string>());
+            lang = Language(_settings["Language"].as<string>()).Code();
         else
             lang = boss::g_lang_any;
 
@@ -926,7 +926,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
     //Set language.
     unsigned int lang;
     if (_settings["Language"])
-        lang = GetLangNum(_settings["Language"].as<string>());
+        lang = Language(_settings["Language"].as<string>()).Code();
     else
         lang = boss::g_lang_any;
 

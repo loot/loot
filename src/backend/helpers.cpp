@@ -232,30 +232,67 @@ namespace boss {
         return "file:///" + file.string();  //Seems that we don't need to worry about encoding, tested with Unicode paths.
     }
 
-    std::string GetLangString(const unsigned int num) {
-        if (num == g_lang_english)
-            return "eng";
-        else if (num == g_lang_spanish)
-            return "spa";
-        else if (num == g_lang_russian)
-            return "rus";
-        else if (num == g_lang_french)
-            return "fra";
-        else
-            return "";
+    Language::Language(const unsigned int code) : _code(code) {
+        if (_code == g_lang_any) {
+            _name = "None Specified";
+            _isoCode = "";
+        }
+        else if (_code == g_lang_english) {
+            _name = "English";
+            _isoCode = "eng";
+        }
+        else if (_code == g_lang_spanish) {
+            _name = "Español";
+            _isoCode = "spa";
+        }
+        else if (_code == g_lang_russian) {
+            _name = "Русский";
+            _isoCode = "rus";
+        }
+        else if (_code == g_lang_french) {
+            _name = "Français";
+            _isoCode = "fra";
+        }
     }
 
-    unsigned int GetLangNum(const std::string& str) {
-        if (boost::iequals(str, "eng"))
-            return g_lang_english;
-        else if (boost::iequals(str, "spa"))
-            return g_lang_spanish;
-        else if (boost::iequals(str, "rus"))
-            return g_lang_russian;
-        else if (boost::iequals(str, "fra"))
-            return g_lang_french;
-        else
-            return g_lang_any;
+    Language::Language(const std::string& nameOrISOCode) {
+        if (nameOrISOCode == "English" || nameOrISOCode == "eng") {
+            _name = "English";
+            _isoCode = "eng";
+            _code = g_lang_english;
+        }
+        else if (nameOrISOCode == "Español" || nameOrISOCode == "spa") {
+            _name = "Español";
+            _isoCode = "spa";
+            _code = g_lang_english;
+        }
+        else if (nameOrISOCode == "Русский" || nameOrISOCode == "rus") {
+            _name = "Русский";
+            _isoCode = "rus";
+            _code = g_lang_english;
+        }
+        else if (nameOrISOCode == "Français" || nameOrISOCode == "fra") {
+            _name = "Français";
+            _isoCode = "fra";
+            _code = g_lang_french;
+        }
+        else {
+            _name = "None Specified";
+            _isoCode = "";
+            _code = g_lang_any;
+        }
+    }
+
+    unsigned int Language::Code() const {
+        return _code;
+    }
+
+    std::string Language::Name() const {
+        return _name;
+    }
+
+    std::string Language::ISOCode() const {
+        return _isoCode;
     }
 
 

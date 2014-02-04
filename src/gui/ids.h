@@ -74,26 +74,10 @@ enum {
     BUTTON_MoveDown,
 };
 
-const unsigned int LanguageSize = 5;
-
-extern const wxString Language[LanguageSize];
-
 wxString translate(const std::string& str);
 
 wxString FromUTF8(const std::string& str);
 
 wxString FromUTF8(const boost::format& f);
-
-//Get the index in the above array of the language corresponding to a given ISO 639-3 code.
-unsigned int GetLangIndex(const std::string& str);
-
-//Get the index in the above array of one of its strings.
-unsigned int GetLangIndex(const wxString& str);
-
-//Get the ISO 639-3 code corresponding to the language at a given index in the above array.
-std::string GetLangStringFromIndex(const unsigned int index);
-
-//Get the BOSS constant for the language string in the above array.
-unsigned int GetLangNum(const wxString& str);
 
 #endif

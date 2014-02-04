@@ -27,14 +27,6 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/locale.hpp>
 
-const wxString Language[LanguageSize] = {
-    translate("None Specified"),
-    wxT("English"),
-	wxString::FromUTF8("Español"),
-    wxString::FromUTF8("Русский"),
-    wxString::FromUTF8("Français"),
-};
-
 wxString translate(const std::string& str) {
     return wxString::FromUTF8(boost::locale::translate(str).str().c_str());
 }
@@ -45,46 +37,4 @@ wxString FromUTF8(const std::string& str) {
 
 wxString FromUTF8(const boost::format& f) {
     return FromUTF8(f.str());
-}
-
-unsigned int GetLangIndex(const std::string& str) {
-    if (boost::iequals(str, "eng"))
-        return 1;
-    else if (boost::iequals(str, "spa"))
-        return 2;
-    else if (boost::iequals(str, "rus"))
-        return 3;
-    else if (boost::iequals(str, "fra"))
-        return 4;
-    else
-        return 0;
-}
-
-std::string GetLangStringFromIndex(const unsigned int index) {
-    if (index == 1)
-        return "eng";
-    else if (index == 2)
-        return "spa";
-    else if (index == 3)
-        return "rus";
-    else if (index == 4)
-        return "fra";
-    else
-        return "";
-}
-
-unsigned int GetLangNum(const wxString& str) {
-    for (int i = 0; i < LanguageSize; ++i) {
-        if (str == Language[i])
-            return GetLangNum(GetLangStringFromIndex(i));
-    }
-    return boss::g_lang_any;
-}
-
-unsigned int GetLangIndex(const wxString& str) {
-    for (int i = 0; i < LanguageSize; ++i) {
-        if (str == Language[i])
-            return i;
-    }
-    return 0;
 }

@@ -103,7 +103,7 @@ wxString MessageList::OnGetItemText(long item, long column) const {
     } else if (column == 2) {
         return FromUTF8(_messages[item].Condition());
     } else {
-        return Language[ GetLangIndex(boss::GetLangString(_messages[item].ChooseContent(_language).Language())) ];
+        return FromUTF8(boss::Language(_messages[item].ChooseContent(_language).Language()).Name());
     }
 }
 
@@ -1033,9 +1033,16 @@ wxString FileEditDialog::GetCondition() const {
 
 MessageEditDialog::MessageEditDialog(wxWindow *parent, const wxString& title) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER) {
 
+    wxArrayString languages;
+    languages.Add(FromUTF8(boss::Language(boss::g_lang_any).Name()));
+    languages.Add(FromUTF8(boss::Language(boss::g_lang_english).Name()));
+    languages.Add(FromUTF8(boss::Language(boss::g_lang_spanish).Name()));
+    languages.Add(FromUTF8(boss::Language(boss::g_lang_russian).Name()));
+    languages.Add(FromUTF8(boss::Language(boss::g_lang_french).Name()));
+
     //Initialise controls.
     _type = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 3, Type);
-    _language = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, LanguageSize, Language);
+    _language = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, languages);
 
     _condition = new wxTextCtrl(this, wxID_ANY);
     _str = new wxTextCtrl(this, wxID_ANY);
@@ -1130,7 +1137,7 @@ void MessageEditDialog::SetMessage(const boss::Message& message) {
 
     vector<boss::MessageContent> contents = message.Content();
     for (size_t i=0, max=contents.size(); i < max; ++i) {
-        _content->InsertItem(i, Language[ GetLangIndex(boss::GetLangString(contents[i].Language())) ]);
+        _content->InsertItem(i, FromUTF8(boss::Language(contents[i].Language()).Name()));
         _content->SetItem(i, 1, FromUTF8(contents[i].Str()));
     }
 }
@@ -1152,7 +1159,7 @@ boss::Message MessageEditDialog::GetMessage() const {
     for (size_t i=0, max=_content->GetItemCount(); i < max; ++i) {
 
         string str = string(_content->GetItemText(i, 1).ToUTF8());
-        unsigned int lang = GetLangIndex(_content->GetItemText(i, 0));
+        unsigned int lang = boss::Language(string(_content->GetItemText(i, 0).ToUTF8())).Code();
 
         contents.push_back(boss::MessageContent(str, lang));
     }
@@ -1161,7 +1168,7 @@ boss::Message MessageEditDialog::GetMessage() const {
 }
 
 void MessageEditDialog::OnSelect(wxListEvent& event) {
-    _language->SetSelection(GetLangIndex(_content->GetItemText(event.GetIndex(), 0)));
+    _language->SetSelection(boss::Language(string(_content->GetItemText(event.GetIndex(), 0).ToUTF8())).Code());
     _str->SetValue(_content->GetItemText(event.GetIndex(), 1));
     editBtn->Enable(true);
     removeBtn->Enable(true);
@@ -1169,7 +1176,7 @@ void MessageEditDialog::OnSelect(wxListEvent& event) {
 
 void MessageEditDialog::OnAdd(wxCommandEvent& event) {
     long i = _content->GetItemCount();
-    _content->InsertItem(i, Language[_language->GetSelection()]);
+    _content->InsertItem(i, FromUTF8(boss::Language(_language->GetSelection()).Name()));
     _content->SetItem(i, 1, _str->GetValue());
 }
 
@@ -1184,7 +1191,7 @@ void MessageEditDialog::OnEdit(wxCommandEvent& event) {
         return;
     }
     long i = _content->GetFirstSelected();
-    _content->SetItem(i, 0, Language[_language->GetSelection()]);
+    _content->SetItem(i, 0, FromUTF8(boss::Language(_language->GetSelection()).Name()));
     _content->SetItem(i, 1, _str->GetValue());
 }
 
