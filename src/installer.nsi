@@ -126,6 +126,7 @@ FunctionEnd
 	;!insertmacro MUI_LANGUAGE "German"
 	!insertmacro MUI_LANGUAGE "Spanish"
 	;!insertmacro MUI_LANGUAGE "SimpChinese"
+	!insertmacro MUI_LANGUAGE "French"
 	!insertmacro MUI_RESERVEFILE_LANGDLL
 
 ;--------------------------------
@@ -176,17 +177,17 @@ FunctionEnd
 ;--------------------------------
 ;French (Français) Strings
 
-	;VIAddVersionKey /LANG=${LANG_FRENCH} "ProductName" "BOSS"
-	;VIAddVersionKey /LANG=${LANG_FRENCH} "CompanyName" "BOSS Development Team"
-	;VIAddVersionKey /LANG=${LANG_FRENCH} "LegalCopyright" "© 2009-2014 BOSS Development Team"
-	;VIAddVersionKey /LANG=${LANG_FRENCH} "FileDescription" "Programme d'installation pour BOSS 3.0.0"
-	;VIAddVersionKey /LANG=${LANG_FRENCH} "FileVersion" "3.0.0"
+	VIAddVersionKey /LANG=${LANG_FRENCH} "ProductName" "BOSS"
+	VIAddVersionKey /LANG=${LANG_FRENCH} "CompanyName" "BOSS Development Team"
+	VIAddVersionKey /LANG=${LANG_FRENCH} "LegalCopyright" "© 2009-2014 BOSS Development Team"
+	VIAddVersionKey /LANG=${LANG_FRENCH} "FileDescription" "Programme d'installation pour BOSS 3.0.0"
+	VIAddVersionKey /LANG=${LANG_FRENCH} "FileVersion" "3.0.0"
 
-	;LangString TEXT_MESSAGEBOX ${LANG_FRENCH} "BOSS est déjà installé, et doit être désinstallé avant de continuer. $\n$\nCliquer sur `OK` pour désinstaller la version précédente ou 'Annuler' pour annuler la mise à jour."
-	;LangString TEXT_RUN ${LANG_FRENCH} "Lancer BOSS"
-	;LangString TEXT_SHOWREADME ${LANG_FRENCH} "Afficher la documentation"
-	;LangString TEXT_MAIN ${LANG_FRENCH} "Tous les fichiers de BOSS, sauf les userlists et les règlages."
-	;LangString TEXT_USERFILES ${LANG_FRENCH} "L'userlist de BOSS et les règlages."
+	LangString TEXT_MESSAGEBOX ${LANG_FRENCH} "BOSS est déjà installé, et doit être désinstallé avant de continuer. $\n$\nCliquer sur `OK` pour désinstaller la version précédente ou 'Annuler' pour annuler la mise à jour."
+	LangString TEXT_RUN ${LANG_FRENCH} "Lancer BOSS"
+	LangString TEXT_SHOWREADME ${LANG_FRENCH} "Afficher la documentation"
+	LangString TEXT_MAIN ${LANG_FRENCH} "Tous les fichiers de BOSS, sauf les userlists et les règlages."
+	LangString TEXT_USERFILES ${LANG_FRENCH} "L'userlist de BOSS et les règlages."
 
 ;--------------------------------
 ;Spanish (castellano) Strings
@@ -325,6 +326,11 @@ FunctionEnd
         ;    Push "Language:"
         ;    Push "Language: cmn"
         ;    Call ReplaceLineStr
+		StrCmp $LANGUAGE ${LANG_FRENCH} 0 +5
+            Push "$LOCALAPPDATA\BOSS\settings.yaml"
+            Push "Language:"
+            Push "Language: fra"
+            Call ReplaceLineStr
 
 		;Add Start Menu shortcuts. Set out path back to $INSTDIR otherwise the shortcuts start in the wrong place.
 		;Set Shell Var Context to all so that shortcuts are installed for all users, not just admin.
