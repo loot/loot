@@ -45,6 +45,7 @@ namespace boss {
     const unsigned int g_lang_spanish  = 2;
     const unsigned int g_lang_russian  = 3;
     const unsigned int g_lang_french   = 4;
+    const unsigned int g_lang_chinese  = 5;
 
     //Version numbers.
     const unsigned int g_version_major = 3;

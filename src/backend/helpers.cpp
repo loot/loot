@@ -233,7 +233,7 @@ namespace boss {
     }
 
     Language::Language(const unsigned int code) {
-        Construct(_code);
+        Construct(code);
     }
 
     Language::Language(const std::string& nameOrISOCode) {
@@ -245,6 +245,8 @@ namespace boss {
             Construct(g_lang_russian);
         else if (nameOrISOCode == "Français" || nameOrISOCode == "fra")
             Construct(g_lang_french);
+        else if (nameOrISOCode == "简体中文" || nameOrISOCode == "zho")
+            Construct(g_lang_chinese);
         else
             Construct(g_lang_any);
     }
@@ -275,6 +277,11 @@ namespace boss {
             _name = "Français";
             _isoCode = "fra";
             _locale = "fr.UTF-8";
+        }
+        else if (_code == g_lang_chinese) {
+            _name = "简体中文";
+            _isoCode = "zho";
+            _locale = "zh.UTF-8";
         }
     }
 

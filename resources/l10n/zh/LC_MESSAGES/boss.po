@@ -1,91 +1,84 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: BOSS v3.0.0\n"
+"Project-Id-Version: Better Oblivion Mod Manager 2.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-10-26 11:41-0000\n"
-"PO-Revision-Date: 2013-10-26 11:42-0000\n"
-"Last-Translator: \n"
+"PO-Revision-Date: 2014-02-04 20:21-0000\n"
+"Last-Translator: icedream <icedream@tesfans.org>\n"
 "Language-Team: 上古卷轴爱好者 <icedream@tesfans.org>\n"
-"Language: Simplified Chinese\n"
+"Language: zh\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.7\n"
+"X-Generator: Poedit 1.6.3\n"
 
 #: backend/game.cpp:96
 msgid "Invalid game ID supplied."
-msgstr ""
+msgstr "无效的游戏ID"
 
 #: backend/game.cpp:147
 msgid "Game path could not be detected."
-msgstr ""
+msgstr "无法检测到游戏路径。"
 
 #: backend/game.cpp:248 backend/game.cpp:308 backend/game.cpp:363
-#, fuzzy
 msgid "libloadorder failed to create a game handle. Details:"
-msgstr "无法获取发行说明。详细信息：%1%"
+msgstr "libloadorder 无法创建游戏处理器，详细信息："
 
 #: backend/game.cpp:260 backend/game.cpp:320 backend/game.cpp:374
-#, fuzzy
 msgid "libloadorder failed to initialise game master file support. Details:"
-msgstr "无法获取发行说明。详细信息：%1%"
+msgstr "libloadorder 无法初始化游戏master文件支持，详细信息："
 
 #: backend/game.cpp:270
-#, fuzzy
 msgid "libloadorder failed to get the active plugins list. Details:"
-msgstr "无法获取发行说明。详细信息：%1%"
+msgstr "libloadorder 无法获取活跃插件列表，详细信息："
 
 #: backend/game.cpp:330 backend/game.cpp:396
-#, fuzzy
 msgid "libloadorder failed to set the load order. Details:"
-msgstr "无法获取发行说明。详细信息：%1%"
+msgstr "libloadorder 无法设置排序，详细信息："
 
 #: backend/game.cpp:415
 msgid "Could not create BOSS folder for game. Details:"
-msgstr ""
+msgstr "BOSS无法创建游戏专属路径，详细信息："
 
 #: backend/graph.cpp:46
 msgid "Cyclic interaction detected between plugins \"%1%\" and \"%2%\"."
-msgstr ""
+msgstr "在插件\"%1%\"和\"%2%\"检测到死循环。"
 
 #: backend/helpers.cpp:140
 msgid "Unable to open \"%1%\" for CRC calculation."
-msgstr ""
+msgstr "无法打开\"%1%\"进行CRC计算。"
 
 #: backend/helpers.cpp:302
 msgid "Could not create pipe for process."
-msgstr ""
+msgstr "无法创建进程点。"
 
 #: backend/helpers.cpp:335
 msgid "Could not create process."
-msgstr ""
+msgstr "无法创建进程。"
 
 #: backend/helpers.cpp:346
 msgid "Could not get process exit code."
-msgstr ""
+msgstr "无法获取进程退出代码。"
 
 #: backend/helpers.cpp:353
 msgid "Could not read process output."
-msgstr ""
+msgstr "无法获取进程输出。"
 
 #: backend/metadata.cpp:142
 msgid "Failed to parse condition \"%1%\": %2%"
-msgstr ""
+msgstr "无法解析条件\"%1%\":%2%"
 
 #: backend/metadata.cpp:147
-#, fuzzy
 msgid "Failed to parse condition \"%1%\"."
-msgstr "无法设置代理类型！cURL错误提示：\"%1%\"。"
+msgstr "无法解析条件 \"%1%\"。"
 
 #: backend/network.cpp:75
-#, fuzzy
 msgid "Git operation failed. Error: %1%"
-msgstr "严重错误：%1%"
+msgstr "Git 操作失败。错误：%1%"
 
 #: backend/network.cpp:338
-#, fuzzy
 msgid "Masterlist revision"
-msgstr "masterlist"
+msgstr "Masterlist 版本"
 
 #: gui/editor.cpp:37
 msgid "Note"
@@ -101,53 +94,48 @@ msgstr "错误"
 
 #: gui/editor.cpp:43
 msgid "Add"
-msgstr ""
+msgstr "添加"
 
 #: gui/editor.cpp:44
 msgid "Remove"
-msgstr ""
+msgstr "移除"
 
 #: gui/editor.cpp:48
 msgid "Type"
-msgstr ""
+msgstr "类型"
 
 #: gui/editor.cpp:49
 msgid "Content"
-msgstr ""
+msgstr "内容"
 
 #: gui/editor.cpp:50 gui/editor.cpp:155 gui/editor.cpp:159 gui/editor.cpp:163
 #: gui/editor.cpp:167
-#, fuzzy
 msgid "Condition"
-msgstr "过渡"
+msgstr "条件"
 
 #: gui/editor.cpp:51 gui/editor.cpp:990
-#, fuzzy
 msgid "Language"
-msgstr "界面语言："
+msgstr "界面语言"
 
 #: gui/editor.cpp:125
-#, fuzzy
 msgid "Enable User Changes"
-msgstr "表格标题"
+msgstr "允许用户修改"
 
 #: gui/editor.cpp:127 gui/editor.cpp:375
-#, fuzzy
 msgid "Add File"
-msgstr "文件"
+msgstr "添加文件"
 
 #: gui/editor.cpp:128 gui/editor.cpp:376
 msgid "Edit File"
-msgstr ""
+msgstr "编辑文件"
 
 #: gui/editor.cpp:129 gui/editor.cpp:377
 msgid "Remove File"
-msgstr ""
+msgstr "移除文件"
 
 #: gui/editor.cpp:130
-#, fuzzy
 msgid "Save Changes"
-msgstr "恢复修改"
+msgstr "保存修改"
 
 #: gui/editor.cpp:131
 msgid "Cancel"
@@ -155,153 +143,135 @@ msgstr "取消"
 
 #: gui/editor.cpp:132
 msgid "Copy Metadata As Text"
-msgstr ""
+msgstr "复制Meta信息为文本"
 
 #: gui/editor.cpp:143
-#, fuzzy
 msgid "Requirements"
-msgstr "隐藏需求信息"
+msgstr "需求信息"
 
 #: gui/editor.cpp:144
-#, fuzzy
 msgid "Incompatibilities"
-msgstr "隐藏不兼容信息"
+msgstr "不兼容信息"
 
 #: gui/editor.cpp:145
-#, fuzzy
 msgid "Load After"
-msgstr "晚于"
+msgstr "加载在……后面"
 
 #: gui/editor.cpp:146
-#, fuzzy
 msgid "Messages"
-msgstr "Dirty Edit信息"
+msgstr "信息"
 
 #: gui/editor.cpp:147
 msgid "Bash Tags"
-msgstr ""
+msgstr "Bash 标签"
 
 #: gui/editor.cpp:148
 msgid "Dirty Info"
-msgstr ""
+msgstr "Dirty 信息"
 
 #: gui/editor.cpp:151
-#, fuzzy
 msgid "Plugins"
 msgstr " 个插件"
 
 #: gui/editor.cpp:153 gui/editor.cpp:157 gui/editor.cpp:161
-#, fuzzy
 msgid "Filename"
 msgstr "文件"
 
 #: gui/editor.cpp:154 gui/editor.cpp:158 gui/editor.cpp:162
-#, fuzzy
 msgid "Display Name"
-msgstr "显示设置"
+msgstr "显示名字"
 
 #: gui/editor.cpp:165
 msgid "Add/Remove"
-msgstr ""
+msgstr "添加/移除"
 
 #: gui/editor.cpp:166
 msgid "Bash Tag"
-msgstr ""
+msgstr "Bash 标签"
 
 #: gui/editor.cpp:169
 msgid "CRC"
-msgstr ""
+msgstr "CRC"
 
 #: gui/editor.cpp:170
-#, fuzzy
 msgid "ITM Count"
-msgstr "总数"
+msgstr "ITM 数量"
 
 #: gui/editor.cpp:171
-#, fuzzy
 msgid "UDR Count"
-msgstr "总数"
+msgstr "UDR 数量"
 
 #: gui/editor.cpp:172
 msgid "Deleted Navmesh Count"
-msgstr ""
+msgstr "已删除Navmesh数量"
 
 #: gui/editor.cpp:173
 msgid "Cleaning Utility"
-msgstr ""
+msgstr "清除工具"
 
 #: gui/editor.cpp:217
 msgid "Priority: "
-msgstr ""
+msgstr "优先级："
 
 #: gui/editor.cpp:379
-#, fuzzy
 msgid "Add Plugin"
-msgstr " 个插件"
+msgstr "添加插件"
 
 #: gui/editor.cpp:380
-#, fuzzy
 msgid "Edit Plugin"
-msgstr "提交插件"
+msgstr "编辑插件"
 
 #: gui/editor.cpp:381
-#, fuzzy
 msgid "Remove Plugin"
-msgstr "已识别插件"
+msgstr "移除插件"
 
 #: gui/editor.cpp:383
-#, fuzzy
 msgid "Add Message"
-msgstr "Dirty Edit信息"
+msgstr "添加信息"
 
 #: gui/editor.cpp:384
-#, fuzzy
 msgid "Edit Message"
-msgstr "Dirty Edit信息"
+msgstr "编辑信息"
 
 #: gui/editor.cpp:385
-#, fuzzy
 msgid "Remove Message"
-msgstr "成功信息"
+msgstr "移除信息"
 
 #: gui/editor.cpp:387
 msgid "Add Bash Tag"
-msgstr ""
+msgstr "添加Bash标签"
 
 #: gui/editor.cpp:388
 msgid "Edit Bash Tag"
-msgstr ""
+msgstr "编辑Bash标签"
 
 #: gui/editor.cpp:389
 msgid "Remove Bash Tag"
-msgstr ""
+msgstr "移除Bash标签"
 
 #: gui/editor.cpp:391
 msgid "Add Dirty Info"
-msgstr ""
+msgstr "添加Dirty信息"
 
 #: gui/editor.cpp:392
 msgid "Edit Dirty Info"
-msgstr ""
+msgstr "编辑Dirty信息"
 
 #: gui/editor.cpp:393
-#, fuzzy
 msgid "Remove Dirty Info"
-msgstr "已识别插件"
+msgstr "移除Dirty信息"
 
 #: gui/editor.cpp:411
 msgid "BOSS: Add File/Plugin"
-msgstr ""
+msgstr "BOSS：添加文件/插件"
 
 #: gui/editor.cpp:433
-#, fuzzy
 msgid "BOSS: Add Message"
-msgstr "BOSS：更新工具"
+msgstr "BOSS：添加信息"
 
 #: gui/editor.cpp:443
-#, fuzzy
 msgid "Error: No content specified. Row will not be added."
-msgstr "错误：未检测到可用网络。无法下载masterlist。"
+msgstr "错误：未指定内容，列不会被添加。"
 
 #: gui/editor.cpp:444 gui/editor.cpp:526 gui/editor.cpp:1122
 #: gui/editor.cpp:1137 gui/main.cpp:164 gui/main.cpp:181 gui/main.cpp:194
@@ -315,68 +285,64 @@ msgid "BOSS: Error"
 msgstr "BOSS：错误"
 
 #: gui/editor.cpp:454
-#, fuzzy
 msgid "BOSS: Add Tag"
-msgstr "BOSS：更新工具"
+msgstr "BOSS：添加标签"
 
 #: gui/editor.cpp:468
-#, fuzzy
 msgid "BOSS: Add Dirty Info"
-msgstr "BOSS：更新工具"
+msgstr "BOSS：添加Dirty信息"
 
 #: gui/editor.cpp:487
 msgid "BOSS: Edit File/Plugin"
-msgstr ""
+msgstr "BOSS：编辑文件/插件"
 
 #: gui/editor.cpp:511
-#, fuzzy
 msgid "BOSS: Edit Message"
-msgstr "Dirty Edit信息"
+msgstr "BOSS：编辑信息"
 
 #: gui/editor.cpp:525
 msgid "Error: No content specified. Row will not be edited."
-msgstr ""
+msgstr "错误：未检测到内容。行不会被修改。"
 
 #: gui/editor.cpp:535
 msgid "BOSS: Edit Tag"
-msgstr ""
+msgstr "BOSS：编辑标签"
 
 #: gui/editor.cpp:557
-#, fuzzy
 msgid "BOSS: Edit Dirty Info"
-msgstr "BOSS：选择游戏"
+msgstr "BOSS：编辑Dirty信息"
 
 #: gui/editor.cpp:932
 msgid "Filename (required):"
-msgstr ""
+msgstr "文件名（必需）："
 
 #: gui/editor.cpp:935
 msgid "Displayed Name:"
-msgstr ""
+msgstr "显示名称："
 
 #: gui/editor.cpp:938 gui/editor.cpp:1016 gui/editor.cpp:1172
 msgid "Condition:"
-msgstr ""
+msgstr "条件："
 
 #: gui/editor.cpp:986
 msgid "Add Content"
-msgstr ""
+msgstr "添加内容"
 
 #: gui/editor.cpp:987
 msgid "Edit Content"
-msgstr ""
+msgstr "编辑内容"
 
 #: gui/editor.cpp:988
 msgid "Remove Content"
-msgstr ""
+msgstr "移除内容"
 
 #: gui/editor.cpp:991
 msgid "String"
-msgstr ""
+msgstr "字符串"
 
 #: gui/editor.cpp:1013 gui/settings.cpp:425
 msgid "Type:"
-msgstr ""
+msgstr "类型："
 
 #: gui/editor.cpp:1028 gui/settings.cpp:101
 msgid "Language:"
@@ -384,106 +350,95 @@ msgstr "界面语言："
 
 #: gui/editor.cpp:1031
 msgid "Content:"
-msgstr ""
+msgstr "内容："
 
 #: gui/editor.cpp:1121 gui/editor.cpp:1136
 msgid "Error: No content row selected."
-msgstr ""
+msgstr "错误：未选择内容行。"
 
 #: gui/editor.cpp:1166
 msgid "Add/Remove:"
-msgstr ""
+msgstr "添加/移除："
 
 #: gui/editor.cpp:1169 gui/settings.cpp:422
 msgid "Name (required):"
-msgstr ""
+msgstr "名字（必需）："
 
 #: gui/editor.cpp:1234
-#, fuzzy
 msgid "CRC (required):"
-msgstr "需要"
+msgstr "CRC（必需）："
 
 #: gui/editor.cpp:1237
-#, fuzzy
 msgid "ITM Count:"
-msgstr "总数"
+msgstr "ITM数量："
 
 #: gui/editor.cpp:1240
-#, fuzzy
 msgid "UDR Count:"
-msgstr "总数"
+msgstr "UDR数量："
 
 #: gui/editor.cpp:1243
 msgid "Deleted Navmesh Count:"
-msgstr ""
+msgstr "已删除Navmesh数量："
 
 #: gui/editor.cpp:1246
 msgid "Cleaning Utility (required):"
-msgstr ""
+msgstr "清除工具（必需）："
 
 #: gui/ids.cpp:31
-#, fuzzy
 msgid "None Specified"
-msgstr "未定义规则对象。"
+msgstr "未指定"
 
 #: gui/main.cpp:118
-#, fuzzy
 msgid "Masterlist update failed. Details: %1%"
-msgstr "检查更新失败。详细信息：%1%"
+msgstr "Masterlist更新失败。详细信息：%1%"
 
 #: gui/main.cpp:134
-#, fuzzy
 msgid "Masterlist parsing failed. Details: %1%"
-msgstr "检查更新失败。详细信息：%1%"
+msgstr "Masterlist解析失败。详细信息：%1%"
 
 #: gui/main.cpp:142
 msgid "Unknown"
-msgstr ""
+msgstr "未知"
 
 #: gui/main.cpp:144
-#, fuzzy
 msgid "No masterlist"
-msgstr "更新masterlist"
+msgstr "无 masterlist"
 
 #: gui/main.cpp:163
-#, fuzzy
 msgid "Error: BOSS is already running. This instance will now quit."
-msgstr "错误：BOSS GUI 正在运行。当前操作即将退出。"
+msgstr "错误：BOSS正在运行。当前操作即将退出。"
 
 #: gui/main.cpp:180
 msgid "Error: Could not create local app data BOSS folder."
-msgstr ""
+msgstr "错误：无法创建local app data BOSS目录。"
 
 #: gui/main.cpp:193
-#, fuzzy
 msgid "Error: Settings parsing failed. %1%"
-msgstr "错误：Data转换失败。"
+msgstr "错误：设置解析失败。%1%"
 
 #: gui/main.cpp:272
-#, fuzzy
 msgid "Error: Could not apply translation."
-msgstr "错误：无法加载翻译包：%1%"
+msgstr "错误：无法加载翻译包。"
 
 #: gui/main.cpp:282
 msgid "Error: The selected language is not available on this system."
-msgstr ""
+msgstr "错误：所选择语言在本系统中不可用。"
 
 #: gui/main.cpp:295 gui/main.cpp:351 gui/main.cpp:1039
 msgid "Error: Game-specific settings could not be initialised. %1%"
-msgstr ""
+msgstr "错误：游戏专属设置无法初始化。%1%"
 
 #: gui/main.cpp:303
-#, fuzzy
 msgid "Error: Games' settings parsing failed. %1%"
-msgstr "错误：masterlist更新失败。"
+msgstr "错误：游戏设置解析失败。%1%"
 
 #: gui/main.cpp:334
 msgid "Error: None of the supported games were detected."
-msgstr ""
+msgstr "错误：未检测到支持的游戏。"
 
 #: gui/main.cpp:379
 msgid "Edit Metadata"
-msgstr ""
+msgstr "编辑Meta信息"
 
 #: gui/main.cpp:380
 msgid "Sort Plugins"
@@ -491,26 +446,23 @@ msgstr "调整排序"
 
 #: gui/main.cpp:381
 msgid "View Last Report"
-msgstr ""
+msgstr "查看最近报告"
 
 #: gui/main.cpp:385
 msgid "&View Last Report"
-msgstr ""
+msgstr "查看最近报告"
 
 #: gui/main.cpp:386
-#, fuzzy
 msgid "View &Debug Log"
-msgstr "查看BOSS日志"
+msgstr "查看调试日志"
 
 #: gui/main.cpp:387
-#, fuzzy
 msgid "&Sort Plugins"
-msgstr "调整排序"
+msgstr "插件排序"
 
 #: gui/main.cpp:388
-#, fuzzy
 msgid "&Redate Plugins"
-msgstr "调整排序"
+msgstr "修改插件时间"
 
 #: gui/main.cpp:391
 msgid "&File"
@@ -518,7 +470,7 @@ msgstr "文件"
 
 #: gui/main.cpp:393
 msgid "&Metadata..."
-msgstr ""
+msgstr "Meta信息..."
 
 #: gui/main.cpp:394
 msgid "&Settings..."
@@ -530,7 +482,7 @@ msgstr "编辑"
 
 #: gui/main.cpp:407
 msgid "&Game"
-msgstr ""
+msgstr "游戏"
 
 #: gui/main.cpp:412
 msgid "&Help"
@@ -542,79 +494,71 @@ msgstr "BOSS：正在排序..."
 
 #: gui/main.cpp:496 gui/main.cpp:851
 msgid "BOSS working..."
-msgstr "BOSS正在排序..."
+msgstr "BOSS正在运行..."
 
 #: gui/main.cpp:547
-#, fuzzy
 msgid "Userlist parsing failed. Details: %1%"
-msgstr "检查更新失败。详细信息：%1%"
+msgstr "Userlist解析失败。详细信息：%1%"
 
 #: gui/main.cpp:584
 msgid ""
 "A global message contains a condition that could not be evaluated. Details: "
 "%1%"
-msgstr ""
+msgstr "一条全局信息包含的条件无法被解析，详细信息：%1%"
 
 #: gui/main.cpp:615
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
-msgstr ""
+msgstr "\"%1%\"包含一条无法被解析的条件。详细信息：%2%"
 
 #: gui/main.cpp:627
 msgid "\"%1%\" is incompatible with \"%2%\" and is present."
-msgstr ""
+msgstr "\"%1%\"不兼容的\"%2%\"当前存在着。"
 
 #: gui/main.cpp:630
 msgid "\"%1%\" is required by \"%2%\" but is missing."
-msgstr ""
+msgstr "\"%2%\"需要的\"%1%\"当前丢失了。"
 
 #: gui/main.cpp:670
-#, fuzzy
 msgid "Failed to generate graph image. Details: %1%"
-msgstr "无法获取发行说明。详细信息：%1%"
+msgstr "无法生成图片。详细信息：%1%"
 
 #: gui/main.cpp:687
-#, fuzzy
 msgid "BOSS: Calculated Load Order"
-msgstr "已恢复排序"
+msgstr "BOSS：已计算加载顺序"
 
 #: gui/main.cpp:765
-#, fuzzy
 msgid "Failed to set the load order. Details: %1%"
-msgstr "无法获取发行说明。详细信息：%1%"
+msgstr "无法设置加载顺序。详细信息：%1%"
 
 #: gui/main.cpp:769
 msgid ""
 "The load order displayed in the Details tab was not applied as sorting was "
 "canceled."
-msgstr ""
+msgstr "详细信息栏中的排序未被应用，因为排序被取消了。"
 
 #: gui/main.cpp:778
-#, fuzzy
 msgid "Failed to calculate the load order. Details: %1%"
-msgstr "无法获取发行说明。详细信息：%1%"
+msgstr "无法计算加载顺序。详细信息：%1%"
 
 #: gui/main.cpp:819
 msgid "Error: %1%"
 msgstr "错误：%1%"
 
 #: gui/main.cpp:839 gui/main.cpp:954
-#, fuzzy
 msgid "BOSS: Report Viewer"
-msgstr "BOSS：更新工具"
+msgstr "BOSS：报告查看工具"
 
 #: gui/main.cpp:872
-#, fuzzy
 msgid "Error: Masterlist parsing failed. %1%"
-msgstr "错误：masterlist更新失败。"
+msgstr "错误：masterlist解析失败。%1%"
 
 #: gui/main.cpp:892
-#, fuzzy
 msgid "Error: Userlist parsing failed. %1%"
-msgstr "错误：masterlist更新失败。"
+msgstr "错误：userlist解析失败，%1%"
 
 #: gui/main.cpp:939
 msgid "BOSS: Metadata Editor"
-msgstr ""
+msgstr "BOSS：Meta信息编辑器"
 
 #: gui/main.cpp:961
 msgid ""
@@ -622,30 +566,28 @@ msgid ""
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
 "will be re-downloaded by Steam. Do you wish to continue?"
 msgstr ""
+"此功能方便使用Creation Kit的modder可以设定个人顺序。副作用是所有在Steam "
+"Workshop订阅的mod都会被Steam重新下载，您确定要继续吗？"
 
 #: gui/main.cpp:961
-#, fuzzy
 msgid "BOSS: Warning"
-msgstr "BOSS：正在排序..."
+msgstr "BOSS：警告"
 
 #: gui/main.cpp:971
-#, fuzzy
 msgid "Error: Failed to get load order. %1%"
-msgstr "无法获取发行说明。详细信息：%1%"
+msgstr "错误：无法获取加载顺序。%1%"
 
 #: gui/main.cpp:1008
 msgid "Error: Failed to set plugin timestamps. %1%"
-msgstr ""
+msgstr "错误：无法设置插件时间戳。%1%"
 
 #: gui/main.cpp:1015
-#, fuzzy
 msgid "Plugins were successfully redated."
-msgstr "已成功下载新版安装程序！"
+msgstr "插件已成功调整时间。"
 
 #: gui/main.cpp:1016
-#, fuzzy
 msgid "BOSS: Plugin Redate"
-msgstr "BOSS：自动更新工具"
+msgstr "BOSS：修改插件时间"
 
 #: gui/main.cpp:1024
 msgid "BOSS: Settings"
@@ -659,325 +601,294 @@ msgstr "错误：找不到\"%1%\"。"
 msgid ""
 "A load order optimisation tool for games using the Elder Scrolls Plugin/"
 "Master system."
-msgstr ""
+msgstr "一个对使用the Elder Scrolls Plugin/Master系统的游戏的MOD排序优化工具。"
 
 #: gui/main.cpp:1110
 msgid "Up"
-msgstr ""
+msgstr "向上"
 
 #: gui/main.cpp:1111
 msgid "Down"
-msgstr ""
+msgstr "向下"
 
 #: gui/main.cpp:1114
-#, fuzzy
 msgid "Load Order"
-msgstr "已恢复排序"
+msgstr "加载顺序"
 
 #: gui/main.cpp:1136
 msgid ""
 "Please submit any alterations made for reasons other than user preference \n"
 "to the BOSS team so that they may include the changes in the masterlist."
 msgstr ""
+"请提交修改的原因而不是个人配置信息给BOSS团队，这样他们才可以在masterlist中修"
+"改。"
 
 #: gui/main.cpp:1181 gui/main.cpp:1226
-#, fuzzy
 msgid "Error: Cannot load \"%1%\" before \"%2%\"."
-msgstr "将%1%排在%2%前面"
+msgstr "错误：无法加载\"%1%\"在\"%2%\"前面。"
 
 #: gui/settings.cpp:40
 msgid "None"
-msgstr ""
+msgstr "无"
 
 #: gui/settings.cpp:41
 msgid "Low"
-msgstr ""
+msgstr "低"
 
 #: gui/settings.cpp:42
 msgid "Medium"
-msgstr ""
+msgstr "中"
 
 #: gui/settings.cpp:43
 msgid "High"
-msgstr ""
+msgstr "高"
 
 #: gui/settings.cpp:47
 msgid "Autodetect"
 msgstr "自动检测"
 
 #: gui/settings.cpp:59
-#, fuzzy
 msgid "Add Game"
-msgstr "当前游戏"
+msgstr "添加游戏"
 
 #: gui/settings.cpp:60
 msgid "Edit Game"
-msgstr ""
+msgstr "编辑游戏"
 
 #: gui/settings.cpp:61
-#, fuzzy
 msgid "Remove Game"
-msgstr "当前游戏"
+msgstr "移除游戏"
 
 #: gui/settings.cpp:63
-#, fuzzy
 msgid "Update masterlist before sorting."
-msgstr "仅更新masterlist"
+msgstr "排序之前更新masterlist。"
 
 #: gui/settings.cpp:64
 msgid "View reports externally in default browser."
-msgstr ""
+msgstr "在外部浏览器查看报告"
 
 #: gui/settings.cpp:65
 msgid "Generate and display plugin graph images."
-msgstr ""
+msgstr "产生并显示插件图片。"
 
 #: gui/settings.cpp:68
 msgid "Name"
-msgstr ""
+msgstr "名字"
 
 #: gui/settings.cpp:69
 msgid "Base Game Type"
-msgstr ""
+msgstr "基础游戏类型"
 
 #: gui/settings.cpp:70
-#, fuzzy
 msgid "BOSS Folder Name"
-msgstr "BOSS：选择游戏"
+msgstr "BOSS路径"
 
 #: gui/settings.cpp:71
-#, fuzzy
 msgid "Master File"
-msgstr "masterlist"
+msgstr "Master文件"
 
 #: gui/settings.cpp:72
-#, fuzzy
 msgid "Online Masterlist URL"
-msgstr "masterlist"
+msgstr "在线 masterlist URL"
 
 #: gui/settings.cpp:73
-#, fuzzy
 msgid "Install Path"
-msgstr "已安装的插件"
+msgstr "安装路径"
 
 #: gui/settings.cpp:74
 msgid "Install Path Registry Key"
-msgstr ""
+msgstr "注册表键安装路径键值"
 
 #: gui/settings.cpp:98
 msgid "Default Game:"
 msgstr "默认游戏："
 
 #: gui/settings.cpp:104
-#, fuzzy
 msgid "Debug Verbosity:"
 msgstr "调试输出冗长程度："
 
 #: gui/settings.cpp:126
-#, fuzzy
 msgid "Language and game changes will be applied after BOSS is restarted."
-msgstr "* 界面语言的修改必须重启才能生效。"
+msgstr "界面语言与游戏的修改必须重启才能生效。"
 
 #: gui/settings.cpp:139
-#, fuzzy
 msgid "The output is logged to the BOSSDebugLog.txt file."
 msgstr "调试报告输出到BOSSDebugLog.txt中。"
 
 #: gui/settings.cpp:279
-#, fuzzy
 msgid "BOSS: Add Game"
-msgstr "BOSS：选择游戏"
+msgstr "BOSS：添加游戏"
 
 #: gui/settings.cpp:286 gui/settings.cpp:365
-#, fuzzy
 msgid "Error: A path and/or registry key is required. Row will not be added."
-msgstr "错误：未检测到可用网络。无法下载masterlist。"
+msgstr "错误：需要路径或者键值，列不会被添加。"
 
 #: gui/settings.cpp:298
 msgid "Error: A game with this name is already defined. Row will not be added."
-msgstr ""
+msgstr "错误：已存在此名字的游戏，列不会被添加。"
 
 #: gui/settings.cpp:306
 msgid ""
 "Error: A game with this folder name is already defined. Row will not be "
 "added."
-msgstr ""
+msgstr "错误：已定义此路径的游戏，列不会被添加。"
 
 #: gui/settings.cpp:328
-#, fuzzy
 msgid "BOSS: Edit Game"
-msgstr "BOSS：选择游戏"
+msgstr "BOSS：编辑游戏"
 
 #: gui/settings.cpp:349
 msgid "Error: Name is required. Row will not be added."
-msgstr ""
+msgstr "错误：名字是必需的，列不会被添加。"
 
 #: gui/settings.cpp:357
 msgid "Error: Folder is required. Row will not be added."
-msgstr ""
+msgstr "错误：路径是必须的，列不会被添加。"
 
 #: gui/settings.cpp:428
-#, fuzzy
 msgid "BOSS Folder Name (required):"
-msgstr "BOSS：选择游戏"
+msgstr "BOSS路径（必需）："
 
 #: gui/settings.cpp:431
-#, fuzzy
 msgid "Master File:"
-msgstr "masterlist"
+msgstr "master 文件："
 
 #: gui/settings.cpp:434
-#, fuzzy
 msgid "Masterlist URL:"
-msgstr "masterlist"
+msgstr "masterlist URL："
 
 #: gui/settings.cpp:437
-#, fuzzy
 msgid "Install Path:"
-msgstr "已安装的插件"
+msgstr "安装路径："
 
 #: gui/settings.cpp:440
 msgid "Install Path Registry Key:"
-msgstr ""
+msgstr "注册表键安装路径键值："
 
 #: backend/generators.h:80
-#, fuzzy
 msgid "Note:"
-msgstr "注意"
+msgstr "注意："
 
 #: backend/generators.h:82
-#, fuzzy
 msgid "Bash Tag Suggestion(s):"
-msgstr "Bash标签建议"
+msgstr "Bash标签建议："
 
 #: backend/generators.h:84
-#, fuzzy
 msgid "Warning:"
-msgstr "警告"
+msgstr "警告："
 
 #: backend/generators.h:86
-#, fuzzy
 msgid "Error:"
 msgstr "错误："
 
 #: backend/generators.h:159
-#, fuzzy
 msgid "BOSS Report"
-msgstr "BOSS：错误"
+msgstr "BOSS报告"
 
 #: backend/generators.h:191 backend/generators.h:262
 msgid "Summary"
 msgstr "总结"
 
 #: backend/generators.h:197
-#, fuzzy
 msgid "Details"
-msgstr "详细信息：%1%"
+msgstr "详细信息"
 
 #: backend/generators.h:204
 msgid "Graph"
-msgstr ""
+msgstr "图片"
 
 #: backend/generators.h:211
 msgid "Filters"
 msgstr "过滤配置"
 
 #: backend/generators.h:275
-#, fuzzy
 msgid "BOSS Version"
-msgstr "版本 "
+msgstr "BOSS 版本 "
 
 #: backend/generators.h:284
-#, fuzzy
 msgid "Masterlist Version"
-msgstr "masterlist"
+msgstr "masterlist 版本"
 
 #: backend/generators.h:293
-#, fuzzy
 msgid "Masterlist Updating"
-msgstr "masterlist"
+msgstr "masterlist 正在更新"
 
 #: backend/generators.h:297
 msgid "Enabled"
-msgstr ""
+msgstr "启用"
 
 #: backend/generators.h:299
 msgid "Disabled"
-msgstr ""
+msgstr "禁用"
 
 #: backend/generators.h:306
-#, fuzzy
 msgid "No change in details since last run."
-msgstr "与上一次操作相比，可识别插件的排序未发生变化。"
+msgstr "与上一次操作相比，详细信息未发生变化。"
 
 #: backend/generators.h:316
-#, fuzzy
 msgid "General Messages"
-msgstr "Dirty Edit信息"
+msgstr "全局信息"
 
 #: backend/generators.h:326
 msgid "Total Number of Messages"
-msgstr ""
+msgstr "总信息数"
 
 #: backend/generators.h:335
-#, fuzzy
 msgid "Number of Warnings"
-msgstr "警告"
+msgstr "警告数"
 
 #: backend/generators.h:344
 msgid "Number of Errors"
-msgstr ""
+msgstr "错误数"
 
 #: backend/generators.h:385
-#, fuzzy
 msgid "Version:"
 msgstr "版本："
 
 #: backend/generators.h:405
 msgid "Add:"
-msgstr ""
+msgstr "添加："
 
 #: backend/generators.h:411
-#, fuzzy
 msgid "Remove:"
-msgstr "当前游戏"
+msgstr "移除："
 
 #: backend/generators.h:419
 msgid ""
 "Contains %1% ITM records, %2% UDR records and %3% deleted navmeshes. Clean "
 "with %4%."
 msgstr ""
+"包含 %1% 个ITM记录，%2% 个UDR记录和 %3% 个被删除navmesh。使用 %4% 清理。"
 
 #: backend/generators.h:421
 msgid "Clean with %1%."
-msgstr ""
+msgstr "使用 %1% 清理。"
 
 #: backend/generators.h:425
 msgid "Contains %1% UDR records and %2% deleted navmeshes. Clean with %3%."
-msgstr ""
+msgstr "包含 %1% 个ITM记录和 %2% 个被删除navmesh。使用 %3% 清理。"
 
 #: backend/generators.h:427
 msgid "Contains %1% deleted navmeshes. Clean with %2%."
-msgstr ""
+msgstr "包含 %1% 个被删除navmesh。使用 %2% 清理。"
 
 #: backend/generators.h:429
 msgid "Contains %1% UDR records. Clean with %2%."
-msgstr ""
+msgstr "包含 %1% 个UDR记录。使用 %2% 清理。"
 
 #: backend/generators.h:432
 msgid "Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%."
-msgstr ""
+msgstr "包含 %1% 个ITM记录和 %2% 个UDR记录。使用 %3% 清理。"
 
 #: backend/generators.h:434
 msgid "Contains %1% ITM records. Clean with %2%."
-msgstr ""
+msgstr "包含 %1% 个ITM记录。使用 %2% 清理。"
 
 #: backend/generators.h:437
 msgid "Contains %1% ITM records and %2% UDR records. Clean with %3%."
-msgstr ""
+msgstr "包含 %1% 个ITM记录和 %2% 个UDR记录。使用 %3% 清理。"
 
 #: backend/generators.h:474
-#, fuzzy
 msgid "The BOSS Report requires Javascript to be enabled in order to function."
 msgstr "BOSS日志需要开启Javascript才能运行函数。"
 
@@ -986,9 +897,8 @@ msgid "Hide Version Numbers"
 msgstr "隐藏版本信息"
 
 #: backend/generators.h:530
-#, fuzzy
 msgid "Hide CRCs"
-msgstr "隐藏注意事项"
+msgstr "隐藏CRC"
 
 #: backend/generators.h:539
 msgid "Hide Bash Tag Suggestions"
@@ -1011,7 +921,6 @@ msgid "Hide Messageless Plugins"
 msgstr "隐藏无信息的插件"
 
 #: backend/generators.h:581
-#, fuzzy
 msgid "%1% of %2% plugins hidden."
 msgstr "%1%/%2%可识别插件已隐藏。"
 
@@ -1021,26 +930,23 @@ msgstr "%1%/%2%信息已隐藏。"
 
 #: backend/generators.h:631
 msgid "Could not write BOSS report."
-msgstr ""
+msgstr "无法写入BOSS报告。"
 
 #: backend/parsers.h:466 backend/parsers.h:549
-#, fuzzy
 msgid "Invalid file path:"
-msgstr "已安装的插件"
+msgstr "无效文件路径："
 
 #: backend/parsers.h:514
-#, fuzzy
 msgid "Invalid folder path:"
-msgstr "已安装的插件"
+msgstr "无效路径："
 
 #: backend/parsers.h:531
-#, fuzzy
 msgid "Invalid regex string:"
-msgstr "选项无效。"
+msgstr "无效表达式："
 
 #: backend/parsers.h:626
 msgid "Expected \"%1%\" at \"%2%\"."
-msgstr ""
+msgstr "预期 \"%1%\" 在 \"%2%\"。"
 
 #~ msgid "Masterlist Parsing Error: Expected a %1% at:"
 #~ msgstr "解析Masterlist出错: 预计%1%于:"
@@ -1178,10 +1084,10 @@ msgstr ""
 #~ msgstr "无法删除文件\"%1%\"！系统错误提示：\"%2%\"。"
 
 #~ msgid "\"%1%\" cannot be created! Filesystem response: \"%2%\"."
-#~ msgstr "无法创建文件\"%1%\"！系统错误提示：\"%2%\"。"
+#~ msgstr "无法创建目录\"%1%\"！系统错误提示：\"%2%\"。"
 
 #~ msgid "\"%1%\" cannot be scanned! Filesystem response: \"%2%\"."
-#~ msgstr "无法扫描文件\"%1%\"！系统错误提示：\"%2%\"。"
+#~ msgstr "无法扫描目录\"%1%\"！系统错误提示：\"%2%\"。"
 
 #~ msgid "cURL cannot be initialised!"
 #~ msgstr "cURL无法初始化！"
@@ -1266,9 +1172,9 @@ msgstr ""
 #~ "more information, see \"file:../Docs/BOSS%20Readme.html#appendix-c False-"
 #~ "Flagged Plugins\"."
 #~ msgstr ""
-#~ "由BOSS调整的排序与masterlist中的排序不一致，因为一个或者多个已安装的插件标"
-#~ "记错误。更新信息可以查看\"file:../Docs/BOSS%20Readme.html#appendix-c "
-#~ "False-Flagged Plugins\"。"
+#~ "由BOSS调整的排序与masterlist中的排序不一致，因为一个或者多个插件标记错"
+#~ "误。\n"
+#~ "详细信息可以查看\"http://www.tesfans.org/esp-esm-master/#i\"。"
 
 #~ msgid "Could not enforce load order master/plugin partition. Details: "
 #~ msgstr "无法运行.ESM、.ESP排序比较。详细信息："
@@ -1289,7 +1195,7 @@ msgstr ""
 #~ msgstr "程序即将关闭。"
 
 #~ msgid "Incompatible with"
-#~ msgstr "冲突："
+#~ msgstr "冲突"
 
 #~ msgid "Contains dirty edits"
 #~ msgstr "含dirty edits"
@@ -1590,7 +1496,7 @@ msgstr ""
 #~ msgstr "规则"
 
 #~ msgid "Applied"
-#~ msgstr "已应用"
+#~ msgstr "应用情况"
 
 #~ msgid "Details (if applicable)"
 #~ msgstr "详细信息(如果可用)"
@@ -1866,20 +1772,20 @@ msgstr ""
 #~ msgstr "对Morrowind运行BOSS排序。"
 
 #~ msgid "Open &Main Readme"
-#~ msgstr "打开说明文档"
+#~ msgstr "查看说明文档"
 
 #~ msgid "Opens the main BOSS readme in your default web browser."
 #~ msgstr "浏览器打开说明文档。"
 
 #~ msgid "Open &Userlist Syntax Doc"
-#~ msgstr "打开Userlist Syntax"
+#~ msgstr "查看Userlist语法规则"
 
 #~ msgid ""
 #~ "Opens the BOSS userlist syntax documentation in your default web browser."
 #~ msgstr "浏览器打开用户规则语法说明。"
 
 #~ msgid "Open &Masterlist Syntax Doc"
-#~ msgstr "打开Masterlist Syntax"
+#~ msgstr "查看Masterlist语法规则"
 
 #~ msgid ""
 #~ "Opens the BOSS masterlist syntax documentation in your default web "
@@ -1887,13 +1793,13 @@ msgstr ""
 #~ msgstr "浏览器打开masterlist语法说明。"
 
 #~ msgid "&Open API Readme"
-#~ msgstr "打开API Readme"
+#~ msgstr "查看API说明"
 
 #~ msgid "Opens the BOSS API readme in your default web browser."
 #~ msgstr "浏览器打开API说明。"
 
 #~ msgid "Open &Version History"
-#~ msgstr "打开Version History"
+#~ msgstr "查看版本历史"
 
 #~ msgid "Opens the BOSS version history in your default web browser."
 #~ msgstr "浏览器打开BOSS版本历史。"
@@ -1940,6 +1846,9 @@ msgstr ""
 
 #~ msgid "Run Options"
 #~ msgstr "运行选项"
+
+#~ msgid "Update Masterlist"
+#~ msgstr "更新masterlist"
 
 #~ msgid "Perform Trial Run"
 #~ msgstr "试运行"
@@ -2000,6 +1909,9 @@ msgstr ""
 #~ "It will then launch the installer before exiting. Complete the installer "
 #~ "to complete the update."
 #~ msgstr "退出之前将运行安装程序。您只要运行完安装程序即可更新BOSS。"
+
+#~ msgid "BOSS: Automatic Updater"
+#~ msgstr "BOSS：自动更新工具"
 
 #~ msgid "Automatic updater cancelled."
 #~ msgstr "自动更新已取消。"

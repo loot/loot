@@ -77,7 +77,8 @@ const unsigned int boss_lang_any        = boss::g_lang_any;
 const unsigned int boss_lang_english    = boss::g_lang_english;
 const unsigned int boss_lang_spanish    = boss::g_lang_spanish;
 const unsigned int boss_lang_russian    = boss::g_lang_russian;
-const unsigned int boss_lang_french     = boss::g_lang_french;  ///< Tells the API to preferentially select French messages.
+const unsigned int boss_lang_french     = boss::g_lang_french;
+const unsigned int boss_lang_chinese    = boss::g_lang_chinese;
 
 // BOSS cleanliness codes.
 const unsigned int boss_needs_cleaning_no       = 0;
