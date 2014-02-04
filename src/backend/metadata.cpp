@@ -444,6 +444,9 @@ namespace boss {
         BOOST_LOG_TRIVIAL(trace) << "Calculating metadata difference for: " << name;
         Plugin p(*this);
 
+        if (p.Priority() == plugin.Priority())
+            p.Priority(0);  //So that non-zero priorities don't get written to the userlist if they're already in the masterlist.
+
         //Compare this plugin against the given plugin.
         set<File> files = plugin.LoadAfter();
         set<File> filesDiff;

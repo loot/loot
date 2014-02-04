@@ -301,8 +301,8 @@ void Editor::OnPluginSelect(wxListEvent& event) {
         if (!currentPlugin.empty())
             ApplyEdits(currentPlugin);
 
-        boss::Plugin plugin = GetMasterData(selectedPlugin);
-        plugin.Merge(GetUserData(selectedPlugin), true);
+        boss::Plugin plugin = GetUserData(selectedPlugin);
+        plugin.Merge(GetMasterData(selectedPlugin), true);
 
         //Now fill editor fields with new plugin's info and update control states.
         BOOST_LOG_TRIVIAL(debug) << "Filling editor fields with plugin info.";
