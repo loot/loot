@@ -142,8 +142,8 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #: gui/editor.cpp:132
-msgid "Copiar Mmetadatos como texto"
-msgstr ""
+msgid "Copy Metadata As Text"
+msgstr "Copiar Metadatos como texto"
 
 #: gui/editor.cpp:143
 msgid "Requirements"
@@ -155,19 +155,19 @@ msgstr "Incompatibilidades"
 
 #: gui/editor.cpp:145
 msgid "Load After"
-msgstr ""
+msgstr "Después De"
 
 #: gui/editor.cpp:146
 msgid "Messages"
-msgstr ""
+msgstr "Mensajes"
 
 #: gui/editor.cpp:147
 msgid "Bash Tags"
-msgstr ""
+msgstr "Etiquetas de Bash"
 
 #: gui/editor.cpp:148
 msgid "Dirty Info"
-msgstr ""
+msgstr "Informacion de ediciones sucias"
 
 #: gui/editor.cpp:151
 msgid "Plugins"
@@ -175,47 +175,47 @@ msgstr "Plugins"
 
 #: gui/editor.cpp:153 gui/editor.cpp:157 gui/editor.cpp:161
 msgid "Filename"
-msgstr ""
+msgstr "Nombre del archivo"
 
 #: gui/editor.cpp:154 gui/editor.cpp:158 gui/editor.cpp:162
 msgid "Display Name"
-msgstr ""
+msgstr "Nombre Desplegada"
 
 #: gui/editor.cpp:165
 msgid "Add/Remove"
-msgstr ""
+msgstr "Agregar o Quitar"
 
 #: gui/editor.cpp:166
 msgid "Bash Tag"
-msgstr ""
+msgstr "Etiqueta de Bash"
 
 #: gui/editor.cpp:169
 msgid "CRC"
-msgstr ""
+msgstr "CDN"
 
 #: gui/editor.cpp:170
 msgid "ITM Count"
-msgstr ""
+msgstr "La enumeración de ITM"
 
 #: gui/editor.cpp:171
 msgid "UDR Count"
-msgstr ""
+msgstr "La enumeración de UDR"
 
 #: gui/editor.cpp:172
 msgid "Deleted Navmesh Count"
-msgstr ""
+msgstr "Enumeración Navmesh eliminado"
 
 #: gui/editor.cpp:173
 msgid "Cleaning Utility"
-msgstr ""
+msgstr "Utilidad de limpieza"
 
 #: gui/editor.cpp:217
 msgid "Priority: "
-msgstr ""
+msgstr "Prioridad: "
 
 #: gui/editor.cpp:379
 msgid "Add Plugin"
-msgstr ""
+msgstr "Agregar un plugin"
 
 #: gui/editor.cpp:380
 msgid "Edit Plugin"
