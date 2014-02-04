@@ -136,7 +136,7 @@ msgstr "Aviso de %s"
 #: ../src/common/tarstrm.cpp:1319
 #, c-format
 msgid "%s did not fit the tar header for entry '%s'"
-msgstr "%s did not fit the tar header for entry '%s'"
+msgstr "%s no se acabe el Tar Header para la línea '%s'"
 
 #: ../src/common/fldlgcmn.cpp:106
 #, c-format
@@ -176,7 +176,7 @@ msgstr "&Organizar iconos"
 
 #: ../src/common/stockitem.cpp:195
 msgid "&Ascending"
-msgstr ""
+msgstr "&Ascendente"
 
 #: ../src/common/stockitem.cpp:142
 msgid "&Back"
@@ -202,7 +202,7 @@ msgstr "&Negrita"
 
 #: ../src/common/stockitem.cpp:144
 msgid "&Bottom"
-msgstr ""
+msgstr "&Bajo de"
 
 #: ../src/richtext/richtextborderspage.cpp:359
 #: ../src/richtext/richtextborderspage.cpp:503
@@ -211,7 +211,7 @@ msgstr ""
 #: ../src/richtext/richtextsizepage.cpp:637
 #: ../src/richtext/richtextsizepage.cpp:644
 msgid "&Bottom:"
-msgstr ""
+msgstr "&Bajo de:"
 
 #: ../include/wx/richtext/richtextbuffer.h:3530
 #, fuzzy
@@ -225,7 +225,7 @@ msgstr "Estilo de &viñeta:"
 
 #: ../src/common/stockitem.cpp:146
 msgid "&CD-Rom"
-msgstr ""
+msgstr "&CD-Rom"
 
 #: ../src/generic/wizard.cpp:432 ../src/generic/fontdlgg.cpp:470
 #: ../src/generic/fontdlgg.cpp:489 ../src/osx/carbon/fontdlg.cpp:588
@@ -301,7 +301,7 @@ msgstr "&Eliminar Estilo..."
 
 #: ../src/common/stockitem.cpp:196
 msgid "&Descending"
-msgstr ""
+msgstr "&Descendente"
 
 #: ../src/generic/logg.cpp:688
 msgid "&Details"
@@ -321,7 +321,7 @@ msgstr "&Editar Estilo..."
 
 #: ../src/common/stockitem.cpp:155
 msgid "&Execute"
-msgstr ""
+msgstr "&Ejecutar"
 
 #: ../src/common/stockitem.cpp:157 ../src/html/helpfrm.cpp:146
 msgid "&File"
@@ -338,11 +338,11 @@ msgstr "&Finalizar"
 #: ../src/common/stockitem.cpp:159
 #, fuzzy
 msgid "&First"
-msgstr "primero"
+msgstr "&Primero"
 
 #: ../src/richtext/richtextsizepage.cpp:244
 msgid "&Floating mode:"
-msgstr ""
+msgstr "&Modo Flotante"
 
 #: ../src/common/stockitem.cpp:160
 #, fuzzy
@@ -377,13 +377,13 @@ msgstr "&Desde:"
 
 #: ../src/common/stockitem.cpp:162
 msgid "&Harddisk"
-msgstr ""
+msgstr "&Disco duro"
 
 #: ../src/richtext/richtextsizepage.cpp:351
 #: ../src/richtext/richtextsizepage.cpp:358
 #, fuzzy
 msgid "&Height:"
-msgstr "Peso"
+msgstr "&Peso:"
 
 #: ../src/generic/wizard.cpp:435 ../src/richtext/richtextstyledlg.cpp:303
 #: ../src/richtext/richtextsymboldlg.cpp:479 ../src/osx/menu_osx.cpp:785
@@ -394,7 +394,7 @@ msgstr "&Ayuda"
 #: ../include/wx/richmsgdlg.h:30
 #, fuzzy
 msgid "&Hide details"
-msgstr "&Detalles"
+msgstr "&Esconder Detalles"
 
 #: ../src/common/stockitem.cpp:164
 msgid "&Home"
@@ -412,7 +412,7 @@ msgstr "&Indeterminado"
 
 #: ../src/common/stockitem.cpp:166
 msgid "&Index"
-msgstr "Índ&ice"
+msgstr "&Índ&ice"
 
 #: ../src/common/stockitem.cpp:167
 #, fuzzy
@@ -421,11 +421,11 @@ msgstr "&Deshacer"
 
 #: ../src/common/stockitem.cpp:168
 msgid "&Italic"
-msgstr "Curs&iva"
+msgstr "&Cursiva"
 
 #: ../src/common/stockitem.cpp:169
 msgid "&Jump to"
-msgstr ""
+msgstr "&Ir a"
 
 #: ../src/richtext/richtextindentspage.cpp:153
 #: ../src/richtext/richtextliststylepage.cpp:342
@@ -435,7 +435,7 @@ msgstr "&Justificado"
 #: ../src/common/stockitem.cpp:174
 #, fuzzy
 msgid "&Last"
-msgstr "&Pegar"
+msgstr "&Último"
 
 #: ../src/richtext/richtextindentspage.cpp:139
 #: ../src/richtext/richtextliststylepage.cpp:328
@@ -455,11 +455,11 @@ msgstr "&Izquierda:"
 
 #: ../src/richtext/richtextliststylepage.cpp:183
 msgid "&List level:"
-msgstr "Nivel de &Lista:"
+msgstr "&Nivel de Lista:"
 
 #: ../src/generic/logg.cpp:523
 msgid "&Log"
-msgstr "&Log"
+msgstr "&Archivo de registro"
 
 #: ../src/univ/themes/win32.cpp:3748
 msgid "&Move"
@@ -467,12 +467,12 @@ msgstr "&Mover"
 
 #: ../src/richtext/richtextsizepage.cpp:672
 msgid "&Move the object to:"
-msgstr ""
+msgstr "&Mover objeto a"
 
 #: ../src/common/stockitem.cpp:175
 #, fuzzy
 msgid "&Network"
-msgstr "&Nuevo"
+msgstr "&La Red"
 
 #: ../src/richtext/richtexttabspage.cpp:136 ../src/common/stockitem.cpp:176
 msgid "&New"
@@ -490,7 +490,7 @@ msgstr "&Siguiente >"
 #: ../src/richtext/richtextsizepage.cpp:681
 #, fuzzy
 msgid "&Next Paragraph"
-msgstr "Después de un párrafo:"
+msgstr "&Después de un párrafo:"
 
 #: ../src/generic/tipdlg.cpp:276
 msgid "&Next Tip"
@@ -520,16 +520,16 @@ msgstr "&Aceptar"
 #: ../src/generic/dbgrptg.cpp:342 ../src/common/stockitem.cpp:179
 #: ../src/html/helpfrm.cpp:137
 msgid "&Open..."
-msgstr "A&brir..."
+msgstr "&Abrir..."
 
 #: ../src/richtext/richtextindentspage.cpp:222
 #, fuzzy
 msgid "&Outline level:"
-msgstr "Nivel de &Lista:"
+msgstr "&Nivel de Lista:"
 
 #: ../src/richtext/richtextindentspage.cpp:293
 msgid "&Page Break"
-msgstr ""
+msgstr "&Salto de página"
 
 #: ../src/richtext/richtextctrl.cpp:327 ../src/osx/textctrl_osx.cpp:584
 #: ../src/common/stockitem.cpp:180 ../src/msw/textctrl.cpp:2285
@@ -538,11 +538,11 @@ msgstr "&Pegar"
 
 #: ../include/wx/richtext/richtextbuffer.h:4655
 msgid "&Picture"
-msgstr ""
+msgstr "&Imagen"
 
 #: ../src/generic/fontdlgg.cpp:422
 msgid "&Point size:"
-msgstr "Tamaño de &punto:"
+msgstr "&Tamaño de punto:"
 
 #: ../src/richtext/richtexttabspage.cpp:114
 msgid "&Position (tenths of a mm):"
@@ -551,7 +551,7 @@ msgstr "&Posición (décimas de mm):"
 #: ../src/richtext/richtextsizepage.cpp:514
 #, fuzzy
 msgid "&Position mode:"
-msgstr "Pregunta"
+msgstr "&Modo de posición:"
 
 #: ../src/common/stockitem.cpp:181
 msgid "&Preferences"
@@ -565,11 +565,11 @@ msgstr "&Anterior"
 #: ../src/richtext/richtextsizepage.cpp:675
 #, fuzzy
 msgid "&Previous Paragraph"
-msgstr "Página anterior"
+msgstr "&Página anterior"
 
 #: ../src/common/stockitem.cpp:183
 msgid "&Print..."
-msgstr "Im&primir..."
+msgstr "&Imprimir..."
 
 #: ../src/richtext/richtextctrl.cpp:332 ../src/richtext/richtextctrl.cpp:4945
 #: ../src/common/stockitem.cpp:184
@@ -629,12 +629,12 @@ msgstr "&Guardar"
 #: ../src/common/stockitem.cpp:191
 #, fuzzy
 msgid "&Save as"
-msgstr "Guardar como"
+msgstr "&Guardar como"
 
 #: ../include/wx/richmsgdlg.h:29
 #, fuzzy
 msgid "&See details"
-msgstr "&Detalles"
+msgstr "&Ver Detalles"
 
 #: ../src/generic/tipdlg.cpp:270
 msgid "&Show tips at startup"
@@ -660,7 +660,7 @@ msgstr "&Espaciado (décimas de mm)"
 
 #: ../src/common/stockitem.cpp:197
 msgid "&Spell Check"
-msgstr ""
+msgstr "&Verificación de ortografía"
 
 #: ../src/common/stockitem.cpp:198
 msgid "&Stop"
@@ -672,11 +672,11 @@ msgstr "&Tachado"
 
 #: ../src/generic/fontdlgg.cpp:382 ../src/richtext/richtextstylepage.cpp:104
 msgid "&Style:"
-msgstr "E&stilo:"
+msgstr "&Estilo:"
 
 #: ../src/richtext/richtextstyledlg.cpp:198
 msgid "&Styles:"
-msgstr "E&stilos:"
+msgstr "&Estilos:"
 
 #: ../src/richtext/richtextsymboldlg.cpp:413
 msgid "&Subset:"
@@ -705,11 +705,11 @@ msgstr "&Copiar"
 #: ../src/richtext/richtextsizepage.cpp:574
 #, fuzzy
 msgid "&Top:"
-msgstr "Hasta:"
+msgstr "&Hasta:"
 
 #: ../src/generic/fontdlgg.cpp:444 ../src/common/stockitem.cpp:202
 msgid "&Underline"
-msgstr "Subrayado"
+msgstr "&Subrayado"
 
 #: ../src/richtext/richtextfontpage.cpp:243
 msgid "&Underlining:"
@@ -731,7 +731,7 @@ msgstr "&No escalonado"
 
 #: ../src/common/stockitem.cpp:205
 msgid "&Up"
-msgstr "Arriba"
+msgstr "&Arriba"
 
 #: ../src/richtext/richtextsizepage.cpp:278
 #, fuzzy
@@ -741,17 +741,17 @@ msgstr "&Alineación de viñeta:"
 #: ../src/generic/dbgrptg.cpp:340
 #, fuzzy
 msgid "&View..."
-msgstr "A&brir..."
+msgstr "&Abrir..."
 
 #: ../src/generic/fontdlgg.cpp:393
 msgid "&Weight:"
-msgstr "Peso"
+msgstr "&Peso:"
 
 #: ../src/richtext/richtextsizepage.cpp:317
 #: ../src/richtext/richtextsizepage.cpp:324
 #, fuzzy
 msgid "&Width:"
-msgstr "Peso"
+msgstr "&El Ancho:"
 
 #: ../src/aui/tabmdi.cpp:311 ../src/aui/tabmdi.cpp:327
 #: ../src/aui/tabmdi.cpp:329 ../src/generic/mdig.cpp:294
@@ -870,7 +870,7 @@ msgstr "+"
 
 #: ../src/msw/utils.cpp:1324
 msgid ", 64-bit edition"
-msgstr ""
+msgstr ", edición de 64 bits"
 
 #: ../src/richtext/richtextliststylepage.cpp:493
 #: ../src/richtext/richtextbulletspage.cpp:298
@@ -880,7 +880,7 @@ msgstr "-"
 #: ../src/generic/filepickerg.cpp:66
 #, fuzzy
 msgid "..."
-msgstr ".."
+msgstr "..."
 
 #: ../src/richtext/richtextindentspage.cpp:276
 #: ../src/richtext/richtextliststylepage.cpp:450
