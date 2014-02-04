@@ -74,10 +74,12 @@ namespace boss {
         unsigned int Code() const;
         std::string Name() const;
         std::string ISOCode() const;
+        std::string Locale() const;
     private:
         unsigned int _code;
         std::string _isoCode;
         std::string _name;
+        std::string _locale;
     };
 
     //Version class for more robust version comparisons.

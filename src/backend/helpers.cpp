@@ -236,22 +236,27 @@ namespace boss {
         if (_code == g_lang_any) {
             _name = "None Specified";
             _isoCode = "";
+            _locale = "en.UTF-8";
         }
         else if (_code == g_lang_english) {
             _name = "English";
             _isoCode = "eng";
+            _locale = "en.UTF-8";
         }
         else if (_code == g_lang_spanish) {
             _name = "Español";
             _isoCode = "spa";
+            _locale = "es.UTF-8";
         }
         else if (_code == g_lang_russian) {
             _name = "Русский";
             _isoCode = "rus";
+            _locale = "ru.UTF-8";
         }
         else if (_code == g_lang_french) {
             _name = "Français";
             _isoCode = "fra";
+            _locale = "fr.UTF-8";
         }
     }
 
@@ -260,26 +265,31 @@ namespace boss {
             _name = "English";
             _isoCode = "eng";
             _code = g_lang_english;
+            _locale = "en.UTF-8";
         }
         else if (nameOrISOCode == "Español" || nameOrISOCode == "spa") {
             _name = "Español";
             _isoCode = "spa";
-            _code = g_lang_english;
+            _code = g_lang_spanish;
+            _locale = "es.UTF-8";
         }
         else if (nameOrISOCode == "Русский" || nameOrISOCode == "rus") {
             _name = "Русский";
             _isoCode = "rus";
-            _code = g_lang_english;
+            _code = g_lang_russian;
+            _locale = "ru.UTF-8";
         }
         else if (nameOrISOCode == "Français" || nameOrISOCode == "fra") {
             _name = "Français";
             _isoCode = "fra";
             _code = g_lang_french;
+            _locale = "fr.UTF-8";
         }
         else {
-            _name = "None Specified";
+            _name = boost::locale::translate("None Specified");
             _isoCode = "";
             _code = g_lang_any;
+            _locale = "en.UTF-8";
         }
     }
 
@@ -295,6 +305,9 @@ namespace boss {
         return _isoCode;
     }
 
+    std::string Language::Locale() const {
+        return _locale;
+    }
 
     //////////////////////////////
     // Version Class Functions

@@ -233,27 +233,20 @@ bool BossGUI::OnInit() {
     //Set the locale to get encoding and language conversions working correctly.
     BOOST_LOG_TRIVIAL(debug) << "Initialising language settings.";
     //Defaults in case language string is empty or setting is missing.
-    string localeId = "en.UTF-8";
-    wxLanguage lang = wxLANGUAGE_ENGLISH;
+    string localeId = boss::Language(boss::g_lang_any).Locale();
+    wxLanguage wxLang = wxLANGUAGE_ENGLISH;
     if (_settings["Language"]) {
-        if (_settings["Language"].as<string>() == "eng") {
-            BOOST_LOG_TRIVIAL(debug) << "Selected language: English.";
-            localeId = "en.UTF-8";
-            lang = wxLANGUAGE_ENGLISH;
-        } else if (_settings["Language"].as<string>() == "spa") {
-            BOOST_LOG_TRIVIAL(debug) << "Selected language: Spanish.";
-            localeId = "es.UTF-8";
-            lang = wxLANGUAGE_SPANISH;
-        } else if (_settings["Language"].as<string>() == "rus") {
-            BOOST_LOG_TRIVIAL(debug) << "Selected language: Russian.";
-            localeId = "ru.UTF-8";
-            lang = wxLANGUAGE_RUSSIAN;
-        }
-        else if (_settings["Language"].as<string>() == "fra") {
-            BOOST_LOG_TRIVIAL(debug) << "Selected language: French.";
-            localeId = "fr.UTF-8";
-            lang = wxLANGUAGE_FRENCH;
-        }
+        boss::Language lang(_settings["Language"].as<string>());
+        BOOST_LOG_TRIVIAL(debug) << "Selected language: " << lang.Name();
+        localeId = lang.Locale();
+        if (lang.Code() == boss::g_lang_english)
+            wxLang = wxLANGUAGE_ENGLISH;
+        else if (lang.Code() == boss::g_lang_spanish)
+            wxLang = wxLANGUAGE_SPANISH;
+        else if (lang.Code() == boss::g_lang_russian)
+            wxLang = wxLANGUAGE_RUSSIAN;
+        else if (lang.Code() == boss::g_lang_french)
+            wxLang = wxLANGUAGE_FRENCH;
     }
 
     //Boost.Locale initialisation: Specify location of language dictionaries.
@@ -267,9 +260,9 @@ bool BossGUI::OnInit() {
     boost::filesystem::path::imbue(locale());
 
     //wxWidgets initalisation.
-    if (wxLocale::IsAvailable(lang)) {
+    if (wxLocale::IsAvailable(wxLang)) {
         BOOST_LOG_TRIVIAL(trace) << "Selected language is available, setting language file paths.";
-        wxLoc = new wxLocale(lang);
+        wxLoc = new wxLocale(wxLang);
 
         wxLocale::AddCatalogLookupPathPrefix(g_path_l10n.string().c_str());
 
