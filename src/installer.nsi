@@ -125,7 +125,7 @@ FunctionEnd
 	!insertmacro MUI_LANGUAGE "Russian"
 	;!insertmacro MUI_LANGUAGE "German"
 	!insertmacro MUI_LANGUAGE "Spanish"
-	;!insertmacro MUI_LANGUAGE "SimpChinese"
+	!insertmacro MUI_LANGUAGE "SimpChinese"
 	!insertmacro MUI_LANGUAGE "French"
 	!insertmacro MUI_RESERVEFILE_LANGDLL
 
@@ -207,18 +207,18 @@ FunctionEnd
 ;--------------------------------
 ;Simplified Chinese (简体中文) Strings
 
-    ;VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "ProductName" "BOSS"
-    ;VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "CompanyName" "BOSS Development Team"
-    ;VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "LegalCopyright" "© 2009-2014 BOSS Development Team"
-    ;VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "FileDescription" "BOSS 3.0.0安装包"
-    ;VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "FileVersion" "3.0.0"
+    VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "ProductName" "BOSS"
+    VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "CompanyName" "BOSS Development Team"
+    VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "LegalCopyright" "© 2009-2014 BOSS Development Team"
+    VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "FileDescription" "BOSS 3.0.0安装包"
+    VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "FileVersion" "3.0.0"
 
-    ;LangString TEXT_MESSAGEBOX ${LANG_SIMPCHINESE} "检测到旧版BOSS，您需要先卸载旧版才能安装新版。$\n$\n单击“确定”卸载旧版本或者“取消”取消更新。"
-    ;LangString TEXT_RUN ${LANG_SIMPCHINESE} "运行BOSS"
-    ;LangString TEXT_SHOWREADME ${LANG_SIMPCHINESE} "查看说明"
-    ;LangString TEXT_MAIN ${LANG_SIMPCHINESE} "所有BOSS文件（除userlist和BOSS.ini）"
-    ;LangString TEXT_USERFILES ${LANG_SIMPCHINESE} "BOSS的userlist和BOSS.ini文件。"
-
+    LangString TEXT_MESSAGEBOX ${LANG_SIMPCHINESE} "检测到旧版BOSS，您需要先卸载旧版才能安装新版。$\n$\n点击“确定”卸载旧版本或者“取消”取消更新。"
+    LangString TEXT_RUN ${LANG_SIMPCHINESE} "运行BOSS"
+    LangString TEXT_SHOWREADME ${LANG_SIMPCHINESE} "查看说明"
+    LangString TEXT_MAIN ${LANG_SIMPCHINESE} "所有BOSS文件（除userlist和配置文件）"
+    LangString TEXT_USERFILES ${LANG_SIMPCHINESE} "BOSS的userlist和配置文件。"
+    
 ;--------------------------------
 ;Initialisations
 
