@@ -201,8 +201,8 @@ FunctionEnd
 	LangString TEXT_MESSAGEBOX ${LANG_SPANISH} "BOSS está instalado, y debe ser desinstalado antes de continuar. $\n$\nPresione `OK` para eliminar la versión anterior o `Cancel` para cancelar la actualización."
 	LangString TEXT_RUN ${LANG_SPANISH} "Ejecutar BOSS"
 	LangString TEXT_SHOWREADME ${LANG_SPANISH} "Ver Léame"
-	LangString TEXT_MAIN ${LANG_SPANISH} "Todos los archivos de BOSS, menos BOSS.ini y listas de usuarios."
-	LangString TEXT_USERFILES ${LANG_SPANISH} "BOSS.ini y listas de usuarios."
+	LangString TEXT_MAIN ${LANG_SPANISH} "Todos los archivos de BOSS, menos la lista de usuario y configuraciónes."
+	LangString TEXT_USERFILES ${LANG_SPANISH} "La lista de usuario y configuraciónes."
 
 ;--------------------------------
 ;Simplified Chinese (简体中文) Strings
