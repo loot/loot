@@ -91,6 +91,8 @@ You may need to make sure that the configuration properties for the Visual Studi
 5. Configure CMake, then generate a build system for Visual Studio 12.
 6. Open the generated solution file, and build it.
 
+If building on MSVC 2012 or 2013, Windows XP is not supported unless Configuration Properties->Platform Toolset is set to `v120_xp`.
+
 ### Linux
 
 #### Boost
