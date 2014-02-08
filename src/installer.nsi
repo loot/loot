@@ -353,7 +353,7 @@ FunctionEnd
 		StrCmp $LANGUAGE ${LANG_POLISH} 0 +5
             Push "$LOCALAPPDATA\BOSS\settings.yaml"
             Push "Language:"
-            Push "Language: pl"
+            Push "Language: pol"
             Call ReplaceLineStr
 			
 		;Add Start Menu shortcuts. Set out path back to $INSTDIR otherwise the shortcuts start in the wrong place.
