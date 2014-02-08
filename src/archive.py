@@ -14,6 +14,8 @@
 # resources/l10n/fr/LC_MESSAGES/wxstd.mo
 # resources/l10n/zh/LC_MESSAGES/boss.mo
 # resources/l10n/zh/LC_MESSAGES/wxstd.mo
+# resources/l10n/pl/LC_MESSAGES/boss.mo
+# resources/l10n/pl/LC_MESSAGES/wxstd.mo
 # resources/polyfill.js
 # resources/script.js
 # resources/style.css
@@ -63,7 +65,7 @@ if not os.path.exists(temp_path):
 # Now copy everything into the temporary folder.
 shutil.copy( os.path.join('..', 'build', 'BOSS.exe'), temp_path )
 
-for lang in ['es', 'ru', 'fr', 'zh']:
+for lang in ['es', 'ru', 'fr', 'zh', 'pl']:
     os.makedirs(os.path.join(temp_path, 'resources', 'l10n', lang, 'LC_MESSAGES'))
     shutil.copy( os.path.join('..', 'resources', 'l10n', lang, 'LC_MESSAGES', 'boss.mo'), os.path.join(temp_path, 'resources', 'l10n', lang, 'LC_MESSAGES') )
     shutil.copy( os.path.join('..', 'resources', 'l10n', lang, 'LC_MESSAGES', 'wxstd.mo'), os.path.join(temp_path, 'resources', 'l10n', lang, 'LC_MESSAGES') )
