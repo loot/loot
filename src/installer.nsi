@@ -127,6 +127,7 @@ FunctionEnd
 	!insertmacro MUI_LANGUAGE "Spanish"
 	!insertmacro MUI_LANGUAGE "SimpChinese"
 	!insertmacro MUI_LANGUAGE "French"
+	!insertmacro MUI_LANGUAGE "Polish"
 	!insertmacro MUI_RESERVEFILE_LANGDLL
 
 ;--------------------------------
@@ -220,6 +221,21 @@ FunctionEnd
     LangString TEXT_USERFILES ${LANG_SIMPCHINESE} "BOSS的userlist和配置文件。"
     
 ;--------------------------------
+;Polish (POLSKI) Strings
+
+	VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "BOSS"
+	VIAddVersionKey /LANG=${LANG_ENGLISH} "CompanyName" "BOSS Development Team"
+	VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "© 2009-2014 BOSS Development Team"
+	VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "Instalator dla BOSS 3.0.0"
+	VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "3.0.0"
+
+	LangString TEXT_MESSAGEBOX ${LANG_ENGLISH} "BOSS jest już zainstalowany i musi zostać odinstalowany przed instalowaniem tej wersji. $\n$\nClick `OK` aby odinstalować lub `Cancel` aby anulować aktualizację."
+	LangString TEXT_RUN ${LANG_ENGLISH}" Uruchom BOSS"
+	LangString TEXT_SHOWREADME ${LANG_ENGLISH} "Czytaj Readme"
+	LangString TEXT_MAIN ${LANG_ENGLISH} "Wszystkie pliki BOSS bez ustawień i plików użytkownika."
+	LangString TEXT_USERFILES ${LANG_ENGLISH} "Wszystkie pliki BOSS oraz ustawienia użytkownika ."
+
+;--------------------------------
 ;Initialisations
 
     Var InstallPath ;Path to existing BOSS install.
@@ -300,7 +316,10 @@ FunctionEnd
 		SetOutPath "$INSTDIR\resources\l10n\fr\LC_MESSAGES"
 		File "..\resources\l10n\fr\LC_MESSAGES\wxstd.mo"
 		File "..\resources\l10n\fr\LC_MESSAGES\boss.mo"
-
+		SetOutPath "$INSTDIR\resources\l10n\pl\LC_MESSAGES"
+		File "..\resources\l10n\pl\LC_MESSAGES\wxstd.mo"
+		File "..\resources\l10n\pl\LC_MESSAGES\boss.mo"
+		
         ;Install settings file.
         SetOutPath "$LOCALAPPDATA\BOSS"
         File "..\resources\settings.yaml"
@@ -331,7 +350,12 @@ FunctionEnd
             Push "Language:"
             Push "Language: fra"
             Call ReplaceLineStr
-
+		StrCmp $LANGUAGE ${LANG_POLISH} 0 +5
+            Push "$LOCALAPPDATA\BOSS\settings.yaml"
+            Push "Language:"
+            Push "Language: pl"
+            Call ReplaceLineStr
+			
 		;Add Start Menu shortcuts. Set out path back to $INSTDIR otherwise the shortcuts start in the wrong place.
 		;Set Shell Var Context to all so that shortcuts are installed for all users, not just admin.
 		SetOutPath "$INSTDIR"
@@ -400,6 +424,8 @@ FunctionEnd
 		Delete "$INSTDIR\resources\l10n\zh\LC_MESSAGES\wxstd.mo"
 		Delete "$INSTDIR\resources\l10n\fr\LC_MESSAGES\boss.mo"
 		Delete "$INSTDIR\resources\l10n\fr\LC_MESSAGES\wxstd.mo"
+		Delete "$INSTDIR\resources\l10n\pl\LC_MESSAGES\boss.mo"
+		Delete "$INSTDIR\resources\l10n\pl\LC_MESSAGES\wxstd.mo"		
 		RMDir  "$INSTDIR\resources\l10n\ru\LC_MESSAGES"
 		RMDir  "$INSTDIR\resources\l10n\ru"
 		RMDir  "$INSTDIR\resources\l10n\es\LC_MESSAGES"
@@ -410,6 +436,8 @@ FunctionEnd
 		RMDir  "$INSTDIR\resources\l10n\zh"
 		RMDir  "$INSTDIR\resources\l10n\fr\LC_MESSAGES"
 		RMDir  "$INSTDIR\resources\l10n\fr"
+		RMDir  "$INSTDIR\resources\l10n\pl\LC_MESSAGES"
+		RMDir  "$INSTDIR\resources\l10n\pl"		
 		RMDir  "$INSTDIR\resources\l10n"
         RMDir  "$INSTDIR\resources"
 
