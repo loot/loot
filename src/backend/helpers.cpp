@@ -287,7 +287,7 @@ namespace boss {
         }
         else if (_code == g_lang_polish) {
             _name = "Polski";
-            _isoCode = "pl";
+            _isoCode = "pol";
             _locale = "pl.UTF-8";
         }
     }
