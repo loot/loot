@@ -312,13 +312,7 @@ Visual C++ Redistributable for Visual Studio 2013 (x86)</a>. BOSS can be install
 
 <p>General discussion and the submission of questions, suggestions and metadata takes place in BOSS's official threads for <a href="http://forums.bethsoft.com/topic/1434397-rel-boss-for-oblivion/">Oblivion</a>, <a href="http://forums.bethsoft.com/topic/1485022-relz-boss-for-skyrim/">Skyrim</a>, <a href="http://forums.bethsoft.com/topic/1282711-relz-boss-for-fo3-thread-4/">Fallout 3</a> and <a href="http://forums.bethsoft.com/topic/1483857-rel-boss-for-fallout-new-vegas/">Fallout: New Vegas</a>.
 
-<p>Information on dirty plugins is very welcome, but for such information to be useful we require:
-<ul>
-    <li>The plugin filename.
-    <li>The number of records removed (the ITM count) as shown by TES4Edit/TES5Edit/FO3Edit/FNVEdit or <abbr title="Wrye Bash, Wrye Flash or Wrye Flash NV">Wrye *ash</abbr> (not the number of records processed).
-    <li>The number of records undeleted (the UDR count) as shown by TES4Edit/TES5Edit/FO3Edit/FNVEdit or <abbr title="Wrye Bash, Wrye Flash or Wrye Flash NV">Wrye *ash</abbr> (not the number of records processed).
-    <li>The CRC of the dirty plugin. Make sure that the CRC is of the dirty file, not the file after cleaning. The CRC may be calculated using <abbr title="Wrye Bash, Wrye Flash or Wrye Flash NV">Wrye *ash</abbr> or 7-zip, with other sources being unverified as correct. In the case of 7-zip, the <q><em>CRC checksum for data</em></q> is the one required.
-</ul>
+<p>Information on dirty plugins is very welcome, but for such information to be useful we require at least the filename and the CRC of the dirty plugin. The CRC may be calculated using <abbr title="Wrye Bash, Wrye Flash or Wrye Flash NV">Wrye *ash</abbr> or 7-zip, with other sources being unverified as correct. In the case of 7-zip, the <q><em>CRC checksum for data</em></q> is the one required. In addition to the CRC, the number of records removed (the ITM count) and/or undeleted (the UDR count) are also welcome.
 
 
 <h2 id="translate">Translating BOSS</h2>
@@ -346,6 +340,7 @@ To translate the BOSS application:
   <li><a href="https://github.com/boss-developers/boss-code/blob/master/resources/l10n/es/LC_MESSAGES/boss.po">Spanish</a>
   <li><a href="https://github.com/boss-developers/boss-code/blob/master/resources/l10n/zh/LC_MESSAGES/boss.po">Simplified Chinese</a>
   <li><a href="https://github.com/boss-developers/boss-code/blob/master/resources/l10n/fr/LC_MESSAGES/boss.po">French</a>
+  <li><a href="https://github.com/boss-developers/boss-code/blob/master/resources/l10n/pl/LC_MESSAGES/boss.po">Polish</a>
  </ul>
  <li>Open Poedit and select <q>File->Preferences</q>, then in the <q>Editor</q> tab ensure that the checkbox for the <q>Automatically compile .mo file on save</q> setting is checked. Click <q>OK</q> to close the preferences window.
  <li>If you are starting a new translation, select <q>File->New catalogue from POT file...</q> and choose the template file you downloaded. In the <q>Catalog properties</q> dialog, just click <q>OK</q> without changing anything.
@@ -369,12 +364,13 @@ To translate the BOSS application:
 <p>In addition to the above data-related support, the following are credited with application-related support:
 <ul>
     <li><a href="http://www.darkcreations.org">Dark Creations</a>: For hosting BOSS's Bugzilla bug tracker that was used by v2 to collect anonymous unrecognised plugin reports. Particular thanks to its administrators Andalaybay and Xae for offering to host the tracker and helping to work around Firefox and Bugzilla bugs encountered.
-    <li>Surazal: For extensive testing of v1.6&ndash;2.1 prior to release and for providing the inspiration for many features through his BOSS Masterlist Manager macro for Microsoft Word.
-    <li>myk002: For extensive testing and code contributions during development of v1.6&ndash;2.1.
-    <li>Hickory: For extensive testing and for providing the icon used by the executables.
-    <li>Scharesoft: For the installer/uninstaller German translation.
-    <li>Ysne58: For testing and keeping the thread links on BOSS's Nexus site pages up to date.
-    <li>For testing and feedback prior to releases: The Beta Testing &amp; Analysis Guild at <a href="http://tesalliance.org/forums/">TES Alliance</a>, AndalayBay, dAb, dj2005, Dubiousness, hyno111, Invader, matter2003, NightStar, olminator, saebel, Telyn, wiz0floyd, wormheart, Zanderat and zone22.
+    <li>Surazal: For providing the inspiration for many features through his BOSS Masterlist Manager macro for Microsoft Word.
+    <li>myk002: For code contributions during development of v1.6&ndash;2.1.
+    <li>Hickory: For providing the icon BOSS uses.
+    <li>Ysne58: For keeping the thread links on BOSS's Nexus site pages up to date.
+    <li>Łukasz Niemczyk: For the Polish translation of v3.
+    <li>bluesky404: For the Chinese translation of v3.
+    <li>For beta testing: Surazal, myk002, Hickory, Ysne58, the <a href="http://tesalliance.org/forums/">Beta Testing &amp; Analysis Guild at TES Alliance</a>, AndalayBay, dAb, dj2005, Dubiousness, hyno111, Invader, matter2003, NightStar, olminator, saebel, Telyn, wiz0floyd, wormheart, Zanderat, zone22 and many more.
 </ul>
 <p>BOSS is written in C++ and makes use of the <a href="http://www.davekoelle.com/alphanum.html">Alphanum</a>, <a href="http://www.boost.org/">Boost</a>, <a href="http://github.com/WrinklyNinja/libespm">libespm</a>, <a href="http://github.com/libgit2/libgit2">libgit2</a>, <a href="http://github.com/WrinklyNinja/libloadorder">libloadorder</a>, <a href="http://code.google.com/p/pugixml/">PugiXML</a>, <a href="http://www.wxwidgets.org/">wxWidgets</a> and <a href="http://code.google.com/p/yaml-cpp/">yaml-cpp</a> libraries. BOSS's reports are written in HTML5/CSS3/Javascript and make use of <a href="http://github.com/inexorabletash/polyfill">Polyfill.js</a> to provide Internet Explorer 8 compatibility. Copyright license information for all these may be found <a href="licenses/Licenses.txt">here</a>.
 
