@@ -175,6 +175,7 @@ BOSS_API extern const unsigned int boss_lang_spanish;  ///< Tells the API to pre
 BOSS_API extern const unsigned int boss_lang_russian;  ///< Tells the API to preferentially select Russian messages.
 BOSS_API extern const unsigned int boss_lang_french;  ///< Tells the API to preferentially select French messages.
 BOSS_API extern const unsigned int boss_lang_chinese;  ///< Tells the API to preferentially select Chinese messages.
+BOSS_API extern const unsigned int boss_lang_polish;  ///< Tells the API to preferentially select Polish messages.
 ///@}
 
 /*********************************//**
