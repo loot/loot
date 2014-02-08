@@ -1,0 +1,968 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: BOSS v3.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-10-26 11:41-0000\n"
+"PO-Revision-Date: 2014-02-08 14:40+0100\n"
+"Last-Translator: Łukasz Niemczyk <Lukasz.Niemczyk.poczta@gmail.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.6.4\n"
+"X-Poedit-KeywordsList: translate:1,1t;translate:1c,2,t\n"
+"X-Poedit-Basepath: ../../src\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
+"Language: pl_PL\n"
+"X-Poedit-SearchPath-0: backend\n"
+"X-Poedit-SearchPath-1: gui\n"
+
+#: backend/game.cpp:96
+msgid "Invalid game ID supplied."
+msgstr "Błędny ID gry."
+
+#: backend/game.cpp:147
+msgid "Game path could not be detected."
+msgstr "Nie wykryto ścieżki do gry."
+
+#: backend/game.cpp:248 backend/game.cpp:308 backend/game.cpp:363
+msgid "libloadorder failed to create a game handle. Details:"
+msgstr "libloader nie zdołał zainicjować operatora gry. Szczegóły:"
+
+#: backend/game.cpp:260 backend/game.cpp:320 backend/game.cpp:374
+msgid "libloadorder failed to initialise game master file support. Details:"
+msgstr ""
+"libloadorder nie zdołał uruchomić wsparcia dla głównego pliku gry. Szczegóły:"
+
+#: backend/game.cpp:270
+msgid "libloadorder failed to get the active plugins list. Details:"
+msgstr "libloadorder nie zdołał pobrać listy aktywnych wtyczek. Szczegóły:"
+
+#: backend/game.cpp:330 backend/game.cpp:396
+msgid "libloadorder failed to set the load order. Details:"
+msgstr "libloadorder nie zdołał ustalić kolejności uruchamiania. Szczegóły:"
+
+#: backend/game.cpp:415
+msgid "Could not create BOSS folder for game. Details:"
+msgstr "Nie można utworzyć folderu BOSS dla gry. Szczegóły:"
+
+#: backend/graph.cpp:46
+msgid "Cyclic interaction detected between plugins \"%1%\" and \"%2%\"."
+msgstr ""
+"Wykryto zamknięte koło powiązań pomiędzy dodatkami \"%1%\" oraz \"%2%\"."
+
+#: backend/helpers.cpp:140
+msgid "Unable to open \"%1%\" for CRC calculation."
+msgstr "Nie można otworzyć  \"%1%\" by obliczyć CRC."
+
+#: backend/helpers.cpp:302
+msgid "Could not create pipe for process."
+msgstr "Nie można utworzyć wątku dla procesu."
+
+#: backend/helpers.cpp:335
+msgid "Could not create process."
+msgstr "Proces nie został rozpoczęty."
+
+#: backend/helpers.cpp:346
+msgid "Could not get process exit code."
+msgstr "Proces nie został zakończony."
+
+#: backend/helpers.cpp:353
+msgid "Could not read process output."
+msgstr "Nie można odczytać wyników procesu."
+
+#: backend/metadata.cpp:142
+msgid "Failed to parse condition \"%1%\": %2%"
+msgstr "Przetwarzanie warunku nieudane \"%1%\": %2%"
+
+#: backend/metadata.cpp:147
+msgid "Failed to parse condition \"%1%\"."
+msgstr "Przetwarzanie warunku nieudane \"%1%\"."
+
+#: backend/network.cpp:75
+msgid "Git operation failed. Error: %1%"
+msgstr "Operacja Git nie udana. Błąd: %1%"
+
+#: backend/network.cpp:338
+msgid "Masterlist revision"
+msgstr "Wersja Masterlisty"
+
+#: gui/editor.cpp:37
+msgid "Note"
+msgstr "Notatka"
+
+#: gui/editor.cpp:38
+msgid "Warning"
+msgstr "Ostrzeżenie"
+
+#: gui/editor.cpp:39
+msgid "Error"
+msgstr "Błąd"
+
+#: gui/editor.cpp:43
+msgid "Add"
+msgstr "Dodaj"
+
+#: gui/editor.cpp:44
+msgid "Remove"
+msgstr "Usuń"
+
+#: gui/editor.cpp:48
+msgid "Type"
+msgstr "Typ"
+
+#: gui/editor.cpp:49
+msgid "Content"
+msgstr "Zawartość"
+
+#: gui/editor.cpp:50 gui/editor.cpp:155 gui/editor.cpp:159 gui/editor.cpp:163
+#: gui/editor.cpp:167
+msgid "Condition"
+msgstr "Stan"
+
+#: gui/editor.cpp:51 gui/editor.cpp:990
+msgid "Language"
+msgstr "Język"
+
+#: gui/editor.cpp:125
+msgid "Enable User Changes"
+msgstr "Zazwól na zmiany użytkownika"
+
+#: gui/editor.cpp:127 gui/editor.cpp:375
+msgid "Add File"
+msgstr "Dodaj plik"
+
+#: gui/editor.cpp:128 gui/editor.cpp:376
+msgid "Edit File"
+msgstr "Edytuj plik"
+
+#: gui/editor.cpp:129 gui/editor.cpp:377
+msgid "Remove File"
+msgstr "Usuń plik"
+
+#: gui/editor.cpp:130
+msgid "Save Changes"
+msgstr "Zapisz zmiany"
+
+#: gui/editor.cpp:131
+msgid "Cancel"
+msgstr "Anuluj"
+
+#: gui/editor.cpp:132
+msgid "Copy Metadata As Text"
+msgstr "Kopiuj Metadane jako tekst"
+
+#: gui/editor.cpp:143
+msgid "Requirements"
+msgstr "Wymagania"
+
+#: gui/editor.cpp:144
+msgid "Incompatibilities"
+msgstr "Niekompatybilne"
+
+#: gui/editor.cpp:145
+msgid "Load After"
+msgstr "Załaduj po"
+
+#: gui/editor.cpp:146
+msgid "Messages"
+msgstr "Wiadomości"
+
+#: gui/editor.cpp:147
+msgid "Bash Tags"
+msgstr "Tagi Bash'a"
+
+#: gui/editor.cpp:148
+msgid "Dirty Info"
+msgstr "Brudne Dane"
+
+#: gui/editor.cpp:151
+msgid "Plugins"
+msgstr "Wtyczki"
+
+#: gui/editor.cpp:153 gui/editor.cpp:157 gui/editor.cpp:161
+msgid "Filename"
+msgstr "Nazwa pliku"
+
+#: gui/editor.cpp:154 gui/editor.cpp:158 gui/editor.cpp:162
+msgid "Display Name"
+msgstr "Nazwa wyświetlana"
+
+#: gui/editor.cpp:165
+msgid "Add/Remove"
+msgstr "Dodaj/usuń"
+
+#: gui/editor.cpp:166
+msgid "Bash Tag"
+msgstr "Tag Bash"
+
+#: gui/editor.cpp:169
+msgid "CRC"
+msgstr "CRC"
+
+#: gui/editor.cpp:170
+msgid "ITM Count"
+msgstr "Liczba ITM"
+
+#: gui/editor.cpp:171
+msgid "UDR Count"
+msgstr "Liczba UDR"
+
+#: gui/editor.cpp:172
+msgid "Deleted Navmesh Count"
+msgstr "Liczba usuniętych Navmesh"
+
+#: gui/editor.cpp:173
+msgid "Cleaning Utility"
+msgstr "Narzędzie czyszczące"
+
+#: gui/editor.cpp:217
+msgid "Priority: "
+msgstr "Priorytet:"
+
+#: gui/editor.cpp:379
+msgid "Add Plugin"
+msgstr "Dodaj wtyczkę"
+
+#: gui/editor.cpp:380
+msgid "Edit Plugin"
+msgstr "Edytuj wtyczkę"
+
+#: gui/editor.cpp:381
+msgid "Remove Plugin"
+msgstr "Usuń wtyczkę"
+
+#: gui/editor.cpp:383
+msgid "Add Message"
+msgstr "Dodaj wiadomość"
+
+#: gui/editor.cpp:384
+msgid "Edit Message"
+msgstr "Edytuj wiadomość"
+
+#: gui/editor.cpp:385
+msgid "Remove Message"
+msgstr "Usuń wiadomość"
+
+#: gui/editor.cpp:387
+msgid "Add Bash Tag"
+msgstr "Dodaj Tag Bash"
+
+#: gui/editor.cpp:388
+msgid "Edit Bash Tag"
+msgstr "Edytuj Tag Bash"
+
+#: gui/editor.cpp:389
+msgid "Remove Bash Tag"
+msgstr "Usuń Tag Bash"
+
+#: gui/editor.cpp:391
+msgid "Add Dirty Info"
+msgstr "Dodaj Brudne Info"
+
+#: gui/editor.cpp:392
+msgid "Edit Dirty Info"
+msgstr "Edytuj Brudne Info"
+
+#: gui/editor.cpp:393
+msgid "Remove Dirty Info"
+msgstr "Usuń Brudne Info"
+
+#: gui/editor.cpp:411
+msgid "BOSS: Add File/Plugin"
+msgstr "BOSS: Dodaj Plik/Wtyczkę"
+
+#: gui/editor.cpp:433
+msgid "BOSS: Add Message"
+msgstr "Dodaj Wiadomość"
+
+#: gui/editor.cpp:443
+msgid "Error: No content specified. Row will not be added."
+msgstr "Błąd: Brak zawartości. Linia nie będzie dodana."
+
+#: gui/editor.cpp:444 gui/editor.cpp:526 gui/editor.cpp:1122
+#: gui/editor.cpp:1137 gui/main.cpp:164 gui/main.cpp:181 gui/main.cpp:194
+#: gui/main.cpp:273 gui/main.cpp:283 gui/main.cpp:296 gui/main.cpp:304
+#: gui/main.cpp:335 gui/main.cpp:352 gui/main.cpp:820 gui/main.cpp:873
+#: gui/main.cpp:893 gui/main.cpp:972 gui/main.cpp:1009 gui/main.cpp:1040
+#: gui/main.cpp:1060 gui/main.cpp:1075 gui/main.cpp:1182 gui/main.cpp:1227
+#: gui/settings.cpp:287 gui/settings.cpp:299 gui/settings.cpp:307
+#: gui/settings.cpp:350 gui/settings.cpp:358 gui/settings.cpp:366
+msgid "BOSS: Error"
+msgstr "BOSS: Błąd"
+
+#: gui/editor.cpp:454
+msgid "BOSS: Add Tag"
+msgstr "BOSS: Dodaj Tag"
+
+#: gui/editor.cpp:468
+msgid "BOSS: Add Dirty Info"
+msgstr "BOSS: Dodaj Brudne Info"
+
+#: gui/editor.cpp:487
+msgid "BOSS: Edit File/Plugin"
+msgstr "BOSS: Edytuj plik/wtyczkę"
+
+#: gui/editor.cpp:511
+msgid "BOSS: Edit Message"
+msgstr "BOSS: Edytuj Wiadomość"
+
+#: gui/editor.cpp:525
+msgid "Error: No content specified. Row will not be edited."
+msgstr "Błąd: Brak zawartości. Linia nie będzie edytowana."
+
+#: gui/editor.cpp:535
+msgid "BOSS: Edit Tag"
+msgstr "BOSS: Edytuj Tag"
+
+#: gui/editor.cpp:557
+msgid "BOSS: Edit Dirty Info"
+msgstr "BOSS: Edytuj Brudne Info"
+
+#: gui/editor.cpp:932
+msgid "Filename (required):"
+msgstr "Nazwa pliku (wymagane)"
+
+#: gui/editor.cpp:935
+msgid "Displayed Name:"
+msgstr "Nazwa wyświetlana"
+
+#: gui/editor.cpp:938 gui/editor.cpp:1016 gui/editor.cpp:1172
+msgid "Condition:"
+msgstr "Stan"
+
+#: gui/editor.cpp:986
+msgid "Add Content"
+msgstr "Dodaj zawartość"
+
+#: gui/editor.cpp:987
+msgid "Edit Content"
+msgstr "Edytuj zawartość"
+
+#: gui/editor.cpp:988
+msgid "Remove Content"
+msgstr "Usuń zawartość"
+
+#: gui/editor.cpp:991
+msgid "String"
+msgstr "Ciąg"
+
+#: gui/editor.cpp:1013 gui/settings.cpp:425
+msgid "Type:"
+msgstr "Typ:"
+
+#: gui/editor.cpp:1028 gui/settings.cpp:101
+msgid "Language:"
+msgstr "Język:"
+
+#: gui/editor.cpp:1031
+msgid "Content:"
+msgstr "Zawartość:"
+
+#: gui/editor.cpp:1121 gui/editor.cpp:1136
+msgid "Error: No content row selected."
+msgstr "Błąd: Brak zawartości w wybranej lini."
+
+#: gui/editor.cpp:1166
+msgid "Add/Remove:"
+msgstr "Dodaj/Usuń:"
+
+#: gui/editor.cpp:1169 gui/settings.cpp:422
+msgid "Name (required):"
+msgstr "Nazwa (wymagane):"
+
+#: gui/editor.cpp:1234
+msgid "CRC (required):"
+msgstr "CRC (wymagane):"
+
+#: gui/editor.cpp:1237
+msgid "ITM Count:"
+msgstr "Liczba ITM:"
+
+#: gui/editor.cpp:1240
+msgid "UDR Count:"
+msgstr "Liczba UDR:"
+
+#: gui/editor.cpp:1243
+msgid "Deleted Navmesh Count:"
+msgstr "Liczba usuniętych Navmesh:"
+
+#: gui/editor.cpp:1246
+msgid "Cleaning Utility (required):"
+msgstr "Narzędzie czyszczące (wymagane):"
+
+#: gui/ids.cpp:31
+msgid "None Specified"
+msgstr "Brak wybranych"
+
+#: gui/main.cpp:118
+msgid "Masterlist update failed. Details: %1%"
+msgstr "Aktualizacja Masterlisty nie powiodła się. Szczegóły: %1%"
+
+#: gui/main.cpp:134
+msgid "Masterlist parsing failed. Details: %1%"
+msgstr "Przetwarzanie Masterlisty nie powiodło się. Szczegóły: %1%"
+
+#: gui/main.cpp:142
+msgid "Unknown"
+msgstr "Nieznany"
+
+#: gui/main.cpp:144
+msgid "No masterlist"
+msgstr "Brak Masterlisty"
+
+#: gui/main.cpp:163
+msgid "Error: BOSS is already running. This instance will now quit."
+msgstr "Błąd: BOSS jest już uruchomiony. Ta wersja zostanie zamknięta."
+
+#: gui/main.cpp:180
+msgid "Error: Could not create local app data BOSS folder."
+msgstr "Błąd: Nie znaleziono folderu z ustawieniami BOSS."
+
+#: gui/main.cpp:193
+msgid "Error: Settings parsing failed. %1%"
+msgstr "Błąd: Przetwarzanie ustawień nieudane. %1%"
+
+#: gui/main.cpp:272
+msgid "Error: Could not apply translation."
+msgstr "Błąd: Nie można zmienić tłumaczenia."
+
+#: gui/main.cpp:282
+msgid "Error: The selected language is not available on this system."
+msgstr "Błąd: Wybrane tłumaczenie jest niedostępny w tym systemie."
+
+#: gui/main.cpp:295 gui/main.cpp:351 gui/main.cpp:1039
+msgid "Error: Game-specific settings could not be initialised. %1%"
+msgstr "Błąd: Nie można zainicjować ustawień gry. %1%"
+
+#: gui/main.cpp:303
+msgid "Error: Games' settings parsing failed. %1%"
+msgstr "Błąd: Przetwarzanie ustawień gry nieudane. %1%"
+
+#: gui/main.cpp:334
+msgid "Error: None of the supported games were detected."
+msgstr "Błąd: Nie wykryto obsługiwanych gier."
+
+#: gui/main.cpp:379
+msgid "Edit Metadata"
+msgstr "Edytuj Metadane"
+
+#: gui/main.cpp:380
+msgid "Sort Plugins"
+msgstr "Sortuj Wtyczki"
+
+#: gui/main.cpp:381
+msgid "View Last Report"
+msgstr "Czytaj ostatni raport"
+
+#: gui/main.cpp:385
+msgid "&View Last Report"
+msgstr "&Czytaj ostatni raport"
+
+#: gui/main.cpp:386
+msgid "View &Debug Log"
+msgstr "Czytaj &Logi Debug"
+
+#: gui/main.cpp:387
+msgid "&Sort Plugins"
+msgstr "&Sortuj Wtyczki"
+
+#: gui/main.cpp:388
+msgid "&Redate Plugins"
+msgstr "&Przedatuj Wtyczki"
+
+#: gui/main.cpp:391
+msgid "&File"
+msgstr "&Plik"
+
+#: gui/main.cpp:393
+msgid "&Metadata..."
+msgstr "&Metadane..."
+
+#: gui/main.cpp:394
+msgid "&Settings..."
+msgstr "&Ustawienia"
+
+#: gui/main.cpp:395
+msgid "&Edit"
+msgstr "&Edycja"
+
+#: gui/main.cpp:407
+msgid "&Game"
+msgstr "&Gra"
+
+#: gui/main.cpp:412
+msgid "&Help"
+msgstr "&Pomoc"
+
+#: gui/main.cpp:496 gui/main.cpp:851
+msgid "BOSS: Working..."
+msgstr "BOSS: Pracuję..."
+
+#: gui/main.cpp:496 gui/main.cpp:851
+msgid "BOSS working..."
+msgstr "BOSS pracuje..."
+
+#: gui/main.cpp:547
+msgid "Userlist parsing failed. Details: %1%"
+msgstr "Przetwarzanie listy użytkownika nie powiodło się. Szczegóły:  %1%"
+
+#: gui/main.cpp:584
+msgid ""
+"A global message contains a condition that could not be evaluated. Details: "
+"%1%"
+msgstr "Wiadomość zawiera warunek nie możliwy do oszacowania. Szczegóły:"
+
+#: gui/main.cpp:615
+msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
+msgstr ""
+"\"%1%\" zawiera warunek który nie może zostać oszacowany. Szczegóły: %2%"
+
+#: gui/main.cpp:627
+msgid "\"%1%\" is incompatible with \"%2%\" and is present."
+msgstr "\"%1%\" jest niekompatybilny z \"%2%\" a jest obecny."
+
+#: gui/main.cpp:630
+msgid "\"%1%\" is required by \"%2%\" but is missing."
+msgstr "\"%1%\" jest wymagany przez \"%2%\" ale go brakuje."
+
+#: gui/main.cpp:670
+msgid "Failed to generate graph image. Details: %1%"
+msgstr "Generowanie wykresu nieudane. Szczegóły: %1%"
+
+#: gui/main.cpp:687
+msgid "BOSS: Calculated Load Order"
+msgstr "BOSS: Wyliczona Kolejność Ładowania"
+
+#: gui/main.cpp:765
+msgid "Failed to set the load order. Details: %1%"
+msgstr "Nie udało się ustalić kolejności ładowania. Szczegóły: %1%"
+
+#: gui/main.cpp:769
+msgid ""
+"The load order displayed in the Details tab was not applied as sorting was "
+"canceled."
+msgstr ""
+"Kolejność ładowania wyświetlona w karcie szczegółów nie została zastosowana "
+"gdyż sortowanie zostało anulowane."
+
+#: gui/main.cpp:778
+msgid "Failed to calculate the load order. Details: %1%"
+msgstr "Ustalanie kolejności ładowania nieudane. Szczegóły: %1%"
+
+#: gui/main.cpp:819
+msgid "Error: %1%"
+msgstr "Błąd: %1%"
+
+#: gui/main.cpp:839 gui/main.cpp:954
+msgid "BOSS: Report Viewer"
+msgstr "BOSS: Czytnik Raportów"
+
+#: gui/main.cpp:872
+msgid "Error: Masterlist parsing failed. %1%"
+msgstr "Błąd: Przetwarzanie Masterlisty nieudane. %1%"
+
+#: gui/main.cpp:892
+msgid "Error: Userlist parsing failed. %1%"
+msgstr "Błąd: Przetwarzanie listy użytkownika nieudane. %1%"
+
+#: gui/main.cpp:939
+msgid "BOSS: Metadata Editor"
+msgstr "BOSS: Edytor Metadanych"
+
+#: gui/main.cpp:961
+msgid ""
+"This feature is provided so that modders using the Creation Kit may set the "
+"load order it uses. A side-effect is that any subscribed Steam Workshop mods "
+"will be re-downloaded by Steam. Do you wish to continue?"
+msgstr ""
+"Ta opcja jest dla użytkowników programu Creation Kit, aby mogli używać "
+"kolejności wczytywania tego programu. W efekcie każdy subskrybowany mod ze "
+"Steam Workshop będzie ponownie pobrany przez Steam. Czy chcesz kontynuować?"
+
+#: gui/main.cpp:961
+msgid "BOSS: Warning"
+msgstr "BOSS: Ostrzeżenie"
+
+#: gui/main.cpp:971
+msgid "Error: Failed to get load order. %1%"
+msgstr "Błąd: Wczytywanie kolejności ładowania nieudane. %1%"
+
+#: gui/main.cpp:1008
+msgid "Error: Failed to set plugin timestamps. %1%"
+msgstr "Błąd: Ustawianie opuźnienia wtyczek nieudane. %1%"
+
+#: gui/main.cpp:1015
+msgid "Plugins were successfully redated."
+msgstr "Wtyczki zostały pomyślnie przedatowane."
+
+#: gui/main.cpp:1016
+msgid "BOSS: Plugin Redate"
+msgstr "BOSS: Przedatowanie Wtyczek"
+
+#: gui/main.cpp:1024
+msgid "BOSS: Settings"
+msgstr "BOSS: Ustawienia"
+
+#: gui/main.cpp:1059 gui/main.cpp:1074
+msgid "Error: \"%1%\" cannot be found."
+msgstr "Błąd: nie znaleziono \"%1%\""
+
+#: gui/main.cpp:1086
+msgid ""
+"A load order optimisation tool for games using the Elder Scrolls Plugin/"
+"Master system."
+msgstr ""
+"Narzędzie do optymalizacji kolejności wczytywania dla gier w systemie The "
+"Elder Scrolls Plugin/Master."
+
+#: gui/main.cpp:1110
+msgid "Up"
+msgstr "Wyżej"
+
+#: gui/main.cpp:1111
+msgid "Down"
+msgstr "Niżej"
+
+#: gui/main.cpp:1114
+msgid "Load Order"
+msgstr "Kolejność wczytywania"
+
+#: gui/main.cpp:1136
+msgid ""
+"Please submit any alterations made for reasons other than user preference \n"
+"to the BOSS team so that they may include the changes in the masterlist."
+msgstr ""
+"Bardzo proszę zgłaszać wszelkie zmiany uzytkowników w kolejności sugerowanej "
+"przez program BOSS wynikłe z nieprawidłowego segregowania do twórców. "
+"Zostaną one dołączone do nastepnej aktualizacji Masterlisty."
+
+#: gui/main.cpp:1181 gui/main.cpp:1226
+msgid "Error: Cannot load \"%1%\" before \"%2%\"."
+msgstr "Błąd: Nie można załadować \"%1%\" przed \"%2%\"."
+
+#: gui/settings.cpp:40
+msgid "None"
+msgstr "Brak"
+
+#: gui/settings.cpp:41
+msgid "Low"
+msgstr "Niskie"
+
+#: gui/settings.cpp:42
+msgid "Medium"
+msgstr "Średnie"
+
+#: gui/settings.cpp:43
+msgid "High"
+msgstr "Wysokie"
+
+#: gui/settings.cpp:47
+msgid "Autodetect"
+msgstr "Automatycznie"
+
+#: gui/settings.cpp:59
+msgid "Add Game"
+msgstr "Dodaj Grę"
+
+#: gui/settings.cpp:60
+msgid "Edit Game"
+msgstr "Edytuj Grę"
+
+#: gui/settings.cpp:61
+msgid "Remove Game"
+msgstr "Usuń Grę"
+
+#: gui/settings.cpp:63
+msgid "Update masterlist before sorting."
+msgstr "Uaktualnij Masterlistę przed sortowaniem."
+
+#: gui/settings.cpp:64
+msgid "View reports externally in default browser."
+msgstr "Czytaj raport w domyślnej przeglądarce."
+
+#: gui/settings.cpp:65
+msgid "Generate and display plugin graph images."
+msgstr "Wygeneruj i pokaż wykres wtyczek."
+
+#: gui/settings.cpp:68
+msgid "Name"
+msgstr "Nazwa"
+
+#: gui/settings.cpp:69
+msgid "Base Game Type"
+msgstr "Podstawowy typ gry"
+
+#: gui/settings.cpp:70
+msgid "BOSS Folder Name"
+msgstr "Nazwa folderu BOSS"
+
+#: gui/settings.cpp:71
+msgid "Master File"
+msgstr "Główny plik"
+
+#: gui/settings.cpp:72
+msgid "Online Masterlist URL"
+msgstr "URL Masterlisty Online"
+
+#: gui/settings.cpp:73
+msgid "Install Path"
+msgstr "Ścieżka instalacyjna"
+
+#: gui/settings.cpp:74
+msgid "Install Path Registry Key"
+msgstr "Klucz rejestru ścieżki instalacyjnej"
+
+#: gui/settings.cpp:98
+msgid "Default Game:"
+msgstr "Domyślna gra"
+
+#: gui/settings.cpp:104
+msgid "Debug Verbosity:"
+msgstr "Debug Verbosity:"
+
+#: gui/settings.cpp:126
+msgid "Language and game changes will be applied after BOSS is restarted."
+msgstr "Język oraz zmiany w grze zostaną zastosowane po restarcie BOSS."
+
+#: gui/settings.cpp:139
+msgid "The output is logged to the BOSSDebugLog.txt file."
+msgstr "Wyniki zostały zapisane w BOSSDebugLog.txt."
+
+#: gui/settings.cpp:279
+msgid "BOSS: Add Game"
+msgstr "BOSS: Dodaj Grę"
+
+#: gui/settings.cpp:286 gui/settings.cpp:365
+msgid "Error: A path and/or registry key is required. Row will not be added."
+msgstr ""
+"Błąd: Scieżka oraz/lub klucz rejestru jest wymagany. Linia nie zostanie "
+"dodana."
+
+#: gui/settings.cpp:298
+msgid "Error: A game with this name is already defined. Row will not be added."
+msgstr "Błąd: Gra z tą nazwą jest już opisana. Linia nie zostanie dodana."
+
+#: gui/settings.cpp:306
+msgid ""
+"Error: A game with this folder name is already defined. Row will not be "
+"added."
+msgstr "Błąd: Gra z tym folderem jest już opisana. Linia nie zostanie dodana."
+
+#: gui/settings.cpp:328
+msgid "BOSS: Edit Game"
+msgstr "BOSS: Edytuj Grę"
+
+#: gui/settings.cpp:349
+msgid "Error: Name is required. Row will not be added."
+msgstr "Błąd: Nazwa jest wymagana. Linia nie zostanie dodana."
+
+#: gui/settings.cpp:357
+msgid "Error: Folder is required. Row will not be added."
+msgstr "Błąd: Folder jest wymagany. Linia nie zostanie dodana."
+
+#: gui/settings.cpp:428
+msgid "BOSS Folder Name (required):"
+msgstr "Nazwa folderu BOSS (wymagane):"
+
+#: gui/settings.cpp:431
+msgid "Master File:"
+msgstr "Główny plik:"
+
+#: gui/settings.cpp:434
+msgid "Masterlist URL:"
+msgstr "URL do Masterlisty:"
+
+#: gui/settings.cpp:437
+msgid "Install Path:"
+msgstr "Ścieżka Instalacyjna:"
+
+#: gui/settings.cpp:440
+msgid "Install Path Registry Key:"
+msgstr "Klucz rejestru ścieżki instalacyjnej:"
+
+#: backend/generators.h:80
+msgid "Note:"
+msgstr "Notatki:"
+
+#: backend/generators.h:82
+msgid "Bash Tag Suggestion(s):"
+msgstr "Sugerowane tagi Bash:"
+
+#: backend/generators.h:84
+msgid "Warning:"
+msgstr "Ostrzeżenie:"
+
+#: backend/generators.h:86
+msgid "Error:"
+msgstr "Błąd:"
+
+#: backend/generators.h:159
+msgid "BOSS Report"
+msgstr "Raport BOSS"
+
+#: backend/generators.h:191 backend/generators.h:262
+msgid "Summary"
+msgstr "Podsumowanie"
+
+#: backend/generators.h:197
+msgid "Details"
+msgstr "Szczegóły"
+
+#: backend/generators.h:204
+msgid "Graph"
+msgstr "Wykres"
+
+#: backend/generators.h:211
+msgid "Filters"
+msgstr "Filtry"
+
+#: backend/generators.h:275
+msgid "BOSS Version"
+msgstr "Wersja BOSS"
+
+#: backend/generators.h:284
+msgid "Masterlist Version"
+msgstr "Wersja Masterlisty"
+
+#: backend/generators.h:293
+msgid "Masterlist Updating"
+msgstr "Aktualizacja Masterlisty"
+
+#: backend/generators.h:297
+msgid "Enabled"
+msgstr "Aktywny"
+
+#: backend/generators.h:299
+msgid "Disabled"
+msgstr "Nieaktywny"
+
+#: backend/generators.h:306
+msgid "No change in details since last run."
+msgstr "Brak istotnych zmian od ostatniego uruchomienia"
+
+#: backend/generators.h:316
+msgid "General Messages"
+msgstr "Ogólne wiadomości"
+
+#: backend/generators.h:326
+msgid "Total Number of Messages"
+msgstr "Liczba wiadomości"
+
+#: backend/generators.h:335
+msgid "Number of Warnings"
+msgstr "Liczba ostrzeżeń"
+
+#: backend/generators.h:344
+msgid "Number of Errors"
+msgstr "Niczba Błędów"
+
+#: backend/generators.h:385
+msgid "Version:"
+msgstr "Wersja:"
+
+#: backend/generators.h:405
+msgid "Add:"
+msgstr "Dodaj:"
+
+#: backend/generators.h:411
+msgid "Remove:"
+msgstr "Usuń:"
+
+#: backend/generators.h:419
+msgid ""
+"Contains %1% ITM records, %2% UDR records and %3% deleted navmeshes. Clean "
+"with %4%."
+msgstr ""
+"Zawiera %1% wpisów ITM, %2% wpisów UDR oraz %3% usuniętych nasmesh. "
+"Wyczyścić w %4%."
+
+#: backend/generators.h:421
+msgid "Clean with %1%."
+msgstr "Wyczyść z %1%."
+
+#: backend/generators.h:425
+msgid "Contains %1% UDR records and %2% deleted navmeshes. Clean with %3%."
+msgstr "Zawiera %1% wpisów UDR oraz %2% usuniętych navmesh. Wyczyść w %3%."
+
+#: backend/generators.h:427
+msgid "Contains %1% deleted navmeshes. Clean with %2%."
+msgstr "Zawiera %1% usuniętych navmesh. Wyczyść w %2%."
+
+#: backend/generators.h:429
+msgid "Contains %1% UDR records. Clean with %2%."
+msgstr "Zawiera %1% wpisów UDR. Wyczyść w %2%."
+
+#: backend/generators.h:432
+msgid "Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%."
+msgstr "Zawiera %1% wpisów ITM oraz %2% usuniętych navmesh. Wyczyść w %3%."
+
+#: backend/generators.h:434
+msgid "Contains %1% ITM records. Clean with %2%."
+msgstr "Zawiera %1% wpisów ITM. Wyczyść w %2%."
+
+#: backend/generators.h:437
+msgid "Contains %1% ITM records and %2% UDR records. Clean with %3%."
+msgstr "Zawiera %1% wpisów ITM oraz %2% wpisów UDR. Wyczyść w %3%."
+
+#: backend/generators.h:474
+msgid "The BOSS Report requires Javascript to be enabled in order to function."
+msgstr "Raport BOSS wymaga włączonego Javascript do pracy."
+
+#: backend/generators.h:521
+msgid "Hide Version Numbers"
+msgstr "Ukryj numer wersji"
+
+#: backend/generators.h:530
+msgid "Hide CRCs"
+msgstr "Ukryj CRC"
+
+#: backend/generators.h:539
+msgid "Hide Bash Tag Suggestions"
+msgstr "Ukryj sugestie Tagów Bash"
+
+#: backend/generators.h:547
+msgid "Hide Notes"
+msgstr "Ukryj Notatki"
+
+#: backend/generators.h:555
+msgid "Hide 'Do Not Clean' Messages"
+msgstr "Ukryj wiadomości 'Nie Czyścić'"
+
+#: backend/generators.h:563
+msgid "Hide All Plugin Messages"
+msgstr "Ukryj wszystkie wiadomości wtyczek"
+
+#: backend/generators.h:571
+msgid "Hide Messageless Plugins"
+msgstr "Ukryj wtyczki bez wiadomości"
+
+#: backend/generators.h:581
+msgid "%1% of %2% plugins hidden."
+msgstr "%1% z %2% wtyczek ukrytych."
+
+#: backend/generators.h:589
+msgid "%1% of %2% messages hidden."
+msgstr "%1% z %2% wiadomosci ukrytych."
+
+#: backend/generators.h:631
+msgid "Could not write BOSS report."
+msgstr "Nie można zapisać raportu BOSS."
+
+#: backend/parsers.h:466 backend/parsers.h:549
+msgid "Invalid file path:"
+msgstr "Nieprawidłowa ścieżka do pliku:"
+
+#: backend/parsers.h:514
+msgid "Invalid folder path:"
+msgstr "Nieprawidłowa ścieżka do folderu:"
+
+#: backend/parsers.h:531
+msgid "Invalid regex string:"
+msgstr "Nieprawidłowy ciąg regex:"
+
+#: backend/parsers.h:626
+msgid "Expected \"%1%\" at \"%2%\"."
+msgstr "Oczekiwano  \"%1%\" w \"%2%\"."

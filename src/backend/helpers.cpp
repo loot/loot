@@ -247,6 +247,8 @@ namespace boss {
             Construct(g_lang_french);
         else if (nameOrISOCode == "简体中文" || nameOrISOCode == "zho")
             Construct(g_lang_chinese);
+        else if (nameOrISOCode == "Polski" || nameOrISOCode == "pol")
+            Construct(g_lang_polish);
         else
             Construct(g_lang_any);
     }
@@ -282,6 +284,11 @@ namespace boss {
             _name = "简体中文";
             _isoCode = "zho";
             _locale = "zh.UTF-8";
+        }
+        else if (_code == g_lang_polish) {
+            _name = "Polski";
+            _isoCode = "pol";
+            _locale = "pl.UTF-8";
         }
     }
 
