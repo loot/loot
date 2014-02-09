@@ -34,80 +34,238 @@
 
 using namespace std;
 
-wxString Type[3] = {
-    translate("Note"),
-    translate("Warning"),
-    translate("Error")
-};
+MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<boss::Plugin>& plugins, const boss::Game& game) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER), _basePlugins(plugins), _game(game) {
+    //Initialise controls.
+    filterCheckbox = new wxCheckBox(this, wxID_ANY, translate("Show only conflicting plugins."));
 
-wxString State[2] = {
-    translate("Add"),
-    translate("Remove")
-};
+    //Set up list columns.
+    pluginList->AppendColumn(translate("Plugin"));
+    pluginList->AppendColumn(translate("Priority"));
+    loadAfterList->AppendColumn(translate("Load After"));
 
-MessageList::MessageList(wxWindow * parent, wxWindowID id, const unsigned int language) : wxListView(parent, id, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_VIRTUAL|wxLC_SINGLE_SEL), _language(language) {
-    InsertColumn(0, translate("Type"));
-    InsertColumn(1, translate("Content"));
-    InsertColumn(2, translate("Condition"));
-    InsertColumn(3, translate("Language"));
+    //Initialise control states.
+    removeBtn->Enable(false);
+    prioritySpin->Enable(false);
+    filterCheckbox->Enable(false);
 
-    Bind(wxEVT_LIST_DELETE_ITEM, &MessageList::OnDeleteItem, this);
+    //Make plugin name bold text.
+    pluginText->SetFont(pluginText->GetFont().Bold());
 
-    SetItemCount(0);
+    //Set up event handling.
+    Bind(wxEVT_LIST_ITEM_SELECTED, &MiniEditor::OnPluginSelect, this, LIST_Plugins);
+    Bind(wxEVT_LIST_ITEM_SELECTED, &MiniEditor::OnRowSelect, this, LIST_LoadAfter);
+    Bind(wxEVT_BUTTON, &MiniEditor::OnRemoveRow, this, BUTTON_RemoveRow);
+    Bind(wxEVT_CHECKBOX, &MiniEditor::OnFilterToggle, this);
+
+    //Set up layout.
+    wxBoxSizer * bigBox = new wxBoxSizer(wxVERTICAL);
+
+    wxBoxSizer * hBox = new wxBoxSizer(wxHORIZONTAL);
+
+    hBox->Add(pluginList, 0, wxEXPAND | wxALL, 10);
+
+    wxBoxSizer * mainBox = new wxBoxSizer(wxVERTICAL);
+
+    mainBox->Add(pluginText, 0, wxTOP | wxBOTTOM, 10);
+    mainBox->Add(filterCheckbox, 0, wxTOP | wxBOTTOM, 10);
+
+    wxBoxSizer * hbox2 = new wxBoxSizer(wxHORIZONTAL);
+    hbox2->Add(new wxStaticText(this, wxID_ANY, translate("Priority: ")), 0, wxALIGN_RIGHT | wxLEFT | wxRIGHT, 5);
+    hbox2->Add(prioritySpin, 0, wxALIGN_RIGHT);
+    mainBox->Add(hbox2, 0, wxEXPAND | wxALIGN_RIGHT | wxTOP | wxBOTTOM, 10);
+
+    mainBox->Add(loadAfterList, 1, wxEXPAND);
+    mainBox->Add(removeBtn, 0, wxTOP | wxBOTTOM | wxALIGN_RIGHT, 10);
+
+    hBox->Add(mainBox, 1, wxEXPAND | wxTOP | wxBOTTOM | wxRIGHT, 10);
+    bigBox->Add(hBox, 1, wxEXPAND | wxALL, 5);
+
+    //Need to add 'Yes' and 'No' buttons.
+    wxSizer * sizer = CreateSeparatedButtonSizer(wxAPPLY | wxCANCEL);
+
+    //Now add buttons to window sizer.
+    if (sizer != NULL)
+        bigBox->Add(sizer, 0, wxEXPAND | wxLEFT | wxBOTTOM | wxRIGHT, 15);
+
+    //Fill pluginList with the contents of basePlugins.
+    int i = 0;
+    for (list<boss::Plugin>::const_iterator it = _basePlugins.begin(); it != _basePlugins.end(); ++it) {
+        pluginList->InsertItem(i, FromUTF8(it->Name()));
+        pluginList->SetItem(i, 1, FromUTF8(boss::IntToString(it->Priority())));
+        if (it->FormIDs().empty()) {
+            pluginList->SetItemTextColour(i, wxColour(122, 122, 122));
+        }
+        else if (it->LoadsBSA(_game)) {
+            pluginList->SetItemTextColour(i, wxColour(0, 142, 219));
+        }
+        ++i;
+    }
+    pluginList->SetColumnWidth(0, wxLIST_AUTOSIZE);
+
+    SetBackgroundColour(wxColour(255, 255, 255));
+    SetIcon(wxIconLocation("BOSS.exe"));
+
+    SetSizerAndFit(bigBox);
+    Layout();
 }
 
-std::vector<boss::Message> MessageList::GetItems() const {
-    return _messages;
-}
+void MiniEditor::OnPluginSelect(wxListEvent& event) {
+    //Create Plugin object for selected plugin.
+    wxString selectedPlugin = pluginList->GetItemText(event.GetIndex());
+    wxString currentPlugin = pluginText->GetLabelText();
 
-void MessageList::SetItems(const std::vector<boss::Message>& messages) {
-    _messages = messages;
-    SetItemCount(_messages.size());
-    RefreshItems(0, _messages.size() - 1);
-}
+    //Check if the selected plugin is the same as the current plugin.
+    if (selectedPlugin != currentPlugin) {
+        BOOST_LOG_TRIVIAL(debug) << "User selected plugin: " << selectedPlugin.ToUTF8();
 
-boss::Message MessageList::GetItem(long item) const {
-    return _messages[item];
-}
+        //Apply any current edits.
+        if (!currentPlugin.empty())
+            ApplyEdits(currentPlugin);
 
-void MessageList::SetItem(long item, const boss::Message& message) {
-    _messages[item] = message;
-    RefreshItem(item);
-}
-
-void MessageList::AppendItem(const boss::Message& message) {
-    _messages.push_back(message);
-    SetItemCount(_messages.size());
-    RefreshItem(_messages.size() - 1);
-}
-
-void MessageList::OnDeleteItem(wxListEvent& event) {
-    _messages.erase(_messages.begin() + event.GetIndex());
-    SetItemCount(_messages.size());
-    RefreshItems(event.GetIndex(), _messages.size() - 1);
-}
-
-wxString MessageList::OnGetItemText(long item, long column) const {
-    if (column < 0 || column > 3 || item < 0 || item > _messages.size() - 1)
-        return wxString();
-
-    if (column == 0) {
-        if (_messages[item].Type() == boss::g_message_say)
-            return Type[0];
-        else if (_messages[item].Type() == boss::g_message_warn)
-            return Type[1];
+        //Merge base metadata and edits.
+        boss::Plugin plugin(string(selectedPlugin.ToUTF8()));
+        list<boss::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
+        if (it != _basePlugins.end())
+            plugin = *it;
         else
-            return Type[2];
-    } else if (column == 1) {
-        return FromUTF8(_messages[item].ChooseContent(_language).Str());
-    } else if (column == 2) {
-        return FromUTF8(_messages[item].Condition());
-    } else {
-        return FromUTF8(boss::Language(_messages[item].ChooseContent(_language).Language()).Name());
+            BOOST_LOG_TRIVIAL(warning) << "Could not find plugin in base list: " << plugin.Name();
+        it = std::find(_editedPlugins.begin(), _editedPlugins.end(), plugin);
+        if (it != _editedPlugins.end())
+            plugin.MergeMetadata(*it);
+        else
+            BOOST_LOG_TRIVIAL(info) << "Could not find plugin in edited list: " << plugin.Name();
+
+        //Now fill editor fields with new plugin's info and update control states.
+        BOOST_LOG_TRIVIAL(debug) << "Filling editor fields with plugin info.";
+        pluginText->SetLabelText(FromUTF8(plugin.Name()));
+
+        prioritySpin->SetValue(plugin.Priority());
+        loadAfterList->DeleteAllItems();
+
+        set<boss::File> files = plugin.LoadAfter();
+        int i = 0;
+        for (set<boss::File>::const_iterator it = files.begin(), endit = files.end(); it != endit; ++it) {
+            loadAfterList->InsertItem(i, FromUTF8(it->Name()));
+            ++i;
+        }
+
+        //Set control states.
+        prioritySpin->Enable(true);
+        filterCheckbox->Enable(true);
+        removeBtn->Enable(false);
     }
 }
 
-Editor::Editor(wxWindow *parent, const wxString& title, const std::string userlistPath, const std::vector<boss::Plugin>& basePlugins, std::vector<boss::Plugin>& editedPlugins, const unsigned int language, const boss::Game& game) : wxFrame(parent, wxID_ANY, title), _userlistPath(userlistPath), _basePlugins(basePlugins), _editedPlugins(editedPlugins), _game(game) {
+void MiniEditor::OnFilterToggle(wxCommandEvent& event) {
+    if (event.IsChecked()) {
+        boss::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
+        list<boss::Plugin>::const_iterator pos = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
+
+        if (pos != _basePlugins.end()) {
+            pluginList->DeleteAllItems();
+
+            int i = 0;
+            for (list<boss::Plugin>::const_iterator it = _basePlugins.begin(); it != _basePlugins.end(); ++it) {
+                if (pos->DoFormIDsOverlap(*it)) {
+                    pluginList->InsertItem(i, FromUTF8(it->Name()));
+                    pluginList->SetItem(i, 1, FromUTF8(boss::IntToString(it->Priority())));
+                    if (it->FormIDs().empty()) {
+                        pluginList->SetItemTextColour(i, wxColour(122, 122, 122));
+                    }
+                    else if (it->LoadsBSA(_game)) {
+                        pluginList->SetItemTextColour(i, wxColour(0, 142, 219));
+                    }
+                    ++i;
+                }
+            }
+        }
+    }
+    else {
+        pluginList->DeleteAllItems();
+        int i = 0;
+        for (list<boss::Plugin>::const_iterator it = _basePlugins.begin(); it != _basePlugins.end(); ++it) {
+            pluginList->InsertItem(i, FromUTF8(it->Name()));
+            pluginList->SetItem(i, 1, FromUTF8(boss::IntToString(it->Priority())));
+            if (it->FormIDs().empty()) {
+                pluginList->SetItemTextColour(i, wxColour(122, 122, 122));
+            }
+            else if (it->LoadsBSA(_game)) {
+                pluginList->SetItemTextColour(i, wxColour(0, 142, 219));
+            }
+            ++i;
+        }
+    }
+}
+
+void MiniEditor::OnRowSelect(wxListEvent& event) {
+
+    boss::File file(string(loadAfterList->GetItemText(event.GetIndex(), 0).ToUTF8()));
+    boss::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
+
+    list<boss::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
+
+    if (it != _basePlugins.end())
+        plugin = *it;
+    else
+        BOOST_LOG_TRIVIAL(warning) << "Could not find plugin in base list: " << plugin.Name();
+
+    set<boss::File> loadAfter = plugin.LoadAfter();
+
+    if (loadAfter.find(file) == loadAfter.end()) {
+        BOOST_LOG_TRIVIAL(trace) << "File \"" << file.Name() << "\" was not found in base plugin metadata. Removal enabled.";
+        removeBtn->Enable(true);
+    }
+    else {
+        BOOST_LOG_TRIVIAL(trace) << "File \"" << file.Name() << "\" was found in base plugin metadata. Removal disabled.";
+        removeBtn->Enable(false);
+    }
+}
+
+void MiniEditor::OnRemoveRow(wxCommandEvent& event) {
+    loadAfterList->DeleteItem(loadAfterList->GetFirstSelected());
+    removeBtn->Enable(false);
+}
+
+const std::list<boss::Plugin>& MiniEditor::GetEditedPlugins() const {
+    return _editedPlugins;
+}
+
+void MiniEditor::ApplyEdits(const wxString& plugin) {
+    BOOST_LOG_TRIVIAL(debug) << "Applying edits to plugin: " << plugin.ToUTF8();
+
+    //Get recorded data.
+    boss::Plugin master;
+    list<boss::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), boss::Plugin(string(plugin.ToUTF8())));
+    if (it != _basePlugins.end())
+        master = *it;
+    else
+        master = boss::Plugin(string(plugin.ToUTF8()));
+
+    //Get new data.
+    boss::Plugin edited = boss::Plugin(string(plugin.ToUTF8()));
+    edited.Priority(prioritySpin->GetValue());
+    set<boss::File> files;
+
+    boss::Plugin diff = master.DiffMetadata(edited);
+
+    list<boss::Plugin>::iterator pos = std::find(_editedPlugins.begin(), _editedPlugins.end(), diff);
+
+    if (pos != _editedPlugins.end())
+        *pos = diff;
+    else
+        _editedPlugins.push_back(diff);
+
+    //Also mark plugin as edited in list.
+    long i = pluginList->FindItem(-1, plugin);
+    if (!diff.HasNameOnly())
+        pluginList->SetItemFont(i, wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT).Bold());
+    else
+        pluginList->SetItemFont(i, wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT));
+
+}
+
+
+Editor::Editor(wxWindow *parent, const wxString& title, const std::string userlistPath, const std::list<boss::Plugin>& basePlugins, std::list<boss::Plugin>& editedPlugins, const unsigned int language, const boss::Game& game) : wxFrame(parent, wxID_ANY, title), _userlistPath(userlistPath), _basePlugins(basePlugins), _editedPlugins(editedPlugins), _game(game) {
 
     //Initialise child windows.
     listBook = new wxNotebook(this, BOOK_Lists);
@@ -270,12 +428,13 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     bigBox->Add(mainBox, 2, wxEXPAND|wxTOP|wxBOTTOM|wxRIGHT, 10);
 
     //Fill pluginList with the contents of basePlugins.
-    for (int i=0, max=_basePlugins.size(); i < max; ++i) {
-        pluginList->InsertItem(i, FromUTF8(_basePlugins[i].Name()));
-        if (_basePlugins[i].LoadsBSA(_game)) {
+    int i = 0;
+    for (list<boss::Plugin>::const_iterator it = _basePlugins.begin(); it != _basePlugins.end(); ++it) {
+        pluginList->InsertItem(i, FromUTF8(it->Name()));
+        if (it->LoadsBSA(_game)) {
             pluginList->SetItemTextColour(i, wxColour(0, 142, 219));
         }
-        if (std::find(_editedPlugins.begin(), _editedPlugins.end(), _basePlugins[i]) != _editedPlugins.end()) {
+        if (std::find(_editedPlugins.begin(), _editedPlugins.end(), *it) != _editedPlugins.end()) {
             pluginList->SetItemFont(i, wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT).Bold());
         }
     }
@@ -429,7 +588,7 @@ void Editor::OnPluginClearMetadata(wxCommandEvent& event) {
 
         //Need to clear what's currently in the editor and what's from the userlist.
 
-        vector<boss::Plugin>::const_iterator it = std::find(_editedPlugins.begin(), _editedPlugins.end(), p);
+        list<boss::Plugin>::const_iterator it = std::find(_editedPlugins.begin(), _editedPlugins.end(), p);
 
         //Delete existing userlist entry.
         if (it != _editedPlugins.end())
@@ -678,7 +837,7 @@ void Editor::OnRowSelect(wxListEvent& event) {
         boss::File file = RowToFile(reqsList, event.GetIndex());
         boss::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
 
-        vector<boss::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
+        list<boss::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
 
         if (it != _basePlugins.end())
             plugin = *it;
@@ -702,7 +861,7 @@ void Editor::OnRowSelect(wxListEvent& event) {
         boss::File file = RowToFile(incsList, event.GetIndex());
         boss::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
 
-        vector<boss::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
+        list<boss::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
 
         if (it != _basePlugins.end())
             plugin = *it;
@@ -726,7 +885,7 @@ void Editor::OnRowSelect(wxListEvent& event) {
         boss::File file = RowToFile(loadAfterList, event.GetIndex());
         boss::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
 
-        vector<boss::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
+        list<boss::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
 
         if (it != _basePlugins.end())
             plugin = *it;
@@ -750,7 +909,7 @@ void Editor::OnRowSelect(wxListEvent& event) {
         boss::Message message = messageList->GetItem(event.GetIndex());
         boss::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
 
-        vector<boss::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
+        list<boss::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
 
         if (it != _basePlugins.end())
             plugin = *it;
@@ -774,7 +933,7 @@ void Editor::OnRowSelect(wxListEvent& event) {
         boss::Tag tag = RowToTag(tagsList, event.GetIndex());
         boss::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
 
-        vector<boss::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
+        list<boss::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
 
         if (it != _basePlugins.end())
             plugin = *it;
@@ -797,7 +956,7 @@ void Editor::OnRowSelect(wxListEvent& event) {
         boss::PluginDirtyInfo dirtyData = RowToPluginDirtyInfo(dirtyList, event.GetIndex());
         boss::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
 
-        vector<boss::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
+        list<boss::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
 
         if (it != _basePlugins.end())
             plugin = *it;
@@ -851,7 +1010,7 @@ void Editor::ApplyEdits(const wxString& plugin) {
 
     boss::Plugin diff = master.DiffMetadata(edited);
 
-    vector<boss::Plugin>::iterator it = std::find(_editedPlugins.begin(), _editedPlugins.end(), diff);
+    list<boss::Plugin>::iterator it = std::find(_editedPlugins.begin(), _editedPlugins.end(), diff);
 
     if (it != _editedPlugins.end())
         *it = diff;
@@ -872,7 +1031,7 @@ boss::Plugin Editor::GetMasterData(const wxString& plugin) const {
     boss::Plugin p;
     boss::Plugin p_in(string(plugin.ToUTF8()));
 
-    vector<boss::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), p_in);
+    list<boss::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), p_in);
 
     if (it != _basePlugins.end())
         p = *it;
@@ -884,7 +1043,7 @@ boss::Plugin Editor::GetUserData(const wxString& plugin) const {
     BOOST_LOG_TRIVIAL(debug) << "Getting userlist metadata for plugin: " << plugin.ToUTF8();
     boss::Plugin p(string(plugin.ToUTF8()));
 
-    vector<boss::Plugin>::const_iterator it = std::find(_editedPlugins.begin(), _editedPlugins.end(), p);
+    list<boss::Plugin>::const_iterator it = std::find(_editedPlugins.begin(), _editedPlugins.end(), p);
 
     if (it != _editedPlugins.end())
         p = *it;
@@ -970,387 +1129,4 @@ boss::PluginDirtyInfo Editor::RowToPluginDirtyInfo(wxListView * list, long row) 
         atoi(string(list->GetItemText(row, 2).ToUTF8()).c_str()),
         atoi(string(list->GetItemText(row, 3).ToUTF8()).c_str()),
         string(list->GetItemText(row, 4).ToUTF8()));
-}
-
-FileEditDialog::FileEditDialog(wxWindow *parent, const wxString& title) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER) {
-
-    _name = new wxTextCtrl(this, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, 0, wxTextValidator(wxFILTER_EMPTY));
-    _display = new wxTextCtrl(this, wxID_ANY);
-    _condition = new wxTextCtrl(this, wxID_ANY);
-
-    wxSizerFlags leftItem(0);
-	leftItem.Left();
-
-	wxSizerFlags rightItem(1);
-	rightItem.Right().Expand();
-
-    wxBoxSizer * bigBox = new wxBoxSizer(wxVERTICAL);
-
-	wxFlexGridSizer * GridSizer = new wxFlexGridSizer(2, 5, 5);
-    GridSizer->AddGrowableCol(1,1);
-
-	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Filename (required):")), leftItem);
-	GridSizer->Add(_name, rightItem);
-
-	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Displayed Name:")), leftItem);
-	GridSizer->Add(_display, rightItem);
-
-	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Condition:")), leftItem);
-	GridSizer->Add(_condition, rightItem);
-
-    bigBox->Add(GridSizer, 0, wxEXPAND|wxALL, 15);
-
-    bigBox->AddSpacer(10);
-    bigBox->AddStretchSpacer(1);
-
-    //Need to add 'OK' and 'Cancel' buttons.
-	wxSizer * sizer = CreateSeparatedButtonSizer(wxOK|wxCANCEL);
-    if (sizer != NULL)
-        bigBox->Add(sizer, 0, wxEXPAND|wxLEFT|wxBOTTOM|wxRIGHT, 15);
-
-    SetBackgroundColour(wxColour(255,255,255));
-    SetIcon(wxIconLocation("BOSS.exe"));
-	SetSizerAndFit(bigBox);
-}
-
-void FileEditDialog::SetValues(const wxString& name, const wxString& display, const wxString& condition) {
-
-    _name->SetValue(name);
-    _display->SetValue(display);
-    _condition->SetValue(condition);
-}
-
-wxString FileEditDialog::GetName() const {
-    return _name->GetValue();
-}
-
-wxString FileEditDialog::GetDisplayName() const {
-    return _display->GetValue();
-}
-
-wxString FileEditDialog::GetCondition() const {
-    return _condition->GetValue();
-}
-
-MessageEditDialog::MessageEditDialog(wxWindow *parent, const wxString& title) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER) {
-
-    wxArrayString languages;
-    vector<string> langs = boss::Language::Names();
-    for (size_t i = 0; i < langs.size(); i++) {
-        languages.Add(FromUTF8(langs[i]));
-    }
-
-    //Initialise controls.
-    _type = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 3, Type);
-    _language = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, languages);
-
-    _condition = new wxTextCtrl(this, wxID_ANY);
-    _str = new wxTextCtrl(this, wxID_ANY);
-
-    _content = new wxListView(this, LIST_MessageContent, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL);
-
-    addBtn = new wxButton(this, BUTTON_AddContent, translate("Add Content"));
-    editBtn = new wxButton(this, BUTTON_EditContent, translate("Edit Content"));
-    removeBtn = new wxButton(this, BUTTON_RemoveContent, translate("Remove Content"));
-
-    _content->InsertColumn(0, translate("Language"));
-    _content->InsertColumn(1, translate("String"));
-
-    //Set up event handling.
-    Bind(wxEVT_BUTTON, &MessageEditDialog::OnAdd, this, BUTTON_AddContent);
-    Bind(wxEVT_BUTTON, &MessageEditDialog::OnEdit, this, BUTTON_EditContent);
-    Bind(wxEVT_BUTTON, &MessageEditDialog::OnRemove, this, BUTTON_RemoveContent);
-    Bind(wxEVT_LIST_ITEM_SELECTED, &MessageEditDialog::OnSelect, this, LIST_MessageContent);
-
-    wxSizerFlags leftItem(0);
-    leftItem.Left();
-
-	wxSizerFlags rightItem(1);
-    rightItem.Right();
-
-    wxSizerFlags wholeItem(0);
-    wholeItem.Expand().Border(wxLEFT|wxRIGHT|wxBOTTOM, 15);
-
-    wxBoxSizer * bigBox = new wxBoxSizer(wxVERTICAL);
-
-	wxFlexGridSizer * GridSizer = new wxFlexGridSizer(2, 5, 5);
-    GridSizer->AddGrowableCol(1,1);
-
-	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Type:")), leftItem);
-	GridSizer->Add(_type, rightItem);
-
-	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Condition:")), leftItem);
-	GridSizer->Add(_condition, rightItem);
-
-    bigBox->AddSpacer(15);
-
-    bigBox->Add(GridSizer, wholeItem);
-
-    bigBox->Add(_content, wholeItem);
-
-    wxFlexGridSizer * GridSizer2 = new wxFlexGridSizer(2, 5, 5);
-    GridSizer2->AddGrowableCol(1,1);
-
-	GridSizer2->Add(new wxStaticText(this, wxID_ANY, translate("Language:")), leftItem);
-	GridSizer2->Add(_language, rightItem);
-
-	GridSizer2->Add(new wxStaticText(this, wxID_ANY, translate("Content:")), leftItem);
-	GridSizer2->Add(_str, rightItem);
-
-    bigBox->Add(GridSizer2, wholeItem);
-
-    wxBoxSizer * hbox = new wxBoxSizer(wxHORIZONTAL);
-    hbox->Add(addBtn, 0, wxRIGHT, 5);
-    hbox->Add(editBtn, 0, wxLEFT|wxRIGHT, 5);
-    hbox->Add(removeBtn, 0, wxLEFT, 5);
-    bigBox->Add(hbox, 0, wxALIGN_RIGHT|wxLEFT|wxRIGHT, 15);
-
-    bigBox->AddSpacer(10);
-    bigBox->AddStretchSpacer(1);
-
-    //Need to add 'OK' and 'Cancel' buttons.
-	wxSizer * sizer = CreateSeparatedButtonSizer(wxOK|wxCANCEL);
-    if (sizer != NULL)
-        bigBox->Add(sizer, 0, wxEXPAND|wxLEFT|wxBOTTOM|wxRIGHT, 15);
-
-    //Set defaults.
-    _type->SetSelection(0);
-    _language->SetSelection(0);
-    editBtn->Enable(false);
-    removeBtn->Enable(false);
-
-    SetBackgroundColour(wxColour(255,255,255));
-    SetIcon(wxIconLocation("BOSS.exe"));
-	SetSizerAndFit(bigBox);
-}
-
-void MessageEditDialog::SetMessage(const boss::Message& message) {
-
-    if (message.Type() == boss::g_message_say)
-        _type->SetSelection(0);
-    else if (message.Type() == boss::g_message_warn)
-        _type->SetSelection(1);
-    else
-        _type->SetSelection(2);
-
-    _condition->SetValue(FromUTF8(message.Condition()));
-
-    vector<boss::MessageContent> contents = message.Content();
-    for (size_t i=0, max=contents.size(); i < max; ++i) {
-        _content->InsertItem(i, FromUTF8(boss::Language(contents[i].Language()).Name()));
-        _content->SetItem(i, 1, FromUTF8(contents[i].Str()));
-    }
-}
-
-boss::Message MessageEditDialog::GetMessage() const {
-
-    unsigned int type;
-    string condition;
-    if (_type->GetSelection() == 0)
-        type = boss::g_message_say;
-    else if (_type->GetSelection() == 1)
-        type = boss::g_message_warn;
-    else
-        type = boss::g_message_error;
-
-    condition = string(_condition->GetValue().ToUTF8());
-
-    vector<boss::MessageContent> contents;
-    for (size_t i=0, max=_content->GetItemCount(); i < max; ++i) {
-
-        string str = string(_content->GetItemText(i, 1).ToUTF8());
-        unsigned int lang = boss::Language(string(_content->GetItemText(i, 0).ToUTF8())).Code();
-
-        contents.push_back(boss::MessageContent(str, lang));
-    }
-
-    return boss::Message(type, contents, condition);
-}
-
-void MessageEditDialog::OnSelect(wxListEvent& event) {
-    _language->SetSelection(boss::Language(string(_content->GetItemText(event.GetIndex(), 0).ToUTF8())).Code());
-    _str->SetValue(_content->GetItemText(event.GetIndex(), 1));
-    editBtn->Enable(true);
-    removeBtn->Enable(true);
-}
-
-void MessageEditDialog::OnAdd(wxCommandEvent& event) {
-    long i = _content->GetItemCount();
-    _content->InsertItem(i, FromUTF8(boss::Language(_language->GetSelection()).Name()));
-    _content->SetItem(i, 1, _str->GetValue());
-}
-
-void MessageEditDialog::OnEdit(wxCommandEvent& event) {
-    if (_content->GetFirstSelected() == -1) {
-        BOOST_LOG_TRIVIAL(error) << "Attempting to edit message content, but no content row selected.";
-        wxMessageBox(
-            translate("Error: No content row selected."),
-            translate("BOSS: Error"),
-            wxOK | wxICON_ERROR,
-            NULL);
-        return;
-    }
-    long i = _content->GetFirstSelected();
-    _content->SetItem(i, 0, FromUTF8(boss::Language(_language->GetSelection()).Name()));
-    _content->SetItem(i, 1, _str->GetValue());
-}
-
-void MessageEditDialog::OnRemove(wxCommandEvent& event) {
-    if (_content->GetFirstSelected() == -1) {
-        BOOST_LOG_TRIVIAL(error) << "Attempting to remove message content, but no content row selected.";
-        wxMessageBox(
-            translate("Error: No content row selected."),
-            translate("BOSS: Error"),
-            wxOK | wxICON_ERROR,
-            NULL);
-        return;
-    }
-    _content->DeleteItem(_content->GetFirstSelected());
-    editBtn->Enable(false);
-    removeBtn->Enable(false);
-}
-
-TagEditDialog::TagEditDialog(wxWindow *parent, const wxString& title) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER) {
-
-    //Initialise controls.
-    _state = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 2, State);
-
-    _name = new wxTextCtrl(this, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, 0, wxTextValidator(wxFILTER_EMPTY));
-    _condition = new wxTextCtrl(this, wxID_ANY);
-
-    wxSizerFlags leftItem(0);
-	leftItem.Left();
-
-	wxSizerFlags rightItem(1);
-	rightItem.Right().Expand();
-
-    wxBoxSizer * bigBox = new wxBoxSizer(wxVERTICAL);
-
-	wxFlexGridSizer * GridSizer = new wxFlexGridSizer(2, 5, 5);
-    GridSizer->AddGrowableCol(1,1);
-
-	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Add/Remove:")), leftItem);
-	GridSizer->Add(_state, rightItem);
-
-	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Name (required):")), leftItem);
-	GridSizer->Add(_name, rightItem);
-
-	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Condition:")), leftItem);
-	GridSizer->Add(_condition, rightItem);
-
-    bigBox->Add(GridSizer, 0, wxEXPAND|wxALL, 15);
-
-    bigBox->AddSpacer(10);
-    bigBox->AddStretchSpacer(1);
-
-    //Need to add 'OK' and 'Cancel' buttons.
-	wxSizer * sizer = CreateSeparatedButtonSizer(wxOK|wxCANCEL);
-    if (sizer != NULL)
-        bigBox->Add(sizer, 0, wxEXPAND|wxLEFT|wxBOTTOM|wxRIGHT, 15);
-
-    //Set defaults.
-    _state->SetSelection(0);
-
-    SetBackgroundColour(wxColour(255,255,255));
-    SetIcon(wxIconLocation("BOSS.exe"));
-	SetSizerAndFit(bigBox);
-}
-
-void TagEditDialog::SetValues(int state, const wxString& name, const wxString& condition) {
-
-    _state->SetSelection(state);
-    _name->SetValue(name);
-    _condition->SetValue(condition);
-}
-
-wxString TagEditDialog::GetState() const {
-    return State[_state->GetSelection()];
-}
-
-wxString TagEditDialog::GetName() const {
-    return _name->GetValue();
-}
-
-wxString TagEditDialog::GetCondition() const {
-    return _condition->GetValue();
-}
-
-DirtInfoEditDialog::DirtInfoEditDialog(wxWindow * parent, const wxString& title) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER) {
-    //Initialise controls.
-    wxTextValidator val(wxFILTER_EMPTY | wxFILTER_INCLUDE_CHAR_LIST);
-    val.SetCharIncludes("0123456789ABCDEFabcdef");
-
-    _itm = new wxSpinCtrl(this, wxID_ANY, "0");
-    _udr = new wxSpinCtrl(this, wxID_ANY, "0");
-    _nav = new wxSpinCtrl(this, wxID_ANY, "0");
-    _crc = new wxTextCtrl(this, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, 0, val);
-    _utility = new wxTextCtrl(this, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, 0, wxTextValidator(wxFILTER_EMPTY));
-
-    wxSizerFlags leftItem(0);
-	leftItem.Left();
-
-	wxSizerFlags rightItem(1);
-	rightItem.Right().Expand();
-
-    wxBoxSizer * bigBox = new wxBoxSizer(wxVERTICAL);
-
-	wxFlexGridSizer * GridSizer = new wxFlexGridSizer(2, 5, 5);
-    GridSizer->AddGrowableCol(1,1);
-
-	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("CRC (required):")), leftItem);
-	GridSizer->Add(_crc, rightItem);
-
-	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("ITM Count:")), leftItem);
-	GridSizer->Add(_itm, rightItem);
-
-	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("UDR Count:")), leftItem);
-	GridSizer->Add(_udr, rightItem);
-
-	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Deleted Navmesh Count:")), leftItem);
-	GridSizer->Add(_nav, rightItem);
-
-	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Cleaning Utility (required):")), leftItem);
-	GridSizer->Add(_utility, rightItem);
-
-    bigBox->Add(GridSizer, 0, wxEXPAND|wxALL, 15);
-
-    bigBox->AddSpacer(10);
-    bigBox->AddStretchSpacer(1);
-
-    //Need to add 'OK' and 'Cancel' buttons.
-	wxSizer * sizer = CreateSeparatedButtonSizer(wxOK|wxCANCEL);
-    if (sizer != NULL)
-        bigBox->Add(sizer, 0, wxEXPAND|wxLEFT|wxBOTTOM|wxRIGHT, 15);
-
-    SetBackgroundColour(wxColour(255,255,255));
-    SetIcon(wxIconLocation("BOSS.exe"));
-	SetSizerAndFit(bigBox);
-}
-
-void DirtInfoEditDialog::SetValues(const wxString& crc, unsigned int itm, unsigned int udr, unsigned int nav, const wxString& utility) {
-    _crc->SetValue(crc);
-    _itm->SetValue(itm);
-    _udr->SetValue(udr);
-    _nav->SetValue(nav);
-    _utility->SetValue(utility);
-}
-
-wxString DirtInfoEditDialog::GetCRC() const {
-    return _crc->GetValue();
-}
-
-unsigned int DirtInfoEditDialog::GetITMs() const {
-    return _itm->GetValue();
-}
-
-unsigned int DirtInfoEditDialog::GetUDRs() const {
-    return _udr->GetValue();
-}
-
-unsigned int DirtInfoEditDialog::GetDeletedNavmeshes() const {
-    return _nav->GetValue();
-}
-
-wxString DirtInfoEditDialog::GetUtility() const {
-    return _utility->GetValue();
 }
