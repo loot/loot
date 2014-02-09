@@ -24,7 +24,7 @@
 #include "settings.h"
 #include "editor.h"
 #include "viewer.h"
-#include "sorting.h"
+#include "misc.h"
 
 #include "../backend/globals.h"
 #include "../backend/metadata.h"
@@ -936,7 +936,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 void Launcher::OnEditMetadata(wxCommandEvent& event) {
 
     //Should probably check for masterlist updates before opening metadata editor.
-    vector<boss::Plugin> installed, mlist_plugins, ulist_plugins;
+    list<boss::Plugin> installed, mlist_plugins, ulist_plugins;
 
     wxProgressDialog *progDia = new wxProgressDialog(translate("BOSS: Working..."),translate("BOSS working..."), 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_ELAPSED_TIME);
 
@@ -967,7 +967,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
                 this);
         }
         if (mlist["plugins"])
-            mlist_plugins = mlist["plugins"].as< vector<boss::Plugin> >();
+            mlist_plugins = mlist["plugins"].as< list<boss::Plugin> >();
     }
 
     progDia->Pulse();
@@ -989,26 +989,25 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
 				this);
         }
         if (ulist["plugins"])
-            ulist_plugins = ulist["plugins"].as< vector<boss::Plugin> >();
+            ulist_plugins = ulist["plugins"].as< list<boss::Plugin> >();
     }
 
     progDia->Pulse();
 
     //Merge the masterlist down into the installed mods list.
     BOOST_LOG_TRIVIAL(debug) << "Merging the masterlist down into the installed mods list.";
-    for (vector<boss::Plugin>::const_iterator it=mlist_plugins.begin(), endit=mlist_plugins.end(); it != endit; ++it) {
-        vector<boss::Plugin>::iterator pos = find(installed.begin(), installed.end(), *it);
+    for (list<boss::Plugin>::const_iterator it = mlist_plugins.begin(), endit = mlist_plugins.end(); it != endit; ++it) {
+        list<boss::Plugin>::iterator pos = find(installed.begin(), installed.end(), *it);
 
         if (pos != installed.end())
             pos->MergeMetadata(*it);
     }
 
-
     progDia->Pulse();
 
     //Add empty entries for any userlist entries that aren't installed.
-    BOOST_LOG_TRIVIAL(debug) << "Padding the userlist to match the plugins in the installed mods list.";
-    for (vector<boss::Plugin>::const_iterator it=ulist_plugins.begin(), endit=ulist_plugins.end(); it != endit; ++it) {
+    BOOST_LOG_TRIVIAL(debug) << "Padding the installed mods list to match the plugins in the userlist.";
+    for (list<boss::Plugin>::const_iterator it = ulist_plugins.begin(), endit = ulist_plugins.end(); it != endit; ++it) {
         if (find(installed.begin(), installed.end(), *it) == installed.end())
             installed.push_back(boss::Plugin(it->Name()));
     }
@@ -1017,7 +1016,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
 
     //Sort into alphabetical order.
     BOOST_LOG_TRIVIAL(debug) << "Sorting plugin list into alphabetical order.";
-    std::sort(installed.begin(), installed.end(), boss::alpha_sort);
+    installed.sort(boss::alpha_sort);
 
     progDia->Pulse();
 
