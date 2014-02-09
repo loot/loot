@@ -488,6 +488,106 @@ void Launcher::OnClose(wxCloseEvent& event) {
     Destroy();
 }
 
+void Launcher::OnViewLastReport(wxCommandEvent& event) {
+    if (_settings["View Report Externally"] && _settings["View Report Externally"].as<bool>()) {
+        BOOST_LOG_TRIVIAL(debug) << "Opening report in external application...";
+        wxLaunchDefaultBrowser(FromUTF8(ToFileURL(_game.ReportPath().string())));
+    }
+    else {
+        //Create viewer window.
+        BOOST_LOG_TRIVIAL(debug) << "Opening viewer window...";
+        Viewer *viewer = new Viewer(this, translate("BOSS: Report Viewer"), FromUTF8(ToFileURL(_game.ReportPath().string())));
+        viewer->Show();
+    }
+    BOOST_LOG_TRIVIAL(debug) << "Report displayed.";
+}
+
+void Launcher::OnOpenSettings(wxCommandEvent& event) {
+    BOOST_LOG_TRIVIAL(debug) << "Opening settings window...";
+    SettingsFrame *settings = new SettingsFrame(this, translate("BOSS: Settings"), _settings, _games);
+    settings->ShowModal();
+    BOOST_LOG_TRIVIAL(debug) << "Settings window opened.";
+}
+
+void Launcher::OnGameChange(wxCommandEvent& event) {
+    BOOST_LOG_TRIVIAL(debug) << "Changing current game...";
+    _game = _games[event.GetId() - MENU_LowestDynamicGameID];
+    try {
+        _game.Init();  //In case it hasn't already been done.
+        *find(_games.begin(), _games.end(), _game) = _game;  //Sync changes.
+        BOOST_LOG_TRIVIAL(debug) << "New game is " << _game.Name();
+    }
+    catch (boss::error& e) {
+        BOOST_LOG_TRIVIAL(error) << "Game-specific settings could not be initialised." << e.what();
+        wxMessageBox(
+            FromUTF8(format(loc::translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()),
+            translate("BOSS: Error"),
+            wxOK | wxICON_ERROR,
+            NULL);
+    }
+    SetTitle(FromUTF8("BOSS - " + _game.Name()));
+    if (_game.Id() == boss::g_game_tes5)
+        RedatePluginsItem->Enable(true);
+    else
+        RedatePluginsItem->Enable(false);
+}
+
+void Launcher::OnHelp(wxCommandEvent& event) {
+    //Look for file.
+    BOOST_LOG_TRIVIAL(debug) << "Opening readme at: " << g_path_readme;
+    if (fs::exists(g_path_readme)) {
+        wxLaunchDefaultBrowser(FromUTF8(ToFileURL(g_path_readme.string())));
+    }
+    else {  //No readme exists, show a pop-up message saying so.
+        BOOST_LOG_TRIVIAL(error) << "File \"" << g_path_readme.string() << "\" could not be found.";
+        wxMessageBox(
+            FromUTF8(format(loc::translate("Error: \"%1%\" cannot be found.")) % g_path_readme.string()),
+            translate("BOSS: Error"),
+            wxOK | wxICON_ERROR,
+            this);
+    }
+}
+
+void Launcher::OnOpenDebugLog(wxCommandEvent& event) {
+    //Look for file.
+    BOOST_LOG_TRIVIAL(debug) << "Opening debug log at: " << g_path_log;
+    if (fs::exists(g_path_log)) {
+        wxLaunchDefaultApplication(FromUTF8(g_path_log.string()));
+    }
+    else {  //No log exists, show a pop-up message saying so.
+        BOOST_LOG_TRIVIAL(error) << "File \"" << g_path_log.string() << "\" could not be found.";
+        wxMessageBox(
+            FromUTF8(format(loc::translate("Error: \"%1%\" cannot be found.")) % g_path_log.string()),
+            translate("BOSS: Error"),
+            wxOK | wxICON_ERROR,
+            this);
+    }
+}
+
+void Launcher::OnAbout(wxCommandEvent& event) {
+    BOOST_LOG_TRIVIAL(debug) << "Opening About dialog.";
+    wxAboutDialogInfo aboutInfo;
+    aboutInfo.SetName("BOSS");
+    aboutInfo.SetVersion(IntToString(g_version_major) + "." + IntToString(g_version_minor) + "." + IntToString(g_version_patch));
+    aboutInfo.SetDescription(translate("Load order optimisation for Oblivion, Skyrim, Fallout 3 and Fallout: New Vegas."));
+    aboutInfo.SetCopyright("Copyright (C) 2009-2014 BOSS Development Team.");
+    aboutInfo.SetWebSite("http://boss-developers.github.io");
+    aboutInfo.SetLicence("This program is free software: you can redistribute it and/or modify\n"
+        "it under the terms of the GNU General Public License as published by\n"
+        "the Free Software Foundation, either version 3 of the License, or\n"
+        "(at your option) any later version.\n"
+        "\n"
+        "This program is distributed in the hope that it will be useful,\n"
+        "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+        "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+        "GNU General Public License for more details.\n"
+        "\n"
+        "You should have received a copy of the GNU General Public License\n"
+        "along with this program.  If not, see <http://www.gnu.org/licenses/>.");
+    aboutInfo.SetIcon(wxIconLocation("BOSS.exe"));
+    wxAboutBox(aboutInfo);
+}
+
 void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     BOOST_LOG_TRIVIAL(debug) << "Beginning sorting process.";
@@ -938,19 +1038,6 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
     BOOST_LOG_TRIVIAL(debug) << "Editor window opened.";
 }
 
-void Launcher::OnViewLastReport(wxCommandEvent& event) {
-    if (_settings["View Report Externally"] && _settings["View Report Externally"].as<bool>()) {
-        BOOST_LOG_TRIVIAL(debug) << "Opening report in external application...";
-        wxLaunchDefaultBrowser(FromUTF8(ToFileURL(_game.ReportPath().string())));
-    } else {
-        //Create viewer window.
-        BOOST_LOG_TRIVIAL(debug) << "Opening viewer window...";
-        Viewer *viewer = new Viewer(this, translate("BOSS: Report Viewer"), FromUTF8(ToFileURL(_game.ReportPath().string())));
-        viewer->Show();
-    }
-    BOOST_LOG_TRIVIAL(debug) << "Report displayed.";
-}
-
 void Launcher::OnRedatePlugins(wxCommandEvent& event) {
     wxMessageDialog * dia = new wxMessageDialog(this, translate("This feature is provided so that modders using the Creation Kit may set the load order it uses. A side-effect is that any subscribed Steam Workshop mods will be re-downloaded by Steam. Do you wish to continue?"), translate("BOSS: Warning"), wxYES_NO|wxCANCEL|wxICON_EXCLAMATION);
 
@@ -1011,87 +1098,4 @@ void Launcher::OnRedatePlugins(wxCommandEvent& event) {
             wxOK|wxCENTRE,
             this);
     }
-}
-
-void Launcher::OnOpenSettings(wxCommandEvent& event) {
-    BOOST_LOG_TRIVIAL(debug) << "Opening settings window...";
-	SettingsFrame *settings = new SettingsFrame(this, translate("BOSS: Settings"), _settings, _games);
-	settings->ShowModal();
-    BOOST_LOG_TRIVIAL(debug) << "Settings window opened.";
-}
-
-void Launcher::OnGameChange(wxCommandEvent& event) {
-    BOOST_LOG_TRIVIAL(debug) << "Changing current game...";
-    _game = _games[event.GetId() - MENU_LowestDynamicGameID];
-    try {
-        _game.Init();  //In case it hasn't already been done.
-        *find(_games.begin(), _games.end(), _game) = _game;  //Sync changes.
-        BOOST_LOG_TRIVIAL(debug) << "New game is " << _game.Name();
-    } catch (boss::error& e) {
-        BOOST_LOG_TRIVIAL(error) << "Game-specific settings could not be initialised." << e.what();
-        wxMessageBox(
-            FromUTF8(format(loc::translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()),
-            translate("BOSS: Error"),
-            wxOK | wxICON_ERROR,
-            NULL);
-    }
-	SetTitle(FromUTF8("BOSS - " + _game.Name()));
-    if (_game.Id() == boss::g_game_tes5)
-        RedatePluginsItem->Enable(true);
-    else
-        RedatePluginsItem->Enable(false);
-}
-
-void Launcher::OnHelp(wxCommandEvent& event) {
-    //Look for file.
-    BOOST_LOG_TRIVIAL(debug) << "Opening readme at: " << g_path_readme;
-    if (fs::exists(g_path_readme)) {
-        wxLaunchDefaultBrowser(FromUTF8(ToFileURL(g_path_readme.string())));
-    } else {  //No readme exists, show a pop-up message saying so.
-        BOOST_LOG_TRIVIAL(error) << "File \"" << g_path_readme.string() << "\" could not be found.";
-        wxMessageBox(
-            FromUTF8(format(loc::translate("Error: \"%1%\" cannot be found.")) % g_path_readme.string()),
-            translate("BOSS: Error"),
-            wxOK | wxICON_ERROR,
-            this);
-    }
-}
-
-void Launcher::OnOpenDebugLog(wxCommandEvent& event) {
-    //Look for file.
-    BOOST_LOG_TRIVIAL(debug) << "Opening debug log at: " << g_path_log;
-    if (fs::exists(g_path_log)) {
-        wxLaunchDefaultApplication(FromUTF8(g_path_log.string()));
-    } else {  //No log exists, show a pop-up message saying so.
-        BOOST_LOG_TRIVIAL(error) << "File \"" << g_path_log.string() << "\" could not be found.";
-        wxMessageBox(
-            FromUTF8(format(loc::translate("Error: \"%1%\" cannot be found.")) % g_path_log.string()),
-            translate("BOSS: Error"),
-            wxOK | wxICON_ERROR,
-            this);
-    }
-}
-
-void Launcher::OnAbout(wxCommandEvent& event) {
-    BOOST_LOG_TRIVIAL(debug) << "Opening About dialog.";
-    wxAboutDialogInfo aboutInfo;
-    aboutInfo.SetName("BOSS");
-    aboutInfo.SetVersion(IntToString(g_version_major)+"."+IntToString(g_version_minor)+"."+IntToString(g_version_patch));
-    aboutInfo.SetDescription(translate("Load order optimisation for Oblivion, Skyrim, Fallout 3 and Fallout: New Vegas."));
-    aboutInfo.SetCopyright("Copyright (C) 2009-2014 BOSS Development Team.");
-    aboutInfo.SetWebSite("http://boss-developers.github.io");
-	aboutInfo.SetLicence("This program is free software: you can redistribute it and/or modify\n"
-    "it under the terms of the GNU General Public License as published by\n"
-    "the Free Software Foundation, either version 3 of the License, or\n"
-    "(at your option) any later version.\n"
-	"\n"
-    "This program is distributed in the hope that it will be useful,\n"
-    "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-    "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
-    "GNU General Public License for more details.\n"
-	"\n"
-    "You should have received a copy of the GNU General Public License\n"
-    "along with this program.  If not, see <http://www.gnu.org/licenses/>.");
-	aboutInfo.SetIcon(wxIconLocation("BOSS.exe"));
-    wxAboutBox(aboutInfo);
 }
