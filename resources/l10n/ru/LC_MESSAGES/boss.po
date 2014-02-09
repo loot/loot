@@ -937,7 +937,7 @@ msgstr "Скрыть все сообщения"
 
 #: backend/generators.h:571
 msgid "Hide Messageless Plugins"
-msgstr "Скрыть плагины с сообщениями"
+msgstr "Скрыть плагины без сообщений"
 
 #: backend/generators.h:581
 msgid "%1% of %2% plugins hidden."
