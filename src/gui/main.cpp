@@ -827,6 +827,10 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                     }
 
                     //Clear all existing edges from the graph.
+                    std::pair<edge_it, edge_it> edge_range = boost::edges(graph);
+                    for (edge_it it = edge_range.first; it != edge_range.second; ++it) {
+                        boost::remove_edge(*it, graph);
+                    }
 
                     //Save edits to the userlist.
                     BOOST_LOG_TRIVIAL(trace) << "Merging down edits to the userlist.";
