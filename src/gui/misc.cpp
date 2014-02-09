@@ -498,6 +498,10 @@ LoadOrderPreview::LoadOrderPreview(wxWindow *parent, const wxString title, const
     }
     _loadOrder->SetColumnWidth(0, wxLIST_AUTOSIZE);
 
+    //Set up event handling.
+    Bind(wxEVT_BUTTON, &LoadOrderPreview::OnYesNo, this, wxID_YES);
+    Bind(wxEVT_BUTTON, &LoadOrderPreview::OnYesNo, this, wxID_NO);
+
     //Set up layout.
     wxBoxSizer * bigBox = new wxBoxSizer(wxVERTICAL);
 
@@ -516,4 +520,8 @@ LoadOrderPreview::LoadOrderPreview(wxWindow *parent, const wxString title, const
     SetBackgroundColour(wxColour(255, 255, 255));
     SetIcon(wxIconLocation("BOSS.exe"));
     SetSizerAndFit(bigBox);
+}
+
+void LoadOrderPreview::OnYesNo(wxCommandEvent& event) {
+    EndModal(event.GetId());
 }

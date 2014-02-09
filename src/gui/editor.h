@@ -89,6 +89,7 @@ public:
     void OnAddRowToggle(wxCommandEvent& event);
     void OnFilterToggle(wxCommandEvent& event);
     void OnDragStart(wxListEvent& event);
+    void OnApply(wxCommandEvent& event);
 
     const std::list<boss::Plugin>& GetEditedPlugins() const;
 private:

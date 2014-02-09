@@ -189,6 +189,7 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
     Bind(wxEVT_BUTTON, &MiniEditor::OnRemoveRow, this, BUTTON_RemoveRow);
     Bind(wxEVT_TOGGLEBUTTON, &MiniEditor::OnAddRowToggle, this, BUTTON_AddRow);
     Bind(wxEVT_CHECKBOX, &MiniEditor::OnFilterToggle, this);
+    Bind(wxEVT_BUTTON, &MiniEditor::OnApply, this, wxID_APPLY);
 
     //Set up layout.
     wxBoxSizer * bigBox = new wxBoxSizer(wxVERTICAL);
@@ -398,6 +399,15 @@ void MiniEditor::OnDragStart(wxListEvent& event) {
     wxDropSource dropSource(pluginList);
     dropSource.SetData(data);
     wxDragResult result = dropSource.DoDragDrop();
+}
+
+void MiniEditor::OnApply(wxCommandEvent& event) {
+    //Apply any current edits.
+    wxString currentPlugin = pluginText->GetLabelText();
+    if (!currentPlugin.empty())
+        ApplyEdits(currentPlugin, pluginList);
+
+    EndModal(event.GetId());
 }
 
 const std::list<boss::Plugin>& MiniEditor::GetEditedPlugins() const {
