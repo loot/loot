@@ -772,49 +772,62 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     
     */
 
-    BOOST_LOG_TRIVIAL(debug) << "Building the plugin dependency graph...";
-
-    //Now add the interactions between plugins to the graph as edges.
-    BOOST_LOG_TRIVIAL(trace) << "Adding non-overlap edges.";
-    AddSpecificEdges(graph);
-
-    BOOST_LOG_TRIVIAL(trace) << "Adding priority edges.";
-    AddPriorityEdges(graph);
-
-    BOOST_LOG_TRIVIAL(trace) << "Adding overlap edges.";
-    AddOverlapEdges(graph);
-
     //Check for back-edges, then perform a topological sort.
     try {
-        BOOST_LOG_TRIVIAL(debug) << "Checking to see if the graph is cyclic.";
-        boss::CheckForCycles(graph);
+        bool applyLoadOrder = false;
+        long ret;
+        do {
+            BOOST_LOG_TRIVIAL(debug) << "Building the plugin dependency graph...";
 
-        progDia->Pulse();
+            //Now add the interactions between plugins to the graph as edges.
+            BOOST_LOG_TRIVIAL(trace) << "Adding non-overlap edges.";
+            AddSpecificEdges(graph);
 
-        BOOST_LOG_TRIVIAL(debug) << "Performing a topological sort.";
-        boss::Sort(graph, plugins);
+            BOOST_LOG_TRIVIAL(trace) << "Adding priority edges.";
+            AddPriorityEdges(graph);
 
-        progDia->Destroy();
-        progDia = NULL;
+            BOOST_LOG_TRIVIAL(trace) << "Adding overlap edges.";
+            AddOverlapEdges(graph);
 
-        BOOST_LOG_TRIVIAL(debug) << "Displaying load order preview.";
-        LoadOrderPreview preview(this, translate("BOSS: Calculated Load Order"), plugins, _game);
+            BOOST_LOG_TRIVIAL(debug) << "Checking to see if the graph is cyclic.";
+            boss::CheckForCycles(graph);
 
-        long ret = preview.ShowModal();
+            progDia->Pulse();
 
-        if (ret == wxID_YES) {
-            preview.Close();
-            //User wants to make changes. Need to display editor and loop around again.
+            BOOST_LOG_TRIVIAL(debug) << "Performing a topological sort.";
+            boss::Sort(graph, plugins);
 
-            MiniEditor editor(this, translate("BOSS: Mini Editor"), plugins, _game);
+            progDia->Destroy();
+            progDia = NULL;
 
-            ret = editor.ShowModal();
+            BOOST_LOG_TRIVIAL(debug) << "Displaying load order preview.";
+            LoadOrderPreview preview(this, translate("BOSS: Calculated Load Order"), plugins, _game);
 
-            if (ret == wxID_APPLY) {
-                //User accepted edits, now apply them, then loop.
+            long ret = preview.ShowModal();
+
+            applyLoadOrder = ret == wxID_NO;
+            if (ret != wxID_YES)
+                break;
+            else {
+                //User wants to make changes. Need to display editor and loop around again.
+
+                MiniEditor editor(this, translate("BOSS: Mini Editor"), plugins, _game);
+
+                ret = editor.ShowModal();
                 const std::list<boss::Plugin> edits = editor.GetEditedPlugins();
 
-                if (!edits.empty()) {
+                if (ret != wxID_APPLY)
+                    break;
+                else if (edits.empty()) {
+                    //No edits were actually made, so just go straight to applying the load order.
+                    applyLoadOrder = true;
+                    break;
+                }
+                else {
+                    //Recreate progress dialog.
+                    progDia = new wxProgressDialog(translate("BOSS: Working..."), translate("BOSS working..."), 1000, this, wxPD_APP_MODAL | wxPD_AUTO_HIDE | wxPD_ELAPSED_TIME);
+
+                    //User accepted edits, now apply them, then loop.
                     //Apply edits to the graph vertices.
                     boss::vertex_it vit, vitend;
                     for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
@@ -832,7 +845,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                         boost::remove_edge(*it, graph);
                     }
 
-                    //Save edits to the userlist.
+                    //Merge edits down to the userlist entries.
                     BOOST_LOG_TRIVIAL(trace) << "Merging down edits to the userlist.";
                     for (list<boss::Plugin>::const_iterator it = edits.begin(), endit = edits.end(); it != endit; ++it) {
                         list<boss::Plugin>::iterator jt = find(ulist_plugins.begin(), ulist_plugins.end(), *it);
@@ -860,14 +873,9 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                     //Now loop.
                 }
             }
-            else {
-                //User decided to cancel editing. Just go straight to displaying the report.
-                BOOST_LOG_TRIVIAL(info) << "The load order calculated was not applied as sorting was canceled.";
-                messages.push_back(boss::Message(boss::g_message_warn, loc::translate("The load order displayed in the Details tab was not applied as sorting was canceled.")));
-            }
-        }
-        else if (ret == wxID_NO) {
-            preview.Close();
+        } while (true);
+
+        if (applyLoadOrder) {
             //User doesn't want to make any changes. Just go straight to applying the load order.
             BOOST_LOG_TRIVIAL(debug) << "Setting load order.";
             try {
@@ -887,6 +895,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             BOOST_LOG_TRIVIAL(info) << "The load order calculated was not applied as sorting was canceled.";
             messages.push_back(boss::Message(boss::g_message_warn, loc::translate("The load order displayed in the Details tab was not applied as sorting was canceled.")));
         }
+
     } catch (std::exception& e) {
         BOOST_LOG_TRIVIAL(error) << "Failed to calculate the load order. Details: " << e.what();
         messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("Failed to calculate the load order. Details: %1%")) % e.what()).str()));
