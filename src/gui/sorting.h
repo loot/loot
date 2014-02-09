@@ -34,7 +34,7 @@ along with BOSS.  If not, see
 
 class MiniEditor : public wxDialog {
 public:
-    MiniEditor(wxWindow *parent, const wxString& title, const std::vector<boss::Plugin>& plugins, const boss::Game& game);
+    MiniEditor(wxWindow *parent, const wxString& title, const std::list<boss::Plugin>& plugins, const boss::Game& game);
 
     void OnPluginSelect(wxListEvent& event);
     void OnPluginListRightClick(wxListEvent& event);
@@ -43,8 +43,6 @@ public:
     void OnQuit(wxCommandEvent& event);
 private:
     wxButton * removeBtn;
-    wxButton * applyBtn;
-    wxButton * cancelBtn;
     wxListView * pluginList;
     wxListView * loadAfterList;
     wxCheckBox * filterCheckbox;
@@ -52,7 +50,7 @@ private:
     wxStaticText * pluginText;
 
 
-    const std::vector<boss::Plugin>& _basePlugins;
+    const std::list<boss::Plugin>& _basePlugins;
     std::list<boss::Plugin> _editedPlugins;
 };
 

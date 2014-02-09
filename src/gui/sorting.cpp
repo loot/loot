@@ -26,7 +26,7 @@ along with BOSS.  If not, see
 
 using namespace std;
 
-MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::vector<boss::Plugin>& plugins, const boss::Game& game) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER), _basePlugins(plugins) {
+MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<boss::Plugin>& plugins, const boss::Game& game) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER), _basePlugins(plugins) {
     //Initialise controls.
     pluginText = new wxStaticText(this, wxID_ANY, "");
     prioritySpin = new wxSpinCtrl(this, wxID_ANY, "0");
@@ -37,8 +37,6 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::vecto
     loadAfterList = new wxListView(this, LIST_LoadAfter, wxDefaultPosition, wxDefaultSize, wxLC_REPORT | wxLC_SINGLE_SEL);
 
     removeBtn = new wxButton(this, BUTTON_RemoveRow, translate("Remove"));
-    applyBtn = new wxButton(this, BUTTON_Apply, translate("Apply Changes"));
-    cancelBtn = new wxButton(this, BUTTON_Cancel, translate("Cancel"));
 
     wxMenu * pluginMenu = new wxMenu();
 
@@ -48,9 +46,7 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::vecto
     loadAfterList->AppendColumn(translate("Filename"));
 
     //Set up plugin right-click menu.
-    pluginMenu->Append(MENU_CopyName, translate("Copy Name"));
-    pluginMenu->Append(MENU_CopyMetadata, translate("Copy Metadata As Text"));
-    pluginMenu->Append(MENU_ClearMetadata, translate("Remove All User-Added Metadata"));
+    pluginMenu->Append(MENU_CopyName, translate("Copy Into Load After List"));
 
     //Initialise control states.
     removeBtn->Enable(false);
@@ -61,42 +57,47 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::vecto
     pluginText->SetFont(pluginText->GetFont().Bold());
     
     //Set up layout.
-    wxBoxSizer * bigBox = new wxBoxSizer(wxHORIZONTAL);
+    wxBoxSizer * bigBox = new wxBoxSizer(wxVERTICAL);
 
-    bigBox->Add(pluginList, 1, wxEXPAND | wxALL, 10);
+    wxBoxSizer * hBox = new wxBoxSizer(wxHORIZONTAL);
+
+    hBox->Add(pluginList, 1, wxEXPAND | wxALL, 10);
 
     wxBoxSizer * mainBox = new wxBoxSizer(wxVERTICAL);
 
     mainBox->Add(pluginText, 0, wxTOP | wxBOTTOM, 10);
+    mainBox->Add(filterCheckbox, 0, wxTOP | wxBOTTOM, 10);
 
-    wxBoxSizer * hbox1 = new wxBoxSizer(wxHORIZONTAL); 
-    hbox1->Add(new wxStaticText(this, wxID_ANY, translate("Priority: ")), 0, wxALIGN_RIGHT | wxLEFT | wxRIGHT, 5);
-    hbox1->Add(prioritySpin, 0, wxALIGN_RIGHT);
-    mainBox->Add(hbox1, 0, wxEXPAND | wxALIGN_RIGHT | wxTOP | wxBOTTOM, 5);
-
+    wxBoxSizer * hbox2 = new wxBoxSizer(wxHORIZONTAL); 
+    hbox2->Add(new wxStaticText(this, wxID_ANY, translate("Priority: ")), 0, wxALIGN_RIGHT | wxLEFT | wxRIGHT, 5);
+    hbox2->Add(prioritySpin, 0, wxALIGN_RIGHT);
+    mainBox->Add(hbox2, 0, wxEXPAND | wxALIGN_RIGHT | wxTOP | wxBOTTOM, 5);
 
     mainBox->Add(loadAfterList, 1, wxEXPAND);
-    mainBox->Add(removeBtn, 0, wxALIGN_RIGHT, 5);
+    mainBox->Add(removeBtn, 0, wxTOP | wxBOTTOM | wxALIGN_RIGHT, 10);
 
-    bigBox->Add(mainBox, 2, wxEXPAND | wxTOP | wxBOTTOM | wxRIGHT, 10);
+    hBox->Add(mainBox, 1, wxEXPAND | wxTOP | wxBOTTOM | wxRIGHT, 10);
+    bigBox->Add(hBox, 1, wxEXPAND);
 
     //Need to add 'Yes' and 'No' buttons.
-    wxSizer * sizer = CreateSeparatedButtonSizer(wxYES | wxNO | wxCANCEL);
+    wxSizer * sizer = CreateSeparatedButtonSizer(wxAPPLY | wxCANCEL);
 
     //Now add buttons to window sizer.
     if (sizer != NULL)
         bigBox->Add(sizer, 0, wxEXPAND | wxLEFT | wxBOTTOM | wxRIGHT, 15);
 
     //Fill pluginList with the contents of basePlugins.
-    for (int i = 0, max = _basePlugins.size(); i < max; ++i) {
-        pluginList->InsertItem(i, FromUTF8(_basePlugins[i].Name()));
-        pluginList->SetItem(i, 2, FromUTF8(boss::IntToString(_basePlugins[i].Priority())));
-        if (_basePlugins[i].LoadsBSA(game)) {
+    int i = 0;
+    for (list<boss::Plugin>::const_iterator it = _basePlugins.begin(); it != _basePlugins.end(); ++it) {
+        pluginList->InsertItem(i, FromUTF8(it->Name()));
+        pluginList->SetItem(i, 1, FromUTF8(boss::IntToString(it->Priority())));
+        if (it->FormIDs().empty()) {
+            pluginList->SetItemTextColour(i, wxColour(122, 122, 122));
+        }
+        else if (it->LoadsBSA(game)) {
             pluginList->SetItemTextColour(i, wxColour(0, 142, 219));
         }
-        if (std::find(_editedPlugins.begin(), _editedPlugins.end(), _basePlugins[i]) != _editedPlugins.end()) {
-            pluginList->SetItemFont(i, wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT).Bold());
-        }
+        ++i;
     }
     pluginList->SetColumnWidth(0, wxLIST_AUTOSIZE);
 
