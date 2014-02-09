@@ -28,7 +28,7 @@
 #include "../backend/metadata.h"
 
 #include <string>
-#include <vector>
+#include <list>
 #include <wx/spinctrl.h>
 #include <wx/notebook.h>
 #include <wx/listctrl.h>
@@ -49,7 +49,27 @@
    editor), then use the immutable plugin entry's metadata for that type.
 */
 
-class MiniEditor : public wxDialog {
+class CommonEditor {
+public:
+    CommonEditor(const std::list<boss::Plugin>& plugins, const boss::Game& game);
+    CommonEditor(const std::list<boss::Plugin>& plugins, const boss::Game& game, std::list<boss::Plugin>& editedPlugins);
+protected:
+    const boss::Game& _game;
+    const std::list<boss::Plugin> _basePlugins;
+    std::list<boss::Plugin> _editedPlugins;
+
+    boss::Plugin GetMasterData(const wxString& plugin) const;
+    boss::Plugin GetUserData(const wxString& plugin) const;
+    virtual boss::Plugin GetNewData(const wxString& plugin) const = 0;
+
+    void ApplyEdits(const wxString& plugin, wxListView * list);
+
+    boss::File RowToFile(wxListView * list, long row) const;
+    boss::Tag RowToTag(wxListView * list, long row) const;
+    boss::PluginDirtyInfo RowToPluginDirtyInfo(wxListView * list, long row) const;
+};
+
+class MiniEditor : public wxDialog, public CommonEditor {
 public:
     MiniEditor(wxWindow *parent, const wxString& title, const std::list<boss::Plugin>& plugins, const boss::Game& game);
 
@@ -60,21 +80,17 @@ public:
 
     const std::list<boss::Plugin>& GetEditedPlugins() const;
 private:
-    wxButton * removeBtn;
     wxListView * pluginList;
+    wxButton * removeBtn;
     wxListView * loadAfterList;
     wxCheckBox * filterCheckbox;
     wxSpinCtrl * prioritySpin;
     wxStaticText * pluginText;
 
-    void MiniEditor::ApplyEdits(const wxString& plugin);
-
-    const std::list<boss::Plugin> _basePlugins;
-    std::list<boss::Plugin> _editedPlugins;
-    const boss::Game& _game;
+    boss::Plugin GetNewData(const wxString& plugin) const;
 };
 
-class Editor : public wxFrame {
+class Editor : public wxFrame, public CommonEditor {
 public:
     Editor(wxWindow *parent, const wxString& title, const std::string userlistPath, const std::list<boss::Plugin>& basePlugins, std::list<boss::Plugin>& editedPlugins, const unsigned int language, const boss::Game& game);
 
@@ -90,7 +106,6 @@ public:
     void OnRowSelect(wxListEvent& event);
     void OnQuit(wxCommandEvent& event);
 private:
-
     wxMenu * pluginMenu;
     wxButton * addBtn;
     wxButton * editBtn;
@@ -110,18 +125,7 @@ private:
     wxStaticText * pluginText;
 
     const std::string _userlistPath;
-    const std::list<boss::Plugin> _basePlugins;
-    std::list<boss::Plugin> _editedPlugins;
-    const boss::Game& _game;
 
-    void ApplyEdits(const wxString& plugin);
-
-    boss::Plugin GetMasterData(const wxString& plugin) const;
-    boss::Plugin GetUserData(const wxString& plugin) const;
     boss::Plugin GetNewData(const wxString& plugin) const;
-
-    boss::File RowToFile(wxListView * list, long row) const;
-    boss::Tag RowToTag(wxListView * list, long row) const;
-    boss::PluginDirtyInfo RowToPluginDirtyInfo(wxListView * list, long row) const;
 };
 #endif

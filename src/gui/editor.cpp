@@ -34,15 +34,130 @@
 
 using namespace std;
 
-MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<boss::Plugin>& plugins, const boss::Game& game) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER), _basePlugins(plugins), _game(game) {
+///////////////////////////////////
+// Common Editor Class
+///////////////////////////////////
+
+CommonEditor::CommonEditor(const std::list<boss::Plugin>& plugins, const boss::Game& game) : _basePlugins(plugins), _game(game) {}
+
+CommonEditor::CommonEditor(const std::list<boss::Plugin>& plugins, const boss::Game& game, std::list<boss::Plugin>& editedPlugins) : _basePlugins(plugins), _game(game), _editedPlugins(editedPlugins) {}
+
+boss::Plugin CommonEditor::GetMasterData(const wxString& plugin) const {
+    BOOST_LOG_TRIVIAL(debug) << "Getting hardcoded and masterlist metadata for plugin: " << plugin.ToUTF8();
+    boss::Plugin p;
+    boss::Plugin p_in(string(plugin.ToUTF8()));
+
+    list<boss::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), p_in);
+
+    if (it != _basePlugins.end())
+        p = *it;
+
+    return p;
+}
+
+boss::Plugin CommonEditor::GetUserData(const wxString& plugin) const {
+    BOOST_LOG_TRIVIAL(debug) << "Getting userlist metadata for plugin: " << plugin.ToUTF8();
+    boss::Plugin p(string(plugin.ToUTF8()));
+
+    list<boss::Plugin>::const_iterator it = std::find(_editedPlugins.begin(), _editedPlugins.end(), p);
+
+    if (it != _editedPlugins.end())
+        p = *it;
+
+    return p;
+}
+
+void CommonEditor::ApplyEdits(const wxString& plugin, wxListView * wxList) {
+    BOOST_LOG_TRIVIAL(debug) << "Applying edits to plugin: " << plugin.ToUTF8();
+
+    //Get recorded data.
+    boss::Plugin master(GetMasterData(plugin));
+    boss::Plugin edited(GetNewData(plugin));
+
+    boss::Plugin diff = master.DiffMetadata(edited);
+
+    list<boss::Plugin>::iterator pos = std::find(_editedPlugins.begin(), _editedPlugins.end(), diff);
+    long i = wxList->FindItem(-1, plugin);
+
+    if (!diff.HasNameOnly()) {
+        wxList->SetItemFont(i, wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT).Bold());
+        if (pos != _editedPlugins.end())
+            *pos = diff;
+        else
+            _editedPlugins.push_back(diff);
+    }
+    else {
+        wxList->SetItemFont(i, wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT));
+        if (pos != _editedPlugins.end())
+            _editedPlugins.erase(pos);  //Prevents unnecessary writes.
+    }
+}
+
+
+boss::File CommonEditor::RowToFile(wxListView * list, long row) const {
+    return boss::File(
+        string(list->GetItemText(row, 0).ToUTF8()),
+        string(list->GetItemText(row, 1).ToUTF8()),
+        string(list->GetItemText(row, 2).ToUTF8())
+        );
+}
+
+boss::Tag CommonEditor::RowToTag(wxListView * list, long row) const {
+    string name = string(list->GetItemText(row, 1).ToUTF8());
+
+    if (list->GetItemText(row, 0) == State[1])
+        return boss::Tag(
+        name,
+        false,
+        string(list->GetItemText(row, 2).ToUTF8())
+        );
+    else
+        return boss::Tag(
+        name,
+        true,
+        string(list->GetItemText(row, 2).ToUTF8())
+        );
+}
+
+boss::PluginDirtyInfo CommonEditor::RowToPluginDirtyInfo(wxListView * list, long row) const {
+    string text(list->GetItemText(row, 0).ToUTF8());
+    uint32_t crc = strtoul(text.c_str(), NULL, 16);
+    return boss::PluginDirtyInfo(
+        crc,
+        atoi(string(list->GetItemText(row, 1).ToUTF8()).c_str()),
+        atoi(string(list->GetItemText(row, 2).ToUTF8()).c_str()),
+        atoi(string(list->GetItemText(row, 3).ToUTF8()).c_str()),
+        string(list->GetItemText(row, 4).ToUTF8()));
+}
+
+
+///////////////////////////////////
+// Mini Editor Class
+///////////////////////////////////
+
+
+MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<boss::Plugin>& plugins, const boss::Game& game) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER), CommonEditor(plugins, game) {
     //Initialise controls.
+    pluginText = new wxStaticText(this, wxID_ANY, "");
+    prioritySpin = new wxSpinCtrl(this, wxID_ANY, "0");
+    prioritySpin->SetRange(std::numeric_limits<int>::min(), std::numeric_limits<int>::max());
     filterCheckbox = new wxCheckBox(this, wxID_ANY, translate("Show only conflicting plugins."));
+    
+    pluginList = new wxListView(this, LIST_Plugins, wxDefaultPosition, wxDefaultSize, wxLC_REPORT | wxLC_SINGLE_SEL);
+    loadAfterList = new wxListView(this, LIST_LoadAfter, wxDefaultPosition, wxDefaultSize, wxLC_REPORT | wxLC_SINGLE_SEL);
+
+    removeBtn = new wxButton(this, BUTTON_RemoveRow, translate("Remove"));
 
     //Set up list columns.
     pluginList->AppendColumn(translate("Plugin"));
     pluginList->AppendColumn(translate("Priority"));
-    loadAfterList->AppendColumn(translate("Load After"));
 
+    loadAfterList->AppendColumn(translate("Filename"));
+    loadAfterList->AppendColumn(translate("Display Name"));
+    loadAfterList->AppendColumn(translate("Condition"));
+    loadAfterList->SetColumnWidth(1, 0);  //Hide this from the user.
+    loadAfterList->SetColumnWidth(2, 0);  //Hide this from the user.
+    
     //Initialise control states.
     removeBtn->Enable(false);
     prioritySpin->Enable(false);
@@ -74,6 +189,7 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
     hbox2->Add(prioritySpin, 0, wxALIGN_RIGHT);
     mainBox->Add(hbox2, 0, wxEXPAND | wxALIGN_RIGHT | wxTOP | wxBOTTOM, 10);
 
+    //mainBox->Add(new wxStaticText(this, wxID_ANY, translate("Load After")), 0, wxTOP | wxBOTTOM, 10);
     mainBox->Add(loadAfterList, 1, wxEXPAND);
     mainBox->Add(removeBtn, 0, wxTOP | wxBOTTOM | wxALIGN_RIGHT, 10);
 
@@ -120,40 +236,36 @@ void MiniEditor::OnPluginSelect(wxListEvent& event) {
 
         //Apply any current edits.
         if (!currentPlugin.empty())
-            ApplyEdits(currentPlugin);
+            ApplyEdits(currentPlugin, pluginList);
 
-        //Merge base metadata and edits.
-        boss::Plugin plugin(string(selectedPlugin.ToUTF8()));
-        list<boss::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
-        if (it != _basePlugins.end())
-            plugin = *it;
-        else
-            BOOST_LOG_TRIVIAL(warning) << "Could not find plugin in base list: " << plugin.Name();
-        it = std::find(_editedPlugins.begin(), _editedPlugins.end(), plugin);
-        if (it != _editedPlugins.end())
-            plugin.MergeMetadata(*it);
-        else
-            BOOST_LOG_TRIVIAL(info) << "Could not find plugin in edited list: " << plugin.Name();
+        //Merge metadata.
+        boss::Plugin plugin = GetMasterData(selectedPlugin);
+        plugin.MergeMetadata(GetUserData(selectedPlugin));
 
         //Now fill editor fields with new plugin's info and update control states.
         BOOST_LOG_TRIVIAL(debug) << "Filling editor fields with plugin info.";
         pluginText->SetLabelText(FromUTF8(plugin.Name()));
 
         prioritySpin->SetValue(plugin.Priority());
-        loadAfterList->DeleteAllItems();
 
+        loadAfterList->DeleteAllItems();
         set<boss::File> files = plugin.LoadAfter();
         int i = 0;
         for (set<boss::File>::const_iterator it = files.begin(), endit = files.end(); it != endit; ++it) {
             loadAfterList->InsertItem(i, FromUTF8(it->Name()));
             ++i;
         }
+        if (loadAfterList->GetItemCount() == 0)
+            loadAfterList->SetColumnWidth(0, wxLIST_AUTOSIZE_USEHEADER);
+        else
+            loadAfterList->SetColumnWidth(0, wxLIST_AUTOSIZE);
 
         //Set control states.
         prioritySpin->Enable(true);
         filterCheckbox->Enable(true);
         removeBtn->Enable(false);
     }
+    Fit();
 }
 
 void MiniEditor::OnFilterToggle(wxCommandEvent& event) {
@@ -230,42 +342,24 @@ const std::list<boss::Plugin>& MiniEditor::GetEditedPlugins() const {
     return _editedPlugins;
 }
 
-void MiniEditor::ApplyEdits(const wxString& plugin) {
-    BOOST_LOG_TRIVIAL(debug) << "Applying edits to plugin: " << plugin.ToUTF8();
-
-    //Get recorded data.
-    boss::Plugin master;
-    list<boss::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), boss::Plugin(string(plugin.ToUTF8())));
-    if (it != _basePlugins.end())
-        master = *it;
-    else
-        master = boss::Plugin(string(plugin.ToUTF8()));
-
-    //Get new data.
-    boss::Plugin edited = boss::Plugin(string(plugin.ToUTF8()));
+boss::Plugin MiniEditor::GetNewData(const wxString& plugin) const {
+    //Get new data. Because most of it is missing in the MiniEditor, start with the existing data.
+    boss::Plugin edited(GetMasterData(plugin));
     edited.Priority(prioritySpin->GetValue());
-    set<boss::File> files;
+    set<boss::File> files; 
+    for (int i = 0, max = loadAfterList->GetItemCount(); i < max; ++i) {
+        files.insert(RowToFile(loadAfterList, i));
+    }
+    edited.LoadAfter(files);
 
-    boss::Plugin diff = master.DiffMetadata(edited);
-
-    list<boss::Plugin>::iterator pos = std::find(_editedPlugins.begin(), _editedPlugins.end(), diff);
-
-    if (pos != _editedPlugins.end())
-        *pos = diff;
-    else
-        _editedPlugins.push_back(diff);
-
-    //Also mark plugin as edited in list.
-    long i = pluginList->FindItem(-1, plugin);
-    if (!diff.HasNameOnly())
-        pluginList->SetItemFont(i, wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT).Bold());
-    else
-        pluginList->SetItemFont(i, wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT));
-
+    return edited;
 }
 
+///////////////////////////////////
+// Editor Class
+///////////////////////////////////
 
-Editor::Editor(wxWindow *parent, const wxString& title, const std::string userlistPath, const std::list<boss::Plugin>& basePlugins, std::list<boss::Plugin>& editedPlugins, const unsigned int language, const boss::Game& game) : wxFrame(parent, wxID_ANY, title), _userlistPath(userlistPath), _basePlugins(basePlugins), _editedPlugins(editedPlugins), _game(game) {
+Editor::Editor(wxWindow *parent, const wxString& title, const std::string userlistPath, const std::list<boss::Plugin>& basePlugins, std::list<boss::Plugin>& editedPlugins, const unsigned int language, const boss::Game& game) : wxFrame(parent, wxID_ANY, title), _userlistPath(userlistPath), CommonEditor(basePlugins, game, editedPlugins) {
 
     //Initialise child windows.
     listBook = new wxNotebook(this, BOOK_Lists);
@@ -458,7 +552,7 @@ void Editor::OnPluginSelect(wxListEvent& event) {
 
         //Apply any current edits.
         if (!currentPlugin.empty())
-            ApplyEdits(currentPlugin);
+            ApplyEdits(currentPlugin, pluginList);
 
         //Merge metadata.
         boss::Plugin plugin = GetMasterData(selectedPlugin);
@@ -487,6 +581,10 @@ void Editor::OnPluginSelect(wxListEvent& event) {
             loadAfterList->SetItem(i, 2, FromUTF8(it->Condition()));
             ++i;
         }
+        if (loadAfterList->GetItemCount() == 0)
+            loadAfterList->SetColumnWidth(0, wxLIST_AUTOSIZE_USEHEADER);
+        else
+            loadAfterList->SetColumnWidth(0, wxLIST_AUTOSIZE); 
 
         files = plugin.Reqs();
         i=0;
@@ -496,6 +594,10 @@ void Editor::OnPluginSelect(wxListEvent& event) {
             reqsList->SetItem(i, 2, FromUTF8(it->Condition()));
             ++i;
         }
+        if (reqsList->GetItemCount() == 0)
+            reqsList->SetColumnWidth(0, wxLIST_AUTOSIZE_USEHEADER);
+        else
+            reqsList->SetColumnWidth(0, wxLIST_AUTOSIZE);
 
         files = plugin.Incs();
         i=0;
@@ -505,6 +607,10 @@ void Editor::OnPluginSelect(wxListEvent& event) {
             incsList->SetItem(i, 2, FromUTF8(it->Condition()));
             ++i;
         }
+        if (incsList->GetItemCount() == 0)
+            incsList->SetColumnWidth(0, wxLIST_AUTOSIZE_USEHEADER);
+        else
+            incsList->SetColumnWidth(0, wxLIST_AUTOSIZE);
 
         list<boss::Message> messages = plugin.Messages();
         vector<boss::Message> vec(messages.begin(), messages.end());
@@ -521,6 +627,10 @@ void Editor::OnPluginSelect(wxListEvent& event) {
             tagsList->SetItem(i, 2, FromUTF8(it->Condition()));
             ++i;
         }
+        if (tagsList->GetItemCount() == 0)
+            tagsList->SetColumnWidth(0, wxLIST_AUTOSIZE_USEHEADER);
+        else
+            tagsList->SetColumnWidth(0, wxLIST_AUTOSIZE);
 
         set<boss::PluginDirtyInfo> dirtyInfo = plugin.DirtyInfo();
         i=0;
@@ -532,6 +642,10 @@ void Editor::OnPluginSelect(wxListEvent& event) {
             dirtyList->SetItem(i, 4, FromUTF8(it->CleaningUtility()));
             ++i;
         }
+        if (dirtyList->GetItemCount() == 0)
+            dirtyList->SetColumnWidth(0, wxLIST_AUTOSIZE_USEHEADER);
+        else
+            dirtyList->SetColumnWidth(0, wxLIST_AUTOSIZE);
 
         //Set control states.
         prioritySpin->Enable(true);
@@ -540,6 +654,7 @@ void Editor::OnPluginSelect(wxListEvent& event) {
         editBtn->Enable(false);
         removeBtn->Enable(false);
     }
+    Fit();
 }
 
 void Editor::OnPluginListRightClick(wxListEvent& event) {
@@ -984,7 +1099,7 @@ void Editor::OnQuit(wxCommandEvent& event) {
         //Apply any current edits.
         wxString currentPlugin = pluginText->GetLabelText();
         if (!currentPlugin.empty())
-            ApplyEdits(currentPlugin);
+            ApplyEdits(currentPlugin, pluginList);
 
         BOOST_LOG_TRIVIAL(debug) << "Saving metadata edits to userlist.";
 
@@ -1001,54 +1116,6 @@ void Editor::OnQuit(wxCommandEvent& event) {
         out.close();
     }
     Close();
-}
-
-void Editor::ApplyEdits(const wxString& plugin) {
-    BOOST_LOG_TRIVIAL(debug) << "Applying edits to plugin: " << plugin.ToUTF8();
-    boss::Plugin master = GetMasterData(plugin);
-    boss::Plugin edited = GetNewData(plugin);
-
-    boss::Plugin diff = master.DiffMetadata(edited);
-
-    list<boss::Plugin>::iterator it = std::find(_editedPlugins.begin(), _editedPlugins.end(), diff);
-
-    if (it != _editedPlugins.end())
-        *it = diff;
-    else
-        _editedPlugins.push_back(diff);
-
-    //Also mark plugin as edited in list.
-    long i = pluginList->FindItem(-1, plugin);
-    if (!diff.HasNameOnly())
-        pluginList->SetItemFont(i, wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT).Bold());
-    else
-        pluginList->SetItemFont(i, wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT));
-
-}
-
-boss::Plugin Editor::GetMasterData(const wxString& plugin) const {
-    BOOST_LOG_TRIVIAL(debug) << "Getting hardcoded and masterlist metadata for plugin: " << plugin.ToUTF8();
-    boss::Plugin p;
-    boss::Plugin p_in(string(plugin.ToUTF8()));
-
-    list<boss::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), p_in);
-
-    if (it != _basePlugins.end())
-        p = *it;
-
-    return p;
-}
-
-boss::Plugin Editor::GetUserData(const wxString& plugin) const {
-    BOOST_LOG_TRIVIAL(debug) << "Getting userlist metadata for plugin: " << plugin.ToUTF8();
-    boss::Plugin p(string(plugin.ToUTF8()));
-
-    list<boss::Plugin>::const_iterator it = std::find(_editedPlugins.begin(), _editedPlugins.end(), p);
-
-    if (it != _editedPlugins.end())
-        p = *it;
-
-    return p;
 }
 
 boss::Plugin Editor::GetNewData(const wxString& plugin) const {
@@ -1093,40 +1160,4 @@ boss::Plugin Editor::GetNewData(const wxString& plugin) const {
     p.Messages(messages);
 
     return p;
-}
-
-boss::File Editor::RowToFile(wxListView * list, long row) const {
-    return boss::File(
-        string(list->GetItemText(row, 0).ToUTF8()),
-        string(list->GetItemText(row, 1).ToUTF8()),
-        string(list->GetItemText(row, 2).ToUTF8())
-    );
-}
-
-boss::Tag Editor::RowToTag(wxListView * list, long row) const {
-    string name = string(list->GetItemText(row, 1).ToUTF8());
-
-    if (list->GetItemText(row, 0) == State[1])
-        return boss::Tag(
-            name,
-            false,
-            string(list->GetItemText(row, 2).ToUTF8())
-        );
-    else
-        return boss::Tag(
-            name,
-            true,
-            string(list->GetItemText(row, 2).ToUTF8())
-        );
-}
-
-boss::PluginDirtyInfo Editor::RowToPluginDirtyInfo(wxListView * list, long row) const {
-    string text(list->GetItemText(row, 0).ToUTF8());
-    uint32_t crc = strtoul(text.c_str(), NULL, 16);
-    return boss::PluginDirtyInfo(
-        crc,
-        atoi(string(list->GetItemText(row, 1).ToUTF8()).c_str()),
-        atoi(string(list->GetItemText(row, 2).ToUTF8()).c_str()),
-        atoi(string(list->GetItemText(row, 3).ToUTF8()).c_str()),
-        string(list->GetItemText(row, 4).ToUTF8()));
 }
