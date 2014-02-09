@@ -70,23 +70,4 @@ private:
     std::vector<boss::Game>& _games;
 };
 
-class LoadOrderPreview : public wxDialog {
-public:
-    LoadOrderPreview(wxWindow *parent, const wxString title, const std::list<boss::Plugin>& plugins, const boss::Game& game);
-
-    void OnPluginSelect(wxListEvent& event);
-    void OnMoveUp(wxCommandEvent& event);
-    void OnMoveDown(wxCommandEvent& event);
-
-    std::list<boss::Plugin> GetLoadOrder() const;
-private:
-    wxListView * _loadOrder;
-    wxButton * _moveUp;
-    wxButton * _moveDown;
-
-    const std::list<boss::Plugin> _plugins;
-    std::set<std::string> _movedPlugins;
-    const boss::Game& _game;
-};
-
 #endif

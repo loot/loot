@@ -61,13 +61,10 @@ public:
     void OnPluginCopyName(wxCommandEvent& event);
     void OnPluginCopyMetadata(wxCommandEvent& event);
     void OnPluginClearMetadata(wxCommandEvent& event);
-    void OnEnabledToggle(wxCommandEvent& event);
-    void OnPriorityChange(wxSpinEvent& event);
     void OnListBookChange(wxBookCtrlEvent& event);
     void OnAddRow(wxCommandEvent& event);
     void OnEditRow(wxCommandEvent& event);
     void OnRemoveRow(wxCommandEvent& event);
-    void OnRecalc(wxCommandEvent& event);
     void OnRowSelect(wxListEvent& event);
     void OnQuit(wxCommandEvent& event);
 private:

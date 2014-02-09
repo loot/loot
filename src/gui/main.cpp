@@ -24,6 +24,7 @@
 #include "settings.h"
 #include "editor.h"
 #include "viewer.h"
+#include "sorting.h"
 
 #include "../backend/globals.h"
 #include "../backend/metadata.h"
@@ -680,7 +681,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         if (preview.ShowModal() == wxID_OK) {
             BOOST_LOG_TRIVIAL(debug) << "Load order accepted.";
             list<boss::Plugin> newPluginsList, editedPlugins;
-            newPluginsList = preview.GetLoadOrder();
+            /*newPluginsList = preview.GetLoadOrder();
 
             BOOST_LOG_TRIVIAL(trace) << "Building list of edited plugins.";
             for (list<boss::Plugin>::iterator it=newPluginsList.begin(),endit=newPluginsList.end(); it != endit; ++it) {
@@ -746,7 +747,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                 uout << yout.c_str();
                 uout.close();
             }
-
+            */
             //Now set load order.
             BOOST_LOG_TRIVIAL(debug) << "Setting load order.";
             try {
@@ -1093,198 +1094,4 @@ void Launcher::OnAbout(wxCommandEvent& event) {
     "along with this program.  If not, see <http://www.gnu.org/licenses/>.");
 	aboutInfo.SetIcon(wxIconLocation("BOSS.exe"));
     wxAboutBox(aboutInfo);
-}
-
-LoadOrderPreview::LoadOrderPreview(wxWindow *parent, const wxString title, const std::list<boss::Plugin>& plugins, const boss::Game& game) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER), _plugins(plugins), _game(game) {
-
-    //Init controls.
-    _loadOrder = new wxListView(this, LIST_LoadOrder, wxDefaultPosition, wxDefaultSize, wxLC_REPORT);
-
-    _moveUp = new wxButton(this, BUTTON_MoveUp, translate("Up"));
-    _moveDown = new wxButton(this, BUTTON_MoveDown, translate("Down"));
-
-    //Populate list.
-    _loadOrder->AppendColumn(translate("Load Order"));
-    size_t i=0;
-    for (list<boss::Plugin>::const_iterator it=plugins.begin(), endit=plugins.end(); it != endit; ++it, ++i) {
-        _loadOrder->InsertItem(i, FromUTF8(it->Name()));
-        if (it->FormIDs().empty()) {
-            _loadOrder->SetItemTextColour(i, wxColour(122, 122, 122));
-        }
-        else if (it->LoadsBSA(_game)) {
-            _loadOrder->SetItemTextColour(i, wxColour(0, 142, 219));
-        }
-    }
-    _loadOrder->SetColumnWidth(0, wxLIST_AUTOSIZE);
-
-    //Set up event handling.
-    Bind(wxEVT_BUTTON, &LoadOrderPreview::OnMoveUp, this, BUTTON_MoveUp);
-    Bind(wxEVT_BUTTON, &LoadOrderPreview::OnMoveDown, this, BUTTON_MoveDown);
-    Bind(wxEVT_LIST_ITEM_SELECTED, &LoadOrderPreview::OnPluginSelect, this, LIST_LoadOrder);
-
-    //Set up layout.
-    wxBoxSizer * bigBox = new wxBoxSizer(wxVERTICAL);
-
-    bigBox->Add(_loadOrder, 1, wxEXPAND|wxALL, 15);
-
-    wxBoxSizer * hbox = new wxBoxSizer(wxHORIZONTAL);
-    hbox->Add(_moveUp, 0, wxRIGHT, 5);
-    hbox->Add(_moveDown, 0, wxLEFT, 5);
-    bigBox->Add(hbox, 0, wxALIGN_RIGHT|wxBOTTOM|wxRIGHT, 15);
-
-    bigBox->Add(new wxStaticText(this, wxID_ANY, translate("Please submit any alterations made for reasons other than user preference \nto the BOSS team so that they may include the changes in the masterlist.")), 0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 15);
-
-    //Need to add 'OK' and 'Cancel' buttons.
-	wxSizer * sizer = CreateSeparatedButtonSizer(wxOK|wxCANCEL);
-
-	//Now add TabHolder and OK button to window sizer.
-    if (sizer != NULL)
-        bigBox->Add(sizer, 0, wxEXPAND|wxLEFT|wxBOTTOM|wxRIGHT, 15);
-
-    //Set initial up/down button states.
-    _moveUp->Enable(false);
-    _moveDown->Enable(false);
-
-    //Now set the layout and sizes.
-	SetBackgroundColour(wxColour(255,255,255));
-    SetIcon(wxIconLocation("BOSS.exe"));
-	SetSizerAndFit(bigBox);
-}
-
-void LoadOrderPreview::OnPluginSelect(wxListEvent& event) {
-    _moveUp->Enable(true);
-    _moveDown->Enable(true);
-}
-
-void LoadOrderPreview::OnMoveUp(wxCommandEvent& event) {
-    BOOST_LOG_TRIVIAL(debug) << "Moving plugin(s) up the load order.";
-    long selected = _loadOrder->GetFirstSelected();
-
-    if (selected == 0)
-        return;
-
-    while (selected != -1) {
-        wxString selectedText = _loadOrder->GetItemText(selected);
-        wxString aboveText = _loadOrder->GetItemText(selected - 1);
-
-        BOOST_LOG_TRIVIAL(trace) << "Moving plugin \"" << string(selectedText.ToUTF8());
-
-        //Check that move is OK.
-        list<boss::Plugin>::const_iterator selectedPlugin = find(_plugins.begin(), _plugins.end(), boss::Plugin(string(selectedText.ToUTF8())));
-        list<boss::Plugin>::const_iterator abovePlugin = find(_plugins.begin(), _plugins.end(), boss::Plugin(string(aboveText.ToUTF8())));
-
-        if (selectedPlugin != _plugins.end() && abovePlugin != _plugins.end()) {
-            if (selectedPlugin->MustLoadAfter(*abovePlugin)) {
-                BOOST_LOG_TRIVIAL(error) << "Cannot load \"" << selectedPlugin->Name() << "\" before \"" << abovePlugin->Name() << "\".";
-                wxMessageBox(
-                    FromUTF8(format(loc::translate("Error: Cannot load \"%1%\" before \"%2%\".")) % selectedPlugin->Name() % abovePlugin->Name()),
-                    translate("BOSS: Error"),
-                    wxOK | wxICON_ERROR,
-                    NULL);
-                selected = _loadOrder->GetNextSelected(selected);
-                continue;
-            }
-        }
-
-        _loadOrder->SetItemText(selected, aboveText);
-        _loadOrder->SetItemText(selected - 1, selectedText);
-
-        _movedPlugins.insert(string(selectedText.ToUTF8()));
-
-        _loadOrder->Select(selected, false);
-        _loadOrder->Select(selected - 1, true);
-
-        selected = _loadOrder->GetNextSelected(selected);
-    }
-    BOOST_LOG_TRIVIAL(debug) << "Plugin(s) moved up.";
-}
-
-void LoadOrderPreview::OnMoveDown(wxCommandEvent& event) {
-    BOOST_LOG_TRIVIAL(debug) << "Moving plugin(s) down the load order.";
-    long i=_loadOrder->GetItemCount() - 1;
-
-    if (_loadOrder->IsSelected(i))
-        return;
-    --i;
-
-    for (i; i > -1; --i) {
-        if (_loadOrder->IsSelected(i)) {
-            wxString selectedText = _loadOrder->GetItemText(i);
-            wxString belowText = _loadOrder->GetItemText(i + 1);
-
-            BOOST_LOG_TRIVIAL(trace) << "Moving plugin \"" << string(selectedText.ToUTF8());
-
-            //Check that move is OK.
-            list<boss::Plugin>::const_iterator selectedPlugin = find(_plugins.begin(), _plugins.end(), boss::Plugin(string(selectedText.ToUTF8())));
-            list<boss::Plugin>::const_iterator belowPlugin = find(_plugins.begin(), _plugins.end(), boss::Plugin(string(belowText.ToUTF8())));
-
-            if (selectedPlugin != _plugins.end() && belowPlugin != _plugins.end()) {
-                if (belowPlugin->MustLoadAfter(*selectedPlugin)) {
-                    BOOST_LOG_TRIVIAL(error) << "Cannot load \"" << belowPlugin->Name() << "\" before \"" << selectedPlugin->Name() << "\".";
-                    wxMessageBox(
-                        FromUTF8(format(loc::translate("Error: Cannot load \"%1%\" before \"%2%\".")) % belowPlugin->Name() % selectedPlugin->Name()),
-                        translate("BOSS: Error"),
-                        wxOK | wxICON_ERROR,
-                        NULL);
-                    continue;
-                }
-            }
-
-            _loadOrder->SetItemText(i, belowText);
-            _loadOrder->SetItemText(i + 1, selectedText);
-
-            _movedPlugins.insert(string(selectedText.ToUTF8()));
-
-            _loadOrder->Select(i, false);
-            _loadOrder->Select(i + 1, true);
-        }
-    }
-    BOOST_LOG_TRIVIAL(debug) << "Plugin(s) moved down.";
-}
-
-std::list<boss::Plugin> LoadOrderPreview::GetLoadOrder() const {
-    BOOST_LOG_TRIVIAL(debug) << "Getting full load order from preview window.";
-    list<boss::Plugin> plugins;
-    bool wasMovedUp = false;
-    for (size_t i=0,max=_loadOrder->GetItemCount(); i < max; ++i) {
-        string name = string(_loadOrder->GetItemText(i).ToUTF8());
-
-        list<boss::Plugin>::const_iterator it = find(_plugins.begin(), _plugins.end(), boss::Plugin(name));
-
-        if (it == _plugins.end())
-            continue;
-
-        plugins.push_back(*it);
-
-        if (wasMovedUp) {
-            BOOST_LOG_TRIVIAL(trace) << "The previous plugin was moved up in the load order, so adding it to the 'load after' set for the current plugin.";
-            list<boss::Plugin>::const_iterator jt = ----plugins.end();
-            set<boss::File> loadAfter = plugins.back().LoadAfter();
-            loadAfter.insert(File(jt->Name()));
-            plugins.back().LoadAfter(loadAfter);
-            wasMovedUp = false;
-        }
-
-        if (_movedPlugins.find(name) != _movedPlugins.end()) {
-            BOOST_LOG_TRIVIAL(trace) << "The current plugin was moved - checking if it was moved up or down.";
-            //Check if this plugin has been moved earlier or later by comparing distances in the original list and the new one.
-            size_t newDist = plugins.size() - 1;
-            size_t oldDist = distance(_plugins.begin(), it);
-
-            if (newDist > oldDist) {
-                BOOST_LOG_TRIVIAL(trace) << "The current plugin was moved down, add the preceding plugin to the current plugin's 'load after' set.";
-                //Record the preceding plugin in this plugin's "load after" set.
-                list<boss::Plugin>::const_iterator jt = ----plugins.end();
-                set<boss::File> loadAfter = plugins.back().LoadAfter();
-                loadAfter.insert(File(jt->Name()));
-                plugins.back().LoadAfter(loadAfter);
-            } else {
-                BOOST_LOG_TRIVIAL(trace) << "The current plugin was moved up.";
-                //Record this plugin in the following plugin's "load after" set.
-                wasMovedUp = true;
-            }
-        }
-    }
-
-    return plugins;
 }
