@@ -235,8 +235,11 @@ void MiniEditor::OnPluginSelect(wxListEvent& event) {
         BOOST_LOG_TRIVIAL(debug) << "User selected plugin: " << selectedPlugin.ToUTF8();
 
         //Apply any current edits.
-        if (!currentPlugin.empty())
+        if (!currentPlugin.empty()) {
             ApplyEdits(currentPlugin, pluginList);
+            //Also update the item's priority value in the plugins list in case it has changed.
+            pluginList->SetItem(pluginList->FindItem(-1, currentPlugin), 1, FromUTF8(boss::IntToString(prioritySpin->GetValue())));
+        }
 
         //Merge metadata.
         boss::Plugin plugin = GetMasterData(selectedPlugin);
@@ -269,15 +272,26 @@ void MiniEditor::OnPluginSelect(wxListEvent& event) {
 }
 
 void MiniEditor::OnFilterToggle(wxCommandEvent& event) {
+    //First need to merge the base and edited plugin lists so that the right priority values get displayed.
+
+    list<boss::Plugin> plugins;
+    for (list<boss::Plugin>::const_iterator it = _basePlugins.begin(); it != _basePlugins.end(); ++it) {
+        plugins.push_back(*it);
+    }
+    for (list<boss::Plugin>::const_iterator it = _editedPlugins.begin(); it != _editedPlugins.end(); ++it) {
+        list<boss::Plugin>::iterator pos = std::find(plugins.begin(), plugins.end(), *it);
+        pos->MergeMetadata(*it);
+    }
+
     if (event.IsChecked()) {
         boss::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
-        list<boss::Plugin>::const_iterator pos = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
+        list<boss::Plugin>::const_iterator pos = std::find(plugins.begin(), plugins.end(), plugin);
 
-        if (pos != _basePlugins.end()) {
+        if (pos != plugins.end()) {
             pluginList->DeleteAllItems();
 
             int i = 0;
-            for (list<boss::Plugin>::const_iterator it = _basePlugins.begin(); it != _basePlugins.end(); ++it) {
+            for (list<boss::Plugin>::const_iterator it = plugins.begin(); it != plugins.end(); ++it) {
                 if (pos->DoFormIDsOverlap(*it)) {
                     pluginList->InsertItem(i, FromUTF8(it->Name()));
                     pluginList->SetItem(i, 1, FromUTF8(boss::IntToString(it->Priority())));
@@ -287,6 +301,9 @@ void MiniEditor::OnFilterToggle(wxCommandEvent& event) {
                     else if (it->LoadsBSA(_game)) {
                         pluginList->SetItemTextColour(i, wxColour(0, 142, 219));
                     }
+                    if (std::find(_editedPlugins.begin(), _editedPlugins.end(), *it) != _editedPlugins.end()) {
+                        pluginList->SetItemFont(i, wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT).Bold());
+                    }
                     ++i;
                 }
             }
@@ -295,7 +312,7 @@ void MiniEditor::OnFilterToggle(wxCommandEvent& event) {
     else {
         pluginList->DeleteAllItems();
         int i = 0;
-        for (list<boss::Plugin>::const_iterator it = _basePlugins.begin(); it != _basePlugins.end(); ++it) {
+        for (list<boss::Plugin>::const_iterator it = plugins.begin(); it != plugins.end(); ++it) {
             pluginList->InsertItem(i, FromUTF8(it->Name()));
             pluginList->SetItem(i, 1, FromUTF8(boss::IntToString(it->Priority())));
             if (it->FormIDs().empty()) {
@@ -304,9 +321,15 @@ void MiniEditor::OnFilterToggle(wxCommandEvent& event) {
             else if (it->LoadsBSA(_game)) {
                 pluginList->SetItemTextColour(i, wxColour(0, 142, 219));
             }
+            if (std::find(_editedPlugins.begin(), _editedPlugins.end(), *it) != _editedPlugins.end()) {
+                pluginList->SetItemFont(i, wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT).Bold());
+            }
             ++i;
         }
     }
+
+    //Now re-select the current plugin in the list.
+    pluginList->Select(pluginList->FindItem(-1, pluginText->GetLabelText()));
 }
 
 void MiniEditor::OnRowSelect(wxListEvent& event) {
