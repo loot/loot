@@ -32,6 +32,8 @@
 #include <wx/spinctrl.h>
 #include <wx/notebook.h>
 #include <wx/listctrl.h>
+#include <wx/tglbtn.h>
+#include <wx/dnd.h>
 
 /* Have two versions of the editor: one mini editor that only contains 
    controls for editing the load order related metadata, and a full editor 
@@ -48,6 +50,14 @@
    If a metadata type's corresponding control is not present (ie. in the mini
    editor), then use the immutable plugin entry's metadata for that type.
 */
+
+class TextDropTarget : public wxTextDropTarget {  //Class to override virtual functions.
+public:
+    TextDropTarget(wxListView * owner);
+    virtual bool OnDropText(wxCoord x, wxCoord y, const wxString &data);
+private:
+    wxListView *targetOwner;
+};
 
 class CommonEditor {
 public:
@@ -76,11 +86,14 @@ public:
     void OnPluginSelect(wxListEvent& event);
     void OnRowSelect(wxListEvent& event);
     void OnRemoveRow(wxCommandEvent& event);
+    void OnAddRowToggle(wxCommandEvent& event);
     void OnFilterToggle(wxCommandEvent& event);
+    void OnDragStart(wxListEvent& event);
 
     const std::list<boss::Plugin>& GetEditedPlugins() const;
 private:
     wxListView * pluginList;
+    wxToggleButton * addBtn;
     wxButton * removeBtn;
     wxListView * loadAfterList;
     wxCheckBox * filterCheckbox;

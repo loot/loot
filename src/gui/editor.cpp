@@ -34,6 +34,19 @@
 
 using namespace std;
 
+//////////////////////////////
+// TextDropTarget class
+//////////////////////////////
+
+TextDropTarget::TextDropTarget(wxListView * owner) {
+    targetOwner = owner;
+}
+
+bool TextDropTarget::OnDropText(wxCoord x, wxCoord y, const wxString &data) {
+    targetOwner->InsertItem(targetOwner->GetItemCount(), data);
+    return true;
+}
+
 ///////////////////////////////////
 // Common Editor Class
 ///////////////////////////////////
@@ -145,8 +158,10 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
     
     pluginList = new wxListView(this, LIST_Plugins, wxDefaultPosition, wxDefaultSize, wxLC_REPORT | wxLC_SINGLE_SEL);
     loadAfterList = new wxListView(this, LIST_LoadAfter, wxDefaultPosition, wxDefaultSize, wxLC_REPORT | wxLC_SINGLE_SEL);
+    loadAfterList->SetDropTarget(new TextDropTarget(loadAfterList));
 
-    removeBtn = new wxButton(this, BUTTON_RemoveRow, translate("Remove"));
+    addBtn = new wxToggleButton(this, BUTTON_AddRow, translate("Add Plugin(s)..."));
+    removeBtn = new wxButton(this, BUTTON_RemoveRow, translate("Remove Plugin"));
 
     //Set up list columns.
     pluginList->AppendColumn(translate("Plugin"));
@@ -159,6 +174,7 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
     loadAfterList->SetColumnWidth(2, 0);  //Hide this from the user.
     
     //Initialise control states.
+    addBtn->Enable(false);
     removeBtn->Enable(false);
     prioritySpin->Enable(false);
     filterCheckbox->Enable(false);
@@ -168,8 +184,10 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
 
     //Set up event handling.
     Bind(wxEVT_LIST_ITEM_SELECTED, &MiniEditor::OnPluginSelect, this, LIST_Plugins);
+    Bind(wxEVT_LIST_BEGIN_DRAG, &MiniEditor::OnDragStart, this, LIST_Plugins);
     Bind(wxEVT_LIST_ITEM_SELECTED, &MiniEditor::OnRowSelect, this, LIST_LoadAfter);
     Bind(wxEVT_BUTTON, &MiniEditor::OnRemoveRow, this, BUTTON_RemoveRow);
+    Bind(wxEVT_TOGGLEBUTTON, &MiniEditor::OnAddRowToggle, this, BUTTON_AddRow);
     Bind(wxEVT_CHECKBOX, &MiniEditor::OnFilterToggle, this);
 
     //Set up layout.
@@ -187,11 +205,15 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
     wxBoxSizer * hbox2 = new wxBoxSizer(wxHORIZONTAL);
     hbox2->Add(new wxStaticText(this, wxID_ANY, translate("Priority: ")), 0, wxALIGN_RIGHT | wxLEFT | wxRIGHT, 5);
     hbox2->Add(prioritySpin, 0, wxALIGN_RIGHT);
-    mainBox->Add(hbox2, 0, wxEXPAND | wxALIGN_RIGHT | wxTOP | wxBOTTOM, 10);
+    mainBox->Add(hbox2, 0, wxEXPAND | wxALIGN_RIGHT | wxBOTTOM, 10);
 
-    //mainBox->Add(new wxStaticText(this, wxID_ANY, translate("Load After")), 0, wxTOP | wxBOTTOM, 10);
-    mainBox->Add(loadAfterList, 1, wxEXPAND);
-    mainBox->Add(removeBtn, 0, wxTOP | wxBOTTOM | wxALIGN_RIGHT, 10);
+    wxStaticBoxSizer * staticBox = new wxStaticBoxSizer(wxVERTICAL, this, translate("Load After"));
+    staticBox->Add(loadAfterList, 1, wxEXPAND);
+    wxBoxSizer * hbox3 = new wxBoxSizer(wxHORIZONTAL);
+    hbox3->Add(addBtn, 0, wxRIGHT, 10);
+    hbox3->Add(removeBtn);
+    staticBox->Add(hbox3, 0, wxEXPAND | wxALIGN_RIGHT | wxTOP, 10);
+    mainBox->Add(staticBox, 1, wxEXPAND);
 
     hBox->Add(mainBox, 1, wxEXPAND | wxTOP | wxBOTTOM | wxRIGHT, 10);
     bigBox->Add(hBox, 1, wxEXPAND | wxALL, 5);
@@ -266,6 +288,7 @@ void MiniEditor::OnPluginSelect(wxListEvent& event) {
         //Set control states.
         prioritySpin->Enable(true);
         filterCheckbox->Enable(true);
+        addBtn->Enable(true);
         removeBtn->Enable(false);
     }
     Fit();
@@ -356,9 +379,25 @@ void MiniEditor::OnRowSelect(wxListEvent& event) {
     }
 }
 
+void MiniEditor::OnAddRowToggle(wxCommandEvent& event) {
+    //This exists because drag 'n' drop selects plugins when they're clicked on, and we
+    //don't want them being loaded.
+    if (event.IsChecked())
+        Unbind(wxEVT_LIST_ITEM_SELECTED, &MiniEditor::OnPluginSelect, this, LIST_Plugins);
+    else
+        Bind(wxEVT_LIST_ITEM_SELECTED, &MiniEditor::OnPluginSelect, this, LIST_Plugins);
+}
+
 void MiniEditor::OnRemoveRow(wxCommandEvent& event) {
     loadAfterList->DeleteItem(loadAfterList->GetFirstSelected());
     removeBtn->Enable(false);
+}
+
+void MiniEditor::OnDragStart(wxListEvent& event) {
+    wxTextDataObject data(pluginList->GetItemText(event.GetItem()));
+    wxDropSource dropSource(pluginList);
+    dropSource.SetData(data);
+    wxDragResult result = dropSource.DoDragDrop();
 }
 
 const std::list<boss::Plugin>& MiniEditor::GetEditedPlugins() const {
