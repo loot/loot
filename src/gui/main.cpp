@@ -602,6 +602,10 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     wxProgressDialog *progDia = new wxProgressDialog(translate("BOSS: Working..."),translate("BOSS working..."), 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_ELAPSED_TIME);
 
+    ///////////////////////////////////////////////////////
+    // Load Plugins & Lists
+    ///////////////////////////////////////////////////////
+
     bool doUpdate = _settings["Update Masterlist"] && _settings["Update Masterlist"].as<bool>();
     masterlist_updater_parser mup(doUpdate, _game, messages, mlist_plugins, mlist_messages, revision);
     group.create_thread(mup);
@@ -660,6 +664,10 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     }
 
     progDia->Pulse();
+
+    ///////////////////////////////////////////////////////
+    // Merge & Check Metadata
+    ///////////////////////////////////////////////////////
 
     if (fs::exists(_game.MasterlistPath()) || fs::exists(_game.UserlistPath())) {
 
@@ -750,6 +758,20 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     progDia->Pulse();
 
+    ///////////////////////////////////////////////////////
+    // Build Graph Edges & Sort
+    ///////////////////////////////////////////////////////
+
+    /* Need to loop this section. There are 3 ways to exit the loop:
+    
+    1. Accept the load order at the preview with no changes.
+    2. Cancel at the preview. 
+    3. Cancel making changes.
+
+    Otherwise, the sorting must loop.
+    
+    */
+
     BOOST_LOG_TRIVIAL(debug) << "Building the plugin dependency graph...";
 
     //Now add the interactions between plugins to the graph as edges.
@@ -778,92 +800,88 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         BOOST_LOG_TRIVIAL(debug) << "Displaying load order preview.";
         LoadOrderPreview preview(this, translate("BOSS: Calculated Load Order"), plugins, _game);
 
-        if (preview.ShowModal() == wxID_OK) {
-            BOOST_LOG_TRIVIAL(debug) << "Load order accepted.";
-            list<boss::Plugin> newPluginsList, editedPlugins;
-            /*newPluginsList = preview.GetLoadOrder();
+        long ret = preview.ShowModal();
 
-            BOOST_LOG_TRIVIAL(trace) << "Building list of edited plugins.";
-            for (list<boss::Plugin>::iterator it=newPluginsList.begin(),endit=newPluginsList.end(); it != endit; ++it) {
-                list<boss::Plugin>::const_iterator jt = find(plugins.begin(), plugins.end(), *it);
+        if (ret == wxID_YES) {
+            preview.Close();
+            //User wants to make changes. Need to display editor and loop around again.
 
-                if (jt == plugins.end())
-                    continue;
+            MiniEditor editor(this, translate("BOSS: Mini Editor"), plugins, _game);
 
-                boss::Plugin diff = it->DiffMetadata(*jt);
+            ret = editor.ShowModal();
 
-                if (!diff.HasNameOnly())
-                    editedPlugins.push_back(diff);
-            }
-            plugins.swap(newPluginsList);
+            if (ret == wxID_APPLY) {
+                //User accepted edits, now apply them, then loop.
+                const std::list<boss::Plugin> edits = editor.GetEditedPlugins();
 
-            if (!editedPlugins.empty()) {
+                if (!edits.empty()) {
+                    //Apply edits to the graph vertices.
+                    boss::vertex_it vit, vitend;
+                    for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
+                        std::list<boss::Plugin>::const_iterator pos = std::find(edits.begin(), edits.end(), graph[*vit]);
 
-                BOOST_LOG_TRIVIAL(trace) << "Merging down edits to the userlist.";
-                for (list<boss::Plugin>::const_iterator it=editedPlugins.begin(),endit=editedPlugins.end(); it != endit; ++it) {
-                    list<boss::Plugin>::iterator jt = find(ulist_plugins.begin(), ulist_plugins.end(), *it);
-
-                    if (jt != ulist_plugins.end()) {
-                        jt->MergeMetadata(*it);
-                    } else {
-                        ulist_plugins.push_back(*it);
+                        if (pos != edits.end()) {
+                            BOOST_LOG_TRIVIAL(trace) << "Merging edits down to plugin list data.";
+                            graph[*vit].MergeMetadata(*pos);
+                        }
                     }
-                }
 
-                BOOST_LOG_TRIVIAL(trace) << "Checking that any pre-existing 'load after' entries in the userlist are still valid.";
-                for (list<boss::Plugin>::iterator it=ulist_plugins.begin(),endit=ulist_plugins.end(); it != endit; ++it) {
-                    //Double-check that the plugin is still loading after any other plugins already in its "load after" metadata.
-                    list<boss::Plugin>::iterator mainPos = find(plugins.begin(), plugins.end(), *it);
+                    //Clear all existing edges from the graph.
 
-                    if (mainPos == plugins.end())
-                        continue;
+                    //Save edits to the userlist.
+                    BOOST_LOG_TRIVIAL(trace) << "Merging down edits to the userlist.";
+                    for (list<boss::Plugin>::const_iterator it = edits.begin(), endit = edits.end(); it != endit; ++it) {
+                        list<boss::Plugin>::iterator jt = find(ulist_plugins.begin(), ulist_plugins.end(), *it);
 
-                    size_t mainDist = distance(plugins.begin(), mainPos);
-
-                    set<boss::File> loadAfter = it->LoadAfter();
-                    set<boss::File>::iterator jt = loadAfter.begin();
-                    while (jt != loadAfter.end()) {
-                        list<boss::Plugin>::iterator filePos = find(plugins.begin(), plugins.end(), *jt);
-
-                        size_t fileDist = distance(plugins.begin(), filePos);
-
-                        if (fileDist > mainDist)
-                            loadAfter.erase(jt++);
-                        else
-                            ++jt;
+                        if (jt != ulist_plugins.end()) {
+                            jt->MergeMetadata(*it);
+                        }
+                        else {
+                            ulist_plugins.push_back(*it);
+                        }
                     }
-                    it->LoadAfter(loadAfter);
+
+                    //Save edits to userlist.
+                    BOOST_LOG_TRIVIAL(debug) << "Saving edited userlist.";
+                    YAML::Emitter yout;
+                    yout.SetIndent(2);
+                    yout << YAML::BeginMap
+                        << YAML::Key << "plugins" << YAML::Value << ulist_plugins
+                        << YAML::EndMap;
+
+                    boss::ofstream uout(_game.UserlistPath());
+                    uout << yout.c_str();
+                    uout.close();
+
+                    //Now loop.
                 }
-
-                //Save edits to userlist.
-                BOOST_LOG_TRIVIAL(debug) << "Saving edited userlist.";
-                YAML::Emitter yout;
-                yout.SetIndent(2);
-                yout << YAML::BeginMap
-                     << YAML::Key << "plugins" << YAML::Value << ulist_plugins
-                     << YAML::EndMap;
-
-                boss::ofstream uout(_game.UserlistPath());
-                uout << yout.c_str();
-                uout.close();
             }
-            */
-            //Now set load order.
+            else {
+                //User decided to cancel editing. Just go straight to displaying the report.
+                BOOST_LOG_TRIVIAL(info) << "The load order calculated was not applied as sorting was canceled.";
+                messages.push_back(boss::Message(boss::g_message_warn, loc::translate("The load order displayed in the Details tab was not applied as sorting was canceled.")));
+            }
+        }
+        else if (ret == wxID_NO) {
+            preview.Close();
+            //User doesn't want to make any changes. Just go straight to applying the load order.
             BOOST_LOG_TRIVIAL(debug) << "Setting load order.";
             try {
                 _game.SetLoadOrder(plugins);
-            } catch (boss::error& e) {
+            }
+            catch (boss::error& e) {
                 BOOST_LOG_TRIVIAL(error) << "Failed to set the load order. Details: " << e.what();
                 messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("Failed to set the load order. Details: %1%")) % e.what()).str()));
             }
-        } else {
+            BOOST_LOG_TRIVIAL(trace) << "Load order set:";
+            for (list<boss::Plugin>::iterator it = plugins.begin(), endIt = plugins.end(); it != endIt; ++it) {
+                BOOST_LOG_TRIVIAL(trace) << '\t' << it->Name();
+            }
+        }
+        else {
+            //User decided to cancel sorting. Just go straight to displaying the report.
             BOOST_LOG_TRIVIAL(info) << "The load order calculated was not applied as sorting was canceled.";
             messages.push_back(boss::Message(boss::g_message_warn, loc::translate("The load order displayed in the Details tab was not applied as sorting was canceled.")));
-        }
-
-        BOOST_LOG_TRIVIAL(trace) << "Load order set:";
-        for (list<boss::Plugin>::iterator it=plugins.begin(), endIt = plugins.end(); it != endIt; ++it) {
-            BOOST_LOG_TRIVIAL(trace) << '\t' << it->Name();
         }
     } catch (std::exception& e) {
         BOOST_LOG_TRIVIAL(error) << "Failed to calculate the load order. Details: " << e.what();
@@ -872,6 +890,10 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         progDia->Destroy();
         progDia = NULL;
     }
+
+    ///////////////////////////////////////////////////////
+    // Build & Display Report
+    ///////////////////////////////////////////////////////
 
     //Read the details section of the previous report, if it exists.
     string oldDetails;
