@@ -317,16 +317,15 @@ void MiniEditor::OnPluginSelect(wxListEvent& event) {
 void MiniEditor::OnFilterToggle(wxCommandEvent& event) {
     //First need to merge the base and edited plugin lists so that the right priority values get displayed.
 
-    list<boss::Plugin> plugins;
-    for (list<boss::Plugin>::const_iterator it = _basePlugins.begin(); it != _basePlugins.end(); ++it) {
-        plugins.push_back(*it);
-    }
+    list<boss::Plugin> plugins(_basePlugins);
     for (list<boss::Plugin>::const_iterator it = _editedPlugins.begin(); it != _editedPlugins.end(); ++it) {
         list<boss::Plugin>::iterator pos = std::find(plugins.begin(), plugins.end(), *it);
         pos->MergeMetadata(*it);
     }
 
+    Freeze();
     if (event.IsChecked()) {
+        Unbind(wxEVT_LIST_ITEM_SELECTED, &MiniEditor::OnPluginSelect, this, LIST_Plugins);
         boss::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
         list<boss::Plugin>::const_iterator pos = std::find(plugins.begin(), plugins.end(), plugin);
 
@@ -353,6 +352,7 @@ void MiniEditor::OnFilterToggle(wxCommandEvent& event) {
         }
     }
     else {
+        Bind(wxEVT_LIST_ITEM_SELECTED, &MiniEditor::OnPluginSelect, this, LIST_Plugins);
         pluginList->DeleteAllItems();
         int i = 0;
         for (list<boss::Plugin>::const_iterator it = plugins.begin(); it != plugins.end(); ++it) {
@@ -373,6 +373,7 @@ void MiniEditor::OnFilterToggle(wxCommandEvent& event) {
 
     //Now re-select the current plugin in the list.
     pluginList->Select(pluginList->FindItem(-1, pluginText->GetLabelText()));
+    Thaw();
 }
 
 void MiniEditor::OnRowSelect(wxListEvent& event) {
