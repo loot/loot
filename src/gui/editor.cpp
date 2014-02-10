@@ -148,13 +148,13 @@ boss::PluginDirtyInfo CommonEditor::RowToPluginDirtyInfo(wxListView * list, long
 ///////////////////////////////////
 
 
-MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<boss::Plugin>& plugins, const boss::Game& game) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER), CommonEditor(plugins, game) {
+MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<boss::Plugin>& plugins, const boss::Game& game) : wxDialog(parent, wxID_ANY, title), CommonEditor(plugins, game) {
     //Initialise editing panel.
     editingPanel = new wxPanel(this, wxID_ANY);
 
     //Initialise controls.
     pluginText = new wxStaticText(editingPanel, wxID_ANY, "");
-    descText = new wxStaticText(this, wxID_ANY, translate("Please submit any edits made for reasons other than personal preference \nto the BOSS team so that they may be included in the masterlist."));
+    descText = new wxStaticText(this, wxID_ANY, translate("Please submit any edits made for reasons other than personal preference to the BOSS team so that they may be included in the masterlist."));
     prioritySpin = new wxSpinCtrl(editingPanel, wxID_ANY, "0");
     prioritySpin->SetRange(std::numeric_limits<int>::min(), std::numeric_limits<int>::max());
     filterCheckbox = new wxCheckBox(editingPanel, wxID_ANY, translate("Show only conflicting plugins."));
@@ -197,14 +197,14 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
     mainBox->Add(filterCheckbox, 0, wxTOP | wxBOTTOM, 10);
 
     wxBoxSizer * hbox2 = new wxBoxSizer(wxHORIZONTAL);
-    hbox2->Add(new wxStaticText(editingPanel, wxID_ANY, translate("Priority: ")), 0, wxALIGN_RIGHT | wxLEFT | wxRIGHT, 5);
-    hbox2->Add(prioritySpin, 0, wxALIGN_RIGHT);
-    mainBox->Add(hbox2, 0, wxEXPAND | wxALIGN_RIGHT | wxBOTTOM, 10);
+    hbox2->Add(new wxStaticText(editingPanel, wxID_ANY, translate("Priority: ")), 0, wxRIGHT, 5);
+    hbox2->Add(prioritySpin);
+    mainBox->Add(hbox2, 0, wxEXPAND | wxBOTTOM, 10);
 
     wxStaticBoxSizer * staticBox = new wxStaticBoxSizer(wxVERTICAL, editingPanel, translate("Load After"));
-    staticBox->Add(loadAfterList, 1, wxEXPAND);
+    staticBox->Add(loadAfterList, 0, wxEXPAND);
     staticBox->Add(removeBtn, 0, wxEXPAND | wxALIGN_RIGHT | wxTOP, 5);
-    mainBox->Add(staticBox, 1, wxEXPAND);
+    mainBox->Add(staticBox, 0, wxEXPAND);
 
     editingPanel->SetSizerAndFit(mainBox);
     editingPanel->Layout();
@@ -213,9 +213,9 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
     wxBoxSizer * bigBox = new wxBoxSizer(wxVERTICAL);
 
     wxBoxSizer * hBox = new wxBoxSizer(wxHORIZONTAL);
-    hBox->Add(pluginList, 1, wxEXPAND | wxALL, 10);
-    hBox->Add(editingPanel, 1, wxEXPAND | wxTOP | wxBOTTOM | wxRIGHT, 10);
-    bigBox->Add(hBox, 1, wxEXPAND | wxALL, 5);
+    hBox->Add(pluginList, 0, wxEXPAND | wxALL, 10);
+    hBox->Add(editingPanel, 0, wxEXPAND | wxTOP | wxBOTTOM | wxRIGHT, 10);
+    bigBox->Add(hBox, 0, wxEXPAND | wxALL, 5);
 
     bigBox->Add(descText, 0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 15);
 
@@ -241,6 +241,7 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
     }
     pluginList->SetColumnWidth(0, wxLIST_AUTOSIZE);
     pluginList->SetColumnWidth(1, 0);
+    descText->Wrap(pluginList->GetClientSize().GetWidth());
 
     SetBackgroundColour(wxColour(255, 255, 255));
     SetIcon(wxIconLocation("BOSS.exe"));
@@ -251,13 +252,6 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
 }
 
 void MiniEditor::OnPluginSelect(wxListEvent& event) {
-    //Change layout.
-    pluginList->SetColumnWidth(1, wxLIST_AUTOSIZE_USEHEADER);
-    pluginList->InvalidateBestSize();
-    if (!editingPanel->IsShown())
-        editingPanel->Show();
-    Refresh();
-
     //Create Plugin object for selected plugin.
     wxString selectedPlugin = pluginList->GetItemText(event.GetIndex());
     wxString currentPlugin = pluginText->GetLabelText();
@@ -300,10 +294,24 @@ void MiniEditor::OnPluginSelect(wxListEvent& event) {
         filterCheckbox->Enable(true);
         removeBtn->Enable(false);
     }
-    editingPanel->InvalidateBestSize();
+
+    //Change layout.
+    if (pluginList->GetColumnWidth(1) == 0)
+        pluginList->SetColumnWidth(1, wxLIST_AUTOSIZE_USEHEADER);
+    if (!editingPanel->IsShown())
+        editingPanel->Show();
+
+    //Do all the horrible fitting. Still haven't managed to set a min size for the editing controls.
+    pluginList->InvalidateBestSize();  //Makes the priority column visible without scrolling.
+    //pluginText->InvalidateBestSize();
+    //pluginText->Layout();
     editingPanel->Fit();
-    editingPanel->SetMinSize(editingPanel->GetSize());
+    InvalidateBestSize();
+    //descText->Wrap(descText->GetSize().GetWidth());
     Fit();
+    //Layout();
+    // int width = GetClientSize().GetWidth();
+    //descText->SetSize(width, descText->GetSize().GetHeight());
 }
 
 void MiniEditor::OnFilterToggle(wxCommandEvent& event) {
