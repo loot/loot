@@ -129,13 +129,4 @@ private:
     wxSpinCtrl * _nav;
     wxTextCtrl * _utility;
 };
-
-class LoadOrderPreview : public wxDialog {
-public:
-    LoadOrderPreview(wxWindow *parent, const wxString title, const std::list<boss::Plugin>& plugins, const boss::Game& game);
-
-    void OnYesNo(wxCommandEvent& event);
-private:
-    wxListView * _loadOrder;
-};
 #endif

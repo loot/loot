@@ -94,12 +94,15 @@ public:
     const std::list<boss::Plugin>& GetEditedPlugins() const;
 private:
     wxListView * pluginList;
+    wxPanel * editingPanel;
     wxToggleButton * addBtn;
     wxButton * removeBtn;
     wxListView * loadAfterList;
     wxCheckBox * filterCheckbox;
     wxSpinCtrl * prioritySpin;
     wxStaticText * pluginText;
+
+    wxString lastSelected;
 
     boss::Plugin GetNewData(const wxString& plugin) const;
 };

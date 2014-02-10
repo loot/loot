@@ -801,77 +801,67 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             progDia = NULL;
 
             BOOST_LOG_TRIVIAL(debug) << "Displaying load order preview.";
-            LoadOrderPreview preview(this, translate("BOSS: Calculated Load Order"), plugins, _game);
+            MiniEditor editor(this, translate("BOSS: Calculated Load Order"), plugins, _game);
 
-            long ret = preview.ShowModal();
+            long ret = editor.ShowModal();
+            const std::list<boss::Plugin> edits = editor.GetEditedPlugins();
 
-            applyLoadOrder = ret == wxID_NO;
-            if (ret != wxID_YES)
+            if (ret != wxID_APPLY) {
+                applyLoadOrder = false;
                 break;
+            } 
+            else if (edits.empty()) {
+                applyLoadOrder = true;
+                break;
+            }
             else {
-                //User wants to make changes. Need to display editor and loop around again.
+                //Recreate progress dialog.
+                progDia = new wxProgressDialog(translate("BOSS: Working..."), translate("BOSS working..."), 1000, this, wxPD_APP_MODAL | wxPD_AUTO_HIDE | wxPD_ELAPSED_TIME);
 
-                MiniEditor editor(this, translate("BOSS: Mini Editor"), plugins, _game);
+                //User accepted edits, now apply them, then loop.
+                //Apply edits to the graph vertices.
+                boss::vertex_it vit, vitend;
+                for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
+                    std::list<boss::Plugin>::const_iterator pos = std::find(edits.begin(), edits.end(), graph[*vit]);
 
-                ret = editor.ShowModal();
-                const std::list<boss::Plugin> edits = editor.GetEditedPlugins();
-
-                if (ret != wxID_APPLY)
-                    break;
-                else if (edits.empty()) {
-                    //No edits were actually made, so just go straight to applying the load order.
-                    applyLoadOrder = true;
-                    break;
+                    if (pos != edits.end()) {
+                        BOOST_LOG_TRIVIAL(trace) << "Merging edits down to plugin list data.";
+                        graph[*vit].MergeMetadata(*pos);
+                    }
                 }
-                else {
-                    //Recreate progress dialog.
-                    progDia = new wxProgressDialog(translate("BOSS: Working..."), translate("BOSS working..."), 1000, this, wxPD_APP_MODAL | wxPD_AUTO_HIDE | wxPD_ELAPSED_TIME);
 
-                    //User accepted edits, now apply them, then loop.
-                    //Apply edits to the graph vertices.
-                    boss::vertex_it vit, vitend;
-                    for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
-                        std::list<boss::Plugin>::const_iterator pos = std::find(edits.begin(), edits.end(), graph[*vit]);
-
-                        if (pos != edits.end()) {
-                            BOOST_LOG_TRIVIAL(trace) << "Merging edits down to plugin list data.";
-                            graph[*vit].MergeMetadata(*pos);
-                        }
-                    }
-
-                    //Clear all existing edges from the graph.
-                    std::pair<edge_it, edge_it> edge_range = boost::edges(graph);
-                    for (edge_it it = edge_range.first; it != edge_range.second; ++it) {
-                        boost::remove_edge(*it, graph);
-                    }
-
-                    //Merge edits down to the userlist entries.
-                    BOOST_LOG_TRIVIAL(trace) << "Merging down edits to the userlist.";
-                    for (list<boss::Plugin>::const_iterator it = edits.begin(), endit = edits.end(); it != endit; ++it) {
-                        list<boss::Plugin>::iterator jt = find(ulist_plugins.begin(), ulist_plugins.end(), *it);
-
-                        if (jt != ulist_plugins.end()) {
-                            jt->MergeMetadata(*it);
-                        }
-                        else {
-                            ulist_plugins.push_back(*it);
-                        }
-                    }
-
-                    //Save edits to userlist.
-                    BOOST_LOG_TRIVIAL(debug) << "Saving edited userlist.";
-                    YAML::Emitter yout;
-                    yout.SetIndent(2);
-                    yout << YAML::BeginMap
-                        << YAML::Key << "plugins" << YAML::Value << ulist_plugins
-                        << YAML::EndMap;
-
-                    boss::ofstream uout(_game.UserlistPath());
-                    uout << yout.c_str();
-                    uout.close();
-
-                    //Now loop.
+                //Clear all existing edges from the graph.
+                std::pair<edge_it, edge_it> edge_range = boost::edges(graph);
+                for (edge_it it = edge_range.first; it != edge_range.second; ++it) {
+                    boost::remove_edge(*it, graph);
                 }
+
+                //Merge edits down to the userlist entries.
+                BOOST_LOG_TRIVIAL(trace) << "Merging down edits to the userlist.";
+                for (list<boss::Plugin>::const_iterator it = edits.begin(), endit = edits.end(); it != endit; ++it) {
+                    list<boss::Plugin>::iterator jt = find(ulist_plugins.begin(), ulist_plugins.end(), *it);
+
+                    if (jt != ulist_plugins.end()) {
+                        jt->MergeMetadata(*it);
+                    }
+                    else {
+                        ulist_plugins.push_back(*it);
+                    }
+                }
+
+                //Save edits to userlist.
+                BOOST_LOG_TRIVIAL(debug) << "Saving edited userlist.";
+                YAML::Emitter yout;
+                yout.SetIndent(2);
+                yout << YAML::BeginMap
+                    << YAML::Key << "plugins" << YAML::Value << ulist_plugins
+                    << YAML::EndMap;
+
+                boss::ofstream uout(_game.UserlistPath());
+                uout << yout.c_str();
+                uout.close();
+
+                //Now loop.
             }
         } while (true);
 

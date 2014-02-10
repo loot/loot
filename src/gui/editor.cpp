@@ -106,7 +106,6 @@ void CommonEditor::ApplyEdits(const wxString& plugin, wxListView * wxList) {
     }
 }
 
-
 boss::File CommonEditor::RowToFile(wxListView * list, long row) const {
     return boss::File(
         string(list->GetItemText(row, 0).ToUTF8()),
@@ -150,18 +149,21 @@ boss::PluginDirtyInfo CommonEditor::RowToPluginDirtyInfo(wxListView * list, long
 
 
 MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<boss::Plugin>& plugins, const boss::Game& game) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER), CommonEditor(plugins, game) {
+    //Initialise editing panel.
+    editingPanel = new wxPanel(this, wxID_ANY);
+
     //Initialise controls.
-    pluginText = new wxStaticText(this, wxID_ANY, "");
-    prioritySpin = new wxSpinCtrl(this, wxID_ANY, "0");
+    pluginText = new wxStaticText(editingPanel, wxID_ANY, "");
+    prioritySpin = new wxSpinCtrl(editingPanel, wxID_ANY, "0");
     prioritySpin->SetRange(std::numeric_limits<int>::min(), std::numeric_limits<int>::max());
-    filterCheckbox = new wxCheckBox(this, wxID_ANY, translate("Show only conflicting plugins."));
+    filterCheckbox = new wxCheckBox(editingPanel, wxID_ANY, translate("Show only conflicting plugins."));
     
     pluginList = new wxListView(this, LIST_Plugins, wxDefaultPosition, wxDefaultSize, wxLC_REPORT | wxLC_SINGLE_SEL);
-    loadAfterList = new wxListView(this, LIST_LoadAfter, wxDefaultPosition, wxDefaultSize, wxLC_REPORT | wxLC_SINGLE_SEL);
+    loadAfterList = new wxListView(editingPanel, LIST_LoadAfter, wxDefaultPosition, wxDefaultSize, wxLC_REPORT | wxLC_SINGLE_SEL);
     loadAfterList->SetDropTarget(new TextDropTarget(loadAfterList));
 
-    addBtn = new wxToggleButton(this, BUTTON_AddRow, translate("Add Plugin(s)..."));
-    removeBtn = new wxButton(this, BUTTON_RemoveRow, translate("Remove Plugin"));
+    addBtn = new wxToggleButton(editingPanel, BUTTON_AddRow, translate("Add Plugin(s)..."));
+    removeBtn = new wxButton(editingPanel, BUTTON_RemoveRow, translate("Remove Plugin"));
 
     //Set up list columns.
     pluginList->AppendColumn(translate("Plugin"));
@@ -191,24 +193,17 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
     Bind(wxEVT_CHECKBOX, &MiniEditor::OnFilterToggle, this);
     Bind(wxEVT_BUTTON, &MiniEditor::OnApply, this, wxID_APPLY);
 
-    //Set up layout.
-    wxBoxSizer * bigBox = new wxBoxSizer(wxVERTICAL);
-
-    wxBoxSizer * hBox = new wxBoxSizer(wxHORIZONTAL);
-
-    hBox->Add(pluginList, 0, wxEXPAND | wxALL, 10);
-
+    //Set up editing panel layout.
     wxBoxSizer * mainBox = new wxBoxSizer(wxVERTICAL);
-
     mainBox->Add(pluginText, 0, wxTOP | wxBOTTOM, 10);
     mainBox->Add(filterCheckbox, 0, wxTOP | wxBOTTOM, 10);
 
     wxBoxSizer * hbox2 = new wxBoxSizer(wxHORIZONTAL);
-    hbox2->Add(new wxStaticText(this, wxID_ANY, translate("Priority: ")), 0, wxALIGN_RIGHT | wxLEFT | wxRIGHT, 5);
+    hbox2->Add(new wxStaticText(editingPanel, wxID_ANY, translate("Priority: ")), 0, wxALIGN_RIGHT | wxLEFT | wxRIGHT, 5);
     hbox2->Add(prioritySpin, 0, wxALIGN_RIGHT);
     mainBox->Add(hbox2, 0, wxEXPAND | wxALIGN_RIGHT | wxBOTTOM, 10);
 
-    wxStaticBoxSizer * staticBox = new wxStaticBoxSizer(wxVERTICAL, this, translate("Load After"));
+    wxStaticBoxSizer * staticBox = new wxStaticBoxSizer(wxVERTICAL, editingPanel, translate("Load After"));
     staticBox->Add(loadAfterList, 1, wxEXPAND);
     wxBoxSizer * hbox3 = new wxBoxSizer(wxHORIZONTAL);
     hbox3->Add(addBtn, 0, wxRIGHT, 10);
@@ -216,8 +211,18 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
     staticBox->Add(hbox3, 0, wxEXPAND | wxALIGN_RIGHT | wxTOP, 10);
     mainBox->Add(staticBox, 1, wxEXPAND);
 
-    hBox->Add(mainBox, 1, wxEXPAND | wxTOP | wxBOTTOM | wxRIGHT, 10);
+    editingPanel->SetSizerAndFit(mainBox);
+    editingPanel->Layout();
+
+    //Set up rest of layout.
+    wxBoxSizer * bigBox = new wxBoxSizer(wxVERTICAL);
+
+    wxBoxSizer * hBox = new wxBoxSizer(wxHORIZONTAL);
+    hBox->Add(pluginList, 0, wxEXPAND | wxALL, 10);
+    hBox->Add(editingPanel, 1, wxEXPAND | wxTOP | wxBOTTOM | wxRIGHT, 10);
     bigBox->Add(hBox, 1, wxEXPAND | wxALL, 5);
+
+    bigBox->Add(new wxStaticText(this, wxID_ANY, translate("Do you want to set the load order given above?")));
 
     //Need to add 'Yes' and 'No' buttons.
     wxSizer * sizer = CreateSeparatedButtonSizer(wxAPPLY | wxCANCEL);
@@ -240,18 +245,29 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
         ++i;
     }
     pluginList->SetColumnWidth(0, wxLIST_AUTOSIZE);
+    pluginList->SetColumnWidth(1, 0);
 
     SetBackgroundColour(wxColour(255, 255, 255));
     SetIcon(wxIconLocation("BOSS.exe"));
 
+    editingPanel->Hide();
     SetSizerAndFit(bigBox);
     Layout();
 }
 
 void MiniEditor::OnPluginSelect(wxListEvent& event) {
+    //Change layout.
+    pluginList->SetColumnWidth(1, wxLIST_AUTOSIZE_USEHEADER);
+    pluginList->InvalidateBestSize();
+    if (!editingPanel->IsShown())
+        editingPanel->Show();
+    Refresh();
+
     //Create Plugin object for selected plugin.
     wxString selectedPlugin = pluginList->GetItemText(event.GetIndex());
     wxString currentPlugin = pluginText->GetLabelText();
+
+    //lastSelected = pluginText->GetLabelText();
 
     //Check if the selected plugin is the same as the current plugin.
     if (selectedPlugin != currentPlugin) {
@@ -292,6 +308,9 @@ void MiniEditor::OnPluginSelect(wxListEvent& event) {
         addBtn->Enable(true);
         removeBtn->Enable(false);
     }
+    editingPanel->InvalidateBestSize();
+    editingPanel->Fit();
+    editingPanel->SetMinSize(editingPanel->GetSize());
     Fit();
 }
 
@@ -395,6 +414,9 @@ void MiniEditor::OnRemoveRow(wxCommandEvent& event) {
 }
 
 void MiniEditor::OnDragStart(wxListEvent& event) {
+  //  if (!lastSelected.empty())
+  //      pluginList->Select(pluginList->FindItem(-1, lastSelected));
+
     wxTextDataObject data(pluginList->GetItemText(event.GetItem()));
     wxDropSource dropSource(pluginList);
     dropSource.SetData(data);
