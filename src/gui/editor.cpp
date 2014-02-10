@@ -323,18 +323,27 @@ void MiniEditor::OnFilterToggle(wxCommandEvent& event) {
         pos->MergeMetadata(*it);
     }
 
+    //Disable list selection.
+    if (event.IsChecked() || addBtn->GetValue())
+        Unbind(wxEVT_LIST_ITEM_SELECTED, &MiniEditor::OnPluginSelect, this, LIST_Plugins);
+    else
+        Bind(wxEVT_LIST_ITEM_SELECTED, &MiniEditor::OnPluginSelect, this, LIST_Plugins);
+
     Freeze();
     if (event.IsChecked()) {
-        Unbind(wxEVT_LIST_ITEM_SELECTED, &MiniEditor::OnPluginSelect, this, LIST_Plugins);
         boss::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
         list<boss::Plugin>::const_iterator pos = std::find(plugins.begin(), plugins.end(), plugin);
 
         if (pos != plugins.end()) {
             pluginList->DeleteAllItems();
 
+            bool loadsBSA = pos->LoadsBSA(_game);
+
             int i = 0;
             for (list<boss::Plugin>::const_iterator it = plugins.begin(); it != plugins.end(); ++it) {
-                if (pos->DoFormIDsOverlap(*it)) {
+                //Want to filter to show only those the selected plugin can load after validly, and which also either conflict with it,
+                //or which load a BSA (if the selected plugin loads a BSA).
+                if (!it->MustLoadAfter(*pos) && (pos->DoFormIDsOverlap(*it) || (loadsBSA && it->LoadsBSA(_game)))) {
                     pluginList->InsertItem(i, FromUTF8(it->Name()));
                     pluginList->SetItem(i, 1, FromUTF8(boss::IntToString(it->Priority())));
                     if (it->FormIDs().empty()) {
@@ -352,7 +361,6 @@ void MiniEditor::OnFilterToggle(wxCommandEvent& event) {
         }
     }
     else {
-        Bind(wxEVT_LIST_ITEM_SELECTED, &MiniEditor::OnPluginSelect, this, LIST_Plugins);
         pluginList->DeleteAllItems();
         int i = 0;
         for (list<boss::Plugin>::const_iterator it = plugins.begin(); it != plugins.end(); ++it) {
@@ -403,7 +411,7 @@ void MiniEditor::OnRowSelect(wxListEvent& event) {
 void MiniEditor::OnAddRowToggle(wxCommandEvent& event) {
     //This exists because drag 'n' drop selects plugins when they're clicked on, and we
     //don't want them being loaded.
-    if (event.IsChecked())
+    if (event.IsChecked() || filterCheckbox->IsChecked())
         Unbind(wxEVT_LIST_ITEM_SELECTED, &MiniEditor::OnPluginSelect, this, LIST_Plugins);
     else
         Bind(wxEVT_LIST_ITEM_SELECTED, &MiniEditor::OnPluginSelect, this, LIST_Plugins);
