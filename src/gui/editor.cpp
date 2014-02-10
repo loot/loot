@@ -222,7 +222,7 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
     hBox->Add(editingPanel, 1, wxEXPAND | wxTOP | wxBOTTOM | wxRIGHT, 10);
     bigBox->Add(hBox, 1, wxEXPAND | wxALL, 5);
 
-    bigBox->Add(new wxStaticText(this, wxID_ANY, translate("Do you want to set the load order given above?")));
+    bigBox->Add(new wxStaticText(this, wxID_ANY, translate("Do you want to apply the load order given above?")), 0, wxLEFT|wxRIGHT|wxBOTTOM, 15);
 
     //Need to add 'Yes' and 'No' buttons.
     wxSizer * sizer = CreateSeparatedButtonSizer(wxAPPLY | wxCANCEL);
