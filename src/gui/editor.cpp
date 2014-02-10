@@ -154,6 +154,7 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
 
     //Initialise controls.
     pluginText = new wxStaticText(editingPanel, wxID_ANY, "");
+    descText = new wxStaticText(this, wxID_ANY, translate("Please submit any edits made for reasons other than personal preference \nto the BOSS team so that they may be included in the masterlist."));
     prioritySpin = new wxSpinCtrl(editingPanel, wxID_ANY, "0");
     prioritySpin->SetRange(std::numeric_limits<int>::min(), std::numeric_limits<int>::max());
     filterCheckbox = new wxCheckBox(editingPanel, wxID_ANY, translate("Show only conflicting plugins."));
@@ -212,11 +213,11 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
     wxBoxSizer * bigBox = new wxBoxSizer(wxVERTICAL);
 
     wxBoxSizer * hBox = new wxBoxSizer(wxHORIZONTAL);
-    hBox->Add(pluginList, 0, wxEXPAND | wxALL, 10);
+    hBox->Add(pluginList, 1, wxEXPAND | wxALL, 10);
     hBox->Add(editingPanel, 1, wxEXPAND | wxTOP | wxBOTTOM | wxRIGHT, 10);
     bigBox->Add(hBox, 1, wxEXPAND | wxALL, 5);
 
-    bigBox->Add(new wxStaticText(this, wxID_ANY, translate("Do you want to apply the load order given above?")), 0, wxLEFT|wxRIGHT|wxBOTTOM, 15);
+    bigBox->Add(descText, 0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 15);
 
     //Need to add 'Yes' and 'No' buttons.
     wxSizer * sizer = CreateSeparatedButtonSizer(wxAPPLY | wxCANCEL);

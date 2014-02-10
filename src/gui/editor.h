@@ -100,6 +100,7 @@ private:
     wxCheckBox * filterCheckbox;
     wxSpinCtrl * prioritySpin;
     wxStaticText * pluginText;
+    wxStaticText * descText;
 
     boss::Plugin GetNewData(const wxString& plugin) const;
 };
