@@ -86,7 +86,6 @@ public:
     void OnPluginSelect(wxListEvent& event);
     void OnRowSelect(wxListEvent& event);
     void OnRemoveRow(wxCommandEvent& event);
-    void OnAddRowToggle(wxCommandEvent& event);
     void OnFilterToggle(wxCommandEvent& event);
     void OnDragStart(wxListEvent& event);
     void OnApply(wxCommandEvent& event);
@@ -95,14 +94,11 @@ public:
 private:
     wxListView * pluginList;
     wxPanel * editingPanel;
-    wxToggleButton * addBtn;
     wxButton * removeBtn;
     wxListView * loadAfterList;
     wxCheckBox * filterCheckbox;
     wxSpinCtrl * prioritySpin;
     wxStaticText * pluginText;
-
-    wxString lastSelected;
 
     boss::Plugin GetNewData(const wxString& plugin) const;
 };
