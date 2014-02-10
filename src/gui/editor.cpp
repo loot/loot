@@ -38,11 +38,11 @@ using namespace std;
 // TextDropTarget class
 //////////////////////////////
 
-TextDropTarget::TextDropTarget(wxListView * owner) {
-    targetOwner = owner;
-}
+TextDropTarget::TextDropTarget(wxListView * owner, wxStaticText * name) : targetOwner(owner), targetName(name) {}
 
 bool TextDropTarget::OnDropText(wxCoord x, wxCoord y, const wxString &data) {
+    if (data == targetName->GetLabelText() || targetOwner->FindItem(-1, data) != wxNOT_FOUND)
+        return false;
     targetOwner->InsertItem(targetOwner->GetItemCount(), data);
     return true;
 }
@@ -160,7 +160,7 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
     
     pluginList = new wxListView(this, LIST_Plugins, wxDefaultPosition, wxDefaultSize, wxLC_REPORT | wxLC_SINGLE_SEL);
     loadAfterList = new wxListView(editingPanel, LIST_LoadAfter, wxDefaultPosition, wxDefaultSize, wxLC_REPORT | wxLC_SINGLE_SEL);
-    loadAfterList->SetDropTarget(new TextDropTarget(loadAfterList));
+    loadAfterList->SetDropTarget(new TextDropTarget(loadAfterList, pluginText));
 
     removeBtn = new wxButton(editingPanel, BUTTON_RemoveRow, translate("Remove Plugin"));
 
@@ -334,7 +334,7 @@ void MiniEditor::OnFilterToggle(wxCommandEvent& event) {
             for (list<boss::Plugin>::const_iterator it = plugins.begin(); it != plugins.end(); ++it) {
                 //Want to filter to show only those the selected plugin can load after validly, and which also either conflict with it,
                 //or which load a BSA (if the selected plugin loads a BSA).
-                if (!it->MustLoadAfter(*pos) && (pos->DoFormIDsOverlap(*it) || (loadsBSA && it->LoadsBSA(_game)))) {
+                if (*it == *pos || !it->MustLoadAfter(*pos) && (pos->DoFormIDsOverlap(*it) || (loadsBSA && it->LoadsBSA(_game)))) {
                     pluginList->InsertItem(i, FromUTF8(it->Name()));
                     pluginList->SetItem(i, 1, FromUTF8(boss::IntToString(it->Priority())));
                     if (it->FormIDs().empty()) {

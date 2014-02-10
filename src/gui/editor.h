@@ -53,10 +53,11 @@
 
 class TextDropTarget : public wxTextDropTarget {  //Class to override virtual functions.
 public:
-    TextDropTarget(wxListView * owner);
+    TextDropTarget(wxListView * owner, wxStaticText * name);
     virtual bool OnDropText(wxCoord x, wxCoord y, const wxString &data);
 private:
-    wxListView *targetOwner;
+    wxListView * targetOwner;
+    wxStaticText * targetName;
 };
 
 class CommonEditor {
