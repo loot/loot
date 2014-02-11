@@ -738,16 +738,10 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
             //Also check install validity.
             BOOST_LOG_TRIVIAL(trace) << "Checking that the current install is valid according to this plugin's data.";
-            map<string, bool> issues = graph[*vit].CheckInstallValidity(_game);
+            vector<string> issues = graph[*vit].CheckInstallValidity(_game);
             list<boss::Message> pluginMessages = graph[*vit].Messages();
-            for (map<string,bool>::const_iterator jt=issues.begin(), endJt=issues.end(); jt != endJt; ++jt) {
-                if (jt->second) {
-                    BOOST_LOG_TRIVIAL(error) << "\"" << jt->first << "\" is incompatible with \"" << graph[*vit].Name() << "\" and is present.";
-                    pluginMessages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("\"%1%\" is incompatible with \"%2%\" and is present.")) % jt->first % graph[*vit].Name()).str()));
-                } else {
-                    BOOST_LOG_TRIVIAL(error) << "\"" << jt->first << "\" is required by \"" << graph[*vit].Name() << "\" but is missing.";
-                    pluginMessages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("\"%1%\" is required by \"%2%\" but is missing.")) % jt->first % graph[*vit].Name()).str()));
-                }
+            for (vector<string>::const_iterator jt = issues.begin(), jtend = issues.end(); jt != jtend; ++jt) {
+                pluginMessages.push_back(boss::Message(boss::g_message_error, *jt));
             }
             if (!issues.empty())
                 graph[*vit].Messages(pluginMessages);
