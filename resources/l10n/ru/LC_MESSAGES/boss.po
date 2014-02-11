@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BOSS v3.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-11 09:23-0000\n"
-"PO-Revision-Date: 2014-02-11 22:05+0600\n"
+"POT-Creation-Date: 2014-02-11 17:46-0000\n"
+"PO-Revision-Date: 2014-02-12 00:04+0600\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru\n"
@@ -843,6 +843,14 @@ msgstr "Включено"
 #: backend/generators.h:255
 msgid "Disabled"
 msgstr "Отключено"
+
+#: backend/generators.h:264
+msgid ""
+"There have been no changes in the Details tab since BOSS was last run for "
+"this game."
+msgstr ""
+"Никаких изменений во вкладке Детали, со времени последнего запуска BOSS для "
+"этой игры."
 
 #: backend/generators.h:274
 msgid "General Messages"
