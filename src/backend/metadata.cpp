@@ -741,7 +741,7 @@ namespace boss {
     }
 
     bool alpha_sort(const Plugin& lhs, const Plugin& rhs) {
-        return boost::ilexicographical_compare(lhs.Name(), rhs.Name());
+        return boost::ilexicographical_compare(rhs.Name(), lhs.Name());
     }
 
     bool master_sort(const Plugin& lhs, const Plugin& rhs) {

@@ -25,6 +25,7 @@ set (BOSS_GUI_SRC ${BOSS_SRC}
                   "${CMAKE_SOURCE_DIR}/src/gui/settings.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/editor.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/viewer.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/gui/misc.cpp"
                   "${CMAKE_SOURCE_DIR}/src/resource.rc")
 
 set (BOSS_API_SRC ${BOSS_SRC}

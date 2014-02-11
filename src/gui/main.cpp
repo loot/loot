@@ -24,6 +24,7 @@
 #include "settings.h"
 #include "editor.h"
 #include "viewer.h"
+#include "misc.h"
 
 #include "../backend/globals.h"
 #include "../backend/metadata.h"
@@ -487,6 +488,106 @@ void Launcher::OnClose(wxCloseEvent& event) {
     Destroy();
 }
 
+void Launcher::OnViewLastReport(wxCommandEvent& event) {
+    if (_settings["View Report Externally"] && _settings["View Report Externally"].as<bool>()) {
+        BOOST_LOG_TRIVIAL(debug) << "Opening report in external application...";
+        wxLaunchDefaultBrowser(FromUTF8(ToFileURL(_game.ReportPath().string())));
+    }
+    else {
+        //Create viewer window.
+        BOOST_LOG_TRIVIAL(debug) << "Opening viewer window...";
+        Viewer *viewer = new Viewer(this, translate("BOSS: Report Viewer"), FromUTF8(ToFileURL(_game.ReportPath().string())));
+        viewer->Show();
+    }
+    BOOST_LOG_TRIVIAL(debug) << "Report displayed.";
+}
+
+void Launcher::OnOpenSettings(wxCommandEvent& event) {
+    BOOST_LOG_TRIVIAL(debug) << "Opening settings window...";
+    SettingsFrame *settings = new SettingsFrame(this, translate("BOSS: Settings"), _settings, _games);
+    settings->ShowModal();
+    BOOST_LOG_TRIVIAL(debug) << "Settings window opened.";
+}
+
+void Launcher::OnGameChange(wxCommandEvent& event) {
+    BOOST_LOG_TRIVIAL(debug) << "Changing current game...";
+    _game = _games[event.GetId() - MENU_LowestDynamicGameID];
+    try {
+        _game.Init();  //In case it hasn't already been done.
+        *find(_games.begin(), _games.end(), _game) = _game;  //Sync changes.
+        BOOST_LOG_TRIVIAL(debug) << "New game is " << _game.Name();
+    }
+    catch (boss::error& e) {
+        BOOST_LOG_TRIVIAL(error) << "Game-specific settings could not be initialised." << e.what();
+        wxMessageBox(
+            FromUTF8(format(loc::translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()),
+            translate("BOSS: Error"),
+            wxOK | wxICON_ERROR,
+            NULL);
+    }
+    SetTitle(FromUTF8("BOSS - " + _game.Name()));
+    if (_game.Id() == boss::g_game_tes5)
+        RedatePluginsItem->Enable(true);
+    else
+        RedatePluginsItem->Enable(false);
+}
+
+void Launcher::OnHelp(wxCommandEvent& event) {
+    //Look for file.
+    BOOST_LOG_TRIVIAL(debug) << "Opening readme at: " << g_path_readme;
+    if (fs::exists(g_path_readme)) {
+        wxLaunchDefaultBrowser(FromUTF8(ToFileURL(g_path_readme.string())));
+    }
+    else {  //No readme exists, show a pop-up message saying so.
+        BOOST_LOG_TRIVIAL(error) << "File \"" << g_path_readme.string() << "\" could not be found.";
+        wxMessageBox(
+            FromUTF8(format(loc::translate("Error: \"%1%\" cannot be found.")) % g_path_readme.string()),
+            translate("BOSS: Error"),
+            wxOK | wxICON_ERROR,
+            this);
+    }
+}
+
+void Launcher::OnOpenDebugLog(wxCommandEvent& event) {
+    //Look for file.
+    BOOST_LOG_TRIVIAL(debug) << "Opening debug log at: " << g_path_log;
+    if (fs::exists(g_path_log)) {
+        wxLaunchDefaultApplication(FromUTF8(g_path_log.string()));
+    }
+    else {  //No log exists, show a pop-up message saying so.
+        BOOST_LOG_TRIVIAL(error) << "File \"" << g_path_log.string() << "\" could not be found.";
+        wxMessageBox(
+            FromUTF8(format(loc::translate("Error: \"%1%\" cannot be found.")) % g_path_log.string()),
+            translate("BOSS: Error"),
+            wxOK | wxICON_ERROR,
+            this);
+    }
+}
+
+void Launcher::OnAbout(wxCommandEvent& event) {
+    BOOST_LOG_TRIVIAL(debug) << "Opening About dialog.";
+    wxAboutDialogInfo aboutInfo;
+    aboutInfo.SetName("BOSS");
+    aboutInfo.SetVersion(IntToString(g_version_major) + "." + IntToString(g_version_minor) + "." + IntToString(g_version_patch));
+    aboutInfo.SetDescription(translate("Load order optimisation for Oblivion, Skyrim, Fallout 3 and Fallout: New Vegas."));
+    aboutInfo.SetCopyright("Copyright (C) 2009-2014 BOSS Development Team.");
+    aboutInfo.SetWebSite("http://boss-developers.github.io");
+    aboutInfo.SetLicence("This program is free software: you can redistribute it and/or modify\n"
+        "it under the terms of the GNU General Public License as published by\n"
+        "the Free Software Foundation, either version 3 of the License, or\n"
+        "(at your option) any later version.\n"
+        "\n"
+        "This program is distributed in the hope that it will be useful,\n"
+        "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+        "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+        "GNU General Public License for more details.\n"
+        "\n"
+        "You should have received a copy of the GNU General Public License\n"
+        "along with this program.  If not, see <http://www.gnu.org/licenses/>.");
+    aboutInfo.SetIcon(wxIconLocation("BOSS.exe"));
+    wxAboutBox(aboutInfo);
+}
+
 void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     BOOST_LOG_TRIVIAL(debug) << "Beginning sorting process.";
@@ -500,6 +601,10 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     string revision;
 
     wxProgressDialog *progDia = new wxProgressDialog(translate("BOSS: Working..."),translate("BOSS working..."), 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_ELAPSED_TIME);
+
+    ///////////////////////////////////////////////////////
+    // Load Plugins & Lists
+    ///////////////////////////////////////////////////////
 
     bool doUpdate = _settings["Update Masterlist"] && _settings["Update Masterlist"].as<bool>();
     masterlist_updater_parser mup(doUpdate, _game, messages, mlist_plugins, mlist_messages, revision);
@@ -559,6 +664,10 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     }
 
     progDia->Pulse();
+
+    ///////////////////////////////////////////////////////
+    // Merge & Check Metadata
+    ///////////////////////////////////////////////////////
 
     if (fs::exists(_game.MasterlistPath()) || fs::exists(_game.UserlistPath())) {
 
@@ -649,89 +758,95 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     progDia->Pulse();
 
-    BOOST_LOG_TRIVIAL(debug) << "Building the plugin dependency graph...";
+    ///////////////////////////////////////////////////////
+    // Build Graph Edges & Sort
+    ///////////////////////////////////////////////////////
 
-    //Now add the interactions between plugins to the graph as edges.
-    BOOST_LOG_TRIVIAL(trace) << "Adding non-overlap edges.";
-    AddSpecificEdges(graph);
+    /* Need to loop this section. There are 3 ways to exit the loop:
+    
+    1. Accept the load order at the preview with no changes.
+    2. Cancel at the preview. 
+    3. Cancel making changes.
 
-    BOOST_LOG_TRIVIAL(trace) << "Adding priority edges.";
-    AddPriorityEdges(graph);
-
-    BOOST_LOG_TRIVIAL(trace) << "Adding overlap edges.";
-    AddOverlapEdges(graph);
+    Otherwise, the sorting must loop.
+    
+    */
 
     //Check for back-edges, then perform a topological sort.
     try {
-        BOOST_LOG_TRIVIAL(debug) << "Checking to see if the graph is cyclic.";
-        boss::CheckForCycles(graph);
+        bool applyLoadOrder = false;
+        long ret;
+        do {
+            BOOST_LOG_TRIVIAL(debug) << "Building the plugin dependency graph...";
 
-        progDia->Pulse();
+            //Now add the interactions between plugins to the graph as edges.
+            BOOST_LOG_TRIVIAL(trace) << "Adding non-overlap edges.";
+            AddSpecificEdges(graph);
 
-        BOOST_LOG_TRIVIAL(debug) << "Performing a topological sort.";
-        boss::Sort(graph, plugins);
+            BOOST_LOG_TRIVIAL(trace) << "Adding priority edges.";
+            AddPriorityEdges(graph);
 
-        progDia->Destroy();
-        progDia = NULL;
+            BOOST_LOG_TRIVIAL(trace) << "Adding overlap edges.";
+            AddOverlapEdges(graph);
 
-        BOOST_LOG_TRIVIAL(debug) << "Displaying load order preview.";
-        LoadOrderPreview preview(this, translate("BOSS: Calculated Load Order"), plugins, _game);
+            BOOST_LOG_TRIVIAL(debug) << "Checking to see if the graph is cyclic.";
+            boss::CheckForCycles(graph);
 
-        if (preview.ShowModal() == wxID_OK) {
-            BOOST_LOG_TRIVIAL(debug) << "Load order accepted.";
-            list<boss::Plugin> newPluginsList, editedPlugins;
-            newPluginsList = preview.GetLoadOrder();
+            progDia->Pulse();
 
-            BOOST_LOG_TRIVIAL(trace) << "Building list of edited plugins.";
-            for (list<boss::Plugin>::iterator it=newPluginsList.begin(),endit=newPluginsList.end(); it != endit; ++it) {
-                list<boss::Plugin>::const_iterator jt = find(plugins.begin(), plugins.end(), *it);
+            BOOST_LOG_TRIVIAL(debug) << "Performing a topological sort.";
+            boss::Sort(graph, plugins);
 
-                if (jt == plugins.end())
-                    continue;
+            progDia->Destroy();
+            progDia = NULL;
 
-                boss::Plugin diff = it->DiffMetadata(*jt);
+            BOOST_LOG_TRIVIAL(debug) << "Displaying load order preview.";
+            MiniEditor editor(this, translate("BOSS: Calculated Load Order"), plugins, _game);
 
-                if (!diff.HasNameOnly())
-                    editedPlugins.push_back(diff);
+            long ret = editor.ShowModal();
+            const std::list<boss::Plugin> edits = editor.GetEditedPlugins();
+
+            if (ret != wxID_APPLY) {
+                applyLoadOrder = false;
+                break;
+            } 
+            else if (edits.empty()) {
+                applyLoadOrder = true;
+                break;
             }
-            plugins.swap(newPluginsList);
+            else {
+                //Recreate progress dialog.
+                progDia = new wxProgressDialog(translate("BOSS: Working..."), translate("BOSS working..."), 1000, this, wxPD_APP_MODAL | wxPD_AUTO_HIDE | wxPD_ELAPSED_TIME);
 
-            if (!editedPlugins.empty()) {
+                //User accepted edits, now apply them, then loop.
+                //Apply edits to the graph vertices.
+                boss::vertex_it vit, vitend;
+                for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
+                    std::list<boss::Plugin>::const_iterator pos = std::find(edits.begin(), edits.end(), graph[*vit]);
 
+                    if (pos != edits.end()) {
+                        BOOST_LOG_TRIVIAL(trace) << "Merging edits down to plugin list data.";
+                        graph[*vit].MergeMetadata(*pos);
+                    }
+                }
+
+                //Clear all existing edges from the graph.
+                std::pair<edge_it, edge_it> edge_range = boost::edges(graph);
+                for (edge_it it = edge_range.first; it != edge_range.second; ++it) {
+                    boost::remove_edge(*it, graph);
+                }
+
+                //Merge edits down to the userlist entries.
                 BOOST_LOG_TRIVIAL(trace) << "Merging down edits to the userlist.";
-                for (list<boss::Plugin>::const_iterator it=editedPlugins.begin(),endit=editedPlugins.end(); it != endit; ++it) {
+                for (list<boss::Plugin>::const_iterator it = edits.begin(), endit = edits.end(); it != endit; ++it) {
                     list<boss::Plugin>::iterator jt = find(ulist_plugins.begin(), ulist_plugins.end(), *it);
 
                     if (jt != ulist_plugins.end()) {
                         jt->MergeMetadata(*it);
-                    } else {
+                    }
+                    else {
                         ulist_plugins.push_back(*it);
                     }
-                }
-
-                BOOST_LOG_TRIVIAL(trace) << "Checking that any pre-existing 'load after' entries in the userlist are still valid.";
-                for (list<boss::Plugin>::iterator it=ulist_plugins.begin(),endit=ulist_plugins.end(); it != endit; ++it) {
-                    //Double-check that the plugin is still loading after any other plugins already in its "load after" metadata.
-                    list<boss::Plugin>::iterator mainPos = find(plugins.begin(), plugins.end(), *it);
-
-                    if (mainPos == plugins.end())
-                        continue;
-
-                    size_t mainDist = distance(plugins.begin(), mainPos);
-
-                    set<boss::File> loadAfter = it->LoadAfter();
-                    set<boss::File>::iterator jt = loadAfter.begin();
-                    while (jt != loadAfter.end()) {
-                        list<boss::Plugin>::iterator filePos = find(plugins.begin(), plugins.end(), *jt);
-
-                        size_t fileDist = distance(plugins.begin(), filePos);
-
-                        if (fileDist > mainDist)
-                            loadAfter.erase(jt++);
-                        else
-                            ++jt;
-                    }
-                    it->LoadAfter(loadAfter);
                 }
 
                 //Save edits to userlist.
@@ -739,31 +854,38 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                 YAML::Emitter yout;
                 yout.SetIndent(2);
                 yout << YAML::BeginMap
-                     << YAML::Key << "plugins" << YAML::Value << ulist_plugins
-                     << YAML::EndMap;
+                    << YAML::Key << "plugins" << YAML::Value << ulist_plugins
+                    << YAML::EndMap;
 
                 boss::ofstream uout(_game.UserlistPath());
                 uout << yout.c_str();
                 uout.close();
-            }
 
-            //Now set load order.
+                //Now loop.
+            }
+        } while (true);
+
+        if (applyLoadOrder) {
+            //User doesn't want to make any changes. Just go straight to applying the load order.
             BOOST_LOG_TRIVIAL(debug) << "Setting load order.";
             try {
                 _game.SetLoadOrder(plugins);
-            } catch (boss::error& e) {
+            }
+            catch (boss::error& e) {
                 BOOST_LOG_TRIVIAL(error) << "Failed to set the load order. Details: " << e.what();
                 messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("Failed to set the load order. Details: %1%")) % e.what()).str()));
             }
-        } else {
+            BOOST_LOG_TRIVIAL(trace) << "Load order set:";
+            for (list<boss::Plugin>::iterator it = plugins.begin(), endIt = plugins.end(); it != endIt; ++it) {
+                BOOST_LOG_TRIVIAL(trace) << '\t' << it->Name();
+            }
+        }
+        else {
+            //User decided to cancel sorting. Just go straight to displaying the report.
             BOOST_LOG_TRIVIAL(info) << "The load order calculated was not applied as sorting was canceled.";
             messages.push_back(boss::Message(boss::g_message_warn, loc::translate("The load order displayed in the Details tab was not applied as sorting was canceled.")));
         }
 
-        BOOST_LOG_TRIVIAL(trace) << "Load order set:";
-        for (list<boss::Plugin>::iterator it=plugins.begin(), endIt = plugins.end(); it != endIt; ++it) {
-            BOOST_LOG_TRIVIAL(trace) << '\t' << it->Name();
-        }
     } catch (std::exception& e) {
         BOOST_LOG_TRIVIAL(error) << "Failed to calculate the load order. Details: " << e.what();
         messages.push_back(boss::Message(boss::g_message_error, (format(loc::translate("Failed to calculate the load order. Details: %1%")) % e.what()).str()));
@@ -771,6 +893,10 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         progDia->Destroy();
         progDia = NULL;
     }
+
+    ///////////////////////////////////////////////////////
+    // Build & Display Report
+    ///////////////////////////////////////////////////////
 
     //Read the details section of the previous report, if it exists.
     string oldDetails;
@@ -835,7 +961,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 void Launcher::OnEditMetadata(wxCommandEvent& event) {
 
     //Should probably check for masterlist updates before opening metadata editor.
-    vector<boss::Plugin> installed, mlist_plugins, ulist_plugins;
+    list<boss::Plugin> installed, mlist_plugins, ulist_plugins;
 
     wxProgressDialog *progDia = new wxProgressDialog(translate("BOSS: Working..."),translate("BOSS working..."), 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_ELAPSED_TIME);
 
@@ -866,7 +992,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
                 this);
         }
         if (mlist["plugins"])
-            mlist_plugins = mlist["plugins"].as< vector<boss::Plugin> >();
+            mlist_plugins = mlist["plugins"].as< list<boss::Plugin> >();
     }
 
     progDia->Pulse();
@@ -888,26 +1014,25 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
 				this);
         }
         if (ulist["plugins"])
-            ulist_plugins = ulist["plugins"].as< vector<boss::Plugin> >();
+            ulist_plugins = ulist["plugins"].as< list<boss::Plugin> >();
     }
 
     progDia->Pulse();
 
     //Merge the masterlist down into the installed mods list.
     BOOST_LOG_TRIVIAL(debug) << "Merging the masterlist down into the installed mods list.";
-    for (vector<boss::Plugin>::const_iterator it=mlist_plugins.begin(), endit=mlist_plugins.end(); it != endit; ++it) {
-        vector<boss::Plugin>::iterator pos = find(installed.begin(), installed.end(), *it);
+    for (list<boss::Plugin>::const_iterator it = mlist_plugins.begin(), endit = mlist_plugins.end(); it != endit; ++it) {
+        list<boss::Plugin>::iterator pos = find(installed.begin(), installed.end(), *it);
 
         if (pos != installed.end())
             pos->MergeMetadata(*it);
     }
 
-
     progDia->Pulse();
 
     //Add empty entries for any userlist entries that aren't installed.
-    BOOST_LOG_TRIVIAL(debug) << "Padding the userlist to match the plugins in the installed mods list.";
-    for (vector<boss::Plugin>::const_iterator it=ulist_plugins.begin(), endit=ulist_plugins.end(); it != endit; ++it) {
+    BOOST_LOG_TRIVIAL(debug) << "Padding the installed mods list to match the plugins in the userlist.";
+    for (list<boss::Plugin>::const_iterator it = ulist_plugins.begin(), endit = ulist_plugins.end(); it != endit; ++it) {
         if (find(installed.begin(), installed.end(), *it) == installed.end())
             installed.push_back(boss::Plugin(it->Name()));
     }
@@ -916,7 +1041,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
 
     //Sort into alphabetical order.
     BOOST_LOG_TRIVIAL(debug) << "Sorting plugin list into alphabetical order.";
-    std::sort(installed.begin(), installed.end(), boss::alpha_sort);
+    installed.sort(boss::alpha_sort);
 
     progDia->Pulse();
 
@@ -935,19 +1060,6 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
 
 	editor->Show();
     BOOST_LOG_TRIVIAL(debug) << "Editor window opened.";
-}
-
-void Launcher::OnViewLastReport(wxCommandEvent& event) {
-    if (_settings["View Report Externally"] && _settings["View Report Externally"].as<bool>()) {
-        BOOST_LOG_TRIVIAL(debug) << "Opening report in external application...";
-        wxLaunchDefaultBrowser(FromUTF8(ToFileURL(_game.ReportPath().string())));
-    } else {
-        //Create viewer window.
-        BOOST_LOG_TRIVIAL(debug) << "Opening viewer window...";
-        Viewer *viewer = new Viewer(this, translate("BOSS: Report Viewer"), FromUTF8(ToFileURL(_game.ReportPath().string())));
-        viewer->Show();
-    }
-    BOOST_LOG_TRIVIAL(debug) << "Report displayed.";
 }
 
 void Launcher::OnRedatePlugins(wxCommandEvent& event) {
@@ -1010,281 +1122,4 @@ void Launcher::OnRedatePlugins(wxCommandEvent& event) {
             wxOK|wxCENTRE,
             this);
     }
-}
-
-void Launcher::OnOpenSettings(wxCommandEvent& event) {
-    BOOST_LOG_TRIVIAL(debug) << "Opening settings window...";
-	SettingsFrame *settings = new SettingsFrame(this, translate("BOSS: Settings"), _settings, _games);
-	settings->ShowModal();
-    BOOST_LOG_TRIVIAL(debug) << "Settings window opened.";
-}
-
-void Launcher::OnGameChange(wxCommandEvent& event) {
-    BOOST_LOG_TRIVIAL(debug) << "Changing current game...";
-    _game = _games[event.GetId() - MENU_LowestDynamicGameID];
-    try {
-        _game.Init();  //In case it hasn't already been done.
-        *find(_games.begin(), _games.end(), _game) = _game;  //Sync changes.
-        BOOST_LOG_TRIVIAL(debug) << "New game is " << _game.Name();
-    } catch (boss::error& e) {
-        BOOST_LOG_TRIVIAL(error) << "Game-specific settings could not be initialised." << e.what();
-        wxMessageBox(
-            FromUTF8(format(loc::translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()),
-            translate("BOSS: Error"),
-            wxOK | wxICON_ERROR,
-            NULL);
-    }
-	SetTitle(FromUTF8("BOSS - " + _game.Name()));
-    if (_game.Id() == boss::g_game_tes5)
-        RedatePluginsItem->Enable(true);
-    else
-        RedatePluginsItem->Enable(false);
-}
-
-void Launcher::OnHelp(wxCommandEvent& event) {
-    //Look for file.
-    BOOST_LOG_TRIVIAL(debug) << "Opening readme at: " << g_path_readme;
-    if (fs::exists(g_path_readme)) {
-        wxLaunchDefaultBrowser(FromUTF8(ToFileURL(g_path_readme.string())));
-    } else {  //No readme exists, show a pop-up message saying so.
-        BOOST_LOG_TRIVIAL(error) << "File \"" << g_path_readme.string() << "\" could not be found.";
-        wxMessageBox(
-            FromUTF8(format(loc::translate("Error: \"%1%\" cannot be found.")) % g_path_readme.string()),
-            translate("BOSS: Error"),
-            wxOK | wxICON_ERROR,
-            this);
-    }
-}
-
-void Launcher::OnOpenDebugLog(wxCommandEvent& event) {
-    //Look for file.
-    BOOST_LOG_TRIVIAL(debug) << "Opening debug log at: " << g_path_log;
-    if (fs::exists(g_path_log)) {
-        wxLaunchDefaultApplication(FromUTF8(g_path_log.string()));
-    } else {  //No log exists, show a pop-up message saying so.
-        BOOST_LOG_TRIVIAL(error) << "File \"" << g_path_log.string() << "\" could not be found.";
-        wxMessageBox(
-            FromUTF8(format(loc::translate("Error: \"%1%\" cannot be found.")) % g_path_log.string()),
-            translate("BOSS: Error"),
-            wxOK | wxICON_ERROR,
-            this);
-    }
-}
-
-void Launcher::OnAbout(wxCommandEvent& event) {
-    BOOST_LOG_TRIVIAL(debug) << "Opening About dialog.";
-    wxAboutDialogInfo aboutInfo;
-    aboutInfo.SetName("BOSS");
-    aboutInfo.SetVersion(IntToString(g_version_major)+"."+IntToString(g_version_minor)+"."+IntToString(g_version_patch));
-    aboutInfo.SetDescription(translate("Load order optimisation for Oblivion, Skyrim, Fallout 3 and Fallout: New Vegas."));
-    aboutInfo.SetCopyright("Copyright (C) 2009-2014 BOSS Development Team.");
-    aboutInfo.SetWebSite("http://boss-developers.github.io");
-	aboutInfo.SetLicence("This program is free software: you can redistribute it and/or modify\n"
-    "it under the terms of the GNU General Public License as published by\n"
-    "the Free Software Foundation, either version 3 of the License, or\n"
-    "(at your option) any later version.\n"
-	"\n"
-    "This program is distributed in the hope that it will be useful,\n"
-    "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-    "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
-    "GNU General Public License for more details.\n"
-	"\n"
-    "You should have received a copy of the GNU General Public License\n"
-    "along with this program.  If not, see <http://www.gnu.org/licenses/>.");
-	aboutInfo.SetIcon(wxIconLocation("BOSS.exe"));
-    wxAboutBox(aboutInfo);
-}
-
-LoadOrderPreview::LoadOrderPreview(wxWindow *parent, const wxString title, const std::list<boss::Plugin>& plugins, const boss::Game& game) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER), _plugins(plugins), _game(game) {
-
-    //Init controls.
-    _loadOrder = new wxListView(this, LIST_LoadOrder, wxDefaultPosition, wxDefaultSize, wxLC_REPORT);
-
-    _moveUp = new wxButton(this, BUTTON_MoveUp, translate("Up"));
-    _moveDown = new wxButton(this, BUTTON_MoveDown, translate("Down"));
-
-    //Populate list.
-    _loadOrder->AppendColumn(translate("Load Order"));
-    size_t i=0;
-    for (list<boss::Plugin>::const_iterator it=plugins.begin(), endit=plugins.end(); it != endit; ++it, ++i) {
-        _loadOrder->InsertItem(i, FromUTF8(it->Name()));
-        if (it->FormIDs().empty()) {
-            _loadOrder->SetItemTextColour(i, wxColour(122, 122, 122));
-        }
-        else if (it->LoadsBSA(_game)) {
-            _loadOrder->SetItemTextColour(i, wxColour(0, 142, 219));
-        }
-    }
-    _loadOrder->SetColumnWidth(0, wxLIST_AUTOSIZE);
-
-    //Set up event handling.
-    Bind(wxEVT_BUTTON, &LoadOrderPreview::OnMoveUp, this, BUTTON_MoveUp);
-    Bind(wxEVT_BUTTON, &LoadOrderPreview::OnMoveDown, this, BUTTON_MoveDown);
-    Bind(wxEVT_LIST_ITEM_SELECTED, &LoadOrderPreview::OnPluginSelect, this, LIST_LoadOrder);
-
-    //Set up layout.
-    wxBoxSizer * bigBox = new wxBoxSizer(wxVERTICAL);
-
-    bigBox->Add(_loadOrder, 1, wxEXPAND|wxALL, 15);
-
-    wxBoxSizer * hbox = new wxBoxSizer(wxHORIZONTAL);
-    hbox->Add(_moveUp, 0, wxRIGHT, 5);
-    hbox->Add(_moveDown, 0, wxLEFT, 5);
-    bigBox->Add(hbox, 0, wxALIGN_RIGHT|wxBOTTOM|wxRIGHT, 15);
-
-    bigBox->Add(new wxStaticText(this, wxID_ANY, translate("Please submit any alterations made for reasons other than user preference \nto the BOSS team so that they may include the changes in the masterlist.")), 0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 15);
-
-    //Need to add 'OK' and 'Cancel' buttons.
-	wxSizer * sizer = CreateSeparatedButtonSizer(wxOK|wxCANCEL);
-
-	//Now add TabHolder and OK button to window sizer.
-    if (sizer != NULL)
-        bigBox->Add(sizer, 0, wxEXPAND|wxLEFT|wxBOTTOM|wxRIGHT, 15);
-
-    //Set initial up/down button states.
-    _moveUp->Enable(false);
-    _moveDown->Enable(false);
-
-    //Now set the layout and sizes.
-	SetBackgroundColour(wxColour(255,255,255));
-    SetIcon(wxIconLocation("BOSS.exe"));
-	SetSizerAndFit(bigBox);
-}
-
-void LoadOrderPreview::OnPluginSelect(wxListEvent& event) {
-    _moveUp->Enable(true);
-    _moveDown->Enable(true);
-}
-
-void LoadOrderPreview::OnMoveUp(wxCommandEvent& event) {
-    BOOST_LOG_TRIVIAL(debug) << "Moving plugin(s) up the load order.";
-    long selected = _loadOrder->GetFirstSelected();
-
-    if (selected == 0)
-        return;
-
-    while (selected != -1) {
-        wxString selectedText = _loadOrder->GetItemText(selected);
-        wxString aboveText = _loadOrder->GetItemText(selected - 1);
-
-        BOOST_LOG_TRIVIAL(trace) << "Moving plugin \"" << string(selectedText.ToUTF8());
-
-        //Check that move is OK.
-        list<boss::Plugin>::const_iterator selectedPlugin = find(_plugins.begin(), _plugins.end(), boss::Plugin(string(selectedText.ToUTF8())));
-        list<boss::Plugin>::const_iterator abovePlugin = find(_plugins.begin(), _plugins.end(), boss::Plugin(string(aboveText.ToUTF8())));
-
-        if (selectedPlugin != _plugins.end() && abovePlugin != _plugins.end()) {
-            if (selectedPlugin->MustLoadAfter(*abovePlugin)) {
-                BOOST_LOG_TRIVIAL(error) << "Cannot load \"" << selectedPlugin->Name() << "\" before \"" << abovePlugin->Name() << "\".";
-                wxMessageBox(
-                    FromUTF8(format(loc::translate("Error: Cannot load \"%1%\" before \"%2%\".")) % selectedPlugin->Name() % abovePlugin->Name()),
-                    translate("BOSS: Error"),
-                    wxOK | wxICON_ERROR,
-                    NULL);
-                selected = _loadOrder->GetNextSelected(selected);
-                continue;
-            }
-        }
-
-        _loadOrder->SetItemText(selected, aboveText);
-        _loadOrder->SetItemText(selected - 1, selectedText);
-
-        _movedPlugins.insert(string(selectedText.ToUTF8()));
-
-        _loadOrder->Select(selected, false);
-        _loadOrder->Select(selected - 1, true);
-
-        selected = _loadOrder->GetNextSelected(selected);
-    }
-    BOOST_LOG_TRIVIAL(debug) << "Plugin(s) moved up.";
-}
-
-void LoadOrderPreview::OnMoveDown(wxCommandEvent& event) {
-    BOOST_LOG_TRIVIAL(debug) << "Moving plugin(s) down the load order.";
-    long i=_loadOrder->GetItemCount() - 1;
-
-    if (_loadOrder->IsSelected(i))
-        return;
-    --i;
-
-    for (i; i > -1; --i) {
-        if (_loadOrder->IsSelected(i)) {
-            wxString selectedText = _loadOrder->GetItemText(i);
-            wxString belowText = _loadOrder->GetItemText(i + 1);
-
-            BOOST_LOG_TRIVIAL(trace) << "Moving plugin \"" << string(selectedText.ToUTF8());
-
-            //Check that move is OK.
-            list<boss::Plugin>::const_iterator selectedPlugin = find(_plugins.begin(), _plugins.end(), boss::Plugin(string(selectedText.ToUTF8())));
-            list<boss::Plugin>::const_iterator belowPlugin = find(_plugins.begin(), _plugins.end(), boss::Plugin(string(belowText.ToUTF8())));
-
-            if (selectedPlugin != _plugins.end() && belowPlugin != _plugins.end()) {
-                if (belowPlugin->MustLoadAfter(*selectedPlugin)) {
-                    BOOST_LOG_TRIVIAL(error) << "Cannot load \"" << belowPlugin->Name() << "\" before \"" << selectedPlugin->Name() << "\".";
-                    wxMessageBox(
-                        FromUTF8(format(loc::translate("Error: Cannot load \"%1%\" before \"%2%\".")) % belowPlugin->Name() % selectedPlugin->Name()),
-                        translate("BOSS: Error"),
-                        wxOK | wxICON_ERROR,
-                        NULL);
-                    continue;
-                }
-            }
-
-            _loadOrder->SetItemText(i, belowText);
-            _loadOrder->SetItemText(i + 1, selectedText);
-
-            _movedPlugins.insert(string(selectedText.ToUTF8()));
-
-            _loadOrder->Select(i, false);
-            _loadOrder->Select(i + 1, true);
-        }
-    }
-    BOOST_LOG_TRIVIAL(debug) << "Plugin(s) moved down.";
-}
-
-std::list<boss::Plugin> LoadOrderPreview::GetLoadOrder() const {
-    BOOST_LOG_TRIVIAL(debug) << "Getting full load order from preview window.";
-    list<boss::Plugin> plugins;
-    bool wasMovedUp = false;
-    for (size_t i=0,max=_loadOrder->GetItemCount(); i < max; ++i) {
-        string name = string(_loadOrder->GetItemText(i).ToUTF8());
-
-        list<boss::Plugin>::const_iterator it = find(_plugins.begin(), _plugins.end(), boss::Plugin(name));
-
-        if (it == _plugins.end())
-            continue;
-
-        plugins.push_back(*it);
-
-        if (wasMovedUp) {
-            BOOST_LOG_TRIVIAL(trace) << "The previous plugin was moved up in the load order, so adding it to the 'load after' set for the current plugin.";
-            list<boss::Plugin>::const_iterator jt = ----plugins.end();
-            set<boss::File> loadAfter = plugins.back().LoadAfter();
-            loadAfter.insert(File(jt->Name()));
-            plugins.back().LoadAfter(loadAfter);
-            wasMovedUp = false;
-        }
-
-        if (_movedPlugins.find(name) != _movedPlugins.end()) {
-            BOOST_LOG_TRIVIAL(trace) << "The current plugin was moved - checking if it was moved up or down.";
-            //Check if this plugin has been moved earlier or later by comparing distances in the original list and the new one.
-            size_t newDist = plugins.size() - 1;
-            size_t oldDist = distance(_plugins.begin(), it);
-
-            if (newDist > oldDist) {
-                BOOST_LOG_TRIVIAL(trace) << "The current plugin was moved down, add the preceding plugin to the current plugin's 'load after' set.";
-                //Record the preceding plugin in this plugin's "load after" set.
-                list<boss::Plugin>::const_iterator jt = ----plugins.end();
-                set<boss::File> loadAfter = plugins.back().LoadAfter();
-                loadAfter.insert(File(jt->Name()));
-                plugins.back().LoadAfter(loadAfter);
-            } else {
-                BOOST_LOG_TRIVIAL(trace) << "The current plugin was moved up.";
-                //Record this plugin in the following plugin's "load after" set.
-                wasMovedUp = true;
-            }
-        }
-    }
-
-    return plugins;
 }
