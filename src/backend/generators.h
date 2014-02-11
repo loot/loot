@@ -261,7 +261,7 @@ namespace boss {
             note.append_attribute("id").set_value("noChanges");
             note.text().set(boost::locale::translate("No change in details since last run.").str().c_str());
             */
-            messages.push_front(boss::Message(boss::g_message_say, "There have been no changes in the Details tab since BOSS was last run for this game."));
+            messages.push_front(boss::Message(boss::g_message_say, boost::locale::translate("There have been no changes in the Details tab since BOSS was last run for this game.").str()));
         }
 
         if (!messages.empty()) {
