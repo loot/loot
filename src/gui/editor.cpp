@@ -44,6 +44,7 @@ bool TextDropTarget::OnDropText(wxCoord x, wxCoord y, const wxString &data) {
     if (data == targetName->GetLabelText() || targetOwner->FindItem(-1, data) != wxNOT_FOUND)
         return false;
     targetOwner->InsertItem(targetOwner->GetItemCount(), data);
+    targetOwner->SetColumnWidth(0, wxLIST_AUTOSIZE);
     return true;
 }
 
@@ -148,7 +149,7 @@ boss::PluginDirtyInfo CommonEditor::RowToPluginDirtyInfo(wxListView * list, long
 ///////////////////////////////////
 
 
-MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<boss::Plugin>& plugins, const boss::Game& game) : wxDialog(parent, wxID_ANY, title), CommonEditor(plugins, game) {
+MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<boss::Plugin>& plugins, const boss::Game& game) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER), CommonEditor(plugins, game) {
     //Initialise editing panel.
     editingPanel = new wxPanel(this, wxID_ANY);
 
@@ -172,6 +173,7 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
     loadAfterList->AppendColumn(translate("Filename"));
     loadAfterList->AppendColumn(translate("Display Name"));
     loadAfterList->AppendColumn(translate("Condition"));
+    loadAfterList->SetColumnWidth(0, wxLIST_AUTOSIZE_USEHEADER);
     loadAfterList->SetColumnWidth(1, 0);  //Hide this from the user.
     loadAfterList->SetColumnWidth(2, 0);  //Hide this from the user.
     
@@ -202,9 +204,9 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
     mainBox->Add(hbox2, 0, wxEXPAND | wxBOTTOM, 10);
 
     wxStaticBoxSizer * staticBox = new wxStaticBoxSizer(wxVERTICAL, editingPanel, translate("Load After"));
-    staticBox->Add(loadAfterList, 0, wxEXPAND);
+    staticBox->Add(loadAfterList, 1, wxEXPAND);
     staticBox->Add(removeBtn, 0, wxEXPAND | wxALIGN_RIGHT | wxTOP, 5);
-    mainBox->Add(staticBox, 0, wxEXPAND);
+    mainBox->Add(staticBox, 1, wxEXPAND);
 
     editingPanel->SetSizerAndFit(mainBox);
     editingPanel->Layout();
@@ -213,9 +215,9 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
     wxBoxSizer * bigBox = new wxBoxSizer(wxVERTICAL);
 
     wxBoxSizer * hBox = new wxBoxSizer(wxHORIZONTAL);
-    hBox->Add(pluginList, 0, wxEXPAND | wxALL, 10);
+    hBox->Add(pluginList, 1, wxEXPAND | wxALL, 10);
     hBox->Add(editingPanel, 0, wxEXPAND | wxTOP | wxBOTTOM | wxRIGHT, 10);
-    bigBox->Add(hBox, 0, wxEXPAND | wxALL, 5);
+    bigBox->Add(hBox, 1, wxEXPAND | wxALL, 5);
 
     bigBox->Add(descText, 0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 15);
 
@@ -327,7 +329,7 @@ void MiniEditor::OnFilterToggle(wxCommandEvent& event) {
     else
         Bind(wxEVT_LIST_ITEM_SELECTED, &MiniEditor::OnPluginSelect, this, LIST_Plugins);
 
-    Freeze();
+    pluginList->Freeze();
     if (event.IsChecked()) {
         boss::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
         list<boss::Plugin>::const_iterator pos = std::find(plugins.begin(), plugins.end(), plugin);
@@ -379,7 +381,8 @@ void MiniEditor::OnFilterToggle(wxCommandEvent& event) {
 
     //Now re-select the current plugin in the list.
     pluginList->Select(pluginList->FindItem(-1, pluginText->GetLabelText()));
-    Thaw();
+    pluginList->Thaw();
+    Refresh();
 }
 
 void MiniEditor::OnRowSelect(wxListEvent& event) {
