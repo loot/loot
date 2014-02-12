@@ -217,7 +217,7 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
 
     wxBoxSizer * hBox = new wxBoxSizer(wxHORIZONTAL);
     hBox->Add(pluginList, 1, wxEXPAND | wxALL, 10);
-    hBox->Add(editingPanel, 0, wxEXPAND | wxTOP | wxBOTTOM | wxRIGHT, 10);
+    hBox->Add(editingPanel, 1, wxEXPAND | wxTOP | wxBOTTOM | wxRIGHT, 10);
     bigBox->Add(hBox, 1, wxEXPAND | wxALL, 5);
 
     bigBox->Add(descText, 0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 15);
