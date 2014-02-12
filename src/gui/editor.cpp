@@ -192,6 +192,7 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
     Bind(wxEVT_BUTTON, &MiniEditor::OnRemoveRow, this, BUTTON_RemoveRow);
     Bind(wxEVT_CHECKBOX, &MiniEditor::OnFilterToggle, this);
     Bind(wxEVT_BUTTON, &MiniEditor::OnApply, this, wxID_APPLY);
+    Bind(wxEVT_SIZE, &MiniEditor::OnResize, this);
 
     //Set up editing panel layout.
     wxBoxSizer * mainBox = new wxBoxSizer(wxVERTICAL);
@@ -444,6 +445,12 @@ boss::Plugin MiniEditor::GetNewData(const wxString& plugin) const {
     edited.LoadAfter(files);
 
     return edited;
+}
+
+void MiniEditor::OnResize(wxSizeEvent& event) {
+    descText->SetLabel(translate("Please submit any edits made for reasons other than personal preference to the BOSS team so that they may be included in the masterlist."));
+    descText->Wrap(GetClientSize().GetWidth()-30);
+    event.Skip();
 }
 
 ///////////////////////////////////

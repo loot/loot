@@ -90,6 +90,7 @@ public:
     void OnFilterToggle(wxCommandEvent& event);
     void OnDragStart(wxListEvent& event);
     void OnApply(wxCommandEvent& event);
+    void OnResize(wxSizeEvent& event);
 
     const std::list<boss::Plugin>& GetEditedPlugins() const;
 private:
