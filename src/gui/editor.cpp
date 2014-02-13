@@ -217,7 +217,7 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
 
     wxBoxSizer * hBox = new wxBoxSizer(wxHORIZONTAL);
     hBox->Add(pluginList, 1, wxEXPAND | wxALL, 10);
-    hBox->Add(editingPanel, 1, wxEXPAND | wxTOP | wxBOTTOM | wxRIGHT, 10);
+    hBox->Add(editingPanel, 0, wxEXPAND | wxTOP | wxBOTTOM | wxRIGHT, 10);
     bigBox->Add(hBox, 1, wxEXPAND | wxALL, 5);
 
     bigBox->Add(descText, 0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 15);
@@ -307,12 +307,11 @@ void MiniEditor::OnPluginSelect(wxListEvent& event) {
     //Layout() doesn't do anything extra, it automatically gets called by the windows.
     //InvalidateBestSize() doesn't do anything useful for the panel or the window.
     pluginList->InvalidateBestSize();  //Makes the priority column visible without scrolling.
+    loadAfterList->InvalidateBestSize();  //Fixes long plugin filenames being cut off.
     editingPanel->Fit();  //Fits the editing panel to the pluginText length.
     editingPanel->SetMinSize(editingPanel->GetSize());  //Makes sure that the editing panel is not cut off when Fit() is called below.
+    descText->SetLabel("");
     Fit();
-    int width = descText->GetSize().GetWidth();
-    descText->SetLabel(translate("Please submit any edits made for reasons other than personal preference to the BOSS team so that they may be included in the masterlist."));
-    descText->Wrap(width);
 }
 
 void MiniEditor::OnFilterToggle(wxCommandEvent& event) {
