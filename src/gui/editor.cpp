@@ -303,15 +303,21 @@ void MiniEditor::OnPluginSelect(wxListEvent& event) {
     if (!editingPanel->IsShown())
         editingPanel->Show();
 
-    //Do all the horrible fitting. Still haven't managed to set a min size for the editing controls.
+    //Window may need to be resized.
     //Layout() doesn't do anything extra, it automatically gets called by the windows.
     //InvalidateBestSize() doesn't do anything useful for the panel or the window.
     pluginList->InvalidateBestSize();  //Makes the priority column visible without scrolling.
     loadAfterList->InvalidateBestSize();  //Fixes long plugin filenames being cut off.
     editingPanel->Fit();  //Fits the editing panel to the pluginText length.
     editingPanel->SetMinSize(editingPanel->GetSize());  //Makes sure that the editing panel is not cut off when Fit() is called below.
-    descText->SetLabel("");
-    Fit();
+    descText->SetLabel("");  //If this isn't cleared, it'll stop the window resizing properly sometimes.
+    if (GetBestSize().GetHeight() > GetSize().GetHeight() || GetBestSize().GetWidth() > GetSize().GetWidth()) {
+        Fit();
+    }
+    else {
+        descText->SetLabel(translate("Please submit any edits made for reasons other than personal preference to the BOSS team so that they may be included in the masterlist."));
+        descText->Wrap(GetClientSize().GetWidth() - 30);
+    }
 }
 
 void MiniEditor::OnFilterToggle(wxCommandEvent& event) {
