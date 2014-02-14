@@ -91,8 +91,6 @@ namespace boss {
             a.append_attribute("href").set_value(url.c_str());
             a.text().set(label.c_str());
 
-            BOOST_LOG_TRIVIAL(trace) << "FOO";
-
             //Set string to end of matched section.
             start = results.suffix().first;
         }
