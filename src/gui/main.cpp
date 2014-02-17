@@ -750,7 +750,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         }
     }
 
-    progDia->Pulse();
+    progDia->Update(800, translate("Building plugin graph..."));
 
     ///////////////////////////////////////////////////////
     // Build Graph Edges & Sort
@@ -810,7 +810,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             }
             else {
                 //Recreate progress dialog.
-                progDia = new wxProgressDialog(translate("BOSS: Working..."), translate("BOSS working..."), 1000, this, wxPD_APP_MODAL | wxPD_AUTO_HIDE | wxPD_ELAPSED_TIME);
+                progDia = new wxProgressDialog(translate("BOSS: Working..."), translate("Recalculating load order..."), 1000, this, wxPD_APP_MODAL | wxPD_AUTO_HIDE | wxPD_ELAPSED_TIME);
 
                 //User accepted edits, now apply them, then loop.
                 //Apply edits to the graph vertices.
@@ -825,9 +825,9 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                 }
 
                 //Clear all existing edges from the graph.
-                std::pair<edge_it, edge_it> edge_range = boost::edges(graph);
-                for (edge_it it = edge_range.first; it != edge_range.second; ++it) {
-                    boost::remove_edge(*it, graph);
+                BOOST_LOG_TRIVIAL(trace) << "Clearing all existing edges from the plugin graph.";
+                for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
+                    boost::clear_vertex(*vit, graph);
                 }
 
                 //Merge edits down to the userlist entries.
