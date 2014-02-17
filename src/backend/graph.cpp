@@ -224,10 +224,19 @@ namespace boss {
                         continue;
 
                     vertex_t vertex, parentVertex;
-                    if (graph[*vit].NumOverrideFormIDs() >= graph[*vit2].NumOverrideFormIDs()) {
+                    if (graph[*vit].NumOverrideFormIDs() > graph[*vit2].NumOverrideFormIDs()) {
                         parentVertex = *vit;
                         vertex = *vit2;
-                    } else {
+                    }
+                    else if (graph[*vit].NumOverrideFormIDs() < graph[*vit2].NumOverrideFormIDs()) {
+                        parentVertex = *vit2;
+                        vertex = *vit;
+                    }
+                    else if (graph[*vit].Name() < graph[*vit2].Name()) {  //There needs to be an edge between the two, but direction cannot be decided using overlap size. Just use names.
+                        parentVertex = *vit;
+                        vertex = *vit2;
+                    }
+                    else {
                         parentVertex = *vit2;
                         vertex = *vit;
                     }
