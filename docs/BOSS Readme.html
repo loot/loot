@@ -126,9 +126,9 @@ h3{
 
 <blockquote class="warning">Version 3 is incompatible with earlier versions, which should be removed. Any existing user rules must be manually recreated in BOSS's user interface. Some plugins sorted correctly in v2 may be sorted incorrectly by v3 until their metadata has been recorded. Please <a href="#contrib">notify the team</a> if you observe any load order issues.</blockquote>
 
-<p>BOSS requires the <a href="http://www.microsoft.com/en-gb/download/details.aspx?id=40784">
-Visual C++ Redistributable for Visual Studio 2013 (x86)</a>. BOSS can be installed either using its automated installer or manually. To install BOSS manually:
+<p>BOSS requires Windows Vista, 7 or 8. BOSS can be installed either using its automated installer or manually. To install BOSS manually:
 <ol>
+    <li>Install the <a href="http://www.microsoft.com/en-gb/download/details.aspx?id=40784">Visual C++ Redistributable for Visual Studio 2013 (x86)</a>.
     <li>Extract the downloaded archive to a location of your choice.
 </ol>
 <p>If BOSS was installed using the installer, then use the uninstaller linked to in the Start Menu to uninstall BOSS. If BOSS was installed manually:
@@ -551,6 +551,7 @@ A copy of the license is included in the file named "GNU FDL v1.3.txt".</blockqu
         <tr><td>BOSS Log plugin submission<td>BOSS allows users to submit unrecognised plugins from the HTML BOSS Log.<td>As there is no longer any such thing as an unrecognised plugin, the submission system has been removed.
         <tr><td>BOSS Log display customisation<td>BOSS allows users to customise the colour scheme used by the BOSS Log.<td>BOSS does not allow customisation of the colour scheme used by the BOSS report. However, the styling is now provided by a static stylesheet instead of being dynamically generated within the report every time BOSS is run, so this static stylesheet can be edited to achieve the same effect.
         <tr><td>Command line interface<td>BOSS provides a command line interface.<td>BOSS does not provide a command line interface, as the greater need for user interaction makes it unwieldy.
+        <tr><td>Windows XP support<td>Supports Windows XP.<td>Does not support Windows XP.
 </table>
 
 <h2 id="history">Version History</h2>

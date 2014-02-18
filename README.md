@@ -72,6 +72,8 @@ In addition, while other data is retained, it needs some manual adjustment, eg. 
 
 Installer and zip archive releases for the main BOSS application can be handled by running the scripts `installer.nsi` and `archive.py` in the `src` folder respectively. The installer script requires [NSIS 3](http://nsis.sourceforge.net/Main_Page) to be installed, while the archive script requires [Python](http://www.python.org/) to be installed.
 
+The installer and Python script both require the built BOSS.exe to be at `build\BOSS.exe`, and the installer also requires the MSVC 2013 Redistributable (x86) to be at `build\vcredist_x86.exe`.
+
 ## Adding Translations To BOSS
 
 If a translation for a new language is provided, here's what needs changing in the code to make BOSS use that translation.
