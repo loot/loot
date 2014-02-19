@@ -25,6 +25,7 @@ set (BOSS_GUI_SRC ${BOSS_SRC}
                   "${CMAKE_SOURCE_DIR}/src/gui/settings.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/editor.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/viewer.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/gui/misc.cpp"
                   "${CMAKE_SOURCE_DIR}/src/resource.rc")
 
 set (BOSS_API_SRC ${BOSS_SRC}
@@ -100,6 +101,9 @@ IF (MINGW)
                        wxzlib-3.0-${COMPILER_PREFIX}
                        comctl32)
 ELSEIF (MSVC)
+    #IF (MSVC_VERSION EQUAL 1800) 
+    #    set (CMAKE_GENERATOR_TOOLSET "v120_xp" CACHE STRING "Platform Toolset" FORCE)
+    #ENDIF ()
     include_directories("${PROJECT_LIBS_DIR}/wxWidgets/lib/vc_lib/mswu")
     link_directories("${PROJECT_LIBS_DIR}/wxWidgets/lib/vc_lib")
 	set (CMAKE_CXX_FLAGS "/EHsc")

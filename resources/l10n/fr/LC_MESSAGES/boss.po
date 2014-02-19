@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: BOSS v3.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-10-26 11:41-0000\n"
-"PO-Revision-Date: 2014-02-02 19:20+0100\n"
+"PO-Revision-Date: 2014-02-10 14:48+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: French\n"
@@ -15,33 +15,33 @@ msgstr ""
 
 #: backend/game.cpp:96
 msgid "Invalid game ID supplied."
-msgstr "ID du jeu fourni incorrect"
+msgstr "ID du jeu fournie incorrecte."
 
 #: backend/game.cpp:147
 msgid "Game path could not be detected."
-msgstr "Le chemin du jeu n'a pas pu être trouvée. "
+msgstr "Le chemin du jeu n'a pas pu être trouvé. "
 
 #: backend/game.cpp:248 backend/game.cpp:308 backend/game.cpp:363
 msgid "libloadorder failed to create a game handle. Details:"
-msgstr "libloadorder n'est pas parveni à créer une poignée du jeu. Détails : "
+msgstr "libloadorder n'est pas parvenu à créer une poignée du jeu. Détails :"
 
 #: backend/game.cpp:260 backend/game.cpp:320 backend/game.cpp:374
 msgid "libloadorder failed to initialise game master file support. Details:"
 msgstr ""
 "libloadorder a échoué dans l'initialisation du support de fichier maître du "
-"jeu. Détails ; "
+"jeu. Détails :"
 
 #: backend/game.cpp:270
 msgid "libloadorder failed to get the active plugins list. Details:"
-msgstr "libloadorer n'a pas pu obtenir la liste des plugins actifs. Détails : "
+msgstr "libloadorer n'a pas pu obtenir la liste des plugins actifs. Détails :"
 
 #: backend/game.cpp:330 backend/game.cpp:396
 msgid "libloadorder failed to set the load order. Details:"
-msgstr "libloadorder n'a pu définir l'ordre de chargement. Détails : "
+msgstr "libloadorder n'a pas pu définir l'ordre de chargement. Détails :"
 
 #: backend/game.cpp:415
 msgid "Could not create BOSS folder for game. Details:"
-msgstr "Impossible de créer le dossier de BOSS pour ce jeu. Détails : "
+msgstr "Impossible de créer le dossier de BOSS pour ce jeu. Détails :"
 
 #: backend/graph.cpp:46
 msgid "Cyclic interaction detected between plugins \"%1%\" and \"%2%\"."
@@ -81,7 +81,7 @@ msgstr "L'opération d'obtention a échoué. Erreur : %1%"
 
 #: backend/network.cpp:338
 msgid "Masterlist revision"
-msgstr "Révision de la Masterlist"
+msgstr "Révision de la masterlist"
 
 #: gui/editor.cpp:37
 msgid "Note"
@@ -130,7 +130,7 @@ msgstr "Ajouter un fichier"
 
 #: gui/editor.cpp:128 gui/editor.cpp:376
 msgid "Edit File"
-msgstr "Éditer un fichier ="
+msgstr "Éditer un fichier"
 
 #: gui/editor.cpp:129 gui/editor.cpp:377
 msgid "Remove File"
@@ -138,7 +138,7 @@ msgstr "Retirer un fichier"
 
 #: gui/editor.cpp:130
 msgid "Save Changes"
-msgstr "Sauvegarder les changements"
+msgstr "Sauvegarder les modifications"
 
 #: gui/editor.cpp:131
 msgid "Cancel"
@@ -170,7 +170,7 @@ msgstr "Étiquettes du bash"
 
 #: gui/editor.cpp:148
 msgid "Dirty Info"
-msgstr "Infos sur les saletés. "
+msgstr "Infos sur les entrées sales"
 
 #: gui/editor.cpp:151
 msgid "Plugins"
@@ -214,7 +214,7 @@ msgstr "Utilitaire de nettoyage"
 
 #: gui/editor.cpp:217
 msgid "Priority: "
-msgstr "Priorité : "
+msgstr "Priorité :"
 
 #: gui/editor.cpp:379
 msgid "Add Plugin"
@@ -226,7 +226,7 @@ msgstr "Éditer un plugin"
 
 #: gui/editor.cpp:381
 msgid "Remove Plugin"
-msgstr "Retirer plugin"
+msgstr "Retirer un plugin"
 
 #: gui/editor.cpp:383
 msgid "Add Message"
@@ -242,7 +242,7 @@ msgstr "Retirer un message"
 
 #: gui/editor.cpp:387
 msgid "Add Bash Tag"
-msgstr "AJouter une étiquette"
+msgstr "Ajouter une étiquette"
 
 #: gui/editor.cpp:388
 msgid "Edit Bash Tag"
@@ -254,7 +254,7 @@ msgstr "Retirer l'étiquette"
 
 #: gui/editor.cpp:391
 msgid "Add Dirty Info"
-msgstr "Ajouter une information à propos d'une entrée sale"
+msgstr "Ajouter une information sur les entrée sales"
 
 #: gui/editor.cpp:392
 msgid "Edit Dirty Info"
@@ -262,11 +262,11 @@ msgstr "Éditer les informations sur les entrées sales"
 
 #: gui/editor.cpp:393
 msgid "Remove Dirty Info"
-msgstr "Rerirer l'information concernant la saleté. "
+msgstr "Retirer l'information sur les entrées sales "
 
 #: gui/editor.cpp:411
 msgid "BOSS: Add File/Plugin"
-msgstr "BOSS : Ajouter un fichier / Plugin-in"
+msgstr "BOSS : Ajouter un fichier / plugin"
 
 #: gui/editor.cpp:433
 msgid "BOSS: Add Message"
@@ -293,11 +293,11 @@ msgstr "BOSS : Ajouter une étiquette"
 
 #: gui/editor.cpp:468
 msgid "BOSS: Add Dirty Info"
-msgstr "BOSS : Ajouter des informations sur la saleté"
+msgstr "BOSS : Ajouter des informations sur les entrées sales"
 
 #: gui/editor.cpp:487
 msgid "BOSS: Edit File/Plugin"
-msgstr "BOSS : Éditer le fichir / Plugin-in"
+msgstr "BOSS : Éditer le fichier / plugin"
 
 #: gui/editor.cpp:511
 msgid "BOSS: Edit Message"
@@ -313,15 +313,15 @@ msgstr "BOSS : Édition des étiquettes"
 
 #: gui/editor.cpp:557
 msgid "BOSS: Edit Dirty Info"
-msgstr "BOSS : Édition des informations sur la saleté. "
+msgstr "BOSS : Édition des informations sur la saleté"
 
 #: gui/editor.cpp:932
 msgid "Filename (required):"
-msgstr "Nom du fichier (requis) : "
+msgstr "Nom du fichier (requis) :"
 
 #: gui/editor.cpp:935
 msgid "Displayed Name:"
-msgstr "Nom affiché : "
+msgstr "Nom affiché :"
 
 #: gui/editor.cpp:938 gui/editor.cpp:1016 gui/editor.cpp:1172
 msgid "Condition:"
@@ -345,15 +345,15 @@ msgstr "String"
 
 #: gui/editor.cpp:1013 gui/settings.cpp:425
 msgid "Type:"
-msgstr "Type : "
+msgstr "Type :"
 
 #: gui/editor.cpp:1028 gui/settings.cpp:101
 msgid "Language:"
-msgstr "Langue : "
+msgstr "Langue :"
 
 #: gui/editor.cpp:1031
 msgid "Content:"
-msgstr "Contenu : "
+msgstr "Contenu :"
 
 #: gui/editor.cpp:1121 gui/editor.cpp:1136
 msgid "Error: No content row selected."
@@ -361,31 +361,31 @@ msgstr "Erreur : Aucun contenu sélectionné. "
 
 #: gui/editor.cpp:1166
 msgid "Add/Remove:"
-msgstr "Ajouter/Retirer"
+msgstr "Ajouter/Retirer :"
 
 #: gui/editor.cpp:1169 gui/settings.cpp:422
 msgid "Name (required):"
-msgstr "Nom (Requis) : "
+msgstr "Nom (requis) :"
 
 #: gui/editor.cpp:1234
 msgid "CRC (required):"
-msgstr "CRC (requis):"
+msgstr "CRC (requis) :"
 
 #: gui/editor.cpp:1237
 msgid "ITM Count:"
-msgstr "Énumération des ITM : "
+msgstr "Énumération des ITM :"
 
 #: gui/editor.cpp:1240
 msgid "UDR Count:"
-msgstr "Énumération des UDR : "
+msgstr "Énumération des UDR :"
 
 #: gui/editor.cpp:1243
 msgid "Deleted Navmesh Count:"
-msgstr "Énumération des Navmesh supprimés : "
+msgstr "Énumération des Navmesh supprimés :"
 
 #: gui/editor.cpp:1246
 msgid "Cleaning Utility (required):"
-msgstr "Utilitaire de nettoyage (requis) : "
+msgstr "Utilitaire de nettoyage (requis) :"
 
 #: gui/ids.cpp:31
 msgid "None Specified"
@@ -397,7 +397,7 @@ msgstr "Le fichier masterlist n'a pas pu être actualisé. Détails: %1%"
 
 #: gui/main.cpp:134
 msgid "Masterlist parsing failed. Details: %1%"
-msgstr "L'analyse de la masterlist a échouée. Détails : %1%"
+msgstr "L'analyse de la masterlist a échoué. Détails : %1%"
 
 #: gui/main.cpp:142
 msgid "Unknown"
@@ -414,11 +414,11 @@ msgstr "Erreur : BOSS est déjà lancé. Cette version va maintenant s'arrêter.
 
 #: gui/main.cpp:180
 msgid "Error: Could not create local app data BOSS folder."
-msgstr "Erreur : Impossible de créer le dossier local BOSS app data. "
+msgstr "Erreur : Impossible de créer le dossier local app data BOSS."
 
 #: gui/main.cpp:193
 msgid "Error: Settings parsing failed. %1%"
-msgstr "Erreur : Les paramètres d'analyse ont échoués. %1%"
+msgstr "Erreur : Les paramètres d'analyse ont échoué. %1%"
 
 #: gui/main.cpp:272
 msgid "Error: Could not apply translation."
@@ -436,11 +436,11 @@ msgstr ""
 
 #: gui/main.cpp:303
 msgid "Error: Games' settings parsing failed. %1%"
-msgstr "Erreur : Les paramètres d'analyse du jeu ont échoués. %1%"
+msgstr "Erreur : Les paramètres d'analyse du jeu ont échoué. %1%"
 
 #: gui/main.cpp:334
 msgid "Error: None of the supported games were detected."
-msgstr "Erreur : Aucun des jeux pris en chargé n'a été détecté. "
+msgstr "Erreur : Aucun des jeux pris en charge n'a été détecté. "
 
 #: gui/main.cpp:379
 msgid "Edit Metadata"
@@ -448,7 +448,7 @@ msgstr "Éditer les métadonnées"
 
 #: gui/main.cpp:380
 msgid "Sort Plugins"
-msgstr "Trier les plug-ins"
+msgstr "Trier les plugins"
 
 #: gui/main.cpp:381
 msgid "View Last Report"
@@ -464,11 +464,11 @@ msgstr "Voir le &journal débogage"
 
 #: gui/main.cpp:387
 msgid "&Sort Plugins"
-msgstr "&Trier les plug-ins"
+msgstr "&Trier les plugins"
 
 #: gui/main.cpp:388
 msgid "&Redate Plugins"
-msgstr "&Redater le plugin"
+msgstr "&Redater les plugins"
 
 #: gui/main.cpp:391
 msgid "&File"
@@ -480,7 +480,7 @@ msgstr "&Métadonnées"
 
 #: gui/main.cpp:394
 msgid "&Settings..."
-msgstr "&Règlages"
+msgstr "&Paramètres"
 
 #: gui/main.cpp:395
 msgid "&Edit"
@@ -488,7 +488,7 @@ msgstr "&Éditer"
 
 #: gui/main.cpp:407
 msgid "&Game"
-msgstr "&Jeux"
+msgstr "&Jeu"
 
 #: gui/main.cpp:412
 msgid "&Help"
@@ -496,11 +496,11 @@ msgstr "&Aide"
 
 #: gui/main.cpp:496 gui/main.cpp:851
 msgid "BOSS: Working..."
-msgstr "BOSS : En train de travailler "
+msgstr "BOSS : En cours"
 
 #: gui/main.cpp:496 gui/main.cpp:851
 msgid "BOSS working..."
-msgstr "BOSS travail..."
+msgstr "BOSS en cours..."
 
 #: gui/main.cpp:547
 msgid "Userlist parsing failed. Details: %1%"
@@ -511,13 +511,13 @@ msgid ""
 "A global message contains a condition that could not be evaluated. Details: "
 "%1%"
 msgstr ""
-"Un message global contient une condition qui n'a pas pu être évalué. "
+"Un message global contient une condition qui n'a pas pu être évaluée. "
 "Détails : %1%"
 
 #: gui/main.cpp:615
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
 msgstr ""
-"\"%1%\" contient une condition qui n'a pas pu être évalué. Détails : %2%"
+"\"%1%\" contient une condition qui n'a pas pu être évaluée. Détails : %2%"
 
 #: gui/main.cpp:627
 msgid "\"%1%\" is incompatible with \"%2%\" and is present."
@@ -533,7 +533,7 @@ msgstr "Impossible de générer l'image graphique. Détails : %1%"
 
 #: gui/main.cpp:687
 msgid "BOSS: Calculated Load Order"
-msgstr "BOSS : En train de définir l'ordre de chargement. "
+msgstr "BOSS : Ordre de chargement défini"
 
 #: gui/main.cpp:765
 msgid "Failed to set the load order. Details: %1%"
@@ -579,8 +579,8 @@ msgid ""
 msgstr ""
 "Cette fonction est prévue pour que les moddeurs qui utilisent le Creation "
 "Kit puissent définir l'ordre de chargement qu'ils utilisent. L'effet "
-"secondaire est que les mods souscrits sur le Steam Workshop seront "
-"retéléchargés pat Steam. Voulez-vous continuer ? "
+"secondaire est que les mods choisis sur le Steam Workshop seront "
+"retéléchargés par Steam. Voulez-vous continuer ? "
 
 #: gui/main.cpp:961
 msgid "BOSS: Warning"
@@ -604,11 +604,11 @@ msgstr "BOSS : Redater le plug-in"
 
 #: gui/main.cpp:1024
 msgid "BOSS: Settings"
-msgstr "BOSS: Configuration"
+msgstr "BOSS : Configuration"
 
 #: gui/main.cpp:1059 gui/main.cpp:1074
 msgid "Error: \"%1%\" cannot be found."
-msgstr "Erreur: \"%1%\" n'a pas être trouvé"
+msgstr "Erreur: \"%1%\" n'a pas être trouvé."
 
 #: gui/main.cpp:1086
 msgid ""
@@ -616,7 +616,7 @@ msgid ""
 "Master system."
 msgstr ""
 "Un outil d'optimisation de l'ordre de chargement pour les jeux qui utilisent "
-"le système des Elder Scrols Plugin/Master"
+"le système des Elder Scrols plugin/master."
 
 #: gui/main.cpp:1110
 msgid "Up"
@@ -635,14 +635,14 @@ msgid ""
 "Please submit any alterations made for reasons other than user preference \n"
 "to the BOSS team so that they may include the changes in the masterlist."
 msgstr ""
-"S'il vous plaît, soumettez les modifications apportées pour des raisons "
-"autres que la préfèrence de l'utilisateur \n"
-" à l'équipe de BOSS afin qu'elle puisse l'inclure les changements dans la "
+"Veuillez soumettre les modifications apportées pour des raisons autres que "
+"la préfèrence de l'utilisateur \n"
+" à l'équipe de BOSS afin qu'elle puisse inclure les changements dans la "
 "masterlist. "
 
 #: gui/main.cpp:1181 gui/main.cpp:1226
 msgid "Error: Cannot load \"%1%\" before \"%2%\"."
-msgstr "Erreur : Impossible de charger %1% avant %2%"
+msgstr "Erreur : Impossible de charger \"%1%\" avant \"%2%\"."
 
 #: gui/settings.cpp:40
 msgid "None"
@@ -694,7 +694,7 @@ msgstr "Nom"
 
 #: gui/settings.cpp:69
 msgid "Base Game Type"
-msgstr "Type du jeu de base. "
+msgstr "Type du jeu de base"
 
 #: gui/settings.cpp:70
 msgid "BOSS Folder Name"
@@ -718,11 +718,11 @@ msgstr "Clé du registre du chemin d'installation. "
 
 #: gui/settings.cpp:98
 msgid "Default Game:"
-msgstr "Jeu par défaut : "
+msgstr "Jeu par défaut :"
 
 #: gui/settings.cpp:104
 msgid "Debug Verbosity:"
-msgstr "Niveau de détails de la sortie du débogage : "
+msgstr "Niveau de détails de la sortie du débogage :"
 
 #: gui/settings.cpp:126
 msgid "Language and game changes will be applied after BOSS is restarted."
@@ -732,7 +732,7 @@ msgstr ""
 
 #: gui/settings.cpp:139
 msgid "The output is logged to the BOSSDebugLog.txt file."
-msgstr "Les informations sont enregistrées dans le fichier BOSSDEbugLog.txt..."
+msgstr "Les informations sont enregistrées dans le fichier BOSSDEbugLog.txt."
 
 #: gui/settings.cpp:279
 msgid "BOSS: Add Game"
@@ -798,7 +798,7 @@ msgstr "Suggestion(s) d'étiquette : "
 
 #: backend/generators.h:84
 msgid "Warning:"
-msgstr "Averissement : "
+msgstr "Avertissement : "
 
 #: backend/generators.h:86
 msgid "Error:"
@@ -866,22 +866,22 @@ msgstr "Nombre d'erreurs"
 
 #: backend/generators.h:385
 msgid "Version:"
-msgstr "Version:"
+msgstr "Version :"
 
 #: backend/generators.h:405
 msgid "Add:"
-msgstr "Ajouter : "
+msgstr "Ajouter :"
 
 #: backend/generators.h:411
 msgid "Remove:"
-msgstr ""
+msgstr "Retirer :"
 
 #: backend/generators.h:419
 msgid ""
 "Contains %1% ITM records, %2% UDR records and %3% deleted navmeshes. Clean "
 "with %4%."
 msgstr ""
-"Contient %1% enregistrement d'ITM, %2% enregistrements d'UDR et %3% "
+"Contient %1% enregistrements d'ITM, %2% enregistrements d'UDR et %3% "
 "navmeshes supprimés. Nettoyez-les avec %4%. "
 
 #: backend/generators.h:421
@@ -905,18 +905,18 @@ msgstr "Contient %1% enregistrements d'UDR. Nettoyez-les avec %2%. "
 #: backend/generators.h:432
 msgid "Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%."
 msgstr ""
-"Contient %1% enregistrement d'ITM, %2% navmeshes supprimés. Nettoyez-les "
+"Contient %1% enregistrements d'ITM, %2% navmeshes supprimés. Nettoyez-les "
 "avec %3%. "
 
 #: backend/generators.h:434
 msgid "Contains %1% ITM records. Clean with %2%."
-msgstr "Contient %1% enregistrement d'ITM. Nettoyez-les avec %2%. "
+msgstr "Contient %1% enregistrements d'ITM. Nettoyez-les avec %2%. "
 
 #: backend/generators.h:437
 msgid "Contains %1% ITM records and %2% UDR records. Clean with %3%."
 msgstr ""
-"Contient %1% enregistrement d'ITM et %2% enregistrements d'UDR. Nettoyez-les "
-"avec %3%. "
+"Contient %1% enregistrements d'ITM et %2% enregistrements d'UDR. Nettoyez-"
+"les avec %3%. "
 
 #: backend/generators.h:474
 msgid "The BOSS Report requires Javascript to be enabled in order to function."
@@ -941,7 +941,7 @@ msgstr "Cacher les notes"
 
 #: backend/generators.h:555
 msgid "Hide 'Do Not Clean' Messages"
-msgstr "Cacher les messages \"Ne pas nettoyer\""
+msgstr "Cacher les messages 'Ne pas nettoyer'"
 
 #: backend/generators.h:563
 msgid "Hide All Plugin Messages"
@@ -953,11 +953,11 @@ msgstr "Cacher tous les plugins sans message"
 
 #: backend/generators.h:581
 msgid "%1% of %2% plugins hidden."
-msgstr "%1% de %2% plugins cachés"
+msgstr "%1% sur %2% plugins cachés."
 
 #: backend/generators.h:589
 msgid "%1% of %2% messages hidden."
-msgstr "%1% de %2% messages cachés"
+msgstr "%1% sur %2% messages cachés."
 
 #: backend/generators.h:631
 msgid "Could not write BOSS report."
@@ -965,15 +965,15 @@ msgstr "Impossible d'écrire le rapport de BOSS. "
 
 #: backend/parsers.h:466 backend/parsers.h:549
 msgid "Invalid file path:"
-msgstr "Chemin du fichier invalide : "
+msgstr "Chemin du fichier invalide :"
 
 #: backend/parsers.h:514
 msgid "Invalid folder path:"
-msgstr "Chemin du dossier invalide : "
+msgstr "Chemin du dossier invalide :"
 
 #: backend/parsers.h:531
 msgid "Invalid regex string:"
-msgstr "Regex string invalide : "
+msgstr "Regex string invalide :"
 
 #: backend/parsers.h:626
 msgid "Expected \"%1%\" at \"%2%\"."

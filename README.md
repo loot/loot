@@ -40,119 +40,8 @@ BOSS requires the following libraries (version numbers used in latest developmen
 
 BOSS expects all libraries' folders to be present alongside the BOSS repository folder that contains this readme, or otherwise installed such that the compiler and linker used can find them without suppling additional paths. All paths below are relative to the folder(s) containing the libraries and BOSS.
 
-Alphanum, Libespm and PugiXML do not require any additional setup. The rest of the libraries must be built separately. Instructions for building them and BOSS itself on Windows and Linux are given below. They assume that Visual C++ 2013 is being used on Windows, and mingw-w64 is being used on Linux, though they should be similar for other compilers.
+Alphanum, Libespm and PugiXML do not require any additional setup. The rest of the libraries must be built separately. Instructions for building them and BOSS itself using MSVC or MinGW are given in `docs/BUILD.MSVC.md` and `docs/BUILD.MinGW.md` respectively.
 
-### Windows
-
-#### Boost
-
-```
-bootstrap.bat
-b2 toolset=msvc-12.0 threadapi=win32 link=static variant=release address-model=32 --with-log --with-date_time --with-thread --with-filesystem --with-locale --with-regex --with-system  --with-iostreams --stagedir=stage-32
-```
-
-#### wxWidgets
-
-Just build the solution provided by wxWidgets.
-
-#### zlib
-
-1. Add `/safeseh` to both lines in `contrib\masmx86\bld_ml32.bat`. 
-2. Build the solution in `contrib\vstudio`.
-3. Copy `build\zconf.h` to `.\zconf.h`.
-
-#### yaml-cpp
-
-1. Set CMake up so that it builds the binaries in the `build` subdirectory of the yaml-cpp folder.
-2. Define `BOOST_ROOT` to point to where the Boost folder is. 
-3. Configure CMake, then generate a build system for Visual Studio 12.
-4. Open the generated solution file, and build it.
-
-#### Libloadorder
-
-Follow the instructions in libloadorder's README.md to build it as a static library.
-
-#### Libgit2
-
-1. Set CMake up so that it builds the binaries in the `build` subdirectory of the libgit2 folder.
-2. Configure CMake.
-3. Undefine `BUILD_SHARED_LIBS`.
-4. Generate a build system for Visual Studio 12.
-5. Open the generated solution file, and build it.
-
-You may need to make sure that the configuration properties for the Visual Studio project are set to use the multithreaded DLL runtime library (C/C++->Code Generation).
-
-#### BOSS
-
-1. Set CMake up so that it builds the binaries in the `build` subdirectory of the BOSS folder.
-2. Define `PROJECT_ARCH=32` or `PROJECT_ARCH=64` to build 32 or 64 bit executables respectively.
-3. Define `PROJECT_LINK=STATIC` to build a static API, or `PROJECT_LINK=SHARED` to build a DLL API.
-4. Define `PROEJCT_LIBS_DIR` to point to the folder holding all the required libraries' folders.
-5. Configure CMake, then generate a build system for Visual Studio 12.
-6. Open the generated solution file, and build it.
-
-If building on MSVC 2012 or 2013, Windows XP is not supported unless Configuration Properties->Platform Toolset is set to `v120_xp`.
-
-### Linux
-
-#### Boost
-
-```
-./bootstrap.sh
-echo "using gcc : 4.6.3 : i686-w64-mingw32-g++ : <rc>i686-w64-mingw32-windres <archiver>i686-w64-mingw32-ar <ranlib>i686-w64-mingw32-ranlib ;" > tools/build/v2/user-config.jam
-./b2 toolset=gcc-4.6.3 target-os=windows threadapi=win32 link=static runtime-link=static variant=release address-model=32 cxxflags=-fPIC --with-log --with-date_time --with-thread --with-filesystem --with-locale --with-regex --with-system --with-iostreams --stagedir=stage-32
-```
-
-#### wxWidgets
-
-```
-./configure --host=i686-w64-mingw32 --disable-shared --enable-stl
-make
-```
-
-#### zlib
-
-```
-mkdir build && cd build
-cmake .. -DCMAKE_C_FLAGS=-m32 -DPROJECT_ARCH=32 -DCMAKE_TOOLCHAIN_FILE=../BOSSv3/mingw-toolchain.cmake
-make
-cp zconf.h ../zconf.h
-```
-
-#### yaml-cpp
-
-```
-cmake . -DCMAKE_C_FLAGS=-m32 -DPROJECT_ARCH=32 -DCMAKE_TOOLCHAIN_FILE=../BOSSv3/mingw-toolchain.cmake -DBOOST_ROOT=../boost
-make
-```
-
-#### Libloadorder
-
-Follow the instructions in libloadorder's README.md to build it as a static library.
-
-#### OpenSSL
-
-```
-./Configure --cross-compile-prefix=i686-w64-mingw32- mingw
-make
-```
-
-#### Libgit2
-
-```
-mkdir build && cd build
-cmake .. -DBUILD_SHARED_LIBS=OFF -DOPENSSL_ROOT_DIR=../openssl -DCMAKE_C_FLAGS=-m32 -DPROJECT_ARCH=32 -DCMAKE_TOOLCHAIN_FILE=../BOSSv3/mingw-toolchain.cmake
-make
-```
-If building with SSL support using OpenSSL, also pass ``.
-
-#### BOSS
-
-```
-mkdir build && cd build
-cmake .. -DPROJECT_LIBS_DIR=".." -DPROJECT_ARCH=32 -DPROJECT_LINK=STATIC -DCMAKE_TOOLCHAIN_FILE="mingw-toolchain.cmake"
-make
-```
 
 ## Using The Masterlist Converter
 
@@ -172,9 +61,9 @@ On encountering an error, it will print an error message to the console, and wil
 
 The converter does not perform a lossless conversion. The following do not get transferred into the new masterlist:
 
-* Silent comments. (Search regex: `^IF(NOT)?.+MOD:`.)
-* Plugin conditions. (Search regex: `REQ:.+(\.esp|\.esm).`)
-* Requirement messages containing plugin filenames. (Search regex: `^(/\*|//)`.)
+* Silent comments. (Search regex: `^(/\*|//)`)
+* Plugin conditions. (Search regex: `^IF(NOT)?.+MOD:`)
+* Requirement messages containing plugin filenames. (Search regex: `REQ:.+(\.esp|\.esm)`)
 * Dirty message content. The ITM, UDR and Navmesh counts, along with CRCs and the dirty utility referenced are transferred, but any additional content, such as links to additional instructions, are lost. (Search regex: `DIRTY:`.)
 
 In addition, while other data is retained, it needs some manual adjustment, eg. translated messages need are converted as separate messages and should be placed into message content objects.
@@ -182,3 +71,16 @@ In addition, while other data is retained, it needs some manual adjustment, eg. 
 ## Packaging Releases
 
 Installer and zip archive releases for the main BOSS application can be handled by running the scripts `installer.nsi` and `archive.py` in the `src` folder respectively. The installer script requires [NSIS 3](http://nsis.sourceforge.net/Main_Page) to be installed, while the archive script requires [Python](http://www.python.org/) to be installed.
+
+The installer and Python script both require the built BOSS.exe to be at `build\BOSS.exe`, and the installer also requires the MSVC 2013 Redistributable (x86) to be at `build\vcredist_x86.exe`.
+
+## Adding Translations To BOSS
+
+If a translation for a new language is provided, here's what needs changing in the code to make BOSS use that translation.
+
+* Add constants for the language in `api.h` and `globals.h`.
+* In `helpers.cpp`, update `Language::Language(const std::string& nameOrISOCode)` and `Language::Construct(const unsigned int code).
+* In `helpers.h`, update `Language::Names()`.
+* In `main.cpp`, update `BossGUI::OnInit` to set the correct `wxLANGUAGE_`.
+* In `archive.py`, add the language folder to the inline list on line 68.
+* In `installer.nsi`, add entries for the language folder to the install and uninstall sections. If there's an installer translation, also add its string definitions beside all the other language string definitions, and insert its macro beside all the other language macros.

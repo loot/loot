@@ -24,54 +24,104 @@
 #define __BOSS_GUI_EDITOR__
 
 #include "ids.h"
+#include "misc.h"
 #include "../backend/metadata.h"
 
 #include <string>
-#include <vector>
+#include <list>
 #include <wx/spinctrl.h>
 #include <wx/notebook.h>
 #include <wx/listctrl.h>
+#include <wx/tglbtn.h>
+#include <wx/dnd.h>
 
-class MessageList : public wxListView {
+/* Have two versions of the editor: one mini editor that only contains 
+   controls for editing the load order related metadata, and a full editor 
+   that contains controls for editing all the metadata.
+  
+   Both editors need to convert between metadata and control data, and to
+   keep track of what edits have been made.
+
+   Have a immutable plugin list to keep track of non-user-edit metadata,
+   and a mutable plugin list to keep track of user-edit metadata. When 
+   recording edits, diff the metadata obtained from the control values with
+   the metadata in the immutable plugin entry to get the new user-edit metadata.
+
+   If a metadata type's corresponding control is not present (ie. in the mini
+   editor), then use the immutable plugin entry's metadata for that type.
+*/
+
+class TextDropTarget : public wxTextDropTarget {  //Class to override virtual functions.
 public:
-    MessageList(wxWindow * parent, wxWindowID id, const unsigned int language);
-
-    void SetItems(const std::vector<boss::Message>& messages);
-    std::vector<boss::Message> GetItems() const;
-
-    boss::Message GetItem(long item) const;
-    void SetItem(long item, const boss::Message& message);
-    void AppendItem(const boss::Message& message);
-
-    void OnDeleteItem(wxListEvent& event);
-protected:
-    wxString OnGetItemText(long item, long column) const;
-
+    TextDropTarget(wxListView * owner, wxStaticText * name);
+    virtual bool OnDropText(wxCoord x, wxCoord y, const wxString &data);
 private:
-    std::vector<boss::Message> _messages;
-    const unsigned int _language;
+    wxListView * targetOwner;
+    wxStaticText * targetName;
 };
 
-class Editor : public wxFrame {
+class CommonEditor {
 public:
-    Editor(wxWindow *parent, const wxString& title, const std::string userlistPath, const std::vector<boss::Plugin>& basePlugins, std::vector<boss::Plugin>& editedPlugins, const unsigned int language, const boss::Game& game);
+    CommonEditor(const std::list<boss::Plugin>& plugins, const boss::Game& game);
+    CommonEditor(const std::list<boss::Plugin>& plugins, const boss::Game& game, std::list<boss::Plugin>& editedPlugins);
+protected:
+    const boss::Game& _game;
+    const std::list<boss::Plugin> _basePlugins;
+    std::list<boss::Plugin> _editedPlugins;
+
+    boss::Plugin GetMasterData(const wxString& plugin) const;
+    boss::Plugin GetUserData(const wxString& plugin) const;
+    virtual boss::Plugin GetNewData(const wxString& plugin) const = 0;
+
+    void ApplyEdits(const wxString& plugin, wxListView * list);
+
+    boss::File RowToFile(wxListView * list, long row) const;
+    boss::Tag RowToTag(wxListView * list, long row) const;
+    boss::PluginDirtyInfo RowToPluginDirtyInfo(wxListView * list, long row) const;
+};
+
+class MiniEditor : public wxDialog, public CommonEditor {
+public:
+    MiniEditor(wxWindow *parent, const wxString& title, const std::list<boss::Plugin>& plugins, const boss::Game& game);
+
+    void OnPluginSelect(wxListEvent& event);
+    void OnRowSelect(wxListEvent& event);
+    void OnRemoveRow(wxCommandEvent& event);
+    void OnFilterToggle(wxCommandEvent& event);
+    void OnDragStart(wxListEvent& event);
+    void OnApply(wxCommandEvent& event);
+    void OnResize(wxSizeEvent& event);
+
+    const std::list<boss::Plugin>& GetEditedPlugins() const;
+private:
+    wxListView * pluginList;
+    wxPanel * editingPanel;
+    wxButton * removeBtn;
+    wxListView * loadAfterList;
+    wxCheckBox * filterCheckbox;
+    wxSpinCtrl * prioritySpin;
+    wxStaticText * pluginText;
+    wxStaticText * descText;
+
+    boss::Plugin GetNewData(const wxString& plugin) const;
+};
+
+class Editor : public wxFrame, public CommonEditor {
+public:
+    Editor(wxWindow *parent, const wxString& title, const std::string userlistPath, const std::list<boss::Plugin>& basePlugins, std::list<boss::Plugin>& editedPlugins, const unsigned int language, const boss::Game& game);
 
     void OnPluginSelect(wxListEvent& event);
     void OnPluginListRightClick(wxListEvent& event);
     void OnPluginCopyName(wxCommandEvent& event);
     void OnPluginCopyMetadata(wxCommandEvent& event);
     void OnPluginClearMetadata(wxCommandEvent& event);
-    void OnEnabledToggle(wxCommandEvent& event);
-    void OnPriorityChange(wxSpinEvent& event);
     void OnListBookChange(wxBookCtrlEvent& event);
     void OnAddRow(wxCommandEvent& event);
     void OnEditRow(wxCommandEvent& event);
     void OnRemoveRow(wxCommandEvent& event);
-    void OnRecalc(wxCommandEvent& event);
     void OnRowSelect(wxListEvent& event);
     void OnQuit(wxCommandEvent& event);
 private:
-
     wxMenu * pluginMenu;
     wxButton * addBtn;
     wxButton * editBtn;
@@ -91,88 +141,7 @@ private:
     wxStaticText * pluginText;
 
     const std::string _userlistPath;
-    const std::vector<boss::Plugin> _basePlugins;
-    const boss::Game& _game;
-    std::vector<boss::Plugin> _editedPlugins;
-    std::vector<boss::Message> currentMessages;
 
-    void ApplyEdits(const wxString& plugin);
-
-    boss::Plugin GetMasterData(const wxString& plugin) const;
-    boss::Plugin GetUserData(const wxString& plugin) const;
     boss::Plugin GetNewData(const wxString& plugin) const;
-
-    boss::File RowToFile(wxListView * list, long row) const;
-    boss::Tag RowToTag(wxListView * list, long row) const;
-    boss::PluginDirtyInfo RowToPluginDirtyInfo(wxListView * list, long row) const;
 };
-
-class FileEditDialog : public wxDialog {
-public:
-    FileEditDialog(wxWindow *parent, const wxString& title);
-
-    void SetValues(const wxString& name, const wxString& display, const wxString& condition);
-    wxString GetName() const;
-    wxString GetDisplayName() const;
-    wxString GetCondition() const;
-private:
-    wxTextCtrl * _name;
-    wxTextCtrl * _display;
-    wxTextCtrl * _condition;
-};
-
-class MessageEditDialog : public wxDialog {
-public:
-    MessageEditDialog(wxWindow *parent, const wxString& title);
-
-    void SetMessage(const boss::Message& message);
-    boss::Message GetMessage() const;
-
-    void OnSelect(wxListEvent& event);
-    void OnAdd(wxCommandEvent& event);
-    void OnEdit(wxCommandEvent& event);
-    void OnRemove(wxCommandEvent& event);
-private:
-    wxButton * addBtn;
-    wxButton * editBtn;
-    wxButton * removeBtn;
-    wxChoice * _type;
-    wxChoice * _language;
-    wxListView * _content;
-    wxTextCtrl * _condition;
-    wxTextCtrl * _str;
-};
-
-class TagEditDialog : public wxDialog {
-public:
-    TagEditDialog(wxWindow *parent, const wxString& title);
-
-    void SetValues(int state, const wxString& name, const wxString& condition);
-    wxString GetState() const;
-    wxString GetName() const;
-    wxString GetCondition() const;
-private:
-    wxChoice * _state;
-    wxTextCtrl * _name;
-    wxTextCtrl * _condition;
-};
-
-class DirtInfoEditDialog : public wxDialog {
-public:
-    DirtInfoEditDialog(wxWindow * parent, const wxString& title);
-
-    void SetValues(const wxString& crc, unsigned int itm, unsigned int udr, unsigned int nav, const wxString& utility);
-    wxString GetCRC() const;
-    wxString GetUtility() const;
-    unsigned int GetITMs() const;
-    unsigned int GetUDRs() const;
-    unsigned int GetDeletedNavmeshes() const;
-private:
-    wxTextCtrl * _crc;
-    wxSpinCtrl * _itm;
-    wxSpinCtrl * _udr;
-    wxSpinCtrl * _nav;
-    wxTextCtrl * _utility;
-};
-
 #endif

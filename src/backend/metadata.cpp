@@ -306,7 +306,7 @@ namespace boss {
 		: name(n), enabled(true), priority(0) {
 
 		// Get data from file contents using libespm. Assumes libespm has already been initialised.
-        BOOST_LOG_TRIVIAL(trace) << "Opening plugin with libespm...";
+        BOOST_LOG_TRIVIAL(trace) << name << ": " << "Opening with libespm...";
 		boost::filesystem::path filepath = game.DataPath() / name;
 
         //In case the plugin is ghosted, but the extension already got trimmed.
@@ -325,22 +325,22 @@ namespace boss {
 
         //If the name passed ends in '.ghost', that should be trimmed.
         if (boost::iends_with(name, ".ghost")) {
-            BOOST_LOG_TRIVIAL(trace) << "Trimming '.ghost' extension.";
+            BOOST_LOG_TRIVIAL(trace) << name << ": " << "Trimming '.ghost' extension.";
             name = name.substr(0, name.length() - 6);
         }
 
-        BOOST_LOG_TRIVIAL(trace) << "Checking to see if plugin is a master or not.";
+        BOOST_LOG_TRIVIAL(trace) << name << ": " << "Checking master flag.";
 		isMaster = file->isMaster(game.espm_settings);
 
-        BOOST_LOG_TRIVIAL(trace) << "Getting the plugin's masters.";
+        BOOST_LOG_TRIVIAL(trace) << name << ": " << "Getting masters.";
 		masters = file->getMasters();
 
-        BOOST_LOG_TRIVIAL(trace) << "Number of masters: " << masters.size();
+        BOOST_LOG_TRIVIAL(trace) << name << ": " << "Number of masters: " << masters.size();
 
         crc = file->crc;
         game.crcCache.insert(pair<string, uint32_t>(n, crc));
 
-        BOOST_LOG_TRIVIAL(trace) << "Getting the plugin's FormIDs.";
+        BOOST_LOG_TRIVIAL(trace) << name << ": " << "Getting the FormIDs.";
 		vector<uint32_t> records = file->getFormIDs();
         vector<string> plugins = masters;
         plugins.push_back(name);
@@ -352,7 +352,7 @@ namespace boss {
         }
 
         //Also read Bash Tags applied and version string in description.
-        BOOST_LOG_TRIVIAL(trace) << "Reading the plugin description.";
+        BOOST_LOG_TRIVIAL(trace) << name << ": " << "Reading the description.";
         string text = file->getDescription();
 
         delete file;
@@ -361,7 +361,7 @@ namespace boss {
         begin = text.begin();
         end = text.end();
 
-        BOOST_LOG_TRIVIAL(trace) << "Attempting to read the plugin version from its description.";
+        BOOST_LOG_TRIVIAL(trace) << name << ": " << "Attempting to read the version from the description.";
         for(int j = 0; j < 7 && version.empty(); j++) {
             boost::smatch what;
             while (boost::regex_search(begin, end, what, version_checks[j])) {
@@ -377,7 +377,7 @@ namespace boss {
             }
         }
 
-        BOOST_LOG_TRIVIAL(trace) << "Attempting to extract Bash Tags from the description.";
+        BOOST_LOG_TRIVIAL(trace) << name << ": " << "Attempting to extract Bash Tags from the description.";
         size_t pos1 = text.find("{{BASH:");
         if (pos1 == string::npos || pos1 + 7 == text.length())
             return;
@@ -395,7 +395,7 @@ namespace boss {
 
         for (int i=0,max=bashTags.size(); i<max; ++i) {
             boost::trim(bashTags[i]);
-            BOOST_LOG_TRIVIAL(trace) << "Extracted Bash Tag: " << bashTags[i];
+            BOOST_LOG_TRIVIAL(trace) << name << ": " << "Extracted Bash Tag: " << bashTags[i];
             tags.insert(Tag(bashTags[i]));
         }
 	}
@@ -699,23 +699,33 @@ namespace boss {
         return false;
     }
 
-    std::map<string,bool> Plugin::CheckInstallValidity(const Game& game) const {
-        map<string,bool> issues;
+    std::vector<std::string> Plugin::CheckInstallValidity(const Game& game) const {
+        std::vector<std::string> errorMessages;
         if (tags.find(Tag("Filter")) == tags.end()) {
             for (vector<string>::const_iterator it=masters.begin(), endIt=masters.end(); it != endIt; ++it) {
-                if (!boost::filesystem::exists(game.DataPath() / *it) && !boost::filesystem::exists(game.DataPath() / (*it + ".ghost")))
-                    issues.insert(pair<string,bool>(*it,false));
+                if (!boost::filesystem::exists(game.DataPath() / *it) && !boost::filesystem::exists(game.DataPath() / (*it + ".ghost"))) {
+                    BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" requires \"" << *it << "\", but it is missing.";
+                    errorMessages.push_back((boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % *it).str());
+                }
+                else if (!game.IsActive(*it)) {
+                    BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" requires \"" << *it << "\", but it is inactive.";
+                    errorMessages.push_back((boost::format(boost::locale::translate("This plugin requires \"%1%\" to be active, but it is inactive.")) % *it).str());
+                }
             }
         }
         for (set<File>::const_iterator it=requirements.begin(), endIt=requirements.end(); it != endIt; ++it) {
-            if (!boost::filesystem::exists(game.DataPath() / it->Name()) && !(IsPlugin(it->Name()) && boost::filesystem::exists(game.DataPath() / (it->Name() + ".ghost"))))
-                issues.insert(pair<string,bool>(it->DisplayName(),false));
+            if (!boost::filesystem::exists(game.DataPath() / it->Name()) && !(IsPlugin(it->Name()) && boost::filesystem::exists(game.DataPath() / (it->Name() + ".ghost")))) {
+                BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" requires \"" << it->Name() << "\", but it is missing.";
+                errorMessages.push_back((boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % it->Name()).str());
+            }
         }
         for (set<File>::const_iterator it=incompatibilities.begin(), endIt=incompatibilities.end(); it != endIt; ++it) {
-            if (boost::filesystem::exists(game.DataPath() / it->Name()) || (IsPlugin(it->Name()) && boost::filesystem::exists(game.DataPath() / (it->Name() + ".ghost"))))
-                issues.insert(pair<string,bool>(it->DisplayName(),true));
+            if (boost::filesystem::exists(game.DataPath() / it->Name()) || (IsPlugin(it->Name()) && boost::filesystem::exists(game.DataPath() / (it->Name() + ".ghost")))) {
+                BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" is incompatible with \"" << it->Name() << "\", but both are present.";
+                errorMessages.push_back((boost::format(boost::locale::translate("This plugin is incompatible with \"%1%\", but both are present.")) % it->Name()).str());
+            }
         }
-        return issues;
+        return errorMessages;
     }
 
     bool Plugin::LoadsBSA(const Game& game) const {
@@ -741,7 +751,7 @@ namespace boss {
     }
 
     bool alpha_sort(const Plugin& lhs, const Plugin& rhs) {
-        return boost::ilexicographical_compare(lhs.Name(), rhs.Name());
+        return boost::ilexicographical_compare(rhs.Name(), lhs.Name());
     }
 
     bool master_sort(const Plugin& lhs, const Plugin& rhs) {

@@ -110,10 +110,12 @@ namespace boss {
 
             boss::vertex_it vit2 = vit;
             ++vit2;
-            for (vit2,vitend; vit2 != vitend; ++vit2) {
+            while (vit2 != vitend) {
 
-                if (graph[*vit].IsMaster() == graph[*vit2].IsMaster())
+                if (graph[*vit].IsMaster() == graph[*vit2].IsMaster()) {
+                    ++vit2;
                     continue;
+                }
 
                 vertex_t vertex, parentVertex;
                 if (graph[*vit2].IsMaster()) {
@@ -130,6 +132,7 @@ namespace boss {
 
                     boost::add_edge(parentVertex, vertex, graph);
                 }
+                ++vit2;
             }
 
             BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for masters.";
@@ -180,10 +183,12 @@ namespace boss {
             BOOST_LOG_TRIVIAL(trace) << "Adding priority difference edges to vertex for \"" << graph[*vit].Name() << "\".";
             boss::vertex_it vit2 = vit;
             ++vit2;
-            for (vit2,vitend; vit2 != vitend; ++vit2) {
+            while (vit2 != vitend) {
                 BOOST_LOG_TRIVIAL(trace) << "Checking for priority difference between \"" << graph[*vit].Name() << "\" and \"" << graph[*vit2].Name() << "\".";
-                if (graph[*vit].Priority() == graph[*vit2].Priority())
+                if (graph[*vit].Priority() == graph[*vit2].Priority()) {
+                    ++vit2;
                     continue;
+                }
 
                 vertex_t vertex, parentVertex;
                 if (graph[*vit].Priority() < graph[*vit2].Priority()) {
@@ -201,6 +206,7 @@ namespace boss {
 
                     boost::add_edge(parentVertex, vertex, graph);
                 }
+                ++vit2;
             }
         }
     }
@@ -209,25 +215,33 @@ namespace boss {
         boss::vertex_it vit, vitend;
 
         for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
-            vertex_t parentVertex;
 
             BOOST_LOG_TRIVIAL(trace) << "Adding overlap edges to vertex for \"" << graph[*vit].Name() << "\".";
 
+            if (graph[*vit].NumOverrideFormIDs() == 0) {
+                continue;
+            }
+
             boss::vertex_it vit2 = vit;
             ++vit2;
-            for (vit2,vitend; vit2 != vitend; ++vit2) {
-                BOOST_LOG_TRIVIAL(trace) << "Checking for FormID overlap between \"" << graph[*vit].Name() << "\" and \"" << graph[*vit2].Name() << "\".";
+            while (vit2 != vitend) {
+                BOOST_LOG_TRIVIAL(trace) << "Checking edge validity between \"" << graph[*vit].Name() << "\" and \"" << graph[*vit2].Name() << "\".";
 
-                if (graph[*vit].DoFormIDsOverlap(graph[*vit2])) {
-
-                    if (graph[*vit].MustLoadAfter(graph[*vit2]) || graph[*vit2].MustLoadAfter(graph[*vit]) || graph[*vit].Priority() != graph[*vit2].Priority())
-                        continue;
-
+                if (graph[*vit].Priority() == graph[*vit2].Priority() && !graph[*vit].MustLoadAfter(graph[*vit2]) && !graph[*vit2].MustLoadAfter(graph[*vit]) && graph[*vit].DoFormIDsOverlap(graph[*vit2])) {
                     vertex_t vertex, parentVertex;
-                    if (graph[*vit].NumOverrideFormIDs() >= graph[*vit2].NumOverrideFormIDs()) {
+                    if (graph[*vit].NumOverrideFormIDs() > graph[*vit2].NumOverrideFormIDs()) {
                         parentVertex = *vit;
                         vertex = *vit2;
-                    } else {
+                    }
+                    else if (graph[*vit].NumOverrideFormIDs() < graph[*vit2].NumOverrideFormIDs()) {
+                        parentVertex = *vit2;
+                        vertex = *vit;
+                    }
+                    else if (graph[*vit].Name() < graph[*vit2].Name()) {  //There needs to be an edge between the two, but direction cannot be decided using overlap size. Just use names.
+                        parentVertex = *vit;
+                        vertex = *vit2;
+                    }
+                    else {
                         parentVertex = *vit2;
                         vertex = *vit;
                     }
@@ -240,6 +254,7 @@ namespace boss {
                         boost::add_edge(parentVertex, vertex, graph);
                     }
                 }
+                ++vit2;
             }
         }
     }
