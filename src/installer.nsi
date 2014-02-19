@@ -415,7 +415,7 @@ FunctionEnd
 
         ;DetailPrint "Downloading Visual C++ 2013 Redistributable Setup..."
         ;DetailPrint "Contacting Microsoft.com..."
-        ;NSISdl::download /TIMEOUT=15000 "http://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4DD4-91DA-3737CD5CD6E3/vcredist_x86.exe" "vcredist_2013_x86.exe"
+        ;NSISdl::download /TIMEOUT=15000 "http://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4DD4-91DA-3737CD5CD6E3/vcredist_x86.exe" "vcredist_x86.exe"
 
         ;Pop $R0 ;Get the return value
         ;StrCmp $R0 "success" OnSuccess
@@ -424,7 +424,7 @@ FunctionEnd
 
         ;OnSuccess:
         DetailPrint "Running Visual C++ 2013 Redistributable Setup..."
-        ExecWait '"$TEMP\vcredist_2013_x86.exe" /qb'
+        ExecWait '"$TEMP\vcredist_x86.exe" /qb'
         DetailPrint "Finished Visual C++ 2013 SP1 Redistributable Setup"
 
         Delete "$TEMP\vcredist_x86.exe"
