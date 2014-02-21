@@ -439,6 +439,11 @@ Launcher::Launcher(const wxChar *title, YAML::Node& settings, Game& game, vector
     Bind(wxEVT_BUTTON, &Launcher::OnViewLastReport, this, OPTION_ViewLastReport);
     Bind(wxEVT_CLOSE_WINDOW, &Launcher::OnClose, this);
 
+    //Set up tooltips.
+    EditButton->SetToolTip(translate("Opens the Metadata Editor, where plugins' sorting metadata, messages, dirty info and Bash Tag suggestions can be edited."));
+    SortButton->SetToolTip(translate("Sorts your plugins, then displays a report of the results."));
+    ViewButton->SetToolTip(translate("Opens the last report generated for the current game."));
+
     //Set up initial state.
     SortButton->SetDefault();
 

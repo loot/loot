@@ -158,7 +158,7 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
     descText = new wxStaticText(this, wxID_ANY, translate("Please submit any edits made for reasons other than personal preference to the BOSS team so that they may be included in the masterlist."));
     prioritySpin = new wxSpinCtrl(editingPanel, wxID_ANY, "0");
     prioritySpin->SetRange(std::numeric_limits<int>::min(), std::numeric_limits<int>::max());
-    filterCheckbox = new wxCheckBox(editingPanel, wxID_ANY, translate("Show only conflicting plugins."));
+    filterCheckbox = new wxCheckBox(editingPanel, wxID_ANY, translate("Show only conflicting plugins"));
     
     pluginList = new wxListView(this, LIST_Plugins, wxDefaultPosition, wxDefaultSize, wxLC_REPORT | wxLC_SINGLE_SEL);
     loadAfterList = new wxListView(editingPanel, LIST_LoadAfter, wxDefaultPosition, wxDefaultSize, wxLC_REPORT | wxLC_SINGLE_SEL);
@@ -193,6 +193,13 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
     Bind(wxEVT_CHECKBOX, &MiniEditor::OnFilterToggle, this);
     Bind(wxEVT_BUTTON, &MiniEditor::OnApply, this, wxID_APPLY);
     Bind(wxEVT_SIZE, &MiniEditor::OnResize, this);
+
+    //Set up tooltips.
+    pluginList->SetToolTip(translate("Select a plugin to edit its load order metadata."));
+    loadAfterList->SetToolTip(translate("Drag and drop a plugin here to make the selected plugin load after it. The \"Show only conflicting plugins\" checkbox must be checked."));
+    prioritySpin->SetToolTip(translate("Plugins with higher priorities will load after plugins with smaller priorities that they conflict with, unless one must explicitly load after the other."));
+    filterCheckbox->SetToolTip(translate("Filters the plugin list to only display plugins which can be loaded after the currently selected plugin, and which either conflict with it, or, if it loads a BSA, also load BSAs. Also enables drag and drop of plugins into the Load After box."));
+    removeBtn->SetToolTip(translate("Only newly-added plugins may be removed here. Use the metadata editor to remove other user-added plugins."));
 
     //Set up editing panel layout.
     wxBoxSizer * mainBox = new wxBoxSizer(wxVERTICAL);
@@ -564,6 +571,13 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     Bind(wxEVT_MENU, &Editor::OnPluginCopyName, this, MENU_CopyName);
     Bind(wxEVT_MENU, &Editor::OnPluginCopyMetadata, this, MENU_CopyMetadata);
     Bind(wxEVT_MENU, &Editor::OnPluginClearMetadata, this, MENU_ClearMetadata);
+
+    //Set up tooltips.
+    pluginList->SetToolTip(translate("Select a plugin to edit its load order metadata."));
+    prioritySpin->SetToolTip(translate("Plugins with higher priorities will load after plugins with smaller priorities that they conflict with, unless one must explicitly load after the other."));
+    enableUserEditsBox->SetToolTip(translate("If unchecked, any user-added metadata will be ignored during sorting."));
+    editBtn->SetToolTip(translate("Only user-added data may be removed."));
+    removeBtn->SetToolTip(translate("Only user-added data may be removed."));
 
     //Set up layout.
     wxBoxSizer * bigBox = new wxBoxSizer(wxHORIZONTAL);

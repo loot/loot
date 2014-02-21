@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BOSS v3.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-18 19:15-0000\n"
-"PO-Revision-Date: 2014-02-19 04:56+0600\n"
+"POT-Creation-Date: 2014-02-19 19:26-0000\n"
+"PO-Revision-Date: 2014-02-20 21:56+0600\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru\n"
@@ -120,7 +120,7 @@ msgstr "Версия мастерлиста"
 msgid "Rolled back to the previous revision."
 msgstr "Выполнен откат к предыдущей версии."
 
-#: gui/editor.cpp:158 gui/editor.cpp:318 gui/editor.cpp:456
+#: gui/editor.cpp:158 gui/editor.cpp:325 gui/editor.cpp:463
 msgid ""
 "Please submit any edits made for reasons other than personal preference to "
 "the BOSS team so that they may be included in the masterlist."
@@ -130,10 +130,10 @@ msgstr ""
 "мастерлист."
 
 #: gui/editor.cpp:161
-msgid "Show only conflicting plugins."
-msgstr "Показать только конфликтующие плагины."
+msgid "Show only conflicting plugins"
+msgstr "Показать только конфликтующие плагины"
 
-#: gui/editor.cpp:167 gui/editor.cpp:832
+#: gui/editor.cpp:167 gui/editor.cpp:846
 msgid "Remove Plugin"
 msgstr "Удалить плагин"
 
@@ -145,116 +145,168 @@ msgstr "Плагин"
 msgid "Priority"
 msgstr "Приоритет"
 
-#: gui/editor.cpp:173 gui/editor.cpp:510 gui/editor.cpp:514 gui/editor.cpp:518
+#: gui/editor.cpp:173 gui/editor.cpp:517 gui/editor.cpp:521 gui/editor.cpp:525
 msgid "Filename"
 msgstr "Имя файла"
 
-#: gui/editor.cpp:174 gui/editor.cpp:511 gui/editor.cpp:515 gui/editor.cpp:519
+#: gui/editor.cpp:174 gui/editor.cpp:518 gui/editor.cpp:522 gui/editor.cpp:526
 msgid "Display Name"
 msgstr "Отображаемое имя"
 
-#: gui/editor.cpp:175 gui/editor.cpp:512 gui/editor.cpp:516 gui/editor.cpp:520
-#: gui/editor.cpp:524 gui/misc.cpp:36
+#: gui/editor.cpp:175 gui/editor.cpp:519 gui/editor.cpp:523 gui/editor.cpp:527
+#: gui/editor.cpp:531 gui/misc.cpp:36
 msgid "Condition"
 msgstr "Выражение"
 
-#: gui/editor.cpp:203 gui/editor.cpp:581
+#: gui/editor.cpp:198 gui/editor.cpp:576
+msgid "Select a plugin to edit its load order metadata."
+msgstr "Выберете плагин для правки его метаданных порядка загрузки."
+
+#: gui/editor.cpp:199
+msgid ""
+"Drag and drop a plugin here to make the selected plugin load after it. The "
+"\"Show only conflicting plugins\" checkbox must be checked."
+msgstr ""
+"Перетащите сюда плагин, чтобы сделать его загружвемым после выбранного. Поле "
+"\"Показать только конфликтующие плагины\" должно быть отмечено."
+
+#: gui/editor.cpp:200 gui/editor.cpp:577
+msgid ""
+"Plugins with higher priorities will load after plugins with smaller "
+"priorities that they conflict with, unless one must explicitly load after "
+"the other."
+msgstr ""
+"Плагины с большим приоритетом будут загружены после конфликтующих плагинов с "
+"меньшим, если конечно какой-либо из них должен грузиться конкретно после "
+"определенного другого."
+
+#: gui/editor.cpp:201
+msgid ""
+"Filters the plugin list to only display plugins which can be loaded after "
+"the currently selected plugin, and which either conflict with it, or, if it "
+"loads a BSA, also load BSAs. Also enables drag and drop of plugins into the "
+"Load After box."
+msgstr ""
+"Фильтры для списка плагинов, для отображения только плагинов, которые могут "
+"быть загружены после выбранного плагина и которые имеют любой конфликт с ним "
+"или если  он грузит BSA, также грузят BSA. Также включает перетаскивание "
+"плагинов в поле Грузить после."
+
+#: gui/editor.cpp:202
+msgid ""
+"Only newly-added plugins may be removed here. Use the metadata editor to "
+"remove other user-added plugins."
+msgstr ""
+"Только вновь добавленные плагины могут быть удалены отсюда. Используйте "
+"редактор метаданных, для удаления других, добавленных пользователем плагинов."
+
+#: gui/editor.cpp:210 gui/editor.cpp:595
 msgid "Priority: "
 msgstr "Приоритет: "
 
-#: gui/editor.cpp:207 gui/editor.cpp:502
+#: gui/editor.cpp:214 gui/editor.cpp:509
 msgid "Load After"
 msgstr "Грузить после"
 
-#: gui/editor.cpp:481
+#: gui/editor.cpp:488
 msgid "Enable User Changes"
 msgstr "Включить пользовательские правки"
 
-#: gui/editor.cpp:483 gui/editor.cpp:826
+#: gui/editor.cpp:490 gui/editor.cpp:840
 msgid "Add File"
 msgstr "Добавить файл"
 
-#: gui/editor.cpp:484 gui/editor.cpp:827
+#: gui/editor.cpp:491 gui/editor.cpp:841
 msgid "Edit File"
 msgstr "Править файл"
 
-#: gui/editor.cpp:485 gui/editor.cpp:828
+#: gui/editor.cpp:492 gui/editor.cpp:842
 msgid "Remove File"
 msgstr "Удалить файл"
 
-#: gui/editor.cpp:486
+#: gui/editor.cpp:493
 msgid "Save Changes"
 msgstr "Сохранить изменения"
 
-#: gui/editor.cpp:487
+#: gui/editor.cpp:494
 msgid "Cancel"
 msgstr "Отмена"
 
-#: gui/editor.cpp:500
+#: gui/editor.cpp:507
 msgid "Requirements"
 msgstr "Требования"
 
-#: gui/editor.cpp:501
+#: gui/editor.cpp:508
 msgid "Incompatibilities"
 msgstr "Несовместимости"
 
-#: gui/editor.cpp:503
+#: gui/editor.cpp:510
 msgid "Messages"
 msgstr "Сообщения"
 
-#: gui/editor.cpp:504
+#: gui/editor.cpp:511
 msgid "Bash Tags"
 msgstr "Bash-теги"
 
-#: gui/editor.cpp:505
+#: gui/editor.cpp:512
 msgid "Dirty Info"
 msgstr "Инфо. о \"грязных\" правках"
 
-#: gui/editor.cpp:508
+#: gui/editor.cpp:515
 msgid "Plugins"
 msgstr "Плагины"
 
-#: gui/editor.cpp:522
+#: gui/editor.cpp:529
 msgid "Add/Remove"
 msgstr "Добавить/удалить"
 
-#: gui/editor.cpp:523
+#: gui/editor.cpp:530
 msgid "Bash Tag"
 msgstr "Bash-тег"
 
-#: gui/editor.cpp:526
+#: gui/editor.cpp:533
 msgid "CRC"
 msgstr ""
 
-#: gui/editor.cpp:527
+#: gui/editor.cpp:534
 msgid "ITM Count"
 msgstr "Число ITM"
 
-#: gui/editor.cpp:528
+#: gui/editor.cpp:535
 msgid "UDR Count"
 msgstr "Число UDR"
 
-#: gui/editor.cpp:529
+#: gui/editor.cpp:536
 msgid "Deleted Navmesh Count"
 msgstr "Число удаленных Navmesh-записей"
 
-#: gui/editor.cpp:530
+#: gui/editor.cpp:537
 msgid "Cleaning Utility"
 msgstr "Утилита для очистки"
 
-#: gui/editor.cpp:533
+#: gui/editor.cpp:540
 msgid "Copy Name"
 msgstr "Скопировать имя"
 
-#: gui/editor.cpp:534
+#: gui/editor.cpp:541
 msgid "Copy Metadata As Text"
 msgstr "Копировать метаданные как текст"
 
-#: gui/editor.cpp:535
+#: gui/editor.cpp:542
 msgid "Remove All User-Added Metadata"
 msgstr "Удалить все пользовательские метаданные"
 
-#: gui/editor.cpp:798
+#: gui/editor.cpp:578
+msgid "If unchecked, any user-added metadata will be ignored during sorting."
+msgstr ""
+"Если не помечено, любые добавленные пользователем метаданные будут "
+"проигнорированы при сортировке."
+
+#: gui/editor.cpp:579 gui/editor.cpp:580
+msgid "Only user-added data may be removed."
+msgstr "Только добавленные пользователем данные могут быть удалены."
+
+#: gui/editor.cpp:812
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from this "
 "plugin?"
@@ -262,102 +314,102 @@ msgstr ""
 "Вы уверены, что хотите очистить все существующие пользовательские метаданные "
 "для этого плагина?"
 
-#: gui/editor.cpp:799 gui/main.cpp:1060
+#: gui/editor.cpp:813 gui/main.cpp:1065
 msgid "BOSS: Warning"
 msgstr "BOSS: Предупреждение"
 
-#: gui/editor.cpp:830
+#: gui/editor.cpp:844
 msgid "Add Plugin"
 msgstr "Добавить плагин"
 
-#: gui/editor.cpp:831
+#: gui/editor.cpp:845
 msgid "Edit Plugin"
 msgstr "Править плагин"
 
-#: gui/editor.cpp:834
+#: gui/editor.cpp:848
 msgid "Add Message"
 msgstr "Добавить сообщение"
 
-#: gui/editor.cpp:835
+#: gui/editor.cpp:849
 msgid "Edit Message"
 msgstr "Править сообщение"
 
-#: gui/editor.cpp:836
+#: gui/editor.cpp:850
 msgid "Remove Message"
 msgstr "Удалить сообщение"
 
-#: gui/editor.cpp:838
+#: gui/editor.cpp:852
 msgid "Add Bash Tag"
 msgstr "Добавить Bash-тег"
 
-#: gui/editor.cpp:839
+#: gui/editor.cpp:853
 msgid "Edit Bash Tag"
 msgstr "Править Bash-тег"
 
-#: gui/editor.cpp:840
+#: gui/editor.cpp:854
 msgid "Remove Bash Tag"
 msgstr "Удалить Bash-тег"
 
-#: gui/editor.cpp:842
+#: gui/editor.cpp:856
 msgid "Add Dirty Info"
 msgstr "Добавить инфо. о \"грязных\" правках"
 
-#: gui/editor.cpp:843
+#: gui/editor.cpp:857
 msgid "Edit Dirty Info"
 msgstr "Править инфо. о \"грязных\" правках"
 
-#: gui/editor.cpp:844
+#: gui/editor.cpp:858
 msgid "Remove Dirty Info"
 msgstr "Удалить инфо. о \"грязных\" правках"
 
-#: gui/editor.cpp:862
+#: gui/editor.cpp:876
 msgid "BOSS: Add File/Plugin"
 msgstr "BOSS: Добавить файл/плагин"
 
-#: gui/editor.cpp:884
+#: gui/editor.cpp:898
 msgid "BOSS: Add Message"
 msgstr "BOSS: Добавить сообщение"
 
-#: gui/editor.cpp:894
+#: gui/editor.cpp:908
 msgid "Error: No content specified. Row will not be added."
 msgstr "Ошибка: Не указано содержимое. Строка не будет добавлена."
 
-#: gui/editor.cpp:895 gui/editor.cpp:977 gui/main.cpp:167 gui/main.cpp:184
+#: gui/editor.cpp:909 gui/editor.cpp:991 gui/main.cpp:167 gui/main.cpp:184
 #: gui/main.cpp:199 gui/main.cpp:280 gui/main.cpp:290 gui/main.cpp:303
-#: gui/main.cpp:311 gui/main.cpp:342 gui/main.cpp:359 gui/main.cpp:524
-#: gui/main.cpp:545 gui/main.cpp:561 gui/main.cpp:932 gui/main.cpp:984
-#: gui/main.cpp:1006 gui/main.cpp:1071 gui/main.cpp:1108 gui/misc.cpp:312
+#: gui/main.cpp:311 gui/main.cpp:342 gui/main.cpp:359 gui/main.cpp:529
+#: gui/main.cpp:550 gui/main.cpp:566 gui/main.cpp:937 gui/main.cpp:989
+#: gui/main.cpp:1011 gui/main.cpp:1076 gui/main.cpp:1113 gui/misc.cpp:312
 #: gui/misc.cpp:327 gui/settings.cpp:287 gui/settings.cpp:299
 #: gui/settings.cpp:307 gui/settings.cpp:351 gui/settings.cpp:359
 #: gui/settings.cpp:367
 msgid "BOSS: Error"
 msgstr "BOSS: Ошибка"
 
-#: gui/editor.cpp:905
+#: gui/editor.cpp:919
 msgid "BOSS: Add Tag"
 msgstr "BOSS: Добавить тег"
 
-#: gui/editor.cpp:919
+#: gui/editor.cpp:933
 msgid "BOSS: Add Dirty Info"
 msgstr "BOSS: Добавить инфо. о \"грязных\" правках"
 
-#: gui/editor.cpp:938
+#: gui/editor.cpp:952
 msgid "BOSS: Edit File/Plugin"
 msgstr "BOSS: Править файл/плагин"
 
-#: gui/editor.cpp:962
+#: gui/editor.cpp:976
 msgid "BOSS: Edit Message"
 msgstr "BOSS: Править сообщение"
 
-#: gui/editor.cpp:976
+#: gui/editor.cpp:990
 msgid "Error: No content specified. Row will not be edited."
 msgstr "Ошибка: Не указано содержимое. Строка не будет добавлена."
 
-#: gui/editor.cpp:986
+#: gui/editor.cpp:1000
 msgid "BOSS: Edit Tag"
 msgstr "BOSS: Править тег"
 
-#: gui/editor.cpp:1008
+#: gui/editor.cpp:1022
 msgid "BOSS: Edit Dirty Info"
 msgstr "BOSS: Править инфо. о \"грязных\" правках"
 
@@ -397,7 +449,7 @@ msgstr "Ошибка: Невозможно применить перевод."
 msgid "Error: The selected language is not available on this system."
 msgstr "Ошибка: Выбранный язык не доступен на этой системе."
 
-#: gui/main.cpp:302 gui/main.cpp:358 gui/main.cpp:523
+#: gui/main.cpp:302 gui/main.cpp:358 gui/main.cpp:528
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr ""
 "Ошибка: Специфические для игры настройки не могут быть инициализированы. %1%"
@@ -462,19 +514,36 @@ msgstr "&Игра"
 msgid "&Help"
 msgstr "&Справка"
 
-#: gui/main.cpp:499 gui/main.cpp:948
+#: gui/main.cpp:443
+msgid ""
+"Opens the Metadata Editor, where plugins' sorting metadata, messages, dirty "
+"info and Bash Tag suggestions can be edited."
+msgstr ""
+"Открывает редактор метаданных, где присутствуют метаданные сортировки "
+"плагинов: сообщения, инфо о грязных правках, теги для Wrye Bash, которые "
+"могут быть изменены."
+
+#: gui/main.cpp:444
+msgid "Sorts your plugins, then displays a report of the results."
+msgstr "Сортирует ваши плагины, а после отображает отчет с результатами."
+
+#: gui/main.cpp:445
+msgid "Opens the last report generated for the current game."
+msgstr "Открывает последний отчет, сгенерированный для текущей игры."
+
+#: gui/main.cpp:504 gui/main.cpp:953
 msgid "BOSS: Report Viewer"
 msgstr "BOSS: Средство просмотра отчетов"
 
-#: gui/main.cpp:507
+#: gui/main.cpp:512
 msgid "BOSS: Settings"
 msgstr "BOSS: Настройки"
 
-#: gui/main.cpp:544 gui/main.cpp:560
+#: gui/main.cpp:549 gui/main.cpp:565
 msgid "Error: \"%1%\" cannot be found."
 msgstr "Ошибка: \"%1%\" не найден."
 
-#: gui/main.cpp:572
+#: gui/main.cpp:577
 msgid ""
 "Load order optimisation for Oblivion, Skyrim, Fallout 3 and Fallout: New "
 "Vegas."
@@ -482,19 +551,19 @@ msgstr ""
 "Оптимизация порядка загрузки для Oblivion, Skyrim, Fallout 3 и Fallout: New "
 "Vegas."
 
-#: gui/main.cpp:603 gui/main.cpp:813 gui/main.cpp:960
+#: gui/main.cpp:608 gui/main.cpp:818 gui/main.cpp:965
 msgid "BOSS: Working..."
 msgstr "BOSS: Работает..."
 
-#: gui/main.cpp:603 gui/main.cpp:960
+#: gui/main.cpp:608 gui/main.cpp:965
 msgid "BOSS working..."
 msgstr "BOSS работает..."
 
-#: gui/main.cpp:660
+#: gui/main.cpp:665
 msgid "Userlist parsing failed. Details: %1%"
 msgstr "Обработка пользовательского списка не удалась. Детали: %1%"
 
-#: gui/main.cpp:701
+#: gui/main.cpp:706
 msgid ""
 "A global message contains a condition that could not be evaluated. Details: "
 "%1%"
@@ -502,27 +571,27 @@ msgstr ""
 "Глобальное сообщение включает выражение, которое не может быть оценено. "
 "Детали: %1%"
 
-#: gui/main.cpp:734
+#: gui/main.cpp:739
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
 msgstr "\"%1%\" включает выражение, которое не может быть оценено. Детали: %2%"
 
-#: gui/main.cpp:753
+#: gui/main.cpp:758
 msgid "Building plugin graph..."
 msgstr "Построение графика плагина..."
 
-#: gui/main.cpp:798
+#: gui/main.cpp:803
 msgid "BOSS: Calculated Load Order"
 msgstr "BOSS: Рассчитанный порядок загрузки"
 
-#: gui/main.cpp:813
+#: gui/main.cpp:818
 msgid "Recalculating load order..."
 msgstr "Пересчет порядка загрузки..."
 
-#: gui/main.cpp:870
+#: gui/main.cpp:875
 msgid "Failed to set the load order. Details: %1%"
 msgstr "Не удалось установить порядок загрузки. Детали: %1%"
 
-#: gui/main.cpp:880
+#: gui/main.cpp:885
 msgid ""
 "The load order displayed in the Details tab was not applied as sorting was "
 "canceled."
@@ -530,27 +599,27 @@ msgstr ""
 "Порядок загрузки, показанный на вкладке Детали не был применен, так как "
 "сортировка была отменена."
 
-#: gui/main.cpp:885
+#: gui/main.cpp:890
 msgid "Failed to calculate the load order. Details: %1%"
 msgstr "Не удалось рассчитать порядок загрузки. Детали: %1%"
 
-#: gui/main.cpp:931
+#: gui/main.cpp:936
 msgid "Error: %1%"
 msgstr "Ошибка: %1%"
 
-#: gui/main.cpp:983
+#: gui/main.cpp:988
 msgid "Error: Masterlist parsing failed. %1%"
 msgstr "Ошибка: Обработка мастерлиста не удалась. %1%"
 
-#: gui/main.cpp:1005
+#: gui/main.cpp:1010
 msgid "Error: Userlist parsing failed. %1%"
 msgstr "Ошибка: Обработка пользовательского списка не удалась. %1%"
 
-#: gui/main.cpp:1051
+#: gui/main.cpp:1056
 msgid "BOSS: Metadata Editor"
 msgstr "BOSS: Редактор метаданных"
 
-#: gui/main.cpp:1060
+#: gui/main.cpp:1065
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
@@ -561,19 +630,19 @@ msgstr ""
 "Обратная сторона этого то, что любые, подписанные в Steam Workshop моды, "
 "могут быть заново загружены с помощью Steam. Вы желаете продолжить?"
 
-#: gui/main.cpp:1070
+#: gui/main.cpp:1075
 msgid "Error: Failed to get load order. %1%"
 msgstr "Ошибка: Не удалось получить порядок загрузки. %1%"
 
-#: gui/main.cpp:1107
+#: gui/main.cpp:1112
 msgid "Error: Failed to set plugin timestamps. %1%"
 msgstr "Ошибка: Не удалось присвоить временные метки плагинам. %1%"
 
-#: gui/main.cpp:1114
+#: gui/main.cpp:1119
 msgid "Plugins were successfully redated."
 msgstr "Плагины были успешно редатированы."
 
-#: gui/main.cpp:1115
+#: gui/main.cpp:1120
 msgid "BOSS: Plugin Redate"
 msgstr "BOSS: Редатирование плагинов"
 
