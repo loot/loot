@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: BOSS v3.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-02-19 19:26-0000\n"
-"PO-Revision-Date: 2014-02-20 14:10+0100\n"
+"PO-Revision-Date: 2014-02-21 11:46+0100\n"
 "Last-Translator: Łukasz Niemczyk <Lukasz.Niemczyk.poczta@gmail.com>\n"
 "Language-Team: \n"
 "Language: pl_PL\n"
@@ -24,12 +24,10 @@ msgid "Invalid game ID supplied."
 msgstr "Błędny ID gry."
 
 #: backend/game.cpp:158
-#, fuzzy
 msgid "Game path could not be detected."
 msgstr "Nie wykryto ścieżki do gry."
 
 #: backend/game.cpp:261 backend/game.cpp:342 backend/game.cpp:418
-#, fuzzy
 msgid ""
 "libloadorder failed to create a game handle. Details could not be fetched."
 msgstr ""
@@ -37,42 +35,35 @@ msgstr ""
 "załadowane."
 
 #: backend/game.cpp:265 backend/game.cpp:346 backend/game.cpp:422
-#, fuzzy
 msgid "libloadorder failed to create a game handle. Details:"
 msgstr "libloader nie zdołał zainicjować operatora gry. Szczegóły:"
 
 #: backend/game.cpp:280 backend/game.cpp:361 backend/game.cpp:436
-#, fuzzy
 msgid ""
 "libloadorder failed to initialise game master file support. Details could "
 "not be fetched."
 msgstr ""
 "libloadorder nie zdołał uruchomić wsparcia dla głównego pliku gry. Szczegóły "
-"nie zostały załadowane"
+"nie są dostępne."
 
 #: backend/game.cpp:284 backend/game.cpp:365 backend/game.cpp:440
-#, fuzzy
 msgid "libloadorder failed to initialise game master file support. Details:"
 msgstr ""
-"libloadorder nie zdołał uruchomić wsparcia dla głównego pliku gry. Szczegóły "
-"nie zostały załadowane"
+"libloadorder nie zdołał uruchomić wsparcia dla głównego pliku gry. Szczegóły:"
 
 #: backend/game.cpp:297
-#, fuzzy
 msgid ""
 "libloadorder failed to get the active plugins list. Details could not be "
 "fetched."
 msgstr ""
-"libloadorder nie zdołał pobrać listy aktywnych dodatków. Szczegóły nie "
-"zostały załadowane."
+"libloadorder nie zdołał pobrać listy aktywnych wtyczek. Szczegóły nie są "
+"dostępne."
 
 #: backend/game.cpp:301
-#, fuzzy
 msgid "libloadorder failed to get the active plugins list. Details:"
-msgstr "libloadorder nie zdołał pobrać listy aktywnych dodatków. Szczegóły:"
+msgstr "libloadorder nie zdołał pobrać listy aktywnych wtyczek. Szczegóły:"
 
 #: backend/game.cpp:378 backend/game.cpp:465
-#, fuzzy
 msgid ""
 "libloadorder failed to set the load order. Details could not be fetched."
 msgstr ""
@@ -85,58 +76,47 @@ msgid "libloadorder failed to get the load order. Details:"
 msgstr "libloadorder nie zdołał wyliczyć kolejności uruchamiania. Szczegóły:"
 
 #: backend/game.cpp:469
-#, fuzzy
 msgid "libloadorder failed to set the load order. Details:"
 msgstr "libloadorder nie zdołał ustawić kolejności uruchamiania. Szczegóły:"
 
 #: backend/game.cpp:489
-#, fuzzy
 msgid "Could not create BOSS folder for game. Details:"
 msgstr "Nie można utworzyć folderu BOSS dla gry. Szczegóły:"
 
 #: backend/graph.cpp:46
-#, fuzzy
 msgid "Cyclic interaction detected between plugins \"%1%\" and \"%2%\"."
 msgstr ""
 "Wykryto zamknięte koło powiązań pomiędzy dodatkami \"%1%\" and \"%2%\"."
 
 #: backend/helpers.cpp:140
-#, fuzzy
 msgid "Unable to open \"%1%\" for CRC calculation."
 msgstr "Nie można otworzyć  \"%1%\" by obliczyć CRC."
 
 #: backend/helpers.cpp:259
-#, fuzzy
 msgid "None Specified"
 msgstr "Brak wybranych"
 
 #: backend/metadata.cpp:142
-#, fuzzy
 msgid "Failed to parse condition \"%1%\": %2%"
 msgstr "Przetwarzanie warunku nieudane \"%1%\": %2%"
 
 #: backend/metadata.cpp:147
-#, fuzzy
 msgid "Failed to parse condition \"%1%\"."
 msgstr "Przetwarzanie warunku nieudane \"%1%\"."
 
 #: backend/metadata.cpp:708 backend/metadata.cpp:719
-#, fuzzy
 msgid "This plugin requires \"%1%\" to be installed, but it is missing."
 msgstr "Ta wtyczka wymaga  \"%1%\", a jest niezainstalowany."
 
 #: backend/metadata.cpp:712
-#, fuzzy
 msgid "This plugin requires \"%1%\" to be active, but it is inactive."
 msgstr "Ta wtyczka wymaga aktywnego \"%1%\" a jest nieaktywny."
 
 #: backend/metadata.cpp:725
-#, fuzzy
 msgid "This plugin is incompatible with \"%1%\", but both are present."
 msgstr "Ta wtyczka jest niekompatybilna z \"%2%\" , a jest aktywna."
 
 #: backend/network.cpp:75
-#, fuzzy
 msgid "Git operation failed. Error: %1%"
 msgstr "Operacja na Git nie udana. Błąd: %1%"
 
@@ -162,7 +142,6 @@ msgid "Show only conflicting plugins"
 msgstr "Pokaż tylko nikompatybilne wtyczki."
 
 #: gui/editor.cpp:167 gui/editor.cpp:846
-#, fuzzy
 msgid "Remove Plugin"
 msgstr "Usuń wtyczkę"
 
@@ -171,17 +150,14 @@ msgid "Plugin"
 msgstr "Wtyczka"
 
 #: gui/editor.cpp:171
-#, fuzzy
 msgid "Priority"
 msgstr "Priorytet"
 
 #: gui/editor.cpp:173 gui/editor.cpp:517 gui/editor.cpp:521 gui/editor.cpp:525
-#, fuzzy
 msgid "Filename"
 msgstr "Nazwa pliku"
 
 #: gui/editor.cpp:174 gui/editor.cpp:518 gui/editor.cpp:522 gui/editor.cpp:526
-#, fuzzy
 msgid "Display Name"
 msgstr "Nazwa wyświetlana"
 
@@ -235,7 +211,6 @@ msgid "Priority: "
 msgstr "Priorytet:"
 
 #: gui/editor.cpp:214 gui/editor.cpp:509
-#, fuzzy
 msgid "Load After"
 msgstr "Załaduj po"
 
@@ -244,37 +219,30 @@ msgid "Enable User Changes"
 msgstr "Zazwól na zmiany użytkownika"
 
 #: gui/editor.cpp:490 gui/editor.cpp:840
-#, fuzzy
 msgid "Add File"
 msgstr "Dodaj plik"
 
 #: gui/editor.cpp:491 gui/editor.cpp:841
-#, fuzzy
 msgid "Edit File"
 msgstr "Edytuj plik"
 
 #: gui/editor.cpp:492 gui/editor.cpp:842
-#, fuzzy
 msgid "Remove File"
 msgstr "Usuń plik"
 
 #: gui/editor.cpp:493
-#, fuzzy
 msgid "Save Changes"
 msgstr "Zapisz zmiany"
 
 #: gui/editor.cpp:494
-#, fuzzy
 msgid "Cancel"
 msgstr "Anuluj"
 
 #: gui/editor.cpp:507
-#, fuzzy
 msgid "Requirements"
 msgstr "Wymagania"
 
 #: gui/editor.cpp:508
-#, fuzzy
 msgid "Incompatibilities"
 msgstr "Niekompatybilne"
 
@@ -283,7 +251,6 @@ msgid "Messages"
 msgstr "Wiadomości"
 
 #: gui/editor.cpp:511
-#, fuzzy
 msgid "Bash Tags"
 msgstr "Tagi Bash"
 
@@ -296,52 +263,42 @@ msgid "Plugins"
 msgstr "Wtyczki"
 
 #: gui/editor.cpp:529
-#, fuzzy
 msgid "Add/Remove"
 msgstr "Dodaj/Usuń"
 
 #: gui/editor.cpp:530
-#, fuzzy
 msgid "Bash Tag"
 msgstr "Tag Bash"
 
 #: gui/editor.cpp:533
-#, fuzzy
 msgid "CRC"
 msgstr "CRC"
 
 #: gui/editor.cpp:534
-#, fuzzy
 msgid "ITM Count"
 msgstr "Liczba ITM"
 
 #: gui/editor.cpp:535
-#, fuzzy
 msgid "UDR Count"
 msgstr "Liczba UDR"
 
 #: gui/editor.cpp:536
-#, fuzzy
 msgid "Deleted Navmesh Count"
 msgstr "Liczba usuniętych Navmesh"
 
 #: gui/editor.cpp:537
-#, fuzzy
 msgid "Cleaning Utility"
 msgstr "Narzędzie czyszczące"
 
 #: gui/editor.cpp:540
-#, fuzzy
 msgid "Copy Name"
 msgstr "Kopiuj Nazwę"
 
 #: gui/editor.cpp:541
-#, fuzzy
 msgid "Copy Metadata As Text"
 msgstr "Kopiuj Metadane jako tekst"
 
 #: gui/editor.cpp:542
-#, fuzzy
 msgid "Remove All User-Added Metadata"
 msgstr "Usuń wszystkie informacje dodane przez użytkownika."
 
@@ -362,17 +319,14 @@ msgstr ""
 "użytkownika o tej wtyczce?"
 
 #: gui/editor.cpp:813 gui/main.cpp:1065
-#, fuzzy
 msgid "BOSS: Warning"
 msgstr "BOSS: Ostrzeżenie"
 
 #: gui/editor.cpp:844
-#, fuzzy
 msgid "Add Plugin"
 msgstr "Dodaj wtyczkę"
 
 #: gui/editor.cpp:845
-#, fuzzy
 msgid "Edit Plugin"
 msgstr "Edytuj wtyczkę"
 
@@ -381,27 +335,22 @@ msgid "Add Message"
 msgstr "Dodaj wiadomość"
 
 #: gui/editor.cpp:849
-#, fuzzy
 msgid "Edit Message"
 msgstr "Edytuj wiadomość"
 
 #: gui/editor.cpp:850
-#, fuzzy
 msgid "Remove Message"
 msgstr "Usuń wiadomość"
 
 #: gui/editor.cpp:852
-#, fuzzy
 msgid "Add Bash Tag"
 msgstr "Dodaj Tag Bash"
 
 #: gui/editor.cpp:853
-#, fuzzy
 msgid "Edit Bash Tag"
 msgstr "Edytuj Tag Bash"
 
 #: gui/editor.cpp:854
-#, fuzzy
 msgid "Remove Bash Tag"
 msgstr "Usuń Tag Bash"
 
@@ -418,7 +367,6 @@ msgid "Remove Dirty Info"
 msgstr "Usuń dane o dublach"
 
 #: gui/editor.cpp:876
-#, fuzzy
 msgid "BOSS: Add File/Plugin"
 msgstr "BOSS: Dodaj Plik/Wtyczkę"
 
@@ -438,12 +386,10 @@ msgstr "Błąd: Brak wybranej zawartości. Linia nie będzie dodana."
 #: gui/misc.cpp:327 gui/settings.cpp:287 gui/settings.cpp:299
 #: gui/settings.cpp:307 gui/settings.cpp:351 gui/settings.cpp:359
 #: gui/settings.cpp:367
-#, fuzzy
 msgid "BOSS: Error"
 msgstr "BOSS: Błąd"
 
 #: gui/editor.cpp:919
-#, fuzzy
 msgid "BOSS: Add Tag"
 msgstr "BOSS: Dodaj Tag"
 
@@ -452,12 +398,10 @@ msgid "BOSS: Add Dirty Info"
 msgstr "BOSS: Dodaj info dublach w"
 
 #: gui/editor.cpp:952
-#, fuzzy
 msgid "BOSS: Edit File/Plugin"
 msgstr "BOSS: Edytuj plik/wtyczkę"
 
 #: gui/editor.cpp:976
-#, fuzzy
 msgid "BOSS: Edit Message"
 msgstr "BOSS: Edytuj Wiadomość"
 
@@ -466,7 +410,6 @@ msgid "Error: No content specified. Row will not be edited."
 msgstr "Błąd: Brak zawartości. Linia nie będzie edytowana"
 
 #: gui/editor.cpp:1000
-#, fuzzy
 msgid "BOSS: Edit Tag"
 msgstr "BOSS: Edytuj Tag"
 
@@ -475,17 +418,14 @@ msgid "BOSS: Edit Dirty Info"
 msgstr "BOSS: Edytuj dane o dublach"
 
 #: gui/main.cpp:119
-#, fuzzy
 msgid "Masterlist update failed. Details: %1%"
 msgstr "Aktualizacja Bazy danych nie powiodła się. Szczegóły: %1%"
 
 #: gui/main.cpp:137
-#, fuzzy
 msgid "Masterlist parsing failed. Details: %1%"
 msgstr "Przetwarzanie Bazy danych nie powiodło się. Szczegóły: %1%"
 
 #: gui/main.cpp:145
-#, fuzzy
 msgid "Unknown"
 msgstr "Nieznany"
 
@@ -498,12 +438,10 @@ msgid "Error: BOSS is already running. This instance will now quit."
 msgstr "Błąd: BOSS jest już uruchomiony. To okno zostanie zamknięte."
 
 #: gui/main.cpp:183
-#, fuzzy
 msgid "Error: Could not create local app data BOSS folder."
 msgstr "Błąd: Nie znaleziono folderu z ustawieniami BOSS."
 
 #: gui/main.cpp:198
-#, fuzzy
 msgid "Error: Settings parsing failed. %1%"
 msgstr "Błąd: Przetwarzanie ustawień nieudane. %1%"
 
@@ -512,67 +450,54 @@ msgid "Error: Could not apply translation."
 msgstr "Błąd: Nie można zastosować tłumaczenia."
 
 #: gui/main.cpp:289
-#, fuzzy
 msgid "Error: The selected language is not available on this system."
 msgstr "Błąd: Wybrany język jest niedostępny w tym systemie."
 
 #: gui/main.cpp:302 gui/main.cpp:358 gui/main.cpp:528
-#, fuzzy
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr "Błąd: Nie można zainicjować ustawień gry. %1%"
 
 #: gui/main.cpp:310
-#, fuzzy
 msgid "Error: Games' settings parsing failed. %1%"
 msgstr "Błąd: Przetwarzanie ustawień gry nieudane. %1%"
 
 #: gui/main.cpp:341
-#, fuzzy
 msgid "Error: None of the supported games were detected."
 msgstr "Błąd: Nie wykryto obsługiwanych gier."
 
 #: gui/main.cpp:386
-#, fuzzy
 msgid "Edit Metadata"
 msgstr "Edytuj Metadane"
 
 #: gui/main.cpp:387
-#, fuzzy
 msgid "Sort Plugins"
 msgstr "Sortuj Wtyczki"
 
 #: gui/main.cpp:388
-#, fuzzy
 msgid "View Last Report"
 msgstr "Czytaj ostatni raport"
 
 #: gui/main.cpp:392
-#, fuzzy
 msgid "&View Last Report"
-msgstr "Czytaj ostatni raport"
+msgstr "&Czytaj ostatni raport"
 
 #: gui/main.cpp:393
-#, fuzzy
 msgid "View &Debug Log"
 msgstr "Czytaj Logi &Debug"
 
 #: gui/main.cpp:394
-#, fuzzy
 msgid "&Sort Plugins"
-msgstr "Sortuj Wtyczki"
+msgstr "&Sortuj Wtyczki"
 
 #: gui/main.cpp:395
-#, fuzzy
 msgid "&Redate Plugins"
 msgstr "P&Rzedatuj Wtyczki"
 
 #: gui/main.cpp:398
-#, fuzzy
 msgid "&File"
 msgstr "&Plik"
 
 #: gui/main.cpp:400
-#, fuzzy
 msgid "&Metadata..."
 msgstr "&Metadane..."
 
@@ -581,17 +506,14 @@ msgid "&Settings..."
 msgstr "&Ustawienia..."
 
 #: gui/main.cpp:402
-#, fuzzy
 msgid "&Edit"
 msgstr "&Edycja"
 
 #: gui/main.cpp:414
-#, fuzzy
 msgid "&Game"
 msgstr "&Gra"
 
 #: gui/main.cpp:419
-#, fuzzy
 msgid "&Help"
 msgstr "&Pomoc"
 
@@ -616,7 +538,6 @@ msgid "BOSS: Report Viewer"
 msgstr "BOSS: Wyswietlacz Raportów"
 
 #: gui/main.cpp:512
-#, fuzzy
 msgid "BOSS: Settings"
 msgstr "BOSS: Ustawienia"
 
@@ -625,7 +546,6 @@ msgid "Error: \"%1%\" cannot be found."
 msgstr "Błąd: Nie znaleziono \"%1%\""
 
 #: gui/main.cpp:577
-#, fuzzy
 msgid ""
 "Load order optimisation for Oblivion, Skyrim, Fallout 3 and Fallout: New "
 "Vegas."
@@ -634,7 +554,6 @@ msgstr ""
 "Fallout 3 oraz Fallout: New Vegas."
 
 #: gui/main.cpp:608 gui/main.cpp:818 gui/main.cpp:965
-#, fuzzy
 msgid "BOSS: Working..."
 msgstr "BOSS: Pracuję..."
 
@@ -682,31 +601,26 @@ msgstr ""
 "gdyż sortowanie zostało anulowane."
 
 #: gui/main.cpp:890
-#, fuzzy
 msgid "Failed to calculate the load order. Details: %1%"
-msgstr "Ustalanie kolejności ładowania nieudane. Szczegóły: %1%"
+msgstr "Wyliczenie kolejności ładowania nieudane. Szczegóły: %1%"
 
 #: gui/main.cpp:936
-#, fuzzy
 msgid "Error: %1%"
 msgstr "Błąd: %1%"
 
 #: gui/main.cpp:988
-#, fuzzy
 msgid "Error: Masterlist parsing failed. %1%"
 msgstr "Błąd: Przetwarzanie bazy danych nieudane. %1%"
 
 #: gui/main.cpp:1010
-#, fuzzy
 msgid "Error: Userlist parsing failed. %1%"
-msgstr "Błąd: Przetwarzanie listy urzytkownika nieudane. %1%"
+msgstr "Błąd: Przetwarzanie listy użytkownika nieudane. %1%"
 
 #: gui/main.cpp:1056
 msgid "BOSS: Metadata Editor"
 msgstr "BOSS: Edytor Metadanych"
 
 #: gui/main.cpp:1065
-#, fuzzy
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
@@ -717,37 +631,31 @@ msgstr ""
 "Steam Workshop będzie ponownie pobrany przez Steam. Czy chcesz kontynuować?"
 
 #: gui/main.cpp:1075
-#, fuzzy
 msgid "Error: Failed to get load order. %1%"
 msgstr "Błąd: Wczytywanie kolejności ładowania nieudane. %1%"
 
 #: gui/main.cpp:1112
 #, fuzzy
 msgid "Error: Failed to set plugin timestamps. %1%"
-msgstr "Błąd: Ustawianie opuźnienia wtyczek nieudane. %1%"
+msgstr "Błąd: Ustawianie znacznika czasu wtyczek nieudane. %1%"
 
 #: gui/main.cpp:1119
-#, fuzzy
 msgid "Plugins were successfully redated."
 msgstr "Wtyczki zostały pomyślnie przedatowane."
 
 #: gui/main.cpp:1120
-#, fuzzy
 msgid "BOSS: Plugin Redate"
 msgstr "BOSS: Przedatowanie Wtyczek"
 
 #: gui/misc.cpp:34
-#, fuzzy
 msgid "Type"
 msgstr "Typ"
 
 #: gui/misc.cpp:35
-#, fuzzy
 msgid "Content"
 msgstr "Zawartość"
 
 #: gui/misc.cpp:37 gui/misc.cpp:180
-#, fuzzy
 msgid "Language"
 msgstr "Język"
 
@@ -760,27 +668,22 @@ msgid "Displayed Name:"
 msgstr "Nazwa wyświetlana:"
 
 #: gui/misc.cpp:122 gui/misc.cpp:206 gui/misc.cpp:362
-#, fuzzy
 msgid "Condition:"
 msgstr "Warunek:"
 
 #: gui/misc.cpp:176
-#, fuzzy
 msgid "Add Content"
 msgstr "Dodaj zawartość"
 
 #: gui/misc.cpp:177
-#, fuzzy
 msgid "Edit Content"
 msgstr "Edytuj zawartość"
 
 #: gui/misc.cpp:178
-#, fuzzy
 msgid "Remove Content"
 msgstr "Usuń zawartość"
 
 #: gui/misc.cpp:181
-#, fuzzy
 msgid "String"
 msgstr "Ciąg"
 
@@ -797,7 +700,6 @@ msgid "Content:"
 msgstr "Zawartość:"
 
 #: gui/misc.cpp:311 gui/misc.cpp:326
-#, fuzzy
 msgid "Error: No content row selected."
 msgstr "Błąd: Brak zawartości w wybranej lini."
 
@@ -806,12 +708,10 @@ msgid "Add/Remove:"
 msgstr "Dodaj/Usuń:"
 
 #: gui/misc.cpp:359 gui/settings.cpp:425
-#, fuzzy
 msgid "Name (required):"
 msgstr "Nazwa (wymagane)"
 
 #: gui/misc.cpp:424
-#, fuzzy
 msgid "CRC (required):"
 msgstr "CRC (wymagane)"
 
@@ -828,47 +728,38 @@ msgid "Deleted Navmesh Count:"
 msgstr "Liczba usuniętych Navmesh:"
 
 #: gui/misc.cpp:436
-#, fuzzy
 msgid "Cleaning Utility (required):"
 msgstr "Narzędzie czyszczące (wymagane):"
 
 #: gui/settings.cpp:41
-#, fuzzy
 msgid "None"
 msgstr "Brak"
 
 #: gui/settings.cpp:42
-#, fuzzy
 msgid "Low"
 msgstr "Niskie"
 
 #: gui/settings.cpp:43
-#, fuzzy
 msgid "Medium"
 msgstr "Średnie"
 
 #: gui/settings.cpp:44
-#, fuzzy
 msgid "High"
 msgstr "Wysokie"
 
 #: gui/settings.cpp:48
-#, fuzzy
 msgid "Autodetect"
 msgstr "Automatycznie"
 
 #: gui/settings.cpp:66
-#, fuzzy
 msgid "Add Game"
 msgstr "Dodaj Grę"
 
 #: gui/settings.cpp:67
-#, fuzzy
 msgid "Edit Game"
 msgstr "Edytuj Grę"
 
 #: gui/settings.cpp:68
-#, fuzzy
 msgid "Remove Game"
 msgstr "Usuń Grę"
 
@@ -881,27 +772,22 @@ msgid "View reports externally in default browser."
 msgstr "Czytaj raport w domyślnej przeglądarce."
 
 #: gui/settings.cpp:74
-#, fuzzy
 msgid "Name"
 msgstr "Nazwa"
 
 #: gui/settings.cpp:75
-#, fuzzy
 msgid "Base Game Type"
 msgstr "Podstawowy typ gry"
 
 #: gui/settings.cpp:76
-#, fuzzy
 msgid "BOSS Folder Name"
 msgstr "nazwa folderu BOSS (wymagane):"
 
 #: gui/settings.cpp:77
-#, fuzzy
 msgid "Master File"
-msgstr "Główny plik"
+msgstr "Plik Nadrzędny"
 
 #: gui/settings.cpp:78
-#, fuzzy
 msgid "Masterlist Repository URL"
 msgstr "URL do Bazy danych:"
 
@@ -910,7 +796,6 @@ msgid "Masterlist Repository Branch"
 msgstr "Gałąź bazy danych"
 
 #: gui/settings.cpp:80
-#, fuzzy
 msgid "Install Path"
 msgstr "Ścieżka instalacyjna:"
 
@@ -923,7 +808,6 @@ msgid "Default Game:"
 msgstr "Domyslna gra:"
 
 #: gui/settings.cpp:111
-#, fuzzy
 msgid "Debug Verbosity:"
 msgstr "Debug Verbosity:"
 
@@ -932,12 +816,10 @@ msgid "Language and game changes will be applied after BOSS is restarted."
 msgstr "JZmiany w języku oraz grze zostaną zastosowane po restarcie BOSS."
 
 #: gui/settings.cpp:143
-#, fuzzy
 msgid "The output is logged to the BOSSDebugLog.txt file."
 msgstr "Wyniki zostały zapisane w BOSSDebugLog.txt."
 
 #: gui/settings.cpp:279
-#, fuzzy
 msgid "BOSS: Add Game"
 msgstr "BOSS: Dodaj Grę"
 
@@ -948,12 +830,10 @@ msgstr ""
 "dodana."
 
 #: gui/settings.cpp:298
-#, fuzzy
 msgid "Error: A game with this name is already defined. Row will not be added."
 msgstr "Błąd: Gra z tą nazwą jest już opisana. Linia nie zostanie dodana."
 
 #: gui/settings.cpp:306
-#, fuzzy
 msgid ""
 "Error: A game with this folder name is already defined. Row will not be "
 "added."
@@ -964,12 +844,10 @@ msgid "BOSS: Edit Game"
 msgstr "BOSS: Edytuj grę"
 
 #: gui/settings.cpp:350
-#, fuzzy
 msgid "Error: Name is required. Row will not be added."
 msgstr "Błąd: Nazwa jest wymagana. Linia nie zostanie dodana."
 
 #: gui/settings.cpp:358
-#, fuzzy
 msgid "Error: Folder is required. Row will not be added."
 msgstr "Błąd: Folder jest wymagany. Linia nie zostanie dodana."
 
@@ -978,12 +856,10 @@ msgid "BOSS Folder Name (required):"
 msgstr "Nazwa folderu BOSS (wymagane):"
 
 #: gui/settings.cpp:434
-#, fuzzy
 msgid "Master File:"
-msgstr "Główny plik"
+msgstr "Plik nadrzędny:"
 
 #: gui/settings.cpp:437
-#, fuzzy
 msgid "Masterlist Repository URL:"
 msgstr "URL do Bazy danych:"
 
@@ -992,82 +868,66 @@ msgid "Masterlist Repository Branch:"
 msgstr "Gałąź Bazy danych"
 
 #: gui/settings.cpp:443
-#, fuzzy
 msgid "Install Path:"
 msgstr "Ścieżka instalacyjna:"
 
 #: gui/settings.cpp:446
-#, fuzzy
 msgid "Install Path Registry Key:"
-msgstr "Klucz rejestru śieżki instalacyjnej "
+msgstr "Klucz rejestru ścieżki instalacyjnej "
 
 #: backend/generators.h:56
-#, fuzzy
 msgid "Note:"
 msgstr "Notatki:"
 
 #: backend/generators.h:58
-#, fuzzy
 msgid "Bash Tag Suggestion(s):"
-msgstr "Sugerowane tagi Bash"
+msgstr "Sugerowane Tagi Bash:"
 
 #: backend/generators.h:60
-#, fuzzy
 msgid "Warning:"
 msgstr "Ostrzeżenie:"
 
 #: backend/generators.h:62
-#, fuzzy
 msgid "Error:"
 msgstr "Błąd:"
 
 #: backend/generators.h:127
-#, fuzzy
 msgid "BOSS Report"
 msgstr "Raport BOSS"
 
 #: backend/generators.h:153 backend/generators.h:216
-#, fuzzy
 msgid "Summary"
 msgstr "Podsumowanie"
 
 #: backend/generators.h:159
-#, fuzzy
 msgid "Details"
 msgstr "Szczegóły"
 
 #: backend/generators.h:165
-#, fuzzy
 msgid "Filters"
 msgstr "Filtry"
 
 #: backend/generators.h:229
-#, fuzzy
 msgid "BOSS Version"
 msgstr "Wersja BOSS"
 
 #: backend/generators.h:238
-#, fuzzy
 msgid "Masterlist Version"
 msgstr "Wersja Bazy Danych"
 
 #: backend/generators.h:247
-#, fuzzy
 msgid "Masterlist Updating"
 msgstr "Aktualizacja Bazy Danych"
 
 #: backend/generators.h:251
-#, fuzzy
 msgid "Enabled"
 msgstr "Aktywny"
 
 #: backend/generators.h:253
-#, fuzzy
 msgid "Disabled"
 msgstr "Nieaktywny"
 
 #: backend/generators.h:262
-#, fuzzy
 msgid ""
 "There have been no changes in the Details tab since BOSS was last run for "
 "this game."
@@ -1076,17 +936,14 @@ msgstr ""
 "tej gry."
 
 #: backend/generators.h:272
-#, fuzzy
 msgid "General Messages"
 msgstr "Ogólne wiadomości"
 
 #: backend/generators.h:282
-#, fuzzy
 msgid "Total Number of Messages"
 msgstr "Liczba wiadomości"
 
 #: backend/generators.h:291
-#, fuzzy
 msgid "Number of Warnings"
 msgstr "Liczba ostrzeżeń"
 
@@ -1095,65 +952,54 @@ msgid "Number of Errors"
 msgstr "Liczba błędów"
 
 #: backend/generators.h:341
-#, fuzzy
 msgid "Version:"
 msgstr "Wersja:"
 
 #: backend/generators.h:361
-#, fuzzy
 msgid "Add:"
 msgstr "Dodaj:"
 
 #: backend/generators.h:367
-#, fuzzy
 msgid "Remove:"
 msgstr "Usuń:"
 
 #: backend/generators.h:375
-#, fuzzy
 msgid ""
 "Contains %1% ITM records, %2% UDR records and %3% deleted navmeshes. Clean "
 "with %4%."
 msgstr ""
-"Zawiera %1% wpisów ITM, %2% wpisów UDR oraz %3% usuniętych navmesh. "
-"Wyczyścić w %4%."
+"Zawiera %1% wpisów ITM, %2% wpisów UDR oraz %3% usuniętych navmesh. Oczyść w "
+"%4%."
 
 #: backend/generators.h:377
 msgid "Clean with %1%."
 msgstr "Wyczyść w %1%."
 
 #: backend/generators.h:381
-#, fuzzy
 msgid "Contains %1% UDR records and %2% deleted navmeshes. Clean with %3%."
-msgstr "Zawiera %1% wpisów UDR oraz %2% usuniętych navmesh. Wyczyść w %3%."
+msgstr "Zawiera %1% wpisów UDR oraz %2% usuniętych navmesh. Oczyść w %3%."
 
 #: backend/generators.h:383
-#, fuzzy
 msgid "Contains %1% deleted navmeshes. Clean with %2%."
-msgstr "Zawiera %1% usuniętych navmesh. Wyczyść w %2%."
+msgstr "Zawiera %1% usuniętych navmesh. Oczyść w %2%."
 
 #: backend/generators.h:385
-#, fuzzy
 msgid "Contains %1% UDR records. Clean with %2%."
-msgstr "Zawiera %1% wpisów UDR. Wyczyść w %2%."
+msgstr "Zawiera %1% wpisów UDR. Oczyść w %2%."
 
 #: backend/generators.h:388
-#, fuzzy
 msgid "Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%."
-msgstr "Zawiera %1% wpisów ITM oraz %2% usuniętych navmesh. Wyczyść w %3%."
+msgstr "Zawiera %1% wpisów ITM oraz %2% usuniętych navmesh. Oczyść w %3%."
 
 #: backend/generators.h:390
-#, fuzzy
 msgid "Contains %1% ITM records. Clean with %2%."
 msgstr "Zawiera %1% wpisów ITM. Wyczyść w %2%."
 
 #: backend/generators.h:393
-#, fuzzy
 msgid "Contains %1% ITM records and %2% UDR records. Clean with %3%."
-msgstr "Zawiera %1% wpisów ITM oraz %2% wpisów UDR. Wyczyść w %3%."
+msgstr "Zawiera %1% wpisów ITM oraz %2% wpisów UDR. Oczyść w %3%."
 
 #: backend/generators.h:429
-#, fuzzy
 msgid "The BOSS Report requires Javascript to be enabled in order to function."
 msgstr "Raport BOSS wymaga włączonego Javascript do pracy."
 
@@ -1162,27 +1008,22 @@ msgid "Hide Version Numbers"
 msgstr "Ukryj numery wersji"
 
 #: backend/generators.h:465
-#, fuzzy
 msgid "Hide CRCs"
 msgstr "Ukryj CRC"
 
 #: backend/generators.h:474
-#, fuzzy
 msgid "Hide Bash Tag Suggestions"
 msgstr "Ukryj sugestie tagów Bash"
 
 #: backend/generators.h:482
-#, fuzzy
 msgid "Hide Notes"
 msgstr "Ukryj notatki"
 
 #: backend/generators.h:490
-#, fuzzy
 msgid "Hide 'Do Not Clean' Messages"
 msgstr "Ukryj wiadomości \"Nie czyścić\""
 
 #: backend/generators.h:498
-#, fuzzy
 msgid "Hide All Plugin Messages"
 msgstr "Ukryj wszystkie wiadomości wtyczek"
 
@@ -1191,7 +1032,6 @@ msgid "Hide Messageless Plugins"
 msgstr "Ukryj wtyczki bez wiadomości"
 
 #: backend/generators.h:516
-#, fuzzy
 msgid "%1% of %2% plugins hidden."
 msgstr "%1% z %2% wtyczek ukrytych."
 
@@ -1200,7 +1040,6 @@ msgid "%1% of %2% messages hidden."
 msgstr "%1% z %2% wiadomości ukrytych."
 
 #: backend/parsers.h:467 backend/parsers.h:550
-#, fuzzy
 msgid "Invalid file path:"
 msgstr "Nieprawidłowa ścieżka do pliku:"
 
@@ -1209,12 +1048,10 @@ msgid "Invalid folder path:"
 msgstr "Nieprawidłowa ścieżka do folderu:"
 
 #: backend/parsers.h:532
-#, fuzzy
 msgid "Invalid regex string:"
 msgstr "Nieprawidłowy ciąg regex:"
 
 #: backend/parsers.h:627
-#, fuzzy
 msgid "Expected \"%1%\" at \"%2%\"."
 msgstr "Oczekiwano  \"%1%\" w \"%2%\"."
 
