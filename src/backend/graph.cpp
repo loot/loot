@@ -255,7 +255,6 @@ namespace boss {
                         boost::add_edge(parentVertex, vertex, graph);
                     }
                 }
-                ++vit2;
             }
         }
     }
