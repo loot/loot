@@ -295,15 +295,15 @@ namespace boss {
         return _name;
     }
 
-    Plugin::Plugin() : enabled(true), priority(0), isMaster(false) {}
-    Plugin::Plugin(const std::string& n) : name(n), enabled(true), priority(0), isMaster(false) {
+    Plugin::Plugin() : enabled(true), priority(0), isMaster(false), crc(0), numOverrideRecords(0) {}
+    Plugin::Plugin(const std::string& n) : name(n), enabled(true), priority(0), isMaster(false), crc(0), numOverrideRecords(0) {
         //If the name passed ends in '.ghost', that should be trimmed.
         if (boost::iends_with(name, ".ghost"))
             name = name.substr(0, name.length() - 6);
     }
 
 	Plugin::Plugin(boss::Game& game, const std::string& n, const bool headerOnly)
-		: name(n), enabled(true), priority(0) {
+        : name(n), enabled(true), priority(0), isMaster(false), crc(0), numOverrideRecords(0) {
 
 		// Get data from file contents using libespm. Assumes libespm has already been initialised.
         BOOST_LOG_TRIVIAL(trace) << name << ": " << "Opening with libespm...";
