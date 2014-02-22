@@ -178,8 +178,6 @@ namespace boss {
         boss::vertex_it vit, vitend;
 
         for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
-            vertex_t parentVertex;
-
             BOOST_LOG_TRIVIAL(trace) << "Adding priority difference edges to vertex for \"" << graph[*vit].Name() << "\".";
             boss::vertex_it vit2 = vit;
             ++vit2;
@@ -219,15 +217,19 @@ namespace boss {
             BOOST_LOG_TRIVIAL(trace) << "Adding overlap edges to vertex for \"" << graph[*vit].Name() << "\".";
 
             if (graph[*vit].NumOverrideFormIDs() == 0) {
+                BOOST_LOG_TRIVIAL(trace) << "Skipping vertex for \"" << graph[*vit].Name() << "\": the plugin contains no override records.";
                 continue;
             }
 
-            boss::vertex_it vit2 = vit;
-            ++vit2;
-            while (vit2 != vitend) {
+            boss::vertex_it vit2, vitend2;
+            for (boost::tie(vit2, vitend2) = boost::vertices(graph); vit2 != vitend2; ++vit2) {
+                if (vit == vit2 || boost::edge(*vit, *vit2, graph).second || boost::edge(*vit2, *vit, graph).second)
+                    //Vertices are the same or are already linked.
+                    continue;
+
                 BOOST_LOG_TRIVIAL(trace) << "Checking edge validity between \"" << graph[*vit].Name() << "\" and \"" << graph[*vit2].Name() << "\".";
 
-                if (graph[*vit].Priority() == graph[*vit2].Priority() && !graph[*vit].MustLoadAfter(graph[*vit2]) && !graph[*vit2].MustLoadAfter(graph[*vit]) && graph[*vit].DoFormIDsOverlap(graph[*vit2])) {
+                if (graph[*vit].DoFormIDsOverlap(graph[*vit2])) {
                     vertex_t vertex, parentVertex;
                     if (graph[*vit].NumOverrideFormIDs() > graph[*vit2].NumOverrideFormIDs()) {
                         parentVertex = *vit;
@@ -246,8 +248,7 @@ namespace boss {
                         vertex = *vit;
                     }
 
-                    if (!boost::edge(parentVertex, vertex, graph).second &&
-                        !EdgeCreatesCycle(graph, parentVertex, vertex)) {  //No edge going the other way, OK to add this edge.
+                    if (!EdgeCreatesCycle(graph, parentVertex, vertex)) {  //No edge going the other way, OK to add this edge.
 
                         BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[vertex].Name() << "\".";
 
