@@ -214,7 +214,7 @@ display: 'OBSE v18+'
     <thead><tr><th>Key Name<th>Required<th>Notes
     <tbody>
         <tr><td><code>str</code><td>&#x2713;<td>The actual message content string. Double-quoted URLs will be hyperlinked in the BOSS report. See <a href="#links">URL Hyperlinking</a> for details.
-        <tr><td><code>lang</code><td>&#x2713;<td>The language that <code>str</code> is written in, given as an ISO 639-3 language code. The languages BOSS supports are given in <a href="#lang">Language Codes</a>.
+        <tr><td><code>lang</code><td>&#x2713;<td>The language that <code>str</code> is written in, given as a POSIX language code. The languages BOSS supports are given in <a href="#lang">Language Codes</a>.
 </table>
 
 <p>BOSS handles messages and languages as follows:
@@ -433,14 +433,15 @@ both get displayed as
 <h2 id="lang">Language Codes</h2>
 <p>BOSS supports the following languages and language codes:
 <table>
-    <thead><tr><th>Language<th>ISO 639-3 Code
+    <thead><tr><th>Language<th>POSIX Code
     <tbody>
-        <tr><td>English<td>eng
-        <tr><td>Spanish<td>spa
-        <tr><td>Russian<td>rus
-        <tr><td>French<td>fra
-        <tr><td>Chinese<td>zho
-        <tr><td>Polish<td>pol
+        <tr><td>Chinese<td>zh_CN
+        <tr><td>English<td>en
+        <tr><td>French<td>fr
+        <tr><td>Polish<td>pl
+        <tr><td>Brazilian Portuguese<td>pt_BR
+        <tr><td>Russian<td>ru
+        <tr><td>Spanish<td>es
 </table>
 
 <h2 id="license">License</h2>
