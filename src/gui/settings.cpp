@@ -209,7 +209,7 @@ void SettingsFrame::OnQuit(wxCommandEvent& event) {
         else
             _settings["Game"] = _games[GameChoice->GetSelection() - 1].FolderName();
 
-        _settings["Language"] = boss::Language(LanguageChoice->GetSelection()).ISOCode();
+        _settings["Language"] = boss::Language(LanguageChoice->GetSelection()).Locale();
 
         _settings["Debug Verbosity"] = DebugVerbosityChoice->GetSelection();
 

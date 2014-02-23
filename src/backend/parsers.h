@@ -154,7 +154,7 @@ namespace YAML {
         static Node encode(const boss::MessageContent& rhs) {
             Node node;
             node["str"] = rhs.Str();
-            node["lang"] = boss::Language(rhs.Language()).ISOCode();
+            node["lang"] = boss::Language(rhs.Language()).Locale();
 
             return node;
         }

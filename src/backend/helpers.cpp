@@ -237,17 +237,17 @@ namespace boss {
     }
 
     Language::Language(const std::string& nameOrISOCode) {
-        if (nameOrISOCode == "English" || nameOrISOCode == "eng")
+        if (nameOrISOCode == Language(g_lang_english).Name() || nameOrISOCode == Language(g_lang_english).Locale())
             Construct(g_lang_english);
-        else if (nameOrISOCode == "Español" || nameOrISOCode == "spa")
+        if (nameOrISOCode == Language(g_lang_english).Name() || nameOrISOCode == Language(g_lang_english).Locale())
             Construct(g_lang_spanish);
-        else if (nameOrISOCode == "Русский" || nameOrISOCode == "rus")
+        if (nameOrISOCode == Language(g_lang_spanish).Name() || nameOrISOCode == Language(g_lang_spanish).Locale())
             Construct(g_lang_russian);
-        else if (nameOrISOCode == "Français" || nameOrISOCode == "fra")
+        if (nameOrISOCode == Language(g_lang_russian).Name() || nameOrISOCode == Language(g_lang_russian).Locale())
             Construct(g_lang_french);
-        else if (nameOrISOCode == "简体中文" || nameOrISOCode == "zho")
+        if (nameOrISOCode == Language(g_lang_french).Name() || nameOrISOCode == Language(g_lang_french).Locale())
             Construct(g_lang_chinese);
-        else if (nameOrISOCode == "Polski" || nameOrISOCode == "pol")
+        if (nameOrISOCode == Language(g_lang_chinese).Name() || nameOrISOCode == Language(g_lang_chinese).Locale())
             Construct(g_lang_polish);
         else
             Construct(g_lang_any);
@@ -257,38 +257,31 @@ namespace boss {
         _code = code;
         if (_code == g_lang_any) {
             _name = boost::locale::translate("None Specified");
-            _isoCode = "";
-            _locale = "en.UTF-8";
+            _locale = "en";
         }
         else if (_code == g_lang_english) {
             _name = "English";
-            _isoCode = "eng";
-            _locale = "en.UTF-8";
+            _locale = "en";
         }
         else if (_code == g_lang_spanish) {
             _name = "Español";
-            _isoCode = "spa";
-            _locale = "es.UTF-8";
+            _locale = "es";
         }
         else if (_code == g_lang_russian) {
             _name = "Русский";
-            _isoCode = "rus";
-            _locale = "ru.UTF-8";
+            _locale = "ru";
         }
         else if (_code == g_lang_french) {
             _name = "Français";
-            _isoCode = "fra";
-            _locale = "fr.UTF-8";
+            _locale = "fr";
         }
         else if (_code == g_lang_chinese) {
             _name = "简体中文";
-            _isoCode = "zho";
-            _locale = "zh.UTF-8";
+            _locale = "zh_CN";
         }
         else if (_code == g_lang_polish) {
             _name = "Polski";
-            _isoCode = "pol";
-            _locale = "pl.UTF-8";
+            _locale = "pl";
         }
     }
 
@@ -298,10 +291,6 @@ namespace boss {
 
     std::string Language::Name() const {
         return _name;
-    }
-
-    std::string Language::ISOCode() const {
-        return _isoCode;
     }
 
     std::string Language::Locale() const {
