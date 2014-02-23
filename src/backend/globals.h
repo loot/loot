@@ -48,6 +48,7 @@ namespace boss {
     extern const unsigned int g_lang_french;
     extern const unsigned int g_lang_chinese;
     extern const unsigned int g_lang_polish;
+    extern const unsigned int g_lang_brazilian_portuguese;
 
     //Version numbers.
     extern const unsigned int g_version_major;

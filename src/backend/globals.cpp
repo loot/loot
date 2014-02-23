@@ -39,14 +39,16 @@ namespace boss {
     const unsigned int g_message_error    = 2;
     const unsigned int g_message_tag      = 3;
 
-    //Languages
+    //Languages.
     const unsigned int g_lang_any      = 0;
     const unsigned int g_lang_english  = 1;
     const unsigned int g_lang_spanish  = 2;
     const unsigned int g_lang_russian  = 3;
     const unsigned int g_lang_french   = 4;
     const unsigned int g_lang_chinese  = 5;
-    const unsigned int g_lang_polish   = 6;
+    const unsigned int g_lang_polish = 6;
+    const unsigned int g_lang_brazilian_portuguese = 7;
+
     //Version numbers.
     const unsigned int g_version_major = 3;
     const unsigned int g_version_minor = 0;

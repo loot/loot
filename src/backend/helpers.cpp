@@ -239,16 +239,18 @@ namespace boss {
     Language::Language(const std::string& nameOrISOCode) {
         if (nameOrISOCode == Language(g_lang_english).Name() || nameOrISOCode == Language(g_lang_english).Locale())
             Construct(g_lang_english);
-        if (nameOrISOCode == Language(g_lang_english).Name() || nameOrISOCode == Language(g_lang_english).Locale())
+        else if (nameOrISOCode == Language(g_lang_spanish).Name() || nameOrISOCode == Language(g_lang_spanish).Locale())
             Construct(g_lang_spanish);
-        if (nameOrISOCode == Language(g_lang_spanish).Name() || nameOrISOCode == Language(g_lang_spanish).Locale())
+        else if (nameOrISOCode == Language(g_lang_russian).Name() || nameOrISOCode == Language(g_lang_russian).Locale())
             Construct(g_lang_russian);
-        if (nameOrISOCode == Language(g_lang_russian).Name() || nameOrISOCode == Language(g_lang_russian).Locale())
+        else if (nameOrISOCode == Language(g_lang_french).Name() || nameOrISOCode == Language(g_lang_french).Locale())
             Construct(g_lang_french);
-        if (nameOrISOCode == Language(g_lang_french).Name() || nameOrISOCode == Language(g_lang_french).Locale())
+        else if (nameOrISOCode == Language(g_lang_chinese).Name() || nameOrISOCode == Language(g_lang_chinese).Locale())
             Construct(g_lang_chinese);
-        if (nameOrISOCode == Language(g_lang_chinese).Name() || nameOrISOCode == Language(g_lang_chinese).Locale())
+        else if (nameOrISOCode == Language(g_lang_polish).Name() || nameOrISOCode == Language(g_lang_polish).Locale())
             Construct(g_lang_polish);
+        else if (nameOrISOCode == Language(g_lang_brazilian_portuguese).Name() || nameOrISOCode == Language(g_lang_brazilian_portuguese).Locale())
+            Construct(g_lang_brazilian_portuguese);
         else
             Construct(g_lang_any);
     }
@@ -282,6 +284,10 @@ namespace boss {
         else if (_code == g_lang_polish) {
             _name = "Polski";
             _locale = "pl";
+        }
+        else if (_code == g_lang_brazilian_portuguese) {
+            _name = "Português do Brasil";
+            _locale = "pt_BR";
         }
     }
 
