@@ -179,14 +179,19 @@ namespace boss {
 
         for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
             BOOST_LOG_TRIVIAL(trace) << "Adding priority difference edges to vertex for \"" << graph[*vit].Name() << "\".";
-            boss::vertex_it vit2 = vit;
-            ++vit2;
-            while (vit2 != vitend) {
-                BOOST_LOG_TRIVIAL(trace) << "Checking for priority difference between \"" << graph[*vit].Name() << "\" and \"" << graph[*vit2].Name() << "\".";
-                if (graph[*vit].Priority() == graph[*vit2].Priority()) {
-                    ++vit2;
+            //Priority differences should only be taken account between plugins that conflict. 
+            //However, an exception is made for plugins that contain only a header record,
+            //as they are for loading BSAs, and in Skyrim that means the resources they load can
+            //be affected by load order.
+
+            boss::vertex_it vit2, vitend2;
+            for (boost::tie(vit2, vitend2) = boost::vertices(graph); vit2 != vitend2; ++vit2) {
+
+                if (graph[*vit].Priority() == graph[*vit2].Priority() || (!graph[*vit].FormIDs().empty() && !graph[*vit2].FormIDs().empty() && !graph[*vit].DoFormIDsOverlap(graph[*vit2]))) {
                     continue;
                 }
+
+                BOOST_LOG_TRIVIAL(trace) << "Checking priority difference between \"" << graph[*vit].Name() << "\" and \"" << graph[*vit2].Name() << "\".";
 
                 vertex_t vertex, parentVertex;
                 if (graph[*vit].Priority() < graph[*vit2].Priority()) {
@@ -204,7 +209,6 @@ namespace boss {
 
                     boost::add_edge(parentVertex, vertex, graph);
                 }
-                ++vit2;
             }
         }
     }
