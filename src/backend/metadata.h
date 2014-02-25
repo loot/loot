@@ -185,6 +185,7 @@ namespace boss {
 
         void Name(const std::string& name);
         void Enabled(const bool enabled);
+        void SetPriorityExplicit(bool state);
         void Priority(const int priority);
         void LoadAfter(const std::set<File>& after);
         void Reqs(const std::set<File>& reqs);
@@ -197,6 +198,7 @@ namespace boss {
         bool HasNameOnly() const;
         bool IsRegexPlugin() const;
         bool LoadsBSA(const Game& game) const;
+        bool IsPriorityExplicit() const;
 
         //Compare name strings.
         bool operator == (const Plugin& rhs) const;
@@ -214,6 +216,7 @@ namespace boss {
     private:
         std::string name;
         bool enabled;  //Default to true.
+        bool _isPriorityExplicit;  //If false and priority is 0, then priority was not explicitly set as such.
         int priority;  //Default to 0 : >0 is lower down in load order, <0 is higher up.
         std::set<File> loadAfter;
         std::set<File> requirements;

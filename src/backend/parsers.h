@@ -339,8 +339,10 @@ namespace YAML {
             if (node["enabled"])
                 rhs.Enabled(node["enabled"].as<bool>());
 
-            if (node["priority"])
+            if (node["priority"]) {
                 rhs.Priority(node["priority"].as<int>());
+                rhs.SetPriorityExplicit(true);
+            }
 
             if (node["after"])
                 rhs.LoadAfter(node["after"].as< std::set<boss::File> >());

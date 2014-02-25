@@ -736,7 +736,7 @@ namespace YAML {
             out << BeginMap
                 << Key << "name" << Value << rhs.Name();
 
-            if (rhs.Priority() != 0)
+            if (rhs.IsPriorityExplicit())
                 out << Key << "priority" << Value << rhs.Priority();
 
             if (!rhs.Enabled())
