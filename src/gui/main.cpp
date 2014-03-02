@@ -234,12 +234,12 @@ bool BossGUI::OnInit() {
     //Set the locale to get encoding and language conversions working correctly.
     BOOST_LOG_TRIVIAL(debug) << "Initialising language settings.";
     //Defaults in case language string is empty or setting is missing.
-    string localeId = boss::Language(boss::g_lang_any).Locale();
+    string localeId = boss::Language(boss::g_lang_any).Locale() + ".UTF-8";
     wxLanguage wxLang = wxLANGUAGE_ENGLISH;
     if (_settings["Language"]) {
         boss::Language lang(_settings["Language"].as<string>());
         BOOST_LOG_TRIVIAL(debug) << "Selected language: " << lang.Name();
-        localeId = lang.Locale();
+        localeId = lang.Locale() + ".UTF-8";
         if (lang.Code() == boss::g_lang_english)
             wxLang = wxLANGUAGE_ENGLISH;
         else if (lang.Code() == boss::g_lang_spanish)
@@ -252,6 +252,8 @@ bool BossGUI::OnInit() {
             wxLang = wxLANGUAGE_CHINESE;
         else if (lang.Code() == boss::g_lang_polish)
             wxLang = wxLANGUAGE_POLISH;
+        else if (lang.Code() == boss::g_lang_brazilian_portuguese)
+            wxLang = wxLANGUAGE_PORTUGUESE_BRAZILIAN;
     }
 
     //Boost.Locale initialisation: Specify location of language dictionaries.

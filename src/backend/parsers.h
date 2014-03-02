@@ -154,7 +154,7 @@ namespace YAML {
         static Node encode(const boss::MessageContent& rhs) {
             Node node;
             node["str"] = rhs.Str();
-            node["lang"] = boss::Language(rhs.Language()).ISOCode();
+            node["lang"] = boss::Language(rhs.Language()).Locale();
 
             return node;
         }
@@ -339,8 +339,10 @@ namespace YAML {
             if (node["enabled"])
                 rhs.Enabled(node["enabled"].as<bool>());
 
-            if (node["priority"])
+            if (node["priority"]) {
                 rhs.Priority(node["priority"].as<int>());
+                rhs.SetPriorityExplicit(true);
+            }
 
             if (node["after"])
                 rhs.LoadAfter(node["after"].as< std::set<boss::File> >());

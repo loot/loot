@@ -84,3 +84,4 @@ If a translation for a new language is provided, here's what needs changing in t
 * In `main.cpp`, update `BossGUI::OnInit` to set the correct `wxLANGUAGE_`.
 * In `archive.py`, add the language folder to the inline list on line 68.
 * In `installer.nsi`, add entries for the language folder to the install and uninstall sections. If there's an installer translation, also add its string definitions beside all the other language string definitions, and insert its macro beside all the other language macros.
+* The readmes should be updated with a link to the translation in the repository in the main readme, and the language's code in the metadata syntax readme.

@@ -659,7 +659,7 @@ namespace YAML {
     inline Emitter& operator << (Emitter& out, const boss::MessageContent& rhs) {
         out << BeginMap;
 
-        out << Key << "lang" << Value << boss::Language(rhs.Language()).ISOCode();
+        out << Key << "lang" << Value << boss::Language(rhs.Language()).Locale();
 
         out << Key << "str" << Value << rhs.Str();
 
@@ -736,7 +736,7 @@ namespace YAML {
             out << BeginMap
                 << Key << "name" << Value << rhs.Name();
 
-            if (rhs.Priority() != 0)
+            if (rhs.IsPriorityExplicit())
                 out << Key << "priority" << Value << rhs.Priority();
 
             if (!rhs.Enabled())

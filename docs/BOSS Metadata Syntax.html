@@ -214,7 +214,7 @@ display: 'OBSE v18+'
     <thead><tr><th>Key Name<th>Required<th>Notes
     <tbody>
         <tr><td><code>str</code><td>&#x2713;<td>The actual message content string. Double-quoted URLs will be hyperlinked in the BOSS report. See <a href="#links">URL Hyperlinking</a> for details.
-        <tr><td><code>lang</code><td>&#x2713;<td>The language that <code>str</code> is written in, given as an ISO 639-3 language code. The languages BOSS supports are given in <a href="#lang">Language Codes</a>.
+        <tr><td><code>lang</code><td>&#x2713;<td>The language that <code>str</code> is written in, given as a POSIX language code. The languages BOSS supports are given in <a href="#lang">Language Codes</a>.
 </table>
 
 <p>BOSS handles messages and languages as follows:
@@ -297,7 +297,7 @@ nav: 0
     <tbody>
         <tr><td><code>name</code><td>string<td>&#x2713;<td>Can be an exact plugin filename or a regular expression plugin filename. If the period that precedes the file extension has been escaped (eg. <code>\.esp</code>, <code>\.esm</code>), the string is treated as a regular expression, otherwise it is treated as an exact filename.
         <tr><td><code>enabled</code><td>boolean<td>&#x2717;<td>Enables or disables use of the plugin object. Used for user rules, but no reason to use it in the masterlist. If unspecified, defaults to <code>true</code>.
-        <tr><td><code>priority</code><td>integer<td>&#x2717;<td>Modifies plugin position relative to others that change one or more of the same records, but which are otherwise unrelated (ie. neither plugin lists the other as a master, requirement, or in its <code>after</code> list). A plugin with a higher priority value will load after a plugin with a lower priority value. Value can be anything in the range <code>-2000000000</code> to <code>2000000000</code>, and if unspecified defaults to <code>0</code>.
+        <tr><td><code>priority</code><td>integer<td>&#x2717;<td>Modifies plugin position relative to others that change one or more of the same records, but which are otherwise unrelated (ie. neither plugin lists the other as a master, requirement, or in its <code>after</code> list). An exception is made for plugins that contain only a header record: these plugins have their priorities compared against all unrelated plugins. A plugin with a higher priority value will load after a plugin with a lower priority value. Value can be anything in the range <code>-2000000000</code> to <code>2000000000</code>, and if unspecified defaults to <code>0</code>.
         <tr><td><code>after</code><td>file list<td>&#x2717;<td>An unordered list of plugins that this plugin must load after, but which are not dependencies. Used for resolving specific compatibility issues and by user rules for specifying custom plugin positions.
         <tr><td><code>req</code><td>file list<td>&#x2717;<td>An unordered list of files that this plugin requires to be present. This plugin will load after any plugins listed. If any of these files are missing, an error message will be displayed. Intended for use specifying implicit dependencies, as BOSS will detect a plugin's explicit masters itself.
         <tr><td><code>inc</code><td>file list<td>&#x2717;<td>An unordered list of files that this plugin is incompatible with. If any of these files are present, an error message will be displayed.
@@ -433,14 +433,15 @@ both get displayed as
 <h2 id="lang">Language Codes</h2>
 <p>BOSS supports the following languages and language codes:
 <table>
-    <thead><tr><th>Language<th>ISO 639-3 Code
+    <thead><tr><th>Language<th>POSIX Code
     <tbody>
-        <tr><td>English<td>eng
-        <tr><td>Spanish<td>spa
-        <tr><td>Russian<td>rus
-        <tr><td>French<td>fra
-        <tr><td>Chinese<td>zho
-        <tr><td>Polish<td>pol
+        <tr><td>Chinese<td>zh_CN
+        <tr><td>English<td>en
+        <tr><td>French<td>fr
+        <tr><td>Polish<td>pl
+        <tr><td>Brazilian Portuguese<td>pt_BR
+        <tr><td>Russian<td>ru
+        <tr><td>Spanish<td>es
 </table>
 
 <h2 id="license">License</h2>

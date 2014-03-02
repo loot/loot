@@ -73,7 +73,6 @@ namespace boss {
 
         unsigned int Code() const;
         std::string Name() const;
-        std::string ISOCode() const;
         std::string Locale() const;
 
         static std::vector<std::string> Names() {
@@ -85,11 +84,11 @@ namespace boss {
             vec.push_back(Language(g_lang_french).Name());
             vec.push_back(Language(g_lang_chinese).Name());
             vec.push_back(Language(g_lang_polish).Name());
+            vec.push_back(Language(g_lang_brazilian_portuguese).Name());
             return vec;
         }
     private:
         unsigned int _code;
-        std::string _isoCode;
         std::string _name;
         std::string _locale;
 

@@ -311,15 +311,18 @@ FunctionEnd
 		File "..\resources\l10n\es\LC_MESSAGES\boss.mo"
 		;SetOutPath "$INSTDIR\resources\l10n\de\LC_MESSAGES"
 		;File "..\resources\l10n\de\LC_MESSAGES\wxstd.mo"
-		SetOutPath "$INSTDIR\resources\l10n\zh\LC_MESSAGES"
-		File "..\resources\l10n\zh\LC_MESSAGES\boss.mo"
-		File "..\resources\l10n\zh\LC_MESSAGES\wxstd.mo"
+		SetOutPath "$INSTDIR\resources\l10n\zh_CN\LC_MESSAGES"
+		File "..\resources\l10n\zh_CN\LC_MESSAGES\boss.mo"
+		File "..\resources\l10n\zh_CN\LC_MESSAGES\wxstd.mo"
 		SetOutPath "$INSTDIR\resources\l10n\fr\LC_MESSAGES"
 		File "..\resources\l10n\fr\LC_MESSAGES\wxstd.mo"
 		File "..\resources\l10n\fr\LC_MESSAGES\boss.mo"
 		SetOutPath "$INSTDIR\resources\l10n\pl\LC_MESSAGES"
 		File "..\resources\l10n\pl\LC_MESSAGES\wxstd.mo"
 		File "..\resources\l10n\pl\LC_MESSAGES\boss.mo"
+		SetOutPath "$INSTDIR\resources\l10n\pt_BR\LC_MESSAGES"
+		File "..\resources\l10n\pt_BR\LC_MESSAGES\wxstd.mo"
+		File "..\resources\l10n\pt_BR\LC_MESSAGES\boss.mo"
 		
         ;Install settings file.
         SetOutPath "$LOCALAPPDATA\BOSS"
@@ -329,33 +332,38 @@ FunctionEnd
 		StrCmp $LANGUAGE ${LANG_RUSSIAN} 0 +5
             Push "$LOCALAPPDATA\BOSS\settings.yaml"
             Push "Language:"
-            Push "Language: rus"
+            Push "Language: ru"
             Call ReplaceLineStr
 		;StrCmp $LANGUAGE ${LANG_GERMAN} 0 +5
         ;    Push "$LOCALAPPDATA\BOSS\settings.yaml"
         ;    Push "Language:"
-        ;    Push "Language: deu"
+        ;    Push "Language: de"
         ;    Call ReplaceLineStr
 		StrCmp $LANGUAGE ${LANG_SPANISH} 0 +5
             Push "$LOCALAPPDATA\BOSS\settings.yaml"
             Push "Language:"
-            Push "Language: spa"
+            Push "Language: es"
             Call ReplaceLineStr
 		StrCmp $LANGUAGE ${LANG_SIMPCHINESE} 0 +5
             Push "$LOCALAPPDATA\BOSS\settings.yaml"
             Push "Language:"
-            Push "Language: zho"
+            Push "Language: zh_CN"
             Call ReplaceLineStr
 		StrCmp $LANGUAGE ${LANG_FRENCH} 0 +5
             Push "$LOCALAPPDATA\BOSS\settings.yaml"
             Push "Language:"
-            Push "Language: fra"
+            Push "Language: fr"
             Call ReplaceLineStr
 		StrCmp $LANGUAGE ${LANG_POLISH} 0 +5
             Push "$LOCALAPPDATA\BOSS\settings.yaml"
             Push "Language:"
-            Push "Language: pol"
+            Push "Language: pl"
             Call ReplaceLineStr
+		;StrCmp $LANGUAGE ${LANG_PORTUGUESEBR} 0 +5
+        ;    Push "$LOCALAPPDATA\BOSS\settings.yaml"
+        ;    Push "Language:"
+        ;    Push "Language: pt_BR"
+        ;    Call ReplaceLineStr
 			
 		;Add Start Menu shortcuts. Set out path back to $INSTDIR otherwise the shortcuts start in the wrong place.
 		;Set Shell Var Context to all so that shortcuts are installed for all users, not just admin.
@@ -469,24 +477,28 @@ FunctionEnd
 		Delete "$INSTDIR\resources\l10n\es\LC_MESSAGES\boss.mo"
 		Delete "$INSTDIR\resources\l10n\es\LC_MESSAGES\wxstd.mo"
 		;Delete "$INSTDIR\resources\l10n\de\LC_MESSAGES\wxstd.mo"
-		Delete "$INSTDIR\resources\l10n\zh\LC_MESSAGES\boss.mo"
-		Delete "$INSTDIR\resources\l10n\zh\LC_MESSAGES\wxstd.mo"
+		Delete "$INSTDIR\resources\l10n\zh_CN\LC_MESSAGES\boss.mo"
+		Delete "$INSTDIR\resources\l10n\zh_CN\LC_MESSAGES\wxstd.mo"
 		Delete "$INSTDIR\resources\l10n\fr\LC_MESSAGES\boss.mo"
 		Delete "$INSTDIR\resources\l10n\fr\LC_MESSAGES\wxstd.mo"
 		Delete "$INSTDIR\resources\l10n\pl\LC_MESSAGES\boss.mo"
-		Delete "$INSTDIR\resources\l10n\pl\LC_MESSAGES\wxstd.mo"		
+		Delete "$INSTDIR\resources\l10n\pl\LC_MESSAGES\wxstd.mo"
+		Delete "$INSTDIR\resources\l10n\pt_BR\LC_MESSAGES\boss.mo"
+		Delete "$INSTDIR\resources\l10n\pt_BR\LC_MESSAGES\wxstd.mo"
 		RMDir  "$INSTDIR\resources\l10n\ru\LC_MESSAGES"
 		RMDir  "$INSTDIR\resources\l10n\ru"
 		RMDir  "$INSTDIR\resources\l10n\es\LC_MESSAGES"
 		RMDir  "$INSTDIR\resources\l10n\es"
 		;RMDir  "$INSTDIR\resources\l10n\de\LC_MESSAGES"
 		;RMDir  "$INSTDIR\resources\l10n\de"
-		RMDir  "$INSTDIR\resources\l10n\zh\LC_MESSAGES"
-		RMDir  "$INSTDIR\resources\l10n\zh"
+		RMDir  "$INSTDIR\resources\l10n\zh_CN\LC_MESSAGES"
+		RMDir  "$INSTDIR\resources\l10n\zh_CN"
 		RMDir  "$INSTDIR\resources\l10n\fr\LC_MESSAGES"
 		RMDir  "$INSTDIR\resources\l10n\fr"
 		RMDir  "$INSTDIR\resources\l10n\pl\LC_MESSAGES"
-		RMDir  "$INSTDIR\resources\l10n\pl"		
+		RMDir  "$INSTDIR\resources\l10n\pl"
+		RMDir  "$INSTDIR\resources\l10n\pt_BR\LC_MESSAGES"
+		RMDir  "$INSTDIR\resources\l10n\pt_BR"	
 		RMDir  "$INSTDIR\resources\l10n"
         RMDir  "$INSTDIR\resources"
 

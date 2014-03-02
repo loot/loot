@@ -210,7 +210,7 @@ Clicking on a plugin in the list will display the editing panel, where its load 
         <tr><th>Field<th>Description
     <tbody>
         <tr><td>Enable User Changes<td>If this is checked, BOSS will use the metadata you supplied when sorting the current plugin. Otherwise, your metadata will be ignored.
-        <tr><td id="editingPriority">Priority<td>This is a very rough control for determining how far up or down the load order a plugin should go. Plugins with equal priority will be compared as normal by the sorting algorithm, but plugins with a larger priority value will load later in the load order than plugins with a smaller priority value, unless the former depends on the latter or the latter is explicity told to load after the former. Plugins have a default priority of <code>0</code>.
+        <tr><td id="editingPriority">Priority<td>This is a rough control for how far up or down the load order a plugin should go. Plugins with equal priority will be compared as normal by the sorting algorithm, but plugins with a larger priority value will load later in the load order than plugins with a smaller priority value. Priority comparisons are only used for plugins that are not masters, requirements or otherwise told to load after one another, and only between plugins that conflict, except if a plugin is empty, in which case conflict status doesn't matter. Plugins have a default priority of <code>0</code>.
         <tr><td>Requirements<td>This is a list of files that are required by the current plugin for it to function correctly. BOSS will display an error message if any of the listed files are missing.
         <p>Any file, not just plugins, can be listed here, and each file has three sub-fields:
         <ul>
@@ -338,11 +338,12 @@ To translate the BOSS application:
  <li>Download <a href="https://github.com/boss-developers/boss-code/blob/master/resources/l10n/template.pot">BOSS's translation template file</a>.
  <li>If you are updating an existing translation, download the relevant translation file for the language you're interested in:
  <ul>
-  <li><a href="https://github.com/boss-developers/boss-code/blob/master/resources/l10n/ru/LC_MESSAGES/boss.po">Russian</a>
-  <li><a href="https://github.com/boss-developers/boss-code/blob/master/resources/l10n/es/LC_MESSAGES/boss.po">Spanish</a>
-  <li><a href="https://github.com/boss-developers/boss-code/blob/master/resources/l10n/zh/LC_MESSAGES/boss.po">Simplified Chinese</a>
+  <li><a href="https://github.com/boss-developers/boss-code/blob/master/resources/l10n/zh_CN/LC_MESSAGES/boss.po">Chinese</a>
   <li><a href="https://github.com/boss-developers/boss-code/blob/master/resources/l10n/fr/LC_MESSAGES/boss.po">French</a>
   <li><a href="https://github.com/boss-developers/boss-code/blob/master/resources/l10n/pl/LC_MESSAGES/boss.po">Polish</a>
+  <li><a href="https://github.com/boss-developers/boss-code/blob/master/resources/l10n/pt_BR/LC_MESSAGES/boss.po">Brazilian Portuguese</a>
+  <li><a href="https://github.com/boss-developers/boss-code/blob/master/resources/l10n/ru/LC_MESSAGES/boss.po">Russian</a>
+  <li><a href="https://github.com/boss-developers/boss-code/blob/master/resources/l10n/es/LC_MESSAGES/boss.po">Spanish</a>
  </ul>
  <li>Open Poedit and select <q>File->Preferences</q>, then in the <q>Editor</q> tab ensure that the checkbox for the <q>Automatically compile .mo file on save</q> setting is checked. Click <q>OK</q> to close the preferences window.
  <li>If you are starting a new translation, select <q>File->New catalogue from POT file...</q> and choose the template file you downloaded. In the <q>Catalog properties</q> dialog, just click <q>OK</q> without changing anything.

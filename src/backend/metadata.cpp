@@ -295,15 +295,15 @@ namespace boss {
         return _name;
     }
 
-    Plugin::Plugin() : enabled(true), priority(0), isMaster(false), crc(0), numOverrideRecords(0) {}
-    Plugin::Plugin(const std::string& n) : name(n), enabled(true), priority(0), isMaster(false), crc(0), numOverrideRecords(0) {
+    Plugin::Plugin() : enabled(true), priority(0), isMaster(false), crc(0), numOverrideRecords(0), _isPriorityExplicit(false) {}
+    Plugin::Plugin(const std::string& n) : name(n), enabled(true), priority(0), isMaster(false), crc(0), numOverrideRecords(0), _isPriorityExplicit(false) {
         //If the name passed ends in '.ghost', that should be trimmed.
         if (boost::iends_with(name, ".ghost"))
             name = name.substr(0, name.length() - 6);
     }
 
 	Plugin::Plugin(boss::Game& game, const std::string& n, const bool headerOnly)
-        : name(n), enabled(true), priority(0), isMaster(false), crc(0), numOverrideRecords(0) {
+        : name(n), enabled(true), priority(0), isMaster(false), crc(0), numOverrideRecords(0), _isPriorityExplicit(false) {
 
 		// Get data from file contents using libespm. Assumes libespm has already been initialised.
         BOOST_LOG_TRIVIAL(trace) << name << ": " << "Opening with libespm...";
@@ -403,10 +403,12 @@ namespace boss {
     void Plugin::MergeMetadata(const Plugin& plugin) {
         BOOST_LOG_TRIVIAL(trace) << "Merging metadata for: " << name;
 
-        //For 'enabled' and 'priority' metadata, use the given plugin's values, but if the 'priority' user value is zero, ignore it.
+        //For 'enabled' and 'priority' metadata, use the given plugin's values, but if the 'priority' user value is not explicit, ignore it.
         enabled = plugin.Enabled();
-        if (plugin.Priority() != 0)
+        if (plugin.IsPriorityExplicit()) {
             priority = plugin.Priority();
+            _isPriorityExplicit = true;
+        }
 
         //Merge the following. If any files in the source already exist in the destination, they will be skipped. Files have display strings and condition strings which aren't considered when comparing them, so will be lost if the plugin being merged in has additional data in these strings.
         std::set<File> files = plugin.LoadAfter();
@@ -437,10 +439,15 @@ namespace boss {
         Plugin p(*this);
 
         p.Enabled(plugin.Enabled());
-        if (priority != plugin.Priority())
+        if (priority != plugin.Priority()) {
             p.Priority(plugin.Priority());
-        else
+            p.SetPriorityExplicit(plugin.IsPriorityExplicit());
+        }
+        else {
             p.Priority(0);
+            p.SetPriorityExplicit(false);
+        }
+            
 
         //Compare this plugin against the given plugin.
         set<File> files = plugin.LoadAfter();
@@ -521,6 +528,10 @@ namespace boss {
 
     void Plugin::Enabled(const bool e) {
         enabled = e;
+    }
+
+    void Plugin::SetPriorityExplicit(bool state) {
+        _isPriorityExplicit = state;
     }
 
     void Plugin::Priority(const int p) {
@@ -610,11 +621,15 @@ namespace boss {
     }
 
     bool Plugin::HasNameOnly() const {
-        return priority == 0 && enabled == true && loadAfter.empty() && requirements.empty() && incompatibilities.empty() && messages.empty() && tags.empty() && _dirtyInfo.empty();
+        return !IsPriorityExplicit() && enabled == true && loadAfter.empty() && requirements.empty() && incompatibilities.empty() && messages.empty() && tags.empty() && _dirtyInfo.empty();
     }
 
     bool Plugin::IsRegexPlugin() const {
         return boost::iends_with(name, "\\.esm") || boost::iends_with(name, "\\.esp");
+    }
+
+    bool Plugin::IsPriorityExplicit() const {
+        return priority != 0 || _isPriorityExplicit;
     }
 
     bool Plugin::operator == (const Plugin& rhs) const {
