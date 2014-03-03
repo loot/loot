@@ -220,7 +220,7 @@ FunctionEnd
     LangString TEXT_SHOWREADME ${LANG_SIMPCHINESE} "查看说明"
     LangString TEXT_MAIN ${LANG_SIMPCHINESE} "所有BOSS文件（除userlist和配置文件）"
     LangString TEXT_USERFILES ${LANG_SIMPCHINESE} "BOSS的userlist和配置文件。"
-    
+
 ;--------------------------------
 ;Polish (POLSKI) Strings
 
@@ -323,7 +323,7 @@ FunctionEnd
 		SetOutPath "$INSTDIR\resources\l10n\pt_BR\LC_MESSAGES"
 		File "..\resources\l10n\pt_BR\LC_MESSAGES\wxstd.mo"
 		File "..\resources\l10n\pt_BR\LC_MESSAGES\boss.mo"
-		
+
         ;Install settings file.
         SetOutPath "$LOCALAPPDATA\BOSS"
         File "..\resources\settings.yaml"
@@ -364,7 +364,7 @@ FunctionEnd
         ;    Push "Language:"
         ;    Push "Language: pt_BR"
         ;    Call ReplaceLineStr
-			
+
 		;Add Start Menu shortcuts. Set out path back to $INSTDIR otherwise the shortcuts start in the wrong place.
 		;Set Shell Var Context to all so that shortcuts are installed for all users, not just admin.
 		SetOutPath "$INSTDIR"
@@ -391,7 +391,7 @@ FunctionEnd
 		WriteUninstaller "$INSTDIR\Uninstall.exe"
 
 	SectionEnd
-    
+
     Section "Microsoft Visual C++ 2013 SP1 Redist"
         ; Thanks to the pcsx2 installer for providing this!
 
@@ -406,38 +406,33 @@ FunctionEnd
         ClearErrors
 
         ${If} ${RunningX64}
-        ReadRegDword $R0 HKLM "SOFTWARE\Wow6432Node\Microsoft\VisualStudio\12.0\VC\Runtimes\x86" "Installed"
+            ReadRegDword $R0 HKLM "SOFTWARE\Wow6432Node\Microsoft\VisualStudio\12.0\VC\Runtimes\x86" "Installed"
         ${Else}
-        ReadRegDword $R0 HKLM "SOFTWARE\Microsoft\VisualStudio\12.0\VC\Runtimes\x86" "Installed"
+            ReadRegDword $R0 HKLM "SOFTWARE\Microsoft\VisualStudio\12.0\VC\Runtimes\x86" "Installed"
         ${EndIf}
 
-        IfErrors 0 +2
-        DetailPrint "Visual C++ 2013 Redistributable registry key was not found; assumed to be uninstalled."
-        StrCmp $R0 "1" 0 +3
-        DetailPrint "Visual C++ 2013 Redistributable is already installed; skipping!"
-        Goto done
+        ${If} $R0 == "1"
+            DetailPrint "Visual C++ 2013 Redistributable is already installed; skipping!"
+        ${Else}
+            DetailPrint "Visual C++ 2013 Redistributable registry key was not found; assumed to be uninstalled."
+            DetailPrint "Downloading Visual C++ 2013 Redistributable Setup..."
+            SetOutPath $TEMP
+            NSISdl::download "http://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4DD4-91DA-3737CD5CD6E3/vcredist_x86.exe" "vcredist_x86.exe"
 
-        ; Use bundled VC redist, more important that the install doesn't fail than it gets whatever is the latest update.
-        SetOutPath "$TEMP"
-        File "..\build\vcredist_x86.exe"
+            Pop $R0 ;Get the return value
+            ${If} $R0 == "success"
+                DetailPrint "Running Visual C++ 2013 Redistributable Setup..."
+                Sleep 2000
+                HideWindow
+                ExecWait '"$TEMP\vcredist_x86.exe" /qb'
+                BringToFront
+                DetailPrint "Finished Visual C++ 2013 SP1 Redistributable Setup"
 
-        ;DetailPrint "Downloading Visual C++ 2013 Redistributable Setup..."
-        ;DetailPrint "Contacting Microsoft.com..."
-        ;NSISdl::download /TIMEOUT=15000 "http://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4DD4-91DA-3737CD5CD6E3/vcredist_x86.exe" "vcredist_x86.exe"
-
-        ;Pop $R0 ;Get the return value
-        ;StrCmp $R0 "success" OnSuccess
-        ;DetailPrint "Could not contact Microsoft.com, or the file has been (re)moved!"
-        ;Goto done
-
-        ;OnSuccess:
-        DetailPrint "Running Visual C++ 2013 Redistributable Setup..."
-        ExecWait '"$TEMP\vcredist_x86.exe" /qb'
-        DetailPrint "Finished Visual C++ 2013 SP1 Redistributable Setup"
-
-        Delete "$TEMP\vcredist_x86.exe"
-
-        done:
+                Delete "$TEMP\vcredist_x86.exe"
+            ${Else}
+                DetailPrint "Could not contact Microsoft.com, or the file has been (re)moved!"
+            ${EndIf}
+        ${EndIf}
     SectionEnd
 
 ;--------------------------------
@@ -498,7 +493,7 @@ FunctionEnd
 		RMDir  "$INSTDIR\resources\l10n\pl\LC_MESSAGES"
 		RMDir  "$INSTDIR\resources\l10n\pl"
 		RMDir  "$INSTDIR\resources\l10n\pt_BR\LC_MESSAGES"
-		RMDir  "$INSTDIR\resources\l10n\pt_BR"	
+		RMDir  "$INSTDIR\resources\l10n\pt_BR"
 		RMDir  "$INSTDIR\resources\l10n"
         RMDir  "$INSTDIR\resources"
 
