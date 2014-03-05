@@ -81,6 +81,7 @@ const unsigned int boss_lang_french                 = boss::g_lang_french;
 const unsigned int boss_lang_chinese                = boss::g_lang_chinese;
 const unsigned int boss_lang_polish                 = boss::g_lang_polish;
 const unsigned int boss_lang_brazilian_portuguese   = boss::g_lang_brazilian_portuguese;
+const unsigned int boss_lang_danish                 = boss::g_lang_danish;
 
 // BOSS cleanliness codes.
 const unsigned int boss_needs_cleaning_no       = 0;

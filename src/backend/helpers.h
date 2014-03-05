@@ -85,6 +85,7 @@ namespace boss {
             vec.push_back(Language(g_lang_chinese).Name());
             vec.push_back(Language(g_lang_polish).Name());
             vec.push_back(Language(g_lang_brazilian_portuguese).Name());
+            vec.push_back(Language(g_lang_danish).Name());
             return vec;
         }
     private:

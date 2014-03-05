@@ -254,6 +254,8 @@ bool BossGUI::OnInit() {
             wxLang = wxLANGUAGE_POLISH;
         else if (lang.Code() == boss::g_lang_brazilian_portuguese)
             wxLang = wxLANGUAGE_PORTUGUESE_BRAZILIAN;
+        else if (lang.Code() == boss::g_lang_danish)
+            wxLang = wxLANGUAGE_DANISH;
     }
 
     //Boost.Locale initialisation: Specify location of language dictionaries.

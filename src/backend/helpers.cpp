@@ -251,6 +251,8 @@ namespace boss {
             Construct(g_lang_polish);
         else if (nameOrISOCode == Language(g_lang_brazilian_portuguese).Name() || nameOrISOCode == Language(g_lang_brazilian_portuguese).Locale())
             Construct(g_lang_brazilian_portuguese);
+        else if (nameOrISOCode == Language(g_lang_danish).Name() || nameOrISOCode == Language(g_lang_danish).Locale())
+            Construct(g_lang_danish);
         else
             Construct(g_lang_any);
     }
@@ -288,6 +290,10 @@ namespace boss {
         else if (_code == g_lang_brazilian_portuguese) {
             _name = "Português do Brasil";
             _locale = "pt_BR";
+        }
+        else if (_code == g_lang_danish) {
+            _name = "Dansk";
+            _locale = "da";
         }
     }
 
