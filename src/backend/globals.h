@@ -26,7 +26,7 @@
 
 #include <boost/filesystem.hpp>
 
-namespace boss {
+namespace loot {
 
     //Game values.
     extern const unsigned int g_game_autodetect;

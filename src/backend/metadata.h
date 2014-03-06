@@ -33,7 +33,7 @@
 #include <list>
 #include <set>
 
-namespace boss {
+namespace loot {
 
 
     //A FormID is a 32 bit unsigned integer of the form xxYYYYYY in hex. The xx is the position in the masters list of the plugin that the FormID is from, and the YYYYYY is the rest of the FormID. Here the xx bit is stored as the corresponding filename to allow comparison between FormIDs from different plugins.
@@ -79,7 +79,7 @@ namespace boss {
         ConditionStruct(const std::string& condition);
 
         bool IsConditional() const;
-        bool EvalCondition(boss::Game& game) const;
+        bool EvalCondition(loot::Game& game) const;
 
         std::string Condition() const;
     private:
@@ -112,7 +112,7 @@ namespace boss {
         bool operator < (const Message& rhs) const;
         bool operator == (const Message& rhs) const;
 
-        bool EvalCondition(boss::Game& game, const unsigned int language);
+        bool EvalCondition(loot::Game& game, const unsigned int language);
 
         unsigned int Type() const;
         std::vector<MessageContent> Content() const;
@@ -157,7 +157,7 @@ namespace boss {
     public:
         Plugin();
         Plugin(const std::string& name);
-        Plugin(boss::Game& game, const std::string& name, const bool headerOnly);
+        Plugin(loot::Game& game, const std::string& name, const bool headerOnly);
 
         //Merges from the given plugin into this one, unless there is already equal metadata present.
         //For 'enabled' and 'priority' metadata, use the given plugin's values, but if the 'priority' user value is zero, ignore it.
@@ -195,7 +195,7 @@ namespace boss {
         void Tags(const std::set<Tag>& tags);
         void DirtyInfo(const std::set<PluginDirtyInfo>& info);
 
-        void EvalAllConditions(boss::Game& game, const unsigned int language);
+        void EvalAllConditions(loot::Game& game, const unsigned int language);
         bool HasNameOnly() const;
         bool IsRegexPlugin() const;
         bool LoadsBSA(const Game& game) const;

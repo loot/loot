@@ -53,16 +53,16 @@ bool TextDropTarget::OnDropText(wxCoord x, wxCoord y, const wxString &data) {
 // Common Editor Class
 ///////////////////////////////////
 
-CommonEditor::CommonEditor(const std::list<boss::Plugin>& plugins, const boss::Game& game) : _basePlugins(plugins), _game(game) {}
+CommonEditor::CommonEditor(const std::list<loot::Plugin>& plugins, const loot::Game& game) : _basePlugins(plugins), _game(game) {}
 
-CommonEditor::CommonEditor(const std::list<boss::Plugin>& plugins, const boss::Game& game, std::list<boss::Plugin>& editedPlugins) : _basePlugins(plugins), _game(game), _editedPlugins(editedPlugins) {}
+CommonEditor::CommonEditor(const std::list<loot::Plugin>& plugins, const loot::Game& game, std::list<loot::Plugin>& editedPlugins) : _basePlugins(plugins), _game(game), _editedPlugins(editedPlugins) {}
 
-boss::Plugin CommonEditor::GetMasterData(const wxString& plugin) const {
+loot::Plugin CommonEditor::GetMasterData(const wxString& plugin) const {
     BOOST_LOG_TRIVIAL(debug) << "Getting hardcoded and masterlist metadata for plugin: " << plugin.ToUTF8();
-    boss::Plugin p;
-    boss::Plugin p_in(string(plugin.ToUTF8()));
+    loot::Plugin p;
+    loot::Plugin p_in(string(plugin.ToUTF8()));
 
-    list<boss::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), p_in);
+    list<loot::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), p_in);
 
     if (it != _basePlugins.end())
         p = *it;
@@ -70,11 +70,11 @@ boss::Plugin CommonEditor::GetMasterData(const wxString& plugin) const {
     return p;
 }
 
-boss::Plugin CommonEditor::GetUserData(const wxString& plugin) const {
+loot::Plugin CommonEditor::GetUserData(const wxString& plugin) const {
     BOOST_LOG_TRIVIAL(debug) << "Getting userlist metadata for plugin: " << plugin.ToUTF8();
-    boss::Plugin p(string(plugin.ToUTF8()));
+    loot::Plugin p(string(plugin.ToUTF8()));
 
-    list<boss::Plugin>::const_iterator it = std::find(_editedPlugins.begin(), _editedPlugins.end(), p);
+    list<loot::Plugin>::const_iterator it = std::find(_editedPlugins.begin(), _editedPlugins.end(), p);
 
     if (it != _editedPlugins.end())
         p = *it;
@@ -86,12 +86,12 @@ void CommonEditor::ApplyEdits(const wxString& plugin, wxListView * wxList) {
     BOOST_LOG_TRIVIAL(debug) << "Applying edits to plugin: " << plugin.ToUTF8();
 
     //Get recorded data.
-    boss::Plugin master(GetMasterData(plugin));
-    boss::Plugin edited(GetNewData(plugin));
+    loot::Plugin master(GetMasterData(plugin));
+    loot::Plugin edited(GetNewData(plugin));
 
-    boss::Plugin diff = master.DiffMetadata(edited);
+    loot::Plugin diff = master.DiffMetadata(edited);
 
-    list<boss::Plugin>::iterator pos = std::find(_editedPlugins.begin(), _editedPlugins.end(), diff);
+    list<loot::Plugin>::iterator pos = std::find(_editedPlugins.begin(), _editedPlugins.end(), diff);
     long i = wxList->FindItem(-1, plugin);
 
     if (!diff.HasNameOnly()) {
@@ -108,35 +108,35 @@ void CommonEditor::ApplyEdits(const wxString& plugin, wxListView * wxList) {
     }
 }
 
-boss::File CommonEditor::RowToFile(wxListView * list, long row) const {
-    return boss::File(
+loot::File CommonEditor::RowToFile(wxListView * list, long row) const {
+    return loot::File(
         string(list->GetItemText(row, 0).ToUTF8()),
         string(list->GetItemText(row, 1).ToUTF8()),
         string(list->GetItemText(row, 2).ToUTF8())
         );
 }
 
-boss::Tag CommonEditor::RowToTag(wxListView * list, long row) const {
+loot::Tag CommonEditor::RowToTag(wxListView * list, long row) const {
     string name = string(list->GetItemText(row, 1).ToUTF8());
 
     if (list->GetItemText(row, 0) == State[1])
-        return boss::Tag(
+        return loot::Tag(
         name,
         false,
         string(list->GetItemText(row, 2).ToUTF8())
         );
     else
-        return boss::Tag(
+        return loot::Tag(
         name,
         true,
         string(list->GetItemText(row, 2).ToUTF8())
         );
 }
 
-boss::PluginDirtyInfo CommonEditor::RowToPluginDirtyInfo(wxListView * list, long row) const {
+loot::PluginDirtyInfo CommonEditor::RowToPluginDirtyInfo(wxListView * list, long row) const {
     string text(list->GetItemText(row, 0).ToUTF8());
     uint32_t crc = strtoul(text.c_str(), NULL, 16);
-    return boss::PluginDirtyInfo(
+    return loot::PluginDirtyInfo(
         crc,
         atoi(string(list->GetItemText(row, 1).ToUTF8()).c_str()),
         atoi(string(list->GetItemText(row, 2).ToUTF8()).c_str()),
@@ -150,7 +150,7 @@ boss::PluginDirtyInfo CommonEditor::RowToPluginDirtyInfo(wxListView * list, long
 ///////////////////////////////////
 
 
-MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<boss::Plugin>& plugins, const boss::Game& game) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER), CommonEditor(plugins, game) {
+MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<loot::Plugin>& plugins, const loot::Game& game) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER), CommonEditor(plugins, game) {
     //Initialise editing panel.
     editingPanel = new wxPanel(this, wxID_ANY);
 
@@ -239,9 +239,9 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
 
     //Fill pluginList with the contents of basePlugins.
     int i = 0;
-    for (list<boss::Plugin>::const_iterator it = _basePlugins.begin(); it != _basePlugins.end(); ++it) {
+    for (list<loot::Plugin>::const_iterator it = _basePlugins.begin(); it != _basePlugins.end(); ++it) {
         pluginList->InsertItem(i, FromUTF8(it->Name()));
-        pluginList->SetItem(i, 1, FromUTF8(boss::IntToString(it->Priority())));
+        pluginList->SetItem(i, 1, FromUTF8(loot::IntToString(it->Priority())));
         if (it->FormIDs().empty()) {
             pluginList->SetItemTextColour(i, wxColour(122, 122, 122));
         }
@@ -274,11 +274,11 @@ void MiniEditor::OnPluginSelect(wxListEvent& event) {
         if (!currentPlugin.empty()) {
             ApplyEdits(currentPlugin, pluginList);
             //Also update the item's priority value in the plugins list in case it has changed.
-            pluginList->SetItem(pluginList->FindItem(-1, currentPlugin), 1, FromUTF8(boss::IntToString(prioritySpin->GetValue())));
+            pluginList->SetItem(pluginList->FindItem(-1, currentPlugin), 1, FromUTF8(loot::IntToString(prioritySpin->GetValue())));
         }
 
         //Merge metadata.
-        boss::Plugin plugin = GetMasterData(selectedPlugin);
+        loot::Plugin plugin = GetMasterData(selectedPlugin);
         plugin.MergeMetadata(GetUserData(selectedPlugin));
 
         //Now fill editor fields with new plugin's info and update control states.
@@ -288,9 +288,9 @@ void MiniEditor::OnPluginSelect(wxListEvent& event) {
         prioritySpin->SetValue(plugin.Priority());
 
         loadAfterList->DeleteAllItems();
-        set<boss::File> files = plugin.LoadAfter();
+        set<loot::File> files = plugin.LoadAfter();
         int i = 0;
-        for (set<boss::File>::const_iterator it = files.begin(), endit = files.end(); it != endit; ++it) {
+        for (set<loot::File>::const_iterator it = files.begin(), endit = files.end(); it != endit; ++it) {
             loadAfterList->InsertItem(i, FromUTF8(it->Name()));
             ++i;
         }
@@ -331,9 +331,9 @@ void MiniEditor::OnPluginSelect(wxListEvent& event) {
 void MiniEditor::OnFilterToggle(wxCommandEvent& event) {
     //First need to merge the base and edited plugin lists so that the right priority values get displayed.
 
-    list<boss::Plugin> plugins(_basePlugins);
-    for (list<boss::Plugin>::const_iterator it = _editedPlugins.begin(); it != _editedPlugins.end(); ++it) {
-        list<boss::Plugin>::iterator pos = std::find(plugins.begin(), plugins.end(), *it);
+    list<loot::Plugin> plugins(_basePlugins);
+    for (list<loot::Plugin>::const_iterator it = _editedPlugins.begin(); it != _editedPlugins.end(); ++it) {
+        list<loot::Plugin>::iterator pos = std::find(plugins.begin(), plugins.end(), *it);
         pos->MergeMetadata(*it);
     }
 
@@ -345,8 +345,8 @@ void MiniEditor::OnFilterToggle(wxCommandEvent& event) {
 
     pluginList->Freeze();
     if (event.IsChecked()) {
-        boss::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
-        list<boss::Plugin>::const_iterator pos = std::find(plugins.begin(), plugins.end(), plugin);
+        loot::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
+        list<loot::Plugin>::const_iterator pos = std::find(plugins.begin(), plugins.end(), plugin);
 
         if (pos != plugins.end()) {
             pluginList->DeleteAllItems();
@@ -354,12 +354,12 @@ void MiniEditor::OnFilterToggle(wxCommandEvent& event) {
             bool loadsBSA = pos->LoadsBSA(_game);
 
             int i = 0;
-            for (list<boss::Plugin>::const_iterator it = plugins.begin(); it != plugins.end(); ++it) {
+            for (list<loot::Plugin>::const_iterator it = plugins.begin(); it != plugins.end(); ++it) {
                 //Want to filter to show only those the selected plugin can load after validly, and which also either conflict with it,
                 //or which load a BSA (if the selected plugin loads a BSA).
                 if (*it == *pos || !it->MustLoadAfter(*pos) && (pos->DoFormIDsOverlap(*it) || (loadsBSA && it->LoadsBSA(_game)))) {
                     pluginList->InsertItem(i, FromUTF8(it->Name()));
-                    pluginList->SetItem(i, 1, FromUTF8(boss::IntToString(it->Priority())));
+                    pluginList->SetItem(i, 1, FromUTF8(loot::IntToString(it->Priority())));
                     if (it->FormIDs().empty()) {
                         pluginList->SetItemTextColour(i, wxColour(122, 122, 122));
                     }
@@ -377,9 +377,9 @@ void MiniEditor::OnFilterToggle(wxCommandEvent& event) {
     else {
         pluginList->DeleteAllItems();
         int i = 0;
-        for (list<boss::Plugin>::const_iterator it = plugins.begin(); it != plugins.end(); ++it) {
+        for (list<loot::Plugin>::const_iterator it = plugins.begin(); it != plugins.end(); ++it) {
             pluginList->InsertItem(i, FromUTF8(it->Name()));
-            pluginList->SetItem(i, 1, FromUTF8(boss::IntToString(it->Priority())));
+            pluginList->SetItem(i, 1, FromUTF8(loot::IntToString(it->Priority())));
             if (it->FormIDs().empty()) {
                 pluginList->SetItemTextColour(i, wxColour(122, 122, 122));
             }
@@ -400,17 +400,17 @@ void MiniEditor::OnFilterToggle(wxCommandEvent& event) {
 }
 
 void MiniEditor::OnRowSelect(wxListEvent& event) {
-    boss::File file(string(loadAfterList->GetItemText(event.GetIndex(), 0).ToUTF8()));
-    boss::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
+    loot::File file(string(loadAfterList->GetItemText(event.GetIndex(), 0).ToUTF8()));
+    loot::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
 
-    list<boss::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
+    list<loot::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
 
     if (it != _basePlugins.end())
         plugin = *it;
     else
         BOOST_LOG_TRIVIAL(warning) << "Could not find plugin in base list: " << plugin.Name();
 
-    set<boss::File> loadAfter = plugin.LoadAfter();
+    set<loot::File> loadAfter = plugin.LoadAfter();
 
     if (loadAfter.find(file) == loadAfter.end()) {
         BOOST_LOG_TRIVIAL(trace) << "File \"" << file.Name() << "\" was not found in base plugin metadata. Removal enabled.";
@@ -443,15 +443,15 @@ void MiniEditor::OnApply(wxCommandEvent& event) {
     EndModal(event.GetId());
 }
 
-const std::list<boss::Plugin>& MiniEditor::GetEditedPlugins() const {
+const std::list<loot::Plugin>& MiniEditor::GetEditedPlugins() const {
     return _editedPlugins;
 }
 
-boss::Plugin MiniEditor::GetNewData(const wxString& plugin) const {
+loot::Plugin MiniEditor::GetNewData(const wxString& plugin) const {
     //Get new data. Because most of it is missing in the MiniEditor, start with the existing data.
-    boss::Plugin edited(GetMasterData(plugin));
+    loot::Plugin edited(GetMasterData(plugin));
     edited.Priority(prioritySpin->GetValue());
-    set<boss::File> files; 
+    set<loot::File> files; 
     for (int i = 0, max = loadAfterList->GetItemCount(); i < max; ++i) {
         files.insert(RowToFile(loadAfterList, i));
     }
@@ -470,7 +470,7 @@ void MiniEditor::OnResize(wxSizeEvent& event) {
 // Editor Class
 ///////////////////////////////////
 
-Editor::Editor(wxWindow *parent, const wxString& title, const std::string userlistPath, const std::list<boss::Plugin>& basePlugins, std::list<boss::Plugin>& editedPlugins, const unsigned int language, const boss::Game& game) : wxFrame(parent, wxID_ANY, title), _userlistPath(userlistPath), CommonEditor(basePlugins, game, editedPlugins) {
+Editor::Editor(wxWindow *parent, const wxString& title, const std::string userlistPath, const std::list<loot::Plugin>& basePlugins, std::list<loot::Plugin>& editedPlugins, const unsigned int language, const loot::Game& game) : wxFrame(parent, wxID_ANY, title), _userlistPath(userlistPath), CommonEditor(basePlugins, game, editedPlugins) {
 
     //Initialise child windows.
     listBook = new wxNotebook(this, BOOK_Lists);
@@ -641,7 +641,7 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
 
     //Fill pluginList with the contents of basePlugins.
     int i = 0;
-    for (list<boss::Plugin>::const_iterator it = _basePlugins.begin(); it != _basePlugins.end(); ++it) {
+    for (list<loot::Plugin>::const_iterator it = _basePlugins.begin(); it != _basePlugins.end(); ++it) {
         pluginList->InsertItem(i, FromUTF8(it->Name()));
         if (it->LoadsBSA(_game)) {
             pluginList->SetItemTextColour(i, wxColour(0, 142, 219));
@@ -673,7 +673,7 @@ void Editor::OnPluginSelect(wxListEvent& event) {
             ApplyEdits(currentPlugin, pluginList);
 
         //Merge metadata.
-        boss::Plugin plugin = GetMasterData(selectedPlugin);
+        loot::Plugin plugin = GetMasterData(selectedPlugin);
         plugin.MergeMetadata(GetUserData(selectedPlugin));
 
         //Now fill editor fields with new plugin's info and update control states.
@@ -691,9 +691,9 @@ void Editor::OnPluginSelect(wxListEvent& event) {
         tagsList->DeleteAllItems();
         dirtyList->DeleteAllItems();
 
-        set<boss::File> files = plugin.LoadAfter();
+        set<loot::File> files = plugin.LoadAfter();
         int i=0;
-        for (set<boss::File>::const_iterator it=files.begin(), endit=files.end(); it != endit; ++it) {
+        for (set<loot::File>::const_iterator it=files.begin(), endit=files.end(); it != endit; ++it) {
             loadAfterList->InsertItem(i, FromUTF8(it->Name()));
             loadAfterList->SetItem(i, 1, FromUTF8(it->DisplayName()));
             loadAfterList->SetItem(i, 2, FromUTF8(it->Condition()));
@@ -706,7 +706,7 @@ void Editor::OnPluginSelect(wxListEvent& event) {
 
         files = plugin.Reqs();
         i=0;
-        for (set<boss::File>::const_iterator it=files.begin(), endit=files.end(); it != endit; ++it) {
+        for (set<loot::File>::const_iterator it=files.begin(), endit=files.end(); it != endit; ++it) {
             reqsList->InsertItem(i, FromUTF8(it->Name()));
             reqsList->SetItem(i, 1, FromUTF8(it->DisplayName()));
             reqsList->SetItem(i, 2, FromUTF8(it->Condition()));
@@ -719,7 +719,7 @@ void Editor::OnPluginSelect(wxListEvent& event) {
 
         files = plugin.Incs();
         i=0;
-        for (set<boss::File>::const_iterator it=files.begin(), endit=files.end(); it != endit; ++it) {
+        for (set<loot::File>::const_iterator it=files.begin(), endit=files.end(); it != endit; ++it) {
             incsList->InsertItem(i, FromUTF8(it->Name()));
             incsList->SetItem(i, 1, FromUTF8(it->DisplayName()));
             incsList->SetItem(i, 2, FromUTF8(it->Condition()));
@@ -730,13 +730,13 @@ void Editor::OnPluginSelect(wxListEvent& event) {
         else
             incsList->SetColumnWidth(0, wxLIST_AUTOSIZE);
 
-        list<boss::Message> messages = plugin.Messages();
-        vector<boss::Message> vec(messages.begin(), messages.end());
+        list<loot::Message> messages = plugin.Messages();
+        vector<loot::Message> vec(messages.begin(), messages.end());
         messageList->SetItems(vec);
 
-        set<boss::Tag> tags = plugin.Tags();
+        set<loot::Tag> tags = plugin.Tags();
         i=0;
-        for (set<boss::Tag>::const_iterator it=tags.begin(), endit=tags.end(); it != endit; ++it) {
+        for (set<loot::Tag>::const_iterator it=tags.begin(), endit=tags.end(); it != endit; ++it) {
             if (it->IsAddition())
                 tagsList->InsertItem(i, State[0]);
             else
@@ -750,13 +750,13 @@ void Editor::OnPluginSelect(wxListEvent& event) {
         else
             tagsList->SetColumnWidth(0, wxLIST_AUTOSIZE);
 
-        set<boss::PluginDirtyInfo> dirtyInfo = plugin.DirtyInfo();
+        set<loot::PluginDirtyInfo> dirtyInfo = plugin.DirtyInfo();
         i=0;
-        for (set<boss::PluginDirtyInfo>::const_iterator it=dirtyInfo.begin(), endit=dirtyInfo.end(); it != endit; ++it) {
-            dirtyList->InsertItem(i, FromUTF8(boss::IntToHexString(it->CRC())));
-            dirtyList->SetItem(i, 1, FromUTF8(boss::IntToString(it->ITMs())));
-            dirtyList->SetItem(i, 2, FromUTF8(boss::IntToString(it->UDRs())));
-            dirtyList->SetItem(i, 3, FromUTF8(boss::IntToString(it->DeletedNavmeshes())));
+        for (set<loot::PluginDirtyInfo>::const_iterator it=dirtyInfo.begin(), endit=dirtyInfo.end(); it != endit; ++it) {
+            dirtyList->InsertItem(i, FromUTF8(loot::IntToHexString(it->CRC())));
+            dirtyList->SetItem(i, 1, FromUTF8(loot::IntToString(it->ITMs())));
+            dirtyList->SetItem(i, 2, FromUTF8(loot::IntToString(it->UDRs())));
+            dirtyList->SetItem(i, 3, FromUTF8(loot::IntToString(it->DeletedNavmeshes())));
             dirtyList->SetItem(i, 4, FromUTF8(it->CleaningUtility()));
             ++i;
         }
@@ -788,7 +788,7 @@ void Editor::OnPluginCopyName(wxCommandEvent& event) {
 
 void Editor::OnPluginCopyMetadata(wxCommandEvent& event) {
     wxString selectedPlugin = pluginList->GetItemText(pluginList->GetFirstSelected());
-    boss::Plugin plugin = GetUserData(selectedPlugin);
+    loot::Plugin plugin = GetUserData(selectedPlugin);
 
     string text;
     if (plugin.HasNameOnly())
@@ -817,11 +817,11 @@ void Editor::OnPluginClearMetadata(wxCommandEvent& event) {
     if (dialog.ShowModal() == wxID_YES) {
         long i = pluginList->GetFirstSelected();
         wxString selectedPlugin = pluginList->GetItemText(i);
-        boss::Plugin p(string(selectedPlugin.ToUTF8()));
+        loot::Plugin p(string(selectedPlugin.ToUTF8()));
 
         //Need to clear what's currently in the editor and what's from the userlist.
 
-        list<boss::Plugin>::const_iterator it = std::find(_editedPlugins.begin(), _editedPlugins.end(), p);
+        list<loot::Plugin>::const_iterator it = std::find(_editedPlugins.begin(), _editedPlugins.end(), p);
 
         //Delete existing userlist entry.
         if (it != _editedPlugins.end())
@@ -940,9 +940,9 @@ void Editor::OnAddRow(wxCommandEvent& event) {
 
         long i = tagsList->GetItemCount();
         dirtyList->InsertItem(i, rowDialog->GetCRC());
-        dirtyList->SetItem(i, 1, FromUTF8(boss::IntToString(rowDialog->GetITMs())));
-        dirtyList->SetItem(i, 2, FromUTF8(boss::IntToString(rowDialog->GetUDRs())));
-        dirtyList->SetItem(i, 3, FromUTF8(boss::IntToString(rowDialog->GetDeletedNavmeshes())));
+        dirtyList->SetItem(i, 1, FromUTF8(loot::IntToString(rowDialog->GetITMs())));
+        dirtyList->SetItem(i, 2, FromUTF8(loot::IntToString(rowDialog->GetUDRs())));
+        dirtyList->SetItem(i, 3, FromUTF8(loot::IntToString(rowDialog->GetDeletedNavmeshes())));
         dirtyList->SetItem(i, 4, rowDialog->GetUtility());
     }
 }
@@ -1036,9 +1036,9 @@ void Editor::OnEditRow(wxCommandEvent& event) {
         }
 
         dirtyList->SetItem(i, 0, rowDialog->GetCRC());
-        dirtyList->SetItem(i, 1, FromUTF8(boss::IntToString(rowDialog->GetITMs())));
-        dirtyList->SetItem(i, 2, FromUTF8(boss::IntToString(rowDialog->GetUDRs())));
-        dirtyList->SetItem(i, 3, FromUTF8(boss::IntToString(rowDialog->GetDeletedNavmeshes())));
+        dirtyList->SetItem(i, 1, FromUTF8(loot::IntToString(rowDialog->GetITMs())));
+        dirtyList->SetItem(i, 2, FromUTF8(loot::IntToString(rowDialog->GetUDRs())));
+        dirtyList->SetItem(i, 3, FromUTF8(loot::IntToString(rowDialog->GetDeletedNavmeshes())));
         dirtyList->SetItem(i, 4, rowDialog->GetUtility());
     }
 }
@@ -1067,17 +1067,17 @@ void Editor::OnRowSelect(wxListEvent& event) {
     if (event.GetId() == LIST_Reqs) {
 
         //Create File object, search the masterlist vector for the plugin and search its reqs for this object.
-        boss::File file = RowToFile(reqsList, event.GetIndex());
-        boss::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
+        loot::File file = RowToFile(reqsList, event.GetIndex());
+        loot::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
 
-        list<boss::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
+        list<loot::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
 
         if (it != _basePlugins.end())
             plugin = *it;
         else
             BOOST_LOG_TRIVIAL(warning) << "Could not find plugin in base list: " << plugin.Name();
 
-        set<boss::File> reqs = plugin.Reqs();
+        set<loot::File> reqs = plugin.Reqs();
 
         if (reqs.find(file) == reqs.end()) {
             BOOST_LOG_TRIVIAL(trace) << "File \"" << file.Name() << "\" was not found in base plugin metadata. Editing enabled.";
@@ -1091,17 +1091,17 @@ void Editor::OnRowSelect(wxListEvent& event) {
 
     } else if (event.GetId() == LIST_Incs) {
 
-        boss::File file = RowToFile(incsList, event.GetIndex());
-        boss::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
+        loot::File file = RowToFile(incsList, event.GetIndex());
+        loot::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
 
-        list<boss::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
+        list<loot::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
 
         if (it != _basePlugins.end())
             plugin = *it;
         else
             BOOST_LOG_TRIVIAL(warning) << "Could not find plugin in base list: " << plugin.Name();
 
-        set<boss::File> incs = plugin.Incs();
+        set<loot::File> incs = plugin.Incs();
 
         if (incs.find(file) == incs.end()) {
             BOOST_LOG_TRIVIAL(trace) << "File \"" << file.Name() << "\" was not found in base plugin metadata. Editing enabled.";
@@ -1115,17 +1115,17 @@ void Editor::OnRowSelect(wxListEvent& event) {
 
     } else if (event.GetId() == LIST_LoadAfter) {
 
-        boss::File file = RowToFile(loadAfterList, event.GetIndex());
-        boss::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
+        loot::File file = RowToFile(loadAfterList, event.GetIndex());
+        loot::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
 
-        list<boss::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
+        list<loot::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
 
         if (it != _basePlugins.end())
             plugin = *it;
         else
             BOOST_LOG_TRIVIAL(warning) << "Could not find plugin in base list: " << plugin.Name();
 
-        set<boss::File> loadAfter = plugin.LoadAfter();
+        set<loot::File> loadAfter = plugin.LoadAfter();
 
         if (loadAfter.find(file) == loadAfter.end()) {
             BOOST_LOG_TRIVIAL(trace) << "File \"" << file.Name() << "\" was not found in base plugin metadata. Editing enabled.";
@@ -1139,41 +1139,41 @@ void Editor::OnRowSelect(wxListEvent& event) {
 
     } else if (event.GetId() == LIST_Messages) {
 
-        boss::Message message = messageList->GetItem(event.GetIndex());
-        boss::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
+        loot::Message message = messageList->GetItem(event.GetIndex());
+        loot::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
 
-        list<boss::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
+        list<loot::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
 
         if (it != _basePlugins.end())
             plugin = *it;
         else
             BOOST_LOG_TRIVIAL(warning) << "Could not find plugin in base list: " << plugin.Name();
 
-        list<boss::Message> messages = plugin.Messages();
+        list<loot::Message> messages = plugin.Messages();
 
         if (find(messages.begin(), messages.end(), message) == messages.end()) {
-            BOOST_LOG_TRIVIAL(trace) << "Message \"" << message.ChooseContent(boss::g_lang_any).Str() << "\" was not found in base plugin metadata. Editing enabled.";
+            BOOST_LOG_TRIVIAL(trace) << "Message \"" << message.ChooseContent(loot::g_lang_any).Str() << "\" was not found in base plugin metadata. Editing enabled.";
             editBtn->Enable(true);
             removeBtn->Enable(true);
         } else {
-            BOOST_LOG_TRIVIAL(trace) << "Message \"" << message.ChooseContent(boss::g_lang_any).Str() << "\" was found in base plugin metadata. Editing disabled.";
+            BOOST_LOG_TRIVIAL(trace) << "Message \"" << message.ChooseContent(loot::g_lang_any).Str() << "\" was found in base plugin metadata. Editing disabled.";
             editBtn->Enable(false);
             removeBtn->Enable(false);
         }
 
     } else if (event.GetId() == LIST_BashTags) {
 
-        boss::Tag tag = RowToTag(tagsList, event.GetIndex());
-        boss::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
+        loot::Tag tag = RowToTag(tagsList, event.GetIndex());
+        loot::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
 
-        list<boss::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
+        list<loot::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
 
         if (it != _basePlugins.end())
             plugin = *it;
         else
             BOOST_LOG_TRIVIAL(warning) << "Could not find plugin in base list: " << plugin.Name();
 
-        set<boss::Tag> tags = plugin.Tags();
+        set<loot::Tag> tags = plugin.Tags();
 
         if (tags.find(tag) == tags.end()) {
             BOOST_LOG_TRIVIAL(trace) << "Bash Tag \"" << tag.Name() << "\" was not found in base plugin metadata. Editing enabled.";
@@ -1186,17 +1186,17 @@ void Editor::OnRowSelect(wxListEvent& event) {
         }
 
     } else {
-        boss::PluginDirtyInfo dirtyData = RowToPluginDirtyInfo(dirtyList, event.GetIndex());
-        boss::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
+        loot::PluginDirtyInfo dirtyData = RowToPluginDirtyInfo(dirtyList, event.GetIndex());
+        loot::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
 
-        list<boss::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
+        list<loot::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
 
         if (it != _basePlugins.end())
             plugin = *it;
         else
             BOOST_LOG_TRIVIAL(warning) << "Could not find plugin in base list: " << plugin.Name();
 
-        set<boss::PluginDirtyInfo> dirtyInfo = plugin.DirtyInfo();
+        set<loot::PluginDirtyInfo> dirtyInfo = plugin.DirtyInfo();
 
         if (dirtyInfo.find(dirtyData) == dirtyInfo.end()) {
             BOOST_LOG_TRIVIAL(trace) << "Dirty info for CRC \"" << dirtyData.CRC() << "\" was not found in base plugin metadata. Editing enabled.";
@@ -1229,21 +1229,21 @@ void Editor::OnQuit(wxCommandEvent& event) {
              << YAML::EndMap;
 
         boost::filesystem::path p(_userlistPath);
-        boss::ofstream out(p);
+        loot::ofstream out(p);
         out << yout.c_str();
         out.close();
     }
     Close();
 }
 
-boss::Plugin Editor::GetNewData(const wxString& plugin) const {
+loot::Plugin Editor::GetNewData(const wxString& plugin) const {
     BOOST_LOG_TRIVIAL(debug) << "Getting metadata from editor fields for plugin: " << plugin.ToUTF8();
-    boss::Plugin p(string(plugin.ToUTF8()));
+    loot::Plugin p(string(plugin.ToUTF8()));
 
     p.Priority(prioritySpin->GetValue());
     p.Enabled(enableUserEditsBox->IsChecked());
 
-    set<boss::File> files;
+    set<loot::File> files;
     for (int i=0,max=reqsList->GetItemCount(); i < max; ++i) {
         files.insert(RowToFile(reqsList, i));
     }
@@ -1261,20 +1261,20 @@ boss::Plugin Editor::GetNewData(const wxString& plugin) const {
     }
     p.LoadAfter(files);
 
-    set<boss::Tag> tags;
+    set<loot::Tag> tags;
     for (int i=0,max=tagsList->GetItemCount(); i < max; ++i) {
         tags.insert(RowToTag(tagsList, i));
     }
     p.Tags(tags);
 
-    set<boss::PluginDirtyInfo> dirtyInfo;
+    set<loot::PluginDirtyInfo> dirtyInfo;
     for (int i=0,max=dirtyList->GetItemCount(); i < max; ++i) {
         dirtyInfo.insert(RowToPluginDirtyInfo(dirtyList, i));
     }
     p.DirtyInfo(dirtyInfo);
 
-    vector<boss::Message> vec = messageList->GetItems();
-    list<boss::Message> messages(vec.begin(), vec.end());
+    vector<loot::Message> vec = messageList->GetItems();
+    list<loot::Message> messages(vec.begin(), vec.end());
     p.Messages(messages);
 
     return p;

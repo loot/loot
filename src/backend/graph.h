@@ -34,9 +34,9 @@
 #include <boost/graph/topological_sort.hpp>
 #include <boost/graph/graphviz.hpp>
 
-namespace boss {
+namespace loot {
 
-    typedef boost::adjacency_list<boost::listS, boost::listS, boost::bidirectionalS, boss::Plugin> PluginGraph;
+    typedef boost::adjacency_list<boost::listS, boost::listS, boost::bidirectionalS, loot::Plugin> PluginGraph;
     typedef boost::graph_traits<PluginGraph>::vertex_descriptor vertex_t;
     typedef boost::graph_traits<PluginGraph>::vertex_iterator vertex_it;
     typedef boost::graph_traits<PluginGraph>::edge_descriptor edge_t;

@@ -35,7 +35,7 @@
 
 using namespace std;
 
-SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node& settings, std::vector<boss::Game>& games) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER), _settings(settings), _games(games) {
+SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node& settings, std::vector<loot::Game>& games) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER), _settings(settings), _games(games) {
 
     //Initialise drop-down list contents.
 	wxString DebugVerbosity[] = {
@@ -52,7 +52,7 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
     }
 
     wxArrayString languages;
-    vector<string> langs = boss::Language::Names();
+    vector<string> langs = loot::Language::Names();
     for (size_t i = 0; i < langs.size(); i++) {
         languages.Add(FromUTF8(langs[i]));
     }
@@ -154,7 +154,7 @@ void SettingsFrame::SetDefaultValues() {
     BOOST_LOG_TRIVIAL(debug) << "Setting default values for LOOT's settings.";
 
     if (_settings["Language"]) {
-        LanguageChoice->SetSelection(boss::Language(_settings["Language"].as<string>()).Code());
+        LanguageChoice->SetSelection(loot::Language(_settings["Language"].as<string>()).Code());
     }
 
     if (_settings["Game"]) {
@@ -186,7 +186,7 @@ void SettingsFrame::SetDefaultValues() {
 
     for (size_t i=0, max=_games.size(); i < max; ++i) {
         gamesList->InsertItem(i, FromUTF8(_games[i].Name()));
-        gamesList->SetItem(i, 1, FromUTF8(boss::Game(_games[i].Id()).FolderName()));
+        gamesList->SetItem(i, 1, FromUTF8(loot::Game(_games[i].Id()).FolderName()));
         gamesList->SetItem(i, 2, FromUTF8(_games[i].FolderName()));
         gamesList->SetItem(i, 3, FromUTF8(_games[i].Master()));
         gamesList->SetItem(i, 4, FromUTF8(_games[i].RepoURL()));
@@ -210,7 +210,7 @@ void SettingsFrame::OnQuit(wxCommandEvent& event) {
         else
             _settings["Game"] = _games[GameChoice->GetSelection() - 1].FolderName();
 
-        _settings["Language"] = boss::Language(LanguageChoice->GetSelection()).Locale();
+        _settings["Language"] = loot::Language(LanguageChoice->GetSelection()).Locale();
 
         _settings["Debug Verbosity"] = DebugVerbosityChoice->GetSelection();
 
@@ -245,16 +245,16 @@ void SettingsFrame::OnQuit(wxCommandEvent& event) {
             path = gamesList->GetItemText(i, 6).ToUTF8();
             registry = gamesList->GetItemText(i, 7).ToUTF8();
 
-            if (gamesList->GetItemText(i, 1).ToUTF8() == boss::Game(boss::g_game_tes4).FolderName())
-                id = boss::g_game_tes4;
-            else if (gamesList->GetItemText(i, 1).ToUTF8() == boss::Game(boss::g_game_tes5).FolderName())
-                id = boss::g_game_tes5;
-            else if (gamesList->GetItemText(i, 1).ToUTF8() == boss::Game(boss::g_game_fo3).FolderName())
-                id = boss::g_game_fo3;
+            if (gamesList->GetItemText(i, 1).ToUTF8() == loot::Game(loot::g_game_tes4).FolderName())
+                id = loot::g_game_tes4;
+            else if (gamesList->GetItemText(i, 1).ToUTF8() == loot::Game(loot::g_game_tes5).FolderName())
+                id = loot::g_game_tes5;
+            else if (gamesList->GetItemText(i, 1).ToUTF8() == loot::Game(loot::g_game_fo3).FolderName())
+                id = loot::g_game_fo3;
             else
-                id = boss::g_game_fonv;
+                id = loot::g_game_fonv;
 
-            _games.push_back(boss::Game(id, folder).SetDetails(name, master, repo, branch, path, registry));
+            _games.push_back(loot::Game(id, folder).SetDetails(name, master, repo, branch, path, registry));
         }
     }
 
@@ -263,10 +263,10 @@ void SettingsFrame::OnQuit(wxCommandEvent& event) {
 
 void SettingsFrame::OnGameSelect(wxListEvent& event) {
     wxString name = gamesList->GetItemText(event.GetIndex());
-    if (name == boss::Game(boss::g_game_tes4).Name()
-     || name == boss::Game(boss::g_game_tes5).Name()
-     || name == boss::Game(boss::g_game_fo3).Name()
-     || name == boss::Game(boss::g_game_fonv).Name()) {
+    if (name == loot::Game(loot::g_game_tes4).Name()
+     || name == loot::Game(loot::g_game_tes5).Name()
+     || name == loot::Game(loot::g_game_fo3).Name()
+     || name == loot::Game(loot::g_game_fonv).Name()) {
         removeBtn->Enable(false);
      } else {
         removeBtn->Enable(true);
@@ -332,14 +332,14 @@ void SettingsFrame::OnEditGame(wxCommandEvent& event) {
     long i = gamesList->GetFirstSelected();
 
     int stateNo;
-    if (gamesList->GetItemText(i, 1) == boss::Game(boss::g_game_tes4).FolderName())
-        stateNo = boss::g_game_tes4;
-    else if (gamesList->GetItemText(i, 1) == boss::Game(boss::g_game_tes5).FolderName())
-        stateNo = boss::g_game_tes5;
-    else if (gamesList->GetItemText(i, 1) == boss::Game(boss::g_game_fo3).FolderName())
-        stateNo = boss::g_game_fo3;
+    if (gamesList->GetItemText(i, 1) == loot::Game(loot::g_game_tes4).FolderName())
+        stateNo = loot::g_game_tes4;
+    else if (gamesList->GetItemText(i, 1) == loot::Game(loot::g_game_tes5).FolderName())
+        stateNo = loot::g_game_tes5;
+    else if (gamesList->GetItemText(i, 1) == loot::Game(loot::g_game_fo3).FolderName())
+        stateNo = loot::g_game_fo3;
     else
-        stateNo = boss::g_game_fonv;
+        stateNo = loot::g_game_fonv;
 
     rowDialog->SetValues(stateNo, gamesList->GetItemText(i, 0), gamesList->GetItemText(i, 2), gamesList->GetItemText(i, 3), gamesList->GetItemText(i, 4), gamesList->GetItemText(i, 5), gamesList->GetItemText(i, 6), gamesList->GetItemText(i, 7));
 
@@ -394,10 +394,10 @@ void SettingsFrame::OnRemoveGame(wxCommandEvent& event) {
 GameEditDialog::GameEditDialog(wxWindow *parent, const wxString& title) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER) {
 
     wxString Types[] = {
-        FromUTF8(boss::Game(boss::g_game_tes4).FolderName()),
-        FromUTF8(boss::Game(boss::g_game_tes5).FolderName()),
-        FromUTF8(boss::Game(boss::g_game_fo3).FolderName()),
-        FromUTF8(boss::Game(boss::g_game_fonv).FolderName())
+        FromUTF8(loot::Game(loot::g_game_tes4).FolderName()),
+        FromUTF8(loot::Game(loot::g_game_tes5).FolderName()),
+        FromUTF8(loot::Game(loot::g_game_fo3).FolderName()),
+        FromUTF8(loot::Game(loot::g_game_fonv).FolderName())
     };
 
     //Initialise controls.
@@ -467,11 +467,11 @@ GameEditDialog::GameEditDialog(wxWindow *parent, const wxString& title) : wxDial
 
 void GameEditDialog::SetValues(unsigned int type, const wxString& name, const wxString& folderName, const wxString& master,
     const wxString& repo, const wxString& branch, const wxString& path, const wxString& registry) {
-    if (type == boss::g_game_tes4)
+    if (type == loot::g_game_tes4)
         _type->SetSelection(0);
-    else if (type == boss::g_game_tes5)
+    else if (type == loot::g_game_tes5)
         _type->SetSelection(1);
-    else if (type  == boss::g_game_fo3)
+    else if (type  == loot::g_game_fo3)
         _type->SetSelection(2);
     else
         _type->SetSelection(3);

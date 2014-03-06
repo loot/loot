@@ -53,7 +53,7 @@
 #include <boost/regex.hpp>
 #include <boost/log/trivial.hpp>
 
-namespace boss {
+namespace loot {
 	namespace qi = boost::spirit::qi;
 	namespace unicode = boost::spirit::unicode;
 	namespace phoenix = boost::phoenix;
@@ -400,7 +400,7 @@ namespace boss {
 
             if (it == varConditionMap.end()) {
                 BOOST_LOG_TRIVIAL(error) << "The variable \"" << var << "\" was not previously defined.";
-                throw boss::error(boss::error::condition_eval_fail, "The variable \"" + var + "\" was not previously defined.");  //Isn't used by LOOT application, so don't need to translate.
+                throw loot::error(loot::error::condition_eval_fail, "The variable \"" + var + "\" was not previously defined.");  //Isn't used by LOOT application, so don't need to translate.
             }
 
             if (ifIfnotStr == "if ")
@@ -792,7 +792,7 @@ namespace boss {
             		boost::trim(context);
 
             BOOST_LOG_TRIVIAL(error) << "Error parsing at \"" << context << "\", expected \"" << what.tag << "\".";
-			throw boss::error(boss::error::condition_eval_fail, "Expected \"" + what.tag + "\" at \"" + context + "\".");  //Isn't used by LOOT application, so don't need to translate.
+			throw loot::error(loot::error::condition_eval_fail, "Expected \"" + what.tag + "\" at \"" + context + "\".");  //Isn't used by LOOT application, so don't need to translate.
 		}
 	};
 
@@ -804,7 +804,7 @@ namespace boss {
 
         grammar.SetGlobalMessageBuffer(&globalMessages);
 
-        boss::ifstream ifile(file);
+        loot::ifstream ifile(file);
         ifile.unsetf(std::ios::skipws); // No white space skipping!
 
         std::copy(
@@ -820,7 +820,7 @@ namespace boss {
 
         if (!r || begin != end) {
             BOOST_LOG_TRIVIAL(error) << "Failed to read file: " << file.string();
-            throw boss::error(boss::error::path_read_fail, file.string());
+            throw loot::error(loot::error::path_read_fail, file.string());
         }
     }
 }

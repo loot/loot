@@ -27,7 +27,7 @@
 #include <boost/iostreams/stream.hpp>
 #include <boost/iostreams/device/file_descriptor.hpp>
 
-namespace boss {
+namespace loot {
     typedef boost::iostreams::stream< boost::iostreams::file_descriptor_sink > ofstream;
     typedef boost::iostreams::stream< boost::iostreams::file_descriptor_source > ifstream;
     typedef boost::iostreams::stream< boost::iostreams::file_descriptor > fstream;

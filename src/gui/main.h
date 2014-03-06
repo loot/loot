@@ -40,13 +40,13 @@ private:
     wxLocale * wxLoc;
 
     YAML::Node _settings;
-    std::vector<boss::Game> _games;
-    boss::Game _game;
+    std::vector<loot::Game> _games;
+    loot::Game _game;
 };
 
 class Launcher : public wxFrame {
 public:
-    Launcher(const wxChar *title, YAML::Node& settings, boss::Game& inGame, std::vector<boss::Game>& games);
+    Launcher(const wxChar *title, YAML::Node& settings, loot::Game& inGame, std::vector<loot::Game>& games);
 
 	void OnSortPlugins(wxCommandEvent& event);
     void OnEditMetadata(wxCommandEvent& event);
@@ -66,9 +66,9 @@ private:
     wxMenuItem * RedatePluginsItem;
 	wxButton * ViewButton;
 
-	boss::Game& _game;
+	loot::Game& _game;
     YAML::Node& _settings;  //LOOT Settings.
-    std::vector<boss::Game>& _games;
+    std::vector<loot::Game>& _games;
 };
 
 #endif

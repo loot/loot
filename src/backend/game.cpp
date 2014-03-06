@@ -36,7 +36,7 @@ using namespace std;
 namespace fs = boost::filesystem;
 namespace lc = boost::locale;
 
-namespace boss {
+namespace loot {
 
     std::vector<Game> GetGames(const YAML::Node& settings) {
         vector<Game> games;
@@ -65,34 +65,34 @@ namespace boss {
         if (Id() == g_game_tes4) {
             _name = "TES IV: Oblivion";
             registryKey = "Software\\Bethesda Softworks\\Oblivion\\Installed Path";
-            bossFolderName = "Oblivion";
+            lootFolderName = "Oblivion";
             _masterFile = "Oblivion.esm";
             espm_settings = espm::Settings("tes4");
-            _repositoryURL = "https://github.com/boss-developers/boss-oblivion.git";
+            _repositoryURL = "https://github.com/loot-developers/loot-oblivion.git";
             _repositoryBranch = "gh-pages";
         } else if (Id() == g_game_tes5) {
             _name = "TES V: Skyrim";
             registryKey = "Software\\Bethesda Softworks\\Skyrim\\Installed Path";
-            bossFolderName = "Skyrim";
+            lootFolderName = "Skyrim";
             _masterFile = "Skyrim.esm";
             espm_settings = espm::Settings("tes5");
-            _repositoryURL = "https://github.com/boss-developers/boss-skyrim.git";
+            _repositoryURL = "https://github.com/loot-developers/loot-skyrim.git";
             _repositoryBranch = "gh-pages";
         } else if (Id() == g_game_fo3) {
             _name = "Fallout 3";
             registryKey = "Software\\Bethesda Softworks\\Fallout3\\Installed Path";
-            bossFolderName = "Fallout3";
+            lootFolderName = "Fallout3";
             _masterFile = "Fallout3.esm";
             espm_settings = espm::Settings("fo3");
-            _repositoryURL = "https://github.com/boss-developers/boss-fallout3.git";
+            _repositoryURL = "https://github.com/loot-developers/loot-fallout3.git";
             _repositoryBranch = "gh-pages";
         } else if (Id() == g_game_fonv) {
             _name = "Fallout: New Vegas";
             registryKey = "Software\\Bethesda Softworks\\FalloutNV\\Installed Path";
-            bossFolderName = "FalloutNV";
+            lootFolderName = "FalloutNV";
             _masterFile = "FalloutNV.esm";
             espm_settings = espm::Settings("fonv");
-            _repositoryURL = "https://github.com/boss-developers/boss-fallout-new-vegas.git";
+            _repositoryURL = "https://github.com/loot-developers/loot-fallout-new-vegas.git";
             _repositoryBranch = "gh-pages";
         } else {
             BOOST_LOG_TRIVIAL(error) << "Invalid game ID supplied.";
@@ -100,7 +100,7 @@ namespace boss {
         }
 
         if (!folder.empty())
-            bossFolderName = folder;
+            lootFolderName = folder;
     }
 
     Game& Game::SetDetails(const std::string& name, const std::string& masterFile,
@@ -186,7 +186,7 @@ namespace boss {
     }
 
     bool Game::operator == (const Game& rhs) const {
-        return (boost::iequals(_name, rhs.Name()) || boost::iequals(bossFolderName, rhs.FolderName()));
+        return (boost::iequals(_name, rhs.Name()) || boost::iequals(lootFolderName, rhs.FolderName()));
     }
 
     unsigned int Game::Id() const {
@@ -198,7 +198,7 @@ namespace boss {
     }
 
     string Game::FolderName() const {
-        return bossFolderName;
+        return lootFolderName;
     }
 
     std::string Game::Master() const {
@@ -226,15 +226,15 @@ namespace boss {
     }
 
     fs::path Game::MasterlistPath() const {
-        return g_path_local / bossFolderName / "masterlist.yaml";
+        return g_path_local / lootFolderName / "masterlist.yaml";
     }
 
     fs::path Game::UserlistPath() const {
-        return g_path_local / bossFolderName / "userlist.yaml";
+        return g_path_local / lootFolderName / "userlist.yaml";
     }
 
     fs::path Game::ReportPath() const {
-        return g_path_local / bossFolderName / "report.html";
+        return g_path_local / lootFolderName / "report.html";
     }
 
     void Game::RefreshActivePluginsList() {
@@ -483,8 +483,8 @@ namespace boss {
     void Game::CreateLOOTGameFolder() {
         //Make sure that the LOOT game path exists.
         try {
-            if (fs::exists(g_path_local) && !fs::exists(g_path_local / bossFolderName))
-                fs::create_directory(g_path_local / bossFolderName);
+            if (fs::exists(g_path_local) && !fs::exists(g_path_local / lootFolderName))
+                fs::create_directory(g_path_local / lootFolderName);
         } catch (fs::filesystem_error& e) {
             BOOST_LOG_TRIVIAL(error) << "Could not create LOOT folder for game. Details: " << e.what();
             throw error(error::path_write_fail, lc::translate("Could not create LOOT folder for game. Details:").str() + " " + e.what());

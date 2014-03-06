@@ -25,7 +25,7 @@
 #include "globals.h"
 #include "helpers.h"
 
-namespace boss {
+namespace loot {
 
     //Game values.
     const unsigned int g_game_autodetect  = 0;

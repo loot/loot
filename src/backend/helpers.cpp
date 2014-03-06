@@ -56,7 +56,7 @@
 #endif
 #define BUFSIZE 4096
 
-namespace boss {
+namespace loot {
     using namespace std;
     using boost::algorithm::replace_all;
     using boost::algorithm::replace_first;
@@ -127,7 +127,7 @@ namespace boss {
         uint32_t chksum = 0;
         static const size_t buffer_size = 8192;
         char buffer[buffer_size];
-        boss::ifstream ifile(filename, ios::binary);
+        loot::ifstream ifile(filename, ios::binary);
         BOOST_LOG_TRIVIAL(trace) << "Calculating CRC for: " << filename.string();
         boost::crc_32_type result;
         if (ifile) {

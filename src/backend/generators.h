@@ -39,7 +39,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/locale.hpp>
 
-namespace boss {
+namespace loot {
 
     //LOOT Report generation stuff.
 
@@ -260,7 +260,7 @@ namespace boss {
             note.append_attribute("id").set_value("noChanges");
             note.text().set(boost::locale::translate("No change in details since last run.").str().c_str());
             */
-            messages.push_front(boss::Message(boss::g_message_say, boost::locale::translate("There have been no changes in the Details tab since LOOT was last run for this game.").str()));
+            messages.push_front(loot::Message(loot::g_message_say, boost::locale::translate("There have been no changes in the Details tab since LOOT was last run for this game.").str()));
         }
 
         if (!messages.empty()) {
@@ -393,7 +393,7 @@ namespace boss {
                     else if (jt->ITMs() > 0 && jt->UDRs() > 0 && jt->DeletedNavmeshes() == 0)
                         f = boost::format(boost::locale::translate("Contains %1% ITM records and %2% UDR records. Clean with %3%.")) % jt->ITMs() % jt->UDRs() % jt->CleaningUtility();
 
-                    messages.push_back(boss::Message(boss::g_message_warn, f.str()));
+                    messages.push_back(loot::Message(loot::g_message_warn, f.str()));
                 }
 
                 AppendMessages(plugin, messages, warnNo, errorNo);
@@ -562,7 +562,7 @@ namespace boss {
         AppendScripts(body);
         //PugiXML's save_file doesn't handle Unicode paths right (it can't open them right), so use a stream instead.
         boost::filesystem::path outpath(file);
-        boss::ofstream out(outpath);
+        loot::ofstream out(outpath);
         doc.save(out, "\t", pugi::format_default | pugi::format_no_declaration | pugi::format_raw);
         out.close();
 
@@ -588,7 +588,7 @@ namespace boss {
         games.push_back(Game(g_game_tes5));
         games.push_back(Game(g_game_fo3));
         games.push_back(Game(g_game_fonv));
-        games.push_back(Game(g_game_tes4, "Nehrim").SetDetails("Nehrim - At Fate's Edge", "Nehrim.esm", "https://github.com/boss-developers/boss-oblivion.git", "gh-pages", "", "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim - At Fate's Edge_is1"));
+        games.push_back(Game(g_game_tes4, "Nehrim").SetDetails("Nehrim - At Fate's Edge", "Nehrim.esm", "https://github.com/loot-developers/loot-oblivion.git", "gh-pages", "", "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim - At Fate's Edge_is1"));
 
         root["Games"] = games;
 
@@ -598,7 +598,7 @@ namespace boss {
         yout << root;
 
         boost::filesystem::path p(file);
-        boss::ofstream out(p);
+        loot::ofstream out(p);
         out << yout.c_str();
         out.close();
     }
@@ -616,7 +616,7 @@ namespace YAML {
 		return out;
     }
 
-    inline Emitter& operator << (Emitter& out, const boss::PluginDirtyInfo& rhs) {
+    inline Emitter& operator << (Emitter& out, const loot::PluginDirtyInfo& rhs) {
         out << BeginMap
             << Key << "crc" << Value << Hex << rhs.CRC() << Dec
             << Key << "util" << Value << rhs.CleaningUtility();
@@ -633,7 +633,7 @@ namespace YAML {
 		return out;
     }
 
-    inline Emitter& operator << (Emitter& out, const boss::Game& rhs) {
+    inline Emitter& operator << (Emitter& out, const loot::Game& rhs) {
         out << BeginMap
             << Key << "folder" << Value << rhs.FolderName()
             << Key << "name" << Value << rhs.Name()
@@ -643,24 +643,24 @@ namespace YAML {
             << Key << "path" << Value << rhs.GamePath().string()
             << Key << "registry" << Value << rhs.RegistryKey();
 
-        if (rhs.Id() == boss::g_game_tes4)
-            out << Key << Value << boss::Game(boss::g_game_tes4).FolderName();
-        else if (rhs.Id() == boss::g_game_tes5)
-            out << Key << Value << boss::Game(boss::g_game_tes5).FolderName();
-        else if (rhs.Id() == boss::g_game_fo3)
-            out << Key << Value << boss::Game(boss::g_game_fo3).FolderName();
-        else if (rhs.Id() == boss::g_game_fonv)
-            out << Key << Value << boss::Game(boss::g_game_fonv).FolderName();
+        if (rhs.Id() == loot::g_game_tes4)
+            out << Key << Value << loot::Game(loot::g_game_tes4).FolderName();
+        else if (rhs.Id() == loot::g_game_tes5)
+            out << Key << Value << loot::Game(loot::g_game_tes5).FolderName();
+        else if (rhs.Id() == loot::g_game_fo3)
+            out << Key << Value << loot::Game(loot::g_game_fo3).FolderName();
+        else if (rhs.Id() == loot::g_game_fonv)
+            out << Key << Value << loot::Game(loot::g_game_fonv).FolderName();
 
 		out << EndMap;
 
 		return out;
     }
 
-    inline Emitter& operator << (Emitter& out, const boss::MessageContent& rhs) {
+    inline Emitter& operator << (Emitter& out, const loot::MessageContent& rhs) {
         out << BeginMap;
 
-        out << Key << "lang" << Value << boss::Language(rhs.Language()).Locale();
+        out << Key << "lang" << Value << loot::Language(rhs.Language()).Locale();
 
         out << Key << "str" << Value << rhs.Str();
 
@@ -669,17 +669,17 @@ namespace YAML {
 		return out;
     }
 
-    inline Emitter& operator << (Emitter& out, const boss::Message& rhs) {
+    inline Emitter& operator << (Emitter& out, const loot::Message& rhs) {
         out << BeginMap;
 
-        if (rhs.Type() == boss::g_message_say)
+        if (rhs.Type() == loot::g_message_say)
             out << Key << "type" << Value << "say";
-        else if (rhs.Type() == boss::g_message_warn)
+        else if (rhs.Type() == loot::g_message_warn)
             out << Key << "type" << Value << "warn";
         else
             out << Key << "type" << Value << "error";
 
-        if (rhs.Content().size() == 1 && rhs.Content().front().Language() == boss::g_lang_any)
+        if (rhs.Content().size() == 1 && rhs.Content().front().Language() == loot::g_lang_any)
             out << Key << "content" << Value << rhs.Content().front().Str();
         else
             out << Key << "content" << Value << rhs.Content();
@@ -692,7 +692,7 @@ namespace YAML {
 		return out;
     }
 
-    inline Emitter& operator << (Emitter& out, const boss::File& rhs) {
+    inline Emitter& operator << (Emitter& out, const loot::File& rhs) {
         if (!rhs.IsConditional() && rhs.DisplayName().empty())
             out << rhs.Name();
         else {
@@ -711,7 +711,7 @@ namespace YAML {
 		return out;
     }
 
-    inline Emitter& operator << (Emitter& out, const boss::Tag& rhs) {
+    inline Emitter& operator << (Emitter& out, const loot::Tag& rhs) {
         if (!rhs.IsConditional()) {
             if (rhs.IsAddition())
                 out << rhs.Name();
@@ -731,7 +731,7 @@ namespace YAML {
 		return out;
     }
 
-    inline Emitter& operator << (Emitter& out, const boss::Plugin& rhs) {
+    inline Emitter& operator << (Emitter& out, const loot::Plugin& rhs) {
         if (!rhs.HasNameOnly()) {
 
             out << BeginMap

@@ -42,26 +42,26 @@ MessageList::MessageList(wxWindow * parent, wxWindowID id, const unsigned int la
     SetItemCount(0);
 }
 
-std::vector<boss::Message> MessageList::GetItems() const {
+std::vector<loot::Message> MessageList::GetItems() const {
     return _messages;
 }
 
-void MessageList::SetItems(const std::vector<boss::Message>& messages) {
+void MessageList::SetItems(const std::vector<loot::Message>& messages) {
     _messages = messages;
     SetItemCount(_messages.size());
     RefreshItems(0, _messages.size() - 1);
 }
 
-boss::Message MessageList::GetItem(long item) const {
+loot::Message MessageList::GetItem(long item) const {
     return _messages[item];
 }
 
-void MessageList::SetItem(long item, const boss::Message& message) {
+void MessageList::SetItem(long item, const loot::Message& message) {
     _messages[item] = message;
     RefreshItem(item);
 }
 
-void MessageList::AppendItem(const boss::Message& message) {
+void MessageList::AppendItem(const loot::Message& message) {
     _messages.push_back(message);
     SetItemCount(_messages.size());
     RefreshItem(_messages.size() - 1);
@@ -78,9 +78,9 @@ wxString MessageList::OnGetItemText(long item, long column) const {
         return wxString();
 
     if (column == 0) {
-        if (_messages[item].Type() == boss::g_message_say)
+        if (_messages[item].Type() == loot::g_message_say)
             return Type[0];
-        else if (_messages[item].Type() == boss::g_message_warn)
+        else if (_messages[item].Type() == loot::g_message_warn)
             return Type[1];
         else
             return Type[2];
@@ -92,7 +92,7 @@ wxString MessageList::OnGetItemText(long item, long column) const {
         return FromUTF8(_messages[item].Condition());
     }
     else {
-        return FromUTF8(boss::Language(_messages[item].ChooseContent(_language).Language()).Name());
+        return FromUTF8(loot::Language(_messages[item].ChooseContent(_language).Language()).Name());
     }
 }
 
@@ -160,7 +160,7 @@ wxString FileEditDialog::GetCondition() const {
 MessageEditDialog::MessageEditDialog(wxWindow *parent, const wxString& title) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER) {
 
     wxArrayString languages;
-    vector<string> langs = boss::Language::Names();
+    vector<string> langs = loot::Language::Names();
     for (size_t i = 0; i < langs.size(); i++) {
         languages.Add(FromUTF8(langs[i]));
     }
@@ -249,51 +249,51 @@ MessageEditDialog::MessageEditDialog(wxWindow *parent, const wxString& title) : 
     SetSizerAndFit(bigBox);
 }
 
-void MessageEditDialog::SetMessage(const boss::Message& message) {
+void MessageEditDialog::SetMessage(const loot::Message& message) {
 
-    if (message.Type() == boss::g_message_say)
+    if (message.Type() == loot::g_message_say)
         _type->SetSelection(0);
-    else if (message.Type() == boss::g_message_warn)
+    else if (message.Type() == loot::g_message_warn)
         _type->SetSelection(1);
     else
         _type->SetSelection(2);
 
     _condition->SetValue(FromUTF8(message.Condition()));
 
-    vector<boss::MessageContent> contents = message.Content();
+    vector<loot::MessageContent> contents = message.Content();
     for (size_t i = 0, max = contents.size(); i < max; ++i) {
-        _content->InsertItem(i, FromUTF8(boss::Language(contents[i].Language()).Name()));
+        _content->InsertItem(i, FromUTF8(loot::Language(contents[i].Language()).Name()));
         _content->SetItem(i, 1, FromUTF8(contents[i].Str()));
     }
 }
 
-boss::Message MessageEditDialog::GetMessage() const {
+loot::Message MessageEditDialog::GetMessage() const {
 
     unsigned int type;
     string condition;
     if (_type->GetSelection() == 0)
-        type = boss::g_message_say;
+        type = loot::g_message_say;
     else if (_type->GetSelection() == 1)
-        type = boss::g_message_warn;
+        type = loot::g_message_warn;
     else
-        type = boss::g_message_error;
+        type = loot::g_message_error;
 
     condition = string(_condition->GetValue().ToUTF8());
 
-    vector<boss::MessageContent> contents;
+    vector<loot::MessageContent> contents;
     for (size_t i = 0, max = _content->GetItemCount(); i < max; ++i) {
 
         string str = string(_content->GetItemText(i, 1).ToUTF8());
-        unsigned int lang = boss::Language(string(_content->GetItemText(i, 0).ToUTF8())).Code();
+        unsigned int lang = loot::Language(string(_content->GetItemText(i, 0).ToUTF8())).Code();
 
-        contents.push_back(boss::MessageContent(str, lang));
+        contents.push_back(loot::MessageContent(str, lang));
     }
 
-    return boss::Message(type, contents, condition);
+    return loot::Message(type, contents, condition);
 }
 
 void MessageEditDialog::OnSelect(wxListEvent& event) {
-    _language->SetSelection(boss::Language(string(_content->GetItemText(event.GetIndex(), 0).ToUTF8())).Code());
+    _language->SetSelection(loot::Language(string(_content->GetItemText(event.GetIndex(), 0).ToUTF8())).Code());
     _str->SetValue(_content->GetItemText(event.GetIndex(), 1));
     editBtn->Enable(true);
     removeBtn->Enable(true);
@@ -301,7 +301,7 @@ void MessageEditDialog::OnSelect(wxListEvent& event) {
 
 void MessageEditDialog::OnAdd(wxCommandEvent& event) {
     long i = _content->GetItemCount();
-    _content->InsertItem(i, FromUTF8(boss::Language(_language->GetSelection()).Name()));
+    _content->InsertItem(i, FromUTF8(loot::Language(_language->GetSelection()).Name()));
     _content->SetItem(i, 1, _str->GetValue());
 }
 
@@ -316,7 +316,7 @@ void MessageEditDialog::OnEdit(wxCommandEvent& event) {
         return;
     }
     long i = _content->GetFirstSelected();
-    _content->SetItem(i, 0, FromUTF8(boss::Language(_language->GetSelection()).Name()));
+    _content->SetItem(i, 0, FromUTF8(loot::Language(_language->GetSelection()).Name()));
     _content->SetItem(i, 1, _str->GetValue());
 }
 

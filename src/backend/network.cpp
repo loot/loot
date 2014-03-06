@@ -39,7 +39,7 @@ using namespace std;
 namespace fs = boost::filesystem;
 namespace lc = boost::locale;
 
-namespace boss {
+namespace loot {
 
     struct pointers_struct {
         pointers_struct() : repo(NULL), remote(NULL), cfg(NULL), obj(NULL), commit(NULL) {}
@@ -73,7 +73,7 @@ namespace boss {
         giterr_clear();
 
         BOOST_LOG_TRIVIAL(error) << "Git operation failed. Error: " << error_message;
-        throw boss::error(boss::error::git_error, (boost::format(lc::translate("Git operation failed. Error: %1%")) % error_message).str());
+        throw loot::error(loot::error::git_error, (boost::format(lc::translate("Git operation failed. Error: %1%")) % error_message).str());
     }
 
 	int progress_cb(const char *str, int len, void *data) {
@@ -201,7 +201,7 @@ namespace boss {
 
             BOOST_LOG_TRIVIAL(trace) << "Adding the masterlist to the list of files to be checked out.";
 
-            boss::ofstream out(game.MasterlistPath().parent_path() / ".git/info/sparse-checkout");
+            loot::ofstream out(game.MasterlistPath().parent_path() / ".git/info/sparse-checkout");
 
             out << "masterlist.yaml";
 
@@ -282,23 +282,23 @@ namespace boss {
             BOOST_LOG_TRIVIAL(trace) << "Testing masterlist parsing.";
 
             //Now try parsing the masterlist.
-            list<boss::Message> messages;
-            list<boss::Plugin> plugins;
+            list<loot::Message> messages;
+            list<loot::Plugin> plugins;
             try {
-                boss::ifstream in(game.MasterlistPath());
+                loot::ifstream in(game.MasterlistPath());
                 YAML::Node mlist = YAML::Load(in);
                 in.close();
 
                 if (mlist["globals"])
-                    messages = mlist["globals"].as< list<boss::Message> >();
+                    messages = mlist["globals"].as< list<loot::Message> >();
                 if (mlist["plugins"])
-                    plugins = mlist["plugins"].as< list<boss::Plugin> >();
+                    plugins = mlist["plugins"].as< list<loot::Plugin> >();
 
-                for (list<boss::Plugin>::iterator it=plugins.begin(), endIt=plugins.end(); it != endIt; ++it) {
+                for (list<loot::Plugin>::iterator it=plugins.begin(), endIt=plugins.end(); it != endIt; ++it) {
                     it->EvalAllConditions(game, g_lang_any);
                 }
 
-                for (list<boss::Message>::iterator it=messages.begin(), endIt=messages.end(); it != endIt; ++it) {
+                for (list<loot::Message>::iterator it=messages.begin(), endIt=messages.end(); it != endIt; ++it) {
                     it->EvalCondition(game, g_lang_any);
                 }
 
@@ -311,7 +311,7 @@ namespace boss {
                 //Roll back one revision if there's an error.
                 BOOST_LOG_TRIVIAL(error) << "Masterlist parsing failed. Masterlist revision " + string(revision) + ": " + e.what();
 
-                parsingErrors.push_back(boss::Message(boss::g_message_error, boost::locale::translate("Masterlist revision").str() + " " + string(revision) + ": " + e.what() + " " + boost::locale::translate("Rolled back to the previous revision.").str()));
+                parsingErrors.push_back(loot::Message(loot::g_message_error, boost::locale::translate("Masterlist revision").str() + " " + string(revision) + ": " + e.what() + " " + boost::locale::translate("Rolled back to the previous revision.").str()));
             }
         } while (parsingFailed);
 

@@ -31,7 +31,7 @@
 #include "game.h"
 #include "metadata.h"
 
-namespace boss {
+namespace loot {
 
     std::string UpdateMasterlist(Game& game, std::list<Message>& parsingErrors, std::list<Plugin>& plugins, std::list<Message>& messages);
 }

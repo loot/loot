@@ -36,7 +36,7 @@
 
 using namespace std;
 
-namespace boss {
+namespace loot {
 
     namespace lc = boost::locale;
 
@@ -116,7 +116,7 @@ namespace boss {
         return _condition;
     }
 
-    bool ConditionStruct::EvalCondition(boss::Game& game) const {
+    bool ConditionStruct::EvalCondition(loot::Game& game) const {
         if (_condition.empty())
             return true;
 
@@ -138,14 +138,14 @@ namespace boss {
         bool r;
         try {
             r = boost::spirit::qi::phrase_parse(begin, end, grammar, skipper, eval);
-        } catch (boss::error& e) {
+        } catch (loot::error& e) {
             BOOST_LOG_TRIVIAL(error) << "Failed to parse condition \"" << _condition << "\": " << e.what();
-            throw boss::error(boss::error::path_read_fail, (boost::format(lc::translate("Failed to parse condition \"%1%\": %2%")) % _condition % e.what()).str());
+            throw loot::error(loot::error::path_read_fail, (boost::format(lc::translate("Failed to parse condition \"%1%\": %2%")) % _condition % e.what()).str());
         }
 
         if (!r || begin != end) {
             BOOST_LOG_TRIVIAL(error) << "Failed to parse condition \"" << _condition << "\".";
-            throw boss::error(boss::error::path_read_fail, (boost::format(lc::translate("Failed to parse condition \"%1%\".")) % _condition).str());
+            throw loot::error(loot::error::path_read_fail, (boost::format(lc::translate("Failed to parse condition \"%1%\".")) % _condition).str());
         }
 
         game.conditionCache.emplace(boost::to_lower_copy(_condition), eval);
@@ -196,7 +196,7 @@ namespace boss {
         return (_type == rhs.Type() && _content == rhs.Content());
     }
 
-    bool Message::EvalCondition(boss::Game& game, const unsigned int language) {
+    bool Message::EvalCondition(loot::Game& game, const unsigned int language) {
 
         BOOST_LOG_TRIVIAL(trace) << "Choosing message language.";
 
@@ -303,7 +303,7 @@ namespace boss {
             name = name.substr(0, name.length() - 6);
     }
 
-	Plugin::Plugin(boss::Game& game, const std::string& n, const bool headerOnly)
+	Plugin::Plugin(loot::Game& game, const std::string& n, const bool headerOnly)
         : name(n), enabled(true), priority(0), isMaster(false), crc(0), numOverrideRecords(0), _isPriorityExplicit(false) {
 
 		// Get data from file contents using libespm. Assumes libespm has already been initialised.
@@ -563,7 +563,7 @@ namespace boss {
         _dirtyInfo = dirtyInfo;
     }
 
-    void Plugin::EvalAllConditions(boss::Game& game, const unsigned int language) {
+    void Plugin::EvalAllConditions(loot::Game& game, const unsigned int language) {
         for (set<File>::iterator it = loadAfter.begin(); it != loadAfter.end();) {
             if (!it->EvalCondition(game))
                 loadAfter.erase(it++);

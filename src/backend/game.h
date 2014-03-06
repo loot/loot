@@ -38,14 +38,14 @@
 #include <src/libespm.h>
 #include <yaml-cpp/yaml.h>
 
-namespace boss {
+namespace loot {
 
     class Plugin;
 
     class Game {
     public:
         Game();  //Sets game to LOOT_g_game_autodetect, with all other vars being empty.
-        Game(const unsigned int baseGameCode, const std::string& bossFolder = "");
+        Game(const unsigned int baseGameCode, const std::string& lootFolder = "");
 
         Game& SetDetails(const std::string& name, const std::string& masterFile,
                         const std::string& repositoryURL, const std::string& repositoryBranch, 
@@ -91,7 +91,7 @@ namespace boss {
 
         std::string registryKey;
 
-        std::string bossFolderName;
+        std::string lootFolderName;
         std::string _repositoryURL;
         std::string _repositoryBranch;
 

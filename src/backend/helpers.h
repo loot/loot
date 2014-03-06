@@ -32,7 +32,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/regex.hpp>
 
-namespace boss {
+namespace loot {
 
     /// Array used to try each of the expressions defined using
 	/// an iteration for each of them.

@@ -28,7 +28,7 @@
 #include <exception>
 #include <string>
 
-namespace boss {
+namespace loot {
 
     class error : public std::exception {
     public:
