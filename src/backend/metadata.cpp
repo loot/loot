@@ -723,7 +723,7 @@ namespace loot {
                     BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" requires \"" << *it << "\", but it is missing.";
                     errorMessages.push_back((boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % *it).str());
                 }
-                else if (!game.IsActive(*it)) {
+                else if (!game.IsActive(*it) && game.IsActive(name)) {
                     BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" requires \"" << *it << "\", but it is inactive.";
                     errorMessages.push_back((boost::format(boost::locale::translate("This plugin requires \"%1%\" to be active, but it is inactive.")) % *it).str());
                 }
