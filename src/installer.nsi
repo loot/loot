@@ -485,6 +485,8 @@ FunctionEnd
 		Delete "$INSTDIR\resources\l10n\pl\LC_MESSAGES\wxstd.mo"
 		Delete "$INSTDIR\resources\l10n\pt_BR\LC_MESSAGES\boss.mo"
 		Delete "$INSTDIR\resources\l10n\pt_BR\LC_MESSAGES\wxstd.mo"
+		Delete "$INSTDIR\resources\l10n\da\LC_MESSAGES\boss.mo"
+		Delete "$INSTDIR\resources\l10n\da\LC_MESSAGES\wxstd.mo"
 		RMDir  "$INSTDIR\resources\l10n\ru\LC_MESSAGES"
 		RMDir  "$INSTDIR\resources\l10n\ru"
 		RMDir  "$INSTDIR\resources\l10n\es\LC_MESSAGES"
@@ -499,6 +501,8 @@ FunctionEnd
 		RMDir  "$INSTDIR\resources\l10n\pl"
 		RMDir  "$INSTDIR\resources\l10n\pt_BR\LC_MESSAGES"
 		RMDir  "$INSTDIR\resources\l10n\pt_BR"	
+		RMDir  "$INSTDIR\resources\l10n\da\LC_MESSAGES"
+		RMDir  "$INSTDIR\resources\l10n\da"
 		RMDir  "$INSTDIR\resources\l10n"
         RMDir  "$INSTDIR\resources"
 
