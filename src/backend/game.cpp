@@ -68,7 +68,7 @@ namespace loot {
             lootFolderName = "Oblivion";
             _masterFile = "Oblivion.esm";
             espm_settings = espm::Settings("tes4");
-            _repositoryURL = "https://github.com/loot-developers/loot-oblivion.git";
+            _repositoryURL = "https://github.com/loot/oblivion.git";
             _repositoryBranch = "gh-pages";
         } else if (Id() == g_game_tes5) {
             _name = "TES V: Skyrim";
@@ -76,7 +76,7 @@ namespace loot {
             lootFolderName = "Skyrim";
             _masterFile = "Skyrim.esm";
             espm_settings = espm::Settings("tes5");
-            _repositoryURL = "https://github.com/loot-developers/loot-skyrim.git";
+            _repositoryURL = "https://github.com/loot/skyrim.git";
             _repositoryBranch = "gh-pages";
         } else if (Id() == g_game_fo3) {
             _name = "Fallout 3";
@@ -84,7 +84,7 @@ namespace loot {
             lootFolderName = "Fallout3";
             _masterFile = "Fallout3.esm";
             espm_settings = espm::Settings("fo3");
-            _repositoryURL = "https://github.com/loot-developers/loot-fallout3.git";
+            _repositoryURL = "https://github.com/loot/fallout3.git";
             _repositoryBranch = "gh-pages";
         } else if (Id() == g_game_fonv) {
             _name = "Fallout: New Vegas";
@@ -92,7 +92,7 @@ namespace loot {
             lootFolderName = "FalloutNV";
             _masterFile = "FalloutNV.esm";
             espm_settings = espm::Settings("fonv");
-            _repositoryURL = "https://github.com/loot-developers/loot-fallout-new-vegas.git";
+            _repositoryURL = "https://github.com/loot/falloutnv.git";
             _repositoryBranch = "gh-pages";
         } else {
             BOOST_LOG_TRIVIAL(error) << "Invalid game ID supplied.";
