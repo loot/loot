@@ -1,4 +1,4 @@
-# Example Default BOSS Settings File
+# Example Default LOOT Settings File
 # This file is written in YAML <http://www.yaml.org/>.
 
 Language:            eng    # One of 'eng', 'spa', 'rus' or ''.
@@ -16,7 +16,7 @@ Games:
     name: "TES IV: Oblivion"
     type: Oblivion
     master: Oblivion.esm
-    url: https://github.com/boss-developers/boss-oblivion.git
+    url: https://github.com/loot/oblivion.git
     path: ~
     registry: Software\Bethesda Softworks\Oblivion\Installed Path
 
@@ -24,7 +24,7 @@ Games:
     name: "TES V: Skyrim"
     type: Skyrim
     master: Skyrim.esm
-    url: https://github.com/boss-developers/boss-skyrim.git
+    url: https://github.com/loot/skyrim.git
     path: ~
     registry: Software\Bethesda Softworks\Skyrim\Installed Path
 
@@ -32,7 +32,7 @@ Games:
     name: Fallout 3
     type: Fallout3
     master: Fallout3.esm
-    url: https://github.com/boss-developers/boss-fallout3.git
+    url: https://github.com/loot/fallout3.git
     path: ~
     registry: Software\Bethesda Softworks\Fallout3\Installed Path
 
@@ -40,7 +40,7 @@ Games:
     name: "Fallout: New Vegas"
     type: FalloutNV
     master: FalloutNV.esm
-    url: https://github.com/boss-developers/boss-fallout-new-vegas.git
+    url: https://github.com/loot/falloutnv.git
     path: ~
     registry: Software\Bethesda Softworks\FalloutNV\Installed Path
 
@@ -48,6 +48,6 @@ Games:
     name: Nehrim - At Fate's Edge
     type: Oblivion
     master: Nehrim.esm
-    url: https://github.com/boss-developers/boss-oblivion.git
+    url: https://github.com/loot/oblivion.git
     path: ~
     registry: Software\Microsoft\Windows\CurrentVersion\Uninstall\Nehrim - At Fate's Edge_is1
