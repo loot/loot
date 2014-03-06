@@ -42,7 +42,7 @@ namespace lc = boost::locale;
 namespace loot {
 
     struct pointers_struct {
-        pointers_struct() : repo(NULL), remote(NULL), cfg(NULL), obj(NULL), commit(NULL) {}
+        pointers_struct() : repo(NULL), remote(NULL), cfg(NULL), obj(NULL), commit(NULL), ref(NULL), sig(NULL), blob(NULL) {}
 
         void free() {
             git_commit_free(commit);
@@ -50,6 +50,9 @@ namespace loot {
             git_config_free(cfg);
             git_remote_free(remote);
             git_repository_free(repo);
+            git_reference_free(ref);
+            git_signature_free(sig);
+            git_blob_free(blob);
         }
 
         git_repository * repo;
@@ -57,6 +60,9 @@ namespace loot {
         git_config * cfg;
         git_object * obj;
         git_commit * commit;
+        git_reference * ref;
+        git_signature * sig;
+        git_blob * blob;
     };
 
     void handle_error(int error_code, pointers_struct& pointers) {
@@ -81,72 +87,74 @@ namespace loot {
 		return 0;
 	}
 
-	int update_cb(const char *refname, const git_oid *a, const git_oid *b, void *data) {
-		char a_str[GIT_OID_HEXSZ + 1], b_str[GIT_OID_HEXSZ + 1];
-		(void)data;
+    bool are_files_equal(const void * buf1, size_t buf1_size, const void * buf2, size_t buf2_size) {
+        if (buf1_size != buf2_size)
+            return false;
 
-		git_oid_fmt(b_str, b);
-		b_str[GIT_OID_HEXSZ] = '\0';
+        size_t pos;
+        while (pos < buf1_size) {
+            if (*((char*)buf1 + pos) != *((char*)buf2 + pos))
+                return false;
+            ++pos;
+        }
+        return true;
+    }
 
-		if (git_oid_iszero(a)) {
-			BOOST_LOG_TRIVIAL(info) << "[new]    " << b_str << " " << refname;
-		} else {
-			git_oid_fmt(a_str, a);
-			a_str[GIT_OID_HEXSZ] = '\0';
-			BOOST_LOG_TRIVIAL(info) << "[updated] " << a_str << ".." << b_str << " " << refname;
-		}
+    std::string GetMasterlistRevision(const Game& game) {
+        if (!fs::exists(game.MasterlistPath().parent_path() / ".git")) {
+            return "Unknown: Git repository missing";
+        }
+        else if (!fs::exists(game.MasterlistPath()))
+            return "N/A: No masterlist present";
+        else {
+            /* Compares HEAD to the working dir.
+                1. Get an object for the masterlist in HEAD.
+                2. Get the blob for that object.
+                3. Open the masterlist file in the working dir in a file buffer.
+                4. Compare the file and blob buffers.
+            */
+            pointers_struct ptrs;
+            BOOST_LOG_TRIVIAL(trace) << "Existing repository found, attempting to open it.";
+            handle_error(git_repository_open(&ptrs.repo, game.MasterlistPath().parent_path().string().c_str()), ptrs);
 
-		return 0;
-	}
+            BOOST_LOG_TRIVIAL(trace) << "Getting HEAD masterlist object.";
+            handle_error(git_revparse_single(&ptrs.obj, ptrs.repo, "HEAD:masterlist.yaml"), ptrs);
+
+            BOOST_LOG_TRIVIAL(trace) << "Getting blob for masterlist object.";
+            handle_error(git_blob_lookup(&ptrs.blob, ptrs.repo, git_object_id(ptrs.obj)), ptrs);
+
+            BOOST_LOG_TRIVIAL(trace) << "Opening masterlist in working directory.";
+            std::string mlist;
+            loot::ifstream ifile(game.MasterlistPath().string().c_str(), ios::binary);
+            if (ifile.fail())
+                throw error(error::path_read_fail, "Couldn't open masterlist.");
+            ifile.unsetf(ios::skipws); // No white space skipping!
+            copy(
+                istream_iterator<char>(ifile),
+                istream_iterator<char>(),
+                back_inserter(mlist)
+                );
+
+            BOOST_LOG_TRIVIAL(trace) << "Comparing files.";
+            if (are_files_equal(git_blob_rawcontent(ptrs.blob), git_blob_rawsize(ptrs.blob), mlist.data(), mlist.length())) {
+                char revision[10];
+                //Need to get the HEAD object, because the individual file has a different SHA.
+                git_object_free(ptrs.obj);
+                BOOST_LOG_TRIVIAL(trace) << "Getting HEAD object revision SHA.";
+                handle_error(git_revparse_single(&ptrs.obj, ptrs.repo, "HEAD"), ptrs);
+                git_oid_tostr(revision, 10, git_object_id(ptrs.obj));
+                ptrs.free();
+                return string(revision);
+            }
+            else {
+                ptrs.free();
+                return "Unknown: Masterlist edited";
+            }
+        }
+    }
 
     std::string UpdateMasterlist(Game& game, std::list<Message>& parsingErrors, std::list<Plugin>& plugins, std::list<Message>& messages) {
-
-        /*  List of Git operations (porcelain commands shown, will need to implement using plumbing in the API though):
-
-            1. Check if there is already a Git repository in the game's LOOT subfolder.
-
-                Since the masterlists will each be in the root of a separate repository, just check if there is a `.git` folder present.
-
-            2a. If there is, compare its remote URL with the URL that LOOT is currently set to use.
-
-                The current remote can be gotten using `git config --get remote.origin.url`.
-
-
-            3a. If the URLs are different, then update the remote URL to the one given by LOOT.
-
-                The remote URL can be changed using `git remote set-url origin <URL>`
-
-            2b. If there isn't already a Git repo present, initialise one using the URL given (remembering to split the URL so that it ends in `.git`).
-
-                `git init`
-                `git remote add origin <URL>`
-
-
-            3b. Now set up sparse checkout support, so that even if the repository has other files, the user's LOOT install only gets the masterlist added to it.
-
-                `git config core.sparseCheckout true`
-                `echo masterlist.yaml >> .git/info/sparse-checkout`
-
-            4.  Now update the repository.
-
-                `git reset --hard HEAD` is required to undo any roll-backs that were done in the local repository.
-                `git pull origin master`
-
-            5. Get the masterlist's commit hash.
-
-            6. Test the masterlist to see if it parses OK (and evals conditions OK).
-
-            7a. If it has errors, checkout one revision earlier.
-
-                `git checkout HEAD~1 masterlist.yaml`
-
-            8a. Go back to step (5).
-
-            7b. If it doesn't have errors, finish.
-
-        */
         pointers_struct ptrs;
-        const git_transfer_progress * stats = NULL;
 
         BOOST_LOG_TRIVIAL(trace) << "Checking for a Git repository.";
 
@@ -188,25 +196,6 @@ namespace loot {
 
             //Now set the repository's remote.
             handle_error(git_remote_create(&ptrs.remote, ptrs.repo, "origin", game.RepoURL().c_str()), ptrs);
-
-            BOOST_LOG_TRIVIAL(trace) << "Getting the repository config.";
-
-            handle_error(git_repository_config(&ptrs.cfg, ptrs.repo), ptrs);
-
-            BOOST_LOG_TRIVIAL(trace) << "Setting the repository up for sparse checkouts.";
-
-            handle_error(git_config_set_bool(ptrs.cfg, "core.sparseCheckout", true), ptrs);
-
-            //Now add the masterlist file to the list of files to be checked out. We can actually just overwrite anything that was there previously, since it's only one file.
-
-            BOOST_LOG_TRIVIAL(trace) << "Adding the masterlist to the list of files to be checked out.";
-
-            loot::ofstream out(game.MasterlistPath().parent_path() / ".git/info/sparse-checkout");
-
-            out << "masterlist.yaml";
-
-            out.close();
-
         }
 
         //WARNING: This is generally a very bad idea, since it makes HTTPS a little bit pointless, but in this case because we're only reading data and not really concerned about its integrity, it's acceptable. A better solution would be to figure out why GitHub's certificate appears to be invalid to OpenSSL.
@@ -218,24 +207,14 @@ namespace loot {
 
         //Now pull from the remote repository. This involves a fetch followed by a merge. First perform the fetch.
 
-		//Set up callbacks.
-		git_remote_callbacks callbacks = GIT_REMOTE_CALLBACKS_INIT;
-		callbacks.update_tips = &update_cb;
-		callbacks.progress = &progress_cb;
-		git_remote_set_callbacks(ptrs.remote, &callbacks);
-
-        stats = git_remote_stats(ptrs.remote);
-
         //Fetch from remote.
         BOOST_LOG_TRIVIAL(trace) << "Fetching from remote.";
         handle_error(git_remote_fetch(ptrs.remote), ptrs);
 
+        const git_transfer_progress * stats = git_remote_stats(ptrs.remote);
         BOOST_LOG_TRIVIAL(info) << "Received " << stats->indexed_objects << " of " << stats->total_objects << " objects in " << stats->received_bytes << " bytes.";
 
-        // Now start the merging. Not entirely sure what's going on here, but it looks like libgit2's merge API is incomplete, you can create some git_merge_head objects, but can't do anything with them...
-        // Thankfully, we don't really need a merge, we just need to replace whatever's in the working directory with the relevant file from FETCH_HEAD, which was updated in the fetching step before.
-        // The porcelain equivalent is `git checkout refs/remotes/origin/gh-pages masterlist.yaml`
-
+        //Now do a forced checkout of masterlist.yaml from the desired branch.
         BOOST_LOG_TRIVIAL(trace) << "Setting up checkout parameters.";
 
         char * paths[] = { "masterlist.yaml" };
@@ -246,38 +225,45 @@ namespace loot {
         opts.paths.count = 1;
 
         //Next, we need to do a looping checkout / parsing check / roll-back.
+        /* Here's what to do:
+        0. Create a git_signature using git_signature_default.
+        1. Get the git_object for the desired masterlist revision, using git_revparse_single.
+        2. Get the git_oid for that object, using git_object_id.
+        3. Get the git_reference for the HEAD reference using git_reference_lookup.
+        5. Generate a short string for the git_oid, to display in the log.
+        6. (Re)create a HEAD reference to point directly to the desired masterlist revision,
+        using its git_oid and git_reference_create.
+        7. Perform the checkout of HEAD.
+        */
 
-        git_object_free(ptrs.obj);  //Free object since it will be reallocated in loop.
+        //Apparently I'm using libgit2's head, not v0.20.0, so I don't need this...
+        //LOG_INFO("Creating a Git signature.");
+        //handle_error(git_signature_default(&ptrs.sig, ptrs.repo), ptrs);
 
         bool parsingFailed = false;
         unsigned int rollbacks = 0;
         char revision[10];
         do {
-            BOOST_LOG_TRIVIAL(trace) << "Getting the Git object for the tree at refs/remotes/origin/" << game.RepoBranch() << "~" << rollbacks << ".";
-
-            //Get the commit hash so that we can report the revision if there is an error.
             string filespec = "refs/remotes/origin/" + game.RepoBranch() + "~" + IntToString(rollbacks);
-            git_object * mlistObj;
-
+            BOOST_LOG_TRIVIAL(trace) << "Getting the Git object for the tree at " << filespec;
             handle_error(git_revparse_single(&ptrs.obj, ptrs.repo, filespec.c_str()), ptrs);
 
-            BOOST_LOG_TRIVIAL(trace) << "Checking out the tree at refs/remotes/origin/" << game.RepoBranch() << "~" << rollbacks << ".";
+            BOOST_LOG_TRIVIAL(trace) << "Getting the Git object ID.";
+            const git_oid * oid = git_object_id(ptrs.obj);
 
-            //Now we can do the checkout.
-            handle_error(git_checkout_tree(ptrs.repo, ptrs.obj, &opts), ptrs);
+            BOOST_LOG_TRIVIAL(trace) << "Generating hex string for Git object ID.";
+            git_oid_tostr(revision, 10, oid);
 
-            BOOST_LOG_TRIVIAL(trace) << "Getting the hash for the tree.";
+            BOOST_LOG_TRIVIAL(trace) << "Recreating HEAD as a direct reference (overwriting it) to the desired revision.";
+            handle_error(git_reference_create(&ptrs.ref, ptrs.repo, "HEAD", oid, 1), ptrs);
 
-            const git_oid * mlistOid = git_object_id(ptrs.obj);
+            BOOST_LOG_TRIVIAL(trace) << "Performing a Git checkout of HEAD.";
+            handle_error(git_checkout_head(ptrs.repo, &opts), ptrs);
 
-            BOOST_LOG_TRIVIAL(trace) << "Converting and recording the first 10 hex characters of the hash.";
-
-            git_oid_tostr(revision, 10, mlistOid);
-
-            BOOST_LOG_TRIVIAL(info) << "Tree hash is: " << revision;
-            BOOST_LOG_TRIVIAL(trace) << "Freeing the masterlist object.";
-
+            BOOST_LOG_TRIVIAL(trace) << "Tree hash is: " << revision;
+            BOOST_LOG_TRIVIAL(trace) << "Freeing pointers.";
             git_object_free(ptrs.obj);
+            git_reference_free(ptrs.ref);
 
             BOOST_LOG_TRIVIAL(trace) << "Testing masterlist parsing.";
 
