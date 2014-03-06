@@ -578,7 +578,7 @@ void Launcher::OnAbout(wxCommandEvent& event) {
     aboutInfo.SetName("LOOT");
     aboutInfo.SetVersion(IntToString(g_version_major) + "." + IntToString(g_version_minor) + "." + IntToString(g_version_patch));
     aboutInfo.SetDescription(translate("Load order optimisation for Oblivion, Skyrim, Fallout 3 and Fallout: New Vegas."));
-    aboutInfo.SetCopyright("Copyright (C) 2009-2014 LOOT Team.");
+    aboutInfo.SetCopyright("Copyright (C) 2012-2014 LOOT Team.");
     aboutInfo.SetWebSite("http://loot.github.io");
     aboutInfo.SetLicence("This program is free software: you can redistribute it and/or modify\n"
         "it under the terms of the GNU General Public License as published by\n"
