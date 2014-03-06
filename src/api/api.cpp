@@ -287,7 +287,7 @@ LOOT_API unsigned int loot_load_lists (loot_db db, const char * const masterlist
             else {
                 boost::filesystem::path p(masterlistPath);
                 std::list<loot::Message> filler;
-                Loadv2Masterlist(p, temp, filler);
+                LoadBOSSMasterlist(p, temp, filler);
             }
         }
     } catch (std::exception& e) {
@@ -579,7 +579,7 @@ LOOT_API unsigned int loot_get_plugin_tags (loot_db db, const char * const plugi
 }
 
 // Returns the messages attached to the given plugin. Messages are valid until Load,
-// DestroyBossDb or GetPluginMessages are next called. plugin is case-insensitive.
+// loot_destroy_db or loot_get_plugin_messages are next called. plugin is case-insensitive.
 // If no messages are attached, *messages will be NULL and numMessages will equal 0.
 LOOT_API unsigned int loot_get_plugin_messages (loot_db db, const char * const plugin,
                                                 loot_message ** const messages,

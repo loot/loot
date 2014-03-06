@@ -25,7 +25,7 @@
 #ifndef __LOOT_LEGACY_PARSER__
 #define __LOOT_LEGACY_PARSER__
 
-// This file holds the code necessary for inputting a v2 masterlist and getting a list of plugins and a list of global messages from it.
+// This file holds the code necessary for inputting a BOSS masterlist and getting a list of plugins and a list of global messages from it.
 
 #ifndef BOOST_SPIRIT_UNICODE
 #define BOOST_SPIRIT_UNICODE
@@ -412,9 +412,9 @@ namespace loot {
         }
 
         void ConvertCondition(std::string& condition) {
-            /*Convert the v2 order of evaluation to the standard order.
+            /*Convert the BOSS order of evaluation to the standard order.
               The only consistent way to do this is to bracket everything,
-              which is supported by the v3 syntax. */
+              which is supported by the LOOT syntax. */
 
             int bracketNo = 0;
             size_t pos = 0;
@@ -796,7 +796,7 @@ namespace loot {
 		}
 	};
 
-    void Loadv2Masterlist(boost::filesystem::path& file, std::list<Plugin>& plugins, std::list<Message>& globalMessages) {
+    void LoadBOSSMasterlist(boost::filesystem::path& file, std::list<Plugin>& plugins, std::list<Message>& globalMessages) {
         Skipper<std::string::const_iterator> skipper;
         LegacyMasterlistGrammar<std::string::const_iterator> grammar;
         std::string::const_iterator begin, end;

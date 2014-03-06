@@ -63,7 +63,7 @@
 
 #define BOOST_THREAD_VERSION 4
 
-wxIMPLEMENT_APP(BossGUI);
+wxIMPLEMENT_APP(LOOT);
 
 using namespace loot;
 using namespace std;
@@ -157,7 +157,7 @@ struct masterlist_updater_parser {
     string& _revision;
 };
 
-bool BossGUI::OnInit() {
+bool LOOT::OnInit() {
 
     //Check if GUI is already running.
 	wxSingleInstanceChecker *checker = new wxSingleInstanceChecker;

@@ -33,7 +33,7 @@
 #include <wx/listctrl.h>
 
 //Program class.
-class BossGUI : public wxApp {
+class LOOT : public wxApp {
 public:
 	bool OnInit();  //Load settings, apply logging and language settings, check if LOOT is already running, detect games, set game to last game or to first detected game if auto, create launcher window.
 private:

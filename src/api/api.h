@@ -272,7 +272,7 @@ LOOT_API void     loot_destroy_db (loot_db db);
     @brief Loads the masterlist and userlist from the paths specified.
     @details Can be called multiple times, each time replacing the previously-loaded data.
     @param db The database the function acts on.
-    @param masterlistPath A string containing the relative or absolute path to the masterlist file that should be loaded. The API supports loading both v3 and v2.3 masterlists.
+    @param masterlistPath A string containing the relative or absolute path to the masterlist file that should be loaded. The API supports loading both LOOT and BOSS masterlists.
     @param userlistPath A string containing the relative or absolute path to the userlist file that should be loaded, or `NULL`. If `NULL`, no userlist will be loaded. The API only upports loading v3 userlists.
     @returns A return code.
 */
@@ -344,7 +344,7 @@ LOOT_API unsigned int loot_get_plugin_messages (loot_db db, const char * const p
     @param db The database the function acts on.
     @param plugin The plugin to look up dirty status information for.
     @param needsCleaning A pointer to a plugin cleanliness code.
-    @returns A return code. 
+    @returns A return code.
 */
 
 LOOT_API unsigned int loot_get_dirty_info (loot_db db, const char * const plugin,
