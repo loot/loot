@@ -380,6 +380,11 @@ FunctionEnd
         ;    Push "Language:"
         ;    Push "Language: pt_BR"
         ;    Call ReplaceLineStr
+		StrCmp $LANGUAGE ${LANG_DANISH} 0 +5
+            Push "$LOCALAPPDATA\BOSS\settings.yaml"
+            Push "Language:"
+            Push "Language: da"
+            Call ReplaceLineStr
 			
 		;Add Start Menu shortcuts. Set out path back to $INSTDIR otherwise the shortcuts start in the wrong place.
 		;Set Shell Var Context to all so that shortcuts are installed for all users, not just admin.
