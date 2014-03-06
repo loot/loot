@@ -129,6 +129,7 @@ FunctionEnd
 	!insertmacro MUI_LANGUAGE "SimpChinese"
 	!insertmacro MUI_LANGUAGE "French"
 	!insertmacro MUI_LANGUAGE "Polish"
+	!insertmacro MUI_LANGUAGE "Danish"
 	!insertmacro MUI_RESERVEFILE_LANGDLL
 
 ;--------------------------------
@@ -235,6 +236,21 @@ FunctionEnd
 	LangString TEXT_SHOWREADME ${LANG_POLISH} "Czytaj Readme"
 	LangString TEXT_MAIN ${LANG_POLISH} "Wszystkie pliki BOSS bez ustawień i plików użytkownika."
 	LangString TEXT_USERFILES ${LANG_POLISH} "Wszystkie pliki BOSS oraz ustawienia użytkownika ."
+
+;--------------------------------
+;Danish (dansk) Strings
+
+	VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "BOSS"
+	VIAddVersionKey /LANG=${LANG_ENGLISH} "CompanyName" "BOSS Development Team"
+	VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "© 2009-2014 BOSS Development Team"
+	VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "Installationsprogram for BOSS 3.0.0"
+	VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "3.0.0"
+
+	LangString TEXT_MESSAGEBOX ${LANG_ENGLISH} "BOSS er allerede installeret og skal afinstalleres før du fortsætter. $\n$\nTryk på »OK« for at fjerne den forrige version eller »Annuller« for at annullere opdateringen."
+	LangString TEXT_RUN ${LANG_ENGLISH} "Kør BOSS"
+	LangString TEXT_SHOWREADME ${LANG_ENGLISH} "Vis Readme"
+	LangString TEXT_MAIN ${LANG_ENGLISH} "Alle BOSS's filer, undtagen brugerlister og indstillingsfiler."
+	LangString TEXT_USERFILES ${LANG_ENGLISH} "BOSS's brugerliste- og indstillingsfile."
 
 ;--------------------------------
 ;Initialisations
