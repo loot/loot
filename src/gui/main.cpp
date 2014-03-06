@@ -1,6 +1,7 @@
 /*  BOSS
 
-    A plugin load order optimiser for games that use the esp/esm plugin system.
+    A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
+    Fallout: New Vegas.
 
     Copyright (C) 2013-2014    WrinklyNinja
 
