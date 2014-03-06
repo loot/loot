@@ -1,7 +1,7 @@
 /**
     @mainpage
     @author WrinklyNinja
-    @version 3.0.0
+    @version 0..0
     @copyright The LOOT API is distributed under the GNU General Public License v3.0. For the full text of the license, see the "GNU GPL v3.txt" file included in the source archive.
 
     @section intro_sec Introduction
@@ -13,8 +13,6 @@
     All further API documentation is contained within the documentation for api.h.
 
     @section credit_sec Credits
-
-    Thanks go to Lojack and myk002 for significant contributions during planning and beta testing, and to kaburke for beta testing of v2 of the API.
 
     The LOOT API is written by WrinklyNinja in C/C++ and makes use of the <a href="http://code.google.com/p/yaml-cpp/">yaml-cpp</a> and <a href="http://github.com/WrinklyNinja/libloadorder/">libloadorder</a> libraries and some of the <a href="http://www.boost.org/">Boost</a> libraries. Copyright license information for all these may be found in the "licenses/Licenses.txt" file.
 */
