@@ -1,24 +1,24 @@
-/*  BOSS
+/*  LOOT
 
     A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
     Fallout: New Vegas.
 
     Copyright (C) 2012-2014    WrinklyNinja
 
-    This file is part of BOSS.
+    This file is part of LOOT.
 
-    BOSS is free software: you can redistribute
+    LOOT is free software: you can redistribute
     it and/or modify it under the terms of the GNU General Public License
     as published by the Free Software Foundation, either version 3 of
     the License, or (at your option) any later version.
 
-    BOSS is distributed in the hope that it will
+    LOOT is distributed in the hope that it will
     be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with BOSS.  If not, see
+    along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
 */
 
@@ -160,7 +160,7 @@ namespace boss {
         }
 
         RefreshActivePluginsList();
-        CreateBOSSGameFolder();
+        CreateLOOTGameFolder();
 
         return *this;
     }
@@ -480,14 +480,14 @@ namespace boss {
         lo_destroy_handle(gh);
     }
 
-    void Game::CreateBOSSGameFolder() {
-        //Make sure that the BOSS game path exists.
+    void Game::CreateLOOTGameFolder() {
+        //Make sure that the LOOT game path exists.
         try {
             if (fs::exists(g_path_local) && !fs::exists(g_path_local / bossFolderName))
                 fs::create_directory(g_path_local / bossFolderName);
         } catch (fs::filesystem_error& e) {
-            BOOST_LOG_TRIVIAL(error) << "Could not create BOSS folder for game. Details: " << e.what();
-            throw error(error::path_write_fail, lc::translate("Could not create BOSS folder for game. Details:").str() + " " + e.what());
+            BOOST_LOG_TRIVIAL(error) << "Could not create LOOT folder for game. Details: " << e.what();
+            throw error(error::path_write_fail, lc::translate("Could not create LOOT folder for game. Details:").str() + " " + e.what());
         }
     }
 }

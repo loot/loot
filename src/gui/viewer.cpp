@@ -1,24 +1,24 @@
-/*  BOSS
+/*  LOOT
 
     A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
     Fallout: New Vegas.
 
     Copyright (C) 2013-2014    WrinklyNinja
 
-    This file is part of BOSS.
+    This file is part of LOOT.
 
-    BOSS is free software: you can redistribute
+    LOOT is free software: you can redistribute
     it and/or modify it under the terms of the GNU General Public License
     as published by the Free Software Foundation, either version 3 of
     the License, or (at your option) any later version.
 
-    BOSS is distributed in the hope that it will
+    LOOT is distributed in the hope that it will
     be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with BOSS.  If not, see
+    along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
 */
 
@@ -38,7 +38,7 @@ Viewer::Viewer(wxWindow *parent, const wxString& title, const wxString& url) : w
 
     SetSizer(topsizer);
     SetSize(800,600);
-    SetIcon(wxIconLocation("BOSS.exe"));
+    SetIcon(wxIconLocation("LOOT.exe"));
 }
 
 void Viewer::OnNavigationStart(wxWebViewEvent& event) {

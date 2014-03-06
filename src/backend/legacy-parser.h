@@ -1,29 +1,29 @@
-/*  BOSS
+/*  LOOT
 
     A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
     Fallout: New Vegas.
 
     Copyright (C) 2012-2014    WrinklyNinja
 
-    This file is part of BOSS.
+    This file is part of LOOT.
 
-    BOSS is free software: you can redistribute
+    LOOT is free software: you can redistribute
     it and/or modify it under the terms of the GNU General Public License
     as published by the Free Software Foundation, either version 3 of
     the License, or (at your option) any later version.
 
-    BOSS is distributed in the hope that it will
+    LOOT is distributed in the hope that it will
     be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with BOSS.  If not, see
+    along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
 */
 
-#ifndef __BOSS_LEGACY_PARSER__
-#define __BOSS_LEGACY_PARSER__
+#ifndef __LOOT_LEGACY_PARSER__
+#define __LOOT_LEGACY_PARSER__
 
 // This file holds the code necessary for inputting a v2 masterlist and getting a list of plugins and a list of global messages from it.
 
@@ -400,7 +400,7 @@ namespace boss {
 
             if (it == varConditionMap.end()) {
                 BOOST_LOG_TRIVIAL(error) << "The variable \"" << var << "\" was not previously defined.";
-                throw boss::error(boss::error::condition_eval_fail, "The variable \"" + var + "\" was not previously defined.");  //Isn't used by BOSS application, so don't need to translate.
+                throw boss::error(boss::error::condition_eval_fail, "The variable \"" + var + "\" was not previously defined.");  //Isn't used by LOOT application, so don't need to translate.
             }
 
             if (ifIfnotStr == "if ")
@@ -716,7 +716,7 @@ namespace boss {
                 }
             }
 
-            //BOSSv2 supports Chinese and German in addition to English, Russian and Spanish, but they aren't used in any of the masterlists so don't bother mapping them.
+            //LOOT supports Chinese and German in addition to English, Russian and Spanish, but they aren't used in any of the masterlists so don't bother mapping them.
             unsigned int langInt;
             if (lang == "english" || lang == "chinese" || lang == "german")
                 langInt = g_lang_english;
@@ -728,7 +728,7 @@ namespace boss {
                 langInt = g_lang_any;
 
 
-            /* Now convert the temporary message types into say or warning messages as appropriate. Translations were obtained from the BOSSv2 translation files. Thanks to the translators for them. */
+            /* Now convert the temporary message types into say or warning messages as appropriate. Translations were obtained from the LOOT translation files. Thanks to the translators for them. */
 
             if (type == message_dirty) {
 
@@ -792,7 +792,7 @@ namespace boss {
             		boost::trim(context);
 
             BOOST_LOG_TRIVIAL(error) << "Error parsing at \"" << context << "\", expected \"" << what.tag << "\".";
-			throw boss::error(boss::error::condition_eval_fail, "Expected \"" + what.tag + "\" at \"" + context + "\".");  //Isn't used by BOSS application, so don't need to translate.
+			throw boss::error(boss::error::condition_eval_fail, "Expected \"" + what.tag + "\" at \"" + context + "\".");  //Isn't used by LOOT application, so don't need to translate.
 		}
 	};
 

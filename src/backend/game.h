@@ -1,29 +1,29 @@
-/*  BOSS
+/*  LOOT
 
     A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
     Fallout: New Vegas.
 
     Copyright (C) 2012-2014    WrinklyNinja
 
-    This file is part of BOSS.
+    This file is part of LOOT.
 
-    BOSS is free software: you can redistribute
+    LOOT is free software: you can redistribute
     it and/or modify it under the terms of the GNU General Public License
     as published by the Free Software Foundation, either version 3 of
     the License, or (at your option) any later version.
 
-    BOSS is distributed in the hope that it will
+    LOOT is distributed in the hope that it will
     be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with BOSS.  If not, see
+    along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
 */
 
-#ifndef __BOSS_GAME__
-#define __BOSS_GAME__
+#ifndef __LOOT_GAME__
+#define __LOOT_GAME__
 
 
 #include <string>
@@ -44,7 +44,7 @@ namespace boss {
 
     class Game {
     public:
-        Game();  //Sets game to BOSS_g_game_autodetect, with all other vars being empty.
+        Game();  //Sets game to LOOT_g_game_autodetect, with all other vars being empty.
         Game(const unsigned int baseGameCode, const std::string& bossFolder = "");
 
         Game& SetDetails(const std::string& name, const std::string& masterFile,
@@ -98,8 +98,8 @@ namespace boss {
         boost::filesystem::path gamePath;  //Path to the game's folder.
         boost::unordered_set<std::string> activePlugins;  //Holds lowercased strings.
 
-        //Creates directory in BOSS folder for BOSS's game-specific files.
-        void CreateBOSSGameFolder();
+        //Creates directory in LOOT folder for LOOT's game-specific files.
+        void CreateLOOTGameFolder();
     };
 
     std::vector<Game> GetGames(const YAML::Node& settings);

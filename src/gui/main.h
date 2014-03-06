@@ -1,29 +1,29 @@
-/*  BOSS
+/*  LOOT
 
     A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
     Fallout: New Vegas.
 
     Copyright (C) 2013-2014    WrinklyNinja
 
-    This file is part of BOSS.
+    This file is part of LOOT.
 
-    BOSS is free software: you can redistribute
+    LOOT is free software: you can redistribute
     it and/or modify it under the terms of the GNU General Public License
     as published by the Free Software Foundation, either version 3 of
     the License, or (at your option) any later version.
 
-    BOSS is distributed in the hope that it will
+    LOOT is distributed in the hope that it will
     be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with BOSS.  If not, see
+    along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
 */
 
-#ifndef __BOSS_GUI_MAIN__
-#define __BOSS_GUI_MAIN__
+#ifndef __LOOT_GUI_MAIN__
+#define __LOOT_GUI_MAIN__
 
 #include "ids.h"
 #include "../backend/game.h"
@@ -35,7 +35,7 @@
 //Program class.
 class BossGUI : public wxApp {
 public:
-	bool OnInit();  //Load settings, apply logging and language settings, check if BOSS is already running, detect games, set game to last game or to first detected game if auto, create launcher window.
+	bool OnInit();  //Load settings, apply logging and language settings, check if LOOT is already running, detect games, set game to last game or to first detected game if auto, create launcher window.
 private:
     wxLocale * wxLoc;
 
@@ -67,7 +67,7 @@ private:
 	wxButton * ViewButton;
 
 	boss::Game& _game;
-    YAML::Node& _settings;  //BOSS Settings.
+    YAML::Node& _settings;  //LOOT Settings.
     std::vector<boss::Game>& _games;
 };
 

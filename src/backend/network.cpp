@@ -1,24 +1,24 @@
-/*  BOSS
+/*  LOOT
 
     A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
     Fallout: New Vegas.
 
     Copyright (C) 2012-2014    WrinklyNinja
 
-    This file is part of BOSS.
+    This file is part of LOOT.
 
-    BOSS is free software: you can redistribute
+    LOOT is free software: you can redistribute
     it and/or modify it under the terms of the GNU General Public License
     as published by the Free Software Foundation, either version 3 of
     the License, or (at your option) any later version.
 
-    BOSS is distributed in the hope that it will
+    LOOT is distributed in the hope that it will
     be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with BOSS.  If not, see
+    along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
 */
 
@@ -103,16 +103,16 @@ namespace boss {
 
         /*  List of Git operations (porcelain commands shown, will need to implement using plumbing in the API though):
 
-            1. Check if there is already a Git repository in the game's BOSS subfolder.
+            1. Check if there is already a Git repository in the game's LOOT subfolder.
 
                 Since the masterlists will each be in the root of a separate repository, just check if there is a `.git` folder present.
 
-            2a. If there is, compare its remote URL with the URL that BOSS is currently set to use.
+            2a. If there is, compare its remote URL with the URL that LOOT is currently set to use.
 
                 The current remote can be gotten using `git config --get remote.origin.url`.
 
 
-            3a. If the URLs are different, then update the remote URL to the one given by BOSS.
+            3a. If the URLs are different, then update the remote URL to the one given by LOOT.
 
                 The remote URL can be changed using `git remote set-url origin <URL>`
 
@@ -122,7 +122,7 @@ namespace boss {
                 `git remote add origin <URL>`
 
 
-            3b. Now set up sparse checkout support, so that even if the repository has other files, the user's BOSS install only gets the masterlist added to it.
+            3b. Now set up sparse checkout support, so that even if the repository has other files, the user's LOOT install only gets the masterlist added to it.
 
                 `git config core.sparseCheckout true`
                 `echo masterlist.yaml >> .git/info/sparse-checkout`
@@ -173,7 +173,7 @@ namespace boss {
             BOOST_LOG_TRIVIAL(info) << "Remote URL in repository settings: " << url;
             if (url != game.RepoURL()) {
                 BOOST_LOG_TRIVIAL(trace) << "URLs do not match, setting repository URL to URL in settings.";
-                //The URLs don't match. Change the remote URL to match the one BOSS has.
+                //The URLs don't match. Change the remote URL to match the one LOOT has.
                 handle_error(git_remote_set_url(ptrs.remote, game.RepoURL().c_str()), ptrs);
 
                 //Now save change.

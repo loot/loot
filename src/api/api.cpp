@@ -1,24 +1,24 @@
-/*  BOSS
+/*  LOOT
 
     A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
     Fallout: New Vegas.
 
     Copyright (C) 2013-2014    WrinklyNinja
 
-    This file is part of BOSS.
+    This file is part of LOOT.
 
-    BOSS is free software: you can redistribute
+    LOOT is free software: you can redistribute
     it and/or modify it under the terms of the GNU General Public License
     as published by the Free Software Foundation, either version 3 of
     the License, or (at your option) any later version.
 
-    BOSS is distributed in the hope that it will
+    LOOT is distributed in the hope that it will
     be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with BOSS.  If not, see
+    along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
 */
 
@@ -67,13 +67,13 @@ const unsigned int boss_game_tes5                   = boss::g_game_tes5;
 const unsigned int boss_game_fo3                    = boss::g_game_fo3;
 const unsigned int boss_game_fonv                   = boss::g_game_fonv;
 
-// BOSS message types.
+// LOOT message types.
 const unsigned int boss_message_say                 = boss::g_message_say;
 const unsigned int boss_message_warn                = boss::g_message_warn;
 const unsigned int boss_message_error               = boss::g_message_error;
 const unsigned int boss_message_tag                 = boss::g_message_tag;
 
-// BOSS message languages.
+// LOOT message languages.
 const unsigned int boss_lang_any                    = boss::g_lang_any;
 const unsigned int boss_lang_english                = boss::g_lang_english;
 const unsigned int boss_lang_spanish                = boss::g_lang_spanish;
@@ -83,7 +83,7 @@ const unsigned int boss_lang_chinese                = boss::g_lang_chinese;
 const unsigned int boss_lang_polish                 = boss::g_lang_polish;
 const unsigned int boss_lang_brazilian_portuguese   = boss::g_lang_brazilian_portuguese;
 
-// BOSS cleanliness codes.
+// LOOT cleanliness codes.
 const unsigned int boss_needs_cleaning_no       = 0;
 const unsigned int boss_needs_cleaning_yes      = 1;
 const unsigned int boss_needs_cleaning_unknown  = 2;
@@ -166,7 +166,7 @@ unsigned int c_error(const unsigned int code, const std::string& what) {
 // Outputs a string giving the details of the last time an error or
 // warning return code was returned by a function. The string exists
 // until this function is called again or until CleanUpAPI is called.
-BOSS_API unsigned int boss_get_error_message (const char ** const message) {
+LOOT_API unsigned int boss_get_error_message (const char ** const message) {
     if (message == NULL)
         return c_error(boss_error_invalid_args, "Null message pointer passed.");
 
@@ -176,7 +176,7 @@ BOSS_API unsigned int boss_get_error_message (const char ** const message) {
 }
 
 // Frees memory allocated to error string.
-BOSS_API void     boss_cleanup () {
+LOOT_API void     boss_cleanup () {
     delete [] extMessageStr;
     extMessageStr = NULL;
 }
@@ -186,16 +186,16 @@ BOSS_API void     boss_cleanup () {
 // Version Functions
 //////////////////////////////
 
-// Returns whether this version of BOSS supports the API from the given
-// BOSS version. Abstracts BOSS API stability policy away from clients.
-BOSS_API bool boss_is_compatible (const unsigned int versionMajor, const unsigned int versionMinor, const unsigned int versionPatch) {
+// Returns whether this version of LOOT supports the API from the given
+// LOOT version. Abstracts LOOT API stability policy away from clients.
+LOOT_API bool boss_is_compatible (const unsigned int versionMajor, const unsigned int versionMinor, const unsigned int versionPatch) {
     return versionMajor == boss::g_version_major && versionMinor == boss::g_version_minor;
 }
 
-// Returns the version string for this version of BOSS.
+// Returns the version string for this version of LOOT.
 // The string exists until this function is called again or until
 // CleanUpAPI is called.
-BOSS_API unsigned int boss_get_version (unsigned int * const versionMajor, unsigned int * const versionMinor, unsigned int * const versionPatch) {
+LOOT_API unsigned int boss_get_version (unsigned int * const versionMajor, unsigned int * const versionMinor, unsigned int * const versionPatch) {
     if (versionMajor == NULL || versionMinor == NULL || versionPatch == NULL)
         return c_error(boss_error_invalid_args, "Null pointer passed.");
 
@@ -218,7 +218,7 @@ BOSS_API unsigned int boss_get_version (unsigned int * const versionMajor, unsig
 // plugins.txt and loadorder.txt (if they both exist) are in sync. If
 // dataPath == NULL then the API will attempt to detect the data path of
 // the specified game.
-BOSS_API unsigned int boss_create_db (boss_db * const db, const unsigned int clientGame, const char * const gamePath) {
+LOOT_API unsigned int boss_create_db (boss_db * const db, const unsigned int clientGame, const char * const gamePath) {
     if (db == NULL || (clientGame != boss_game_tes4 && clientGame != boss_game_tes5 && clientGame != boss_game_fo3 && clientGame != boss_game_fonv))
         return c_error(boss_error_invalid_args, "Null pointer passed.");
 
@@ -255,7 +255,7 @@ BOSS_API unsigned int boss_create_db (boss_db * const db, const unsigned int cli
 }
 
 // Destroys the given DB, freeing any memory allocated as part of its use.
-BOSS_API void     boss_destroy_db (boss_db db) {
+LOOT_API void     boss_destroy_db (boss_db db) {
     delete db;
 }
 
@@ -268,7 +268,7 @@ BOSS_API void     boss_destroy_db (boss_db db) {
 // Can be called multiple times. On error, the database is unchanged.
 // Paths are case-sensitive if the underlying filesystem is case-sensitive.
 // masterlistPath and userlistPath are files.
-BOSS_API unsigned int boss_load_lists (boss_db db, const char * const masterlistPath,
+LOOT_API unsigned int boss_load_lists (boss_db db, const char * const masterlistPath,
                                     const char * const userlistPath) {
     if (db == NULL || masterlistPath == NULL)
         return c_error(boss_error_invalid_args, "Null pointer passed.");
@@ -345,7 +345,7 @@ BOSS_API unsigned int boss_load_lists (boss_db db, const char * const masterlist
 // is called. Repeated calls re-evaluate the masterlist from scratch each time,
 // ignoring the results of any previous evaluations. Paths are case-sensitive
 // if the underlying filesystem is case-sensitive.
-BOSS_API unsigned int boss_eval_lists (boss_db db, const unsigned int language) {
+LOOT_API unsigned int boss_eval_lists (boss_db db, const unsigned int language) {
     if (db == NULL)
         return c_error(boss_error_invalid_args, "Null pointer passed.");
 
@@ -421,7 +421,7 @@ BOSS_API unsigned int boss_eval_lists (boss_db db, const unsigned int language) 
 // Returns an array of the Bash Tags encounterred when loading the masterlist
 // and userlist, and the number of tags in the returned array. The array and
 // its contents are static and should not be freed by the client.
-BOSS_API unsigned int boss_get_tag_map (boss_db db, char *** const tagMap, size_t * const numTags) {
+LOOT_API unsigned int boss_get_tag_map (boss_db db, char *** const tagMap, size_t * const numTags) {
     if (db == NULL || tagMap == NULL || numTags == NULL)
         return c_error(boss_error_invalid_args, "Null pointer passed.");
 
@@ -481,13 +481,13 @@ BOSS_API unsigned int boss_get_tag_map (boss_db db, char *** const tagMap, size_
 }
 
 // Returns arrays of Bash Tag UIDs for Bash Tags suggested for addition and removal
-// by BOSS's masterlist and userlist, and the number of tags in each array.
+// by LOOT's masterlist and userlist, and the number of tags in each array.
 // The returned arrays are valid until the db is destroyed or until the Load
 // function is called.  The arrays should not be freed by the client. modName is
 // case-insensitive. If no Tags are found for an array, the array pointer (*tagIds)
 // will be NULL. The userlistModified bool is true if the userlist contains Bash Tag
 // suggestion message additions.
-BOSS_API unsigned int boss_get_plugin_tags (boss_db db, const char * const plugin,
+LOOT_API unsigned int boss_get_plugin_tags (boss_db db, const char * const plugin,
                                             unsigned int ** const tagIds_added,
                                             size_t * const numTags_added,
                                             unsigned int ** const tagIds_removed,
@@ -581,7 +581,7 @@ BOSS_API unsigned int boss_get_plugin_tags (boss_db db, const char * const plugi
 // Returns the messages attached to the given plugin. Messages are valid until Load,
 // DestroyBossDb or GetPluginMessages are next called. plugin is case-insensitive.
 // If no messages are attached, *messages will be NULL and numMessages will equal 0.
-BOSS_API unsigned int boss_get_plugin_messages (boss_db db, const char * const plugin,
+LOOT_API unsigned int boss_get_plugin_messages (boss_db db, const char * const plugin,
                                                 boss_message ** const messages,
                                                 size_t * const numMessages) {
     if (db == NULL || plugin == NULL || messages == NULL || numMessages == NULL)
@@ -630,7 +630,7 @@ BOSS_API unsigned int boss_get_plugin_messages (boss_db db, const char * const p
     return boss_ok;
 }
 
-BOSS_API unsigned int boss_get_dirty_info(boss_db db, const char * const plugin, unsigned int * const needsCleaning) {
+LOOT_API unsigned int boss_get_dirty_info(boss_db db, const char * const plugin, unsigned int * const needsCleaning) {
     if (db == NULL || plugin == NULL || needsCleaning == NULL)
         return c_error(boss_error_invalid_args, "Null pointer passed.");
 
@@ -660,7 +660,7 @@ BOSS_API unsigned int boss_get_dirty_info(boss_db db, const char * const plugin,
 // and/or dirty messages, plus the Tag suggestions and/or messages themselves and their
 // conditions, in order to create the Wrye Bash taglist. outputFile is the path to use
 // for output. If outputFile already exists, it will only be overwritten if overwrite is true.
-BOSS_API unsigned int boss_write_minimal_list (boss_db db, const char * const outputFile, const bool overwrite) {
+LOOT_API unsigned int boss_write_minimal_list (boss_db db, const char * const outputFile, const bool overwrite) {
     if (db == NULL || outputFile == NULL)
         return c_error(boss_error_invalid_args, "Null pointer passed.");
 

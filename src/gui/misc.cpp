@@ -1,24 +1,24 @@
-/*  BOSS
+/*  LOOT
 
 A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
     Fallout: New Vegas.
 
 Copyright (C) 2013-2014    WrinklyNinja
 
-This file is part of BOSS.
+This file is part of LOOT.
 
-BOSS is free software: you can redistribute
+LOOT is free software: you can redistribute
 it and/or modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation, either version 3 of
 the License, or (at your option) any later version.
 
-BOSS is distributed in the hope that it will
+LOOT is distributed in the hope that it will
 be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with BOSS.  If not, see
+along with LOOT.  If not, see
 <http://www.gnu.org/licenses/>.
 */
 
@@ -134,7 +134,7 @@ FileEditDialog::FileEditDialog(wxWindow *parent, const wxString& title) : wxDial
         bigBox->Add(sizer, 0, wxEXPAND | wxLEFT | wxBOTTOM | wxRIGHT, 15);
 
     SetBackgroundColour(wxColour(255, 255, 255));
-    SetIcon(wxIconLocation("BOSS.exe"));
+    SetIcon(wxIconLocation("LOOT.exe"));
     SetSizerAndFit(bigBox);
 }
 
@@ -245,7 +245,7 @@ MessageEditDialog::MessageEditDialog(wxWindow *parent, const wxString& title) : 
     removeBtn->Enable(false);
 
     SetBackgroundColour(wxColour(255, 255, 255));
-    SetIcon(wxIconLocation("BOSS.exe"));
+    SetIcon(wxIconLocation("LOOT.exe"));
     SetSizerAndFit(bigBox);
 }
 
@@ -310,7 +310,7 @@ void MessageEditDialog::OnEdit(wxCommandEvent& event) {
         BOOST_LOG_TRIVIAL(error) << "Attempting to edit message content, but no content row selected.";
         wxMessageBox(
             translate("Error: No content row selected."),
-            translate("BOSS: Error"),
+            translate("LOOT: Error"),
             wxOK | wxICON_ERROR,
             NULL);
         return;
@@ -325,7 +325,7 @@ void MessageEditDialog::OnRemove(wxCommandEvent& event) {
         BOOST_LOG_TRIVIAL(error) << "Attempting to remove message content, but no content row selected.";
         wxMessageBox(
             translate("Error: No content row selected."),
-            translate("BOSS: Error"),
+            translate("LOOT: Error"),
             wxOK | wxICON_ERROR,
             NULL);
         return;
@@ -377,7 +377,7 @@ TagEditDialog::TagEditDialog(wxWindow *parent, const wxString& title) : wxDialog
     _state->SetSelection(0);
 
     SetBackgroundColour(wxColour(255, 255, 255));
-    SetIcon(wxIconLocation("BOSS.exe"));
+    SetIcon(wxIconLocation("LOOT.exe"));
     SetSizerAndFit(bigBox);
 }
 
@@ -448,7 +448,7 @@ DirtInfoEditDialog::DirtInfoEditDialog(wxWindow * parent, const wxString& title)
         bigBox->Add(sizer, 0, wxEXPAND | wxLEFT | wxBOTTOM | wxRIGHT, 15);
 
     SetBackgroundColour(wxColour(255, 255, 255));
-    SetIcon(wxIconLocation("BOSS.exe"));
+    SetIcon(wxIconLocation("LOOT.exe"));
     SetSizerAndFit(bigBox);
 }
 

@@ -1,24 +1,24 @@
-/*  BOSS
+/*  LOOT
 
     A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
     Fallout: New Vegas.
 
     Copyright (C) 2013-2014    WrinklyNinja
 
-    This file is part of BOSS.
+    This file is part of LOOT.
 
-    BOSS is free software: you can redistribute
+    LOOT is free software: you can redistribute
     it and/or modify it under the terms of the GNU General Public License
     as published by the Free Software Foundation, either version 3 of
     the License, or (at your option) any later version.
 
-    BOSS is distributed in the hope that it will
+    LOOT is distributed in the hope that it will
     be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with BOSS.  If not, see
+    along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
 */
 #include "main.h"
@@ -164,8 +164,8 @@ bool BossGUI::OnInit() {
 
 	if (checker->IsAnotherRunning()) {
         wxMessageBox(
-			translate("Error: BOSS is already running. This instance will now quit."),
-			translate("BOSS: Error"),
+			translate("Error: LOOT is already running. This instance will now quit."),
+			translate("LOOT: Error"),
 			wxOK | wxICON_ERROR,
 			NULL);
 		delete checker; // OnExit() won't be called if we return false
@@ -181,8 +181,8 @@ bool BossGUI::OnInit() {
                 fs::create_directory(g_path_settings.parent_path());
         } catch (fs::filesystem_error& e) {
             wxMessageBox(
-				translate("Error: Could not create local app data BOSS folder."),
-				translate("BOSS: Error"),
+				translate("Error: Could not create local app data LOOT folder."),
+				translate("LOOT: Error"),
 				wxOK | wxICON_ERROR,
 				NULL);
             return false;
@@ -197,7 +197,7 @@ bool BossGUI::OnInit() {
         } catch (YAML::ParserException& e) {
             wxMessageBox(
 				FromUTF8(format(loc::translate("Error: Settings parsing failed. %1%")) % e.what()),
-				translate("BOSS: Error"),
+				translate("LOOT: Error"),
 				wxOK | wxICON_ERROR,
 				NULL);
             return false;
@@ -280,7 +280,7 @@ bool BossGUI::OnInit() {
             BOOST_LOG_TRIVIAL(error) << "Could not load translations.";
             wxMessageBox(
                 translate("Error: Could not apply translation."),
-                translate("BOSS: Error"),
+                translate("LOOT: Error"),
                 wxOK | wxICON_ERROR,
                 NULL);
         }
@@ -290,7 +290,7 @@ bool BossGUI::OnInit() {
         BOOST_LOG_TRIVIAL(error) << "The selected language is not available on this system.";
         wxMessageBox(
             translate("Error: The selected language is not available on this system."),
-            translate("BOSS: Error"),
+            translate("LOOT: Error"),
             wxOK | wxICON_ERROR,
             NULL);
     }
@@ -303,7 +303,7 @@ bool BossGUI::OnInit() {
         BOOST_LOG_TRIVIAL(error) << "Game-specific settings could not be initialised. " << e.what();
         wxMessageBox(
             FromUTF8(format(loc::translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()),
-            translate("BOSS: Error"),
+            translate("LOOT: Error"),
             wxOK | wxICON_ERROR,
             NULL);
         return false;
@@ -311,7 +311,7 @@ bool BossGUI::OnInit() {
         BOOST_LOG_TRIVIAL(error) << "Games' settings parsing failed. " << e.what();
         wxMessageBox(
             FromUTF8(format(loc::translate("Error: Games' settings parsing failed. %1%")) % e.what()),
-            translate("BOSS: Error"),
+            translate("LOOT: Error"),
             wxOK | wxICON_ERROR,
             NULL);
         return false;
@@ -342,7 +342,7 @@ bool BossGUI::OnInit() {
             BOOST_LOG_TRIVIAL(error) << "None of the supported games were detected.";
             wxMessageBox(
                 translate("Error: None of the supported games were detected."),
-                translate("BOSS: Error"),
+                translate("LOOT: Error"),
                 wxOK | wxICON_ERROR,
                 NULL);
             return false;
@@ -359,17 +359,17 @@ bool BossGUI::OnInit() {
         BOOST_LOG_TRIVIAL(error) << "Game-specific settings could not be initialised. " << e.what();
         wxMessageBox(
             FromUTF8(format(loc::translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()),
-            translate("BOSS: Error"),
+            translate("LOOT: Error"),
             wxOK | wxICON_ERROR,
             NULL);
         return false;
     }
 
     //Create launcher window.
-    BOOST_LOG_TRIVIAL(debug) << "Opening the main BOSS window.";
-    Launcher * launcher = new Launcher(wxT("BOSS"), _settings, _game, _games);
+    BOOST_LOG_TRIVIAL(debug) << "Opening the main LOOT window.";
+    Launcher * launcher = new Launcher(wxT("LOOT"), _settings, _game, _games);
 
-    launcher->SetIcon(wxIconLocation("BOSS.exe"));
+    launcher->SetIcon(wxIconLocation("LOOT.exe"));
 	launcher->Show();
 	SetTopWindow(launcher);
 
@@ -459,7 +459,7 @@ Launcher::Launcher(const wxChar *title, YAML::Node& settings, Game& game, vector
         RedatePluginsItem->Enable(false);
 
     //Set title bar text.
-	SetTitle(FromUTF8("BOSS - " + _game.Name()));
+	SetTitle(FromUTF8("LOOT - " + _game.Name()));
 
     //Now set the layout and sizes.
     SetMenuBar(MenuBar);
@@ -477,14 +477,14 @@ void Launcher::OnQuit(wxCommandEvent& event) {
 }
 
 void Launcher::OnClose(wxCloseEvent& event) {
-    BOOST_LOG_TRIVIAL(debug) << "Quiting BOSS.";
+    BOOST_LOG_TRIVIAL(debug) << "Quiting LOOT.";
 
     _settings["Last Game"] = _game.FolderName();
 
     _settings["Games"] = _games;
 
     //Save settings.
-    BOOST_LOG_TRIVIAL(debug) << "Saving BOSS settings.";
+    BOOST_LOG_TRIVIAL(debug) << "Saving LOOT settings.";
     YAML::Emitter yout;
     yout.SetIndent(2);
     yout << _settings;
@@ -504,7 +504,7 @@ void Launcher::OnViewLastReport(wxCommandEvent& event) {
     else {
         //Create viewer window.
         BOOST_LOG_TRIVIAL(debug) << "Opening viewer window...";
-        Viewer *viewer = new Viewer(this, translate("BOSS: Report Viewer"), FromUTF8(ToFileURL(_game.ReportPath().string())));
+        Viewer *viewer = new Viewer(this, translate("LOOT: Report Viewer"), FromUTF8(ToFileURL(_game.ReportPath().string())));
         viewer->Show();
     }
     BOOST_LOG_TRIVIAL(debug) << "Report displayed.";
@@ -512,7 +512,7 @@ void Launcher::OnViewLastReport(wxCommandEvent& event) {
 
 void Launcher::OnOpenSettings(wxCommandEvent& event) {
     BOOST_LOG_TRIVIAL(debug) << "Opening settings window...";
-    SettingsFrame *settings = new SettingsFrame(this, translate("BOSS: Settings"), _settings, _games);
+    SettingsFrame *settings = new SettingsFrame(this, translate("LOOT: Settings"), _settings, _games);
     settings->ShowModal();
     BOOST_LOG_TRIVIAL(debug) << "Settings window opened.";
 }
@@ -529,11 +529,11 @@ void Launcher::OnGameChange(wxCommandEvent& event) {
         BOOST_LOG_TRIVIAL(error) << "Game-specific settings could not be initialised." << e.what();
         wxMessageBox(
             FromUTF8(format(loc::translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()),
-            translate("BOSS: Error"),
+            translate("LOOT: Error"),
             wxOK | wxICON_ERROR,
             NULL);
     }
-    SetTitle(FromUTF8("BOSS - " + _game.Name()));
+    SetTitle(FromUTF8("LOOT - " + _game.Name()));
     if (_game.Id() == boss::g_game_tes5)
         RedatePluginsItem->Enable(true);
     else
@@ -550,7 +550,7 @@ void Launcher::OnHelp(wxCommandEvent& event) {
         BOOST_LOG_TRIVIAL(error) << "File \"" << g_path_readme.string() << "\" could not be found.";
         wxMessageBox(
             FromUTF8(format(loc::translate("Error: \"%1%\" cannot be found.")) % g_path_readme.string()),
-            translate("BOSS: Error"),
+            translate("LOOT: Error"),
             wxOK | wxICON_ERROR,
             this);
     }
@@ -566,7 +566,7 @@ void Launcher::OnOpenDebugLog(wxCommandEvent& event) {
         BOOST_LOG_TRIVIAL(error) << "File \"" << g_path_log.string() << "\" could not be found.";
         wxMessageBox(
             FromUTF8(format(loc::translate("Error: \"%1%\" cannot be found.")) % g_path_log.string()),
-            translate("BOSS: Error"),
+            translate("LOOT: Error"),
             wxOK | wxICON_ERROR,
             this);
     }
@@ -575,11 +575,11 @@ void Launcher::OnOpenDebugLog(wxCommandEvent& event) {
 void Launcher::OnAbout(wxCommandEvent& event) {
     BOOST_LOG_TRIVIAL(debug) << "Opening About dialog.";
     wxAboutDialogInfo aboutInfo;
-    aboutInfo.SetName("BOSS");
+    aboutInfo.SetName("LOOT");
     aboutInfo.SetVersion(IntToString(g_version_major) + "." + IntToString(g_version_minor) + "." + IntToString(g_version_patch));
     aboutInfo.SetDescription(translate("Load order optimisation for Oblivion, Skyrim, Fallout 3 and Fallout: New Vegas."));
-    aboutInfo.SetCopyright("Copyright (C) 2009-2014 BOSS Development Team.");
-    aboutInfo.SetWebSite("http://boss-developers.github.io");
+    aboutInfo.SetCopyright("Copyright (C) 2009-2014 LOOT Team.");
+    aboutInfo.SetWebSite("http://loot.github.io");
     aboutInfo.SetLicence("This program is free software: you can redistribute it and/or modify\n"
         "it under the terms of the GNU General Public License as published by\n"
         "the Free Software Foundation, either version 3 of the License, or\n"
@@ -592,7 +592,7 @@ void Launcher::OnAbout(wxCommandEvent& event) {
         "\n"
         "You should have received a copy of the GNU General Public License\n"
         "along with this program.  If not, see <http://www.gnu.org/licenses/>.");
-    aboutInfo.SetIcon(wxIconLocation("BOSS.exe"));
+    aboutInfo.SetIcon(wxIconLocation("LOOT.exe"));
     wxAboutBox(aboutInfo);
 }
 
@@ -608,7 +608,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     boss::PluginGraph graph;
     string revision;
 
-    wxProgressDialog *progDia = new wxProgressDialog(translate("BOSS: Working..."),translate("BOSS working..."), 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_ELAPSED_TIME);
+    wxProgressDialog *progDia = new wxProgressDialog(translate("LOOT: Working..."),translate("LOOT working..."), 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_ELAPSED_TIME);
 
     ///////////////////////////////////////////////////////
     // Load Plugins & Lists
@@ -765,13 +765,13 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     ///////////////////////////////////////////////////////
 
     /* Need to loop this section. There are 3 ways to exit the loop:
-    
+
     1. Accept the load order at the preview with no changes.
-    2. Cancel at the preview. 
+    2. Cancel at the preview.
     3. Cancel making changes.
 
     Otherwise, the sorting must loop.
-    
+
     */
 
     //Check for back-edges, then perform a topological sort.
@@ -803,7 +803,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             progDia = NULL;
 
             BOOST_LOG_TRIVIAL(debug) << "Displaying load order preview.";
-            MiniEditor editor(this, translate("BOSS: Calculated Load Order"), plugins, _game);
+            MiniEditor editor(this, translate("LOOT: Calculated Load Order"), plugins, _game);
 
             long ret = editor.ShowModal();
             const std::list<boss::Plugin> edits = editor.GetEditedPlugins();
@@ -811,14 +811,14 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             if (ret != wxID_APPLY) {
                 applyLoadOrder = false;
                 break;
-            } 
+            }
             else if (edits.empty()) {
                 applyLoadOrder = true;
                 break;
             }
             else {
                 //Recreate progress dialog.
-                progDia = new wxProgressDialog(translate("BOSS: Working..."), translate("Recalculating load order..."), 1000, this, wxPD_APP_MODAL | wxPD_AUTO_HIDE | wxPD_ELAPSED_TIME);
+                progDia = new wxProgressDialog(translate("LOOT: Working..."), translate("Recalculating load order..."), 1000, this, wxPD_APP_MODAL | wxPD_AUTO_HIDE | wxPD_ELAPSED_TIME);
 
                 //User accepted edits, now apply them, then loop.
                 //Apply edits to the graph vertices.
@@ -937,7 +937,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     } catch (boss::error& e) {
         wxMessageBox(
             FromUTF8(format(loc::translate("Error: %1%")) % e.what()),
-            translate("BOSS: Error"),
+            translate("LOOT: Error"),
             wxOK | wxICON_ERROR,
             this);
         if (progDia != NULL)
@@ -953,7 +953,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         wxLaunchDefaultBrowser(FromUTF8(ToFileURL(_game.ReportPath().string())));
     } else {
         //Create viewer window.
-        Viewer *viewer = new Viewer(this, translate("BOSS: Report Viewer"), FromUTF8(ToFileURL(_game.ReportPath().string())));
+        Viewer *viewer = new Viewer(this, translate("LOOT: Report Viewer"), FromUTF8(ToFileURL(_game.ReportPath().string())));
         viewer->Show();
     }
 
@@ -965,7 +965,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
     //Should probably check for masterlist updates before opening metadata editor.
     list<boss::Plugin> installed, mlist_plugins, ulist_plugins;
 
-    wxProgressDialog *progDia = new wxProgressDialog(translate("BOSS: Working..."),translate("BOSS working..."), 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_ELAPSED_TIME);
+    wxProgressDialog *progDia = new wxProgressDialog(translate("LOOT: Working..."),translate("LOOT working..."), 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_ELAPSED_TIME);
 
     //Scan for installed plugins.
     BOOST_LOG_TRIVIAL(debug) << "Reading installed plugins' headers.";
@@ -989,7 +989,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
             BOOST_LOG_TRIVIAL(error) << "Masterlist parsing failed. " << e.what();
             wxMessageBox(
                 FromUTF8(format(loc::translate("Error: Masterlist parsing failed. %1%")) % e.what()),
-                translate("BOSS: Error"),
+                translate("LOOT: Error"),
                 wxOK | wxICON_ERROR,
                 this);
         }
@@ -1011,7 +1011,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
             BOOST_LOG_TRIVIAL(error) << "Userlist parsing failed. " << e.what();
             wxMessageBox(
 				FromUTF8(format(loc::translate("Error: Userlist parsing failed. %1%")) % e.what()),
-				translate("BOSS: Error"),
+				translate("LOOT: Error"),
 				wxOK | wxICON_ERROR,
 				this);
         }
@@ -1056,7 +1056,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
 
     //Create editor window.
     BOOST_LOG_TRIVIAL(debug) << "Opening editor window.";
-    Editor *editor = new Editor(this, translate("BOSS: Metadata Editor"), _game.UserlistPath().string(), installed, ulist_plugins, lang, _game);
+    Editor *editor = new Editor(this, translate("LOOT: Metadata Editor"), _game.UserlistPath().string(), installed, ulist_plugins, lang, _game);
 
     progDia->Destroy();
 
@@ -1065,7 +1065,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
 }
 
 void Launcher::OnRedatePlugins(wxCommandEvent& event) {
-    wxMessageDialog * dia = new wxMessageDialog(this, translate("This feature is provided so that modders using the Creation Kit may set the load order it uses. A side-effect is that any subscribed Steam Workshop mods will be re-downloaded by Steam. Do you wish to continue?"), translate("BOSS: Warning"), wxYES_NO|wxCANCEL|wxICON_EXCLAMATION);
+    wxMessageDialog * dia = new wxMessageDialog(this, translate("This feature is provided so that modders using the Creation Kit may set the load order it uses. A side-effect is that any subscribed Steam Workshop mods will be re-downloaded by Steam. Do you wish to continue?"), translate("LOOT: Warning"), wxYES_NO|wxCANCEL|wxICON_EXCLAMATION);
 
     if (dia->ShowModal() == wxID_YES) {
         BOOST_LOG_TRIVIAL(debug) << "Redating plugins.";
@@ -1076,7 +1076,7 @@ void Launcher::OnRedatePlugins(wxCommandEvent& event) {
             BOOST_LOG_TRIVIAL(error) << "Failed to get load order. " << e.what();
             wxMessageBox(
                 FromUTF8(format(loc::translate("Error: Failed to get load order. %1%")) % e.what()),
-                translate("BOSS: Error"),
+                translate("LOOT: Error"),
                 wxOK | wxICON_ERROR,
                 this);
         }
@@ -1113,14 +1113,14 @@ void Launcher::OnRedatePlugins(wxCommandEvent& event) {
             BOOST_LOG_TRIVIAL(error) << "Failed to set plugin timestamps. " << e.what();
             wxMessageBox(
                 FromUTF8(format(loc::translate("Error: Failed to set plugin timestamps. %1%")) % e.what()),
-                translate("BOSS: Error"),
+                translate("LOOT: Error"),
                 wxOK | wxICON_ERROR,
                 this);
         }
 
         wxMessageBox(
             translate("Plugins were successfully redated."),
-            translate("BOSS: Plugin Redate"),
+            translate("LOOT: Plugin Redate"),
             wxOK|wxCENTRE,
             this);
     }

@@ -1,29 +1,29 @@
-/*  BOSS
+/*  LOOT
 
     A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
     Fallout: New Vegas.
 
     Copyright (C) 2012-2014    WrinklyNinja
 
-    This file is part of BOSS.
+    This file is part of LOOT.
 
-    BOSS is free software: you can redistribute
+    LOOT is free software: you can redistribute
     it and/or modify it under the terms of the GNU General Public License
     as published by the Free Software Foundation, either version 3 of
     the License, or (at your option) any later version.
 
-    BOSS is distributed in the hope that it will
+    LOOT is distributed in the hope that it will
     be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with BOSS.  If not, see
+    along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
 */
 
-#ifndef __BOSS_PARSERS__
-#define __BOSS_PARSERS__
+#ifndef __LOOT_PARSERS__
+#define __LOOT_PARSERS__
 
 #ifndef BOOST_SPIRIT_UNICODE
 #define BOOST_SPIRIT_UNICODE
@@ -460,7 +460,7 @@ namespace boss {
 
             BOOST_LOG_TRIVIAL(trace) << "Checking to see if the file \"" << file << "\" exists.";
 
-            if (file == "BOSS") {
+            if (file == "LOOT") {
                 result = true;
                 return;
             }
@@ -559,8 +559,8 @@ namespace boss {
             if (it != game->crcCache.end())
                 crc = it->second;
             else {
-                if (file == "BOSS")
-                    crc = GetCrc32(boost::filesystem::absolute("BOSS.exe"));
+                if (file == "LOOT")
+                    crc = GetCrc32(boost::filesystem::absolute("LOOT.exe"));
                 if (boost::filesystem::exists(game->DataPath() / file))
                     crc = GetCrc32(game->DataPath() / file);
                 else if (IsPlugin(file) && boost::filesystem::exists(game->DataPath() / (file + ".ghost")))
@@ -590,8 +590,8 @@ namespace boss {
 
             Version givenVersion = Version(version);
             Version trueVersion;
-            if (file == "BOSS")
-                trueVersion = Version(boost::filesystem::absolute("BOSS.exe"));
+            if (file == "LOOT")
+                trueVersion = Version(boost::filesystem::absolute("LOOT.exe"));
             else if (IsPlugin(file)) {
                 Plugin plugin(*game, file, true);
                 trueVersion = Version(plugin.Version());
@@ -612,7 +612,7 @@ namespace boss {
         }
 
         void CheckActive(bool& result, const std::string& file) {
-            if (file == "BOSS")
+            if (file == "LOOT")
                 result = false;
             else
                 result = game->IsActive(file);

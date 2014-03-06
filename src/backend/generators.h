@@ -1,28 +1,28 @@
-/*  BOSS
+/*  LOOT
 
     A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
     Fallout: New Vegas.
 
     Copyright (C) 2013-2014    WrinklyNinja
 
-    This file is part of BOSS.
+    This file is part of LOOT.
 
-    BOSS is free software: you can redistribute
+    LOOT is free software: you can redistribute
     it and/or modify it under the terms of the GNU General Public License
     as published by the Free Software Foundation, either version 3 of
     the License, or (at your option) any later version.
 
-    BOSS is distributed in the hope that it will
+    LOOT is distributed in the hope that it will
     be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with BOSS.  If not, see
+    along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
 */
-#ifndef __BOSS_GENERATORS__
-#define __BOSS_GENERATORS__
+#ifndef __LOOT_GENERATORS__
+#define __LOOT_GENERATORS__
 
 #include "helpers.h"
 #include "metadata.h"
@@ -41,7 +41,7 @@
 
 namespace boss {
 
-    //BOSS Report generation stuff.
+    //LOOT Report generation stuff.
 
     struct xml_string_writer: pugi::xml_writer {
         std::string result;
@@ -102,7 +102,7 @@ namespace boss {
     }
 
     inline void GenerateHead(pugi::xml_document& doc) {
-        BOOST_LOG_TRIVIAL(trace) << "Creating BOSS report head.";
+        BOOST_LOG_TRIVIAL(trace) << "Creating LOOT report head.";
 
         //Add DOCTYPE node.
         doc.append_child(pugi::node_doctype).set_value("html");
@@ -125,7 +125,7 @@ namespace boss {
 
         node = head.append_child();
         node.set_name("title");
-        node.text().set(boost::locale::translate("BOSS Report").str().c_str());
+        node.text().set(boost::locale::translate("LOOT Report").str().c_str());
 
         node = head.append_child();
         node.set_name("link");
@@ -139,7 +139,7 @@ namespace boss {
     }
 
     inline void AppendNav(pugi::xml_node& body) {
-        BOOST_LOG_TRIVIAL(trace) << "Appending navigation bar to BOSS report.";
+        BOOST_LOG_TRIVIAL(trace) << "Appending navigation bar to LOOT report.";
 
         pugi::xml_node nav, div;
 
@@ -203,7 +203,7 @@ namespace boss {
                         int errorNo,
                         std::list<Message>& messages) {
 
-        BOOST_LOG_TRIVIAL(trace) << "Appending summary tab to BOSS report.";
+        BOOST_LOG_TRIVIAL(trace) << "Appending summary tab to LOOT report.";
 
         pugi::xml_node summary = main.append_child();
         summary.set_name("div");
@@ -227,7 +227,7 @@ namespace boss {
         row.set_name("tr");
         cell = row.append_child();
         cell.set_name("td");
-        cell.text().set(boost::locale::translate("BOSS Version").str().c_str());
+        cell.text().set(boost::locale::translate("LOOT Version").str().c_str());
         cell = row.append_child();
         cell.set_name("td");
         cell.text().set((IntToString(g_version_major)+"."+IntToString(g_version_minor)+"."+IntToString(g_version_patch)).c_str());
@@ -254,13 +254,13 @@ namespace boss {
             cell.text().set(boost::locale::translate("Disabled").str().c_str());
 
         if (!hasChanged) {
-            BOOST_LOG_TRIVIAL(info) << "No changes in the BOSS report details tab since the last run.";
+            BOOST_LOG_TRIVIAL(info) << "No changes in the LOOT report details tab since the last run.";
             /*pugi::xml_node note = summary.append_child();
             note.set_name("div");
             note.append_attribute("id").set_value("noChanges");
             note.text().set(boost::locale::translate("No change in details since last run.").str().c_str());
             */
-            messages.push_front(boss::Message(boss::g_message_say, boost::locale::translate("There have been no changes in the Details tab since BOSS was last run for this game.").str()));
+            messages.push_front(boss::Message(boss::g_message_say, boost::locale::translate("There have been no changes in the Details tab since LOOT was last run for this game.").str()));
         }
 
         if (!messages.empty()) {
@@ -306,7 +306,7 @@ namespace boss {
 
     inline bool AppendDetails(pugi::xml_node& main, const std::list<Plugin>& plugins, int& messageNo, int& warnNo, int& errorNo, const std::string& oldDetails) {
 
-        BOOST_LOG_TRIVIAL(trace) << "Appending details tab to BOSS report.";
+        BOOST_LOG_TRIVIAL(trace) << "Appending details tab to LOOT report.";
 
         pugi::xml_node details = main.append_child();
         details.set_name("div");
@@ -415,7 +415,7 @@ namespace boss {
                         int& pluginMessageNo
                         ) {
 
-        BOOST_LOG_TRIVIAL(trace) << "Appending main content to BOSS report.";
+        BOOST_LOG_TRIVIAL(trace) << "Appending main content to LOOT report.";
 
         pugi::xml_node main = body.append_child();
         main.set_name("div");
@@ -427,7 +427,7 @@ namespace boss {
         noscript.set_name("noscript");
         div = noscript.append_child();
         div.set_name("div");
-        div.text().set(boost::locale::translate("The BOSS Report requires Javascript to be enabled in order to function.").str().c_str());
+        div.text().set(boost::locale::translate("The LOOT Report requires Javascript to be enabled in order to function.").str().c_str());
 
         int messageNo=0, warnNo=0, errorNo=0;
         bool hasChanged = AppendDetails(main, plugins, messageNo, warnNo, errorNo, oldDetails);
@@ -438,7 +438,7 @@ namespace boss {
 
     inline void AppendFilters(pugi::xml_node& body, int messageNo, int pluginNo) {
 
-        BOOST_LOG_TRIVIAL(trace) << "Appending filters to BOSS report.";
+        BOOST_LOG_TRIVIAL(trace) << "Appending filters to LOOT report.";
 
         pugi::xml_node filters = body.append_child();
         filters.set_name("div");
@@ -527,7 +527,7 @@ namespace boss {
 
     inline void AppendScripts(pugi::xml_node& body) {
 
-        BOOST_LOG_TRIVIAL(trace) << "Appending scripts to BOSS report.";
+        BOOST_LOG_TRIVIAL(trace) << "Appending scripts to LOOT report.";
 
         pugi::xml_node node;
 

@@ -1,24 +1,24 @@
-/*  BOSS
+/*  LOOT
 
     A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
     Fallout: New Vegas.
 
     Copyright (C) 2013-2014    WrinklyNinja
 
-    This file is part of BOSS.
+    This file is part of LOOT.
 
-    BOSS is free software: you can redistribute
+    LOOT is free software: you can redistribute
     it and/or modify it under the terms of the GNU General Public License
     as published by the Free Software Foundation, either version 3 of
     the License, or (at your option) any later version.
 
-    BOSS is distributed in the hope that it will
+    LOOT is distributed in the hope that it will
     be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with BOSS.  If not, see
+    along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
 */
 
@@ -74,7 +74,7 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
     //Set up list columns.
     gamesList->AppendColumn(translate("Name"));
     gamesList->AppendColumn(translate("Base Game Type"));
-    gamesList->AppendColumn(translate("BOSS Folder Name"));
+    gamesList->AppendColumn(translate("LOOT Folder Name"));
     gamesList->AppendColumn(translate("Master File"));
     gamesList->AppendColumn(translate("Masterlist Repository URL"));
     gamesList->AppendColumn(translate("Masterlist Repository Branch"));
@@ -128,7 +128,7 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
 
     bigBox->AddSpacer(10);
 
-	bigBox->Add(new wxStaticText(this, wxID_ANY, translate("Language and game changes will be applied after BOSS is restarted.")), wholeItem);
+	bigBox->Add(new wxStaticText(this, wxID_ANY, translate("Language and game changes will be applied after LOOT is restarted.")), wholeItem);
 
 	//Need to add 'OK' and 'Cancel' buttons.
 	wxSizer * sizer = CreateSeparatedButtonSizer(wxOK|wxCANCEL);
@@ -141,17 +141,17 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
 	SetDefaultValues();
 
 	//Tooltips.
-	DebugVerbosityChoice->SetToolTip(translate("The output is logged to the BOSSDebugLog.txt file."));
+	DebugVerbosityChoice->SetToolTip(translate("The output is logged to the LOOTDebugLog.txt file."));
 
 	//Now set the layout and sizes.
 	SetBackgroundColour(wxColour(255,255,255));
-    SetIcon(wxIconLocation("BOSS.exe"));
+    SetIcon(wxIconLocation("LOOT.exe"));
 	SetSizerAndFit(bigBox);
 }
 
 void SettingsFrame::SetDefaultValues() {
 
-    BOOST_LOG_TRIVIAL(debug) << "Setting default values for BOSS's settings.";
+    BOOST_LOG_TRIVIAL(debug) << "Setting default values for LOOT's settings.";
 
     if (_settings["Language"]) {
         LanguageChoice->SetSelection(boss::Language(_settings["Language"].as<string>()).Code());
@@ -277,7 +277,7 @@ void SettingsFrame::OnGameSelect(wxListEvent& event) {
 void SettingsFrame::OnAddGame(wxCommandEvent& event) {
     BOOST_LOG_TRIVIAL(debug) << "Adding new game to settings.";
 
-    GameEditDialog * rowDialog = new GameEditDialog(this, translate("BOSS: Add Game"));
+    GameEditDialog * rowDialog = new GameEditDialog(this, translate("LOOT: Add Game"));
 
     if (rowDialog->ShowModal() == wxID_OK) {
 
@@ -285,7 +285,7 @@ void SettingsFrame::OnAddGame(wxCommandEvent& event) {
             BOOST_LOG_TRIVIAL(error) << "Tried to add a new game with no path or registry key given.";
             wxMessageBox(
                 translate("Error: A path and/or registry key is required. Row will not be added."),
-                translate("BOSS: Error"),
+                translate("LOOT: Error"),
                 wxOK | wxICON_ERROR,
                 this);
             return;
@@ -297,7 +297,7 @@ void SettingsFrame::OnAddGame(wxCommandEvent& event) {
                 BOOST_LOG_TRIVIAL(error) << "Tried to add a new game with the same name as one that is already defined.";
                 wxMessageBox(
                     translate("Error: A game with this name is already defined. Row will not be added."),
-                    translate("BOSS: Error"),
+                    translate("LOOT: Error"),
                     wxOK | wxICON_ERROR,
                     this);
                 return;
@@ -305,7 +305,7 @@ void SettingsFrame::OnAddGame(wxCommandEvent& event) {
                 BOOST_LOG_TRIVIAL(error) << "Tried to add a new game with the same folder as one that is already defined.";
                 wxMessageBox(
                     translate("Error: A game with this folder name is already defined. Row will not be added."),
-                    translate("BOSS: Error"),
+                    translate("LOOT: Error"),
                     wxOK | wxICON_ERROR,
                     this);
                 return;
@@ -327,7 +327,7 @@ void SettingsFrame::OnAddGame(wxCommandEvent& event) {
 void SettingsFrame::OnEditGame(wxCommandEvent& event) {
     BOOST_LOG_TRIVIAL(debug) << "Editing game settings.";
 
-    GameEditDialog * rowDialog = new GameEditDialog(this, translate("BOSS: Edit Game"));
+    GameEditDialog * rowDialog = new GameEditDialog(this, translate("LOOT: Edit Game"));
 
     long i = gamesList->GetFirstSelected();
 
@@ -349,7 +349,7 @@ void SettingsFrame::OnEditGame(wxCommandEvent& event) {
             BOOST_LOG_TRIVIAL(error) << "Tried to blank a game's name field.";
             wxMessageBox(
                 translate("Error: Name is required. Row will not be added."),
-                translate("BOSS: Error"),
+                translate("LOOT: Error"),
                 wxOK | wxICON_ERROR,
                 this);
             return;
@@ -357,7 +357,7 @@ void SettingsFrame::OnEditGame(wxCommandEvent& event) {
             BOOST_LOG_TRIVIAL(error) << "Tried to blank a game's folder field.";
             wxMessageBox(
                 translate("Error: Folder is required. Row will not be added."),
-                translate("BOSS: Error"),
+                translate("LOOT: Error"),
                 wxOK | wxICON_ERROR,
                 this);
             return;
@@ -365,7 +365,7 @@ void SettingsFrame::OnEditGame(wxCommandEvent& event) {
             BOOST_LOG_TRIVIAL(error) << "Tried to edit a game with no path or registry key given.";
             wxMessageBox(
                 translate("Error: A path and/or registry key is required. Row will not be added."),
-                translate("BOSS: Error"),
+                translate("LOOT: Error"),
                 wxOK | wxICON_ERROR,
                 this);
             return;
@@ -429,7 +429,7 @@ GameEditDialog::GameEditDialog(wxWindow *parent, const wxString& title) : wxDial
 	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Type:")), leftItem);
 	GridSizer->Add(_type, rightItem);
 
-	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("BOSS Folder Name (required):")), leftItem);
+	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("LOOT Folder Name (required):")), leftItem);
 	GridSizer->Add(_folderName, rightItem);
 
 	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Master File:")), leftItem);
@@ -461,7 +461,7 @@ GameEditDialog::GameEditDialog(wxWindow *parent, const wxString& title) : wxDial
     _type->SetSelection(0);
 
     SetBackgroundColour(wxColour(255,255,255));
-    SetIcon(wxIconLocation("BOSS.exe"));
+    SetIcon(wxIconLocation("LOOT.exe"));
 	SetSizerAndFit(bigBox);
 }
 

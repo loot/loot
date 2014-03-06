@@ -1,24 +1,24 @@
-/*  BOSS
+/*  LOOT
 
     A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
     Fallout: New Vegas.
 
     Copyright (C) 2013-2014    WrinklyNinja
 
-    This file is part of BOSS.
+    This file is part of LOOT.
 
-    BOSS is free software: you can redistribute
+    LOOT is free software: you can redistribute
     it and/or modify it under the terms of the GNU General Public License
     as published by the Free Software Foundation, either version 3 of
     the License, or (at your option) any later version.
 
-    BOSS is distributed in the hope that it will
+    LOOT is distributed in the hope that it will
     be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with BOSS.  If not, see
+    along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
 */
 
@@ -156,7 +156,7 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
 
     //Initialise controls.
     pluginText = new wxStaticText(editingPanel, wxID_ANY, "");
-    descText = new wxStaticText(this, wxID_ANY, translate("Please submit any edits made for reasons other than personal preference to the BOSS team so that they may be included in the masterlist."));
+    descText = new wxStaticText(this, wxID_ANY, translate("Please submit any edits made for reasons other than personal preference to the LOOT team so that they may be included in the masterlist."));
     prioritySpin = new wxSpinCtrl(editingPanel, wxID_ANY, "0");
     prioritySpin->SetRange(std::numeric_limits<int>::min(), std::numeric_limits<int>::max());
     filterCheckbox = new wxCheckBox(editingPanel, wxID_ANY, translate("Show only conflicting plugins"));
@@ -255,7 +255,7 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
     descText->Wrap(pluginList->GetClientSize().GetWidth());
 
     SetBackgroundColour(wxColour(255, 255, 255));
-    SetIcon(wxIconLocation("BOSS.exe"));
+    SetIcon(wxIconLocation("LOOT.exe"));
 
     editingPanel->Hide();
     SetSizerAndFit(bigBox);
@@ -323,7 +323,7 @@ void MiniEditor::OnPluginSelect(wxListEvent& event) {
         Fit();
     }
     else {
-        descText->SetLabel(translate("Please submit any edits made for reasons other than personal preference to the BOSS team so that they may be included in the masterlist."));
+        descText->SetLabel(translate("Please submit any edits made for reasons other than personal preference to the LOOT team so that they may be included in the masterlist."));
         descText->Wrap(GetClientSize().GetWidth() - 30);
     }
 }
@@ -461,7 +461,7 @@ boss::Plugin MiniEditor::GetNewData(const wxString& plugin) const {
 }
 
 void MiniEditor::OnResize(wxSizeEvent& event) {
-    descText->SetLabel(translate("Please submit any edits made for reasons other than personal preference to the BOSS team so that they may be included in the masterlist."));
+    descText->SetLabel(translate("Please submit any edits made for reasons other than personal preference to the LOOT team so that they may be included in the masterlist."));
     descText->Wrap(GetClientSize().GetWidth()-30);
     event.Skip();
 }
@@ -653,7 +653,7 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     pluginList->SetColumnWidth(0, wxLIST_AUTOSIZE);
 
     SetBackgroundColour(wxColour(255,255,255));
-    SetIcon(wxIconLocation("BOSS.exe"));
+    SetIcon(wxIconLocation("LOOT.exe"));
 
     SetSizerAndFit(bigBox);
     Layout();
@@ -811,7 +811,7 @@ void Editor::OnPluginCopyMetadata(wxCommandEvent& event) {
 void Editor::OnPluginClearMetadata(wxCommandEvent& event) {
     wxMessageDialog dialog(this, 
                             translate("Are you sure you want to clear all existing user-added metadata from this plugin?"), 
-                            translate("BOSS: Warning"), 
+                            translate("LOOT: Warning"), 
                             wxYES_NO | wxCANCEL | wxICON_EXCLAMATION);
 
     if (dialog.ShowModal() == wxID_YES) {
@@ -874,7 +874,7 @@ void Editor::OnAddRow(wxCommandEvent& event) {
     if (listBook->GetSelection() < 3) {
         BOOST_LOG_TRIVIAL(debug) << "Adding new file row.";
 
-        FileEditDialog * rowDialog = new FileEditDialog(this, translate("BOSS: Add File/Plugin"));
+        FileEditDialog * rowDialog = new FileEditDialog(this, translate("LOOT: Add File/Plugin"));
 
         if (rowDialog->ShowModal() != wxID_OK) {
             BOOST_LOG_TRIVIAL(debug) << "Cancelled adding new file row.";
@@ -896,7 +896,7 @@ void Editor::OnAddRow(wxCommandEvent& event) {
     } else if (listBook->GetSelection() == 3) {
         BOOST_LOG_TRIVIAL(debug) << "Adding new message row.";
 
-        MessageEditDialog * rowDialog = new MessageEditDialog(this, translate("BOSS: Add Message"));
+        MessageEditDialog * rowDialog = new MessageEditDialog(this, translate("LOOT: Add Message"));
 
         if (rowDialog->ShowModal() != wxID_OK) {
             BOOST_LOG_TRIVIAL(debug) << "Cancelled adding new message row.";
@@ -907,7 +907,7 @@ void Editor::OnAddRow(wxCommandEvent& event) {
             BOOST_LOG_TRIVIAL(error) << "No content specified. Row will not be added.";
             wxMessageBox(
                 translate("Error: No content specified. Row will not be added."),
-                translate("BOSS: Error"),
+                translate("LOOT: Error"),
                 wxOK | wxICON_ERROR,
                 this);
             return;
@@ -917,7 +917,7 @@ void Editor::OnAddRow(wxCommandEvent& event) {
     } else if (listBook->GetSelection() == 4) {
         BOOST_LOG_TRIVIAL(debug) << "Adding new tag row.";
 
-        TagEditDialog * rowDialog = new TagEditDialog(this, translate("BOSS: Add Tag"));
+        TagEditDialog * rowDialog = new TagEditDialog(this, translate("LOOT: Add Tag"));
 
         if (rowDialog->ShowModal() != wxID_OK) {
             BOOST_LOG_TRIVIAL(debug) << "Cancelled adding new tag row.";
@@ -931,7 +931,7 @@ void Editor::OnAddRow(wxCommandEvent& event) {
     } else if (listBook->GetSelection() == 5) {
         BOOST_LOG_TRIVIAL(debug) << "Adding new dirty info row.";
 
-        DirtInfoEditDialog * rowDialog = new DirtInfoEditDialog(this, translate("BOSS: Add Dirty Info"));
+        DirtInfoEditDialog * rowDialog = new DirtInfoEditDialog(this, translate("LOOT: Add Dirty Info"));
 
         if (rowDialog->ShowModal() != wxID_OK) {
             BOOST_LOG_TRIVIAL(debug) << "Cancelled adding dirty info row.";
@@ -950,7 +950,7 @@ void Editor::OnAddRow(wxCommandEvent& event) {
 void Editor::OnEditRow(wxCommandEvent& event) {
     if (listBook->GetSelection() < 3) {
         BOOST_LOG_TRIVIAL(debug) << "Editing file row.";
-        FileEditDialog * rowDialog = new FileEditDialog(this, translate("BOSS: Edit File/Plugin"));
+        FileEditDialog * rowDialog = new FileEditDialog(this, translate("LOOT: Edit File/Plugin"));
 
         wxListView * list;
         if (listBook->GetSelection() == 0)
@@ -974,7 +974,7 @@ void Editor::OnEditRow(wxCommandEvent& event) {
         list->SetItem(i, 2, rowDialog->GetCondition());
     } else if (listBook->GetSelection() == 3) {
         BOOST_LOG_TRIVIAL(debug) << "Editing message row.";
-        MessageEditDialog * rowDialog = new MessageEditDialog(this, translate("BOSS: Edit Message"));
+        MessageEditDialog * rowDialog = new MessageEditDialog(this, translate("LOOT: Edit Message"));
 
         long i = messageList->GetFirstSelected();
 
@@ -989,7 +989,7 @@ void Editor::OnEditRow(wxCommandEvent& event) {
             BOOST_LOG_TRIVIAL(error) << "No content specified. Row will not be edited.";
             wxMessageBox(
                 translate("Error: No content specified. Row will not be edited."),
-                translate("BOSS: Error"),
+                translate("LOOT: Error"),
                 wxOK | wxICON_ERROR,
                 this);
             return;
@@ -998,7 +998,7 @@ void Editor::OnEditRow(wxCommandEvent& event) {
         messageList->SetItem(i, rowDialog->GetMessage());
     } else if (listBook->GetSelection() == 4) {
         BOOST_LOG_TRIVIAL(debug) << "Editing tag row.";
-        TagEditDialog * rowDialog = new TagEditDialog(this, translate("BOSS: Edit Tag"));
+        TagEditDialog * rowDialog = new TagEditDialog(this, translate("LOOT: Edit Tag"));
 
         long i = tagsList->GetFirstSelected();
 
@@ -1020,7 +1020,7 @@ void Editor::OnEditRow(wxCommandEvent& event) {
         tagsList->SetItem(i, 2, rowDialog->GetCondition());
     } else if (listBook->GetSelection() == 5) {
         BOOST_LOG_TRIVIAL(debug) << "Editing dirty info row.";
-        DirtInfoEditDialog * rowDialog = new DirtInfoEditDialog(this, translate("BOSS: Edit Dirty Info"));
+        DirtInfoEditDialog * rowDialog = new DirtInfoEditDialog(this, translate("LOOT: Edit Dirty Info"));
 
         long i = tagsList->GetFirstSelected();
 
