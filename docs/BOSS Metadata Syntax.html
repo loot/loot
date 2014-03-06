@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<title>BOSS Metadata Syntax</title>
+<title>LOOT Metadata Syntax</title>
 <style>
     body {
         font:10pt/1.5 Helvetica,sans-serif;
@@ -45,30 +45,30 @@ h3{
     .warning {background:#fbb; border-color:#d00;}
     var {color:#8B4513;}
 </style>
-<!--  BOSS
+<!--  LOOT
 
-    A plugin load order optimiser for games that use the esp/esm plugin system.
+    A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and Fallout: New Vegas.
 
     Copyright (C) 2012–2014    WrinklyNinja
 
-    This file is part of BOSS.
+    This file is part of LOOT.
 
-    BOSS is free software: you can redistribute
+    LOOT is free software: you can redistribute
     it and/or modify it under the terms of the GNU General Public License
     as published by the Free Software Foundation, either version 3 of
     the License, or (at your option) any later version.
 
-    BOSS is distributed in the hope that it will
+    LOOT is distributed in the hope that it will
     be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with BOSS.  If not, see
+    along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
 -->
 
-<h1>BOSS Metadata Syntax</h1>
+<h1>LOOT Metadata Syntax</h1>
 
 <h2>Contents</h2>
 <ol>
@@ -95,7 +95,7 @@ h3{
 </ol>
 
 <h2 id="intro">Introduction</h2>
-<p>As of BOSS v3, the metadata syntax is what BOSS's masterlists and userlists are written in. If you know YAML, good news: the syntax is essentially just YAML 1.2. If you don't know YAML, then its <a href="https://en.wikipedia.org/wiki/YAML">Wikipedia page</a> is a good introduction. All you really need to know is:
+<p>The metadata syntax is what LOOT's masterlists and userlists are written in. If you know YAML, good news: the syntax is essentially just YAML 1.2. If you don't know YAML, then its <a href="https://en.wikipedia.org/wiki/YAML">Wikipedia page</a> is a good introduction. All you really need to know is:
 <ul>
     <li>How lists and associative arrays (key-value maps) are written.
     <li>That whitespace is important, and that only normal spaces (ie. no non-breaking spaces or tabs) count as such.
@@ -103,34 +103,34 @@ h3{
     <li>That YAML files must be written in a Unicode encoding.
     <li>That each key in a key-value map must only appear once per map object.
 </ul>
-<p>Some important points that are more specific to how BOSS uses YAML:
+<p>Some important points that are more specific to how LOOT uses YAML:
 <ul>
-    <li>BOSS's support for YAML syntax is incomplete. A list of known limitations can be found <a href="https://github.com/WrinklyNinja/yaml-cpp/issues?labels=bug&amp;state=open">here</a>. The only major missing piece is support for merge keys (<code>&lt;&lt;:</code>).
+    <li>LOOT's support for YAML syntax is incomplete. A list of known limitations can be found <a href="https://github.com/WrinklyNinja/yaml-cpp/issues?labels=bug&amp;state=open">here</a>. The only major missing piece is support for merge keys (<code>&lt;&lt;:</code>).
     <li>Strings are case-sensitive, apart from file paths, regular expressions and checksums.
 </ul>
-<p>Some properties of file paths as used by BOSS:
+<p>Some properties of file paths as used by LOOT:
 <ul>
     <li>They are evaluated as paths relative to the game's Data folder.
     <li>They cannot reference a path outside of the game's folder structure, ie. they cannot contain the substring <code>../../</code>.
     <li>Regular expression file paths must be written in the <a href="http://www.boost.org/doc/libs/1_54_0/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html">Perl</a> syntax.
-    <li>Only the filename of a regex file path may contain non-literal regex syntax, ie. if the filename part of the regex file path is removed, the remainder must be an exact folder path (though with the regex syntax special characters escaped). For example, given the regex file path <code>Meshes\\Resources(1|2)\\(upperclass)?table.nif</code>, BOSS will look for a file named <code>table.nif</code> or <code>upperclasstable.nif</code> in the <code>Meshes\Resources(1|2)</code> folder, rather than looking in the <code>Meshes\Resources1</code> and <code>Meshes\Resources2</code> folders.
+    <li>Only the filename of a regex file path may contain non-literal regex syntax, ie. if the filename part of the regex file path is removed, the remainder must be an exact folder path (though with the regex syntax special characters escaped). For example, given the regex file path <code>Meshes\\Resources(1|2)\\(upperclass)?table.nif</code>, LOOT will look for a file named <code>table.nif</code> or <code>upperclasstable.nif</code> in the <code>Meshes\Resources(1|2)</code> folder, rather than looking in the <code>Meshes\Resources1</code> and <code>Meshes\Resources2</code> folders.
 </ul>
-<p>Please test any changes you make before uploading them. One way of doing this is to run BOSS, another is to copy/paste what you've changed into <a href="http://nodeca.github.io/js-yaml/">here</a>, though it won't catch condition syntax errors and doesn't use the same parser as BOSS so may give different results.
+<p>Please test any changes you make before uploading them. One way of doing this is to run LOOT, another is to copy/paste what you've changed into <a href="http://nodeca.github.io/js-yaml/">here</a>, though it won't catch condition syntax errors and doesn't use the same parser as LOOT so may give different results.
 
 <h2 id="filestruct">Metadata File Contents</h2>
-<p>The root of a metadata file is a key-value map. BOSS will recognise the following keys, none of which are required:
+<p>The root of a metadata file is a key-value map. LOOT will recognise the following keys, none of which are required:
 <table>
     <thead><tr><th>Key Name<th>Value Type<th>Notes
     <tbody>
         <tr><td><code>globals</code><td>message list<td>A list of message data structures for messages that are displayed independently of any plugin.
         <tr><td><code>plugins</code><td>plugin list<td>A list of plugin data structures, holding all the plugin metadata within the file.
 </table>
-<p>Other keys may also be present, but are not processed by BOSS. The message and plugin data structures are detailed in the next section.
+<p>Other keys may also be present, but are not processed by LOOT. The message and plugin data structures are detailed in the next section.
 <p>An example metadata file:
 <code class="box">globals:
   - type: say
-    content: 'You are using the latest version of BOSS.'
-    condition: 'version("BOSS", "3.0.0.0", ==)'
+    content: 'You are using the latest version of LOOT.'
+    condition: 'version("LOOT", "0.5.0.0", ==)'
 plugins:
   - name: 'Armamentarium.esm'
     tag:
@@ -148,10 +148,10 @@ plugins:
 
 
 <h2 id="structs">Data Structures</h2>
-<p>BOSS expects metadata to be laid out using a certain set of data structures, described in this section.
+<p>LOOT expects metadata to be laid out using a certain set of data structures, described in this section.
 
 <h3 id="structs-tag">Tag Data Structure</h3>
-<p>BOSS metadata files can contain suggestions for the addition or removal of Bash Tags, and this is the structure used for them. It has two forms: the first is a simple string, and the second is a key-value map. All values in the map are strings.
+<p>LOOT metadata files can contain suggestions for the addition or removal of Bash Tags, and this is the structure used for them. It has two forms: the first is a simple string, and the second is a key-value map. All values in the map are strings.
 <p>The simple form:
 <code class="box"><var>tag</var></code>
 <p>where <code><var>tag</var></code> is the Bash Tag, preceded by a minus sign if it is suggested for removal.
@@ -179,7 +179,7 @@ condition: 'file("Mart''s Monster Mod for OOO.esm") or file("FCOM_Convergence.es
     <thead><tr><th>Key Name<th>Required<th>Notes
     <tbody>
         <tr><td><code>name</code><td>&#x2713;<td>An exact (ie. not regex) file path or name.
-        <tr><td><code>display</code><td>&#x2717;<td>A substitute string to be displayed instead of the file path in any generated messages, eg. the name of the mod the file belongs to. Double-quoted URLs will be hyperlinked in the BOSS report. See <a href="#links">URL Hyperlinking</a> for details.
+        <tr><td><code>display</code><td>&#x2717;<td>A substitute string to be displayed instead of the file path in any generated messages, eg. the name of the mod the file belongs to. Double-quoted URLs will be hyperlinked in the LOOT report. See <a href="#links">URL Hyperlinking</a> for details.
         <tr><td><code>condition</code><td>&#x2717;<td>A condition string that is evaluated to determine whether this file data should be used: if it evaluates to true, the data is used, otherwise it is ignored. See <a href="#cond">Condition Strings</a> for details.
 </table>
 
@@ -213,14 +213,14 @@ display: 'OBSE v18+'
 <table>
     <thead><tr><th>Key Name<th>Required<th>Notes
     <tbody>
-        <tr><td><code>str</code><td>&#x2713;<td>The actual message content string. Double-quoted URLs will be hyperlinked in the BOSS report. See <a href="#links">URL Hyperlinking</a> for details.
-        <tr><td><code>lang</code><td>&#x2713;<td>The language that <code>str</code> is written in, given as a POSIX language code. The languages BOSS supports are given in <a href="#lang">Language Codes</a>.
+        <tr><td><code>str</code><td>&#x2713;<td>The actual message content string. Double-quoted URLs will be hyperlinked in the LOOT report. See <a href="#links">URL Hyperlinking</a> for details.
+        <tr><td><code>lang</code><td>&#x2713;<td>The language that <code>str</code> is written in, given as a POSIX language code. The languages LOOT supports are given in <a href="#lang">Language Codes</a>.
 </table>
 
-<p>BOSS handles messages and languages as follows:
+<p>LOOT handles messages and languages as follows:
 <ol>
     <li>If a message's <code>content</code> value is a string, the message will use the string as its content if displayed.
-    <li>If a message's <code>content</code> value is a list of localised content structures, then the first structure with a language that matches BOSS's current language will be used as the message's content if displayed. If there are no matches, then the first structure in English will be used.
+    <li>If a message's <code>content</code> value is a list of localised content structures, then the first structure with a language that matches LOOT's current language will be used as the message's content if displayed. If there are no matches, then the first structure in English will be used.
 </ol>
 
 
@@ -250,7 +250,7 @@ would be displayed as
 
 
 <h3 id="structs-location">Location Data Structure</h3>
-<p>This data structure is used to hold information on where a plugin is hosted online. It is not currently used by BOSS, but it was suggested that since the BOSS team receives a considerable number of plugin URLs, they should be recorded in a standard format, as there is no existing store of such information and it could prove useful in the future.
+<p>This data structure is used to hold information on where a plugin is hosted online. It is not currently used by LOOT, but it was suggested that since the LOOT team receives a considerable number of plugin URLs, they should be recorded in a standard format, as there is no existing store of such information and it could prove useful in the future.
 <p>The data structure has two forms: the first is a simple string, and the second is a key-value map. The first form should be used for a URL without any associated version data, such as when it is not clear which version is found there, or when it is the only known hosting location for the plugin and as such hosts all available versions. The second form should be used when version data can be associated with the URL, such as when the URL only hosts a subset of the available versions of the plugin.
 <p>The simple form:
 <code class="box"><var>URL</var></code>
@@ -275,7 +275,7 @@ ver:
 <table>
     <thead><tr><th>Key Name<th>Data Type<th>Required<th>Notes
     <tbody>
-        <tr><td><code>crc</code><td>hexadecimal integer<td>&#x2713;<td>The CRC checksum of the dirty plugin, before cleaning. BOSS displays the CRCs of installed plugins in its report. The 8-character CRC should be preceded by <code>0x</code> so that it is correctly interpreted.
+        <tr><td><code>crc</code><td>hexadecimal integer<td>&#x2713;<td>The CRC checksum of the dirty plugin, before cleaning. LOOT displays the CRCs of installed plugins in its report. The 8-character CRC should be preceded by <code>0x</code> so that it is correctly interpreted.
         <tr><td><code>util</code><td>string<td>&#x2713;<td>The utility that should be used to clean the plugin. This field supports <a href="#links">URL Hyperlinking</a>, and it is recommended that a URL to the game's cleaning guide is supplied.
         <tr><td><code>itm</code><td>integer<td>&#x2717;<td>The number of identical-to-master records reported for the dirty plugin. If the number is unknown, this field should not be supplied. If the number is known and zero, this field should be supplied.
         <tr><td><code>udr</code><td>integer<td>&#x2717;<td>The number of undeleted records reported for the dirty plugin. If the number is unknown, this field should not be supplied. If the number is known and zero, this field should be supplied.
@@ -299,17 +299,17 @@ nav: 0
         <tr><td><code>enabled</code><td>boolean<td>&#x2717;<td>Enables or disables use of the plugin object. Used for user rules, but no reason to use it in the masterlist. If unspecified, defaults to <code>true</code>.
         <tr><td><code>priority</code><td>integer<td>&#x2717;<td>Modifies plugin position relative to others that change one or more of the same records, but which are otherwise unrelated (ie. neither plugin lists the other as a master, requirement, or in its <code>after</code> list). An exception is made for plugins that contain only a header record: these plugins have their priorities compared against all unrelated plugins. A plugin with a higher priority value will load after a plugin with a lower priority value. Value can be anything in the range <code>-2000000000</code> to <code>2000000000</code>, and if unspecified defaults to <code>0</code>.
         <tr><td><code>after</code><td>file list<td>&#x2717;<td>An unordered list of plugins that this plugin must load after, but which are not dependencies. Used for resolving specific compatibility issues and by user rules for specifying custom plugin positions.
-        <tr><td><code>req</code><td>file list<td>&#x2717;<td>An unordered list of files that this plugin requires to be present. This plugin will load after any plugins listed. If any of these files are missing, an error message will be displayed. Intended for use specifying implicit dependencies, as BOSS will detect a plugin's explicit masters itself.
+        <tr><td><code>req</code><td>file list<td>&#x2717;<td>An unordered list of files that this plugin requires to be present. This plugin will load after any plugins listed. If any of these files are missing, an error message will be displayed. Intended for use specifying implicit dependencies, as LOOT will detect a plugin's explicit masters itself.
         <tr><td><code>inc</code><td>file list<td>&#x2717;<td>An unordered list of files that this plugin is incompatible with. If any of these files are present, an error message will be displayed.
         <tr><td><code>msg</code><td>message list<td>&#x2717;<td>The messages attached to this plugin. The messages will be displayed in the order that they are listed.
         <tr><td><code>tag</code><td>tag list<td>&#x2717;<td>An unordered list of Bash Tags suggested for this plugin. If a Bash Tag is suggested for both addition and removal, the latter will override the former when the list is evaluated.
-        <tr><td><code>url</code><td>location list<td>&#x2717;<td>An unordered list of locations for this plugin. If the same version can be found at multiple locations, only one location should be recorded. This metadata is not currently used by BOSS.
+        <tr><td><code>url</code><td>location list<td>&#x2717;<td>An unordered list of locations for this plugin. If the same version can be found at multiple locations, only one location should be recorded. This metadata is not currently used by LOOT.
         <tr><td><code>dirty</code><td>dirty info list<td>&#x2717;<td>An unordered list of dirty info structures for this plugin.
 </table>
 <p>Example:
 <code class="box">name: 'Oscuro''s_Oblivion_Overhaul.esm'
 req:
-  - 'Oblivion.esm'  # Don't do this, Oblivion.esm is a master of Oscuro's_Oblivion_Overhaul.esm, so BOSS already knows it's required.
+  - 'Oblivion.esm'  # Don't do this, Oblivion.esm is a master of Oscuro's_Oblivion_Overhaul.esm, so LOOT already knows it's required.
   - name: 'example.esp'
     display: '[Example Mod](http://www.example.com)'
     condition: 'version("Oscuro''s_Oblivion_Overhaul.esm", "15.0", ==)'
@@ -329,8 +329,8 @@ msg:
 
 
 <h2 id="links">URL Hyperlinking</h2>
-<p>File <code>display</code> strings and message <code>content</code> strings (including the strings in localised content structures) that contain recognised URLs have them displayed as hyperlinks in the BOSS report. 
-<p>URLs must begin with <code>file:</code>, <code>http:</code> or <code>https:</code>, and be written according to the following subset of <a href="http://daringfireball.net/projects/markdown/syntax">Markdown</a> syntax. Note that BOSS does not recognise additional Markdown syntaxes to those given below.
+<p>File <code>display</code> strings and message <code>content</code> strings (including the strings in localised content structures) that contain recognised URLs have them displayed as hyperlinks in the LOOT report.
+<p>URLs must begin with <code>file:</code>, <code>http:</code> or <code>https:</code>, and be written according to the following subset of <a href="http://daringfireball.net/projects/markdown/syntax">Markdown</a> syntax. Note that LOOT does not recognise additional Markdown syntaxes to those given below.
 <p>For labelled URLs, the syntax is <code>[<var>label</var>](<var>url</var>)</code>. A single optional space may be included between the closing square bracket and the opening parenthesis, ie. <code>[<var>label</var>] (<var>url</var>)</code>.
 <p>For unlabelled URLs, the syntax is <code>&lt;<var>url</var>&gt;</code>. The URL shall be used as its own label.
 <p>Note that the URLs given as part of a location data structure should not be labelled or enclosed in less-than or greater-than signs, as they consist of raw URL data, rather than text to be displayed in a message.
@@ -344,10 +344,10 @@ both get displayed as
 <blockquote>This string (see: <a href="https://en.wikipedia.org/wiki/String_(computer_science)">https://en.wikipedia.org/wiki/String_(computer_science)</a>) contains an unlabelled hyperlink.</blockquote>
 
 <h2 id="cond">Condition Strings</h2>
-<p>Condition strings can be used to ensure that data is only acted on by BOSS under certain circumstances. They are very similar to boolean conditional expressions in programming languages such as Python, though more limited. Their <a href="https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_Form">EBNF</a> grammar is:
+<p>Condition strings can be used to ensure that data is only acted on by LOOT under certain circumstances. They are very similar to boolean conditional expressions in programming languages such as Python, though more limited. Their <a href="https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_Form">EBNF</a> grammar is:
 <code class="box">[ negator ], function, { junctor, [ negator ], function } ;</code>
 <p>The <code>[ negator ], function</code> grammar is referred to as a condition, and two conditions joined by an operator, ie. <code>condition, operator, condition</code> is referred to as a compound condition.
-<p>Unlike previous versions of BOSS, BOSS v3 caches the results of condition evaluations, so performance is not really an issue. A regular expression check will still take longer than a file check though, so use the former only when appropriate to do so.
+<p>LOOT caches the results of condition evaluations, so performance is not really an issue. A regular expression check will still take longer than a file check though, so use the former only when appropriate to do so.
 
 <h3 id="cond-function">Functions</h3>
 <p>There are several conditions that can be tested for using the functions detailed in the table below.
@@ -365,10 +365,10 @@ both get displayed as
 <table>
  <thead><tr><th>Variable Type<th>Description
  <tbody>
-  <tr><td><code>filepath</code><td>A Windows file path, or <code>BOSS</code>, which references the BOSS executable being run.
+  <tr><td><code>filepath</code><td>A Windows file path, or <code>LOOT</code>, which references the LOOT executable being run.
   <tr><td><code>regex</code><td>A regular expression string to match file paths to.
-  <tr><td><code>checksum</code><td>A string of hexadecimal digits representing an unsigned integer that is the data checksum of a file. BOSS displays the checksums of plugins in its user interface after running.
-  <tr><td><code>version</code><td>A string of characters representing the version of a plugin or executable. BOSS displays the versions of plugins in its user interface after running.
+  <tr><td><code>checksum</code><td>A string of hexadecimal digits representing an unsigned integer that is the data checksum of a file. LOOT displays the checksums of plugins in its user interface after running.
+  <tr><td><code>version</code><td>A string of characters representing the version of a plugin or executable. LOOT displays the versions of plugins in its user interface after running.
   <tr><td><code>comparator</code><td>A comparison operator, ie. one of <code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code> or <code>&gt;=</code>, meaning "is equal to", "is not equal to", "is less than", "is greater than", "is less than or equal to" and "is greater than or equal to" respectively.
 </table>
 
@@ -431,7 +431,7 @@ both get displayed as
 <p>You can also explicitly enclose any condition in brackets to override the evaluation order, eg. <code><var>C</var> and ( <var>C</var> or <var>C</var> )</code> is evaluated as <code><var>C</var> and ( <var>C</var> or <var>C</var> )</code>, in contrast to the unbracketed string above.
 
 <h2 id="lang">Language Codes</h2>
-<p>BOSS supports the following languages and language codes:
+<p>LOOT supports the following languages and language codes:
 <table>
     <thead><tr><th>Language<th>POSIX Code
     <tbody>
@@ -445,6 +445,6 @@ both get displayed as
 </table>
 
 <h2 id="license">License</h2>
-<p>This document is part of the BOSS documentation.<br>
+<p>This document is part of the LOOT documentation.<br>
 Copyright (C) 2012&mdash;2014 WrinklyNinja<br>
-See the file <q>BOSS ReadMe.html</q> for copying conditions.
+See the file <q>LOOT ReadMe.html</q> for copying conditions.

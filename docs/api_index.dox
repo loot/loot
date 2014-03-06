@@ -2,13 +2,13 @@
     @mainpage
     @author WrinklyNinja
     @version 3.0.0
-    @copyright The BOSS API is distributed under the GNU General Public License v3.0. For the full text of the license, see the "GNU GPL v3.txt" file included in the source archive.
+    @copyright The LOOT API is distributed under the GNU General Public License v3.0. For the full text of the license, see the "GNU GPL v3.txt" file included in the source archive.
 
     @section intro_sec Introduction
 
-    BOSS is a utility that helps users avoid serious conflicts between their mods by setting their plugins in an optimal load order. It also provides tens of thousands of plugin-specific messages, including usage notes, requirements, incompatibilities, bug warnings and installation mistake notifications, and thousands of Bash Tag suggestions.
+    LOOT is a utility that helps users avoid serious conflicts between their mods by setting their plugins in an optimal load order. It also provides tens of thousands of plugin-specific messages, including usage notes, requirements, incompatibilities, bug warnings and installation mistake notifications, and thousands of Bash Tag suggestions.
 
-    This metadata that BOSS supplies is stored in its masterlist, which is maintained by the BOSS team using information provided by mod authors and users. Users can also add to and modify the metadata used by BOSS through the use of userlist files. The BOSS API provides a way for third-party developers to access this metadata for use in their own programs.
+    This metadata that LOOT supplies is stored in its masterlist, which is maintained by the LOOT team using information provided by mod authors and users. Users can also add to and modify the metadata used by LOOT through the use of userlist files. The LOOT API provides a way for third-party developers to access this metadata for use in their own programs.
 
     All further API documentation is contained within the documentation for api.h.
 
@@ -16,5 +16,5 @@
 
     Thanks go to Lojack and myk002 for significant contributions during planning and beta testing, and to kaburke for beta testing of v2 of the API.
 
-    The BOSS API is written by WrinklyNinja in C/C++ and makes use of the <a href="http://code.google.com/p/yaml-cpp/">yaml-cpp</a> and <a href="http://github.com/WrinklyNinja/libloadorder/">libloadorder</a> libraries and some of the <a href="http://www.boost.org/">Boost</a> libraries. Copyright license information for all these may be found in the "licenses/Licenses.txt" file.
+    The LOOT API is written by WrinklyNinja in C/C++ and makes use of the <a href="http://code.google.com/p/yaml-cpp/">yaml-cpp</a> and <a href="http://github.com/WrinklyNinja/libloadorder/">libloadorder</a> libraries and some of the <a href="http://www.boost.org/">Boost</a> libraries. Copyright license information for all these may be found in the "licenses/Licenses.txt" file.
 */

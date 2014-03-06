@@ -1,6 +1,6 @@
 # Build Instructions using MinGW
 
-These instructions were used to build BOSS using mingw-w64 on Ubuntu and Debian linux, though they should also apply to other similar environments.
+These instructions were used to build LOOT using mingw-w64 on Ubuntu and Debian linux, though they should also apply to other similar environments.
 
 #### Boost
 
@@ -21,7 +21,7 @@ make
 
 ```
 mkdir build && cd build
-cmake .. -DCMAKE_C_FLAGS=-m32 -DPROJECT_ARCH=32 -DCMAKE_TOOLCHAIN_FILE=../BOSSv3/mingw-toolchain.cmake
+cmake .. -DCMAKE_C_FLAGS=-m32 -DPROJECT_ARCH=32 -DCMAKE_TOOLCHAIN_FILE=../LOOT/mingw-toolchain.cmake
 make
 cp zconf.h ../zconf.h
 ```
@@ -29,7 +29,7 @@ cp zconf.h ../zconf.h
 #### yaml-cpp
 
 ```
-cmake . -DCMAKE_C_FLAGS=-m32 -DPROJECT_ARCH=32 -DCMAKE_TOOLCHAIN_FILE=../BOSSv3/mingw-toolchain.cmake -DBOOST_ROOT=../boost
+cmake . -DCMAKE_C_FLAGS=-m32 -DPROJECT_ARCH=32 -DCMAKE_TOOLCHAIN_FILE=../LOOT/mingw-toolchain.cmake -DBOOST_ROOT=../boost
 make
 ```
 
@@ -48,12 +48,12 @@ make
 
 ```
 mkdir build && cd build
-cmake .. -DBUILD_SHARED_LIBS=OFF -DOPENSSL_ROOT_DIR=../openssl -DCMAKE_C_FLAGS=-m32 -DPROJECT_ARCH=32 -DCMAKE_TOOLCHAIN_FILE=../BOSSv3/mingw-toolchain.cmake
+cmake .. -DBUILD_SHARED_LIBS=OFF -DOPENSSL_ROOT_DIR=../openssl -DCMAKE_C_FLAGS=-m32 -DPROJECT_ARCH=32 -DCMAKE_TOOLCHAIN_FILE=../LOOT/mingw-toolchain.cmake
 make
 ```
 If building with SSL support using OpenSSL, also pass ``.
 
-#### BOSS
+#### LOOT
 
 ```
 mkdir build && cd build
