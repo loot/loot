@@ -314,15 +314,21 @@ namespace loot {
         if (!boost::filesystem::exists(filepath) && boost::filesystem::exists(filepath.string() + ".ghost"))
             filepath += ".ghost";
 
-        espm::File * file;
-        if (game.Id() == g_game_tes4)
-            file = new espm::tes4::File(filepath, game.espm_settings, false, headerOnly);
-        else if (game.Id() == g_game_tes5)
-            file = new espm::tes5::File(filepath, game.espm_settings, false, headerOnly);
-        else if (game.Id() == g_game_fo3)
-            file = new espm::fo3::File(filepath, game.espm_settings, false, headerOnly);
-        else
-            file = new espm::fonv::File(filepath, game.espm_settings, false, headerOnly);
+        espm::File * file = NULL;
+        try {
+            if (game.Id() == g_game_tes4)
+                file = new espm::tes4::File(filepath, game.espm_settings, false, headerOnly);
+            else if (game.Id() == g_game_tes5)
+                file = new espm::tes5::File(filepath, game.espm_settings, false, headerOnly);
+            else if (game.Id() == g_game_fo3)
+                file = new espm::fo3::File(filepath, game.espm_settings, false, headerOnly);
+            else
+                file = new espm::fonv::File(filepath, game.espm_settings, false, headerOnly);
+        }
+        catch (std::exception& e) {
+            BOOST_LOG_TRIVIAL(error) << "Cannot read plugin file \"" << name << "\". Details: " << e.what();
+            messages.push_back(loot::Message(loot::g_message_error, (boost::format(boost::locale::translate("Cannot read \"%1%\". Details: %2%")) % name % e.what()).str()));
+        }
 
         //If the name passed ends in '.ghost', that should be trimmed.
         if (boost::iends_with(name, ".ghost")) {
@@ -715,33 +721,31 @@ namespace loot {
         return false;
     }
 
-    std::vector<std::string> Plugin::CheckInstallValidity(const Game& game) const {
-        std::vector<std::string> errorMessages;
+    void Plugin::CheckInstallValidity(const Game& game) {
         if (tags.find(Tag("Filter")) == tags.end()) {
             for (vector<string>::const_iterator it=masters.begin(), endIt=masters.end(); it != endIt; ++it) {
                 if (!boost::filesystem::exists(game.DataPath() / *it) && !boost::filesystem::exists(game.DataPath() / (*it + ".ghost"))) {
                     BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" requires \"" << *it << "\", but it is missing.";
-                    errorMessages.push_back((boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % *it).str());
+                    messages.push_back(loot::Message(loot::g_message_error, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % *it).str()));
                 }
                 else if (!game.IsActive(*it) && game.IsActive(name)) {
                     BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" requires \"" << *it << "\", but it is inactive.";
-                    errorMessages.push_back((boost::format(boost::locale::translate("This plugin requires \"%1%\" to be active, but it is inactive.")) % *it).str());
+                    messages.push_back(loot::Message(loot::g_message_error, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be active, but it is inactive.")) % *it).str()));
                 }
             }
         }
         for (set<File>::const_iterator it=requirements.begin(), endIt=requirements.end(); it != endIt; ++it) {
             if (!boost::filesystem::exists(game.DataPath() / it->Name()) && !(IsPlugin(it->Name()) && boost::filesystem::exists(game.DataPath() / (it->Name() + ".ghost")))) {
                 BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" requires \"" << it->Name() << "\", but it is missing.";
-                errorMessages.push_back((boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % it->Name()).str());
+                messages.push_back(loot::Message(loot::g_message_error, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % it->Name()).str()));
             }
         }
         for (set<File>::const_iterator it=incompatibilities.begin(), endIt=incompatibilities.end(); it != endIt; ++it) {
             if (boost::filesystem::exists(game.DataPath() / it->Name()) || (IsPlugin(it->Name()) && boost::filesystem::exists(game.DataPath() / (it->Name() + ".ghost")))) {
                 BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" is incompatible with \"" << it->Name() << "\", but both are present.";
-                errorMessages.push_back((boost::format(boost::locale::translate("This plugin is incompatible with \"%1%\", but both are present.")) % it->Name()).str());
+                messages.push_back(loot::Message(loot::g_message_error, (boost::format(boost::locale::translate("This plugin is incompatible with \"%1%\", but both are present.")) % it->Name()).str()));
             }
         }
-        return errorMessages;
     }
 
     bool Plugin::LoadsBSA(const Game& game) const {

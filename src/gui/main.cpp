@@ -200,8 +200,8 @@ bool LOOT::OnInit() {
             return false;
         }
         GenerateDefaultSettingsFile(g_path_settings.string());
-    }
-    if (fs::exists(g_path_settings)) {
+    } 
+    else {
         try {
             loot::ifstream in(g_path_settings);
             _settings = YAML::Load(in);
@@ -758,13 +758,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
             //Also check install validity.
             BOOST_LOG_TRIVIAL(trace) << "Checking that the current install is valid according to this plugin's data.";
-            vector<string> issues = graph[*vit].CheckInstallValidity(_game);
-            list<loot::Message> pluginMessages = graph[*vit].Messages();
-            for (vector<string>::const_iterator jt = issues.begin(), jtend = issues.end(); jt != jtend; ++jt) {
-                pluginMessages.push_back(loot::Message(loot::g_message_error, *jt));
-            }
-            if (!issues.empty())
-                graph[*vit].Messages(pluginMessages);
+            graph[*vit].CheckInstallValidity(_game);
 
             progDia->Pulse();
         }
