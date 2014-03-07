@@ -207,7 +207,13 @@ Clicking on a plugin in the list will display the editing panel, where its load 
         <tr><th>Field<th>Description
     <tbody>
         <tr><td>Enable User Changes<td>If this is checked, LOOT will use the metadata you supplied when sorting the current plugin. Otherwise, your metadata will be ignored.
-        <tr><td id="editingPriority">Priority<td>This is a rough control for how far up or down the load order a plugin should go. Plugins with equal priority will be compared as normal by the sorting algorithm, but plugins with a larger priority value will load later in the load order than plugins with a smaller priority value. Priority comparisons are only used for plugins that are not masters, requirements or otherwise told to load after one another, and only between plugins that conflict, except if a plugin is empty, in which case conflict status doesn't matter. Plugins have a default priority of <code>0</code>.
+        <tr><td id="editingPriority">Priority<td>Modifies plugin position relative to others that change one or more of the same records, but which are otherwise unrelated (ie. neither plugin lists the other as a master, requirement, or in its "load after" list). Plugins that don't change any of the same records are not compared, unless:
+        <ul>
+            <li>One of the plugins is a "dummy" plugin, containing only a header record.
+            <li>One of the plugins has a priority greater than or equal to 1,000,000. In this case, only the modulo (ie. remainder when divided) with 1,000,000 is used when comparing plugin priority values &endash; the rest is only used to signify that the plugin should be compared against all others.
+        </ul>
+        For example, priorities of 153,000,352 and 352 have equal values when compared, but a plugin with the first priority will be compared against all others, while a (non-dummy) plugin with the second priority will be compared against only those it conflicts with.
+        <p>A plugin with a higher priority value will load after a plugin with a lower priority value. Plugins have a default priority of 0.
         <tr><td>Requirements<td>This is a list of files that are required by the current plugin for it to function correctly. LOOT will display an error message if any of the listed files are missing.
         <p>Any file, not just plugins, can be listed here, and each file has three sub-fields:
         <ul>
@@ -364,6 +370,7 @@ To translate the LOOT application:
 <p>LOOT's masterlists were largely converted from <a href="http://boss-developers.github.io">BOSS</a>'s masterlists, and so credit is due to the very large number of sources and people who have contributed to them.
 <p>In addition, the following are credited with application-related support:
 <ul>
+    <li>Icon: jonwd7
     <li>Polish translation: Łukasz Niemczyk
     <li>Chinese translation: bluesky404
     <li>French translation: Kaos
