@@ -1,23 +1,24 @@
-/*  BOSS
+/*  LOOT
 
-    A plugin load order optimiser for games that use the esp/esm plugin system.
+    A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
+    Fallout: New Vegas.
 
     Copyright (C) 2013-2014    WrinklyNinja
 
-    This file is part of BOSS.
+    This file is part of LOOT.
 
-    BOSS is free software: you can redistribute
+    LOOT is free software: you can redistribute
     it and/or modify it under the terms of the GNU General Public License
     as published by the Free Software Foundation, either version 3 of
     the License, or (at your option) any later version.
 
-    BOSS is distributed in the hope that it will
+    LOOT is distributed in the hope that it will
     be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with BOSS.  If not, see
+    along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
 */
 
@@ -44,12 +45,12 @@ int main(int argc, char * argv[]) {
     YAML::Emitter yout;
     yout.SetIndent(2);
 
-    list<boss::Plugin> test_plugins;
-    list<boss::Message> globalMessages;
+    list<loot::Plugin> test_plugins;
+    list<loot::Message> globalMessages;
 
-    //Parse the v2 masterlist and output it as a YAML masterlist.
+    //Parse the BOSS masterlist and output it as a LOOT masterlist.
     try {
-        Loadv2Masterlist(boost::filesystem::path(in_str), test_plugins, globalMessages);
+        LoadBOSSMasterlist(boost::filesystem::path(in_str), test_plugins, globalMessages);
     } catch (exception& e) {
         cout << "An error was encountered during masterlist parsing. Message: " << e.what() << endl;
         return 1;
@@ -62,7 +63,7 @@ int main(int argc, char * argv[]) {
 
     // Save output.
     boost::filesystem::path out_path(out_str);
-    boss::ofstream out(out_path);
+    loot::ofstream out(out_path);
     out << yout.c_str();
     out.close();
 

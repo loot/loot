@@ -1,27 +1,28 @@
-/*  BOSS
+/*  LOOT
 
-    A plugin load order optimiser for games that use the esp/esm plugin system.
+    A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
+    Fallout: New Vegas.
 
     Copyright (C) 2013-2014    WrinklyNinja
 
-    This file is part of BOSS.
+    This file is part of LOOT.
 
-    BOSS is free software: you can redistribute
+    LOOT is free software: you can redistribute
     it and/or modify it under the terms of the GNU General Public License
     as published by the Free Software Foundation, either version 3 of
     the License, or (at your option) any later version.
 
-    BOSS is distributed in the hope that it will
+    LOOT is distributed in the hope that it will
     be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with BOSS.  If not, see
+    along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
 */
-#ifndef __BOSS_GUI_EDITOR__
-#define __BOSS_GUI_EDITOR__
+#ifndef __LOOT_GUI_EDITOR__
+#define __LOOT_GUI_EDITOR__
 
 #include "ids.h"
 #include "misc.h"
@@ -62,27 +63,27 @@ private:
 
 class CommonEditor {
 public:
-    CommonEditor(const std::list<boss::Plugin>& plugins, const boss::Game& game);
-    CommonEditor(const std::list<boss::Plugin>& plugins, const boss::Game& game, std::list<boss::Plugin>& editedPlugins);
+    CommonEditor(const std::list<loot::Plugin>& plugins, const loot::Game& game);
+    CommonEditor(const std::list<loot::Plugin>& plugins, const loot::Game& game, std::list<loot::Plugin>& editedPlugins);
 protected:
-    const boss::Game& _game;
-    const std::list<boss::Plugin> _basePlugins;
-    std::list<boss::Plugin> _editedPlugins;
+    const loot::Game& _game;
+    const std::list<loot::Plugin> _basePlugins;
+    std::list<loot::Plugin> _editedPlugins;
 
-    boss::Plugin GetMasterData(const wxString& plugin) const;
-    boss::Plugin GetUserData(const wxString& plugin) const;
-    virtual boss::Plugin GetNewData(const wxString& plugin) const = 0;
+    loot::Plugin GetMasterData(const wxString& plugin) const;
+    loot::Plugin GetUserData(const wxString& plugin) const;
+    virtual loot::Plugin GetNewData(const wxString& plugin) const = 0;
 
     void ApplyEdits(const wxString& plugin, wxListView * list);
 
-    boss::File RowToFile(wxListView * list, long row) const;
-    boss::Tag RowToTag(wxListView * list, long row) const;
-    boss::PluginDirtyInfo RowToPluginDirtyInfo(wxListView * list, long row) const;
+    loot::File RowToFile(wxListView * list, long row) const;
+    loot::Tag RowToTag(wxListView * list, long row) const;
+    loot::PluginDirtyInfo RowToPluginDirtyInfo(wxListView * list, long row) const;
 };
 
 class MiniEditor : public wxDialog, public CommonEditor {
 public:
-    MiniEditor(wxWindow *parent, const wxString& title, const std::list<boss::Plugin>& plugins, const boss::Game& game);
+    MiniEditor(wxWindow *parent, const wxString& title, const std::list<loot::Plugin>& plugins, const loot::Game& game);
 
     void OnPluginSelect(wxListEvent& event);
     void OnRowSelect(wxListEvent& event);
@@ -92,7 +93,7 @@ public:
     void OnApply(wxCommandEvent& event);
     void OnResize(wxSizeEvent& event);
 
-    const std::list<boss::Plugin>& GetEditedPlugins() const;
+    const std::list<loot::Plugin>& GetEditedPlugins() const;
 private:
     wxListView * pluginList;
     wxPanel * editingPanel;
@@ -103,12 +104,12 @@ private:
     wxStaticText * pluginText;
     wxStaticText * descText;
 
-    boss::Plugin GetNewData(const wxString& plugin) const;
+    loot::Plugin GetNewData(const wxString& plugin) const;
 };
 
 class Editor : public wxFrame, public CommonEditor {
 public:
-    Editor(wxWindow *parent, const wxString& title, const std::string userlistPath, const std::list<boss::Plugin>& basePlugins, std::list<boss::Plugin>& editedPlugins, const unsigned int language, const boss::Game& game);
+    Editor(wxWindow *parent, const wxString& title, const std::string userlistPath, const std::list<loot::Plugin>& basePlugins, std::list<loot::Plugin>& editedPlugins, const unsigned int language, const loot::Game& game);
 
     void OnPluginSelect(wxListEvent& event);
     void OnPluginListRightClick(wxListEvent& event);
@@ -142,6 +143,6 @@ private:
 
     const std::string _userlistPath;
 
-    boss::Plugin GetNewData(const wxString& plugin) const;
+    loot::Plugin GetNewData(const wxString& plugin) const;
 };
 #endif

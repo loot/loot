@@ -1,30 +1,31 @@
-/*  BOSS
+/*  LOOT
 
-    A plugin load order optimiser for games that use the esp/esm plugin system.
+    A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
+    Fallout: New Vegas.
 
     Copyright (C) 2012-2014    WrinklyNinja
 
-    This file is part of BOSS.
+    This file is part of LOOT.
 
-    BOSS is free software: you can redistribute
+    LOOT is free software: you can redistribute
     it and/or modify it under the terms of the GNU General Public License
     as published by the Free Software Foundation, either version 3 of
     the License, or (at your option) any later version.
 
-    BOSS is distributed in the hope that it will
+    LOOT is distributed in the hope that it will
     be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with BOSS.  If not, see
+    along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
 */
 
-#ifndef __BOSS_LEGACY_PARSER__
-#define __BOSS_LEGACY_PARSER__
+#ifndef __LOOT_LEGACY_PARSER__
+#define __LOOT_LEGACY_PARSER__
 
-// This file holds the code necessary for inputting a v2 masterlist and getting a list of plugins and a list of global messages from it.
+// This file holds the code necessary for inputting a BOSS masterlist and getting a list of plugins and a list of global messages from it.
 
 #ifndef BOOST_SPIRIT_UNICODE
 #define BOOST_SPIRIT_UNICODE
@@ -52,7 +53,7 @@
 #include <boost/regex.hpp>
 #include <boost/log/trivial.hpp>
 
-namespace boss {
+namespace loot {
 	namespace qi = boost::spirit::qi;
 	namespace unicode = boost::spirit::unicode;
 	namespace phoenix = boost::phoenix;
@@ -399,7 +400,7 @@ namespace boss {
 
             if (it == varConditionMap.end()) {
                 BOOST_LOG_TRIVIAL(error) << "The variable \"" << var << "\" was not previously defined.";
-                throw boss::error(boss::error::condition_eval_fail, "The variable \"" + var + "\" was not previously defined.");  //Isn't used by BOSS application, so don't need to translate.
+                throw loot::error(loot::error::condition_eval_fail, "The variable \"" + var + "\" was not previously defined.");  //Isn't used by LOOT application, so don't need to translate.
             }
 
             if (ifIfnotStr == "if ")
@@ -411,9 +412,9 @@ namespace boss {
         }
 
         void ConvertCondition(std::string& condition) {
-            /*Convert the v2 order of evaluation to the standard order.
+            /*Convert the BOSS order of evaluation to the standard order.
               The only consistent way to do this is to bracket everything,
-              which is supported by the v3 syntax. */
+              which is supported by the LOOT syntax. */
 
             int bracketNo = 0;
             size_t pos = 0;
@@ -715,7 +716,7 @@ namespace boss {
                 }
             }
 
-            //BOSSv2 supports Chinese and German in addition to English, Russian and Spanish, but they aren't used in any of the masterlists so don't bother mapping them.
+            //LOOT supports Chinese and German in addition to English, Russian and Spanish, but they aren't used in any of the masterlists so don't bother mapping them.
             unsigned int langInt;
             if (lang == "english" || lang == "chinese" || lang == "german")
                 langInt = g_lang_english;
@@ -727,7 +728,7 @@ namespace boss {
                 langInt = g_lang_any;
 
 
-            /* Now convert the temporary message types into say or warning messages as appropriate. Translations were obtained from the BOSSv2 translation files. Thanks to the translators for them. */
+            /* Now convert the temporary message types into say or warning messages as appropriate. Translations were obtained from the LOOT translation files. Thanks to the translators for them. */
 
             if (type == message_dirty) {
 
@@ -791,11 +792,11 @@ namespace boss {
             		boost::trim(context);
 
             BOOST_LOG_TRIVIAL(error) << "Error parsing at \"" << context << "\", expected \"" << what.tag << "\".";
-			throw boss::error(boss::error::condition_eval_fail, "Expected \"" + what.tag + "\" at \"" + context + "\".");  //Isn't used by BOSS application, so don't need to translate.
+			throw loot::error(loot::error::condition_eval_fail, "Expected \"" + what.tag + "\" at \"" + context + "\".");  //Isn't used by LOOT application, so don't need to translate.
 		}
 	};
 
-    void Loadv2Masterlist(boost::filesystem::path& file, std::list<Plugin>& plugins, std::list<Message>& globalMessages) {
+    void LoadBOSSMasterlist(boost::filesystem::path& file, std::list<Plugin>& plugins, std::list<Message>& globalMessages) {
         Skipper<std::string::const_iterator> skipper;
         LegacyMasterlistGrammar<std::string::const_iterator> grammar;
         std::string::const_iterator begin, end;
@@ -803,7 +804,7 @@ namespace boss {
 
         grammar.SetGlobalMessageBuffer(&globalMessages);
 
-        boss::ifstream ifile(file);
+        loot::ifstream ifile(file);
         ifile.unsetf(std::ios::skipws); // No white space skipping!
 
         std::copy(
@@ -819,7 +820,7 @@ namespace boss {
 
         if (!r || begin != end) {
             BOOST_LOG_TRIVIAL(error) << "Failed to read file: " << file.string();
-            throw boss::error(boss::error::path_read_fail, file.string());
+            throw loot::error(loot::error::path_read_fail, file.string());
         }
     }
 }

@@ -1,28 +1,29 @@
-/*  BOSS
+/*  LOOT
 
-    A plugin load order optimiser for games that use the esp/esm plugin system.
+    A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
+    Fallout: New Vegas.
 
     Copyright (C) 2012-2014    WrinklyNinja
 
-    This file is part of BOSS.
+    This file is part of LOOT.
 
-    BOSS is free software: you can redistribute
+    LOOT is free software: you can redistribute
     it and/or modify it under the terms of the GNU General Public License
     as published by the Free Software Foundation, either version 3 of
     the License, or (at your option) any later version.
 
-    BOSS is distributed in the hope that it will
+    LOOT is distributed in the hope that it will
     be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with BOSS.  If not, see
+    along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
 */
 
-#ifndef __BOSS_HELPERS__
-#define __BOSS_HELPERS__
+#ifndef __LOOT_HELPERS__
+#define __LOOT_HELPERS__
 
 #include "metadata.h"
 
@@ -31,7 +32,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/regex.hpp>
 
-namespace boss {
+namespace loot {
 
     /// Array used to try each of the expressions defined using
 	/// an iteration for each of them.
@@ -75,16 +76,25 @@ namespace boss {
         std::string Name() const;
         std::string Locale() const;
 
+        static const unsigned int any = 0;
+        static const unsigned int english = 1;
+        static const unsigned int spanish = 2;
+        static const unsigned int russian = 3;
+        static const unsigned int french = 4;
+        static const unsigned int chinese = 5;
+        static const unsigned int polish = 6;
+        static const unsigned int brazilian_portuguese = 7;
+
         static std::vector<std::string> Names() {
             std::vector<std::string> vec;
-            vec.push_back(Language(g_lang_any).Name());
-            vec.push_back(Language(g_lang_english).Name());
-            vec.push_back(Language(g_lang_spanish).Name());
-            vec.push_back(Language(g_lang_russian).Name());
-            vec.push_back(Language(g_lang_french).Name());
-            vec.push_back(Language(g_lang_chinese).Name());
-            vec.push_back(Language(g_lang_polish).Name());
-            vec.push_back(Language(g_lang_brazilian_portuguese).Name());
+            vec.push_back(Language(Language::any).Name());
+            vec.push_back(Language(Language::english).Name());
+            vec.push_back(Language(Language::spanish).Name());
+            vec.push_back(Language(Language::russian).Name());
+            vec.push_back(Language(Language::french).Name());
+            vec.push_back(Language(Language::chinese).Name());
+            vec.push_back(Language(Language::polish).Name());
+            vec.push_back(Language(Language::brazilian_portuguese).Name());
             return vec;
         }
     private:

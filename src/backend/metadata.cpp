@@ -1,23 +1,24 @@
-/*  BOSS
+/*  LOOT
 
-    A plugin load order optimiser for games that use the esp/esm plugin system.
+    A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
+    Fallout: New Vegas.
 
     Copyright (C) 2012-2014    WrinklyNinja
 
-    This file is part of BOSS.
+    This file is part of LOOT.
 
-    BOSS is free software: you can redistribute
+    LOOT is free software: you can redistribute
     it and/or modify it under the terms of the GNU General Public License
     as published by the Free Software Foundation, either version 3 of
     the License, or (at your option) any later version.
 
-    BOSS is distributed in the hope that it will
+    LOOT is distributed in the hope that it will
     be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with BOSS.  If not, see
+    along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
 */
 
@@ -35,7 +36,7 @@
 
 using namespace std;
 
-namespace boss {
+namespace loot {
 
     namespace lc = boost::locale;
 
@@ -115,7 +116,7 @@ namespace boss {
         return _condition;
     }
 
-    bool ConditionStruct::EvalCondition(boss::Game& game) const {
+    bool ConditionStruct::EvalCondition(loot::Game& game) const {
         if (_condition.empty())
             return true;
 
@@ -137,14 +138,14 @@ namespace boss {
         bool r;
         try {
             r = boost::spirit::qi::phrase_parse(begin, end, grammar, skipper, eval);
-        } catch (boss::error& e) {
+        } catch (loot::error& e) {
             BOOST_LOG_TRIVIAL(error) << "Failed to parse condition \"" << _condition << "\": " << e.what();
-            throw boss::error(boss::error::path_read_fail, (boost::format(lc::translate("Failed to parse condition \"%1%\": %2%")) % _condition % e.what()).str());
+            throw loot::error(loot::error::path_read_fail, (boost::format(lc::translate("Failed to parse condition \"%1%\": %2%")) % _condition % e.what()).str());
         }
 
         if (!r || begin != end) {
             BOOST_LOG_TRIVIAL(error) << "Failed to parse condition \"" << _condition << "\".";
-            throw boss::error(boss::error::path_read_fail, (boost::format(lc::translate("Failed to parse condition \"%1%\".")) % _condition).str());
+            throw loot::error(loot::error::path_read_fail, (boost::format(lc::translate("Failed to parse condition \"%1%\".")) % _condition).str());
         }
 
         game.conditionCache.emplace(boost::to_lower_copy(_condition), eval);
@@ -152,7 +153,7 @@ namespace boss {
         return eval;
     }
 
-    MessageContent::MessageContent() : _language(g_lang_any) {}
+    MessageContent::MessageContent() : _language(Language::any) {}
 
     MessageContent::MessageContent(const std::string& str, const unsigned int language) : _str(str), _language(language) {}
 
@@ -176,7 +177,7 @@ namespace boss {
 
     Message::Message(const unsigned int type, const std::string& content,
                      const std::string& condition) : _type(type), ConditionStruct(condition) {
-        _content.push_back(MessageContent(content));
+        _content.push_back(MessageContent(content, Language::any));
     }
 
     Message::Message(const unsigned int type, const std::vector<MessageContent>& content,
@@ -195,12 +196,12 @@ namespace boss {
         return (_type == rhs.Type() && _content == rhs.Content());
     }
 
-    bool Message::EvalCondition(boss::Game& game, const unsigned int language) {
+    bool Message::EvalCondition(loot::Game& game, const unsigned int language) {
 
         BOOST_LOG_TRIVIAL(trace) << "Choosing message language.";
 
         if (_content.size() > 1) {
-            if (language == g_lang_any)  //Can use a message of any language, so use the first string.
+            if (language == Language::any)  //Can use a message of any language, so use the first string.
                 _content.resize(1);
             else {
                 MessageContent english, match;
@@ -208,7 +209,7 @@ namespace boss {
                     if (it->Language() == language) {
                         match = *it;
                         break;
-                    } else if (it->Language() == g_lang_english)
+                    } else if (it->Language() == Language::english)
                         english = *it;
                 }
                 _content.resize(1);
@@ -223,7 +224,7 @@ namespace boss {
 
     MessageContent Message::ChooseContent(const unsigned int language) const {
         BOOST_LOG_TRIVIAL(trace) << "Choosing message content.";
-        if (_content.size() == 1 || language == g_lang_any)
+        if (_content.size() == 1 || language == Language::any)
             return _content[0];
         else {
             MessageContent english, match;
@@ -231,7 +232,7 @@ namespace boss {
                 if (it->Language() == language) {
                     match = *it;
                     break;
-                } else if (it->Language() == g_lang_english)
+                } else if (it->Language() == Language::english)
                     english = *it;
             }
             if (!match.Str().empty())
@@ -302,7 +303,7 @@ namespace boss {
             name = name.substr(0, name.length() - 6);
     }
 
-	Plugin::Plugin(boss::Game& game, const std::string& n, const bool headerOnly)
+	Plugin::Plugin(loot::Game& game, const std::string& n, const bool headerOnly)
         : name(n), enabled(true), priority(0), isMaster(false), crc(0), numOverrideRecords(0), _isPriorityExplicit(false) {
 
 		// Get data from file contents using libespm. Assumes libespm has already been initialised.
@@ -313,15 +314,21 @@ namespace boss {
         if (!boost::filesystem::exists(filepath) && boost::filesystem::exists(filepath.string() + ".ghost"))
             filepath += ".ghost";
 
-        espm::File * file;
-        if (game.Id() == g_game_tes4)
-            file = new espm::tes4::File(filepath, game.espm_settings, false, headerOnly);
-        else if (game.Id() == g_game_tes5)
-            file = new espm::tes5::File(filepath, game.espm_settings, false, headerOnly);
-        else if (game.Id() == g_game_fo3)
-            file = new espm::fo3::File(filepath, game.espm_settings, false, headerOnly);
-        else
-            file = new espm::fonv::File(filepath, game.espm_settings, false, headerOnly);
+        espm::File * file = NULL;
+        try {
+            if (game.Id() == Game::tes4)
+                file = new espm::tes4::File(filepath, game.espm_settings, false, headerOnly);
+            else if (game.Id() == Game::tes5)
+                file = new espm::tes5::File(filepath, game.espm_settings, false, headerOnly);
+            else if (game.Id() == Game::fo3)
+                file = new espm::fo3::File(filepath, game.espm_settings, false, headerOnly);
+            else
+                file = new espm::fonv::File(filepath, game.espm_settings, false, headerOnly);
+        }
+        catch (std::exception& e) {
+            BOOST_LOG_TRIVIAL(error) << "Cannot read plugin file \"" << name << "\". Details: " << e.what();
+            messages.push_back(loot::Message(loot::Message::error, (boost::format(boost::locale::translate("Cannot read \"%1%\". Details: %2%")) % name % e.what()).str()));
+        }
 
         //If the name passed ends in '.ghost', that should be trimmed.
         if (boost::iends_with(name, ".ghost")) {
@@ -562,7 +569,7 @@ namespace boss {
         _dirtyInfo = dirtyInfo;
     }
 
-    void Plugin::EvalAllConditions(boss::Game& game, const unsigned int language) {
+    void Plugin::EvalAllConditions(loot::Game& game, const unsigned int language) {
         for (set<File>::iterator it = loadAfter.begin(); it != loadAfter.end();) {
             if (!it->EvalCondition(game))
                 loadAfter.erase(it++);
@@ -714,37 +721,35 @@ namespace boss {
         return false;
     }
 
-    std::vector<std::string> Plugin::CheckInstallValidity(const Game& game) const {
-        std::vector<std::string> errorMessages;
+    void Plugin::CheckInstallValidity(const Game& game) {
         if (tags.find(Tag("Filter")) == tags.end()) {
             for (vector<string>::const_iterator it=masters.begin(), endIt=masters.end(); it != endIt; ++it) {
                 if (!boost::filesystem::exists(game.DataPath() / *it) && !boost::filesystem::exists(game.DataPath() / (*it + ".ghost"))) {
                     BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" requires \"" << *it << "\", but it is missing.";
-                    errorMessages.push_back((boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % *it).str());
+                    messages.push_back(loot::Message(loot::Message::error, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % *it).str()));
                 }
-                else if (!game.IsActive(*it)) {
+                else if (!game.IsActive(*it) && game.IsActive(name)) {
                     BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" requires \"" << *it << "\", but it is inactive.";
-                    errorMessages.push_back((boost::format(boost::locale::translate("This plugin requires \"%1%\" to be active, but it is inactive.")) % *it).str());
+                    messages.push_back(loot::Message(loot::Message::error, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be active, but it is inactive.")) % *it).str()));
                 }
             }
         }
         for (set<File>::const_iterator it=requirements.begin(), endIt=requirements.end(); it != endIt; ++it) {
             if (!boost::filesystem::exists(game.DataPath() / it->Name()) && !(IsPlugin(it->Name()) && boost::filesystem::exists(game.DataPath() / (it->Name() + ".ghost")))) {
                 BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" requires \"" << it->Name() << "\", but it is missing.";
-                errorMessages.push_back((boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % it->Name()).str());
+                messages.push_back(loot::Message(loot::Message::error, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % it->Name()).str()));
             }
         }
         for (set<File>::const_iterator it=incompatibilities.begin(), endIt=incompatibilities.end(); it != endIt; ++it) {
             if (boost::filesystem::exists(game.DataPath() / it->Name()) || (IsPlugin(it->Name()) && boost::filesystem::exists(game.DataPath() / (it->Name() + ".ghost")))) {
                 BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" is incompatible with \"" << it->Name() << "\", but both are present.";
-                errorMessages.push_back((boost::format(boost::locale::translate("This plugin is incompatible with \"%1%\", but both are present.")) % it->Name()).str());
+                messages.push_back(loot::Message(loot::Message::error, (boost::format(boost::locale::translate("This plugin is incompatible with \"%1%\", but both are present.")) % it->Name()).str()));
             }
         }
-        return errorMessages;
     }
 
     bool Plugin::LoadsBSA(const Game& game) const {
-        if (game.Id() != g_game_tes5 || IsRegexPlugin())
+        if (game.Id() != Game::tes5 || IsRegexPlugin())
             return false;
         return boost::filesystem::exists(game.DataPath() / (name.substr(0, name.length() - 3) + "bsa"));
     }

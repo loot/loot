@@ -1,23 +1,24 @@
-/*  BOSS
+/*  LOOT
 
-    A plugin load order optimiser for games that use the esp/esm plugin system.
+    A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
+    Fallout: New Vegas.
 
     Copyright (C) 2012-2014    WrinklyNinja
 
-    This file is part of BOSS.
+    This file is part of LOOT.
 
-    BOSS is free software: you can redistribute
+    LOOT is free software: you can redistribute
     it and/or modify it under the terms of the GNU General Public License
     as published by the Free Software Foundation, either version 3 of
     the License, or (at your option) any later version.
 
-    BOSS is distributed in the hope that it will
+    LOOT is distributed in the hope that it will
     be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with BOSS.  If not, see
+    along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
 */
 
@@ -55,7 +56,7 @@
 #endif
 #define BUFSIZE 4096
 
-namespace boss {
+namespace loot {
     using namespace std;
     using boost::algorithm::replace_all;
     using boost::algorithm::replace_first;
@@ -126,7 +127,7 @@ namespace boss {
         uint32_t chksum = 0;
         static const size_t buffer_size = 8192;
         char buffer[buffer_size];
-        boss::ifstream ifile(filename, ios::binary);
+        loot::ifstream ifile(filename, ios::binary);
         BOOST_LOG_TRIVIAL(trace) << "Calculating CRC for: " << filename.string();
         boost::crc_32_type result;
         if (ifile) {
@@ -237,55 +238,55 @@ namespace boss {
     }
 
     Language::Language(const std::string& nameOrISOCode) {
-        if (nameOrISOCode == Language(g_lang_english).Name() || nameOrISOCode == Language(g_lang_english).Locale())
-            Construct(g_lang_english);
-        else if (nameOrISOCode == Language(g_lang_spanish).Name() || nameOrISOCode == Language(g_lang_spanish).Locale())
-            Construct(g_lang_spanish);
-        else if (nameOrISOCode == Language(g_lang_russian).Name() || nameOrISOCode == Language(g_lang_russian).Locale())
-            Construct(g_lang_russian);
-        else if (nameOrISOCode == Language(g_lang_french).Name() || nameOrISOCode == Language(g_lang_french).Locale())
-            Construct(g_lang_french);
-        else if (nameOrISOCode == Language(g_lang_chinese).Name() || nameOrISOCode == Language(g_lang_chinese).Locale())
-            Construct(g_lang_chinese);
-        else if (nameOrISOCode == Language(g_lang_polish).Name() || nameOrISOCode == Language(g_lang_polish).Locale())
-            Construct(g_lang_polish);
-        else if (nameOrISOCode == Language(g_lang_brazilian_portuguese).Name() || nameOrISOCode == Language(g_lang_brazilian_portuguese).Locale())
-            Construct(g_lang_brazilian_portuguese);
+        if (nameOrISOCode == Language(Language::english).Name() || nameOrISOCode == Language(Language::english).Locale())
+            Construct(Language::english);
+        else if (nameOrISOCode == Language(Language::spanish).Name() || nameOrISOCode == Language(Language::spanish).Locale())
+            Construct(Language::spanish);
+        else if (nameOrISOCode == Language(Language::russian).Name() || nameOrISOCode == Language(Language::russian).Locale())
+            Construct(Language::russian);
+        else if (nameOrISOCode == Language(Language::french).Name() || nameOrISOCode == Language(Language::french).Locale())
+            Construct(Language::french);
+        else if (nameOrISOCode == Language(Language::chinese).Name() || nameOrISOCode == Language(Language::chinese).Locale())
+            Construct(Language::chinese);
+        else if (nameOrISOCode == Language(Language::polish).Name() || nameOrISOCode == Language(Language::polish).Locale())
+            Construct(Language::polish);
+        else if (nameOrISOCode == Language(Language::brazilian_portuguese).Name() || nameOrISOCode == Language(Language::brazilian_portuguese).Locale())
+            Construct(Language::brazilian_portuguese);
         else
-            Construct(g_lang_any);
+            Construct(Language::any);
     }
 
     void Language::Construct(const unsigned int code) {
         _code = code;
-        if (_code == g_lang_any) {
+        if (_code == Language::any) {
             _name = boost::locale::translate("None Specified");
             _locale = "en";
         }
-        else if (_code == g_lang_english) {
+        else if (_code == Language::english) {
             _name = "English";
             _locale = "en";
         }
-        else if (_code == g_lang_spanish) {
+        else if (_code == Language::spanish) {
             _name = "Español";
             _locale = "es";
         }
-        else if (_code == g_lang_russian) {
+        else if (_code == Language::russian) {
             _name = "Русский";
             _locale = "ru";
         }
-        else if (_code == g_lang_french) {
+        else if (_code == Language::french) {
             _name = "Français";
             _locale = "fr";
         }
-        else if (_code == g_lang_chinese) {
+        else if (_code == Language::chinese) {
             _name = "简体中文";
             _locale = "zh_CN";
         }
-        else if (_code == g_lang_polish) {
+        else if (_code == Language::polish) {
             _name = "Polski";
             _locale = "pl";
         }
-        else if (_code == g_lang_brazilian_portuguese) {
+        else if (_code == Language::brazilian_portuguese) {
             _name = "Português do Brasil";
             _locale = "pt_BR";
         }

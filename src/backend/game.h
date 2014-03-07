@@ -1,28 +1,29 @@
-/*  BOSS
+/*  LOOT
 
-    A plugin load order optimiser for games that use the esp/esm plugin system.
+    A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
+    Fallout: New Vegas.
 
     Copyright (C) 2012-2014    WrinklyNinja
 
-    This file is part of BOSS.
+    This file is part of LOOT.
 
-    BOSS is free software: you can redistribute
+    LOOT is free software: you can redistribute
     it and/or modify it under the terms of the GNU General Public License
     as published by the Free Software Foundation, either version 3 of
     the License, or (at your option) any later version.
 
-    BOSS is distributed in the hope that it will
+    LOOT is distributed in the hope that it will
     be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with BOSS.  If not, see
+    along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
 */
 
-#ifndef __BOSS_GAME__
-#define __BOSS_GAME__
+#ifndef __LOOT_GAME__
+#define __LOOT_GAME__
 
 
 #include <string>
@@ -37,14 +38,14 @@
 #include <src/libespm.h>
 #include <yaml-cpp/yaml.h>
 
-namespace boss {
+namespace loot {
 
     class Plugin;
 
     class Game {
     public:
-        Game();  //Sets game to BOSS_g_game_autodetect, with all other vars being empty.
-        Game(const unsigned int baseGameCode, const std::string& bossFolder = "");
+        Game();  //Sets game to LOOT_Game::autodetect, with all other vars being empty.
+        Game(const unsigned int baseGameCode, const std::string& lootFolder = "");
 
         Game& SetDetails(const std::string& name, const std::string& masterFile,
                         const std::string& repositoryURL, const std::string& repositoryBranch, 
@@ -83,6 +84,12 @@ namespace boss {
         boost::unordered_map<std::string, uint32_t> crcCache;  //Holds lowercased strings.
 
         espm::Settings espm_settings;
+
+        static const unsigned int autodetect = 0;
+        static const unsigned int tes4 = 1;
+        static const unsigned int tes5 = 2;
+        static const unsigned int fo3 = 3;
+        static const unsigned int fonv = 4;
     private:
         unsigned id;
         std::string _name;
@@ -90,15 +97,15 @@ namespace boss {
 
         std::string registryKey;
 
-        std::string bossFolderName;
+        std::string lootFolderName;
         std::string _repositoryURL;
         std::string _repositoryBranch;
 
         boost::filesystem::path gamePath;  //Path to the game's folder.
         boost::unordered_set<std::string> activePlugins;  //Holds lowercased strings.
 
-        //Creates directory in BOSS folder for BOSS's game-specific files.
-        void CreateBOSSGameFolder();
+        //Creates directory in LOOT folder for LOOT's game-specific files.
+        void CreateLOOTGameFolder();
     };
 
     std::vector<Game> GetGames(const YAML::Node& settings);

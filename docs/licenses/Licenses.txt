@@ -1,6 +1,6 @@
 # Licenses
 
-BOSS uses a number of libraries, and their licenses are listed in this file.
+LOOT uses a number of libraries, and their licenses are listed in this file.
 
 * Alphanum - zlib license; the text is not included as allowed by the license.
 * Boost - Boost Software License v1.0; see "Boost Software License v1.0.txt" for the text.
@@ -13,4 +13,4 @@ BOSS uses a number of libraries, and their licenses are listed in this file.
 * yaml-cpp - MIT License; see "MIT License (yaml-cpp).txt" for the text.
 * zlib - zlib license; the text is not included as allowed by the license.
 
-Source code for all libraries and binaries can be found on the websites linked to in the main BOSS readme.
+Source code for all libraries and binaries can be found on the websites linked to in the main LOOT readme.

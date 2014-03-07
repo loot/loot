@@ -1,23 +1,24 @@
-/*  BOSS
+/*  LOOT
 
-    A plugin load order optimiser for games that use the esp/esm plugin system.
+    A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
+    Fallout: New Vegas.
 
     Copyright (C) 2013-2014    WrinklyNinja
 
-    This file is part of BOSS.
+    This file is part of LOOT.
 
-    BOSS is free software: you can redistribute
+    LOOT is free software: you can redistribute
     it and/or modify it under the terms of the GNU General Public License
     as published by the Free Software Foundation, either version 3 of
     the License, or (at your option) any later version.
 
-    BOSS is distributed in the hope that it will
+    LOOT is distributed in the hope that it will
     be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with BOSS.  If not, see
+    along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
 */
 
@@ -34,7 +35,7 @@
 
 using namespace std;
 
-SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node& settings, std::vector<boss::Game>& games) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER), _settings(settings), _games(games) {
+SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node& settings, std::vector<loot::Game>& games) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER), _settings(settings), _games(games) {
 
     //Initialise drop-down list contents.
 	wxString DebugVerbosity[] = {
@@ -51,7 +52,7 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
     }
 
     wxArrayString languages;
-    vector<string> langs = boss::Language::Names();
+    vector<string> langs = loot::Language::Names();
     for (size_t i = 0; i < langs.size(); i++) {
         languages.Add(FromUTF8(langs[i]));
     }
@@ -73,7 +74,7 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
     //Set up list columns.
     gamesList->AppendColumn(translate("Name"));
     gamesList->AppendColumn(translate("Base Game Type"));
-    gamesList->AppendColumn(translate("BOSS Folder Name"));
+    gamesList->AppendColumn(translate("LOOT Folder Name"));
     gamesList->AppendColumn(translate("Master File"));
     gamesList->AppendColumn(translate("Masterlist Repository URL"));
     gamesList->AppendColumn(translate("Masterlist Repository Branch"));
@@ -127,7 +128,7 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
 
     bigBox->AddSpacer(10);
 
-	bigBox->Add(new wxStaticText(this, wxID_ANY, translate("Language and game changes will be applied after BOSS is restarted.")), wholeItem);
+	bigBox->Add(new wxStaticText(this, wxID_ANY, translate("Language and game changes will be applied after LOOT is restarted.")), wholeItem);
 
 	//Need to add 'OK' and 'Cancel' buttons.
 	wxSizer * sizer = CreateSeparatedButtonSizer(wxOK|wxCANCEL);
@@ -140,20 +141,20 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
 	SetDefaultValues();
 
 	//Tooltips.
-	DebugVerbosityChoice->SetToolTip(translate("The output is logged to the BOSSDebugLog.txt file."));
+	DebugVerbosityChoice->SetToolTip(translate("The output is logged to the LOOTDebugLog.txt file."));
 
 	//Now set the layout and sizes.
 	SetBackgroundColour(wxColour(255,255,255));
-    SetIcon(wxIconLocation("BOSS.exe"));
+    SetIcon(wxIconLocation("LOOT.exe"));
 	SetSizerAndFit(bigBox);
 }
 
 void SettingsFrame::SetDefaultValues() {
 
-    BOOST_LOG_TRIVIAL(debug) << "Setting default values for BOSS's settings.";
+    BOOST_LOG_TRIVIAL(debug) << "Setting default values for LOOT's settings.";
 
     if (_settings["Language"]) {
-        LanguageChoice->SetSelection(boss::Language(_settings["Language"].as<string>()).Code());
+        LanguageChoice->SetSelection(loot::Language(_settings["Language"].as<string>()).Code());
     }
 
     if (_settings["Game"]) {
@@ -185,7 +186,7 @@ void SettingsFrame::SetDefaultValues() {
 
     for (size_t i=0, max=_games.size(); i < max; ++i) {
         gamesList->InsertItem(i, FromUTF8(_games[i].Name()));
-        gamesList->SetItem(i, 1, FromUTF8(boss::Game(_games[i].Id()).FolderName()));
+        gamesList->SetItem(i, 1, FromUTF8(loot::Game(_games[i].Id()).FolderName()));
         gamesList->SetItem(i, 2, FromUTF8(_games[i].FolderName()));
         gamesList->SetItem(i, 3, FromUTF8(_games[i].Master()));
         gamesList->SetItem(i, 4, FromUTF8(_games[i].RepoURL()));
@@ -209,7 +210,7 @@ void SettingsFrame::OnQuit(wxCommandEvent& event) {
         else
             _settings["Game"] = _games[GameChoice->GetSelection() - 1].FolderName();
 
-        _settings["Language"] = boss::Language(LanguageChoice->GetSelection()).Locale();
+        _settings["Language"] = loot::Language(LanguageChoice->GetSelection()).Locale();
 
         _settings["Debug Verbosity"] = DebugVerbosityChoice->GetSelection();
 
@@ -244,16 +245,16 @@ void SettingsFrame::OnQuit(wxCommandEvent& event) {
             path = gamesList->GetItemText(i, 6).ToUTF8();
             registry = gamesList->GetItemText(i, 7).ToUTF8();
 
-            if (gamesList->GetItemText(i, 1).ToUTF8() == boss::Game(boss::g_game_tes4).FolderName())
-                id = boss::g_game_tes4;
-            else if (gamesList->GetItemText(i, 1).ToUTF8() == boss::Game(boss::g_game_tes5).FolderName())
-                id = boss::g_game_tes5;
-            else if (gamesList->GetItemText(i, 1).ToUTF8() == boss::Game(boss::g_game_fo3).FolderName())
-                id = boss::g_game_fo3;
+            if (gamesList->GetItemText(i, 1).ToUTF8() == loot::Game(loot::Game::tes4).FolderName())
+                id = loot::Game::tes4;
+            else if (gamesList->GetItemText(i, 1).ToUTF8() == loot::Game(loot::Game::tes5).FolderName())
+                id = loot::Game::tes5;
+            else if (gamesList->GetItemText(i, 1).ToUTF8() == loot::Game(loot::Game::fo3).FolderName())
+                id = loot::Game::fo3;
             else
-                id = boss::g_game_fonv;
+                id = loot::Game::fonv;
 
-            _games.push_back(boss::Game(id, folder).SetDetails(name, master, repo, branch, path, registry));
+            _games.push_back(loot::Game(id, folder).SetDetails(name, master, repo, branch, path, registry));
         }
     }
 
@@ -262,10 +263,10 @@ void SettingsFrame::OnQuit(wxCommandEvent& event) {
 
 void SettingsFrame::OnGameSelect(wxListEvent& event) {
     wxString name = gamesList->GetItemText(event.GetIndex());
-    if (name == boss::Game(boss::g_game_tes4).Name()
-     || name == boss::Game(boss::g_game_tes5).Name()
-     || name == boss::Game(boss::g_game_fo3).Name()
-     || name == boss::Game(boss::g_game_fonv).Name()) {
+    if (name == loot::Game(loot::Game::tes4).Name()
+     || name == loot::Game(loot::Game::tes5).Name()
+     || name == loot::Game(loot::Game::fo3).Name()
+     || name == loot::Game(loot::Game::fonv).Name()) {
         removeBtn->Enable(false);
      } else {
         removeBtn->Enable(true);
@@ -276,7 +277,7 @@ void SettingsFrame::OnGameSelect(wxListEvent& event) {
 void SettingsFrame::OnAddGame(wxCommandEvent& event) {
     BOOST_LOG_TRIVIAL(debug) << "Adding new game to settings.";
 
-    GameEditDialog * rowDialog = new GameEditDialog(this, translate("BOSS: Add Game"));
+    GameEditDialog * rowDialog = new GameEditDialog(this, translate("LOOT: Add Game"));
 
     if (rowDialog->ShowModal() == wxID_OK) {
 
@@ -284,7 +285,7 @@ void SettingsFrame::OnAddGame(wxCommandEvent& event) {
             BOOST_LOG_TRIVIAL(error) << "Tried to add a new game with no path or registry key given.";
             wxMessageBox(
                 translate("Error: A path and/or registry key is required. Row will not be added."),
-                translate("BOSS: Error"),
+                translate("LOOT: Error"),
                 wxOK | wxICON_ERROR,
                 this);
             return;
@@ -296,7 +297,7 @@ void SettingsFrame::OnAddGame(wxCommandEvent& event) {
                 BOOST_LOG_TRIVIAL(error) << "Tried to add a new game with the same name as one that is already defined.";
                 wxMessageBox(
                     translate("Error: A game with this name is already defined. Row will not be added."),
-                    translate("BOSS: Error"),
+                    translate("LOOT: Error"),
                     wxOK | wxICON_ERROR,
                     this);
                 return;
@@ -304,7 +305,7 @@ void SettingsFrame::OnAddGame(wxCommandEvent& event) {
                 BOOST_LOG_TRIVIAL(error) << "Tried to add a new game with the same folder as one that is already defined.";
                 wxMessageBox(
                     translate("Error: A game with this folder name is already defined. Row will not be added."),
-                    translate("BOSS: Error"),
+                    translate("LOOT: Error"),
                     wxOK | wxICON_ERROR,
                     this);
                 return;
@@ -326,19 +327,19 @@ void SettingsFrame::OnAddGame(wxCommandEvent& event) {
 void SettingsFrame::OnEditGame(wxCommandEvent& event) {
     BOOST_LOG_TRIVIAL(debug) << "Editing game settings.";
 
-    GameEditDialog * rowDialog = new GameEditDialog(this, translate("BOSS: Edit Game"));
+    GameEditDialog * rowDialog = new GameEditDialog(this, translate("LOOT: Edit Game"));
 
     long i = gamesList->GetFirstSelected();
 
     int stateNo;
-    if (gamesList->GetItemText(i, 1) == boss::Game(boss::g_game_tes4).FolderName())
-        stateNo = boss::g_game_tes4;
-    else if (gamesList->GetItemText(i, 1) == boss::Game(boss::g_game_tes5).FolderName())
-        stateNo = boss::g_game_tes5;
-    else if (gamesList->GetItemText(i, 1) == boss::Game(boss::g_game_fo3).FolderName())
-        stateNo = boss::g_game_fo3;
+    if (gamesList->GetItemText(i, 1) == loot::Game(loot::Game::tes4).FolderName())
+        stateNo = loot::Game::tes4;
+    else if (gamesList->GetItemText(i, 1) == loot::Game(loot::Game::tes5).FolderName())
+        stateNo = loot::Game::tes5;
+    else if (gamesList->GetItemText(i, 1) == loot::Game(loot::Game::fo3).FolderName())
+        stateNo = loot::Game::fo3;
     else
-        stateNo = boss::g_game_fonv;
+        stateNo = loot::Game::fonv;
 
     rowDialog->SetValues(stateNo, gamesList->GetItemText(i, 0), gamesList->GetItemText(i, 2), gamesList->GetItemText(i, 3), gamesList->GetItemText(i, 4), gamesList->GetItemText(i, 5), gamesList->GetItemText(i, 6), gamesList->GetItemText(i, 7));
 
@@ -348,7 +349,7 @@ void SettingsFrame::OnEditGame(wxCommandEvent& event) {
             BOOST_LOG_TRIVIAL(error) << "Tried to blank a game's name field.";
             wxMessageBox(
                 translate("Error: Name is required. Row will not be added."),
-                translate("BOSS: Error"),
+                translate("LOOT: Error"),
                 wxOK | wxICON_ERROR,
                 this);
             return;
@@ -356,7 +357,7 @@ void SettingsFrame::OnEditGame(wxCommandEvent& event) {
             BOOST_LOG_TRIVIAL(error) << "Tried to blank a game's folder field.";
             wxMessageBox(
                 translate("Error: Folder is required. Row will not be added."),
-                translate("BOSS: Error"),
+                translate("LOOT: Error"),
                 wxOK | wxICON_ERROR,
                 this);
             return;
@@ -364,7 +365,7 @@ void SettingsFrame::OnEditGame(wxCommandEvent& event) {
             BOOST_LOG_TRIVIAL(error) << "Tried to edit a game with no path or registry key given.";
             wxMessageBox(
                 translate("Error: A path and/or registry key is required. Row will not be added."),
-                translate("BOSS: Error"),
+                translate("LOOT: Error"),
                 wxOK | wxICON_ERROR,
                 this);
             return;
@@ -393,10 +394,10 @@ void SettingsFrame::OnRemoveGame(wxCommandEvent& event) {
 GameEditDialog::GameEditDialog(wxWindow *parent, const wxString& title) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER) {
 
     wxString Types[] = {
-        FromUTF8(boss::Game(boss::g_game_tes4).FolderName()),
-        FromUTF8(boss::Game(boss::g_game_tes5).FolderName()),
-        FromUTF8(boss::Game(boss::g_game_fo3).FolderName()),
-        FromUTF8(boss::Game(boss::g_game_fonv).FolderName())
+        FromUTF8(loot::Game(loot::Game::tes4).FolderName()),
+        FromUTF8(loot::Game(loot::Game::tes5).FolderName()),
+        FromUTF8(loot::Game(loot::Game::fo3).FolderName()),
+        FromUTF8(loot::Game(loot::Game::fonv).FolderName())
     };
 
     //Initialise controls.
@@ -428,7 +429,7 @@ GameEditDialog::GameEditDialog(wxWindow *parent, const wxString& title) : wxDial
 	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Type:")), leftItem);
 	GridSizer->Add(_type, rightItem);
 
-	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("BOSS Folder Name (required):")), leftItem);
+	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("LOOT Folder Name (required):")), leftItem);
 	GridSizer->Add(_folderName, rightItem);
 
 	GridSizer->Add(new wxStaticText(this, wxID_ANY, translate("Master File:")), leftItem);
@@ -460,17 +461,17 @@ GameEditDialog::GameEditDialog(wxWindow *parent, const wxString& title) : wxDial
     _type->SetSelection(0);
 
     SetBackgroundColour(wxColour(255,255,255));
-    SetIcon(wxIconLocation("BOSS.exe"));
+    SetIcon(wxIconLocation("LOOT.exe"));
 	SetSizerAndFit(bigBox);
 }
 
 void GameEditDialog::SetValues(unsigned int type, const wxString& name, const wxString& folderName, const wxString& master,
     const wxString& repo, const wxString& branch, const wxString& path, const wxString& registry) {
-    if (type == boss::g_game_tes4)
+    if (type == loot::Game::tes4)
         _type->SetSelection(0);
-    else if (type == boss::g_game_tes5)
+    else if (type == loot::Game::tes5)
         _type->SetSelection(1);
-    else if (type  == boss::g_game_fo3)
+    else if (type  == loot::Game::fo3)
         _type->SetSelection(2);
     else
         _type->SetSelection(3);

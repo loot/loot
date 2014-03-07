@@ -1,27 +1,28 @@
-/*  BOSS
+/*  LOOT
 
-    A plugin load order optimiser for games that use the esp/esm plugin system.
+    A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
+    Fallout: New Vegas.
 
     Copyright (C) 2013-2014    WrinklyNinja
 
-    This file is part of BOSS.
+    This file is part of LOOT.
 
-    BOSS is free software: you can redistribute
+    LOOT is free software: you can redistribute
     it and/or modify it under the terms of the GNU General Public License
     as published by the Free Software Foundation, either version 3 of
     the License, or (at your option) any later version.
 
-    BOSS is distributed in the hope that it will
+    LOOT is distributed in the hope that it will
     be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with BOSS.  If not, see
+    along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
 */
-#ifndef __BOSS_GENERATORS__
-#define __BOSS_GENERATORS__
+#ifndef __LOOT_GENERATORS__
+#define __LOOT_GENERATORS__
 
 #include "helpers.h"
 #include "metadata.h"
@@ -38,9 +39,9 @@
 #include <boost/filesystem.hpp>
 #include <boost/locale.hpp>
 
-namespace boss {
+namespace loot {
 
-    //BOSS Report generation stuff.
+    //LOOT Report generation stuff.
 
     struct xml_string_writer: pugi::xml_writer {
         std::string result;
@@ -52,11 +53,11 @@ namespace boss {
 
     inline void WriteMessage(pugi::xml_node& listItem, unsigned int type, std::string content) {
 
-        if (type == g_message_say)
+        if (type == Message::say)
             content = boost::locale::translate("Note:").str() + " " + content;
-        else if (type == g_message_tag) {
+        else if (type == Message::tag) {
             content = boost::locale::translate("Bash Tag Suggestion(s):").str() + " " + content;
-        } else if (type == g_message_warn)
+        } else if (type == Message::warn)
             content = boost::locale::translate("Warning:").str() + " " + content;
         else
             content = boost::locale::translate("Error:").str() + " " + content;
@@ -101,7 +102,7 @@ namespace boss {
     }
 
     inline void GenerateHead(pugi::xml_document& doc) {
-        BOOST_LOG_TRIVIAL(trace) << "Creating BOSS report head.";
+        BOOST_LOG_TRIVIAL(trace) << "Creating LOOT report head.";
 
         //Add DOCTYPE node.
         doc.append_child(pugi::node_doctype).set_value("html");
@@ -124,7 +125,7 @@ namespace boss {
 
         node = head.append_child();
         node.set_name("title");
-        node.text().set(boost::locale::translate("BOSS Report").str().c_str());
+        node.text().set(boost::locale::translate("LOOT Report").str().c_str());
 
         node = head.append_child();
         node.set_name("link");
@@ -138,7 +139,7 @@ namespace boss {
     }
 
     inline void AppendNav(pugi::xml_node& body) {
-        BOOST_LOG_TRIVIAL(trace) << "Appending navigation bar to BOSS report.";
+        BOOST_LOG_TRIVIAL(trace) << "Appending navigation bar to LOOT report.";
 
         pugi::xml_node nav, div;
 
@@ -175,11 +176,11 @@ namespace boss {
                 pugi::xml_node li = list.append_child();
                 li.set_name("li");
 
-                if (it->Type() == g_message_say)
+                if (it->Type() == Message::say)
                     li.append_attribute("class").set_value("say");
-                else if (it->Type() == g_message_tag)
+                else if (it->Type() == Message::tag)
                     li.append_attribute("class").set_value("tag");
-                else if (it->Type() == g_message_warn) {
+                else if (it->Type() == Message::warn) {
                     li.append_attribute("class").set_value("warn");
                     ++warnNo;
                 } else {
@@ -202,7 +203,7 @@ namespace boss {
                         int errorNo,
                         std::list<Message>& messages) {
 
-        BOOST_LOG_TRIVIAL(trace) << "Appending summary tab to BOSS report.";
+        BOOST_LOG_TRIVIAL(trace) << "Appending summary tab to LOOT report.";
 
         pugi::xml_node summary = main.append_child();
         summary.set_name("div");
@@ -226,7 +227,7 @@ namespace boss {
         row.set_name("tr");
         cell = row.append_child();
         cell.set_name("td");
-        cell.text().set(boost::locale::translate("BOSS Version").str().c_str());
+        cell.text().set(boost::locale::translate("LOOT Version").str().c_str());
         cell = row.append_child();
         cell.set_name("td");
         cell.text().set((IntToString(g_version_major)+"."+IntToString(g_version_minor)+"."+IntToString(g_version_patch)).c_str());
@@ -253,13 +254,13 @@ namespace boss {
             cell.text().set(boost::locale::translate("Disabled").str().c_str());
 
         if (!hasChanged) {
-            BOOST_LOG_TRIVIAL(info) << "No changes in the BOSS report details tab since the last run.";
+            BOOST_LOG_TRIVIAL(info) << "No changes in the LOOT report details tab since the last run.";
             /*pugi::xml_node note = summary.append_child();
             note.set_name("div");
             note.append_attribute("id").set_value("noChanges");
             note.text().set(boost::locale::translate("No change in details since last run.").str().c_str());
             */
-            messages.push_front(boss::Message(boss::g_message_say, boost::locale::translate("There have been no changes in the Details tab since BOSS was last run for this game.").str()));
+            messages.push_front(loot::Message(loot::Message::say, boost::locale::translate("There have been no changes in the Details tab since LOOT was last run for this game.").str()));
         }
 
         if (!messages.empty()) {
@@ -305,7 +306,7 @@ namespace boss {
 
     inline bool AppendDetails(pugi::xml_node& main, const std::list<Plugin>& plugins, int& messageNo, int& warnNo, int& errorNo, const std::string& oldDetails) {
 
-        BOOST_LOG_TRIVIAL(trace) << "Appending details tab to BOSS report.";
+        BOOST_LOG_TRIVIAL(trace) << "Appending details tab to LOOT report.";
 
         pugi::xml_node details = main.append_child();
         details.set_name("div");
@@ -392,7 +393,7 @@ namespace boss {
                     else if (jt->ITMs() > 0 && jt->UDRs() > 0 && jt->DeletedNavmeshes() == 0)
                         f = boost::format(boost::locale::translate("Contains %1% ITM records and %2% UDR records. Clean with %3%.")) % jt->ITMs() % jt->UDRs() % jt->CleaningUtility();
 
-                    messages.push_back(boss::Message(boss::g_message_warn, f.str()));
+                    messages.push_back(loot::Message(loot::Message::warn, f.str()));
                 }
 
                 AppendMessages(plugin, messages, warnNo, errorNo);
@@ -414,7 +415,7 @@ namespace boss {
                         int& pluginMessageNo
                         ) {
 
-        BOOST_LOG_TRIVIAL(trace) << "Appending main content to BOSS report.";
+        BOOST_LOG_TRIVIAL(trace) << "Appending main content to LOOT report.";
 
         pugi::xml_node main = body.append_child();
         main.set_name("div");
@@ -426,7 +427,7 @@ namespace boss {
         noscript.set_name("noscript");
         div = noscript.append_child();
         div.set_name("div");
-        div.text().set(boost::locale::translate("The BOSS Report requires Javascript to be enabled in order to function.").str().c_str());
+        div.text().set(boost::locale::translate("The LOOT Report requires Javascript to be enabled in order to function.").str().c_str());
 
         int messageNo=0, warnNo=0, errorNo=0;
         bool hasChanged = AppendDetails(main, plugins, messageNo, warnNo, errorNo, oldDetails);
@@ -437,7 +438,7 @@ namespace boss {
 
     inline void AppendFilters(pugi::xml_node& body, int messageNo, int pluginNo) {
 
-        BOOST_LOG_TRIVIAL(trace) << "Appending filters to BOSS report.";
+        BOOST_LOG_TRIVIAL(trace) << "Appending filters to LOOT report.";
 
         pugi::xml_node filters = body.append_child();
         filters.set_name("div");
@@ -526,7 +527,7 @@ namespace boss {
 
     inline void AppendScripts(pugi::xml_node& body) {
 
-        BOOST_LOG_TRIVIAL(trace) << "Appending scripts to BOSS report.";
+        BOOST_LOG_TRIVIAL(trace) << "Appending scripts to LOOT report.";
 
         pugi::xml_node node;
 
@@ -561,7 +562,7 @@ namespace boss {
         AppendScripts(body);
         //PugiXML's save_file doesn't handle Unicode paths right (it can't open them right), so use a stream instead.
         boost::filesystem::path outpath(file);
-        boss::ofstream out(outpath);
+        loot::ofstream out(outpath);
         doc.save(out, "\t", pugi::format_default | pugi::format_no_declaration | pugi::format_raw);
         out.close();
 
@@ -583,11 +584,11 @@ namespace boss {
         root["Update Masterlist"] = true;
         root["View Report Externally"] = false;
 
-        games.push_back(Game(g_game_tes4));
-        games.push_back(Game(g_game_tes5));
-        games.push_back(Game(g_game_fo3));
-        games.push_back(Game(g_game_fonv));
-        games.push_back(Game(g_game_tes4, "Nehrim").SetDetails("Nehrim - At Fate's Edge", "Nehrim.esm", "https://github.com/boss-developers/boss-oblivion.git", "gh-pages", "", "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim - At Fate's Edge_is1"));
+        games.push_back(Game(Game::tes4));
+        games.push_back(Game(Game::tes5));
+        games.push_back(Game(Game::fo3));
+        games.push_back(Game(Game::fonv));
+        games.push_back(Game(Game::tes4, "Nehrim").SetDetails("Nehrim - At Fate's Edge", "Nehrim.esm", "https://github.com/loot-developers/loot-oblivion.git", "gh-pages", "", "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim - At Fate's Edge_is1"));
 
         root["Games"] = games;
 
@@ -597,7 +598,7 @@ namespace boss {
         yout << root;
 
         boost::filesystem::path p(file);
-        boss::ofstream out(p);
+        loot::ofstream out(p);
         out << yout.c_str();
         out.close();
     }
@@ -615,7 +616,7 @@ namespace YAML {
 		return out;
     }
 
-    inline Emitter& operator << (Emitter& out, const boss::PluginDirtyInfo& rhs) {
+    inline Emitter& operator << (Emitter& out, const loot::PluginDirtyInfo& rhs) {
         out << BeginMap
             << Key << "crc" << Value << Hex << rhs.CRC() << Dec
             << Key << "util" << Value << rhs.CleaningUtility();
@@ -632,7 +633,7 @@ namespace YAML {
 		return out;
     }
 
-    inline Emitter& operator << (Emitter& out, const boss::Game& rhs) {
+    inline Emitter& operator << (Emitter& out, const loot::Game& rhs) {
         out << BeginMap
             << Key << "folder" << Value << rhs.FolderName()
             << Key << "name" << Value << rhs.Name()
@@ -642,24 +643,24 @@ namespace YAML {
             << Key << "path" << Value << rhs.GamePath().string()
             << Key << "registry" << Value << rhs.RegistryKey();
 
-        if (rhs.Id() == boss::g_game_tes4)
-            out << Key << Value << boss::Game(boss::g_game_tes4).FolderName();
-        else if (rhs.Id() == boss::g_game_tes5)
-            out << Key << Value << boss::Game(boss::g_game_tes5).FolderName();
-        else if (rhs.Id() == boss::g_game_fo3)
-            out << Key << Value << boss::Game(boss::g_game_fo3).FolderName();
-        else if (rhs.Id() == boss::g_game_fonv)
-            out << Key << Value << boss::Game(boss::g_game_fonv).FolderName();
+        if (rhs.Id() == loot::Game::tes4)
+            out << Key << Value << loot::Game(loot::Game::tes4).FolderName();
+        else if (rhs.Id() == loot::Game::tes5)
+            out << Key << Value << loot::Game(loot::Game::tes5).FolderName();
+        else if (rhs.Id() == loot::Game::fo3)
+            out << Key << Value << loot::Game(loot::Game::fo3).FolderName();
+        else if (rhs.Id() == loot::Game::fonv)
+            out << Key << Value << loot::Game(loot::Game::fonv).FolderName();
 
 		out << EndMap;
 
 		return out;
     }
 
-    inline Emitter& operator << (Emitter& out, const boss::MessageContent& rhs) {
+    inline Emitter& operator << (Emitter& out, const loot::MessageContent& rhs) {
         out << BeginMap;
 
-        out << Key << "lang" << Value << boss::Language(rhs.Language()).Locale();
+        out << Key << "lang" << Value << loot::Language(rhs.Language()).Locale();
 
         out << Key << "str" << Value << rhs.Str();
 
@@ -668,17 +669,17 @@ namespace YAML {
 		return out;
     }
 
-    inline Emitter& operator << (Emitter& out, const boss::Message& rhs) {
+    inline Emitter& operator << (Emitter& out, const loot::Message& rhs) {
         out << BeginMap;
 
-        if (rhs.Type() == boss::g_message_say)
+        if (rhs.Type() == loot::Message::say)
             out << Key << "type" << Value << "say";
-        else if (rhs.Type() == boss::g_message_warn)
+        else if (rhs.Type() == loot::Message::warn)
             out << Key << "type" << Value << "warn";
         else
             out << Key << "type" << Value << "error";
 
-        if (rhs.Content().size() == 1 && rhs.Content().front().Language() == boss::g_lang_any)
+        if (rhs.Content().size() == 1 && rhs.Content().front().Language() == loot::Language::any)
             out << Key << "content" << Value << rhs.Content().front().Str();
         else
             out << Key << "content" << Value << rhs.Content();
@@ -691,7 +692,7 @@ namespace YAML {
 		return out;
     }
 
-    inline Emitter& operator << (Emitter& out, const boss::File& rhs) {
+    inline Emitter& operator << (Emitter& out, const loot::File& rhs) {
         if (!rhs.IsConditional() && rhs.DisplayName().empty())
             out << rhs.Name();
         else {
@@ -710,7 +711,7 @@ namespace YAML {
 		return out;
     }
 
-    inline Emitter& operator << (Emitter& out, const boss::Tag& rhs) {
+    inline Emitter& operator << (Emitter& out, const loot::Tag& rhs) {
         if (!rhs.IsConditional()) {
             if (rhs.IsAddition())
                 out << rhs.Name();
@@ -730,7 +731,7 @@ namespace YAML {
 		return out;
     }
 
-    inline Emitter& operator << (Emitter& out, const boss::Plugin& rhs) {
+    inline Emitter& operator << (Emitter& out, const loot::Plugin& rhs) {
         if (!rhs.HasNameOnly()) {
 
             out << BeginMap
