@@ -76,16 +76,25 @@ namespace loot {
         std::string Name() const;
         std::string Locale() const;
 
+        static const unsigned int any = 0;
+        static const unsigned int english = 1;
+        static const unsigned int spanish = 2;
+        static const unsigned int russian = 3;
+        static const unsigned int french = 4;
+        static const unsigned int chinese = 5;
+        static const unsigned int polish = 6;
+        static const unsigned int brazilian_portuguese = 7;
+
         static std::vector<std::string> Names() {
             std::vector<std::string> vec;
-            vec.push_back(Language(g_lang_any).Name());
-            vec.push_back(Language(g_lang_english).Name());
-            vec.push_back(Language(g_lang_spanish).Name());
-            vec.push_back(Language(g_lang_russian).Name());
-            vec.push_back(Language(g_lang_french).Name());
-            vec.push_back(Language(g_lang_chinese).Name());
-            vec.push_back(Language(g_lang_polish).Name());
-            vec.push_back(Language(g_lang_brazilian_portuguese).Name());
+            vec.push_back(Language(Language::any).Name());
+            vec.push_back(Language(Language::english).Name());
+            vec.push_back(Language(Language::spanish).Name());
+            vec.push_back(Language(Language::russian).Name());
+            vec.push_back(Language(Language::french).Name());
+            vec.push_back(Language(Language::chinese).Name());
+            vec.push_back(Language(Language::polish).Name());
+            vec.push_back(Language(Language::brazilian_portuguese).Name());
             return vec;
         }
     private:

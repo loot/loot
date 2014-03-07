@@ -28,29 +28,6 @@
 
 namespace loot {
 
-    //Game values.
-    extern const unsigned int g_game_autodetect;
-    extern const unsigned int g_game_tes4;
-    extern const unsigned int g_game_tes5;
-    extern const unsigned int g_game_fo3;
-    extern const unsigned int g_game_fonv;
-
-    //Message types.
-    extern const unsigned int g_message_say;
-    extern const unsigned int g_message_warn;
-    extern const unsigned int g_message_error;
-    extern const unsigned int g_message_tag;
-
-    //Languages
-    extern const unsigned int g_lang_any;
-    extern const unsigned int g_lang_english;
-    extern const unsigned int g_lang_spanish;
-    extern const unsigned int g_lang_russian;
-    extern const unsigned int g_lang_french;
-    extern const unsigned int g_lang_chinese;
-    extern const unsigned int g_lang_polish;
-    extern const unsigned int g_lang_brazilian_portuguese;
-
     //Version numbers.
     extern const unsigned int g_version_major;
     extern const unsigned int g_version_minor;

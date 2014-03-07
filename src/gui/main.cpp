@@ -117,7 +117,7 @@ struct masterlist_updater_parser {
                 _plugins.clear();
                 _messages.clear();
                 BOOST_LOG_TRIVIAL(error) << "Masterlist update failed. Details: " << e.what();
-                _errors.push_back(loot::Message(loot::g_message_error, (format(loc::translate("Masterlist update failed. Details: %1%")) % e.what()).str()));
+                _errors.push_back(loot::Message(loot::Message::error, (format(loc::translate("Masterlist update failed. Details: %1%")) % e.what()).str()));
             }
         }
         else {
@@ -129,7 +129,7 @@ struct masterlist_updater_parser {
                 _plugins.clear();
                 _messages.clear();
                 BOOST_LOG_TRIVIAL(error) << "Masterlist revision check failed. Details: " << e.what();
-                _errors.push_back(loot::Message(loot::g_message_error, (format(loc::translate("Masterlist revision check failed. Details: %1%")) % e.what()).str()));
+                _errors.push_back(loot::Message(loot::Message::error, (format(loc::translate("Masterlist revision check failed. Details: %1%")) % e.what()).str()));
             }
         }
 
@@ -147,7 +147,7 @@ struct masterlist_updater_parser {
                     _plugins = mlist["plugins"].as< list<loot::Plugin> >();
             } catch (YAML::Exception& e) {
                 BOOST_LOG_TRIVIAL(error) << "Masterlist parsing failed. Details: " << e.what();
-                _errors.push_back(loot::Message(loot::g_message_error, (format(loc::translate("Masterlist parsing failed. Details: %1%")) % e.what()).str()));
+                _errors.push_back(loot::Message(loot::Message::error, (format(loc::translate("Masterlist parsing failed. Details: %1%")) % e.what()).str()));
             }
             BOOST_LOG_TRIVIAL(debug) << "Finished parsing masterlist.";
 
@@ -247,25 +247,25 @@ bool LOOT::OnInit() {
     //Set the locale to get encoding and language conversions working correctly.
     BOOST_LOG_TRIVIAL(debug) << "Initialising language settings.";
     //Defaults in case language string is empty or setting is missing.
-    string localeId = loot::Language(loot::g_lang_any).Locale() + ".UTF-8";
+    string localeId = loot::Language(loot::Language::any).Locale() + ".UTF-8";
     wxLanguage wxLang = wxLANGUAGE_ENGLISH;
     if (_settings["Language"]) {
         loot::Language lang(_settings["Language"].as<string>());
         BOOST_LOG_TRIVIAL(debug) << "Selected language: " << lang.Name();
         localeId = lang.Locale() + ".UTF-8";
-        if (lang.Code() == loot::g_lang_english)
+        if (lang.Code() == loot::Language::english)
             wxLang = wxLANGUAGE_ENGLISH;
-        else if (lang.Code() == loot::g_lang_spanish)
+        else if (lang.Code() == loot::Language::spanish)
             wxLang = wxLANGUAGE_SPANISH;
-        else if (lang.Code() == loot::g_lang_russian)
+        else if (lang.Code() == loot::Language::russian)
             wxLang = wxLANGUAGE_RUSSIAN;
-        else if (lang.Code() == loot::g_lang_french)
+        else if (lang.Code() == loot::Language::french)
             wxLang = wxLANGUAGE_FRENCH;
-        else if (lang.Code() == loot::g_lang_chinese)
+        else if (lang.Code() == loot::Language::chinese)
             wxLang = wxLANGUAGE_CHINESE;
-        else if (lang.Code() == loot::g_lang_polish)
+        else if (lang.Code() == loot::Language::polish)
             wxLang = wxLANGUAGE_POLISH;
-        else if (lang.Code() == loot::g_lang_brazilian_portuguese)
+        else if (lang.Code() == loot::Language::brazilian_portuguese)
             wxLang = wxLANGUAGE_PORTUGUESE_BRAZILIAN;
     }
 
@@ -465,7 +465,7 @@ Launcher::Launcher(const wxChar *title, YAML::Node& settings, Game& game, vector
     if (!fs::exists(_game.ReportPath()))
         ViewButton->Enable(false);
 
-    if (_game.Id() == loot::g_game_tes5)
+    if (_game.Id() == loot::Game::tes5)
         RedatePluginsItem->Enable(true);
     else
         RedatePluginsItem->Enable(false);
@@ -546,7 +546,7 @@ void Launcher::OnGameChange(wxCommandEvent& event) {
             NULL);
     }
     SetTitle(FromUTF8("LOOT - " + _game.Name()));
-    if (_game.Id() == loot::g_game_tes5)
+    if (_game.Id() == loot::Game::tes5)
         RedatePluginsItem->Enable(true);
     else
         RedatePluginsItem->Enable(false);
@@ -677,7 +677,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                 ulist_plugins = ulist["plugins"].as< list<loot::Plugin> >();
         } catch (YAML::ParserException& e) {
             BOOST_LOG_TRIVIAL(error) << "Userlist parsing failed. Details: " << e.what();
-            messages.push_back(loot::Message(loot::g_message_error, (format(loc::translate("Userlist parsing failed. Details: %1%")) % e.what()).str()));
+            messages.push_back(loot::Message(loot::Message::error, (format(loc::translate("Userlist parsing failed. Details: %1%")) % e.what()).str()));
         }
         if (ulist["plugins"])
             ulist_plugins = ulist["plugins"].as< list<loot::Plugin> >();
@@ -696,7 +696,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         if (_settings["Language"])
             lang = Language(_settings["Language"].as<string>()).Code();
         else
-            lang = loot::g_lang_any;
+            lang = loot::Language::any;
 
 
         //Merge all global message lists.
@@ -718,7 +718,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             }
         } catch (loot::error& e) {
             BOOST_LOG_TRIVIAL(error) << "A global message contains a condition that could not be evaluated. Details: " << e.what();
-            messages.push_back(loot::Message(loot::g_message_error, (format(loc::translate("A global message contains a condition that could not be evaluated. Details: %1%")) % e.what()).str()));
+            messages.push_back(loot::Message(loot::Message::error, (format(loc::translate("A global message contains a condition that could not be evaluated. Details: %1%")) % e.what()).str()));
         }
 
         //Merge plugin list, masterlist and userlist plugin data.
@@ -751,7 +751,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                 graph[*vit].EvalAllConditions(_game, lang);
             } catch (loot::error& e) {
                 BOOST_LOG_TRIVIAL(error) << "\"" << graph[*vit].Name() << "\" contains a condition that could not be evaluated. Details: " << e.what();
-                messages.push_back(loot::Message(loot::g_message_error, (format(loc::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % graph[*vit].Name() % e.what()).str()));
+                messages.push_back(loot::Message(loot::Message::error, (format(loc::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % graph[*vit].Name() % e.what()).str()));
             }
 
             progDia->Pulse();
@@ -881,7 +881,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             }
             catch (loot::error& e) {
                 BOOST_LOG_TRIVIAL(error) << "Failed to set the load order. Details: " << e.what();
-                messages.push_back(loot::Message(loot::g_message_error, (format(loc::translate("Failed to set the load order. Details: %1%")) % e.what()).str()));
+                messages.push_back(loot::Message(loot::Message::error, (format(loc::translate("Failed to set the load order. Details: %1%")) % e.what()).str()));
             }
             BOOST_LOG_TRIVIAL(trace) << "Load order set:";
             for (list<loot::Plugin>::iterator it = plugins.begin(), endIt = plugins.end(); it != endIt; ++it) {
@@ -891,12 +891,12 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         else {
             //User decided to cancel sorting. Just go straight to displaying the report.
             BOOST_LOG_TRIVIAL(info) << "The load order calculated was not applied as sorting was canceled.";
-            messages.push_back(loot::Message(loot::g_message_warn, loc::translate("The load order displayed in the Details tab was not applied as sorting was canceled.")));
+            messages.push_back(loot::Message(loot::Message::warn, loc::translate("The load order displayed in the Details tab was not applied as sorting was canceled.")));
         }
 
     } catch (std::exception& e) {
         BOOST_LOG_TRIVIAL(error) << "Failed to calculate the load order. Details: " << e.what();
-        messages.push_back(loot::Message(loot::g_message_error, (format(loc::translate("Failed to calculate the load order. Details: %1%")) % e.what()).str()));
+        messages.push_back(loot::Message(loot::Message::error, (format(loc::translate("Failed to calculate the load order. Details: %1%")) % e.what()).str()));
 
         progDia->Destroy();
         progDia = NULL;
@@ -1058,7 +1058,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
     if (_settings["Language"])
         lang = Language(_settings["Language"].as<string>()).Code();
     else
-        lang = loot::g_lang_any;
+        lang = loot::Language::any;
 
     //Create editor window.
     BOOST_LOG_TRIVIAL(debug) << "Opening editor window.";

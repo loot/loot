@@ -53,11 +53,11 @@ namespace loot {
 
     inline void WriteMessage(pugi::xml_node& listItem, unsigned int type, std::string content) {
 
-        if (type == g_message_say)
+        if (type == Message::say)
             content = boost::locale::translate("Note:").str() + " " + content;
-        else if (type == g_message_tag) {
+        else if (type == Message::tag) {
             content = boost::locale::translate("Bash Tag Suggestion(s):").str() + " " + content;
-        } else if (type == g_message_warn)
+        } else if (type == Message::warn)
             content = boost::locale::translate("Warning:").str() + " " + content;
         else
             content = boost::locale::translate("Error:").str() + " " + content;
@@ -176,11 +176,11 @@ namespace loot {
                 pugi::xml_node li = list.append_child();
                 li.set_name("li");
 
-                if (it->Type() == g_message_say)
+                if (it->Type() == Message::say)
                     li.append_attribute("class").set_value("say");
-                else if (it->Type() == g_message_tag)
+                else if (it->Type() == Message::tag)
                     li.append_attribute("class").set_value("tag");
-                else if (it->Type() == g_message_warn) {
+                else if (it->Type() == Message::warn) {
                     li.append_attribute("class").set_value("warn");
                     ++warnNo;
                 } else {
@@ -260,7 +260,7 @@ namespace loot {
             note.append_attribute("id").set_value("noChanges");
             note.text().set(boost::locale::translate("No change in details since last run.").str().c_str());
             */
-            messages.push_front(loot::Message(loot::g_message_say, boost::locale::translate("There have been no changes in the Details tab since LOOT was last run for this game.").str()));
+            messages.push_front(loot::Message(loot::Message::say, boost::locale::translate("There have been no changes in the Details tab since LOOT was last run for this game.").str()));
         }
 
         if (!messages.empty()) {
@@ -393,7 +393,7 @@ namespace loot {
                     else if (jt->ITMs() > 0 && jt->UDRs() > 0 && jt->DeletedNavmeshes() == 0)
                         f = boost::format(boost::locale::translate("Contains %1% ITM records and %2% UDR records. Clean with %3%.")) % jt->ITMs() % jt->UDRs() % jt->CleaningUtility();
 
-                    messages.push_back(loot::Message(loot::g_message_warn, f.str()));
+                    messages.push_back(loot::Message(loot::Message::warn, f.str()));
                 }
 
                 AppendMessages(plugin, messages, warnNo, errorNo);
@@ -584,11 +584,11 @@ namespace loot {
         root["Update Masterlist"] = true;
         root["View Report Externally"] = false;
 
-        games.push_back(Game(g_game_tes4));
-        games.push_back(Game(g_game_tes5));
-        games.push_back(Game(g_game_fo3));
-        games.push_back(Game(g_game_fonv));
-        games.push_back(Game(g_game_tes4, "Nehrim").SetDetails("Nehrim - At Fate's Edge", "Nehrim.esm", "https://github.com/loot-developers/loot-oblivion.git", "gh-pages", "", "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim - At Fate's Edge_is1"));
+        games.push_back(Game(Game::tes4));
+        games.push_back(Game(Game::tes5));
+        games.push_back(Game(Game::fo3));
+        games.push_back(Game(Game::fonv));
+        games.push_back(Game(Game::tes4, "Nehrim").SetDetails("Nehrim - At Fate's Edge", "Nehrim.esm", "https://github.com/loot-developers/loot-oblivion.git", "gh-pages", "", "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim - At Fate's Edge_is1"));
 
         root["Games"] = games;
 
@@ -643,14 +643,14 @@ namespace YAML {
             << Key << "path" << Value << rhs.GamePath().string()
             << Key << "registry" << Value << rhs.RegistryKey();
 
-        if (rhs.Id() == loot::g_game_tes4)
-            out << Key << Value << loot::Game(loot::g_game_tes4).FolderName();
-        else if (rhs.Id() == loot::g_game_tes5)
-            out << Key << Value << loot::Game(loot::g_game_tes5).FolderName();
-        else if (rhs.Id() == loot::g_game_fo3)
-            out << Key << Value << loot::Game(loot::g_game_fo3).FolderName();
-        else if (rhs.Id() == loot::g_game_fonv)
-            out << Key << Value << loot::Game(loot::g_game_fonv).FolderName();
+        if (rhs.Id() == loot::Game::tes4)
+            out << Key << Value << loot::Game(loot::Game::tes4).FolderName();
+        else if (rhs.Id() == loot::Game::tes5)
+            out << Key << Value << loot::Game(loot::Game::tes5).FolderName();
+        else if (rhs.Id() == loot::Game::fo3)
+            out << Key << Value << loot::Game(loot::Game::fo3).FolderName();
+        else if (rhs.Id() == loot::Game::fonv)
+            out << Key << Value << loot::Game(loot::Game::fonv).FolderName();
 
 		out << EndMap;
 
@@ -672,14 +672,14 @@ namespace YAML {
     inline Emitter& operator << (Emitter& out, const loot::Message& rhs) {
         out << BeginMap;
 
-        if (rhs.Type() == loot::g_message_say)
+        if (rhs.Type() == loot::Message::say)
             out << Key << "type" << Value << "say";
-        else if (rhs.Type() == loot::g_message_warn)
+        else if (rhs.Type() == loot::Message::warn)
             out << Key << "type" << Value << "warn";
         else
             out << Key << "type" << Value << "error";
 
-        if (rhs.Content().size() == 1 && rhs.Content().front().Language() == loot::g_lang_any)
+        if (rhs.Content().size() == 1 && rhs.Content().front().Language() == loot::Language::any)
             out << Key << "content" << Value << rhs.Content().front().Str();
         else
             out << Key << "content" << Value << rhs.Content();

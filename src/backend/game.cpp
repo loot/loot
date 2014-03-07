@@ -44,25 +44,25 @@ namespace loot {
         if (settings["Games"])
             games = settings["Games"].as< vector<Game> >();
 
-        if (find(games.begin(), games.end(), Game(g_game_tes4)) == games.end())
-            games.push_back(Game(g_game_tes4));
+        if (find(games.begin(), games.end(), Game(Game::tes4)) == games.end())
+            games.push_back(Game(Game::tes4));
 
-        if (find(games.begin(), games.end(), Game(g_game_tes5)) == games.end())
-            games.push_back(Game(g_game_tes5));
+        if (find(games.begin(), games.end(), Game(Game::tes5)) == games.end())
+            games.push_back(Game(Game::tes5));
 
-        if (find(games.begin(), games.end(), Game(g_game_fo3)) == games.end())
-            games.push_back(Game(g_game_fo3));
+        if (find(games.begin(), games.end(), Game(Game::fo3)) == games.end())
+            games.push_back(Game(Game::fo3));
 
-        if (find(games.begin(), games.end(), Game(g_game_fonv)) == games.end())
-            games.push_back(Game(g_game_fonv));
+        if (find(games.begin(), games.end(), Game(Game::fonv)) == games.end())
+            games.push_back(Game(Game::fonv));
 
         return games;
     }
 
-    Game::Game() : id(g_game_autodetect) {}
+    Game::Game() : id(Game::autodetect) {}
 
     Game::Game(const unsigned int gameCode, const std::string& folder) : id(gameCode) {
-        if (Id() == g_game_tes4) {
+        if (Id() == Game::tes4) {
             _name = "TES IV: Oblivion";
             registryKey = "Software\\Bethesda Softworks\\Oblivion\\Installed Path";
             lootFolderName = "Oblivion";
@@ -70,7 +70,7 @@ namespace loot {
             espm_settings = espm::Settings("tes4");
             _repositoryURL = "https://github.com/loot/oblivion.git";
             _repositoryBranch = "gh-pages";
-        } else if (Id() == g_game_tes5) {
+        } else if (Id() == Game::tes5) {
             _name = "TES V: Skyrim";
             registryKey = "Software\\Bethesda Softworks\\Skyrim\\Installed Path";
             lootFolderName = "Skyrim";
@@ -78,7 +78,7 @@ namespace loot {
             espm_settings = espm::Settings("tes5");
             _repositoryURL = "https://github.com/loot/skyrim.git";
             _repositoryBranch = "gh-pages";
-        } else if (Id() == g_game_fo3) {
+        } else if (Id() == Game::fo3) {
             _name = "Fallout 3";
             registryKey = "Software\\Bethesda Softworks\\Fallout3\\Installed Path";
             lootFolderName = "Fallout3";
@@ -86,7 +86,7 @@ namespace loot {
             espm_settings = espm::Settings("fo3");
             _repositoryURL = "https://github.com/loot/fallout3.git";
             _repositoryBranch = "gh-pages";
-        } else if (Id() == g_game_fonv) {
+        } else if (Id() == Game::fonv) {
             _name = "Fallout: New Vegas";
             registryKey = "Software\\Bethesda Softworks\\FalloutNV\\Installed Path";
             lootFolderName = "FalloutNV";
@@ -244,13 +244,13 @@ namespace loot {
         char ** pluginArr;
         size_t pluginArrSize;
         int ret;
-        if (Id() == g_game_tes4)
+        if (Id() == Game::tes4)
             ret = lo_create_handle(&gh, LIBLO_GAME_TES4, gamePath.string().c_str());
-        else if (Id() == g_game_tes5)
+        else if (Id() == Game::tes5)
             ret = lo_create_handle(&gh, LIBLO_GAME_TES5, gamePath.string().c_str());
-        else if (Id() == g_game_fo3)
+        else if (Id() == Game::fo3)
             ret = lo_create_handle(&gh, LIBLO_GAME_FO3, gamePath.string().c_str());
-        else if (Id() == g_game_fonv)
+        else if (Id() == Game::fonv)
             ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str());
 
         if (ret != LIBLO_OK && ret != LIBLO_WARN_LO_MISMATCH) {
@@ -325,13 +325,13 @@ namespace loot {
         size_t pluginArrSize;
 
         int ret;
-        if (Id() == g_game_tes4)
+        if (Id() == Game::tes4)
             ret = lo_create_handle(&gh, LIBLO_GAME_TES4, gamePath.string().c_str());
-        else if (Id() == g_game_tes5)
+        else if (Id() == Game::tes5)
             ret = lo_create_handle(&gh, LIBLO_GAME_TES5, gamePath.string().c_str());
-        else if (Id() == g_game_fo3)
+        else if (Id() == Game::fo3)
             ret = lo_create_handle(&gh, LIBLO_GAME_FO3, gamePath.string().c_str());
-        else if (Id() == g_game_fonv)
+        else if (Id() == Game::fonv)
             ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str());
 
         if (ret != LIBLO_OK && ret != LIBLO_WARN_LO_MISMATCH) {
@@ -401,13 +401,13 @@ namespace loot {
         char ** pluginArr = NULL;
         size_t pluginArrSize = 0;
         int ret;
-        if (Id() == g_game_tes4)
+        if (Id() == Game::tes4)
             ret = lo_create_handle(&gh, LIBLO_GAME_TES4, gamePath.string().c_str());
-        else if (Id() == g_game_tes5)
+        else if (Id() == Game::tes5)
             ret = lo_create_handle(&gh, LIBLO_GAME_TES5, gamePath.string().c_str());
-        else if (Id() == g_game_fo3)
+        else if (Id() == Game::fo3)
             ret = lo_create_handle(&gh, LIBLO_GAME_FO3, gamePath.string().c_str());
-        else if (Id() == g_game_fonv)
+        else if (Id() == Game::fonv)
             ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str());
 
         if (ret != LIBLO_OK && ret != LIBLO_WARN_LO_MISMATCH) {

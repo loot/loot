@@ -27,6 +27,7 @@
 #include "game.h"
 #include "globals.h"
 
+
 #include <stdint.h>
 #include <string>
 #include <vector>
@@ -89,7 +90,7 @@ namespace loot {
     class MessageContent {
     public:
         MessageContent();
-        MessageContent(const std::string& str, const unsigned int language = g_lang_any);
+        MessageContent(const std::string& str, const unsigned int language);
 
         std::string Str() const;
         unsigned int Language() const;
@@ -117,6 +118,11 @@ namespace loot {
         unsigned int Type() const;
         std::vector<MessageContent> Content() const;
         MessageContent ChooseContent(const unsigned int language) const;
+
+        static const unsigned int say   = 0;
+        static const unsigned int warn  = 1;
+        static const unsigned int error = 2;
+        static const unsigned int tag   = 3;
     private:
         unsigned int _type;
         std::vector<MessageContent> _content;

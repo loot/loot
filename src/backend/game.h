@@ -44,7 +44,7 @@ namespace loot {
 
     class Game {
     public:
-        Game();  //Sets game to LOOT_g_game_autodetect, with all other vars being empty.
+        Game();  //Sets game to LOOT_Game::autodetect, with all other vars being empty.
         Game(const unsigned int baseGameCode, const std::string& lootFolder = "");
 
         Game& SetDetails(const std::string& name, const std::string& masterFile,
@@ -84,6 +84,12 @@ namespace loot {
         boost::unordered_map<std::string, uint32_t> crcCache;  //Holds lowercased strings.
 
         espm::Settings espm_settings;
+
+        static const unsigned int autodetect = 0;
+        static const unsigned int tes4 = 1;
+        static const unsigned int tes5 = 2;
+        static const unsigned int fo3 = 3;
+        static const unsigned int fonv = 4;
     private:
         unsigned id;
         std::string _name;

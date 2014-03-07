@@ -281,11 +281,11 @@ namespace loot {
                     plugins = mlist["plugins"].as< list<loot::Plugin> >();
 
                 for (list<loot::Plugin>::iterator it=plugins.begin(), endIt=plugins.end(); it != endIt; ++it) {
-                    it->EvalAllConditions(game, g_lang_any);
+                    it->EvalAllConditions(game, Language::any);
                 }
 
                 for (list<loot::Message>::iterator it=messages.begin(), endIt=messages.end(); it != endIt; ++it) {
-                    it->EvalCondition(game, g_lang_any);
+                    it->EvalCondition(game, Language::any);
                 }
 
                 parsingFailed = false;
@@ -297,7 +297,7 @@ namespace loot {
                 //Roll back one revision if there's an error.
                 BOOST_LOG_TRIVIAL(error) << "Masterlist parsing failed. Masterlist revision " + string(revision) + ": " + e.what();
 
-                parsingErrors.push_back(loot::Message(loot::g_message_error, boost::locale::translate("Masterlist revision").str() + " " + string(revision) + ": " + e.what() + " " + boost::locale::translate("Rolled back to the previous revision.").str()));
+                parsingErrors.push_back(loot::Message(loot::Message::error, boost::locale::translate("Masterlist revision").str() + " " + string(revision) + ": " + e.what() + " " + boost::locale::translate("Rolled back to the previous revision.").str()));
             }
         } while (parsingFailed);
 

@@ -153,7 +153,7 @@ namespace loot {
         return eval;
     }
 
-    MessageContent::MessageContent() : _language(g_lang_any) {}
+    MessageContent::MessageContent() : _language(Language::any) {}
 
     MessageContent::MessageContent(const std::string& str, const unsigned int language) : _str(str), _language(language) {}
 
@@ -177,7 +177,7 @@ namespace loot {
 
     Message::Message(const unsigned int type, const std::string& content,
                      const std::string& condition) : _type(type), ConditionStruct(condition) {
-        _content.push_back(MessageContent(content));
+        _content.push_back(MessageContent(content, Language::any));
     }
 
     Message::Message(const unsigned int type, const std::vector<MessageContent>& content,
@@ -201,7 +201,7 @@ namespace loot {
         BOOST_LOG_TRIVIAL(trace) << "Choosing message language.";
 
         if (_content.size() > 1) {
-            if (language == g_lang_any)  //Can use a message of any language, so use the first string.
+            if (language == Language::any)  //Can use a message of any language, so use the first string.
                 _content.resize(1);
             else {
                 MessageContent english, match;
@@ -209,7 +209,7 @@ namespace loot {
                     if (it->Language() == language) {
                         match = *it;
                         break;
-                    } else if (it->Language() == g_lang_english)
+                    } else if (it->Language() == Language::english)
                         english = *it;
                 }
                 _content.resize(1);
@@ -224,7 +224,7 @@ namespace loot {
 
     MessageContent Message::ChooseContent(const unsigned int language) const {
         BOOST_LOG_TRIVIAL(trace) << "Choosing message content.";
-        if (_content.size() == 1 || language == g_lang_any)
+        if (_content.size() == 1 || language == Language::any)
             return _content[0];
         else {
             MessageContent english, match;
@@ -232,7 +232,7 @@ namespace loot {
                 if (it->Language() == language) {
                     match = *it;
                     break;
-                } else if (it->Language() == g_lang_english)
+                } else if (it->Language() == Language::english)
                     english = *it;
             }
             if (!match.Str().empty())
@@ -316,18 +316,18 @@ namespace loot {
 
         espm::File * file = NULL;
         try {
-            if (game.Id() == g_game_tes4)
+            if (game.Id() == Game::tes4)
                 file = new espm::tes4::File(filepath, game.espm_settings, false, headerOnly);
-            else if (game.Id() == g_game_tes5)
+            else if (game.Id() == Game::tes5)
                 file = new espm::tes5::File(filepath, game.espm_settings, false, headerOnly);
-            else if (game.Id() == g_game_fo3)
+            else if (game.Id() == Game::fo3)
                 file = new espm::fo3::File(filepath, game.espm_settings, false, headerOnly);
             else
                 file = new espm::fonv::File(filepath, game.espm_settings, false, headerOnly);
         }
         catch (std::exception& e) {
             BOOST_LOG_TRIVIAL(error) << "Cannot read plugin file \"" << name << "\". Details: " << e.what();
-            messages.push_back(loot::Message(loot::g_message_error, (boost::format(boost::locale::translate("Cannot read \"%1%\". Details: %2%")) % name % e.what()).str()));
+            messages.push_back(loot::Message(loot::Message::error, (boost::format(boost::locale::translate("Cannot read \"%1%\". Details: %2%")) % name % e.what()).str()));
         }
 
         //If the name passed ends in '.ghost', that should be trimmed.
@@ -726,30 +726,30 @@ namespace loot {
             for (vector<string>::const_iterator it=masters.begin(), endIt=masters.end(); it != endIt; ++it) {
                 if (!boost::filesystem::exists(game.DataPath() / *it) && !boost::filesystem::exists(game.DataPath() / (*it + ".ghost"))) {
                     BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" requires \"" << *it << "\", but it is missing.";
-                    messages.push_back(loot::Message(loot::g_message_error, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % *it).str()));
+                    messages.push_back(loot::Message(loot::Message::error, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % *it).str()));
                 }
                 else if (!game.IsActive(*it) && game.IsActive(name)) {
                     BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" requires \"" << *it << "\", but it is inactive.";
-                    messages.push_back(loot::Message(loot::g_message_error, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be active, but it is inactive.")) % *it).str()));
+                    messages.push_back(loot::Message(loot::Message::error, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be active, but it is inactive.")) % *it).str()));
                 }
             }
         }
         for (set<File>::const_iterator it=requirements.begin(), endIt=requirements.end(); it != endIt; ++it) {
             if (!boost::filesystem::exists(game.DataPath() / it->Name()) && !(IsPlugin(it->Name()) && boost::filesystem::exists(game.DataPath() / (it->Name() + ".ghost")))) {
                 BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" requires \"" << it->Name() << "\", but it is missing.";
-                messages.push_back(loot::Message(loot::g_message_error, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % it->Name()).str()));
+                messages.push_back(loot::Message(loot::Message::error, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % it->Name()).str()));
             }
         }
         for (set<File>::const_iterator it=incompatibilities.begin(), endIt=incompatibilities.end(); it != endIt; ++it) {
             if (boost::filesystem::exists(game.DataPath() / it->Name()) || (IsPlugin(it->Name()) && boost::filesystem::exists(game.DataPath() / (it->Name() + ".ghost")))) {
                 BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" is incompatible with \"" << it->Name() << "\", but both are present.";
-                messages.push_back(loot::Message(loot::g_message_error, (boost::format(boost::locale::translate("This plugin is incompatible with \"%1%\", but both are present.")) % it->Name()).str()));
+                messages.push_back(loot::Message(loot::Message::error, (boost::format(boost::locale::translate("This plugin is incompatible with \"%1%\", but both are present.")) % it->Name()).str()));
             }
         }
     }
 
     bool Plugin::LoadsBSA(const Game& game) const {
-        if (game.Id() != g_game_tes5 || IsRegexPlugin())
+        if (game.Id() != Game::tes5 || IsRegexPlugin())
             return false;
         return boost::filesystem::exists(game.DataPath() / (name.substr(0, name.length() - 3) + "bsa"));
     }

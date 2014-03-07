@@ -80,14 +80,14 @@ namespace YAML {
             if (!node.IsMap() || !node["folder"] || !node["type"])
                 return false;
 
-            if (node["type"].as<std::string>() == loot::Game(loot::g_game_tes4).FolderName())
-                rhs = loot::Game(loot::g_game_tes4, node["folder"].as<std::string>());
-            else if (node["type"].as<std::string>() == loot::Game(loot::g_game_tes5).FolderName())
-                rhs = loot::Game(loot::g_game_tes5, node["folder"].as<std::string>());
-            else if (node["type"].as<std::string>() == loot::Game(loot::g_game_fo3).FolderName())
-                rhs = loot::Game(loot::g_game_fo3, node["folder"].as<std::string>());
-            else if (node["type"].as<std::string>() == loot::Game(loot::g_game_fonv).FolderName())
-                rhs = loot::Game(loot::g_game_fonv, node["folder"].as<std::string>());
+            if (node["type"].as<std::string>() == loot::Game(loot::Game::tes4).FolderName())
+                rhs = loot::Game(loot::Game::tes4, node["folder"].as<std::string>());
+            else if (node["type"].as<std::string>() == loot::Game(loot::Game::tes5).FolderName())
+                rhs = loot::Game(loot::Game::tes5, node["folder"].as<std::string>());
+            else if (node["type"].as<std::string>() == loot::Game(loot::Game::fo3).FolderName())
+                rhs = loot::Game(loot::Game::fo3, node["folder"].as<std::string>());
+            else if (node["type"].as<std::string>() == loot::Game(loot::Game::fonv).FolderName())
+                rhs = loot::Game(loot::Game::fonv, node["folder"].as<std::string>());
             else
                 return false;
 
@@ -180,9 +180,9 @@ namespace YAML {
             node["condition"] = rhs.Condition();
             node["content"] = rhs.Content();
 
-            if (rhs.Type() == loot::g_message_say)
+            if (rhs.Type() == loot::Message::say)
                 node["type"] = "say";
-            else if (rhs.Type() == loot::g_message_warn)
+            else if (rhs.Type() == loot::Message::warn)
                 node["type"] = "warn";
             else
                 node["type"] = "error";
@@ -200,25 +200,25 @@ namespace YAML {
                 type = node["type"].as<std::string>();
 
                 if (boost::iequals(type, "say"))
-                    typeNo = loot::g_message_say;
+                    typeNo = loot::Message::say;
                 else if (boost::iequals(type, "warn"))
-                    typeNo = loot::g_message_warn;
+                    typeNo = loot::Message::warn;
                 else
-                    typeNo = loot::g_message_error;
+                    typeNo = loot::Message::error;
             }
 
             std::vector<loot::MessageContent> content;
             if (node["content"].IsSequence())
                 content = node["content"].as< std::vector<loot::MessageContent> >();
             else {
-                content.push_back(loot::MessageContent(node["content"].as<std::string>()));
+                content.push_back(loot::MessageContent(node["content"].as<std::string>(), loot::Language::any));
             }
 
             //Check now that at least one item in content is English if there are multiple items.
             if (content.size() > 1) {
                 bool found = false;
                 for (std::vector<loot::MessageContent>::const_iterator it=content.begin(), endit=content.end(); it != endit; ++it) {
-                    if (it->Language() == loot::g_lang_english)
+                    if (it->Language() == loot::Language::english)
                         found = true;
                 }
                 if (!found)

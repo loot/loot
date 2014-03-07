@@ -245,14 +245,14 @@ void SettingsFrame::OnQuit(wxCommandEvent& event) {
             path = gamesList->GetItemText(i, 6).ToUTF8();
             registry = gamesList->GetItemText(i, 7).ToUTF8();
 
-            if (gamesList->GetItemText(i, 1).ToUTF8() == loot::Game(loot::g_game_tes4).FolderName())
-                id = loot::g_game_tes4;
-            else if (gamesList->GetItemText(i, 1).ToUTF8() == loot::Game(loot::g_game_tes5).FolderName())
-                id = loot::g_game_tes5;
-            else if (gamesList->GetItemText(i, 1).ToUTF8() == loot::Game(loot::g_game_fo3).FolderName())
-                id = loot::g_game_fo3;
+            if (gamesList->GetItemText(i, 1).ToUTF8() == loot::Game(loot::Game::tes4).FolderName())
+                id = loot::Game::tes4;
+            else if (gamesList->GetItemText(i, 1).ToUTF8() == loot::Game(loot::Game::tes5).FolderName())
+                id = loot::Game::tes5;
+            else if (gamesList->GetItemText(i, 1).ToUTF8() == loot::Game(loot::Game::fo3).FolderName())
+                id = loot::Game::fo3;
             else
-                id = loot::g_game_fonv;
+                id = loot::Game::fonv;
 
             _games.push_back(loot::Game(id, folder).SetDetails(name, master, repo, branch, path, registry));
         }
@@ -263,10 +263,10 @@ void SettingsFrame::OnQuit(wxCommandEvent& event) {
 
 void SettingsFrame::OnGameSelect(wxListEvent& event) {
     wxString name = gamesList->GetItemText(event.GetIndex());
-    if (name == loot::Game(loot::g_game_tes4).Name()
-     || name == loot::Game(loot::g_game_tes5).Name()
-     || name == loot::Game(loot::g_game_fo3).Name()
-     || name == loot::Game(loot::g_game_fonv).Name()) {
+    if (name == loot::Game(loot::Game::tes4).Name()
+     || name == loot::Game(loot::Game::tes5).Name()
+     || name == loot::Game(loot::Game::fo3).Name()
+     || name == loot::Game(loot::Game::fonv).Name()) {
         removeBtn->Enable(false);
      } else {
         removeBtn->Enable(true);
@@ -332,14 +332,14 @@ void SettingsFrame::OnEditGame(wxCommandEvent& event) {
     long i = gamesList->GetFirstSelected();
 
     int stateNo;
-    if (gamesList->GetItemText(i, 1) == loot::Game(loot::g_game_tes4).FolderName())
-        stateNo = loot::g_game_tes4;
-    else if (gamesList->GetItemText(i, 1) == loot::Game(loot::g_game_tes5).FolderName())
-        stateNo = loot::g_game_tes5;
-    else if (gamesList->GetItemText(i, 1) == loot::Game(loot::g_game_fo3).FolderName())
-        stateNo = loot::g_game_fo3;
+    if (gamesList->GetItemText(i, 1) == loot::Game(loot::Game::tes4).FolderName())
+        stateNo = loot::Game::tes4;
+    else if (gamesList->GetItemText(i, 1) == loot::Game(loot::Game::tes5).FolderName())
+        stateNo = loot::Game::tes5;
+    else if (gamesList->GetItemText(i, 1) == loot::Game(loot::Game::fo3).FolderName())
+        stateNo = loot::Game::fo3;
     else
-        stateNo = loot::g_game_fonv;
+        stateNo = loot::Game::fonv;
 
     rowDialog->SetValues(stateNo, gamesList->GetItemText(i, 0), gamesList->GetItemText(i, 2), gamesList->GetItemText(i, 3), gamesList->GetItemText(i, 4), gamesList->GetItemText(i, 5), gamesList->GetItemText(i, 6), gamesList->GetItemText(i, 7));
 
@@ -394,10 +394,10 @@ void SettingsFrame::OnRemoveGame(wxCommandEvent& event) {
 GameEditDialog::GameEditDialog(wxWindow *parent, const wxString& title) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER) {
 
     wxString Types[] = {
-        FromUTF8(loot::Game(loot::g_game_tes4).FolderName()),
-        FromUTF8(loot::Game(loot::g_game_tes5).FolderName()),
-        FromUTF8(loot::Game(loot::g_game_fo3).FolderName()),
-        FromUTF8(loot::Game(loot::g_game_fonv).FolderName())
+        FromUTF8(loot::Game(loot::Game::tes4).FolderName()),
+        FromUTF8(loot::Game(loot::Game::tes5).FolderName()),
+        FromUTF8(loot::Game(loot::Game::fo3).FolderName()),
+        FromUTF8(loot::Game(loot::Game::fonv).FolderName())
     };
 
     //Initialise controls.
@@ -467,11 +467,11 @@ GameEditDialog::GameEditDialog(wxWindow *parent, const wxString& title) : wxDial
 
 void GameEditDialog::SetValues(unsigned int type, const wxString& name, const wxString& folderName, const wxString& master,
     const wxString& repo, const wxString& branch, const wxString& path, const wxString& registry) {
-    if (type == loot::g_game_tes4)
+    if (type == loot::Game::tes4)
         _type->SetSelection(0);
-    else if (type == loot::g_game_tes5)
+    else if (type == loot::Game::tes5)
         _type->SetSelection(1);
-    else if (type  == loot::g_game_fo3)
+    else if (type  == loot::Game::fo3)
         _type->SetSelection(2);
     else
         _type->SetSelection(3);

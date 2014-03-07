@@ -62,26 +62,26 @@ const unsigned int loot_error_sorting_error         = loot::error::sorting_error
 const unsigned int loot_return_max                  = loot_error_sorting_error;
 
 // The following are the games identifiers used by the API.
-const unsigned int loot_game_tes4                   = loot::g_game_tes4;
-const unsigned int loot_game_tes5                   = loot::g_game_tes5;
-const unsigned int loot_game_fo3                    = loot::g_game_fo3;
-const unsigned int loot_game_fonv                   = loot::g_game_fonv;
+const unsigned int loot_game_tes4                   = loot::Game::tes4;
+const unsigned int loot_game_tes5                   = loot::Game::tes5;
+const unsigned int loot_game_fo3                    = loot::Game::fo3;
+const unsigned int loot_game_fonv                   = loot::Game::fonv;
 
 // LOOT message types.
-const unsigned int loot_message_say                 = loot::g_message_say;
-const unsigned int loot_message_warn                = loot::g_message_warn;
-const unsigned int loot_message_error               = loot::g_message_error;
-const unsigned int loot_message_tag                 = loot::g_message_tag;
+const unsigned int loot_message_say                 = loot::Message::say;
+const unsigned int loot_message_warn                = loot::Message::warn;
+const unsigned int loot_message_error               = loot::Message::error;
+const unsigned int loot_message_tag                 = loot::Message::tag;
 
 // LOOT message languages.
-const unsigned int loot_lang_any                    = loot::g_lang_any;
-const unsigned int loot_lang_english                = loot::g_lang_english;
-const unsigned int loot_lang_spanish                = loot::g_lang_spanish;
-const unsigned int loot_lang_russian                = loot::g_lang_russian;
-const unsigned int loot_lang_french                 = loot::g_lang_french;
-const unsigned int loot_lang_chinese                = loot::g_lang_chinese;
-const unsigned int loot_lang_polish                 = loot::g_lang_polish;
-const unsigned int loot_lang_brazilian_portuguese   = loot::g_lang_brazilian_portuguese;
+const unsigned int loot_lang_any                    = loot::Language::any;
+const unsigned int loot_lang_english                = loot::Language::english;
+const unsigned int loot_lang_spanish                = loot::Language::spanish;
+const unsigned int loot_lang_russian                = loot::Language::russian;
+const unsigned int loot_lang_french                 = loot::Language::french;
+const unsigned int loot_lang_chinese                = loot::Language::chinese;
+const unsigned int loot_lang_polish                 = loot::Language::polish;
+const unsigned int loot_lang_brazilian_portuguese   = loot::Language::brazilian_portuguese;
 
 // LOOT cleanliness codes.
 const unsigned int loot_needs_cleaning_no       = 0;
@@ -618,7 +618,7 @@ LOOT_API unsigned int loot_get_plugin_messages (loot_db db, const char * const p
         int i = 0;
         for (std::list<loot::Message>::const_iterator it=pluginMessages.begin(), endIt=pluginMessages.end(); it != endIt; ++it) {
             db->extMessageArray[i].type = it->Type();
-            db->extMessageArray[i].message = ToNewCString(it->ChooseContent(loot::g_lang_any).Str());
+            db->extMessageArray[i].message = ToNewCString(it->ChooseContent(loot::Language::any).Str());
         }
     } catch (std::bad_alloc& e) {
         return c_error(loot_error_no_mem, e.what());

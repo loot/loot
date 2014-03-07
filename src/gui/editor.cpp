@@ -1152,11 +1152,11 @@ void Editor::OnRowSelect(wxListEvent& event) {
         list<loot::Message> messages = plugin.Messages();
 
         if (find(messages.begin(), messages.end(), message) == messages.end()) {
-            BOOST_LOG_TRIVIAL(trace) << "Message \"" << message.ChooseContent(loot::g_lang_any).Str() << "\" was not found in base plugin metadata. Editing enabled.";
+            BOOST_LOG_TRIVIAL(trace) << "Message \"" << message.ChooseContent(loot::Language::any).Str() << "\" was not found in base plugin metadata. Editing enabled.";
             editBtn->Enable(true);
             removeBtn->Enable(true);
         } else {
-            BOOST_LOG_TRIVIAL(trace) << "Message \"" << message.ChooseContent(loot::g_lang_any).Str() << "\" was found in base plugin metadata. Editing disabled.";
+            BOOST_LOG_TRIVIAL(trace) << "Message \"" << message.ChooseContent(loot::Language::any).Str() << "\" was found in base plugin metadata. Editing disabled.";
             editBtn->Enable(false);
             removeBtn->Enable(false);
         }

@@ -238,55 +238,55 @@ namespace loot {
     }
 
     Language::Language(const std::string& nameOrISOCode) {
-        if (nameOrISOCode == Language(g_lang_english).Name() || nameOrISOCode == Language(g_lang_english).Locale())
-            Construct(g_lang_english);
-        else if (nameOrISOCode == Language(g_lang_spanish).Name() || nameOrISOCode == Language(g_lang_spanish).Locale())
-            Construct(g_lang_spanish);
-        else if (nameOrISOCode == Language(g_lang_russian).Name() || nameOrISOCode == Language(g_lang_russian).Locale())
-            Construct(g_lang_russian);
-        else if (nameOrISOCode == Language(g_lang_french).Name() || nameOrISOCode == Language(g_lang_french).Locale())
-            Construct(g_lang_french);
-        else if (nameOrISOCode == Language(g_lang_chinese).Name() || nameOrISOCode == Language(g_lang_chinese).Locale())
-            Construct(g_lang_chinese);
-        else if (nameOrISOCode == Language(g_lang_polish).Name() || nameOrISOCode == Language(g_lang_polish).Locale())
-            Construct(g_lang_polish);
-        else if (nameOrISOCode == Language(g_lang_brazilian_portuguese).Name() || nameOrISOCode == Language(g_lang_brazilian_portuguese).Locale())
-            Construct(g_lang_brazilian_portuguese);
+        if (nameOrISOCode == Language(Language::english).Name() || nameOrISOCode == Language(Language::english).Locale())
+            Construct(Language::english);
+        else if (nameOrISOCode == Language(Language::spanish).Name() || nameOrISOCode == Language(Language::spanish).Locale())
+            Construct(Language::spanish);
+        else if (nameOrISOCode == Language(Language::russian).Name() || nameOrISOCode == Language(Language::russian).Locale())
+            Construct(Language::russian);
+        else if (nameOrISOCode == Language(Language::french).Name() || nameOrISOCode == Language(Language::french).Locale())
+            Construct(Language::french);
+        else if (nameOrISOCode == Language(Language::chinese).Name() || nameOrISOCode == Language(Language::chinese).Locale())
+            Construct(Language::chinese);
+        else if (nameOrISOCode == Language(Language::polish).Name() || nameOrISOCode == Language(Language::polish).Locale())
+            Construct(Language::polish);
+        else if (nameOrISOCode == Language(Language::brazilian_portuguese).Name() || nameOrISOCode == Language(Language::brazilian_portuguese).Locale())
+            Construct(Language::brazilian_portuguese);
         else
-            Construct(g_lang_any);
+            Construct(Language::any);
     }
 
     void Language::Construct(const unsigned int code) {
         _code = code;
-        if (_code == g_lang_any) {
+        if (_code == Language::any) {
             _name = boost::locale::translate("None Specified");
             _locale = "en";
         }
-        else if (_code == g_lang_english) {
+        else if (_code == Language::english) {
             _name = "English";
             _locale = "en";
         }
-        else if (_code == g_lang_spanish) {
+        else if (_code == Language::spanish) {
             _name = "Español";
             _locale = "es";
         }
-        else if (_code == g_lang_russian) {
+        else if (_code == Language::russian) {
             _name = "Русский";
             _locale = "ru";
         }
-        else if (_code == g_lang_french) {
+        else if (_code == Language::french) {
             _name = "Français";
             _locale = "fr";
         }
-        else if (_code == g_lang_chinese) {
+        else if (_code == Language::chinese) {
             _name = "简体中文";
             _locale = "zh_CN";
         }
-        else if (_code == g_lang_polish) {
+        else if (_code == Language::polish) {
             _name = "Polski";
             _locale = "pl";
         }
-        else if (_code == g_lang_brazilian_portuguese) {
+        else if (_code == Language::brazilian_portuguese) {
             _name = "Português do Brasil";
             _locale = "pt_BR";
         }

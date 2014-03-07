@@ -78,9 +78,9 @@ wxString MessageList::OnGetItemText(long item, long column) const {
         return wxString();
 
     if (column == 0) {
-        if (_messages[item].Type() == loot::g_message_say)
+        if (_messages[item].Type() == loot::Message::say)
             return Type[0];
-        else if (_messages[item].Type() == loot::g_message_warn)
+        else if (_messages[item].Type() == loot::Message::warn)
             return Type[1];
         else
             return Type[2];
@@ -251,9 +251,9 @@ MessageEditDialog::MessageEditDialog(wxWindow *parent, const wxString& title) : 
 
 void MessageEditDialog::SetMessage(const loot::Message& message) {
 
-    if (message.Type() == loot::g_message_say)
+    if (message.Type() == loot::Message::say)
         _type->SetSelection(0);
-    else if (message.Type() == loot::g_message_warn)
+    else if (message.Type() == loot::Message::warn)
         _type->SetSelection(1);
     else
         _type->SetSelection(2);
@@ -272,11 +272,11 @@ loot::Message MessageEditDialog::GetMessage() const {
     unsigned int type;
     string condition;
     if (_type->GetSelection() == 0)
-        type = loot::g_message_say;
+        type = loot::Message::say;
     else if (_type->GetSelection() == 1)
-        type = loot::g_message_warn;
+        type = loot::Message::warn;
     else
-        type = loot::g_message_error;
+        type = loot::Message::error;
 
     condition = string(_condition->GetValue().ToUTF8());
 
