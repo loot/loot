@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BOSS v3.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-07 09:58-0000\n"
-"PO-Revision-Date: 2014-03-07 09:58-0000\n"
+"POT-Creation-Date: 2014-03-07 20:08-0000\n"
+"PO-Revision-Date: 2014-03-07 20:08-0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -91,15 +91,19 @@ msgstr ""
 msgid "Failed to parse condition \"%1%\"."
 msgstr ""
 
-#: backend/metadata.cpp:724 backend/metadata.cpp:735
+#: backend/metadata.cpp:330
+msgid "Cannot read \"%1%\". Details: %2%"
+msgstr ""
+
+#: backend/metadata.cpp:729 backend/metadata.cpp:740
 msgid "This plugin requires \"%1%\" to be installed, but it is missing."
 msgstr ""
 
-#: backend/metadata.cpp:728
+#: backend/metadata.cpp:733
 msgid "This plugin requires \"%1%\" to be active, but it is inactive."
 msgstr ""
 
-#: backend/metadata.cpp:741
+#: backend/metadata.cpp:746
 msgid "This plugin is incompatible with \"%1%\", but both are present."
 msgstr ""
 
@@ -291,7 +295,7 @@ msgid ""
 "plugin?"
 msgstr ""
 
-#: gui/editor.cpp:814 gui/main.cpp:1080
+#: gui/editor.cpp:814 gui/main.cpp:1074
 msgid "LOOT: Warning"
 msgstr ""
 
@@ -354,8 +358,8 @@ msgstr ""
 #: gui/editor.cpp:910 gui/editor.cpp:992 gui/main.cpp:180 gui/main.cpp:197
 #: gui/main.cpp:212 gui/main.cpp:295 gui/main.cpp:305 gui/main.cpp:318
 #: gui/main.cpp:326 gui/main.cpp:357 gui/main.cpp:374 gui/main.cpp:544
-#: gui/main.cpp:565 gui/main.cpp:581 gui/main.cpp:952 gui/main.cpp:1004
-#: gui/main.cpp:1026 gui/main.cpp:1091 gui/main.cpp:1128 gui/misc.cpp:313
+#: gui/main.cpp:565 gui/main.cpp:581 gui/main.cpp:946 gui/main.cpp:998
+#: gui/main.cpp:1020 gui/main.cpp:1085 gui/main.cpp:1122 gui/misc.cpp:313
 #: gui/misc.cpp:328 gui/settings.cpp:288 gui/settings.cpp:300
 #: gui/settings.cpp:308 gui/settings.cpp:352 gui/settings.cpp:360
 #: gui/settings.cpp:368
@@ -508,7 +512,7 @@ msgstr ""
 msgid "Opens the last report generated for the current game."
 msgstr ""
 
-#: gui/main.cpp:519 gui/main.cpp:968
+#: gui/main.cpp:519 gui/main.cpp:962
 msgid "LOOT: Report Viewer"
 msgstr ""
 
@@ -526,11 +530,11 @@ msgid ""
 "Vegas."
 msgstr ""
 
-#: gui/main.cpp:623 gui/main.cpp:833 gui/main.cpp:980
+#: gui/main.cpp:623 gui/main.cpp:827 gui/main.cpp:974
 msgid "LOOT: Working..."
 msgstr ""
 
-#: gui/main.cpp:623 gui/main.cpp:980
+#: gui/main.cpp:623 gui/main.cpp:974
 msgid "LOOT working..."
 msgstr ""
 
@@ -548,68 +552,68 @@ msgstr ""
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
 msgstr ""
 
-#: gui/main.cpp:773
+#: gui/main.cpp:767
 msgid "Building plugin graph..."
 msgstr ""
 
-#: gui/main.cpp:818
+#: gui/main.cpp:812
 msgid "LOOT: Calculated Load Order"
 msgstr ""
 
-#: gui/main.cpp:833
+#: gui/main.cpp:827
 msgid "Recalculating load order..."
 msgstr ""
 
-#: gui/main.cpp:890
+#: gui/main.cpp:884
 msgid "Failed to set the load order. Details: %1%"
 msgstr ""
 
-#: gui/main.cpp:900
+#: gui/main.cpp:894
 msgid ""
 "The load order displayed in the Details tab was not applied as sorting was "
 "canceled."
 msgstr ""
 
-#: gui/main.cpp:905
+#: gui/main.cpp:899
 msgid "Failed to calculate the load order. Details: %1%"
 msgstr ""
 
-#: gui/main.cpp:951
+#: gui/main.cpp:945
 msgid "Error: %1%"
 msgstr ""
 
-#: gui/main.cpp:1003
+#: gui/main.cpp:997
 msgid "Error: Masterlist parsing failed. %1%"
 msgstr ""
 
-#: gui/main.cpp:1025
+#: gui/main.cpp:1019
 msgid "Error: Userlist parsing failed. %1%"
 msgstr ""
 
-#: gui/main.cpp:1071
+#: gui/main.cpp:1065
 msgid "LOOT: Metadata Editor"
 msgstr ""
 
-#: gui/main.cpp:1080
+#: gui/main.cpp:1074
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
 "will be re-downloaded by Steam. Do you wish to continue?"
 msgstr ""
 
-#: gui/main.cpp:1090
+#: gui/main.cpp:1084
 msgid "Error: Failed to get load order. %1%"
 msgstr ""
 
-#: gui/main.cpp:1127
+#: gui/main.cpp:1121
 msgid "Error: Failed to set plugin timestamps. %1%"
 msgstr ""
 
-#: gui/main.cpp:1134
+#: gui/main.cpp:1128
 msgid "Plugins were successfully redated."
 msgstr ""
 
-#: gui/main.cpp:1135
+#: gui/main.cpp:1129
 msgid "LOOT: Plugin Redate"
 msgstr ""
 
