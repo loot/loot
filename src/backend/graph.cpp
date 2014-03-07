@@ -188,14 +188,30 @@ namespace loot {
             loot::vertex_it vit2, vitend2;
             for (boost::tie(vit2, vitend2) = boost::vertices(graph); vit2 != vitend2; ++vit2) {
 
-                if (graph[*vit].Priority() == graph[*vit2].Priority() || (!graph[*vit].FormIDs().empty() && !graph[*vit2].FormIDs().empty() && !graph[*vit].DoFormIDsOverlap(graph[*vit2]))) {
+                if (graph[*vit].Priority() == graph[*vit2].Priority() 
+                    || (graph[*vit].Priority() < 1000000 && graph[*vit2].Priority() < 1000000 
+                        && !graph[*vit].FormIDs().empty() && !graph[*vit2].FormIDs().empty() && !graph[*vit].DoFormIDsOverlap(graph[*vit2])
+                       )
+                   ) {
                     continue;
                 }
 
                 BOOST_LOG_TRIVIAL(trace) << "Checking priority difference between \"" << graph[*vit].Name() << "\" and \"" << graph[*vit2].Name() << "\".";
 
                 vertex_t vertex, parentVertex;
-                if (graph[*vit].Priority() < graph[*vit2].Priority()) {
+                //Modulo is not consistently defined for negative numbers, so figure it out explicitly.
+                int p1 = graph[*vit].Priority();
+                int p2 = graph[*vit2].Priority();
+                if (p1 < 0)
+                    p1 = -((-p1) % 1000000);
+                else
+                    p1 = p1 % 1000000;
+                if (p2 < 0)
+                    p2 = -((-p2) % 1000000);
+                else
+                    p2 = p2 % 1000000;
+
+                if (p1 < p2) {
                     parentVertex = *vit;
                     vertex = *vit2;
                 } else {
