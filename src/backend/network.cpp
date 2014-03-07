@@ -91,7 +91,7 @@ namespace loot {
         if (buf1_size != buf2_size)
             return false;
 
-        size_t pos;
+        size_t pos = 0;
         while (pos < buf1_size) {
             if (*((char*)buf1 + pos) != *((char*)buf2 + pos))
                 return false;
