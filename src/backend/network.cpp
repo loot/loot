@@ -140,6 +140,7 @@ namespace loot {
                 char revision[10];
                 //Need to get the HEAD object, because the individual file has a different SHA.
                 git_object_free(ptrs.obj);
+                ptrs.obj = NULL;  //Just to be safe.
                 BOOST_LOG_TRIVIAL(trace) << "Getting HEAD object revision SHA.";
                 handle_error(git_revparse_single(&ptrs.obj, ptrs.repo, "HEAD"), ptrs);
                 git_oid_tostr(revision, 10, git_object_id(ptrs.obj));
@@ -264,6 +265,8 @@ namespace loot {
             BOOST_LOG_TRIVIAL(trace) << "Freeing pointers.";
             git_object_free(ptrs.obj);
             git_reference_free(ptrs.ref);
+            ptrs.obj = NULL;
+            ptrs.ref = NULL;
 
             BOOST_LOG_TRIVIAL(trace) << "Testing masterlist parsing.";
 
