@@ -238,6 +238,8 @@ LOOT_API bool loot_is_compatible (const unsigned int versionMajor, const unsigne
 LOOT_API unsigned int loot_get_version (unsigned int * const versionMajor, unsigned int * const versionMinor, unsigned int * const versionPatch);
 
 
+///@}
+
 /***************************************//**
     @name Lifecycle Management Functions
 *******************************************/
