@@ -71,13 +71,13 @@ namespace loot {
 	struct masterlistMsgKey_ : qi::symbols<char, uint32_t> {
 		masterlistMsgKey_() {
 			add //New Message keywords.
-				("say",g_message_say)
-                ("tag",g_message_tag)
+				("say",Message::say)
+                ("tag",Message::tag)
 				("req",message_req)
 				("inc", message_inc)
 				("dirty",message_dirty)
-				("warn",g_message_warn)
-				("error",g_message_error)
+				("warn",Message::warn)
+				("error",Message::error)
 			;
 		}
 	};
@@ -501,8 +501,8 @@ namespace loot {
             std::list<Message>::iterator it = messages.begin();
             while (it != messages.end()) {
 
-                if (it->Type() == g_message_tag) {
-                    std::string message = it->ChooseContent(g_lang_any).Str();
+                if (it->Type() == Message::tag) {
+                    std::string message = it->ChooseContent(Language::any).Str();
 
                     std::string addedList, removedList;
                     size_t pos1, pos2 = std::string::npos;
@@ -555,15 +555,15 @@ namespace loot {
                     }
 
                     it = messages.erase(it);
-                } else if (it->Type() == g_message_say) {
-                    std::string content = it->ChooseContent(g_lang_any).Str();
-                    unsigned int langInt = it->ChooseContent(g_lang_any).Language();
+                } else if (it->Type() == Message::say) {
+                    std::string content = it->ChooseContent(Language::any).Str();
+                    unsigned int langInt = it->ChooseContent(Language::any).Language();
                     std::string opener;
-                    if (langInt == g_lang_english || langInt == g_lang_any)
+                    if (langInt == Language::english || langInt == Language::any)
                         opener = "Requires: ";
-                    else if (langInt == g_lang_spanish)
+                    else if (langInt == Language::spanish)
                         opener = "Requiere: ";
-                    else if (langInt == g_lang_russian)
+                    else if (langInt == Language::russian)
                         opener = "Требуется: ";
 
                     if (boost::starts_with(content, opener) && (boost::icontains(content, ".esp") || boost::icontains(content, ".esm"))) {
@@ -571,15 +571,17 @@ namespace loot {
                         it = messages.erase(it);
                     } else
                         ++it;
-                } else if (it->Type() == g_message_warn) {
-                    std::string content = it->ChooseContent(g_lang_any).Str();
-                    unsigned int langInt = it->ChooseContent(g_lang_any).Language();
+                } else if (it->Type() == Message::warn) {
+                    std::string content = it->ChooseContent(Language::any).Str();
+                    unsigned int langInt = it->ChooseContent(Language::any).Language();
                     std::string opener;
-                    if (langInt == g_lang_english || langInt == g_lang_any) {
+                    if (langInt == Language::english || langInt == Language::any) {
                         opener = "Contains dirty edits: ";
-                    } else if (langInt == g_lang_spanish) {
+                    }
+                    else if (langInt == Language::spanish) {
                         opener = "Contiene ediciones sucia: ";
-                    } else if (langInt == g_lang_russian) {
+                    }
+                    else if (langInt == Language::russian) {
                         opener = "\"Грязные\" правки: ";
                     }
 
@@ -591,7 +593,7 @@ namespace loot {
                         uint32_t crc;
                         std::string utility;
                         size_t pos1, pos2;
-                        std::string content = it->ChooseContent(g_lang_any).Str();
+                        std::string content = it->ChooseContent(Language::any).Str();
                         std::string condition = it->Condition();
 
                         //Extract CRC.
@@ -719,13 +721,13 @@ namespace loot {
             //LOOT supports Chinese and German in addition to English, Russian and Spanish, but they aren't used in any of the masterlists so don't bother mapping them.
             unsigned int langInt;
             if (lang == "english" || lang == "chinese" || lang == "german")
-                langInt = g_lang_english;
+                langInt = Language::english;
             else if (lang == "russian")
-                langInt = g_lang_russian;
+                langInt = Language::russian;
             else if (lang == "spanish")
-                langInt = g_lang_spanish;
+                langInt = Language::spanish;
             else
-                langInt = g_lang_any;
+                langInt = Language::any;
 
 
             /* Now convert the temporary message types into say or warning messages as appropriate. Translations were obtained from the LOOT translation files. Thanks to the translators for them. */
@@ -734,44 +736,46 @@ namespace loot {
 
                 std::string search;
                 std::string opener;
-                if (langInt == g_lang_english || langInt == g_lang_any) {
+                if (langInt == Language::english || langInt == Language::any) {
                     search = "do not clean";
                     opener = "Contains dirty edits: ";
-                } else if (langInt == g_lang_spanish) {
+                }
+                else if (langInt == Language::spanish) {
                     search = "no se limpia";
                     opener = "Contiene ediciones sucia: ";
-                } else if (langInt == g_lang_russian) {
+                }
+                else if (langInt == Language::russian) {
                     search = "Не очищать";
                     opener = "\"Грязные\" правки: ";
                 }
 
                 if (boost::icontains(content, search))
-                    type = g_message_say;
+                    type = Message::say;
                 else
-                    type = g_message_warn;
+                    type = Message::warn;
 
                 content = opener + content;
             } else if (type == message_req) {
-                type = g_message_say;
+                type = Message::say;
 
                 std::string opener;
-                if (langInt == g_lang_english || langInt == g_lang_any)
+                if (langInt == Language::english || langInt == Language::any)
                     opener = "Requires: ";
-                else if (langInt == g_lang_spanish)
+                else if (langInt == Language::spanish)
                     opener = "Requiere: ";
-                else if (langInt == g_lang_russian)
+                else if (langInt == Language::russian)
                     opener = "Требуется: ";
 
                 content = opener + content;
             } else if (type == message_inc) {
-                type = g_message_say;
+                type = Message::say;
 
                 std::string opener;
-                if (langInt == g_lang_english || langInt == g_lang_any)
+                if (langInt == Language::english || langInt == Language::any)
                     opener = "Incompatible with: ";
-                else if (langInt == g_lang_spanish)
+                else if (langInt == Language::spanish)
                     opener = "Incompatible con: ";
-                else if (langInt == g_lang_russian)
+                else if (langInt == Language::russian)
                     opener = "Несовместим с: ";
 
                 content = opener + content;
