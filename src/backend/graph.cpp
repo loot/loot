@@ -25,6 +25,8 @@
 #include "graph.h"
 #include "streams.h"
 
+#include <cstdlib>
+
 #include <boost/algorithm/string.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/graph/breadth_first_search.hpp>
@@ -189,7 +191,7 @@ namespace loot {
             for (boost::tie(vit2, vitend2) = boost::vertices(graph); vit2 != vitend2; ++vit2) {
 
                 if (graph[*vit].Priority() == graph[*vit2].Priority() 
-                    || (graph[*vit].Priority() < 1000000 && graph[*vit2].Priority() < 1000000 
+                    || (abs(graph[*vit].Priority()) < 1000000 && abs(graph[*vit2].Priority()) < 1000000 
                         && !graph[*vit].FormIDs().empty() && !graph[*vit2].FormIDs().empty() && !graph[*vit].DoFormIDsOverlap(graph[*vit2])
                        )
                    ) {
@@ -203,11 +205,11 @@ namespace loot {
                 int p1 = graph[*vit].Priority();
                 int p2 = graph[*vit2].Priority();
                 if (p1 < 0)
-                    p1 = -((-p1) % 1000000);
+                    p1 = -(abs(p1) % 1000000);
                 else
                     p1 = p1 % 1000000;
                 if (p2 < 0)
-                    p2 = -((-p2) % 1000000);
+                    p2 = -(abs(p2) % 1000000);
                 else
                     p2 = p2 % 1000000;
 
