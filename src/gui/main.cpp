@@ -118,6 +118,14 @@ struct masterlist_updater_parser {
                 _messages.clear();
                 BOOST_LOG_TRIVIAL(error) << "Masterlist update failed. Details: " << e.what();
                 _errors.push_back(loot::Message(loot::Message::error, (format(loc::translate("Masterlist update failed. Details: %1%")) % e.what()).str()));
+                //Try getting masterlist revision anyway.
+                try {
+                    _revision = GetMasterlistRevision(_game);
+                }
+                catch (loot::error& e) {
+                    BOOST_LOG_TRIVIAL(error) << "Masterlist revision check failed. Details: " << e.what();
+                    _errors.push_back(loot::Message(loot::Message::error, (format(loc::translate("Masterlist revision check failed. Details: %1%")) % e.what()).str()));
+                }
             }
         }
         else {
@@ -126,8 +134,6 @@ struct masterlist_updater_parser {
                 _revision = GetMasterlistRevision(_game);
             }
             catch (loot::error& e) {
-                _plugins.clear();
-                _messages.clear();
                 BOOST_LOG_TRIVIAL(error) << "Masterlist revision check failed. Details: " << e.what();
                 _errors.push_back(loot::Message(loot::Message::error, (format(loc::translate("Masterlist revision check failed. Details: %1%")) % e.what()).str()));
             }
