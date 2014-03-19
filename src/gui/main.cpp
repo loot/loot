@@ -1082,50 +1082,12 @@ void Launcher::OnRedatePlugins(wxCommandEvent& event) {
 
     if (dia->ShowModal() == wxID_YES) {
         BOOST_LOG_TRIVIAL(debug) << "Redating plugins.";
-        list<loot::Plugin> loadorder;
         try {
-            _game.GetLoadOrder(loadorder);
-        } catch (loot::error& e) {
-            BOOST_LOG_TRIVIAL(error) << "Failed to get load order. " << e.what();
+            _game.RedatePlugins();
+        } catch (std::exception& e) {
+            BOOST_LOG_TRIVIAL(error) << "Failed to redate plugins. " << e.what();
             wxMessageBox(
-                FromUTF8(format(loc::translate("Error: Failed to get load order. %1%")) % e.what()),
-                translate("LOOT: Error"),
-                wxOK | wxICON_ERROR,
-                this);
-        }
-
-        try {
-            if (!loadorder.empty()) {
-
-                time_t lastTime, thisTime;
-                fs::path filepath = _game.DataPath() / loadorder.begin()->Name();
-                if (!fs::exists(filepath) && fs::exists(filepath.string() + ".ghost"))
-                    filepath += ".ghost";
-
-                lastTime = fs::last_write_time(filepath);
-
-                for (list<loot::Plugin>::const_iterator it=loadorder.begin(), itend=loadorder.end(); it != itend; ++it) {
-
-                    filepath = _game.DataPath() / it->Name();
-                    if (!fs::exists(filepath) && fs::exists(filepath.string() + ".ghost"))
-                        filepath += ".ghost";
-
-                    time_t thisTime = fs::last_write_time(filepath);
-                    BOOST_LOG_TRIVIAL(info) << "Current timestamp for \"" << filepath.filename().string() << "\": " << thisTime;
-                    if (thisTime >= lastTime) {
-                        lastTime = thisTime;
-                        BOOST_LOG_TRIVIAL(trace) << "No need to redate \"" << filepath.filename().string() << "\".";
-                    } else {
-                        lastTime += 60;
-                        fs::last_write_time(filepath, lastTime);  //Space timestamps by a minute.
-                        BOOST_LOG_TRIVIAL(info) << "Redated \"" << filepath.filename().string() << "\" to: " << lastTime;
-                    }
-                }
-            }
-        } catch(fs::filesystem_error& e) {
-            BOOST_LOG_TRIVIAL(error) << "Failed to set plugin timestamps. " << e.what();
-            wxMessageBox(
-                FromUTF8(format(loc::translate("Error: Failed to set plugin timestamps. %1%")) % e.what()),
+                FromUTF8(format(loc::translate("Error: Failed to redate plugins. %1%")) % e.what()),
                 translate("LOOT: Error"),
                 wxOK | wxICON_ERROR,
                 this);

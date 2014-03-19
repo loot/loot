@@ -480,6 +480,43 @@ namespace loot {
         lo_destroy_handle(gh);
     }
 
+    void Game::RedatePlugins() {
+        if (id != tes5)
+            return;
+
+        list<loot::Plugin> loadorder;
+        GetLoadOrder(loadorder);
+
+        if (!loadorder.empty()) {
+
+            time_t lastTime, thisTime;
+            fs::path filepath = DataPath() / loadorder.begin()->Name();
+            if (!fs::exists(filepath) && fs::exists(filepath.string() + ".ghost"))
+                filepath += ".ghost";
+
+            lastTime = fs::last_write_time(filepath);
+
+            for (list<loot::Plugin>::const_iterator it = loadorder.begin(), itend = loadorder.end(); it != itend; ++it) {
+
+                filepath = DataPath() / it->Name();
+                if (!fs::exists(filepath) && fs::exists(filepath.string() + ".ghost"))
+                    filepath += ".ghost";
+
+                time_t thisTime = fs::last_write_time(filepath);
+                BOOST_LOG_TRIVIAL(info) << "Current timestamp for \"" << filepath.filename().string() << "\": " << thisTime;
+                if (thisTime >= lastTime) {
+                    lastTime = thisTime;
+                    BOOST_LOG_TRIVIAL(trace) << "No need to redate \"" << filepath.filename().string() << "\".";
+                }
+                else {
+                    lastTime += 60;
+                    fs::last_write_time(filepath, lastTime);  //Space timestamps by a minute.
+                    BOOST_LOG_TRIVIAL(info) << "Redated \"" << filepath.filename().string() << "\" to: " << lastTime;
+                }
+            }
+        }
+    }
+
     void Game::CreateLOOTGameFolder() {
         //Make sure that the LOOT game path exists.
         try {

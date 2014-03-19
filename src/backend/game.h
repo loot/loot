@@ -65,7 +65,6 @@ namespace loot {
         std::string RepoURL() const;
         std::string RepoBranch() const;
 
-
         boost::filesystem::path GamePath() const;
         boost::filesystem::path DataPath() const;
         boost::filesystem::path MasterlistPath() const;
@@ -75,9 +74,10 @@ namespace loot {
         bool IsActive(const std::string& plugin) const;
 
         void GetLoadOrder(std::list<Plugin>& loadOrder) const;
-        void SetLoadOrder(const std::list<Plugin>& loadOrder) const;
+        void SetLoadOrder(const std::list<Plugin>& loadOrder) const;  //Modifies game load order, even though const.
 
         void RefreshActivePluginsList();
+        void RedatePlugins();
 
         //Caches for condition results, active plugins and CRCs.
         boost::unordered_map<std::string, bool> conditionCache;  //Holds lowercased strings.
@@ -91,7 +91,7 @@ namespace loot {
         static const unsigned int fo3 = 3;
         static const unsigned int fonv = 4;
     private:
-        unsigned id;
+        unsigned int id;
         std::string _name;
         std::string _masterFile;
 
