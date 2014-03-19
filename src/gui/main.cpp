@@ -61,8 +61,6 @@
 #include <wx/aboutdlg.h>
 #include <wx/progdlg.h>
 
-#define BOOST_THREAD_VERSION 4
-
 wxIMPLEMENT_APP(LOOT);
 
 using namespace loot;
@@ -913,38 +911,11 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     // Build & Display Report
     ///////////////////////////////////////////////////////
 
-    //Read the details section of the previous report, if it exists.
-    string oldDetails;
-    if (fs::exists(_game.ReportPath().string())) {
-        BOOST_LOG_TRIVIAL(debug) << "Reading the previous report's details section.";
-        //Read the whole file in.
-        loot::ifstream in(_game.ReportPath(), ios::binary);
-        in.seekg(0, std::ios::end);
-        oldDetails.resize(in.tellg());
-        in.seekg(0, std::ios::beg);
-        in.read(&oldDetails[0], oldDetails.size());
-        in.close();
-
-        //Slim down to only the details section.
-        size_t pos1 = oldDetails.find("<div id=\"plugins\"");
-        if (pos1 != string::npos) {
-            pos1 = oldDetails.find("<ul>", pos1);
-            if (pos1 != string::npos) {
-                size_t pos2 = oldDetails.find("<div id=\"summary\">", pos1);
-                if (pos2 != string::npos) {
-                    pos2 -= 6; // "</div>"
-                    oldDetails = oldDetails.substr(pos1, pos2 - pos1);
-                }
-            }
-        }
-    }
-
     BOOST_LOG_TRIVIAL(debug) << "Generating report...";
     try {
         GenerateReport(_game.ReportPath(),
                         messages,
                         plugins,
-                        oldDetails,
                         revision,
                         doUpdate);
     } catch (loot::error& e) {

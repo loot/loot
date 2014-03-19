@@ -43,6 +43,34 @@ namespace loot {
 
     //LOOT Report generation stuff.
 
+    inline std::string GetOldReportDetails(boost::filesystem::path& filepath) {
+        if (boost::filesystem::exists(filepath)) {
+            BOOST_LOG_TRIVIAL(debug) << "Reading the previous report's details section.";
+            //Read the whole file in.
+            std::string contents;
+            loot::ifstream in(filepath, ios::binary);
+            in.seekg(0, std::ios::end);
+            contents.resize(in.tellg());
+            in.seekg(0, std::ios::beg);
+            in.read(&contents[0], contents.size());
+            in.close();
+
+            //Slim down to only the details section.
+            size_t pos1 = contents.find("<div id=\"plugins\"");
+            if (pos1 != string::npos) {
+                pos1 = contents.find("<ul>", pos1);
+                if (pos1 != string::npos) {
+                    size_t pos2 = contents.find("<div id=\"summary\">", pos1);
+                    if (pos2 != string::npos) {
+                        pos2 -= 6; // "</div>"
+                        return contents.substr(pos1, pos2 - pos1);
+                    }
+                }
+            }
+        }
+        return "";
+    }
+
     struct xml_string_writer: pugi::xml_writer {
         std::string result;
 
@@ -541,7 +569,6 @@ namespace loot {
     inline void GenerateReport(const boost::filesystem::path& file,
                         std::list<Message>& messages,
                         const std::list<Plugin>& plugins,
-                        const std::string& oldDetails,
                         const std::string& masterlistVersion,
                         const bool masterlistUpdateEnabled) {
 
@@ -554,7 +581,9 @@ namespace loot {
 
         AppendNav(body);
 
-        int messageNo=0;
+        int messageNo = 0;
+        //Read the details section of the previous report, if it exists.
+        string oldDetails = GetOldReportDetails(file);
         AppendMain(body, oldDetails, masterlistVersion, masterlistUpdateEnabled, messages, plugins, messageNo);
 
         AppendFilters(body, messageNo, plugins.size());
