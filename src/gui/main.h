@@ -41,7 +41,6 @@ private:
 
     YAML::Node _settings;
     std::vector<loot::Game> _games;
-    loot::Game _game;
 };
 
 class Launcher : public wxFrame {

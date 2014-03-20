@@ -336,6 +336,7 @@ bool LOOT::OnInit() {
 
     BOOST_LOG_TRIVIAL(debug) << "Selecting game.";
     string target;
+    int gameIndex = -1;
     if (_settings["Game"] && _settings["Game"].as<string>() != "auto")
         target = _settings["Game"].as<string>();
     else if (_settings["Last Game"] && _settings["Last Game"].as<string>() != "auto")
@@ -344,18 +345,18 @@ bool LOOT::OnInit() {
     if (!target.empty()) {
         for (size_t i=0, max=_games.size(); i < max; ++i) {
             if (target == _games[i].FolderName() && _games[i].IsInstalled())
-                _game = _games[i];
+                gameIndex = i;
         }
     }
-    if (_game == Game()) {
+    if (gameIndex < 0) {
         //Set _game to the first installed game.
         for (size_t i=0, max=_games.size(); i < max; ++i) {
             if (_games[i].IsInstalled()) {
-                _game = _games[i];
+                gameIndex = i;
                 break;
             }
         }
-        if (_game == Game()) {
+        if (gameIndex < 0) {
             BOOST_LOG_TRIVIAL(error) << "None of the supported games were detected.";
             wxMessageBox(
                 translate("Error: None of the supported games were detected."),
@@ -365,6 +366,7 @@ bool LOOT::OnInit() {
             return false;
         }
     }
+    loot::Game & _game(_games[gameIndex]);
     BOOST_LOG_TRIVIAL(debug) << "Game selected is " << _game.Name();
 
     //Now that game is selected, initialise it.
