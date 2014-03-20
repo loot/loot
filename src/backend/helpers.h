@@ -51,12 +51,6 @@ namespace loot {
     //Converts an integer to a hex string using BOOST's Spirit.Karma. Faster than a stringstream conversion.
     std::string IntToHexString(const int n);
 
-    //Converts a boolean to a string representation (true/false)
-    std::string BoolToString(const bool b);
-
-    //Check if registry subkey exists.
-    bool RegKeyExists(const std::string& keyStr, const std::string& subkey, const std::string& value);
-
     //Get registry subkey value string.
     std::string RegKeyStringValue(const std::string& keyStr, const std::string& subkey, const std::string& value);
 

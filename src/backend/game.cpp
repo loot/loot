@@ -146,11 +146,9 @@ namespace loot {
                 string path;
                 string key_parent = fs::path(registryKey).parent_path().string();
                 string key_name = fs::path(registryKey).filename().string();
-                if (RegKeyExists("HKEY_LOCAL_MACHINE", key_parent, key_name)) {
-                    path = RegKeyStringValue("HKEY_LOCAL_MACHINE", key_parent, key_name);
-                    if (fs::exists(fs::path(path) / "Data" / _masterFile))
-                        gamePath = fs::path(path);
-                }
+                path = RegKeyStringValue("HKEY_LOCAL_MACHINE", key_parent, key_name);
+                if (!path.empty() && fs::exists(fs::path(path) / "Data" / _masterFile))
+                    gamePath = fs::path(path);
             }
         }
 
@@ -176,11 +174,9 @@ namespace loot {
         string path;
         string key_parent = fs::path(registryKey).parent_path().string();
         string key_name = fs::path(registryKey).filename().string();
-        if (RegKeyExists("HKEY_LOCAL_MACHINE", key_parent, key_name)) {
-            path = RegKeyStringValue("HKEY_LOCAL_MACHINE", key_parent, key_name);
-            if (fs::exists(fs::path(path) / "Data" / _masterFile))
-                return true;
-        }
+        path = RegKeyStringValue("HKEY_LOCAL_MACHINE", key_parent, key_name);
+        if (!path.empty() && fs::exists(fs::path(path) / "Data" / _masterFile))
+            return true;
 
         return false;
     }

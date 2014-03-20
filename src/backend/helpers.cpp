@@ -160,19 +160,6 @@ namespace loot {
         return out;
     }
 
-    //Converts a boolean to a string representation (true/false)
-    std::string BoolToString(const bool b) {
-        if (b)
-            return "true";
-        else
-            return "false";
-    }
-
-    //Check if registry subkey exists.
-    bool RegKeyExists(const std::string& keyStr, const std::string& subkey, const std::string& value) {
-        return !RegKeyStringValue(keyStr, subkey, value).empty();
-    }
-
     //Get registry subkey value string.
     string RegKeyStringValue(const std::string& keyStr, const std::string& subkey, const std::string& value) {
 #if _WIN32 || _WIN64

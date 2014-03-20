@@ -242,14 +242,6 @@ namespace loot {
         size_t numOverrideRecords;
     };
 
-    struct plugin_hash : std::unary_function<Plugin, size_t> {
-        inline size_t operator () (const Plugin& p) const {
-            size_t seed = 0;
-            boost::hash_combine(seed, p.Name());
-            return seed;
-        }
-    };
-
     bool operator == (const File& lhs, const Plugin& rhs);
 
     bool operator == (const Plugin& lhs, const File& rhs);
