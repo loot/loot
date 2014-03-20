@@ -25,6 +25,7 @@
 #ifndef __LOOT_GAME__
 #define __LOOT_GAME__
 
+#include "metadata.h"
 
 #include <string>
 #include <vector>
@@ -40,10 +41,19 @@
 
 namespace loot {
 
-    class Plugin;
+    /* Each Game object should store the config details specific to that game.
+       It should also store the plugin and masterlist data for that game.
+       Plugin data should be stored as an unordered hashset, the elements of which are
+       referenced by ordered lists and other structures.
+       Masterlist / userlist data should be stored as structures which hold plugin and
+       global message lists.
+       Each game should have functions to load this plugin and masterlist / userlist
+       data. Plugin data should be loaded as header-only and as full data.
+    */
 
     class Game {
     public:
+        //Game functions.
         Game();  //Sets game to LOOT_Game::autodetect, with all other vars being empty.
         Game(const unsigned int baseGameCode, const std::string& lootFolder = "");
 
@@ -71,17 +81,24 @@ namespace loot {
         boost::filesystem::path UserlistPath() const;
         boost::filesystem::path ReportPath() const;
 
+        //Game plugin functions.
+
         bool IsActive(const std::string& plugin) const;
 
         void GetLoadOrder(std::list<Plugin>& loadOrder) const;
         void SetLoadOrder(const std::list<Plugin>& loadOrder) const;  //Modifies game load order, even though const.
 
         void RefreshActivePluginsList();
-        void RedatePlugins();
+        void RedatePlugins();  //Change timestamps to match load order (Skyrim only).
 
         //Caches for condition results, active plugins and CRCs.
         boost::unordered_map<std::string, bool> conditionCache;  //Holds lowercased strings.
         boost::unordered_map<std::string, uint32_t> crcCache;  //Holds lowercased strings.
+
+        //Plugin data and metadata lists.
+        MetadataList masterlist;
+        MetadataList userlist;
+        boost::unordered_set<Plugin, plugin_hash> plugins;
 
         espm::Settings espm_settings;
 
@@ -102,6 +119,7 @@ namespace loot {
         std::string _repositoryBranch;
 
         boost::filesystem::path gamePath;  //Path to the game's folder.
+
         boost::unordered_set<std::string> activePlugins;  //Holds lowercased strings.
 
         //Creates directory in LOOT folder for LOOT's game-specific files.

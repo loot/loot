@@ -33,6 +33,7 @@
 #define BOOST_SPIRIT_USE_PHOENIX_V3 1
 #endif
 
+#include "game.h"
 #include "metadata.h"
 #include "helpers.h"
 #include "error.h"

@@ -24,9 +24,7 @@
 #ifndef __LOOT_METADATA__
 #define __LOOT_METADATA__
 
-#include "game.h"
 #include "globals.h"
-
 
 #include <stdint.h>
 #include <string>
@@ -36,6 +34,7 @@
 
 namespace loot {
 
+    class Game;
 
     //A FormID is a 32 bit unsigned integer of the form xxYYYYYY in hex. The xx is the position in the masters list of the plugin that the FormID is from, and the YYYYYY is the rest of the FormID. Here the xx bit is stored as the corresponding filename to allow comparison between FormIDs from different plugins.
     class FormID {
@@ -241,6 +240,19 @@ namespace loot {
         //Useful caches.
         size_t numOverrideRecords;
     };
+
+    class MetadataList {
+    public:
+        void Load(boost::filesystem::path& filepath);
+
+        std::list<Plugin> plugins;
+        std::list<Message> messages;
+    };
+
+    struct plugin_hash : std::unary_function<Plugin, size_t> {
+        size_t operator () (const Plugin& p) const;
+    };
+
 
     bool operator == (const File& lhs, const Plugin& rhs);
 
