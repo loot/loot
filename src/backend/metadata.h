@@ -260,10 +260,6 @@ namespace loot {
 
     bool operator == (const std::string& lhs, const Plugin& rhs);
 
-    bool alpha_sort(const Plugin& lhs, const Plugin& rhs);
-
-    bool master_sort(const Plugin& lhs, const Plugin& rhs);
-
     bool IsPlugin(const std::string& file);
 }
 

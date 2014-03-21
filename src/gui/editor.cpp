@@ -649,6 +649,7 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
         if (std::find(_editedPlugins.begin(), _editedPlugins.end(), *it) != _editedPlugins.end()) {
             pluginList->SetItemFont(i, wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT).Bold());
         }
+        ++i;
     }
     pluginList->SetColumnWidth(0, wxLIST_AUTOSIZE);
 

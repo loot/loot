@@ -313,7 +313,7 @@ namespace loot {
         return activePlugins.find(boost::to_lower_copy(plugin)) != activePlugins.end();
     }
 
-    void Game::GetLoadOrder(std::list<Plugin>& loadOrder) const {
+    void Game::GetLoadOrder(std::list<std::string>& loadOrder) const {
         BOOST_LOG_TRIVIAL(trace) << "Setting load order for game: " << _name;
 
         lo_game_handle gh;
@@ -480,21 +480,21 @@ namespace loot {
         if (id != tes5)
             return;
 
-        list<loot::Plugin> loadorder;
+        list<string> loadorder;
         GetLoadOrder(loadorder);
 
         if (!loadorder.empty()) {
 
             time_t lastTime, thisTime;
-            fs::path filepath = DataPath() / loadorder.begin()->Name();
+            fs::path filepath = DataPath() / *loadorder.begin();
             if (!fs::exists(filepath) && fs::exists(filepath.string() + ".ghost"))
                 filepath += ".ghost";
 
             lastTime = fs::last_write_time(filepath);
 
-            for (list<loot::Plugin>::const_iterator it = loadorder.begin(), itend = loadorder.end(); it != itend; ++it) {
+            for (list<string>::const_iterator it = loadorder.begin(), itend = loadorder.end(); it != itend; ++it) {
 
-                filepath = DataPath() / it->Name();
+                filepath = DataPath() / *it;
                 if (!fs::exists(filepath) && fs::exists(filepath.string() + ".ghost"))
                     filepath += ".ghost";
 
@@ -510,6 +510,22 @@ namespace loot {
                     BOOST_LOG_TRIVIAL(info) << "Redated \"" << filepath.filename().string() << "\" to: " << lastTime;
                 }
             }
+        }
+    }
+
+    void Game::LoadPlugins(bool headersOnly) {
+        //Add all plugins in data folder not already in the hashset to the hashset, and load them.
+        for (fs::directory_iterator it(DataPath()); it != fs::directory_iterator(); ++it) {
+            if (fs::is_regular_file(it->status()) && IsPlugin(it->path().string())) {
+                const string filename = it->path().filename().string();
+
+                if (plugins.find(filename) == plugins.end())
+                    plugins.insert(std::pair<string, Plugin>(filename, Plugin(filename)));
+            }
+        }
+
+        for (boost::unordered_map<string, Plugin>::iterator it = plugins.begin(), itend = plugins.end(); it != itend; ++it) {
+            it->second = Plugin(*this, it->second.Name(), headersOnly);
         }
     }
 

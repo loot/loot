@@ -85,11 +85,12 @@ namespace loot {
 
         bool IsActive(const std::string& plugin) const;
 
-        void GetLoadOrder(std::list<Plugin>& loadOrder) const;
+        void GetLoadOrder(std::list<std::string>& loadOrder) const;
         void SetLoadOrder(const std::list<Plugin>& loadOrder) const;  //Modifies game load order, even though const.
 
         void RefreshActivePluginsList();
         void RedatePlugins();  //Change timestamps to match load order (Skyrim only).
+        void LoadPlugins(bool headersOnly);  //Loads all installed plugins.
 
         //Caches for condition results, active plugins and CRCs.
         boost::unordered_map<std::string, bool> conditionCache;  //Holds lowercased strings.
@@ -98,7 +99,7 @@ namespace loot {
         //Plugin data and metadata lists.
         MetadataList masterlist;
         MetadataList userlist;
-        boost::unordered_set<Plugin, plugin_hash> plugins;
+        boost::unordered_map<std::string, Plugin> plugins;  //Map so that plugin data can be edited.
 
         espm::Settings espm_settings;
 

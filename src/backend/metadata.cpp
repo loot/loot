@@ -795,17 +795,6 @@ namespace loot {
         return rhs == lhs;
     }
 
-    bool alpha_sort(const Plugin& lhs, const Plugin& rhs) {
-        return boost::ilexicographical_compare(rhs.Name(), lhs.Name());
-    }
-
-    bool master_sort(const Plugin& lhs, const Plugin& rhs) {
-        if (lhs.IsMaster() && !rhs.IsMaster())
-            return true;
-        else
-            return false;
-    }
-
     bool IsPlugin(const std::string& file) {
         if (boost::iends_with(file, ".esp") || boost::iends_with(file, ".esm")
          || boost::iends_with(file, ".esp.ghost") || boost::iends_with(file, ".esm.ghost"))

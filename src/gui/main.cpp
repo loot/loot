@@ -955,12 +955,15 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
 
     //Scan for installed plugins.
     BOOST_LOG_TRIVIAL(debug) << "Reading installed plugins' headers.";
-    for (fs::directory_iterator it(_game.DataPath()); it != fs::directory_iterator(); ++it) {
-        if (fs::is_regular_file(it->status()) && IsPlugin(it->path().string())) {
-            installed.push_back(loot::Plugin(_game, it->path().filename().string(), true));
+    _game.LoadPlugins(true);
+    //Sort plugins into their load order.
+    list<string> loadOrder;
+    _game.GetLoadOrder(loadOrder);
+    for (list<string>::const_iterator it = loadOrder.begin(), itend = loadOrder.end(); it != itend; ++it) {
+        boost::unordered_map<string, loot::Plugin>::const_iterator pos = _game.plugins.find(*it);
 
-            progDia->Pulse();
-        }
+        if (pos != _game.plugins.end())
+            installed.push_back(pos->second);
     }
 
     //Parse masterlist.
@@ -1024,12 +1027,6 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
         if (find(installed.begin(), installed.end(), *it) == installed.end())
             installed.push_back(loot::Plugin(it->Name()));
     }
-
-    progDia->Pulse();
-
-    //Sort into alphabetical order.
-    BOOST_LOG_TRIVIAL(debug) << "Sorting plugin list into alphabetical order.";
-    installed.sort(loot::alpha_sort);
 
     progDia->Pulse();
 
