@@ -204,20 +204,18 @@ bool LOOT::OnInit() {
             return false;
         }
         GenerateDefaultSettingsFile(g_path_settings.string());
-    } 
-    else {
-        try {
-            loot::ifstream in(g_path_settings);
-            _settings = YAML::Load(in);
-            in.close();
-        } catch (YAML::ParserException& e) {
-            wxMessageBox(
-				FromUTF8(format(loc::translate("Error: Settings parsing failed. %1%")) % e.what()),
-				translate("LOOT: Error"),
-				wxOK | wxICON_ERROR,
-				NULL);
-            return false;
-        }
+    }
+    try {
+        loot::ifstream in(g_path_settings);
+        _settings = YAML::Load(in);
+        in.close();
+    } catch (YAML::ParserException& e) {
+        wxMessageBox(
+			FromUTF8(format(loc::translate("Error: Settings parsing failed. %1%")) % e.what()),
+			translate("LOOT: Error"),
+			wxOK | wxICON_ERROR,
+			NULL);
+        return false;
     }
 
     //Set up logging.
