@@ -69,7 +69,7 @@ namespace loot {
             _masterFile = "Oblivion.esm";
             espm_settings = espm::Settings("tes4");
             _repositoryURL = "https://github.com/loot/oblivion.git";
-            _repositoryBranch = "gh-pages";
+            _repositoryBranch = "master";
         } else if (Id() == Game::tes5) {
             _name = "TES V: Skyrim";
             registryKey = "Software\\Bethesda Softworks\\Skyrim\\Installed Path";
@@ -77,7 +77,7 @@ namespace loot {
             _masterFile = "Skyrim.esm";
             espm_settings = espm::Settings("tes5");
             _repositoryURL = "https://github.com/loot/skyrim.git";
-            _repositoryBranch = "gh-pages";
+            _repositoryBranch = "master";
         } else if (Id() == Game::fo3) {
             _name = "Fallout 3";
             registryKey = "Software\\Bethesda Softworks\\Fallout3\\Installed Path";
@@ -85,7 +85,7 @@ namespace loot {
             _masterFile = "Fallout3.esm";
             espm_settings = espm::Settings("fo3");
             _repositoryURL = "https://github.com/loot/fallout3.git";
-            _repositoryBranch = "gh-pages";
+            _repositoryBranch = "master";
         } else if (Id() == Game::fonv) {
             _name = "Fallout: New Vegas";
             registryKey = "Software\\Bethesda Softworks\\FalloutNV\\Installed Path";
@@ -93,7 +93,7 @@ namespace loot {
             _masterFile = "FalloutNV.esm";
             espm_settings = espm::Settings("fonv");
             _repositoryURL = "https://github.com/loot/falloutnv.git";
-            _repositoryBranch = "gh-pages";
+            _repositoryBranch = "master";
         } else {
             BOOST_LOG_TRIVIAL(error) << "Invalid game ID supplied.";
             throw error(error::invalid_args, lc::translate("Invalid game ID supplied.").str());
