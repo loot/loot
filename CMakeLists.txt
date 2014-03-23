@@ -11,6 +11,14 @@
 cmake_minimum_required (VERSION 2.8.9)
 project (LOOT)
 
+IF (NOT DEFINED PROJECT_LINK)
+    set (PROJECT_LINK "STATIC")
+ENDIF ()
+
+IF (NOT DEFINED PROJECT_ARCH)
+    set (PROJECT_ARCH "32")
+ENDIF ()
+
 set (LOOT_SRC   "${CMAKE_SOURCE_DIR}/src/backend/metadata.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/game.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers.cpp"
