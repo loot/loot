@@ -47,10 +47,10 @@ The installer and Python script both require the built LOOT.exe to be at `build\
 
 If a translation for a new language is provided, here's what needs changing to make LOOT use that translation.
 
-* In [helpers.h](src/backend/helpers.h), add a static constant for the language to the `Language` class, and update `Language::Names()`.
-* In [helpers.cpp](src/backend/helpers.cpp), update `Language::Language(const std::string& nameOrCode)` and `Language::Construct(const unsigned int code).
+* In [helpers.h](src/backend/helpers.h), add a constant for the language to the `Language` class, and update `Language::Names()`.
+* In [helpers.cpp](src/backend/helpers.cpp), update `Language::Language(const std::string& nameOrCode)` and `Language::Construct(const unsigned int code)`.
 * Add constants for the language in [api.h](src/api/api.h) and [api.cpp](src/api/api.cpp).
-* In [main.cpp](src/gui/main.cpp, update `LOOT::OnInit` to set the correct `wxLANGUAGE_`.
+* In [main.cpp](src/gui/main.cpp), update `LOOT::OnInit` to set the correct `wxLANGUAGE_`.
 * In [archive.py](src/archive.py), add the language folder to the inline list on line 68.
 * In [installer.nsi](src/installer.nsi), add entries for the language folder to the install and uninstall sections. If there's an installer translation, also add its string definitions beside all the other language string definitions, and insert its macro beside all the other language macros.
 * The readmes should be updated with a link to the translation in the repository in the main readme, and the language's code in the metadata syntax readme.
