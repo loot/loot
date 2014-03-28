@@ -23,6 +23,15 @@ along with LOOT.  If not, see
 */
 
 #include "generators.h"
+#include "helpers.h"
+#include "globals.h"
+#include "parsers.h"
+#include "streams.h"
+
+#include <pugixml.hpp>
+
+#include <boost/algorithm/string.hpp>
+#include <boost/locale.hpp>
 
 namespace loot {
     //LOOT Report generation stuff.

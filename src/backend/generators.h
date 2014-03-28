@@ -24,20 +24,13 @@
 #ifndef __LOOT_GENERATORS__
 #define __LOOT_GENERATORS__
 
-#include "helpers.h"
 #include "metadata.h"
-#include "globals.h"
-#include "parsers.h"
-#include "streams.h"
 
-#include <pugixml.hpp>
 #include <yaml-cpp/yaml.h>
 
 #include <string>
 #include <list>
-#include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
-#include <boost/locale.hpp>
 
 namespace loot {
     //LOOT Report generation stuff.

@@ -24,11 +24,13 @@
 
 #include "editor.h"
 #include "../backend/generators.h"
+#include "../backend/helpers.h"
 #include "../backend/streams.h"
 
 #include <algorithm>
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/log/trivial.hpp>
 
 #include <wx/clipbrd.h>
 #include <wx/msgdlg.h>
