@@ -23,54 +23,29 @@ LOOT uses [CMake](http://cmake.org) v2.8.9 or later for cross-platform building 
 LOOT requires the following libraries (version numbers used in latest development revision given):
 
 * [Alphanum](http://www.davekoelle.com/files/alphanum.hpp)
-* [Boost](http://www.boost.org) v1.55.0.
+* [Boost](http://www.boost.org) v1.55.0
 * [Libespm](http://github.com/WrinklyNinja/libespm)
-* [Libgit2](https://github.com/libgit2) v0.20.0.
+* [Libgit2](http://libgit2.github.com/) v0.20.0
 * [Libloadorder](http://github.com/WrinklyNinja/libloadorder)
 * [OpenSSL](https://www.openssl.org) - only if HTTPS support in libgit2 is required using compilers other than MSVC.
-* [PugiXML](http://code.google.com/p/pugixml/) v1.2.
-* [wxWidgets](http://www.wxwidgets.org) v3.0.0.
-* [yaml-cpp](http://github.com/WrinklyNinja/yaml-cpp).
-* [zlib](http://zlib.net) v1.2.8.
+* [PugiXML](http://pugixml.org/) v1.4
+* [wxWidgets](http://www.wxwidgets.org) v3.0.0
+* [yaml-cpp](http://github.com/WrinklyNinja/yaml-cpp)
+* [zlib](http://zlib.net/) v1.2.8
 
 LOOT expects all libraries' folders to be present alongside the LOOT repository folder that contains this readme, or otherwise installed such that the compiler and linker used can find them without suppling additional paths. All paths below are relative to the folder(s) containing the libraries and LOOT.
 
-Alphanum, Libespm and PugiXML do not require any additional setup. The rest of the libraries must be built separately. Instructions for building them and LOOT itself using MSVC or MinGW are given in `docs/BUILD.MSVC.md` and `docs/BUILD.MinGW.md` respectively.
-
-## Using The Masterlist Converter
-
-The masterlist converter is a command line utility that takes two optional command line arguments:
-
-```
-masterlist-converter.exe [BOSS masterlist input file] [LOOT masterlist output file]
-```
-
-If only one argument is given, or if no arguments are given, the converter assumes it was called as
-
-```
-masterlist-converter.exe masterlist.txt masterlist.yaml
-```
-
-On encountering an error, it will print an error message to the console, and will not output a LOOT masterlist.
-
-The converter does not perform a lossless conversion. The following do not get transferred into the new masterlist:
-
-* Silent comments. (Search regex: `^(/\*|//)`)
-* Plugin conditions. (Search regex: `^IF(NOT)?.+MOD:`)
-* Requirement messages containing plugin filenames. (Search regex: `REQ:.+(\.esp|\.esm)`)
-* Dirty message content. The ITM, UDR and Navmesh counts, along with CRCs and the dirty utility referenced are transferred, but any additional content, such as links to additional instructions, are lost. (Search regex: `DIRTY:`.)
-
-In addition, while other data is retained, it needs some manual adjustment, eg. translated messages need are converted as separate messages and should be placed into message content objects.
+Alphanum, Libespm and PugiXML do not require any additional setup. The rest of the libraries must be built separately. Instructions for building them and LOOT itself using MSVC or MinGW are given in [docs/BUILD.MSVC.md](docs/BUILD.MSVC.md) and [docs/BUILD.MinGW.md](docs/BUILD.MinGW.md) respectively.
 
 ## Packaging Releases
 
-Installer and zip archive releases for the main LOOT application can be handled by running the scripts `installer.nsi` and `archive.py` in the `src` folder respectively. The installer script requires [NSIS 3](http://nsis.sourceforge.net/Main_Page) to be installed, while the archive script requires [Python](http://www.python.org/) to be installed.
+Installer and zip archive releases for the main LOOT application can be handled by running the scripts `installer.nsi` and `archive.py` in the `src` folder respectively. The installer script requires [Unicode NSIS](http://www.scratchpaper.com/), while the archive script requires [Python](http://www.python.org/).
 
-The installer and Python script both require the built LOOT.exe to be at `build\LOOT.exe`, and the installer also requires the MSVC 2013 Redistributable (x86) to be at `build\vcredist_x86.exe`.
+The installer and Python script both require the built LOOT.exe to be at `build\LOOT.exe`.
 
-## Adding Translations To LOOT
+## Adding Translations
 
-If a translation for a new language is provided, here's what needs changing in the code to make LOOT use that translation.
+If a translation for a new language is provided, here's what needs changing to make LOOT use that translation.
 
 * Add constants for the language in `api.h` and `globals.h`.
 * In `helpers.cpp`, update `Language::Language(const std::string& nameOrISOCode)` and `Language::Construct(const unsigned int code).

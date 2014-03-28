@@ -29,6 +29,46 @@
 
 using namespace std;
 
+/**
+    @file converter.cpp
+    @brief The masterlist converter utility.
+
+    @section about_sec About
+
+    The masterlist converter is a command line utility that takes two optional
+    command line arguments:
+
+    ```
+    masterlist-converter.exe [BOSS masterlist input] [LOOT masterlist output]
+    ```
+
+    If only one argument is given, or if no arguments are given, the converter
+    assumes it was called as
+
+    ```
+    masterlist-converter.exe masterlist.txt masterlist.yaml
+    ```
+
+    On encountering an error, it will print an error message to the console,
+    and will not output a LOOT masterlist.
+
+    The converter does not perform a lossless conversion. The following do not
+    get transferred into the new masterlist:
+
+    * Silent comments. (Search regex: `^(/\*|//)`)
+    * Plugin conditions. (Search regex: `^IF(NOT)?.+MOD:`)
+    * Requirement messages containing plugin filenames. (Search regex:
+      `REQ:.+(\.esp|\.esm)`)
+    * Dirty message content. The ITM, UDR and Navmesh counts, along with CRCs
+      and the dirty utility referenced are transferred, but any additional
+      content, such as links to additional instructions, are lost. (Search
+      regex: `DIRTY:`.)
+
+    In addition, while other data is retained, it needs some manual adjustment,
+    eg. translated messages need are converted as separate messages and should
+    be placed into message content objects.
+*/
+
 int main(int argc, char * argv[]) {
     string in_str, out_str;
     if (argc < 3) {
