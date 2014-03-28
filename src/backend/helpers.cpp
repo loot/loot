@@ -224,20 +224,20 @@ namespace loot {
         Construct(code);
     }
 
-    Language::Language(const std::string& nameOrISOCode) {
-        if (nameOrISOCode == Language(Language::english).Name() || nameOrISOCode == Language(Language::english).Locale())
+    Language::Language(const std::string& nameOrCode) {
+        if (nameOrCode == Language(Language::english).Name() || nameOrCode == Language(Language::english).Locale())
             Construct(Language::english);
-        else if (nameOrISOCode == Language(Language::spanish).Name() || nameOrISOCode == Language(Language::spanish).Locale())
+        else if (nameOrCode == Language(Language::spanish).Name() || nameOrCode == Language(Language::spanish).Locale())
             Construct(Language::spanish);
-        else if (nameOrISOCode == Language(Language::russian).Name() || nameOrISOCode == Language(Language::russian).Locale())
+        else if (nameOrCode == Language(Language::russian).Name() || nameOrCode == Language(Language::russian).Locale())
             Construct(Language::russian);
-        else if (nameOrISOCode == Language(Language::french).Name() || nameOrISOCode == Language(Language::french).Locale())
+        else if (nameOrCode == Language(Language::french).Name() || nameOrCode == Language(Language::french).Locale())
             Construct(Language::french);
-        else if (nameOrISOCode == Language(Language::chinese).Name() || nameOrISOCode == Language(Language::chinese).Locale())
+        else if (nameOrCode == Language(Language::chinese).Name() || nameOrCode == Language(Language::chinese).Locale())
             Construct(Language::chinese);
-        else if (nameOrISOCode == Language(Language::polish).Name() || nameOrISOCode == Language(Language::polish).Locale())
+        else if (nameOrCode == Language(Language::polish).Name() || nameOrCode == Language(Language::polish).Locale())
             Construct(Language::polish);
-        else if (nameOrISOCode == Language(Language::brazilian_portuguese).Name() || nameOrISOCode == Language(Language::brazilian_portuguese).Locale())
+        else if (nameOrCode == Language(Language::brazilian_portuguese).Name() || nameOrCode == Language(Language::brazilian_portuguese).Locale())
             Construct(Language::brazilian_portuguese);
         else
             Construct(Language::any);

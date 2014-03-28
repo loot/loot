@@ -64,7 +64,7 @@ namespace loot {
     class Language {
     public:
         Language(const unsigned int code);
-        Language(const std::string& nameOrISOCode);
+        Language(const std::string& nameOrCode);
 
         unsigned int Code() const;
         std::string Name() const;
