@@ -23,7 +23,6 @@
 */
 
 #include "api.h"
-#include "../backend/globals.h"
 #include "../backend/game.h"
 #include "../backend/metadata.h"
 #include "../backend/parsers.h"

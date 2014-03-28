@@ -23,9 +23,7 @@
 */
 
 #include "ids.h"
-#include "../backend/globals.h"
 
-#include <boost/algorithm/string.hpp>
 #include <boost/locale.hpp>
 
 wxString translate(const std::string& str) {

@@ -24,7 +24,6 @@
 
 #include "settings.h"
 #include "../backend/helpers.h"
-#include "../backend/globals.h"
 #include <boost/algorithm/string.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/log/core.hpp>
