@@ -93,8 +93,6 @@ namespace loot {
 
         while (boost::regex_search(start, end, results, regex)) {
 
-            BOOST_LOG_TRIVIAL(trace) << "Results size: " << results.size();
-
             //Get data from match.
             std::string url, label;
             if (results[3].matched)
