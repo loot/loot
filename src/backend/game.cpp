@@ -295,7 +295,7 @@ namespace loot {
             }
             else {
                 BOOST_LOG_TRIVIAL(error) << "libloadorder failed to get the active plugins list. Details: " << e;
-                string err = lc::translate("libloadorder failed to get the active plugins list. Details:").str() + " " + e;
+                err = lc::translate("libloadorder failed to get the active plugins list. Details:").str() + " " + e;
             }
             lo_cleanup();
             throw error(error::liblo_error, err);
@@ -340,7 +340,7 @@ namespace loot {
             }
             else {
                 BOOST_LOG_TRIVIAL(error) << "libloadorder failed to create a game handle. Details: " << e;
-                string err = lc::translate("libloadorder failed to create a game handle. Details:").str() + " " + e;
+                err = lc::translate("libloadorder failed to create a game handle. Details:").str() + " " + e;
             }
             lo_cleanup();
             throw error(error::liblo_error, err);
@@ -359,7 +359,7 @@ namespace loot {
             }
             else {
                 BOOST_LOG_TRIVIAL(error) << "libloadorder failed to initialise game master file support. Details: " << e;
-                string err = lc::translate("libloadorder failed to initialise game master file support. Details:").str() + " " + e;
+                err = lc::translate("libloadorder failed to initialise game master file support. Details:").str() + " " + e;
             }
             lo_cleanup();
             throw error(error::liblo_error, err);
@@ -376,7 +376,7 @@ namespace loot {
             }
             else {
                 BOOST_LOG_TRIVIAL(error) << "libloadorder failed to get the load order. Details: " << e;
-                string err = lc::translate("libloadorder failed to get the load order. Details:").str() + " " + e;
+                err = lc::translate("libloadorder failed to get the load order. Details:").str() + " " + e;
             }
             lo_cleanup();
             throw error(error::liblo_error, err);
@@ -416,7 +416,7 @@ namespace loot {
             }
             else {
                 BOOST_LOG_TRIVIAL(error) << "libloadorder failed to create a game handle. Details: " << e;
-                string err = lc::translate("libloadorder failed to create a game handle. Details:").str() + " " + e;
+                err = lc::translate("libloadorder failed to create a game handle. Details:").str() + " " + e;
             }
             lo_cleanup();
             throw error(error::liblo_error, err);
@@ -434,7 +434,7 @@ namespace loot {
             }
             else {
                 BOOST_LOG_TRIVIAL(error) << "libloadorder failed to initialise game master file support. Details: " << e;
-                string err = lc::translate("libloadorder failed to initialise game master file support. Details:").str() + " " + e;
+                err = lc::translate("libloadorder failed to initialise game master file support. Details:").str() + " " + e;
             }
             lo_cleanup();
             throw error(error::liblo_error, err);
@@ -463,7 +463,7 @@ namespace loot {
             }
             else {
                 BOOST_LOG_TRIVIAL(error) << "libloadorder failed to set the load order. Details: " << e;
-                string err = lc::translate("libloadorder failed to set the load order. Details:").str() + " " + e;
+                err = lc::translate("libloadorder failed to set the load order. Details:").str() + " " + e;
             }
             lo_cleanup();
             throw error(error::liblo_error, err);
