@@ -1,0 +1,12 @@
+[submodule "libs/libespm"]
+	path = libs/libespm
+	url = https://github.com/WrinklyNinja/libespm.git
+[submodule "libs/libloadorder"]
+	path = libs/libloadorder
+	url = https://github.com/WrinklyNinja/libloadorder.git
+[submodule "libs/yaml-cpp"]
+	path = libs/yaml-cpp
+	url = https://github.com/WrinklyNinja/yaml-cpp.git
+[submodule "libs/libgit2"]
+	path = libs/libgit2
+	url = https://github.com/libgit2/libgit2.git
