@@ -220,8 +220,88 @@ function processURLParams() {
         var datapath = 'file:///' + document.URL.substring(pos+6);
         console.log(datapath);
         require([datapath], function(){
-            console.log(data);
+            var totalMessageNo = 0;
+            var warnMessageNo = 0;
+            var errorMessageNo = 0;
+            /* Fill report with data. */
             document.getElementById('lootVersion').textContent = data.lootVersion;
+            document.getElementById('masterlistRevision').textContent = data.masterlist.revision;
+            document.getElementById('masterlistUpdating').textContent = data.masterlistUpdater;
+            var generalMessagesList = document.getElementById('generalMessagesList');
+            for (var i = 0; i < data.globalMessages.length; ++i) {
+                var li = document.createElement('li');
+                li.className = data.globalMessages[i].type;
+                /* innerHTML is open to abuse, but for hyperlinking it's too useful. */
+                li.innerHTML = data.globalMessages[i].message;
+                generalMessagesList.appendChild(li);
+
+                if (li.className == 'warn') {
+                    warnMessageNo += 1;
+                } else if (li.className == 'error') {
+                    errorMessageNo += 1;
+                }
+            }
+            totalMessageNo = data.globalMessages.length;
+            var pluginsList = document.getElementById('pluginsList');
+            for (var i = 0; i < data.plugins.length; ++i) {
+                var li = document.createElement('li');
+
+                var mod = document.createElement('div');
+                mod.className = 'mod';
+                mod.textContent = data.plugins[i].name;
+                li.appendChild(mod);
+
+                var crc = document.createElement('div');
+                crc.className = 'crc';
+                crc.textContent = 'CRC: ' + data.plugins[i].crc;
+                li.appendChild(crc);
+
+                if (data.plugins[i].version) {
+                    var version = document.createElement('div');
+                    version.className = 'version';
+                    version.textContent = 'Version: ' + data.plugins[i].version;
+                    li.appendChild(version);
+                }
+
+                if (data.plugins[i].tagsAdd && data.plugins[i].tagsAdd.length != 0) {
+                    var tagAdd = document.createElement('div');
+                    tagAdd.className = 'tag add';
+                    tagAdd.textContent = data.plugins[i].tagsAdd.join(', ');
+                    li.appendChild(tagAdd);
+                }
+
+                if (data.plugins[i].tagRemove && data.plugins[i].tagRemove.length != 0) {
+                    var tagRemove = document.createElement('div');
+                    tagRemove.className = 'tag remove';
+                    tagRemove.textContent = data.plugins[i].tagsRemove.join(', ');
+                    li.appendChild(tagRemove);
+                }
+
+                if (data.plugins[i].messages && data.plugins[i].messages.length != 0) {
+                    var ul = document.createElement('ul');
+                    for (var j = 0; j < data.plugins[i].messages.length; ++j) {
+                        var messageLi = document.createElement('li');
+                        messageLi.className = data.plugins[i].messages[j].type;
+                        /* innerHTML is open to abuse, but for hyperlinking it's too useful. */
+                        messageLi.innerHTML = data.plugins[i].messages[j].message;
+                        ul.appendChild(messageLi);
+
+                        if (messageLi.className == 'warn') {
+                            warnMessageNo += 1;
+                        } else if (messageLi.className == 'error') {
+                            errorMessageNo += 1;
+                        }
+                        totalMessageNo += 1;
+                    }
+                    li.appendChild(ul);
+                }
+                pluginsList.appendChild(li);
+            }
+            document.getElementById('totalMessageNo').textContent = totalMessageNo;
+            document.getElementById('filterTotalMessageNo').textContent = totalMessageNo;
+            document.getElementById('totalPluginNo').textContent = data.plugins.length;
+            document.getElementById('totalWarningNo').textContent = warnMessageNo;
+            document.getElementById('totalErrorNo').textContent = errorMessageNo;
         });
     }
 }
