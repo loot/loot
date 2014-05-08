@@ -112,16 +112,24 @@ IF (MINGW)
 ELSEIF (MSVC)
     IF (MSVC_VERSION EQUAL 1800)
         set (CMAKE_GENERATOR_TOOLSET "v120_xp" CACHE STRING "Platform Toolset" FORCE)
-        set (BOOST_SUFFIX "-vc120-mt-1_55")
+        set (BOOST_SUFFIX "-vc120-mt-s-1_55")
     ELSEIF (MSVC_VERSION EQUAL 1700)
-        set (BOOST_SUFFIX "-vc110-mt-1_55")
+        set (BOOST_SUFFIX "-vc110-mt-s-1_55")
     ENDIF ()
     include_directories("${PROJECT_LIBS_DIR}/wxWidgets/lib/vc_lib/mswu")
     link_directories("${PROJECT_LIBS_DIR}/wxWidgets/lib/vc_lib")
-    set (CMAKE_CXX_FLAGS "/EHsc")
+    # Force static C++ runtime linkage.
+    FOREACH(flag
+        CMAKE_C_FLAGS_RELEASE CMAKE_C_FLAGS_RELWITHDEBINFO
+        CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_DEBUG_INIT
+        CMAKE_CXX_FLAGS_RELEASE  CMAKE_CXX_FLAGS_RELWITHDEBINFO
+        CMAKE_CXX_FLAGS_DEBUG  CMAKE_CXX_FLAGS_DEBUG_INIT)
+        STRING(REPLACE "/MD"  "/MT" "${flag}" "${${flag}}")
+        SET("${flag}" "${${flag}} /EHsc")
+    ENDFOREACH()
     set (CMAKE_EXE_LINKER_FLAGS "/SUBSYSTEM:WINDOWS")
     set (LOOT_LIBS ${LOOT_LIBS}
-                   libyaml-cppmd
+                   libyaml-cppmt
                    libboost_log_setup${BOOST_SUFFIX}
                    libboost_log${BOOST_SUFFIX}
                    libboost_locale${BOOST_SUFFIX}
