@@ -104,7 +104,7 @@ table td:first-child {
     cursor:pointer;
 }
 #filters div {
-    padding:0.4em;
+    padding:0.2em 1em;
     font-style:italic;
 }
 input[type='checkbox'] {
