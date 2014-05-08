@@ -213,6 +213,13 @@ function setupEventHandlers() {
     document.getElementById('hideAllPluginMessages').addEventListener('click', toggleMessages, false);
     document.getElementById('hideMessagelessPlugins').addEventListener('click', togglePlugins, false);
 }
+function masterlistUpdaterStatus(state) {
+    if (state) {
+        return 'Enabled';
+    } else {
+        return 'Disabled';
+    }
+}
 function processURLParams() {
     /* Get the data path from the URL and load it. */
     var pos = document.URL.indexOf("?data=");
@@ -226,13 +233,13 @@ function processURLParams() {
             /* Fill report with data. */
             document.getElementById('lootVersion').textContent = data.lootVersion;
             document.getElementById('masterlistRevision').textContent = data.masterlist.revision;
-            document.getElementById('masterlistUpdating').textContent = data.masterlistUpdater;
+            document.getElementById('masterlistUpdating').textContent = masterlistUpdaterStatus(data.masterlist.updaterEnabled);
             var generalMessagesList = document.getElementById('generalMessagesList');
             for (var i = 0; i < data.globalMessages.length; ++i) {
                 var li = document.createElement('li');
                 li.className = data.globalMessages[i].type;
                 /* innerHTML is open to abuse, but for hyperlinking it's too useful. */
-                li.innerHTML = data.globalMessages[i].message;
+                li.innerHTML = data.globalMessages[i].content;
                 generalMessagesList.appendChild(li);
 
                 if (li.className == 'warn') {
@@ -283,7 +290,7 @@ function processURLParams() {
                         var messageLi = document.createElement('li');
                         messageLi.className = data.plugins[i].messages[j].type;
                         /* innerHTML is open to abuse, but for hyperlinking it's too useful. */
-                        messageLi.innerHTML = data.plugins[i].messages[j].message;
+                        messageLi.innerHTML = data.plugins[i].messages[j].content;
                         ul.appendChild(messageLi);
 
                         if (messageLi.className == 'warn') {
