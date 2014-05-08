@@ -126,16 +126,16 @@ function showSection(evt) {
 function toggleMessages(evt) {
     var listItems = document.getElementById('plugins').getElementsByTagName('li');
     var i = listItems.length - 1;
-    var hiddenNo = parseInt(document.getElementById('hiddenMessageNo').innerHTML);
+    var hiddenNo = parseInt(document.getElementById('hiddenMessageNo').textContent, 10);
     while (i > -1) {
-        var spans = listItems[i].getElementsByTagName('span');
-        if (spans.length == 0 || spans[0].className.indexOf('mod') == -1) {
+        var divs = listItems[i].getElementsByTagName('div');
+        if (divs.length == 0) {
             var filterMatch = false;
             if (evt.target.id == 'hideAllPluginMessages') {
                 filterMatch = true;
             } else if (evt.target.id == 'hideNotes' && listItems[i].className.indexOf('say') != -1) {
                 filterMatch = true;
-            } else if (evt.target.id == 'hideDoNotCleanMessages' && listItems[i].innerHTML.indexOf('Do not clean.') != -1) {
+            } else if (evt.target.id == 'hideDoNotCleanMessages' && listItems[i].textContent.indexOf('Do not clean.') != -1) {
                 filterMatch = true;
             }
             if (filterMatch) {
@@ -154,38 +154,36 @@ function toggleMessages(evt) {
         }
         i--;
     }
-	document.getElementById('hiddenMessageNo').innerHTML = hiddenNo;
+	document.getElementById('hiddenMessageNo').textContent = hiddenNo;
 	togglePlugins(evt);
 }
 function togglePlugins(evt) {
-    var plugins = document.getElementById('plugins').getElementsByTagName('ul')[0].childNodes;
+    var plugins = document.getElementById('plugins').getElementsByTagName('ul')[0].children;
     var i = plugins.length - 1;
-    var hiddenNo = parseInt(document.getElementById('hiddenPluginNo').innerHTML);
+    var hiddenNo = parseInt(document.getElementById('hiddenPluginNo').textContent, 10);
     while (i > -1) {
-        if (plugins[i].nodeType == Node.ELEMENT_NODE) {
-            var isMessageless = true;
-            var messages = plugins[i].getElementsByTagName('li');
-            var j = messages.length - 1;
-            while (j > -1) {
-                if (messages[j].className.indexOf('hidden') == -1) {
-                    isMessageless = false;
-                    break;
-                }
-                j--;
+        var isMessageless = true;
+        var messages = plugins[i].getElementsByTagName('li');
+        var j = messages.length - 1;
+        while (j > -1) {
+            if (messages[j].className.indexOf('hidden') == -1) {
+                isMessageless = false;
+                break;
             }
-            if (document.getElementById('hideMessagelessPlugins').checked && isMessageless) {
-                if (plugins[i].className.indexOf('hidden') == -1) {
-                    hiddenNo++;
-                    hideElement(plugins[i]);
-                }
-            } else if (plugins[i].className.indexOf('hidden') != -1) {
-                hiddenNo--;
-                showElement(plugins[i]);
+            j--;
+        }
+        if (document.getElementById('hideMessagelessPlugins').checked && isMessageless) {
+            if (plugins[i].className.indexOf('hidden') == -1) {
+                hiddenNo++;
+                hideElement(plugins[i]);
             }
+        } else if (plugins[i].className.indexOf('hidden') !== -1) {
+            hiddenNo--;
+            showElement(plugins[i]);
         }
         i--;
     }
-    document.getElementById('hiddenPluginNo').innerHTML = hiddenNo;
+    document.getElementById('hiddenPluginNo').textContent = hiddenNo;
 }
 function setupEventHandlers() {
     var i, elemArr;
@@ -243,9 +241,9 @@ function processURLParams() {
                 generalMessagesList.appendChild(li);
 
                 if (li.className == 'warn') {
-                    warnMessageNo += 1;
+                    warnMessageNo++;
                 } else if (li.className == 'error') {
-                    errorMessageNo += 1;
+                    errorMessageNo++;
                 }
             }
             totalMessageNo = data.globalMessages.length;
@@ -294,11 +292,11 @@ function processURLParams() {
                         ul.appendChild(messageLi);
 
                         if (messageLi.className == 'warn') {
-                            warnMessageNo += 1;
+                            warnMessageNo++;
                         } else if (messageLi.className == 'error') {
-                            errorMessageNo += 1;
+                            errorMessageNo++;
                         }
-                        totalMessageNo += 1;
+                        totalMessageNo++;
                     }
                     li.appendChild(ul);
                 }
@@ -309,15 +307,14 @@ function processURLParams() {
             document.getElementById('totalPluginNo').textContent = data.plugins.length;
             document.getElementById('totalWarningNo').textContent = warnMessageNo;
             document.getElementById('totalErrorNo').textContent = errorMessageNo;
+
+            /* Now initialise the rest of the report. */
+            setupEventHandlers();
+            if (isStorageSupported()) {
+                loadSettings();
+            }
+            showElement(document.getElementsByTagName('section')[0]);
         });
     }
 }
-function init() {
-    processURLParams();
-    setupEventHandlers();
-    if (isStorageSupported()) {
-        loadSettings();
-    }
-    showElement(document.getElementsByTagName('section')[0])
-}
-init();
+processURLParams();
