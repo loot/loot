@@ -29,7 +29,6 @@
 #include "../backend/generators.h"
 #include "../backend/error.h"
 #include "../backend/streams.h"
-#include "../backend/legacy-parser.h"
 
 #include <yaml-cpp/yaml.h>
 
@@ -277,17 +276,10 @@ LOOT_API unsigned int loot_load_lists (loot_db db, const char * const masterlist
 
     try {
         if (boost::filesystem::exists(masterlistPath)) {
-            if (boost::algorithm::iends_with(masterlistPath, ".yaml")) {
-                loot::ifstream in(masterlistPath);
-                YAML::Node tempNode = YAML::Load(in);
-                in.close();
-                temp = tempNode["plugins"].as< std::list<loot::Plugin> >();
-            }
-            else {
-                boost::filesystem::path p(masterlistPath);
-                std::list<loot::Message> filler;
-                LoadBOSSMasterlist(p, temp, filler);
-            }
+            loot::ifstream in(masterlistPath);
+            YAML::Node tempNode = YAML::Load(in);
+            in.close();
+            temp = tempNode["plugins"].as< std::list<loot::Plugin> >();
         }
     } catch (std::exception& e) {
         return c_error(loot_error_parse_fail, e.what());

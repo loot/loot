@@ -114,7 +114,7 @@ ELSEIF (MSVC)
         set (CMAKE_GENERATOR_TOOLSET "v120_xp" CACHE STRING "Platform Toolset" FORCE)
         set (BOOST_SUFFIX "-vc120-mt-1_55")
     ELSEIF (MSVC_VERSION EQUAL 1700)
-        set (BOOST_SUFFIX "-vc110-mt-1_55")        
+        set (BOOST_SUFFIX "-vc110-mt-1_55")
     ENDIF ()
     include_directories("${PROJECT_LIBS_DIR}/wxWidgets/lib/vc_lib/mswu")
     link_directories("${PROJECT_LIBS_DIR}/wxWidgets/lib/vc_lib")
@@ -158,11 +158,3 @@ target_link_libraries (loot${PROJECT_ARCH} ${LOOT_LIBS})
 # Build application.
 add_executable        (LOOT ${LOOT_GUI_SRC})
 target_link_libraries (LOOT ${LOOT_GUI_LIBS})
-
-# Build converter.
-add_executable        (masterlist-converter ${LOOT_SRC} "${CMAKE_SOURCE_DIR}/src/converter.cpp")
-IF (MSVC)
-    set_target_properties (masterlist-converter PROPERTIES LINK_FLAGS "/SUBSYSTEM:CONSOLE")
-ENDIF ()
-target_link_libraries (masterlist-converter ${LOOT_LIBS})
-

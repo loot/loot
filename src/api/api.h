@@ -274,8 +274,8 @@ LOOT_API void     loot_destroy_db (loot_db db);
     @brief Loads the masterlist and userlist from the paths specified.
     @details Can be called multiple times, each time replacing the previously-loaded data.
     @param db The database the function acts on.
-    @param masterlistPath A string containing the relative or absolute path to the masterlist file that should be loaded. The API supports loading both LOOT and BOSS masterlists.
-    @param userlistPath A string containing the relative or absolute path to the userlist file that should be loaded, or `NULL`. If `NULL`, no userlist will be loaded. The API only upports loading v3 userlists.
+    @param masterlistPath A string containing the relative or absolute path to the masterlist file that should be loaded.
+    @param userlistPath A string containing the relative or absolute path to the userlist file that should be loaded, or `NULL`. If `NULL`, no userlist will be loaded.
     @returns A return code.
 */
 LOOT_API unsigned int loot_load_lists (loot_db db, const char * const masterlistPath,
