@@ -911,7 +911,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                         plugins,
                         revision,
                         doUpdate);
-    } catch (loot::error& e) {
+    } catch (std::exception& e) {
         wxMessageBox(
             FromUTF8(format(loc::translate("Error: %1%")) % e.what()),
             translate("LOOT: Error"),

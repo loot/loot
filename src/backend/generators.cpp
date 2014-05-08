@@ -33,34 +33,6 @@ along with LOOT.  If not, see
 
 namespace loot {
     //LOOT Report generation stuff.
-    std::string GetOldReportDetails(const boost::filesystem::path& filepath) {
-        if (boost::filesystem::exists(filepath)) {
-            BOOST_LOG_TRIVIAL(debug) << "Reading the previous report's details section.";
-            //Read the whole file in.
-            std::string contents;
-            loot::ifstream in(filepath, std::ios::binary);
-            in.seekg(0, std::ios::end);
-            contents.resize(in.tellg());
-            in.seekg(0, std::ios::beg);
-            in.read(&contents[0], contents.size());
-            in.close();
-
-            //Slim down to only the details section.
-            size_t pos1 = contents.find("<div id=\"plugins\"");
-            if (pos1 != std::string::npos) {
-                pos1 = contents.find("<ul>", pos1);
-                if (pos1 != std::string::npos) {
-                    size_t pos2 = contents.find("<div id=\"summary\">", pos1);
-                    if (pos2 != std::string::npos) {
-                        pos2 -= 6; // "</div>"
-                        return contents.substr(pos1, pos2 - pos1);
-                    }
-                }
-            }
-        }
-        return "";
-    }
-
     void WriteMessage(YAML::Emitter& out, const Message& message) {
 
         //Look for Markdown URL syntax and convert any found.
@@ -198,9 +170,6 @@ namespace loot {
         const std::list<Plugin>& plugins,
         const std::string& masterlistVersion,
         const bool masterlistUpdateEnabled) {
-
-
-        //messages.push_front(loot::Message(loot::Message::say, boost::locale::translate("There have been no changes in the Details tab since LOOT was last run for this game.").str()));
         
         //Need to output YAML as a JSON Javascript variable.
         YAML::Emitter yout;
@@ -209,6 +178,8 @@ namespace loot {
         yout.SetBoolFormat(YAML::TrueFalseBool);
         yout.SetSeqFormat(YAML::Flow);
         yout.SetMapFormat(YAML::Flow);
+
+        BOOST_LOG_TRIVIAL(debug) << "Generating JSON report data.";
 
         yout << YAML::BeginMap;
 
@@ -226,6 +197,7 @@ namespace loot {
             << YAML::EndMap;
 
         if (!messages.empty()) {
+            BOOST_LOG_TRIVIAL(debug) << "Generating JSON general message data.";
             yout << YAML::Key << "globalMessages"
                 << YAML::Value << YAML::BeginSeq;
             for (std::list<Message>::const_iterator it = messages.begin(), endit = messages.end(); it != endit; ++it) {
@@ -235,6 +207,7 @@ namespace loot {
         }
 
         if (!plugins.empty()) {
+            BOOST_LOG_TRIVIAL(debug) << "Generating JSON plugin data.";
             yout << YAML::Key << "plugins"
                 << YAML::Value << YAML::BeginSeq;
             for (std::list<Plugin>::const_iterator it = plugins.begin(), endit = plugins.end(); it != endit; ++it) {
