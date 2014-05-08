@@ -467,7 +467,7 @@ Launcher::Launcher(const wxChar *title, YAML::Node& settings, Game * game, vecto
     //Set up initial state.
     SortButton->SetDefault();
 
-    if (!fs::exists(_game->ReportPath()))
+    if (!fs::exists(g_path_report))
         ViewButton->Enable(false);
 
     if (_game->Id() == loot::Game::tes5)
@@ -516,12 +516,12 @@ void Launcher::OnClose(wxCloseEvent& event) {
 void Launcher::OnViewLastReport(wxCommandEvent& event) {
     if (_settings["View Report Externally"] && _settings["View Report Externally"].as<bool>()) {
         BOOST_LOG_TRIVIAL(debug) << "Opening report in external application...";
-        wxLaunchDefaultBrowser(FromUTF8(ToFileURL(_game->ReportPath().string())));
+        wxLaunchDefaultBrowser(FromUTF8(ToFileURL(g_path_report.string() + "?data=" + _game->ReportDataPath().string())));
     }
     else {
         //Create viewer window.
         BOOST_LOG_TRIVIAL(debug) << "Opening viewer window...";
-        Viewer *viewer = new Viewer(this, translate("LOOT: Report Viewer"), FromUTF8(ToFileURL(_game->ReportPath().string())));
+        Viewer *viewer = new Viewer(this, translate("LOOT: Report Viewer"), FromUTF8(ToFileURL(g_path_report.string() + "?data=" + _game->ReportDataPath().string())));
         viewer->Show();
     }
     BOOST_LOG_TRIVIAL(debug) << "Report displayed.";
@@ -912,7 +912,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     BOOST_LOG_TRIVIAL(debug) << "Generating report...";
     try {
-        GenerateReport(_game->ReportPath(),
+        GenerateReport(_game->ReportDataPath(),
                         messages,
                         plugins,
                         revision,
@@ -933,10 +933,10 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     BOOST_LOG_TRIVIAL(debug) << "Displaying report...";
     if (_settings["View Report Externally"] && _settings["View Report Externally"].as<bool>()) {
-        wxLaunchDefaultBrowser(FromUTF8(ToFileURL(_game->ReportPath().string())));
+        wxLaunchDefaultBrowser(FromUTF8(ToFileURL(g_path_report.string() + "?data=" + _game->ReportDataPath().string())));
     } else {
         //Create viewer window.
-        Viewer *viewer = new Viewer(this, translate("LOOT: Report Viewer"), FromUTF8(ToFileURL(_game->ReportPath().string())));
+        Viewer *viewer = new Viewer(this, translate("LOOT: Report Viewer"), FromUTF8(ToFileURL(g_path_report.string() + "?data=" + _game->ReportDataPath().string())));
         viewer->Show();
     }
 

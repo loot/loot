@@ -79,7 +79,7 @@ namespace loot {
         boost::filesystem::path DataPath() const;
         boost::filesystem::path MasterlistPath() const;
         boost::filesystem::path UserlistPath() const;
-        boost::filesystem::path ReportPath() const;
+        boost::filesystem::path ReportDataPath() const;
 
         //Game plugin functions.
 

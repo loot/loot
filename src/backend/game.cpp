@@ -229,8 +229,8 @@ namespace loot {
         return g_path_local / lootFolderName / "userlist.yaml";
     }
 
-    fs::path Game::ReportPath() const {
-        return g_path_local / lootFolderName / "report.html";
+    fs::path Game::ReportDataPath() const {
+        return g_path_local / lootFolderName / "reportdata.js";
     }
 
     void Game::RefreshActivePluginsList() {

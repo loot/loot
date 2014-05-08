@@ -28,7 +28,6 @@ LOOT requires the following libraries (version numbers used in latest developmen
 * [Libgit2](http://libgit2.github.com/) v0.20.0
 * [Libloadorder](http://github.com/WrinklyNinja/libloadorder)
 * [OpenSSL](https://www.openssl.org) - only if HTTPS support in libgit2 is required using compilers other than MSVC.
-* [PugiXML](http://pugixml.org/) v1.4
 * [wxWidgets](http://www.wxwidgets.org) v3.0.0
 * [yaml-cpp](http://github.com/WrinklyNinja/yaml-cpp)
 * [zlib](http://zlib.net/) v1.2.8
