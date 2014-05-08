@@ -68,7 +68,6 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
     removeBtn = new wxButton(this, BUTTON_RemoveGame, translate("Remove Game"));
 
     UpdateMasterlistBox = new wxCheckBox(this, wxID_ANY, translate("Update masterlist before sorting."));
-    reportViewBox = new wxCheckBox(this, wxID_ANY, translate("View reports externally in default browser."));
 
     //Set up list columns.
     gamesList->AppendColumn(translate("Name"));
@@ -123,8 +122,6 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
 
     bigBox->Add(UpdateMasterlistBox, wholeItem);
 
-    bigBox->Add(reportViewBox, wholeItem);
-
     bigBox->AddSpacer(10);
 
 	bigBox->Add(new wxStaticText(this, wxID_ANY, translate("Language and game changes will be applied after LOOT is restarted.")), wholeItem);
@@ -178,11 +175,6 @@ void SettingsFrame::SetDefaultValues() {
         UpdateMasterlistBox->SetValue(update);
     }
 
-    if (_settings["View Report Externally"]) {
-        bool view = _settings["View Report Externally"].as<bool>();
-        reportViewBox->SetValue(view);
-    }
-
     for (size_t i=0, max=_games.size(); i < max; ++i) {
         gamesList->InsertItem(i, FromUTF8(_games[i].Name()));
         gamesList->SetItem(i, 1, FromUTF8(loot::Game(_games[i].Id()).FolderName()));
@@ -228,8 +220,6 @@ void SettingsFrame::OnQuit(wxCommandEvent& event) {
         }
 
         _settings["Update Masterlist"] = UpdateMasterlistBox->IsChecked();
-
-        _settings["View Report Externally"] = reportViewBox->IsChecked();
 
         _games.clear();
         for (size_t i=0,max=gamesList->GetItemCount(); i < max; ++i) {

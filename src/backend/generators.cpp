@@ -263,7 +263,6 @@ namespace loot {
         root["Last Game"] = "auto";
         root["Debug Verbosity"] = 0;
         root["Update Masterlist"] = true;
-        root["View Report Externally"] = false;
 
         games.push_back(Game(Game::tes4));
         games.push_back(Game(Game::tes5));

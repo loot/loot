@@ -514,16 +514,10 @@ void Launcher::OnClose(wxCloseEvent& event) {
 }
 
 void Launcher::OnViewLastReport(wxCommandEvent& event) {
-    if (_settings["View Report Externally"] && _settings["View Report Externally"].as<bool>()) {
-        BOOST_LOG_TRIVIAL(debug) << "Opening report in external application...";
-        wxLaunchDefaultBrowser(FromUTF8(ToFileURL(g_path_report.string() + "?data=" + _game->ReportDataPath().string())));
-    }
-    else {
-        //Create viewer window.
-        BOOST_LOG_TRIVIAL(debug) << "Opening viewer window...";
-        Viewer *viewer = new Viewer(this, translate("LOOT: Report Viewer"), FromUTF8(ToFileURL(g_path_report.string() + "?data=" + _game->ReportDataPath().string())));
-        viewer->Show();
-    }
+    //Create viewer window.
+    BOOST_LOG_TRIVIAL(debug) << "Opening viewer window...";
+    Viewer *viewer = new Viewer(this, translate("LOOT: Report Viewer"), FromUTF8(ToFileURL(g_path_report.string() + "?data=" + _game->ReportDataPath().string())));
+    viewer->Show();
     BOOST_LOG_TRIVIAL(debug) << "Report displayed.";
 }
 
@@ -932,13 +926,9 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     ViewButton->Enable(true);
 
     BOOST_LOG_TRIVIAL(debug) << "Displaying report...";
-    if (_settings["View Report Externally"] && _settings["View Report Externally"].as<bool>()) {
-        wxLaunchDefaultBrowser(FromUTF8(ToFileURL(g_path_report.string() + "?data=" + _game->ReportDataPath().string())));
-    } else {
-        //Create viewer window.
-        Viewer *viewer = new Viewer(this, translate("LOOT: Report Viewer"), FromUTF8(ToFileURL(g_path_report.string() + "?data=" + _game->ReportDataPath().string())));
-        viewer->Show();
-    }
+    //Create viewer window.
+    Viewer *viewer = new Viewer(this, translate("LOOT: Report Viewer"), FromUTF8(ToFileURL(g_path_report.string() + "?data=" + _game->ReportDataPath().string())));
+    viewer->Show();
 
     BOOST_LOG_TRIVIAL(debug) << "Report display successful. Sorting process complete.";
 }
