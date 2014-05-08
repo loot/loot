@@ -51,7 +51,7 @@ noscript div {
 .button.current {
     background: #ccc;
 }
-.button[id] {
+#filtersToggle {
     position:absolute;
     right:0;
     top:0;
@@ -98,19 +98,19 @@ table td:first-child {
     display:none;
 }
 #filters label {
-    display:block;
+    display:inline-block;
     padding:0.2em 0.5em;
     white-space:nowrap;
     cursor:pointer;
 }
 #filters div {
-    padding:0.2em 1em;
+    padding:0.2em 0.5em;
     font-style:italic;
 }
 input[type='checkbox'] {
     position:relative;
     top:0.15em;
-    margin-right:0.5em;
+    margin-left:0.5em;
 }
 ul {
     margin-top:0.5em;

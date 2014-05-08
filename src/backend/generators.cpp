@@ -103,7 +103,7 @@ namespace loot {
 
         if (!plugin.Version().empty()) {
             out << YAML::Key << "version"
-                << YAML::Value << plugin.Version();
+                << YAML::Value << boost::locale::translate("Version").str() << ": " << plugin.Version();
         }
 
         std::set<Tag> tags = plugin.Tags();
@@ -189,8 +189,14 @@ namespace loot {
         yout << YAML::Key << "masterlist"
             << YAML::BeginMap
             << YAML::Key << "updaterEnabled"
-            << YAML::Value << masterlistUpdateEnabled
-            << YAML::Key << "revision"
+            << YAML::Value;
+
+        if (masterlistUpdateEnabled)
+            yout << boost::locale::translate("Enabled").str();
+        else
+            yout << boost::locale::translate("Disabled").str();
+
+        yout << YAML::Key << "revision"
             << YAML::Value << masterlistVersion
             << YAML::Key << "date"
             << YAML::Value << ""
@@ -215,6 +221,75 @@ namespace loot {
             }
             yout << YAML::EndSeq;
         }
+
+        BOOST_LOG_TRIVIAL(debug) << "Generating text translations.";
+
+
+
+        yout << YAML::Key << "l10n"
+            << YAML::BeginMap
+
+            << YAML::Key << "txtNoscript"
+            << YAML::Value << boost::locale::translate("The LOOT Report requires Javascript to be enabled in order to function.").str()
+
+            << YAML::Key << "txtSummarySec"
+            << YAML::Value << boost::locale::translate("Summary").str()
+
+            << YAML::Key << "txtLootVersion"
+            << YAML::Value << boost::locale::translate("LOOT Version").str()
+
+            << YAML::Key << "txtMasterlistRevision"
+            << YAML::Value << boost::locale::translate("Masterlist Version").str()
+
+            << YAML::Key << "txtMasterlistUpdating"
+            << YAML::Value << boost::locale::translate("Masterlist Updating").str()
+
+            << YAML::Key << "txtTotalMessageNo"
+            << YAML::Value << boost::locale::translate("Total Number of Messages").str()
+
+            << YAML::Key << "txtTotalWarningNo"
+            << YAML::Value << boost::locale::translate("Number of Warnings").str()
+
+            << YAML::Key << "txtTotalErrorNo"
+            << YAML::Value << boost::locale::translate("Number of Errors").str()
+
+            << YAML::Key << "txtGeneralMessages"
+            << YAML::Value << boost::locale::translate("General Messages").str()
+
+            << YAML::Key << "txtDetailsSec"
+            << YAML::Value << boost::locale::translate("Details").str()
+
+            << YAML::Key << "filtersToggle"
+            << YAML::Value << boost::locale::translate("Filters").str()
+
+            << YAML::Key << "txtHideVersionNumbers"
+            << YAML::Value << boost::locale::translate("Hide Version Numbers").str()
+
+            << YAML::Key << "txtHideCRCs"
+            << YAML::Value << boost::locale::translate("Hide CRCs").str()
+
+            << YAML::Key << "txtHideBashTags"
+            << YAML::Value << boost::locale::translate("Hide Bash Tag Suggestions").str()
+
+            << YAML::Key << "txtHideNotes"
+            << YAML::Value << boost::locale::translate("Hide Notes").str()
+
+            << YAML::Key << "txtHideDoNotCleanMessages"
+            << YAML::Value << boost::locale::translate("Hide 'Do Not Clean' Messages").str()
+
+            << YAML::Key << "txtHideAllPluginMessages"
+            << YAML::Value << boost::locale::translate("Hide All Plugin Messages").str()
+
+            << YAML::Key << "txtHideMessagelessPlugins"
+            << YAML::Value << boost::locale::translate("Hide Messageless Plugins").str()
+
+            << YAML::Key << "txtPluginsHidden"
+            << YAML::Value << boost::locale::translate("Plugins hidden").str()
+
+            << YAML::Key << "txtMessagesHidden"
+            << YAML::Value << boost::locale::translate("Messages hidden").str()
+
+            << YAML::EndMap;
 
         yout << YAML::EndMap;
 

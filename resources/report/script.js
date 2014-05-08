@@ -211,13 +211,6 @@ function setupEventHandlers() {
     document.getElementById('hideAllPluginMessages').addEventListener('click', toggleMessages, false);
     document.getElementById('hideMessagelessPlugins').addEventListener('click', togglePlugins, false);
 }
-function masterlistUpdaterStatus(state) {
-    if (state) {
-        return 'Enabled';
-    } else {
-        return 'Disabled';
-    }
-}
 function processURLParams() {
     /* Get the data path from the URL and load it. */
     var pos = document.URL.indexOf("?data=");
@@ -231,7 +224,7 @@ function processURLParams() {
             /* Fill report with data. */
             document.getElementById('lootVersion').textContent = data.lootVersion;
             document.getElementById('masterlistRevision').textContent = data.masterlist.revision;
-            document.getElementById('masterlistUpdating').textContent = masterlistUpdaterStatus(data.masterlist.updaterEnabled);
+            document.getElementById('masterlistUpdating').textContent = data.masterlist.updaterEnabled;
             var generalMessagesList = document.getElementById('generalMessagesList');
             for (var i = 0; i < data.globalMessages.length; ++i) {
                 var li = document.createElement('li');
@@ -264,7 +257,7 @@ function processURLParams() {
                 if (data.plugins[i].version) {
                     var version = document.createElement('div');
                     version.className = 'version';
-                    version.textContent = 'Version: ' + data.plugins[i].version;
+                    version.textContent = data.plugins[i].version;
                     li.appendChild(version);
                 }
 
@@ -307,6 +300,14 @@ function processURLParams() {
             document.getElementById('totalPluginNo').textContent = data.plugins.length;
             document.getElementById('totalWarningNo').textContent = warnMessageNo;
             document.getElementById('totalErrorNo').textContent = errorMessageNo;
+
+            /* Now apply translated UI strings. */
+            for (var id in data.l10n) {
+                var elem = document.getElementById(id);
+                if (elem) {
+                    elem.textContent = data.l10n[id];
+                }
+            }
 
             /* Now initialise the rest of the report. */
             setupEventHandlers();
