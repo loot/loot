@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta charset="utf-8" />
+    <title>LOOT Report</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/ico" href="../icon.ico">
+    <script src="polyfill.js"></script>
+</head>
+<body>
+    <div id="nav">
+    <div class="button current" data-section="summary">Summary</div>
+    <div class="button" data-section="plugins">Details</div>
+    <div class="button hidden" id="filtersToggle">Filters</div>
+    </div>
+    <div id="main">
+        <noscript>
+        <div>The LOOT Report requires Javascript to be enabled in order to function.</div>
+        </noscript>
+        <div id="plugins" class="hidden">
+            <ul id="pluginsList">
+                <li>
+                    <span class="mod">Skyrim.esm</span>
+                    <div class="crc">CRC: C665FD56</div>
+                    <div class="version">Version: 2.0.0b</div>
+                    <div class="tag add">Add: Delev, Relev</div>
+                    <div class="tag remove">Remove: Delev, Relev</div>
+                    <ul>
+                        <li class="say">Note: Requires: <a href="http://www.nexusmods.com/skyrim/mods/60">Dragonborn Compatibility_Patch</a>.</li>
+                        <li class="warn">Warning: Contains 3 UDR records. Clean with <a href="http://www.nexusmods.com/skyrim/mods/25859">TES5Edit</a>.</li>
+                        <li class="error">Error: This plugin requires "Dawnguard.esm" to be installed, but it is missing.</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div id="summary">
+            <div>
+                <h2>Summary</h2>
+                <table>
+                    <tbody>
+                        <tr><td>LOOT Version</td><td id="lootVersion">0.5.0</td></tr>
+                        <tr><td>Masterlist Version</td><td id="masterlistRevision">be2c19078</td></tr>
+                        <tr><td>Masterlist Updating</td><td id="masterlistUpdating">Enabled</td></tr>
+                        <tr><td>Total Number of Messages</td><td id="totalMessageNo">49</td></tr>
+                        <tr><td>Number of Warnings</td><td id="totalWarningNo">4</td></tr>
+                        <tr><td>Number of Errors</td><td id="totalErrorNo">37</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <h2>General Messages</h2>
+                <ul id="generalMessagesList">
+                    <li class="say">Note: <a href="http://forums.bethsoft.com/topic/1498392-rel-loot-thread-7/">Latest LOOT thread</a>.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id="filters" class="hidden">
+        <label><input type="checkbox" id="hideVersionNumbers" data-class="version" />Hide Version Numbers</label>
+        <label><input type="checkbox" id="hideCRCs" data-class="crc" />Hide CRCs</label>
+        <label><input type="checkbox" id="hideBashTags" data-class="tag" />Hide Bash Tag Suggestions</label>
+        <label><input type="checkbox" id="hideNotes" />Hide Notes</label>
+        <label><input type="checkbox" id="hideDoNotCleanMessages" />Hide 'Do Not Clean' Messages</label>
+        <label><input type="checkbox" id="hideAllPluginMessages" />Hide All Plugin Messages</label>
+        <label><input type="checkbox" id="hideMessagelessPlugins" />Hide Messageless Plugins</label>
+        <div>
+            <span id="hiddenPluginNo">0</span> of <span id="totalPluginNo">128</span> plugins hidden.
+        </div>
+        <div>
+            <span id="hiddenMessageNo">0</span> of <span id="totalMessageNo">46</span> messages hidden.
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
