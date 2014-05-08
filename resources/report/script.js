@@ -213,7 +213,20 @@ function setupEventHandlers() {
     document.getElementById('hideAllPluginMessages').addEventListener('click', toggleMessages, false);
     document.getElementById('hideMessagelessPlugins').addEventListener('click', togglePlugins, false);
 }
+function processURLParams() {
+    /* Get the data path from the URL and load it. */
+    var pos = document.URL.indexOf("?data=");
+    if (pos != -1) {
+        var datapath = 'file:///' + document.URL.substring(pos+6);
+        console.log(datapath);
+        require([datapath], function(){
+            console.log(data);
+            document.getElementById('lootVersion').textContent = data.lootVersion;
+        });
+    }
+}
 function init() {
+    processURLParams();
     setupEventHandlers();
     if (isStorageSupported()) {
         loadSettings();
