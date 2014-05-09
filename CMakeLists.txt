@@ -25,8 +25,7 @@ set (LOOT_SRC   "${CMAKE_SOURCE_DIR}/src/backend/metadata.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/network.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/globals.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/graph.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/generators.cpp"
-                "${PROJECT_LIBS_DIR}/pugixml/src/pugixml.cpp")
+                "${CMAKE_SOURCE_DIR}/src/backend/generators.cpp")
 
 set (LOOT_GUI_SRC ${LOOT_SRC}
                   "${CMAKE_SOURCE_DIR}/src/gui/ids.cpp"
