@@ -33,6 +33,57 @@ along with LOOT.  If not, see
 
 namespace loot {
     //LOOT Report generation stuff.
+    void GetOldReportDetails(const boost::filesystem::path& filepath, YAML::Node& node) {
+        if (boost::filesystem::exists(filepath)) {
+            BOOST_LOG_TRIVIAL(debug) << "Reading the previous report's details section.";
+            //Read the whole file in.
+            std::string contents;
+            loot::ifstream in(filepath, std::ios::binary);
+            in.seekg(0, std::ios::end);
+            contents.resize(in.tellg());
+            in.seekg(0, std::ios::beg);
+            in.read(&contents[0], contents.size());
+            in.close();
+
+            //Cut off non-JSON part of file.
+            contents = contents.substr(11);  //"var data = ".
+            //Parse as YAML.
+            node = YAML::Load(contents);
+            if (node["plugins"]) {
+                node = node["plugins"];
+            }
+        }
+    }
+
+    bool AreDetailsEqual(const YAML::Node& lhs, const YAML::Node& rhs) {
+        //We want to check for plugin order and messages. 
+        if (lhs.IsSequence() && rhs.IsSequence()) {
+            std::list<std::string> lhs_names, rhs_names;
+            std::list<Message> lhs_messages, rhs_messages;
+            
+            for (YAML::const_iterator it = lhs.begin(); it != lhs.end(); ++it) {
+                if ((*it)["name"])
+                    lhs_names.push_back((*it)["name"].as<std::string>());
+                if ((*it)["messages"]) {
+                    std::list<Message> messages = (*it)["messages"].as< std::list<Message> >();
+                    lhs_messages.insert(lhs_messages.end(), messages.begin(), messages.end());
+                }
+            }
+            for (YAML::const_iterator it = rhs.begin(); it != rhs.end(); ++it) {
+                if ((*it)["name"])
+                    rhs_names.push_back((*it)["name"].as<std::string>());
+                if ((*it)["messages"]) {
+                    std::list<Message> messages = (*it)["messages"].as< std::list<Message> >();
+                    rhs_messages.insert(rhs_messages.end(), messages.begin(), messages.end());
+                }
+            }
+
+            return lhs_names == rhs_names && lhs_messages == rhs_messages;
+        }
+        else
+            return false;
+    }
+
     void WriteMessage(YAML::Emitter& out, const Message& message) {
 
         //Look for Markdown URL syntax and convert any found.
@@ -170,6 +221,9 @@ namespace loot {
         const std::list<Plugin>& plugins,
         const std::string& masterlistVersion,
         const bool masterlistUpdateEnabled) {
+
+        YAML::Node oldDetails;
+        GetOldReportDetails(file, oldDetails);
         
         //Need to output YAML as a JSON Javascript variable.
         YAML::Emitter yout;
@@ -202,6 +256,37 @@ namespace loot {
             << YAML::Value << ""
             << YAML::EndMap;
 
+        if (!plugins.empty()) {
+            BOOST_LOG_TRIVIAL(debug) << "Generating JSON plugin data.";
+            YAML::Emitter tempout;
+            tempout.SetOutputCharset(YAML::EscapeNonAscii);
+            tempout.SetStringFormat(YAML::DoubleQuoted);
+            tempout.SetBoolFormat(YAML::TrueFalseBool);
+            tempout.SetSeqFormat(YAML::Flow);
+            tempout.SetMapFormat(YAML::Flow);
+
+            tempout << YAML::BeginSeq;
+            for (std::list<Plugin>::const_iterator it = plugins.begin(), endit = plugins.end(); it != endit; ++it) {
+                WritePlugin(tempout, *it);
+            }
+            tempout << YAML::EndSeq;
+
+            YAML::Node node = YAML::Load(tempout.c_str());
+
+            if (AreDetailsEqual(node, oldDetails))
+                messages.push_front(loot::Message(loot::Message::say, boost::locale::translate("There have been no changes in the Details tab since LOOT was last run for this game.").str()));
+                
+            //Need to generate output twice because passing the node causes !<!> to be written before every key and value for some reason.
+            yout << YAML::Key << "plugins"
+                << YAML::Value << YAML::BeginSeq;
+            for (std::list<Plugin>::const_iterator it = plugins.begin(), endit = plugins.end(); it != endit; ++it) {
+                WritePlugin(yout, *it);
+            }
+            yout << YAML::EndSeq;
+        }
+        else if (oldDetails.size() == 0)
+            messages.push_front(loot::Message(loot::Message::say, boost::locale::translate("There have been no changes in the Details tab since LOOT was last run for this game.").str()));
+
         if (!messages.empty()) {
             BOOST_LOG_TRIVIAL(debug) << "Generating JSON general message data.";
             yout << YAML::Key << "globalMessages"
@@ -212,20 +297,7 @@ namespace loot {
             yout << YAML::EndSeq;
         }
 
-        if (!plugins.empty()) {
-            BOOST_LOG_TRIVIAL(debug) << "Generating JSON plugin data.";
-            yout << YAML::Key << "plugins"
-                << YAML::Value << YAML::BeginSeq;
-            for (std::list<Plugin>::const_iterator it = plugins.begin(), endit = plugins.end(); it != endit; ++it) {
-                WritePlugin(yout, *it);
-            }
-            yout << YAML::EndSeq;
-        }
-
         BOOST_LOG_TRIVIAL(debug) << "Generating text translations.";
-
-
-
         yout << YAML::Key << "l10n"
             << YAML::BeginMap
 
