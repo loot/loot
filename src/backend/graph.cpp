@@ -24,6 +24,7 @@
 
 #include "graph.h"
 #include "streams.h"
+#include "helpers.h"
 
 #include <cstdlib>
 
@@ -201,18 +202,9 @@ namespace loot {
                 BOOST_LOG_TRIVIAL(trace) << "Checking priority difference between \"" << graph[*vit].Name() << "\" and \"" << graph[*vit2].Name() << "\".";
 
                 vertex_t vertex, parentVertex;
-                //Modulo is not consistently defined for negative numbers, so figure it out explicitly.
-                int p1 = graph[*vit].Priority();
-                int p2 = graph[*vit2].Priority();
-                if (p1 < 0)
-                    p1 = -(abs(p1) % 1000000);
-                else
-                    p1 = p1 % 1000000;
-                if (p2 < 0)
-                    p2 = -(abs(p2) % 1000000);
-                else
-                    p2 = p2 % 1000000;
-
+                //Modulo operator is not consistently defined for negative numbers except in C++11, so use function.
+                int p1 = modulo(graph[*vit].Priority(), 1000000);
+                int p2 = modulo(graph[*vit2].Priority(), 1000000);
                 if (p1 < p2) {
                     parentVertex = *vit;
                     vertex = *vit2;
