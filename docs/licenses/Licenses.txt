@@ -8,7 +8,7 @@ LOOT uses a number of libraries, and their licenses are listed in this file.
 * Libgit2 - GNU GPL v2; see "GNU GPL v2 (libgit2).txt" for the text.
 * Libloadorder - GNU GPL v3; see "GNU GPL v3.txt" for the text.
 * Polyfill.js - This code has been placed in the public domain.
-* PugiXML - MIT License; see "MIT License (PugiXML).txt" for the text.
+* RequireJS - MIT License; see "MIT License (RequireJS).txt" for the text.
 * wxWidgets - wxWindows License; the text is not included as allowed by the license.
 * yaml-cpp - MIT License; see "MIT License (yaml-cpp).txt" for the text.
 * zlib - zlib license; the text is not included as allowed by the license.
