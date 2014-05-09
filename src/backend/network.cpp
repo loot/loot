@@ -154,7 +154,7 @@ namespace loot {
         }
     }
 
-    std::string UpdateMasterlist(Game& game, std::list<Message>& parsingErrors, std::list<Plugin>& plugins, std::list<Message>& messages) {
+    std::pair<std::string, std::string> UpdateMasterlist(Game& game, std::list<Message>& parsingErrors, std::list<Plugin>& plugins, std::list<Message>& messages) {
         pointers_struct ptrs;
 
         BOOST_LOG_TRIVIAL(trace) << "Checking for a Git repository.";
@@ -243,7 +243,7 @@ namespace loot {
 
         bool parsingFailed = false;
         unsigned int rollbacks = 0;
-        char revision[10];
+        string revision, date;
         do {
             string filespec = "refs/remotes/origin/" + game.RepoBranch() + "~" + IntToString(rollbacks);
             BOOST_LOG_TRIVIAL(trace) << "Getting the Git object for the tree at " << filespec;
@@ -253,7 +253,17 @@ namespace loot {
             const git_oid * oid = git_object_id(ptrs.obj);
 
             BOOST_LOG_TRIVIAL(trace) << "Generating hex string for Git object ID.";
-            git_oid_tostr(revision, 10, oid);
+            char sha1[10];
+            git_oid_tostr(sha1, 10, oid);
+            revision = sha1;
+
+            BOOST_LOG_TRIVIAL(trace) << "Getting date for Git object ID.";
+            handle_error(git_commit_lookup(&ptrs.commit, ptrs.repo, oid), ptrs);
+            git_time_t time = git_commit_time(ptrs.commit);
+            boost::locale::date_time dateTime(time);
+            stringstream out;
+            out << boost::locale::as::ftime("%Y-%m-%d") << dateTime;
+            date = out.str();
 
             BOOST_LOG_TRIVIAL(trace) << "Recreating HEAD as a direct reference (overwriting it) to the desired revision.";
             handle_error(git_reference_create(&ptrs.ref, ptrs.repo, "HEAD", oid, 1), ptrs);
@@ -265,8 +275,10 @@ namespace loot {
             BOOST_LOG_TRIVIAL(trace) << "Freeing pointers.";
             git_object_free(ptrs.obj);
             git_reference_free(ptrs.ref);
+            git_commit_free(ptrs.commit);
             ptrs.obj = NULL;
             ptrs.ref = NULL;
+            ptrs.commit = NULL;
 
             BOOST_LOG_TRIVIAL(trace) << "Testing masterlist parsing.";
 
@@ -307,6 +319,6 @@ namespace loot {
         //Finally, free memory.
         ptrs.free();
 
-        return string(revision);
+        return pair<string, string>(revision, date);
     }
 }

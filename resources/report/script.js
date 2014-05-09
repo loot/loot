@@ -224,6 +224,7 @@ function processURLParams() {
             /* Fill report with data. */
             document.getElementById('lootVersion').textContent = data.lootVersion;
             document.getElementById('masterlistRevision').textContent = data.masterlist.revision;
+            document.getElementById('masterlistDate').textContent = data.masterlist.date;
             document.getElementById('masterlistUpdating').textContent = data.masterlist.updaterEnabled;
             var generalMessagesList = document.getElementById('generalMessagesList');
             for (var i = 0; i < data.globalMessages.length; ++i) {

@@ -38,6 +38,7 @@ namespace loot {
         std::list<Message>& messages,
         const std::list<Plugin>& plugins,
         const std::string& masterlistVersion,
+        const std::string& masterlistDate,
         const bool masterlistUpdateEnabled);
 
     //Default settings file generation.

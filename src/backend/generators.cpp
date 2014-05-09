@@ -220,6 +220,7 @@ namespace loot {
         std::list<Message>& messages,
         const std::list<Plugin>& plugins,
         const std::string& masterlistVersion,
+        const std::string& masterlistDate,
         const bool masterlistUpdateEnabled) {
 
         YAML::Node oldDetails;
@@ -253,7 +254,7 @@ namespace loot {
         yout << YAML::Key << "revision"
             << YAML::Value << masterlistVersion
             << YAML::Key << "date"
-            << YAML::Value << ""
+            << YAML::Value << masterlistDate
             << YAML::EndMap;
 
         if (!plugins.empty()) {
@@ -312,6 +313,9 @@ namespace loot {
 
             << YAML::Key << "txtMasterlistRevision"
             << YAML::Value << boost::locale::translate("Masterlist Version").str()
+
+            << YAML::Key << "txtMasterlistDate"
+            << YAML::Value << boost::locale::translate("Masterlist Date").str()
 
             << YAML::Key << "txtMasterlistUpdating"
             << YAML::Value << boost::locale::translate("Masterlist Updating").str()

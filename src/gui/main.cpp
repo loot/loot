@@ -103,14 +103,16 @@ struct plugin_list_loader {
 };
 
 struct masterlist_updater_parser {
-    masterlist_updater_parser(bool doUpdate, loot::Game& game, list<loot::Message>& errors, list<loot::Plugin>& plugins, list<loot::Message>& messages, string& revision) : _doUpdate(doUpdate), _game(game), _errors(errors), _plugins(plugins), _messages(messages), _revision(revision) {}
+    masterlist_updater_parser(bool doUpdate, loot::Game& game, list<loot::Message>& errors, list<loot::Plugin>& plugins, list<loot::Message>& messages, string& revision, string& date) : _doUpdate(doUpdate), _game(game), _errors(errors), _plugins(plugins), _messages(messages), _revision(revision), _date(date) {}
 
     void operator () () {
 
         if (_doUpdate) {
             BOOST_LOG_TRIVIAL(debug) << "Updating masterlist";
             try {
-                _revision = UpdateMasterlist(_game, _errors, _plugins, _messages);
+                pair<string, string> ret = UpdateMasterlist(_game, _errors, _plugins, _messages);
+                _revision = ret.first;
+                _date = ret.second;
             } catch (loot::error& e) {
                 _plugins.clear();
                 _messages.clear();
@@ -171,6 +173,7 @@ struct masterlist_updater_parser {
     list<loot::Plugin>& _plugins;
     list<loot::Message>& _messages;
     string& _revision;
+    string& _date;
 };
 
 bool LOOT::OnInit() {
@@ -616,7 +619,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     list<loot::Plugin> plugins;
     boost::thread_group group;
     loot::PluginGraph graph;
-    string revision;
+    string revision, date;
 
     wxProgressDialog *progDia = new wxProgressDialog(translate("LOOT: Working..."),translate("LOOT working..."), 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_ELAPSED_TIME);
 
@@ -625,7 +628,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     ///////////////////////////////////////////////////////
 
     bool doUpdate = _settings["Update Masterlist"] && _settings["Update Masterlist"].as<bool>();
-    masterlist_updater_parser mup(doUpdate, *_game, messages, mlist_plugins, mlist_messages, revision);
+    masterlist_updater_parser mup(doUpdate, *_game, messages, mlist_plugins, mlist_messages, revision, date);
     group.create_thread(mup);
 
     //First calculate the mean plugin size. Store it temporarily in a map to reduce filesystem lookups and file size recalculation.
@@ -910,6 +913,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                         messages,
                         plugins,
                         revision,
+                        date,
                         doUpdate);
     } catch (std::exception& e) {
         wxMessageBox(
