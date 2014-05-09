@@ -104,6 +104,8 @@ private:
     wxStaticText * pluginText;
     wxStaticText * descText;
 
+    wxString feedbackText;
+
     loot::Plugin GetNewData(const wxString& plugin) const;
 };
 

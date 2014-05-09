@@ -157,8 +157,9 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
     editingPanel = new wxPanel(this, wxID_ANY);
 
     //Initialise controls.
+    feedbackText = translate("If LOOT has gotten something wrong, please let the team know. See the Contributing To LOOT section of the readme for details.");
     pluginText = new wxStaticText(editingPanel, wxID_ANY, "");
-    descText = new wxStaticText(this, wxID_ANY, translate("Please submit any edits made for reasons other than personal preference to the LOOT team so that they may be included in the masterlist."));
+    descText = new wxStaticText(this, wxID_ANY, feedbackText);
     prioritySpin = new wxSpinCtrl(editingPanel, wxID_ANY, "0");
     prioritySpin->SetRange(std::numeric_limits<int>::min(), std::numeric_limits<int>::max());
     filterCheckbox = new wxCheckBox(editingPanel, wxID_ANY, translate("Show only conflicting plugins"));
@@ -325,7 +326,7 @@ void MiniEditor::OnPluginSelect(wxListEvent& event) {
         Fit();
     }
     else {
-        descText->SetLabel(translate("Please submit any edits made for reasons other than personal preference to the LOOT team so that they may be included in the masterlist."));
+        descText->SetLabel(feedbackText);
         descText->Wrap(GetClientSize().GetWidth() - 30);
     }
 }
@@ -463,7 +464,7 @@ loot::Plugin MiniEditor::GetNewData(const wxString& plugin) const {
 }
 
 void MiniEditor::OnResize(wxSizeEvent& event) {
-    descText->SetLabel(translate("Please submit any edits made for reasons other than personal preference to the LOOT team so that they may be included in the masterlist."));
+    descText->SetLabel(feedbackText);
     descText->Wrap(GetClientSize().GetWidth()-30);
     event.Skip();
 }
