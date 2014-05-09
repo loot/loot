@@ -34,7 +34,7 @@ LOOT requires the following libraries (version numbers used in latest developmen
 
 LOOT expects all libraries' folders to be present alongside the LOOT repository folder that contains this readme, or otherwise installed such that the compiler and linker used can find them without suppling additional paths. All paths below are relative to the folder(s) containing the libraries and LOOT.
 
-Alphanum, Libespm and PugiXML do not require any additional setup. The rest of the libraries must be built separately. Instructions for building them and LOOT itself using MSVC or MinGW are given in [docs/BUILD.MSVC.md](docs/BUILD.MSVC.md) and [docs/BUILD.MinGW.md](docs/BUILD.MinGW.md) respectively.
+Alphanum and Libespm do not require any additional setup. The rest of the libraries must be built separately. Instructions for building them and LOOT itself using MSVC or MinGW are given in [docs/BUILD.MSVC.md](docs/BUILD.MSVC.md) and [docs/BUILD.MinGW.md](docs/BUILD.MinGW.md) respectively.
 
 ## Packaging Releases
 
