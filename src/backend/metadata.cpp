@@ -46,7 +46,7 @@ namespace loot {
     FormID::FormID(const std::string& sourcePlugin, const uint32_t objectID) : plugin(sourcePlugin), id(objectID) {}
 
     FormID::FormID(const std::vector<std::string>& sourcePlugins, const uint32_t formID) {
-        int index = formID >> 24;
+        unsigned int index = formID >> 24;
         id = formID & ~((uint32_t)index << 24);
 
         if (index >= sourcePlugins.size()) {

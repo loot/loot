@@ -531,7 +531,7 @@ namespace loot {
             boost::regex regex;
             try {
                 regex = boost::regex(filename, boost::regex::perl|boost::regex::icase);
-            } catch (boost::regex_error& e) {
+            } catch (boost::regex_error& /*e*/) {
                 BOOST_LOG_TRIVIAL(error) << "Invalid regex string:" << filename;
                 throw loot::error(loot::error::invalid_args, boost::locale::translate("Invalid regex string:").str() + " " + filename);
             }

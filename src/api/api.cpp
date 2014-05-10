@@ -146,7 +146,7 @@ unsigned int c_error(const loot::error& e) {
         extMessageStr = new char[strlen(e.what()) + 1];
         strcpy(extMessageStr, e.what());
     }
-    catch (std::bad_alloc& e) {
+    catch (std::bad_alloc& /*e*/) {
         extMessageStr = NULL;
     }
     return e.code();

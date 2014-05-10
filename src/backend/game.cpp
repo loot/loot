@@ -485,7 +485,7 @@ namespace loot {
 
         if (!loadorder.empty()) {
 
-            time_t lastTime, thisTime;
+            time_t lastTime;
             fs::path filepath = DataPath() / *loadorder.begin();
             if (!fs::exists(filepath) && fs::exists(filepath.string() + ".ghost"))
                 filepath += ".ghost";
