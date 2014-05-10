@@ -1,8 +1,7 @@
 # Settings passed on the command line:
 #
-# PROJECT_LIBS_DIR = the directory which all external libraries may be referenced from.
 # PROJECT_ARCH = the build architecture
-# PROJECT_LINK = whether to build a static or dynamic library.
+# LIBESPM_ROOT = the path to the root of the libespm source.
 
 ##############################
 # General Settings
@@ -11,13 +10,40 @@
 cmake_minimum_required (VERSION 2.8.9)
 project (LOOT)
 
-IF (NOT DEFINED PROJECT_LINK)
-    set (PROJECT_LINK "STATIC")
-ENDIF ()
+option(BUILD_SHARED_LIBS "Build a shared library" OFF)
+option(PROJECT_STATIC_RUNTIME "Build with static runtime libs (/MT)" ON)
 
 IF (NOT DEFINED PROJECT_ARCH)
     set (PROJECT_ARCH "32")
 ENDIF ()
+
+IF (NOT DEFINED ALPHANUM_ROOT)
+    set (ALPHANUM_ROOT "../../alphanum")
+ENDIF ()
+
+IF (NOT DEFINED LIBESPM_ROOT)
+    set (LIBESPM_ROOT "../../libespm")
+ENDIF ()
+
+IF (NOT DEFINED LIBGIT2_ROOT)
+    set (LIBGIT2_ROOT "../../libgit2")
+ENDIF ()
+
+IF (NOT DEFINED LIBLOADORDER_ROOT)
+    set (LIBLOADORDER_ROOT "../../libloadorder")
+ENDIF ()
+
+IF (NOT DEFINED YAMLCPP_ROOT)
+    set (YAMLCPP_ROOT "../../yaml-cpp")
+ENDIF ()
+
+IF (NOT DEFINED WXWIDGETS_ROOT)
+    set (WXWIDGETS_ROOT "../../wxWidgets")
+ENDIF ()
+
+set (Boost_USE_STATIC_LIBS ON)
+set (Boost_USE_MULTITHREADED ON)
+set (Boost_USE_STATIC_RUNTIME PROJECT_STATIC_RUNTIME)
 
 set (LOOT_SRC   "${CMAKE_SOURCE_DIR}/src/backend/metadata.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/game.cpp"
@@ -39,23 +65,21 @@ set (LOOT_GUI_SRC ${LOOT_SRC}
 set (LOOT_API_SRC ${LOOT_SRC}
                   "${CMAKE_SOURCE_DIR}/src/api/api.cpp")
 
+find_package(Boost REQUIRED COMPONENTS log log_setup locale thread chrono date_time filesystem system regex iostreams)
+
 # Include source and library directories.
 include_directories ("${CMAKE_SOURCE_DIR}/src"
-                     "${PROJECT_LIBS_DIR}/alphanum"
-                     "${PROJECT_LIBS_DIR}/boost"
-                     "${PROJECT_LIBS_DIR}/yaml-cpp/include"
-                     "${PROJECT_LIBS_DIR}/libloadorder/src"
-                     "${PROJECT_LIBS_DIR}/libespm"
-                     "${PROJECT_LIBS_DIR}/zlib"
-                     "${PROJECT_LIBS_DIR}/pugixml/src"
-                     "${PROJECT_LIBS_DIR}/libgit2/include"
-                     "${PROJECT_LIBS_DIR}/wxWidgets/include")
+                     ${ALPHANUM_ROOT}
+                     "${YAMLCPP_ROOT}/include"
+                     "${LIBLOADORDER_ROOT}/src"
+                     "${LIBGIT2_ROOT}/include"
+                     "${WXWIDGETS_ROOT}/include"
+                     ${LIBESPM_ROOT}
+                     ${Boost_INCLUDE_DIRS})
 
-link_directories ("${PROJECT_LIBS_DIR}/libloadorder/build"
-                  "${PROJECT_LIBS_DIR}/zlib/build"
-                  "${PROJECT_LIBS_DIR}/libgit2/build"
-                  "${PROJECT_LIBS_DIR}/yaml-cpp/build"
-                  "${PROJECT_LIBS_DIR}/boost/stage-${PROJECT_ARCH}/lib")
+link_directories ("${LIBLOADORDER_ROOT}/build"
+                  "${LIBGIT2_ROOT}/build"
+                  "${YAMLCPP_ROOT}/build")
 
 
 ##############################
@@ -65,18 +89,17 @@ link_directories ("${PROJECT_LIBS_DIR}/libloadorder/build"
 # Settings when compiling for Windows. Since it's a Windows-only app this is always true, but useful to check for copy/paste into other projects.
 IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
     add_definitions (-DUNICODE -D_UNICODE -D__WXMSW__ -DNDEBUG -DLIBLO_STATIC -DWIN32 -D_WINDOWS)
-    IF (${PROJECT_LINK} MATCHES "STATIC")
-        add_definitions (-DLOOT_STATIC)
-    ELSE ()
+    IF (BUILD_SHARED_LIBS)
         add_definitions (-DLOOT_EXPORT)
+    ELSE ()
+        add_definitions (-DLOOT_STATIC)
     ENDIF ()
 ENDIF ()
 
 # MinGW settings.
 IF (MINGW)
-    include_directories("${PROJECT_LIBS_DIR}/wxWidgets/lib/wx/include/${COMPILER_PREFIX}-msw-unicode-static-3.0")
-    link_directories("${PROJECT_LIBS_DIR}/openssl"
-                     "${PROJECT_LIBS_DIR}/wxWidgets/lib")
+    include_directories("${WXWIDGETS_ROOT}/lib/wx/include/${COMPILER_PREFIX}-msw-unicode-static-3.0")
+    link_directories("${WXWIDGETS_ROOT}/lib")
     set (CMAKE_C_FLAGS  "-m${PROJECT_ARCH} -O3")
     set (CMAKE_CXX_FLAGS "-m${PROJECT_ARCH} -O3")
     set (CMAKE_EXE_LINKER_FLAGS "-static-libstdc++ -static-libgcc -Wl,--subsystem,windows")
@@ -95,7 +118,6 @@ IF (MINGW)
                    boost_regex
                    version
                    git2
-                   zlibstatic
                    loadorder${PROJECT_ARCH}
                    ssl
                    crypto
@@ -111,36 +133,28 @@ IF (MINGW)
 ELSEIF (MSVC)
     IF (MSVC_VERSION EQUAL 1800)
         set (CMAKE_GENERATOR_TOOLSET "v120_xp" CACHE STRING "Platform Toolset" FORCE)
-        set (BOOST_SUFFIX "-vc120-mt-s-1_55")
     ELSEIF (MSVC_VERSION EQUAL 1700)
-        set (BOOST_SUFFIX "-vc110-mt-s-1_55")
+        set (CMAKE_GENERATOR_TOOLSET "v110_xp" CACHE STRING "Platform Toolset" FORCE)
     ENDIF ()
-    include_directories("${PROJECT_LIBS_DIR}/wxWidgets/lib/vc_lib/mswu")
-    link_directories("${PROJECT_LIBS_DIR}/wxWidgets/lib/vc_lib")
+    include_directories("${WXWIDGETS_ROOT}/lib/vc_lib/mswu")
+    link_directories("${WXWIDGETS_ROOT}/lib/vc_lib")
+
     # Force static C++ runtime linkage.
-    FOREACH(flag
-        CMAKE_C_FLAGS_RELEASE CMAKE_C_FLAGS_RELWITHDEBINFO
-        CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_DEBUG_INIT
-        CMAKE_CXX_FLAGS_RELEASE  CMAKE_CXX_FLAGS_RELWITHDEBINFO
-        CMAKE_CXX_FLAGS_DEBUG  CMAKE_CXX_FLAGS_DEBUG_INIT)
-        STRING(REPLACE "/MD"  "/MT" "${flag}" "${${flag}}")
-        SET("${flag}" "${${flag}} /EHsc")
-    ENDFOREACH()
+    IF (PROJECT_STATIC_RUNTIME)
+        FOREACH(flag
+            CMAKE_C_FLAGS_RELEASE CMAKE_C_FLAGS_RELWITHDEBINFO
+            CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_DEBUG_INIT
+            CMAKE_CXX_FLAGS_RELEASE  CMAKE_CXX_FLAGS_RELWITHDEBINFO
+            CMAKE_CXX_FLAGS_DEBUG  CMAKE_CXX_FLAGS_DEBUG_INIT)
+            STRING(REPLACE "/MD"  "/MT" "${flag}" "${${flag}}")
+            SET("${flag}" "${${flag}} /EHsc")
+        ENDFOREACH()
+    ENDIF ()
+
     set (CMAKE_EXE_LINKER_FLAGS "/SUBSYSTEM:WINDOWS")
-    set (LOOT_LIBS ${LOOT_LIBS}
-                   libyaml-cppmt
-                   libboost_log_setup${BOOST_SUFFIX}
-                   libboost_log${BOOST_SUFFIX}
-                   libboost_locale${BOOST_SUFFIX}
-                   libboost_thread${BOOST_SUFFIX}
-                   libboost_chrono${BOOST_SUFFIX}
-                   libboost_date_time${BOOST_SUFFIX}
-                   libboost_filesystem${BOOST_SUFFIX}
-                   libboost_system${BOOST_SUFFIX}
-                   libboost_regex${BOOST_SUFFIX}
+    set (LOOT_LIBS libyaml-cppmt
                    version
                    git2
-                   zlibstatic
                    loadorder${PROJECT_ARCH}
                    ws2_32)
     set (LOOT_GUI_LIBS ${LOOT_LIBS}
@@ -159,9 +173,9 @@ ENDIF ()
 ##############################
 
 # Build API.
-add_library           (loot${PROJECT_ARCH} ${PROJECT_LINK} ${LOOT_API_SRC})
-target_link_libraries (loot${PROJECT_ARCH} ${LOOT_LIBS})
+add_library           (loot${PROJECT_ARCH} ${LOOT_API_SRC})
+target_link_libraries (loot${PROJECT_ARCH} ${Boost_LIBRARIES} ${LOOT_LIBS})
 
 # Build application.
 add_executable        (LOOT ${LOOT_GUI_SRC})
-target_link_libraries (LOOT ${LOOT_GUI_LIBS})
+target_link_libraries (LOOT ${Boost_LIBRARIES} ${LOOT_GUI_LIBS})

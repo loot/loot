@@ -11,11 +11,6 @@ Although LOOT is able to calculate the correct load order positions for the vast
 LOOT is intended to make using mods easier, and mod users should still possess a working knowledge of mod load ordering. See the "Introduction To Load Orders" section of the LOOT readme for an overview.
 
 
-## Downloading LOOT
-
-At the moment, LOOT is in beta testing, and so is not recommended for use unless for testing purposes. The load orders it produces should not be used in-game unless found to be valid by manual checking beforehand. Any releases can be found by clicking on the releases button above the coloured bar on the repository homepage.
-
-
 ## Building LOOT
 
 LOOT uses [CMake](http://cmake.org) v2.8.9 or later for cross-platform building support, as though it is a Windows application, development has taken place on Windows and Linux.
@@ -27,12 +22,8 @@ LOOT requires the following libraries (version numbers used in latest developmen
 * [Libespm](http://github.com/WrinklyNinja/libespm)
 * [Libgit2](http://libgit2.github.com/) v0.20.0
 * [Libloadorder](http://github.com/WrinklyNinja/libloadorder)
-* [OpenSSL](https://www.openssl.org) - only if HTTPS support in libgit2 is required using compilers other than MSVC.
 * [wxWidgets](http://www.wxwidgets.org) v3.0.0
 * [yaml-cpp](http://github.com/WrinklyNinja/yaml-cpp)
-* [zlib](http://zlib.net/) v1.2.8
-
-LOOT expects all libraries' folders to be present alongside the LOOT repository folder that contains this readme, or otherwise installed such that the compiler and linker used can find them without suppling additional paths. All paths below are relative to the folder(s) containing the libraries and LOOT.
 
 Alphanum and Libespm do not require any additional setup. The rest of the libraries must be built separately. Instructions for building them and LOOT itself using MSVC or MinGW are given in [docs/BUILD.MSVC.md](docs/BUILD.MSVC.md) and [docs/BUILD.MinGW.md](docs/BUILD.MinGW.md) respectively.
 

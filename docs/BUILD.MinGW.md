@@ -17,15 +17,6 @@ echo "using gcc : 4.6.3 : i686-w64-mingw32-g++ : <rc>i686-w64-mingw32-windres <a
 make
 ```
 
-#### zlib
-
-```
-mkdir build && cd build
-cmake .. -DCMAKE_C_FLAGS=-m32 -DPROJECT_ARCH=32 -DCMAKE_TOOLCHAIN_FILE=../LOOT/mingw-toolchain.cmake
-make
-cp zconf.h ../zconf.h
-```
-
 #### yaml-cpp
 
 ```
@@ -37,13 +28,6 @@ make
 
 Follow the instructions in libloadorder's README.md to build it as a static library.
 
-#### OpenSSL
-
-```
-./Configure --cross-compile-prefix=i686-w64-mingw32- mingw
-make
-```
-
 #### Libgit2
 
 ```
@@ -51,7 +35,6 @@ mkdir build && cd build
 cmake .. -DBUILD_SHARED_LIBS=OFF -DOPENSSL_ROOT_DIR=../openssl -DCMAKE_C_FLAGS=-m32 -DPROJECT_ARCH=32 -DCMAKE_TOOLCHAIN_FILE=../LOOT/mingw-toolchain.cmake
 make
 ```
-If building with SSL support using OpenSSL, also pass ``.
 
 #### LOOT
 
