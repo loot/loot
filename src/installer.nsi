@@ -268,10 +268,12 @@ FunctionEnd
 		;File "..\build\loot64.dll"
 
         ;Install resource files.
-        SetOutPath "$INSTDIR\resources"
-        File "..\resources\polyfill.js"
-        File "..\resources\script.js"
-        File "..\resources\style.css"
+        SetOutPath "$INSTDIR\resources\report"
+        File "..\resources\report\report.html"
+        File "..\resources\report\require.js"
+        File "..\resources\report\polyfill.js"
+        File "..\resources\report\script.js"
+        File "..\resources\report\style.css"
 
         ;Install documentation images.
 		SetOutPath "$INSTDIR\docs\images"
@@ -369,49 +371,6 @@ FunctionEnd
 
 	SectionEnd
 
-    Section "Microsoft Visual C++ 2013 SP1 Redist"
-        ; Thanks to the pcsx2 installer for providing this!
-
-        ; Detection made easy: Unlike previous redists, VC2013 now generates a platform
-        ; independent key for checking availability.
-        ; HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\12.0\VC\Runtimes\x86  for x64 Windows
-        ; HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\12.0\VC\Runtimes\x86  for x86 Windows
-
-        ; Download from:
-        ; http://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4DD4-91DA-3737CD5CD6E3/vcredist_x86.exe
-
-        ClearErrors
-
-        ${If} ${RunningX64}
-            ReadRegDword $R0 HKLM "SOFTWARE\Wow6432Node\Microsoft\VisualStudio\12.0\VC\Runtimes\x86" "Installed"
-        ${Else}
-            ReadRegDword $R0 HKLM "SOFTWARE\Microsoft\VisualStudio\12.0\VC\Runtimes\x86" "Installed"
-        ${EndIf}
-
-        ${If} $R0 == "1"
-            DetailPrint "Visual C++ 2013 Redistributable is already installed; skipping!"
-        ${Else}
-            DetailPrint "Visual C++ 2013 Redistributable registry key was not found; assumed to be uninstalled."
-            DetailPrint "Downloading Visual C++ 2013 Redistributable Setup..."
-            SetOutPath $TEMP
-            NSISdl::download "http://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4DD4-91DA-3737CD5CD6E3/vcredist_x86.exe" "vcredist_x86.exe"
-
-            Pop $R0 ;Get the return value
-            ${If} $R0 == "success"
-                DetailPrint "Running Visual C++ 2013 Redistributable Setup..."
-                Sleep 2000
-                HideWindow
-                ExecWait '"$TEMP\vcredist_x86.exe" /qb'
-                BringToFront
-                DetailPrint "Finished Visual C++ 2013 SP1 Redistributable Setup"
-
-                Delete "$TEMP\vcredist_x86.exe"
-            ${Else}
-                DetailPrint "Could not contact Microsoft.com, or the file has been (re)moved!"
-            ${EndIf}
-        ${EndIf}
-    SectionEnd
-
 ;--------------------------------
 ;Uninstaller Section
 
@@ -438,9 +397,11 @@ FunctionEnd
 		RMDir  "$INSTDIR\docs"
 
         ;Remove resource files.
-        Delete "$INSTDIR\resources\polyfill.js"
-        Delete "$INSTDIR\resources\script.js"
-        Delete "$INSTDIR\resources\style.css"
+        Delete "$INSTDIR\resources\report\report.html"
+        Delete "$INSTDIR\resources\report\require.js"
+        Delete "$INSTDIR\resources\report\polyfill.js"
+        Delete "$INSTDIR\resources\report\script.js"
+        Delete "$INSTDIR\resources\report\style.css"
 
 		;Remove language files.
 		Delete "$INSTDIR\resources\l10n\ru\LC_MESSAGES\loot.mo"
@@ -474,22 +435,26 @@ FunctionEnd
 		Delete "$LOCALAPPDATA\LOOT\LOOTDebugLog.txt"
 		;Trying to delete a file that doesn't exist doesn't cause an error, so delete all games' files.
         ;This doesn't handle user-defined games.
-		Delete "$LOCALAPPDATA\LOOT\Oblivion\report.html"
+		Delete "$LOCALAPPDATA\LOOT\Oblivion\reportdata.js"
 		Delete "$LOCALAPPDATA\LOOT\Oblivion\masterlist.yaml"
-		Delete "$LOCALAPPDATA\LOOT\Nehrim\report.html"
-		Delete "$LOCALAPPDATA\LOOT\Nehrim\masterlist.yaml"
-		Delete "$LOCALAPPDATA\LOOT\Skyrim\report.html"
+		Delete "$LOCALAPPDATA\LOOT\Skyrim\reportdata.js"
 		Delete "$LOCALAPPDATA\LOOT\Skyrim\masterlist.yaml"
-		Delete "$LOCALAPPDATA\LOOT\Fallout3\report.html"
+		Delete "$LOCALAPPDATA\LOOT\Fallout3\reportdata.js"
 		Delete "$LOCALAPPDATA\LOOT\Fallout3\masterlist.yaml"
-		Delete "$LOCALAPPDATA\LOOT\FalloutNV\report.html"
+		Delete "$LOCALAPPDATA\LOOT\FalloutNV\reportdata.js"
 		Delete "$LOCALAPPDATA\LOOT\FalloutNV\masterlist.yaml"
+        ;Delete repositories.
+        RMDir /r "$LOCALAPPDATA\LOOT\Oblivion\.git"
+        RMDir /r "$LOCALAPPDATA\LOOT\Skyrim\.git"
+        RMDir /r "$LOCALAPPDATA\LOOT\Fallout3\.git"
+        RMDir /r "$LOCALAPPDATA\LOOT\FalloutNV\.git"
+        ;Try deleting folders.
 		RMDir  "$LOCALAPPDATA\LOOT\Oblivion"
-		RMDir  "$LOCALAPPDATA\LOOT\Nehrim"
 		RMDir  "$LOCALAPPDATA\LOOT\Skyrim"
 		RMDir  "$LOCALAPPDATA\LOOT\Fallout3"
 		RMDir  "$LOCALAPPDATA\LOOT\FalloutNV"
         RMDir  "$LOCALAPPDATA\LOOT"
+
 
 		;Remove uninstaller.
 		Delete "$INSTDIR\Uninstall.exe"
@@ -525,13 +490,11 @@ FunctionEnd
 		;The following user files are only removed if set to.
 		Delete "$LOCALAPPDATA\LOOT\settings.yaml"
 		Delete "$LOCALAPPDATA\LOOT\Oblivion\userlist.yaml"
-		Delete "$LOCALAPPDATA\LOOT\Nehrim\userlist.yaml"
 		Delete "$LOCALAPPDATA\LOOT\Skyrim\userlist.yaml"
 		Delete "$LOCALAPPDATA\LOOT\Fallout3\userlist.yaml"
 		Delete "$LOCALAPPDATA\LOOT\FalloutNV\userlist.yaml"
 		;Also try removing the folders storing them, in case they are otherwise empty.
 		RMDir  "$LOCALAPPDATA\LOOT\Oblivion"
-		RMDir  "$LOCALAPPDATA\LOOT\Nehrim"
 		RMDir  "$LOCALAPPDATA\LOOT\Skyrim"
 		RMDir  "$LOCALAPPDATA\LOOT\Fallout3"
 		RMDir  "$LOCALAPPDATA\LOOT\FalloutNV"
