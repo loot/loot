@@ -7,7 +7,6 @@ Game:                auto   # auto, or one of the 'folder' values below.
 Last Game:           auto   # auto, or one of the 'folder' values below.
 Debug Verbosity:     0      # 0, 1, 2, 3. Logging takes place if > 0.
 Update Masterlist:   true
-Generate Graph Image: false
 
 # Games. The four types are 'Oblivion', 'Skyrim', 'Fallout3' and 'FalloutNV'. They correspond to each base game's libespm and libloadorder settings.
 Games:
