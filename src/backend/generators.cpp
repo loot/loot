@@ -308,9 +308,6 @@ namespace loot {
         yout << YAML::Key << "l10n"
             << YAML::BeginMap
 
-            << YAML::Key << "txtNoscript"
-            << YAML::Value << boost::locale::translate("The LOOT Report requires Javascript to be enabled in order to function.").str()
-
             << YAML::Key << "txtSummarySec"
             << YAML::Value << boost::locale::translate("Summary").str()
 
