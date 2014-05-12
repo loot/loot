@@ -137,6 +137,8 @@ function toggleMessages(evt) {
                 filterMatch = true;
             } else if (evt.target.id == 'hideDoNotCleanMessages' && listItems[i].textContent.indexOf('Do not clean.') != -1) {
                 filterMatch = true;
+            } else if (evt.target.id == 'hideInactivePluginMessages' && listItems[i].parentElement.parentElement.getAttribute('data-active') == 'false') {
+                filterMatch = true;
             }
             if (filterMatch) {
                 if (evt.target.checked) {
@@ -208,6 +210,7 @@ function setupEventHandlers() {
     document.getElementById('hideBashTags').addEventListener('click', toggleDisplayCSS, false);
     document.getElementById('hideNotes').addEventListener('click', toggleMessages, false);
     document.getElementById('hideDoNotCleanMessages').addEventListener('click', toggleMessages, false);
+    document.getElementById('hideInactivePluginMessages').addEventListener('click', toggleMessages, false);
     document.getElementById('hideAllPluginMessages').addEventListener('click', toggleMessages, false);
     document.getElementById('hideMessagelessPlugins').addEventListener('click', togglePlugins, false);
 }
@@ -244,6 +247,8 @@ function processURLParams() {
             var pluginsList = document.getElementById('pluginsList');
             for (var i = 0; i < data.plugins.length; ++i) {
                 var li = document.createElement('li');
+
+                li.setAttribute('data-active', data.plugins[i].isActive);
 
                 var mod = document.createElement('div');
                 mod.className = 'mod';

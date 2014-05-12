@@ -149,9 +149,9 @@ namespace loot {
 
         out << YAML::Key << "isActive";
         if (game.IsActive(plugin.Name()))
-            out << YAML::Value << "true";
+            out << YAML::Value << true;
         else
-            out << YAML::Value << "false";
+            out << YAML::Value << false;
 
         if (plugin.Crc() != 0) {
             out << YAML::Key << "crc"
@@ -160,7 +160,7 @@ namespace loot {
 
         if (!plugin.Version().empty()) {
             out << YAML::Key << "version"
-                << YAML::Value << boost::locale::translate("Version").str() << ": " << plugin.Version();
+                << YAML::Value << boost::locale::translate("Version").str() + ": " + plugin.Version();
         }
 
         std::set<Tag> tags = plugin.Tags();
@@ -358,6 +358,9 @@ namespace loot {
 
             << YAML::Key << "txtHideDoNotCleanMessages"
             << YAML::Value << boost::locale::translate("Hide 'Do Not Clean' Messages").str()
+
+            << YAML::Key << "txtHideInactivePluginMessages"
+            << YAML::Value << boost::locale::translate("Hide Inactive Plugin Messages").str()
 
             << YAML::Key << "txtHideAllPluginMessages"
             << YAML::Value << boost::locale::translate("Hide All Plugin Messages").str()
