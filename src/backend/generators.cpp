@@ -141,11 +141,17 @@ namespace loot {
         out << YAML::EndMap;
     }
 
-    void WritePlugin(YAML::Emitter& out, const Plugin& plugin) {
+    void WritePlugin(YAML::Emitter& out, const Plugin& plugin, const Game& game) {
         out << YAML::BeginMap;
 
         out << YAML::Key << "name"
             << YAML::Value << plugin.Name();
+
+        out << YAML::Key << "isActive";
+        if (game.IsActive(plugin.Name()))
+            out << YAML::Value << "true";
+        else
+            out << YAML::Value << "false";
 
         if (plugin.Crc() != 0) {
             out << YAML::Key << "crc"
@@ -216,7 +222,7 @@ namespace loot {
         out << YAML::EndMap;
     }
 
-    void GenerateReport(const boost::filesystem::path& file,
+    void GenerateReportData(const Game& game,
         std::list<Message>& messages,
         const std::list<Plugin>& plugins,
         const std::string& masterlistVersion,
@@ -224,7 +230,7 @@ namespace loot {
         const bool masterlistUpdateEnabled) {
 
         YAML::Node oldDetails;
-        GetOldReportDetails(file, oldDetails);
+        GetOldReportDetails(game.ReportDataPath(), oldDetails);
         
         //Need to output YAML as a JSON Javascript variable.
         YAML::Emitter yout;
@@ -268,7 +274,7 @@ namespace loot {
 
             tempout << YAML::BeginSeq;
             for (std::list<Plugin>::const_iterator it = plugins.begin(), endit = plugins.end(); it != endit; ++it) {
-                WritePlugin(tempout, *it);
+                WritePlugin(tempout, *it, game);
             }
             tempout << YAML::EndSeq;
 
@@ -281,7 +287,7 @@ namespace loot {
             yout << YAML::Key << "plugins"
                 << YAML::Value << YAML::BeginSeq;
             for (std::list<Plugin>::const_iterator it = plugins.begin(), endit = plugins.end(); it != endit; ++it) {
-                WritePlugin(yout, *it);
+                WritePlugin(yout, *it, game);
             }
             yout << YAML::EndSeq;
         }
@@ -369,7 +375,7 @@ namespace loot {
 
         yout << YAML::EndMap;
 
-        loot::ofstream out(file);
+        loot::ofstream out(game.ReportDataPath());
         out << "var data = " << yout.c_str();
         out.close();
     }

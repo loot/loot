@@ -34,7 +34,7 @@
 
 namespace loot {
     //LOOT Report generation stuff.
-    void GenerateReport(const boost::filesystem::path& file,
+    void GenerateReportData(const Game& game,
         std::list<Message>& messages,
         const std::list<Plugin>& plugins,
         const std::string& masterlistVersion,

@@ -909,7 +909,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     BOOST_LOG_TRIVIAL(debug) << "Generating report...";
     try {
-        GenerateReport(_game->ReportDataPath(),
+        GenerateReportData(*_game,
                         messages,
                         plugins,
                         revision,
