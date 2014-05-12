@@ -311,11 +311,14 @@ namespace loot {
             << YAML::Key << "txtSummarySec"
             << YAML::Value << boost::locale::translate("Summary").str()
 
+            << YAML::Key << "txtSummary"
+            << YAML::Value << boost::locale::translate("Summary").str()
+
             << YAML::Key << "txtLootVersion"
             << YAML::Value << boost::locale::translate("LOOT Version").str()
 
             << YAML::Key << "txtMasterlistRevision"
-            << YAML::Value << boost::locale::translate("Masterlist Version").str()
+            << YAML::Value << boost::locale::translate("Masterlist Revision").str()
 
             << YAML::Key << "txtMasterlistDate"
             << YAML::Value << boost::locale::translate("Masterlist Date").str()
