@@ -41,8 +41,9 @@ namespace lc = boost::locale;
 
 namespace loot {
 
-    struct pointers_struct {
-        pointers_struct() : repo(NULL), remote(NULL), cfg(NULL), obj(NULL), commit(NULL), ref(NULL), sig(NULL), blob(NULL) {}
+    struct git_handler {
+    public:
+        git_handler() : repo(NULL), remote(NULL), cfg(NULL), obj(NULL), commit(NULL), ref(NULL), sig(NULL), blob(NULL) {}
 
         void free() {
             git_commit_free(commit);
@@ -55,6 +56,30 @@ namespace loot {
             git_blob_free(blob);
         }
 
+        void call(int error_code) {
+            if (!error_code)
+                return;
+
+            const git_error * error = giterr_last();
+            std::string error_message;
+            if (error == NULL)
+                error_message = IntToString(error_code) + ".";
+            else
+                error_message = IntToString(error_code) + "; " + error->message;
+            free();
+            giterr_clear();
+
+            if (message.empty())
+                message = "Git operation failed.";
+            BOOST_LOG_TRIVIAL(error) << "Git operation failed. Error: " << error_message;
+            throw loot::error(loot::error::git_error, (boost::format(lc::translate("Git operation failed. Error: %1%")) % error_message).str());
+        }
+
+        void call(int error_code, std::string& error_message) {
+            message = error_message;
+            call(error_code);
+        }
+
         git_repository * repo;
         git_remote * remote;
         git_config * cfg;
@@ -63,24 +88,9 @@ namespace loot {
         git_reference * ref;
         git_signature * sig;
         git_blob * blob;
+
+        std::string message;
     };
-
-    void handle_error(int error_code, pointers_struct& pointers) {
-        if (!error_code)
-            return;
-
-        const git_error * error = giterr_last();
-        std::string error_message;
-        if (error == NULL)
-            error_message = IntToString(error_code) + ".";
-        else
-            error_message = IntToString(error_code) + "; " + error->message;
-        pointers.free();
-        giterr_clear();
-
-        BOOST_LOG_TRIVIAL(error) << "Git operation failed. Error: " << error_message;
-        throw loot::error(loot::error::git_error, (boost::format(lc::translate("Git operation failed. Error: %1%")) % error_message).str());
-    }
 
 	int progress_cb(const char *str, int len, void *data) {
 		BOOST_LOG_TRIVIAL(info) << string(str, len);
@@ -113,15 +123,15 @@ namespace loot {
                 3. Open the masterlist file in the working dir in a file buffer.
                 4. Compare the file and blob buffers.
             */
-            pointers_struct ptrs;
+            git_handler git;
             BOOST_LOG_TRIVIAL(debug) << "Existing repository found, attempting to open it.";
-            handle_error(git_repository_open(&ptrs.repo, game.MasterlistPath().parent_path().string().c_str()), ptrs);
+            git.call(git_repository_open(&git.repo, game.MasterlistPath().parent_path().string().c_str()));
 
             BOOST_LOG_TRIVIAL(trace) << "Getting HEAD masterlist object.";
-            handle_error(git_revparse_single(&ptrs.obj, ptrs.repo, "HEAD:masterlist.yaml"), ptrs);
+            git.call(git_revparse_single(&git.obj, git.repo, "HEAD:masterlist.yaml"));
 
             BOOST_LOG_TRIVIAL(trace) << "Getting blob for masterlist object.";
-            handle_error(git_blob_lookup(&ptrs.blob, ptrs.repo, git_object_id(ptrs.obj)), ptrs);
+            git.call(git_blob_lookup(&git.blob, git.repo, git_object_id(git.obj)));
 
             BOOST_LOG_TRIVIAL(debug) << "Opening masterlist in working directory.";
             std::string mlist;
@@ -136,26 +146,26 @@ namespace loot {
                 );
 
             BOOST_LOG_TRIVIAL(debug) << "Comparing files.";
-            if (are_files_equal(git_blob_rawcontent(ptrs.blob), git_blob_rawsize(ptrs.blob), mlist.data(), mlist.length())) {
+            if (are_files_equal(git_blob_rawcontent(git.blob), git_blob_rawsize(git.blob), mlist.data(), mlist.length())) {
                 char revision[10];
                 //Need to get the HEAD object, because the individual file has a different SHA.
-                git_object_free(ptrs.obj);
-                ptrs.obj = NULL;  //Just to be safe.
+                git_object_free(git.obj);
+                git.obj = NULL;  //Just to be safe.
                 BOOST_LOG_TRIVIAL(trace) << "Getting HEAD object revision SHA.";
-                handle_error(git_revparse_single(&ptrs.obj, ptrs.repo, "HEAD"), ptrs);
-                git_oid_tostr(revision, 10, git_object_id(ptrs.obj));
-                ptrs.free();
+                git.call(git_revparse_single(&git.obj, git.repo, "HEAD"));
+                git_oid_tostr(revision, 10, git_object_id(git.obj));
+                git.free();
                 return string(revision);
             }
             else {
-                ptrs.free();
+                git.free();
                 return "Unknown: Masterlist edited";
             }
         }
     }
 
     std::pair<std::string, std::string> UpdateMasterlist(Game& game, std::list<Message>& parsingErrors, std::list<Plugin>& plugins, std::list<Message>& messages) {
-        pointers_struct ptrs;
+        git_handler git;
 
         BOOST_LOG_TRIVIAL(debug) << "Checking for a Git repository.";
 
@@ -163,17 +173,17 @@ namespace loot {
         if (fs::exists(game.MasterlistPath().parent_path() / ".git")) {
             //Repository exists. Open it.
             BOOST_LOG_TRIVIAL(info) << "Existing repository found, attempting to open it.";
-            handle_error(git_repository_open(&ptrs.repo, game.MasterlistPath().parent_path().string().c_str()), ptrs);
+            git.call(git_repository_open(&git.repo, game.MasterlistPath().parent_path().string().c_str()));
 
             BOOST_LOG_TRIVIAL(trace) << "Attempting to get info on the repository remote.";
 
             //Now get remote info.
-            handle_error(git_remote_load(&ptrs.remote, ptrs.repo, "origin"), ptrs);
+            git.call(git_remote_load(&git.remote, git.repo, "origin"));
 
             BOOST_LOG_TRIVIAL(trace) << "Getting the remote URL.";
 
             //Get the remote URL.
-            const char * url = git_remote_url(ptrs.remote);
+            const char * url = git_remote_url(git.remote);
 
             BOOST_LOG_TRIVIAL(info) << "Checking to see if remote URL matches URL in settings.";
 
@@ -183,25 +193,25 @@ namespace loot {
             if (url != game.RepoURL()) {
                 BOOST_LOG_TRIVIAL(info) << "URLs do not match, setting repository URL to URL in settings.";
                 //The URLs don't match. Change the remote URL to match the one LOOT has.
-                handle_error(git_remote_set_url(ptrs.remote, game.RepoURL().c_str()), ptrs);
+                git.call(git_remote_set_url(git.remote, game.RepoURL().c_str()));
 
                 //Now save change.
-                handle_error(git_remote_save(ptrs.remote), ptrs);
+                git.call(git_remote_save(git.remote));
             }
         } else {
             BOOST_LOG_TRIVIAL(info) << "Repository doesn't exist, initialising a new repository.";
             //Repository doesn't exist. Set up a repository.
-            handle_error(git_repository_init(&ptrs.repo, game.MasterlistPath().parent_path().string().c_str(), false), ptrs);
+            git.call(git_repository_init(&git.repo, game.MasterlistPath().parent_path().string().c_str(), false));
 
             BOOST_LOG_TRIVIAL(info) << "Setting the new repository's remote to: " << game.RepoURL();
 
             //Now set the repository's remote.
-            handle_error(git_remote_create(&ptrs.remote, ptrs.repo, "origin", game.RepoURL().c_str()), ptrs);
+            git.call(git_remote_create(&git.remote, git.repo, "origin", game.RepoURL().c_str()));
         }
 
         //WARNING: This is generally a very bad idea, since it makes HTTPS a little bit pointless, but in this case because we're only reading data and not really concerned about its integrity, it's acceptable. A better solution would be to figure out why GitHub's certificate appears to be invalid to OpenSSL.
 #ifndef _WIN32
-		git_remote_check_cert(ptrs.remote, 0);
+		git_remote_check_cert(git.remote, 0);
 #endif
 
         BOOST_LOG_TRIVIAL(trace) << "Fetching updates from remote.";
@@ -210,9 +220,9 @@ namespace loot {
 
         //Fetch from remote.
         BOOST_LOG_TRIVIAL(trace) << "Fetching from remote.";
-        handle_error(git_remote_fetch(ptrs.remote), ptrs);
+        git.call(git_remote_fetch(git.remote));
 
-        const git_transfer_progress * stats = git_remote_stats(ptrs.remote);
+        const git_transfer_progress * stats = git_remote_stats(git.remote);
         BOOST_LOG_TRIVIAL(info) << "Received " << stats->indexed_objects << " of " << stats->total_objects << " objects in " << stats->received_bytes << " bytes.";
 
         //Now do a forced checkout of masterlist.yaml from the desired branch.
@@ -239,7 +249,7 @@ namespace loot {
 
         //Apparently I'm using libgit2's head, not v0.20.0, so I don't need this...
         //LOG_INFO("Creating a Git signature.");
-        //handle_error(git_signature_default(&ptrs.sig, ptrs.repo), ptrs);
+        //git.call(git_signature_default(&git.sig, git.repo));
 
         bool parsingFailed = false;
         unsigned int rollbacks = 0;
@@ -247,10 +257,10 @@ namespace loot {
         do {
             string filespec = "refs/remotes/origin/" + game.RepoBranch() + "~" + IntToString(rollbacks);
             BOOST_LOG_TRIVIAL(info) << "Getting the Git object for the tree at " << filespec;
-            handle_error(git_revparse_single(&ptrs.obj, ptrs.repo, filespec.c_str()), ptrs);
+            git.call(git_revparse_single(&git.obj, git.repo, filespec.c_str()));
 
             BOOST_LOG_TRIVIAL(trace) << "Getting the Git object ID.";
-            const git_oid * oid = git_object_id(ptrs.obj);
+            const git_oid * oid = git_object_id(git.obj);
 
             BOOST_LOG_TRIVIAL(trace) << "Generating hex string for Git object ID.";
             char sha1[10];
@@ -258,27 +268,27 @@ namespace loot {
             revision = sha1;
 
             BOOST_LOG_TRIVIAL(trace) << "Getting date for Git object ID.";
-            handle_error(git_commit_lookup(&ptrs.commit, ptrs.repo, oid), ptrs);
-            git_time_t time = git_commit_time(ptrs.commit);
+            git.call(git_commit_lookup(&git.commit, git.repo, oid));
+            git_time_t time = git_commit_time(git.commit);
             boost::locale::date_time dateTime(time);
             stringstream out;
             out << boost::locale::as::ftime("%Y-%m-%d") << dateTime;
             date = out.str();
 
             BOOST_LOG_TRIVIAL(trace) << "Recreating HEAD as a direct reference (overwriting it) to the desired revision.";
-            handle_error(git_reference_create(&ptrs.ref, ptrs.repo, "HEAD", oid, 1), ptrs);
+            git.call(git_reference_create(&git.ref, git.repo, "HEAD", oid, 1));
 
             BOOST_LOG_TRIVIAL(trace) << "Performing a Git checkout of HEAD.";
-            handle_error(git_checkout_head(ptrs.repo, &opts), ptrs);
+            git.call(git_checkout_head(git.repo, &opts));
 
             BOOST_LOG_TRIVIAL(debug) << "Tree hash is: " << revision;
             BOOST_LOG_TRIVIAL(trace) << "Freeing pointers.";
-            git_object_free(ptrs.obj);
-            git_reference_free(ptrs.ref);
-            git_commit_free(ptrs.commit);
-            ptrs.obj = NULL;
-            ptrs.ref = NULL;
-            ptrs.commit = NULL;
+            git_object_free(git.obj);
+            git_reference_free(git.ref);
+            git_commit_free(git.commit);
+            git.obj = NULL;
+            git.ref = NULL;
+            git.commit = NULL;
 
             BOOST_LOG_TRIVIAL(debug) << "Testing masterlist parsing.";
 
@@ -317,7 +327,7 @@ namespace loot {
         } while (parsingFailed);
 
         //Finally, free memory.
-        ptrs.free();
+        git.free();
 
         return pair<string, string>(revision, date);
     }
