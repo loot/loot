@@ -35,6 +35,6 @@ namespace loot {
 
     std::pair<std::string, std::string> UpdateMasterlist(Game& game, std::list<Message>& parsingErrors, std::list<Plugin>& plugins, std::list<Message>& messages);
 
-    std::string GetMasterlistRevision(const Game& game);
+    std::pair<std::string, std::string> GetMasterlistRevision(const Game& game);
 }
 #endif

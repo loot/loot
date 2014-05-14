@@ -120,7 +120,9 @@ struct masterlist_updater_parser {
                 _errors.push_back(loot::Message(loot::Message::error, (format(loc::translate("Masterlist update failed. Details: %1%")) % e.what()).str()));
                 //Try getting masterlist revision anyway.
                 try {
-                    _revision = GetMasterlistRevision(_game);
+                    pair<string, string> ret = GetMasterlistRevision(_game);
+                    _revision = ret.first;
+                    _date = ret.second;
                 }
                 catch (loot::error& e) {
                     BOOST_LOG_TRIVIAL(error) << "Masterlist revision check failed. Details: " << e.what();
@@ -131,7 +133,9 @@ struct masterlist_updater_parser {
         else {
             BOOST_LOG_TRIVIAL(debug) << "Getting masterlist revision";
             try {
-                _revision = GetMasterlistRevision(_game);
+                pair<string, string> ret = GetMasterlistRevision(_game);
+                _revision = ret.first;
+                _date = ret.second;
             }
             catch (loot::error& e) {
                 BOOST_LOG_TRIVIAL(error) << "Masterlist revision check failed. Details: " << e.what();
@@ -164,6 +168,13 @@ struct masterlist_updater_parser {
                 _revision = loc::translate("Unknown");
             else
                 _revision = loc::translate("No masterlist");
+        }
+
+        if (_date.empty()) {
+            if (fs::exists(_game.MasterlistPath()))
+                _date = loc::translate("Unknown");
+            else
+                _date = loc::translate("No masterlist");
         }
     }
 

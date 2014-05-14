@@ -110,12 +110,12 @@ namespace loot {
         return true;
     }
 
-    std::string GetMasterlistRevision(const Game& game) {
+    std::pair<string, string> GetMasterlistRevision(const Game& game) {
         if (!fs::exists(game.MasterlistPath().parent_path() / ".git")) {
-            return "Unknown: Git repository missing";
+            return pair<string, string>("Unknown: Git repository missing", "Unknown: Git repository missing");
         }
         else if (!fs::exists(game.MasterlistPath()))
-            return "N/A: No masterlist present";
+            return pair<string, string>("N/A: No masterlist present", "N/A: No masterlist present");
         else {
             /* Compares HEAD to the working dir.
                 1. Get an object for the masterlist in HEAD.
@@ -147,19 +147,36 @@ namespace loot {
 
             BOOST_LOG_TRIVIAL(debug) << "Comparing files.";
             if (are_files_equal(git_blob_rawcontent(git.blob), git_blob_rawsize(git.blob), mlist.data(), mlist.length())) {
-                char revision[10];
+
+                string revision, date;
                 //Need to get the HEAD object, because the individual file has a different SHA.
                 git_object_free(git.obj);
                 git.obj = NULL;  //Just to be safe.
-                BOOST_LOG_TRIVIAL(trace) << "Getting HEAD object revision SHA.";
+                BOOST_LOG_TRIVIAL(info) << "Getting the Git object for the tree at HEAD.";
                 git.call(git_revparse_single(&git.obj, git.repo, "HEAD"));
-                git_oid_tostr(revision, 10, git_object_id(git.obj));
+
+                BOOST_LOG_TRIVIAL(trace) << "Getting the Git object ID.";
+                const git_oid * oid = git_object_id(git.obj);
+
+                BOOST_LOG_TRIVIAL(trace) << "Generating hex string for Git object ID.";
+                char sha1[10];
+                git_oid_tostr(sha1, 10, oid);
+                revision = sha1;
+
+                BOOST_LOG_TRIVIAL(trace) << "Getting date for Git object ID.";
+                git.call(git_commit_lookup(&git.commit, git.repo, oid));
+                git_time_t time = git_commit_time(git.commit);
+                boost::locale::date_time dateTime(time);
+                stringstream out;
+                out << boost::locale::as::ftime("%Y-%m-%d") << dateTime;
+                date = out.str();
+
                 git.free();
-                return string(revision);
+                return pair<string, string>(revision, date);
             }
             else {
                 git.free();
-                return "Unknown: Masterlist edited";
+                return pair<string, string>("Unknown: Masterlist edited", "Unknown: Masterlist edited");
             }
         }
     }
