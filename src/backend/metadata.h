@@ -34,6 +34,8 @@
 
 namespace loot {
 
+    const unsigned int max_priority = 1000000;
+
     class Game;
 
     //A FormID is a 32 bit unsigned integer of the form xxYYYYYY in hex. The xx is the position in the masters list of the plugin that the FormID is from, and the YYYYYY is the rest of the FormID. Here the xx bit is stored as the corresponding filename to allow comparison between FormIDs from different plugins.

@@ -161,8 +161,9 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
     pluginText = new wxStaticText(editingPanel, wxID_ANY, "");
     descText = new wxStaticText(this, wxID_ANY, feedbackText);
     prioritySpin = new wxSpinCtrl(editingPanel, wxID_ANY, "0");
-    prioritySpin->SetRange(std::numeric_limits<int>::min(), std::numeric_limits<int>::max());
-    filterCheckbox = new wxCheckBox(editingPanel, wxID_ANY, translate("Show only conflicting plugins"));
+    prioritySpin->SetRange(-999999, 999999);
+    priorityCheckbox = new wxCheckBox(editingPanel, wxID_ANY, translate("Compare priority against all other plugins."));
+    filterCheckbox = new wxCheckBox(editingPanel, CHECKBOX_Filter, translate("Show only conflicting plugins"));
     
     pluginList = new wxListView(this, LIST_Plugins, wxDefaultPosition, wxDefaultSize, wxLC_REPORT | wxLC_SINGLE_SEL);
     loadAfterList = new wxListView(editingPanel, LIST_LoadAfter, wxDefaultPosition, wxDefaultSize, wxLC_REPORT | wxLC_SINGLE_SEL);
@@ -173,6 +174,7 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
     //Set up list columns.
     pluginList->AppendColumn(translate("Plugin"));
     pluginList->AppendColumn(translate("Priority"));
+    pluginList->AppendColumn(translate("Global Priority"));
 
     loadAfterList->AppendColumn(translate("Filename"));
     loadAfterList->AppendColumn(translate("Display Name"));
@@ -194,7 +196,7 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
     Bind(wxEVT_LIST_BEGIN_DRAG, &MiniEditor::OnDragStart, this, LIST_Plugins);
     Bind(wxEVT_LIST_ITEM_SELECTED, &MiniEditor::OnRowSelect, this, LIST_LoadAfter);
     Bind(wxEVT_BUTTON, &MiniEditor::OnRemoveRow, this, BUTTON_RemoveRow);
-    Bind(wxEVT_CHECKBOX, &MiniEditor::OnFilterToggle, this);
+    Bind(wxEVT_CHECKBOX, &MiniEditor::OnFilterToggle, this, CHECKBOX_Filter);
     Bind(wxEVT_BUTTON, &MiniEditor::OnApply, this, wxID_APPLY);
     Bind(wxEVT_SIZE, &MiniEditor::OnResize, this);
 
@@ -204,6 +206,7 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
     prioritySpin->SetToolTip(translate("Plugins with higher priorities will load after plugins with smaller priorities that they conflict with, unless one must explicitly load after the other."));
     filterCheckbox->SetToolTip(translate("Filters the plugin list to only display plugins which can be loaded after the currently selected plugin, and which either conflict with it, or, if it loads a BSA, also load BSAs. Also enables drag and drop of plugins into the Load After box."));
     removeBtn->SetToolTip(translate("Only newly-added plugins may be removed here. Use the metadata editor to remove other user-added plugins."));
+    priorityCheckbox->SetToolTip(translate("Otherwise, priorities are only compared between conflicting plugins."));
 
     //Set up editing panel layout.
     wxBoxSizer * mainBox = new wxBoxSizer(wxVERTICAL);
@@ -212,8 +215,9 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
 
     wxBoxSizer * hbox2 = new wxBoxSizer(wxHORIZONTAL);
     hbox2->Add(new wxStaticText(editingPanel, wxID_ANY, translate("Priority: ")), 0, wxRIGHT, 5);
-    hbox2->Add(prioritySpin);
+    hbox2->Add(prioritySpin, 0, wxRIGHT, 5);
     mainBox->Add(hbox2, 0, wxEXPAND | wxBOTTOM, 10);
+    mainBox->Add(priorityCheckbox, 0, wxEXPAND | wxBOTTOM, 10);
 
     wxStaticBoxSizer * staticBox = new wxStaticBoxSizer(wxVERTICAL, editingPanel, translate("Load After"));
     staticBox->Add(loadAfterList, 1, wxEXPAND);
@@ -244,7 +248,11 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
     int i = 0;
     for (list<loot::Plugin>::const_iterator it = _basePlugins.begin(); it != _basePlugins.end(); ++it) {
         pluginList->InsertItem(i, FromUTF8(it->Name()));
-        pluginList->SetItem(i, 1, FromUTF8(loot::IntToString(it->Priority())));
+        pluginList->SetItem(i, 1, FromUTF8(loot::IntToString(loot::modulo(it->Priority(), loot::max_priority))));
+        if (abs(it->Priority()) >= loot::max_priority)
+            pluginList->SetItem(i, 2, FromUTF8("\xE2\x9C\x93"));
+        else
+            pluginList->SetItem(i, 2, FromUTF8("\xE2\x9C\x97"));
         if (it->FormIDs().empty()) {
             pluginList->SetItemTextColour(i, wxColour(122, 122, 122));
         }
@@ -255,6 +263,7 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
     }
     pluginList->SetColumnWidth(0, wxLIST_AUTOSIZE);
     pluginList->SetColumnWidth(1, 0);
+    pluginList->SetColumnWidth(2, 0);
     descText->Wrap(pluginList->GetClientSize().GetWidth());
 
     SetBackgroundColour(wxColour(255, 255, 255));
@@ -278,6 +287,10 @@ void MiniEditor::OnPluginSelect(wxListEvent& event) {
             ApplyEdits(currentPlugin, pluginList);
             //Also update the item's priority value in the plugins list in case it has changed.
             pluginList->SetItem(pluginList->FindItem(-1, currentPlugin), 1, FromUTF8(loot::IntToString(prioritySpin->GetValue())));
+            if (priorityCheckbox->IsChecked())
+                pluginList->SetItem(pluginList->FindItem(-1, currentPlugin), 2, FromUTF8("\xE2\x9C\x93"));
+            else
+                pluginList->SetItem(pluginList->FindItem(-1, currentPlugin), 2, FromUTF8("\xE2\x9C\x97"));
         }
 
         //Merge metadata.
@@ -288,7 +301,12 @@ void MiniEditor::OnPluginSelect(wxListEvent& event) {
         BOOST_LOG_TRIVIAL(debug) << "Filling editor fields with plugin info.";
         pluginText->SetLabelText(FromUTF8(plugin.Name()));
 
-        prioritySpin->SetValue(plugin.Priority());
+        prioritySpin->SetValue(loot::modulo(plugin.Priority(), loot::max_priority));
+
+        if (abs(plugin.Priority()) >= loot::max_priority)
+            priorityCheckbox->SetValue(true);
+        else
+            priorityCheckbox->SetValue(false);
 
         loadAfterList->DeleteAllItems();
         set<loot::File> files = plugin.LoadAfter();
@@ -309,8 +327,10 @@ void MiniEditor::OnPluginSelect(wxListEvent& event) {
     }
 
     //Change layout.
-    if (pluginList->GetColumnWidth(1) == 0)
+    if (pluginList->GetColumnWidth(1) == 0) {
         pluginList->SetColumnWidth(1, wxLIST_AUTOSIZE_USEHEADER);
+        pluginList->SetColumnWidth(2, wxLIST_AUTOSIZE_USEHEADER);
+    }
     if (!editingPanel->IsShown())
         editingPanel->Show();
 
@@ -453,7 +473,16 @@ const std::list<loot::Plugin>& MiniEditor::GetEditedPlugins() const {
 loot::Plugin MiniEditor::GetNewData(const wxString& plugin) const {
     //Get new data. Because most of it is missing in the MiniEditor, start with the existing data.
     loot::Plugin edited(GetMasterData(plugin));
-    edited.Priority(prioritySpin->GetValue());
+
+    int priority = prioritySpin->GetValue();
+    if (priorityCheckbox->IsChecked()) {
+        if (priority < 0)
+            priority -= loot::max_priority;
+        else
+            priority += loot::max_priority;
+    }
+    edited.Priority(priority);
+    
     set<loot::File> files; 
     for (int i = 0, max = loadAfterList->GetItemCount(); i < max; ++i) {
         files.insert(RowToFile(loadAfterList, i));

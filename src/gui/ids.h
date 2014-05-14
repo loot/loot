@@ -73,6 +73,7 @@ enum {
     LIST_LoadOrder,
     BUTTON_MoveUp,
     BUTTON_MoveDown,
+    CHECKBOX_Filter
 };
 
 wxString translate(const std::string& str);

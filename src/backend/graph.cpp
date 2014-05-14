@@ -192,7 +192,7 @@ namespace loot {
             for (boost::tie(vit2, vitend2) = boost::vertices(graph); vit2 != vitend2; ++vit2) {
 
                 if (graph[*vit].Priority() == graph[*vit2].Priority() 
-                    || (abs(graph[*vit].Priority()) < 1000000 && abs(graph[*vit2].Priority()) < 1000000 
+                    || (abs(graph[*vit].Priority()) < max_priority && abs(graph[*vit2].Priority()) < max_priority
                         && !graph[*vit].FormIDs().empty() && !graph[*vit2].FormIDs().empty() && !graph[*vit].DoFormIDsOverlap(graph[*vit2])
                        )
                    ) {
@@ -203,8 +203,8 @@ namespace loot {
 
                 vertex_t vertex, parentVertex;
                 //Modulo operator is not consistently defined for negative numbers except in C++11, so use function.
-                int p1 = modulo(graph[*vit].Priority(), 1000000);
-                int p2 = modulo(graph[*vit2].Priority(), 1000000);
+                int p1 = modulo(graph[*vit].Priority(), max_priority);
+                int p2 = modulo(graph[*vit2].Priority(), max_priority);
                 if (p1 < p2) {
                     parentVertex = *vit;
                     vertex = *vit2;

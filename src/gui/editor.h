@@ -101,6 +101,7 @@ private:
     wxListView * loadAfterList;
     wxCheckBox * filterCheckbox;
     wxSpinCtrl * prioritySpin;
+    wxCheckBox * priorityCheckbox;
     wxStaticText * pluginText;
     wxStaticText * descText;
 
