@@ -517,7 +517,8 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     //Initialise controls.
     pluginText = new wxStaticText(this, wxID_ANY, "");
     prioritySpin = new wxSpinCtrl(this, wxID_ANY, "0");
-    prioritySpin->SetRange(std::numeric_limits<int>::min(), std::numeric_limits<int>::max());
+    prioritySpin->SetRange(-999999, 999999);
+    priorityCheckbox = new wxCheckBox(this, wxID_ANY, translate("Compare priority against all other plugins"));
     enableUserEditsBox = new wxCheckBox(this, wxID_ANY, translate("Enable User Changes"));
 
     addBtn = new wxButton(this, BUTTON_AddRow, translate("Add File"));
@@ -579,6 +580,7 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     editBtn->Enable(false);
     removeBtn->Enable(false);
     prioritySpin->Enable(false);
+    priorityCheckbox->Enable(false);
     enableUserEditsBox->Enable(false);
 
     //Make plugin name bold text.
@@ -611,6 +613,7 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     enableUserEditsBox->SetToolTip(translate("If unchecked, any user-added metadata will be ignored during sorting."));
     editBtn->SetToolTip(translate("Only user-added data may be removed."));
     removeBtn->SetToolTip(translate("Only user-added data may be removed."));
+    priorityCheckbox->SetToolTip(translate("Otherwise, priorities are only compared between conflicting plugins."));
 
     //Set up layout.
     wxBoxSizer * bigBox = new wxBoxSizer(wxHORIZONTAL);
@@ -629,6 +632,7 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     hbox1->Add(prioritySpin, 0, wxALIGN_RIGHT);
 
     mainBox->Add(hbox1, 0, wxEXPAND|wxALIGN_RIGHT|wxTOP|wxBOTTOM, 5);
+    mainBox->Add(priorityCheckbox, 0, wxALIGN_RIGHT | wxBOTTOM, 10);
 
     wxBoxSizer * tabBox1 = new wxBoxSizer(wxVERTICAL);
     tabBox1->Add(reqsList, 1, wxEXPAND);
@@ -713,7 +717,12 @@ void Editor::OnPluginSelect(wxListEvent& event) {
         BOOST_LOG_TRIVIAL(debug) << "Filling editor fields with plugin info.";
         pluginText->SetLabelText(FromUTF8(plugin.Name()));
 
-        prioritySpin->SetValue(plugin.Priority());
+        prioritySpin->SetValue(loot::modulo(plugin.Priority(), loot::max_priority));
+
+        if (abs(plugin.Priority()) >= loot::max_priority)
+            priorityCheckbox->SetValue(true);
+        else
+            priorityCheckbox->SetValue(false);
 
         enableUserEditsBox->SetValue(plugin.Enabled());
 
@@ -800,6 +809,7 @@ void Editor::OnPluginSelect(wxListEvent& event) {
 
         //Set control states.
         prioritySpin->Enable(true);
+        priorityCheckbox->Enable(true);
         enableUserEditsBox->Enable(true);
         addBtn->Enable(true);
         editBtn->Enable(false);
@@ -1273,8 +1283,16 @@ loot::Plugin Editor::GetNewData(const wxString& plugin) const {
     BOOST_LOG_TRIVIAL(debug) << "Getting metadata from editor fields for plugin: " << plugin.ToUTF8();
     loot::Plugin p(string(plugin.ToUTF8()));
 
-    p.Priority(prioritySpin->GetValue());
     p.Enabled(enableUserEditsBox->IsChecked());
+
+    int priority = prioritySpin->GetValue();
+    if (priorityCheckbox->IsChecked()) {
+        if (priority < 0)
+            priority -= loot::max_priority;
+        else
+            priority += loot::max_priority;
+    }
+    p.Priority(priority);
 
     set<loot::File> files;
     for (int i=0,max=reqsList->GetItemCount(); i < max; ++i) {

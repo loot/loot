@@ -140,6 +140,7 @@ private:
     wxListView * tagsList;
     wxListView * dirtyList;
     wxNotebook * listBook;
+    wxCheckBox * priorityCheckbox;
     wxCheckBox * enableUserEditsBox;
     wxSpinCtrl * prioritySpin;
     wxStaticText * pluginText;
