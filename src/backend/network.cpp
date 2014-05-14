@@ -69,15 +69,11 @@ namespace loot {
             free();
             giterr_clear();
 
-            if (message.empty())
-                message = "Git operation failed.";
-            BOOST_LOG_TRIVIAL(error) << "Git operation failed. Error: " << error_message;
-            throw loot::error(loot::error::git_error, (boost::format(lc::translate("Git operation failed. Error: %1%")) % error_message).str());
-        }
+            if (ui_message.empty())
+                ui_message = (boost::format(lc::translate("Git operation failed. Error: %1%")) % error_message).str();
 
-        void call(int error_code, std::string& error_message) {
-            message = error_message;
-            call(error_code);
+            BOOST_LOG_TRIVIAL(error) << "Git operation failed. Error: " << error_message;
+            throw loot::error(loot::error::git_error, ui_message);
         }
 
         git_repository * repo;
@@ -89,7 +85,7 @@ namespace loot {
         git_signature * sig;
         git_blob * blob;
 
-        std::string message;
+        std::string ui_message;
     };
 
 	int progress_cb(const char *str, int len, void *data) {
@@ -124,6 +120,7 @@ namespace loot {
                 4. Compare the file and blob buffers.
             */
             git_handler git;
+            git.ui_message = "An error occurred while trying to read the local masterlist's version. If this error happens again, try deleting the \".git\" folder in \"%LOCALAPPDATA%\\LOOT\\" + game.FolderName() + "\".";
             BOOST_LOG_TRIVIAL(debug) << "Existing repository found, attempting to open it.";
             git.call(git_repository_open(&git.repo, game.MasterlistPath().parent_path().string().c_str()));
 
@@ -185,6 +182,7 @@ namespace loot {
         git_handler git;
 
         BOOST_LOG_TRIVIAL(debug) << "Checking for a Git repository.";
+        git.ui_message = "An error occurred while trying to access the local masterlist repository. If this error happens again, try deleting the \".git\" folder in \"%LOCALAPPDATA%\\LOOT\\" + game.FolderName() + "\".";
 
         //Checking for a ".git" folder.
         if (fs::exists(game.MasterlistPath().parent_path() / ".git")) {
@@ -232,6 +230,7 @@ namespace loot {
 #endif
 
         BOOST_LOG_TRIVIAL(trace) << "Fetching updates from remote.";
+        git.ui_message = "An error occurred while trying to update the masterlist. This could be due to a server-side error. Try again in a few minutes.";
 
         //Now pull from the remote repository. This involves a fetch followed by a merge. First perform the fetch.
 
@@ -271,6 +270,7 @@ namespace loot {
         bool parsingFailed = false;
         unsigned int rollbacks = 0;
         string revision, date;
+        git.ui_message = "An error occurred while trying to read information on the updated masterlist. If this error happens again, try deleting the \".git\" folder in \"%LOCALAPPDATA%\\LOOT\\" + game.FolderName() + "\".";
         do {
             string filespec = "refs/remotes/origin/" + game.RepoBranch() + "~" + IntToString(rollbacks);
             BOOST_LOG_TRIVIAL(info) << "Getting the Git object for the tree at " << filespec;
