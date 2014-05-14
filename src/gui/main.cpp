@@ -113,7 +113,7 @@ struct masterlist_updater_parser {
                 pair<string, string> ret = UpdateMasterlist(_game, _errors, _plugins, _messages);
                 _revision = ret.first;
                 _date = ret.second;
-            } catch (loot::error& e) {
+            } catch (std::exception& e) {
                 _plugins.clear();
                 _messages.clear();
                 BOOST_LOG_TRIVIAL(error) << "Masterlist update failed. Details: " << e.what();
@@ -124,7 +124,7 @@ struct masterlist_updater_parser {
                     _revision = ret.first;
                     _date = ret.second;
                 }
-                catch (loot::error& e) {
+                catch (std::exception& e) {
                     BOOST_LOG_TRIVIAL(error) << "Masterlist revision check failed. Details: " << e.what();
                     _errors.push_back(loot::Message(loot::Message::error, (format(loc::translate("Masterlist revision check failed. Details: %1%")) % e.what()).str()));
                 }
@@ -137,7 +137,7 @@ struct masterlist_updater_parser {
                 _revision = ret.first;
                 _date = ret.second;
             }
-            catch (loot::error& e) {
+            catch (std::exception& e) {
                 BOOST_LOG_TRIVIAL(error) << "Masterlist revision check failed. Details: " << e.what();
                 _errors.push_back(loot::Message(loot::Message::error, (format(loc::translate("Masterlist revision check failed. Details: %1%")) % e.what()).str()));
             }
@@ -328,18 +328,19 @@ bool LOOT::OnInit() {
     BOOST_LOG_TRIVIAL(debug) << "Detecting installed games.";
     try {
         _games = GetGames(_settings);
-    } catch (loot::error& e) {
-        BOOST_LOG_TRIVIAL(error) << "Game-specific settings could not be initialised. " << e.what();
-        wxMessageBox(
-            FromUTF8(format(loc::translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()),
-            translate("LOOT: Error"),
-            wxOK | wxICON_ERROR,
-            NULL);
-        return false;
     } catch (YAML::Exception& e) {
         BOOST_LOG_TRIVIAL(error) << "Games' settings parsing failed. " << e.what();
         wxMessageBox(
             FromUTF8(format(loc::translate("Error: Games' settings parsing failed. %1%")) % e.what()),
+            translate("LOOT: Error"),
+            wxOK | wxICON_ERROR,
+            NULL);
+        return false;
+    }
+    catch (std::exception& e) {
+        BOOST_LOG_TRIVIAL(error) << "Game-specific settings could not be initialised. " << e.what();
+        wxMessageBox(
+            FromUTF8(format(loc::translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()),
             translate("LOOT: Error"),
             wxOK | wxICON_ERROR,
             NULL);
@@ -386,7 +387,7 @@ bool LOOT::OnInit() {
     try {
         _game.Init();
         *find(_games.begin(), _games.end(), _game) = _game;  //Sync changes.
-    } catch (loot::error& e) {
+    } catch (std::exception& e) {
         BOOST_LOG_TRIVIAL(error) << "Game-specific settings could not be initialised. " << e.what();
         wxMessageBox(
             FromUTF8(format(loc::translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()),
@@ -549,7 +550,7 @@ void Launcher::OnGameChange(wxCommandEvent& event) {
         _game->Init();  //In case it hasn't already been done.
         BOOST_LOG_TRIVIAL(debug) << "New game is " << _game->Name();
     }
-    catch (loot::error& e) {
+    catch (std::exception& e) {
         BOOST_LOG_TRIVIAL(error) << "Game-specific settings could not be initialised." << e.what();
         wxMessageBox(
             FromUTF8(format(loc::translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()),
@@ -728,7 +729,8 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                 else
                     ++it;
             }
-        } catch (loot::error& e) {
+        }
+        catch (std::exception& e) {
             BOOST_LOG_TRIVIAL(error) << "A global message contains a condition that could not be evaluated. Details: " << e.what();
             messages.push_back(loot::Message(loot::Message::error, (format(loc::translate("A global message contains a condition that could not be evaluated. Details: %1%")) % e.what()).str()));
         }
@@ -761,7 +763,8 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             BOOST_LOG_TRIVIAL(trace) << "Evaluate conditions for merged plugin data.";
             try {
                 graph[*vit].EvalAllConditions(*_game, lang);
-            } catch (loot::error& e) {
+            }
+            catch (std::exception& e) {
                 BOOST_LOG_TRIVIAL(error) << "\"" << graph[*vit].Name() << "\" contains a condition that could not be evaluated. Details: " << e.what();
                 messages.push_back(loot::Message(loot::Message::error, (format(loc::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % graph[*vit].Name() % e.what()).str()));
             }
@@ -890,7 +893,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             try {
                 _game->SetLoadOrder(plugins);
             }
-            catch (loot::error& e) {
+            catch (std::exception& e) {
                 BOOST_LOG_TRIVIAL(error) << "Failed to set the load order. Details: " << e.what();
                 messages.push_back(loot::Message(loot::Message::error, (format(loc::translate("Failed to set the load order. Details: %1%")) % e.what()).str()));
             }

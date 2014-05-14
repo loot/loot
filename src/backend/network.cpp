@@ -60,12 +60,12 @@ namespace loot {
             if (!error_code)
                 return;
 
-            const git_error * error = giterr_last();
+            const git_error * last_error = giterr_last();
             std::string error_message;
-            if (error == NULL)
+            if (last_error == NULL)
                 error_message = IntToString(error_code) + ".";
             else
-                error_message = IntToString(error_code) + "; " + error->message;
+                error_message = IntToString(error_code) + "; " + last_error->message;
             free();
             giterr_clear();
 
