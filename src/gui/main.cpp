@@ -198,7 +198,7 @@ bool LOOT::OnInit() {
         try {
             if (!fs::exists(g_path_settings.parent_path()))
                 fs::create_directory(g_path_settings.parent_path());
-        } catch (fs::filesystem_error& e) {
+        } catch (fs::filesystem_error& /*e*/) {
             wxMessageBox(
 				translate("Error: Could not create local app data LOOT folder."),
 				translate("LOOT: Error"),
@@ -650,7 +650,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     plugin_list_loader pll(graph, *_game);
     for (boost::unordered_map<string, size_t>::const_iterator it=tempMap.begin(), endit=tempMap.end(); it != endit; ++it) {
 
-        BOOST_LOG_TRIVIAL(trace) << "Found plugin: " << it->first;
+        BOOST_LOG_TRIVIAL(info) << "Found plugin: " << it->first;
 
         vertex_t v = boost::add_vertex(loot::Plugin(it->first), graph);
 
@@ -701,14 +701,14 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
 
         //Merge all global message lists.
-        BOOST_LOG_TRIVIAL(trace) << "Merging all global message lists.";
+        BOOST_LOG_TRIVIAL(debug) << "Merging all global message lists.";
         if (!mlist_messages.empty())
             messages.insert(messages.end(), mlist_messages.begin(), mlist_messages.end());
         if (!ulist_messages.empty())
             messages.insert(messages.end(), ulist_messages.begin(), ulist_messages.end());
 
         //Evaluate any conditions in the global messages.
-        BOOST_LOG_TRIVIAL(trace) << "Evaluating global message conditions.";
+        BOOST_LOG_TRIVIAL(debug) << "Evaluating global message conditions.";
         try {
             list<loot::Message>::iterator it=messages.begin();
             while (it != messages.end()) {
@@ -784,32 +784,31 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     //Check for back-edges, then perform a topological sort.
     try {
         bool applyLoadOrder = false;
-        long ret;
         do {
-            BOOST_LOG_TRIVIAL(debug) << "Building the plugin dependency graph...";
+            BOOST_LOG_TRIVIAL(info) << "Building the plugin dependency graph...";
 
             //Now add the interactions between plugins to the graph as edges.
-            BOOST_LOG_TRIVIAL(trace) << "Adding non-overlap edges.";
+            BOOST_LOG_TRIVIAL(debug) << "Adding non-overlap edges.";
             AddSpecificEdges(graph);
 
-            BOOST_LOG_TRIVIAL(trace) << "Adding priority edges.";
+            BOOST_LOG_TRIVIAL(debug) << "Adding priority edges.";
             AddPriorityEdges(graph);
 
-            BOOST_LOG_TRIVIAL(trace) << "Adding overlap edges.";
+            BOOST_LOG_TRIVIAL(debug) << "Adding overlap edges.";
             AddOverlapEdges(graph);
 
-            BOOST_LOG_TRIVIAL(debug) << "Checking to see if the graph is cyclic.";
+            BOOST_LOG_TRIVIAL(info) << "Checking to see if the graph is cyclic.";
             loot::CheckForCycles(graph);
 
             progDia->Pulse();
 
-            BOOST_LOG_TRIVIAL(debug) << "Performing a topological sort.";
+            BOOST_LOG_TRIVIAL(info) << "Performing a topological sort.";
             loot::Sort(graph, plugins);
 
             progDia->Destroy();
             progDia = NULL;
 
-            BOOST_LOG_TRIVIAL(debug) << "Displaying load order preview.";
+            BOOST_LOG_TRIVIAL(info) << "Displaying load order preview.";
             MiniEditor editor(this, translate("LOOT: Calculated Load Order"), plugins, *_game);
 
             long ret = editor.ShowModal();
@@ -840,13 +839,13 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                 }
 
                 //Clear all existing edges from the graph.
-                BOOST_LOG_TRIVIAL(trace) << "Clearing all existing edges from the plugin graph.";
+                BOOST_LOG_TRIVIAL(debug) << "Clearing all existing edges from the plugin graph.";
                 for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
                     boost::clear_vertex(*vit, graph);
                 }
 
                 //Merge edits down to the userlist entries.
-                BOOST_LOG_TRIVIAL(trace) << "Merging down edits to the userlist.";
+                BOOST_LOG_TRIVIAL(debug) << "Merging down edits to the userlist.";
                 for (list<loot::Plugin>::const_iterator it = edits.begin(), endit = edits.end(); it != endit; ++it) {
                     list<loot::Plugin>::iterator jt = find(ulist_plugins.begin(), ulist_plugins.end(), *it);
 
@@ -859,7 +858,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                 }
 
                 //Save edits to userlist.
-                BOOST_LOG_TRIVIAL(debug) << "Saving edited userlist.";
+                BOOST_LOG_TRIVIAL(info) << "Saving edited userlist.";
                 YAML::Emitter yout;
                 yout.SetIndent(2);
                 yout << YAML::BeginMap
@@ -884,9 +883,9 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                 BOOST_LOG_TRIVIAL(error) << "Failed to set the load order. Details: " << e.what();
                 messages.push_back(loot::Message(loot::Message::error, (format(loc::translate("Failed to set the load order. Details: %1%")) % e.what()).str()));
             }
-            BOOST_LOG_TRIVIAL(trace) << "Load order set:";
+            BOOST_LOG_TRIVIAL(info) << "Load order set:";
             for (list<loot::Plugin>::iterator it = plugins.begin(), endIt = plugins.end(); it != endIt; ++it) {
-                BOOST_LOG_TRIVIAL(trace) << '\t' << it->Name();
+                BOOST_LOG_TRIVIAL(info) << '\t' << it->Name();
             }
         }
         else {

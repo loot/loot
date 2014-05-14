@@ -150,7 +150,7 @@ namespace loot {
             BOOST_LOG_TRIVIAL(error) << "Unable to open \"" << filename.string() << "\" for CRC calculation.";
             throw error(error::path_read_fail, (boost::format(lc::translate("Unable to open \"%1%\" for CRC calculation.")) % filename.string()).str());
         }
-        BOOST_LOG_TRIVIAL(debug) << "CRC32(\"" << filename.string() << "\"):" << chksum;
+        BOOST_LOG_TRIVIAL(debug) << "CRC32(\"" << filename.string() << "\"): " << std::hex << chksum << std::dec;
         return chksum;
     }
 

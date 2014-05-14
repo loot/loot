@@ -106,7 +106,7 @@ namespace loot {
     Game& Game::SetDetails(const std::string& name, const std::string& masterFile,
         const std::string& repositoryURL, const std::string& repositoryBranch, const std::string& path, const std::string& registry) {
 
-        BOOST_LOG_TRIVIAL(trace) << "Setting new details for game: " << _name;
+        BOOST_LOG_TRIVIAL(info) << "Setting new details for game: " << _name;
 
         if (!name.empty())
             _name = name;
@@ -136,7 +136,7 @@ namespace loot {
     }
 
     Game& Game::Init() {
-        BOOST_LOG_TRIVIAL(trace) << "Initialising filesystem-related data for game: " << _name;
+        BOOST_LOG_TRIVIAL(info) << "Initialising filesystem-related data for game: " << _name;
 
         //First look for local install, then look for Registry.
         if (gamePath.empty() || !fs::exists(gamePath / "Data" / _masterFile)) {
@@ -234,7 +234,7 @@ namespace loot {
     }
 
     void Game::RefreshActivePluginsList() {
-        BOOST_LOG_TRIVIAL(trace) << "Refreshing active plugins list for game: " << _name;
+        BOOST_LOG_TRIVIAL(debug) << "Refreshing active plugins list for game: " << _name;
 
         lo_game_handle gh;
         char ** pluginArr;
@@ -314,7 +314,7 @@ namespace loot {
     }
 
     void Game::GetLoadOrder(std::list<std::string>& loadOrder) const {
-        BOOST_LOG_TRIVIAL(trace) << "Setting load order for game: " << _name;
+        BOOST_LOG_TRIVIAL(debug) << "Getting load order for game: " << _name;
 
         lo_game_handle gh;
         char ** pluginArr;
@@ -391,7 +391,7 @@ namespace loot {
     }
 
     void Game::SetLoadOrder(const std::list<Plugin>& loadOrder) const {
-        BOOST_LOG_TRIVIAL(trace) << "Setting load order for game: " << _name;
+        BOOST_LOG_TRIVIAL(debug) << "Setting load order for game: " << _name;
 
         lo_game_handle gh = NULL;
         char ** pluginArr = NULL;

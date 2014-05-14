@@ -114,7 +114,7 @@ namespace loot {
                 4. Compare the file and blob buffers.
             */
             pointers_struct ptrs;
-            BOOST_LOG_TRIVIAL(trace) << "Existing repository found, attempting to open it.";
+            BOOST_LOG_TRIVIAL(debug) << "Existing repository found, attempting to open it.";
             handle_error(git_repository_open(&ptrs.repo, game.MasterlistPath().parent_path().string().c_str()), ptrs);
 
             BOOST_LOG_TRIVIAL(trace) << "Getting HEAD masterlist object.";
@@ -123,7 +123,7 @@ namespace loot {
             BOOST_LOG_TRIVIAL(trace) << "Getting blob for masterlist object.";
             handle_error(git_blob_lookup(&ptrs.blob, ptrs.repo, git_object_id(ptrs.obj)), ptrs);
 
-            BOOST_LOG_TRIVIAL(trace) << "Opening masterlist in working directory.";
+            BOOST_LOG_TRIVIAL(debug) << "Opening masterlist in working directory.";
             std::string mlist;
             loot::ifstream ifile(game.MasterlistPath().string().c_str(), ios::binary);
             if (ifile.fail())
@@ -135,7 +135,7 @@ namespace loot {
                 back_inserter(mlist)
                 );
 
-            BOOST_LOG_TRIVIAL(trace) << "Comparing files.";
+            BOOST_LOG_TRIVIAL(debug) << "Comparing files.";
             if (are_files_equal(git_blob_rawcontent(ptrs.blob), git_blob_rawsize(ptrs.blob), mlist.data(), mlist.length())) {
                 char revision[10];
                 //Need to get the HEAD object, because the individual file has a different SHA.
@@ -157,7 +157,7 @@ namespace loot {
     std::pair<std::string, std::string> UpdateMasterlist(Game& game, std::list<Message>& parsingErrors, std::list<Plugin>& plugins, std::list<Message>& messages) {
         pointers_struct ptrs;
 
-        BOOST_LOG_TRIVIAL(trace) << "Checking for a Git repository.";
+        BOOST_LOG_TRIVIAL(debug) << "Checking for a Git repository.";
 
         //Checking for a ".git" folder.
         if (fs::exists(game.MasterlistPath().parent_path() / ".git")) {
@@ -175,13 +175,13 @@ namespace loot {
             //Get the remote URL.
             const char * url = git_remote_url(ptrs.remote);
 
-            BOOST_LOG_TRIVIAL(trace) << "Checking to see if remote URL matches URL in settings.";
+            BOOST_LOG_TRIVIAL(info) << "Checking to see if remote URL matches URL in settings.";
 
             //Check if the repo URLs match.
             BOOST_LOG_TRIVIAL(info) << "Remote URL given: " << game.RepoURL();
             BOOST_LOG_TRIVIAL(info) << "Remote URL in repository settings: " << url;
             if (url != game.RepoURL()) {
-                BOOST_LOG_TRIVIAL(trace) << "URLs do not match, setting repository URL to URL in settings.";
+                BOOST_LOG_TRIVIAL(info) << "URLs do not match, setting repository URL to URL in settings.";
                 //The URLs don't match. Change the remote URL to match the one LOOT has.
                 handle_error(git_remote_set_url(ptrs.remote, game.RepoURL().c_str()), ptrs);
 
@@ -246,7 +246,7 @@ namespace loot {
         string revision, date;
         do {
             string filespec = "refs/remotes/origin/" + game.RepoBranch() + "~" + IntToString(rollbacks);
-            BOOST_LOG_TRIVIAL(trace) << "Getting the Git object for the tree at " << filespec;
+            BOOST_LOG_TRIVIAL(info) << "Getting the Git object for the tree at " << filespec;
             handle_error(git_revparse_single(&ptrs.obj, ptrs.repo, filespec.c_str()), ptrs);
 
             BOOST_LOG_TRIVIAL(trace) << "Getting the Git object ID.";
@@ -271,7 +271,7 @@ namespace loot {
             BOOST_LOG_TRIVIAL(trace) << "Performing a Git checkout of HEAD.";
             handle_error(git_checkout_head(ptrs.repo, &opts), ptrs);
 
-            BOOST_LOG_TRIVIAL(trace) << "Tree hash is: " << revision;
+            BOOST_LOG_TRIVIAL(debug) << "Tree hash is: " << revision;
             BOOST_LOG_TRIVIAL(trace) << "Freeing pointers.";
             git_object_free(ptrs.obj);
             git_reference_free(ptrs.ref);
@@ -280,7 +280,7 @@ namespace loot {
             ptrs.ref = NULL;
             ptrs.commit = NULL;
 
-            BOOST_LOG_TRIVIAL(trace) << "Testing masterlist parsing.";
+            BOOST_LOG_TRIVIAL(debug) << "Testing masterlist parsing.";
 
             //Now try parsing the masterlist.
             list<loot::Message> messages;
