@@ -67,7 +67,8 @@ enum {
     BOOK_Lists,
     MENU_CopyName,
     MENU_CopyMetadata,
-    MENU_ClearMetadata,
+    MENU_ClearPluginMetadata,
+    MENU_ClearAllMetadata,
     //Main window - dynamically created IDs.
     MENU_LowestDynamicGameID,
     LIST_LoadOrder,

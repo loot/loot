@@ -119,6 +119,7 @@ public:
     void OnPluginCopyName(wxCommandEvent& event);
     void OnPluginCopyMetadata(wxCommandEvent& event);
     void OnPluginClearMetadata(wxCommandEvent& event);
+    void OnClearAllMetadata(wxCommandEvent& event);
     void OnListBookChange(wxBookCtrlEvent& event);
     void OnAddRow(wxCommandEvent& event);
     void OnEditRow(wxCommandEvent& event);

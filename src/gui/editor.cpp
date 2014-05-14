@@ -571,9 +571,11 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     dirtyList->AppendColumn(translate("Cleaning Utility"));
 
     //Set up plugin right-click menu.
-    pluginMenu->Append(MENU_CopyName, translate("Copy Name"));
-    pluginMenu->Append(MENU_CopyMetadata, translate("Copy Metadata As Text"));
-    pluginMenu->Append(MENU_ClearMetadata, translate("Remove All User-Added Metadata"));
+    pluginMenu->Append(MENU_CopyName, translate("Copy Plugin Name"));
+    pluginMenu->Append(MENU_CopyMetadata, translate("Copy Plugin Metadata As Text"));
+    pluginMenu->Append(MENU_ClearPluginMetadata, translate("Remove Plugin User-Added Metadata"));
+    pluginMenu->AppendSeparator();
+    pluginMenu->Append(MENU_ClearAllMetadata, translate("Remove All User-Added Metadata"));
 
     //Initialise control states.
     addBtn->Enable(false);
@@ -605,7 +607,8 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     Bind(wxEVT_LIST_ITEM_RIGHT_CLICK, &Editor::OnPluginListRightClick, this);
     Bind(wxEVT_MENU, &Editor::OnPluginCopyName, this, MENU_CopyName);
     Bind(wxEVT_MENU, &Editor::OnPluginCopyMetadata, this, MENU_CopyMetadata);
-    Bind(wxEVT_MENU, &Editor::OnPluginClearMetadata, this, MENU_ClearMetadata);
+    Bind(wxEVT_MENU, &Editor::OnPluginClearMetadata, this, MENU_ClearPluginMetadata);
+    Bind(wxEVT_MENU, &Editor::OnClearAllMetadata, this, MENU_ClearAllMetadata);
 
     //Set up tooltips.
     pluginList->SetToolTip(translate("Select a plugin to edit its load order metadata."));
@@ -875,6 +878,27 @@ void Editor::OnPluginClearMetadata(wxCommandEvent& event) {
         pluginList->Select(i, false);
         pluginList->Select(i, true);
         pluginList->SetItemFont(i, wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT));
+    }
+}
+
+void Editor::OnClearAllMetadata(wxCommandEvent& event) {
+    wxMessageDialog dialog(this,
+        translate("Are you sure you want to clear all existing user-added metadata from all plugins?"),
+        translate("LOOT: Warning"),
+        wxYES_NO | wxCANCEL | wxICON_EXCLAMATION);
+
+    if (dialog.ShowModal() == wxID_YES) {
+        //Delete all existing userlist entries.
+        _editedPlugins.clear();
+
+        //Also clear any unapplied data. Easiest way to do this is to simulate loading the plugin's data again.
+        pluginText->SetLabelText("");
+        long i = pluginList->GetFirstSelected();
+        pluginList->Select(i, false);
+        pluginList->Select(i, true);
+        for (int i = 0, max = pluginList->GetItemCount(); i < max; ++i) {
+            pluginList->SetItemFont(i, wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT));
+        }
     }
 }
 
