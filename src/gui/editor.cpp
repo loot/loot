@@ -636,7 +636,7 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     //Set up layout.
     wxBoxSizer * bigBox = new wxBoxSizer(wxHORIZONTAL);
 
-    bigBox->Add(pluginList, 1, wxEXPAND | wxALL, 10);
+    bigBox->Add(pluginList, 0, wxEXPAND | wxALL, 10);
 
     wxBoxSizer * mainBox = new wxBoxSizer(wxVERTICAL);
 
@@ -691,7 +691,7 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     hbox6->Add(cancelBtn, 0, wxLEFT, 5);
     mainBox->Add(hbox6, 0, wxALIGN_RIGHT);
 
-    bigBox->Add(mainBox, 2, wxEXPAND|wxTOP|wxBOTTOM|wxRIGHT, 10);
+    bigBox->Add(mainBox, 1, wxEXPAND|wxTOP|wxBOTTOM|wxRIGHT, 10);
 
     //Fill pluginList with the contents of basePlugins.
     int i = 0;
@@ -846,7 +846,10 @@ void Editor::OnPluginSelect(wxListEvent& event) {
         editBtn->Enable(false);
         removeBtn->Enable(false);
     }
-    Fit();
+    InvalidateBestSize();  //Makes the priority column visible without scrolling.
+    if (GetBestSize().GetHeight() > GetSize().GetHeight() || GetBestSize().GetWidth() > GetSize().GetWidth()) {
+        Fit();
+    }
 }
 
 void Editor::OnPluginListRightClick(wxListEvent& event) {
