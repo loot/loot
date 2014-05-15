@@ -54,11 +54,11 @@
 
 class TextDropTarget : public wxTextDropTarget {  //Class to override virtual functions.
 public:
-    TextDropTarget(wxListView * owner, wxStaticText * name);
+    TextDropTarget(wxListView * owner, wxControl * name);
     virtual bool OnDropText(wxCoord x, wxCoord y, const wxString &data);
 private:
     wxListView * targetOwner;
-    wxStaticText * targetName;
+    wxControl * targetName;
 };
 
 class CommonEditor {
@@ -125,6 +125,8 @@ public:
     void OnEditRow(wxCommandEvent& event);
     void OnRemoveRow(wxCommandEvent& event);
     void OnRowSelect(wxListEvent& event);
+    void OnFilterToggle(wxCommandEvent& event);
+    void OnDragStart(wxListEvent& event);
     void OnQuit(wxCommandEvent& event);
 private:
     wxMenu * pluginMenu;
@@ -142,9 +144,9 @@ private:
     wxListView * dirtyList;
     wxNotebook * listBook;
     wxCheckBox * priorityCheckbox;
-    wxCheckBox * enableUserEditsBox;
     wxSpinCtrl * prioritySpin;
-    wxStaticText * pluginText;
+    wxCheckBox * pluginCheckbox;
+    wxCheckBox * filterCheckbox;
 
     const std::string _userlistPath;
 

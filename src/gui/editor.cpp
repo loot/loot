@@ -41,7 +41,7 @@ using namespace std;
 // TextDropTarget class
 //////////////////////////////
 
-TextDropTarget::TextDropTarget(wxListView * owner, wxStaticText * name) : targetOwner(owner), targetName(name) {}
+TextDropTarget::TextDropTarget(wxListView * owner, wxControl * name) : targetOwner(owner), targetName(name) {}
 
 bool TextDropTarget::OnDropText(wxCoord x, wxCoord y, const wxString &data) {
     if (data == targetName->GetLabelText() || targetOwner->FindItem(-1, data) != wxNOT_FOUND)
@@ -515,11 +515,11 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     wxPanel * dirtyTab = new wxPanel(listBook);
 
     //Initialise controls.
-    pluginText = new wxStaticText(this, wxID_ANY, "");
     prioritySpin = new wxSpinCtrl(this, wxID_ANY, "0");
     prioritySpin->SetRange(-999999, 999999);
     priorityCheckbox = new wxCheckBox(this, wxID_ANY, translate("Compare priority against all other plugins"));
-    enableUserEditsBox = new wxCheckBox(this, wxID_ANY, translate("Enable User Changes"));
+    pluginCheckbox = new wxCheckBox(this, wxID_ANY, "");
+    filterCheckbox = new wxCheckBox(this, CHECKBOX_Filter, translate("Show only conflicting plugins"));
 
     addBtn = new wxButton(this, BUTTON_AddRow, translate("Add File"));
     editBtn = new wxButton(this, BUTTON_EditRow, translate("Edit File"));
@@ -546,6 +546,7 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     listBook->AddPage(dirtyTab, translate("Dirty Info"));
 
     //Set up list columns.
+    pluginList->AppendColumn(translate("User Metadata Enabled"));
     pluginList->AppendColumn(translate("Plugins"));
 
     reqsList->AppendColumn(translate("Filename"));
@@ -583,12 +584,13 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     removeBtn->Enable(false);
     prioritySpin->Enable(false);
     priorityCheckbox->Enable(false);
-    enableUserEditsBox->Enable(false);
+    pluginCheckbox->Enable(false);
+    filterCheckbox->Enable(false);
 
     //Make plugin name bold text.
-    wxFont font = pluginText->GetFont();
+    wxFont font = pluginCheckbox->GetFont();
     font.SetWeight(wxFONTWEIGHT_BOLD);
-    pluginText->SetFont(font);
+    pluginCheckbox->SetFont(font);
 
     //Set up event handling.
     Bind(wxEVT_LIST_ITEM_SELECTED, &Editor::OnPluginSelect, this, LIST_Plugins);
@@ -609,27 +611,38 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     Bind(wxEVT_MENU, &Editor::OnPluginCopyMetadata, this, MENU_CopyMetadata);
     Bind(wxEVT_MENU, &Editor::OnPluginClearMetadata, this, MENU_ClearPluginMetadata);
     Bind(wxEVT_MENU, &Editor::OnClearAllMetadata, this, MENU_ClearAllMetadata);
+    Bind(wxEVT_LIST_BEGIN_DRAG, &Editor::OnDragStart, this, LIST_Plugins);
+    Bind(wxEVT_CHECKBOX, &Editor::OnFilterToggle, this, CHECKBOX_Filter);
+
+    //Set up drag 'n' drop.
+    reqsList->SetDropTarget(new TextDropTarget(reqsList, pluginCheckbox));
+    incsList->SetDropTarget(new TextDropTarget(incsList, pluginCheckbox));
+    loadAfterList->SetDropTarget(new TextDropTarget(loadAfterList, pluginCheckbox));
 
     //Set up tooltips.
     pluginList->SetToolTip(translate("Select a plugin to edit its load order metadata."));
+    reqsList->SetToolTip(translate("Drag and drop a plugin here to add it to the list. The \"Show only conflicting plugins\" checkbox must be checked."));
+    incsList->SetToolTip(translate("Drag and drop a plugin here to add it to the list. The \"Show only conflicting plugins\" checkbox must be checked."));
+    loadAfterList->SetToolTip(translate("Drag and drop a plugin here to make the selected plugin load after it. The \"Show only conflicting plugins\" checkbox must be checked."));
     prioritySpin->SetToolTip(translate("Plugins with higher priorities will load after plugins with smaller priorities that they conflict with, unless one must explicitly load after the other."));
-    enableUserEditsBox->SetToolTip(translate("If unchecked, any user-added metadata will be ignored during sorting."));
+    pluginCheckbox->SetToolTip(translate("If unchecked, any user-added metadata will be ignored during sorting."));
     editBtn->SetToolTip(translate("Only user-added data may be removed."));
     removeBtn->SetToolTip(translate("Only user-added data may be removed."));
     priorityCheckbox->SetToolTip(translate("Otherwise, priorities are only compared between conflicting plugins."));
+    filterCheckbox->SetToolTip(translate("Filters the plugin list to only display plugins which can be loaded after the currently selected plugin, and which either conflict with it, or, if it loads a BSA, also load BSAs. Also enables drag and drop of plugins into the Load After box."));
 
     //Set up layout.
     wxBoxSizer * bigBox = new wxBoxSizer(wxHORIZONTAL);
 
-    bigBox->Add(pluginList, 1, wxEXPAND|wxALL, 10);
+    bigBox->Add(pluginList, 1, wxEXPAND | wxALL, 10);
 
     wxBoxSizer * mainBox = new wxBoxSizer(wxVERTICAL);
 
-    mainBox->Add(pluginText, 0, wxTOP|wxBOTTOM, 10);
+    mainBox->Add(pluginCheckbox, 0, wxTOP | wxBOTTOM | wxEXPAND, 10);
 
 
     wxBoxSizer * hbox1 = new wxBoxSizer(wxHORIZONTAL);
-    hbox1->Add(enableUserEditsBox, 0, wxALIGN_LEFT|wxRIGHT, 10);
+    hbox1->Add(filterCheckbox, 0, wxALIGN_LEFT|wxRIGHT, 10);
     hbox1->AddStretchSpacer(1);
     hbox1->Add(new wxStaticText(this, wxID_ANY, translate("Priority: ")), 0, wxALIGN_RIGHT|wxLEFT|wxRIGHT, 5);
     hbox1->Add(prioritySpin, 0, wxALIGN_RIGHT);
@@ -681,16 +694,23 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     //Fill pluginList with the contents of basePlugins.
     int i = 0;
     for (list<loot::Plugin>::const_iterator it = _basePlugins.begin(); it != _basePlugins.end(); ++it) {
-        pluginList->InsertItem(i, FromUTF8(it->Name()));
+        loot::Plugin userEdits = GetUserData(it->Name());
+        if (!userEdits.HasNameOnly()) {
+            if (userEdits.Enabled())
+                pluginList->InsertItem(i, FromUTF8("\xE2\x9C\x93"));
+            else
+                pluginList->InsertItem(i, FromUTF8("\xE2\x9C\x97"));
+        } else
+            pluginList->InsertItem(i, "");
+
+        pluginList->SetItem(i, 1, FromUTF8(it->Name()));
         if (it->LoadsBSA(_game)) {
             pluginList->SetItemTextColour(i, wxColour(0, 142, 219));
-        }
-        if (std::find(_editedPlugins.begin(), _editedPlugins.end(), *it) != _editedPlugins.end()) {
-            pluginList->SetItemFont(i, wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT).Bold());
         }
         ++i;
     }
     pluginList->SetColumnWidth(0, wxLIST_AUTOSIZE);
+    pluginList->SetColumnWidth(1, wxLIST_AUTOSIZE);
 
     SetBackgroundColour(wxColour(255,255,255));
     SetIcon(wxIconLocation("LOOT.exe"));
@@ -701,16 +721,25 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
 
 void Editor::OnPluginSelect(wxListEvent& event) {
     //Create Plugin object for selected plugin.
-    wxString selectedPlugin = pluginList->GetItemText(event.GetIndex());
-    wxString currentPlugin = pluginText->GetLabelText();
+    wxString selectedPlugin = pluginList->GetItemText(event.GetIndex(), 1);
+    wxString currentPlugin = pluginCheckbox->GetLabelText();
 
     //Check if the selected plugin is the same as the current plugin.
     if (selectedPlugin != currentPlugin) {
         BOOST_LOG_TRIVIAL(debug) << "User selected plugin: " << selectedPlugin.ToUTF8();
 
         //Apply any current edits.
-        if (!currentPlugin.empty())
+        if (!currentPlugin.empty()) {
             ApplyEdits(currentPlugin, pluginList);
+            //Also update plugin list UI.
+            loot::Plugin userEdits = GetUserData(currentPlugin);
+            if (!userEdits.HasNameOnly()) {
+                if (userEdits.Enabled())
+                    pluginList->SetItem(pluginList->FindItem(-1, currentPlugin), 0, FromUTF8("\xE2\x9C\x93"));
+                else
+                    pluginList->SetItem(pluginList->FindItem(-1, currentPlugin), 0, FromUTF8("\xE2\x9C\x97"));
+            }
+        }
 
         //Merge metadata.
         loot::Plugin plugin = GetMasterData(selectedPlugin);
@@ -718,7 +747,7 @@ void Editor::OnPluginSelect(wxListEvent& event) {
 
         //Now fill editor fields with new plugin's info and update control states.
         BOOST_LOG_TRIVIAL(debug) << "Filling editor fields with plugin info.";
-        pluginText->SetLabelText(FromUTF8(plugin.Name()));
+        pluginCheckbox->SetLabelText(FromUTF8(plugin.Name()));
 
         prioritySpin->SetValue(loot::modulo(plugin.Priority(), loot::max_priority));
 
@@ -727,7 +756,7 @@ void Editor::OnPluginSelect(wxListEvent& event) {
         else
             priorityCheckbox->SetValue(false);
 
-        enableUserEditsBox->SetValue(plugin.Enabled());
+        pluginCheckbox->SetValue(plugin.Enabled());
 
         loadAfterList->DeleteAllItems();
         reqsList->DeleteAllItems();
@@ -813,7 +842,8 @@ void Editor::OnPluginSelect(wxListEvent& event) {
         //Set control states.
         prioritySpin->Enable(true);
         priorityCheckbox->Enable(true);
-        enableUserEditsBox->Enable(true);
+        pluginCheckbox->Enable(true);
+        filterCheckbox->Enable(true);
         addBtn->Enable(true);
         editBtn->Enable(false);
         removeBtn->Enable(false);
@@ -827,13 +857,13 @@ void Editor::OnPluginListRightClick(wxListEvent& event) {
 
 void Editor::OnPluginCopyName(wxCommandEvent& event) {
     if (wxTheClipboard->Open()) {
-        wxTheClipboard->SetData(new wxTextDataObject(pluginList->GetItemText(pluginList->GetFirstSelected())));
+        wxTheClipboard->SetData(new wxTextDataObject(pluginList->GetItemText(pluginList->GetFirstSelected(), 1)));
         wxTheClipboard->Close();
     }
 }
 
 void Editor::OnPluginCopyMetadata(wxCommandEvent& event) {
-    wxString selectedPlugin = pluginList->GetItemText(pluginList->GetFirstSelected());
+    wxString selectedPlugin = pluginList->GetItemText(pluginList->GetFirstSelected(), 1);
     loot::Plugin plugin = GetUserData(selectedPlugin);
 
     string text;
@@ -862,7 +892,7 @@ void Editor::OnPluginClearMetadata(wxCommandEvent& event) {
 
     if (dialog.ShowModal() == wxID_YES) {
         long i = pluginList->GetFirstSelected();
-        wxString selectedPlugin = pluginList->GetItemText(i);
+        wxString selectedPlugin = pluginList->GetItemText(i, 1);
         loot::Plugin p(string(selectedPlugin.ToUTF8()));
 
         //Need to clear what's currently in the editor and what's from the userlist.
@@ -874,7 +904,7 @@ void Editor::OnPluginClearMetadata(wxCommandEvent& event) {
             _editedPlugins.erase(it);
 
         //Also clear any unapplied data. Easiest way to do this is to simulate loading the plugin's data again.
-        pluginText->SetLabelText("");
+        pluginCheckbox->SetLabelText("");
         pluginList->Select(i, false);
         pluginList->Select(i, true);
         pluginList->SetItemFont(i, wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT));
@@ -892,7 +922,7 @@ void Editor::OnClearAllMetadata(wxCommandEvent& event) {
         _editedPlugins.clear();
 
         //Also clear any unapplied data. Easiest way to do this is to simulate loading the plugin's data again.
-        pluginText->SetLabelText("");
+        pluginCheckbox->SetLabelText("");
         long i = pluginList->GetFirstSelected();
         pluginList->Select(i, false);
         pluginList->Select(i, true);
@@ -1135,7 +1165,7 @@ void Editor::OnRowSelect(wxListEvent& event) {
 
         //Create File object, search the masterlist vector for the plugin and search its reqs for this object.
         loot::File file = RowToFile(reqsList, event.GetIndex());
-        loot::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
+        loot::Plugin plugin(string(pluginCheckbox->GetLabelText().ToUTF8()));
 
         list<loot::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
 
@@ -1159,7 +1189,7 @@ void Editor::OnRowSelect(wxListEvent& event) {
     } else if (event.GetId() == LIST_Incs) {
 
         loot::File file = RowToFile(incsList, event.GetIndex());
-        loot::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
+        loot::Plugin plugin(string(pluginCheckbox->GetLabelText().ToUTF8()));
 
         list<loot::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
 
@@ -1183,7 +1213,7 @@ void Editor::OnRowSelect(wxListEvent& event) {
     } else if (event.GetId() == LIST_LoadAfter) {
 
         loot::File file = RowToFile(loadAfterList, event.GetIndex());
-        loot::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
+        loot::Plugin plugin(string(pluginCheckbox->GetLabelText().ToUTF8()));
 
         list<loot::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
 
@@ -1207,7 +1237,7 @@ void Editor::OnRowSelect(wxListEvent& event) {
     } else if (event.GetId() == LIST_Messages) {
 
         loot::Message message = messageList->GetItem(event.GetIndex());
-        loot::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
+        loot::Plugin plugin(string(pluginCheckbox->GetLabelText().ToUTF8()));
 
         list<loot::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
 
@@ -1231,7 +1261,7 @@ void Editor::OnRowSelect(wxListEvent& event) {
     } else if (event.GetId() == LIST_BashTags) {
 
         loot::Tag tag = RowToTag(tagsList, event.GetIndex());
-        loot::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
+        loot::Plugin plugin(string(pluginCheckbox->GetLabelText().ToUTF8()));
 
         list<loot::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
 
@@ -1254,7 +1284,7 @@ void Editor::OnRowSelect(wxListEvent& event) {
 
     } else {
         loot::PluginDirtyInfo dirtyData = RowToPluginDirtyInfo(dirtyList, event.GetIndex());
-        loot::Plugin plugin(string(pluginText->GetLabelText().ToUTF8()));
+        loot::Plugin plugin(string(pluginCheckbox->GetLabelText().ToUTF8()));
 
         list<loot::Plugin>::const_iterator it = std::find(_basePlugins.begin(), _basePlugins.end(), plugin);
 
@@ -1282,7 +1312,7 @@ void Editor::OnQuit(wxCommandEvent& event) {
     if (event.GetId() == BUTTON_Apply) {
 
         //Apply any current edits.
-        wxString currentPlugin = pluginText->GetLabelText();
+        wxString currentPlugin = pluginCheckbox->GetLabelText();
         if (!currentPlugin.empty())
             ApplyEdits(currentPlugin, pluginList);
 
@@ -1307,7 +1337,7 @@ loot::Plugin Editor::GetNewData(const wxString& plugin) const {
     BOOST_LOG_TRIVIAL(debug) << "Getting metadata from editor fields for plugin: " << plugin.ToUTF8();
     loot::Plugin p(string(plugin.ToUTF8()));
 
-    p.Enabled(enableUserEditsBox->IsChecked());
+    p.Enabled(pluginCheckbox->IsChecked());
 
     int priority = prioritySpin->GetValue();
     if (priorityCheckbox->IsChecked()) {
@@ -1353,4 +1383,88 @@ loot::Plugin Editor::GetNewData(const wxString& plugin) const {
     p.Messages(messages);
 
     return p;
+}
+
+void Editor::OnFilterToggle(wxCommandEvent& event) {
+    //First need to merge the base and edited plugin lists so that the right priority values get displayed.
+
+    list<loot::Plugin> plugins(_basePlugins);
+    for (list<loot::Plugin>::const_iterator it = _editedPlugins.begin(); it != _editedPlugins.end(); ++it) {
+        list<loot::Plugin>::iterator pos = std::find(plugins.begin(), plugins.end(), *it);
+        pos->MergeMetadata(*it);
+    }
+
+    //Disable list selection.
+    if (event.IsChecked())
+        Unbind(wxEVT_LIST_ITEM_SELECTED, &Editor::OnPluginSelect, this, LIST_Plugins);
+    else
+        Bind(wxEVT_LIST_ITEM_SELECTED, &Editor::OnPluginSelect, this, LIST_Plugins);
+
+    pluginList->Freeze();
+    if (event.IsChecked()) {
+        loot::Plugin plugin(string(pluginCheckbox->GetLabelText().ToUTF8()));
+        list<loot::Plugin>::const_iterator pos = std::find(plugins.begin(), plugins.end(), plugin);
+
+        if (pos != plugins.end()) {
+            pluginList->DeleteAllItems();
+
+            bool loadsBSA = pos->LoadsBSA(_game);
+
+            int i = 0;
+            for (list<loot::Plugin>::const_iterator it = plugins.begin(); it != plugins.end(); ++it) {
+                //Want to filter to show only those the selected plugin can load after validly, and which also either conflict with it,
+                //or which load a BSA (if the selected plugin loads a BSA).
+                if (*it == *pos || !it->MustLoadAfter(*pos) && (pos->DoFormIDsOverlap(*it) || (loadsBSA && it->LoadsBSA(_game)))) {
+                    loot::Plugin userEdits = GetUserData(it->Name());
+                    if (!userEdits.HasNameOnly()) {
+                        if (userEdits.Enabled())
+                            pluginList->InsertItem(i, FromUTF8("\xE2\x9C\x93"));
+                        else
+                            pluginList->InsertItem(i, FromUTF8("\xE2\x9C\x97"));
+                    }
+                    else
+                        pluginList->InsertItem(i, "");
+
+                    pluginList->SetItem(i, 1, FromUTF8(it->Name()));
+                    if (it->LoadsBSA(_game)) {
+                        pluginList->SetItemTextColour(i, wxColour(0, 142, 219));
+                    }
+                    ++i;
+                }
+            }
+        }
+    }
+    else {
+        pluginList->DeleteAllItems();
+        int i = 0;
+        for (list<loot::Plugin>::const_iterator it = plugins.begin(); it != plugins.end(); ++it) {
+            loot::Plugin userEdits = GetUserData(it->Name());
+            if (!userEdits.HasNameOnly()) {
+                if (userEdits.Enabled())
+                    pluginList->InsertItem(i, FromUTF8("\xE2\x9C\x93"));
+                else
+                    pluginList->InsertItem(i, FromUTF8("\xE2\x9C\x97"));
+            }
+            else
+                pluginList->InsertItem(i, "");
+
+            pluginList->SetItem(i, 1, FromUTF8(it->Name()));
+            if (it->LoadsBSA(_game)) {
+                pluginList->SetItemTextColour(i, wxColour(0, 142, 219));
+            }
+            ++i;
+        }
+    }
+
+    //Now re-select the current plugin in the list.
+    pluginList->Select(pluginList->FindItem(-1, pluginCheckbox->GetLabelText()));
+    pluginList->Thaw();
+    Refresh();
+}
+
+void Editor::OnDragStart(wxListEvent& event) {
+    wxTextDataObject data(pluginList->GetItemText(event.GetItem(), 1));
+    wxDropSource dropSource(pluginList);
+    dropSource.SetData(data);
+    wxDragResult result = dropSource.DoDragDrop();
 }
