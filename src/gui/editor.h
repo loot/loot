@@ -151,5 +151,6 @@ private:
     const std::string _userlistPath;
 
     loot::Plugin GetNewData(const wxString& plugin) const;
+    void AddPluginToList(const loot::Plugin& plugin, int position);
 };
 #endif

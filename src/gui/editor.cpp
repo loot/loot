@@ -547,7 +547,9 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
 
     //Set up list columns.
     pluginList->AppendColumn(translate("User Metadata Enabled"));
-    pluginList->AppendColumn(translate("Plugins"));
+    pluginList->AppendColumn(translate("Plugin Name"));
+    pluginList->AppendColumn(translate("Priority"));
+    pluginList->AppendColumn(translate("Global Priority"));
 
     reqsList->AppendColumn(translate("Filename"));
     reqsList->AppendColumn(translate("Display Name"));
@@ -694,23 +696,13 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     //Fill pluginList with the contents of basePlugins.
     int i = 0;
     for (list<loot::Plugin>::const_iterator it = _basePlugins.begin(); it != _basePlugins.end(); ++it) {
-        loot::Plugin userEdits = GetUserData(it->Name());
-        if (!userEdits.HasNameOnly()) {
-            if (userEdits.Enabled())
-                pluginList->InsertItem(i, FromUTF8("\xE2\x9C\x93"));
-            else
-                pluginList->InsertItem(i, FromUTF8("\xE2\x9C\x97"));
-        } else
-            pluginList->InsertItem(i, "");
-
-        pluginList->SetItem(i, 1, FromUTF8(it->Name()));
-        if (it->LoadsBSA(_game)) {
-            pluginList->SetItemTextColour(i, wxColour(0, 142, 219));
-        }
+        AddPluginToList(*it, i);
         ++i;
     }
     pluginList->SetColumnWidth(0, wxLIST_AUTOSIZE);
     pluginList->SetColumnWidth(1, wxLIST_AUTOSIZE);
+    pluginList->SetColumnWidth(2, wxLIST_AUTOSIZE_USEHEADER);
+    pluginList->SetColumnWidth(3, wxLIST_AUTOSIZE_USEHEADER);
 
     SetBackgroundColour(wxColour(255,255,255));
     SetIcon(wxIconLocation("LOOT.exe"));
@@ -739,6 +731,12 @@ void Editor::OnPluginSelect(wxListEvent& event) {
                 else
                     pluginList->SetItem(pluginList->FindItem(-1, currentPlugin), 0, FromUTF8("\xE2\x9C\x97"));
             }
+            //Also update the item's priority value in the plugins list in case it has changed.
+            pluginList->SetItem(pluginList->FindItem(-1, currentPlugin), 2, FromUTF8(loot::IntToString(prioritySpin->GetValue())));
+            if (priorityCheckbox->IsChecked())
+                pluginList->SetItem(pluginList->FindItem(-1, currentPlugin), 3, FromUTF8("\xE2\x9C\x93"));
+            else
+                pluginList->SetItem(pluginList->FindItem(-1, currentPlugin), 3, FromUTF8("\xE2\x9C\x97"));
         }
 
         //Merge metadata.
@@ -1415,20 +1413,7 @@ void Editor::OnFilterToggle(wxCommandEvent& event) {
                 //Want to filter to show only those the selected plugin can load after validly, and which also either conflict with it,
                 //or which load a BSA (if the selected plugin loads a BSA).
                 if (*it == *pos || !it->MustLoadAfter(*pos) && (pos->DoFormIDsOverlap(*it) || (loadsBSA && it->LoadsBSA(_game)))) {
-                    loot::Plugin userEdits = GetUserData(it->Name());
-                    if (!userEdits.HasNameOnly()) {
-                        if (userEdits.Enabled())
-                            pluginList->InsertItem(i, FromUTF8("\xE2\x9C\x93"));
-                        else
-                            pluginList->InsertItem(i, FromUTF8("\xE2\x9C\x97"));
-                    }
-                    else
-                        pluginList->InsertItem(i, "");
-
-                    pluginList->SetItem(i, 1, FromUTF8(it->Name()));
-                    if (it->LoadsBSA(_game)) {
-                        pluginList->SetItemTextColour(i, wxColour(0, 142, 219));
-                    }
+                    AddPluginToList(*it, i);
                     ++i;
                 }
             }
@@ -1438,20 +1423,7 @@ void Editor::OnFilterToggle(wxCommandEvent& event) {
         pluginList->DeleteAllItems();
         int i = 0;
         for (list<loot::Plugin>::const_iterator it = plugins.begin(); it != plugins.end(); ++it) {
-            loot::Plugin userEdits = GetUserData(it->Name());
-            if (!userEdits.HasNameOnly()) {
-                if (userEdits.Enabled())
-                    pluginList->InsertItem(i, FromUTF8("\xE2\x9C\x93"));
-                else
-                    pluginList->InsertItem(i, FromUTF8("\xE2\x9C\x97"));
-            }
-            else
-                pluginList->InsertItem(i, "");
-
-            pluginList->SetItem(i, 1, FromUTF8(it->Name()));
-            if (it->LoadsBSA(_game)) {
-                pluginList->SetItemTextColour(i, wxColour(0, 142, 219));
-            }
+            AddPluginToList(*it, i);
             ++i;
         }
     }
@@ -1467,4 +1439,26 @@ void Editor::OnDragStart(wxListEvent& event) {
     wxDropSource dropSource(pluginList);
     dropSource.SetData(data);
     wxDragResult result = dropSource.DoDragDrop();
+}
+
+void Editor::AddPluginToList(const loot::Plugin& plugin, int position) {
+    loot::Plugin userEdits = GetUserData(plugin.Name());
+    if (!userEdits.HasNameOnly()) {
+        if (userEdits.Enabled())
+            pluginList->InsertItem(position, FromUTF8("\xE2\x9C\x93"));
+        else
+            pluginList->InsertItem(position, FromUTF8("\xE2\x9C\x97"));
+    }
+    else
+        pluginList->InsertItem(position, "");
+
+    pluginList->SetItem(position, 1, FromUTF8(plugin.Name()));
+    pluginList->SetItem(position, 2, FromUTF8(loot::IntToString(loot::modulo(plugin.Priority(), loot::max_priority))));
+    if (abs(plugin.Priority()) >= loot::max_priority)
+        pluginList->SetItem(position, 3, FromUTF8("\xE2\x9C\x93"));
+    else
+        pluginList->SetItem(position, 3, FromUTF8("\xE2\x9C\x97"));
+    if (plugin.LoadsBSA(_game)) {
+        pluginList->SetItemTextColour(position, wxColour(0, 142, 219));
+    }
 }
