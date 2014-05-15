@@ -60,6 +60,7 @@
 #include <wx/snglinst.h>
 #include <wx/aboutdlg.h>
 #include <wx/progdlg.h>
+#include <wx/cmdline.h>
 
 wxIMPLEMENT_APP(LOOT);
 
@@ -259,6 +260,7 @@ bool LOOT::OnInit() {
                 boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::trace);  //Log everything.
         }
     }
+    BOOST_LOG_TRIVIAL(info) << "LOOT Version" << g_version_major << "." << g_version_minor << "." << g_version_patch;
 
 
     //Set the locale to get encoding and language conversions working correctly.
@@ -350,10 +352,37 @@ bool LOOT::OnInit() {
     BOOST_LOG_TRIVIAL(debug) << "Selecting game.";
     string target;
     int gameIndex = -1;
-    if (_settings["Game"] && _settings["Game"].as<string>() != "auto")
-        target = _settings["Game"].as<string>();
-    else if (_settings["Last Game"] && _settings["Last Game"].as<string>() != "auto")
-        target = _settings["Last Game"].as<string>();
+
+    wxCmdLineEntryDesc cmdLineDesc[2];
+    cmdLineDesc[0].kind = wxCMD_LINE_OPTION;
+    cmdLineDesc[0].shortName = "g";
+    cmdLineDesc[0].longName = "game";
+    cmdLineDesc[0].description = "The folder name of the game to run for.";
+    cmdLineDesc[0].type = wxCMD_LINE_VAL_STRING;
+    cmdLineDesc[0].flags = wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR;
+    cmdLineDesc[1].kind = wxCMD_LINE_NONE;
+
+    wxCmdLineParser parser(cmdLineDesc, argc, argv);
+    wxString value;
+    switch (parser.Parse()) {
+    case -1:
+        BOOST_LOG_TRIVIAL(info) << "Help was given.";
+        break;
+    case 0:
+        if (parser.Found("game", &value))
+            target = value.ToUTF8();
+        break;
+    default:
+        BOOST_LOG_TRIVIAL(error) << "A command line syntax error was detected.";
+        break;
+    }
+
+    if (target.empty()) {
+        if (_settings["Game"] && _settings["Game"].as<string>() != "auto")
+            target = _settings["Game"].as<string>();
+        else if (_settings["Last Game"] && _settings["Last Game"].as<string>() != "auto")
+            target = _settings["Last Game"].as<string>();
+    }
 
     if (!target.empty()) {
         for (size_t i=0, max=_games.size(); i < max; ++i) {
