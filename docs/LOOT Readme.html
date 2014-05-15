@@ -122,11 +122,8 @@ h3{
 
 <h2 id="install">Installation &amp; Uninstallation</h2>
 
-<p>LOOT can be installed either using its automated installer or manually. To install LOOT manually:
-<ol>
-    <li>Install the <a href="http://www.microsoft.com/en-gb/download/details.aspx?id=40784">Visual C++ Redistributable for Visual Studio 2013 (x86)</a>.
-    <li>Extract the downloaded archive to a location of your choice.
-</ol>
+<p>LOOT can be installed either using its automated installer or manually. To install LOOT manually, extract the downloaded archive to a location of your choice.
+
 <p>If LOOT was installed using the installer, then use the uninstaller linked to in the Start Menu to uninstall LOOT. If LOOT was installed manually:
 <ol>
     <li>Delete the files you extracted from the location you chose.
@@ -135,7 +132,9 @@ h3{
 
 
 <h2 id="usage">Using LOOT</h2>
-<p>When LOOT is run, it will attempt to detect which of the supported games are installed, and set itself to run for the first game detected, unless a <a href="#settingsDefaultGame">default game</a> has been set, in which case it will set itself to run for that game. Once a game has been set, the main window will be displayed.
+<p>When LOOT is run, it will attempt to detect which of the supported games are installed. If a <a href="#settingsDefaultGame">default game</a> has been set, LOOT will run for it, otherwise it will run for the same game as it last ran for. If the relevant game cannot be detected, if there is no record of the last game LOOT ran for, it will run for the first detected game.
+<p>LOOT can also be launched with the <code>LOOT.exe [--game=&lt;game folder name&gt;]</code> command line parameter to set the game to run for. If the supplied game folder name is valid, the default and last game values are ignored. The default folder names are <code>Oblivion</code>, <code>Skyrim</code>, <code>Fallout3</code> and <code>FalloutNV</code>.
+<p>Once a game has been set, the main window will be displayed.
 <figure>
     <img alt="LOOT's main window" src="images/main.png">
     <figcaption>LOOT's main window. The title bar displays which game LOOT is running for.</figcaption>
@@ -182,9 +181,10 @@ Clicking on a plugin in the list will display the editing panel, where its load 
 <ul>
     <li><i>Hide Version Numbers</i>: Hides the version numbers printed in blue next to those plugins that provide them.
     <li><i>Hide CRCs</i>: Hides the CRCs printed in orange next to those plugins that provide them.
-    <li><i>Hide Notes</i>: Hides all messages attached to plugins that have the <i>Note:</i> prefix.
+    <li><i>Hide Notes</i>: Hides all plugin messages that have the <i>Note:</i> prefix.
     <li><i>Hide Bash Tag Suggestions</i>: Hides all Bash Tag suggestions.
     <li><i>Hide 'Do Not Clean' Messages</i>: Hides any messages that contain the string <q>Do not clean.</q>.
+    <li><i>Hide Inactive Plugin Messages</i>: Hides all messages attached to plugins that are inactive.
     <li><i>Hide All Plugin Messages</i>: Hides all plugin messages.
     <li><i>Hide Messageless Plugins</i>: Hides any plugins that have no visible messages.
 </ul>
@@ -209,10 +209,9 @@ Clicking on a plugin in the list will display the editing panel, where its load 
         <tr><td>Enable User Changes<td>If this is checked, LOOT will use the metadata you supplied when sorting the current plugin. Otherwise, your metadata will be ignored.
         <tr><td id="editingPriority">Priority<td>Modifies plugin position relative to others that change one or more of the same records, but which are otherwise unrelated (ie. neither plugin lists the other as a master, requirement, or in its "load after" list). Plugins that don't change any of the same records are not compared, unless:
         <ul>
-            <li>One of the plugins is a "dummy" plugin, containing only a header record.
-            <li>One of the plugins has a priority greater than or equal to 1,000,000. In this case, only the modulo (ie. remainder when divided) with 1,000,000 is used when comparing plugin priority values &ndash; the rest is only used to signify that the plugin should be compared against all others.
+            <li>One or both of the plugins is a "dummy" plugin, containing only a header record.
+            <li>One or both of the plugins has the <q>Compare priority against all other plugins</q> checkbox ticked.
         </ul>
-        For example, priorities of 153,000,352 and 352 have equal values when compared, but a plugin with the first priority will be compared against all others, while a (non-dummy) plugin with the second priority will be compared against only those it conflicts with.
         <p>A plugin with a higher priority value will load after a plugin with a lower priority value. Plugins have a default priority of 0.
         <tr><td>Requirements<td>This is a list of files that are required by the current plugin for it to function correctly. LOOT will display an error message if any of the listed files are missing.
         <p>Any file, not just plugins, can be listed here, and each file has three sub-fields:
@@ -250,7 +249,8 @@ Clicking on a plugin in the list will display the editing panel, where its load 
     <tbody>
         <tr><td>Copy Name<td>Copies the selected plugin's filename to the clipboard.
         <tr><td id="editorCopyMetadataAsText">Copy Metadata As Text<td>Copies the selected plugin's current metadata, as it appears in the userlist, to the clipboard. This makes it easier to share your metadata changes with the LOOT team, as they can then paste this text directly into the masterlist, and also avoids any typos being introduced. If posting the text in an online forum that supports BBCode (as most forums do), be sure to wrap it in <code>[code]</code> tags, eg. <code>[code]copied text[/code]</code>, so that the spaces are not removed by the forum software.
-        <tr><td>Remove All User-Added Metadata<td>This removes all saved user-added metadata from the selected plugin, <b>and</b> any unsaved data added to the plugin since the Metadata Editor window was opened.
+        <tr><td>Remove Plugin User-Added Metadata<td>This removes all saved user-added metadata from the selected plugin, <b>and</b> any unsaved data added to the plugin since the Metadata Editor window was opened.
+        <tr><td>Remove All User-Added Metadata<td>This removes all user-added metadata from all plugins.
 </table>
 
 <h3 id="usage-settings">Editing Settings</h3>
@@ -267,7 +267,6 @@ Clicking on a plugin in the list will display the editing panel, where its load 
         <tr><td>Language<td>Controls the language LOOT uses in its interfaces. Debug messages are always displayed in English, and any plugin messages that do not have translations in the selected language will be displayed in English instead.
         <tr><td>Debug Verbosity<td>Controls the verbosity of the debug output, which is written to <code>%LOCALAPPDATA%\LOOT\LOOTDebugLog.txt</code>.
         <tr><td id="settingsUpdateMasterlist">Update masterlist before sorting<td>If checked, LOOT will update its masterlist, should an update be available, before sorting plugins.
-        <tr><td id="settingsViewReports">View reports externally in default browser.<td>If checked, LOOT will display its report using your default web browser instead of opening its own window.
 </table>
 <p>The games list allows the customisation of which games LOOT offers support for, trivialising support for multiple copies of a game and Total Conversions. The games listed here will be displayed in the main window's <q>Game</q> menu when LOOT is next run. The <q>Add Game</q>, <q>Edit Game</q> and <q>Remove Game</q> buttons are used to edit the list. Each game has several columns, which are explained below.
 <table>
@@ -299,14 +298,15 @@ Clicking on a plugin in the list will display the editing panel, where its load 
 <p>If the information below does not help you to solve any problems you are experiencing, please seek further support in one of the official LOOT threads.
 <p>There are a few general reasons why LOOT may fail to function correctly. Check if any of the symptoms listed below fit your issue.
 <dl>
-    <dt>No change in load order.
+    <dt>LOOT ran without any errors, but the load order hasn't changed to match what LOOT has in its report.
         <dd>Make sure that you aren't using another utility to <q>lock</q> your load order.
+        <dd>If you're sorting for Skyrim, make sure that you haven't replaced or renamed your <code>TESV.exe</code>, as this interferes with LOOT's ability to decide how to set the load order.
     <dt>Some plugins have the wrong or no version number given in LOOT's report.
         <dd>No solution.
-    <dt>You get an error message of the form <q>There is a problem sending the command to the program.</q>
-        <dd>Windows sometimes does this when it tries to open files in their default application. If you're sure that you have a default program for HTML files set, restarting your computer generally fixes the issue.
     <dt>A game is installed, but LOOT cannot detect it.
         <dd>The game's Registry entry is missing. This happens to a lot of people, because Steam likes to remove it whenever the game is updated or its game cache is verified. Run the game's launcher to add the Registry entry back again.
+    <dt>There are no line breaks in <code>plugins.txt</code> or <code>loadorder.txt</code> when they are opened in Notepad.
+        <dd>There probably are LF line breaks, but Notepad only recognises CRLF line breaks. It doesn't make any difference to the game.
 </dl>
 
 
@@ -439,6 +439,24 @@ A copy of the license is included in the file named "GNU FDL v1.3.txt".</blockqu
 
 <h2 id="history">Version History</h2>
 <p>Only program history is recorded here. The masterlists are updated far too frequently for their changes to be concisely recorded here, but a full history of changes to them may be viewed by browsing the GitHub repositories.
+
+<h3>0.5.1 - <i>X Y 2014</i></h3>
+<ul>
+    <li>Fixed: The uninstaller not removing the Git repositories used to update the masterlists.
+    <li>Fixed: Miscellaneous crashes due to uncaught exceptions.
+    <li>Added: Display of masterlist revision date in reports.
+    <li>Added: Report filter for inactive plugin messages.
+    <li>Added: Right-click menu command for clearing all user-added metadata for all plugins to the full metadata editor.
+    <li>Added: Command line parameter for selecting the game LOOT should run for.
+	<li>Removed: Support for loading BOSS masterlists using the API. This was a leftover from when LOOT was BOSSv3 and backwards compatibility was an issue.
+    <li>Removed: The ability to open reports in an external browser. This was necessitated by the changes to report generation.
+    <li>Removed: The MSVC 2013 redistributable requirement.
+    <li>Changed: Missing master/requirement and incompatibility errors are downgraded to warnings if the plugin in question is inactive.
+    <li>Changed: Checkboxes have been added to the full and mini metadata editors to set whether or not a priority value is "global". The UI also now displays the priority value used in comparisons (ie. with the millions and higher digits omitted).
+    <li>Changed: Masterlist update errors have been made more user-friendly.
+    <li>Changed: LOOT's report now uses a static HTML file and generates a javascript file that is dynamically loaded to contain the report data. This removes the PugiXML build dependency.
+    <li>Changed: Debug log message priorities adjusted so that medium verbosity includes more useful data.
+</ul>
 
 <h3>0.5.0 - <i>31 March 2014</i></h3>
 <ul>
