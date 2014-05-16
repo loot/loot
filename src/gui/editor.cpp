@@ -507,12 +507,12 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
     //Initialise child windows.
     listBook = new wxNotebook(this, BOOK_Lists);
 
-    wxPanel * reqsTab = new wxPanel(listBook);
-    wxPanel * incsTab = new wxPanel(listBook);
-    wxPanel * loadAfterTab = new wxPanel(listBook);
-    wxPanel * messagesTab = new wxPanel(listBook);
-    wxPanel * tagsTab = new wxPanel(listBook);
-    wxPanel * dirtyTab = new wxPanel(listBook);
+    reqsTab = new wxPanel(listBook);
+    incsTab = new wxPanel(listBook);
+    loadAfterTab = new wxPanel(listBook);
+    messagesTab = new wxPanel(listBook);
+    tagsTab = new wxPanel(listBook);
+    dirtyTab = new wxPanel(listBook);
 
     //Initialise controls.
     prioritySpin = new wxSpinCtrl(this, wxID_ANY, "0");
@@ -935,14 +935,14 @@ void Editor::OnClearAllMetadata(wxCommandEvent& event) {
 
 void Editor::OnListBookChange(wxBookCtrlEvent& event) {
     BOOST_LOG_TRIVIAL(trace) << "Changed list tab.";
-    if (event.GetSelection() == 0 || event.GetSelection() == 1) {
-        addBtn->SetLabel(translate("Add File"));
-        editBtn->SetLabel(translate("Edit File"));
-        removeBtn->SetLabel(translate("Remove File"));
-    } else if (event.GetSelection() == 2) {
+    if (listBook->GetPageCount() == 1 || event.GetSelection() == 2) {  //First check is for simple view mode.
         addBtn->SetLabel(translate("Add Plugin"));
         editBtn->SetLabel(translate("Edit Plugin"));
         removeBtn->SetLabel(translate("Remove Plugin"));
+    } else if (event.GetSelection() == 0 || event.GetSelection() == 1) {
+        addBtn->SetLabel(translate("Add File"));
+        editBtn->SetLabel(translate("Edit File"));
+        removeBtn->SetLabel(translate("Remove File"));
     } else if (event.GetSelection() == 3) {
         addBtn->SetLabel(translate("Add Message"));
         editBtn->SetLabel(translate("Edit Message"));
@@ -980,12 +980,12 @@ void Editor::OnAddRow(wxCommandEvent& event) {
         }
 
         wxListView * list;
-        if (listBook->GetSelection() == 0)
+        if (listBook->GetPageCount() == 1 || listBook->GetSelection() == 2)
+            list = loadAfterList;
+        else if (listBook->GetSelection() == 0)
             list = reqsList;
         else if (listBook->GetSelection() == 1)
             list = incsList;
-        else
-            list = loadAfterList;
 
         long i = list->GetItemCount();
         list->InsertItem(i, rowDialog->GetName());
@@ -1051,12 +1051,12 @@ void Editor::OnEditRow(wxCommandEvent& event) {
         FileEditDialog * rowDialog = new FileEditDialog(this, translate("LOOT: Edit File/Plugin"));
 
         wxListView * list;
-        if (listBook->GetSelection() == 0)
+        if (listBook->GetPageCount() == 1 || listBook->GetSelection() == 2)
+            list = loadAfterList;
+        else if (listBook->GetSelection() == 0)
             list = reqsList;
         else if (listBook->GetSelection() == 1)
             list = incsList;
-        else
-            list = loadAfterList;
 
         long i = list->GetFirstSelected();
 
@@ -1144,16 +1144,18 @@ void Editor::OnEditRow(wxCommandEvent& event) {
 void Editor::OnRemoveRow(wxCommandEvent& event) {
     BOOST_LOG_TRIVIAL(debug) << "Removing row.";
     wxListView * list;
-    if (listBook->GetSelection() == 0)
+    if (listBook->GetPageCount() == 1 || listBook->GetSelection() == 2)
+        list = loadAfterList;
+    else if (listBook->GetSelection() == 0)
         list = reqsList;
     else if (listBook->GetSelection() == 1)
         list = incsList;
-    else if (listBook->GetSelection() == 2)
-        list = loadAfterList;
     else if (listBook->GetSelection() == 3)
         list = messageList;
-    else
+    else if (listBook->GetSelection() == 4)
         list = tagsList;
+    else if (listBook->GetSelection() == 5)
+        list = dirtyList;
 
     list->DeleteItem(list->GetFirstSelected());
 
@@ -1463,5 +1465,30 @@ void Editor::AddPluginToList(const loot::Plugin& plugin, int position) {
         pluginList->SetItem(position, 3, FromUTF8("\xE2\x9C\x97"));
     if (plugin.LoadsBSA(_game)) {
         pluginList->SetItemTextColour(position, wxColour(0, 142, 219));
+    }
+}
+
+void Editor::SetSimpleView(bool on) {
+    if (on) {
+        listBook->RemovePage(5);
+        listBook->RemovePage(4);
+        listBook->RemovePage(3);
+        listBook->RemovePage(1);
+        listBook->RemovePage(0);
+        addBtn->Show(false);
+        editBtn->Show(false);
+        loadAfterList->SetColumnWidth(1, 0);
+        loadAfterList->SetColumnWidth(2, 0);
+    }
+    else {
+        listBook->InsertPage(0, reqsTab, translate("Requirements"));
+        listBook->InsertPage(1, incsTab, translate("Incompatibilities"));
+        listBook->AddPage(messagesTab, translate("Messages"));
+        listBook->AddPage(tagsTab, translate("Bash Tags"));
+        listBook->AddPage(dirtyTab, translate("Dirty Info"));
+        addBtn->Show(true);
+        editBtn->Show(true);
+        loadAfterList->SetColumnWidth(1, wxLIST_AUTOSIZE);
+        loadAfterList->SetColumnWidth(2, wxLIST_AUTOSIZE);
     }
 }

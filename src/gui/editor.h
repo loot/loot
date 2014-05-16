@@ -114,6 +114,8 @@ class Editor : public wxFrame, public CommonEditor {
 public:
     Editor(wxWindow *parent, const wxString& title, const std::string userlistPath, const std::list<loot::Plugin>& basePlugins, std::list<loot::Plugin>& editedPlugins, const unsigned int language, const loot::Game& game);
 
+    void SetSimpleView(bool on = true);
+
     void OnPluginSelect(wxListEvent& event);
     void OnPluginListRightClick(wxListEvent& event);
     void OnPluginCopyName(wxCommandEvent& event);
@@ -147,6 +149,13 @@ private:
     wxSpinCtrl * prioritySpin;
     wxCheckBox * pluginCheckbox;
     wxCheckBox * filterCheckbox;
+
+    wxPanel * reqsTab;
+    wxPanel * incsTab;
+    wxPanel * loadAfterTab;
+    wxPanel * messagesTab;
+    wxPanel * tagsTab;
+    wxPanel * dirtyTab;
 
     const std::string _userlistPath;
 
