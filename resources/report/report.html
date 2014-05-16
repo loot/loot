@@ -8,50 +8,85 @@
     <script src="require.js"></script>
 </head>
 <body>
-    <div id="nav">
-    <div class="button current" data-section="summary" id="txtSummarySec"></div>
-    <div class="button" data-section="plugins" id="txtDetailsSec"></div>
-    <div class="button hidden" id="filtersToggle"></div>
-    </div>
-    <div id="main">
-        <noscript>The LOOT Report requires Javascript to be enabled in order to function.</noscript>
-        <div id="plugins" class="hidden">
-            <ul id="pluginsList">
+    <template id="pluginSection">
+        <section>
+            <h1></h1>
+            <div class="crc"></div>
+            <div class="version"></div>
+            <div class="tag add"></div>
+            <div class="tag remove"></div>
+            <ul>
+
             </ul>
-        </div>
-        <div id="summary">
-            <div>
-                <h2 id="txtSummary"></h2>
-                <table>
-                    <tbody>
-                        <tr><td id="txtLootVersion"><td id="lootVersion">
-                        <tr><td id="txtMasterlistUpdating"><td id="masterlistUpdating">
-                        <tr><td id="txtMasterlistRevision"><td id="masterlistRevision">
-                        <tr><td id="txtMasterlistDate"><td id="masterlistDate">
-                </table>
-            </div>
-            <div>
-                <h2 id="txtCounts"></h2>
-                <table style="float:left;">
-                    <tbody>
-                        <tr><td id="txtActivePluginNo"><td id="activePluginNo">
-                        <tr><td id="txtDirtyPluginNo"><td id="dirtyPluginNo">
-                        <tr><td id="txtTotalPluginNo"><td id="totalPluginNo">
-                </table>
-                <table style="float:left;">
-                    <tbody>
-                        <tr><td id="txtTotalWarningNo"><td id="totalWarningNo">
-                        <tr><td id="txtTotalErrorNo"><td id="totalErrorNo">
-                        <tr><td id="txtTotalMessageNo"><td id="totalMessageNo">
-                </table>
-            </div>
-            <div>
-                <h2 id="txtGeneralMessages"></h2>
-                <ul id="generalMessagesList">
-                </ul>
-            </div>
-        </div>
+        </section>
+    </template>
+    <template id="sayMessage">
+        <li class="say">
+    </template>
+    <template id="warnMessage">
+        <li class="warn">
+    </template>
+    <template id="errorMessage">
+        <li class="error">
+    </template>
+    <!-- Need to add template for editing panel. -->
+    <!-- Need to add template for message dialog overlays. -->
+    <noscript>The LOOT Report requires Javascript to be enabled in order to function.</noscript>
+    <header>
+        <ol>
+            <li>File
+                <ol>
+                    <li>Sort Plugins
+                    <li>Redate Plugins
+                    <li>Quit
+                </ol>
+            <li>Game
+                <ol id="gameList">
+                    <!-- Generated game <li> elements go here. -->
+                </ol>
+            <li>Settings
+            <li>Help
+                <ol>
+                    <li>Help
+                    <li>Open Debug Log Location
+                    <li>About
+                </ol>
+        </ol>
+    </header>
+    <nav>
+        <ol>
+            <li><a href="#summary">Summary</a>
+            <li><a href="#generalMessages">General Messages</a>
+            <ol id="pluginsNav">
+                <!-- Generated <li> elements go here, containing # links to each plugin's section in the list. -->
+            </ol>
+            <li id="filtersToggle">Filters
+        </ol>
+    </nav>
+    <div id="main">
+        <section id="summary">
+            <h1>Summary</h1>
+            <table>
+                <tbody>
+                    <tr><td>Masterlist Revision<td id="masterlistRevision">
+                    <tr><td>Masterlist Date<td id="masterlistDate">
+                    <tr><td>Warnings<td id="totalWarningNo">
+                    <tr><td>Errors<td id="totalErrorNo">
+                    <tr><td>Total Messages<td id="totalMessageNo">
+                    <tr><td>Active Plugins<td id="activePluginNo">
+                    <tr><td>Dirty Plugins<td id="dirtyPluginNo">
+                    <tr><td>Total Plugins<td id="totalPluginNo">
+            </table>
+        </section>
+        <section id="generalMessages">
+            <h1>General Messages</h1>
+            <ul>
+                <!-- Generated message <li> elements go here. -->
+            </ul>
+        </section>
+        <!-- Generated plugin #pluginSection elements go here. -->
     </div>
+
     <div id="filters" class="hidden">
         <input type="checkbox" id="hideVersionNumbers" data-class="version" /><label id="txtHideVersionNumbers" for="hideVersionNumbers"></label><br>
         <input type="checkbox" id="hideCRCs" data-class="crc" /><label id="txtHideCRCs" for="hideCRCs"></label><br>
@@ -68,5 +103,54 @@
             <span id="txtMessagesHidden"></span>: <span id="hiddenMessageNo">0</span> / <span id="filterTotalMessageNo"></span>
         </div>
     </div>
+
+    <div id="about" class="hidden">
+        <h1>LOOT <span id="LOOTVersion"></span></h1>
+        <p>Copyright &copy; 2012&mdash;2014 LOOT Team
+        <p>Load order optimisation for Oblivion, Skyrim, Fallout 3 and Fallout: New Vegas.
+        <p><a href="http://loot.github.io">http://loot.github.io</a>
+        <blockquote>
+        LOOT is free software: you can redistribute
+        it and/or modify it under the terms of the GNU General Public License
+        as published by the Free Software Foundation, either version 3 of
+        the License, or any later version.
+
+        LOOT is distributed in the hope that it will
+        be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        GNU General Public License for more details.
+
+        You should have received a copy of the GNU General Public License
+        along with LOOT. If not, see
+        <http://www.gnu.org/licenses/>.
+        </blockquote>
+    </div>
+
+    <div id="settings">
+        <h1>Settings</h1>
+        <form>
+            <label for="defaultGameSelect">Default Game</label>
+            <select id="defaultGameSelect">
+                <!-- Game <option> elements go here. -->
+            </select>
+            <label for="languageSelect">Language</label>
+            <select id="languageSelect">
+                <!-- Language <option> elements go here. -->
+            </select>
+            <label for="debugVerbositySelect">Debug Verbosity</label>
+            <select id="debugVerbositySelect">
+                <option value="0">None</option>
+                <option value="1">Low</option>
+                <option value="2">Medium</option>
+                <option value="3">High</option>
+            </select>
+            <!-- Need to add an editable multi-column game list here. -->
+            <p>Language and game changes will be applied after LOOT is restarted.
+            <hr>
+            <button>Apply</button>
+            <button>Cancel</button>
+        </form>
+    </div>
+
     <script src="script.js"></script>
 </body>
