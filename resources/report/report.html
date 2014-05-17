@@ -8,6 +8,9 @@
     <script src="require.js"></script>
 </head>
 <body>
+    <template id="pluginNav">
+        <li><a href=""></a>
+    </template>
     <template id="pluginSection">
         <section>
             <h1></h1>
@@ -33,34 +36,42 @@
     <!-- Need to add template for message dialog overlays. -->
     <noscript>The LOOT Report requires Javascript to be enabled in order to function.</noscript>
     <header>
+        <img src="../icon.ico">
         <ol>
             <li>File
-                <ol>
+                <ol class="hidden">
                     <li>Sort Plugins
                     <li>Redate Plugins
                     <li>Quit
                 </ol>
             <li>Game
-                <ol id="gameList">
+                <ol id="gameList" class="hidden">
                     <!-- Generated game <li> elements go here. -->
                 </ol>
             <li>Settings
             <li>Help
-                <ol>
+                <ol class="hidden">
                     <li>Help
                     <li>Open Debug Log Location
                     <li>About
                 </ol>
+        </ol>
+        <ol>
+            <li>Update Masterlist
+            <li>Sort
+            <li class="hidden">Apply
+            <li class="hidden">Cancel
+            <li>Filters
         </ol>
     </header>
     <nav>
         <ol>
             <li><a href="#summary">Summary</a>
             <li><a href="#generalMessages">General Messages</a>
+            <li>
             <ol id="pluginsNav">
                 <!-- Generated <li> elements go here, containing # links to each plugin's section in the list. -->
             </ol>
-            <li id="filtersToggle">Filters
         </ol>
     </nav>
     <div id="main">
@@ -126,7 +137,7 @@
         </blockquote>
     </div>
 
-    <div id="settings">
+    <div id="settings" class="hidden">
         <h1>Settings</h1>
         <form>
             <label for="defaultGameSelect">Default Game</label>

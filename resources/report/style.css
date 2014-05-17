@@ -32,7 +32,7 @@ noscript {
     padding:10px 5px;
     color:white;
 }
-#nav {
+header {
     background:#e3e3e3;
     position:fixed;
     top:0;
@@ -40,7 +40,65 @@ noscript {
     z-index:2;
     box-shadow: 0 0 3px 1px rgba(0,0,0,0.5);
     width:100%;
+    height: 3em;
 }
+header ol {
+    display: inline-block;
+    margin:0;
+    padding:0;
+}
+header li{
+    display: inline-block;
+    padding: 0.75em 1em;
+    margin: 0;
+}
+header ol:last-child {
+    position: fixed;
+    right: 0;
+}
+header li:hover {
+    background: #ccc;
+}
+header img {
+    height: 2.5em;
+    width: 2.5em;
+    vertical-align: middle;
+    padding: 0 0.5em;
+}
+
+nav {
+    position: fixed;
+    top: 3em;
+    width: 20em;
+    height: calc(100% - 3em);
+}
+nav ol {
+    list-style-type: none;
+    height: calc(100% - 3em);
+}
+nav ol li:last-child, nav ol li:last-child ol {
+    height: calc(100% - 3em);
+    overflow: auto;
+}
+nav ol li {
+    padding: 1em;
+}
+
+#main {
+    position: absolute;
+    top: 3em;
+    left: 20em;
+}
+
+section {
+    background:white;
+    overflow:hidden;
+    margin:1em;
+    box-shadow:0 0 3px 0px rgba(0,0,0,0.5);
+    padding:1em;
+}
+
+
 .button {
     display:inline-table;
     cursor:pointer;
@@ -55,11 +113,6 @@ noscript {
     position:absolute;
     right:0;
     top:0;
-}
-#main {
-    position:absolute;
-    top:32px;
-    width:100%;
 }
 #summary, #plugins {
     padding:1em;

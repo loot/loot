@@ -227,11 +227,10 @@ function processURLParams() {
             var activePluginNo = 0;
             var dirtyPluginNo = 0;
             /* Fill report with data. */
-            document.getElementById('lootVersion').textContent = data.lootVersion;
+            document.getElementById('LOOTVersion').textContent = data.lootVersion;
             document.getElementById('masterlistRevision').textContent = data.masterlist.revision;
             document.getElementById('masterlistDate').textContent = data.masterlist.date;
-            document.getElementById('masterlistUpdating').textContent = data.masterlist.updaterEnabled;
-            var generalMessagesList = document.getElementById('generalMessagesList');
+            var generalMessagesList = document.getElementById('generalMessages').getElementsByTagName('ul')[0];
             for (var i = 0; i < data.globalMessages.length; ++i) {
                 var li = document.createElement('li');
                 li.className = data.globalMessages[i].type;
@@ -246,11 +245,23 @@ function processURLParams() {
                 }
             }
             totalMessageNo = data.globalMessages.length;
-            var pluginsList = document.getElementById('pluginsList');
+            var pluginsList = document.getElementById('main');
+            var pluginsNav = document.getElementById('pluginsNav');
             for (var i = 0; i < data.plugins.length; ++i) {
-                var li = document.createElement('li');
+                var content, clone;
+                /* First add link to navbar. */
+                content = document.getElementById('pluginNav').content;
+                content.children[0].children[0].textContent = data.plugins[i].name;
+                content.children[0].children[0].href = '#' + data.plugins[i].name.replace(/\s+/g, '');
 
-                li.setAttribute('data-active', data.plugins[i].isActive);
+                clone = document.importNode(content, true);
+                pluginsNav.appendChild(clone);
+
+                var content = document.getElementById('pluginSection').content;
+                var section = content.children[0];
+
+                section.setAttribute('data-active', data.plugins[i].isActive);
+                section.id = data.plugins[i].name.replace(/\s+/g, '');
 
                 if (data.plugins[i].isActive) {
                     ++activePluginNo;
@@ -260,45 +271,36 @@ function processURLParams() {
                     ++dirtyPluginNo;
                 }
 
-                var mod = document.createElement('div');
-                mod.className = 'mod';
-                mod.textContent = data.plugins[i].name;
-                li.appendChild(mod);
+                section.children[0].textContent = data.plugins[i].name;
 
-                var crc = document.createElement('div');
-                crc.className = 'crc';
-                crc.textContent = 'CRC: ' + data.plugins[i].crc;
-                li.appendChild(crc);
+                section.children[1].textContent = 'CRC: ' + data.plugins[i].crc;
 
                 if (data.plugins[i].version) {
-                    var version = document.createElement('div');
-                    version.className = 'version';
-                    version.textContent = data.plugins[i].version;
-                    li.appendChild(version);
+                    section.children[2].textContent = data.plugins[i].version;
+                } else {
+                    section.children[2].className += ' hidden';
                 }
 
                 if (data.plugins[i].tagsAdd && data.plugins[i].tagsAdd.length != 0) {
-                    var tagAdd = document.createElement('div');
-                    tagAdd.className = 'tag add';
-                    tagAdd.textContent = data.plugins[i].tagsAdd.join(', ');
-                    li.appendChild(tagAdd);
+                    section.children[3].textContent = data.plugins[i].tagsAdd.join(', ');
+                } else {
+                    section.children[3].className += ' hidden';
                 }
 
                 if (data.plugins[i].tagRemove && data.plugins[i].tagRemove.length != 0) {
-                    var tagRemove = document.createElement('div');
-                    tagRemove.className = 'tag remove';
-                    tagRemove.textContent = data.plugins[i].tagsRemove.join(', ');
-                    li.appendChild(tagRemove);
+                    section.children[4].textContent = data.plugins[i].tagsRemove.join(', ');
+                } else {
+                    section.children[4].className += ' hidden';
                 }
 
+
                 if (data.plugins[i].messages && data.plugins[i].messages.length != 0) {
-                    var ul = document.createElement('ul');
                     for (var j = 0; j < data.plugins[i].messages.length; ++j) {
                         var messageLi = document.createElement('li');
                         messageLi.className = data.plugins[i].messages[j].type;
                         /* innerHTML is open to abuse, but for hyperlinking it's too useful. */
                         messageLi.innerHTML = data.plugins[i].messages[j].content;
-                        ul.appendChild(messageLi);
+                        section.children[5].appendChild(messageLi);
 
                         if (messageLi.className == 'warn') {
                             warnMessageNo++;
@@ -307,9 +309,11 @@ function processURLParams() {
                         }
                         totalMessageNo++;
                     }
-                    li.appendChild(ul);
+                } else {
+                    section.children[5].className += ' hidden';
                 }
-                pluginsList.appendChild(li);
+                clone = document.importNode(content, true);
+                pluginsList.appendChild(clone);
             }
             document.getElementById('filterTotalMessageNo').textContent = totalMessageNo;
             document.getElementById('totalMessageNo').textContent = totalMessageNo;
