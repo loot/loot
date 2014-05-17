@@ -93,11 +93,18 @@ header > ol > li > ol > li {
     left: 235px;
 }
 
-nav {
+#container {
     position: fixed;
     top: 3em;
-    width: 20em;
     height: calc(100% - 3em);
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    width: 100%;
+}
+nav {
+    height: 100%;
 }
 nav > ol {
     padding-left: 1em;
@@ -136,12 +143,8 @@ nav a {
 }
 
 #main {
-    position: absolute;
-    top: 3em;
-    left: 20em;
-    right:0;
-    height: calc(100% - 3em);
     overflow: auto;
+    flex-shrink: 10;
 }
 
 section, #settings, #about {

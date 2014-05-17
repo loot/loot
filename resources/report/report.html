@@ -92,63 +92,65 @@
             <li data-action="cancel-sort" class="hidden">Cancel
         </ol>
     </header>
-    <nav>
-        <ol>
-            <li><a href="#summary">Summary</a>
-            <li><a href="#generalMessages">General Messages</a>
-            <li>
-            <ol id="pluginsNav">
-                <!-- Generated <li> elements go here, containing # links to each plugin's section in the list. -->
+    <div id="container">
+        <nav>
+            <ol>
+                <li><a href="#summary">Summary</a>
+                <li><a href="#generalMessages">General Messages</a>
+                <li>
+                <ol id="pluginsNav">
+                    <!-- Generated <li> elements go here, containing # links to each plugin's section in the list. -->
+                </ol>
+                <ol id="filters" class="hidden" data-replace="pluginsNav">
+                    <input type="checkbox" id="hideVersionNumbers" data-class="version" />
+                    <label for="hideVersionNumbers">Hide version numbers</label><br>
+                    <input type="checkbox" id="hideCRCs" data-class="crc" />
+                    <label for="hideCRCs">Hide CRCs</label><br>
+                    <input type="checkbox" id="hideBashTags" data-class="tag" />
+                    <label for="hideBashTags">Hide Bash Tags</label><br>
+                    <input type="checkbox" id="hideNotes" />
+                    <label for="hideNotes">Hide notes</label><br>
+                    <input type="checkbox" id="hideDoNotCleanMessages" />
+                    <label for="hideDoNotCleanMessages">Hide 'Do not clean' messages</label><br>
+                    <input type="checkbox" id="hideInactivePluginMessages" />
+                    <label for="hideInactivePluginMessages">Hide inactive plugin messages</label><br>
+                    <input type="checkbox" id="hideAllPluginMessages" />
+                    <label for="hideAllPluginMessages">Hide all plugin messages</label><br>
+                    <input type="checkbox" id="hideMessagelessPlugins" />
+                    <label for="hideMessagelessPlugins">Hide messageless plugins</label><br>
+                    <div>
+                        <span>Hidden plugins</span>: <span id="hiddenPluginNo">0</span> / <span id="totalPluginNo"></span>
+                    </div>
+                    <div>
+                        <span>Hidden messages</span>: <span id="hiddenMessageNo">0</span> / <span id="filterTotalMessageNo"></span>
+                    </div>
+                </ol>
+                <li data-action="view-ui" data-target="filters">Filters
             </ol>
-            <ol id="filters" class="hidden" data-replace="pluginsNav">
-                <input type="checkbox" id="hideVersionNumbers" data-class="version" />
-                <label for="hideVersionNumbers">Hide version numbers</label><br>
-                <input type="checkbox" id="hideCRCs" data-class="crc" />
-                <label for="hideCRCs">Hide CRCs</label><br>
-                <input type="checkbox" id="hideBashTags" data-class="tag" />
-                <label for="hideBashTags">Hide Bash Tags</label><br>
-                <input type="checkbox" id="hideNotes" />
-                <label for="hideNotes">Hide notes</label><br>
-                <input type="checkbox" id="hideDoNotCleanMessages" />
-                <label for="hideDoNotCleanMessages">Hide 'Do not clean' messages</label><br>
-                <input type="checkbox" id="hideInactivePluginMessages" />
-                <label for="hideInactivePluginMessages">Hide inactive plugin messages</label><br>
-                <input type="checkbox" id="hideAllPluginMessages" />
-                <label for="hideAllPluginMessages">Hide all plugin messages</label><br>
-                <input type="checkbox" id="hideMessagelessPlugins" />
-                <label for="hideMessagelessPlugins">Hide messageless plugins</label><br>
-                <div>
-                    <span>Hidden plugins</span>: <span id="hiddenPluginNo">0</span> / <span id="totalPluginNo"></span>
-                </div>
-                <div>
-                    <span>Hidden messages</span>: <span id="hiddenMessageNo">0</span> / <span id="filterTotalMessageNo"></span>
-                </div>
-            </ol>
-            <li data-action="view-ui" data-target="filters">Filters
-        </ol>
-    </nav>
-    <div id="main">
-        <section id="summary">
-            <h1>Summary</h1>
-            <table>
-                <tbody>
-                    <tr><td>Masterlist Revision<td id="masterlistRevision">
-                    <tr><td>Masterlist Date<td id="masterlistDate">
-                    <tr><td>Warnings<td id="totalWarningNo">
-                    <tr><td>Errors<td id="totalErrorNo">
-                    <tr><td>Total Messages<td id="totalMessageNo">
-                    <tr><td>Active Plugins<td id="activePluginNo">
-                    <tr><td>Dirty Plugins<td id="dirtyPluginNo">
-                    <tr><td>Total Plugins<td id="totalPluginNo">
-            </table>
-        </section>
-        <section id="generalMessages">
-            <h1>General Messages</h1>
-            <ul>
-                <!-- Generated message <li> elements go here. -->
-            </ul>
-        </section>
-        <!-- Generated plugin #pluginSection elements go here. -->
+        </nav>
+        <div id="main">
+            <section id="summary">
+                <h1>Summary</h1>
+                <table>
+                    <tbody>
+                        <tr><td>Masterlist Revision<td id="masterlistRevision">
+                        <tr><td>Masterlist Date<td id="masterlistDate">
+                        <tr><td>Warnings<td id="totalWarningNo">
+                        <tr><td>Errors<td id="totalErrorNo">
+                        <tr><td>Total Messages<td id="totalMessageNo">
+                        <tr><td>Active Plugins<td id="activePluginNo">
+                        <tr><td>Dirty Plugins<td id="dirtyPluginNo">
+                        <tr><td>Total Plugins<td id="totalPluginNo">
+                </table>
+            </section>
+            <section id="generalMessages">
+                <h1>General Messages</h1>
+                <ul>
+                    <!-- Generated message <li> elements go here. -->
+                </ul>
+            </section>
+            <!-- Generated plugin #pluginSection elements go here. -->
+        </div>
     </div>
 
     <div id="about" class="hidden" data-overlay="1">
