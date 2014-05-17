@@ -52,16 +52,19 @@ function loadSettings() {
         i--;
     }
 }
+function isVisible(element) {
+    return (element.className.indexOf('hidden') == -1);
+}
 function showElement(element) {
     if (element != null) {
-        if (element.className.indexOf('hidden') != -1) {
+        if (!isVisible(element)) {
             element.className = element.className.replace('hidden', '');
         }
     }
 }
 function hideElement(element) {
     if (element != null) {
-        if (element.className.indexOf('hidden') == -1) {
+        if (isVisible(element)) {
             element.className += ' hidden';
         }
     }
@@ -342,3 +345,19 @@ function processURLParams() {
     }
 }
 processURLParams();
+
+var menus = document.getElementsByTagName('header')[0].children[1].children;
+
+for (var i = 0; i < menus.length; ++i) {
+    menus[i].onclick = function(evt) {
+        var action = evt.target.getAttribute('data-action');
+        var target = document.getElementById(evt.target.getAttribute('data-target'));
+        if (action == 'open-menu' || action == 'open-dialog') {
+            if (isVisible(target)) {
+                hideElement(target);
+            } else {
+                showElement(target);
+            }
+        }
+    }
+}

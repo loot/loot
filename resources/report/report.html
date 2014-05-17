@@ -32,38 +32,53 @@
     <template id="errorMessage">
         <li class="error">
     </template>
-    <!-- Need to add template for editing panel. -->
-    <!-- Need to add template for message dialog overlays. -->
+    <template>
+        <div id="messageBox">
+            <h1></h1>
+            <p>
+        </div>
+    </template>
+    <template>
+        <div id="editor">
+            <h1></h1>
+            <label for="editorEnableEdits">Enable Edits</label>
+            <input type="checkbox" id="editorEnableEdits">
+            <label for="editorPriorityValue">Priority</label>
+            <input type="number" max="999999" min="-999999" step="1">
+            <label for="editorGlobalPriority">Compare priority against all other plugins</label>
+            <input type="checkbox" id="editorGlobalPriority">
+            <!-- Need to finish template for editing panel. -->
+        </div>
+    </template>
     <noscript>The LOOT Report requires Javascript to be enabled in order to function.</noscript>
     <header>
         <img src="../icon.ico">
         <ol>
-            <li>File
-                <ol class="hidden">
-                    <li>Sort Plugins
-                    <li>Redate Plugins
-                    <li>Quit
-                </ol>
-            <li>Game
-                <ol id="gameList" class="hidden">
-                    <!-- Generated game <li> elements go here. -->
-                </ol>
-            <li>Settings
-            <li>Help
-                <ol class="hidden">
-                    <li>Help
-                    <li>Open Debug Log Location
-                    <li>About
-                </ol>
+            <li data-action="open-menu" data-target="fileMenu">File
+            <li data-action="open-menu" data-target="gameMenu">Game
+            <li data-action="open-dialog" data-target="settings">Settings
+            <li data-action="open-menu" data-target="helpMenu">Help
         </ol>
         <ol>
             <li>Update Masterlist
             <li>Sort
             <li class="hidden">Apply
             <li class="hidden">Cancel
-            <li>Filters
         </ol>
     </header>
+    <ol id="fileMenu" class="hidden">
+        <li>Sort Plugins
+        <li>Redate Plugins
+        <li>Quit
+    </ol>
+    <ol id="gameMenu" class="hidden">
+        <!-- Generated game <li> elements go here. -->
+    </ol>
+    <ol id="helpMenu" class="hidden">
+        <li>Help
+        <li>Open Debug Log Location
+        <li>About
+    </ol>
     <nav>
         <ol>
             <li><a href="#summary">Summary</a>
@@ -72,6 +87,7 @@
             <ol id="pluginsNav">
                 <!-- Generated <li> elements go here, containing # links to each plugin's section in the list. -->
             </ol>
+            <li>Filters
         </ol>
     </nav>
     <div id="main">
@@ -162,6 +178,8 @@
             <button>Cancel</button>
         </form>
     </div>
+
+    <div id="overlay"></div>
 
     <script src="script.js"></script>
 </body>
