@@ -85,6 +85,30 @@
             <ol id="pluginsNav">
                 <!-- Generated <li> elements go here, containing # links to each plugin's section in the list. -->
             </ol>
+    <ol id="filters" class="hidden" data-replace="pluginsNav">
+        <input type="checkbox" id="hideVersionNumbers" data-class="version" />
+        <label for="hideVersionNumbers">Hide version numbers</label><br>
+        <input type="checkbox" id="hideCRCs" data-class="crc" />
+        <label for="hideCRCs">Hide CRCs</label><br>
+        <input type="checkbox" id="hideBashTags" data-class="tag" />
+        <label for="hideBashTags">Hide Bash Tags</label><br>
+        <input type="checkbox" id="hideNotes" />
+        <label for="hideNotes">Hide notes</label><br>
+        <input type="checkbox" id="hideDoNotCleanMessages" />
+        <label for="hideDoNotCleanMessages">Hide 'Do not clean' messages</label><br>
+        <input type="checkbox" id="hideInactivePluginMessages" />
+        <label for="hideInactivePluginMessages">Hide inactive plugin messages</label><br>
+        <input type="checkbox" id="hideAllPluginMessages" />
+        <label for="hideAllPluginMessages">Hide all plugin messages</label><br>
+        <input type="checkbox" id="hideMessagelessPlugins" />
+        <label for="hideMessagelessPlugins">Hide messageless plugins</label><br>
+        <div>
+            <span>Hidden plugins</span>: <span id="hiddenPluginNo">0</span> / <span id="totalPluginNo"></span>
+        </div>
+        <div>
+            <span>Hidden messages</span>: <span id="hiddenMessageNo">0</span> / <span id="filterTotalMessageNo"></span>
+        </div>
+    </ol>
             <li data-action="view-ui" data-target="filters">Filters
         </ol>
     </nav>
@@ -110,23 +134,6 @@
             </ul>
         </section>
         <!-- Generated plugin #pluginSection elements go here. -->
-    </div>
-
-    <div id="filters" class="hidden">
-        <input type="checkbox" id="hideVersionNumbers" data-class="version" /><label id="txtHideVersionNumbers" for="hideVersionNumbers"></label><br>
-        <input type="checkbox" id="hideCRCs" data-class="crc" /><label id="txtHideCRCs" for="hideCRCs"></label><br>
-        <input type="checkbox" id="hideBashTags" data-class="tag" /><label id="txtHideBashTags" for="hideBashTags"></label><br>
-        <input type="checkbox" id="hideNotes" /><label id="txtHideNotes" for="hideNotes"></label><br>
-        <input type="checkbox" id="hideDoNotCleanMessages" /><label id="txtHideDoNotCleanMessages" for="hideDoNotCleanMessages"></label><br>
-        <input type="checkbox" id="hideInactivePluginMessages" /><label id="txtHideInactivePluginMessages" for="hideInactivePluginMessages"></label><br>
-        <input type="checkbox" id="hideAllPluginMessages" /><label id="txtHideAllPluginMessages" for="hideAllPluginMessages"></label><br>
-        <input type="checkbox" id="hideMessagelessPlugins" /><label id="txtHideMessagelessPlugins" for="hideMessagelessPlugins"></label><br>
-        <div>
-            <span id="txtPluginsHidden"></span>: <span id="hiddenPluginNo">0</span> / <span id="filterTotalPluginNo"></span>
-        </div>
-        <div>
-            <span id="txtMessagesHidden"></span>: <span id="hiddenMessageNo">0</span> / <span id="filterTotalMessageNo"></span>
-        </div>
     </div>
 
     <div id="about" class="hidden" data-overlay="1">

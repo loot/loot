@@ -341,32 +341,45 @@ function processURLParams() {
 }
 processURLParams();
 
-var menus = document.getElementsByTagName('header')[0].getElementsByTagName('li');
-var overlay = document.getElementById('overlay');
+/* New JS */
 
-for (var i = 0; i < menus.length; ++i) {
-    menus[i].addEventListener('click', function(evt) {
-        var action = evt.currentTarget.getAttribute('data-action');
-        var target = document.getElementById(evt.currentTarget.getAttribute('data-target'));
-        if (action == 'view-ui') {
-            if (isVisible(target)) {
-                hideElement(target);
-                if (target.getAttribute('data-overlay')) {
-                    overlay.setAttribute('data-dialog', '');
-                    hideElement(overlay);
-                }
+function processButtonClick(evt) {
+    var overlay = document.getElementById('overlay');
+    var action = evt.currentTarget.getAttribute('data-action');
+    var target = document.getElementById(evt.currentTarget.getAttribute('data-target'));
+    if (action == 'view-ui') {
+        if (isVisible(target)) {
+            hideElement(target);
+            if (target.getAttribute('data-overlay')) {
+                overlay.setAttribute('data-dialog', '');
+                hideElement(overlay);
             } else {
-                showElement(target);
-                if (target.getAttribute('data-overlay') == '1') {
-                    overlay.setAttribute('data-dialog', target.id);
-                    showElement(overlay);
+                var replace = target.getAttribute('data-replace');
+                if (replace) {
+                    showElement(document.getElementById(replace));
+                }
+            }
+        } else {
+            showElement(target);
+            if (target.getAttribute('data-overlay') == '1') {
+                overlay.setAttribute('data-dialog', target.id);
+                showElement(overlay);
+            } else {
+                var replace = target.getAttribute('data-replace');
+                if (replace) {
+                    hideElement(document.getElementById(replace));
                 }
             }
         }
-    }, false);
-
-    overlay.addEventListener('click', function(evt) {
-        hideElement(overlay);
-        hideElement(document.getElementById(overlay.getAttribute('data-dialog')));
-    }, false);
+    }
 }
+function toggleOverlay(evt) {
+    hideElement(evt.target);
+    hideElement(document.getElementById(evt.target.getAttribute('data-dialog')));
+}
+
+var buttons = document.querySelectorAll('[data-action]');
+for (var i = 0; i < buttons.length; ++i) {
+    buttons[i].addEventListener('click', processButtonClick, false);
+}
+overlay.addEventListener('click', toggleOverlay, false);
