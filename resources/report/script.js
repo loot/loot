@@ -127,77 +127,102 @@ function showSection(evt) {
     }
 }
 function toggleMessages(evt) {
-    var listItems = document.getElementById('plugins').getElementsByTagName('li');
-    var i = listItems.length - 1;
+    // Start at 2nd section to skip summary.
+    var listItems = document.getElementById('main').getElementsByTagName('li');
     var hiddenNo = parseInt(document.getElementById('hiddenMessageNo').textContent, 10);
-    while (i > -1) {
-        var divs = listItems[i].getElementsByTagName('div');
-        if (divs.length == 0) {
-            var filterMatch = false;
-            if (evt.target.id == 'hideAllPluginMessages') {
-                filterMatch = true;
-            } else if (evt.target.id == 'hideNotes' && listItems[i].className.indexOf('say') != -1) {
-                filterMatch = true;
-            } else if (evt.target.id == 'hideDoNotCleanMessages' && listItems[i].textContent.indexOf('Do not clean.') != -1) {
-                filterMatch = true;
-            } else if (evt.target.id == 'hideInactivePluginMessages' && listItems[i].parentElement.parentElement.getAttribute('data-active') == 'false') {
-                filterMatch = true;
-            }
-            if (filterMatch) {
-                if (evt.target.checked) {
-                    if (listItems[i].className.indexOf('hidden') == -1) {
-                        hiddenNo++;
-                    }
-                    stepHideElement(listItems[i]);
-                } else {
-                    stepUnhideElement(listItems[i]);
-                    if (listItems[i].className.indexOf('hidden') == -1) {
-                        hiddenNo--;
-                    }
+    for (var i = 0; i < listItems.length; ++i) {
+        var filterMatch = false;
+        if (evt.target.id == 'hideAllPluginMessages' && listItems[i].parentElement.parentElement.id != 'generalMessages') {
+            filterMatch = true;
+        } else if (evt.target.id == 'hideNotes' && listItems[i].className.indexOf('say') != -1) {
+            filterMatch = true;
+        } else if (evt.target.id == 'hideDoNotCleanMessages' && listItems[i].textContent.indexOf('Do not clean.') != -1) {
+            filterMatch = true;
+        } else if (evt.target.id == 'hideInactivePluginMessages' && listItems[i].parentElement.parentElement.getAttribute('data-active') == 'false') {
+            filterMatch = true;
+        }
+        if (filterMatch) {
+            if (evt.target.checked) {
+                if (listItems[i].className.indexOf('hidden') == -1) {
+                    hiddenNo++;
+                }
+                stepHideElement(listItems[i]);
+            } else {
+                stepUnhideElement(listItems[i]);
+                if (listItems[i].className.indexOf('hidden') == -1) {
+                    hiddenNo--;
                 }
             }
         }
-        i--;
     }
 	document.getElementById('hiddenMessageNo').textContent = hiddenNo;
 	togglePlugins(evt);
 }
 function togglePlugins(evt) {
-    var plugins = document.getElementById('plugins').getElementsByTagName('ul')[0].children;
-    var i = plugins.length - 1;
+    var sections = document.getElementById('main').children;
     var hiddenNo = parseInt(document.getElementById('hiddenPluginNo').textContent, 10);
-    while (i > -1) {
+    // Start at 3rd section to skip summary and general messages.
+    for (var i = 2; i < sections.length; ++i) {
         var isMessageless = true;
-        var messages = plugins[i].getElementsByTagName('li');
-        var j = messages.length - 1;
-        while (j > -1) {
+        var messages = sections[i].getElementsByTagName('li');
+        for (var j = 1; j < messages.length; ++j) {
             if (messages[j].className.indexOf('hidden') == -1) {
                 isMessageless = false;
                 break;
             }
-            j--;
         }
         if (document.getElementById('hideMessagelessPlugins').checked && isMessageless) {
-            if (plugins[i].className.indexOf('hidden') == -1) {
+            if (sections[i].className.indexOf('hidden') == -1) {
                 hiddenNo++;
-                hideElement(plugins[i]);
+                hideElement(sections[i]);
             }
-        } else if (plugins[i].className.indexOf('hidden') !== -1) {
+        } else if (sections[i].className.indexOf('hidden') !== -1) {
             hiddenNo--;
-            showElement(plugins[i]);
+            showElement(sections[i]);
         }
-        i--;
     }
     document.getElementById('hiddenPluginNo').textContent = hiddenNo;
 }
+function processButtonClick(evt) {
+    var overlay = document.getElementById('overlay');
+    var action = evt.currentTarget.getAttribute('data-action');
+    var target = document.getElementById(evt.currentTarget.getAttribute('data-target'));
+    if (action == 'view-ui') {
+        if (isVisible(target)) {
+            hideElement(target);
+            if (target.getAttribute('data-overlay')) {
+                overlay.setAttribute('data-dialog', '');
+                hideElement(overlay);
+            } else {
+                var replace = target.getAttribute('data-replace');
+                if (replace) {
+                    showElement(document.getElementById(replace));
+                }
+            }
+        } else {
+            showElement(target);
+            if (target.getAttribute('data-overlay') == '1') {
+                overlay.setAttribute('data-dialog', target.id);
+                showElement(overlay);
+            } else {
+                var replace = target.getAttribute('data-replace');
+                if (replace) {
+                    hideElement(document.getElementById(replace));
+                }
+            }
+        }
+    }
+}
+function toggleOverlay(evt) {
+    hideElement(evt.target);
+    hideElement(document.getElementById(evt.target.getAttribute('data-dialog')));
+}
 function setupEventHandlers() {
-    var i, elemArr;
+    var elements;
     if (isStorageSupported()) { /*Set up filter value and CSS setting storage read/write handlers.*/
-        elemArr = document.getElementById('filters').getElementsByTagName('input');
-        i = elemArr.length - 1;
-        while (i > -1) {
-            elemArr[i].addEventListener('click', saveCheckboxState, false);
-            i--;
+        elements = document.getElementById('filters').getElementsByTagName('input');
+        for (var i = 0; i < elements.length; ++i) {
+            elements[i].addEventListener('click', saveCheckboxState, false);
         }
     }
     /*Set up handlers for filters.*/
@@ -209,6 +234,12 @@ function setupEventHandlers() {
     document.getElementById('hideInactivePluginMessages').addEventListener('click', toggleMessages, false);
     document.getElementById('hideAllPluginMessages').addEventListener('click', toggleMessages, false);
     document.getElementById('hideMessagelessPlugins').addEventListener('click', togglePlugins, false);
+    /* Set up handlers for buttons. */
+    elements = document.querySelectorAll('[data-action]');
+    for (var i = 0; i < elements.length; ++i) {
+        elements[i].addEventListener('click', processButtonClick, false);
+    }
+    overlay.addEventListener('click', toggleOverlay, false);
 }
 function processURLParams() {
     /* Get the data path from the URL and load it. */
@@ -340,46 +371,3 @@ function processURLParams() {
     }
 }
 processURLParams();
-
-/* New JS */
-
-function processButtonClick(evt) {
-    var overlay = document.getElementById('overlay');
-    var action = evt.currentTarget.getAttribute('data-action');
-    var target = document.getElementById(evt.currentTarget.getAttribute('data-target'));
-    if (action == 'view-ui') {
-        if (isVisible(target)) {
-            hideElement(target);
-            if (target.getAttribute('data-overlay')) {
-                overlay.setAttribute('data-dialog', '');
-                hideElement(overlay);
-            } else {
-                var replace = target.getAttribute('data-replace');
-                if (replace) {
-                    showElement(document.getElementById(replace));
-                }
-            }
-        } else {
-            showElement(target);
-            if (target.getAttribute('data-overlay') == '1') {
-                overlay.setAttribute('data-dialog', target.id);
-                showElement(overlay);
-            } else {
-                var replace = target.getAttribute('data-replace');
-                if (replace) {
-                    hideElement(document.getElementById(replace));
-                }
-            }
-        }
-    }
-}
-function toggleOverlay(evt) {
-    hideElement(evt.target);
-    hideElement(document.getElementById(evt.target.getAttribute('data-dialog')));
-}
-
-var buttons = document.querySelectorAll('[data-action]');
-for (var i = 0; i < buttons.length; ++i) {
-    buttons[i].addEventListener('click', processButtonClick, false);
-}
-overlay.addEventListener('click', toggleOverlay, false);
