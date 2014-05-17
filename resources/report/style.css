@@ -21,6 +21,9 @@
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
 */
+::-webkit-scrollbar-corner {
+    background: inherit;
+}
 body {
     font:10pt/1.5 Helvetica,sans-serif;
     margin:0;
