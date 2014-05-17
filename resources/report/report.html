@@ -54,27 +54,27 @@
     <header>
         <img src="../icon.ico">
         <ol>
-            <li data-action="open-menu" data-target="fileMenu">File
+            <li data-action="view-ui" data-target="fileMenu">File
             <ol id="fileMenu" class="hidden">
-                <li>Redate Plugins
-                <li>Open Debug Log Location
+                <li data-action="redate-plugins">Redate Plugins
+                <li data-action="open-log-location">Open Debug Log Location
             </ol>
-            <li data-action="open-menu" data-target="gameMenu">Game
+            <li data-action="view-ui" data-target="gameMenu">Game
             <ol id="gameMenu" class="hidden">
-                <!-- Generated game <li> elements go here. -->
+                <!-- Generated game <li> elements go here. The action should be 'change-game' and the target the game's folder name, I think. -->
             </ol>
-            <li data-action="open-dialog" data-target="settings">Settings
-            <li data-action="open-menu" data-target="helpMenu">Help
+            <li data-action="view-ui" data-target="settings">Settings
+            <li data-action="view-ui" data-target="helpMenu">Help
             <ol id="helpMenu" class="hidden">
-                <li>Help
-                <li data-action="open-dialog" data-target="about">About
+                <li data-action="open-readme">Help
+                <li data-action="view-ui" data-target="about">About
             </ol>
         </ol>
         <ol>
-            <li>Update Masterlist
-            <li>Sort
-            <li class="hidden">Apply
-            <li class="hidden">Cancel
+            <li data-action="update-masterlist">Update Masterlist
+            <li data-action="sort">Sort
+            <li data-action="apply-sort" class="hidden">Apply
+            <li data-action="cancel-sort" class="hidden">Cancel
         </ol>
     </header>
     <nav>
@@ -85,7 +85,7 @@
             <ol id="pluginsNav">
                 <!-- Generated <li> elements go here, containing # links to each plugin's section in the list. -->
             </ol>
-            <li>Filters
+            <li data-action="view-ui" data-target="filters">Filters
         </ol>
     </nav>
     <div id="main">

@@ -200,14 +200,7 @@ function setupEventHandlers() {
             i--;
         }
     }
-    document.getElementById('filtersToggle').addEventListener('click', toggleFilters, false);
-    /*Set up handlers for section display.*/
-    elemArr = document.getElementById('nav').querySelectorAll('.button[data-section]');
-    var i = elemArr.length - 1;
-    while (i > -1) {
-        elemArr[i].addEventListener('click', showSection, false);
-        i--;
-    }
+    /*Set up handlers for filters.*/
     document.getElementById('hideVersionNumbers').addEventListener('click', toggleDisplayCSS, false);
     document.getElementById('hideCRCs').addEventListener('click', toggleDisplayCSS, false);
     document.getElementById('hideBashTags').addEventListener('click', toggleDisplayCSS, false);
@@ -355,7 +348,7 @@ for (var i = 0; i < menus.length; ++i) {
     menus[i].addEventListener('click', function(evt) {
         var action = evt.currentTarget.getAttribute('data-action');
         var target = document.getElementById(evt.currentTarget.getAttribute('data-target'));
-        if (action == 'open-menu' || action == 'open-dialog') {
+        if (action == 'view-ui') {
             if (isVisible(target)) {
                 hideElement(target);
                 if (target.getAttribute('data-overlay')) {

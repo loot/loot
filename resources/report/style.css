@@ -25,6 +25,7 @@ body {
     font:10pt/1.5 Helvetica,sans-serif;
     margin:0;
     background:#f8f8f8;
+    height: 100%;
 }
 noscript {
     background:#c00;
@@ -125,6 +126,9 @@ nav ol li {
     position: absolute;
     top: 3em;
     left: 20em;
+    right:0;
+    height: calc(100% - 3em);
+    overflow: auto;
 }
 
 section, #settings, #about, #settings {
