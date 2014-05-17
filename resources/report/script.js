@@ -346,18 +346,32 @@ function processURLParams() {
 }
 processURLParams();
 
-var menus = document.getElementsByTagName('header')[0].children[1].children;
+var menus = document.getElementsByTagName('header')[0].getElementsByTagName('li');
+var overlay = document.getElementById('overlay');
 
 for (var i = 0; i < menus.length; ++i) {
-    menus[i].onclick = function(evt) {
-        var action = evt.target.getAttribute('data-action');
-        var target = document.getElementById(evt.target.getAttribute('data-target'));
+    menus[i].addEventListener('click', function(evt) {
+        var action = evt.currentTarget.getAttribute('data-action');
+        var target = document.getElementById(evt.currentTarget.getAttribute('data-target'));
         if (action == 'open-menu' || action == 'open-dialog') {
             if (isVisible(target)) {
                 hideElement(target);
+                if (target.getAttribute('data-overlay')) {
+                    overlay.setAttribute('data-dialog', '');
+                    hideElement(overlay);
+                }
             } else {
                 showElement(target);
+                if (target.getAttribute('data-overlay') == '1') {
+                    overlay.setAttribute('data-dialog', target.id);
+                    showElement(overlay);
+                }
             }
         }
-    }
+    }, false);
+
+    overlay.addEventListener('click', function(evt) {
+        hideElement(overlay);
+        hideElement(document.getElementById(overlay.getAttribute('data-dialog')));
+    }, false);
 }
