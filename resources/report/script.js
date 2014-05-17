@@ -219,9 +219,11 @@ function setupEventHandlers() {
 }
 function processURLParams() {
     /* Get the data path from the URL and load it. */
-    var pos = document.URL.indexOf("?data=");
+    /*var pos = document.URL.indexOf("?data=");*/
+    var pos = 0;
     if (pos != -1) {
-        var datapath = 'file:///' + document.URL.substring(pos+6);
+        /*var datapath = 'file:///' + document.URL.substring(pos+6);*/
+        var datapath = 'testdata'
         console.log(datapath);
         require([datapath], function(){
             var totalMessageNo = 0;
