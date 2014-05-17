@@ -249,14 +249,16 @@ function processURLParams() {
                 var content, clone;
                 /* First add link to navbar. */
                 content = document.getElementById('pluginNav').content;
-                content.children[0].children[0].textContent = data.plugins[i].name;
-                content.children[0].children[0].href = '#' + data.plugins[i].name.replace(/\s+/g, '');
-
                 clone = document.importNode(content, true);
                 pluginsNav.appendChild(clone);
+                pluginsNav.lastElementChild.children[0].textContent = data.plugins[i].name;
+                pluginsNav.lastElementChild.children[0].href = '#' + data.plugins[i].name.replace(/\s+/g, '');
 
-                var content = document.getElementById('pluginSection').content;
-                var section = content.children[0];
+
+                content = document.getElementById('pluginSection').content;
+                clone = document.importNode(content, true);
+                pluginsList.appendChild(clone);
+                var section = pluginsList.lastElementChild;
 
                 section.setAttribute('data-active', data.plugins[i].isActive);
                 section.id = data.plugins[i].name.replace(/\s+/g, '');
@@ -310,8 +312,6 @@ function processURLParams() {
                 } else {
                     section.children[5].className += ' hidden';
                 }
-                clone = document.importNode(content, true);
-                pluginsList.appendChild(clone);
             }
             document.getElementById('filterTotalMessageNo').textContent = totalMessageNo;
             document.getElementById('totalMessageNo').textContent = totalMessageNo;

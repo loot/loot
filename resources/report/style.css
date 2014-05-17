@@ -286,7 +286,7 @@ ul {
     padding:0.5em 1em;
     list-style:disc inside;
 }
-.error, .warn {
+.say, .error, .warn {
     padding:0.5em 1em;
     list-style:disc inside;
 }
