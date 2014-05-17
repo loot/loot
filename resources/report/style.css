@@ -67,13 +67,6 @@ header img {
     vertical-align: middle;
     padding: 0 0.5em;
 }
-
-header li.selected {
-    border-top: rgba(0,0,0,0.5) 1px solid;
-    border-left: rgba(0,0,0,0.5) 1px solid;
-    border-right: rgba(0,0,0,0.5) 1px solid;
-}
-
 header > ol > li > ol {
     background: #e3e3e3;
     position: fixed;
@@ -104,15 +97,27 @@ nav {
     height: calc(100% - 3em);
 }
 nav > ol {
+    padding-left: 1em;
     list-style-type: none;
     height: calc(100% - 3em);
 }
-nav > ol > li:nth-child(3), #pluginsNav {
-    height: calc(100% - 5em);
+nav > ol > li:nth-child(3) {
+    height: calc(100% - 7em);
     overflow: auto;
 }
-nav ol li {
-    padding: 1em 0.5em;
+#pluginsNav {
+    height: 100%;
+    overflow: auto;
+}
+nav li {
+    padding: 0.5em 0.5em;
+}
+nav > ol > li:not(:nth-child(3)):hover, #pluginsNav li:hover {
+    background: #ccc;
+}
+nav a {
+    text-decoration: none;
+    color:black;
 }
 #pluginsNav {
     margin: 0;
@@ -131,7 +136,7 @@ nav ol li {
     overflow: auto;
 }
 
-section, #settings, #about, #settings {
+section, #settings, #about {
     background:white;
     overflow:hidden;
     margin:1em;
@@ -140,7 +145,7 @@ section, #settings, #about, #settings {
 }
 
 #settings, #about {
-    margin: 1em auto;
+    margin: 1em;
     position: fixed;
     z-index:4;
     top: 10%;
@@ -165,6 +170,20 @@ section, #settings, #about, #settings {
     top: 0;
     left: 0;
 }
+
+section h1 {
+    margin: 0;
+    font-weight: normal;
+    font-size: 1.2em;
+}
+
+#settings h1, #about h1 {
+    margin: 0;
+    font-weight: normal;
+}
+
+
+/* Old CSS */
 
 .button {
     display:inline-table;

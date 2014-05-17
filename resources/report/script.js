@@ -226,7 +226,7 @@ function processURLParams() {
             var dirtyPluginNo = 0;
             /* Fill report with data. */
             document.getElementById('LOOTVersion').textContent = data.lootVersion;
-            document.getElementById('masterlistRevision').textContent = data.masterlist.revision;
+            document.getElementById('masterlistRevision').textContent = data.masterlist.revision.substr(0, 9);
             document.getElementById('masterlistDate').textContent = data.masterlist.date;
             var generalMessagesList = document.getElementById('generalMessages').getElementsByTagName('ul')[0];
             for (var i = 0; i < data.globalMessages.length; ++i) {
