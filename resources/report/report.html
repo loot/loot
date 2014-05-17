@@ -23,22 +23,30 @@
             </ul>
         </section>
     </template>
-    <template id="sayMessage">
-        <li class="say">
-    </template>
-    <template id="warnMessage">
-        <li class="warn">
-    </template>
-    <template id="errorMessage">
-        <li class="error">
-    </template>
-    <template>
-        <div id="messageBox">
+    <template id="messageBox">
+        <div class="messageBox">
             <h1></h1>
-            <p>
+            <p></p>
+            <button>Close</button>
         </div>
     </template>
-    <template>
+    <template id="messageDialog">
+        <div class="messageDialog">
+            <h1></h1>
+            <p></p>
+            <button>Yes</button>
+            <button>Cancel</button>
+        </div>
+    </template>
+    <template id="pluginMenu">
+        <!-- The ol (or each li?) should have a 'data-plugin' attribute added with the plugin filename. -->
+        <ol class="menu">
+            <li data-action="view-ui" data-target="editor">Edit Metadata
+            <li data-action="copy-metadata">Copy Metadata As Text
+            <li data-action="clear-metadata">Clear User Metadata
+        </ol>
+    </template>
+    <template id="editorPanel">
         <div id="editor">
             <h1></h1>
             <label for="editorEnableEdits">Enable Edits</label>
@@ -48,6 +56,12 @@
             <label for="editorGlobalPriority">Compare priority against all other plugins</label>
             <input type="checkbox" id="editorGlobalPriority">
             <!-- Need to finish template for editing panel. -->
+            <label for="editorShowOnlyConflicts">Show Only Conflicts</label>
+            <input type="checkbox" id="editorShowOnlyConflicts">
+            <label for="editorSimpleView">Simple View</label>
+            <input type="checkbox" id="editorSimpleView">
+            <button>Apply</button>
+            <button>Cancel</button>
         </div>
     </template>
     <noscript>The LOOT Report requires Javascript to be enabled in order to function.</noscript>
@@ -58,6 +72,7 @@
             <ol id="fileMenu" class="hidden">
                 <li data-action="redate-plugins">Redate Plugins
                 <li data-action="open-log-location">Open Debug Log Location
+                <li data-action="wipe-userlist">Clear All User Metadata
             </ol>
             <li data-action="view-ui" data-target="gameMenu">Game
             <ol id="gameMenu" class="hidden">
@@ -85,30 +100,30 @@
             <ol id="pluginsNav">
                 <!-- Generated <li> elements go here, containing # links to each plugin's section in the list. -->
             </ol>
-    <ol id="filters" class="hidden" data-replace="pluginsNav">
-        <input type="checkbox" id="hideVersionNumbers" data-class="version" />
-        <label for="hideVersionNumbers">Hide version numbers</label><br>
-        <input type="checkbox" id="hideCRCs" data-class="crc" />
-        <label for="hideCRCs">Hide CRCs</label><br>
-        <input type="checkbox" id="hideBashTags" data-class="tag" />
-        <label for="hideBashTags">Hide Bash Tags</label><br>
-        <input type="checkbox" id="hideNotes" />
-        <label for="hideNotes">Hide notes</label><br>
-        <input type="checkbox" id="hideDoNotCleanMessages" />
-        <label for="hideDoNotCleanMessages">Hide 'Do not clean' messages</label><br>
-        <input type="checkbox" id="hideInactivePluginMessages" />
-        <label for="hideInactivePluginMessages">Hide inactive plugin messages</label><br>
-        <input type="checkbox" id="hideAllPluginMessages" />
-        <label for="hideAllPluginMessages">Hide all plugin messages</label><br>
-        <input type="checkbox" id="hideMessagelessPlugins" />
-        <label for="hideMessagelessPlugins">Hide messageless plugins</label><br>
-        <div>
-            <span>Hidden plugins</span>: <span id="hiddenPluginNo">0</span> / <span id="totalPluginNo"></span>
-        </div>
-        <div>
-            <span>Hidden messages</span>: <span id="hiddenMessageNo">0</span> / <span id="filterTotalMessageNo"></span>
-        </div>
-    </ol>
+            <ol id="filters" class="hidden" data-replace="pluginsNav">
+                <input type="checkbox" id="hideVersionNumbers" data-class="version" />
+                <label for="hideVersionNumbers">Hide version numbers</label><br>
+                <input type="checkbox" id="hideCRCs" data-class="crc" />
+                <label for="hideCRCs">Hide CRCs</label><br>
+                <input type="checkbox" id="hideBashTags" data-class="tag" />
+                <label for="hideBashTags">Hide Bash Tags</label><br>
+                <input type="checkbox" id="hideNotes" />
+                <label for="hideNotes">Hide notes</label><br>
+                <input type="checkbox" id="hideDoNotCleanMessages" />
+                <label for="hideDoNotCleanMessages">Hide 'Do not clean' messages</label><br>
+                <input type="checkbox" id="hideInactivePluginMessages" />
+                <label for="hideInactivePluginMessages">Hide inactive plugin messages</label><br>
+                <input type="checkbox" id="hideAllPluginMessages" />
+                <label for="hideAllPluginMessages">Hide all plugin messages</label><br>
+                <input type="checkbox" id="hideMessagelessPlugins" />
+                <label for="hideMessagelessPlugins">Hide messageless plugins</label><br>
+                <div>
+                    <span>Hidden plugins</span>: <span id="hiddenPluginNo">0</span> / <span id="totalPluginNo"></span>
+                </div>
+                <div>
+                    <span>Hidden messages</span>: <span id="hiddenMessageNo">0</span> / <span id="filterTotalMessageNo"></span>
+                </div>
+            </ol>
             <li data-action="view-ui" data-target="filters">Filters
         </ol>
     </nav>

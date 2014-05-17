@@ -107,7 +107,7 @@ nav > ol {
 nav > ol > li:nth-child(3) {
     height: calc(100% - 7em);
     overflow: auto;
-    padding:0;
+    padding: 0;
 }
 #pluginsNav {
     height: 100%;
@@ -115,6 +115,7 @@ nav > ol > li:nth-child(3) {
 }
 nav li {
     padding: 0.5em 0.5em;
+    cursor: pointer;
 }
 nav > ol > li:not(:nth-child(3)):hover, #pluginsNav li:hover {
     background: #ccc;
@@ -122,6 +123,8 @@ nav > ol > li:not(:nth-child(3)):hover, #pluginsNav li:hover {
 nav a {
     text-decoration: none;
     color:black;
+    display: inline-block;
+    width: 100%;
 }
 #pluginsNav {
     margin: 0;
