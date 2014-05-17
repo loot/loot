@@ -105,6 +105,7 @@ header > ol > li > ol > li {
 }
 nav {
     height: 100%;
+    min-width: 20em;
 }
 nav > ol {
     padding-left: 1em;
@@ -153,6 +154,37 @@ section, #settings, #about {
     margin:1em;
     box-shadow:0 0 3px 0px rgba(0,0,0,0.5);
     padding:1em;
+    position: relative;
+}
+
+section[data-active] .buttons {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    position: absolute;
+    top: 0.5em;
+    right: 0.5em;
+}
+
+.dummyPlugin, .loadsBSA, .hasUserEdits {
+    height: 1.5em;
+    width: 1.5em;
+    text-align: center;
+    vertical-align: middle;
+    display: inline-block;
+    color: white;
+    font-weight: bold;
+    margin: 0.2em;
+    cursor: pointer;
+}
+.dummyPlugin {
+    background: #A9BCF5;
+}
+.loadsBSA {
+    background: green;
+}
+.hasUserEdits {
+    background: #C13C3C;
 }
 
 #settings, #about {

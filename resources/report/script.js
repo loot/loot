@@ -306,6 +306,14 @@ function processURLParams() {
 
                 section.children[1].textContent = 'CRC: ' + data.plugins[i].crc;
 
+                if (data.plugins[i].isDummy) {
+                    showElement(section.getElementsByClassName('dummyPlugin')[0]);
+                }
+
+                if (data.plugins[i].loadsBSA) {
+                    showElement(section.getElementsByClassName('loadsBSA')[0]);
+                }
+
                 if (data.plugins[i].version) {
                     section.children[2].textContent = data.plugins[i].version;
                 } else {
