@@ -266,6 +266,10 @@ function processButtonClick(evt) {
         }
     } else if (action == 'redate-plugins') {
         redatePlugins();
+    } else if (action == 'clear-metadata') {
+        clearMetadata(evt.target.parentNode.parentNode.parentNode.parentNode.children[0].textContent);
+    } else if (action == 'wipe-userlist') {
+        clearAllMetadata();
     }
 }
 function setupEventHandlers() {
