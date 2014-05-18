@@ -281,44 +281,19 @@ section h1 {
     font-style:italic;
 }
 
-
-/* Old CSS */
-
-.button {
-    display:inline-table;
-    cursor:pointer;
-    padding:0.5em;
-    text-decoration:none;
-    transition:background 0.2s;
-}
-.button.current {
-    background: #ccc;
-}
-#summary, #plugins {
-    padding:1em;
-}
 #summary > table {
     border-collapse:separate;
     border-spacing:0;
 }
-td {
+#summary td {
     padding:0.5em;
     line-height:1.5;
     text-align:right;
     padding-left:3em;
 }
-table td:first-child {
+#summary table td:first-child {
     text-align:left;
     padding-left:0;
-}
-table:not(:last-child) {
-    margin-right: 3em;
-}
-#noChanges {
-	font-weight:bold;
-	font-size:12pt;
-	text-align:center;
-	margin:1em;
 }
 input[type='checkbox'] {
     position:relative;
@@ -327,17 +302,9 @@ input[type='checkbox'] {
 }
 ul {
     margin-top:0.5em;
+    margin-bottom:0;
     list-style:none;
     padding-left:0;
-}
-
-
-#plugins > ul > li, #summary > div {
-    background:white;
-    overflow:hidden;
-    margin:1em;
-    box-shadow:0 0 3px 0px rgba(0,0,0,0.5);
-    padding:1em;
 }
 .mod {
     font-size:1.3em;
@@ -357,9 +324,6 @@ ul {
 .hidden {
     display:none;
 }
-#summary > div {
-    float:left;
-}
 #summary li, li > ul > li {
     padding:0.5em 1em;
     list-style:disc inside;
@@ -374,8 +338,7 @@ ul {
 .warn{
     background:#FFDD55;
 }
-h2 {
-    font-weight: normal;
-    margin:0;
-    display:block;
+
+#settings td {
+    vertical-align: top;
 }

@@ -376,6 +376,45 @@ function processURLParams() {
                 }
             }
 
+            /* Now fill game lists/table. */
+            var gameSelect = document.getElementById('defaultGameSelect');
+            var gameMenu = document.getElementById('gameMenu');
+            var gameTable = document.getElementById('gameTable');
+            for (var i = 0; i < data.games.length; ++i) {
+                var option = document.createElement('option');
+                option.value = data.games[i].folder;
+                option.textContent = data.games[i].name;
+                gameSelect.appendChild(option);
+
+                var li = document.createElement('li');
+                li.setAttribute('data-action', 'change-game');
+                li.setAttribute('data-target', data.games[i].folder);
+                li.textContent = data.games[i].name;
+                gameMenu.appendChild(li);
+
+                var content = document.getElementById('gameRow').content;
+                var clone = document.importNode(content, true);
+                gameTable.appendChild(clone);
+                clone = gameTable.lastElementChild;
+                clone.children[0].textContent = data.games[i].name;
+                clone.children[1].textContent = data.games[i].type;
+                clone.children[2].textContent = data.games[i].folder;
+                clone.children[3].textContent = data.games[i].masterFile;
+                clone.children[4].textContent = data.games[i].url;
+                clone.children[5].textContent = data.games[i].branch;
+                clone.children[6].textContent = data.games[i].path;
+                clone.children[7].textContent = data.games[i].registryKey;
+            }
+
+            /* Now fill in language options. */
+            var langSelect = document.getElementById('languageSelect');
+            for (var i = 0; i < data.languages.length; ++i) {
+                var option = document.createElement('option');
+                option.value = data.languages[i];
+                option.textContent = data.languages[i];
+                langSelect.appendChild(option);
+            }
+
             /* Now initialise the rest of the report. */
             setupEventHandlers();
             if (isStorageSupported()) {

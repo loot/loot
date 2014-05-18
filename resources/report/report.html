@@ -9,6 +9,17 @@
     <script src="js/require.js"></script>
 </head>
 <body>
+    <template id="gameRow">
+        <tr>
+            <td>Name
+            <td>Base Game
+            <td>LOOT Folder
+            <td>Master File
+            <td>Masterlist Repository URL
+            <td>Masterlist Repository Branch
+            <td>Install Path
+            <td>Install Path Registry Key
+    </template>
     <template id="pluginNav">
         <li><a href=""></a>
     </template>
@@ -53,6 +64,8 @@
     <template id="editorPanel">
         <div id="editor">
             <h1></h1>
+            <div class="crc"></div>
+            <div class="version"></div>
             <label for="editorEnableEdits">Enable Edits</label>
             <input type="checkbox" id="editorEnableEdits">
             <label for="editorPriorityValue">Priority</label>
@@ -197,6 +210,12 @@ along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
                 <option value="3">High</option>
             </select>
             <!-- Need to add an editable multi-column game list here. -->
+            <table>
+                <thead>
+                    <tr><th>Name<th>Base Game<th>LOOT Folder<th>Master File<th>Masterlist Repository URL<th>Masterlist Repository Branch<th>Install Path<th>Install Path Registry Key
+                <tbody id="gameTable">
+                    <!-- Game rows go here. -->
+            </table>
             <p>Language and game changes will be applied after LOOT is restarted.
             <hr>
             <button>Apply</button>
