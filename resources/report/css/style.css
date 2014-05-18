@@ -342,9 +342,6 @@ ul {
     background:#FFDD55;
 }
 
-#settings td, #settings th {
-    vertical-align: top;
-}
 #settings select {
     float: right;
     clear: both;
@@ -356,4 +353,16 @@ ul {
     height: 18px;
     padding: 1px;
     margin: 2px;
+}
+#settings table {
+    margin: 3em 1em;
+    border-collapse: collapse;
+}
+#settings td, #settings th {
+    vertical-align: top;
+    text-align: left;
+    padding: 0.5em;
+}
+#settings th {
+    border-bottom: 1px black solid;
 }
