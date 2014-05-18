@@ -227,12 +227,13 @@ section[data-active] {
 
 
 #settings, #about {
-    margin: 1em;
-    position: fixed;
+    padding: 2em;
     z-index:4;
-    top: 10%;
-    left: 25%;
-    width: 50%;
+    margin: 0 auto;
+    display:table;
+    position: relative;
+    top: 3em;
+    max-width: 90%;
 }
 
 #about h1, #about p {
@@ -261,6 +262,8 @@ section h1 {
 
 #settings h1, #about h1 {
     margin: 0;
+    margin-bottom: 1em;
+    text-align: center;
     font-weight: normal;
 }
 #filters {
@@ -321,7 +324,7 @@ ul {
 .tag.remove {
     color:red;
 }
-.hidden {
+.hidden, #about.hidden, #settings.hidden {
     display:none;
 }
 #summary li, li > ul > li {
@@ -339,6 +342,18 @@ ul {
     background:#FFDD55;
 }
 
-#settings td {
+#settings td, #settings th {
     vertical-align: top;
+}
+#settings select {
+    float: right;
+    clear: both;
+    position:relative;
+    top:-0.15em;
+}
+#settings label {
+    display: inline-block;
+    height: 18px;
+    padding: 1px;
+    margin: 2px;
 }
