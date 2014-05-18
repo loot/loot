@@ -61,6 +61,9 @@ header > ol:last-child {
     position: fixed;
     right: 0;
 }
+header li span {
+    opacity: 0.5;
+}
 header li:hover {
     background: #ccc;
 }
@@ -171,38 +174,21 @@ section[data-active] .buttons {
     right: 0.5em;
     overflow:visible;
 }
-section[data-active] .buttons > li:not(:last-child) {
+section .buttons > li:not(:last-child) {
     opacity: 0.5;
+    text-align: center;
+    display: inline-block;
+    margin: 0.2em;
+    cursor: pointer;
 }
-section[data-active] .buttons > li:hover {
+section .buttons  > li:hover {
     opacity: 1;
 }
 .pluginMenu {
     width: 1.5em;
     text-align: center;
-    vertical-align: bottom;
     margin: 0.2em;
     cursor: pointer;
-}
-.dummyPlugin, .loadsBSA, .hasUserEdits {
-    height: 1.5em;
-    width: 1.5em;
-    text-align: center;
-    vertical-align: middle;
-    display: inline-block;
-    color: white;
-    font-weight: bold;
-    margin: 0.2em;
-    cursor: pointer;
-}
-.dummyPlugin {
-    background: #A9BCF5;
-}
-.loadsBSA {
-    background: green;
-}
-.hasUserEdits {
-    background: #C13C3C;
 }
 .menu {
     background: white;
@@ -211,7 +197,7 @@ section[data-active] .buttons > li:hover {
     position: absolute;
     right: 0.5em;
     font: 10pt/1.5 Helvetica,sans-serif;
-    width: 12em;
+    width: 13em;
     z-index: 2;
     text-align: left;
     opacity: 1;
@@ -324,7 +310,7 @@ ul {
 .tag.remove {
     color:red;
 }
-.hidden {
+.hidden, section .buttons li.hidden {
     display:none;
 }
 #summary li, li > ul > li {
