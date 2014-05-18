@@ -183,11 +183,54 @@ function togglePlugins(evt) {
     }
     document.getElementById('hiddenPluginNo').textContent = hiddenNo;
 }
+function hideDialog(evt) {
+    hideElement(document.getElementById('overlay'));
+    var target = document.getElementById(evt.target.getAttribute('data-dialog'));
+    hideElement(target);
+    if (target.id == 'modalDialog') {
+        document.body.removeChild(target);
+    }
+}
+function showMessageDialog(title, text) {
+    var content = document.getElementById('messageDialog').content;
+    var clone = document.importNode(content, true);
+    document.body.appendChild(clone);
+    clone = document.body.lastElementChild;
+
+    clone.id = 'modalDialog';
+
+    clone.children[0].textContent = title;
+    clone.children[1].textContent = text;
+
+    var overlay = document.getElementById('overlay');
+    overlay.removeEventListener('click', hideDialog, false);
+    showElement(overlay);
+
+    clone.children[2].setAttribute('data-dialog', clone.id);
+    clone.children[2].addEventListener('click', hideDialog, false);
+
+    clone.children[3].setAttribute('data-dialog', clone.id);
+    clone.children[3].addEventListener('click', hideDialog, false);
+}
+function showMessageBox(type, title, text) {
+
+}
+function redatePlugins() {
+    showMessageDialog('Redate Plugins', 'This feature is provided so that modders using the Creation Kit may set the load order it uses. A side-effect is that any subscribed Steam Workshop mods will be re-downloaded by Steam. Do you wish to continue?');
+
+    //showMessageBox('info', 'Redate Plugins', 'Plugins were successfully redated.');
+}
+function clearAllMetadata() {
+    showMessageDialog('Clear All Metadata', 'Are you sure you want to clear all existing user-added metadata from all plugins?');
+}
+function clearMetadata(filename) {
+    showMessageDialog('Clear Plugin Metadata', 'Are you sure you want to clear all existing user-added metadata from "' + filename + '"?');
+}
 function processButtonClick(evt) {
     var overlay = document.getElementById('overlay');
     var action = evt.currentTarget.getAttribute('data-action');
-    var target = document.getElementById(evt.currentTarget.getAttribute('data-target'));
     if (action == 'view-ui') {
+        var target = document.getElementById(evt.currentTarget.getAttribute('data-target'));
         if (isVisible(target)) {
             hideElement(target);
             if (target.getAttribute('data-overlay')) {
@@ -203,6 +246,7 @@ function processButtonClick(evt) {
             showElement(target);
             if (target.getAttribute('data-overlay') == '1') {
                 overlay.setAttribute('data-dialog', target.id);
+                overlay.addEventListener('click', hideDialog, false);
                 showElement(overlay);
             } else {
                 var replace = target.getAttribute('data-replace');
@@ -218,11 +262,9 @@ function processButtonClick(evt) {
         } else {
             showElement(target);
         }
+    } else if (action == 'redate-plugins') {
+        redatePlugins();
     }
-}
-function toggleOverlay(evt) {
-    hideElement(evt.target);
-    hideElement(document.getElementById(evt.target.getAttribute('data-dialog')));
 }
 function setupEventHandlers() {
     var elements;
@@ -246,7 +288,6 @@ function setupEventHandlers() {
     for (var i = 0; i < elements.length; ++i) {
         elements[i].addEventListener('click', processButtonClick, false);
     }
-    overlay.addEventListener('click', toggleOverlay, false);
 }
 function processURLParams() {
     /* Get the data path from the URL and load it. */

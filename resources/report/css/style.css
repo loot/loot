@@ -148,7 +148,7 @@ nav a {
     flex-shrink: 10;
 }
 
-section, #settings, #about {
+section, .dialog {
     background:white;
     overflow:hidden;
     margin:1em;
@@ -226,7 +226,7 @@ section[data-active] {
 }
 
 
-#settings, #about {
+.dialog {
     padding: 2em;
     z-index:4;
     margin: 0 auto;
@@ -260,7 +260,7 @@ section h1 {
     font-size: 1.2em;
 }
 
-#settings h1, #about h1 {
+.dialog h1 {
     margin: 0;
     margin-bottom: 1em;
     text-align: center;
@@ -324,7 +324,7 @@ ul {
 .tag.remove {
     color:red;
 }
-.hidden, #about.hidden, #settings.hidden {
+.hidden {
     display:none;
 }
 #summary li, li > ul > li {
@@ -365,4 +365,8 @@ ul {
 }
 #settings th {
     border-bottom: 1px black solid;
+}
+
+.message {
+    width: 40em;
 }
