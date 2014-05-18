@@ -199,18 +199,20 @@ function showMessageDialog(title, text) {
 
     clone.id = 'modalDialog';
 
-    clone.children[0].textContent = title;
-    clone.children[1].textContent = text;
+    clone.children[0].className += ' warn';
+
+    clone.children[1].textContent = title;
+    clone.children[2].textContent = text;
 
     var overlay = document.getElementById('overlay');
     overlay.removeEventListener('click', hideDialog, false);
     showElement(overlay);
 
-    clone.children[2].setAttribute('data-dialog', clone.id);
-    clone.children[2].addEventListener('click', hideDialog, false);
+    clone.children[3].children[0].setAttribute('data-dialog', clone.id);
+    clone.children[3].children[0].addEventListener('click', hideDialog, false);
 
-    clone.children[3].setAttribute('data-dialog', clone.id);
-    clone.children[3].addEventListener('click', hideDialog, false);
+    clone.children[3].children[1].setAttribute('data-dialog', clone.id);
+    clone.children[3].children[1].addEventListener('click', hideDialog, false);
 }
 function showMessageBox(type, title, text) {
 

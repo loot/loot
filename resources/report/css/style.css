@@ -161,7 +161,7 @@ section[data-active] {
     overflow:visible;
 }
 
-.buttons {
+section[data-active] .buttons {
     background: transparent;
     margin: 0;
     padding: 0;
@@ -171,10 +171,10 @@ section[data-active] {
     right: 0.5em;
     overflow:visible;
 }
-.buttons > li:not(:last-child) {
+section[data-active] .buttons > li:not(:last-child) {
     opacity: 0.5;
 }
-.buttons > li:hover {
+section[data-active] .buttons > li:hover {
     opacity: 1;
 }
 .pluginMenu {
@@ -331,14 +331,14 @@ ul {
     padding:0.5em 1em;
     list-style:disc inside;
 }
-.say, .error, .warn {
+li.say, li.error, li.warn {
     padding:0.5em 1em;
     list-style:disc inside;
 }
-.error{
+li.error{
     background:#ff9090;
 }
-.warn{
+li.warn{
     background:#FFDD55;
 }
 
@@ -369,4 +369,16 @@ ul {
 
 .message {
     width: 40em;
+}
+.message span:first-child {
+    font-size: 4em;
+    position: absolute;
+    left: 1em;
+    top: 23px;
+}
+.message span.warn  {
+    color: gold;
+}
+.dialog .buttons {
+    text-align: center;
 }
