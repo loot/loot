@@ -126,6 +126,8 @@ nav > ol > li:nth-child(3) {
 }
 nav li {
     padding: 0.5em 0.5em;
+}
+nav > ol > li:last-child {
     cursor: pointer;
 }
 nav > ol > li:not(:nth-child(3)):hover, #pluginsNav li:hover {
