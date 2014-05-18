@@ -157,15 +157,33 @@ section, #settings, #about {
     position: relative;
 }
 
-section[data-active] .buttons {
+section[data-active] {
+    overflow:visible;
+}
+
+.buttons {
+    background: transparent;
     margin: 0;
     padding: 0;
     list-style-type: none;
     position: absolute;
-    top: 0.5em;
+    top: 1em;
     right: 0.5em;
+    overflow:visible;
 }
-
+.buttons > li:not(:last-child) {
+    opacity: 0.5;
+}
+.buttons > li:hover {
+    opacity: 1;
+}
+.pluginMenu {
+    width: 1.5em;
+    text-align: center;
+    vertical-align: bottom;
+    margin: 0.2em;
+    cursor: pointer;
+}
 .dummyPlugin, .loadsBSA, .hasUserEdits {
     height: 1.5em;
     width: 1.5em;
@@ -186,6 +204,27 @@ section[data-active] .buttons {
 .hasUserEdits {
     background: #C13C3C;
 }
+.menu {
+    background: white;
+    box-shadow:0 0 3px 0px rgba(0,0,0,0.5);
+    list-style-type: none;
+    position: absolute;
+    right: 0.5em;
+    font: 10pt/1.5 Helvetica,sans-serif;
+    width: 12em;
+    z-index: 2;
+    text-align: left;
+    opacity: 1;
+    padding:0;
+}
+.menu > li {
+    padding: 0.2em 0.5em;
+    cursor: pointer;
+}
+.menu > li:hover {
+    background:#e3e3e3;
+}
+
 
 #settings, #about {
     margin: 1em;

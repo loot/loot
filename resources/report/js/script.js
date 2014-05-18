@@ -211,6 +211,13 @@ function processButtonClick(evt) {
                 }
             }
         }
+    } else if (action == 'show-menu') {
+        target = evt.target.nextSibling;
+        if (isVisible(target)) {
+            hideElement(target);
+        } else {
+            showElement(target);
+        }
     }
 }
 function toggleOverlay(evt) {

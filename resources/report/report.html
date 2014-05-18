@@ -3,9 +3,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta charset="utf-8" />
     <title>LOOT Report</title>
-    <link rel="stylesheet" href="style.css" />
-    <script src="polyfill.js"></script>
-    <script src="require.js"></script>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/font-awesome.css" />
+    <script src="js/polyfill.js"></script>
+    <script src="js/require.js"></script>
 </head>
 <body>
     <template id="pluginNav">
@@ -25,7 +26,12 @@
                 <li class="dummyPlugin hidden" title="Dummy Plugin">D
                 <li class="loadsBSA hidden" title="Loads BSA">B
                 <li class="hasUserEdits hidden" title="Has User Metadata">U
-                <li>
+                <li class=" fa fa-ellipsis-v fa-lg pluginMenu" data-action="show-menu">
+                <li class="hidden"><ol class="menu">
+                    <li data-action="view-ui" data-target="editor">Edit Metadata
+                    <li data-action="copy-metadata">Copy Metadata As Text
+                    <li data-action="clear-metadata">Clear User Metadata
+                </ol>
             </ol>
         </section>
     </template>
@@ -43,14 +49,6 @@
             <button>Yes</button>
             <button>Cancel</button>
         </div>
-    </template>
-    <template id="pluginMenu">
-        <!-- The ol (or each li?) should have a 'data-plugin' attribute added with the plugin filename. -->
-        <ol class="menu">
-            <li data-action="view-ui" data-target="editor">Edit Metadata
-            <li data-action="copy-metadata">Copy Metadata As Text
-            <li data-action="clear-metadata">Clear User Metadata
-        </ol>
     </template>
     <template id="editorPanel">
         <div id="editor">
@@ -208,5 +206,5 @@ along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
 
     <div id="overlay" class="hidden"></div>
 
-    <script src="script.js"></script>
+    <script src="js/script.js"></script>
 </body>
