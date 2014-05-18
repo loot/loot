@@ -145,7 +145,10 @@ nav a {
     padding: 0 0.5em;
     white-space:nowrap;
 }
-
+#pluginsNav li span {
+    display: inline-block;
+    width: 1.2em;
+}
 #main {
     overflow: auto;
     flex-shrink: 10;

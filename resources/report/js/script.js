@@ -336,10 +336,25 @@ function processURLParams() {
                 content = document.getElementById('pluginNav').content;
                 clone = document.importNode(content, true);
                 pluginsNav.appendChild(clone);
-                pluginsNav.lastElementChild.children[0].textContent = data.plugins[i].name;
-                pluginsNav.lastElementChild.children[0].href = '#' + data.plugins[i].name.replace(/\s+/g, '');
+                clone = pluginsNav.lastElementChild;
 
+                clone.children[3].textContent = data.plugins[i].name;
+                clone.children[3].href = '#' + data.plugins[i].name.replace(/\s+/g, '');
 
+                if (data.plugins[i].isDummy) {
+                    clone.getElementsByClassName('dummyPlugin')[0].className += ' fa fa-file-o';
+                }
+
+                if (data.plugins[i].loadsBSA) {
+                    clone.getElementsByClassName('loadsBSA')[0].className += ' fa fa-folder-open';
+                }
+
+                if (data.plugins[i].hasUserEdits) {
+                    /* This won't actually be handled anything like this in the real data implementation. */
+                    clone.getElementsByClassName('hasUserEdits')[0].className += ' fa fa-user';
+                }
+
+                /* Now add plugin 'card'. */
                 content = document.getElementById('pluginSection').content;
                 clone = document.importNode(content, true);
                 pluginsList.appendChild(clone);
@@ -366,6 +381,11 @@ function processURLParams() {
 
                 if (data.plugins[i].loadsBSA) {
                     showElement(section.getElementsByClassName('loadsBSA')[0]);
+                }
+
+                if (data.plugins[i].hasUserEdits) {
+                    /* This won't actually be handled anything like this in the real data implementation. */
+                    showElement(section.getElementsByClassName('hasUserEdits')[0]);
                 }
 
                 if (data.plugins[i].version) {

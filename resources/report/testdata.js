@@ -14,6 +14,7 @@ var data = {
             "name": "Update.esm",
             "loadsBSA": true,
             "isActive": true,
+            "hasUserEdits": true,
             "crc": "E5B67BDA",
             "tagsAdd": ["Delev",
             "Relev"], "messages": [{"type": "warn",
