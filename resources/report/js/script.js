@@ -272,6 +272,29 @@ function processButtonClick(evt) {
         clearAllMetadata();
     }
 }
+function toggleInputRO(evt) {
+    if (evt.target.readOnly) {
+        evt.target.removeAttribute('readonly');
+    } else {
+        evt.target.setAttribute('readonly', '');
+    }
+}
+function removeGameRow(evt) {
+    evt.target.parentElement.parentElement.parentElement.removeChild(evt.target.parentElement.parentElement);
+}
+function addNewGameRow(evt) {
+    var clone = evt.currentTarget.cloneNode(true);
+    var inputs = clone.getElementsByTagName('input');
+    for (var i = 0; i < inputs.length; ++i) {
+        inputs[i].removeAttribute('readonly');
+        inputs[i].addEventListener('dblclick', toggleInputRO, false);
+    }
+    clone.querySelector('.name').placeholder = '';
+    showElement(clone.querySelector('.type'));
+    showElement(clone.querySelector('.fa-trash-o'));
+    clone.querySelector('.fa-trash-o').addEventListener('click', removeGameRow, false);
+    evt.currentTarget.parentElement.insertBefore(clone, evt.currentTarget);
+}
 function setupEventHandlers() {
     var elements;
     if (isStorageSupported()) { /*Set up filter value and CSS setting storage read/write handlers.*/
@@ -294,6 +317,16 @@ function setupEventHandlers() {
     for (var i = 0; i < elements.length; ++i) {
         elements[i].addEventListener('click', processButtonClick, false);
     }
+    /* Set up handlers for game table. */
+    elements = document.getElementById('gameTable').querySelectorAll('tbody > tr');
+    for (var i = 0; i < elements.length - 1; ++i) {
+        var inputs = elements[i].getElementsByTagName('input');
+        for (var j = 0; j < inputs.length; ++j) {
+            inputs[j].addEventListener('dblclick', toggleInputRO, false);
+        }
+        elements[i].querySelector('.fa-trash-o').addEventListener('click', removeGameRow, false);
+    }
+    elements[elements.length - 1].addEventListener('dblclick', addNewGameRow, false);
 }
 function processURLParams() {
     /* Get the data path from the URL and load it. */
@@ -470,16 +503,6 @@ function processURLParams() {
                 gameTable.appendChild(clone);
                 clone = gameTable.lastElementChild;
                 clone.querySelector('.name').value = data.games[i].name;
-                var inputs = clone.getElementsByTagName('input');
-                for (var j = 0; j < inputs.length; ++j) {
-                    inputs[j].addEventListener('dblclick', function(evt){
-                        if (evt.target.readOnly) {
-                            evt.target.removeAttribute('readonly');
-                        } else {
-                            evt.target.setAttribute('readonly', '');
-                        }
-                    });
-                }
                 clone.querySelector('.type').value = data.games[i].type;
                 clone.querySelector('.folder').value = data.games[i].folder;
                 clone.querySelector('.masterFile').value = data.games[i].masterFile;
@@ -488,29 +511,14 @@ function processURLParams() {
                 clone.querySelector('.path').value = data.games[i].path;
                 clone.querySelector('.registryKey').value = data.games[i].registryKey;
             }
+            /* Add row for creating new rows. */
             var content = document.getElementById('gameRow').content;
             var clone = document.importNode(content, true);
             gameTable.appendChild(clone);
             clone = gameTable.lastElementChild;
-            clone.querySelector('.name').placeholder = 'Add new row...'
+            clone.querySelector('.name').placeholder = 'Add new row...';
             hideElement(clone.querySelector('.type'));
-            clone.addEventListener('dblclick', function(evt){
-                var newClone = evt.currentTarget.cloneNode(true);
-                var inputs = newClone.getElementsByTagName('input');
-                for (var i = 0; i < inputs.length; ++i) {
-                    inputs[i].removeAttribute('readonly');
-                    inputs[i].addEventListener('dblclick', function(evt){
-                        if (evt.target.readOnly) {
-                            evt.target.removeAttribute('readonly');
-                        } else {
-                            evt.target.setAttribute('readonly', '');
-                        }
-                    });
-                }
-                newClone.querySelector('.name').placeholder = '';
-                showElement(newClone.querySelector('.type'));
-                gameTable.insertBefore(newClone, gameTable.lastElementChild);
-            }, false);
+            hideElement(clone.querySelector('.fa-trash-o'));
 
             /* Now fill in language options. */
             var langSelect = document.getElementById('languageSelect');

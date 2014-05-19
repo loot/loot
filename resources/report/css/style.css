@@ -315,7 +315,7 @@ ul {
 .tag.remove {
     color:red;
 }
-.hidden, section .buttons li.hidden {
+.hidden, section .buttons li.hidden, .fa.hidden {
     display:none;
 }
 #summary li, li > ul > li {
@@ -380,4 +380,11 @@ input[readonly] {
 }
 td input {
     width: 100%;
+    text-overflow: ellipsis;
+}
+#gameTable td:last-child span {
+    cursor: pointer;
+}
+#gameTable td:last-child span:hover {
+    color: red;
 }
