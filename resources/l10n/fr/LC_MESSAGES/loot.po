@@ -3,14 +3,14 @@ msgstr ""
 "Project-Id-Version: BOSS v3.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-10-26 11:41-0000\n"
-"PO-Revision-Date: 2014-02-10 14:48+0100\n"
+"PO-Revision-Date: 2014-05-19 19:39+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
-"Language: French\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.7\n"
+"X-Generator: Poedit 1.6.5\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
 #: backend/game.cpp:96
@@ -41,7 +41,7 @@ msgstr "libloadorder n'a pas pu définir l'ordre de chargement. Détails :"
 
 #: backend/game.cpp:415
 msgid "Could not create BOSS folder for game. Details:"
-msgstr "Impossible de créer le dossier de BOSS pour ce jeu. Détails :"
+msgstr "Impossible de créer le dossier de LOOT pour ce jeu. Détails :"
 
 #: backend/graph.cpp:46
 msgid "Cyclic interaction detected between plugins \"%1%\" and \"%2%\"."
@@ -266,11 +266,11 @@ msgstr "Retirer l'information sur les entrées sales "
 
 #: gui/editor.cpp:411
 msgid "BOSS: Add File/Plugin"
-msgstr "BOSS : Ajouter un fichier / plugin"
+msgstr "LOOT : Ajouter un fichier / plugin"
 
 #: gui/editor.cpp:433
 msgid "BOSS: Add Message"
-msgstr "BOSS : Ajouter un message"
+msgstr "LOOT : Ajouter un message"
 
 #: gui/editor.cpp:443
 msgid "Error: No content specified. Row will not be added."
@@ -285,23 +285,23 @@ msgstr "Erreur : Aucun contenu spécifié. Rien ne sera ajouté. "
 #: gui/settings.cpp:287 gui/settings.cpp:299 gui/settings.cpp:307
 #: gui/settings.cpp:350 gui/settings.cpp:358 gui/settings.cpp:366
 msgid "BOSS: Error"
-msgstr "Erreur de BOSS "
+msgstr "Erreur de LOOT "
 
 #: gui/editor.cpp:454
 msgid "BOSS: Add Tag"
-msgstr "BOSS : Ajouter une étiquette"
+msgstr "LOOT : Ajouter une étiquette"
 
 #: gui/editor.cpp:468
 msgid "BOSS: Add Dirty Info"
-msgstr "BOSS : Ajouter des informations sur les entrées sales"
+msgstr "LOOT : Ajouter des informations sur les entrées sales"
 
 #: gui/editor.cpp:487
 msgid "BOSS: Edit File/Plugin"
-msgstr "BOSS : Éditer le fichier / plugin"
+msgstr "LOOT : Éditer le fichier / plugin"
 
 #: gui/editor.cpp:511
 msgid "BOSS: Edit Message"
-msgstr "BOSS : Éditer le message"
+msgstr "LOOT : Éditer le message"
 
 #: gui/editor.cpp:525
 msgid "Error: No content specified. Row will not be edited."
@@ -309,11 +309,11 @@ msgstr "Erreur : Aucun contenu spécifié. Rien ne sera modifié. "
 
 #: gui/editor.cpp:535
 msgid "BOSS: Edit Tag"
-msgstr "BOSS : Édition des étiquettes"
+msgstr "LOOT : Édition des étiquettes"
 
 #: gui/editor.cpp:557
 msgid "BOSS: Edit Dirty Info"
-msgstr "BOSS : Édition des informations sur la saleté"
+msgstr "LOOT : Édition des informations sur entrées sales"
 
 #: gui/editor.cpp:932
 msgid "Filename (required):"
@@ -410,11 +410,11 @@ msgstr "Pas de masterlist"
 # Version est assez étrange comme formulation.
 #: gui/main.cpp:163
 msgid "Error: BOSS is already running. This instance will now quit."
-msgstr "Erreur : BOSS est déjà lancé. Cette version va maintenant s'arrêter. "
+msgstr "Erreur : LOOT est déjà lancé. Cette version va maintenant s'arrêter. "
 
 #: gui/main.cpp:180
 msgid "Error: Could not create local app data BOSS folder."
-msgstr "Erreur : Impossible de créer le dossier local app data BOSS."
+msgstr "Erreur : Impossible de créer le dossier local app data LOOT."
 
 #: gui/main.cpp:193
 msgid "Error: Settings parsing failed. %1%"
@@ -496,11 +496,11 @@ msgstr "&Aide"
 
 #: gui/main.cpp:496 gui/main.cpp:851
 msgid "BOSS: Working..."
-msgstr "BOSS : En cours"
+msgstr "LOOT : En cours"
 
 #: gui/main.cpp:496 gui/main.cpp:851
 msgid "BOSS working..."
-msgstr "BOSS en cours..."
+msgstr "LOOT en cours..."
 
 #: gui/main.cpp:547
 msgid "Userlist parsing failed. Details: %1%"
@@ -533,7 +533,7 @@ msgstr "Impossible de générer l'image graphique. Détails : %1%"
 
 #: gui/main.cpp:687
 msgid "BOSS: Calculated Load Order"
-msgstr "BOSS : Ordre de chargement défini"
+msgstr "LOOT : Ordre de chargement défini"
 
 #: gui/main.cpp:765
 msgid "Failed to set the load order. Details: %1%"
@@ -557,7 +557,7 @@ msgstr "Erreur : %1%"
 
 #: gui/main.cpp:839 gui/main.cpp:954
 msgid "BOSS: Report Viewer"
-msgstr "BOSS : Visualiser le rapport"
+msgstr "LOOT : Visualiser le rapport"
 
 #: gui/main.cpp:872
 msgid "Error: Masterlist parsing failed. %1%"
@@ -569,7 +569,7 @@ msgstr "Erreur : l'analyse de l'userlist a échoué. 1%1"
 
 #: gui/main.cpp:939
 msgid "BOSS: Metadata Editor"
-msgstr "BOSS : Éditeur de métadonnées"
+msgstr "LOOT : Éditeur de métadonnées"
 
 #: gui/main.cpp:961
 msgid ""
@@ -584,7 +584,7 @@ msgstr ""
 
 #: gui/main.cpp:961
 msgid "BOSS: Warning"
-msgstr "BOSS : Avertissement"
+msgstr "LOOT : Avertissement"
 
 #: gui/main.cpp:971
 msgid "Error: Failed to get load order. %1%"
@@ -600,11 +600,11 @@ msgstr "Les plugins ont été redaté avec succès. "
 
 #: gui/main.cpp:1016
 msgid "BOSS: Plugin Redate"
-msgstr "BOSS : Redater le plug-in"
+msgstr "LOOT : Redater le plug-in"
 
 #: gui/main.cpp:1024
 msgid "BOSS: Settings"
-msgstr "BOSS : Configuration"
+msgstr "LOOT : Configuration"
 
 #: gui/main.cpp:1059 gui/main.cpp:1074
 msgid "Error: \"%1%\" cannot be found."
@@ -637,7 +637,7 @@ msgid ""
 msgstr ""
 "Veuillez soumettre les modifications apportées pour des raisons autres que "
 "la préfèrence de l'utilisateur \n"
-" à l'équipe de BOSS afin qu'elle puisse inclure les changements dans la "
+" à l'équipe de LOOT afin qu'elle puisse inclure les changements dans la "
 "masterlist. "
 
 #: gui/main.cpp:1181 gui/main.cpp:1226
@@ -698,7 +698,7 @@ msgstr "Type du jeu de base"
 
 #: gui/settings.cpp:70
 msgid "BOSS Folder Name"
-msgstr "Nom du dossier de BOSS"
+msgstr "Nom du dossier de LOOT"
 
 #: gui/settings.cpp:71
 msgid "Master File"
@@ -728,15 +728,15 @@ msgstr "Niveau de détails de la sortie du débogage :"
 msgid "Language and game changes will be applied after BOSS is restarted."
 msgstr ""
 "Les changements concernant les jeux et les langues seront appliqués après le "
-"redémarrage de BOSS. "
+"redémarrage de LOOT. "
 
 #: gui/settings.cpp:139
 msgid "The output is logged to the BOSSDebugLog.txt file."
-msgstr "Les informations sont enregistrées dans le fichier BOSSDEbugLog.txt."
+msgstr "Les informations sont enregistrées dans le fichier LOOTDEbugLog.txt."
 
 #: gui/settings.cpp:279
 msgid "BOSS: Add Game"
-msgstr "BOSS : Ajouter un jeu"
+msgstr "LOOT : Ajouter un jeu"
 
 #: gui/settings.cpp:286 gui/settings.cpp:365
 msgid "Error: A path and/or registry key is required. Row will not be added."
@@ -758,7 +758,7 @@ msgstr ""
 
 #: gui/settings.cpp:328
 msgid "BOSS: Edit Game"
-msgstr "BOSS : Éditer le jeu "
+msgstr "LOOT : Éditer le jeu "
 
 #: gui/settings.cpp:349
 msgid "Error: Name is required. Row will not be added."
@@ -770,7 +770,7 @@ msgstr "Erreur : Un dossier est requis. Rien n'a été ajouté. "
 
 #: gui/settings.cpp:428
 msgid "BOSS Folder Name (required):"
-msgstr "Nom du dossier de BOSS (requis) : "
+msgstr "Nom du dossier de LOOT (requis) : "
 
 #: gui/settings.cpp:431
 msgid "Master File:"
@@ -806,7 +806,7 @@ msgstr "Erreur : "
 
 #: backend/generators.h:159
 msgid "BOSS Report"
-msgstr "Rapport de BOSS"
+msgstr "Rapport de LOOT"
 
 #: backend/generators.h:191 backend/generators.h:262
 msgid "Summary"
@@ -826,7 +826,7 @@ msgstr "Filtres"
 
 #: backend/generators.h:275
 msgid "BOSS Version"
-msgstr "Version de BOSS"
+msgstr "Version de LOOT"
 
 #: backend/generators.h:284
 msgid "Masterlist Version"
@@ -921,7 +921,7 @@ msgstr ""
 #: backend/generators.h:474
 msgid "The BOSS Report requires Javascript to be enabled in order to function."
 msgstr ""
-"Le rapport de BOSS nécessite l'activation de Javascript pour fonctionner. "
+"Le rapport de LOOT nécessite l'activation de Javascript pour fonctionner. "
 
 #: backend/generators.h:521
 msgid "Hide Version Numbers"
@@ -961,7 +961,7 @@ msgstr "%1% sur %2% messages cachés."
 
 #: backend/generators.h:631
 msgid "Could not write BOSS report."
-msgstr "Impossible d'écrire le rapport de BOSS. "
+msgstr "Impossible d'écrire le rapport de LOOT. "
 
 #: backend/parsers.h:466 backend/parsers.h:549
 msgid "Invalid file path:"
