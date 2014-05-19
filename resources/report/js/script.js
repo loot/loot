@@ -460,6 +460,12 @@ function processURLParams() {
                 gameMenu.appendChild(li);
 
                 var content = document.getElementById('gameRow').content;
+                for (var j = 0; j < data.gameTypes.length; ++j) {
+                    var option = document.createElement('option');
+                    option.value = data.gameTypes[j];
+                    option.textContent = data.gameTypes[j];
+                    content.querySelector('.type').appendChild(option);
+                }
                 var clone = document.importNode(content, true);
                 gameTable.appendChild(clone);
                 clone = gameTable.lastElementChild;
@@ -474,15 +480,7 @@ function processURLParams() {
                         }
                     });
                 }
-
-                for (var j = 0; j < data.gameTypes.length; ++j) {
-                    var option = document.createElement('option');
-                    option.value = data.gameTypes[j];
-                    option.textContent = data.gameTypes[j];
-                    clone.querySelector('.type').appendChild(option);
-                }
                 clone.querySelector('.type').value = data.games[i].type;
-
                 clone.querySelector('.folder').value = data.games[i].folder;
                 clone.querySelector('.masterFile').value = data.games[i].masterFile;
                 clone.querySelector('.url').value = data.games[i].url;
@@ -490,6 +488,29 @@ function processURLParams() {
                 clone.querySelector('.path').value = data.games[i].path;
                 clone.querySelector('.registryKey').value = data.games[i].registryKey;
             }
+            var content = document.getElementById('gameRow').content;
+            var clone = document.importNode(content, true);
+            gameTable.appendChild(clone);
+            clone = gameTable.lastElementChild;
+            clone.querySelector('.name').placeholder = 'Add new row...'
+            hideElement(clone.querySelector('.type'));
+            clone.addEventListener('dblclick', function(evt){
+                var newClone = evt.currentTarget.cloneNode(true);
+                var inputs = newClone.getElementsByTagName('input');
+                for (var i = 0; i < inputs.length; ++i) {
+                    inputs[i].removeAttribute('readonly');
+                    inputs[i].addEventListener('dblclick', function(evt){
+                        if (evt.target.readOnly) {
+                            evt.target.removeAttribute('readonly');
+                        } else {
+                            evt.target.setAttribute('readonly', '');
+                        }
+                    });
+                }
+                newClone.querySelector('.name').placeholder = '';
+                showElement(newClone.querySelector('.type'));
+                gameTable.insertBefore(newClone, gameTable.lastElementChild);
+            }, false);
 
             /* Now fill in language options. */
             var langSelect = document.getElementById('languageSelect');
