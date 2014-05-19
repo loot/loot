@@ -9,15 +9,18 @@
 </head>
 <body>
     <template id="gameRow">
-        <tr contenteditable>
-            <td >Name
-            <td>Base Game
-            <td>LOOT Folder
-            <td>Master File
-            <td>Masterlist Repository URL
-            <td>Masterlist Repository Branch
-            <td>Install Path
-            <td>Install Path Registry Key
+        <tr>
+            <td><input class="name" type="text" readonly>
+            <td>
+                <select class="type" >
+                <!-- Game <option> elements go here. -->
+                </select>
+            <td><input class="folder" type="text" readonly>
+            <td><input class="masterFile" type="text" readonly>
+            <td><input class="url" type="text" readonly>
+            <td><input class="branch" type="text" readonly>
+            <td><input class="path" type="text" readonly>
+            <td><input class="registryKey" type="text" readonly>
     </template>
     <template id="pluginNav">
         <li>

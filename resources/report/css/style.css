@@ -373,3 +373,11 @@ li.warn{
 .dialog .buttons {
     text-align: center;
 }
+
+input[readonly] {
+    border: none;
+    -webkit-user-select: none;
+}
+td input {
+    width: 100%;
+}

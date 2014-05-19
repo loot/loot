@@ -998,6 +998,12 @@ var data = {
             "registryKey": "Software\\Bethesda Softworks\\FalloutNV\\Installed Path",
         },
     ],
+    "gameTypes": [
+        "Oblivion",
+        "Skyrim",
+        "Fallout3",
+        "FalloutNV",
+    ],
     "languages": [
         "None Specified",
         "English",

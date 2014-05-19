@@ -463,14 +463,32 @@ function processURLParams() {
                 var clone = document.importNode(content, true);
                 gameTable.appendChild(clone);
                 clone = gameTable.lastElementChild;
-                clone.children[0].textContent = data.games[i].name;
-                clone.children[1].textContent = data.games[i].type;
-                clone.children[2].textContent = data.games[i].folder;
-                clone.children[3].textContent = data.games[i].masterFile;
-                clone.children[4].textContent = data.games[i].url;
-                clone.children[5].textContent = data.games[i].branch;
-                clone.children[6].textContent = data.games[i].path;
-                clone.children[7].textContent = data.games[i].registryKey;
+                clone.querySelector('.name').value = data.games[i].name;
+                var inputs = clone.getElementsByTagName('input');
+                for (var j = 0; j < inputs.length; ++j) {
+                    inputs[j].addEventListener('dblclick', function(evt){
+                        if (evt.target.readOnly) {
+                            evt.target.removeAttribute('readonly');
+                        } else {
+                            evt.target.setAttribute('readonly', '');
+                        }
+                    });
+                }
+
+                for (var j = 0; j < data.gameTypes.length; ++j) {
+                    var option = document.createElement('option');
+                    option.value = data.gameTypes[j];
+                    option.textContent = data.gameTypes[j];
+                    clone.querySelector('.type').appendChild(option);
+                }
+                clone.querySelector('.type').value = data.games[i].type;
+
+                clone.querySelector('.folder').value = data.games[i].folder;
+                clone.querySelector('.masterFile').value = data.games[i].masterFile;
+                clone.querySelector('.url').value = data.games[i].url;
+                clone.querySelector('.branch').value = data.games[i].branch;
+                clone.querySelector('.path').value = data.games[i].path;
+                clone.querySelector('.registryKey').value = data.games[i].registryKey;
             }
 
             /* Now fill in language options. */
