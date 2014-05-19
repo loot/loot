@@ -342,11 +342,11 @@ function processURLParams() {
                 clone.children[3].href = '#' + data.plugins[i].name.replace(/\s+/g, '');
 
                 if (data.plugins[i].isDummy) {
-                    clone.getElementsByClassName('dummyPlugin')[0].className += ' fa fa-file-o';
+                    clone.getElementsByClassName('dummyPlugin')[0].className += ' fa fa-eye-slash';
                 }
 
                 if (data.plugins[i].loadsBSA) {
-                    clone.getElementsByClassName('loadsBSA')[0].className += ' fa fa-folder-open';
+                    clone.getElementsByClassName('loadsBSA')[0].className += ' fa fa-paperclip';
                 }
 
                 if (data.plugins[i].hasUserEdits) {
