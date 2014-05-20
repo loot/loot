@@ -358,29 +358,17 @@ li.warn{
     background:#FFDD55;
 }
 
-#settings select {
+#settings > select {
     float: right;
     clear: both;
     position:relative;
     top:-0.15em;
 }
-#settings label {
+#settings > label {
     display: inline-block;
     height: 18px;
     padding: 1px;
     margin: 2px;
-}
-#settings table {
-    margin: 3em 1em;
-    border-collapse: collapse;
-}
-#settings td, #settings th {
-    vertical-align: top;
-    text-align: left;
-    padding: 0.5em;
-}
-#settings th {
-    border-bottom: 1px black solid;
 }
 
 .dialog.message {
@@ -407,11 +395,26 @@ td input {
     width: 100%;
     text-overflow: ellipsis;
 }
-#gameTable td:last-child span {
+.editable td:last-child span {
     cursor: pointer;
 }
-#gameTable td:last-child span:hover {
+.editable td:last-child span:hover {
     color: red;
+}
+.editable {
+    margin: 3em 1em;
+    border-collapse: collapse;
+}
+.editable td, .editable th {
+    vertical-align: top;
+    text-align: left;
+    padding: 0.5em;
+}
+.editable th {
+    border-bottom: 1px black solid;
+}
+.editable tr:last-child {
+    cursor: pointer;
 }
 
 .tableTabs {
@@ -424,6 +427,7 @@ td input {
     border: 1px black solid;
     border-bottom: none;
     background: #e3e3e3;
+    cursor: pointer;
 }
 .tableTabs > span:not(:first-child) {
     border-left: none;
@@ -431,24 +435,9 @@ td input {
 .tableTabs > span:hover, .tableTabs span.selected {
     background: #f8f8f8;
 }
-
-.tableTabs table {
+.tableTabs .editable {
     margin: 0 1em 3em 0;
     border-collapse: collapse;
     border: 1px black solid;
     width: 100%;
-}
-.tableTabs td, .tableTabs th {
-    vertical-align: top;
-    text-align: left;
-    padding: 0.5em;
-}
-.tableTabs th {
-    border-bottom: 1px black solid;
-}
-.tableTabs td:last-child span {
-    cursor: pointer;
-}
-.tableTabs td:last-child span:hover {
-    color: red;
 }

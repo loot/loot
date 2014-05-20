@@ -109,37 +109,37 @@
             <input type="checkbox" class="editorGlobalPriority">
             <div class="tableTabs">
                 <span class="selected" data-for="loadAfter">Load After</span><span data-for="req">Requirements</span><span data-for="inc">Incompatibilities</span><span data-for="message">Messages</span><span data-for="tags">Bash Tags</span><span data-for="dirty">Dirty Info</span>
-                <table class="loadAfter">
+                <table class="editable loadAfter">
                     <thead>
                         <tr><th>Filename<th>Display Name<th>Condition<th>
                     <tbody data-template="fileRow">
                         <!-- File rows go here. -->
                 </table>
-                <table class="req hidden">
+                <table class="editable req hidden">
                     <thead>
                         <tr><th>Filename<th>Display Name<th>Condition<th>
                     <tbody data-template="fileRow">
                         <!-- File rows go here. -->
                 </table>
-                <table class="inc hidden">
+                <table class="editable inc hidden">
                     <thead>
                         <tr><th>Filename<th>Display Name<th>Condition<th>
                     <tbody data-template="fileRow">
                         <!-- File rows go here. -->
                 </table>
-                <table class="message hidden">
+                <table class="editable message hidden">
                     <thead>
                         <tr><th>Type<th>Content<th>Condition<th>Language<th>
                     <tbody data-template="messageRow">
                         <!-- Message rows go here. -->
                 </table>
-                <table class="tags hidden">
+                <table class="editable tags hidden">
                     <thead>
                         <tr><th>Add/Remove<th>Bash Tag<th>Condition<th>
                     <tbody data-template="tagRow">
                         <!-- Bash Tag rows go here. -->
                 </table>
-                <table class="dirty hidden">
+                <table class="editable dirty hidden">
                     <thead>
                         <tr><th>CRC<th>ITM Count<th>UDR Count<th>Deleted Navmeshes<th>Cleaning Utility<th>
                     <tbody data-template="dirtyInfoRow">
@@ -293,7 +293,7 @@ along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
             <option value="3">High</option>
         </select><br>
         <!-- Need to add an editable multi-column game list here. -->
-        <table id="gameTable">
+        <table id="gameTable" class="editable">
             <thead>
                 <tr><th>Name<th>Base Game<th>LOOT Folder<th>Master File<th>Masterlist Repository URL<th>Masterlist Repository Branch<th>Install Path<th>Install Path Registry Key<th>
             <tbody data-template="gameRow">
