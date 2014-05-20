@@ -467,7 +467,7 @@ function processURLParams() {
             }
 
             /* Fill in game row template's game type options. */
-            var select = document.getElementById('gameRow').content.querySelector('.name');
+            var select = document.getElementById('gameRow').content.querySelector('select');
             for (var j = 0; j < data.gameTypes.length; ++j) {
                 var option = document.createElement('option');
                 option.value = data.gameTypes[j];
