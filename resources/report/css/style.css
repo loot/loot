@@ -383,10 +383,10 @@ li.warn{
     border-bottom: 1px black solid;
 }
 
-.message {
+.dialog.message {
     width: 40em;
 }
-.message span:first-child {
+.dialog.message span:first-child {
     font-size: 4em;
     position: absolute;
     left: 1em;
