@@ -413,3 +413,42 @@ td input {
 #gameTable td:last-child span:hover {
     color: red;
 }
+
+.tableTabs {
+    margin: 1.5em 1em;
+    display: table;
+}
+.tableTabs span {
+    display: inline-block;
+    padding: 0.5em;
+    border: 1px black solid;
+    border-bottom: none;
+    background: #e3e3e3;
+}
+.tableTabs span:not(:first-child) {
+    border-left: none;
+}
+.tableTabs span:hover, .tableTabs span.selected {
+    background: #f8f8f8;
+}
+
+.tableTabs table {
+    margin: 0 1em 3em 0;
+    border-collapse: collapse;
+    border: 1px black solid;
+    width: 100%;
+}
+.tableTabs td, .tableTabs th {
+    vertical-align: top;
+    text-align: left;
+    padding: 0.5em;
+}
+.tableTabs th {
+    border-bottom: 1px black solid;
+}
+.tableTabs td:last-child span {
+    cursor: pointer;
+}
+.tableTabs td:last-child span:hover {
+    color: red;
+}
