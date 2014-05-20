@@ -40,7 +40,6 @@
             <td><span class="fa fa-trash-o fa-fw"></span>
     </template>
     <template id="dirtyInfoRow">
-    <th>CRC<th>ITM Count<th>UDR Count<th>Deleted Navmeshes<th>Cleaning Utility<th>
         <tr>
             <td><input class="crc" type="text" maxlength="8" minlength="8" pattern="[0-9A-Fa-f]{8}" readonly required>
             <td><input class="itm" type="number" min="0" step="1" readonly>
@@ -109,41 +108,41 @@
             <label for="editorGlobalPriority">Compare priority against all other plugins</label>
             <input type="checkbox" class="editorGlobalPriority">
             <div class="tableTabs">
-                <span class="selected" data-for="loadAfterTable">Load After</span><span data-for="reqTable">Requirements</span><span data-for="incTable">Incompatibilities</span><span data-for="messageTable">Messages</span><span data-for="tagsTable">Bash Tags</span><span data-for="dirtyTable">Dirty Info</span>
-                <table class="loadAfterTable">
+                <span class="selected" data-for="loadAfter">Load After</span><span data-for="req">Requirements</span><span data-for="inc">Incompatibilities</span><span data-for="message">Messages</span><span data-for="tags">Bash Tags</span><span data-for="dirty">Dirty Info</span>
+                <table class="loadAfter">
                     <thead>
                         <tr><th>Filename<th>Display Name<th>Condition<th>
-                    <tbody>
+                    <tbody data-template="fileRow">
                         <!-- File rows go here. -->
                 </table>
-                <table class="reqTable hidden">
+                <table class="req hidden">
                     <thead>
                         <tr><th>Filename<th>Display Name<th>Condition<th>
-                    <tbody>
+                    <tbody data-template="fileRow">
                         <!-- File rows go here. -->
                 </table>
-                <table class="incTable hidden">
+                <table class="inc hidden">
                     <thead>
                         <tr><th>Filename<th>Display Name<th>Condition<th>
-                    <tbody>
+                    <tbody data-template="fileRow">
                         <!-- File rows go here. -->
                 </table>
-                <table class="messageTable hidden">
+                <table class="message hidden">
                     <thead>
                         <tr><th>Type<th>Content<th>Condition<th>Language<th>
-                    <tbody>
+                    <tbody data-template="messageRow">
                         <!-- Message rows go here. -->
                 </table>
-                <table class="tagsTable hidden">
+                <table class="tags hidden">
                     <thead>
                         <tr><th>Add/Remove<th>Bash Tag<th>Condition<th>
-                    <tbody>
+                    <tbody data-template="tagRow">
                         <!-- Bash Tag rows go here. -->
                 </table>
-                <table class="dirtyTable hidden">
+                <table class="dirty hidden">
                     <thead>
                         <tr><th>CRC<th>ITM Count<th>UDR Count<th>Deleted Navmeshes<th>Cleaning Utility<th>
-                    <tbody>
+                    <tbody data-template="dirtyInfoRow">
                         <!-- Dirty info rows go here. -->
                 </table>
             </div>

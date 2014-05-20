@@ -199,6 +199,88 @@ function clearAllMetadata() {
 function clearMetadata(filename) {
     showMessageDialog('Clear Plugin Metadata', 'Are you sure you want to clear all existing user-added metadata from "' + filename + '"?');
 }
+function removeTableRow(evt) {
+    evt.target.parentElement.parentElement.parentElement.removeChild(evt.target.parentElement.parentElement);
+}
+function addNewTableRow(evt) {
+    /* Create new row. */
+    var tableBody = evt.currentTarget.parentElement;
+    var rowTemplateId = tableBody.getAttribute('data-template');
+    var content = document.getElementById(rowTemplateId).content;
+    var row = document.importNode(content, true);
+    tableBody.insertBefore(row, evt.currentTarget);
+    row = evt.currentTarget.previousElementSibling;
+
+    /* Enable row editing. */
+    var inputs = row.getElementsByTagName('input');
+    for (var i = 0; i < inputs.length; ++i) {
+        inputs[i].removeAttribute('readonly');
+        inputs[i].addEventListener('dblclick', toggleInputRO, false);
+    }
+    /* Add deletion listener. */
+    row.getElementsByClassName('fa-trash-o')[0].addEventListener('click', removeTableRow, false);
+}
+function addTableRow(tableBody, data) {
+    var rowTemplateId = tableBody.getAttribute('data-template');
+    var content = document.getElementById(rowTemplateId).content;
+    var row = document.importNode(content, true);
+    tableBody.insertBefore(row, tableBody.lastElementChild);
+    row = tableBody.lastElementChild.previousElementSibling;
+
+    /* Data is an object with keys that match element class names. */
+    for (var key in data) {
+        row.getElementsByClassName(key)[0].value = data[key];
+    }
+
+    /* Enable row editing. */
+    var inputs = row.getElementsByTagName('input');
+    for (var i = 0; i < inputs.length; ++i) {
+        inputs[i].addEventListener('dblclick', toggleInputRO, false);
+    }
+    /* Add deletion listener. */
+    row.getElementsByClassName('fa-trash-o')[0].addEventListener('click', removeTableRow, false);
+}
+function setupTable(tableBody) {
+    /* Add "add new row" row. */
+    var rowTemplateId = tableBody.getAttribute('data-template');
+    var content = document.getElementById(rowTemplateId).content;
+    var row = document.importNode(content, true);
+    tableBody.appendChild(row);
+    row = tableBody.lastElementChild;
+
+    /* All the tables have at least 4 columns, including the delete button column. Delete the first three from this row and span the fourth over four columns to ensure the text does not get cut off. */
+    row.removeChild(row.firstElementChild);
+    row.removeChild(row.firstElementChild);
+    row.removeChild(row.firstElementChild);
+    row.firstElementChild.textContent = 'Add new row...';
+    row.firstElementChild.setAttribute('colspan', 4);
+
+    /* Hide any 'select' elements, and the bin icon. */
+    var selects = row.getElementsByTagName('select');
+    for (var i = 0; i < selects.length; ++i) {
+        hideElement(selects[i]);
+    }
+    var bin = row.getElementsByClassName('fa-trash-o')[0];
+    if (bin) {
+        hideElement(bin);
+    }
+
+    /* Add new row listener. */
+    row.addEventListener('dblclick', addNewTableRow, false);
+}
+function showEditorTable(evt) {
+    var tableClass = evt.target.getAttribute('data-for');
+    var tables = evt.target.parentElement.getElementsByTagName('table');
+    for (var i = 0; i < tables.length; ++i) {
+        if (tables[i].className.indexOf(tableClass) == -1) {
+            hideElement(tables[i]);
+        } else {
+            showElement(tables[i]);
+        }
+    }
+    evt.target.parentElement.getElementsByClassName('selected')[0].classList.toggle('selected');
+    evt.target.classList.toggle('selected');
+}
 function showEditor(sectionId) {
         /* Editor is attached to plugins on-demand. */
         var content = document.getElementById('pluginEditor').content;
@@ -206,10 +288,27 @@ function showEditor(sectionId) {
         var section = document.getElementById(sectionId);
         section.appendChild(editor);
         editor = section.lastElementChild;
+
         /* Fill in data. */
         section.getElementsByTagName('h1')[1].textContent = section.getElementsByTagName('h1')[0].textContent;
         section.getElementsByClassName('crc')[1].textContent = section.getElementsByClassName('crc')[0].textContent;
         section.getElementsByClassName('version')[1].textContent = section.getElementsByClassName('version')[0].textContent;
+
+        /* Initialise tables. */
+        var tables = editor.getElementsByTagName('table');
+        for (var i = 0; i < tables.length; ++i) {
+            setupTable(tables[i].getElementsByTagName('tbody')[0]);
+        }
+
+        /* Set up table tab event handlers. */
+        var elements = document.getElementsByClassName('tableTabs')[0].children;
+        for (var i = 0; i < elements.length; ++i) {
+            var tableClass = elements[i].getAttribute('data-for');
+            if (tableClass) {
+                elements[i].addEventListener('click', showEditorTable, false);
+            }
+        }
+
         /* Finally, show editor. */
         section.classList.toggle('flip');
 }
@@ -265,75 +364,6 @@ function toggleInputRO(evt) {
     } else {
         evt.target.setAttribute('readonly', '');
     }
-}
-function removeGameRow(evt) {
-    evt.target.parentElement.parentElement.parentElement.removeChild(evt.target.parentElement.parentElement);
-}
-function addNewTableRow(evt) {
-    /* Create new row. */
-    var tableBody = evt.currentTarget.parentElement;
-    var rowTemplateId = tableBody.getAttribute('data-template');
-    var content = document.getElementById(rowTemplateId).content;
-    var row = document.importNode(content, true);
-    tableBody.insertBefore(row, evt.currentTarget);
-    row = evt.currentTarget.previousElementSibling;
-
-    /* Enable row editing. */
-    var inputs = row.getElementsByTagName('input');
-    for (var i = 0; i < inputs.length; ++i) {
-        inputs[i].removeAttribute('readonly');
-        inputs[i].addEventListener('dblclick', toggleInputRO, false);
-    }
-    /* Add deletion listener. */
-    row.getElementsByClassName('fa-trash-o')[0].addEventListener('click', removeGameRow, false);
-}
-function addTableRow(tableBody, data) {
-    var rowTemplateId = tableBody.getAttribute('data-template');
-    var content = document.getElementById(rowTemplateId).content;
-    var row = document.importNode(content, true);
-    tableBody.insertBefore(row, tableBody.lastElementChild);
-    row = tableBody.lastElementChild.previousElementSibling;
-
-    /* Data is an object with keys that match element class names. */
-    for (var key in data) {
-        row.getElementsByClassName(key)[0].value = data[key];
-    }
-
-    /* Enable row editing. */
-    var inputs = row.getElementsByTagName('input');
-    for (var i = 0; i < inputs.length; ++i) {
-        inputs[i].addEventListener('dblclick', toggleInputRO, false);
-    }
-    /* Add deletion listener. */
-    row.getElementsByClassName('fa-trash-o')[0].addEventListener('click', removeGameRow, false);
-}
-function setupTable(tableBody) {
-    /* Add "add new row" row. */
-    var rowTemplateId = tableBody.getAttribute('data-template');
-    var content = document.getElementById(rowTemplateId).content;
-    var row = document.importNode(content, true);
-    tableBody.appendChild(row);
-    row = tableBody.lastElementChild;
-
-    /* All the tables have at least 4 columns, including the delete button column. Delete the first three from this row and span the fourth over four columns to ensure the text does not get cut off. */
-    row.removeChild(row.firstElementChild);
-    row.removeChild(row.firstElementChild);
-    row.removeChild(row.firstElementChild);
-    row.firstElementChild.textContent = 'Add new row...';
-    row.firstElementChild.setAttribute('colspan', 4);
-
-    /* Hide any 'select' elements, and the bin icon. */
-    var selects = row.getElementsByTagName('select');
-    for (var i = 0; i < selects.length; ++i) {
-        hideElement(selects[i]);
-    }
-    var bin = row.getElementsByClassName('fa-trash-o')[0];
-    if (bin) {
-        hideElement(bin);
-    }
-
-    /* Add new row listener. */
-    row.addEventListener('dblclick', addNewTableRow, false);
 }
 function setupEventHandlers() {
     var elements;

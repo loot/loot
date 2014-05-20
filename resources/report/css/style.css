@@ -418,17 +418,17 @@ td input {
     margin: 1.5em 1em;
     display: table;
 }
-.tableTabs span {
+.tableTabs > span {
     display: inline-block;
     padding: 0.5em;
     border: 1px black solid;
     border-bottom: none;
     background: #e3e3e3;
 }
-.tableTabs span:not(:first-child) {
+.tableTabs > span:not(:first-child) {
     border-left: none;
 }
-.tableTabs span:hover, .tableTabs span.selected {
+.tableTabs > span:hover, .tableTabs span.selected {
     background: #f8f8f8;
 }
 
