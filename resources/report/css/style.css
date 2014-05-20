@@ -154,6 +154,7 @@ nav a {
     overflow: auto;
     flex-shrink: 10;
     flex-grow: 1;
+    /*-webkit-perspective: 1000;*/
 }
 
 section, .dialog {
@@ -167,6 +168,31 @@ section, .dialog {
 
 section[data-active] {
     overflow:visible;
+    /*transition: 0.6s;
+    -webkit-transform-style: preserve-3d;
+    z-index:-1;*/
+}
+
+/*section[data-active] .front, section[data-active] .editor {
+    -webkit-backface-visibility: hidden;
+    transition: 0.6s;
+}*/
+
+section[data-active] .editor {
+    /*-webkit-transform: rotateY(180deg);*/
+    display:none;
+}
+
+/*section[data-active].flip  {
+    -webkit-transform: rotateY(180deg);
+}*/
+
+section[data-active].flip .front  {
+    display:none;
+}
+
+section[data-active].flip .editor  {
+    display:block;
 }
 
 section[data-active] .buttons {
@@ -201,7 +227,6 @@ section .buttons  > li:hover {
     list-style-type: none;
     position: absolute;
     right: 0.5em;
-    font: 10pt/1.5 Helvetica,sans-serif;
     width: 13em;
     z-index: 2;
     text-align: left;

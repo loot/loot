@@ -243,8 +243,7 @@ function processButtonClick(evt) {
         clearAllMetadata();
     } else if (action == 'show-editor') {
         var section = evt.target.parentElement.parentElement.parentElement.parentElement.parentElement;
-        hideElement(document.getElementsByClassName('front')[0]);
-        showElement(document.getElementsByClassName('editor')[0]);
+        section.classList.toggle('flip');
     }
 }
 function toggleInputRO(evt) {
