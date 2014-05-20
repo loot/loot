@@ -570,12 +570,14 @@ function processURLParams() {
             }
 
             /* Now fill in language options. */
-            var langSelect = document.getElementById('languageSelect');
+            var settingsLangSelect = document.getElementById('languageSelect');
+            var messageLangSelect = document.getElementById('messageRow').content.querySelector('.language');
             for (var i = 0; i < data.languages.length; ++i) {
                 var option = document.createElement('option');
                 option.value = data.languages[i];
                 option.textContent = data.languages[i];
-                langSelect.appendChild(option);
+                settingsLangSelect.appendChild(option);
+                messageLangSelect.appendChild(option.cloneNode(true));
             }
 
             /* Now initialise the rest of the report. */
