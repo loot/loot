@@ -25,7 +25,7 @@ var data = {
             "loadsBSA": true,
             "isActive": false,
             "crc": "29D2C7DF",
-            "version": "Version: 2.0.0a",
+            "version": "2.0.0a",
             "tagsAdd": ["Delev",
             "Relev"]
         },
@@ -33,7 +33,7 @@ var data = {
             "name": "Unofficial Dawnguard Patch.esp",
             "isActive": false,
             "crc": "FF134167",
-            "version": "Version: 2.0.0b",
+            "version": "2.0.0b",
             "tagsAdd": ["Delev",
             "Relev"], "messages": [{"type": "warn",
             "content": "Warning: This plugin requires \"Dawnguard.esm\" to be installed, but it is missing."}]
@@ -42,7 +42,7 @@ var data = {
             "name": "Unofficial Hearthfire Patch.esp",
             "isActive": false,
             "crc": "F913F25E",
-            "version": "Version: 2.0.0",
+            "version": "2.0.0",
             "messages": [{"type": "warn",
             "content": "Warning: This plugin requires \"HearthFires.esm\" to be installed, but it is missing."}]
         },
@@ -59,7 +59,7 @@ var data = {
             "loadsBSA": true,
             "isActive": true,
             "crc": "DA46F3C8",
-            "version": "Version: 2.0.0",
+            "version": "2.0.0",
             "tagsAdd": ["Delev"]
         },
         {
@@ -67,7 +67,7 @@ var data = {
             "loadsBSA": true,
             "isActive": false,
             "crc": "6629BE21",
-            "version": "Version: 1.10",
+            "version": "1.10",
             "messages": [{"type": "warn",
             "content": "Warning: This plugin is incompatible with \"Dragonborn.esm\", but both are present."}]
         },
@@ -75,7 +75,7 @@ var data = {
             "name": "EnchantingAwakened.esp",
             "isActive": false,
             "crc": "4E2FE0C1",
-            "version": "Version: 1.60"
+            "version": "1.60"
         },
         {
             "name": "SPIKE.esm",
@@ -97,7 +97,7 @@ var data = {
             "name": "Cutting Room Floor.esp",
             "isActive": false,
             "crc": "1BA027FF",
-            "version": "Version: 1.0.2",
+            "version": "1.0.2",
             "messages": [{"type": "warn",
             "content": "Warning: This plugin requires \"Unofficial Skyrim Patch.esp\" to be active, but it is inactive."}]
         },
@@ -105,13 +105,13 @@ var data = {
             "name": "Run For Your Lives.esp",
         "isActive": false,
         "crc": "1931B1F5",
-        "version": "Version: 1.2.3"
+        "version": "1.2.3"
         },
         {
             "name": "WATER DB.esp",
         "isActive": false,
         "crc": "1765B1A6",
-        "version": "Version: 1.87"
+        "version": "1.87"
         },
         {
             "name": "MorePP.esp",
@@ -157,7 +157,7 @@ var data = {
             "name": "BFSEffects.esp",
         "isActive": false,
         "crc": "543D56D4",
-        "version": "Version: 3.6",
+        "version": "3.6",
         "messages": [{"type": "warn",
         "content": "Warning: This plugin requires \"Dawnguard.esm\" to be installed, but it is missing."}]
         },
@@ -172,7 +172,7 @@ var data = {
             "name": "AMatterOftime.esp",
         "isActive": false,
         "crc": "75025A7E",
-        "version": "Version: 1.00"
+        "version": "1.00"
         },
         {
             "name": "STEP-part5.esp",
@@ -287,7 +287,7 @@ var data = {
             "name": "fFastTravelSpeedMult_4.esp",
         "isActive": false,
         "crc": "CC1A0B4E",
-        "version": "Version: 1.0"
+        "version": "1.0"
         },
         {
             "name": "BarenziahQuestMarkers_Droppable.esp",
@@ -345,7 +345,7 @@ var data = {
             "name": "Lightweight Potions and Poisons.esp",
         "isActive": false,
         "crc": "276314FF",
-        "version": "Version: 0.1."
+        "version": "0.1."
         },
         {
             "name": "No Empty Tag on Containers.esp",
@@ -399,13 +399,13 @@ var data = {
             "name": "Ars Metallica.esp",
         "isActive": false,
         "crc": "8D03ECC0",
-        "version": "Version: 1.2.1"
+        "version": "1.2.1"
         },
         {
             "name": "Ars Metallica - Dawnguard.esp",
         "isActive": false,
         "crc": "FE8960A3",
-        "version": "Version: 1.2.1",
+        "version": "1.2.1",
         "messages": [{"type": "warn",
         "content": "Warning: This plugin requires \"Dawnguard.esm\" to be installed, but it is missing."
         },
@@ -417,7 +417,7 @@ var data = {
             "name": "Ars Metallica - Hearthfire.esp",
         "isActive": false,
         "crc": "18A5C66B",
-        "version": "Version: 1.2.1",
+        "version": "1.2.1",
         "messages": [{"type": "warn",
         "content": "Warning: This plugin requires \"HearthFires.esm\" to be installed, but it is missing."
         },
@@ -465,14 +465,14 @@ var data = {
             "name": "Reduced Distance NPC Greetings.esp",
         "isActive": false,
         "crc": "24658104",
-        "version": "Version: 50"
+        "version": "50"
         },
         {
             "name": "SkyUI.esp",
             "loadsBSA": true,
         "isActive": true,
         "crc": "9330CAF7",
-        "version": "Version: 4.1"
+        "version": "4.1"
         },
         {
             "name": "AnimeticaKobato.esp",
@@ -490,7 +490,7 @@ var data = {
             "name": "SoS - The Wilds.esp",
         "isActive": false,
         "crc": "49F5E301",
-        "version": "Version: 1.13",
+        "version": "1.13",
         "messages": [{"type": "say",
         "content": "Note: Do not use the Crash Fix ESP for this mod. It is flagged as a master and is only meant as a last resort for fixing crashes."}]
         },
@@ -517,7 +517,7 @@ var data = {
             "name": "Bring Out Your Dead.esp",
         "isActive": false,
         "crc": "3ABC3315",
-        "version": "Version: 1.2.2",
+        "version": "1.2.2",
         "messages": [{"type": "warn",
         "content": "Warning: This plugin requires \"Unofficial Skyrim Patch.esp\" to be active, but it is inactive."}]
         },
@@ -554,7 +554,7 @@ var data = {
             "name": "SoS - The Dungeons.esp",
         "isActive": false,
         "crc": "79377267",
-        "version": "Version: 1.23",
+        "version": "1.23",
         "messages": [{"type": "say",
         "content": "Note: Do not use the Crash Fix ESP for this mod. It is flagged as a master and is only meant as a last resort for fixing crashes."}]
         },
@@ -621,7 +621,7 @@ var data = {
             "name": "SplashofRain.esp",
         "isActive": false,
         "crc": "363772B6",
-        "version": "Version: 1.04"
+        "version": "1.04"
         },
         {
             "name": "Unique Grasses.esp",
@@ -632,13 +632,13 @@ var data = {
             "name": "SPTDiverseMuscleTones.esp",
         "isActive": false,
         "crc": "2D5C68FE",
-        "version": "Version: 5.1"
+        "version": "5.1"
         },
         {
             "name": "SPTDiverseMuscleTonesViljaPatch.esp",
         "isActive": false,
         "crc": "117758E3",
-        "version": "Version: 5.0",
+        "version": "5.0",
         "messages": [{"type": "warn",
         "content": "Warning: This plugin requires \"EMCompViljaSkyrim.esp\" to be active, but it is inactive."
         },
@@ -650,7 +650,7 @@ var data = {
             "name": "SPTDiverseMuscleTonesDawnguardDragonborn.esp",
         "isActive": false,
         "crc": "F4927D22",
-        "version": "Version: 5.0",
+        "version": "5.0",
         "messages": [{"type": "warn",
         "content": "Warning: This plugin requires \"Dawnguard.esm\" to be installed, but it is missing."
         },
@@ -662,7 +662,7 @@ var data = {
             "name": "SPTDiverseMuscleTonesNPCs.esp",
         "isActive": false,
         "crc": "554F1CAB",
-        "version": "Version: 5.0",
+        "version": "5.0",
         "messages": [{"type": "warn",
         "content": "Warning: This plugin requires \"Unofficial Skyrim Patch.esp\" to be active, but it is inactive."
         },
@@ -682,7 +682,7 @@ var data = {
             "name": "SPTDiverseGuardsSkyrim.esp",
         "isActive": false,
         "crc": "682A3893",
-        "version": "Version: 4.6",
+        "version": "4.6",
         "messages": [{"type": "warn",
         "content": "Warning: This plugin requires \"SPTDiverseMuscleTones.esp\" to be active, but it is inactive."}]
         },
@@ -690,7 +690,7 @@ var data = {
             "name": "SPTConsistentOlderPeople.esp",
         "isActive": false,
         "crc": "CAF3C1BE",
-        "version": "Version: 1.8",
+        "version": "1.8",
         "messages": [{"type": "say",
         "content": "Note: If this is not newer than v1.3, update to the latest version."
         },
@@ -706,7 +706,7 @@ var data = {
             "name": "EnchantingAwakenedAWEPatch.esp",
         "isActive": false,
         "crc": "DDDCC598",
-        "version": "Version: 1.50",
+        "version": "1.50",
         "messages": [{"type": "warn",
         "content": "Warning: This plugin requires \"Animated Weapon Enchants.esp\" to be installed, but it is missing."
         },
@@ -733,7 +733,7 @@ var data = {
             "name": "Ars Metallica - Dragonborn.esp",
         "isActive": false,
         "crc": "1091DB21",
-        "version": "Version: 1.2.1",
+        "version": "1.2.1",
         "messages": [{"type": "warn",
         "content": "Warning: This plugin requires \"Ars Metallica.esp\" to be active, but it is inactive."}]
         },
@@ -780,13 +780,13 @@ var data = {
             "name": "Point The Way.esp",
         "isActive": false,
         "crc": "F372CBC2",
-        "version": "Version: 1.0.2"
+        "version": "1.0.2"
         },
         {
             "name": "SkyrimImprovedPuddles-DG-HF-DB.esp",
         "isActive": false,
         "crc": "D0427B6",
-        "version": "Version: 1.1",
+        "version": "1.1",
         "messages": [{"type": "say",
         "content": "Note: Use only one SkyrimImprovedPuddles esp."
         },
@@ -802,7 +802,7 @@ var data = {
             "name": "The Paarthurnax Dilemma.esp",
         "isActive": false,
         "crc": "9E446FBD",
-        "version": "Version: 1.2.5"
+        "version": "1.2.5"
         },
         {
             "name": "TheTownIsSafe.esp",
@@ -827,26 +827,26 @@ var data = {
             "name": "Tamriel Compendium - Skill Books.esp",
         "isActive": false,
         "crc": "1F348D90",
-        "version": "Version: 1.1",
+        "version": "1.1",
         "tagsAdd": ["Relev"]
         },
         {
             "name": "WATER.esp",
         "isActive": false,
         "crc": "AFE4A968",
-        "version": "Version: 1.87"
+        "version": "1.87"
         },
         {
             "name": "WetandCold.esp",
         "isActive": false,
         "crc": "E034A81F",
-        "version": "Version: 1.321"
+        "version": "1.321"
         },
         {
             "name": "WetandCold - Ashes.esp",
         "isActive": false,
         "crc": "8C003085",
-        "version": "Version: 1.06",
+        "version": "1.06",
         "messages": [{"type": "warn",
         "content": "Warning: This plugin requires \"WetandCold.esp\" to be active, but it is inactive."}]
         },
@@ -854,7 +854,7 @@ var data = {
             "name": "When Vampires Attack.esp",
         "isActive": false,
         "crc": "4743D674",
-        "version": "Version: 1.1",
+        "version": "1.1",
         "messages": [{"type": "warn",
         "content": "Warning: This plugin requires \"Dawnguard.esm\" to be installed, but it is missing."
         },
@@ -876,13 +876,13 @@ var data = {
             "name": "Oblivion Gates in Cities.esp",
         "isActive": false,
         "crc": "E7D68506",
-        "version": "Version: 1.0"
+        "version": "1.0"
         },
         {
             "name": "Gildergreen Regrown.esp",
         "isActive": false,
         "crc": "7AFAAD00",
-        "version": "Version: 1.2.5"
+        "version": "1.2.5"
         },
         {
             "name": "TheChoiceIsYours_Dawnguard.esp",
@@ -907,7 +907,7 @@ var data = {
             "name": "Bashed Patch, 0.esp",
         "isActive": false,
         "crc": "C2306BE5",
-        "version": "Version: 2013-12-13 13:55:02",
+        "version": "2013-12-13 13:55:02",
         "messages": [{"type": "warn",
         "content": "Warning: This plugin requires \"Dawnguard.esm\" to be installed, but it is missing."
         },

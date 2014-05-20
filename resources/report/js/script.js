@@ -170,20 +170,20 @@ function showMessageDialog(title, text) {
 
     clone.id = 'modalDialog';
 
-    clone.children[0].className += ' warn';
+    clone.getElementsByTagName('span')[0].className += ' warn';
 
-    clone.children[1].textContent = title;
-    clone.children[2].textContent = text;
+    clone.getElementsByTagName('h1')[0].textContent = title;
+    clone.getElementsByTagName('p')[0].textContent = text;
 
     var overlay = document.getElementById('overlay');
     overlay.removeEventListener('click', hideDialog, false);
     showElement(overlay);
 
-    clone.children[3].children[0].setAttribute('data-dialog', clone.id);
-    clone.children[3].children[0].addEventListener('click', hideDialog, false);
+    clone.getElementsByClassName('accept')[0].setAttribute('data-dialog', clone.id);
+    clone.getElementsByClassName('accept')[0].addEventListener('click', hideDialog, false);
 
-    clone.children[3].children[1].setAttribute('data-dialog', clone.id);
-    clone.children[3].children[1].addEventListener('click', hideDialog, false);
+    clone.getElementsByClassName('cancel')[0].setAttribute('data-dialog', clone.id);
+    clone.getElementsByClassName('cancel')[0].addEventListener('click', hideDialog, false);
 }
 function showMessageBox(type, title, text) {
 
@@ -238,12 +238,11 @@ function processButtonClick(evt) {
     } else if (action == 'redate-plugins') {
         redatePlugins();
     } else if (action == 'clear-metadata') {
-        clearMetadata(evt.target.parentNode.parentNode.parentNode.parentNode.children[0].textContent);
+        clearMetadata(evt.target.getAttribute('data-target'));
     } else if (action == 'wipe-userlist') {
         clearAllMetadata();
     } else if (action == 'show-editor') {
-        var section = evt.target.parentElement.parentElement.parentElement.parentElement.parentElement;
-        section.classList.toggle('flip');
+        document.getElementById(evt.target.getAttribute('data-target')).classList.toggle('flip');
     }
 }
 function toggleInputRO(evt) {
@@ -263,10 +262,10 @@ function addNewGameRow(evt) {
         inputs[i].removeAttribute('readonly');
         inputs[i].addEventListener('dblclick', toggleInputRO, false);
     }
-    clone.querySelector('.name').placeholder = '';
-    showElement(clone.querySelector('.type'));
-    showElement(clone.querySelector('.fa-trash-o'));
-    clone.querySelector('.fa-trash-o').addEventListener('click', removeGameRow, false);
+    clone.getElementsByClassName('name')[0].placeholder = '';
+    showElement(clone.getElementsByClassName('type')[0]);
+    showElement(clone.getElementsByClassName('fa-trash-o')[0]);
+    clone.getElementsByClassName('fa-trash-o')[0].addEventListener('click', removeGameRow, false);
     evt.currentTarget.parentElement.insertBefore(clone, evt.currentTarget);
 }
 function setupEventHandlers() {
@@ -292,13 +291,13 @@ function setupEventHandlers() {
         elements[i].addEventListener('click', processButtonClick, false);
     }
     /* Set up handlers for game table. */
-    elements = document.getElementById('gameTable').querySelectorAll('tbody > tr');
+    elements = document.getElementById('gameTable').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
     for (var i = 0; i < elements.length - 1; ++i) {
         var inputs = elements[i].getElementsByTagName('input');
         for (var j = 0; j < inputs.length; ++j) {
             inputs[j].addEventListener('dblclick', toggleInputRO, false);
         }
-        elements[i].querySelector('.fa-trash-o').addEventListener('click', removeGameRow, false);
+        elements[i].getElementsByClassName('fa-trash-o')[0].addEventListener('click', removeGameRow, false);
     }
     elements[elements.length - 1].addEventListener('dblclick', addNewGameRow, false);
 }
@@ -345,8 +344,8 @@ function processURLParams() {
                 pluginsNav.appendChild(clone);
                 clone = pluginsNav.lastElementChild;
 
-                clone.children[3].textContent = data.plugins[i].name;
-                clone.children[3].href = '#' + data.plugins[i].name.replace(/\s+/g, '');
+                clone.getElementsByTagName('a')[0].textContent = data.plugins[i].name;
+                clone.getElementsByTagName('a')[0].href = '#' + data.plugins[i].name.replace(/\s+/g, '');
 
                 if (data.plugins[i].isDummy) {
                     clone.getElementsByClassName('dummyPlugin')[0].className += ' fa fa-eye-slash';
@@ -365,10 +364,10 @@ function processURLParams() {
                 content = document.getElementById('pluginSection').content;
                 clone = document.importNode(content, true);
                 pluginsList.appendChild(clone);
-                var section = pluginsList.lastElementChild;
+                clone = pluginsList.lastElementChild;
 
-                section.setAttribute('data-active', data.plugins[i].isActive);
-                section.id = data.plugins[i].name.replace(/\s+/g, '');
+                clone.setAttribute('data-active', data.plugins[i].isActive);
+                clone.id = data.plugins[i].name.replace(/\s+/g, '');
 
                 if (data.plugins[i].isActive) {
                     ++activePluginNo;
@@ -378,45 +377,48 @@ function processURLParams() {
                     ++dirtyPluginNo;
                 }
 
-                section.getElementsByTagName('h1')[0].textContent = data.plugins[i].name;
-                section.getElementsByTagName('h1')[1].textContent = data.plugins[i].name;
+                clone.getElementsByTagName('h1')[0].textContent = data.plugins[i].name;
+                clone.getElementsByTagName('h1')[1].textContent = data.plugins[i].name;
 
-                section.getElementsByClassName('crc')[0].textContent = 'CRC: ' + data.plugins[i].crc;
-                section.getElementsByClassName('crc')[1].textContent = 'CRC: ' + data.plugins[i].crc;
+                clone.getElementsByClassName('crc')[0].textContent = 'CRC: ' + data.plugins[i].crc;
+                clone.getElementsByClassName('crc')[1].textContent = 'CRC: ' + data.plugins[i].crc;
 
                 if (data.plugins[i].isDummy) {
-                    showElement(section.getElementsByClassName('dummyPlugin')[0]);
+                    showElement(clone.getElementsByClassName('dummyPlugin')[0]);
                 }
 
                 if (data.plugins[i].loadsBSA) {
-                    showElement(section.getElementsByClassName('loadsBSA')[0]);
+                    showElement(clone.getElementsByClassName('loadsBSA')[0]);
                 }
 
                 if (data.plugins[i].hasUserEdits) {
                     /* This won't actually be handled anything like this in the real data implementation. */
-                    showElement(section.getElementsByClassName('hasUserEdits')[0]);
+                    showElement(clone.getElementsByClassName('hasUserEdits')[0]);
                 }
 
                 if (data.plugins[i].version) {
-                    section.getElementsByClassName('crc')[0].textContent = data.plugins[i].version;
-                    section.getElementsByClassName('crc')[1].textContent = data.plugins[i].version;
+                    clone.getElementsByClassName('version')[0].textContent = 'Version: ' + data.plugins[i].version;
+                    clone.getElementsByClassName('version')[1].textContent = 'Version: ' + data.plugins[i].version;
                 } else {
-                    section.getElementsByClassName('version')[0].className += ' hidden';
-                    section.getElementsByClassName('version')[1].className += ' hidden';
+                    hideElement(clone.getElementsByClassName('version')[0]);
+                    hideElement(clone.getElementsByClassName('version')[1]);
                 }
 
                 if (data.plugins[i].tagsAdd && data.plugins[i].tagsAdd.length != 0) {
-                    section.querySelector('.tag.add').textContent = data.plugins[i].tagsAdd.join(', ');
+                    clone.getElementsByClassName('tag add')[0].textContent = data.plugins[i].tagsAdd.join(', ');
                 } else {
-                    section.querySelector('.tag.add').className += ' hidden';
+                    hideElement(clone.getElementsByClassName('tag add')[0]);
                 }
 
                 if (data.plugins[i].tagRemove && data.plugins[i].tagRemove.length != 0) {
-                    section.querySelector('.tag.remove').textContent = data.plugins[i].tagsRemove.join(', ');
+                    clone.getElementsByClassName('tag remove')[0].textContent = data.plugins[i].tagsRemove.join(', ');
                 } else {
-                    section.querySelector('.tag.remove').className += ' hidden';
+                    hideElement(clone.getElementsByClassName('tag remove')[0]);
                 }
 
+                clone.getElementsByClassName('editMetadata')[0].setAttribute('data-target', data.plugins[i].name);
+                clone.getElementsByClassName('copyMetadata')[0].setAttribute('data-target', data.plugins[i].name);
+                clone.getElementsByClassName('clearMetadata')[0].setAttribute('data-target', clone.id);
 
                 if (data.plugins[i].messages && data.plugins[i].messages.length != 0) {
                     for (var j = 0; j < data.plugins[i].messages.length; ++j) {
@@ -424,7 +426,7 @@ function processURLParams() {
                         messageLi.className = data.plugins[i].messages[j].type;
                         /* innerHTML is open to abuse, but for hyperlinking it's too useful. */
                         messageLi.innerHTML = data.plugins[i].messages[j].content;
-                        section.getElementsByTagName('ul')[0].appendChild(messageLi);
+                        clone.getElementsByTagName('ul')[0].appendChild(messageLi);
 
                         if (messageLi.className == 'warn') {
                             warnMessageNo++;
@@ -434,7 +436,7 @@ function processURLParams() {
                         totalMessageNo++;
                     }
                 } else {
-                    section.getElementsByTagName('ul')[0].className += ' hidden';
+                    clone.getElementsByTagName('ul')[0].className += ' hidden';
                 }
             }
             document.getElementById('filterTotalMessageNo').textContent = totalMessageNo;
@@ -454,10 +456,19 @@ function processURLParams() {
                 }
             }
 
+            /* Fill in game row template's game type options. */
+            var select = document.getElementById('gameRow').content.querySelector('.name');
+            for (var j = 0; j < data.gameTypes.length; ++j) {
+                var option = document.createElement('option');
+                option.value = data.gameTypes[j];
+                option.textContent = data.gameTypes[j];
+                select.appendChild(option);
+            }
+
             /* Now fill game lists/table. */
             var gameSelect = document.getElementById('defaultGameSelect');
             var gameMenu = document.getElementById('gameMenu');
-            var gameTable = document.getElementById('gameTable');
+            var gameTableBody = document.getElementById('gameTable').getElementsByTagName('tbody')[0];
             for (var i = 0; i < data.games.length; ++i) {
                 var option = document.createElement('option');
                 option.value = data.games[i].folder;
@@ -471,32 +482,26 @@ function processURLParams() {
                 gameMenu.appendChild(li);
 
                 var content = document.getElementById('gameRow').content;
-                for (var j = 0; j < data.gameTypes.length; ++j) {
-                    var option = document.createElement('option');
-                    option.value = data.gameTypes[j];
-                    option.textContent = data.gameTypes[j];
-                    content.querySelector('.type').appendChild(option);
-                }
                 var clone = document.importNode(content, true);
-                gameTable.appendChild(clone);
-                clone = gameTable.lastElementChild;
-                clone.querySelector('.name').value = data.games[i].name;
-                clone.querySelector('.type').value = data.games[i].type;
-                clone.querySelector('.folder').value = data.games[i].folder;
-                clone.querySelector('.masterFile').value = data.games[i].masterFile;
-                clone.querySelector('.url').value = data.games[i].url;
-                clone.querySelector('.branch').value = data.games[i].branch;
-                clone.querySelector('.path').value = data.games[i].path;
-                clone.querySelector('.registryKey').value = data.games[i].registryKey;
+                gameTableBody.appendChild(clone);
+                clone = gameTableBody.lastElementChild;
+                clone.getElementsByClassName('name')[0].value = data.games[i].name;
+                clone.getElementsByClassName('type')[0].value = data.games[i].type;
+                clone.getElementsByClassName('folder')[0].value = data.games[i].folder;
+                clone.getElementsByClassName('masterFile')[0].value = data.games[i].masterFile;
+                clone.getElementsByClassName('url')[0].value = data.games[i].url;
+                clone.getElementsByClassName('branch')[0].value = data.games[i].branch;
+                clone.getElementsByClassName('path')[0].value = data.games[i].path;
+                clone.getElementsByClassName('registryKey')[0].value = data.games[i].registryKey;
             }
             /* Add row for creating new rows. */
             var content = document.getElementById('gameRow').content;
             var clone = document.importNode(content, true);
-            gameTable.appendChild(clone);
-            clone = gameTable.lastElementChild;
-            clone.querySelector('.name').placeholder = 'Add new row...';
-            hideElement(clone.querySelector('.type'));
-            hideElement(clone.querySelector('.fa-trash-o'));
+            gameTableBody.appendChild(clone);
+            clone = gameTableBody.lastElementChild;
+            clone.getElementsByClassName('name')[0].placeholder = 'Add new row...';
+            hideElement(clone.getElementsByClassName('type')[0]);
+            hideElement(clone.getElementsByClassName('fa-trash-o')[0]);
 
             /* Now fill in language options. */
             var langSelect = document.getElementById('languageSelect');
