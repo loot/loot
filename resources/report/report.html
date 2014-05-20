@@ -95,63 +95,65 @@
                         </ol>
                 </ol>
             </div>
-            <div class="editor">
-                <h1></h1>
-                <div class="crc"></div>
-                <div class="version"></div>
-                <input type="checkbox" class="editorEnableEdits">
-                <label for="editorEnableEdits">Enable Edits</label>
-                <label for="editorPriorityValue">Priority</label>
-                <input type="number" max="999999" min="-999999" step="1">
-                <label for="editorGlobalPriority">Compare priority against all other plugins</label>
-                <input type="checkbox" class="editorGlobalPriority">
-                <div class="tableTabs">
-                    <span class="selected" data-for="loadAfterTable">Load After</span><span data-for="reqTable">Requirements</span><span data-for="incTable">Incompatibilities</span><span data-for="messageTable">Messages</span><span data-for="tagsTable">Bash Tags</span><span data-for="dirtyTable">Dirty Info</span>
-                    <table class="loadAfterTable">
-                        <thead>
-                            <tr><th>Filename<th>Display Name<th>Condition<th>
-                        <tbody>
-                            <!-- File rows go here. -->
-                    </table>
-                    <table class="reqTable hidden">
-                        <thead>
-                            <tr><th>Filename<th>Display Name<th>Condition<th>
-                        <tbody>
-                            <!-- File rows go here. -->
-                    </table>
-                    <table class="incTable hidden">
-                        <thead>
-                            <tr><th>Filename<th>Display Name<th>Condition<th>
-                        <tbody>
-                            <!-- File rows go here. -->
-                    </table>
-                    <table class="messageTable hidden">
-                        <thead>
-                            <tr><th>Type<th>Content<th>Condition<th>Language<th>
-                        <tbody>
-                            <!-- Message rows go here. -->
-                    </table>
-                    <table class="tagsTable hidden">
-                        <thead>
-                            <tr><th>Add/Remove<th>Bash Tag<th>Condition<th>
-                        <tbody>
-                            <!-- Bash Tag rows go here. -->
-                    </table>
-                    <table class="dirtyTable hidden">
-                        <thead>
-                            <tr><th>CRC<th>ITM Count<th>UDR Count<th>Deleted Navmeshes<th>Cleaning Utility<th>
-                        <tbody>
-                            <!-- Dirty info rows go here. -->
-                    </table>
-                </div>
-                <label for="editorShowOnlyConflicts">Show Only Conflicts</label>
-                <input type="checkbox" class="editorShowOnlyConflicts">
-                <label for="editorSimpleView">Simple View</label>
-                <input type="checkbox" class="editorSimpleView">
-                <button>Apply</button>
-                <button>Cancel</button>
-            </div>
         </section>
+    </template>
+    <template id="pluginEditor">
+        <div class="editor">
+            <h1></h1>
+            <div class="crc"></div>
+            <div class="version"></div>
+            <input type="checkbox" class="editorEnableEdits">
+            <label for="editorEnableEdits">Enable Edits</label>
+            <label for="editorPriorityValue">Priority</label>
+            <input type="number" max="999999" min="-999999" step="1">
+            <label for="editorGlobalPriority">Compare priority against all other plugins</label>
+            <input type="checkbox" class="editorGlobalPriority">
+            <div class="tableTabs">
+                <span class="selected" data-for="loadAfterTable">Load After</span><span data-for="reqTable">Requirements</span><span data-for="incTable">Incompatibilities</span><span data-for="messageTable">Messages</span><span data-for="tagsTable">Bash Tags</span><span data-for="dirtyTable">Dirty Info</span>
+                <table class="loadAfterTable">
+                    <thead>
+                        <tr><th>Filename<th>Display Name<th>Condition<th>
+                    <tbody>
+                        <!-- File rows go here. -->
+                </table>
+                <table class="reqTable hidden">
+                    <thead>
+                        <tr><th>Filename<th>Display Name<th>Condition<th>
+                    <tbody>
+                        <!-- File rows go here. -->
+                </table>
+                <table class="incTable hidden">
+                    <thead>
+                        <tr><th>Filename<th>Display Name<th>Condition<th>
+                    <tbody>
+                        <!-- File rows go here. -->
+                </table>
+                <table class="messageTable hidden">
+                    <thead>
+                        <tr><th>Type<th>Content<th>Condition<th>Language<th>
+                    <tbody>
+                        <!-- Message rows go here. -->
+                </table>
+                <table class="tagsTable hidden">
+                    <thead>
+                        <tr><th>Add/Remove<th>Bash Tag<th>Condition<th>
+                    <tbody>
+                        <!-- Bash Tag rows go here. -->
+                </table>
+                <table class="dirtyTable hidden">
+                    <thead>
+                        <tr><th>CRC<th>ITM Count<th>UDR Count<th>Deleted Navmeshes<th>Cleaning Utility<th>
+                    <tbody>
+                        <!-- Dirty info rows go here. -->
+                </table>
+            </div>
+            <label for="editorShowOnlyConflicts">Show Only Conflicts</label>
+            <input type="checkbox" class="editorShowOnlyConflicts">
+            <label for="editorSimpleView">Simple View</label>
+            <input type="checkbox" class="editorSimpleView">
+            <button>Apply</button>
+            <button>Cancel</button>
+        </div>
     </template>
     <template id="messageDialog">
         <div class="message dialog">

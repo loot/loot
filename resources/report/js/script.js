@@ -199,6 +199,20 @@ function clearAllMetadata() {
 function clearMetadata(filename) {
     showMessageDialog('Clear Plugin Metadata', 'Are you sure you want to clear all existing user-added metadata from "' + filename + '"?');
 }
+function showEditor(sectionId) {
+        /* Editor is attached to plugins on-demand. */
+        var content = document.getElementById('pluginEditor').content;
+        var editor = document.importNode(content, true);
+        var section = document.getElementById(sectionId);
+        section.appendChild(editor);
+        editor = section.lastElementChild;
+        /* Fill in data. */
+        section.getElementsByTagName('h1')[1].textContent = section.getElementsByTagName('h1')[0].textContent;
+        section.getElementsByClassName('crc')[1].textContent = section.getElementsByClassName('crc')[0].textContent;
+        section.getElementsByClassName('version')[1].textContent = section.getElementsByClassName('version')[0].textContent;
+        /* Finally, show editor. */
+        section.classList.toggle('flip');
+}
 function processButtonClick(evt) {
     var overlay = document.getElementById('overlay');
     var action = evt.currentTarget.getAttribute('data-action');
@@ -242,7 +256,7 @@ function processButtonClick(evt) {
     } else if (action == 'wipe-userlist') {
         clearAllMetadata();
     } else if (action == 'show-editor') {
-        document.getElementById(evt.target.getAttribute('data-target')).classList.toggle('flip');
+        showEditor(evt.target.getAttribute('data-target'));
     }
 }
 function toggleInputRO(evt) {
@@ -378,10 +392,8 @@ function processURLParams() {
                 }
 
                 clone.getElementsByTagName('h1')[0].textContent = data.plugins[i].name;
-                clone.getElementsByTagName('h1')[1].textContent = data.plugins[i].name;
 
                 clone.getElementsByClassName('crc')[0].textContent = 'CRC: ' + data.plugins[i].crc;
-                clone.getElementsByClassName('crc')[1].textContent = 'CRC: ' + data.plugins[i].crc;
 
                 if (data.plugins[i].isDummy) {
                     showElement(clone.getElementsByClassName('dummyPlugin')[0]);
@@ -398,10 +410,8 @@ function processURLParams() {
 
                 if (data.plugins[i].version) {
                     clone.getElementsByClassName('version')[0].textContent = 'Version: ' + data.plugins[i].version;
-                    clone.getElementsByClassName('version')[1].textContent = 'Version: ' + data.plugins[i].version;
                 } else {
                     hideElement(clone.getElementsByClassName('version')[0]);
-                    hideElement(clone.getElementsByClassName('version')[1]);
                 }
 
                 if (data.plugins[i].tagsAdd && data.plugins[i].tagsAdd.length != 0) {
