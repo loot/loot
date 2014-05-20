@@ -269,18 +269,71 @@ function toggleInputRO(evt) {
 function removeGameRow(evt) {
     evt.target.parentElement.parentElement.parentElement.removeChild(evt.target.parentElement.parentElement);
 }
-function addNewGameRow(evt) {
-    var clone = evt.currentTarget.cloneNode(true);
-    var inputs = clone.getElementsByTagName('input');
+function addNewTableRow(evt) {
+    /* Create new row. */
+    var tableBody = evt.currentTarget.parentElement;
+    var rowTemplateId = tableBody.getAttribute('data-template');
+    var content = document.getElementById(rowTemplateId).content;
+    var row = document.importNode(content, true);
+    tableBody.insertBefore(row, evt.currentTarget);
+    row = evt.currentTarget.previousElementSibling;
+
+    /* Enable row editing. */
+    var inputs = row.getElementsByTagName('input');
     for (var i = 0; i < inputs.length; ++i) {
         inputs[i].removeAttribute('readonly');
         inputs[i].addEventListener('dblclick', toggleInputRO, false);
     }
-    clone.getElementsByClassName('name')[0].placeholder = '';
-    showElement(clone.getElementsByClassName('type')[0]);
-    showElement(clone.getElementsByClassName('fa-trash-o')[0]);
-    clone.getElementsByClassName('fa-trash-o')[0].addEventListener('click', removeGameRow, false);
-    evt.currentTarget.parentElement.insertBefore(clone, evt.currentTarget);
+    /* Add deletion listener. */
+    row.getElementsByClassName('fa-trash-o')[0].addEventListener('click', removeGameRow, false);
+}
+function addTableRow(tableBody, data) {
+    var rowTemplateId = tableBody.getAttribute('data-template');
+    var content = document.getElementById(rowTemplateId).content;
+    var row = document.importNode(content, true);
+    tableBody.insertBefore(row, tableBody.lastElementChild);
+    row = tableBody.lastElementChild.previousElementSibling;
+
+    /* Data is an object with keys that match element class names. */
+    for (var key in data) {
+        row.getElementsByClassName(key)[0].value = data[key];
+    }
+
+    /* Enable row editing. */
+    var inputs = row.getElementsByTagName('input');
+    for (var i = 0; i < inputs.length; ++i) {
+        inputs[i].addEventListener('dblclick', toggleInputRO, false);
+    }
+    /* Add deletion listener. */
+    row.getElementsByClassName('fa-trash-o')[0].addEventListener('click', removeGameRow, false);
+}
+function setupTable(tableBody) {
+    /* Add "add new row" row. */
+    var rowTemplateId = tableBody.getAttribute('data-template');
+    var content = document.getElementById(rowTemplateId).content;
+    var row = document.importNode(content, true);
+    tableBody.appendChild(row);
+    row = tableBody.lastElementChild;
+
+    /* All the tables have at least 4 columns, including the delete button column. Delete the first three from this row and span the fourth over four columns to ensure the text does not get cut off. */
+    row.removeChild(row.firstElementChild);
+    row.removeChild(row.firstElementChild);
+    row.removeChild(row.firstElementChild);
+    row.firstElementChild.textContent = 'Add new row...';
+    row.firstElementChild.setAttribute('colspan', 4);
+
+    /* Hide any 'select' elements, and the bin icon. */
+    var selects = row.getElementsByTagName('select');
+    for (var i = 0; i < selects.length; ++i) {
+        hideElement(selects[i]);
+    }
+    var bin = row.getElementsByClassName('fa-trash-o')[0];
+    if (bin) {
+        hideElement(bin);
+    }
+
+    /* Add new row listener. */
+    row.addEventListener('dblclick', addNewTableRow, false);
 }
 function setupEventHandlers() {
     var elements;
@@ -304,16 +357,6 @@ function setupEventHandlers() {
     for (var i = 0; i < elements.length; ++i) {
         elements[i].addEventListener('click', processButtonClick, false);
     }
-    /* Set up handlers for game table. */
-    elements = document.getElementById('gameTable').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-    for (var i = 0; i < elements.length - 1; ++i) {
-        var inputs = elements[i].getElementsByTagName('input');
-        for (var j = 0; j < inputs.length; ++j) {
-            inputs[j].addEventListener('dblclick', toggleInputRO, false);
-        }
-        elements[i].getElementsByClassName('fa-trash-o')[0].addEventListener('click', removeGameRow, false);
-    }
-    elements[elements.length - 1].addEventListener('dblclick', addNewGameRow, false);
 }
 function processURLParams() {
     /* Get the data path from the URL and load it. */
@@ -479,6 +522,8 @@ function processURLParams() {
             var gameSelect = document.getElementById('defaultGameSelect');
             var gameMenu = document.getElementById('gameMenu');
             var gameTableBody = document.getElementById('gameTable').getElementsByTagName('tbody')[0];
+            /* Add row for creating new rows. */
+            setupTable(gameTableBody);
             for (var i = 0; i < data.games.length; ++i) {
                 var option = document.createElement('option');
                 option.value = data.games[i].folder;
@@ -491,27 +536,8 @@ function processURLParams() {
                 li.textContent = data.games[i].name;
                 gameMenu.appendChild(li);
 
-                var content = document.getElementById('gameRow').content;
-                var clone = document.importNode(content, true);
-                gameTableBody.appendChild(clone);
-                clone = gameTableBody.lastElementChild;
-                clone.getElementsByClassName('name')[0].value = data.games[i].name;
-                clone.getElementsByClassName('type')[0].value = data.games[i].type;
-                clone.getElementsByClassName('folder')[0].value = data.games[i].folder;
-                clone.getElementsByClassName('masterFile')[0].value = data.games[i].masterFile;
-                clone.getElementsByClassName('url')[0].value = data.games[i].url;
-                clone.getElementsByClassName('branch')[0].value = data.games[i].branch;
-                clone.getElementsByClassName('path')[0].value = data.games[i].path;
-                clone.getElementsByClassName('registryKey')[0].value = data.games[i].registryKey;
+                addTableRow(gameTableBody, data.games[i]);
             }
-            /* Add row for creating new rows. */
-            var content = document.getElementById('gameRow').content;
-            var clone = document.importNode(content, true);
-            gameTableBody.appendChild(clone);
-            clone = gameTableBody.lastElementChild;
-            clone.getElementsByClassName('name')[0].placeholder = 'Add new row...';
-            hideElement(clone.getElementsByClassName('type')[0]);
-            hideElement(clone.getElementsByClassName('fa-trash-o')[0]);
 
             /* Now fill in language options. */
             var langSelect = document.getElementById('languageSelect');
