@@ -57,16 +57,12 @@ function isVisible(element) {
 }
 function showElement(element) {
     if (element != null) {
-        if (!isVisible(element)) {
-            element.className = element.className.replace('hidden', '');
-        }
+        element.classList.toggle('hidden', false);
     }
 }
 function hideElement(element) {
     if (element != null) {
-        if (isVisible(element)) {
-            element.className += ' hidden';
-        }
+        element.classList.toggle('hidden', true);
     }
 }
 function stepUnhideElement(element) {
@@ -101,34 +97,9 @@ function toggleFilters(evt) {
         evt.target.className = evt.target.className.replace('current', '');
     }
 }
-function showSection(evt) {
-    var elemArr = document.getElementById('nav').querySelectorAll('.button[data-section]');
-    var i = elemArr.length - 1;
-    while (i > -1) {
-        hideElement(document.getElementById(elemArr[i].getAttribute('data-section')));
-        i--;
-    }
-    showElement(document.getElementById(evt.target.getAttribute('data-section')));
-    var elem = document.querySelector('#nav div.current[data-section]');
-    if (elem != null) {
-        elem.className = elem.className.replace('current', '');
-    }
-    if (evt.target.className.indexOf('current') == -1) {
-        evt.target.className += ' current';
-    } /*Also enable/disable filters based on current page.*/
-    if (evt.target.getAttribute('data-section') == 'plugins') {
-        showElement(document.getElementById('filtersToggle'));
-        if (document.getElementById('filtersToggle').className.indexOf('current') != -1) {
-            showElement(filters);
-        }
-    } else {
-        hideElement(document.getElementById('filtersToggle'));
-        hideElement(document.getElementById('filters'));
-    }
-}
 function toggleMessages(evt) {
     // Start at 2nd section to skip summary.
-    var listItems = document.getElementById('main').getElementsByTagName('li');
+    var listItems = document.getElementById('main').querySelectorAll('ul li');
     var hiddenNo = parseInt(document.getElementById('hiddenMessageNo').textContent, 10);
     for (var i = 0; i < listItems.length; ++i) {
         var filterMatch = false;
@@ -164,8 +135,8 @@ function togglePlugins(evt) {
     // Start at 3rd section to skip summary and general messages.
     for (var i = 2; i < sections.length; ++i) {
         var isMessageless = true;
-        var messages = sections[i].getElementsByTagName('li');
-        for (var j = 1; j < messages.length; ++j) {
+        var messages = sections[i].getElementsByTagName('ul')[0].getElementsByTagName('li');
+        for (var j = 0; j < messages.length; ++j) {
             if (messages[j].className.indexOf('hidden') == -1) {
                 isMessageless = false;
                 break;
@@ -270,6 +241,10 @@ function processButtonClick(evt) {
         clearMetadata(evt.target.parentNode.parentNode.parentNode.parentNode.children[0].textContent);
     } else if (action == 'wipe-userlist') {
         clearAllMetadata();
+    } else if (action == 'show-editor') {
+        var section = evt.target.parentElement.parentElement.parentElement.parentElement.parentElement;
+        hideElement(document.getElementsByClassName('front')[0]);
+        showElement(document.getElementsByClassName('editor')[0]);
     }
 }
 function toggleInputRO(evt) {
@@ -404,9 +379,11 @@ function processURLParams() {
                     ++dirtyPluginNo;
                 }
 
-                section.children[0].textContent = data.plugins[i].name;
+                section.getElementsByTagName('h1')[0].textContent = data.plugins[i].name;
+                section.getElementsByTagName('h1')[1].textContent = data.plugins[i].name;
 
-                section.children[1].textContent = 'CRC: ' + data.plugins[i].crc;
+                section.getElementsByClassName('crc')[0].textContent = 'CRC: ' + data.plugins[i].crc;
+                section.getElementsByClassName('crc')[1].textContent = 'CRC: ' + data.plugins[i].crc;
 
                 if (data.plugins[i].isDummy) {
                     showElement(section.getElementsByClassName('dummyPlugin')[0]);
@@ -422,21 +399,23 @@ function processURLParams() {
                 }
 
                 if (data.plugins[i].version) {
-                    section.children[2].textContent = data.plugins[i].version;
+                    section.getElementsByClassName('crc')[0].textContent = data.plugins[i].version;
+                    section.getElementsByClassName('crc')[1].textContent = data.plugins[i].version;
                 } else {
-                    section.children[2].className += ' hidden';
+                    section.getElementsByClassName('version')[0].className += ' hidden';
+                    section.getElementsByClassName('version')[1].className += ' hidden';
                 }
 
                 if (data.plugins[i].tagsAdd && data.plugins[i].tagsAdd.length != 0) {
-                    section.children[3].textContent = data.plugins[i].tagsAdd.join(', ');
+                    section.querySelector('.tag.add').textContent = data.plugins[i].tagsAdd.join(', ');
                 } else {
-                    section.children[3].className += ' hidden';
+                    section.querySelector('.tag.add').className += ' hidden';
                 }
 
                 if (data.plugins[i].tagRemove && data.plugins[i].tagRemove.length != 0) {
-                    section.children[4].textContent = data.plugins[i].tagsRemove.join(', ');
+                    section.querySelector('.tag.remove').textContent = data.plugins[i].tagsRemove.join(', ');
                 } else {
-                    section.children[4].className += ' hidden';
+                    section.querySelector('.tag.remove').className += ' hidden';
                 }
 
 
@@ -446,7 +425,7 @@ function processURLParams() {
                         messageLi.className = data.plugins[i].messages[j].type;
                         /* innerHTML is open to abuse, but for hyperlinking it's too useful. */
                         messageLi.innerHTML = data.plugins[i].messages[j].content;
-                        section.children[5].appendChild(messageLi);
+                        section.getElementsByTagName('ul')[0].appendChild(messageLi);
 
                         if (messageLi.className == 'warn') {
                             warnMessageNo++;
@@ -456,7 +435,7 @@ function processURLParams() {
                         totalMessageNo++;
                     }
                 } else {
-                    section.children[5].className += ' hidden';
+                    section.getElementsByTagName('ul')[0].className += ' hidden';
                 }
             }
             document.getElementById('filterTotalMessageNo').textContent = totalMessageNo;

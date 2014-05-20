@@ -32,26 +32,46 @@
     </template>
     <template id="pluginSection">
         <section>
-            <h1></h1>
-            <div class="crc"></div>
-            <div class="version"></div>
-            <div class="tag add"></div>
-            <div class="tag remove"></div>
-            <ul>
+            <div class="front">
+                <h1></h1>
+                <div class="crc"></div>
+                <div class="version"></div>
+                <div class="tag add"></div>
+                <div class="tag remove"></div>
+                <ul>
 
-            </ul>
-            <ol class="buttons">
-                <li class="dummyPlugin fa fa-eye-slash hidden" title="Dummy Plugin">
-                <li class="loadsBSA fa fa-paperclip hidden" title="Loads BSA">
-                <li class="hasUserEdits fa fa-user hidden" title="Has User Metadata">
-                <li class=" fa fa-ellipsis-v fa-lg pluginMenu" data-action="show-menu">
-                <li class="hidden">
-                    <ol class="menu">
-                        <li data-action="view-ui" data-target="editor"><span class="fa fa-pencil fa-fw"></span> Edit Metadata
-                        <li data-action="copy-metadata"><span class="fa fa-copy fa-fw"></span> Copy Metadata As Text
-                        <li data-action="clear-metadata"><span class="fa fa-trash-o fa-fw"></span> Clear User Metadata
-                    </ol>
-            </ol>
+                </ul>
+                <ol class="buttons">
+                    <li class="dummyPlugin fa fa-eye-slash hidden" title="Dummy Plugin">
+                    <li class="loadsBSA fa fa-paperclip hidden" title="Loads BSA">
+                    <li class="hasUserEdits fa fa-user hidden" title="Has User Metadata">
+                    <li class=" fa fa-ellipsis-v fa-lg pluginMenu" data-action="show-menu">
+                    <li class="hidden">
+                        <ol class="menu">
+                            <li data-action="show-editor"><span class="fa fa-pencil fa-fw"></span> Edit Metadata
+                            <li data-action="copy-metadata"><span class="fa fa-copy fa-fw"></span> Copy Metadata As Text
+                            <li data-action="clear-metadata"><span class="fa fa-trash-o fa-fw"></span> Clear User Metadata
+                        </ol>
+                </ol>
+            </div>
+            <div class="editor hidden">
+                <h1></h1>
+                <div class="crc"></div>
+                <div class="version"></div>
+                <input type="checkbox" id="editorEnableEdits">
+                <label for="editorEnableEdits">Enable Edits</label>
+                <label for="editorPriorityValue">Priority</label>
+                <input type="number" max="999999" min="-999999" step="1">
+                <label for="editorGlobalPriority">Compare priority against all other plugins</label>
+                <input type="checkbox" id="editorGlobalPriority">
+                <!-- Need to finish template for editing panel. -->
+                <label for="editorShowOnlyConflicts">Show Only Conflicts</label>
+                <input type="checkbox" id="editorShowOnlyConflicts">
+                <label for="editorSimpleView">Simple View</label>
+                <input type="checkbox" id="editorSimpleView">
+                <button>Apply</button>
+                <button>Cancel</button>
+            </div>
         </section>
     </template>
     <template id="messageDialog">
@@ -62,26 +82,6 @@
                 <button>Yes</button>
                 <button>Cancel</button>
             </div>
-        </div>
-    </template>
-    <template id="editorPanel">
-        <div id="editor">
-            <h1></h1>
-            <div class="crc"></div>
-            <div class="version"></div>
-            <label for="editorEnableEdits">Enable Edits</label>
-            <input type="checkbox" id="editorEnableEdits">
-            <label for="editorPriorityValue">Priority</label>
-            <input type="number" max="999999" min="-999999" step="1">
-            <label for="editorGlobalPriority">Compare priority against all other plugins</label>
-            <input type="checkbox" id="editorGlobalPriority">
-            <!-- Need to finish template for editing panel. -->
-            <label for="editorShowOnlyConflicts">Show Only Conflicts</label>
-            <input type="checkbox" id="editorShowOnlyConflicts">
-            <label for="editorSimpleView">Simple View</label>
-            <input type="checkbox" id="editorSimpleView">
-            <button>Apply</button>
-            <button>Cancel</button>
         </div>
     </template>
     <noscript>The LOOT Report requires Javascript to be enabled in order to function.</noscript>
