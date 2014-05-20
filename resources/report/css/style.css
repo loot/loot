@@ -103,7 +103,6 @@ header > ol > li > ol > li {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    justify-content: space-between;
     width: 100%;
 }
 nav {
@@ -154,6 +153,7 @@ nav a {
 #main {
     overflow: auto;
     flex-shrink: 10;
+    flex-grow: 1;
 }
 
 section, .dialog {
