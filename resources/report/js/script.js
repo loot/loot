@@ -131,7 +131,11 @@ function toggleMessages(evt) {
 }
 function togglePlugins(evt) {
     var sections = document.getElementById('main').children;
+    var entries = document.getElementById('pluginsNav').children;
     var hiddenNo = parseInt(document.getElementById('hiddenPluginNo').textContent, 10);
+    if (sections.length - 2 != entries.length) {
+        throw "Error: Number of plugins in sidebar doesn't match number of plugins in main area!";
+    }
     // Start at 3rd section to skip summary and general messages.
     for (var i = 2; i < sections.length; ++i) {
         var isMessageless = true;
@@ -146,10 +150,12 @@ function togglePlugins(evt) {
             if (sections[i].className.indexOf('hidden') == -1) {
                 hiddenNo++;
                 hideElement(sections[i]);
+                hideElement(entries[i]);
             }
         } else if (sections[i].className.indexOf('hidden') !== -1) {
             hiddenNo--;
             showElement(sections[i]);
+            showElement(entries[i]);
         }
     }
     document.getElementById('hiddenPluginNo').textContent = hiddenNo;
@@ -189,6 +195,10 @@ function showMessageDialog(title, text) {
 }
 function showMessageBox(type, title, text) {
 
+}
+function getConflictingPlugins(filename) {
+    /* This would be a C++ function interface, but using a dummy function to test the UI. */
+    return ['Skyrim.esm', 'Unofficial Skyrim Patch.esp', 'Wyrmstooth.esp', 'RaceMenu.esp', 'Run For Your Lives.esp'];
 }
 function redatePlugins() {
     showMessageDialog('Redate Plugins', 'This feature is provided so that modders using the Creation Kit may set the load order it uses. A side-effect is that any subscribed Steam Workshop mods will be re-downloaded by Steam. Do you wish to continue?');
@@ -459,6 +469,7 @@ function setupEventHandlers() {
     document.getElementById('hideInactivePluginMessages').addEventListener('click', toggleMessages, false);
     document.getElementById('hideAllPluginMessages').addEventListener('click', toggleMessages, false);
     document.getElementById('hideMessagelessPlugins').addEventListener('click', togglePlugins, false);
+    document.getElementById('showOnlyConflicts').addEventListener('click', togglePlugins, false);
     /* Set up handlers for buttons. */
     elements = document.querySelectorAll('[data-action]');
     for (var i = 0; i < elements.length; ++i) {
