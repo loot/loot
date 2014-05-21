@@ -97,68 +97,60 @@ function toggleFilters(evt) {
         evt.target.className = evt.target.className.replace('current', '');
     }
 }
-function toggleMessages(evt) {
-    // Start at 2nd section to skip summary.
-    var listItems = document.getElementById('main').querySelectorAll('ul li');
-    var hiddenNo = parseInt(document.getElementById('hiddenMessageNo').textContent, 10);
-    for (var i = 0; i < listItems.length; ++i) {
-        var filterMatch = false;
-        if (evt.target.id == 'hideAllPluginMessages' && listItems[i].parentElement.parentElement.id != 'generalMessages') {
-            filterMatch = true;
-        } else if (evt.target.id == 'hideNotes' && listItems[i].className.indexOf('say') != -1) {
-            filterMatch = true;
-        } else if (evt.target.id == 'hideDoNotCleanMessages' && listItems[i].textContent.indexOf('Do not clean.') != -1) {
-            filterMatch = true;
-        } else if (evt.target.id == 'hideInactivePluginMessages' && listItems[i].parentElement.parentElement.getAttribute('data-active') == 'false') {
-            filterMatch = true;
-        }
-        if (filterMatch) {
-            if (evt.target.checked) {
-                if (listItems[i].className.indexOf('hidden') == -1) {
-                    hiddenNo++;
-                }
-                stepHideElement(listItems[i]);
-            } else {
-                stepUnhideElement(listItems[i]);
-                if (listItems[i].className.indexOf('hidden') == -1) {
-                    hiddenNo--;
-                }
-            }
-        }
-    }
-	document.getElementById('hiddenMessageNo').textContent = hiddenNo;
-	togglePlugins(evt);
-}
 function togglePlugins(evt) {
     var sections = document.getElementById('main').children;
     var entries = document.getElementById('pluginsNav').children;
-    var hiddenNo = parseInt(document.getElementById('hiddenPluginNo').textContent, 10);
+    var hiddenPluginNo = 0;
+    var hiddenMessageNo = 0;
     if (sections.length - 2 != entries.length) {
         throw "Error: Number of plugins in sidebar doesn't match number of plugins in main area!";
     }
     // Start at 3rd section to skip summary and general messages.
     for (var i = 2; i < sections.length; ++i) {
         var isMessageless = true;
+        var hasInactivePluginMessages = false;
         var messages = sections[i].getElementsByTagName('ul')[0].getElementsByTagName('li');
+        if (sections[i].getAttribute('data-active') == 'false') {
+            hasInactivePluginMessages = true;
+        }
         for (var j = 0; j < messages.length; ++j) {
+            var hasPluginMessages = false;
+            var hasNotes = false;
+            var hasDoNotCleanMessages = false;
+            if (messages[j].parentElement.parentElement.id != 'generalMessages') {
+                hasPluginMessages = true;
+            }
+            if (messages[j].className.indexOf('say') != -1) {
+                hasNotes = true;
+            }
+            if (messages[j].textContent.indexOf('Do not clean.') != -1) {
+                hasDoNotCleanMessages = true;
+            }
+            if ((document.getElementById('hideAllPluginMessages').checked && hasPluginMessages)
+                || (document.getElementById('hideNotes').checked && hasNotes)
+                || (document.getElementById('hideDoNotCleanMessages').checked && hasDoNotCleanMessages)
+                || (document.getElementById('hideInactivePluginMessages').checked && hasInactivePluginMessages)) {
+                hideElement(messages[j]);
+                ++hiddenMessageNo;
+            } else {
+                showElement(messages[j]);
+            }
             if (messages[j].className.indexOf('hidden') == -1) {
                 isMessageless = false;
                 break;
             }
         }
         if (document.getElementById('hideMessagelessPlugins').checked && isMessageless) {
-            if (sections[i].className.indexOf('hidden') == -1) {
-                hiddenNo++;
-                hideElement(sections[i]);
-                hideElement(entries[i]);
-            }
-        } else if (sections[i].className.indexOf('hidden') !== -1) {
-            hiddenNo--;
+            hideElement(sections[i]);
+            hideElement(entries[i]);
+            ++hiddenPluginNo;
+        } else {
             showElement(sections[i]);
             showElement(entries[i]);
         }
     }
-    document.getElementById('hiddenPluginNo').textContent = hiddenNo;
+	document.getElementById('hiddenMessageNo').textContent = hiddenMessageNo;
+    document.getElementById('hiddenPluginNo').textContent = hiddenPluginNo;
 }
 function hideDialog(evt) {
     var target = document.getElementById(evt.target.getAttribute('data-dialog'));
@@ -464,10 +456,10 @@ function setupEventHandlers() {
     document.getElementById('hideVersionNumbers').addEventListener('click', toggleDisplayCSS, false);
     document.getElementById('hideCRCs').addEventListener('click', toggleDisplayCSS, false);
     document.getElementById('hideBashTags').addEventListener('click', toggleDisplayCSS, false);
-    document.getElementById('hideNotes').addEventListener('click', toggleMessages, false);
-    document.getElementById('hideDoNotCleanMessages').addEventListener('click', toggleMessages, false);
-    document.getElementById('hideInactivePluginMessages').addEventListener('click', toggleMessages, false);
-    document.getElementById('hideAllPluginMessages').addEventListener('click', toggleMessages, false);
+    document.getElementById('hideNotes').addEventListener('click', togglePlugins, false);
+    document.getElementById('hideDoNotCleanMessages').addEventListener('click', togglePlugins, false);
+    document.getElementById('hideInactivePluginMessages').addEventListener('click', togglePlugins, false);
+    document.getElementById('hideAllPluginMessages').addEventListener('click', togglePlugins, false);
     document.getElementById('hideMessagelessPlugins').addEventListener('click', togglePlugins, false);
     document.getElementById('showOnlyConflicts').addEventListener('click', togglePlugins, false);
     /* Set up handlers for buttons. */
