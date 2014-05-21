@@ -65,16 +65,6 @@ function hideElement(element) {
         element.classList.toggle('hidden', true);
     }
 }
-function stepUnhideElement(element) {
-    if (element != null && element.className.indexOf('hidden') != -1) {
-        element.className = element.className.replace('hidden', '');
-    }
-}
-function stepHideElement(element) {
-    if (element != null) {
-        element.className += ' hidden';
-    }
-}
 function toggleDisplayCSS(evt) {
     var e = document.getElementsByClassName(evt.target.getAttribute('data-class'));
     if (evt.target.checked) {
@@ -97,6 +87,10 @@ function toggleFilters(evt) {
         evt.target.className = evt.target.className.replace('current', '');
     }
 }
+function getConflictingPlugins(filename) {
+    /* This would be a C++ function interface, but using a dummy function to test the UI. */
+    return ['Skyrim.esm', 'Unofficial Skyrim Patch.esp', 'Wyrmstooth.esp', 'RaceMenu.esp', 'Run For Your Lives.esp'];
+}
 function togglePlugins(evt) {
     var sections = document.getElementById('main').children;
     var entries = document.getElementById('pluginsNav').children;
@@ -105,13 +99,25 @@ function togglePlugins(evt) {
     if (sections.length - 2 != entries.length) {
         throw "Error: Number of plugins in sidebar doesn't match number of plugins in main area!";
     }
-    // Start at 3rd section to skip summary and general messages.
+    /* Check if the conflict filter is enabled, and if a plugin has been given. */
+    var conflicts = [];
+    if (document.getElementById('showOnlyConflicts').checked) {
+        var plugin = document.getElementById('conflictsPlugin').value;
+        if (plugin.length != 0) {
+            conflicts = getConflictingPlugins(plugin);
+        }
+    }
+    /* Start at 3rd section to skip summary and general messages. */
     for (var i = 2; i < sections.length; ++i) {
+        var isConflictingPlugin = false;
         var isMessageless = true;
         var hasInactivePluginMessages = false;
         var messages = sections[i].getElementsByTagName('ul')[0].getElementsByTagName('li');
         if (sections[i].getAttribute('data-active') == 'false') {
             hasInactivePluginMessages = true;
+        }
+        if (conflicts.indexOf(sections[i].getElementsByTagName('h1')[0].textContent) != -1) {
+            isConflictingPlugin = true;
         }
         for (var j = 0; j < messages.length; ++j) {
             var hasPluginMessages = false;
@@ -140,7 +146,8 @@ function togglePlugins(evt) {
                 break;
             }
         }
-        if (document.getElementById('hideMessagelessPlugins').checked && isMessageless) {
+        if ((document.getElementById('hideMessagelessPlugins').checked && isMessageless)
+            || conflicts.length > 0 && !isConflictingPlugin) {
             hideElement(sections[i]);
             hideElement(entries[i]);
             ++hiddenPluginNo;
@@ -187,10 +194,6 @@ function showMessageDialog(title, text) {
 }
 function showMessageBox(type, title, text) {
 
-}
-function getConflictingPlugins(filename) {
-    /* This would be a C++ function interface, but using a dummy function to test the UI. */
-    return ['Skyrim.esm', 'Unofficial Skyrim Patch.esp', 'Wyrmstooth.esp', 'RaceMenu.esp', 'Run For Your Lives.esp'];
 }
 function redatePlugins() {
     showMessageDialog('Redate Plugins', 'This feature is provided so that modders using the Creation Kit may set the load order it uses. A side-effect is that any subscribed Steam Workshop mods will be re-downloaded by Steam. Do you wish to continue?');

@@ -465,7 +465,7 @@ header.editMode #headerOverlay {
 .editor .buttons {
     text-align: right;
 }
-.conflictsPlugin {
+#conflictsPlugin {
     margin-left: 2.5em;
 }
 .editorEnableEdits {
