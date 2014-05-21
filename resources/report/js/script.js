@@ -287,7 +287,13 @@ function hideEditor(evt) {
     if (evt.target.className.indexOf('accept') != -1) {
 
     }
-    var section = evt.target.parentElement.parentElement.parentElement;
+
+    /* Remove drag 'n' drop event handlers. */
+    var elements = document.getElementById('pluginsNav').children;
+    for (var i = 0; i < elements.length; ++i) {
+        elements[i].removeAttribute('draggable', true);
+        elements[i].removeEventListener('dragstart', handlePluginDragStart, false);
+    }
 
     /* Disable priority hover in plugins list. */
     document.getElementById('pluginsNav').classList.toggle('editMode', false);
@@ -296,10 +302,31 @@ function hideEditor(evt) {
     document.getElementsByTagName('header')[0].classList.toggle('editMode', false);
 
     /* Hide editor. */
+    var section = evt.target.parentElement.parentElement.parentElement;
     section.classList.toggle('flip');
 
     /* Now delete editor panel. */
     section.removeChild(section.getElementsByClassName('editor')[0]);
+}
+function handlePluginDrop(evt) {
+    evt.stopPropagation();
+
+    if (evt.currentTarget.tagName == 'TABLE' && (evt.currentTarget.className.indexOf('req') != -1 || evt.currentTarget.className.indexOf('inc') != -1 || evt.currentTarget.className.indexOf('loadAfter') != -1)) {
+        var data = {
+            file: evt.dataTransfer.getData('text/plain')
+        };
+        addTableRow(evt.currentTarget.getElementsByTagName('tbody')[0], data);
+    }
+
+    return false;
+}
+function handlePluginDragStart(evt) {
+    evt.dataTransfer.effectAllowed = 'copy';
+    evt.dataTransfer.setData('text/plain', evt.target.getElementsByClassName('name')[0].textContent);
+}
+function handlePluginDragOver(evt) {
+    evt.preventDefault();
+    evt.dataTransfer.dropEffect = 'copy';
 }
 function showEditor(sectionId) {
         /* Editor is attached to plugins on-demand. */
@@ -332,6 +359,20 @@ function showEditor(sectionId) {
         /* Set up button event handlers. */
         editor.getElementsByClassName('accept')[0].addEventListener('click', hideEditor, false);
         editor.getElementsByClassName('cancel')[0].addEventListener('click', hideEditor, false);
+
+        /* Set up drag 'n' drop event handlers. */
+        elements = document.getElementById('pluginsNav').children;
+        for (var i = 0; i < elements.length; ++i) {
+            elements[i].setAttribute('draggable', true);
+            elements[i].addEventListener('dragstart', handlePluginDragStart, false);
+        }
+        elements = editor.getElementsByTagName('table');
+        for (var i = 0; i < elements.length; ++i) {
+            if (elements[i].className.indexOf('loadAfter') != -1 || elements[i].className.indexOf('req') != -1 || elements[i].className.indexOf('inc') != -1) {
+                elements[i].addEventListener('drop', handlePluginDrop, false);
+                elements[i].addEventListener('dragover', handlePluginDragOver, false);
+            }
+        }
 
         /* Enable priority hover in plugins list. */
         document.getElementById('pluginsNav').classList.toggle('editMode', true);

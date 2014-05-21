@@ -474,3 +474,6 @@ header.editMode #headerOverlay {
 label[for=editorPriorityValue] {
     margin-left: 0.5em;
 }
+[draggable] {
+    -webkit-user-select: none;
+}
