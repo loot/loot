@@ -155,12 +155,14 @@ function togglePlugins(evt) {
     document.getElementById('hiddenPluginNo').textContent = hiddenNo;
 }
 function hideDialog(evt) {
-    hideElement(document.getElementById('overlay'));
     var target = document.getElementById(evt.target.getAttribute('data-dialog'));
     hideElement(target);
     if (target.id == 'modalDialog') {
         document.body.removeChild(target);
     }
+    overlay.setAttribute('data-dialog', '');
+    overlay.removeEventListener('click', hideDialog, false);
+    hideElement(document.getElementById('overlay'));
 }
 function showMessageDialog(title, text) {
     var content = document.getElementById('messageDialog').content;
@@ -312,6 +314,13 @@ function showEditor(sectionId) {
         /* Finally, show editor. */
         section.classList.toggle('flip');
 }
+function closeSettings(evt) {
+    if (evt.target.className.indexOf('accept') != -1) {
+
+    }
+    hideElement(evt.target.parentElement.parentElement);
+    hideElement(document.getElementById('overlay'));
+}
 function processButtonClick(evt) {
     var overlay = document.getElementById('overlay');
     var action = evt.currentTarget.getAttribute('data-action');
@@ -319,20 +328,17 @@ function processButtonClick(evt) {
         var target = document.getElementById(evt.currentTarget.getAttribute('data-target'));
         if (isVisible(target)) {
             hideElement(target);
-            if (target.getAttribute('data-overlay')) {
-                overlay.setAttribute('data-dialog', '');
-                hideElement(overlay);
-            } else {
-                var replace = target.getAttribute('data-replace');
-                if (replace) {
-                    showElement(document.getElementById(replace));
-                }
+            var replace = target.getAttribute('data-replace');
+            if (replace) {
+                showElement(document.getElementById(replace));
             }
         } else {
             showElement(target);
             if (target.getAttribute('data-overlay') == '1') {
                 overlay.setAttribute('data-dialog', target.id);
                 overlay.addEventListener('click', hideDialog, false);
+                showElement(overlay);
+            } else if (target.id == 'settings') {
                 showElement(overlay);
             } else {
                 var replace = target.getAttribute('data-replace');
@@ -356,6 +362,8 @@ function processButtonClick(evt) {
         clearAllMetadata();
     } else if (action == 'show-editor') {
         showEditor(evt.target.getAttribute('data-target'));
+    } else if (action == 'close-settings') {
+        closeSettings(evt);
     }
 }
 function toggleInputRO(evt) {

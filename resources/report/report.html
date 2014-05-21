@@ -275,7 +275,7 @@ along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
         </blockquote>
     </div>
 
-    <div id="settings" class="dialog hidden" data-overlay="1">
+    <div id="settings" class="dialog hidden">
         <h1>Settings</h1>
         <label for="defaultGameSelect">Default Game</label>
         <select id="defaultGameSelect">
@@ -302,8 +302,8 @@ along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
         <p>Language and game changes will be applied after LOOT is restarted.
         <hr>
         <div class="buttons">
-            <button>Apply</button>
-            <button>Cancel</button>
+            <button class="accept" data-action="close-settings">Apply</button>
+            <button class="cancel" data-action="close-settings">Cancel</button>
         </div>
     </div>
 
