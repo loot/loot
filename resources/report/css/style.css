@@ -195,7 +195,7 @@ section[data-active].flip .editor  {
     display:block;
 }
 
-section[data-active] .buttons {
+section[data-active] .icons {
     background: transparent;
     margin: 0;
     padding: 0;
@@ -205,15 +205,15 @@ section[data-active] .buttons {
     right: 0.5em;
     overflow:visible;
 }
-section .buttons > li:not(:last-child) {
-    opacity: 0.5;
+.icons .fa {
+    color: grey;
     text-align: center;
     display: inline-block;
     margin: 0.2em;
     cursor: pointer;
 }
-section .buttons  > li:hover {
-    opacity: 1;
+.icons  > li:hover {
+    color: black;
 }
 .pluginMenu {
     width: 1.5em;
@@ -227,7 +227,7 @@ section .buttons  > li:hover {
     list-style-type: none;
     position: absolute;
     right: 0.5em;
-    width: 13em;
+    width: 14em;
     z-index: 2;
     text-align: left;
     opacity: 1;
@@ -436,7 +436,7 @@ td input {
     background: #f8f8f8;
 }
 .tableTabs .editable {
-    margin: 0 1em 3em 0;
+    margin: 0;
     border-collapse: collapse;
     border: 1px black solid;
     width: 100%;
@@ -461,4 +461,16 @@ header.editMode #headerOverlay {
     position: absolute;
     top: 0;
     left: 0;
+}
+.editor .buttons {
+    text-align: right;
+}
+.conflictsPlugin {
+    margin-left: 2.5em;
+}
+.editorEnableEdits {
+    margin-bottom: 1em;
+}
+label[for=editorPriorityValue] {
+    margin-left: 0.5em;
 }

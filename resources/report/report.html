@@ -84,7 +84,7 @@
                 <ul>
 
                 </ul>
-                <ol class="buttons">
+                <ol class="icons">
                     <li class="dummyPlugin fa fa-eye-slash hidden" title="Dummy Plugin">
                     <li class="loadsBSA fa fa-paperclip hidden" title="Loads BSA">
                     <li class="hasUserEdits fa fa-user hidden" title="Has User Metadata">
@@ -105,11 +105,11 @@
             <div class="crc"></div>
             <div class="version"></div>
             <input type="checkbox" class="editorEnableEdits">
-            <label for="editorEnableEdits">Enable Edits</label>
-            <label for="editorPriorityValue">Priority</label>
-            <input type="number" max="999999" min="-999999" step="1">
-            <label for="editorGlobalPriority">Compare priority against all other plugins</label>
+            <label for="editorEnableEdits">Enable Edits</label><br>
             <input type="checkbox" class="editorGlobalPriority">
+            <label for="editorGlobalPriority" title="Global priorities are compared against all other plugins. Normal priorities are compared against only conflicting plugins.">Global Priority</label><br>
+            <label for="editorPriorityValue">Priority Value:</label>
+            <input type="number" max="999999" min="-999999" step="1">
             <div class="tableTabs">
                 <span class="selected" data-for="loadAfter">Load After</span><span data-for="req">Requirements</span><span data-for="inc">Incompatibilities</span><span data-for="message">Messages</span><span data-for="tags">Bash Tags</span><span data-for="dirty">Dirty Info</span>
                 <table class="editable loadAfter">
@@ -149,10 +149,7 @@
                         <!-- Dirty info rows go here. -->
                 </table>
             </div>
-            <label for="editorShowOnlyConflicts">Show Only Conflicts</label>
-            <input type="checkbox" class="editorShowOnlyConflicts">
-            <label for="editorSimpleView">Simple View</label>
-            <input type="checkbox" class="editorSimpleView">
+            <hr>
             <div class="buttons">
                 <button class="accept">Apply</button>
                 <button class="cancel">Cancel</button>
@@ -225,6 +222,9 @@
                     <label for="hideAllPluginMessages">Hide all plugin messages</label><br>
                     <input type="checkbox" id="hideMessagelessPlugins" />
                     <label for="hideMessagelessPlugins">Hide messageless plugins</label><br>
+                    <input type="checkbox" class="showOnlyConflicts">
+                    <label for="editorShowOnlyConflicts">Show only conflicts for </label>
+                    <input type="text" class="conflictsPlugin">
                     <div>
                         <span>Hidden plugins</span>: <span id="hiddenPluginNo">0</span> / <span id="totalPluginNo"></span>
                     </div>
