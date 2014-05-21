@@ -146,7 +146,7 @@ nav a {
     padding: 0 0.5em;
     white-space:nowrap;
 }
-#pluginsNav li span {
+#pluginsNav li > span {
     display: inline-block;
     width: 1.2em;
 }
@@ -440,4 +440,14 @@ td input {
     border-collapse: collapse;
     border: 1px black solid;
     width: 100%;
+}
+
+#pluginsNav .priority {
+    display: none;
+}
+#pluginsNav.editMode li:hover .priority {
+    display: inline;
+}
+#pluginsNav.editMode li:hover .name {
+    display: none;
 }

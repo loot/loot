@@ -311,6 +311,9 @@ function showEditor(sectionId) {
             }
         }
 
+        /* Enable priority hover in plugins list. */
+        document.getElementById('pluginsNav').classList.toggle('editMode', true);
+
         /* Finally, show editor. */
         section.classList.toggle('flip');
 }
@@ -439,8 +442,9 @@ function processURLParams() {
                 pluginsNav.appendChild(clone);
                 clone = pluginsNav.lastElementChild;
 
-                clone.getElementsByTagName('a')[0].textContent = data.plugins[i].name;
+                clone.getElementsByClassName('name')[0].textContent = data.plugins[i].name;
                 clone.getElementsByTagName('a')[0].href = '#' + data.plugins[i].name.replace(/\s+/g, '');
+                clone.getElementsByClassName('priority')[0].textContent = 'Priority: 500, Global: ✓';  // Or '✗'.
 
                 if (data.plugins[i].isDummy) {
                     clone.getElementsByClassName('dummyPlugin')[0].className += ' fa fa-eye-slash';
