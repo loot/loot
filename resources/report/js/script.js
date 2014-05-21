@@ -314,6 +314,9 @@ function showEditor(sectionId) {
         /* Enable priority hover in plugins list. */
         document.getElementById('pluginsNav').classList.toggle('editMode', true);
 
+        /* Disable header buttons. */
+        document.getElementsByTagName('header')[0].classList.toggle('editMode', true);
+
         /* Finally, show editor. */
         section.classList.toggle('flip');
 }
