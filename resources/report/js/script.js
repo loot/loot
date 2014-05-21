@@ -283,6 +283,24 @@ function showEditorTable(evt) {
     evt.target.parentElement.getElementsByClassName('selected')[0].classList.toggle('selected');
     evt.target.classList.toggle('selected');
 }
+function hideEditor(evt) {
+    if (evt.target.className.indexOf('accept') != -1) {
+
+    }
+    var section = evt.target.parentElement.parentElement.parentElement;
+
+    /* Disable priority hover in plugins list. */
+    document.getElementById('pluginsNav').classList.toggle('editMode', false);
+
+    /* Enable header buttons. */
+    document.getElementsByTagName('header')[0].classList.toggle('editMode', false);
+
+    /* Hide editor. */
+    section.classList.toggle('flip');
+
+    /* Now delete editor panel. */
+    section.removeChild(section.getElementsByClassName('editor')[0]);
+}
 function showEditor(sectionId) {
         /* Editor is attached to plugins on-demand. */
         var content = document.getElementById('pluginEditor').content;
@@ -292,9 +310,9 @@ function showEditor(sectionId) {
         editor = section.lastElementChild;
 
         /* Fill in data. */
-        section.getElementsByTagName('h1')[1].textContent = section.getElementsByTagName('h1')[0].textContent;
-        section.getElementsByClassName('crc')[1].textContent = section.getElementsByClassName('crc')[0].textContent;
-        section.getElementsByClassName('version')[1].textContent = section.getElementsByClassName('version')[0].textContent;
+        editor.getElementsByTagName('h1')[0].textContent = section.getElementsByTagName('h1')[0].textContent;
+        editor.getElementsByClassName('crc')[0].textContent = section.getElementsByClassName('crc')[0].textContent;
+        editor.getElementsByClassName('version')[0].textContent = section.getElementsByClassName('version')[0].textContent;
 
         /* Initialise tables. */
         var tables = editor.getElementsByTagName('table');
@@ -303,13 +321,17 @@ function showEditor(sectionId) {
         }
 
         /* Set up table tab event handlers. */
-        var elements = document.getElementsByClassName('tableTabs')[0].children;
+        var elements = editor.getElementsByClassName('tableTabs')[0].children;
         for (var i = 0; i < elements.length; ++i) {
             var tableClass = elements[i].getAttribute('data-for');
             if (tableClass) {
                 elements[i].addEventListener('click', showEditorTable, false);
             }
         }
+
+        /* Set up button event handlers. */
+        editor.getElementsByClassName('accept')[0].addEventListener('click', hideEditor, false);
+        editor.getElementsByClassName('cancel')[0].addEventListener('click', hideEditor, false);
 
         /* Enable priority hover in plugins list. */
         document.getElementById('pluginsNav').classList.toggle('editMode', true);
