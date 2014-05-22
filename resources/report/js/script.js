@@ -142,11 +142,11 @@ function togglePlugins(evt) {
         if ((document.getElementById('hideMessagelessPlugins').checked && isMessageless)
             || conflicts.length > 0 && !isConflictingPlugin) {
             hideElement(sections[i]);
-            hideElement(entries[i]);
+            hideElement(entries[i - 2]);
             ++hiddenPluginNo;
         } else {
             showElement(sections[i]);
-            showElement(entries[i]);
+            showElement(entries[i - 2]);
         }
     }
 	document.getElementById('hiddenMessageNo').textContent = hiddenMessageNo;
