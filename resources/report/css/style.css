@@ -483,3 +483,11 @@ label[for=editorPriorityValue] {
     background: #69aaff;
     color: #f8f8f8;
 }
+input:invalid {
+    background-color: pink;
+    color: white;
+}
+input:valid {
+    background-color: white;
+    color: black;
+}

@@ -264,31 +264,17 @@ function addTableRow(tableBody, data) {
 }
 function setupTable(tableBody) {
     /* Add "add new row" row. */
-    var rowTemplateId = tableBody.getAttribute('data-template');
-    var content = document.getElementById(rowTemplateId).content;
-    var row = document.importNode(content, true);
-    tableBody.appendChild(row);
-    row = tableBody.lastElementChild;
-
-    /* All the tables have at least 4 columns, including the delete button column. Delete the first three from this row and span the fourth over four columns to ensure the text does not get cut off. */
-    row.removeChild(row.firstElementChild);
-    row.removeChild(row.firstElementChild);
-    row.removeChild(row.firstElementChild);
-    row.firstElementChild.textContent = 'Add new row...';
-    row.firstElementChild.setAttribute('colspan', 4);
-
-    /* Hide any 'select' elements, and the bin icon. */
-    var selects = row.getElementsByTagName('select');
-    for (var i = 0; i < selects.length; ++i) {
-        hideElement(selects[i]);
-    }
-    var bin = row.getElementsByClassName('fa-trash-o')[0];
-    if (bin) {
-        hideElement(bin);
-    }
+    var tr = document.createElement('tr');
+    var td = document.createElement('td');
+    var td2 = document.createElement('td');
+    td.textContent = 'Add new row...';
+    td.setAttribute('colspan', 4);
+    tr.appendChild(td);
+    tr.appendChild(td2);
+    tableBody.appendChild(tr);
 
     /* Add new row listener. */
-    row.addEventListener('dblclick', addNewTableRow, false);
+    tr.addEventListener('dblclick', addNewTableRow, false);
 }
 function showEditorTable(evt) {
     var tableClass = evt.target.getAttribute('data-for');
@@ -304,29 +290,46 @@ function showEditorTable(evt) {
     evt.target.classList.toggle('selected');
 }
 function hideEditor(evt) {
+    var isValid = true;
     if (evt.target.className.indexOf('accept') != -1) {
-
+        /* First validate table inputs. */
+        var inputs = evt.target.parentElement.parentElement.getElementsByTagName('input');
+        /* If an input is readonly, it doesn't validate, so check required / value length explicitly.
+        */
+        for (var i = 0; i < inputs.length; ++i) {
+            if (inputs[i].readOnly) {
+                if (inputs[i].required && inputs[i].value.length == 0) {
+                    isValid = false;
+                    console.log(inputs[i]);
+                    inputs[i].readOnly = false;
+                }
+            } else if (!inputs[i].checkValidity()) {
+                isValid = false;
+                console.log(inputs[i]);
+            }
+        }
     }
+    if (isValid) {
+        /* Remove drag 'n' drop event handlers. */
+        var elements = document.getElementById('pluginsNav').children;
+        for (var i = 0; i < elements.length; ++i) {
+            elements[i].removeAttribute('draggable', true);
+            elements[i].removeEventListener('dragstart', handlePluginDragStart, false);
+        }
 
-    /* Remove drag 'n' drop event handlers. */
-    var elements = document.getElementById('pluginsNav').children;
-    for (var i = 0; i < elements.length; ++i) {
-        elements[i].removeAttribute('draggable', true);
-        elements[i].removeEventListener('dragstart', handlePluginDragStart, false);
+        /* Disable priority hover in plugins list. */
+        document.getElementById('pluginsNav').classList.toggle('editMode', false);
+
+        /* Enable header buttons. */
+        document.getElementsByTagName('header')[0].classList.toggle('editMode', false);
+
+        /* Hide editor. */
+        var section = evt.target.parentElement.parentElement.parentElement;
+        section.classList.toggle('flip');
+
+        /* Now delete editor panel. */
+        section.removeChild(section.getElementsByClassName('editor')[0]);
     }
-
-    /* Disable priority hover in plugins list. */
-    document.getElementById('pluginsNav').classList.toggle('editMode', false);
-
-    /* Enable header buttons. */
-    document.getElementsByTagName('header')[0].classList.toggle('editMode', false);
-
-    /* Hide editor. */
-    var section = evt.target.parentElement.parentElement.parentElement;
-    section.classList.toggle('flip');
-
-    /* Now delete editor panel. */
-    section.removeChild(section.getElementsByClassName('editor')[0]);
 }
 function handlePluginDrop(evt) {
     evt.stopPropagation();
@@ -405,11 +408,29 @@ function showEditor(evt) {
         section.classList.toggle('flip');
 }
 function closeSettings(evt) {
+    var isValid = true;
     if (evt.target.className.indexOf('accept') != -1) {
-
+        /* First validate table inputs. */
+        var inputs = evt.target.parentElement.parentElement.getElementsByTagName('input');
+        /* If an input is readonly, it doesn't validate, so check required / value length explicitly.
+        */
+        for (var i = 0; i < inputs.length; ++i) {
+            if (inputs[i].readOnly) {
+                if (inputs[i].required && inputs[i].value.length == 0) {
+                    isValid = false;
+                    console.log(inputs[i]);
+                    inputs[i].readOnly = false;
+                }
+            } else if (!inputs[i].checkValidity()) {
+                isValid = false;
+                console.log(inputs[i]);
+            }
+        }
     }
-    hideElement(evt.target.parentElement.parentElement);
-    hideElement(document.getElementById('overlay'));
+    if (isValid) {
+        hideElement(evt.target.parentElement.parentElement);
+        hideElement(document.getElementById('overlay'));
+    }
 }
 function toggleMenu(evt) {
     var target = document.getElementById('currentMenu');
