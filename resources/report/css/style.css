@@ -479,3 +479,7 @@ label[for=editorPriorityValue] {
 [draggable] {
     -webkit-user-select: none;
 }
+.highlight {
+    background: #69aaff;
+    color: #f8f8f8;
+}
