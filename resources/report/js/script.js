@@ -207,7 +207,7 @@ function clearMetadata(filename) {
     showMessageDialog('Clear Plugin Metadata', 'Are you sure you want to clear all existing user-added metadata from "' + filename + '"?');
 }
 function removeTableRow(evt) {
-    evt.target.parentElement.parentElement.parentElement.removeChild(evt.target.parentElement.parentElement);
+    evt.target.parentElement.parentElement.removeChild(evt.target.parentElement);
 }
 function addNewTableRow(evt) {
     /* Create new row. */
@@ -422,7 +422,7 @@ function processButtonClick(evt) {
             }
         }
     } else if (action == 'show-menu') {
-        target = evt.target.nextSibling;
+        target = evt.target.nextElementSibling;
         if (isVisible(target)) {
             hideElement(target);
         } else {

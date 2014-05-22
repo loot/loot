@@ -13,7 +13,7 @@
             <td><input class="file" type="text" readonly required>
             <td><input class="display" type="text" readonly>
             <td><input class="condition" type="text" readonly>
-            <td><span class="fa fa-trash-o fa-fw"></span>
+            <td class="fa fa-trash-o fa-fw">
     </template>
     <template id="messageRow">
         <tr>
@@ -27,7 +27,7 @@
             <td><select class="language">
                     <!-- Language <option> elements go here. -->
                 </select>
-            <td><span class="fa fa-trash-o fa-fw"></span>
+            <td class="fa fa-trash-o fa-fw">
     </template>
     <template id="tagRow">
         <tr>
@@ -37,7 +37,7 @@
                 </select>
             <td><input class="name" type="text" readonly required>
             <td><input class="condition" type="text" readonly>
-            <td><span class="fa fa-trash-o fa-fw"></span>
+            <td class="fa fa-trash-o fa-fw">
     </template>
     <template id="dirtyInfoRow">
         <tr>
@@ -46,7 +46,7 @@
             <td><input class="udr" type="number" min="0" step="1" readonly>
             <td><input class="navmesh" type="number" min="0" step="1" readonly>
             <td><input class="utility" type="text" readonly required>
-            <td><span class="fa fa-trash-o fa-fw"></span>
+            <td class="fa fa-trash-o fa-fw">
     </template>
     <template id="gameRow">
         <tr>
@@ -61,13 +61,13 @@
             <td><input class="branch" type="text" readonly>
             <td><input class="path" type="text" readonly>
             <td><input class="registryKey" type="text" readonly>
-            <td><span class="fa fa-trash-o fa-fw"></span>
+            <td class="fa fa-trash-o fa-fw">
     </template>
     <template id="pluginNav">
         <li>
             <span class="dummyPlugin" title="Dummy Plugin"></span>
             <span class="loadsBSA" title="Loads BSA"></span>
-            <span class="hasUserEdits"  title="Has User Metadata"></span>
+            <span class="hasUserEdits" title="Has User Metadata"></span>
             <a href="">
                 <span class="name"></span>
                 <span class="priority"></span>
@@ -82,7 +82,7 @@
                 <div class="tag add"></div>
                 <div class="tag remove"></div>
                 <ul>
-
+                    <!-- Plugin message <li> elements go here. -->
                 </ul>
                 <ol class="icons">
                     <li class="dummyPlugin fa fa-eye-slash hidden" title="Dummy Plugin">

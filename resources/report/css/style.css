@@ -395,10 +395,10 @@ td input {
     width: 100%;
     text-overflow: ellipsis;
 }
-.editable td:last-child span {
+.editable td:last-child {
     cursor: pointer;
 }
-.editable td:last-child span:hover {
+.editable td:last-child:hover {
     color: red;
 }
 .editable {
