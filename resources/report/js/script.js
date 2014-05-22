@@ -77,16 +77,6 @@ function toggleDisplayCSS(evt) {
         }
     }
 }
-function toggleFilters(evt) {
-    var filters = document.getElementById('filters');
-    if (document.getElementById('filtersToggle').className.indexOf('current') == -1) {
-        showElement(filters);
-        evt.target.className += ' current';
-    } else {
-        hideElement(filters);
-        evt.target.className = evt.target.className.replace('current', '');
-    }
-}
 function getConflictingPlugins(filename) {
     /* This would be a C++ function interface, but using a dummy function to test the UI. */
     return ['Skyrim.esm', 'Unofficial Skyrim Patch.esp', 'Wyrmstooth.esp', 'RaceMenu.esp', 'Run For Your Lives.esp'];
@@ -195,15 +185,37 @@ function showMessageDialog(title, text) {
 function showMessageBox(type, title, text) {
 
 }
-function redatePlugins() {
+function openLogLocation(evt) {
+
+}
+function openReadme(evt) {
+
+}
+function updateMasterlist(evt) {
+
+}
+function sortPlugins(evt) {
+
+}
+function applySort(evt) {
+
+}
+function cancelSort(evt) {
+
+}
+function redatePlugins(evt) {
     showMessageDialog('Redate Plugins', 'This feature is provided so that modders using the Creation Kit may set the load order it uses. A side-effect is that any subscribed Steam Workshop mods will be re-downloaded by Steam. Do you wish to continue?');
 
     //showMessageBox('info', 'Redate Plugins', 'Plugins were successfully redated.');
 }
-function clearAllMetadata() {
+function copyMetadata(evt) {
+
+}
+function clearAllMetadata(evt) {
     showMessageDialog('Clear All Metadata', 'Are you sure you want to clear all existing user-added metadata from all plugins?');
 }
-function clearMetadata(filename) {
+function clearMetadata(evt) {
+    var filename = evt.target.getAttribute('data-target');
     showMessageDialog('Clear Plugin Metadata', 'Are you sure you want to clear all existing user-added metadata from "' + filename + '"?');
 }
 function removeTableRow(evt) {
@@ -333,10 +345,11 @@ function handlePluginDragOver(evt) {
     evt.preventDefault();
     evt.dataTransfer.dropEffect = 'copy';
 }
-function showEditor(sectionId) {
+function showEditor(evt) {
         /* Editor is attached to plugins on-demand. */
         var content = document.getElementById('pluginEditor').content;
         var editor = document.importNode(content, true);
+        var sectionId = evt.target.getAttribute('data-target');
         var section = document.getElementById(sectionId);
         section.appendChild(editor);
         editor = section.lastElementChild;
@@ -395,50 +408,84 @@ function closeSettings(evt) {
     hideElement(evt.target.parentElement.parentElement);
     hideElement(document.getElementById('overlay'));
 }
-function processButtonClick(evt) {
-    var overlay = document.getElementById('overlay');
-    var action = evt.currentTarget.getAttribute('data-action');
-    if (action == 'view-ui') {
-        var target = document.getElementById(evt.currentTarget.getAttribute('data-target'));
-        if (isVisible(target)) {
-            hideElement(target);
-            var replace = target.getAttribute('data-replace');
-            if (replace) {
-                showElement(document.getElementById(replace));
-            }
-        } else {
-            showElement(target);
-            if (target.getAttribute('data-overlay') == '1') {
-                overlay.setAttribute('data-dialog', target.id);
-                overlay.addEventListener('click', hideDialog, false);
-                showElement(overlay);
-            } else if (target.id == 'settings') {
-                showElement(overlay);
-            } else {
-                var replace = target.getAttribute('data-replace');
-                if (replace) {
-                    hideElement(document.getElementById(replace));
-                }
-            }
-        }
-    } else if (action == 'show-menu') {
-        target = evt.target.nextElementSibling;
-        if (isVisible(target)) {
-            hideElement(target);
-        } else {
-            showElement(target);
-        }
-    } else if (action == 'redate-plugins') {
-        redatePlugins();
-    } else if (action == 'clear-metadata') {
-        clearMetadata(evt.target.getAttribute('data-target'));
-    } else if (action == 'wipe-userlist') {
-        clearAllMetadata();
-    } else if (action == 'show-editor') {
-        showEditor(evt.target.getAttribute('data-target'));
-    } else if (action == 'close-settings') {
-        closeSettings(evt);
+function toggleMenu(evt) {
+    var target = document.getElementById('currentMenu');
+    if (!target) {
+        target = evt.target.firstElementChild;
     }
+    if (isVisible(target)) {
+        hideElement(target);
+
+        /* Also remove event listeners to any dynamically-generated items. */
+        var elements = target.querySelectorAll('[data-action]');
+        for (var i = 0; i < elements.length; ++i) {
+            var action = elements[i].getAttribute('data-action');
+            if (action == 'show-editor') {
+                elements[i].removeEventListener('click', showEditor, false);
+            } else if (action == 'copy-metadata') {
+                elements[i].removeEventListener('click', copyMetadata, false);
+            } else if (action == 'clear-metadata') {
+                elements[i].removeEventListener('click', clearMetadata, false);
+            }
+        }
+
+        /* Also add an event listener to the body to close the menu if anywhere is clicked. */
+        target.id = '';
+        document.body.removeEventListener('click', toggleMenu, false);
+    } else {
+        showElement(target);
+
+        /* Also attach event listeners to any dynamically-generated items. */
+        var elements = target.querySelectorAll('[data-action]');
+        for (var i = 0; i < elements.length; ++i) {
+            var action = elements[i].getAttribute('data-action');
+            if (action == 'show-editor') {
+                elements[i].addEventListener('click', showEditor, false);
+            } else if (action == 'copy-metadata') {
+                elements[i].addEventListener('click', copyMetadata, false);
+            } else if (action == 'clear-metadata') {
+                elements[i].addEventListener('click', clearMetadata, false);
+            }
+        }
+
+        /* Also add an event listener to the body to close the menu if anywhere is clicked. */
+        target.id = 'currentMenu';
+        document.body.addEventListener('click', toggleMenu, false);
+        evt.stopPropagation();
+    }
+}
+function toggleFiltersList(evt) {
+    var filters = document.getElementById('filters');
+    var plugins = document.getElementById('pluginsNav');
+
+    if (isVisible(filters)) {
+        hideElement(filters);
+        showElement(plugins);
+    } else {
+        showElement(filters);
+        hideElement(plugins);
+    }
+}
+function showAboutDialog(evt) {
+    var target = document.getElementById('about');
+    var overlay = document.getElementById('overlay');
+
+    overlay.setAttribute('data-dialog', target.id);
+    overlay.addEventListener('click', hideDialog, false);
+
+    showElement(target);
+    showElement(overlay);
+}
+function showSettingsDialog(evt) {
+    var target = document.getElementById('settings');
+    var overlay = document.getElementById('overlay');
+
+    var buttons = target.getElementsByTagName('button');
+    buttons[0].addEventListener('click', closeSettings, false);
+    buttons[1].addEventListener('click', closeSettings, false);
+
+    showElement(target);
+    showElement(overlay);
 }
 function toggleInputRO(evt) {
     if (evt.target.readOnly) {
@@ -465,10 +512,28 @@ function setupEventHandlers() {
     document.getElementById('hideAllPluginMessages').addEventListener('click', togglePlugins, false);
     document.getElementById('hideMessagelessPlugins').addEventListener('click', togglePlugins, false);
     document.getElementById('showOnlyConflicts').addEventListener('click', togglePlugins, false);
+
     /* Set up handlers for buttons. */
-    elements = document.querySelectorAll('[data-action]');
-    for (var i = 0; i < elements.length; ++i) {
-        elements[i].addEventListener('click', processButtonClick, false);
+    document.getElementById('fileMenu').addEventListener('click', toggleMenu, false);
+    document.getElementById('redatePluginsButton').addEventListener('click', redatePlugins, false);
+    document.getElementById('openLogButton').addEventListener('click', openLogLocation, false);
+    document.getElementById('wipeUserlistButton').addEventListener('click', clearAllMetadata, false);
+    document.getElementById('gameMenu').addEventListener('click', toggleMenu, false);
+    document.getElementById('settingsButton').addEventListener('click', showSettingsDialog, false);
+    document.getElementById('helpMenu').addEventListener('click', toggleMenu, false);
+    document.getElementById('helpButton').addEventListener('click', openReadme, false);
+    document.getElementById('aboutButton').addEventListener('click', showAboutDialog, false);
+    document.getElementById('updateMasterlistButton').addEventListener('click', updateMasterlist, false);
+    document.getElementById('sortButton').addEventListener('click', sortPlugins, false);
+    document.getElementById('applySortButton').addEventListener('click', applySort, false);
+    document.getElementById('cancelSortButton').addEventListener('click', cancelSort, false);
+    document.getElementById('filtersToggle').addEventListener('click', toggleFiltersList, false);
+
+    /* Set up handlers for game menus. */
+    elements = document.getElementById('main').children;
+    for (var i = 2; i < elements.length; ++i) {
+        var pluginMenu = elements[i].getElementsByClassName('pluginMenu')[0];
+        pluginMenu.addEventListener('click', toggleMenu, false);
     }
 }
 function processURLParams() {
@@ -634,7 +699,7 @@ function processURLParams() {
 
             /* Now fill game lists/table. */
             var gameSelect = document.getElementById('defaultGameSelect');
-            var gameMenu = document.getElementById('gameMenu');
+            var gameMenu = document.getElementById('gameMenu').firstElementChild;
             var gameTableBody = document.getElementById('gameTable').getElementsByTagName('tbody')[0];
             /* Add row for creating new rows. */
             setupTable(gameTableBody);

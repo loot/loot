@@ -51,7 +51,7 @@ header > ol {
     margin:0;
     padding:0;
 }
-header > ol > li{
+header > ol > li {
     display: inline-block;
     padding: 0.75em 1em;
     margin: 0;
@@ -86,13 +86,13 @@ header > ol > li > ol {
 header > ol > li > ol > li {
     padding: 0.5em 1em;
 }
-#fileMenu {
+#fileMenu > ol {
     left: 3.75em;
 }
-#gameMenu {
+#gameMenu > ol {
     left: 98px;
 }
-#helpMenu {
+#helpMenu > ol {
     left: 235px;
 }
 
@@ -224,6 +224,7 @@ section[data-active] .icons {
 .menu {
     background: white;
     box-shadow:0 0 3px 0px rgba(0,0,0,0.5);
+    font:10pt/1.5 Helvetica,sans-serif;
     list-style-type: none;
     position: absolute;
     right: 0.5em;
@@ -232,6 +233,7 @@ section[data-active] .icons {
     text-align: left;
     opacity: 1;
     padding:0;
+    color: black;
 }
 .menu > li {
     padding: 0.2em 0.5em;
