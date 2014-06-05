@@ -42,12 +42,27 @@ namespace loot {
 
     cycle_detector::cycle_detector() {}
 
+    void cycle_detector::tree_edge(edge_t e, const PluginGraph& g) {
+        vertex_t source = boost::source(e, g);
+
+        trail.push_back(g[source].Name());
+    }
+
     void cycle_detector::back_edge(edge_t e, const PluginGraph& g) {
         vertex_t vSource = boost::source(e, g);
         vertex_t vTarget = boost::target(e, g);
 
-        BOOST_LOG_TRIVIAL(error) << "Cyclic interaction detected between plugins \"" << g[vSource].Name() << "\" and \"" << g[vTarget].Name() << "\".";
-        throw loot::error(loot::error::sorting_error, (boost::format(lc::translate("Cyclic interaction detected between plugins \"%1%\" and \"%2%\".")) % g[vSource].Name() % g[vTarget].Name()).str());
+        trail.push_back(g[vSource].Name());
+        list<string>::iterator it = find(trail.begin(), trail.end(), g[vTarget].Name());
+        string backCycle;
+        for (list<string>::iterator endIt = trail.end(); it != endIt; ++it) {
+            backCycle += *it + ", ";
+        }
+        backCycle.erase(backCycle.length() - 2);
+
+        BOOST_LOG_TRIVIAL(error) << "Cyclic interaction detected between plugins \"" << g[vSource].Name() << "\" and \"" << g[vTarget].Name() << "\". Back cycle: " << backCycle;
+
+        throw loot::error(loot::error::sorting_error, (boost::format(lc::translate("Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: %3%")) % g[vSource].Name() % g[vTarget].Name() % backCycle).str());
     }
 
     bool GetVertexByName(const PluginGraph& graph, const std::string& name, vertex_t& vertex) {

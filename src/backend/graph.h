@@ -45,6 +45,9 @@ namespace loot {
     struct cycle_detector : public boost::dfs_visitor<> {
         cycle_detector();
 
+        std::list<std::string> trail;
+        
+        void tree_edge(edge_t e, const PluginGraph& g);
         void back_edge(edge_t e, const PluginGraph& g);
     };
 
