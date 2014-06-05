@@ -65,7 +65,7 @@ namespace loot {
     namespace lc = boost::locale;
 
 
-	/// REGEX expression definitionLanguage::Language(const std::string& nameOrCode)
+	/// REGEX expression definition
 	///  Each expression is composed of three parts:
 	///    1. The marker string "version", "ver", "rev", "v" or "r"
 	///    2. The version string itself.
