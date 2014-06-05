@@ -65,7 +65,7 @@ namespace loot {
     namespace lc = boost::locale;
 
 
-	/// REGEX expression definition
+	/// REGEX expression definitionLanguage::Language(const std::string& nameOrCode)
 	///  Each expression is composed of three parts:
 	///    1. The marker string "version", "ver", "rev", "v" or "r"
 	///    2. The version string itself.
@@ -249,6 +249,8 @@ namespace loot {
             Construct(Language::polish);
         else if (nameOrCode == Language(Language::brazilian_portuguese).Name() || nameOrCode == Language(Language::brazilian_portuguese).Locale())
             Construct(Language::brazilian_portuguese);
+    	else if (nameOrCode == Language(Language::finnish).Name() || nameOrCode == Language(Language::finnish).Locale())
+    	    Construct(Language::finnish);
         else
             Construct(Language::any);
     }
@@ -286,6 +288,10 @@ namespace loot {
         else if (_code == Language::brazilian_portuguese) {
             _name = "Português do Brasil";
             _locale = "pt_BR";
+        }
+        else if (_code == Language::finnish) {
+            _name = "suomi";
+            _locale = "fi";
         }
     }
 
