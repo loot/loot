@@ -122,6 +122,7 @@ namespace loot {
         loot::vertex_it vit, vitend;
         for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
             vertex_t parentVertex;
+            int parentPriority = graph[*vit].Priority();
 
             BOOST_LOG_TRIVIAL(trace) << "Adding specific edges to vertex for \"" << graph[*vit].Name() << "\".";
 
@@ -163,6 +164,11 @@ namespace loot {
                     BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[*vit].Name() << "\".";
 
                     boost::add_edge(parentVertex, *vit, graph);
+
+                    int priority = graph[parentVertex].Priority();
+                    if (priority > parentPriority) {
+                        parentPriority = priority;
+                    }
                 }
             }
             BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for requirements.";
@@ -175,6 +181,11 @@ namespace loot {
                     BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[*vit].Name() << "\".";
 
                     boost::add_edge(parentVertex, *vit, graph);
+
+                    int priority = graph[parentVertex].Priority();
+                    if (priority > parentPriority) {
+                        parentPriority = priority;
+                    }
                 }
             }
 
@@ -188,8 +199,17 @@ namespace loot {
                     BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[*vit].Name() << "\".";
 
                     boost::add_edge(parentVertex, *vit, graph);
+
+                    int priority = graph[parentVertex].Priority();
+                    if (priority > parentPriority) {
+                        parentPriority = priority;
+                    }
                 }
             }
+
+            //parentPriority is now the highest priority value of any plugin that the current plugin needs to load after.
+            //Set the current plugin's priority to parentPlugin.
+
         }
     }
 
