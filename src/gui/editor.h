@@ -54,11 +54,11 @@
 
 class TextDropTarget : public wxTextDropTarget {  //Class to override virtual functions.
 public:
-    TextDropTarget(wxListView * owner, wxStaticText * name);
+    TextDropTarget(wxListView * owner, wxControl * name);
     virtual bool OnDropText(wxCoord x, wxCoord y, const wxString &data);
 private:
     wxListView * targetOwner;
-    wxStaticText * targetName;
+    wxControl * targetName;
 };
 
 class CommonEditor {
@@ -114,6 +114,8 @@ class Editor : public wxFrame, public CommonEditor {
 public:
     Editor(wxWindow *parent, const wxString& title, const std::string userlistPath, const std::list<loot::Plugin>& basePlugins, std::list<loot::Plugin>& editedPlugins, const unsigned int language, const loot::Game& game);
 
+    void SetSimpleView(bool on = true);
+
     void OnPluginSelect(wxListEvent& event);
     void OnPluginListRightClick(wxListEvent& event);
     void OnPluginCopyName(wxCommandEvent& event);
@@ -125,6 +127,8 @@ public:
     void OnEditRow(wxCommandEvent& event);
     void OnRemoveRow(wxCommandEvent& event);
     void OnRowSelect(wxListEvent& event);
+    void OnFilterToggle(wxCommandEvent& event);
+    void OnDragStart(wxListEvent& event);
     void OnQuit(wxCommandEvent& event);
 private:
     wxMenu * pluginMenu;
@@ -142,12 +146,20 @@ private:
     wxListView * dirtyList;
     wxNotebook * listBook;
     wxCheckBox * priorityCheckbox;
-    wxCheckBox * enableUserEditsBox;
     wxSpinCtrl * prioritySpin;
-    wxStaticText * pluginText;
+    wxCheckBox * pluginCheckbox;
+    wxCheckBox * filterCheckbox;
+
+    wxPanel * reqsTab;
+    wxPanel * incsTab;
+    wxPanel * loadAfterTab;
+    wxPanel * messagesTab;
+    wxPanel * tagsTab;
+    wxPanel * dirtyTab;
 
     const std::string _userlistPath;
 
     loot::Plugin GetNewData(const wxString& plugin) const;
+    void AddPluginToList(const loot::Plugin& plugin, int position);
 };
 #endif
