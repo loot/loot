@@ -81,6 +81,7 @@ namespace loot {
         static const unsigned int chinese = 5;
         static const unsigned int polish = 6;
         static const unsigned int brazilian_portuguese = 7;
+        static const unsigned int finnish = 8;
 
         static std::vector<std::string> Names() {
             std::vector<std::string> vec;
