@@ -194,17 +194,17 @@ FunctionEnd
 ;--------------------------------
 ;Simplified Chinese (简体中文) Strings
 
-    VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "ProductName" "LOOT"
-    VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "CompanyName" "LOOT Team"
-    VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "LegalCopyright" "© 2009-2014 LOOT Team"
-    VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "FileDescription" "LOOT 0.5.0安装包"
-    VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "FileVersion" "0.5.0"
-
-    LangString TEXT_MESSAGEBOX ${LANG_SIMPCHINESE} "检测到旧版LOOT，您需要先卸载旧版才能安装新版。$\n$\n点击“确定”卸载旧版本或者“取消”取消更新。"
-    LangString TEXT_RUN ${LANG_SIMPCHINESE} "运行LOOT"
-    LangString TEXT_SHOWREADME ${LANG_SIMPCHINESE} "查看说明"
-    LangString TEXT_MAIN ${LANG_SIMPCHINESE} "所有LOOT文件（除userlist和配置文件）"
-    LangString TEXT_USERFILES ${LANG_SIMPCHINESE} "LOOT的userlist和配置文件。"
+	VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "ProductName" "LOOT"
+	VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "CompanyName" "LOOT Team"
+	VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "LegalCopyright" "© 2009-2014 LOOT Team"
+	VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "FileDescription" "LOOT 0.5.0安装包"
+	VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "FileVersion" "0.5.0"
+	
+	LangString TEXT_MESSAGEBOX ${LANG_SIMPCHINESE} "检测到旧版LOOT，您需要先卸载旧版才能安装新版。$\n$\n点击“确定”卸载旧版本或者“取消”取消更新。"
+	LangString TEXT_RUN ${LANG_SIMPCHINESE} "运行LOOT"
+	LangString TEXT_SHOWREADME ${LANG_SIMPCHINESE} "查看说明"
+	LangString TEXT_MAIN ${LANG_SIMPCHINESE} "所有LOOT文件（除userlist和配置文件）"
+	LangString TEXT_USERFILES ${LANG_SIMPCHINESE} "LOOT的userlist和配置文件。"
 
 ;--------------------------------
 ;Polish (POLSKI) Strings
@@ -220,6 +220,21 @@ FunctionEnd
 	LangString TEXT_SHOWREADME ${LANG_POLISH} "Czytaj Readme"
 	LangString TEXT_MAIN ${LANG_POLISH} "Wszystkie pliki LOOT bez ustawień i plików użytkownika."
 	LangString TEXT_USERFILES ${LANG_POLISH} "Wszystkie pliki LOOT oraz ustawienia użytkownika ."
+
+;--------------------------------
+;Finnish Strings
+
+	VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "LOOT"
+	VIAddVersionKey /LANG=${LANG_ENGLISH} "CompanyName" "LOOT Team"
+	VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "© 2009-2014 LOOT Team"
+	VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "LOOT 0.5.0 Asennusohjelma"
+	VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "0.5.0"
+
+	LangString TEXT_MESSAGEBOX ${LANG_ENGLISH} "LOOT on jo asennettu ja vanha asennus on poistettava ennen jatkamista. $\n$\nKlikkaa "OK" poistaaksesi vanhan version tai "Peruuta" peruuttaaksesi päivityksen."
+	LangString TEXT_RUN ${LANG_ENGLISH} "Käynnistä LOOT"
+	LangString TEXT_SHOWREADME ${LANG_ENGLISH} "Näytä readme"
+	LangString TEXT_MAIN ${LANG_ENGLISH} "Kaikki LOOTin tiedostot paitsi käyttäjälistat ja asetukset."
+	LangString TEXT_USERFILES ${LANG_ENGLISH} "LOOTin käyttäjälistat ja asetukset."
 
 ;--------------------------------
 ;Initialisations
@@ -307,6 +322,10 @@ FunctionEnd
 		SetOutPath "$INSTDIR\resources\l10n\pt_BR\LC_MESSAGES"
 		File "..\resources\l10n\pt_BR\LC_MESSAGES\wxstd.mo"
 		File "..\resources\l10n\pt_BR\LC_MESSAGES\loot.mo"
+		SetOutPath "$INSTDIR\resources\l10n\fi\LC_MESSAGES"
+		File "..\resources\l10n\fi\LC_MESSAGES\wxstd.mo"
+		File "..\resources\l10n\fi\LC_MESSAGES\loot.mo"
+		
 
         ;Install settings file.
         SetOutPath "$LOCALAPPDATA\LOOT"
@@ -343,6 +362,11 @@ FunctionEnd
         ;    Push "Language:"
         ;    Push "Language: pt_BR"
         ;    Call ReplaceLineStr
+		StrCmp $LANGUAGE ${LANG_FINNISH} 0 +5
+            Push "$LOCALAPPDATA\LOOT\settings.yaml"
+            Push "Language:"
+            Push "Language: fi"
+            Call ReplaceLineStr
 
 		;Add Start Menu shortcuts. Set out path back to $INSTDIR otherwise the shortcuts start in the wrong place.
 		;Set Shell Var Context to all so that shortcuts are installed for all users, not just admin.
@@ -416,6 +440,8 @@ FunctionEnd
 		Delete "$INSTDIR\resources\l10n\pl\LC_MESSAGES\wxstd.mo"
 		Delete "$INSTDIR\resources\l10n\pt_BR\LC_MESSAGES\loot.mo"
 		Delete "$INSTDIR\resources\l10n\pt_BR\LC_MESSAGES\wxstd.mo"
+		Delete "$INSTDIR\resources\l10n\fi\LC_MESSAGES\loot.mo"
+		Delete "$INSTDIR\resources\l10n\fi\LC_MESSAGES\wxstd.mo"
 		RMDir  "$INSTDIR\resources\l10n\ru\LC_MESSAGES"
 		RMDir  "$INSTDIR\resources\l10n\ru"
 		RMDir  "$INSTDIR\resources\l10n\es\LC_MESSAGES"
@@ -428,6 +454,8 @@ FunctionEnd
 		RMDir  "$INSTDIR\resources\l10n\pl"
 		RMDir  "$INSTDIR\resources\l10n\pt_BR\LC_MESSAGES"
 		RMDir  "$INSTDIR\resources\l10n\pt_BR"
+		RMDir  "$INSTDIR\resources\l10n\fi\LC_MESSAGES"
+		RMDir  "$INSTDIR\resources\l10n\fi"
 		RMDir  "$INSTDIR\resources\l10n"
         RMDir  "$INSTDIR\resources"
 
