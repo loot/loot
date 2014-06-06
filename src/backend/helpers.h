@@ -93,6 +93,7 @@ namespace loot {
             vec.push_back(Language(Language::chinese).Name());
             vec.push_back(Language(Language::polish).Name());
             vec.push_back(Language(Language::brazilian_portuguese).Name());
+            vec.push_back(Language(Language::finnish).Name());
             return vec;
         }
     private:
