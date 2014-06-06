@@ -117,7 +117,7 @@ namespace loot {
         boost::depth_first_search(graph, visitor(vis).vertex_index_map(v_index_map));
     }
 
-    void AddSpecificEdges(PluginGraph& graph) {
+    void AddSpecificEdges(PluginGraph& graph, std::map<std::string, int>& overridenPriorities) {
         //Add edges for all relationships that aren't overlaps or priority differences.
         loot::vertex_it vit, vitend;
         for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
@@ -209,8 +209,11 @@ namespace loot {
 
             //parentPriority is now the highest priority value of any plugin that the current plugin needs to load after.
             //Set the current plugin's priority to parentPlugin.
-            if (graph[*vit].Priority() < parentPriority)
+            if (parentPriority > 0 && graph[*vit].Priority() < parentPriority) {
+                BOOST_LOG_TRIVIAL(trace) << "Overriding priority for " << graph[*vit].Name() << " from " << graph[*vit].Priority() << " to " << parentPriority;
+                overridenPriorities.insert(pair<string, int>(graph[*vit].Name(), graph[*vit].Priority()));
                 graph[*vit].Priority(parentPriority);
+            }
 
         }
     }

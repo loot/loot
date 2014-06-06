@@ -833,8 +833,9 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             BOOST_LOG_TRIVIAL(info) << "Building the plugin dependency graph...";
 
             //Now add the interactions between plugins to the graph as edges.
+            std::map<std::string, int> overridenPriorities;
             BOOST_LOG_TRIVIAL(debug) << "Adding non-overlap edges.";
-            AddSpecificEdges(graph);
+            AddSpecificEdges(graph, overridenPriorities);
 
             BOOST_LOG_TRIVIAL(debug) << "Adding priority edges.";
             AddPriorityEdges(graph);
@@ -844,6 +845,13 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
             BOOST_LOG_TRIVIAL(info) << "Checking to see if the graph is cyclic.";
             loot::CheckForCycles(graph);
+
+            for (std::map<std::string, int>::const_iterator it = overridenPriorities.begin(), itend = overridenPriorities.end(); it != itend; ++it) {
+                vertex_t vertex;
+                if (loot::GetVertexByName(graph, it->first, vertex)) {
+                    graph[vertex].Priority(it->second);
+                }
+            }
 
             progDia->Pulse();
 
