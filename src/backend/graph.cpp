@@ -209,6 +209,8 @@ namespace loot {
 
             //parentPriority is now the highest priority value of any plugin that the current plugin needs to load after.
             //Set the current plugin's priority to parentPlugin.
+            if (graph[*vit].Priority() < parentPriority)
+                graph[*vit].Priority(parentPriority);
 
         }
     }
