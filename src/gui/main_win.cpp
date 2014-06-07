@@ -52,6 +52,14 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
     // Initialise CEF settings.
     CefSettings settings;
 
+    //Disable CEF logging.
+    settings.command_line_args_disabled = true;
+    settings.log_severity = LOGSEVERITY_DISABLE;
+
+    // Use settings.locale to specify locale.
+    // Use settings.resources_dir_path to specify Resources folder path.
+    // Use settings.locales_dir_path to specify locales folder path.
+
     // Initialize CEF.
     CefInitialize(main_args, settings, app.get(), sandbox_info);
 
