@@ -1,4 +1,4 @@
-#include <windows.h>
+#include "gui/resource.h"
 1 VERSIONINFO
  FILEVERSION 0,6,0,0
  PRODUCTVERSION 0,6,0,0

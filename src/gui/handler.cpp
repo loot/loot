@@ -23,6 +23,7 @@
 */
 
 #include "handler.h"
+#include "resource.h"
 
 #include <include/cef_app.h>
 #include <include/cef_runnable.h>
@@ -84,6 +85,13 @@ namespace loot {
 
     void LootHandler::OnAfterCreated(CefRefPtr<CefBrowser> browser) {
         assert(CefCurrentlyOn(TID_UI));
+
+        // Set the title bar icon.
+        HWND hWnd = browser->GetHost()->GetWindowHandle();
+        HANDLE hIcon = LoadImage(GetModuleHandle(NULL), MAKEINTRESOURCE(MAINICON), IMAGE_ICON, 0, 0, LR_DEFAULTSIZE);
+        HANDLE hIconSm = LoadImage(GetModuleHandle(NULL), MAKEINTRESOURCE(MAINICON), IMAGE_ICON, 0, 0, LR_DEFAULTSIZE);
+        SendMessage(hWnd, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
+        SendMessage(hWnd, WM_SETICON, ICON_SMALL, (LPARAM)hIconSm);
 
         // Add to the list of existing browsers.
         browser_list_.push_back(browser);
