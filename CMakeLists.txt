@@ -37,8 +37,8 @@ IF (NOT DEFINED YAMLCPP_ROOT)
     set (YAMLCPP_ROOT "../../yaml-cpp")
 ENDIF ()
 
-IF (NOT DEFINED WXWIDGETS_ROOT)
-    set (WXWIDGETS_ROOT "../../wxWidgets")
+IF (NOT DEFINED CEF_ROOT)
+    set (CEF_ROOT "../../cef")
 ENDIF ()
 
 set (Boost_USE_STATIC_LIBS ON)
@@ -56,12 +56,9 @@ set (LOOT_GUI_SRC ${LOOT_SRC}
                   "${CMAKE_SOURCE_DIR}/src/backend/graph.cpp"
                   "${CMAKE_SOURCE_DIR}/src/backend/network.cpp"
                   # Actual GUI code.
-                  "${CMAKE_SOURCE_DIR}/src/gui/ids.cpp"
-                  "${CMAKE_SOURCE_DIR}/src/gui/main.cpp"
-                  "${CMAKE_SOURCE_DIR}/src/gui/settings.cpp"
-                  "${CMAKE_SOURCE_DIR}/src/gui/editor.cpp"
-                  "${CMAKE_SOURCE_DIR}/src/gui/viewer.cpp"
-                  "${CMAKE_SOURCE_DIR}/src/gui/misc.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/gui/main_win.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/gui/handler.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/gui/app.cpp"
                   "${CMAKE_SOURCE_DIR}/src/resource.rc")
 
 set (LOOT_API_SRC ${LOOT_SRC}
@@ -75,13 +72,15 @@ include_directories ("${CMAKE_SOURCE_DIR}/src"
                      "${YAMLCPP_ROOT}/include"
                      "${LIBLOADORDER_ROOT}/src"
                      "${LIBGIT2_ROOT}/include"
-                     "${WXWIDGETS_ROOT}/include"
+                     ${CEF_ROOT}
                      ${LIBESPM_ROOT}
                      ${Boost_INCLUDE_DIRS})
 
 link_directories ("${LIBLOADORDER_ROOT}/build"
                   "${LIBGIT2_ROOT}/build"
-                  "${YAMLCPP_ROOT}/build")
+                  "${YAMLCPP_ROOT}/build"
+                  "${CEF_ROOT}/Release"
+                  "${CEF_ROOT}/out/Release/lib")
 
 
 ##############################
@@ -100,8 +99,6 @@ ENDIF ()
 
 # MinGW settings.
 IF (MINGW)
-    include_directories("${WXWIDGETS_ROOT}/lib/wx/include/${COMPILER_PREFIX}-msw-unicode-static-3.0")
-    link_directories("${WXWIDGETS_ROOT}/lib")
     set (CMAKE_C_FLAGS  "-m${PROJECT_ARCH} -O3")
     set (CMAKE_CXX_FLAGS "-m${PROJECT_ARCH} -O3")
     set (CMAKE_EXE_LINKER_FLAGS "-static-libstdc++ -static-libgcc -Wl,--subsystem,windows")
@@ -125,16 +122,13 @@ IF (MINGW)
                    ws2_32)
     set (LOOT_GUI_LIBS ${LOOT_LIBS}
                        git2
-                       wx_mswu_webview-3.0-${COMPILER_PREFIX}
-                       wx_mswu_core-3.0-${COMPILER_PREFIX}
-                       wx_baseu-3.0-${COMPILER_PREFIX}
-                       wx_mswu_adv-3.0-${COMPILER_PREFIX}
-                       wxpng-3.0-${COMPILER_PREFIX}
-                       wxzlib-3.0-${COMPILER_PREFIX}
+                       cef_sandbox
+                       libcef
+                       libcef_dll_wrapper
+                       rpcrt4
+                       shlwapi
                        comctl32)
 ELSEIF (MSVC)
-    include_directories("${WXWIDGETS_ROOT}/lib/vc_lib/mswu")
-    link_directories("${WXWIDGETS_ROOT}/lib/vc_lib")
 
     # Force static C++ runtime linkage.
     IF (PROJECT_STATIC_RUNTIME)
@@ -155,12 +149,11 @@ ELSEIF (MSVC)
                    ws2_32)
     set (LOOT_GUI_LIBS ${LOOT_LIBS}
                        git2
-                       wxmsw30u_webview
-                       wxmsw30u_adv
-                       wxmsw30u_core
-                       wxbase30u
-                       wxpng
-                       wxzlib
+                       cef_sandbox
+                       libcef
+                       libcef_dll_wrapper
+                       rpcrt4
+                       shlwapi
                        comctl32)
 ENDIF ()
 
@@ -176,3 +169,17 @@ target_link_libraries (loot${PROJECT_ARCH} ${Boost_LIBRARIES} ${LOOT_LIBS})
 # Build application.
 add_executable        (LOOT ${LOOT_GUI_SRC})
 target_link_libraries (LOOT ${Boost_LIBRARIES} ${LOOT_GUI_LIBS})
+
+# Copy CEF DLLs.
+FOREACH(cef_dll d3dcompiler_43.dll d3dcompiler_46.dll libEGL.dll libGLESv2.dll libcef.dll)
+    add_custom_command(TARGET LOOT POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${CMAKE_SOURCE_DIR}/${CEF_ROOT}/$<CONFIGURATION>/${cef_dll}"
+            $<TARGET_FILE_DIR:LOOT>)
+ENDFOREACH()
+
+# Copy CEF resources.
+add_custom_command(TARGET LOOT POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_SOURCE_DIR}/${CEF_ROOT}/Resources"
+        $<TARGET_FILE_DIR:LOOT>)

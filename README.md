@@ -19,10 +19,10 @@ LOOT requires the following libraries (version numbers used in latest developmen
 
 * [Alphanum](http://www.davekoelle.com/files/alphanum.hpp)
 * [Boost](http://www.boost.org) v1.55.0
+* [Chromium Embedded Framework](https://code.google.com/p/chromiumembedded/) branch 1916
 * [Libespm](http://github.com/WrinklyNinja/libespm)
 * [Libgit2](http://libgit2.github.com/) v0.21.0
 * [Libloadorder](http://github.com/WrinklyNinja/libloadorder)
-* [wxWidgets](http://www.wxwidgets.org) v3.0.1
 * [yaml-cpp](http://github.com/WrinklyNinja/yaml-cpp)
 
 Alphanum and Libespm do not require any additional setup. The rest of the libraries must be built separately. Instructions for building them and LOOT itself using MSVC or MinGW are given in [docs/BUILD.MSVC.md](docs/BUILD.MSVC.md) and [docs/BUILD.MinGW.md](docs/BUILD.MinGW.md) respectively.

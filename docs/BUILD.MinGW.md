@@ -10,12 +10,9 @@ echo "using gcc : 4.6.3 : i686-w64-mingw32-g++ : <rc>i686-w64-mingw32-windres <a
 ./b2 toolset=gcc-4.6.3 target-os=windows threadapi=win32 link=static runtime-link=static variant=release address-model=32 cxxflags=-fPIC --with-log --with-date_time --with-thread --with-filesystem --with-locale --with-regex --with-system --with-iostreams --stagedir=stage-32
 ```
 
-#### wxWidgets
+#### Chromium Embedded Framework
 
-```
-./configure --host=i686-w64-mingw32 --disable-shared --enable-stl
-make
-```
+Most of the required binaries are pre-built, but the libcef_dll_wrapper dynamic library must be built.
 
 #### yaml-cpp
 
