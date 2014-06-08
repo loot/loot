@@ -27,18 +27,27 @@
 
 #include <include/cef_app.h>
 
+#include <yaml-cpp/yaml.h>
+
 namespace loot {
 
-    class LootApp : public CefApp, public CefBrowserProcessHandler {
+    class LootApp : public CefApp, 
+                    public CefBrowserProcessHandler,
+                    public CefRenderProcessHandler {
     public:
         LootApp();
 
         // Override CefApp methods.
         virtual CefRefPtr<CefBrowserProcessHandler> GetBrowserProcessHandler() OVERRIDE;
+        virtual CefRefPtr<CefRenderProcessHandler> GetRenderProcessHandler() OVERRIDE;
 
         // Override CefBrowserProcessHandler methods.
         virtual void OnContextInitialized() OVERRIDE;
     private:
+        virtual void OnContextCreated(CefRefPtr<CefBrowser> browser,
+            CefRefPtr<CefFrame> frame,
+            CefRefPtr<CefV8Context> context) OVERRIDE;
+
         IMPLEMENT_REFCOUNTING(LootApp);
     };
 

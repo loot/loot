@@ -39,6 +39,10 @@ namespace loot {
         return this;
     }
 
+    CefRefPtr<CefRenderProcessHandler> LootApp::GetRenderProcessHandler() {
+        return this;
+    }
+
     void LootApp::OnContextInitialized() {
         //Make sure this is running in the UI thread.
         assert(CefCurrentlyOn(TID_UI));
@@ -64,4 +68,24 @@ namespace loot {
         CefBrowserHost::CreateBrowser(window_info, handler.get(), url, browser_settings, NULL);
     }
 
+
+    void LootApp::OnContextCreated(CefRefPtr<CefBrowser> browser,
+        CefRefPtr<CefFrame> frame,
+        CefRefPtr<CefV8Context> context) {
+
+        // Retrieve the context's window object.
+        CefRefPtr<CefV8Value> object = context->GetGlobal();
+
+        // Here the initialisation values should be set.
+
+        // LOOT Version / Settings
+        //------------------------
+
+        CefRefPtr<CefV8Value> lootObj = CefV8Value::CreateObject(NULL);
+
+        lootObj->SetValue("version", CefV8Value::CreateString(IntToString(g_version_major) + "." + IntToString(g_version_minor) + "." + IntToString(g_version_patch)), V8_PROPERTY_ATTRIBUTE_NONE);
+
+        // Add the string to the window object as "window.myval". See the "JS Objects" section below.
+        object->SetValue("loot", lootObj, V8_PROPERTY_ATTRIBUTE_NONE);
+    }
 }
