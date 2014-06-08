@@ -491,3 +491,10 @@ input:valid {
     background-color: white;
     color: black;
 }
+#hoverText {
+    position: fixed;
+    z-index: 5;
+    background: white;
+    box-shadow:0 0 3px 0px rgba(0,0,0,0.5);
+    padding: 2px 5px;
+}

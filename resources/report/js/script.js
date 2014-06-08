@@ -553,6 +553,34 @@ function toggleInputRO(evt) {
         evt.target.setAttribute('readonly', '');
     }
 }
+function toggleHoverText(evt) {
+    /*if (evt.target.id = 'hoverText') {
+        evt.stopPropagation();
+        return;
+    }*/
+    var hoverText = document.getElementById('hoverText');
+    if (isVisible(hoverText) && evt.target != hoverText && evt.target.id != hoverText.getAttribute('hoverTarget')) {
+        hideElement(hoverText);
+    } else {
+        if (evt.target.hasAttribute('title')) {
+            var id;
+            if (evt.target.id) {
+                id = evt.target.id;
+            } else {
+                id = 'hoverTarget';
+                evt.target.id = id;
+            }
+            hoverText.setAttribute('hoverTarget', id);
+
+            hoverText.textContent = evt.target.getAttribute('title');
+            hoverText.style.left = evt.clientX + 'px';
+            hoverText.style.top = (20 + evt.clientY) + 'px';
+            showElement(hoverText);
+
+            document.title = hoverText.textContent;
+        }
+    }
+}
 function setupEventHandlers() {
     var elements;
     if (isStorageSupported()) { /*Set up filter value and CSS setting storage read/write handlers.*/
@@ -594,6 +622,8 @@ function setupEventHandlers() {
         var pluginMenu = elements[i].getElementsByClassName('pluginMenu')[0];
         pluginMenu.addEventListener('click', toggleMenu, false);
     }
+
+    document.body.addEventListener('mouseover', toggleHoverText, false);
 }
 function processURLParams() {
     /* Get the data path from the URL and load it. */
