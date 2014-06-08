@@ -24,12 +24,111 @@
 
 #include "app.h"
 
+#include "../backend/globals.h"
+#include "../backend/helpers.h"
+#include "../backend/generators.h"
+#include "../backend/streams.h"
+
 #include <windows.h>
 #include <include/cef_sandbox_win.h>
 
+#include <boost/format.hpp>
+#include <boost/locale.hpp>
+#include <boost/log/core.hpp>
+#include <boost/log/trivial.hpp>
+#include <boost/log/expressions.hpp>
+#include <boost/log/utility/setup/file.hpp>
+#include <boost/log/utility/setup/common_attributes.hpp>
+#include <boost/log/support/date_time.hpp>
+
+namespace fs = boost::filesystem;
+
+using namespace std;
+using namespace loot;
+using boost::locale::translate;
+using boost::format;
+
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 
-    // First do all the standard CEF setup stuff.
+    // First do application loading.
+    //------------------------------
+
+    string initError;
+    YAML::Node settings;
+
+    //Load settings.
+    if (!fs::exists(g_path_settings)) {
+        try {
+            if (!fs::exists(g_path_settings.parent_path()))
+                fs::create_directory(g_path_settings.parent_path());
+        }
+        catch (fs::filesystem_error& /*e*/) {
+            initError = "Error: Could not create local app data LOOT folder.";
+            return 1;
+        }
+        GenerateDefaultSettingsFile(g_path_settings.string());
+    }
+    try {
+        loot::ifstream in(g_path_settings);
+        settings = YAML::Load(in);
+        in.close();
+    }
+    catch (YAML::ParserException& e) {
+        initError = (format(translate("Error: Settings parsing failed. %1%")) % e.what()).str();
+        return 1;
+    }
+
+    //Set up logging.
+    boost::log::add_file_log(
+        boost::log::keywords::file_name = g_path_log.string().c_str(),
+        boost::log::keywords::auto_flush = true,
+        boost::log::keywords::format = (
+        boost::log::expressions::stream
+        << "[" << boost::log::expressions::format_date_time< boost::posix_time::ptime >("TimeStamp", "%H:%M:%S") << "]"
+        << " [" << boost::log::trivial::severity << "]: "
+        << boost::log::expressions::smessage
+        )
+        );
+    boost::log::add_common_attributes();
+    unsigned int verbosity = 0;
+    if (settings["Debug Verbosity"]) {
+        verbosity = settings["Debug Verbosity"].as<unsigned int>();
+    }
+    if (verbosity == 0)
+        boost::log::core::get()->set_logging_enabled(false);
+    else {
+        boost::log::core::get()->set_logging_enabled(true);
+
+        if (verbosity == 1)
+            boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::warning);  //Log all warnings, errors and fatals.
+        else if (verbosity == 2)
+            boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::debug);  //Log debugs, infos, warnings, errors and fatals.
+        else
+            boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::trace);  //Log everything.
+    }
+    BOOST_LOG_TRIVIAL(info) << "LOOT Version: " << g_version_major << "." << g_version_minor << "." << g_version_patch;
+
+    //Set the locale to get encoding and language conversions working correctly.
+    BOOST_LOG_TRIVIAL(debug) << "Initialising language settings.";
+    //Defaults in case language string is empty or setting is missing.
+    string localeId = loot::Language(loot::Language::any).Locale() + ".UTF-8";
+    if (settings["Language"]) {
+        loot::Language lang(settings["Language"].as<string>());
+        BOOST_LOG_TRIVIAL(debug) << "Selected language: " << lang.Name();
+        localeId = lang.Locale() + ".UTF-8";
+    }
+
+    //Boost.Locale initialisation: Specify location of language dictionaries.
+    boost::locale::generator gen;
+    gen.add_messages_path(g_path_l10n.string());
+    gen.add_messages_domain("loot");
+
+    //Boost.Locale initialisation: Generate and imbue locales.
+    locale::global(gen(localeId));
+    cout.imbue(locale());
+    boost::filesystem::path::imbue(locale());
+
+    // Now do all the standard CEF setup stuff.
     //----------------------------
 
     // Set up CEF sandbox.
@@ -40,7 +139,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
     CefMainArgs main_args(hInstance);
 
     // Create the process reference.
-    CefRefPtr<loot::LootApp> app(new loot::LootApp);
+    CefRefPtr<loot::LootApp> app(new loot::LootApp(settings));
 
     // Run the process.
     int exit_code = CefExecuteProcess(main_args, app.get(), sandbox_info);
@@ -50,18 +149,19 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
     }
 
     // Initialise CEF settings.
-    CefSettings settings;
+    CefSettings cef_settings;
 
     //Disable CEF logging.
-    settings.command_line_args_disabled = true;
-    settings.log_severity = LOGSEVERITY_DISABLE;
+    cef_settings.command_line_args_disabled = true;
+    CefString(&cef_settings.locale).FromString(localeId);
+    if (verbosity == 0)
+        cef_settings.log_severity = LOGSEVERITY_DISABLE;
 
-    // Use settings.locale to specify locale.
-    // Use settings.resources_dir_path to specify Resources folder path.
-    // Use settings.locales_dir_path to specify locales folder path.
+    // Use cef_settings.resources_dir_path to specify Resources folder path.
+    // Use cef_settings.locales_dir_path to specify locales folder path.
 
     // Initialize CEF.
-    CefInitialize(main_args, settings, app.get(), sandbox_info);
+    CefInitialize(main_args, cef_settings, app.get(), sandbox_info);
 
     // Run the CEF message loop. This will block until CefQuitMessageLoop() is called.
     CefRunMessageLoop();
