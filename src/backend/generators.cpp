@@ -401,7 +401,7 @@ namespace loot {
         games.push_back(Game(Game::tes5));
         games.push_back(Game(Game::fo3));
         games.push_back(Game(Game::fonv));
-        games.push_back(Game(Game::tes4, "Nehrim").SetDetails("Nehrim - At Fate's Edge", "Nehrim.esm", "https://github.com/loot-developers/loot-oblivion.git", "gh-pages", "", "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim - At Fate's Edge_is1"));
+        games.push_back(Game(Game::tes4, "Nehrim").SetDetails("Nehrim - At Fate's Edge", "Nehrim.esm", "https://github.com/loot/oblivion.git", "master", "", "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim - At Fate's Edge_is1"));
 
         root["Games"] = games;
 
@@ -438,24 +438,15 @@ namespace YAML {
 
     Emitter& operator << (Emitter& out, const loot::Game& rhs) {
         out << BeginMap
+            << Key << "type" << Value << loot::Game(rhs.Id()).FolderName()
             << Key << "folder" << Value << rhs.FolderName()
             << Key << "name" << Value << rhs.Name()
             << Key << "master" << Value << rhs.Master()
             << Key << "repo" << Value << rhs.RepoURL()
             << Key << "branch" << Value << rhs.RepoBranch()
             << Key << "path" << Value << rhs.GamePath().string()
-            << Key << "registry" << Value << rhs.RegistryKey();
-
-        if (rhs.Id() == loot::Game::tes4)
-            out << Key << Value << loot::Game(loot::Game::tes4).FolderName();
-        else if (rhs.Id() == loot::Game::tes5)
-            out << Key << Value << loot::Game(loot::Game::tes5).FolderName();
-        else if (rhs.Id() == loot::Game::fo3)
-            out << Key << Value << loot::Game(loot::Game::fo3).FolderName();
-        else if (rhs.Id() == loot::Game::fonv)
-            out << Key << Value << loot::Game(loot::Game::fonv).FolderName();
-
-        out << EndMap;
+            << Key << "registry" << Value << rhs.RegistryKey()
+            << EndMap;
 
         return out;
     }
