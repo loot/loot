@@ -576,8 +576,6 @@ function toggleHoverText(evt) {
             hoverText.style.left = evt.clientX + 'px';
             hoverText.style.top = (20 + evt.clientY) + 'px';
             showElement(hoverText);
-
-            document.title = hoverText.textContent;
         }
     }
 }
