@@ -25,15 +25,15 @@
 #include "app.h"
 #include "handler.h"
 
-#include "../backend/globals.h"
-#include "../backend/helpers.h"
-
 #include <include/cef_browser.h>
 #include <include/cef_task.h>
+#include <boost/log/trivial.hpp>
+
+using namespace std;
 
 namespace loot {
 
-    LootApp::LootApp() {}
+    LootApp::LootApp(YAML::Node& settings) : _settings(settings) {}
 
     CefRefPtr<CefBrowserProcessHandler> LootApp::GetBrowserProcessHandler() {
         return this;
@@ -95,12 +95,77 @@ namespace loot {
 
         // Here the initialisation values should be set.
 
-        // LOOT Version / Settings
-        //------------------------
-
         CefRefPtr<CefV8Value> lootObj = CefV8Value::CreateObject(NULL);
 
+        // LOOT Version
+        //-------------
+
         lootObj->SetValue("version", CefV8Value::CreateString(IntToString(g_version_major) + "." + IntToString(g_version_minor) + "." + IntToString(g_version_patch)), V8_PROPERTY_ATTRIBUTE_NONE);
+
+        // LOOT Settings
+        //--------------
+
+        BOOST_LOG_TRIVIAL(debug) << "Setting GUI values for LOOT's settings.";
+
+        CefRefPtr<CefV8Value> settingsObj = CefV8Value::CreateObject(NULL);
+
+        if (_settings["Language"])
+            settingsObj->SetValue("language", CefV8Value::CreateString(Language(_settings["Language"].as<string>()).Name()), V8_PROPERTY_ATTRIBUTE_NONE);
+
+        if (_settings["Update Masterlist"])
+            settingsObj->SetValue("updateMasterlist", CefV8Value::CreateBool(_settings["Update Masterlist"].as<bool>()), V8_PROPERTY_ATTRIBUTE_NONE);
+
+        if (_settings["Debug Verbosity"])
+            settingsObj->SetValue("debugVerbosity", CefV8Value::CreateInt(_settings["Debug Verbosity"].as<int>()), V8_PROPERTY_ATTRIBUTE_NONE);
+
+        if (_settings["Game"])
+            settingsObj->SetValue("game", CefV8Value::CreateString(_settings["Game"].as<string>()), V8_PROPERTY_ATTRIBUTE_NONE);
+
+        vector<Game> games = GetGames(_settings);
+        CefRefPtr<CefV8Value> gamesArr = CefV8Value::CreateArray(games.size());
+        for (int i = 0; i < games.size(); ++i) {
+            CefRefPtr<CefV8Value> gameObj = CefV8Value::CreateObject(NULL);
+
+            gameObj->SetValue("type", CefV8Value::CreateString(loot::Game(games[i].Id()).FolderName()), V8_PROPERTY_ATTRIBUTE_NONE);
+            gameObj->SetValue("name", CefV8Value::CreateString(games[i].Name()), V8_PROPERTY_ATTRIBUTE_NONE);
+            gameObj->SetValue("folder", CefV8Value::CreateString(games[i].FolderName()), V8_PROPERTY_ATTRIBUTE_NONE);
+            gameObj->SetValue("masterFile", CefV8Value::CreateString(games[i].Master()), V8_PROPERTY_ATTRIBUTE_NONE);
+            gameObj->SetValue("url", CefV8Value::CreateString(games[i].RepoURL()), V8_PROPERTY_ATTRIBUTE_NONE);
+            gameObj->SetValue("branch", CefV8Value::CreateString(games[i].RepoBranch()), V8_PROPERTY_ATTRIBUTE_NONE);
+            gameObj->SetValue("path", CefV8Value::CreateString(games[i].GamePath().string()), V8_PROPERTY_ATTRIBUTE_NONE);
+            gameObj->SetValue("registryKey", CefV8Value::CreateString(games[i].RegistryKey()), V8_PROPERTY_ATTRIBUTE_NONE);
+
+            gamesArr->SetValue(i, gameObj);
+        }
+        settingsObj->SetValue("games", gamesArr, V8_PROPERTY_ATTRIBUTE_NONE);
+
+        lootObj->SetValue("settings", settingsObj, V8_PROPERTY_ATTRIBUTE_NONE);
+
+        // LOOT Game Types
+        //----------------
+
+        BOOST_LOG_TRIVIAL(debug) << "Setting GUI values for LOOT's game types.";
+
+        CefRefPtr<CefV8Value> gameTypesArr = CefV8Value::CreateArray(4);
+        gameTypesArr->SetValue(0, CefV8Value::CreateString(Game(Game::tes4).FolderName()));
+        gameTypesArr->SetValue(1, CefV8Value::CreateString(Game(Game::tes5).FolderName()));
+        gameTypesArr->SetValue(2, CefV8Value::CreateString(Game(Game::fo3).FolderName()));
+        gameTypesArr->SetValue(3, CefV8Value::CreateString(Game(Game::fonv).FolderName()));
+
+        lootObj->SetValue("gameTypes", gameTypesArr, V8_PROPERTY_ATTRIBUTE_NONE);
+
+        // LOOT Languages
+        //---------------
+
+        BOOST_LOG_TRIVIAL(debug) << "Setting GUI values for LOOT's languages.";
+
+        vector<string> langs = Language::Names();
+        CefRefPtr<CefV8Value> langsArr = CefV8Value::CreateArray(langs.size());
+        for (int i = 0; i < langs.size(); ++i) {
+            langsArr->SetValue(i, CefV8Value::CreateString(langs[i]));
+        }
+
+        lootObj->SetValue("languages", langsArr, V8_PROPERTY_ATTRIBUTE_NONE);
 
         object->SetValue("loot", lootObj, V8_PROPERTY_ATTRIBUTE_NONE);
     }

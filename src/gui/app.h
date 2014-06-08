@@ -25,6 +25,8 @@
 #ifndef __LOOT_GUI_APP__
 #define __LOOT_GUI_APP__
 
+#include "../backend/game.h"
+
 #include <include/cef_app.h>
 #include <include/wrapper/cef_message_router.h>
 
@@ -36,7 +38,7 @@ namespace loot {
                     public CefBrowserProcessHandler,
                     public CefRenderProcessHandler {
     public:
-        LootApp();
+        LootApp(YAML::Node& settings);
 
         // Override CefApp methods.
         virtual CefRefPtr<CefBrowserProcessHandler> GetBrowserProcessHandler() OVERRIDE;
@@ -56,6 +58,9 @@ namespace loot {
         virtual void OnContextCreated(CefRefPtr<CefBrowser> browser,
                                     CefRefPtr<CefFrame> frame,
                                     CefRefPtr<CefV8Context> context) OVERRIDE;
+
+        YAML::Node _settings;
+        std::vector<loot::Game> _games;
 
         IMPLEMENT_REFCOUNTING(LootApp);
     };

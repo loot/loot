@@ -777,10 +777,10 @@ function processURLParams() {
 
             /* Fill in game row template's game type options. */
             var select = document.getElementById('gameRow').content.querySelector('select');
-            for (var j = 0; j < data.gameTypes.length; ++j) {
+            for (var j = 0; j < loot.gameTypes.length; ++j) {
                 var option = document.createElement('option');
-                option.value = data.gameTypes[j];
-                option.textContent = data.gameTypes[j];
+                option.value = loot.gameTypes[j];
+                option.textContent = loot.gameTypes[j];
                 select.appendChild(option);
             }
 
@@ -790,28 +790,28 @@ function processURLParams() {
             var gameTableBody = document.getElementById('gameTable').getElementsByTagName('tbody')[0];
             /* Add row for creating new rows. */
             setupTable(gameTableBody);
-            for (var i = 0; i < data.games.length; ++i) {
+            for (var i = 0; i < loot.settings.games.length; ++i) {
                 var option = document.createElement('option');
-                option.value = data.games[i].folder;
-                option.textContent = data.games[i].name;
+                option.value = loot.settings.games[i].folder;
+                option.textContent = loot.settings.games[i].name;
                 gameSelect.appendChild(option);
 
                 var li = document.createElement('li');
                 li.setAttribute('data-action', 'change-game');
-                li.setAttribute('data-target', data.games[i].folder);
-                li.textContent = data.games[i].name;
+                li.setAttribute('data-target', loot.settings.games[i].folder);
+                li.textContent = loot.settings.games[i].name;
                 gameMenu.appendChild(li);
 
-                addTableRow(gameTableBody, data.games[i]);
+                addTableRow(gameTableBody, loot.settings.games[i]);
             }
 
             /* Now fill in language options. */
             var settingsLangSelect = document.getElementById('languageSelect');
             var messageLangSelect = document.getElementById('messageRow').content.querySelector('.language');
-            for (var i = 0; i < data.languages.length; ++i) {
+            for (var i = 0; i < loot.languages.length; ++i) {
                 var option = document.createElement('option');
-                option.value = data.languages[i];
-                option.textContent = data.languages[i];
+                option.value = loot.languages[i];
+                option.textContent = loot.languages[i];
                 settingsLangSelect.appendChild(option);
                 messageLangSelect.appendChild(option.cloneNode(true));
             }
