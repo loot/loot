@@ -55,13 +55,23 @@ namespace loot {
         const std::string& message_name = request;
         if (message_name.find("openReadme") == 0) {
             // Open readme in default application.
-            std::string url = ToFileURL(g_path_readme);
-            int len = MultiByteToWideChar(CP_UTF8, 0, url.c_str(), url.length() + 1, 0, 0);
-            std::wstring wurl(len, NULL);
-            MultiByteToWideChar(CP_UTF8, 0, url.c_str(), url.length() + 1, &(wurl[0]), len);
-            ShellExecute(0, NULL, wurl.c_str(), NULL, NULL, SW_SHOWNORMAL);
-            callback->Success(request);
-            return true;
+            HINSTANCE ret = ShellExecute(0, NULL, ToWinWide(ToFileURL(g_path_readme)).c_str(), NULL, NULL, SW_SHOWNORMAL);
+            if ((int)ret > 32) {
+                callback->Success(request);
+                return true;
+            }
+            else
+                callback->Failure((int)ret, "Shell execute failed.");
+        }
+        else if (message_name == "openLogLocation") {
+            //Open debug log folder.
+            HINSTANCE ret = ShellExecute(NULL, L"open", ToWinWide(g_path_log.parent_path().string()).c_str(), NULL, NULL, SW_SHOWNORMAL);
+            if ((int)ret > 32) {
+                callback->Success(request);
+                return true;
+            }
+            else
+                callback->Failure((int)ret, "Shell execute failed.");
         }
 
         return false;

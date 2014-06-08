@@ -60,6 +60,11 @@ namespace loot {
     //Turns an absolute filesystem path into a valid file:// URL.
     std::string ToFileURL(const boost::filesystem::path& file);
 
+#if _WIN32 || _WIN64
+    //Helper to turn UTF8 strings into strings that can be used by WinAPI.
+    std::wstring ToWinWide(const std::string& str);
+#endif
+
     //Language class for simpler language support.
     class Language {
     public:

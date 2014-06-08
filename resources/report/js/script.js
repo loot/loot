@@ -186,20 +186,46 @@ function showMessageDialog(title, text) {
     clone.getElementsByClassName('cancel')[0].addEventListener('click', hideDialog, false);
 }
 function showMessageBox(type, title, text) {
+    var content = document.getElementById('messageDialog').content;
+    var clone = document.importNode(content, true);
+    document.body.appendChild(clone);
+    clone = document.body.lastElementChild;
 
+    clone.id = 'modalDialog';
+
+    clone.getElementsByTagName('span')[0].classList.add(type);
+
+    clone.getElementsByTagName('h1')[0].textContent = title;
+    clone.getElementsByTagName('p')[0].textContent = text;
+
+    var overlay = document.getElementById('overlay');
+    overlay.removeEventListener('click', hideDialog, false);
+    showElement(overlay);
+
+    clone.getElementsByClassName('accept')[0].textContent = 'OK';
+    clone.getElementsByClassName('accept')[0].setAttribute('data-dialog', clone.id);
+    clone.getElementsByClassName('accept')[0].addEventListener('click', hideDialog, false);
+
+    hideElement(clone.getElementsByClassName('cancel')[0]);
 }
 function openLogLocation(evt) {
-
+    var request_id = window.cefQuery({
+        request: 'openLogLocation',
+        persistent: false,
+        onSuccess: function(response) {},
+        onFailure: function(error_code, error_message) {
+            showMessageBox('error', "Error", "Error code: " + error_code + "; " + error_message);
+        }
+    });
 }
 function openReadme(evt) {
-
     // Create and send a new query.
     var request_id = window.cefQuery({
         request: 'openReadme',
         persistent: false,
         onSuccess: function(response) {},
         onFailure: function(error_code, error_message) {
-            alert(error_code + error_message);
+            showMessageBox('error', "Error", "Error code: " + error_code + "; " + error_message);
         }
     });
 }

@@ -221,6 +221,17 @@ namespace loot {
         return "file:///" + file.string();  //Seems that we don't need to worry about encoding, tested with Unicode paths.
     }
 
+#if _WIN32 || _WIN64
+    //Helper to turn UTF8 strings into strings that can be used by WinAPI.
+    std::wstring ToWinWide(const std::string& str) {
+
+        int len = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), str.length() + 1, 0, 0);
+        std::wstring wstr(len, NULL);
+        MultiByteToWideChar(CP_UTF8, 0, str.c_str(), str.length() + 1, &(wstr[0]), len);
+        return wstr;
+    }
+#endif
+
     Language::Language(const unsigned int code) {
         Construct(code);
     }
