@@ -56,22 +56,20 @@ namespace loot {
         if (message_name.find("openReadme") == 0) {
             // Open readme in default application.
             HINSTANCE ret = ShellExecute(0, NULL, ToWinWide(ToFileURL(g_path_readme)).c_str(), NULL, NULL, SW_SHOWNORMAL);
-            if ((int)ret > 32) {
+            if ((int)ret > 32)
                 callback->Success(request);
-                return true;
-            }
             else
                 callback->Failure((int)ret, "Shell execute failed.");
+            return true;
         }
         else if (message_name == "openLogLocation") {
             //Open debug log folder.
             HINSTANCE ret = ShellExecute(NULL, L"open", ToWinWide(g_path_log.parent_path().string()).c_str(), NULL, NULL, SW_SHOWNORMAL);
-            if ((int)ret > 32) {
+            if ((int)ret > 32)
                 callback->Success(request);
-                return true;
-            }
             else
                 callback->Failure((int)ret, "Shell execute failed.");
+            return true;
         }
 
         return false;
