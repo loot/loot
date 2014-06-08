@@ -68,10 +68,27 @@ namespace loot {
         CefBrowserHost::CreateBrowser(window_info, handler.get(), url, browser_settings, NULL);
     }
 
+    void LootApp::OnWebKitInitialized() {
+        // Create the renderer-side router for query handling.
+        CefMessageRouterConfig config;
+        message_router_ = CefMessageRouterRendererSide::Create(config);
+    }
+
+    bool LootApp::OnProcessMessageReceived(
+        CefRefPtr<CefBrowser> browser,
+        CefProcessId source_process,
+        CefRefPtr<CefProcessMessage> message) {
+        // Handle IPC messages from the browser process...
+        return message_router_->OnProcessMessageReceived(browser, source_process, message);
+    }
+
 
     void LootApp::OnContextCreated(CefRefPtr<CefBrowser> browser,
         CefRefPtr<CefFrame> frame,
         CefRefPtr<CefV8Context> context) {
+
+        // Register javascript functions.
+        message_router_->OnContextCreated(browser, frame, context);
 
         // Retrieve the context's window object.
         CefRefPtr<CefV8Value> object = context->GetGlobal();
@@ -85,7 +102,6 @@ namespace loot {
 
         lootObj->SetValue("version", CefV8Value::CreateString(IntToString(g_version_major) + "." + IntToString(g_version_minor) + "." + IntToString(g_version_patch)), V8_PROPERTY_ATTRIBUTE_NONE);
 
-        // Add the string to the window object as "window.myval". See the "JS Objects" section below.
         object->SetValue("loot", lootObj, V8_PROPERTY_ATTRIBUTE_NONE);
     }
 }

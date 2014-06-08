@@ -39,6 +39,34 @@ namespace loot {
         LootHandler * g_instance = NULL;
     }
 
+    // Handler methods
+    //----------------
+
+    Handler::Handler() {}
+
+    // Called due to cefQuery execution in binding.html.
+    bool Handler::OnQuery(CefRefPtr<CefBrowser> browser,
+                            CefRefPtr<CefFrame> frame,
+                            int64 query_id,
+                            const CefString& request,
+                            bool persistent,
+                            CefRefPtr<Callback> callback) {
+
+        const std::string& message_name = request;
+        if (message_name.find("openReadme") == 0) {
+            // Open readme in default application.
+            std::string url = ToFileURL(g_path_readme);
+            int len = MultiByteToWideChar(CP_UTF8, 0, url.c_str(), url.length() + 1, 0, 0);
+            std::wstring wurl(len, NULL);
+            MultiByteToWideChar(CP_UTF8, 0, url.c_str(), url.length() + 1, &(wurl[0]), len);
+            ShellExecute(0, NULL, wurl.c_str(), NULL, NULL, SW_SHOWNORMAL);
+            callback->Success(request);
+            return true;
+        }
+
+        return false;
+    }
+
     LootHandler::LootHandler() : is_closing_(false) {
         assert(!g_instance);
         g_instance = this;
@@ -65,6 +93,12 @@ namespace loot {
     
     CefRefPtr<CefLoadHandler> LootHandler::GetLoadHandler() {
         return this;
+    }
+
+    bool LootHandler::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser,
+                                                CefProcessId source_process,
+                                                CefRefPtr<CefProcessMessage> message) {
+        return browser_side_router_->OnProcessMessageReceived(browser, source_process, message);
     }
 
     // CefDisplayHandler methods
@@ -95,6 +129,12 @@ namespace loot {
 
         // Add to the list of existing browsers.
         browser_list_.push_back(browser);
+
+        // Create a message router.
+        CefMessageRouterConfig config;
+        browser_side_router_ = CefMessageRouterBrowserSide::Create(config);
+
+        browser_side_router_->AddHandler(new Handler(), false);
     }
 
     bool LootHandler::DoClose(CefRefPtr<CefBrowser> browser) {
@@ -115,6 +155,9 @@ namespace loot {
 
     void LootHandler::OnBeforeClose(CefRefPtr<CefBrowser> browser) {
         assert(CefCurrentlyOn(TID_UI));
+
+        // Cancel any javascript callbacks.
+        browser_side_router_->OnBeforeClose(browser);
 
         // Remove from the list of existing browsers.
         for (BrowserList::iterator bit = browser_list_.begin(); bit != browser_list_.end(); ++bit) {

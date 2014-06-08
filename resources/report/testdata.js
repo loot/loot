@@ -1,5 +1,4 @@
 var data = {
-    "lootVersion": "0.5.0",
     "masterlist": {
         "revision": "f66688fbe946396bc8fa1d5dadb7c8211c189cee",
         "date": "2014-05-10"

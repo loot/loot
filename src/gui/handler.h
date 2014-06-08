@@ -25,11 +25,28 @@
 #ifndef __LOOT_GUI_HANDLER__
 #define __LOOT_GUI_HANDLER__
 
+#include "../backend/globals.h"
+#include "../backend/helpers.h"
+
 #include <include/cef_client.h>
+#include <include/wrapper/cef_message_router.h>
 
 #include <list>
 
 namespace loot {
+
+    class Handler : public CefMessageRouterBrowserSide::Handler {
+    public:
+        Handler();
+
+        // Called due to cefQuery execution in binding.html.
+        virtual bool OnQuery(CefRefPtr<CefBrowser> browser,
+                            CefRefPtr<CefFrame> frame,
+                            int64 query_id,
+                            const CefString& request,
+                            bool persistent,
+                            CefRefPtr<Callback> callback) OVERRIDE;
+    };
 
     class LootHandler : public CefClient,
                         public CefDisplayHandler,
@@ -47,6 +64,10 @@ namespace loot {
         virtual CefRefPtr<CefDisplayHandler> GetDisplayHandler() OVERRIDE;
         virtual CefRefPtr<CefLifeSpanHandler> GetLifeSpanHandler() OVERRIDE;
         virtual CefRefPtr<CefLoadHandler> GetLoadHandler() OVERRIDE;
+
+        virtual bool OnProcessMessageReceived(CefRefPtr<CefBrowser> browser,
+                                CefProcessId source_process,
+                                CefRefPtr<CefProcessMessage> message) OVERRIDE;
 
         // CefDisplayHandler methods
         //--------------------------
@@ -76,6 +97,7 @@ namespace loot {
         // List of existing browser windows. Only accessed on the CEF UI thread.
         typedef std::list<CefRefPtr<CefBrowser> > BrowserList;
         BrowserList browser_list_;
+        CefRefPtr<CefMessageRouterBrowserSide> browser_side_router_;
 
         bool is_closing_;
 

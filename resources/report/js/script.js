@@ -193,6 +193,15 @@ function openLogLocation(evt) {
 }
 function openReadme(evt) {
 
+    // Create and send a new query.
+    var request_id = window.cefQuery({
+        request: 'openReadme',
+        persistent: false,
+        onSuccess: function(response) {},
+        onFailure: function(error_code, error_message) {
+            alert(error_code + error_message);
+        }
+    });
 }
 function updateMasterlist(evt) {
 
@@ -575,7 +584,7 @@ function processURLParams() {
             var activePluginNo = 0;
             var dirtyPluginNo = 0;
             /* Fill report with data. */
-            document.getElementById('LOOTVersion').textContent = data.lootVersion;
+            document.getElementById('LOOTVersion').textContent = loot.version;
             document.getElementById('masterlistRevision').textContent = data.masterlist.revision.substr(0, 9);
             document.getElementById('masterlistDate').textContent = data.masterlist.date;
             var generalMessagesList = document.getElementById('generalMessages').getElementsByTagName('ul')[0];
