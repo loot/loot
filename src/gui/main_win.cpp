@@ -50,8 +50,8 @@ using boost::format;
 
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 
-    // First do application loading.
-    //------------------------------
+    // Do application init
+    //--------------------
 
     string initError;
     YAML::Node settings;
@@ -148,6 +148,23 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
         return exit_code;
     }
 
+
+    // Check if LOOT is already running
+    //---------------------------------
+
+    HANDLE hMutex = ::OpenMutex(MUTEX_ALL_ACCESS, FALSE, L"LOOT.Shell.Instance");
+    if (hMutex != NULL) {
+        // An instance of LOOT is already running, so quit.
+        return 0;
+    }
+    else {
+        //Create the mutex so that future instances will not run.
+        hMutex = ::CreateMutex(NULL, FALSE, L"LOOT.Shell.Instance");
+    }
+
+    // Back to CEF
+    //------------
+
     // Initialise CEF settings.
     CefSettings cef_settings;
 
@@ -168,6 +185,10 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 
     // Shut down CEF.
     CefShutdown();
+
+    // Release the program instance mutex.
+    if (hMutex != NULL)
+        ReleaseMutex(hMutex);
 
     return 0;
 }
