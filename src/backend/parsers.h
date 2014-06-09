@@ -212,7 +212,7 @@ namespace YAML {
             if (node["content"].IsSequence())
                 content = node["content"].as< std::vector<loot::MessageContent> >();
             else {
-                content.push_back(loot::MessageContent(node["content"].as<std::string>(), loot::Language::any));
+                content.push_back(loot::MessageContent(node["content"].as<std::string>(), loot::Language::english));
             }
 
             //Check now that at least one item in content is English if there are multiple items.

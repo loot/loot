@@ -150,7 +150,7 @@ void SettingsFrame::SetDefaultValues() {
     BOOST_LOG_TRIVIAL(debug) << "Setting default values for LOOT's settings.";
 
     if (_settings["Language"]) {
-        LanguageChoice->SetSelection(loot::Language(_settings["Language"].as<string>()).Code());
+        LanguageChoice->SetSelection(loot::Language(_settings["Language"].as<string>()).Code() - 1);
     }
 
     if (_settings["Game"]) {
@@ -201,7 +201,7 @@ void SettingsFrame::OnQuit(wxCommandEvent& event) {
         else
             _settings["Game"] = _games[GameChoice->GetSelection() - 1].FolderName();
 
-        _settings["Language"] = loot::Language(LanguageChoice->GetSelection()).Locale();
+        _settings["Language"] = loot::Language(LanguageChoice->GetSelection() + 1).Locale();
 
         _settings["Debug Verbosity"] = DebugVerbosityChoice->GetSelection();
 

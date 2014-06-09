@@ -154,7 +154,7 @@ namespace loot {
         return eval;
     }
 
-    MessageContent::MessageContent() : _language(Language::any) {}
+    MessageContent::MessageContent() : _language(Language::english) {}
 
     MessageContent::MessageContent(const std::string& str, const unsigned int language) : _str(str), _language(language) {}
 
@@ -178,7 +178,7 @@ namespace loot {
 
     Message::Message(const unsigned int type, const std::string& content,
                      const std::string& condition) : _type(type), ConditionStruct(condition) {
-        _content.push_back(MessageContent(content, Language::any));
+        _content.push_back(MessageContent(content, Language::english));
     }
 
     Message::Message(const unsigned int type, const std::vector<MessageContent>& content,

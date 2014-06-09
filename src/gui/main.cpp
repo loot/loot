@@ -266,7 +266,7 @@ bool LOOT::OnInit() {
     //Set the locale to get encoding and language conversions working correctly.
     BOOST_LOG_TRIVIAL(debug) << "Initialising language settings.";
     //Defaults in case language string is empty or setting is missing.
-    string localeId = loot::Language(loot::Language::any).Locale() + ".UTF-8";
+    string localeId = loot::Language(loot::Language::english).Locale() + ".UTF-8";
     wxLanguage wxLang = wxLANGUAGE_ENGLISH;
     if (_settings["Language"]) {
         loot::Language lang(_settings["Language"].as<string>());

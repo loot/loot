@@ -252,20 +252,12 @@ namespace loot {
     	else if (nameOrCode == Language(Language::finnish).Name() || nameOrCode == Language(Language::finnish).Locale())
     	    Construct(Language::finnish);
         else
-            Construct(Language::any);
+            Construct(Language::english);
     }
 
     void Language::Construct(const unsigned int code) {
         _code = code;
-        if (_code == Language::any) {
-            _name = boost::locale::translate("None Specified");
-            _locale = "en";
-        }
-        else if (_code == Language::english) {
-            _name = "English";
-            _locale = "en";
-        }
-        else if (_code == Language::spanish) {
+        if (_code == Language::spanish) {
             _name = "Español";
             _locale = "es";
         }
@@ -292,6 +284,10 @@ namespace loot {
         else if (_code == Language::finnish) {
             _name = "suomi";
             _locale = "fi";
+        }
+        else  {
+            _name = "English";
+            _locale = "en";
         }
     }
 

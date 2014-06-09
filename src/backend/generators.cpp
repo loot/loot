@@ -473,7 +473,7 @@ namespace YAML {
         else
             out << Key << "type" << Value << "error";
 
-        if (rhs.Content().size() == 1 && rhs.Content().front().Language() == loot::Language::any)
+        if (rhs.Content().size() == 1)
             out << Key << "content" << Value << rhs.Content().front().Str();
         else
             out << Key << "content" << Value << rhs.Content();

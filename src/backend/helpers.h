@@ -73,7 +73,7 @@ namespace loot {
         std::string Name() const;
         std::string Locale() const;
 
-        static const unsigned int any = 0;
+        static const unsigned int any = 0; // This shouldn't be used as a selectable language, just for when picking any string in a message.
         static const unsigned int english = 1;
         static const unsigned int spanish = 2;
         static const unsigned int russian = 3;
@@ -85,7 +85,6 @@ namespace loot {
 
         static std::vector<std::string> Names() {
             std::vector<std::string> vec;
-            vec.push_back(Language(Language::any).Name());
             vec.push_back(Language(Language::english).Name());
             vec.push_back(Language(Language::spanish).Name());
             vec.push_back(Language(Language::russian).Name());
