@@ -391,7 +391,7 @@ namespace loot {
         YAML::Node root;
         std::vector<Game> games;
 
-        root["Language"] = "eng";
+        root["Language"] = "en";
         root["Game"] = "auto";
         root["Last Game"] = "auto";
         root["Debug Verbosity"] = 0;
