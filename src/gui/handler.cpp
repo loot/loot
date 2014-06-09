@@ -53,7 +53,7 @@ namespace loot {
                             CefRefPtr<Callback> callback) {
 
         const std::string& message_name = request;
-        if (message_name.find("openReadme") == 0) {
+        if (message_name == "openReadme") {
             // Open readme in default application.
             HINSTANCE ret = ShellExecute(0, NULL, ToWinWide(ToFileURL(g_path_readme)).c_str(), NULL, NULL, SW_SHOWNORMAL);
             if ((int)ret > 32)

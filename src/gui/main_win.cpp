@@ -153,7 +153,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 
     //Disable CEF logging.
     cef_settings.command_line_args_disabled = true;
-    CefString(&cef_settings.locale).FromString(localeId);
+    CefString(&cef_settings.locale).FromString(localeId.substr(0, localeId.length() - 7));
     if (verbosity == 0)
         cef_settings.log_severity = LOGSEVERITY_DISABLE;
 
