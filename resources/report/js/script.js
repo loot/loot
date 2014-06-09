@@ -623,6 +623,60 @@ function setupEventHandlers() {
 
     document.body.addEventListener('mouseover', toggleHoverText, false);
 }
+function initUI() {
+    /* Fill in languages, games, settings values. */
+
+    /* Fill in game row template's game type options. */
+    var select = document.getElementById('gameRow').content.querySelector('select');
+    for (var j = 0; j < loot.gameTypes.length; ++j) {
+        var option = document.createElement('option');
+        option.value = loot.gameTypes[j];
+        option.textContent = loot.gameTypes[j];
+        select.appendChild(option);
+    }
+
+    /* Now fill game lists/table. */
+    var gameSelect = document.getElementById('defaultGameSelect');
+    var gameMenu = document.getElementById('gameMenu').firstElementChild;
+    var gameTableBody = document.getElementById('gameTable').getElementsByTagName('tbody')[0];
+    /* Add "auto" value for default game. */
+    var option = document.createElement('option');
+    option.value = 'auto';
+    option.textContent = 'Autodetect';
+    gameSelect.appendChild(option);
+    /* Add row for creating new rows. */
+    setupTable(gameTableBody);
+    for (var i = 0; i < loot.settings.games.length; ++i) {
+        var option = document.createElement('option');
+        option.value = loot.settings.games[i].folder;
+        option.textContent = loot.settings.games[i].name;
+        gameSelect.appendChild(option);
+
+        var li = document.createElement('li');
+        li.setAttribute('data-action', 'change-game');
+        li.setAttribute('data-target', loot.settings.games[i].folder);
+        li.textContent = loot.settings.games[i].name;
+        gameMenu.appendChild(li);
+
+        addTableRow(gameTableBody, loot.settings.games[i]);
+    }
+
+    /* Now fill in language options. */
+    var settingsLangSelect = document.getElementById('languageSelect');
+    var messageLangSelect = document.getElementById('messageRow').content.querySelector('.language');
+    for (var i = 0; i < loot.languages.length; ++i) {
+        var option = document.createElement('option');
+        option.value = loot.languages[i];
+        option.textContent = loot.languages[i];
+        settingsLangSelect.appendChild(option);
+        messageLangSelect.appendChild(option.cloneNode(true));
+    }
+
+    /* Now fill in settings values. */
+    gameSelect.value = loot.settings.game;
+    settingsLangSelect.value = loot.settings.language;
+    debugVerbositySelect.value = loot.settings.debugVerbosity;
+}
 function processURLParams() {
     /* Get the data path from the URL and load it. */
     /*var pos = document.URL.indexOf("?data=");*/
@@ -775,48 +829,8 @@ function processURLParams() {
                 }
             }
 
-            /* Fill in game row template's game type options. */
-            var select = document.getElementById('gameRow').content.querySelector('select');
-            for (var j = 0; j < loot.gameTypes.length; ++j) {
-                var option = document.createElement('option');
-                option.value = loot.gameTypes[j];
-                option.textContent = loot.gameTypes[j];
-                select.appendChild(option);
-            }
-
-            /* Now fill game lists/table. */
-            var gameSelect = document.getElementById('defaultGameSelect');
-            var gameMenu = document.getElementById('gameMenu').firstElementChild;
-            var gameTableBody = document.getElementById('gameTable').getElementsByTagName('tbody')[0];
-            /* Add row for creating new rows. */
-            setupTable(gameTableBody);
-            for (var i = 0; i < loot.settings.games.length; ++i) {
-                var option = document.createElement('option');
-                option.value = loot.settings.games[i].folder;
-                option.textContent = loot.settings.games[i].name;
-                gameSelect.appendChild(option);
-
-                var li = document.createElement('li');
-                li.setAttribute('data-action', 'change-game');
-                li.setAttribute('data-target', loot.settings.games[i].folder);
-                li.textContent = loot.settings.games[i].name;
-                gameMenu.appendChild(li);
-
-                addTableRow(gameTableBody, loot.settings.games[i]);
-            }
-
-            /* Now fill in language options. */
-            var settingsLangSelect = document.getElementById('languageSelect');
-            var messageLangSelect = document.getElementById('messageRow').content.querySelector('.language');
-            for (var i = 0; i < loot.languages.length; ++i) {
-                var option = document.createElement('option');
-                option.value = loot.languages[i];
-                option.textContent = loot.languages[i];
-                settingsLangSelect.appendChild(option);
-                messageLangSelect.appendChild(option.cloneNode(true));
-            }
-
             /* Now initialise the rest of the report. */
+            initUI();
             setupEventHandlers();
             if (isStorageSupported()) {
                 loadSettings();
