@@ -48,12 +48,14 @@ set (Boost_USE_STATIC_RUNTIME PROJECT_STATIC_RUNTIME)
 set (LOOT_SRC   "${CMAKE_SOURCE_DIR}/src/backend/metadata.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/game.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/network.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/globals.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/graph.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/generators.cpp")
 
 set (LOOT_GUI_SRC ${LOOT_SRC}
+                  # Code the API doesn't need.
+                  "${CMAKE_SOURCE_DIR}/src/backend/graph.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/backend/network.cpp"
+                  # Actual GUI code.
                   "${CMAKE_SOURCE_DIR}/src/gui/ids.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/main.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/settings.cpp"
@@ -117,12 +119,12 @@ IF (MINGW)
                    boost_system
                    boost_regex
                    version
-                   git2
                    loadorder${PROJECT_ARCH}
                    ssl
                    crypto
                    ws2_32)
     set (LOOT_GUI_LIBS ${LOOT_LIBS}
+                       git2
                        wx_mswu_webview-3.0-${COMPILER_PREFIX}
                        wx_mswu_core-3.0-${COMPILER_PREFIX}
                        wx_baseu-3.0-${COMPILER_PREFIX}
@@ -154,10 +156,10 @@ ELSEIF (MSVC)
     set (CMAKE_EXE_LINKER_FLAGS "/SUBSYSTEM:WINDOWS")
     set (LOOT_LIBS libyaml-cppmt
                    version
-                   git2
                    loadorder${PROJECT_ARCH}
                    ws2_32)
     set (LOOT_GUI_LIBS ${LOOT_LIBS}
+                       git2
                        wxmsw30u_webview
                        wxmsw30u_adv
                        wxmsw30u_core
