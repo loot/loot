@@ -38,7 +38,9 @@ namespace loot {
                     public CefBrowserProcessHandler,
                     public CefRenderProcessHandler {
     public:
-        LootApp(YAML::Node& settings);
+        LootApp();
+
+        void Init(YAML::Node& settings, std::string& cmdLineGame);
 
         // Override CefApp methods.
         virtual CefRefPtr<CefBrowserProcessHandler> GetBrowserProcessHandler() OVERRIDE;
@@ -58,6 +60,14 @@ namespace loot {
         virtual void OnContextCreated(CefRefPtr<CefBrowser> browser,
                                     CefRefPtr<CefFrame> frame,
                                     CefRefPtr<CefV8Context> context) OVERRIDE;
+
+        virtual void OnContextReleased(CefRefPtr<CefBrowser> browser,
+                                    CefRefPtr<CefFrame> frame,
+                                    CefRefPtr<CefV8Context> context) OVERRIDE;
+
+        void InitJSVars();
+
+        CefRefPtr<CefV8Context> _context;
 
         YAML::Node _settings;
         std::vector<loot::Game> _games;

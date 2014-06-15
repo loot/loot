@@ -64,7 +64,7 @@ set (LOOT_GUI_SRC ${LOOT_SRC}
 set (LOOT_API_SRC ${LOOT_SRC}
                   "${CMAKE_SOURCE_DIR}/src/api/api.cpp")
 
-find_package(Boost REQUIRED COMPONENTS log log_setup locale thread chrono date_time filesystem system regex iostreams)
+find_package(Boost REQUIRED COMPONENTS log log_setup locale thread chrono date_time filesystem program_options system regex iostreams)
 
 # Include source and library directories.
 include_directories ("${CMAKE_SOURCE_DIR}/src"
@@ -113,6 +113,7 @@ IF (MINGW)
                    boost_chrono
                    boost_date_time
                    boost_filesystem
+                   boost_program_options
                    boost_system
                    boost_regex
                    version

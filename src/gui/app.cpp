@@ -27,13 +27,104 @@
 
 #include <include/cef_browser.h>
 #include <include/cef_task.h>
+#include <include/cef_runnable.h>
+
 #include <boost/log/trivial.hpp>
+#include <boost/format.hpp>
+#include <boost/locale.hpp>
 
 using namespace std;
+using boost::locale::translate;
+using boost::format;
 
 namespace loot {
 
-    LootApp::LootApp(YAML::Node& settings) : _settings(settings) {}
+    LootApp::LootApp() {}
+    
+    void LootApp::Init(YAML::Node& settings, std::string& cmdLineGame) {
+        _settings = settings;
+        
+        string initError;
+
+        // Detect Games
+        //-------------
+
+        int gameIndex = -1;
+
+        //Detect installed games.
+        BOOST_LOG_TRIVIAL(debug) << "Detecting installed games.";
+        try {
+            _games = GetGames(settings);
+        }
+        catch (YAML::Exception& e) {
+            BOOST_LOG_TRIVIAL(error) << "Games' settings parsing failed. " << e.what();
+            initError = (format(translate("Error: Games' settings parsing failed. %1%")) % e.what()).str();
+            return;
+        }
+        catch (std::exception& e) {
+            BOOST_LOG_TRIVIAL(error) << "Game-specific settings could not be initialised. " << e.what();
+            initError = (format(translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()).str();
+            return;
+        }
+
+        BOOST_LOG_TRIVIAL(debug) << "Selecting game.";
+
+        if (cmdLineGame.empty()) {
+            if (_settings["Game"] && _settings["Game"].as<string>() != "auto")
+                cmdLineGame = _settings["Game"].as<string>();
+            else if (_settings["Last Game"] && _settings["Last Game"].as<string>() != "auto")
+                cmdLineGame = _settings["Last Game"].as<string>();
+        }
+
+        if (!cmdLineGame.empty()) {
+            for (size_t i = 0, max = _games.size(); i < max; ++i) {
+                if (cmdLineGame == _games[i].FolderName() && _games[i].IsInstalled())
+                    gameIndex = i;
+            }
+        }
+        if (gameIndex < 0) {
+            //Set gameIndex to the first installed game.
+            for (size_t i = 0, max = _games.size(); i < max; ++i) {
+                if (_games[i].IsInstalled()) {
+                    gameIndex = i;
+                    break;
+                }
+            }
+            if (gameIndex < 0) {
+                BOOST_LOG_TRIVIAL(error) << "None of the supported games were detected.";
+                initError = translate("Error: None of the supported games were detected.").str();
+                return;
+            }
+        }
+        loot::Game& game(_games[gameIndex]);
+        BOOST_LOG_TRIVIAL(debug) << "Game selected is " << game.Name();
+
+        //Now that game is selected, initialise it.
+        BOOST_LOG_TRIVIAL(debug) << "Initialising game-specific settings.";
+        try {
+            game.Init();
+            *find(_games.begin(), _games.end(), game) = game;  //Sync changes.
+        }
+        catch (std::exception& e) {
+            BOOST_LOG_TRIVIAL(error) << "Game-specific settings could not be initialised. " << e.what();
+            initError = (format(translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()).str();
+            return;
+        }
+
+        // Create the message object.
+        CefRefPtr<CefProcessMessage> msg = CefProcessMessage::Create("initJSVars");
+
+        // Retrieve the argument list object.
+        CefRefPtr<CefListValue> args = msg>GetArgumentList();
+
+        // Populate the argument values.
+        args->SetString(0, “my string”);
+        args->SetInt(0, 10);
+
+        // Send the process message to the render process.
+        // Use PID_BROWSER instead when sending a message to the browser process.
+        browser->SendProcessMessage(PID_RENDERER, msg);
+    }
 
     CefRefPtr<CefBrowserProcessHandler> LootApp::GetBrowserProcessHandler() {
         return this;
@@ -90,8 +181,24 @@ namespace loot {
         // Register javascript functions.
         message_router_->OnContextCreated(browser, frame, context);
 
+        _context = context;
+    }
+    
+    void LootApp::OnContextReleased(CefRefPtr<CefBrowser> browser,
+        CefRefPtr<CefFrame> frame,
+        CefRefPtr<CefV8Context> context) {
+
+        _context = NULL;
+    }
+
+    void LootApp::InitJSVars() {
+        BOOST_LOG_TRIVIAL(debug) << "Populating JS object variable initial values.";
+
+        if (_context == NULL)
+            return;
+
         // Retrieve the context's window object.
-        CefRefPtr<CefV8Value> object = context->GetGlobal();
+        CefRefPtr<CefV8Value> object = _context->GetGlobal();
 
         // Here the initialisation values should be set.
 
@@ -166,6 +273,9 @@ namespace loot {
         }
 
         lootObj->SetValue("languages", langsArr, V8_PROPERTY_ATTRIBUTE_NONE);
+
+        // Load Order
+        //-----------
 
         object->SetValue("loot", lootObj, V8_PROPERTY_ATTRIBUTE_NONE);
     }

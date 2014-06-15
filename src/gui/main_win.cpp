@@ -40,8 +40,10 @@
 #include <boost/log/utility/setup/file.hpp>
 #include <boost/log/utility/setup/common_attributes.hpp>
 #include <boost/log/support/date_time.hpp>
+#include <boost/program_options.hpp>
 
 namespace fs = boost::filesystem;
+namespace po = boost::program_options;
 
 using namespace std;
 using namespace loot;
@@ -50,11 +52,91 @@ using boost::format;
 
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 
-    // Do application init
-    //--------------------
+    // Do all the standard CEF setup stuff.
+    //-------------------------------------
+
+    // Set up CEF sandbox.
+    CefScopedSandboxInfo scoped_sandbox;
+    void * sandbox_info = scoped_sandbox.sandbox_info();
+
+    // Read command line arguments.
+    CefMainArgs main_args(hInstance);
+
+    // Create the process reference.
+    CefRefPtr<loot::LootApp> app(new loot::LootApp);
+
+    // Run the process.
+    int exit_code = CefExecuteProcess(main_args, app.get(), sandbox_info);
+    if (exit_code >= 0) {
+        // The sub-process has completed so return here.
+        return exit_code;
+    }
 
     string initError;
+    string gameStr;
     YAML::Node settings;
+    unsigned int verbosity = 0;
+
+    // Check if LOOT is already running
+    //---------------------------------
+
+    HANDLE hMutex = ::OpenMutex(MUTEX_ALL_ACCESS, FALSE, L"LOOT.Shell.Instance");
+    if (hMutex != NULL) {
+        // An instance of LOOT is already running, so quit.
+        return 0;
+    }
+    else {
+        //Create the mutex so that future instances will not run.
+        hMutex = ::CreateMutex(NULL, FALSE, L"LOOT.Shell.Instance");
+    }
+
+    // Handle command line args (not CEF args)
+    //----------------------------------------
+
+    // declare the supported options
+    po::options_description opts("Options");
+    opts.add_options()
+        ("help,h", translate("produces this help message").str().c_str())
+        ("version,V", translate("prints the version banner").str().c_str())
+        ("game,g", po::value(&gameStr),
+        translate("Override game autodetection. Valid values are the folder "
+        "names defined in the settings file.").str().c_str());
+
+    // parse command line arguments
+    po::variables_map vm;
+    try{
+        vector<wstring> args = po::split_winmain(lpCmdLine);
+        po::store(po::wcommand_line_parser(args).options(opts).run(), vm);
+        po::notify(vm);
+    }
+    catch (po::multiple_occurrences &){
+        BOOST_LOG_TRIVIAL(error) << "Cannot specify options multiple times; please use the '--help' option to see usage instructions";
+        std::cout << "Cannot specify options multiple times; please use the '--help' option to see usage instructions";
+        return 1;
+    }
+    catch (exception & e){
+        BOOST_LOG_TRIVIAL(error) << e.what() << "; please use the '--help' option to see usage instructions";
+        std::cout << e.what() << "; please use the '--help' option to see usage instructions";
+        return 1;
+    }
+
+    if (vm.count("help")) {
+        BOOST_LOG_TRIVIAL(info) << "Displaying command line help...";
+        std::cout << opts << std::endl;
+        if (hMutex != NULL)
+            ReleaseMutex(hMutex);
+        return 0;
+    }
+    if (vm.count("version")) {
+        BOOST_LOG_TRIVIAL(info) << "Displaying command line version...";
+        std::cout << "LOOT v" << g_version_major << "." << g_version_minor << "." << g_version_patch << std::endl;
+        if (hMutex != NULL)
+            ReleaseMutex(hMutex);
+        return 0;
+    }
+
+    // Do application init
+    //--------------------
 
     //Load settings.
     if (!fs::exists(g_path_settings)) {
@@ -64,7 +146,6 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
         }
         catch (fs::filesystem_error& /*e*/) {
             initError = "Error: Could not create local app data LOOT folder.";
-            return 1;
         }
         GenerateDefaultSettingsFile(g_path_settings.string());
     }
@@ -75,7 +156,6 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
     }
     catch (YAML::ParserException& e) {
         initError = (format(translate("Error: Settings parsing failed. %1%")) % e.what()).str();
-        return 1;
     }
 
     //Set up logging.
@@ -90,7 +170,6 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
         )
         );
     boost::log::add_common_attributes();
-    unsigned int verbosity = 0;
     if (settings["Debug Verbosity"]) {
         verbosity = settings["Debug Verbosity"].as<unsigned int>();
     }
@@ -128,39 +207,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
     cout.imbue(locale());
     boost::filesystem::path::imbue(locale());
 
-    // Now do all the standard CEF setup stuff.
-    //----------------------------
-
-    // Set up CEF sandbox.
-    CefScopedSandboxInfo scoped_sandbox;
-    void * sandbox_info = scoped_sandbox.sandbox_info();
-
-    // Read command line arguments.
-    CefMainArgs main_args(hInstance);
-
-    // Create the process reference.
-    CefRefPtr<loot::LootApp> app(new loot::LootApp(settings));
-
-    // Run the process.
-    int exit_code = CefExecuteProcess(main_args, app.get(), sandbox_info);
-    if (exit_code >= 0) {
-        // The sub-process has completed so return here.
-        return exit_code;
-    }
-
-
-    // Check if LOOT is already running
-    //---------------------------------
-
-    HANDLE hMutex = ::OpenMutex(MUTEX_ALL_ACCESS, FALSE, L"LOOT.Shell.Instance");
-    if (hMutex != NULL) {
-        // An instance of LOOT is already running, so quit.
-        return 0;
-    }
-    else {
-        //Create the mutex so that future instances will not run.
-        hMutex = ::CreateMutex(NULL, FALSE, L"LOOT.Shell.Instance");
-    }
+    app.get()->Init(settings, gameStr);
 
     // Back to CEF
     //------------
