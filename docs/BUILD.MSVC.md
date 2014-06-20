@@ -2,8 +2,6 @@
 
 These instructions were used to build LOOT using Microsoft Visual Studio 2012 and Microsoft Visual Studio Express 2013 for Desktop, though they should also apply to other versions of MSVC.
 
-LOOT's CMake configuration builds an executable that can be run on Windows XP, but this support has only been implemented for MSVC 2012 and 2013 - other versions may require editing of LOOT's `CMakeLists.txt` file.
-
 #### Boost
 
 ```

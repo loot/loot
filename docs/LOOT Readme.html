@@ -122,6 +122,8 @@ h3{
 
 <h2 id="install">Installation &amp; Uninstallation</h2>
 
+<p><b>LOOT does not support Windows XP or earlier.</b>
+
 <p>LOOT can be installed either using its automated installer or manually. To install LOOT manually, extract the downloaded archive to a location of your choice.
 
 <p>If LOOT was installed using the installer, then use the uninstaller linked to in the Start Menu to uninstall LOOT. If LOOT was installed manually:
@@ -446,15 +448,19 @@ A copy of the license is included in the file named "GNU FDL v1.3.txt".</blockqu
     <li>Fixed: The uninstaller not removing the Git repositories used to update the masterlists.
     <li>Fixed: Miscellaneous crashes due to uncaught exceptions.
     <li>Fixed: Plugin priorities are now temporarily "inherited" during sorting so that a plugin with a low priority that is made via metadata to load after a plugin with a high priority doesn't cause other plugins with lower priorities to be positioned incorrectly.
+    <li>Fixed: Default language setting value.
+    <li>Fixed: Defaults for the online masterlist used for Nehrim.
     <li>Added: Display of masterlist revision date in reports.
     <li>Added: Report filter for inactive plugin messages.
     <li>Added: Right-click menu command for clearing all user-added metadata for all plugins to the full metadata editor.
     <li>Added: Conflict filter, drag 'n' drop into requirements, incompatibilities and load after lists, plugin priority display and a simple display mode to the full metadata editor.
     <li>Added: Command line parameter for selecting the game LOOT should run for.
     <li>Added: Finnish translation.
+    <li>Removed: Support for Windows XP. Although no change has been made to LOOT itself to remove support, it makes use of libraries that do not support Windows XP or are not built with Windows XP support, and so even if the executable runs, it may not function correctly.
 	<li>Removed: Support for loading BOSS masterlists using the API. This was a leftover from when LOOT was BOSSv3 and backwards compatibility was an issue.
     <li>Removed: The ability to open reports in an external browser. This was necessitated by the changes to report generation.
     <li>Removed: The MSVC 2013 redistributable requirement.
+    <li>Removed: The "None Specified" language option is no longer available: English is the new default.
     <li>Changed: The full metadata now displays plugins with user edits using a tick beside their name, rather than bolding their name text.
     <li>Changed: Full metadata window sizing. It should now resize more appropriately.
     <li>Changed: Missing master/requirement and incompatibility errors are downgraded to warnings if the plugin in question is inactive.

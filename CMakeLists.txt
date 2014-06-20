@@ -133,11 +133,6 @@ IF (MINGW)
                        wxzlib-3.0-${COMPILER_PREFIX}
                        comctl32)
 ELSEIF (MSVC)
-    IF (MSVC_VERSION EQUAL 1800)
-        set (CMAKE_GENERATOR_TOOLSET "v120_xp" CACHE STRING "Platform Toolset" FORCE)
-    ELSEIF (MSVC_VERSION EQUAL 1700)
-        set (CMAKE_GENERATOR_TOOLSET "v110_xp" CACHE STRING "Platform Toolset" FORCE)
-    ENDIF ()
     include_directories("${WXWIDGETS_ROOT}/lib/vc_lib/mswu")
     link_directories("${WXWIDGETS_ROOT}/lib/vc_lib")
 
