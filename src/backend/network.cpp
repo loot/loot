@@ -224,6 +224,9 @@ namespace loot {
             git.call(git_remote_create(&git.remote, git.repo, "origin", game.RepoURL().c_str()));
         }
 
+        //Now that repo is loaded, create a reflog signature for any changes.
+        git.call(git_signature_new(&git.sig, "LOOT", "loot@placeholder.net", 0, 0));
+
         //WARNING: This is generally a very bad idea, since it makes HTTPS a little bit pointless, but in this case because we're only reading data and not really concerned about its integrity, it's acceptable. A better solution would be to figure out why GitHub's certificate appears to be invalid to OpenSSL.
 #ifndef _WIN32
 		git_remote_check_cert(git.remote, 0);
@@ -236,7 +239,7 @@ namespace loot {
 
         //Fetch from remote.
         BOOST_LOG_TRIVIAL(trace) << "Fetching from remote.";
-        git.call(git_remote_fetch(git.remote));
+        git.call(git_remote_fetch(git.remote, git.sig, NULL));
 
         const git_transfer_progress * stats = git_remote_stats(git.remote);
         BOOST_LOG_TRIVIAL(info) << "Received " << stats->indexed_objects << " of " << stats->total_objects << " objects in " << stats->received_bytes << " bytes.";
@@ -246,7 +249,7 @@ namespace loot {
 
         char * paths[] = { "masterlist.yaml" };
 
-        git_checkout_opts opts = GIT_CHECKOUT_OPTS_INIT;
+        git_checkout_options opts = GIT_CHECKOUT_OPTIONS_INIT;
         opts.checkout_strategy = GIT_CHECKOUT_FORCE;  //Make sure the existing file gets overwritten.
         opts.paths.strings = paths;
         opts.paths.count = 1;
@@ -276,15 +279,14 @@ namespace loot {
             BOOST_LOG_TRIVIAL(info) << "Getting the Git object for the tree at " << filespec;
             git.call(git_revparse_single(&git.obj, git.repo, filespec.c_str()));
 
-            BOOST_LOG_TRIVIAL(trace) << "Getting the Git object ID.";
-            const git_oid * oid = git_object_id(git.obj);
-
-            BOOST_LOG_TRIVIAL(trace) << "Generating hex string for Git object ID.";
-            char sha1[10];
-            git_oid_tostr(sha1, 10, oid);
-            revision = sha1;
+            BOOST_LOG_TRIVIAL(trace) << "Generating hex string for the Git object.";
+            git_buf buffer;
+            git.call(git_object_short_id(&buffer, git.obj));
+            revision = string(buffer.ptr, buffer.size);
+            git_buf_free(&buffer);
 
             BOOST_LOG_TRIVIAL(trace) << "Getting date for Git object ID.";
+            const git_oid * oid = git_object_id(git.obj);
             git.call(git_commit_lookup(&git.commit, git.repo, oid));
             git_time_t time = git_commit_time(git.commit);
             boost::locale::date_time dateTime(time);
@@ -293,7 +295,7 @@ namespace loot {
             date = out.str();
 
             BOOST_LOG_TRIVIAL(trace) << "Recreating HEAD as a direct reference (overwriting it) to the desired revision.";
-            git.call(git_reference_create(&git.ref, git.repo, "HEAD", oid, 1));
+            git.call(git_reference_create(&git.ref, git.repo, "HEAD", oid, 1, git.sig, "Updated HEAD."));
 
             BOOST_LOG_TRIVIAL(trace) << "Performing a Git checkout of HEAD.";
             git.call(git_checkout_head(git.repo, &opts));

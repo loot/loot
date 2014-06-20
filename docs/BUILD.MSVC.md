@@ -30,24 +30,26 @@ Example CMake keys: `-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=build -DCMAKE_ARCHIVE_OUTP
 
 #### Libgit2
 
-1. Configure CMake and generate a build system for Visual Studio by running CMake with keys `-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=build -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=build -DBUILD_SHARED_LIBS=OFF -DSTATIC_CRT=OFF`.
+1. Configure CMake and generate a build system for Visual Studio by running CMake with keys `-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=build -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=build -DBUILD_SHARED_LIBS=OFF -DSTATIC_CRT=ON`.
 2. Open the generated solution file, and build it with `Release` configuration.
 
 #### LOOT
 
 LOOT uses the following CMake variables to set build parameters:
 
-Parameter | Values | Description
-----------|--------|------------
-`BUILD_SHARED_LIBS` | `ON`, `OFF` | Whether or not to build a shared libloot. Defaults to `OFF`.
-`PROJECT_STATIC_RUNTIME` | `ON`, `OFF` | Whether to link the C++ runtime statically or not. This also affects the Boost libraries used. Defaults to `ON`.
-`PROJECT_ARCH` | `32`, `64` | Whether to build 32 or 64 bit LOOT binaries. Defaults to `32`.
-`ALPHANUM_ROOT` | path | Path to the folder containing `alphanum.hpp`. Defaults to `../../alphanum`, relative to LOOT's CMakeLists.txt.
-`LIBESPM_ROOT` | path | Path to the root of the libespm repository folder. Defaults to `../../libespm`, relative to LOOT's CMakeLists.txt.
-`LIBGIT2_ROOT` | path | Path to the root of the libgit2 repository folder. Defaults to `../../libgit2`, relative to LOOT's CMakeLists.txt.
-`LIBLOADORDER_ROOT` | path | Path to the root of the libloadorder repository folder. Defaults to `../../libloadorder`, relative to LOOT's CMakeLists.txt.
-`YAMLCPP_ROOT` | path | Path to the root of the yaml-cpp folder. Defaults to `../../yaml-cpp`, relative to LOOT's CMakeLists.txt.
-`WXWIDGETS_ROOT` | path | Path to the root of the wxWidgets folder. Defaults to `../../wxWidgets`, relative to LOOT's CMakeLists.txt.
+Parameter | Values | Default |Description
+----------|--------|---------|-----------
+`BUILD_SHARED_LIBS` | `ON`, `OFF` | `OFF` | Whether or not to build a shared libloot.
+`PROJECT_STATIC_RUNTIME` | `ON`, `OFF` | `ON` | Whether to link the C++ runtime statically or not. This also affects the Boost libraries used.
+`PROJECT_ARCH` | `32`, `64` | `32` | Whether to build 32 or 64 bit LOOT binaries.
+`ALPHANUM_ROOT` | path | `../../alphanum` | Path to the folder containing `alphanum.hpp`.
+`LIBESPM_ROOT` | path | `../../libespm` | Path to the root of the libespm repository folder.
+`LIBGIT2_ROOT` | path | `../../libgit2` | Path to the root of the libgit2 repository folder.
+`LIBLOADORDER_ROOT` | path | `../../libloadorder` | Path to the root of the libloadorder repository folder.
+`YAMLCPP_ROOT` | path | `../../yaml-cpp` | Path to the root of the yaml-cpp folder.
+`WXWIDGETS_ROOT` | path | `../../wxWidgets` | Path to the root of the wxWidgets folder.
+
+The default paths given in the table above are relative to LOOT's `CMakeLists.txt`.
 
 1. Set CMake up so that it builds the binaries in the `build` subdirectory of the LOOT folder.
 2. Define any necessary parameters.
