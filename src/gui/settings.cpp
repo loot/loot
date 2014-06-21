@@ -130,7 +130,7 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
 	wxSizer * sizer = CreateSeparatedButtonSizer(wxOK|wxCANCEL);
 
 	//Now add TabHolder and OK button to window sizer.
-    if (sizer != NULL)
+    if (sizer != nullptr)
         bigBox->Add(sizer, 0, wxEXPAND|wxLEFT|wxBOTTOM|wxRIGHT, 15);
 
 	//Initialise options with values. For checkboxes, they are off by default.
@@ -443,7 +443,7 @@ GameEditDialog::GameEditDialog(wxWindow *parent, const wxString& title) : wxDial
 
     //Need to add 'OK' and 'Cancel' buttons.
 	wxSizer * sizer = CreateSeparatedButtonSizer(wxOK|wxCANCEL);
-    if (sizer != NULL)
+    if (sizer != nullptr)
         bigBox->Add(sizer, 0, wxEXPAND|wxLEFT|wxBOTTOM|wxRIGHT, 15);
 
     //Set defaults.

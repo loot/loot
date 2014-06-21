@@ -318,7 +318,7 @@ namespace loot {
         if (!boost::filesystem::exists(filepath) && boost::filesystem::exists(filepath.string() + ".ghost"))
             filepath += ".ghost";
 
-        espm::File * file = NULL;
+        espm::File * file = nullptr;
         try {
             if (game.Id() == Game::tes4)
                 file = new espm::tes4::File(filepath, game.espm_settings, false, headerOnly);

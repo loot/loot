@@ -250,10 +250,10 @@ namespace loot {
             ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str());
 
         if (ret != LIBLO_OK && ret != LIBLO_WARN_LO_MISMATCH) {
-            const char * e = NULL;
+            const char * e = nullptr;
             string err;
             lo_get_error_message(&e);
-            if (e == NULL) {
+            if (e == nullptr) {
                 BOOST_LOG_TRIVIAL(error) << "libloadorder failed to create a game handle. Details could not be fetched.";
                 err = lc::translate("libloadorder failed to create a game handle. Details could not be fetched.").str();
             }
@@ -268,11 +268,11 @@ namespace loot {
         ret = lo_set_game_master(gh, _masterFile.c_str());
 
         if (ret != LIBLO_OK) {
-            const char * e = NULL;
+            const char * e = nullptr;
             string err;
             lo_get_error_message(&e);
             lo_destroy_handle(gh);
-            if (e == NULL) {
+            if (e == nullptr) {
                 BOOST_LOG_TRIVIAL(error) << "libloadorder failed to initialise game master file support. Details could not be fetched.";
                 err = lc::translate("libloadorder failed to initialise game master file support. Details could not be fetched.").str();
             }
@@ -285,11 +285,11 @@ namespace loot {
         }
 
         if (lo_get_active_plugins(gh, &pluginArr, &pluginArrSize) != LIBLO_OK) {
-            const char * e = NULL;
+            const char * e = nullptr;
             string err;
             lo_get_error_message(&e);
             lo_destroy_handle(gh);
-            if (e == NULL) {
+            if (e == nullptr) {
                 BOOST_LOG_TRIVIAL(error) << "libloadorder failed to get the active plugins list. Details could not be fetched.";
                 err = lc::translate("libloadorder failed to get the active plugins list. Details could not be fetched.").str();
             }
@@ -331,10 +331,10 @@ namespace loot {
             ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str());
 
         if (ret != LIBLO_OK && ret != LIBLO_WARN_LO_MISMATCH) {
-            const char * e = NULL;
+            const char * e = nullptr;
             string err;
             lo_get_error_message(&e);
-            if (e == NULL) {
+            if (e == nullptr) {
                 BOOST_LOG_TRIVIAL(error) << "libloadorder failed to create a game handle. Details could not be fetched.";
                 err = lc::translate("libloadorder failed to create a game handle. Details could not be fetched.").str();
             }
@@ -349,11 +349,11 @@ namespace loot {
         ret = lo_set_game_master(gh, _masterFile.c_str());
 
         if (ret != LIBLO_OK) {
-            const char * e = NULL;
+            const char * e = nullptr;
             string err;
             lo_get_error_message(&e);
             lo_destroy_handle(gh);
-            if (e == NULL) {
+            if (e == nullptr) {
                 BOOST_LOG_TRIVIAL(error) << "libloadorder failed to initialise game master file support. Details could not be fetched.";
                 err = lc::translate("libloadorder failed to initialise game master file support. Details could not be fetched.").str();
             }
@@ -366,11 +366,11 @@ namespace loot {
         }
 
         if (lo_get_load_order(gh, &pluginArr, &pluginArrSize) != LIBLO_OK) {
-            const char * e = NULL;
+            const char * e = nullptr;
             string err;
             lo_get_error_message(&e);
             lo_destroy_handle(gh);
-            if (e == NULL) {
+            if (e == nullptr) {
                 BOOST_LOG_TRIVIAL(error) << "libloadorder failed to set the load order. Details could not be fetched.";
                 err = lc::translate("libloadorder failed to set the load order. Details could not be fetched.").str();
             }
@@ -393,8 +393,8 @@ namespace loot {
     void Game::SetLoadOrder(const std::list<Plugin>& loadOrder) const {
         BOOST_LOG_TRIVIAL(debug) << "Setting load order for game: " << _name;
 
-        lo_game_handle gh = NULL;
-        char ** pluginArr = NULL;
+        lo_game_handle gh = nullptr;
+        char ** pluginArr = nullptr;
         size_t pluginArrSize = 0;
         int ret;
         if (Id() == Game::tes4)
@@ -407,10 +407,10 @@ namespace loot {
             ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str());
 
         if (ret != LIBLO_OK && ret != LIBLO_WARN_LO_MISMATCH) {
-            const char * e = NULL;
+            const char * e = nullptr;
             string err;
             lo_get_error_message(&e);
-            if (e == NULL) {
+            if (e == nullptr) {
                 BOOST_LOG_TRIVIAL(error) << "libloadorder failed to create a game handle. Details could not be fetched.";
                 err = lc::translate("libloadorder failed to create a game handle. Details could not be fetched.").str();
             }
@@ -424,11 +424,11 @@ namespace loot {
 
         ret = lo_set_game_master(gh, _masterFile.c_str());
         if (ret != LIBLO_OK) {
-            const char * e = NULL;
+            const char * e = nullptr;
             string err;
             lo_get_error_message(&e);
             lo_destroy_handle(gh);
-            if (e == NULL) {
+            if (e == nullptr) {
                 BOOST_LOG_TRIVIAL(error) << "libloadorder failed to initialise game master file support. Details could not be fetched.";
                 err = lc::translate("libloadorder failed to initialise game master file support. Details could not be fetched.").str();
             }
@@ -453,11 +453,11 @@ namespace loot {
             for (size_t i=0; i < pluginArrSize; i++)
                 delete [] pluginArr[i];
             delete [] pluginArr;
-            const char * e = NULL;
+            const char * e = nullptr;
             string err;
             lo_get_error_message(&e);
             lo_destroy_handle(gh);
-            if (e == NULL) {
+            if (e == nullptr) {
                 BOOST_LOG_TRIVIAL(error) << "libloadorder failed to set the load order. Details could not be fetched.";
                 err = lc::translate("libloadorder failed to set the load order. Details could not be fetched.").str();
             }

@@ -339,7 +339,7 @@ namespace loot {
             // read out the version string
             static const uint32_t BUFSIZE = 32;
             char buf[BUFSIZE];
-            if (NULL != fgets(buf, BUFSIZE, fp)) {
+            if (nullptr != fgets(buf, BUFSIZE, fp)) {
                 verString = string(buf);
             }
             pclose(fp);

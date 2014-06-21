@@ -43,7 +43,7 @@ namespace loot {
 
     struct git_handler {
     public:
-        git_handler() : repo(NULL), remote(NULL), cfg(NULL), obj(NULL), commit(NULL), ref(NULL), sig(NULL), blob(NULL) {}
+        git_handler() : repo(nullptr), remote(nullptr), cfg(nullptr), obj(nullptr), commit(nullptr), ref(nullptr), sig(nullptr), blob(nullptr) {}
 
         void free() {
             git_commit_free(commit);
@@ -62,7 +62,7 @@ namespace loot {
 
             const git_error * last_error = giterr_last();
             std::string error_message;
-            if (last_error == NULL)
+            if (last_error == nullptr)
                 error_message = to_string(error_code) + ".";
             else
                 error_message = to_string(error_code) + "; " + last_error->message;
@@ -148,7 +148,7 @@ namespace loot {
                 string revision, date;
                 //Need to get the HEAD object, because the individual file has a different SHA.
                 git_object_free(git.obj);
-                git.obj = NULL;  //Just to be safe.
+                git.obj = nullptr;  //Just to be safe.
                 BOOST_LOG_TRIVIAL(info) << "Getting the Git object for the tree at HEAD.";
                 git.call(git_revparse_single(&git.obj, git.repo, "HEAD"));
 
@@ -239,7 +239,7 @@ namespace loot {
 
         //Fetch from remote.
         BOOST_LOG_TRIVIAL(trace) << "Fetching from remote.";
-        git.call(git_remote_fetch(git.remote, git.sig, NULL));
+        git.call(git_remote_fetch(git.remote, git.sig, nullptr));
 
         const git_transfer_progress * stats = git_remote_stats(git.remote);
         BOOST_LOG_TRIVIAL(info) << "Received " << stats->indexed_objects << " of " << stats->total_objects << " objects in " << stats->received_bytes << " bytes.";
@@ -305,9 +305,9 @@ namespace loot {
             git_object_free(git.obj);
             git_reference_free(git.ref);
             git_commit_free(git.commit);
-            git.obj = NULL;
-            git.ref = NULL;
-            git.commit = NULL;
+            git.obj = nullptr;
+            git.ref = nullptr;
+            git.commit = nullptr;
 
             BOOST_LOG_TRIVIAL(debug) << "Testing masterlist parsing.";
 

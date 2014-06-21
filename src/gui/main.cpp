@@ -198,9 +198,9 @@ bool LOOT::OnInit() {
 			translate("Error: LOOT is already running. This instance will now quit."),
 			translate("LOOT: Error"),
 			wxOK | wxICON_ERROR,
-			NULL);
+			nullptr);
 		delete checker; // OnExit() won't be called if we return false
-		checker = NULL;
+		checker = nullptr;
 
 		return false;
 	}
@@ -215,7 +215,7 @@ bool LOOT::OnInit() {
 				translate("Error: Could not create local app data LOOT folder."),
 				translate("LOOT: Error"),
 				wxOK | wxICON_ERROR,
-				NULL);
+				nullptr);
             return false;
         }
         GenerateDefaultSettingsFile(g_path_settings.string());
@@ -229,7 +229,7 @@ bool LOOT::OnInit() {
 			FromUTF8(format(loc::translate("Error: Settings parsing failed. %1%")) % e.what()),
 			translate("LOOT: Error"),
 			wxOK | wxICON_ERROR,
-			NULL);
+			nullptr);
         return false;
     }
 
@@ -315,7 +315,7 @@ bool LOOT::OnInit() {
                 translate("Error: Could not apply translation."),
                 translate("LOOT: Error"),
                 wxOK | wxICON_ERROR,
-                NULL);
+                nullptr);
         }
     } else {
         wxLoc = new wxLocale(wxLANGUAGE_ENGLISH);
@@ -325,7 +325,7 @@ bool LOOT::OnInit() {
             translate("Error: The selected language is not available on this system."),
             translate("LOOT: Error"),
             wxOK | wxICON_ERROR,
-            NULL);
+            nullptr);
     }
 
     //Detect installed games.
@@ -338,7 +338,7 @@ bool LOOT::OnInit() {
             FromUTF8(format(loc::translate("Error: Games' settings parsing failed. %1%")) % e.what()),
             translate("LOOT: Error"),
             wxOK | wxICON_ERROR,
-            NULL);
+            nullptr);
         return false;
     }
     catch (std::exception& e) {
@@ -347,7 +347,7 @@ bool LOOT::OnInit() {
             FromUTF8(format(loc::translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()),
             translate("LOOT: Error"),
             wxOK | wxICON_ERROR,
-            NULL);
+            nullptr);
         return false;
     }
 
@@ -406,7 +406,7 @@ bool LOOT::OnInit() {
                 translate("Error: None of the supported games were detected."),
                 translate("LOOT: Error"),
                 wxOK | wxICON_ERROR,
-                NULL);
+                nullptr);
             return false;
         }
     }
@@ -424,7 +424,7 @@ bool LOOT::OnInit() {
             FromUTF8(format(loc::translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()),
             translate("LOOT: Error"),
             wxOK | wxICON_ERROR,
-            NULL);
+            nullptr);
         return false;
     }
 
@@ -439,7 +439,7 @@ bool LOOT::OnInit() {
     return true;
 }
 
-Launcher::Launcher(const wxChar *title, YAML::Node& settings, Game * game, vector<loot::Game>& games) : wxFrame(NULL, wxID_ANY, title), _game(game), _settings(settings), _games(games) {
+Launcher::Launcher(const wxChar *title, YAML::Node& settings, Game * game, vector<loot::Game>& games) : wxFrame(nullptr, wxID_ANY, title), _game(game), _settings(settings), _games(games) {
 
     //Initialise menu items.
     wxMenuBar * MenuBar = new wxMenuBar();
@@ -587,7 +587,7 @@ void Launcher::OnGameChange(wxCommandEvent& event) {
             FromUTF8(format(loc::translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()),
             translate("LOOT: Error"),
             wxOK | wxICON_ERROR,
-            NULL);
+            nullptr);
     }
     SetTitle(FromUTF8("LOOT - " + _game->Name()));
     if (_game->Id() == loot::Game::tes5)
@@ -859,7 +859,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             loot::Sort(graph, plugins);
 
             progDia->Destroy();
-            progDia = NULL;
+            progDia = nullptr;
 
             BOOST_LOG_TRIVIAL(info) << "Displaying load order preview.";
             MiniEditor editor(this, translate("LOOT: Calculated Load Order"), plugins, *_game);
@@ -952,7 +952,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         messages.push_back(loot::Message(loot::Message::error, (format(loc::translate("Failed to calculate the load order. Details: %1%")) % e.what()).str()));
 
         progDia->Destroy();
-        progDia = NULL;
+        progDia = nullptr;
     }
 
     ///////////////////////////////////////////////////////
@@ -973,7 +973,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             translate("LOOT: Error"),
             wxOK | wxICON_ERROR,
             this);
-        if (progDia != NULL)
+        if (progDia != nullptr)
             progDia->Destroy();
         return;
     }

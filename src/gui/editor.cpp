@@ -137,7 +137,7 @@ loot::Tag CommonEditor::RowToTag(wxListView * list, long row) const {
 
 loot::PluginDirtyInfo CommonEditor::RowToPluginDirtyInfo(wxListView * list, long row) const {
     string text(list->GetItemText(row, 0).ToUTF8());
-    uint32_t crc = strtoul(text.c_str(), NULL, 16);
+    uint32_t crc = strtoul(text.c_str(), nullptr, 16);
     return loot::PluginDirtyInfo(
         crc,
         atoi(string(list->GetItemText(row, 1).ToUTF8()).c_str()),
@@ -241,7 +241,7 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
     wxSizer * sizer = CreateSeparatedButtonSizer(wxAPPLY | wxCANCEL);
 
     //Now add buttons to window sizer.
-    if (sizer != NULL)
+    if (sizer != nullptr)
         bigBox->Add(sizer, 0, wxEXPAND | wxLEFT | wxBOTTOM | wxRIGHT, 15);
 
     //Fill pluginList with the contents of basePlugins.
