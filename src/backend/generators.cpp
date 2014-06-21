@@ -245,7 +245,7 @@ namespace loot {
         yout << YAML::BeginMap;
 
         yout << YAML::Key << "lootVersion"
-            << YAML::Value << IntToString(g_version_major) + "." + IntToString(g_version_minor) + "." + IntToString(g_version_patch);
+            << YAML::Value << std::to_string(g_version_major) + "." + std::to_string(g_version_minor) + "." + std::to_string(g_version_patch);
 
         yout << YAML::Key << "masterlist"
             << YAML::BeginMap

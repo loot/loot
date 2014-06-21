@@ -112,7 +112,7 @@ h3{
 <ul>
     <li>They are evaluated as paths relative to the game's Data folder.
     <li>They cannot reference a path outside of the game's folder structure, ie. they cannot contain the substring <code>../../</code>.
-    <li>Regular expression file paths must be written in the <a href="http://www.boost.org/doc/libs/1_54_0/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html">Perl</a> syntax.
+    <li>Regular expression file paths must be written in the <a href="http://www.cplusplus.com/reference/regex/ECMAScript/">EMCAScript</a> syntax.
     <li>Only the filename of a regex file path may contain non-literal regex syntax, ie. if the filename part of the regex file path is removed, the remainder must be an exact folder path (though with the regex syntax special characters escaped). For example, given the regex file path <code>Meshes\\Resources(1|2)\\(upperclass)?table.nif</code>, LOOT will look for a file named <code>table.nif</code> or <code>upperclasstable.nif</code> in the <code>Meshes\Resources(1|2)</code> folder, rather than looking in the <code>Meshes\Resources1</code> and <code>Meshes\Resources2</code> folders.
 </ul>
 <p>Please test any changes you make before uploading them. One way of doing this is to run LOOT, another is to copy/paste what you've changed into <a href="http://nodeca.github.io/js-yaml/">here</a>, though it won't catch condition syntax errors and doesn't use the same parser as LOOT so may give different results.

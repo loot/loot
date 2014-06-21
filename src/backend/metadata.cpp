@@ -27,11 +27,12 @@
 #include "parsers.h"
 #include "streams.h"
 
+#include <regex>
+
 #include <src/libespm.h>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
-#include <boost/regex.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/locale.hpp>
 
@@ -123,7 +124,7 @@ namespace loot {
 
         BOOST_LOG_TRIVIAL(trace) << "Evaluating condition: " << _condition;
 
-        boost::unordered_map<std::string, bool>::const_iterator it = game.conditionCache.find(boost::to_lower_copy(_condition));
+        unordered_map<std::string, bool>::const_iterator it = game.conditionCache.find(boost::to_lower_copy(_condition));
         if (it != game.conditionCache.end())
             return it->second;
 
@@ -371,12 +372,12 @@ namespace loot {
 
         BOOST_LOG_TRIVIAL(trace) << name << ": " << "Attempting to read the version from the description.";
         for(int j = 0; j < 7 && version.empty(); j++) {
-            boost::smatch what;
-            while (boost::regex_search(begin, end, what, version_checks[j])) {
+            smatch what;
+            while (regex_search(begin, end, what, version_checks[j])) {
                 if (what.empty())
                     continue;
 
-                boost::ssub_match match = what[1];
+                ssub_match match = what[1];
                 if (!match.matched)
                     continue;
 
@@ -608,7 +609,7 @@ namespace loot {
 
         //First need to get plugin's CRC.
         uint32_t crc = 0;
-        boost::unordered_map<std::string,uint32_t>::iterator it = game.crcCache.find(boost::to_lower_copy(name));
+        unordered_map<std::string,uint32_t>::iterator it = game.crcCache.find(boost::to_lower_copy(name));
         if (it != game.crcCache.end())
             crc = it->second;
         else if (boost::filesystem::exists(game.DataPath() / name)) {

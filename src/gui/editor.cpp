@@ -248,7 +248,7 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
     int i = 0;
     for (list<loot::Plugin>::const_iterator it = _basePlugins.begin(); it != _basePlugins.end(); ++it) {
         pluginList->InsertItem(i, FromUTF8(it->Name()));
-        pluginList->SetItem(i, 1, FromUTF8(loot::IntToString(loot::modulo(it->Priority(), loot::max_priority))));
+        pluginList->SetItem(i, 1, FromUTF8(to_string(loot::modulo(it->Priority(), loot::max_priority))));
         if (abs(it->Priority()) >= loot::max_priority)
             pluginList->SetItem(i, 2, FromUTF8("\xE2\x9C\x93"));
         else
@@ -286,7 +286,7 @@ void MiniEditor::OnPluginSelect(wxListEvent& event) {
         if (!currentPlugin.empty()) {
             ApplyEdits(currentPlugin, pluginList);
             //Also update the item's priority value in the plugins list in case it has changed.
-            pluginList->SetItem(pluginList->FindItem(-1, currentPlugin), 1, FromUTF8(loot::IntToString(prioritySpin->GetValue())));
+            pluginList->SetItem(pluginList->FindItem(-1, currentPlugin), 1, FromUTF8(to_string(prioritySpin->GetValue())));
             if (priorityCheckbox->IsChecked())
                 pluginList->SetItem(pluginList->FindItem(-1, currentPlugin), 2, FromUTF8("\xE2\x9C\x93"));
             else
@@ -382,7 +382,7 @@ void MiniEditor::OnFilterToggle(wxCommandEvent& event) {
                 //or which load a BSA (if the selected plugin loads a BSA).
                 if (*it == *pos || !it->MustLoadAfter(*pos) && (pos->DoFormIDsOverlap(*it) || (loadsBSA && it->LoadsBSA(_game)))) {
                     pluginList->InsertItem(i, FromUTF8(it->Name()));
-                    pluginList->SetItem(i, 1, FromUTF8(loot::IntToString(it->Priority())));
+                    pluginList->SetItem(i, 1, FromUTF8(to_string(it->Priority())));
                     if (it->FormIDs().empty()) {
                         pluginList->SetItemTextColour(i, wxColour(122, 122, 122));
                     }
@@ -402,7 +402,7 @@ void MiniEditor::OnFilterToggle(wxCommandEvent& event) {
         int i = 0;
         for (list<loot::Plugin>::const_iterator it = plugins.begin(); it != plugins.end(); ++it) {
             pluginList->InsertItem(i, FromUTF8(it->Name()));
-            pluginList->SetItem(i, 1, FromUTF8(loot::IntToString(it->Priority())));
+            pluginList->SetItem(i, 1, FromUTF8(to_string(it->Priority())));
             if (it->FormIDs().empty()) {
                 pluginList->SetItemTextColour(i, wxColour(122, 122, 122));
             }
@@ -732,7 +732,7 @@ void Editor::OnPluginSelect(wxListEvent& event) {
                     pluginList->SetItem(pluginList->FindItem(-1, currentPlugin), 0, FromUTF8("\xE2\x9C\x97"));
             }
             //Also update the item's priority value in the plugins list in case it has changed.
-            pluginList->SetItem(pluginList->FindItem(-1, currentPlugin), 2, FromUTF8(loot::IntToString(prioritySpin->GetValue())));
+            pluginList->SetItem(pluginList->FindItem(-1, currentPlugin), 2, FromUTF8(to_string(prioritySpin->GetValue())));
             if (priorityCheckbox->IsChecked())
                 pluginList->SetItem(pluginList->FindItem(-1, currentPlugin), 3, FromUTF8("\xE2\x9C\x93"));
             else
@@ -826,9 +826,9 @@ void Editor::OnPluginSelect(wxListEvent& event) {
         i=0;
         for (set<loot::PluginDirtyInfo>::const_iterator it=dirtyInfo.begin(), endit=dirtyInfo.end(); it != endit; ++it) {
             dirtyList->InsertItem(i, FromUTF8(loot::IntToHexString(it->CRC())));
-            dirtyList->SetItem(i, 1, FromUTF8(loot::IntToString(it->ITMs())));
-            dirtyList->SetItem(i, 2, FromUTF8(loot::IntToString(it->UDRs())));
-            dirtyList->SetItem(i, 3, FromUTF8(loot::IntToString(it->DeletedNavmeshes())));
+            dirtyList->SetItem(i, 1, FromUTF8(to_string(it->ITMs())));
+            dirtyList->SetItem(i, 2, FromUTF8(to_string(it->UDRs())));
+            dirtyList->SetItem(i, 3, FromUTF8(to_string(it->DeletedNavmeshes())));
             dirtyList->SetItem(i, 4, FromUTF8(it->CleaningUtility()));
             ++i;
         }
@@ -1038,9 +1038,9 @@ void Editor::OnAddRow(wxCommandEvent& event) {
 
         long i = tagsList->GetItemCount();
         dirtyList->InsertItem(i, rowDialog->GetCRC());
-        dirtyList->SetItem(i, 1, FromUTF8(loot::IntToString(rowDialog->GetITMs())));
-        dirtyList->SetItem(i, 2, FromUTF8(loot::IntToString(rowDialog->GetUDRs())));
-        dirtyList->SetItem(i, 3, FromUTF8(loot::IntToString(rowDialog->GetDeletedNavmeshes())));
+        dirtyList->SetItem(i, 1, FromUTF8(to_string(rowDialog->GetITMs())));
+        dirtyList->SetItem(i, 2, FromUTF8(to_string(rowDialog->GetUDRs())));
+        dirtyList->SetItem(i, 3, FromUTF8(to_string(rowDialog->GetDeletedNavmeshes())));
         dirtyList->SetItem(i, 4, rowDialog->GetUtility());
     }
 }
@@ -1134,9 +1134,9 @@ void Editor::OnEditRow(wxCommandEvent& event) {
         }
 
         dirtyList->SetItem(i, 0, rowDialog->GetCRC());
-        dirtyList->SetItem(i, 1, FromUTF8(loot::IntToString(rowDialog->GetITMs())));
-        dirtyList->SetItem(i, 2, FromUTF8(loot::IntToString(rowDialog->GetUDRs())));
-        dirtyList->SetItem(i, 3, FromUTF8(loot::IntToString(rowDialog->GetDeletedNavmeshes())));
+        dirtyList->SetItem(i, 1, FromUTF8(to_string(rowDialog->GetITMs())));
+        dirtyList->SetItem(i, 2, FromUTF8(to_string(rowDialog->GetUDRs())));
+        dirtyList->SetItem(i, 3, FromUTF8(to_string(rowDialog->GetDeletedNavmeshes())));
         dirtyList->SetItem(i, 4, rowDialog->GetUtility());
     }
 }
@@ -1458,7 +1458,7 @@ void Editor::AddPluginToList(const loot::Plugin& plugin, int position) {
         pluginList->InsertItem(position, "");
 
     pluginList->SetItem(position, 1, FromUTF8(plugin.Name()));
-    pluginList->SetItem(position, 2, FromUTF8(loot::IntToString(loot::modulo(plugin.Priority(), loot::max_priority))));
+    pluginList->SetItem(position, 2, FromUTF8(to_string(loot::modulo(plugin.Priority(), loot::max_priority))));
     if (abs(plugin.Priority()) >= loot::max_priority)
         pluginList->SetItem(position, 3, FromUTF8("\xE2\x9C\x93"));
     else

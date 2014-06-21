@@ -63,9 +63,9 @@ namespace loot {
             const git_error * last_error = giterr_last();
             std::string error_message;
             if (last_error == NULL)
-                error_message = IntToString(error_code) + ".";
+                error_message = to_string(error_code) + ".";
             else
-                error_message = IntToString(error_code) + "; " + last_error->message;
+                error_message = to_string(error_code) + "; " + last_error->message;
             free();
             giterr_clear();
 
@@ -275,7 +275,7 @@ namespace loot {
         string revision, date;
         git.ui_message = "An error occurred while trying to read information on the updated masterlist. If this error happens again, try deleting the \".git\" folder in \"%LOCALAPPDATA%\\LOOT\\" + game.FolderName() + "\".";
         do {
-            string filespec = "refs/remotes/origin/" + game.RepoBranch() + "~" + IntToString(rollbacks);
+            string filespec = "refs/remotes/origin/" + game.RepoBranch() + "~" + to_string(rollbacks);
             BOOST_LOG_TRIVIAL(info) << "Getting the Git object for the tree at " << filespec;
             git.call(git_revparse_single(&git.obj, git.repo, filespec.c_str()));
 

@@ -42,6 +42,7 @@
 #include <iterator>
 #include <ctime>
 #include <clocale>
+#include <unordered_map>
 
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/detail/utf8_codecvt_facet.hpp>
@@ -54,8 +55,7 @@
 #include <boost/log/utility/setup/file.hpp>
 #include <boost/log/utility/setup/common_attributes.hpp>
 #include <boost/log/support/date_time.hpp>
-#include <boost/thread/thread.hpp>
-#include <boost/unordered_map.hpp>
+#include <boost/thread.hpp>
 
 #include <wx/snglinst.h>
 #include <wx/aboutdlg.h>
@@ -632,7 +632,7 @@ void Launcher::OnAbout(wxCommandEvent& event) {
     BOOST_LOG_TRIVIAL(debug) << "Opening About dialog.";
     wxAboutDialogInfo aboutInfo;
     aboutInfo.SetName("LOOT");
-    aboutInfo.SetVersion(IntToString(g_version_major) + "." + IntToString(g_version_minor) + "." + IntToString(g_version_patch));
+    aboutInfo.SetVersion(to_string(g_version_major) + "." + to_string(g_version_minor) + "." + to_string(g_version_patch));
     aboutInfo.SetDescription(translate("Load order optimisation for Oblivion, Skyrim, Fallout 3 and Fallout: New Vegas."));
     aboutInfo.SetCopyright("Copyright (C) 2012-2014 LOOT Team.");
     aboutInfo.SetWebSite("http://loot.github.io");
@@ -1003,7 +1003,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
     list<string> loadOrder;
     _game->GetLoadOrder(loadOrder);
     for (list<string>::const_iterator it = loadOrder.begin(), itend = loadOrder.end(); it != itend; ++it) {
-        boost::unordered_map<string, loot::Plugin>::const_iterator pos = _game->plugins.find(*it);
+        unordered_map<string, loot::Plugin>::const_iterator pos = _game->plugins.find(*it);
 
         if (pos != _game->plugins.end())
             installed.push_back(pos->second);

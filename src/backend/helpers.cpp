@@ -29,7 +29,6 @@
 #include <boost/spirit/include/karma.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/crc.hpp>
-#include <boost/regex.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
@@ -38,11 +37,11 @@
 
 #include <cstring>
 #include <iostream>
-#include <ctype.h>
-#include <stdio.h>
-#include <time.h>
-#include <sys/types.h>
+#include <cctype>
+#include <cstdio>
+#include <ctime>
 #include <sstream>
+#include <regex>
 
 #if _WIN32 || _WIN64
 #   ifndef UNICODE
@@ -108,14 +107,14 @@ namespace loot {
 
 	/// Array used to try each of the expressions defined above using
 	/// an iteration for each of them.
-	boost::regex version_checks[7] = {
-			boost::regex(regex1, boost::regex::icase),
-			boost::regex(regex2, boost::regex::icase),
-			boost::regex(regex3, boost::regex::icase),
-			boost::regex(regex4, boost::regex::icase),
-			boost::regex(regex5, boost::regex::icase),  //This incorrectly identifies "OBSE v19" where 19 is any integer.
-			boost::regex(regex6, boost::regex::icase),  //This is responsible for metallicow's false positive.
-			boost::regex(regex7, boost::regex::icase)
+    regex version_checks[7] = {
+			regex(regex1, regex::ECMAScript | regex::icase),
+            regex(regex2, regex::ECMAScript | regex::icase),
+            regex(regex3, regex::ECMAScript | regex::icase),
+            regex(regex4, regex::ECMAScript | regex::icase),
+            regex(regex5, regex::ECMAScript | regex::icase),  //This incorrectly identifies "OBSE v19" where 19 is any integer.
+            regex(regex6, regex::ECMAScript | regex::icase),  //This is responsible for metallicow's false positive.
+            regex(regex7, regex::ECMAScript | regex::icase)
 			};
 
     //////////////////////////////////////////////////////////////////////////
@@ -152,14 +151,6 @@ namespace loot {
         }
         BOOST_LOG_TRIVIAL(debug) << "CRC32(\"" << filename.string() << "\"): " << std::hex << chksum << std::dec;
         return chksum;
-    }
-
-    //Converts an integer to a string using BOOST's Spirit.Karma, which is apparently a lot faster than a stringstream conversion...
-    std::string IntToString(const int n) {
-        string out;
-        back_insert_iterator<string> sink(out);
-        karma::generate(sink,karma::upper[karma::int_],n);
-        return out;
     }
 
     //Converts an integer to a hex string using BOOST's Spirit.Karma, which is apparently a lot faster than a stringstream conversion...
@@ -334,7 +325,7 @@ namespace loot {
 
             delete [] point;
 
-            verString = IntToString(dwLeftMost) + '.' + IntToString(dwSecondLeft) + '.' + IntToString(dwSecondRight) + '.' + IntToString(dwRightMost);
+            verString = to_string(dwLeftMost) + '.' + to_string(dwSecondLeft) + '.' + to_string(dwSecondRight) + '.' + to_string(dwRightMost);
         }
 #else
         // ensure filename has no quote characters in it to avoid command injection attacks
@@ -367,11 +358,11 @@ namespace loot {
     bool Version::operator < (Version ver) {
         //Version string could have a wide variety of formats. Use regex to choose specific comparison types.
 
-        boost::regex reg1("(\\d+\\.?)+");  //a.b.c.d.e.f.... where the letters are all integers, and 'a' is the shortest possible match.
+        regex reg1("(\\d+\\.?)+");  //a.b.c.d.e.f.... where the letters are all integers, and 'a' is the shortest possible match.
 
         //boost::regex reg2("(\\d+\\.?)+([a-zA-Z\\-]+(\\d+\\.?)*)+");  //Matches a mix of letters and numbers - from "0.99.xx", "1.35Alpha2", "0.9.9MB8b1", "10.52EV-D", "1.62EV" to "10.0EV-D1.62EV".
 
-        if (boost::regex_match(verString, reg1) && boost::regex_match(ver.AsString(), reg1)) {
+        if (regex_match(verString, reg1) && regex_match(ver.AsString(), reg1)) {
             //First type: numbers separated by periods. If two versions have a different number of numbers, then the shorter should be padded
             //with zeros. An arbitrary number of numbers should be supported.
             istringstream parser1(verString);

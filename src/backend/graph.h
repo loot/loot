@@ -28,7 +28,8 @@
 #include "metadata.h"
 #include "error.h"
 
-#include <boost/unordered_map.hpp>
+#include <unordered_map>
+
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/topological_sort.hpp>

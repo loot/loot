@@ -38,11 +38,11 @@
 #include "helpers.h"
 #include "error.h"
 
-#include <stdint.h>
+#include <cstdint>
+#include <regex>
 
 #include <yaml-cpp/yaml.h>
 
-#include <boost/regex.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/regex.hpp>
@@ -555,7 +555,7 @@ namespace loot {
             }
 
             uint32_t crc;
-            boost::unordered_map<std::string,uint32_t>::iterator it = game->crcCache.find(boost::to_lower_copy(file));
+            unordered_map<std::string,uint32_t>::iterator it = game->crcCache.find(boost::to_lower_copy(file));
 
             if (it != game->crcCache.end())
                 crc = it->second;

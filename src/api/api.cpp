@@ -36,13 +36,13 @@
 #include <clocale>
 #include <list>
 #include <vector>
+#include <regex>
+#include <unordered_set>
+#include <unordered_map>
 
-#include <boost/regex.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem/detail/utf8_codecvt_facet.hpp>
 #include <boost/filesystem.hpp>
-#include <boost/unordered_set.hpp>
-#include <boost/unordered_map.hpp>
 
 const unsigned int loot_ok                          = loot::error::ok;
 const unsigned int loot_error_liblo_error           = loot::error::liblo_error;

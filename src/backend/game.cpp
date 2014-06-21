@@ -524,7 +524,7 @@ namespace loot {
             }
         }
 
-        for (boost::unordered_map<string, Plugin>::iterator it = plugins.begin(), itend = plugins.end(); it != itend; ++it) {
+        for (unordered_map<string, Plugin>::iterator it = plugins.begin(), itend = plugins.end(); it != itend; ++it) {
             it->second = Plugin(*this, it->second.Name(), headersOnly);
         }
     }

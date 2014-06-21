@@ -29,11 +29,11 @@
 
 #include <string>
 #include <vector>
-#include <stdint.h>
+#include <cstdint>
+#include <unordered_map>
+#include <unordered_set>
 
 #include <boost/filesystem.hpp>
-#include <boost/unordered_map.hpp>
-#include <boost/unordered_set.hpp>
 
 #include <api/libloadorder.h>
 #include <src/libespm.h>
@@ -93,13 +93,13 @@ namespace loot {
         void LoadPlugins(bool headersOnly);  //Loads all installed plugins.
 
         //Caches for condition results, active plugins and CRCs.
-        boost::unordered_map<std::string, bool> conditionCache;  //Holds lowercased strings.
-        boost::unordered_map<std::string, uint32_t> crcCache;  //Holds lowercased strings.
+        std::unordered_map<std::string, bool> conditionCache;  //Holds lowercased strings.
+        std::unordered_map<std::string, uint32_t> crcCache;  //Holds lowercased strings.
 
         //Plugin data and metadata lists.
         MetadataList masterlist;
         MetadataList userlist;
-        boost::unordered_map<std::string, Plugin> plugins;  //Map so that plugin data can be edited.
+        std::unordered_map<std::string, Plugin> plugins;  //Map so that plugin data can be edited.
 
         espm::Settings espm_settings;
 
@@ -121,7 +121,7 @@ namespace loot {
 
         boost::filesystem::path gamePath;  //Path to the game's folder.
 
-        boost::unordered_set<std::string> activePlugins;  //Holds lowercased strings.
+        std::unordered_set<std::string> activePlugins;  //Holds lowercased strings.
 
         //Creates directory in LOOT folder for LOOT's game-specific files.
         void CreateLOOTGameFolder();
