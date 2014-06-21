@@ -443,9 +443,9 @@ namespace loot {
         pluginArrSize = loadOrder.size();
         pluginArr = new char*[pluginArrSize];
         int i = 0;
-        for (list<Plugin>::const_iterator it=loadOrder.begin(),endIt=loadOrder.end(); it != endIt; ++it) {
-            pluginArr[i] = new char[it->Name().length() + 1];
-            strcpy(pluginArr[i], it->Name().c_str());
+        for (const auto &plugin: loadOrder) {
+            pluginArr[i] = new char[plugin.Name().length() + 1];
+            strcpy(pluginArr[i], plugin.Name().c_str());
             ++i;
         }
 
@@ -492,9 +492,9 @@ namespace loot {
 
             lastTime = fs::last_write_time(filepath);
 
-            for (list<string>::const_iterator it = loadorder.begin(), itend = loadorder.end(); it != itend; ++it) {
+            for (const auto &pluginName: loadorder) {
 
-                filepath = DataPath() / *it;
+                filepath = DataPath() / pluginName;
                 if (!fs::exists(filepath) && fs::exists(filepath.string() + ".ghost"))
                     filepath += ".ghost";
 
@@ -524,8 +524,8 @@ namespace loot {
             }
         }
 
-        for (unordered_map<string, Plugin>::iterator it = plugins.begin(), itend = plugins.end(); it != itend; ++it) {
-            it->second = Plugin(*this, it->second.Name(), headersOnly);
+        for (auto &pluginPair: plugins) {
+            pluginPair.second = Plugin(*this, pluginPair.second.Name(), headersOnly);
         }
     }
 

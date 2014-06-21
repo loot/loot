@@ -691,14 +691,14 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     //Now load plugins.
     plugin_list_loader pll(graph, *_game);
-    for (boost::unordered_map<string, size_t>::const_iterator it=tempMap.begin(), endit=tempMap.end(); it != endit; ++it) {
+    for (const auto &pluginPair: tempMap) {
 
-        BOOST_LOG_TRIVIAL(info) << "Found plugin: " << it->first;
+        BOOST_LOG_TRIVIAL(info) << "Found plugin: " << pluginPair.first;
 
-        vertex_t v = boost::add_vertex(loot::Plugin(it->first), graph);
+        vertex_t v = boost::add_vertex(loot::Plugin(pluginPair.first), graph);
 
-        if (it->second > meanFileSize) {
-            pll.skipPlugins.insert(it->first);
+        if (pluginPair.second > meanFileSize) {
+            pll.skipPlugins.insert(pluginPair.first);
             plugin_loader pl(graph[v], *_game);
             group.create_thread(pl);
         }
@@ -833,9 +833,9 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             BOOST_LOG_TRIVIAL(info) << "Building the plugin dependency graph...";
 
             //Now add the interactions between plugins to the graph as edges.
-            std::map<std::string, int> overridenPriorities;
+            std::map<std::string, int> overriddenPriorities;
             BOOST_LOG_TRIVIAL(debug) << "Adding non-overlap edges.";
-            AddSpecificEdges(graph, overridenPriorities);
+            AddSpecificEdges(graph, overriddenPriorities);
 
             BOOST_LOG_TRIVIAL(debug) << "Adding priority edges.";
             AddPriorityEdges(graph);
@@ -846,10 +846,10 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             BOOST_LOG_TRIVIAL(info) << "Checking to see if the graph is cyclic.";
             loot::CheckForCycles(graph);
 
-            for (std::map<std::string, int>::const_iterator it = overridenPriorities.begin(), itend = overridenPriorities.end(); it != itend; ++it) {
+            for (const auto &overriddenPriority: overriddenPriorities) {
                 vertex_t vertex;
-                if (loot::GetVertexByName(graph, it->first, vertex)) {
-                    graph[vertex].Priority(it->second);
+                if (loot::GetVertexByName(graph, overriddenPriority.first, vertex)) {
+                    graph[vertex].Priority(overriddenPriority.second);
                 }
             }
 
@@ -899,14 +899,14 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
                 //Merge edits down to the userlist entries.
                 BOOST_LOG_TRIVIAL(debug) << "Merging down edits to the userlist.";
-                for (list<loot::Plugin>::const_iterator it = edits.begin(), endit = edits.end(); it != endit; ++it) {
-                    list<loot::Plugin>::iterator jt = find(ulist_plugins.begin(), ulist_plugins.end(), *it);
+                for (const auto &plugin: edits) {
+                    auto it = find(ulist_plugins.begin(), ulist_plugins.end(), plugin);
 
-                    if (jt != ulist_plugins.end()) {
-                        jt->MergeMetadata(*it);
+                    if (it != ulist_plugins.end()) {
+                        it->MergeMetadata(plugin);
                     }
                     else {
-                        ulist_plugins.push_back(*it);
+                        ulist_plugins.push_back(plugin);
                     }
                 }
 
@@ -937,8 +937,8 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                 messages.push_back(loot::Message(loot::Message::error, (format(loc::translate("Failed to set the load order. Details: %1%")) % e.what()).str()));
             }
             BOOST_LOG_TRIVIAL(info) << "Load order set:";
-            for (list<loot::Plugin>::iterator it = plugins.begin(), endIt = plugins.end(); it != endIt; ++it) {
-                BOOST_LOG_TRIVIAL(info) << '\t' << it->Name();
+            for (const auto &plugin: plugins) {
+                BOOST_LOG_TRIVIAL(info) << '\t' << plugin.Name();
             }
         }
         else {
@@ -1002,8 +1002,8 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
     //Sort plugins into their load order.
     list<string> loadOrder;
     _game->GetLoadOrder(loadOrder);
-    for (list<string>::const_iterator it = loadOrder.begin(), itend = loadOrder.end(); it != itend; ++it) {
-        unordered_map<string, loot::Plugin>::const_iterator pos = _game->plugins.find(*it);
+    for (const auto &pluginName: loadOrder) {
+        const auto pos = _game->plugins.find(pluginName);
 
         if (pos != _game->plugins.end())
             installed.push_back(pos->second);
@@ -1055,20 +1055,20 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
 
     //Merge the masterlist down into the installed mods list.
     BOOST_LOG_TRIVIAL(debug) << "Merging the masterlist down into the installed mods list.";
-    for (list<loot::Plugin>::const_iterator it = mlist_plugins.begin(), endit = mlist_plugins.end(); it != endit; ++it) {
-        list<loot::Plugin>::iterator pos = find(installed.begin(), installed.end(), *it);
+    for (const auto &plugin: mlist_plugins) {
+        auto pos = find(installed.begin(), installed.end(), plugin);
 
         if (pos != installed.end())
-            pos->MergeMetadata(*it);
+            pos->MergeMetadata(plugin);
     }
 
     progDia->Pulse();
 
     //Add empty entries for any userlist entries that aren't installed.
     BOOST_LOG_TRIVIAL(debug) << "Padding the installed mods list to match the plugins in the userlist.";
-    for (list<loot::Plugin>::const_iterator it = ulist_plugins.begin(), endit = ulist_plugins.end(); it != endit; ++it) {
-        if (find(installed.begin(), installed.end(), *it) == installed.end())
-            installed.push_back(loot::Plugin(it->Name()));
+    for (const auto &plugin : ulist_plugins) {
+        if (find(installed.begin(), installed.end(), plugin) == installed.end())
+            installed.push_back(loot::Plugin(plugin.Name()));
     }
 
     progDia->Pulse();

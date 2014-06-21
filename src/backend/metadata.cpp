@@ -207,12 +207,13 @@ namespace loot {
                 _content.resize(1);
             else {
                 MessageContent english, match;
-                for (vector<MessageContent>::const_iterator it=_content.begin(), endit=_content.end(); it != endit; ++it) {
-                    if (it->Language() == language) {
-                        match = *it;
+                for (const auto &mc: _content) {
+                    if (mc.Language() == language) {
+                        match = mc;
                         break;
-                    } else if (it->Language() == Language::english)
-                        english = *it;
+                    }
+                    else if (mc.Language() == Language::english)
+                        english = mc;
                 }
                 _content.resize(1);
                 if (!match.Str().empty())
@@ -230,12 +231,13 @@ namespace loot {
             return _content[0];
         else {
             MessageContent english, match;
-            for (vector<MessageContent>::const_iterator it=_content.begin(), endit=_content.end(); it != endit; ++it) {
-                if (it->Language() == language) {
-                    match = *it;
+            for (const auto &mc : _content) {
+                if (mc.Language() == language) {
+                    match = mc;
                     break;
-                } else if (it->Language() == Language::english)
-                    english = *it;
+                }
+                else if (mc.Language() == Language::english)
+                    english = mc;
             }
             if (!match.Str().empty())
                 return match;
@@ -353,8 +355,8 @@ namespace loot {
 		vector<uint32_t> records = file->getFormIDs();
         vector<string> plugins = masters;
         plugins.push_back(name);
-		for (vector<uint32_t>::const_iterator it = records.begin(),endIt = records.end(); it != endIt; ++it) {
-            FormID fid = FormID(plugins, *it);
+		for (const auto &record: records) {
+            FormID fid = FormID(plugins, record);
 			formIDs.insert(fid);
             if (!boost::iequals(fid.Plugin(), name))
                 ++numOverrideRecords;
@@ -371,7 +373,7 @@ namespace loot {
         end = text.end();
 
         BOOST_LOG_TRIVIAL(trace) << name << ": " << "Attempting to read the version from the description.";
-        for(int j = 0; j < 7 && version.empty(); j++) {
+        for (int j = 0; j < 7 && version.empty(); j++) {
             smatch what;
             while (regex_search(begin, end, what, version_checks[j])) {
                 if (what.empty())
@@ -402,10 +404,10 @@ namespace loot {
         vector<string> bashTags;
         boost::split(bashTags, text, boost::is_any_of(","));
 
-        for (int i=0,max=bashTags.size(); i<max; ++i) {
-            boost::trim(bashTags[i]);
-            BOOST_LOG_TRIVIAL(trace) << name << ": " << "Extracted Bash Tag: " << bashTags[i];
-            tags.insert(Tag(bashTags[i]));
+        for (auto &tag: bashTags) {
+            boost::trim(tag);
+            BOOST_LOG_TRIVIAL(trace) << name << ": " << "Extracted Bash Tag: " << tag;
+            tags.insert(Tag(tag));
         }
 	}
 
@@ -572,35 +574,35 @@ namespace loot {
     }
 
     void Plugin::EvalAllConditions(loot::Game& game, const unsigned int language) {
-        for (set<File>::iterator it = loadAfter.begin(); it != loadAfter.end();) {
+        for (auto it = loadAfter.begin(); it != loadAfter.end();) {
             if (!it->EvalCondition(game))
                 loadAfter.erase(it++);
             else
                 ++it;
         }
 
-        for (set<File>::iterator it = requirements.begin(); it != requirements.end();) {
+        for (auto it = requirements.begin(); it != requirements.end();) {
             if (!it->EvalCondition(game))
                 requirements.erase(it++);
             else
                 ++it;
         }
 
-        for (set<File>::iterator it = incompatibilities.begin(); it != incompatibilities.end();) {
+        for (auto it = incompatibilities.begin(); it != incompatibilities.end();) {
             if (!it->EvalCondition(game))
                 incompatibilities.erase(it++);
             else
                 ++it;
         }
 
-        for (list<Message>::iterator it = messages.begin(); it != messages.end();) {
+        for (auto it = messages.begin(); it != messages.end();) {
             if (!it->EvalCondition(game, language))
                 it = messages.erase(it);
             else
                 ++it;
         }
 
-        for (set<Tag>::iterator it = tags.begin(); it != tags.end();) {
+        for (auto it = tags.begin(); it != tags.end();) {
             if (!it->EvalCondition(game))
                 tags.erase(it++);
             else
@@ -621,7 +623,7 @@ namespace loot {
         } else
             _dirtyInfo.clear();
 
-        for (set<PluginDirtyInfo>::iterator it = _dirtyInfo.begin(); it != _dirtyInfo.end();) {
+        for (auto it = _dirtyInfo.begin(); it != _dirtyInfo.end();) {
             if (it->CRC() != crc)
                 _dirtyInfo.erase(it++);
             else
@@ -691,9 +693,9 @@ namespace loot {
 
     std::set<FormID> Plugin::OverrideFormIDs() const {
         set<FormID> fidSubset;
-		for (set<FormID>::const_iterator it = formIDs.begin(), endIt=formIDs.end(); it != endIt; ++it) {
-			if (!boost::iequals(it->Plugin(), name))
-				fidSubset.insert(*it);
+        for (const auto &formID : formIDs) {
+            if (!boost::iequals(formID.Plugin(), name))
+                fidSubset.insert(formID);
 		}
 		return fidSubset;
     }
@@ -730,27 +732,27 @@ namespace loot {
         else
             messageType = loot::Message::warn;
         if (tags.find(Tag("Filter")) == tags.end()) {
-            for (vector<string>::const_iterator it=masters.begin(), endIt=masters.end(); it != endIt; ++it) {
-                if (!boost::filesystem::exists(game.DataPath() / *it) && !boost::filesystem::exists(game.DataPath() / (*it + ".ghost"))) {
-                    BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" requires \"" << *it << "\", but it is missing.";
-                    messages.push_back(loot::Message(messageType, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % *it).str()));
+            for (const auto &master: masters) {
+                if (!boost::filesystem::exists(game.DataPath() / master) && !boost::filesystem::exists(game.DataPath() / (master + ".ghost"))) {
+                    BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" requires \"" << master << "\", but it is missing.";
+                    messages.push_back(loot::Message(messageType, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % master).str()));
                 }
-                else if (!game.IsActive(*it)) {
-                    BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" requires \"" << *it << "\", but it is inactive.";
-                    messages.push_back(loot::Message(messageType, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be active, but it is inactive.")) % *it).str()));
+                else if (!game.IsActive(master)) {
+                    BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" requires \"" << master  << "\", but it is inactive.";
+                    messages.push_back(loot::Message(messageType, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be active, but it is inactive.")) % master).str()));
                 }
             }
         }
-        for (set<File>::const_iterator it=requirements.begin(), endIt=requirements.end(); it != endIt; ++it) {
-            if (!boost::filesystem::exists(game.DataPath() / it->Name()) && !(IsPlugin(it->Name()) && boost::filesystem::exists(game.DataPath() / (it->Name() + ".ghost")))) {
-                BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" requires \"" << it->Name() << "\", but it is missing.";
-                messages.push_back(loot::Message(messageType, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % it->Name()).str()));
+        for (const auto &req: requirements) {
+            if (!boost::filesystem::exists(game.DataPath() / req.Name()) && !(IsPlugin(req.Name()) && boost::filesystem::exists(game.DataPath() / (req.Name() + ".ghost")))) {
+                BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" requires \"" << req.Name() << "\", but it is missing.";
+                messages.push_back(loot::Message(messageType, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % req.Name()).str()));
             }
         }
-        for (set<File>::const_iterator it=incompatibilities.begin(), endIt=incompatibilities.end(); it != endIt; ++it) {
-            if (boost::filesystem::exists(game.DataPath() / it->Name()) || (IsPlugin(it->Name()) && boost::filesystem::exists(game.DataPath() / (it->Name() + ".ghost")))) {
-                BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" is incompatible with \"" << it->Name() << "\", but both are present.";
-                messages.push_back(loot::Message(messageType, (boost::format(boost::locale::translate("This plugin is incompatible with \"%1%\", but both are present.")) % it->Name()).str()));
+        for (const auto &inc: incompatibilities) {
+            if (boost::filesystem::exists(game.DataPath() / inc.Name()) || (IsPlugin(inc.Name()) && boost::filesystem::exists(game.DataPath() / (inc.Name() + ".ghost")))) {
+                BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" is incompatible with \"" << inc.Name() << "\", but both are present.";
+                messages.push_back(loot::Message(messageType, (boost::format(boost::locale::translate("This plugin is incompatible with \"%1%\", but both are present.")) % inc.Name()).str()));
             }
         }
     }

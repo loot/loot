@@ -58,7 +58,7 @@ namespace loot {
 
     void CheckForCycles(const PluginGraph& graph);
 
-    void AddSpecificEdges(PluginGraph& graph, std::map<std::string, int>& overridenPriorities);
+    void AddSpecificEdges(PluginGraph& graph, std::map<std::string, int>& overriddenPriorities);
 
     void AddPriorityEdges(PluginGraph& graph);
 

@@ -61,19 +61,19 @@ namespace loot {
             std::list<std::string> lhs_names, rhs_names;
             std::list<Message> lhs_messages, rhs_messages;
             
-            for (YAML::const_iterator it = lhs.begin(); it != lhs.end(); ++it) {
-                if ((*it)["name"])
-                    lhs_names.push_back((*it)["name"].as<std::string>());
-                if ((*it)["messages"]) {
-                    std::list<Message> messages = (*it)["messages"].as< std::list<Message> >();
+            for (const auto &element: lhs) {
+                if (element["name"])
+                    lhs_names.push_back(element["name"].as<std::string>());
+                if (element["messages"]) {
+                    std::list<Message> messages = element["messages"].as< std::list<Message> >();
                     lhs_messages.insert(lhs_messages.end(), messages.begin(), messages.end());
                 }
             }
-            for (YAML::const_iterator it = rhs.begin(); it != rhs.end(); ++it) {
-                if ((*it)["name"])
-                    rhs_names.push_back((*it)["name"].as<std::string>());
-                if ((*it)["messages"]) {
-                    std::list<Message> messages = (*it)["messages"].as< std::list<Message> >();
+            for (const auto &element: rhs) {
+                if (element["name"])
+                    rhs_names.push_back(element["name"].as<std::string>());
+                if (element["messages"]) {
+                    std::list<Message> messages = element["messages"].as< std::list<Message> >();
                     rhs_messages.insert(rhs_messages.end(), messages.begin(), messages.end());
                 }
             }
@@ -166,11 +166,11 @@ namespace loot {
         std::set<Tag> tags = plugin.Tags();
         std::set<Tag> tagsAdd, tagsRemove;
         if (!tags.empty()) {
-            for (std::set<Tag>::const_iterator it = tags.begin(), endit = tags.end(); it != endit; ++it) {
-                if (it->IsAddition())
-                    tagsAdd.insert(*it);
+            for (const auto &tag: tags) {
+                if (tag.IsAddition())
+                    tagsAdd.insert(tag);
                 else
-                    tagsRemove.insert(*it);
+                    tagsRemove.insert(tag);
             }
             if (!tagsAdd.empty()) {
                 out << YAML::Key << "tagsAdd"
@@ -184,28 +184,28 @@ namespace loot {
 
         std::list<Message> messages = plugin.Messages();
         std::set<PluginDirtyInfo> dirtyInfo = plugin.DirtyInfo();
-        for (std::set<PluginDirtyInfo>::const_iterator it = dirtyInfo.begin(), endit = dirtyInfo.end(); it != endit; ++it) {
+        for (const auto &element: dirtyInfo) {
             boost::format f;
-            if (it->ITMs() > 0 && it->UDRs() > 0 && it->DeletedNavmeshes() > 0)
-                f = boost::format(boost::locale::translate("Contains %1% ITM records, %2% UDR records and %3% deleted navmeshes. Clean with %4%.")) % it->ITMs() % it->UDRs() % it->DeletedNavmeshes() % it->CleaningUtility();
-            else if (it->ITMs() == 0 && it->UDRs() == 0 && it->DeletedNavmeshes() == 0)
-                f = boost::format(boost::locale::translate("Clean with %1%.")) % it->CleaningUtility();
+            if (element.ITMs() > 0 && element.UDRs() > 0 && element.DeletedNavmeshes() > 0)
+                f = boost::format(boost::locale::translate("Contains %1% ITM records, %2% UDR records and %3% deleted navmeshes. Clean with %4%.")) % element.ITMs() % element.UDRs() % element.DeletedNavmeshes() % element.CleaningUtility();
+            else if (element.ITMs() == 0 && element.UDRs() == 0 && element.DeletedNavmeshes() == 0)
+                f = boost::format(boost::locale::translate("Clean with %1%.")) % element.CleaningUtility();
 
 
-            else if (it->ITMs() == 0 && it->UDRs() > 0 && it->DeletedNavmeshes() > 0)
-                f = boost::format(boost::locale::translate("Contains %1% UDR records and %2% deleted navmeshes. Clean with %3%.")) % it->UDRs() % it->DeletedNavmeshes() % it->CleaningUtility();
-            else if (it->ITMs() == 0 && it->UDRs() == 0 && it->DeletedNavmeshes() > 0)
-                f = boost::format(boost::locale::translate("Contains %1% deleted navmeshes. Clean with %2%.")) % it->DeletedNavmeshes() % it->CleaningUtility();
-            else if (it->ITMs() == 0 && it->UDRs() > 0 && it->DeletedNavmeshes() == 0)
-                f = boost::format(boost::locale::translate("Contains %1% UDR records. Clean with %2%.")) % it->UDRs() % it->CleaningUtility();
+            else if (element.ITMs() == 0 && element.UDRs() > 0 && element.DeletedNavmeshes() > 0)
+                f = boost::format(boost::locale::translate("Contains %1% UDR records and %2% deleted navmeshes. Clean with %3%.")) % element.UDRs() % element.DeletedNavmeshes() % element.CleaningUtility();
+            else if (element.ITMs() == 0 && element.UDRs() == 0 && element.DeletedNavmeshes() > 0)
+                f = boost::format(boost::locale::translate("Contains %1% deleted navmeshes. Clean with %2%.")) % element.DeletedNavmeshes() % element.CleaningUtility();
+            else if (element.ITMs() == 0 && element.UDRs() > 0 && element.DeletedNavmeshes() == 0)
+                f = boost::format(boost::locale::translate("Contains %1% UDR records. Clean with %2%.")) % element.UDRs() % element.CleaningUtility();
 
-            else if (it->ITMs() > 0 && it->UDRs() == 0 && it->DeletedNavmeshes() > 0)
-                f = boost::format(boost::locale::translate("Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%.")) % it->ITMs() % it->DeletedNavmeshes() % it->CleaningUtility();
-            else if (it->ITMs() > 0 && it->UDRs() == 0 && it->DeletedNavmeshes() == 0)
-                f = boost::format(boost::locale::translate("Contains %1% ITM records. Clean with %2%.")) % it->ITMs() % it->CleaningUtility();
+            else if (element.ITMs() > 0 && element.UDRs() == 0 && element.DeletedNavmeshes() > 0)
+                f = boost::format(boost::locale::translate("Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%.")) % element.ITMs() % element.DeletedNavmeshes() % element.CleaningUtility();
+            else if (element.ITMs() > 0 && element.UDRs() == 0 && element.DeletedNavmeshes() == 0)
+                f = boost::format(boost::locale::translate("Contains %1% ITM records. Clean with %2%.")) % element.ITMs() % element.CleaningUtility();
 
-            else if (it->ITMs() > 0 && it->UDRs() > 0 && it->DeletedNavmeshes() == 0)
-                f = boost::format(boost::locale::translate("Contains %1% ITM records and %2% UDR records. Clean with %3%.")) % it->ITMs() % it->UDRs() % it->CleaningUtility();
+            else if (element.ITMs() > 0 && element.UDRs() > 0 && element.DeletedNavmeshes() == 0)
+                f = boost::format(boost::locale::translate("Contains %1% ITM records and %2% UDR records. Clean with %3%.")) % element.ITMs() % element.UDRs() % element.CleaningUtility();
 
             messages.push_back(loot::Message(loot::Message::warn, f.str()));
         }
@@ -213,8 +213,8 @@ namespace loot {
         if (!messages.empty()) {
             out << YAML::Key << "messages"
                 << YAML::Value << YAML::BeginSeq;
-            for (std::list<Message>::const_iterator it = messages.begin(), endit = messages.end(); it != endit; ++it) {
-                WriteMessage(out, *it);
+            for (const auto &message: messages) {
+                WriteMessage(out, message);
             }
             out << YAML::EndSeq;
         }
@@ -273,8 +273,8 @@ namespace loot {
             tempout.SetMapFormat(YAML::Flow);
 
             tempout << YAML::BeginSeq;
-            for (std::list<Plugin>::const_iterator it = plugins.begin(), endit = plugins.end(); it != endit; ++it) {
-                WritePlugin(tempout, *it, game);
+            for (const auto &plugin: plugins) {
+                WritePlugin(tempout, plugin, game);
             }
             tempout << YAML::EndSeq;
 
@@ -286,8 +286,8 @@ namespace loot {
             //Need to generate output twice because passing the node causes !<!> to be written before every key and value for some reason.
             yout << YAML::Key << "plugins"
                 << YAML::Value << YAML::BeginSeq;
-            for (std::list<Plugin>::const_iterator it = plugins.begin(), endit = plugins.end(); it != endit; ++it) {
-                WritePlugin(yout, *it, game);
+            for (const auto &plugin: plugins) {
+                WritePlugin(yout, plugin, game);
             }
             yout << YAML::EndSeq;
         }
@@ -298,8 +298,8 @@ namespace loot {
             BOOST_LOG_TRIVIAL(debug) << "Generating JSON general message data.";
             yout << YAML::Key << "globalMessages"
                 << YAML::Value << YAML::BeginSeq;
-            for (std::list<Message>::const_iterator it = messages.begin(), endit = messages.end(); it != endit; ++it) {
-                WriteMessage(yout, *it);
+            for (const auto &message: messages) {
+                WriteMessage(yout, message);
             }
             yout << YAML::EndSeq;
         }

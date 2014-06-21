@@ -96,9 +96,9 @@ namespace loot {
 
         BOOST_LOG_TRIVIAL(info) << "Calculated order: ";
         list<loot::Plugin> tempPlugins;
-        for (std::list<vertex_t>::iterator it = sortedVertices.begin(), endit = sortedVertices.end(); it != endit; ++it) {
-            BOOST_LOG_TRIVIAL(info) << '\t' << graph[*it].Name();
-            tempPlugins.push_back(graph[*it]);
+        for (const auto &vertex: sortedVertices) {
+            BOOST_LOG_TRIVIAL(info) << '\t' << graph[vertex].Name();
+            tempPlugins.push_back(graph[vertex]);
         }
         plugins.swap(tempPlugins);
     }
@@ -117,7 +117,7 @@ namespace loot {
         boost::depth_first_search(graph, visitor(vis).vertex_index_map(v_index_map));
     }
 
-    void AddSpecificEdges(PluginGraph& graph, std::map<std::string, int>& overridenPriorities) {
+    void AddSpecificEdges(PluginGraph& graph, std::map<std::string, int>& overriddenPriorities) {
         //Add edges for all relationships that aren't overlaps or priority differences.
         loot::vertex_it vit, vitend;
         for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
@@ -157,8 +157,8 @@ namespace loot {
 
             BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for masters.";
             vector<string> strVec(graph[*vit].Masters());
-            for (vector<string>::const_iterator it=strVec.begin(), itend=strVec.end(); it != itend; ++it) {
-                if (loot::GetVertexByName(graph, *it, parentVertex) &&
+            for (const auto &master: strVec) {
+                if (loot::GetVertexByName(graph, master, parentVertex) &&
                     !boost::edge(parentVertex, *vit, graph).second) {
 
                     BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[*vit].Name() << "\".";
@@ -173,9 +173,9 @@ namespace loot {
             }
             BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for requirements.";
             set<File> fileset(graph[*vit].Reqs());
-            for (set<File>::const_iterator it=fileset.begin(), itend=fileset.end(); it != itend; ++it) {
-                if (loot::IsPlugin(it->Name()) &&
-                    loot::GetVertexByName(graph, it->Name(), parentVertex) &&
+            for (const auto &file: fileset) {
+                if (loot::IsPlugin(file.Name()) &&
+                    loot::GetVertexByName(graph, file.Name(), parentVertex) &&
                     !boost::edge(parentVertex, *vit, graph).second) {
 
                     BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[*vit].Name() << "\".";
@@ -191,9 +191,9 @@ namespace loot {
 
             BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for 'load after's.";
             fileset = graph[*vit].LoadAfter();
-            for (set<File>::const_iterator it=fileset.begin(), itend=fileset.end(); it != itend; ++it) {
-                if (loot::IsPlugin(it->Name()) &&
-                    loot::GetVertexByName(graph, it->Name(), parentVertex) &&
+            for (const auto &file : fileset) {
+                if (loot::IsPlugin(file.Name()) &&
+                    loot::GetVertexByName(graph, file.Name(), parentVertex) &&
                     !boost::edge(parentVertex, *vit, graph).second) {
 
                     BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[*vit].Name() << "\".";
@@ -211,7 +211,7 @@ namespace loot {
             //Set the current plugin's priority to parentPlugin.
             if (parentPriority > 0 && graph[*vit].Priority() < parentPriority) {
                 BOOST_LOG_TRIVIAL(trace) << "Overriding priority for " << graph[*vit].Name() << " from " << graph[*vit].Priority() << " to " << parentPriority;
-                overridenPriorities.insert(pair<string, int>(graph[*vit].Name(), graph[*vit].Priority()));
+                overriddenPriorities.insert(pair<string, int>(graph[*vit].Name(), graph[*vit].Priority()));
                 graph[*vit].Priority(parentPriority);
             }
 

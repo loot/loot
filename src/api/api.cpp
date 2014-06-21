@@ -121,7 +121,7 @@ struct _loot_db_int {
     loot::Game game;
     std::list<loot::Plugin> metadata, rawMetadata, userMetadata, rawUserMetadata;
 
-    boost::unordered_map<std::string, unsigned int> bashTagMap;
+    std::unordered_map<std::string, unsigned int> bashTagMap;
 
     char ** extTagMap;
 
@@ -344,7 +344,7 @@ LOOT_API unsigned int loot_eval_lists (loot_db db, const unsigned int language) 
     std::list<loot::Plugin> temp = db->rawMetadata;
     try {
         db->game.RefreshActivePluginsList();
-        for (std::list<loot::Plugin>::iterator it=temp.begin(); it != temp.end();) {
+        for (auto it=temp.begin(); it != temp.end();) {
             it->EvalAllConditions(db->game, language);
             if (it->IsRegexPlugin()) {
                 boost::regex regex;
@@ -374,7 +374,7 @@ LOOT_API unsigned int loot_eval_lists (loot_db db, const unsigned int language) 
 
     temp = db->rawUserMetadata;
     try {
-        for (std::list<loot::Plugin>::iterator it=temp.begin(); it != temp.end();) {
+        for (auto it=temp.begin(); it != temp.end();) {
             it->EvalAllConditions(db->game, language);
             if (it->IsRegexPlugin()) {
                 boost::regex regex;
@@ -430,18 +430,18 @@ LOOT_API unsigned int loot_get_tag_map (loot_db db, char *** const tagMap, size_
     *tagMap = NULL;
     *numTags = 0;
 
-    boost::unordered_set<std::string> allTags;
+    std::unordered_set<std::string> allTags;
 
-    for (std::list<loot::Plugin>::iterator it=db->metadata.begin(), endIt=db->metadata.end(); it != endIt; ++it) {
-        std::set<loot::Tag> tags = it->Tags();
-        for (std::set<loot::Tag>::const_iterator jt=tags.begin(), endJt=tags.end(); jt != endJt; ++jt) {
-            allTags.insert(jt->Name());
+    for (const auto &plugin: db->metadata) {
+        std::set<loot::Tag> tags(plugin.Tags());
+        for (const auto &tag: tags) {
+            allTags.insert(tag.Name());
         }
     }
-    for (std::list<loot::Plugin>::iterator it=db->userMetadata.begin(), endIt=db->userMetadata.end(); it != endIt; ++it) {
-        std::set<loot::Tag> tags = it->Tags();
-        for (std::set<loot::Tag>::const_iterator jt=tags.begin(), endJt=tags.end(); jt != endJt; ++jt) {
-            allTags.insert(jt->Name());
+    for (const auto &plugin : db->userMetadata) {
+        std::set<loot::Tag> tags(plugin.Tags());
+        for (const auto &tag : tags) {
+            allTags.insert(tag.Name());
         }
     }
 
@@ -456,10 +456,10 @@ LOOT_API unsigned int loot_get_tag_map (loot_db db, char *** const tagMap, size_
 
     unsigned int UID = 0;
     try {
-        for (boost::unordered_set<std::string>::const_iterator it=allTags.begin(), endIt=allTags.end(); it != endIt; ++it) {
-            db->bashTagMap.emplace(*it, UID);
+        for (const auto &tag: allTags) {
+            db->bashTagMap.emplace(tag, UID);
             //Also allocate memory.
-            db->extTagMap[UID] = ToNewCString(*it);
+            db->extTagMap[UID] = ToNewCString(tag);
             UID++;
         }
     } catch (std::bad_alloc& e) {
@@ -502,28 +502,27 @@ LOOT_API unsigned int loot_get_plugin_tags (loot_db db, const char * const plugi
     *numTags_added = 0;
     *numTags_removed = 0;
 
-    boost::unordered_set<std::string> tagsAdded, tagsRemoved;
+    std::unordered_set<std::string> tagsAdded, tagsRemoved;
     std::list<loot::Plugin>::iterator pluginIt = std::find(db->metadata.begin(), db->metadata.end(), loot::Plugin(plugin));
     if (pluginIt != db->metadata.end()) {
-        std::set<loot::Tag> tags = pluginIt->Tags();
-        for (std::set<loot::Tag>::const_iterator it=tags.begin(), endIt=tags.end(); it != endIt; ++it) {
-            if (it->IsAddition())
-                tagsAdded.insert(it->Name());
+        std::set<loot::Tag> tags(pluginIt->Tags());
+        for (const auto &tag: tags) {
+            if (tag.IsAddition())
+                tagsAdded.insert(tag.Name());
             else
-                tagsRemoved.insert(it->Name());
+                tagsRemoved.insert(tag.Name());
         }
     }
 
     pluginIt = std::find(db->userMetadata.begin(), db->userMetadata.end(), loot::Plugin(plugin));
     if (pluginIt != db->userMetadata.end()) {
         *userlistModified = true;
-        std::set<loot::Tag> tags = pluginIt->Tags();
-        for (std::set<loot::Tag>::const_iterator it = tags.begin(), endIt = tags.end(); it != endIt; ++it) {
-            if (it->IsAddition())
-                tagsAdded.insert(it->Name());
+        std::set<loot::Tag> tags(pluginIt->Tags());
+        for (const auto &tag : tags) {
+            if (tag.IsAddition())
+                tagsAdded.insert(tag.Name());
             else
-                tagsRemoved.insert(it->Name());
-
+                tagsRemoved.insert(tag.Name());
         }
     }
 
@@ -532,15 +531,15 @@ LOOT_API unsigned int loot_get_plugin_tags (loot_db db, const char * const plugi
     }
 
     std::vector<unsigned int> tagsAddedIDs, tagsRemovedIDs;
-    for (boost::unordered_set<std::string>::const_iterator it=tagsAdded.begin(), endIt=tagsAdded.end(); it != endIt; ++it) {
-        boost::unordered_map<std::string, unsigned int>::const_iterator mapIter = db->bashTagMap.find(*it);
+    for (const auto &tagNames: tagsAdded) {
+        const auto mapIter(db->bashTagMap.find(tagNames));
         if (mapIter != db->bashTagMap.end())
             tagsAddedIDs.push_back(mapIter->second);
     }
-    for (boost::unordered_set<std::string>::const_iterator it=tagsRemoved.begin(), endIt=tagsRemoved.end(); it != endIt; ++it) {
-        boost::unordered_map<std::string, unsigned int>::const_iterator mapIter = db->bashTagMap.find(*it);
+    for (const auto &tagNames : tagsRemoved) {
+        const auto mapIter(db->bashTagMap.find(tagNames));
         if (mapIter != db->bashTagMap.end())
-            tagsRemovedIDs.push_back(mapIter->second);
+            tagsAddedIDs.push_back(mapIter->second);
     }
 
     //Allocate memory.
@@ -608,9 +607,9 @@ LOOT_API unsigned int loot_get_plugin_messages (loot_db db, const char * const p
     try {
         db->extMessageArray = new loot_message[db->extMessageArraySize];
         int i = 0;
-        for (std::list<loot::Message>::const_iterator it=pluginMessages.begin(), endIt=pluginMessages.end(); it != endIt; ++it) {
-            db->extMessageArray[i].type = it->Type();
-            db->extMessageArray[i].message = ToNewCString(it->ChooseContent(loot::Language::any).Str());
+        for (const auto &message: pluginMessages) {
+            db->extMessageArray[i].type = message.Type();
+            db->extMessageArray[i].message = ToNewCString(message.ChooseContent(loot::Language::any).Str());
         }
     } catch (std::bad_alloc& e) {
         return c_error(loot_error_no_mem, e.what());
@@ -660,12 +659,12 @@ LOOT_API unsigned int loot_write_minimal_list (loot_db db, const char * const ou
         return c_error(loot_error_invalid_args, "Output file exists but overwrite is not set to true.");
 
     std::list<loot::Plugin> temp = db->metadata;
-    for (std::list<loot::Plugin>::iterator it=temp.begin(), endIt=temp.end(); it != endIt; ++it) {
-        loot::Plugin p(it->Name());
-        p.Tags(it->Tags());
-        p.DirtyInfo(it->DirtyInfo());
+    for (auto &plugin: temp) {
+        loot::Plugin p(plugin.Name());
+        p.Tags(plugin.Tags());
+        p.DirtyInfo(plugin.DirtyInfo());
 
-        *it = p;
+        plugin = p;
     }
 
     YAML::Emitter yout;

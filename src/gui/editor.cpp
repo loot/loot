@@ -246,17 +246,17 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
 
     //Fill pluginList with the contents of basePlugins.
     int i = 0;
-    for (list<loot::Plugin>::const_iterator it = _basePlugins.begin(); it != _basePlugins.end(); ++it) {
-        pluginList->InsertItem(i, FromUTF8(it->Name()));
-        pluginList->SetItem(i, 1, FromUTF8(to_string(loot::modulo(it->Priority(), loot::max_priority))));
-        if (abs(it->Priority()) >= loot::max_priority)
+    for (const auto &plugin: _basePlugins) {
+        pluginList->InsertItem(i, FromUTF8(plugin.Name()));
+        pluginList->SetItem(i, 1, FromUTF8(to_string(loot::modulo(plugin.Priority(), loot::max_priority))));
+        if (abs(plugin.Priority()) >= loot::max_priority)
             pluginList->SetItem(i, 2, FromUTF8("\xE2\x9C\x93"));
         else
             pluginList->SetItem(i, 2, FromUTF8("\xE2\x9C\x97"));
-        if (it->FormIDs().empty()) {
+        if (plugin.FormIDs().empty()) {
             pluginList->SetItemTextColour(i, wxColour(122, 122, 122));
         }
-        else if (it->LoadsBSA(_game)) {
+        else if (plugin.LoadsBSA(_game)) {
             pluginList->SetItemTextColour(i, wxColour(0, 142, 219));
         }
         ++i;
@@ -311,8 +311,8 @@ void MiniEditor::OnPluginSelect(wxListEvent& event) {
         loadAfterList->DeleteAllItems();
         set<loot::File> files = plugin.LoadAfter();
         int i = 0;
-        for (set<loot::File>::const_iterator it = files.begin(), endit = files.end(); it != endit; ++it) {
-            loadAfterList->InsertItem(i, FromUTF8(it->Name()));
+        for (const auto &file: files) {
+            loadAfterList->InsertItem(i, FromUTF8(file.Name()));
             ++i;
         }
         if (loadAfterList->GetItemCount() == 0)
@@ -355,9 +355,9 @@ void MiniEditor::OnFilterToggle(wxCommandEvent& event) {
     //First need to merge the base and edited plugin lists so that the right priority values get displayed.
 
     list<loot::Plugin> plugins(_basePlugins);
-    for (list<loot::Plugin>::const_iterator it = _editedPlugins.begin(); it != _editedPlugins.end(); ++it) {
-        list<loot::Plugin>::iterator pos = std::find(plugins.begin(), plugins.end(), *it);
-        pos->MergeMetadata(*it);
+    for (const auto &plugin: _editedPlugins) {
+        list<loot::Plugin>::iterator pos = std::find(plugins.begin(), plugins.end(), plugin);
+        pos->MergeMetadata(plugin);
     }
 
     //Disable list selection.
@@ -377,19 +377,19 @@ void MiniEditor::OnFilterToggle(wxCommandEvent& event) {
             bool loadsBSA = pos->LoadsBSA(_game);
 
             int i = 0;
-            for (list<loot::Plugin>::const_iterator it = plugins.begin(); it != plugins.end(); ++it) {
+            for (const auto &plugin: plugins) {
                 //Want to filter to show only those the selected plugin can load after validly, and which also either conflict with it,
                 //or which load a BSA (if the selected plugin loads a BSA).
-                if (*it == *pos || !it->MustLoadAfter(*pos) && (pos->DoFormIDsOverlap(*it) || (loadsBSA && it->LoadsBSA(_game)))) {
-                    pluginList->InsertItem(i, FromUTF8(it->Name()));
-                    pluginList->SetItem(i, 1, FromUTF8(to_string(it->Priority())));
-                    if (it->FormIDs().empty()) {
+                if (plugin == *pos || !plugin.MustLoadAfter(*pos) && (pos->DoFormIDsOverlap(plugin) || (loadsBSA && plugin.LoadsBSA(_game)))) {
+                    pluginList->InsertItem(i, FromUTF8(plugin.Name()));
+                    pluginList->SetItem(i, 1, FromUTF8(to_string(plugin.Priority())));
+                    if (plugin.FormIDs().empty()) {
                         pluginList->SetItemTextColour(i, wxColour(122, 122, 122));
                     }
-                    else if (it->LoadsBSA(_game)) {
+                    else if (plugin.LoadsBSA(_game)) {
                         pluginList->SetItemTextColour(i, wxColour(0, 142, 219));
                     }
-                    if (std::find(_editedPlugins.begin(), _editedPlugins.end(), *it) != _editedPlugins.end()) {
+                    if (std::find(_editedPlugins.begin(), _editedPlugins.end(), plugin) != _editedPlugins.end()) {
                         pluginList->SetItemFont(i, wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT).Bold());
                     }
                     ++i;
@@ -400,16 +400,16 @@ void MiniEditor::OnFilterToggle(wxCommandEvent& event) {
     else {
         pluginList->DeleteAllItems();
         int i = 0;
-        for (list<loot::Plugin>::const_iterator it = plugins.begin(); it != plugins.end(); ++it) {
-            pluginList->InsertItem(i, FromUTF8(it->Name()));
-            pluginList->SetItem(i, 1, FromUTF8(to_string(it->Priority())));
-            if (it->FormIDs().empty()) {
+        for (const auto &plugin: plugins) {
+            pluginList->InsertItem(i, FromUTF8(plugin.Name()));
+            pluginList->SetItem(i, 1, FromUTF8(to_string(plugin.Priority())));
+            if (plugin.FormIDs().empty()) {
                 pluginList->SetItemTextColour(i, wxColour(122, 122, 122));
             }
-            else if (it->LoadsBSA(_game)) {
+            else if (plugin.LoadsBSA(_game)) {
                 pluginList->SetItemTextColour(i, wxColour(0, 142, 219));
             }
-            if (std::find(_editedPlugins.begin(), _editedPlugins.end(), *it) != _editedPlugins.end()) {
+            if (std::find(_editedPlugins.begin(), _editedPlugins.end(), plugin) != _editedPlugins.end()) {
                 pluginList->SetItemFont(i, wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT).Bold());
             }
             ++i;
@@ -695,8 +695,8 @@ Editor::Editor(wxWindow *parent, const wxString& title, const std::string userli
 
     //Fill pluginList with the contents of basePlugins.
     int i = 0;
-    for (list<loot::Plugin>::const_iterator it = _basePlugins.begin(); it != _basePlugins.end(); ++it) {
-        AddPluginToList(*it, i);
+    for (const auto &plugin: _basePlugins) {
+        AddPluginToList(plugin, i);
         ++i;
     }
     pluginList->SetColumnWidth(0, wxLIST_AUTOSIZE);
@@ -765,10 +765,10 @@ void Editor::OnPluginSelect(wxListEvent& event) {
 
         set<loot::File> files = plugin.LoadAfter();
         int i=0;
-        for (set<loot::File>::const_iterator it=files.begin(), endit=files.end(); it != endit; ++it) {
-            loadAfterList->InsertItem(i, FromUTF8(it->Name()));
-            loadAfterList->SetItem(i, 1, FromUTF8(it->DisplayName()));
-            loadAfterList->SetItem(i, 2, FromUTF8(it->Condition()));
+        for (const auto &file: files) {
+            loadAfterList->InsertItem(i, FromUTF8(file.Name()));
+            loadAfterList->SetItem(i, 1, FromUTF8(file.DisplayName()));
+            loadAfterList->SetItem(i, 2, FromUTF8(file.Condition()));
             ++i;
         }
         if (loadAfterList->GetItemCount() == 0)
@@ -778,10 +778,10 @@ void Editor::OnPluginSelect(wxListEvent& event) {
 
         files = plugin.Reqs();
         i=0;
-        for (set<loot::File>::const_iterator it=files.begin(), endit=files.end(); it != endit; ++it) {
-            reqsList->InsertItem(i, FromUTF8(it->Name()));
-            reqsList->SetItem(i, 1, FromUTF8(it->DisplayName()));
-            reqsList->SetItem(i, 2, FromUTF8(it->Condition()));
+        for (const auto &file : files) {
+            reqsList->InsertItem(i, FromUTF8(file.Name()));
+            reqsList->SetItem(i, 1, FromUTF8(file.DisplayName()));
+            reqsList->SetItem(i, 2, FromUTF8(file.Condition()));
             ++i;
         }
         if (reqsList->GetItemCount() == 0)
@@ -791,10 +791,10 @@ void Editor::OnPluginSelect(wxListEvent& event) {
 
         files = plugin.Incs();
         i=0;
-        for (set<loot::File>::const_iterator it=files.begin(), endit=files.end(); it != endit; ++it) {
-            incsList->InsertItem(i, FromUTF8(it->Name()));
-            incsList->SetItem(i, 1, FromUTF8(it->DisplayName()));
-            incsList->SetItem(i, 2, FromUTF8(it->Condition()));
+        for (const auto &file : files) {
+            incsList->InsertItem(i, FromUTF8(file.Name()));
+            incsList->SetItem(i, 1, FromUTF8(file.DisplayName()));
+            incsList->SetItem(i, 2, FromUTF8(file.Condition()));
             ++i;
         }
         if (incsList->GetItemCount() == 0)
@@ -808,13 +808,13 @@ void Editor::OnPluginSelect(wxListEvent& event) {
 
         set<loot::Tag> tags = plugin.Tags();
         i=0;
-        for (set<loot::Tag>::const_iterator it=tags.begin(), endit=tags.end(); it != endit; ++it) {
-            if (it->IsAddition())
+        for (const auto &tag: tags) {
+            if (tag.IsAddition())
                 tagsList->InsertItem(i, State[0]);
             else
                 tagsList->InsertItem(i, State[1]);
-            tagsList->SetItem(i, 1, FromUTF8(it->Name()));
-            tagsList->SetItem(i, 2, FromUTF8(it->Condition()));
+            tagsList->SetItem(i, 1, FromUTF8(tag.Name()));
+            tagsList->SetItem(i, 2, FromUTF8(tag.Condition()));
             ++i;
         }
         if (tagsList->GetItemCount() == 0)
@@ -824,12 +824,12 @@ void Editor::OnPluginSelect(wxListEvent& event) {
 
         set<loot::PluginDirtyInfo> dirtyInfo = plugin.DirtyInfo();
         i=0;
-        for (set<loot::PluginDirtyInfo>::const_iterator it=dirtyInfo.begin(), endit=dirtyInfo.end(); it != endit; ++it) {
-            dirtyList->InsertItem(i, FromUTF8(loot::IntToHexString(it->CRC())));
-            dirtyList->SetItem(i, 1, FromUTF8(to_string(it->ITMs())));
-            dirtyList->SetItem(i, 2, FromUTF8(to_string(it->UDRs())));
-            dirtyList->SetItem(i, 3, FromUTF8(to_string(it->DeletedNavmeshes())));
-            dirtyList->SetItem(i, 4, FromUTF8(it->CleaningUtility()));
+        for (const auto &element: dirtyInfo) {
+            dirtyList->InsertItem(i, FromUTF8(loot::IntToHexString(element.CRC())));
+            dirtyList->SetItem(i, 1, FromUTF8(to_string(element.ITMs())));
+            dirtyList->SetItem(i, 2, FromUTF8(to_string(element.UDRs())));
+            dirtyList->SetItem(i, 3, FromUTF8(to_string(element.DeletedNavmeshes())));
+            dirtyList->SetItem(i, 4, FromUTF8(element.CleaningUtility()));
             ++i;
         }
         if (dirtyList->GetItemCount() == 0)
@@ -1392,9 +1392,9 @@ void Editor::OnFilterToggle(wxCommandEvent& event) {
     //First need to merge the base and edited plugin lists so that the right priority values get displayed.
 
     list<loot::Plugin> plugins(_basePlugins);
-    for (list<loot::Plugin>::const_iterator it = _editedPlugins.begin(); it != _editedPlugins.end(); ++it) {
-        list<loot::Plugin>::iterator pos = std::find(plugins.begin(), plugins.end(), *it);
-        pos->MergeMetadata(*it);
+    for (const auto &plugin: _editedPlugins) {
+        list<loot::Plugin>::iterator pos = std::find(plugins.begin(), plugins.end(), plugin);
+        pos->MergeMetadata(plugin);
     }
 
     //Disable list selection.
@@ -1414,11 +1414,11 @@ void Editor::OnFilterToggle(wxCommandEvent& event) {
             bool loadsBSA = pos->LoadsBSA(_game);
 
             int i = 0;
-            for (list<loot::Plugin>::const_iterator it = plugins.begin(); it != plugins.end(); ++it) {
+            for (const auto &plugin: plugins) {
                 //Want to filter to show only those the selected plugin can load after validly, and which also either conflict with it,
                 //or which load a BSA (if the selected plugin loads a BSA).
-                if (*it == *pos || !it->MustLoadAfter(*pos) && (pos->DoFormIDsOverlap(*it) || (loadsBSA && it->LoadsBSA(_game)))) {
-                    AddPluginToList(*it, i);
+                if (plugin == *pos || !plugin.MustLoadAfter(*pos) && (pos->DoFormIDsOverlap(plugin) || (loadsBSA && plugin.LoadsBSA(_game)))) {
+                    AddPluginToList(plugin, i);
                     ++i;
                 }
             }
@@ -1427,8 +1427,8 @@ void Editor::OnFilterToggle(wxCommandEvent& event) {
     else {
         pluginList->DeleteAllItems();
         int i = 0;
-        for (list<loot::Plugin>::const_iterator it = plugins.begin(); it != plugins.end(); ++it) {
-            AddPluginToList(*it, i);
+        for (const auto &plugin: plugins) {
+            AddPluginToList(plugin, i);
             ++i;
         }
     }

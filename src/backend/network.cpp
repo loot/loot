@@ -324,12 +324,12 @@ namespace loot {
                 if (mlist["plugins"])
                     plugins = mlist["plugins"].as< list<loot::Plugin> >();
 
-                for (list<loot::Plugin>::iterator it=plugins.begin(), endIt=plugins.end(); it != endIt; ++it) {
-                    it->EvalAllConditions(game, Language::any);
+                for (auto &plugin: plugins) {
+                    plugin.EvalAllConditions(game, Language::any);
                 }
 
-                for (list<loot::Message>::iterator it=messages.begin(), endIt=messages.end(); it != endIt; ++it) {
-                    it->EvalCondition(game, Language::any);
+                for (auto &message: messages) {
+                    message.EvalCondition(game, Language::any);
                 }
 
                 parsingFailed = false;

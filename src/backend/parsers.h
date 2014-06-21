@@ -218,8 +218,8 @@ namespace YAML {
             //Check now that at least one item in content is English if there are multiple items.
             if (content.size() > 1) {
                 bool found = false;
-                for (std::vector<loot::MessageContent>::const_iterator it=content.begin(), endit=content.end(); it != endit; ++it) {
-                    if (it->Language() == loot::Language::english)
+                for (const auto &mc: content) {
+                    if (mc.Language() == loot::Language::english)
                         found = true;
                 }
                 if (!found)
@@ -296,8 +296,8 @@ namespace YAML {
     struct convert< std::set<T, Compare> > {
       static Node encode(const std::set<T, Compare>& rhs) {
           Node node;
-          for (typename std::set<T, Compare>::const_iterator it=rhs.begin(), endIt=rhs.end(); it != endIt; ++it) {
-              node.push_back(*it);
+          for (const auto &element: rhs) {
+              node.push_back(element);
           }
           return node;
       }
@@ -307,8 +307,8 @@ namespace YAML {
             return false;
 
         rhs.clear();
-        for(YAML::const_iterator it=node.begin();it!=node.end();++it) {
-            rhs.insert(it->as<T>());
+        for (const auto &element : node) {
+            rhs.insert(element.as<T>());
         }
         return true;
 
@@ -640,7 +640,7 @@ namespace loot {
             boost::split(components, path, boost::is_any_of("/\\"));
             components.pop_back();
             std::string parent_path;
-            for (std::vector<std::string>::const_iterator it=components.begin(), endIt=components.end()--; it != endIt; ++it) {
+            for (auto it=components.cbegin(), endIt=components.cend()--; it != endIt; ++it) {
                 if (*it == ".")
                     continue;
                 parent_path += *it + '/';

@@ -49,8 +49,8 @@ namespace YAML {
     template<class T, class Compare>
     Emitter& operator << (Emitter& out, const std::set<T, Compare>& rhs) {
         out << BeginSeq;
-        for (typename std::set<T, Compare>::const_iterator it=rhs.begin(), endIt=rhs.end(); it != endIt; ++it) {
-            out << *it;
+        for (const auto &element: rhs) {
+            out << element;
         }
 		out << EndSeq;
 
