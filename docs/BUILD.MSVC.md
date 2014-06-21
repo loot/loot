@@ -17,7 +17,13 @@ Just build the solution provided by wxWidgets. You may need to change the C/C++ 
 
 #### yaml-cpp
 
-1. Configure CMake and generate a build system for Visual Studio by running CMake with keys `-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=build -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=build -DBOOST_ROOT={BOOST_ROOT}`.
+1. Configure CMake and generate a build system for Visual Studio by running:
+  ```
+  mkdir build
+  cd build
+  cmake.exe .. -G "Visual Studio 12" -DBOOST_ROOT={BOOST_ROOT} -DMSVC_SHARED_RT=OFF
+  ```
+  Adapt the commands as necessary for your particular setup.
 2. Open the generated solution file, and build it with `Release` configuration.
 
 #### Libloadorder
@@ -28,7 +34,13 @@ Example CMake keys: `-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=build -DCMAKE_ARCHIVE_OUTP
 
 #### Libgit2
 
-1. Configure CMake and generate a build system for Visual Studio by running CMake with keys `-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=build -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=build -DBUILD_SHARED_LIBS=OFF -DSTATIC_CRT=ON`.
+1. Configure CMake and generate a build system for Visual Studio by running:
+  ```
+  mkdir build
+  cd build
+  cmake.exe .. -G "Visual Studio 12" -DBUILD_SHARED_LIBS=OFF -DSTATIC_CRT=ON
+  ```
+  Adapt the commands as necessary for your particular setup.
 2. Open the generated solution file, and build it with `Release` configuration.
 
 #### LOOT
