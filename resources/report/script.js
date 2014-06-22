@@ -224,6 +224,8 @@ function processURLParams() {
             var totalMessageNo = 0;
             var warnMessageNo = 0;
             var errorMessageNo = 0;
+            var activePluginNo = 0;
+            var dirtyPluginNo = 0;
             /* Fill report with data. */
             document.getElementById('lootVersion').textContent = data.lootVersion;
             document.getElementById('masterlistRevision').textContent = data.masterlist.revision;
@@ -249,6 +251,14 @@ function processURLParams() {
                 var li = document.createElement('li');
 
                 li.setAttribute('data-active', data.plugins[i].isActive);
+
+                if (data.plugins[i].isActive) {
+                    ++activePluginNo;
+                }
+
+                if (data.plugins[i].isDirty) {
+                    ++dirtyPluginNo;
+                }
 
                 var mod = document.createElement('div');
                 mod.className = 'mod';
@@ -301,11 +311,14 @@ function processURLParams() {
                 }
                 pluginsList.appendChild(li);
             }
-            document.getElementById('totalMessageNo').textContent = totalMessageNo;
             document.getElementById('filterTotalMessageNo').textContent = totalMessageNo;
-            document.getElementById('totalPluginNo').textContent = data.plugins.length;
+            document.getElementById('totalMessageNo').textContent = totalMessageNo;
             document.getElementById('totalWarningNo').textContent = warnMessageNo;
             document.getElementById('totalErrorNo').textContent = errorMessageNo;
+            document.getElementById('filterTotalPluginNo').textContent = data.plugins.length;
+            document.getElementById('totalPluginNo').textContent = data.plugins.length;
+            document.getElementById('activePluginNo').textContent = activePluginNo;
+            document.getElementById('dirtyPluginNo').textContent = dirtyPluginNo;
 
             /* Now apply translated UI strings. */
             for (var id in data.l10n) {

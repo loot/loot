@@ -184,6 +184,7 @@ namespace loot {
 
         std::list<Message> messages = plugin.Messages();
         std::set<PluginDirtyInfo> dirtyInfo = plugin.DirtyInfo();
+        size_t numDirtyInfo(0);
         for (const auto &element: dirtyInfo) {
             boost::format f;
             if (element.ITMs() > 0 && element.UDRs() > 0 && element.DeletedNavmeshes() > 0)
@@ -208,7 +209,15 @@ namespace loot {
                 f = boost::format(boost::locale::translate("Contains %1% ITM records and %2% UDR records. Clean with %3%.")) % element.ITMs() % element.UDRs() % element.CleaningUtility();
 
             messages.push_back(loot::Message(loot::Message::warn, f.str()));
+            ++numDirtyInfo;
         }
+
+        //Also add some metadata so that the summary can count the total number of cleaning messages.
+        out << YAML::Key << "isDirty";
+        if (numDirtyInfo > 0)
+            out << YAML::Value << true;
+        else
+            out << YAML::Value << false;
 
         if (!messages.empty()) {
             out << YAML::Key << "messages"
@@ -312,7 +321,7 @@ namespace loot {
             << YAML::Value << boost::locale::translate("Summary").str()
 
             << YAML::Key << "txtSummary"
-            << YAML::Value << boost::locale::translate("Summary").str()
+            << YAML::Value << boost::locale::translate("Version Information").str()
 
             << YAML::Key << "txtLootVersion"
             << YAML::Value << boost::locale::translate("LOOT Version").str()
@@ -326,14 +335,26 @@ namespace loot {
             << YAML::Key << "txtMasterlistUpdating"
             << YAML::Value << boost::locale::translate("Masterlist Updating").str()
 
+            << YAML::Key << "txtCounts"
+            << YAML::Value << boost::locale::translate("Plugin & Message Counts").str()
+
+            << YAML::Key << "txtTotalPluginNo"
+            << YAML::Value << boost::locale::translate("Total Plugins").str()
+
+            << YAML::Key << "txtActivePluginNo"
+            << YAML::Value << boost::locale::translate("Active Plugins").str()
+
+            << YAML::Key << "txtDirtyPluginNo"
+            << YAML::Value << boost::locale::translate("Dirty Plugins").str()
+
             << YAML::Key << "txtTotalMessageNo"
-            << YAML::Value << boost::locale::translate("Total Number of Messages").str()
+            << YAML::Value << boost::locale::translate("Total Messages").str()
 
             << YAML::Key << "txtTotalWarningNo"
-            << YAML::Value << boost::locale::translate("Number of Warnings").str()
+            << YAML::Value << boost::locale::translate("Warnings").str()
 
             << YAML::Key << "txtTotalErrorNo"
-            << YAML::Value << boost::locale::translate("Number of Errors").str()
+            << YAML::Value << boost::locale::translate("Errors").str()
 
             << YAML::Key << "txtGeneralMessages"
             << YAML::Value << boost::locale::translate("General Messages").str()

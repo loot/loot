@@ -24,14 +24,25 @@
                 <h2 id="txtSummary"></h2>
                 <table>
                     <tbody>
-                        <tr><td id="txtLootVersion"></td><td id="lootVersion"></td></tr>
-                        <tr><td id="txtMasterlistUpdating"></td><td id="masterlistUpdating"></td></tr>
-                        <tr><td id="txtMasterlistRevision"></td><td id="masterlistRevision"></td></tr>
-                        <tr><td id="txtMasterlistDate"></td><td id="masterlistDate"></td></tr>
-                        <tr><td id="txtTotalMessageNo"></td><td id="totalMessageNo"></td></tr>
-                        <tr><td id="txtTotalWarningNo"></td><td id="totalWarningNo"></td></tr>
-                        <tr><td id="txtTotalErrorNo"></td><td id="totalErrorNo"></td></tr>
-                    </tbody>
+                        <tr><td id="txtLootVersion"><td id="lootVersion">
+                        <tr><td id="txtMasterlistUpdating"><td id="masterlistUpdating">
+                        <tr><td id="txtMasterlistRevision"><td id="masterlistRevision">
+                        <tr><td id="txtMasterlistDate"><td id="masterlistDate">
+                </table>
+            </div>
+            <div>
+                <h2 id="txtCounts"></h2>
+                <table style="float:left;">
+                    <tbody>
+                        <tr><td id="txtActivePluginNo"><td id="activePluginNo">
+                        <tr><td id="txtDirtyPluginNo"><td id="dirtyPluginNo">
+                        <tr><td id="txtTotalPluginNo"><td id="totalPluginNo">
+                </table>
+                <table style="float:left;">
+                    <tbody>
+                        <tr><td id="txtTotalWarningNo"><td id="totalWarningNo">
+                        <tr><td id="txtTotalErrorNo"><td id="totalErrorNo">
+                        <tr><td id="txtTotalMessageNo"><td id="totalMessageNo">
                 </table>
             </div>
             <div>
@@ -51,7 +62,7 @@
         <input type="checkbox" id="hideAllPluginMessages" /><label id="txtHideAllPluginMessages" for="hideAllPluginMessages"></label><br>
         <input type="checkbox" id="hideMessagelessPlugins" /><label id="txtHideMessagelessPlugins" for="hideMessagelessPlugins"></label><br>
         <div>
-            <span id="txtPluginsHidden"></span>: <span id="hiddenPluginNo">0</span> / <span id="totalPluginNo"></span>
+            <span id="txtPluginsHidden"></span>: <span id="hiddenPluginNo">0</span> / <span id="filterTotalPluginNo"></span>
         </div>
         <div>
             <span id="txtMessagesHidden"></span>: <span id="hiddenMessageNo">0</span> / <span id="filterTotalMessageNo"></span>

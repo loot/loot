@@ -78,6 +78,9 @@ table td:first-child {
     text-align:left;
     padding-left:0;
 }
+table:not(:last-child) {
+    margin-right: 3em;
+}
 #noChanges {
 	font-weight:bold;
 	font-size:12pt;
