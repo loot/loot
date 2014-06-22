@@ -547,14 +547,19 @@ void Launcher::OnClose(wxCloseEvent& event) {
     _settings["Games"] = _games;
 
     //Save settings.
-    BOOST_LOG_TRIVIAL(debug) << "Saving LOOT settings.";
-    YAML::Emitter yout;
-    yout.SetIndent(2);
-    yout << _settings;
+    try {
+        BOOST_LOG_TRIVIAL(debug) << "Saving LOOT settings.";
+        YAML::Emitter yout;
+        yout.SetIndent(2);
+        yout << _settings;
 
-    loot::ofstream out(loot::g_path_settings);
-    out << yout.c_str();
-    out.close();
+        loot::ofstream out(loot::g_path_settings);
+        out << yout.c_str();
+        out.close();
+    }
+    catch (std::exception &e) {
+        BOOST_LOG_TRIVIAL(error) << "Failed to save LOOT's settings. Error: " << e.what();
+    }
 
     Destroy();
 }
