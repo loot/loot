@@ -25,12 +25,11 @@
 #include "viewer.h"
 #include "../backend/helpers.h"
 
-#include <wx/webview.h>
-
 Viewer::Viewer(wxWindow *parent, const wxString& title, const wxString& url) : wxFrame(parent, wxID_ANY, title) {
-    wxWebView * web = wxWebView::New(this, wxID_ANY, url);
+    web = wxWebView::New(this, wxID_ANY, url);
 
     web->Bind(wxEVT_WEBVIEW_NAVIGATING, &Viewer::OnNavigationStart, this);
+    web->Bind(wxEVT_CHAR_HOOK, &Viewer::OnKeyUp, this);
 
     wxBoxSizer* topsizer = new wxBoxSizer(wxVERTICAL);
 
@@ -44,4 +43,31 @@ Viewer::Viewer(wxWindow *parent, const wxString& title, const wxString& url) : w
 void Viewer::OnNavigationStart(wxWebViewEvent& event) {
     wxLaunchDefaultBrowser(event.GetURL());
     event.Veto();
+}
+
+void Viewer::OnKeyUp(wxKeyEvent &event) {
+    if (event.GetUnicodeKey() != 0x46 || event.GetModifiers() != wxMOD_CONTROL)  // "F"
+        return;
+
+    wxFindReplaceDialog * findDia = new wxFindReplaceDialog(this, &data, translate("Find in Page"));
+
+    findDia->Bind(wxEVT_FIND, &Viewer::OnFind, this);
+    findDia->Bind(wxEVT_FIND_NEXT, &Viewer::OnFind, this);
+
+    findDia->Show();
+}
+
+void Viewer::OnFind(wxFindDialogEvent &event) {
+    int dialogFlags = event.GetFlags();
+    int findFlags = wxWEBVIEW_FIND_WRAP | wxWEBVIEW_FIND_HIGHLIGHT_RESULT;
+
+    if ((dialogFlags & wxFR_DOWN) == 0)
+        findFlags = findFlags | wxWEBVIEW_FIND_BACKWARDS;
+    if (dialogFlags & wxFR_WHOLEWORD)
+        findFlags = findFlags | wxWEBVIEW_FIND_ENTIRE_WORD;
+    if (dialogFlags & wxFR_MATCHCASE)
+        findFlags = findFlags | wxWEBVIEW_FIND_MATCH_CASE;
+
+
+    web->Find(event.GetFindString(), findFlags);
 }

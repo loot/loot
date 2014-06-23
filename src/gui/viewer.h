@@ -28,12 +28,18 @@
 #include "ids.h"
 
 #include <wx/webview.h>
+#include <wx/fdrepdlg.h>
 
 class Viewer : public wxFrame {
 public:
     Viewer(wxWindow *parent, const wxString& title, const wxString& url);
 
     void OnNavigationStart(wxWebViewEvent& event);
+    void OnKeyUp(wxKeyEvent &event);
+    void OnFind(wxFindDialogEvent &event);
+    
+    wxWebView * web;
+    wxFindReplaceData data;
 };
 
 #endif
