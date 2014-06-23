@@ -37,7 +37,10 @@ Viewer::Viewer(wxWindow *parent, const wxString& title, const wxString& url, wxP
     topsizer->Add(web, 1, wxEXPAND);
 
     SetSizer(topsizer);
-    SetSize(800,600);
+    if (size != wxDefaultSize)
+        SetSize(size);
+    else
+        SetSize(800, 600);
     SetIcon(wxIconLocation("LOOT.exe"));
 }
 

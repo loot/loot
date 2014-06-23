@@ -143,6 +143,9 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
 	SetBackgroundColour(wxColour(255,255,255));
     SetIcon(wxIconLocation("LOOT.exe"));
 	SetSizerAndFit(bigBox);
+
+    if (size != wxDefaultSize)
+        SetSize(size);
 }
 
 void SettingsFrame::SetDefaultValues() {

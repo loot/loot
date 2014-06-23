@@ -552,8 +552,12 @@ Launcher::Launcher(const wxChar *title, YAML::Node& settings, Game * game, vecto
     //Now set the layout and sizes.
     SetMenuBar(MenuBar);
 	SetBackgroundColour(wxColour(255,255,255));
-	SetSizerAndFit(buttonBox);
-    SetSize(wxSize(250, 200));
+    SetSizerAndFit(buttonBox);
+
+    if (size != wxDefaultSize)
+        SetSize(size);
+    else
+        SetSize(wxSize(250, 200));
 
     SortButton->SetFocus();
 }

@@ -1181,6 +1181,9 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, wxPoint pos, wxS
     SetIcon(wxIconLocation("LOOT.exe"));
 
     SetSizerAndFit(bigBox);
+
+    if (size != wxDefaultSize)
+        SetSize(size);
 }
 
 void MiniEditor::OnApply(wxCommandEvent& event) {
@@ -1228,7 +1231,9 @@ FullEditor::FullEditor(wxWindow *parent, const wxString& title, wxPoint pos, wxS
     SetIcon(wxIconLocation("LOOT.exe"));
 
     SetSizerAndFit(bigBox);
-    Layout();
+
+    if (size != wxDefaultSize)
+        SetSize(size);
 }
 
 void FullEditor::OnQuit(wxCommandEvent& event) {
