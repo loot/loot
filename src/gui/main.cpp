@@ -882,7 +882,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             progDia = nullptr;
 
             BOOST_LOG_TRIVIAL(info) << "Displaying load order preview.";
-            MiniEditor editor(this, translate("LOOT: Calculated Load Order"), plugins, *_game);
+            MiniEditor editor(this, translate("LOOT: Calculated Load Order"), plugins, ulist_plugins, *_game);
 
             long ret = editor.ShowModal();
             const std::list<loot::Plugin> edits = editor.GetEditedPlugins();
@@ -1102,7 +1102,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
 
     //Create editor window.
     BOOST_LOG_TRIVIAL(debug) << "Opening editor window.";
-    Editor *editor = new Editor(this, translate("LOOT: Metadata Editor"), _game->UserlistPath().string(), installed, ulist_plugins, lang, *_game);
+    FullEditor *editor = new FullEditor(this, translate("LOOT: Metadata Editor"), _game->UserlistPath().string(), installed, ulist_plugins, lang, *_game);
 
     progDia->Destroy();
 

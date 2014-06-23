@@ -61,60 +61,14 @@ private:
     wxControl * targetName;
 };
 
-class CommonEditor {
+class EditorPanel : public wxPanel {
 public:
-    CommonEditor(const std::list<loot::Plugin>& plugins, const loot::Game& game);
-    CommonEditor(const std::list<loot::Plugin>& plugins, const loot::Game& game, std::list<loot::Plugin>& editedPlugins);
-protected:
-    const loot::Game& _game;
-    const std::list<loot::Plugin> _basePlugins;
-    std::list<loot::Plugin> _editedPlugins;
-
-    loot::Plugin GetMasterData(const wxString& plugin) const;
-    loot::Plugin GetUserData(const wxString& plugin) const;
-    virtual loot::Plugin GetNewData(const wxString& plugin) const = 0;
-
-    void ApplyEdits(const wxString& plugin, wxListView * list);
-
-    loot::File RowToFile(wxListView * list, long row) const;
-    loot::Tag RowToTag(wxListView * list, long row) const;
-    loot::PluginDirtyInfo RowToPluginDirtyInfo(wxListView * list, long row) const;
-};
-
-class MiniEditor : public wxDialog, public CommonEditor {
-public:
-    MiniEditor(wxWindow *parent, const wxString& title, const std::list<loot::Plugin>& plugins, const loot::Game& game);
-
-    void OnPluginSelect(wxListEvent& event);
-    void OnRowSelect(wxListEvent& event);
-    void OnRemoveRow(wxCommandEvent& event);
-    void OnFilterToggle(wxCommandEvent& event);
-    void OnDragStart(wxListEvent& event);
-    void OnApply(wxCommandEvent& event);
-    void OnResize(wxSizeEvent& event);
-
-    const std::list<loot::Plugin>& GetEditedPlugins() const;
-private:
-    wxListView * pluginList;
-    wxPanel * editingPanel;
-    wxButton * removeBtn;
-    wxListView * loadAfterList;
-    wxCheckBox * filterCheckbox;
-    wxSpinCtrl * prioritySpin;
-    wxCheckBox * priorityCheckbox;
-    wxStaticText * pluginText;
-    wxStaticText * descText;
-
-    wxString feedbackText;
-
-    loot::Plugin GetNewData(const wxString& plugin) const;
-};
-
-class Editor : public wxFrame, public CommonEditor {
-public:
-    Editor(wxWindow *parent, const wxString& title, const std::string userlistPath, const std::list<loot::Plugin>& basePlugins, std::list<loot::Plugin>& editedPlugins, const unsigned int language, const loot::Game& game);
+    EditorPanel(wxWindow *parent, const std::list<loot::Plugin>& basePlugins, std::list<loot::Plugin>& editedPlugins, const unsigned int language, const loot::Game& game);
 
     void SetSimpleView(bool on = true);
+    void ApplyCurrentEdits();
+
+    const std::list<loot::Plugin>& GetEditedPlugins() const;
 
     void OnPluginSelect(wxListEvent& event);
     void OnPluginListRightClick(wxListEvent& event);
@@ -129,14 +83,11 @@ public:
     void OnRowSelect(wxListEvent& event);
     void OnFilterToggle(wxCommandEvent& event);
     void OnDragStart(wxListEvent& event);
-    void OnQuit(wxCommandEvent& event);
 private:
     wxMenu * pluginMenu;
     wxButton * addBtn;
     wxButton * editBtn;
     wxButton * removeBtn;
-    wxButton * applyBtn;
-    wxButton * cancelBtn;
     wxListView * pluginList;
     wxListView * reqsList;
     wxListView * incsList;
@@ -157,9 +108,49 @@ private:
     wxPanel * tagsTab;
     wxPanel * dirtyTab;
 
-    const std::string _userlistPath;
-
-    loot::Plugin GetNewData(const wxString& plugin) const;
     void AddPluginToList(const loot::Plugin& plugin, int position);
+protected:
+    const loot::Game& _game;
+    const std::list<loot::Plugin> _basePlugins;
+    std::list<loot::Plugin> _editedPlugins;
+
+    loot::Plugin GetMasterData(const wxString& plugin) const;
+    loot::Plugin GetUserData(const wxString& plugin) const;
+    loot::Plugin GetNewData(const wxString& plugin) const;
+
+    void ApplyEdits(const wxString& plugin);
+    long FindPlugin(const wxString& plugin);
+
+    loot::File RowToFile(wxListView * list, long row) const;
+    loot::Tag RowToTag(wxListView * list, long row) const;
+    loot::PluginDirtyInfo RowToPluginDirtyInfo(wxListView * list, long row) const;
+};
+
+class MiniEditor : public wxDialog {
+public:
+    MiniEditor(wxWindow *parent, const wxString& title, const std::list<loot::Plugin>& basePlugins, std::list<loot::Plugin>& editedPlugins, const loot::Game& game);
+
+    void OnApply(wxCommandEvent& event);
+    void OnResize(wxSizeEvent& event);
+
+    const std::list<loot::Plugin>& GetEditedPlugins() const;
+private:
+    EditorPanel * editorPanel;
+    wxStaticText * descText;
+
+    wxString feedbackText;
+};
+
+class FullEditor : public wxFrame {
+public:
+    FullEditor(wxWindow *parent, const wxString& title, const std::string userlistPath, const std::list<loot::Plugin>& basePlugins, std::list<loot::Plugin>& editedPlugins, const unsigned int language, const loot::Game& game);
+
+    void OnQuit(wxCommandEvent& event);
+private:
+    EditorPanel * editorPanel;
+    wxButton * applyBtn;
+    wxButton * cancelBtn;
+
+    const std::string _userlistPath;
 };
 #endif
