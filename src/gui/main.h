@@ -45,7 +45,7 @@ private:
 
 class Launcher : public wxFrame {
 public:
-    Launcher(const wxChar *title, YAML::Node& settings, loot::Game * inGame, std::vector<loot::Game>& games);
+    Launcher(const wxChar *title, YAML::Node& settings, loot::Game * inGame, std::vector<loot::Game>& games, wxPoint pos, wxSize size);
 
 	void OnSortPlugins(wxCommandEvent& event);
     void OnEditMetadata(wxCommandEvent& event);

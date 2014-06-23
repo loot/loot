@@ -442,9 +442,20 @@ bool LOOT::OnInit() {
         return false;
     }
 
+    //Load window size/pos settings.
+    wxSize size = wxDefaultSize;
+    wxPoint pos = wxDefaultPosition;
+    if (_settings["windows"] && _settings["windows"]["main"]) {
+        YAML::Node node = _settings["windows"]["main"];
+        if (node["width"] && node["height"] && node["xPos"] && node["yPos"]) {
+            size = wxSize(node["width"].as<int>(), node["height"].as<int>());
+            pos = wxPoint(node["xPos"].as<int>(), node["yPos"].as<int>());
+        }
+    }
+
     //Create launcher window.
     BOOST_LOG_TRIVIAL(debug) << "Opening the main LOOT window.";
-    Launcher * launcher = new Launcher(wxT("LOOT"), _settings, &_game, _games);
+    Launcher * launcher = new Launcher(wxT("LOOT"), _settings, &_game, _games, pos, size);
 
     launcher->SetIcon(wxIconLocation("LOOT.exe"));
 	launcher->Show();
@@ -453,7 +464,7 @@ bool LOOT::OnInit() {
     return true;
 }
 
-Launcher::Launcher(const wxChar *title, YAML::Node& settings, Game * game, vector<loot::Game>& games) : wxFrame(nullptr, wxID_ANY, title), _game(game), _settings(settings), _games(games) {
+Launcher::Launcher(const wxChar *title, YAML::Node& settings, Game * game, vector<loot::Game>& games, wxPoint pos, wxSize size) : wxFrame(nullptr, wxID_ANY, title, pos, size), _game(game), _settings(settings), _games(games) {
 
     //Initialise menu items.
     wxMenuBar * MenuBar = new wxMenuBar();
@@ -556,8 +567,17 @@ void Launcher::OnQuit(wxCommandEvent& event) {
 void Launcher::OnClose(wxCloseEvent& event) {
     BOOST_LOG_TRIVIAL(debug) << "Quiting LOOT.";
 
-    _settings["Last Game"] = _game->FolderName();
+    //Record window settings.
+    YAML::Node main;
+    main["height"] = GetSize().GetHeight();
+    main["width"] = GetSize().GetWidth();
+    main["xPos"] = GetPosition().x;
+    main["yPos"] = GetPosition().y;
 
+    _settings["windows"]["main"] = main;
+
+    //Record game settings.
+    _settings["Last Game"] = _game->FolderName();
     _settings["Games"] = _games;
 
     //Save settings.
@@ -588,9 +608,34 @@ void Launcher::OnViewLastReport(wxCommandEvent& event) {
 
 void Launcher::OnOpenSettings(wxCommandEvent& event) {
     BOOST_LOG_TRIVIAL(debug) << "Opening settings window...";
-    SettingsFrame *settings = new SettingsFrame(this, translate("LOOT: Settings"), _settings, _games);
-    settings->ShowModal();
+
+    //Load window size/pos settings.
+    wxSize size = wxDefaultSize;
+    wxPoint pos = wxDefaultPosition;
+    if (_settings["windows"] && _settings["windows"]["settings"]) {
+        YAML::Node node = _settings["windows"]["settings"];
+        if (node["width"] && node["height"] && node["xPos"] && node["yPos"]) {
+            size = wxSize(node["width"].as<int>(), node["height"].as<int>());
+            pos = wxPoint(node["xPos"].as<int>(), node["yPos"].as<int>());
+        }
+    }
+
+    SettingsFrame settings = SettingsFrame(this, translate("LOOT: Settings"), _settings, _games, pos, size);
     BOOST_LOG_TRIVIAL(debug) << "Settings window opened.";
+    int ret = settings.ShowModal();
+
+    if (ret == wxID_OK) {
+
+    }
+
+    //Record window settings.
+    YAML::Node node;
+    node["height"] = settings.GetSize().GetHeight();
+    node["width"] = settings.GetSize().GetWidth();
+    node["xPos"] = settings.GetPosition().x;
+    node["yPos"] = settings.GetPosition().y;
+
+    _settings["windows"]["settings"] = node;
 }
 
 void Launcher::OnGameChange(wxCommandEvent& event) {
