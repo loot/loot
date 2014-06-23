@@ -1149,7 +1149,7 @@ loot::PluginDirtyInfo EditorPanel::RowToPluginDirtyInfo(wxListView * list, long 
 // Mini Editor Class
 ///////////////////////////////////
 
-MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<loot::Plugin>& basePlugins, std::list<loot::Plugin>& editedPlugins, const loot::Game& game) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER) {
+MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, wxPoint pos, wxSize size, const std::list<loot::Plugin>& basePlugins, std::list<loot::Plugin>& editedPlugins, const loot::Game& game) : wxDialog(parent, wxID_ANY, title, pos, size, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER) {
 
     //Initialise content.
     editorPanel = new EditorPanel(this, basePlugins, editedPlugins, loot::Language::any, game);
@@ -1203,7 +1203,7 @@ const std::list<loot::Plugin>& MiniEditor::GetNewUserlist() const {
 // Full Editor Class
 ///////////////////////////////////
 
-FullEditor::FullEditor(wxWindow *parent, const wxString& title, const std::string userlistPath, const std::list<loot::Plugin>& basePlugins, std::list<loot::Plugin>& editedPlugins, const unsigned int language, const loot::Game& game) : wxFrame(parent, wxID_ANY, title), _userlistPath(userlistPath) {
+FullEditor::FullEditor(wxWindow *parent, const wxString& title, wxPoint pos, wxSize size, const std::string userlistPath, const std::list<loot::Plugin>& basePlugins, std::list<loot::Plugin>& editedPlugins, const unsigned int language, const loot::Game& game, YAML::Node &settings) : wxFrame(parent, wxID_ANY, title, pos, size), _userlistPath(userlistPath), _settings(settings) {
     //Set up content.
     editorPanel = new EditorPanel(this, basePlugins, editedPlugins, language, game);
     applyBtn = new wxButton(this, BUTTON_Apply, translate("Save Changes"));
@@ -1212,6 +1212,7 @@ FullEditor::FullEditor(wxWindow *parent, const wxString& title, const std::strin
     //Set up event handling.
     Bind(wxEVT_BUTTON, &FullEditor::OnQuit, this, BUTTON_Apply);
     Bind(wxEVT_BUTTON, &FullEditor::OnQuit, this, BUTTON_Cancel);
+    Bind(wxEVT_CLOSE_WINDOW, &FullEditor::OnClose, this);
 
     //Set up layout.
     wxBoxSizer * bigBox = new wxBoxSizer(wxVERTICAL);
@@ -1252,4 +1253,17 @@ void FullEditor::OnQuit(wxCommandEvent& event) {
         out.close();
     }
     Close();
+}
+
+void FullEditor::OnClose(wxCloseEvent &event) {
+    //Record window settings.
+    YAML::Node node;
+    node["height"] = GetSize().GetHeight();
+    node["width"] = GetSize().GetWidth();
+    node["xPos"] = GetPosition().x;
+    node["yPos"] = GetPosition().y;
+
+    _settings["windows"]["editor"] = node;
+
+    Destroy();
 }

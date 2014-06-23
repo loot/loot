@@ -27,19 +27,23 @@
 
 #include "ids.h"
 
+#include <yaml-cpp/yaml.h>
 #include <wx/webview.h>
 #include <wx/fdrepdlg.h>
 
 class Viewer : public wxFrame {
 public:
-    Viewer(wxWindow *parent, const wxString& title, const wxString& url);
+    Viewer(wxWindow *parent, const wxString& title, const wxString& url, wxPoint pos, wxSize size, YAML::Node& settings);
 
     void OnNavigationStart(wxWebViewEvent& event);
     void OnKeyUp(wxKeyEvent &event);
     void OnFind(wxFindDialogEvent &event);
+    void OnClose(wxCloseEvent &event);
     
     wxWebView * web;
     wxFindReplaceData data;
+
+    YAML::Node& _settings;
 };
 
 #endif

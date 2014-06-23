@@ -30,6 +30,7 @@
 
 #include <string>
 #include <list>
+#include <yaml-cpp/yaml.h>
 #include <wx/spinctrl.h>
 #include <wx/notebook.h>
 #include <wx/listctrl.h>
@@ -128,7 +129,7 @@ protected:
 
 class MiniEditor : public wxDialog {
 public:
-    MiniEditor(wxWindow *parent, const wxString& title, const std::list<loot::Plugin>& basePlugins, std::list<loot::Plugin>& editedPlugins, const loot::Game& game);
+    MiniEditor(wxWindow *parent, const wxString& title, wxPoint pos, wxSize size, const std::list<loot::Plugin>& basePlugins, std::list<loot::Plugin>& editedPlugins, const loot::Game& game);
 
     void OnApply(wxCommandEvent& event);
     void OnResize(wxSizeEvent& event);
@@ -143,14 +144,16 @@ private:
 
 class FullEditor : public wxFrame {
 public:
-    FullEditor(wxWindow *parent, const wxString& title, const std::string userlistPath, const std::list<loot::Plugin>& basePlugins, std::list<loot::Plugin>& editedPlugins, const unsigned int language, const loot::Game& game);
+    FullEditor(wxWindow *parent, const wxString& title, wxPoint pos, wxSize size, const std::string userlistPath, const std::list<loot::Plugin>& basePlugins, std::list<loot::Plugin>& editedPlugins, const unsigned int language, const loot::Game& game, YAML::Node &settings);
 
     void OnQuit(wxCommandEvent& event);
+    void OnClose(wxCloseEvent &event);
 private:
     EditorPanel * editorPanel;
     wxButton * applyBtn;
     wxButton * cancelBtn;
 
     const std::string _userlistPath;
+    YAML::Node& _settings;
 };
 #endif

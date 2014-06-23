@@ -599,9 +599,19 @@ void Launcher::OnClose(wxCloseEvent& event) {
 }
 
 void Launcher::OnViewLastReport(wxCommandEvent& event) {
+    //Load window size/pos settings.
+    wxSize size = wxDefaultSize;
+    wxPoint pos = wxDefaultPosition;
+    if (_settings["windows"] && _settings["windows"]["viewer"]) {
+        YAML::Node node = _settings["windows"]["viewer"];
+        if (node["width"] && node["height"] && node["xPos"] && node["yPos"]) {
+            size = wxSize(node["width"].as<int>(), node["height"].as<int>());
+            pos = wxPoint(node["xPos"].as<int>(), node["yPos"].as<int>());
+        }
+    }
     //Create viewer window.
     BOOST_LOG_TRIVIAL(debug) << "Opening viewer window...";
-    Viewer *viewer = new Viewer(this, translate("LOOT: Report Viewer"), FromUTF8(ToFileURL(g_path_report.string() + "?data=" + _game->ReportDataPath().string())));
+    Viewer *viewer = new Viewer(this, translate("LOOT: Report Viewer"), FromUTF8(ToFileURL(g_path_report.string() + "?data=" + _game->ReportDataPath().string())), pos, size, _settings);
     viewer->Show();
     BOOST_LOG_TRIVIAL(debug) << "Report displayed.";
 }
@@ -622,11 +632,7 @@ void Launcher::OnOpenSettings(wxCommandEvent& event) {
 
     SettingsFrame settings = SettingsFrame(this, translate("LOOT: Settings"), _settings, _games, pos, size);
     BOOST_LOG_TRIVIAL(debug) << "Settings window opened.";
-    int ret = settings.ShowModal();
-
-    if (ret == wxID_OK) {
-
-    }
+    settings.ShowModal();
 
     //Record window settings.
     YAML::Node node;
@@ -938,10 +944,31 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             progDia = nullptr;
 
             BOOST_LOG_TRIVIAL(info) << "Displaying load order preview.";
-            MiniEditor editor(this, translate("LOOT: Calculated Load Order"), plugins, ulist_plugins, *_game);
+
+            //Load window size/pos settings.
+            wxSize size = wxDefaultSize;
+            wxPoint pos = wxDefaultPosition;
+            if (_settings["windows"] && _settings["windows"]["editor"]) {
+                YAML::Node node = _settings["windows"]["editor"];
+                if (node["width"] && node["height"] && node["xPos"] && node["yPos"]) {
+                    size = wxSize(node["width"].as<int>(), node["height"].as<int>());
+                    pos = wxPoint(node["xPos"].as<int>(), node["yPos"].as<int>());
+                }
+            }
+
+            MiniEditor editor(this, translate("LOOT: Calculated Load Order"), pos, size, plugins, ulist_plugins, *_game);
 
             long ret = editor.ShowModal();
             const std::list<loot::Plugin>& newUserlist = editor.GetNewUserlist();
+
+            //Record window settings.
+            YAML::Node node;
+            node["height"] = editor.GetSize().GetHeight();
+            node["width"] = editor.GetSize().GetWidth();
+            node["xPos"] = editor.GetPosition().x;
+            node["yPos"] = editor.GetPosition().y;
+
+            _settings["windows"]["editor"] = node;
 
             //Need to determine if any new edits have been made.
             bool haveNewEdits = false;
@@ -1049,8 +1076,19 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     ViewButton->Enable(true);
 
     BOOST_LOG_TRIVIAL(debug) << "Displaying report...";
+    //Load window size/pos settings.
+    wxSize size = wxDefaultSize;
+    wxPoint pos = wxDefaultPosition;
+    if (_settings["windows"] && _settings["windows"]["viewer"]) {
+        YAML::Node node = _settings["windows"]["viewer"];
+        if (node["width"] && node["height"] && node["xPos"] && node["yPos"]) {
+            size = wxSize(node["width"].as<int>(), node["height"].as<int>());
+            pos = wxPoint(node["xPos"].as<int>(), node["yPos"].as<int>());
+        }
+    }
+
     //Create viewer window.
-    Viewer *viewer = new Viewer(this, translate("LOOT: Report Viewer"), FromUTF8(ToFileURL(g_path_report.string() + "?data=" + _game->ReportDataPath().string())));
+    Viewer *viewer = new Viewer(this, translate("LOOT: Report Viewer"), FromUTF8(ToFileURL(g_path_report.string() + "?data=" + _game->ReportDataPath().string())), pos, size, _settings);
     viewer->Show();
 
     BOOST_LOG_TRIVIAL(debug) << "Report display successful. Sorting process complete.";
@@ -1147,9 +1185,20 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
     else
         lang = loot::Language::any;
 
+    //Load window size/pos settings.
+    wxSize size = wxDefaultSize;
+    wxPoint pos = wxDefaultPosition;
+    if (_settings["windows"] && _settings["windows"]["editor"]) {
+        YAML::Node node = _settings["windows"]["editor"];
+        if (node["width"] && node["height"] && node["xPos"] && node["yPos"]) {
+            size = wxSize(node["width"].as<int>(), node["height"].as<int>());
+            pos = wxPoint(node["xPos"].as<int>(), node["yPos"].as<int>());
+        }
+    }
+
     //Create editor window.
     BOOST_LOG_TRIVIAL(debug) << "Opening editor window.";
-    FullEditor *editor = new FullEditor(this, translate("LOOT: Metadata Editor"), _game->UserlistPath().string(), installed, ulist_plugins, lang, *_game);
+    FullEditor *editor = new FullEditor(this, translate("LOOT: Metadata Editor"), pos, size, _game->UserlistPath().string(), installed, ulist_plugins, lang, *_game, _settings);
 
     progDia->Destroy();
 

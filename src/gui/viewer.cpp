@@ -25,11 +25,12 @@
 #include "viewer.h"
 #include "../backend/helpers.h"
 
-Viewer::Viewer(wxWindow *parent, const wxString& title, const wxString& url) : wxFrame(parent, wxID_ANY, title) {
+Viewer::Viewer(wxWindow *parent, const wxString& title, const wxString& url, wxPoint pos, wxSize size, YAML::Node& settings) : wxFrame(parent, wxID_ANY, title, pos, size), _settings(settings) {
     web = wxWebView::New(this, wxID_ANY, url);
 
     web->Bind(wxEVT_WEBVIEW_NAVIGATING, &Viewer::OnNavigationStart, this);
     web->Bind(wxEVT_CHAR_HOOK, &Viewer::OnKeyUp, this);
+    Bind(wxEVT_CLOSE_WINDOW, &Viewer::OnClose, this);
 
     wxBoxSizer* topsizer = new wxBoxSizer(wxVERTICAL);
 
@@ -70,4 +71,17 @@ void Viewer::OnFind(wxFindDialogEvent &event) {
 
 
     web->Find(event.GetFindString(), findFlags);
+}
+
+void Viewer::OnClose(wxCloseEvent &event) {
+    //Record window settings.
+    YAML::Node node;
+    node["height"] = GetSize().GetHeight();
+    node["width"] = GetSize().GetWidth();
+    node["xPos"] = GetPosition().x;
+    node["yPos"] = GetPosition().y;
+
+    _settings["windows"]["viewer"] = node;
+
+    Destroy();
 }
