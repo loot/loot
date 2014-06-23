@@ -13,14 +13,14 @@ LOOT is intended to make using mods easier, and mod users should still possess a
 
 ## Building LOOT
 
-LOOT uses [CMake](http://cmake.org) v2.8.9 or later for cross-platform building support, as though it is a Windows application, development has taken place on Windows and Linux.
+LOOT uses [CMake](http://cmake.org) for cross-platform building support, as though it is a Windows application, development has taken place on Windows and Linux.
 
 LOOT requires the following libraries (version numbers used in latest development revision given):
 
 * [Alphanum](http://www.davekoelle.com/files/alphanum.hpp)
 * [Boost](http://www.boost.org) v1.55.0
 * [Libespm](http://github.com/WrinklyNinja/libespm)
-* [Libgit2](http://libgit2.github.com/) v0.20.0
+* [Libgit2](http://libgit2.github.com/) v0.21.0
 * [Libloadorder](http://github.com/WrinklyNinja/libloadorder)
 * [wxWidgets](http://www.wxwidgets.org) v3.0.0
 * [yaml-cpp](http://github.com/WrinklyNinja/yaml-cpp)
