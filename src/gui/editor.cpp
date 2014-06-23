@@ -931,7 +931,8 @@ void EditorPanel::OnFilterToggle(wxCommandEvent& event) {
     list<loot::Plugin> plugins(_basePlugins);
     for (const auto &plugin : _editedPlugins) {
         list<loot::Plugin>::iterator pos = std::find(plugins.begin(), plugins.end(), plugin);
-        pos->MergeMetadata(plugin);
+        if (pos != plugins.end())
+            pos->MergeMetadata(plugin);
     }
 
     //Disable list selection.
@@ -1040,7 +1041,7 @@ void EditorPanel::ApplyCurrentEdits() {
         ApplyEdits(currentPlugin);
 }
 
-const std::list<loot::Plugin>& EditorPanel::GetEditedPlugins() const {
+const std::list<loot::Plugin>& EditorPanel::GetNewUserlist() const {
     return _editedPlugins;
 }
 
@@ -1153,7 +1154,9 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
     //Initialise content.
     editorPanel = new EditorPanel(this, basePlugins, editedPlugins, loot::Language::any, game);
     editorPanel->SetSimpleView(true);
+
     feedbackText = translate("If LOOT has gotten something wrong, please let the team know. See the Contributing To LOOT section of the readme for details.");
+    descText = new wxStaticText(this, wxID_ANY, feedbackText);
 
     //Set up event handling.
     Bind(wxEVT_BUTTON, &MiniEditor::OnApply, this, wxID_APPLY);
@@ -1167,7 +1170,7 @@ MiniEditor::MiniEditor(wxWindow *parent, const wxString& title, const std::list<
 
     //Need to add 'Yes' and 'No' buttons.
     wxSizer * sizer = CreateSeparatedButtonSizer(wxAPPLY | wxCANCEL);
-
+    
     //Now add buttons to window sizer.
     if (sizer != nullptr)
         bigBox->Add(sizer, 0, wxEXPAND | wxLEFT | wxBOTTOM | wxRIGHT, 15);
@@ -1191,8 +1194,8 @@ void MiniEditor::OnResize(wxSizeEvent& event) {
     event.Skip();
 }
 
-const std::list<loot::Plugin>& MiniEditor::GetEditedPlugins() const {
-    return editorPanel->GetEditedPlugins();
+const std::list<loot::Plugin>& MiniEditor::GetNewUserlist() const {
+    return editorPanel->GetNewUserlist();
 }
 
 
@@ -1240,7 +1243,7 @@ void FullEditor::OnQuit(wxCommandEvent& event) {
         YAML::Emitter yout;
         yout.SetIndent(2);
         yout << YAML::BeginMap
-            << YAML::Key << "plugins" << YAML::Value << editorPanel->GetEditedPlugins()
+            << YAML::Key << "plugins" << YAML::Value << editorPanel->GetNewUserlist()
             << YAML::EndMap;
 
         boost::filesystem::path p(_userlistPath);

@@ -68,7 +68,7 @@ public:
     void SetSimpleView(bool on = true);
     void ApplyCurrentEdits();
 
-    const std::list<loot::Plugin>& GetEditedPlugins() const;
+    const std::list<loot::Plugin>& GetNewUserlist() const;
 
     void OnPluginSelect(wxListEvent& event);
     void OnPluginListRightClick(wxListEvent& event);
@@ -133,7 +133,7 @@ public:
     void OnApply(wxCommandEvent& event);
     void OnResize(wxSizeEvent& event);
 
-    const std::list<loot::Plugin>& GetEditedPlugins() const;
+    const std::list<loot::Plugin>& GetNewUserlist() const;
 private:
     EditorPanel * editorPanel;
     wxStaticText * descText;

@@ -87,18 +87,17 @@ struct plugin_loader {
 };
 
 struct plugin_list_loader {
-    plugin_list_loader(PluginGraph& graph, loot::Game& game) : _graph(graph), _game(game) {}
+    plugin_list_loader(list<loot::Plugin>& plugins, loot::Game& game) : _plugins(plugins), _game(game) {}
 
     void operator () () {
-        loot::vertex_it vit, vitend;
-        for (boost::tie(vit, vitend) = boost::vertices(_graph); vit != vitend; ++vit) {
-            if (skipPlugins.find(_graph[*vit].Name()) == skipPlugins.end()) {
-                _graph[*vit] = loot::Plugin(_game, _graph[*vit].Name(), false);
+        for (auto &plugin : _plugins) {
+            if (skipPlugins.find(plugin.Name()) == skipPlugins.end()) {
+                plugin = loot::Plugin(_game, plugin.Name(), false);
             }
         }
     }
 
-    PluginGraph& _graph;
+    list<loot::Plugin>& _plugins;
     loot::Game& _game;
     set<string> skipPlugins;
 };
@@ -681,7 +680,6 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     list<loot::Plugin> mlist_plugins, ulist_plugins;
     list<loot::Plugin> plugins;
     boost::thread_group group;
-    loot::PluginGraph graph;
     string revision, date;
 
     wxProgressDialog *progDia = new wxProgressDialog(translate("LOOT: Working..."),translate("LOOT working..."), 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_ELAPSED_TIME);
@@ -704,22 +702,21 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             meanFileSize += fileSize;
 
             tempMap.emplace(it->path().filename().string(), fileSize);
-            plugins.push_back(loot::Plugin(it->path().filename().string()));  //Just in case there's an error with the graph.
         }
     }
     meanFileSize /= tempMap.size();
 
     //Now load plugins.
-    plugin_list_loader pll(graph, *_game);
+    plugin_list_loader pll(plugins, *_game);
     for (const auto &pluginPair: tempMap) {
 
         BOOST_LOG_TRIVIAL(info) << "Found plugin: " << pluginPair.first;
 
-        vertex_t v = boost::add_vertex(loot::Plugin(pluginPair.first), graph);
+        plugins.push_back(loot::Plugin(pluginPair.first));
 
         if (pluginPair.second > meanFileSize) {
             pll.skipPlugins.insert(pluginPair.first);
-            plugin_loader pl(graph[v], *_game);
+            plugin_loader pl(plugins.back(), *_game);
             group.create_thread(pl);
         }
 
@@ -753,14 +750,14 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     // Merge & Check Metadata
     ///////////////////////////////////////////////////////
 
-    if (fs::exists(_game->MasterlistPath()) || fs::exists(_game->UserlistPath())) {
+    //Set language.
+    unsigned int lang;
+    if (_settings["Language"])
+        lang = Language(_settings["Language"].as<string>()).Code();
+    else
+        lang = loot::Language::any;
 
-        //Set language.
-        unsigned int lang;
-        if (_settings["Language"])
-            lang = Language(_settings["Language"].as<string>()).Code();
-        else
-            lang = loot::Language::any;
+    if (fs::exists(_game->MasterlistPath()) || fs::exists(_game->UserlistPath())) {
 
 
         //Merge all global message lists.
@@ -786,45 +783,18 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             messages.push_back(loot::Message(loot::Message::error, (format(loc::translate("A global message contains a condition that could not be evaluated. Details: %1%")) % e.what()).str()));
         }
 
-        //Merge plugin list, masterlist and userlist plugin data.
-        BOOST_LOG_TRIVIAL(debug) << "Merging plugin list, masterlist and userlist data, evaluating conditions and checking for install validity.";
-        loot::vertex_it vit, vitend;
-        for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
-            BOOST_LOG_TRIVIAL(trace) << "Merging for plugin \"" << graph[*vit].Name() << "\"";
+        //Merge plugin list and masterlist.
+        BOOST_LOG_TRIVIAL(debug) << "Merging plugin list and masterlist data.";
+        for (auto &plugin : plugins) {
+            BOOST_LOG_TRIVIAL(trace) << "Merging for plugin \"" << plugin.Name() << "\"";
 
             //Check if there is a plugin entry in the masterlist. This will also find matching regex entries.
-            list<loot::Plugin>::iterator pos = std::find(mlist_plugins.begin(), mlist_plugins.end(), graph[*vit]);
+            list<loot::Plugin>::iterator pos = std::find(mlist_plugins.begin(), mlist_plugins.end(), plugin);
 
             if (pos != mlist_plugins.end()) {
                 BOOST_LOG_TRIVIAL(trace) << "Merging masterlist data down to plugin list data.";
-                graph[*vit].MergeMetadata(*pos);
+                plugin.MergeMetadata(*pos);
             }
-
-            //Check if there is a plugin entry in the userlist. This will also find matching regex entries.
-            pos = std::find(ulist_plugins.begin(), ulist_plugins.end(), graph[*vit]);
-
-            if (pos != ulist_plugins.end() && pos->Enabled()) {
-                BOOST_LOG_TRIVIAL(trace) << "Merging userlist data down to plugin list data.";
-                graph[*vit].MergeMetadata(*pos);
-            }
-
-            progDia->Pulse();
-
-            //Now that items are merged, evaluate any conditions they have.
-            BOOST_LOG_TRIVIAL(trace) << "Evaluate conditions for merged plugin data.";
-            try {
-                graph[*vit].EvalAllConditions(*_game, lang);
-            }
-            catch (std::exception& e) {
-                BOOST_LOG_TRIVIAL(error) << "\"" << graph[*vit].Name() << "\" contains a condition that could not be evaluated. Details: " << e.what();
-                messages.push_back(loot::Message(loot::Message::error, (format(loc::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % graph[*vit].Name() % e.what()).str()));
-            }
-
-            progDia->Pulse();
-
-            //Also check install validity.
-            BOOST_LOG_TRIVIAL(trace) << "Checking that the current install is valid according to this plugin's data.";
-            graph[*vit].CheckInstallValidity(*_game);
 
             progDia->Pulse();
         }
@@ -849,19 +819,60 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     //Check for back-edges, then perform a topological sort.
     try {
         bool applyLoadOrder = false;
+
         do {
+            //Create a plugin graph containing the plugin and masterlist data.
+            loot::PluginGraph graph;
+            for (auto &plugin : plugins) {
+                vertex_t v = boost::add_vertex(plugin, graph);
+            }
+
+            BOOST_LOG_TRIVIAL(info) << "Merging userlist into plugin list/masterlist, evaluating conditions and checking for install validity.";
+            loot::vertex_it vit, vitend;
+            for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
+                BOOST_LOG_TRIVIAL(trace) << "Merging for plugin \"" << graph[*vit].Name() << "\"";
+
+                //Check if there is a plugin entry in the userlist. This will also find matching regex entries.
+                list<loot::Plugin>::iterator pos = std::find(ulist_plugins.begin(), ulist_plugins.end(), graph[*vit]);
+
+                if (pos != ulist_plugins.end() && pos->Enabled()) {
+                    BOOST_LOG_TRIVIAL(trace) << "Merging userlist data down to plugin list data.";
+                    graph[*vit].MergeMetadata(*pos);
+                }
+
+                progDia->Pulse();
+
+                //Now that items are merged, evaluate any conditions they have.
+                BOOST_LOG_TRIVIAL(trace) << "Evaluate conditions for merged plugin data.";
+                try {
+                    graph[*vit].EvalAllConditions(*_game, lang);
+                }
+                catch (std::exception& e) {
+                    BOOST_LOG_TRIVIAL(error) << "\"" << graph[*vit].Name() << "\" contains a condition that could not be evaluated. Details: " << e.what();
+                    messages.push_back(loot::Message(loot::Message::error, (format(loc::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % graph[*vit].Name() % e.what()).str()));
+                }
+
+                progDia->Pulse();
+
+                //Also check install validity.
+                BOOST_LOG_TRIVIAL(trace) << "Checking that the current install is valid according to this plugin's data.";
+                graph[*vit].CheckInstallValidity(*_game);
+
+                progDia->Pulse();
+            }
+
             BOOST_LOG_TRIVIAL(info) << "Building the plugin dependency graph...";
 
             //Now add the interactions between plugins to the graph as edges.
             std::map<std::string, int> overriddenPriorities;
             BOOST_LOG_TRIVIAL(debug) << "Adding non-overlap edges.";
-            AddSpecificEdges(graph, overriddenPriorities);
+            loot::AddSpecificEdges(graph, overriddenPriorities);
 
             BOOST_LOG_TRIVIAL(debug) << "Adding priority edges.";
-            AddPriorityEdges(graph);
+            loot::AddPriorityEdges(graph);
 
             BOOST_LOG_TRIVIAL(debug) << "Adding overlap edges.";
-            AddOverlapEdges(graph);
+            loot::AddOverlapEdges(graph);
 
             BOOST_LOG_TRIVIAL(info) << "Checking to see if the graph is cyclic.";
             loot::CheckForCycles(graph);
@@ -885,13 +896,32 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             MiniEditor editor(this, translate("LOOT: Calculated Load Order"), plugins, ulist_plugins, *_game);
 
             long ret = editor.ShowModal();
-            const std::list<loot::Plugin> edits = editor.GetEditedPlugins();
+            const std::list<loot::Plugin>& newUserlist = editor.GetNewUserlist();
+
+            //Need to determine if any new edits have been made.
+            bool haveNewEdits = false;
+            if (newUserlist.size() != ulist_plugins.size())
+                haveNewEdits = true;
+            else {
+                for (const auto& newEdit : newUserlist) {
+                    const auto it = std::find(ulist_plugins.begin(), ulist_plugins.end(), newEdit);
+                    if (it == ulist_plugins.end()) {
+                        haveNewEdits = true;
+                        break;
+                    }
+
+                    if (!it->DiffMetadata(newEdit).HasNameOnly()) {
+                        haveNewEdits = true;
+                        break;
+                    }
+                }
+            }
 
             if (ret != wxID_APPLY) {
                 applyLoadOrder = false;
                 break;
             }
-            else if (edits.empty()) {
+            else if (!haveNewEdits) {
                 applyLoadOrder = true;
                 break;
             }
@@ -900,35 +930,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                 progDia = new wxProgressDialog(translate("LOOT: Working..."), translate("Recalculating load order..."), 1000, this, wxPD_APP_MODAL | wxPD_AUTO_HIDE | wxPD_ELAPSED_TIME);
 
                 //User accepted edits, now apply them, then loop.
-                //Apply edits to the graph vertices.
-                loot::vertex_it vit, vitend;
-                for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
-                    std::list<loot::Plugin>::const_iterator pos = std::find(edits.begin(), edits.end(), graph[*vit]);
-
-                    if (pos != edits.end()) {
-                        BOOST_LOG_TRIVIAL(trace) << "Merging edits down to plugin list data.";
-                        graph[*vit].MergeMetadata(*pos);
-                    }
-                }
-
-                //Clear all existing edges from the graph.
-                BOOST_LOG_TRIVIAL(debug) << "Clearing all existing edges from the plugin graph.";
-                for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
-                    boost::clear_vertex(*vit, graph);
-                }
-
-                //Merge edits down to the userlist entries.
-                BOOST_LOG_TRIVIAL(debug) << "Merging down edits to the userlist.";
-                for (const auto &plugin: edits) {
-                    auto it = find(ulist_plugins.begin(), ulist_plugins.end(), plugin);
-
-                    if (it != ulist_plugins.end()) {
-                        it->MergeMetadata(plugin);
-                    }
-                    else {
-                        ulist_plugins.push_back(plugin);
-                    }
-                }
+                ulist_plugins = newUserlist;
 
                 //Save edits to userlist.
                 BOOST_LOG_TRIVIAL(info) << "Saving edited userlist.";
@@ -947,7 +949,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         } while (true);
 
         if (applyLoadOrder) {
-            //User doesn't want to make any changes. Just go straight to applying the load order.
+            //Applying the load order.
             BOOST_LOG_TRIVIAL(debug) << "Setting load order.";
             try {
                 _game->SetLoadOrder(plugins);

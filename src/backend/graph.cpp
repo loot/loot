@@ -95,12 +95,23 @@ namespace loot {
         boost::topological_sort(graph, std::front_inserter(sortedVertices), boost::vertex_index_map(v_index_map));
 
         BOOST_LOG_TRIVIAL(info) << "Calculated order: ";
-        list<loot::Plugin> tempPlugins;
+        list<string> tempPlugins;
         for (const auto &vertex: sortedVertices) {
             BOOST_LOG_TRIVIAL(info) << '\t' << graph[vertex].Name();
-            tempPlugins.push_back(graph[vertex]);
+            tempPlugins.push_back(graph[vertex].Name());
         }
-        plugins.swap(tempPlugins);
+
+        //Now sort exist plugins list according to order in tempPlugins.
+        plugins.sort([tempPlugins](const Plugin& first, const Plugin& second){
+            //Find both plugins, and compare distances from beginning.
+            auto fIt = find(tempPlugins.begin(), tempPlugins.end(), first);
+            auto sIt = find(tempPlugins.begin(), tempPlugins.end(), second);
+
+            if (fIt == tempPlugins.end() || sIt == tempPlugins.end())
+                return false;
+
+            return distance(tempPlugins.begin(), fIt) < distance(tempPlugins.begin(), sIt);
+        });
     }
 
     void CheckForCycles(const PluginGraph& graph) {
