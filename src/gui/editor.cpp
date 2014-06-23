@@ -985,6 +985,9 @@ void EditorPanel::OnDragStart(wxListEvent& event) {
 
 void EditorPanel::AddPluginToList(const loot::Plugin& plugin, int position) {
     loot::Plugin userEdits = GetUserData(FromUTF8(plugin.Name()));
+    loot::Plugin mergedPlugin(plugin);
+    mergedPlugin.MergeMetadata(userEdits);
+
     if (!userEdits.HasNameOnly()) {
         if (userEdits.Enabled())
             pluginList->InsertItem(position, FromUTF8("\xE2\x9C\x93"));
@@ -994,13 +997,13 @@ void EditorPanel::AddPluginToList(const loot::Plugin& plugin, int position) {
     else
         pluginList->InsertItem(position, "");
 
-    pluginList->SetItem(position, 1, FromUTF8(plugin.Name()));
-    pluginList->SetItem(position, 2, FromUTF8(to_string(loot::modulo(plugin.Priority(), loot::max_priority))));
-    if (abs(plugin.Priority()) >= loot::max_priority)
+    pluginList->SetItem(position, 1, FromUTF8(mergedPlugin.Name()));
+    pluginList->SetItem(position, 2, FromUTF8(to_string(loot::modulo(mergedPlugin.Priority(), loot::max_priority))));
+    if (abs(mergedPlugin.Priority()) >= loot::max_priority)
         pluginList->SetItem(position, 3, FromUTF8("\xE2\x9C\x93"));
     else
         pluginList->SetItem(position, 3, FromUTF8("\xE2\x9C\x97"));
-    if (plugin.LoadsBSA(_game)) {
+    if (mergedPlugin.LoadsBSA(_game)) {
         pluginList->SetItemTextColour(position, wxColour(0, 142, 219));
     }
 }
@@ -1080,7 +1083,7 @@ void EditorPanel::ApplyEdits(const wxString& plugin) {
 
     if (!diff.HasNameOnly()) {
         if (pos != _editedPlugins.end()) {
-            if (!pos->DiffMetadata(edited).HasNameOnly())
+            if (!pos->DiffMetadata(diff).HasNameOnly())
                 pluginList->SetItemFont(i, wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT).Bold());
             *pos = diff;
         }
