@@ -448,12 +448,13 @@ A copy of the license is included in the file named "GNU FDL v1.3.txt".</blockqu
     <li>Fixed: The uninstaller not removing the Git repositories used to update the masterlists.
     <li>Fixed: Miscellaneous crashes due to uncaught exceptions.
     <li>Fixed: Plugin priorities are now temporarily "inherited" during sorting so that a plugin with a low priority that is made via metadata to load after a plugin with a high priority doesn't cause other plugins with lower priorities to be positioned incorrectly.
-    <li>Fixed: Default language setting value.
-    <li>Fixed: Defaults for the online masterlist used for Nehrim.
+    <li>Fixed: The default language is now correctly set to English.
+    <li>Fixed: Defaults for the online masterlist repository used for Nehrim.
     <li>Added: Display of masterlist revision date in reports.
     <li>Added: Report filter for inactive plugin messages.
-    <li>Added: Right-click menu command for clearing all user-added metadata for all plugins to the full metadata editor.
-    <li>Added: Conflict filter, drag 'n' drop into requirements, incompatibilities and load after lists, plugin priority display and a simple display mode to the full metadata editor.
+    <li>Added: The number of dirty plugins, active plugins and plugins in total to the report summary.
+    <li>Added: A find dialog to the report viewer, initiated using the <code>Ctrl-F</code> keyboard shortcut.
+    <li>Added: LOOT's windows now remember their last position and size.
     <li>Added: Command line parameter for selecting the game LOOT should run for.
     <li>Added: Finnish translation.
     <li>Removed: Support for Windows XP.
@@ -461,14 +462,24 @@ A copy of the license is included in the file named "GNU FDL v1.3.txt".</blockqu
     <li>Removed: The ability to open reports in an external browser. This was necessitated by the changes to report generation.
     <li>Removed: The MSVC 2013 redistributable requirement.
     <li>Removed: The "None Specified" language option is no longer available: English is the new default.
-    <li>Changed: The full metadata now displays plugins with user edits using a tick beside their name, rather than bolding their name text.
-    <li>Changed: Full metadata window sizing. It should now resize more appropriately.
+    <li>Changed: Unified and improved the metadata editors launched during and outside of sorting.
+    <ul>
+        <li>The metadata editor now resizes more appropriately.
+        <li>The mid-sorting instance hides the requirement, incompatibility, Bash Tags, dirty info and message lists.
+        <li>Both instances now have a conflict filter, priority display in their plugin list and drag 'n' drop from the plugin list into whatever metadata lists are visible.
+        <li>The mid-sorting instance also hides the load after entry edit button, and the button to add new entries (so drag 'n' drop is the only available method of adding entries).
+        <li>The metadata editor now displays plugins with user edits using a tick beside their name, rather than bolding their name text.
+        <li>Plugins that have been edited in the current instance have their list entry text bolded.
+        <li>Checkboxes have been added to set whether or not a priority value is "global". The UI also now displays the priority value used in comparisons (ie. with the millions and higher digits omitted).
+        <li>A right-click menu command for clearing all user-added metadata for all plugins has been added to the metadata editor.
+    </ul>
     <li>Changed: Missing master/requirement and incompatibility errors are downgraded to warnings if the plugin in question is inactive.
-    <li>Changed: Checkboxes have been added to the full and mini metadata editors to set whether or not a priority value is "global". The UI also now displays the priority value used in comparisons (ie. with the millions and higher digits omitted).
     <li>Changed: Masterlist update errors have been made more user-friendly.
-    <li>Changed: Cyclic depndency error messages now detail the full cycle.
+    <li>Changed: If an error is encountered during masterlist update, LOOT will now silently delete the repository folder and attempt the update again. If it fails again, it will then report an error.
+    <li>Changed: Cyclic dependency error messages now detail the full cycle.
     <li>Changed: LOOT's report now uses a static HTML file and generates a javascript file that is dynamically loaded to contain the report data. This removes the PugiXML build dependency.
     <li>Changed: Debug log message priorities adjusted so that medium verbosity includes more useful data.
+    <li>Changed: Updated libgit2 dependency to v0.21.0.
 </ul>
 
 <h3>0.5.0 - <i>31 March 2014</i></h3>
