@@ -46,10 +46,6 @@ namespace loot {
         git_handler() : repo(nullptr), remote(nullptr), cfg(nullptr), obj(nullptr), commit(nullptr), ref(nullptr), sig(nullptr), blob(nullptr) {}
 
         ~git_handler() {
-            free();
-        }
-
-        void free() {
             git_commit_free(commit);
             git_object_free(obj);
             git_config_free(cfg);
@@ -70,7 +66,6 @@ namespace loot {
                 error_message = to_string(error_code) + ".";
             else
                 error_message = to_string(error_code) + "; " + last_error->message;
-            free();
             giterr_clear();
 
             if (ui_message.empty())
@@ -172,11 +167,9 @@ namespace loot {
                 out << boost::locale::as::ftime("%Y-%m-%d") << dateTime;
                 date = out.str();
 
-                git.free();
                 return pair<string, string>(revision, date);
             }
             else {
-                git.free();
                 return pair<string, string>("Unknown: Masterlist edited", "Unknown: Masterlist edited");
             }
         }
@@ -344,9 +337,6 @@ namespace loot {
                 parsingErrors.push_back(loot::Message(loot::Message::error, boost::locale::translate("Masterlist revision").str() + " " + string(revision) + ": " + e.what() + " " + boost::locale::translate("Rolled back to the previous revision.").str()));
             }
         } while (parsingFailed);
-
-        //Finally, free memory.
-        git.free();
 
         return pair<string, string>(revision, date);
     }
