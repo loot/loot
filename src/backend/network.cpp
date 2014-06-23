@@ -45,6 +45,10 @@ namespace loot {
     public:
         git_handler() : repo(nullptr), remote(nullptr), cfg(nullptr), obj(nullptr), commit(nullptr), ref(nullptr), sig(nullptr), blob(nullptr) {}
 
+        ~git_handler() {
+            free();
+        }
+
         void free() {
             git_commit_free(commit);
             git_object_free(obj);
@@ -182,7 +186,7 @@ namespace loot {
         git_handler git;
 
         BOOST_LOG_TRIVIAL(debug) << "Checking for a Git repository.";
-        git.ui_message = "An error occurred while trying to access the local masterlist repository. If this error happens again, try deleting the \".git\" folder in \"%LOCALAPPDATA%\\LOOT\\" + game.FolderName() + "\".";
+        git.ui_message = "An error occurred while trying to access the local masterlist repository.";
 
         //Checking for a ".git" folder.
         if (fs::exists(game.MasterlistPath().parent_path() / ".git")) {
@@ -265,10 +269,6 @@ namespace loot {
         using its git_oid and git_reference_create.
         7. Perform the checkout of HEAD.
         */
-
-        //Apparently I'm using libgit2's head, not v0.20.0, so I don't need this...
-        //LOG_INFO("Creating a Git signature.");
-        //git.call(git_signature_default(&git.sig, git.repo));
 
         bool parsingFailed = false;
         unsigned int rollbacks = 0;

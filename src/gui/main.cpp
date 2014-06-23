@@ -111,9 +111,24 @@ struct masterlist_updater_parser {
         if (_doUpdate) {
             BOOST_LOG_TRIVIAL(debug) << "Updating masterlist";
             try {
-                pair<string, string> ret = UpdateMasterlist(_game, _errors, _plugins, _messages);
-                _revision = ret.first;
-                _date = ret.second;
+                try {
+                    pair<string, string> ret = UpdateMasterlist(_game, _errors, _plugins, _messages);
+                    _revision = ret.first;
+                    _date = ret.second;
+                }
+                catch (loot::error &e) {
+                    BOOST_LOG_TRIVIAL(error) << "Masterlist update failed. Details: " << e.what();
+                    if (e.code() == loot::error::git_error) {
+                        BOOST_LOG_TRIVIAL(info) << "Masterlist update failure was due to Git error, deleting repository and retrying...";
+                        //Delete .git folder and try again.
+                        fs::remove_all(_game.MasterlistPath().parent_path() / ".git");
+                        pair<string, string> ret = UpdateMasterlist(_game, _errors, _plugins, _messages);
+                        _revision = ret.first;
+                        _date = ret.second;
+                    }
+                    else
+                        throw e;
+                }
             } catch (std::exception& e) {
                 _plugins.clear();
                 _messages.clear();
