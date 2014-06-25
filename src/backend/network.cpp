@@ -105,6 +105,10 @@ namespace loot {
         return true;
     }
 
+    bool isRepository(const fs::path& path) {
+        return git_repository_open_ext(NULL, path.string().c_str(), GIT_REPOSITORY_OPEN_NO_SEARCH, NULL) == 0;
+    }
+
     std::pair<string, string> GetMasterlistRevision(const Game& game) {
         if (!fs::exists(game.MasterlistPath().parent_path() / ".git")) {
             return pair<string, string>("Unknown: Git repository missing", "Unknown: Git repository missing");
@@ -177,100 +181,167 @@ namespace loot {
 
     std::pair<std::string, std::string> UpdateMasterlist(Game& game, std::list<Message>& parsingErrors, std::list<Plugin>& plugins, std::list<Message>& messages) {
         git_handler git;
+        fs::path repo_path = game.MasterlistPath().parent_path();
+        string repo_branch = game.RepoBranch();
 
-        BOOST_LOG_TRIVIAL(debug) << "Checking for a Git repository.";
+        // First initialise some stuff that isn't specific to a repository.
+        BOOST_LOG_TRIVIAL(debug) << "Creating a reflog signature to use.";
+        // Create a reflog signature for any changes.
+        git.call(git_signature_new(&git.sig, "LOOT", "loot@placeholder.net", 0, 0));
+
+        BOOST_LOG_TRIVIAL(debug) << "Setting up checkout options.";
+        char * paths[] = { "masterlist.yaml" };
+        git_checkout_options checkout_opts = GIT_CHECKOUT_OPTIONS_INIT;
+        checkout_opts.checkout_strategy = GIT_CHECKOUT_FORCE;
+        checkout_opts.paths.strings = paths;
+        checkout_opts.paths.count = 1;
+
+        // Now try to access the repository if it exists, or clone one if it doesn't.
         git.ui_message = "An error occurred while trying to access the local masterlist repository.";
 
-        //Checking for a ".git" folder.
-        if (fs::exists(game.MasterlistPath().parent_path() / ".git")) {
-            //Repository exists. Open it.
+        if (!isRepository(repo_path)) {
+            // Clone the remote repository.
+            BOOST_LOG_TRIVIAL(info) << "Repository doesn't exist, cloning the remote repository.";
+
+            bool wasEmpty = true;
+            if (!fs::is_empty(repo_path)) {
+                // Now, libgit2 doesn't support cloning into non-empty folders. Rename the folder 
+                // temporarily, and move its contents back in afterwards, skipping any that then conflict.
+                BOOST_LOG_TRIVIAL(trace) << "Repo path not empty, renaming folder.";
+                fs::rename(repo_path, repo_path.string() + ".temp");
+                wasEmpty = false;
+            }
+
+            //First set up clone options.
+
+            git_clone_options clone_options = GIT_CLONE_OPTIONS_INIT;
+            clone_options.checkout_opts = checkout_opts;
+            clone_options.bare = 0;
+            clone_options.checkout_branch = repo_branch.c_str();
+            clone_options.signature = git.sig;
+#ifndef _WIN32
+            //OpenSSL doesn't seem to like GitHub's certificate.
+            clone_options.ignore_cert_errors = 1;
+#endif
+
+            //Now perform the clone.
+            git.call(git_clone(&git.repo, game.RepoURL().c_str(), repo_path.string().c_str(), &clone_options));
+
+            if (!wasEmpty) {
+                //Move contents back in.
+                BOOST_LOG_TRIVIAL(trace) << "Repo path wasn't empty, moving previous files back in.";
+                for (fs::directory_iterator it(repo_path.string() + ".temp"); it != fs::directory_iterator(); ++it) {
+                    if (!fs::exists(repo_path / it->path().filename())) {
+                        //No conflict, OK to move back in.
+                        fs::rename(it->path(), repo_path / it->path().filename());
+                    }
+                }
+                //Delete temporary folder.
+                fs::remove_all(repo_path.string() + ".temp");
+            }
+        }
+        else {
+            // Repository exists: check settings are correct, then pull updates.
+
+            // Open the repository.
             BOOST_LOG_TRIVIAL(info) << "Existing repository found, attempting to open it.";
-            git.call(git_repository_open(&git.repo, game.MasterlistPath().parent_path().string().c_str()));
+            git.call(git_repository_open(&git.repo, repo_path.string().c_str()));
 
-            BOOST_LOG_TRIVIAL(trace) << "Attempting to get info on the repository remote.";
-
-            //Now get remote info.
+            // Check that the repository's remote settings match LOOT's.
+            BOOST_LOG_TRIVIAL(info) << "Checking to see if remote URL matches URL in settings.";
             git.call(git_remote_load(&git.remote, git.repo, "origin"));
-
-            BOOST_LOG_TRIVIAL(trace) << "Getting the remote URL.";
-
-            //Get the remote URL.
             const char * url = git_remote_url(git.remote);
 
-            BOOST_LOG_TRIVIAL(info) << "Checking to see if remote URL matches URL in settings.";
-
-            //Check if the repo URLs match.
             BOOST_LOG_TRIVIAL(info) << "Remote URL given: " << game.RepoURL();
             BOOST_LOG_TRIVIAL(info) << "Remote URL in repository settings: " << url;
             if (url != game.RepoURL()) {
                 BOOST_LOG_TRIVIAL(info) << "URLs do not match, setting repository URL to URL in settings.";
-                //The URLs don't match. Change the remote URL to match the one LOOT has.
+                // The URLs don't match. Change the remote URL to match the one LOOT has.
                 git.call(git_remote_set_url(git.remote, game.RepoURL().c_str()));
 
-                //Now save change.
+                // Now save change.
                 git.call(git_remote_save(git.remote));
             }
-        } else {
-            BOOST_LOG_TRIVIAL(info) << "Repository doesn't exist, initialising a new repository.";
-            //Repository doesn't exist. Set up a repository.
-            git.call(git_repository_init(&git.repo, game.MasterlistPath().parent_path().string().c_str(), false));
 
-            BOOST_LOG_TRIVIAL(info) << "Setting the new repository's remote to: " << game.RepoURL();
+            // Now fetch updates from the remote.
+            BOOST_LOG_TRIVIAL(trace) << "Fetching updates from remote.";
+            git.ui_message = "An error occurred while trying to update the masterlist. This could be due to a server-side error. Try again in a few minutes.";
 
-            //Now set the repository's remote.
-            git.call(git_remote_create(&git.remote, git.repo, "origin", game.RepoURL().c_str()));
+            git.call(git_remote_fetch(git.remote, git.sig, nullptr));
+
+            // Print some stats on what was fetched either during update or clone.
+            const git_transfer_progress * stats = git_remote_stats(git.remote);
+            BOOST_LOG_TRIVIAL(info) << "Received " << stats->indexed_objects << " of " << stats->total_objects << " objects in " << stats->received_bytes << " bytes.";
+
+            // Check that a branch with the correct name exists.
+            int ret = git_branch_lookup(&git.ref, git.repo, repo_branch.c_str(), GIT_BRANCH_LOCAL);
+            if (ret == GIT_ENOTFOUND) {
+                // Branch doesn't exist. Create a new branch using the remote branch's latest commit.
+
+                BOOST_LOG_TRIVIAL(trace) << "Looking up commit referred to by the remote branch \"" << repo_branch << "\".";
+                git.call(git_revparse_single(&git.obj, git.repo, (string("origin/") + repo_branch).c_str()));
+                const git_oid * commit_id = git_object_id(git.obj);
+
+                BOOST_LOG_TRIVIAL(trace) << "Creating the new branch.";
+                
+                // Create a branch.
+                git.call(git_commit_lookup(&git.commit, git.repo, commit_id));
+                git.call(git_branch_create(&git.ref, git.repo, repo_branch.c_str(), git.commit, 0, git.sig, NULL));
+
+                // Set upstream. Don't really know if this is necessary or not.
+                git.call(git_branch_set_upstream(git.ref, (string("origin/") + repo_branch).c_str()));
+
+                BOOST_LOG_TRIVIAL(trace) << "Setting the upstream for the new branch.";
+                
+                // Free tree and commit pointers. Reference pointer is still used below.
+                git_object_free(git.obj);
+                git_commit_free(git.commit);
+                git.commit = nullptr;
+                git.obj = nullptr;
+
+                BOOST_LOG_TRIVIAL(trace) << "Done creating the new branch.";
+            }
+            else if (ret != 0)
+                git.call(ret);  // Handle other errors.
+
+            // Check if HEAD points to the desired branch and set it to if not.
+            if (!git_branch_is_head(git.ref)) {
+                BOOST_LOG_TRIVIAL(trace) << "Setting HEAD to follow branch: " << repo_branch;
+                git.call(git_repository_set_head(git.repo, (string("refs/heads/") + repo_branch).c_str(), git.sig, (string("Updated HEAD to ") + repo_branch).c_str()));
+            }
+
+            if (ret == 0) {
+                /* The branch did exist, and is now pointed at by HEAD.
+                   Need to merge the remote branch into it.
+                  
+                   1. git_merge_head_from_fetchhead to get the remote branch object to merge with.
+                   2. git_merge to merge the remote branch object into HEAD, which is set to be
+                      the desired branch.Docs say a commit may be necessary after this.
+                */
+            }
+
+            // Free branch pointer.
+            git_reference_free(git.ref);
+            git.ref = nullptr;
+
+            BOOST_LOG_TRIVIAL(trace) << "Performing a Git checkout of HEAD.";
+            git.call(git_checkout_head(git.repo, &checkout_opts));
+
         }
 
-        //Now that repo is loaded, create a reflog signature for any changes.
-        git.call(git_signature_new(&git.sig, "LOOT", "loot@placeholder.net", 0, 0));
-
-        //WARNING: This is generally a very bad idea, since it makes HTTPS a little bit pointless, but in this case because we're only reading data and not really concerned about its integrity, it's acceptable. A better solution would be to figure out why GitHub's certificate appears to be invalid to OpenSSL.
-#ifndef _WIN32
-		git_remote_check_cert(git.remote, 0);
-#endif
-
-        BOOST_LOG_TRIVIAL(trace) << "Fetching updates from remote.";
-        git.ui_message = "An error occurred while trying to update the masterlist. This could be due to a server-side error. Try again in a few minutes.";
-
-        //Now pull from the remote repository. This involves a fetch followed by a merge. First perform the fetch.
-
-        //Fetch from remote.
-        BOOST_LOG_TRIVIAL(trace) << "Fetching from remote.";
-        git.call(git_remote_fetch(git.remote, git.sig, nullptr));
-
-        const git_transfer_progress * stats = git_remote_stats(git.remote);
-        BOOST_LOG_TRIVIAL(info) << "Received " << stats->indexed_objects << " of " << stats->total_objects << " objects in " << stats->received_bytes << " bytes.";
-
-        //Now do a forced checkout of masterlist.yaml from the desired branch.
-        BOOST_LOG_TRIVIAL(trace) << "Setting up checkout parameters.";
-
-        char * paths[] = { "masterlist.yaml" };
-
-        git_checkout_options opts = GIT_CHECKOUT_OPTIONS_INIT;
-        opts.checkout_strategy = GIT_CHECKOUT_FORCE;  //Make sure the existing file gets overwritten.
-        opts.paths.strings = paths;
-        opts.paths.count = 1;
-
-        //Next, we need to do a looping checkout / parsing check / roll-back.
-        /* Here's what to do:
-        0. Create a git_signature using git_signature_default.
-        1. Get the git_object for the desired masterlist revision, using git_revparse_single.
-        2. Get the git_oid for that object, using git_object_id.
-        3. Get the git_reference for the HEAD reference using git_reference_lookup.
-        5. Generate a short string for the git_oid, to display in the log.
-        6. (Re)create a HEAD reference to point directly to the desired masterlist revision,
-        using its git_oid and git_reference_create.
-        7. Perform the checkout of HEAD.
-        */
+        // Now whether the repository was cloned or updated, the working directory contains
+        // the latest masterlist. Try parsing it: on failure, detach the HEAD back one commit
+        // and try again.
 
         bool parsingFailed = false;
-        unsigned int rollbacks = 0;
         string revision, date;
         git.ui_message = "An error occurred while trying to read information on the updated masterlist. If this error happens again, try deleting the \".git\" folder in \"%LOCALAPPDATA%\\LOOT\\" + game.FolderName() + "\".";
         do {
-            string filespec = "refs/remotes/origin/" + game.RepoBranch() + "~" + to_string(rollbacks);
-            BOOST_LOG_TRIVIAL(info) << "Getting the Git object for the tree at " << filespec;
-            git.call(git_revparse_single(&git.obj, git.repo, filespec.c_str()));
+            // Get some descriptive info about what was checked out.
+
+            BOOST_LOG_TRIVIAL(trace) << "Getting the Git object for HEAD.";
+            git.call(git_repository_head(&git.ref, git.repo));
+            git.call(git_reference_peel(&git.obj, git.ref, GIT_OBJ_COMMIT));
 
             BOOST_LOG_TRIVIAL(trace) << "Generating hex string for the Git object.";
             git_buf buffer;
@@ -282,31 +353,23 @@ namespace loot {
             const git_oid * oid = git_object_id(git.obj);
             git.call(git_commit_lookup(&git.commit, git.repo, oid));
             git_time_t time = git_commit_time(git.commit);
+            // Now convert into a nice text format.
             boost::locale::date_time dateTime(time);
             stringstream out;
             out << boost::locale::as::ftime("%Y-%m-%d") << dateTime;
             date = out.str();
 
-            BOOST_LOG_TRIVIAL(trace) << "Recreating HEAD as a direct reference (overwriting it) to the desired revision.";
-            git.call(git_reference_create(&git.ref, git.repo, "HEAD", oid, 1, git.sig, "Updated HEAD."));
-
-            BOOST_LOG_TRIVIAL(trace) << "Performing a Git checkout of HEAD.";
-            git.call(git_checkout_head(git.repo, &opts));
-
-            BOOST_LOG_TRIVIAL(debug) << "Tree hash is: " << revision;
+            BOOST_LOG_TRIVIAL(debug) << "Set HEAD to commit (date): " << revision << " (" << date << ").";
             BOOST_LOG_TRIVIAL(trace) << "Freeing pointers.";
-            git_object_free(git.obj);
             git_reference_free(git.ref);
+            git_object_free(git.obj);
             git_commit_free(git.commit);
-            git.obj = nullptr;
             git.ref = nullptr;
+            git.obj = nullptr;
             git.commit = nullptr;
 
-            BOOST_LOG_TRIVIAL(debug) << "Testing masterlist parsing.";
-
             //Now try parsing the masterlist.
-            list<loot::Message> messages;
-            list<loot::Plugin> plugins;
+            BOOST_LOG_TRIVIAL(debug) << "Testing masterlist parsing.";
             try {
                 loot::ifstream in(game.MasterlistPath());
                 YAML::Node mlist = YAML::Load(in);
@@ -329,10 +392,22 @@ namespace loot {
 
             } catch (std::exception& e) {
                 parsingFailed = true;
-                rollbacks++;
 
                 //Roll back one revision if there's an error.
                 BOOST_LOG_TRIVIAL(error) << "Masterlist parsing failed. Masterlist revision " + string(revision) + ": " + e.what();
+
+                // Get an object ID for 'HEAD~1'.
+                git.call(git_revparse_single(&git.obj, git.repo, "HEAD~1"));
+                const git_oid * oid = git_object_id(git.obj);
+                git_object_free(git.obj);
+                git.obj = nullptr;
+
+                // Detach HEAD to HEAD~1. This will roll back HEAD by one commit each time it is called.
+                git.call(git_repository_set_head_detached(git.repo, oid, git.sig, "Updated HEAD to HEAD~1"));
+
+                // Checkout the new HEAD.
+                BOOST_LOG_TRIVIAL(trace) << "Performing a Git checkout of HEAD.";
+                git.call(git_checkout_head(git.repo, &checkout_opts));
 
                 parsingErrors.push_back(loot::Message(loot::Message::error, boost::locale::translate("Masterlist revision").str() + " " + string(revision) + ": " + e.what() + " " + boost::locale::translate("Rolled back to the previous revision.").str()));
             }
