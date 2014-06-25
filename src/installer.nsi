@@ -74,9 +74,9 @@ FunctionEnd
 ;General
 
 	;Name, file and version info for installer.
-	Name "LOOT v0.5.0"
+	Name "LOOT v0.6.0"
 	OutFile "..\build\LOOT Installer.exe"
-	VIProductVersion 0.5.0.0
+	VIProductVersion 0.6.0.0
 
 	;Request application privileges for Windows Vista/7
 	RequestExecutionLevel admin
@@ -138,8 +138,8 @@ FunctionEnd
 	VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "LOOT"
 	VIAddVersionKey /LANG=${LANG_ENGLISH} "CompanyName" "LOOT Team"
 	VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "© 2009-2014 LOOT Team"
-	VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "Installer for LOOT 0.5.0"
-	VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "0.5.0"
+	VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "Installer for LOOT 0.6.0"
+	VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "0.6.0"
 
 	LangString TEXT_MESSAGEBOX ${LANG_ENGLISH} "LOOT is already installed, and must be uninstalled before continuing. $\n$\nClick `OK` to remove the previous version or `Cancel` to cancel this upgrade."
 	LangString TEXT_RUN ${LANG_ENGLISH} "Run LOOT"
@@ -153,8 +153,8 @@ FunctionEnd
 	VIAddVersionKey /LANG=${LANG_RUSSIAN} "ProductName" "LOOT"
 	VIAddVersionKey /LANG=${LANG_RUSSIAN} "CompanyName" "LOOT Team"
 	VIAddVersionKey /LANG=${LANG_RUSSIAN} "LegalCopyright" "© 2009-2014 LOOT Team"
-	VIAddVersionKey /LANG=${LANG_RUSSIAN} "FileDescription" "Установщик для LOOT 0.5.0"
-	VIAddVersionKey /LANG=${LANG_RUSSIAN} "FileVersion" "0.5.0"
+	VIAddVersionKey /LANG=${LANG_RUSSIAN} "FileDescription" "Установщик для LOOT 0.6.0"
+	VIAddVersionKey /LANG=${LANG_RUSSIAN} "FileVersion" "0.6.0"
 
 	LangString TEXT_MESSAGEBOX ${LANG_RUSSIAN} "LOOT уже установлен и должен быть удален перед продолжением. $\n$\nНажмите `OK` для удаления предыдущей версии или `Отмена` для отмены обновления."
 	LangString TEXT_RUN ${LANG_RUSSIAN} "Запустить LOOT"
@@ -168,8 +168,8 @@ FunctionEnd
 	VIAddVersionKey /LANG=${LANG_FRENCH} "ProductName" "LOOT"
 	VIAddVersionKey /LANG=${LANG_FRENCH} "CompanyName" "LOOT Team"
 	VIAddVersionKey /LANG=${LANG_FRENCH} "LegalCopyright" "© 2009-2014 LOOT Team"
-	VIAddVersionKey /LANG=${LANG_FRENCH} "FileDescription" "Programme d'installation pour LOOT 0.5.0"
-	VIAddVersionKey /LANG=${LANG_FRENCH} "FileVersion" "0.5.0"
+	VIAddVersionKey /LANG=${LANG_FRENCH} "FileDescription" "Programme d'installation pour LOOT 0.6.0"
+	VIAddVersionKey /LANG=${LANG_FRENCH} "FileVersion" "0.6.0"
 
 	LangString TEXT_MESSAGEBOX ${LANG_FRENCH} "LOOT est déjà installé, et doit être désinstallé avant de continuer. $\n$\nCliquer sur `OK` pour désinstaller la version précédente ou 'Annuler' pour annuler la mise à jour."
 	LangString TEXT_RUN ${LANG_FRENCH} "Lancer LOOT"
@@ -183,8 +183,8 @@ FunctionEnd
 	VIAddVersionKey /LANG=${LANG_SPANISH} "ProductName" "LOOT"
 	VIAddVersionKey /LANG=${LANG_SPANISH} "CompanyName" "LOOT Team"
 	VIAddVersionKey /LANG=${LANG_SPANISH} "LegalCopyright" "© 2009-2014 LOOT Team"
-	VIAddVersionKey /LANG=${LANG_SPANISH} "FileDescription" "El instalador para LOOT 0.5.0"
-	VIAddVersionKey /LANG=${LANG_SPANISH} "FileVersion" "0.5.0"
+	VIAddVersionKey /LANG=${LANG_SPANISH} "FileDescription" "El instalador para LOOT 0.6.0"
+	VIAddVersionKey /LANG=${LANG_SPANISH} "FileVersion" "0.6.0"
 
 	LangString TEXT_MESSAGEBOX ${LANG_SPANISH} "LOOT está instalado, y debe ser desinstalado antes de continuar. $\n$\nPresione `OK` para eliminar la versión anterior o `Cancel` para cancelar la actualización."
 	LangString TEXT_RUN ${LANG_SPANISH} "Ejecutar LOOT"
@@ -198,8 +198,8 @@ FunctionEnd
 	VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "ProductName" "LOOT"
 	VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "CompanyName" "LOOT Team"
 	VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "LegalCopyright" "© 2009-2014 LOOT Team"
-	VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "FileDescription" "LOOT 0.5.0安装包"
-	VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "FileVersion" "0.5.0"
+	VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "FileDescription" "LOOT 0.6.0安装包"
+	VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "FileVersion" "0.6.0"
 
 	LangString TEXT_MESSAGEBOX ${LANG_SIMPCHINESE} "检测到旧版LOOT，您需要先卸载旧版才能安装新版。$\n$\n点击“确定”卸载旧版本或者“取消”取消更新。"
 	LangString TEXT_RUN ${LANG_SIMPCHINESE} "运行LOOT"
@@ -213,8 +213,8 @@ FunctionEnd
 	VIAddVersionKey /LANG=${LANG_POLISH} "ProductName" "LOOT"
 	VIAddVersionKey /LANG=${LANG_POLISH} "CompanyName" "LOOT Team"
 	VIAddVersionKey /LANG=${LANG_POLISH} "LegalCopyright" "© 2009-2014 LOOT Team"
-	VIAddVersionKey /LANG=${LANG_POLISH} "FileDescription" "Instalator dla LOOT 0.5.0"
-	VIAddVersionKey /LANG=${LANG_POLISH} "FileVersion" "0.5.0"
+	VIAddVersionKey /LANG=${LANG_POLISH} "FileDescription" "Instalator dla LOOT 0.6.0"
+	VIAddVersionKey /LANG=${LANG_POLISH} "FileVersion" "0.6.0"
 
 	LangString TEXT_MESSAGEBOX ${LANG_POLISH} "LOOT jest już zainstalowany i musi zostać odinstalowany przed instalowaniem tej wersji. $\n$\nClick `OK` aby odinstalować lub `Cancel` aby anulować aktualizację."
 	LangString TEXT_RUN ${LANG_POLISH} " Uruchom LOOT"
@@ -228,8 +228,8 @@ FunctionEnd
 	VIAddVersionKey /LANG=${LANG_FINNISH} "ProductName" "LOOT"
 	VIAddVersionKey /LANG=${LANG_FINNISH} "CompanyName" "LOOT Team"
 	VIAddVersionKey /LANG=${LANG_FINNISH} "LegalCopyright" "© 2009-2014 LOOT Team"
-	VIAddVersionKey /LANG=${LANG_FINNISH} "FileDescription" "LOOT 0.5.0 Asennusohjelma"
-	VIAddVersionKey /LANG=${LANG_FINNISH} "FileVersion" "0.5.0"
+	VIAddVersionKey /LANG=${LANG_FINNISH} "FileDescription" "LOOT 0.6.0 Asennusohjelma"
+	VIAddVersionKey /LANG=${LANG_FINNISH} "FileVersion" "0.6.0"
 
 	LangString TEXT_MESSAGEBOX ${LANG_FINNISH} "LOOT on jo asennettu ja vanha asennus on poistettava ennen jatkamista. $\n$\nKlikkaa 'OK' poistaaksesi vanhan version tai 'Peruuta' peruuttaaksesi päivityksen."
 	LangString TEXT_RUN ${LANG_FINNISH} "Käynnistä LOOT"
@@ -387,7 +387,7 @@ FunctionEnd
 		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\LOOT" "URLInfoAbout" 'http://loot.github.io/'
 		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\LOOT" "HelpLink" 'http://loot.github.io/'
 		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\LOOT" "Publisher" 'LOOT Development Team'
-		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\LOOT" "DisplayVersion" '0.5.0'
+		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\LOOT" "DisplayVersion" '0.6.0'
 		WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\LOOT" "NoModify" 1
 		WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\LOOT" "NoRepair" 1
 

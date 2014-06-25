@@ -29,7 +29,7 @@ namespace loot {
 
     //Version numbers.
     const unsigned int g_version_major = 0;
-    const unsigned int g_version_minor = 5;
+    const unsigned int g_version_minor = 6;
     const unsigned int g_version_patch = 0;
 
     //Common paths.
