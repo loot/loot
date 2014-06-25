@@ -476,6 +476,7 @@ A copy of the license is included in the file named "GNU FDL v1.3.txt".</blockqu
     <li>Changed: Missing master/requirement and incompatibility errors are downgraded to warnings if the plugin in question is inactive.
     <li>Changed: Masterlist update errors have been made more user-friendly.
     <li>Changed: If an error is encountered during masterlist update, LOOT will now silently delete the repository folder and attempt the update again. If it fails again, it will then report an error.
+    <li>Changed: Masterlist update now handles repository interaction a lot more like Git itself does, so should be less error-prone.
     <li>Changed: Cyclic dependency error messages now detail the full cycle.
     <li>Changed: LOOT's report now uses a static HTML file and generates a javascript file that is dynamically loaded to contain the report data. This removes the PugiXML build dependency.
     <li>Changed: Debug log message priorities adjusted so that medium verbosity includes more useful data.
