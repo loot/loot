@@ -342,15 +342,19 @@ namespace loot {
             BOOST_LOG_TRIVIAL(trace) << "Getting the Git object for HEAD.";
             git.call(git_repository_head(&git.ref, git.repo));
             git.call(git_reference_peel(&git.obj, git.ref, GIT_OBJ_COMMIT));
+            const git_oid * oid = git_object_id(git.obj);
 
             BOOST_LOG_TRIVIAL(trace) << "Generating hex string for the Git object.";
-            git_buf buffer;
+            // git_object_short_id seems to be unstable, or I'm just not freeing memory right somewhere, I can't tell.
+            /*git_buf buffer;
             git.call(git_object_short_id(&buffer, git.obj));
             revision = string(buffer.ptr, buffer.size);
-            git_buf_free(&buffer);
+            git_buf_free(&buffer);*/
+            char sha1[10];
+            git_oid_tostr(sha1, 10, oid);
+            revision = sha1;
 
             BOOST_LOG_TRIVIAL(trace) << "Getting date for Git object ID.";
-            const git_oid * oid = git_object_id(git.obj);
             git.call(git_commit_lookup(&git.commit, git.repo, oid));
             git_time_t time = git_commit_time(git.commit);
             // Now convert into a nice text format.
