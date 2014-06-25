@@ -129,6 +129,7 @@ FunctionEnd
 	!insertmacro MUI_LANGUAGE "SimpChinese"
 	!insertmacro MUI_LANGUAGE "French"
 	!insertmacro MUI_LANGUAGE "Polish"
+	!insertmacro MUI_LANGUAGE "Finnish"
 	!insertmacro MUI_RESERVEFILE_LANGDLL
 
 ;--------------------------------
@@ -199,7 +200,7 @@ FunctionEnd
 	VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "LegalCopyright" "© 2009-2014 LOOT Team"
 	VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "FileDescription" "LOOT 0.5.0安装包"
 	VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "FileVersion" "0.5.0"
-	
+
 	LangString TEXT_MESSAGEBOX ${LANG_SIMPCHINESE} "检测到旧版LOOT，您需要先卸载旧版才能安装新版。$\n$\n点击“确定”卸载旧版本或者“取消”取消更新。"
 	LangString TEXT_RUN ${LANG_SIMPCHINESE} "运行LOOT"
 	LangString TEXT_SHOWREADME ${LANG_SIMPCHINESE} "查看说明"
@@ -224,17 +225,17 @@ FunctionEnd
 ;--------------------------------
 ;Finnish Strings
 
-	VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "LOOT"
-	VIAddVersionKey /LANG=${LANG_ENGLISH} "CompanyName" "LOOT Team"
-	VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "© 2009-2014 LOOT Team"
-	VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "LOOT 0.5.0 Asennusohjelma"
-	VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "0.5.0"
+	VIAddVersionKey /LANG=${LANG_FINNISH} "ProductName" "LOOT"
+	VIAddVersionKey /LANG=${LANG_FINNISH} "CompanyName" "LOOT Team"
+	VIAddVersionKey /LANG=${LANG_FINNISH} "LegalCopyright" "© 2009-2014 LOOT Team"
+	VIAddVersionKey /LANG=${LANG_FINNISH} "FileDescription" "LOOT 0.5.0 Asennusohjelma"
+	VIAddVersionKey /LANG=${LANG_FINNISH} "FileVersion" "0.5.0"
 
-	LangString TEXT_MESSAGEBOX ${LANG_ENGLISH} "LOOT on jo asennettu ja vanha asennus on poistettava ennen jatkamista. $\n$\nKlikkaa "OK" poistaaksesi vanhan version tai "Peruuta" peruuttaaksesi päivityksen."
-	LangString TEXT_RUN ${LANG_ENGLISH} "Käynnistä LOOT"
-	LangString TEXT_SHOWREADME ${LANG_ENGLISH} "Näytä readme"
-	LangString TEXT_MAIN ${LANG_ENGLISH} "Kaikki LOOTin tiedostot paitsi käyttäjälistat ja asetukset."
-	LangString TEXT_USERFILES ${LANG_ENGLISH} "LOOTin käyttäjälistat ja asetukset."
+	LangString TEXT_MESSAGEBOX ${LANG_FINNISH} "LOOT on jo asennettu ja vanha asennus on poistettava ennen jatkamista. $\n$\nKlikkaa 'OK' poistaaksesi vanhan version tai 'Peruuta' peruuttaaksesi päivityksen."
+	LangString TEXT_RUN ${LANG_FINNISH} "Käynnistä LOOT"
+	LangString TEXT_SHOWREADME ${LANG_FINNISH} "Näytä readme"
+	LangString TEXT_MAIN ${LANG_FINNISH} "Kaikki LOOTin tiedostot paitsi käyttäjälistat ja asetukset."
+	LangString TEXT_USERFILES ${LANG_FINNISH} "LOOTin käyttäjälistat ja asetukset."
 
 ;--------------------------------
 ;Initialisations
@@ -325,7 +326,7 @@ FunctionEnd
 		SetOutPath "$INSTDIR\resources\l10n\fi\LC_MESSAGES"
 		File "..\resources\l10n\fi\LC_MESSAGES\wxstd.mo"
 		File "..\resources\l10n\fi\LC_MESSAGES\loot.mo"
-		
+
 
         ;Install settings file.
         SetOutPath "$LOCALAPPDATA\LOOT"
