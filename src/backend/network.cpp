@@ -229,7 +229,7 @@ namespace loot {
             //Now perform the clone.
             git.call(git_clone(&git.repo, game.RepoURL().c_str(), repo_path.string().c_str(), &clone_options));
 
-            if (!wasEmpty) {
+            if (fs::exists(repo_path.string() + ".temp")) {
                 //Move contents back in.
                 BOOST_LOG_TRIVIAL(trace) << "Repo path wasn't empty, moving previous files back in.";
                 for (fs::directory_iterator it(repo_path.string() + ".temp"); it != fs::directory_iterator(); ++it) {
