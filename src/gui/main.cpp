@@ -976,17 +976,21 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
             //Need to determine if any new edits have been made.
             bool haveNewEdits = false;
-            if (newUserlist.size() != ulist_plugins.size())
+            if (newUserlist.size() != ulist_plugins.size()) {
+                BOOST_LOG_TRIVIAL(info) << "Metadata edited for some plugin, new and old userlists differ in size.";
                 haveNewEdits = true;
+            }
             else {
                 for (const auto& newEdit : newUserlist) {
                     const auto it = std::find(ulist_plugins.begin(), ulist_plugins.end(), newEdit);
                     if (it == ulist_plugins.end()) {
+                        BOOST_LOG_TRIVIAL(info) << "Metadata added for plugin: " << it->Name();
                         haveNewEdits = true;
                         break;
                     }
 
                     if (!it->DiffMetadata(newEdit).HasNameOnly()) {
+                        BOOST_LOG_TRIVIAL(info) << "Metadata edited for plugin: " << it->Name();
                         haveNewEdits = true;
                         break;
                     }

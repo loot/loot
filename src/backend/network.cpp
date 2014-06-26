@@ -199,6 +199,7 @@ namespace loot {
         // Now try to access the repository if it exists, or clone one if it doesn't.
         git.ui_message = "An error occurred while trying to access the local masterlist repository.";
 
+        BOOST_LOG_TRIVIAL(trace) << "Attempting to open the Git repository at: " << repo_path;
         if (!isRepository(repo_path)) {
             // Clone the remote repository.
             BOOST_LOG_TRIVIAL(info) << "Repository doesn't exist, cloning the remote repository.";
