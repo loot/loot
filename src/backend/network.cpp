@@ -210,6 +210,8 @@ namespace loot {
                 // temporarily, and move its contents back in afterwards, skipping any that then conflict.
                 BOOST_LOG_TRIVIAL(trace) << "Repo path not empty, renaming folder.";
                 fs::rename(repo_path, repo_path.string() + ".temp");
+                // Recreate the game folder so that we don't inadvertently cause any other errors (everything past LOOT init assumes it exists).
+                fs::create_directory(repo_path);
                 wasEmpty = false;
             }
 
