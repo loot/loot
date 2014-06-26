@@ -197,10 +197,9 @@ namespace loot {
         checkout_opts.paths.count = 1;
 
         // Now try to access the repository if it exists, or clone one if it doesn't.
-        git.ui_message = "An error occurred while trying to access the local masterlist repository.";
-
         BOOST_LOG_TRIVIAL(trace) << "Attempting to open the Git repository at: " << repo_path;
         if (!isRepository(repo_path)) {
+            git.ui_message = "An error occurred while trying to clone the remote masterlist repository.";
             // Clone the remote repository.
             BOOST_LOG_TRIVIAL(info) << "Repository doesn't exist, cloning the remote repository.";
 
@@ -245,6 +244,7 @@ namespace loot {
         }
         else {
             // Repository exists: check settings are correct, then pull updates.
+            git.ui_message = "An error occurred while trying to access the local masterlist repository.";
 
             // Open the repository.
             BOOST_LOG_TRIVIAL(info) << "Existing repository found, attempting to open it.";
