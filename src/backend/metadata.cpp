@@ -632,7 +632,7 @@ namespace loot {
     }
 
     bool Plugin::HasNameOnly() const {
-        return !IsPriorityExplicit() && enabled == true && loadAfter.empty() && requirements.empty() && incompatibilities.empty() && messages.empty() && tags.empty() && _dirtyInfo.empty();
+        return !IsPriorityExplicit() && loadAfter.empty() && requirements.empty() && incompatibilities.empty() && messages.empty() && tags.empty() && _dirtyInfo.empty();
     }
 
     bool Plugin::IsRegexPlugin() const {
