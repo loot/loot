@@ -274,7 +274,7 @@ bool LOOT::OnInit() {
                 boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::trace);  //Log everything.
         }
     }
-    BOOST_LOG_TRIVIAL(info) << "LOOT Version" << g_version_major << "." << g_version_minor << "." << g_version_patch;
+    BOOST_LOG_TRIVIAL(info) << "LOOT Version: " << g_version_major << "." << g_version_minor << "." << g_version_patch;
 
 
     //Set the locale to get encoding and language conversions working correctly.
