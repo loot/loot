@@ -208,6 +208,8 @@ namespace loot {
                 // Now, libgit2 doesn't support cloning into non-empty folders. Rename the folder 
                 // temporarily, and move its contents back in afterwards, skipping any that then conflict.
                 BOOST_LOG_TRIVIAL(trace) << "Repo path not empty, renaming folder.";
+                if (fs::exists(repo_path.string() + ".temp"))
+                    fs::remove_all(repo_path.string() + ".temp");
                 fs::rename(repo_path, repo_path.string() + ".temp");
                 // Recreate the game folder so that we don't inadvertently cause any other errors (everything past LOOT init assumes it exists).
                 fs::create_directory(repo_path);
