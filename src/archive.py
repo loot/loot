@@ -18,6 +18,8 @@
 # resources/l10n/pl/LC_MESSAGES/wxstd.mo
 # resources/l10n/fi/LC_MESSAGES/loot.mo
 # resources/l10n/fi/LC_MESSAGES/wxstd.mo
+# resources/l10n/de/LC_MESSAGES/loot.mo
+# resources/l10n/de/LC_MESSAGES/wxstd.mo
 # resources/report/report.html
 # resources/report/require.js
 # resources/report/polyfill.js
@@ -70,7 +72,7 @@ if not os.path.exists(temp_path):
 # Now copy everything into the temporary folder.
 shutil.copy( os.path.join('..', 'build', 'LOOT.exe'), temp_path )
 
-for lang in ['es', 'ru', 'fr', 'zh_CN', 'pl', 'pt_BR', 'fi']:
+for lang in ['es', 'ru', 'fr', 'zh_CN', 'pl', 'pt_BR', 'fi', 'de']:
     os.makedirs(os.path.join(temp_path, 'resources', 'l10n', lang, 'LC_MESSAGES'))
     shutil.copy( os.path.join('..', 'resources', 'l10n', lang, 'LC_MESSAGES', 'loot.mo'), os.path.join(temp_path, 'resources', 'l10n', lang, 'LC_MESSAGES') )
     shutil.copy( os.path.join('..', 'resources', 'l10n', lang, 'LC_MESSAGES', 'wxstd.mo'), os.path.join(temp_path, 'resources', 'l10n', lang, 'LC_MESSAGES') )
