@@ -1,37 +1,37 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: BOSS v3.0.0\n"
+"Project-Id-Version: LOOT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-19 19:26-0000\n"
-"PO-Revision-Date: 2014-02-20 21:56+0600\n"
+"POT-Creation-Date: 2014-03-07 20:08-0000\n"
+"PO-Revision-Date: 2014-07-05 21:40+0600\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.6.4\n"
+"X-Generator: Poedit 1.6.6\n"
 
-#: backend/game.cpp:98
+#: backend/game.cpp:99
 msgid "Invalid game ID supplied."
 msgstr "Предоставлен неверный идентификатор игры."
 
-#: backend/game.cpp:158
+#: backend/game.cpp:159
 msgid "Game path could not be detected."
 msgstr "Путь к игре найти не удалось."
 
-#: backend/game.cpp:261 backend/game.cpp:342 backend/game.cpp:418
+#: backend/game.cpp:262 backend/game.cpp:343 backend/game.cpp:419
 msgid ""
 "libloadorder failed to create a game handle. Details could not be fetched."
 msgstr ""
 "libloadorder не удалось создать дескриптор игры. Детали не могут быть "
 "получены."
 
-#: backend/game.cpp:265 backend/game.cpp:346 backend/game.cpp:422
+#: backend/game.cpp:266 backend/game.cpp:347 backend/game.cpp:423
 msgid "libloadorder failed to create a game handle. Details:"
 msgstr "libloadorder не удалось создать дескриптор игры. Детали:"
 
-#: backend/game.cpp:280 backend/game.cpp:361 backend/game.cpp:436
+#: backend/game.cpp:281 backend/game.cpp:362 backend/game.cpp:437
 msgid ""
 "libloadorder failed to initialise game master file support. Details could "
 "not be fetched."
@@ -39,12 +39,12 @@ msgstr ""
 "libloadorder не удалось инициализировать поддержку мастер-файла игры. Детали "
 "не могут быть получены."
 
-#: backend/game.cpp:284 backend/game.cpp:365 backend/game.cpp:440
+#: backend/game.cpp:285 backend/game.cpp:366 backend/game.cpp:441
 msgid "libloadorder failed to initialise game master file support. Details:"
 msgstr ""
 "libloadorder не удалось инициализировать поддержку мастер-файла игры. Детали:"
 
-#: backend/game.cpp:297
+#: backend/game.cpp:298
 msgid ""
 "libloadorder failed to get the active plugins list. Details could not be "
 "fetched."
@@ -52,117 +52,142 @@ msgstr ""
 "libloadorder не удалось получить список активных плагинов. Детали не могут "
 "быть получены."
 
-#: backend/game.cpp:301
+#: backend/game.cpp:302
 msgid "libloadorder failed to get the active plugins list. Details:"
 msgstr "libloadorder не удалось получить список активных плагинов. Детали:"
 
-#: backend/game.cpp:378 backend/game.cpp:465
+#: backend/game.cpp:379 backend/game.cpp:466
 msgid ""
 "libloadorder failed to set the load order. Details could not be fetched."
 msgstr ""
 "libloadorder не удалось установить порядок загрузки. Детали не могут быть "
 "получены."
 
-#: backend/game.cpp:382
+#: backend/game.cpp:383
 msgid "libloadorder failed to get the load order. Details:"
 msgstr "libloadorder не удалось получить порядок загрузки. Детали:"
 
-#: backend/game.cpp:469
+#: backend/game.cpp:470
 msgid "libloadorder failed to set the load order. Details:"
 msgstr "libloadorder не удалось установить порядок загрузки. Детали:"
 
-#: backend/game.cpp:489
-msgid "Could not create BOSS folder for game. Details:"
-msgstr "Не удалось создать папку BOSS для игры. Детали:"
+#: backend/game.cpp:490
+msgid "Could not create LOOT folder for game. Details:"
+msgstr "Не удалось создать папку LOOT для игры. Детали:"
 
-#: backend/graph.cpp:46
+#: backend/graph.cpp:47
 msgid "Cyclic interaction detected between plugins \"%1%\" and \"%2%\"."
 msgstr ""
 "Циклическое взаимодействие обнаружено между плагинами \"%1%\" и \"%2%\"."
 
-#: backend/helpers.cpp:140
+#: backend/helpers.cpp:141
 msgid "Unable to open \"%1%\" for CRC calculation."
 msgstr "Не удается открыть \"%1%\" для подсчета CRC."
 
-#: backend/helpers.cpp:259
+#: backend/helpers.cpp:262
 msgid "None Specified"
 msgstr "Не определено"
 
-#: backend/metadata.cpp:142
+#: backend/metadata.cpp:143
 msgid "Failed to parse condition \"%1%\": %2%"
 msgstr "Не удалось обработать выражение \"%1%\": %2%"
 
-#: backend/metadata.cpp:147
+#: backend/metadata.cpp:148
 msgid "Failed to parse condition \"%1%\"."
 msgstr "Не удалось обработать выражение \"%1%\"."
 
-#: backend/metadata.cpp:708 backend/metadata.cpp:719
+#: backend/metadata.cpp:330
+msgid "Cannot read \"%1%\". Details: %2%"
+msgstr "Невозможно прочесть \"%1%\". Детали: %2%"
+
+#: backend/metadata.cpp:729 backend/metadata.cpp:740
 msgid "This plugin requires \"%1%\" to be installed, but it is missing."
 msgstr "Этот плагин требует установленного плагина \"%1%\", но он отсутствует."
 
-#: backend/metadata.cpp:712
+#: backend/metadata.cpp:733
 msgid "This plugin requires \"%1%\" to be active, but it is inactive."
 msgstr "Этот плагин требует подключенного плагина \"%1%\", но он не подключен."
 
-#: backend/metadata.cpp:725
+#: backend/metadata.cpp:746
 msgid "This plugin is incompatible with \"%1%\", but both are present."
 msgstr "Этот плагин несовместим с \"%1%\", но они оба присутствуют."
 
-#: backend/network.cpp:75
+#: backend/network.cpp:82
 msgid "Git operation failed. Error: %1%"
 msgstr "Не удалась операция с Git. Ошибка: %1%"
 
-#: backend/network.cpp:313
+#: backend/network.cpp:300
 msgid "Masterlist revision"
 msgstr "Версия мастерлиста"
 
-#: backend/network.cpp:313
+#: backend/network.cpp:300
 msgid "Rolled back to the previous revision."
 msgstr "Выполнен откат к предыдущей версии."
 
-#: gui/editor.cpp:158 gui/editor.cpp:325 gui/editor.cpp:463
+#: gui/editor.cpp:73
+msgid "Compare priority against all other plugins"
+msgstr "Сравнивать приоритет со всеми плагинами"
+
+#: gui/editor.cpp:100
+msgid "User Metadata Enabled"
+msgstr "Метаданные пользователя включены"
+
+#: gui/editor.cpp:101
+msgid "Plugin Name"
+msgstr "Имя плагина"
+
+#: gui/editor.cpp:103
+msgid "Global Priority"
+msgstr "Глобальный приоритет"
+
+#: gui/editor.cpp:159 gui/editor.cpp:326 gui/editor.cpp:464
 msgid ""
 "Please submit any edits made for reasons other than personal preference to "
-"the BOSS team so that they may be included in the masterlist."
+"the LOOT team so that they may be included in the masterlist."
 msgstr ""
-"Пожалуйста, сообщайте команде BOSS о любых сделанных изменениях (кроме "
+"Пожалуйста, сообщайте команде LOOT о любых сделанных изменениях (кроме "
 "личных предпочтений), для того, чтобы эти изменения могли быть внесены в "
 "мастерлист."
 
-#: gui/editor.cpp:161
+#: gui/editor.cpp:162
 msgid "Show only conflicting plugins"
 msgstr "Показать только конфликтующие плагины"
 
-#: gui/editor.cpp:167 gui/editor.cpp:846
+#: gui/editor.cpp:168 gui/editor.cpp:847
 msgid "Remove Plugin"
 msgstr "Удалить плагин"
 
-#: gui/editor.cpp:170
+#: gui/editor.cpp:171
 msgid "Plugin"
 msgstr "Плагин"
 
-#: gui/editor.cpp:171
+#: gui/editor.cpp:172
 msgid "Priority"
 msgstr "Приоритет"
 
-#: gui/editor.cpp:173 gui/editor.cpp:517 gui/editor.cpp:521 gui/editor.cpp:525
+#: gui/editor.cpp:174 gui/editor.cpp:518 gui/editor.cpp:522 gui/editor.cpp:526
 msgid "Filename"
 msgstr "Имя файла"
 
-#: gui/editor.cpp:174 gui/editor.cpp:518 gui/editor.cpp:522 gui/editor.cpp:526
+#: gui/editor.cpp:175 gui/editor.cpp:519 gui/editor.cpp:523 gui/editor.cpp:527
 msgid "Display Name"
 msgstr "Отображаемое имя"
 
-#: gui/editor.cpp:175 gui/editor.cpp:519 gui/editor.cpp:523 gui/editor.cpp:527
-#: gui/editor.cpp:531 gui/misc.cpp:36
+#: gui/editor.cpp:176 gui/editor.cpp:520 gui/editor.cpp:524 gui/editor.cpp:528
+#: gui/editor.cpp:532 gui/misc.cpp:37
 msgid "Condition"
 msgstr "Выражение"
 
-#: gui/editor.cpp:198 gui/editor.cpp:576
+#: gui/editor.cpp:182
+msgid "Otherwise, priorities are only compared between conflicting plugins."
+msgstr ""
+"Иначе приоритеты будут сравниваться только между конфликтующими плагинами."
+
+#: gui/editor.cpp:199 gui/editor.cpp:577
 msgid "Select a plugin to edit its load order metadata."
 msgstr "Выберете плагин для правки его метаданных порядка загрузки."
 
-#: gui/editor.cpp:199
+#: gui/editor.cpp:200
 msgid ""
 "Drag and drop a plugin here to make the selected plugin load after it. The "
 "\"Show only conflicting plugins\" checkbox must be checked."
@@ -170,7 +195,7 @@ msgstr ""
 "Перетащите сюда плагин, чтобы сделать его загружвемым после выбранного. Поле "
 "\"Показать только конфликтующие плагины\" должно быть отмечено."
 
-#: gui/editor.cpp:200 gui/editor.cpp:577
+#: gui/editor.cpp:201 gui/editor.cpp:578
 msgid ""
 "Plugins with higher priorities will load after plugins with smaller "
 "priorities that they conflict with, unless one must explicitly load after "
@@ -180,7 +205,7 @@ msgstr ""
 "меньшим, если конечно какой-либо из них должен грузиться конкретно после "
 "определенного другого."
 
-#: gui/editor.cpp:201
+#: gui/editor.cpp:202
 msgid ""
 "Filters the plugin list to only display plugins which can be loaded after "
 "the currently selected plugin, and which either conflict with it, or, if it "
@@ -192,7 +217,7 @@ msgstr ""
 "или если  он грузит BSA, также грузят BSA. Также включает перетаскивание "
 "плагинов в поле Грузить после."
 
-#: gui/editor.cpp:202
+#: gui/editor.cpp:203
 msgid ""
 "Only newly-added plugins may be removed here. Use the metadata editor to "
 "remove other user-added plugins."
@@ -200,113 +225,113 @@ msgstr ""
 "Только вновь добавленные плагины могут быть удалены отсюда. Используйте "
 "редактор метаданных, для удаления других, добавленных пользователем плагинов."
 
-#: gui/editor.cpp:210 gui/editor.cpp:595
+#: gui/editor.cpp:211 gui/editor.cpp:596
 msgid "Priority: "
 msgstr "Приоритет: "
 
-#: gui/editor.cpp:214 gui/editor.cpp:509
+#: gui/editor.cpp:215 gui/editor.cpp:510
 msgid "Load After"
 msgstr "Грузить после"
 
-#: gui/editor.cpp:488
+#: gui/editor.cpp:489
 msgid "Enable User Changes"
 msgstr "Включить пользовательские правки"
 
-#: gui/editor.cpp:490 gui/editor.cpp:840
+#: gui/editor.cpp:491 gui/editor.cpp:841
 msgid "Add File"
 msgstr "Добавить файл"
 
-#: gui/editor.cpp:491 gui/editor.cpp:841
+#: gui/editor.cpp:492 gui/editor.cpp:842
 msgid "Edit File"
 msgstr "Править файл"
 
-#: gui/editor.cpp:492 gui/editor.cpp:842
+#: gui/editor.cpp:493 gui/editor.cpp:843
 msgid "Remove File"
 msgstr "Удалить файл"
 
-#: gui/editor.cpp:493
+#: gui/editor.cpp:494
 msgid "Save Changes"
 msgstr "Сохранить изменения"
 
-#: gui/editor.cpp:494
+#: gui/editor.cpp:495
 msgid "Cancel"
 msgstr "Отмена"
 
-#: gui/editor.cpp:507
+#: gui/editor.cpp:508
 msgid "Requirements"
 msgstr "Требования"
 
-#: gui/editor.cpp:508
+#: gui/editor.cpp:509
 msgid "Incompatibilities"
 msgstr "Несовместимости"
 
-#: gui/editor.cpp:510
+#: gui/editor.cpp:511
 msgid "Messages"
 msgstr "Сообщения"
 
-#: gui/editor.cpp:511
+#: gui/editor.cpp:512
 msgid "Bash Tags"
 msgstr "Bash-теги"
 
-#: gui/editor.cpp:512
+#: gui/editor.cpp:513
 msgid "Dirty Info"
 msgstr "Инфо. о \"грязных\" правках"
 
-#: gui/editor.cpp:515
+#: gui/editor.cpp:516
 msgid "Plugins"
 msgstr "Плагины"
 
-#: gui/editor.cpp:529
+#: gui/editor.cpp:530
 msgid "Add/Remove"
 msgstr "Добавить/удалить"
 
-#: gui/editor.cpp:530
+#: gui/editor.cpp:531
 msgid "Bash Tag"
 msgstr "Bash-тег"
 
-#: gui/editor.cpp:533
+#: gui/editor.cpp:534
 msgid "CRC"
 msgstr ""
 
-#: gui/editor.cpp:534
+#: gui/editor.cpp:535
 msgid "ITM Count"
 msgstr "Число ITM"
 
-#: gui/editor.cpp:535
+#: gui/editor.cpp:536
 msgid "UDR Count"
 msgstr "Число UDR"
 
-#: gui/editor.cpp:536
+#: gui/editor.cpp:537
 msgid "Deleted Navmesh Count"
 msgstr "Число удаленных Navmesh-записей"
 
-#: gui/editor.cpp:537
+#: gui/editor.cpp:538
 msgid "Cleaning Utility"
 msgstr "Утилита для очистки"
 
-#: gui/editor.cpp:540
+#: gui/editor.cpp:541
 msgid "Copy Name"
 msgstr "Скопировать имя"
 
-#: gui/editor.cpp:541
+#: gui/editor.cpp:542
 msgid "Copy Metadata As Text"
 msgstr "Копировать метаданные как текст"
 
-#: gui/editor.cpp:542
+#: gui/editor.cpp:543
 msgid "Remove All User-Added Metadata"
 msgstr "Удалить все пользовательские метаданные"
 
-#: gui/editor.cpp:578
+#: gui/editor.cpp:579
 msgid "If unchecked, any user-added metadata will be ignored during sorting."
 msgstr ""
 "Если не помечено, любые добавленные пользователем метаданные будут "
 "проигнорированы при сортировке."
 
-#: gui/editor.cpp:579 gui/editor.cpp:580
+#: gui/editor.cpp:580 gui/editor.cpp:581
 msgid "Only user-added data may be removed."
 msgstr "Только добавленные пользователем данные могут быть удалены."
 
-#: gui/editor.cpp:812
+#: gui/editor.cpp:813
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from this "
 "plugin?"
@@ -314,207 +339,219 @@ msgstr ""
 "Вы уверены, что хотите очистить все существующие пользовательские метаданные "
 "для этого плагина?"
 
-#: gui/editor.cpp:813 gui/main.cpp:1065
-msgid "BOSS: Warning"
-msgstr "BOSS: Предупреждение"
+#: gui/editor.cpp:814 gui/main.cpp:1074
+msgid "LOOT: Warning"
+msgstr "LOOT: Предупреждение"
 
-#: gui/editor.cpp:844
+#: gui/editor.cpp:845
 msgid "Add Plugin"
 msgstr "Добавить плагин"
 
-#: gui/editor.cpp:845
+#: gui/editor.cpp:846
 msgid "Edit Plugin"
 msgstr "Править плагин"
 
-#: gui/editor.cpp:848
+#: gui/editor.cpp:849
 msgid "Add Message"
 msgstr "Добавить сообщение"
 
-#: gui/editor.cpp:849
+#: gui/editor.cpp:850
 msgid "Edit Message"
 msgstr "Править сообщение"
 
-#: gui/editor.cpp:850
+#: gui/editor.cpp:851
 msgid "Remove Message"
 msgstr "Удалить сообщение"
 
-#: gui/editor.cpp:852
+#: gui/editor.cpp:853
 msgid "Add Bash Tag"
 msgstr "Добавить Bash-тег"
 
-#: gui/editor.cpp:853
+#: gui/editor.cpp:854
 msgid "Edit Bash Tag"
 msgstr "Править Bash-тег"
 
-#: gui/editor.cpp:854
+#: gui/editor.cpp:855
 msgid "Remove Bash Tag"
 msgstr "Удалить Bash-тег"
 
-#: gui/editor.cpp:856
+#: gui/editor.cpp:857
 msgid "Add Dirty Info"
 msgstr "Добавить инфо. о \"грязных\" правках"
 
-#: gui/editor.cpp:857
+#: gui/editor.cpp:858
 msgid "Edit Dirty Info"
 msgstr "Править инфо. о \"грязных\" правках"
 
-#: gui/editor.cpp:858
+#: gui/editor.cpp:859
 msgid "Remove Dirty Info"
 msgstr "Удалить инфо. о \"грязных\" правках"
 
-#: gui/editor.cpp:876
-msgid "BOSS: Add File/Plugin"
-msgstr "BOSS: Добавить файл/плагин"
+#: gui/editor.cpp:877
+msgid "LOOT: Add File/Plugin"
+msgstr "LOOT: Добавить файл/плагин"
 
-#: gui/editor.cpp:898
-msgid "BOSS: Add Message"
-msgstr "BOSS: Добавить сообщение"
+#: gui/editor.cpp:899
+msgid "LOOT: Add Message"
+msgstr "LOOT: Добавить сообщение"
 
-#: gui/editor.cpp:908
+#: gui/editor.cpp:909
 msgid "Error: No content specified. Row will not be added."
 msgstr "Ошибка: Не указано содержимое. Строка не будет добавлена."
 
-#: gui/editor.cpp:909 gui/editor.cpp:991 gui/main.cpp:167 gui/main.cpp:184
-#: gui/main.cpp:199 gui/main.cpp:280 gui/main.cpp:290 gui/main.cpp:303
-#: gui/main.cpp:311 gui/main.cpp:342 gui/main.cpp:359 gui/main.cpp:529
-#: gui/main.cpp:550 gui/main.cpp:566 gui/main.cpp:937 gui/main.cpp:989
-#: gui/main.cpp:1011 gui/main.cpp:1076 gui/main.cpp:1113 gui/misc.cpp:312
-#: gui/misc.cpp:327 gui/settings.cpp:287 gui/settings.cpp:299
-#: gui/settings.cpp:307 gui/settings.cpp:351 gui/settings.cpp:359
-#: gui/settings.cpp:367
-msgid "BOSS: Error"
-msgstr "BOSS: Ошибка"
+#: gui/editor.cpp:910 gui/editor.cpp:992 gui/main.cpp:180 gui/main.cpp:197
+#: gui/main.cpp:212 gui/main.cpp:295 gui/main.cpp:305 gui/main.cpp:318
+#: gui/main.cpp:326 gui/main.cpp:357 gui/main.cpp:374 gui/main.cpp:544
+#: gui/main.cpp:565 gui/main.cpp:581 gui/main.cpp:946 gui/main.cpp:998
+#: gui/main.cpp:1020 gui/main.cpp:1085 gui/main.cpp:1122 gui/misc.cpp:313
+#: gui/misc.cpp:328 gui/settings.cpp:288 gui/settings.cpp:300
+#: gui/settings.cpp:308 gui/settings.cpp:352 gui/settings.cpp:360
+#: gui/settings.cpp:368
+msgid "LOOT: Error"
+msgstr "LOOT: Ошибка"
 
-#: gui/editor.cpp:919
-msgid "BOSS: Add Tag"
-msgstr "BOSS: Добавить тег"
+#: gui/editor.cpp:920
+msgid "LOOT: Add Tag"
+msgstr "LOOT: Добавить тег"
 
-#: gui/editor.cpp:933
-msgid "BOSS: Add Dirty Info"
-msgstr "BOSS: Добавить инфо. о \"грязных\" правках"
+#: gui/editor.cpp:934
+msgid "LOOT: Add Dirty Info"
+msgstr "LOOT: Добавить инфо. о \"грязных\" правках"
 
-#: gui/editor.cpp:952
-msgid "BOSS: Edit File/Plugin"
-msgstr "BOSS: Править файл/плагин"
+#: gui/editor.cpp:953
+msgid "LOOT: Edit File/Plugin"
+msgstr "LOOT: Править файл/плагин"
 
-#: gui/editor.cpp:976
-msgid "BOSS: Edit Message"
-msgstr "BOSS: Править сообщение"
+#: gui/editor.cpp:977
+msgid "LOOT: Edit Message"
+msgstr "LOOT: Править сообщение"
 
-#: gui/editor.cpp:990
+#: gui/editor.cpp:991
 msgid "Error: No content specified. Row will not be edited."
 msgstr "Ошибка: Не указано содержимое. Строка не будет добавлена."
 
-#: gui/editor.cpp:1000
-msgid "BOSS: Edit Tag"
-msgstr "BOSS: Править тег"
+#: gui/editor.cpp:1001
+msgid "LOOT: Edit Tag"
+msgstr "LOOT: Править тег"
 
-#: gui/editor.cpp:1022
-msgid "BOSS: Edit Dirty Info"
-msgstr "BOSS: Править инфо. о \"грязных\" правках"
+#: gui/editor.cpp:1023
+msgid "LOOT: Edit Dirty Info"
+msgstr "LOOT: Править инфо. о \"грязных\" правках"
 
-#: gui/main.cpp:119
+#: gui/editor.cpp:1158
+msgid ""
+"If LOOT has gotten something wrong, please let the team know. See the "
+"Contributing To LOOT section of the readme for details."
+msgstr ""
+"Если LOOT сделал что-то неправильно, пожалуйста, сообщите об этом команде. "
+"Подробнее в секции Contributing To LOOT, в документации."
+
+#: gui/main.cpp:120
 msgid "Masterlist update failed. Details: %1%"
 msgstr "Проверка обновлений мастерлиста не удалась. Детали: %1%"
 
-#: gui/main.cpp:137
+#: gui/main.cpp:132
+msgid "Masterlist revision check failed. Details: %1%"
+msgstr "Проверка версии мастерлиста не удалась. Детали: %1%"
+
+#: gui/main.cpp:150
 msgid "Masterlist parsing failed. Details: %1%"
 msgstr "Обработка мастерлиста не удалась. Детали: %1%"
 
-#: gui/main.cpp:145
+#: gui/main.cpp:158
 msgid "Unknown"
 msgstr "Неизвестно"
 
-#: gui/main.cpp:147
+#: gui/main.cpp:160
 msgid "No masterlist"
 msgstr "Нет мастерлиста"
 
-#: gui/main.cpp:166
-msgid "Error: BOSS is already running. This instance will now quit."
-msgstr "Ошибка: BOSS GUI уже запущен. Этот экземпляр будет закрыт."
+#: gui/main.cpp:179
+msgid "Error: LOOT is already running. This instance will now quit."
+msgstr "Ошибка: LOOT уже запущен. Этот экземпляр будет закрыт."
 
-#: gui/main.cpp:183
-msgid "Error: Could not create local app data BOSS folder."
-msgstr "Ошибка: Невозможно создать локальную папку данных BOSS."
+#: gui/main.cpp:196
+msgid "Error: Could not create local app data LOOT folder."
+msgstr "Ошибка: Невозможно создать локальную папку данных LOOT."
 
-#: gui/main.cpp:198
+#: gui/main.cpp:211
 msgid "Error: Settings parsing failed. %1%"
 msgstr "Ошибка: Обработка настроек не удалась. %1%"
 
-#: gui/main.cpp:279
+#: gui/main.cpp:294
 msgid "Error: Could not apply translation."
 msgstr "Ошибка: Невозможно применить перевод."
 
-#: gui/main.cpp:289
+#: gui/main.cpp:304
 msgid "Error: The selected language is not available on this system."
 msgstr "Ошибка: Выбранный язык не доступен на этой системе."
 
-#: gui/main.cpp:302 gui/main.cpp:358 gui/main.cpp:528
+#: gui/main.cpp:317 gui/main.cpp:373 gui/main.cpp:543
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr ""
 "Ошибка: Специфические для игры настройки не могут быть инициализированы. %1%"
 
-#: gui/main.cpp:310
+#: gui/main.cpp:325
 msgid "Error: Games' settings parsing failed. %1%"
 msgstr "Ошибка: Обработка настроек игры не удалась. %1%"
 
-#: gui/main.cpp:341
+#: gui/main.cpp:356
 msgid "Error: None of the supported games were detected."
 msgstr "Ошибка: Не найдено ни одной поддерживаемой игры."
 
-#: gui/main.cpp:386
+#: gui/main.cpp:401
 msgid "Edit Metadata"
 msgstr "Править метаданные"
 
-#: gui/main.cpp:387
+#: gui/main.cpp:402
 msgid "Sort Plugins"
 msgstr "Сортировать плагины"
 
-#: gui/main.cpp:388
+#: gui/main.cpp:403
 msgid "View Last Report"
 msgstr "Просмотр последнего отчета"
 
-#: gui/main.cpp:392
+#: gui/main.cpp:407
 msgid "&View Last Report"
 msgstr "&Просмотр последнего отчета"
 
-#: gui/main.cpp:393
+#: gui/main.cpp:408
 msgid "View &Debug Log"
 msgstr "Просмотр лога &отладки"
 
-#: gui/main.cpp:394
+#: gui/main.cpp:409
 msgid "&Sort Plugins"
 msgstr "&Сортировать плагины"
 
-#: gui/main.cpp:395
+#: gui/main.cpp:410
 msgid "&Redate Plugins"
 msgstr "&Редатировать плагины"
 
-#: gui/main.cpp:398
+#: gui/main.cpp:413
 msgid "&File"
 msgstr "&Файл"
 
-#: gui/main.cpp:400
+#: gui/main.cpp:415
 msgid "&Metadata..."
 msgstr "&Метаданные..."
 
-#: gui/main.cpp:401
+#: gui/main.cpp:416
 msgid "&Settings..."
 msgstr "&Настройки..."
 
-#: gui/main.cpp:402
+#: gui/main.cpp:417
 msgid "&Edit"
 msgstr "&Правка"
 
-#: gui/main.cpp:414
+#: gui/main.cpp:429
 msgid "&Game"
 msgstr "&Игра"
 
-#: gui/main.cpp:419
+#: gui/main.cpp:434
 msgid "&Help"
 msgstr "&Справка"
 
-#: gui/main.cpp:443
+#: gui/main.cpp:458
 msgid ""
 "Opens the Metadata Editor, where plugins' sorting metadata, messages, dirty "
 "info and Bash Tag suggestions can be edited."
@@ -523,27 +560,27 @@ msgstr ""
 "плагинов: сообщения, инфо о грязных правках, теги для Wrye Bash, которые "
 "могут быть изменены."
 
-#: gui/main.cpp:444
+#: gui/main.cpp:459
 msgid "Sorts your plugins, then displays a report of the results."
 msgstr "Сортирует ваши плагины, а после отображает отчет с результатами."
 
-#: gui/main.cpp:445
+#: gui/main.cpp:460
 msgid "Opens the last report generated for the current game."
 msgstr "Открывает последний отчет, сгенерированный для текущей игры."
 
-#: gui/main.cpp:504 gui/main.cpp:953
-msgid "BOSS: Report Viewer"
-msgstr "BOSS: Средство просмотра отчетов"
+#: gui/main.cpp:519 gui/main.cpp:962
+msgid "LOOT: Report Viewer"
+msgstr "LOOT: Просмотр отчета"
 
-#: gui/main.cpp:512
-msgid "BOSS: Settings"
-msgstr "BOSS: Настройки"
+#: gui/main.cpp:527
+msgid "LOOT: Settings"
+msgstr "LOOT: Настройки"
 
-#: gui/main.cpp:549 gui/main.cpp:565
+#: gui/main.cpp:564 gui/main.cpp:580
 msgid "Error: \"%1%\" cannot be found."
 msgstr "Ошибка: \"%1%\" не найден."
 
-#: gui/main.cpp:577
+#: gui/main.cpp:592
 msgid ""
 "Load order optimisation for Oblivion, Skyrim, Fallout 3 and Fallout: New "
 "Vegas."
@@ -551,19 +588,19 @@ msgstr ""
 "Оптимизация порядка загрузки для Oblivion, Skyrim, Fallout 3 и Fallout: New "
 "Vegas."
 
-#: gui/main.cpp:608 gui/main.cpp:818 gui/main.cpp:965
-msgid "BOSS: Working..."
-msgstr "BOSS: Работает..."
+#: gui/main.cpp:623 gui/main.cpp:827 gui/main.cpp:974
+msgid "LOOT: Working..."
+msgstr "LOOT: Работает..."
 
-#: gui/main.cpp:608 gui/main.cpp:965
-msgid "BOSS working..."
-msgstr "BOSS работает..."
+#: gui/main.cpp:623 gui/main.cpp:974
+msgid "LOOT working..."
+msgstr "LOOT работает..."
 
-#: gui/main.cpp:665
+#: gui/main.cpp:680
 msgid "Userlist parsing failed. Details: %1%"
 msgstr "Обработка пользовательского списка не удалась. Детали: %1%"
 
-#: gui/main.cpp:706
+#: gui/main.cpp:721
 msgid ""
 "A global message contains a condition that could not be evaluated. Details: "
 "%1%"
@@ -571,27 +608,27 @@ msgstr ""
 "Глобальное сообщение включает выражение, которое не может быть оценено. "
 "Детали: %1%"
 
-#: gui/main.cpp:739
+#: gui/main.cpp:754
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
 msgstr "\"%1%\" включает выражение, которое не может быть оценено. Детали: %2%"
 
-#: gui/main.cpp:758
+#: gui/main.cpp:767
 msgid "Building plugin graph..."
 msgstr "Построение графика плагина..."
 
-#: gui/main.cpp:803
-msgid "BOSS: Calculated Load Order"
-msgstr "BOSS: Рассчитанный порядок загрузки"
+#: gui/main.cpp:812
+msgid "LOOT: Calculated Load Order"
+msgstr "LOOT: Рассчитанный порядок загрузки"
 
-#: gui/main.cpp:818
+#: gui/main.cpp:827
 msgid "Recalculating load order..."
 msgstr "Пересчет порядка загрузки..."
 
-#: gui/main.cpp:875
+#: gui/main.cpp:884
 msgid "Failed to set the load order. Details: %1%"
 msgstr "Не удалось установить порядок загрузки. Детали: %1%"
 
-#: gui/main.cpp:885
+#: gui/main.cpp:894
 msgid ""
 "The load order displayed in the Details tab was not applied as sorting was "
 "canceled."
@@ -599,27 +636,27 @@ msgstr ""
 "Порядок загрузки, показанный на вкладке Детали не был применен, так как "
 "сортировка была отменена."
 
-#: gui/main.cpp:890
+#: gui/main.cpp:899
 msgid "Failed to calculate the load order. Details: %1%"
 msgstr "Не удалось рассчитать порядок загрузки. Детали: %1%"
 
-#: gui/main.cpp:936
+#: gui/main.cpp:945
 msgid "Error: %1%"
 msgstr "Ошибка: %1%"
 
-#: gui/main.cpp:988
+#: gui/main.cpp:997
 msgid "Error: Masterlist parsing failed. %1%"
 msgstr "Ошибка: Обработка мастерлиста не удалась. %1%"
 
-#: gui/main.cpp:1010
+#: gui/main.cpp:1019
 msgid "Error: Userlist parsing failed. %1%"
 msgstr "Ошибка: Обработка пользовательского списка не удалась. %1%"
 
-#: gui/main.cpp:1056
-msgid "BOSS: Metadata Editor"
-msgstr "BOSS: Редактор метаданных"
-
 #: gui/main.cpp:1065
+msgid "LOOT: Metadata Editor"
+msgstr "LOOT: Редактор метаданных"
+
+#: gui/main.cpp:1074
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
@@ -630,338 +667,378 @@ msgstr ""
 "Обратная сторона этого то, что любые, подписанные в Steam Workshop моды, "
 "могут быть заново загружены с помощью Steam. Вы желаете продолжить?"
 
-#: gui/main.cpp:1075
+#: gui/main.cpp:1084
 msgid "Error: Failed to get load order. %1%"
 msgstr "Ошибка: Не удалось получить порядок загрузки. %1%"
 
-#: gui/main.cpp:1112
+#: gui/main.cpp:1121
 msgid "Error: Failed to set plugin timestamps. %1%"
 msgstr "Ошибка: Не удалось присвоить временные метки плагинам. %1%"
 
-#: gui/main.cpp:1119
+#: gui/main.cpp:1128
 msgid "Plugins were successfully redated."
 msgstr "Плагины были успешно редатированы."
 
-#: gui/main.cpp:1120
-msgid "BOSS: Plugin Redate"
-msgstr "BOSS: Редатирование плагинов"
+#: gui/main.cpp:1129
+msgid "LOOT: Plugin Redate"
+msgstr "LOOT: Редатирование плагинов"
 
-#: gui/misc.cpp:34
+#: gui/misc.cpp:35
 msgid "Type"
 msgstr "Тип"
 
-#: gui/misc.cpp:35
+#: gui/misc.cpp:36
 msgid "Content"
 msgstr "Содержимое"
 
-#: gui/misc.cpp:37 gui/misc.cpp:180
+#: gui/misc.cpp:38 gui/misc.cpp:181
 msgid "Language"
 msgstr "Язык"
 
-#: gui/misc.cpp:116
+#: gui/misc.cpp:117
 msgid "Filename (required):"
 msgstr "Имя файла (требуется):"
 
-#: gui/misc.cpp:119
+#: gui/misc.cpp:120
 msgid "Displayed Name:"
 msgstr "Отображаемое имя:"
 
-#: gui/misc.cpp:122 gui/misc.cpp:206 gui/misc.cpp:362
+#: gui/misc.cpp:123 gui/misc.cpp:207 gui/misc.cpp:363
 msgid "Condition:"
 msgstr "Выражение:"
 
-#: gui/misc.cpp:176
+#: gui/misc.cpp:177
 msgid "Add Content"
 msgstr "Добавить содержимое"
 
-#: gui/misc.cpp:177
+#: gui/misc.cpp:178
 msgid "Edit Content"
 msgstr "Править содержимое"
 
-#: gui/misc.cpp:178
+#: gui/misc.cpp:179
 msgid "Remove Content"
 msgstr "Удалить содержимое"
 
-#: gui/misc.cpp:181
+#: gui/misc.cpp:182
 msgid "String"
 msgstr "Строка"
 
-#: gui/misc.cpp:203 gui/settings.cpp:428
+#: gui/misc.cpp:204 gui/settings.cpp:429
 msgid "Type:"
 msgstr "Тип:"
 
-#: gui/misc.cpp:218 gui/settings.cpp:108
+#: gui/misc.cpp:219 gui/settings.cpp:109
 msgid "Language:"
 msgstr "Язык:"
 
-#: gui/misc.cpp:221
+#: gui/misc.cpp:222
 msgid "Content:"
 msgstr "Содержимое:"
 
-#: gui/misc.cpp:311 gui/misc.cpp:326
+#: gui/misc.cpp:312 gui/misc.cpp:327
 msgid "Error: No content row selected."
 msgstr "Ошибка: Не выбрана строка с содержимым."
 
-#: gui/misc.cpp:356
+#: gui/misc.cpp:357
 msgid "Add/Remove:"
 msgstr "Добавить/Удалить:"
 
-#: gui/misc.cpp:359 gui/settings.cpp:425
+#: gui/misc.cpp:360 gui/settings.cpp:426
 msgid "Name (required):"
 msgstr "Имя (требуется):"
 
-#: gui/misc.cpp:424
+#: gui/misc.cpp:425
 msgid "CRC (required):"
 msgstr "CRC (требуется):"
 
-#: gui/misc.cpp:427
+#: gui/misc.cpp:428
 msgid "ITM Count:"
 msgstr "Число ITM:"
 
-#: gui/misc.cpp:430
+#: gui/misc.cpp:431
 msgid "UDR Count:"
 msgstr "Число UDR:"
 
-#: gui/misc.cpp:433
+#: gui/misc.cpp:434
 msgid "Deleted Navmesh Count:"
 msgstr "Число удаленных Navmesh-записей:"
 
-#: gui/misc.cpp:436
+#: gui/misc.cpp:437
 msgid "Cleaning Utility (required):"
 msgstr "Утилита для очистки (требуется):"
 
-#: gui/settings.cpp:41
+#: gui/settings.cpp:42
 msgid "None"
 msgstr "Нет"
 
-#: gui/settings.cpp:42
+#: gui/settings.cpp:43
 msgid "Low"
 msgstr "Низкая"
 
-#: gui/settings.cpp:43
+#: gui/settings.cpp:44
 msgid "Medium"
 msgstr "Средняя"
 
-#: gui/settings.cpp:44
+#: gui/settings.cpp:45
 msgid "High"
 msgstr "Высокая"
 
-#: gui/settings.cpp:48
+#: gui/settings.cpp:49
 msgid "Autodetect"
 msgstr "Автообнаружение"
 
-#: gui/settings.cpp:66
+#: gui/settings.cpp:67
 msgid "Add Game"
 msgstr "Добавить игру"
 
-#: gui/settings.cpp:67
+#: gui/settings.cpp:68
 msgid "Edit Game"
 msgstr "Редактировать игру"
 
-#: gui/settings.cpp:68
+#: gui/settings.cpp:69
 msgid "Remove Game"
 msgstr "Удалить игру"
 
-#: gui/settings.cpp:70
+#: gui/settings.cpp:71
 msgid "Update masterlist before sorting."
 msgstr "Обновить мастерлист перед сортировкой."
 
-#: gui/settings.cpp:71
+#: gui/settings.cpp:72
 msgid "View reports externally in default browser."
 msgstr "Просмотреть отчет во внешнем браузере по умолчанию."
 
-#: gui/settings.cpp:74
+#: gui/settings.cpp:75
 msgid "Name"
 msgstr "Имя"
 
-#: gui/settings.cpp:75
+#: gui/settings.cpp:76
 msgid "Base Game Type"
 msgstr "Базовый тип игры"
 
-#: gui/settings.cpp:76
-msgid "BOSS Folder Name"
-msgstr "Имя папки BOSS"
-
 #: gui/settings.cpp:77
+msgid "LOOT Folder Name"
+msgstr "Имя папки LOOT"
+
+#: gui/settings.cpp:78
 msgid "Master File"
 msgstr "Мастерфайл"
 
-#: gui/settings.cpp:78
+#: gui/settings.cpp:79
 msgid "Masterlist Repository URL"
 msgstr "URL хранилища мастерлиста"
 
-#: gui/settings.cpp:79
+#: gui/settings.cpp:80
 msgid "Masterlist Repository Branch"
 msgstr "Ветка хранилища мастерлиста"
 
-#: gui/settings.cpp:80
+#: gui/settings.cpp:81
 msgid "Install Path"
 msgstr "Путь установки"
 
-#: gui/settings.cpp:81
+#: gui/settings.cpp:82
 msgid "Install Path Registry Key"
 msgstr "Ключ реестра для пути установки"
 
-#: gui/settings.cpp:105
+#: gui/settings.cpp:106
 msgid "Default Game:"
 msgstr "Игра по умолчанию:"
 
-#: gui/settings.cpp:111
+#: gui/settings.cpp:112
 msgid "Debug Verbosity:"
 msgstr "Детализация отладки:"
 
-#: gui/settings.cpp:130
-msgid "Language and game changes will be applied after BOSS is restarted."
-msgstr "Установки языка и игры будут применены после перезапуска BOSS."
+#: gui/settings.cpp:131
+msgid "Language and game changes will be applied after LOOT is restarted."
+msgstr "Установки языка и игры будут применены после перезапуска LOOT."
 
-#: gui/settings.cpp:143
-msgid "The output is logged to the BOSSDebugLog.txt file."
-msgstr "Выходной поток записан в файл BOSSDebugLog.txt"
+#: gui/settings.cpp:144
+msgid "The output is logged to the LOOTDebugLog.txt file."
+msgstr "Выходной поток записан в файл LOOTDebugLog.txt."
 
-#: gui/settings.cpp:279
-msgid "BOSS: Add Game"
-msgstr "BOSS: Добавить игру"
+#: gui/settings.cpp:280
+msgid "LOOT: Add Game"
+msgstr "LOOT: Добавить игру"
 
-#: gui/settings.cpp:286 gui/settings.cpp:366
+#: gui/settings.cpp:287 gui/settings.cpp:367
 msgid "Error: A path and/or registry key is required. Row will not be added."
 msgstr "Ошибка: Требуется путь и/или ключ реестра. Строка не будет добавлена."
 
-#: gui/settings.cpp:298
+#: gui/settings.cpp:299
 msgid "Error: A game with this name is already defined. Row will not be added."
 msgstr "Ошибка: Игра с этим именем уже определена. Строка не будет добавлена."
 
-#: gui/settings.cpp:306
+#: gui/settings.cpp:307
 msgid ""
 "Error: A game with this folder name is already defined. Row will not be "
 "added."
 msgstr ""
 "Ошибка: Игра с этим именем папки уже определена. Строка не будет добавлена."
 
-#: gui/settings.cpp:329
-msgid "BOSS: Edit Game"
-msgstr "BOSS: Править игру"
+#: gui/settings.cpp:330
+msgid "LOOT: Edit Game"
+msgstr "LOOT: Править игру"
 
-#: gui/settings.cpp:350
+#: gui/settings.cpp:351
 msgid "Error: Name is required. Row will not be added."
 msgstr "Ошибка: Требуется имя. Строка не будет добавлена."
 
-#: gui/settings.cpp:358
+#: gui/settings.cpp:359
 msgid "Error: Folder is required. Row will not be added."
 msgstr "Ошибка: Требуется папка. Строка не будет добавлена."
 
-#: gui/settings.cpp:431
-msgid "BOSS Folder Name (required):"
-msgstr "BOSS: Имя папки (требуется):"
+#: gui/settings.cpp:432
+msgid "LOOT Folder Name (required):"
+msgstr "LOOT: Имя папки (требуется):"
 
-#: gui/settings.cpp:434
+#: gui/settings.cpp:435
 msgid "Master File:"
 msgstr "Мастерфайл:"
 
-#: gui/settings.cpp:437
+#: gui/settings.cpp:438
 msgid "Masterlist Repository URL:"
 msgstr "URL хранилища мастерлиста:"
 
-#: gui/settings.cpp:440
+#: gui/settings.cpp:441
 msgid "Masterlist Repository Branch:"
 msgstr "Ветка хранилища мастерлиста:"
 
-#: gui/settings.cpp:443
+#: gui/settings.cpp:444
 msgid "Install Path:"
 msgstr "Путь установки:"
 
-#: gui/settings.cpp:446
+#: gui/settings.cpp:447
 msgid "Install Path Registry Key:"
 msgstr "Ключ реестра для пути установки:"
 
-#: backend/generators.h:56
+#: backend/generators.cpp:324
+msgid "Version Information"
+msgstr "Информация о версии"
+
+#: backend/generators.cpp:330
+msgid "Masterlist Revision"
+msgstr "Версия мастерлиста"
+
+#: backend/generators.cpp:333
+msgid "Masterlist Date"
+msgstr "Дата мастерлиста"
+
+#: backend/generators.cpp:339
+msgid "Plugin & Message Counts"
+msgstr "Количество плагинов и сообщений"
+
+#: backend/generators.cpp:342
+msgid "Total Plugins"
+msgstr "Плагинов всего"
+
+#: backend/generators.cpp:345
+msgid "Active Plugins"
+msgstr "Активных плагинов"
+
+#: backend/generators.cpp:348
+msgid "Dirty Plugins"
+msgstr "Грязных плагинов"
+
+#: backend/generators.cpp:351
+msgid "Total Messages"
+msgstr "Всего сообщений"
+
+#: backend/generators.cpp:354
+msgid "Warnings"
+msgstr "Предупреждения"
+
+#: backend/generators.cpp:357
+msgid "Errors"
+msgstr "Ошибки"
+
+#: backend/generators.h:57
 msgid "Note:"
 msgstr "Примечание:"
 
-#: backend/generators.h:58
+#: backend/generators.h:59
 msgid "Bash Tag Suggestion(s):"
 msgstr "Bash-теги:"
 
-#: backend/generators.h:60
+#: backend/generators.h:61
 msgid "Warning:"
 msgstr "Предупреждение:"
 
-#: backend/generators.h:62
+#: backend/generators.h:63
 msgid "Error:"
 msgstr "Ошибка:"
 
-#: backend/generators.h:127
-msgid "BOSS Report"
-msgstr "Отчет BOSS"
+#: backend/generators.h:128
+msgid "LOOT Report"
+msgstr "Отчет LOOT"
 
-#: backend/generators.h:153 backend/generators.h:216
+#: backend/generators.h:154 backend/generators.h:217
 msgid "Summary"
 msgstr "Сводка"
 
-#: backend/generators.h:159
+#: backend/generators.h:160
 msgid "Details"
 msgstr "Детали"
 
-#: backend/generators.h:165
+#: backend/generators.h:166
 msgid "Filters"
 msgstr "Фильтры"
 
-#: backend/generators.h:229
-msgid "BOSS Version"
-msgstr "Версия BOSS"
+#: backend/generators.h:230
+msgid "LOOT Version"
+msgstr "Версия LOOT"
 
-#: backend/generators.h:238
+#: backend/generators.h:239
 msgid "Masterlist Version"
 msgstr "Версия мастерлиста"
 
-#: backend/generators.h:247
+#: backend/generators.h:248
 msgid "Masterlist Updating"
 msgstr "Обновление мастерлиста"
 
-#: backend/generators.h:251
+#: backend/generators.h:252
 msgid "Enabled"
 msgstr "Включено"
 
-#: backend/generators.h:253
+#: backend/generators.h:254
 msgid "Disabled"
 msgstr "Отключено"
 
-#: backend/generators.h:262
+#: backend/generators.h:263
 msgid ""
-"There have been no changes in the Details tab since BOSS was last run for "
+"There have been no changes in the Details tab since LOOT was last run for "
 "this game."
 msgstr ""
-"Никаких изменений во вкладке Детали, со времени последнего запуска BOSS для "
+"Никаких изменений во вкладке Детали, со времени последнего запуска LOOT для "
 "этой игры."
 
-#: backend/generators.h:272
+#: backend/generators.h:273
 msgid "General Messages"
 msgstr "Сообщения общего назначения"
 
-#: backend/generators.h:282
+#: backend/generators.h:283
 msgid "Total Number of Messages"
 msgstr "Общее число сообщений"
 
-#: backend/generators.h:291
+#: backend/generators.h:292
 msgid "Number of Warnings"
 msgstr "Количество предупреждений"
 
-#: backend/generators.h:300
+#: backend/generators.h:301
 msgid "Number of Errors"
 msgstr "Количество ошибок"
 
-#: backend/generators.h:341
+#: backend/generators.h:342
 msgid "Version:"
 msgstr "Версия:"
 
-#: backend/generators.h:361
+#: backend/generators.h:362
 msgid "Add:"
 msgstr "Добавить:"
 
-#: backend/generators.h:367
+#: backend/generators.h:368
 msgid "Remove:"
 msgstr "Удалить:"
 
-#: backend/generators.h:375
+#: backend/generators.h:376
 msgid ""
 "Contains %1% ITM records, %2% UDR records and %3% deleted navmeshes. Clean "
 "with %4%."
@@ -969,111 +1046,111 @@ msgstr ""
 "Содержит %1% ITM записей, %2% UDR записей и %3% удаленных navmesh-записей. "
 "Очистить с помощью %1%."
 
-#: backend/generators.h:377
+#: backend/generators.h:378
 msgid "Clean with %1%."
 msgstr "Очистить с помощью %1%."
 
-#: backend/generators.h:381
+#: backend/generators.h:382
 msgid "Contains %1% UDR records and %2% deleted navmeshes. Clean with %3%."
 msgstr ""
 "Содержит %1% ITM записей и %2% удаленных navmesh-записей. Очистить с помощью "
 "%1%."
 
-#: backend/generators.h:383
+#: backend/generators.h:384
 msgid "Contains %1% deleted navmeshes. Clean with %2%."
 msgstr "Содержит %1% удаленных navmesh-записей. Очистить с помощью %1%."
 
-#: backend/generators.h:385
+#: backend/generators.h:386
 msgid "Contains %1% UDR records. Clean with %2%."
 msgstr "Содержит %1% UDR записей. Очистить с помощью %1%."
 
-#: backend/generators.h:388
+#: backend/generators.h:389
 msgid "Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%."
 msgstr ""
 "Содержит %1% ITM записей и %2% удаленных navmesh-записей. Очистить с помощью "
 "%1%."
 
-#: backend/generators.h:390
+#: backend/generators.h:391
 msgid "Contains %1% ITM records. Clean with %2%."
 msgstr "Содержит %1% ITM записей. Очистить с помощью %1%."
 
-#: backend/generators.h:393
+#: backend/generators.h:394
 msgid "Contains %1% ITM records and %2% UDR records. Clean with %3%."
 msgstr "Содержит %1% ITM записей и %2% UDR записей. Очистить с помощью %1%."
 
-#: backend/generators.h:429
-msgid "The BOSS Report requires Javascript to be enabled in order to function."
-msgstr "Для работы всех функций отчета BOSS требуется включить JavaScript"
+#: backend/generators.h:430
+msgid "The LOOT Report requires Javascript to be enabled in order to function."
+msgstr "Для работы всех функций отчета LOOT требуется включить JavaScript"
 
-#: backend/generators.h:456
+#: backend/generators.h:457
 msgid "Hide Version Numbers"
 msgstr "Скрыть номера версии"
 
-#: backend/generators.h:465
+#: backend/generators.h:466
 msgid "Hide CRCs"
 msgstr "Скрыть CRC"
 
-#: backend/generators.h:474
+#: backend/generators.h:475
 msgid "Hide Bash Tag Suggestions"
 msgstr "Скрыть Bash-теги"
 
-#: backend/generators.h:482
+#: backend/generators.h:483
 msgid "Hide Notes"
 msgstr "Скрыть примечания"
 
-#: backend/generators.h:490
+#: backend/generators.h:491
 msgid "Hide 'Do Not Clean' Messages"
 msgstr "Скрыть сообщения 'Не чистить'"
 
-#: backend/generators.h:498
+#: backend/generators.h:499
 msgid "Hide All Plugin Messages"
 msgstr "Скрыть все сообщения"
 
-#: backend/generators.h:506
+#: backend/generators.h:507
 msgid "Hide Messageless Plugins"
 msgstr "Скрыть плагины без сообщений"
 
-#: backend/generators.h:516
+#: backend/generators.h:517
 msgid "%1% of %2% plugins hidden."
 msgstr "%1% из %2% плагинов скрыто."
 
-#: backend/generators.h:524
+#: backend/generators.h:525
 msgid "%1% of %2% messages hidden."
 msgstr "%1% из %2% сообщений скрыто."
 
-#: backend/parsers.h:467 backend/parsers.h:550
+#: backend/parsers.h:470 backend/parsers.h:553
 msgid "Invalid file path:"
 msgstr "Неверный путь к файлу:"
 
-#: backend/parsers.h:515
+#: backend/parsers.h:518
 msgid "Invalid folder path:"
 msgstr "Неверный путь к папке:"
 
-#: backend/parsers.h:532
+#: backend/parsers.h:535
 msgid "Invalid regex string:"
 msgstr "Неверная строка regex:"
 
-#: backend/parsers.h:627
+#: backend/parsers.h:630
 msgid "Expected \"%1%\" at \"%2%\"."
 msgstr "Ожидалось \"%1%\" на \"%2%\"."
 
-#: gui/misc.h:35
+#: gui/misc.h:36
 msgid "Note"
 msgstr "Примечание"
 
-#: gui/misc.h:36
+#: gui/misc.h:37
 msgid "Warning"
 msgstr "Предупреждение"
 
-#: gui/misc.h:37
+#: gui/misc.h:38
 msgid "Error"
 msgstr "Ошибка"
 
-#: gui/misc.h:41
+#: gui/misc.h:42
 msgid "Add"
 msgstr "Добавить"
 
-#: gui/misc.h:42
+#: gui/misc.h:43
 msgid "Remove"
 msgstr "Удалить"
 
@@ -1110,9 +1187,6 @@ msgstr "Удалить"
 
 #~ msgid "Load Order"
 #~ msgstr "Порядок загрузки"
-
-#~ msgid "Error: Cannot load \"%1%\" before \"%2%\"."
-#~ msgstr "Ошибка: Невозможно загрузить \"%1%\" перед \"%2%\"."
 
 #~ msgid "Generate and display plugin graph images."
 #~ msgstr "Сгенерировать и отобразить изображения графиков плагинов"
