@@ -335,22 +335,26 @@ namespace loot {
                 git.call(git_merge_head_from_ref(&git.merge_head, git.repo, git.ref2));
                 git.call(git_merge_analysis(&analysis, &pref, git.repo, (const git_merge_head **)&git.merge_head, 1));
 
-                if (analysis == GIT_MERGE_ANALYSIS_FASTFORWARD) {
+                if ((analysis & GIT_MERGE_ANALYSIS_FASTFORWARD) != 0) {
                     BOOST_LOG_TRIVIAL(trace) << "Local branch can be fast-forwarded to remote branch.";
                     // The remote branch reference points to a particular commit. We just want to
                     // update the local branch reference to point to the same commit.
-                    // Get the commit object ID.
 
-                    const git_oid * commit_id = git_reference_target_peel(git.ref2);
+                    // Get the commit object ID.
+                    git.call(git_reference_peel(&git.obj, git.ref2, GIT_OBJ_COMMIT));
+                    const git_oid * commit_id = git_object_id(git.obj);
                     git_reference_free(git.ref2);
                     git.ref2 = nullptr;
+                    git_object_free(git.obj);
+                    git.obj = nullptr;
 
+                    // Set the reference target.
                     git.call(git_reference_set_target(&git.ref2, git.ref, commit_id, git.sig, "Setting branch reference."));
 
                     git_reference_free(git.ref2);
                     git.ref2 = nullptr;
                 }
-                else if (analysis == GIT_MERGE_ANALYSIS_UP_TO_DATE) {
+                else if ((analysis & GIT_MERGE_ANALYSIS_UP_TO_DATE) != 0) {
                     BOOST_LOG_TRIVIAL(trace) << "Local branch is up-to-date with remote branch.";
                 }
                 else {
