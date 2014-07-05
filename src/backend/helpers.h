@@ -79,6 +79,7 @@ namespace loot {
         static const unsigned int polish = 6;
         static const unsigned int brazilian_portuguese = 7;
         static const unsigned int finnish = 8;
+        static const unsigned int german = 9;
 
         static std::vector<std::string> Names() {
             std::vector<std::string> vec;
@@ -90,6 +91,7 @@ namespace loot {
             vec.push_back(Language(Language::polish).Name());
             vec.push_back(Language(Language::brazilian_portuguese).Name());
             vec.push_back(Language(Language::finnish).Name());
+            vec.push_back(Language(Language::german).Name());
             return vec;
         }
     private:

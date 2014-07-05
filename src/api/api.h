@@ -179,6 +179,7 @@ LOOT_API extern const unsigned int loot_lang_chinese;  ///< Tells the API to pre
 LOOT_API extern const unsigned int loot_lang_polish;  ///< Tells the API to preferentially select Polish messages.
 LOOT_API extern const unsigned int loot_lang_brazilian_portuguese;  ///< Tells the API to preferentially select Brazilian Portuguese messages.
 LOOT_API extern const unsigned int loot_lang_finnish; ///< Tells the API to preferentially select Finnish messages.
+LOOT_API extern const unsigned int loot_lang_german; ///< Tells the API to preferentially select German messages.
 ///@}
 
 /*********************************//**
