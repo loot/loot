@@ -111,12 +111,29 @@ msgstr ""
 msgid "Git operation failed. Error: %1%"
 msgstr ""
 
-#: backend/network.cpp:300
+#: backend\generators.cpp:330 backend/network.cpp:300
 msgid "Masterlist revision"
 msgstr ""
 
 #: backend/network.cpp:300
 msgid "Rolled back to the previous revision."
+msgstr ""
+
+#: gui/editor.cpp:73
+msgid ""
+"Compare priority against all other plugins"
+msgstr ""
+
+#: gui/editor.cpp:100
+msgid "User Metadata Enabled"
+msgstr ""
+
+#: gui/editor.cpp:101
+msgid "Plugin Name"
+msgstr ""
+
+#: gui/editor.cpp:103
+msgid "Global Priority"
 msgstr ""
 
 #: gui/editor.cpp:159 gui/editor.cpp:326 gui/editor.cpp:464
@@ -152,6 +169,10 @@ msgstr ""
 #: gui/editor.cpp:176 gui/editor.cpp:520 gui/editor.cpp:524 gui/editor.cpp:528
 #: gui/editor.cpp:532 gui/misc.cpp:37
 msgid "Condition"
+msgstr ""
+
+#: gui/editor.cpp:182
+msgid "Otherwise, priorities are only compared between conflicting plugins."
 msgstr ""
 
 #: gui/editor.cpp:199 gui/editor.cpp:577
@@ -392,6 +413,10 @@ msgstr ""
 
 #: gui/editor.cpp:1023
 msgid "LOOT: Edit Dirty Info"
+msgstr ""
+
+#: gui/editor.cpp:1158
+msgid "If LOOT has gotten something wrong, please let the team know. See the Contributing To LOOT section of the readme for details."
 msgstr ""
 
 #: gui/main.cpp:120
@@ -841,6 +866,34 @@ msgstr ""
 
 #: gui/settings.cpp:447
 msgid "Install Path Registry Key:"
+msgstr ""
+
+#: backend/generators.cpp:324
+msgid "Version Information"
+msgstr ""
+
+#: backend/generators.cpp:333
+msgid "Masterlist Date"
+msgstr ""
+
+#: backend/generators.cpp:339
+msgid "Plugin & Message Counts"
+msgstr ""
+
+#: backend/generators.cpp:342
+msgid "Total Plugins"
+msgstr ""
+
+#: backend/generators.cpp:345
+msgid "Active Plugins"
+msgstr ""
+
+#: backend/generators.cpp:348
+msgid "Dirty Plugins"
+msgstr ""
+
+#: backend/generators.cpp:351
+msgid "Total Messages"
 msgstr ""
 
 #: backend/generators.h:57

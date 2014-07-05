@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: LOOT\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-03-07 20:08-0000\n"
-"PO-Revision-Date: 2014-07-05 20:33+0600\n"
+"PO-Revision-Date: 2014-07-05 21:18+0600\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru\n"
@@ -116,13 +116,29 @@ msgstr "Этот плагин несовместим с \"%1%\", но они о�
 msgid "Git operation failed. Error: %1%"
 msgstr "Не удалась операция с Git. Ошибка: %1%"
 
-#: backend/network.cpp:300
+#: backend\generators.cpp:330 backend/network.cpp:300
 msgid "Masterlist revision"
 msgstr "Версия мастерлиста"
 
 #: backend/network.cpp:300
 msgid "Rolled back to the previous revision."
 msgstr "Выполнен откат к предыдущей версии."
+
+#: gui/editor.cpp:73
+msgid "Compare priority against all other plugins"
+msgstr "Сравнивать приоритет со всеми плагинами"
+
+#: gui/editor.cpp:100
+msgid "User Metadata Enabled"
+msgstr "Метаданные пользователя включены"
+
+#: gui/editor.cpp:101
+msgid "Plugin Name"
+msgstr "Имя плагина"
+
+#: gui/editor.cpp:103
+msgid "Global Priority"
+msgstr "Глобальный приоритет"
 
 #: gui/editor.cpp:159 gui/editor.cpp:326 gui/editor.cpp:464
 msgid ""
@@ -161,6 +177,11 @@ msgstr "Отображаемое имя"
 #: gui/editor.cpp:532 gui/misc.cpp:37
 msgid "Condition"
 msgstr "Выражение"
+
+#: gui/editor.cpp:182
+msgid "Otherwise, priorities are only compared between conflicting plugins."
+msgstr ""
+"Иначе приоритеты будут сравниваться только между конфликтующими плагинами."
 
 #: gui/editor.cpp:199 gui/editor.cpp:577
 msgid "Select a plugin to edit its load order metadata."
@@ -416,6 +437,14 @@ msgstr "LOOT: Править тег"
 #: gui/editor.cpp:1023
 msgid "LOOT: Edit Dirty Info"
 msgstr "LOOT: Править инфо. о \"грязных\" правках"
+
+#: gui/editor.cpp:1158
+msgid ""
+"If LOOT has gotten something wrong, please let the team know. See the "
+"Contributing To LOOT section of the readme for details."
+msgstr ""
+"Если LOOT сделал что-то неправильно, пожалуйста, сообщите об этом команде. "
+"Подробнее в секции Contributing To LOOT, в документации."
 
 #: gui/main.cpp:120
 msgid "Masterlist update failed. Details: %1%"
@@ -880,6 +909,34 @@ msgstr "Путь установки:"
 #: gui/settings.cpp:447
 msgid "Install Path Registry Key:"
 msgstr "Ключ реестра для пути установки:"
+
+#: backend/generators.cpp:324
+msgid "Version Information"
+msgstr "Информация о версии"
+
+#: backend/generators.cpp:333
+msgid "Masterlist Date"
+msgstr "Дата мастерлиста"
+
+#: backend/generators.cpp:339
+msgid "Plugin & Message Counts"
+msgstr "Количество плагинов и сообщений"
+
+#: backend/generators.cpp:342
+msgid "Total Plugins"
+msgstr "Плагинов всего"
+
+#: backend/generators.cpp:345
+msgid "Active Plugins"
+msgstr "Активных плагинов"
+
+#: backend/generators.cpp:348
+msgid "Dirty Plugins"
+msgstr "Грязных плагинов"
+
+#: backend/generators.cpp:351
+msgid "Total Messages"
+msgstr "Всего сообщений"
 
 #: backend/generators.h:57
 msgid "Note:"
