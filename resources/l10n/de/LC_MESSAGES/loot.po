@@ -3,9 +3,10 @@ msgstr ""
 "Project-Id-Version: BOSS v3.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-03-07 20:08-0000\n"
-"PO-Revision-Date: 2014-07-05 16:15+0100\n"
+"PO-Revision-Date: 2014-07-05 18:46+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
+"Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +15,6 @@ msgstr ""
 "X-Poedit-Basepath: ../../src\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Language: de_DE\n"
 "X-Poedit-SearchPath-0: backend\n"
 "X-Poedit-SearchPath-1: gui\n"
 
@@ -133,6 +133,22 @@ msgstr "Revision der Masterlist"
 msgid "Rolled back to the previous revision."
 msgstr "Auf die vorherige Revision zurückgerollt."
 
+#: gui/editor.cpp:73
+msgid "Compare priority against all other plugins"
+msgstr "Priorität mit allen anderen Plugins vergleichen"
+
+#: gui/editor.cpp:100
+msgid "User Metadata Enabled"
+msgstr "Benutzer-Metadaten aktiviert"
+
+#: gui/editor.cpp:101
+msgid "Plugin Name"
+msgstr "Plugin Name"
+
+#: gui/editor.cpp:103
+msgid "Global Priority"
+msgstr "Globale Priorität"
+
 #: gui/editor.cpp:159 gui/editor.cpp:326 gui/editor.cpp:464
 msgid ""
 "Please submit any edits made for reasons other than personal preference to "
@@ -170,6 +186,12 @@ msgstr "Anzeigename"
 #: gui/editor.cpp:532 gui/misc.cpp:37
 msgid "Condition"
 msgstr "Bedingung"
+
+#: gui/editor.cpp:182
+msgid "Otherwise, priorities are only compared between conflicting plugins."
+msgstr ""
+"Anderenfalls werden Prioritäten nur zwischen Plugins verglichen, die "
+"miteinander in Konflikt stehen."
 
 #: gui/editor.cpp:199 gui/editor.cpp:577
 msgid "Select a plugin to edit its load order metadata."
@@ -430,6 +452,15 @@ msgstr "LOOT: Tag bearbeiten"
 #: gui/editor.cpp:1023
 msgid "LOOT: Edit Dirty Info"
 msgstr "LOOT: Informationen über unsaubere Einträge bearbeiten"
+
+#: gui/editor.cpp:1158
+msgid ""
+"If LOOT has gotten something wrong, please let the team know. See the "
+"Contributing To LOOT section of the readme for details."
+msgstr ""
+"Falls LOOT etwas falsch gemacht hat, lassen Sie es das Team bitte wissen. "
+"Für weitere Details sehen Sie sich bitte den Abschnitt 'Contributing To "
+"LOOT' der Readme an."
 
 #: gui/main.cpp:120
 msgid "Masterlist update failed. Details: %1%"
@@ -909,6 +940,46 @@ msgstr "Installationspfad:"
 #: gui/settings.cpp:447
 msgid "Install Path Registry Key:"
 msgstr "Installationspfad Registrierungsschlüssel:"
+
+#: backend/generators.cpp:324
+msgid "Version Information"
+msgstr "Informationen zur Version"
+
+#: backend/generators.cpp:330
+msgid "Masterlist Revision"
+msgstr "Masterlist Revision"
+
+#: backend/generators.cpp:333
+msgid "Masterlist Date"
+msgstr "Masterlist Datum"
+
+#: backend/generators.cpp:339
+msgid "Plugin & Message Counts"
+msgstr "Plugin & Nachrichten Anzahl"
+
+#: backend/generators.cpp:342
+msgid "Total Plugins"
+msgstr "Plugins insgesamt"
+
+#: backend/generators.cpp:345
+msgid "Active Plugins"
+msgstr "Aktive Plugins"
+
+#: backend/generators.cpp:348
+msgid "Dirty Plugins"
+msgstr "Unsaubere Plugins"
+
+#: backend/generators.cpp:351
+msgid "Total Messages"
+msgstr "Nachrichten insgesamt"
+
+#: backend/generators.cpp:354
+msgid "Warnings"
+msgstr "Warnungen"
+
+#: backend/generators.cpp:357
+msgid "Errors"
+msgstr "Fehler"
 
 #: backend/generators.h:57
 msgid "Note:"
