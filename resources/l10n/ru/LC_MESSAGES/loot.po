@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: LOOT\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-03-07 20:08-0000\n"
-"PO-Revision-Date: 2014-07-05 21:18+0600\n"
+"PO-Revision-Date: 2014-07-05 21:40+0600\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru\n"
@@ -116,7 +116,7 @@ msgstr "Этот плагин несовместим с \"%1%\", но они о�
 msgid "Git operation failed. Error: %1%"
 msgstr "Не удалась операция с Git. Ошибка: %1%"
 
-#: backend\generators.cpp:330 backend/network.cpp:300
+#: backend/network.cpp:300
 msgid "Masterlist revision"
 msgstr "Версия мастерлиста"
 
@@ -914,6 +914,10 @@ msgstr "Ключ реестра для пути установки:"
 msgid "Version Information"
 msgstr "Информация о версии"
 
+#: backend/generators.cpp:330
+msgid "Masterlist Revision"
+msgstr "Версия мастерлиста"
+
 #: backend/generators.cpp:333
 msgid "Masterlist Date"
 msgstr "Дата мастерлиста"
@@ -937,6 +941,14 @@ msgstr "Грязных плагинов"
 #: backend/generators.cpp:351
 msgid "Total Messages"
 msgstr "Всего сообщений"
+
+#: backend/generators.cpp:354
+msgid "Warnings"
+msgstr "Предупреждения"
+
+#: backend/generators.cpp:357
+msgid "Errors"
+msgstr "Ошибки"
 
 #: backend/generators.h:57
 msgid "Note:"

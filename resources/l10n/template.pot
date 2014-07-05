@@ -111,7 +111,7 @@ msgstr ""
 msgid "Git operation failed. Error: %1%"
 msgstr ""
 
-#: backend\generators.cpp:330 backend/network.cpp:300
+#: backend/network.cpp:300
 msgid "Masterlist revision"
 msgstr ""
 
@@ -872,6 +872,10 @@ msgstr ""
 msgid "Version Information"
 msgstr ""
 
+#: backend/generators.cpp:330
+msgid "Masterlist Revision"
+msgstr ""
+
 #: backend/generators.cpp:333
 msgid "Masterlist Date"
 msgstr ""
@@ -894,6 +898,14 @@ msgstr ""
 
 #: backend/generators.cpp:351
 msgid "Total Messages"
+msgstr ""
+
+#: backend/generators.cpp:354
+msgid "Warnings"
+msgstr ""
+
+#: backend/generators.cpp:357
+msgid "Errors"
 msgstr ""
 
 #: backend/generators.h:57
