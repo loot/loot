@@ -443,13 +443,14 @@ A copy of the license is included in the file named "GNU FDL v1.3.txt".</blockqu
 <h2 id="history">Version History</h2>
 <p>Only program history is recorded here. The masterlists are updated far too frequently for their changes to be concisely recorded here, but a full history of changes to them may be viewed by browsing the GitHub repositories.
 
-<h3>0.6.0 - <i>X Y 2014</i></h3>
+<h3>0.6.0 - <i>05 July 2014</i></h3>
 <ul>
     <li>Fixed: The uninstaller not removing the Git repositories used to update the masterlists.
     <li>Fixed: Miscellaneous crashes due to uncaught exceptions.
     <li>Fixed: Plugin priorities are now temporarily "inherited" during sorting so that a plugin with a low priority that is made via metadata to load after a plugin with a high priority doesn't cause other plugins with lower priorities to be positioned incorrectly.
     <li>Fixed: The default language is now correctly set to English.
     <li>Fixed: Defaults for the online masterlist repository used for Nehrim.
+    <li>Fixed: Endless sorting loop that occurred if some user metadata was disabled.
     <li>Added: Display of masterlist revision date in reports.
     <li>Added: Report filter for inactive plugin messages.
     <li>Added: The number of dirty plugins, active plugins and plugins in total to the report summary.
