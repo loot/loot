@@ -124,7 +124,7 @@ FunctionEnd
 
 	!insertmacro MUI_LANGUAGE "English"
 	!insertmacro MUI_LANGUAGE "Russian"
-	;!insertmacro MUI_LANGUAGE "German"
+	!insertmacro MUI_LANGUAGE "German"
 	!insertmacro MUI_LANGUAGE "Spanish"
 	!insertmacro MUI_LANGUAGE "SimpChinese"
 	!insertmacro MUI_LANGUAGE "French"
@@ -238,6 +238,21 @@ FunctionEnd
 	LangString TEXT_USERFILES ${LANG_FINNISH} "LOOTin käyttäjälistat ja asetukset."
 
 ;--------------------------------
+;German Strings
+
+	VIAddVersionKey /LANG=${LANG_GERMAN} "ProductName" "LOOT"
+	VIAddVersionKey /LANG=${LANG_GERMAN} "CompanyName" "LOOT Team"
+	VIAddVersionKey /LANG=${LANG_GERMAN} "LegalCopyright" "© 2009-2014 LOOT Team"
+	VIAddVersionKey /LANG=${LANG_GERMAN} "FileDescription" "Installationsprogramm LOOT 0.6.0"
+	VIAddVersionKey /LANG=${LANG_GERMAN} "FileVersion" "0.6.0"
+
+	LangString TEXT_MESSAGEBOX ${LANG_GERMAN} "LOOT ist bereits installiert und muss zunächst deinstalliert werden. $\n$\nKlicken Sie auf 'OK', um die frühere Version zu deinstallieren oder auf 'Abbrechen', um diese Installation abzubrechen."
+	LangString TEXT_RUN ${LANG_GERMAN} "LOOT starten"
+	LangString TEXT_SHOWREADME ${LANG_GERMAN} "Readme öffnen"
+	LangString TEXT_MAIN ${LANG_GERMAN} "Alle LOOT Dateien mit Ausnahme der Benutzerlisten-Dateien und Konfigurationsdateien."
+	LangString TEXT_USERFILES ${LANG_GERMAN} "LOOT Benutzerlisten-Dateien und Konfigurationsdateien."
+
+;--------------------------------
 ;Initialisations
 
     Var InstallPath ;Path to existing LOOT install.
@@ -326,6 +341,9 @@ FunctionEnd
 		SetOutPath "$INSTDIR\resources\l10n\fi\LC_MESSAGES"
 		File "..\resources\l10n\fi\LC_MESSAGES\wxstd.mo"
 		File "..\resources\l10n\fi\LC_MESSAGES\loot.mo"
+        SetOutPath "$INSTDIR\resources\l10n\de\LC_MESSAGES"
+		File "..\resources\l10n\de\LC_MESSAGES\wxstd.mo"
+		File "..\resources\l10n\de\LC_MESSAGES\loot.mo"
 
 
         ;Install settings file.
@@ -367,6 +385,11 @@ FunctionEnd
             Push "$LOCALAPPDATA\LOOT\settings.yaml"
             Push "Language:"
             Push "Language: fi"
+            Call ReplaceLineStr
+        StrCmp $LANGUAGE ${LANG_GERMAN} 0 +5
+            Push "$LOCALAPPDATA\LOOT\settings.yaml"
+            Push "Language:"
+            Push "Language: de"
             Call ReplaceLineStr
 
 		;Add Start Menu shortcuts. Set out path back to $INSTDIR otherwise the shortcuts start in the wrong place.
@@ -457,6 +480,8 @@ FunctionEnd
 		RMDir  "$INSTDIR\resources\l10n\pt_BR"
 		RMDir  "$INSTDIR\resources\l10n\fi\LC_MESSAGES"
 		RMDir  "$INSTDIR\resources\l10n\fi"
+        RMDir  "$INSTDIR\resources\l10n\de\LC_MESSAGES"
+		RMDir  "$INSTDIR\resources\l10n\de"
 		RMDir  "$INSTDIR\resources\l10n"
         RMDir  "$INSTDIR\resources"
 

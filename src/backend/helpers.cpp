@@ -242,6 +242,8 @@ namespace loot {
             Construct(Language::brazilian_portuguese);
     	else if (nameOrCode == Language(Language::finnish).Name() || nameOrCode == Language(Language::finnish).Locale())
     	    Construct(Language::finnish);
+        else if (nameOrCode == Language(Language::german).Name() || nameOrCode == Language(Language::german).Locale())
+    	    Construct(Language::german);
         else
             Construct(Language::english);
     }
@@ -275,6 +277,10 @@ namespace loot {
         else if (_code == Language::finnish) {
             _name = "suomi";
             _locale = "fi";
+        }
+        else if (_code == Language::german) {
+            _name = "Deutsch";
+            _locale = "de";
         }
         else  {
             _name = "English";

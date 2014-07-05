@@ -287,6 +287,8 @@ bool LOOT::OnInit() {
             wxLang = wxLANGUAGE_PORTUGUESE_BRAZILIAN;
         else if (lang.Code() == loot::Language::finnish)
             wxLang = wxLANGUAGE_FINNISH;
+        else if (lang.Code() == loot::Language::german)
+            wxLang = wxLANGUAGE_GERMAN;
     }
 
     //Boost.Locale initialisation: Specify location of language dictionaries.
