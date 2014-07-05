@@ -43,7 +43,7 @@ namespace loot {
 
     struct git_handler {
     public:
-        git_handler() : repo(nullptr), remote(nullptr), cfg(nullptr), obj(nullptr), commit(nullptr), ref(nullptr), sig(nullptr), blob(nullptr) {}
+        git_handler() : repo(nullptr), remote(nullptr), cfg(nullptr), obj(nullptr), commit(nullptr), ref(nullptr), ref2(nullptr), sig(nullptr), blob(nullptr), merge_head(nullptr) {}
 
         ~git_handler() {
             git_commit_free(commit);
@@ -52,8 +52,10 @@ namespace loot {
             git_remote_free(remote);
             git_repository_free(repo);
             git_reference_free(ref);
+            git_reference_free(ref2);
             git_signature_free(sig);
             git_blob_free(blob);
+            git_merge_head_free(merge_head);
         }
 
         void call(int error_code) {
@@ -81,8 +83,11 @@ namespace loot {
         git_object * obj;
         git_commit * commit;
         git_reference * ref;
+        git_reference * ref2;
         git_signature * sig;
         git_blob * blob;
+        git_merge_head * merge_head;
+
 
         std::string ui_message;
     };
@@ -246,7 +251,7 @@ namespace loot {
         }
         else {
             // Repository exists: check settings are correct, then pull updates.
-            git.ui_message = "An error occurred while trying to access the local masterlist repository.";
+            git.ui_message = "An error occurred while trying to access the local masterlist repository. If this error happens again, try deleting the \".git\" folder in \"%LOCALAPPDATA%\\LOOT\\" + game.FolderName() + "\".";
 
             // Open the repository.
             BOOST_LOG_TRIVIAL(info) << "Existing repository found, attempting to open it.";
@@ -279,6 +284,7 @@ namespace loot {
             BOOST_LOG_TRIVIAL(info) << "Received " << stats->indexed_objects << " of " << stats->total_objects << " objects in " << stats->received_bytes << " bytes.";
 
             // Check that a branch with the correct name exists.
+            git.ui_message = "An error occurred while trying to access the local masterlist repository. If this error happens again, try deleting the \".git\" folder in \"%LOCALAPPDATA%\\LOOT\\" + game.FolderName() + "\".";
             int ret = git_branch_lookup(&git.ref, git.repo, repo_branch.c_str(), GIT_BRANCH_LOCAL);
             if (ret == GIT_ENOTFOUND) {
                 // Branch doesn't exist. Create a new branch using the remote branch's latest commit.
@@ -317,12 +323,40 @@ namespace loot {
 
             if (ret == 0) {
                 /* The branch did exist, and is now pointed at by HEAD.
-                   Need to merge the remote branch into it.
-                  
-                   1. git_merge_head_from_fetchhead to get the remote branch object to merge with.
-                   2. git_merge to merge the remote branch object into HEAD, which is set to be
-                      the desired branch.Docs say a commit may be necessary after this.
+                   Need to merge the remote branch into it. Just do a fast-forward merge because
+                   that's all that should be necessary as the local repo shouldn't get changed by
+                   the user.
                 */
+
+                BOOST_LOG_TRIVIAL(trace) << "Checking that local and remote branches can be merged by fast-forward.";
+                git_merge_analysis_t analysis;
+                git_merge_preference_t pref;
+                git.call(git_reference_lookup(&git.ref2, git.repo, (string("refs/remotes/origin/") + repo_branch).c_str()));
+                git.call(git_merge_head_from_ref(&git.merge_head, git.repo, git.ref2));
+                git.call(git_merge_analysis(&analysis, &pref, git.repo, (const git_merge_head **)&git.merge_head, 1));
+
+                if (analysis == GIT_MERGE_ANALYSIS_FASTFORWARD) {
+                    BOOST_LOG_TRIVIAL(trace) << "Local branch can be fast-forwarded to remote branch.";
+                    // The remote branch reference points to a particular commit. We just want to
+                    // update the local branch reference to point to the same commit.
+                    // Get the commit object ID.
+
+                    const git_oid * commit_id = git_reference_target_peel(git.ref2);
+                    git_reference_free(git.ref2);
+                    git.ref2 = nullptr;
+
+                    git.call(git_reference_set_target(&git.ref2, git.ref, commit_id, git.sig, "Setting branch reference."));
+
+                    git_reference_free(git.ref2);
+                    git.ref2 = nullptr;
+                }
+                else if (analysis == GIT_MERGE_ANALYSIS_UP_TO_DATE) {
+                    BOOST_LOG_TRIVIAL(trace) << "Local branch is up-to-date with remote branch.";
+                }
+                else {
+                    throw error(error::git_error, "Local repository has been edited, an automatic fast-forward merge update is not possible.");
+                }
+
             }
 
             // Free branch pointer.
