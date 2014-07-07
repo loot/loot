@@ -136,6 +136,18 @@ msgstr ""
 msgid "Global Priority"
 msgstr ""
 
+#: gui/editor.cpp:128
+msgid "Copy Plugin Name"
+msgstr ""
+
+#: gui/editor.cpp:129
+msgid "Copy Plugin Metadata As Text"
+msgstr ""
+
+#: gui/editor.cpp:130
+msgid "Remove Plugin User-Added Metadata"
+msgstr ""
+
 #: gui/editor.cpp:159 gui/editor.cpp:326 gui/editor.cpp:464
 msgid ""
 "Please submit any edits made for reasons other than personal preference to "

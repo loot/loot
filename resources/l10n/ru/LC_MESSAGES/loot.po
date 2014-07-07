@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: LOOT\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-03-07 20:08-0000\n"
-"PO-Revision-Date: 2014-07-05 21:40+0600\n"
+"PO-Revision-Date: 2014-07-08 02:10+0600\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru\n"
@@ -139,6 +139,18 @@ msgstr "Имя плагина"
 #: gui/editor.cpp:103
 msgid "Global Priority"
 msgstr "Глобальный приоритет"
+
+#: gui/editor.cpp:128
+msgid "Copy Plugin Name"
+msgstr "Скопировать имя"
+
+#: gui/editor.cpp:129
+msgid "Copy Plugin Metadata As Text"
+msgstr "Скопировать метаданные"
+
+#: gui/editor.cpp:130
+msgid "Remove Plugin User-Added Metadata"
+msgstr "Удалить пользовательские метаданные плагина"
 
 #: gui/editor.cpp:159 gui/editor.cpp:326 gui/editor.cpp:464
 msgid ""
