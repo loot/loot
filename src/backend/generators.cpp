@@ -56,11 +56,11 @@ namespace loot {
     }
 
     bool AreDetailsEqual(const YAML::Node& lhs, const YAML::Node& rhs) {
-        //We want to check for plugin order and messages. 
+        //We want to check for plugin order and messages.
         if (lhs.IsSequence() && rhs.IsSequence()) {
             std::list<std::string> lhs_names, rhs_names;
             std::list<Message> lhs_messages, rhs_messages;
-            
+
             for (const auto &element: lhs) {
                 if (element["name"])
                     lhs_names.push_back(element["name"].as<std::string>());
@@ -240,7 +240,7 @@ namespace loot {
 
         YAML::Node oldDetails;
         GetOldReportDetails(game.ReportDataPath(), oldDetails);
-        
+
         //Need to output YAML as a JSON Javascript variable.
         YAML::Emitter yout;
         yout.SetOutputCharset(YAML::EscapeNonAscii);
@@ -291,7 +291,7 @@ namespace loot {
 
             if (AreDetailsEqual(node, oldDetails))
                 messages.push_front(loot::Message(loot::Message::say, boost::locale::translate("There have been no changes in the Details tab since LOOT was last run for this game.").str()));
-                
+
             //Need to generate output twice because passing the node causes !<!> to be written before every key and value for some reason.
             yout << YAML::Key << "plugins"
                 << YAML::Value << YAML::BeginSeq;
@@ -422,7 +422,7 @@ namespace loot {
         games.push_back(Game(Game::tes5));
         games.push_back(Game(Game::fo3));
         games.push_back(Game(Game::fonv));
-        games.push_back(Game(Game::tes4, "Nehrim").SetDetails("Nehrim - At Fate's Edge", "Nehrim.esm", "https://github.com/loot/oblivion.git", "master", "", "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim - At Fate's Edge_is1"));
+        games.push_back(Game(Game::tes4, "Nehrim").SetDetails("Nehrim - At Fate's Edge", "Nehrim.esm", "https://github.com/loot/oblivion.git", "master", "", "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim - At Fate's Edge_is1\\InstallLocation"));
 
         root["Games"] = games;
 

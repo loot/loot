@@ -48,4 +48,4 @@ Games:
     master: Nehrim.esm
     url: https://github.com/loot/oblivion.git
     path: ~
-    registry: Software\Microsoft\Windows\CurrentVersion\Uninstall\Nehrim - At Fate's Edge_is1
+    registry: Software\Microsoft\Windows\CurrentVersion\Uninstall\Nehrim - At Fate's Edge_is1\InstallLocation
