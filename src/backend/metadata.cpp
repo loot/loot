@@ -200,7 +200,7 @@ namespace loot {
 
     bool Message::EvalCondition(loot::Game& game, const unsigned int language) {
 
-        BOOST_LOG_TRIVIAL(trace) << "Choosing message language.";
+        BOOST_LOG_TRIVIAL(trace) << "Choosing message content for language: " << Language(language).Name();
 
         if (_content.size() > 1) {
             if (language == Language::any)  //Can use a message of any language, so use the first string.

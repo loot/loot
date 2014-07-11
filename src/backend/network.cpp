@@ -184,7 +184,7 @@ namespace loot {
         }
     }
 
-    std::pair<std::string, std::string> UpdateMasterlist(Game& game, std::list<Message>& parsingErrors, std::list<Plugin>& plugins, std::list<Message>& messages) {
+    std::pair<std::string, std::string> UpdateMasterlist(Game& game, std::list<Message>& parsingErrors, std::list<Plugin>& plugins, std::list<Message>& messages, const unsigned int language) {
         git_handler git;
         fs::path repo_path = game.MasterlistPath().parent_path();
         string repo_branch = game.RepoBranch();
@@ -428,11 +428,11 @@ namespace loot {
                     plugins = mlist["plugins"].as< list<loot::Plugin> >();
 
                 for (auto &plugin: plugins) {
-                    plugin.EvalAllConditions(game, Language::any);
+                    plugin.EvalAllConditions(game, language);
                 }
 
                 for (auto &message: messages) {
-                    message.EvalCondition(game, Language::any);
+                    message.EvalCondition(game, language);
                 }
 
                 parsingFailed = false;
