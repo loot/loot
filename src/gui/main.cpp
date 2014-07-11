@@ -438,6 +438,20 @@ bool LOOT::OnInit() {
         if (node["width"] && node["height"] && node["xPos"] && node["yPos"]) {
             size = wxSize(node["width"].as<int>(), node["height"].as<int>());
             pos = wxPoint(node["xPos"].as<int>(), node["yPos"].as<int>());
+
+            // Now check that those values are sensible given current screen dimensions.
+            int screenX = wxSystemSettings::GetMetric(wxSYS_SCREEN_X);
+            int screenY = wxSystemSettings::GetMetric(wxSYS_SCREEN_Y);
+            BOOST_LOG_TRIVIAL(trace) << "Current screen dimensions: " << screenX << "x" << screenY;
+
+            if (size.GetHeight() > screenY || size.GetWidth() > screenX) {
+                BOOST_LOG_TRIVIAL(trace) << "Previous window size is larger than primary screeen, using default size.";
+                size = wxDefaultSize;
+            }
+            if (pos.x < 0 || pos.x > screenX || pos.y < 0 || pos.y > screenY) {
+                BOOST_LOG_TRIVIAL(trace) << "Previous window position lies outside primary screeen, using default position.";
+                pos = wxDefaultPosition;
+            }
         }
     }
 
@@ -595,11 +609,7 @@ void Launcher::OnViewLastReport(wxCommandEvent& event) {
     wxSize size = wxDefaultSize;
     wxPoint pos = wxDefaultPosition;
     if (_settings["windows"] && _settings["windows"]["viewer"]) {
-        YAML::Node node = _settings["windows"]["viewer"];
-        if (node["width"] && node["height"] && node["xPos"] && node["yPos"]) {
-            size = wxSize(node["width"].as<int>(), node["height"].as<int>());
-            pos = wxPoint(node["xPos"].as<int>(), node["yPos"].as<int>());
-        }
+        GetWindowSizePos(_settings["windows"]["viewer"], pos, size);
     }
     //Create viewer window.
     BOOST_LOG_TRIVIAL(debug) << "Opening viewer window...";
@@ -615,11 +625,7 @@ void Launcher::OnOpenSettings(wxCommandEvent& event) {
     wxSize size = wxDefaultSize;
     wxPoint pos = wxDefaultPosition;
     if (_settings["windows"] && _settings["windows"]["settings"]) {
-        YAML::Node node = _settings["windows"]["settings"];
-        if (node["width"] && node["height"] && node["xPos"] && node["yPos"]) {
-            size = wxSize(node["width"].as<int>(), node["height"].as<int>());
-            pos = wxPoint(node["xPos"].as<int>(), node["yPos"].as<int>());
-        }
+        GetWindowSizePos(_settings["windows"]["settings"], pos, size);
     }
 
     SettingsFrame settings = SettingsFrame(this, translate("LOOT: Settings"), _settings, _games, pos, size);
@@ -943,11 +949,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             wxSize size = wxDefaultSize;
             wxPoint pos = wxDefaultPosition;
             if (_settings["windows"] && _settings["windows"]["editor"]) {
-                YAML::Node node = _settings["windows"]["editor"];
-                if (node["width"] && node["height"] && node["xPos"] && node["yPos"]) {
-                    size = wxSize(node["width"].as<int>(), node["height"].as<int>());
-                    pos = wxPoint(node["xPos"].as<int>(), node["yPos"].as<int>());
-                }
+                GetWindowSizePos(_settings["windows"]["editor"], pos, size);
             }
 
             MiniEditor editor(this, translate("LOOT: Calculated Load Order"), pos, size, plugins, ulist_plugins, *_game);
@@ -1078,11 +1080,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     wxSize size = wxDefaultSize;
     wxPoint pos = wxDefaultPosition;
     if (_settings["windows"] && _settings["windows"]["viewer"]) {
-        YAML::Node node = _settings["windows"]["viewer"];
-        if (node["width"] && node["height"] && node["xPos"] && node["yPos"]) {
-            size = wxSize(node["width"].as<int>(), node["height"].as<int>());
-            pos = wxPoint(node["xPos"].as<int>(), node["yPos"].as<int>());
-        }
+        GetWindowSizePos(_settings["windows"]["viewer"], pos, size);
     }
 
     //Create viewer window.
@@ -1187,11 +1185,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
     wxSize size = wxDefaultSize;
     wxPoint pos = wxDefaultPosition;
     if (_settings["windows"] && _settings["windows"]["editor"]) {
-        YAML::Node node = _settings["windows"]["editor"];
-        if (node["width"] && node["height"] && node["xPos"] && node["yPos"]) {
-            size = wxSize(node["width"].as<int>(), node["height"].as<int>());
-            pos = wxPoint(node["xPos"].as<int>(), node["yPos"].as<int>());
-        }
+        GetWindowSizePos(_settings["windows"]["editor"], pos, size);
     }
 
     //Create editor window.
@@ -1225,5 +1219,30 @@ void Launcher::OnRedatePlugins(wxCommandEvent& event) {
             translate("LOOT: Plugin Redate"),
             wxOK|wxCENTRE,
             this);
+    }
+}
+
+void Launcher::GetWindowSizePos(const YAML::Node& node, wxPoint& pos, wxSize& size) {
+    if (node["width"] && node["height"] && node["xPos"] && node["yPos"]) {
+        size = wxSize(node["width"].as<int>(), node["height"].as<int>());
+        pos = wxPoint(node["xPos"].as<int>(), node["yPos"].as<int>());
+
+        // Now check that those values are sensible given current screen dimensions.
+        int screenX = wxSystemSettings::GetMetric(wxSYS_SCREEN_X);
+        int screenY = wxSystemSettings::GetMetric(wxSYS_SCREEN_Y);
+        BOOST_LOG_TRIVIAL(trace) << "Current screen dimensions: " << screenX << "x" << screenY;
+
+        if (size.GetHeight() > screenY || size.GetWidth() > screenX) {
+            BOOST_LOG_TRIVIAL(trace) << "Previous window size is larger than primary screeen, using default size.";
+            size = wxDefaultSize;
+        }
+        if (pos.x < 0 || pos.x > screenX || pos.y < 0 || pos.y > screenY) {
+            BOOST_LOG_TRIVIAL(trace) << "Previous window position lies outside primary screeen, using default position.";
+            pos = wxDefaultPosition;
+        }
+    }
+    else {
+        size = wxDefaultSize;
+        pos = wxDefaultPosition;
     }
 }

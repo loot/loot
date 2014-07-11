@@ -68,6 +68,8 @@ private:
 	loot::Game * _game;
     YAML::Node& _settings;  //LOOT Settings.
     std::vector<loot::Game>& _games;
+
+    void GetWindowSizePos(const YAML::Node& node, wxPoint& pos, wxSize& size);
 };
 
 #endif
