@@ -40,7 +40,8 @@ namespace loot {
     public:
         LootApp();
 
-        void Init(YAML::Node& settings, std::string& cmdLineGame);
+        void Init(std::string& cmdLineGame);
+        CefSettings GetCefSettings() const;
 
         // Override CefApp methods.
         virtual CefRefPtr<CefBrowserProcessHandler> GetBrowserProcessHandler() OVERRIDE;

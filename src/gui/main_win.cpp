@@ -24,11 +24,6 @@
 
 #include "app.h"
 
-#include "../backend/globals.h"
-#include "../backend/helpers.h"
-#include "../backend/generators.h"
-#include "../backend/streams.h"
-
 #include <windows.h>
 #include <include/cef_sandbox_win.h>
 
@@ -72,10 +67,6 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
         return exit_code;
     }
 
-    string initError;
-    string gameStr;
-    YAML::Node settings;
-    unsigned int verbosity = 0;
 
     // Check if LOOT is already running
     //---------------------------------
@@ -93,14 +84,15 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
     // Handle command line args (not CEF args)
     //----------------------------------------
 
+    string gameStr;
     // declare the supported options
     po::options_description opts("Options");
     opts.add_options()
-        ("help,h", translate("produces this help message").str().c_str())
-        ("version,V", translate("prints the version banner").str().c_str())
+        ("help,h", "produces this help message")
+        ("version,V", "prints the version banner")
         ("game,g", po::value(&gameStr),
-        translate("Override game autodetection. Valid values are the folder "
-        "names defined in the settings file.").str().c_str());
+        "Override game autodetection. Valid values are the folder "
+        "names defined in the settings file.");
 
     // parse command line arguments
     po::variables_map vm;
@@ -110,25 +102,21 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
         po::notify(vm);
     }
     catch (po::multiple_occurrences &){
-        BOOST_LOG_TRIVIAL(error) << "Cannot specify options multiple times; please use the '--help' option to see usage instructions";
         std::cout << "Cannot specify options multiple times; please use the '--help' option to see usage instructions";
         return 1;
     }
     catch (exception & e){
-        BOOST_LOG_TRIVIAL(error) << e.what() << "; please use the '--help' option to see usage instructions";
         std::cout << e.what() << "; please use the '--help' option to see usage instructions";
         return 1;
     }
 
     if (vm.count("help")) {
-        BOOST_LOG_TRIVIAL(info) << "Displaying command line help...";
         std::cout << opts << std::endl;
         if (hMutex != NULL)
             ReleaseMutex(hMutex);
         return 0;
     }
     if (vm.count("version")) {
-        BOOST_LOG_TRIVIAL(info) << "Displaying command line version...";
         std::cout << "LOOT v" << g_version_major << "." << g_version_minor << "." << g_version_patch << std::endl;
         if (hMutex != NULL)
             ReleaseMutex(hMutex);
@@ -138,91 +126,13 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
     // Do application init
     //--------------------
 
-    //Load settings.
-    if (!fs::exists(g_path_settings)) {
-        try {
-            if (!fs::exists(g_path_settings.parent_path()))
-                fs::create_directory(g_path_settings.parent_path());
-        }
-        catch (fs::filesystem_error& /*e*/) {
-            initError = "Error: Could not create local app data LOOT folder.";
-        }
-        GenerateDefaultSettingsFile(g_path_settings.string());
-    }
-    try {
-        loot::ifstream in(g_path_settings);
-        settings = YAML::Load(in);
-        in.close();
-    }
-    catch (YAML::ParserException& e) {
-        initError = (format(translate("Error: Settings parsing failed. %1%")) % e.what()).str();
-    }
-
-    //Set up logging.
-    boost::log::add_file_log(
-        boost::log::keywords::file_name = g_path_log.string().c_str(),
-        boost::log::keywords::auto_flush = true,
-        boost::log::keywords::format = (
-        boost::log::expressions::stream
-        << "[" << boost::log::expressions::format_date_time< boost::posix_time::ptime >("TimeStamp", "%H:%M:%S") << "]"
-        << " [" << boost::log::trivial::severity << "]: "
-        << boost::log::expressions::smessage
-        )
-        );
-    boost::log::add_common_attributes();
-    if (settings["Debug Verbosity"]) {
-        verbosity = settings["Debug Verbosity"].as<unsigned int>();
-    }
-    if (verbosity == 0)
-        boost::log::core::get()->set_logging_enabled(false);
-    else {
-        boost::log::core::get()->set_logging_enabled(true);
-
-        if (verbosity == 1)
-            boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::warning);  //Log all warnings, errors and fatals.
-        else if (verbosity == 2)
-            boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::debug);  //Log debugs, infos, warnings, errors and fatals.
-        else
-            boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::trace);  //Log everything.
-    }
-    BOOST_LOG_TRIVIAL(info) << "LOOT Version: " << g_version_major << "." << g_version_minor << "." << g_version_patch;
-
-    //Set the locale to get encoding and language conversions working correctly.
-    BOOST_LOG_TRIVIAL(debug) << "Initialising language settings.";
-    //Defaults in case language string is empty or setting is missing.
-    string localeId = loot::Language(loot::Language::any).Locale() + ".UTF-8";
-    if (settings["Language"]) {
-        loot::Language lang(settings["Language"].as<string>());
-        BOOST_LOG_TRIVIAL(debug) << "Selected language: " << lang.Name();
-        localeId = lang.Locale() + ".UTF-8";
-    }
-
-    //Boost.Locale initialisation: Specify location of language dictionaries.
-    boost::locale::generator gen;
-    gen.add_messages_path(g_path_l10n.string());
-    gen.add_messages_domain("loot");
-
-    //Boost.Locale initialisation: Generate and imbue locales.
-    locale::global(gen(localeId));
-    cout.imbue(locale());
-    boost::filesystem::path::imbue(locale());
-
-    app.get()->Init(settings, gameStr);
+    app.get()->Init(gameStr);
 
     // Back to CEF
     //------------
 
     // Initialise CEF settings.
-    CefSettings cef_settings;
-
-    //Disable CEF logging.
-    cef_settings.command_line_args_disabled = true;
-    CefString(&cef_settings.locale).FromString(localeId.substr(0, localeId.length() - 7));
-    if (verbosity == 0)
-        cef_settings.log_severity = LOGSEVERITY_DISABLE;
-
-    // Use cef_settings.resources_dir_path to specify Resources folder path.
-    // Use cef_settings.locales_dir_path to specify locales folder path.
+    CefSettings cef_settings = app.get()->GetCefSettings();
 
     // Initialize CEF.
     CefInitialize(main_args, cef_settings, app.get(), sandbox_info);

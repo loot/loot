@@ -25,26 +25,106 @@
 #include "app.h"
 #include "handler.h"
 
+#include "../backend/globals.h"
+#include "../backend/helpers.h"
+#include "../backend/generators.h"
+#include "../backend/streams.h"
+
 #include <include/cef_browser.h>
 #include <include/cef_task.h>
 #include <include/cef_runnable.h>
 
-#include <boost/log/trivial.hpp>
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
+#include <boost/log/core.hpp>
+#include <boost/log/trivial.hpp>
+#include <boost/log/expressions.hpp>
+#include <boost/log/utility/setup/file.hpp>
+#include <boost/log/utility/setup/common_attributes.hpp>
+#include <boost/log/support/date_time.hpp>
 
 using namespace std;
 using boost::locale::translate;
 using boost::format;
 
+namespace fs = boost::filesystem;
+
 namespace loot {
 
     LootApp::LootApp() {}
     
-    void LootApp::Init(YAML::Node& settings, std::string& cmdLineGame) {
-        _settings = settings;
-        
+    void LootApp::Init(std::string& cmdLineGame) {
         string initError;
+        
+        //Load settings.
+        if (!fs::exists(g_path_settings)) {
+            try {
+                if (!fs::exists(g_path_settings.parent_path()))
+                    fs::create_directory(g_path_settings.parent_path());
+            }
+            catch (fs::filesystem_error& /*e*/) {
+                initError = "Error: Could not create local app data LOOT folder.";
+            }
+            GenerateDefaultSettingsFile(g_path_settings.string());
+        }
+        try {
+            loot::ifstream in(g_path_settings);
+            _settings = YAML::Load(in);
+            in.close();
+        }
+        catch (YAML::ParserException& e) {
+            initError = (format(translate("Error: Settings parsing failed. %1%")) % e.what()).str();
+        }
+
+        //Set up logging.
+        boost::log::add_file_log(
+            boost::log::keywords::file_name = g_path_log.string().c_str(),
+            boost::log::keywords::auto_flush = true,
+            boost::log::keywords::format = (
+            boost::log::expressions::stream
+            << "[" << boost::log::expressions::format_date_time< boost::posix_time::ptime >("TimeStamp", "%H:%M:%S") << "]"
+            << " [" << boost::log::trivial::severity << "]: "
+            << boost::log::expressions::smessage
+            )
+            );
+        boost::log::add_common_attributes();
+        unsigned int verbosity;
+        if (_settings["Debug Verbosity"]) {
+            verbosity = _settings["Debug Verbosity"].as<unsigned int>();
+        }
+        if (verbosity == 0)
+            boost::log::core::get()->set_logging_enabled(false);
+        else {
+            boost::log::core::get()->set_logging_enabled(true);
+
+            if (verbosity == 1)
+                boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::warning);  //Log all warnings, errors and fatals.
+            else if (verbosity == 2)
+                boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::debug);  //Log debugs, infos, warnings, errors and fatals.
+            else
+                boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::trace);  //Log everything.
+        }
+        BOOST_LOG_TRIVIAL(info) << "LOOT Version: " << g_version_major << "." << g_version_minor << "." << g_version_patch;
+
+        //Set the locale to get encoding and language conversions working correctly.
+        BOOST_LOG_TRIVIAL(debug) << "Initialising language settings.";
+        //Defaults in case language string is empty or setting is missing.
+        string localeId = loot::Language(loot::Language::any).Locale() + ".UTF-8";
+        if (_settings["Language"]) {
+            loot::Language lang(_settings["Language"].as<string>());
+            BOOST_LOG_TRIVIAL(debug) << "Selected language: " << lang.Name();
+            localeId = lang.Locale() + ".UTF-8";
+        }
+
+        //Boost.Locale initialisation: Specify location of language dictionaries.
+        boost::locale::generator gen;
+        gen.add_messages_path(g_path_l10n.string());
+        gen.add_messages_domain("loot");
+
+        //Boost.Locale initialisation: Generate and imbue locales.
+        locale::global(gen(localeId));
+        cout.imbue(locale());
+        boost::filesystem::path::imbue(locale());
 
         // Detect Games
         //-------------
@@ -54,7 +134,7 @@ namespace loot {
         //Detect installed games.
         BOOST_LOG_TRIVIAL(debug) << "Detecting installed games.";
         try {
-            _games = GetGames(settings);
+            _games = GetGames(_settings);
         }
         catch (YAML::Exception& e) {
             BOOST_LOG_TRIVIAL(error) << "Games' settings parsing failed. " << e.what();
@@ -110,20 +190,24 @@ namespace loot {
             initError = (format(translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()).str();
             return;
         }
+    }
 
-        // Create the message object.
-        CefRefPtr<CefProcessMessage> msg = CefProcessMessage::Create("initJSVars");
+    CefSettings LootApp::GetCefSettings() const {
+        CefSettings cef_settings;
 
-        // Retrieve the argument list object.
-        CefRefPtr<CefListValue> args = msg>GetArgumentList();
+        //Disable CEF logging.
+        cef_settings.command_line_args_disabled = true;
+        if (_settings["Language"]) {
+            loot::Language lang(_settings["Language"].as<string>());
+            CefString(&cef_settings.locale).FromString(lang.Locale());
+        }
+        if (!_settings["Verbosity"] || _settings["Debug Verbosity"].as<unsigned int>() == 0)
+            cef_settings.log_severity = LOGSEVERITY_DISABLE;
 
-        // Populate the argument values.
-        args->SetString(0, “my string”);
-        args->SetInt(0, 10);
+        // Use cef_settings.resources_dir_path to specify Resources folder path.
+        // Use cef_settings.locales_dir_path to specify locales folder path.
 
-        // Send the process message to the render process.
-        // Use PID_BROWSER instead when sending a message to the browser process.
-        browser->SendProcessMessage(PID_RENDERER, msg);
+        return cef_settings;
     }
 
     CefRefPtr<CefBrowserProcessHandler> LootApp::GetBrowserProcessHandler() {
@@ -182,6 +266,8 @@ namespace loot {
         message_router_->OnContextCreated(browser, frame, context);
 
         _context = context;
+
+        InitJSVars();
     }
     
     void LootApp::OnContextReleased(CefRefPtr<CefBrowser> browser,
@@ -207,7 +293,7 @@ namespace loot {
         // LOOT Version
         //-------------
 
-        lootObj->SetValue("version", CefV8Value::CreateString(IntToString(g_version_major) + "." + IntToString(g_version_minor) + "." + IntToString(g_version_patch)), V8_PROPERTY_ATTRIBUTE_NONE);
+        lootObj->SetValue("version", CefV8Value::CreateString(to_string(g_version_major) + "." + to_string(g_version_minor) + "." + to_string(g_version_patch)), V8_PROPERTY_ATTRIBUTE_NONE);
 
         // LOOT Settings
         //--------------
