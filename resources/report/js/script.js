@@ -672,8 +672,8 @@ function processURLParams() {
                     hideElement(clone.getElementsByClassName('tag remove')[0]);
                 }
 
-                clone.getElementsByClassName('editMetadata')[0].setAttribute('data-target', data.plugins[i].name);
-                clone.getElementsByClassName('copyMetadata')[0].setAttribute('data-target', data.plugins[i].name);
+                clone.getElementsByClassName('editMetadata')[0].setAttribute('data-target', clone.id);
+                clone.getElementsByClassName('copyMetadata')[0].setAttribute('data-target', clone.id);
                 clone.getElementsByClassName('clearMetadata')[0].setAttribute('data-target', clone.id);
 
                 if (data.plugins[i].messages && data.plugins[i].messages.length != 0) {
