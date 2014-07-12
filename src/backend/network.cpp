@@ -209,13 +209,24 @@ namespace loot {
             BOOST_LOG_TRIVIAL(info) << "Repository doesn't exist, cloning the remote repository.";
 
             bool wasEmpty = true;
+            fs::path temp_path = repo_path.string() + ".temp";
             if (!fs::is_empty(repo_path)) {
                 // Now, libgit2 doesn't support cloning into non-empty folders. Rename the folder 
                 // temporarily, and move its contents back in afterwards, skipping any that then conflict.
                 BOOST_LOG_TRIVIAL(trace) << "Repo path not empty, renaming folder.";
-                if (fs::exists(repo_path.string() + ".temp"))
-                    fs::remove_all(repo_path.string() + ".temp");
-                fs::rename(repo_path, repo_path.string() + ".temp");
+                // First we need to ensure that the folder is not read-only. The ".git" folder contents
+                // seem to be made that way with no detrimental effect on libgit2's operation, but it
+                // stuffs these filesystem commands up.
+                if (fs::exists(temp_path)) {
+                    setDirWriteAccess(repo_path.string() + ".temp");
+                    BOOST_LOG_TRIVIAL(trace) << "Recursively setting write permission on directory: " << temp_path;
+                    for (fs::recursive_directory_iterator it(temp_path); it != fs::recursive_directory_iterator(); ++it) {
+                        BOOST_LOG_TRIVIAL(trace) << "Setting write permission for: " << it->path();
+                        fs::permissions(it->path(), fs::add_perms | fs::owner_write);
+                    }
+                    fs::remove_all(temp_path);
+                }
+                fs::rename(repo_path, temp_path);
                 // Recreate the game folder so that we don't inadvertently cause any other errors (everything past LOOT init assumes it exists).
                 fs::create_directory(repo_path);
                 wasEmpty = false;
@@ -236,17 +247,17 @@ namespace loot {
             //Now perform the clone.
             git.call(git_clone(&git.repo, game.RepoURL().c_str(), repo_path.string().c_str(), &clone_options));
 
-            if (fs::exists(repo_path.string() + ".temp")) {
+            if (fs::exists(temp_path)) {
                 //Move contents back in.
                 BOOST_LOG_TRIVIAL(trace) << "Repo path wasn't empty, moving previous files back in.";
-                for (fs::directory_iterator it(repo_path.string() + ".temp"); it != fs::directory_iterator(); ++it) {
+                for (fs::directory_iterator it(temp_path); it != fs::directory_iterator(); ++it) {
                     if (!fs::exists(repo_path / it->path().filename())) {
                         //No conflict, OK to move back in.
                         fs::rename(it->path(), repo_path / it->path().filename());
                     }
                 }
                 //Delete temporary folder.
-                fs::remove_all(repo_path.string() + ".temp");
+                fs::remove_all(temp_path);
             }
         }
         else {
