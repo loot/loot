@@ -683,8 +683,7 @@ function processURLParams() {
     var pos = 0;
     if (pos != -1) {
         /*var datapath = 'file:///' + document.URL.substring(pos+6);*/
-        var datapath = 'testdata'
-        console.log(datapath);
+        var datapath = 'testdata';
         require([datapath], function(){
             var totalMessageNo = 0;
             var warnMessageNo = 0;
