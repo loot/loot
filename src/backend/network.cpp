@@ -218,7 +218,6 @@ namespace loot {
                 // seem to be made that way with no detrimental effect on libgit2's operation, but it
                 // stuffs these filesystem commands up.
                 if (fs::exists(temp_path)) {
-                    setDirWriteAccess(repo_path.string() + ".temp");
                     BOOST_LOG_TRIVIAL(trace) << "Recursively setting write permission on directory: " << temp_path;
                     for (fs::recursive_directory_iterator it(temp_path); it != fs::recursive_directory_iterator(); ++it) {
                         BOOST_LOG_TRIVIAL(trace) << "Setting write permission for: " << it->path();
