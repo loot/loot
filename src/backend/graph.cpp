@@ -45,7 +45,18 @@ namespace loot {
     void cycle_detector::tree_edge(edge_t e, const PluginGraph& g) {
         vertex_t source = boost::source(e, g);
 
-        trail.push_back(g[source].Name());
+        string name = g[source].Name();
+
+        // Check if the plugin already exists in the recorded trail.
+        auto it = find(trail.begin(), trail.end(), name);
+
+        if (it != trail.end()) {
+            // Erase everything from this position onwards, as it doesn't
+            // contribute to a forward-cycle.
+            trail.erase(it, trail.end());
+        }
+
+        trail.push_back(name);
     }
 
     void cycle_detector::back_edge(edge_t e, const PluginGraph& g) {
