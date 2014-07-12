@@ -65,7 +65,7 @@ namespace loot {
             catch (fs::filesystem_error& /*e*/) {
                 initError = "Error: Could not create local app data LOOT folder.";
             }
-            GenerateDefaultSettingsFile(g_path_settings.string());
+            GenerateDefaultSettingsFile(g_path_settings);
         }
         try {
             loot::ifstream in(g_path_settings);
@@ -201,7 +201,7 @@ namespace loot {
             loot::Language lang(_settings["Language"].as<string>());
             CefString(&cef_settings.locale).FromString(lang.Locale());
         }
-        if (!_settings["Verbosity"] || _settings["Debug Verbosity"].as<unsigned int>() == 0)
+        if (!_settings["Debug Verbosity"] || _settings["Debug Verbosity"].as<unsigned int>() == 0)
             cef_settings.log_severity = LOGSEVERITY_DISABLE;
 
         // Use cef_settings.resources_dir_path to specify Resources folder path.

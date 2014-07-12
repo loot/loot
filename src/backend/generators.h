@@ -42,7 +42,7 @@ namespace loot {
         const bool masterlistUpdateEnabled);
 
     //Default settings file generation.
-    void GenerateDefaultSettingsFile(const std::string& file);
+    void GenerateDefaultSettingsFile(const boost::filesystem::path& file);
 }
 
 namespace YAML {

@@ -405,7 +405,7 @@ namespace loot {
     }
 
     //Default settings file generation.
-    void GenerateDefaultSettingsFile(const std::string& file) {
+    void GenerateDefaultSettingsFile(const boost::filesystem::path& file) {
 
         BOOST_LOG_TRIVIAL(info) << "Generating default settings file.";
 
@@ -431,8 +431,7 @@ namespace loot {
         yout.SetIndent(2);
         yout << root;
 
-        boost::filesystem::path p(file);
-        loot::ofstream out(p);
+        loot::ofstream out(file);
         out << yout.c_str();
         out.close();
     }
