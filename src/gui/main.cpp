@@ -33,7 +33,6 @@
 #include "../backend/error.h"
 #include "../backend/helpers.h"
 #include "../backend/generators.h"
-#include "../backend/network.h"
 #include "../backend/streams.h"
 #include "../backend/graph.h"
 
@@ -70,123 +69,6 @@ using boost::format;
 
 namespace fs = boost::filesystem;
 namespace loc = boost::locale;
-
-
-struct plugin_loader {
-    plugin_loader(loot::Plugin& plugin, loot::Game& game) : _plugin(plugin), _game(game) {
-    }
-
-    void operator () () {
-        _plugin = loot::Plugin(_game, _plugin.Name(), false);
-    }
-
-    loot::Plugin& _plugin;
-    loot::Game& _game;
-    string _filename;
-    bool _b;
-};
-
-struct plugin_list_loader {
-    plugin_list_loader(list<loot::Plugin>& plugins, loot::Game& game) : _plugins(plugins), _game(game) {}
-
-    void operator () () {
-        for (auto &plugin : _plugins) {
-            if (skipPlugins.find(plugin.Name()) == skipPlugins.end()) {
-                plugin = loot::Plugin(_game, plugin.Name(), false);
-            }
-        }
-    }
-
-    list<loot::Plugin>& _plugins;
-    loot::Game& _game;
-    set<string> skipPlugins;
-};
-
-struct masterlist_updater_parser {
-    masterlist_updater_parser(bool doUpdate, loot::Game& game, list<loot::Message>& errors, list<loot::Plugin>& plugins, list<loot::Message>& messages, string& revision, string& date, const unsigned int language) : _doUpdate(doUpdate), _game(game), _errors(errors), _plugins(plugins), _messages(messages), _revision(revision), _date(date), _language(language) {}
-
-    void operator () () {
-
-        if (_doUpdate) {
-            BOOST_LOG_TRIVIAL(debug) << "Updating masterlist";
-            try {
-                pair<string, string> ret = UpdateMasterlist(_game, _errors, _plugins, _messages, _language);
-                _revision = ret.first;
-                _date = ret.second;
-            } catch (std::exception& e) {
-                _plugins.clear();
-                _messages.clear();
-                BOOST_LOG_TRIVIAL(error) << "Masterlist update failed. Details: " << e.what();
-                _errors.push_back(loot::Message(loot::Message::error, (format(loc::translate("Masterlist update failed. Details: %1%")) % e.what()).str()));
-                //Try getting masterlist revision anyway.
-                try {
-                    pair<string, string> ret = GetMasterlistRevision(_game);
-                    _revision = ret.first;
-                    _date = ret.second;
-                }
-                catch (std::exception& e) {
-                    BOOST_LOG_TRIVIAL(error) << "Masterlist revision check failed. Details: " << e.what();
-                    _errors.push_back(loot::Message(loot::Message::error, (format(loc::translate("Masterlist revision check failed. Details: %1%")) % e.what()).str()));
-                }
-            }
-        }
-        else {
-            BOOST_LOG_TRIVIAL(debug) << "Getting masterlist revision";
-            try {
-                pair<string, string> ret = GetMasterlistRevision(_game);
-                _revision = ret.first;
-                _date = ret.second;
-            }
-            catch (std::exception& e) {
-                BOOST_LOG_TRIVIAL(error) << "Masterlist revision check failed. Details: " << e.what();
-                _errors.push_back(loot::Message(loot::Message::error, (format(loc::translate("Masterlist revision check failed. Details: %1%")) % e.what()).str()));
-            }
-        }
-
-        if (_plugins.empty() && _messages.empty() && fs::exists(_game.MasterlistPath())) {
-
-            BOOST_LOG_TRIVIAL(debug) << "Parsing masterlist...";
-            try {
-                loot::ifstream in(_game.MasterlistPath());
-                YAML::Node mlist = YAML::Load(in);
-                in.close();
-
-                if (mlist["globals"])
-                    _messages = mlist["globals"].as< list<loot::Message> >();
-                if (mlist["plugins"])
-                    _plugins = mlist["plugins"].as< list<loot::Plugin> >();
-            } catch (YAML::Exception& e) {
-                BOOST_LOG_TRIVIAL(error) << "Masterlist parsing failed. Details: " << e.what();
-                _errors.push_back(loot::Message(loot::Message::error, (format(loc::translate("Masterlist parsing failed. Details: %1%")) % e.what()).str()));
-            }
-            BOOST_LOG_TRIVIAL(debug) << "Finished parsing masterlist.";
-
-        }
-
-        if (_revision.empty()) {
-            if (fs::exists(_game.MasterlistPath()))
-                _revision = loc::translate("Unknown");
-            else
-                _revision = loc::translate("No masterlist");
-        }
-
-        if (_date.empty()) {
-            if (fs::exists(_game.MasterlistPath()))
-                _date = loc::translate("Unknown");
-            else
-                _date = loc::translate("No masterlist");
-        }
-    }
-
-    bool _doUpdate;
-    loot::Game& _game;
-    list<loot::Message>& _errors;
-    list<loot::Plugin>& _plugins;
-    list<loot::Message>& _messages;
-    string& _revision;
-    string& _date;
-    unsigned int _language;
-};
 
 bool LOOT::OnInit() {
 
@@ -729,7 +611,6 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     list<loot::Plugin> mlist_plugins, ulist_plugins;
     list<loot::Plugin> plugins;
     boost::thread_group group;
-    string revision, date;
 
     wxProgressDialog *progDia = new wxProgressDialog(translate("LOOT: Working..."),translate("LOOT working..."), 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_ELAPSED_TIME);
 
@@ -747,8 +628,14 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     BOOST_LOG_TRIVIAL(info) << "Using message language: " << Language(lang).Name();
 
     bool doUpdate = _settings["Update Masterlist"] && _settings["Update Masterlist"].as<bool>();
-    masterlist_updater_parser mup(doUpdate, *_game, messages, mlist_plugins, mlist_messages, revision, date, lang);
-    group.create_thread(mup);
+    group.create_thread([this, lang, &messages]() {
+        try {
+            this->_game->masterlist.Load(*this->_game, lang);
+        }
+        catch (exception &e) {
+            messages.push_back(loot::Message(loot::Message::error, (format(loc::translate("Masterlist parsing failed. Details: %1%")) % e.what()).str()));
+        }
+    });
 
     //First calculate the mean plugin size. Store it temporarily in a map to reduce filesystem lookups and file size recalculation.
     size_t meanFileSize = 0;
@@ -765,7 +652,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     meanFileSize /= tempMap.size();
 
     //Now load plugins.
-    plugin_list_loader pll(plugins, *_game);
+    PluginsLoader pll(plugins, *_game);
     for (const auto &pluginPair: tempMap) {
 
         BOOST_LOG_TRIVIAL(info) << "Found plugin: " << pluginPair.first;
@@ -774,7 +661,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
         if (pluginPair.second > meanFileSize) {
             pll.skipPlugins.insert(pluginPair.first);
-            plugin_loader pl(plugins.back(), *_game);
+            PluginLoader pl(plugins.back(), *_game);
             group.create_thread(pl);
         }
 
@@ -1058,8 +945,8 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         GenerateReportData(*_game,
                         messages,
                         plugins,
-                        revision,
-                        date,
+                        _game->masterlist.GetRevision(_game->MasterlistPath()),
+                        _game->masterlist.GetDate(_game->MasterlistPath()),
                         doUpdate);
     } catch (std::exception& e) {
         wxMessageBox(
