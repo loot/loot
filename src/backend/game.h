@@ -78,56 +78,6 @@ namespace loot {
         std::string revision;
         std::string date;
     };
-    /*
-    class PluginCache {
-
-
-        bool IsActive(const std::string& plugin) const;
-
-        void GetLoadOrder(std::list<std::string>& loadOrder) const;
-        void SetLoadOrder(const std::list<Plugin>& loadOrder) const;  //Modifies game load order, even though const.
-
-        void RefreshActivePluginsList();
-        void RedatePlugins();  //Change timestamps to match load order (Skyrim only).
-        void LoadPlugins(bool headersOnly);  //Loads all installed plugins.
-        std::unordered_map<std::string, Plugin> plugins;  //Map so that plugin data can be edited.
-
-        std::unordered_set<std::string> activePlugins;  //Holds lowercased strings.
-    };
-    */
-
-    // A couple of plugin loader classes for handling plugin loading in separate threads.
-    class PluginLoader {
-    public:
-        PluginLoader(Plugin& plugin, Game& game) : _plugin(plugin), _game(game) {
-        }
-
-        void operator () () {
-            _plugin = Plugin(_game, _plugin.Name(), false);
-        }
-
-        Plugin& _plugin;
-        Game& _game;
-        std::string _filename;
-        bool _b;
-    };
-
-    class PluginsLoader {
-    public:
-        PluginsLoader(std::list<Plugin>& plugins, Game& game) : _plugins(plugins), _game(game) {}
-
-        void operator () () {
-            for (auto &plugin : _plugins) {
-                if (skipPlugins.find(plugin.Name()) == skipPlugins.end()) {
-                    plugin = Plugin(_game, plugin.Name(), false);
-                }
-            }
-        }
-
-        std::list<Plugin>& _plugins;
-        Game& _game;
-        std::set<std::string> skipPlugins;
-    };
 
     class Game {
     public:
@@ -159,7 +109,6 @@ namespace loot {
         boost::filesystem::path UserlistPath() const;
         boost::filesystem::path ReportDataPath() const;
 
-//TO BE REMOVED
         //Game plugin functions.
         bool IsActive(const std::string& plugin) const;
 
@@ -173,12 +122,11 @@ namespace loot {
         //Caches for condition results, active plugins and CRCs.
         std::unordered_map<std::string, bool> conditionCache;  //Holds lowercased strings.
         std::unordered_map<std::string, uint32_t> crcCache;  //Holds lowercased strings.
-//END TO BE REMOVED
 
         //Plugin data and metadata lists.
         Masterlist masterlist;
         MetadataList userlist;
-        std::unordered_map<std::string, Plugin> plugins;  //Map so that plugin data can be edited. TO BE REMOVED
+        std::unordered_map<std::string, Plugin> plugins;  //Map so that plugin data can be edited.
 
         espm::Settings espm_settings;
 
@@ -200,7 +148,7 @@ namespace loot {
 
         boost::filesystem::path gamePath;  //Path to the game's folder.
 
-        std::unordered_set<std::string> activePlugins;  //Holds lowercased strings. TO BE REMOVED
+        std::unordered_set<std::string> activePlugins;  //Holds lowercased strings.
 
         //Creates directory in LOOT folder for LOOT's game-specific files.
         void CreateLOOTGameFolder();

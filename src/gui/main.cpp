@@ -607,7 +607,6 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     BOOST_LOG_TRIVIAL(debug) << "Beginning sorting process.";
 
     list<loot::Message> messages;
-    list<loot::Plugin> plugins;
     boost::thread_group group;
     unsigned int lang;
 
@@ -633,38 +632,9 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             messages.push_back(loot::Message(loot::Message::error, (format(loc::translate("Masterlist parsing failed. Details: %1%")) % e.what()).str()));
         }
     });
-
-    //First calculate the mean plugin size. Store it temporarily in a map to reduce filesystem lookups and file size recalculation.
-    size_t meanFileSize = 0;
-    boost::unordered_map<std::string, size_t> tempMap;
-    for (fs::directory_iterator it(_game->DataPath()); it != fs::directory_iterator(); ++it) {
-        if (fs::is_regular_file(it->status()) && IsPlugin(it->path().string())) {
-
-            size_t fileSize = fs::file_size(it->path());
-            meanFileSize += fileSize;
-
-            tempMap.emplace(it->path().filename().string(), fileSize);
-        }
-    }
-    meanFileSize /= tempMap.size();
-
-    //Now load plugins.
-    PluginsLoader pll(plugins, *_game);
-    for (const auto &pluginPair: tempMap) {
-
-        BOOST_LOG_TRIVIAL(info) << "Found plugin: " << pluginPair.first;
-
-        plugins.push_back(loot::Plugin(pluginPair.first));
-
-        if (pluginPair.second > meanFileSize) {
-            pll.skipPlugins.insert(pluginPair.first);
-            PluginLoader pl(plugins.back(), *_game);
-            group.create_thread(pl);
-        }
-
-        progDia->Pulse();
-    }
-    group.create_thread(pll);
+    group.create_thread([this]() {
+        this->_game->LoadPlugins(false);
+    });
     group.join_all();
 
     //Now load userlist.
@@ -685,47 +655,27 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     // Merge & Check Metadata
     ///////////////////////////////////////////////////////
 
-    if (fs::exists(_game->MasterlistPath()) || fs::exists(_game->UserlistPath())) {
+    //Merge all global message lists.
+    BOOST_LOG_TRIVIAL(debug) << "Merging all global message lists.";
+    if (!_game->masterlist.messages.empty())
+        messages.insert(messages.end(), _game->masterlist.messages.begin(), _game->masterlist.messages.end());
+    if (!_game->userlist.messages.empty())
+        messages.insert(messages.end(), _game->userlist.messages.begin(), _game->userlist.messages.end());
 
-
-        //Merge all global message lists.
-        BOOST_LOG_TRIVIAL(debug) << "Merging all global message lists.";
-        if (!_game->masterlist.messages.empty())
-            messages.insert(messages.end(), _game->masterlist.messages.begin(), _game->masterlist.messages.end());
-        if (!_game->userlist.messages.empty())
-            messages.insert(messages.end(), _game->userlist.messages.begin(), _game->userlist.messages.end());
-
-        //Evaluate any conditions in the global messages.
-        BOOST_LOG_TRIVIAL(debug) << "Evaluating global message conditions.";
-        try {
-            list<loot::Message>::iterator it=messages.begin();
-            while (it != messages.end()) {
-                if (!it->EvalCondition(*_game, lang))
-                    it = messages.erase(it);
-                else
-                    ++it;
-            }
+    //Evaluate any conditions in the global messages.
+    BOOST_LOG_TRIVIAL(debug) << "Evaluating global message conditions.";
+    try {
+        list<loot::Message>::iterator it=messages.begin();
+        while (it != messages.end()) {
+            if (!it->EvalCondition(*_game, lang))
+                it = messages.erase(it);
+            else
+                ++it;
         }
-        catch (std::exception& e) {
-            BOOST_LOG_TRIVIAL(error) << "A global message contains a condition that could not be evaluated. Details: " << e.what();
-            messages.push_back(loot::Message(loot::Message::error, (format(loc::translate("A global message contains a condition that could not be evaluated. Details: %1%")) % e.what()).str()));
-        }
-
-        //Merge plugin list and masterlist.
-        BOOST_LOG_TRIVIAL(debug) << "Merging plugin list and masterlist data.";
-        for (auto &plugin : plugins) {
-            BOOST_LOG_TRIVIAL(trace) << "Merging for plugin \"" << plugin.Name() << "\"";
-
-            //Check if there is a plugin entry in the masterlist. This will also find matching regex entries.
-            list<loot::Plugin>::iterator pos = std::find(_game->masterlist.plugins.begin(), _game->masterlist.plugins.end(), plugin);
-
-            if (pos != _game->masterlist.plugins.end()) {
-                BOOST_LOG_TRIVIAL(trace) << "Merging masterlist data down to plugin list data.";
-                plugin.MergeMetadata(*pos);
-            }
-
-            progDia->Pulse();
-        }
+    }
+    catch (std::exception& e) {
+        BOOST_LOG_TRIVIAL(error) << "A global message contains a condition that could not be evaluated. Details: " << e.what();
+        messages.push_back(loot::Message(loot::Message::error, (format(loc::translate("A global message contains a condition that could not be evaluated. Details: %1%")) % e.what()).str()));
     }
 
     progDia->Update(800, translate("Building plugin graph..."));
@@ -745,6 +695,10 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     */
 
     //Check for back-edges, then perform a topological sort.
+    list<loot::Plugin> plugins;
+    for (auto &plugin : _game->plugins) {
+        plugins.push_back(plugin.second);
+    }
     try {
         bool applyLoadOrder = false;
 
@@ -760,8 +714,16 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
                 BOOST_LOG_TRIVIAL(trace) << "Merging for plugin \"" << graph[*vit].Name() << "\"";
 
+                //Check if there is a plugin entry in the masterlist. This will also find matching regex entries.
+                list<loot::Plugin>::iterator pos = std::find(_game->masterlist.plugins.begin(), _game->masterlist.plugins.end(), graph[*vit]);
+
+                if (pos != _game->masterlist.plugins.end()) {
+                    BOOST_LOG_TRIVIAL(trace) << "Merging masterlist data down to plugin list data.";
+                    graph[*vit].MergeMetadata(*pos);
+                }
+
                 //Check if there is a plugin entry in the userlist. This will also find matching regex entries.
-                list<loot::Plugin>::iterator pos = std::find(_game->userlist.plugins.begin(), _game->userlist.plugins.end(), graph[*vit]);
+                pos = std::find(_game->userlist.plugins.begin(), _game->userlist.plugins.end(), graph[*vit]);
 
                 if (pos != _game->userlist.plugins.end() && pos->Enabled()) {
                     BOOST_LOG_TRIVIAL(trace) << "Merging userlist data down to plugin list data.";

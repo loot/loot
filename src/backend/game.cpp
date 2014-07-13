@@ -31,6 +31,7 @@
 #include "streams.h"
 
 #include <boost/algorithm/string.hpp>
+#include <boost/thread.hpp>
 
 using namespace std;
 
@@ -572,19 +573,44 @@ namespace loot {
     }
 
     void Game::LoadPlugins(bool headersOnly) {
-        //Add all plugins in data folder not already in the hashset to the hashset, and load them.
-        for (fs::directory_iterator it(DataPath()); it != fs::directory_iterator(); ++it) {
+        boost::thread_group group;
+        size_t meanFileSize = 0;
+        unordered_map<std::string, size_t> tempMap;
+        std::set<std::string> skipPlugins;
+        //First calculate the mean plugin size. Store it temporarily in a map to reduce filesystem lookups and file size recalculation.
+        for (fs::directory_iterator it(this->DataPath()); it != fs::directory_iterator(); ++it) {
             if (fs::is_regular_file(it->status()) && IsPlugin(it->path().string())) {
-                const string filename = it->path().filename().string();
 
-                if (plugins.find(filename) == plugins.end())
-                    plugins.insert(std::pair<string, Plugin>(filename, Plugin(filename)));
+                size_t fileSize = fs::file_size(it->path());
+                meanFileSize += fileSize;
+
+                tempMap.emplace(it->path().filename().string(), fileSize);
             }
         }
+        meanFileSize /= tempMap.size();
 
-        for (auto &pluginPair: plugins) {
-            pluginPair.second = Plugin(*this, pluginPair.second.Name(), headersOnly);
+        //Now load plugins.
+        for (const auto &pluginPair : tempMap) {
+
+            BOOST_LOG_TRIVIAL(info) << "Found plugin: " << pluginPair.first;
+
+            auto plugin = plugins.emplace(pluginPair.first, Plugin(pluginPair.first));
+
+            if (pluginPair.second > meanFileSize) {
+                skipPlugins.insert(pluginPair.first);
+                group.create_thread([this, &plugin, headersOnly]() {
+                    plugin.first->second = Plugin(*this, plugin.first->first, headersOnly);
+                });
+            }
         }
+        group.create_thread([this, &skipPlugins, headersOnly]() {
+            for (auto &pluginPair : this->plugins) {
+                if (skipPlugins.find(pluginPair.first) == skipPlugins.end()) {
+                    pluginPair.second = Plugin(*this, pluginPair.first, headersOnly);
+                }
+            }
+        });
+        group.join_all();
     }
 
     void Game::CreateLOOTGameFolder() {
