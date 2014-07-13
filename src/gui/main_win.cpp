@@ -123,11 +123,6 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
         return 0;
     }
 
-    // Do application init
-    //--------------------
-
-    app.get()->Init(gameStr);
-
     // Back to CEF
     //------------
 
@@ -136,6 +131,11 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 
     // Initialize CEF.
     CefInitialize(main_args, cef_settings, app.get(), sandbox_info);
+
+    // Do application init
+    //--------------------
+
+    app.get()->Init(gameStr);
 
     // Run the CEF message loop. This will block until CefQuitMessageLoop() is called.
     CefRunMessageLoop();
