@@ -605,14 +605,9 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     BOOST_LOG_TRIVIAL(debug) << "Beginning sorting process.";
 
     list<loot::Message> messages;
-    boost::thread_group group;
     unsigned int lang;
 
-    wxProgressDialog *progDia = new wxProgressDialog(translate("LOOT: Working..."),translate("LOOT working..."), 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_ELAPSED_TIME);
-
-    ///////////////////////////////////////////////////////
-    // Load Plugins & Lists
-    ///////////////////////////////////////////////////////
+    wxProgressDialog *progDia = new wxProgressDialog(translate("LOOT: Working..."), translate("LOOT working..."), 1000, this, wxPD_APP_MODAL | wxPD_AUTO_HIDE | wxPD_ELAPSED_TIME);
 
     //Set language.
     if (_settings["Language"])
@@ -622,61 +617,13 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     BOOST_LOG_TRIVIAL(info) << "Using message language: " << Language(lang).Name();
 
-    group.create_thread([this, lang, &messages]() {
-        try {
-            this->_games[_currentGame].masterlist.Load(this->_games[_currentGame], lang);
-        }
-        catch (exception &e) {
-            messages.push_back(loot::Message(loot::Message::error, (format(loc::translate("Masterlist parsing failed. Details: %1%")) % e.what()).str()));
-        }
-    });
-    group.create_thread([this]() {
-        this->_games[_currentGame].LoadPlugins(false);
-    });
-    group.join_all();
-
-    //Now load userlist.
-    if (fs::exists(_games[_currentGame].UserlistPath())) {
-        BOOST_LOG_TRIVIAL(debug) << "Parsing userlist at: " << _games[_currentGame].UserlistPath();
-
-        try {
-            _games[_currentGame].userlist.Load(_games[_currentGame].UserlistPath());
-        } catch (exception& e) {
-            BOOST_LOG_TRIVIAL(error) << "Userlist parsing failed. Details: " << e.what();
-            messages.push_back(loot::Message(loot::Message::error, (format(loc::translate("Userlist parsing failed. Details: %1%")) % e.what()).str()));
-        }
-    }
-
-    progDia->Pulse();
-
     ///////////////////////////////////////////////////////
-    // Merge & Check Metadata
+    // Load Plugins & Lists
     ///////////////////////////////////////////////////////
 
-    //Merge all global message lists.
-    BOOST_LOG_TRIVIAL(debug) << "Merging all global message lists.";
-    if (!_games[_currentGame].masterlist.messages.empty())
-        messages.insert(messages.end(), _games[_currentGame].masterlist.messages.begin(), _games[_currentGame].masterlist.messages.end());
-    if (!_games[_currentGame].userlist.messages.empty())
-        messages.insert(messages.end(), _games[_currentGame].userlist.messages.begin(), _games[_currentGame].userlist.messages.end());
-
-    //Evaluate any conditions in the global messages.
-    BOOST_LOG_TRIVIAL(debug) << "Evaluating global message conditions.";
-    try {
-        list<loot::Message>::iterator it=messages.begin();
-        while (it != messages.end()) {
-            if (!it->EvalCondition(_games[_currentGame], lang))
-                it = messages.erase(it);
-            else
-                ++it;
-        }
-    }
-    catch (std::exception& e) {
-        BOOST_LOG_TRIVIAL(error) << "A global message contains a condition that could not be evaluated. Details: " << e.what();
-        messages.push_back(loot::Message(loot::Message::error, (format(loc::translate("A global message contains a condition that could not be evaluated. Details: %1%")) % e.what()).str()));
-    }
-
-    progDia->Update(800, translate("Building plugin graph..."));
+    _games[_currentGame].SortPlugins(lang, messages, [progDia](const std::string& message) {
+        progDia->Pulse(FromUTF8(message));
+    });
 
     ///////////////////////////////////////////////////////
     // Build Graph Edges & Sort
@@ -691,6 +638,8 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     Otherwise, the sorting must loop.
 
     */
+
+    progDia->Update(800, translate("Building plugin graph..."));
 
     //Check for back-edges, then perform a topological sort.
     list<loot::Plugin> plugins;
