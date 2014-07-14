@@ -109,7 +109,7 @@ namespace loot {
         return git_repository_open_ext(NULL, path.string().c_str(), GIT_REPOSITORY_OPEN_NO_SEARCH, NULL) == 0;
     }
 
-    void Masterlist::GetGitInfo(boost::filesystem::path& path) {
+    void Masterlist::GetGitInfo(const boost::filesystem::path& path) {
         if (!fs::exists(path.parent_path() / ".git")) {
             revision = "Unknown: Git repository missing";
             date = "Unknown: Git repository missing";
