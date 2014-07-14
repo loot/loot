@@ -56,11 +56,10 @@ namespace loot {
     class MetadataList {
     public:
         void Load(boost::filesystem::path& filepath);
+        void Save(boost::filesystem::path& filepath);
 
         std::list<Plugin> plugins;
         std::list<Message> messages;
-        std::unordered_map<std::string, bool> conditionCache;  //Holds lowercased strings.
-        std::unordered_map<std::string, uint32_t> crcCache;  //Holds lowercased strings.
     };
 
     class Masterlist : public MetadataList {
@@ -119,7 +118,8 @@ namespace loot {
         void RedatePlugins();  //Change timestamps to match load order (Skyrim only).
         void LoadPlugins(bool headersOnly);  //Loads all installed plugins.
 
-        void SortPlugins(const unsigned int language, std::list<Message>& messages, std::function<void(const std::string&)> callback);
+        void SortPrep(const unsigned int language, std::list<Message>& messages, std::function<void(const std::string&)> progressCallback);
+        std::list<Plugin> Sort(const unsigned int language, std::list<Message>& messages, std::function<void(const std::string&)> progressCallback);
 
         //Caches for condition results, active plugins and CRCs.
         std::unordered_map<std::string, bool> conditionCache;  //Holds lowercased strings.

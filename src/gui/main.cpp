@@ -34,7 +34,7 @@
 #include "../backend/helpers.h"
 #include "../backend/generators.h"
 #include "../backend/streams.h"
-#include "../backend/graph.h"
+//#include "../backend/graph.h"
 
 #include <ostream>
 #include <algorithm>
@@ -609,6 +609,10 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     wxProgressDialog *progDia = new wxProgressDialog(translate("LOOT: Working..."), translate("LOOT working..."), 1000, this, wxPD_APP_MODAL | wxPD_AUTO_HIDE | wxPD_ELAPSED_TIME);
 
+    function<void(const std::string&)> progressCallback([progDia](const std::string& message) {
+        progDia->Pulse(FromUTF8(message));
+    });
+
     //Set language.
     if (_settings["Language"])
         lang = Language(_settings["Language"].as<string>()).Code();
@@ -621,9 +625,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     // Load Plugins & Lists
     ///////////////////////////////////////////////////////
 
-    _games[_currentGame].SortPlugins(lang, messages, [progDia](const std::string& message) {
-        progDia->Pulse(FromUTF8(message));
-    });
+    _games[_currentGame].SortPrep(lang, messages, progressCallback);
 
     ///////////////////////////////////////////////////////
     // Build Graph Edges & Sort
@@ -639,96 +641,14 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     */
 
-    progDia->Update(800, translate("Building plugin graph..."));
-
     //Check for back-edges, then perform a topological sort.
     list<loot::Plugin> plugins;
-    for (auto &plugin : _games[_currentGame].plugins) {
-        plugins.push_back(plugin.second);
-
-        // Merge the masterlist data down into the plugins now, as userlist changes won't affect
-        // it.
-        BOOST_LOG_TRIVIAL(trace) << "Merging for plugin \"" << plugins.back().Name() << "\"";
-
-        //Check if there is a plugin entry in the masterlist. This will also find matching regex entries.
-        list<loot::Plugin>::iterator pos = std::find(_games[_currentGame].masterlist.plugins.begin(), _games[_currentGame].masterlist.plugins.end(), plugins.back());
-
-        if (pos != _games[_currentGame].masterlist.plugins.end()) {
-            BOOST_LOG_TRIVIAL(trace) << "Merging masterlist data down to plugin list data.";
-            plugins.back().MergeMetadata(*pos);
-        }
-    }
     try {
         bool applyLoadOrder = false;
 
         do {
-            //Create a plugin graph containing the plugin and masterlist data.
-            loot::PluginGraph graph;
-            for (auto &plugin : plugins) {
-                vertex_t v = boost::add_vertex(plugin, graph);
-            }
-
-            BOOST_LOG_TRIVIAL(info) << "Merging userlist into plugin list/masterlist, evaluating conditions and checking for install validity.";
-            loot::vertex_it vit, vitend;
-            for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
-                BOOST_LOG_TRIVIAL(trace) << "Merging for plugin \"" << graph[*vit].Name() << "\"";
-
-                //Check if there is a plugin entry in the userlist. This will also find matching regex entries.
-                list<loot::Plugin>::iterator pos = std::find(_games[_currentGame].userlist.plugins.begin(), _games[_currentGame].userlist.plugins.end(), graph[*vit]);
-
-                if (pos != _games[_currentGame].userlist.plugins.end() && pos->Enabled()) {
-                    BOOST_LOG_TRIVIAL(trace) << "Merging userlist data down to plugin list data.";
-                    graph[*vit].MergeMetadata(*pos);
-                }
-
-                progDia->Pulse();
-
-                //Now that items are merged, evaluate any conditions they have.
-                BOOST_LOG_TRIVIAL(trace) << "Evaluate conditions for merged plugin data.";
-                try {
-                    graph[*vit].EvalAllConditions(_games[_currentGame], lang);
-                }
-                catch (std::exception& e) {
-                    BOOST_LOG_TRIVIAL(error) << "\"" << graph[*vit].Name() << "\" contains a condition that could not be evaluated. Details: " << e.what();
-                    messages.push_back(loot::Message(loot::Message::error, (format(loc::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % graph[*vit].Name() % e.what()).str()));
-                }
-
-                progDia->Pulse();
-
-                //Also check install validity.
-                BOOST_LOG_TRIVIAL(trace) << "Checking that the current install is valid according to this plugin's data.";
-                graph[*vit].CheckInstallValidity(_games[_currentGame]);
-
-                progDia->Pulse();
-            }
-
-            BOOST_LOG_TRIVIAL(info) << "Building the plugin dependency graph...";
-
-            //Now add the interactions between plugins to the graph as edges.
-            std::map<std::string, int> overriddenPriorities;
-            BOOST_LOG_TRIVIAL(debug) << "Adding non-overlap edges.";
-            loot::AddSpecificEdges(graph, overriddenPriorities);
-
-            BOOST_LOG_TRIVIAL(debug) << "Adding priority edges.";
-            loot::AddPriorityEdges(graph);
-
-            BOOST_LOG_TRIVIAL(debug) << "Adding overlap edges.";
-            loot::AddOverlapEdges(graph);
-
-            BOOST_LOG_TRIVIAL(info) << "Checking to see if the graph is cyclic.";
-            loot::CheckForCycles(graph);
-
-            for (const auto &overriddenPriority: overriddenPriorities) {
-                vertex_t vertex;
-                if (loot::GetVertexByName(graph, overriddenPriority.first, vertex)) {
-                    graph[vertex].Priority(overriddenPriority.second);
-                }
-            }
-
-            progDia->Pulse();
-
-            BOOST_LOG_TRIVIAL(info) << "Performing a topological sort.";
-            loot::Sort(graph, plugins);
+            
+            plugins = _games[_currentGame].Sort(lang, messages, progressCallback);
 
             progDia->Destroy();
             progDia = nullptr;
@@ -795,16 +715,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                 _games[_currentGame].userlist.plugins = newUserlist;
 
                 //Save edits to userlist.
-                BOOST_LOG_TRIVIAL(info) << "Saving edited userlist.";
-                YAML::Emitter yout;
-                yout.SetIndent(2);
-                yout << YAML::BeginMap
-                    << YAML::Key << "plugins" << YAML::Value << _games[_currentGame].userlist.plugins
-                    << YAML::EndMap;
-
-                loot::ofstream uout(_games[_currentGame].UserlistPath());
-                uout << yout.c_str();
-                uout.close();
+                _games[_currentGame].userlist.Save(_games[_currentGame].UserlistPath());
 
                 //Now loop.
             }
