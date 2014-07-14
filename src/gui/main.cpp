@@ -698,6 +698,18 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     list<loot::Plugin> plugins;
     for (auto &plugin : _game->plugins) {
         plugins.push_back(plugin.second);
+
+        // Merge the masterlist data down into the plugins now, as userlist changes won't affect
+        // it.
+        BOOST_LOG_TRIVIAL(trace) << "Merging for plugin \"" << plugins.back().Name() << "\"";
+
+        //Check if there is a plugin entry in the masterlist. This will also find matching regex entries.
+        list<loot::Plugin>::iterator pos = std::find(_game->masterlist.plugins.begin(), _game->masterlist.plugins.end(), plugins.back());
+
+        if (pos != _game->masterlist.plugins.end()) {
+            BOOST_LOG_TRIVIAL(trace) << "Merging masterlist data down to plugin list data.";
+            plugins.back().MergeMetadata(*pos);
+        }
     }
     try {
         bool applyLoadOrder = false;
@@ -714,16 +726,8 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
                 BOOST_LOG_TRIVIAL(trace) << "Merging for plugin \"" << graph[*vit].Name() << "\"";
 
-                //Check if there is a plugin entry in the masterlist. This will also find matching regex entries.
-                list<loot::Plugin>::iterator pos = std::find(_game->masterlist.plugins.begin(), _game->masterlist.plugins.end(), graph[*vit]);
-
-                if (pos != _game->masterlist.plugins.end()) {
-                    BOOST_LOG_TRIVIAL(trace) << "Merging masterlist data down to plugin list data.";
-                    graph[*vit].MergeMetadata(*pos);
-                }
-
                 //Check if there is a plugin entry in the userlist. This will also find matching regex entries.
-                pos = std::find(_game->userlist.plugins.begin(), _game->userlist.plugins.end(), graph[*vit]);
+                list<loot::Plugin>::iterator pos = std::find(_game->userlist.plugins.begin(), _game->userlist.plugins.end(), graph[*vit]);
 
                 if (pos != _game->userlist.plugins.end() && pos->Enabled()) {
                     BOOST_LOG_TRIVIAL(trace) << "Merging userlist data down to plugin list data.";

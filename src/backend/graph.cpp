@@ -105,15 +105,18 @@ namespace loot {
         std::list<vertex_t> sortedVertices;
         boost::topological_sort(graph, std::front_inserter(sortedVertices), boost::vertex_index_map(v_index_map));
 
+        /* Sorting now evaluates conditions inside the graph, so existing plugins list is missing
+        data present in the graph, so we need to swap the two lists. */
         BOOST_LOG_TRIVIAL(info) << "Calculated order: ";
-        list<string> tempPlugins;
+        plugins.clear();
         for (const auto &vertex: sortedVertices) {
             BOOST_LOG_TRIVIAL(info) << '\t' << graph[vertex].Name();
-            tempPlugins.push_back(graph[vertex].Name());
+            plugins.push_back(graph[vertex]);
         }
 
+        
         //Now sort exist plugins list according to order in tempPlugins.
-        plugins.sort([tempPlugins](const Plugin& first, const Plugin& second){
+        /*plugins.sort([tempPlugins](const Plugin& first, const Plugin& second){
             //Find both plugins, and compare distances from beginning.
             auto fIt = find(tempPlugins.begin(), tempPlugins.end(), first);
             auto sIt = find(tempPlugins.begin(), tempPlugins.end(), second);
@@ -123,6 +126,7 @@ namespace loot {
 
             return distance(tempPlugins.begin(), fIt) < distance(tempPlugins.begin(), sIt);
         });
+        */
     }
 
     void CheckForCycles(const PluginGraph& graph) {
