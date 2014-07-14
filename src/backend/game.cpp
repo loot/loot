@@ -576,7 +576,7 @@ namespace loot {
         boost::thread_group group;
         size_t meanFileSize = 0;
         unordered_map<std::string, size_t> tempMap;
-        std::set<std::string> skipPlugins;
+        std::vector<Plugin*> groupPlugins;
         //First calculate the mean plugin size. Store it temporarily in a map to reduce filesystem lookups and file size recalculation.
         for (fs::directory_iterator it(this->DataPath()); it != fs::directory_iterator(); ++it) {
             if (fs::is_regular_file(it->status()) && IsPlugin(it->path().string())) {
@@ -597,19 +597,24 @@ namespace loot {
             auto plugin = plugins.emplace(pluginPair.first, Plugin(pluginPair.first));
 
             if (pluginPair.second > meanFileSize) {
-                skipPlugins.insert(pluginPair.first);
-                group.create_thread([this, &plugin, headersOnly]() {
+                BOOST_LOG_TRIVIAL(trace) << "Creating individual loading thread for: " << pluginPair.first;
+                group.create_thread([this, plugin, headersOnly]() {
+                    BOOST_LOG_TRIVIAL(trace) << "Loading " << plugin.first->second.Name() << " individually.";
                     plugin.first->second = Plugin(*this, plugin.first->first, headersOnly);
                 });
             }
+            else {
+                groupPlugins.push_back(&plugin.first->second);
+            }
         }
-        group.create_thread([this, &skipPlugins, headersOnly]() {
-            for (auto &pluginPair : this->plugins) {
-                if (skipPlugins.find(pluginPair.first) == skipPlugins.end()) {
-                    pluginPair.second = Plugin(*this, pluginPair.first, headersOnly);
-                }
+        group.create_thread([this, &groupPlugins, headersOnly]() {
+            for (auto plugin : groupPlugins) {
+                const std::string name = plugin->Name();
+                BOOST_LOG_TRIVIAL(trace) << "Loading " << plugin->Name() << " as part of a group.";
+                *plugin = Plugin(*this, name, headersOnly);
             }
         });
+
         group.join_all();
     }
 
