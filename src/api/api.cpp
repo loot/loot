@@ -158,6 +158,21 @@ unsigned int c_error(const unsigned int code, const std::string& what) {
     return c_error(loot::error(code, what.c_str()));
 }
 
+////////////////////////////////////
+// Dummy Masterlist member functions
+////////////////////////////////////
+
+// The API doesn't depend on libgit2, by not compiling ".git.cpp", so the member functions are defined
+// below as dummies.
+
+namespace loot {
+    void Masterlist::GetGitInfo(boost::filesystem::path& path) {}
+
+    void Masterlist::Update(Game& game, const unsigned int language) {
+        this->MetadataList::Load(game.MasterlistPath());
+    }
+}
+
 
 //////////////////////////////
 // Error Handling Functions
