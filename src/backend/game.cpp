@@ -62,6 +62,26 @@ namespace loot {
         return games;
     }
 
+    size_t SelectGame(const YAML::Node& settings, const std::vector<Game>& games, const std::string& cmdLineGame) {
+        string preferredGame(cmdLineGame);
+        if (preferredGame.empty()) {
+            // Get preferred game from settings.
+            if (settings["Game"] && settings["Game"].as<string>() != "auto")
+                preferredGame = settings["Game"].as<string>();
+            else if (settings["Last Game"] && settings["Last Game"].as<string>() != "auto")
+                preferredGame = settings["Last Game"].as<string>();
+        }
+
+        // Get index of preferred game if there is one.
+        for (size_t i = 0; i < games.size(); ++i) {
+            if (preferredGame.empty() && games[i].IsInstalled())
+                return i;
+            else if (!preferredGame.empty() && preferredGame == games[i].FolderName() && games[i].IsInstalled())
+                return i;
+        }
+        throw error(error::no_game_detected, "None of the supported games were detected.");
+    }
+
     // MetadataList member functions
     //------------------------------
 
@@ -588,20 +608,20 @@ namespace loot {
 
     void Game::LoadPlugins(bool headersOnly) {
         boost::thread_group group;
-        size_t meanFileSize = 0;
-        unordered_map<std::string, size_t> tempMap;
+        uintmax_t meanFileSize = 0;
+        unordered_map<std::string, uintmax_t> tempMap;
         std::vector<Plugin*> groupPlugins;
         //First calculate the mean plugin size. Store it temporarily in a map to reduce filesystem lookups and file size recalculation.
         for (fs::directory_iterator it(this->DataPath()); it != fs::directory_iterator(); ++it) {
             if (fs::is_regular_file(it->status()) && IsPlugin(it->path().string())) {
 
-                size_t fileSize = fs::file_size(it->path());
+                uintmax_t fileSize = fs::file_size(it->path());
                 meanFileSize += fileSize;
 
                 tempMap.emplace(it->path().filename().string(), fileSize);
             }
         }
-        meanFileSize /= tempMap.size();
+        meanFileSize /= tempMap.size();  //Rounding error, but not important.
 
         //Now load plugins.
         for (const auto &pluginPair : tempMap) {
