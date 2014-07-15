@@ -192,35 +192,6 @@ namespace loot {
         }
     }
 
-    CefSettings LootApp::GetCefSettings() const {
-        CefSettings cef_settings;
-
-        //Disable CEF command line args.
-        cef_settings.command_line_args_disabled = true;
-
-        // Don't set CEF locale, as it tries to load resources and crashes
-        // if they can't be found.
-        /*if (_settings["Language"]) {
-            loot::Language lang(_settings["Language"].as<string>());
-            CefString(&cef_settings.locale).FromString(lang.Locale());
-        }*/
-
-        // Set CEF logging.
-        CefString(&cef_settings.log_file).FromString("CEFDebugLog.txt");
-        if (!_settings["Debug Verbosity"] || _settings["Debug Verbosity"].as<unsigned int>() == 0)
-            cef_settings.log_severity = LOGSEVERITY_DISABLE;
-
-        // Enable remote debugging.
-        //cef_settings.single_process = true;
-        cef_settings.remote_debugging_port = 8080;
-
-
-        // Use cef_settings.resources_dir_path to specify Resources folder path.
-        // Use cef_settings.locales_dir_path to specify locales folder path.
-
-        return cef_settings;
-    }
-
     CefRefPtr<CefBrowserProcessHandler> LootApp::GetBrowserProcessHandler() {
         return this;
     }

@@ -35,15 +35,41 @@
 #include <boost/log/utility/setup/file.hpp>
 #include <boost/log/utility/setup/common_attributes.hpp>
 #include <boost/log/support/date_time.hpp>
-#include <boost/program_options.hpp>
 
 namespace fs = boost::filesystem;
-namespace po = boost::program_options;
 
 using namespace std;
 using namespace loot;
 using boost::locale::translate;
 using boost::format;
+
+CefSettings GetCefSettings() {
+    CefSettings cef_settings;
+
+    //Disable CEF command line args.
+    cef_settings.command_line_args_disabled = true;
+
+    // Don't set CEF locale, as it tries to load resources and crashes
+    // if they can't be found.
+    /*if (_settings["Language"]) {
+    loot::Language lang(_settings["Language"].as<string>());
+    CefString(&cef_settings.locale).FromString(lang.Locale());
+    }*/
+
+    // Set CEF logging.
+    CefString(&cef_settings.log_file).FromString("CEFDebugLog.txt");
+    /*if (!_settings["Debug Verbosity"] || _settings["Debug Verbosity"].as<unsigned int>() == 0)
+        cef_settings.log_severity = LOGSEVERITY_DISABLE;
+*/
+    // Enable remote debugging.
+    //cef_settings.single_process = true;
+    cef_settings.remote_debugging_port = 8080;
+
+    // Use cef_settings.resources_dir_path to specify Resources folder path.
+    // Use cef_settings.locales_dir_path to specify locales folder path.
+
+    return cef_settings;
+}
 
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 
@@ -85,49 +111,21 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
     //----------------------------------------
 
     string gameStr;
-    // declare the supported options
-    po::options_description opts("Options");
-    opts.add_options()
-        ("help,h", "produces this help message")
-        ("version,V", "prints the version banner")
-        ("game,g", po::value(&gameStr),
-        "Override game autodetection. Valid values are the folder "
-        "names defined in the settings file.");
 
-    // parse command line arguments
-    po::variables_map vm;
-    try{
-        vector<wstring> args = po::split_winmain(lpCmdLine);
-        po::store(po::wcommand_line_parser(args).options(opts).run(), vm);
-        po::notify(vm);
-    }
-    catch (po::multiple_occurrences &){
-        std::cout << "Cannot specify options multiple times; please use the '--help' option to see usage instructions";
-        return 1;
-    }
-    catch (exception & e){
-        std::cout << e.what() << "; please use the '--help' option to see usage instructions";
-        return 1;
-    }
-
-    if (vm.count("help")) {
-        std::cout << opts << std::endl;
-        if (hMutex != NULL)
-            ReleaseMutex(hMutex);
-        return 0;
-    }
-    if (vm.count("version")) {
-        std::cout << "LOOT v" << g_version_major << "." << g_version_minor << "." << g_version_patch << std::endl;
-        if (hMutex != NULL)
-            ReleaseMutex(hMutex);
-        return 0;
+    // Record command line arguments.
+    CefRefPtr<CefCommandLine> command_line = CefCommandLine::CreateCommandLine();
+#if defined(OS_WIN)
+    command_line->InitFromString(::GetCommandLineW());
+#endif
+    if (command_line->HasSwitch("game")) {  // Format is: --game=<game>
+        gameStr = command_line->GetSwitchValue("game");
     }
 
     // Back to CEF
     //------------
 
     // Initialise CEF settings.
-    CefSettings cef_settings = app.get()->GetCefSettings();
+    CefSettings cef_settings = GetCefSettings();
 
     // Initialize CEF.
     CefInitialize(main_args, cef_settings, app.get(), sandbox_info);
