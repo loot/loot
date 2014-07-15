@@ -277,7 +277,7 @@ function addNewTableRow(evt) {
     /* Add deletion listener. */
     row.getElementsByClassName('fa-trash-o')[0].addEventListener('click', removeTableRow, false);
 }
-function addTableRow(tableBody, data) {
+function addTableRow(tableBody, tableData) {
     var rowTemplateId = tableBody.getAttribute('data-template');
     var content = document.getElementById(rowTemplateId).content;
     var row = document.importNode(content, true);
@@ -285,8 +285,8 @@ function addTableRow(tableBody, data) {
     row = tableBody.lastElementChild.previousElementSibling;
 
     /* Data is an object with keys that match element class names. */
-    for (var key in data) {
-        row.getElementsByClassName(key)[0].value = data[key];
+    for (var key in tableData) {
+        row.getElementsByClassName(key)[0].value = tableData[key];
     }
 
     /* Enable row editing. */
@@ -624,6 +624,12 @@ function setupEventHandlers() {
     document.body.addEventListener('mouseover', toggleHoverText, false);
 }
 function initUI() {
+    if (typeof loot == 'undefined') {
+        console.log('loot is not defined.');
+        return;
+    }
+
+    document.getElementById('LOOTVersion').textContent = loot.version;
     /* Fill in languages, games, settings values. */
 
     /* Fill in game row template's game type options. */
@@ -677,6 +683,26 @@ function initUI() {
     settingsLangSelect.value = loot.settings.language;
     debugVerbositySelect.value = loot.settings.debugVerbosity;
 }
+var loot;
+function initJavascriptVars() {
+    // Create and send a new query.
+    var request_id = window.cefQuery({
+        request: 'initJavascriptVars',
+        persistent: false,
+        onSuccess: function(response) {
+            try {
+                loot = JSON.parse(response);
+            } catch (e) {
+                console.log(e);
+                console.log('Response: ' + response);
+            }
+            initUI();
+        },
+        onFailure: function(error_code, error_message) {
+            showMessageBox('error', "Error", "Error code: " + error_code + "; " + error_message);
+        }
+    });
+}
 function processURLParams() {
     /* Get the data path from the URL and load it. */
     /*var pos = document.URL.indexOf("?data=");*/
@@ -691,7 +717,6 @@ function processURLParams() {
             var activePluginNo = 0;
             var dirtyPluginNo = 0;
             /* Fill report with data. */
-            document.getElementById('LOOTVersion').textContent = loot.version;
             document.getElementById('masterlistRevision').textContent = data.masterlist.revision.substr(0, 9);
             document.getElementById('masterlistDate').textContent = data.masterlist.date;
             var generalMessagesList = document.getElementById('generalMessages').getElementsByTagName('ul')[0];
@@ -829,7 +854,7 @@ function processURLParams() {
             }
 
             /* Now initialise the rest of the report. */
-            initUI();
+            initJavascriptVars();
             setupEventHandlers();
             if (isStorageSupported()) {
                 loadSettings();

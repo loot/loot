@@ -40,8 +40,6 @@ namespace loot {
     public:
         LootApp();
 
-        void Init(std::string& cmdLineGame);
-
         // Override CefApp methods.
         virtual CefRefPtr<CefBrowserProcessHandler> GetBrowserProcessHandler() OVERRIDE;
         virtual CefRefPtr<CefRenderProcessHandler> GetRenderProcessHandler() OVERRIDE;
@@ -69,12 +67,19 @@ namespace loot {
 
         CefRefPtr<CefV8Context> _context;
 
-        YAML::Node _settings;
-        std::vector<loot::Game> _games;
-
         IMPLEMENT_REFCOUNTING(LootApp);
     };
 
+    class LootState {
+    public:
+
+        void Init(const std::string& cmdLineGame);
+
+        YAML::Node _settings;
+        std::vector<loot::Game> _games;
+    };
+
+    extern LootState g_app_state;
 }
 
 #endif

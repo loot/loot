@@ -51,11 +51,90 @@ namespace fs = boost::filesystem;
 
 namespace loot {
 
+    LootState g_app_state = LootState();
+
     LootApp::LootApp() {}
     
-    void LootApp::Init(std::string& cmdLineGame) {
-        string initError;
+    CefRefPtr<CefBrowserProcessHandler> LootApp::GetBrowserProcessHandler() {
+        return this;
+    }
+
+    CefRefPtr<CefRenderProcessHandler> LootApp::GetRenderProcessHandler() {
+        return this;
+    }
+
+    void LootApp::OnContextInitialized() {
+        //Make sure this is running in the UI thread.
+        assert(CefCurrentlyOn(TID_UI));
+
+        // Information used when creating the native window.
+        CefWindowInfo window_info;
+
+#if _WIN32 || _WIN64
+        // On Windows we need to specify certain flags that will be passed to CreateWindowEx().
+        window_info.SetAsPopup(NULL, "LOOT");
+#endif
+
+        // Set the handler for browser-level callbacks.
+        CefRefPtr<LootHandler> handler(new LootHandler());
+
+        // Specify CEF browser settings here.
+        CefBrowserSettings browser_settings;
+
+        // Set URL to load. Ignore any command line values.
+        std::string url = ToFileURL(g_path_report);
+
+        // Create the first browser window.
+        CefBrowserHost::CreateBrowser(window_info, handler.get(), url, browser_settings, NULL);
+    }
+
+    void LootApp::OnWebKitInitialized() {
+        // Create the renderer-side router for query handling.
+        CefMessageRouterConfig config;
+        message_router_ = CefMessageRouterRendererSide::Create(config);
+    }
+
+    bool LootApp::OnProcessMessageReceived(
+        CefRefPtr<CefBrowser> browser,
+        CefProcessId source_process,
+        CefRefPtr<CefProcessMessage> message) {
+        // Handle IPC messages from the browser process...
+        return message_router_->OnProcessMessageReceived(browser, source_process, message);
+    }
+
+
+    void LootApp::OnContextCreated(CefRefPtr<CefBrowser> browser,
+        CefRefPtr<CefFrame> frame,
+        CefRefPtr<CefV8Context> context) {
+
+        _context = context;
+
+        // Register javascript functions.
+        message_router_->OnContextCreated(browser, frame, context);
+    }
+    
+    void LootApp::OnContextReleased(CefRefPtr<CefBrowser> browser,
+        CefRefPtr<CefFrame> frame,
+        CefRefPtr<CefV8Context> context) {
+
+        _context = NULL;
+    }
+
+    void LootApp::InitJSVars() {
+        BOOST_LOG_TRIVIAL(debug) << "Populating JS object variable initial values.";
+
+        if (_context == NULL)
+            return;
+
         
+    }
+
+    // LootState member functions
+    //---------------------------
+
+    void LootState::Init(const std::string& cmdLineGame) {
+        string initError;
+
         //Load settings.
         if (!fs::exists(g_path_settings)) {
             try {
@@ -126,10 +205,8 @@ namespace loot {
         cout.imbue(locale());
         boost::filesystem::path::imbue(locale());
 
-        // Detect Games
-        //-------------
-
-        int gameIndex = -1;
+        // Detect games & select startup game
+        //-----------------------------------
 
         //Detect installed games.
         BOOST_LOG_TRIVIAL(debug) << "Detecting installed games.";
@@ -149,200 +226,23 @@ namespace loot {
 
         BOOST_LOG_TRIVIAL(debug) << "Selecting game.";
 
-        if (cmdLineGame.empty()) {
-            if (_settings["Game"] && _settings["Game"].as<string>() != "auto")
-                cmdLineGame = _settings["Game"].as<string>();
-            else if (_settings["Last Game"] && _settings["Last Game"].as<string>() != "auto")
-                cmdLineGame = _settings["Last Game"].as<string>();
+        size_t gameIndex(0);
+        try {
+            gameIndex = SelectGame(_settings, _games, cmdLineGame);
         }
-
-        if (!cmdLineGame.empty()) {
-            for (size_t i = 0, max = _games.size(); i < max; ++i) {
-                if (cmdLineGame == _games[i].FolderName() && _games[i].IsInstalled())
-                    gameIndex = i;
-            }
+        catch (exception &) {
+            BOOST_LOG_TRIVIAL(error) << "None of the supported games were detected.";
         }
-        if (gameIndex < 0) {
-            //Set gameIndex to the first installed game.
-            for (size_t i = 0, max = _games.size(); i < max; ++i) {
-                if (_games[i].IsInstalled()) {
-                    gameIndex = i;
-                    break;
-                }
-            }
-            if (gameIndex < 0) {
-                BOOST_LOG_TRIVIAL(error) << "None of the supported games were detected.";
-                initError = translate("Error: None of the supported games were detected.").str();
-                return;
-            }
-        }
-        loot::Game& game(_games[gameIndex]);
-        BOOST_LOG_TRIVIAL(debug) << "Game selected is " << game.Name();
+        BOOST_LOG_TRIVIAL(debug) << "Game selected is " << _games[gameIndex].Name();
 
         //Now that game is selected, initialise it.
         BOOST_LOG_TRIVIAL(debug) << "Initialising game-specific settings.";
         try {
-            game.Init();
-            *find(_games.begin(), _games.end(), game) = game;  //Sync changes.
+            _games[gameIndex].Init();
         }
         catch (std::exception& e) {
             BOOST_LOG_TRIVIAL(error) << "Game-specific settings could not be initialised. " << e.what();
-            initError = (format(translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()).str();
-            return;
         }
     }
 
-    CefRefPtr<CefBrowserProcessHandler> LootApp::GetBrowserProcessHandler() {
-        return this;
-    }
-
-    CefRefPtr<CefRenderProcessHandler> LootApp::GetRenderProcessHandler() {
-        return this;
-    }
-
-    void LootApp::OnContextInitialized() {
-        //Make sure this is running in the UI thread.
-        assert(CefCurrentlyOn(TID_UI));
-
-        // Information used when creating the native window.
-        CefWindowInfo window_info;
-
-#if _WIN32 || _WIN64
-        // On Windows we need to specify certain flags that will be passed to CreateWindowEx().
-        window_info.SetAsPopup(NULL, "LOOT");
-#endif
-
-        // Set the handler for browser-level callbacks.
-        CefRefPtr<LootHandler> handler(new LootHandler());
-
-        // Specify CEF browser settings here.
-        CefBrowserSettings browser_settings;
-
-        // Set URL to load. Ignore any command line values.
-        std::string url = ToFileURL(g_path_report);
-
-        // Create the first browser window.
-        CefBrowserHost::CreateBrowser(window_info, handler.get(), url, browser_settings, NULL);
-    }
-
-    void LootApp::OnWebKitInitialized() {
-        // Create the renderer-side router for query handling.
-        CefMessageRouterConfig config;
-        message_router_ = CefMessageRouterRendererSide::Create(config);
-    }
-
-    bool LootApp::OnProcessMessageReceived(
-        CefRefPtr<CefBrowser> browser,
-        CefProcessId source_process,
-        CefRefPtr<CefProcessMessage> message) {
-        // Handle IPC messages from the browser process...
-        return message_router_->OnProcessMessageReceived(browser, source_process, message);
-    }
-
-
-    void LootApp::OnContextCreated(CefRefPtr<CefBrowser> browser,
-        CefRefPtr<CefFrame> frame,
-        CefRefPtr<CefV8Context> context) {
-
-        // Register javascript functions.
-        message_router_->OnContextCreated(browser, frame, context);
-
-        _context = context;
-    }
-    
-    void LootApp::OnContextReleased(CefRefPtr<CefBrowser> browser,
-        CefRefPtr<CefFrame> frame,
-        CefRefPtr<CefV8Context> context) {
-
-        _context = NULL;
-    }
-
-    void LootApp::InitJSVars() {
-        BOOST_LOG_TRIVIAL(debug) << "Populating JS object variable initial values.";
-
-        if (_context == NULL)
-            return;
-
-        // Retrieve the context's window object.
-        CefRefPtr<CefV8Value> object = _context->GetGlobal();
-
-        // Here the initialisation values should be set.
-
-        CefRefPtr<CefV8Value> lootObj = CefV8Value::CreateObject(NULL);
-
-        // LOOT Version
-        //-------------
-
-        lootObj->SetValue("version", CefV8Value::CreateString(to_string(g_version_major) + "." + to_string(g_version_minor) + "." + to_string(g_version_patch)), V8_PROPERTY_ATTRIBUTE_NONE);
-
-        // LOOT Settings
-        //--------------
-
-        BOOST_LOG_TRIVIAL(debug) << "Setting GUI values for LOOT's settings.";
-
-        CefRefPtr<CefV8Value> settingsObj = CefV8Value::CreateObject(NULL);
-
-        if (_settings["Language"])
-            settingsObj->SetValue("language", CefV8Value::CreateString(Language(_settings["Language"].as<string>()).Name()), V8_PROPERTY_ATTRIBUTE_NONE);
-
-        if (_settings["Update Masterlist"])
-            settingsObj->SetValue("updateMasterlist", CefV8Value::CreateBool(_settings["Update Masterlist"].as<bool>()), V8_PROPERTY_ATTRIBUTE_NONE);
-
-        if (_settings["Debug Verbosity"])
-            settingsObj->SetValue("debugVerbosity", CefV8Value::CreateInt(_settings["Debug Verbosity"].as<int>()), V8_PROPERTY_ATTRIBUTE_NONE);
-
-        if (_settings["Game"])
-            settingsObj->SetValue("game", CefV8Value::CreateString(_settings["Game"].as<string>()), V8_PROPERTY_ATTRIBUTE_NONE);
-
-        vector<Game> games = GetGames(_settings);
-        CefRefPtr<CefV8Value> gamesArr = CefV8Value::CreateArray(games.size());
-        for (int i = 0; i < games.size(); ++i) {
-            CefRefPtr<CefV8Value> gameObj = CefV8Value::CreateObject(NULL);
-
-            gameObj->SetValue("type", CefV8Value::CreateString(loot::Game(games[i].Id()).FolderName()), V8_PROPERTY_ATTRIBUTE_NONE);
-            gameObj->SetValue("name", CefV8Value::CreateString(games[i].Name()), V8_PROPERTY_ATTRIBUTE_NONE);
-            gameObj->SetValue("folder", CefV8Value::CreateString(games[i].FolderName()), V8_PROPERTY_ATTRIBUTE_NONE);
-            gameObj->SetValue("masterFile", CefV8Value::CreateString(games[i].Master()), V8_PROPERTY_ATTRIBUTE_NONE);
-            gameObj->SetValue("url", CefV8Value::CreateString(games[i].RepoURL()), V8_PROPERTY_ATTRIBUTE_NONE);
-            gameObj->SetValue("branch", CefV8Value::CreateString(games[i].RepoBranch()), V8_PROPERTY_ATTRIBUTE_NONE);
-            gameObj->SetValue("path", CefV8Value::CreateString(games[i].GamePath().string()), V8_PROPERTY_ATTRIBUTE_NONE);
-            gameObj->SetValue("registryKey", CefV8Value::CreateString(games[i].RegistryKey()), V8_PROPERTY_ATTRIBUTE_NONE);
-
-            gamesArr->SetValue(i, gameObj);
-        }
-        settingsObj->SetValue("games", gamesArr, V8_PROPERTY_ATTRIBUTE_NONE);
-
-        lootObj->SetValue("settings", settingsObj, V8_PROPERTY_ATTRIBUTE_NONE);
-
-        // LOOT Game Types
-        //----------------
-
-        BOOST_LOG_TRIVIAL(debug) << "Setting GUI values for LOOT's game types.";
-
-        CefRefPtr<CefV8Value> gameTypesArr = CefV8Value::CreateArray(4);
-        gameTypesArr->SetValue(0, CefV8Value::CreateString(Game(Game::tes4).FolderName()));
-        gameTypesArr->SetValue(1, CefV8Value::CreateString(Game(Game::tes5).FolderName()));
-        gameTypesArr->SetValue(2, CefV8Value::CreateString(Game(Game::fo3).FolderName()));
-        gameTypesArr->SetValue(3, CefV8Value::CreateString(Game(Game::fonv).FolderName()));
-
-        lootObj->SetValue("gameTypes", gameTypesArr, V8_PROPERTY_ATTRIBUTE_NONE);
-
-        // LOOT Languages
-        //---------------
-
-        BOOST_LOG_TRIVIAL(debug) << "Setting GUI values for LOOT's languages.";
-
-        vector<string> langs = Language::Names();
-        CefRefPtr<CefV8Value> langsArr = CefV8Value::CreateArray(langs.size());
-        for (int i = 0; i < langs.size(); ++i) {
-            langsArr->SetValue(i, CefV8Value::CreateString(langs[i]));
-        }
-
-        lootObj->SetValue("languages", langsArr, V8_PROPERTY_ATTRIBUTE_NONE);
-
-        // Load Order
-        //-----------
-
-        object->SetValue("loot", lootObj, V8_PROPERTY_ATTRIBUTE_NONE);
-    }
 }

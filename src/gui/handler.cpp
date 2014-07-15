@@ -24,14 +24,19 @@
 
 #include "handler.h"
 #include "resource.h"
+#include "app.h"
 
 #include <include/cef_app.h>
 #include <include/cef_runnable.h>
 #include <include/cef_task.h>
 
+#include <boost/log/trivial.hpp>
+
 #include <sstream>
 #include <string>
 #include <cassert>
+
+using namespace std;
 
 namespace loot {
 
@@ -39,8 +44,8 @@ namespace loot {
         LootHandler * g_instance = NULL;
     }
 
-    // Handler methods
-    //----------------
+    // WinHandler methods
+    //-------------------
 
     Handler::Handler() {}
 
@@ -52,8 +57,7 @@ namespace loot {
                             bool persistent,
                             CefRefPtr<Callback> callback) {
 
-        const std::string& message_name = request;
-        if (message_name == "openReadme") {
+        if (request == "openReadme") {
             // Open readme in default application.
             HINSTANCE ret = ShellExecute(0, NULL, ToWinWide(ToFileURL(g_path_readme)).c_str(), NULL, NULL, SW_SHOWNORMAL);
             if ((int)ret > 32)
@@ -62,7 +66,7 @@ namespace loot {
                 callback->Failure((int)ret, "Shell execute failed.");
             return true;
         }
-        else if (message_name == "openLogLocation") {
+        else if (request == "openLogLocation") {
             //Open debug log folder.
             HINSTANCE ret = ShellExecute(NULL, L"open", ToWinWide(g_path_log.parent_path().string()).c_str(), NULL, NULL, SW_SHOWNORMAL);
             if ((int)ret > 32)
@@ -71,9 +75,83 @@ namespace loot {
                 callback->Failure((int)ret, "Shell execute failed.");
             return true;
         }
+        else if (request == "initJavascriptVars") {
+            // Convert the _settings YAML object to a JSON string, and also add members for the LOOT version, game types and languages.
+
+            if (g_app_state._games.empty()) {
+                BOOST_LOG_TRIVIAL(warning) << "Application state not yet initialised, initialising now...";
+                g_app_state.Init("");
+                BOOST_LOG_TRIVIAL(info) << "Application state initialised.";
+            }
+
+            YAML::Node temp;
+
+            // LOOT Version
+            //-------------
+
+            temp["version"] = to_string(g_version_major) + "." + to_string(g_version_minor) + "." + to_string(g_version_patch);
+
+            // LOOT Settings
+            //--------------
+
+            //temp["settings"] = g_app_state._settings;
+
+            // Do a bit of translation of key names into more javascript-friendly names.
+            // Consider instead making the settings file use the more friendly names itself.
+
+            temp["settings"]["debugVerbosity"] = g_app_state._settings["Debug Verbosity"];
+            temp["settings"]["game"] = g_app_state._settings["Game"];
+            temp["settings"]["games"] = g_app_state._settings["Games"];
+            temp["settings"]["language"] = Language(g_app_state._settings["Language"].as<string>()).Name();
+            temp["settings"]["lastGame"] = g_app_state._settings["Last Game"];
+
+            // LOOT Game Types
+            //-----------------
+
+            vector<string> gameTypes;
+            gameTypes.push_back(Game(Game::tes4).FolderName());
+            gameTypes.push_back(Game(Game::tes5).FolderName());
+            gameTypes.push_back(Game(Game::fo3).FolderName());
+            gameTypes.push_back(Game(Game::fonv).FolderName());
+
+            temp["gameTypes"] = gameTypes;
+
+            // LOOT Languages
+            //---------------
+
+            BOOST_LOG_TRIVIAL(debug) << "Setting GUI values for LOOT's languages.";
+
+            temp["languages"] = Language::Names();
+
+            // Now output as JSON.
+
+            YAML::Emitter tempout;
+            tempout.SetOutputCharset(YAML::EscapeNonAscii);
+            tempout.SetStringFormat(YAML::DoubleQuoted);
+            tempout.SetBoolFormat(YAML::TrueFalseBool);
+            tempout.SetSeqFormat(YAML::Flow);
+            tempout.SetMapFormat(YAML::Flow);
+
+            tempout << temp;
+
+            // yaml-cpp produces `!<!>` artifacts in its output, so remove them.
+            std::string json = tempout.c_str();
+            boost::replace_all(json, "!<!>", "");
+            // There's also a bit of weirdness where there are some \x escapes and some \u escapes.
+            // They should all be \u, so transform them.
+            boost::replace_all(json, "\\x", "\\u00");
+
+            callback->Success(json);
+
+            return true;
+        }
 
         return false;
     }
+
+
+    // LootHandler methods
+    //--------------------
 
     LootHandler::LootHandler() : is_closing_(false) {
         assert(!g_instance);
