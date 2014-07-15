@@ -28,8 +28,11 @@
 #include "error.h"
 #include "metadata.h"
 #include "parsers.h"
+#include "streams.h"
+#include "generators.h"
 
 #include <boost/algorithm/string.hpp>
+#include <boost/thread.hpp>
 
 using namespace std;
 
@@ -58,6 +61,128 @@ namespace loot {
 
         return games;
     }
+
+    size_t SelectGame(const YAML::Node& settings, const std::vector<Game>& games, const std::string& cmdLineGame) {
+        string preferredGame(cmdLineGame);
+        if (preferredGame.empty()) {
+            // Get preferred game from settings.
+            if (settings["Game"] && settings["Game"].as<string>() != "auto")
+                preferredGame = settings["Game"].as<string>();
+            else if (settings["Last Game"] && settings["Last Game"].as<string>() != "auto")
+                preferredGame = settings["Last Game"].as<string>();
+        }
+
+        // Get index of preferred game if there is one.
+        for (size_t i = 0; i < games.size(); ++i) {
+            if (preferredGame.empty() && games[i].IsInstalled())
+                return i;
+            else if (!preferredGame.empty() && preferredGame == games[i].FolderName() && games[i].IsInstalled())
+                return i;
+        }
+        throw error(error::no_game_detected, "None of the supported games were detected.");
+    }
+
+    // MetadataList member functions
+    //------------------------------
+
+    void MetadataList::Load(const boost::filesystem::path& filepath) {
+        plugins.clear();
+        messages.clear();
+
+        BOOST_LOG_TRIVIAL(debug) << "Loading file: " << filepath;
+
+        loot::ifstream in(filepath);
+        YAML::Node metadataList = YAML::Load(in);
+        in.close();
+
+        if (metadataList["plugins"])
+            plugins = metadataList["plugins"].as< list<Plugin> >();
+        if (metadataList["globals"])
+            messages = metadataList["globals"].as< list<Message> >();
+
+        BOOST_LOG_TRIVIAL(debug) << "File loaded successfully.";
+    }
+
+    void MetadataList::Save(const boost::filesystem::path& filepath) {
+        YAML::Emitter yout;
+        yout.SetIndent(2);
+        yout << YAML::BeginMap
+            << YAML::Key << "plugins" << YAML::Value << plugins
+            << YAML::Key << "globals" << YAML::Value << messages
+            << YAML::EndMap;
+
+        loot::ofstream uout(filepath);
+        uout << yout.c_str();
+        uout.close();
+    }
+
+    bool MetadataList::operator == (const MetadataList& rhs) const {
+        if (this->plugins.size() != rhs.plugins.size() || this->messages.size() != rhs.messages.size()) {
+            BOOST_LOG_TRIVIAL(info) << "Metadata edited for some plugin, new and old userlists differ in size.";
+            return false;
+        }
+        else {
+            for (const auto& rhsPlugin : rhs.plugins) {
+                const auto it = std::find(this->plugins.begin(), this->plugins.end(), rhsPlugin);
+
+                if (it == this->plugins.end()) {
+                    BOOST_LOG_TRIVIAL(info) << "Metadata added for plugin: " << it->Name();
+                    return false;
+                }
+
+                if (!it->DiffMetadata(rhsPlugin).HasNameOnly()) {
+                    BOOST_LOG_TRIVIAL(info) << "Metadata edited for plugin: " << it->Name();
+                    return false;
+                }
+            }
+            // Messages are compared exactly by the '==' operator, so there's no need to do a more
+            // fine-grained check.
+            for (const auto& rhsMessage : rhs.messages) {
+                const auto it = std::find(this->messages.begin(), this->messages.end(), rhsMessage);
+
+                if (it == this->messages.end()) {
+                    return  false;
+                }
+            }
+        }
+        return true;
+    }
+
+    // Masterlist member functions
+    //----------------------------
+
+    void Masterlist::Load(Game& game, const unsigned int language) {
+        try {
+            Update(game, language);
+        }
+        catch (error& e) {
+            if (e.code() != error::ok) {
+                // Error wasn't a parsing error. Need to try parsing masterlist if it exists.
+                try {
+                    MetadataList::Load(game.MasterlistPath());
+                }
+                catch (...) {}
+            }
+            throw e;
+        }
+    }
+
+    std::string Masterlist::GetRevision(const boost::filesystem::path& path) {
+        if (revision.empty())
+            GetGitInfo(path);
+
+        return revision;
+    }
+
+    std::string Masterlist::GetDate(const boost::filesystem::path& path) {
+        if (date.empty())
+            GetGitInfo(path);
+
+        return date;
+    }
+
+    // Game member functions
+    //----------------------
 
     Game::Game() : id(Game::autodetect) {}
 
@@ -514,19 +639,49 @@ namespace loot {
     }
 
     void Game::LoadPlugins(bool headersOnly) {
-        //Add all plugins in data folder not already in the hashset to the hashset, and load them.
-        for (fs::directory_iterator it(DataPath()); it != fs::directory_iterator(); ++it) {
+        boost::thread_group group;
+        uintmax_t meanFileSize = 0;
+        unordered_map<std::string, uintmax_t> tempMap;
+        std::vector<Plugin*> groupPlugins;
+        //First calculate the mean plugin size. Store it temporarily in a map to reduce filesystem lookups and file size recalculation.
+        for (fs::directory_iterator it(this->DataPath()); it != fs::directory_iterator(); ++it) {
             if (fs::is_regular_file(it->status()) && IsPlugin(it->path().string())) {
-                const string filename = it->path().filename().string();
 
-                if (plugins.find(filename) == plugins.end())
-                    plugins.insert(std::pair<string, Plugin>(filename, Plugin(filename)));
+                uintmax_t fileSize = fs::file_size(it->path());
+                meanFileSize += fileSize;
+
+                tempMap.emplace(it->path().filename().string(), fileSize);
             }
         }
+        meanFileSize /= tempMap.size();  //Rounding error, but not important.
 
-        for (auto &pluginPair: plugins) {
-            pluginPair.second = Plugin(*this, pluginPair.second.Name(), headersOnly);
+        //Now load plugins.
+        for (const auto &pluginPair : tempMap) {
+
+            BOOST_LOG_TRIVIAL(info) << "Found plugin: " << pluginPair.first;
+
+            auto plugin = plugins.emplace(pluginPair.first, Plugin(pluginPair.first));
+
+            if (pluginPair.second > meanFileSize) {
+                BOOST_LOG_TRIVIAL(trace) << "Creating individual loading thread for: " << pluginPair.first;
+                group.create_thread([this, plugin, headersOnly]() {
+                    BOOST_LOG_TRIVIAL(trace) << "Loading " << plugin.first->second.Name() << " individually.";
+                    plugin.first->second = Plugin(*this, plugin.first->first, headersOnly);
+                });
+            }
+            else {
+                groupPlugins.push_back(&plugin.first->second);
+            }
         }
+        group.create_thread([this, &groupPlugins, headersOnly]() {
+            for (auto plugin : groupPlugins) {
+                const std::string name = plugin->Name();
+                BOOST_LOG_TRIVIAL(trace) << "Loading " << plugin->Name() << " as part of a group.";
+                *plugin = Plugin(*this, name, headersOnly);
+            }
+        });
+
+        group.join_all();
     }
 
     void Game::CreateLOOTGameFolder() {

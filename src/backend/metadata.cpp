@@ -763,24 +763,6 @@ namespace loot {
         return boost::filesystem::exists(game.DataPath() / (name.substr(0, name.length() - 3) + "bsa"));
     }
 
-    void MetadataList::Load(boost::filesystem::path& filepath) {
-        plugins.clear();
-        messages.clear();
-
-        BOOST_LOG_TRIVIAL(debug) << "Loading file: " << filepath;
-
-        loot::ifstream in(filepath);
-        YAML::Node metadataList = YAML::Load(in);
-        in.close();
-
-        if (metadataList["plugins"])
-            plugins = metadataList["plugins"].as< list<Plugin> >();
-        if (metadataList["globals"])
-            messages = metadataList["globals"].as< list<Message> >();
-
-        BOOST_LOG_TRIVIAL(debug) << "File loaded successfully.";
-    }
-
     size_t plugin_hash::operator () (const Plugin& p) const {
         size_t seed = 0;
         boost::hash_combine(seed, p.Name());

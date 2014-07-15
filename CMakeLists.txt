@@ -49,12 +49,13 @@ set (LOOT_SRC   "${CMAKE_SOURCE_DIR}/src/backend/metadata.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/game.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/globals.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/generators.cpp")
+                "${CMAKE_SOURCE_DIR}/src/backend/generators.cpp"
+                "${CMAKE_SOURCE_DIR}/src/backend/sort.cpp")
 
 set (LOOT_GUI_SRC ${LOOT_SRC}
                   # Code the API doesn't need.
                   "${CMAKE_SOURCE_DIR}/src/backend/graph.cpp"
-                  "${CMAKE_SOURCE_DIR}/src/backend/network.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/backend/git.cpp"
                   # Actual GUI code.
                   "${CMAKE_SOURCE_DIR}/src/gui/main_win.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/handler.cpp"

@@ -40,6 +40,8 @@
 #include <yaml-cpp/yaml.h>
 
 namespace loot {
+    
+    class Game;
 
     /* Each Game object should store the config details specific to that game.
        It should also store the plugin and masterlist data for that game.
@@ -50,6 +52,33 @@ namespace loot {
        Each game should have functions to load this plugin and masterlist / userlist
        data. Plugin data should be loaded as header-only and as full data.
     */
+
+    class MetadataList {
+    public:
+        void Load(const boost::filesystem::path& filepath);
+        void Save(const boost::filesystem::path& filepath);
+
+        bool operator == (const MetadataList& rhs) const;  //Compares content.
+
+        std::list<Plugin> plugins;
+        std::list<Message> messages;
+    };
+
+    class Masterlist : public MetadataList {
+    public:
+
+        void Load(Game& game, const unsigned int language);  //Handles update with load fallback.
+        void Update(Game& game, const unsigned int language);
+        
+        std::string GetRevision(const boost::filesystem::path& path);
+        std::string GetDate(const boost::filesystem::path& path);
+
+    private:
+        void GetGitInfo(const boost::filesystem::path& path);
+
+        std::string revision;
+        std::string date;
+    };
 
     class Game {
     public:
@@ -82,7 +111,6 @@ namespace loot {
         boost::filesystem::path ReportDataPath() const;
 
         //Game plugin functions.
-
         bool IsActive(const std::string& plugin) const;
 
         void GetLoadOrder(std::list<std::string>& loadOrder) const;
@@ -92,12 +120,15 @@ namespace loot {
         void RedatePlugins();  //Change timestamps to match load order (Skyrim only).
         void LoadPlugins(bool headersOnly);  //Loads all installed plugins.
 
+        void SortPrep(const unsigned int language, std::list<Message>& messages, std::function<void(const std::string&)> progressCallback);
+        std::list<Plugin> Sort(const unsigned int language, std::list<Message>& messages, std::function<void(const std::string&)> progressCallback);
+
         //Caches for condition results, active plugins and CRCs.
         std::unordered_map<std::string, bool> conditionCache;  //Holds lowercased strings.
         std::unordered_map<std::string, uint32_t> crcCache;  //Holds lowercased strings.
 
         //Plugin data and metadata lists.
-        MetadataList masterlist;
+        Masterlist masterlist;
         MetadataList userlist;
         std::unordered_map<std::string, Plugin> plugins;  //Map so that plugin data can be edited.
 
@@ -128,6 +159,8 @@ namespace loot {
     };
 
     std::vector<Game> GetGames(const YAML::Node& settings);
+
+    size_t SelectGame(const YAML::Node& settings, const std::vector<Game>& games, const std::string& cmdLineGame);
 }
 
 #endif

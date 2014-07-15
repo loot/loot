@@ -22,11 +22,11 @@
     <http://www.gnu.org/licenses/>.
 */
 
-#include "network.h"
 #include "error.h"
 #include "parsers.h"
 #include "streams.h"
 #include "helpers.h"
+#include "game.h"
 
 #include <boost/log/trivial.hpp>
 #include <boost/locale.hpp>
@@ -92,11 +92,6 @@ namespace loot {
         std::string ui_message;
     };
 
-	int progress_cb(const char *str, int len, void *data) {
-		BOOST_LOG_TRIVIAL(info) << string(str, len);
-		return 0;
-	}
-
     bool are_files_equal(const void * buf1, size_t buf1_size, const void * buf2, size_t buf2_size) {
         if (buf1_size != buf2_size)
             return false;
@@ -114,12 +109,17 @@ namespace loot {
         return git_repository_open_ext(NULL, path.string().c_str(), GIT_REPOSITORY_OPEN_NO_SEARCH, NULL) == 0;
     }
 
-    std::pair<string, string> GetMasterlistRevision(const Game& game) {
-        if (!fs::exists(game.MasterlistPath().parent_path() / ".git")) {
-            return pair<string, string>("Unknown: Git repository missing", "Unknown: Git repository missing");
+    void Masterlist::GetGitInfo(const boost::filesystem::path& path) {
+        if (!fs::exists(path.parent_path() / ".git")) {
+            revision = "Unknown: Git repository missing";
+            date = "Unknown: Git repository missing";
+            return;
         }
-        else if (!fs::exists(game.MasterlistPath()))
-            return pair<string, string>("N/A: No masterlist present", "N/A: No masterlist present");
+        else if (!fs::exists(path)) {
+            revision = "N/A: No masterlist present";
+            date = "N/A: No masterlist present";
+            return;
+        }
         else {
             /* Compares HEAD to the working dir.
                 1. Get an object for the masterlist in HEAD.
@@ -128,9 +128,9 @@ namespace loot {
                 4. Compare the file and blob buffers.
             */
             git_handler git;
-            git.ui_message = "An error occurred while trying to read the local masterlist's version. If this error happens again, try deleting the \".git\" folder in \"%LOCALAPPDATA%\\LOOT\\" + game.FolderName() + "\".";
+            git.ui_message = "An error occurred while trying to read the local masterlist's version. If this error happens again, try deleting the \".git\" folder in " + path.parent_path().string() + ".";
             BOOST_LOG_TRIVIAL(debug) << "Existing repository found, attempting to open it.";
-            git.call(git_repository_open(&git.repo, game.MasterlistPath().parent_path().string().c_str()));
+            git.call(git_repository_open(&git.repo, path.parent_path().string().c_str()));
 
             BOOST_LOG_TRIVIAL(trace) << "Getting HEAD masterlist object.";
             git.call(git_revparse_single(&git.obj, git.repo, "HEAD:masterlist.yaml"));
@@ -140,7 +140,7 @@ namespace loot {
 
             BOOST_LOG_TRIVIAL(debug) << "Opening masterlist in working directory.";
             std::string mlist;
-            loot::ifstream ifile(game.MasterlistPath().string().c_str(), ios::binary);
+            loot::ifstream ifile(path, ios::binary);
             if (ifile.fail())
                 throw error(error::path_read_fail, "Couldn't open masterlist.");
             ifile.unsetf(ios::skipws); // No white space skipping!
@@ -153,7 +153,6 @@ namespace loot {
             BOOST_LOG_TRIVIAL(debug) << "Comparing files.";
             if (are_files_equal(git_blob_rawcontent(git.blob), git_blob_rawsize(git.blob), mlist.data(), mlist.length())) {
 
-                string revision, date;
                 //Need to get the HEAD object, because the individual file has a different SHA.
                 git_object_free(git.obj);
                 git.obj = nullptr;  //Just to be safe.
@@ -176,15 +175,17 @@ namespace loot {
                 out << boost::locale::as::ftime("%Y-%m-%d") << dateTime;
                 date = out.str();
 
-                return pair<string, string>(revision, date);
+                return;
             }
             else {
-                return pair<string, string>("Unknown: Masterlist edited", "Unknown: Masterlist edited");
+                revision = "Unknown: Masterlist edited";
+                date = "Unknown: Masterlist edited";
+                return;
             }
         }
     }
 
-    std::pair<std::string, std::string> UpdateMasterlist(Game& game, std::list<Message>& parsingErrors, std::list<Plugin>& plugins, std::list<Message>& messages, const unsigned int language) {
+    void Masterlist::Update(Game& game, const unsigned int language) {
         git_handler git;
         fs::path repo_path = game.MasterlistPath().parent_path();
         string repo_branch = game.RepoBranch();
@@ -387,7 +388,7 @@ namespace loot {
         // and try again.
 
         bool parsingFailed = false;
-        string revision, date;
+        std::string parsingError;
         git.ui_message = "An error occurred while trying to read information on the updated masterlist. If this error happens again, try deleting the \".git\" folder in \"%LOCALAPPDATA%\\LOOT\\" + game.FolderName() + "\".";
         do {
             // Get some descriptive info about what was checked out.
@@ -428,14 +429,7 @@ namespace loot {
             //Now try parsing the masterlist.
             BOOST_LOG_TRIVIAL(debug) << "Testing masterlist parsing.";
             try {
-                loot::ifstream in(game.MasterlistPath());
-                YAML::Node mlist = YAML::Load(in);
-                in.close();
-
-                if (mlist["globals"])
-                    messages = mlist["globals"].as< list<loot::Message> >();
-                if (mlist["plugins"])
-                    plugins = mlist["plugins"].as< list<loot::Plugin> >();
+                this->MetadataList::Load(game.MasterlistPath());
 
                 for (auto &plugin: plugins) {
                     plugin.EvalAllConditions(game, language);
@@ -466,10 +460,12 @@ namespace loot {
                 BOOST_LOG_TRIVIAL(trace) << "Performing a Git checkout of HEAD.";
                 git.call(git_checkout_head(git.repo, &checkout_opts));
 
-                parsingErrors.push_back(loot::Message(loot::Message::error, boost::locale::translate("Masterlist revision").str() + " " + string(revision) + ": " + e.what() + " " + boost::locale::translate("Rolled back to the previous revision.").str()));
+                if (parsingError.empty())
+                    parsingError = boost::locale::translate("Masterlist revision").str() + " " + string(revision) + ": " + e.what() + " " + boost::locale::translate("Rolled back to the previous revision.").str();
             }
         } while (parsingFailed);
 
-        return pair<string, string>(revision, date);
+        if (!parsingError.empty())
+            throw error(error::ok, parsingError);  //Throw an OK because the process still completed in a successful state.
     }
 }
