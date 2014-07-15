@@ -72,11 +72,14 @@ namespace loot {
 
     class LootState {
     public:
+        LootState();
 
         void Init(const std::string& cmdLineGame);
+        Game& CurrentGame();
 
         YAML::Node _settings;
         std::vector<loot::Game> _games;
+        size_t _currentGame;
     };
 
     extern LootState g_app_state;

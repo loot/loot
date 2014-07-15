@@ -22,6 +22,7 @@
     <http://www.gnu.org/licenses/>.
 */
 'use strict';
+var loot = {};
 function isStorageSupported() {
     try {
         return ('localStorage' in window && window['localStorage'] !== null && window['localStorage'] !== undefined);
@@ -683,15 +684,18 @@ function initUI() {
     settingsLangSelect.value = loot.settings.language;
     debugVerbositySelect.value = loot.settings.debugVerbosity;
 }
-var loot;
-function initJavascriptVars() {
+function initGlobalVars() {
     // Create and send a new query.
     var request_id = window.cefQuery({
-        request: 'initJavascriptVars',
+        request: 'initGlobalVars',
         persistent: false,
         onSuccess: function(response) {
             try {
-                loot = JSON.parse(response);
+                var temp = JSON.parse(response);
+                loot.version = temp.version;
+                loot.settings = temp.settings;
+                loot.gameTypes = temp.gameTypes;
+                loot.languages = temp.languages;
             } catch (e) {
                 console.log(e);
                 console.log('Response: ' + response);
@@ -703,164 +707,173 @@ function initJavascriptVars() {
         }
     });
 }
-function processURLParams() {
-    /* Get the data path from the URL and load it. */
-    /*var pos = document.URL.indexOf("?data=");*/
-    var pos = 0;
-    if (pos != -1) {
-        /*var datapath = 'file:///' + document.URL.substring(pos+6);*/
-        var datapath = 'testdata';
-        require([datapath], function(){
-            var totalMessageNo = 0;
-            var warnMessageNo = 0;
-            var errorMessageNo = 0;
-            var activePluginNo = 0;
-            var dirtyPluginNo = 0;
-            /* Fill report with data. */
-            document.getElementById('masterlistRevision').textContent = data.masterlist.revision.substr(0, 9);
-            document.getElementById('masterlistDate').textContent = data.masterlist.date;
-            var generalMessagesList = document.getElementById('generalMessages').getElementsByTagName('ul')[0];
-            for (var i = 0; i < data.globalMessages.length; ++i) {
-                var li = document.createElement('li');
-                li.className = data.globalMessages[i].type;
-                /* innerHTML is open to abuse, but for hyperlinking it's too useful. */
-                li.innerHTML = data.globalMessages[i].content;
-                generalMessagesList.appendChild(li);
+function updateInterfaceWithGameInfo(response) {
 
-                if (li.className == 'warn') {
+    try {
+        loot.game = JSON.parse(response);
+    } catch (e) {
+        console.log(e);
+        console.log('Response: ' + response);
+    }
+
+    var totalMessageNo = 0;
+    var warnMessageNo = 0;
+    var errorMessageNo = 0;
+    var activePluginNo = 0;
+    var dirtyPluginNo = 0;
+
+    /* Fill report with data. */
+    document.getElementById('masterlistRevision').textContent = loot.game.masterlist.revision;
+    document.getElementById('masterlistDate').textContent = loot.game.masterlist.date;
+
+    var generalMessagesList = document.getElementById('generalMessages').getElementsByTagName('ul')[0];
+    for (var i = 0; i < loot.game.globalMessages.length; ++i) {
+        var li = document.createElement('li');
+        li.className = loot.game.globalMessages[i].type;
+        /* innerHTML is open to abuse, but for hyperlinking it's too useful. */
+        li.innerHTML = loot.game.globalMessages[i].content[0].str;
+        generalMessagesList.appendChild(li);
+
+        if (li.className == 'warn') {
+            warnMessageNo++;
+        } else if (li.className == 'error') {
+            errorMessageNo++;
+        }
+    }
+    totalMessageNo = loot.game.globalMessages.length;
+    var pluginsList = document.getElementById('main');
+    var pluginsNav = document.getElementById('pluginsNav');
+    for (var i = 0; i < loot.game.plugins.length; ++i) {
+        var content, clone;
+        /* First add link to navbar. */
+        content = document.getElementById('pluginNav').content;
+        clone = document.importNode(content, true);
+        pluginsNav.appendChild(clone);
+        clone = pluginsNav.lastElementChild;
+
+        clone.getElementsByClassName('name')[0].textContent = loot.game.plugins[i].name;
+        clone.getElementsByTagName('a')[0].href = '#' + loot.game.plugins[i].name.replace(/\s+/g, '');
+        //clone.getElementsByClassName('priority')[0].textContent = 'Priority: 500, Global: ✓';  // Or '✗'.
+
+        if (loot.game.plugins[i].isDummy) {
+            clone.getElementsByClassName('dummyPlugin')[0].className += ' fa fa-eye-slash';
+        }
+
+        if (loot.game.plugins[i].loadsBSA) {
+            clone.getElementsByClassName('loadsBSA')[0].className += ' fa fa-paperclip';
+        }
+
+
+        /*// This won't actually be handled anything like this in the real data implementation.
+        if (data.plugins[i].hasUserEdits) {
+            clone.getElementsByClassName('hasUserEdits')[0].className += ' fa fa-user';
+        }*/
+
+        /* Now add plugin 'card'. */
+        content = document.getElementById('pluginSection').content;
+        clone = document.importNode(content, true);
+        pluginsList.appendChild(clone);
+        clone = pluginsList.lastElementChild;
+
+        clone.setAttribute('data-active', loot.game.plugins[i].isActive);
+        clone.id = loot.game.plugins[i].name.replace(/\s+/g, '');
+
+        if (loot.game.plugins[i].isActive) {
+            ++activePluginNo;
+        }
+
+        /*if (loot.game.plugins[i].isDirty) {
+            ++dirtyPluginNo;
+        }*/
+
+        clone.getElementsByTagName('h1')[0].textContent = loot.game.plugins[i].name;
+
+        if (loot.game.plugins[i].crc != 0) {
+            clone.getElementsByClassName('crc')[0].textContent = 'CRC: ' + loot.game.plugins[i].crc;
+        } else {
+            clone.getElementsByClassName('crc')[0].textContent = '';
+        }
+
+        if (loot.game.plugins[i].isDummy) {
+            showElement(clone.getElementsByClassName('dummyPlugin')[0]);
+        }
+
+        if (loot.game.plugins[i].loadsBSA) {
+            showElement(clone.getElementsByClassName('loadsBSA')[0]);
+        }
+
+        /*// This won't actually be handled anything like this in the real data implementation.
+        if (data.plugins[i].hasUserEdits) {
+            showElement(clone.getElementsByClassName('hasUserEdits')[0]);
+        }*/
+
+        if (loot.game.plugins[i].version) {
+            clone.getElementsByClassName('version')[0].textContent = 'Version: ' + loot.game.plugins[i].version;
+        } else {
+            hideElement(clone.getElementsByClassName('version')[0]);
+        }
+
+        /*if (data.plugins[i].tagsAdd && data.plugins[i].tagsAdd.length != 0) {
+            clone.getElementsByClassName('tag add')[0].textContent = data.plugins[i].tagsAdd.join(', ');
+        } else {*/
+            hideElement(clone.getElementsByClassName('tag add')[0]);
+        //}
+
+        /*if (data.plugins[i].tagRemove && data.plugins[i].tagRemove.length != 0) {
+            clone.getElementsByClassName('tag remove')[0].textContent = data.plugins[i].tagsRemove.join(', ');
+        } else {*/
+            hideElement(clone.getElementsByClassName('tag remove')[0]);
+        //}
+
+        clone.getElementsByClassName('editMetadata')[0].setAttribute('data-target', clone.id);
+        clone.getElementsByClassName('copyMetadata')[0].setAttribute('data-target', clone.id);
+        clone.getElementsByClassName('clearMetadata')[0].setAttribute('data-target', clone.id);
+
+        /*if (data.plugins[i].messages && data.plugins[i].messages.length != 0) {
+            for (var j = 0; j < data.plugins[i].messages.length; ++j) {
+                var messageLi = document.createElement('li');
+                messageLi.className = data.plugins[i].messages[j].type;
+                // innerHTML is open to abuse, but for hyperlinking it's too useful.
+                messageLi.innerHTML = data.plugins[i].messages[j].content;
+                clone.getElementsByTagName('ul')[0].appendChild(messageLi);
+
+                if (messageLi.className == 'warn') {
                     warnMessageNo++;
-                } else if (li.className == 'error') {
+                } else if (messageLi.className == 'error') {
                     errorMessageNo++;
                 }
+                totalMessageNo++;
             }
-            totalMessageNo = data.globalMessages.length;
-            var pluginsList = document.getElementById('main');
-            var pluginsNav = document.getElementById('pluginsNav');
-            for (var i = 0; i < data.plugins.length; ++i) {
-                var content, clone;
-                /* First add link to navbar. */
-                content = document.getElementById('pluginNav').content;
-                clone = document.importNode(content, true);
-                pluginsNav.appendChild(clone);
-                clone = pluginsNav.lastElementChild;
-
-                clone.getElementsByClassName('name')[0].textContent = data.plugins[i].name;
-                clone.getElementsByTagName('a')[0].href = '#' + data.plugins[i].name.replace(/\s+/g, '');
-                clone.getElementsByClassName('priority')[0].textContent = 'Priority: 500, Global: ✓';  // Or '✗'.
-
-                if (data.plugins[i].isDummy) {
-                    clone.getElementsByClassName('dummyPlugin')[0].className += ' fa fa-eye-slash';
-                }
-
-                if (data.plugins[i].loadsBSA) {
-                    clone.getElementsByClassName('loadsBSA')[0].className += ' fa fa-paperclip';
-                }
-
-                if (data.plugins[i].hasUserEdits) {
-                    /* This won't actually be handled anything like this in the real data implementation. */
-                    clone.getElementsByClassName('hasUserEdits')[0].className += ' fa fa-user';
-                }
-
-                /* Now add plugin 'card'. */
-                content = document.getElementById('pluginSection').content;
-                clone = document.importNode(content, true);
-                pluginsList.appendChild(clone);
-                clone = pluginsList.lastElementChild;
-
-                clone.setAttribute('data-active', data.plugins[i].isActive);
-                clone.id = data.plugins[i].name.replace(/\s+/g, '');
-
-                if (data.plugins[i].isActive) {
-                    ++activePluginNo;
-                }
-
-                if (data.plugins[i].isDirty) {
-                    ++dirtyPluginNo;
-                }
-
-                clone.getElementsByTagName('h1')[0].textContent = data.plugins[i].name;
-
-                clone.getElementsByClassName('crc')[0].textContent = 'CRC: ' + data.plugins[i].crc;
-
-                if (data.plugins[i].isDummy) {
-                    showElement(clone.getElementsByClassName('dummyPlugin')[0]);
-                }
-
-                if (data.plugins[i].loadsBSA) {
-                    showElement(clone.getElementsByClassName('loadsBSA')[0]);
-                }
-
-                if (data.plugins[i].hasUserEdits) {
-                    /* This won't actually be handled anything like this in the real data implementation. */
-                    showElement(clone.getElementsByClassName('hasUserEdits')[0]);
-                }
-
-                if (data.plugins[i].version) {
-                    clone.getElementsByClassName('version')[0].textContent = 'Version: ' + data.plugins[i].version;
-                } else {
-                    hideElement(clone.getElementsByClassName('version')[0]);
-                }
-
-                if (data.plugins[i].tagsAdd && data.plugins[i].tagsAdd.length != 0) {
-                    clone.getElementsByClassName('tag add')[0].textContent = data.plugins[i].tagsAdd.join(', ');
-                } else {
-                    hideElement(clone.getElementsByClassName('tag add')[0]);
-                }
-
-                if (data.plugins[i].tagRemove && data.plugins[i].tagRemove.length != 0) {
-                    clone.getElementsByClassName('tag remove')[0].textContent = data.plugins[i].tagsRemove.join(', ');
-                } else {
-                    hideElement(clone.getElementsByClassName('tag remove')[0]);
-                }
-
-                clone.getElementsByClassName('editMetadata')[0].setAttribute('data-target', clone.id);
-                clone.getElementsByClassName('copyMetadata')[0].setAttribute('data-target', clone.id);
-                clone.getElementsByClassName('clearMetadata')[0].setAttribute('data-target', clone.id);
-
-                if (data.plugins[i].messages && data.plugins[i].messages.length != 0) {
-                    for (var j = 0; j < data.plugins[i].messages.length; ++j) {
-                        var messageLi = document.createElement('li');
-                        messageLi.className = data.plugins[i].messages[j].type;
-                        /* innerHTML is open to abuse, but for hyperlinking it's too useful. */
-                        messageLi.innerHTML = data.plugins[i].messages[j].content;
-                        clone.getElementsByTagName('ul')[0].appendChild(messageLi);
-
-                        if (messageLi.className == 'warn') {
-                            warnMessageNo++;
-                        } else if (messageLi.className == 'error') {
-                            errorMessageNo++;
-                        }
-                        totalMessageNo++;
-                    }
-                } else {
-                    clone.getElementsByTagName('ul')[0].className += ' hidden';
-                }
-            }
-            document.getElementById('filterTotalMessageNo').textContent = totalMessageNo;
-            document.getElementById('totalMessageNo').textContent = totalMessageNo;
-            document.getElementById('totalWarningNo').textContent = warnMessageNo;
-            document.getElementById('totalErrorNo').textContent = errorMessageNo;
-            document.getElementById('filterTotalPluginNo').textContent = data.plugins.length;
-            document.getElementById('totalPluginNo').textContent = data.plugins.length;
-            document.getElementById('activePluginNo').textContent = activePluginNo;
-            document.getElementById('dirtyPluginNo').textContent = dirtyPluginNo;
-
-            /* Now apply translated UI strings. */
-            for (var id in data.l10n) {
-                var elem = document.getElementById(id);
-                if (elem) {
-                    elem.textContent = data.l10n[id];
-                }
-            }
-
-            /* Now initialise the rest of the report. */
-            initJavascriptVars();
-            setupEventHandlers();
-            if (isStorageSupported()) {
-                loadSettings();
-            }
-            showElement(document.getElementsByTagName('section')[0]);
-        });
+        } else {*/
+            clone.getElementsByTagName('ul')[0].className += ' hidden';
+        //}
     }
+    document.getElementById('filterTotalMessageNo').textContent = totalMessageNo;
+    document.getElementById('totalMessageNo').textContent = totalMessageNo;
+    document.getElementById('totalWarningNo').textContent = warnMessageNo;
+    document.getElementById('totalErrorNo').textContent = errorMessageNo;
+    document.getElementById('filterTotalPluginNo').textContent = loot.game.plugins.length;
+    document.getElementById('totalPluginNo').textContent = loot.game.plugins.length;
+    document.getElementById('activePluginNo').textContent = activePluginNo;
+    document.getElementById('dirtyPluginNo').textContent = dirtyPluginNo;
+
+    // Now set up event handlers, as they depend on the plugin cards having been created.
+    setupEventHandlers();
 }
-processURLParams();
+function initGameVars() {
+    // Create and send a new query.
+    var request_id = window.cefQuery({
+        request: 'initGameVars',
+        persistent: false,
+        onSuccess: updateInterfaceWithGameInfo,
+        onFailure: function(error_code, error_message) {
+            showMessageBox('error', "Error", "Error code: " + error_code + "; " + error_message);
+        }
+    });
+}
+
+initGlobalVars();
+initGameVars();
+if (isStorageSupported()) {
+    loadSettings();
+}

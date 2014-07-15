@@ -132,6 +132,8 @@ namespace loot {
     // LootState member functions
     //---------------------------
 
+    LootState::LootState() : _currentGame(0) {}
+
     void LootState::Init(const std::string& cmdLineGame) {
         string initError;
 
@@ -226,23 +228,25 @@ namespace loot {
 
         BOOST_LOG_TRIVIAL(debug) << "Selecting game.";
 
-        size_t gameIndex(0);
         try {
-            gameIndex = SelectGame(_settings, _games, cmdLineGame);
+            _currentGame = SelectGame(_settings, _games, cmdLineGame);
         }
         catch (exception &) {
             BOOST_LOG_TRIVIAL(error) << "None of the supported games were detected.";
         }
-        BOOST_LOG_TRIVIAL(debug) << "Game selected is " << _games[gameIndex].Name();
+        BOOST_LOG_TRIVIAL(debug) << "Game selected is " << _games[_currentGame].Name();
 
         //Now that game is selected, initialise it.
         BOOST_LOG_TRIVIAL(debug) << "Initialising game-specific settings.";
         try {
-            _games[gameIndex].Init();
+            _games[_currentGame].Init();
         }
         catch (std::exception& e) {
             BOOST_LOG_TRIVIAL(error) << "Game-specific settings could not be initialised. " << e.what();
         }
     }
 
+    Game& LootState::CurrentGame() {
+        return _games[_currentGame];
+    }
 }
