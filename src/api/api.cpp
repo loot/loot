@@ -166,7 +166,7 @@ unsigned int c_error(const unsigned int code, const std::string& what) {
 // below as dummies.
 
 namespace loot {
-    void Masterlist::GetGitInfo(boost::filesystem::path& path) {}
+    void Masterlist::GetGitInfo(const boost::filesystem::path& path) {}
 
     void Masterlist::Update(Game& game, const unsigned int language) {
         this->MetadataList::Load(game.MasterlistPath());
