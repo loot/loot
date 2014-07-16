@@ -213,17 +213,17 @@ namespace loot {
         gameNode["masterlist"]["date"] = g_app_state.CurrentGame().masterlist.GetDate(g_app_state.CurrentGame().MasterlistPath());
 
         // Now store plugin data.
-        for (const auto& plugin : g_app_state.CurrentGame().plugins) {
+        for (const auto& plugin : installed) {
             // Test data has 'hasUserEdits', and 'tagsAdd', 'tagsRemove' keys, but
             // the first will be handled by userlist lookups, and the other two are probably
             // going to get moved around, haven't decided how best to handle the split between masterlist, userlist and plugin-sourced metadata.
             YAML::Node pluginNode;
-            pluginNode["name"] = plugin.second.Name();
-            pluginNode["isActive"] = g_app_state.CurrentGame().IsActive(plugin.first);
+            pluginNode["name"] = plugin.Name();
+            pluginNode["isActive"] = g_app_state.CurrentGame().IsActive(plugin.Name());
             pluginNode["isDummy"] = false; // Set to false for now because null is a bit iffy and we just don't know yet. Although, we could read the record count from the TES4 header... Usual check is (plugin.second.FormIDs().size() == 0);
-            pluginNode["loadsBSA"] = plugin.second.LoadsBSA(g_app_state.CurrentGame());
-            pluginNode["crc"] = IntToHexString(plugin.second.Crc());
-            pluginNode["version"] = plugin.second.Version();
+            pluginNode["loadsBSA"] = plugin.LoadsBSA(g_app_state.CurrentGame());
+            pluginNode["crc"] = IntToHexString(plugin.Crc());
+            pluginNode["version"] = plugin.Version();
 
             gameNode["plugins"].push_back(pluginNode);
         }
