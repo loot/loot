@@ -28,6 +28,8 @@ along with LOOT.  If not, see
 
 #include <yaml-cpp/yaml.h>
 
+#include <regex>
+
 namespace loot {
 
     // Handy class for turning YAML objects into JSON and vice-versa.
@@ -55,6 +57,15 @@ namespace loot {
             // There's also a bit of weirdness where there are some \x escapes and some \u escapes.
             // They should all be \u, so transform them.
             boost::replace_all(json, "\\x", "\\u00");
+            // yaml-cpp also emits booleans as "true" and "false" strings, whereas JSON expects the same unquoted basic values. The same happens for null and numbers.
+            boost::replace_all(json, ": \"true\"", ": true");
+            boost::replace_all(json, ": \"false\"", ": false");
+            boost::replace_all(json, ": \"null\"", ": null");
+
+            // Using the definition at <http://www.json.org/>.
+            std::regex numbers(": \"(-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?)\"", std::regex::ECMAScript);
+
+            json = std::regex_replace(json, numbers, ": $1");
 
             return json;
         }
