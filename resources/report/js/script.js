@@ -901,6 +901,12 @@ function getGameData() {
 
 require(['js/marked'], function(response) {
     marked = response;
+    /* Make sure settings are what I want. */
+    marked.setOptions({
+        gfm: true,
+        tables: true,
+        sanitize: true
+    });
     initGlobalVars();
     getGameData();
     if (isStorageSupported()) {

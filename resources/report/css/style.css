@@ -353,6 +353,9 @@ li.say, li.error, li.warn {
     padding:0.5em 1em;
     list-style:disc inside;
 }
+li.say > p, li.error > p, li.warn > p {
+    margin: 0;
+}
 li.error{
     background:#ff9090;
 }
