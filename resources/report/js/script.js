@@ -734,6 +734,78 @@ function initGlobalVars() {
         onFailure: processCefError
     });
 }
+function getPriorityString(plugin) {
+    if (plugin.userlist) {
+        var priorityText = 'Priority: ' + plugin.userlist.modPriority + ', Global: ';
+        if (plugin.userlist.isGlobalPriority) {
+            priorityText += '✓';
+        } else {
+            priorityText += '✗';
+        }
+        return priorityText;
+    } else if (plugin.masterlist) {
+        var priorityText = 'Priority: ' + plugin.masterlist.modPriority + ', Global: ';
+        if (plugin.masterlist.isGlobalPriority) {
+            priorityText += '✓';
+        } else {
+            priorityText += '✗';
+        }
+        return priorityText;
+    } else {
+        return 'Priority: 0, Global: ✗';
+    }
+}
+function getTagsStrings(plugin) {
+    var tagsAdded = [];
+    var tagsRemoved = [];
+
+    if (plugin.masterlist && plugin.masterlist.tag) {
+        for (var i = 0; i < plugin.masterlist.tag.length; ++i) {
+            if (plugin.masterlist.tag[i].name[0] == '-') {
+                tagsRemoved.push(plugin.masterlist.tag[i].name);
+            } else {
+                tagsAdded.push(plugin.masterlist.tag[i].name);
+            }
+        }
+    }
+    /* Now make sure that the same tag doesn't appear in both arrays.
+       Prefer the removed list. */
+    for (var i = 0; i < tagsAdded.length; ++i) {
+        for (var j = 0; j < tagsRemoved.length; ++j) {
+            if (tagsRemoved[j].name.toLowerCase() == tagsAdded[i].name.toLowerCase()) {
+                /* Remove tag from the tagsAdded array. */
+                tagsAdded.splice(i, 1);
+                --i;
+            }
+        }
+    }
+
+    if (plugin.userlist && plugin.userlist.tag) {
+        for (var i = 0; i < plugin.userlist.tag.length; ++i) {
+            if (plugin.userlist.tag[i][0] == '-') {
+                tagsRemoved.push(plugin.userlist.tag[i]);
+            } else {
+                tagsAdded.push(plugin.userlist.tag[i]);
+            }
+        }
+    }
+    /* Now again make sure that the same tag doesn't appear in both arrays.
+       Prefer the removed list. */
+    for (var i = 0; i < tagsAdded.length; ++i) {
+        for (var j = 0; j < tagsRemoved.length; ++j) {
+            if (tagsRemoved[j].name.toLowerCase() == tagsAdded[i].name.toLowerCase()) {
+                /* Remove tag from the tagsAdded array. */
+                tagsAdded.splice(i, 1);
+                --i;
+            }
+        }
+    }
+
+    return {
+      tagsAdded: tagsAdded.join(', '),
+      tagsRemoved: tagsRemoved.join(', ')
+    };
+}
 function updateInterfaceWithGameInfo(response) {
 
     try {
@@ -781,17 +853,8 @@ function updateInterfaceWithGameInfo(response) {
         clone.getElementsByClassName('name')[0].textContent = loot.game.plugins[i].name;
         clone.getElementsByTagName('a')[0].href = '#' + loot.game.plugins[i].name.replace(/\s+/g, '');
 
-        if (loot.game.plugins[i].masterlist) {
-            var priorityText = 'Priority: ' + loot.game.plugins[i].masterlist.modPriority + ', Global: ';
-            if (loot.game.plugins[i].masterlist.isGlobalPriority) {
-                priorityText += '✓';
-            } else {
-                priorityText += '✗';
-            }
-            clone.getElementsByClassName('priority')[0].textContent = priorityText;
-        } else {
-            clone.getElementsByClassName('priority')[0].textContent = 'Priority: 0, Global: ✗';
-        }
+
+        clone.getElementsByClassName('priority')[0].textContent = getPriorityString(loot.game.plugins[i]);
 
         if (loot.game.plugins[i].isDummy) {
             clone.getElementsByClassName('dummyPlugin')[0].className += ' fa fa-eye-slash';
@@ -801,11 +864,9 @@ function updateInterfaceWithGameInfo(response) {
             clone.getElementsByClassName('loadsBSA')[0].className += ' fa fa-paperclip';
         }
 
-
-        /*// This won't actually be handled anything like this in the real data implementation.
-        if (data.plugins[i].hasUserEdits) {
+        if (loot.game.plugins[i].userlist) {
             clone.getElementsByClassName('hasUserEdits')[0].className += ' fa fa-user';
-        }*/
+        }
 
         /* Now add plugin 'card'. */
         content = document.getElementById('pluginSection').content;
@@ -840,10 +901,9 @@ function updateInterfaceWithGameInfo(response) {
             showElement(clone.getElementsByClassName('loadsBSA')[0]);
         }
 
-        /*// This won't actually be handled anything like this in the real data implementation.
-        if (data.plugins[i].hasUserEdits) {
+        if (loot.game.plugins[i].userlist) {
             showElement(clone.getElementsByClassName('hasUserEdits')[0]);
-        }*/
+        }
 
         if (loot.game.plugins[i].version) {
             clone.getElementsByClassName('version')[0].textContent = 'Version: ' + loot.game.plugins[i].version;
@@ -851,17 +911,17 @@ function updateInterfaceWithGameInfo(response) {
             hideElement(clone.getElementsByClassName('version')[0]);
         }
 
-        /*if (data.plugins[i].tagsAdd && data.plugins[i].tagsAdd.length != 0) {
-            clone.getElementsByClassName('tag add')[0].textContent = data.plugins[i].tagsAdd.join(', ');
-        } else {*/
+        var tags = getTagsStrings(loot.game.plugins[i]);
+        if (tags.tagsAdded) {
+            clone.getElementsByClassName('tag add')[0].textContent = tags.tagsAdded;
+        } else {
             hideElement(clone.getElementsByClassName('tag add')[0]);
-        //}
-
-        /*if (data.plugins[i].tagRemove && data.plugins[i].tagRemove.length != 0) {
-            clone.getElementsByClassName('tag remove')[0].textContent = data.plugins[i].tagsRemove.join(', ');
-        } else {*/
+        }
+        if (tags.tagsRemoved) {
+            clone.getElementsByClassName('tag remove')[0].textContent = tags.tagsRemoved;
+        } else {
             hideElement(clone.getElementsByClassName('tag remove')[0]);
-        //}
+        }
 
         clone.getElementsByClassName('editMetadata')[0].setAttribute('data-target', clone.id);
         clone.getElementsByClassName('copyMetadata')[0].setAttribute('data-target', clone.id);
