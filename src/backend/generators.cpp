@@ -31,6 +31,10 @@ along with LOOT.  If not, see
 #include <boost/algorithm/string.hpp>
 #include <boost/locale.hpp>
 
+#include <regex>
+
+using namespace std;
+
 namespace loot {
     //LOOT Report generation stuff.
     void GetOldReportDetails(const boost::filesystem::path& filepath, YAML::Node& node) {
@@ -87,16 +91,16 @@ namespace loot {
     void WriteMessage(YAML::Emitter& out, const Message& message) {
 
         //Look for Markdown URL syntax and convert any found.
-        boost::regex regex("(\\[([^\\]]+)\\]\\s?\\(|<)((file|https?)://\\S+)(\\)|>)", boost::regex::perl | boost::regex::icase);  // \2 is the label, \3 is the URL.
+        regex reg("(\\[([^\\]]+)\\]\\s?\\(|<)((file|https?)://\\S+)(\\)|>)", regex::ECMAScript | regex::icase);  // \2 is the label, \3 is the URL.
 
-        boost::match_results<std::string::iterator> results;
+        std::match_results<std::string::iterator> results;
         std::string content = message.Content().front().Str();
         std::string converted;
         std::string::iterator start, end;
         start = content.begin();
         end = content.end();
 
-        while (boost::regex_search(start, end, results, regex)) {
+        while (regex_search(start, end, results, reg)) {
 
             //Get data from match.
             std::string url, label;

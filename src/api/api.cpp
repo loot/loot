@@ -363,16 +363,16 @@ LOOT_API unsigned int loot_eval_lists (loot_db db, const unsigned int language) 
         for (auto it=temp.begin(); it != temp.end();) {
             it->EvalAllConditions(db->game, language);
             if (it->IsRegexPlugin()) {
-                boost::regex regex;
+                std::regex reg;
                 try {
-                    regex = boost::regex(it->Name(), boost::regex::perl|boost::regex::icase);
-                } catch (boost::regex_error& e) {
+                    reg = std::regex(it->Name(), std::regex::ECMAScript | std::regex::icase);
+                } catch (std::exception& e) {
                     return c_error(loot_error_regex_eval_fail, e.what());
                 }
 
                 for (boost::filesystem::directory_iterator itr(db->game.DataPath()); itr != boost::filesystem::directory_iterator(); ++itr) {
                     const std::string filename = itr->path().filename().string();
-                    if (boost::regex_match(filename, regex)) {
+                    if (std::regex_match(filename, reg)) {
                         loot::Plugin p = *it;
                         p.Name(filename);
                         temp.push_back(p);
@@ -393,16 +393,16 @@ LOOT_API unsigned int loot_eval_lists (loot_db db, const unsigned int language) 
         for (auto it=temp.begin(); it != temp.end();) {
             it->EvalAllConditions(db->game, language);
             if (it->IsRegexPlugin()) {
-                boost::regex regex;
+                std::regex reg;
                 try {
-                    regex = boost::regex(it->Name(), boost::regex::perl|boost::regex::icase);
-                } catch (boost::regex_error& e) {
+                    reg = std::regex(it->Name(), std::regex::ECMAScript | std::regex::icase);
+                } catch (std::exception& e) {
                     return c_error(loot_error_regex_eval_fail, e.what());
                 }
 
                 for (boost::filesystem::directory_iterator itr(db->game.DataPath()); itr != boost::filesystem::directory_iterator(); ++itr) {
                     const std::string filename = itr->path().filename().string();
-                    if (boost::regex_match(filename, regex)) {
+                    if (std::regex_match(filename, reg)) {
                         loot::Plugin p = *it;
                         p.Name(filename);
                         temp.push_back(p);

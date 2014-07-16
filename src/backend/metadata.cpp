@@ -645,8 +645,8 @@ namespace loot {
 
     bool Plugin::operator == (const Plugin& rhs) const {
         return (boost::iequals(name, rhs.Name())
-            || (IsRegexPlugin() && boost::regex_match(rhs.Name(), boost::regex(name, boost::regex::perl|boost::regex::icase)))
-            || (rhs.IsRegexPlugin() && boost::regex_match(name, boost::regex(rhs.Name(), boost::regex::perl|boost::regex::icase))));
+            || (IsRegexPlugin() && regex_match(rhs.Name(), regex(name, regex::ECMAScript | regex::icase)))
+            || (rhs.IsRegexPlugin() && regex_match(name, regex(rhs.Name(), regex::ECMAScript | regex::icase))));
     }
 
     bool Plugin::operator != (const Plugin& rhs) const {

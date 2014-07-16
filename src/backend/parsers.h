@@ -498,10 +498,14 @@ namespace loot {
 
             BOOST_LOG_TRIVIAL(trace) << "Checking to see if any files matching the regex \"" << regexStr << "\" exist.";
 
-            boost::regex sepReg("/|(\\\\\\\\)", boost::regex::perl);
+            regex sepReg("/|(\\\\\\\\)", regex::ECMAScript | regex::icase);
 
             std::vector<std::string> components;
-            boost::algorithm::split_regex(components, regexStr, sepReg);
+            std::sregex_token_iterator it(regexStr.begin(), regexStr.end(), sepReg, -1);
+            std::sregex_token_iterator itend;
+            for (; it != itend; ++it) {
+                components.push_back(*it);
+            }
 
             std::string filename = components.back();
             components.pop_back();
@@ -528,16 +532,16 @@ namespace loot {
                 return;
             }
 
-            boost::regex regex;
+            regex reg;
             try {
-                regex = boost::regex(filename, boost::regex::perl|boost::regex::icase);
-            } catch (boost::regex_error& /*e*/) {
+                reg = regex(filename, regex::ECMAScript | regex::icase);
+            } catch (exception& /*e*/) {
                 BOOST_LOG_TRIVIAL(error) << "Invalid regex string:" << filename;
                 throw loot::error(loot::error::invalid_args, boost::locale::translate("Invalid regex string:").str() + " " + filename);
             }
 
             for (boost::filesystem::directory_iterator itr(parent_path); itr != boost::filesystem::directory_iterator(); ++itr) {
-                if (boost::regex_match(itr->path().filename().string(), regex)) {
+                if (regex_match(itr->path().filename().string(), reg)) {
                     result = true;
                     BOOST_LOG_TRIVIAL(trace) << "Matching file found: " << itr->path();
                     return;
