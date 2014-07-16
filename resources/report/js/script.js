@@ -23,6 +23,7 @@
 */
 'use strict';
 var loot = {};
+var marked;
 function isStorageSupported() {
     try {
         return ('localStorage' in window && window['localStorage'] !== null && window['localStorage'] !== undefined);
@@ -756,8 +757,8 @@ function updateInterfaceWithGameInfo(response) {
     for (var i = 0; i < loot.game.globalMessages.length; ++i) {
         var li = document.createElement('li');
         li.className = loot.game.globalMessages[i].type;
-        /* innerHTML is open to abuse, but for hyperlinking it's too useful. */
-        li.innerHTML = loot.game.globalMessages[i].content[0].str;
+        /* Use the Marked library for Markdown formatting support. */
+        li.innerHTML = marked(loot.game.globalMessages[i].content[0].str);
         generalMessagesList.appendChild(li);
 
         if (li.className == 'warn') {
@@ -859,8 +860,8 @@ function updateInterfaceWithGameInfo(response) {
             for (var j = 0; j < data.plugins[i].messages.length; ++j) {
                 var messageLi = document.createElement('li');
                 messageLi.className = data.plugins[i].messages[j].type;
-                // innerHTML is open to abuse, but for hyperlinking it's too useful.
-                messageLi.innerHTML = data.plugins[i].messages[j].content;
+                // Use the Marked library for Markdown formatting support.
+                messageLi.innerHTML = marked(data.plugins[i].messages[j].content);
                 clone.getElementsByTagName('ul')[0].appendChild(messageLi);
 
                 if (messageLi.className == 'warn') {
@@ -898,8 +899,11 @@ function getGameData() {
     });
 }
 
-initGlobalVars();
-getGameData();
-if (isStorageSupported()) {
-    loadSettings();
-}
+require(['js/marked'], function(response) {
+    marked = response;
+    initGlobalVars();
+    getGameData();
+    if (isStorageSupported()) {
+        loadSettings();
+    }
+});
