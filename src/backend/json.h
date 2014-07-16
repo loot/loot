@@ -58,15 +58,15 @@ namespace loot {
             // They should all be \u, so transform them.
             boost::replace_all(json, "\\x", "\\u00");
             // yaml-cpp also emits booleans as "true" and "false" strings, whereas JSON expects the same unquoted basic values. The same happens for null and numbers.
-            boost::replace_all(json, ": \"true\"", ": true");
-            boost::replace_all(json, ": \"false\"", ": false");
-            boost::replace_all(json, ": \"null\"", ": null");
-            //boost::replace_all(json, ": ~", ": null");
+            boost::replace_all(json, "\": \"true\"", "\": true");
+            boost::replace_all(json, "\": \"false\"", "\": false");
+            boost::replace_all(json, "\": \"null\"", "\": null");
+            boost::replace_all(json, "\": ~", "\": null");
 
             // Using the definition at <http://www.json.org/>.
-            std::regex numbers(": \"(-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?)\"", std::regex::ECMAScript);
+            std::regex numbers("\": \"(-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?)\"", std::regex::ECMAScript);
 
-            json = std::regex_replace(json, numbers, ": $1");
+            json = std::regex_replace(json, numbers, "\": $1");
 
             return json;
         }

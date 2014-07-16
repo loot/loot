@@ -202,6 +202,13 @@ namespace loot {
         // Now convert to a single object that can be turned into a JSON string
         //---------------------------------------------------------------------
 
+        //Set language.
+        unsigned int language;
+        if (g_app_state.GetSetting("language"))
+            language = Language(g_app_state.GetSetting("language").as<string>()).Code();
+        else
+            language = Language::any;
+
         // The data structure is to be set as 'loot.game'.
         YAML::Node gameNode;
 
@@ -225,22 +232,49 @@ namespace loot {
             pluginNode["crc"] = IntToHexString(plugin.Crc());
             pluginNode["version"] = plugin.Version();
 
+            // Find the masterlist metadata for this plugin.
+            BOOST_LOG_TRIVIAL(trace) << "Getting masterlist metadata for: " << plugin.Name();
+            Plugin tempPlugin(plugin);
+            tempPlugin.MergeMetadata(g_app_state.CurrentGame().masterlist.FindPlugin(plugin.Name()));
+
+            if (!tempPlugin.HasNameOnly()) {
+
+                BOOST_LOG_TRIVIAL(trace) << "Number of masters for " << tempPlugin.Name() << ": " << tempPlugin.Masters().size();
+                //Evaluate any conditions
+                BOOST_LOG_TRIVIAL(trace) << "Evaluate conditions for merged plugin data.";
+                try {
+                    tempPlugin.EvalAllConditions(g_app_state.CurrentGame(), language);
+                }
+                catch (std::exception& e) {
+                    BOOST_LOG_TRIVIAL(error) << "\"" << tempPlugin.Name() << "\" contains a condition that could not be evaluated. Details: " << e.what();
+                    g_app_state.CurrentGame().masterlist.messages.push_back(Message(Message::error, (format(loc::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % tempPlugin.Name() % e.what()).str()));
+                }
+
+                //Also check install validity.
+                BOOST_LOG_TRIVIAL(trace) << "Checking that the current install is valid according to this plugin's data.";
+                tempPlugin.CheckInstallValidity(g_app_state.CurrentGame());
+
+                // Now add the masterlist metadata to the pluginNode.
+
+                pluginNode["masterlist"]["modPriority"] = modulo(tempPlugin.Priority(), max_priority);
+                pluginNode["masterlist"]["isGlobalPriority"] = (abs(tempPlugin.Priority()) >= max_priority);
+                pluginNode["masterlist"]["after"] = tempPlugin.LoadAfter();
+                pluginNode["masterlist"]["req"] = tempPlugin.Reqs();
+                pluginNode["masterlist"]["inc"] = tempPlugin.Incs();
+                pluginNode["masterlist"]["msg"] = tempPlugin.Messages();
+                pluginNode["masterlist"]["tag"] = tempPlugin.Tags();
+                pluginNode["masterlist"]["dirty"] = tempPlugin.DirtyInfo();
+            }
+
             gameNode["plugins"].push_back(pluginNode);
         }
-
-        //Set language.
-        unsigned int language;
-        if (g_app_state.GetSetting("language"))
-            language = Language(g_app_state.GetSetting("language").as<string>()).Code();
-        else
-            language = loot::Language::any;
 
         BOOST_LOG_TRIVIAL(info) << "Using message language: " << Language(language).Name();
 
         //Evaluate any conditions in the global messages.
         BOOST_LOG_TRIVIAL(debug) << "Evaluating global message conditions.";
         try {
-            list<loot::Message>::iterator it = g_app_state.CurrentGame().masterlist.messages.begin();
+            list<Message>::iterator it = g_app_state.CurrentGame().masterlist.messages.begin();
             while (it != g_app_state.CurrentGame().masterlist.messages.end()) {
                 if (!it->EvalCondition(g_app_state.CurrentGame(), language))
                     it = g_app_state.CurrentGame().masterlist.messages.erase(it);
@@ -250,7 +284,7 @@ namespace loot {
         }
         catch (std::exception& e) {
             BOOST_LOG_TRIVIAL(error) << "A global message contains a condition that could not be evaluated. Details: " << e.what();
-            g_app_state.CurrentGame().masterlist.messages.push_back(loot::Message(loot::Message::error, (format(loc::translate("A global message contains a condition that could not be evaluated. Details: %1%")) % e.what()).str()));
+            g_app_state.CurrentGame().masterlist.messages.push_back(Message(Message::error, (format(loc::translate("A global message contains a condition that could not be evaluated. Details: %1%")) % e.what()).str()));
         }
 
         // Now store global messages from masterlist.

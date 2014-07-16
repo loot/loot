@@ -780,7 +780,18 @@ function updateInterfaceWithGameInfo(response) {
 
         clone.getElementsByClassName('name')[0].textContent = loot.game.plugins[i].name;
         clone.getElementsByTagName('a')[0].href = '#' + loot.game.plugins[i].name.replace(/\s+/g, '');
-        //clone.getElementsByClassName('priority')[0].textContent = 'Priority: 500, Global: ✓';  // Or '✗'.
+
+        if (loot.game.plugins[i].masterlist) {
+            var priorityText = 'Priority: ' + loot.game.plugins[i].masterlist.modPriority + ', Global: ';
+            if (loot.game.plugins[i].masterlist.isGlobalPriority) {
+                priorityText += '✓';
+            } else {
+                priorityText += '✗';
+            }
+            clone.getElementsByClassName('priority')[0].textContent = priorityText;
+        } else {
+            clone.getElementsByClassName('priority')[0].textContent = 'Priority: 0, Global: ✗';
+        }
 
         if (loot.game.plugins[i].isDummy) {
             clone.getElementsByClassName('dummyPlugin')[0].className += ' fa fa-eye-slash';
@@ -856,12 +867,12 @@ function updateInterfaceWithGameInfo(response) {
         clone.getElementsByClassName('copyMetadata')[0].setAttribute('data-target', clone.id);
         clone.getElementsByClassName('clearMetadata')[0].setAttribute('data-target', clone.id);
 
-        /*if (data.plugins[i].messages && data.plugins[i].messages.length != 0) {
-            for (var j = 0; j < data.plugins[i].messages.length; ++j) {
+        if (loot.game.plugins[i].masterlist && loot.game.plugins[i].masterlist.msg && loot.game.plugins[i].masterlist.msg.length != 0) {
+            for (var j = 0; j < loot.game.plugins[i].masterlist.msg.length; ++j) {
                 var messageLi = document.createElement('li');
-                messageLi.className = data.plugins[i].messages[j].type;
+                messageLi.className = loot.game.plugins[i].masterlist.msg[j].type;
                 // Use the Marked library for Markdown formatting support.
-                messageLi.innerHTML = marked(data.plugins[i].messages[j].content);
+                messageLi.innerHTML = marked(loot.game.plugins[i].masterlist.msg[j].content[0].str);
                 clone.getElementsByTagName('ul')[0].appendChild(messageLi);
 
                 if (messageLi.className == 'warn') {
@@ -871,9 +882,9 @@ function updateInterfaceWithGameInfo(response) {
                 }
                 totalMessageNo++;
             }
-        } else {*/
+        } else {
             clone.getElementsByTagName('ul')[0].className += ' hidden';
-        //}
+        }
     }
     document.getElementById('filterTotalMessageNo').textContent = totalMessageNo;
     document.getElementById('totalMessageNo').textContent = totalMessageNo;

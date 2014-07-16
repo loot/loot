@@ -148,6 +148,15 @@ namespace loot {
         return true;
     }
 
+    Plugin MetadataList::FindPlugin(const std::string& name) const {
+        auto it = std::find(plugins.begin(), plugins.end(), Plugin(name));
+
+        if (it != plugins.end())
+            return *it;
+        else
+            return Plugin();
+    }
+
     // Masterlist member functions
     //----------------------------
 

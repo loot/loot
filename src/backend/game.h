@@ -60,6 +60,8 @@ namespace loot {
 
         bool operator == (const MetadataList& rhs) const;  //Compares content.
 
+        Plugin FindPlugin(const std::string& name) const;
+
         std::list<Plugin> plugins;
         std::list<Message> messages;
     };
