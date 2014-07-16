@@ -61,6 +61,7 @@ namespace loot {
             boost::replace_all(json, ": \"true\"", ": true");
             boost::replace_all(json, ": \"false\"", ": false");
             boost::replace_all(json, ": \"null\"", ": null");
+            //boost::replace_all(json, ": ~", ": null");
 
             // Using the definition at <http://www.json.org/>.
             std::regex numbers(": \"(-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?)\"", std::regex::ECMAScript);

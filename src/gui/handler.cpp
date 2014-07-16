@@ -220,7 +220,7 @@ namespace loot {
             YAML::Node pluginNode;
             pluginNode["name"] = plugin.second.Name();
             pluginNode["isActive"] = g_app_state.CurrentGame().IsActive(plugin.first);
-            pluginNode["isDummy"] = (plugin.second.FormIDs().size() == 0);
+            pluginNode["isDummy"] = false; // Set to false for now because null is a bit iffy and we just don't know yet. Although, we could read the record count from the TES4 header... Usual check is (plugin.second.FormIDs().size() == 0);
             pluginNode["loadsBSA"] = plugin.second.LoadsBSA(g_app_state.CurrentGame());
             pluginNode["crc"] = IntToHexString(plugin.second.Crc());
             pluginNode["version"] = plugin.second.Version();
