@@ -38,7 +38,7 @@ namespace loot {
             return YAML::Load(json);
         }
 
-        inline static std::string stringify(YAML::Node& yaml) {
+        inline static std::string stringify(const YAML::Node& yaml) {
 
             YAML::Emitter out;
             out.SetOutputCharset(YAML::EscapeNonAscii);

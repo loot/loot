@@ -44,8 +44,8 @@ namespace loot {
     std::vector<Game> GetGames(const YAML::Node& settings) {
         vector<Game> games;
 
-        if (settings["Games"])
-            games = settings["Games"].as< vector<Game> >();
+        if (settings["games"])
+            games = settings["games"].as< vector<Game> >();
 
         if (find(games.begin(), games.end(), Game(Game::tes4)) == games.end())
             games.push_back(Game(Game::tes4));
@@ -66,10 +66,10 @@ namespace loot {
         string preferredGame(cmdLineGame);
         if (preferredGame.empty()) {
             // Get preferred game from settings.
-            if (settings["Game"] && settings["Game"].as<string>() != "auto")
-                preferredGame = settings["Game"].as<string>();
-            else if (settings["Last Game"] && settings["Last Game"].as<string>() != "auto")
-                preferredGame = settings["Last Game"].as<string>();
+            if (settings["game"] && settings["game"].as<string>() != "auto")
+                preferredGame = settings["game"].as<string>();
+            else if (settings["lastGame"] && settings["lastGame"].as<string>() != "auto")
+                preferredGame = settings["lastGame"].as<string>();
         }
 
         // Get index of preferred game if there is one.

@@ -624,87 +624,113 @@ function setupEventHandlers() {
 
     document.body.addEventListener('mouseover', toggleHoverText, false);
 }
-function initUI() {
-    if (typeof loot == 'undefined') {
-        console.log('loot is not defined.');
-        return;
-    }
-
-    document.getElementById('LOOTVersion').textContent = loot.version;
-    /* Fill in languages, games, settings values. */
-
-    /* Fill in game row template's game type options. */
-    var select = document.getElementById('gameRow').content.querySelector('select');
-    for (var j = 0; j < loot.gameTypes.length; ++j) {
-        var option = document.createElement('option');
-        option.value = loot.gameTypes[j];
-        option.textContent = loot.gameTypes[j];
-        select.appendChild(option);
-    }
-
-    /* Now fill game lists/table. */
-    var gameSelect = document.getElementById('defaultGameSelect');
-    var gameMenu = document.getElementById('gameMenu').firstElementChild;
-    var gameTableBody = document.getElementById('gameTable').getElementsByTagName('tbody')[0];
-    /* Add "auto" value for default game. */
-    var option = document.createElement('option');
-    option.value = 'auto';
-    option.textContent = 'Autodetect';
-    gameSelect.appendChild(option);
-    /* Add row for creating new rows. */
-    setupTable(gameTableBody);
-    for (var i = 0; i < loot.settings.games.length; ++i) {
-        var option = document.createElement('option');
-        option.value = loot.settings.games[i].folder;
-        option.textContent = loot.settings.games[i].name;
-        gameSelect.appendChild(option);
-
-        var li = document.createElement('li');
-        li.setAttribute('data-action', 'change-game');
-        li.setAttribute('data-target', loot.settings.games[i].folder);
-        li.textContent = loot.settings.games[i].name;
-        gameMenu.appendChild(li);
-
-        addTableRow(gameTableBody, loot.settings.games[i]);
-    }
-
-    /* Now fill in language options. */
-    var settingsLangSelect = document.getElementById('languageSelect');
-    var messageLangSelect = document.getElementById('messageRow').content.querySelector('.language');
-    for (var i = 0; i < loot.languages.length; ++i) {
-        var option = document.createElement('option');
-        option.value = loot.languages[i];
-        option.textContent = loot.languages[i];
-        settingsLangSelect.appendChild(option);
-        messageLangSelect.appendChild(option.cloneNode(true));
-    }
-
-    /* Now fill in settings values. */
-    gameSelect.value = loot.settings.game;
-    settingsLangSelect.value = loot.settings.language;
-    debugVerbositySelect.value = loot.settings.debugVerbosity;
+function processCefError(errorCode, errorMessage) {
+    showMessageBox('error', "Error", "Error code: " + error_code + "; " + error_message);
 }
 function initGlobalVars() {
     // Create and send a new query.
     var request_id = window.cefQuery({
-        request: 'initGlobalVars',
+        request: 'getVersion',
         persistent: false,
         onSuccess: function(response) {
             try {
-                var temp = JSON.parse(response);
-                loot.version = temp.version;
-                loot.settings = temp.settings;
-                loot.gameTypes = temp.gameTypes;
-                loot.languages = temp.languages;
+                loot.version = JSON.parse(response);
+
+                document.getElementById('LOOTVersion').textContent = loot.version;
             } catch (e) {
                 console.log(e);
                 console.log('Response: ' + response);
             }
-            initUI();
         },
-        onFailure: function(error_code, error_message) {
-            showMessageBox('error', "Error", "Error code: " + error_code + "; " + error_message);
-        }
+        onFailure: processCefError
+    });
+    var request_id = window.cefQuery({
+        request: 'getLanguages',
+        persistent: false,
+        onSuccess: function(response) {
+            try {
+                loot.languages = JSON.parse(response);
+
+                /* Now fill in language options. */
+                var settingsLangSelect = document.getElementById('languageSelect');
+                var messageLangSelect = document.getElementById('messageRow').content.querySelector('.language');
+                for (var i = 0; i < loot.languages.length; ++i) {
+                    var option = document.createElement('option');
+                    option.value = loot.languages[i].locale;
+                    option.textContent = loot.languages[i].name;
+                    settingsLangSelect.appendChild(option);
+                    messageLangSelect.appendChild(option.cloneNode(true));
+                }
+            } catch (e) {
+                console.log(e);
+                console.log('Response: ' + response);
+            }
+        },
+        onFailure: processCefError
+    });
+    var request_id = window.cefQuery({
+        request: 'getGameTypes',
+        persistent: false,
+        onSuccess: function(response) {
+            try {
+                loot.gameTypes = JSON.parse(response);
+
+                /* Fill in game row template's game type options. */
+                var select = document.getElementById('gameRow').content.querySelector('select');
+                for (var j = 0; j < loot.gameTypes.length; ++j) {
+                    var option = document.createElement('option');
+                    option.value = loot.gameTypes[j];
+                    option.textContent = loot.gameTypes[j];
+                    select.appendChild(option);
+                }
+            } catch (e) {
+                console.log(e);
+                console.log('Response: ' + response);
+            }
+
+            // Settings depend on having the game types filled, so now send the CEF query for the settings.
+            var request_id = window.cefQuery({
+                request: 'getSettings',
+                persistent: false,
+                onSuccess: function(response) {
+                    try {
+                        loot.settings = JSON.parse(response);
+
+
+                        /* Now fill game lists/table. */
+                        var gameSelect = document.getElementById('defaultGameSelect');
+                        var gameMenu = document.getElementById('gameMenu').firstElementChild;
+                        var gameTableBody = document.getElementById('gameTable').getElementsByTagName('tbody')[0];
+                        /* Add row for creating new rows. */
+                        setupTable(gameTableBody);
+                        for (var i = 0; i < loot.settings.games.length; ++i) {
+                            var option = document.createElement('option');
+                            option.value = loot.settings.games[i].folder;
+                            option.textContent = loot.settings.games[i].name;
+                            gameSelect.appendChild(option);
+
+                            var li = document.createElement('li');
+                            li.setAttribute('data-action', 'change-game');
+                            li.setAttribute('data-target', loot.settings.games[i].folder);
+                            li.textContent = loot.settings.games[i].name;
+                            gameMenu.appendChild(li);
+
+                            addTableRow(gameTableBody, loot.settings.games[i]);
+                        }
+
+                        gameSelect.value = loot.settings.game;
+                        document.getElementById('languageSelect').value = loot.settings.language;
+                        document.getElementById('debugVerbositySelect').value = loot.settings.debugVerbosity;
+                    } catch (e) {
+                        console.log(e);
+                        console.log('Response: ' + response);
+                    }
+
+                },
+                onFailure: processCefError
+            });
+        },
+        onFailure: processCefError
     });
 }
 function updateInterfaceWithGameInfo(response) {
@@ -860,10 +886,10 @@ function updateInterfaceWithGameInfo(response) {
     // Now set up event handlers, as they depend on the plugin cards having been created.
     setupEventHandlers();
 }
-function initGameVars() {
+function getGameData() {
     // Create and send a new query.
     var request_id = window.cefQuery({
-        request: 'initGameVars',
+        request: 'getGameData',
         persistent: false,
         onSuccess: updateInterfaceWithGameInfo,
         onFailure: function(error_code, error_message) {
@@ -873,7 +899,7 @@ function initGameVars() {
 }
 
 initGlobalVars();
-initGameVars();
+getGameData();
 if (isStorageSupported()) {
     loadSettings();
 }

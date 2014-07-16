@@ -46,6 +46,14 @@ namespace loot {
                             const CefString& request,
                             bool persistent,
                             CefRefPtr<Callback> callback) OVERRIDE;
+    private:
+        void OpenReadme();
+        void OpenLogLocation();
+        std::string GetVersion();
+        std::string GetSettings();
+        std::string GetLanguages();
+        std::string GetGameTypes();
+        std::string GetGameData();
     };
 
     class LootHandler : public CefClient,

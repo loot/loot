@@ -1,15 +1,15 @@
 # Example Default LOOT Settings File
 # This file is written in YAML <http://www.yaml.org/>.
 
-Language:            eng    # One of 'eng', 'spa', 'rus' or ''.
+language:            eng    # One of 'eng', 'spa', 'rus' or ''.
 
-Game:                auto   # auto, or one of the 'folder' values below.
-Last Game:           auto   # auto, or one of the 'folder' values below.
-Debug Verbosity:     0      # 0, 1, 2, 3. Logging takes place if > 0.
-Update Masterlist:   true
+game:                auto   # auto, or one of the 'folder' values below.
+lastGame:           auto   # auto, or one of the 'folder' values below.
+debugVerbosity:     0      # 0, 1, 2, 3. Logging takes place if > 0.
+updateMasterlist:   true
 
 # Games. The four types are 'Oblivion', 'Skyrim', 'Fallout3' and 'FalloutNV'. They correspond to each base game's libespm and libloadorder settings.
-Games:
+games:
   - folder: Oblivion
     name: "TES IV: Oblivion"
     type: Oblivion

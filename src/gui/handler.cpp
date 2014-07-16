@@ -69,178 +69,195 @@ namespace loot {
                             CefRefPtr<Callback> callback) {
 
         if (request == "openReadme") {
-            // Open readme in default application.
-            HINSTANCE ret = ShellExecute(0, NULL, ToWinWide(ToFileURL(g_path_readme)).c_str(), NULL, NULL, SW_SHOWNORMAL);
-            if ((int)ret > 32)
-                callback->Success(request);
-            else
-                callback->Failure((int)ret, "Shell execute failed.");
+            try {
+                OpenReadme();
+                callback->Success("");
+            }
+            catch (error &e) {
+                callback->Failure(e.code(), e.what());
+            }
+            catch (exception &e) {
+                callback->Failure(-1, e.what());
+            }
             return true;
         }
         else if (request == "openLogLocation") {
-            //Open debug log folder.
-            HINSTANCE ret = ShellExecute(NULL, L"open", ToWinWide(g_path_log.parent_path().string()).c_str(), NULL, NULL, SW_SHOWNORMAL);
-            if ((int)ret > 32)
-                callback->Success(request);
-            else
-                callback->Failure((int)ret, "Shell execute failed.");
-            return true;
-        }
-        else if (request == "initGlobalVars") {
-            // Convert the _settings YAML object to a JSON string, and also add members for the LOOT version, game types and languages.
-
-            if (g_app_state._games.empty()) {
-                BOOST_LOG_TRIVIAL(warning) << "Application state not yet initialised, initialising now...";
-                g_app_state.Init("");
-                BOOST_LOG_TRIVIAL(info) << "Application state initialised.";
-            }
-
-            YAML::Node temp;
-
-            // LOOT Version
-            //-------------
-
-            temp["version"] = to_string(g_version_major) + "." + to_string(g_version_minor) + "." + to_string(g_version_patch);
-
-            // LOOT Settings
-            //--------------
-
-            //temp["settings"] = g_app_state._settings;
-
-            // Do a bit of translation of key names into more javascript-friendly names.
-            // Consider instead making the settings file use the more friendly names itself.
-
-            temp["settings"]["debugVerbosity"] = g_app_state._settings["Debug Verbosity"];
-            temp["settings"]["game"] = g_app_state._settings["Game"];
-            temp["settings"]["games"] = g_app_state._settings["Games"];
-            temp["settings"]["language"] = Language(g_app_state._settings["Language"].as<string>()).Name();
-            temp["settings"]["lastGame"] = g_app_state._settings["Last Game"];
-
-            // LOOT Game Types
-            //-----------------
-
-            vector<string> gameTypes;
-            gameTypes.push_back(Game(Game::tes4).FolderName());
-            gameTypes.push_back(Game(Game::tes5).FolderName());
-            gameTypes.push_back(Game(Game::fo3).FolderName());
-            gameTypes.push_back(Game(Game::fonv).FolderName());
-
-            temp["gameTypes"] = gameTypes;
-
-            // LOOT Languages
-            //---------------
-
-            BOOST_LOG_TRIVIAL(debug) << "Setting GUI values for LOOT's languages.";
-
-            temp["languages"] = Language::Names();
-
-            // Now output as JSON
-            //-------------------
-
-            callback->Success(JSON::stringify(temp));
-
-            return true;
-        }
-        else if (request == "initGameVars") {
-            // Get masterlist revision info and parse if it exists. Also get plugin headers info and parse userlist if it exists.
-
-            if (g_app_state._games.empty()) {
-                BOOST_LOG_TRIVIAL(warning) << "Application state not yet initialised, initialising now...";
-                g_app_state.Init("");
-                BOOST_LOG_TRIVIAL(info) << "Application state initialised.";
-            }
-
-            g_app_state.CurrentGame().LoadPlugins(true);
-
-            //Sort plugins into their load order.
-            list<loot::Plugin> installed;
-            list<string> loadOrder;
-            g_app_state.CurrentGame().GetLoadOrder(loadOrder);
-            for (const auto &pluginName : loadOrder) {
-                const auto pos = g_app_state.CurrentGame().plugins.find(pluginName);
-
-                if (pos != g_app_state.CurrentGame().plugins.end())
-                    installed.push_back(pos->second);
-            }
-
-            //Parse masterlist, don't update it.
-            if (fs::exists(g_app_state.CurrentGame().MasterlistPath())) {
-                BOOST_LOG_TRIVIAL(debug) << "Parsing masterlist.";
-                g_app_state.CurrentGame().masterlist.MetadataList::Load(g_app_state.CurrentGame().MasterlistPath());
-            }
-
-            //Parse userlist.
-            if (fs::exists(g_app_state.CurrentGame().UserlistPath())) {
-                BOOST_LOG_TRIVIAL(debug) << "Parsing userlist.";
-                g_app_state.CurrentGame().userlist.Load(g_app_state.CurrentGame().UserlistPath());
-            }
-
-            // Now convert to a single object that can be turned into a JSON string
-            //---------------------------------------------------------------------
-
-            // The data structure is to be set as 'loot.game'.
-            YAML::Node gameNode;
-
-            // ID the game using its folder value.
-            gameNode["folder"] = g_app_state.CurrentGame().FolderName();
-
-            // Store the masterlist revision and date.
-            gameNode["masterlist"]["revision"] = g_app_state.CurrentGame().masterlist.GetRevision(g_app_state.CurrentGame().MasterlistPath());
-            gameNode["masterlist"]["date"] = g_app_state.CurrentGame().masterlist.GetDate(g_app_state.CurrentGame().MasterlistPath());
-
-            // Now store plugin data.
-            for (const auto& plugin : g_app_state.CurrentGame().plugins) {
-                // Test data has 'hasUserEdits', and 'tagsAdd', 'tagsRemove' keys, but
-                // the first will be handled by userlist lookups, and the other two are probably
-                // going to get moved around, haven't decided how best to handle the split between masterlist, userlist and plugin-sourced metadata.
-                YAML::Node pluginNode;
-                pluginNode["name"] = plugin.second.Name();
-                pluginNode["isActive"] = g_app_state.CurrentGame().IsActive(plugin.first);
-                pluginNode["isDummy"] = (plugin.second.FormIDs().size() == 0);
-                pluginNode["loadsBSA"] = plugin.second.LoadsBSA(g_app_state.CurrentGame());
-                pluginNode["crc"] = IntToHexString(plugin.second.Crc());
-                pluginNode["version"] = plugin.second.Version();
-
-                gameNode["plugins"].push_back(pluginNode);
-            }
-
-            //Set language.
-            unsigned int language;
-            if (g_app_state._settings["Language"])
-                language = Language(g_app_state._settings["Language"].as<string>()).Code();
-            else
-                language = loot::Language::any;
-
-            BOOST_LOG_TRIVIAL(info) << "Using message language: " << Language(language).Name();
-                
-            //Evaluate any conditions in the global messages.
-            BOOST_LOG_TRIVIAL(debug) << "Evaluating global message conditions.";
             try {
-                list<loot::Message>::iterator it = g_app_state.CurrentGame().masterlist.messages.begin();
-                while (it != g_app_state.CurrentGame().masterlist.messages.end()) {
-                    if (!it->EvalCondition(g_app_state.CurrentGame(), language))
-                        it = g_app_state.CurrentGame().masterlist.messages.erase(it);
-                    else
-                        ++it;
-                }
+                OpenLogLocation();
+                callback->Success("");
             }
-            catch (std::exception& e) {
-                BOOST_LOG_TRIVIAL(error) << "A global message contains a condition that could not be evaluated. Details: " << e.what();
-                g_app_state.CurrentGame().masterlist.messages.push_back(loot::Message(loot::Message::error, (format(loc::translate("A global message contains a condition that could not be evaluated. Details: %1%")) % e.what()).str()));
+            catch (error &e) {
+                callback->Failure(e.code(), e.what());
             }
-
-            // Now store global messages from masterlist.
-            gameNode["globalMessages"] = g_app_state.CurrentGame().masterlist.messages;
-
-            callback->Success(JSON::stringify(gameNode));
-
+            catch (exception &e) {
+                callback->Failure(-1, e.what());
+            }
             return true;
-
+        }
+        else if (request == "getVersion") {
+            callback->Success(GetVersion());
+            return true;
+        }
+        else if (request == "getSettings") {
+            callback->Success(GetSettings());
+            return true;
+        }
+        else if (request == "getLanguages") {
+            callback->Success(GetLanguages());
+            return true;
+        }
+        else if (request == "getGameTypes") {
+            callback->Success(GetGameTypes());
+            return true;
+        }
+        else if (request == "getGameData") {
+            callback->Success(GetGameData());
+            return true;
         }
 
         return false;
     }
 
+
+    void Handler::OpenReadme() {
+        BOOST_LOG_TRIVIAL(info) << "Opening LOOT readme.";
+        // Open readme in default application.
+        HINSTANCE ret = ShellExecute(0, NULL, ToWinWide(ToFileURL(g_path_readme)).c_str(), NULL, NULL, SW_SHOWNORMAL);
+        if ((int)ret <= 32)
+            throw error(error::windows_error, "Shell execute failed.");
+    }
+
+    void Handler::OpenLogLocation() {
+        BOOST_LOG_TRIVIAL(info) << "Opening LOOT local appdata folder.";
+        //Open debug log folder.
+        HINSTANCE ret = ShellExecute(NULL, L"open", ToWinWide(g_path_log.parent_path().string()).c_str(), NULL, NULL, SW_SHOWNORMAL);
+        if ((int)ret <= 32)
+            throw error(error::windows_error, "Shell execute failed.");
+    }
+
+    std::string Handler::GetVersion() {
+        BOOST_LOG_TRIVIAL(info) << "Getting LOOT version.";
+        YAML::Node version(to_string(g_version_major) + "." + to_string(g_version_minor) + "." + to_string(g_version_patch));
+        return JSON::stringify(version);
+    }
+
+    std::string Handler::GetSettings() {
+        BOOST_LOG_TRIVIAL(info) << "Getting LOOT settings.";
+        return JSON::stringify(g_app_state.GetSettings());
+    }
+
+    std::string Handler::GetLanguages() {
+        BOOST_LOG_TRIVIAL(info) << "Getting LOOT's supported languages.";
+        // Need to get an array of language names and their corresponding codes.
+        YAML::Node temp;
+        vector<string> names = Language::Names();
+        for (const auto& name : names) {
+            YAML::Node lang;
+            lang["name"] = name;
+            lang["locale"] = Language(name).Locale();
+            temp.push_back(lang);
+        }
+        return JSON::stringify(temp);
+    }
+
+    std::string Handler::GetGameTypes() {
+        BOOST_LOG_TRIVIAL(info) << "Getting LOOT's supported game types.";
+        YAML::Node temp;
+        temp.push_back(Game(Game::tes4).FolderName());
+        temp.push_back(Game(Game::tes5).FolderName());
+        temp.push_back(Game(Game::fo3).FolderName());
+        temp.push_back(Game(Game::fonv).FolderName());
+        return JSON::stringify(temp);
+    }
+
+    std::string Handler::GetGameData() {
+        BOOST_LOG_TRIVIAL(info) << "Getting data specific to LOOT's active game.";
+        // Get masterlist revision info and parse if it exists. Also get plugin headers info and parse userlist if it exists.
+
+        g_app_state.CurrentGame().LoadPlugins(true);
+
+        //Sort plugins into their load order.
+        list<loot::Plugin> installed;
+        list<string> loadOrder;
+        g_app_state.CurrentGame().GetLoadOrder(loadOrder);
+        for (const auto &pluginName : loadOrder) {
+            const auto pos = g_app_state.CurrentGame().plugins.find(pluginName);
+
+            if (pos != g_app_state.CurrentGame().plugins.end())
+                installed.push_back(pos->second);
+        }
+
+        //Parse masterlist, don't update it.
+        if (fs::exists(g_app_state.CurrentGame().MasterlistPath())) {
+            BOOST_LOG_TRIVIAL(debug) << "Parsing masterlist.";
+            g_app_state.CurrentGame().masterlist.MetadataList::Load(g_app_state.CurrentGame().MasterlistPath());
+        }
+
+        //Parse userlist.
+        if (fs::exists(g_app_state.CurrentGame().UserlistPath())) {
+            BOOST_LOG_TRIVIAL(debug) << "Parsing userlist.";
+            g_app_state.CurrentGame().userlist.Load(g_app_state.CurrentGame().UserlistPath());
+        }
+
+        // Now convert to a single object that can be turned into a JSON string
+        //---------------------------------------------------------------------
+
+        // The data structure is to be set as 'loot.game'.
+        YAML::Node gameNode;
+
+        // ID the game using its folder value.
+        gameNode["folder"] = g_app_state.CurrentGame().FolderName();
+
+        // Store the masterlist revision and date.
+        gameNode["masterlist"]["revision"] = g_app_state.CurrentGame().masterlist.GetRevision(g_app_state.CurrentGame().MasterlistPath());
+        gameNode["masterlist"]["date"] = g_app_state.CurrentGame().masterlist.GetDate(g_app_state.CurrentGame().MasterlistPath());
+
+        // Now store plugin data.
+        for (const auto& plugin : g_app_state.CurrentGame().plugins) {
+            // Test data has 'hasUserEdits', and 'tagsAdd', 'tagsRemove' keys, but
+            // the first will be handled by userlist lookups, and the other two are probably
+            // going to get moved around, haven't decided how best to handle the split between masterlist, userlist and plugin-sourced metadata.
+            YAML::Node pluginNode;
+            pluginNode["name"] = plugin.second.Name();
+            pluginNode["isActive"] = g_app_state.CurrentGame().IsActive(plugin.first);
+            pluginNode["isDummy"] = (plugin.second.FormIDs().size() == 0);
+            pluginNode["loadsBSA"] = plugin.second.LoadsBSA(g_app_state.CurrentGame());
+            pluginNode["crc"] = IntToHexString(plugin.second.Crc());
+            pluginNode["version"] = plugin.second.Version();
+
+            gameNode["plugins"].push_back(pluginNode);
+        }
+
+        //Set language.
+        unsigned int language;
+        if (g_app_state.GetSetting("language"))
+            language = Language(g_app_state.GetSetting("language").as<string>()).Code();
+        else
+            language = loot::Language::any;
+
+        BOOST_LOG_TRIVIAL(info) << "Using message language: " << Language(language).Name();
+
+        //Evaluate any conditions in the global messages.
+        BOOST_LOG_TRIVIAL(debug) << "Evaluating global message conditions.";
+        try {
+            list<loot::Message>::iterator it = g_app_state.CurrentGame().masterlist.messages.begin();
+            while (it != g_app_state.CurrentGame().masterlist.messages.end()) {
+                if (!it->EvalCondition(g_app_state.CurrentGame(), language))
+                    it = g_app_state.CurrentGame().masterlist.messages.erase(it);
+                else
+                    ++it;
+            }
+        }
+        catch (std::exception& e) {
+            BOOST_LOG_TRIVIAL(error) << "A global message contains a condition that could not be evaluated. Details: " << e.what();
+            g_app_state.CurrentGame().masterlist.messages.push_back(loot::Message(loot::Message::error, (format(loc::translate("A global message contains a condition that could not be evaluated. Details: %1%")) % e.what()).str()));
+        }
+
+        // Now store global messages from masterlist.
+        gameNode["globalMessages"] = g_app_state.CurrentGame().masterlist.messages;
+
+        return JSON::stringify(gameNode);
+    }
 
     // LootHandler methods
     //--------------------

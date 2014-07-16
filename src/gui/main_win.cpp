@@ -51,14 +51,14 @@ CefSettings GetCefSettings() {
 
     // Don't set CEF locale, as it tries to load resources and crashes
     // if they can't be found.
-    /*if (_settings["Language"]) {
-    loot::Language lang(_settings["Language"].as<string>());
+    /*if (_settings["language"]) {
+    loot::Language lang(_settings["language"].as<string>());
     CefString(&cef_settings.locale).FromString(lang.Locale());
     }*/
 
     // Set CEF logging.
     CefString(&cef_settings.log_file).FromString("CEFDebugLog.txt");
-    /*if (!_settings["Debug Verbosity"] || _settings["Debug Verbosity"].as<unsigned int>() == 0)
+    /*if (!_settings["debugVerbosity"] || _settings["debugVerbosity"].as<unsigned int>() == 0)
         cef_settings.log_severity = LOGSEVERITY_DISABLE;
 */
     // Enable remote debugging.

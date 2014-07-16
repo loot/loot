@@ -170,8 +170,8 @@ namespace loot {
             );
         boost::log::add_common_attributes();
         unsigned int verbosity;
-        if (_settings["Debug Verbosity"]) {
-            verbosity = _settings["Debug Verbosity"].as<unsigned int>();
+        if (_settings["debugVerbosity"]) {
+            verbosity = _settings["debugVerbosity"].as<unsigned int>();
         }
         if (verbosity == 0)
             boost::log::core::get()->set_logging_enabled(false);
@@ -191,8 +191,8 @@ namespace loot {
         BOOST_LOG_TRIVIAL(debug) << "Initialising language settings.";
         //Defaults in case language string is empty or setting is missing.
         string localeId = loot::Language(loot::Language::any).Locale() + ".UTF-8";
-        if (_settings["Language"]) {
-            loot::Language lang(_settings["Language"].as<string>());
+        if (_settings["language"]) {
+            loot::Language lang(_settings["language"].as<string>());
             BOOST_LOG_TRIVIAL(debug) << "Selected language: " << lang.Name();
             localeId = lang.Locale() + ".UTF-8";
         }
@@ -248,5 +248,12 @@ namespace loot {
 
     Game& LootState::CurrentGame() {
         return _games[_currentGame];
+    }
+
+    const YAML::Node& LootState::GetSettings() const {
+        return _settings;
+    }
+    const YAML::Node& LootState::GetSetting(const std::string& setting) const {
+        return _settings[setting];
     }
 }

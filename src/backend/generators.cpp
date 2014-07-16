@@ -412,11 +412,11 @@ namespace loot {
         YAML::Node root;
         std::vector<Game> games;
 
-        root["Language"] = "en";
-        root["Game"] = "auto";
-        root["Last Game"] = "auto";
-        root["Debug Verbosity"] = 0;
-        root["Update Masterlist"] = true;
+        root["language"] = "en";
+        root["game"] = "auto";
+        root["lastGame"] = "auto";
+        root["debugVerbosity"] = 0;
+        root["updateMasterlist"] = true;
 
         games.push_back(Game(Game::tes4));
         games.push_back(Game(Game::tes5));
@@ -424,7 +424,7 @@ namespace loot {
         games.push_back(Game(Game::fonv));
         games.push_back(Game(Game::tes4, "Nehrim").SetDetails("Nehrim - At Fate's Edge", "Nehrim.esm", "https://github.com/loot/oblivion.git", "master", "", "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim - At Fate's Edge_is1\\InstallLocation"));
 
-        root["Games"] = games;
+        root["games"] = games;
 
         //Save settings.
         YAML::Emitter yout;

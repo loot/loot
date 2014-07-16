@@ -75,8 +75,13 @@ namespace loot {
         LootState();
 
         void Init(const std::string& cmdLineGame);
+
         Game& CurrentGame();
 
+        const YAML::Node& GetSettings() const;
+        const YAML::Node& GetSetting(const std::string& setting) const;
+
+    private:
         YAML::Node _settings;
         std::vector<loot::Game> _games;
         size_t _currentGame;
