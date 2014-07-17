@@ -253,7 +253,4 @@ namespace loot {
     const YAML::Node& LootState::GetSettings() const {
         return _settings;
     }
-    const YAML::Node& LootState::GetSetting(const std::string& setting) const {
-        return _settings[setting];
-    }
 }

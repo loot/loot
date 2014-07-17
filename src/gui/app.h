@@ -79,7 +79,6 @@ namespace loot {
         Game& CurrentGame();
 
         const YAML::Node& GetSettings() const;
-        const YAML::Node& GetSetting(const std::string& setting) const;
 
     private:
         YAML::Node _settings;

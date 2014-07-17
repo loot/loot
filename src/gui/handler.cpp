@@ -204,8 +204,8 @@ namespace loot {
 
         //Set language.
         unsigned int language;
-        if (g_app_state.GetSetting("language"))
-            language = Language(g_app_state.GetSetting("language").as<string>()).Code();
+        if (g_app_state.GetSettings()["language"])
+            language = Language(g_app_state.GetSettings()["language"].as<string>()).Code();
         else
             language = Language::any;
 
