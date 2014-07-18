@@ -16,15 +16,48 @@
         :host {
             display: block;
             background:white;
-            overflow:hidden;
             margin:1em;
             box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
             padding:1em;
             position: relative;
             overflow:visible;
+            transition: 0.6s;
+            transform-style: flat;
         }
-        :host.flip {
+        :host([data-active=false]) .activeTick {
+            visibility: hidden;
+        }
+        :host([data-bsa=false]) .loadsBSA {
+            display: none;
+        }
+        :host([data-dummy=false]) .dummyPlugin {
+            display: none;
+        }
+        :host([data-edits=false]) .hasUserEdits {
+            display: none;
+        }
+
+        :host(.flip)  {
             transform: rotateY(180deg);
+        }
+
+        #front, #editor {
+            backface-visibility: hidden;
+            transition: 0.6s;
+        }
+
+        #editor {
+            transform: rotateY(180deg);
+            display:none;
+        }
+
+        :host(.flip) #front  {
+            display:none;
+        }
+
+        :host(.flip) #editor  {
+            backface-visibility: visible;
+            display:block;
         }
         .icons {
             background: transparent;
@@ -43,7 +76,7 @@
             margin: 0.2em;
             cursor: pointer;
         }
-        .icons  > li:hover {
+        .icons > li:hover {
             color: black;
         }
         .pluginMenu {
@@ -94,69 +127,133 @@
             color: green;
             padding-right: 0.5em;
         }
-        :host([data-active=false]) .activeTick {
-            visibility: hidden;
+        .version{
+            color:#6394F8;
         }
-        :host([data-bsa=false]) .loadsBSA {
-            display: none;
+        .crc{
+            color:#BC8923;
         }
-        :host([data-dummy=false]) .dummyPlugin {
-            display: none;
+        .tag.add {
+            color:green;
         }
-        :host([data-edits=false]) .hasUserEdits {
-            display: none;
-        }
-
-
-        section[data-active] {
-            overflow:visible;
-            /*transition: 0.6s;
-            -webkit-transform-style: preserve-3d;
-            z-index:-1;*/
+        .tag.remove {
+            color:red;
         }
 
-        /*section[data-active] .front, section[data-active] .editor {
-            -webkit-backface-visibility: hidden;
-            transition: 0.6s;
-        }*/
-
-        section[data-active] .editor {
-            /*-webkit-transform: rotateY(180deg);*/
-            display:none;
+        .tableTabs {
+            margin: 1.5em 1em;
+            display: table;
         }
-
-        /*section[data-active].flip  {
-            -webkit-transform: rotateY(180deg);
-        }*/
-
-        section[data-active].flip .front  {
-            display:none;
+        .tableTabs > span {
+            display: inline-block;
+            padding: 0.5em;
+            border: 1px black solid;
+            border-bottom: none;
+            background: #e3e3e3;
+            cursor: pointer;
         }
-
-        section[data-active].flip .editor  {
-            display:block;
+        .tableTabs > span:not(:first-child) {
+            border-left: none;
+        }
+        .tableTabs > span:hover, .tableTabs span.selected {
+            background: #f8f8f8;
+        }
+        .tableTabs .editable {
+            margin: 0;
+            border-collapse: collapse;
+            border: 1px black solid;
+            width: 100%;
         }
         </style>
 
-        <span class="activeTick fa fa-check" title="Active Plugin"></span>
-        <content select="h1"></content>
-        <content select=".version"></content>
-        <content select=".crc"></content>
-        <content select=".tag.add"></content>
-        <content select=".tag.remove"></content>
-        <content select="ul"></content>
-        <ol class="icons">
-            <li class="dummyPlugin fa fa-eye-slash" title="Dummy Plugin"></li>
-            <li class="loadsBSA fa fa-paperclip" title="Loads BSA"></li>
-            <li class="hasUserEdits fa fa-user" title="Has User Metadata"></li>
-            <li class="fa fa-ellipsis-v fa-lg pluginMenu" data-action="toggle-menu">
-                <ol class="menu hidden">
-                    <li class="editMetadata" data-action="show-editor" data-target=""><span class="fa fa-pencil fa-fw"></span> Edit Metadata</li>
-                    <li class="copyMetadata" data-action="copy-metadata" data-target=""><span class="fa fa-copy fa-fw"></span> Copy Metadata As Text</li>
-                    <li class="clearMetadata" data-action="clear-metadata" data-target=""><span class="fa fa-trash-o fa-fw"></span> Clear User Metadata</li>
-                </ol>
-            </li>
-        </ol>
+        <section id="front">
+            <span class="activeTick fa fa-check" title="Active Plugin"></span>
+            <content select="h1"></content>
+            <content select=".version"></content>
+            <content select=".crc"></content>
+            <content select=".tag.add"></content>
+            <content select=".tag.remove"></content>
+            <content select="ul"></content>
+            <ol class="icons">
+                <li class="dummyPlugin fa fa-eye-slash" title="Dummy Plugin"></li>
+                <li class="loadsBSA fa fa-paperclip" title="Loads BSA"></li>
+                <li class="hasUserEdits fa fa-user" title="Has User Metadata"></li>
+                <li class="fa fa-ellipsis-v fa-lg pluginMenu" data-action="toggle-menu">
+                    <ol class="menu hidden">
+                        <li class="editMetadata" data-action="show-editor" data-target=""><span class="fa fa-pencil fa-fw"></span> Edit Metadata</li>
+                        <li class="copyMetadata" data-action="copy-metadata" data-target=""><span class="fa fa-copy fa-fw"></span> Copy Metadata As Text</li>
+                        <li class="clearMetadata" data-action="clear-metadata" data-target=""><span class="fa fa-trash-o fa-fw"></span> Clear User Metadata</li>
+                    </ol>
+                </li>
+            </ol>
+        </section>
+        <section id="editor">
+            <h1></h1>
+            <div class="crc"></div>
+            <div class="version"></div>
+            <input type="checkbox" id="editorEnableEdits">
+            <label for="editorEnableEdits">Enable Edits</label><br>
+            <input type="checkbox" id="editorGlobalPriority">
+            <label for="editorGlobalPriority" title="Global priorities are compared against all other plugins. Normal priorities are compared against only conflicting plugins.">Global Priority</label><br>
+            <label for="editorPriorityValue">Priority Value</label>
+            <input id="editorPriorityValue" type="number" max="999999" min="-999999" step="1">
+            <div class="tableTabs">
+                <span class="selected" data-for="loadAfter">Load After</span><span data-for="req">Requirements</span><span data-for="inc">Incompatibilities</span><span data-for="message">Messages</span><span data-for="tags">Bash Tags</span><span data-for="dirty">Dirty Info</span>
+                <table class="editable loadAfter">
+                    <thead>
+                        <tr><th>Filename</th><th>Display Name</th><th>Condition</th><th></th></tr>
+                    </thead>
+                    <tbody data-template="fileRow">
+                        <!-- File rows go here. -->
+                    </tbody>
+                </table>
+                <table class="editable req hidden">
+                    <thead>
+                        <tr><th>Filename</th><th>Display Name</th><th>Condition</th><th></th></tr>
+                    </thead>
+                    <tbody data-template="fileRow">
+                        <!-- File rows go here. -->
+                    </tbody>
+                </table>
+                <table class="editable inc hidden">
+                    <thead>
+                        <tr><th>Filename</th><th>Display Name</th><th>Condition</th><th></th></tr>
+                    </thead>
+                    <tbody data-template="fileRow">
+                        <!-- File rows go here. -->
+                    </tbody>
+                </table>
+                <table class="editable message hidden">
+                    <thead>
+                        <tr><th>Type</th><th>Content</th><th>Condition</th><th>Language</th><th></th></tr>
+                    </thead>
+                    <tbody data-template="messageRow">
+                        <!-- Message rows go here. -->
+                    </tbody>
+                </table>
+                <table class="editable tags hidden">
+                    <thead>
+                        <tr><th>Add/Remove</th><th>Bash Tag</th><th>Condition</th><th></th></tr>
+                    </thead>
+                    <tbody data-template="tagRow">
+                        <!-- Bash Tag rows go here. -->
+                    </tbody>
+                </table>
+                <table class="editable dirty hidden">
+                    <thead>
+                        <tr><th>CRC</th><th>ITM Count</th><th>UDR Count</th><th>Deleted Navmeshes</th><th>Cleaning Utility</th><th></th></tr>
+                    </thead>
+                    <tbody data-template="dirtyInfoRow">
+                        <!-- Dirty info rows go here. -->
+                    </tbody>
+                </table>
+            </div>
+            <hr>
+            <div class="buttons">
+                <button class="accept">Apply</button>
+                <button class="cancel">Cancel</button>
+            </div>
+        </section>
     </template>
     <template id="pluginLI">
         <style>
@@ -246,73 +343,6 @@
             <td><input class="path" type="text" readonly>
             <td><input class="registry" type="text" readonly>
             <td class="fa fa-trash-o fa-fw">
-    </template>
-    <template id="pluginNav">
-        <li>
-            <span class="dummyPlugin" title="Dummy Plugin"></span>
-            <span class="loadsBSA" title="Loads BSA"></span>
-            <span class="hasUserEdits" title="Has User Metadata"></span>
-            <a href="">
-                <span class="name"></span>
-                <span class="priority"></span>
-            </a>
-    </template>
-    <template id="pluginEditor">
-        <div class="editor">
-            <h1></h1>
-            <div class="crc"></div>
-            <div class="version"></div>
-            <input type="checkbox" class="editorEnableEdits">
-            <label for="editorEnableEdits">Enable Edits</label><br>
-            <input type="checkbox" class="editorGlobalPriority">
-            <label for="editorGlobalPriority" title="Global priorities are compared against all other plugins. Normal priorities are compared against only conflicting plugins.">Global Priority</label><br>
-            <label for="editorPriorityValue">Priority Value:</label>
-            <input type="number" max="999999" min="-999999" step="1">
-            <div class="tableTabs">
-                <span class="selected" data-for="loadAfter">Load After</span><span data-for="req">Requirements</span><span data-for="inc">Incompatibilities</span><span data-for="message">Messages</span><span data-for="tags">Bash Tags</span><span data-for="dirty">Dirty Info</span>
-                <table class="editable loadAfter">
-                    <thead>
-                        <tr><th>Filename<th>Display Name<th>Condition<th>
-                    <tbody data-template="fileRow">
-                        <!-- File rows go here. -->
-                </table>
-                <table class="editable req hidden">
-                    <thead>
-                        <tr><th>Filename<th>Display Name<th>Condition<th>
-                    <tbody data-template="fileRow">
-                        <!-- File rows go here. -->
-                </table>
-                <table class="editable inc hidden">
-                    <thead>
-                        <tr><th>Filename<th>Display Name<th>Condition<th>
-                    <tbody data-template="fileRow">
-                        <!-- File rows go here. -->
-                </table>
-                <table class="editable message hidden">
-                    <thead>
-                        <tr><th>Type<th>Content<th>Condition<th>Language<th>
-                    <tbody data-template="messageRow">
-                        <!-- Message rows go here. -->
-                </table>
-                <table class="editable tags hidden">
-                    <thead>
-                        <tr><th>Add/Remove<th>Bash Tag<th>Condition<th>
-                    <tbody data-template="tagRow">
-                        <!-- Bash Tag rows go here. -->
-                </table>
-                <table class="editable dirty hidden">
-                    <thead>
-                        <tr><th>CRC<th>ITM Count<th>UDR Count<th>Deleted Navmeshes<th>Cleaning Utility<th>
-                    <tbody data-template="dirtyInfoRow">
-                        <!-- Dirty info rows go here. -->
-                </table>
-            </div>
-            <hr>
-            <div class="buttons">
-                <button class="accept">Apply</button>
-                <button class="cancel">Cancel</button>
-            </div>
-        </div>
     </template>
     <noscript>The LOOT Report requires Javascript to be enabled in order to function.</noscript>
     <header>

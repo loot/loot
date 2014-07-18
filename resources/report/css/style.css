@@ -212,16 +212,6 @@ dialog button {
     display: block;
 }
 
-#overlay {
-    z-index: 3;
-    background: rgba(0,0,0,0.5);
-    width: 100%;
-    height: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-}
-
 section h1 {
     margin: 0;
     font-weight: normal;
@@ -271,21 +261,7 @@ ul {
     list-style:none;
     padding-left:0;
 }
-.mod {
-    font-size:1.3em;
-}
-.version{
-    color:#6394F8;
-}
-.crc{
-    color:#BC8923;
-}
-.tag.add {
-    color:green;
-}
-.tag.remove {
-    color:red;
-}
+
 .hidden, section .buttons li.hidden, .fa.hidden {
     display:none;
 }
@@ -356,38 +332,15 @@ td input {
     cursor: pointer;
 }
 
-.tableTabs {
-    margin: 1.5em 1em;
-    display: table;
-}
-.tableTabs > span {
-    display: inline-block;
-    padding: 0.5em;
-    border: 1px black solid;
-    border-bottom: none;
-    background: #e3e3e3;
-    cursor: pointer;
-}
-.tableTabs > span:not(:first-child) {
-    border-left: none;
-}
-.tableTabs > span:hover, .tableTabs span.selected {
-    background: #f8f8f8;
-}
-.tableTabs .editable {
-    margin: 0;
-    border-collapse: collapse;
-    border: 1px black solid;
-    width: 100%;
-}
+
 
 #pluginsNav .priority {
     display: none;
 }
-#pluginsNav.editMode li:hover .priority {
+#pluginsNav.editMode plugin-li:hover .priority {
     display: inline;
 }
-#pluginsNav.editMode li:hover .name {
+#pluginsNav.editMode plugin-li:hover .name {
     display: none;
 }
 header.editMode {
