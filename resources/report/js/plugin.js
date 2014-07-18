@@ -46,6 +46,59 @@ function Plugin(obj) {
         card.querySelector('.editMetadata').addEventListener('click', this.onMenuItemClick, false);
     }
 
+    Plugin.prototype.getTagsStrings = function () {
+        var tagsAdded = [];
+        var tagsRemoved = [];
+
+        if (this.masterlist && this.masterlist.tag) {
+            for (var i = 0; i < this.masterlist.tag.length; ++i) {
+                if (this.masterlist.tag[i].name[0] == '-') {
+                    tagsRemoved.push(this.masterlist.tag[i].name);
+                } else {
+                    tagsAdded.push(this.masterlist.tag[i].name);
+                }
+            }
+        }
+        /* Now make sure that the same tag doesn't appear in both arrays.
+           Prefer the removed list. */
+        for (var i = 0; i < tagsAdded.length; ++i) {
+            for (var j = 0; j < tagsRemoved.length; ++j) {
+                if (tagsRemoved[j].name.toLowerCase() == tagsAdded[i].name.toLowerCase()) {
+                    /* Remove tag from the tagsAdded array. */
+                    tagsAdded.splice(i, 1);
+                    --i;
+                }
+            }
+        }
+
+        if (this.userlist && this.userlist.tag) {
+            for (var i = 0; i < this.userlist.tag.length; ++i) {
+                if (this.userlist.tag[i][0] == '-') {
+                    tagsRemoved.push(this.userlist.tag[i]);
+                } else {
+                    tagsAdded.push(this.userlist.tag[i]);
+                }
+            }
+        }
+        /* Now again make sure that the same tag doesn't appear in both arrays.
+           Prefer the removed list. */
+        for (var i = 0; i < tagsAdded.length; ++i) {
+            for (var j = 0; j < tagsRemoved.length; ++j) {
+                if (tagsRemoved[j].name.toLowerCase() == tagsAdded[i].name.toLowerCase()) {
+                    /* Remove tag from the tagsAdded array. */
+                    tagsAdded.splice(i, 1);
+                    --i;
+                }
+            }
+        }
+
+        return {
+          tagsAdded: tagsAdded.join(', '),
+          tagsRemoved: tagsRemoved.join(', ')
+        };
+
+    }
+
 
     Plugin.prototype.createCard = function() {
         var card = new PluginCard();
