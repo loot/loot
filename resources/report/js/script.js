@@ -154,13 +154,22 @@ function togglePlugins(evt) {
 	document.getElementById('hiddenMessageNo').textContent = hiddenMessageNo;
     document.getElementById('hiddenPluginNo').textContent = hiddenPluginNo;
 }
-function hideDialog(evt) {
-    var dialog = document.getElementsByTagName('dialog')[0];
-    dialog.close(evt.target);
+function closeMessageDialog(evt) {
+    if (evt.target.returnValue == 'true') {
+
+    } else {
+
+    }
+    evt.target.removeEventListener('close', closeMessageDialog, false);
+    evt.target.removeEventListener('click', clickMessageButton, false);
+    document.body.removeChild(evt.target);
+}
+function clickMessageButton(evt) {
+    evt.currentTarget.close( evt.target.className == 'accept' );
 }
 function showMessageDialog(title, text) {
 
-    var dialog = document.getElementsByTagName('dialog')[0];
+    var dialog = new MessageDialog();
 
     dialog.id = 'modalDialog';
     dialog.setAttribute('data-type', 'warn');
@@ -168,17 +177,15 @@ function showMessageDialog(title, text) {
     dialog.getElementsByTagName('h1')[0].textContent = title;
     dialog.getElementsByTagName('p')[0].textContent = text;
 
-    dialog.shadowRoot.querySelector('#accept').setAttribute('data-dialog', dialog.id);
-    dialog.shadowRoot.querySelector('#accept').addEventListener('click', hideDialog, false);
+    dialog.addEventListener('close', closeMessageDialog, false);
+    dialog.addEventListener('click', clickMessageButton, false);
 
-    dialog.shadowRoot.querySelector('#cancel').setAttribute('data-dialog', dialog.id);
-    dialog.shadowRoot.querySelector('#cancel').addEventListener('click', hideDialog, false);
-
+    document.body.appendChild(dialog);
     dialog.showModal();
 }
 function showMessageBox(type, title, text) {
 
-    var dialog = document.getElementsByTagName('dialog')[0];
+    var dialog = new MessageDialog();
 
     dialog.id = 'modalDialog';
     dialog.setAttribute('data-type', type);
@@ -192,6 +199,7 @@ function showMessageBox(type, title, text) {
 
     hideElement(dialog.shadowRoot.querySelector('#cancel'));
 
+    document.body.appendChild(dialog);
     dialog.showModal();
 }
 function openLogLocation(evt) {
@@ -519,7 +527,14 @@ function closeSettingsDialog(evt) {
         evt.preventDefault();
         return;
     }
+
+    if (evt.target.returnValue == 'true') {
+
+    } else {
+
+    }
 }
+
 function showSettingsDialog(evt) {
     document.getElementById('settings').showModal();
 }
@@ -724,55 +739,6 @@ function getPriorityString(plugin) {
 
 }
 function getTagsStrings(plugin) {
-    var tagsAdded = [];
-    var tagsRemoved = [];
-
-    if (plugin.masterlist && plugin.masterlist.tag) {
-        for (var i = 0; i < plugin.masterlist.tag.length; ++i) {
-            if (plugin.masterlist.tag[i].name[0] == '-') {
-                tagsRemoved.push(plugin.masterlist.tag[i].name);
-            } else {
-                tagsAdded.push(plugin.masterlist.tag[i].name);
-            }
-        }
-    }
-    /* Now make sure that the same tag doesn't appear in both arrays.
-       Prefer the removed list. */
-    for (var i = 0; i < tagsAdded.length; ++i) {
-        for (var j = 0; j < tagsRemoved.length; ++j) {
-            if (tagsRemoved[j].name.toLowerCase() == tagsAdded[i].name.toLowerCase()) {
-                /* Remove tag from the tagsAdded array. */
-                tagsAdded.splice(i, 1);
-                --i;
-            }
-        }
-    }
-
-    if (plugin.userlist && plugin.userlist.tag) {
-        for (var i = 0; i < plugin.userlist.tag.length; ++i) {
-            if (plugin.userlist.tag[i][0] == '-') {
-                tagsRemoved.push(plugin.userlist.tag[i]);
-            } else {
-                tagsAdded.push(plugin.userlist.tag[i]);
-            }
-        }
-    }
-    /* Now again make sure that the same tag doesn't appear in both arrays.
-       Prefer the removed list. */
-    for (var i = 0; i < tagsAdded.length; ++i) {
-        for (var j = 0; j < tagsRemoved.length; ++j) {
-            if (tagsRemoved[j].name.toLowerCase() == tagsAdded[i].name.toLowerCase()) {
-                /* Remove tag from the tagsAdded array. */
-                tagsAdded.splice(i, 1);
-                --i;
-            }
-        }
-    }
-
-    return {
-      tagsAdded: tagsAdded.join(', '),
-      tagsRemoved: tagsRemoved.join(', ')
-    };
 }
 
 function updateInterfaceWithGameInfo(response) {
@@ -812,9 +778,7 @@ function updateInterfaceWithGameInfo(response) {
     var pluginsList = document.getElementById('main');
     var pluginsNav = document.getElementById('pluginsNav');
     loot.game.plugins.forEach(function(plugin) {
-        var content, clone;
 
-        /* Now add plugin 'card'. */
         if (plugin.isActive) {
             ++activePluginNo;
         }

@@ -175,6 +175,24 @@ dialog {
     top: 3em;
     max-width: 40em;
 }
+dialog > h1 {
+    margin: 0;
+    margin-bottom: 1em;
+    text-align: center;
+    font-weight: normal;
+}
+dialog > span:first-child {
+    font-size: 4em;
+    position: absolute;
+    left: 1em;
+    top: 23px;
+}
+dialog[data-type=warn] > span:first-child  {
+    color: gold;
+}
+dialog > .buttons {
+    text-align: center;
+}
 
 section[data-active] {
     overflow:visible;

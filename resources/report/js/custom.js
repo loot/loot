@@ -87,16 +87,27 @@ var messageDialogProto = Object.create(HTMLDialogElement.prototype, {
 
         value: function() {
 
-            var template = document.getElementById('messageDialog');
-            var clone = document.importNode(template.content, true);
-
-            this.createShadowRoot().appendChild(clone);
+            var icon = document.createElement('span');
+            icon.className = 'fa fa-exclamation-circle';
+            this.appendChild(icon);
 
             var h1 = document.createElement('h1');
             this.appendChild(h1);
+
             var message = document.createElement('p');
             this.appendChild(message);
 
+            var buttons = document.createElement('div');
+            buttons.className = 'buttons';
+            this.appendChild(buttons);
+
+            var accept = document.createElement('button');
+            accept.className = 'accept';
+            buttons.appendChild(accept);
+
+            var cancel = document.createElement('button');
+            cancel.className = 'cancel';
+            buttons.appendChild(cancel);
         }
 
     }
