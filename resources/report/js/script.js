@@ -171,7 +171,6 @@ function showMessageDialog(title, text) {
 
     var dialog = new MessageDialog();
 
-    dialog.id = 'modalDialog';
     dialog.setAttribute('data-type', 'warn');
 
     dialog.getElementsByTagName('h1')[0].textContent = title;
@@ -180,6 +179,9 @@ function showMessageDialog(title, text) {
     dialog.addEventListener('close', closeMessageDialog, false);
     dialog.addEventListener('click', clickMessageButton, false);
 
+    dialog.querySelector('.accept').textContent = 'Yes';
+    showElement(dialog.querySelector('.cancel'));
+
     document.body.appendChild(dialog);
     dialog.showModal();
 }
@@ -187,17 +189,16 @@ function showMessageBox(type, title, text) {
 
     var dialog = new MessageDialog();
 
-    dialog.id = 'modalDialog';
     dialog.setAttribute('data-type', type);
 
     dialog.getElementsByTagName('h1')[0].textContent = title;
     dialog.getElementsByTagName('p')[0].textContent = text;
 
-    dialog.shadowRoot.querySelector('#accept').textContent = 'OK';
-    dialog.shadowRoot.querySelector('#accept').setAttribute('data-dialog', dialog.id);
-    dialog.shadowRoot.querySelector('#accept').addEventListener('click', hideDialog, false);
+    dialog.addEventListener('close', closeMessageDialog, false);
+    dialog.addEventListener('click', clickMessageButton, false);
 
-    hideElement(dialog.shadowRoot.querySelector('#cancel'));
+    dialog.querySelector('#accept').textContent = 'OK';
+    hideElement(dialog.querySelector('#cancel'));
 
     document.body.appendChild(dialog);
     dialog.showModal();

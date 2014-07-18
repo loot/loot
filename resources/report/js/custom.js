@@ -103,10 +103,12 @@ var messageDialogProto = Object.create(HTMLDialogElement.prototype, {
 
             var accept = document.createElement('button');
             accept.className = 'accept';
+            accept.textContent = 'Yes';
             buttons.appendChild(accept);
 
             var cancel = document.createElement('button');
             cancel.className = 'cancel';
+            accept.textContent = 'Cancel';
             buttons.appendChild(cancel);
         }
 
