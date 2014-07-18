@@ -106,7 +106,9 @@ function Plugin(obj) {
 
         card.id = this.id;
         card.querySelector('h1').textContent = this.name;
-        card.querySelector('.crc').textContent = this.crc;
+        if (this.crc != '0') {
+            card.querySelector('.crc').textContent = this.crc;
+        }
         card.querySelector('.version').textContent = this.version;
 
         card.setAttribute('data-active', this.isActive);

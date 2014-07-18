@@ -74,13 +74,28 @@
             background:#e3e3e3;
         }
         ::content h1 {
-            color: blue;
+            margin: 0;
+            font-weight: normal;
+            font-size: 1.2em;
+            display: inline-block;
+        }
+        ::content .version {
+            display: inline-block;
+            margin-left: 1em;
+        }
+        ::content .crc {
+            display: inline-block;
+            margin-left: 1em;
+        }
+        .hidden, ::content .hidden {
+            display: none;
         }
         .activeTick {
             color: green;
+            padding-right: 0.5em;
         }
         :host([data-active=false]) .activeTick {
-            display: none;
+            visibility: hidden;
         }
         :host([data-bsa=false]) .loadsBSA {
             display: none;
@@ -90,6 +105,36 @@
         }
         :host([data-edits=false]) .hasUserEdits {
             display: none;
+        }
+
+
+        section[data-active] {
+            overflow:visible;
+            /*transition: 0.6s;
+            -webkit-transform-style: preserve-3d;
+            z-index:-1;*/
+        }
+
+        /*section[data-active] .front, section[data-active] .editor {
+            -webkit-backface-visibility: hidden;
+            transition: 0.6s;
+        }*/
+
+        section[data-active] .editor {
+            /*-webkit-transform: rotateY(180deg);*/
+            display:none;
+        }
+
+        /*section[data-active].flip  {
+            -webkit-transform: rotateY(180deg);
+        }*/
+
+        section[data-active].flip .front  {
+            display:none;
+        }
+
+        section[data-active].flip .editor  {
+            display:block;
         }
         </style>
 

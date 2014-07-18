@@ -74,11 +74,11 @@ function toggleDisplayCSS(evt) {
     var e = document.getElementsByClassName(evt.target.getAttribute('data-class'));
     if (evt.target.checked) {
         for (var i = 0, z = e.length; i < z; i++) {
-            e[i].className += ' hidden';
+            e[i].classList.toggle('hidden', true);
         }
     } else {
         for (var i = 0, z = e.length; i < z; i++) {
-            e[i].className = e[i].className.replace('hidden', '');
+            e[i].classList.toggle('hidden', false);
         }
     }
 }
