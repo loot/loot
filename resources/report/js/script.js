@@ -155,60 +155,44 @@ function togglePlugins(evt) {
     document.getElementById('hiddenPluginNo').textContent = hiddenPluginNo;
 }
 function hideDialog(evt) {
-    var target = document.getElementById(evt.target.getAttribute('data-dialog'));
-    hideElement(target);
-    if (target.id == 'modalDialog') {
-        document.body.removeChild(target);
-    }
-    overlay.setAttribute('data-dialog', '');
-    overlay.removeEventListener('click', hideDialog, false);
-    hideElement(document.getElementById('overlay'));
+    var dialog = document.getElementsByTagName('dialog')[0];
+    dialog.close(evt.target);
 }
 function showMessageDialog(title, text) {
-    var content = document.getElementById('messageDialog').content;
-    var clone = document.importNode(content, true);
-    document.body.appendChild(clone);
-    clone = document.body.lastElementChild;
 
-    clone.id = 'modalDialog';
+    var dialog = document.getElementsByTagName('dialog')[0];
 
-    clone.getElementsByTagName('span')[0].className += ' warn';
+    dialog.id = 'modalDialog';
+    dialog.setAttribute('data-type', 'warn');
 
-    clone.getElementsByTagName('h1')[0].textContent = title;
-    clone.getElementsByTagName('p')[0].textContent = text;
+    dialog.getElementsByTagName('h1')[0].textContent = title;
+    dialog.getElementsByTagName('p')[0].textContent = text;
 
-    var overlay = document.getElementById('overlay');
-    overlay.removeEventListener('click', hideDialog, false);
-    showElement(overlay);
+    dialog.shadowRoot.querySelector('#accept').setAttribute('data-dialog', dialog.id);
+    dialog.shadowRoot.querySelector('#accept').addEventListener('click', hideDialog, false);
 
-    clone.getElementsByClassName('accept')[0].setAttribute('data-dialog', clone.id);
-    clone.getElementsByClassName('accept')[0].addEventListener('click', hideDialog, false);
+    dialog.shadowRoot.querySelector('#cancel').setAttribute('data-dialog', dialog.id);
+    dialog.shadowRoot.querySelector('#cancel').addEventListener('click', hideDialog, false);
 
-    clone.getElementsByClassName('cancel')[0].setAttribute('data-dialog', clone.id);
-    clone.getElementsByClassName('cancel')[0].addEventListener('click', hideDialog, false);
+    dialog.showModal();
 }
 function showMessageBox(type, title, text) {
-    var content = document.getElementById('messageDialog').content;
-    var clone = document.importNode(content, true);
-    document.body.appendChild(clone);
-    clone = document.body.lastElementChild;
 
-    clone.id = 'modalDialog';
+    var dialog = document.getElementsByTagName('dialog')[0];
 
-    clone.getElementsByTagName('span')[0].classList.add(type);
+    dialog.id = 'modalDialog';
+    dialog.setAttribute('data-type', type);
 
-    clone.getElementsByTagName('h1')[0].textContent = title;
-    clone.getElementsByTagName('p')[0].textContent = text;
+    dialog.getElementsByTagName('h1')[0].textContent = title;
+    dialog.getElementsByTagName('p')[0].textContent = text;
 
-    var overlay = document.getElementById('overlay');
-    overlay.removeEventListener('click', hideDialog, false);
-    showElement(overlay);
+    dialog.shadowRoot.querySelector('#accept').textContent = 'OK';
+    dialog.shadowRoot.querySelector('#accept').setAttribute('data-dialog', dialog.id);
+    dialog.shadowRoot.querySelector('#accept').addEventListener('click', hideDialog, false);
 
-    clone.getElementsByClassName('accept')[0].textContent = 'OK';
-    clone.getElementsByClassName('accept')[0].setAttribute('data-dialog', clone.id);
-    clone.getElementsByClassName('accept')[0].addEventListener('click', hideDialog, false);
+    hideElement(dialog.shadowRoot.querySelector('#cancel'));
 
-    hideElement(clone.getElementsByClassName('cancel')[0]);
+    dialog.showModal();
 }
 function openLogLocation(evt) {
     var request_id = window.cefQuery({
@@ -446,30 +430,24 @@ function showEditor(evt) {
         /* Finally, show editor. */
         section.classList.toggle('flip');
 }
-function closeSettings(evt) {
-    var isValid = true;
-    if (evt.target.className.indexOf('accept') != -1) {
-        /* First validate table inputs. */
-        var inputs = evt.target.parentElement.parentElement.getElementsByTagName('input');
-        /* If an input is readonly, it doesn't validate, so check required / value length explicitly.
-        */
-        for (var i = 0; i < inputs.length; ++i) {
-            if (inputs[i].readOnly) {
-                if (inputs[i].required && inputs[i].value.length == 0) {
-                    isValid = false;
-                    console.log(inputs[i]);
-                    inputs[i].readOnly = false;
-                }
-            } else if (!inputs[i].checkValidity()) {
-                isValid = false;
+function areSettingsValid() {
+    /* First validate table inputs. */
+    var inputs = document.getElementById('settings').getElementsByTagName('input');
+    /* If an input is readonly, it doesn't validate, so check required / value length explicitly.
+    */
+    for (var i = 0; i < inputs.length; ++i) {
+        if (inputs[i].readOnly) {
+            if (inputs[i].required && inputs[i].value.length == 0) {
+                return false;
                 console.log(inputs[i]);
+                inputs[i].readOnly = false;
             }
+        } else if (!inputs[i].checkValidity()) {
+            return false;
+            console.log(inputs[i]);
         }
     }
-    if (isValid) {
-        hideElement(evt.target.parentElement.parentElement);
-        hideElement(document.getElementById('overlay'));
-    }
+    return true;
 }
 function toggleMenu(evt) {
     var target = document.getElementById('currentMenu');
@@ -529,26 +507,21 @@ function toggleFiltersList(evt) {
         hideElement(plugins);
     }
 }
+
+function closeAboutDialog(evt) {
+    evt.target.parentElement.close();
+}
 function showAboutDialog(evt) {
-    var target = document.getElementById('about');
-    var overlay = document.getElementById('overlay');
-
-    overlay.setAttribute('data-dialog', target.id);
-    overlay.addEventListener('click', hideDialog, false);
-
-    showElement(target);
-    showElement(overlay);
+    document.getElementById('about').showModal();
+}
+function closeSettingsDialog(evt) {
+    if (!areSettingsValid()) {
+        evt.preventDefault();
+        return;
+    }
 }
 function showSettingsDialog(evt) {
-    var target = document.getElementById('settings');
-    var overlay = document.getElementById('overlay');
-
-    var buttons = target.getElementsByTagName('button');
-    buttons[0].addEventListener('click', closeSettings, false);
-    buttons[1].addEventListener('click', closeSettings, false);
-
-    showElement(target);
-    showElement(overlay);
+    document.getElementById('settings').showModal();
 }
 function toggleInputRO(evt) {
     if (evt.target.readOnly) {
@@ -617,6 +590,23 @@ function setupEventHandlers() {
     document.getElementById('applySortButton').addEventListener('click', applySort, false);
     document.getElementById('cancelSortButton').addEventListener('click', cancelSort, false);
     document.getElementById('filtersToggle').addEventListener('click', toggleFiltersList, false);
+
+    /* Set up event handlers for settings dialog. */
+    var settings = document.getElementById('settings');
+    settings.addEventListener('close', closeSettingsDialog, false);
+    settings.addEventListener('cancel', closeSettingsDialog, false);
+
+    settings.getElementsByClassName('accept')[0].addEventListener('click', function(evt){
+        evt.target.parentElement.parentElement.close(true);
+    }, false);
+    settings.getElementsByClassName('cancel')[0].addEventListener('click', function(evt){
+        evt.target.parentElement.parentElement.close(false);
+    }, false);
+
+    /* Set up about dialog handlers. */
+
+    document.getElementById('about').getElementsByTagName('button')[0].addEventListener('click', closeAboutDialog, false);
+
 
     /* Set up event handler for hover text. */
     document.body.addEventListener('mouseover', toggleHoverText, false);

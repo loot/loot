@@ -131,6 +131,10 @@
             :host([data-edits=false]) .hasUserEdits {
                 visibility: hidden;
             }
+            a {
+                text-decoration: none;
+                color: black;
+            }
         </style>
         <span class="dummyPlugin fa fa-eye-slash" title="Dummy Plugin"></span>
         <span class="loadsBSA fa fa-paperclip" title="Loads BSA"></span>
@@ -139,6 +143,38 @@
             <content select=".name"></content>
             <content select=".priority"></content>
         </a>
+    </template>
+    <template id="messageDialog">
+        <style>
+            @import 'css/font-awesome.min.css';
+
+            ::content > h1 {
+                margin: 0;
+                margin-bottom: 1em;
+                text-align: center;
+                font-weight: normal;
+            }
+            :host > span:first-child {
+                font-size: 4em;
+                position: absolute;
+                left: 1em;
+                top: 23px;
+            }
+            :host([data-type=warn]) > span  {
+                color: gold;
+            }
+            .buttons {
+                text-align: center;
+            }
+        </style>
+            <span class="fa fa-exclamation-circle"></span>
+            <content select="h1"></content>
+            <content></content>
+            <div class="buttons">
+                <button id="accept">Yes</button>
+                <button id="cancel">Cancel</button>
+            </div>
+        </div>
     </template>
 
 
@@ -292,17 +328,6 @@
             </div>
         </div>
     </template>
-    <template id="messageDialog">
-        <div class="message dialog">
-            <span class="fa fa-exclamation-circle"></span>
-            <h1></h1>
-            <p></p>
-            <div class="buttons">
-                <button class="accept">Yes</button>
-                <button class="cancel">Cancel</button>
-            </div>
-        </div>
-    </template>
     <noscript>The LOOT Report requires Javascript to be enabled in order to function.</noscript>
     <header>
         <div id="headerOverlay"></div>
@@ -396,9 +421,9 @@
         </div>
     </div>
 
-    <div id="about" class="dialog hidden" data-overlay="1">
+    <dialog id="about">
         <h1>LOOT <span id="LOOTVersion"></span></h1>
-        <p>Copyright &copy; 2012&ndash;2014 LOOT Team
+        <p>Copyright &copy; 2012&ndash;2014 WrinklyNinja
         <p>Load order optimisation for Oblivion, Skyrim, Fallout 3 and Fallout: New Vegas.
         <p><a href="http://loot.github.io">http://loot.github.io</a>
         <blockquote>
@@ -415,9 +440,10 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
         </blockquote>
-    </div>
+        <button>OK</button>
+    </dialog>
 
-    <div id="settings" class="dialog hidden">
+    <dialog id="settings">
         <h1>Settings</h1>
         <label for="defaultGameSelect">Default Game</label>
         <select id="defaultGameSelect">
@@ -448,9 +474,9 @@ along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
             <button class="accept">Apply</button>
             <button class="cancel">Cancel</button>
         </div>
-    </div>
+    </dialog>
 
-    <div id="overlay" class="hidden"></div>
+    <dialog is="message-dialog"></dialog>
     <div id="hoverText" class="hidden"></div>
 
     <script src="js/script.js"></script>

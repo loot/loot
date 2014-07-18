@@ -157,13 +157,23 @@ nav a {
     /*-webkit-perspective: 1000;*/
 }
 
-section, .dialog {
+section {
     background:white;
     overflow:hidden;
     margin:1em;
     box-shadow:0 0 3px 0px rgba(0,0,0,0.5);
     padding:1em;
     position: relative;
+}
+
+dialog {
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
+    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+    overflow:hidden;
+    padding: 2em;
+    top: 3em;
+    max-width: 40em;
 }
 
 section[data-active] {
@@ -244,15 +254,6 @@ section[data-active] .icons {
 }
 
 
-.dialog {
-    padding: 2em;
-    z-index:4;
-    margin: 0 auto;
-    display:table;
-    position: relative;
-    top: 3em;
-    max-width: 90%;
-}
 
 #about h1, #about p {
     text-align: center;
@@ -260,6 +261,10 @@ section[data-active] .icons {
 
 #about blockquote {
     white-space: pre;
+}
+#about button {
+    margin: 0 auto;
+    display: block;
 }
 
 #overlay {
@@ -278,12 +283,6 @@ section h1 {
     font-size: 1.2em;
 }
 
-.dialog h1 {
-    margin: 0;
-    margin-bottom: 1em;
-    text-align: center;
-    font-weight: normal;
-}
 #filters {
     margin: 0;
     padding: 0;
@@ -363,6 +362,10 @@ li.warn{
     background:#FFDD55;
 }
 
+#settings {
+    width: auto;
+    max-width: 90%;
+}
 #settings > select {
     float: right;
     clear: both;
@@ -376,21 +379,7 @@ li.warn{
     margin: 2px;
 }
 
-.dialog.message {
-    width: 40em;
-}
-.dialog.message span:first-child {
-    font-size: 4em;
-    position: absolute;
-    left: 1em;
-    top: 23px;
-}
-.message span.warn  {
-    color: gold;
-}
-.dialog .buttons {
-    text-align: center;
-}
+
 
 input[readonly] {
     border: none;

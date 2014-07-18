@@ -50,7 +50,7 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
 });
 var PluginCard = document.registerElement('plugin-card', {prototype: pluginCardProto});
 
-/* Create a <plugin-li> element type. */
+/* Create a <plugin-li> element type that extends from <li>. */
 var pluginLIProto = Object.create(HTMLLIElement.prototype, {
 
     createdCallback: {
@@ -77,4 +77,32 @@ var pluginLIProto = Object.create(HTMLLIElement.prototype, {
 var PluginListItem = document.registerElement('plugin-li', {
     prototype: pluginLIProto,
     extends: 'li'
+});
+
+/* Create a <message-dialog> element type that extends from <dialog>.
+   Use a data-type member on the element to style its type. */
+var messageDialogProto = Object.create(HTMLDialogElement.prototype, {
+
+    createdCallback: {
+
+        value: function() {
+
+            var template = document.getElementById('messageDialog');
+            var clone = document.importNode(template.content, true);
+
+            this.createShadowRoot().appendChild(clone);
+
+            var h1 = document.createElement('h1');
+            this.appendChild(h1);
+            var message = document.createElement('p');
+            this.appendChild(message);
+
+        }
+
+    }
+
+});
+var MessageDialog = document.registerElement('message-dialog', {
+    prototype: messageDialogProto,
+    extends: 'dialog'
 });
