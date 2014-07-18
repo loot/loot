@@ -178,14 +178,14 @@ dialog {
 dialog > h1 {
     margin: 0;
     margin-bottom: 1em;
-    text-align: center;
     font-weight: normal;
+    display: inline-block;
 }
 dialog > span:first-child {
     font-size: 4em;
-    position: absolute;
-    left: 1em;
-    top: 23px;
+    position: relative;
+    margin-right: 0.5em;
+    top: 0.2em;
 }
 dialog[data-type=warn] > span:first-child  {
     color: gold;
