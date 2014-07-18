@@ -92,7 +92,7 @@ function Plugin(obj) {
     Plugin.prototype.createListItem = function() {
         var li = new PluginListItem();
 
-        li.shadowRoot.querySelector('a').href = this.id;
+        li.shadowRoot.querySelector('a').href = '#' + this.id;
 
         li.querySelector('.name').textContent = this.name;
         li.querySelector('.priority').textContent = this.getPriorityString();
