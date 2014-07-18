@@ -225,6 +225,7 @@ namespace loot {
             // the first will be handled by userlist lookups, and the other two are probably
             // going to get moved around, haven't decided how best to handle the split between masterlist, userlist and plugin-sourced metadata.
             YAML::Node pluginNode;
+            pluginNode["__type"] = "Plugin";  // For conversion back into a JS typed object.
             pluginNode["name"] = plugin.Name();
             pluginNode["isActive"] = g_app_state.CurrentGame().IsActive(plugin.Name());
             pluginNode["isDummy"] = false; // Set to false for now because null is a bit iffy and we just don't know yet. Although, we could read the record count from the TES4 header... Usual check is (plugin.second.FormIDs().size() == 0);

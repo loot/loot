@@ -408,6 +408,8 @@ function showEditor(evt) {
             setupTable(tables[i].getElementsByTagName('tbody')[0]);
         }
 
+        /* Fill in table data. */
+
         /* Set up table tab event handlers. */
         var elements = editor.getElementsByClassName('tableTabs')[0].children;
         for (var i = 0; i < elements.length; ++i) {
@@ -616,13 +618,7 @@ function setupEventHandlers() {
     document.getElementById('cancelSortButton').addEventListener('click', cancelSort, false);
     document.getElementById('filtersToggle').addEventListener('click', toggleFiltersList, false);
 
-    /* Set up handlers for game menus. */
-    elements = document.getElementById('main').children;
-    for (var i = 2; i < elements.length; ++i) {
-        var pluginMenu = elements[i].getElementsByClassName('pluginMenu')[0];
-        pluginMenu.addEventListener('click', toggleMenu, false);
-    }
-
+    /* Set up event handler for hover text. */
     document.body.addEventListener('mouseover', toggleHoverText, false);
 }
 function processCefError(errorCode, errorMessage) {
@@ -735,25 +731,7 @@ function initGlobalVars() {
     });
 }
 function getPriorityString(plugin) {
-    if (plugin.userlist) {
-        var priorityText = 'Priority: ' + plugin.userlist.modPriority + ', Global: ';
-        if (plugin.userlist.isGlobalPriority) {
-            priorityText += '✓';
-        } else {
-            priorityText += '✗';
-        }
-        return priorityText;
-    } else if (plugin.masterlist) {
-        var priorityText = 'Priority: ' + plugin.masterlist.modPriority + ', Global: ';
-        if (plugin.masterlist.isGlobalPriority) {
-            priorityText += '✓';
-        } else {
-            priorityText += '✗';
-        }
-        return priorityText;
-    } else {
-        return 'Priority: 0, Global: ✗';
-    }
+
 }
 function getTagsStrings(plugin) {
     var tagsAdded = [];
@@ -806,10 +784,11 @@ function getTagsStrings(plugin) {
       tagsRemoved: tagsRemoved.join(', ')
     };
 }
+
 function updateInterfaceWithGameInfo(response) {
 
     try {
-        loot.game = JSON.parse(response);
+        loot.game = JSON.parse(response, jsonToPlugin);
     } catch (e) {
         console.log(e);
         console.log('Response: ' + response);
@@ -842,76 +821,20 @@ function updateInterfaceWithGameInfo(response) {
     totalMessageNo = loot.game.globalMessages.length;
     var pluginsList = document.getElementById('main');
     var pluginsNav = document.getElementById('pluginsNav');
-    for (var i = 0; i < loot.game.plugins.length; ++i) {
+    loot.game.plugins.forEach(function(plugin) {
         var content, clone;
-        /* First add link to navbar. */
-        content = document.getElementById('pluginNav').content;
-        clone = document.importNode(content, true);
-        pluginsNav.appendChild(clone);
-        clone = pluginsNav.lastElementChild;
-
-        clone.getElementsByClassName('name')[0].textContent = loot.game.plugins[i].name;
-        clone.getElementsByTagName('a')[0].href = '#' + loot.game.plugins[i].name.replace(/\s+/g, '');
-
-
-        clone.getElementsByClassName('priority')[0].textContent = getPriorityString(loot.game.plugins[i]);
-
-        if (loot.game.plugins[i].isDummy) {
-            clone.getElementsByClassName('dummyPlugin')[0].className += ' fa fa-eye-slash';
-        }
-
-        if (loot.game.plugins[i].loadsBSA) {
-            clone.getElementsByClassName('loadsBSA')[0].className += ' fa fa-paperclip';
-        }
-
-        if (loot.game.plugins[i].userlist) {
-            clone.getElementsByClassName('hasUserEdits')[0].className += ' fa fa-user';
-        }
 
         /* Now add plugin 'card'. */
-        content = document.getElementById('pluginSection').content;
-        clone = document.importNode(content, true);
-        pluginsList.appendChild(clone);
-        clone = pluginsList.lastElementChild;
-
-        clone.setAttribute('data-active', loot.game.plugins[i].isActive);
-        clone.id = loot.game.plugins[i].name.replace(/\s+/g, '');
-
-        if (loot.game.plugins[i].isActive) {
+        if (plugin.isActive) {
             ++activePluginNo;
         }
 
-        /*if (loot.game.plugins[i].isDirty) {
+        /*if (plugin.isDirty) {
             ++dirtyPluginNo;
         }*/
 
-        clone.getElementsByTagName('h1')[0].textContent = loot.game.plugins[i].name;
-
-        if (loot.game.plugins[i].crc != 0) {
-            clone.getElementsByClassName('crc')[0].textContent = 'CRC: ' + loot.game.plugins[i].crc;
-        } else {
-            clone.getElementsByClassName('crc')[0].textContent = '';
-        }
-
-        if (loot.game.plugins[i].isDummy) {
-            showElement(clone.getElementsByClassName('dummyPlugin')[0]);
-        }
-
-        if (loot.game.plugins[i].loadsBSA) {
-            showElement(clone.getElementsByClassName('loadsBSA')[0]);
-        }
-
-        if (loot.game.plugins[i].userlist) {
-            showElement(clone.getElementsByClassName('hasUserEdits')[0]);
-        }
-
-        if (loot.game.plugins[i].version) {
-            clone.getElementsByClassName('version')[0].textContent = 'Version: ' + loot.game.plugins[i].version;
-        } else {
-            hideElement(clone.getElementsByClassName('version')[0]);
-        }
-
-        var tags = getTagsStrings(loot.game.plugins[i]);
+/*
+        var tags = getTagsStrings(plugin);
         if (tags.tagsAdded) {
             clone.getElementsByClassName('tag add')[0].textContent = tags.tagsAdded;
         } else {
@@ -923,16 +846,12 @@ function updateInterfaceWithGameInfo(response) {
             hideElement(clone.getElementsByClassName('tag remove')[0]);
         }
 
-        clone.getElementsByClassName('editMetadata')[0].setAttribute('data-target', clone.id);
-        clone.getElementsByClassName('copyMetadata')[0].setAttribute('data-target', clone.id);
-        clone.getElementsByClassName('clearMetadata')[0].setAttribute('data-target', clone.id);
-
-        if (loot.game.plugins[i].masterlist && loot.game.plugins[i].masterlist.msg && loot.game.plugins[i].masterlist.msg.length != 0) {
-            for (var j = 0; j < loot.game.plugins[i].masterlist.msg.length; ++j) {
+        if (plugin.masterlist && plugin.masterlist.msg && plugin.masterlist.msg.length != 0) {
+            plugin.masterlist.msg.forEach(function(message) {
                 var messageLi = document.createElement('li');
-                messageLi.className = loot.game.plugins[i].masterlist.msg[j].type;
+                messageLi.className = message.type;
                 // Use the Marked library for Markdown formatting support.
-                messageLi.innerHTML = marked(loot.game.plugins[i].masterlist.msg[j].content[0].str);
+                messageLi.innerHTML = marked(message.content[0].str);
                 clone.getElementsByTagName('ul')[0].appendChild(messageLi);
 
                 if (messageLi.className == 'warn') {
@@ -941,11 +860,12 @@ function updateInterfaceWithGameInfo(response) {
                     errorMessageNo++;
                 }
                 totalMessageNo++;
-            }
+            });
         } else {
             clone.getElementsByTagName('ul')[0].className += ' hidden';
         }
-    }
+*/
+    });
     document.getElementById('filterTotalMessageNo').textContent = totalMessageNo;
     document.getElementById('totalMessageNo').textContent = totalMessageNo;
     document.getElementById('totalWarningNo').textContent = warnMessageNo;
@@ -970,7 +890,10 @@ function getGameData() {
     });
 }
 
-require(['js/marked'], function(response) {
+require.config({
+    baseUrl: "js",
+  });
+require(['marked', 'order!custom', 'order!plugin'], function(response) {
     marked = response;
     /* Make sure settings are what I want. */
     marked.setOptions({
