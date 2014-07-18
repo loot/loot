@@ -36,16 +36,6 @@ function Plugin(obj) {
 
     this.id = this.name.replace(/\s+/g, '');
 
-    Plugin.prototype.onMenuItemClick = function(evt) {
-
-    }
-
-    Plugin.prototype.onMenuClick = function(evt) {
-        card.querySelector('.editMetadata').addEventListener('click', this.onMenuItemClick, false);
-        card.querySelector('.editMetadata').addEventListener('click', this.onMenuItemClick, false);
-        card.querySelector('.editMetadata').addEventListener('click', this.onMenuItemClick, false);
-    }
-
     Plugin.prototype.getTagsStrings = function () {
         var tagsAdded = [];
         var tagsRemoved = [];
@@ -115,9 +105,6 @@ function Plugin(obj) {
         card.setAttribute('data-dummy', this.isDummy);
         card.setAttribute('data-bsa', this.loadsBSA);
         card.setAttribute('data-edits', this.userlist != undefined);
-
-        card.shadowRoot.querySelector('.pluginMenu').addEventListener('click', this.onMenuClick, false);
-
 
         document.getElementById('main').appendChild(card);
     }

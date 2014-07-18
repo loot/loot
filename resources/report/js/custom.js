@@ -25,6 +25,24 @@
 /* Create a <plugin-card> element type. */
 var pluginCardProto = Object.create(HTMLElement.prototype, {
 
+
+    onMenuItemClick: {
+        value: function(evt) {
+
+        }
+    },
+
+    onMenuClick: {
+        value: function(evt) {
+            var section = evt.currentTarget.parentElement.parentElement;
+            section.querySelector('#editMetadata').addEventListener('click', this.onMenuItemClick, false);
+            section.querySelector('#copyMetadata').addEventListener('click', this.onMenuItemClick, false);
+            section.querySelector('#clearMetadata').addEventListener('click', this.onMenuItemClick, false);
+
+            section.querySelector('#menu').classList.toggle('hidden');
+        }
+    },
+
     createdCallback: {
 
         value: function() {
@@ -42,6 +60,8 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
             var version = document.createElement('div');
             version.className = 'version';
             this.appendChild(version);
+
+            this.shadowRoot.querySelector('#menuButton').addEventListener('click', this.onMenuClick, false);
 
         }
 

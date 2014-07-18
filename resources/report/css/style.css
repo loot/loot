@@ -282,6 +282,18 @@ li.error{
 li.warn{
     background:#FFDD55;
 }
+.version{
+    color:#6394F8;
+}
+.crc{
+    color:#BC8923;
+}
+.tag.add {
+    color:green;
+}
+.tag.remove {
+    color:red;
+}
 
 #settings {
     width: auto;
