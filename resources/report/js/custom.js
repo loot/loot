@@ -83,6 +83,33 @@ var PluginListItem = document.registerElement('plugin-li', {
    Use a data-type member on the element to style its type. */
 var messageDialogProto = Object.create(HTMLDialogElement.prototype, {
 
+    onButtonClick: {
+        value: function(evt) {
+            evt.currentTarget.parentElement.parentElement.close( evt.target.className == 'accept' );
+        }
+    },
+
+    showModal: {
+        /* A type of 'error' or 'info' produces an 'OK'-only dialog box. */
+        value: function(type, title, text, onClose) {
+
+            this.setAttribute('data-type', type);
+
+            this.querySelector('h1').textContent = title;
+            this.querySelector('p').textContent = text;
+
+            this.querySelector('.accept').addEventListener('click', this.onButtonClick, false);
+            this.querySelector('.cancel').addEventListener('click', this.onButtonClick, false);
+
+            if (type == 'error' || type == 'info') {
+                this.querySelector('.accept').textContent = 'OK';
+                hideElement(this.querySelector('.cancel'));
+            }
+
+            HTMLDialogElement.prototype.showModal.call(this);
+        }
+    },
+
     createdCallback: {
 
         value: function() {
@@ -108,10 +135,17 @@ var messageDialogProto = Object.create(HTMLDialogElement.prototype, {
 
             var cancel = document.createElement('button');
             cancel.className = 'cancel';
-            accept.textContent = 'Cancel';
+            cancel.textContent = 'Cancel';
             buttons.appendChild(cancel);
         }
 
+    },
+
+    detachedCallback: {
+        value: function() {
+
+            this.removeEventListener('click', this.onButtonClick, false);
+        }
     }
 
 });

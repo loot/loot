@@ -193,6 +193,9 @@ dialog[data-type=warn] > span:first-child  {
 dialog > .buttons {
     text-align: center;
 }
+dialog button {
+    margin: 0.5em;
+}
 
 section[data-active] {
     overflow:visible;

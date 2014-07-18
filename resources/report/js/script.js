@@ -155,53 +155,32 @@ function togglePlugins(evt) {
     document.getElementById('hiddenPluginNo').textContent = hiddenPluginNo;
 }
 function closeMessageDialog(evt) {
-    if (evt.target.returnValue == 'true') {
+    var ret = evt.target.returnValue == 'true';
+
+    evt.target.removeEventListener('close', closeMessageDialog, false);
+    document.body.removeChild(evt.target);
+
+    if (ret) {
 
     } else {
 
     }
-    evt.target.removeEventListener('close', closeMessageDialog, false);
-    evt.target.removeEventListener('click', clickMessageButton, false);
-    document.body.removeChild(evt.target);
-}
-function clickMessageButton(evt) {
-    evt.currentTarget.close( evt.target.className == 'accept' );
 }
 function showMessageDialog(title, text) {
-
     var dialog = new MessageDialog();
 
-    dialog.setAttribute('data-type', 'warn');
-
-    dialog.getElementsByTagName('h1')[0].textContent = title;
-    dialog.getElementsByTagName('p')[0].textContent = text;
-
     dialog.addEventListener('close', closeMessageDialog, false);
-    dialog.addEventListener('click', clickMessageButton, false);
-
-    dialog.querySelector('.accept').textContent = 'Yes';
-    showElement(dialog.querySelector('.cancel'));
 
     document.body.appendChild(dialog);
-    dialog.showModal();
+    dialog.showModal('warn', title, text);
 }
 function showMessageBox(type, title, text) {
-
     var dialog = new MessageDialog();
 
-    dialog.setAttribute('data-type', type);
-
-    dialog.getElementsByTagName('h1')[0].textContent = title;
-    dialog.getElementsByTagName('p')[0].textContent = text;
-
     dialog.addEventListener('close', closeMessageDialog, false);
-    dialog.addEventListener('click', clickMessageButton, false);
-
-    dialog.querySelector('#accept').textContent = 'OK';
-    hideElement(dialog.querySelector('#cancel'));
 
     document.body.appendChild(dialog);
-    dialog.showModal();
+    dialog.showModal(type, title, text);
 }
 function openLogLocation(evt) {
     var request_id = window.cefQuery({
