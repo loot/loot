@@ -376,31 +376,47 @@ function toggleInputRO(evt) {
         evt.target.setAttribute('readonly', '');
     }
 }
-function toggleHoverText(evt) {
-    /*if (evt.target.id = 'hoverText') {
-        evt.stopPropagation();
-        return;
-    }*/
-    var hoverText = document.getElementById('hoverText');
-    if (isVisible(hoverText) && evt.target != hoverText && evt.target.id != hoverText.getAttribute('hoverTarget')) {
-        hideElement(hoverText);
-    } else {
-        if (evt.target.hasAttribute('title')) {
-            var id;
-            if (evt.target.id) {
-                id = evt.target.id;
-            } else {
-                id = 'hoverTarget';
-                evt.target.id = id;
-            }
-            hoverText.setAttribute('hoverTarget', id);
 
-            hoverText.textContent = evt.target.getAttribute('title');
-            hoverText.style.left = evt.clientX + 'px';
-            hoverText.style.top = (20 + evt.clientY) + 'px';
-            showElement(hoverText);
+function getDialogParent(element) {
+    var element = element.parentElement;
+    while (element) {
+        if (element.nodeName == 'DIALOG') {
+            return element;
         }
+        element = element.parentElement;
     }
+    return null;
+}
+function toggleHoverText(evt) {
+    var hoverText = document.getElementById('hoverText');
+
+    if (hoverText) {
+        var hoverTarget = document.getElementById('hoverTarget');
+        if (hoverTarget) {
+            hoverTarget.id = '';
+        }
+        hoverText.parentElement.removeChild(hoverText);
+    }
+
+    hoverText = document.createElement('div');
+    hoverText.id = 'hoverText';
+    hoverText.textContent = evt.target.title;
+
+    if (!evt.target.id) {
+        evt.target.id = 'hoverTarget';
+    }
+    hoverText.setAttribute('data-target', evt.target.id);
+
+    var rect = evt.target.getBoundingClientRect();
+
+    var dialog = getDialogParent(evt.target);
+    if (dialog) {
+        dialog.appendChild(hoverText);
+    } else {
+        document.body.appendChild(hoverText);
+    }
+    hoverText.style.left = (rect.left + evt.target.offsetWidth/2) + 'px';
+    hoverText.style.top = (rect.bottom + 10) + 'px';
 }
 function setupEventHandlers() {
     var elements;
@@ -455,7 +471,11 @@ function setupEventHandlers() {
 
 
     /* Set up event handler for hover text. */
-    document.body.addEventListener('mouseover', toggleHoverText, false);
+    var hoverTargets = document.querySelectorAll('[title]');
+    for (var i = 0; i < hoverTargets.length; ++i) {
+        hoverTargets[i].addEventListener('mouseenter', toggleHoverText, false);
+        hoverTargets[i].addEventListener('mouseleave', toggleHoverText, false);
+    }
 }
 function processCefError(errorCode, errorMessage) {
     showMessageBox('error', "Error", "Error code: " + error_code + "; " + error_message);

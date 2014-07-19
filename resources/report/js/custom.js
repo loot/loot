@@ -282,6 +282,12 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
 
             this.shadowRoot.querySelector('#menuButton').addEventListener('click', this.onMenuButtonClick, false);
 
+            var hoverTargets = this.shadowRoot.querySelectorAll('[title]');
+            for (var i = 0; i < hoverTargets.length; ++i) {
+                hoverTargets[i].addEventListener('mouseenter', toggleHoverText, false);
+                hoverTargets[i].addEventListener('mouseleave', toggleHoverText, false);
+            }
+
         }
 
     },
@@ -313,6 +319,12 @@ var pluginLIProto = Object.create(HTMLLIElement.prototype, {
             var priority = document.createElement('span');
             priority.className = 'priority';
             this.appendChild(priority);
+
+            var hoverTargets = this.shadowRoot.querySelectorAll('[title]');
+            for (var i = 0; i < hoverTargets.length; ++i) {
+                hoverTargets[i].addEventListener('mouseenter', toggleHoverText, false);
+                hoverTargets[i].addEventListener('mouseleave', toggleHoverText, false);
+            }
 
         }
 
