@@ -284,8 +284,8 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
 
             var hoverTargets = this.shadowRoot.querySelectorAll('[title]');
             for (var i = 0; i < hoverTargets.length; ++i) {
-                hoverTargets[i].addEventListener('mouseenter', toggleHoverText, false);
-                hoverTargets[i].addEventListener('mouseleave', toggleHoverText, false);
+                hoverTargets[i].addEventListener('mouseenter', showHoverText, false);
+                hoverTargets[i].addEventListener('mouseleave', hideHoverText, false);
             }
 
         }
@@ -295,6 +295,12 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
     detachedCallback: {
         value: function() {
             this.shadowRoot.querySelector('#menuButton').removeEventListener('click', this.onMenuButtonClick, false);
+
+            var hoverTargets = this.shadowRoot.querySelectorAll('[title]');
+            for (var i = 0; i < hoverTargets.length; ++i) {
+                hoverTargets[i].removeEventListener('mouseenter', showHoverText, false);
+                hoverTargets[i].removeEventListener('mouseleave', hideHoverText, false);
+            }
         }
     }
 
@@ -322,12 +328,22 @@ var pluginLIProto = Object.create(HTMLLIElement.prototype, {
 
             var hoverTargets = this.shadowRoot.querySelectorAll('[title]');
             for (var i = 0; i < hoverTargets.length; ++i) {
-                hoverTargets[i].addEventListener('mouseenter', toggleHoverText, false);
-                hoverTargets[i].addEventListener('mouseleave', toggleHoverText, false);
+                hoverTargets[i].addEventListener('mouseenter', showHoverText, false);
+                hoverTargets[i].addEventListener('mouseleave', hideHoverText, false);
             }
 
         }
 
+    },
+
+    detachedCallback: {
+        value: function() {
+            var hoverTargets = this.shadowRoot.querySelectorAll('[title]');
+            for (var i = 0; i < hoverTargets.length; ++i) {
+                hoverTargets[i].removeEventListener('mouseenter', showHoverText, false);
+                hoverTargets[i].removeEventListener('mouseleave', hideHoverText, false);
+            }
+        }
     }
 
 });

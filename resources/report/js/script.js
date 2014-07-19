@@ -387,18 +387,10 @@ function getDialogParent(element) {
     }
     return null;
 }
-function toggleHoverText(evt) {
-    var hoverText = document.getElementById('hoverText');
+function showHoverText(evt) {
+    hideHoverText(evt);
 
-    if (hoverText) {
-        var hoverTarget = document.getElementById('hoverTarget');
-        if (hoverTarget) {
-            hoverTarget.id = '';
-        }
-        hoverText.parentElement.removeChild(hoverText);
-    }
-
-    hoverText = document.createElement('div');
+    var hoverText = document.createElement('div');
     hoverText.id = 'hoverText';
     hoverText.textContent = evt.target.title;
 
@@ -417,6 +409,17 @@ function toggleHoverText(evt) {
     }
     hoverText.style.left = (rect.left + evt.target.offsetWidth/2) + 'px';
     hoverText.style.top = (rect.bottom + 10) + 'px';
+}
+function hideHoverText(evt) {
+    var hoverText = document.getElementById('hoverText');
+
+    if (hoverText) {
+        var hoverTarget = document.getElementById('hoverTarget');
+        if (hoverTarget) {
+            hoverTarget.id = '';
+        }
+        hoverText.parentElement.removeChild(hoverText);
+    }
 }
 function setupEventHandlers() {
     var elements;
@@ -473,8 +476,8 @@ function setupEventHandlers() {
     /* Set up event handler for hover text. */
     var hoverTargets = document.querySelectorAll('[title]');
     for (var i = 0; i < hoverTargets.length; ++i) {
-        hoverTargets[i].addEventListener('mouseenter', toggleHoverText, false);
-        hoverTargets[i].addEventListener('mouseleave', toggleHoverText, false);
+        hoverTargets[i].addEventListener('mouseenter', showHoverText, false);
+        hoverTargets[i].addEventListener('mouseleave', hideHoverText, false);
     }
 }
 function processCefError(errorCode, errorMessage) {
