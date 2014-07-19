@@ -253,7 +253,7 @@ function handlePluginDrop(evt) {
 
     if (evt.currentTarget.tagName == 'TABLE' && (evt.currentTarget.className.indexOf('req') != -1 || evt.currentTarget.className.indexOf('inc') != -1 || evt.currentTarget.className.indexOf('loadAfter') != -1)) {
         var data = {
-            file: evt.dataTransfer.getData('text/plain')
+            name: evt.dataTransfer.getData('text/plain')
         };
         evt.currentTarget.addRow(data);
     }

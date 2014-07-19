@@ -122,7 +122,7 @@
         #tableTabs > span:not(:first-child) {
             border-left: none;
         }
-        #tableTabs > span:hover, .tableTabs span.selected {
+        #tableTabs > span:hover, #tableTabs span.selected {
             background: #f8f8f8;
         }
         #tableTabs .editable {
@@ -291,7 +291,7 @@
 
     <template id="fileRow">
         <tr>
-            <td><input class="file" type="text" readonly required>
+            <td><input class="name" type="text" readonly required>
             <td><input class="display" type="text" readonly>
             <td><input class="condition" type="text" readonly>
             <td class="fa fa-trash-o fa-fw">
@@ -325,8 +325,8 @@
             <td><input class="crc" type="text" maxlength="8" minlength="8" pattern="[0-9A-Fa-f]{8}" readonly required>
             <td><input class="itm" type="number" min="0" step="1" readonly>
             <td><input class="udr" type="number" min="0" step="1" readonly>
-            <td><input class="navmesh" type="number" min="0" step="1" readonly>
-            <td><input class="utility" type="text" readonly required>
+            <td><input class="nav" type="number" min="0" step="1" readonly>
+            <td><input class="util" type="text" readonly required>
             <td class="fa fa-trash-o fa-fw">
     </template>
     <template id="gameRow">

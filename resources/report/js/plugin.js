@@ -42,6 +42,22 @@ function Plugin(obj) {
 
     this.id = this.name.replace(/\s+/g, '');
 
+    Plugin.prototype.getTagObj = function(tag) {
+        var data = {
+            type: '',
+            name: '',
+            condition: tag.condition
+        };
+        if (tag.name[0] == '-') {
+            data.type = 'remove';
+            data.name = tag.name.substr(1);
+        } else {
+            data.type = 'add';
+            data.name = tag.name;
+        }
+        return data;
+    }
+
     Plugin.prototype.getTagsStrings = function () {
         var tagsAdded = [];
         var tagsRemoved = [];
@@ -158,9 +174,103 @@ function Plugin(obj) {
         }
 
         /* Fill in editor table data. */
-        var tables = card.shadowRoot.getElementsByTagName('editable-table');
+        var tables = card.shadowRoot.getElementsByTagName('table');
         for (var i = 0; i < tables.length; ++i) {
+            if (tables[i].id == 'loadAfter') {
 
+                if (this.masterlist && this.masterlist.after) {
+                    this.masterlist.after.forEach(function(file) {
+                        tables[i].addRow(file).querySelector('.fa-trash-o').classList.toggle('hidden');
+                    });
+                }
+                if (this.userlist && this.userlist.after) {
+                    this.userlist.after.forEach(function(file) {
+                        tables[i].addRow(file);
+                    });
+                }
+
+            } else if (tables[i].id == 'req') {
+
+                if (this.masterlist && this.masterlist.req) {
+                    this.masterlist.req.forEach(function(file) {
+                        tables[i].addRow(file).querySelector('.fa-trash-o').classList.toggle('hidden');
+                    });
+                }
+                if (this.userlist && this.userlist.req) {
+                    this.userlist.req.forEach(function(file) {
+                        tables[i].addRow(file);
+                    });
+                }
+
+            } else if (tables[i].id == 'inc') {
+
+                if (this.masterlist && this.masterlist.inc) {
+                    this.masterlist.inc.forEach(function(file) {
+                        tables[i].addRow(file).querySelector('.fa-trash-o').classList.toggle('hidden');
+                    });
+                }
+                if (this.userlist && this.userlist.inc) {
+                    this.userlist.inc.forEach(function(file) {
+                        tables[i].addRow(file);
+                    });
+                }
+
+            } else if (tables[i].id == 'message') {
+
+                if (this.masterlist && this.masterlist.msg) {
+                    this.masterlist.msg.forEach(function(message) {
+                        var data = {
+                            type: message.type,
+                            content: message.content[0].str,
+                            condition: message.condition,
+                            language: message.content[0].lang
+                        };
+                        tables[i].addRow(data).querySelector('.fa-trash-o').classList.toggle('hidden');
+                    });
+                }
+                if (this.userlist && this.userlist.msg) {
+                    this.userlist.msg.forEach(function(message) {
+                        var data = {
+                            type: message.type,
+                            content: message.content[0].str,
+                            condition: message.condition,
+                            language: message.content[0].lang
+                        };
+                        tables[i].addRow(data);
+                    });
+                }
+
+            } else if (tables[i].id == 'tags') {
+
+                if (this.masterlist && this.masterlist.tag) {
+                    this.masterlist.tag.forEach(function(tag) {
+                        var data = this.getTagObj(tag);
+                        tables[i].addRow(data).querySelector('.fa-trash-o').classList.toggle('hidden');
+                    }, this);
+                }
+                if (this.userlist && this.userlist.tag) {
+                    this.userlist.tag.forEach(function(tag) {
+                        var data = this.getTagObj(tag);
+                        tables[i].addRow(data);
+                    }, this);
+                }
+
+            } else if (tables[i].id == 'dirty') {
+
+                if (this.masterlist && this.masterlist.dirty) {
+                    this.masterlist.dirty.forEach(function(info) {
+                        info.crc = info.crc.toString(16);
+                        tables[i].addRow(info).querySelector('.fa-trash-o').classList.toggle('hidden');
+                    });
+                }
+                if (this.userlist && this.userlist.dirty) {
+                    this.userlist.dirty.forEach(function(info) {
+                        info.crc = info.crc.toString(16);
+                        tables[i].addRow(info);
+                    });
+                }
+
+            }
         }
 
         document.getElementById('main').appendChild(card);

@@ -98,10 +98,10 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
 
     showEditorTable: {
         value: function(evt) {
-            var tableClass = evt.target.getAttribute('data-for');
-            var tables = evt.target.parentElement.querySelectorAll('table');
+            var tableId = evt.target.getAttribute('data-for');
+            var tables = evt.target.parentElement.parentElement.querySelectorAll('table');
             for (var i = 0; i < tables.length; ++i) {
-                if (tables[i].className.indexOf(tableClass) == -1) {
+                if (tables[i].id != tableId) {
                     hideElement(tables[i]);
                 } else {
                     showElement(tables[i]);
@@ -460,6 +460,8 @@ var EditableTableProto = Object.create(HTMLTableElement.prototype, {
             }
             /* Add deletion listener. */
             row.getElementsByClassName('fa-trash-o')[0].addEventListener('click', this.removeRow, false);
+
+            return row;
         }
     },
 
