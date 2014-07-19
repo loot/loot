@@ -155,6 +155,7 @@ nav a {
     flex-shrink: 10;
     flex-grow: 1;
     /*-webkit-perspective: 1000;*/
+    position: relative;
 }
 
 section {
