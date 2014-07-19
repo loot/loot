@@ -223,10 +223,6 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
 
             menu.setAttribute('data-for', card.id);
 
-            /* To prevent the click event closing this menu just after it was
-               opened, attach an ID to it, then stop the current event and send
-               off a new one. */
-            menu.id = Math.random().toString(36).substr(2) + Math.random().toString(36).substr(2);
 
             var main = document.getElementById('main');
             main.appendChild(menu);
@@ -250,6 +246,8 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
 
             evt.stopPropagation();
 
+            /* To prevent the click event closing this menu just after it was
+               opened, stop the current event and send off a new one. */
             menu.dispatchEvent(new CustomEvent('click', { newMenu: true }));
         }
     },
