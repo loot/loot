@@ -22,6 +22,77 @@
     <http://www.gnu.org/licenses/>.
 */
 'use strict';
+
+/* Create a <plugin-menu> element type. */
+var pluginMenuProto = Object.create(HTMLElement.prototype, {
+
+    onMenuItemClick: {
+        value: function(evt) {
+
+            var pluginID = evt.target.parentNode.host.getAttribute('data-for');
+            var pluginCard = document.getElementById(pluginID);
+
+            if (evt.target.id == 'editMetadata') {
+                /* Show editing controls. */
+                pluginCard.showEditor();
+
+            } else if (evt.target.id == 'copyMetadata') {
+
+            } else if (evt.target.id == 'clearMetadata') {
+                showMessageDialog('Clear Plugin Metadata', 'Are you sure you want to clear all existing user-added metadata from "' + pluginCard.querySelector('h1').textContent + '"?');
+            }
+        }
+    },
+
+    onClick: {
+        value: function(evt) {
+            var menus = document.getElementsByTagName('plugin-menu');
+
+            for (var i = 0; i < menus.length; ++i) {
+                if (!evt.newMenu) {
+                    menus[i].parentElement.removeChild(menus[i]);
+                }
+            }
+        }
+    },
+
+    createdCallback: {
+        value: function() {
+
+            var template = document.getElementById('pluginMenu');
+            var clone = document.importNode(template.content, true);
+
+            this.createShadowRoot().appendChild(clone);
+
+            this.id = 'activePluginMenu';
+
+            /* Add an event listener so that the menu gets closed. */
+            main.addEventListener('click', this.onClick, false);
+
+            /* Add event listeners for the menu items. */
+            this.shadowRoot.querySelector('#editMetadata').addEventListener('click', this.onMenuItemClick, false);
+            this.shadowRoot.querySelector('#copyMetadata').addEventListener('click', this.onMenuItemClick, false);
+            this.shadowRoot.querySelector('#clearMetadata').addEventListener('click', this.onMenuItemClick, false);
+        }
+    },
+
+    detachedCallback: {
+        value: function() {
+            /* Remove menu close listener. */
+            document.getElementById('main').removeEventListener('click', this.onClick, false);
+
+            /* Remove event listeners for the menu items. */
+            this.shadowRoot.querySelector('#editMetadata').removeEventListener('click', this.onMenuItemClick, false);
+            this.shadowRoot.querySelector('#copyMetadata').removeEventListener('click', this.onMenuItemClick, false);
+            this.shadowRoot.querySelector('#clearMetadata').removeEventListener('click', this.onMenuItemClick, false);
+
+        }
+    }
+
+
+});
+var PluginMenu = document.registerElement('plugin-menu', {prototype: pluginMenuProto});
+
 /* Create a <plugin-card> element type. */
 var pluginCardProto = Object.create(HTMLElement.prototype, {
 
@@ -63,11 +134,33 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
                 }
             }
             if (isValid) {
+                var card = evt.target.parentElement.parentElement.parentNode.host;
+
+                /* Set up table tab event handlers. */
+                var elements = card.shadowRoot.querySelector('#tableTabs').children;
+                for (var i = 0; i < elements.length; ++i) {
+                    if (elements[i].hasAttribute('data-for')) {
+                        elements[i].removeEventListener('click', card.showEditorTable, false);
+                    }
+                }
+
+                /* Set up button event handlers. */
+                card.shadowRoot.querySelector('#accept').removeEventListener('click', card.hideEditor, false);
+                card.shadowRoot.querySelector('#cancel').removeEventListener('click', card.hideEditor, false);
+
+
                 /* Remove drag 'n' drop event handlers. */
                 var elements = document.getElementById('pluginsNav').children;
                 for (var i = 0; i < elements.length; ++i) {
                     elements[i].removeAttribute('draggable', true);
                     elements[i].removeEventListener('dragstart', handlePluginDragStart, false);
+                }
+                elements = card.shadowRoot.querySelector('table');
+                for (var i = 0; i < elements.length; ++i) {
+                    if (elements[i].className.indexOf('loadAfter') != -1 || elements[i].className.indexOf('req') != -1 || elements[i].className.indexOf('inc') != -1) {
+                        elements[i].removeEventListener('drop', handlePluginDrop, false);
+                        elements[i].removeEventListener('dragover', handlePluginDragOver, false);
+                    }
                 }
 
                 /* Disable priority hover in plugins list. */
@@ -77,7 +170,7 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
                 document.getElementsByTagName('header')[0].classList.toggle('editMode', false);
 
                 /* Hide editor. */
-                evt.target.parentElement.parentElement.parentNode.host.classList.toggle('flip');
+                card.classList.toggle('flip');
             }
         }
     },
@@ -121,29 +214,43 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
         }
     },
 
-
-    onMenuItemClick: {
+    onMenuButtonClick: {
         value: function(evt) {
-            if (evt.target.id == 'editMetadata') {
-                /* Show editing controls. */
-                evt.target.parentElement.parentElement.parentNode.host.showEditor();
 
-            } else if (evt.target.id == 'copyMetadata') {
+            /* Open a new plugin menu. */
+            var menu = new PluginMenu();
+            var card = evt.currentTarget.parentElement.parentElement.parentNode.host;
 
-            } else if (evt.target.id == 'clearMetadata') {
-                showMessageDialog('Clear Plugin Metadata', 'Are you sure you want to clear all existing user-added metadata from "' + evt.target.parentElement.parentElement.querySelector('h1').textContent + '"?');
+            menu.setAttribute('data-for', card.id);
+
+            /* To prevent the click event closing this menu just after it was
+               opened, attach an ID to it, then stop the current event and send
+               off a new one. */
+            menu.id = Math.random().toString(36).substr(2) + Math.random().toString(36).substr(2);
+
+            var main = document.getElementById('main');
+            main.appendChild(menu);
+
+            /* Set page position of menu. */
+
+            function getOffset( el, stopEl ) {
+                var _x = 0;
+                var _y = 0;
+                while( el && el != stopEl ) {
+                    _x += el.offsetLeft;
+                    _y += el.offsetTop;
+                    el = el.offsetParent;
+                }
+                return { top: _y, left: _x };
             }
-        }
-    },
+            var offset = getOffset(evt.target, main);
 
-    onMenuClick: {
-        value: function(evt) {
-            var section = evt.currentTarget.parentElement.parentElement;
-            section.querySelector('#editMetadata').addEventListener('click', section.parentNode.host.onMenuItemClick, false);
-            section.querySelector('#copyMetadata').addEventListener('click', section.parentNode.host.onMenuItemClick, false);
-            section.querySelector('#clearMetadata').addEventListener('click', section.parentNode.host.onMenuItemClick, false);
+            menu.style.top = (offset.top + evt.target.offsetHeight + 10) + 'px';
+            menu.style.right = (main.offsetWidth - offset.left - evt.target.offsetWidth - 10) + 'px';
 
-            section.querySelector('#menu').classList.toggle('hidden');
+            evt.stopPropagation();
+
+            menu.dispatchEvent(new CustomEvent('click', { newMenu: true }));
         }
     },
 
@@ -175,10 +282,16 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
             var messages = document.createElement('ul');
             this.appendChild(messages);
 
-            this.shadowRoot.querySelector('#menuButton').addEventListener('click', this.onMenuClick, false);
+            this.shadowRoot.querySelector('#menuButton').addEventListener('click', this.onMenuButtonClick, false);
 
         }
 
+    },
+
+    detachedCallback: {
+        value: function() {
+            this.shadowRoot.querySelector('#menuButton').removeEventListener('click', this.onMenuButtonClick, false);
+        }
     }
 
 });
@@ -218,7 +331,12 @@ var messageDialogProto = Object.create(HTMLDialogElement.prototype, {
 
     onButtonClick: {
         value: function(evt) {
-            evt.currentTarget.parentElement.parentElement.close( evt.target.className == 'accept' );
+            var dialog = evt.currentTarget.parentElement.parentElement;
+
+            dialog.querySelector('.accept').removeEventListener('click', dialog.onButtonClick, false);
+            dialog.querySelector('.cancel').removeEventListener('click', dialog.onButtonClick, false);
+
+            dialog.close( evt.target.className == 'accept' );
         }
     },
 
@@ -270,13 +388,6 @@ var messageDialogProto = Object.create(HTMLDialogElement.prototype, {
             buttons.appendChild(cancel);
         }
 
-    },
-
-    detachedCallback: {
-        value: function() {
-
-            this.removeEventListener('click', this.onButtonClick, false);
-        }
     }
 
 });
@@ -291,7 +402,21 @@ var EditableTableProto = Object.create(HTMLTableElement.prototype, {
 
     removeRow: {
         value: function(evt) {
-            evt.target.parentElement.parentElement.removeChild(evt.target.parentElement);
+            var tr = evt.target.parentElement;
+            var tbody = tr.parentElement
+            var table = tbody.parentElement;
+
+            /* Remove row edit listeners. */
+            var inputs = row.getElementsByTagName('input');
+            for (var i = 0; i < inputs.length; ++i) {
+                inputs[i].removeEventListener('dblclick', toggleInputRO, false);
+            }
+
+            /* Remove deletion listener. */
+            evt.target.removeEventListener('click', table.removeRow, false);
+
+            /* Now remove row. */
+            tbody.removeChild(tr);
         }
     },
 
@@ -347,6 +472,30 @@ var EditableTableProto = Object.create(HTMLTableElement.prototype, {
             this.querySelector('tbody tr:last-child').addEventListener('dblclick', this.addEmptyRow, false);
         }
 
+    },
+
+    detachedCallback: {
+        value: function() {
+            /* Remove event listeners. */
+            var tbody = this.getElementsByTagName('tbody')[0];
+
+
+            /* Remove row edit listeners. */
+            var inputs = tbody.getElementsByTagName('input');
+            for (var i = 0; i < inputs.length; ++i) {
+                inputs[i].removeEventListener('dblclick', toggleInputRO, false);
+            }
+
+            /* Remove deletion listener. */
+            var icons = tbody.getElementsByClassName('fa-trash-o');
+            for (var i = 0; i < icons.length; ++i) {
+                icons[i].removeEventListener('click', this.removeRow, false);
+            }
+
+            /* Remove new row listener. */
+            this.querySelector('tbody tr:last-child').removeEventListener('dblclick', this.addEmptyRow, false);
+
+        }
     },
 
 });

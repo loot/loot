@@ -22,7 +22,7 @@
             position: relative;
             overflow:visible;
             transition: 0.6s;
-            transform-style: flat;
+            transform-style: preserve-3d;
         }
         :host([data-active=false]) #activeTick {
             visibility: hidden;
@@ -37,28 +37,27 @@
             display: none;
         }
 
-        :host(.flip)  {
-            transform: rotateY(180deg);
-        }
-
         #front, #editor {
-            backface-visibility: hidden;
-            transition: 0.6s;
+            display: block;
         }
 
         #editor {
-            transform: rotateY(180deg);
+            transform: rotateY(180deg) translateZ(1px);
             display:none;
+        }
+
+        :host(.flip) {
+            transform: rotateY(180deg);
         }
 
         :host(.flip) #front  {
-            display:none;
+            display: none;
         }
 
         :host(.flip) #editor  {
-            backface-visibility: visible;
-            display:block;
+            display: block;
         }
+
         #icons {
             background: transparent;
             margin: 0;
@@ -74,7 +73,6 @@
             text-align: center;
             display: inline-block;
             margin: 0.2em;
-            cursor: pointer;
         }
         #icons > li:hover {
             color: black;
@@ -84,32 +82,6 @@
             text-align: center;
             margin: 0.2em;
             cursor: pointer;
-        }
-        #menu {
-            background: white;
-            box-shadow:0 0 3px 0px rgba(0,0,0,0.5);
-            font:10pt/1.5 Helvetica,sans-serif;
-            list-style-type: none;
-            position: absolute;
-            right: 0.5em;
-            width: 14em;
-            z-index: 2;
-            text-align: left;
-            opacity: 1;
-            padding:0;
-            color: black;
-            top: 2em;
-        }
-        #menu > li {
-            padding: 0.2em 0.5em;
-            cursor: pointer;
-            display: block;
-        }
-        #menu > li:hover {
-            background:#e3e3e3;
-        }
-        #menu span {
-            padding-right: 0.4em;
         }
         ::content h1, h1 {
             margin: 0;
@@ -175,11 +147,6 @@
                 <li id="hasUserEdits" class="fa fa-user" title="Has User Metadata"></li>
                 <li id="menuButton" class="fa fa-ellipsis-v fa-lg">
                 </li>
-            </ol>
-            <ol id="menu" class="hidden">
-                <li id="editMetadata"><span class="fa fa-pencil fa-fw"></span>Edit Metadata</li>
-                <li id="copyMetadata"><span class="fa fa-copy fa-fw"></span>Copy Metadata As Text</li>
-                <li id="clearMetadata"><span class="fa fa-trash-o fa-fw"></span>Clear User Metadata</li>
             </ol>
         </section>
         <section id="editor">
@@ -293,6 +260,34 @@
             <content select=".priority"></content>
         </a>
     </template>
+    <template id="pluginMenu">
+        <style>
+        @import 'css/font-awesome.min.css';
+        :host {
+            background: white;
+            box-shadow:0 0 3px 0px rgba(0,0,0,0.5);
+            font:10pt/1.5 Helvetica,sans-serif;
+            position: absolute;
+            z-index: 5;
+            width: 14em;
+            text-align: left;
+            padding:0;
+        }
+        div {
+            padding: 0.2em 0.5em;
+            cursor: pointer;
+        }
+        div:hover {
+            background: #e3e3e3;
+        }
+        span {
+            padding-right: 0.4em;
+        }
+        </style>
+        <div id="editMetadata"><span class="fa fa-pencil fa-fw"></span>Edit Metadata</div>
+        <div id="copyMetadata"><span class="fa fa-copy fa-fw"></span>Copy Metadata As Text</div>
+        <div id="clearMetadata"><span class="fa fa-trash-o fa-fw"></span>Clear User Metadata</div>
+    </template>
 
     <template id="fileRow">
         <tr>
@@ -349,7 +344,7 @@
             <td><input class="registry" type="text" readonly>
             <td class="fa fa-trash-o fa-fw">
     </template>
-    
+
     <noscript>The LOOT Report requires Javascript to be enabled in order to function.</noscript>
     <header>
         <div id="headerOverlay"></div>
