@@ -176,12 +176,16 @@ dialog {
     max-width: 40em;
 }
 dialog > h1 {
+    font-weight: normal;
+    text-align: center;
+}
+dialog[is=message-dialog] > h1 {
     margin: 0;
     margin-bottom: 1em;
-    font-weight: normal;
     display: inline-block;
+    text-align: left;
 }
-dialog > span:first-child {
+dialog[is=message-dialog] > span:first-child {
     font-size: 4em;
     position: relative;
     margin-right: 0.5em;

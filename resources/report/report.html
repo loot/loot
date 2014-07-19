@@ -111,19 +111,21 @@
         #menu span {
             padding-right: 0.4em;
         }
-        ::content h1 {
+        ::content h1, h1 {
             margin: 0;
             font-weight: normal;
             font-size: 1.2em;
             display: inline-block;
         }
-        ::content .version {
+        ::content .version, .version {
             display: inline-block;
             margin-left: 1em;
+            color:#6394F8;
         }
-        ::content .crc {
+        ::content .crc, .crc {
             display: inline-block;
             margin-left: 1em;
+            color:#BC8923;
         }
         .hidden, ::content .hidden {
             display: none;
@@ -184,60 +186,74 @@
             <h1></h1>
             <span class="version"></span>
             <span class="crc"></span>
-            <input type="checkbox" id="editorEnableEdits">
-            <label for="editorEnableEdits">Enable Edits</label><br>
-            <input type="checkbox" id="editorGlobalPriority">
-            <label for="editorGlobalPriority" title="Global priorities are compared against all other plugins. Normal priorities are compared against only conflicting plugins.">Global Priority</label><br>
-            <label for="editorPriorityValue">Priority Value</label>
-            <input id="editorPriorityValue" type="number" max="999999" min="-999999" step="1">
+            <div>
+                <input type="checkbox" id="editorEnableEdits">
+                <label for="editorEnableEdits">Enable Edits</label><br>
+                <input type="checkbox" id="editorGlobalPriority">
+                <label for="editorGlobalPriority" title="Global priorities are compared against all other plugins. Normal priorities are compared against only conflicting plugins.">Global Priority</label><br>
+                <label for="editorPriorityValue">Priority Value</label>
+                <input id="editorPriorityValue" type="number" max="999999" min="-999999" step="1">
+            </div>
             <div id="tableTabs">
-                <span class="selected" data-for="loadAfter">Load After</span><span data-for="req">Requirements</span><span data-for="inc">Incompatibilities</span><span data-for="message">Messages</span><span data-for="tags">Bash Tags</span><span data-for="dirty">Dirty Info</span>
-                <table id="loadAfter" class="editable">
+                <span class="selected" data-for="loadAfter">Load After</span>
+                <span data-for="req">Requirements</span>
+                <span data-for="inc">Incompatibilities</span>
+                <span data-for="message">Messages</span>
+                <span data-for="tags">Bash Tags</span>
+                <span data-for="dirty">Dirty Info</span>
+
+                <table is="editable-table" id="loadAfter" data-template="fileRow">
                     <thead>
                         <tr><th>Filename</th><th>Display Name</th><th>Condition</th><th></th></tr>
                     </thead>
-                    <tbody data-template="fileRow">
+                    <tbody>
                         <!-- File rows go here. -->
+                        <tr><td colspan="4">Add new row...</td><td></td></tr>
                     </tbody>
                 </table>
-                <table id="req" class="editable hidden">
+                <table is="editable-table" id="req" class="hidden" data-template="fileRow">
                     <thead>
                         <tr><th>Filename</th><th>Display Name</th><th>Condition</th><th></th></tr>
                     </thead>
-                    <tbody data-template="fileRow">
+                    <tbody>
                         <!-- File rows go here. -->
+                        <tr><td colspan="4">Add new row...</td><td></td></tr>
                     </tbody>
                 </table>
-                <table id="inc" class="editable hidden">
+                <table is="editable-table" id="inc" class="hidden" data-template="fileRow">
                     <thead>
                         <tr><th>Filename</th><th>Display Name</th><th>Condition</th><th></th></tr>
                     </thead>
-                    <tbody data-template="fileRow">
+                    <tbody>
                         <!-- File rows go here. -->
+                        <tr><td colspan="4">Add new row...</td><td></td></tr>
                     </tbody>
                 </table>
-                <table id="message" class="editable hidden">
+                <table is="editable-table" id="message" class="hidden" data-template="messageRow">
                     <thead>
                         <tr><th>Type</th><th>Content</th><th>Condition</th><th>Language</th><th></th></tr>
                     </thead>
-                    <tbody data-template="messageRow">
+                    <tbody>
                         <!-- Message rows go here. -->
+                        <tr><td colspan="4">Add new row...</td><td></td></tr>
                     </tbody>
                 </table>
-                <table id="tags" class="editable hidden">
+                <table is="editable-table" id="tags" class="hidden" data-template="tagRow">
                     <thead>
                         <tr><th>Add/Remove</th><th>Bash Tag</th><th>Condition</th><th></th></tr>
                     </thead>
-                    <tbody data-template="tagRow">
+                    <tbody>
                         <!-- Bash Tag rows go here. -->
+                        <tr><td colspan="4">Add new row...</td><td></td></tr>
                     </tbody>
                 </table>
-                <table id="dirty" class="editable hidden">
+                <table is="editable-table" id="dirty" class="hidden" data-template="dirtyInfoRow">
                     <thead>
                         <tr><th>CRC</th><th>ITM Count</th><th>UDR Count</th><th>Deleted Navmeshes</th><th>Cleaning Utility</th><th></th></tr>
                     </thead>
-                    <tbody data-template="dirtyInfoRow">
+                    <tbody>
                         <!-- Dirty info rows go here. -->
+                        <tr><td colspan="4">Add new row...</td><td></td></tr>
                     </tbody>
                 </table>
             </div>
@@ -471,11 +487,12 @@ along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
             <option value="3">High</option>
         </select><br>
         <!-- Need to add an editable multi-column game list here. -->
-        <table id="gameTable" class="editable">
+        <table is="editable-table" id="gameTable" data-template="gameRow">
             <thead>
                 <tr><th>Name<th>Base Game<th>LOOT Folder<th>Master File<th>Masterlist Repository URL<th>Masterlist Repository Branch<th>Install Path<th>Install Path Registry Key<th>
-            <tbody data-template="gameRow">
+            <tbody>
                 <!-- Game rows go here. -->
+                <tr><td colspan="4">Add new row...</td><td></td></tr>
         </table>
         <p>Language and game changes will be applied after LOOT is restarted.
         <hr>

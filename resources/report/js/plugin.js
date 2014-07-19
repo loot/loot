@@ -130,6 +130,12 @@ function Plugin(obj) {
             card.shadowRoot.querySelector('#editor .crc').textContent = this.crc;
         }
 
+        /* Fill in editor table data. */
+        var tables = card.shadowRoot.getElementsByTagName('editable-table');
+        for (var i = 0; i < tables.length; ++i) {
+
+        }
+
         document.getElementById('main').appendChild(card);
     }
 

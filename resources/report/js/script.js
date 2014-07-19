@@ -230,116 +230,7 @@ function clearMetadata(evt) {
     var filename = evt.target.getAttribute('data-target');
     showMessageDialog('Clear Plugin Metadata', 'Are you sure you want to clear all existing user-added metadata from "' + filename + '"?');
 }
-function removeTableRow(evt) {
-    evt.target.parentElement.parentElement.removeChild(evt.target.parentElement);
-}
-function addNewTableRow(evt) {
-    /* Create new row. */
-    var tableBody = evt.currentTarget.parentElement;
-    var rowTemplateId = tableBody.getAttribute('data-template');
-    var content = document.getElementById(rowTemplateId).content;
-    var row = document.importNode(content, true);
-    tableBody.insertBefore(row, evt.currentTarget);
-    row = evt.currentTarget.previousElementSibling;
 
-    /* Enable row editing. */
-    var inputs = row.getElementsByTagName('input');
-    for (var i = 0; i < inputs.length; ++i) {
-        inputs[i].removeAttribute('readonly');
-        inputs[i].addEventListener('dblclick', toggleInputRO, false);
-    }
-    /* Add deletion listener. */
-    row.getElementsByClassName('fa-trash-o')[0].addEventListener('click', removeTableRow, false);
-}
-function addTableRow(tableBody, tableData) {
-    var rowTemplateId = tableBody.getAttribute('data-template');
-    var content = document.getElementById(rowTemplateId).content;
-    var row = document.importNode(content, true);
-    tableBody.insertBefore(row, tableBody.lastElementChild);
-    row = tableBody.lastElementChild.previousElementSibling;
-
-    /* Data is an object with keys that match element class names. */
-    for (var key in tableData) {
-        row.getElementsByClassName(key)[0].value = tableData[key];
-    }
-
-    /* Enable row editing. */
-    var inputs = row.getElementsByTagName('input');
-    for (var i = 0; i < inputs.length; ++i) {
-        inputs[i].addEventListener('dblclick', toggleInputRO, false);
-    }
-    /* Add deletion listener. */
-    row.getElementsByClassName('fa-trash-o')[0].addEventListener('click', removeTableRow, false);
-}
-function setupTable(tableBody) {
-    /* Add "add new row" row. */
-    var tr = document.createElement('tr');
-    var td = document.createElement('td');
-    var td2 = document.createElement('td');
-    td.textContent = 'Add new row...';
-    td.setAttribute('colspan', 4);
-    tr.appendChild(td);
-    tr.appendChild(td2);
-    tableBody.appendChild(tr);
-
-    /* Add new row listener. */
-    tr.addEventListener('dblclick', addNewTableRow, false);
-}
-function showEditorTable(evt) {
-    var tableClass = evt.target.getAttribute('data-for');
-    var tables = evt.target.parentElement.getElementsByTagName('table');
-    for (var i = 0; i < tables.length; ++i) {
-        if (tables[i].className.indexOf(tableClass) == -1) {
-            hideElement(tables[i]);
-        } else {
-            showElement(tables[i]);
-        }
-    }
-    evt.target.parentElement.getElementsByClassName('selected')[0].classList.toggle('selected');
-    evt.target.classList.toggle('selected');
-}
-function hideEditor(evt) {
-    var isValid = true;
-    if (evt.target.className.indexOf('accept') != -1) {
-        /* First validate table inputs. */
-        var inputs = evt.target.parentElement.parentElement.getElementsByTagName('input');
-        /* If an input is readonly, it doesn't validate, so check required / value length explicitly.
-        */
-        for (var i = 0; i < inputs.length; ++i) {
-            if (inputs[i].readOnly) {
-                if (inputs[i].required && inputs[i].value.length == 0) {
-                    isValid = false;
-                    console.log(inputs[i]);
-                    inputs[i].readOnly = false;
-                }
-            } else if (!inputs[i].checkValidity()) {
-                isValid = false;
-                console.log(inputs[i]);
-            }
-        }
-    }
-    if (isValid) {
-        /* Remove drag 'n' drop event handlers. */
-        var elements = document.getElementById('pluginsNav').children;
-        for (var i = 0; i < elements.length; ++i) {
-            elements[i].removeAttribute('draggable', true);
-            elements[i].removeEventListener('dragstart', handlePluginDragStart, false);
-        }
-
-        /* Disable priority hover in plugins list. */
-        document.getElementById('pluginsNav').classList.toggle('editMode', false);
-
-        /* Enable header buttons. */
-        document.getElementsByTagName('header')[0].classList.toggle('editMode', false);
-
-        /* Hide editor. */
-        var section = evt.target.parentElement.parentElement.parentElement;
-        section.classList.toggle('flip');
-
-        /* Now delete editor panel. */
-        section.removeChild(section.getElementsByClassName('editor')[0]);
-    }
-}
 function handlePluginDrop(evt) {
     evt.stopPropagation();
 
@@ -360,64 +251,7 @@ function handlePluginDragOver(evt) {
     evt.preventDefault();
     evt.dataTransfer.dropEffect = 'copy';
 }
-function showEditor(evt) {
-        /* Editor is attached to plugins on-demand. */
-        var content = document.getElementById('pluginEditor').content;
-        var editor = document.importNode(content, true);
-        var sectionId = evt.target.getAttribute('data-target');
-        var section = document.getElementById(sectionId);
-        section.appendChild(editor);
-        editor = section.lastElementChild;
 
-        /* Fill in data. */
-        editor.getElementsByTagName('h1')[0].textContent = section.getElementsByTagName('h1')[0].textContent;
-        editor.getElementsByClassName('crc')[0].textContent = section.getElementsByClassName('crc')[0].textContent;
-        editor.getElementsByClassName('version')[0].textContent = section.getElementsByClassName('version')[0].textContent;
-
-        /* Initialise tables. */
-        var tables = editor.getElementsByTagName('table');
-        for (var i = 0; i < tables.length; ++i) {
-            setupTable(tables[i].getElementsByTagName('tbody')[0]);
-        }
-
-        /* Fill in table data. */
-
-        /* Set up table tab event handlers. */
-        var elements = editor.getElementsByClassName('tableTabs')[0].children;
-        for (var i = 0; i < elements.length; ++i) {
-            var tableClass = elements[i].getAttribute('data-for');
-            if (tableClass) {
-                elements[i].addEventListener('click', showEditorTable, false);
-            }
-        }
-
-        /* Set up button event handlers. */
-        editor.getElementsByClassName('accept')[0].addEventListener('click', hideEditor, false);
-        editor.getElementsByClassName('cancel')[0].addEventListener('click', hideEditor, false);
-
-        /* Set up drag 'n' drop event handlers. */
-        elements = document.getElementById('pluginsNav').children;
-        for (var i = 0; i < elements.length; ++i) {
-            elements[i].setAttribute('draggable', true);
-            elements[i].addEventListener('dragstart', handlePluginDragStart, false);
-        }
-        elements = editor.getElementsByTagName('table');
-        for (var i = 0; i < elements.length; ++i) {
-            if (elements[i].className.indexOf('loadAfter') != -1 || elements[i].className.indexOf('req') != -1 || elements[i].className.indexOf('inc') != -1) {
-                elements[i].addEventListener('drop', handlePluginDrop, false);
-                elements[i].addEventListener('dragover', handlePluginDragOver, false);
-            }
-        }
-
-        /* Enable priority hover in plugins list. */
-        document.getElementById('pluginsNav').classList.toggle('editMode', true);
-
-        /* Disable header buttons. */
-        document.getElementsByTagName('header')[0].classList.toggle('editMode', true);
-
-        /* Finally, show editor. */
-        section.classList.toggle('flip');
-}
 function areSettingsValid() {
     /* First validate table inputs. */
     var inputs = document.getElementById('settings').getElementsByTagName('input');
@@ -682,9 +516,7 @@ function initGlobalVars() {
                         /* Now fill game lists/table. */
                         var gameSelect = document.getElementById('defaultGameSelect');
                         var gameMenu = document.getElementById('gameMenu').firstElementChild;
-                        var gameTableBody = document.getElementById('gameTable').getElementsByTagName('tbody')[0];
-                        /* Add row for creating new rows. */
-                        setupTable(gameTableBody);
+                        var gameTable = document.getElementById('gameTable');
                         for (var i = 0; i < loot.settings.games.length; ++i) {
                             var option = document.createElement('option');
                             option.value = loot.settings.games[i].folder;
@@ -697,7 +529,7 @@ function initGlobalVars() {
                             li.textContent = loot.settings.games[i].name;
                             gameMenu.appendChild(li);
 
-                            addTableRow(gameTableBody, loot.settings.games[i]);
+                            gameTable.addRow(loot.settings.games[i]);
                         }
 
                         gameSelect.value = loot.settings.game;

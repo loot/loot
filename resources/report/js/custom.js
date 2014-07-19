@@ -25,10 +25,108 @@
 /* Create a <plugin-card> element type. */
 var pluginCardProto = Object.create(HTMLElement.prototype, {
 
+    showEditorTable: {
+        value: function(evt) {
+            var tableClass = evt.target.getAttribute('data-for');
+            var tables = evt.target.parentElement.getElementsByTagName('table');
+            for (var i = 0; i < tables.length; ++i) {
+                if (tables[i].className.indexOf(tableClass) == -1) {
+                    hideElement(tables[i]);
+                } else {
+                    showElement(tables[i]);
+                }
+            }
+            evt.target.parentElement.getElementsByClassName('selected')[0].classList.toggle('selected');
+            evt.target.classList.toggle('selected');
+        }
+    },
+
+    hideEditor: {
+        value: function(evt) {
+            var isValid = true;
+            if (evt.target.className.indexOf('accept') != -1) {
+                /* First validate table inputs. */
+                var inputs = evt.target.parentElement.parentElement.getElementsByTagName('input');
+                /* If an input is readonly, it doesn't validate, so check required / value length explicitly.
+                */
+                for (var i = 0; i < inputs.length; ++i) {
+                    if (inputs[i].readOnly) {
+                        if (inputs[i].required && inputs[i].value.length == 0) {
+                            isValid = false;
+                            console.log(inputs[i]);
+                            inputs[i].readOnly = false;
+                        }
+                    } else if (!inputs[i].checkValidity()) {
+                        isValid = false;
+                        console.log(inputs[i]);
+                    }
+                }
+            }
+            if (isValid) {
+                /* Remove drag 'n' drop event handlers. */
+                var elements = document.getElementById('pluginsNav').children;
+                for (var i = 0; i < elements.length; ++i) {
+                    elements[i].removeAttribute('draggable', true);
+                    elements[i].removeEventListener('dragstart', handlePluginDragStart, false);
+                }
+
+                /* Disable priority hover in plugins list. */
+                document.getElementById('pluginsNav').classList.toggle('editMode', false);
+
+                /* Enable header buttons. */
+                document.getElementsByTagName('header')[0].classList.toggle('editMode', false);
+
+                /* Hide editor. */
+                evt.target.parentElement.parentElement.parentElement.classList.toggle('flip');
+            }
+        }
+    },
+
+    showEditor: {
+        value: function() {
+
+            /* Set up table tab event handlers. */
+            var elements = this.shadowRoot.getElementsByClassName('tableTabs')[0].children;
+            for (var i = 0; i < elements.length; ++i) {
+                if (elements[i].hasAttribute('data-for')) {
+                    elements[i].addEventListener('click', showEditorTable, false);
+                }
+            }
+
+            /* Set up button event handlers. */
+            editor.getElementsByClassName('accept')[0].addEventListener('click', hideEditor, false);
+            editor.getElementsByClassName('cancel')[0].addEventListener('click', hideEditor, false);
+
+            /* Set up drag 'n' drop event handlers. */
+            elements = document.getElementById('pluginsNav').children;
+            for (var i = 0; i < elements.length; ++i) {
+                elements[i].setAttribute('draggable', true);
+                elements[i].addEventListener('dragstart', handlePluginDragStart, false);
+            }
+            elements = this.shadowRoot.getElementsByTagName('editable-table');
+            for (var i = 0; i < elements.length; ++i) {
+                if (elements[i].className.indexOf('loadAfter') != -1 || elements[i].className.indexOf('req') != -1 || elements[i].className.indexOf('inc') != -1) {
+                    elements[i].addEventListener('drop', handlePluginDrop, false);
+                    elements[i].addEventListener('dragover', handlePluginDragOver, false);
+                }
+            }
+
+            /* Enable priority hover in plugins list. */
+            document.getElementById('pluginsNav').classList.toggle('editMode', true);
+            /* Disable header buttons. */
+            document.getElementsByTagName('header')[0].classList.toggle('editMode', true);
+
+            /* Now show editor. */
+            this.classList.toggle('flip');
+        }
+    },
+
 
     onMenuItemClick: {
         value: function(evt) {
             if (evt.target.id == 'editMetadata') {
+                /* Show editing controls. */
+                evt.target.parentElement.parentElement.parentNode.host.showEditor();
 
             } else if (evt.target.id == 'copyMetadata') {
 
@@ -115,8 +213,7 @@ var PluginListItem = document.registerElement('plugin-li', {
     extends: 'li'
 });
 
-/* Create a <message-dialog> element type that extends from <dialog>.
-   Use a data-type member on the element to style its type. */
+/* Create a <message-dialog> element type that extends from <dialog>. */
 var messageDialogProto = Object.create(HTMLDialogElement.prototype, {
 
     onButtonClick: {
@@ -186,4 +283,74 @@ var messageDialogProto = Object.create(HTMLDialogElement.prototype, {
 var MessageDialog = document.registerElement('message-dialog', {
     prototype: messageDialogProto,
     extends: 'dialog'
+});
+
+
+/* Create a <editable-table> element type that extends from <table>. */
+var EditableTableProto = Object.create(HTMLTableElement.prototype, {
+
+    removeRow: {
+        value: function(evt) {
+            evt.target.parentElement.parentElement.removeChild(evt.target.parentElement);
+        }
+    },
+
+    addEmptyRow: {
+        value: function(evt) {
+            /* Create new row. */
+            var table = evt.currentTarget.parentElement.parentElement;
+            var rowTemplateId = table.getAttribute('data-template');
+            var content = document.getElementById(rowTemplateId).content;
+            var row = document.importNode(content, true);
+            table.getElementsByTagName('tbody')[0].insertBefore(row, evt.currentTarget);
+            row = evt.currentTarget.previousElementSibling;
+
+            /* Enable row editing. */
+            var inputs = row.getElementsByTagName('input');
+            for (var i = 0; i < inputs.length; ++i) {
+                inputs[i].removeAttribute('readonly');
+                inputs[i].addEventListener('dblclick', toggleInputRO, false);
+            }
+            /* Add deletion listener. */
+            row.getElementsByClassName('fa-trash-o')[0].addEventListener('click', this.removeRow, false);
+        }
+    },
+
+    addRow: {
+        value: function(tableData) {
+            var rowTemplateId = this.getAttribute('data-template');
+            var content = document.getElementById(rowTemplateId).content;
+            var row = document.importNode(content, true);
+            var tbody = this.getElementsByTagName('tbody')[0];
+            tbody.insertBefore(row, tbody.lastElementChild);
+            row = tbody.lastElementChild.previousElementSibling;
+
+            /* Data is an object with keys that match element class names. */
+            for (var key in tableData) {
+                row.getElementsByClassName(key)[0].value = tableData[key];
+            }
+
+            /* Enable row editing. */
+            var inputs = row.getElementsByTagName('input');
+            for (var i = 0; i < inputs.length; ++i) {
+                inputs[i].addEventListener('dblclick', toggleInputRO, false);
+            }
+            /* Add deletion listener. */
+            row.getElementsByClassName('fa-trash-o')[0].addEventListener('click', this.removeRow, false);
+        }
+    },
+
+    createdCallback: {
+
+        value: function() {
+            /* Add new row listener. */
+            this.querySelector('tbody tr:last-child').addEventListener('dblclick', this.addEmptyRow, false);
+        }
+
+    },
+
+});
+var EditableTable = document.registerElement('editable-table', {
+    prototype: EditableTableProto,
+    extends: 'table'
 });
