@@ -28,16 +28,22 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
 
     onMenuItemClick: {
         value: function(evt) {
+            if (evt.target.id == 'editMetadata') {
 
+            } else if (evt.target.id == 'copyMetadata') {
+
+            } else if (evt.target.id == 'clearMetadata') {
+                showMessageDialog('Clear Plugin Metadata', 'Are you sure you want to clear all existing user-added metadata from "' + evt.target.parentElement.parentElement.querySelector('h1').textContent + '"?');
+            }
         }
     },
 
     onMenuClick: {
         value: function(evt) {
             var section = evt.currentTarget.parentElement.parentElement;
-            section.querySelector('#editMetadata').addEventListener('click', this.onMenuItemClick, false);
-            section.querySelector('#copyMetadata').addEventListener('click', this.onMenuItemClick, false);
-            section.querySelector('#clearMetadata').addEventListener('click', this.onMenuItemClick, false);
+            section.querySelector('#editMetadata').addEventListener('click', section.parentNode.host.onMenuItemClick, false);
+            section.querySelector('#copyMetadata').addEventListener('click', section.parentNode.host.onMenuItemClick, false);
+            section.querySelector('#clearMetadata').addEventListener('click', section.parentNode.host.onMenuItemClick, false);
 
             section.querySelector('#menu').classList.toggle('hidden');
         }
@@ -60,6 +66,16 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
             var version = document.createElement('div');
             version.className = 'version';
             this.appendChild(version);
+
+            var tagAdd = document.createElement('div');
+            tagAdd.className = 'tag add';
+            this.appendChild(tagAdd);
+            var tagRemove = document.createElement('div');
+            tagRemove.className = 'tag remove';
+            this.appendChild(tagRemove);
+
+            var messages = document.createElement('ul');
+            this.appendChild(messages);
 
             this.shadowRoot.querySelector('#menuButton').addEventListener('click', this.onMenuClick, false);
 

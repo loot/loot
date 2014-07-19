@@ -34,18 +34,24 @@ function Plugin(obj) {
     this.masterlist = obj.masterlist;
     this.userlist = obj.userlist;
 
+    this.modPriority = obj.modPriority;
+    this.isGlobalPriority = obj.isGlobalPriority;
+    this.messages = obj.messages;
+    this.tags = obj.tags;
+    this.isDirty = obj.isDirty;
+
     this.id = this.name.replace(/\s+/g, '');
 
     Plugin.prototype.getTagsStrings = function () {
         var tagsAdded = [];
         var tagsRemoved = [];
 
-        if (this.masterlist && this.masterlist.tag) {
-            for (var i = 0; i < this.masterlist.tag.length; ++i) {
-                if (this.masterlist.tag[i].name[0] == '-') {
-                    tagsRemoved.push(this.masterlist.tag[i].name);
+        if (this.tags) {
+            for (var i = 0; i < this.tags.length; ++i) {
+                if (this.tags[i].name[0] == '-') {
+                    tagsRemoved.push(this.tags[i].name.substr(1));
                 } else {
-                    tagsAdded.push(this.masterlist.tag[i].name);
+                    tagsAdded.push(this.tags[i].name);
                 }
             }
         }
@@ -53,28 +59,7 @@ function Plugin(obj) {
            Prefer the removed list. */
         for (var i = 0; i < tagsAdded.length; ++i) {
             for (var j = 0; j < tagsRemoved.length; ++j) {
-                if (tagsRemoved[j].name.toLowerCase() == tagsAdded[i].name.toLowerCase()) {
-                    /* Remove tag from the tagsAdded array. */
-                    tagsAdded.splice(i, 1);
-                    --i;
-                }
-            }
-        }
-
-        if (this.userlist && this.userlist.tag) {
-            for (var i = 0; i < this.userlist.tag.length; ++i) {
-                if (this.userlist.tag[i][0] == '-') {
-                    tagsRemoved.push(this.userlist.tag[i]);
-                } else {
-                    tagsAdded.push(this.userlist.tag[i]);
-                }
-            }
-        }
-        /* Now again make sure that the same tag doesn't appear in both arrays.
-           Prefer the removed list. */
-        for (var i = 0; i < tagsAdded.length; ++i) {
-            for (var j = 0; j < tagsRemoved.length; ++j) {
-                if (tagsRemoved[j].name.toLowerCase() == tagsAdded[i].name.toLowerCase()) {
+                if (tagsRemoved[j].toLowerCase() == tagsAdded[i].toLowerCase()) {
                     /* Remove tag from the tagsAdded array. */
                     tagsAdded.splice(i, 1);
                     --i;
@@ -95,40 +80,67 @@ function Plugin(obj) {
         this.card = card;
 
         card.id = this.id;
-        card.querySelector('h1').textContent = this.name;
-        if (this.crc != '0') {
-            card.querySelector('.crc').textContent = this.crc;
-        }
-        card.querySelector('.version').textContent = this.version;
 
         card.setAttribute('data-active', this.isActive);
         card.setAttribute('data-dummy', this.isDummy);
         card.setAttribute('data-bsa', this.loadsBSA);
         card.setAttribute('data-edits', this.userlist != undefined);
 
+        /* Fill in name, version, CRC. */
+        card.querySelector('h1').textContent = this.name;
+        card.querySelector('.version').textContent = this.version;
+        if (this.crc != '0') {
+            card.querySelector('.crc').textContent = this.crc;
+        }
+
+        /* Fill in Bash Tag suggestions. */
+        var tags = this.getTagsStrings();
+        if (tags.tagsAdded) {
+            card.getElementsByClassName('tag add')[0].textContent = tags.tagsAdded;
+        } else {
+            card.getElementsByClassName('tag add')[0].classList.toggle('hidden');
+        }
+        if (tags.tagsRemoved) {
+            card.getElementsByClassName('tag remove')[0].textContent = tags.tagsRemoved;
+        } else {
+            card.getElementsByClassName('tag remove')[0].classList.toggle('hidden');
+        }
+
+        /* Fill in messages. */
+        if (this.messages && this.messages.length != 0) {
+            this.messages.forEach(function(message) {
+                var messageLi = document.createElement('li');
+                messageLi.className = message.type;
+                // Use the Marked library for Markdown formatting support.
+                messageLi.innerHTML = marked(message.content[0].str);
+                card.getElementsByTagName('ul')[0].appendChild(messageLi);
+
+            });
+        } else {
+            card.getElementsByTagName('ul')[0].classList.toggle('hidden');
+        }
+
+        /* The content elements steal the name, CRC and version, so they
+           don't get distributed into the editor part of the shadow DOM.
+           Update the editor elements manually. */
+
+        card.shadowRoot.querySelector('#editor h1').textContent = this.name;
+        card.shadowRoot.querySelector('#editor .version').textContent = this.version;
+        if (this.crc != '0') {
+            card.shadowRoot.querySelector('#editor .crc').textContent = this.crc;
+        }
+
         document.getElementById('main').appendChild(card);
     }
 
     Plugin.prototype.getPriorityString = function() {
-        if (this.userlist) {
-            var priorityText = 'Priority: ' + this.userlist.modPriority + ', Global: ';
-            if (this.userlist.isGlobalPriority) {
-                priorityText += '✓';
-            } else {
-                priorityText += '✗';
-            }
-            return priorityText;
-        } else if (this.masterlist) {
-            var priorityText = 'Priority: ' + this.masterlist.modPriority + ', Global: ';
-            if (this.masterlist.isGlobalPriority) {
-                priorityText += '✓';
-            } else {
-                priorityText += '✗';
-            }
-            return priorityText;
+        var priorityText = 'Priority: ' + this.modPriority + ', Global: ';
+        if (this.isGlobalPriority) {
+            priorityText += '✓';
         } else {
-            return 'Priority: 0, Global: ✗';
+            priorityText += '✗';
         }
+        return priorityText;
     }
 
     Plugin.prototype.createListItem = function() {

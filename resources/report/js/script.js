@@ -763,42 +763,21 @@ function updateInterfaceWithGameInfo(response) {
             ++activePluginNo;
         }
 
-        /*if (plugin.isDirty) {
+        if (plugin.isDirty) {
             ++dirtyPluginNo;
-        }*/
-
-/*
-        var tags = getTagsStrings(plugin);
-        if (tags.tagsAdded) {
-            clone.getElementsByClassName('tag add')[0].textContent = tags.tagsAdded;
-        } else {
-            hideElement(clone.getElementsByClassName('tag add')[0]);
-        }
-        if (tags.tagsRemoved) {
-            clone.getElementsByClassName('tag remove')[0].textContent = tags.tagsRemoved;
-        } else {
-            hideElement(clone.getElementsByClassName('tag remove')[0]);
         }
 
-        if (plugin.masterlist && plugin.masterlist.msg && plugin.masterlist.msg.length != 0) {
-            plugin.masterlist.msg.forEach(function(message) {
-                var messageLi = document.createElement('li');
-                messageLi.className = message.type;
-                // Use the Marked library for Markdown formatting support.
-                messageLi.innerHTML = marked(message.content[0].str);
-                clone.getElementsByTagName('ul')[0].appendChild(messageLi);
+        if (plugin.messages && plugin.messages.length != 0) {
+            plugin.messages.forEach(function(message) {
 
-                if (messageLi.className == 'warn') {
+                if (message.type == 'warn') {
                     warnMessageNo++;
-                } else if (messageLi.className == 'error') {
+                } else if (message.type == 'error') {
                     errorMessageNo++;
                 }
                 totalMessageNo++;
             });
-        } else {
-            clone.getElementsByTagName('ul')[0].className += ' hidden';
         }
-*/
     });
     document.getElementById('filterTotalMessageNo').textContent = totalMessageNo;
     document.getElementById('totalMessageNo').textContent = totalMessageNo;

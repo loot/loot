@@ -290,9 +290,14 @@ li.warn{
 }
 .tag.add {
     color:green;
+    margin-left: 1.75em;
 }
 .tag.remove {
     color:red;
+    margin-left: 1.75em;
+}
+plugin-card > ul {
+    margin-left: 1.75em;
 }
 
 #settings {
