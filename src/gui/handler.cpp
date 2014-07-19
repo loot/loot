@@ -260,6 +260,7 @@ namespace loot {
             if (!ulistPlugin.HasNameOnly()) {
                 // Now add the masterlist metadata to the pluginNode.
 
+                pluginNode["userlist"]["enabled"] = ulistPlugin.Enabled();
                 pluginNode["userlist"]["modPriority"] = modulo(ulistPlugin.Priority(), max_priority);
                 pluginNode["userlist"]["isGlobalPriority"] = (abs(ulistPlugin.Priority()) >= max_priority);
                 pluginNode["userlist"]["after"] = ulistPlugin.LoadAfter();

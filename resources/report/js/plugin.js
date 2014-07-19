@@ -173,6 +173,15 @@ function Plugin(obj) {
             card.shadowRoot.querySelector('#editor .crc').textContent = this.crc;
         }
 
+        /* Fill in the editor input values. */
+        if (this.userlist && !this.userlist.enabled) {
+            card.shadowRoot.querySelector('#enableEdits').checked = false;
+        } else {
+            card.shadowRoot.querySelector('#enableEdits').checked = true;
+        }
+        card.shadowRoot.querySelector('#globalPriority').value = this.globalPriority;
+        card.shadowRoot.querySelector('#priorityValue').value = this.modPriority;
+
         /* Fill in editor table data. */
         var tables = card.shadowRoot.getElementsByTagName('table');
         for (var i = 0; i < tables.length; ++i) {
