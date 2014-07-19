@@ -77,7 +77,7 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
                 document.getElementsByTagName('header')[0].classList.toggle('editMode', false);
 
                 /* Hide editor. */
-                evt.target.parentElement.parentElement.parentElement.classList.toggle('flip');
+                evt.target.parentElement.parentElement.parentNode.host.classList.toggle('flip');
             }
         }
     },

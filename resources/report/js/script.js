@@ -82,10 +82,7 @@ function toggleDisplayCSS(evt) {
         }
     }
 }
-function getConflictingPlugins(filename) {
-    /* This would be a C++ function interface, but using a dummy function to test the UI. */
-    return ['Skyrim.esm', 'Unofficial Skyrim Patch.esp', 'Wyrmstooth.esp', 'RaceMenu.esp', 'Run For Your Lives.esp'];
-}
+
 function togglePlugins(evt) {
     var sections = document.getElementById('main').children;
     var entries = document.getElementById('pluginsNav').children;
@@ -204,33 +201,53 @@ function openReadme(evt) {
     });
 }
 function updateMasterlist(evt) {
-
+    var request_id = window.cefQuery({
+        request: 'updateMasterlist',
+        persistent: false,
+        onSuccess: function(response) {},
+        onFailure: function(error_code, error_message) {
+            showMessageBox('error', "Error", "Error code: " + error_code + "; " + error_message);
+        }
+    });
 }
 function sortPlugins(evt) {
-
+    var request_id = window.cefQuery({
+        request: 'sortPlugins',
+        persistent: false,
+        onSuccess: function(response) {},
+        onFailure: function(error_code, error_message) {
+            showMessageBox('error', "Error", "Error code: " + error_code + "; " + error_message);
+        }
+    });
 }
 function applySort(evt) {
-
+    var request_id = window.cefQuery({
+        request: 'applySort',
+        persistent: false,
+        onSuccess: function(response) {},
+        onFailure: function(error_code, error_message) {
+            showMessageBox('error', "Error", "Error code: " + error_code + "; " + error_message);
+        }
+    });
 }
 function cancelSort(evt) {
-
+    var request_id = window.cefQuery({
+        request: 'cancelSort',
+        persistent: false,
+        onSuccess: function(response) {},
+        onFailure: function(error_code, error_message) {
+            showMessageBox('error', "Error", "Error code: " + error_code + "; " + error_message);
+        }
+    });
 }
 function redatePlugins(evt) {
     showMessageDialog('Redate Plugins', 'This feature is provided so that modders using the Creation Kit may set the load order it uses. A side-effect is that any subscribed Steam Workshop mods will be re-downloaded by Steam. Do you wish to continue?');
 
     //showMessageBox('info', 'Redate Plugins', 'Plugins were successfully redated.');
 }
-function copyMetadata(evt) {
-
-}
 function clearAllMetadata(evt) {
     showMessageDialog('Clear All Metadata', 'Are you sure you want to clear all existing user-added metadata from all plugins?');
 }
-function clearMetadata(evt) {
-    var filename = evt.target.getAttribute('data-target');
-    showMessageDialog('Clear Plugin Metadata', 'Are you sure you want to clear all existing user-added metadata from "' + filename + '"?');
-}
-
 function handlePluginDrop(evt) {
     evt.stopPropagation();
 

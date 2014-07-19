@@ -74,6 +74,33 @@ function Plugin(obj) {
 
     }
 
+    Plugin.prototype.getPriorityString = function() {
+        var priorityText = 'Priority: ' + this.modPriority + ', Global: ';
+        if (this.isGlobalPriority) {
+            priorityText += '✓';
+        } else {
+            priorityText += '✗';
+        }
+        return priorityText;
+    }
+
+    Plugin.prototype.getConflictingPlugins = function() {
+        var request = {
+            name: 'getConflictingPlugins',
+            args: [
+                this.name
+            ]
+        };
+
+        var request_id = window.cefQuery({
+            request: JSON.stringify(request),
+            persistent: false,
+            onSuccess: function(response) {},
+            onFailure: function(error_code, error_message) {
+                showMessageBox('error', "Error", "Error code: " + error_code + "; " + error_message);
+            }
+        });
+    }
 
     Plugin.prototype.createCard = function() {
         var card = new PluginCard();
@@ -137,16 +164,6 @@ function Plugin(obj) {
         }
 
         document.getElementById('main').appendChild(card);
-    }
-
-    Plugin.prototype.getPriorityString = function() {
-        var priorityText = 'Priority: ' + this.modPriority + ', Global: ';
-        if (this.isGlobalPriority) {
-            priorityText += '✓';
-        } else {
-            priorityText += '✗';
-        }
-        return priorityText;
     }
 
     Plugin.prototype.createListItem = function() {
