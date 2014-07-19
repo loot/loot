@@ -258,9 +258,9 @@
                 </table>
             </div>
             <hr>
-            <div class="buttons">
-                <button class="accept">Apply</button>
-                <button class="cancel">Cancel</button>
+            <div id="buttons">
+                <button id="accept">Apply</button>
+                <button id="cancel">Cancel</button>
             </div>
         </section>
     </template>
@@ -293,10 +293,6 @@
             <content select=".priority"></content>
         </a>
     </template>
-
-
-
-
 
     <template id="fileRow">
         <tr>
@@ -353,6 +349,7 @@
             <td><input class="registry" type="text" readonly>
             <td class="fa fa-trash-o fa-fw">
     </template>
+    
     <noscript>The LOOT Report requires Javascript to be enabled in order to function.</noscript>
     <header>
         <div id="headerOverlay"></div>
@@ -485,8 +482,7 @@ along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
             <option value="1">Low</option>
             <option value="2">Medium</option>
             <option value="3">High</option>
-        </select><br>
-        <!-- Need to add an editable multi-column game list here. -->
+        </select>
         <table is="editable-table" id="gameTable" data-template="gameRow">
             <thead>
                 <tr><th>Name<th>Base Game<th>LOOT Folder<th>Master File<th>Masterlist Repository URL<th>Masterlist Repository Branch<th>Install Path<th>Install Path Registry Key<th>

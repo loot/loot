@@ -358,10 +358,10 @@ td input {
 #pluginsNav .priority {
     display: none;
 }
-#pluginsNav.editMode plugin-li:hover .priority {
+#pluginsNav.editMode li:hover .priority {
     display: inline;
 }
-#pluginsNav.editMode plugin-li:hover .name {
+#pluginsNav.editMode li:hover .name {
     display: none;
 }
 header.editMode {

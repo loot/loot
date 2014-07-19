@@ -28,7 +28,7 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
     showEditorTable: {
         value: function(evt) {
             var tableClass = evt.target.getAttribute('data-for');
-            var tables = evt.target.parentElement.getElementsByTagName('table');
+            var tables = evt.target.parentElement.querySelectorAll('table');
             for (var i = 0; i < tables.length; ++i) {
                 if (tables[i].className.indexOf(tableClass) == -1) {
                     hideElement(tables[i]);
@@ -36,7 +36,7 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
                     showElement(tables[i]);
                 }
             }
-            evt.target.parentElement.getElementsByClassName('selected')[0].classList.toggle('selected');
+            evt.target.parentElement.querySelector('.selected').classList.toggle('selected');
             evt.target.classList.toggle('selected');
         }
     },
@@ -86,16 +86,16 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
         value: function() {
 
             /* Set up table tab event handlers. */
-            var elements = this.shadowRoot.getElementsByClassName('tableTabs')[0].children;
+            var elements = this.shadowRoot.querySelector('#tableTabs').children;
             for (var i = 0; i < elements.length; ++i) {
                 if (elements[i].hasAttribute('data-for')) {
-                    elements[i].addEventListener('click', showEditorTable, false);
+                    elements[i].addEventListener('click', this.showEditorTable, false);
                 }
             }
 
             /* Set up button event handlers. */
-            editor.getElementsByClassName('accept')[0].addEventListener('click', hideEditor, false);
-            editor.getElementsByClassName('cancel')[0].addEventListener('click', hideEditor, false);
+            this.shadowRoot.querySelector('#accept').addEventListener('click', this.hideEditor, false);
+            this.shadowRoot.querySelector('#cancel').addEventListener('click', this.hideEditor, false);
 
             /* Set up drag 'n' drop event handlers. */
             elements = document.getElementById('pluginsNav').children;
@@ -103,7 +103,7 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
                 elements[i].setAttribute('draggable', true);
                 elements[i].addEventListener('dragstart', handlePluginDragStart, false);
             }
-            elements = this.shadowRoot.getElementsByTagName('editable-table');
+            elements = this.shadowRoot.querySelector('table');
             for (var i = 0; i < elements.length; ++i) {
                 if (elements[i].className.indexOf('loadAfter') != -1 || elements[i].className.indexOf('req') != -1 || elements[i].className.indexOf('inc') != -1) {
                     elements[i].addEventListener('drop', handlePluginDrop, false);

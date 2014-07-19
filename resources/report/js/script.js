@@ -238,7 +238,7 @@ function handlePluginDrop(evt) {
         var data = {
             file: evt.dataTransfer.getData('text/plain')
         };
-        addTableRow(evt.currentTarget.getElementsByTagName('tbody')[0], data);
+        evt.currentTarget.addRow(data);
     }
 
     return false;
