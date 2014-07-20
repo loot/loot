@@ -360,16 +360,16 @@ td input {
 #pluginsNav .priority {
     display: none;
 }
-#pluginsNav.editMode li:hover .priority {
+body.editMode #pluginsNav li:hover .priority {
     display: inline;
 }
-#pluginsNav.editMode li:hover .name {
+body.editMode #pluginsNav li:hover .name {
     display: none;
 }
-header.editMode {
+body.editMode header {
     color: #999;
 }
-header.editMode #headerOverlay {
+body.editMode header #headerOverlay {
     z-index: 3;
     width: 100%;
     height: 100%;

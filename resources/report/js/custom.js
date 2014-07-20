@@ -163,11 +163,15 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
                     }
                 }
 
-                /* Disable priority hover in plugins list. */
-                document.getElementById('pluginsNav').classList.toggle('editMode', false);
+                /* Disable priority hover in plugins list and enable header
+                   buttons if this is the only editor instance. */
+                var numEditors = parseInt(document.body.getAttribute('data-editors'), 10);
+                --numEditors;
 
-                /* Enable header buttons. */
-                document.getElementsByTagName('header')[0].classList.toggle('editMode', false);
+                if (numEditors == 0) {
+                    document.body.classList.remove('editMode');
+                }
+                document.body.setAttribute('data-editors', numEditors);
 
                 /* Hide editor. */
                 card.classList.toggle('flip');
@@ -204,10 +208,18 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
                 }
             }
 
-            /* Enable priority hover in plugins list. */
-            document.getElementById('pluginsNav').classList.toggle('editMode', true);
-            /* Disable header buttons. */
-            document.getElementsByTagName('header')[0].classList.toggle('editMode', true);
+            /* Enable priority hover in plugins list and enable header
+               buttons if this is the only editor instance. */
+            var numEditors = 0;
+            if (document.body.hasAttribute('data-editors')) {
+                numEditors = parseInt(document.body.getAttribute('data-editors'), 10);
+            }
+            ++numEditors;
+
+            if (numEditors == 1) {
+                document.body.classList.add('editMode');
+            }
+            document.body.setAttribute('data-editors', numEditors);
 
             /* Now show editor. */
             this.classList.toggle('flip');
