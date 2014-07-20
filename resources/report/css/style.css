@@ -113,7 +113,7 @@ nav {
 nav > ol {
     padding-left: 1em;
     list-style-type: none;
-    height: calc(100% - 3em);
+    height: calc(100% - 4em);
 }
 nav > ol > li:nth-child(3) {
     height: calc(100% - 7em);
@@ -124,10 +124,10 @@ nav > ol > li:nth-child(3) {
     height: 100%;
     overflow: auto;
 }
-nav li {
+nav li:not(:last-child) {
     padding: 0.5em 0.5em;
 }
-nav > ol > li:last-child {
+#filtersToggle {
     cursor: pointer;
 }
 nav > ol > li:not(:nth-child(3)):hover, #pluginsNav li:hover {
@@ -150,6 +150,10 @@ nav a {
 #pluginsNav li > span {
     display: inline-block;
     width: 1.2em;
+}
+#searchBox {
+    padding: 0.3em 0.6em;
+    width: 100%;
 }
 #main {
     overflow: auto;
