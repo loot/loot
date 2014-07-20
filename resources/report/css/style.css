@@ -94,7 +94,7 @@ header > ol > li > ol > li {
 }
 
 header li > span, #filtersToggle > span {
-    padding-right: 0.5em;
+    margin-right: 1em;
 }
 
 #container {
