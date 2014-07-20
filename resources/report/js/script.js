@@ -369,13 +369,6 @@ function closeSettingsDialog(evt) {
 function showSettingsDialog(evt) {
     document.getElementById('settings').showModal();
 }
-function toggleInputRO(evt) {
-    if (evt.target.readOnly) {
-        evt.target.removeAttribute('readonly');
-    } else {
-        evt.target.setAttribute('readonly', '');
-    }
-}
 
 function getDialogParent(element) {
     var element = element.parentElement;

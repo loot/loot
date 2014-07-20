@@ -444,12 +444,6 @@ var EditableTableProto = Object.create(HTMLTableElement.prototype, {
             var tbody = tr.parentElement
             var table = tbody.parentElement;
 
-            /* Remove row edit listeners. */
-            var inputs = tr.getElementsByTagName('input');
-            for (var i = 0; i < inputs.length; ++i) {
-                inputs[i].removeEventListener('dblclick', toggleInputRO, false);
-            }
-
             /* Remove deletion listener. */
             evt.target.removeEventListener('click', table.removeRow, false);
 
@@ -468,12 +462,6 @@ var EditableTableProto = Object.create(HTMLTableElement.prototype, {
             table.getElementsByTagName('tbody')[0].insertBefore(row, evt.currentTarget);
             row = evt.currentTarget.previousElementSibling;
 
-            /* Enable row editing. */
-            var inputs = row.getElementsByTagName('input');
-            for (var i = 0; i < inputs.length; ++i) {
-                inputs[i].removeAttribute('readonly');
-                inputs[i].addEventListener('dblclick', toggleInputRO, false);
-            }
             /* Add deletion listener. */
             row.getElementsByClassName('fa-trash-o')[0].addEventListener('click', table.removeRow, false);
         }
@@ -493,11 +481,6 @@ var EditableTableProto = Object.create(HTMLTableElement.prototype, {
                 row.getElementsByClassName(key)[0].value = tableData[key];
             }
 
-            /* Enable row editing. */
-            var inputs = row.getElementsByTagName('input');
-            for (var i = 0; i < inputs.length; ++i) {
-                inputs[i].addEventListener('dblclick', toggleInputRO, false);
-            }
             /* Add deletion listener. */
             row.getElementsByClassName('fa-trash-o')[0].addEventListener('click', this.removeRow, false);
 
@@ -518,13 +501,6 @@ var EditableTableProto = Object.create(HTMLTableElement.prototype, {
         value: function() {
             /* Remove event listeners. */
             var tbody = this.getElementsByTagName('tbody')[0];
-
-
-            /* Remove row edit listeners. */
-            var inputs = tbody.getElementsByTagName('input');
-            for (var i = 0; i < inputs.length; ++i) {
-                inputs[i].removeEventListener('dblclick', toggleInputRO, false);
-            }
 
             /* Remove deletion listener. */
             var icons = tbody.getElementsByClassName('fa-trash-o');
