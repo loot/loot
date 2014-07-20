@@ -120,6 +120,41 @@ namespace loot {
             callback->Success(GetGameData());
             return true;
         }
+        else if (request == "cancelFind") {
+            browser->GetHost()->StopFinding(true);
+            callback->Success("");
+            return true;
+        }
+        else {
+            // May be a request with arguments.
+            YAML::Node req;
+            try {
+                req = JSON::parse(request.ToString());
+            }
+            catch (exception &e) {
+                BOOST_LOG_TRIVIAL(error) << "Failed to parse CEF query request \"" << request << "\": " << e.what();
+                return false;
+            }
+
+            const std::string requestName = req["name"].as<string>();
+
+            if (requestName == "find") {
+                // Has one arg, which is the search string.
+                const std::string search = req["args"][0].as<string>();
+
+                // In case there is a search already running, cancel it.
+                browser->GetHost()->StopFinding(true);
+
+                // Only one search at a time is allowed, so give a constant identifier,
+                // and we want case-insensitive forward searching, with no repeated
+                // searches.
+                browser->GetHost()->Find(0, search, true, false, false);
+
+                callback->Success("");
+
+                return true;
+            }
+        }
 
         return false;
     }

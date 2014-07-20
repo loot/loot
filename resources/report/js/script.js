@@ -421,6 +421,40 @@ function hideHoverText(evt) {
         hoverText.parentElement.removeChild(hoverText);
     }
 }
+function startSearch(evt) {
+    if (evt.target.value == '') {
+        var request_id = window.cefQuery({
+            request: 'cancelFind',
+            persistent: false,
+            onSuccess: function(response) { evt.target.focus(); },
+            onFailure: function(error_code, error_message) {
+                showMessageBox('error', "Error", "Error code: " + error_code + "; " + error_message);
+            }
+        });
+    } else {
+        var request = {
+            name: 'find',
+            args: [
+                evt.target.value
+            ]
+        };
+
+        var request_id = window.cefQuery({
+            request: JSON.stringify(request),
+            persistent: false,
+            onSuccess: function(response) { evt.target.focus(); },
+            onFailure: function(error_code, error_message) {
+                showMessageBox('error', "Error", "Error code: " + error_code + "; " + error_message);
+            }
+        });
+    }
+
+}
+function focusSearch(evt) {
+    if (evt.ctrlKey && evt.keyCode == 70) { //'f'
+        document.getElementById('searchBox').focus();
+    }
+}
 function setupEventHandlers() {
     var elements;
     if (isStorageSupported()) { /*Set up filter value and CSS setting storage read/write handlers.*/
@@ -479,6 +513,12 @@ function setupEventHandlers() {
         hoverTargets[i].addEventListener('mouseenter', showHoverText, false);
         hoverTargets[i].addEventListener('mouseleave', hideHoverText, false);
     }
+
+    /* Set up event handlers for content search. */
+    var searchBox = document.getElementById('searchBox');
+    searchBox.addEventListener('input', startSearch, false);
+    searchBox.addEventListener('search', startSearch, false);
+    window.addEventListener('keyup', focusSearch, false);
 }
 function processCefError(errorCode, errorMessage) {
     showMessageBox('error', "Error", "Error code: " + error_code + "; " + error_message);
