@@ -61,9 +61,6 @@ header > ol:last-child {
     position: fixed;
     right: 0;
 }
-header li span {
-    opacity: 0.5;
-}
 header li:hover {
     background: #ccc;
 }
@@ -94,6 +91,10 @@ header > ol > li > ol > li {
 }
 #helpMenu > ol {
     left: 235px;
+}
+
+header li > span, #filtersToggle > span {
+    padding-right: 0.5em;
 }
 
 #container {
@@ -376,17 +377,8 @@ header.editMode #headerOverlay {
     top: 0;
     left: 0;
 }
-.editor .buttons {
-    text-align: right;
-}
 #conflictsPlugin {
     margin-left: 2.5em;
-}
-.editorEnableEdits {
-    margin-bottom: 1em;
-}
-label[for=editorPriorityValue] {
-    margin-left: 0.5em;
 }
 [draggable] {
     -webkit-user-select: none;

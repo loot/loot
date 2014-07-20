@@ -566,7 +566,15 @@ function initGlobalVars() {
                             var li = document.createElement('li');
                             li.setAttribute('data-action', 'change-game');
                             li.setAttribute('data-target', loot.settings.games[i].folder);
-                            li.textContent = loot.settings.games[i].name;
+
+                            var icon = document.createElement('span');
+                            icon.className = 'fa fa-fw';
+                            li.appendChild(icon);
+
+                            var text = document.createElement('span');
+                            text.textContent = loot.settings.games[i].name;
+                            li.appendChild(text);
+
                             gameMenu.appendChild(li);
 
                             gameTable.addRow(loot.settings.games[i]);
@@ -607,6 +615,16 @@ function updateInterfaceWithGameInfo(response) {
     var errorMessageNo = 0;
     var activePluginNo = 0;
     var dirtyPluginNo = 0;
+
+    /* Highlight game in menu. Could use fa-chevron-right instead. */
+    var gameMenuItems = document.getElementById('gameMenu').children[0].children;
+    for (var i = 0; i < gameMenuItems.length; ++i) {
+        if (gameMenuItems[i].getAttribute('data-target') != loot.game.folder) {
+            gameMenuItems[i].querySelector('.fa').classList.toggle('fa-angle-double-right', false);
+        } else {
+            gameMenuItems[i].querySelector('.fa').classList.toggle('fa-angle-double-right', true);
+        }
+    }
 
     /* Fill report with data. */
     document.getElementById('masterlistRevision').textContent = loot.game.masterlist.revision;

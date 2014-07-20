@@ -131,6 +131,50 @@
             border: 1px black solid;
             width: 100%;
         }
+
+        #enableEdits {
+            margin-bottom: 1em;
+        }
+        label[for=priorityValue] {
+            margin-left: 0.5em;
+        }
+        .buttons {
+            text-align: right;
+        }
+        input[readonly] {
+            border: none;
+            -webkit-user-select: none;
+        }
+        td input {
+            width: 100%;
+            text-overflow: ellipsis;
+        }
+        .editable td:last-child {
+            cursor: pointer;
+        }
+        .editable td:last-child:hover {
+            color: red;
+        }
+        .editable {
+            margin: 3em 1em;
+            border-collapse: collapse;
+        }
+        .editable td, .editable th {
+            vertical-align: top;
+            text-align: left;
+            padding: 0.5em;
+        }
+        .editable th {
+            border-bottom: 1px black solid;
+        }
+        .editable tr:last-child {
+            cursor: pointer;
+        }
+        input[type='checkbox'] {
+            position:relative;
+            top:0.15em;
+            margin-left:0.5em;
+        }
         </style>
 
         <section id="front">
@@ -352,9 +396,9 @@
         <ol>
             <li id="fileMenu">File
             <ol class="hidden">
-                <li id="redatePluginsButton">Redate Plugins
-                <li id="openLogButton">Open Debug Log Location
-                <li id="wipeUserlistButton">Clear All User Metadata
+                <li id="redatePluginsButton"><span class="fa fa-fw fa-calendar-o"></span>Redate Plugins <!-- or fa-clock-o fa-history -->
+                <li id="openLogButton"><span class="fa fa-fw fa-folder-open"></span>Open Debug Log Location
+                <li id="wipeUserlistButton"><span class="fa fa-fw fa-trash-o"></span>Clear All User Metadata
             </ol>
             <li id="gameMenu">Game
             <ol class="hidden">
@@ -363,15 +407,15 @@
             <li id="settingsButton">Settings
             <li id="helpMenu">Help
             <ol class="hidden">
-                <li id="helpButton">Help
-                <li id="aboutButton">About
+                <li id="helpButton"><span class="fa fa-fw fa-question-circle"></span>Help <!-- fa-life-ring -->
+                <li id="aboutButton"><span class="fa fa-fw fa-info-circle"></span>About
             </ol>
         </ol>
         <ol>
-            <li id="updateMasterlistButton">Update Masterlist
-            <li id="sortButton">Sort
-            <li id="applySortButton" class="hidden">Apply
-            <li id="cancelSortButton" class="hidden">Cancel
+            <li id="updateMasterlistButton"><span class="fa fa-fw fa-refresh"></span>Update Masterlist
+            <li id="sortButton"><span class="fa fa-fw fa-magic"></span>Sort
+            <li id="applySortButton" class="hidden"><span class="fa fa-fw fa-check"></span>Apply
+            <li id="cancelSortButton" class="hidden"><span class="fa fa-fw fa-times"></span>Cancel
         </ol>
     </header>
     <div id="container">
