@@ -380,7 +380,7 @@ var messageDialogProto = Object.create(HTMLDialogElement.prototype, {
 
     showModal: {
         /* A type of 'error' or 'info' produces an 'OK'-only dialog box. */
-        value: function(type, title, text, onClose) {
+        value: function(type, title, text) {
 
             this.querySelector('h1').textContent = title;
             this.querySelector('p').textContent = text;
