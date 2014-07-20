@@ -533,6 +533,31 @@ namespace loot {
         frame->LoadString(ss.str(), failedUrl);
     }
 
+    // CefRequestHandler methods
+    //--------------------------
+
+    bool LootHandler::OnBeforeBrowse(CefRefPtr< CefBrowser > browser,
+        CefRefPtr< CefFrame > frame,
+        CefRefPtr< CefRequest > request,
+        bool is_redirect) {
+
+        BOOST_LOG_TRIVIAL(trace) << "Attemping to open link: " << request->GetURL().ToString();
+        BOOST_LOG_TRIVIAL(trace) << "Comparing with URL: " << ToFileURL(g_path_report);
+
+        if (request->GetURL() == ToFileURL(g_path_report)) {
+            BOOST_LOG_TRIVIAL(trace) << "Link is to LOOT page, allowing CEF's default handling.";
+            return false;
+        }
+
+        BOOST_LOG_TRIVIAL(info) << "Opening link in Windows' default handler.";
+        // Open readme in default application.
+        HINSTANCE ret = ShellExecute(0, NULL, request->GetURL().ToWString().c_str(), NULL, NULL, SW_SHOWNORMAL);
+        if ((int)ret <= 32)
+            throw error(error::windows_error, "Shell execute failed.");
+
+        return true;
+    }
+
     void LootHandler::CloseAllBrowsers(bool force_close) {
 
         if (!CefCurrentlyOn(TID_UI)) {

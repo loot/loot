@@ -52,6 +52,7 @@
 #   endif
 #   include "windows.h"
 #   include "shlobj.h"
+#   include "shlwapi.h"
 #endif
 #define BUFSIZE 4096
 
@@ -218,17 +219,33 @@ namespace loot {
     //Turns an absolute filesystem path into a valid file:// URL.
     std::string ToFileURL(const fs::path& file) {
         BOOST_LOG_TRIVIAL(trace) << "Converting file path " << file << " to a URL.";
-        return "file:///" + file.string();  //Seems that we don't need to worry about encoding, tested with Unicode paths.
+
+#if _WIN32 || _WIN64
+        wstring wstr(MAX_PATH, 0);
+        DWORD len = MAX_PATH;
+        UrlCreateFromPath(ToWinWide(file.string()).c_str(), &wstr[0], &len, NULL);
+        string str = FromWinWide(wstr.c_str());  // Passing c_str() cuts off any unused buffer.
+        BOOST_LOG_TRIVIAL(trace) << "Converted to: " << str;
+
+        return str;
+#endif
     }
 
 #if _WIN32 || _WIN64
     //Helper to turn UTF8 strings into strings that can be used by WinAPI.
     std::wstring ToWinWide(const std::string& str) {
 
-        int len = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), str.length() + 1, 0, 0);
-        std::wstring wstr(len, NULL);
-        MultiByteToWideChar(CP_UTF8, 0, str.c_str(), str.length() + 1, &(wstr[0]), len);
+        int len = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), str.length(), 0, 0);
+        std::wstring wstr(len, 0);
+        MultiByteToWideChar(CP_UTF8, 0, str.c_str(), str.length(), &(wstr[0]), len);
         return wstr;
+    }
+
+    std::string FromWinWide(const std::wstring& wstr) {
+        int len = WideCharToMultiByte(CP_UTF8, 0, &wstr[0], wstr.length(), NULL, 0, NULL, NULL);
+        std::string str(len, 0);
+        WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), wstr.length(), &str[0], len, NULL, NULL);
+        return str;
     }
 #endif
 

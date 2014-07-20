@@ -59,7 +59,8 @@ namespace loot {
     class LootHandler : public CefClient,
                         public CefDisplayHandler,
                         public CefLifeSpanHandler,
-                        public CefLoadHandler {
+                        public CefLoadHandler,
+                        public CefRequestHandler {
     public:
         LootHandler();
         ~LootHandler();
@@ -95,6 +96,19 @@ namespace loot {
                                ErrorCode errorCode,
                                const CefString& errorText,
                                const CefString& failedUrl) OVERRIDE;
+
+        // CefRequestHandler methods
+        //--------------------------
+
+
+        virtual CefRefPtr<CefRequestHandler> GetRequestHandler() OVERRIDE{
+            return this;
+        }
+
+        virtual bool OnBeforeBrowse(CefRefPtr< CefBrowser > browser, 
+                                    CefRefPtr< CefFrame > frame, 
+                                    CefRefPtr< CefRequest > request, 
+                                    bool is_redirect) OVERRIDE;
 
         // Request that all existing browser windows close.
         void CloseAllBrowsers(bool force_close);
