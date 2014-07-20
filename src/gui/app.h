@@ -59,14 +59,6 @@ namespace loot {
                                     CefRefPtr<CefFrame> frame,
                                     CefRefPtr<CefV8Context> context) OVERRIDE;
 
-        virtual void OnContextReleased(CefRefPtr<CefBrowser> browser,
-                                    CefRefPtr<CefFrame> frame,
-                                    CefRefPtr<CefV8Context> context) OVERRIDE;
-
-        void InitJSVars();
-
-        CefRefPtr<CefV8Context> _context;
-
         IMPLEMENT_REFCOUNTING(LootApp);
     };
 

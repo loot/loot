@@ -107,26 +107,8 @@ namespace loot {
         CefRefPtr<CefFrame> frame,
         CefRefPtr<CefV8Context> context) {
 
-        _context = context;
-
         // Register javascript functions.
         message_router_->OnContextCreated(browser, frame, context);
-    }
-    
-    void LootApp::OnContextReleased(CefRefPtr<CefBrowser> browser,
-        CefRefPtr<CefFrame> frame,
-        CefRefPtr<CefV8Context> context) {
-
-        _context = NULL;
-    }
-
-    void LootApp::InitJSVars() {
-        BOOST_LOG_TRIVIAL(debug) << "Populating JS object variable initial values.";
-
-        if (_context == NULL)
-            return;
-
-        
     }
 
     // LootState member functions
