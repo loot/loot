@@ -445,7 +445,7 @@ var EditableTableProto = Object.create(HTMLTableElement.prototype, {
             var table = tbody.parentElement;
 
             /* Remove row edit listeners. */
-            var inputs = row.getElementsByTagName('input');
+            var inputs = tr.getElementsByTagName('input');
             for (var i = 0; i < inputs.length; ++i) {
                 inputs[i].removeEventListener('dblclick', toggleInputRO, false);
             }
@@ -475,7 +475,7 @@ var EditableTableProto = Object.create(HTMLTableElement.prototype, {
                 inputs[i].addEventListener('dblclick', toggleInputRO, false);
             }
             /* Add deletion listener. */
-            row.getElementsByClassName('fa-trash-o')[0].addEventListener('click', this.removeRow, false);
+            row.getElementsByClassName('fa-trash-o')[0].addEventListener('click', table.removeRow, false);
         }
     },
 
