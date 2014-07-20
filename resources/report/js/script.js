@@ -620,6 +620,16 @@ function initGlobalVars() {
                             gameTable.addRow(loot.settings.games[i]);
                         }
 
+                        /* Highlight game in menu. Could use fa-chevron-right instead. */
+                        var gameMenuItems = document.getElementById('gameMenu').children[0].children;
+                        for (var i = 0; i < gameMenuItems.length; ++i) {
+                            if (gameMenuItems[i].getAttribute('data-target') != loot.game.folder) {
+                                gameMenuItems[i].querySelector('.fa').classList.toggle('fa-angle-double-right', false);
+                            } else {
+                                gameMenuItems[i].querySelector('.fa').classList.toggle('fa-angle-double-right', true);
+                            }
+                        }
+
                         gameSelect.value = loot.settings.game;
                         document.getElementById('languageSelect').value = loot.settings.language;
                         document.getElementById('debugVerbositySelect').value = loot.settings.debugVerbosity;
@@ -655,16 +665,6 @@ function updateInterfaceWithGameInfo(response) {
     var errorMessageNo = 0;
     var activePluginNo = 0;
     var dirtyPluginNo = 0;
-
-    /* Highlight game in menu. Could use fa-chevron-right instead. */
-    var gameMenuItems = document.getElementById('gameMenu').children[0].children;
-    for (var i = 0; i < gameMenuItems.length; ++i) {
-        if (gameMenuItems[i].getAttribute('data-target') != loot.game.folder) {
-            gameMenuItems[i].querySelector('.fa').classList.toggle('fa-angle-double-right', false);
-        } else {
-            gameMenuItems[i].querySelector('.fa').classList.toggle('fa-angle-double-right', true);
-        }
-    }
 
     /* Fill report with data. */
     document.getElementById('masterlistRevision').textContent = loot.game.masterlist.revision;
