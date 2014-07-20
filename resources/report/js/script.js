@@ -272,16 +272,11 @@ function handlePluginDragOver(evt) {
 function areSettingsValid() {
     /* First validate table inputs. */
     var inputs = document.getElementById('settings').getElementsByTagName('input');
-    /* If an input is readonly, it doesn't validate, so check required / value length explicitly.
+    /* If an input is readonly, it doesn't validate, but that's ok because the
+       read-only inputs must be valid.
     */
     for (var i = 0; i < inputs.length; ++i) {
-        if (inputs[i].readOnly) {
-            if (inputs[i].required && inputs[i].value.length == 0) {
-                return false;
-                console.log(inputs[i]);
-                inputs[i].readOnly = false;
-            }
-        } else if (!inputs[i].checkValidity()) {
+        if (!inputs[i].checkValidity()) {
             return false;
             console.log(inputs[i]);
         }
