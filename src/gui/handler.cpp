@@ -111,6 +111,12 @@ namespace loot {
             return true;
         }
         else if (request == "getGameData") {
+            BOOST_LOG_TRIVIAL(info) << "Setting LOOT window title bar text to include game name: " << g_app_state.CurrentGame().Name();
+#if defined(OS_WIN)
+            HWND handle = browser->GetHost()->GetWindowHandle();
+            SetWindowText(handle, ToWinWide("LOOT: " + g_app_state.CurrentGame().Name()).c_str());
+#endif
+
             callback->Success(GetGameData());
             return true;
         }
