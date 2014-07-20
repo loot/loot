@@ -182,14 +182,21 @@ function Plugin(obj) {
         card.shadowRoot.querySelector('#globalPriority').value = this.globalPriority;
         card.shadowRoot.querySelector('#priorityValue').value = this.modPriority;
 
-        /* Fill in editor table data. */
+        /* Fill in editor table data. Masterlist-originated rows should have
+           their contents made read-only, and be unremovable. */
         var tables = card.shadowRoot.getElementsByTagName('table');
         for (var i = 0; i < tables.length; ++i) {
             if (tables[i].id == 'loadAfter') {
 
                 if (this.masterlist && this.masterlist.after) {
                     this.masterlist.after.forEach(function(file) {
-                        tables[i].addRow(file).querySelector('.fa-trash-o').classList.toggle('hidden');
+                        var row = tables[i].addRow(file);
+                        row.querySelector('.fa-trash-o').classList.toggle('hidden');
+
+                        var inputs = row.getElementsByTagName('input');
+                        for (var j = 0; j < inputs.length; ++j) {
+                            inputs[j].setAttribute('readonly', true);
+                        }
                     });
                 }
                 if (this.userlist && this.userlist.after) {
@@ -202,7 +209,13 @@ function Plugin(obj) {
 
                 if (this.masterlist && this.masterlist.req) {
                     this.masterlist.req.forEach(function(file) {
-                        tables[i].addRow(file).querySelector('.fa-trash-o').classList.toggle('hidden');
+                        var row = tables[i].addRow(file);
+                        row.querySelector('.fa-trash-o').classList.toggle('hidden');
+
+                        var inputs = row.getElementsByTagName('input');
+                        for (var j = 0; j < inputs.length; ++j) {
+                            inputs[j].setAttribute('readonly', true);
+                        }
                     });
                 }
                 if (this.userlist && this.userlist.req) {
@@ -215,7 +228,13 @@ function Plugin(obj) {
 
                 if (this.masterlist && this.masterlist.inc) {
                     this.masterlist.inc.forEach(function(file) {
-                        tables[i].addRow(file).querySelector('.fa-trash-o').classList.toggle('hidden');
+                        var row = tables[i].addRow(file);
+                        row.querySelector('.fa-trash-o').classList.toggle('hidden');
+
+                        var inputs = row.getElementsByTagName('input');
+                        for (var j = 0; j < inputs.length; ++j) {
+                            inputs[j].setAttribute('readonly', true);
+                        }
                     });
                 }
                 if (this.userlist && this.userlist.inc) {
@@ -234,7 +253,15 @@ function Plugin(obj) {
                             condition: message.condition,
                             language: message.content[0].lang
                         };
-                        tables[i].addRow(data).querySelector('.fa-trash-o').classList.toggle('hidden');
+                        var row = tables[i].addRow(data);
+                        row.querySelector('.fa-trash-o').classList.toggle('hidden');
+
+                        var inputs = row.getElementsByTagName('input');
+                        for (var j = 0; j < inputs.length; ++j) {
+                            inputs[j].setAttribute('readonly', true);
+                        }
+                        var select = row.getElementsByTagName('select')[0].setAttribute('disabled', true);
+
                     });
                 }
                 if (this.userlist && this.userlist.msg) {
@@ -254,7 +281,14 @@ function Plugin(obj) {
                 if (this.masterlist && this.masterlist.tag) {
                     this.masterlist.tag.forEach(function(tag) {
                         var data = this.getTagObj(tag);
-                        tables[i].addRow(data).querySelector('.fa-trash-o').classList.toggle('hidden');
+                        var row = tables[i].addRow(data);
+                        row.querySelector('.fa-trash-o').classList.toggle('hidden');
+
+                        var inputs = row.getElementsByTagName('input');
+                        for (var j = 0; j < inputs.length; ++j) {
+                            inputs[j].setAttribute('readonly', true);
+                        }
+                        var select = row.getElementsByTagName('select')[0].setAttribute('disabled', true);
                     }, this);
                 }
                 if (this.userlist && this.userlist.tag) {
@@ -269,7 +303,13 @@ function Plugin(obj) {
                 if (this.masterlist && this.masterlist.dirty) {
                     this.masterlist.dirty.forEach(function(info) {
                         info.crc = info.crc.toString(16);
-                        tables[i].addRow(info).querySelector('.fa-trash-o').classList.toggle('hidden');
+                        var row = tables[i].addRow(info);
+                        row.querySelector('.fa-trash-o').classList.toggle('hidden');
+
+                        var inputs = row.getElementsByTagName('input');
+                        for (var j = 0; j < inputs.length; ++j) {
+                            inputs[j].setAttribute('readonly', true);
+                        }
                     });
                 }
                 if (this.userlist && this.userlist.dirty) {
