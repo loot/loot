@@ -228,6 +228,22 @@ namespace loot {
         }
     }
 
+    void LootState::ChangeGame(const std::string& newGameFolder) {
+        BOOST_LOG_TRIVIAL(debug) << "Changing current game...";
+        auto it = std::find_if(_games.begin(), _games.end(), [&newGameFolder](const Game& game){
+            return game.FolderName() == newGameFolder;
+        });
+
+        _currentGame = std::distance(_games.begin(), it);
+        try {
+        _games[_currentGame].Init();
+        BOOST_LOG_TRIVIAL(debug) << "New game is " << _games[_currentGame].Name();
+        }
+        catch (std::exception& e) {
+            BOOST_LOG_TRIVIAL(error) << "Game-specific settings could not be initialised." << e.what();
+        }
+    }
+
     Game& LootState::CurrentGame() {
         return _games[_currentGame];
     }

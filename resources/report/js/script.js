@@ -189,6 +189,92 @@ function openLogLocation(evt) {
         }
     });
 }
+function updateSelectedGame() {
+    /* Highlight game in menu. Could use fa-chevron-right instead. */
+    var gameMenuItems = document.getElementById('gameMenu').children[0].children;
+    for (var i = 0; i < gameMenuItems.length; ++i) {
+        if (gameMenuItems[i].getAttribute('data-target') != loot.game.folder) {
+            gameMenuItems[i].querySelector('.fa').classList.toggle('fa-angle-double-right', false);
+        } else {
+            gameMenuItems[i].querySelector('.fa').classList.toggle('fa-angle-double-right', true);
+        }
+    }
+
+    /* Also enable/disable the redate plugins option. */
+    var index = undefined;
+    for (var i = 0; i < loot.settings.games.length; ++i) {
+        if (loot.settings.games[i].folder == loot.game.folder) {
+            index = i;
+        }
+    }
+    if (loot.settings.games.type == 'Skyrim') {
+        document.getElementById('redatePluginsButton').classList.toggle('disabled', false);
+    } else {
+        document.getElementById('redatePluginsButton').classList.toggle('disabled', true);
+    }
+}
+function changeGame(evt) {
+    /* First store current game info in loot.games object.
+       This object may not exist, so initialise it using the corresponding
+       loot.settings.games object. */
+    var index = undefined;
+    if (loot.games) {
+        for (var i = 0; i < loot.games.length; ++i) {
+            if (loot.games[i].folder == loot.game.folder) {
+                index = i;
+            }
+        }
+    } else {
+        for (var i = 0; i < loot.settings.games.length; ++i) {
+            if (loot.settings.games[i].folder == loot.game.folder) {
+                index = i;
+            }
+        }
+
+        loot.games = [];
+        loot.games.push(loot.settings.games[index]);
+        index = 0;
+
+    }
+    loot.games[index].globalMessages = loot.game.globalMessages;
+    loot.games[index].masterlist = loot.game.masterlist;
+    loot.games[index].plugins = loot.game.plugins;
+
+
+    /* Now send off a CEF query with the folder name of the new game. */
+    var request = {
+        name: 'changeGame',
+        args: [
+            evt.target.getAttribute('data-target')
+        ]
+    };
+
+    // Create and send a new query.
+    var request_id = window.cefQuery({
+        request: JSON.stringify(request),
+        persistent: false,
+        onSuccess: function(response) {
+
+            /* First clear the UI of all existing game-specific data. Also
+               clear the card and li variables for each plugin object. */
+            loot.games[index].plugins.forEach(function(plugin){
+                plugin.card.parentElement.removeChild(plugin.card);
+                plugin.card = undefined;
+                plugin.li.parentElement.removeChild(plugin.li);
+                plugin.li = undefined;
+            });
+
+            /* Now update interface for new data. */
+            updateInterfaceWithGameInfo();
+
+            /* Now update game menu to highlight the newly selected game. */
+            updateSelectedGame();
+        },
+        onFailure: function(error_code, error_message) {
+            showMessageBox('error', "Error", "Error code: " + error_code + "; " + error_message);
+        }
+    });
+}
 function openReadme(evt) {
     // Create and send a new query.
     var request_id = window.cefQuery({
@@ -241,6 +327,10 @@ function cancelSort(evt) {
     });
 }
 function redatePlugins(evt) {
+    if (evt.target.classList.contains('disabled')) {
+        return;
+    }
+
     showMessageDialog('Redate Plugins', 'This feature is provided so that modders using the Creation Kit may set the load order it uses. A side-effect is that any subscribed Steam Workshop mods will be re-downloaded by Steam. Do you wish to continue?');
 
     //showMessageBox('info', 'Redate Plugins', 'Plugins were successfully redated.');
@@ -301,6 +391,8 @@ function toggleMenu(evt) {
                 elements[i].removeEventListener('click', copyMetadata, false);
             } else if (action == 'clear-metadata') {
                 elements[i].removeEventListener('click', clearMetadata, false);
+            } else if (action == 'change-game') {
+                elements[i].removeEventListener('click', changeGame, false);
             }
         }
 
@@ -320,6 +412,8 @@ function toggleMenu(evt) {
                 elements[i].addEventListener('click', copyMetadata, false);
             } else if (action == 'clear-metadata') {
                 elements[i].addEventListener('click', clearMetadata, false);
+            } else if (action == 'change-game') {
+                elements[i].addEventListener('click', changeGame, false);
             }
         }
 
@@ -608,15 +702,8 @@ function initGlobalVars() {
                             gameTable.addRow(loot.settings.games[i]);
                         }
 
-                        /* Highlight game in menu. Could use fa-chevron-right instead. */
-                        var gameMenuItems = document.getElementById('gameMenu').children[0].children;
-                        for (var i = 0; i < gameMenuItems.length; ++i) {
-                            if (gameMenuItems[i].getAttribute('data-target') != loot.game.folder) {
-                                gameMenuItems[i].querySelector('.fa').classList.toggle('fa-angle-double-right', false);
-                            } else {
-                                gameMenuItems[i].querySelector('.fa').classList.toggle('fa-angle-double-right', true);
-                            }
-                        }
+                        /* Highlight game in menu. */
+                        updateSelectedGame();
 
                         gameSelect.value = loot.settings.game;
                         document.getElementById('languageSelect').value = loot.settings.language;

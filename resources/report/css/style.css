@@ -96,6 +96,10 @@ header > ol > li > ol > li {
 header li > span, #filtersToggle > span {
     margin-right: 1em;
 }
+header li.disabled {
+    cursor: default;
+    color: #999;
+}
 
 #container {
     position: fixed;

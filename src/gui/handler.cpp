@@ -154,6 +154,23 @@ namespace loot {
 
                 return true;
             }
+            else if (requestName == "changeGame") {
+                // Has one arg, which is the folder name of the new game.
+                const std::string folder = req["args"][0].as<string>();
+
+                BOOST_LOG_TRIVIAL(info) << "Changing game to that with folder: " << folder;
+                g_app_state.ChangeGame(folder);
+
+                BOOST_LOG_TRIVIAL(info) << "Setting LOOT window title bar text to include game name: " << g_app_state.CurrentGame().Name();
+#if defined(OS_WIN)
+                HWND handle = browser->GetHost()->GetWindowHandle();
+                SetWindowText(handle, ToWinWide("LOOT: " + g_app_state.CurrentGame().Name()).c_str());
+#endif
+
+                callback->Success(GetGameData());
+                return true;
+
+            }
         }
 
         return false;

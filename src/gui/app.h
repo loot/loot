@@ -67,6 +67,7 @@ namespace loot {
         LootState();
 
         void Init(const std::string& cmdLineGame);
+        void ChangeGame(const std::string& newGameFolder);
 
         Game& CurrentGame();
 

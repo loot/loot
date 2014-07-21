@@ -327,6 +327,7 @@ function Plugin(obj) {
 
     Plugin.prototype.createListItem = function() {
         var li = new PluginListItem();
+        this.li = li;
 
         li.shadowRoot.querySelector('a').href = '#' + this.id;
 
