@@ -168,9 +168,9 @@ namespace loot {
         if (!tags.empty()) {
             for (const auto &tag: tags) {
                 if (tag.IsAddition())
-                    tagsAdd.insert(tag);
+                    tagsAdd.insert(Tag(tag.Name()));  // Remove condition.
                 else
-                    tagsRemove.insert(tag);
+                    tagsRemove.insert(Tag(tag.Name(), false));  // Remove condition.
             }
             if (!tagsAdd.empty()) {
                 out << YAML::Key << "tagsAdd"
