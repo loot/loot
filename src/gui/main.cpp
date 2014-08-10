@@ -482,7 +482,7 @@ void Launcher::OnOpenSettings(wxCommandEvent& event) {
         GetWindowSizePos(_settings["windows"]["settings"], pos, size);
     }
 
-    SettingsFrame settings = SettingsFrame(this, translate("LOOT: Settings"), _settings, _games, pos, size);
+    SettingsFrame settings = SettingsFrame(this, translate("LOOT: Settings"), _settings, _games, _currentGame, pos, size);
     BOOST_LOG_TRIVIAL(debug) << "Settings window opened.";
     settings.ShowModal();
 
@@ -494,6 +494,23 @@ void Launcher::OnOpenSettings(wxCommandEvent& event) {
     node["yPos"] = settings.GetPosition().y;
 
     _settings["windows"]["settings"] = node;
+
+    // Clear existing games menu items.
+    for (size_t i = 0, max = GameMenu->GetMenuItemCount(); i < max; ++i) {
+        GameMenu->Delete(MENU_LowestDynamicGameID + i);
+    }
+    // Fill games list again.
+    for (size_t i = 0, max = _games.size(); i < max; ++i) {
+        wxMenuItem * item = GameMenu->AppendRadioItem(MENU_LowestDynamicGameID + i, FromUTF8(_games[i].Name()));
+        if (_games[_currentGame] == _games[i])
+            item->Check();
+
+        if (_games[i].IsInstalled())
+            Bind(wxEVT_MENU, &Launcher::OnGameChange, this, MENU_LowestDynamicGameID + i);
+        else
+            item->Enable(false);
+    }
+
 }
 
 void Launcher::OnGameChange(wxCommandEvent& event) {

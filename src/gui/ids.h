@@ -69,12 +69,9 @@ enum {
     MENU_CopyMetadata,
     MENU_ClearPluginMetadata,
     MENU_ClearAllMetadata,
+    CHECKBOX_Filter,
     //Main window - dynamically created IDs.
     MENU_LowestDynamicGameID,
-    LIST_LoadOrder,
-    BUTTON_MoveUp,
-    BUTTON_MoveDown,
-    CHECKBOX_Filter
 };
 
 wxString translate(const std::string& str);
