@@ -224,7 +224,8 @@ function changeGame(evt) {
                 index = i;
             }
         }
-    } else {
+    }
+    if (index == undefined) {
         for (var i = 0; i < loot.settings.games.length; ++i) {
             if (loot.settings.games[i].folder == loot.game.folder) {
                 index = i;
@@ -263,9 +264,13 @@ function changeGame(evt) {
                 plugin.li.parentElement.removeChild(plugin.li);
                 plugin.li = undefined;
             });
+            var globalMessages = document.getElementById('generalMessages').getElementsByTagName('ul')[0];
+            while (globalMessages.firstElementChild) {
+                globalMessages.removeChild(globalMessages.firstElementChild);
+            }
 
             /* Now update interface for new data. */
-            updateInterfaceWithGameInfo();
+            updateInterfaceWithGameInfo(response);
 
             /* Now update game menu to highlight the newly selected game. */
             updateSelectedGame();
