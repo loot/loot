@@ -101,21 +101,14 @@ function Plugin(obj) {
     }
 
     Plugin.prototype.getConflictingPlugins = function() {
-        var request = {
+        var request = JSON.stringify({
             name: 'getConflictingPlugins',
             args: [
                 this.name
             ]
-        };
-
-        var request_id = window.cefQuery({
-            request: JSON.stringify(request),
-            persistent: false,
-            onSuccess: function(response) {},
-            onFailure: function(error_code, error_message) {
-                showMessageBox('error', "Error", "Error code: " + error_code + "; " + error_message);
-            }
         });
+
+        loot.query(request).catch(processCefError);
     }
 
     Plugin.prototype.createCard = function() {

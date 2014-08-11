@@ -23,6 +23,24 @@
 */
 'use strict';
 var loot = {};
+
+/* Returns a cefQuery as a Promise. */
+loot.query = function(request) {
+    return new Promise(function(resolve, reject) {
+        window.cefQuery({
+        request: request,
+        persistent: false,
+        onSuccess: resolve,
+        onFailure: function(errorCode, errorMessage) {
+                reject(Error('Error code: ' + errorCode + '; ' + errorMessage))
+            }
+        });
+    })
+}
+function processCefError(err) {
+    showMessageBox('error', 'Error', err.message);
+}
+
 var marked;
 function isStorageSupported() {
     try {
@@ -180,14 +198,7 @@ function showMessageBox(type, title, text) {
     dialog.showModal(type, title, text);
 }
 function openLogLocation(evt) {
-    var request_id = window.cefQuery({
-        request: 'openLogLocation',
-        persistent: false,
-        onSuccess: function(response) {},
-        onFailure: function(error_code, error_message) {
-            showMessageBox('error', "Error", "Error code: " + error_code + "; " + error_message);
-        }
-    });
+    loot.query('openLogLocation').catch(processCefError);
 }
 function updateSelectedGame() {
     /* Highlight game in menu. Could use fa-chevron-right instead. */
@@ -243,93 +254,47 @@ function changeGame(evt) {
 
 
     /* Now send off a CEF query with the folder name of the new game. */
-    var request = {
+    var request = JSON.stringify({
         name: 'changeGame',
         args: [
             evt.currentTarget.getAttribute('data-target')
         ]
-    };
-
-    // Create and send a new query.
-    var request_id = window.cefQuery({
-        request: JSON.stringify(request),
-        persistent: false,
-        onSuccess: function(response) {
-
-            /* First clear the UI of all existing game-specific data. Also
-               clear the card and li variables for each plugin object. */
-            loot.games[index].plugins.forEach(function(plugin){
-                plugin.card.parentElement.removeChild(plugin.card);
-                plugin.card = undefined;
-                plugin.li.parentElement.removeChild(plugin.li);
-                plugin.li = undefined;
-            });
-            var globalMessages = document.getElementById('generalMessages').getElementsByTagName('ul')[0];
-            while (globalMessages.firstElementChild) {
-                globalMessages.removeChild(globalMessages.firstElementChild);
-            }
-
-            /* Now update interface for new data. */
-            updateInterfaceWithGameInfo(response);
-
-            /* Now update game menu to highlight the newly selected game. */
-            updateSelectedGame();
-        },
-        onFailure: function(error_code, error_message) {
-            showMessageBox('error', "Error", "Error code: " + error_code + "; " + error_message);
-        }
     });
+    loot.query(request).then(function(result){
+        /* First clear the UI of all existing game-specific data. Also
+           clear the card and li variables for each plugin object. */
+        loot.games[index].plugins.forEach(function(plugin){
+            plugin.card.parentElement.removeChild(plugin.card);
+            plugin.card = undefined;
+            plugin.li.parentElement.removeChild(plugin.li);
+            plugin.li = undefined;
+        });
+        var globalMessages = document.getElementById('generalMessages').getElementsByTagName('ul')[0];
+        while (globalMessages.firstElementChild) {
+            globalMessages.removeChild(globalMessages.firstElementChild);
+        }
+
+        /* Now update interface for new data. */
+        updateInterfaceWithGameInfo(result);
+
+        /* Now update game menu to highlight the newly selected game. */
+        updateSelectedGame();
+    }).catch(processCefError);
 }
 function openReadme(evt) {
-    // Create and send a new query.
-    var request_id = window.cefQuery({
-        request: 'openReadme',
-        persistent: false,
-        onSuccess: function(response) {},
-        onFailure: function(error_code, error_message) {
-            showMessageBox('error', "Error", "Error code: " + error_code + "; " + error_message);
-        }
-    });
+    loot.query('openReadme').catch(processCefError);
 }
 function updateMasterlist(evt) {
-    var request_id = window.cefQuery({
-        request: 'updateMasterlist',
-        persistent: false,
-        onSuccess: function(response) {},
-        onFailure: function(error_code, error_message) {
-            showMessageBox('error', "Error", "Error code: " + error_code + "; " + error_message);
-        }
-    });
+    loot.query('updateMasterlist').catch(processCefError);
 }
 function sortPlugins(evt) {
-    var request_id = window.cefQuery({
-        request: 'sortPlugins',
-        persistent: false,
-        onSuccess: function(response) {},
-        onFailure: function(error_code, error_message) {
-            showMessageBox('error', "Error", "Error code: " + error_code + "; " + error_message);
-        }
-    });
+    loot.query('sortPlugins').catch(processCefError);
 }
 function applySort(evt) {
-    var request_id = window.cefQuery({
-        request: 'applySort',
-        persistent: false,
-        onSuccess: function(response) {},
-        onFailure: function(error_code, error_message) {
-            showMessageBox('error', "Error", "Error code: " + error_code + "; " + error_message);
-        }
-    });
+    loot.query('applySort').catch(processCefError);
 }
 function cancelSort(evt) {
-    var request_id = window.cefQuery({
-        request: 'cancelSort',
-        persistent: false,
-        onSuccess: function(response) {},
-        onFailure: function(error_code, error_message) {
-            showMessageBox('error', "Error", "Error code: " + error_code + "; " + error_message);
-        }
-    });
+    loot.query('cancelSort').catch(processCefError);
 }
 function redatePlugins(evt) {
     if (evt.target.classList.contains('disabled')) {
@@ -510,30 +475,20 @@ function hideHoverText(evt) {
 }
 function startSearch(evt) {
     if (evt.target.value == '') {
-        var request_id = window.cefQuery({
-            request: 'cancelFind',
-            persistent: false,
-            onSuccess: function(response) { evt.target.focus(); },
-            onFailure: function(error_code, error_message) {
-                showMessageBox('error', "Error", "Error code: " + error_code + "; " + error_message);
-            }
-        });
+        loot.query('cancelFind').then(function(result){
+            evt.target.focus();
+        }).catch(processCefError);
     } else {
-        var request = {
+        var request = JSON.stringify({
             name: 'find',
             args: [
                 evt.target.value
             ]
-        };
-
-        var request_id = window.cefQuery({
-            request: JSON.stringify(request),
-            persistent: false,
-            onSuccess: function(response) { evt.target.focus(); },
-            onFailure: function(error_code, error_message) {
-                showMessageBox('error', "Error", "Error code: " + error_code + "; " + error_message);
-            }
         });
+
+        loot.query(request).then(function(result){
+            evt.target.focus();
+        }).catch(processCefError);
     }
 
 }
@@ -607,96 +562,44 @@ function setupEventHandlers() {
     searchBox.addEventListener('search', startSearch, false);
     window.addEventListener('keyup', focusSearch, false);
 }
-function processCefError(errorCode, errorMessage) {
-    showMessageBox('error', "Error", "Error code: " + error_code + "; " + error_message);
-}
 function initVars() {
-    // Create and send a new query.
-    var request_id = window.cefQuery({
-        request: 'getVersion',
-        persistent: false,
-        onSuccess: function(response) {
-            try {
-                loot.version = JSON.parse(response);
+    loot.query('getVersion').then(function(result){
+        try {
+            loot.version = JSON.parse(result);
 
-                document.getElementById('LOOTVersion').textContent = loot.version;
-            } catch (e) {
-                console.log(e);
-                console.log('Response: ' + response);
+            document.getElementById('LOOTVersion').textContent = loot.version;
+        } catch (e) {
+            console.log(e);
+            console.log('Response: ' + result);
+        }
+    }).catch(processCefError);
+
+    loot.query('getLanguages').then(function(result){
+        try {
+            loot.languages = JSON.parse(result);
+
+            /* Now fill in language options. */
+            var settingsLangSelect = document.getElementById('languageSelect');
+            var messageLangSelect = document.getElementById('messageRow').content.querySelector('.language');
+            for (var i = 0; i < loot.languages.length; ++i) {
+                var option = document.createElement('option');
+                option.value = loot.languages[i].locale;
+                option.textContent = loot.languages[i].name;
+                settingsLangSelect.appendChild(option);
+                messageLangSelect.appendChild(option.cloneNode(true));
             }
-        },
-        onFailure: processCefError
-    });
-    var request_id = window.cefQuery({
-        request: 'getLanguages',
-        persistent: false,
-        onSuccess: function(response) {
-            try {
-                loot.languages = JSON.parse(response);
+        } catch (e) {
+            console.log(e);
+            console.log('Response: ' + result);
+        }
+    }).catch(processCefError);
 
-                /* Now fill in language options. */
-                var settingsLangSelect = document.getElementById('languageSelect');
-                var messageLangSelect = document.getElementById('messageRow').content.querySelector('.language');
-                for (var i = 0; i < loot.languages.length; ++i) {
-                    var option = document.createElement('option');
-                    option.value = loot.languages[i].locale;
-                    option.textContent = loot.languages[i].name;
-                    settingsLangSelect.appendChild(option);
-                    messageLangSelect.appendChild(option.cloneNode(true));
-                }
-            } catch (e) {
-                console.log(e);
-                console.log('Response: ' + response);
-            }
-        },
-        onFailure: processCefError
-    });
-
-    var parallelPromises = [];
-
-    parallelPromises.push(new Promise(function(resolve, reject) {
-        var request_id = window.cefQuery({
-        request: 'getGameTypes',
-        persistent: false,
-        onSuccess: resolve,
-        onFailure: function(errorCode, errorMessage) {
-                reject(Error('Error code: ' + error_code + '; ' + error_message))
-            }
-        });
-    }));
-
-    parallelPromises.push(new Promise(function(resolve, reject) {
-        var request_id = window.cefQuery({
-        request: 'getInstalledGames',
-        persistent: false,
-        onSuccess: resolve,
-        onFailure: function(errorCode, errorMessage) {
-                reject(Error('Error code: ' + error_code + '; ' + error_message))
-            }
-        });
-    }));
-
-    parallelPromises.push(new Promise(function(resolve, reject) {
-        var request_id = window.cefQuery({
-        request: 'getGameData',
-        persistent: false,
-        onSuccess: resolve,
-        onFailure: function(errorCode, errorMessage) {
-                reject(Error('Error code: ' + error_code + '; ' + error_message))
-            }
-        });
-    }));
-
-    parallelPromises.push(new Promise(function(resolve, reject) {
-        var request_id = window.cefQuery({
-        request: 'getSettings',
-        persistent: false,
-        onSuccess: resolve,
-        onFailure: function(errorCode, errorMessage) {
-                reject(Error('Error code: ' + error_code + '; ' + error_message))
-            }
-        });
-    }));
+    var parallelPromises = [
+        loot.query('getGameTypes'),
+        loot.query('getInstalledGames'),
+        loot.query('getGameData'),
+        loot.query('getSettings'),
+    ];
 
     Promise.all(parallelPromises).then(function(results) {
         try {
@@ -768,9 +671,7 @@ function initVars() {
         gameSelect.value = loot.settings.game;
         document.getElementById('languageSelect').value = loot.settings.language;
         document.getElementById('debugVerbositySelect').value = loot.settings.debugVerbosity;
-    }).catch(function(err) {
-        console.log(err);
-    });
+    }).catch(processCefError);
 }
 function getPriorityString(plugin) {
 
