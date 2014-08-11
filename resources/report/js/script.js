@@ -330,11 +330,8 @@ function handlePluginDragOver(evt) {
 }
 
 function areSettingsValid() {
-    /* First validate table inputs. */
+    /* Validate inputs individually. */
     var inputs = document.getElementById('settings').getElementsByTagName('input');
-    /* If an input is readonly, it doesn't validate, but that's ok because the
-       read-only inputs must be valid.
-    */
     for (var i = 0; i < inputs.length; ++i) {
         if (!inputs[i].checkValidity()) {
             return false;
@@ -673,12 +670,6 @@ function initVars() {
         document.getElementById('debugVerbositySelect').value = loot.settings.debugVerbosity;
     }).catch(processCefError);
 }
-function getPriorityString(plugin) {
-
-}
-function getTagsStrings(plugin) {
-}
-
 function updateInterfaceWithGameInfo(response) {
 
     try {
