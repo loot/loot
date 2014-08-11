@@ -101,6 +101,24 @@ function toggleDisplayCSS(evt) {
     }
 }
 
+function getConflictingPluginsFromFilter() {
+    if (document.getElementById('showOnlyConflicts').checked) {
+        var conflictsPlugin = document.getElementById('conflictsPlugin');
+        if (conflictsPlugin.value.length != 0) {
+
+            var request = JSON.stringify({
+                name: 'getConflictingPlugins',
+                args: [
+                    conflictsPlugin.value
+                ]
+            });
+
+            return loot.query(request).then(JSON.parse).catch(processCefError);
+        }
+    }
+
+    return Promise.resolve([]);
+}
 function togglePlugins(evt) {
     var sections = document.getElementById('main').children;
     var entries = document.getElementById('pluginsNav').children;
@@ -109,65 +127,63 @@ function togglePlugins(evt) {
     if (sections.length - 2 != entries.length) {
         throw "Error: Number of plugins in sidebar doesn't match number of plugins in main area!";
     }
-    /* Check if the conflict filter is enabled, and if a plugin has been given. */
-    var conflicts = [];
-    if (document.getElementById('showOnlyConflicts').checked) {
-        var plugin = document.getElementById('conflictsPlugin').value;
-        if (plugin.length != 0) {
-            conflicts = getConflictingPlugins(plugin);
-        }
-    }
-    /* Start at 3rd section to skip summary and general messages. */
-    for (var i = 2; i < sections.length; ++i) {
-        var isConflictingPlugin = false;
-        var isMessageless = true;
-        var hasInactivePluginMessages = false;
-        var messages = sections[i].getElementsByTagName('ul')[0].getElementsByTagName('li');
-        if (sections[i].getAttribute('data-active') == 'false') {
-            hasInactivePluginMessages = true;
-        }
-        if (conflicts.indexOf(sections[i].getElementsByTagName('h1')[0].textContent) != -1) {
-            isConflictingPlugin = true;
-        }
-        for (var j = 0; j < messages.length; ++j) {
-            var hasPluginMessages = false;
-            var hasNotes = false;
-            var hasDoNotCleanMessages = false;
-            if (messages[j].parentElement.parentElement.id != 'generalMessages') {
-                hasPluginMessages = true;
+    /* The conflict filter, if enabled, executes C++ code, so needs to be
+       handled using a promise, so the rest of the function should wait until
+       it is completed.
+    */
+    getConflictingPluginsFromFilter().then(function(conflicts) {
+        /* Start at 3rd section to skip summary and general messages. */
+        for (var i = 2; i < sections.length; ++i) {
+            var isConflictingPlugin = false;
+            var isMessageless = true;
+            var hasInactivePluginMessages = false;
+            var messages = sections[i].getElementsByTagName('ul')[0].getElementsByTagName('li');
+            if (sections[i].getAttribute('data-active') == 'false') {
+                hasInactivePluginMessages = true;
             }
-            if (messages[j].className.indexOf('say') != -1) {
-                hasNotes = true;
+            if (conflicts.indexOf(sections[i].getElementsByTagName('h1')[0].textContent) != -1) {
+                isConflictingPlugin = true;
             }
-            if (messages[j].textContent.indexOf('Do not clean.') != -1) {
-                hasDoNotCleanMessages = true;
+            for (var j = 0; j < messages.length; ++j) {
+                var hasPluginMessages = false;
+                var hasNotes = false;
+                var hasDoNotCleanMessages = false;
+                if (messages[j].parentElement.parentElement.id != 'generalMessages') {
+                    hasPluginMessages = true;
+                }
+                if (messages[j].className.indexOf('say') != -1) {
+                    hasNotes = true;
+                }
+                if (messages[j].textContent.indexOf('Do not clean.') != -1) {
+                    hasDoNotCleanMessages = true;
+                }
+                if ((document.getElementById('hideAllPluginMessages').checked && hasPluginMessages)
+                    || (document.getElementById('hideNotes').checked && hasNotes)
+                    || (document.getElementById('hideDoNotCleanMessages').checked && hasDoNotCleanMessages)
+                    || (document.getElementById('hideInactivePluginMessages').checked && hasInactivePluginMessages)) {
+                    hideElement(messages[j]);
+                    ++hiddenMessageNo;
+                } else {
+                    showElement(messages[j]);
+                }
+                if (messages[j].className.indexOf('hidden') == -1) {
+                    isMessageless = false;
+                    break;
+                }
             }
-            if ((document.getElementById('hideAllPluginMessages').checked && hasPluginMessages)
-                || (document.getElementById('hideNotes').checked && hasNotes)
-                || (document.getElementById('hideDoNotCleanMessages').checked && hasDoNotCleanMessages)
-                || (document.getElementById('hideInactivePluginMessages').checked && hasInactivePluginMessages)) {
-                hideElement(messages[j]);
-                ++hiddenMessageNo;
+            if ((document.getElementById('hideMessagelessPlugins').checked && isMessageless)
+                || conflicts.length > 0 && !isConflictingPlugin) {
+                hideElement(sections[i]);
+                hideElement(entries[i - 2]);
+                ++hiddenPluginNo;
             } else {
-                showElement(messages[j]);
-            }
-            if (messages[j].className.indexOf('hidden') == -1) {
-                isMessageless = false;
-                break;
+                showElement(sections[i]);
+                showElement(entries[i - 2]);
             }
         }
-        if ((document.getElementById('hideMessagelessPlugins').checked && isMessageless)
-            || conflicts.length > 0 && !isConflictingPlugin) {
-            hideElement(sections[i]);
-            hideElement(entries[i - 2]);
-            ++hiddenPluginNo;
-        } else {
-            showElement(sections[i]);
-            showElement(entries[i - 2]);
-        }
-    }
-	document.getElementById('hiddenMessageNo').textContent = hiddenMessageNo;
-    document.getElementById('hiddenPluginNo').textContent = hiddenPluginNo;
+        document.getElementById('hiddenMessageNo').textContent = hiddenMessageNo;
+        document.getElementById('hiddenPluginNo').textContent = hiddenPluginNo;
+    });
 }
 function closeMessageDialog(evt) {
     var ret = evt.target.returnValue == 'true';

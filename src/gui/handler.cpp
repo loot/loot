@@ -137,6 +137,7 @@ namespace loot {
             }
             catch (exception &e) {
                 BOOST_LOG_TRIVIAL(error) << "Failed to parse CEF query request \"" << request << "\": " << e.what();
+                callback->Failure(-1, e.what());
                 return false;
             }
 
@@ -165,15 +166,40 @@ namespace loot {
                 BOOST_LOG_TRIVIAL(info) << "Changing game to that with folder: " << folder;
                 g_app_state.ChangeGame(folder);
 
-                BOOST_LOG_TRIVIAL(info) << "Setting LOOT window title bar text to include game name: " << g_app_state.CurrentGame().Name();
 #if defined(OS_WIN)
+                BOOST_LOG_TRIVIAL(info) << "Setting LOOT window title bar text to include game name: " << g_app_state.CurrentGame().Name();
                 HWND handle = browser->GetHost()->GetWindowHandle();
                 SetWindowText(handle, ToWinWide("LOOT: " + g_app_state.CurrentGame().Name()).c_str());
 #endif
 
                 callback->Success(GetGameData());
                 return true;
+            }
+            else if (requestName == "getConflictingPlugins") {
+                // Has one arg, which is the name of the plugin to get conflicts for.
+                const string pluginName = req["args"][0].as<string>();
+                BOOST_LOG_TRIVIAL(debug) << "Searching for plugins that conflict with " << pluginName;
 
+                auto pluginIt = g_app_state.CurrentGame().plugins.find(pluginName);
+
+                // Checking for FormID overlap will only work if the plugins have been loaded, so check if
+                // the first plugin has any FormIDs in memory, and if not load all plugins.
+                if (g_app_state.CurrentGame().plugins.begin()->second.FormIDs().size() == 0)
+                    g_app_state.CurrentGame().LoadPlugins(false);
+
+                vector<string> conflictingPlugins;
+                if (pluginIt != g_app_state.CurrentGame().plugins.end()) {
+                    for (const auto& pluginPair : g_app_state.CurrentGame().plugins) {
+                        if (pluginIt->second.DoFormIDsOverlap(pluginPair.second)) {
+                            BOOST_LOG_TRIVIAL(debug) << "Found conflicting plugin: " << pluginPair.first;
+                            conflictingPlugins.push_back(pluginPair.first);
+                        }
+                    }
+                }
+
+                YAML::Node temp(conflictingPlugins);
+                callback->Success(JSON::stringify(temp));
+                return true;
             }
         }
 

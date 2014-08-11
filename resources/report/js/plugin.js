@@ -100,17 +100,6 @@ function Plugin(obj) {
         return priorityText;
     }
 
-    Plugin.prototype.getConflictingPlugins = function() {
-        var request = JSON.stringify({
-            name: 'getConflictingPlugins',
-            args: [
-                this.name
-            ]
-        });
-
-        loot.query(request).catch(processCefError);
-    }
-
     Plugin.prototype.createCard = function() {
         var card = new PluginCard();
         this.card = card;
