@@ -33,7 +33,7 @@
 
 class SettingsFrame : public wxDialog {
 public:
-    SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node& settings, std::vector<loot::Game>& games, wxPoint pos, wxSize size);
+    SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node& settings, std::vector<loot::Game>& games, size_t currentGameIndex, wxPoint pos, wxSize size);
 
 	void OnQuit(wxCommandEvent& event);
     void OnGameSelect(wxListEvent& event);
@@ -55,6 +55,7 @@ private:
 
     YAML::Node& _settings;
     std::vector<loot::Game>& _games;
+    size_t _currentGameIndex;
 };
 
 class GameEditDialog : public wxDialog {

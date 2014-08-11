@@ -319,6 +319,10 @@ namespace loot {
         return (boost::iequals(_name, rhs.Name()) || boost::iequals(lootFolderName, rhs.FolderName()));
     }
 
+    bool Game::operator == (const std::string& nameOrFolderName) const {
+        return (boost::iequals(_name, nameOrFolderName) || boost::iequals(lootFolderName, nameOrFolderName));
+    }
+
     unsigned int Game::Id() const {
         return id;
     }

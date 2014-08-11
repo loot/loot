@@ -34,7 +34,7 @@
 
 using namespace std;
 
-SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node& settings, std::vector<loot::Game>& games, wxPoint pos, wxSize size) : wxDialog(parent, wxID_ANY, title, pos, size, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER), _settings(settings), _games(games) {
+SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node& settings, std::vector<loot::Game>& games, size_t currentGameIndex, wxPoint pos, wxSize size) : wxDialog(parent, wxID_ANY, title, pos, size, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER), _settings(settings), _games(games), _currentGameIndex(currentGameIndex) {
 
     //Initialise drop-down list contents.
 	wxString DebugVerbosity[] = {
@@ -224,19 +224,25 @@ void SettingsFrame::OnQuit(wxCommandEvent& event) {
 
         _settings["Update Masterlist"] = UpdateMasterlistBox->IsChecked();
 
-        _games.clear();
+        unordered_set<string> newGameFolders;
         for (size_t i=0,max=gamesList->GetItemCount(); i < max; ++i) {
-            string name, folder, master, repo, branch, path, registry;
+            /* We want to avoid overwriting existing game objects as doing so
+               clears the game caches. Instead, recognise that game folder names
+               must be unique. Therefore, use Game::SetDetails() to set
+               the settings for each existing game, and add new games on.
+               For any games that have been deleted, check against the newGameNames
+               hashset and remove any not in it.
+            */
+
+            string name = gamesList->GetItemText(i, 0).ToUTF8();
+            string folder = gamesList->GetItemText(i, 2).ToUTF8();
+            string master = gamesList->GetItemText(i, 3).ToUTF8();
+            string repo = gamesList->GetItemText(i, 4).ToUTF8();
+            string branch = gamesList->GetItemText(i, 5).ToUTF8();
+            string path = gamesList->GetItemText(i, 6).ToUTF8();
+            string registry = gamesList->GetItemText(i, 7).ToUTF8();
+
             unsigned int id;
-
-            name = gamesList->GetItemText(i, 0).ToUTF8();
-            folder = gamesList->GetItemText(i, 2).ToUTF8();
-            master = gamesList->GetItemText(i, 3).ToUTF8();
-            repo = gamesList->GetItemText(i, 4).ToUTF8();
-            branch = gamesList->GetItemText(i, 5).ToUTF8();
-            path = gamesList->GetItemText(i, 6).ToUTF8();
-            registry = gamesList->GetItemText(i, 7).ToUTF8();
-
             if (gamesList->GetItemText(i, 1).ToUTF8() == loot::Game(loot::Game::tes4).FolderName())
                 id = loot::Game::tes4;
             else if (gamesList->GetItemText(i, 1).ToUTF8() == loot::Game(loot::Game::tes5).FolderName())
@@ -246,7 +252,23 @@ void SettingsFrame::OnQuit(wxCommandEvent& event) {
             else
                 id = loot::Game::fonv;
 
-            _games.push_back(loot::Game(id, folder).SetDetails(name, master, repo, branch, path, registry));
+            auto pos = find(_games.begin(), _games.end(), folder);
+
+            if (pos != _games.end()) {
+                pos->SetDetails(name, master, repo, branch, path, registry);
+            }
+            else {
+                _games.push_back(loot::Game(id, folder).SetDetails(name, master, repo, branch, path, registry));
+            }
+
+            newGameFolders.insert(folder);
+        }
+
+        for (auto it = _games.begin(); it != _games.end();) {
+            if (newGameFolders.find(it->FolderName()) == newGameFolders.end())
+                it = _games.erase(it);
+            else
+                ++it;
         }
     }
 
@@ -258,7 +280,8 @@ void SettingsFrame::OnGameSelect(wxListEvent& event) {
     if (name == loot::Game(loot::Game::tes4).Name()
      || name == loot::Game(loot::Game::tes5).Name()
      || name == loot::Game(loot::Game::fo3).Name()
-     || name == loot::Game(loot::Game::fonv).Name()) {
+     || name == loot::Game(loot::Game::fonv).Name()
+     || event.GetIndex() == _currentGameIndex) {
         removeBtn->Enable(false);
      } else {
         removeBtn->Enable(true);

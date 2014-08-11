@@ -97,6 +97,7 @@ namespace loot {
         bool IsInstalled() const;
 
         bool operator == (const Game& rhs) const;  //Compares names and folder names.
+        bool operator == (const std::string& nameOrFolderName) const;
 
         unsigned int Id() const;
         std::string Name() const;  //Returns the game's name, eg. "TES IV: Oblivion".

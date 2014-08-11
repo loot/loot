@@ -54,7 +54,6 @@
 #   include "shlobj.h"
 #   include "shlwapi.h"
 #endif
-#define BUFSIZE 4096
 
 namespace loot {
     using namespace std;

@@ -143,7 +143,7 @@ ELSEIF (MSVC)
         ENDFOREACH()
     ENDIF ()
 
-    set (CMAKE_EXE_LINKER_FLAGS "/SUBSYSTEM:WINDOWS")
+    set (CMAKE_EXE_LINKER_FLAGS "/SUBSYSTEM:WINDOWS /LARGEADDRESSAWARE")
     set (LOOT_LIBS libyaml-cppmt
                    version
                    loadorder${PROJECT_ARCH}
