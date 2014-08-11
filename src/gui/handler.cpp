@@ -110,6 +110,10 @@ namespace loot {
             callback->Success(GetGameTypes());
             return true;
         }
+        else if (request == "getInstalledGames") {
+            callback->Success(GetInstalledGames());
+            return true;
+        }
         else if (request == "getGameData") {
             BOOST_LOG_TRIVIAL(info) << "Setting LOOT window title bar text to include game name: " << g_app_state.CurrentGame().Name();
 #if defined(OS_WIN)
@@ -136,11 +140,11 @@ namespace loot {
                 return false;
             }
 
-            const std::string requestName = req["name"].as<string>();
+            const string requestName = req["name"].as<string>();
 
             if (requestName == "find") {
                 // Has one arg, which is the search string.
-                const std::string search = req["args"][0].as<string>();
+                const string search = req["args"][0].as<string>();
 
                 // In case there is a search already running, cancel it.
                 browser->GetHost()->StopFinding(true);
@@ -156,7 +160,7 @@ namespace loot {
             }
             else if (requestName == "changeGame") {
                 // Has one arg, which is the folder name of the new game.
-                const std::string folder = req["args"][0].as<string>();
+                const string folder = req["args"][0].as<string>();
 
                 BOOST_LOG_TRIVIAL(info) << "Changing game to that with folder: " << folder;
                 g_app_state.ChangeGame(folder);
@@ -225,6 +229,16 @@ namespace loot {
         temp.push_back(Game(Game::tes5).FolderName());
         temp.push_back(Game(Game::fo3).FolderName());
         temp.push_back(Game(Game::fonv).FolderName());
+        return JSON::stringify(temp);
+    }
+
+    std::string Handler::GetInstalledGames() {
+        BOOST_LOG_TRIVIAL(info) << "Getting LOOT's detected games.";
+        YAML::Node temp;
+        for (const auto &game : g_app_state.InstalledGames()) {
+            if (game.IsInstalled())
+                temp.push_back(game.FolderName());
+        }
         return JSON::stringify(temp);
     }
 

@@ -247,6 +247,9 @@ namespace loot {
     Game& LootState::CurrentGame() {
         return _games[_currentGame];
     }
+    std::vector<Game>& LootState::InstalledGames() {
+        return _games;
+    }
 
     const YAML::Node& LootState::GetSettings() const {
         return _settings;

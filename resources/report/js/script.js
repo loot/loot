@@ -207,7 +207,7 @@ function updateSelectedGame() {
             index = i;
         }
     }
-    if (loot.settings.games.type == 'Skyrim') {
+    if (loot.settings.games[index].type == 'Skyrim') {
         document.getElementById('redatePluginsButton').classList.toggle('disabled', false);
     } else {
         document.getElementById('redatePluginsButton').classList.toggle('disabled', true);
@@ -245,7 +245,7 @@ function changeGame(evt) {
     var request = {
         name: 'changeGame',
         args: [
-            evt.target.getAttribute('data-target')
+            evt.currentTarget.getAttribute('data-target')
         ]
     };
 
@@ -382,7 +382,7 @@ function toggleMenu(evt) {
         hideElement(target);
 
         /* Also remove event listeners to any dynamically-generated items. */
-        var elements = target.querySelectorAll('[data-action]');
+        var elements = target.querySelectorAll('[data-action]:not(.disabled)');
         for (var i = 0; i < elements.length; ++i) {
             var action = elements[i].getAttribute('data-action');
             if (action == 'show-editor') {
@@ -403,7 +403,7 @@ function toggleMenu(evt) {
         showElement(target);
 
         /* Also attach event listeners to any dynamically-generated items. */
-        var elements = target.querySelectorAll('[data-action]');
+        var elements = target.querySelectorAll('[data-action]:not(.disabled)');
         for (var i = 0; i < elements.length; ++i) {
             var action = elements[i].getAttribute('data-action');
             if (action == 'show-editor') {
@@ -605,7 +605,7 @@ function setupEventHandlers() {
 function processCefError(errorCode, errorMessage) {
     showMessageBox('error', "Error", "Error code: " + error_code + "; " + error_message);
 }
-function initGlobalVars() {
+function initVars() {
     // Create and send a new query.
     var request_id = window.cefQuery({
         request: 'getVersion',
@@ -646,78 +646,125 @@ function initGlobalVars() {
         },
         onFailure: processCefError
     });
-    var request_id = window.cefQuery({
+
+    var parallelPromises = [];
+
+    parallelPromises.push(new Promise(function(resolve, reject) {
+        var request_id = window.cefQuery({
         request: 'getGameTypes',
         persistent: false,
-        onSuccess: function(response) {
-            try {
-                loot.gameTypes = JSON.parse(response);
+        onSuccess: resolve,
+        onFailure: function(errorCode, errorMessage) {
+                reject(Error('Error code: ' + error_code + '; ' + error_message))
+            }
+        });
+    }));
 
-                /* Fill in game row template's game type options. */
-                var select = document.getElementById('gameRow').content.querySelector('select');
-                for (var j = 0; j < loot.gameTypes.length; ++j) {
-                    var option = document.createElement('option');
-                    option.value = loot.gameTypes[j];
-                    option.textContent = loot.gameTypes[j];
-                    select.appendChild(option);
-                }
-            } catch (e) {
-                console.log(e);
-                console.log('Response: ' + response);
+    parallelPromises.push(new Promise(function(resolve, reject) {
+        var request_id = window.cefQuery({
+        request: 'getInstalledGames',
+        persistent: false,
+        onSuccess: resolve,
+        onFailure: function(errorCode, errorMessage) {
+                reject(Error('Error code: ' + error_code + '; ' + error_message))
+            }
+        });
+    }));
+
+    parallelPromises.push(new Promise(function(resolve, reject) {
+        var request_id = window.cefQuery({
+        request: 'getGameData',
+        persistent: false,
+        onSuccess: resolve,
+        onFailure: function(errorCode, errorMessage) {
+                reject(Error('Error code: ' + error_code + '; ' + error_message))
+            }
+        });
+    }));
+
+    parallelPromises.push(new Promise(function(resolve, reject) {
+        var request_id = window.cefQuery({
+        request: 'getSettings',
+        persistent: false,
+        onSuccess: resolve,
+        onFailure: function(errorCode, errorMessage) {
+                reject(Error('Error code: ' + error_code + '; ' + error_message))
+            }
+        });
+    }));
+
+    Promise.all(parallelPromises).then(function(results) {
+        try {
+            loot.gameTypes = JSON.parse(results[0]);
+        } catch (e) {
+            console.log(e);
+            console.log('getGameTypes response: ' + results[0]);
+        }
+
+        /* Fill in game row template's game type options. */
+        var select = document.getElementById('gameRow').content.querySelector('select');
+        for (var j = 0; j < loot.gameTypes.length; ++j) {
+            var option = document.createElement('option');
+            option.value = loot.gameTypes[j];
+            option.textContent = loot.gameTypes[j];
+            select.appendChild(option);
+        }
+
+        try {
+            loot.installedGames = JSON.parse(results[1]);
+        } catch (e) {
+            console.log(e);
+            console.log('getInstalledGames response: ' + results[1]);
+        }
+
+        updateInterfaceWithGameInfo(results[2]);
+
+        try {
+            loot.settings = JSON.parse(results[3]);
+        } catch (e) {
+            console.log(e);
+            console.log('getSettings response: ' + results[3]);
+        }
+
+        /* Now fill game lists/table. */
+        var gameSelect = document.getElementById('defaultGameSelect');
+        var gameMenu = document.getElementById('gameMenu').firstElementChild;
+        var gameTable = document.getElementById('gameTable');
+        for (var i = 0; i < loot.settings.games.length; ++i) {
+            var option = document.createElement('option');
+            option.value = loot.settings.games[i].folder;
+            option.textContent = loot.settings.games[i].name;
+            gameSelect.appendChild(option);
+
+            var li = document.createElement('li');
+            li.setAttribute('data-action', 'change-game');
+            li.setAttribute('data-target', loot.settings.games[i].folder);
+
+            if (loot.installedGames.indexOf(loot.settings.games[i].folder) == -1) {
+                li.classList.toggle('disabled', true);
             }
 
-            // Settings depend on having the game types filled, so now send the CEF query for the settings.
-            var request_id = window.cefQuery({
-                request: 'getSettings',
-                persistent: false,
-                onSuccess: function(response) {
-                    try {
-                        loot.settings = JSON.parse(response);
+            var icon = document.createElement('span');
+            icon.className = 'fa fa-fw';
+            li.appendChild(icon);
 
+            var text = document.createElement('span');
+            text.textContent = loot.settings.games[i].name;
+            li.appendChild(text);
 
-                        /* Now fill game lists/table. */
-                        var gameSelect = document.getElementById('defaultGameSelect');
-                        var gameMenu = document.getElementById('gameMenu').firstElementChild;
-                        var gameTable = document.getElementById('gameTable');
-                        for (var i = 0; i < loot.settings.games.length; ++i) {
-                            var option = document.createElement('option');
-                            option.value = loot.settings.games[i].folder;
-                            option.textContent = loot.settings.games[i].name;
-                            gameSelect.appendChild(option);
+            gameMenu.appendChild(li);
 
-                            var li = document.createElement('li');
-                            li.setAttribute('data-action', 'change-game');
-                            li.setAttribute('data-target', loot.settings.games[i].folder);
+            gameTable.addRow(loot.settings.games[i]);
+        }
 
-                            var icon = document.createElement('span');
-                            icon.className = 'fa fa-fw';
-                            li.appendChild(icon);
+        /* Highlight game in menu. */
+        updateSelectedGame();
 
-                            var text = document.createElement('span');
-                            text.textContent = loot.settings.games[i].name;
-                            li.appendChild(text);
-
-                            gameMenu.appendChild(li);
-
-                            gameTable.addRow(loot.settings.games[i]);
-                        }
-
-                        /* Highlight game in menu. */
-                        updateSelectedGame();
-
-                        gameSelect.value = loot.settings.game;
-                        document.getElementById('languageSelect').value = loot.settings.language;
-                        document.getElementById('debugVerbositySelect').value = loot.settings.debugVerbosity;
-                    } catch (e) {
-                        console.log(e);
-                        console.log('Response: ' + response);
-                    }
-
-                },
-                onFailure: processCefError
-            });
-        },
-        onFailure: processCefError
+        gameSelect.value = loot.settings.game;
+        document.getElementById('languageSelect').value = loot.settings.language;
+        document.getElementById('debugVerbositySelect').value = loot.settings.debugVerbosity;
+    }).catch(function(err) {
+        console.log(err);
     });
 }
 function getPriorityString(plugin) {
@@ -732,7 +779,7 @@ function updateInterfaceWithGameInfo(response) {
         loot.game = JSON.parse(response, jsonToPlugin);
     } catch (e) {
         console.log(e);
-        console.log('Response: ' + response);
+        console.log('getGameData response: ' + response);
     }
 
     var totalMessageNo = 0;
@@ -796,17 +843,6 @@ function updateInterfaceWithGameInfo(response) {
     // Now set up event handlers, as they depend on the plugin cards having been created.
     setupEventHandlers();
 }
-function getGameData() {
-    // Create and send a new query.
-    var request_id = window.cefQuery({
-        request: 'getGameData',
-        persistent: false,
-        onSuccess: updateInterfaceWithGameInfo,
-        onFailure: function(error_code, error_message) {
-            showMessageBox('error', "Error", "Error code: " + error_code + "; " + error_message);
-        }
-    });
-}
 
 require.config({
     baseUrl: "js",
@@ -819,8 +855,7 @@ require(['marked', 'order!custom', 'order!plugin'], function(response) {
         tables: true,
         sanitize: true
     });
-    initGlobalVars();
-    getGameData();
+    initVars();
     if (isStorageSupported()) {
         loadSettings();
     }

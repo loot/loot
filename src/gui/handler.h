@@ -53,6 +53,7 @@ namespace loot {
         std::string GetSettings();
         std::string GetLanguages();
         std::string GetGameTypes();
+        std::string GetInstalledGames();
         std::string GetGameData();
     };
 

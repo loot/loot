@@ -70,12 +70,13 @@ namespace loot {
         void ChangeGame(const std::string& newGameFolder);
 
         Game& CurrentGame();
+        std::vector<Game>& InstalledGames();
 
         const YAML::Node& GetSettings() const;
 
     private:
         YAML::Node _settings;
-        std::vector<loot::Game> _games;
+        std::vector<Game> _games;
         size_t _currentGame;
     };
 
