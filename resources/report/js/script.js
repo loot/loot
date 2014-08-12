@@ -338,7 +338,7 @@ function clearAllMetadata(evt) {
 function handlePluginDrop(evt) {
     evt.stopPropagation();
 
-    if (evt.currentTarget.tagName == 'TABLE' && (evt.currentTarget.className.indexOf('req') != -1 || evt.currentTarget.className.indexOf('inc') != -1 || evt.currentTarget.className.indexOf('loadAfter') != -1)) {
+    if (evt.currentTarget.tagName == 'TABLE' && (evt.currentTarget.id == 'req' || evt.currentTarget.id == 'inc' || evt.currentTarget.id == 'loadAfter')) {
         var data = {
             name: evt.dataTransfer.getData('text/plain')
         };

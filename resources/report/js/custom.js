@@ -183,9 +183,9 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
                     elements[i].removeAttribute('draggable', true);
                     elements[i].removeEventListener('dragstart', handlePluginDragStart, false);
                 }
-                elements = card.shadowRoot.querySelector('table');
+                elements = card.shadowRoot.getElementsByTagName('table');
                 for (var i = 0; i < elements.length; ++i) {
-                    if (elements[i].className.indexOf('loadAfter') != -1 || elements[i].className.indexOf('req') != -1 || elements[i].className.indexOf('inc') != -1) {
+                    if (elements[i].id == 'loadAfter' || elements[i].id == 'req' || elements[i].id == 'inc') {
                         elements[i].removeEventListener('drop', handlePluginDrop, false);
                         elements[i].removeEventListener('dragover', handlePluginDragOver, false);
                     }
@@ -402,9 +402,9 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
                 elements[i].setAttribute('draggable', true);
                 elements[i].addEventListener('dragstart', handlePluginDragStart, false);
             }
-            elements = this.shadowRoot.querySelector('table');
+            elements = this.shadowRoot.getElementsByTagName('table');
             for (var i = 0; i < elements.length; ++i) {
-                if (elements[i].className.indexOf('loadAfter') != -1 || elements[i].className.indexOf('req') != -1 || elements[i].className.indexOf('inc') != -1) {
+                if (elements[i].id == 'loadAfter' || elements[i].id == 'req' || elements[i].id == 'inc') {
                     elements[i].addEventListener('drop', handlePluginDrop, false);
                     elements[i].addEventListener('dragover', handlePluginDragOver, false);
                 }
@@ -665,8 +665,8 @@ var EditableTableProto = Object.create(HTMLTableElement.prototype, {
         value: function() {
             var rowDeletes = this.getElementsByTagName('tbody')[0].getElementsByClassName('fa-trash-o');
 
-            for (var i = 0; i < rowDeletes.length; ++i) {
-                rowDeletes[i].click();
+            while (rowDeletes.length > 0) {
+                rowDeletes[0].click();
             }
         }
     },
