@@ -19,7 +19,7 @@ LOOT requires the following libraries (version numbers used in latest developmen
 
 * [Alphanum](http://www.davekoelle.com/files/alphanum.hpp)
 * [Boost](http://www.boost.org) v1.56.0
-* [Chromium Embedded Framework](https://code.google.com/p/chromiumembedded/) trunk
+* [Chromium Embedded Framework](https://code.google.com/p/chromiumembedded/) branch 2062
 * [Libespm](http://github.com/WrinklyNinja/libespm)
 * [Libgit2](http://libgit2.github.com/) v0.21.1
 * [Libloadorder](http://github.com/WrinklyNinja/libloadorder)
