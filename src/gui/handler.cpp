@@ -184,6 +184,20 @@ namespace loot {
                 callback->Success("[]");
             return true;
         }
+        else if (request == "redatePlugins") {
+            BOOST_LOG_TRIVIAL(debug) << "Redating plugins.";
+            try {
+                g_app_state.CurrentGame().RedatePlugins();
+            }
+            catch (std::exception& e) {
+                BOOST_LOG_TRIVIAL(error) << "Failed to redate plugins. " << e.what();
+                callback->Failure(-1, e.what());
+                return true;
+            }
+
+            callback->Success("");
+            return true;
+        }
         else {
             // May be a request with arguments.
             YAML::Node req;

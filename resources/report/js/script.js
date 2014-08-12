@@ -301,7 +301,13 @@ function redatePlugins(evt) {
         return;
     }
 
-    showMessageDialog('Redate Plugins', 'This feature is provided so that modders using the Creation Kit may set the load order it uses. A side-effect is that any subscribed Steam Workshop mods will be re-downloaded by Steam. Do you wish to continue?');
+    showMessageDialog('Redate Plugins', 'This feature is provided so that modders using the Creation Kit may set the load order it uses. A side-effect is that any subscribed Steam Workshop mods will be re-downloaded by Steam. Do you wish to continue?', function(result){
+        if (result) {
+            loot.query('redatePlugins').then(function(response){
+                showMessageBox('info', 'Redate Plugins', 'Plugins were successfully redated.');
+            }).catch(processCefError);
+        }
+    });
 
     //showMessageBox('info', 'Redate Plugins', 'Plugins were successfully redated.');
 }
@@ -373,13 +379,7 @@ function toggleMenu(evt) {
         var elements = target.querySelectorAll('[data-action]:not(.disabled)');
         for (var i = 0; i < elements.length; ++i) {
             var action = elements[i].getAttribute('data-action');
-            if (action == 'show-editor') {
-                elements[i].removeEventListener('click', showEditor, false);
-            } else if (action == 'copy-metadata') {
-                elements[i].removeEventListener('click', copyMetadata, false);
-            } else if (action == 'clear-metadata') {
-                elements[i].removeEventListener('click', clearMetadata, false);
-            } else if (action == 'change-game') {
+            if (action == 'change-game') {
                 elements[i].removeEventListener('click', changeGame, false);
             }
         }
@@ -394,13 +394,7 @@ function toggleMenu(evt) {
         var elements = target.querySelectorAll('[data-action]:not(.disabled)');
         for (var i = 0; i < elements.length; ++i) {
             var action = elements[i].getAttribute('data-action');
-            if (action == 'show-editor') {
-                elements[i].addEventListener('click', showEditor, false);
-            } else if (action == 'copy-metadata') {
-                elements[i].addEventListener('click', copyMetadata, false);
-            } else if (action == 'clear-metadata') {
-                elements[i].addEventListener('click', clearMetadata, false);
-            } else if (action == 'change-game') {
+            if (action == 'change-game') {
                 elements[i].addEventListener('click', changeGame, false);
             }
         }
