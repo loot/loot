@@ -725,7 +725,7 @@ namespace loot {
         return false;
     }
 
-    void Plugin::CheckInstallValidity(const Game& game) {
+    bool Plugin::CheckInstallValidity(const Game& game) {
         unsigned int messageType;
         if (game.IsActive(name))
             messageType = loot::Message::error;
@@ -755,6 +755,37 @@ namespace loot {
                 messages.push_back(loot::Message(messageType, (boost::format(boost::locale::translate("This plugin is incompatible with \"%1%\", but both are present.")) % inc.Name()).str()));
             }
         }
+
+        // Also evaluate dirty info.
+        bool isDirty = false;
+        for (const auto &element : _dirtyInfo) {
+            boost::format f;
+            if (element.ITMs() > 0 && element.UDRs() > 0 && element.DeletedNavmeshes() > 0)
+                f = boost::format(boost::locale::translate("Contains %1% ITM records, %2% UDR records and %3% deleted navmeshes. Clean with %4%.")) % element.ITMs() % element.UDRs() % element.DeletedNavmeshes() % element.CleaningUtility();
+            else if (element.ITMs() == 0 && element.UDRs() == 0 && element.DeletedNavmeshes() == 0)
+                f = boost::format(boost::locale::translate("Clean with %1%.")) % element.CleaningUtility();
+
+
+            else if (element.ITMs() == 0 && element.UDRs() > 0 && element.DeletedNavmeshes() > 0)
+                f = boost::format(boost::locale::translate("Contains %1% UDR records and %2% deleted navmeshes. Clean with %3%.")) % element.UDRs() % element.DeletedNavmeshes() % element.CleaningUtility();
+            else if (element.ITMs() == 0 && element.UDRs() == 0 && element.DeletedNavmeshes() > 0)
+                f = boost::format(boost::locale::translate("Contains %1% deleted navmeshes. Clean with %2%.")) % element.DeletedNavmeshes() % element.CleaningUtility();
+            else if (element.ITMs() == 0 && element.UDRs() > 0 && element.DeletedNavmeshes() == 0)
+                f = boost::format(boost::locale::translate("Contains %1% UDR records. Clean with %2%.")) % element.UDRs() % element.CleaningUtility();
+
+            else if (element.ITMs() > 0 && element.UDRs() == 0 && element.DeletedNavmeshes() > 0)
+                f = boost::format(boost::locale::translate("Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%.")) % element.ITMs() % element.DeletedNavmeshes() % element.CleaningUtility();
+            else if (element.ITMs() > 0 && element.UDRs() == 0 && element.DeletedNavmeshes() == 0)
+                f = boost::format(boost::locale::translate("Contains %1% ITM records. Clean with %2%.")) % element.ITMs() % element.CleaningUtility();
+
+            else if (element.ITMs() > 0 && element.UDRs() > 0 && element.DeletedNavmeshes() == 0)
+                f = boost::format(boost::locale::translate("Contains %1% ITM records and %2% UDR records. Clean with %3%.")) % element.ITMs() % element.UDRs() % element.CleaningUtility();
+
+            messages.push_back(loot::Message(loot::Message::warn, f.str()));
+            isDirty = true;
+        }
+
+        return isDirty;
     }
 
     bool Plugin::LoadsBSA(const Game& game) const {

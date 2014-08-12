@@ -131,8 +131,57 @@ namespace loot {
             return true;
         }
         else if (request == "clearAllMetadata") {
+            // First regenerate the derived metadata (priority, messages, tags and dirty state)
+            // for any plugins with userlist entries, ignoring the user metadata.
+
+            //Set language.
+            unsigned int language;
+            if (g_app_state.GetSettings()["language"])
+                language = Language(g_app_state.GetSettings()["language"].as<string>()).Code();
+            else
+                language = Language::any;
+
+            YAML::Node pluginsNode;
+            for (const auto &plugin : g_app_state.CurrentGame().userlist.plugins) {
+                YAML::Node temp;
+
+                auto pluginIt = g_app_state.CurrentGame().plugins.find(plugin.Name());
+                if (pluginIt != g_app_state.CurrentGame().plugins.end()) {
+                    Plugin tempPlugin(pluginIt->second);
+
+                    tempPlugin.MergeMetadata(g_app_state.CurrentGame().masterlist.FindPlugin(pluginIt->first));
+
+                    //Evaluate any conditions
+                    BOOST_LOG_TRIVIAL(trace) << "Evaluate conditions for merged plugin data.";
+                    try {
+                        tempPlugin.EvalAllConditions(g_app_state.CurrentGame(), language);
+                    }
+                    catch (std::exception& e) {
+                        BOOST_LOG_TRIVIAL(error) << "\"" << tempPlugin.Name() << "\" contains a condition that could not be evaluated. Details: " << e.what();
+                        g_app_state.CurrentGame().masterlist.messages.push_back(Message(Message::error, (format(loc::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % tempPlugin.Name() % e.what()).str()));
+                    }
+
+                    //Also check install validity.
+                    BOOST_LOG_TRIVIAL(trace) << "Checking that the current install is valid according to this plugin's data.";
+                    bool isDirty = tempPlugin.CheckInstallValidity(g_app_state.CurrentGame());
+
+                    // Now add to pluginNode.
+                    temp["name"] = tempPlugin.Name();
+                    temp["modPriority"] = modulo(tempPlugin.Priority(), max_priority);
+                    temp["isGlobalPriority"] = (abs(tempPlugin.Priority()) >= max_priority);
+                    temp["messages"] = tempPlugin.Messages();
+                    temp["tags"] = tempPlugin.Tags();
+                    temp["isDirty"] = isDirty;
+                }
+
+                pluginsNode.push_back(temp);
+            }
+            // Now clear the user metadata.
             g_app_state.CurrentGame().userlist.clear();
-            callback->Success("");
+            if (pluginsNode.size() > 0)
+                callback->Success(JSON::stringify(pluginsNode));
+            else
+                callback->Success("[]");
             return true;
         }
         else {
@@ -270,13 +319,50 @@ namespace loot {
                 const string pluginName = req["args"][0].as<string>();
                 BOOST_LOG_TRIVIAL(debug) << "Clearing user metadata for plugin " << pluginName;
 
-                auto pluginIt = find(g_app_state.CurrentGame().userlist.plugins.begin(), g_app_state.CurrentGame().userlist.plugins.end(), Plugin(pluginName));
+                auto ulistPluginIt = find(g_app_state.CurrentGame().userlist.plugins.begin(), g_app_state.CurrentGame().userlist.plugins.end(), Plugin(pluginName));
 
-                if (pluginIt != g_app_state.CurrentGame().userlist.plugins.end()) {
-                    g_app_state.CurrentGame().userlist.plugins.erase(pluginIt);
+                if (ulistPluginIt != g_app_state.CurrentGame().userlist.plugins.end()) {
+                    g_app_state.CurrentGame().userlist.plugins.erase(ulistPluginIt);
                 }
 
-                callback->Success("");
+                //Set language.
+                unsigned int language;
+                if (g_app_state.GetSettings()["language"])
+                    language = Language(g_app_state.GetSettings()["language"].as<string>()).Code();
+                else
+                    language = Language::any;
+
+                // Now rederive the displayed metadata from the masterlist.
+                YAML::Node pluginNode;
+                auto pluginIt = g_app_state.CurrentGame().plugins.find(pluginName);
+                if (pluginIt != g_app_state.CurrentGame().plugins.end()) {
+                    Plugin tempPlugin(pluginIt->second);
+
+                    tempPlugin.MergeMetadata(g_app_state.CurrentGame().masterlist.FindPlugin(pluginIt->first));
+
+                    //Evaluate any conditions
+                    BOOST_LOG_TRIVIAL(trace) << "Evaluate conditions for merged plugin data.";
+                    try {
+                        tempPlugin.EvalAllConditions(g_app_state.CurrentGame(), language);
+                    }
+                    catch (std::exception& e) {
+                        BOOST_LOG_TRIVIAL(error) << "\"" << tempPlugin.Name() << "\" contains a condition that could not be evaluated. Details: " << e.what();
+                        g_app_state.CurrentGame().masterlist.messages.push_back(Message(Message::error, (format(loc::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % tempPlugin.Name() % e.what()).str()));
+                    }
+
+                    //Also check install validity.
+                    BOOST_LOG_TRIVIAL(trace) << "Checking that the current install is valid according to this plugin's data.";
+                    bool isDirty = tempPlugin.CheckInstallValidity(g_app_state.CurrentGame());
+
+                    // Now add to pluginNode.
+                    pluginNode["modPriority"] = modulo(tempPlugin.Priority(), max_priority);
+                    pluginNode["isGlobalPriority"] = (abs(tempPlugin.Priority()) >= max_priority);
+                    pluginNode["messages"] = tempPlugin.Messages();
+                    pluginNode["tags"] = tempPlugin.Tags();
+                    pluginNode["isDirty"] = isDirty;
+                }
+
+                callback->Success(JSON::stringify(pluginNode));
                 return true;
             }
         }
@@ -464,49 +550,14 @@ namespace loot {
 
             //Also check install validity.
             BOOST_LOG_TRIVIAL(trace) << "Checking that the current install is valid according to this plugin's data.";
-            mlistPlugin.CheckInstallValidity(g_app_state.CurrentGame());
-
-            // Also evaluate dirty info.
-            std::list<Message> messages = mlistPlugin.Messages();
-            std::set<PluginDirtyInfo> dirtyInfo = mlistPlugin.DirtyInfo();
-            size_t numDirtyInfo(0);
-            for (const auto &element : dirtyInfo) {
-                boost::format f;
-                if (element.ITMs() > 0 && element.UDRs() > 0 && element.DeletedNavmeshes() > 0)
-                    f = boost::format(boost::locale::translate("Contains %1% ITM records, %2% UDR records and %3% deleted navmeshes. Clean with %4%.")) % element.ITMs() % element.UDRs() % element.DeletedNavmeshes() % element.CleaningUtility();
-                else if (element.ITMs() == 0 && element.UDRs() == 0 && element.DeletedNavmeshes() == 0)
-                    f = boost::format(boost::locale::translate("Clean with %1%.")) % element.CleaningUtility();
-
-
-                else if (element.ITMs() == 0 && element.UDRs() > 0 && element.DeletedNavmeshes() > 0)
-                    f = boost::format(boost::locale::translate("Contains %1% UDR records and %2% deleted navmeshes. Clean with %3%.")) % element.UDRs() % element.DeletedNavmeshes() % element.CleaningUtility();
-                else if (element.ITMs() == 0 && element.UDRs() == 0 && element.DeletedNavmeshes() > 0)
-                    f = boost::format(boost::locale::translate("Contains %1% deleted navmeshes. Clean with %2%.")) % element.DeletedNavmeshes() % element.CleaningUtility();
-                else if (element.ITMs() == 0 && element.UDRs() > 0 && element.DeletedNavmeshes() == 0)
-                    f = boost::format(boost::locale::translate("Contains %1% UDR records. Clean with %2%.")) % element.UDRs() % element.CleaningUtility();
-
-                else if (element.ITMs() > 0 && element.UDRs() == 0 && element.DeletedNavmeshes() > 0)
-                    f = boost::format(boost::locale::translate("Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%.")) % element.ITMs() % element.DeletedNavmeshes() % element.CleaningUtility();
-                else if (element.ITMs() > 0 && element.UDRs() == 0 && element.DeletedNavmeshes() == 0)
-                    f = boost::format(boost::locale::translate("Contains %1% ITM records. Clean with %2%.")) % element.ITMs() % element.CleaningUtility();
-
-                else if (element.ITMs() > 0 && element.UDRs() > 0 && element.DeletedNavmeshes() == 0)
-                    f = boost::format(boost::locale::translate("Contains %1% ITM records and %2% UDR records. Clean with %3%.")) % element.ITMs() % element.UDRs() % element.CleaningUtility();
-
-                messages.push_back(loot::Message(loot::Message::warn, f.str()));
-                ++numDirtyInfo;
-            }
+            bool isDirty = mlistPlugin.CheckInstallValidity(g_app_state.CurrentGame());
 
             // Now add to pluginNode.
             pluginNode["modPriority"] = modulo(mlistPlugin.Priority(), max_priority);
             pluginNode["isGlobalPriority"] = (abs(mlistPlugin.Priority()) >= max_priority);
-            pluginNode["messages"] = messages;
+            pluginNode["messages"] = mlistPlugin.Messages();
             pluginNode["tags"] = mlistPlugin.Tags();
-            pluginNode["isDirty"] = (numDirtyInfo > 0);
-
-            BOOST_LOG_TRIVIAL(trace) << "messages length: " << messages.size();
-            BOOST_LOG_TRIVIAL(trace) << "tags length: " << mlistPlugin.Tags().size();
-
+            pluginNode["isDirty"] = isDirty;
 
             gameNode["plugins"].push_back(pluginNode);
         }

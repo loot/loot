@@ -308,10 +308,22 @@ function redatePlugins(evt) {
 function clearAllMetadata(evt) {
     showMessageDialog('Clear All Metadata', 'Are you sure you want to clear all existing user-added metadata from all plugins?', function(result){
         if (result) {
-            loot.query('clearAllMetadata').then(function(result){
-                /* Need to also empty the UI-side user metadata. */
-                loot.game.plugins.forEach(function(plugin){
-                    plugin.userlist = undefined;
+            loot.query('clearAllMetadata').then(JSON.parse).then(function(result){
+                /* Need to empty the UI-side user metadata. */
+                result.forEach(function(plugin){
+                    for (var i = 0; i < loot.game.plugins.length; ++i) {
+                        if (loot.game.plugins[i].name == plugin.name) {
+                            loot.game.plugins[i].userlist = undefined;
+
+                            loot.game.plugins[i].modPriority = plugin.modPriority;
+                            loot.game.plugins[i].isGlobalPriority = plugin.isGlobalPriority;
+                            loot.game.plugins[i].messages = plugin.messages;
+                            loot.game.plugins[i].tags = plugin.tags;
+                            loot.game.plugins[i].isDirty = plugin.isDirty;
+
+                            break;
+                        }
+                    }
                 });
             }).catch(processCefError);
         }
@@ -707,9 +719,9 @@ function updateInterfaceWithGameInfo(response) {
         generalMessagesList.appendChild(li);
 
         if (li.className == 'warn') {
-            warnMessageNo++;
+            ++warnMessageNo;
         } else if (li.className == 'error') {
-            errorMessageNo++;
+            ++errorMessageNo;
         }
     }
     totalMessageNo = loot.game.globalMessages.length;
@@ -729,11 +741,11 @@ function updateInterfaceWithGameInfo(response) {
             plugin.messages.forEach(function(message) {
 
                 if (message.type == 'warn') {
-                    warnMessageNo++;
+                    ++warnMessageNo;
                 } else if (message.type == 'error') {
-                    errorMessageNo++;
+                    ++errorMessageNo;
                 }
-                totalMessageNo++;
+                ++totalMessageNo;
             });
         }
     });

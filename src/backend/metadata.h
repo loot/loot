@@ -220,7 +220,7 @@ namespace loot {
         bool MustLoadAfter(const Plugin& plugin) const;  //Checks masters, reqs and loadAfter.
 
         //Validity checks.
-        void CheckInstallValidity(const Game& game);  //Checks that reqs and masters are all present, and that no incs are present. Returns a map of filenames and whether they are missing (if bool is true, then filename is a req or master, otherwise it's an inc).
+        bool CheckInstallValidity(const Game& game);  //Checks that reqs and masters are all present, and that no incs are present. Returns true if the plugin is dirty.
     private:
         std::string name;
         bool enabled;  //Default to true.

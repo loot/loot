@@ -58,7 +58,9 @@ function Plugin(obj) {
         return data;
     }
 
-    Plugin.prototype.getTagsStrings = function () {
+
+
+    Plugin.prototype.updateCardTags = function() {
         var tagsAdded = [];
         var tagsRemoved = [];
 
@@ -83,11 +85,16 @@ function Plugin(obj) {
             }
         }
 
-        return {
-          tagsAdded: tagsAdded.join(', '),
-          tagsRemoved: tagsRemoved.join(', ')
-        };
-
+        if (tagsAdded.length != 0) {
+            this.card.getElementsByClassName('tag add')[0].textContent = tagsAdded.join(', ');
+        } else {
+            this.card.getElementsByClassName('tag add')[0].classList.toggle('hidden');
+        }
+        if (tagsRemoved.length != 0) {
+            this.card.getElementsByClassName('tag remove')[0].textContent = tagsRemoved.join(', ');
+        } else {
+            this.card.getElementsByClassName('tag remove')[0].classList.toggle('hidden');
+        }
     }
 
     Plugin.prototype.getPriorityString = function() {
@@ -98,6 +105,27 @@ function Plugin(obj) {
             priorityText += '✗';
         }
         return priorityText;
+    }
+
+    Plugin.prototype.updateCardMessages = function() {
+        var messageUL = this.card.getElementsByTagName('ul')[0];
+        /* First clear any existing messages. */
+        while(messageUL.firstElementChild) {
+            messageUL.removeChild(messageUL.firstElementChild);
+        }
+        /* Now add the new messages. */
+        if (this.messages && this.messages.length != 0) {
+            this.messages.forEach(function(message) {
+                var messageLi = document.createElement('li');
+                messageLi.className = message.type;
+                // Use the Marked library for Markdown formatting support.
+                messageLi.innerHTML = marked(message.content[0].str);
+                messageUL.appendChild(messageLi);
+
+            });
+        } else {
+            this.card.getElementsByTagName('ul')[0].classList.toggle('hidden');
+        }
     }
 
     Plugin.prototype.createCard = function() {
@@ -119,31 +147,10 @@ function Plugin(obj) {
         }
 
         /* Fill in Bash Tag suggestions. */
-        var tags = this.getTagsStrings();
-        if (tags.tagsAdded) {
-            card.getElementsByClassName('tag add')[0].textContent = tags.tagsAdded;
-        } else {
-            card.getElementsByClassName('tag add')[0].classList.toggle('hidden');
-        }
-        if (tags.tagsRemoved) {
-            card.getElementsByClassName('tag remove')[0].textContent = tags.tagsRemoved;
-        } else {
-            card.getElementsByClassName('tag remove')[0].classList.toggle('hidden');
-        }
+        this.updateCardTags();
 
         /* Fill in messages. */
-        if (this.messages && this.messages.length != 0) {
-            this.messages.forEach(function(message) {
-                var messageLi = document.createElement('li');
-                messageLi.className = message.type;
-                // Use the Marked library for Markdown formatting support.
-                messageLi.innerHTML = marked(message.content[0].str);
-                card.getElementsByTagName('ul')[0].appendChild(messageLi);
-
-            });
-        } else {
-            card.getElementsByTagName('ul')[0].classList.toggle('hidden');
-        }
+        this.updateCardMessages();
 
         /* The content elements steal the name, CRC and version, so they
            don't get distributed into the editor part of the shadow DOM.
@@ -328,6 +335,57 @@ function Plugin(obj) {
             if (change.name == 'userlist') {
                 change.object.li.setAttribute('data-edits', change.object[change.name] != undefined);
                 change.object.card.setAttribute('data-edits', change.object[change.name] != undefined);
+            } else if (change.name == 'modPriority') {
+                change.object.li.querySelector('.priority').textContent = change.object.getPriorityString();
+                change.object.card.shadowRoot.getElementById('priorityValue').value = change.object[change.name];
+            } else if (change.name == 'isGlobalPriority') {
+                change.object.li.querySelector('.priority').textContent = change.object.getPriorityString();
+            } else if (change.name == 'messages') {
+                change.object.updateCardMessages();
+                /* For messages, the card's messages need updating,
+                   as do the message counts. */
+                var oldTotal = 0;
+                var newTotal = 0;
+                var oldWarns = 0;
+                var newWarns = 0;
+                var oldErrs = 0;
+                var newErrs = 0;
+
+                if (change.oldValue) {
+                    oldTotal = change.oldValue.length;
+
+                    change.oldValue.forEach(function(message){
+                        if (message.type == 'warn') {
+                            ++oldWarns;
+                        } else if (message.type == 'error') {
+                            ++oldErrs;
+                        }
+                    });
+                }
+                if (change.object[change.name]) {
+                    newTotal = change.object[change.name].length;
+
+                    change.object[change.name].forEach(function(message){
+                        if (message.type == 'warn') {
+                            ++newWarns;
+                        } else if (message.type == 'error') {
+                            ++newErrs;
+                        }
+                    });
+                }
+
+                document.getElementById('filterTotalMessageNo').textContent = parseInt(document.getElementById('filterTotalMessageNo').textContent, 10) + newTotal - oldTotal;
+                document.getElementById('totalMessageNo').textContent = parseInt(document.getElementById('totalMessageNo').textContent, 10) + newTotal - oldTotal;
+                document.getElementById('totalWarningNo').textContent = parseInt(document.getElementById('totalWarningNo').textContent, 10) + newWarns - oldWarns;
+                document.getElementById('totalErrorNo').textContent = parseInt(document.getElementById('totalErrorNo').textContent, 10) + newErrs - oldErrs;
+            } else if (change.name == 'tags') {
+                change.object.updateCardTags();
+            } else if (change.name == 'isDirty') {
+                if (change.object[change.name]) {
+                    document.getElementById('dirtyPluginNo').textContent = ++parseInt(document.getElementById('dirtyPluginNo').textContent, 10);
+                } else {
+                    document.getElementById('dirtyPluginNo').textContent = --parseInt(document.getElementById('dirtyPluginNo').textContent, 10);
+                }
             }
         });
     }

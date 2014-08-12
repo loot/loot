@@ -55,11 +55,18 @@ var pluginMenuProto = Object.create(HTMLElement.prototype, {
                             ]
                         });
 
-                        loot.query(request).then(function(result){
-                            /* Need to also empty the UI-side user metadata. */
+                        loot.query(request).then(JSON.parse).then(function(result){
+                            /* Need to empty the UI-side user metadata. */
                             for (var i = 0; i < loot.game.plugins.length; ++i) {
                                 if (loot.game.plugins[i].id == pluginID) {
                                     loot.game.plugins[i].userlist = undefined;
+
+                                    loot.game.plugins[i].modPriority = result.modPriority;
+                                    loot.game.plugins[i].isGlobalPriority = result.isGlobalPriority;
+                                    loot.game.plugins[i].messages = result.messages;
+                                    loot.game.plugins[i].tags = result.tags;
+                                    loot.game.plugins[i].isDirty = result.isDirty;
+
                                     break;
                                 }
                             }
