@@ -57,6 +57,7 @@ namespace loot {
     public:
         void Load(const boost::filesystem::path& filepath);
         void Save(const boost::filesystem::path& filepath);
+        void clear();
 
         bool operator == (const MetadataList& rhs) const;  //Compares content.
 

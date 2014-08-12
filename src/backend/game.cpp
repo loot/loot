@@ -116,6 +116,11 @@ namespace loot {
         uout.close();
     }
 
+    void MetadataList::clear() {
+        plugins.clear();
+        messages.clear();
+    }
+
     bool MetadataList::operator == (const MetadataList& rhs) const {
         if (this->plugins.size() != rhs.plugins.size() || this->messages.size() != rhs.messages.size()) {
             BOOST_LOG_TRIVIAL(info) << "Metadata edited for some plugin, new and old userlists differ in size.";

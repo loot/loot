@@ -306,7 +306,16 @@ function redatePlugins(evt) {
     //showMessageBox('info', 'Redate Plugins', 'Plugins were successfully redated.');
 }
 function clearAllMetadata(evt) {
-    showMessageDialog('Clear All Metadata', 'Are you sure you want to clear all existing user-added metadata from all plugins?');
+    showMessageDialog('Clear All Metadata', 'Are you sure you want to clear all existing user-added metadata from all plugins?', function(result){
+        if (result) {
+            loot.query('clearAllMetadata').then(function(result){
+                /* Need to also empty the UI-side user metadata. */
+                loot.game.plugins.forEach(function(plugin){
+                    plugin.userlist = undefined;
+                });
+            }).catch(processCefError);
+        }
+    });
 }
 function handlePluginDrop(evt) {
     evt.stopPropagation();

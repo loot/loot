@@ -130,6 +130,11 @@ namespace loot {
             callback->Success("");
             return true;
         }
+        else if (request == "clearAllMetadata") {
+            g_app_state.CurrentGame().userlist.clear();
+            callback->Success("");
+            return true;
+        }
         else {
             // May be a request with arguments.
             YAML::Node req;
