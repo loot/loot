@@ -103,9 +103,9 @@ var pluginMenuProto = Object.create(HTMLElement.prototype, {
             main.addEventListener('click', this.onClick, false);
 
             /* Add event listeners for the menu items. */
-            this.shadowRoot.querySelector('#editMetadata').addEventListener('click', this.onMenuItemClick, false);
-            this.shadowRoot.querySelector('#copyMetadata').addEventListener('click', this.onMenuItemClick, false);
-            this.shadowRoot.querySelector('#clearMetadata').addEventListener('click', this.onMenuItemClick, false);
+            this.shadowRoot.getElementById('editMetadata').addEventListener('click', this.onMenuItemClick, false);
+            this.shadowRoot.getElementById('copyMetadata').addEventListener('click', this.onMenuItemClick, false);
+            this.shadowRoot.getElementById('clearMetadata').addEventListener('click', this.onMenuItemClick, false);
         }
     },
 
@@ -115,9 +115,9 @@ var pluginMenuProto = Object.create(HTMLElement.prototype, {
             document.getElementById('main').removeEventListener('click', this.onClick, false);
 
             /* Remove event listeners for the menu items. */
-            this.shadowRoot.querySelector('#editMetadata').removeEventListener('click', this.onMenuItemClick, false);
-            this.shadowRoot.querySelector('#copyMetadata').removeEventListener('click', this.onMenuItemClick, false);
-            this.shadowRoot.querySelector('#clearMetadata').removeEventListener('click', this.onMenuItemClick, false);
+            this.shadowRoot.getElementById('editMetadata').removeEventListener('click', this.onMenuItemClick, false);
+            this.shadowRoot.getElementById('copyMetadata').removeEventListener('click', this.onMenuItemClick, false);
+            this.shadowRoot.getElementById('clearMetadata').removeEventListener('click', this.onMenuItemClick, false);
 
         }
     }
@@ -165,7 +165,7 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
                 var card = evt.target.parentElement.parentElement.parentNode.host;
 
                 /* Set up table tab event handlers. */
-                var elements = card.shadowRoot.querySelector('#tableTabs').children;
+                var elements = card.shadowRoot.getElementById('tableTabs').children;
                 for (var i = 0; i < elements.length; ++i) {
                     if (elements[i].hasAttribute('data-for')) {
                         elements[i].removeEventListener('click', card.showEditorTable, false);
@@ -173,8 +173,8 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
                 }
 
                 /* Set up button event handlers. */
-                card.shadowRoot.querySelector('#accept').removeEventListener('click', card.hideEditor, false);
-                card.shadowRoot.querySelector('#cancel').removeEventListener('click', card.hideEditor, false);
+                card.shadowRoot.getElementById('accept').removeEventListener('click', card.hideEditor, false);
+                card.shadowRoot.getElementById('cancel').removeEventListener('click', card.hideEditor, false);
 
 
                 /* Remove drag 'n' drop event handlers. */
@@ -210,8 +210,182 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
     showEditor: {
         value: function() {
 
+            /* Fill editor controls with values from the plugin this card corresponds to. */
+
+            /* First find the corresponding plugin. */
+            for (var i = 0; i < loot.game.plugins.length; ++i) {
+                if (loot.game.plugins[i].id == this.id) {
+
+                    this.shadowRoot.querySelector('#editor h1').textContent = loot.game.plugins[i].name;
+                    this.shadowRoot.querySelector('#editor .version').textContent = loot.game.plugins[i].version;
+                    if (loot.game.plugins[i].crc != '0') {
+                        this.shadowRoot.querySelector('#editor .crc').textContent = loot.game.plugins[i].crc;
+                    }
+
+                    /* Fill in the editor input values. */
+                    if (loot.game.plugins[i].userlist && !loot.game.plugins[i].userlist.enabled) {
+                        this.shadowRoot.getElementById('enableEdits').checked = false;
+                    } else {
+                        this.shadowRoot.getElementById('enableEdits').checked = true;
+                    }
+                    this.shadowRoot.getElementById('globalPriority').value = loot.game.plugins[i].globalPriority;
+                    this.shadowRoot.getElementById('priorityValue').value = loot.game.plugins[i].modPriority;
+
+                    /* Clear any existing editor table data. Don't remove the last row though,
+                       that's the "add new row" one. */
+                    var tables = this.shadowRoot.getElementsByTagName('table');
+                    for (var i = 0; i < tables.length; ++i) {
+                        tables[i].clear();
+                    }
+
+
+                    /* Fill in editor table data. Masterlist-originated rows should have
+                       their contents made read-only, and be unremovable. */
+                    var tables = this.shadowRoot.getElementsByTagName('table');
+                    for (var i = 0; i < tables.length; ++i) {
+                        if (tables[i].id == 'loadAfter') {
+
+                            if (loot.game.plugins[i].masterlist && loot.game.plugins[i].masterlist.after) {
+                                loot.game.plugins[i].masterlist.after.forEach(function(file) {
+                                    var row = tables[i].addRow(file);
+                                    row.querySelector('.fa-trash-o').classList.toggle('hidden');
+
+                                    var inputs = row.getElementsByTagName('input');
+                                    for (var j = 0; j < inputs.length; ++j) {
+                                        inputs[j].setAttribute('readonly', true);
+                                    }
+                                });
+                            }
+                            if (loot.game.plugins[i].userlist && loot.game.plugins[i].userlist.after) {
+                                loot.game.plugins[i].userlist.after.forEach(function(file) {
+                                    tables[i].addRow(file);
+                                });
+                            }
+
+                        } else if (tables[i].id == 'req') {
+
+                            if (loot.game.plugins[i].masterlist && loot.game.plugins[i].masterlist.req) {
+                                loot.game.plugins[i].masterlist.req.forEach(function(file) {
+                                    var row = tables[i].addRow(file);
+                                    row.querySelector('.fa-trash-o').classList.toggle('hidden');
+
+                                    var inputs = row.getElementsByTagName('input');
+                                    for (var j = 0; j < inputs.length; ++j) {
+                                        inputs[j].setAttribute('readonly', true);
+                                    }
+                                });
+                            }
+                            if (loot.game.plugins[i].userlist && loot.game.plugins[i].userlist.req) {
+                                loot.game.plugins[i].userlist.req.forEach(function(file) {
+                                    tables[i].addRow(file);
+                                });
+                            }
+
+                        } else if (tables[i].id == 'inc') {
+
+                            if (loot.game.plugins[i].masterlist && loot.game.plugins[i].masterlist.inc) {
+                                loot.game.plugins[i].masterlist.inc.forEach(function(file) {
+                                    var row = tables[i].addRow(file);
+                                    row.querySelector('.fa-trash-o').classList.toggle('hidden');
+
+                                    var inputs = row.getElementsByTagName('input');
+                                    for (var j = 0; j < inputs.length; ++j) {
+                                        inputs[j].setAttribute('readonly', true);
+                                    }
+                                });
+                            }
+                            if (loot.game.plugins[i].userlist && loot.game.plugins[i].userlist.inc) {
+                                loot.game.plugins[i].userlist.inc.forEach(function(file) {
+                                    tables[i].addRow(file);
+                                });
+                            }
+
+                        } else if (tables[i].id == 'message') {
+
+                            if (loot.game.plugins[i].masterlist && loot.game.plugins[i].masterlist.msg) {
+                                loot.game.plugins[i].masterlist.msg.forEach(function(message) {
+                                    var data = {
+                                        type: message.type,
+                                        content: message.content[0].str,
+                                        condition: message.condition,
+                                        language: message.content[0].lang
+                                    };
+                                    var row = tables[i].addRow(data);
+                                    row.querySelector('.fa-trash-o').classList.toggle('hidden');
+
+                                    var inputs = row.getElementsByTagName('input');
+                                    for (var j = 0; j < inputs.length; ++j) {
+                                        inputs[j].setAttribute('readonly', true);
+                                    }
+                                    var select = row.getElementsByTagName('select')[0].setAttribute('disabled', true);
+
+                                });
+                            }
+                            if (loot.game.plugins[i].userlist && loot.game.plugins[i].userlist.msg) {
+                                loot.game.plugins[i].userlist.msg.forEach(function(message) {
+                                    var data = {
+                                        type: message.type,
+                                        content: message.content[0].str,
+                                        condition: message.condition,
+                                        language: message.content[0].lang
+                                    };
+                                    tables[i].addRow(data);
+                                });
+                            }
+
+                        } else if (tables[i].id == 'tags') {
+
+                            if (loot.game.plugins[i].masterlist && loot.game.plugins[i].masterlist.tag) {
+                                loot.game.plugins[i].masterlist.tag.forEach(function(tag) {
+                                    var data = loot.game.plugins[i].getTagObj(tag);
+                                    var row = tables[i].addRow(data);
+                                    row.querySelector('.fa-trash-o').classList.toggle('hidden');
+
+                                    var inputs = row.getElementsByTagName('input');
+                                    for (var j = 0; j < inputs.length; ++j) {
+                                        inputs[j].setAttribute('readonly', true);
+                                    }
+                                    var select = row.getElementsByTagName('select')[0].setAttribute('disabled', true);
+                                }, loot.game.plugins[i]);
+                            }
+                            if (loot.game.plugins[i].userlist && loot.game.plugins[i].userlist.tag) {
+                                loot.game.plugins[i].userlist.tag.forEach(function(tag) {
+                                    var data = loot.game.plugins[i].getTagObj(tag);
+                                    tables[i].addRow(data);
+                                }, loot.game.plugins[i]);
+                            }
+
+                        } else if (tables[i].id == 'dirty') {
+
+                            if (loot.game.plugins[i].masterlist && loot.game.plugins[i].masterlist.dirty) {
+                                loot.game.plugins[i].masterlist.dirty.forEach(function(info) {
+                                    info.crc = info.crc.toString(16);
+                                    var row = tables[i].addRow(info);
+                                    row.querySelector('.fa-trash-o').classList.toggle('hidden');
+
+                                    var inputs = row.getElementsByTagName('input');
+                                    for (var j = 0; j < inputs.length; ++j) {
+                                        inputs[j].setAttribute('readonly', true);
+                                    }
+                                });
+                            }
+                            if (loot.game.plugins[i].userlist && loot.game.plugins[i].userlist.dirty) {
+                                loot.game.plugins[i].userlist.dirty.forEach(function(info) {
+                                    info.crc = info.crc.toString(16);
+                                    tables[i].addRow(info);
+                                });
+                            }
+
+                        }
+                    }
+
+
+                    break;
+                }
+            }
+
             /* Set up table tab event handlers. */
-            var elements = this.shadowRoot.querySelector('#tableTabs').children;
+            var elements = this.shadowRoot.getElementById('tableTabs').children;
             for (var i = 0; i < elements.length; ++i) {
                 if (elements[i].hasAttribute('data-for')) {
                     elements[i].addEventListener('click', this.showEditorTable, false);
@@ -219,8 +393,8 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
             }
 
             /* Set up button event handlers. */
-            this.shadowRoot.querySelector('#accept').addEventListener('click', this.hideEditor, false);
-            this.shadowRoot.querySelector('#cancel').addEventListener('click', this.hideEditor, false);
+            this.shadowRoot.getElementById('accept').addEventListener('click', this.hideEditor, false);
+            this.shadowRoot.getElementById('cancel').addEventListener('click', this.hideEditor, false);
 
             /* Set up drag 'n' drop event handlers. */
             elements = document.getElementById('pluginsNav').children;
@@ -320,7 +494,7 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
             var messages = document.createElement('ul');
             this.appendChild(messages);
 
-            this.shadowRoot.querySelector('#menuButton').addEventListener('click', this.onMenuButtonClick, false);
+            this.shadowRoot.getElementById('menuButton').addEventListener('click', this.onMenuButtonClick, false);
 
             var hoverTargets = this.shadowRoot.querySelectorAll('[title]');
             for (var i = 0; i < hoverTargets.length; ++i) {
@@ -334,7 +508,7 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
 
     detachedCallback: {
         value: function() {
-            this.shadowRoot.querySelector('#menuButton').removeEventListener('click', this.onMenuButtonClick, false);
+            this.shadowRoot.getElementById('menuButton').removeEventListener('click', this.onMenuButtonClick, false);
 
             var hoverTargets = this.shadowRoot.querySelectorAll('[title]');
             for (var i = 0; i < hoverTargets.length; ++i) {
@@ -486,6 +660,16 @@ var MessageDialog = document.registerElement('message-dialog', {
 
 /* Create a <editable-table> element type that extends from <table>. */
 var EditableTableProto = Object.create(HTMLTableElement.prototype, {
+
+    clear: {
+        value: function() {
+            var rowDeletes = this.getElementsByTagName('tbody')[0].getElementsByClassName('fa-trash-o');
+
+            for (var i = 0; i < rowDeletes.length; ++i) {
+                rowDeletes[i].click();
+            }
+        }
+    },
 
     removeRow: {
         value: function(evt) {
