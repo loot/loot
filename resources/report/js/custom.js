@@ -46,24 +46,26 @@ var pluginMenuProto = Object.create(HTMLElement.prototype, {
 
                 loot.query(request).catch(processCefError);
             } else if (evt.target.id == 'clearMetadata') {
-                showMessageDialog('Clear Plugin Metadata', 'Are you sure you want to clear all existing user-added metadata from "' + pluginCard.querySelector('h1').textContent + '"?');
+                showMessageDialog('Clear Plugin Metadata', 'Are you sure you want to clear all existing user-added metadata from "' + pluginCard.querySelector('h1').textContent + '"?', function(result){
+                    if (result) {
+                        var request = JSON.stringify({
+                            name: 'clearPluginMetadata',
+                            args: [
+                                pluginCard.getElementsByTagName('h1')[0].textContent
+                            ]
+                        });
 
-                var request = JSON.stringify({
-                    name: 'clearPluginMetadata',
-                    args: [
-                        pluginCard.getElementsByTagName('h1')[0].textContent
-                    ]
-                });
-
-                loot.query(request).then(function(result){
-                    /* Need to also empty the UI-side user metadata. */
-                    for (var i = 0; i < loot.game.plugins.length; ++i) {
-                        if (loot.game.plugins[i].id == pluginID) {
-                            loot.game.plugins[i].userlist = undefined;
-                            break;
-                        }
+                        loot.query(request).then(function(result){
+                            /* Need to also empty the UI-side user metadata. */
+                            for (var i = 0; i < loot.game.plugins.length; ++i) {
+                                if (loot.game.plugins[i].id == pluginID) {
+                                    loot.game.plugins[i].userlist = undefined;
+                                    break;
+                                }
+                            }
+                        }).catch(processCefError);
                     }
-                }).catch(processCefError);
+                });
             }
         }
     },
@@ -386,6 +388,18 @@ var PluginListItem = document.registerElement('plugin-li', {
 /* Create a <message-dialog> element type that extends from <dialog>. */
 var messageDialogProto = Object.create(HTMLDialogElement.prototype, {
 
+    onClose: {
+        value: function(evt) {
+            var ret = evt.target.returnValue == 'true';
+
+            evt.target.parentElement.removeChild(evt.target);
+
+            if (evt.target.closeCallback != undefined) {
+                evt.target.closeCallback(ret);
+            }
+        }
+    },
+
     onButtonClick: {
         value: function(evt) {
             var dialog = evt.currentTarget.parentElement.parentElement;
@@ -399,7 +413,9 @@ var messageDialogProto = Object.create(HTMLDialogElement.prototype, {
 
     showModal: {
         /* A type of 'error' or 'info' produces an 'OK'-only dialog box. */
-        value: function(type, title, text) {
+        value: function(type, title, text, closeCallback) {
+
+            this.closeCallback = closeCallback;
 
             this.querySelector('h1').textContent = title;
             this.querySelector('p').textContent = text;
@@ -443,8 +459,15 @@ var messageDialogProto = Object.create(HTMLDialogElement.prototype, {
             cancel.className = 'cancel';
             cancel.textContent = 'Cancel';
             buttons.appendChild(cancel);
-        }
 
+            this.addEventListener('close', this.onClose, false);
+        }
+    },
+
+    detachedCallback: {
+        value: function() {
+            this.removeEventListener('close', this.onClose, false);
+        }
     }
 
 });

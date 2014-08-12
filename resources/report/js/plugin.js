@@ -325,7 +325,6 @@ function Plugin(obj) {
 
     Plugin.prototype.observer = function(changes) {
         changes.forEach(function(change) {
-            console.log(change);
             if (change.name == 'userlist') {
                 change.object.li.setAttribute('data-edits', change.object[change.name] != undefined);
                 change.object.card.setAttribute('data-edits', change.object[change.name] != undefined);

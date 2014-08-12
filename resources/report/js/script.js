@@ -185,30 +185,14 @@ function togglePlugins(evt) {
         document.getElementById('hiddenPluginNo').textContent = hiddenPluginNo;
     });
 }
-function closeMessageDialog(evt) {
-    var ret = evt.target.returnValue == 'true';
-
-    evt.target.removeEventListener('close', closeMessageDialog, false);
-    document.body.removeChild(evt.target);
-
-    if (ret) {
-
-    } else {
-
-    }
-}
-function showMessageDialog(title, text) {
+function showMessageDialog(title, text, closeCallback) {
     var dialog = new MessageDialog();
 
-    dialog.addEventListener('close', closeMessageDialog, false);
-
     document.body.appendChild(dialog);
-    dialog.showModal('warn', title, text);
+    dialog.showModal('warn', title, text, closeCallback);
 }
 function showMessageBox(type, title, text) {
     var dialog = new MessageDialog();
-
-    dialog.addEventListener('close', closeMessageDialog, false);
 
     document.body.appendChild(dialog);
     dialog.showModal(type, title, text);
