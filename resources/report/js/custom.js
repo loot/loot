@@ -47,6 +47,23 @@ var pluginMenuProto = Object.create(HTMLElement.prototype, {
                 loot.query(request).catch(processCefError);
             } else if (evt.target.id == 'clearMetadata') {
                 showMessageDialog('Clear Plugin Metadata', 'Are you sure you want to clear all existing user-added metadata from "' + pluginCard.querySelector('h1').textContent + '"?');
+
+                var request = JSON.stringify({
+                    name: 'clearPluginMetadata',
+                    args: [
+                        pluginCard.getElementsByTagName('h1')[0].textContent
+                    ]
+                });
+
+                loot.query(request).then(function(result){
+                    /* Need to also empty the UI-side user metadata. */
+                    for (var i = 0; i < loot.game.plugins.length; ++i) {
+                        if (loot.game.plugins[i].id == pluginID) {
+                            loot.game.plugins[i].userlist = undefined;
+                            break;
+                        }
+                    }
+                }).catch(processCefError);
             }
         }
     },

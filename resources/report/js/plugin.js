@@ -323,20 +323,14 @@ function Plugin(obj) {
         document.getElementById('pluginsNav').appendChild(li);
     }
 
-    Plugin.prototype.changeAction = function(change) {
-        console.log(change);
-    }
-
     Plugin.prototype.observer = function(changes) {
-        //console.log(changes);
         changes.forEach(function(change) {
-        //for (var i = 0; i < changes.length; ++i) {
-
-            if (change.name == 'name') {
-                change.object.card.querySelector('h1').textContent = change.object[change.name];
+            console.log(change);
+            if (change.name == 'userlist') {
+                change.object.li.setAttribute('data-edits', change.object[change.name] != undefined);
+                change.object.card.setAttribute('data-edits', change.object[change.name] != undefined);
             }
         });
-        //changes.forEach(changeAction);
     }
 
     this.createCard();

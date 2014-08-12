@@ -260,6 +260,20 @@ namespace loot {
 #endif
                 return true;
             }
+            else if (requestName == "clearPluginMetadata") {
+                // Has one arg, which is the name of the plugin to copy metadata for.
+                const string pluginName = req["args"][0].as<string>();
+                BOOST_LOG_TRIVIAL(debug) << "Clearing user metadata for plugin " << pluginName;
+
+                auto pluginIt = find(g_app_state.CurrentGame().userlist.plugins.begin(), g_app_state.CurrentGame().userlist.plugins.end(), Plugin(pluginName));
+
+                if (pluginIt != g_app_state.CurrentGame().userlist.plugins.end()) {
+                    g_app_state.CurrentGame().userlist.plugins.erase(pluginIt);
+                }
+
+                callback->Success("");
+                return true;
+            }
         }
 
         return false;
