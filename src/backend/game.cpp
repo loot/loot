@@ -154,7 +154,7 @@ namespace loot {
         if (it != plugins.end())
             return *it;
         else
-            return Plugin();
+            return Plugin(name);
     }
 
     // Masterlist member functions

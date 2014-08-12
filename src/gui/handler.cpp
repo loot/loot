@@ -28,6 +28,7 @@
 
 #include "../backend/json.h"
 #include "../backend/parsers.h"
+#include "../backend/generators.h"
 
 #include <include/cef_app.h>
 #include <include/cef_runnable.h>
@@ -138,7 +139,7 @@ namespace loot {
             catch (exception &e) {
                 BOOST_LOG_TRIVIAL(error) << "Failed to parse CEF query request \"" << request << "\": " << e.what();
                 callback->Failure(-1, e.what());
-                return false;
+                return true;
             }
 
             const string requestName = req["name"].as<string>();
@@ -199,6 +200,64 @@ namespace loot {
 
                 YAML::Node temp(conflictingPlugins);
                 callback->Success(JSON::stringify(temp));
+                return true;
+            }
+            else if (requestName == "copyMetadata") {
+                // Has one arg, which is the name of the plugin to copy metadata for.
+                const string pluginName = req["args"][0].as<string>();
+                BOOST_LOG_TRIVIAL(debug) << "Copying metadata for plugin " << pluginName;
+
+                // Get metadata from masterlist and userlist.
+                Plugin plugin = g_app_state.CurrentGame().masterlist.FindPlugin(pluginName);
+                plugin.MergeMetadata(g_app_state.CurrentGame().userlist.FindPlugin(pluginName));
+
+                // Generate text representation.
+                string text;
+                if (plugin.HasNameOnly())
+                    text = "name: " + plugin.Name();
+                else {
+                    YAML::Emitter yout;
+                    yout.SetIndent(2);
+                    yout << plugin;
+                    text = yout.c_str();
+                }
+
+
+#if defined(OS_WIN)
+                if (!OpenClipboard(NULL)) {
+                    BOOST_LOG_TRIVIAL(error) << "Failed to open the Windows clipboard.";
+                    callback->Failure(-1, "Failed to open the Windows clipboard.");
+                    return true;
+                }
+
+                if (!EmptyClipboard()) {
+                    BOOST_LOG_TRIVIAL(error) << "Failed to empty the Windows clipboard.";
+                    callback->Failure(-1, "Failed to empty the Windows clipboard.");
+                    return true;
+                }
+
+                // The clipboard takes a Unicode (ie. UTF-16) string that it then owns and must not
+                // be destroyed by LOOT. Convert the string, then copy it into a new block of 
+                // memory for the clipboard.
+                wstring wtext = ToWinWide(text);
+                wchar_t * wcstr = new wchar_t[wtext.length() + 1];
+                wcscpy(wcstr, wtext.c_str());
+
+                if (SetClipboardData(CF_UNICODETEXT, wcstr) == NULL) {
+                    BOOST_LOG_TRIVIAL(error) << "Failed to copy metadata to the Windows clipboard.";
+                    callback->Failure(-1, "Failed to copy metadata to the Windows clipboard.");
+                    return true;
+                }
+
+                if (!CloseClipboard()) {
+                    BOOST_LOG_TRIVIAL(error) << "Failed to close the Windows clipboard.";
+                    callback->Failure(-1, "Failed to close the Windows clipboard.");
+                    return true;
+                }
+
+                BOOST_LOG_TRIVIAL(info) << "Exported userlist metadata text for \"" << pluginName << "\": " << text;
+                callback->Success("");
+#endif
                 return true;
             }
         }

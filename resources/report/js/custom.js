@@ -37,7 +37,14 @@ var pluginMenuProto = Object.create(HTMLElement.prototype, {
                 pluginCard.showEditor();
 
             } else if (evt.target.id == 'copyMetadata') {
+                var request = JSON.stringify({
+                    name: 'copyMetadata',
+                    args: [
+                        pluginCard.getElementsByTagName('h1')[0].textContent
+                    ]
+                });
 
+                loot.query(request).catch(processCefError);
             } else if (evt.target.id == 'clearMetadata') {
                 showMessageDialog('Clear Plugin Metadata', 'Are you sure you want to clear all existing user-added metadata from "' + pluginCard.querySelector('h1').textContent + '"?');
             }
