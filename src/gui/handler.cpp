@@ -131,57 +131,26 @@ namespace loot {
             return true;
         }
         else if (request == "clearAllMetadata") {
-            // First regenerate the derived metadata (priority, messages, tags and dirty state)
-            // for any plugins with userlist entries, ignoring the user metadata.
-
-            //Set language.
-            unsigned int language;
-            if (g_app_state.GetSettings()["language"])
-                language = Language(g_app_state.GetSettings()["language"].as<string>()).Code();
-            else
-                language = Language::any;
-
-            YAML::Node pluginsNode;
+            BOOST_LOG_TRIVIAL(debug) << "Clearing all user metadata.";
+            // Record which plugins have userlist entries.
+            vector<string> userlistPlugins;
             for (const auto &plugin : g_app_state.CurrentGame().userlist.plugins) {
-                YAML::Node temp;
-
-                auto pluginIt = g_app_state.CurrentGame().plugins.find(plugin.Name());
-                if (pluginIt != g_app_state.CurrentGame().plugins.end()) {
-                    Plugin tempPlugin(pluginIt->second);
-
-                    tempPlugin.MergeMetadata(g_app_state.CurrentGame().masterlist.FindPlugin(pluginIt->first));
-
-                    //Evaluate any conditions
-                    BOOST_LOG_TRIVIAL(trace) << "Evaluate conditions for merged plugin data.";
-                    try {
-                        tempPlugin.EvalAllConditions(g_app_state.CurrentGame(), language);
-                    }
-                    catch (std::exception& e) {
-                        BOOST_LOG_TRIVIAL(error) << "\"" << tempPlugin.Name() << "\" contains a condition that could not be evaluated. Details: " << e.what();
-                        g_app_state.CurrentGame().masterlist.messages.push_back(Message(Message::error, (format(loc::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % tempPlugin.Name() % e.what()).str()));
-                    }
-
-                    //Also check install validity.
-                    BOOST_LOG_TRIVIAL(trace) << "Checking that the current install is valid according to this plugin's data.";
-                    bool isDirty = tempPlugin.CheckInstallValidity(g_app_state.CurrentGame());
-
-                    // Now add to pluginNode.
-                    temp["name"] = tempPlugin.Name();
-                    temp["modPriority"] = modulo(tempPlugin.Priority(), max_priority);
-                    temp["isGlobalPriority"] = (abs(tempPlugin.Priority()) >= max_priority);
-                    temp["messages"] = tempPlugin.Messages();
-                    temp["tags"] = tempPlugin.Tags();
-                    temp["isDirty"] = isDirty;
-                }
-
-                pluginsNode.push_back(temp);
+                userlistPlugins.push_back(plugin.Name());
             }
-            // Now clear the user metadata.
+            BOOST_LOG_TRIVIAL(trace) << "User metadata exists for " << userlistPlugins.size() << " plugins.";
+
+            // Clear the user metadata.
             g_app_state.CurrentGame().userlist.clear();
-            if (pluginsNode.size() > 0)
-                callback->Success(JSON::stringify(pluginsNode));
-            else
-                callback->Success("[]");
+
+            // Regenerate the derived metadata (priority, messages, tags and dirty state)
+            // for any plugins with userlist entries.
+            YAML::Node pluginsNode;
+            for (const auto &plugin : userlistPlugins) {
+                pluginsNode.push_back(GenerateDerivedMetadata(plugin));
+            }
+            BOOST_LOG_TRIVIAL(trace) << "Display metadata rederived for " << pluginsNode.size() << " plugins.";
+
+            callback->Success(JSON::stringify(pluginsNode));
             return true;
         }
         else if (request == "redatePlugins") {
@@ -266,8 +235,7 @@ namespace loot {
                     }
                 }
 
-                YAML::Node temp(conflictingPlugins);
-                callback->Success(JSON::stringify(temp));
+                callback->Success(JSON::stringify(YAML::Node(conflictingPlugins)));
                 return true;
             }
             else if (requestName == "copyMetadata") {
@@ -339,44 +307,82 @@ namespace loot {
                     g_app_state.CurrentGame().userlist.plugins.erase(ulistPluginIt);
                 }
 
-                //Set language.
-                unsigned int language;
-                if (g_app_state.GetSettings()["language"])
-                    language = Language(g_app_state.GetSettings()["language"].as<string>()).Code();
-                else
-                    language = Language::any;
-
                 // Now rederive the displayed metadata from the masterlist.
-                YAML::Node pluginNode;
-                auto pluginIt = g_app_state.CurrentGame().plugins.find(pluginName);
-                if (pluginIt != g_app_state.CurrentGame().plugins.end()) {
-                    Plugin tempPlugin(pluginIt->second);
+                callback->Success(JSON::stringify(GenerateDerivedMetadata(pluginName)));
+                return true;
+            }
+            else if (requestName == "editorClosed") {
+                BOOST_LOG_TRIVIAL(debug) << "Editor for plugin closed.";
+                // One argument, which is the plugin metadata that has changed (+ its name).
+                const YAML::Node pluginMetadata = req["args"][0];
 
-                    tempPlugin.MergeMetadata(g_app_state.CurrentGame().masterlist.FindPlugin(pluginIt->first));
+                // Create new object for userlist entry.
+                Plugin newUserlistEntry(pluginMetadata["name"].as<string>());
 
-                    //Evaluate any conditions
-                    BOOST_LOG_TRIVIAL(trace) << "Evaluate conditions for merged plugin data.";
-                    try {
-                        tempPlugin.EvalAllConditions(g_app_state.CurrentGame(), language);
+                // Find existing userlist entry.
+                auto ulistPluginIt = find(g_app_state.CurrentGame().userlist.plugins.begin(), g_app_state.CurrentGame().userlist.plugins.end(), newUserlistEntry);
+
+                // First sort out the priority value. This is only given if it was changed.
+                BOOST_LOG_TRIVIAL(trace) << "Calculating userlist metadata priority value from Javascript variables.";
+                if (pluginMetadata["modPriority"] && pluginMetadata["isGlobalPriority"]) {
+                    BOOST_LOG_TRIVIAL(trace) << "Priority value was changed, recalculating...";
+                    // Priority value was changed, so add it to the userlist data.
+                    int priority = pluginMetadata["modPriority"].as<int>();
+
+                    if (priority >= 0) {
+                        priority += max_priority;
                     }
-                    catch (std::exception& e) {
-                        BOOST_LOG_TRIVIAL(error) << "\"" << tempPlugin.Name() << "\" contains a condition that could not be evaluated. Details: " << e.what();
-                        g_app_state.CurrentGame().masterlist.messages.push_back(Message(Message::error, (format(loc::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % tempPlugin.Name() % e.what()).str()));
+                    else {
+                        priority -= max_priority;
                     }
-
-                    //Also check install validity.
-                    BOOST_LOG_TRIVIAL(trace) << "Checking that the current install is valid according to this plugin's data.";
-                    bool isDirty = tempPlugin.CheckInstallValidity(g_app_state.CurrentGame());
-
-                    // Now add to pluginNode.
-                    pluginNode["modPriority"] = modulo(tempPlugin.Priority(), max_priority);
-                    pluginNode["isGlobalPriority"] = (abs(tempPlugin.Priority()) >= max_priority);
-                    pluginNode["messages"] = tempPlugin.Messages();
-                    pluginNode["tags"] = tempPlugin.Tags();
-                    pluginNode["isDirty"] = isDirty;
+                    newUserlistEntry.Priority(priority);
+                    newUserlistEntry.SetPriorityExplicit(true);
+                }
+                else {
+                    // Priority value wasn't changed, use the existing userlist value.
+                    BOOST_LOG_TRIVIAL(trace) << "Priority value is unchanged, using existing userlist value (if it exists).";
+                    if (ulistPluginIt != g_app_state.CurrentGame().userlist.plugins.end()) {
+                        newUserlistEntry.Priority(ulistPluginIt->Priority());
+                        newUserlistEntry.SetPriorityExplicit(ulistPluginIt->IsPriorityExplicit());
+                    }
                 }
 
-                callback->Success(JSON::stringify(pluginNode));
+                // Now the enabled flag.
+                newUserlistEntry.Enabled(pluginMetadata["userlist"]["enabled"].as<bool>());
+
+                // Now metadata lists. These are given in their entirety, so replace anything that
+                // currently exists.
+                BOOST_LOG_TRIVIAL(trace) << "Recording metadata lists from Javascript variables.";
+                if (pluginMetadata["userlist"]["after"])
+                    newUserlistEntry.LoadAfter(pluginMetadata["userlist"]["after"].as<set<File>>());
+                if (pluginMetadata["userlist"]["req"])
+                    newUserlistEntry.Reqs(pluginMetadata["userlist"]["req"].as<set<File>>());
+                if (pluginMetadata["userlist"]["inc"])
+                    newUserlistEntry.Incs(pluginMetadata["userlist"]["inc"].as<set<File>>());
+
+                if (pluginMetadata["userlist"]["msg"])
+                    newUserlistEntry.Messages(pluginMetadata["userlist"]["msg"].as<list<Message>>());
+                if (pluginMetadata["userlist"]["tag"])
+                    newUserlistEntry.Tags(pluginMetadata["userlist"]["tag"].as<set<Tag>>());
+                if (pluginMetadata["userlist"]["dirty"])
+                    newUserlistEntry.DirtyInfo(pluginMetadata["userlist"]["dirty"].as<set<PluginDirtyInfo>>());
+
+                // Now replace existing userlist entry with the new one.
+                if (ulistPluginIt != g_app_state.CurrentGame().userlist.plugins.end()) {
+                    BOOST_LOG_TRIVIAL(trace) << "Replacing existing userlist entry with new metadata.";
+                    if (newUserlistEntry.HasNameOnly())
+                        g_app_state.CurrentGame().userlist.plugins.erase(ulistPluginIt);
+                    else
+                        *ulistPluginIt = newUserlistEntry;
+                }
+                else {
+                    BOOST_LOG_TRIVIAL(trace) << "Adding new metadata to new userlist entry.";
+                    g_app_state.CurrentGame().userlist.plugins.push_back(newUserlistEntry);
+                }
+
+                // Now rederive the derived metadata.
+                BOOST_LOG_TRIVIAL(trace) << "Returning newly derived display metadata.";
+                callback->Success(JSON::stringify(GenerateDerivedMetadata(newUserlistEntry.Name())));
                 return true;
             }
         }
@@ -515,9 +521,7 @@ namespace loot {
             mlistPlugin.MergeMetadata(g_app_state.CurrentGame().masterlist.FindPlugin(plugin.Name()));
 
             if (!mlistPlugin.HasNameOnly()) {
-                // Now add the masterlist metadata to the pluginNode.]
-                pluginNode["masterlist"]["modPriority"] = modulo(mlistPlugin.Priority(), max_priority);
-                pluginNode["masterlist"]["isGlobalPriority"] = (abs(mlistPlugin.Priority()) >= max_priority);
+                // Now add the masterlist metadata to the pluginNode.
                 pluginNode["masterlist"]["after"] = mlistPlugin.LoadAfter();
                 pluginNode["masterlist"]["req"] = mlistPlugin.Reqs();
                 pluginNode["masterlist"]["inc"] = mlistPlugin.Incs();
@@ -534,11 +538,8 @@ namespace loot {
             ulistPlugin.MergeMetadata(g_app_state.CurrentGame().userlist.FindPlugin(plugin.Name()));
 
             if (!ulistPlugin.HasNameOnly()) {
-                // Now add the masterlist metadata to the pluginNode.
-
+                // Now add the userlist metadata to the pluginNode.
                 pluginNode["userlist"]["enabled"] = ulistPlugin.Enabled();
-                pluginNode["userlist"]["modPriority"] = modulo(ulistPlugin.Priority(), max_priority);
-                pluginNode["userlist"]["isGlobalPriority"] = (abs(ulistPlugin.Priority()) >= max_priority);
                 pluginNode["userlist"]["after"] = ulistPlugin.LoadAfter();
                 pluginNode["userlist"]["req"] = ulistPlugin.Reqs();
                 pluginNode["userlist"]["inc"] = ulistPlugin.Incs();
@@ -549,29 +550,12 @@ namespace loot {
 
             // Now merge masterlist and userlist metadata and evaluate,
             // putting any resulting metadata into the base of the pluginNode.
+            YAML::Node derivedNode = GenerateDerivedMetadata(plugin, mlistPlugin, ulistPlugin);
 
-            mlistPlugin.MergeMetadata(ulistPlugin);
-
-            //Evaluate any conditions
-            BOOST_LOG_TRIVIAL(trace) << "Evaluate conditions for merged plugin data.";
-            try {
-                mlistPlugin.EvalAllConditions(g_app_state.CurrentGame(), language);
+            for (auto it = derivedNode.begin(); it != derivedNode.end(); ++it) {
+                const string key = it->first.as<string>();
+                pluginNode[key] = it->second;
             }
-            catch (std::exception& e) {
-                BOOST_LOG_TRIVIAL(error) << "\"" << mlistPlugin.Name() << "\" contains a condition that could not be evaluated. Details: " << e.what();
-                g_app_state.CurrentGame().masterlist.messages.push_back(Message(Message::error, (format(loc::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % mlistPlugin.Name() % e.what()).str()));
-            }
-
-            //Also check install validity.
-            BOOST_LOG_TRIVIAL(trace) << "Checking that the current install is valid according to this plugin's data.";
-            bool isDirty = mlistPlugin.CheckInstallValidity(g_app_state.CurrentGame());
-
-            // Now add to pluginNode.
-            pluginNode["modPriority"] = modulo(mlistPlugin.Priority(), max_priority);
-            pluginNode["isGlobalPriority"] = (abs(mlistPlugin.Priority()) >= max_priority);
-            pluginNode["messages"] = mlistPlugin.Messages();
-            pluginNode["tags"] = mlistPlugin.Tags();
-            pluginNode["isDirty"] = isDirty;
 
             gameNode["plugins"].push_back(pluginNode);
         }
@@ -580,24 +564,82 @@ namespace loot {
 
         //Evaluate any conditions in the global messages.
         BOOST_LOG_TRIVIAL(debug) << "Evaluating global message conditions.";
+        list<Message> messages = g_app_state.CurrentGame().masterlist.messages;
         try {
-            list<Message>::iterator it = g_app_state.CurrentGame().masterlist.messages.begin();
-            while (it != g_app_state.CurrentGame().masterlist.messages.end()) {
+            list<Message>::iterator it = messages.begin();
+            while (it != messages.end()) {
                 if (!it->EvalCondition(g_app_state.CurrentGame(), language))
-                    it = g_app_state.CurrentGame().masterlist.messages.erase(it);
+                    it = messages.erase(it);
                 else
                     ++it;
             }
         }
         catch (std::exception& e) {
             BOOST_LOG_TRIVIAL(error) << "A global message contains a condition that could not be evaluated. Details: " << e.what();
-            g_app_state.CurrentGame().masterlist.messages.push_back(Message(Message::error, (format(loc::translate("A global message contains a condition that could not be evaluated. Details: %1%")) % e.what()).str()));
+            messages.push_back(Message(Message::error, (format(loc::translate("A global message contains a condition that could not be evaluated. Details: %1%")) % e.what()).str()));
         }
 
         // Now store global messages from masterlist.
-        gameNode["globalMessages"] = g_app_state.CurrentGame().masterlist.messages;
+        gameNode["globalMessages"] = messages;
 
         return JSON::stringify(gameNode);
+    }
+
+    YAML::Node Handler::GenerateDerivedMetadata(const Plugin& file, const Plugin& masterlist, const Plugin& userlist) {
+        //Set language.
+        unsigned int language;
+        if (g_app_state.GetSettings()["language"])
+            language = Language(g_app_state.GetSettings()["language"].as<string>()).Code();
+        else
+            language = Language::any;
+
+        // Now rederive the displayed metadata from the masterlist and userlist.
+        Plugin tempPlugin(file);
+
+        tempPlugin.MergeMetadata(masterlist);
+        tempPlugin.MergeMetadata(userlist);
+
+        //Evaluate any conditions
+        BOOST_LOG_TRIVIAL(trace) << "Evaluate conditions for merged plugin data.";
+        try {
+            tempPlugin.EvalAllConditions(g_app_state.CurrentGame(), language);
+        }
+        catch (std::exception& e) {
+            BOOST_LOG_TRIVIAL(error) << "\"" << tempPlugin.Name() << "\" contains a condition that could not be evaluated. Details: " << e.what();
+            list<Message> messages(tempPlugin.Messages());
+            messages.push_back(Message(Message::error, (format(loc::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % tempPlugin.Name() % e.what()).str()));
+            tempPlugin.Messages(messages);
+        }
+
+        //Also check install validity.
+        BOOST_LOG_TRIVIAL(trace) << "Checking that the current install is valid according to this plugin's data.";
+        bool isDirty = tempPlugin.CheckInstallValidity(g_app_state.CurrentGame());
+
+        // Now add to pluginNode.
+        YAML::Node pluginNode;
+        pluginNode["name"] = tempPlugin.Name();
+        pluginNode["modPriority"] = modulo(tempPlugin.Priority(), max_priority);
+        pluginNode["isGlobalPriority"] = (abs(tempPlugin.Priority()) >= max_priority);
+        pluginNode["messages"] = tempPlugin.Messages();
+        pluginNode["tags"] = tempPlugin.Tags();
+        pluginNode["isDirty"] = isDirty;
+
+        return pluginNode;
+    }
+
+    YAML::Node Handler::GenerateDerivedMetadata(const std::string& pluginName) {
+        
+        // Now rederive the displayed metadata from the masterlist and userlist.
+        auto pluginIt = g_app_state.CurrentGame().plugins.find(pluginName);
+        if (pluginIt != g_app_state.CurrentGame().plugins.end()) {
+
+            const Plugin master = g_app_state.CurrentGame().userlist.FindPlugin(pluginIt->first);
+            const Plugin user = g_app_state.CurrentGame().userlist.FindPlugin(pluginIt->first);
+
+            return this->GenerateDerivedMetadata(pluginIt->second, master, user);
+        }
+
+        return YAML::Node();
     }
 
     // LootHandler methods

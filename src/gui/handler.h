@@ -31,6 +31,8 @@
 #include <include/cef_client.h>
 #include <include/wrapper/cef_message_router.h>
 
+#include <yaml-cpp/yaml.h>
+
 #include <list>
 
 namespace loot {
@@ -55,6 +57,9 @@ namespace loot {
         std::string GetGameTypes();
         std::string GetInstalledGames();
         std::string GetGameData();
+
+        YAML::Node Handler::GenerateDerivedMetadata(const std::string& pluginName);
+        YAML::Node Handler::GenerateDerivedMetadata(const Plugin& file, const Plugin& masterlist, const Plugin& userlist);
     };
 
     class LootHandler : public CefClient,
