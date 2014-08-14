@@ -38,6 +38,7 @@ loot.query = function(request) {
     })
 }
 function processCefError(err) {
+    console.log(err);
     showMessageBox('error', 'Error', err.message);
 }
 
@@ -113,7 +114,7 @@ function getConflictingPluginsFromFilter() {
                 ]
             });
 
-            return loot.query(request).then(JSON.parse).catch(processCefError);
+            return loot.query(request).catch(processCefError);
         }
     }
 
@@ -132,6 +133,12 @@ function togglePlugins(evt) {
        it is completed.
     */
     getConflictingPluginsFromFilter().then(function(conflicts) {
+        if (conflicts) {
+            conflicts = JSON.parse(conflicts);
+        } else {
+            conflicts = [];
+        }
+
         /* Start at 3rd section to skip summary and general messages. */
         for (var i = 2; i < sections.length; ++i) {
             var isConflictingPlugin = false;
@@ -314,23 +321,27 @@ function redatePlugins(evt) {
 function clearAllMetadata(evt) {
     showMessageDialog('Clear All Metadata', 'Are you sure you want to clear all existing user-added metadata from all plugins?', function(result){
         if (result) {
-            loot.query('clearAllMetadata').then(JSON.parse).then(function(result){
-                /* Need to empty the UI-side user metadata. */
-                result.forEach(function(plugin){
-                    for (var i = 0; i < loot.game.plugins.length; ++i) {
-                        if (loot.game.plugins[i].name == plugin.name) {
-                            loot.game.plugins[i].userlist = undefined;
+            loot.query('clearAllMetadata').then(function(result){
+                if (result) {
+                    result = JSON.parse(result);
 
-                            loot.game.plugins[i].modPriority = plugin.modPriority;
-                            loot.game.plugins[i].isGlobalPriority = plugin.isGlobalPriority;
-                            loot.game.plugins[i].messages = plugin.messages;
-                            loot.game.plugins[i].tags = plugin.tags;
-                            loot.game.plugins[i].isDirty = plugin.isDirty;
+                    /* Need to empty the UI-side user metadata. */
+                    result.forEach(function(plugin){
+                        for (var i = 0; i < loot.game.plugins.length; ++i) {
+                            if (loot.game.plugins[i].name == plugin.name) {
+                                loot.game.plugins[i].userlist = undefined;
 
-                            break;
+                                loot.game.plugins[i].modPriority = plugin.modPriority;
+                                loot.game.plugins[i].isGlobalPriority = plugin.isGlobalPriority;
+                                loot.game.plugins[i].messages = plugin.messages;
+                                loot.game.plugins[i].tags = plugin.tags;
+                                loot.game.plugins[i].isDirty = plugin.isDirty;
+
+                                break;
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }).catch(processCefError);
         }
     });
@@ -631,7 +642,11 @@ function initVars() {
         }
 
         try {
-            loot.installedGames = JSON.parse(results[1]);
+            if (results[1]) {
+                loot.installedGames = JSON.parse(results[1]);
+            } else {
+                loot.installedGames = [];
+            }
         } catch (e) {
             console.log(e);
             console.log('getInstalledGames response: ' + results[1]);

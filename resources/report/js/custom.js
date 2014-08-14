@@ -55,19 +55,23 @@ var pluginMenuProto = Object.create(HTMLElement.prototype, {
                             ]
                         });
 
-                        loot.query(request).then(JSON.parse).then(function(result){
-                            /* Need to empty the UI-side user metadata. */
-                            for (var i = 0; i < loot.game.plugins.length; ++i) {
-                                if (loot.game.plugins[i].id == pluginID) {
-                                    loot.game.plugins[i].userlist = undefined;
+                        loot.query(request).then(function(result){
+                            if (result) {
+                                result = JSON.parse(result);
 
-                                    loot.game.plugins[i].modPriority = result.modPriority;
-                                    loot.game.plugins[i].isGlobalPriority = result.isGlobalPriority;
-                                    loot.game.plugins[i].messages = result.messages;
-                                    loot.game.plugins[i].tags = result.tags;
-                                    loot.game.plugins[i].isDirty = result.isDirty;
+                                /* Need to empty the UI-side user metadata. */
+                                for (var i = 0; i < loot.game.plugins.length; ++i) {
+                                    if (loot.game.plugins[i].id == pluginID) {
+                                        loot.game.plugins[i].userlist = undefined;
 
-                                    break;
+                                        loot.game.plugins[i].modPriority = result.modPriority;
+                                        loot.game.plugins[i].isGlobalPriority = result.isGlobalPriority;
+                                        loot.game.plugins[i].messages = result.messages;
+                                        loot.game.plugins[i].tags = result.tags;
+                                        loot.game.plugins[i].isDirty = result.isDirty;
+
+                                        break;
+                                    }
                                 }
                             }
                         }).catch(processCefError);
@@ -161,13 +165,12 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
             for (var i = 0; i < loot.game.plugins.length; ++i) {
                 if (loot.game.plugins[i].id == this.id) {
 
-                    if (this.shadowRoot.getElementById('globalPriority').checked != loot.game.plugins[i].isGlobalPriority) {
-                        /* Priority value has been changed, record it. */
+                    /* If either of the priority values have been changed, the
+                       base priority value they're derived from will have
+                       changed, so record both. */
+                    if (this.shadowRoot.getElementById('globalPriority').checked != loot.game.plugins[i].isGlobalPriority
+                        || this.shadowRoot.getElementById('priorityValue').value != loot.game.plugins[i].modPriority) {
                         plugin.isGlobalPriority = this.shadowRoot.getElementById('globalPriority').checked;
-                    }
-
-                    if (this.shadowRoot.getElementById('priorityValue').value != loot.game.plugins[i].modPriority) {
-                        /* Priority value has been changed, record it. */
                         plugin.modPriority = this.shadowRoot.getElementById('priorityValue').value;
                     }
 
@@ -205,8 +208,8 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
                             }
                         }
                     }
-                    /* Update the userlist values. This doesn't affect priority,
-                       which will need to be set in the callback. */
+
+                    /* Now update JS userlist data for the plugin. */
                     loot.game.plugins[i].userlist = plugin.userlist;
 
                     break;
@@ -218,8 +221,9 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
 
     hideEditor: {
         value: function(evt) {
+            var card = evt.target.parentElement.parentElement.parentNode.host;
             var isValid = true;
-            if (evt.target.className.indexOf('accept') != -1) {
+            if (evt.target.id == 'accept') {
                 /* First validate table inputs. */
                 var inputs = evt.target.parentElement.parentElement.getElementsByTagName('input');
                 for (var i = 0; i < inputs.length; ++i) {
@@ -228,39 +232,40 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
                         console.log(inputs[i]);
                     }
                 }
+
+                if (isValid) {
+                    /* Need to record the editor control values and work out what's
+                       changed, and update any UI elements necessary. Offload the
+                       majority of the work to the C++ side of things. */
+                    var request = JSON.stringify({
+                        name: 'editorClosed',
+                        args: [
+                            card.readFromEditor()
+                        ]
+                    });
+                    loot.query(request).then(function(result){
+                        if (result) {
+                            result = JSON.parse(result);
+
+                            for (var i = 0; i < loot.game.plugins.length; ++i) {
+                                if (loot.game.plugins[i].id == card.id) {
+
+                                    loot.game.plugins[i].modPriority = result.modPriority;
+                                    loot.game.plugins[i].isGlobalPriority = result.isGlobalPriority;
+                                    loot.game.plugins[i].messages = result.messages;
+                                    loot.game.plugins[i].tags = result.tags;
+                                    loot.game.plugins[i].isDirty = result.isDirty;
+
+                                    break;
+                                }
+                            }
+                        }
+                    }).catch(processCefError);
+                }
             }
             if (isValid) {
-                var card = evt.target.parentElement.parentElement.parentNode.host;
 
-                /* Need to record the editor control values and work out what's
-                   changed, and update any UI elements necessary. Offload the
-                   majority of the work to the C++ side of things. */
-                var request = JSON.stringify({
-                    name: 'editorClosed',
-                    args: [
-                        card.getElementsByTagName('h1')[0].textContent,
-                        card.readFromEditor()
-                    ]
-                });
-                loot.query(request).then(function(result){
-                    for (var i = 0; i < loot.game.plugins.length; ++i) {
-                        if (loot.game.plugins[i].id == this.id) {
-
-                            loot.game.plugins[i].userlist.priority = result.userlist.priority;
-
-                            loot.game.plugins[i].modPriority = result.modPriority;
-                            loot.game.plugins[i].isGlobalPriority = result.isGlobalPriority;
-                            loot.game.plugins[i].messages = result.messages;
-                            loot.game.plugins[i].tags = result.tags;
-                            loot.game.plugins[i].isDirty = result.isDirty;
-
-                            break;
-                        }
-                    }
-                }).catch(processCefError);
-
-
-                /* Set up table tab event handlers. */
+                /* Remove table tab event handlers. */
                 var elements = card.shadowRoot.getElementById('tableTabs').children;
                 for (var i = 0; i < elements.length; ++i) {
                     if (elements[i].hasAttribute('data-for')) {
@@ -268,7 +273,7 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
                     }
                 }
 
-                /* Set up button event handlers. */
+                /* Remove button event handlers. */
                 card.shadowRoot.getElementById('accept').removeEventListener('click', card.hideEditor, false);
                 card.shadowRoot.getElementById('cancel').removeEventListener('click', card.hideEditor, false);
 
