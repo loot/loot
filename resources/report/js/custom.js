@@ -205,6 +205,11 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
                             }
                         }
                     }
+                    /* Update the userlist values. This doesn't affect priority,
+                       which will need to be set in the callback. */
+                    loot.game.plugins[i].userlist = plugin.userlist;
+
+                    break;
                 }
             }
             return plugin;
@@ -238,7 +243,20 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
                     ]
                 });
                 loot.query(request).then(function(result){
+                    for (var i = 0; i < loot.game.plugins.length; ++i) {
+                        if (loot.game.plugins[i].id == this.id) {
 
+                            loot.game.plugins[i].userlist.priority = result.userlist.priority;
+
+                            loot.game.plugins[i].modPriority = result.modPriority;
+                            loot.game.plugins[i].isGlobalPriority = result.isGlobalPriority;
+                            loot.game.plugins[i].messages = result.messages;
+                            loot.game.plugins[i].tags = result.tags;
+                            loot.game.plugins[i].isDirty = result.isDirty;
+
+                            break;
+                        }
+                    }
                 }).catch(processCefError);
 
 
