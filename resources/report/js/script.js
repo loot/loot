@@ -292,7 +292,73 @@ function openReadme(evt) {
     loot.query('openReadme').catch(processCefError);
 }
 function updateMasterlist(evt) {
-    loot.query('updateMasterlist').catch(processCefError);
+    loot.query('updateMasterlist').then(JSON.parse).then(function(result){
+        /* Update JS variables. */
+
+        loot.game.masterlist.revision = result.masterlist.revision;
+        loot.game.masterlist.date = result.masterlist.date;
+
+        result.plugins.forEach(function(plugin){
+            for (var i = 0; i < loot.game.plugins.length; ++i) {
+                if (loot.game.plugins[i].name == plugin.name) {
+                    loot.game.plugins[i].isDirty = plugin.isDirty;
+                    loot.game.plugins[i].isGlobalPriority = plugin.isGlobalPriority;
+                    loot.game.plugins[i].masterlist = plugin.masterlist;
+                    loot.game.plugins[i].messages = plugin.messages;
+                    loot.game.plugins[i].modPriority = plugin.modPriority;
+                    loot.game.plugins[i].tags = plugin.tags;
+                    break;
+                }
+            }
+        });
+
+        /* For the messages, they don't have a JS 'class' so need to everything
+           here. Count up the global message types that exist, then remove them
+           and add the new ones, counting their types, then update the message
+           counts. I tried using an observer for this, but it wouldn't fire for
+           some reason. */
+
+        var oldTotal = loot.game.globalMessages.length;
+        var newTotal = result.globalMessages.length;
+        var oldWarn = 0;
+        var newWarn = 0;
+        var oldErr = 0;
+        var newErr = 0;
+
+        loot.game.globalMessages.forEach(function(message){
+            if (message.type == 'warn') {
+                ++oldWarn;
+            } else if (message.type == 'error') {
+                ++oldErr;
+            }
+        });
+
+        var generalMessagesList = document.getElementById('generalMessages').getElementsByTagName('ul')[0];
+        while (generalMessagesList.firstElementChild) {
+            generalMessagesList.removeChild(generalMessagesList.firstElementChild);
+        }
+
+        result.globalMessages.forEach(function(message){
+            var li = document.createElement('li');
+            li.className = message.type;
+            /* Use the Marked library for Markdown formatting support. */
+            li.innerHTML = marked(message.content[0].str);
+            generalMessagesList.appendChild(li);
+
+            if (li.className == 'warn') {
+                ++newWarn;
+            } else if (li.className == 'error') {
+                ++newErr;
+            }
+        });
+
+        document.getElementById('filterTotalMessageNo').textContent = parseInt(document.getElementById('filterTotalMessageNo').textContent, 10) + newTotal - oldTotal;
+        document.getElementById('totalMessageNo').textContent = parseInt(document.getElementById('totalMessageNo').textContent, 10) + newTotal - oldTotal;
+        document.getElementById('totalWarningNo').textContent = parseInt(document.getElementById('totalWarningNo').textContent, 10) + newWarn - oldWarn;
+        document.getElementById('totalErrorNo').textContent = parseInt(document.getElementById('totalErrorNo').textContent, 10) + newErr - oldErr;
+
+        loot.game.globalMessages = result.globalMessages;
+    }).catch(processCefError);
 }
 function sortPlugins(evt) {
     loot.query('sortPlugins').catch(processCefError);
@@ -700,6 +766,16 @@ function initVars() {
         document.getElementById('debugVerbositySelect').value = loot.settings.debugVerbosity;
     }).catch(processCefError);
 }
+
+function masterlistObserver(changes) {
+    changes.forEach(function(change){
+        if (change.name == 'revision') {
+            document.getElementById('masterlistRevision').textContent = change.object[change.name];
+        } else if (change.name == 'date') {
+            document.getElementById('masterlistDate').textContent = change.object[change.name];
+        }
+    });
+}
 function updateInterfaceWithGameInfo(response) {
 
     try {
@@ -720,11 +796,11 @@ function updateInterfaceWithGameInfo(response) {
     document.getElementById('masterlistDate').textContent = loot.game.masterlist.date;
 
     var generalMessagesList = document.getElementById('generalMessages').getElementsByTagName('ul')[0];
-    for (var i = 0; i < loot.game.globalMessages.length; ++i) {
+    loot.game.globalMessages.forEach(function(message){
         var li = document.createElement('li');
-        li.className = loot.game.globalMessages[i].type;
+        li.className = message.type;
         /* Use the Marked library for Markdown formatting support. */
-        li.innerHTML = marked(loot.game.globalMessages[i].content[0].str);
+        li.innerHTML = marked(message.content[0].str);
         generalMessagesList.appendChild(li);
 
         if (li.className == 'warn') {
@@ -732,7 +808,7 @@ function updateInterfaceWithGameInfo(response) {
         } else if (li.className == 'error') {
             ++errorMessageNo;
         }
-    }
+    });
     totalMessageNo = loot.game.globalMessages.length;
     var pluginsList = document.getElementById('main');
     var pluginsNav = document.getElementById('pluginsNav');
@@ -766,6 +842,9 @@ function updateInterfaceWithGameInfo(response) {
     document.getElementById('totalPluginNo').textContent = loot.game.plugins.length;
     document.getElementById('activePluginNo').textContent = activePluginNo;
     document.getElementById('dirtyPluginNo').textContent = dirtyPluginNo;
+
+    /* Observe changes to update UI as appropriate. */
+    Object.observe(loot.game.masterlist, masterlistObserver);
 
     // Now set up event handlers, as they depend on the plugin cards having been created.
     setupEventHandlers();
