@@ -167,6 +167,10 @@ namespace loot {
             callback->Success("");
             return true;
         }
+        else if (request == "updateMasterlist") {
+            callback->Success(UpdateMasterlist());
+            return true;
+        }
         else {
             // May be a request with arguments.
             YAML::Node req;
@@ -257,7 +261,6 @@ namespace loot {
                     yout << plugin;
                     text = yout.c_str();
                 }
-
 
 #if defined(OS_WIN)
                 if (!OpenClipboard(NULL)) {
@@ -490,6 +493,7 @@ namespace loot {
             language = Language(g_app_state.GetSettings()["language"].as<string>()).Code();
         else
             language = Language::any;
+        BOOST_LOG_TRIVIAL(info) << "Using message language: " << Language(language).Name();
 
         // The data structure is to be set as 'loot.game'.
         YAML::Node gameNode;
@@ -560,7 +564,78 @@ namespace loot {
             gameNode["plugins"].push_back(pluginNode);
         }
 
+        //Evaluate any conditions in the global messages.
+        BOOST_LOG_TRIVIAL(debug) << "Evaluating global message conditions.";
+        list<Message> messages = g_app_state.CurrentGame().masterlist.messages;
+        try {
+            list<Message>::iterator it = messages.begin();
+            while (it != messages.end()) {
+                if (!it->EvalCondition(g_app_state.CurrentGame(), language))
+                    it = messages.erase(it);
+                else
+                    ++it;
+            }
+        }
+        catch (std::exception& e) {
+            BOOST_LOG_TRIVIAL(error) << "A global message contains a condition that could not be evaluated. Details: " << e.what();
+            messages.push_back(Message(Message::error, (format(loc::translate("A global message contains a condition that could not be evaluated. Details: %1%")) % e.what()).str()));
+        }
+
+        // Now store global messages from masterlist.
+        gameNode["globalMessages"] = messages;
+
+        return JSON::stringify(gameNode);
+    }
+
+    std::string Handler::UpdateMasterlist() {
+        BOOST_LOG_TRIVIAL(debug) << "Updating and parsing masterlist.";
+
+        //Set language.
+        unsigned int language;
+        if (g_app_state.GetSettings()["language"])
+            language = Language(g_app_state.GetSettings()["language"].as<string>()).Code();
+        else
+            language = Language::any;
         BOOST_LOG_TRIVIAL(info) << "Using message language: " << Language(language).Name();
+
+        // Update / parse masterlist.
+        g_app_state.CurrentGame().masterlist.Load(g_app_state.CurrentGame(), language);
+
+        // Now regenerate the JS-side masterlist data.
+
+        // The data structure is to be set as 'loot.game'.
+        YAML::Node gameNode;
+
+        // Store the masterlist revision and date.
+        gameNode["masterlist"]["revision"] = g_app_state.CurrentGame().masterlist.GetRevision(g_app_state.CurrentGame().MasterlistPath());
+        gameNode["masterlist"]["date"] = g_app_state.CurrentGame().masterlist.GetDate(g_app_state.CurrentGame().MasterlistPath());
+
+        for (const auto& pluginPair : g_app_state.CurrentGame().plugins) {
+            Plugin mlistPlugin(pluginPair.second);
+            mlistPlugin.MergeMetadata(g_app_state.CurrentGame().masterlist.FindPlugin(pluginPair.first));
+
+            YAML::Node pluginNode;
+            if (!mlistPlugin.HasNameOnly()) {
+                // Now add the masterlist metadata to the pluginNode.
+                pluginNode["masterlist"]["after"] = mlistPlugin.LoadAfter();
+                pluginNode["masterlist"]["req"] = mlistPlugin.Reqs();
+                pluginNode["masterlist"]["inc"] = mlistPlugin.Incs();
+                pluginNode["masterlist"]["msg"] = mlistPlugin.Messages();
+                pluginNode["masterlist"]["tag"] = mlistPlugin.Tags();
+                pluginNode["masterlist"]["dirty"] = mlistPlugin.DirtyInfo();
+            }
+
+            // Now merge masterlist and userlist metadata and evaluate,
+            // putting any resulting metadata into the base of the pluginNode.
+            YAML::Node derivedNode = GenerateDerivedMetadata(pluginPair.first);
+
+            for (auto it = derivedNode.begin(); it != derivedNode.end(); ++it) {
+                const string key = it->first.as<string>();
+                pluginNode[key] = it->second;
+            }
+
+            gameNode["plugins"].push_back(pluginNode);
+        }
 
         //Evaluate any conditions in the global messages.
         BOOST_LOG_TRIVIAL(debug) << "Evaluating global message conditions.";
@@ -592,6 +667,7 @@ namespace loot {
             language = Language(g_app_state.GetSettings()["language"].as<string>()).Code();
         else
             language = Language::any;
+        BOOST_LOG_TRIVIAL(info) << "Using message language: " << Language(language).Name();
 
         // Now rederive the displayed metadata from the masterlist and userlist.
         Plugin tempPlugin(file);

@@ -57,6 +57,7 @@ namespace loot {
         std::string GetGameTypes();
         std::string GetInstalledGames();
         std::string GetGameData();
+        std::string UpdateMasterlist();
 
         YAML::Node Handler::GenerateDerivedMetadata(const std::string& pluginName);
         YAML::Node Handler::GenerateDerivedMetadata(const Plugin& file, const Plugin& masterlist, const Plugin& userlist);
