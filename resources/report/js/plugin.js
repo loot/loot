@@ -42,23 +42,26 @@ function Plugin(obj) {
 
     this.id = this.name.replace(/\s+/g, '');
 
-    Plugin.prototype.getTagObj = function(tag) {
-        var data = {
-            type: '',
-            name: '',
-            condition: tag.condition
-        };
-        if (tag.name[0] == '-') {
-            data.type = 'remove';
-            data.name = tag.name.substr(1);
+    /* Converts between the LOOT metadata object for tags, and their
+       editor row representation. */
+    Plugin.prototype.convTagObj = function(tag) {
+        if (tag.type) {
+            /* Input is row data. */
+            if (tag.type == 'remove') {
+                tag.name = '-' + tag.name;
+            }
+            delete tag.type;
         } else {
-            data.type = 'add';
-            data.name = tag.name;
+            /* Input is metadata object. */
+            if (tag.name[0] == '-') {
+                tag.type = 'remove';
+                tag.name = tag.name.substr(1);
+            } else {
+                tag.type = 'add';
+            }
         }
-        return data;
+        return tag;
     }
-
-
 
     Plugin.prototype.updateCardTags = function() {
         var tagsAdded = [];

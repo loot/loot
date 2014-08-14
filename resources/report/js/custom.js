@@ -145,15 +145,78 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
         }
     },
 
+    readFromEditor: {
+        value: function() {
+            /* Need to turn all the editor controls' values into data to
+               process. The control values can be compared with the existing
+               values to determine what's been changed, and masterlist rows in
+               the tables can be ignored because they're immutable. */
+
+            var plugin = {
+                name: this.getElementsByTagName('h1')[0].textContent,
+                userlist: {},
+            };
+
+            /* First find the corresponding plugin. */
+            for (var i = 0; i < loot.game.plugins.length; ++i) {
+                if (loot.game.plugins[i].id == this.id) {
+
+                    if (this.shadowRoot.getElementById('globalPriority').checked != loot.game.plugins[i].isGlobalPriority) {
+                        /* Priority value has been changed, record it. */
+                        plugin.isGlobalPriority = this.shadowRoot.getElementById('globalPriority').checked;
+                    }
+
+                    if (this.shadowRoot.getElementById('priorityValue').value != loot.game.plugins[i].modPriority) {
+                        /* Priority value has been changed, record it. */
+                        plugin.modPriority = this.shadowRoot.getElementById('priorityValue').value;
+                    }
+
+                    plugin.userlist.enabled = this.shadowRoot.getElementById('enableEdits').checked;
+
+                    var tables = this.shadowRoot.getElementsByTagName('table');
+                    for (var j = 0; j < tables.length; ++j) {
+                        var rowsData = tables[j].getWritableRowData();
+                        if (rowsData.length > 0) {
+                            if (tables[j].id == 'loadAfter') {
+                                plugin.userlist.after = rowsData;
+                            } else if (tables[j].id == 'req') {
+                                plugin.userlist.req = rowsData;
+                            } else if (tables[j].id == 'inc') {
+                                plugin.userlist.inc = rowsData;
+                            } else if (tables[j].id == 'message') {
+                                rowsData.forEach(function(data){
+                                    data.content = [{
+                                        str: data.content,
+                                        lang: data.language
+                                    }]
+                                    delete data.language;
+                                });
+                                plugin.userlist.msg = rowsData;
+                            } else if (tables[j].id == 'tags') {
+                                rowsData.forEach(function(data){
+                                    data = loot.game.plugins[i].convTagObj(data);
+                                });
+                                plugin.userlist.tag = rowsData;
+                            } else if (tables[j].id == 'dirty') {
+                                rowsData.forEach(function(data){
+                                    data.crc = parseInt(data.crc, 16);
+                                });
+                                plugin.userlist.dirty = rowsData;
+                            }
+                        }
+                    }
+                }
+            }
+            return plugin;
+        }
+    },
+
     hideEditor: {
         value: function(evt) {
             var isValid = true;
             if (evt.target.className.indexOf('accept') != -1) {
                 /* First validate table inputs. */
                 var inputs = evt.target.parentElement.parentElement.getElementsByTagName('input');
-                /* If an input is readonly, it doesn't validate, but that's ok
-                   because the read-only inputs must be valid.
-                */
                 for (var i = 0; i < inputs.length; ++i) {
                     if (!inputs[i].checkValidity()) {
                         isValid = false;
@@ -163,6 +226,21 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
             }
             if (isValid) {
                 var card = evt.target.parentElement.parentElement.parentNode.host;
+
+                /* Need to record the editor control values and work out what's
+                   changed, and update any UI elements necessary. Offload the
+                   majority of the work to the C++ side of things. */
+                var request = JSON.stringify({
+                    name: 'editorClosed',
+                    args: [
+                        card.getElementsByTagName('h1')[0].textContent,
+                        card.readFromEditor()
+                    ]
+                });
+                loot.query(request).then(function(result){
+
+                }).catch(processCefError);
+
 
                 /* Set up table tab event handlers. */
                 var elements = card.shadowRoot.getElementById('tableTabs').children;
@@ -228,79 +306,63 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
                     } else {
                         this.shadowRoot.getElementById('enableEdits').checked = true;
                     }
-                    this.shadowRoot.getElementById('globalPriority').value = loot.game.plugins[i].globalPriority;
+                    this.shadowRoot.getElementById('globalPriority').checked = loot.game.plugins[i].isGlobalPriority;
                     this.shadowRoot.getElementById('priorityValue').value = loot.game.plugins[i].modPriority;
 
                     /* Clear any existing editor table data. Don't remove the last row though,
                        that's the "add new row" one. */
                     var tables = this.shadowRoot.getElementsByTagName('table');
-                    for (var i = 0; i < tables.length; ++i) {
-                        tables[i].clear();
+                    for (var j = 0; j < tables.length; ++j) {
+                        tables[j].clear();
                     }
-
 
                     /* Fill in editor table data. Masterlist-originated rows should have
                        their contents made read-only, and be unremovable. */
                     var tables = this.shadowRoot.getElementsByTagName('table');
-                    for (var i = 0; i < tables.length; ++i) {
-                        if (tables[i].id == 'loadAfter') {
+                    for (var j = 0; j < tables.length; ++j) {
+                        if (tables[j].id == 'loadAfter') {
 
                             if (loot.game.plugins[i].masterlist && loot.game.plugins[i].masterlist.after) {
                                 loot.game.plugins[i].masterlist.after.forEach(function(file) {
-                                    var row = tables[i].addRow(file);
-                                    row.querySelector('.fa-trash-o').classList.toggle('hidden');
-
-                                    var inputs = row.getElementsByTagName('input');
-                                    for (var j = 0; j < inputs.length; ++j) {
-                                        inputs[j].setAttribute('readonly', true);
-                                    }
+                                    var row = tables[j].addRow(file);
+                                    tables[j].setReadOnly(row);
                                 });
                             }
                             if (loot.game.plugins[i].userlist && loot.game.plugins[i].userlist.after) {
                                 loot.game.plugins[i].userlist.after.forEach(function(file) {
-                                    tables[i].addRow(file);
+                                    tables[j].addRow(file);
                                 });
                             }
 
-                        } else if (tables[i].id == 'req') {
+                        } else if (tables[j].id == 'req') {
 
                             if (loot.game.plugins[i].masterlist && loot.game.plugins[i].masterlist.req) {
                                 loot.game.plugins[i].masterlist.req.forEach(function(file) {
-                                    var row = tables[i].addRow(file);
-                                    row.querySelector('.fa-trash-o').classList.toggle('hidden');
-
-                                    var inputs = row.getElementsByTagName('input');
-                                    for (var j = 0; j < inputs.length; ++j) {
-                                        inputs[j].setAttribute('readonly', true);
-                                    }
+                                    var row = tables[j].addRow(file);
+                                    tables[j].setReadOnly(row);
                                 });
                             }
                             if (loot.game.plugins[i].userlist && loot.game.plugins[i].userlist.req) {
                                 loot.game.plugins[i].userlist.req.forEach(function(file) {
-                                    tables[i].addRow(file);
+                                    tables[j].addRow(file);
                                 });
                             }
 
-                        } else if (tables[i].id == 'inc') {
+                        } else if (tables[j].id == 'inc') {
 
                             if (loot.game.plugins[i].masterlist && loot.game.plugins[i].masterlist.inc) {
                                 loot.game.plugins[i].masterlist.inc.forEach(function(file) {
-                                    var row = tables[i].addRow(file);
-                                    row.querySelector('.fa-trash-o').classList.toggle('hidden');
-
-                                    var inputs = row.getElementsByTagName('input');
-                                    for (var j = 0; j < inputs.length; ++j) {
-                                        inputs[j].setAttribute('readonly', true);
-                                    }
+                                    var row = tables[j].addRow(file);
+                                    tables[j].setReadOnly(row);
                                 });
                             }
                             if (loot.game.plugins[i].userlist && loot.game.plugins[i].userlist.inc) {
                                 loot.game.plugins[i].userlist.inc.forEach(function(file) {
-                                    tables[i].addRow(file);
+                                    tables[j].addRow(file);
                                 });
                             }
 
-                        } else if (tables[i].id == 'message') {
+                        } else if (tables[j].id == 'message') {
 
                             if (loot.game.plugins[i].masterlist && loot.game.plugins[i].masterlist.msg) {
                                 loot.game.plugins[i].masterlist.msg.forEach(function(message) {
@@ -310,14 +372,8 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
                                         condition: message.condition,
                                         language: message.content[0].lang
                                     };
-                                    var row = tables[i].addRow(data);
-                                    row.querySelector('.fa-trash-o').classList.toggle('hidden');
-
-                                    var inputs = row.getElementsByTagName('input');
-                                    for (var j = 0; j < inputs.length; ++j) {
-                                        inputs[j].setAttribute('readonly', true);
-                                    }
-                                    var select = row.getElementsByTagName('select')[0].setAttribute('disabled', true);
+                                    var row = tables[j].addRow(data);
+                                    tables[j].setReadOnly(row);
 
                                 });
                             }
@@ -329,50 +385,39 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
                                         condition: message.condition,
                                         language: message.content[0].lang
                                     };
-                                    tables[i].addRow(data);
+                                    tables[j].addRow(data);
                                 });
                             }
 
-                        } else if (tables[i].id == 'tags') {
+                        } else if (tables[j].id == 'tags') {
 
                             if (loot.game.plugins[i].masterlist && loot.game.plugins[i].masterlist.tag) {
                                 loot.game.plugins[i].masterlist.tag.forEach(function(tag) {
-                                    var data = loot.game.plugins[i].getTagObj(tag);
-                                    var row = tables[i].addRow(data);
-                                    row.querySelector('.fa-trash-o').classList.toggle('hidden');
-
-                                    var inputs = row.getElementsByTagName('input');
-                                    for (var j = 0; j < inputs.length; ++j) {
-                                        inputs[j].setAttribute('readonly', true);
-                                    }
-                                    var select = row.getElementsByTagName('select')[0].setAttribute('disabled', true);
+                                    var data = loot.game.plugins[i].convTagObj(tag);
+                                    var row = tables[j].addRow(data);
+                                    tables[j].setReadOnly(row);
                                 }, loot.game.plugins[i]);
                             }
                             if (loot.game.plugins[i].userlist && loot.game.plugins[i].userlist.tag) {
                                 loot.game.plugins[i].userlist.tag.forEach(function(tag) {
-                                    var data = loot.game.plugins[i].getTagObj(tag);
-                                    tables[i].addRow(data);
+                                    var data = loot.game.plugins[i].convTagObj(tag);
+                                    tables[j].addRow(data);
                                 }, loot.game.plugins[i]);
                             }
 
-                        } else if (tables[i].id == 'dirty') {
+                        } else if (tables[j].id == 'dirty') {
 
                             if (loot.game.plugins[i].masterlist && loot.game.plugins[i].masterlist.dirty) {
                                 loot.game.plugins[i].masterlist.dirty.forEach(function(info) {
                                     info.crc = info.crc.toString(16);
-                                    var row = tables[i].addRow(info);
-                                    row.querySelector('.fa-trash-o').classList.toggle('hidden');
-
-                                    var inputs = row.getElementsByTagName('input');
-                                    for (var j = 0; j < inputs.length; ++j) {
-                                        inputs[j].setAttribute('readonly', true);
-                                    }
+                                    var row = tables[j].addRow(info);
+                                    tables[j].setReadOnly(row);
                                 });
                             }
                             if (loot.game.plugins[i].userlist && loot.game.plugins[i].userlist.dirty) {
                                 loot.game.plugins[i].userlist.dirty.forEach(function(info) {
                                     info.crc = info.crc.toString(16);
-                                    tables[i].addRow(info);
+                                    tables[j].addRow(info);
                                 });
                             }
 
@@ -660,6 +705,51 @@ var MessageDialog = document.registerElement('message-dialog', {
 
 /* Create a <editable-table> element type that extends from <table>. */
 var EditableTableProto = Object.create(HTMLTableElement.prototype, {
+
+    getWritableRowData: {
+        value: function() {
+            var writableRows = [];
+            var rows = this.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+            for (var i = 0; i < rows.length; ++i) {
+                var trash = rows[i].getElementsByClassName('fa-trash-o');
+
+                if (trash.length > 0 && !trash[0].classList.contains('hidden')) {
+                    var rowData = {};
+
+                    var inputs = rows[i].getElementsByTagName('input');
+                    for (var j = 0; j < inputs.length; ++j) {
+                        rowData[inputs[j].className] = inputs[j].value;
+                    }
+
+                    var selects = rows[i].getElementsByTagName('select');
+                    for (var j = 0; j < selects.length; ++j) {
+                        rowData[selects[j].className] = selects[j].value;
+                    }
+
+                    writableRows.push(rowData);
+                }
+            }
+
+            return writableRows;
+        }
+    },
+
+    setReadOnly: {
+        value: function(row) {
+            row.getElementsByClassName('fa-trash-o')[0].classList.toggle('hidden');
+
+            var inputs = row.getElementsByTagName('input');
+            for (var i = 0; i < inputs.length; ++i) {
+                inputs[i].setAttribute('readonly', true);
+            }
+
+            var selects = row.getElementsByTagName('select');
+            for (var i = 0; i < selects.length; ++i) {
+                selects[i].setAttribute('disabled', true);
+            }
+        }
+    },
 
     clear: {
         value: function() {
