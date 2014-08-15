@@ -171,6 +171,13 @@ namespace loot {
             callback->Success(UpdateMasterlist());
             return true;
         }
+        else if (request == "sortPlugins") {
+            //Sort plugins into their load order.
+            list<string> loadOrder;
+            g_app_state.CurrentGame().GetLoadOrder(loadOrder);
+            callback->Success(JSON::stringify(YAML::Node(loadOrder)));
+            return true;
+        }
         else {
             // May be a request with arguments.
             YAML::Node req;
@@ -391,6 +398,20 @@ namespace loot {
             else if (requestName == "closeSettings") {
                 BOOST_LOG_TRIVIAL(trace) << "Settings dialog closed and changes accepted, updating settings object.";
                 g_app_state.UpdateSettings(req["args"][0]);
+                callback->Success("");
+                return true;
+            }
+            else if (requestName == "applySort") {
+                BOOST_LOG_TRIVIAL(trace) << "User has accepted sorted load order, applying it.";
+                list<string> loadOrder = req["args"][0].as<list<string>>();
+                try {
+                    g_app_state.CurrentGame().SetLoadOrder(loadOrder);
+                }
+                catch (exception &e) {
+                    callback->Failure(-1, e.what());
+                    return true;
+                }
+
                 callback->Success("");
                 return true;
             }

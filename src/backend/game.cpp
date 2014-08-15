@@ -533,7 +533,7 @@ namespace loot {
         lo_destroy_handle(gh);
     }
 
-    void Game::SetLoadOrder(const std::list<Plugin>& loadOrder) const {
+    void Game::SetLoadOrder(const std::list<std::string>& loadOrder) const {
         BOOST_LOG_TRIVIAL(debug) << "Setting load order for game: " << _name;
 
         lo_game_handle gh = nullptr;
@@ -587,8 +587,8 @@ namespace loot {
         pluginArr = new char*[pluginArrSize];
         int i = 0;
         for (const auto &plugin: loadOrder) {
-            pluginArr[i] = new char[plugin.Name().length() + 1];
-            strcpy(pluginArr[i], plugin.Name().c_str());
+            pluginArr[i] = new char[plugin.length() + 1];
+            strcpy(pluginArr[i], plugin.c_str());
             ++i;
         }
 

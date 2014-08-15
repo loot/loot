@@ -126,7 +126,7 @@ function togglePlugins(evt) {
     var hiddenPluginNo = 0;
     var hiddenMessageNo = 0;
     if (sections.length - 2 != entries.length) {
-        throw "Error: Number of plugins in sidebar doesn't match number of plugins in main area!";
+        throw Error("Error: Number of plugins in sidebar doesn't match number of plugins in main area!");
     }
     /* The conflict filter, if enabled, executes C++ code, so needs to be
        handled using a promise, so the rest of the function should wait until
@@ -372,14 +372,93 @@ function updateMasterlist(evt) {
         loot.game.globalMessages = result.globalMessages;
     }).catch(processCefError);
 }
+function sortUIElements(pluginNames) {
+    /* pluginNames is an array of plugin names in their sorted order. Rearrange
+       the plugin cards and nav entries to match it. */
+    var main = document.getElementById('main');
+    var pluginsNav = document.getElementById('pluginsNav');
+    var entries = pluginsNav.children;
+    if (main.children.length - 2 != entries.length) {
+        throw Error("Error: Number of plugins in sidebar doesn't match number of plugins in main area!");
+    }
+    pluginNames.forEach(function(name){
+        var card = document.getElementById(name.replace(/\s+/g, ''));
+        var li;
+        for (var i = 0; i < entries.length; ++i) {
+            if (entries[i].getElementsByClassName('name')[0].textContent == name) {
+                li = entries[i];
+            }
+        }
+
+        /* Easiest just to remove them and add them on at the end. */
+        main.removeChild(card);
+        main.appendChild(card);
+        pluginsNav.removeChild(li);
+        pluginsNav.appendChild(li);
+    });
+}
 function sortPlugins(evt) {
-    loot.query('sortPlugins').catch(processCefError);
+    if (loot.settings.updateMasterlist) {
+        updateMasterlist(evt);
+    }
+    loot.query('sortPlugins').then(JSON.parse).then(function(result){
+
+        if (loot.neverTellMeTheOdds) {
+            /* Array shuffler from <https://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array-in-javascript> */
+            for(var j, x, i = result.length; i; j = Math.floor(Math.random() * i), x = result[--i], result[i] = result[j], result[j] = x);
+        }
+
+        /* Record the previous order in case the user cancels sorting. */
+        /* Start at 2 to skip summary and general messages. */
+        var cards = document.getElementById('main').children;
+        loot.newLoadOrder = result;
+        loot.lastLoadOrder = [];
+        for (var i = 2; i < cards.length; ++i) {
+            loot.lastLoadOrder.push(cards[i].getElementsByTagName('h1')[0].textContent);
+        }
+        /* Now update the UI for the new order. */
+        sortUIElements(result);
+
+        /* Now hide the masterlist update buttons, and display the accept and
+           cancel sort buttons. */
+        hideElement(document.getElementById('updateMasterlistButton'));
+        hideElement(document.getElementById('sortButton'));
+        showElement(document.getElementById('applySortButton'));
+        showElement(document.getElementById('cancelSortButton'));
+    }).catch(processCefError);
 }
 function applySort(evt) {
-    loot.query('applySort').catch(processCefError);
+    var request = JSON.stringify({
+        name: 'applySort',
+        args: [
+            loot.newLoadOrder
+        ]
+    });
+    loot.query(request).then(function(result){
+        /* Remove old load order storage. */
+        delete loot.lastLoadOrder;
+        delete loot.newLoadOrder;
+
+        /* Now show the masterlist update buttons, and hide the accept and
+           cancel sort buttons. */
+        showElement(document.getElementById('updateMasterlistButton'));
+        showElement(document.getElementById('sortButton'));
+        hideElement(document.getElementById('applySortButton'));
+        hideElement(document.getElementById('cancelSortButton'));
+    }).catch(processCefError);
 }
 function cancelSort(evt) {
-    loot.query('cancelSort').catch(processCefError);
+    /* Sort UI elements again according to stored old load order. */
+    sortUIElements(loot.lastLoadOrder);
+    delete loot.lastLoadOrder;
+    delete loot.newLoadOrder;
+
+    /* Now show the masterlist update buttons, and hide the accept and
+       cancel sort buttons. */
+    showElement(document.getElementById('updateMasterlistButton'));
+    showElement(document.getElementById('sortButton'));
+    hideElement(document.getElementById('applySortButton'));
+    hideElement(document.getElementById('cancelSortButton'));
 }
 function redatePlugins(evt) {
     if (evt.target.classList.contains('disabled')) {
@@ -578,7 +657,7 @@ function closeSettingsDialog(evt) {
             games: document.getElementById('gameTable').getRowsData(false),
             language: document.getElementById('languageSelect').value,
             lastGame: loot.game.folder,
-            updateMasterlist: document.getElementById('updateMasterlist').value,
+            updateMasterlist: document.getElementById('updateMasterlist').checked,
         };
 
         /* Send the settings back to the C++ side. */
