@@ -172,9 +172,27 @@ namespace loot {
             return true;
         }
         else if (request == "sortPlugins") {
+
+            //Set language.
+            unsigned int language;
+            if (g_app_state.GetSettings()["language"])
+                language = Language(g_app_state.GetSettings()["language"].as<string>()).Code();
+            else
+                language = Language::any;
+            BOOST_LOG_TRIVIAL(info) << "Using message language: " << Language(language).Name();
+
+            // Check if the first plugin has any FormIDs in memory, and if not load all plugins.
+            if (g_app_state.CurrentGame().plugins.begin()->second.FormIDs().size() == 0)
+                g_app_state.CurrentGame().LoadPlugins(false);
+
             //Sort plugins into their load order.
+            list<Plugin> plugins = g_app_state.CurrentGame().Sort(language, [](const string& message){});
+
             list<string> loadOrder;
-            g_app_state.CurrentGame().GetLoadOrder(loadOrder);
+            for (const auto &plugin : plugins) {
+                loadOrder.push_back(plugin.Name());
+            }
+
             callback->Success(JSON::stringify(YAML::Node(loadOrder)));
             return true;
         }

@@ -124,8 +124,7 @@ namespace loot {
         void RedatePlugins();  //Change timestamps to match load order (Skyrim only).
         void LoadPlugins(bool headersOnly);  //Loads all installed plugins.
 
-        void SortPrep(const unsigned int language, std::list<Message>& messages, std::function<void(const std::string&)> progressCallback);
-        std::list<Plugin> Sort(const unsigned int language, std::list<Message>& messages, std::function<void(const std::string&)> progressCallback);
+        std::list<Plugin> Sort(const unsigned int language, std::function<void(const std::string&)> progressCallback);
 
         //Caches for condition results, active plugins and CRCs.
         std::unordered_map<std::string, bool> conditionCache;  //Holds lowercased strings.

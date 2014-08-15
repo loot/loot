@@ -40,96 +40,7 @@ namespace fs = boost::filesystem;
 
 namespace loot {
 
-    void Game::SortPrep(const unsigned int language, std::list<Message>& messages, std::function<void(const std::string&)> progressCallback) {
-        boost::thread_group group;
-
-        BOOST_LOG_TRIVIAL(info) << "Using message language: " << Language(language).Name();
-
-        ///////////////////////////////////////////////////////
-        // Load Plugins & Lists
-        ///////////////////////////////////////////////////////
-
-        progressCallback("Reading installed plugins...");
-
-        group.create_thread([this, language, &messages]() {
-            try {
-                this->masterlist.Load(*this, language);
-            }
-            catch (exception &e) {
-                messages.push_back(loot::Message(loot::Message::error, (format(loc::translate("Masterlist parsing failed. Details: %1%")) % e.what()).str()));
-            }
-        });
-        group.create_thread([this]() {
-            this->LoadPlugins(false);
-        });
-        group.join_all();
-
-        //Now load userlist.
-        if (fs::exists(this->UserlistPath())) {
-            BOOST_LOG_TRIVIAL(debug) << "Parsing userlist at: " << this->UserlistPath();
-
-            try {
-                this->userlist.Load(this->UserlistPath());
-            }
-            catch (exception& e) {
-                BOOST_LOG_TRIVIAL(error) << "Userlist parsing failed. Details: " << e.what();
-                messages.push_back(loot::Message(loot::Message::error, (format(loc::translate("Userlist parsing failed. Details: %1%")) % e.what()).str()));
-            }
-        }
-
-        ///////////////////////////////////////////////////////
-        // Evaluate Global Messages
-        ///////////////////////////////////////////////////////
-
-        progressCallback("Evaluating global messages...");
-
-        //Merge all global message lists.
-        BOOST_LOG_TRIVIAL(debug) << "Merging all global message lists.";
-        if (!this->masterlist.messages.empty())
-            messages.insert(messages.end(), this->masterlist.messages.begin(), this->masterlist.messages.end());
-        if (!this->userlist.messages.empty())
-            messages.insert(messages.end(), this->userlist.messages.begin(), this->userlist.messages.end());
-
-        //Evaluate any conditions in the global messages.
-        BOOST_LOG_TRIVIAL(debug) << "Evaluating global message conditions.";
-        try {
-            list<loot::Message>::iterator it = messages.begin();
-            while (it != messages.end()) {
-                if (!it->EvalCondition(*this, language))
-                    it = messages.erase(it);
-                else
-                    ++it;
-            }
-        }
-        catch (std::exception& e) {
-            BOOST_LOG_TRIVIAL(error) << "A global message contains a condition that could not be evaluated. Details: " << e.what();
-            messages.push_back(loot::Message(loot::Message::error, (format(loc::translate("A global message contains a condition that could not be evaluated. Details: %1%")) % e.what()).str()));
-        }
-
-        ////////////////////////////////////////////////////////
-        // Slim down masterlist
-        ////////////////////////////////////////////////////////
-        //
-        // Userlist data gets replaced every time sorting is looped, so there's no point evaluating it
-        // outside the loop, but the masterlist can be slimmed down now.
-
-        progressCallback("Filtering masterlist...");
-       
-        std::list<Plugin> tempMasterlistPlugins;
-        for (const auto &plugin : this->plugins) {
-            list<loot::Plugin>::iterator pos = std::find(this->masterlist.plugins.begin(), this->masterlist.plugins.end(), plugin.second);
-
-            if (pos != this->masterlist.plugins.end()) {
-                // The plugin exists in the masterlist, store a copy of its metadata.
-                tempMasterlistPlugins.push_back(*pos);
-            }
-        }
-        // Now replace the current full masterlist plugin metadata list with the install-specific one.
-        this->masterlist.plugins = tempMasterlistPlugins;
-    }
-
-
-    std::list<Plugin> Game::Sort(const unsigned int language, std::list<Message>& messages, std::function<void(const std::string&)> progressCallback) {
+    std::list<Plugin> Game::Sort(const unsigned int language, std::function<void(const std::string&)> progressCallback) {
         //Create a plugin graph containing the plugin and masterlist data.
         loot::PluginGraph graph;
 
@@ -163,7 +74,9 @@ namespace loot {
             }
             catch (std::exception& e) {
                 BOOST_LOG_TRIVIAL(error) << "\"" << graph[v].Name() << "\" contains a condition that could not be evaluated. Details: " << e.what();
+                list<Message> messages(graph[v].Messages());
                 messages.push_back(loot::Message(loot::Message::error, (format(loc::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % graph[v].Name() % e.what()).str()));
+                graph[v].Messages(messages);
             }
 
             //Also check install validity.
