@@ -519,8 +519,8 @@ function updateSettingsUI() {
     var gameTable = document.getElementById('gameTable');
 
     /* First make sure game listing elements don't have any existing entries. */
-    while (gameSelect.firstElementChild) {
-        gameSelect.removeChild(gameSelect.firstElementChild);
+    while (gameSelect.children.length > 1) {
+        gameSelect.removeChild(gameSelect.lastElementChild);
     }
     while (gameMenu.firstElementChild) {
         gameMenu.removeChild(gameMenu.firstElementChild);

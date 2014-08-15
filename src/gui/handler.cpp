@@ -388,6 +388,12 @@ namespace loot {
                 callback->Success(JSON::stringify(GenerateDerivedMetadata(newUserlistEntry.Name())));
                 return true;
             }
+            else if (requestName == "closeSettings") {
+                BOOST_LOG_TRIVIAL(trace) << "Settings dialog closed and changes accepted, updating settings object.";
+                g_app_state.UpdateSettings(req["args"][0]);
+                callback->Success("");
+                return true;
+            }
         }
 
         return false;
@@ -709,7 +715,7 @@ namespace loot {
         auto pluginIt = g_app_state.CurrentGame().plugins.find(pluginName);
         if (pluginIt != g_app_state.CurrentGame().plugins.end()) {
 
-            const Plugin master = g_app_state.CurrentGame().userlist.FindPlugin(pluginIt->first);
+            const Plugin master = g_app_state.CurrentGame().masterlist.FindPlugin(pluginIt->first);
             const Plugin user = g_app_state.CurrentGame().userlist.FindPlugin(pluginIt->first);
 
             return this->GenerateDerivedMetadata(pluginIt->second, master, user);
