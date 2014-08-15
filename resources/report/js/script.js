@@ -230,6 +230,18 @@ function updateSelectedGame() {
     } else {
         document.getElementById('redatePluginsButton').classList.toggle('disabled', true);
     }
+
+    /* Also disable deletion of the game's row in the settings dialog. */
+    var rows = document.getElementById('gameTable').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+    for (var i = 0; i < rows.length; ++i) {
+        if (rows[i].getElementsByClassName('folder').length > 0) {
+            if (rows[i].getElementsByClassName('folder')[0].value == loot.game.folder) {
+                document.getElementById('gameTable').setReadOnly(rows[i], ['fa-trash-o']);
+            } else {
+                document.getElementById('gameTable').setReadOnly(rows[i], ['fa-trash-o'], false);
+            }
+        }
+    }
 }
 function changeGame(evt) {
     /* First store current game info in loot.games object.
@@ -501,17 +513,90 @@ function closeAboutDialog(evt) {
 function showAboutDialog(evt) {
     document.getElementById('about').showModal();
 }
+function updateSettingsUI() {
+    var gameSelect = document.getElementById('defaultGameSelect');
+    var gameMenu = document.getElementById('gameMenu').firstElementChild;
+    var gameTable = document.getElementById('gameTable');
+
+    /* First make sure game listing elements don't have any existing entries. */
+    while (gameSelect.firstElementChild) {
+        gameSelect.removeChild(gameSelect.firstElementChild);
+    }
+    while (gameMenu.firstElementChild) {
+        gameMenu.removeChild(gameMenu.firstElementChild);
+    }
+    gameTable.clear();
+
+    /* Now fill with new values. */
+    for (var i = 0; i < loot.settings.games.length; ++i) {
+        var option = document.createElement('option');
+        option.value = loot.settings.games[i].folder;
+        option.textContent = loot.settings.games[i].name;
+        gameSelect.appendChild(option);
+
+        var li = document.createElement('li');
+        li.setAttribute('data-action', 'change-game');
+        li.setAttribute('data-target', loot.settings.games[i].folder);
+
+        if (loot.installedGames.indexOf(loot.settings.games[i].folder) == -1) {
+            li.classList.toggle('disabled', true);
+        }
+
+        var icon = document.createElement('span');
+        icon.className = 'fa fa-fw';
+        li.appendChild(icon);
+
+        var text = document.createElement('span');
+        text.textContent = loot.settings.games[i].name;
+        li.appendChild(text);
+
+        gameMenu.appendChild(li);
+
+        var row = gameTable.addRow(loot.settings.games[i]);
+        gameTable.setReadOnly(row, ['name','folder','type']);
+    }
+
+    /* Highlight game in menu. */
+    updateSelectedGame();
+
+    gameSelect.value = loot.settings.game;
+    document.getElementById('languageSelect').value = loot.settings.language;
+    document.getElementById('debugVerbositySelect').value = loot.settings.debugVerbosity;
+    document.getElementById('updateMasterlist').checked = loot.settings.updateMasterlist;
+}
 function closeSettingsDialog(evt) {
     if (!areSettingsValid()) {
-        evt.preventDefault();
         return;
     }
 
-    if (evt.target.returnValue == 'true') {
+    var dialog = evt.target.parentElement.parentElement;
+    if (evt.target.classList.contains('accept')) {
+        /* Update the JS variable values. */
+        var settings = {
+            debugVerbosity: document.getElementById('debugVerbositySelect').value,
+            game: document.getElementById('defaultGameSelect').value,
+            games: document.getElementById('gameTable').getRowsData(false),
+            language: document.getElementById('languageSelect').value,
+            lastGame: loot.game.folder,
+            updateMasterlist: document.getElementById('updateMasterlist').value,
+        };
+
+        /* Send the settings back to the C++ side. */
+        var request = JSON.stringify({
+            name: 'closeSettings',
+            args: [
+                settings
+            ]
+        });
+        loot.query(request).catch(processCefError);
+
+        loot.settings = settings;
 
     } else {
-
+        /* Re-apply the existing settings to the settings dialog elements. */
+        updateSettingsUI();
     }
+    dialog.close();
 }
 
 function showSettingsDialog(evt) {
@@ -623,18 +708,10 @@ function setupEventHandlers() {
 
     /* Set up event handlers for settings dialog. */
     var settings = document.getElementById('settings');
-    settings.addEventListener('close', closeSettingsDialog, false);
-    settings.addEventListener('cancel', closeSettingsDialog, false);
-
-    settings.getElementsByClassName('accept')[0].addEventListener('click', function(evt){
-        evt.target.parentElement.parentElement.close(true);
-    }, false);
-    settings.getElementsByClassName('cancel')[0].addEventListener('click', function(evt){
-        evt.target.parentElement.parentElement.close(false);
-    }, false);
+    settings.getElementsByClassName('accept')[0].addEventListener('click', closeSettingsDialog, false);
+    settings.getElementsByClassName('cancel')[0].addEventListener('click', closeSettingsDialog, false);
 
     /* Set up about dialog handlers. */
-
     document.getElementById('about').getElementsByTagName('button')[0].addEventListener('click', closeAboutDialog, false);
 
 
@@ -727,43 +804,7 @@ function initVars() {
             console.log('getSettings response: ' + results[3]);
         }
 
-        /* Now fill game lists/table. */
-        var gameSelect = document.getElementById('defaultGameSelect');
-        var gameMenu = document.getElementById('gameMenu').firstElementChild;
-        var gameTable = document.getElementById('gameTable');
-        for (var i = 0; i < loot.settings.games.length; ++i) {
-            var option = document.createElement('option');
-            option.value = loot.settings.games[i].folder;
-            option.textContent = loot.settings.games[i].name;
-            gameSelect.appendChild(option);
-
-            var li = document.createElement('li');
-            li.setAttribute('data-action', 'change-game');
-            li.setAttribute('data-target', loot.settings.games[i].folder);
-
-            if (loot.installedGames.indexOf(loot.settings.games[i].folder) == -1) {
-                li.classList.toggle('disabled', true);
-            }
-
-            var icon = document.createElement('span');
-            icon.className = 'fa fa-fw';
-            li.appendChild(icon);
-
-            var text = document.createElement('span');
-            text.textContent = loot.settings.games[i].name;
-            li.appendChild(text);
-
-            gameMenu.appendChild(li);
-
-            gameTable.addRow(loot.settings.games[i]);
-        }
-
-        /* Highlight game in menu. */
-        updateSelectedGame();
-
-        gameSelect.value = loot.settings.game;
-        document.getElementById('languageSelect').value = loot.settings.language;
-        document.getElementById('debugVerbositySelect').value = loot.settings.debugVerbosity;
+        updateSettingsUI();
     }).catch(processCefError);
 }
 

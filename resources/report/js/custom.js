@@ -178,7 +178,7 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
 
                     var tables = this.shadowRoot.getElementsByTagName('table');
                     for (var j = 0; j < tables.length; ++j) {
-                        var rowsData = tables[j].getWritableRowData();
+                        var rowsData = tables[j].getRowsData(true);
                         if (rowsData.length > 0) {
                             if (tables[j].id == 'loadAfter') {
                                 plugin.userlist.after = rowsData;
@@ -729,15 +729,14 @@ var MessageDialog = document.registerElement('message-dialog', {
 /* Create a <editable-table> element type that extends from <table>. */
 var EditableTableProto = Object.create(HTMLTableElement.prototype, {
 
-    getWritableRowData: {
-        value: function() {
+    getRowsData: {
+        value: function(writableOnly) {
             var writableRows = [];
             var rows = this.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
 
             for (var i = 0; i < rows.length; ++i) {
                 var trash = rows[i].getElementsByClassName('fa-trash-o');
-
-                if (trash.length > 0 && !trash[0].classList.contains('hidden')) {
+                if (trash.length > 0 && (!writableOnly || !trash[0].classList.contains('hidden'))) {
                     var rowData = {};
 
                     var inputs = rows[i].getElementsByTagName('input');
@@ -759,17 +758,49 @@ var EditableTableProto = Object.create(HTMLTableElement.prototype, {
     },
 
     setReadOnly: {
-        value: function(row) {
-            row.getElementsByClassName('fa-trash-o')[0].classList.toggle('hidden');
+        value: function(row, classMask, readOnly) {
+            if (readOnly == undefined) {
+                readOnly = true;
+            }
+
+            var trash = row.getElementsByClassName('fa-trash-o')[0];
+            if (classMask) {
+                for (var i = 0; i < classMask.length; ++i) {
+                    if (trash.classList.contains(classMask[i])) {
+                        trash.classList.toggle('hidden', readOnly);
+                        break;
+                    }
+                }
+            } else {
+                trash.classList.toggle('hidden', readOnly);
+            }
 
             var inputs = row.getElementsByTagName('input');
             for (var i = 0; i < inputs.length; ++i) {
-                inputs[i].setAttribute('readonly', true);
+                if (classMask) {
+                    for (var j = 0; j < classMask.length; ++j) {
+                        if (inputs[i].classList.contains(classMask[j])) {
+                            inputs[i].setAttribute('readonly', readOnly);
+                            break;
+                        }
+                    }
+                } else {
+                    inputs[i].setAttribute('readonly', readOnly);
+                }
             }
 
             var selects = row.getElementsByTagName('select');
             for (var i = 0; i < selects.length; ++i) {
-                selects[i].setAttribute('disabled', true);
+                if (classMask) {
+                    for (var j = 0; j < classMask.length; ++j) {
+                        if (selects[i].classList.contains(classMask[j])) {
+                            selects[i].setAttribute('disabled', readOnly);
+                            break;
+                        }
+                    }
+                } else {
+                    selects[i].setAttribute('disabled', readOnly);
+                }
             }
         }
     },
