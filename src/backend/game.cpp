@@ -104,6 +104,7 @@ namespace loot {
     }
 
     void MetadataList::Save(const boost::filesystem::path& filepath) {
+        BOOST_LOG_TRIVIAL(trace) << "Saving metadata list to: " << filepath;
         YAML::Emitter yout;
         yout.SetIndent(2);
         yout << YAML::BeginMap

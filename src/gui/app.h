@@ -74,7 +74,7 @@ namespace loot {
 
         const YAML::Node& GetSettings() const;
         void UpdateSettings(const YAML::Node& settings);
-
+        void SaveSettings();
     private:
         YAML::Node _settings;
         std::vector<Game> _games;
