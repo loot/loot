@@ -120,16 +120,18 @@ namespace loot {
         string initError;
 
         //Load settings.
-        if (!fs::exists(g_path_settings)) {
+        if (!fs::exists(g_path_settings) || !AreSettingsValid(_settings)) {
+            BOOST_LOG_TRIVIAL(error) << "Settings file invalid, or doesn't exist, generating new file.";
             try {
-                if (!fs::exists(g_path_settings.parent_path()))
-                    fs::create_directory(g_path_settings.parent_path());
+                fs::create_directory(g_path_settings.parent_path());
+                GenerateDefaultSettingsFile(g_path_settings);
             }
             catch (fs::filesystem_error& /*e*/) {
                 initError = "Error: Could not create local app data LOOT folder.";
             }
-            GenerateDefaultSettingsFile(g_path_settings);
         }
+
+        BOOST_LOG_TRIVIAL(info) << "Settings file found, parsing...";
         try {
             loot::ifstream in(g_path_settings);
             _settings = YAML::Load(in);

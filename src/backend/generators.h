@@ -33,13 +33,9 @@
 #include <boost/filesystem.hpp>
 
 namespace loot {
-    //LOOT Report generation stuff.
-    void GenerateReportData(const Game& game,
-        std::list<Message>& messages,
-        const std::list<Plugin>& plugins,
-        const std::string& masterlistVersion,
-        const std::string& masterlistDate,
-        const bool masterlistUpdateEnabled);
+    // Check if the settings file has the right root keys (doesn't check
+    // their values).
+    bool AreSettingsValid(const YAML::Node& settings);
 
     //Default settings file generation.
     void GenerateDefaultSettingsFile(const boost::filesystem::path& file);
