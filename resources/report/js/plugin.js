@@ -145,7 +145,7 @@ function Plugin(obj) {
         /* Fill in name, version, CRC. */
         card.querySelector('h1').textContent = this.name;
         card.querySelector('.version').textContent = this.version;
-        if (this.crc != '0') {
+        if (this.crc != 0) {
             card.querySelector('.crc').textContent = this.crc;
         }
 
@@ -229,6 +229,10 @@ function Plugin(obj) {
                     document.getElementById('dirtyPluginNo').textContent = ++parseInt(document.getElementById('dirtyPluginNo').textContent, 10);
                 } else {
                     document.getElementById('dirtyPluginNo').textContent = --parseInt(document.getElementById('dirtyPluginNo').textContent, 10);
+                }
+            } else if (change.name == 'crc') {
+                if (change.object[change.name] != 0) {
+                    change.object.card.getElementsByClassName('crc')[0].textContent = change.object[change.name].toString(16).toUpperCase();
                 }
             }
         });

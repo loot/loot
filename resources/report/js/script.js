@@ -114,7 +114,20 @@ function getConflictingPluginsFromFilter() {
                 ]
             });
 
-            return loot.query(request).catch(processCefError);
+            return loot.query(request).then(function(result){
+                result = JSON.parse(result);
+                var plugins = [];
+                for (var key in result) {
+                    plugins.push(key);
+                    for (var i = 0; i < loot.game.plugins.length; ++i) {
+                        if (loot.game.plugins[i].name == key) {
+                            loot.game.plugins[i].crc = result[key];
+                            break;
+                        }
+                    }
+                }
+                return plugins;
+            }).catch(processCefError);
         }
     }
 
@@ -402,22 +415,32 @@ function sortPlugins(evt) {
         updateMasterlist(evt);
     }
     loot.query('sortPlugins').then(JSON.parse).then(function(result){
+        var plugins = [];
+        result.forEach(function(value, key){
+            plugins.push(key);
+            for (var i = 0; i < loot.game.plugins.length; ++i) {
+                if (loot.game.plugins[i].name == key) {
+                    loot.game.plugins[i].crc = value;
+                    break;
+                }
+            }
+        });
 
         if (loot.neverTellMeTheOdds) {
             /* Array shuffler from <https://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array-in-javascript> */
-            for(var j, x, i = result.length; i; j = Math.floor(Math.random() * i), x = result[--i], result[i] = result[j], result[j] = x);
+            for(var j, x, i = plugins.length; i; j = Math.floor(Math.random() * i), x = plugins[--i], plugins[i] = plugins[j], plugins[j] = x);
         }
 
         /* Record the previous order in case the user cancels sorting. */
         /* Start at 2 to skip summary and general messages. */
         var cards = document.getElementById('main').children;
-        loot.newLoadOrder = result;
+        loot.newLoadOrder = plugins;
         loot.lastLoadOrder = [];
         for (var i = 2; i < cards.length; ++i) {
             loot.lastLoadOrder.push(cards[i].getElementsByTagName('h1')[0].textContent);
         }
         /* Now update the UI for the new order. */
-        sortUIElements(result);
+        sortUIElements(plugins);
 
         /* Now hide the masterlist update buttons, and display the accept and
            cancel sort buttons. */

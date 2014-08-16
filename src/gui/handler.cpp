@@ -188,9 +188,9 @@ namespace loot {
             //Sort plugins into their load order.
             list<Plugin> plugins = g_app_state.CurrentGame().Sort(language, [](const string& message){});
 
-            list<string> loadOrder;
+            map<string, uint32_t> loadOrder;
             for (const auto &plugin : plugins) {
-                loadOrder.push_back(plugin.Name());
+                loadOrder.emplace(plugin.Name(), plugin.Crc());
             }
 
             callback->Success(JSON::stringify(YAML::Node(loadOrder)));
@@ -254,12 +254,12 @@ namespace loot {
                 if (g_app_state.CurrentGame().plugins.begin()->second.FormIDs().size() == 0)
                     g_app_state.CurrentGame().LoadPlugins(false);
 
-                vector<string> conflictingPlugins;
+                map<string, uint32_t> conflictingPlugins;
                 if (pluginIt != g_app_state.CurrentGame().plugins.end()) {
                     for (const auto& pluginPair : g_app_state.CurrentGame().plugins) {
                         if (pluginIt->second.DoFormIDsOverlap(pluginPair.second)) {
                             BOOST_LOG_TRIVIAL(debug) << "Found conflicting plugin: " << pluginPair.first;
-                            conflictingPlugins.push_back(pluginPair.first);
+                            conflictingPlugins.emplace(pluginPair.first, pluginPair.second.Crc());
                         }
                     }
                 }
