@@ -751,6 +751,8 @@ namespace loot {
         }
         for (const auto &inc: incompatibilities) {
             if (boost::filesystem::exists(game.DataPath() / inc.Name()) || (IsPlugin(inc.Name()) && boost::filesystem::exists(game.DataPath() / (inc.Name() + ".ghost")))) {
+                if (!game.IsActive(inc.Name()))
+                    messageType = loot::Message::warn;
                 BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" is incompatible with \"" << inc.Name() << "\", but both are present.";
                 messages.push_back(loot::Message(messageType, (boost::format(boost::locale::translate("This plugin is incompatible with \"%1%\", but both are present.")) % inc.Name()).str()));
             }
