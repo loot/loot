@@ -49,24 +49,11 @@ CefSettings GetCefSettings() {
     //Disable CEF command line args.
     cef_settings.command_line_args_disabled = true;
 
-    // Don't set CEF locale, as it tries to load resources and crashes
-    // if they can't be found.
-    /*if (_settings["language"]) {
-    loot::Language lang(_settings["language"].as<string>());
-    CefString(&cef_settings.locale).FromString(lang.Locale());
-    }*/
-
     // Set CEF logging.
-    CefString(&cef_settings.log_file).FromString("CEFDebugLog.txt");
-    /*if (!_settings["debugVerbosity"] || _settings["debugVerbosity"].as<unsigned int>() == 0)
-        cef_settings.log_severity = LOGSEVERITY_DISABLE;
-*/
+    CefString(&cef_settings.log_file).FromString((g_path_local / "CEFDebugLog.txt").string());
+ 
     // Enable remote debugging.
-    //cef_settings.single_process = true;
     cef_settings.remote_debugging_port = 8080;
-
-    // Use cef_settings.resources_dir_path to specify Resources folder path.
-    // Use cef_settings.locales_dir_path to specify locales folder path.
 
     return cef_settings;
 }
