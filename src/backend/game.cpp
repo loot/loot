@@ -447,14 +447,14 @@ namespace loot {
 
         activePlugins.clear();
         for (size_t i=0; i < pluginArrSize; ++i) {
-            activePlugins.insert(boost::to_lower_copy(string(pluginArr[i])));
+            activePlugins.insert(boost::locale::to_lower(string(pluginArr[i])));
         }
 
         lo_destroy_handle(gh);
     }
 
     bool Game::IsActive(const std::string& plugin) const {
-        return activePlugins.find(boost::to_lower_copy(plugin)) != activePlugins.end();
+        return activePlugins.find(boost::locale::to_lower(plugin)) != activePlugins.end();
     }
 
     void Game::GetLoadOrder(std::list<std::string>& loadOrder) const {
@@ -679,7 +679,8 @@ namespace loot {
 
             BOOST_LOG_TRIVIAL(info) << "Found plugin: " << pluginPair.first;
 
-            auto plugin = plugins.emplace(pluginPair.first, Plugin(pluginPair.first));
+            //Insert the lowercased name as a key for case-insensitive matching.
+            auto plugin = plugins.emplace(boost::locale::to_lower(pluginPair.first), Plugin(pluginPair.first));
 
             if (pluginPair.second > meanFileSize) {
                 BOOST_LOG_TRIVIAL(trace) << "Creating individual loading thread for: " << pluginPair.first;

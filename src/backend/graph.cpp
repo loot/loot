@@ -114,20 +114,6 @@ namespace loot {
             plugins.push_back(graph[vertex]);
         }
         return plugins;
-
-        
-        //Now sort exist plugins list according to order in tempPlugins.
-        /*plugins.sort([tempPlugins](const Plugin& first, const Plugin& second){
-            //Find both plugins, and compare distances from beginning.
-            auto fIt = find(tempPlugins.begin(), tempPlugins.end(), first);
-            auto sIt = find(tempPlugins.begin(), tempPlugins.end(), second);
-
-            if (fIt == tempPlugins.end() || sIt == tempPlugins.end())
-                return false;
-
-            return distance(tempPlugins.begin(), fIt) < distance(tempPlugins.begin(), sIt);
-        });
-        */
     }
 
     void CheckForCycles(const PluginGraph& graph) {

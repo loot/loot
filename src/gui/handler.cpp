@@ -247,7 +247,7 @@ namespace loot {
                 const string pluginName = req["args"][0].as<string>();
                 BOOST_LOG_TRIVIAL(debug) << "Searching for plugins that conflict with " << pluginName;
 
-                auto pluginIt = g_app_state.CurrentGame().plugins.find(pluginName);
+                auto pluginIt = g_app_state.CurrentGame().plugins.find(boost::locale::to_lower(pluginName));
 
                 // Checking for FormID overlap will only work if the plugins have been loaded, so check if
                 // the first plugin has any FormIDs in memory, and if not load all plugins.
@@ -258,8 +258,8 @@ namespace loot {
                 if (pluginIt != g_app_state.CurrentGame().plugins.end()) {
                     for (const auto& pluginPair : g_app_state.CurrentGame().plugins) {
                         if (pluginIt->second.DoFormIDsOverlap(pluginPair.second)) {
-                            BOOST_LOG_TRIVIAL(debug) << "Found conflicting plugin: " << pluginPair.first;
-                            conflictingPlugins.emplace(pluginPair.first, pluginPair.second.Crc());
+                            BOOST_LOG_TRIVIAL(debug) << "Found conflicting plugin: " << pluginPair.second.Name();
+                            conflictingPlugins.emplace(pluginPair.second.Name(), pluginPair.second.Crc());
                         }
                     }
                 }
@@ -511,7 +511,7 @@ namespace loot {
         list<string> loadOrder;
         g_app_state.CurrentGame().GetLoadOrder(loadOrder);
         for (const auto &pluginName : loadOrder) {
-            const auto pos = g_app_state.CurrentGame().plugins.find(pluginName);
+            const auto pos = g_app_state.CurrentGame().plugins.find(boost::locale::to_lower(pluginName));
 
             if (pos != g_app_state.CurrentGame().plugins.end())
                 installed.push_back(pos->second);
@@ -657,7 +657,7 @@ namespace loot {
 
         for (const auto& pluginPair : g_app_state.CurrentGame().plugins) {
             Plugin mlistPlugin(pluginPair.second);
-            mlistPlugin.MergeMetadata(g_app_state.CurrentGame().masterlist.FindPlugin(pluginPair.first));
+            mlistPlugin.MergeMetadata(g_app_state.CurrentGame().masterlist.FindPlugin(pluginPair.second.Name()));
 
             YAML::Node pluginNode;
             if (!mlistPlugin.HasNameOnly()) {
@@ -672,7 +672,7 @@ namespace loot {
 
             // Now merge masterlist and userlist metadata and evaluate,
             // putting any resulting metadata into the base of the pluginNode.
-            YAML::Node derivedNode = GenerateDerivedMetadata(pluginPair.first);
+            YAML::Node derivedNode = GenerateDerivedMetadata(pluginPair.second.Name());
 
             for (auto it = derivedNode.begin(); it != derivedNode.end(); ++it) {
                 const string key = it->first.as<string>();
@@ -751,11 +751,11 @@ namespace loot {
     YAML::Node Handler::GenerateDerivedMetadata(const std::string& pluginName) {
         
         // Now rederive the displayed metadata from the masterlist and userlist.
-        auto pluginIt = g_app_state.CurrentGame().plugins.find(pluginName);
+        auto pluginIt = g_app_state.CurrentGame().plugins.find(boost::locale::to_lower(pluginName));
         if (pluginIt != g_app_state.CurrentGame().plugins.end()) {
 
-            const Plugin master = g_app_state.CurrentGame().masterlist.FindPlugin(pluginIt->first);
-            const Plugin user = g_app_state.CurrentGame().userlist.FindPlugin(pluginIt->first);
+            const Plugin master = g_app_state.CurrentGame().masterlist.FindPlugin(pluginIt->second.Name());
+            const Plugin user = g_app_state.CurrentGame().userlist.FindPlugin(pluginIt->second.Name());
 
             return this->GenerateDerivedMetadata(pluginIt->second, master, user);
         }

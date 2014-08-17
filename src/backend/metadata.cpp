@@ -124,7 +124,7 @@ namespace loot {
 
         BOOST_LOG_TRIVIAL(trace) << "Evaluating condition: " << _condition;
 
-        unordered_map<std::string, bool>::const_iterator it = game.conditionCache.find(boost::to_lower_copy(_condition));
+        unordered_map<std::string, bool>::const_iterator it = game.conditionCache.find(boost::locale::to_lower(_condition));
         if (it != game.conditionCache.end())
             return it->second;
 
@@ -150,7 +150,7 @@ namespace loot {
             throw loot::error(loot::error::condition_eval_fail, (boost::format(lc::translate("Failed to parse condition \"%1%\".")) % _condition).str());
         }
 
-        game.conditionCache.emplace(boost::to_lower_copy(_condition), eval);
+        game.conditionCache.emplace(boost::locale::to_lower(_condition), eval);
 
         return eval;
     }
@@ -611,15 +611,15 @@ namespace loot {
 
         //First need to get plugin's CRC.
         uint32_t crc = 0;
-        unordered_map<std::string,uint32_t>::iterator it = game.crcCache.find(boost::to_lower_copy(name));
+        unordered_map<std::string, uint32_t>::iterator it = game.crcCache.find(boost::locale::to_lower(name));
         if (it != game.crcCache.end())
             crc = it->second;
         else if (boost::filesystem::exists(game.DataPath() / name)) {
             crc = GetCrc32(game.DataPath() / name);
-            game.crcCache.emplace(boost::to_lower_copy(name), crc);
+            game.crcCache.emplace(boost::locale::to_lower(name), crc);
         } else if (boost::filesystem::exists(game.DataPath() / (name + ".ghost"))) {
             crc = GetCrc32(game.DataPath() / (name + ".ghost"));
-            game.crcCache.emplace(boost::to_lower_copy(name), crc);
+            game.crcCache.emplace(boost::locale::to_lower(name), crc);
         } else
             _dirtyInfo.clear();
 
