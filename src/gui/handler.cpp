@@ -256,15 +256,15 @@ namespace loot {
 
                 map<string, uint32_t> conflictingPlugins;
                 YAML::Node node;
-                if (pluginIt != g_app_state.CurrentGame().plugins.end()) {
-                    for (const auto& pluginPair : g_app_state.CurrentGame().plugins) {
+                for (const auto& pluginPair : g_app_state.CurrentGame().plugins) {
+                    if (pluginIt != g_app_state.CurrentGame().plugins.end()) {
                         if (pluginIt->second.DoFormIDsOverlap(pluginPair.second)) {
                             BOOST_LOG_TRIVIAL(debug) << "Found conflicting plugin: " << pluginPair.second.Name();
                             conflictingPlugins.emplace(pluginPair.second.Name(), pluginPair.second.Crc());
                             node["conflicts"].push_back(pluginPair.second.Name());
                         }
-                        node["crcs"][pluginPair.second.Name()] = pluginPair.second.Crc();
                     }
+                    node["crcs"][pluginPair.second.Name()] = pluginPair.second.Crc();
                 }
 
                 callback->Success(JSON::stringify(node));
@@ -441,20 +441,13 @@ namespace loot {
                 BOOST_LOG_TRIVIAL(trace) << "Saving state of filter " << id << " as " << req["args"][2].as<string>();
                 YAML::Node settings = g_app_state.GetSettings();
 
-                if (req["args"][1].as<string>() == "boolean") {
-                    const bool value = req["args"][2].as<bool>();
-                    if (value)
-                        settings["filters"][id] = true;
-                    else
-                        settings["filters"].remove(settings["filters"][id]);
-                }
-                else {
-                    const string value = req["args"][2].as<string>();
-                    if (value.empty())
-                        settings["filters"].remove(settings["filters"][id]);
-                    else
-                        settings["filters"][id] = value;
-                }
+                const string value = req["args"][2].as<string>();
+                if (value == "true")
+                    settings["filters"][id] = true;
+                else if (value == "false" || value.empty())
+                    settings["filters"].remove(id);
+                else
+                    settings["filters"][id] = value;
 
                 g_app_state.UpdateSettings(settings);
                 

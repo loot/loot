@@ -125,16 +125,21 @@ function getConflictingPluginsFromFilter() {
             });
 
             return loot.query(request).then(function(result){
-                result = JSON.parse(result);
-                for (var key in result.crcs) {
-                    for (var i = 0; i < loot.game.plugins.length; ++i) {
-                        if (loot.game.plugins[i].name == key) {
-                            loot.game.plugins[i].crc = result.crcs[key];
-                            break;
+                if (result) {
+                    result = JSON.parse(result);
+                    for (var key in result.crcs) {
+                        for (var i = 0; i < loot.game.plugins.length; ++i) {
+                            if (loot.game.plugins[i].name == key) {
+                                loot.game.plugins[i].crc = result.crcs[key];
+                                break;
+                            }
                         }
                     }
+                    if (result.conflicts) {
+                        return result.conflicts;
+                    }
                 }
-                return result.conflicts;
+                return [];
             }).catch(processCefError);
         }
     }
@@ -780,7 +785,11 @@ function setupEventHandlers() {
     /*Set up filter value and CSS setting storage read/write handlers.*/
     elements = document.getElementById('filters').getElementsByTagName('input');
     for (var i = 0; i < elements.length; ++i) {
-        elements[i].addEventListener('input', saveFilterState, false);
+        if (elements[i].type == 'text') {
+            elements[i].addEventListener('input', saveFilterState, false);
+        } else {
+            elements[i].addEventListener('click', saveFilterState, false);
+        }
     }
 
     /*Set up handlers for filters.*/
