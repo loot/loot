@@ -255,16 +255,19 @@ namespace loot {
                     g_app_state.CurrentGame().LoadPlugins(false);
 
                 map<string, uint32_t> conflictingPlugins;
+                YAML::Node node;
                 if (pluginIt != g_app_state.CurrentGame().plugins.end()) {
                     for (const auto& pluginPair : g_app_state.CurrentGame().plugins) {
                         if (pluginIt->second.DoFormIDsOverlap(pluginPair.second)) {
                             BOOST_LOG_TRIVIAL(debug) << "Found conflicting plugin: " << pluginPair.second.Name();
                             conflictingPlugins.emplace(pluginPair.second.Name(), pluginPair.second.Crc());
+                            node["conflicts"].push_back(pluginPair.second.Name());
                         }
+                        node["crcs"][pluginPair.second.Name()] = pluginPair.second.Crc();
                     }
                 }
 
-                callback->Success(JSON::stringify(YAML::Node(conflictingPlugins)));
+                callback->Success(JSON::stringify(node));
                 return true;
             }
             else if (requestName == "copyMetadata") {

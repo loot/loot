@@ -116,17 +116,15 @@ function getConflictingPluginsFromFilter() {
 
             return loot.query(request).then(function(result){
                 result = JSON.parse(result);
-                var plugins = [];
-                for (var key in result) {
-                    plugins.push(key);
+                for (var key in result.crcs) {
                     for (var i = 0; i < loot.game.plugins.length; ++i) {
                         if (loot.game.plugins[i].name == key) {
-                            loot.game.plugins[i].crc = result[key];
+                            loot.game.plugins[i].crc = result.crcs[key];
                             break;
                         }
                     }
                 }
-                return plugins;
+                return result.conflicts;
             }).catch(processCefError);
         }
     }
