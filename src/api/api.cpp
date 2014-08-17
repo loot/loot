@@ -671,6 +671,9 @@ LOOT_API unsigned int loot_write_minimal_list (loot_db db, const char * const ou
     if (db == nullptr || outputFile == nullptr)
         return c_error(loot_error_invalid_args, "Null pointer passed.");
 
+    if (!boost::filesystem::exists(boost::filesystem::path(outputFile).parent_path()))
+        return c_error(loot_error_invalid_args, "Output directory does not exist.");
+
     if (boost::filesystem::exists(outputFile) && !overwrite)
         return c_error(loot_error_invalid_args, "Output file exists but overwrite is not set to true.");
 
