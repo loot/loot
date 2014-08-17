@@ -120,8 +120,8 @@ namespace loot {
         string initError;
 
         //Load settings.
-        if (!fs::exists(g_path_settings) || !AreSettingsValid(_settings)) {
-            BOOST_LOG_TRIVIAL(error) << "Settings file invalid, or doesn't exist, generating new file.";
+        if (!fs::exists(g_path_settings)) {
+            BOOST_LOG_TRIVIAL(error) << "Settings file doesn't exist, generating new file.";
             try {
                 fs::create_directory(g_path_settings.parent_path());
                 GenerateDefaultSettingsFile(g_path_settings);
@@ -130,8 +130,7 @@ namespace loot {
                 initError = "Error: Could not create local app data LOOT folder.";
             }
         }
-
-        BOOST_LOG_TRIVIAL(info) << "Settings file found, parsing...";
+        BOOST_LOG_TRIVIAL(info) << "Parsing settings file.";
         try {
             loot::ifstream in(g_path_settings);
             _settings = YAML::Load(in);
@@ -139,6 +138,18 @@ namespace loot {
         }
         catch (YAML::ParserException& e) {
             initError = (format(translate("Error: Settings parsing failed. %1%")) % e.what()).str();
+        }
+        if (!AreSettingsValid(_settings)) {
+            BOOST_LOG_TRIVIAL(error) << "Settings file invalid, generating new file.";
+            GenerateDefaultSettingsFile(g_path_settings);
+            try {
+                loot::ifstream in(g_path_settings);
+                _settings = YAML::Load(in);
+                in.close();
+            }
+            catch (YAML::ParserException& e) {
+                initError = (format(translate("Error: Settings parsing failed. %1%")) % e.what()).str();
+            }
         }
 
         //Set up logging.
