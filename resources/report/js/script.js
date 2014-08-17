@@ -43,34 +43,44 @@ function processCefError(err) {
 }
 
 var marked;
-function isStorageSupported() {
-    try {
-        return ('localStorage' in window && window['localStorage'] !== null && window['localStorage'] !== undefined);
-    } catch (e) {
-        return false;
+function saveFilterState(evt) {
+    var attr;
+    var type;
+    if (evt.currentTarget.type == 'checkbox') {
+        attr = 'checked';
+        type = 'boolean';
+    } else {
+        attr = 'value';
+        type = 'string';
     }
+    if (evt.currentTarget[attr]) {
+        loot.settings.filters[evt.currentTarget.id] = true;
+    } else {
+        delete loot.settings.filters[evt.currentTarget.id];
+    }
+
+    var request = JSON.stringify({
+        name: 'saveFilterState',
+        args: [
+            evt.currentTarget.id,
+            type,
+            evt.currentTarget[attr]
+        ]
+    });
+
+    loot.query(request).catch(processCefError);
 }
-function saveCheckboxState(evt) {
-    if (evt.currentTarget.checked) {
-        try {
-            localStorage.setItem(evt.currentTarget.id, true);
-        } catch (e) {
-            if (e == QUOTA_EXCEEDED_ERR) {
-                alert('Web storage quota for this document has been exceeded. Please empty your browser\'s cache. Note that this will delete all locally stored data.');
+function applySavedFilters() {
+    if (loot.settings.filters) {
+        for (var key in loot.settings.filters) {
+            var elem = document.getElementById(key);
+            if (elem.type == 'checkbox') {
+                //elem.checked = true;
+                elem.dispatchEvent(new MouseEvent('click'));
+            } else {
+                elem.value = loot.settings.filters[key];
             }
         }
-    } else {
-        localStorage.removeItem(evt.currentTarget.id);
-    }
-}
-function loadSettings() {
-    var i = localStorage.length - 1;
-    while (i > -1) {
-        var elem = document.getElementById(localStorage.key(i));
-        if (elem != null && 'defaultChecked' in elem) {
-			elem.dispatchEvent(new MouseEvent('click'));
-        }
-        i--;
     }
 }
 function isVisible(element) {
@@ -767,12 +777,12 @@ function focusSearch(evt) {
 }
 function setupEventHandlers() {
     var elements;
-    if (isStorageSupported()) { /*Set up filter value and CSS setting storage read/write handlers.*/
-        elements = document.getElementById('filters').getElementsByTagName('input');
-        for (var i = 0; i < elements.length; ++i) {
-            elements[i].addEventListener('click', saveCheckboxState, false);
-        }
+    /*Set up filter value and CSS setting storage read/write handlers.*/
+    elements = document.getElementById('filters').getElementsByTagName('input');
+    for (var i = 0; i < elements.length; ++i) {
+        elements[i].addEventListener('input', saveFilterState, false);
     }
+
     /*Set up handlers for filters.*/
     document.getElementById('hideVersionNumbers').addEventListener('click', toggleDisplayCSS, false);
     document.getElementById('hideCRCs').addEventListener('click', toggleDisplayCSS, false);
@@ -893,6 +903,10 @@ function initVars() {
 
         try {
             loot.settings = JSON.parse(results[3]);
+            if (loot.settings.filters == undefined) {
+                loot.settings.filters = {};
+            }
+            applySavedFilters();
         } catch (e) {
             console.log(e);
             console.log('getSettings response: ' + results[3]);
@@ -997,7 +1011,4 @@ require(['marked', 'order!custom', 'order!plugin'], function(response) {
         sanitize: true
     });
     initVars();
-    if (isStorageSupported()) {
-        loadSettings();
-    }
 });

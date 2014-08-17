@@ -436,6 +436,31 @@ namespace loot {
                 callback->Success("");
                 return true;
             }
+            else if (requestName == "saveFilterState") {
+                const string id = req["args"][0].as<string>();
+                BOOST_LOG_TRIVIAL(trace) << "Saving state of filter " << id << " as " << req["args"][2].as<string>();
+                YAML::Node settings = g_app_state.GetSettings();
+
+                if (req["args"][1].as<string>() == "boolean") {
+                    const bool value = req["args"][2].as<bool>();
+                    if (value)
+                        settings["filters"][id] = true;
+                    else
+                        settings["filters"].remove(settings["filters"][id]);
+                }
+                else {
+                    const string value = req["args"][2].as<string>();
+                    if (value.empty())
+                        settings["filters"].remove(settings["filters"][id]);
+                    else
+                        settings["filters"][id] = value;
+                }
+
+                g_app_state.UpdateSettings(settings);
+                
+                callback->Success("");
+                return true;
+            }
         }
 
         return false;
