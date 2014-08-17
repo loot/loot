@@ -70,12 +70,21 @@ if not os.path.exists(temp_path):
     os.makedirs(temp_path)
 
 # Now copy everything into the temporary folder.
-shutil.copy( os.path.join('..', 'build', 'LOOT.exe'), temp_path )
+shutil.copy( os.path.join('..', 'build', 'Release', 'LOOT.exe'), temp_path )
+shutil.copy( os.path.join('..', 'build', 'Release', 'd3dcompiler_43.dll'), temp_path )
+shutil.copy( os.path.join('..', 'build', 'Release', 'd3dcompiler_46.dll'), temp_path )
+shutil.copy( os.path.join('..', 'build', 'Release', 'libEGL.dll'), temp_path )
+shutil.copy( os.path.join('..', 'build', 'Release', 'libGLESv2.dll'), temp_path )
+shutil.copy( os.path.join('..', 'build', 'Release', 'libcef.dll'), temp_path )
+shutil.copy( os.path.join('..', 'build', 'Release', 'cef.pak'), temp_path )
+shutil.copy( os.path.join('..', 'build', 'Release', 'cef_100_percent.pak'), temp_path )
+shutil.copy( os.path.join('..', 'build', 'Release', 'cef_200_percent.pak'), temp_path )
+shutil.copy( os.path.join('..', 'build', 'Release', 'devtools_resources.pak'), temp_path )
+shutil.copy( os.path.join('..', 'build', 'Release', 'icudtl.dat'), temp_path )
 
 for lang in ['es', 'ru', 'fr', 'zh_CN', 'pl', 'pt_BR', 'fi', 'de']:
     os.makedirs(os.path.join(temp_path, 'resources', 'l10n', lang, 'LC_MESSAGES'))
     shutil.copy( os.path.join('..', 'resources', 'l10n', lang, 'LC_MESSAGES', 'loot.mo'), os.path.join(temp_path, 'resources', 'l10n', lang, 'LC_MESSAGES') )
-    shutil.copy( os.path.join('..', 'resources', 'l10n', lang, 'LC_MESSAGES', 'wxstd.mo'), os.path.join(temp_path, 'resources', 'l10n', lang, 'LC_MESSAGES') )
 
 shutil.copytree( os.path.join('..', 'resources', 'report'), os.path.join(temp_path, 'resources', 'report') )
 

@@ -291,20 +291,30 @@ FunctionEnd
 
 		;Install executable.
 		SetOutPath "$INSTDIR"
-		File "..\build\LOOT.exe"
-
-		;Now install API DLLs.
-		;SetOutPath "$INSTDIR\API"
-		;File "..\build\loot32.dll"
-		;File "..\build\loot64.dll"
+		File "..\build\Release\LOOT.exe"
+        File "..\build\Release\d3dcompiler_43.dll"
+        File "..\build\Release\d3dcompiler_46.dll"
+        File "..\build\Release\libEGL.dll"
+        File "..\build\Release\libGLESv2.dll"
+        File "..\build\Release\libcef.dll"
+        File "..\build\Release\cef.pak"
+        File "..\build\Release\cef_100_percent.pak"
+        File "..\build\Release\cef_200_percent.pak"
+        File "..\build\Release\devtools_resources.pak"
+        File "..\build\Release\icudtl.dat"
 
         ;Install resource files.
         SetOutPath "$INSTDIR\resources\report"
         File "..\resources\report\report.html"
-        File "..\resources\report\require.js"
-        File "..\resources\report\polyfill.js"
-        File "..\resources\report\script.js"
-        File "..\resources\report\style.css"
+        File "..\resources\report\js\custom.js"
+        File "..\resources\report\js\marked.js"
+        File "..\resources\report\js\order.js"
+        File "..\resources\report\js\plugin.js"
+        File "..\resources\report\js\require.js"
+        File "..\resources\report\js\script.js"
+        File "..\resources\report\css\style.css"
+        File "..\resources\report\css\font-awesome.min.css"
+        File "..\resources\report\fonts\fontawesome-webfont.woff"
 
         ;Install documentation images.
 		SetOutPath "$INSTDIR\docs\images"
@@ -322,27 +332,19 @@ FunctionEnd
 		;Now install language files.
 		SetOutPath "$INSTDIR\resources\l10n\ru\LC_MESSAGES"
 		File "..\resources\l10n\ru\LC_MESSAGES\loot.mo"
-		File "..\resources\l10n\ru\LC_MESSAGES\wxstd.mo"
 		SetOutPath "$INSTDIR\resources\l10n\es\LC_MESSAGES"
-		File "..\resources\l10n\es\LC_MESSAGES\wxstd.mo"
 		File "..\resources\l10n\es\LC_MESSAGES\loot.mo"
 		SetOutPath "$INSTDIR\resources\l10n\zh_CN\LC_MESSAGES"
 		File "..\resources\l10n\zh_CN\LC_MESSAGES\loot.mo"
-		File "..\resources\l10n\zh_CN\LC_MESSAGES\wxstd.mo"
 		SetOutPath "$INSTDIR\resources\l10n\fr\LC_MESSAGES"
-		File "..\resources\l10n\fr\LC_MESSAGES\wxstd.mo"
 		File "..\resources\l10n\fr\LC_MESSAGES\loot.mo"
 		SetOutPath "$INSTDIR\resources\l10n\pl\LC_MESSAGES"
-		File "..\resources\l10n\pl\LC_MESSAGES\wxstd.mo"
 		File "..\resources\l10n\pl\LC_MESSAGES\loot.mo"
 		SetOutPath "$INSTDIR\resources\l10n\pt_BR\LC_MESSAGES"
-		File "..\resources\l10n\pt_BR\LC_MESSAGES\wxstd.mo"
 		File "..\resources\l10n\pt_BR\LC_MESSAGES\loot.mo"
 		SetOutPath "$INSTDIR\resources\l10n\fi\LC_MESSAGES"
-		File "..\resources\l10n\fi\LC_MESSAGES\wxstd.mo"
 		File "..\resources\l10n\fi\LC_MESSAGES\loot.mo"
         SetOutPath "$INSTDIR\resources\l10n\de\LC_MESSAGES"
-		File "..\resources\l10n\de\LC_MESSAGES\wxstd.mo"
 		File "..\resources\l10n\de\LC_MESSAGES\loot.mo"
 
 
@@ -427,11 +429,16 @@ FunctionEnd
 
 		;Remove main executables.
 		Delete "$INSTDIR\LOOT.exe"
-
-		;Remove API DLLs.
-		;Delete "$INSTDIR\API\loot32.dll"
-		;Delete "$INSTDIR\API\loot64.dll"
-		;RMDir  "$INSTDIR\API"
+        Delete "$INSTDIR\d3dcompiler_43.dll"
+        Delete "$INSTDIR\d3dcompiler_46.dll"
+        Delete "$INSTDIR\libEGL.dll"
+        Delete "$INSTDIR\libGLESv2.dll"
+        Delete "$INSTDIR\libcef.dll"
+        Delete "$INSTDIR\cef.pak"
+        Delete "$INSTDIR\cef_100_percent.pak"
+        Delete "$INSTDIR\cef_200_percent.pak"
+        Delete "$INSTDIR\devtools_resources.pak"
+        Delete "$INSTDIR\icudtl.dat"
 
 		;Remove readme images.
 		RMDir /r "$INSTDIR\docs\images"
@@ -445,27 +452,26 @@ FunctionEnd
 		RMDir  "$INSTDIR\docs"
 
         ;Remove resource files.
+
         Delete "$INSTDIR\resources\report\report.html"
-        Delete "$INSTDIR\resources\report\require.js"
-        Delete "$INSTDIR\resources\report\polyfill.js"
-        Delete "$INSTDIR\resources\report\script.js"
-        Delete "$INSTDIR\resources\report\style.css"
+        Delete "$INSTDIR\resources\report\js\custom.js"
+        Delete "$INSTDIR\resources\report\js\marked.js"
+        Delete "$INSTDIR\resources\report\js\order.js"
+        Delete "$INSTDIR\resources\report\js\plugin.js"
+        Delete "$INSTDIR\resources\report\js\require.js"
+        Delete "$INSTDIR\resources\report\js\script.js"
+        Delete "$INSTDIR\resources\report\css\style.css"
+        Delete "$INSTDIR\resources\report\css\font-awesome.min.css"
+        Delete "$INSTDIR\resources\report\fonts\fontawesome-webfont.woff"
 
 		;Remove language files.
 		Delete "$INSTDIR\resources\l10n\ru\LC_MESSAGES\loot.mo"
-		Delete "$INSTDIR\resources\l10n\ru\LC_MESSAGES\wxstd.mo"
 		Delete "$INSTDIR\resources\l10n\es\LC_MESSAGES\loot.mo"
-		Delete "$INSTDIR\resources\l10n\es\LC_MESSAGES\wxstd.mo"
 		Delete "$INSTDIR\resources\l10n\zh_CN\LC_MESSAGES\loot.mo"
-		Delete "$INSTDIR\resources\l10n\zh_CN\LC_MESSAGES\wxstd.mo"
 		Delete "$INSTDIR\resources\l10n\fr\LC_MESSAGES\loot.mo"
-		Delete "$INSTDIR\resources\l10n\fr\LC_MESSAGES\wxstd.mo"
 		Delete "$INSTDIR\resources\l10n\pl\LC_MESSAGES\loot.mo"
-		Delete "$INSTDIR\resources\l10n\pl\LC_MESSAGES\wxstd.mo"
 		Delete "$INSTDIR\resources\l10n\pt_BR\LC_MESSAGES\loot.mo"
-		Delete "$INSTDIR\resources\l10n\pt_BR\LC_MESSAGES\wxstd.mo"
 		Delete "$INSTDIR\resources\l10n\fi\LC_MESSAGES\loot.mo"
-		Delete "$INSTDIR\resources\l10n\fi\LC_MESSAGES\wxstd.mo"
 		RMDir  "$INSTDIR\resources\l10n\ru\LC_MESSAGES"
 		RMDir  "$INSTDIR\resources\l10n\ru"
 		RMDir  "$INSTDIR\resources\l10n\es\LC_MESSAGES"
@@ -489,13 +495,9 @@ FunctionEnd
 		Delete "$LOCALAPPDATA\LOOT\LOOTDebugLog.txt"
 		;Trying to delete a file that doesn't exist doesn't cause an error, so delete all games' files.
         ;This doesn't handle user-defined games.
-		Delete "$LOCALAPPDATA\LOOT\Oblivion\reportdata.js"
 		Delete "$LOCALAPPDATA\LOOT\Oblivion\masterlist.yaml"
-		Delete "$LOCALAPPDATA\LOOT\Skyrim\reportdata.js"
 		Delete "$LOCALAPPDATA\LOOT\Skyrim\masterlist.yaml"
-		Delete "$LOCALAPPDATA\LOOT\Fallout3\reportdata.js"
 		Delete "$LOCALAPPDATA\LOOT\Fallout3\masterlist.yaml"
-		Delete "$LOCALAPPDATA\LOOT\FalloutNV\reportdata.js"
 		Delete "$LOCALAPPDATA\LOOT\FalloutNV\masterlist.yaml"
         ;Delete repositories.
         RMDir /r "$LOCALAPPDATA\LOOT\Oblivion\.git"
