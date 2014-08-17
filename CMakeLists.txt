@@ -180,7 +180,9 @@ FOREACH(cef_dll d3dcompiler_43.dll d3dcompiler_46.dll libEGL.dll libGLESv2.dll l
 ENDFOREACH()
 
 # Copy CEF resources.
-add_custom_command(TARGET LOOT POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-        "${CMAKE_SOURCE_DIR}/${CEF_ROOT}/Resources"
-        $<TARGET_FILE_DIR:LOOT>)
+FOREACH(cef.pak cef_100_percent.pak cef_200_percent.pak devtools_resources.pak icudtl.dat)
+    add_custom_command(TARGET LOOT POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${CMAKE_SOURCE_DIR}/${CEF_ROOT}/Resources"
+            $<TARGET_FILE_DIR:LOOT>)
+ENDFOREACH()
