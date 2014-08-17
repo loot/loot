@@ -146,12 +146,6 @@ function togglePlugins(evt) {
        it is completed.
     */
     getConflictingPluginsFromFilter().then(function(conflicts) {
-        if (conflicts) {
-            conflicts = JSON.parse(conflicts);
-        } else {
-            conflicts = [];
-        }
-
         /* Start at 3rd section to skip summary and general messages. */
         for (var i = 2; i < sections.length; ++i) {
             var isConflictingPlugin = false;
