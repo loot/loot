@@ -150,26 +150,30 @@
             width: 100%;
             text-overflow: ellipsis;
         }
-        table td:last-child {
+        td:last-child {
             cursor: pointer;
         }
-        table td:last-child:hover {
+        td:last-child:hover {
             color: red;
         }
         table {
             margin: 3em 1em;
             border-collapse: collapse;
         }
-        table td, table th {
+        td, th {
             vertical-align: top;
             text-align: left;
             padding: 0.5em;
         }
-        table th {
+        th {
             border-bottom: 1px black solid;
         }
-        table tr:last-child {
+        tbody tr:last-child {
             cursor: pointer;
+            color: grey;
+        }
+        tbody tr:last-child:hover {
+            color: black;
         }
         input[type='checkbox'] {
             position:relative;

@@ -869,7 +869,7 @@ var EditableTableProto = Object.create(HTMLTableElement.prototype, {
 
         value: function() {
             /* Add new row listener. */
-            this.querySelector('tbody tr:last-child').addEventListener('dblclick', this.addEmptyRow, false);
+            this.querySelector('tbody tr:last-child').addEventListener('click', this.addEmptyRow, false);
         }
 
     },
@@ -886,7 +886,7 @@ var EditableTableProto = Object.create(HTMLTableElement.prototype, {
             }
 
             /* Remove new row listener. */
-            this.querySelector('tbody tr:last-child').removeEventListener('dblclick', this.addEmptyRow, false);
+            this.querySelector('tbody tr:last-child').removeEventListener('click', this.addEmptyRow, false);
 
         }
     },
