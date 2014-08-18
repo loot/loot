@@ -188,12 +188,15 @@ namespace loot {
             //Sort plugins into their load order.
             list<Plugin> plugins = g_app_state.CurrentGame().Sort(language, [](const string& message){});
 
-            map<string, uint32_t> loadOrder;
+            map<string, uint32_t> crcs;
+            list<string> loadOrder;
+            YAML::Node node;
             for (const auto &plugin : plugins) {
-                loadOrder.emplace(plugin.Name(), plugin.Crc());
+                node["loadOrder"].push_back(plugin.Name());
+                node["crcs"][plugin.Name()] = plugin.Crc();
             }
 
-            callback->Success(JSON::stringify(YAML::Node(loadOrder)));
+            callback->Success(JSON::stringify(node));
             return true;
         }
         else {
