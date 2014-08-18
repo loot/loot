@@ -316,6 +316,10 @@ FunctionEnd
         File "..\resources\report\css\font-awesome.min.css"
         File "..\resources\report\fonts\fontawesome-webfont.woff"
 
+        ;Install icon image.
+        SetOutPath "$INSTDIR\resources"
+        FIle "..\resources\icon.ico"
+
         ;Install documentation images.
 		SetOutPath "$INSTDIR\docs\images"
         File "..\docs\images\*"
@@ -452,7 +456,6 @@ FunctionEnd
 		RMDir  "$INSTDIR\docs"
 
         ;Remove resource files.
-
         Delete "$INSTDIR\resources\report\report.html"
         Delete "$INSTDIR\resources\report\js\custom.js"
         Delete "$INSTDIR\resources\report\js\marked.js"
@@ -463,6 +466,8 @@ FunctionEnd
         Delete "$INSTDIR\resources\report\css\style.css"
         Delete "$INSTDIR\resources\report\css\font-awesome.min.css"
         Delete "$INSTDIR\resources\report\fonts\fontawesome-webfont.woff"
+
+        Delete "$INSTDIR\resources\icon.ico"
 
 		;Remove language files.
 		Delete "$INSTDIR\resources\l10n\ru\LC_MESSAGES\loot.mo"
