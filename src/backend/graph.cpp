@@ -289,8 +289,6 @@ namespace loot {
                     //Vertices are the same or are already linked.
                     continue;
 
-                BOOST_LOG_TRIVIAL(trace) << "Checking edge validity between \"" << graph[*vit].Name() << "\" and \"" << graph[*vit2].Name() << "\".";
-
                 if (graph[*vit].DoFormIDsOverlap(graph[*vit2])) {
                     vertex_t vertex, parentVertex;
                     if (graph[*vit].NumOverrideFormIDs() > graph[*vit2].NumOverrideFormIDs()) {
@@ -310,6 +308,7 @@ namespace loot {
                         vertex = *vit;
                     }
 
+                    BOOST_LOG_TRIVIAL(trace) << "Checking edge validity between \"" << graph[*vit].Name() << "\" and \"" << graph[*vit2].Name() << "\".";
                     if (!EdgeCreatesCycle(graph, parentVertex, vertex)) {  //No edge going the other way, OK to add this edge.
 
                         BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[vertex].Name() << "\".";
@@ -332,6 +331,7 @@ namespace loot {
         AddPriorityEdges(graph);
 
         BOOST_LOG_TRIVIAL(debug) << "Adding overlap edges.";
+        AddOverlapEdges(graph);
 
         BOOST_LOG_TRIVIAL(info) << "Checking to see if the graph is cyclic.";
         CheckForCycles(graph);
