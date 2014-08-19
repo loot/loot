@@ -26,9 +26,6 @@
 #define __LOOT_GRAPH__
 
 #include "metadata.h"
-#include "error.h"
-
-#include <unordered_map>
 
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/adjacency_list.hpp>
@@ -43,28 +40,7 @@ namespace loot {
     typedef boost::graph_traits<PluginGraph>::edge_descriptor edge_t;
     typedef boost::graph_traits<PluginGraph>::edge_iterator edge_it;
 
-    struct cycle_detector : public boost::dfs_visitor<> {
-        cycle_detector();
-
-        std::list<std::string> trail;
-        
-        void tree_edge(edge_t e, const PluginGraph& g);
-        void back_edge(edge_t e, const PluginGraph& g);
-    };
-
-    bool GetVertexByName(const PluginGraph& graph, const std::string& name, vertex_t& vertex);
-
-    std::list<Plugin> Sort(const PluginGraph& graph);
-
-    void CheckForCycles(const PluginGraph& graph);
-
-    void AddSpecificEdges(PluginGraph& graph, std::map<std::string, int>& overriddenPriorities);
-
-    void AddPriorityEdges(PluginGraph& graph);
-
-    void AddOverlapEdges(PluginGraph& graph);
-
-    bool EdgeCreatesCycle(PluginGraph& graph, vertex_t u, vertex_t v);
+    std::list<Plugin> Sort(PluginGraph& graph);
 }
 
 #endif

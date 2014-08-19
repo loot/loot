@@ -30,9 +30,12 @@
 #include "parsers.h"
 #include "streams.h"
 #include "generators.h"
+#include "graph.h"
 
 #include <boost/algorithm/string.hpp>
 #include <boost/thread.hpp>
+#include <boost/locale.hpp>
+#include <boost/log/trivial.hpp>
 
 using namespace std;
 
@@ -713,5 +716,54 @@ namespace loot {
             BOOST_LOG_TRIVIAL(error) << "Could not create LOOT folder for game. Details: " << e.what();
             throw error(error::path_write_fail, lc::translate("Could not create LOOT folder for game. Details:").str() + " " + e.what());
         }
+    }
+
+    std::list<Plugin> Game::Sort(const unsigned int language, std::function<void(const std::string&)> progressCallback) {
+        //Create a plugin graph containing the plugin and masterlist data.
+        loot::PluginGraph graph;
+
+        progressCallback("Building plugin graph...");
+        BOOST_LOG_TRIVIAL(info) << "Merging masterlist, userlist into plugin list, evaluating conditions and checking for install validity.";
+        for (const auto &plugin : this->plugins) {
+            vertex_t v = boost::add_vertex(plugin.second, graph);
+            list<loot::Plugin>::iterator pos;
+            BOOST_LOG_TRIVIAL(trace) << "Merging for plugin \"" << graph[v].Name() << "\"";
+
+            //Check if there is a plugin entry in the masterlist. This will also find matching regex entries.
+            pos = std::find(this->masterlist.plugins.begin(), this->masterlist.plugins.end(), graph[v]);
+
+            if (pos != this->masterlist.plugins.end()) {
+                BOOST_LOG_TRIVIAL(trace) << "Merging masterlist data down to plugin list data.";
+                graph[v].MergeMetadata(*pos);
+            }
+
+            //Check if there is a plugin entry in the userlist. This will also find matching regex entries.
+            pos = std::find(this->userlist.plugins.begin(), this->userlist.plugins.end(), graph[v]);
+
+            if (pos != this->userlist.plugins.end() && pos->Enabled()) {
+                BOOST_LOG_TRIVIAL(trace) << "Merging userlist data down to plugin list data.";
+                graph[v].MergeMetadata(*pos);
+            }
+
+            //Now that items are merged, evaluate any conditions they have.
+            BOOST_LOG_TRIVIAL(trace) << "Evaluate conditions for merged plugin data.";
+            try {
+                graph[v].EvalAllConditions(*this, language);
+            }
+            catch (std::exception& e) {
+                BOOST_LOG_TRIVIAL(error) << "\"" << graph[v].Name() << "\" contains a condition that could not be evaluated. Details: " << e.what();
+                list<Message> messages(graph[v].Messages());
+                messages.push_back(loot::Message(loot::Message::error, (boost::format(lc::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % graph[v].Name() % e.what()).str()));
+                graph[v].Messages(messages);
+            }
+
+            //Also check install validity.
+            BOOST_LOG_TRIVIAL(trace) << "Checking that the current install is valid according to this plugin's data.";
+            graph[v].CheckInstallValidity(*this);
+        }
+
+        // Now add edges and sort.
+        progressCallback("Adding edges to plugin graph and performing topological sort...");
+        return loot::Sort(graph);
     }
 }
