@@ -695,7 +695,7 @@ namespace loot {
                 BOOST_LOG_TRIVIAL(trace) << "Creating individual loading thread for: " << pluginPair.first;
                 group.create_thread([this, plugin, headersOnly]() {
                     BOOST_LOG_TRIVIAL(trace) << "Loading " << plugin.first->second.Name() << " individually.";
-                    plugin.first->second = Plugin(*this, plugin.first->first, headersOnly);
+                    plugin.first->second = Plugin(*this, plugin.first->second.Name(), headersOnly);
                 });
             }
             else {
