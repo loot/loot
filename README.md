@@ -13,9 +13,7 @@ LOOT is intended to make using mods easier, and mod users should still possess a
 
 ## Building LOOT
 
-LOOT uses [CMake](http://cmake.org) for cross-platform building support, as though it is a Windows application, development has taken place on Windows and Linux.
-
-LOOT requires the following libraries (version numbers used in latest development revision given):
+LOOT uses [CMake](http://cmake.org) to generate build files, and requires the following libraries (version numbers used in latest development revision given):
 
 * [Alphanum](http://www.davekoelle.com/files/alphanum.hpp)
 * [Boost](http://www.boost.org) v1.56.0
@@ -27,11 +25,11 @@ LOOT requires the following libraries (version numbers used in latest developmen
 
 Alphanum and Libespm do not require any additional setup. The rest of the libraries must be built separately. Instructions for building them and LOOT itself using MSVC or MinGW are given in [docs/BUILD.MSVC.md](docs/BUILD.MSVC.md) and [docs/BUILD.MinGW.md](docs/BUILD.MinGW.md) respectively.
 
+Although LOOT uses a cross-platform build system and cross-platform libraries, it does rely on some Windows API functionality. Anyone wishing to port LOOT to other platforms will need to ensure equivalent functionality is implemented for their target platform. The Windows API code is wrapped in `#ifdef _WIN32` blocks so that it can be easily identified.
+
 ## Packaging Releases
 
 Installer and zip archive releases for the main LOOT application can be handled by running the scripts `installer.nsi` and `archive.py` in the `src` folder respectively. The installer script requires [Unicode NSIS](http://www.scratchpaper.com/), while the archive script requires [Python](http://www.python.org/).
-
-The installer and Python script both require the built LOOT.exe to be at `build\LOOT.exe`.
 
 ## Adding Translations
 
@@ -40,7 +38,6 @@ If a translation for a new language is provided, here's what needs changing to m
 * In [helpers.h](src/backend/helpers.h), add a constant for the language to the `Language` class, and update `Language::Names()`.
 * In [helpers.cpp](src/backend/helpers.cpp), update `Language::Language(const std::string& nameOrCode)` and `Language::Construct(const unsigned int code)`.
 * Add constants for the language in [api.h](src/api/api.h) and [api.cpp](src/api/api.cpp).
-* In [main.cpp](src/gui/main.cpp), update `LOOT::OnInit` to set the correct `wxLANGUAGE_`.
 * In [archive.py](src/archive.py), add the language folder to the inline list on line 68.
 * In [installer.nsi](src/installer.nsi), add entries for the language folder to the install and uninstall sections. If there's an installer translation, also add its string definitions beside all the other language string definitions, and insert its macro beside all the other language macros.
 * The readmes should be updated with a link to the translation in the repository in the main readme, and the language's code in the metadata syntax readme.
