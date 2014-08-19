@@ -55,10 +55,8 @@ var pluginMenuProto = Object.create(HTMLElement.prototype, {
                             ]
                         });
 
-                        loot.query(request).then(function(result){
+                        loot.query(request).then(JSON.parse).then(function(result){
                             if (result) {
-                                result = JSON.parse(result);
-
                                 /* Need to empty the UI-side user metadata. */
                                 for (var i = 0; i < loot.game.plugins.length; ++i) {
                                     if (loot.game.plugins[i].id == pluginID) {
@@ -243,10 +241,8 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
                             card.readFromEditor()
                         ]
                     });
-                    loot.query(request).then(function(result){
+                    loot.query(request).then(JSON.parse).then(function(result){
                         if (result) {
-                            result = JSON.parse(result);
-
                             for (var i = 0; i < loot.game.plugins.length; ++i) {
                                 if (loot.game.plugins[i].id == card.id) {
 

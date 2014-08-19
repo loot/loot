@@ -234,7 +234,7 @@ namespace loot {
     }
 
     void LootState::ChangeGame(const std::string& newGameFolder) {
-        BOOST_LOG_TRIVIAL(debug) << "Changing current game...";
+        BOOST_LOG_TRIVIAL(debug) << "Changing current game to that with folder: " << newGameFolder;
         auto it = std::find_if(_games.begin(), _games.end(), [&newGameFolder](const Game& game){
             return game.FolderName() == newGameFolder;
         });
@@ -248,8 +248,13 @@ namespace loot {
         return _games[_currentGame];
     }
 
-    const std::vector<Game>& LootState::InstalledGames() const {
-        return _games;
+    std::vector<std::string> LootState::InstalledGames() const {
+        vector<string> installedGames;
+        for (const auto &game : _games) {
+            if (game.IsInstalled())
+                installedGames.push_back(game.FolderName());
+        }
+        return installedGames;
     }
 
     const YAML::Node& LootState::GetSettings() const {

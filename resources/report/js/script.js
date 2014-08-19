@@ -45,13 +45,10 @@ function processCefError(err) {
 var marked;
 function saveFilterState(evt) {
     var attr;
-    var type;
     if (evt.currentTarget.type == 'checkbox') {
         attr = 'checked';
-        type = 'boolean';
     } else {
         attr = 'value';
-        type = 'string';
     }
     if (evt.currentTarget[attr]) {
         loot.settings.filters[evt.currentTarget.id] = true;
@@ -63,7 +60,6 @@ function saveFilterState(evt) {
         name: 'saveFilterState',
         args: [
             evt.currentTarget.id,
-            type,
             evt.currentTarget[attr]
         ]
     });
@@ -124,9 +120,8 @@ function getConflictingPluginsFromFilter() {
                 ]
             });
 
-            return loot.query(request).then(function(result){
+            return loot.query(request).then(JSON.parse).then(function(result){
                 if (result) {
-                    result = JSON.parse(result);
                     for (var key in result.crcs) {
                         for (var i = 0; i < loot.game.plugins.length; ++i) {
                             if (loot.game.plugins[i].name == key) {
@@ -422,37 +417,39 @@ function sortPlugins(evt) {
         updateMasterlist(evt);
     }
     loot.query('sortPlugins').then(JSON.parse).then(function(result){
-        for (var key in result.crcs) {
-            for (var i = 0; i < loot.game.plugins.length; ++i) {
-                if (loot.game.plugins[i].name == key) {
-                    loot.game.plugins[i].crc = result.crcs[key];
-                    break;
+        if (result) {
+            for (var key in result.crcs) {
+                for (var i = 0; i < loot.game.plugins.length; ++i) {
+                    if (loot.game.plugins[i].name == key) {
+                        loot.game.plugins[i].crc = result.crcs[key];
+                        break;
+                    }
                 }
             }
-        }
 
-        if (loot.neverTellMeTheOdds) {
-            /* Array shuffler from <https://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array-in-javascript> */
-            for(var j, x, i = result.loadOrder.length; i; j = Math.floor(Math.random() * i), x = result.loadOrder[--i], result.loadOrder[i] = result.loadOrder[j], result.loadOrder[j] = x);
-        }
+            if (loot.neverTellMeTheOdds) {
+                /* Array shuffler from <https://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array-in-javascript> */
+                for(var j, x, i = result.loadOrder.length; i; j = Math.floor(Math.random() * i), x = result.loadOrder[--i], result.loadOrder[i] = result.loadOrder[j], result.loadOrder[j] = x);
+            }
 
-        /* Record the previous order in case the user cancels sorting. */
-        /* Start at 2 to skip summary and general messages. */
-        var cards = document.getElementById('main').children;
-        loot.newLoadOrder = result.loadOrder;
-        loot.lastLoadOrder = [];
-        for (var i = 2; i < cards.length; ++i) {
-            loot.lastLoadOrder.push(cards[i].getElementsByTagName('h1')[0].textContent);
-        }
-        /* Now update the UI for the new order. */
-        sortUIElements(result.loadOrder);
+            /* Record the previous order in case the user cancels sorting. */
+            /* Start at 2 to skip summary and general messages. */
+            var cards = document.getElementById('main').children;
+            loot.newLoadOrder = result.loadOrder;
+            loot.lastLoadOrder = [];
+            for (var i = 2; i < cards.length; ++i) {
+                loot.lastLoadOrder.push(cards[i].getElementsByTagName('h1')[0].textContent);
+            }
+            /* Now update the UI for the new order. */
+            sortUIElements(result.loadOrder);
 
-        /* Now hide the masterlist update buttons, and display the accept and
-           cancel sort buttons. */
-        hideElement(document.getElementById('updateMasterlistButton'));
-        hideElement(document.getElementById('sortButton'));
-        showElement(document.getElementById('applySortButton'));
-        showElement(document.getElementById('cancelSortButton'));
+            /* Now hide the masterlist update buttons, and display the accept and
+               cancel sort buttons. */
+            hideElement(document.getElementById('updateMasterlistButton'));
+            hideElement(document.getElementById('sortButton'));
+            showElement(document.getElementById('applySortButton'));
+            showElement(document.getElementById('cancelSortButton'));
+        }
     }).catch(processCefError);
 }
 function applySort(evt) {
@@ -506,27 +503,23 @@ function redatePlugins(evt) {
 function clearAllMetadata(evt) {
     showMessageDialog('Clear All Metadata', 'Are you sure you want to clear all existing user-added metadata from all plugins?', function(result){
         if (result) {
-            loot.query('clearAllMetadata').then(function(result){
-                if (result) {
-                    result = JSON.parse(result);
+            loot.query('clearAllMetadata').then(JSON.parse).then(function(result){
+                /* Need to empty the UI-side user metadata. */
+                result.forEach(function(plugin){
+                    for (var i = 0; i < loot.game.plugins.length; ++i) {
+                        if (loot.game.plugins[i].name == plugin.name) {
+                            loot.game.plugins[i].userlist = undefined;
 
-                    /* Need to empty the UI-side user metadata. */
-                    result.forEach(function(plugin){
-                        for (var i = 0; i < loot.game.plugins.length; ++i) {
-                            if (loot.game.plugins[i].name == plugin.name) {
-                                loot.game.plugins[i].userlist = undefined;
+                            loot.game.plugins[i].modPriority = plugin.modPriority;
+                            loot.game.plugins[i].isGlobalPriority = plugin.isGlobalPriority;
+                            loot.game.plugins[i].messages = plugin.messages;
+                            loot.game.plugins[i].tags = plugin.tags;
+                            loot.game.plugins[i].isDirty = plugin.isDirty;
 
-                                loot.game.plugins[i].modPriority = plugin.modPriority;
-                                loot.game.plugins[i].isGlobalPriority = plugin.isGlobalPriority;
-                                loot.game.plugins[i].messages = plugin.messages;
-                                loot.game.plugins[i].tags = plugin.tags;
-                                loot.game.plugins[i].isDirty = plugin.isDirty;
-
-                                break;
-                            }
+                            break;
                         }
-                    });
-                }
+                    }
+                });
             }).catch(processCefError);
         }
     });
@@ -896,11 +889,7 @@ function initVars() {
         }
 
         try {
-            if (results[1]) {
-                loot.installedGames = JSON.parse(results[1]);
-            } else {
-                loot.installedGames = [];
-            }
+            loot.installedGames = JSON.parse(results[1]);
         } catch (e) {
             console.log(e);
             console.log('getInstalledGames response: ' + results[1]);

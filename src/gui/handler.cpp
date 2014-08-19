@@ -75,9 +75,11 @@ namespace loot {
                 callback->Success("");
             }
             catch (error &e) {
+                BOOST_LOG_TRIVIAL(error) << e.what();
                 callback->Failure(e.code(), e.what());
             }
             catch (exception &e) {
+                BOOST_LOG_TRIVIAL(error) << e.what();
                 callback->Failure(-1, e.what());
             }
             return true;
@@ -88,9 +90,11 @@ namespace loot {
                 callback->Success("");
             }
             catch (error &e) {
+                BOOST_LOG_TRIVIAL(error) << e.what();
                 callback->Failure(e.code(), e.what());
             }
             catch (exception &e) {
+                BOOST_LOG_TRIVIAL(error) << e.what();
                 callback->Failure(-1, e.what());
             }
             return true;
@@ -121,8 +125,17 @@ namespace loot {
 #ifdef _WIN32
             SetWindowText(handle, ToWinWide("LOOT: " + g_app_state.CurrentGame().Name()).c_str());
 #endif
-
-            callback->Success(GetGameData());
+            try {
+                callback->Success(GetGameData());
+            }
+            catch (error &e) {
+                BOOST_LOG_TRIVIAL(error) << "Failed to get game data. " << e.what();
+                callback->Failure(e.code(), e.what());
+            }
+            catch (exception &e) {
+                BOOST_LOG_TRIVIAL(error) << "Failed to get game data. " << e.what();
+                callback->Failure(-1, e.what());
+            }
             return true;
         }
         else if (request == "cancelFind") {
@@ -131,70 +144,42 @@ namespace loot {
             return true;
         }
         else if (request == "clearAllMetadata") {
-            BOOST_LOG_TRIVIAL(debug) << "Clearing all user metadata.";
-            // Record which plugins have userlist entries.
-            vector<string> userlistPlugins;
-            for (const auto &plugin : g_app_state.CurrentGame().userlist.plugins) {
-                userlistPlugins.push_back(plugin.Name());
-            }
-            BOOST_LOG_TRIVIAL(trace) << "User metadata exists for " << userlistPlugins.size() << " plugins.";
-
-            // Clear the user metadata.
-            g_app_state.CurrentGame().userlist.clear();
-
-            // Regenerate the derived metadata (priority, messages, tags and dirty state)
-            // for any plugins with userlist entries.
-            YAML::Node pluginsNode;
-            for (const auto &plugin : userlistPlugins) {
-                pluginsNode.push_back(GenerateDerivedMetadata(plugin));
-            }
-            BOOST_LOG_TRIVIAL(trace) << "Display metadata rederived for " << pluginsNode.size() << " plugins.";
-
-            callback->Success(JSON::stringify(pluginsNode));
+            callback->Success(ClearAllMetadata());
             return true;
         }
         else if (request == "redatePlugins") {
             BOOST_LOG_TRIVIAL(debug) << "Redating plugins.";
             try {
                 g_app_state.CurrentGame().RedatePlugins();
+                callback->Success("");
             }
-            catch (std::exception& e) {
+            catch (error &e) {
+                BOOST_LOG_TRIVIAL(error) << "Failed to redate plugins. " << e.what();
+                callback->Failure(e.code(), e.what());
+            }
+            catch (exception &e) {
                 BOOST_LOG_TRIVIAL(error) << "Failed to redate plugins. " << e.what();
                 callback->Failure(-1, e.what());
-                return true;
             }
 
-            callback->Success("");
             return true;
         }
         else if (request == "updateMasterlist") {
-            callback->Success(UpdateMasterlist());
+            try {
+                callback->Success(UpdateMasterlist());
+            }
+            catch (error &e) {
+                BOOST_LOG_TRIVIAL(error) << "Failed to update the masterlist. " << e.what();
+                callback->Failure(e.code(), e.what());
+            }
+            catch (exception &e) {
+                BOOST_LOG_TRIVIAL(error) << "Failed to update the masterlist. " << e.what();
+                callback->Failure(-1, e.what());
+            }
             return true;
         }
         else if (request == "sortPlugins") {
-
-            //Set language.
-            unsigned int language;
-            if (g_app_state.GetSettings()["language"])
-                language = Language(g_app_state.GetSettings()["language"].as<string>()).Code();
-            else
-                language = Language::any;
-            BOOST_LOG_TRIVIAL(info) << "Using message language: " << Language(language).Name();
-
-            // Check if the first plugin has any FormIDs in memory, and if not load all plugins.
-            if (g_app_state.CurrentGame().plugins.begin()->second.FormIDs().size() == 0)
-                g_app_state.CurrentGame().LoadPlugins(false);
-
-            //Sort plugins into their load order.
-            list<Plugin> plugins = g_app_state.CurrentGame().Sort(language, [](const string& message){});
-
-            YAML::Node node;
-            for (const auto &plugin : plugins) {
-                node["loadOrder"].push_back(plugin.Name());
-                node["crcs"][plugin.Name()] = plugin.Crc();
-            }
-
-            callback->Success(JSON::stringify(node));
+            callback->Success(SortPlugins());
             return true;
         }
         else {
@@ -209,30 +194,29 @@ namespace loot {
                 return true;
             }
 
-            const string requestName = req["name"].as<string>();
+            return HandleComplexQuery(browser, req, callback);
+        }
 
-            if (requestName == "find") {
-                // Has one arg, which is the search string.
-                const string search = req["args"][0].as<string>();
+        return false;
+    }
 
-                // In case there is a search already running, cancel it.
-                browser->GetHost()->StopFinding(true);
+    // Handle queries with input arguments.
+    bool Handler::HandleComplexQuery(CefRefPtr<CefBrowser> browser, YAML::Node& request,
+        CefRefPtr<Callback> callback) {
 
-                // Only one search at a time is allowed, so give a constant identifier,
-                // and we want case-insensitive forward searching, with no repeated
-                // searches.
-                browser->GetHost()->Find(0, search, true, false, false);
 
-                callback->Success("");
+        const string requestName = request["name"].as<string>();
 
-                return true;
-            }
-            else if (requestName == "changeGame") {
+        if (requestName == "find") {
+            // Has one arg, which is the search string.
+            Find(browser, request["args"][0].as<string>());
+            callback->Success("");
+            return true;
+        }
+        else if (requestName == "changeGame") {
+            try {
                 // Has one arg, which is the folder name of the new game.
-                const string folder = req["args"][0].as<string>();
-
-                BOOST_LOG_TRIVIAL(info) << "Changing game to that with folder: " << folder;
-                g_app_state.ChangeGame(folder);
+                g_app_state.ChangeGame(request["args"][0].as<string>());
 
                 BOOST_LOG_TRIVIAL(info) << "Setting LOOT window title bar text to include game name: " << g_app_state.CurrentGame().Name();
                 HWND handle = browser->GetHost()->GetWindowHandle();
@@ -241,225 +225,272 @@ namespace loot {
 #endif
 
                 callback->Success(GetGameData());
-                return true;
             }
-            else if (requestName == "getConflictingPlugins") {
-                // Has one arg, which is the name of the plugin to get conflicts for.
-                const string pluginName = req["args"][0].as<string>();
-                BOOST_LOG_TRIVIAL(debug) << "Searching for plugins that conflict with " << pluginName;
-
-                auto pluginIt = g_app_state.CurrentGame().plugins.find(boost::locale::to_lower(pluginName));
-
-                // Checking for FormID overlap will only work if the plugins have been loaded, so check if
-                // the first plugin has any FormIDs in memory, and if not load all plugins.
-                if (g_app_state.CurrentGame().plugins.begin()->second.FormIDs().size() == 0)
-                    g_app_state.CurrentGame().LoadPlugins(false);
-
-                map<string, uint32_t> conflictingPlugins;
-                YAML::Node node;
-                for (const auto& pluginPair : g_app_state.CurrentGame().plugins) {
-                    if (pluginIt != g_app_state.CurrentGame().plugins.end()) {
-                        if (pluginIt->second.DoFormIDsOverlap(pluginPair.second)) {
-                            BOOST_LOG_TRIVIAL(debug) << "Found conflicting plugin: " << pluginPair.second.Name();
-                            conflictingPlugins.emplace(pluginPair.second.Name(), pluginPair.second.Crc());
-                            node["conflicts"].push_back(pluginPair.second.Name());
-                        }
-                    }
-                    node["crcs"][pluginPair.second.Name()] = pluginPair.second.Crc();
-                }
-
-                callback->Success(JSON::stringify(node));
-                return true;
+            catch (loot::error &e) {
+                BOOST_LOG_TRIVIAL(error) << "Failed to change game. Details: " << e.what();
+                callback->Failure(e.code(), string("Failed to change game. Details: ") + e.what());
             }
-            else if (requestName == "copyMetadata") {
-                // Has one arg, which is the name of the plugin to copy metadata for.
-                const string pluginName = req["args"][0].as<string>();
-                BOOST_LOG_TRIVIAL(debug) << "Copying metadata for plugin " << pluginName;
-
-                // Get metadata from masterlist and userlist.
-                Plugin plugin = g_app_state.CurrentGame().masterlist.FindPlugin(pluginName);
-                plugin.MergeMetadata(g_app_state.CurrentGame().userlist.FindPlugin(pluginName));
-
-                // Generate text representation.
-                string text;
-                if (plugin.HasNameOnly())
-                    text = "name: " + plugin.Name();
-                else {
-                    YAML::Emitter yout;
-                    yout.SetIndent(2);
-                    yout << plugin;
-                    text = yout.c_str();
-                }
-
-#ifdef _WIN32
-                if (!OpenClipboard(NULL)) {
-                    BOOST_LOG_TRIVIAL(error) << "Failed to open the Windows clipboard.";
-                    callback->Failure(-1, "Failed to open the Windows clipboard.");
-                    return true;
-                }
-
-                if (!EmptyClipboard()) {
-                    BOOST_LOG_TRIVIAL(error) << "Failed to empty the Windows clipboard.";
-                    callback->Failure(-1, "Failed to empty the Windows clipboard.");
-                    return true;
-                }
-
-                // The clipboard takes a Unicode (ie. UTF-16) string that it then owns and must not
-                // be destroyed by LOOT. Convert the string, then copy it into a new block of 
-                // memory for the clipboard.
-                wstring wtext = ToWinWide(text);
-                wchar_t * wcstr = new wchar_t[wtext.length() + 1];
-                wcscpy(wcstr, wtext.c_str());
-
-                if (SetClipboardData(CF_UNICODETEXT, wcstr) == NULL) {
-                    BOOST_LOG_TRIVIAL(error) << "Failed to copy metadata to the Windows clipboard.";
-                    callback->Failure(-1, "Failed to copy metadata to the Windows clipboard.");
-                    return true;
-                }
-
-                if (!CloseClipboard()) {
-                    BOOST_LOG_TRIVIAL(error) << "Failed to close the Windows clipboard.";
-                    callback->Failure(-1, "Failed to close the Windows clipboard.");
-                    return true;
-                }
-
-                BOOST_LOG_TRIVIAL(info) << "Exported userlist metadata text for \"" << pluginName << "\": " << text;
-                callback->Success("");
-#endif
-                return true;
+            catch (std::exception& e) {
+                BOOST_LOG_TRIVIAL(error) << "Failed to change game. Details: " << e.what();
+                callback->Failure(-1, string("Failed to change game. Details: ") + e.what());
             }
-            else if (requestName == "clearPluginMetadata") {
-                // Has one arg, which is the name of the plugin to copy metadata for.
-                const string pluginName = req["args"][0].as<string>();
-                BOOST_LOG_TRIVIAL(debug) << "Clearing user metadata for plugin " << pluginName;
-
-                auto ulistPluginIt = find(g_app_state.CurrentGame().userlist.plugins.begin(), g_app_state.CurrentGame().userlist.plugins.end(), Plugin(pluginName));
-
-                if (ulistPluginIt != g_app_state.CurrentGame().userlist.plugins.end()) {
-                    g_app_state.CurrentGame().userlist.plugins.erase(ulistPluginIt);
-                }
-
-                // Now rederive the displayed metadata from the masterlist.
-                callback->Success(JSON::stringify(GenerateDerivedMetadata(pluginName)));
-                return true;
-            }
-            else if (requestName == "editorClosed") {
-                BOOST_LOG_TRIVIAL(debug) << "Editor for plugin closed.";
-                // One argument, which is the plugin metadata that has changed (+ its name).
-                const YAML::Node pluginMetadata = req["args"][0];
-
-                // Create new object for userlist entry.
-                Plugin newUserlistEntry(pluginMetadata["name"].as<string>());
-
-                // Find existing userlist entry.
-                auto ulistPluginIt = find(g_app_state.CurrentGame().userlist.plugins.begin(), g_app_state.CurrentGame().userlist.plugins.end(), newUserlistEntry);
-
-                // First sort out the priority value. This is only given if it was changed.
-                BOOST_LOG_TRIVIAL(trace) << "Calculating userlist metadata priority value from Javascript variables.";
-                if (pluginMetadata["modPriority"] && pluginMetadata["isGlobalPriority"]) {
-                    BOOST_LOG_TRIVIAL(trace) << "Priority value was changed, recalculating...";
-                    // Priority value was changed, so add it to the userlist data.
-                    int priority = pluginMetadata["modPriority"].as<int>();
-
-                    if (priority >= 0) {
-                        priority += max_priority;
-                    }
-                    else {
-                        priority -= max_priority;
-                    }
-                    newUserlistEntry.Priority(priority);
-                    newUserlistEntry.SetPriorityExplicit(true);
-                }
-                else {
-                    // Priority value wasn't changed, use the existing userlist value.
-                    BOOST_LOG_TRIVIAL(trace) << "Priority value is unchanged, using existing userlist value (if it exists).";
-                    if (ulistPluginIt != g_app_state.CurrentGame().userlist.plugins.end()) {
-                        newUserlistEntry.Priority(ulistPluginIt->Priority());
-                        newUserlistEntry.SetPriorityExplicit(ulistPluginIt->IsPriorityExplicit());
-                    }
-                }
-
-                // Now the enabled flag.
-                newUserlistEntry.Enabled(pluginMetadata["userlist"]["enabled"].as<bool>());
-
-                // Now metadata lists. These are given in their entirety, so replace anything that
-                // currently exists.
-                BOOST_LOG_TRIVIAL(trace) << "Recording metadata lists from Javascript variables.";
-                if (pluginMetadata["userlist"]["after"])
-                    newUserlistEntry.LoadAfter(pluginMetadata["userlist"]["after"].as<set<File>>());
-                if (pluginMetadata["userlist"]["req"])
-                    newUserlistEntry.Reqs(pluginMetadata["userlist"]["req"].as<set<File>>());
-                if (pluginMetadata["userlist"]["inc"])
-                    newUserlistEntry.Incs(pluginMetadata["userlist"]["inc"].as<set<File>>());
-
-                if (pluginMetadata["userlist"]["msg"])
-                    newUserlistEntry.Messages(pluginMetadata["userlist"]["msg"].as<list<Message>>());
-                if (pluginMetadata["userlist"]["tag"])
-                    newUserlistEntry.Tags(pluginMetadata["userlist"]["tag"].as<set<Tag>>());
-                if (pluginMetadata["userlist"]["dirty"])
-                    newUserlistEntry.DirtyInfo(pluginMetadata["userlist"]["dirty"].as<set<PluginDirtyInfo>>());
-
-                // Now replace existing userlist entry with the new one.
-                if (ulistPluginIt != g_app_state.CurrentGame().userlist.plugins.end()) {
-                    BOOST_LOG_TRIVIAL(trace) << "Replacing existing userlist entry with new metadata.";
-                    if (newUserlistEntry.HasNameOnly())
-                        g_app_state.CurrentGame().userlist.plugins.erase(ulistPluginIt);
-                    else
-                        *ulistPluginIt = newUserlistEntry;
-                }
-                else {
-                    BOOST_LOG_TRIVIAL(trace) << "Adding new metadata to new userlist entry.";
-                    g_app_state.CurrentGame().userlist.plugins.push_back(newUserlistEntry);
-                }
-
-                // Now rederive the derived metadata.
-                BOOST_LOG_TRIVIAL(trace) << "Returning newly derived display metadata.";
-                callback->Success(JSON::stringify(GenerateDerivedMetadata(newUserlistEntry.Name())));
-                return true;
-            }
-            else if (requestName == "closeSettings") {
-                BOOST_LOG_TRIVIAL(trace) << "Settings dialog closed and changes accepted, updating settings object.";
-                g_app_state.UpdateSettings(req["args"][0]);
-                callback->Success("");
-                return true;
-            }
-            else if (requestName == "applySort") {
-                BOOST_LOG_TRIVIAL(trace) << "User has accepted sorted load order, applying it.";
-                list<string> loadOrder = req["args"][0].as<list<string>>();
-                try {
-                    g_app_state.CurrentGame().SetLoadOrder(loadOrder);
-                }
-                catch (exception &e) {
-                    callback->Failure(-1, e.what());
-                    return true;
-                }
-
-                callback->Success("");
-                return true;
-            }
-            else if (requestName == "saveFilterState") {
-                const string id = req["args"][0].as<string>();
-                BOOST_LOG_TRIVIAL(trace) << "Saving state of filter " << id << " as " << req["args"][2].as<string>();
-                YAML::Node settings = g_app_state.GetSettings();
-
-                const string value = req["args"][2].as<string>();
-                if (value == "true")
-                    settings["filters"][id] = true;
-                else if (value == "false" || value.empty())
-                    settings["filters"].remove(id);
-                else
-                    settings["filters"][id] = value;
-
-                g_app_state.UpdateSettings(settings);
-                
-                callback->Success("");
-                return true;
-            }
+            return true;
         }
+        else if (requestName == "getConflictingPlugins") {
+            // Has one arg, which is the name of the plugin to get conflicts for.
+            callback->Success(GetConflictingPlugins(request["args"][0].as<string>()));
+            return true;
+        }
+        else if (requestName == "copyMetadata") {
+            // Has one arg, which is the name of the plugin to copy metadata for.
+            try {
+                CopyMetadata(request["args"][0].as<string>());
+                callback->Success("");
+            }
+            catch (loot::error &e) {
+                BOOST_LOG_TRIVIAL(error) << "Failed to copy plugin metadata. Details: " << e.what();
+                callback->Failure(e.code(), string("Failed to copy plugin metadata. Details: ") + e.what());
+            }
+            catch (std::exception& e) {
+                BOOST_LOG_TRIVIAL(error) << "Failed to copy plugin metadata. Details: " << e.what();
+                callback->Failure(-1, string("Failed to copy plugin metadata. Details: ") + e.what());
+            }
+            return true;
+        }
+        else if (requestName == "clearPluginMetadata") {
+            // Has one arg, which is the name of the plugin to copy metadata for.
+            callback->Success(ClearPluginMetadata(request["args"][0].as<string>()));
+            return true;
+        }
+        else if (requestName == "editorClosed") {
+            BOOST_LOG_TRIVIAL(debug) << "Editor for plugin closed.";
+            // One argument, which is the plugin metadata that has changed (+ its name).
+            callback->Success(ApplyUserEdits(request["args"][0]));
+            return true;
+        }
+        else if (requestName == "closeSettings") {
+            BOOST_LOG_TRIVIAL(trace) << "Settings dialog closed and changes accepted, updating settings object.";
+            g_app_state.UpdateSettings(request["args"][0]);
+            callback->Success("");
+            return true;
+        }
+        else if (requestName == "applySort") {
+            BOOST_LOG_TRIVIAL(trace) << "User has accepted sorted load order, applying it.";
+            try {
+                g_app_state.CurrentGame().SetLoadOrder(request["args"][0].as<list<string>>());
+                callback->Success("");
+            }
+            catch (error &e) {
+                BOOST_LOG_TRIVIAL(error) << e.what();
+                callback->Failure(e.code(), e.what());
+            }
+            catch (exception &e) {
+                BOOST_LOG_TRIVIAL(error) << e.what();
+                callback->Failure(-1, e.what());
+            }
 
+            return true;
+        }
+        else if (requestName == "saveFilterState") {
+            const string id = request["args"][0].as<string>();
+            const string value = request["args"][1].as<string>();
+            SaveFilterState(id, value);
+            callback->Success("");
+            return true;
+        }
         return false;
     }
 
+    void Handler::Find(CefRefPtr<CefBrowser> browser, const std::string& search) {
+        // In case there is a search already running, cancel it.
+        browser->GetHost()->StopFinding(true);
+
+        // Only one search at a time is allowed, so give a constant identifier,
+        // and we want case-insensitive forward searching, with no repeated
+        // searches.
+        browser->GetHost()->Find(0, search, true, false, false);
+    }
+
+    std::string Handler::GetConflictingPlugins(const std::string& pluginName) {
+        BOOST_LOG_TRIVIAL(debug) << "Searching for plugins that conflict with " << pluginName;
+
+        auto pluginIt = g_app_state.CurrentGame().plugins.find(boost::locale::to_lower(pluginName));
+
+        // Checking for FormID overlap will only work if the plugins have been loaded, so check if
+        // the first plugin has any FormIDs in memory, and if not load all plugins.
+        if (g_app_state.CurrentGame().plugins.begin()->second.FormIDs().size() == 0)
+            g_app_state.CurrentGame().LoadPlugins(false);
+
+        map<string, uint32_t> conflictingPlugins;
+        YAML::Node node;
+        for (const auto& pluginPair : g_app_state.CurrentGame().plugins) {
+            if (pluginIt != g_app_state.CurrentGame().plugins.end()) {
+                if (pluginIt->second.DoFormIDsOverlap(pluginPair.second)) {
+                    BOOST_LOG_TRIVIAL(debug) << "Found conflicting plugin: " << pluginPair.second.Name();
+                    conflictingPlugins.emplace(pluginPair.second.Name(), pluginPair.second.Crc());
+                    node["conflicts"].push_back(pluginPair.second.Name());
+                }
+            }
+            node["crcs"][pluginPair.second.Name()] = pluginPair.second.Crc();
+        }
+
+        if (node.size() > 0)
+            return JSON::stringify(node);
+        else
+            return "null";
+    }
+
+    void Handler::CopyMetadata(const std::string& pluginName) {
+        BOOST_LOG_TRIVIAL(debug) << "Copying metadata for plugin " << pluginName;
+
+        // Get metadata from masterlist and userlist.
+        Plugin plugin = g_app_state.CurrentGame().masterlist.FindPlugin(pluginName);
+        plugin.MergeMetadata(g_app_state.CurrentGame().userlist.FindPlugin(pluginName));
+
+        // Generate text representation.
+        string text;
+        if (plugin.HasNameOnly())
+            text = "name: " + plugin.Name();
+        else {
+            YAML::Emitter yout;
+            yout.SetIndent(2);
+            yout << plugin;
+            text = yout.c_str();
+        }
+
+#ifdef _WIN32
+        if (!OpenClipboard(NULL)) {
+            throw loot::error(loot::error::windows_error, "Failed to open the Windows clipboard.");
+        }
+
+        if (!EmptyClipboard()) {
+            throw loot::error(loot::error::windows_error, "Failed to empty the Windows clipboard.");
+        }
+
+        // The clipboard takes a Unicode (ie. UTF-16) string that it then owns and must not
+        // be destroyed by LOOT. Convert the string, then copy it into a new block of 
+        // memory for the clipboard.
+        wstring wtext = ToWinWide(text);
+        wchar_t * wcstr = new wchar_t[wtext.length() + 1];
+        wcscpy(wcstr, wtext.c_str());
+
+        if (SetClipboardData(CF_UNICODETEXT, wcstr) == NULL) {
+            throw loot::error(loot::error::windows_error, "Failed to copy metadata to the Windows clipboard.");
+        }
+
+        if (!CloseClipboard()) {
+            throw loot::error(loot::error::windows_error, "Failed to close the Windows clipboard.");
+        }
+#endif
+
+        BOOST_LOG_TRIVIAL(info) << "Exported userlist metadata text for \"" << pluginName << "\": " << text;
+    }
+
+    std::string Handler::ClearPluginMetadata(const std::string& pluginName) {
+        BOOST_LOG_TRIVIAL(debug) << "Clearing user metadata for plugin " << pluginName;
+
+        auto ulistPluginIt = find(g_app_state.CurrentGame().userlist.plugins.begin(), g_app_state.CurrentGame().userlist.plugins.end(), Plugin(pluginName));
+
+        if (ulistPluginIt != g_app_state.CurrentGame().userlist.plugins.end()) {
+            g_app_state.CurrentGame().userlist.plugins.erase(ulistPluginIt);
+        }
+
+        // Now rederive the displayed metadata from the masterlist.
+        YAML::Node derivedMetadata = GenerateDerivedMetadata(pluginName);
+        if (derivedMetadata.size() > 0)
+            return JSON::stringify(derivedMetadata);
+        else
+            return "null";
+    }
+
+    void Handler::SaveFilterState(const std::string& id, const std::string& value) {
+        BOOST_LOG_TRIVIAL(trace) << "Saving state of filter " << id << " as " << value;
+        YAML::Node settings = g_app_state.GetSettings();
+
+        if (value == "true")
+            settings["filters"][id] = true;
+        else if (value == "false" || value.empty())
+            settings["filters"].remove(id);
+        else
+            settings["filters"][id] = value;
+
+        g_app_state.UpdateSettings(settings);
+    }
+
+    std::string Handler::ApplyUserEdits(const YAML::Node& pluginMetadata) {
+        BOOST_LOG_TRIVIAL(trace) << "Applying user edits for: " << pluginMetadata["name"].as<string>();
+        // Create new object for userlist entry.
+        Plugin newUserlistEntry(pluginMetadata["name"].as<string>());
+
+        // Find existing userlist entry.
+        auto ulistPluginIt = find(g_app_state.CurrentGame().userlist.plugins.begin(), g_app_state.CurrentGame().userlist.plugins.end(), newUserlistEntry);
+
+        // First sort out the priority value. This is only given if it was changed.
+        BOOST_LOG_TRIVIAL(trace) << "Calculating userlist metadata priority value from Javascript variables.";
+        if (pluginMetadata["modPriority"] && pluginMetadata["isGlobalPriority"]) {
+            BOOST_LOG_TRIVIAL(trace) << "Priority value was changed, recalculating...";
+            // Priority value was changed, so add it to the userlist data.
+            int priority = pluginMetadata["modPriority"].as<int>();
+
+            if (priority >= 0) {
+                priority += max_priority;
+            }
+            else {
+                priority -= max_priority;
+            }
+            newUserlistEntry.Priority(priority);
+            newUserlistEntry.SetPriorityExplicit(true);
+        }
+        else {
+            // Priority value wasn't changed, use the existing userlist value.
+            BOOST_LOG_TRIVIAL(trace) << "Priority value is unchanged, using existing userlist value (if it exists).";
+            if (ulistPluginIt != g_app_state.CurrentGame().userlist.plugins.end()) {
+                newUserlistEntry.Priority(ulistPluginIt->Priority());
+                newUserlistEntry.SetPriorityExplicit(ulistPluginIt->IsPriorityExplicit());
+            }
+        }
+
+        // Now the enabled flag.
+        newUserlistEntry.Enabled(pluginMetadata["userlist"]["enabled"].as<bool>());
+
+        // Now metadata lists. These are given in their entirety, so replace anything that
+        // currently exists.
+        BOOST_LOG_TRIVIAL(trace) << "Recording metadata lists from Javascript variables.";
+        if (pluginMetadata["userlist"]["after"])
+            newUserlistEntry.LoadAfter(pluginMetadata["userlist"]["after"].as<set<File>>());
+        if (pluginMetadata["userlist"]["req"])
+            newUserlistEntry.Reqs(pluginMetadata["userlist"]["req"].as<set<File>>());
+        if (pluginMetadata["userlist"]["inc"])
+            newUserlistEntry.Incs(pluginMetadata["userlist"]["inc"].as<set<File>>());
+
+        if (pluginMetadata["userlist"]["msg"])
+            newUserlistEntry.Messages(pluginMetadata["userlist"]["msg"].as<list<Message>>());
+        if (pluginMetadata["userlist"]["tag"])
+            newUserlistEntry.Tags(pluginMetadata["userlist"]["tag"].as<set<Tag>>());
+        if (pluginMetadata["userlist"]["dirty"])
+            newUserlistEntry.DirtyInfo(pluginMetadata["userlist"]["dirty"].as<set<PluginDirtyInfo>>());
+
+        // Now replace existing userlist entry with the new one.
+        if (ulistPluginIt != g_app_state.CurrentGame().userlist.plugins.end()) {
+            BOOST_LOG_TRIVIAL(trace) << "Replacing existing userlist entry with new metadata.";
+            if (newUserlistEntry.HasNameOnly())
+                g_app_state.CurrentGame().userlist.plugins.erase(ulistPluginIt);
+            else
+                *ulistPluginIt = newUserlistEntry;
+        }
+        else {
+            BOOST_LOG_TRIVIAL(trace) << "Adding new metadata to new userlist entry.";
+            g_app_state.CurrentGame().userlist.plugins.push_back(newUserlistEntry);
+        }
+
+        // Now rederive the derived metadata.
+        BOOST_LOG_TRIVIAL(trace) << "Returning newly derived display metadata.";
+        YAML::Node derivedMetadata = GenerateDerivedMetadata(newUserlistEntry.Name());
+        if (derivedMetadata.size() > 0)
+            return JSON::stringify(derivedMetadata);
+        else
+            return "null";
+    }
 
     void Handler::OpenReadme() {
         BOOST_LOG_TRIVIAL(info) << "Opening LOOT readme.";
@@ -514,12 +545,11 @@ namespace loot {
 
     std::string Handler::GetInstalledGames() {
         BOOST_LOG_TRIVIAL(info) << "Getting LOOT's detected games.";
-        YAML::Node temp;
-        for (const auto &game : g_app_state.InstalledGames()) {
-            if (game.IsInstalled())
-                temp.push_back(game.FolderName());
-        }
-        return JSON::stringify(temp);
+        YAML::Node temp = YAML::Node(g_app_state.InstalledGames());
+        if (temp.size() > 0)
+            return JSON::stringify(temp);
+        else
+            return "[]";
     }
 
     std::string Handler::GetGameData() {
@@ -725,6 +755,60 @@ namespace loot {
         gameNode["globalMessages"] = messages;
 
         return JSON::stringify(gameNode);
+    }
+
+    std::string Handler::ClearAllMetadata() {
+        BOOST_LOG_TRIVIAL(debug) << "Clearing all user metadata.";
+        // Record which plugins have userlist entries.
+        vector<string> userlistPlugins;
+        for (const auto &plugin : g_app_state.CurrentGame().userlist.plugins) {
+            userlistPlugins.push_back(plugin.Name());
+        }
+        BOOST_LOG_TRIVIAL(trace) << "User metadata exists for " << userlistPlugins.size() << " plugins.";
+
+        // Clear the user metadata.
+        g_app_state.CurrentGame().userlist.clear();
+
+        // Regenerate the derived metadata (priority, messages, tags and dirty state)
+        // for any plugins with userlist entries.
+        YAML::Node pluginsNode;
+        for (const auto &plugin : userlistPlugins) {
+            pluginsNode.push_back(GenerateDerivedMetadata(plugin));
+        }
+        BOOST_LOG_TRIVIAL(trace) << "Display metadata rederived for " << pluginsNode.size() << " plugins.";
+
+        if (pluginsNode.size() > 0)
+            return JSON::stringify(pluginsNode);
+        else
+            return "[]";
+    }
+
+    std::string Handler::SortPlugins() {
+        //Set language.
+        unsigned int language;
+        if (g_app_state.GetSettings()["language"])
+            language = Language(g_app_state.GetSettings()["language"].as<string>()).Code();
+        else
+            language = Language::any;
+        BOOST_LOG_TRIVIAL(info) << "Using message language: " << Language(language).Name();
+
+        // Check if the first plugin has any FormIDs in memory, and if not load all plugins.
+        if (g_app_state.CurrentGame().plugins.begin()->second.FormIDs().size() == 0)
+            g_app_state.CurrentGame().LoadPlugins(false);
+
+        //Sort plugins into their load order.
+        list<Plugin> plugins = g_app_state.CurrentGame().Sort(language, [](const string& message){});
+
+        YAML::Node node;
+        for (const auto &plugin : plugins) {
+            node["loadOrder"].push_back(plugin.Name());
+            node["crcs"][plugin.Name()] = plugin.Crc();
+        }
+
+        if (node.size() > 0)
+            return JSON::stringify(node);
+        else
+            return "null";
     }
 
     YAML::Node Handler::GenerateDerivedMetadata(const Plugin& file, const Plugin& masterlist, const Plugin& userlist) {

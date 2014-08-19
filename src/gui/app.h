@@ -72,7 +72,8 @@ namespace loot {
 
         Game& CurrentGame();
         void ChangeGame(const std::string& newGameFolder);
-        const std::vector<Game>& InstalledGames() const;
+        // Get the folder names of the installed games.
+        std::vector<std::string> InstalledGames() const;
 
         const YAML::Node& GetSettings() const;
         void UpdateSettings(const YAML::Node& settings);
