@@ -43,7 +43,7 @@
 #include <sstream>
 #include <regex>
 
-#if _WIN32 || _WIN64
+#ifdef _WIN32
 #   ifndef UNICODE
 #       define UNICODE
 #   endif
@@ -161,9 +161,9 @@ namespace loot {
         return out;
     }
 
+#ifdef _WIN32
     //Get registry subkey value string.
     string RegKeyStringValue(const std::string& keyStr, const std::string& subkey, const std::string& value) {
-#if _WIN32 || _WIN64
         HKEY hKey, key;
         DWORD BufferSize = 4096;
         wchar_t val[4096];
@@ -193,13 +193,11 @@ namespace loot {
                 return "";
         } else
             return "";
-#else
-        return "";
-#endif
     }
+#endif
 
     boost::filesystem::path GetLocalAppDataPath() {
-#if _WIN32 || _WIN64
+#ifdef _WIN32
         HWND owner = 0;
         TCHAR path[MAX_PATH];
 
@@ -210,8 +208,6 @@ namespace loot {
             return fs::path(path);
         else
             return fs::path("");
-#else
-        return fs::path("");
 #endif
     }
 
@@ -219,7 +215,7 @@ namespace loot {
     std::string ToFileURL(const fs::path& file) {
         BOOST_LOG_TRIVIAL(trace) << "Converting file path " << file << " to a URL.";
 
-#if _WIN32 || _WIN64
+#ifdef _WIN32
         wstring wstr(MAX_PATH, 0);
         DWORD len = MAX_PATH;
         UrlCreateFromPath(ToWinWide(file.string()).c_str(), &wstr[0], &len, NULL);
@@ -230,7 +226,7 @@ namespace loot {
 #endif
     }
 
-#if _WIN32 || _WIN64
+#ifdef _WIN32
     //Helper to turn UTF8 strings into strings that can be used by WinAPI.
     std::wstring ToWinWide(const std::string& str) {
 
@@ -337,7 +333,7 @@ namespace loot {
         : verString(ver) {}
 
     Version::Version(const fs::path& file) {
-#if _WIN32 || _WIN64
+#ifdef _WIN32
         DWORD dummy = 0;
         DWORD size = GetFileVersionInfoSize(file.wstring().c_str(), &dummy);
 

@@ -51,16 +51,18 @@ namespace loot {
     //Converts an integer to a hex string using BOOST's Spirit.Karma. Faster than a stringstream conversion.
     std::string IntToHexString(const int n);
 
+#ifdef _WIN32
     //Get registry subkey value string.
     std::string RegKeyStringValue(const std::string& keyStr, const std::string& subkey, const std::string& value);
+#endif
 
-    //Get the local application data path.
+    //Get the local application data path, within which LOOT's data folder should be stored.
     boost::filesystem::path GetLocalAppDataPath();
 
     //Turns an absolute filesystem path into a valid file:// URL.
     std::string ToFileURL(const boost::filesystem::path& file);
 
-#if _WIN32 || _WIN64
+#ifdef _WIN32
     //Helper to turn UTF8 strings into strings that can be used by WinAPI.
     std::wstring ToWinWide(const std::string& str);
 

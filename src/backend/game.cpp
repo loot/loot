@@ -283,8 +283,10 @@ namespace loot {
 
         //First look for local install, then look for Registry.
         if (gamePath.empty() || !fs::exists(gamePath / "Data" / _masterFile)) {
-            if (fs::exists(fs::path("..") / "Data" / _masterFile))
+            if (fs::exists(fs::path("..") / "Data" / _masterFile)) {
                 gamePath = "..";
+#ifdef _WIN32
+            }
             else {
                 string path;
                 string key_parent = fs::path(registryKey).parent_path().string();
@@ -292,6 +294,7 @@ namespace loot {
                 path = RegKeyStringValue("HKEY_LOCAL_MACHINE", key_parent, key_name);
                 if (!path.empty() && fs::exists(fs::path(path) / "Data" / _masterFile))
                     gamePath = fs::path(path);
+#endif
             }
         }
 
@@ -314,12 +317,14 @@ namespace loot {
         if (fs::exists(fs::path("..") / "Data" / _masterFile))
             return true;
 
+#ifdef _WIN32
         string path;
         string key_parent = fs::path(registryKey).parent_path().string();
         string key_name = fs::path(registryKey).filename().string();
         path = RegKeyStringValue("HKEY_LOCAL_MACHINE", key_parent, key_name);
         if (!path.empty() && fs::exists(fs::path(path) / "Data" / _masterFile))
             return true;
+#endif
 
         return false;
     }

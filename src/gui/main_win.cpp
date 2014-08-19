@@ -101,7 +101,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 
     // Record command line arguments.
     CefRefPtr<CefCommandLine> command_line = CefCommandLine::CreateCommandLine();
-#if defined(OS_WIN)
+#ifdef _WIN32
     command_line->InitFromString(::GetCommandLineW());
 #endif
     if (command_line->HasSwitch("game")) {  // Format is: --game=<game>

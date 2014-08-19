@@ -70,7 +70,7 @@ namespace loot {
         // Information used when creating the native window.
         CefWindowInfo window_info;
 
-#if _WIN32 || _WIN64
+#ifdef _WIN32
         // On Windows we need to specify certain flags that will be passed to CreateWindowEx().
         window_info.SetAsPopup(NULL, "LOOT");
 #endif

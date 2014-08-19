@@ -117,8 +117,8 @@ namespace loot {
         }
         else if (request == "getGameData") {
             BOOST_LOG_TRIVIAL(info) << "Setting LOOT window title bar text to include game name: " << g_app_state.CurrentGame().Name();
-#if defined(OS_WIN)
             HWND handle = browser->GetHost()->GetWindowHandle();
+#ifdef _WIN32
             SetWindowText(handle, ToWinWide("LOOT: " + g_app_state.CurrentGame().Name()).c_str());
 #endif
 
@@ -234,9 +234,9 @@ namespace loot {
                 BOOST_LOG_TRIVIAL(info) << "Changing game to that with folder: " << folder;
                 g_app_state.ChangeGame(folder);
 
-#if defined(OS_WIN)
                 BOOST_LOG_TRIVIAL(info) << "Setting LOOT window title bar text to include game name: " << g_app_state.CurrentGame().Name();
                 HWND handle = browser->GetHost()->GetWindowHandle();
+#ifdef _WIN32
                 SetWindowText(handle, ToWinWide("LOOT: " + g_app_state.CurrentGame().Name()).c_str());
 #endif
 
@@ -291,7 +291,7 @@ namespace loot {
                     text = yout.c_str();
                 }
 
-#if defined(OS_WIN)
+#ifdef _WIN32
                 if (!OpenClipboard(NULL)) {
                     BOOST_LOG_TRIVIAL(error) << "Failed to open the Windows clipboard.";
                     callback->Failure(-1, "Failed to open the Windows clipboard.");
@@ -825,15 +825,15 @@ namespace loot {
     // CefDisplayHandler methods
     //--------------------------
 
-#if _WIN32 || _WIN64
     void LootHandler::OnTitleChange(CefRefPtr<CefBrowser> browser,
                                       const CefString& title) {
       assert(CefCurrentlyOn(TID_UI));
 
       CefWindowHandle hwnd = browser->GetHost()->GetWindowHandle();
+#ifdef _WIN32
       SetWindowText(hwnd, std::wstring(title).c_str());
-    }
 #endif
+    }
 
     // CefLifeSpanHandler methods
     //---------------------------
