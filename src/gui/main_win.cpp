@@ -58,7 +58,9 @@ CefSettings GetCefSettings() {
     return cef_settings;
 }
 
+#ifdef _WIN32
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
+#endif
 
     // Do all the standard CEF setup stuff.
     //-------------------------------------
@@ -68,7 +70,9 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
     void * sandbox_info = scoped_sandbox.sandbox_info();
 
     // Read command line arguments.
+#ifdef _WIN32
     CefMainArgs main_args(hInstance);
+#endif
 
     // Create the process reference.
     CefRefPtr<loot::LootApp> app(new loot::LootApp);
