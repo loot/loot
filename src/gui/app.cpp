@@ -25,8 +25,10 @@
 #include "app.h"
 #include "handler.h"
 
+#include "../backend/error.h"
 #include "../backend/globals.h"
 #include "../backend/helpers.h"
+#include "../backend/parsers.h"
 #include "../backend/generators.h"
 #include "../backend/streams.h"
 
@@ -117,39 +119,29 @@ namespace loot {
     LootState::LootState() : _currentGame(0) {}
 
     void LootState::Init(const std::string& cmdLineGame) {
-        string initError;
-
-        //Load settings.
-        if (!fs::exists(g_path_settings)) {
-            BOOST_LOG_TRIVIAL(error) << "Settings file doesn't exist, generating new file.";
+        // Check if the LOOT local app data folder exists, and create it if not.
+        if (!fs::exists(g_path_local)) {
+            BOOST_LOG_TRIVIAL(info) << "Local app data LOOT folder doesn't exist, creating it.";
             try {
-                fs::create_directory(g_path_settings.parent_path());
-                GenerateDefaultSettingsFile(g_path_settings);
+                fs::create_directory(g_path_local);
             }
-            catch (fs::filesystem_error& /*e*/) {
-                initError = "Error: Could not create local app data LOOT folder.";
+            catch (exception& e) {
+                _initErrors.push_back((format(translate("Error: Could not create LOOT settings file. %1%")) % e.what()).str());
             }
         }
-        BOOST_LOG_TRIVIAL(info) << "Parsing settings file.";
-        try {
-            loot::ifstream in(g_path_settings);
-            _settings = YAML::Load(in);
-            in.close();
-        }
-        catch (YAML::ParserException& e) {
-            initError = (format(translate("Error: Settings parsing failed. %1%")) % e.what()).str();
-        }
-        if (!AreSettingsValid(_settings)) {
-            BOOST_LOG_TRIVIAL(error) << "Settings file invalid, generating new file.";
-            GenerateDefaultSettingsFile(g_path_settings);
+        if (fs::exists(g_path_settings)) {
             try {
                 loot::ifstream in(g_path_settings);
                 _settings = YAML::Load(in);
                 in.close();
             }
-            catch (YAML::ParserException& e) {
-                initError = (format(translate("Error: Settings parsing failed. %1%")) % e.what()).str();
+            catch (exception& e) {
+                _initErrors.push_back((format(translate("Error: Settings parsing failed. %1%")) % e.what()).str());
             }
+        }
+        // Check if the settings are valid (or if they don't exist).
+        if (!AreSettingsValid(_settings)) {
+            _settings = GetDefaultSettings();
         }
 
         //Set up logging.
@@ -212,33 +204,33 @@ namespace loot {
         }
         catch (YAML::Exception& e) {
             BOOST_LOG_TRIVIAL(error) << "Games' settings parsing failed. " << e.what();
-            initError = (format(translate("Error: Games' settings parsing failed. %1%")) % e.what()).str();
-            return;
+            _initErrors.push_back((format(translate("Error: Games' settings parsing failed. %1%")) % e.what()).str());
+            // Now redo, but with no games settings, so only the hardcoded defaults get loaded. It means the user can
+            // at least still then edit them.
+            _games = GetGames(YAML::Node());
         }
-        catch (std::exception& e) {
-            BOOST_LOG_TRIVIAL(error) << "Game-specific settings could not be initialised. " << e.what();
-            initError = (format(translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()).str();
-            return;
-        }
-
-        BOOST_LOG_TRIVIAL(debug) << "Selecting game.";
 
         try {
+            BOOST_LOG_TRIVIAL(debug) << "Selecting game.";
             _currentGame = SelectGame(_settings, _games, cmdLineGame);
-        }
-        catch (exception &) {
-            BOOST_LOG_TRIVIAL(error) << "None of the supported games were detected.";
-        }
-        BOOST_LOG_TRIVIAL(debug) << "Game selected is " << _games[_currentGame].Name();
-
-        //Now that game is selected, initialise it.
-        BOOST_LOG_TRIVIAL(debug) << "Initialising game-specific settings.";
-        try {
+            BOOST_LOG_TRIVIAL(debug) << "Initialising game-specific settings.";
             _games[_currentGame].Init();
         }
-        catch (std::exception& e) {
-            BOOST_LOG_TRIVIAL(error) << "Game-specific settings could not be initialised. " << e.what();
+        catch (loot::error &e) {
+            if (e.code() == loot::error::no_game_detected) {
+                BOOST_LOG_TRIVIAL(error) << e.what();
+                _initErrors.push_back(e.what());
+            }
+            else {
+                BOOST_LOG_TRIVIAL(error) << "Game-specific settings could not be initialised. " << e.what();
+                _initErrors.push_back((format(translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()).str());
+            }
         }
+        BOOST_LOG_TRIVIAL(debug) << "Game selected is " << _games[_currentGame].Name();
+    }
+
+    const std::vector<std::string>& LootState::InitErrors() const {
+        return _initErrors;
     }
 
     void LootState::ChangeGame(const std::string& newGameFolder) {
@@ -248,18 +240,14 @@ namespace loot {
         });
 
         _currentGame = std::distance(_games.begin(), it);
-        try {
         _games[_currentGame].Init();
         BOOST_LOG_TRIVIAL(debug) << "New game is " << _games[_currentGame].Name();
-        }
-        catch (std::exception& e) {
-            BOOST_LOG_TRIVIAL(error) << "Game-specific settings could not be initialised." << e.what();
-        }
     }
 
     Game& LootState::CurrentGame() {
         return _games[_currentGame];
     }
+
     const std::vector<Game>& LootState::InstalledGames() const {
         return _games;
     }
@@ -289,5 +277,43 @@ namespace loot {
         catch (std::exception &e) {
             BOOST_LOG_TRIVIAL(error) << "Failed to save LOOT's settings. Error: " << e.what();
         }
+    }
+    
+    bool LootState::AreSettingsValid(const YAML::Node& settings) {
+        if (!settings["language"])
+            return false;
+        if (!settings["game"])
+            return false;
+        if (!settings["lastGame"])
+            return false;
+        if (!settings["debugVerbosity"])
+            return false;
+        if (!settings["updateMasterlist"])
+            return false;
+        if (!settings["games"])
+            return false;
+
+        return true;
+    }
+
+    YAML::Node LootState::GetDefaultSettings() {
+        YAML::Node root;
+
+        root["language"] = "en";
+        root["game"] = "auto";
+        root["lastGame"] = "auto";
+        root["debugVerbosity"] = 0;
+        root["updateMasterlist"] = true;
+
+        std::vector<Game> games;
+        games.push_back(Game(Game::tes4));
+        games.push_back(Game(Game::tes5));
+        games.push_back(Game(Game::fo3));
+        games.push_back(Game(Game::fonv));
+        games.push_back(Game(Game::tes4, "Nehrim").SetDetails("Nehrim - At Fate's Edge", "Nehrim.esm", "https://github.com/loot/oblivion.git", "master", "", "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim - At Fate's Edge_is1\\InstallLocation"));
+
+        root["games"] = games;
+
+        return root;
     }
 }

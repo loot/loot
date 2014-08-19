@@ -237,9 +237,6 @@ namespace loot {
             espm_settings = espm::Settings("fonv");
             _repositoryURL = "https://github.com/loot/falloutnv.git";
             _repositoryBranch = "master";
-        } else {
-            BOOST_LOG_TRIVIAL(error) << "Invalid game ID supplied.";
-            throw error(error::invalid_args, lc::translate("Invalid game ID supplied.").str());
         }
 
         if (!folder.empty())
@@ -279,6 +276,10 @@ namespace loot {
     }
 
     Game& Game::Init() {
+        if (id != Game::tes4 && id != Game::tes5 && id != Game::fo3 && id != Game::fonv) {
+            throw error(error::invalid_args, lc::translate("Invalid game ID supplied.").str());
+        }
+
         BOOST_LOG_TRIVIAL(info) << "Initialising filesystem-related data for game: " << _name;
 
         //First look for local install, then look for Registry.

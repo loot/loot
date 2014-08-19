@@ -66,10 +66,12 @@ namespace loot {
     public:
         LootState();
 
+        // Init may fail with no 
         void Init(const std::string& cmdLineGame);
-        void ChangeGame(const std::string& newGameFolder);
+        const std::vector<std::string>& InitErrors() const;
 
         Game& CurrentGame();
+        void ChangeGame(const std::string& newGameFolder);
         const std::vector<Game>& InstalledGames() const;
 
         const YAML::Node& GetSettings() const;
@@ -79,6 +81,11 @@ namespace loot {
         YAML::Node _settings;
         std::vector<Game> _games;
         size_t _currentGame;
+        std::vector<std::string> _initErrors;
+
+        // Check if the settings file has the right root keys (doesn't check their values).
+        bool AreSettingsValid(const YAML::Node& settings);
+        YAML::Node GetDefaultSettings();
     };
 
     extern LootState g_app_state;

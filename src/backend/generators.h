@@ -32,15 +32,6 @@
 #include <list>
 #include <boost/filesystem.hpp>
 
-namespace loot {
-    // Check if the settings file has the right root keys (doesn't check
-    // their values).
-    bool AreSettingsValid(const YAML::Node& settings);
-
-    //Default settings file generation.
-    void GenerateDefaultSettingsFile(const boost::filesystem::path& file);
-}
-
 namespace YAML {
     template<class T, class Compare>
     Emitter& operator << (Emitter& out, const std::set<T, Compare>& rhs) {

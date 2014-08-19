@@ -35,56 +35,6 @@ along with LOOT.  If not, see
 
 using namespace std;
 
-namespace loot {
-    bool AreSettingsValid(const YAML::Node& settings) {
-        if (!settings["language"])
-            return false;
-        if (!settings["game"])
-            return false;
-        if (!settings["lastGame"])
-            return false;
-        if (!settings["debugVerbosity"])
-            return false;
-        if (!settings["updateMasterlist"])
-            return false;
-        if (!settings["games"])
-            return false;
-
-        return true;
-    }
-
-    //Default settings file generation.
-    void GenerateDefaultSettingsFile(const boost::filesystem::path& file) {
-        BOOST_LOG_TRIVIAL(info) << "Generating default settings file.";
-
-        YAML::Node root;
-        std::vector<Game> games;
-
-        root["language"] = "en";
-        root["game"] = "auto";
-        root["lastGame"] = "auto";
-        root["debugVerbosity"] = 0;
-        root["updateMasterlist"] = true;
-
-        games.push_back(Game(Game::tes4));
-        games.push_back(Game(Game::tes5));
-        games.push_back(Game(Game::fo3));
-        games.push_back(Game(Game::fonv));
-        games.push_back(Game(Game::tes4, "Nehrim").SetDetails("Nehrim - At Fate's Edge", "Nehrim.esm", "https://github.com/loot/oblivion.git", "master", "", "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim - At Fate's Edge_is1\\InstallLocation"));
-
-        root["games"] = games;
-
-        //Save settings.
-        YAML::Emitter yout;
-        yout.SetIndent(2);
-        yout << root;
-
-        loot::ofstream out(file);
-        out << yout.c_str();
-        out.close();
-    }
-}
-
 namespace YAML {
 
     Emitter& operator << (Emitter& out, const loot::PluginDirtyInfo& rhs) {
