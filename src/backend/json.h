@@ -64,9 +64,10 @@ namespace loot {
             boost::replace_all(json, "\": ~", "\": null");
 
             // Using the definition at <http://www.json.org/>.
-            std::regex numbers("\": \"(-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?)\"", std::regex::ECMAScript);
+            // Version numbers should be kept as strings though.
+            std::regex numbers("\"(?!version)(\\w+)\": \"(-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?)\"", std::regex::ECMAScript);
 
-            json = std::regex_replace(json, numbers, "\": $1");
+            json = std::regex_replace(json, numbers, "\"$1\": $2");
 
             return json;
         }
