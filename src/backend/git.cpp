@@ -442,7 +442,7 @@ namespace loot {
                 git.call(git_checkout_head(git.repo, &checkout_opts));
 
                 if (parsingError.empty())
-                    parsingError = boost::locale::translate("Masterlist revision").str() + " " + string(revision) + ": " + e.what() + " " + boost::locale::translate("Rolled back to the previous revision.").str();
+                    parsingError = boost::locale::translate("Masterlist revision").str() + " " + string(revision) + ": " + e.what() + ". " + boost::locale::translate("Rolled back to the previous revision.").str();
             }
         } while (parsingFailed);
 

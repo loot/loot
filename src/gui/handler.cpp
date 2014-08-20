@@ -686,6 +686,7 @@ namespace loot {
 
     std::string Handler::UpdateMasterlist() {
         BOOST_LOG_TRIVIAL(debug) << "Updating and parsing masterlist.";
+        string parsingError;
 
         //Set language.
         unsigned int language;
@@ -696,7 +697,18 @@ namespace loot {
         BOOST_LOG_TRIVIAL(info) << "Using message language: " << Language(language).Name();
 
         // Update / parse masterlist.
-        g_app_state.CurrentGame().masterlist.Load(g_app_state.CurrentGame(), language);
+        try {
+            g_app_state.CurrentGame().masterlist.Load(g_app_state.CurrentGame(), language);
+        }
+        catch (loot::error &e) {
+            if (e.code() == loot::error::ok) {
+                // There was a parsing error, but roll-back was successful, so the process 
+                // should still complete.
+                parsingError = e.what();
+            }
+            else
+                throw e;
+        }
 
         // Now regenerate the JS-side masterlist data.
 
@@ -749,6 +761,11 @@ namespace loot {
         catch (std::exception& e) {
             BOOST_LOG_TRIVIAL(error) << "A global message contains a condition that could not be evaluated. Details: " << e.what();
             messages.push_back(Message(Message::error, (format(loc::translate("A global message contains a condition that could not be evaluated. Details: %1%")) % e.what()).str()));
+        }
+
+        // Add the parsing error to the global messages, if it exists.
+        if (!parsingError.empty()) {
+            messages.push_back(Message(Message::error, parsingError));
         }
 
         // Now store global messages from masterlist.
