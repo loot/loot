@@ -932,7 +932,7 @@ namespace loot {
 
       CefWindowHandle hwnd = browser->GetHost()->GetWindowHandle();
 #ifdef _WIN32
-      SetWindowText(hwnd, std::wstring(title).c_str());
+      SetWindowText(hwnd, ToWinWide(title).c_str());
 #endif
     }
 

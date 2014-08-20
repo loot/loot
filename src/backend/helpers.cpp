@@ -180,11 +180,11 @@ namespace loot {
             key = HKEY_USERS;
 
         BOOST_LOG_TRIVIAL(trace) << "Getting registry object for key and subkey: " << keyStr << " + " << subkey;
-        LONG ret = RegOpenKeyEx(key, fs::path(subkey).wstring().c_str(), 0, KEY_READ|KEY_WOW64_32KEY, &hKey);
+        LONG ret = RegOpenKeyEx(key, ToWinWide(subkey).c_str(), 0, KEY_READ|KEY_WOW64_32KEY, &hKey);
 
         if (ret == ERROR_SUCCESS) {
             BOOST_LOG_TRIVIAL(trace) << "Getting value for entry: " << value;
-            ret = RegQueryValueEx(hKey, fs::path(value).wstring().c_str(), NULL, NULL, (LPBYTE)&val, &BufferSize);
+            ret = RegQueryValueEx(hKey, ToWinWide(value).c_str(), NULL, NULL, (LPBYTE)&val, &BufferSize);
             RegCloseKey(hKey);
 
             if (ret == ERROR_SUCCESS)
@@ -335,7 +335,7 @@ namespace loot {
     Version::Version(const fs::path& file) {
 #ifdef _WIN32
         DWORD dummy = 0;
-        DWORD size = GetFileVersionInfoSize(file.wstring().c_str(), &dummy);
+        DWORD size = GetFileVersionInfoSize(ToWinWide(file.string()).c_str(), &dummy);
 
         if (size > 0) {
             LPBYTE point = new BYTE[size];
@@ -343,7 +343,7 @@ namespace loot {
             VS_FIXEDFILEINFO *info;
             string ver;
 
-            GetFileVersionInfo(file.wstring().c_str(),0,size,point);
+            GetFileVersionInfo(ToWinWide(file.string()).c_str(),0,size,point);
 
             VerQueryValue(point,L"\\",(LPVOID *)&info,&uLen);
 
