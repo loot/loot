@@ -208,7 +208,7 @@
                 <input type="checkbox" id="globalPriority">
                 <label for="globalPriority" title="Global priorities are compared against all other plugins. Normal priorities are compared against only conflicting plugins.">Global Priority</label><br>
                 <label for="priorityValue">Priority Value</label>
-                <input id="priorityValue" type="number" max="999999" min="-999999" step="1">
+                <input id="priorityValue" type="number" max="999999" min="-999999" step="1" value="0">
             </div>
             <div id="tableTabs">
                 <span class="selected" data-for="loadAfter">Load After</span>
@@ -372,9 +372,9 @@
     <template id="dirtyInfoRow">
         <tr>
             <td><input class="crc" type="text" maxlength="8" minlength="8" pattern="[0-9A-Fa-f]{8}" required>
-            <td><input class="itm" type="number" min="0" step="1">
-            <td><input class="udr" type="number" min="0" step="1">
-            <td><input class="nav" type="number" min="0" step="1">
+            <td><input class="itm" type="number" min="0" step="1" value="0">
+            <td><input class="udr" type="number" min="0" step="1" value="0">
+            <td><input class="nav" type="number" min="0" step="1" value="0">
             <td><input class="util" type="text" required>
             <td class="fa fa-trash-o fa-fw">
     </template>
