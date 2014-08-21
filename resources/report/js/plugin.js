@@ -90,13 +90,15 @@ function Plugin(obj) {
 
         if (tagsAdded.length != 0) {
             this.card.getElementsByClassName('tag add')[0].textContent = tagsAdded.join(', ');
+            this.card.getElementsByClassName('tag add')[0].classList.toggle('hidden', false);
         } else {
-            this.card.getElementsByClassName('tag add')[0].classList.toggle('hidden');
+            this.card.getElementsByClassName('tag add')[0].classList.toggle('hidden', true);
         }
         if (tagsRemoved.length != 0) {
             this.card.getElementsByClassName('tag remove')[0].textContent = tagsRemoved.join(', ');
+            this.card.getElementsByClassName('tag remove')[0].classList.toggle('hidden', false);
         } else {
-            this.card.getElementsByClassName('tag remove')[0].classList.toggle('hidden');
+            this.card.getElementsByClassName('tag remove')[0].classList.toggle('hidden', true);
         }
     }
 
