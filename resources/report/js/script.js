@@ -38,7 +38,9 @@ loot.query = function(request) {
     })
 }
 function processCefError(err) {
-    console.log(err);
+    /* Error.stack seems to be Chromium-specific. It gives a lot more useful
+       info than just the error message. */
+    console.log(err.stack);
     showMessageBox('error', 'Error', err.message);
 }
 

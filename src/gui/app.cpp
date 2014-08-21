@@ -174,6 +174,10 @@ namespace loot {
         }
         BOOST_LOG_TRIVIAL(info) << "LOOT Version: " << g_version_major << "." << g_version_minor << "." << g_version_patch;
 
+        // The CEF debug log is appended to, not overwritten, so it gets really long.
+        // Delete the current CEF debug log.
+        fs::remove(g_path_local / "CEFDebugLog.txt");
+
         //Set the locale to get encoding and language conversions working correctly.
         BOOST_LOG_TRIVIAL(debug) << "Initialising language settings.";
         //Defaults in case language string is empty or setting is missing.
