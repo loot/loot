@@ -46,7 +46,7 @@ var pluginMenuProto = Object.create(HTMLElement.prototype, {
 
                 loot.query(request).catch(processCefError);
             } else if (evt.target.id == 'clearMetadata') {
-                showMessageDialog('Clear Plugin Metadata', 'Are you sure you want to clear all existing user-added metadata from "' + pluginCard.querySelector('h1').textContent + '"?', function(result){
+                showMessageDialog('Clear Plugin Metadata', 'Are you sure you want to clear all existing user-added metadata from "' + pluginCard.getElementsByTagName('h1')[0].textContent + '"?', function(result){
                     if (result) {
                         var request = JSON.stringify({
                             name: 'clearPluginMetadata',
@@ -134,7 +134,7 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
     showEditorTable: {
         value: function(evt) {
             var tableId = evt.target.getAttribute('data-for');
-            var tables = evt.target.parentElement.parentElement.querySelectorAll('table');
+            var tables = evt.target.parentElement.parentElement.getElementsByTagName('table');
             for (var i = 0; i < tables.length; ++i) {
                 if (tables[i].id != tableId) {
                     hideElement(tables[i]);
@@ -142,7 +142,7 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
                     showElement(tables[i]);
                 }
             }
-            evt.target.parentElement.querySelector('.selected').classList.toggle('selected');
+            evt.target.parentElement.getElementsByClassName('selected')[0].classList.toggle('selected');
             evt.target.classList.toggle('selected');
         }
     },
@@ -313,10 +313,10 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
             for (var i = 0; i < loot.game.plugins.length; ++i) {
                 if (loot.game.plugins[i].id == this.id) {
 
-                    this.shadowRoot.querySelector('#editor h1').textContent = loot.game.plugins[i].name;
-                    this.shadowRoot.querySelector('#editor .version').textContent = loot.game.plugins[i].version;
+                    this.shadowRoot.getElementById('editor').getElementsByTagName('h1')[0].textContent = loot.game.plugins[i].name;
+                    this.shadowRoot.getElementById('editor').getElementsByClassName('version')[0].textContent = loot.game.plugins[i].version;
                     if (loot.game.plugins[i].crc != '0') {
-                        this.shadowRoot.querySelector('#editor .crc').textContent = loot.game.plugins[i].crc;
+                        this.shadowRoot.getElementById('editor').getElementsByClassName('crc')[0].textContent = loot.game.plugins[i].crc;
                     }
 
                     /* Fill in the editor input values. */
@@ -649,8 +649,8 @@ var messageDialogProto = Object.create(HTMLDialogElement.prototype, {
         value: function(evt) {
             var dialog = evt.currentTarget.parentElement.parentElement;
 
-            dialog.querySelector('.accept').removeEventListener('click', dialog.onButtonClick, false);
-            dialog.querySelector('.cancel').removeEventListener('click', dialog.onButtonClick, false);
+            dialog.getElementsByClassName('accept')[0].removeEventListener('click', dialog.onButtonClick, false);
+            dialog.getElementsByClassName('cancel')[0].removeEventListener('click', dialog.onButtonClick, false);
 
             dialog.close( evt.target.className == 'accept' );
         }
@@ -662,15 +662,15 @@ var messageDialogProto = Object.create(HTMLDialogElement.prototype, {
 
             this.closeCallback = closeCallback;
 
-            this.querySelector('h1').textContent = title;
-            this.querySelector('p').textContent = text;
+            this.getElementsByTagName('h1')[0].textContent = title;
+            this.getElementsByTagName('p')[0].textContent = text;
 
-            this.querySelector('.accept').addEventListener('click', this.onButtonClick, false);
-            this.querySelector('.cancel').addEventListener('click', this.onButtonClick, false);
+            this.getElementsByClassName('accept')[0].addEventListener('click', this.onButtonClick, false);
+            this.getElementsByClassName('cancel')[0].addEventListener('click', this.onButtonClick, false);
 
             if (type == 'error' || type == 'info') {
-                this.querySelector('.accept').textContent = 'OK';
-                this.querySelector('.cancel').style.display = 'hidden';
+                this.getElementsByClassName('accept')[0].textContent = 'OK';
+                this.getElementsByClassName('cancel')[0].style.display = 'hidden';
             }
 
             HTMLDialogElement.prototype.showModal.call(this);

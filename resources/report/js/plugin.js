@@ -143,10 +143,10 @@ function Plugin(obj) {
         card.setAttribute('data-edits', this.userlist != undefined);
 
         /* Fill in name, version, CRC. */
-        card.querySelector('h1').textContent = this.name;
-        card.querySelector('.version').textContent = this.version;
+        card.getElementsByTagName('h1')[0].textContent = this.name;
+        card.getElementsByClassName('version')[0].textContent = this.version;
         if (this.crc != 0) {
-            card.querySelector('.crc').textContent = this.crc;
+            card.getElementsByClassName('crc')[0].textContent = this.crc;
         }
 
         /* Fill in Bash Tag suggestions. */
@@ -162,10 +162,10 @@ function Plugin(obj) {
         var li = new PluginListItem();
         this.li = li;
 
-        li.shadowRoot.querySelector('a').href = '#' + this.id;
+        li.shadowRoot.getElementsByTagName('a')[0].href = '#' + this.id;
 
-        li.querySelector('.name').textContent = this.name;
-        li.querySelector('.priority').textContent = this.getPriorityString();
+        li.getElementsByClassName('name')[0].textContent = this.name;
+        li.getElementsByClassName('priority')[0].textContent = this.getPriorityString();
 
         li.setAttribute('data-dummy', this.isDummy);
         li.setAttribute('data-bsa', this.loadsBSA);
@@ -180,10 +180,10 @@ function Plugin(obj) {
                 change.object.li.setAttribute('data-edits', change.object[change.name] != undefined);
                 change.object.card.setAttribute('data-edits', change.object[change.name] != undefined);
             } else if (change.name == 'modPriority') {
-                change.object.li.querySelector('.priority').textContent = change.object.getPriorityString();
+                change.object.li.getElementsByClassName('priority')[0].textContent = change.object.getPriorityString();
                 change.object.card.shadowRoot.getElementById('priorityValue').value = change.object[change.name];
             } else if (change.name == 'isGlobalPriority') {
-                change.object.li.querySelector('.priority').textContent = change.object.getPriorityString();
+                change.object.li.getElementsByClassName('priority')[0].textContent = change.object.getPriorityString();
             } else if (change.name == 'messages') {
                 change.object.updateCardMessages();
                 /* For messages, the card's messages need updating,

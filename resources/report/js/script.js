@@ -229,9 +229,9 @@ function updateSelectedGame() {
     var gameMenuItems = document.getElementById('gameMenu').children[0].children;
     for (var i = 0; i < gameMenuItems.length; ++i) {
         if (gameMenuItems[i].getAttribute('data-target') != loot.game.folder) {
-            gameMenuItems[i].querySelector('.fa').classList.toggle('fa-angle-double-right', false);
+            gameMenuItems[i].getElementsByClassName('fa')[0].classList.toggle('fa-angle-double-right', false);
         } else {
-            gameMenuItems[i].querySelector('.fa').classList.toggle('fa-angle-double-right', true);
+            gameMenuItems[i].getElementsByClassName('fa')[0].classList.toggle('fa-angle-double-right', true);
         }
     }
 
