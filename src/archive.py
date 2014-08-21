@@ -3,33 +3,6 @@
 
 # Creates an archive of a LOOT release, putting it in the 'build' folder.
 
-# Files and folders that need to go in (relative to repository root):
-#
-# build/LOOT.exe
-# resources/l10n/es/LC_MESSAGES/loot.mo
-# resources/l10n/es/LC_MESSAGES/wxstd.mo
-# resources/l10n/ru/LC_MESSAGES/loot.mo
-# resources/l10n/ru/LC_MESSAGES/wxstd.mo
-# resources/l10n/fr/LC_MESSAGES/loot.mo
-# resources/l10n/fr/LC_MESSAGES/wxstd.mo
-# resources/l10n/zh/LC_MESSAGES/loot.mo
-# resources/l10n/zh/LC_MESSAGES/wxstd.mo
-# resources/l10n/pl/LC_MESSAGES/loot.mo
-# resources/l10n/pl/LC_MESSAGES/wxstd.mo
-# resources/l10n/fi/LC_MESSAGES/loot.mo
-# resources/l10n/fi/LC_MESSAGES/wxstd.mo
-# resources/l10n/de/LC_MESSAGES/loot.mo
-# resources/l10n/de/LC_MESSAGES/wxstd.mo
-# resources/report/report.html
-# resources/report/require.js
-# resources/report/polyfill.js
-# resources/report/script.js
-# resources/report/style.css
-# docs/images
-# docs/licenses
-# docs/LOOT Metadata Syntax.html
-# docs/LOOT Readme.html
-
 #   LOOT
 #
 #   A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
@@ -65,6 +38,9 @@ archive_name = 'LOOT Archive.zip'
 if (len(sys.argv) > 1):
     archive_name = sys.argv[1]
 
+# Delete the temporary folder if it already exists.
+shutil.rmtree(temp_path)
+
 # First make sure that the temporary folder for the archive exists.
 if not os.path.exists(temp_path):
     os.makedirs(temp_path)
@@ -96,7 +72,7 @@ shutil.copy( os.path.join('..', 'docs', 'LOOT Readme.html'), os.path.join(temp_p
 
 # Now compress the temporary folder. (Creating a zip because I can't get pylzma to work...)
 os.chdir(temp_path)
-zip = zipfile.ZipFile( os.path.join('..', archive_name), 'w', zipfile.ZIP_DEFLATED )
+zip = zipfile.ZipFile( os.path.join('..', archive_name), 'w', zipfile.ZIP_LZMA )
 for root, dirs, files in os.walk('.'):
     for file in files:
         zip.write(os.path.join(root, file))
