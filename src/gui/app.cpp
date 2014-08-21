@@ -119,6 +119,17 @@ namespace loot {
     LootState::LootState() : _currentGame(0) {}
 
     void LootState::Init(const std::string& cmdLineGame) {
+        // Do some preliminary locale / UTF-8 support setup here, in case the settings file reading requires it.
+        //Boost.Locale initialisation: Specify location of language dictionaries.
+        boost::locale::generator gen;
+        gen.add_messages_path(g_path_l10n.string());
+        gen.add_messages_domain("loot");
+
+        //Boost.Locale initialisation: Generate and imbue locales.
+        locale::global(gen(Language(Language::english).Locale() + ".UTF-8"));
+        cout.imbue(locale());
+        boost::filesystem::path::imbue(locale());
+
         // Check if the LOOT local app data folder exists, and create it if not.
         if (!fs::exists(g_path_local)) {
             BOOST_LOG_TRIVIAL(info) << "Local app data LOOT folder doesn't exist, creating it.";
@@ -178,25 +189,17 @@ namespace loot {
         // Delete the current CEF debug log.
         fs::remove(g_path_local / "CEFDebugLog.txt");
 
-        //Set the locale to get encoding and language conversions working correctly.
-        BOOST_LOG_TRIVIAL(debug) << "Initialising language settings.";
-        //Defaults in case language string is empty or setting is missing.
-        string localeId = loot::Language(loot::Language::any).Locale() + ".UTF-8";
-        if (_settings["language"]) {
+        // Now that settings have been loaded, set the locale again to handle translations.
+        if (_settings["language"] && _settings["language"].as<string>() != Language(Language::english).Locale()) {
+            BOOST_LOG_TRIVIAL(debug) << "Initialising language settings.";
             loot::Language lang(_settings["language"].as<string>());
             BOOST_LOG_TRIVIAL(debug) << "Selected language: " << lang.Name();
-            localeId = lang.Locale() + ".UTF-8";
+
+            //Boost.Locale initialisation: Generate and imbue locales.
+            locale::global(gen(lang.Locale() + ".UTF-8"));
+            cout.imbue(locale());
+            boost::filesystem::path::imbue(locale());
         }
-
-        //Boost.Locale initialisation: Specify location of language dictionaries.
-        boost::locale::generator gen;
-        gen.add_messages_path(g_path_l10n.string());
-        gen.add_messages_domain("loot");
-
-        //Boost.Locale initialisation: Generate and imbue locales.
-        locale::global(gen(localeId));
-        cout.imbue(locale());
-        boost::filesystem::path::imbue(locale());
 
         // Detect games & select startup game
         //-----------------------------------
