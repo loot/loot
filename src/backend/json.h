@@ -65,7 +65,7 @@ namespace loot {
 
             // Using the definition at <http://www.json.org/>.
             // Version numbers should be kept as strings though.
-            std::regex numbers("\"(?!version)(\\w+)\": \"(-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?)\"", std::regex::ECMAScript);
+            std::regex numbers("\"(?!version)([^\"]+)\": \"(-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?)\"", std::regex::ECMAScript);
 
             json = std::regex_replace(json, numbers, "\"$1\": $2");
 
