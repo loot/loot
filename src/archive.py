@@ -39,7 +39,8 @@ if (len(sys.argv) > 1):
     archive_name = sys.argv[1]
 
 # Delete the temporary folder if it already exists.
-shutil.rmtree(temp_path)
+if os.path.exists(temp_path):
+    shutil.rmtree(temp_path)
 
 # First make sure that the temporary folder for the archive exists.
 if not os.path.exists(temp_path):
