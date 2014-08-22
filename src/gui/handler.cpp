@@ -697,81 +697,86 @@ namespace loot {
         BOOST_LOG_TRIVIAL(info) << "Using message language: " << Language(language).Name();
 
         // Update / parse masterlist.
+        bool wasChanged = true;
         try {
-            g_app_state.CurrentGame().masterlist.Load(g_app_state.CurrentGame(), language);
+            wasChanged = g_app_state.CurrentGame().masterlist.Load(g_app_state.CurrentGame(), language);
         }
         catch (loot::error &e) {
             if (e.code() == loot::error::ok) {
                 // There was a parsing error, but roll-back was successful, so the process 
                 // should still complete.
                 parsingError = e.what();
+                wasChanged = true;
             }
             else
                 throw e;
         }
 
-        // Now regenerate the JS-side masterlist data.
+        // Now regenerate the JS-side masterlist data if the masterlist was changed.
+        if (wasChanged) {
+            // The data structure is to be set as 'loot.game'.
+            YAML::Node gameNode;
 
-        // The data structure is to be set as 'loot.game'.
-        YAML::Node gameNode;
+            // Store the masterlist revision and date.
+            gameNode["masterlist"]["revision"] = g_app_state.CurrentGame().masterlist.GetRevision(g_app_state.CurrentGame().MasterlistPath());
+            gameNode["masterlist"]["date"] = g_app_state.CurrentGame().masterlist.GetDate(g_app_state.CurrentGame().MasterlistPath());
 
-        // Store the masterlist revision and date.
-        gameNode["masterlist"]["revision"] = g_app_state.CurrentGame().masterlist.GetRevision(g_app_state.CurrentGame().MasterlistPath());
-        gameNode["masterlist"]["date"] = g_app_state.CurrentGame().masterlist.GetDate(g_app_state.CurrentGame().MasterlistPath());
+            for (const auto& pluginPair : g_app_state.CurrentGame().plugins) {
+                Plugin mlistPlugin(pluginPair.second);
+                mlistPlugin.MergeMetadata(g_app_state.CurrentGame().masterlist.FindPlugin(pluginPair.second.Name()));
 
-        for (const auto& pluginPair : g_app_state.CurrentGame().plugins) {
-            Plugin mlistPlugin(pluginPair.second);
-            mlistPlugin.MergeMetadata(g_app_state.CurrentGame().masterlist.FindPlugin(pluginPair.second.Name()));
+                YAML::Node pluginNode;
+                if (!mlistPlugin.HasNameOnly()) {
+                    // Now add the masterlist metadata to the pluginNode.
+                    pluginNode["masterlist"]["after"] = mlistPlugin.LoadAfter();
+                    pluginNode["masterlist"]["req"] = mlistPlugin.Reqs();
+                    pluginNode["masterlist"]["inc"] = mlistPlugin.Incs();
+                    pluginNode["masterlist"]["msg"] = mlistPlugin.Messages();
+                    pluginNode["masterlist"]["tag"] = mlistPlugin.Tags();
+                    pluginNode["masterlist"]["dirty"] = mlistPlugin.DirtyInfo();
+                }
 
-            YAML::Node pluginNode;
-            if (!mlistPlugin.HasNameOnly()) {
-                // Now add the masterlist metadata to the pluginNode.
-                pluginNode["masterlist"]["after"] = mlistPlugin.LoadAfter();
-                pluginNode["masterlist"]["req"] = mlistPlugin.Reqs();
-                pluginNode["masterlist"]["inc"] = mlistPlugin.Incs();
-                pluginNode["masterlist"]["msg"] = mlistPlugin.Messages();
-                pluginNode["masterlist"]["tag"] = mlistPlugin.Tags();
-                pluginNode["masterlist"]["dirty"] = mlistPlugin.DirtyInfo();
+                // Now merge masterlist and userlist metadata and evaluate,
+                // putting any resulting metadata into the base of the pluginNode.
+                YAML::Node derivedNode = GenerateDerivedMetadata(pluginPair.second.Name());
+
+                for (auto it = derivedNode.begin(); it != derivedNode.end(); ++it) {
+                    const string key = it->first.as<string>();
+                    pluginNode[key] = it->second;
+                }
+
+                gameNode["plugins"].push_back(pluginNode);
             }
 
-            // Now merge masterlist and userlist metadata and evaluate,
-            // putting any resulting metadata into the base of the pluginNode.
-            YAML::Node derivedNode = GenerateDerivedMetadata(pluginPair.second.Name());
-
-            for (auto it = derivedNode.begin(); it != derivedNode.end(); ++it) {
-                const string key = it->first.as<string>();
-                pluginNode[key] = it->second;
+            //Evaluate any conditions in the global messages.
+            BOOST_LOG_TRIVIAL(debug) << "Evaluating global message conditions.";
+            list<Message> messages = g_app_state.CurrentGame().masterlist.messages;
+            try {
+                list<Message>::iterator it = messages.begin();
+                while (it != messages.end()) {
+                    if (!it->EvalCondition(g_app_state.CurrentGame(), language))
+                        it = messages.erase(it);
+                    else
+                        ++it;
+                }
+            }
+            catch (std::exception& e) {
+                BOOST_LOG_TRIVIAL(error) << "A global message contains a condition that could not be evaluated. Details: " << e.what();
+                messages.push_back(Message(Message::error, (format(loc::translate("A global message contains a condition that could not be evaluated. Details: %1%")) % e.what()).str()));
             }
 
-            gameNode["plugins"].push_back(pluginNode);
-        }
-
-        //Evaluate any conditions in the global messages.
-        BOOST_LOG_TRIVIAL(debug) << "Evaluating global message conditions.";
-        list<Message> messages = g_app_state.CurrentGame().masterlist.messages;
-        try {
-            list<Message>::iterator it = messages.begin();
-            while (it != messages.end()) {
-                if (!it->EvalCondition(g_app_state.CurrentGame(), language))
-                    it = messages.erase(it);
-                else
-                    ++it;
+            // Add the parsing error to the global messages, if it exists.
+            if (!parsingError.empty()) {
+                messages.push_back(Message(Message::error, parsingError));
             }
-        }
-        catch (std::exception& e) {
-            BOOST_LOG_TRIVIAL(error) << "A global message contains a condition that could not be evaluated. Details: " << e.what();
-            messages.push_back(Message(Message::error, (format(loc::translate("A global message contains a condition that could not be evaluated. Details: %1%")) % e.what()).str()));
-        }
 
-        // Add the parsing error to the global messages, if it exists.
-        if (!parsingError.empty()) {
-            messages.push_back(Message(Message::error, parsingError));
+            // Now store global messages from masterlist.
+            gameNode["globalMessages"] = messages;
+
+            return JSON::stringify(gameNode);
         }
-
-        // Now store global messages from masterlist.
-        gameNode["globalMessages"] = messages;
-
-        return JSON::stringify(gameNode);
+        else
+            return "null";
     }
 
     std::string Handler::ClearAllMetadata() {

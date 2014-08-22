@@ -322,6 +322,9 @@ function openReadme(evt) {
 }
 function updateMasterlist(evt) {
     loot.query('updateMasterlist').then(JSON.parse).then(function(result){
+        if (result == null) {
+            return;
+        }
         /* Update JS variables. */
 
         loot.game.masterlist.revision = result.masterlist.revision;

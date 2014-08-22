@@ -169,9 +169,9 @@ namespace loot {
     // Masterlist member functions
     //----------------------------
 
-    void Masterlist::Load(Game& game, const unsigned int language) {
+    bool Masterlist::Load(Game& game, const unsigned int language) {
         try {
-            Update(game, language);
+            return Update(game, language);
         }
         catch (error& e) {
             if (e.code() != error::ok) {

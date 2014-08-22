@@ -100,6 +100,15 @@ namespace loot {
         return git_repository_open_ext(NULL, path.string().c_str(), GIT_REPOSITORY_OPEN_NO_SEARCH, NULL) == 0;
     }
 
+    // Removes the read-only flag from some files in git repositories created by libgit2.
+    void FixRepoPermissions(const fs::path& path) {
+        BOOST_LOG_TRIVIAL(trace) << "Recursively setting write permission on directory: " << path;
+        for (fs::recursive_directory_iterator it(path); it != fs::recursive_directory_iterator(); ++it) {
+            BOOST_LOG_TRIVIAL(trace) << "Setting write permission for: " << it->path();
+            fs::permissions(it->path(), fs::add_perms | fs::owner_write);
+        }
+    }
+
     int diffFileCallback(const git_diff_delta *delta, float progress, void * payload) {
         BOOST_LOG_TRIVIAL(trace) << "Checking diff for: " << delta->old_file.path;
         if (strcmp(delta->old_file.path, "masterlist.yaml") == 0) {
@@ -166,7 +175,7 @@ namespace loot {
         }
     }
 
-    void Masterlist::Update(Game& game, const unsigned int language) {
+    bool Masterlist::Update(Game& game, const unsigned int language) {
         git_handler git;
         fs::path repo_path = game.MasterlistPath().parent_path();
         string repo_branch = game.RepoBranch();
@@ -200,11 +209,7 @@ namespace loot {
                 // seem to be made that way with no detrimental effect on libgit2's operation, but it
                 // stuffs these filesystem commands up.
                 if (fs::exists(temp_path)) {
-                    BOOST_LOG_TRIVIAL(trace) << "Recursively setting write permission on directory: " << temp_path;
-                    for (fs::recursive_directory_iterator it(temp_path); it != fs::recursive_directory_iterator(); ++it) {
-                        BOOST_LOG_TRIVIAL(trace) << "Setting write permission for: " << it->path();
-                        fs::permissions(it->path(), fs::add_perms | fs::owner_write);
-                    }
+                    FixRepoPermissions(temp_path);
                     fs::remove_all(temp_path);
                 }
                 fs::rename(repo_path, temp_path);
@@ -347,10 +352,20 @@ namespace loot {
                     git.ref2 = nullptr;
                 }
                 else if ((analysis & GIT_MERGE_ANALYSIS_UP_TO_DATE) != 0) {
+                    // No update necessary, so exit early to skip unnecessary masterlist parsing.
                     BOOST_LOG_TRIVIAL(trace) << "Local branch is up-to-date with remote branch.";
+
+                    BOOST_LOG_TRIVIAL(trace) << "Performing a Git checkout of HEAD.";
+                    git.call(git_checkout_head(git.repo, &checkout_opts));
+
+                    return false;
                 }
                 else {
-                    throw error(error::git_error, "Local repository has been edited, an automatic fast-forward merge update is not possible.");
+                    // The local repository can't be easily merged. It's best just to delete and re-clone it.
+                    FixRepoPermissions(repo_path / ".git");
+                    fs::remove_all(repo_path / ".git");
+                    return this->Update(game, language);
+                    //throw error(error::git_error, "Local repository has been edited, an automatic fast-forward merge update is not possible.");
                 }
 
             }
@@ -448,5 +463,7 @@ namespace loot {
 
         if (!parsingError.empty())
             throw error(error::ok, parsingError);  //Throw an OK because the process still completed in a successful state.
+
+        return true;
     }
 }

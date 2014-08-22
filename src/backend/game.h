@@ -70,8 +70,8 @@ namespace loot {
     class Masterlist : public MetadataList {
     public:
 
-        void Load(Game& game, const unsigned int language);  //Handles update with load fallback.
-        void Update(Game& game, const unsigned int language);
+        bool Load(Game& game, const unsigned int language);  //Handles update with load fallback.
+        bool Update(Game& game, const unsigned int language);
         
         std::string GetRevision(const boost::filesystem::path& path);
         std::string GetDate(const boost::filesystem::path& path);
