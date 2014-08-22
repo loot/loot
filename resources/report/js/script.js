@@ -297,7 +297,25 @@ function changeGame(evt) {
         ]
     });
     loot.query(request).then(function(result){
-        /* First clear the UI of all existing game-specific data. Also
+        /* For each filter, save its state then deactivate it if it is activated.
+           All filters apart from the conflicts filter will be re-activated
+           after the new game has loaded. */
+        var elements = document.getElementById('filters').getElementsByTagName('input');
+        var activeFilters = [];
+        for (var i = 0; i < elements.length; ++i) {
+            if (elements[i].type == 'checkbox' && elements[i].id != 'showOnlyConflicts'
+                && elements[i].checked) {
+                activeFilters.push(elements[i]);
+                elements[i].click();
+            }
+        }
+        if (document.getElementById('showOnlyConflicts').checked) {
+            document.getElementById('showOnlyConflicts').click();
+        }
+        document.getElementById('conflictsPlugin').value = '';
+
+
+        /* Clear the UI of all existing game-specific data. Also
            clear the card and li variables for each plugin object. */
         loot.games[index].plugins.forEach(function(plugin){
             plugin.card.parentElement.removeChild(plugin.card);
@@ -315,6 +333,11 @@ function changeGame(evt) {
 
         /* Now update game menu to highlight the newly selected game. */
         updateSelectedGame();
+
+        /* Reapply previously active filters. */
+        activeFilters.forEach(function(filter){
+            filter.click();
+        });
     }).catch(processCefError);
 }
 function openReadme(evt) {
