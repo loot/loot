@@ -182,6 +182,14 @@ namespace loot {
             callback->Success(SortPlugins());
             return true;
         }
+        else if (request == "getInitErrors") {
+            YAML::Node node(g_app_state.InitErrors());
+            if (node.size() > 0)
+                callback->Success(JSON::stringify(node));
+            else
+                callback->Success("null");
+            return true;
+        }
         else {
             // May be a request with arguments.
             YAML::Node req;

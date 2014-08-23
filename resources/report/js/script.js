@@ -219,21 +219,21 @@ function updateSelectedGame() {
     /* Highlight game in menu. Could use fa-chevron-right instead. */
     var gameMenuItems = document.getElementById('gameMenu').children[0].children;
     for (var i = 0; i < gameMenuItems.length; ++i) {
-        if (gameMenuItems[i].getAttribute('data-folder') != loot.game.folder) {
-            gameMenuItems[i].getElementsByClassName('fa')[0].classList.toggle('fa-angle-double-right', false);
-        } else {
+        if (loot.game && gameMenuItems[i].getAttribute('data-folder') == loot.game.folder) {
             gameMenuItems[i].getElementsByClassName('fa')[0].classList.toggle('fa-angle-double-right', true);
+        } else {
+            gameMenuItems[i].getElementsByClassName('fa')[0].classList.toggle('fa-angle-double-right', false);
         }
     }
 
     /* Also enable/disable the redate plugins option. */
     var index = undefined;
     for (var i = 0; i < loot.settings.games.length; ++i) {
-        if (loot.settings.games[i].folder == loot.game.folder) {
+        if (loot.game && loot.settings.games[i].folder == loot.game.folder) {
             index = i;
         }
     }
-    if (loot.settings.games[index].type == 'Skyrim') {
+    if (index != undefined && loot.settings.games[index].type == 'Skyrim') {
         document.getElementById('redatePluginsButton').classList.toggle('disabled', false);
     } else {
         document.getElementById('redatePluginsButton').classList.toggle('disabled', true);
@@ -243,7 +243,7 @@ function updateSelectedGame() {
     var rows = document.getElementById('gameTable').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
     for (var i = 0; i < rows.length; ++i) {
         if (rows[i].getElementsByClassName('folder').length > 0) {
-            if (rows[i].getElementsByClassName('folder')[0].value == loot.game.folder) {
+            if (loot.game && rows[i].getElementsByClassName('folder')[0].value == loot.game.folder) {
                 document.getElementById('gameTable').setReadOnly(rows[i], ['fa-trash-o']);
             } else {
                 document.getElementById('gameTable').setReadOnly(rows[i], ['fa-trash-o'], false);
@@ -594,8 +594,8 @@ function onBodyClick(evt) {
     }
 }
 function openMenu(evt) {
-    if (!isVisible(evt.target.firstElementChild)) {
-        showElement(evt.target.firstElementChild)
+    if (!isVisible(evt.currentTarget.firstElementChild)) {
+        showElement(evt.currentTarget.firstElementChild)
 
         /* To prevent the click event closing this menu just after it was
            opened, stop the current event and send off a new one. */
@@ -604,7 +604,7 @@ function openMenu(evt) {
         document.body.dispatchEvent(new CustomEvent('click', {
             bubbles: true,
             detail: {
-                newMenu: evt.target.firstElementChild
+                newMenu: evt.currentTarget.firstElementChild
             }
         }));
     }
@@ -694,7 +694,7 @@ function closeSettingsDialog(evt) {
             game: document.getElementById('defaultGameSelect').value,
             games: document.getElementById('gameTable').getRowsData(false),
             language: document.getElementById('languageSelect').value,
-            lastGame: loot.game.folder,
+            lastGame: loot.settings.lastGame,
             updateMasterlist: document.getElementById('updateMasterlist').checked,
         };
 
@@ -878,51 +878,77 @@ function initVars() {
         }
     }).catch(processCefError);
 
-    var parallelPromises = [
-        loot.query('getGameTypes'),
-        loot.query('getInstalledGames'),
-        loot.query('getGameData'),
-        loot.query('getSettings'),
-    ];
+    loot.query('getInitErrors').then(JSON.parse).then(function(result){
+        if (result) {
+            var generalMessagesList = document.getElementById('generalMessages').getElementsByTagName('ul')[0];
 
-    Promise.all(parallelPromises).then(function(results) {
-        try {
-            loot.gameTypes = JSON.parse(results[0]);
-        } catch (e) {
-            console.log(e);
-            console.log('getGameTypes response: ' + results[0]);
+            result.forEach(function(message){
+                var li = document.createElement('li');
+                li.className = 'error';
+                /* Use the Marked library for Markdown formatting support. */
+                li.innerHTML = marked(message);
+                generalMessagesList.appendChild(li);
+            });
+
+            document.getElementById('filterTotalMessageNo').textContent = result.length;
+            document.getElementById('totalMessageNo').textContent = result.length;
+            document.getElementById('totalErrorNo').textContent = result.length;
         }
 
-        /* Fill in game row template's game type options. */
-        var select = document.getElementById('gameRow').content.querySelector('select');
-        for (var j = 0; j < loot.gameTypes.length; ++j) {
-            var option = document.createElement('option');
-            option.value = loot.gameTypes[j];
-            option.textContent = loot.gameTypes[j];
-            select.appendChild(option);
+        var parallelPromises = [
+            loot.query('getGameTypes'),
+            loot.query('getInstalledGames'),
+            loot.query('getSettings'),
+        ];
+
+        if (!result) {
+            parallelPromises.push(loot.query('getGameData'));
         }
 
-        try {
-            loot.installedGames = JSON.parse(results[1]);
-        } catch (e) {
-            console.log(e);
-            console.log('getInstalledGames response: ' + results[1]);
-        }
-
-        updateInterfaceWithGameInfo(results[2]);
-
-        try {
-            loot.settings = JSON.parse(results[3]);
-            if (loot.settings.filters == undefined) {
-                loot.settings.filters = {};
+        Promise.all(parallelPromises).then(function(results) {
+            try {
+                loot.gameTypes = JSON.parse(results[0]);
+            } catch (e) {
+                console.log(e);
+                console.log('getGameTypes response: ' + results[0]);
             }
-            applySavedFilters();
-        } catch (e) {
-            console.log(e);
-            console.log('getSettings response: ' + results[3]);
-        }
 
-        updateSettingsUI();
+            /* Fill in game row template's game type options. */
+            var select = document.getElementById('gameRow').content.querySelector('select');
+            for (var j = 0; j < loot.gameTypes.length; ++j) {
+                var option = document.createElement('option');
+                option.value = loot.gameTypes[j];
+                option.textContent = loot.gameTypes[j];
+                select.appendChild(option);
+            }
+
+            try {
+                loot.installedGames = JSON.parse(results[1]);
+            } catch (e) {
+                console.log(e);
+                console.log('getInstalledGames response: ' + results[1]);
+            }
+
+            try {
+                loot.settings = JSON.parse(results[2]);
+                if (loot.settings.filters == undefined) {
+                    loot.settings.filters = {};
+                }
+                applySavedFilters();
+                updateSettingsUI();
+            } catch (e) {
+                console.log(e);
+                console.log('getSettings response: ' + results[2]);
+            }
+
+            if (results.length > 3) {
+                updateInterfaceWithGameInfo(results[3]);
+            } else {
+                document.getElementById('settingsButton').click();
+            }
+
+        }).catch(processCefError);
+
     }).catch(processCefError);
 }
 
@@ -1004,9 +1030,6 @@ function updateInterfaceWithGameInfo(response) {
 
     /* Observe changes to update UI as appropriate. */
     Object.observe(loot.game.masterlist, masterlistObserver);
-
-    // Now set up event handlers, as they depend on the plugin cards having been created.
-    setupEventHandlers();
 }
 
 require.config({
@@ -1020,5 +1043,6 @@ require(['marked', 'order!custom', 'order!plugin'], function(response) {
         tables: true,
         sanitize: true
     });
+    setupEventHandlers();
     initVars();
 });
