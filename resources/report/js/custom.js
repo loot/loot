@@ -79,18 +79,6 @@ var pluginMenuProto = Object.create(HTMLElement.prototype, {
         }
     },
 
-    onClick: {
-        value: function(evt) {
-            var menus = document.getElementsByTagName('plugin-menu');
-
-            for (var i = 0; i < menus.length; ++i) {
-                if (!evt.newMenu) {
-                    menus[i].parentElement.removeChild(menus[i]);
-                }
-            }
-        }
-    },
-
     createdCallback: {
         value: function() {
 
@@ -101,9 +89,6 @@ var pluginMenuProto = Object.create(HTMLElement.prototype, {
 
             this.id = 'activePluginMenu';
 
-            /* Add an event listener so that the menu gets closed. */
-            main.addEventListener('click', this.onClick, false);
-
             /* Add event listeners for the menu items. */
             this.shadowRoot.getElementById('editMetadata').addEventListener('click', this.onMenuItemClick, false);
             this.shadowRoot.getElementById('copyMetadata').addEventListener('click', this.onMenuItemClick, false);
@@ -113,8 +98,6 @@ var pluginMenuProto = Object.create(HTMLElement.prototype, {
 
     detachedCallback: {
         value: function() {
-            /* Remove menu close listener. */
-            document.getElementById('main').removeEventListener('click', this.onClick, false);
 
             /* Remove event listeners for the menu items. */
             this.shadowRoot.getElementById('editMetadata').removeEventListener('click', this.onMenuItemClick, false);
@@ -526,7 +509,12 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
 
             /* To prevent the click event closing this menu just after it was
                opened, stop the current event and send off a new one. */
-            menu.dispatchEvent(new CustomEvent('click', { newMenu: true }));
+            document.body.dispatchEvent(new CustomEvent('click', {
+                bubbles: true,
+                detail: {
+                    newMenu: menu
+                }
+            }));
         }
     },
 
