@@ -202,16 +202,19 @@ namespace loot {
             bool wasEmpty = true;
             fs::path temp_path = repo_path.string() + ".temp";
             if (!fs::is_empty(repo_path)) {
+                // Clear any read-only flags first.
+                FixRepoPermissions(repo_path);
                 // Now, libgit2 doesn't support cloning into non-empty folders. Rename the folder 
                 // temporarily, and move its contents back in afterwards, skipping any that then conflict.
                 BOOST_LOG_TRIVIAL(trace) << "Repo path not empty, renaming folder.";
-                // First we need to ensure that the folder is not read-only. The ".git" folder contents
-                // seem to be made that way with no detrimental effect on libgit2's operation, but it
-                // stuffs these filesystem commands up.
+                // If the temp path already exists, it needs to be deleted.
                 if (fs::exists(temp_path)) {
                     FixRepoPermissions(temp_path);
                     fs::remove_all(temp_path);
                 }
+                // There's no point moving the .git folder, so delete that.
+                fs::remove_all(repo_path / ".git");
+                // Now move to temp path.
                 fs::rename(repo_path, temp_path);
                 // Recreate the game folder so that we don't inadvertently cause any other errors (everything past LOOT init assumes it exists).
                 fs::create_directory(repo_path);
