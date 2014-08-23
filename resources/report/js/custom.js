@@ -905,7 +905,10 @@ var EditableTableProto = Object.create(HTMLTableElement.prototype, {
 
             /* Data is an object with keys that match element class names. */
             for (var key in tableData) {
-                row.getElementsByClassName(key)[0].value = tableData[key];
+                var elems = row.getElementsByClassName(key);
+                if (elems.length == 1) {
+                    elems[0].value = tableData[key];
+                }
             }
 
             /* Add deletion listener. */

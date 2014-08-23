@@ -151,7 +151,7 @@ namespace loot {
             }
         }
         // Check if the settings are valid (or if they don't exist).
-        if (!AreSettingsValid(_settings)) {
+        if (!AreSettingsValid()) {
             _settings = GetDefaultSettings();
         }
 
@@ -291,19 +291,55 @@ namespace loot {
         }
     }
     
-    bool LootState::AreSettingsValid(const YAML::Node& settings) {
-        if (!settings["language"])
-            return false;
-        if (!settings["game"])
-            return false;
-        if (!settings["lastGame"])
-            return false;
-        if (!settings["debugVerbosity"])
-            return false;
-        if (!settings["updateMasterlist"])
-            return false;
-        if (!settings["games"])
-            return false;
+    bool LootState::AreSettingsValid() {
+        if (!_settings["language"]) {
+            if (_settings["Language"]) {
+                // Conversion from 0.6 key.
+                _settings["language"] = _settings["Language"];
+                _settings.remove("Language");
+            } else
+                return false;
+        }
+        if (!_settings["game"])
+            if (_settings["Game"]) {
+            // Conversion from 0.6 key.
+            _settings["game"] = _settings["Game"];
+            _settings.remove("Game");
+            }
+            else
+                return false;
+        if (!_settings["lastGame"])
+            if (_settings["Last Game"]) {
+            // Conversion from 0.6 key.
+            _settings["lastGame"] = _settings["Last Game"];
+            _settings.remove("Last Game");
+            }
+            else
+                return false;
+        if (!_settings["debugVerbosity"])
+            if (_settings["Debug Verbosity"]) {
+            // Conversion from 0.6 key.
+            _settings["debugVerbosity"] = _settings["Debug Verbosity"];
+            _settings.remove("Debug Verbosity");
+            }
+            else
+                return false;
+        if (!_settings["updateMasterlist"])
+            if (_settings["Update Masterlist"]) {
+            // Conversion from 0.6 key.
+            _settings["updateMasterlist"] = _settings["Update Masterlist"];
+            _settings.remove("Update Masterlist");
+            }
+            else
+                return false;
+        if (!_settings["games"])
+            if (_settings["Games"]) {
+            // Conversion from 0.6 key.
+            _settings["games"] = _settings["Games"];
+            _settings.remove("Games");
+            }
+            else
+                return false;
 
         return true;
     }

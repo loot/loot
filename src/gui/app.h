@@ -85,7 +85,7 @@ namespace loot {
         std::vector<std::string> _initErrors;
 
         // Check if the settings file has the right root keys (doesn't check their values).
-        bool AreSettingsValid(const YAML::Node& settings);
+        bool AreSettingsValid();
         YAML::Node GetDefaultSettings();
     };
 
