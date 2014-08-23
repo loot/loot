@@ -157,7 +157,7 @@ function Plugin(obj) {
         /* Fill in messages. */
         this.updateCardMessages();
 
-        document.getElementById('main').appendChild(card);
+        document.getElementsByTagName('main')[0].appendChild(card);
     }
 
     Plugin.prototype.createListItem = function() {

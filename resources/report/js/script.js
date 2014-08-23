@@ -72,11 +72,8 @@ function applySavedFilters() {
     if (loot.settings.filters) {
         for (var key in loot.settings.filters) {
             var elem = document.getElementById(key);
-            if (elem.type == 'checkbox') {
-                //elem.checked = true;
+            if (elem) {
                 elem.dispatchEvent(new MouseEvent('click'));
-            } else {
-                elem.value = loot.settings.filters[key];
             }
         }
     }
@@ -111,44 +108,45 @@ function toggleDisplayCSS(evt) {
 }
 
 function getConflictingPluginsFromFilter() {
-    if (document.getElementById('showOnlyConflicts').checked) {
-        var conflictsPlugin = document.getElementById('conflictsPlugin');
-        if (conflictsPlugin.value.length != 0) {
+    var conflictsPlugin = document.body.getAttribute('data-conflicts');
+    if (conflictsPlugin) {
+        /* Now get conflicts for the plugin. */
+        var request = JSON.stringify({
+            name: 'getConflictingPlugins',
+            args: [
+                conflictsPlugin
+            ]
+        });
 
-            var request = JSON.stringify({
-                name: 'getConflictingPlugins',
-                args: [
-                    conflictsPlugin.value
-                ]
-            });
-
-            return loot.query(request).then(JSON.parse).then(function(result){
-                if (result) {
-                    for (var key in result.crcs) {
-                        for (var i = 0; i < loot.game.plugins.length; ++i) {
-                            if (loot.game.plugins[i].name == key) {
-                                loot.game.plugins[i].crc = result.crcs[key];
-                                break;
-                            }
+        return loot.query(request).then(JSON.parse).then(function(result){
+            if (result) {
+                for (var key in result.crcs) {
+                    for (var i = 0; i < loot.game.plugins.length; ++i) {
+                        if (loot.game.plugins[i].name == key) {
+                            loot.game.plugins[i].crc = result.crcs[key];
+                            break;
                         }
                     }
-                    if (result.conflicts) {
-                        return result.conflicts;
-                    }
                 }
-                return [];
-            }).catch(processCefError);
-        }
+                if (result.conflicts) {
+                    return result.conflicts;
+                } else {
+                    /* No conflicts. Filter everything but the plugin itself. */
+                    return [ conflictsPlugin ];
+                }
+            }
+            return [];
+        }).catch(processCefError);
     }
 
     return Promise.resolve([]);
 }
 function togglePlugins(evt) {
-    var sections = document.getElementById('main').children;
+    var cards = document.getElementsByTagName('main')[0].getElementsByTagName('plugin-card');
     var entries = document.getElementById('pluginsNav').children;
     var hiddenPluginNo = 0;
     var hiddenMessageNo = 0;
-    if (sections.length - 2 != entries.length) {
+    if (cards.length != entries.length) {
         throw Error("Error: Number of plugins in sidebar doesn't match number of plugins in main area!");
     }
     /* The conflict filter, if enabled, executes C++ code, so needs to be
@@ -156,16 +154,15 @@ function togglePlugins(evt) {
        it is completed.
     */
     getConflictingPluginsFromFilter().then(function(conflicts) {
-        /* Start at 3rd section to skip summary and general messages. */
-        for (var i = 2; i < sections.length; ++i) {
+        for (var i = 0; i < cards.length; ++i) {
             var isConflictingPlugin = false;
             var isMessageless = true;
             var hasInactivePluginMessages = false;
-            var messages = sections[i].getElementsByTagName('ul')[0].getElementsByTagName('li');
-            if (sections[i].getAttribute('data-active') == 'false') {
+            var messages = cards[i].getElementsByTagName('ul')[0].getElementsByTagName('li');
+            if (cards[i].getAttribute('data-active') == 'false') {
                 hasInactivePluginMessages = true;
             }
-            if (conflicts.indexOf(sections[i].getElementsByTagName('h1')[0].textContent) != -1) {
+            if (conflicts.indexOf(cards[i].getName()) != -1) {
                 isConflictingPlugin = true;
             }
             for (var j = 0; j < messages.length; ++j) {
@@ -197,11 +194,11 @@ function togglePlugins(evt) {
             }
             if ((document.getElementById('hideMessagelessPlugins').checked && isMessageless)
                 || conflicts.length > 0 && !isConflictingPlugin) {
-                hideElement(sections[i]);
+                hideElement(cards[i]);
                 hideElement(entries[i - 2]);
                 ++hiddenPluginNo;
             } else {
-                showElement(sections[i]);
+                showElement(cards[i]);
                 showElement(entries[i - 2]);
             }
         }
@@ -303,17 +300,19 @@ function changeGame(evt) {
         var elements = document.getElementById('filters').getElementsByTagName('input');
         var activeFilters = [];
         for (var i = 0; i < elements.length; ++i) {
-            if (elements[i].type == 'checkbox' && elements[i].id != 'showOnlyConflicts'
-                && elements[i].checked) {
+            if (elements[i].type == 'checkbox' && elements[i].checked) {
                 activeFilters.push(elements[i]);
                 elements[i].click();
             }
         }
-        if (document.getElementById('showOnlyConflicts').checked) {
-            document.getElementById('showOnlyConflicts').click();
+        /* Need to do something slightly different for the conflicts filter.
+           Edit its state and run the filter function manually. */
+        if (document.body.hasAttribute('data-conflicts')) {
+            document.body.removeAttribute('data-conflicts');
+            /* Don't need to supply an event arg because togglePlugins doesn't
+               actually use it. */
+            togglePlugins();
         }
-        document.getElementById('conflictsPlugin').value = '';
-
 
         /* Clear the UI of all existing game-specific data. Also
            clear the card and li variables for each plugin object. */
@@ -418,7 +417,7 @@ function updateMasterlist(evt) {
 function sortUIElements(pluginNames) {
     /* pluginNames is an array of plugin names in their sorted order. Rearrange
        the plugin cards and nav entries to match it. */
-    var main = document.getElementById('main');
+    var main = document.getElementsByTagName('main')[0];
     var pluginsNav = document.getElementById('pluginsNav');
     var entries = pluginsNav.children;
     if (main.children.length - 2 != entries.length) {
@@ -462,7 +461,7 @@ function sortPlugins(evt) {
 
             /* Record the previous order in case the user cancels sorting. */
             /* Start at 2 to skip summary and general messages. */
-            var cards = document.getElementById('main').children;
+            var cards = document.getElementsByTagName('main')[0].children;
             loot.newLoadOrder = result.loadOrder;
             loot.lastLoadOrder = [];
             for (var i = 2; i < cards.length; ++i) {
@@ -800,11 +799,7 @@ function setupEventHandlers() {
     /*Set up filter value and CSS setting storage read/write handlers.*/
     elements = document.getElementById('filters').getElementsByTagName('input');
     for (var i = 0; i < elements.length; ++i) {
-        if (elements[i].type == 'text') {
-            elements[i].addEventListener('input', saveFilterState, false);
-        } else {
-            elements[i].addEventListener('click', saveFilterState, false);
-        }
+        elements[i].addEventListener('click', saveFilterState, false);
     }
 
     /*Set up handlers for filters.*/
@@ -816,7 +811,6 @@ function setupEventHandlers() {
     document.getElementById('hideInactivePluginMessages').addEventListener('click', togglePlugins, false);
     document.getElementById('hideAllPluginMessages').addEventListener('click', togglePlugins, false);
     document.getElementById('hideMessagelessPlugins').addEventListener('click', togglePlugins, false);
-    document.getElementById('showOnlyConflicts').addEventListener('click', togglePlugins, false);
 
     /* Set up handlers for buttons. */
     document.getElementById('fileMenu').addEventListener('click', openMenu, false);
@@ -981,7 +975,7 @@ function updateInterfaceWithGameInfo(response) {
         }
     });
     totalMessageNo = loot.game.globalMessages.length;
-    var pluginsList = document.getElementById('main');
+    var pluginsList = document.getElementsByTagName('main')[0];
     var pluginsNav = document.getElementById('pluginsNav');
     loot.game.plugins.forEach(function(plugin) {
 

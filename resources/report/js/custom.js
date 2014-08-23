@@ -26,56 +26,87 @@
 /* Create a <plugin-menu> element type. */
 var pluginMenuProto = Object.create(HTMLElement.prototype, {
 
-    onMenuItemClick: {
+    getPluginCard: {
+        value: function() {
+            return document.getElementById(this.getAttribute('data-for'));
+        }
+    },
+
+    onShowOnlyConflicts: {
         value: function(evt) {
+            /* Depending on what was clicked, this function may be run before
+               the checkbox state has updated. Handle both cases. */
+            var activateFilter;
+            if (evt.currentTarget == evt.target) {
+                /* Clicked on the label, checkbox state isn't updated yet. */
+                activateFilter = !evt.target.firstElementChild.checked;
+            } else {
+                /* Clicked on the checkbox. */
+                activateFilter = evt.target.checked;
+            }
+            if (activateFilter) {
+                document.body.setAttribute('data-conflicts', evt.currentTarget.parentNode.host.getPluginCard().getName());
+                evt.currentTarget.parentNode.host.getPluginCard().classList.toggle('highlight', true);
+            } else {
+                evt.currentTarget.parentNode.host.getPluginCard().classList.toggle('highlight', false);
+                document.body.removeAttribute('data-conflicts');
+            }
+            togglePlugins(evt);
+        }
+    },
 
-            var pluginID = evt.target.parentNode.host.getAttribute('data-for');
-            var pluginCard = document.getElementById(pluginID);
+    onEditMetadata: {
+        value: function(evt) {
+            evt.target.parentNode.host.getPluginCard().showEditor();
+        }
+    },
 
-            if (evt.target.id == 'editMetadata') {
-                /* Show editing controls. */
-                pluginCard.showEditor();
+    onCopyMetadata: {
+        value: function(evt) {
+            var request = JSON.stringify({
+                name: 'copyMetadata',
+                args: [
+                    evt.target.parentNode.host.getPluginCard().getName()
+                ]
+            });
 
-            } else if (evt.target.id == 'copyMetadata') {
-                var request = JSON.stringify({
-                    name: 'copyMetadata',
-                    args: [
-                        pluginCard.getElementsByTagName('h1')[0].textContent
-                    ]
-                });
+            loot.query(request).catch(processCefError);
+        }
+    },
 
-                loot.query(request).catch(processCefError);
-            } else if (evt.target.id == 'clearMetadata') {
-                showMessageDialog('Clear Plugin Metadata', 'Are you sure you want to clear all existing user-added metadata from "' + pluginCard.getElementsByTagName('h1')[0].textContent + '"?', function(result){
-                    if (result) {
-                        var request = JSON.stringify({
-                            name: 'clearPluginMetadata',
-                            args: [
-                                pluginCard.getElementsByTagName('h1')[0].textContent
-                            ]
-                        });
+    onClearMetadata: {
+        value: function(evt) {
+            var pluginCard = evt.target.parentNode.host.getPluginCard();
 
-                        loot.query(request).then(JSON.parse).then(function(result){
-                            if (result) {
-                                /* Need to empty the UI-side user metadata. */
-                                for (var i = 0; i < loot.game.plugins.length; ++i) {
-                                    if (loot.game.plugins[i].id == pluginID) {
-                                        loot.game.plugins[i].userlist = undefined;
+            showMessageDialog('Clear Plugin Metadata', 'Are you sure you want to clear all existing user-added metadata from "' + pluginCard.getName() + '"?', function(result){
+                if (result) {
+                    var request = JSON.stringify({
+                        name: 'clearPluginMetadata',
+                        args: [
+                            pluginCard.getName()
+                        ]
+                    });
 
-                                        loot.game.plugins[i].modPriority = result.modPriority;
-                                        loot.game.plugins[i].isGlobalPriority = result.isGlobalPriority;
-                                        loot.game.plugins[i].messages = result.messages;
-                                        loot.game.plugins[i].tags = result.tags;
-                                        loot.game.plugins[i].isDirty = result.isDirty;
+                    loot.query(request).then(JSON.parse).then(function(result){
+                        if (result) {
+                            /* Need to empty the UI-side user metadata. */
+                            for (var i = 0; i < loot.game.plugins.length; ++i) {
+                                if (loot.game.plugins[i].id == pluginCard.id) {
+                                    loot.game.plugins[i].userlist = undefined;
 
-                                        break;
-                                    }
+                                    loot.game.plugins[i].modPriority = result.modPriority;
+                                    loot.game.plugins[i].isGlobalPriority = result.isGlobalPriority;
+                                    loot.game.plugins[i].messages = result.messages;
+                                    loot.game.plugins[i].tags = result.tags;
+                                    loot.game.plugins[i].isDirty = result.isDirty;
+
+                                    break;
                                 }
                             }
-                        }).catch(processCefError);
-                    }
-                });
-            }
+                        }
+                    }).catch(processCefError);
+                }
+            });
         }
     },
 
@@ -92,19 +123,40 @@ var pluginMenuProto = Object.create(HTMLElement.prototype, {
     attachedCallback: {
         value: function() {
             /* Add event listeners for the menu items. */
-            this.shadowRoot.getElementById('editMetadata').addEventListener('click', this.onMenuItemClick, false);
-            this.shadowRoot.getElementById('copyMetadata').addEventListener('click', this.onMenuItemClick, false);
-            this.shadowRoot.getElementById('clearMetadata').addEventListener('click', this.onMenuItemClick, false);
+            var conflictsPlugin = document.body.getAttribute('data-conflicts');
+            if (conflictsPlugin && conflictsPlugin != this.getPluginCard().getName()) {
+                /* The conflict filter is currently active for another plugin.
+                   Prevent the filter being activated for this one. */
+                this.shadowRoot.getElementById('showOnlyConflicts').disabled = true;
+                this.shadowRoot.getElementById('showOnlyConflicts').parentElement.classList.toggle('disabled', true);
+            } else {
+                /* The conflicts filter is either inactive or active for this
+                   plugin. Allow it to be activated or deactivated. For some
+                   reason clicking on the label is processed slower than
+                   the checkbox state, and in the time difference the menu
+                   gets closed, so that the conflicts filter never gets applied.
+                   To get around this, listen for a click on the label rather
+                   than for checkbox state change. */
+                if (conflictsPlugin == this.getPluginCard().getName()) {
+                    this.shadowRoot.getElementById('showOnlyConflicts').checked = true;
+                }
+                this.shadowRoot.getElementById('showOnlyConflicts').parentElement.addEventListener('click', this.onShowOnlyConflicts, false);
+            }
+            this.shadowRoot.getElementById('editMetadata').addEventListener('click', this.onEditMetadata, false);
+            this.shadowRoot.getElementById('copyMetadata').addEventListener('click', this.onCopyMetadata, false);
+            this.shadowRoot.getElementById('clearMetadata').addEventListener('click', this.onClearMetadata, false);
         }
     },
 
     detachedCallback: {
         value: function() {
-
             /* Remove event listeners for the menu items. */
-            this.shadowRoot.getElementById('editMetadata').removeEventListener('click', this.onMenuItemClick, false);
-            this.shadowRoot.getElementById('copyMetadata').removeEventListener('click', this.onMenuItemClick, false);
-            this.shadowRoot.getElementById('clearMetadata').removeEventListener('click', this.onMenuItemClick, false);
+            /* Nothing happens if we try to remove a listener that doesn't exist,
+               so don't bother checking first. */
+            this.shadowRoot.getElementById('showOnlyConflicts').parentElement.removeEventListener('click', this.onShowOnlyConflicts, false);
+            this.shadowRoot.getElementById('editMetadata').removeEventListener('click', this.onEditMetadata, false);
+            this.shadowRoot.getElementById('copyMetadata').removeEventListener('click', this.onCopyMetadata, false);
+            this.shadowRoot.getElementById('clearMetadata').removeEventListener('click', this.onClearMetadata, false);
 
         }
     }
@@ -115,6 +167,12 @@ var PluginMenu = document.registerElement('plugin-menu', {prototype: pluginMenuP
 
 /* Create a <plugin-card> element type. */
 var pluginCardProto = Object.create(HTMLElement.prototype, {
+
+    getName: {
+        value: function() {
+            return this.getElementsByTagName('h1')[0].textContent;
+        }
+    },
 
     showEditorTable: {
         value: function(evt) {
@@ -427,8 +485,6 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
 
                         }
                     }
-
-
                     break;
                 }
             }
@@ -448,7 +504,7 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
             /* Set up drag 'n' drop event handlers. */
             elements = document.getElementById('pluginsNav').children;
             for (var i = 0; i < elements.length; ++i) {
-                elements[i].setAttribute('draggable', true);
+                elements[i].draggable = true;
                 elements[i].addEventListener('dragstart', handlePluginDragStart, false);
             }
             elements = this.shadowRoot.getElementsByTagName('table');
@@ -487,7 +543,7 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
             menu.setAttribute('data-for', card.id);
 
 
-            var main = document.getElementById('main');
+            var main = document.getElementsByTagName('main')[0];
             main.appendChild(menu);
 
             /* Set page position of menu. */
@@ -774,12 +830,12 @@ var EditableTableProto = Object.create(HTMLTableElement.prototype, {
                 if (classMask) {
                     for (var j = 0; j < classMask.length; ++j) {
                         if (inputs[i].classList.contains(classMask[j])) {
-                            inputs[i].setAttribute('readonly', readOnly);
+                            inputs[i].readOnly = readOnly;
                             break;
                         }
                     }
                 } else {
-                    inputs[i].setAttribute('readonly', readOnly);
+                    inputs[i].readOnly = readOnly;
                 }
             }
 
@@ -788,12 +844,12 @@ var EditableTableProto = Object.create(HTMLTableElement.prototype, {
                 if (classMask) {
                     for (var j = 0; j < classMask.length; ++j) {
                         if (selects[i].classList.contains(classMask[j])) {
-                            selects[i].setAttribute('disabled', readOnly);
+                            selects[i].disabled = readOnly;
                             break;
                         }
                     }
                 } else {
-                    selects[i].setAttribute('disabled', readOnly);
+                    selects[i].disabled = readOnly;
                 }
             }
         }

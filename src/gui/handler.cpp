@@ -271,6 +271,10 @@ namespace loot {
         else if (requestName == "closeSettings") {
             BOOST_LOG_TRIVIAL(trace) << "Settings dialog closed and changes accepted, updating settings object.";
             g_app_state.UpdateSettings(request["args"][0]);
+            
+            // Also update the game details.
+            g_app_state.
+
             callback->Success("");
             return true;
         }
@@ -321,13 +325,11 @@ namespace loot {
         if (g_app_state.CurrentGame().plugins.begin()->second.FormIDs().size() == 0)
             g_app_state.CurrentGame().LoadPlugins(false);
 
-        map<string, uint32_t> conflictingPlugins;
         YAML::Node node;
         for (const auto& pluginPair : g_app_state.CurrentGame().plugins) {
             if (pluginIt != g_app_state.CurrentGame().plugins.end()) {
                 if (pluginIt->second.DoFormIDsOverlap(pluginPair.second)) {
                     BOOST_LOG_TRIVIAL(debug) << "Found conflicting plugin: " << pluginPair.second.Name();
-                    conflictingPlugins.emplace(pluginPair.second.Name(), pluginPair.second.Crc());
                     node["conflicts"].push_back(pluginPair.second.Name());
                 }
             }
