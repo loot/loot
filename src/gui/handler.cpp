@@ -960,6 +960,40 @@ namespace loot {
         SendMessage(hWnd, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
         SendMessage(hWnd, WM_SETICON, ICON_SMALL, (LPARAM)hIconSm);
 
+        // Set window size & position.
+        YAML::Node settings = g_app_state.GetSettings();
+
+        if (settings["window"]["left"] && settings["window"]["top"] && settings["window"]["right"] && settings["window"]["bottom"]) {
+#ifdef _WIN32
+            RECT rc;
+            rc.left = settings["window"]["left"].as<long>();
+            rc.top = settings["window"]["top"].as<long>();
+            rc.right = settings["window"]["right"].as<long>();
+            rc.bottom = settings["window"]["bottom"].as<long>();
+
+            // Fit the saved window size/position to the current monitor setup.
+
+            // Get the nearest monitor to the saved size/pos.
+            HMONITOR hMonitor;
+            hMonitor = MonitorFromRect(&rc, MONITOR_DEFAULTTONEAREST);
+
+            // Get the rect for the monitor's working area.
+            MONITORINFO mi;
+            mi.cbSize = sizeof(mi);
+            GetMonitorInfo(hMonitor, &mi);
+
+            // Clip the saved rect to fit inside the monitor rect.
+            int width = rc.right - rc.left;
+            int height = rc.bottom - rc.top;
+            rc.left = max(mi.rcWork.left, min(mi.rcWork.right - width, rc.left));
+            rc.top = max(mi.rcWork.top, min(mi.rcWork.bottom - height, rc.top));
+            rc.right = rc.left + width;
+            rc.bottom = rc.top + height;
+
+            SetWindowPos(hWnd, HWND_TOP, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, SWP_SHOWWINDOW);
+#endif
+        }
+
         // Add to the list of existing browsers.
         browser_list_.push_back(browser);
 
@@ -988,6 +1022,21 @@ namespace loot {
 
     void LootHandler::OnBeforeClose(CefRefPtr<CefBrowser> browser) {
         assert(CefCurrentlyOn(TID_UI));
+
+        // Save window size & position.
+        YAML::Node settings = g_app_state.GetSettings();
+
+#ifdef _WIN32
+        RECT rc;
+        GetWindowRect(browser->GetHost()->GetWindowHandle(), &rc);
+
+        settings["window"]["left"] = rc.left;
+        settings["window"]["top"] = rc.top;
+        settings["window"]["right"] = rc.right;
+        settings["window"]["bottom"] = rc.bottom;
+#endif
+
+        g_app_state.UpdateSettings(settings);
 
         // Cancel any javascript callbacks.
         browser_side_router_->OnBeforeClose(browser);
