@@ -82,6 +82,12 @@ namespace loot {
             else if (!preferredGame.empty() && preferredGame == games[i].FolderName() && games[i].IsInstalled())
                 return i;
         }
+        // Preferred game not found, just pick the first installed one.
+        for (size_t i = 0; i < games.size(); ++i) {
+            if (games[i].IsInstalled())
+                return i;
+        }
+
         throw error(error::no_game_detected, "None of the supported games were detected.");
     }
 
