@@ -86,9 +86,11 @@ var pluginMenuProto = Object.create(HTMLElement.prototype, {
             var clone = document.importNode(template.content, true);
 
             this.createShadowRoot().appendChild(clone);
+        }
+    },
 
-            this.id = 'activePluginMenu';
-
+    attachedCallback: {
+        value: function() {
             /* Add event listeners for the menu items. */
             this.shadowRoot.getElementById('editMetadata').addEventListener('click', this.onMenuItemClick, false);
             this.shadowRoot.getElementById('copyMetadata').addEventListener('click', this.onMenuItemClick, false);
@@ -545,7 +547,11 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
 
             var messages = document.createElement('ul');
             this.appendChild(messages);
+        }
+    },
 
+    attachedCallback: {
+        value: function() {
             this.shadowRoot.getElementById('menuButton').addEventListener('click', this.onMenuButtonClick, false);
 
             var hoverTargets = this.shadowRoot.querySelectorAll('[title]');
@@ -553,9 +559,7 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
                 hoverTargets[i].addEventListener('mouseenter', showHoverText, false);
                 hoverTargets[i].addEventListener('mouseleave', hideHoverText, false);
             }
-
         }
-
     },
 
     detachedCallback: {
@@ -591,15 +595,17 @@ var pluginLIProto = Object.create(HTMLLIElement.prototype, {
             var priority = document.createElement('span');
             priority.className = 'priority';
             this.appendChild(priority);
+        }
+    },
 
+    attachedCallback: {
+        value: function() {
             var hoverTargets = this.shadowRoot.querySelectorAll('[title]');
             for (var i = 0; i < hoverTargets.length; ++i) {
                 hoverTargets[i].addEventListener('mouseenter', showHoverText, false);
                 hoverTargets[i].addEventListener('mouseleave', hideHoverText, false);
             }
-
         }
-
     },
 
     detachedCallback: {
@@ -692,7 +698,11 @@ var messageDialogProto = Object.create(HTMLDialogElement.prototype, {
             cancel.className = 'cancel';
             cancel.textContent = 'Cancel';
             buttons.appendChild(cancel);
+        }
+    },
 
+    attachedCallback: {
+        value: function() {
             this.addEventListener('close', this.onClose, false);
         }
     },
@@ -849,13 +859,11 @@ var EditableTableProto = Object.create(HTMLTableElement.prototype, {
         }
     },
 
-    createdCallback: {
-
+    attachedCallback: {
         value: function() {
             /* Add new row listener. */
             this.querySelector('tbody tr:last-child').addEventListener('click', this.addEmptyRow, false);
         }
-
     },
 
     detachedCallback: {

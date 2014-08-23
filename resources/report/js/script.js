@@ -660,12 +660,6 @@ function updateSettingsUI() {
         var li = document.createElement('li');
         li.setAttribute('data-folder', loot.settings.games[i].folder);
 
-        if (loot.installedGames.indexOf(loot.settings.games[i].folder) == -1) {
-            li.classList.toggle('disabled', true);
-        } else {
-            li.addEventListener('click', changeGame, false);
-        }
-
         var icon = document.createElement('span');
         icon.className = 'fa fa-fw';
         li.appendChild(icon);
@@ -675,6 +669,12 @@ function updateSettingsUI() {
         li.appendChild(text);
 
         gameMenu.appendChild(li);
+
+        if (loot.installedGames.indexOf(loot.settings.games[i].folder) == -1) {
+            li.classList.toggle('disabled', true);
+        } else {
+            li.addEventListener('click', changeGame, false);
+        }
 
         var row = gameTable.addRow(loot.settings.games[i]);
         gameTable.setReadOnly(row, ['name','folder','type']);
