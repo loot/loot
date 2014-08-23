@@ -572,13 +572,23 @@ namespace loot {
         //Parse masterlist, don't update it.
         if (fs::exists(g_app_state.CurrentGame().MasterlistPath())) {
             BOOST_LOG_TRIVIAL(debug) << "Parsing masterlist.";
-            g_app_state.CurrentGame().masterlist.MetadataList::Load(g_app_state.CurrentGame().MasterlistPath());
+            try {
+                g_app_state.CurrentGame().masterlist.MetadataList::Load(g_app_state.CurrentGame().MasterlistPath());
+            }
+            catch (exception &e) {
+                g_app_state.CurrentGame().masterlist.messages.push_back(Message(Message::error, string("An error occurred while parsing the masterlist: ") + e.what()));
+            }
         }
 
         //Parse userlist.
         if (fs::exists(g_app_state.CurrentGame().UserlistPath())) {
             BOOST_LOG_TRIVIAL(debug) << "Parsing userlist.";
-            g_app_state.CurrentGame().userlist.Load(g_app_state.CurrentGame().UserlistPath());
+            try {
+                g_app_state.CurrentGame().userlist.Load(g_app_state.CurrentGame().UserlistPath());
+            }
+            catch (exception &e) {
+                g_app_state.CurrentGame().userlist.messages.push_back(Message(Message::error, string("An error occurred while parsing the userlist: ") + e.what()));
+            }
         }
 
         // Now convert to a single object that can be turned into a JSON string
@@ -664,6 +674,7 @@ namespace loot {
         //Evaluate any conditions in the global messages.
         BOOST_LOG_TRIVIAL(debug) << "Evaluating global message conditions.";
         list<Message> messages = g_app_state.CurrentGame().masterlist.messages;
+        messages.insert(messages.end(), g_app_state.CurrentGame().userlist.messages.begin(), g_app_state.CurrentGame().userlist.messages.end());
         try {
             list<Message>::iterator it = messages.begin();
             while (it != messages.end()) {
@@ -686,7 +697,6 @@ namespace loot {
 
     std::string Handler::UpdateMasterlist() {
         BOOST_LOG_TRIVIAL(debug) << "Updating and parsing masterlist.";
-        string parsingError;
 
         //Set language.
         unsigned int language;
@@ -705,7 +715,7 @@ namespace loot {
             if (e.code() == loot::error::ok) {
                 // There was a parsing error, but roll-back was successful, so the process 
                 // should still complete.
-                parsingError = e.what();
+                g_app_state.CurrentGame().masterlist.messages.push_back(Message(Message::error, e.what()));
                 wasChanged = true;
             }
             else
@@ -763,11 +773,6 @@ namespace loot {
             catch (std::exception& e) {
                 BOOST_LOG_TRIVIAL(error) << "A global message contains a condition that could not be evaluated. Details: " << e.what();
                 messages.push_back(Message(Message::error, (format(loc::translate("A global message contains a condition that could not be evaluated. Details: %1%")) % e.what()).str()));
-            }
-
-            // Add the parsing error to the global messages, if it exists.
-            if (!parsingError.empty()) {
-                messages.push_back(Message(Message::error, parsingError));
             }
 
             // Now store global messages from masterlist.
