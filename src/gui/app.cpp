@@ -300,30 +300,33 @@ namespace loot {
             } else
                 return false;
         }
-        if (!_settings["game"])
+        if (!_settings["game"]) {
             if (_settings["Game"]) {
-            // Conversion from 0.6 key.
-            _settings["game"] = _settings["Game"];
-            _settings.remove("Game");
+                // Conversion from 0.6 key.
+                _settings["game"] = _settings["Game"];
+                _settings.remove("Game");
             }
             else
                 return false;
-        if (!_settings["lastGame"])
+        }
+        if (!_settings["lastGame"]) {
             if (_settings["Last Game"]) {
-            // Conversion from 0.6 key.
-            _settings["lastGame"] = _settings["Last Game"];
-            _settings.remove("Last Game");
+                // Conversion from 0.6 key.
+                _settings["lastGame"] = _settings["Last Game"];
+                _settings.remove("Last Game");
             }
             else
                 return false;
-        if (!_settings["debugVerbosity"])
+        }
+        if (!_settings["debugVerbosity"]) {
             if (_settings["Debug Verbosity"]) {
-            // Conversion from 0.6 key.
-            _settings["debugVerbosity"] = _settings["Debug Verbosity"];
-            _settings.remove("Debug Verbosity");
+                // Conversion from 0.6 key.
+                _settings["debugVerbosity"] = _settings["Debug Verbosity"];
+                _settings.remove("Debug Verbosity");
             }
             else
                 return false;
+        }
         if (!_settings["updateMasterlist"])
             if (_settings["Update Masterlist"]) {
             // Conversion from 0.6 key.
@@ -332,14 +335,27 @@ namespace loot {
             }
             else
                 return false;
-        if (!_settings["games"])
+        if (!_settings["games"]) {
             if (_settings["Games"]) {
-            // Conversion from 0.6 key.
-            _settings["games"] = _settings["Games"];
-            _settings.remove("Games");
+                // Conversion from 0.6 key.
+                _settings["games"] = _settings["Games"];
+
+                for (auto &node : _settings["games"]) {
+                    if (node["url"]) {
+                        node["repo"] = node["url"];
+                        node["branch"] = "master";
+                        node.remove("url");
+                    }
+                }
+
+                _settings.remove("Games");
             }
             else
                 return false;
+        }
+
+        if (_settings["windows"])
+            _settings.remove("windows");
 
         return true;
     }
