@@ -46,13 +46,7 @@ function processCefError(err) {
 
 var marked;
 function saveFilterState(evt) {
-    var attr;
-    if (evt.currentTarget.type == 'checkbox') {
-        attr = 'checked';
-    } else {
-        attr = 'value';
-    }
-    if (evt.currentTarget[attr]) {
+    if (evt.currentTarget.checked) {
         loot.settings.filters[evt.currentTarget.id] = true;
     } else {
         delete loot.settings.filters[evt.currentTarget.id];
@@ -62,7 +56,7 @@ function saveFilterState(evt) {
         name: 'saveFilterState',
         args: [
             evt.currentTarget.id,
-            evt.currentTarget[attr]
+            evt.currentTarget.checked
         ]
     });
 
@@ -300,7 +294,7 @@ function changeGame(evt) {
         var elements = document.getElementById('filters').getElementsByTagName('input');
         var activeFilters = [];
         for (var i = 0; i < elements.length; ++i) {
-            if (elements[i].type == 'checkbox' && elements[i].checked) {
+            if (elements[i].checked) {
                 activeFilters.push(elements[i]);
                 elements[i].click();
             }
