@@ -246,6 +246,7 @@ namespace loot {
                     }
                 }
                 //Delete temporary folder.
+                FixRepoPermissions(temp_path);
                 fs::remove_all(temp_path);
             }
         }
