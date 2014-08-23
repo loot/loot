@@ -273,7 +273,6 @@ namespace loot {
             g_app_state.UpdateSettings(request["args"][0]);
             
             // Also update the game details.
-            g_app_state.
 
             callback->Success("");
             return true;
