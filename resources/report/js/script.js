@@ -545,6 +545,54 @@ function clearAllMetadata(evt) {
         }
     });
 }
+function copyContent(evt) {
+    var messages = [];
+    var plugins = [];
+
+    if (loot.game) {
+        loot.game.globalMessages.forEach(function(message){
+            var m = {};
+            messages.push({
+                type: message.type,
+                content: message.content[0].str
+            });
+        });
+        loot.game.plugins.forEach(function(plugin){
+            plugins.push({
+                name: plugin.name,
+                crc: plugin.crc,
+                version: plugin.version,
+                isActive: plugin.isActive,
+                isDummy: plugin.isDummy,
+                loadsBSA: plugin.loadsBSA,
+
+                modPriority: plugin.modPriority,
+                isGlobalPriority: plugin.isGlobalPriority,
+                messages: plugin.messages,
+                tags: plugin.tags,
+                isDirty: plugin.isDirty
+            });
+        });
+    } else {
+        var message = document.getElementById('generalMessagesList').getElementsByTagName('ul')[0].firstElementChild;
+        if (message) {
+            messages.push({
+                type: 'error',
+                content: message.textContent
+            });
+        }
+    }
+
+    var request = JSON.stringify({
+        name: 'copyContent',
+        args: [{
+            messages: messages,
+            plugins: plugins
+        }]
+    });
+
+    loot.query(request).catch(processCefError);
+}
 function handlePluginDrop(evt) {
     evt.stopPropagation();
 
@@ -811,6 +859,7 @@ function setupEventHandlers() {
     document.getElementById('redatePluginsButton').addEventListener('click', redatePlugins, false);
     document.getElementById('openLogButton').addEventListener('click', openLogLocation, false);
     document.getElementById('wipeUserlistButton').addEventListener('click', clearAllMetadata, false);
+    document.getElementById('copyContentButton').addEventListener('click', copyContent, false);
     document.getElementById('gameMenu').addEventListener('click', openMenu, false);
     document.getElementById('settingsButton').addEventListener('click', showSettingsDialog, false);
     document.getElementById('helpMenu').addEventListener('click', openMenu, false);
@@ -929,6 +978,10 @@ function initVars() {
                 console.log('getInstalledGames response: ' + results[1]);
             }
 
+            if (results.length > 3) {
+                updateInterfaceWithGameInfo(results[3]);
+            }
+
             try {
                 loot.settings = JSON.parse(results[2]);
                 if (loot.settings.filters == undefined) {
@@ -941,9 +994,7 @@ function initVars() {
                 console.log('getSettings response: ' + results[2]);
             }
 
-            if (results.length > 3) {
-                updateInterfaceWithGameInfo(results[3]);
-            } else {
+            if (results.length == 3) {
                 document.getElementById('settingsButton').click();
             }
 

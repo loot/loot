@@ -74,6 +74,8 @@ namespace loot {
 
         YAML::Node Handler::GenerateDerivedMetadata(const std::string& pluginName);
         YAML::Node Handler::GenerateDerivedMetadata(const Plugin& file, const Plugin& masterlist, const Plugin& userlist);
+
+        void CopyToClipboard(const std::string& text);
     };
 
     class LootHandler : public CefClient,

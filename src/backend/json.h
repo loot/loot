@@ -53,7 +53,7 @@ namespace loot {
 
             // yaml-cpp produces `!<!>` artifacts in its output, so remove them.
             std::string json = out.c_str();
-            boost::replace_all(json, "!<!>", "");
+            boost::replace_all(json, "!<!> ", "");
             // There's also a bit of weirdness where there are some \x escapes and some \u escapes.
             // They should all be \u, so transform them.
             boost::replace_all(json, "\\x", "\\u00");
