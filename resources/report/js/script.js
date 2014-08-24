@@ -22,7 +22,9 @@
     <http://www.gnu.org/licenses/>.
 */
 'use strict';
-var loot = {};
+var loot = {
+    hasFocus: true
+};
 
 /* Returns a cefQuery as a Promise. */
 loot.query = function(request) {
@@ -1144,6 +1146,120 @@ function updateInterfaceWithGameInfo() {
     /* Observe changes to update UI as appropriate. */
     Object.observe(loot.game.masterlist, masterlistObserver);
 }
+function onFocus() {
+    /* Send a query for updated load order and plugin header info. */
+    loot.query('getGameData').then(function(result){
+        /* The plugins installed may have changed, which means cards might be
+           added or removed. Filters should be deactivated and reactivated once
+           the UI has finished updating. */
+
+        /* For each filter, save its state then deactivate it if it is activated. */
+        var conflictsPlugin;
+        if (document.body.hasAttribute('data-conflicts')) {
+            conflictsPlugin = document.body.getAttribute('data-conflicts');
+            document.body.removeAttribute('data-conflicts');
+        }
+        var elements = document.getElementById('filters').getElementsByTagName('input');
+        var activeFilters = [];
+        for (var i = 0; i < elements.length; ++i) {
+            if (elements[i].checked) {
+                activeFilters.push(elements[i]);
+                elements[i].checked = false;
+            }
+        }
+        /* Don't need to supply an event arg because togglePlugins doesn't
+           actually use it. */
+        togglePlugins();
+
+        /* Parse the data sent from C++. */
+        try {
+            /* We don't want the plugin info creating cards, so don't convert
+               to plugin objects. */
+            var gameInfo = JSON.parse(result);
+        } catch (e) {
+            console.log(e);
+            console.log('getGameData response: ' + result);
+        }
+
+        /* Now overwrite plugin data with the newly sent data. Also update
+           card and li vars as they were unset when the game was switched
+           from before. */
+        var pluginNames = [];
+        gameInfo.plugins.forEach(function(plugin){
+            var foundPlugin = false;
+            for (var i = 0; i < loot.game.plugins.length; ++i) {
+                if (loot.game.plugins[i].name == plugin.name) {
+
+                    loot.game.plugins[i].isActive = plugin.isActive;
+                    loot.game.plugins[i].isDummy = plugin.isDummy;
+                    loot.game.plugins[i].loadsBSA = plugin.loadsBSA;
+                    loot.game.plugins[i].crc = plugin.crc;
+                    loot.game.plugins[i].version = plugin.version;
+
+                    loot.game.plugins[i].modPriority = plugin.modPriority;
+                    loot.game.plugins[i].isGlobalPriority = plugin.isGlobalPriority;
+                    loot.game.plugins[i].messages = plugin.messages;
+                    loot.game.plugins[i].tags = plugin.tags;
+                    loot.game.plugins[i].isDirty = plugin.isDirty;
+
+                    foundPlugin = true;
+                    break;
+                }
+            }
+            if (!foundPlugin) {
+                /* A new plugin. */
+                loot.game.plugins.push(new Plugin(plugin));
+            }
+            pluginNames.push(plugin.name);
+        });
+        for (var i = 0; i < loot.game.plugins.length;) {
+            var foundPlugin = false;
+            for (var j = 0; j < pluginNames.length; ++j) {
+                if (loot.game.plugins[i].name == pluginNames[j]) {
+                    foundPlugin = true;
+                    break;
+                }
+            }
+            if (!foundPlugin) {
+                /* Remove plugin. */
+                loot.game.plugins[i].card.parentElement.removeChild(loot.game.plugins[i].card);
+                loot.game.plugins[i].li.parentElement.removeChild(loot.game.plugins[i].li);
+                loot.game.plugins.splice(i, 1);
+            } else {
+                ++i;
+            }
+        }
+        /* Now sort the cards to match the load order. */
+        sortUIElements(pluginNames);
+
+        /* Remove the existing messages, otherwise they'll just get added again
+           in the UI update. */
+        var globalMessages = document.getElementById('generalMessages').getElementsByTagName('ul')[0];
+        while (globalMessages.firstElementChild) {
+            globalMessages.removeChild(globalMessages.firstElementChild);
+        }
+
+        /* Now update interface for new data. */
+        updateInterfaceWithGameInfo();
+
+        /* Reapply previously active filters. */
+        activeFilters.forEach(function(filter){
+            filter.checked = true;
+        });
+        if (conflictsPlugin) {
+            document.body.setAttribute('data-conflicts', conflictsPlugin);
+        }
+        togglePlugins();
+    }).catch(processCefError);
+}
+function checkFocus(){
+    if (document.hasFocus() && !loot.hasFocus) {
+        loot.hasFocus = true;
+        onFocus();
+    } else if (!document.hasFocus() && loot.hasFocus) {
+        loot.hasFocus = false;
+    }
+}
 
 require.config({
     baseUrl: "js",
@@ -1158,4 +1274,8 @@ require(['marked', 'order!custom', 'order!plugin'], function(response) {
     });
     setupEventHandlers();
     initVars();
+    /* So much easier than trying to set up my own C++ message loop to listen
+       to window messages looking for a focus change. */
+    loot.hasFocus = document.hasFocus();
+    setInterval(checkFocus, 500);
 });
