@@ -753,10 +753,18 @@ function closeSettingsDialog(evt) {
                 settings
             ]
         });
-        loot.query(request).catch(processCefError);
+        loot.query(request).then(function(result){
 
-        loot.settings = settings;
+            try {
+                loot.installedGames = JSON.parse(result);
+            } catch (e) {
+                console.log(e);
+                console.log('getInstalledGames response: ' + results[1]);
+            }
 
+            loot.settings = settings;
+            updateSettingsUI();
+        }).catch(processCefError);
     } else {
         /* Re-apply the existing settings to the settings dialog elements. */
         updateSettingsUI();

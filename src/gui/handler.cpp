@@ -278,11 +278,17 @@ namespace loot {
         }
         else if (requestName == "closeSettings") {
             BOOST_LOG_TRIVIAL(trace) << "Settings dialog closed and changes accepted, updating settings object.";
-            g_app_state.UpdateSettings(request["args"][0]);
             
-            // Also update the game details.
+            // Update the game details and settings.
+            g_app_state.UpdateSettings(request["args"][0]);
+            // If the user has deleted a default game, we don't want to restore it now.
+            // It will be restored when LOOT is next loaded.
+            vector<Game> games(request["args"][0]["games"].as< vector<Game> >());
 
-            callback->Success("");
+            g_app_state.UpdateGames(games);
+
+            // Now send back the new list of installed games to the UI.
+            callback->Success(GetInstalledGames());
             return true;
         }
         else if (requestName == "applySort") {

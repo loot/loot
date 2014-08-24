@@ -240,11 +240,42 @@ namespace loot {
         return _initErrors;
     }
 
+
+    void LootState::UpdateGames(std::vector<Game>& games) {
+        unordered_set<string> newGameFolders;
+
+        // Update existing games, add new games.
+        for (auto &game : games) {
+            auto pos = find(_games.begin(), _games.end(), game);
+
+            if (pos != _games.end()) {
+                pos->SetDetails(game.Name(), game.Master(), game.RepoURL(), game.RepoBranch(), game.GamePath().string(), game.RegistryKey());
+            }
+            else {
+                _games.push_back(game);
+            }
+
+            newGameFolders.insert(game.FolderName());
+        }
+        // Remove deleted games. As the current game is stored using its index, 
+        // removing an earlier game may invalidate it.
+        for (auto it = _games.begin(); it != _games.end();) {
+            if (newGameFolders.find(it->FolderName()) == newGameFolders.end()) {
+                if (distance(_games.begin(), it) < _currentGame) {
+                    // Deleting a game before the current game, so the current game's
+                    // index decreases by one.
+                    --_currentGame;
+                }
+                it = _games.erase(it);
+            }
+            else
+                ++it;
+        }
+    }
+
     void LootState::ChangeGame(const std::string& newGameFolder) {
         BOOST_LOG_TRIVIAL(debug) << "Changing current game to that with folder: " << newGameFolder;
-        auto it = std::find_if(_games.begin(), _games.end(), [&newGameFolder](const Game& game){
-            return game.FolderName() == newGameFolder;
-        });
+        auto it = find(_games.begin(), _games.end(), newGameFolder);
 
         _currentGame = std::distance(_games.begin(), it);
         _games[_currentGame].Init();

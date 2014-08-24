@@ -44,7 +44,7 @@ namespace lc = boost::locale;
 
 namespace loot {
 
-    std::vector<Game> GetGames(const YAML::Node& settings) {
+    std::vector<Game> GetGames(YAML::Node& settings) {
         vector<Game> games;
 
         if (settings["games"])
@@ -61,6 +61,9 @@ namespace loot {
 
         if (find(games.begin(), games.end(), Game(Game::fonv)) == games.end())
             games.push_back(Game(Game::fonv));
+
+        // If there were any missing defaults, make sure they're in settings now.
+        settings["games"] = games;
 
         return games;
     }

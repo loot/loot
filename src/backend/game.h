@@ -161,7 +161,7 @@ namespace loot {
         void CreateLOOTGameFolder();
     };
 
-    std::vector<Game> GetGames(const YAML::Node& settings);
+    std::vector<Game> GetGames(YAML::Node& settings);
 
     size_t SelectGame(const YAML::Node& settings, const std::vector<Game>& games, const std::string& cmdLineGame);
 }
