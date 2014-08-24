@@ -123,6 +123,7 @@ namespace loot {
         void RefreshActivePluginsList();
         void RedatePlugins();  //Change timestamps to match load order (Skyrim only).
         void LoadPlugins(bool headersOnly);  //Loads all installed plugins.
+        bool HasBeenLoaded();  // Checks if the game's plugins have already been loaded.
 
         std::list<Plugin> Sort(const unsigned int language, std::function<void(const std::string&)> progressCallback);
 

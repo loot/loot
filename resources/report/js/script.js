@@ -253,27 +253,23 @@ function updateSelectedGame() {
 }
 function changeGame(evt) {
     /* First store current game info in loot.games object.
-       This object may not exist, so initialise it using the corresponding
-       loot.settings.games object. */
+       This object may not exist, so initialise it if not. */
     var index = undefined;
     if (loot.games) {
         for (var i = 0; i < loot.games.length; ++i) {
             if (loot.games[i].folder == loot.game.folder) {
                 index = i;
+                break;
             }
         }
+    } else {
+        loot.games = [];
     }
     if (index == undefined) {
-        for (var i = 0; i < loot.settings.games.length; ++i) {
-            if (loot.settings.games[i].folder == loot.game.folder) {
-                index = i;
-            }
-        }
-
-        loot.games = [];
-        loot.games.push(loot.settings.games[index]);
-        index = 0;
-
+        loot.games.push({
+            folder: loot.game.folder
+        });
+        index = loot.games.length - 1;
     }
     loot.games[index].globalMessages = loot.game.globalMessages;
     loot.games[index].masterlist = loot.game.masterlist;
@@ -321,8 +317,67 @@ function changeGame(evt) {
             globalMessages.removeChild(globalMessages.firstElementChild);
         }
 
+        /* Parse the data sent from C++. */
+        try {
+            var gameInfo = JSON.parse(result, jsonToPlugin);
+        } catch (e) {
+            console.log(e);
+            console.log('getGameData response: ' + result);
+        }
+
+        /* This may not be the first time loading this game this instance of
+           LOOT. Restore cached data if it exists. */
+        index = undefined;
+        if (loot.games) {
+            for (var i = 0; i < loot.games.length; ++i) {
+                if (loot.games[i].folder == gameInfo.folder) {
+                    index = i;
+                    break;
+                }
+            }
+        }
+        if (index == undefined) {
+            /* Game data not cached, simply set what was sent. */
+            loot.game = gameInfo;
+        } else {
+            /* Game data cache exists. */
+            loot.game = loot.games[i];
+            /* Now overwrite plugin data with the newly sent data. Also update
+               card and li vars as they were unset when the game was switched
+               from before. */
+            gameInfo.plugins.forEach(function(plugin){
+                var foundPlugin = false;
+                for (var i = 0; i < loot.game.plugins.length; ++i) {
+                    if (loot.game.plugins[i].name == plugin.name) {
+
+                        loot.game.plugins[i].isActive = plugin.isActive;
+                        loot.game.plugins[i].isDummy = plugin.isDummy;
+                        loot.game.plugins[i].loadsBSA = plugin.loadsBSA;
+                        loot.game.plugins[i].crc = plugin.crc;
+                        loot.game.plugins[i].version = plugin.version;
+
+                        loot.game.plugins[i].modPriority = plugin.modPriority;
+                        loot.game.plugins[i].isGlobalPriority = plugin.isGlobalPriority;
+                        loot.game.plugins[i].messages = plugin.messages;
+                        loot.game.plugins[i].tags = plugin.tags;
+                        loot.game.plugins[i].isDirty = plugin.isDirty;
+
+                        loot.game.plugins[i].card = plugin.card;
+                        loot.game.plugins[i].li = plugin.li;
+
+                        foundPlugin = true;
+                        break;
+                    }
+                }
+                if (!foundPlugin) {
+                    /* A new plugin. */
+                    loot.game.plugins.push(plugin);
+                }
+            });
+        }
+
         /* Now update interface for new data. */
-        updateInterfaceWithGameInfo(result);
+        updateInterfaceWithGameInfo();
 
         /* Now update game menu to highlight the newly selected game. */
         updateSelectedGame();
@@ -987,7 +1042,13 @@ function initVars() {
             }
 
             if (results.length > 3) {
-                updateInterfaceWithGameInfo(results[3]);
+                try {
+                    loot.game = JSON.parse(results[3], jsonToPlugin);
+                } catch (e) {
+                    console.log(e);
+                    console.log('getGameData response: ' + results[3]);
+                }
+                updateInterfaceWithGameInfo();
             }
 
             try {
@@ -1020,14 +1081,7 @@ function masterlistObserver(changes) {
         }
     });
 }
-function updateInterfaceWithGameInfo(response) {
-
-    try {
-        loot.game = JSON.parse(response, jsonToPlugin);
-    } catch (e) {
-        console.log(e);
-        console.log('getGameData response: ' + response);
-    }
+function updateInterfaceWithGameInfo() {
 
     var totalMessageNo = 0;
     var warnMessageNo = 0;
