@@ -108,7 +108,7 @@ namespace loot {
         in.close();
 
         if (metadataList["plugins"])
-            plugins = metadataList["plugins"].as< list<Plugin> >();
+            plugins = metadataList["plugins"].as< unordered_set<Plugin, plugin_hash> >();
         if (metadataList["globals"])
             messages = metadataList["globals"].as< list<Message> >();
 
@@ -141,7 +141,7 @@ namespace loot {
         }
         else {
             for (const auto& rhsPlugin : rhs.plugins) {
-                const auto it = std::find(this->plugins.begin(), this->plugins.end(), rhsPlugin);
+                const auto it = this->plugins.find(rhsPlugin);
 
                 if (it == this->plugins.end()) {
                     BOOST_LOG_TRIVIAL(info) << "Metadata added for plugin: " << it->Name();
@@ -164,15 +164,6 @@ namespace loot {
             }
         }
         return true;
-    }
-
-    Plugin MetadataList::FindPlugin(const std::string& name) const {
-        auto it = std::find(plugins.begin(), plugins.end(), Plugin(name));
-
-        if (it != plugins.end())
-            return *it;
-        else
-            return Plugin(name);
     }
 
     // Masterlist member functions
@@ -752,11 +743,10 @@ namespace loot {
         BOOST_LOG_TRIVIAL(info) << "Merging masterlist, userlist into plugin list, evaluating conditions and checking for install validity.";
         for (const auto &plugin : this->plugins) {
             vertex_t v = boost::add_vertex(plugin.second, graph);
-            list<loot::Plugin>::iterator pos;
             BOOST_LOG_TRIVIAL(trace) << "Merging for plugin \"" << graph[v].Name() << "\"";
 
             //Check if there is a plugin entry in the masterlist. This will also find matching regex entries.
-            pos = std::find(this->masterlist.plugins.begin(), this->masterlist.plugins.end(), graph[v]);
+            auto pos = this->masterlist.plugins.find(graph[v]);
 
             if (pos != this->masterlist.plugins.end()) {
                 BOOST_LOG_TRIVIAL(trace) << "Merging masterlist data down to plugin list data.";
@@ -764,7 +754,7 @@ namespace loot {
             }
 
             //Check if there is a plugin entry in the userlist. This will also find matching regex entries.
-            pos = std::find(this->userlist.plugins.begin(), this->userlist.plugins.end(), graph[v]);
+            pos = this->userlist.plugins.find(graph[v]);
 
             if (pos != this->userlist.plugins.end() && pos->Enabled()) {
                 BOOST_LOG_TRIVIAL(trace) << "Merging userlist data down to plugin list data.";

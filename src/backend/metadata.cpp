@@ -573,7 +573,7 @@ namespace loot {
         _dirtyInfo = dirtyInfo;
     }
 
-    void Plugin::EvalAllConditions(loot::Game& game, const unsigned int language) {
+    Plugin& Plugin::EvalAllConditions(loot::Game& game, const unsigned int language) {
         for (auto it = loadAfter.begin(); it != loadAfter.end();) {
             if (!it->EvalCondition(game))
                 loadAfter.erase(it++);
@@ -629,6 +629,8 @@ namespace loot {
             else
                 ++it;
         }
+
+        return *this;
     }
 
     bool Plugin::HasNameOnly() const {
@@ -798,7 +800,7 @@ namespace loot {
 
     size_t plugin_hash::operator () (const Plugin& p) const {
         size_t seed = 0;
-        boost::hash_combine(seed, p.Name());
+        boost::hash_combine(seed, boost::locale::to_lower(p.Name()));
         return seed;
     }
 

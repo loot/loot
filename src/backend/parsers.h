@@ -315,6 +315,29 @@ namespace YAML {
       }
     };
 
+    template<class T, class Hash>
+    struct convert< std::unordered_set<T, Hash> > {
+        static Node encode(const std::unordered_set<T, Hash>& rhs) {
+            Node node;
+            for (const auto &element : rhs) {
+                node.push_back(element);
+            }
+            return node;
+        }
+
+        static bool decode(const Node& node, std::unordered_set<T, Hash>& rhs) {
+            if (!node.IsSequence())
+                return false;
+
+            rhs.clear();
+            for (const auto &element : node) {
+                rhs.insert(element.as<T>());
+            }
+            return true;
+
+        }
+    };
+
     template<>
     struct convert<loot::Plugin> {
         static Node encode(const loot::Plugin& rhs) {

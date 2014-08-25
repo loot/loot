@@ -30,6 +30,7 @@
 
 #include <string>
 #include <list>
+#include <unordered_set>
 #include <boost/filesystem.hpp>
 
 namespace YAML {
@@ -42,6 +43,17 @@ namespace YAML {
 		out << EndSeq;
 
 		return out;
+    }
+
+    template<class T, class Hash>
+    Emitter& operator << (Emitter& out, const std::unordered_set<T, Hash>& rhs) {
+        out << BeginSeq;
+        for (const auto &element : rhs) {
+            out << element;
+        }
+        out << EndSeq;
+
+        return out;
     }
 
     Emitter& operator << (Emitter& out, const loot::PluginDirtyInfo& rhs);

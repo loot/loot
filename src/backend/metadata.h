@@ -202,7 +202,7 @@ namespace loot {
         void Tags(const std::set<Tag>& tags);
         void DirtyInfo(const std::set<PluginDirtyInfo>& info);
 
-        void EvalAllConditions(loot::Game& game, const unsigned int language);
+        Plugin& EvalAllConditions(loot::Game& game, const unsigned int language);
         bool HasNameOnly() const;
         bool IsRegexPlugin() const;
         bool LoadsBSA(const Game& game) const;
