@@ -171,7 +171,7 @@ section {
     background:white;
     overflow:hidden;
     margin:1em;
-    box-shadow:0 0 3px 0px rgba(0,0,0,0.5);
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
     padding:1em;
     position: relative;
 }
