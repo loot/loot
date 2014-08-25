@@ -270,7 +270,7 @@ function getConflictingPluginsFromFilter() {
 
     return Promise.resolve([]);
 }
-function togglePlugins(evt) {
+function applyFilters(evt) {
     var cards = document.getElementsByTagName('main')[0].getElementsByTagName('plugin-card');
     var entries = document.getElementById('pluginsNav').children;
     var hiddenPluginNo = 0;
@@ -383,25 +383,11 @@ function changeGame(evt) {
         ]
     });
     loot.query(request).then(function(result){
-        /* For each filter, save its state then deactivate it if it is activated.
-           All filters apart from the conflicts filter will be re-activated
-           after the new game has loaded. */
-        var elements = document.getElementById('filters').getElementsByTagName('input');
-        var activeFilters = [];
-        for (var i = 0; i < elements.length; ++i) {
-            if (elements[i].checked) {
-                activeFilters.push(elements[i]);
-                elements[i].click();
-            }
-        }
-        /* Need to do something slightly different for the conflicts filter.
-           Edit its state and run the filter function manually. */
-        if (document.body.hasAttribute('data-conflicts')) {
-            document.body.removeAttribute('data-conflicts');
-            /* Don't need to supply an event arg because togglePlugins doesn't
-               actually use it. */
-            togglePlugins();
-        }
+        /* Filters should be re-applied on game change, except the conflicts
+           filter. Don't need to deactivate the others beforehand. Strictly not
+           deactivating the conflicts filter either, just resetting it's value.
+           */
+        document.body.removeAttribute('data-conflicts');
 
         /* Clear the UI of all existing game-specific data. Also
            clear the card and li variables for each plugin object. */
@@ -479,9 +465,7 @@ function changeGame(evt) {
         updateInterfaceWithGameInfo();
 
         /* Reapply previously active filters. */
-        activeFilters.forEach(function(filter){
-            filter.click();
-        });
+        applyFilters();
     }).catch(processCefError);
 }
 function openReadme(evt) {
@@ -1186,28 +1170,6 @@ function updateInterfaceWithGameInfo() {
 function onFocus() {
     /* Send a query for updated load order and plugin header info. */
     loot.query('getGameData').then(function(result){
-        /* The plugins installed may have changed, which means cards might be
-           added or removed. Filters should be deactivated and reactivated once
-           the UI has finished updating. */
-
-        /* For each filter, save its state then deactivate it if it is activated. */
-        var conflictsPlugin;
-        if (document.body.hasAttribute('data-conflicts')) {
-            conflictsPlugin = document.body.getAttribute('data-conflicts');
-            document.body.removeAttribute('data-conflicts');
-        }
-        var elements = document.getElementById('filters').getElementsByTagName('input');
-        var activeFilters = [];
-        for (var i = 0; i < elements.length; ++i) {
-            if (elements[i].checked) {
-                activeFilters.push(elements[i]);
-                elements[i].checked = false;
-            }
-        }
-        /* Don't need to supply an event arg because togglePlugins doesn't
-           actually use it. */
-        togglePlugins();
-
         /* Parse the data sent from C++. */
         try {
             /* We don't want the plugin info creating cards, so don't convert
@@ -1279,14 +1241,8 @@ function onFocus() {
         /* Now update interface for new data. */
         updateInterfaceWithGameInfo();
 
-        /* Reapply previously active filters. */
-        activeFilters.forEach(function(filter){
-            filter.checked = true;
-        });
-        if (conflictsPlugin) {
-            document.body.setAttribute('data-conflicts', conflictsPlugin);
-        }
-        togglePlugins();
+        /* Reapply filters. */
+        applyFilters();
     }).catch(processCefError);
 }
 function checkFocus(){
