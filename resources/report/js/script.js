@@ -134,6 +134,9 @@ var loot = {
         document.getElementById('languageSelect').value = this.settings.language;
         document.getElementById('debugVerbositySelect').value = this.settings.debugVerbosity;
         document.getElementById('updateMasterlist').checked = this.settings.updateMasterlist;
+
+        this.updateEnabledGames();
+        this.updateSelectedGame();
     },
 
     observer: function(changes) {
@@ -142,8 +145,6 @@ var loot = {
                 change.object.updateEnabledGames();
             } else if (change.name == 'settings') {
                 change.object.updateSettingsUI();
-                change.object.updateEnabledGames();
-                change.object.updateSelectedGame();
             } else if (change.name == 'game') {
                 change.object.updateSelectedGame();
                 change.object.updateRedatePluginsButtonState();
@@ -176,12 +177,12 @@ function processCefError(err) {
 var marked;
 function saveFilterState(evt) {
     if (evt.currentTarget.checked) {
-        if (!loot.setttings.filters) {
+        if (!loot.settings.filters) {
             loot.settings.filters = {};
         }
         loot.settings.filters[evt.currentTarget.id] = true;
     } else {
-        if (loot.setttings.filters) {
+        if (loot.settings.filters) {
             delete loot.settings.filters[evt.currentTarget.id];
         }
     }
