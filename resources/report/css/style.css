@@ -162,6 +162,7 @@ nav a {
 main {
     overflow: auto;
     position: relative;
+    flex-grow: 1;
 }
 
 section {
