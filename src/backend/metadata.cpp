@@ -798,12 +798,6 @@ namespace loot {
         return boost::filesystem::exists(game.DataPath() / (name.substr(0, name.length() - 3) + "bsa"));
     }
 
-    size_t plugin_hash::operator () (const Plugin& p) const {
-        size_t seed = 0;
-        boost::hash_combine(seed, boost::locale::to_lower(p.Name()));
-        return seed;
-    }
-
     bool operator == (const File& lhs, const Plugin& rhs) {
         return boost::iequals(lhs.Name(), rhs.Name());
     }

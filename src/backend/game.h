@@ -61,7 +61,7 @@ namespace loot {
 
         bool operator == (const MetadataList& rhs) const;  //Compares content.
 
-        std::unordered_set<Plugin, plugin_hash> plugins;
+        std::unordered_set<Plugin> plugins;
         std::list<Message> messages;
     };
 

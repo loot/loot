@@ -108,7 +108,7 @@ namespace loot {
         in.close();
 
         if (metadataList["plugins"])
-            plugins = metadataList["plugins"].as< unordered_set<Plugin, plugin_hash> >();
+            plugins = metadataList["plugins"].as< unordered_set<Plugin> >();
         if (metadataList["globals"])
             messages = metadataList["globals"].as< list<Message> >();
 

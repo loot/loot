@@ -431,7 +431,7 @@ namespace loot {
             try {
                 this->MetadataList::Load(game.MasterlistPath());
 
-                unordered_set<Plugin, plugin_hash> tempSet;
+                unordered_set<Plugin> tempSet;
                 for (auto &plugin : plugins) {
                     tempSet.insert(Plugin(plugin).EvalAllConditions(game, language));
                 }

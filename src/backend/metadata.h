@@ -32,6 +32,8 @@
 #include <list>
 #include <set>
 
+#include <boost/locale.hpp>
+
 namespace loot {
 
     const unsigned int max_priority = 1000000;
@@ -243,11 +245,6 @@ namespace loot {
         size_t numOverrideRecords;
     };
 
-    struct plugin_hash : std::unary_function<Plugin, size_t> {
-        size_t operator () (const Plugin& p) const;
-    };
-
-
     bool operator == (const File& lhs, const Plugin& rhs);
 
     bool operator == (const Plugin& lhs, const File& rhs);
@@ -255,6 +252,15 @@ namespace loot {
     bool operator == (const std::string& lhs, const Plugin& rhs);
 
     bool IsPlugin(const std::string& file);
+}
+
+namespace std {
+    template<>
+    struct hash < loot::Plugin > {
+        size_t operator() (const loot::Plugin& plugin) {
+            return hash<string>()(boost::locale::to_lower(plugin.Name()));
+        }
+    };
 }
 
 #endif
