@@ -254,6 +254,11 @@ section h1 {
 #summary > table {
     border-collapse:separate;
     border-spacing:0;
+    display: inline-block;
+    vertical-align: top;
+}
+#summary > table:not(:last-child) {
+    margin-right: 4em;
 }
 #summary td {
     padding:0.5em;
@@ -261,7 +266,7 @@ section h1 {
     text-align:right;
     padding-left:3em;
 }
-#summary table td:first-child {
+#summary > table td:first-child {
     text-align:left;
     padding-left:0;
 }
