@@ -112,7 +112,8 @@ header li.disabled {
 }
 nav {
     height: 100%;
-    min-width: 20em;
+    width: 33%;
+    flex-shrink: 0;
 }
 nav > ol {
     padding-left: 1em;
@@ -123,10 +124,6 @@ nav > ol > li:nth-child(3) {
     height: calc(100% - 7em);
     overflow: auto;
     padding: 0;
-}
-#pluginsNav {
-    height: 100%;
-    overflow: auto;
 }
 nav li:not(:last-child) {
     padding: 0.5em 0.5em;
@@ -144,6 +141,8 @@ nav a {
     width: 100%;
 }
 #pluginsNav {
+    height: 100%;
+    overflow: auto;
     margin: 0;
     padding: 0;
 }
@@ -162,9 +161,6 @@ nav a {
 }
 main {
     overflow: auto;
-    flex-shrink: 10;
-    flex-grow: 1;
-    /*-webkit-perspective: 1000;*/
     position: relative;
 }
 
