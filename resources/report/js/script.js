@@ -692,20 +692,56 @@ function sortUIElements(pluginNames) {
     if (main.getElementsByTagName('plugin-card').length != entries.length) {
         throw Error("Error: Number of plugins in sidebar doesn't match number of plugins in main area!");
     }
-    pluginNames.forEach(function(name){
+    var lastCard;
+    var lastLi;
+    pluginNames.forEach(function(name, index){
+
+        /* Just removing and appending everything is the easiest way, but
+           redrawing the UI so much is expensive. Try to only move elements
+           that need to be moved.
+           The previous plugin in pluginNames has already been sorted, so check
+           if this plugin's card is after the previous plugin's card, and if so
+           do nothing.
+           The first plugin is a special case.
+           */
         var card = document.getElementById(name.replace(/\s+/g, ''));
-        var li;
-        for (var i = 0; i < entries.length; ++i) {
-            if (entries[i].getElementsByClassName('name')[0].textContent == name) {
-                li = entries[i];
-            }
+
+
+        var move = false;
+        if (index == 0) {
+            /* Special case. */
+            move = (card != card.parentElement.getElementsByTagName('plugin-card')[0]);
+        } else {
+            move = (card.previousElementSibling.getName() != pluginNames[index-1]);
         }
 
-        /* Easiest just to remove them and add them on at the end. */
-        main.removeChild(card);
-        main.appendChild(card);
-        pluginsNav.removeChild(li);
-        pluginsNav.appendChild(li);
+        if (move) {
+            /* Also need to move plugin sidebar entry. */
+            var li;
+            for (var i = 0; i < entries.length; ++i) {
+                if (entries[i].getElementsByClassName('name')[0].textContent == name) {
+                    li = entries[i];
+                }
+            }
+
+            /* Easiest just to remove them and add them on at the end. */
+            main.removeChild(card);
+            if (lastCard) {
+                main.insertBefore(card, lastCard.nextElementSibling);
+            } else {
+                main.insertBefore(card, main.getElementsByTagName('plugin-card')[0]);
+            }
+            pluginsNav.removeChild(li);
+            if (lastLi) {
+                pluginsNav.insertBefore(li, lastLi.nextElementSibling);
+            } else {
+                pluginsNav.insertBefore(li, pluginsNav.firstElementChild);
+            }
+            lastLi = li;
+        } else {
+            lastLi = entries[index];
+        }
+        lastCard = card;
     });
 }
 function sortPlugins(evt) {
