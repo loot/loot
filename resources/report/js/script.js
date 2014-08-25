@@ -407,9 +407,6 @@ function hideElement(element) {
         element.classList.toggle('hidden', true);
     }
 }
-function highlightElement(element, state) {
-    element.classList.toggle('highlight', state);
-}
 function toggleDisplayCSS(evt) {
     var e = document.getElementsByClassName(evt.target.getAttribute('data-class'));
     if (evt.target.checked) {
