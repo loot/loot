@@ -129,7 +129,7 @@ function Plugin(obj) {
 
             });
         } else {
-            this.card.getElementsByTagName('ul')[0].classList.toggle('hidden');
+            this.card.getElementsByTagName('ul')[0].classList.toggle('hidden', true);
         }
     }
 
