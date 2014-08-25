@@ -725,11 +725,11 @@ namespace loot {
     bool Game::HasBeenLoaded() {
         // Easy way to check is by checking the game's master file,
         // which definitely shouldn't be empty.
-        auto pairIt = plugins.find(_masterFile);
+        auto pairIt = plugins.find(boost::locale::to_lower(_masterFile));
 
         if (pairIt != plugins.end())
-            return pairIt->second.FormIDs().size() > 0;
-        
+            return !pairIt->second.FormIDs().empty();
+
         return false;
     }
 
