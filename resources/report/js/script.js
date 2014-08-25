@@ -22,6 +22,7 @@
     <http://www.gnu.org/licenses/>.
 */
 'use strict';
+var marked;
 var loot = {
     hasFocus: true,
     installedGames: [],
@@ -150,23 +151,24 @@ var loot = {
                 change.object.updateRedatePluginsButtonState();
             }
         });
+    },
+
+    /* Returns a cefQuery as a Promise. */
+    query: function(request) {
+        return new Promise(function(resolve, reject) {
+            window.cefQuery({
+            request: request,
+            persistent: false,
+            onSuccess: resolve,
+            onFailure: function(errorCode, errorMessage) {
+                    reject(Error('Error code: ' + errorCode + '; ' + errorMessage))
+                }
+            });
+        });
     }
 };
 Object.observe(loot, loot.observer);
 
-/* Returns a cefQuery as a Promise. */
-loot.query = function(request) {
-    return new Promise(function(resolve, reject) {
-        window.cefQuery({
-        request: request,
-        persistent: false,
-        onSuccess: resolve,
-        onFailure: function(errorCode, errorMessage) {
-                reject(Error('Error code: ' + errorCode + '; ' + errorMessage))
-            }
-        });
-    })
-}
 function processCefError(err) {
     /* Error.stack seems to be Chromium-specific. It gives a lot more useful
        info than just the error message. */
@@ -174,7 +176,6 @@ function processCefError(err) {
     showMessageBox('error', 'Error', err.message);
 }
 
-var marked;
 function saveFilterState(evt) {
     if (evt.currentTarget.checked) {
         if (!loot.settings.filters) {
@@ -324,11 +325,11 @@ function applyFilters(evt) {
             if ((document.getElementById('hideMessagelessPlugins').checked && isMessageless)
                 || conflicts.length > 0 && !isConflictingPlugin) {
                 hideElement(cards[i]);
-                hideElement(entries[i - 2]);
+                hideElement(entries[i]);
                 ++hiddenPluginNo;
             } else {
                 showElement(cards[i]);
-                showElement(entries[i - 2]);
+                showElement(entries[i]);
             }
         }
         document.getElementById('hiddenMessageNo').textContent = hiddenMessageNo;
@@ -549,7 +550,7 @@ function sortUIElements(pluginNames) {
     var main = document.getElementsByTagName('main')[0];
     var pluginsNav = document.getElementById('pluginsNav');
     var entries = pluginsNav.children;
-    if (main.children.length - 2 != entries.length) {
+    if (main.getElementsByTagName('plugin-card').length != entries.length) {
         throw Error("Error: Number of plugins in sidebar doesn't match number of plugins in main area!");
     }
     pluginNames.forEach(function(name){
@@ -938,11 +939,11 @@ function setupEventHandlers() {
     document.getElementById('hideVersionNumbers').addEventListener('click', toggleDisplayCSS, false);
     document.getElementById('hideCRCs').addEventListener('click', toggleDisplayCSS, false);
     document.getElementById('hideBashTags').addEventListener('click', toggleDisplayCSS, false);
-    document.getElementById('hideNotes').addEventListener('click', togglePlugins, false);
-    document.getElementById('hideDoNotCleanMessages').addEventListener('click', togglePlugins, false);
-    document.getElementById('hideInactivePluginMessages').addEventListener('click', togglePlugins, false);
-    document.getElementById('hideAllPluginMessages').addEventListener('click', togglePlugins, false);
-    document.getElementById('hideMessagelessPlugins').addEventListener('click', togglePlugins, false);
+    document.getElementById('hideNotes').addEventListener('click', applyFilters, false);
+    document.getElementById('hideDoNotCleanMessages').addEventListener('click', applyFilters, false);
+    document.getElementById('hideInactivePluginMessages').addEventListener('click', applyFilters, false);
+    document.getElementById('hideAllPluginMessages').addEventListener('click', applyFilters, false);
+    document.getElementById('hideMessagelessPlugins').addEventListener('click', applyFilters, false);
 
     /* Set up handlers for buttons. */
     document.getElementById('fileMenu').addEventListener('click', openMenu, false);

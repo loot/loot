@@ -45,13 +45,18 @@ var pluginMenuProto = Object.create(HTMLElement.prototype, {
                 activateFilter = evt.target.checked;
             }
             if (activateFilter) {
-                document.body.setAttribute('data-conflicts', evt.currentTarget.parentNode.host.getPluginCard().getName());
+                /* Un-highlight any existing filter plugin. */
+                var cards = document.getElementsByTagName('main')[0].getElementsByTagName('plugin-card');
+                for (var i = 0; i < cards.length; ++i) {
+                    cards[i].classList.toggle('highlight', false);
+                }
                 evt.currentTarget.parentNode.host.getPluginCard().classList.toggle('highlight', true);
+                document.body.setAttribute('data-conflicts', evt.currentTarget.parentNode.host.getPluginCard().getName());
             } else {
                 evt.currentTarget.parentNode.host.getPluginCard().classList.toggle('highlight', false);
                 document.body.removeAttribute('data-conflicts');
             }
-            togglePlugins(evt);
+            applyFilters(evt);
         }
     },
 
@@ -123,25 +128,15 @@ var pluginMenuProto = Object.create(HTMLElement.prototype, {
     attachedCallback: {
         value: function() {
             /* Add event listeners for the menu items. */
-            var conflictsPlugin = document.body.getAttribute('data-conflicts');
-            if (conflictsPlugin && conflictsPlugin != this.getPluginCard().getName()) {
-                /* The conflict filter is currently active for another plugin.
-                   Prevent the filter being activated for this one. */
-                this.shadowRoot.getElementById('showOnlyConflicts').disabled = true;
-                this.shadowRoot.getElementById('showOnlyConflicts').parentElement.classList.toggle('disabled', true);
-            } else {
-                /* The conflicts filter is either inactive or active for this
-                   plugin. Allow it to be activated or deactivated. For some
-                   reason clicking on the label is processed slower than
-                   the checkbox state, and in the time difference the menu
-                   gets closed, so that the conflicts filter never gets applied.
-                   To get around this, listen for a click on the label rather
-                   than for checkbox state change. */
-                if (conflictsPlugin == this.getPluginCard().getName()) {
-                    this.shadowRoot.getElementById('showOnlyConflicts').checked = true;
-                }
-                this.shadowRoot.getElementById('showOnlyConflicts').parentElement.addEventListener('click', this.onShowOnlyConflicts, false);
+            /* For some reason clicking on the label is processed slower
+               than the checkbox state, and in the time difference the menu
+               gets closed, so that the conflicts filter never gets applied.
+               To get around this, listen for a click on the label rather
+               than for checkbox state change. */
+            if (document.body.getAttribute('data-conflicts') == this.getPluginCard().getName()) {
+                this.shadowRoot.getElementById('showOnlyConflicts').checked = true;
             }
+            this.shadowRoot.getElementById('showOnlyConflicts').parentElement.addEventListener('click', this.onShowOnlyConflicts, false);
             this.shadowRoot.getElementById('editMetadata').addEventListener('click', this.onEditMetadata, false);
             this.shadowRoot.getElementById('copyMetadata').addEventListener('click', this.onCopyMetadata, false);
             this.shadowRoot.getElementById('clearMetadata').addEventListener('click', this.onClearMetadata, false);
@@ -541,13 +536,9 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
             var card = evt.currentTarget.parentElement.parentElement.parentNode.host;
 
             menu.setAttribute('data-for', card.id);
-
-
             var main = document.getElementsByTagName('main')[0];
-            main.appendChild(menu);
 
             /* Set page position of menu. */
-
             function getOffset( el, stopEl ) {
                 var _x = 0;
                 var _y = 0;
@@ -562,6 +553,8 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
 
             menu.style.top = (offset.top + evt.target.offsetHeight + 10) + 'px';
             menu.style.right = (main.offsetWidth - offset.left - evt.target.offsetWidth - 10) + 'px';
+
+            main.appendChild(menu);
 
             evt.stopPropagation();
 
