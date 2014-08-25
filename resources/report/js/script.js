@@ -23,8 +23,35 @@
 */
 'use strict';
 var loot = {
-    hasFocus: true
+    hasFocus: true,
+    installedGames: [],
+    settings: {},
+    game: {
+        folder: '',
+        globalMessages: [],
+        masterlist: {},
+        plugins: []
+    },
+
+    observer: function(changes) {
+        changes.forEach(function(change){
+            if (change.name == 'installedGames') {
+                /* Update the disabled games in the game menu. */
+                var gameMenuItems = document.getElementById('gameMenu').firstElementChild.children;
+                for (var i = 0; i < gameMenuItems.length; ++i) {
+                    if (change.object[change.name].indexOf(gameMenuItems[i].getAttribute('data-folder')) == -1) {
+                        gameMenuItems[i].classList.toggle('disabled', true);
+                        gameMenuItems[i].removeEventListener('click', changeGame, false);
+                    } else {
+                        gameMenuItems[i].classList.toggle('disabled', false);
+                        gameMenuItems[i].addEventListener('click', changeGame, false);
+                    }
+                }
+            }
+        });
+    }
 };
+Object.observe(loot, loot.observer);
 
 /* Returns a cefQuery as a Promise. */
 loot.query = function(request) {
@@ -767,12 +794,6 @@ function updateSettingsUI() {
         li.appendChild(text);
 
         gameMenu.appendChild(li);
-
-        if (loot.installedGames.indexOf(loot.settings.games[i].folder) == -1) {
-            li.classList.toggle('disabled', true);
-        } else {
-            li.addEventListener('click', changeGame, false);
-        }
 
         var row = gameTable.addRow(loot.settings.games[i]);
         gameTable.setReadOnly(row, ['name','folder','type']);
