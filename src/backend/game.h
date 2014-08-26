@@ -41,7 +41,7 @@
 #include <yaml-cpp/yaml.h>
 
 namespace loot {
-    
+
     class Game;
 
     /* Each Game object should store the config details specific to that game.
@@ -78,7 +78,7 @@ namespace loot {
 
         bool Load(Game& game, const unsigned int language);  //Handles update with load fallback.
         bool Update(Game& game, const unsigned int language);
-        
+
         std::string GetRevision(const boost::filesystem::path& path);
         std::string GetDate(const boost::filesystem::path& path);
 
@@ -96,7 +96,7 @@ namespace loot {
         Game(const unsigned int baseGameCode, const std::string& lootFolder = "");
 
         Game& SetDetails(const std::string& name, const std::string& masterFile,
-                        const std::string& repositoryURL, const std::string& repositoryBranch, 
+                        const std::string& repositoryURL, const std::string& repositoryBranch,
                         const std::string& path, const std::string& registry);
         Game& SetPath(const std::string& path);  //Used by API.
         Game& Init();

@@ -172,7 +172,7 @@ namespace loot {
         //For 'enabled' and 'priority' metadata, use the given plugin's values, but if the 'priority' user value is zero, ignore it.
         void MergeMetadata(const Plugin& plugin);
 
-        //Returns the difference in metadata between the two plugins. 
+        //Returns the difference in metadata between the two plugins.
         //For 'enabled', use the given plugin's value.
         //For 'priority', use the given plugin's value, unless it is equal to this plugin's value, in which case return 0.
         Plugin DiffMetadata(const Plugin& plugin) const;

@@ -189,7 +189,6 @@ namespace loot {
     bool Handler::HandleComplexQuery(CefRefPtr<CefBrowser> browser, YAML::Node& request,
         CefRefPtr<Callback> callback) {
 
-
         const string requestName = request["name"].as<string>();
 
         if (requestName == "find") {
@@ -254,7 +253,7 @@ namespace loot {
         }
         else if (requestName == "closeSettings") {
             BOOST_LOG_TRIVIAL(trace) << "Settings dialog closed and changes accepted, updating settings object.";
-            
+
             // Update the game details and settings.
             g_app_state.UpdateSettings(request["args"][0]);
             // If the user has deleted a default game, we don't want to restore it now.
@@ -733,7 +732,8 @@ namespace loot {
             }
             catch (loot::error &e) {
                 if (e.code() == loot::error::ok) {
-                    // There was a parsing error, but roll-back was successful, so the process 
+                    // There was a parsing error, but roll-back was successful, so the process
+
                     // should still complete.
                     g_app_state.CurrentGame().masterlist.messages.push_back(Message(Message::error, e.what()));
                     wasChanged = true;
@@ -914,7 +914,6 @@ namespace loot {
     }
 
     YAML::Node Handler::GenerateDerivedMetadata(const std::string& pluginName) {
-        
         // Now rederive the displayed metadata from the masterlist and userlist.
         auto pluginIt = g_app_state.CurrentGame().plugins.find(boost::locale::to_lower(pluginName));
         if (pluginIt != g_app_state.CurrentGame().plugins.end()) {
@@ -939,7 +938,8 @@ namespace loot {
         }
 
         // The clipboard takes a Unicode (ie. UTF-16) string that it then owns and must not
-        // be destroyed by LOOT. Convert the string, then copy it into a new block of 
+        // be destroyed by LOOT. Convert the string, then copy it into a new block of
+
         // memory for the clipboard.
         wstring wtext = ToWinWide(text);
         wchar_t * wcstr = new wchar_t[wtext.length() + 1];
@@ -981,7 +981,7 @@ namespace loot {
     CefRefPtr<CefLifeSpanHandler> LootHandler::GetLifeSpanHandler() {
         return this;
     }
-    
+
     CefRefPtr<CefLoadHandler> LootHandler::GetLoadHandler() {
         return this;
     }
@@ -1133,7 +1133,7 @@ namespace loot {
            << "<h2>Failed to load URL " << std::string(failedUrl)
            << " with error " << std::string(errorText) << " (" << errorCode
            << ").</h2></body></html>";
-        
+
         frame->LoadString(ss.str(), failedUrl);
     }
 

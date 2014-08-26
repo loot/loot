@@ -460,7 +460,6 @@ namespace loot {
             p.Priority(0);
             p.SetPriorityExplicit(false);
         }
-            
 
         //Compare this plugin against the given plugin.
         set<File> files = plugin.LoadAfter();

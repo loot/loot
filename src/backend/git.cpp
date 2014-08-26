@@ -94,7 +94,6 @@ namespace loot {
         git_diff * diff;
         git_buf buf;
 
-
         std::string ui_message;
     };
 
@@ -203,7 +202,8 @@ namespace loot {
             if (!fs::is_empty(repo_path)) {
                 // Clear any read-only flags first.
                 FixRepoPermissions(repo_path);
-                // Now, libgit2 doesn't support cloning into non-empty folders. Rename the folder 
+                // Now, libgit2 doesn't support cloning into non-empty folders. Rename the folder
+
                 // temporarily, and move its contents back in afterwards, skipping any that then conflict.
                 BOOST_LOG_TRIVIAL(trace) << "Repo path not empty, renaming folder.";
                 // If the temp path already exists, it needs to be deleted.
@@ -294,7 +294,6 @@ namespace loot {
                 const git_oid * commit_id = git_object_id(git.obj);
 
                 BOOST_LOG_TRIVIAL(trace) << "Creating the new branch.";
-                
                 // Create a branch.
                 git.call(git_commit_lookup(&git.commit, git.repo, commit_id));
                 git.call(git_branch_create(&git.ref, git.repo, repo_branch.c_str(), git.commit, 0, git.sig, NULL));
@@ -303,7 +302,6 @@ namespace loot {
                 git.call(git_branch_set_upstream(git.ref, (string("origin/") + repo_branch).c_str()));
 
                 BOOST_LOG_TRIVIAL(trace) << "Setting the upstream for the new branch.";
-                
                 // Free tree and commit pointers. Reference pointer is still used below.
                 git_object_free(git.obj);
                 git_commit_free(git.commit);

@@ -62,7 +62,7 @@ namespace loot {
         void SortPlugins(CefRefPtr<Callback> callback);
 
         // Handle queries with input arguments.
-        bool HandleComplexQuery(CefRefPtr<CefBrowser> browser, YAML::Node& request, 
+        bool HandleComplexQuery(CefRefPtr<CefBrowser> browser, YAML::Node& request,
                                 CefRefPtr<Callback> callback);
 
         void Find(CefRefPtr<CefBrowser> browser, const std::string& search);
@@ -75,7 +75,7 @@ namespace loot {
         YAML::Node Handler::GenerateDerivedMetadata(const std::string& pluginName);
         YAML::Node Handler::GenerateDerivedMetadata(const Plugin& file, const Plugin& masterlist, const Plugin& userlist);
 
-        void CopyToClipboard(const std::string& text); 
+        void CopyToClipboard(const std::string& text);
     private:
         IMPLEMENT_REFCOUNTING(Handler);
     };
@@ -129,9 +129,9 @@ namespace loot {
             return this;
         }
 
-        virtual bool OnBeforeBrowse(CefRefPtr< CefBrowser > browser, 
-                                    CefRefPtr< CefFrame > frame, 
-                                    CefRefPtr< CefRequest > request, 
+        virtual bool OnBeforeBrowse(CefRefPtr< CefBrowser > browser,
+                                    CefRefPtr< CefFrame > frame,
+                                    CefRefPtr< CefRequest > request,
                                     bool is_redirect) OVERRIDE;
 
         // Request that all existing browser windows close.

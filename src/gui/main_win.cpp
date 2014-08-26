@@ -51,7 +51,7 @@ CefSettings GetCefSettings() {
 
     // Set CEF logging.
     CefString(&cef_settings.log_file).FromString((g_path_local / "CEFDebugLog.txt").string());
- 
+
     // Enable remote debugging.
     cef_settings.remote_debugging_port = 8080;
 

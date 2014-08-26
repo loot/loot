@@ -34,7 +34,7 @@
 
 namespace loot {
 
-    class LootApp : public CefApp, 
+    class LootApp : public CefApp,
                     public CefBrowserProcessHandler,
                     public CefRenderProcessHandler {
     public:
@@ -66,7 +66,7 @@ namespace loot {
     public:
         LootState();
 
-        // Init may fail with no 
+        // Init may fail with no
         void Init(const std::string& cmdLineGame);
         const std::vector<std::string>& InitErrors() const;
 

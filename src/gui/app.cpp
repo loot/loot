@@ -56,7 +56,7 @@ namespace loot {
     LootState g_app_state = LootState();
 
     LootApp::LootApp() {}
-    
+
     CefRefPtr<CefBrowserProcessHandler> LootApp::GetBrowserProcessHandler() {
         return this;
     }
@@ -257,7 +257,8 @@ namespace loot {
 
             newGameFolders.insert(game.FolderName());
         }
-        // Remove deleted games. As the current game is stored using its index, 
+        // Remove deleted games. As the current game is stored using its index,
+
         // removing an earlier game may invalidate it.
         for (auto it = _games.begin(); it != _games.end();) {
             if (newGameFolders.find(it->FolderName()) == newGameFolders.end()) {
@@ -321,7 +322,7 @@ namespace loot {
             BOOST_LOG_TRIVIAL(error) << "Failed to save LOOT's settings. Error: " << e.what();
         }
     }
-    
+
     bool LootState::AreSettingsValid() {
         if (!_settings["language"]) {
             if (_settings["Language"]) {
