@@ -43,7 +43,7 @@ namespace loot {
 
     struct git_handler {
     public:
-        git_handler() : repo(nullptr), remote(nullptr), cfg(nullptr), obj(nullptr), commit(nullptr), ref(nullptr), ref2(nullptr), sig(nullptr), blob(nullptr), merge_head(nullptr), tree(nullptr), diff(nullptr) {}
+        git_handler() : repo(nullptr), remote(nullptr), cfg(nullptr), obj(nullptr), commit(nullptr), ref(nullptr), ref2(nullptr), sig(nullptr), blob(nullptr), merge_head(nullptr), tree(nullptr), diff(nullptr), buf({0}) {}
 
         ~git_handler() {
             git_commit_free(commit);
@@ -58,6 +58,7 @@ namespace loot {
             git_merge_head_free(merge_head);
             git_tree_free(tree);
             git_diff_free(diff);
+            git_buf_free(&buf);
         }
 
         void call(int error_code) {
@@ -91,6 +92,7 @@ namespace loot {
         git_merge_head * merge_head;
         git_tree * tree;
         git_diff * diff;
+        git_buf buf;
 
 
         std::string ui_message;
@@ -152,15 +154,12 @@ namespace loot {
             BOOST_LOG_TRIVIAL(info) << "Getting the Git object for the tree at HEAD.";
             git.call(git_revparse_single(&git.obj, git.repo, "HEAD"));
 
-            BOOST_LOG_TRIVIAL(trace) << "Getting the Git object ID.";
-            const git_oid * oid = git_object_id(git.obj);
-
             BOOST_LOG_TRIVIAL(trace) << "Generating hex string for Git object ID.";
-            char sha1[10];
-            git_oid_tostr(sha1, 10, oid);
-            revision = sha1;
+            git.call(git_object_short_id(&git.buf, git.obj));
+            revision = git.buf.ptr;
 
-            BOOST_LOG_TRIVIAL(trace) << "Getting date for Git object ID.";
+            BOOST_LOG_TRIVIAL(trace) << "Getting date for Git object.";
+            const git_oid * oid = git_object_id(git.obj);
             git.call(git_commit_lookup(&git.commit, git.repo, oid));
             git_time_t time = git_commit_time(git.commit);
             boost::locale::date_time dateTime(time);
@@ -396,19 +395,13 @@ namespace loot {
             BOOST_LOG_TRIVIAL(trace) << "Getting the Git object for HEAD.";
             git.call(git_repository_head(&git.ref, git.repo));
             git.call(git_reference_peel(&git.obj, git.ref, GIT_OBJ_COMMIT));
+
+            BOOST_LOG_TRIVIAL(trace) << "Generating hex string for Git object ID.";
+            git.call(git_object_short_id(&git.buf, git.obj));
+            revision = git.buf.ptr;
+
+            BOOST_LOG_TRIVIAL(trace) << "Getting date for Git object.";
             const git_oid * oid = git_object_id(git.obj);
-
-            BOOST_LOG_TRIVIAL(trace) << "Generating hex string for the Git object.";
-            // git_object_short_id seems to be unstable, or I'm just not freeing memory right somewhere, I can't tell.
-            /*git_buf buffer;
-            git.call(git_object_short_id(&buffer, git.obj));
-            revision = string(buffer.ptr, buffer.size);
-            git_buf_free(&buffer);*/
-            char sha1[10];
-            git_oid_tostr(sha1, 10, oid);
-            revision = sha1;
-
-            BOOST_LOG_TRIVIAL(trace) << "Getting date for Git object ID.";
             git.call(git_commit_lookup(&git.commit, git.repo, oid));
             git_time_t time = git_commit_time(git.commit);
             // Now convert into a nice text format.
