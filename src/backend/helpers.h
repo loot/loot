@@ -35,7 +35,7 @@
 namespace loot {
 
     /// Array used to try each of the expressions defined using
-	/// an iteration for each of them.
+    /// an iteration for each of them.
     extern std::regex version_checks[7];
 
     //////////////////////////////////////////////////////////////////////////
