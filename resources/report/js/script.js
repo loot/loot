@@ -1057,6 +1057,8 @@ function showHoverText(evt) {
     hoverText.setAttribute('data-target', evt.target.id);
 
     var rect = evt.target.getBoundingClientRect();
+    hoverText.style.left = (rect.left + evt.target.offsetWidth/2) + 'px';
+    hoverText.style.top = (rect.bottom + 10) + 'px';
 
     var dialog = getDialogParent(evt.target);
     if (dialog) {
@@ -1064,8 +1066,6 @@ function showHoverText(evt) {
     } else {
         document.body.appendChild(hoverText);
     }
-    hoverText.style.left = (rect.left + evt.target.offsetWidth/2) + 'px';
-    hoverText.style.top = (rect.bottom + 10) + 'px';
 }
 function hideHoverText(evt) {
     var hoverText = document.getElementById('hoverText');
