@@ -561,6 +561,8 @@ function changeGame(evt) {
     loot.games[index].masterlist = loot.game.masterlist;
     loot.games[index].plugins = loot.game.plugins;
 
+    updateProgressDialog('Loading game data...');
+    openProgressDialog();
 
     /* Now send off a CEF query with the folder name of the new game. */
     var request = JSON.stringify({
@@ -594,7 +596,7 @@ function changeGame(evt) {
             var gameInfo = JSON.parse(result, jsonToPlugin);
         } catch (e) {
             console.log(e);
-            console.log('getGameData response: ' + result);
+            console.log('changeGame response: ' + result);
         }
 
         /* This may not be the first time loading this game this instance of
@@ -656,6 +658,8 @@ function changeGame(evt) {
 
         /* Reapply previously active filters. */
         applyFilters();
+
+        closeProgressDialog();
     }).catch(processCefError);
 }
 function openReadme(evt) {
@@ -1249,6 +1253,8 @@ function initVars() {
             parallelPromises.push(loot.query('getGameData'));
         }
 
+        updateProgressDialog('Initialising user interface...');
+        openProgressDialog();
         Promise.all(parallelPromises).then(function(results) {
             try {
                 loot.gameTypes = JSON.parse(results[0]);
@@ -1298,12 +1304,15 @@ function initVars() {
                 document.getElementById('settingsButton').click();
             }
 
+            closeProgressDialog();
         }).catch(processCefError);
 
     }).catch(processCefError);
 }
 function onFocus() {
     /* Send a query for updated load order and plugin header info. */
+    updateProgressDialog('Refreshing data...');
+    openProgressDialog();
     loot.query('getGameData').then(function(result){
         /* Parse the data sent from C++. */
         try {
@@ -1368,6 +1377,8 @@ function onFocus() {
 
         /* Reapply filters. */
         applyFilters();
+
+        closeProgressDialog();
     }).catch(processCefError);
 }
 function checkFocus(){
