@@ -40,9 +40,9 @@ namespace YAML {
         for (const auto &element: rhs) {
             out << element;
         }
-		out << EndSeq;
+        out << EndSeq;
 
-		return out;
+        return out;
     }
 
     template<class T, class Hash>

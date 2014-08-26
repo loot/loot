@@ -307,12 +307,12 @@ namespace loot {
             name = name.substr(0, name.length() - 6);
     }
 
-	Plugin::Plugin(loot::Game& game, const std::string& n, const bool headerOnly)
+    Plugin::Plugin(loot::Game& game, const std::string& n, const bool headerOnly)
         : name(n), enabled(true), priority(0), isMaster(false), crc(0), numOverrideRecords(0), _isPriorityExplicit(false) {
 
-		// Get data from file contents using libespm. Assumes libespm has already been initialised.
+        // Get data from file contents using libespm. Assumes libespm has already been initialised.
         BOOST_LOG_TRIVIAL(trace) << name << ": " << "Opening with libespm...";
-		boost::filesystem::path filepath = game.DataPath() / name;
+        boost::filesystem::path filepath = game.DataPath() / name;
 
         //In case the plugin is ghosted, but the extension already got trimmed.
         if (!boost::filesystem::exists(filepath) && boost::filesystem::exists(filepath.string() + ".ghost"))
@@ -341,10 +341,10 @@ namespace loot {
         }
 
         BOOST_LOG_TRIVIAL(trace) << name << ": " << "Checking master flag.";
-		isMaster = file->isMaster(game.espm_settings);
+        isMaster = file->isMaster(game.espm_settings);
 
         BOOST_LOG_TRIVIAL(trace) << name << ": " << "Getting masters.";
-		masters = file->getMasters();
+        masters = file->getMasters();
 
         BOOST_LOG_TRIVIAL(trace) << name << ": " << "Number of masters: " << masters.size();
 
@@ -352,12 +352,12 @@ namespace loot {
         game.crcCache.insert(pair<string, uint32_t>(n, crc));
 
         BOOST_LOG_TRIVIAL(trace) << name << ": " << "Getting the FormIDs.";
-		vector<uint32_t> records = file->getFormIDs();
+        vector<uint32_t> records = file->getFormIDs();
         vector<string> plugins = masters;
         plugins.push_back(name);
-		for (const auto &record: records) {
+        for (const auto &record: records) {
             FormID fid = FormID(plugins, record);
-			formIDs.insert(fid);
+            formIDs.insert(fid);
             if (!boost::iequals(fid.Plugin(), name))
                 ++numOverrideRecords;
         }
@@ -409,7 +409,7 @@ namespace loot {
             BOOST_LOG_TRIVIAL(trace) << name << ": " << "Extracted Bash Tag: " << tag;
             tags.insert(Tag(tag));
         }
-	}
+    }
 
     void Plugin::MergeMetadata(const Plugin& plugin) {
         BOOST_LOG_TRIVIAL(trace) << "Merging metadata for: " << name;
@@ -658,8 +658,8 @@ namespace loot {
     }
 
     const std::set<FormID>& Plugin::FormIDs() const {
-		return formIDs;
-	}
+        return formIDs;
+    }
 
     bool Plugin::DoFormIDsOverlap(const Plugin& plugin) const {
         //Basically std::set_intersection except with an early exit instead of an append to results.
@@ -700,17 +700,17 @@ namespace loot {
         for (const auto &formID : formIDs) {
             if (!boost::iequals(formID.Plugin(), name))
                 fidSubset.insert(formID);
-		}
-		return fidSubset;
+        }
+        return fidSubset;
     }
 
-	std::vector<std::string> Plugin::Masters() const {
-		return masters;
-	}
+    std::vector<std::string> Plugin::Masters() const {
+        return masters;
+    }
 
-	bool Plugin::IsMaster() const {
-		return isMaster;
-	}
+    bool Plugin::IsMaster() const {
+        return isMaster;
+    }
 
     std::string Plugin::Version() const {
         return version;
