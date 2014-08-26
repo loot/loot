@@ -419,3 +419,24 @@ input:valid {
     box-shadow:0 0 3px 0px rgba(0,0,0,0.5);
     padding: 2px 5px;
 }
+progress {
+    /* Reset the default appearance */
+    -webkit-appearance: none;
+    width: 250px;
+    height: 20px;
+    display: block;
+}
+
+@-webkit-keyframes indeterminate {
+	0% { width: 0% }
+	100% { width: 100% }
+}
+
+progress::-webkit-progress-bar {
+    background-color: #eee;
+    border-radius: 2px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+}
+progress::-webkit-progress-value {
+    -webkit-animation: indeterminate 5s linear 0 infinite alternate;
+}

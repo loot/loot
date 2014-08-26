@@ -746,7 +746,21 @@ function sortUIElements(pluginNames) {
         lastCard = card;
     });
 }
+function toggleProgressDialog() {
+    var progressDialog = document.getElementById('progressDialog');
+    if (progressDialog.open) {
+        progressDialog.close();
+    } else {
+        progressDialog.showModal();
+    }
+}
+function updateProgressDialog(message) {
+    var progressDialog = document.getElementById('progressDialog');
+    progressDialog.getElementsByTagName('h1')[0].textContent = message;
+}
 function sortPlugins(evt) {
+    updateProgressDialog('LOOT Working...');
+    toggleProgressDialog();
     if (loot.settings.updateMasterlist) {
         updateMasterlist(evt);
     }
@@ -786,6 +800,7 @@ function sortPlugins(evt) {
             hideElement(document.getElementById('sortButton'));
             showElement(document.getElementById('applySortButton'));
             showElement(document.getElementById('cancelSortButton'));
+            toggleProgressDialog();
         }
     }).catch(processCefError);
 }
