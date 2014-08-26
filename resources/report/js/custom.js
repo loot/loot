@@ -539,20 +539,9 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
             var main = document.getElementsByTagName('main')[0];
 
             /* Set page position of menu. */
-            function getOffset( el, stopEl ) {
-                var _x = 0;
-                var _y = 0;
-                while( el && el != stopEl ) {
-                    _x += el.offsetLeft;
-                    _y += el.offsetTop;
-                    el = el.offsetParent;
-                }
-                return { top: _y, left: _x };
-            }
-            var offset = getOffset(evt.target, main);
-
-            menu.style.top = (offset.top + evt.target.offsetHeight + 10) + 'px';
-            menu.style.right = (main.offsetWidth - offset.left - evt.target.offsetWidth - 10) + 'px';
+            var rect = evt.target.getBoundingClientRect();
+            menu.style.right =  (main.offsetWidth - (rect.right - main.offsetLeft) - 15) + 'px';
+            menu.style.top = (rect.bottom - document.getElementById('container').offsetTop + main.scrollTop + 5) + 'px';
 
             main.appendChild(menu);
 
