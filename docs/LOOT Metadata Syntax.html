@@ -83,7 +83,6 @@ h3{
         <li><a href="#structs-dirty">Dirty Info Data Structure</a>
         <li><a href="#structs-plugin">Plugin Data Structure</a>
     </ol>
-    <li><a href="#links">URL Hyperlinking</a>
     <li><a href="#cond">Condition Strings</a>
     <ol>
         <li><a href="#cond-function">Functions</a>
@@ -92,6 +91,7 @@ h3{
     </ol>
     <li><a href="#lang">Language Codes</a>
     <li><a href="#license">License</a>
+    <li><a href="#support">Feature Support</a>
 </ol>
 
 <h2 id="intro">Introduction</h2>
@@ -179,7 +179,7 @@ condition: 'file("Mart''s Monster Mod for OOO.esm") or file("FCOM_Convergence.es
     <thead><tr><th>Key Name<th>Required<th>Notes
     <tbody>
         <tr><td><code>name</code><td>&#x2713;<td>An exact (ie. not regex) file path or name.
-        <tr><td><code>display</code><td>&#x2717;<td>A substitute string to be displayed instead of the file path in any generated messages, eg. the name of the mod the file belongs to. Double-quoted URLs will be hyperlinked in the LOOT report. See <a href="#links">URL Hyperlinking</a> for details.
+        <tr><td><code>display</code><td>&#x2717;<td>A substitute string to be displayed instead of the file path in any generated messages, eg. the name of the mod the file belongs to.
         <tr><td><code>condition</code><td>&#x2717;<td>A condition string that is evaluated to determine whether this file data should be used: if it evaluates to true, the data is used, otherwise it is ignored. See <a href="#cond">Condition Strings</a> for details.
 </table>
 
@@ -199,6 +199,7 @@ display: 'OBSE v18+'
         <tr><td><code>type</code><td>string<td>&#x2713;<td>The type string can be one of three keywords, see the table below for their semantics.
         <tr><td><code>content</code><td>string <i>or</i> localised content list<td>&#x2713;<td>Either simply a string, or a list of localised content data structures. If the latter, one of the structures must be for English.
         <tr><td><code>condition</code><td>string<td>&#x2717;<td>A condition string that is evaluated to determine whether the message should be displayed: if it evaluates to true, the message is displayed, otherwise it is not. See <a href="#cond">Condition Strings</a> for details.
+        <tr><td><code>subs</code><td>list of strings<td>&#x2717;<td>A list of strings to be substituted into the message content string. The content string must use numbered specifiers (<code>%1%</code>, <code>%2%</code>, etc.), where the numbers correspond to the position of the substitution string in this list to use, to denote where these strings are to be substituted.
 </table>
 
 <p>There are three message types:
@@ -213,16 +214,16 @@ display: 'OBSE v18+'
 <table>
     <thead><tr><th>Key Name<th>Required<th>Notes
     <tbody>
-        <tr><td><code>str</code><td>&#x2713;<td>The actual message content string. Double-quoted URLs will be hyperlinked in the LOOT report. See <a href="#links">URL Hyperlinking</a> for details.
+        <tr><td><code>str</code><td>&#x2713;<td>The actual message content string.
         <tr><td><code>lang</code><td>&#x2713;<td>The language that <code>str</code> is written in, given as a POSIX language code. The languages LOOT supports are given in <a href="#lang">Language Codes</a>.
 </table>
+<p>LOOT supports formatting of messages using <a href="https://help.github.com/articles/github-flavored-markdown">GitHub Flavored Markdown</a>. Support is provided by the <a href="https://github.com/chjj/marked">Marked</a> library (v0.3.2). Strings that get substituted into messages, such as file display names and dirty info utility strings, also support the same formatting options.
 
 <p>LOOT handles messages and languages as follows:
 <ol>
     <li>If a message's <code>content</code> value is a string, the message will use the string as its content if displayed.
     <li>If a message's <code>content</code> value is a list of localised content structures, then the first structure with a language that matches LOOT's current language will be used as the message's content if displayed. If there are no matches, then the first structure in English will be used.
 </ol>
-
 
 <p>Examples (translations by Google):
 <code class="box">type: say
@@ -244,6 +245,17 @@ content: 'An alternative [example link](http://www.example.com), with no transla
 would be displayed as
 <blockquote>
 отмечать: An alternative <a href="http://www.example.com">example link</a>, with no translations.
+</blockquote>
+In English,
+<code class="box">type: say
+content: 'A newer version of %1% [is available](%2%).
+subs:
+  - 'this plugin'
+  - 'http://www.example.com'
+</code>
+would be displayed as
+<blockquote>
+Note: A newer version of this plugin <a href="http://www.example.com">is available</a>.
 </blockquote>
 
 
@@ -274,7 +286,7 @@ ver:
     <thead><tr><th>Key Name<th>Data Type<th>Required<th>Notes
     <tbody>
         <tr><td><code>crc</code><td>hexadecimal integer<td>&#x2713;<td>The CRC checksum of the dirty plugin, before cleaning. LOOT displays the CRCs of installed plugins in its report. The 8-character CRC should be preceded by <code>0x</code> so that it is correctly interpreted.
-        <tr><td><code>util</code><td>string<td>&#x2713;<td>The utility that should be used to clean the plugin. This field supports <a href="#links">URL Hyperlinking</a>, and it is recommended that a URL to the game's cleaning guide is supplied.
+        <tr><td><code>util</code><td>string<td>&#x2713;<td>The utility that should be used to clean the plugin.
         <tr><td><code>itm</code><td>integer<td>&#x2717;<td>The number of identical-to-master records reported for the dirty plugin. If the number is unknown, this field should not be supplied. If the number is known and zero, this field should be supplied.
         <tr><td><code>udr</code><td>integer<td>&#x2717;<td>The number of undeleted records reported for the dirty plugin. If the number is unknown, this field should not be supplied. If the number is known and zero, this field should be supplied.
         <tr><td><code>nav</code><td>integer<td>&#x2717;<td>The number of deleted navmeshes reported for the dirty plugin. If the number is unknown, this field should not be supplied. If the number is known and zero, this field should be supplied.
@@ -330,22 +342,6 @@ msg:
   - type: say
     content: 'Do not clean. "Dirty" edits are intentional and required for the mod to function.'
 </code>
-
-
-<h2 id="links">URL Hyperlinking</h2>
-<p>File <code>display</code> strings and message <code>content</code> strings (including the strings in localised content structures) that contain recognised URLs have them displayed as hyperlinks in the LOOT report.
-<p>URLs must begin with <code>file:</code>, <code>http:</code> or <code>https:</code>, and be written according to the following subset of <a href="http://daringfireball.net/projects/markdown/syntax">Markdown</a> syntax. Note that LOOT does not recognise additional Markdown syntaxes to those given below.
-<p>For labelled URLs, the syntax is <code>[<var>label</var>](<var>url</var>)</code>. A single optional space may be included between the closing square bracket and the opening parenthesis, ie. <code>[<var>label</var>] (<var>url</var>)</code>.
-<p>For unlabelled URLs, the syntax is <code>&lt;<var>url</var>&gt;</code>. The URL shall be used as its own label.
-<p>Note that the URLs given as part of a location data structure should not be labelled or enclosed in less-than or greater-than signs, as they consist of raw URL data, rather than text to be displayed in a message.
-<p>Examples:
-<code class="box">'This [string](https://en.wikipedia.org/wiki/String_(computer_science)) contains a labelled hyperlink.'</code>
-would be displayed as
-<blockquote>This <a href="https://en.wikipedia.org/wiki/String_(computer_science)">string</a> contains a labelled hyperlink.</blockquote>
-<p>While
-<code class="box">'This string (see: &lt;https://en.wikipedia.org/wiki/String_(computer_science)&gt;) contains an unlabelled hyperlink.'</code>
-both get displayed as
-<blockquote>This string (see: <a href="https://en.wikipedia.org/wiki/String_(computer_science)">https://en.wikipedia.org/wiki/String_(computer_science)</a>) contains an unlabelled hyperlink.</blockquote>
 
 <h2 id="cond">Condition Strings</h2>
 <p>Condition strings can be used to ensure that data is only acted on by LOOT under certain circumstances. They are very similar to boolean conditional expressions in programming languages such as Python, though more limited. Their <a href="https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_Form">EBNF</a> grammar is:
@@ -454,3 +450,16 @@ both get displayed as
 <p>This document is part of the LOOT documentation.<br>
 Copyright (C) 2012&mdash;2014 WrinklyNinja<br>
 See the file <q>LOOT ReadMe.html</q> for copying conditions.
+
+<h2 id="support">Feature Support</h2>
+<p>Different versions of LOOT may have varying levels of support for the syntax detailed in this document. Such variation in support is detailed in the table below. Unless otherwise noted, all syntax changes are backwards-compatible (ie. you can use the features without breaking the masterlist for users on older versions).
+
+<table>
+    <thead>
+        <tr><th><th colspan="2">LOOT Version
+        <tr><th>Feature<th>&lt;= 0.6 <th>0.7
+    <tbody>
+        <tr><td>GitHub Flavored Markdown message formatting<td>Only URL hyperlinking is supported, for <code>file:</code>, <code>http:</code> and <code>https:</code> URLs, using the <code>[label](url)</code> and <code>&lt;url&gt;</code> syntaxes.<td>LOOT uses the <a href="https://github.com/chjj/marked">Marked</a> library (v0.3.2) to provide support for most of GitHub Flavored Markdown, minus the GitHub-specific features (like @mentions, issue/repo linking and emoji).
+        <tr><td>Message string substitution (ie. <code>sub:</code>)<td>Not supported.<td>Support planned, but not yet implemented in the latest alpha release.
+        <tr><td>YAML merge keys (ie. <code>&lt;&lt;:</code>)<td>Not supported.<td>Support planned, but not yet implemented in the latest alpha release.
+</table>

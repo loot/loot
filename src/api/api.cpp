@@ -82,6 +82,7 @@ const unsigned int loot_lang_polish                 = loot::Language::polish;
 const unsigned int loot_lang_brazilian_portuguese   = loot::Language::brazilian_portuguese;
 const unsigned int loot_lang_finnish                = loot::Language::finnish;
 const unsigned int loot_lang_german                 = loot::Language::german;
+const unsigned int loot_lang_danish                 = loot::Language::danish;
 
 // LOOT cleanliness codes.
 const unsigned int loot_needs_cleaning_no       = 0;
@@ -166,7 +167,7 @@ unsigned int c_error(const unsigned int code, const std::string& what) {
 // below as dummies.
 
 namespace loot {
-    void Masterlist::GetGitInfo(boost::filesystem::path& path) {}
+    void Masterlist::GetGitInfo(const boost::filesystem::path& path) {}
 
     void Masterlist::Update(Game& game, const unsigned int language) {
         this->MetadataList::Load(game.MasterlistPath());
@@ -363,16 +364,16 @@ LOOT_API unsigned int loot_eval_lists (loot_db db, const unsigned int language) 
         for (auto it=temp.begin(); it != temp.end();) {
             it->EvalAllConditions(db->game, language);
             if (it->IsRegexPlugin()) {
-                boost::regex regex;
+                std::regex reg;
                 try {
-                    regex = boost::regex(it->Name(), boost::regex::perl|boost::regex::icase);
-                } catch (boost::regex_error& e) {
+                    reg = std::regex(it->Name(), std::regex::ECMAScript | std::regex::icase);
+                } catch (std::exception& e) {
                     return c_error(loot_error_regex_eval_fail, e.what());
                 }
 
                 for (boost::filesystem::directory_iterator itr(db->game.DataPath()); itr != boost::filesystem::directory_iterator(); ++itr) {
                     const std::string filename = itr->path().filename().string();
-                    if (boost::regex_match(filename, regex)) {
+                    if (std::regex_match(filename, reg)) {
                         loot::Plugin p = *it;
                         p.Name(filename);
                         temp.push_back(p);
@@ -393,16 +394,16 @@ LOOT_API unsigned int loot_eval_lists (loot_db db, const unsigned int language) 
         for (auto it=temp.begin(); it != temp.end();) {
             it->EvalAllConditions(db->game, language);
             if (it->IsRegexPlugin()) {
-                boost::regex regex;
+                std::regex reg;
                 try {
-                    regex = boost::regex(it->Name(), boost::regex::perl|boost::regex::icase);
-                } catch (boost::regex_error& e) {
+                    reg = std::regex(it->Name(), std::regex::ECMAScript | std::regex::icase);
+                } catch (std::exception& e) {
                     return c_error(loot_error_regex_eval_fail, e.what());
                 }
 
                 for (boost::filesystem::directory_iterator itr(db->game.DataPath()); itr != boost::filesystem::directory_iterator(); ++itr) {
                     const std::string filename = itr->path().filename().string();
-                    if (boost::regex_match(filename, regex)) {
+                    if (std::regex_match(filename, reg)) {
                         loot::Plugin p = *it;
                         p.Name(filename);
                         temp.push_back(p);
@@ -670,6 +671,9 @@ LOOT_API unsigned int loot_get_dirty_info(loot_db db, const char * const plugin,
 LOOT_API unsigned int loot_write_minimal_list (loot_db db, const char * const outputFile, const bool overwrite) {
     if (db == nullptr || outputFile == nullptr)
         return c_error(loot_error_invalid_args, "Null pointer passed.");
+
+    if (!boost::filesystem::exists(boost::filesystem::path(outputFile).parent_path()))
+        return c_error(loot_error_invalid_args, "Output directory does not exist.");
 
     if (boost::filesystem::exists(outputFile) && !overwrite)
         return c_error(loot_error_invalid_args, "Output file exists but overwrite is not set to true.");

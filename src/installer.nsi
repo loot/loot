@@ -74,9 +74,9 @@ FunctionEnd
 ;General
 
 	;Name, file and version info for installer.
-	Name "LOOT v0.6.0"
+	Name "LOOT v0.7.0"
 	OutFile "..\build\LOOT Installer.exe"
-	VIProductVersion 0.6.0.0
+	VIProductVersion 0.7.0.0
 
 	;Request application privileges for Windows Vista/7
 	RequestExecutionLevel admin
@@ -130,6 +130,7 @@ FunctionEnd
 	!insertmacro MUI_LANGUAGE "French"
 	!insertmacro MUI_LANGUAGE "Polish"
 	!insertmacro MUI_LANGUAGE "Finnish"
+	!insertmacro MUI_LANGUAGE "Danish"
 	!insertmacro MUI_RESERVEFILE_LANGDLL
 
 ;--------------------------------
@@ -138,8 +139,8 @@ FunctionEnd
 	VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "LOOT"
 	VIAddVersionKey /LANG=${LANG_ENGLISH} "CompanyName" "LOOT Team"
 	VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "© 2009-2014 LOOT Team"
-	VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "Installer for LOOT 0.6.0"
-	VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "0.6.0"
+	VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "Installer for LOOT 0.7.0"
+	VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "0.7.0"
 
 	LangString TEXT_MESSAGEBOX ${LANG_ENGLISH} "LOOT is already installed, and must be uninstalled before continuing. $\n$\nClick `OK` to remove the previous version or `Cancel` to cancel this upgrade."
 	LangString TEXT_RUN ${LANG_ENGLISH} "Run LOOT"
@@ -153,8 +154,8 @@ FunctionEnd
 	VIAddVersionKey /LANG=${LANG_RUSSIAN} "ProductName" "LOOT"
 	VIAddVersionKey /LANG=${LANG_RUSSIAN} "CompanyName" "LOOT Team"
 	VIAddVersionKey /LANG=${LANG_RUSSIAN} "LegalCopyright" "© 2009-2014 LOOT Team"
-	VIAddVersionKey /LANG=${LANG_RUSSIAN} "FileDescription" "Установщик для LOOT 0.6.0"
-	VIAddVersionKey /LANG=${LANG_RUSSIAN} "FileVersion" "0.6.0"
+	VIAddVersionKey /LANG=${LANG_RUSSIAN} "FileDescription" "Установщик для LOOT 0.7.0"
+	VIAddVersionKey /LANG=${LANG_RUSSIAN} "FileVersion" "0.7.0"
 
 	LangString TEXT_MESSAGEBOX ${LANG_RUSSIAN} "LOOT уже установлен и должен быть удален перед продолжением. $\n$\nНажмите `OK` для удаления предыдущей версии или `Отмена` для отмены обновления."
 	LangString TEXT_RUN ${LANG_RUSSIAN} "Запустить LOOT"
@@ -168,8 +169,8 @@ FunctionEnd
 	VIAddVersionKey /LANG=${LANG_FRENCH} "ProductName" "LOOT"
 	VIAddVersionKey /LANG=${LANG_FRENCH} "CompanyName" "LOOT Team"
 	VIAddVersionKey /LANG=${LANG_FRENCH} "LegalCopyright" "© 2009-2014 LOOT Team"
-	VIAddVersionKey /LANG=${LANG_FRENCH} "FileDescription" "Programme d'installation pour LOOT 0.6.0"
-	VIAddVersionKey /LANG=${LANG_FRENCH} "FileVersion" "0.6.0"
+	VIAddVersionKey /LANG=${LANG_FRENCH} "FileDescription" "Programme d'installation pour LOOT 0.7.0"
+	VIAddVersionKey /LANG=${LANG_FRENCH} "FileVersion" "0.7.0"
 
 	LangString TEXT_MESSAGEBOX ${LANG_FRENCH} "LOOT est déjà installé, et doit être désinstallé avant de continuer. $\n$\nCliquer sur `OK` pour désinstaller la version précédente ou 'Annuler' pour annuler la mise à jour."
 	LangString TEXT_RUN ${LANG_FRENCH} "Lancer LOOT"
@@ -183,8 +184,8 @@ FunctionEnd
 	VIAddVersionKey /LANG=${LANG_SPANISH} "ProductName" "LOOT"
 	VIAddVersionKey /LANG=${LANG_SPANISH} "CompanyName" "LOOT Team"
 	VIAddVersionKey /LANG=${LANG_SPANISH} "LegalCopyright" "© 2009-2014 LOOT Team"
-	VIAddVersionKey /LANG=${LANG_SPANISH} "FileDescription" "El instalador para LOOT 0.6.0"
-	VIAddVersionKey /LANG=${LANG_SPANISH} "FileVersion" "0.6.0"
+	VIAddVersionKey /LANG=${LANG_SPANISH} "FileDescription" "El instalador para LOOT 0.7.0"
+	VIAddVersionKey /LANG=${LANG_SPANISH} "FileVersion" "0.7.0"
 
 	LangString TEXT_MESSAGEBOX ${LANG_SPANISH} "LOOT está instalado, y debe ser desinstalado antes de continuar. $\n$\nPresione `OK` para eliminar la versión anterior o `Cancel` para cancelar la actualización."
 	LangString TEXT_RUN ${LANG_SPANISH} "Ejecutar LOOT"
@@ -198,8 +199,8 @@ FunctionEnd
 	VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "ProductName" "LOOT"
 	VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "CompanyName" "LOOT Team"
 	VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "LegalCopyright" "© 2009-2014 LOOT Team"
-	VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "FileDescription" "LOOT 0.6.0安装包"
-	VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "FileVersion" "0.6.0"
+	VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "FileDescription" "LOOT 0.7.0安装包"
+	VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "FileVersion" "0.7.0"
 
 	LangString TEXT_MESSAGEBOX ${LANG_SIMPCHINESE} "检测到旧版LOOT，您需要先卸载旧版才能安装新版。$\n$\n点击“确定”卸载旧版本或者“取消”取消更新。"
 	LangString TEXT_RUN ${LANG_SIMPCHINESE} "运行LOOT"
@@ -213,8 +214,8 @@ FunctionEnd
 	VIAddVersionKey /LANG=${LANG_POLISH} "ProductName" "LOOT"
 	VIAddVersionKey /LANG=${LANG_POLISH} "CompanyName" "LOOT Team"
 	VIAddVersionKey /LANG=${LANG_POLISH} "LegalCopyright" "© 2009-2014 LOOT Team"
-	VIAddVersionKey /LANG=${LANG_POLISH} "FileDescription" "Instalator dla LOOT 0.6.0"
-	VIAddVersionKey /LANG=${LANG_POLISH} "FileVersion" "0.6.0"
+	VIAddVersionKey /LANG=${LANG_POLISH} "FileDescription" "Instalator dla LOOT 0.7.0"
+	VIAddVersionKey /LANG=${LANG_POLISH} "FileVersion" "0.7.0"
 
 	LangString TEXT_MESSAGEBOX ${LANG_POLISH} "LOOT jest już zainstalowany i musi zostać odinstalowany przed instalowaniem tej wersji. $\n$\nClick `OK` aby odinstalować lub `Cancel` aby anulować aktualizację."
 	LangString TEXT_RUN ${LANG_POLISH} " Uruchom LOOT"
@@ -228,8 +229,8 @@ FunctionEnd
 	VIAddVersionKey /LANG=${LANG_FINNISH} "ProductName" "LOOT"
 	VIAddVersionKey /LANG=${LANG_FINNISH} "CompanyName" "LOOT Team"
 	VIAddVersionKey /LANG=${LANG_FINNISH} "LegalCopyright" "© 2009-2014 LOOT Team"
-	VIAddVersionKey /LANG=${LANG_FINNISH} "FileDescription" "LOOT 0.6.0 Asennusohjelma"
-	VIAddVersionKey /LANG=${LANG_FINNISH} "FileVersion" "0.6.0"
+	VIAddVersionKey /LANG=${LANG_FINNISH} "FileDescription" "LOOT 0.7.0 Asennusohjelma"
+	VIAddVersionKey /LANG=${LANG_FINNISH} "FileVersion" "0.7.0"
 
 	LangString TEXT_MESSAGEBOX ${LANG_FINNISH} "LOOT on jo asennettu ja vanha asennus on poistettava ennen jatkamista. $\n$\nKlikkaa 'OK' poistaaksesi vanhan version tai 'Peruuta' peruuttaaksesi päivityksen."
 	LangString TEXT_RUN ${LANG_FINNISH} "Käynnistä LOOT"
@@ -243,14 +244,29 @@ FunctionEnd
 	VIAddVersionKey /LANG=${LANG_GERMAN} "ProductName" "LOOT"
 	VIAddVersionKey /LANG=${LANG_GERMAN} "CompanyName" "LOOT Team"
 	VIAddVersionKey /LANG=${LANG_GERMAN} "LegalCopyright" "© 2009-2014 LOOT Team"
-	VIAddVersionKey /LANG=${LANG_GERMAN} "FileDescription" "Installationsprogramm LOOT 0.6.0"
-	VIAddVersionKey /LANG=${LANG_GERMAN} "FileVersion" "0.6.0"
+	VIAddVersionKey /LANG=${LANG_GERMAN} "FileDescription" "Installationsprogramm LOOT 0.7.0"
+	VIAddVersionKey /LANG=${LANG_GERMAN} "FileVersion" "0.7.0"
 
 	LangString TEXT_MESSAGEBOX ${LANG_GERMAN} "LOOT ist bereits installiert und muss zunächst deinstalliert werden. $\n$\nKlicken Sie auf 'OK', um die frühere Version zu deinstallieren oder auf 'Abbrechen', um diese Installation abzubrechen."
 	LangString TEXT_RUN ${LANG_GERMAN} "LOOT starten"
 	LangString TEXT_SHOWREADME ${LANG_GERMAN} "Readme öffnen"
 	LangString TEXT_MAIN ${LANG_GERMAN} "Alle LOOT Dateien mit Ausnahme der Benutzerlisten-Dateien und Konfigurationsdateien."
 	LangString TEXT_USERFILES ${LANG_GERMAN} "LOOT Benutzerlisten-Dateien und Konfigurationsdateien."
+
+;--------------------------------
+;Danish (dansk) Strings
+
+	VIAddVersionKey /LANG=${LANG_DANISH} "ProductName" "LOOT"
+	VIAddVersionKey /LANG=${LANG_DANISH} "CompanyName" "LOOT Team"
+	VIAddVersionKey /LANG=${LANG_DANISH} "LegalCopyright" "© 2009-2014 LOOT Team"
+	VIAddVersionKey /LANG=${LANG_DANISH} "FileDescription" "Installationsprogram for LOOT 0.7.0"
+	VIAddVersionKey /LANG=${LANG_DANISH} "FileVersion" "0.7.0"
+
+	LangString TEXT_MESSAGEBOX ${LANG_DANISH} "LOOT er allerede installeret og skal afinstalleres før du fortsætter. $\n$\nTryk på »OK« for at fjerne den forrige version eller »Annuller« for at annullere opdateringen."
+	LangString TEXT_RUN ${LANG_DANISH} "Kør LOOT"
+	LangString TEXT_SHOWREADME ${LANG_DANISH} "Vis Readme"
+	LangString TEXT_MAIN ${LANG_DANISH} "Alle LOOT's filer, undtagen brugerlister og indstillingsfiler."
+	LangString TEXT_USERFILES ${LANG_DANISH} "LOOT's brugerliste- og indstillingsfile."
 
 ;--------------------------------
 ;Initialisations
@@ -291,20 +307,34 @@ FunctionEnd
 
 		;Install executable.
 		SetOutPath "$INSTDIR"
-		File "..\build\LOOT.exe"
-
-		;Now install API DLLs.
-		;SetOutPath "$INSTDIR\API"
-		;File "..\build\loot32.dll"
-		;File "..\build\loot64.dll"
+		File "..\build\Release\LOOT.exe"
+        File "..\build\Release\d3dcompiler_43.dll"
+        File "..\build\Release\d3dcompiler_46.dll"
+        File "..\build\Release\libEGL.dll"
+        File "..\build\Release\libGLESv2.dll"
+        File "..\build\Release\libcef.dll"
+        File "..\build\Release\cef.pak"
+        File "..\build\Release\cef_100_percent.pak"
+        File "..\build\Release\cef_200_percent.pak"
+        File "..\build\Release\devtools_resources.pak"
+        File "..\build\Release\icudtl.dat"
 
         ;Install resource files.
         SetOutPath "$INSTDIR\resources\report"
         File "..\resources\report\report.html"
-        File "..\resources\report\require.js"
-        File "..\resources\report\polyfill.js"
-        File "..\resources\report\script.js"
-        File "..\resources\report\style.css"
+        File "..\resources\report\js\custom.js"
+        File "..\resources\report\js\marked.js"
+        File "..\resources\report\js\order.js"
+        File "..\resources\report\js\plugin.js"
+        File "..\resources\report\js\require.js"
+        File "..\resources\report\js\script.js"
+        File "..\resources\report\css\style.css"
+        File "..\resources\report\css\font-awesome.min.css"
+        File "..\resources\report\fonts\fontawesome-webfont.woff"
+
+        ;Install icon image.
+        SetOutPath "$INSTDIR\resources"
+        FIle "..\resources\icon.ico"
 
         ;Install documentation images.
 		SetOutPath "$INSTDIR\docs\images"
@@ -322,27 +352,19 @@ FunctionEnd
 		;Now install language files.
 		SetOutPath "$INSTDIR\resources\l10n\ru\LC_MESSAGES"
 		File "..\resources\l10n\ru\LC_MESSAGES\loot.mo"
-		File "..\resources\l10n\ru\LC_MESSAGES\wxstd.mo"
 		SetOutPath "$INSTDIR\resources\l10n\es\LC_MESSAGES"
-		File "..\resources\l10n\es\LC_MESSAGES\wxstd.mo"
 		File "..\resources\l10n\es\LC_MESSAGES\loot.mo"
 		SetOutPath "$INSTDIR\resources\l10n\zh_CN\LC_MESSAGES"
 		File "..\resources\l10n\zh_CN\LC_MESSAGES\loot.mo"
-		File "..\resources\l10n\zh_CN\LC_MESSAGES\wxstd.mo"
 		SetOutPath "$INSTDIR\resources\l10n\fr\LC_MESSAGES"
-		File "..\resources\l10n\fr\LC_MESSAGES\wxstd.mo"
 		File "..\resources\l10n\fr\LC_MESSAGES\loot.mo"
 		SetOutPath "$INSTDIR\resources\l10n\pl\LC_MESSAGES"
-		File "..\resources\l10n\pl\LC_MESSAGES\wxstd.mo"
 		File "..\resources\l10n\pl\LC_MESSAGES\loot.mo"
 		SetOutPath "$INSTDIR\resources\l10n\pt_BR\LC_MESSAGES"
-		File "..\resources\l10n\pt_BR\LC_MESSAGES\wxstd.mo"
 		File "..\resources\l10n\pt_BR\LC_MESSAGES\loot.mo"
 		SetOutPath "$INSTDIR\resources\l10n\fi\LC_MESSAGES"
-		File "..\resources\l10n\fi\LC_MESSAGES\wxstd.mo"
 		File "..\resources\l10n\fi\LC_MESSAGES\loot.mo"
         SetOutPath "$INSTDIR\resources\l10n\de\LC_MESSAGES"
-		File "..\resources\l10n\de\LC_MESSAGES\wxstd.mo"
 		File "..\resources\l10n\de\LC_MESSAGES\loot.mo"
 
 
@@ -391,6 +413,11 @@ FunctionEnd
             Push "Language:"
             Push "Language: de"
             Call ReplaceLineStr
+		StrCmp $LANGUAGE ${LANG_DANISH} 0 +5
+            Push "$LOCALAPPDATA\LOOT\settings.yaml"
+            Push "Language:"
+            Push "Language: da"
+            Call ReplaceLineStr
 
 		;Add Start Menu shortcuts. Set out path back to $INSTDIR otherwise the shortcuts start in the wrong place.
 		;Set Shell Var Context to all so that shortcuts are installed for all users, not just admin.
@@ -410,7 +437,7 @@ FunctionEnd
 		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\LOOT" "URLInfoAbout" 'http://loot.github.io/'
 		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\LOOT" "HelpLink" 'http://loot.github.io/'
 		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\LOOT" "Publisher" 'LOOT Development Team'
-		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\LOOT" "DisplayVersion" '0.6.0'
+		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\LOOT" "DisplayVersion" '0.7.0'
 		WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\LOOT" "NoModify" 1
 		WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\LOOT" "NoRepair" 1
 
@@ -427,11 +454,16 @@ FunctionEnd
 
 		;Remove main executables.
 		Delete "$INSTDIR\LOOT.exe"
-
-		;Remove API DLLs.
-		;Delete "$INSTDIR\API\loot32.dll"
-		;Delete "$INSTDIR\API\loot64.dll"
-		;RMDir  "$INSTDIR\API"
+        Delete "$INSTDIR\d3dcompiler_43.dll"
+        Delete "$INSTDIR\d3dcompiler_46.dll"
+        Delete "$INSTDIR\libEGL.dll"
+        Delete "$INSTDIR\libGLESv2.dll"
+        Delete "$INSTDIR\libcef.dll"
+        Delete "$INSTDIR\cef.pak"
+        Delete "$INSTDIR\cef_100_percent.pak"
+        Delete "$INSTDIR\cef_200_percent.pak"
+        Delete "$INSTDIR\devtools_resources.pak"
+        Delete "$INSTDIR\icudtl.dat"
 
 		;Remove readme images.
 		RMDir /r "$INSTDIR\docs\images"
@@ -446,26 +478,27 @@ FunctionEnd
 
         ;Remove resource files.
         Delete "$INSTDIR\resources\report\report.html"
-        Delete "$INSTDIR\resources\report\require.js"
-        Delete "$INSTDIR\resources\report\polyfill.js"
-        Delete "$INSTDIR\resources\report\script.js"
-        Delete "$INSTDIR\resources\report\style.css"
+        Delete "$INSTDIR\resources\report\js\custom.js"
+        Delete "$INSTDIR\resources\report\js\marked.js"
+        Delete "$INSTDIR\resources\report\js\order.js"
+        Delete "$INSTDIR\resources\report\js\plugin.js"
+        Delete "$INSTDIR\resources\report\js\require.js"
+        Delete "$INSTDIR\resources\report\js\script.js"
+        Delete "$INSTDIR\resources\report\css\style.css"
+        Delete "$INSTDIR\resources\report\css\font-awesome.min.css"
+        Delete "$INSTDIR\resources\report\fonts\fontawesome-webfont.woff"
+
+        Delete "$INSTDIR\resources\icon.ico"
 
 		;Remove language files.
 		Delete "$INSTDIR\resources\l10n\ru\LC_MESSAGES\loot.mo"
-		Delete "$INSTDIR\resources\l10n\ru\LC_MESSAGES\wxstd.mo"
 		Delete "$INSTDIR\resources\l10n\es\LC_MESSAGES\loot.mo"
-		Delete "$INSTDIR\resources\l10n\es\LC_MESSAGES\wxstd.mo"
 		Delete "$INSTDIR\resources\l10n\zh_CN\LC_MESSAGES\loot.mo"
-		Delete "$INSTDIR\resources\l10n\zh_CN\LC_MESSAGES\wxstd.mo"
 		Delete "$INSTDIR\resources\l10n\fr\LC_MESSAGES\loot.mo"
-		Delete "$INSTDIR\resources\l10n\fr\LC_MESSAGES\wxstd.mo"
 		Delete "$INSTDIR\resources\l10n\pl\LC_MESSAGES\loot.mo"
-		Delete "$INSTDIR\resources\l10n\pl\LC_MESSAGES\wxstd.mo"
 		Delete "$INSTDIR\resources\l10n\pt_BR\LC_MESSAGES\loot.mo"
-		Delete "$INSTDIR\resources\l10n\pt_BR\LC_MESSAGES\wxstd.mo"
 		Delete "$INSTDIR\resources\l10n\fi\LC_MESSAGES\loot.mo"
-		Delete "$INSTDIR\resources\l10n\fi\LC_MESSAGES\wxstd.mo"
+		Delete "$INSTDIR\resources\l10n\da\LC_MESSAGES\loot.mo"
 		RMDir  "$INSTDIR\resources\l10n\ru\LC_MESSAGES"
 		RMDir  "$INSTDIR\resources\l10n\ru"
 		RMDir  "$INSTDIR\resources\l10n\es\LC_MESSAGES"
@@ -482,6 +515,8 @@ FunctionEnd
 		RMDir  "$INSTDIR\resources\l10n\fi"
         RMDir  "$INSTDIR\resources\l10n\de\LC_MESSAGES"
 		RMDir  "$INSTDIR\resources\l10n\de"
+		RMDir  "$INSTDIR\resources\l10n\da\LC_MESSAGES"
+		RMDir  "$INSTDIR\resources\l10n\da"
 		RMDir  "$INSTDIR\resources\l10n"
         RMDir  "$INSTDIR\resources"
 
@@ -489,13 +524,9 @@ FunctionEnd
 		Delete "$LOCALAPPDATA\LOOT\LOOTDebugLog.txt"
 		;Trying to delete a file that doesn't exist doesn't cause an error, so delete all games' files.
         ;This doesn't handle user-defined games.
-		Delete "$LOCALAPPDATA\LOOT\Oblivion\reportdata.js"
 		Delete "$LOCALAPPDATA\LOOT\Oblivion\masterlist.yaml"
-		Delete "$LOCALAPPDATA\LOOT\Skyrim\reportdata.js"
 		Delete "$LOCALAPPDATA\LOOT\Skyrim\masterlist.yaml"
-		Delete "$LOCALAPPDATA\LOOT\Fallout3\reportdata.js"
 		Delete "$LOCALAPPDATA\LOOT\Fallout3\masterlist.yaml"
-		Delete "$LOCALAPPDATA\LOOT\FalloutNV\reportdata.js"
 		Delete "$LOCALAPPDATA\LOOT\FalloutNV\masterlist.yaml"
         ;Delete repositories.
         RMDir /r "$LOCALAPPDATA\LOOT\Oblivion\.git"

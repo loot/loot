@@ -43,7 +43,7 @@ namespace loot {
 
     struct git_handler {
     public:
-        git_handler() : repo(nullptr), remote(nullptr), cfg(nullptr), obj(nullptr), commit(nullptr), ref(nullptr), ref2(nullptr), sig(nullptr), blob(nullptr), merge_head(nullptr) {}
+        git_handler() : repo(nullptr), remote(nullptr), cfg(nullptr), obj(nullptr), commit(nullptr), ref(nullptr), ref2(nullptr), sig(nullptr), blob(nullptr), merge_head(nullptr), tree(nullptr), diff(nullptr) {}
 
         ~git_handler() {
             git_commit_free(commit);
@@ -56,6 +56,8 @@ namespace loot {
             git_signature_free(sig);
             git_blob_free(blob);
             git_merge_head_free(merge_head);
+            git_tree_free(tree);
+            git_diff_free(diff);
         }
 
         void call(int error_code) {
@@ -87,105 +89,93 @@ namespace loot {
         git_signature * sig;
         git_blob * blob;
         git_merge_head * merge_head;
+        git_tree * tree;
+        git_diff * diff;
 
 
         std::string ui_message;
     };
 
-    bool are_files_equal(const void * buf1, size_t buf1_size, const void * buf2, size_t buf2_size) {
-        if (buf1_size != buf2_size)
-            return false;
-
-        size_t pos = 0;
-        while (pos < buf1_size) {
-            if (*((char*)buf1 + pos) != *((char*)buf2 + pos))
-                return false;
-            ++pos;
-        }
-        return true;
-    }
-
     bool isRepository(const fs::path& path) {
         return git_repository_open_ext(NULL, path.string().c_str(), GIT_REPOSITORY_OPEN_NO_SEARCH, NULL) == 0;
     }
 
+    // Removes the read-only flag from some files in git repositories created by libgit2.
+    void FixRepoPermissions(const fs::path& path) {
+        BOOST_LOG_TRIVIAL(trace) << "Recursively setting write permission on directory: " << path;
+        for (fs::recursive_directory_iterator it(path); it != fs::recursive_directory_iterator(); ++it) {
+            BOOST_LOG_TRIVIAL(trace) << "Setting write permission for: " << it->path();
+            fs::permissions(it->path(), fs::add_perms | fs::owner_write);
+        }
+    }
+
+    int diffFileCallback(const git_diff_delta *delta, float progress, void * payload) {
+        BOOST_LOG_TRIVIAL(trace) << "Checking diff for: " << delta->old_file.path;
+        if (strcmp(delta->old_file.path, "masterlist.yaml") == 0) {
+            BOOST_LOG_TRIVIAL(warning) << "Edited masterlist found.";
+            *(bool*)payload = true;
+        }
+
+        return 0;
+    }
+
     void Masterlist::GetGitInfo(const boost::filesystem::path& path) {
-        if (!fs::exists(path.parent_path() / ".git")) {
+        if (!isRepository(path.parent_path())) {
             revision = "Unknown: Git repository missing";
             date = "Unknown: Git repository missing";
-            return;
         }
         else if (!fs::exists(path)) {
             revision = "N/A: No masterlist present";
             date = "N/A: No masterlist present";
-            return;
         }
         else {
-            /* Compares HEAD to the working dir.
-                1. Get an object for the masterlist in HEAD.
-                2. Get the blob for that object.
-                3. Open the masterlist file in the working dir in a file buffer.
-                4. Compare the file and blob buffers.
-            */
+            // Perform a git diff, then iterate the deltas to see if one exists for masterlist.yaml.
             git_handler git;
             git.ui_message = "An error occurred while trying to read the local masterlist's version. If this error happens again, try deleting the \".git\" folder in " + path.parent_path().string() + ".";
             BOOST_LOG_TRIVIAL(debug) << "Existing repository found, attempting to open it.";
             git.call(git_repository_open(&git.repo, path.parent_path().string().c_str()));
 
-            BOOST_LOG_TRIVIAL(trace) << "Getting HEAD masterlist object.";
-            git.call(git_revparse_single(&git.obj, git.repo, "HEAD:masterlist.yaml"));
+            BOOST_LOG_TRIVIAL(trace) << "Getting the tree for the HEAD revision.";
+            git.call(git_revparse_single(&git.obj, git.repo, "HEAD^{tree}"));
+            git.call(git_tree_lookup(&git.tree, git.repo, git_object_id(git.obj)));
 
-            BOOST_LOG_TRIVIAL(trace) << "Getting blob for masterlist object.";
-            git.call(git_blob_lookup(&git.blob, git.repo, git_object_id(git.obj)));
+            BOOST_LOG_TRIVIAL(trace) << "Performing git diff.";
+            git.call(git_diff_tree_to_workdir_with_index(&git.diff, git.repo, git.tree, NULL));
 
-            BOOST_LOG_TRIVIAL(debug) << "Opening masterlist in working directory.";
-            std::string mlist;
-            loot::ifstream ifile(path, ios::binary);
-            if (ifile.fail())
-                throw error(error::path_read_fail, "Couldn't open masterlist.");
-            ifile.unsetf(ios::skipws); // No white space skipping!
-            copy(
-                istream_iterator<char>(ifile),
-                istream_iterator<char>(),
-                back_inserter(mlist)
-                );
+            BOOST_LOG_TRIVIAL(trace) << "Iterating over git diff deltas.";
+            bool isMasterlistDifferent = false;
+            git.call(git_diff_foreach(git.diff, &diffFileCallback, NULL, NULL, &isMasterlistDifferent));
 
-            BOOST_LOG_TRIVIAL(debug) << "Comparing files.";
-            if (are_files_equal(git_blob_rawcontent(git.blob), git_blob_rawsize(git.blob), mlist.data(), mlist.length())) {
+            //Need to get the HEAD object, because the individual file has a different SHA.
+            git_object_free(git.obj);
+            git.obj = nullptr;  //Just to be safe.
+            BOOST_LOG_TRIVIAL(info) << "Getting the Git object for the tree at HEAD.";
+            git.call(git_revparse_single(&git.obj, git.repo, "HEAD"));
 
-                //Need to get the HEAD object, because the individual file has a different SHA.
-                git_object_free(git.obj);
-                git.obj = nullptr;  //Just to be safe.
-                BOOST_LOG_TRIVIAL(info) << "Getting the Git object for the tree at HEAD.";
-                git.call(git_revparse_single(&git.obj, git.repo, "HEAD"));
+            BOOST_LOG_TRIVIAL(trace) << "Getting the Git object ID.";
+            const git_oid * oid = git_object_id(git.obj);
 
-                BOOST_LOG_TRIVIAL(trace) << "Getting the Git object ID.";
-                const git_oid * oid = git_object_id(git.obj);
+            BOOST_LOG_TRIVIAL(trace) << "Generating hex string for Git object ID.";
+            char sha1[10];
+            git_oid_tostr(sha1, 10, oid);
+            revision = sha1;
 
-                BOOST_LOG_TRIVIAL(trace) << "Generating hex string for Git object ID.";
-                char sha1[10];
-                git_oid_tostr(sha1, 10, oid);
-                revision = sha1;
+            BOOST_LOG_TRIVIAL(trace) << "Getting date for Git object ID.";
+            git.call(git_commit_lookup(&git.commit, git.repo, oid));
+            git_time_t time = git_commit_time(git.commit);
+            boost::locale::date_time dateTime(time);
+            stringstream out;
+            out << boost::locale::as::ftime("%Y-%m-%d") << dateTime;
+            date = out.str();
 
-                BOOST_LOG_TRIVIAL(trace) << "Getting date for Git object ID.";
-                git.call(git_commit_lookup(&git.commit, git.repo, oid));
-                git_time_t time = git_commit_time(git.commit);
-                boost::locale::date_time dateTime(time);
-                stringstream out;
-                out << boost::locale::as::ftime("%Y-%m-%d") << dateTime;
-                date = out.str();
-
-                return;
-            }
-            else {
-                revision = "Unknown: Masterlist edited";
-                date = "Unknown: Masterlist edited";
-                return;
+            if (isMasterlistDifferent) {
+                revision += " (edited)";
+                date += " (edited)";
             }
         }
     }
 
-    void Masterlist::Update(Game& game, const unsigned int language) {
+    bool Masterlist::Update(Game& game, const unsigned int language) {
         git_handler git;
         fs::path repo_path = game.MasterlistPath().parent_path();
         string repo_branch = game.RepoBranch();
@@ -212,20 +202,19 @@ namespace loot {
             bool wasEmpty = true;
             fs::path temp_path = repo_path.string() + ".temp";
             if (!fs::is_empty(repo_path)) {
+                // Clear any read-only flags first.
+                FixRepoPermissions(repo_path);
                 // Now, libgit2 doesn't support cloning into non-empty folders. Rename the folder 
                 // temporarily, and move its contents back in afterwards, skipping any that then conflict.
                 BOOST_LOG_TRIVIAL(trace) << "Repo path not empty, renaming folder.";
-                // First we need to ensure that the folder is not read-only. The ".git" folder contents
-                // seem to be made that way with no detrimental effect on libgit2's operation, but it
-                // stuffs these filesystem commands up.
+                // If the temp path already exists, it needs to be deleted.
                 if (fs::exists(temp_path)) {
-                    BOOST_LOG_TRIVIAL(trace) << "Recursively setting write permission on directory: " << temp_path;
-                    for (fs::recursive_directory_iterator it(temp_path); it != fs::recursive_directory_iterator(); ++it) {
-                        BOOST_LOG_TRIVIAL(trace) << "Setting write permission for: " << it->path();
-                        fs::permissions(it->path(), fs::add_perms | fs::owner_write);
-                    }
+                    FixRepoPermissions(temp_path);
                     fs::remove_all(temp_path);
                 }
+                // There's no point moving the .git folder, so delete that.
+                fs::remove_all(repo_path / ".git");
+                // Now move to temp path.
                 fs::rename(repo_path, temp_path);
                 // Recreate the game folder so that we don't inadvertently cause any other errors (everything past LOOT init assumes it exists).
                 fs::create_directory(repo_path);
@@ -257,6 +246,7 @@ namespace loot {
                     }
                 }
                 //Delete temporary folder.
+                FixRepoPermissions(temp_path);
                 fs::remove_all(temp_path);
             }
         }
@@ -366,10 +356,20 @@ namespace loot {
                     git.ref2 = nullptr;
                 }
                 else if ((analysis & GIT_MERGE_ANALYSIS_UP_TO_DATE) != 0) {
+                    // No update necessary, so exit early to skip unnecessary masterlist parsing.
                     BOOST_LOG_TRIVIAL(trace) << "Local branch is up-to-date with remote branch.";
+
+                    BOOST_LOG_TRIVIAL(trace) << "Performing a Git checkout of HEAD.";
+                    git.call(git_checkout_head(git.repo, &checkout_opts));
+
+                    return false;
                 }
                 else {
-                    throw error(error::git_error, "Local repository has been edited, an automatic fast-forward merge update is not possible.");
+                    // The local repository can't be easily merged. It's best just to delete and re-clone it.
+                    FixRepoPermissions(repo_path / ".git");
+                    fs::remove_all(repo_path / ".git");
+                    return this->Update(game, language);
+                    //throw error(error::git_error, "Local repository has been edited, an automatic fast-forward merge update is not possible.");
                 }
 
             }
@@ -431,7 +431,12 @@ namespace loot {
             try {
                 this->MetadataList::Load(game.MasterlistPath());
 
-                for (auto &plugin: plugins) {
+                unordered_set<Plugin> tempSet;
+                for (auto &plugin : plugins) {
+                    tempSet.insert(Plugin(plugin).EvalAllConditions(game, language));
+                }
+                plugins = tempSet;
+                for (auto &plugin : regexPlugins) {
                     plugin.EvalAllConditions(game, language);
                 }
 
@@ -461,11 +466,13 @@ namespace loot {
                 git.call(git_checkout_head(git.repo, &checkout_opts));
 
                 if (parsingError.empty())
-                    parsingError = boost::locale::translate("Masterlist revision").str() + " " + string(revision) + ": " + e.what() + " " + boost::locale::translate("Rolled back to the previous revision.").str();
+                    parsingError = boost::locale::translate("Masterlist revision").str() + " " + string(revision) + ": " + e.what() + ". " + boost::locale::translate("Rolled back to the previous revision.").str();
             }
         } while (parsingFailed);
 
         if (!parsingError.empty())
             throw error(error::ok, parsingError);  //Throw an OK because the process still completed in a successful state.
+
+        return true;
     }
 }

@@ -1,72 +1,570 @@
 <!DOCTYPE html>
 <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta charset="utf-8" />
-    <title>LOOT Report</title>
-    <link rel="stylesheet" href="style.css" />
-    <script src="polyfill.js"></script>
-    <script src="require.js"></script>
+    <title>LOOT</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/font-awesome.min.css" />
+    <script src="js/require.js"></script>
 </head>
-<body>
-    <div id="nav">
-    <div class="button current" data-section="summary" id="txtSummarySec"></div>
-    <div class="button" data-section="plugins" id="txtDetailsSec"></div>
-    <div class="button hidden" id="filtersToggle"></div>
-    </div>
-    <div id="main">
-        <noscript>The LOOT Report requires Javascript to be enabled in order to function.</noscript>
-        <div id="plugins" class="hidden">
-            <ul id="pluginsList">
-            </ul>
-        </div>
-        <div id="summary">
+<!-- oncontextmenu attribute disables the right-click menu. -->
+<body oncontextmenu="return false">
+
+
+    <template id="pluginCard">
+
+        <style>
+        @import 'css/font-awesome.min.css';
+        :host {
+            display: block;
+            background:white;
+            margin:1em;
+            box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+            padding:1em;
+            position: relative;
+            overflow:visible;
+            transition: 0.6s;
+            transform-style: preserve-3d;
+        }
+        :host([data-active=false]) #activeTick {
+            visibility: hidden;
+        }
+        :host([data-bsa=false]) #icons #loadsBSA {
+            display: none;
+        }
+        :host([data-dummy=false]) #icons #dummyPlugin {
+            display: none;
+        }
+        :host([data-edits=false]) #icons #hasUserEdits {
+            display: none;
+        }
+
+        #front, #editor {
+            display: block;
+        }
+
+        #editor {
+            transform: rotateY(180deg) translateZ(1px);
+            display:none;
+        }
+
+        :host(.flip) {
+            transform: rotateY(180deg);
+        }
+
+        :host(.flip) #front  {
+            display: none;
+        }
+
+        :host(.flip) #editor  {
+            display: block;
+        }
+
+        #icons {
+            background: transparent;
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+            position: absolute;
+            top: 1em;
+            right: 0.5em;
+            overflow:visible;
+        }
+        #icons .fa {
+            color: grey;
+            text-align: center;
+            display: inline-block;
+            margin: 0.2em;
+        }
+        #icons > li:hover {
+            color: black;
+        }
+        #menuButton {
+            width: 1.5em;
+            text-align: center;
+            margin: 0.2em;
+            cursor: pointer;
+        }
+        ::content h1, h1 {
+            margin: 0;
+            font-weight: normal;
+            font-size: 1.2em;
+            display: inline-block;
+        }
+        ::content .version, .version {
+            display: inline-block;
+            margin-left: 1em;
+            color:#6394F8;
+        }
+        ::content .crc, .crc {
+            display: inline-block;
+            margin-left: 1em;
+            color:#BC8923;
+        }
+        .hidden, ::content .hidden {
+            display: none;
+        }
+        #activeTick {
+            color: green;
+            padding-right: 0.5em;
+        }
+
+        #tableTabs {
+            margin: 1.5em 1em;
+            display: table;
+        }
+        #tableTabs > span {
+            display: inline-block;
+            padding: 0.5em;
+            border: 1px black solid;
+            border-bottom: none;
+            background: #e3e3e3;
+            cursor: pointer;
+        }
+        #tableTabs > span:not(:first-child) {
+            border-left: none;
+        }
+        #tableTabs > span:hover, #tableTabs span.selected {
+            background: #f8f8f8;
+        }
+        #tableTabs .editable {
+            margin: 0;
+            border-collapse: collapse;
+            border: 1px black solid;
+            width: 100%;
+        }
+
+        #enableEdits {
+            margin-bottom: 1em;
+        }
+        label[for=priorityValue] {
+            margin-left: 0.5em;
+        }
+        .buttons {
+            text-align: right;
+        }
+        input[readonly] {
+            border: none;
+            -webkit-user-select: none;
+        }
+        input:invalid {
+            background-color: pink;
+            color: white;
+        }
+        td input {
+            width: 100%;
+            text-overflow: ellipsis;
+        }
+        td:last-child {
+            cursor: pointer;
+        }
+        td:last-child:hover {
+            color: red;
+        }
+        table {
+            margin: 3em 1em;
+            border-collapse: collapse;
+        }
+        td, th {
+            vertical-align: top;
+            text-align: left;
+            padding: 0.5em;
+        }
+        th {
+            border-bottom: 1px black solid;
+        }
+        tbody tr:last-child {
+            cursor: pointer;
+            color: grey;
+        }
+        tbody tr:last-child:hover {
+            color: black;
+        }
+        input[type='checkbox'] {
+            position:relative;
+            top:0.15em;
+            margin-left:0.5em;
+        }
+        </style>
+
+        <section id="front">
+            <span id="activeTick" class="fa fa-check" title="Active Plugin"></span>
+            <content select="h1"></content>
+            <content select=".version"></content>
+            <content select=".crc"></content>
+            <content select=".tag.add"></content>
+            <content select=".tag.remove"></content>
+            <content select="ul"></content>
+            <ol id="icons">
+                <li id="dummyPlugin" class="fa fa-eye-slash" title="Dummy Plugin"></li>
+                <li id="loadsBSA" class="fa fa-paperclip" title="Loads BSA"></li>
+                <li id="hasUserEdits" class="fa fa-user" title="Has User Metadata"></li>
+                <li id="menuButton" class="fa fa-ellipsis-v fa-lg">
+                </li>
+            </ol>
+        </section>
+        <section id="editor">
+            <h1></h1>
+            <span class="version"></span>
+            <span class="crc"></span>
             <div>
-                <h2 id="txtSummary"></h2>
+                <input type="checkbox" id="enableEdits">
+                <label for="enableEdits">Enable Edits</label><br>
+                <input type="checkbox" id="globalPriority">
+                <label for="globalPriority" title="Global priorities are compared against all other plugins. Normal priorities are compared against only conflicting plugins.">Global Priority</label><br>
+                <label for="priorityValue">Priority Value</label>
+                <input id="priorityValue" type="number" max="999999" min="-999999" step="1" value="0">
+            </div>
+            <div id="tableTabs">
+                <span class="selected" data-for="loadAfter">Load After</span>
+                <span data-for="req">Requirements</span>
+                <span data-for="inc">Incompatibilities</span>
+                <span data-for="message">Messages</span>
+                <span data-for="tags">Bash Tags</span>
+                <span data-for="dirty">Dirty Info</span>
+
+                <table is="editable-table" id="loadAfter" data-template="fileRow">
+                    <thead>
+                        <tr><th>Filename</th><th>Display Name</th><th>Condition</th><th></th></tr>
+                    </thead>
+                    <tbody>
+                        <!-- File rows go here. -->
+                        <tr><td colspan="4">Add new row...</td><td></td></tr>
+                    </tbody>
+                </table>
+                <table is="editable-table" id="req" class="hidden" data-template="fileRow">
+                    <thead>
+                        <tr><th>Filename</th><th>Display Name</th><th>Condition</th><th></th></tr>
+                    </thead>
+                    <tbody>
+                        <!-- File rows go here. -->
+                        <tr><td colspan="4">Add new row...</td><td></td></tr>
+                    </tbody>
+                </table>
+                <table is="editable-table" id="inc" class="hidden" data-template="fileRow">
+                    <thead>
+                        <tr><th>Filename</th><th>Display Name</th><th>Condition</th><th></th></tr>
+                    </thead>
+                    <tbody>
+                        <!-- File rows go here. -->
+                        <tr><td colspan="4">Add new row...</td><td></td></tr>
+                    </tbody>
+                </table>
+                <table is="editable-table" id="message" class="hidden" data-template="messageRow">
+                    <thead>
+                        <tr><th>Type</th><th>Content</th><th>Condition</th><th>Language</th><th></th></tr>
+                    </thead>
+                    <tbody>
+                        <!-- Message rows go here. -->
+                        <tr><td colspan="4">Add new row...</td><td></td></tr>
+                    </tbody>
+                </table>
+                <table is="editable-table" id="tags" class="hidden" data-template="tagRow">
+                    <thead>
+                        <tr><th>Add/Remove</th><th>Bash Tag</th><th>Condition</th><th></th></tr>
+                    </thead>
+                    <tbody>
+                        <!-- Bash Tag rows go here. -->
+                        <tr><td colspan="4">Add new row...</td><td></td></tr>
+                    </tbody>
+                </table>
+                <table is="editable-table" id="dirty" class="hidden" data-template="dirtyInfoRow">
+                    <thead>
+                        <tr><th>CRC</th><th>ITM Count</th><th>UDR Count</th><th>Deleted Navmeshes</th><th>Cleaning Utility</th><th></th></tr>
+                    </thead>
+                    <tbody>
+                        <!-- Dirty info rows go here. -->
+                        <tr><td colspan="4">Add new row...</td><td></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <hr>
+            <div id="buttons">
+                <button id="accept">Apply</button>
+                <button id="cancel">Cancel</button>
+            </div>
+        </section>
+    </template>
+    <template id="pluginLI">
+        <style>
+            @import 'css/font-awesome.min.css';
+            :host > span {
+                display: inline-block;
+                width: 1.2em;
+            }
+            :host([data-bsa=false]) .loadsBSA {
+                visibility: hidden;
+            }
+            :host([data-dummy=false]) .dummyPlugin {
+                visibility: hidden;
+            }
+            :host([data-edits=false]) .hasUserEdits {
+                visibility: hidden;
+            }
+            a {
+                text-decoration: none;
+                color: black;
+            }
+        </style>
+        <span class="dummyPlugin fa fa-eye-slash" title="Dummy Plugin"></span>
+        <span class="loadsBSA fa fa-paperclip" title="Loads BSA"></span>
+        <span class="hasUserEdits fa fa-user" title="Has User Metadata"></span>
+        <a href="">
+            <content select=".name"></content>
+            <content select=".priority"></content>
+        </a>
+    </template>
+    <template id="pluginMenu">
+        <style>
+        @import 'css/font-awesome.min.css';
+        :host {
+            background: white;
+            box-shadow:0 0 3px 0px rgba(0,0,0,0.5);
+            font:10pt/1.5 Helvetica,sans-serif;
+            position: absolute;
+            z-index: 5;
+            width: 14em;
+            text-align: left;
+            padding:0;
+        }
+        div, label {
+            padding: 0.2em 0.5em;
+            cursor: pointer;
+            display: block;
+        }
+        div:hover, label:hover {
+            background: #e3e3e3;
+        }
+        span {
+            padding-right: 0.4em;
+        }
+        input {
+            position: relative;
+            top: 0.15em;
+            margin: 0em 0.3em 0 0.1em;
+        }
+        .disabled {
+            cursor: default;
+            color: #999;
+        }
+        </style>
+
+        <label><input type="checkbox" id="showOnlyConflicts" class="fa-fw">Show Only Conflicts</label>
+        <div id="editMetadata"><span class="fa fa-pencil fa-fw"></span>Edit Metadata</div>
+        <div id="copyMetadata"><span class="fa fa-copy fa-fw"></span>Copy Metadata As Text</div>
+        <div id="clearMetadata"><span class="fa fa-trash-o fa-fw"></span>Clear User Metadata</div>
+    </template>
+
+    <template id="fileRow">
+        <tr>
+            <td><input class="name" type="text" required>
+            <td><input class="display" type="text">
+            <td><input class="condition" type="text">
+            <td class="fa fa-trash-o fa-fw">
+    </template>
+    <template id="messageRow">
+        <tr>
+            <td><select class="type">
+                    <option value="say">Note</option>
+                    <option value="warn">Warning</option>
+                    <option value="error">Error</option>
+                </select>
+            <td><input class="content" type="text" required>
+            <td><input class="condition" type="text">
+            <td><select class="language">
+                    <!-- Language <option> elements go here. -->
+                </select>
+            <td class="fa fa-trash-o fa-fw">
+    </template>
+    <template id="tagRow">
+        <tr>
+            <td><select class="type">
+                    <option value="add">Add</option>
+                    <option value="remove">Remove</option>
+                </select>
+            <td><input class="name" type="text" required>
+            <td><input class="condition" type="text">
+            <td class="fa fa-trash-o fa-fw">
+    </template>
+    <template id="dirtyInfoRow">
+        <tr>
+            <td><input class="crc" type="text" maxlength="8" minlength="8" pattern="[0-9A-Fa-f]{8}" required>
+            <td><input class="itm" type="number" min="0" step="1" value="0">
+            <td><input class="udr" type="number" min="0" step="1" value="0">
+            <td><input class="nav" type="number" min="0" step="1" value="0">
+            <td><input class="util" type="text" required>
+            <td class="fa fa-trash-o fa-fw">
+    </template>
+    <template id="gameRow">
+        <tr>
+            <td><input class="name" type="text" required>
+            <td>
+                <select class="type">
+                <!-- Game <option> elements go here. -->
+                </select>
+            <td><input class="folder" type="text" required>
+            <td><input class="master" type="text">
+            <td><input class="repo" type="text">
+            <td><input class="branch" type="text">
+            <td><input class="path" type="text">
+            <td><input class="registry" type="text">
+            <td class="fa fa-trash-o fa-fw">
+    </template>
+
+    <noscript>The LOOT Report requires Javascript to be enabled in order to function.</noscript>
+    <header>
+        <div id="headerOverlay"></div>
+        <img src="../icon.ico">
+        <ol>
+            <li id="fileMenu">File
+            <ol class="hidden">
+                <li id="redatePluginsButton"><span class="fa fa-fw fa-calendar-o"></span>Redate Plugins <!-- or fa-clock-o fa-history -->
+                <li id="openLogButton"><span class="fa fa-fw fa-folder-open"></span>Open Debug Log Location
+                <li id="wipeUserlistButton"><span class="fa fa-fw fa-trash-o"></span>Clear All User Metadata
+                <li id="copyContentButton"><span class="fa fa-fw fa-copy"></span>Copy Content As Text
+            </ol>
+            <li id="gameMenu">Game
+            <ol class="hidden">
+                <!-- Generated game <li> elements go here. -->
+            </ol>
+            <li id="settingsButton">Settings
+            <li id="helpMenu">Help
+            <ol class="hidden">
+                <li id="helpButton"><span class="fa fa-fw fa-question-circle"></span>Help <!-- fa-life-ring -->
+                <li id="aboutButton"><span class="fa fa-fw fa-info-circle"></span>About
+            </ol>
+        </ol>
+        <ol>
+            <li id="updateMasterlistButton"><span class="fa fa-fw fa-refresh"></span>Update Masterlist
+            <li id="sortButton"><span class="fa fa-fw fa-magic"></span>Sort
+            <li id="applySortButton" class="hidden"><span class="fa fa-fw fa-check"></span>Apply
+            <li id="cancelSortButton" class="hidden"><span class="fa fa-fw fa-times"></span>Cancel
+        </ol>
+    </header>
+    <div id="container">
+        <nav>
+            <ol>
+                <li><a href="#summary">Summary</a>
+                <li><a href="#generalMessages">General Messages</a>
+                <li>
+                <ol id="pluginsNav">
+                    <!-- Generated <li> elements go here, containing # links to each plugin's section in the list. -->
+                </ol>
+                <ol id="filters" class="hidden" data-replace="pluginsNav">
+                    <input type="checkbox" id="hideVersionNumbers" data-class="version" />
+                    <label for="hideVersionNumbers">Hide version numbers</label><br>
+                    <input type="checkbox" id="hideCRCs" data-class="crc" />
+                    <label for="hideCRCs">Hide CRCs</label><br>
+                    <input type="checkbox" id="hideBashTags" data-class="tag" />
+                    <label for="hideBashTags">Hide Bash Tags</label><br>
+                    <input type="checkbox" id="hideNotes" />
+                    <label for="hideNotes">Hide notes</label><br>
+                    <input type="checkbox" id="hideDoNotCleanMessages" />
+                    <label for="hideDoNotCleanMessages">Hide 'Do not clean' messages</label><br>
+                    <input type="checkbox" id="hideInactivePluginMessages" />
+                    <label for="hideInactivePluginMessages">Hide inactive plugin messages</label><br>
+                    <input type="checkbox" id="hideAllPluginMessages" />
+                    <label for="hideAllPluginMessages">Hide all plugin messages</label><br>
+                    <input type="checkbox" id="hideMessagelessPlugins" />
+                    <label for="hideMessagelessPlugins">Hide messageless plugins</label>
+                    <div>
+                        <span>Hidden plugins</span>: <span id="hiddenPluginNo">0</span> / <span id="filterTotalPluginNo">0</span>
+                    </div>
+                    <div>
+                        <span>Hidden messages</span>: <span id="hiddenMessageNo">0</span> / <span id="filterTotalMessageNo">0</span>
+                    </div>
+                </ol>
+                <li id="filtersToggle"><span class="fa fa-fw fa-filter"></span>Filters
+                <li><input id="searchBox" type="search" placeholder="Search content...">
+            </ol>
+        </nav>
+        <main>
+            <section id="summary">
+                <h1>Summary</h1>
                 <table>
                     <tbody>
-                        <tr><td id="txtLootVersion"><td id="lootVersion">
-                        <tr><td id="txtMasterlistUpdating"><td id="masterlistUpdating">
-                        <tr><td id="txtMasterlistRevision"><td id="masterlistRevision">
-                        <tr><td id="txtMasterlistDate"><td id="masterlistDate">
+                        <tr><td>Masterlist Revision<td id="masterlistRevision">N/A
+                        <tr><td>Masterlist Date<td id="masterlistDate">N/A
                 </table>
-            </div>
-            <div>
-                <h2 id="txtCounts"></h2>
-                <table style="float:left;">
+                <table>
                     <tbody>
-                        <tr><td id="txtActivePluginNo"><td id="activePluginNo">
-                        <tr><td id="txtDirtyPluginNo"><td id="dirtyPluginNo">
-                        <tr><td id="txtTotalPluginNo"><td id="totalPluginNo">
+                        <tr><td>Warnings<td id="totalWarningNo">0
+                        <tr><td>Errors<td id="totalErrorNo">0
+                        <tr><td>Total Messages<td id="totalMessageNo">0
                 </table>
-                <table style="float:left;">
+                <table>
                     <tbody>
-                        <tr><td id="txtTotalWarningNo"><td id="totalWarningNo">
-                        <tr><td id="txtTotalErrorNo"><td id="totalErrorNo">
-                        <tr><td id="txtTotalMessageNo"><td id="totalMessageNo">
+                        <tr><td>Active Plugins<td id="activePluginNo">0
+                        <tr><td>Dirty Plugins<td id="dirtyPluginNo">0
+                        <tr><td>Total Plugins<td id="totalPluginNo">0
                 </table>
-            </div>
-            <div>
-                <h2 id="txtGeneralMessages"></h2>
-                <ul id="generalMessagesList">
+            </section>
+            <section id="generalMessages">
+                <h1>General Messages</h1>
+                <ul>
+                    <!-- Generated message <li> elements go here. -->
                 </ul>
-            </div>
-        </div>
+            </section>
+            <!-- Generated plugin #pluginSection elements go here. -->
+        </main>
     </div>
-    <div id="filters" class="hidden">
-        <input type="checkbox" id="hideVersionNumbers" data-class="version" /><label id="txtHideVersionNumbers" for="hideVersionNumbers"></label><br>
-        <input type="checkbox" id="hideCRCs" data-class="crc" /><label id="txtHideCRCs" for="hideCRCs"></label><br>
-        <input type="checkbox" id="hideBashTags" data-class="tag" /><label id="txtHideBashTags" for="hideBashTags"></label><br>
-        <input type="checkbox" id="hideNotes" /><label id="txtHideNotes" for="hideNotes"></label><br>
-        <input type="checkbox" id="hideDoNotCleanMessages" /><label id="txtHideDoNotCleanMessages" for="hideDoNotCleanMessages"></label><br>
-        <input type="checkbox" id="hideInactivePluginMessages" /><label id="txtHideInactivePluginMessages" for="hideInactivePluginMessages"></label><br>
-        <input type="checkbox" id="hideAllPluginMessages" /><label id="txtHideAllPluginMessages" for="hideAllPluginMessages"></label><br>
-        <input type="checkbox" id="hideMessagelessPlugins" /><label id="txtHideMessagelessPlugins" for="hideMessagelessPlugins"></label><br>
-        <div>
-            <span id="txtPluginsHidden"></span>: <span id="hiddenPluginNo">0</span> / <span id="filterTotalPluginNo"></span>
+
+    <dialog id="about">
+        <h1>LOOT <span id="LOOTVersion"></span></h1>
+        <p>Copyright &copy; 2012&ndash;2014 WrinklyNinja
+        <p>Load order optimisation for Oblivion, Skyrim, Fallout 3 and Fallout: New Vegas.
+        <p><a href="http://loot.github.io">http://loot.github.io</a>
+        <blockquote>
+LOOT is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published
+by the Free Software Foundation, either version 3 of the
+License, or any later version.
+
+LOOT is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+        </blockquote>
+        <button>OK</button>
+    </dialog>
+
+    <dialog id="settings">
+        <h1>Settings</h1>
+        <label for="defaultGameSelect">Default Game</label>
+        <select id="defaultGameSelect">
+            <option value="auto">Autodetect</option>
+            <!-- Game <option> elements go here. -->
+        </select><br>
+        <label for="languageSelect">Language</label>
+        <select id="languageSelect">
+            <!-- Language <option> elements go here. -->
+        </select><br>
+        <label for="debugVerbositySelect" title="The output is logged to the LOOTDebugLog.txt file.">Debug Verbosity</label>
+        <select id="debugVerbositySelect">
+            <option value="0">None</option>
+            <option value="1">Low</option>
+            <option value="2">Medium</option>
+            <option value="3">High</option>
+        </select>
+        <table is="editable-table" id="gameTable" data-template="gameRow">
+            <thead>
+                <tr><th>Name<th>Base Game<th>LOOT Folder<th>Master File<th>Masterlist Repository URL<th>Masterlist Repository Branch<th>Install Path<th>Install Path Registry Key<th>
+            <tbody>
+                <!-- Game rows go here. -->
+                <tr><td colspan="4">Add new row...</td><td></td></tr>
+        </table>
+        <p><input type="checkbox" id="updateMasterlist"><label for="updateMasterlist">Update masterlist before sorting</label>
+        <p>Language changes will be applied after LOOT is restarted.
+        <hr>
+        <div class="buttons">
+            <button class="accept">Apply</button>
+            <button class="cancel">Cancel</button>
         </div>
-        <div>
-            <span id="txtMessagesHidden"></span>: <span id="hiddenMessageNo">0</span> / <span id="filterTotalMessageNo"></span>
-        </div>
-    </div>
-    <script src="script.js"></script>
+    </dialog>
+
+    <div id="hoverText" class="hidden"></div>
+
+    <script src="js/script.js"></script>
 </body>

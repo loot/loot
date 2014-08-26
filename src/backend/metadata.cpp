@@ -124,7 +124,7 @@ namespace loot {
 
         BOOST_LOG_TRIVIAL(trace) << "Evaluating condition: " << _condition;
 
-        unordered_map<std::string, bool>::const_iterator it = game.conditionCache.find(boost::to_lower_copy(_condition));
+        unordered_map<std::string, bool>::const_iterator it = game.conditionCache.find(boost::locale::to_lower(_condition));
         if (it != game.conditionCache.end())
             return it->second;
 
@@ -150,7 +150,7 @@ namespace loot {
             throw loot::error(loot::error::condition_eval_fail, (boost::format(lc::translate("Failed to parse condition \"%1%\".")) % _condition).str());
         }
 
-        game.conditionCache.emplace(boost::to_lower_copy(_condition), eval);
+        game.conditionCache.emplace(boost::locale::to_lower(_condition), eval);
 
         return eval;
     }
@@ -413,6 +413,8 @@ namespace loot {
 
     void Plugin::MergeMetadata(const Plugin& plugin) {
         BOOST_LOG_TRIVIAL(trace) << "Merging metadata for: " << name;
+        if (plugin.HasNameOnly())
+            return;
 
         //For 'enabled' and 'priority' metadata, use the given plugin's values, but if the 'priority' user value is not explicit, ignore it.
         enabled = plugin.Enabled();
@@ -573,7 +575,7 @@ namespace loot {
         _dirtyInfo = dirtyInfo;
     }
 
-    void Plugin::EvalAllConditions(loot::Game& game, const unsigned int language) {
+    Plugin& Plugin::EvalAllConditions(loot::Game& game, const unsigned int language) {
         for (auto it = loadAfter.begin(); it != loadAfter.end();) {
             if (!it->EvalCondition(game))
                 loadAfter.erase(it++);
@@ -611,15 +613,15 @@ namespace loot {
 
         //First need to get plugin's CRC.
         uint32_t crc = 0;
-        unordered_map<std::string,uint32_t>::iterator it = game.crcCache.find(boost::to_lower_copy(name));
+        unordered_map<std::string, uint32_t>::iterator it = game.crcCache.find(boost::locale::to_lower(name));
         if (it != game.crcCache.end())
             crc = it->second;
         else if (boost::filesystem::exists(game.DataPath() / name)) {
             crc = GetCrc32(game.DataPath() / name);
-            game.crcCache.emplace(boost::to_lower_copy(name), crc);
+            game.crcCache.emplace(boost::locale::to_lower(name), crc);
         } else if (boost::filesystem::exists(game.DataPath() / (name + ".ghost"))) {
             crc = GetCrc32(game.DataPath() / (name + ".ghost"));
-            game.crcCache.emplace(boost::to_lower_copy(name), crc);
+            game.crcCache.emplace(boost::locale::to_lower(name), crc);
         } else
             _dirtyInfo.clear();
 
@@ -629,6 +631,8 @@ namespace loot {
             else
                 ++it;
         }
+
+        return *this;
     }
 
     bool Plugin::HasNameOnly() const {
@@ -645,8 +649,8 @@ namespace loot {
 
     bool Plugin::operator == (const Plugin& rhs) const {
         return (boost::iequals(name, rhs.Name())
-            || (IsRegexPlugin() && boost::regex_match(rhs.Name(), boost::regex(name, boost::regex::perl|boost::regex::icase)))
-            || (rhs.IsRegexPlugin() && boost::regex_match(name, boost::regex(rhs.Name(), boost::regex::perl|boost::regex::icase))));
+            || (IsRegexPlugin() && regex_match(rhs.Name(), regex(name, regex::ECMAScript | regex::icase)))
+            || (rhs.IsRegexPlugin() && regex_match(name, regex(rhs.Name(), regex::ECMAScript | regex::icase))));
     }
 
     bool Plugin::operator != (const Plugin& rhs) const {
@@ -725,7 +729,7 @@ namespace loot {
         return false;
     }
 
-    void Plugin::CheckInstallValidity(const Game& game) {
+    bool Plugin::CheckInstallValidity(const Game& game) {
         unsigned int messageType;
         if (game.IsActive(name))
             messageType = loot::Message::error;
@@ -751,22 +755,49 @@ namespace loot {
         }
         for (const auto &inc: incompatibilities) {
             if (boost::filesystem::exists(game.DataPath() / inc.Name()) || (IsPlugin(inc.Name()) && boost::filesystem::exists(game.DataPath() / (inc.Name() + ".ghost")))) {
+                if (!game.IsActive(inc.Name()))
+                    messageType = loot::Message::warn;
                 BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" is incompatible with \"" << inc.Name() << "\", but both are present.";
                 messages.push_back(loot::Message(messageType, (boost::format(boost::locale::translate("This plugin is incompatible with \"%1%\", but both are present.")) % inc.Name()).str()));
             }
         }
+
+        // Also evaluate dirty info.
+        bool isDirty = false;
+        for (const auto &element : _dirtyInfo) {
+            boost::format f;
+            if (element.ITMs() > 0 && element.UDRs() > 0 && element.DeletedNavmeshes() > 0)
+                f = boost::format(boost::locale::translate("Contains %1% ITM records, %2% UDR records and %3% deleted navmeshes. Clean with %4%.")) % element.ITMs() % element.UDRs() % element.DeletedNavmeshes() % element.CleaningUtility();
+            else if (element.ITMs() == 0 && element.UDRs() == 0 && element.DeletedNavmeshes() == 0)
+                f = boost::format(boost::locale::translate("Clean with %1%.")) % element.CleaningUtility();
+
+
+            else if (element.ITMs() == 0 && element.UDRs() > 0 && element.DeletedNavmeshes() > 0)
+                f = boost::format(boost::locale::translate("Contains %1% UDR records and %2% deleted navmeshes. Clean with %3%.")) % element.UDRs() % element.DeletedNavmeshes() % element.CleaningUtility();
+            else if (element.ITMs() == 0 && element.UDRs() == 0 && element.DeletedNavmeshes() > 0)
+                f = boost::format(boost::locale::translate("Contains %1% deleted navmeshes. Clean with %2%.")) % element.DeletedNavmeshes() % element.CleaningUtility();
+            else if (element.ITMs() == 0 && element.UDRs() > 0 && element.DeletedNavmeshes() == 0)
+                f = boost::format(boost::locale::translate("Contains %1% UDR records. Clean with %2%.")) % element.UDRs() % element.CleaningUtility();
+
+            else if (element.ITMs() > 0 && element.UDRs() == 0 && element.DeletedNavmeshes() > 0)
+                f = boost::format(boost::locale::translate("Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%.")) % element.ITMs() % element.DeletedNavmeshes() % element.CleaningUtility();
+            else if (element.ITMs() > 0 && element.UDRs() == 0 && element.DeletedNavmeshes() == 0)
+                f = boost::format(boost::locale::translate("Contains %1% ITM records. Clean with %2%.")) % element.ITMs() % element.CleaningUtility();
+
+            else if (element.ITMs() > 0 && element.UDRs() > 0 && element.DeletedNavmeshes() == 0)
+                f = boost::format(boost::locale::translate("Contains %1% ITM records and %2% UDR records. Clean with %3%.")) % element.ITMs() % element.UDRs() % element.CleaningUtility();
+
+            messages.push_back(loot::Message(loot::Message::warn, f.str()));
+            isDirty = true;
+        }
+
+        return isDirty;
     }
 
     bool Plugin::LoadsBSA(const Game& game) const {
         if (game.Id() != Game::tes5 || IsRegexPlugin())
             return false;
         return boost::filesystem::exists(game.DataPath() / (name.substr(0, name.length() - 3) + "bsa"));
-    }
-
-    size_t plugin_hash::operator () (const Plugin& p) const {
-        size_t seed = 0;
-        boost::hash_combine(seed, p.Name());
-        return seed;
     }
 
     bool operator == (const File& lhs, const Plugin& rhs) {

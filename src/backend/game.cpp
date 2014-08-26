@@ -30,9 +30,12 @@
 #include "parsers.h"
 #include "streams.h"
 #include "generators.h"
+#include "graph.h"
 
 #include <boost/algorithm/string.hpp>
 #include <boost/thread.hpp>
+#include <boost/locale.hpp>
+#include <boost/log/trivial.hpp>
 
 using namespace std;
 
@@ -41,11 +44,11 @@ namespace lc = boost::locale;
 
 namespace loot {
 
-    std::vector<Game> GetGames(const YAML::Node& settings) {
+    std::vector<Game> GetGames(YAML::Node& settings) {
         vector<Game> games;
 
-        if (settings["Games"])
-            games = settings["Games"].as< vector<Game> >();
+        if (settings["games"])
+            games = settings["games"].as< vector<Game> >();
 
         if (find(games.begin(), games.end(), Game(Game::tes4)) == games.end())
             games.push_back(Game(Game::tes4));
@@ -59,6 +62,9 @@ namespace loot {
         if (find(games.begin(), games.end(), Game(Game::fonv)) == games.end())
             games.push_back(Game(Game::fonv));
 
+        // If there were any missing defaults, make sure they're in settings now.
+        settings["games"] = games;
+
         return games;
     }
 
@@ -66,10 +72,10 @@ namespace loot {
         string preferredGame(cmdLineGame);
         if (preferredGame.empty()) {
             // Get preferred game from settings.
-            if (settings["Game"] && settings["Game"].as<string>() != "auto")
-                preferredGame = settings["Game"].as<string>();
-            else if (settings["Last Game"] && settings["Last Game"].as<string>() != "auto")
-                preferredGame = settings["Last Game"].as<string>();
+            if (settings["game"] && settings["game"].as<string>() != "auto")
+                preferredGame = settings["game"].as<string>();
+            else if (settings["lastGame"] && settings["lastGame"].as<string>() != "auto")
+                preferredGame = settings["lastGame"].as<string>();
         }
 
         // Get index of preferred game if there is one.
@@ -79,6 +85,12 @@ namespace loot {
             else if (!preferredGame.empty() && preferredGame == games[i].FolderName() && games[i].IsInstalled())
                 return i;
         }
+        // Preferred game not found, just pick the first installed one.
+        for (size_t i = 0; i < games.size(); ++i) {
+            if (games[i].IsInstalled())
+                return i;
+        }
+
         throw error(error::no_game_detected, "None of the supported games were detected.");
     }
 
@@ -95,8 +107,15 @@ namespace loot {
         YAML::Node metadataList = YAML::Load(in);
         in.close();
 
-        if (metadataList["plugins"])
-            plugins = metadataList["plugins"].as< list<Plugin> >();
+        if (metadataList["plugins"]) {
+            for (const auto& node : metadataList["plugins"]) {
+                Plugin plugin(node.as<Plugin>());
+                if (plugin.IsRegexPlugin())
+                    regexPlugins.push_back(plugin);
+                else
+                    plugins.insert(plugin);
+            }
+        }
         if (metadataList["globals"])
             messages = metadataList["globals"].as< list<Message> >();
 
@@ -104,6 +123,7 @@ namespace loot {
     }
 
     void MetadataList::Save(const boost::filesystem::path& filepath) {
+        BOOST_LOG_TRIVIAL(trace) << "Saving metadata list to: " << filepath;
         YAML::Emitter yout;
         yout.SetIndent(2);
         yout << YAML::BeginMap
@@ -116,6 +136,11 @@ namespace loot {
         uout.close();
     }
 
+    void MetadataList::clear() {
+        plugins.clear();
+        messages.clear();
+    }
+
     bool MetadataList::operator == (const MetadataList& rhs) const {
         if (this->plugins.size() != rhs.plugins.size() || this->messages.size() != rhs.messages.size()) {
             BOOST_LOG_TRIVIAL(info) << "Metadata edited for some plugin, new and old userlists differ in size.";
@@ -123,7 +148,7 @@ namespace loot {
         }
         else {
             for (const auto& rhsPlugin : rhs.plugins) {
-                const auto it = std::find(this->plugins.begin(), this->plugins.end(), rhsPlugin);
+                const auto it = this->plugins.find(rhsPlugin);
 
                 if (it == this->plugins.end()) {
                     BOOST_LOG_TRIVIAL(info) << "Metadata added for plugin: " << it->Name();
@@ -148,12 +173,56 @@ namespace loot {
         return true;
     }
 
+    std::list<Plugin> MetadataList::Plugins() const {
+        list<Plugin> pluginList(plugins.begin(), plugins.end());
+
+        pluginList.insert(pluginList.end(), regexPlugins.begin(), regexPlugins.end());
+
+        return pluginList;
+    }
+
+    Plugin MetadataList::FindPlugin(const Plugin& plugin) const {
+        auto it = plugins.find(plugin);
+
+        if (it != plugins.end())
+            return *it;
+
+        it = find(regexPlugins.begin(), regexPlugins.end(), plugin);
+
+        if (it != regexPlugins.end())
+            return *it;
+        else
+            return Plugin(plugin.Name());
+    }
+
+    void MetadataList::AddPlugin(const Plugin& plugin) {
+        if (plugin.IsRegexPlugin())
+            regexPlugins.push_back(plugin);
+        else
+            plugins.insert(plugin);
+    }
+
+    void MetadataList::ErasePlugin(const Plugin& plugin) {
+        auto it = plugins.find(plugin);
+
+        if (it != plugins.end()) {
+            plugins.erase(it);
+            return;
+        }
+
+        it = find(regexPlugins.begin(), regexPlugins.end(), plugin);
+
+        if (it != regexPlugins.end()) {
+            regexPlugins.erase(it);
+        }
+    }
+
     // Masterlist member functions
     //----------------------------
 
-    void Masterlist::Load(Game& game, const unsigned int language) {
+    bool Masterlist::Load(Game& game, const unsigned int language) {
         try {
-            Update(game, language);
+            return Update(game, language);
         }
         catch (error& e) {
             if (e.code() != error::ok) {
@@ -219,9 +288,6 @@ namespace loot {
             espm_settings = espm::Settings("fonv");
             _repositoryURL = "https://github.com/loot/falloutnv.git";
             _repositoryBranch = "master";
-        } else {
-            BOOST_LOG_TRIVIAL(error) << "Invalid game ID supplied.";
-            throw error(error::invalid_args, lc::translate("Invalid game ID supplied.").str());
         }
 
         if (!folder.empty())
@@ -261,12 +327,18 @@ namespace loot {
     }
 
     Game& Game::Init() {
+        if (id != Game::tes4 && id != Game::tes5 && id != Game::fo3 && id != Game::fonv) {
+            throw error(error::invalid_args, lc::translate("Invalid game ID supplied.").str());
+        }
+
         BOOST_LOG_TRIVIAL(info) << "Initialising filesystem-related data for game: " << _name;
 
         //First look for local install, then look for Registry.
         if (gamePath.empty() || !fs::exists(gamePath / "Data" / _masterFile)) {
-            if (fs::exists(fs::path("..") / "Data" / _masterFile))
+            if (fs::exists(fs::path("..") / "Data" / _masterFile)) {
                 gamePath = "..";
+#ifdef _WIN32
+            }
             else {
                 string path;
                 string key_parent = fs::path(registryKey).parent_path().string();
@@ -274,6 +346,7 @@ namespace loot {
                 path = RegKeyStringValue("HKEY_LOCAL_MACHINE", key_parent, key_name);
                 if (!path.empty() && fs::exists(fs::path(path) / "Data" / _masterFile))
                     gamePath = fs::path(path);
+#endif
             }
         }
 
@@ -296,12 +369,14 @@ namespace loot {
         if (fs::exists(fs::path("..") / "Data" / _masterFile))
             return true;
 
+#ifdef _WIN32
         string path;
         string key_parent = fs::path(registryKey).parent_path().string();
         string key_name = fs::path(registryKey).filename().string();
         path = RegKeyStringValue("HKEY_LOCAL_MACHINE", key_parent, key_name);
         if (!path.empty() && fs::exists(fs::path(path) / "Data" / _masterFile))
             return true;
+#endif
 
         return false;
     }
@@ -432,14 +507,14 @@ namespace loot {
 
         activePlugins.clear();
         for (size_t i=0; i < pluginArrSize; ++i) {
-            activePlugins.insert(boost::to_lower_copy(string(pluginArr[i])));
+            activePlugins.insert(boost::locale::to_lower(string(pluginArr[i])));
         }
 
         lo_destroy_handle(gh);
     }
 
     bool Game::IsActive(const std::string& plugin) const {
-        return activePlugins.find(boost::to_lower_copy(plugin)) != activePlugins.end();
+        return activePlugins.find(boost::locale::to_lower(plugin)) != activePlugins.end();
     }
 
     void Game::GetLoadOrder(std::list<std::string>& loadOrder) const {
@@ -519,7 +594,7 @@ namespace loot {
         lo_destroy_handle(gh);
     }
 
-    void Game::SetLoadOrder(const std::list<Plugin>& loadOrder) const {
+    void Game::SetLoadOrder(const std::list<std::string>& loadOrder) const {
         BOOST_LOG_TRIVIAL(debug) << "Setting load order for game: " << _name;
 
         lo_game_handle gh = nullptr;
@@ -573,8 +648,8 @@ namespace loot {
         pluginArr = new char*[pluginArrSize];
         int i = 0;
         for (const auto &plugin: loadOrder) {
-            pluginArr[i] = new char[plugin.Name().length() + 1];
-            strcpy(pluginArr[i], plugin.Name().c_str());
+            pluginArr[i] = new char[plugin.length() + 1];
+            strcpy(pluginArr[i], plugin.c_str());
             ++i;
         }
 
@@ -664,13 +739,14 @@ namespace loot {
 
             BOOST_LOG_TRIVIAL(info) << "Found plugin: " << pluginPair.first;
 
-            auto plugin = plugins.emplace(pluginPair.first, Plugin(pluginPair.first));
+            //Insert the lowercased name as a key for case-insensitive matching.
+            auto plugin = plugins.emplace(boost::locale::to_lower(pluginPair.first), Plugin(pluginPair.first));
 
             if (pluginPair.second > meanFileSize) {
                 BOOST_LOG_TRIVIAL(trace) << "Creating individual loading thread for: " << pluginPair.first;
                 group.create_thread([this, plugin, headersOnly]() {
                     BOOST_LOG_TRIVIAL(trace) << "Loading " << plugin.first->second.Name() << " individually.";
-                    plugin.first->second = Plugin(*this, plugin.first->first, headersOnly);
+                    plugin.first->second = Plugin(*this, plugin.first->second.Name(), headersOnly);
                 });
             }
             else {
@@ -688,6 +764,17 @@ namespace loot {
         group.join_all();
     }
 
+    bool Game::HasBeenLoaded() {
+        // Easy way to check is by checking the game's master file,
+        // which definitely shouldn't be empty.
+        auto pairIt = plugins.find(boost::locale::to_lower(_masterFile));
+
+        if (pairIt != plugins.end())
+            return !pairIt->second.FormIDs().empty();
+
+        return false;
+    }
+
     void Game::CreateLOOTGameFolder() {
         //Make sure that the LOOT game path exists.
         try {
@@ -697,5 +784,49 @@ namespace loot {
             BOOST_LOG_TRIVIAL(error) << "Could not create LOOT folder for game. Details: " << e.what();
             throw error(error::path_write_fail, lc::translate("Could not create LOOT folder for game. Details:").str() + " " + e.what());
         }
+    }
+
+    std::list<Plugin> Game::Sort(const unsigned int language, std::function<void(const std::string&)> progressCallback) {
+        //Create a plugin graph containing the plugin and masterlist data.
+        loot::PluginGraph graph;
+
+        progressCallback("Building plugin graph...");
+        BOOST_LOG_TRIVIAL(info) << "Merging masterlist, userlist into plugin list, evaluating conditions and checking for install validity.";
+        for (const auto &plugin : this->plugins) {
+            vertex_t v = boost::add_vertex(plugin.second, graph);
+            BOOST_LOG_TRIVIAL(trace) << "Merging for plugin \"" << graph[v].Name() << "\"";
+
+            //Check if there is a plugin entry in the masterlist. This will also find matching regex entries.
+            BOOST_LOG_TRIVIAL(trace) << "Merging masterlist data down to plugin list data.";
+            graph[v].MergeMetadata(this->masterlist.FindPlugin(graph[v]));
+
+            //Check if there is a plugin entry in the userlist. This will also find matching regex entries.
+            Plugin ulistPlugin = this->userlist.FindPlugin(graph[v]);
+
+            if (!ulistPlugin.HasNameOnly() && ulistPlugin.Enabled()) {
+                BOOST_LOG_TRIVIAL(trace) << "Merging userlist data down to plugin list data.";
+                graph[v].MergeMetadata(ulistPlugin);
+            }
+
+            //Now that items are merged, evaluate any conditions they have.
+            BOOST_LOG_TRIVIAL(trace) << "Evaluate conditions for merged plugin data.";
+            try {
+                graph[v].EvalAllConditions(*this, language);
+            }
+            catch (std::exception& e) {
+                BOOST_LOG_TRIVIAL(error) << "\"" << graph[v].Name() << "\" contains a condition that could not be evaluated. Details: " << e.what();
+                list<Message> messages(graph[v].Messages());
+                messages.push_back(loot::Message(loot::Message::error, (boost::format(lc::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % graph[v].Name() % e.what()).str()));
+                graph[v].Messages(messages);
+            }
+
+            //Also check install validity.
+            BOOST_LOG_TRIVIAL(trace) << "Checking that the current install is valid according to this plugin's data.";
+            graph[v].CheckInstallValidity(*this);
+        }
+
+        // Now add edges and sort.
+        progressCallback("Adding edges to plugin graph and performing topological sort...");
+        return loot::Sort(graph);
     }
 }

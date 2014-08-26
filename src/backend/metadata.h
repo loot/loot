@@ -32,6 +32,8 @@
 #include <list>
 #include <set>
 
+#include <boost/locale.hpp>
+
 namespace loot {
 
     const unsigned int max_priority = 1000000;
@@ -202,7 +204,7 @@ namespace loot {
         void Tags(const std::set<Tag>& tags);
         void DirtyInfo(const std::set<PluginDirtyInfo>& info);
 
-        void EvalAllConditions(loot::Game& game, const unsigned int language);
+        Plugin& EvalAllConditions(loot::Game& game, const unsigned int language);
         bool HasNameOnly() const;
         bool IsRegexPlugin() const;
         bool LoadsBSA(const Game& game) const;
@@ -220,7 +222,7 @@ namespace loot {
         bool MustLoadAfter(const Plugin& plugin) const;  //Checks masters, reqs and loadAfter.
 
         //Validity checks.
-        void CheckInstallValidity(const Game& game);  //Checks that reqs and masters are all present, and that no incs are present. Returns a map of filenames and whether they are missing (if bool is true, then filename is a req or master, otherwise it's an inc).
+        bool CheckInstallValidity(const Game& game);  //Checks that reqs and masters are all present, and that no incs are present. Returns true if the plugin is dirty.
     private:
         std::string name;
         bool enabled;  //Default to true.
@@ -243,11 +245,6 @@ namespace loot {
         size_t numOverrideRecords;
     };
 
-    struct plugin_hash : std::unary_function<Plugin, size_t> {
-        size_t operator () (const Plugin& p) const;
-    };
-
-
     bool operator == (const File& lhs, const Plugin& rhs);
 
     bool operator == (const Plugin& lhs, const File& rhs);
@@ -255,6 +252,15 @@ namespace loot {
     bool operator == (const std::string& lhs, const Plugin& rhs);
 
     bool IsPlugin(const std::string& file);
+}
+
+namespace std {
+    template<>
+    struct hash < loot::Plugin > {
+        size_t operator() (const loot::Plugin& plugin) {
+            return hash<string>()(boost::locale::to_lower(plugin.Name()));
+        }
+    };
 }
 
 #endif

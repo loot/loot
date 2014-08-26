@@ -30,20 +30,8 @@
 
 #include <string>
 #include <list>
+#include <unordered_set>
 #include <boost/filesystem.hpp>
-
-namespace loot {
-    //LOOT Report generation stuff.
-    void GenerateReportData(const Game& game,
-        std::list<Message>& messages,
-        const std::list<Plugin>& plugins,
-        const std::string& masterlistVersion,
-        const std::string& masterlistDate,
-        const bool masterlistUpdateEnabled);
-
-    //Default settings file generation.
-    void GenerateDefaultSettingsFile(const std::string& file);
-}
 
 namespace YAML {
     template<class T, class Compare>
@@ -55,6 +43,17 @@ namespace YAML {
 		out << EndSeq;
 
 		return out;
+    }
+
+    template<class T, class Hash>
+    Emitter& operator << (Emitter& out, const std::unordered_set<T, Hash>& rhs) {
+        out << BeginSeq;
+        for (const auto &element : rhs) {
+            out << element;
+        }
+        out << EndSeq;
+
+        return out;
     }
 
     Emitter& operator << (Emitter& out, const loot::PluginDirtyInfo& rhs);

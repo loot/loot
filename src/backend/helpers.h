@@ -51,14 +51,23 @@ namespace loot {
     //Converts an integer to a hex string using BOOST's Spirit.Karma. Faster than a stringstream conversion.
     std::string IntToHexString(const int n);
 
+#ifdef _WIN32
     //Get registry subkey value string.
     std::string RegKeyStringValue(const std::string& keyStr, const std::string& subkey, const std::string& value);
+#endif
 
-    //Get the local application data path.
+    //Get the local application data path, within which LOOT's data folder should be stored.
     boost::filesystem::path GetLocalAppDataPath();
 
     //Turns an absolute filesystem path into a valid file:// URL.
     std::string ToFileURL(const boost::filesystem::path& file);
+
+#ifdef _WIN32
+    //Helper to turn UTF8 strings into strings that can be used by WinAPI.
+    std::wstring ToWinWide(const std::string& str);
+
+    std::string FromWinWide(const std::wstring& wstr);
+#endif
 
     //Language class for simpler language support.
     class Language {
@@ -80,6 +89,7 @@ namespace loot {
         static const unsigned int brazilian_portuguese = 7;
         static const unsigned int finnish = 8;
         static const unsigned int german = 9;
+        static const unsigned int danish = 10;
 
         static std::vector<std::string> Names() {
             std::vector<std::string> vec;
@@ -92,6 +102,7 @@ namespace loot {
             vec.push_back(Language(Language::brazilian_portuguese).Name());
             vec.push_back(Language(Language::finnish).Name());
             vec.push_back(Language(Language::german).Name());
+            vec.push_back(Language(Language::danish).Name());
             return vec;
         }
     private:

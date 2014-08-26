@@ -34,6 +34,7 @@
 #include <unordered_set>
 
 #include <boost/filesystem.hpp>
+#include <boost/locale.hpp>
 
 #include <api/libloadorder.h>
 #include <src/libespm.h>
@@ -57,18 +58,26 @@ namespace loot {
     public:
         void Load(const boost::filesystem::path& filepath);
         void Save(const boost::filesystem::path& filepath);
+        void clear();
 
         bool operator == (const MetadataList& rhs) const;  //Compares content.
 
-        std::list<Plugin> plugins;
+        std::list<Plugin> Plugins() const;
+        Plugin FindPlugin(const Plugin& plugin) const;
+        void AddPlugin(const Plugin& plugin);
+        void ErasePlugin(const Plugin& plugin);
+
         std::list<Message> messages;
+    protected:
+        std::unordered_set<Plugin> plugins;
+        std::list<Plugin> regexPlugins;
     };
 
     class Masterlist : public MetadataList {
     public:
 
-        void Load(Game& game, const unsigned int language);  //Handles update with load fallback.
-        void Update(Game& game, const unsigned int language);
+        bool Load(Game& game, const unsigned int language);  //Handles update with load fallback.
+        bool Update(Game& game, const unsigned int language);
         
         std::string GetRevision(const boost::filesystem::path& path);
         std::string GetDate(const boost::filesystem::path& path);
@@ -115,14 +124,14 @@ namespace loot {
         bool IsActive(const std::string& plugin) const;
 
         void GetLoadOrder(std::list<std::string>& loadOrder) const;
-        void SetLoadOrder(const std::list<Plugin>& loadOrder) const;  //Modifies game load order, even though const.
+        void SetLoadOrder(const std::list<std::string>& loadOrder) const;  //Modifies game load order, even though const.
 
         void RefreshActivePluginsList();
         void RedatePlugins();  //Change timestamps to match load order (Skyrim only).
         void LoadPlugins(bool headersOnly);  //Loads all installed plugins.
+        bool HasBeenLoaded();  // Checks if the game's plugins have already been loaded.
 
-        void SortPrep(const unsigned int language, std::list<Message>& messages, std::function<void(const std::string&)> progressCallback);
-        std::list<Plugin> Sort(const unsigned int language, std::list<Message>& messages, std::function<void(const std::string&)> progressCallback);
+        std::list<Plugin> Sort(const unsigned int language, std::function<void(const std::string&)> progressCallback);
 
         //Caches for condition results, active plugins and CRCs.
         std::unordered_map<std::string, bool> conditionCache;  //Holds lowercased strings.
@@ -159,7 +168,7 @@ namespace loot {
         void CreateLOOTGameFolder();
     };
 
-    std::vector<Game> GetGames(const YAML::Node& settings);
+    std::vector<Game> GetGames(YAML::Node& settings);
 
     size_t SelectGame(const YAML::Node& settings, const std::vector<Game>& games, const std::string& cmdLineGame);
 }

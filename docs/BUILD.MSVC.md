@@ -6,14 +6,14 @@ These instructions were used to build LOOT using Microsoft Visual Studio 2012 an
 
 ```
 bootstrap.bat
-b2 toolset=msvc threadapi=win32 link=static runtime-link=static variant=release address-model=32 --with-log --with-date_time --with-thread --with-filesystem --with-locale --with-regex --with-system  --with-iostreams
+b2 toolset=msvc threadapi=win32 link=static runtime-link=static variant=release address-model=32 --with-log --with-date_time --with-thread --with-filesystem --with-program_options --with-locale --with-regex --with-system  --with-iostreams
 ```
 
 `link`, `runtime-link` and `address-model` can all be modified if shared linking or 64 bit builds are desired. LOOT uses statically-linked Boost libraries by default: to change this, edit [CMakeLists.txt](../CMakeLists.txt).
 
-#### wxWidgets
+#### Chromium Embedded Framework
 
-Just build the solution provided by wxWidgets. You may need to change the C/C++ Runtime Library setting in each project to `Multi-threaded (/MT)`.
+Most of the required binaries are pre-built, but the libcef_dll_wrapper dynamic library must be built. Just open its project file and build it with the `Release` configuration.
 
 #### yaml-cpp
 
@@ -53,11 +53,11 @@ Parameter | Values | Default |Description
 `PROJECT_STATIC_RUNTIME` | `ON`, `OFF` | `ON` | Whether to link the C++ runtime statically or not. This also affects the Boost libraries used.
 `PROJECT_ARCH` | `32`, `64` | `32` | Whether to build 32 or 64 bit LOOT binaries.
 `ALPHANUM_ROOT` | path | `../../alphanum` | Path to the folder containing `alphanum.hpp`.
+`CEF_ROOT` | path | `../../cef` | Path to the root of the Chromium Embedded Framework folder.
 `LIBESPM_ROOT` | path | `../../libespm` | Path to the root of the libespm repository folder.
 `LIBGIT2_ROOT` | path | `../../libgit2` | Path to the root of the libgit2 repository folder.
 `LIBLOADORDER_ROOT` | path | `../../libloadorder` | Path to the root of the libloadorder repository folder.
 `YAMLCPP_ROOT` | path | `../../yaml-cpp` | Path to the root of the yaml-cpp folder.
-`WXWIDGETS_ROOT` | path | `../../wxWidgets` | Path to the root of the wxWidgets folder.
 
 The default paths given in the table above are relative to LOOT's `CMakeLists.txt`.
 

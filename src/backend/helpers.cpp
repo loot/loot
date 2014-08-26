@@ -43,7 +43,7 @@
 #include <sstream>
 #include <regex>
 
-#if _WIN32 || _WIN64
+#ifdef _WIN32
 #   ifndef UNICODE
 #       define UNICODE
 #   endif
@@ -52,6 +52,7 @@
 #   endif
 #   include "windows.h"
 #   include "shlobj.h"
+#   include "shlwapi.h"
 #endif
 
 namespace loot {
@@ -160,9 +161,9 @@ namespace loot {
         return out;
     }
 
+#ifdef _WIN32
     //Get registry subkey value string.
     string RegKeyStringValue(const std::string& keyStr, const std::string& subkey, const std::string& value) {
-#if _WIN32 || _WIN64
         HKEY hKey, key;
         DWORD BufferSize = 4096;
         wchar_t val[4096];
@@ -179,11 +180,11 @@ namespace loot {
             key = HKEY_USERS;
 
         BOOST_LOG_TRIVIAL(trace) << "Getting registry object for key and subkey: " << keyStr << " + " << subkey;
-        LONG ret = RegOpenKeyEx(key, fs::path(subkey).wstring().c_str(), 0, KEY_READ|KEY_WOW64_32KEY, &hKey);
+        LONG ret = RegOpenKeyEx(key, ToWinWide(subkey).c_str(), 0, KEY_READ|KEY_WOW64_32KEY, &hKey);
 
         if (ret == ERROR_SUCCESS) {
             BOOST_LOG_TRIVIAL(trace) << "Getting value for entry: " << value;
-            ret = RegQueryValueEx(hKey, fs::path(value).wstring().c_str(), NULL, NULL, (LPBYTE)&val, &BufferSize);
+            ret = RegQueryValueEx(hKey, ToWinWide(value).c_str(), NULL, NULL, (LPBYTE)&val, &BufferSize);
             RegCloseKey(hKey);
 
             if (ret == ERROR_SUCCESS)
@@ -192,13 +193,11 @@ namespace loot {
                 return "";
         } else
             return "";
-#else
-        return "";
-#endif
     }
+#endif
 
     boost::filesystem::path GetLocalAppDataPath() {
-#if _WIN32 || _WIN64
+#ifdef _WIN32
         HWND owner = 0;
         TCHAR path[MAX_PATH];
 
@@ -209,16 +208,41 @@ namespace loot {
             return fs::path(path);
         else
             return fs::path("");
-#else
-        return fs::path("");
 #endif
     }
 
     //Turns an absolute filesystem path into a valid file:// URL.
     std::string ToFileURL(const fs::path& file) {
         BOOST_LOG_TRIVIAL(trace) << "Converting file path " << file << " to a URL.";
-        return "file:///" + file.string();  //Seems that we don't need to worry about encoding, tested with Unicode paths.
+
+#ifdef _WIN32
+        wstring wstr(MAX_PATH, 0);
+        DWORD len = MAX_PATH;
+        UrlCreateFromPath(ToWinWide(file.string()).c_str(), &wstr[0], &len, NULL);
+        string str = FromWinWide(wstr.c_str());  // Passing c_str() cuts off any unused buffer.
+        BOOST_LOG_TRIVIAL(trace) << "Converted to: " << str;
+
+        return str;
+#endif
     }
+
+#ifdef _WIN32
+    //Helper to turn UTF8 strings into strings that can be used by WinAPI.
+    std::wstring ToWinWide(const std::string& str) {
+
+        int len = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), str.length(), 0, 0);
+        std::wstring wstr(len, 0);
+        MultiByteToWideChar(CP_UTF8, 0, str.c_str(), str.length(), &(wstr[0]), len);
+        return wstr;
+    }
+
+    std::string FromWinWide(const std::wstring& wstr) {
+        int len = WideCharToMultiByte(CP_UTF8, 0, &wstr[0], wstr.length(), NULL, 0, NULL, NULL);
+        std::string str(len, 0);
+        WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), wstr.length(), &str[0], len, NULL, NULL);
+        return str;
+    }
+#endif
 
     Language::Language(const unsigned int code) {
         Construct(code);
@@ -243,6 +267,8 @@ namespace loot {
     	    Construct(Language::finnish);
         else if (nameOrCode == Language(Language::german).Name() || nameOrCode == Language(Language::german).Locale())
     	    Construct(Language::german);
+        else if (nameOrCode == Language(Language::danish).Name() || nameOrCode == Language(Language::danish).Locale())
+            Construct(Language::danish);
         else
             Construct(Language::english);
     }
@@ -281,6 +307,9 @@ namespace loot {
             _name = "Deutsch";
             _locale = "de";
         }
+        else if (_code == Language::danish) {
+            _name = "Dansk";
+            _locale = "da";
         else  {
             _name = "English";
             _locale = "en";
@@ -309,9 +338,9 @@ namespace loot {
         : verString(ver) {}
 
     Version::Version(const fs::path& file) {
-#if _WIN32 || _WIN64
+#ifdef _WIN32
         DWORD dummy = 0;
-        DWORD size = GetFileVersionInfoSize(file.wstring().c_str(), &dummy);
+        DWORD size = GetFileVersionInfoSize(ToWinWide(file.string()).c_str(), &dummy);
 
         if (size > 0) {
             LPBYTE point = new BYTE[size];
@@ -319,7 +348,7 @@ namespace loot {
             VS_FIXEDFILEINFO *info;
             string ver;
 
-            GetFileVersionInfo(file.wstring().c_str(),0,size,point);
+            GetFileVersionInfo(ToWinWide(file.string()).c_str(),0,size,point);
 
             VerQueryValue(point,L"\\",(LPVOID *)&info,&uLen);
 
@@ -365,7 +394,7 @@ namespace loot {
 
         regex reg1("(\\d+\\.?)+");  //a.b.c.d.e.f.... where the letters are all integers, and 'a' is the shortest possible match.
 
-        //boost::regex reg2("(\\d+\\.?)+([a-zA-Z\\-]+(\\d+\\.?)*)+");  //Matches a mix of letters and numbers - from "0.99.xx", "1.35Alpha2", "0.9.9MB8b1", "10.52EV-D", "1.62EV" to "10.0EV-D1.62EV".
+        //regex reg2("(\\d+\\.?)+([a-zA-Z\\-]+(\\d+\\.?)*)+");  //Matches a mix of letters and numbers - from "0.99.xx", "1.35Alpha2", "0.9.9MB8b1", "10.52EV-D", "1.62EV" to "10.0EV-D1.62EV".
 
         if (regex_match(verString, reg1) && regex_match(ver.AsString(), reg1)) {
             //First type: numbers separated by periods. If two versions have a different number of numbers, then the shorter should be padded
