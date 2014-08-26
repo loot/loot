@@ -1,53 +1,86 @@
 # Settings passed on the command line:
 #
-# PROJECT_LIBS_DIR = the directory which all external libraries may be referenced from.
 # PROJECT_ARCH = the build architecture
-# PROJECT_LINK = whether to build a static or dynamic library.
+# LIBESPM_ROOT = the path to the root of the libespm source.
 
 ##############################
 # General Settings
 ##############################
 
 cmake_minimum_required (VERSION 2.8.9)
-project (boss)
+project (LOOT)
 
-set (BOSS_SRC   "${CMAKE_SOURCE_DIR}/src/backend/metadata.cpp"
+option(BUILD_SHARED_LIBS "Build a shared library" OFF)
+option(PROJECT_STATIC_RUNTIME "Build with static runtime libs (/MT)" ON)
+
+IF (NOT DEFINED PROJECT_ARCH)
+    set (PROJECT_ARCH "32")
+ENDIF ()
+
+IF (NOT DEFINED ALPHANUM_ROOT)
+    set (ALPHANUM_ROOT "../../alphanum")
+ENDIF ()
+
+IF (NOT DEFINED LIBESPM_ROOT)
+    set (LIBESPM_ROOT "../../libespm")
+ENDIF ()
+
+IF (NOT DEFINED LIBGIT2_ROOT)
+    set (LIBGIT2_ROOT "../../libgit2")
+ENDIF ()
+
+IF (NOT DEFINED LIBLOADORDER_ROOT)
+    set (LIBLOADORDER_ROOT "../../libloadorder")
+ENDIF ()
+
+IF (NOT DEFINED YAMLCPP_ROOT)
+    set (YAMLCPP_ROOT "../../yaml-cpp")
+ENDIF ()
+
+IF (NOT DEFINED CEF_ROOT)
+    set (CEF_ROOT "../../cef")
+ENDIF ()
+
+set (Boost_USE_STATIC_LIBS ON)
+set (Boost_USE_MULTITHREADED ON)
+set (Boost_USE_STATIC_RUNTIME PROJECT_STATIC_RUNTIME)
+
+set (LOOT_SRC   "${CMAKE_SOURCE_DIR}/src/backend/metadata.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/game.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/network.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/globals.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/graph.cpp"
-                "${PROJECT_LIBS_DIR}/pugixml/src/pugixml.cpp")
+                "${CMAKE_SOURCE_DIR}/src/backend/generators.cpp"
+                "${CMAKE_SOURCE_DIR}/src/backend/graph.cpp")
 
-set (BOSS_GUI_SRC ${BOSS_SRC}
-                  "${CMAKE_SOURCE_DIR}/src/gui/ids.cpp"
-                  "${CMAKE_SOURCE_DIR}/src/gui/main.cpp"
-                  "${CMAKE_SOURCE_DIR}/src/gui/settings.cpp"
-                  "${CMAKE_SOURCE_DIR}/src/gui/editor.cpp"
-                  "${CMAKE_SOURCE_DIR}/src/gui/viewer.cpp"
-                  "${CMAKE_SOURCE_DIR}/src/gui/misc.cpp"
+set (LOOT_GUI_SRC ${LOOT_SRC}
+                  # Code the API doesn't need.
+                  "${CMAKE_SOURCE_DIR}/src/backend/git.cpp"
+                  # Actual GUI code.
+                  "${CMAKE_SOURCE_DIR}/src/gui/main_win.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/gui/handler.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/gui/app.cpp"
                   "${CMAKE_SOURCE_DIR}/src/resource.rc")
 
-set (BOSS_API_SRC ${BOSS_SRC}
+set (LOOT_API_SRC ${LOOT_SRC}
                   "${CMAKE_SOURCE_DIR}/src/api/api.cpp")
+
+find_package(Boost REQUIRED COMPONENTS log log_setup locale thread chrono date_time filesystem system regex iostreams)
 
 # Include source and library directories.
 include_directories ("${CMAKE_SOURCE_DIR}/src"
-                     "${PROJECT_LIBS_DIR}/alphanum"
-                     "${PROJECT_LIBS_DIR}/boost"
-                     "${PROJECT_LIBS_DIR}/yaml-cpp/include"
-                     "${PROJECT_LIBS_DIR}/libloadorder/src"
-                     "${PROJECT_LIBS_DIR}/libespm"
-                     "${PROJECT_LIBS_DIR}/zlib"
-                     "${PROJECT_LIBS_DIR}/pugixml/src"
-                     "${PROJECT_LIBS_DIR}/libgit2/include"
-                     "${PROJECT_LIBS_DIR}/wxWidgets/include")
+                     ${ALPHANUM_ROOT}
+                     "${YAMLCPP_ROOT}/include"
+                     "${LIBLOADORDER_ROOT}/src"
+                     "${LIBGIT2_ROOT}/include"
+                     ${CEF_ROOT}
+                     ${LIBESPM_ROOT}
+                     ${Boost_INCLUDE_DIRS})
 
-link_directories ("${PROJECT_LIBS_DIR}/libloadorder/build"
-                  "${PROJECT_LIBS_DIR}/zlib/build"
-                  "${PROJECT_LIBS_DIR}/libgit2/build"
-                  "${PROJECT_LIBS_DIR}/yaml-cpp/build"
-                  "${PROJECT_LIBS_DIR}/boost/stage-${PROJECT_ARCH}/lib")
+link_directories ("${LIBLOADORDER_ROOT}/build"
+                  "${LIBGIT2_ROOT}/build"
+                  "${YAMLCPP_ROOT}/build"
+                  "${CEF_ROOT}/Release"
+                  "${CEF_ROOT}/out/Release/lib")
 
 
 ##############################
@@ -57,24 +90,21 @@ link_directories ("${PROJECT_LIBS_DIR}/libloadorder/build"
 # Settings when compiling for Windows. Since it's a Windows-only app this is always true, but useful to check for copy/paste into other projects.
 IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
     add_definitions (-DUNICODE -D_UNICODE -D__WXMSW__ -DNDEBUG -DLIBLO_STATIC -DWIN32 -D_WINDOWS)
-    IF (${PROJECT_LINK} MATCHES "STATIC")
-        add_definitions (-DBOSS_STATIC)
+    IF (BUILD_SHARED_LIBS)
+        add_definitions (-DLOOT_EXPORT)
     ELSE ()
-        add_definitions (-DBOSS_EXPORT)
+        add_definitions (-DLOOT_STATIC)
     ENDIF ()
 ENDIF ()
 
 # MinGW settings.
 IF (MINGW)
-    include_directories("${PROJECT_LIBS_DIR}/wxWidgets/lib/wx/include/${COMPILER_PREFIX}-msw-unicode-static-3.0")
-    link_directories("${PROJECT_LIBS_DIR}/openssl"
-                     "${PROJECT_LIBS_DIR}/wxWidgets/lib")
     set (CMAKE_C_FLAGS  "-m${PROJECT_ARCH} -O3")
     set (CMAKE_CXX_FLAGS "-m${PROJECT_ARCH} -O3")
     set (CMAKE_EXE_LINKER_FLAGS "-static-libstdc++ -static-libgcc -Wl,--subsystem,windows")
     set (CMAKE_SHARED_LINKER_FLAGS "-static-libstdc++ -static-libgcc -Wl,--subsystem,windows")
     set (CMAKE_MODULE_LINKER_FLAGS "-static-libstdc++ -static-libgcc -Wl,--subsystem,windows")
-    set (BOSS_LIBS ${BOSS_LIBS}
+    set (LOOT_LIBS ${LOOT_LIBS}
                    yaml-cpp
                    boost_log_setup
                    boost_log
@@ -86,52 +116,44 @@ IF (MINGW)
                    boost_system
                    boost_regex
                    version
-                   git2
-                   zlibstatic
                    loadorder${PROJECT_ARCH}
                    ssl
                    crypto
                    ws2_32)
-    set (BOSS_GUI_LIBS ${BOSS_LIBS}
-                       wx_mswu_webview-3.0-${COMPILER_PREFIX}
-                       wx_mswu_core-3.0-${COMPILER_PREFIX}
-                       wx_baseu-3.0-${COMPILER_PREFIX}
-                       wx_mswu_adv-3.0-${COMPILER_PREFIX}
-                       wxpng-3.0-${COMPILER_PREFIX}
-                       wxzlib-3.0-${COMPILER_PREFIX}
+    set (LOOT_GUI_LIBS ${LOOT_LIBS}
+                       git2
+                       cef_sandbox
+                       libcef
+                       libcef_dll_wrapper
+                       rpcrt4
+                       shlwapi
                        comctl32)
 ELSEIF (MSVC)
-    IF (MSVC_VERSION EQUAL 1800) 
-        set (CMAKE_GENERATOR_TOOLSET "v120_xp" CACHE STRING "Platform Toolset" FORCE)
+
+    # Force static C++ runtime linkage.
+    IF (PROJECT_STATIC_RUNTIME)
+        FOREACH(flag
+            CMAKE_C_FLAGS_RELEASE CMAKE_C_FLAGS_RELWITHDEBINFO
+            CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_DEBUG_INIT
+            CMAKE_CXX_FLAGS_RELEASE  CMAKE_CXX_FLAGS_RELWITHDEBINFO
+            CMAKE_CXX_FLAGS_DEBUG  CMAKE_CXX_FLAGS_DEBUG_INIT)
+            STRING(REPLACE "/MD"  "/MT" "${flag}" "${${flag}}")
+            SET("${flag}" "${${flag}} /EHsc")
+        ENDFOREACH()
     ENDIF ()
-    include_directories("${PROJECT_LIBS_DIR}/wxWidgets/lib/vc_lib/mswu")
-    link_directories("${PROJECT_LIBS_DIR}/wxWidgets/lib/vc_lib")
-	set (CMAKE_CXX_FLAGS "/EHsc")
-    set (CMAKE_EXE_LINKER_FLAGS "/SUBSYSTEM:WINDOWS")
-    set (BOOST_SUFFIX "-vc120-mt-1_55")
-    set (BOSS_LIBS ${BOSS_LIBS}
-                   libyaml-cppmd
-                   libboost_log_setup${BOOST_SUFFIX}
-                   libboost_log${BOOST_SUFFIX}
-                   libboost_locale${BOOST_SUFFIX}
-                   libboost_thread${BOOST_SUFFIX}
-                   libboost_chrono${BOOST_SUFFIX}
-                   libboost_date_time${BOOST_SUFFIX}
-                   libboost_filesystem${BOOST_SUFFIX}
-                   libboost_system${BOOST_SUFFIX}
-                   libboost_regex${BOOST_SUFFIX}
+
+    set (CMAKE_EXE_LINKER_FLAGS "/SUBSYSTEM:WINDOWS /LARGEADDRESSAWARE")
+    set (LOOT_LIBS libyaml-cppmt
                    version
-                   git2
-                   zlibstatic
                    loadorder${PROJECT_ARCH}
                    ws2_32)
-    set (BOSS_GUI_LIBS ${BOSS_LIBS}
-                       wxmsw30u_webview
-                       wxmsw30u_adv
-                       wxmsw30u_core
-                       wxbase30u
-                       wxpng
-                       wxzlib
+    set (LOOT_GUI_LIBS ${LOOT_LIBS}
+                       git2
+                       cef_sandbox
+                       libcef
+                       libcef_dll_wrapper
+                       rpcrt4
+                       shlwapi
                        comctl32)
 ENDIF ()
 
@@ -141,14 +163,25 @@ ENDIF ()
 ##############################
 
 # Build API.
-add_library           (boss${PROJECT_ARCH} ${PROJECT_LINK} ${BOSS_API_SRC})
-target_link_libraries (boss${PROJECT_ARCH} ${BOSS_LIBS})
+add_library           (loot${PROJECT_ARCH} ${LOOT_API_SRC})
+target_link_libraries (loot${PROJECT_ARCH} ${Boost_LIBRARIES} ${LOOT_LIBS})
 
 # Build application.
-add_executable        (BOSS ${BOSS_GUI_SRC})
-target_link_libraries (BOSS ${BOSS_GUI_LIBS})
+add_executable        (LOOT ${LOOT_GUI_SRC})
+target_link_libraries (LOOT ${Boost_LIBRARIES} ${LOOT_GUI_LIBS})
 
-# Build converter.
-add_executable        (masterlist-converter ${BOSS_SRC} "${CMAKE_SOURCE_DIR}/src/converter.cpp")
-target_link_libraries (masterlist-converter ${BOSS_LIBS})
+# Copy CEF DLLs.
+FOREACH(cef_dll d3dcompiler_43.dll d3dcompiler_46.dll libEGL.dll libGLESv2.dll libcef.dll)
+    add_custom_command(TARGET LOOT POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${CMAKE_SOURCE_DIR}/${CEF_ROOT}/$<CONFIGURATION>/${cef_dll}"
+            $<TARGET_FILE_DIR:LOOT>)
+ENDFOREACH()
 
+# Copy CEF resources.
+FOREACH(cef_resource cef.pak cef_100_percent.pak cef_200_percent.pak devtools_resources.pak icudtl.dat)
+    add_custom_command(TARGET LOOT POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${CMAKE_SOURCE_DIR}/${CEF_ROOT}/Resources/${cef_resource}"
+            $<TARGET_FILE_DIR:LOOT>)
+ENDFOREACH()

@@ -1,22 +1,21 @@
-# Example Default BOSS Settings File
+# Example Default LOOT Settings File
 # This file is written in YAML <http://www.yaml.org/>.
 
-Language:            eng    # One of 'eng', 'spa', 'rus' or ''.
+language:            eng    # One of 'eng', 'spa', 'rus' or ''.
 
-Game:                auto   # auto, or one of the 'folder' values below.
-Last Game:           auto   # auto, or one of the 'folder' values below.
-Debug Verbosity:     0      # 0, 1, 2, 3. Logging takes place if > 0.
-Update Masterlist:   true
-View Report Externally: false
-Generate Graph Image: false
+game:                auto   # auto, or one of the 'folder' values below.
+lastGame:           auto   # auto, or one of the 'folder' values below.
+debugVerbosity:     0      # 0, 1, 2, 3. Logging takes place if > 0.
+updateMasterlist:   true
 
 # Games. The four types are 'Oblivion', 'Skyrim', 'Fallout3' and 'FalloutNV'. They correspond to each base game's libespm and libloadorder settings.
-Games:
+games:
   - folder: Oblivion
     name: "TES IV: Oblivion"
     type: Oblivion
     master: Oblivion.esm
-    url: https://github.com/boss-developers/boss-oblivion.git
+    repo: https://github.com/loot/oblivion.git
+    branch: master
     path: ~
     registry: Software\Bethesda Softworks\Oblivion\Installed Path
 
@@ -24,7 +23,8 @@ Games:
     name: "TES V: Skyrim"
     type: Skyrim
     master: Skyrim.esm
-    url: https://github.com/boss-developers/boss-skyrim.git
+    repo: https://github.com/loot/skyrim.git
+    branch: master
     path: ~
     registry: Software\Bethesda Softworks\Skyrim\Installed Path
 
@@ -32,7 +32,8 @@ Games:
     name: Fallout 3
     type: Fallout3
     master: Fallout3.esm
-    url: https://github.com/boss-developers/boss-fallout3.git
+    repo: https://github.com/loot/fallout3.git
+    branch: master
     path: ~
     registry: Software\Bethesda Softworks\Fallout3\Installed Path
 
@@ -40,7 +41,8 @@ Games:
     name: "Fallout: New Vegas"
     type: FalloutNV
     master: FalloutNV.esm
-    url: https://github.com/boss-developers/boss-fallout-new-vegas.git
+    repo: https://github.com/loot/falloutnv.git
+    branch: master
     path: ~
     registry: Software\Bethesda Softworks\FalloutNV\Installed Path
 
@@ -48,6 +50,7 @@ Games:
     name: Nehrim - At Fate's Edge
     type: Oblivion
     master: Nehrim.esm
-    url: https://github.com/boss-developers/boss-oblivion.git
+    repo: https://github.com/loot/oblivion.git
+    branch: master
     path: ~
-    registry: Software\Microsoft\Windows\CurrentVersion\Uninstall\Nehrim - At Fate's Edge_is1
+    registry: Software\Microsoft\Windows\CurrentVersion\Uninstall\Nehrim - At Fate's Edge_is1\InstallLocation

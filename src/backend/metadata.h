@@ -1,39 +1,44 @@
-/*  BOSS
+/*  LOOT
 
-    A plugin load order optimiser for games that use the esp/esm plugin system.
+    A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
+    Fallout: New Vegas.
 
     Copyright (C) 2012-2014    WrinklyNinja
 
-    This file is part of BOSS.
+    This file is part of LOOT.
 
-    BOSS is free software: you can redistribute
+    LOOT is free software: you can redistribute
     it and/or modify it under the terms of the GNU General Public License
     as published by the Free Software Foundation, either version 3 of
     the License, or (at your option) any later version.
 
-    BOSS is distributed in the hope that it will
+    LOOT is distributed in the hope that it will
     be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with BOSS.  If not, see
+    along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
 */
-#ifndef __BOSS_METADATA__
-#define __BOSS_METADATA__
+#ifndef __LOOT_METADATA__
+#define __LOOT_METADATA__
 
-#include "game.h"
 #include "globals.h"
 
-#include <stdint.h>
+#include <cstdint>
 #include <string>
 #include <vector>
 #include <list>
 #include <set>
 
-namespace boss {
+#include <boost/locale.hpp>
 
+namespace loot {
+
+    const unsigned int max_priority = 1000000;
+
+    class Game;
 
     //A FormID is a 32 bit unsigned integer of the form xxYYYYYY in hex. The xx is the position in the masters list of the plugin that the FormID is from, and the YYYYYY is the rest of the FormID. Here the xx bit is stored as the corresponding filename to allow comparison between FormIDs from different plugins.
     class FormID {
@@ -78,7 +83,7 @@ namespace boss {
         ConditionStruct(const std::string& condition);
 
         bool IsConditional() const;
-        bool EvalCondition(boss::Game& game) const;
+        bool EvalCondition(loot::Game& game) const;
 
         std::string Condition() const;
     private:
@@ -88,7 +93,7 @@ namespace boss {
     class MessageContent {
     public:
         MessageContent();
-        MessageContent(const std::string& str, const unsigned int language = g_lang_any);
+        MessageContent(const std::string& str, const unsigned int language);
 
         std::string Str() const;
         unsigned int Language() const;
@@ -111,11 +116,16 @@ namespace boss {
         bool operator < (const Message& rhs) const;
         bool operator == (const Message& rhs) const;
 
-        bool EvalCondition(boss::Game& game, const unsigned int language);
+        bool EvalCondition(loot::Game& game, const unsigned int language);
 
         unsigned int Type() const;
         std::vector<MessageContent> Content() const;
         MessageContent ChooseContent(const unsigned int language) const;
+
+        static const unsigned int say   = 0;
+        static const unsigned int warn  = 1;
+        static const unsigned int error = 2;
+        static const unsigned int tag   = 3;
     private:
         unsigned int _type;
         std::vector<MessageContent> _content;
@@ -156,7 +166,7 @@ namespace boss {
     public:
         Plugin();
         Plugin(const std::string& name);
-        Plugin(boss::Game& game, const std::string& name, const bool headerOnly);
+        Plugin(loot::Game& game, const std::string& name, const bool headerOnly);
 
         //Merges from the given plugin into this one, unless there is already equal metadata present.
         //For 'enabled' and 'priority' metadata, use the given plugin's values, but if the 'priority' user value is zero, ignore it.
@@ -194,7 +204,7 @@ namespace boss {
         void Tags(const std::set<Tag>& tags);
         void DirtyInfo(const std::set<PluginDirtyInfo>& info);
 
-        void EvalAllConditions(boss::Game& game, const unsigned int language);
+        Plugin& EvalAllConditions(loot::Game& game, const unsigned int language);
         bool HasNameOnly() const;
         bool IsRegexPlugin() const;
         bool LoadsBSA(const Game& game) const;
@@ -212,7 +222,7 @@ namespace boss {
         bool MustLoadAfter(const Plugin& plugin) const;  //Checks masters, reqs and loadAfter.
 
         //Validity checks.
-        std::vector<std::string> CheckInstallValidity(const Game& game) const;  //Checks that reqs and masters are all present, and that no incs are present. Returns a map of filenames and whether they are missing (if bool is true, then filename is a req or master, otherwise it's an inc).
+        bool CheckInstallValidity(const Game& game);  //Checks that reqs and masters are all present, and that no incs are present. Returns true if the plugin is dirty.
     private:
         std::string name;
         bool enabled;  //Default to true.
@@ -235,25 +245,22 @@ namespace boss {
         size_t numOverrideRecords;
     };
 
-    struct plugin_hash : std::unary_function<Plugin, size_t> {
-        inline size_t operator () (const Plugin& p) const {
-            size_t seed = 0;
-            boost::hash_combine(seed, p.Name());
-            return seed;
-        }
-    };
-
     bool operator == (const File& lhs, const Plugin& rhs);
 
     bool operator == (const Plugin& lhs, const File& rhs);
 
     bool operator == (const std::string& lhs, const Plugin& rhs);
 
-    bool alpha_sort(const Plugin& lhs, const Plugin& rhs);
-
-    bool master_sort(const Plugin& lhs, const Plugin& rhs);
-
     bool IsPlugin(const std::string& file);
+}
+
+namespace std {
+    template<>
+    struct hash < loot::Plugin > {
+        size_t operator() (const loot::Plugin& plugin) {
+            return hash<string>()(boost::locale::to_lower(plugin.Name()));
+        }
+    };
 }
 
 #endif

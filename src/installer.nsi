@@ -1,4 +1,4 @@
-﻿;BOSS NSIS Installer Script
+﻿;LOOT NSIS Installer Script
 
 ;--------------------------------
 ;Include NSIS files.
@@ -74,9 +74,9 @@ FunctionEnd
 ;General
 
 	;Name, file and version info for installer.
-	Name "BOSS v3.0.0"
-	OutFile "..\build\BOSS Installer.exe"
-	VIProductVersion 3.0.0.0
+	Name "LOOT v0.7.0"
+	OutFile "..\build\LOOT Installer.exe"
+	VIProductVersion 0.7.0.0
 
 	;Request application privileges for Windows Vista/7
 	RequestExecutionLevel admin
@@ -89,15 +89,15 @@ FunctionEnd
 	!define MUI_ABORTWARNING
 	!define MUI_UNABORTWARNING
 
-	;Checks that the installer's CRC is correct (means we can remove installer CRC checking from BOSS).
+	;Checks that the installer's CRC is correct.
 	CRCCheck force
 
 	;The SOLID lzma compressor gives the best compression ratio.
 	SetCompressor /SOLID lzma
 
     ;Default install directory.
-    InstallDir "$PROGRAMFILES\BOSS"
-    InstallDirRegKey HKLM "Software\BOSS" "Installed Path"
+    InstallDir "$PROGRAMFILES\LOOT"
+    InstallDirRegKey HKLM "Software\LOOT" "Installed Path"
 
 ;--------------------------------
 ;Pages
@@ -108,9 +108,9 @@ FunctionEnd
 	!insertmacro MUI_PAGE_DIRECTORY
 	!insertmacro MUI_PAGE_INSTFILES
 	!define MUI_FINISHPAGE_NOAUTOCLOSE
-	!define MUI_FINISHPAGE_RUN "$INSTDIR\BOSS.exe"
+	!define MUI_FINISHPAGE_RUN "$INSTDIR\LOOT.exe"
 	!define MUI_FINISHPAGE_RUN_TEXT "$(Text_Run)"
-	!define MUI_FINISHPAGE_SHOWREADME "$INSTDIR\Docs\BOSS Readme.html"
+	!define MUI_FINISHPAGE_SHOWREADME "$INSTDIR\Docs\LOOT Readme.html"
 	!define MUI_FINISHPAGE_SHOWREADME_TEXT "$(Text_ShowReadme)"
 	!insertmacro MUI_PAGE_FINISH
 
@@ -124,138 +124,154 @@ FunctionEnd
 
 	!insertmacro MUI_LANGUAGE "English"
 	!insertmacro MUI_LANGUAGE "Russian"
-	;!insertmacro MUI_LANGUAGE "German"
+	!insertmacro MUI_LANGUAGE "German"
 	!insertmacro MUI_LANGUAGE "Spanish"
 	!insertmacro MUI_LANGUAGE "SimpChinese"
 	!insertmacro MUI_LANGUAGE "French"
 	!insertmacro MUI_LANGUAGE "Polish"
+	!insertmacro MUI_LANGUAGE "Finnish"
 	!insertmacro MUI_LANGUAGE "Danish"
 	!insertmacro MUI_RESERVEFILE_LANGDLL
 
 ;--------------------------------
 ;English Strings
 
-	VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "BOSS"
-	VIAddVersionKey /LANG=${LANG_ENGLISH} "CompanyName" "BOSS Development Team"
-	VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "© 2009-2014 BOSS Development Team"
-	VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "Installer for BOSS 3.0.0"
-	VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "3.0.0"
+	VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "LOOT"
+	VIAddVersionKey /LANG=${LANG_ENGLISH} "CompanyName" "LOOT Team"
+	VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "© 2009-2014 LOOT Team"
+	VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "Installer for LOOT 0.7.0"
+	VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "0.7.0"
 
-	LangString TEXT_MESSAGEBOX ${LANG_ENGLISH} "BOSS is already installed, and must be uninstalled before continuing. $\n$\nClick `OK` to remove the previous version or `Cancel` to cancel this upgrade."
-	LangString TEXT_RUN ${LANG_ENGLISH} "Run BOSS"
+	LangString TEXT_MESSAGEBOX ${LANG_ENGLISH} "LOOT is already installed, and must be uninstalled before continuing. $\n$\nClick `OK` to remove the previous version or `Cancel` to cancel this upgrade."
+	LangString TEXT_RUN ${LANG_ENGLISH} "Run LOOT"
 	LangString TEXT_SHOWREADME ${LANG_ENGLISH} "View Readme"
-	LangString TEXT_MAIN ${LANG_ENGLISH} "All BOSS's files, minus userlists and settings file."
-	LangString TEXT_USERFILES ${LANG_ENGLISH} "BOSS's userlist files and settings file."
+	LangString TEXT_MAIN ${LANG_ENGLISH} "All LOOT's files, minus userlists and settings file."
+	LangString TEXT_USERFILES ${LANG_ENGLISH} "LOOT's userlist files and settings file."
 
 ;--------------------------------
 ;Russian (Русский) Strings
 
-	VIAddVersionKey /LANG=${LANG_RUSSIAN} "ProductName" "BOSS"
-	VIAddVersionKey /LANG=${LANG_RUSSIAN} "CompanyName" "BOSS Development Team"
-	VIAddVersionKey /LANG=${LANG_RUSSIAN} "LegalCopyright" "© 2009-2014 BOSS Development Team"
-	VIAddVersionKey /LANG=${LANG_RUSSIAN} "FileDescription" "Установщик для BOSS 3.0.0"
-	VIAddVersionKey /LANG=${LANG_RUSSIAN} "FileVersion" "3.0.0"
+	VIAddVersionKey /LANG=${LANG_RUSSIAN} "ProductName" "LOOT"
+	VIAddVersionKey /LANG=${LANG_RUSSIAN} "CompanyName" "LOOT Team"
+	VIAddVersionKey /LANG=${LANG_RUSSIAN} "LegalCopyright" "© 2009-2014 LOOT Team"
+	VIAddVersionKey /LANG=${LANG_RUSSIAN} "FileDescription" "Установщик для LOOT 0.7.0"
+	VIAddVersionKey /LANG=${LANG_RUSSIAN} "FileVersion" "0.7.0"
 
-	LangString TEXT_MESSAGEBOX ${LANG_RUSSIAN} "BOSS уже установлен и должен быть удален перед продолжением. $\n$\nНажмите `OK` для удаления предыдущей версии или `Отмена` для отмены обновления."
-	LangString TEXT_RUN ${LANG_RUSSIAN} "Запустить BOSS"
+	LangString TEXT_MESSAGEBOX ${LANG_RUSSIAN} "LOOT уже установлен и должен быть удален перед продолжением. $\n$\nНажмите `OK` для удаления предыдущей версии или `Отмена` для отмены обновления."
+	LangString TEXT_RUN ${LANG_RUSSIAN} "Запустить LOOT"
 	LangString TEXT_SHOWREADME ${LANG_RUSSIAN} "Просмотр документации"
-	LangString TEXT_MAIN ${LANG_RUSSIAN} "Все файлы BOSS, кроме пользовательских списков и файла настроек"
-	LangString TEXT_USERFILES ${LANG_RUSSIAN} "Файлы пользовательских списков BOSS и файл настроек."
-
-;--------------------------------
-;German (Deutsch) Strings
-
-	;VIAddVersionKey /LANG=${LANG_GERMAN} "ProductName" "BOSS"
-	;VIAddVersionKey /LANG=${LANG_GERMAN} "CompanyName" "BOSS Development Team"
-	;VIAddVersionKey /LANG=${LANG_GERMAN} "LegalCopyright" "© 2009-2014 BOSS Development Team"
-	;VIAddVersionKey /LANG=${LANG_GERMAN} "FileDescription" "Installer für BOSS 3.0.0"
-	;VIAddVersionKey /LANG=${LANG_GERMAN} "FileVersion" "3.0.0"
-
-	;LangString TEXT_MESSAGEBOX ${LANG_GERMAN} "BOSS ist bereits installiert und muss deinstalliert werden, bevor fortgefahren wird. $\n$\nKlicke auf `Ok` um die vorherige Version zu entfernen oder auf `Abbrechen` um das Upgrade abzubrechen."
-	;LangString TEXT_RUN ${LANG_GERMAN} "BOSS starten"
-	;LangString TEXT_SHOWREADME ${LANG_GERMAN} "Readme lesen"
-	;LangString TEXT_MAIN ${LANG_GERMAN} "Alle Dateien von BOSS ohne die Benutzerlisten und die BOSS.ini."
-	;LangString TEXT_USERFILES ${LANG_GERMAN} "Benutzerliste von BOSS und die BOSS.ini-Datei."
+	LangString TEXT_MAIN ${LANG_RUSSIAN} "Все файлы LOOT, кроме пользовательских списков и файла настроек"
+	LangString TEXT_USERFILES ${LANG_RUSSIAN} "Файлы пользовательских списков LOOT и файл настроек."
 
 ;--------------------------------
 ;French (Français) Strings
 
-	VIAddVersionKey /LANG=${LANG_FRENCH} "ProductName" "BOSS"
-	VIAddVersionKey /LANG=${LANG_FRENCH} "CompanyName" "BOSS Development Team"
-	VIAddVersionKey /LANG=${LANG_FRENCH} "LegalCopyright" "© 2009-2014 BOSS Development Team"
-	VIAddVersionKey /LANG=${LANG_FRENCH} "FileDescription" "Programme d'installation pour BOSS 3.0.0"
-	VIAddVersionKey /LANG=${LANG_FRENCH} "FileVersion" "3.0.0"
+	VIAddVersionKey /LANG=${LANG_FRENCH} "ProductName" "LOOT"
+	VIAddVersionKey /LANG=${LANG_FRENCH} "CompanyName" "LOOT Team"
+	VIAddVersionKey /LANG=${LANG_FRENCH} "LegalCopyright" "© 2009-2014 LOOT Team"
+	VIAddVersionKey /LANG=${LANG_FRENCH} "FileDescription" "Programme d'installation pour LOOT 0.7.0"
+	VIAddVersionKey /LANG=${LANG_FRENCH} "FileVersion" "0.7.0"
 
-	LangString TEXT_MESSAGEBOX ${LANG_FRENCH} "BOSS est déjà installé, et doit être désinstallé avant de continuer. $\n$\nCliquer sur `OK` pour désinstaller la version précédente ou 'Annuler' pour annuler la mise à jour."
-	LangString TEXT_RUN ${LANG_FRENCH} "Lancer BOSS"
+	LangString TEXT_MESSAGEBOX ${LANG_FRENCH} "LOOT est déjà installé, et doit être désinstallé avant de continuer. $\n$\nCliquer sur `OK` pour désinstaller la version précédente ou 'Annuler' pour annuler la mise à jour."
+	LangString TEXT_RUN ${LANG_FRENCH} "Lancer LOOT"
 	LangString TEXT_SHOWREADME ${LANG_FRENCH} "Afficher la documentation"
-	LangString TEXT_MAIN ${LANG_FRENCH} "Tous les fichiers de BOSS, sauf les userlists et les règlages."
-	LangString TEXT_USERFILES ${LANG_FRENCH} "L'userlist de BOSS et les règlages."
+	LangString TEXT_MAIN ${LANG_FRENCH} "Tous les fichiers de LOOT, sauf les userlists et les règlages."
+	LangString TEXT_USERFILES ${LANG_FRENCH} "L'userlist de LOOT et les règlages."
 
 ;--------------------------------
 ;Spanish (castellano) Strings
 
-	VIAddVersionKey /LANG=${LANG_SPANISH} "ProductName" "BOSS"
-	VIAddVersionKey /LANG=${LANG_SPANISH} "CompanyName" "BOSS Development Team"
-	VIAddVersionKey /LANG=${LANG_SPANISH} "LegalCopyright" "© 2009-2014 BOSS Development Team"
-	VIAddVersionKey /LANG=${LANG_SPANISH} "FileDescription" "El instalador para BOSS 3.0.0"
-	VIAddVersionKey /LANG=${LANG_SPANISH} "FileVersion" "3.0.0"
+	VIAddVersionKey /LANG=${LANG_SPANISH} "ProductName" "LOOT"
+	VIAddVersionKey /LANG=${LANG_SPANISH} "CompanyName" "LOOT Team"
+	VIAddVersionKey /LANG=${LANG_SPANISH} "LegalCopyright" "© 2009-2014 LOOT Team"
+	VIAddVersionKey /LANG=${LANG_SPANISH} "FileDescription" "El instalador para LOOT 0.7.0"
+	VIAddVersionKey /LANG=${LANG_SPANISH} "FileVersion" "0.7.0"
 
-	LangString TEXT_MESSAGEBOX ${LANG_SPANISH} "BOSS está instalado, y debe ser desinstalado antes de continuar. $\n$\nPresione `OK` para eliminar la versión anterior o `Cancel` para cancelar la actualización."
-	LangString TEXT_RUN ${LANG_SPANISH} "Ejecutar BOSS"
+	LangString TEXT_MESSAGEBOX ${LANG_SPANISH} "LOOT está instalado, y debe ser desinstalado antes de continuar. $\n$\nPresione `OK` para eliminar la versión anterior o `Cancel` para cancelar la actualización."
+	LangString TEXT_RUN ${LANG_SPANISH} "Ejecutar LOOT"
 	LangString TEXT_SHOWREADME ${LANG_SPANISH} "Ver Léame"
-	LangString TEXT_MAIN ${LANG_SPANISH} "Todos los archivos de BOSS, menos la lista de usuario y configuraciónes."
+	LangString TEXT_MAIN ${LANG_SPANISH} "Todos los archivos de LOOT, menos la lista de usuario y configuraciónes."
 	LangString TEXT_USERFILES ${LANG_SPANISH} "La lista de usuario y configuraciónes."
 
 ;--------------------------------
 ;Simplified Chinese (简体中文) Strings
 
-    VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "ProductName" "BOSS"
-    VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "CompanyName" "BOSS Development Team"
-    VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "LegalCopyright" "© 2009-2014 BOSS Development Team"
-    VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "FileDescription" "BOSS 3.0.0安装包"
-    VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "FileVersion" "3.0.0"
+	VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "ProductName" "LOOT"
+	VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "CompanyName" "LOOT Team"
+	VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "LegalCopyright" "© 2009-2014 LOOT Team"
+	VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "FileDescription" "LOOT 0.7.0安装包"
+	VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "FileVersion" "0.7.0"
 
-    LangString TEXT_MESSAGEBOX ${LANG_SIMPCHINESE} "检测到旧版BOSS，您需要先卸载旧版才能安装新版。$\n$\n点击“确定”卸载旧版本或者“取消”取消更新。"
-    LangString TEXT_RUN ${LANG_SIMPCHINESE} "运行BOSS"
-    LangString TEXT_SHOWREADME ${LANG_SIMPCHINESE} "查看说明"
-    LangString TEXT_MAIN ${LANG_SIMPCHINESE} "所有BOSS文件（除userlist和配置文件）"
-    LangString TEXT_USERFILES ${LANG_SIMPCHINESE} "BOSS的userlist和配置文件。"
-    
+	LangString TEXT_MESSAGEBOX ${LANG_SIMPCHINESE} "检测到旧版LOOT，您需要先卸载旧版才能安装新版。$\n$\n点击“确定”卸载旧版本或者“取消”取消更新。"
+	LangString TEXT_RUN ${LANG_SIMPCHINESE} "运行LOOT"
+	LangString TEXT_SHOWREADME ${LANG_SIMPCHINESE} "查看说明"
+	LangString TEXT_MAIN ${LANG_SIMPCHINESE} "所有LOOT文件（除userlist和配置文件）"
+	LangString TEXT_USERFILES ${LANG_SIMPCHINESE} "LOOT的userlist和配置文件。"
+
 ;--------------------------------
 ;Polish (POLSKI) Strings
 
-	VIAddVersionKey /LANG=${LANG_POLISH} "ProductName" "BOSS"
-	VIAddVersionKey /LANG=${LANG_POLISH} "CompanyName" "BOSS Development Team"
-	VIAddVersionKey /LANG=${LANG_POLISH} "LegalCopyright" "© 2009-2014 BOSS Development Team"
-	VIAddVersionKey /LANG=${LANG_POLISH} "FileDescription" "Instalator dla BOSS 3.0.0"
-	VIAddVersionKey /LANG=${LANG_POLISH} "FileVersion" "3.0.0"
+	VIAddVersionKey /LANG=${LANG_POLISH} "ProductName" "LOOT"
+	VIAddVersionKey /LANG=${LANG_POLISH} "CompanyName" "LOOT Team"
+	VIAddVersionKey /LANG=${LANG_POLISH} "LegalCopyright" "© 2009-2014 LOOT Team"
+	VIAddVersionKey /LANG=${LANG_POLISH} "FileDescription" "Instalator dla LOOT 0.7.0"
+	VIAddVersionKey /LANG=${LANG_POLISH} "FileVersion" "0.7.0"
 
-	LangString TEXT_MESSAGEBOX ${LANG_POLISH} "BOSS jest już zainstalowany i musi zostać odinstalowany przed instalowaniem tej wersji. $\n$\nClick `OK` aby odinstalować lub `Cancel` aby anulować aktualizację."
-	LangString TEXT_RUN ${LANG_POLISH} " Uruchom BOSS"
+	LangString TEXT_MESSAGEBOX ${LANG_POLISH} "LOOT jest już zainstalowany i musi zostać odinstalowany przed instalowaniem tej wersji. $\n$\nClick `OK` aby odinstalować lub `Cancel` aby anulować aktualizację."
+	LangString TEXT_RUN ${LANG_POLISH} " Uruchom LOOT"
 	LangString TEXT_SHOWREADME ${LANG_POLISH} "Czytaj Readme"
-	LangString TEXT_MAIN ${LANG_POLISH} "Wszystkie pliki BOSS bez ustawień i plików użytkownika."
-	LangString TEXT_USERFILES ${LANG_POLISH} "Wszystkie pliki BOSS oraz ustawienia użytkownika ."
+	LangString TEXT_MAIN ${LANG_POLISH} "Wszystkie pliki LOOT bez ustawień i plików użytkownika."
+	LangString TEXT_USERFILES ${LANG_POLISH} "Wszystkie pliki LOOT oraz ustawienia użytkownika ."
+
+;--------------------------------
+;Finnish Strings
+
+	VIAddVersionKey /LANG=${LANG_FINNISH} "ProductName" "LOOT"
+	VIAddVersionKey /LANG=${LANG_FINNISH} "CompanyName" "LOOT Team"
+	VIAddVersionKey /LANG=${LANG_FINNISH} "LegalCopyright" "© 2009-2014 LOOT Team"
+	VIAddVersionKey /LANG=${LANG_FINNISH} "FileDescription" "LOOT 0.7.0 Asennusohjelma"
+	VIAddVersionKey /LANG=${LANG_FINNISH} "FileVersion" "0.7.0"
+
+	LangString TEXT_MESSAGEBOX ${LANG_FINNISH} "LOOT on jo asennettu ja vanha asennus on poistettava ennen jatkamista. $\n$\nKlikkaa 'OK' poistaaksesi vanhan version tai 'Peruuta' peruuttaaksesi päivityksen."
+	LangString TEXT_RUN ${LANG_FINNISH} "Käynnistä LOOT"
+	LangString TEXT_SHOWREADME ${LANG_FINNISH} "Näytä readme"
+	LangString TEXT_MAIN ${LANG_FINNISH} "Kaikki LOOTin tiedostot paitsi käyttäjälistat ja asetukset."
+	LangString TEXT_USERFILES ${LANG_FINNISH} "LOOTin käyttäjälistat ja asetukset."
+
+;--------------------------------
+;German Strings
+
+	VIAddVersionKey /LANG=${LANG_GERMAN} "ProductName" "LOOT"
+	VIAddVersionKey /LANG=${LANG_GERMAN} "CompanyName" "LOOT Team"
+	VIAddVersionKey /LANG=${LANG_GERMAN} "LegalCopyright" "© 2009-2014 LOOT Team"
+	VIAddVersionKey /LANG=${LANG_GERMAN} "FileDescription" "Installationsprogramm LOOT 0.7.0"
+	VIAddVersionKey /LANG=${LANG_GERMAN} "FileVersion" "0.7.0"
+
+	LangString TEXT_MESSAGEBOX ${LANG_GERMAN} "LOOT ist bereits installiert und muss zunächst deinstalliert werden. $\n$\nKlicken Sie auf 'OK', um die frühere Version zu deinstallieren oder auf 'Abbrechen', um diese Installation abzubrechen."
+	LangString TEXT_RUN ${LANG_GERMAN} "LOOT starten"
+	LangString TEXT_SHOWREADME ${LANG_GERMAN} "Readme öffnen"
+	LangString TEXT_MAIN ${LANG_GERMAN} "Alle LOOT Dateien mit Ausnahme der Benutzerlisten-Dateien und Konfigurationsdateien."
+	LangString TEXT_USERFILES ${LANG_GERMAN} "LOOT Benutzerlisten-Dateien und Konfigurationsdateien."
 
 ;--------------------------------
 ;Danish (dansk) Strings
 
-	VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "BOSS"
-	VIAddVersionKey /LANG=${LANG_ENGLISH} "CompanyName" "BOSS Development Team"
-	VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "© 2009-2014 BOSS Development Team"
-	VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "Installationsprogram for BOSS 3.0.0"
-	VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "3.0.0"
+	VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "LOOT"
+	VIAddVersionKey /LANG=${LANG_ENGLISH} "CompanyName" "LOOT Team"
+	VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "© 2009-2014 LOOT Team"
+	VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "Installationsprogram for LOOT 0.7.0"
+	VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "0.7.0"
 
-	LangString TEXT_MESSAGEBOX ${LANG_ENGLISH} "BOSS er allerede installeret og skal afinstalleres før du fortsætter. $\n$\nTryk på »OK« for at fjerne den forrige version eller »Annuller« for at annullere opdateringen."
-	LangString TEXT_RUN ${LANG_ENGLISH} "Kør BOSS"
+	LangString TEXT_MESSAGEBOX ${LANG_ENGLISH} "LOOT er allerede installeret og skal afinstalleres før du fortsætter. $\n$\nTryk på »OK« for at fjerne den forrige version eller »Annuller« for at annullere opdateringen."
+	LangString TEXT_RUN ${LANG_ENGLISH} "Kør LOOT"
 	LangString TEXT_SHOWREADME ${LANG_ENGLISH} "Vis Readme"
-	LangString TEXT_MAIN ${LANG_ENGLISH} "Alle BOSS's filer, undtagen brugerlister og indstillingsfiler."
-	LangString TEXT_USERFILES ${LANG_ENGLISH} "BOSS's brugerliste- og indstillingsfile."
+	LangString TEXT_MAIN ${LANG_ENGLISH} "Alle LOOT's filer, undtagen brugerlister og indstillingsfiler."
+	LangString TEXT_USERFILES ${LANG_ENGLISH} "LOOT's brugerliste- og indstillingsfile."
 
 ;--------------------------------
 ;Initialisations
 
-    Var InstallPath ;Path to existing BOSS install.
+    Var InstallPath ;Path to existing LOOT install.
 
 	Function .onInit
 
@@ -264,8 +280,8 @@ FunctionEnd
 	FunctionEnd
 
 	Function onGUIInit
-		; First check to see if BOSS is already installed via installer, and launch the existing uninstaller if so.
-		ReadRegStr $InstallPath HKLM "Software\BOSS" "Installed Path"
+		; First check to see if LOOT is already installed via installer, and launch the existing uninstaller if so.
+		ReadRegStr $InstallPath HKLM "Software\LOOT" "Installed Path"
 		${If} $InstallPath != ""
 			IfFileExists "$InstallPath\Uninstall.exe" 0 +8
 				MessageBox MB_OKCANCEL|MB_ICONQUESTION "$(Text_MessageBox)" IDOK cont IDCANCEL cancel
@@ -291,18 +307,34 @@ FunctionEnd
 
 		;Install executable.
 		SetOutPath "$INSTDIR"
-		File "..\build\BOSS.exe"
-
-		;Now install API DLLs.
-		;SetOutPath "$INSTDIR\API"
-		;File "..\build\libboss32.dll"
-		;File "..\build\libboss64.dll"
+		File "..\build\Release\LOOT.exe"
+        File "..\build\Release\d3dcompiler_43.dll"
+        File "..\build\Release\d3dcompiler_46.dll"
+        File "..\build\Release\libEGL.dll"
+        File "..\build\Release\libGLESv2.dll"
+        File "..\build\Release\libcef.dll"
+        File "..\build\Release\cef.pak"
+        File "..\build\Release\cef_100_percent.pak"
+        File "..\build\Release\cef_200_percent.pak"
+        File "..\build\Release\devtools_resources.pak"
+        File "..\build\Release\icudtl.dat"
 
         ;Install resource files.
+        SetOutPath "$INSTDIR\resources\report"
+        File "..\resources\report\report.html"
+        File "..\resources\report\js\custom.js"
+        File "..\resources\report\js\marked.js"
+        File "..\resources\report\js\order.js"
+        File "..\resources\report\js\plugin.js"
+        File "..\resources\report\js\require.js"
+        File "..\resources\report\js\script.js"
+        File "..\resources\report\css\style.css"
+        File "..\resources\report\css\font-awesome.min.css"
+        File "..\resources\report\fonts\fontawesome-webfont.woff"
+
+        ;Install icon image.
         SetOutPath "$INSTDIR\resources"
-        File "..\resources\polyfill.js"
-        File "..\resources\script.js"
-        File "..\resources\style.css"
+        FIle "..\resources\icon.ico"
 
         ;Install documentation images.
 		SetOutPath "$INSTDIR\docs\images"
@@ -314,166 +346,124 @@ FunctionEnd
 
 		;Now install readme files.
 		SetOutPath "$INSTDIR\docs"
-		;File "..\docs\BOSS API Readme.html"
-		File "..\docs\BOSS Metadata Syntax.html"
-		File "..\docs\BOSS Readme.html"
+		File "..\docs\LOOT Metadata Syntax.html"
+		File "..\docs\LOOT Readme.html"
 
 		;Now install language files.
 		SetOutPath "$INSTDIR\resources\l10n\ru\LC_MESSAGES"
-		File "..\resources\l10n\ru\LC_MESSAGES\boss.mo"
-		File "..\resources\l10n\ru\LC_MESSAGES\wxstd.mo"
+		File "..\resources\l10n\ru\LC_MESSAGES\loot.mo"
 		SetOutPath "$INSTDIR\resources\l10n\es\LC_MESSAGES"
-		File "..\resources\l10n\es\LC_MESSAGES\wxstd.mo"
-		File "..\resources\l10n\es\LC_MESSAGES\boss.mo"
-		;SetOutPath "$INSTDIR\resources\l10n\de\LC_MESSAGES"
-		;File "..\resources\l10n\de\LC_MESSAGES\wxstd.mo"
+		File "..\resources\l10n\es\LC_MESSAGES\loot.mo"
 		SetOutPath "$INSTDIR\resources\l10n\zh_CN\LC_MESSAGES"
-		File "..\resources\l10n\zh_CN\LC_MESSAGES\boss.mo"
-		File "..\resources\l10n\zh_CN\LC_MESSAGES\wxstd.mo"
+		File "..\resources\l10n\zh_CN\LC_MESSAGES\loot.mo"
 		SetOutPath "$INSTDIR\resources\l10n\fr\LC_MESSAGES"
-		File "..\resources\l10n\fr\LC_MESSAGES\wxstd.mo"
-		File "..\resources\l10n\fr\LC_MESSAGES\boss.mo"
+		File "..\resources\l10n\fr\LC_MESSAGES\loot.mo"
 		SetOutPath "$INSTDIR\resources\l10n\pl\LC_MESSAGES"
-		File "..\resources\l10n\pl\LC_MESSAGES\wxstd.mo"
-		File "..\resources\l10n\pl\LC_MESSAGES\boss.mo"
+		File "..\resources\l10n\pl\LC_MESSAGES\loot.mo"
 		SetOutPath "$INSTDIR\resources\l10n\pt_BR\LC_MESSAGES"
-		File "..\resources\l10n\pt_BR\LC_MESSAGES\wxstd.mo"
-		File "..\resources\l10n\pt_BR\LC_MESSAGES\boss.mo"
-		
+		File "..\resources\l10n\pt_BR\LC_MESSAGES\loot.mo"
+		SetOutPath "$INSTDIR\resources\l10n\fi\LC_MESSAGES"
+		File "..\resources\l10n\fi\LC_MESSAGES\loot.mo"
+        SetOutPath "$INSTDIR\resources\l10n\de\LC_MESSAGES"
+		File "..\resources\l10n\de\LC_MESSAGES\loot.mo"
+
+
         ;Install settings file.
-        SetOutPath "$LOCALAPPDATA\BOSS"
+        SetOutPath "$LOCALAPPDATA\LOOT"
         File "..\resources\settings.yaml"
 
 		;Write language setting to settings.yaml.
 		StrCmp $LANGUAGE ${LANG_RUSSIAN} 0 +5
-            Push "$LOCALAPPDATA\BOSS\settings.yaml"
+            Push "$LOCALAPPDATA\LOOT\settings.yaml"
             Push "Language:"
             Push "Language: ru"
             Call ReplaceLineStr
-		;StrCmp $LANGUAGE ${LANG_GERMAN} 0 +5
-        ;    Push "$LOCALAPPDATA\BOSS\settings.yaml"
-        ;    Push "Language:"
-        ;    Push "Language: de"
-        ;    Call ReplaceLineStr
 		StrCmp $LANGUAGE ${LANG_SPANISH} 0 +5
-            Push "$LOCALAPPDATA\BOSS\settings.yaml"
+            Push "$LOCALAPPDATA\LOOT\settings.yaml"
             Push "Language:"
             Push "Language: es"
             Call ReplaceLineStr
 		StrCmp $LANGUAGE ${LANG_SIMPCHINESE} 0 +5
-            Push "$LOCALAPPDATA\BOSS\settings.yaml"
+            Push "$LOCALAPPDATA\LOOT\settings.yaml"
             Push "Language:"
             Push "Language: zh_CN"
             Call ReplaceLineStr
 		StrCmp $LANGUAGE ${LANG_FRENCH} 0 +5
-            Push "$LOCALAPPDATA\BOSS\settings.yaml"
+            Push "$LOCALAPPDATA\LOOT\settings.yaml"
             Push "Language:"
             Push "Language: fr"
             Call ReplaceLineStr
 		StrCmp $LANGUAGE ${LANG_POLISH} 0 +5
-            Push "$LOCALAPPDATA\BOSS\settings.yaml"
+            Push "$LOCALAPPDATA\LOOT\settings.yaml"
             Push "Language:"
             Push "Language: pl"
             Call ReplaceLineStr
 		;StrCmp $LANGUAGE ${LANG_PORTUGUESEBR} 0 +5
-        ;    Push "$LOCALAPPDATA\BOSS\settings.yaml"
+        ;    Push "$LOCALAPPDATA\LOOT\settings.yaml"
         ;    Push "Language:"
         ;    Push "Language: pt_BR"
         ;    Call ReplaceLineStr
+		StrCmp $LANGUAGE ${LANG_FINNISH} 0 +5
+            Push "$LOCALAPPDATA\LOOT\settings.yaml"
+            Push "Language:"
+            Push "Language: fi"
+            Call ReplaceLineStr
+        StrCmp $LANGUAGE ${LANG_GERMAN} 0 +5
+            Push "$LOCALAPPDATA\LOOT\settings.yaml"
+            Push "Language:"
+            Push "Language: de"
+            Call ReplaceLineStr
 		StrCmp $LANGUAGE ${LANG_DANISH} 0 +5
-            Push "$LOCALAPPDATA\BOSS\settings.yaml"
+            Push "$LOCALAPPDATA\LOOT\settings.yaml"
             Push "Language:"
             Push "Language: da"
             Call ReplaceLineStr
-			
+
 		;Add Start Menu shortcuts. Set out path back to $INSTDIR otherwise the shortcuts start in the wrong place.
 		;Set Shell Var Context to all so that shortcuts are installed for all users, not just admin.
 		SetOutPath "$INSTDIR"
 		SetShellVarContext all
-		CreateDirectory "$SMPROGRAMS\BOSS"
-		CreateShortCut "$SMPROGRAMS\BOSS\BOSS.lnk" "$INSTDIR\BOSS.exe"
-		CreateShortCut "$SMPROGRAMS\BOSS\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
-		CreateShortCut "$SMPROGRAMS\BOSS\Readme.lnk" "$INSTDIR\Docs\BOSS Readme.html"
+		CreateDirectory "$SMPROGRAMS\LOOT"
+		CreateShortCut "$SMPROGRAMS\LOOT\LOOT.lnk" "$INSTDIR\LOOT.exe"
+		CreateShortCut "$SMPROGRAMS\LOOT\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
+		CreateShortCut "$SMPROGRAMS\LOOT\Readme.lnk" "$INSTDIR\Docs\LOOT Readme.html"
 
 
 		;Store installation folder in registry key.
-		WriteRegStr HKLM "Software\BOSS" "Installed Path" "$INSTDIR"
+		WriteRegStr HKLM "Software\LOOT" "Installed Path" "$INSTDIR"
 		;Write registry keys for Windows' uninstaller.
-		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\BOSS" "DisplayName" "BOSS"
-		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\BOSS" "UninstallString" '"$INSTDIR\Uninstall.exe"'
-		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\BOSS" "URLInfoAbout" 'http://boss-developers.github.io/'
-		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\BOSS" "HelpLink" 'http://boss-developers.github.io/'
-		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\BOSS" "Publisher" 'BOSS Development Team'
-		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\BOSS" "DisplayVersion" '3.0.0'
-		WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\BOSS" "NoModify" 1
-		WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\BOSS" "NoRepair" 1
+		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\LOOT" "DisplayName" "LOOT"
+		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\LOOT" "UninstallString" '"$INSTDIR\Uninstall.exe"'
+		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\LOOT" "URLInfoAbout" 'http://loot.github.io/'
+		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\LOOT" "HelpLink" 'http://loot.github.io/'
+		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\LOOT" "Publisher" 'LOOT Development Team'
+		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\LOOT" "DisplayVersion" '0.7.0'
+		WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\LOOT" "NoModify" 1
+		WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\LOOT" "NoRepair" 1
 
 		;Create uninstaller
 		WriteUninstaller "$INSTDIR\Uninstall.exe"
 
 	SectionEnd
-    
-    Section "Microsoft Visual C++ 2013 SP1 Redist"
-        ; Thanks to the pcsx2 installer for providing this!
-
-        ; Detection made easy: Unlike previous redists, VC2013 now generates a platform
-        ; independent key for checking availability.
-        ; HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\12.0\VC\Runtimes\x86  for x64 Windows
-        ; HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\12.0\VC\Runtimes\x86  for x86 Windows
-
-        ; Download from:
-        ; http://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4DD4-91DA-3737CD5CD6E3/vcredist_x86.exe
-
-        ClearErrors
-
-        ${If} ${RunningX64}
-        ReadRegDword $R0 HKLM "SOFTWARE\Wow6432Node\Microsoft\VisualStudio\12.0\VC\Runtimes\x86" "Installed"
-        ${Else}
-        ReadRegDword $R0 HKLM "SOFTWARE\Microsoft\VisualStudio\12.0\VC\Runtimes\x86" "Installed"
-        ${EndIf}
-
-        IfErrors 0 +2
-        DetailPrint "Visual C++ 2013 Redistributable registry key was not found; assumed to be uninstalled."
-        StrCmp $R0 "1" 0 +3
-        DetailPrint "Visual C++ 2013 Redistributable is already installed; skipping!"
-        Goto done
-
-        ; Use bundled VC redist, more important that the install doesn't fail than it gets whatever is the latest update.
-        SetOutPath "$TEMP"
-        File "..\build\vcredist_x86.exe"
-
-        ;DetailPrint "Downloading Visual C++ 2013 Redistributable Setup..."
-        ;DetailPrint "Contacting Microsoft.com..."
-        ;NSISdl::download /TIMEOUT=15000 "http://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4DD4-91DA-3737CD5CD6E3/vcredist_x86.exe" "vcredist_x86.exe"
-
-        ;Pop $R0 ;Get the return value
-        ;StrCmp $R0 "success" OnSuccess
-        ;DetailPrint "Could not contact Microsoft.com, or the file has been (re)moved!"
-        ;Goto done
-
-        ;OnSuccess:
-        DetailPrint "Running Visual C++ 2013 Redistributable Setup..."
-        ExecWait '"$TEMP\vcredist_x86.exe" /qb'
-        DetailPrint "Finished Visual C++ 2013 SP1 Redistributable Setup"
-
-        Delete "$TEMP\vcredist_x86.exe"
-
-        done:
-    SectionEnd
 
 ;--------------------------------
 ;Uninstaller Section
 
 
-	Section "un.BOSS" Main
+	Section "un.LOOT" Main
 
 		;Remove main executables.
-		Delete "$INSTDIR\BOSS.exe"
-
-		;Remove API DLLs.
-		;Delete "$INSTDIR\API\libboss32.dll"
-		;Delete "$INSTDIR\API\libboss64.dll"
-		;RMDir  "$INSTDIR\API"
+		Delete "$INSTDIR\LOOT.exe"
+        Delete "$INSTDIR\d3dcompiler_43.dll"
+        Delete "$INSTDIR\d3dcompiler_46.dll"
+        Delete "$INSTDIR\libEGL.dll"
+        Delete "$INSTDIR\libGLESv2.dll"
+        Delete "$INSTDIR\libcef.dll"
+        Delete "$INSTDIR\cef.pak"
+        Delete "$INSTDIR\cef_100_percent.pak"
+        Delete "$INSTDIR\cef_200_percent.pak"
+        Delete "$INSTDIR\devtools_resources.pak"
+        Delete "$INSTDIR\icudtl.dat"
 
 		;Remove readme images.
 		RMDir /r "$INSTDIR\docs\images"
@@ -482,38 +472,37 @@ FunctionEnd
         RMDir /r "$INSTDIR\docs\licenses"
 
 		;Remove readme files.
-		;Delete "$INSTDIR\docs\BOSS API Readme.html"
-		Delete "$INSTDIR\docs\BOSS Metadata Syntax.html"
-		Delete "$INSTDIR\docs\BOSS Readme.html"
+		Delete "$INSTDIR\docs\LOOT Metadata Syntax.html"
+		Delete "$INSTDIR\docs\LOOT Readme.html"
 		RMDir  "$INSTDIR\docs"
 
         ;Remove resource files.
-        Delete "$INSTDIR\resources\polyfill.js"
-        Delete "$INSTDIR\resources\script.js"
-        Delete "$INSTDIR\resources\style.css"
+        Delete "$INSTDIR\resources\report\report.html"
+        Delete "$INSTDIR\resources\report\js\custom.js"
+        Delete "$INSTDIR\resources\report\js\marked.js"
+        Delete "$INSTDIR\resources\report\js\order.js"
+        Delete "$INSTDIR\resources\report\js\plugin.js"
+        Delete "$INSTDIR\resources\report\js\require.js"
+        Delete "$INSTDIR\resources\report\js\script.js"
+        Delete "$INSTDIR\resources\report\css\style.css"
+        Delete "$INSTDIR\resources\report\css\font-awesome.min.css"
+        Delete "$INSTDIR\resources\report\fonts\fontawesome-webfont.woff"
+
+        Delete "$INSTDIR\resources\icon.ico"
 
 		;Remove language files.
-		Delete "$INSTDIR\resources\l10n\ru\LC_MESSAGES\boss.mo"
-		Delete "$INSTDIR\resources\l10n\ru\LC_MESSAGES\wxstd.mo"
-		Delete "$INSTDIR\resources\l10n\es\LC_MESSAGES\boss.mo"
-		Delete "$INSTDIR\resources\l10n\es\LC_MESSAGES\wxstd.mo"
-		;Delete "$INSTDIR\resources\l10n\de\LC_MESSAGES\wxstd.mo"
-		Delete "$INSTDIR\resources\l10n\zh_CN\LC_MESSAGES\boss.mo"
-		Delete "$INSTDIR\resources\l10n\zh_CN\LC_MESSAGES\wxstd.mo"
-		Delete "$INSTDIR\resources\l10n\fr\LC_MESSAGES\boss.mo"
-		Delete "$INSTDIR\resources\l10n\fr\LC_MESSAGES\wxstd.mo"
-		Delete "$INSTDIR\resources\l10n\pl\LC_MESSAGES\boss.mo"
-		Delete "$INSTDIR\resources\l10n\pl\LC_MESSAGES\wxstd.mo"
-		Delete "$INSTDIR\resources\l10n\pt_BR\LC_MESSAGES\boss.mo"
-		Delete "$INSTDIR\resources\l10n\pt_BR\LC_MESSAGES\wxstd.mo"
-		Delete "$INSTDIR\resources\l10n\da\LC_MESSAGES\boss.mo"
-		Delete "$INSTDIR\resources\l10n\da\LC_MESSAGES\wxstd.mo"
+		Delete "$INSTDIR\resources\l10n\ru\LC_MESSAGES\loot.mo"
+		Delete "$INSTDIR\resources\l10n\es\LC_MESSAGES\loot.mo"
+		Delete "$INSTDIR\resources\l10n\zh_CN\LC_MESSAGES\loot.mo"
+		Delete "$INSTDIR\resources\l10n\fr\LC_MESSAGES\loot.mo"
+		Delete "$INSTDIR\resources\l10n\pl\LC_MESSAGES\loot.mo"
+		Delete "$INSTDIR\resources\l10n\pt_BR\LC_MESSAGES\loot.mo"
+		Delete "$INSTDIR\resources\l10n\fi\LC_MESSAGES\loot.mo"
+		Delete "$INSTDIR\resources\l10n\da\LC_MESSAGES\loot.mo"
 		RMDir  "$INSTDIR\resources\l10n\ru\LC_MESSAGES"
 		RMDir  "$INSTDIR\resources\l10n\ru"
 		RMDir  "$INSTDIR\resources\l10n\es\LC_MESSAGES"
 		RMDir  "$INSTDIR\resources\l10n\es"
-		;RMDir  "$INSTDIR\resources\l10n\de\LC_MESSAGES"
-		;RMDir  "$INSTDIR\resources\l10n\de"
 		RMDir  "$INSTDIR\resources\l10n\zh_CN\LC_MESSAGES"
 		RMDir  "$INSTDIR\resources\l10n\zh_CN"
 		RMDir  "$INSTDIR\resources\l10n\fr\LC_MESSAGES"
@@ -521,32 +510,36 @@ FunctionEnd
 		RMDir  "$INSTDIR\resources\l10n\pl\LC_MESSAGES"
 		RMDir  "$INSTDIR\resources\l10n\pl"
 		RMDir  "$INSTDIR\resources\l10n\pt_BR\LC_MESSAGES"
-		RMDir  "$INSTDIR\resources\l10n\pt_BR"	
+		RMDir  "$INSTDIR\resources\l10n\pt_BR"
+		RMDir  "$INSTDIR\resources\l10n\fi\LC_MESSAGES"
+		RMDir  "$INSTDIR\resources\l10n\fi"
+        RMDir  "$INSTDIR\resources\l10n\de\LC_MESSAGES"
+		RMDir  "$INSTDIR\resources\l10n\de"
 		RMDir  "$INSTDIR\resources\l10n\da\LC_MESSAGES"
 		RMDir  "$INSTDIR\resources\l10n\da"
 		RMDir  "$INSTDIR\resources\l10n"
         RMDir  "$INSTDIR\resources"
 
-		;Now we have to remove the files BOSS generates when it runs.
-		Delete "$LOCALAPPDATA\BOSS\BOSSDebugLog.txt"
+		;Now we have to remove the files LOOT generates when it runs.
+		Delete "$LOCALAPPDATA\LOOT\LOOTDebugLog.txt"
 		;Trying to delete a file that doesn't exist doesn't cause an error, so delete all games' files.
         ;This doesn't handle user-defined games.
-		Delete "$LOCALAPPDATA\BOSS\Oblivion\report.html"
-		Delete "$LOCALAPPDATA\BOSS\Oblivion\masterlist.yaml"
-		Delete "$LOCALAPPDATA\BOSS\Nehrim\report.html"
-		Delete "$LOCALAPPDATA\BOSS\Nehrim\masterlist.yaml"
-		Delete "$LOCALAPPDATA\BOSS\Skyrim\report.html"
-		Delete "$LOCALAPPDATA\BOSS\Skyrim\masterlist.yaml"
-		Delete "$LOCALAPPDATA\BOSS\Fallout3\report.html"
-		Delete "$LOCALAPPDATA\BOSS\Fallout3\masterlist.yaml"
-		Delete "$LOCALAPPDATA\BOSS\FalloutNV\report.html"
-		Delete "$LOCALAPPDATA\BOSS\FalloutNV\masterlist.yaml"
-		RMDir  "$LOCALAPPDATA\BOSS\Oblivion"
-		RMDir  "$LOCALAPPDATA\BOSS\Nehrim"
-		RMDir  "$LOCALAPPDATA\BOSS\Skyrim"
-		RMDir  "$LOCALAPPDATA\BOSS\Fallout3"
-		RMDir  "$LOCALAPPDATA\BOSS\FalloutNV"
-        RMDir  "$LOCALAPPDATA\BOSS"
+		Delete "$LOCALAPPDATA\LOOT\Oblivion\masterlist.yaml"
+		Delete "$LOCALAPPDATA\LOOT\Skyrim\masterlist.yaml"
+		Delete "$LOCALAPPDATA\LOOT\Fallout3\masterlist.yaml"
+		Delete "$LOCALAPPDATA\LOOT\FalloutNV\masterlist.yaml"
+        ;Delete repositories.
+        RMDir /r "$LOCALAPPDATA\LOOT\Oblivion\.git"
+        RMDir /r "$LOCALAPPDATA\LOOT\Skyrim\.git"
+        RMDir /r "$LOCALAPPDATA\LOOT\Fallout3\.git"
+        RMDir /r "$LOCALAPPDATA\LOOT\FalloutNV\.git"
+        ;Try deleting folders.
+		RMDir  "$LOCALAPPDATA\LOOT\Oblivion"
+		RMDir  "$LOCALAPPDATA\LOOT\Skyrim"
+		RMDir  "$LOCALAPPDATA\LOOT\Fallout3"
+		RMDir  "$LOCALAPPDATA\LOOT\FalloutNV"
+        RMDir  "$LOCALAPPDATA\LOOT"
+
 
 		;Remove uninstaller.
 		Delete "$INSTDIR\Uninstall.exe"
@@ -555,45 +548,43 @@ FunctionEnd
 		RMDir "$INSTDIR"
 
 		;Delete registry key.
-		DeleteRegKey HKLM "Software\BOSS"
+		DeleteRegKey HKLM "Software\LOOT"
 
 		;Delete stupid Windows created registry keys:
-		DeleteRegKey HKCU "Software\BOSS"
-		DeleteRegKey HKLM "Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\BOSS"
-		DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\BOSS"
-		DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\App Management\ARPCache\BOSS"
+		DeleteRegKey HKCU "Software\LOOT"
+		DeleteRegKey HKLM "Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\LOOT"
+		DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\LOOT"
+		DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\App Management\ARPCache\LOOT"
 		DeleteRegValue HKCR "Local Settings\Software\Microsoft\Windows\Shell\MuiCache" "$INSTDIR"
-		DeleteRegValue HKCR "Local Settings\Software\Microsoft\Windows\Shell\MuiCache" "$INSTDIR\BOSS.exe"
+		DeleteRegValue HKCR "Local Settings\Software\Microsoft\Windows\Shell\MuiCache" "$INSTDIR\LOOT.exe"
 		DeleteRegValue HKCR "Local Settings\Software\Microsoft\Windows\Shell\MuiCache" "$INSTDIR\Uninstall.exe"
 		DeleteRegValue HKCU "Software\Classes\Local Settings\Software\Microsoft\Windows\Shell\MuiCache" "$INSTDIR"
-		DeleteRegValue HKCU "Software\Classes\Local Settings\Software\Microsoft\Windows\Shell\MuiCache" "$INSTDIR\BOSS.exe"
+		DeleteRegValue HKCU "Software\Classes\Local Settings\Software\Microsoft\Windows\Shell\MuiCache" "$INSTDIR\LOOT.exe"
 		DeleteRegValue HKCU "Software\Classes\Local Settings\Software\Microsoft\Windows\Shell\MuiCache" "$INSTDIR\Uninstall.exe"
 		DeleteRegValue HKCU "Software\Microsoft\Windows\ShellNoRoam\MuiCache" "$INSTDIR"
-		DeleteRegValue HKCU "Software\Microsoft\Windows\ShellNoRoam\MuiCache" "$INSTDIR\BOSS.exe"
+		DeleteRegValue HKCU "Software\Microsoft\Windows\ShellNoRoam\MuiCache" "$INSTDIR\LOOT.exe"
 		DeleteRegValue HKCU "Software\Microsoft\Windows\ShellNoRoam\MuiCache" "$INSTDIR\Uninstall.exe"
 
 		;Delete Start Menu folder.
 		SetShellVarContext all
-		RMDir /r "$SMPROGRAMS\BOSS"
+		RMDir /r "$SMPROGRAMS\LOOT"
 
 	SectionEnd
 
 	Section /o "un.User Files" UserFiles
 		;The following user files are only removed if set to.
-		Delete "$LOCALAPPDATA\BOSS\settings.yaml"
-		Delete "$LOCALAPPDATA\BOSS\Oblivion\userlist.yaml"
-		Delete "$LOCALAPPDATA\BOSS\Nehrim\userlist.yaml"
-		Delete "$LOCALAPPDATA\BOSS\Skyrim\userlist.yaml"
-		Delete "$LOCALAPPDATA\BOSS\Fallout3\userlist.yaml"
-		Delete "$LOCALAPPDATA\BOSS\FalloutNV\userlist.yaml"
+		Delete "$LOCALAPPDATA\LOOT\settings.yaml"
+		Delete "$LOCALAPPDATA\LOOT\Oblivion\userlist.yaml"
+		Delete "$LOCALAPPDATA\LOOT\Skyrim\userlist.yaml"
+		Delete "$LOCALAPPDATA\LOOT\Fallout3\userlist.yaml"
+		Delete "$LOCALAPPDATA\LOOT\FalloutNV\userlist.yaml"
 		;Also try removing the folders storing them, in case they are otherwise empty.
-		RMDir  "$LOCALAPPDATA\BOSS\Oblivion"
-		RMDir  "$LOCALAPPDATA\BOSS\Nehrim"
-		RMDir  "$LOCALAPPDATA\BOSS\Skyrim"
-		RMDir  "$LOCALAPPDATA\BOSS\Fallout3"
-		RMDir  "$LOCALAPPDATA\BOSS\FalloutNV"
+		RMDir  "$LOCALAPPDATA\LOOT\Oblivion"
+		RMDir  "$LOCALAPPDATA\LOOT\Skyrim"
+		RMDir  "$LOCALAPPDATA\LOOT\Fallout3"
+		RMDir  "$LOCALAPPDATA\LOOT\FalloutNV"
 		;Try removing install directory.
-        RMDir  "$LOCALAPPDATA\BOSS"
+        RMDir  "$LOCALAPPDATA\LOOT"
 	SectionEnd
 
 ;--------------------------------

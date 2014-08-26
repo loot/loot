@@ -1,50 +1,67 @@
 # Build Instructions using Microsoft Visual C++
 
-These instructions were used to build BOSS using Microsoft Visual Studio Express 2013 for Desktop, though they should also apply to other versions of MSVC. BOSS's CMake configuration builds an executable that can be run on Windows XP, but this support has only been implemented for MSVC 2013 - other versions may require editing of BOSS's `CMakeLists.txt` file.
+These instructions were used to build LOOT using Microsoft Visual Studio 2012 and Microsoft Visual Studio Express 2013 for Desktop, though they should also apply to other versions of MSVC.
 
 #### Boost
 
 ```
 bootstrap.bat
-b2 toolset=msvc-12.0 threadapi=win32 link=static variant=release address-model=32 --with-log --with-date_time --with-thread --with-filesystem --with-locale --with-regex --with-system  --with-iostreams --stagedir=stage-32
+b2 toolset=msvc threadapi=win32 link=static runtime-link=static variant=release address-model=32 --with-log --with-date_time --with-thread --with-filesystem --with-program_options --with-locale --with-regex --with-system  --with-iostreams
 ```
 
-#### wxWidgets
+`link`, `runtime-link` and `address-model` can all be modified if shared linking or 64 bit builds are desired. LOOT uses statically-linked Boost libraries by default: to change this, edit [CMakeLists.txt](../CMakeLists.txt).
 
-Just build the solution provided by wxWidgets.
+#### Chromium Embedded Framework
 
-#### zlib
-
-1. Add `/safeseh` to both lines in `contrib\masmx86\bld_ml32.bat`. 
-2. Build the solution in `contrib\vstudio`.
-3. Copy `build\zconf.h` to `.\zconf.h`.
+Most of the required binaries are pre-built, but the libcef_dll_wrapper dynamic library must be built. Just open its project file and build it with the `Release` configuration.
 
 #### yaml-cpp
 
-1. Set CMake up so that it builds the binaries in the `build` subdirectory of the yaml-cpp folder.
-2. Define `BOOST_ROOT` to point to where the Boost folder is. 
-3. Configure CMake, then generate a build system for Visual Studio 12.
-4. Open the generated solution file, and build it.
+1. Configure CMake and generate a build system for Visual Studio by running:
+  ```
+  mkdir build
+  cd build
+  cmake.exe .. -G "Visual Studio 12" -DBOOST_ROOT={BOOST_ROOT} -DMSVC_SHARED_RT=OFF
+  ```
+  Adapt the commands as necessary for your particular setup.
+2. Open the generated solution file, and build it with `Release` configuration.
 
 #### Libloadorder
 
 Follow the instructions in libloadorder's README.md to build it as a static library.
 
+Example CMake keys: `-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=build -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=build`
+
 #### Libgit2
 
-1. Set CMake up so that it builds the binaries in the `build` subdirectory of the libgit2 folder.
-2. Configure CMake.
-3. Undefine `BUILD_SHARED_LIBS`.
-4. Generate a build system for Visual Studio 12.
-5. Open the generated solution file, and build it.
+1. Configure CMake and generate a build system for Visual Studio by running:
+  ```
+  mkdir build
+  cd build
+  cmake.exe .. -G "Visual Studio 12" -DBUILD_SHARED_LIBS=OFF -DSTATIC_CRT=ON
+  ```
+  Adapt the commands as necessary for your particular setup.
+2. Open the generated solution file, and build it with `Release` configuration.
 
-You may need to make sure that the configuration properties for the Visual Studio project are set to use the multithreaded DLL runtime library (C/C++->Code Generation).
+#### LOOT
 
-#### BOSS
+LOOT uses the following CMake variables to set build parameters:
 
-1. Set CMake up so that it builds the binaries in the `build` subdirectory of the BOSS folder.
-2. Define `PROJECT_ARCH=32` or `PROJECT_ARCH=64` to build 32 or 64 bit executables respectively.
-3. Define `PROJECT_LINK=STATIC` to build a static API, or `PROJECT_LINK=SHARED` to build a DLL API.
-4. Define `PROEJCT_LIBS_DIR` to point to the folder holding all the required libraries' folders.
-5. Configure CMake, then generate a build system for Visual Studio 12.
-6. Open the generated solution file, and build it.
+Parameter | Values | Default |Description
+----------|--------|---------|-----------
+`BUILD_SHARED_LIBS` | `ON`, `OFF` | `OFF` | Whether or not to build a shared libloot.
+`PROJECT_STATIC_RUNTIME` | `ON`, `OFF` | `ON` | Whether to link the C++ runtime statically or not. This also affects the Boost libraries used.
+`PROJECT_ARCH` | `32`, `64` | `32` | Whether to build 32 or 64 bit LOOT binaries.
+`ALPHANUM_ROOT` | path | `../../alphanum` | Path to the folder containing `alphanum.hpp`.
+`CEF_ROOT` | path | `../../cef` | Path to the root of the Chromium Embedded Framework folder.
+`LIBESPM_ROOT` | path | `../../libespm` | Path to the root of the libespm repository folder.
+`LIBGIT2_ROOT` | path | `../../libgit2` | Path to the root of the libgit2 repository folder.
+`LIBLOADORDER_ROOT` | path | `../../libloadorder` | Path to the root of the libloadorder repository folder.
+`YAMLCPP_ROOT` | path | `../../yaml-cpp` | Path to the root of the yaml-cpp folder.
+
+The default paths given in the table above are relative to LOOT's `CMakeLists.txt`.
+
+1. Set CMake up so that it builds the binaries in the `build` subdirectory of the LOOT folder.
+2. Define any necessary parameters.
+3. Configure CMake, then generate a build system for Visual Studio 12.
+4. Open the generated solution file, and build it.

@@ -1,16 +1,16 @@
 # Licenses
 
-BOSS uses a number of libraries, and their licenses are listed in this file.
+LOOT uses a number of libraries, and their licenses are listed in this file.
 
 * Alphanum - zlib license; the text is not included as allowed by the license.
 * Boost - Boost Software License v1.0; see "Boost Software License v1.0.txt" for the text.
+* Chromium Embedded Framework - BSD license; see "BSD License (Chromium Embedded Framework).txt for the text.
+* Font Awesome - SIL OFL 1.1, MIT license; the author has stated attribution is not necessary.
 * Libespm - GNU GPL v3; see "GNU GPL v3.txt" for the text.
 * Libgit2 - GNU GPL v2; see "GNU GPL v2 (libgit2).txt" for the text.
 * Libloadorder - GNU GPL v3; see "GNU GPL v3.txt" for the text.
-* Polyfill.js - This code has been placed in the public domain.
-* PugiXML - MIT License; see "MIT License (PugiXML).txt" for the text.
-* wxWidgets - wxWindows License; the text is not included as allowed by the license.
+* Marked - MIT License; see "MIT License (Marked).txt" for the text.
+* RequireJS - MIT License; see "MIT License (RequireJS).txt" for the text.
 * yaml-cpp - MIT License; see "MIT License (yaml-cpp).txt" for the text.
-* zlib - zlib license; the text is not included as allowed by the license.
 
-Source code for all libraries and binaries can be found on the websites linked to in the main BOSS readme.
+Source code for all libraries and binaries can be found on the websites linked to in the main LOOT readme.

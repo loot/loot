@@ -1,28 +1,29 @@
-/*  BOSS
+/*  LOOT
 
-    A plugin load order optimiser for games that use the esp/esm plugin system.
+    A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
+    Fallout: New Vegas.
 
     Copyright (C) 2012-2014    WrinklyNinja
 
-    This file is part of BOSS.
+    This file is part of LOOT.
 
-    BOSS is free software: you can redistribute
+    LOOT is free software: you can redistribute
     it and/or modify it under the terms of the GNU General Public License
     as published by the Free Software Foundation, either version 3 of
     the License, or (at your option) any later version.
 
-    BOSS is distributed in the hope that it will
+    LOOT is distributed in the hope that it will
     be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with BOSS.  If not, see
+    along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
 */
 
-#ifndef __BOSS_PARSERS__
-#define __BOSS_PARSERS__
+#ifndef __LOOT_PARSERS__
+#define __LOOT_PARSERS__
 
 #ifndef BOOST_SPIRIT_UNICODE
 #define BOOST_SPIRIT_UNICODE
@@ -32,15 +33,16 @@
 #define BOOST_SPIRIT_USE_PHOENIX_V3 1
 #endif
 
+#include "game.h"
 #include "metadata.h"
 #include "helpers.h"
 #include "error.h"
 
-#include <stdint.h>
+#include <cstdint>
+#include <regex>
 
 #include <yaml-cpp/yaml.h>
 
-#include <boost/regex.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/regex.hpp>
@@ -59,11 +61,11 @@ namespace YAML {
     ///////////////////////
 
     template<>
-    struct convert<boss::Game> {
-        static Node encode(const boss::Game& rhs) {
+    struct convert<loot::Game> {
+        static Node encode(const loot::Game& rhs) {
             Node node;
 
-            node["type"] = boss::Game(rhs.Id()).FolderName();
+            node["type"] = loot::Game(rhs.Id()).FolderName();
             node["name"] = rhs.Name();
             node["folder"] = rhs.FolderName();
             node["master"] = rhs.Master();
@@ -75,18 +77,18 @@ namespace YAML {
             return node;
         }
 
-        static bool decode(const Node& node, boss::Game& rhs) {
+        static bool decode(const Node& node, loot::Game& rhs) {
             if (!node.IsMap() || !node["folder"] || !node["type"])
                 return false;
 
-            if (node["type"].as<std::string>() == boss::Game(boss::g_game_tes4).FolderName())
-                rhs = boss::Game(boss::g_game_tes4, node["folder"].as<std::string>());
-            else if (node["type"].as<std::string>() == boss::Game(boss::g_game_tes5).FolderName())
-                rhs = boss::Game(boss::g_game_tes5, node["folder"].as<std::string>());
-            else if (node["type"].as<std::string>() == boss::Game(boss::g_game_fo3).FolderName())
-                rhs = boss::Game(boss::g_game_fo3, node["folder"].as<std::string>());
-            else if (node["type"].as<std::string>() == boss::Game(boss::g_game_fonv).FolderName())
-                rhs = boss::Game(boss::g_game_fonv, node["folder"].as<std::string>());
+            if (node["type"].as<std::string>() == loot::Game(loot::Game::tes4).FolderName())
+                rhs = loot::Game(loot::Game::tes4, node["folder"].as<std::string>());
+            else if (node["type"].as<std::string>() == loot::Game(loot::Game::tes5).FolderName())
+                rhs = loot::Game(loot::Game::tes5, node["folder"].as<std::string>());
+            else if (node["type"].as<std::string>() == loot::Game(loot::Game::fo3).FolderName())
+                rhs = loot::Game(loot::Game::fo3, node["folder"].as<std::string>());
+            else if (node["type"].as<std::string>() == loot::Game(loot::Game::fonv).FolderName())
+                rhs = loot::Game(loot::Game::fonv, node["folder"].as<std::string>());
             else
                 return false;
 
@@ -111,8 +113,8 @@ namespace YAML {
     };
 
     template<>
-    struct convert<boss::PluginDirtyInfo> {
-        static Node encode(const boss::PluginDirtyInfo& rhs) {
+    struct convert<loot::PluginDirtyInfo> {
+        static Node encode(const loot::PluginDirtyInfo& rhs) {
             Node node;
             node["crc"] = rhs.CRC();
             node["util"] = rhs.CleaningUtility();
@@ -127,7 +129,7 @@ namespace YAML {
             return node;
         }
 
-        static bool decode(const Node& node, boss::PluginDirtyInfo& rhs) {
+        static bool decode(const Node& node, loot::PluginDirtyInfo& rhs) {
             if (!node.IsMap() || !node["crc"] || !node["util"])
                 return false;
 
@@ -143,45 +145,45 @@ namespace YAML {
 
             std::string utility = node["util"].as<std::string>();
 
-            rhs = boss::PluginDirtyInfo(crc, itm, udr, nav, utility);
+            rhs = loot::PluginDirtyInfo(crc, itm, udr, nav, utility);
 
             return true;
         }
     };
 
     template<>
-    struct convert<boss::MessageContent> {
-        static Node encode(const boss::MessageContent& rhs) {
+    struct convert<loot::MessageContent> {
+        static Node encode(const loot::MessageContent& rhs) {
             Node node;
             node["str"] = rhs.Str();
-            node["lang"] = boss::Language(rhs.Language()).Locale();
+            node["lang"] = loot::Language(rhs.Language()).Locale();
 
             return node;
         }
 
-        static bool decode(const Node& node, boss::MessageContent& rhs) {
+        static bool decode(const Node& node, loot::MessageContent& rhs) {
             if (!node.IsMap() || !node["str"] || !node["lang"])
                 return false;
 
             std::string str = node["str"].as<std::string>();
-            unsigned int lang = boss::Language(node["lang"].as<std::string>()).Code();
+            unsigned int lang = loot::Language(node["lang"].as<std::string>()).Code();
 
-            rhs = boss::MessageContent(str, lang);
+            rhs = loot::MessageContent(str, lang);
 
             return true;
         }
     };
 
     template<>
-    struct convert<boss::Message> {
-        static Node encode(const boss::Message& rhs) {
+    struct convert<loot::Message> {
+        static Node encode(const loot::Message& rhs) {
             Node node;
             node["condition"] = rhs.Condition();
             node["content"] = rhs.Content();
 
-            if (rhs.Type() == boss::g_message_say)
+            if (rhs.Type() == loot::Message::say)
                 node["type"] = "say";
-            else if (rhs.Type() == boss::g_message_warn)
+            else if (rhs.Type() == loot::Message::warn)
                 node["type"] = "warn";
             else
                 node["type"] = "error";
@@ -189,7 +191,7 @@ namespace YAML {
             return node;
         }
 
-        static bool decode(const Node& node, boss::Message& rhs) {
+        static bool decode(const Node& node, loot::Message& rhs) {
             if(!node.IsMap() || !node["type"] || !node["content"])
                 return false;
 
@@ -199,25 +201,25 @@ namespace YAML {
                 type = node["type"].as<std::string>();
 
                 if (boost::iequals(type, "say"))
-                    typeNo = boss::g_message_say;
+                    typeNo = loot::Message::say;
                 else if (boost::iequals(type, "warn"))
-                    typeNo = boss::g_message_warn;
+                    typeNo = loot::Message::warn;
                 else
-                    typeNo = boss::g_message_error;
+                    typeNo = loot::Message::error;
             }
 
-            std::vector<boss::MessageContent> content;
+            std::vector<loot::MessageContent> content;
             if (node["content"].IsSequence())
-                content = node["content"].as< std::vector<boss::MessageContent> >();
+                content = node["content"].as< std::vector<loot::MessageContent> >();
             else {
-                content.push_back(boss::MessageContent(node["content"].as<std::string>()));
+                content.push_back(loot::MessageContent(node["content"].as<std::string>(), loot::Language::english));
             }
 
             //Check now that at least one item in content is English if there are multiple items.
             if (content.size() > 1) {
                 bool found = false;
-                for (std::vector<boss::MessageContent>::const_iterator it=content.begin(), endit=content.end(); it != endit; ++it) {
-                    if (it->Language() == boss::g_lang_english)
+                for (const auto &mc: content) {
+                    if (mc.Language() == loot::Language::english)
                         found = true;
                 }
                 if (!found)
@@ -228,14 +230,14 @@ namespace YAML {
             if (node["condition"])
                 condition = node["condition"].as<std::string>();
 
-            rhs = boss::Message(typeNo, content, condition);
+            rhs = loot::Message(typeNo, content, condition);
             return true;
         }
     };
 
     template<>
-    struct convert<boss::File> {
-        static Node encode(const boss::File& rhs) {
+    struct convert<loot::File> {
+        static Node encode(const loot::File& rhs) {
             Node node;
             node["condition"] = rhs.Condition();
             node["name"] = rhs.Name();
@@ -243,7 +245,7 @@ namespace YAML {
             return node;
         }
 
-        static bool decode(const Node& node, boss::File& rhs) {
+        static bool decode(const Node& node, loot::File& rhs) {
             if(node.IsMap()) {
                 std::string condition, name, display;
                 if (node["condition"])
@@ -252,16 +254,16 @@ namespace YAML {
                     name = node["name"].as<std::string>();
                 if (node["display"])
                     display = node["display"].as<std::string>();
-                rhs = boss::File(name, display, condition);
+                rhs = loot::File(name, display, condition);
             } else
-                rhs = boss::File(node.as<std::string>());
+                rhs = loot::File(node.as<std::string>());
             return true;
         }
     };
 
     template<>
-    struct convert<boss::Tag> {
-        static Node encode(const boss::Tag& rhs) {
+    struct convert<loot::Tag> {
+        static Node encode(const loot::Tag& rhs) {
             Node node;
             node["condition"] = rhs.Condition();
             if (rhs.IsAddition())
@@ -271,7 +273,7 @@ namespace YAML {
             return node;
         }
 
-        static bool decode(const Node& node, boss::Tag& rhs) {
+        static bool decode(const Node& node, loot::Tag& rhs) {
             std::string condition, tag;
             if(node.IsMap()) {
                 if (node["condition"])
@@ -282,9 +284,9 @@ namespace YAML {
                 tag = node.as<std::string>();
 
             if (tag[0] == '-')
-                rhs = boss::Tag(tag.substr(1), false, condition);
+                rhs = loot::Tag(tag.substr(1), false, condition);
             else
-                rhs = boss::Tag(tag, true, condition);
+                rhs = loot::Tag(tag, true, condition);
 
             return true;
         }
@@ -294,8 +296,8 @@ namespace YAML {
     struct convert< std::set<T, Compare> > {
       static Node encode(const std::set<T, Compare>& rhs) {
           Node node;
-          for (typename std::set<T, Compare>::const_iterator it=rhs.begin(), endIt=rhs.end(); it != endIt; ++it) {
-              node.push_back(*it);
+          for (const auto &element: rhs) {
+              node.push_back(element);
           }
           return node;
       }
@@ -305,17 +307,40 @@ namespace YAML {
             return false;
 
         rhs.clear();
-        for(YAML::const_iterator it=node.begin();it!=node.end();++it) {
-            rhs.insert(it->as<T>());
+        for (const auto &element : node) {
+            rhs.insert(element.as<T>());
         }
         return true;
 
       }
     };
 
+    template<class T, class Hash>
+    struct convert< std::unordered_set<T, Hash> > {
+        static Node encode(const std::unordered_set<T, Hash>& rhs) {
+            Node node;
+            for (const auto &element : rhs) {
+                node.push_back(element);
+            }
+            return node;
+        }
+
+        static bool decode(const Node& node, std::unordered_set<T, Hash>& rhs) {
+            if (!node.IsSequence())
+                return false;
+
+            rhs.clear();
+            for (const auto &element : node) {
+                rhs.insert(element.as<T>());
+            }
+            return true;
+
+        }
+    };
+
     template<>
-    struct convert<boss::Plugin> {
-        static Node encode(const boss::Plugin& rhs) {
+    struct convert<loot::Plugin> {
+        static Node encode(const loot::Plugin& rhs) {
             Node node;
             node["name"] = rhs.Name();
             node["enabled"] = rhs.Enabled();
@@ -330,12 +355,12 @@ namespace YAML {
             return node;
         }
 
-        static bool decode(const Node& node, boss::Plugin& rhs) {
+        static bool decode(const Node& node, loot::Plugin& rhs) {
             if(!node.IsMap())
                 return false;
 
             if (node["name"])
-                rhs = boss::Plugin(node["name"].as<std::string>());
+                rhs = loot::Plugin(node["name"].as<std::string>());
             if (node["enabled"])
                 rhs.Enabled(node["enabled"].as<bool>());
 
@@ -345,24 +370,24 @@ namespace YAML {
             }
 
             if (node["after"])
-                rhs.LoadAfter(node["after"].as< std::set<boss::File> >());
+                rhs.LoadAfter(node["after"].as< std::set<loot::File> >());
             if (node["req"])
-                rhs.Reqs(node["req"].as< std::set<boss::File> >());
+                rhs.Reqs(node["req"].as< std::set<loot::File> >());
             if (node["inc"])
-                rhs.Incs(node["inc"].as< std::set<boss::File> >());
+                rhs.Incs(node["inc"].as< std::set<loot::File> >());
             if (node["msg"])
-                rhs.Messages(node["msg"].as< std::list<boss::Message> >());
+                rhs.Messages(node["msg"].as< std::list<loot::Message> >());
             if (node["tag"])
-                rhs.Tags(node["tag"].as< std::set<boss::Tag> >());
+                rhs.Tags(node["tag"].as< std::set<loot::Tag> >());
             if (node["dirty"])
-                rhs.DirtyInfo(node["dirty"].as< std::set<boss::PluginDirtyInfo> >());
+                rhs.DirtyInfo(node["dirty"].as< std::set<loot::PluginDirtyInfo> >());
 
             return true;
         }
     };
 }
 
-namespace boss {
+namespace loot {
 
     ///////////////////////////////
     // Condition parser/evaluator
@@ -443,7 +468,7 @@ namespace boss {
             qi::on_error<qi::fail>(invalidPathChars,   phoenix::bind(&condition_grammar::SyntaxError, this, qi::labels::_1, qi::labels::_2, qi::labels::_3, qi::labels::_4));
         }
 
-        void SetGame(boss::Game& g) {
+        void SetGame(loot::Game& g) {
             game = &g;
         }
 
@@ -452,21 +477,21 @@ namespace boss {
         qi::rule<Iterator, std::string()> quotedStr, filePath, comparator;
         qi::rule<Iterator, char()> invalidPathChars;
 
-        boss::Game * game;
+        loot::Game * game;
 
         //Eval's exact paths. Check for files and ghosted plugins.
         void CheckFile(bool& result, const std::string& file) {
 
             BOOST_LOG_TRIVIAL(trace) << "Checking to see if the file \"" << file << "\" exists.";
 
-            if (file == "BOSS") {
+            if (file == "LOOT") {
                 result = true;
                 return;
             }
 
             if (!IsSafePath(file)) {
                 BOOST_LOG_TRIVIAL(error) << "Invalid file path: " << file;
-                throw boss::error(boss::error::invalid_args, boost::locale::translate("Invalid file path:").str() + " " + file);
+                throw loot::error(loot::error::invalid_args, boost::locale::translate("Invalid file path:").str() + " " + file);
             }
 
             if (IsPlugin(file))
@@ -496,10 +521,14 @@ namespace boss {
 
             BOOST_LOG_TRIVIAL(trace) << "Checking to see if any files matching the regex \"" << regexStr << "\" exist.";
 
-            boost::regex sepReg("/|(\\\\\\\\)", boost::regex::perl);
+            regex sepReg("/|(\\\\\\\\)", regex::ECMAScript | regex::icase);
 
             std::vector<std::string> components;
-            boost::algorithm::split_regex(components, regexStr, sepReg);
+            std::sregex_token_iterator it(regexStr.begin(), regexStr.end(), sepReg, -1);
+            std::sregex_token_iterator itend;
+            for (; it != itend; ++it) {
+                components.push_back(*it);
+            }
 
             std::string filename = components.back();
             components.pop_back();
@@ -514,7 +543,7 @@ namespace boss {
 
             if (boost::contains(parent, "../../")){
                 BOOST_LOG_TRIVIAL(error) << "Invalid folder path: " << parent;
-                throw boss::error(boss::error::invalid_args, boost::locale::translate("Invalid folder path:").str() + " " + parent);
+                throw loot::error(loot::error::invalid_args, boost::locale::translate("Invalid folder path:").str() + " " + parent);
             }
 
             //Now we have a valid parent path and a regex filename. Check that
@@ -526,16 +555,16 @@ namespace boss {
                 return;
             }
 
-            boost::regex regex;
+            regex reg;
             try {
-                regex = boost::regex(filename, boost::regex::perl|boost::regex::icase);
-            } catch (boost::regex_error& e) {
+                reg = regex(filename, regex::ECMAScript | regex::icase);
+            } catch (exception& /*e*/) {
                 BOOST_LOG_TRIVIAL(error) << "Invalid regex string:" << filename;
-                throw boss::error(boss::error::invalid_args, boost::locale::translate("Invalid regex string:").str() + " " + filename);
+                throw loot::error(loot::error::invalid_args, boost::locale::translate("Invalid regex string:").str() + " " + filename);
             }
 
             for (boost::filesystem::directory_iterator itr(parent_path); itr != boost::filesystem::directory_iterator(); ++itr) {
-                if (boost::regex_match(itr->path().filename().string(), regex)) {
+                if (regex_match(itr->path().filename().string(), reg)) {
                     result = true;
                     BOOST_LOG_TRIVIAL(trace) << "Matching file found: " << itr->path();
                     return;
@@ -549,17 +578,17 @@ namespace boss {
 
             if (!IsSafePath(file)) {
                 BOOST_LOG_TRIVIAL(error) << "Invalid file path: " << file;
-                throw boss::error(boss::error::invalid_args, boost::locale::translate("Invalid file path:").str() + " " + file);
+                throw loot::error(loot::error::invalid_args, boost::locale::translate("Invalid file path:").str() + " " + file);
             }
 
             uint32_t crc;
-            boost::unordered_map<std::string,uint32_t>::iterator it = game->crcCache.find(boost::to_lower_copy(file));
+            unordered_map<std::string,uint32_t>::iterator it = game->crcCache.find(boost::to_lower_copy(file));
 
             if (it != game->crcCache.end())
                 crc = it->second;
             else {
-                if (file == "BOSS")
-                    crc = GetCrc32(boost::filesystem::absolute("BOSS.exe"));
+                if (file == "LOOT")
+                    crc = GetCrc32(boost::filesystem::absolute("LOOT.exe"));
                 if (boost::filesystem::exists(game->DataPath() / file))
                     crc = GetCrc32(game->DataPath() / file);
                 else if (IsPlugin(file) && boost::filesystem::exists(game->DataPath() / (file + ".ghost")))
@@ -589,8 +618,8 @@ namespace boss {
 
             Version givenVersion = Version(version);
             Version trueVersion;
-            if (file == "BOSS")
-                trueVersion = Version(boost::filesystem::absolute("BOSS.exe"));
+            if (file == "LOOT")
+                trueVersion = Version(boost::filesystem::absolute("LOOT.exe"));
             else if (IsPlugin(file)) {
                 Plugin plugin(*game, file, true);
                 trueVersion = Version(plugin.Version());
@@ -611,7 +640,7 @@ namespace boss {
         }
 
         void CheckActive(bool& result, const std::string& file) {
-            if (file == "BOSS")
+            if (file == "LOOT")
                 result = false;
             else
                 result = game->IsActive(file);
@@ -626,7 +655,7 @@ namespace boss {
 
             BOOST_LOG_TRIVIAL(error) << "Expected \"" << what.tag << "\" at \"" << context << "\".";
 
-            throw boss::error(boss::error::condition_eval_fail, (boost::format(boost::locale::translate("Expected \"%1%\" at \"%2%\".")) % what.tag % context).str());
+            throw loot::error(loot::error::condition_eval_fail, (boost::format(boost::locale::translate("Expected \"%1%\" at \"%2%\".")) % what.tag % context).str());
         }
 
         //Checks that the path (not regex) doesn't go outside any game folders.
@@ -638,7 +667,7 @@ namespace boss {
             boost::split(components, path, boost::is_any_of("/\\"));
             components.pop_back();
             std::string parent_path;
-            for (std::vector<std::string>::const_iterator it=components.begin(), endIt=components.end()--; it != endIt; ++it) {
+            for (auto it=components.cbegin(), endIt=components.cend()--; it != endIt; ++it) {
                 if (*it == ".")
                     continue;
                 parent_path += *it + '/';

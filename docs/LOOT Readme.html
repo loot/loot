@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>LOOT Readme</title>
+<style>
+    body {
+        font:10pt/1.5 Helvetica,sans-serif;
+        text-rendering:optimizeLegibility;}
+    p, ul, li {margin:1.5em 0;}
+    h1,h3,h2 {font-weight:normal;}
+h1{
+    font-size:36pt;
+    line-height:0.5;
+    margin-top:1.125em;
+    margin-bottom:0.375em;}
+h2{
+    font-size:24pt;
+    line-height:0.75;
+    margin-top:3em;
+    margin-bottom:1.5em;}
+h3{
+    font-size:18pt;
+    line-height:1;
+    margin-top:3.5em;
+    margin-bottom:1em;}
+    ul, ol {margin-top:0.5em; margin-bottom:1em;}
+    li {margin:0.75em 0;}
+    a:link {text-decoration:none;}
+    a:hover {text-decoration:underline;}
+    ol ol {list-style:lower-alpha;}
+
+    code {display:inline-block; padding:0 3px; background:#eee;}
+    td, th {border:1px solid #ddd; padding: 5px 10px; vertical-align:top;}
+    table {border-collapse:collapse; margin:1.5em; margin-bottom: 3em; background:#fafafa;}
+    thead {background:#6badf6;}
+    th {font-weight:normal;}
+    code.box {border-radius:5px; border:1px solid #ccc; padding:0.75em; white-space:pre; overflow-x:auto; display:table; margin:1.5em;}
+
+    blockquote {border:1px solid #ccc; border-radius:3px; padding:10px; background:#eee; display:table;margin:1.5em;}
+
+    a[href^="http"]:after {padding-left:2px; content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAVklEQVR4Xn3PgQkAMQhDUXfqTu7kTtkpd5RA8AInfArtQ2iRXFWT2QedAfttj2FsPIOE1eCOlEuoWWjgzYaB/IkeGOrxXhqB+uA9Bfcm0lAZuh+YIeAD+cAqSz4kCMUAAAAASUVORK5CYII=);}
+
+    .slideshow img {opacity:0;
+        position:absolute;
+        transition: opacity 1.5s;
+        -moz-transition: opacity 1.5s;
+        -webkit-transition: opacity 1.5s;
+        -o-transition: opacity 1.5s;}
+    .slideshow img:first-child {opacity:1;}
+
+    span[title] {border-bottom: 1px dotted; font-family: sans-serif; cursor:help;}
+    abbr {cursor:help; border-bottom: 1px dotted black;}
+
+    #warning {background:#fbb; padding:10px 5px;margin:-8px;}
+    .warning {background:#fbb; border-color:#d00;}
+    var {color:#8B4513;}
+
+    .teamTableBody td:not(:first-child) {text-align:center;}
+    dt {margin-bottom:0.5em; margin-top:1em; font-style:italic;}
+    dd {margin-bottom:0.75em;}
+</style>
+<!--  LOOT
+
+    A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and Fallout: New Vegas.
+
+    Copyright (C) 2012–2014    WrinklyNinja
+
+    This file is part of LOOT.
+
+    LOOT is free software: you can redistribute
+    it and/or modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation, either version 3 of
+    the License, or (at your option) any later version.
+
+    LOOT is distributed in the hope that it will
+    be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with LOOT.  If not, see
+    <http://www.gnu.org/licenses/>.
+-->
+
+<h1>LOOT</h1>
+
+<h2>Contents</h2>
+
+<ol>
+    <li><a href="#intro">Introduction</a>
+    <li><a href="#install">Installation &amp; Uninstallation</a>
+    <li><a href="#usage">Using LOOT</a>
+    <ol>
+        <li><a href="#usage-sort">Sorting Plugins</a>
+        <li><a href="#usage-log">The Results Report</a>
+        <li><a href="#usage-custom">Customising LOOT's Results</a>
+        <li><a href="#usage-settings">Editing Settings</a>
+    </ol>
+    <li><a href="#trouble">Troubleshooting</a>
+    <li><a href="#contrib">Contributing To LOOT</a>
+    <li><a href="#translate">Translating LOOT</a>
+    <li><a href="#credits">Credits</a>
+    <li><a href="#license">License</a>
+    <li><a href="#appendix">Appendices</a>
+    <ol>
+        <li><a href="#appendix-intro">Introduction To Load Orders</a>
+        <li><a href="#appendix-dirty">Dirty Edits, Mod Cleaning &amp; CRCs</a>
+        <li><a href="#appendix-permissions">File Permissions</a>
+    </ol>
+    <li><a href="#history">Version History</a>
+</ol>
+
+<h2 id="intro">Introduction</h2>
+
+<p>LOOT is a plugin load order optimiser for TES IV: Oblivion, TES V: Skyrim, Fallout 3 and Fallout: New Vegas. It is designed to assist mod users in avoiding detrimental conflicts, by automatically calculating a load order that satisfies all plugin dependencies and maximises each plugin's impact on the user's game.
+
+<p>LOOT also provides some load order error checking, including checks for requirements, incompatibilities and cyclic dependencies. In addition, it provides a large number of plugin-specific usage notes, bug warnings and Bash Tag suggestions for Wrye Bash.
+
+<p>While LOOT is able to calculate correct load order positions for the vast majority of plugins using only their content, it cannot do so for all plugins. As such, LOOT provides a mechanism for supplying additional plugin metadata so that it may sort them correctly.
+
+<p>LOOT is intended to make using mods easier, and mod users should still possess a working knowledge of mod load ordering. See <a href="#appendix-intro">Introduction To Load Orders</a> for an overview.
+
+
+<h2 id="install">Installation &amp; Uninstallation</h2>
+
+<p><b>LOOT does not support Windows XP or earlier.</b>
+
+<p>LOOT can be installed either using its automated installer or manually. To install LOOT manually, extract the downloaded archive to a location of your choice.
+
+<p>If LOOT was installed using the installer, then use the uninstaller linked to in the Start Menu to uninstall LOOT. If LOOT was installed manually:
+<ol>
+    <li>Delete the files you extracted from the location you chose.
+    <li>Delete the <q>LOOT</q> folder in your local application data folder, which can be accessed by entering <code>%LOCALAPPDATA%</code> into Windows' File Explorer.
+</ol>
+
+
+<h2 id="usage">Using LOOT</h2>
+<p>When LOOT is run, it will attempt to detect which of the supported games are installed. If a <a href="#settingsDefaultGame">default game</a> has been set, LOOT will run for it, otherwise it will run for the same game as it last ran for. If the relevant game cannot be detected, if there is no record of the last game LOOT ran for, it will run for the first detected game.
+<p>LOOT can also be launched with the <code>LOOT.exe [--game=&lt;game folder name&gt;]</code> command line parameter to set the game to run for. If the supplied game folder name is valid, the default and last game values are ignored. The default folder names are <code>Oblivion</code>, <code>Skyrim</code>, <code>Fallout3</code> and <code>FalloutNV</code>.
+<p>Once a game has been set, the main window will be displayed.
+<figure>
+    <img alt="LOOT's main window" src="images/main.png">
+    <figcaption>LOOT's main window. The title bar displays which game LOOT is running for.</figcaption>
+</figure>
+<p>Clicking the <q>Edit Metadata</q> button will open LOOT's <a href="#usage-custom">metadata editor</a>, where you can make changes to the metadata LOOT uses to sort plugins, the messages that get displayed for plugins, and any Bash Tag suggestions LOOT makes.
+<p>Clicking the <q>Sort Plugins</q> button will begin the <a href="#usage-sort">plugin sorting process</a>. This will sort your plugins, allow you to make any changes to the load order it produces, then display a report that details the results of LOOT's activity.
+<p>Clicking the <q>View Last Report</q> button will display the <a href="#usage-log">report</a> generated the last time LOOT sorted your plugins for the current game.
+<p>The <q>File</q> menu provides menu items for sorting plugins, viewing the debug log and the last report LOOT generated, and quitting LOOT. The menu's <q>Redate Plugins</q> option is provided so that Skyrim modders may set the load order for the Creation Kit. It is only enabled for Skyrim, and changes the timestamps of the plugins in its Data folder to match their current load order. A side effect of changing the timestamps is that any Steam Workshop mods installed will be re-downloaded.
+<p>The <q>Edit</q> menu provides menu items for accessing LOOT's metadata editor and the <a href="#usage-settings">settings window</a>.
+<p>The <q>Game</q> menu allows you to change which game LOOT is running for. Games that LOOT cannot find are greyed out, and the the one LOOT is running for is marked with a bullet point. To change the active game, simply select another game in the list.
+<p>The <q>Help</q> menu provides a link to this readme and an about page that contains the version of LOOT being run, some legal information and a link to the <a href="http://loot.github.io">project homepage</a>.
+
+<h3 id="usage-sort">Sorting Plugins</h3>
+<figure>
+    <img alt="LOOT confirmation dialog" src="images/confirm.png">
+    <figcaption>Viewing &amp; editing LOOT's calculated load order.</figcaption>
+</figure>
+<p>Clicking the <q>Sort Plugins</q> button in the main window will begin the sorting process.
+<p>First, LOOT downloads and applies any masterlist updates available, if the <a href="#settingsUpdateMasterlist">relevant setting</a> is enabled. If the latest update cannot be parsed (eg. due to typos), then LOOT will roll back until it finds a version that works.
+<p>LOOT then sorts your plugins according to a combination of data from the plugins themselves, and any masterlist and userlist entries they may have. If a cyclic interaction is detected (eg. A depends on B depends on A), then sorting will fail.
+<p>If sorting is successful, the calculated load order is then displayed in the dialog shown above. In this window, you can view the load order calculated by LOOT, and make any edits to the metadata used that you feel are necessary. The window is a simplified version of the metadata editor window, in which all metadata that does not affect sorting is hidden. Please see <a href="usage-custom">the section below</a> for more information on how to edit metadata using it.
+<p>If the <q>Apply</q> button is clicked, LOOT does one of two things: if no edits were made, then it immediately applies the load order; but if edits were made, then it repeats the sorting process with the new edits applied. If the <q>Cancel</q> button is clicked, then the load order and any edits made are discarded.
+<p>LOOT then generates a report and displays it either in a new window or in your default browser, according to the value of the <a href="#settingsViewReports">relevant setting</a>. Any errors encountered during the sorting process will be displayed in this report. See the next section for more information on the report.
+<p>LOOT is able to sort plugins ghosted by Wrye Bash, and can extract Bash Tags and version numbers from plugin descriptions. Provided that they have the <code>Filter</code> Bash Tag present in their description, LOOT can recognise filter patches and so avoid displaying unnecessary error messages for any of their masters that may be missing.
+<p>While reading very large plugins, such as the game's main master file, LOOT may appear to stop responding: this is not an issue. The time it takes for LOOT to sort your load order depends primarily on the size of the masterlist being used, the total size of the files in your load order, and the number of plugins in your load order. The first run is likely to be longer than subsequent runs as LOOT needs to download the full masterlist, rather than just the changes made by updates. In testing, it was found that sorting ~90 plugins with a total size of ~350 MB and a 5 MB masterlist takes around 15 seconds, though performance will vary with computer hardware.
+
+
+<h3 id="usage-log">The Results Report</h3>
+<figure class="slideshow">
+    <img alt="LOOT report summary tab" src="images/viewer-1.png">
+    <img alt="LOOT report details tab" src="images/viewer-2.png">
+    <figcaption style="padding-top:610px;">LOOT's report viewer.</figcaption>
+</figure>
+
+<p>LOOT's results report is comprised of two sections:
+<ul>
+    <li>The <q>Summary</q> tab gives information on the versions of LOOT and the masterlist used, whether masterlist updating is enabled, and breaks down some message and plugin numbers. It also notifies you if there have been no changes in the <q>Details</q> tab since you last ran LOOT for the same game. Finally, the <q>Summary</q> tab is also where any global messages supplied in the masterlist and any errors encountered during sorting are displayed.
+    <li>The <q>Details</q> tab lists the plugins LOOT sorted in their new load order, along with any messages LOOT has provided for them. LOOT will also display the plugin's <abbr title="Cyclic Redundancy Check">CRC</abbr> value and extract its version if found in the plugin's description field. If LOOT suggests any Bash Tags to be added, they will be displayed in <span style="color:green;">green text</span>, while any Bash Tags to be removed will be displayed in <span style="color:red;">red text</span>.
+</ul>
+<p>In addition, there are a few filters that can be used to selectively hide items in the <q>Details</q> tab. These filters are:
+<ul>
+    <li><i>Hide Version Numbers</i>: Hides the version numbers printed in blue next to those plugins that provide them.
+    <li><i>Hide CRCs</i>: Hides the CRCs printed in orange next to those plugins that provide them.
+    <li><i>Hide Notes</i>: Hides all plugin messages that have the <i>Note:</i> prefix.
+    <li><i>Hide Bash Tag Suggestions</i>: Hides all Bash Tag suggestions.
+    <li><i>Hide 'Do Not Clean' Messages</i>: Hides any messages that contain the string <q>Do not clean.</q>.
+    <li><i>Hide Inactive Plugin Messages</i>: Hides all messages attached to plugins that are inactive.
+    <li><i>Hide All Plugin Messages</i>: Hides all plugin messages.
+    <li><i>Hide Messageless Plugins</i>: Hides any plugins that have no visible messages.
+</ul>
+<p>LOOT will display the version numbers of any plugins that provide them in their description fields. If a plugin supplies no version number, it cannot be displayed. The version numbers may not reflect the actual version of the mod installed - this could either be due to the mod author forgetting to update the description, or due to a mistake in LOOT's detection. As version numbers are supplied by mod authors in a wide range of formats and LOOT has to detect as many as possible, it occasionally identifies parts of some descriptions as version numbers incorrectly. When in doubt, check the version number given in a mod's readme.
+<p>LOOT's plugin messages are a valuable resource, acting as a means of providing users with information that they might otherwise not obtain. It is important for a stable, healthy game that you act on any messages that require action.
+<p>If you think a message suggests an unnecessary action, report it to an official LOOT thread. If you encounter a message that is non-conditional, ie. it suggests an action but is still displayed on subsequent runs of LOOT after the action has been carried out, also report it to an official LOOT thread, so that it can be made conditional.
+
+
+<h3 id="usage-custom">Customising LOOT's Results</h3>
+<figure>
+    <img src="images/editor.png">
+    <figcaption>LOOT's metadata editor.</figcaption>
+</figure>
+<p>LOOT's sorting algorithm uses the contents of plugins to work out where they should load relative to one another. However, this is sometimes not enough for it to produce a correct load order. In such cases, additional metadata can be supplied so that the plugins get sorted correctly. This metadata is supplied to LOOT by two sources: one is the masterlist, which is maintained by the LOOT team, and the other is the userlist, which you can edit as you desire.
+<p>The metadata editor allows you to manage the metadata stored in your userlist. It is a more fully-featured version of the dialog displayed during sorting. When opened, it lists all the plugins you have installed, and any that are missing but have existing user-added metadata, in alphabetical order. Plugins that load BSAs are displayed in <span style="color: #008EDB;">blue text</span>, and plugins with user-added metadata are displayed with a tick in the first column of the list. Selecting a plugin then opens its metadata for editing, and displays any existing metadata in the fields to the right of the plugin list. Right-clicking a plugin displays a context menu containing a few commands. The editor fields and context menu commands are explained in the tables below.
+<p>The <q>Add &#x2026;</q>, <q>Edit &#x2026;</q> and <q>Remove &#x2026;</q> buttons are used to edit the contents of the list currently visible. The <q>Edit &#x2026;</q> and <q>Remove &#x2026;</q> buttons are greyed out if no row is selected or if the selected row is not user-added metadata, but comes from the masterlist or the plugin itself. Metadata that comes from the masterlist or the plugin itself cannot be edited or removed, only added to. This is to prevent users from accidentally overriding important metadata.
+
+<p>The <q>Show only conflicting plugins</q> checkbox filters the plugin list so that only plugins which either contain conflicting records or (if the selected plugin loads a BSA) load BSAs that <i>may</i> contain conflicting resources are displayed. While the filter is active, it is also possible to add plugins to the <q>Requirements</q>, <q>Incompatibilities</q> and <q>Load After</q> lists by drag 'n' dropping them from the plugin list. The filter must be deactivated to select another plugin for editing.
+
+<p>The <q>Save Changes</q> button will save any user-added metadata to your userlist, including any changes made, then exit the metadata editor. The <q>Cancel</q> button will exit the editor without saving any changes.
+<table>
+    <thead>
+        <tr><th>Field<th>Description
+    <tbody>
+        <tr><td>Enable User Changes<td>If this is checked, LOOT will use the metadata you supplied when sorting the current plugin. Otherwise, your metadata will be ignored.
+        <tr><td id="editingPriority">Priority<td>Modifies plugin position relative to others that change one or more of the same records, but which are otherwise unrelated (ie. neither plugin lists the other as a master, requirement, or in its "load after" list). Plugins that don't change any of the same records are not compared, unless:
+        <ul>
+            <li>One or both of the plugins is a "dummy" plugin, containing only a header record.
+            <li>One or both of the plugins has the <q>Compare priority against all other plugins</q> checkbox ticked.
+        </ul>
+        <p>A plugin with a higher priority value will load after a plugin with a lower priority value. Plugins have a default priority of 0.
+        <tr><td>Requirements<td>This is a list of files that are required by the current plugin for it to function correctly. LOOT will display an error message if any of the listed files are missing.
+        <p>Any file, not just plugins, can be listed here, and each file has three sub-fields:
+        <ul>
+            <li>The <var>filename</var> is the path, relative to the game's Data folder, of the file to be checked for. This sub-field is required.
+            <li>The <var>display name</var> is optional, and if specified will be used instead of the <var>filename</var> in any error messages that are displayed if a problem is encountered relating to the file.
+            <li>The <var>condition</var> is the optional condition string that is used to determine if the file should be checked for. If left blank, the file will always be checked for. Condition strings are a relatively advanced part of LOOT's functionality, and their syntax is covered in the <a href="LOOT%20Metadata%20Syntax.html">Metadata Syntax</a> documentation.
+        </ul>
+        <p>Note that listing a plugin's masters as requirements is pointless, as LOOT already checks them.
+        <tr><td>Incompatibilities<td>This is a list of files that are incompatible with the plugin. LOOT will display an error message if any of the listed files are found.
+        <p>Any file, not just plugins, can be listed here, and each file has the same three sub-fields as for the requirements field.
+        <tr><td>Load After<td>This is a list of plugins which, if present, the current plugin must load after, but which are not required. This field can be used for resolving specific compatibility issues.
+        <tr><td>Messages<td>A list of messages that are to be displayed for the plugin in LOOT's report. These have no bearing on a plugin's position in the load order.
+        <p>Each message has four sub-fields:
+        <ul>
+            <li>The <var>type</var> is fairly self-explanatory, and is used to provide messages of varying severity with appropriate emphasis in LOOT's report.
+            <li>The <var>content</var> is the actual message text.
+            <li>The <var>condition</var> is, like for the corresponding file sub-field, used to determine if the message should be displayed. If left blank, the message is displayed.
+            <li>The <var>language</var> is the language LOOT runs in that the message will be displayed for. For example, if the message language is set to <q>English</q> and LOOT is running in German, then the message will not be displayed. If left unspecified, the message will be shown no matter what language LOOT is running in.
+        </ul>
+        <p>If a message's condition determines that it should not be displayed, then it will not be displayed, no matter the language. However, if a message's condition determines that it should be displayed, but the language is specified and doesn't match the language LOOT is running in, the message will not be displayed.
+        <tr><td>Bash Tags<td>A list of Bash Tags. These are used by Wrye Bash when generating a Bashed Patch. LOOT's metadata includes Bash Tag addition and removal suggestions, and any Bash Tags that came with the plugin are also displayed.
+        <p>As LOOT can suggest Bash Tags be added or removed, it is possible for the same Tag to appear twice, being suggested for addition and removal. In such cases, removal overrides addition.
+        <p>Each Bash Tag has three sub-fields:
+        <ul>
+            <li>The <var>state</var> determines whether the Tag is to be suggested for addition or removal.
+            <li>The <var>name</var> is the actual Bash Tag name.
+            <li>The <var>condition</var> decides if the Tag is to be suggested or not. It functions as for files and messages.
+        </ul>
+        <p>If a plugin's masters are missing, an error message will be displayed for it. Filter patches are special mods designed for use with a Bashed Patch that do not require all their masters to be present, and so any plugin with the <code>Filter</code> tag applied and missing masters will not cause any errors to be displayed.
+</table>
+<table>
+    <thead>
+        <tr><th>Context Menu Command<th>Description
+    <tbody>
+        <tr><td>Copy Name<td>Copies the selected plugin's filename to the clipboard.
+        <tr><td id="editorCopyMetadataAsText">Copy Metadata As Text<td>Copies the selected plugin's current metadata, as it appears in the userlist, to the clipboard. This makes it easier to share your metadata changes with the LOOT team, as they can then paste this text directly into the masterlist, and also avoids any typos being introduced. If posting the text in an online forum that supports BBCode (as most forums do), be sure to wrap it in <code>[code]</code> tags, eg. <code>[code]copied text[/code]</code>, so that the spaces are not removed by the forum software.
+        <tr><td>Remove Plugin User-Added Metadata<td>This removes all saved user-added metadata from the selected plugin, <b>and</b> any unsaved data added to the plugin since the Metadata Editor window was opened.
+        <tr><td>Remove All User-Added Metadata<td>This removes all user-added metadata from all plugins.
+</table>
+
+<h3 id="usage-settings">Editing Settings</h3>
+<figure>
+    <img src="images/settings.png">
+    <figcaption>LOOT's settings window.</figcaption>
+</figure>
+<p>LOOT's settings window may be accessed by clicking <q>Edit&#x2192;Settings</q> in the main window's menu bar. LOOT's settings are detailed in the table below.
+<table>
+    <thead>
+        <tr><th>Setting<th>Description
+    <tbody>
+        <tr><td id="settingsDefaultGame">Default Game<td>If set to something other than <q>Autodetect</q>, this overrides game autodetection. If the game specified is not detected, LOOT falls back to autodetection.
+        <tr><td>Language<td>Controls the language LOOT uses in its interfaces. Debug messages are always displayed in English, and any plugin messages that do not have translations in the selected language will be displayed in English instead.
+        <tr><td>Debug Verbosity<td>Controls the verbosity of the debug output, which is written to <code>%LOCALAPPDATA%\LOOT\LOOTDebugLog.txt</code>.
+        <tr><td id="settingsUpdateMasterlist">Update masterlist before sorting<td>If checked, LOOT will update its masterlist, should an update be available, before sorting plugins.
+</table>
+<p>The games list allows the customisation of which games LOOT offers support for, trivialising support for multiple copies of a game and Total Conversions. The games listed here will be displayed in the main window's <q>Game</q> menu when LOOT is next run. The <q>Add Game</q>, <q>Edit Game</q> and <q>Remove Game</q> buttons are used to edit the list. Each game has several columns, which are explained below.
+<table>
+    <thead>
+        <tr><th>Column<th>Description
+    <tbody>
+        <tr><td>Name<td>The name of the game, or another identifying string, that is displayed in menus and the main window's title bar.
+        <tr><td>Base Game Type<td>Every game LOOT runs for must use the plugin file format and load order system of one of the following games:
+        <ul>
+            <li>TES IV: Oblivion
+            <li>TES V: Skyrim
+            <li>Fallout 3
+            <li>Fallout: New Vegas
+        </ul>
+        <tr><td>LOOT Folder Name<td>The sub-folder which LOOT uses to store the game's files in. Each game must be given a unique sub-folder.
+        <tr><td>Master File<td>The game's main master file. This is specified as it must load before all other plugins. Note that Skyrim-based games will always load Skyrim.esm first, so this column must always be set to <q>Skyrim.esm</q> for such games.
+        <tr><td id="settingsMasterlistURL">Masterlist Repository URL<td>The URL of the repository that LOOT uses to update its local copy of the masterlist. If set to an empty string, masterlist updating will be skipped.
+        <br><br>
+        Masterlist repositories are <a href="http://git-scm.com/">Git</a> repositories that are configured to allow unauthenticated read access and contain a masterlist file named <code>masterlist.yaml</code> in their root directory. The LOOT team maintains a set of official repositories for the games that LOOT supports by default.
+        <tr><td>Masterlist Repository Branch<td>The branch of the masterlist repository that LOOT should get masterlist updates from.
+        <tr><td>Install Path<td>The path to the game's folder, in which the Data folder lies. Either this or a registry key must be supplied.
+        <tr><td>Install Path Registry Key<td>The registry key, in <code>HKEY_LOCAL_MACHINE</code>, that contains the install path of the game. This is used to obtain the install path if LOOT has no previous record of the game's install path, or LOOT's stored install path is invalid. Either this or an install path must be supplied.
+</table>
+<p>Note that for Skyrim, multiple copies or Total Conversions will all edit the same <code>plugins.txt</code> file, and so they lack the level of independence that is achievable for other games.
+
+
+<h2 id="trouble">Troubleshooting</h2>
+<p>If LOOT encounters a problem at any point, it should provide an error message, either in a dialog (as is generally the case) or in its report (as for errors encountered during the sorting process). If LOOT unexpectedly crashes, or you experience a problem for which no error message is given, please report the crash or problem to an official LOOT thread (see <a href="#contrib">Contributing To LOOT</a>), so that it can be fixed.
+<p>If the information below does not help you to solve any problems you are experiencing, please seek further support in one of the official LOOT threads.
+<p>There are a few general reasons why LOOT may fail to function correctly. Check if any of the symptoms listed below fit your issue.
+<dl>
+    <dt>LOOT ran without any errors, but the load order hasn't changed to match what LOOT has in its report.
+        <dd>Make sure that you aren't using another utility to <q>lock</q> your load order.
+        <dd>If you're sorting for Skyrim, make sure that you haven't replaced or renamed your <code>TESV.exe</code>, as this interferes with LOOT's ability to decide how to set the load order.
+    <dt>Some plugins have the wrong or no version number given in LOOT's report.
+        <dd>No solution.
+    <dt>A game is installed, but LOOT cannot detect it.
+        <dd>The game's Registry entry is missing. This happens to a lot of people, because Steam likes to remove it whenever the game is updated or its game cache is verified. Run the game's launcher to add the Registry entry back again.
+    <dt>There are no line breaks in <code>plugins.txt</code> or <code>loadorder.txt</code> when they are opened in Notepad.
+        <dd>There probably are LF line breaks, but Notepad only recognises CRLF line breaks. It doesn't make any difference to the game.
+</dl>
+
+
+<h2 id="contrib">Contributing To LOOT</h2>
+<p>LOOT is very much a community project, and contributions from its users are vital to its upkeep. The best way to contribute is to <a href="https://github.com/loot/loot.github.io/wiki/How-To-Contribute">make changes yourself</a> at GitHub! It's the fastest way to get changes you want applied, and you'll get your name automatically immortalised in our <a href="http://loot.github.io/credits/">credits</a>.
+
+<p>Otherwise, general discussion takes place in LOOT's official forum threads. These are linked to at the bottom of <a href="http://loot.github.io">LOOT's homepage</a>.
+
+<p>If you want to submit metadata, the easiest way to do so is to add the metadata to your own LOOT install (either during sorting or in the Metadata Editor), and use the <a href="#editorCopyMetadataAsText">Copy Metadata As Text</a> feature to easily get it in a form that you can then edit into a masterlist on GitHub or post in the official forum threads.
+
+<p>Information on dirty plugins is very welcome, but for such information to be useful we require at least the filename and the CRC of the dirty plugin. The CRC may be calculated using Wrye Bash or 7-zip, with other sources being unverified as correct. In the case of 7-zip, the <q><em>CRC checksum for data</em></q> is the one required. In addition to the CRC, the number of records removed (the ITM count) and/or undeleted (the UDR count) are also welcome.
+
+<p>
+
+
+<h2 id="translate">Translating LOOT</h2>
+<p>LOOT supports translation into other languages, with the following limitations:
+<ul>
+    <li>Debug log messages and error messages generated by the libraries LOOT uses cannot be translated.
+    <li>Masterlist messages can be translated, but translations must be submitted to the masterlist maintainers for addition.
+    <li>The languages LOOT supports is hardcoded, so LOOT must be updated to include new translations.
+</ul>
+<p>Translations are best submitted through GitHub's <a href="https://github.com/loot/loot.github.io/wiki/How-To-Contribute">forking system</a>. You will need to fork the LOOT <a href="https://github.com/loot/loot">source code repository</a>. All file paths given below are relative to the base folder of that repository.
+<p>To translate LOOT's installer:
+<ol>
+    <li>Open the installer script at <code>src/installer.nsi</code> in a text editor of your choice.
+    <li>The English strings are located in the section with the heading <q>English Strings</q>. Copy and paste this section into a new text file, and translate the quoted strings, replacing the English text. For the lines beginning <code>VIAddVersionKey</code>, only translate the second quoted string.
+    <li>Save the text file containing your translated strings.
+</ol>
+To translate the LOOT application:
+<ol>
+ <li>Download and install the latest version of <a href="http://www.poedit.net/">Poedit</a>.
+ <li>If you are starting a new translation, select <q>File->New catalogue from POT file...</q> and choose the template file at <code>resources/l10n/template.pot</code>. In the <q>Catalog properties</q> dialog, just click <q>OK</q> without changing anything.
+ <li>If you are updating a previous translation, open in Poedit the <code>loot.po</code> translation file in the relevant subdirectory of <code>resources/l10n</code>, then select <q>Catalogue->Update from POT file...</q> and choose the template file you downloaded. Click <q>OK</q> in the <q>Update summary</q> dialog.
+ <li>Edit the translation file to add or update translations of the programs' text. Strings that were added since the last translation are displayed in bold and dark blue, and strings you have edited the translations of are marked with a star to the left of their source text in the main list.
+<p>Some languages may use different words or phrases for different contexts where only one word or phrase may be used for all contexts in English. <strong>While no contextual information is supplied to translators by default, it can be added on request</strong>. To request the addition of contextual information to a text string, contact WrinklyNinja, quoting the structure that contains the string for which you are requesting contextual information.
+<p>Some strings to be translated may contain special characters. Different types of special character that may be encountered are:
+<ul>
+ <li>Backslashes <code>\</code>. Backslashes must be escaped using another backslash, so if you wanted to display a single backslash <code>\</code>, you would put <code>\\</code> in your translated string.
+ <li>Double-quotation marks <code>"</code>. Double-quotation marks must be preceded by a backslash, ie. <code>\"</code>, or LOOT will crash when it tries to display the string.
+ <li>New line characters <code>\n</code>. Do not change the position of these characters relative to the surrounding text, they are responsible for creating new lines.
+ <li>Words containing an ampersand <code>&amp;</code>. If a string contains a word that begins with or includes an ampersand, the string is for a menu item and the ampersand is a symbol placed before a specific letter and used to show which keyboard key can be used to select that menu item. The ampersand can be moved to be placed before a more appropriate letter in the translated text.
+ <li>Formatting placeholders. Placeholders are used so that LOOT can substitute text or numbers that are generated at runtime into pre-made strings. They appear as a number surrounded by percentage signs, eg. <code>%1%</code>. If formatting placeholders are used in the untranslated string, they <strong>must all</strong> be present in the translated string, or LOOT will crash when it tries to display the translated string. Placeholders can be moved around so that the sentence makes grammatical sense in the target language.
+</ul>
+ <li>Save the translation file with the filename <code>loot.po</code> in a location of your choosing.
+</ol>
+
+
+<h2 id="credits">Credits</h2>
+<p>LOOT is developed by a team on <a href="https://github.com/loot/">GitHub</a>, with contributions from users. A full list of GitHub contributors may be found <a href="http://loot.github.io/credits/">here</a>. An up-to-date list of team members may be viewed on the <a href="https://github.com/loot/loot.github.io/wiki/Team-Members">project wiki</a>. Unless otherwise noted, team members can be contacted on the <a href="http://forums.bethsoft.com/index.php">Bethesda Softworks Forums</a> or on <a href="http://forums.nexusmods.com/">The Nexus Forums</a> via the private messaging system.
+<p>LOOT's masterlists were largely converted from <a href="http://boss-developers.github.io">BOSS</a>'s masterlists, and so credit is due to the very large number of sources and people who have contributed to them.
+<p>In addition, the following are credited with application-related support:
+<ul>
+    <li>Icon: jonwd7
+    <li>Polish translation: Łukasz Niemczyk
+    <li>Chinese translation: bluesky404
+    <li>French translation: Kaos
+    <li>Spanish translation: Sharlikran
+    <li>Russian translation: Tokc.D.K.
+    <li>Brazilian Portuguese translation: Kassane
+    <li>Finnish translation: 3ventic
+    <li>Beta testing: Too many to list, thank you all!
+</ul>
+<p>LOOT is written in C++ and makes use of the <a href="http://www.davekoelle.com/alphanum.html">Alphanum</a>, <a href="http://www.boost.org/">Boost</a>, <a href="http://github.com/WrinklyNinja/libespm">libespm</a>, <a href="http://github.com/libgit2/libgit2">libgit2</a>, <a href="http://github.com/WrinklyNinja/libloadorder">libloadorder</a>, <a href="http://www.wxwidgets.org/">wxWidgets</a> and <a href="http://code.google.com/p/yaml-cpp/">yaml-cpp</a> libraries. LOOT's reports are written in HTML5/CSS3/Javascript and make use of <a href="http://github.com/inexorabletash/polyfill">Polyfill.js</a> and <a href="http://requirejs.org">RequireJS</a>. Copyright license information for all these may be found <a href="licenses/Licenses.txt">here</a>.
+
+<h2 id="license">License</h2>
+<p>LOOT is distributed under the <a href="http://www.gnu.org/licenses/gpl.html">GNU General Public License v3.0</a>, aside from the documentation, which is distributed under the <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License v1.3</a>. The full texts of the licenses are included with LOOT in the accompanying <a href="licenses/GNU%20GPL%20v3.txt">GNU GPL v3.txt</a> and <a href="licenses/GNU%20FDL%20v1.3.txt">GNU FDL v1.3.txt</a> files.
+
+<p>While the GPL license allows anyone to make derivative works of LOOT, the LOOT Team encourages those thinking of doing so to first discuss their reasoning for such an endeavour with the Team. It may be that what the derivative work would do differently is already planned for a future version of LOOT or would be happily integrated into LOOT, thus avoiding any extra effort by others.
+
+<p>LOOT has been specifically designed to prevent it being locked into the LOOT Team's official masterlist repositories. Nevertheless, the LOOT Team appeals to the community to avoid the distribution of unofficial masterlists, as this would only hamper the effort to create one set of stores for load order information. Any issues with a masterlist are best brought to the attention of the LOOT Team so that they may be remedied.
+
+<p>GNU Free Documentation License Version 1.3 Notice:
+<blockquote>Copyright (C)  2012&mdash;2014  WrinklyNinja<br />
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3
+or any later version published by the Free Software Foundation;
+with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.<br />
+A copy of the license is included in the file named "GNU FDL v1.3.txt".</blockquote>
+
+<h2 id="appendix">Appendices</h2>
+<h3 id="appendix-intro">Introduction To Load Orders</h3>
+<p>This appendix provides a general overview of load ordering in the games LOOT supports for those who are unfamiliar with the concept. For simplicity, <q>the game</q> will be used when the text refers to any of the games that LOOT supports.
+<p>Mod plugins for the game are files that end in <code>.esp</code> or <code>.esm</code>. These files are created by the game's official editing tools, or by third-party modders' tools. They contain various data <em>records</em>, which  cover almost all aspects of what is in the game &ndash; NPCs, items, races, interiors, worlds, quests, etc. &ndash; and can either be new or changes to the records added by another plugin.
+<p>When the game is run, it loads each installed plugin one by one in a certain <em>load order</em>. The load order is important for two reasons:
+<ul>
+<li>If one plugin changes a record added by another plugin, the former must load after the latter. If it doesn't, the game will crash on launch.
+<li>The game can only apply one version of a record, so if multiple plugins contain the same record, the last-loaded plugin's version overrides all others. This is known as the <em>rule of one</em>, and it holds true for almost all record types. Some overrides can cause problems in-game, and a good load order is one that arranges plugins to avoid such problems.
+</ul>
+<p>There are a few hardcoded rules related to load order:
+<ul>
+ <li>Master plugins always load before non-master plugins. The difference between the two plugin types isn't really relevant, except that a plugin's type is decided by a setting inside it, and not by its file extension (even though <code>.esm</code> stands for Elder Scrolls Master).
+ <li>There is a limit of 255 active plugins that can be loaded by the game. This isn't strictly a load <em>order</em> thing, but is worth mentioning.
+ <li>In Skyrim, <code>Skyrim.esm</code> always loads before all other plugins.
+ <li>In Skyrim, if <code>Update.esm</code> is present, it is always loaded. It loads after all other master plugins, unless it has another position explicitly set.
+</ul>
+<p>A plugin's position in the load order is often displayed by mod managers as a hexadecimal number, from 00 to FE (0 to 255 in decimal). The plugin with position 00 loads first, and the plugin with position FE is loaded last. Hexadecimal numbers are used to display the load order positions of plugins because these numbers form the first two digits of the code that the game uses to reference the records that the plugin adds, so knowing the numbers allows modders and mod users to determine from which plugin a record is from.
+<p>In Oblivion, Fallout 3 and Fallout: New Vegas, load order is determined by plugin timestamps, and the plugins you have accessed are listed in <code>%LOCALAPPDATA%\&lt;game&gt;\plugins.txt</code>. As such, it's best to use a mod manager to create a backup of your load order. In Skyrim, the load order of active plugins is stored in <code>%LOCALAPPDATA%\&lt;game&gt;\plugins.txt</code>, and modding utilities generally use <code>%LOCALAPPDATA%\&lt;game&gt;\loadorder.txt</code> to store the load order of all plugins. This makes backing up your load order as easy as making copies of those two files.
+
+<h3 id="appendix-dirty">Dirty Edits, Mod Cleaning &amp; CRCs</h3>
+<p>Dirty edits are often a side-effect of mod creation, and are often due to bugs in the utilities Bethesda has provided to create mods, rather than bad practice by mod authors. Dirty edits can cause a wide range of issues, including incorrect game settings, missing content, broken quests and crashing to desktop. The more dirty edits there are in a mod, and the more mods with dirty edits you use, the more likely you are to experience issues.
+<p>Thankfully there is a way to remove dirty edits from mods relatively easily, a process known as <i>mod cleaning</i>, using TES4Edit, FO3Edit,  FNVEdit or TES5Edit (for Oblivion, Fallout 3, Fallout: New Vegas and Skyrim respectively). Detailed instructions and information on mod cleaning are available for <a href="http://cs.elderscrolls.com/constwiki/index.php/TES4Edit_Cleaning_Guide">Oblivion</a> and <a href="http://www.creationkit.com/TES5Edit_Cleaning_Guide_-_TES5Edit">Skyrim</a>, with the process being largely the same for the others.
+<p>The problem of dirty edits is largely a problem of ignorance on the part of mod authors and users alike of the problems dirty mods can cause. As such, there are community efforts to raise awareness of dirty edits and cleaning. LOOT plays a key role in these efforts, as it holds the complete list of all known dirty mods (as does BOSS), and it uses this information to provide notification messages to users for any dirty mods they have installed.
+<p>LOOT identifies and describes unclean plugins using four key pieces of information. They are:
+<ul>
+    <li><i><abbr title="Cyclic Redundancy Check">CRC</abbr> value</i>: CRC values are a highly accurate way of identifying files based on their contents, as if the contents change, so does the CRC value. LOOT identifies an unclean plugin by comparing the installed plugin's CRC value against the CRC values for known unclean versions of that plugin. This identification method has the limitation that it can't detect unclean plugins that aren't already known as such, and won't detect unclean but edited plugins, but it's a lot faster than actually checking for dirty edits in the plugin.
+    <li><i><abbr title="Identical To Master">ITM</abbr> Count</i>: ITM records are a type of dirty edit where a mod has overwritten something in the game without actually changing anything. If another mod higher up in the load order makes an intentional change to that thing, it will have its effect cancelled out by the ITM record, which can cause problems. The ITM count is the number of ITM records found and corrected in the mod plugin.
+    <li><i><abbr title="Undeleted and Disabled Reference">UDR</abbr> Count</i>: Deleting records is a significant cause of crashes and game bugs. UDRs are records that the mod deleted from the game or from another mod that have been corrected safely by undeleting them and disabling them instead, which has the same intended effect without causing issues. The UDR count is the number of deleted reference records found and corrected in the mod plugin.
+    <li><i>Deleted Navmesh Count</i>: Like deleting records, deleting navmeshes can cause crashes. However, these cannot be automatically corrected, and require manual cleaning. Navmeshes don't exist in Oblivion, so this information doesn't apply.
+</ul>
+<p>In addition to the above, there is another type of dirty edit known as a <em>wild edit</em>. These are any edit that is unrelated to the purpose of the mod, and so provide unnecessary opportunity for conflicts with other mods that do need to change the same thing. It can be difficult to tell if an edit is a wild edit, and so they cannot be automatically cleaned. LOOT can still notify users of wild edits and link to information on fixing them if the CRCs of plugins with wild edits are reported, along with details on what needs cleaning.
+<p>LOOT and the modding communities rely on user contribution of this information to progress. For information on how to contribute, see <a href="#contrib">Contributing To LOOT</a>. If you find that a mod contains dirty edits, you should also report this to the mod's author so that they can fix it.
+<p><b>Note:</b> TES4Edit et al. will include a variety of <em>junk records</em> in the ITM count for a plugin, such as new empty cells that are automatically generated and are almost impossible to remove. These junk records are non-harmful, and LOOT may inform users when a mod contains these and no true ITMs to avoid confusion.
+
+<h3 id="appendix-permissions">File Permissions</h3>
+<p>If you are running Windows Vista or a later version of Windows, LOOT (and other modding programs) may be prevented from working correctly by the UAC security feature. There are four common workarounds to this problem:
+<ol>
+    <li>Install the game outside the <q>Program Files</q> (or <q>Program Files (x86)</q> if on 64-bit Windows). UAC prevents unauthorised edits to these folders, so by installing the game outside of them, you remove it from UAC's reach, allowing you to use mods more easily.
+    <li>Deactivate UAC. This can be done from the Control Panel, and will turn UAC off across the whole of your computer. It is up to you whether you feel that you have adequate security measures in place to do this without risk.
+    <li>Give yourself <q>Full Control</q> permissions over your game install folder. This will allow you to make any edits you desire while keeping UAC active and on guard for any edits made by programs you do not run, and also means that you do not need to reinstall your game to a new location.
+    <li>Run LOOT as an Administrator. Right-click the LOOT executable, or the shortcut if launching from a shortcut, and select <q>Run as administrator</q>.
+</ol>
+<p>For those that wish to take the third option and give themselves <q>Full Control</q> permissions, here is a guide:
+<ol>
+    <li>Right-click the folder you wish to change the permissions for, and select <q>Properties</q>.
+    <li>In <q>Properties</q>, select the <q>Security</q> tab, and click the <q>Edit...</q> button. A UAC prompt may appear, simply allow yourself to continue.
+    <li>In the <q>Group or user names</q> box, select the <q>Users</q> option.
+    <li>In the lower box, check the box opposite <q>Full Control</q> in the <q>Allow</q> column. Press OK to exit. If a UAC prompt appears, allow the change.
+    <li>In the <q>Properties</q> window, select OK to exit. You should now have Full Control permissions over your chosen folder.
+</ol>
+
+<h2 id="history">Version History</h2>
+<p>Only program history is recorded here. The masterlists are updated far too frequently for their changes to be concisely recorded here, but a full history of changes to them may be viewed by browsing the GitHub repositories.
+
+<h3>0.6.0 - <i>05 July 2014</i></h3>
+<ul>
+    <li>Fixed: The uninstaller not removing the Git repositories used to update the masterlists.
+    <li>Fixed: Miscellaneous crashes due to uncaught exceptions.
+    <li>Fixed: Plugin priorities are now temporarily "inherited" during sorting so that a plugin with a low priority that is made via metadata to load after a plugin with a high priority doesn't cause other plugins with lower priorities to be positioned incorrectly.
+    <li>Fixed: The default language is now correctly set to English.
+    <li>Fixed: Defaults for the online masterlist repository used for Nehrim.
+    <li>Fixed: Endless sorting loop that occurred if some user metadata was disabled.
+    <li>Added: Display of masterlist revision date in reports.
+    <li>Added: Report filter for inactive plugin messages.
+    <li>Added: The number of dirty plugins, active plugins and plugins in total to the report summary.
+    <li>Added: A find dialog to the report viewer, initiated using the <code>Ctrl-F</code> keyboard shortcut.
+    <li>Added: LOOT's windows now remember their last position and size.
+    <li>Added: Command line parameter for selecting the game LOOT should run for.
+    <li>Added: Finnish translation.
+    <li>Removed: Support for Windows XP.
+	<li>Removed: Support for loading BOSS masterlists using the API. This was a leftover from when LOOT was BOSSv3 and backwards compatibility was an issue.
+    <li>Removed: The ability to open reports in an external browser. This was necessitated by the changes to report generation.
+    <li>Removed: The MSVC 2013 redistributable requirement.
+    <li>Removed: The "None Specified" language option is no longer available: English is the new default.
+    <li>Changed: Unified and improved the metadata editors launched during and outside of sorting.
+    <ul>
+        <li>The metadata editor now resizes more appropriately.
+        <li>The mid-sorting instance hides the requirement, incompatibility, Bash Tags, dirty info and message lists.
+        <li>Both instances now have a conflict filter, priority display in their plugin list and drag 'n' drop from the plugin list into whatever metadata lists are visible.
+        <li>The mid-sorting instance also hides the load after entry edit button, and the button to add new entries (so drag 'n' drop is the only available method of adding entries).
+        <li>The metadata editor now displays plugins with user edits using a tick beside their name, rather than bolding their name text.
+        <li>Plugins that have been edited in the current instance have their list entry text bolded.
+        <li>Checkboxes have been added to set whether or not a priority value is "global". The UI also now displays the priority value used in comparisons (ie. with the millions and higher digits omitted).
+        <li>A right-click menu command for clearing all user-added metadata for all plugins has been added to the metadata editor.
+    </ul>
+    <li>Changed: Missing master/requirement and incompatibility errors are downgraded to warnings if the plugin in question is inactive.
+    <li>Changed: Masterlist update errors have been made more user-friendly.
+    <li>Changed: If an error is encountered during masterlist update, LOOT will now silently delete the repository folder and attempt the update again. If it fails again, it will then report an error.
+    <li>Changed: Masterlist update now handles repository interaction a lot more like Git itself does, so should be less error-prone.
+    <li>Changed: Cyclic dependency error messages now detail the full cycle.
+    <li>Changed: LOOT's report now uses a static HTML file and generates a javascript file that is dynamically loaded to contain the report data. This removes the PugiXML build dependency.
+    <li>Changed: Debug log message priorities adjusted so that medium verbosity includes more useful data.
+    <li>Changed: Updated dependencies: libgit2 (v0.21.0), wxWidgets (v3.0.1), libloadorder (latest), libespm (latest).
+</ul>
+
+<h3>0.5.0 - <i>31 March 2014</i></h3>
+<ul>
+	<li>Initial release.
+</ul>
+
+<script>
+"use strict";
+function nextImage(imgs, i){
+    for(var i=0;i<imgs.length;i++){
+        if(imgs[i].style.opacity=='1' || imgs[i].style.opacity==''){
+            imgs[i].style.opacity='0';
+            if(i+1<imgs.length){
+                imgs[i+1].style.opacity='1';
+            }else{
+                imgs[0].style.opacity='1';
+            }
+            break;
+        }
+    }
+    var t=setTimeout(nextImage, 5000, imgs);
+}
+
+var figures = document.getElementsByTagName('figure');
+if(figures!=null){
+    for (var i=0; i < figures.length; i++) {
+        if (figures[i].className == 'slideshow'){
+            var t=setTimeout(nextImage,5000, figures[i].getElementsByTagName('img'));
+        }
+    }
+}
+</script>

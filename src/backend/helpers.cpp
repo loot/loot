@@ -1,23 +1,24 @@
-/*  BOSS
+/*  LOOT
 
-    A plugin load order optimiser for games that use the esp/esm plugin system.
+    A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
+    Fallout: New Vegas.
 
     Copyright (C) 2012-2014    WrinklyNinja
 
-    This file is part of BOSS.
+    This file is part of LOOT.
 
-    BOSS is free software: you can redistribute
+    LOOT is free software: you can redistribute
     it and/or modify it under the terms of the GNU General Public License
     as published by the Free Software Foundation, either version 3 of
     the License, or (at your option) any later version.
 
-    BOSS is distributed in the hope that it will
+    LOOT is distributed in the hope that it will
     be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with BOSS.  If not, see
+    along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
 */
 
@@ -28,7 +29,6 @@
 #include <boost/spirit/include/karma.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/crc.hpp>
-#include <boost/regex.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
@@ -37,13 +37,13 @@
 
 #include <cstring>
 #include <iostream>
-#include <ctype.h>
-#include <stdio.h>
-#include <time.h>
-#include <sys/types.h>
+#include <cctype>
+#include <cstdio>
+#include <ctime>
 #include <sstream>
+#include <regex>
 
-#if _WIN32 || _WIN64
+#ifdef _WIN32
 #   ifndef UNICODE
 #       define UNICODE
 #   endif
@@ -52,10 +52,10 @@
 #   endif
 #   include "windows.h"
 #   include "shlobj.h"
+#   include "shlwapi.h"
 #endif
-#define BUFSIZE 4096
 
-namespace boss {
+namespace loot {
     using namespace std;
     using boost::algorithm::replace_all;
     using boost::algorithm::replace_first;
@@ -107,26 +107,36 @@ namespace boss {
 
 	/// Array used to try each of the expressions defined above using
 	/// an iteration for each of them.
-	boost::regex version_checks[7] = {
-			boost::regex(regex1, boost::regex::icase),
-			boost::regex(regex2, boost::regex::icase),
-			boost::regex(regex3, boost::regex::icase),
-			boost::regex(regex4, boost::regex::icase),
-			boost::regex(regex5, boost::regex::icase),  //This incorrectly identifies "OBSE v19" where 19 is any integer.
-			boost::regex(regex6, boost::regex::icase),  //This is responsible for metallicow's false positive.
-			boost::regex(regex7, boost::regex::icase)
+    regex version_checks[7] = {
+			regex(regex1, regex::ECMAScript | regex::icase),
+            regex(regex2, regex::ECMAScript | regex::icase),
+            regex(regex3, regex::ECMAScript | regex::icase),
+            regex(regex4, regex::ECMAScript | regex::icase),
+            regex(regex5, regex::ECMAScript | regex::icase),  //This incorrectly identifies "OBSE v19" where 19 is any integer.
+            regex(regex6, regex::ECMAScript | regex::icase),  //This is responsible for metallicow's false positive.
+            regex(regex7, regex::ECMAScript | regex::icase)
 			};
 
     //////////////////////////////////////////////////////////////////////////
     // Helper functions
     //////////////////////////////////////////////////////////////////////////
 
+    //Calculate modulo with dividend sign preserved, matching behaviour of C++11.
+    int modulo(int dividend, int divisor) {
+        divisor = abs(divisor);
+        if (dividend < 0) {
+            return -1 * (abs(dividend) % divisor);
+        }
+        else
+            return dividend % divisor;
+    }
+
     //Calculate the CRC of the given file for comparison purposes.
     uint32_t GetCrc32(const fs::path& filename) {
         uint32_t chksum = 0;
         static const size_t buffer_size = 8192;
         char buffer[buffer_size];
-        boss::ifstream ifile(filename, ios::binary);
+        loot::ifstream ifile(filename, ios::binary);
         BOOST_LOG_TRIVIAL(trace) << "Calculating CRC for: " << filename.string();
         boost::crc_32_type result;
         if (ifile) {
@@ -139,16 +149,8 @@ namespace boss {
             BOOST_LOG_TRIVIAL(error) << "Unable to open \"" << filename.string() << "\" for CRC calculation.";
             throw error(error::path_read_fail, (boost::format(lc::translate("Unable to open \"%1%\" for CRC calculation.")) % filename.string()).str());
         }
-        BOOST_LOG_TRIVIAL(debug) << "CRC32(\"" << filename.string() << "\"):" << chksum;
+        BOOST_LOG_TRIVIAL(debug) << "CRC32(\"" << filename.string() << "\"): " << std::hex << chksum << std::dec;
         return chksum;
-    }
-
-    //Converts an integer to a string using BOOST's Spirit.Karma, which is apparently a lot faster than a stringstream conversion...
-    std::string IntToString(const int n) {
-        string out;
-        back_insert_iterator<string> sink(out);
-        karma::generate(sink,karma::upper[karma::int_],n);
-        return out;
     }
 
     //Converts an integer to a hex string using BOOST's Spirit.Karma, which is apparently a lot faster than a stringstream conversion...
@@ -159,22 +161,9 @@ namespace boss {
         return out;
     }
 
-    //Converts a boolean to a string representation (true/false)
-    std::string BoolToString(const bool b) {
-        if (b)
-            return "true";
-        else
-            return "false";
-    }
-
-    //Check if registry subkey exists.
-    bool RegKeyExists(const std::string& keyStr, const std::string& subkey, const std::string& value) {
-        return !RegKeyStringValue(keyStr, subkey, value).empty();
-    }
-
+#ifdef _WIN32
     //Get registry subkey value string.
     string RegKeyStringValue(const std::string& keyStr, const std::string& subkey, const std::string& value) {
-#if _WIN32 || _WIN64
         HKEY hKey, key;
         DWORD BufferSize = 4096;
         wchar_t val[4096];
@@ -191,11 +180,11 @@ namespace boss {
             key = HKEY_USERS;
 
         BOOST_LOG_TRIVIAL(trace) << "Getting registry object for key and subkey: " << keyStr << " + " << subkey;
-        LONG ret = RegOpenKeyEx(key, fs::path(subkey).wstring().c_str(), 0, KEY_READ|KEY_WOW64_32KEY, &hKey);
+        LONG ret = RegOpenKeyEx(key, ToWinWide(subkey).c_str(), 0, KEY_READ|KEY_WOW64_32KEY, &hKey);
 
         if (ret == ERROR_SUCCESS) {
             BOOST_LOG_TRIVIAL(trace) << "Getting value for entry: " << value;
-            ret = RegQueryValueEx(hKey, fs::path(value).wstring().c_str(), NULL, NULL, (LPBYTE)&val, &BufferSize);
+            ret = RegQueryValueEx(hKey, ToWinWide(value).c_str(), NULL, NULL, (LPBYTE)&val, &BufferSize);
             RegCloseKey(hKey);
 
             if (ret == ERROR_SUCCESS)
@@ -204,13 +193,11 @@ namespace boss {
                 return "";
         } else
             return "";
-#else
-        return "";
-#endif
     }
+#endif
 
     boost::filesystem::path GetLocalAppDataPath() {
-#if _WIN32 || _WIN64
+#ifdef _WIN32
         HWND owner = 0;
         TCHAR path[MAX_PATH];
 
@@ -221,79 +208,111 @@ namespace boss {
             return fs::path(path);
         else
             return fs::path("");
-#else
-        return fs::path("");
 #endif
     }
 
     //Turns an absolute filesystem path into a valid file:// URL.
     std::string ToFileURL(const fs::path& file) {
         BOOST_LOG_TRIVIAL(trace) << "Converting file path " << file << " to a URL.";
-        return "file:///" + file.string();  //Seems that we don't need to worry about encoding, tested with Unicode paths.
+
+#ifdef _WIN32
+        wstring wstr(MAX_PATH, 0);
+        DWORD len = MAX_PATH;
+        UrlCreateFromPath(ToWinWide(file.string()).c_str(), &wstr[0], &len, NULL);
+        string str = FromWinWide(wstr.c_str());  // Passing c_str() cuts off any unused buffer.
+        BOOST_LOG_TRIVIAL(trace) << "Converted to: " << str;
+
+        return str;
+#endif
     }
+
+#ifdef _WIN32
+    //Helper to turn UTF8 strings into strings that can be used by WinAPI.
+    std::wstring ToWinWide(const std::string& str) {
+
+        int len = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), str.length(), 0, 0);
+        std::wstring wstr(len, 0);
+        MultiByteToWideChar(CP_UTF8, 0, str.c_str(), str.length(), &(wstr[0]), len);
+        return wstr;
+    }
+
+    std::string FromWinWide(const std::wstring& wstr) {
+        int len = WideCharToMultiByte(CP_UTF8, 0, &wstr[0], wstr.length(), NULL, 0, NULL, NULL);
+        std::string str(len, 0);
+        WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), wstr.length(), &str[0], len, NULL, NULL);
+        return str;
+    }
+#endif
 
     Language::Language(const unsigned int code) {
         Construct(code);
     }
 
-    Language::Language(const std::string& nameOrISOCode) {
-        if (nameOrISOCode == Language(g_lang_english).Name() || nameOrISOCode == Language(g_lang_english).Locale())
-            Construct(g_lang_english);
-        else if (nameOrISOCode == Language(g_lang_spanish).Name() || nameOrISOCode == Language(g_lang_spanish).Locale())
-            Construct(g_lang_spanish);
-        else if (nameOrISOCode == Language(g_lang_russian).Name() || nameOrISOCode == Language(g_lang_russian).Locale())
-            Construct(g_lang_russian);
-        else if (nameOrISOCode == Language(g_lang_french).Name() || nameOrISOCode == Language(g_lang_french).Locale())
-            Construct(g_lang_french);
-        else if (nameOrISOCode == Language(g_lang_chinese).Name() || nameOrISOCode == Language(g_lang_chinese).Locale())
-            Construct(g_lang_chinese);
-        else if (nameOrISOCode == Language(g_lang_polish).Name() || nameOrISOCode == Language(g_lang_polish).Locale())
-            Construct(g_lang_polish);
-        else if (nameOrISOCode == Language(g_lang_brazilian_portuguese).Name() || nameOrISOCode == Language(g_lang_brazilian_portuguese).Locale())
-            Construct(g_lang_brazilian_portuguese);
-        else if (nameOrISOCode == Language(g_lang_danish).Name() || nameOrISOCode == Language(g_lang_danish).Locale())
-            Construct(g_lang_danish);
+    Language::Language(const std::string& nameOrCode) {
+        if (nameOrCode == Language(Language::english).Name() || nameOrCode == Language(Language::english).Locale())
+            Construct(Language::english);
+        else if (nameOrCode == Language(Language::spanish).Name() || nameOrCode == Language(Language::spanish).Locale())
+            Construct(Language::spanish);
+        else if (nameOrCode == Language(Language::russian).Name() || nameOrCode == Language(Language::russian).Locale())
+            Construct(Language::russian);
+        else if (nameOrCode == Language(Language::french).Name() || nameOrCode == Language(Language::french).Locale())
+            Construct(Language::french);
+        else if (nameOrCode == Language(Language::chinese).Name() || nameOrCode == Language(Language::chinese).Locale())
+            Construct(Language::chinese);
+        else if (nameOrCode == Language(Language::polish).Name() || nameOrCode == Language(Language::polish).Locale())
+            Construct(Language::polish);
+        else if (nameOrCode == Language(Language::brazilian_portuguese).Name() || nameOrCode == Language(Language::brazilian_portuguese).Locale())
+            Construct(Language::brazilian_portuguese);
+    	else if (nameOrCode == Language(Language::finnish).Name() || nameOrCode == Language(Language::finnish).Locale())
+    	    Construct(Language::finnish);
+        else if (nameOrCode == Language(Language::german).Name() || nameOrCode == Language(Language::german).Locale())
+    	    Construct(Language::german);
+        else if (nameOrCode == Language(Language::danish).Name() || nameOrCode == Language(Language::danish).Locale())
+            Construct(Language::danish);
         else
-            Construct(g_lang_any);
+            Construct(Language::english);
     }
 
     void Language::Construct(const unsigned int code) {
         _code = code;
-        if (_code == g_lang_any) {
-            _name = boost::locale::translate("None Specified");
-            _locale = "en";
-        }
-        else if (_code == g_lang_english) {
-            _name = "English";
-            _locale = "en";
-        }
-        else if (_code == g_lang_spanish) {
+        if (_code == Language::spanish) {
             _name = "Español";
             _locale = "es";
         }
-        else if (_code == g_lang_russian) {
+        else if (_code == Language::russian) {
             _name = "Русский";
             _locale = "ru";
         }
-        else if (_code == g_lang_french) {
+        else if (_code == Language::french) {
             _name = "Français";
             _locale = "fr";
         }
-        else if (_code == g_lang_chinese) {
+        else if (_code == Language::chinese) {
             _name = "简体中文";
             _locale = "zh_CN";
         }
-        else if (_code == g_lang_polish) {
+        else if (_code == Language::polish) {
             _name = "Polski";
             _locale = "pl";
         }
-        else if (_code == g_lang_brazilian_portuguese) {
+        else if (_code == Language::brazilian_portuguese) {
             _name = "Português do Brasil";
             _locale = "pt_BR";
         }
-        else if (_code == g_lang_danish) {
+        else if (_code == Language::finnish) {
+            _name = "suomi";
+            _locale = "fi";
+        }
+        else if (_code == Language::german) {
+            _name = "Deutsch";
+            _locale = "de";
+        }
+        else if (_code == Language::danish) {
             _name = "Dansk";
             _locale = "da";
+        else  {
+            _name = "English";
+            _locale = "en";
         }
     }
 
@@ -319,9 +338,9 @@ namespace boss {
         : verString(ver) {}
 
     Version::Version(const fs::path& file) {
-#if _WIN32 || _WIN64
+#ifdef _WIN32
         DWORD dummy = 0;
-        DWORD size = GetFileVersionInfoSize(file.wstring().c_str(), &dummy);
+        DWORD size = GetFileVersionInfoSize(ToWinWide(file.string()).c_str(), &dummy);
 
         if (size > 0) {
             LPBYTE point = new BYTE[size];
@@ -329,7 +348,7 @@ namespace boss {
             VS_FIXEDFILEINFO *info;
             string ver;
 
-            GetFileVersionInfo(file.wstring().c_str(),0,size,point);
+            GetFileVersionInfo(ToWinWide(file.string()).c_str(),0,size,point);
 
             VerQueryValue(point,L"\\",(LPVOID *)&info,&uLen);
 
@@ -340,7 +359,7 @@ namespace boss {
 
             delete [] point;
 
-            verString = IntToString(dwLeftMost) + '.' + IntToString(dwSecondLeft) + '.' + IntToString(dwSecondRight) + '.' + IntToString(dwRightMost);
+            verString = to_string(dwLeftMost) + '.' + to_string(dwSecondLeft) + '.' + to_string(dwSecondRight) + '.' + to_string(dwRightMost);
         }
 #else
         // ensure filename has no quote characters in it to avoid command injection attacks
@@ -354,7 +373,7 @@ namespace boss {
             // read out the version string
             static const uint32_t BUFSIZE = 32;
             char buf[BUFSIZE];
-            if (NULL != fgets(buf, BUFSIZE, fp)) {
+            if (nullptr != fgets(buf, BUFSIZE, fp)) {
                 verString = string(buf);
             }
             pclose(fp);
@@ -373,11 +392,11 @@ namespace boss {
     bool Version::operator < (Version ver) {
         //Version string could have a wide variety of formats. Use regex to choose specific comparison types.
 
-        boost::regex reg1("(\\d+\\.?)+");  //a.b.c.d.e.f.... where the letters are all integers, and 'a' is the shortest possible match.
+        regex reg1("(\\d+\\.?)+");  //a.b.c.d.e.f.... where the letters are all integers, and 'a' is the shortest possible match.
 
-        //boost::regex reg2("(\\d+\\.?)+([a-zA-Z\\-]+(\\d+\\.?)*)+");  //Matches a mix of letters and numbers - from "0.99.xx", "1.35Alpha2", "0.9.9MB8b1", "10.52EV-D", "1.62EV" to "10.0EV-D1.62EV".
+        //regex reg2("(\\d+\\.?)+([a-zA-Z\\-]+(\\d+\\.?)*)+");  //Matches a mix of letters and numbers - from "0.99.xx", "1.35Alpha2", "0.9.9MB8b1", "10.52EV-D", "1.62EV" to "10.0EV-D1.62EV".
 
-        if (boost::regex_match(verString, reg1) && boost::regex_match(ver.AsString(), reg1)) {
+        if (regex_match(verString, reg1) && regex_match(ver.AsString(), reg1)) {
             //First type: numbers separated by periods. If two versions have a different number of numbers, then the shorter should be padded
             //with zeros. An arbitrary number of numbers should be supported.
             istringstream parser1(verString);
