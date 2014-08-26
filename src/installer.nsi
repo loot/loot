@@ -256,17 +256,17 @@ FunctionEnd
 ;--------------------------------
 ;Danish (dansk) Strings
 
-	VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "LOOT"
-	VIAddVersionKey /LANG=${LANG_ENGLISH} "CompanyName" "LOOT Team"
-	VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "© 2009-2014 LOOT Team"
-	VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "Installationsprogram for LOOT 0.7.0"
-	VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "0.7.0"
+	VIAddVersionKey /LANG=${LANG_DANISH} "ProductName" "LOOT"
+	VIAddVersionKey /LANG=${LANG_DANISH} "CompanyName" "LOOT Team"
+	VIAddVersionKey /LANG=${LANG_DANISH} "LegalCopyright" "© 2009-2014 LOOT Team"
+	VIAddVersionKey /LANG=${LANG_DANISH} "FileDescription" "Installationsprogram for LOOT 0.7.0"
+	VIAddVersionKey /LANG=${LANG_DANISH} "FileVersion" "0.7.0"
 
-	LangString TEXT_MESSAGEBOX ${LANG_ENGLISH} "LOOT er allerede installeret og skal afinstalleres før du fortsætter. $\n$\nTryk på »OK« for at fjerne den forrige version eller »Annuller« for at annullere opdateringen."
-	LangString TEXT_RUN ${LANG_ENGLISH} "Kør LOOT"
-	LangString TEXT_SHOWREADME ${LANG_ENGLISH} "Vis Readme"
-	LangString TEXT_MAIN ${LANG_ENGLISH} "Alle LOOT's filer, undtagen brugerlister og indstillingsfiler."
-	LangString TEXT_USERFILES ${LANG_ENGLISH} "LOOT's brugerliste- og indstillingsfile."
+	LangString TEXT_MESSAGEBOX ${LANG_DANISH} "LOOT er allerede installeret og skal afinstalleres før du fortsætter. $\n$\nTryk på »OK« for at fjerne den forrige version eller »Annuller« for at annullere opdateringen."
+	LangString TEXT_RUN ${LANG_DANISH} "Kør LOOT"
+	LangString TEXT_SHOWREADME ${LANG_DANISH} "Vis Readme"
+	LangString TEXT_MAIN ${LANG_DANISH} "Alle LOOT's filer, undtagen brugerlister og indstillingsfiler."
+	LangString TEXT_USERFILES ${LANG_DANISH} "LOOT's brugerliste- og indstillingsfile."
 
 ;--------------------------------
 ;Initialisations
