@@ -419,12 +419,16 @@ input:valid {
     box-shadow:0 0 3px 0px rgba(0,0,0,0.5);
     padding: 2px 5px;
 }
-progress {
+progress, .progress {
     /* Reset the default appearance */
     -webkit-appearance: none;
     width: 250px;
     height: 20px;
     display: block;
+    margin: 0 auto;
+}
+#progressDialog > h1 {
+    font-size: 1.5em;
 }
 
 @-webkit-keyframes indeterminate {
@@ -432,11 +436,16 @@ progress {
 	100% { width: 100% }
 }
 
-progress::-webkit-progress-bar {
+progress::-webkit-progress-bar, .progress.bar {
     background-color: #eee;
     border-radius: 2px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
 }
-progress::-webkit-progress-value {
-    -webkit-animation: indeterminate 5s linear 0 infinite alternate;
+progress::-webkit-progress-value, .progress .value {
+    height: 100%;
+    background-color: green;
+    -webkit-animation: indeterminate 2s linear 0 infinite alternate paused;
+}
+#progressDialog[open] > .progress > .value {
+    -webkit-animation-play-state: running;
 }

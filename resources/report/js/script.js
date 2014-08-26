@@ -759,7 +759,7 @@ function updateProgressDialog(message) {
     progressDialog.getElementsByTagName('h1')[0].textContent = message;
 }
 function sortPlugins(evt) {
-    updateProgressDialog('LOOT Working...');
+    updateProgressDialog('Sorting plugins...');
     toggleProgressDialog();
     if (loot.settings.updateMasterlist) {
         updateMasterlist(evt);
