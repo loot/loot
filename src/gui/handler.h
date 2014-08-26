@@ -57,7 +57,7 @@ namespace loot {
         std::string GetGameTypes();
         std::string GetInstalledGames();
         std::string GetGameData();
-        std::string UpdateMasterlist();
+        void UpdateMasterlist(CefRefPtr<Callback> callback);
         std::string ClearAllMetadata();
         void SortPlugins(CefRefPtr<Callback> callback);
 

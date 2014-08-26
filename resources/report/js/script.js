@@ -359,6 +359,7 @@ function processCefError(err) {
     /* Error.stack seems to be Chromium-specific. It gives a lot more useful
        info than just the error message. */
     console.log(err.stack);
+    closeProgressDialog();
     showMessageBox('error', 'Error', err.message);
 }
 
@@ -661,8 +662,11 @@ function openReadme(evt) {
     loot.query('openReadme').catch(processCefError);
 }
 function updateMasterlist(evt) {
+    updateProgressDialog('Updating masterlist...');
+    openProgressDialog();
     loot.query('updateMasterlist').then(JSON.parse).then(function(result){
         if (result == null) {
+            closeProgressDialog();
             return;
         }
         /* Update JS variables. */
@@ -683,6 +687,7 @@ function updateMasterlist(evt) {
                 }
             }
         });
+        closeProgressDialog();
     }).catch(processCefError);
 }
 function sortUIElements(pluginNames) {
@@ -746,11 +751,9 @@ function sortUIElements(pluginNames) {
         lastCard = card;
     });
 }
-function toggleProgressDialog() {
+function openProgressDialog() {
     var progressDialog = document.getElementById('progressDialog');
-    if (progressDialog.open) {
-        progressDialog.close();
-    } else {
+    if (!progressDialog.open) {
         progressDialog.showModal();
     }
 }
@@ -758,12 +761,18 @@ function updateProgressDialog(message) {
     var progressDialog = document.getElementById('progressDialog');
     progressDialog.getElementsByTagName('h1')[0].textContent = message;
 }
+function closeProgressDialog() {
+    var progressDialog = document.getElementById('progressDialog');
+    if (progressDialog.open) {
+        progressDialog.close();
+    }
+}
 function sortPlugins(evt) {
-    updateProgressDialog('Sorting plugins...');
-    toggleProgressDialog();
     if (loot.settings.updateMasterlist) {
         updateMasterlist(evt);
     }
+    updateProgressDialog('Sorting plugins...');
+    openProgressDialog();
     loot.query('sortPlugins').then(JSON.parse).then(function(result){
         if (result) {
             var loadOrder = [];
@@ -800,7 +809,7 @@ function sortPlugins(evt) {
             hideElement(document.getElementById('sortButton'));
             showElement(document.getElementById('applySortButton'));
             showElement(document.getElementById('cancelSortButton'));
-            toggleProgressDialog();
+            closeProgressDialog();
         }
     }).catch(processCefError);
 }
