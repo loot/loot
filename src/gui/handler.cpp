@@ -851,9 +851,8 @@ namespace loot {
             language = Language::any;
         BOOST_LOG_TRIVIAL(info) << "Using message language: " << Language(language).Name();
 
-        // Check if the plugins have been fully loaded, and if not load all plugins.
-        if (!g_app_state.CurrentGame().HasBeenLoaded())
-            g_app_state.CurrentGame().LoadPlugins(false);
+        // Always reload all the plugins.
+        g_app_state.CurrentGame().LoadPlugins(false);
 
         //Sort plugins into their load order.
         list<Plugin> plugins = g_app_state.CurrentGame().Sort(language, [](const string& message){});
