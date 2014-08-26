@@ -236,6 +236,9 @@ function Plugin(obj) {
                 if (change.object[change.name] != 0) {
                     change.object.card.getElementsByClassName('crc')[0].textContent = change.object[change.name].toString(16).toUpperCase();
                 }
+            } else if (change.name == 'isDummy') {
+                change.object.li.setAttribute('data-dummy', change.object[change.name]);
+                change.object.card.setAttribute('data-dummy', change.object[change.name]);
             }
         });
     }

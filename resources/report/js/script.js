@@ -433,22 +433,24 @@ function getConflictingPluginsFromFilter() {
 
         return loot.query(request).then(JSON.parse).then(function(result){
             if (result) {
-                for (var key in result.crcs) {
+                /* Filter everything but the plugin itself if there are no
+                   conflicts. */
+                var conflicts = [ conflictsPlugin ];
+                for (var key in result) {
+                    if (result[key].conflicts) {
+                        conflicts.push(key);
+                    }
                     for (var i = 0; i < loot.game.plugins.length; ++i) {
                         if (loot.game.plugins[i].name == key) {
-                            loot.game.plugins[i].crc = result.crcs[key];
+                            loot.game.plugins[i].crc = result[key].crc;
+                            loot.game.plugins[i].isDummy = result[key].isDummy;
                             break;
                         }
                     }
                 }
-                if (result.conflicts) {
-                    return result.conflicts;
-                } else {
-                    /* No conflicts. Filter everything but the plugin itself. */
-                    return [ conflictsPlugin ];
-                }
+                return conflicts;
             }
-            return [];
+            return [ conflictsPlugin ];
         }).catch(processCefError);
     }
 
@@ -750,26 +752,29 @@ function sortPlugins(evt) {
     }
     loot.query('sortPlugins').then(JSON.parse).then(function(result){
         if (result) {
-            for (var key in result.crcs) {
+            var loadOrder = [];
+            result.forEach(function(plugin){
+                loadOrder.push(plugin.name);
                 for (var i = 0; i < loot.game.plugins.length; ++i) {
-                    if (loot.game.plugins[i].name == key) {
-                        loot.game.plugins[i].crc = result.crcs[key];
+                    if (loot.game.plugins[i].name == plugin.name) {
+                        loot.game.plugins[i].crc = plugin.crc;
+                        loot.game.plugins[i].isDummy = plugin.isDummy;
                         break;
                     }
                 }
-            }
+            });
 
-            if (loot.neverTellMeTheOdds) {
+            if (loot.settings.neverTellMeTheOdds) {
                 /* Array shuffler from <https://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array-in-javascript> */
                 for(var j, x, i = result.loadOrder.length; i; j = Math.floor(Math.random() * i), x = result.loadOrder[--i], result.loadOrder[i] = result.loadOrder[j], result.loadOrder[j] = x);
             }
 
             /* Record the previous order in case the user cancels sorting. */
             /* Start at 2 to skip summary and general messages. */
-            var cards = document.getElementsByTagName('main')[0].children;
+            var cards = document.getElementsByTagName('main')[0].getElementsByTagName('plugin-card');
             loot.newLoadOrder = result.loadOrder;
             loot.lastLoadOrder = [];
-            for (var i = 2; i < cards.length; ++i) {
+            for (var i = 0; i < cards.length; ++i) {
                 loot.lastLoadOrder.push(cards[i].getElementsByTagName('h1')[0].textContent);
             }
             /* Now update the UI for the new order. */

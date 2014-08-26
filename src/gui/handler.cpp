@@ -362,13 +362,18 @@ namespace loot {
 
         YAML::Node node;
         for (const auto& pluginPair : g_app_state.CurrentGame().plugins) {
-            if (pluginIt != g_app_state.CurrentGame().plugins.end()) {
-                if (pluginIt->second.DoFormIDsOverlap(pluginPair.second)) {
-                    BOOST_LOG_TRIVIAL(debug) << "Found conflicting plugin: " << pluginPair.second.Name();
-                    node["conflicts"].push_back(pluginPair.second.Name());
-                }
+            YAML::Node pluginNode;
+
+            pluginNode["crc"] = pluginPair.second.Crc();
+            pluginNode["isDummy"] = pluginPair.second.FormIDs().size() == 0;
+            if (pluginIt != g_app_state.CurrentGame().plugins.end() && pluginIt->second.DoFormIDsOverlap(pluginPair.second)) {
+                BOOST_LOG_TRIVIAL(debug) << "Found conflicting plugin: " << pluginPair.second.Name();
+                pluginNode["conflicts"] = true;
             }
-            node["crcs"][pluginPair.second.Name()] = pluginPair.second.Crc();
+            else {
+                pluginNode["conflicts"] = false;
+            }
+            node[pluginPair.second.Name()] = pluginNode;
         }
 
         if (node.size() > 0)
@@ -649,7 +654,7 @@ namespace loot {
             pluginNode["__type"] = "Plugin";  // For conversion back into a JS typed object.
             pluginNode["name"] = plugin.Name();
             pluginNode["isActive"] = g_app_state.CurrentGame().IsActive(plugin.Name());
-            pluginNode["isDummy"] = false; // Set to false for now because null is a bit iffy and we just don't know yet. Although, we could read the record count from the TES4 header... Usual check is (plugin.second.FormIDs().size() == 0);
+            pluginNode["isDummy"] = false; // Set to false for now because we just don't know yet.
             pluginNode["loadsBSA"] = plugin.LoadsBSA(g_app_state.CurrentGame());
             pluginNode["crc"] = IntToHexString(plugin.Crc());
             pluginNode["version"] = plugin.Version();
@@ -856,8 +861,12 @@ namespace loot {
 
         YAML::Node node;
         for (const auto &plugin : plugins) {
-            node["loadOrder"].push_back(plugin.Name());
-            node["crcs"][plugin.Name()] = plugin.Crc();
+            YAML::Node pluginNode;
+
+            pluginNode["name"] = plugin.Name();
+            pluginNode["crc"] = plugin.Crc();
+            pluginNode["isDummy"] = plugin.FormIDs().size() == 0;
+            node.push_back(pluginNode);
         }
 
         if (node.size() > 0)
