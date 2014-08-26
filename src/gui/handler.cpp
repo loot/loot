@@ -34,7 +34,7 @@
 #include <include/cef_runnable.h>
 #include <include/cef_task.h>
 #include <include/base/cef_bind.h>
-#include "include/wrapper/cef_closure_task.h"
+#include <include/wrapper/cef_closure_task.h>
 
 #include <boost/log/trivial.hpp>
 #include <boost/filesystem.hpp>
@@ -43,7 +43,6 @@
 
 #include <sstream>
 #include <string>
-#include <cassert>
 
 using namespace std;
 
