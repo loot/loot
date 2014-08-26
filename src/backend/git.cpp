@@ -436,6 +436,9 @@ namespace loot {
                     tempSet.insert(Plugin(plugin).EvalAllConditions(game, language));
                 }
                 plugins = tempSet;
+                for (auto &plugin : regexPlugins) {
+                    plugin.EvalAllConditions(game, language);
+                }
 
                 for (auto &message: messages) {
                     message.EvalCondition(game, language);

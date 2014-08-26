@@ -381,15 +381,8 @@ namespace loot {
         BOOST_LOG_TRIVIAL(debug) << "Copying metadata for plugin " << pluginName;
 
         // Get metadata from masterlist and userlist.
-        Plugin plugin;
-        auto it = g_app_state.CurrentGame().masterlist.plugins.find(pluginName);
-        if (it != g_app_state.CurrentGame().masterlist.plugins.end()) {
-            plugin = *it;
-        }
-        it = g_app_state.CurrentGame().userlist.plugins.find(pluginName);
-        if (it != g_app_state.CurrentGame().userlist.plugins.end()) {
-            plugin.MergeMetadata(*it);
-        }
+        Plugin plugin = g_app_state.CurrentGame().masterlist.FindPlugin(pluginName);
+        plugin.MergeMetadata(g_app_state.CurrentGame().userlist.FindPlugin(pluginName));
 
         // Generate text representation.
         string text;
@@ -412,11 +405,7 @@ namespace loot {
     std::string Handler::ClearPluginMetadata(const std::string& pluginName) {
         BOOST_LOG_TRIVIAL(debug) << "Clearing user metadata for plugin " << pluginName;
 
-        auto ulistPluginIt = g_app_state.CurrentGame().userlist.plugins.find(Plugin(pluginName));
-
-        if (ulistPluginIt != g_app_state.CurrentGame().userlist.plugins.end()) {
-            g_app_state.CurrentGame().userlist.plugins.erase(ulistPluginIt);
-        }
+        g_app_state.CurrentGame().userlist.ErasePlugin(Plugin(pluginName));
 
         // Now rederive the displayed metadata from the masterlist.
         YAML::Node derivedMetadata = GenerateDerivedMetadata(pluginName);
@@ -446,7 +435,7 @@ namespace loot {
         Plugin newUserlistEntry(pluginMetadata["name"].as<string>());
 
         // Find existing userlist entry.
-        auto ulistPluginIt = g_app_state.CurrentGame().userlist.plugins.find(newUserlistEntry);
+        Plugin ulistPlugin = g_app_state.CurrentGame().userlist.FindPlugin(newUserlistEntry);
 
         // First sort out the priority value. This is only given if it was changed.
         BOOST_LOG_TRIVIAL(trace) << "Calculating userlist metadata priority value from Javascript variables.";
@@ -467,9 +456,9 @@ namespace loot {
         else {
             // Priority value wasn't changed, use the existing userlist value.
             BOOST_LOG_TRIVIAL(trace) << "Priority value is unchanged, using existing userlist value (if it exists).";
-            if (ulistPluginIt != g_app_state.CurrentGame().userlist.plugins.end()) {
-                newUserlistEntry.Priority(ulistPluginIt->Priority());
-                newUserlistEntry.SetPriorityExplicit(ulistPluginIt->IsPriorityExplicit());
+            if (!ulistPlugin.HasNameOnly()) {
+                newUserlistEntry.Priority(ulistPlugin.Priority());
+                newUserlistEntry.SetPriorityExplicit(ulistPlugin.IsPriorityExplicit());
             }
         }
 
@@ -494,19 +483,19 @@ namespace loot {
             newUserlistEntry.DirtyInfo(pluginMetadata["userlist"]["dirty"].as<set<PluginDirtyInfo>>());
 
         // Now replace existing userlist entry with the new one.
-        if (ulistPluginIt != g_app_state.CurrentGame().userlist.plugins.end()) {
+        if (!ulistPlugin.HasNameOnly()) {
             BOOST_LOG_TRIVIAL(trace) << "Replacing existing userlist entry with new metadata.";
             if (newUserlistEntry.HasNameOnly())
-                g_app_state.CurrentGame().userlist.plugins.erase(ulistPluginIt);
+                g_app_state.CurrentGame().userlist.ErasePlugin(ulistPlugin);
             else {
                 // Set members are static, so just erase and add the new data.
-                g_app_state.CurrentGame().userlist.plugins.erase(ulistPluginIt);
-                g_app_state.CurrentGame().userlist.plugins.insert(newUserlistEntry);
+                g_app_state.CurrentGame().userlist.ErasePlugin(ulistPlugin);
+                g_app_state.CurrentGame().userlist.AddPlugin(newUserlistEntry);
             }
         }
         else {
             BOOST_LOG_TRIVIAL(trace) << "Adding new metadata to new userlist entry.";
-            g_app_state.CurrentGame().userlist.plugins.insert(newUserlistEntry);
+            g_app_state.CurrentGame().userlist.AddPlugin(newUserlistEntry);
         }
 
         // Now rederive the derived metadata.
@@ -651,17 +640,11 @@ namespace loot {
             // description as part of it.
             BOOST_LOG_TRIVIAL(trace) << "Getting masterlist metadata for: " << plugin.Name();
             Plugin mlistPlugin(plugin);
-            auto it = g_app_state.CurrentGame().masterlist.plugins.find(plugin.Name());
-            if (it != g_app_state.CurrentGame().masterlist.plugins.end()) {
-                mlistPlugin.MergeMetadata(*it);
-            }
+            mlistPlugin.MergeMetadata(g_app_state.CurrentGame().masterlist.FindPlugin(plugin));
+
             // Now do the same again for any userlist data.
             BOOST_LOG_TRIVIAL(trace) << "Getting userlist metadata for: " << plugin.Name();
-            Plugin ulistPlugin;
-            it = g_app_state.CurrentGame().userlist.plugins.find(plugin.Name());
-            if (it != g_app_state.CurrentGame().userlist.plugins.end()) {
-                ulistPlugin = *it;
-            }
+            Plugin ulistPlugin(g_app_state.CurrentGame().userlist.FindPlugin(plugin));
 
             pluginNode["__type"] = "Plugin";  // For conversion back into a JS typed object.
             pluginNode["name"] = plugin.Name();
@@ -778,10 +761,7 @@ namespace loot {
 
             for (const auto& pluginPair : g_app_state.CurrentGame().plugins) {
                 Plugin mlistPlugin(pluginPair.second);
-                auto it = g_app_state.CurrentGame().masterlist.plugins.find(pluginPair.second);
-                if (it != g_app_state.CurrentGame().masterlist.plugins.end()) {
-                    mlistPlugin.MergeMetadata(*it);
-                }
+                mlistPlugin.MergeMetadata(g_app_state.CurrentGame().masterlist.FindPlugin(pluginPair.second));
 
                 YAML::Node pluginNode;
                 if (!mlistPlugin.HasNameOnly()) {
@@ -836,7 +816,7 @@ namespace loot {
         BOOST_LOG_TRIVIAL(debug) << "Clearing all user metadata.";
         // Record which plugins have userlist entries.
         vector<string> userlistPlugins;
-        for (const auto &plugin : g_app_state.CurrentGame().userlist.plugins) {
+        for (const auto &plugin : g_app_state.CurrentGame().userlist.Plugins()) {
             userlistPlugins.push_back(plugin.Name());
         }
         BOOST_LOG_TRIVIAL(trace) << "User metadata exists for " << userlistPlugins.size() << " plugins.";
@@ -935,18 +915,8 @@ namespace loot {
         auto pluginIt = g_app_state.CurrentGame().plugins.find(boost::locale::to_lower(pluginName));
         if (pluginIt != g_app_state.CurrentGame().plugins.end()) {
 
-            Plugin master;
-            Plugin user;
-
-            auto it = g_app_state.CurrentGame().masterlist.plugins.find(pluginIt->second.Name());
-            if (it != g_app_state.CurrentGame().masterlist.plugins.end()) {
-                master = *it;
-            }
-
-            it = g_app_state.CurrentGame().userlist.plugins.find(pluginIt->second.Name());
-            if (it != g_app_state.CurrentGame().userlist.plugins.end()) {
-                user = *it;
-            }
+            Plugin master(g_app_state.CurrentGame().masterlist.FindPlugin(pluginIt->second));
+            Plugin user(g_app_state.CurrentGame().userlist.FindPlugin(pluginIt->second));
 
             return this->GenerateDerivedMetadata(pluginIt->second, master, user);
         }

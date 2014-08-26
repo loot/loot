@@ -413,6 +413,8 @@ namespace loot {
 
     void Plugin::MergeMetadata(const Plugin& plugin) {
         BOOST_LOG_TRIVIAL(trace) << "Merging metadata for: " << name;
+        if (plugin.HasNameOnly())
+            return;
 
         //For 'enabled' and 'priority' metadata, use the given plugin's values, but if the 'priority' user value is not explicit, ignore it.
         enabled = plugin.Enabled();

@@ -34,6 +34,7 @@
 #include <unordered_set>
 
 #include <boost/filesystem.hpp>
+#include <boost/locale.hpp>
 
 #include <api/libloadorder.h>
 #include <src/libespm.h>
@@ -61,8 +62,15 @@ namespace loot {
 
         bool operator == (const MetadataList& rhs) const;  //Compares content.
 
-        std::unordered_set<Plugin> plugins;
+        std::list<Plugin> Plugins() const;
+        Plugin FindPlugin(const Plugin& plugin) const;
+        void AddPlugin(const Plugin& plugin);
+        void ErasePlugin(const Plugin& plugin);
+
         std::list<Message> messages;
+    protected:
+        std::unordered_set<Plugin> plugins;
+        std::list<Plugin> regexPlugins;
     };
 
     class Masterlist : public MetadataList {

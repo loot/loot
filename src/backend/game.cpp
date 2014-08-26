@@ -107,8 +107,15 @@ namespace loot {
         YAML::Node metadataList = YAML::Load(in);
         in.close();
 
-        if (metadataList["plugins"])
-            plugins = metadataList["plugins"].as< unordered_set<Plugin> >();
+        if (metadataList["plugins"]) {
+            for (const auto& node : metadataList["plugins"]) {
+                Plugin plugin(node.as<Plugin>());
+                if (plugin.IsRegexPlugin())
+                    regexPlugins.push_back(plugin);
+                else
+                    plugins.insert(plugin);
+            }
+        }
         if (metadataList["globals"])
             messages = metadataList["globals"].as< list<Message> >();
 
@@ -164,6 +171,50 @@ namespace loot {
             }
         }
         return true;
+    }
+
+    std::list<Plugin> MetadataList::Plugins() const {
+        list<Plugin> pluginList(plugins.begin(), plugins.end());
+
+        pluginList.insert(pluginList.end(), regexPlugins.begin(), regexPlugins.end());
+
+        return pluginList;
+    }
+
+    Plugin MetadataList::FindPlugin(const Plugin& plugin) const {
+        auto it = plugins.find(plugin);
+
+        if (it != plugins.end())
+            return *it;
+
+        it = find(regexPlugins.begin(), regexPlugins.end(), plugin);
+
+        if (it != regexPlugins.end())
+            return *it;
+        else
+            return Plugin(plugin.Name());
+    }
+
+    void MetadataList::AddPlugin(const Plugin& plugin) {
+        if (plugin.IsRegexPlugin())
+            regexPlugins.push_back(plugin);
+        else
+            plugins.insert(plugin);
+    }
+
+    void MetadataList::ErasePlugin(const Plugin& plugin) {
+        auto it = plugins.find(plugin);
+
+        if (it != plugins.end()) {
+            plugins.erase(it);
+            return;
+        }
+
+        it = find(regexPlugins.begin(), regexPlugins.end(), plugin);
+
+        if (it != regexPlugins.end()) {
+            regexPlugins.erase(it);
+        }
     }
 
     // Masterlist member functions
@@ -746,19 +797,15 @@ namespace loot {
             BOOST_LOG_TRIVIAL(trace) << "Merging for plugin \"" << graph[v].Name() << "\"";
 
             //Check if there is a plugin entry in the masterlist. This will also find matching regex entries.
-            auto pos = this->masterlist.plugins.find(graph[v]);
-
-            if (pos != this->masterlist.plugins.end()) {
-                BOOST_LOG_TRIVIAL(trace) << "Merging masterlist data down to plugin list data.";
-                graph[v].MergeMetadata(*pos);
-            }
+            BOOST_LOG_TRIVIAL(trace) << "Merging masterlist data down to plugin list data.";
+            graph[v].MergeMetadata(this->masterlist.FindPlugin(graph[v]));
 
             //Check if there is a plugin entry in the userlist. This will also find matching regex entries.
-            pos = this->userlist.plugins.find(graph[v]);
+            Plugin ulistPlugin = this->userlist.FindPlugin(graph[v]);
 
-            if (pos != this->userlist.plugins.end() && pos->Enabled()) {
+            if (!ulistPlugin.HasNameOnly() && ulistPlugin.Enabled()) {
                 BOOST_LOG_TRIVIAL(trace) << "Merging userlist data down to plugin list data.";
-                graph[v].MergeMetadata(*pos);
+                graph[v].MergeMetadata(ulistPlugin);
             }
 
             //Now that items are merged, evaluate any conditions they have.
