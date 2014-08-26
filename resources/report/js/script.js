@@ -766,19 +766,19 @@ function sortPlugins(evt) {
 
             if (loot.settings.neverTellMeTheOdds) {
                 /* Array shuffler from <https://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array-in-javascript> */
-                for(var j, x, i = result.loadOrder.length; i; j = Math.floor(Math.random() * i), x = result.loadOrder[--i], result.loadOrder[i] = result.loadOrder[j], result.loadOrder[j] = x);
+                for(var j, x, i = loadOrder.length; i; j = Math.floor(Math.random() * i), x = loadOrder[--i], loadOrder[i] = loadOrder[j], loadOrder[j] = x);
             }
 
             /* Record the previous order in case the user cancels sorting. */
             /* Start at 2 to skip summary and general messages. */
             var cards = document.getElementsByTagName('main')[0].getElementsByTagName('plugin-card');
-            loot.newLoadOrder = result.loadOrder;
+            loot.newLoadOrder = loadOrder;
             loot.lastLoadOrder = [];
             for (var i = 0; i < cards.length; ++i) {
                 loot.lastLoadOrder.push(cards[i].getElementsByTagName('h1')[0].textContent);
             }
             /* Now update the UI for the new order. */
-            sortUIElements(result.loadOrder);
+            sortUIElements(loadOrder);
 
             /* Now hide the masterlist update buttons, and display the accept and
                cancel sort buttons. */
