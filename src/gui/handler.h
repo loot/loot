@@ -59,7 +59,7 @@ namespace loot {
         std::string GetGameData();
         std::string UpdateMasterlist();
         std::string ClearAllMetadata();
-        std::string SortPlugins();
+        void SortPlugins(CefRefPtr<Callback> callback);
 
         // Handle queries with input arguments.
         bool HandleComplexQuery(CefRefPtr<CefBrowser> browser, YAML::Node& request, 
@@ -75,7 +75,9 @@ namespace loot {
         YAML::Node Handler::GenerateDerivedMetadata(const std::string& pluginName);
         YAML::Node Handler::GenerateDerivedMetadata(const Plugin& file, const Plugin& masterlist, const Plugin& userlist);
 
-        void CopyToClipboard(const std::string& text);
+        void CopyToClipboard(const std::string& text); 
+    private:
+        IMPLEMENT_REFCOUNTING(Handler);
     };
 
     class LootHandler : public CefClient,

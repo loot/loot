@@ -33,6 +33,8 @@
 #include <include/cef_app.h>
 #include <include/cef_runnable.h>
 #include <include/cef_task.h>
+#include <include/base/cef_bind.h>
+#include "include/wrapper/cef_closure_task.h"
 
 #include <boost/log/trivial.hpp>
 #include <boost/filesystem.hpp>
@@ -68,7 +70,6 @@ namespace loot {
                             const CefString& request,
                             bool persistent,
                             CefRefPtr<Callback> callback) {
-
         if (request == "openReadme") {
             try {
                 OpenReadme();
@@ -179,8 +180,7 @@ namespace loot {
             return true;
         }
         else if (request == "sortPlugins") {
-            callback->Success(SortPlugins());
-            return true;
+            return CefPostTask(TID_FILE, base::Bind(&Handler::SortPlugins, base::Unretained(this), callback));
         }
         else if (request == "getInitErrors") {
             YAML::Node node(g_app_state.InitErrors());
@@ -843,7 +843,7 @@ namespace loot {
             return "[]";
     }
 
-    std::string Handler::SortPlugins() {
+    void Handler::SortPlugins(CefRefPtr<CefMessageRouterBrowserSide::Callback> callback) {
         //Set language.
         unsigned int language;
         if (g_app_state.GetSettings()["language"])
@@ -870,9 +870,9 @@ namespace loot {
         }
 
         if (node.size() > 0)
-            return JSON::stringify(node);
+            callback->Success(JSON::stringify(node));
         else
-            return "null";
+            callback->Success("null");
     }
 
     YAML::Node Handler::GenerateDerivedMetadata(const Plugin& file, const Plugin& masterlist, const Plugin& userlist) {
