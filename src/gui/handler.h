@@ -56,13 +56,15 @@ namespace loot {
         std::string GetLanguages();
         std::string GetGameTypes();
         std::string GetInstalledGames();
-        void GetGameData(CefRefPtr<Callback> callback);
+        void GetGameData(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback);
         void UpdateMasterlist(CefRefPtr<Callback> callback);
         std::string ClearAllMetadata();
         void SortPlugins(CefRefPtr<Callback> callback);
 
         // Handle queries with input arguments.
-        bool HandleComplexQuery(CefRefPtr<CefBrowser> browser, YAML::Node& request,
+        bool HandleComplexQuery(CefRefPtr<CefBrowser> browser,
+                                CefRefPtr<CefFrame> frame, 
+                                YAML::Node& request,
                                 CefRefPtr<Callback> callback);
 
         void Find(CefRefPtr<CefBrowser> browser, const std::string& search);
@@ -76,6 +78,7 @@ namespace loot {
         YAML::Node Handler::GenerateDerivedMetadata(const Plugin& file, const Plugin& masterlist, const Plugin& userlist);
 
         void CopyToClipboard(const std::string& text);
+        void SendProgressUpdate(CefRefPtr<CefFrame> frame, const std::string& message);
     private:
         IMPLEMENT_REFCOUNTING(Handler);
     };

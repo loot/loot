@@ -125,7 +125,7 @@ namespace loot {
 #ifdef _WIN32
             SetWindowText(handle, ToWinWide("LOOT: " + g_app_state.CurrentGame().Name()).c_str());
 #endif
-            return CefPostTask(TID_FILE, base::Bind(&Handler::GetGameData, base::Unretained(this), callback));
+            return CefPostTask(TID_FILE, base::Bind(&Handler::GetGameData, base::Unretained(this), frame, callback));
         }
         else if (request == "cancelFind") {
             browser->GetHost()->StopFinding(true);
@@ -179,15 +179,17 @@ namespace loot {
                 return true;
             }
 
-            return HandleComplexQuery(browser, req, callback);
+            return HandleComplexQuery(browser, frame, req, callback);
         }
 
         return false;
     }
 
     // Handle queries with input arguments.
-    bool Handler::HandleComplexQuery(CefRefPtr<CefBrowser> browser, YAML::Node& request,
-        CefRefPtr<Callback> callback) {
+    bool Handler::HandleComplexQuery(CefRefPtr<CefBrowser> browser, 
+                                     CefRefPtr<CefFrame> frame, 
+                                     YAML::Node& request,
+                                     CefRefPtr<Callback> callback) {
 
         const string requestName = request["name"].as<string>();
 
@@ -207,7 +209,7 @@ namespace loot {
 #ifdef _WIN32
                 SetWindowText(handle, ToWinWide("LOOT: " + g_app_state.CurrentGame().Name()).c_str());
 #endif
-                CefPostTask(TID_FILE, base::Bind(&Handler::GetGameData, base::Unretained(this), callback));
+                CefPostTask(TID_FILE, base::Bind(&Handler::GetGameData, base::Unretained(this), frame, callback));
             }
             catch (loot::error &e) {
                 BOOST_LOG_TRIVIAL(error) << "Failed to change game. Details: " << e.what();
@@ -547,7 +549,7 @@ namespace loot {
             return "[]";
     }
 
-    void Handler::GetGameData(CefRefPtr<Callback> callback) {
+    void Handler::GetGameData(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback) {
         try {
             /* GetGameData() can be called for initialising the UI for a game for the first time
                in a session, or it can be called when changing to a game that has previously been
@@ -557,6 +559,8 @@ namespace loot {
                */
             BOOST_LOG_TRIVIAL(info) << "Getting data specific to LOOT's active game.";
             // Get masterlist revision info and parse if it exists. Also get plugin headers info and parse userlist if it exists.
+
+            SendProgressUpdate(frame, "Loading plugin headers...");
 
             bool isFirstLoad = g_app_state.CurrentGame().plugins.empty();
             g_app_state.CurrentGame().LoadPlugins(true);
@@ -575,6 +579,7 @@ namespace loot {
             if (isFirstLoad) {
                 //Parse masterlist, don't update it.
                 if (fs::exists(g_app_state.CurrentGame().MasterlistPath())) {
+                    SendProgressUpdate(frame, "Parsing masterlist...");
                     BOOST_LOG_TRIVIAL(debug) << "Parsing masterlist.";
                     try {
                         g_app_state.CurrentGame().masterlist.MetadataList::Load(g_app_state.CurrentGame().MasterlistPath());
@@ -586,6 +591,7 @@ namespace loot {
 
                 //Parse userlist.
                 if (fs::exists(g_app_state.CurrentGame().UserlistPath())) {
+                    SendProgressUpdate(frame, "Parsing userlist...");
                     BOOST_LOG_TRIVIAL(debug) << "Parsing userlist.";
                     try {
                         g_app_state.CurrentGame().userlist.Load(g_app_state.CurrentGame().UserlistPath());
@@ -612,6 +618,7 @@ namespace loot {
             }
 
             // Now store plugin data.
+            SendProgressUpdate(frame, "Merging and evaluating plugin metadata...");
             for (const auto& plugin : installed) {
                 /* Each plugin has members while hold its raw masterlist and userlist data for
                    the editor, and also processed data for the main display.
@@ -671,6 +678,7 @@ namespace loot {
             }
 
             if (isFirstLoad) {
+                SendProgressUpdate(frame, "Loading general messages...");
                 //Set language.
                 unsigned int language;
                 if (g_app_state.GetSettings()["language"])
@@ -953,6 +961,10 @@ namespace loot {
             throw loot::error(loot::error::windows_error, "Failed to close the Windows clipboard.");
         }
 #endif
+    }
+
+    void Handler::SendProgressUpdate(CefRefPtr<CefFrame> frame, const std::string& message) {
+        frame->ExecuteJavaScript("updateProgressDialog('" + message + "');", frame->GetURL(), 0);
     }
 
     // LootHandler methods
