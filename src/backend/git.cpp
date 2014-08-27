@@ -412,10 +412,12 @@ namespace loot {
             BOOST_LOG_TRIVIAL(trace) << "Freeing pointers.";
             git_reference_free(git.ref);
             git_object_free(git.obj);
+            git_buf_free(&git.buf);
             git_commit_free(git.commit);
             git.ref = nullptr;
             git.obj = nullptr;
             git.commit = nullptr;
+            git.buf = { 0 };
 
             //Now try parsing the masterlist.
             BOOST_LOG_TRIVIAL(debug) << "Testing masterlist parsing.";
