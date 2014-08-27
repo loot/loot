@@ -702,7 +702,7 @@ var messageDialogProto = Object.create(HTMLDialogElement.prototype, {
 
             if (type == 'error' || type == 'info') {
                 this.getElementsByClassName('accept')[0].textContent = 'OK';
-                this.getElementsByClassName('cancel')[0].style.display = 'hidden';
+                this.getElementsByClassName('cancel')[0].classList.toggle('hidden', true);
             }
 
             HTMLDialogElement.prototype.showModal.call(this);
