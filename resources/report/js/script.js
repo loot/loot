@@ -432,6 +432,9 @@ function getConflictingPluginsFromFilter() {
             ]
         });
 
+        updateProgressDialog('Checking if plugins have been loaded...');
+        openProgressDialog();
+
         return loot.query(request).then(JSON.parse).then(function(result){
             if (result) {
                 /* Filter everything but the plugin itself if there are no
@@ -449,8 +452,10 @@ function getConflictingPluginsFromFilter() {
                         }
                     }
                 }
+                closeProgressDialog();
                 return conflicts;
             }
+            closeProgressDialog();
             return [ conflictsPlugin ];
         }).catch(processCefError);
     }

@@ -57,9 +57,9 @@ namespace loot {
         std::string GetGameTypes();
         std::string GetInstalledGames();
         void GetGameData(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback);
-        void UpdateMasterlist(CefRefPtr<Callback> callback);
+        void UpdateMasterlist(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback);
         std::string ClearAllMetadata();
-        void SortPlugins(CefRefPtr<Callback> callback);
+        void SortPlugins(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback);
 
         // Handle queries with input arguments.
         bool HandleComplexQuery(CefRefPtr<CefBrowser> browser,
@@ -68,7 +68,7 @@ namespace loot {
                                 CefRefPtr<Callback> callback);
 
         void Find(CefRefPtr<CefBrowser> browser, const std::string& search);
-        std::string GetConflictingPlugins(const std::string& pluginName);
+        void GetConflictingPlugins(const std::string& pluginName, CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback);
         void CopyMetadata(const std::string& pluginName);
         std::string ClearPluginMetadata(const std::string& pluginName);
         void SaveFilterState(const std::string& filterId, const std::string& value);

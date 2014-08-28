@@ -154,10 +154,10 @@ namespace loot {
             return true;
         }
         else if (request == "updateMasterlist") {
-            return CefPostTask(TID_FILE, base::Bind(&Handler::UpdateMasterlist, base::Unretained(this), callback));
+            return CefPostTask(TID_FILE, base::Bind(&Handler::UpdateMasterlist, base::Unretained(this), frame, callback));
         }
         else if (request == "sortPlugins") {
-            return CefPostTask(TID_FILE, base::Bind(&Handler::SortPlugins, base::Unretained(this), callback));
+            return CefPostTask(TID_FILE, base::Bind(&Handler::SortPlugins, base::Unretained(this), frame, callback));
         }
         else if (request == "getInitErrors") {
             YAML::Node node(g_app_state.InitErrors());
@@ -223,7 +223,7 @@ namespace loot {
         }
         else if (requestName == "getConflictingPlugins") {
             // Has one arg, which is the name of the plugin to get conflicts for.
-            callback->Success(GetConflictingPlugins(request["args"][0].as<string>()));
+            CefPostTask(TID_FILE, base::Bind(&Handler::GetConflictingPlugins, base::Unretained(this), request["args"][0].as<string>(), frame, callback));
             return true;
         }
         else if (requestName == "copyMetadata") {
@@ -333,16 +333,19 @@ namespace loot {
         browser->GetHost()->Find(0, search, true, false, false);
     }
 
-    std::string Handler::GetConflictingPlugins(const std::string& pluginName) {
+    void Handler::GetConflictingPlugins(const std::string& pluginName, CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback) {
         BOOST_LOG_TRIVIAL(debug) << "Searching for plugins that conflict with " << pluginName;
 
         auto pluginIt = g_app_state.CurrentGame().plugins.find(boost::locale::to_lower(pluginName));
 
         // Checking for FormID overlap will only work if the plugins have been loaded, so check if
         // the plugins have been fully loaded, and if not load all plugins.
-        if (!g_app_state.CurrentGame().HasBeenLoaded())
+        if (!g_app_state.CurrentGame().HasBeenLoaded()) {
+            SendProgressUpdate(frame, "Loading plugin contents...");
             g_app_state.CurrentGame().LoadPlugins(false);
+        }
 
+        SendProgressUpdate(frame, "Checking for conflicting plugins...");
         YAML::Node node;
         for (const auto& pluginPair : g_app_state.CurrentGame().plugins) {
             YAML::Node pluginNode;
@@ -360,9 +363,9 @@ namespace loot {
         }
 
         if (node.size() > 0)
-            return JSON::stringify(node);
+            callback->Success(JSON::stringify(node));
         else
-            return "null";
+            callback->Success("null");
     }
 
     void Handler::CopyMetadata(const std::string& pluginName) {
@@ -727,7 +730,7 @@ namespace loot {
         }
     }
 
-    void Handler::UpdateMasterlist(CefRefPtr<Callback> callback) {
+    void Handler::UpdateMasterlist(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback) {
         try {
             BOOST_LOG_TRIVIAL(debug) << "Updating and parsing masterlist.";
 
@@ -742,6 +745,7 @@ namespace loot {
             // Update / parse masterlist.
             bool wasChanged = true;
             try {
+                SendProgressUpdate(frame, "Updating and parsing masterlist...");
                 wasChanged = g_app_state.CurrentGame().masterlist.Load(g_app_state.CurrentGame(), language);
             }
             catch (loot::error &e) {
@@ -757,6 +761,7 @@ namespace loot {
             }
 
             // Now regenerate the JS-side masterlist data if the masterlist was changed.
+            SendProgressUpdate(frame, "Regenerating displayed content...");
             if (wasChanged) {
                 // The data structure is to be set as 'loot.game'.
                 YAML::Node gameNode;
@@ -853,7 +858,7 @@ namespace loot {
             return "[]";
     }
 
-    void Handler::SortPlugins(CefRefPtr<Callback> callback) {
+    void Handler::SortPlugins(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback) {
         //Set language.
         unsigned int language;
         if (g_app_state.GetSettings()["language"])
@@ -863,10 +868,13 @@ namespace loot {
         BOOST_LOG_TRIVIAL(info) << "Using message language: " << Language(language).Name();
 
         // Always reload all the plugins.
+        SendProgressUpdate(frame, "Loading plugin contents...");
         g_app_state.CurrentGame().LoadPlugins(false);
 
         //Sort plugins into their load order.
-        list<Plugin> plugins = g_app_state.CurrentGame().Sort(language, [](const string& message){});
+        list<Plugin> plugins = g_app_state.CurrentGame().Sort(language, [this, frame](const string& message){
+            this->SendProgressUpdate(frame, message);
+        });
 
         YAML::Node node;
         for (const auto &plugin : plugins) {
