@@ -264,6 +264,12 @@ namespace loot {
 
             g_app_state.UpdateGames(games);
 
+            // Also enable/disable debug logging as required.
+            if (request["args"][0]["enableDebugLogging"].as<bool>())
+                boost::log::core::get()->set_logging_enabled(true);
+            else
+                boost::log::core::get()->set_logging_enabled(false);
+
             // Now send back the new list of installed games to the UI.
             callback->Success(GetInstalledGames());
             return true;
