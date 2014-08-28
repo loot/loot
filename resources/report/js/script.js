@@ -735,7 +735,7 @@ function sortUIElements(pluginNames) {
             /* Also need to move plugin sidebar entry. */
             var li;
             for (var i = 0; i < entries.length; ++i) {
-                if (entries[i].getElementsByClassName('name')[0].textContent == name) {
+                if (entries[i].textContent == name) {
                     li = entries[i];
                 }
             }
@@ -959,7 +959,7 @@ function handlePluginDrop(evt) {
 }
 function handlePluginDragStart(evt) {
     evt.dataTransfer.effectAllowed = 'copy';
-    evt.dataTransfer.setData('text/plain', evt.target.getElementsByClassName('name')[0].textContent);
+    evt.dataTransfer.setData('text/plain', evt.target.textContent);
 }
 function handlePluginDragOver(evt) {
     evt.preventDefault();

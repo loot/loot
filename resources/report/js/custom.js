@@ -624,15 +624,7 @@ var pluginLIProto = Object.create(HTMLLIElement.prototype, {
 
             var template = document.getElementById('pluginLI');
             var clone = document.importNode(template.content, true);
-
             this.createShadowRoot().appendChild(clone);
-
-            var name = document.createElement('span');
-            name.className = 'name';
-            this.appendChild(name);
-            var priority = document.createElement('span');
-            priority.className = 'priority';
-            this.appendChild(priority);
         }
     },
 

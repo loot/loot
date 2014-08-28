@@ -103,13 +103,11 @@ function Plugin(obj) {
     }
 
     Plugin.prototype.getPriorityString = function() {
-        var priorityText = 'Priority: ' + this.modPriority + ', Global: ';
-        if (this.isGlobalPriority) {
-            priorityText += '✓';
+        if (this.modPriority != 0) {
+            return 'Priority: ' + this.modPriority;
         } else {
-            priorityText += '✗';
+            return '';
         }
-        return priorityText;
     }
 
     Plugin.prototype.updateCardMessages = function() {
@@ -166,12 +164,13 @@ function Plugin(obj) {
 
         li.shadowRoot.getElementsByTagName('a')[0].href = '#' + this.id;
 
-        li.getElementsByClassName('name')[0].textContent = this.name;
-        li.getElementsByClassName('priority')[0].textContent = this.getPriorityString();
+        li.textContent = this.name;
 
         li.setAttribute('data-dummy', this.isDummy);
         li.setAttribute('data-bsa', this.loadsBSA);
         li.setAttribute('data-edits', this.userlist != undefined);
+        li.setAttribute('data-global-priority', this.isGlobalPriority);
+        li.shadowRoot.getElementsByClassName('hasPriority')[0].title = this.getPriorityString();
 
         document.getElementById('pluginsNav').appendChild(li);
     }
@@ -182,10 +181,10 @@ function Plugin(obj) {
                 change.object.li.setAttribute('data-edits', change.object[change.name] != undefined);
                 change.object.card.setAttribute('data-edits', change.object[change.name] != undefined);
             } else if (change.name == 'modPriority') {
-                change.object.li.getElementsByClassName('priority')[0].textContent = change.object.getPriorityString();
+                change.object.li.shadowRoot.getElementsByClassName('hasPriority')[0].title = this.getPriorityString();
                 change.object.card.shadowRoot.getElementById('priorityValue').value = change.object[change.name];
             } else if (change.name == 'isGlobalPriority') {
-                change.object.li.getElementsByClassName('priority')[0].textContent = change.object.getPriorityString();
+                change.object.li.shadowRoot.getElementsByClassName('hasPriority')[0].title = this.getPriorityString();
             } else if (change.name == 'messages') {
                 change.object.updateCardMessages();
                 /* For messages, the card's messages need updating,
