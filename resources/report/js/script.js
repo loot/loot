@@ -196,7 +196,7 @@ var loot = {
 
         gameSelect.value = this.settings.game;
         document.getElementById('languageSelect').value = this.settings.language;
-        document.getElementById('debugVerbositySelect').value = this.settings.debugVerbosity;
+        document.getElementById('enableDebugLogging').checked = this.settings.enableDebugLogging;
         document.getElementById('updateMasterlist').checked = this.settings.updateMasterlist;
 
         this.updateEnabledGames();
@@ -1032,7 +1032,7 @@ function closeSettingsDialog(evt) {
     if (evt.target.classList.contains('accept')) {
         /* Update the JS variable values. */
         var settings = {
-            debugVerbosity: document.getElementById('debugVerbositySelect').value,
+            enableDebugLogging: document.getElementById('enableDebugLogging').checked,
             game: document.getElementById('defaultGameSelect').value,
             games: document.getElementById('gameTable').getRowsData(false),
             language: document.getElementById('languageSelect').value,

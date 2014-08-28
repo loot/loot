@@ -160,29 +160,21 @@ namespace loot {
             boost::log::keywords::file_name = g_path_log.string().c_str(),
             boost::log::keywords::auto_flush = true,
             boost::log::keywords::format = (
-            boost::log::expressions::stream
-            << "[" << boost::log::expressions::format_date_time< boost::posix_time::ptime >("TimeStamp", "%H:%M:%S") << "]"
-            << " [" << boost::log::trivial::severity << "]: "
-            << boost::log::expressions::smessage
+                boost::log::expressions::stream
+                << "[" << boost::log::expressions::format_date_time< boost::posix_time::ptime >("TimeStamp", "%H:%M:%S") << "]"
+                << " [" << boost::log::trivial::severity << "]: "
+                << boost::log::expressions::smessage
             )
-            );
+        );
         boost::log::add_common_attributes();
-        unsigned int verbosity;
-        if (_settings["debugVerbosity"]) {
-            verbosity = _settings["debugVerbosity"].as<unsigned int>();
+        bool enableDebugLogging = false;
+        if (_settings["enableDebugLogging"]) {
+            enableDebugLogging = _settings["enableDebugLogging"].as<bool>();
         }
-        if (verbosity == 0)
-            boost::log::core::get()->set_logging_enabled(false);
-        else {
+        if (enableDebugLogging)
             boost::log::core::get()->set_logging_enabled(true);
-
-            if (verbosity == 1)
-                boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::warning);  //Log all warnings, errors and fatals.
-            else if (verbosity == 2)
-                boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::debug);  //Log debugs, infos, warnings, errors and fatals.
-            else
-                boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::trace);  //Log everything.
-        }
+        else
+            boost::log::core::get()->set_logging_enabled(false);
         BOOST_LOG_TRIVIAL(info) << "LOOT Version: " << g_version_major << "." << g_version_minor << "." << g_version_patch;
 
         // The CEF debug log is appended to, not overwritten, so it gets really long.
@@ -350,10 +342,10 @@ namespace loot {
             else
                 return false;
         }
-        if (!_settings["debugVerbosity"]) {
+        if (!_settings["enableDebugLogging"]) {
             if (_settings["Debug Verbosity"]) {
                 // Conversion from 0.6 key.
-                _settings["debugVerbosity"] = _settings["Debug Verbosity"];
+                _settings["enableDebugLogging"] = (_settings["Debug Verbosity"].as<unsigned int>() > 0);
                 _settings.remove("Debug Verbosity");
             }
             else
@@ -398,7 +390,7 @@ namespace loot {
         root["language"] = "en";
         root["game"] = "auto";
         root["lastGame"] = "auto";
-        root["debugVerbosity"] = 0;
+        root["enableDebugLogging"] = false;
         root["updateMasterlist"] = true;
 
         std::vector<Game> games;

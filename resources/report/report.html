@@ -541,13 +541,8 @@ along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
         <select id="languageSelect">
             <!-- Language <option> elements go here. -->
         </select><br>
-        <label for="debugVerbositySelect" title="The output is logged to the LOOTDebugLog.txt file.">Debug Verbosity</label>
-        <select id="debugVerbositySelect">
-            <option value="0">None</option>
-            <option value="1">Low</option>
-            <option value="2">Medium</option>
-            <option value="3">High</option>
-        </select>
+        <p><input type="checkbox" id="enableDebugLogging"><label for="enableDebugLogging" title="The output is logged to the LOOTDebugLog.txt file.">Enable debug logging</label>
+        <p><input type="checkbox" id="updateMasterlist"><label for="updateMasterlist">Update masterlist before sorting</label>
         <table is="editable-table" id="gameTable" data-template="gameRow">
             <thead>
                 <tr><th>Name<th>Base Game<th>LOOT Folder<th>Master File<th>Masterlist Repository URL<th>Masterlist Repository Branch<th>Install Path<th>Install Path Registry Key<th>
@@ -555,7 +550,6 @@ along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
                 <!-- Game rows go here. -->
                 <tr><td colspan="4">Add new row...</td><td></td></tr>
         </table>
-        <p><input type="checkbox" id="updateMasterlist"><label for="updateMasterlist">Update masterlist before sorting</label>
         <p>Language changes will be applied after LOOT is restarted.
         <hr>
         <div class="buttons">
