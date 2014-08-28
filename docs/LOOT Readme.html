@@ -239,22 +239,13 @@ h3{
         </ul>
         <p>If a plugin's masters are missing, an error message will be displayed for it. Filter patches are special mods designed for use with a Bashed Patch that do not require all their masters to be present, and so any plugin with the <code>Filter</code> tag applied and missing masters will not cause any errors to be displayed.
 </table>
-<table>
-    <thead>
-        <tr><th>Context Menu Command<th>Description
-    <tbody>
-        <tr><td>Copy Name<td>Copies the selected plugin's filename to the clipboard.
-        <tr><td id="editorCopyMetadataAsText">Copy Metadata As Text<td>Copies the selected plugin's current metadata, as it appears in the userlist, to the clipboard. This makes it easier to share your metadata changes with the LOOT team, as they can then paste this text directly into the masterlist, and also avoids any typos being introduced. If posting the text in an online forum that supports BBCode (as most forums do), be sure to wrap it in <code>[code]</code> tags, eg. <code>[code]copied text[/code]</code>, so that the spaces are not removed by the forum software.
-        <tr><td>Remove Plugin User-Added Metadata<td>This removes all saved user-added metadata from the selected plugin, <b>and</b> any unsaved data added to the plugin since the Metadata Editor window was opened.
-        <tr><td>Remove All User-Added Metadata<td>This removes all user-added metadata from all plugins.
-</table>
 
 <h3 id="usage-settings">Editing Settings</h3>
 <figure>
     <img src="images/settings.png">
-    <figcaption>LOOT's settings window.</figcaption>
+    <figcaption>LOOT's settings dialog.</figcaption>
 </figure>
-<p>LOOT's settings window may be accessed by clicking <q>Edit&#x2192;Settings</q> in the main window's menu bar. LOOT's settings are detailed in the table below.
+<p>LOOT's settings may be accessed by clicking <q>Settings</q> button in LOOT's menu bar. The settings are detailed in the table below.
 <table>
     <thead>
         <tr><th>Setting<th>Description
@@ -264,12 +255,14 @@ h3{
         <tr><td>Debug Verbosity<td>Controls the verbosity of the debug output, which is written to <code>%LOCALAPPDATA%\LOOT\LOOTDebugLog.txt</code>.
         <tr><td id="settingsUpdateMasterlist">Update masterlist before sorting<td>If checked, LOOT will update its masterlist, should an update be available, before sorting plugins.
 </table>
-<p>The games list allows the customisation of which games LOOT offers support for, trivialising support for multiple copies of a game and Total Conversions. The games listed here will be displayed in the main window's <q>Game</q> menu when LOOT is next run. The <q>Add Game</q>, <q>Edit Game</q> and <q>Remove Game</q> buttons are used to edit the list. Each game has several columns, which are explained below.
+<p>LOOT's game-specific settings can be customised in the games table. Settings can also be added for additional game instances, making it easy to use LOOT across multiple copies of a game, including total conversion mods. LOOT ships with settings for the <q>Nehrim - At Fate's Edge</q> total conversion mod as an example.
+<p>The games instances defined in this table are displayed in LOOT's <q>Game</q> menu, and can be selected there if detected. Game instance settings may be deleted by clicking the trash icon at the end of the game's row. The current game cannot have its settings deleted. If you delete the settings for one of LOOT's core four supported games (Oblivion, Skyrim, Fallout 3, Fallout: New Vegas), they will be recreated when LOOT is next run.
+<p>The game settings are explained in the table below.
 <table>
     <thead>
-        <tr><th>Column<th>Description
+        <tr><th>Game Setting<th>Description
     <tbody>
-        <tr><td>Name<td>The name of the game, or another identifying string, that is displayed in menus and the main window's title bar.
+        <tr><td>Name<td>The name of the game, or another identifying string, that is displayed in menus and the LOOT's title bar.
         <tr><td>Base Game Type<td>Every game LOOT runs for must use the plugin file format and load order system of one of the following games:
         <ul>
             <li>TES IV: Oblivion
