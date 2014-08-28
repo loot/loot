@@ -400,7 +400,7 @@ namespace loot {
     template<typename Iterator, typename Skipper>
     class condition_grammar : public qi::grammar<Iterator, bool(), Skipper> {
     public:
-        condition_grammar() : condition_grammar::base_type(expression, "condition grammar") {
+        condition_grammar(Game& game, bool parseOnly) : condition_grammar::base_type(expression, "condition grammar"), _game(game), _parseOnly(parseOnly) {
 
             expression =
                 compound                            [qi::labels::_val = qi::labels::_1]
@@ -468,19 +468,18 @@ namespace loot {
             qi::on_error<qi::fail>(invalidPathChars,   phoenix::bind(&condition_grammar::SyntaxError, this, qi::labels::_1, qi::labels::_2, qi::labels::_3, qi::labels::_4));
         }
 
-        void SetGame(loot::Game& g) {
-            game = &g;
-        }
-
     private:
         qi::rule<Iterator, bool(), Skipper> expression, compound, condition, function;
         qi::rule<Iterator, std::string()> quotedStr, filePath, comparator;
         qi::rule<Iterator, char()> invalidPathChars;
 
-        loot::Game * game;
+        Game& _game;
+        bool _parseOnly;
 
         //Eval's exact paths. Check for files and ghosted plugins.
         void CheckFile(bool& result, const std::string& file) {
+            if (_parseOnly)
+                return;
 
             BOOST_LOG_TRIVIAL(trace) << "Checking to see if the file \"" << file << "\" exists.";
 
@@ -495,9 +494,9 @@ namespace loot {
             }
 
             if (IsPlugin(file))
-                result = boost::filesystem::exists(game->DataPath() / file) || boost::filesystem::exists(game->DataPath() / (file + ".ghost"));
+                result = boost::filesystem::exists(_game.DataPath() / file) || boost::filesystem::exists(_game.DataPath() / (file + ".ghost"));
             else
-                result = boost::filesystem::exists(game->DataPath() / file);
+                result = boost::filesystem::exists(_game.DataPath() / file);
 
             if (result)
                 BOOST_LOG_TRIVIAL(trace) << "The file does exist.";
@@ -506,6 +505,8 @@ namespace loot {
         }
 
         void CheckRegex(bool& result, const std::string& regexStr) {
+            if (_parseOnly)
+                return;
             result = false;
             //Can't support a regex string where all path components may be regex, since this could
             //lead to massive scanning if an unfortunately-named directory is encountered.
@@ -549,7 +550,7 @@ namespace loot {
             //Now we have a valid parent path and a regex filename. Check that
             //the parent path exists and is a directory.
 
-            boost::filesystem::path parent_path = game->DataPath() / parent;
+            boost::filesystem::path parent_path = _game.DataPath() / parent;
             if (!boost::filesystem::exists(parent_path) || !boost::filesystem::is_directory(parent_path)) {
                 BOOST_LOG_TRIVIAL(trace) << "The path \"" << parent_path << "\" does not exist or is not a directory.";
                 return;
@@ -573,6 +574,8 @@ namespace loot {
         }
 
         void CheckSum(bool& result, const std::string& file, const uint32_t checksum) {
+            if (_parseOnly)
+                return;
 
             BOOST_LOG_TRIVIAL(trace) << "Checking the CRC of the file \"" << file << "\".";
 
@@ -582,29 +585,31 @@ namespace loot {
             }
 
             uint32_t crc;
-            unordered_map<std::string,uint32_t>::iterator it = game->crcCache.find(boost::to_lower_copy(file));
+            unordered_map<std::string,uint32_t>::iterator it = _game.crcCache.find(boost::to_lower_copy(file));
 
-            if (it != game->crcCache.end())
+            if (it != _game.crcCache.end())
                 crc = it->second;
             else {
                 if (file == "LOOT")
                     crc = GetCrc32(boost::filesystem::absolute("LOOT.exe"));
-                if (boost::filesystem::exists(game->DataPath() / file))
-                    crc = GetCrc32(game->DataPath() / file);
-                else if (IsPlugin(file) && boost::filesystem::exists(game->DataPath() / (file + ".ghost")))
-                    crc = GetCrc32(game->DataPath() / (file + ".ghost"));
+                if (boost::filesystem::exists(_game.DataPath() / file))
+                    crc = GetCrc32(_game.DataPath() / file);
+                else if (IsPlugin(file) && boost::filesystem::exists(_game.DataPath() / (file + ".ghost")))
+                    crc = GetCrc32(_game.DataPath() / (file + ".ghost"));
                 else {
                     result = false;
                     return;
                 }
 
-                game->crcCache.emplace(boost::to_lower_copy(file), crc);
+                _game.crcCache.emplace(boost::to_lower_copy(file), crc);
             }
 
             result = checksum == crc;
         }
 
         void CheckVersion(bool& result, const std::string&  file, const std::string& version, const std::string& comparator) {
+            if (_parseOnly)
+                return;
 
             BOOST_LOG_TRIVIAL(trace) << "Checking version of file \"" << file << "\".";
 
@@ -621,10 +626,10 @@ namespace loot {
             if (file == "LOOT")
                 trueVersion = Version(boost::filesystem::absolute("LOOT.exe"));
             else if (IsPlugin(file)) {
-                Plugin plugin(*game, file, true);
+                Plugin plugin(_game, file, true);
                 trueVersion = Version(plugin.Version());
             } else
-                trueVersion = Version(game->DataPath() / file);
+                trueVersion = Version(_game.DataPath() / file);
 
             BOOST_LOG_TRIVIAL(trace) << "Version extracted: " << trueVersion.AsString();
 
@@ -640,10 +645,13 @@ namespace loot {
         }
 
         void CheckActive(bool& result, const std::string& file) {
+            if (_parseOnly)
+                return;
+
             if (file == "LOOT")
                 result = false;
             else
-                result = game->IsActive(file);
+                result = _game.IsActive(file);
 
             BOOST_LOG_TRIVIAL(trace) << "Active check result: " << result;
         }

@@ -118,7 +118,7 @@ namespace loot {
         return _condition;
     }
 
-    bool ConditionStruct::EvalCondition(loot::Game& game) const {
+    bool ConditionStruct::EvalCondition(Game& game) const {
         if (_condition.empty())
             return true;
 
@@ -128,12 +128,11 @@ namespace loot {
         if (it != game.conditionCache.end())
             return it->second;
 
-        condition_grammar<std::string::const_iterator, boost::spirit::qi::space_type> grammar;
+        condition_grammar<std::string::const_iterator, boost::spirit::qi::space_type> grammar(game, false);
         boost::spirit::qi::space_type skipper;
         std::string::const_iterator begin, end;
         bool eval;
 
-        grammar.SetGame(game);
         begin = _condition.begin();
         end = _condition.end();
 
@@ -153,6 +152,39 @@ namespace loot {
         game.conditionCache.emplace(boost::locale::to_lower(_condition), eval);
 
         return eval;
+    }
+
+    void ConditionStruct::ParseCondition(Game& game) const {
+        if (_condition.empty())
+            return;
+
+        BOOST_LOG_TRIVIAL(trace) << "Testing condition syntax: " << _condition;
+
+        // If the same condition string has already been evaluated, it must be written correctly.
+        unordered_map<std::string, bool>::const_iterator it = game.conditionCache.find(boost::locale::to_lower(_condition));
+        if (it != game.conditionCache.end())
+            return;
+
+        condition_grammar<std::string::const_iterator, boost::spirit::qi::space_type> grammar(game, true);
+        boost::spirit::qi::space_type skipper;
+        std::string::const_iterator begin, end;
+
+        begin = _condition.begin();
+        end = _condition.end();
+
+        bool r;
+        try {
+            r = boost::spirit::qi::phrase_parse(begin, end, grammar, skipper);
+        }
+        catch (std::exception& e) {
+            BOOST_LOG_TRIVIAL(error) << "Failed to parse condition \"" << _condition << "\": " << e.what();
+            throw loot::error(loot::error::condition_eval_fail, (boost::format(lc::translate("Failed to parse condition \"%1%\": %2%")) % _condition % e.what()).str());
+        }
+
+        if (!r || begin != end) {
+            BOOST_LOG_TRIVIAL(error) << "Failed to parse condition \"" << _condition << "\".";
+            throw loot::error(loot::error::condition_eval_fail, (boost::format(lc::translate("Failed to parse condition \"%1%\".")) % _condition).str());
+        }
     }
 
     MessageContent::MessageContent() : _language(Language::english) {}
@@ -574,7 +606,7 @@ namespace loot {
         _dirtyInfo = dirtyInfo;
     }
 
-    Plugin& Plugin::EvalAllConditions(loot::Game& game, const unsigned int language) {
+    Plugin& Plugin::EvalAllConditions(Game& game, const unsigned int language) {
         for (auto it = loadAfter.begin(); it != loadAfter.end();) {
             if (!it->EvalCondition(game))
                 loadAfter.erase(it++);
@@ -632,6 +664,24 @@ namespace loot {
         }
 
         return *this;
+    }
+
+    void Plugin::ParseAllConditions(Game& game) const {
+        for (const File& file : loadAfter) {
+            file.ParseCondition(game);
+        }
+        for (const File& file : requirements) {
+            file.ParseCondition(game);
+        }
+        for (const File& file : incompatibilities) {
+            file.ParseCondition(game);
+        }
+        for (const Message& message : messages) {
+            message.ParseCondition(game);
+        }
+        for (const Tag& tag : tags) {
+            tag.ParseCondition(game);
+        }
     }
 
     bool Plugin::HasNameOnly() const {

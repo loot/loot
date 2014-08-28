@@ -424,17 +424,14 @@ namespace loot {
             try {
                 this->MetadataList::Load(game.MasterlistPath());
 
-                unordered_set<Plugin> tempSet;
                 for (auto &plugin : plugins) {
-                    tempSet.insert(Plugin(plugin).EvalAllConditions(game, language));
+                    plugin.ParseAllConditions(game);
                 }
-                plugins = tempSet;
                 for (auto &plugin : regexPlugins) {
-                    plugin.EvalAllConditions(game, language);
+                    plugin.ParseAllConditions(game);
                 }
-
                 for (auto &message: messages) {
-                    message.EvalCondition(game, language);
+                    message.ParseCondition(game);
                 }
 
                 parsingFailed = false;
