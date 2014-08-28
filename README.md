@@ -28,7 +28,9 @@ Although LOOT uses a cross-platform build system and cross-platform libraries, i
 
 ## Packaging Releases
 
-Installer and zip archive releases for the main LOOT application can be handled by running the scripts `installer.nsi` and `archive.py` in the `src` folder respectively. The installer script requires [Unicode NSIS](http://www.scratchpaper.com/), while the archive script requires [Python](http://www.python.org/) (2 or 3).
+Installer and zip archive releases for the main LOOT application can be handled by running the scripts `installer.nsi` and `archive.py` in the `src` folder respectively. The installer script requires [NSIS 3](http://nsis.sourceforge.net/), while the archive script requires [Python](http://www.python.org/) (2 or 3). The installer and archive files are created in the `build/` folder, relative to the repository root.
+
+If you have [Git for Windows (msysGit)](https://msysgit.github.io/) or [GitHub for Windows](https://windows.github.com/) installed and you're building from a clone of this repository, the archive script will give archives descriptive names using the output of `git describe --tags --long`. If you have [7-zip](www.7-zip.org) installed, `.7z` archives will be created. Otherwise, archives will be named `LOOT Archive` and created as deflate-compressed zip files.
 
 ## Snapshot Builds
 
