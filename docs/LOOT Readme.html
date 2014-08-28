@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <title>LOOT Readme</title>
+<link rel="stylesheet" href="../resources/report/css/font-awesome.min.css" />
 <style>
     body {
         font:10pt/1.5 Helvetica,sans-serif;
@@ -155,7 +156,7 @@ h3{
 <p>The <q>Game</q> menu allows you to change which game LOOT is running for. Games that LOOT cannot find are greyed out, and the the one LOOT is running for is marked with a double chevron. To change the active game, simply select another game in the list.
 <h4>Plugin Menus</h4>
 <p>Each plugin's <q>card</q> has a menu button in its top-right corner. Clicking on it will reveal the plugin's menu.
-<p>The <q>Show Only Conflicts</q> option filters the plugin cards displayed so that only plugins which conflict with the menu plugin will be visible. While the filter is active, the plugin for which conflicts are displayed is highlighted, and enabling the filter for another plugin will deactivate the current filter before applying it again for the new plugin.
+<p>The <q>Show Only Conflicts</q> option filters the plugin cards displayed so that only plugins which conflict with the menu plugin will be visible. If the selected plugin loads a BSA, other plugins that load BSAs which <i>may</i> contain conflicting resources are also displayed. While the filter is active, the plugin for which conflicts are displayed is highlighted, and enabling the filter for another plugin will deactivate the current filter before applying it again for the new plugin.
 <p>The <q>Edit Metadata</q> option flips the plugin card over to reveal its <a href="#usage-custom">metadata editor</a>, where you can make changes to the metadata that LOOT uses to sort the plugin, and display its messages and Bash Tags.
 <p>The <q>Copy Metadata As Text</q> option copies the plugin's metadata to the clipboard.  This makes it easier to share your metadata changes with the LOOT team, as they can then paste this text directly into the masterlist, and also avoids any typos being introduced. If posting the text in an online forum that supports BBCode (as most forums do), be sure to wrap it in <code>[code]</code> tags, eg. <code>[code]copied text[/code]</code>, so that the spaces are not removed by the forum software.
 
@@ -186,47 +187,45 @@ h3{
 
 
 
-<h3 id="usage-custom">Customising LOOT's Results</h3>
+<h3 id="usage-custom">Editing Plugin Metadata</h3>
 <figure>
     <img src="images/editor.png">
-    <figcaption>LOOT's metadata editor.</figcaption>
+    <figcaption>A metadata editor panel.</figcaption>
 </figure>
-<p>LOOT's sorting algorithm uses the contents of plugins to work out where they should load relative to one another. However, this is sometimes not enough for it to produce a correct load order. In such cases, additional metadata can be supplied so that the plugins get sorted correctly. This metadata is supplied to LOOT by two sources: one is the masterlist, which is maintained by the LOOT team, and the other is the userlist, which you can edit as you desire.
-<p>The metadata editor allows you to manage the metadata stored in your userlist. It is a more fully-featured version of the dialog displayed during sorting. When opened, it lists all the plugins you have installed, and any that are missing but have existing user-added metadata, in alphabetical order. Plugins that load BSAs are displayed in <span style="color: #008EDB;">blue text</span>, and plugins with user-added metadata are displayed with a tick in the first column of the list. Selecting a plugin then opens its metadata for editing, and displays any existing metadata in the fields to the right of the plugin list. Right-clicking a plugin displays a context menu containing a few commands. The editor fields and context menu commands are explained in the tables below.
-<p>The <q>Add &#x2026;</q>, <q>Edit &#x2026;</q> and <q>Remove &#x2026;</q> buttons are used to edit the contents of the list currently visible. The <q>Edit &#x2026;</q> and <q>Remove &#x2026;</q> buttons are greyed out if no row is selected or if the selected row is not user-added metadata, but comes from the masterlist or the plugin itself. Metadata that comes from the masterlist or the plugin itself cannot be edited or removed, only added to. This is to prevent users from accidentally overriding important metadata.
+<p>LOOT uses metadata to supply plugins with messages and Bash Tag suggestions, and to help it sort plugins that it otherwise can't sort correctly. Users can add to their plugins' metadata through each plugin's metadata editor panel, and plugins with user metadata are labelled with a <span class="fa fa-user"></span> icon.
+<p>A plugin's editor panel is accessed by clicking the <q>Edit Metadata</q> item in the plugin's menu. Multiple plugins can have their editor panels open at once, but everything in LOOT's menu bar is disabled while there is at least one panel open.
 
-<p>The <q>Show only conflicting plugins</q> checkbox filters the plugin list so that only plugins which either contain conflicting records or (if the selected plugin loads a BSA) load BSAs that <i>may</i> contain conflicting resources are displayed. While the filter is active, it is also possible to add plugins to the <q>Requirements</q>, <q>Incompatibilities</q> and <q>Load After</q> lists by drag 'n' dropping them from the plugin list. The filter must be deactivated to select another plugin for editing.
+<p>Table rows that are for masterlist metadata cannot be edited or deleted. User metadata rows can be deleted by clicking their <span class="fa fa-trash-o"></span> icon.
+<p>Rows can be added to the <q>Requirements</q>, <q>Incompatibilities</q> and <q>Load After</q> tables by dragging and dropping plugins from the sidebar into the table area.
 
-<p>The <q>Save Changes</q> button will save any user-added metadata to your userlist, including any changes made, then exit the metadata editor. The <q>Cancel</q> button will exit the editor without saving any changes.
+<p>The <q>Apply</q> button will save any changes made, then exit the editor panel. The <q>Cancel</q> button will exit the editor panel without saving any changes.
 <table>
     <thead>
-        <tr><th>Field<th>Description
+        <tr><th>Control<th>Description
     <tbody>
-        <tr><td>Enable User Changes<td>If this is checked, LOOT will use the metadata you supplied when sorting the current plugin. Otherwise, your metadata will be ignored.
-        <tr><td id="editingPriority">Priority<td>Modifies plugin position relative to others that change one or more of the same records, but which are otherwise unrelated (ie. neither plugin lists the other as a master, requirement, or in its "load after" list). Plugins that don't change any of the same records are not compared, unless:
+        <tr><td>Enable User Changes<td>If this is checked, LOOT will use the metadata you supplied. Otherwise, your metadata will be ignored.
+        <tr><td id="editingPriority">Priority<td>Modifies plugin position relative to others. Plugins with higher priority values load after plugins with lower priority values. Plugins have a default priority of 0. Plugin priorities are only compared if:
         <ul>
+            <li>The two plugins conflict with each other.
             <li>One or both of the plugins is a "dummy" plugin, containing only a header record.
-            <li>One or both of the plugins has the <q>Compare priority against all other plugins</q> checkbox ticked.
+            <li>One or both of the plugins has a global priority.
         </ul>
-        <p>A plugin with a higher priority value will load after a plugin with a lower priority value. Plugins have a default priority of 0.
-        <tr><td>Requirements<td>This is a list of files that are required by the current plugin for it to function correctly. LOOT will display an error message if any of the listed files are missing.
-        <p>Any file, not just plugins, can be listed here, and each file has three sub-fields:
+        <tr><td>Requirements<td>This is a list of files that are required by the current plugin for it to function correctly. The current plugin will be loaded after any plugins listed. LOOT will also display an error message if any of the listed files are missing. Any file, not just plugins, can be listed here, and each entry has three fields:
         <ul>
-            <li>The <var>filename</var> is the path, relative to the game's Data folder, of the file to be checked for. This sub-field is required.
+            <li>The <var>filename</var> is the path, relative to the game's Data folder, of the file to be checked for. This field is required.
             <li>The <var>display name</var> is optional, and if specified will be used instead of the <var>filename</var> in any error messages that are displayed if a problem is encountered relating to the file.
             <li>The <var>condition</var> is the optional condition string that is used to determine if the file should be checked for. If left blank, the file will always be checked for. Condition strings are a relatively advanced part of LOOT's functionality, and their syntax is covered in the <a href="LOOT%20Metadata%20Syntax.html">Metadata Syntax</a> documentation.
         </ul>
-        <p>Note that listing a plugin's masters as requirements is pointless, as LOOT already checks them.
-        <tr><td>Incompatibilities<td>This is a list of files that are incompatible with the plugin. LOOT will display an error message if any of the listed files are found.
-        <p>Any file, not just plugins, can be listed here, and each file has the same three sub-fields as for the requirements field.
-        <tr><td>Load After<td>This is a list of plugins which, if present, the current plugin must load after, but which are not required. This field can be used for resolving specific compatibility issues.
+        <p>Note that listing a plugin's masters as requirements is unnecessary, as LOOT already checks them.
+        <tr><td>Incompatibilities<td>This is a list of files that are incompatible with the plugin. LOOT will display an error message if any of the listed files are found. Any file, not just plugins, can be listed here, and each entry has the same three fields as for the requirements table.
+        <tr><td>Load After<td>This is a list of plugins which, if present, the current plugin must load after, but which are not required. This metadata can be used for resolving specific compatibility issues. Each entry has the same three fields as for the requirements table.
         <tr><td>Messages<td>A list of messages that are to be displayed for the plugin in LOOT's report. These have no bearing on a plugin's position in the load order.
-        <p>Each message has four sub-fields:
+        <p>Each message has four fields:
         <ul>
             <li>The <var>type</var> is fairly self-explanatory, and is used to provide messages of varying severity with appropriate emphasis in LOOT's report.
             <li>The <var>content</var> is the actual message text.
-            <li>The <var>condition</var> is, like for the corresponding file sub-field, used to determine if the message should be displayed. If left blank, the message is displayed.
-            <li>The <var>language</var> is the language LOOT runs in that the message will be displayed for. For example, if the message language is set to <q>English</q> and LOOT is running in German, then the message will not be displayed. If left unspecified, the message will be shown no matter what language LOOT is running in.
+            <li>The <var>condition</var> is, like for the corresponding file field, used to determine if the message should be displayed. If left blank, the message is displayed.
+            <li>The <var>language</var> is the language LOOT runs in that the message will be displayed for. This field has no effect for user-added messages, as they cannot contain multiple localisations, and LOOT will always display messages that have only one localisation, even if it doesn't match the current language.
         </ul>
         <p>If a message's condition determines that it should not be displayed, then it will not be displayed, no matter the language. However, if a message's condition determines that it should be displayed, but the language is specified and doesn't match the language LOOT is running in, the message will not be displayed.
         <tr><td>Bash Tags<td>A list of Bash Tags. These are used by Wrye Bash when generating a Bashed Patch. LOOT's metadata includes Bash Tag addition and removal suggestions, and any Bash Tags that came with the plugin are also displayed.
@@ -256,7 +255,7 @@ h3{
         <tr><td id="settingsUpdateMasterlist">Update masterlist before sorting<td>If checked, LOOT will update its masterlist, should an update be available, before sorting plugins.
 </table>
 <p>LOOT's game-specific settings can be customised in the games table. Settings can also be added for additional game instances, making it easy to use LOOT across multiple copies of a game, including total conversion mods. LOOT ships with settings for the <q>Nehrim - At Fate's Edge</q> total conversion mod as an example.
-<p>The games instances defined in this table are displayed in LOOT's <q>Game</q> menu, and can be selected there if detected. Game instance settings may be deleted by clicking the trash icon at the end of the game's row. The current game cannot have its settings deleted. If you delete the settings for one of LOOT's core four supported games (Oblivion, Skyrim, Fallout 3, Fallout: New Vegas), they will be recreated when LOOT is next run.
+<p>The games instances defined in this table are displayed in LOOT's <q>Game</q> menu, and can be selected there if detected. Game instance settings may be deleted by clicking the <span class="fa fa-trash-o"></span> icon at the end of the game's row. The current game cannot have its settings deleted. If you delete the settings for one of LOOT's core four supported games (Oblivion, Skyrim, Fallout 3, Fallout: New Vegas), they will be recreated when LOOT is next run.
 <p>The game settings are explained in the table below.
 <table>
     <thead>
