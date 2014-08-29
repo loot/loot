@@ -401,9 +401,9 @@ namespace loot {
         delete file;
 
         BOOST_LOG_TRIVIAL(trace) << name << ": " << "Attempting to read the version from the description.";
-        for (int j = 0; j < 7 && version.empty(); j++) {
+        for (size_t i = 0; i < 7; ++i) {
             smatch what;
-            if (regex_search(text, what, version_checks[j])) {
+            if (regex_search(text, what, version_checks[i])) {
                 //Use the first sub-expression match.
                 version = string(what[1].first, what[1].second);
                 break;
