@@ -621,7 +621,7 @@ var pluginLIProto = Object.create(HTMLLIElement.prototype, {
     handleDragStart: {
         value: function(evt) {
             evt.dataTransfer.effectAllowed = 'copy';
-            evt.dataTransfer.setData('text/plain', evt.target.textContent);
+            evt.dataTransfer.setData('text/plain', evt.currentTarget.getElementsByTagName('a')[0].textContent);
         }
     },
 
@@ -631,13 +631,13 @@ var pluginLIProto = Object.create(HTMLLIElement.prototype, {
 
             var template = document.getElementById('pluginLI');
             var clone = document.importNode(template.content, true);
-            this.createShadowRoot().appendChild(clone);
+            this.appendChild(clone);
         }
     },
 
     attachedCallback: {
         value: function() {
-            var hoverTargets = this.shadowRoot.querySelectorAll('[title]');
+            var hoverTargets = this.querySelectorAll('[title]');
             for (var i = 0; i < hoverTargets.length; ++i) {
                 hoverTargets[i].addEventListener('mouseenter', showHoverText, false);
                 hoverTargets[i].addEventListener('mouseleave', hideHoverText, false);
@@ -647,7 +647,7 @@ var pluginLIProto = Object.create(HTMLLIElement.prototype, {
 
     detachedCallback: {
         value: function() {
-            var hoverTargets = this.shadowRoot.querySelectorAll('[title]');
+            var hoverTargets = this.querySelectorAll('[title]');
             for (var i = 0; i < hoverTargets.length; ++i) {
                 hoverTargets[i].removeEventListener('mouseenter', showHoverText, false);
                 hoverTargets[i].removeEventListener('mouseleave', hideHoverText, false);

@@ -444,3 +444,26 @@ progress::-webkit-progress-value, .progress .value {
 #progressDialog[open] > .progress > .value {
     -webkit-animation-play-state: running;
 }
+
+:host > span {
+    display: inline-block;
+    width: 1.2em;
+}
+li[is=plugin-li][data-bsa=false] > .loadsBSA,
+li[is=plugin-li][data-dummy=false] > .dummyPlugin,
+li[is=plugin-li][data-edits=false] > .hasUserEdits,
+li[is=plugin-li][data-global-priority=false] > .hasGlobalPriority,
+li[is=plugin-li] > .hasPriority:not([title^=Priority]) {
+    visibility: hidden;
+}
+li[is=plugin-li] > a {
+    text-decoration: none;
+    color: black;
+}
+li[is=plugin-li] > .hasGlobalPriority, li[is=plugin-li] > .hasPriority {
+    display:none;
+}
+body.editMode li[is=plugin-li] > .hasGlobalPriority,
+body.editMode li[is=plugin-li] > .hasPriority {
+    display: inline-block;
+}
