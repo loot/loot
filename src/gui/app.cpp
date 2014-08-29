@@ -357,6 +357,11 @@ namespace loot {
                 _settings["enableDebugLogging"] = (_settings["Debug Verbosity"].as<unsigned int>() > 0);
                 _settings.remove("Debug Verbosity");
             }
+            else if (_setting["debugVerbosity"]) {
+                // Conversion from 0.7 alpha key
+                _settings["enableDebugLogging"] = (_settings["debugVerbosity"].as<unsigned int>() > 0);
+                _settings.remove("debugVerbosity");
+            }
             else
                 return false;
         }
