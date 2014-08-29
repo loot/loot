@@ -184,7 +184,7 @@ function Plugin(obj) {
                 change.object.li.shadowRoot.getElementsByClassName('hasPriority')[0].title = this.getPriorityString();
                 change.object.card.shadowRoot.getElementById('priorityValue').value = change.object[change.name];
             } else if (change.name == 'isGlobalPriority') {
-                change.object.li.shadowRoot.getElementsByClassName('hasPriority')[0].title = this.getPriorityString();
+                change.object.li.setAttribute('data-global-priority', change.object[change.name]);
             } else if (change.name == 'messages') {
                 change.object.updateCardMessages();
                 /* For messages, the card's messages need updating,
