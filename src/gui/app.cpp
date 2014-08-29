@@ -175,7 +175,16 @@ namespace loot {
             boost::log::core::get()->set_logging_enabled(true);
         else
             boost::log::core::get()->set_logging_enabled(false);
+
+        // Log some useful info.
         BOOST_LOG_TRIVIAL(info) << "LOOT Version: " << g_version_major << "." << g_version_minor << "." << g_version_patch;
+#ifdef _WIN32
+        // Check if LOOT is being run through Mod Organiser.
+        bool runFromMO = GetModuleHandle(ToWinWide("hook.dll").c_str()) != NULL;
+        if (runFromMO) {
+            BOOST_LOG_TRIVIAL(info) << "LOOT is being run through Mod Organiser.";
+        }
+#endif
 
         // The CEF debug log is appended to, not overwritten, so it gets really long.
         // Delete the current CEF debug log.
