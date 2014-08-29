@@ -4,9 +4,9 @@
 language:            eng    # One of 'eng', 'spa', 'rus' or ''.
 
 game:                auto   # auto, or one of the 'folder' values below.
-lastGame:           auto   # auto, or one of the 'folder' values below.
-debugVerbosity:     0      # 0, 1, 2, 3. Logging takes place if > 0.
-updateMasterlist:   true
+lastGame:            auto   # auto, or one of the 'folder' values below.
+enableDebugLogging:  false
+updateMasterlist:    true
 
 # Games. The four types are 'Oblivion', 'Skyrim', 'Fallout3' and 'FalloutNV'. They correspond to each base game's libespm and libloadorder settings.
 games:
