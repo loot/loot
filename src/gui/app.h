@@ -20,7 +20,7 @@
     You should have received a copy of the GNU General Public License
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
-*/
+    */
 
 #ifndef __LOOT_GUI_APP__
 #define __LOOT_GUI_APP__
@@ -29,14 +29,14 @@
 
 #include <include/cef_app.h>
 #include <include/wrapper/cef_message_router.h>
+#include <include/base/cef_lock.h>
 
 #include <yaml-cpp/yaml.h>
 
 namespace loot {
-
     class LootApp : public CefApp,
-                    public CefBrowserProcessHandler,
-                    public CefRenderProcessHandler {
+        public CefBrowserProcessHandler,
+        public CefRenderProcessHandler {
     public:
         LootApp();
 
@@ -50,23 +50,22 @@ namespace loot {
 
         // Override CefRenderProcessHandler methods.
         virtual bool OnProcessMessageReceived(CefRefPtr<CefBrowser> browser,
-                                            CefProcessId source_process,
-                                            CefRefPtr<CefProcessMessage> message) OVERRIDE;
+                                              CefProcessId source_process,
+                                              CefRefPtr<CefProcessMessage> message) OVERRIDE;
     private:
         CefRefPtr<CefMessageRouterRendererSide> message_router_;
 
         virtual void OnContextCreated(CefRefPtr<CefBrowser> browser,
-                                    CefRefPtr<CefFrame> frame,
-                                    CefRefPtr<CefV8Context> context) OVERRIDE;
+                                      CefRefPtr<CefFrame> frame,
+                                      CefRefPtr<CefV8Context> context) OVERRIDE;
 
         IMPLEMENT_REFCOUNTING(LootApp);
     };
 
-    class LootState {
+    class LootState : public CefBase {
     public:
         LootState();
 
-        // Init may fail with no
         void Init(const std::string& cmdLineGame);
         const std::vector<std::string>& InitErrors() const;
 
@@ -87,7 +86,11 @@ namespace loot {
 
         // Check if the settings file has the right root keys (doesn't check their values).
         bool AreSettingsValid();
-        YAML::Node GetDefaultSettings();
+        YAML::Node GetDefaultSettings() const;
+
+        // Lock used to protect access to member variables.
+        base::Lock _lock;
+        IMPLEMENT_REFCOUNTING(LootState);
     };
 
     extern LootState g_app_state;

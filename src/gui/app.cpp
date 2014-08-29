@@ -239,6 +239,9 @@ namespace loot {
     }
 
     void LootState::UpdateGames(std::vector<Game>& games) {
+        // Acquire the lock for the scope of this method.
+        base::AutoLock lock_scope(_lock);
+
         unordered_set<string> newGameFolders;
 
         // Update existing games, add new games.
@@ -272,6 +275,9 @@ namespace loot {
     }
 
     void LootState::ChangeGame(const std::string& newGameFolder) {
+        // Acquire the lock for the scope of this method.
+        base::AutoLock lock_scope(_lock);
+
         BOOST_LOG_TRIVIAL(debug) << "Changing current game to that with folder: " << newGameFolder;
         auto it = find(_games.begin(), _games.end(), newGameFolder);
 
@@ -281,6 +287,9 @@ namespace loot {
     }
 
     Game& LootState::CurrentGame() {
+        // Acquire the lock for the scope of this method.
+        base::AutoLock lock_scope(_lock);
+
         return _games[_currentGame];
     }
 
@@ -298,10 +307,16 @@ namespace loot {
     }
 
     void LootState::UpdateSettings(const YAML::Node& settings) {
+        // Acquire the lock for the scope of this method.
+        base::AutoLock lock_scope(_lock);
+
         _settings = settings;
     }
 
     void LootState::SaveSettings() {
+        // Acquire the lock for the scope of this method.
+        base::AutoLock lock_scope(_lock);
+
         _settings["lastGame"] = _games[_currentGame].FolderName();
 
         //Save settings.
@@ -321,6 +336,9 @@ namespace loot {
     }
 
     bool LootState::AreSettingsValid() {
+        // Acquire the lock for the scope of this method.
+        base::AutoLock lock_scope(_lock);
+
         if (!_settings["language"]) {
             if (_settings["Language"]) {
                 // Conversion from 0.6 key.
@@ -396,7 +414,7 @@ namespace loot {
         return true;
     }
 
-    YAML::Node LootState::GetDefaultSettings() {
+    YAML::Node LootState::GetDefaultSettings() const {
         YAML::Node root;
 
         root["language"] = "en";
