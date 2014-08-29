@@ -151,7 +151,8 @@ h3{
 
 <h3 id="usage-menus">Menus</h3>
 <h4>File Menu</h4>
-<p>The menu's <q>Redate Plugins</q> option is provided so that Skyrim modders may set the load order for the Creation Kit. It is only enabled for Skyrim, and changes the timestamps of the plugins in its Data folder to match their current load order. A side effect of changing the timestamps is that any Steam Workshop mods installed will be re-downloaded.
+<p>The menu's <q>Redate Plugins</q> item is provided so that Skyrim modders may set the load order for the Creation Kit. It is only enabled for Skyrim, and changes the timestamps of the plugins in its Data folder to match their current load order. A side effect of changing the timestamps is that any Steam Workshop mods installed will be re-downloaded.
+<p>The <q>Refresh Content</q> item re-scans the installed plugin headers and regenerates the content LOOT displays. It can be used to manually force a refresh when auto-refresh on window refocus is disabled.
 <h4>Game Menu</h4>
 <p>The <q>Game</q> menu allows you to change which game LOOT is running for. Games that LOOT cannot find are greyed out, and the the one LOOT is running for is marked with a double chevron. To change the active game, simply select another game in the list.
 <h4>Plugin Menus</h4>
@@ -250,9 +251,10 @@ h3{
         <tr><th>Setting<th>Description
     <tbody>
         <tr><td id="settingsDefaultGame">Default Game<td>If set to something other than <q>Autodetect</q>, this overrides game autodetection. If the game specified is not detected, LOOT falls back to autodetection.
-        <tr><td>Language<td>Controls the language LOOT uses in its interfaces. Debug messages are always displayed in English, and any plugin messages that do not have translations in the selected language will be displayed in English instead.
-        <tr><td>Debug Verbosity<td>Controls the verbosity of the debug output, which is written to <code>%LOCALAPPDATA%\LOOT\LOOTDebugLog.txt</code>.
+        <tr><td>Language<td>Controls the language LOOT uses in its interfaces. Any plugin messages that do not have translations in the selected language will be displayed in English, if available, or in their available language otherwise.
+        <tr><td>Enable Debug Logging<td>If enabled, writes debug output to <code>%LOCALAPPDATA%\LOOT\LOOTDebugLog.txt</code>. Debug logging can have a noticeable impact on performance, so it is off by default.
         <tr><td id="settingsUpdateMasterlist">Update masterlist before sorting<td>If checked, LOOT will update its masterlist, should an update be available, before sorting plugins.
+        <tr><td>Automatically refresh content on window refocus<td>Controls whether or not LOOT re-scans installed plugin headers and regenerates displayed content when its window regains focus.
 </table>
 <p>LOOT's game-specific settings can be customised in the games table. Settings can also be added for additional game instances, making it easy to use LOOT across multiple copies of a game, including total conversion mods. LOOT ships with settings for the <q>Nehrim - At Fate's Edge</q> total conversion mod as an example.
 <p>The games instances defined in this table are displayed in LOOT's <q>Game</q> menu, and can be selected there if detected. Game instance settings may be deleted by clicking the <span class="fa fa-trash-o"></span> icon at the end of the game's row. The current game cannot have its settings deleted. If you delete the settings for one of LOOT's core four supported games (Oblivion, Skyrim, Fallout 3, Fallout: New Vegas), they will be recreated when LOOT is next run.
@@ -401,7 +403,8 @@ A copy of the license is included in the file named "GNU FDL v1.3.txt".</blockqu
     <li>Support for the full range of GitHub Flavored Markdown in masterlist messages.
     <li>If LOOT can't detect any installed games, it now launches to the settings dialog, where the game settings can be edited to allow a game to be detected.
     <li><q>Copy Content As Text</q> menu item to copy the plugin list and all information it contains to the clipboard as YAML-formatted text.
-    <li>LOOT now re-scans plugin headers and updates the plugin list when its window regains focus.
+    <li>LOOT now re-scans plugin headers and updates the plugin list when its window regains focus. This can be disabled using the new <q>Automatically refresh content on window refocus</q> setting.
+    <li>A <q>Refresh Content</q> item has been added to the <q>File</q> menu, which manually performs the same refresh that happens by default when LOOT's window regains focus.
     <li>LOOT is now built as with the Large Address Aware flag.
     <li>Masterlist update can now be performed without then sorting.
 </ul>
@@ -422,6 +425,7 @@ A copy of the license is included in the file named "GNU FDL v1.3.txt".</blockqu
         <li>The <q>Show only conflicting plugins</q> filter has been renamed to <q>Show Only Conflicts</q> and moved into the plugin menu.
     </ul>
     <li>The <q>View Debug Log</q> menu item has been replaced with a <q>Open Debug Log Location</q> menu item to make it easier to upload the file itself.
+    <li>Debug logging control has been simplified to enable/disable, replacing the <q>Debug Verbosity</q> setting with an <q>Enable Debug Logging</q> checkbox.
     <li>Changes to game settings now take immediate effect.
     <li>Masterlist updating now exits earlier if the masterlist is already up-to-date.
     <li>Masterlist revisions are now displayed using the shortest unique substring that is at least 7 characters long.
