@@ -859,6 +859,7 @@ namespace loot {
     }
 
     void Handler::SortPlugins(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback) {
+        BOOST_LOG_TRIVIAL(info) << "Beginning sorting operation.";
         //Set language.
         unsigned int language;
         if (g_app_state.GetSettings()["language"])

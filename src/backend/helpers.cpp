@@ -107,7 +107,7 @@ namespace loot {
 
     /// Array used to try each of the expressions defined above using
     /// an iteration for each of them.
-    regex version_checks[7] = {
+    const regex version_checks[7] = {
             regex(regex1, regex::ECMAScript | regex::icase),
             regex(regex2, regex::ECMAScript | regex::icase),
             regex(regex3, regex::ECMAScript | regex::icase),
@@ -116,6 +116,9 @@ namespace loot {
             regex(regex6, regex::ECMAScript | regex::icase),  //This is responsible for metallicow's false positive.
             regex(regex7, regex::ECMAScript | regex::icase)
             };
+
+    // A regular expression for finding Bash Tags in plugin descriptions.
+    const regex bash_tag_check("\\{\\{BASH:(?:[ ]*([-A-Za-z.]+)[ ]*,)+[ ]*\\}\\}", regex::ECMAScript | regex::icase);
 
     //////////////////////////////////////////////////////////////////////////
     // Helper functions

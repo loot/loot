@@ -400,47 +400,28 @@ namespace loot {
 
         delete file;
 
-        string::const_iterator begin, end;
-        begin = text.begin();
-        end = text.end();
-
         BOOST_LOG_TRIVIAL(trace) << name << ": " << "Attempting to read the version from the description.";
         for (int j = 0; j < 7 && version.empty(); j++) {
             smatch what;
-            while (regex_search(begin, end, what, version_checks[j])) {
-                if (what.empty())
-                    continue;
-
-                ssub_match match = what[1];
-                if (!match.matched)
-                    continue;
-
-                version = boost::trim_copy(string(match.first, match.second));
+            if (regex_search(text, what, version_checks[j])) {
+                //Use the first sub-expression match.
+                version = string(what[1].first, what[1].second);
                 break;
             }
         }
-
         BOOST_LOG_TRIVIAL(trace) << name << ": " << "Attempting to extract Bash Tags from the description.";
-        size_t pos1 = text.find("{{BASH:");
-        if (pos1 == string::npos || pos1 + 7 == text.length())
-            return;
-
-        pos1 += 7;
-
-        size_t pos2 = text.find("}}", pos1);
-        if (pos2 == string::npos)
-            return;
-
-        text = text.substr(pos1, pos2-pos1);
-
-        vector<string> bashTags;
-        boost::split(bashTags, text, boost::is_any_of(","));
-
-        for (auto &tag: bashTags) {
-            boost::trim(tag);
-            BOOST_LOG_TRIVIAL(trace) << name << ": " << "Extracted Bash Tag: " << tag;
-            tags.insert(Tag(tag));
+        smatch results;
+        if (regex_search(text, results, bash_tag_check)) {
+            // Regex requires there to be at least one sub-expression match,
+            // so skip the first (which is the full expression.
+            for (size_t i = 1; i < results.size(); ++i) {
+                // Tags in the description must be addition tags, because there's
+                // nowhere else to remove them from.
+                auto tag = tags.insert(Tag(string(results[i].first, results[i].second)));
+                BOOST_LOG_TRIVIAL(trace) << name << ": " << "Extracted Bash Tag: " << tag.first->Name();
+            }
         }
+        BOOST_LOG_TRIVIAL(trace) << name << ": " << "Plugin loading complete.";
     }
 
     void Plugin::MergeMetadata(const Plugin& plugin) {

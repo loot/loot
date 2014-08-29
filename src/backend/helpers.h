@@ -36,7 +36,10 @@ namespace loot {
 
     /// Array used to try each of the expressions defined using
     /// an iteration for each of them.
-    extern std::regex version_checks[7];
+    extern const std::regex version_checks[7];
+
+    // A regular expression for finding Bash Tags in plugin descriptions.
+    extern const std::regex bash_tag_check;
 
     //////////////////////////////////////////////////////////////////////////
     // Helper functions
