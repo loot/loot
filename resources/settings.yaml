@@ -7,6 +7,7 @@ game:                auto   # auto, or one of the 'folder' values below.
 lastGame:            auto   # auto, or one of the 'folder' values below.
 enableDebugLogging:  false
 updateMasterlist:    true
+autoRefresh:         true
 
 # Games. The four types are 'Oblivion', 'Skyrim', 'Fallout3' and 'FalloutNV'. They correspond to each base game's libespm and libloadorder settings.
 games:

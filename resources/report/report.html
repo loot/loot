@@ -421,6 +421,7 @@
                 <li id="openLogButton"><span class="fa fa-fw fa-folder-open"></span>Open Debug Log Location
                 <li id="wipeUserlistButton"><span class="fa fa-fw fa-trash-o"></span>Clear All User Metadata
                 <li id="copyContentButton"><span class="fa fa-fw fa-copy"></span>Copy Content As Text
+                <li id="refreshContentButton"><span class="fa fa-fw fa-refresh"></span>Refresh Content
             </ol>
             <li id="gameMenu">Game
             <ol class="hidden">
@@ -434,7 +435,7 @@
             </ol>
         </ol>
         <ol>
-            <li id="updateMasterlistButton"><span class="fa fa-fw fa-refresh"></span>Update Masterlist
+            <li id="updateMasterlistButton"><span class="fa fa-fw fa-download"></span>Update Masterlist
             <li id="sortButton"><span class="fa fa-fw fa-magic"></span>Sort
             <li id="applySortButton" class="hidden"><span class="fa fa-fw fa-check"></span>Apply
             <li id="cancelSortButton" class="hidden"><span class="fa fa-fw fa-times"></span>Cancel
@@ -543,6 +544,7 @@ along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
         </select><br>
         <p><input type="checkbox" id="enableDebugLogging"><label for="enableDebugLogging" title="The output is logged to the LOOTDebugLog.txt file.">Enable debug logging</label>
         <p><input type="checkbox" id="updateMasterlist"><label for="updateMasterlist">Update masterlist before sorting</label>
+        <p><input type="checkbox" id="autoRefresh"><label for="autoRefresh">Automatically refresh content on window refocus</label>
         <table is="editable-table" id="gameTable" data-template="gameRow">
             <thead>
                 <tr><th>Name<th>Base Game<th>LOOT Folder<th>Master File<th>Masterlist Repository URL<th>Masterlist Repository Branch<th>Install Path<th>Install Path Registry Key<th>

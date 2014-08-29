@@ -407,6 +407,8 @@ namespace loot {
             else
                 return false;
         }
+        if (!_settings["autoRefresh"])
+            _settings["autoRefresh"] = true;
 
         if (_settings["windows"])
             _settings.remove("windows");

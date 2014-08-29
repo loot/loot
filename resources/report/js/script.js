@@ -198,6 +198,7 @@ var loot = {
         document.getElementById('languageSelect').value = this.settings.language;
         document.getElementById('enableDebugLogging').checked = this.settings.enableDebugLogging;
         document.getElementById('updateMasterlist').checked = this.settings.updateMasterlist;
+        document.getElementById('autoRefresh').checked = this.settings.autoRefresh;
 
         this.updateEnabledGames();
         this.game.updateSelectedGame();
@@ -1044,7 +1045,16 @@ function closeSettingsDialog(evt) {
             lastGame: loot.settings.lastGame,
             updateMasterlist: document.getElementById('updateMasterlist').checked,
             filters: loot.settings.filters,
+            autoRefresh: document.getElementById('autoRefresh').checked,
         };
+
+        /* There's no easy way to check if an event listener has been added
+           already, so just remove the window focus listener, and add it again
+           if auto-refresh is enabled. */
+        window.removeEventListener('focus', onFocus, false);
+        if (settings.autoRefresh) {
+            window.addEventListener('focus', onFocus, false);
+        }
 
         /* Send the settings back to the C++ side. */
         var request = JSON.stringify({
@@ -1167,6 +1177,7 @@ function setupEventHandlers() {
     document.getElementById('openLogButton').addEventListener('click', openLogLocation, false);
     document.getElementById('wipeUserlistButton').addEventListener('click', clearAllMetadata, false);
     document.getElementById('copyContentButton').addEventListener('click', copyContent, false);
+    document.getElementById('refreshContentButton').addEventListener('click', onFocus, false);
     document.getElementById('gameMenu').addEventListener('click', openMenu, false);
     document.getElementById('settingsButton').addEventListener('click', showSettingsDialog, false);
     document.getElementById('helpMenu').addEventListener('click', openMenu, false);
@@ -1313,11 +1324,17 @@ function initVars() {
             }
 
             closeProgressDialog();
+
+            /* So much easier than trying to set up my own C++ message loop to listen
+               to window messages looking for a focus change. */
+            if (loot.settings.autoRefresh) {
+                window.addEventListener('focus', onFocus, false);
+            }
         }).catch(processCefError);
 
     }).catch(processCefError);
 }
-function onFocus() {
+function onFocus(evt) {
     /* Send a query for updated load order and plugin header info. */
     updateProgressDialog('Refreshing data...');
     openProgressDialog();
@@ -1389,14 +1406,6 @@ function onFocus() {
         closeProgressDialog();
     }).catch(processCefError);
 }
-function checkFocus(){
-    if (document.hasFocus() && !loot.hasFocus) {
-        loot.hasFocus = true;
-        onFocus();
-    } else if (!document.hasFocus() && loot.hasFocus) {
-        loot.hasFocus = false;
-    }
-}
 
 require.config({
     baseUrl: "js",
@@ -1411,8 +1420,4 @@ require(['marked', 'order!custom', 'order!plugin'], function(response) {
     });
     setupEventHandlers();
     initVars();
-    /* So much easier than trying to set up my own C++ message loop to listen
-       to window messages looking for a focus change. */
-    loot.hasFocus = document.hasFocus();
-    setInterval(checkFocus, 500);
 });
