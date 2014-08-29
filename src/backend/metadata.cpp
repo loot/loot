@@ -20,7 +20,7 @@
     You should have received a copy of the GNU General Public License
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
-*/
+    */
 
 #include "helpers.h"
 #include "metadata.h"
@@ -39,7 +39,6 @@
 using namespace std;
 
 namespace loot {
-
     namespace lc = boost::locale;
 
     FormID::FormID() : id(0) {}
@@ -105,7 +104,6 @@ namespace loot {
         return _utility;
     }
 
-
     ConditionStruct::ConditionStruct() {}
 
     ConditionStruct::ConditionStruct(const string& condition) : _condition(condition) {}
@@ -139,7 +137,8 @@ namespace loot {
         bool r;
         try {
             r = boost::spirit::qi::phrase_parse(begin, end, grammar, skipper, eval);
-        } catch (std::exception& e) {
+        }
+        catch (std::exception& e) {
             BOOST_LOG_TRIVIAL(error) << "Failed to parse condition \"" << _condition << "\": " << e.what();
             throw loot::error(loot::error::condition_eval_fail, (boost::format(lc::translate("Failed to parse condition \"%1%\": %2%")) % _condition % e.what()).str());
         }
@@ -215,7 +214,7 @@ namespace loot {
     }
 
     Message::Message(const unsigned int type, const std::vector<MessageContent>& content,
-                const std::string& condition) : _type(type), _content(content), ConditionStruct(condition) {}
+                     const std::string& condition) : _type(type), _content(content), ConditionStruct(condition) {}
 
     bool Message::operator < (const Message& rhs) const {
         if (!_content.empty() && !rhs.Content().empty())
@@ -231,7 +230,6 @@ namespace loot {
     }
 
     bool Message::EvalCondition(loot::Game& game, const unsigned int language) {
-
         BOOST_LOG_TRIVIAL(trace) << "Choosing message content for language: " << Language(language).Name();
 
         if (_content.size() > 1) {
@@ -239,7 +237,7 @@ namespace loot {
                 _content.resize(1);
             else {
                 MessageContent english, match;
-                for (const auto &mc: _content) {
+                for (const auto &mc : _content) {
                     if (mc.Language() == language) {
                         match = mc;
                         break;
@@ -341,7 +339,6 @@ namespace loot {
 
     Plugin::Plugin(loot::Game& game, const std::string& n, const bool headerOnly)
         : name(n), enabled(true), priority(0), isMaster(false), crc(0), numOverrideRecords(0), _isPriorityExplicit(false) {
-
         // Get data from file contents using libespm. Assumes libespm has already been initialised.
         BOOST_LOG_TRIVIAL(trace) << name << ": " << "Opening with libespm...";
         boost::filesystem::path filepath = game.DataPath() / name;
@@ -387,7 +384,7 @@ namespace loot {
         vector<uint32_t> records = file->getFormIDs();
         vector<string> plugins = masters;
         plugins.push_back(name);
-        for (const auto &record: records) {
+        for (const auto &record : records) {
             FormID fid = FormID(plugins, record);
             formIDs.insert(fid);
             if (!boost::iequals(fid.Plugin(), name))
@@ -631,10 +628,12 @@ namespace loot {
         else if (boost::filesystem::exists(game.DataPath() / name)) {
             crc = GetCrc32(game.DataPath() / name);
             game.crcCache.emplace(boost::locale::to_lower(name), crc);
-        } else if (boost::filesystem::exists(game.DataPath() / (name + ".ghost"))) {
+        }
+        else if (boost::filesystem::exists(game.DataPath() / (name + ".ghost"))) {
             crc = GetCrc32(game.DataPath() / (name + ".ghost"));
             game.crcCache.emplace(boost::locale::to_lower(name), crc);
-        } else
+        }
+        else
             _dirtyInfo.clear();
 
         for (auto it = _dirtyInfo.begin(); it != _dirtyInfo.end();) {
@@ -679,8 +678,8 @@ namespace loot {
 
     bool Plugin::operator == (const Plugin& rhs) const {
         return (boost::iequals(name, rhs.Name())
-            || (IsRegexPlugin() && regex_match(rhs.Name(), regex(name, regex::ECMAScript | regex::icase)))
-            || (rhs.IsRegexPlugin() && regex_match(name, regex(rhs.Name(), regex::ECMAScript | regex::icase))));
+                || (IsRegexPlugin() && regex_match(rhs.Name(), regex(name, regex::ECMAScript | regex::icase)))
+                || (rhs.IsRegexPlugin() && regex_match(name, regex(rhs.Name(), regex::ECMAScript | regex::icase))));
     }
 
     bool Plugin::operator != (const Plugin& rhs) const {
@@ -696,9 +695,9 @@ namespace loot {
         BOOST_LOG_TRIVIAL(trace) << "Checking for FormID overlap between \"" << name << "\" and \"" << plugin.Name() << "\".";
 
         set<FormID>::const_iterator i = formIDs.begin(),
-                                    j = plugin.FormIDs().begin(),
-                                    iend = formIDs.end(),
-                                    jend = plugin.FormIDs().end();
+            j = plugin.FormIDs().begin(),
+            iend = formIDs.end(),
+            jend = plugin.FormIDs().end();
 
         while (i != iend && j != jend) {
             if (*i < *j)
@@ -752,9 +751,9 @@ namespace loot {
 
     bool Plugin::MustLoadAfter(const Plugin& plugin) const {
         if ((!isMaster && plugin.IsMaster())
-         || find(masters.begin(), masters.end(), plugin) != masters.end()
-         || find(requirements.begin(), requirements.end(), plugin) != requirements.end()
-         || find(loadAfter.begin(), loadAfter.end(), plugin) != loadAfter.end())
+            || find(masters.begin(), masters.end(), plugin) != masters.end()
+            || find(requirements.begin(), requirements.end(), plugin) != requirements.end()
+            || find(loadAfter.begin(), loadAfter.end(), plugin) != loadAfter.end())
             return true;
         return false;
     }
@@ -766,24 +765,24 @@ namespace loot {
         else
             messageType = loot::Message::warn;
         if (tags.find(Tag("Filter")) == tags.end()) {
-            for (const auto &master: masters) {
+            for (const auto &master : masters) {
                 if (!boost::filesystem::exists(game.DataPath() / master) && !boost::filesystem::exists(game.DataPath() / (master + ".ghost"))) {
                     BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" requires \"" << master << "\", but it is missing.";
                     messages.push_back(loot::Message(messageType, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % master).str()));
                 }
                 else if (!game.IsActive(master)) {
-                    BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" requires \"" << master  << "\", but it is inactive.";
+                    BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" requires \"" << master << "\", but it is inactive.";
                     messages.push_back(loot::Message(messageType, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be active, but it is inactive.")) % master).str()));
                 }
             }
         }
-        for (const auto &req: requirements) {
+        for (const auto &req : requirements) {
             if (!boost::filesystem::exists(game.DataPath() / req.Name()) && !(IsPlugin(req.Name()) && boost::filesystem::exists(game.DataPath() / (req.Name() + ".ghost")))) {
                 BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" requires \"" << req.Name() << "\", but it is missing.";
                 messages.push_back(loot::Message(messageType, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % req.Name()).str()));
             }
         }
-        for (const auto &inc: incompatibilities) {
+        for (const auto &inc : incompatibilities) {
             if (boost::filesystem::exists(game.DataPath() / inc.Name()) || (IsPlugin(inc.Name()) && boost::filesystem::exists(game.DataPath() / (inc.Name() + ".ghost")))) {
                 if (!game.IsActive(inc.Name()))
                     messageType = loot::Message::warn;
@@ -800,7 +799,6 @@ namespace loot {
                 f = boost::format(boost::locale::translate("Contains %1% ITM records, %2% UDR records and %3% deleted navmeshes. Clean with %4%.")) % element.ITMs() % element.UDRs() % element.DeletedNavmeshes() % element.CleaningUtility();
             else if (element.ITMs() == 0 && element.UDRs() == 0 && element.DeletedNavmeshes() == 0)
                 f = boost::format(boost::locale::translate("Clean with %1%.")) % element.CleaningUtility();
-
 
             else if (element.ITMs() == 0 && element.UDRs() > 0 && element.DeletedNavmeshes() > 0)
                 f = boost::format(boost::locale::translate("Contains %1% UDR records and %2% deleted navmeshes. Clean with %3%.")) % element.UDRs() % element.DeletedNavmeshes() % element.CleaningUtility();
@@ -848,7 +846,7 @@ namespace loot {
 
     bool IsPlugin(const std::string& file) {
         if (boost::iends_with(file, ".esp") || boost::iends_with(file, ".esm")
-         || boost::iends_with(file, ".esp.ghost") || boost::iends_with(file, ".esm.ghost"))
+            || boost::iends_with(file, ".esp.ghost") || boost::iends_with(file, ".esm.ghost"))
             return true;
         else
             return false;

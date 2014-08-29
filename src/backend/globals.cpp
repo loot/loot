@@ -20,13 +20,12 @@
     You should have received a copy of the GNU General Public License
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
-*/
+    */
 
 #include "globals.h"
 #include "helpers.h"
 
 namespace loot {
-
     //Version numbers.
     const unsigned int g_version_major = 0;
     const unsigned int g_version_minor = 7;

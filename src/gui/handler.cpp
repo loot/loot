@@ -20,7 +20,7 @@
     You should have received a copy of the GNU General Public License
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
-*/
+    */
 
 #include "handler.h"
 #include "resource.h"
@@ -52,7 +52,6 @@ namespace fs = boost::filesystem;
 namespace loc = boost::locale;
 
 namespace loot {
-
     namespace {
         LootHandler * g_instance = NULL;
     }
@@ -64,11 +63,11 @@ namespace loot {
 
     // Called due to cefQuery execution in binding.html.
     bool Handler::OnQuery(CefRefPtr<CefBrowser> browser,
-                            CefRefPtr<CefFrame> frame,
-                            int64 query_id,
-                            const CefString& request,
-                            bool persistent,
-                            CefRefPtr<Callback> callback) {
+                          CefRefPtr<CefFrame> frame,
+                          int64 query_id,
+                          const CefString& request,
+                          bool persistent,
+                          CefRefPtr<Callback> callback) {
         if (request == "openReadme") {
             try {
                 OpenReadme();
@@ -186,11 +185,10 @@ namespace loot {
     }
 
     // Handle queries with input arguments.
-    bool Handler::HandleComplexQuery(CefRefPtr<CefBrowser> browser, 
-                                     CefRefPtr<CefFrame> frame, 
+    bool Handler::HandleComplexQuery(CefRefPtr<CefBrowser> browser,
+                                     CefRefPtr<CefFrame> frame,
                                      YAML::Node& request,
                                      CefRefPtr<Callback> callback) {
-
         const string requestName = request["name"].as<string>();
 
         if (requestName == "find") {
@@ -873,7 +871,7 @@ namespace loot {
         g_app_state.CurrentGame().LoadPlugins(false);
 
         //Sort plugins into their load order.
-        list<Plugin> plugins = g_app_state.CurrentGame().Sort(language, [this, frame](const string& message){
+        list<Plugin> plugins = g_app_state.CurrentGame().Sort(language, [this, frame](const string& message) {
             this->SendProgressUpdate(frame, message);
         });
 
@@ -940,7 +938,6 @@ namespace loot {
         // Now rederive the displayed metadata from the masterlist and userlist.
         auto pluginIt = g_app_state.CurrentGame().plugins.find(boost::locale::to_lower(pluginName));
         if (pluginIt != g_app_state.CurrentGame().plugins.end()) {
-
             Plugin master(g_app_state.CurrentGame().masterlist.FindPlugin(pluginIt->second));
             Plugin user(g_app_state.CurrentGame().userlist.FindPlugin(pluginIt->second));
 
@@ -1013,9 +1010,9 @@ namespace loot {
         return this;
     }
 
-    bool LootHandler::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser,
-                                                CefProcessId source_process,
-                                                CefRefPtr<CefProcessMessage> message) {
+    bool LootHandler::OnProcessMessageReceived(CefRefPtr<CefBrowser> browser,
+                                               CefProcessId source_process,
+                                               CefRefPtr<CefProcessMessage> message) {
         return browser_side_router_->OnProcessMessageReceived(browser, source_process, message);
     }
 
@@ -1023,12 +1020,12 @@ namespace loot {
     //--------------------------
 
     void LootHandler::OnTitleChange(CefRefPtr<CefBrowser> browser,
-                                      const CefString& title) {
-      assert(CefCurrentlyOn(TID_UI));
+                                    const CefString& title) {
+        assert(CefCurrentlyOn(TID_UI));
 
-      CefWindowHandle hwnd = browser->GetHost()->GetWindowHandle();
+        CefWindowHandle hwnd = browser->GetHost()->GetWindowHandle();
 #ifdef _WIN32
-      SetWindowText(hwnd, ToWinWide(title).c_str());
+        SetWindowText(hwnd, ToWinWide(title).c_str());
 #endif
     }
 
@@ -1144,10 +1141,10 @@ namespace loot {
     //-----------------------
 
     void LootHandler::OnLoadError(CefRefPtr<CefBrowser> browser,
-                            CefRefPtr<CefFrame> frame,
-                            ErrorCode errorCode,
-                            const CefString& errorText,
-                            const CefString& failedUrl) {
+                                  CefRefPtr<CefFrame> frame,
+                                  ErrorCode errorCode,
+                                  const CefString& errorText,
+                                  const CefString& failedUrl) {
         assert(CefCurrentlyOn(TID_UI));
 
         // Don't display an error for downloaded files.
@@ -1157,9 +1154,9 @@ namespace loot {
         // Display a load error message.
         std::stringstream ss;
         ss << "<html><body bgcolor=\"white\">"
-           << "<h2>Failed to load URL " << std::string(failedUrl)
-           << " with error " << std::string(errorText) << " (" << errorCode
-           << ").</h2></body></html>";
+            << "<h2>Failed to load URL " << std::string(failedUrl)
+            << " with error " << std::string(errorText) << " (" << errorCode
+            << ").</h2></body></html>";
 
         frame->LoadString(ss.str(), failedUrl);
     }
@@ -1168,10 +1165,9 @@ namespace loot {
     //--------------------------
 
     bool LootHandler::OnBeforeBrowse(CefRefPtr< CefBrowser > browser,
-        CefRefPtr< CefFrame > frame,
-        CefRefPtr< CefRequest > request,
-        bool is_redirect) {
-
+                                     CefRefPtr< CefFrame > frame,
+                                     CefRefPtr< CefRequest > request,
+                                     bool is_redirect) {
         BOOST_LOG_TRIVIAL(trace) << "Attemping to open link: " << request->GetURL().ToString();
         BOOST_LOG_TRIVIAL(trace) << "Comparing with URL: " << ToFileURL(g_path_report);
 
@@ -1190,11 +1186,10 @@ namespace loot {
     }
 
     void LootHandler::CloseAllBrowsers(bool force_close) {
-
         if (!CefCurrentlyOn(TID_UI)) {
             // Execute on the UI thread.
             CefPostTask(TID_UI,
-            NewCefRunnableMethod(this, &LootHandler::CloseAllBrowsers, force_close));
+                        NewCefRunnableMethod(this, &LootHandler::CloseAllBrowsers, force_close));
             return;
         }
 
@@ -1205,5 +1200,4 @@ namespace loot {
             (*it)->GetHost()->CloseBrowser(force_close);
         }
     }
-
 }

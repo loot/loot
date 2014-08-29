@@ -20,7 +20,7 @@
     You should have received a copy of the GNU General Public License
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
-*/
+    */
 
 #include "game.h"
 #include "globals.h"
@@ -43,7 +43,6 @@ namespace fs = boost::filesystem;
 namespace lc = boost::locale;
 
 namespace loot {
-
     std::vector<Game> GetGames(YAML::Node& settings) {
         vector<Game> games;
 
@@ -264,7 +263,8 @@ namespace loot {
             espm_settings = espm::Settings("tes4");
             _repositoryURL = "https://github.com/loot/oblivion.git";
             _repositoryBranch = "master";
-        } else if (Id() == Game::tes5) {
+        }
+        else if (Id() == Game::tes5) {
             _name = "TES V: Skyrim";
             registryKey = "Software\\Bethesda Softworks\\Skyrim\\Installed Path";
             lootFolderName = "Skyrim";
@@ -272,7 +272,8 @@ namespace loot {
             espm_settings = espm::Settings("tes5");
             _repositoryURL = "https://github.com/loot/skyrim.git";
             _repositoryBranch = "master";
-        } else if (Id() == Game::fo3) {
+        }
+        else if (Id() == Game::fo3) {
             _name = "Fallout 3";
             registryKey = "Software\\Bethesda Softworks\\Fallout3\\Installed Path";
             lootFolderName = "Fallout3";
@@ -280,7 +281,8 @@ namespace loot {
             espm_settings = espm::Settings("fo3");
             _repositoryURL = "https://github.com/loot/fallout3.git";
             _repositoryBranch = "master";
-        } else if (Id() == Game::fonv) {
+        }
+        else if (Id() == Game::fonv) {
             _name = "Fallout: New Vegas";
             registryKey = "Software\\Bethesda Softworks\\FalloutNV\\Installed Path";
             lootFolderName = "FalloutNV";
@@ -295,8 +297,7 @@ namespace loot {
     }
 
     Game& Game::SetDetails(const std::string& name, const std::string& masterFile,
-        const std::string& repositoryURL, const std::string& repositoryBranch, const std::string& path, const std::string& registry) {
-
+                           const std::string& repositoryURL, const std::string& repositoryBranch, const std::string& path, const std::string& registry) {
         BOOST_LOG_TRIVIAL(info) << "Setting new details for game: " << _name;
 
         if (!name.empty())
@@ -506,7 +507,7 @@ namespace loot {
         }
 
         activePlugins.clear();
-        for (size_t i=0; i < pluginArrSize; ++i) {
+        for (size_t i = 0; i < pluginArrSize; ++i) {
             activePlugins.insert(boost::locale::to_lower(string(pluginArr[i])));
         }
 
@@ -587,7 +588,7 @@ namespace loot {
         }
 
         loadOrder.clear();
-        for (size_t i=0; i < pluginArrSize; ++i) {
+        for (size_t i = 0; i < pluginArrSize; ++i) {
             loadOrder.push_back(string(pluginArr[i]));
         }
 
@@ -647,16 +648,16 @@ namespace loot {
         pluginArrSize = loadOrder.size();
         pluginArr = new char*[pluginArrSize];
         int i = 0;
-        for (const auto &plugin: loadOrder) {
+        for (const auto &plugin : loadOrder) {
             pluginArr[i] = new char[plugin.length() + 1];
             strcpy(pluginArr[i], plugin.c_str());
             ++i;
         }
 
         if (lo_set_load_order(gh, pluginArr, pluginArrSize) != LIBLO_OK) {
-            for (size_t i=0; i < pluginArrSize; i++)
-                delete [] pluginArr[i];
-            delete [] pluginArr;
+            for (size_t i = 0; i < pluginArrSize; i++)
+                delete[] pluginArr[i];
+            delete[] pluginArr;
             const char * e = nullptr;
             string err;
             lo_get_error_message(&e);
@@ -673,9 +674,9 @@ namespace loot {
             throw error(error::liblo_error, err);
         }
 
-        for (size_t i=0; i < pluginArrSize; i++)
-            delete [] pluginArr[i];
-        delete [] pluginArr;
+        for (size_t i = 0; i < pluginArrSize; i++)
+            delete[] pluginArr[i];
+        delete[] pluginArr;
 
         lo_destroy_handle(gh);
     }
@@ -688,7 +689,6 @@ namespace loot {
         GetLoadOrder(loadorder);
 
         if (!loadorder.empty()) {
-
             time_t lastTime;
             fs::path filepath = DataPath() / *loadorder.begin();
             if (!fs::exists(filepath) && fs::exists(filepath.string() + ".ghost"))
@@ -696,8 +696,7 @@ namespace loot {
 
             lastTime = fs::last_write_time(filepath);
 
-            for (const auto &pluginName: loadorder) {
-
+            for (const auto &pluginName : loadorder) {
                 filepath = DataPath() / pluginName;
                 if (!fs::exists(filepath) && fs::exists(filepath.string() + ".ghost"))
                     filepath += ".ghost";
@@ -725,7 +724,6 @@ namespace loot {
         //First calculate the mean plugin size. Store it temporarily in a map to reduce filesystem lookups and file size recalculation.
         for (fs::directory_iterator it(this->DataPath()); it != fs::directory_iterator(); ++it) {
             if (fs::is_regular_file(it->status()) && IsPlugin(it->path().string())) {
-
                 uintmax_t fileSize = fs::file_size(it->path());
                 meanFileSize += fileSize;
 
@@ -736,7 +734,6 @@ namespace loot {
 
         //Now load plugins.
         for (const auto &pluginPair : tempMap) {
-
             BOOST_LOG_TRIVIAL(info) << "Found plugin: " << pluginPair.first;
 
             //Insert the lowercased name as a key for case-insensitive matching.
@@ -780,7 +777,8 @@ namespace loot {
         try {
             if (fs::exists(g_path_local) && !fs::exists(g_path_local / lootFolderName))
                 fs::create_directory(g_path_local / lootFolderName);
-        } catch (fs::filesystem_error& e) {
+        }
+        catch (fs::filesystem_error& e) {
             BOOST_LOG_TRIVIAL(error) << "Could not create LOOT folder for game. Details: " << e.what();
             throw error(error::path_write_fail, lc::translate("Could not create LOOT folder for game. Details:").str() + " " + e.what());
         }

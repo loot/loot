@@ -20,7 +20,7 @@
     You should have received a copy of the GNU General Public License
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
-*/
+    */
 
 #include "app.h"
 #include "handler.h"
@@ -52,7 +52,6 @@ using boost::format;
 namespace fs = boost::filesystem;
 
 namespace loot {
-
     LootState g_app_state = LootState();
 
     LootApp::LootApp() {}
@@ -104,11 +103,9 @@ namespace loot {
         return message_router_->OnProcessMessageReceived(browser, source_process, message);
     }
 
-
     void LootApp::OnContextCreated(CefRefPtr<CefBrowser> browser,
-        CefRefPtr<CefFrame> frame,
-        CefRefPtr<CefV8Context> context) {
-
+                                   CefRefPtr<CefFrame> frame,
+                                   CefRefPtr<CefV8Context> context) {
         // Register javascript functions.
         message_router_->OnContextCreated(browser, frame, context);
     }
@@ -160,12 +157,12 @@ namespace loot {
             boost::log::keywords::file_name = g_path_log.string().c_str(),
             boost::log::keywords::auto_flush = true,
             boost::log::keywords::format = (
-                boost::log::expressions::stream
-                << "[" << boost::log::expressions::format_date_time< boost::posix_time::ptime >("TimeStamp", "%H:%M:%S") << "]"
-                << " [" << boost::log::trivial::severity << "]: "
-                << boost::log::expressions::smessage
+            boost::log::expressions::stream
+            << "[" << boost::log::expressions::format_date_time< boost::posix_time::ptime >("TimeStamp", "%H:%M:%S") << "]"
+            << " [" << boost::log::trivial::severity << "]: "
+            << boost::log::expressions::smessage
             )
-        );
+            );
         boost::log::add_common_attributes();
         bool enableDebugLogging = false;
         if (_settings["enableDebugLogging"]) {
@@ -240,7 +237,6 @@ namespace loot {
     const std::vector<std::string>& LootState::InitErrors() const {
         return _initErrors;
     }
-
 
     void LootState::UpdateGames(std::vector<Game>& games) {
         unordered_set<string> newGameFolders;
@@ -330,7 +326,8 @@ namespace loot {
                 // Conversion from 0.6 key.
                 _settings["language"] = _settings["Language"];
                 _settings.remove("Language");
-            } else
+            }
+            else
                 return false;
         }
         if (!_settings["game"]) {

@@ -20,7 +20,7 @@
     You should have received a copy of the GNU General Public License
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
-*/
+    */
 
 #include "helpers.h"
 #include "error.h"
@@ -62,7 +62,6 @@ namespace loot {
     namespace karma = boost::spirit::karma;
     namespace fs = boost::filesystem;
     namespace lc = boost::locale;
-
 
     /// REGEX expression definition
     ///  Each expression is composed of three parts:
@@ -107,15 +106,15 @@ namespace loot {
 
     /// Array used to try each of the expressions defined above using
     /// an iteration for each of them.
-    const regex version_checks[7] = {
-            regex(regex1, regex::ECMAScript | regex::icase),
-            regex(regex2, regex::ECMAScript | regex::icase),
-            regex(regex3, regex::ECMAScript | regex::icase),
-            regex(regex4, regex::ECMAScript | regex::icase),
-            regex(regex5, regex::ECMAScript | regex::icase),  //This incorrectly identifies "OBSE v19" where 19 is any integer.
-            regex(regex6, regex::ECMAScript | regex::icase),  //This is responsible for metallicow's false positive.
-            regex(regex7, regex::ECMAScript | regex::icase)
-            };
+    const regex version_checks[7] ={
+        regex(regex1, regex::ECMAScript | regex::icase),
+        regex(regex2, regex::ECMAScript | regex::icase),
+        regex(regex3, regex::ECMAScript | regex::icase),
+        regex(regex4, regex::ECMAScript | regex::icase),
+        regex(regex5, regex::ECMAScript | regex::icase),  //This incorrectly identifies "OBSE v19" where 19 is any integer.
+        regex(regex6, regex::ECMAScript | regex::icase),  //This is responsible for metallicow's false positive.
+        regex(regex7, regex::ECMAScript | regex::icase)
+    };
 
     // A regular expression for finding Bash Tags in plugin descriptions.
     const regex bash_tag_check("\\{\\{BASH:(?:[ ]*([-A-Za-z.]+)[ ]*,)+[ ]*\\}\\}", regex::ECMAScript | regex::icase);
@@ -148,7 +147,8 @@ namespace loot {
                 result.process_bytes(buffer, ifile.gcount());
             } while (ifile);
             chksum = result.checksum();
-        } else {
+        }
+        else {
             BOOST_LOG_TRIVIAL(error) << "Unable to open \"" << filename.string() << "\" for CRC calculation.";
             throw error(error::path_read_fail, (boost::format(lc::translate("Unable to open \"%1%\" for CRC calculation.")) % filename.string()).str());
         }
@@ -160,7 +160,7 @@ namespace loot {
     std::string IntToHexString(const int n) {
         string out;
         back_insert_iterator<string> sink(out);
-        karma::generate(sink,karma::upper[karma::hex],n);
+        karma::generate(sink, karma::upper[karma::hex], n);
         return out;
     }
 
@@ -183,7 +183,7 @@ namespace loot {
             key = HKEY_USERS;
 
         BOOST_LOG_TRIVIAL(trace) << "Getting registry object for key and subkey: " << keyStr << " + " << subkey;
-        LONG ret = RegOpenKeyEx(key, ToWinWide(subkey).c_str(), 0, KEY_READ|KEY_WOW64_32KEY, &hKey);
+        LONG ret = RegOpenKeyEx(key, ToWinWide(subkey).c_str(), 0, KEY_READ | KEY_WOW64_32KEY, &hKey);
 
         if (ret == ERROR_SUCCESS) {
             BOOST_LOG_TRIVIAL(trace) << "Getting value for entry: " << value;
@@ -194,7 +194,8 @@ namespace loot {
                 return fs::path(val).string();  //Easiest way to convert from wide to narrow character strings.
             else
                 return "";
-        } else
+        }
+        else
             return "";
     }
 #endif
@@ -232,7 +233,6 @@ namespace loot {
 #ifdef _WIN32
     //Helper to turn UTF8 strings into strings that can be used by WinAPI.
     std::wstring ToWinWide(const std::string& str) {
-
         int len = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), str.length(), 0, 0);
         std::wstring wstr(len, 0);
         MultiByteToWideChar(CP_UTF8, 0, str.c_str(), str.length(), &(wstr[0]), len);
@@ -308,7 +308,7 @@ namespace loot {
             _name = "Deutsch";
             _locale = "de";
         }
-        else  {
+        else {
             _name = "English";
             _locale = "en";
         }
@@ -346,23 +346,23 @@ namespace loot {
             VS_FIXEDFILEINFO *info;
             string ver;
 
-            GetFileVersionInfo(ToWinWide(file.string()).c_str(),0,size,point);
+            GetFileVersionInfo(ToWinWide(file.string()).c_str(), 0, size, point);
 
-            VerQueryValue(point,L"\\",(LPVOID *)&info,&uLen);
+            VerQueryValue(point, L"\\", (LPVOID *)&info, &uLen);
 
             DWORD dwLeftMost     = HIWORD(info->dwFileVersionMS);
             DWORD dwSecondLeft   = LOWORD(info->dwFileVersionMS);
             DWORD dwSecondRight  = HIWORD(info->dwFileVersionLS);
             DWORD dwRightMost    = LOWORD(info->dwFileVersionLS);
 
-            delete [] point;
+            delete[] point;
 
             verString = to_string(dwLeftMost) + '.' + to_string(dwSecondLeft) + '.' + to_string(dwSecondRight) + '.' + to_string(dwRightMost);
         }
 #else
         // ensure filename has no quote characters in it to avoid command injection attacks
         if (string::npos != file.string().find('"')) {
-             // command mostly borrowed from the gnome-exe-thumbnailer.sh script
+            // command mostly borrowed from the gnome-exe-thumbnailer.sh script
             // wrestool is part of the icoutils package
             string cmd = "wrestool --extract --raw --type=version \"" + file.string() + "\" | tr '\\0, ' '\\t.\\0' | sed 's/\\t\\t/_/g' | tr -c -d '[:print:]' | sed -r 's/.*Version[^0-9]*([0-9]+(\\.[0-9]+)+).*/\\1/'";
 
@@ -405,12 +405,14 @@ namespace loot {
                 if (parser1.good()) {
                     parser1 >> n1;
                     parser1.get();
-                } else
+                }
+                else
                     n1 = 0;
                 if (parser2.good()) {
                     parser2 >> n2;
                     parser2.get();
-                } else
+                }
+                else
                     n2 = 0;
                 if (n1 < n2)
                     return true;
@@ -418,7 +420,8 @@ namespace loot {
                     return false;
             }
             return false;
-        } else {
+        }
+        else {
             //Wacky format. Use the Alphanum Algorithm. (what a name!)
             return (doj::alphanum_comp(verString, ver.AsString()) < 0);
         }

@@ -20,7 +20,7 @@
     You should have received a copy of the GNU General Public License
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
-*/
+    */
 
 #include "error.h"
 #include "parsers.h"
@@ -40,10 +40,9 @@ namespace fs = boost::filesystem;
 namespace lc = boost::locale;
 
 namespace loot {
-
     struct git_handler {
     public:
-        git_handler() : repo(nullptr), remote(nullptr), cfg(nullptr), obj(nullptr), commit(nullptr), ref(nullptr), ref2(nullptr), sig(nullptr), blob(nullptr), merge_head(nullptr), tree(nullptr), diff(nullptr), buf({0}) {}
+        git_handler() : repo(nullptr), remote(nullptr), cfg(nullptr), obj(nullptr), commit(nullptr), ref(nullptr), ref2(nullptr), sig(nullptr), blob(nullptr), merge_head(nullptr), tree(nullptr), diff(nullptr), buf({ 0 }) {}
 
         ~git_handler() {
             git_commit_free(commit);
@@ -184,7 +183,7 @@ namespace loot {
         git.call(git_signature_new(&git.sig, "LOOT", "loot@placeholder.net", 0, 0));
 
         BOOST_LOG_TRIVIAL(debug) << "Setting up checkout options.";
-        char * paths[] = { "masterlist.yaml" };
+        char * paths[] ={ "masterlist.yaml" };
         git_checkout_options checkout_opts = GIT_CHECKOUT_OPTIONS_INIT;
         checkout_opts.checkout_strategy = GIT_CHECKOUT_FORCE;
         checkout_opts.paths.strings = paths;
@@ -324,7 +323,7 @@ namespace loot {
                    Need to merge the remote branch into it. Just do a fast-forward merge because
                    that's all that should be necessary as the local repo shouldn't get changed by
                    the user.
-                */
+                   */
 
                 BOOST_LOG_TRIVIAL(trace) << "Checking that local and remote branches can be merged by fast-forward.";
                 git_merge_analysis_t analysis;
@@ -368,7 +367,6 @@ namespace loot {
                     return this->Update(game, language);
                     //throw error(error::git_error, "Local repository has been edited, an automatic fast-forward merge update is not possible.");
                 }
-
             }
 
             // Free branch pointer.
@@ -377,7 +375,6 @@ namespace loot {
 
             BOOST_LOG_TRIVIAL(trace) << "Performing a Git checkout of HEAD.";
             git.call(git_checkout_head(git.repo, &checkout_opts));
-
         }
 
         // Now whether the repository was cloned or updated, the working directory contains
@@ -417,7 +414,7 @@ namespace loot {
             git.ref = nullptr;
             git.obj = nullptr;
             git.commit = nullptr;
-            git.buf = { 0 };
+            git.buf ={ 0 };
 
             //Now try parsing the masterlist.
             BOOST_LOG_TRIVIAL(debug) << "Testing masterlist parsing.";
@@ -430,13 +427,13 @@ namespace loot {
                 for (auto &plugin : regexPlugins) {
                     plugin.ParseAllConditions(game);
                 }
-                for (auto &message: messages) {
+                for (auto &message : messages) {
                     message.ParseCondition(game);
                 }
 
                 parsingFailed = false;
-
-            } catch (std::exception& e) {
+            }
+            catch (std::exception& e) {
                 parsingFailed = true;
 
                 //Roll back one revision if there's an error.

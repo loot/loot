@@ -20,7 +20,7 @@
     You should have received a copy of the GNU General Public License
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
-*/
+    */
 
 #include "app.h"
 
@@ -83,7 +83,6 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
         // The sub-process has completed so return here.
         return exit_code;
     }
-
 
     // Check if LOOT is already running
     //---------------------------------

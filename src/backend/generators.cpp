@@ -36,7 +36,6 @@ along with LOOT.  If not, see
 using namespace std;
 
 namespace YAML {
-
     Emitter& operator << (Emitter& out, const loot::PluginDirtyInfo& rhs) {
         out << BeginMap
             << Key << "crc" << Value << Hex << rhs.CRC() << Dec
@@ -146,7 +145,6 @@ namespace YAML {
 
     Emitter& operator << (Emitter& out, const loot::Plugin& rhs) {
         if (!rhs.HasNameOnly()) {
-
             out << BeginMap
                 << Key << "name" << Value << rhs.Name();
 
