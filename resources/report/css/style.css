@@ -374,12 +374,6 @@ table[is=editable-table] tbody tr:last-child:hover {
 #pluginsNav .priority {
     display: none;
 }
-body.editMode #pluginsNav li:hover .priority {
-    display: inline;
-}
-body.editMode #pluginsNav li:hover .name {
-    display: none;
-}
 body.editMode header {
     color: #999;
 }

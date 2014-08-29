@@ -291,24 +291,23 @@
                 display: inline-block;
                 width: 1.2em;
             }
-            :host([data-bsa=false]) .loadsBSA {
-                visibility: hidden;
-            }
-            :host([data-dummy=false]) .dummyPlugin {
-                visibility: hidden;
-            }
-            :host([data-edits=false]) .hasUserEdits {
-                visibility: hidden;
-            }
-            :host([data-global-priority=false]) .hasGlobalPriority {
-                visibility: hidden;
-            }
+            :host([data-bsa=false]) .loadsBSA,
+            :host([data-dummy=false]) .dummyPlugin,
+            :host([data-edits=false]) .hasUserEdits,
+            :host([data-global-priority=false]) .hasGlobalPriority,
             .hasPriority:not([title^=Priority]) {
                 visibility: hidden;
             }
             a {
                 text-decoration: none;
                 color: black;
+            }
+            .hasGlobalPriority, .hasPriority {
+                display:none;
+            }
+            :host-context(.editMode) .hasGlobalPriority,
+            :host-context(.editMode) .hasPriority {
+                display: inline-block;
             }
         </style>
         <span class="dummyPlugin fa fa-eye-slash" title="Dummy Plugin"></span>
