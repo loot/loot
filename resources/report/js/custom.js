@@ -315,14 +315,14 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
                 /* Remove drag 'n' drop event handlers. */
                 var elements = document.getElementById('pluginsNav').children;
                 for (var i = 0; i < elements.length; ++i) {
-                    elements[i].removeAttribute('draggable', true);
-                    elements[i].removeEventListener('dragstart', handlePluginDragStart, false);
+                    elements[i].removeAttribute('draggable');
+                    elements[i].removeEventListener('dragstart', elements[i].handleDragStart, false);
                 }
                 elements = card.shadowRoot.getElementsByTagName('table');
                 for (var i = 0; i < elements.length; ++i) {
                     if (elements[i].id == 'loadAfter' || elements[i].id == 'req' || elements[i].id == 'inc') {
-                        elements[i].removeEventListener('drop', handlePluginDrop, false);
-                        elements[i].removeEventListener('dragover', handlePluginDragOver, false);
+                        elements[i].removeEventListener('drop', elements[i].handleDrop, false);
+                        elements[i].removeEventListener('dragover', elements[i].handleDragOver, false);
                     }
                 }
 
@@ -500,13 +500,13 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
             elements = document.getElementById('pluginsNav').children;
             for (var i = 0; i < elements.length; ++i) {
                 elements[i].draggable = true;
-                elements[i].addEventListener('dragstart', handlePluginDragStart, false);
+                elements[i].addEventListener('dragstart', elements[i].handleDragStart, false);
             }
             elements = this.shadowRoot.getElementsByTagName('table');
             for (var i = 0; i < elements.length; ++i) {
                 if (elements[i].id == 'loadAfter' || elements[i].id == 'req' || elements[i].id == 'inc') {
-                    elements[i].addEventListener('drop', handlePluginDrop, false);
-                    elements[i].addEventListener('dragover', handlePluginDragOver, false);
+                    elements[i].addEventListener('drop', elements[i].handleDrop, false);
+                    elements[i].addEventListener('dragover', elements[i].handleDragOver, false);
                 }
             }
 
@@ -617,6 +617,13 @@ var PluginCard = document.registerElement('plugin-card', {prototype: pluginCardP
 
 /* Create a <plugin-li> element type that extends from <li>. */
 var pluginLIProto = Object.create(HTMLLIElement.prototype, {
+
+    handleDragStart: {
+        value: function(evt) {
+            evt.dataTransfer.effectAllowed = 'copy';
+            evt.dataTransfer.setData('text/plain', evt.target.textContent);
+        }
+    },
 
     createdCallback: {
 
@@ -752,6 +759,28 @@ var MessageDialog = document.registerElement('message-dialog', {
 
 /* Create a <editable-table> element type that extends from <table>. */
 var EditableTableProto = Object.create(HTMLTableElement.prototype, {
+
+    handleDrop: {
+        value: function(evt) {
+            evt.stopPropagation();
+
+            if (evt.currentTarget.tagName == 'TABLE' && (evt.currentTarget.id == 'req' || evt.currentTarget.id == 'inc' || evt.currentTarget.id == 'loadAfter')) {
+                var data = {
+                    name: evt.dataTransfer.getData('text/plain')
+                };
+                evt.currentTarget.addRow(data);
+            }
+
+            return false;
+        }
+    },
+
+    handleDragOver: {
+        value: function(evt) {
+            evt.preventDefault();
+            evt.dataTransfer.dropEffect = 'copy';
+        }
+    },
 
     getRowsData: {
         value: function(writableOnly) {

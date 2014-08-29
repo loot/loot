@@ -387,6 +387,7 @@ body.editMode header #headerOverlay {
 }
 [draggable] {
     -webkit-user-select: none;
+    cursor: move;
 }
 .highlight {
     background: #69aaff;

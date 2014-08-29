@@ -946,27 +946,6 @@ function copyContent(evt) {
 
     loot.query(request).catch(processCefError);
 }
-function handlePluginDrop(evt) {
-    evt.stopPropagation();
-
-    if (evt.currentTarget.tagName == 'TABLE' && (evt.currentTarget.id == 'req' || evt.currentTarget.id == 'inc' || evt.currentTarget.id == 'loadAfter')) {
-        var data = {
-            name: evt.dataTransfer.getData('text/plain')
-        };
-        evt.currentTarget.addRow(data);
-    }
-
-    return false;
-}
-function handlePluginDragStart(evt) {
-    evt.dataTransfer.effectAllowed = 'copy';
-    evt.dataTransfer.setData('text/plain', evt.target.textContent);
-}
-function handlePluginDragOver(evt) {
-    evt.preventDefault();
-    evt.dataTransfer.dropEffect = 'copy';
-}
-
 function areSettingsValid() {
     /* Validate inputs individually. */
     var inputs = document.getElementById('settings').getElementsByTagName('input');
