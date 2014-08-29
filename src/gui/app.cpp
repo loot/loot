@@ -362,14 +362,15 @@ namespace loot {
             else
                 return false;
         }
-        if (!_settings["updateMasterlist"])
+        if (!_settings["updateMasterlist"]) {
             if (_settings["Update Masterlist"]) {
-            // Conversion from 0.6 key.
-            _settings["updateMasterlist"] = _settings["Update Masterlist"];
-            _settings.remove("Update Masterlist");
+                // Conversion from 0.6 key.
+                _settings["updateMasterlist"] = _settings["Update Masterlist"];
+                _settings.remove("Update Masterlist");
             }
             else
                 return false;
+        }
         if (!_settings["games"]) {
             if (_settings["Games"]) {
                 // Conversion from 0.6 key.
