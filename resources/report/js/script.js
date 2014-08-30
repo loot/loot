@@ -675,7 +675,7 @@ function updateMasterlist(evt) {
     updateProgressDialog('Updating masterlist...');
     openProgressDialog();
     return loot.query('updateMasterlist').then(JSON.parse).then(function(result){
-        if (result == null) {
+        if (!result) {
             closeProgressDialog();
             return;
         }
@@ -722,8 +722,6 @@ function sortUIElements(pluginNames) {
            The first plugin is a special case.
            */
         var card = document.getElementById(name.replace(/\s+/g, ''));
-
-
         var move = false;
         if (index == 0) {
             /* Special case. */
@@ -878,22 +876,24 @@ function clearAllMetadata(evt) {
     showMessageDialog('Clear All Metadata', 'Are you sure you want to clear all existing user-added metadata from all plugins?', function(result){
         if (result) {
             loot.query('clearAllMetadata').then(JSON.parse).then(function(result){
-                /* Need to empty the UI-side user metadata. */
-                result.forEach(function(plugin){
-                    for (var i = 0; i < loot.game.plugins.length; ++i) {
-                        if (loot.game.plugins[i].name == plugin.name) {
-                            loot.game.plugins[i].userlist = undefined;
+                if (result) {
+                    /* Need to empty the UI-side user metadata. */
+                    result.forEach(function(plugin){
+                        for (var i = 0; i < loot.game.plugins.length; ++i) {
+                            if (loot.game.plugins[i].name == plugin.name) {
+                                loot.game.plugins[i].userlist = undefined;
 
-                            loot.game.plugins[i].modPriority = plugin.modPriority;
-                            loot.game.plugins[i].isGlobalPriority = plugin.isGlobalPriority;
-                            loot.game.plugins[i].messages = plugin.messages;
-                            loot.game.plugins[i].tags = plugin.tags;
-                            loot.game.plugins[i].isDirty = plugin.isDirty;
+                                loot.game.plugins[i].modPriority = plugin.modPriority;
+                                loot.game.plugins[i].isGlobalPriority = plugin.isGlobalPriority;
+                                loot.game.plugins[i].messages = plugin.messages;
+                                loot.game.plugins[i].tags = plugin.tags;
+                                loot.game.plugins[i].isDirty = plugin.isDirty;
 
-                            break;
+                                break;
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }).catch(processCefError);
         }
     });
