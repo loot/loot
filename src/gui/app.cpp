@@ -318,6 +318,7 @@ namespace loot {
         base::AutoLock lock_scope(_lock);
 
         _settings["lastGame"] = _games[_currentGame].FolderName();
+        _settings["lastVersion"] = to_string(g_version_major) + "." + to_string(g_version_minor) + "." + to_string(g_version_patch);
 
         //Save settings.
         try {

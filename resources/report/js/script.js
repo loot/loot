@@ -357,10 +357,10 @@ var loot = {
     query: function(request) {
         return new Promise(function(resolve, reject) {
             window.cefQuery({
-            request: request,
-            persistent: false,
-            onSuccess: resolve,
-            onFailure: function(errorCode, errorMessage) {
+                request: request,
+                persistent: false,
+                onSuccess: resolve,
+                onFailure: function(errorCode, errorMessage) {
                     reject(Error('Error code: ' + errorCode + '; ' + errorMessage))
                 }
             });
@@ -1147,6 +1147,9 @@ function focusSearch(evt) {
         document.getElementById('searchBox').focus();
     }
 }
+function closeFirstRunDialog(evt) {
+    evt.target.parentElement.close();
+}
 function setupEventHandlers() {
     var elements;
     /*Set up filter value and CSS setting storage read/write handlers.*/
@@ -1188,8 +1191,11 @@ function setupEventHandlers() {
     settings.getElementsByClassName('accept')[0].addEventListener('click', closeSettingsDialog, false);
     settings.getElementsByClassName('cancel')[0].addEventListener('click', closeSettingsDialog, false);
 
-    /* Set up about dialog handlers. */
+    /* Set up about dialog handler. */
     document.getElementById('about').getElementsByTagName('button')[0].addEventListener('click', closeAboutDialog, false);
+
+    /* Set up event handler for closing the first-run dialog. */
+    document.getElementById('firstRun').getElementsByTagName('button')[0].addEventListener('click', closeFirstRunDialog, false);
 
     /* Set up event handler for hover text. */
     var hoverTargets = document.querySelectorAll('[title]');
@@ -1213,6 +1219,7 @@ function initVars() {
             loot.version = JSON.parse(result);
 
             document.getElementById('LOOTVersion').textContent = loot.version;
+            document.getElementById('firstTimeLootVersion').textContent = loot.version;
         } catch (e) {
             console.log(e);
             console.log('Response: ' + result);
@@ -1323,6 +1330,10 @@ function initVars() {
                to window messages looking for a focus change. */
             if (loot.settings.autoRefresh) {
                 window.addEventListener('focus', onFocus, false);
+            }
+
+            if (!loot.settings.lastVersion || loot.settings.lastVersion != loot.version) {
+                document.getElementById('firstRun').showModal();
             }
         }).catch(processCefError);
 

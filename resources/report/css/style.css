@@ -467,3 +467,18 @@ body.editMode li[is=plugin-li] > .hasGlobalPriority,
 body.editMode li[is=plugin-li] > .hasPriority {
     display: inline-block;
 }
+
+#firstRun > ul {
+    list-style-type: disc;
+    padding-left: 40px;
+}
+#firstRun > button {
+    display: block;
+    margin: 0 auto;
+}
+#firstRun .tag {
+    margin: 0;
+}
+#firstRun .fa {
+    padding: 0 0.3em;
+}
