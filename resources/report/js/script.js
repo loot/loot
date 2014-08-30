@@ -68,10 +68,17 @@ var loot = {
                     break;
                 }
             }
+            var redateButton = document.getElementById('redatePluginsButton');
             if (index != undefined && loot.settings.games[index].type == 'Skyrim') {
-                document.getElementById('redatePluginsButton').classList.toggle('disabled', false);
+                redateButton.classList.toggle('disabled', false);
+                redateButton.title = '';
+                redateButton.removeEventListener('mouseenter', showHoverText, false);
+                redateButton.removeEventListener('mouseleave', hideHoverText, false);
             } else {
-                document.getElementById('redatePluginsButton').classList.toggle('disabled', true);
+                redateButton.classList.toggle('disabled', true);
+                redateButton.title = 'A Skyrim-specific feature';
+                redateButton.addEventListener('mouseenter', showHoverText, false);
+                redateButton.addEventListener('mouseleave', hideHoverText, false);
             }
         },
 
@@ -146,10 +153,16 @@ var loot = {
         for (var i = 0; i < gameMenuItems.length; ++i) {
             if (this.installedGames.indexOf(gameMenuItems[i].getAttribute('data-folder')) == -1) {
                 gameMenuItems[i].classList.toggle('disabled', true);
+                gameMenuItems[i].title = 'No install detected';
                 gameMenuItems[i].removeEventListener('click', changeGame, false);
+                gameMenuItems[i].addEventListener('mouseenter', showHoverText, false);
+                gameMenuItems[i].addEventListener('mouseleave', hideHoverText, false);
             } else {
                 gameMenuItems[i].classList.toggle('disabled', false);
+                gameMenuItems[i].title = '';
                 gameMenuItems[i].addEventListener('click', changeGame, false);
+                gameMenuItems[i].removeEventListener('mouseenter', showHoverText, false);
+                gameMenuItems[i].removeEventListener('mouseleave', hideHoverText, false);
             }
         }
     },
@@ -166,6 +179,8 @@ var loot = {
         }
         while (gameMenu.firstElementChild) {
             gameMenu.firstElementChild.removeEventListener('click', changeGame, false);
+            gameMenu.firstElementChild.removeEventListener('mouseenter', showHoverText, false);
+            gameMenu.firstElementChild.removeEventListener('mouseleave', hideHoverText, false);
             gameMenu.removeChild(gameMenu.firstElementChild);
         }
         gameTable.clear();
