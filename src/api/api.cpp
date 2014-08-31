@@ -94,15 +94,11 @@ struct _loot_db_int {
         extAddedTagIds(nullptr),
         extRemovedTagIds(nullptr),
         extMessageArray(nullptr),
-        extMessageArraySize(0) {
-        extMessage.type = loot_message_say;
-        extMessage.message = nullptr;
-    }
+        extMessageArraySize(0) {}
 
     ~_loot_db_int() {
         delete[] extAddedTagIds;
         delete[] extRemovedTagIds;
-        delete[] extMessage.message;
 
         if (extTagMap != nullptr) {
             for (size_t i=0; i < bashTagMap.size(); i++)
@@ -127,7 +123,6 @@ struct _loot_db_int {
     unsigned int * extAddedTagIds;
     unsigned int * extRemovedTagIds;
 
-    loot_message extMessage;
     loot_message * extMessageArray;
     size_t extMessageArraySize;
 };
@@ -166,8 +161,9 @@ unsigned int c_error(const unsigned int code, const std::string& what) {
 namespace loot {
     void Masterlist::GetGitInfo(const boost::filesystem::path& path) {}
 
-    void Masterlist::Update(Game& game, const unsigned int language) {
+    bool Masterlist::Update(Game& game, const unsigned int language) {
         this->MetadataList::Load(game.MasterlistPath());
+        return false;
     }
 }
 
