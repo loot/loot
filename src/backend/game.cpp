@@ -743,7 +743,15 @@ namespace loot {
                 BOOST_LOG_TRIVIAL(trace) << "Creating individual loading thread for: " << pluginPair.first;
                 group.create_thread([this, plugin, headersOnly]() {
                     BOOST_LOG_TRIVIAL(trace) << "Loading " << plugin.first->second.Name() << " individually.";
-                    plugin.first->second = Plugin(*this, plugin.first->second.Name(), headersOnly);
+                    try {
+                        plugin.first->second = Plugin(*this, plugin.first->second.Name(), headersOnly);
+                    }
+                    catch (exception &e) {
+                        BOOST_LOG_TRIVIAL(error) << plugin.first->second.Name() << ": Exception occurred: " << e.what();
+                        Plugin p;
+                        p.Messages(list<Message>(1, Message(Message::error, string("An exception occurred while loading this plugin. Details: ") + e.what())));
+                        plugin.first->second = p;
+                    }
                 });
             }
             else {
@@ -752,9 +760,16 @@ namespace loot {
         }
         group.create_thread([this, &groupPlugins, headersOnly]() {
             for (auto plugin : groupPlugins) {
-                const std::string name = plugin->Name();
                 BOOST_LOG_TRIVIAL(trace) << "Loading " << plugin->Name() << " as part of a group.";
-                *plugin = Plugin(*this, name, headersOnly);
+                try {
+                    *plugin = Plugin(*this, plugin->Name(), headersOnly);
+                }
+                catch (exception &e) {
+                    BOOST_LOG_TRIVIAL(error) << plugin->Name() << ": Exception occurred: " << e.what();
+                    Plugin p;
+                    p.Messages(list<Message>(1, Message(Message::error, string("An exception occurred while loading this plugin. Details: ") + e.what())));
+                    *plugin = p;
+                }
             }
         });
 
