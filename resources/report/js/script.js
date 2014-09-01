@@ -791,11 +791,15 @@ function closeProgressDialog() {
     }
 }
 function sortPlugins(evt) {
-    Promise.all([function(){
-        if (loot.settings.updateMasterlist) {
-            updateMasterlist(evt);
-        }
-    }]).then(function(){
+    var mlistUpdate;
+    if (loot.settings.updateMasterlist) {
+        mlistUpdate = updateMasterlist(evt);
+    } else {
+        mlistUpdate = new Promise(function(resolve, reject){
+            resolve('');
+        });
+    }
+    mlistUpdate.then(function(){
         updateProgressDialog('Sorting plugins...');
         openProgressDialog();
         loot.query('sortPlugins').then(JSON.parse).then(function(result){
