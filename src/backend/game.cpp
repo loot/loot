@@ -126,7 +126,7 @@ namespace loot {
         YAML::Emitter yout;
         yout.SetIndent(2);
         yout << YAML::BeginMap
-            << YAML::Key << "plugins" << YAML::Value << plugins
+            << YAML::Key << "plugins" << YAML::Value << Plugins()
             << YAML::Key << "globals" << YAML::Value << messages
             << YAML::EndMap;
 
@@ -141,7 +141,7 @@ namespace loot {
     }
 
     bool MetadataList::operator == (const MetadataList& rhs) const {
-        if (this->plugins.size() != rhs.plugins.size() || this->messages.size() != rhs.messages.size()) {
+        if (this->plugins.size() != rhs.plugins.size() || this->messages.size() != rhs.messages.size() || this->regexPlugins.size() != rhs.regexPlugins.size()) {
             BOOST_LOG_TRIVIAL(info) << "Metadata edited for some plugin, new and old userlists differ in size.";
             return false;
         }
@@ -150,6 +150,19 @@ namespace loot {
                 const auto it = this->plugins.find(rhsPlugin);
 
                 if (it == this->plugins.end()) {
+                    BOOST_LOG_TRIVIAL(info) << "Metadata added for plugin: " << it->Name();
+                    return false;
+                }
+
+                if (!it->DiffMetadata(rhsPlugin).HasNameOnly()) {
+                    BOOST_LOG_TRIVIAL(info) << "Metadata edited for plugin: " << it->Name();
+                    return false;
+                }
+            }
+            for (const auto& rhsPlugin : rhs.regexPlugins) {
+                const auto it = find(regexPlugins.begin(), regexPlugins.end(), rhsPlugin);
+
+                if (it == this->regexPlugins.end()) {
                     BOOST_LOG_TRIVIAL(info) << "Metadata added for plugin: " << it->Name();
                     return false;
                 }
