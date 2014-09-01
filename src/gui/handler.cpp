@@ -166,6 +166,11 @@ namespace loot {
                 callback->Success("null");
             return true;
         }
+        else if (request == "cancelSort") {
+            g_app_state.isMidSort = false;
+            callback->Success("");
+            return true;
+        }
         else {
             // May be a request with arguments.
             YAML::Node req;
@@ -273,6 +278,7 @@ namespace loot {
             return true;
         }
         else if (requestName == "applySort") {
+            g_app_state.isMidSort = false;
             BOOST_LOG_TRIVIAL(trace) << "User has accepted sorted load order, applying it.";
             try {
                 g_app_state.CurrentGame().SetLoadOrder(request["args"][0].as<list<string>>());
@@ -888,6 +894,7 @@ namespace loot {
             pluginNode["isDummy"] = plugin.FormIDs().size() == 0;
             node.push_back(pluginNode);
         }
+        g_app_state.isMidSort = true;
 
         if (node.size() > 0)
             callback->Success(JSON::stringify(node));
@@ -1092,6 +1099,12 @@ namespace loot {
 
     bool LootHandler::DoClose(CefRefPtr<CefBrowser> browser) {
         assert(CefCurrentlyOn(TID_UI));
+
+        // Check if unapplied sorting changes exist.
+        if (g_app_state.isMidSort) {
+            browser->GetMainFrame()->ExecuteJavaScript("handleUnappliedChangesClose();", browser->GetMainFrame()->GetURL(), 0);
+            return true;
+        }
 
         // Closing the main window requires special handling. See the DoClose()
         // documentation in the CEF header for a detailed destription of this

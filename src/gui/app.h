@@ -78,6 +78,9 @@ namespace loot {
         const YAML::Node& GetSettings() const;
         void UpdateSettings(const YAML::Node& settings);
         void SaveSettings();
+
+        // Used to check if LOOT has unaccepted sorting changes on quit.
+        bool isMidSort;
     private:
         YAML::Node _settings;
         std::vector<Game> _games;

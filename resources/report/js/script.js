@@ -850,7 +850,7 @@ function applySort(evt) {
             loot.newLoadOrder
         ]
     });
-    loot.query(request).then(function(result){
+    return loot.query(request).then(function(result){
         /* Remove old load order storage. */
         delete loot.lastLoadOrder;
         delete loot.newLoadOrder;
@@ -864,17 +864,19 @@ function applySort(evt) {
     }).catch(processCefError);
 }
 function cancelSort(evt) {
-    /* Sort UI elements again according to stored old load order. */
-    sortUIElements(loot.lastLoadOrder);
-    delete loot.lastLoadOrder;
-    delete loot.newLoadOrder;
+    return loot.query('cancelSort').then(function(){
+        /* Sort UI elements again according to stored old load order. */
+        sortUIElements(loot.lastLoadOrder);
+        delete loot.lastLoadOrder;
+        delete loot.newLoadOrder;
 
-    /* Now show the masterlist update buttons, and hide the accept and
-       cancel sort buttons. */
-    showElement(document.getElementById('updateMasterlistButton'));
-    showElement(document.getElementById('sortButton'));
-    hideElement(document.getElementById('applySortButton'));
-    hideElement(document.getElementById('cancelSortButton'));
+        /* Now show the masterlist update buttons, and hide the accept and
+           cancel sort buttons. */
+        showElement(document.getElementById('updateMasterlistButton'));
+        showElement(document.getElementById('sortButton'));
+        hideElement(document.getElementById('applySortButton'));
+        hideElement(document.getElementById('cancelSortButton'));
+    }).catch(processCefError);
 }
 function redatePlugins(evt) {
     if (evt.target.classList.contains('disabled')) {
@@ -1153,6 +1155,19 @@ function focusSearch(evt) {
 }
 function closeFirstRunDialog(evt) {
     evt.target.parentElement.close();
+}
+function handleUnappliedChangesClose() {
+    showMessageDialog('Unapplied Sorting Changes', 'You have not yet applied or cancelled your sorted load order. Apply your load order before quitting?', function(result){
+        if (result) {
+            applySort().then(function(){
+                window.close();
+            });
+        } else {
+            cancelSort().then(function(){
+                window.close();
+            });
+        }
+    });
 }
 function setupEventHandlers() {
     var elements;

@@ -113,7 +113,7 @@ namespace loot {
     // LootState member functions
     //---------------------------
 
-    LootState::LootState() : _currentGame(0) {}
+    LootState::LootState() : _currentGame(0), isMidSort(false) {}
 
     void LootState::Init(const std::string& cmdLineGame) {
         // Do some preliminary locale / UTF-8 support setup here, in case the settings file reading requires it.
