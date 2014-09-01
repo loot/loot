@@ -569,6 +569,10 @@ namespace loot {
 
             SendProgressUpdate(frame, "Loading plugin headers...");
 
+            // First clear CRC and condition caches, otherwise they could lead to incorrect evaluations.
+            g_app_state.CurrentGame().conditionCache.clear();
+            g_app_state.CurrentGame().crcCache.clear();
+
             bool isFirstLoad = g_app_state.CurrentGame().plugins.empty();
             g_app_state.CurrentGame().LoadPlugins(true);
 
