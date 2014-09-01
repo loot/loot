@@ -389,14 +389,8 @@ body.editMode header #headerOverlay {
     -webkit-user-select: none;
     cursor: move;
 }
-.highlight {
-    background: #69aaff;
-    color: #f8f8f8;
-}
-plugin-card.highlight {
+.highlight, #applySortButton {
     box-shadow: inset 0 0 10px 3px #69aaff;
-    background: white;
-    color: inherit;
     outline: 3px solid #69aaff;
 }
 input:invalid {
