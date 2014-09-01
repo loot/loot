@@ -180,18 +180,24 @@ namespace loot {
         return pluginList;
     }
 
+    // Merges multiple matching regex entries if any are found.
     Plugin MetadataList::FindPlugin(const Plugin& plugin) const {
+        Plugin match(plugin.Name());
+
         auto it = plugins.find(plugin);
 
         if (it != plugins.end())
-            return *it;
+            match = *it;
 
+        // Now we want to also match possibly multiple regex entries.
         it = find(regexPlugins.begin(), regexPlugins.end(), plugin);
+        while (it != regexPlugins.end()) {
+            match.MergeMetadata(*it);
 
-        if (it != regexPlugins.end())
-            return *it;
-        else
-            return Plugin(plugin.Name());
+            it = find(++it, regexPlugins.end(), plugin);
+        }
+
+        return match;
     }
 
     void MetadataList::AddPlugin(const Plugin& plugin) {
@@ -201,18 +207,14 @@ namespace loot {
             plugins.insert(plugin);
     }
 
+    // Doesn't erase matching regex entries, because they might also
+    // be required for other plugins.
     void MetadataList::ErasePlugin(const Plugin& plugin) {
         auto it = plugins.find(plugin);
 
         if (it != plugins.end()) {
             plugins.erase(it);
             return;
-        }
-
-        it = find(regexPlugins.begin(), regexPlugins.end(), plugin);
-
-        if (it != regexPlugins.end()) {
-            regexPlugins.erase(it);
         }
     }
 
