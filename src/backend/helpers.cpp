@@ -29,7 +29,6 @@
 #include <boost/spirit/include/karma.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/crc.hpp>
-#include <boost/regex.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
@@ -38,11 +37,11 @@
 
 #include <cstring>
 #include <iostream>
-#include <ctype.h>
-#include <stdio.h>
-#include <time.h>
-#include <sys/types.h>
+#include <cctype>
+#include <cstdio>
+#include <ctime>
 #include <sstream>
+#include <regex>
 
 #if _WIN32 || _WIN64
 #   ifndef UNICODE
@@ -54,7 +53,6 @@
 #   include "windows.h"
 #   include "shlobj.h"
 #endif
-#define BUFSIZE 4096
 
 namespace loot {
     using namespace std;
@@ -108,19 +106,29 @@ namespace loot {
 
 	/// Array used to try each of the expressions defined above using
 	/// an iteration for each of them.
-	boost::regex version_checks[7] = {
-			boost::regex(regex1, boost::regex::icase),
-			boost::regex(regex2, boost::regex::icase),
-			boost::regex(regex3, boost::regex::icase),
-			boost::regex(regex4, boost::regex::icase),
-			boost::regex(regex5, boost::regex::icase),  //This incorrectly identifies "OBSE v19" where 19 is any integer.
-			boost::regex(regex6, boost::regex::icase),  //This is responsible for metallicow's false positive.
-			boost::regex(regex7, boost::regex::icase)
+    regex version_checks[7] = {
+			regex(regex1, regex::ECMAScript | regex::icase),
+            regex(regex2, regex::ECMAScript | regex::icase),
+            regex(regex3, regex::ECMAScript | regex::icase),
+            regex(regex4, regex::ECMAScript | regex::icase),
+            regex(regex5, regex::ECMAScript | regex::icase),  //This incorrectly identifies "OBSE v19" where 19 is any integer.
+            regex(regex6, regex::ECMAScript | regex::icase),  //This is responsible for metallicow's false positive.
+            regex(regex7, regex::ECMAScript | regex::icase)
 			};
 
     //////////////////////////////////////////////////////////////////////////
     // Helper functions
     //////////////////////////////////////////////////////////////////////////
+
+    //Calculate modulo with dividend sign preserved, matching behaviour of C++11.
+    int modulo(int dividend, int divisor) {
+        divisor = abs(divisor);
+        if (dividend < 0) {
+            return -1 * (abs(dividend) % divisor);
+        }
+        else
+            return dividend % divisor;
+    }
 
     //Calculate the CRC of the given file for comparison purposes.
     uint32_t GetCrc32(const fs::path& filename) {
@@ -140,16 +148,8 @@ namespace loot {
             BOOST_LOG_TRIVIAL(error) << "Unable to open \"" << filename.string() << "\" for CRC calculation.";
             throw error(error::path_read_fail, (boost::format(lc::translate("Unable to open \"%1%\" for CRC calculation.")) % filename.string()).str());
         }
-        BOOST_LOG_TRIVIAL(debug) << "CRC32(\"" << filename.string() << "\"):" << chksum;
+        BOOST_LOG_TRIVIAL(debug) << "CRC32(\"" << filename.string() << "\"): " << std::hex << chksum << std::dec;
         return chksum;
-    }
-
-    //Converts an integer to a string using BOOST's Spirit.Karma, which is apparently a lot faster than a stringstream conversion...
-    std::string IntToString(const int n) {
-        string out;
-        back_insert_iterator<string> sink(out);
-        karma::generate(sink,karma::upper[karma::int_],n);
-        return out;
     }
 
     //Converts an integer to a hex string using BOOST's Spirit.Karma, which is apparently a lot faster than a stringstream conversion...
@@ -158,19 +158,6 @@ namespace loot {
         back_insert_iterator<string> sink(out);
         karma::generate(sink,karma::upper[karma::hex],n);
         return out;
-    }
-
-    //Converts a boolean to a string representation (true/false)
-    std::string BoolToString(const bool b) {
-        if (b)
-            return "true";
-        else
-            return "false";
-    }
-
-    //Check if registry subkey exists.
-    bool RegKeyExists(const std::string& keyStr, const std::string& subkey, const std::string& value) {
-        return !RegKeyStringValue(keyStr, subkey, value).empty();
     }
 
     //Get registry subkey value string.
@@ -237,36 +224,32 @@ namespace loot {
         Construct(code);
     }
 
-    Language::Language(const std::string& nameOrISOCode) {
-        if (nameOrISOCode == Language(Language::english).Name() || nameOrISOCode == Language(Language::english).Locale())
+    Language::Language(const std::string& nameOrCode) {
+        if (nameOrCode == Language(Language::english).Name() || nameOrCode == Language(Language::english).Locale())
             Construct(Language::english);
-        else if (nameOrISOCode == Language(Language::spanish).Name() || nameOrISOCode == Language(Language::spanish).Locale())
+        else if (nameOrCode == Language(Language::spanish).Name() || nameOrCode == Language(Language::spanish).Locale())
             Construct(Language::spanish);
-        else if (nameOrISOCode == Language(Language::russian).Name() || nameOrISOCode == Language(Language::russian).Locale())
+        else if (nameOrCode == Language(Language::russian).Name() || nameOrCode == Language(Language::russian).Locale())
             Construct(Language::russian);
-        else if (nameOrISOCode == Language(Language::french).Name() || nameOrISOCode == Language(Language::french).Locale())
+        else if (nameOrCode == Language(Language::french).Name() || nameOrCode == Language(Language::french).Locale())
             Construct(Language::french);
-        else if (nameOrISOCode == Language(Language::chinese).Name() || nameOrISOCode == Language(Language::chinese).Locale())
+        else if (nameOrCode == Language(Language::chinese).Name() || nameOrCode == Language(Language::chinese).Locale())
             Construct(Language::chinese);
-        else if (nameOrISOCode == Language(Language::polish).Name() || nameOrISOCode == Language(Language::polish).Locale())
+        else if (nameOrCode == Language(Language::polish).Name() || nameOrCode == Language(Language::polish).Locale())
             Construct(Language::polish);
-        else if (nameOrISOCode == Language(Language::brazilian_portuguese).Name() || nameOrISOCode == Language(Language::brazilian_portuguese).Locale())
+        else if (nameOrCode == Language(Language::brazilian_portuguese).Name() || nameOrCode == Language(Language::brazilian_portuguese).Locale())
             Construct(Language::brazilian_portuguese);
+    	else if (nameOrCode == Language(Language::finnish).Name() || nameOrCode == Language(Language::finnish).Locale())
+    	    Construct(Language::finnish);
+        else if (nameOrCode == Language(Language::german).Name() || nameOrCode == Language(Language::german).Locale())
+    	    Construct(Language::german);
         else
-            Construct(Language::any);
+            Construct(Language::english);
     }
 
     void Language::Construct(const unsigned int code) {
         _code = code;
-        if (_code == Language::any) {
-            _name = boost::locale::translate("None Specified");
-            _locale = "en";
-        }
-        else if (_code == Language::english) {
-            _name = "English";
-            _locale = "en";
-        }
-        else if (_code == Language::spanish) {
+        if (_code == Language::spanish) {
             _name = "Español";
             _locale = "es";
         }
@@ -289,6 +272,18 @@ namespace loot {
         else if (_code == Language::brazilian_portuguese) {
             _name = "Português do Brasil";
             _locale = "pt_BR";
+        }
+        else if (_code == Language::finnish) {
+            _name = "suomi";
+            _locale = "fi";
+        }
+        else if (_code == Language::german) {
+            _name = "Deutsch";
+            _locale = "de";
+        }
+        else  {
+            _name = "English";
+            _locale = "en";
         }
     }
 
@@ -335,7 +330,7 @@ namespace loot {
 
             delete [] point;
 
-            verString = IntToString(dwLeftMost) + '.' + IntToString(dwSecondLeft) + '.' + IntToString(dwSecondRight) + '.' + IntToString(dwRightMost);
+            verString = to_string(dwLeftMost) + '.' + to_string(dwSecondLeft) + '.' + to_string(dwSecondRight) + '.' + to_string(dwRightMost);
         }
 #else
         // ensure filename has no quote characters in it to avoid command injection attacks
@@ -349,7 +344,7 @@ namespace loot {
             // read out the version string
             static const uint32_t BUFSIZE = 32;
             char buf[BUFSIZE];
-            if (NULL != fgets(buf, BUFSIZE, fp)) {
+            if (nullptr != fgets(buf, BUFSIZE, fp)) {
                 verString = string(buf);
             }
             pclose(fp);
@@ -368,11 +363,11 @@ namespace loot {
     bool Version::operator < (Version ver) {
         //Version string could have a wide variety of formats. Use regex to choose specific comparison types.
 
-        boost::regex reg1("(\\d+\\.?)+");  //a.b.c.d.e.f.... where the letters are all integers, and 'a' is the shortest possible match.
+        regex reg1("(\\d+\\.?)+");  //a.b.c.d.e.f.... where the letters are all integers, and 'a' is the shortest possible match.
 
         //boost::regex reg2("(\\d+\\.?)+([a-zA-Z\\-]+(\\d+\\.?)*)+");  //Matches a mix of letters and numbers - from "0.99.xx", "1.35Alpha2", "0.9.9MB8b1", "10.52EV-D", "1.62EV" to "10.0EV-D1.62EV".
 
-        if (boost::regex_match(verString, reg1) && boost::regex_match(ver.AsString(), reg1)) {
+        if (regex_match(verString, reg1) && regex_match(ver.AsString(), reg1)) {
             //First type: numbers separated by periods. If two versions have a different number of numbers, then the shorter should be padded
             //with zeros. An arbitrary number of numbers should be supported.
             istringstream parser1(verString);

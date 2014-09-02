@@ -3,199 +3,210 @@ msgstr ""
 "Project-Id-Version: BOSS v3.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-03-07 20:08-0000\n"
-"PO-Revision-Date: 2014-03-07 20:08-0000\n"
+"PO-Revision-Date: 2014-07-05 18:46+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
-"Language: en\n"
+"Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.6.4\n"
+"X-Generator: Poedit 1.6.5\n"
 "X-Poedit-KeywordsList: translate:1,1t;translate:1c,2,t\n"
 "X-Poedit-Basepath: ../../src\n"
 "X-Poedit-SourceCharset: UTF-8\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SearchPath-0: backend\n"
 "X-Poedit-SearchPath-1: gui\n"
 
 #: backend/game.cpp:99
 msgid "Invalid game ID supplied."
-msgstr ""
+msgstr "Ungültige Spiel-ID übergeben."
 
 #: backend/game.cpp:159
 msgid "Game path could not be detected."
-msgstr ""
+msgstr "Spiepfad konnte nicht ermittelt werden."
 
 #: backend/game.cpp:262 backend/game.cpp:343 backend/game.cpp:419
 msgid ""
 "libloadorder failed to create a game handle. Details could not be fetched."
 msgstr ""
+"libloadorder konnte keine Spiel-Referenz anlegen. Es konnten keine Details "
+"ermittelt werden."
 
 #: backend/game.cpp:266 backend/game.cpp:347 backend/game.cpp:423
 msgid "libloadorder failed to create a game handle. Details:"
-msgstr ""
+msgstr "libloadorder konnte keine Spiel-Referenz anlegen."
 
 #: backend/game.cpp:281 backend/game.cpp:362 backend/game.cpp:437
 msgid ""
 "libloadorder failed to initialise game master file support. Details could "
 "not be fetched."
 msgstr ""
+"libloadorder konnte die Unterstützung für die Spiel-Stammdatei nicht "
+"initialisieren. Es konnten keine Details ermittelt werden."
 
 #: backend/game.cpp:285 backend/game.cpp:366 backend/game.cpp:441
 msgid "libloadorder failed to initialise game master file support. Details:"
 msgstr ""
+"libloadorder konnte die Unterstützung für die Spiel-Stammdatei nicht "
+"initialisieren. Details:"
 
 #: backend/game.cpp:298
 msgid ""
 "libloadorder failed to get the active plugins list. Details could not be "
 "fetched."
 msgstr ""
+"libloadorder konnte die Liste der aktiven Plugins nicht laden. Es konnten "
+"keine Details ermittelt werden."
 
 #: backend/game.cpp:302
 msgid "libloadorder failed to get the active plugins list. Details:"
 msgstr ""
+"libloadorder konnte die Liste der aktiven Plugins nicht laden. Details: "
 
 #: backend/game.cpp:379 backend/game.cpp:466
 msgid ""
 "libloadorder failed to set the load order. Details could not be fetched."
 msgstr ""
+"libloadorder konnte die Lade-Reihenfolge nicht verändern. Es konnten keine "
+"Details ermittelt werden."
 
 #: backend/game.cpp:383
 msgid "libloadorder failed to get the load order. Details:"
-msgstr ""
+msgstr "libloadorder konnte die Lade-Reihenfolge nicht verändern. Details:"
 
 #: backend/game.cpp:470
 msgid "libloadorder failed to set the load order. Details:"
-msgstr ""
+msgstr "libloadorder konnte die Lade-Reihenfolge nicht verändern."
 
 #: backend/game.cpp:490
 msgid "Could not create LOOT folder for game. Details:"
-msgstr ""
+msgstr "Konnte den LOOT-Ordner für das Spiel nicht erzeugen. Details:"
 
 #: backend/graph.cpp:47
 msgid "Cyclic interaction detected between plugins \"%1%\" and \"%2%\"."
 msgstr ""
+"Zyklische Interaktion zwischen den Plugins \"%1%\" und \"%2%\" ermittelt."
 
 #: backend/helpers.cpp:141
 msgid "Unable to open \"%1%\" for CRC calculation."
-msgstr ""
+msgstr "Konnte \"%1%\" zur Berechnung der CRC-Prüfsumme nicht öffnen."
 
 #: backend/helpers.cpp:262
 msgid "None Specified"
-msgstr ""
+msgstr "Nichts spezifiziert."
 
 #: backend/metadata.cpp:143
 msgid "Failed to parse condition \"%1%\": %2%"
-msgstr ""
+msgstr "Fehler beim Parsen der Bedingung \"%1%\": %2%"
 
 #: backend/metadata.cpp:148
 msgid "Failed to parse condition \"%1%\"."
-msgstr ""
+msgstr "Fehler beim Parsen der Bedingung \"%1%\"."
 
 #: backend/metadata.cpp:330
 msgid "Cannot read \"%1%\". Details: %2%"
-msgstr ""
+msgstr "Kann \"%1%\" nicht lesen. Details: %2%"
 
 #: backend/metadata.cpp:729 backend/metadata.cpp:740
 msgid "This plugin requires \"%1%\" to be installed, but it is missing."
-msgstr ""
+msgstr "Für dieses Plugin muss \"%1%\" installiert sein, dieses fehlt aber."
 
 #: backend/metadata.cpp:733
 msgid "This plugin requires \"%1%\" to be active, but it is inactive."
-msgstr ""
+msgstr "Für dieses Plugin muss \"%1%\" aktiv sein, dieses ist aber inaktiv."
 
 #: backend/metadata.cpp:746
 msgid "This plugin is incompatible with \"%1%\", but both are present."
 msgstr ""
+"Dieses Plugin ist inkompatibel mit \"%1%\", es sind jedoch beide vorhanden."
 
 #: backend/network.cpp:82
 msgid "Git operation failed. Error: %1%"
-msgstr ""
+msgstr "Git-Operation ist fehlgeschalgen. Fehler: %1%"
 
 #: backend/network.cpp:300
 msgid "Masterlist revision"
-msgstr ""
+msgstr "Revision der Masterlist"
 
 #: backend/network.cpp:300
 msgid "Rolled back to the previous revision."
-msgstr ""
+msgstr "Auf die vorherige Revision zurückgerollt."
 
 #: gui/editor.cpp:73
-msgid ""
-"Compare priority against all other plugins"
-msgstr ""
+msgid "Compare priority against all other plugins"
+msgstr "Priorität mit allen anderen Plugins vergleichen"
 
 #: gui/editor.cpp:100
 msgid "User Metadata Enabled"
-msgstr ""
+msgstr "Benutzer-Metadaten aktiviert"
 
 #: gui/editor.cpp:101
 msgid "Plugin Name"
-msgstr ""
+msgstr "Plugin Name"
 
 #: gui/editor.cpp:103
 msgid "Global Priority"
-msgstr ""
-
-#: gui/editor.cpp:128
-msgid "Copy Plugin Name"
-msgstr ""
-
-#: gui/editor.cpp:129
-msgid "Copy Plugin Metadata As Text"
-msgstr ""
-
-#: gui/editor.cpp:130
-msgid "Remove Plugin User-Added Metadata"
-msgstr ""
+msgstr "Globale Priorität"
 
 #: gui/editor.cpp:159 gui/editor.cpp:326 gui/editor.cpp:464
 msgid ""
 "Please submit any edits made for reasons other than personal preference to "
 "the LOOT team so that they may be included in the masterlist."
 msgstr ""
+"Bitte senden Sie alle Änderungen, die Sie nicht aus persönlicher Vorliebe "
+"vorgenommen haben, an das LOOT-Team, damit diese in der Masterlist "
+"übernommen werden können."
 
 #: gui/editor.cpp:162
 msgid "Show only conflicting plugins"
-msgstr ""
+msgstr "Zeige nur in Konflikt stehende Plugins an"
 
 #: gui/editor.cpp:168 gui/editor.cpp:847
 msgid "Remove Plugin"
-msgstr ""
+msgstr "Plugins entfernen"
 
 #: gui/editor.cpp:171
 msgid "Plugin"
-msgstr ""
+msgstr "Plugin"
 
 #: gui/editor.cpp:172
 msgid "Priority"
-msgstr ""
+msgstr "Priorität"
 
 #: gui/editor.cpp:174 gui/editor.cpp:518 gui/editor.cpp:522 gui/editor.cpp:526
 msgid "Filename"
-msgstr ""
+msgstr "Dateiname"
 
 #: gui/editor.cpp:175 gui/editor.cpp:519 gui/editor.cpp:523 gui/editor.cpp:527
 msgid "Display Name"
-msgstr ""
+msgstr "Anzeigename"
 
 #: gui/editor.cpp:176 gui/editor.cpp:520 gui/editor.cpp:524 gui/editor.cpp:528
 #: gui/editor.cpp:532 gui/misc.cpp:37
 msgid "Condition"
-msgstr ""
+msgstr "Bedingung"
 
 #: gui/editor.cpp:182
 msgid "Otherwise, priorities are only compared between conflicting plugins."
 msgstr ""
+"Anderenfalls werden Prioritäten nur zwischen Plugins verglichen, die "
+"miteinander in Konflikt stehen."
 
 #: gui/editor.cpp:199 gui/editor.cpp:577
 msgid "Select a plugin to edit its load order metadata."
 msgstr ""
+"Wählen Sie ein Plugin aus, um dessen Lade-Reihenfolge-Metadaten zu "
+"bearbeiten."
 
 #: gui/editor.cpp:200
 msgid ""
 "Drag and drop a plugin here to make the selected plugin load after it. The "
 "\"Show only conflicting plugins\" checkbox must be checked."
 msgstr ""
+"Ziehen Sie ein Plugin per Drag-and-drop an diese Stelle, um das ausgewählte "
+"Plugin danach zu laden. Die \"Zeige nur in Konflikt stehende Plugins an\"-"
+"Box muss aktiviert sein."
 
 #: gui/editor.cpp:201 gui/editor.cpp:578
 msgid ""
@@ -203,6 +214,9 @@ msgid ""
 "priorities that they conflict with, unless one must explicitly load after "
 "the other."
 msgstr ""
+"Plugins mit höherer Prioriät werden nach den Plugins mit geringerer "
+"Priorität geladen, mit denen Sie in Konflikt stehen, es sei denn, eines muss "
+"explizit nach dem anderen geladen werden."
 
 #: gui/editor.cpp:202
 msgid ""
@@ -211,182 +225,194 @@ msgid ""
 "loads a BSA, also load BSAs. Also enables drag and drop of plugins into the "
 "Load After box."
 msgstr ""
+"Filtert die Plugin-Liste, sodass nur Plugins angezeigt werden, die nach dem "
+"momentan ausgewählten Plugin geladen werden können und die entweder mit "
+"diesem in Konflikt stehen oder, falls es ein BSA lädt, ebenfalls BSAs laden. "
+"Aktiviert außerdem die Möglichkeit, per Drag-and-drop Plugins in die Lade "
+"später-Box zu ziehen."
 
 #: gui/editor.cpp:203
 msgid ""
 "Only newly-added plugins may be removed here. Use the metadata editor to "
 "remove other user-added plugins."
 msgstr ""
+"Nur neu hinzugefügte Plugins dürfen hier entfernt werden. Verwenden Sie den "
+"Metadaten-Editor, um andere durch den Benutzer hinzugefügte Plugins zu "
+"entfernen."
 
 #: gui/editor.cpp:211 gui/editor.cpp:596
 msgid "Priority: "
-msgstr ""
+msgstr "Priorität:"
 
 #: gui/editor.cpp:215 gui/editor.cpp:510
 msgid "Load After"
-msgstr ""
+msgstr "Lade Nach"
 
 #: gui/editor.cpp:489
 msgid "Enable User Changes"
-msgstr ""
+msgstr "Aktiviere Benutzer-Änderungen"
 
 #: gui/editor.cpp:491 gui/editor.cpp:841
 msgid "Add File"
-msgstr ""
+msgstr "Datei hinzufügen"
 
 #: gui/editor.cpp:492 gui/editor.cpp:842
 msgid "Edit File"
-msgstr ""
+msgstr "Datei bearbeiten"
 
 #: gui/editor.cpp:493 gui/editor.cpp:843
 msgid "Remove File"
-msgstr ""
+msgstr "Datei entfernen"
 
 #: gui/editor.cpp:494
 msgid "Save Changes"
-msgstr ""
+msgstr "Änderungen speichern"
 
 #: gui/editor.cpp:495
 msgid "Cancel"
-msgstr ""
+msgstr "Abbrechen"
 
 #: gui/editor.cpp:508
 msgid "Requirements"
-msgstr ""
+msgstr "Voraussetzungen"
 
 #: gui/editor.cpp:509
 msgid "Incompatibilities"
-msgstr ""
+msgstr "Inkompatibilitäten"
 
 #: gui/editor.cpp:511
 msgid "Messages"
-msgstr ""
+msgstr "Nachrichten"
 
 #: gui/editor.cpp:512
 msgid "Bash Tags"
-msgstr ""
+msgstr "Bash Tags"
 
 #: gui/editor.cpp:513
 msgid "Dirty Info"
-msgstr ""
+msgstr "Informationen über unsaubere Einträge"
 
 #: gui/editor.cpp:516
 msgid "Plugins"
-msgstr ""
+msgstr "Plugins"
 
 #: gui/editor.cpp:530
 msgid "Add/Remove"
-msgstr ""
+msgstr "Hinzufügen/Entfernen"
 
 #: gui/editor.cpp:531
 msgid "Bash Tag"
-msgstr ""
+msgstr "Bash Tag"
 
 #: gui/editor.cpp:534
 msgid "CRC"
-msgstr ""
+msgstr "CRC"
 
 #: gui/editor.cpp:535
 msgid "ITM Count"
-msgstr ""
+msgstr "ITM Anzahl"
 
 #: gui/editor.cpp:536
 msgid "UDR Count"
-msgstr ""
+msgstr "UDR Anzahl"
 
 #: gui/editor.cpp:537
 msgid "Deleted Navmesh Count"
-msgstr ""
+msgstr "Gelöschte Navmeshs Anzahl"
 
 #: gui/editor.cpp:538
 msgid "Cleaning Utility"
-msgstr ""
+msgstr "Bereinigungs-Tool"
 
 #: gui/editor.cpp:541
 msgid "Copy Name"
-msgstr ""
+msgstr "Kopiere Namen"
 
 #: gui/editor.cpp:542
 msgid "Copy Metadata As Text"
-msgstr ""
+msgstr "Kopiere Metadaten als Text"
 
 #: gui/editor.cpp:543
 msgid "Remove All User-Added Metadata"
-msgstr ""
+msgstr "Entferne alle durch den Benutzer hinzugefügten Metadaten"
 
 #: gui/editor.cpp:579
 msgid "If unchecked, any user-added metadata will be ignored during sorting."
 msgstr ""
+"Falls deaktiviert, werden alle durch den Benutzer hinzugefügten Metadaten "
+"bei der Sortierung ignoriert."
 
 #: gui/editor.cpp:580 gui/editor.cpp:581
 msgid "Only user-added data may be removed."
-msgstr ""
+msgstr "Nur durch den Benutzer hinzugefügten Metadaten dürfen entfernt werden."
 
 #: gui/editor.cpp:813
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from this "
 "plugin?"
 msgstr ""
+"Sind Sie sicher, dass sie alle durch den Benutzer hinzugefügten Metadaten "
+"von diesem Plugin entfernen wollen?"
 
 #: gui/editor.cpp:814 gui/main.cpp:1074
 msgid "LOOT: Warning"
-msgstr ""
+msgstr "LOOT: Warnung"
 
 #: gui/editor.cpp:845
 msgid "Add Plugin"
-msgstr ""
+msgstr "Plugin hinzufügen"
 
 #: gui/editor.cpp:846
 msgid "Edit Plugin"
-msgstr ""
+msgstr "Plugin bearbeiten"
 
 #: gui/editor.cpp:849
 msgid "Add Message"
-msgstr ""
+msgstr "Nachricht hinzufügen"
 
 #: gui/editor.cpp:850
 msgid "Edit Message"
-msgstr ""
+msgstr "Nachricht bearbeiten"
 
 #: gui/editor.cpp:851
 msgid "Remove Message"
-msgstr ""
+msgstr "Nachricht entfernen"
 
 #: gui/editor.cpp:853
 msgid "Add Bash Tag"
-msgstr ""
+msgstr "Bash Tag hinzufügen"
 
 #: gui/editor.cpp:854
 msgid "Edit Bash Tag"
-msgstr ""
+msgstr "Bash Tag bearbeiten"
 
 #: gui/editor.cpp:855
 msgid "Remove Bash Tag"
-msgstr ""
+msgstr "Bash Tag entfernen"
 
 #: gui/editor.cpp:857
 msgid "Add Dirty Info"
-msgstr ""
+msgstr "Informationen über unsaubere Einträge hinzufügen"
 
 #: gui/editor.cpp:858
 msgid "Edit Dirty Info"
-msgstr ""
+msgstr "Informationen über unsaubere Einträge bearbeiten"
 
 #: gui/editor.cpp:859
 msgid "Remove Dirty Info"
-msgstr ""
+msgstr "Informationen über unsaubere Einträge entfernen"
 
 #: gui/editor.cpp:877
 msgid "LOOT: Add File/Plugin"
-msgstr ""
+msgstr "LOOT: Datei/Plugin hinzufügen"
 
 #: gui/editor.cpp:899
 msgid "LOOT: Add Message"
-msgstr ""
+msgstr "LOOT: Nachricht hinzufügen"
 
 #: gui/editor.cpp:909
 msgid "Error: No content specified. Row will not be added."
-msgstr ""
+msgstr "Fehler: Kein Inhalt angegeben. Die Zeile wird nicht hinzugefügt."
 
 #: gui/editor.cpp:910 gui/editor.cpp:992 gui/main.cpp:180 gui/main.cpp:197
 #: gui/main.cpp:212 gui/main.cpp:295 gui/main.cpp:305 gui/main.cpp:318
@@ -397,239 +423,262 @@ msgstr ""
 #: gui/settings.cpp:308 gui/settings.cpp:352 gui/settings.cpp:360
 #: gui/settings.cpp:368
 msgid "LOOT: Error"
-msgstr ""
+msgstr "LOOT: Fehler"
 
 #: gui/editor.cpp:920
 msgid "LOOT: Add Tag"
-msgstr ""
+msgstr "LOOT: Tag hinzufügen"
 
 #: gui/editor.cpp:934
 msgid "LOOT: Add Dirty Info"
-msgstr ""
+msgstr "LOOT: Informationen über unsaubere Einträge hinzufügen"
 
 #: gui/editor.cpp:953
 msgid "LOOT: Edit File/Plugin"
-msgstr ""
+msgstr "LOOT: Datei/Plugin bearbeiten"
 
 #: gui/editor.cpp:977
 msgid "LOOT: Edit Message"
-msgstr ""
+msgstr "LOOT: Nachricht bearbeiten"
 
 #: gui/editor.cpp:991
 msgid "Error: No content specified. Row will not be edited."
-msgstr ""
+msgstr "Fehler: Kein Inhalt angegeben. Die Reihe wird nicht verändert."
 
 #: gui/editor.cpp:1001
 msgid "LOOT: Edit Tag"
-msgstr ""
+msgstr "LOOT: Tag bearbeiten"
 
 #: gui/editor.cpp:1023
 msgid "LOOT: Edit Dirty Info"
-msgstr ""
+msgstr "LOOT: Informationen über unsaubere Einträge bearbeiten"
 
 #: gui/editor.cpp:1158
-msgid "If LOOT has gotten something wrong, please let the team know. See the Contributing To LOOT section of the readme for details."
+msgid ""
+"If LOOT has gotten something wrong, please let the team know. See the "
+"Contributing To LOOT section of the readme for details."
 msgstr ""
+"Falls LOOT etwas falsch gemacht hat, lassen Sie es das Team bitte wissen. "
+"Für weitere Details sehen Sie sich bitte den Abschnitt 'Contributing To "
+"LOOT' der Readme an."
 
 #: gui/main.cpp:120
 msgid "Masterlist update failed. Details: %1%"
-msgstr ""
+msgstr "Die Masterlist konnte nicht aktualisiert werden. Details: %1%"
 
 #: gui/main.cpp:132
 msgid "Masterlist revision check failed. Details: %1%"
 msgstr ""
+"Die Überprüfung der Masterlist-Revision ist fehlgeschlagen. Details: %1%"
 
 #: gui/main.cpp:150
 msgid "Masterlist parsing failed. Details: %1%"
-msgstr ""
+msgstr "Die Masterlist konnte nicht gelesen werden. Details: %1%"
 
 #: gui/main.cpp:158
 msgid "Unknown"
-msgstr ""
+msgstr "Unbekannt"
 
 #: gui/main.cpp:160
 msgid "No masterlist"
-msgstr ""
+msgstr "Keine Masterlist"
 
 #: gui/main.cpp:179
 msgid "Error: LOOT is already running. This instance will now quit."
 msgstr ""
+"Fehler: LOOT wird bereits ausgeführt. Diese Instanz wird jetzt beendet."
 
 #: gui/main.cpp:196
 msgid "Error: Could not create local app data LOOT folder."
 msgstr ""
+"Fehler: In den lokalen Anwendungsdaten konnte kein LOOT-Ordner angelegt "
+"werden."
 
 #: gui/main.cpp:211
 msgid "Error: Settings parsing failed. %1%"
-msgstr ""
+msgstr "Fehler: Die Einstellungen konnten nicht gelesen werden. %1%"
 
 #: gui/main.cpp:294
 msgid "Error: Could not apply translation."
-msgstr ""
+msgstr "Fehler: Es konnte keine Übersetzung angewandt werden."
 
 #: gui/main.cpp:304
 msgid "Error: The selected language is not available on this system."
 msgstr ""
+"Fehler: Die ausgewählte Sprache steht auf diesem System nicht zur Verfügung."
 
 #: gui/main.cpp:317 gui/main.cpp:373 gui/main.cpp:543
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr ""
+"Fehler: Spielspezifische Einstellungen konnten nicht initialisiert werden. "
+"%1%"
 
 #: gui/main.cpp:325
 msgid "Error: Games' settings parsing failed. %1%"
-msgstr ""
+msgstr "Fehler: Die Einstellungen des Spiels konnten nicht gelesen werden. %1%"
 
 #: gui/main.cpp:356
 msgid "Error: None of the supported games were detected."
-msgstr ""
+msgstr "Fehler: Keine der unterstützten Spiele wurden gefunden."
 
 #: gui/main.cpp:401
 msgid "Edit Metadata"
-msgstr ""
+msgstr "Metadaten bearbeiten"
 
 #: gui/main.cpp:402
 msgid "Sort Plugins"
-msgstr ""
+msgstr "Plugins sortieren"
 
 #: gui/main.cpp:403
 msgid "View Last Report"
-msgstr ""
+msgstr "Neuesten Bericht ansehen"
 
 #: gui/main.cpp:407
 msgid "&View Last Report"
-msgstr ""
+msgstr "&Neuesten Bericht ansehen"
 
 #: gui/main.cpp:408
 msgid "View &Debug Log"
-msgstr ""
+msgstr "Debug &Log ansehen"
 
 #: gui/main.cpp:409
 msgid "&Sort Plugins"
-msgstr ""
+msgstr "Plugins &Umsortieren"
 
 #: gui/main.cpp:410
 msgid "&Redate Plugins"
-msgstr ""
+msgstr "Plugin &Zeitstempel bearbeiten"
 
 #: gui/main.cpp:413
 msgid "&File"
-msgstr ""
+msgstr "&Datei"
 
 #: gui/main.cpp:415
 msgid "&Metadata..."
-msgstr ""
+msgstr "&Metadaten..."
 
 #: gui/main.cpp:416
 msgid "&Settings..."
-msgstr ""
+msgstr "&Einstellungen..."
 
 #: gui/main.cpp:417
 msgid "&Edit"
-msgstr ""
+msgstr "&Bearbeiten"
 
 #: gui/main.cpp:429
 msgid "&Game"
-msgstr ""
+msgstr "&Spiel"
 
 #: gui/main.cpp:434
 msgid "&Help"
-msgstr ""
+msgstr "&Hilfe"
 
 #: gui/main.cpp:458
 msgid ""
 "Opens the Metadata Editor, where plugins' sorting metadata, messages, dirty "
 "info and Bash Tag suggestions can be edited."
 msgstr ""
+"Öffnet den Metadaten-Editor, mit dem die Sortier-Metadaten, Nachrichten, "
+"Informationen über unsaubere Einträge und Bash Tags von Plugins bearbeitet "
+"werden können."
 
 #: gui/main.cpp:459
 msgid "Sorts your plugins, then displays a report of the results."
-msgstr ""
+msgstr "Sortiert die Plugins und zeigt einen Bericht über die Ergebnisse an."
 
 #: gui/main.cpp:460
 msgid "Opens the last report generated for the current game."
-msgstr ""
+msgstr "Öffnet den zuletzt generierten Bericht für das aktuelle Spiel."
 
 #: gui/main.cpp:519 gui/main.cpp:962
 msgid "LOOT: Report Viewer"
-msgstr ""
+msgstr "LOOT: Bericht-Betrachter"
 
 #: gui/main.cpp:527
 msgid "LOOT: Settings"
-msgstr ""
+msgstr "LOOT: Einstellungen"
 
 #: gui/main.cpp:564 gui/main.cpp:580
 msgid "Error: \"%1%\" cannot be found."
-msgstr ""
+msgstr "Fehler: \"%1%\" wurde nicht gefunden."
 
 #: gui/main.cpp:592
 msgid ""
 "Load order optimisation for Oblivion, Skyrim, Fallout 3 and Fallout: New "
 "Vegas."
 msgstr ""
+"Optimierung der Ladereihenfolge für Oblivion, Skyrim, Fallout 3 und Fallout: "
+"New Vegas."
 
 #: gui/main.cpp:623 gui/main.cpp:827 gui/main.cpp:974
 msgid "LOOT: Working..."
-msgstr ""
+msgstr "LOOT: Arbeite..."
 
 #: gui/main.cpp:623 gui/main.cpp:974
 msgid "LOOT working..."
-msgstr ""
+msgstr "LOOT arbeitet..."
 
 #: gui/main.cpp:680
 msgid "Userlist parsing failed. Details: %1%"
-msgstr ""
+msgstr "Das Lesen der Benutzerliste ist fehlgeschlagen. Details: %1%"
 
 #: gui/main.cpp:721
 msgid ""
 "A global message contains a condition that could not be evaluated. Details: "
 "%1%"
 msgstr ""
+"Eine globale Nachricht enthält eine Bedingung, die nicht ausgewertet werden "
+"konnte. Details: %1%"
 
 #: gui/main.cpp:754
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
 msgstr ""
+"\"%1%\" enthält eine Bedingung, die nicht ausgewertet werden konnte. "
+"Details: %2%"
 
 #: gui/main.cpp:767
 msgid "Building plugin graph..."
-msgstr ""
+msgstr "Konstruiere Plugin-Graphen..."
 
 #: gui/main.cpp:812
 msgid "LOOT: Calculated Load Order"
-msgstr ""
+msgstr "LOOT: Ladereihenfolge berechnet"
 
 #: gui/main.cpp:827
 msgid "Recalculating load order..."
-msgstr ""
+msgstr "Berechne Ladereihenfolge neu..."
 
 #: gui/main.cpp:884
 msgid "Failed to set the load order. Details: %1%"
-msgstr ""
+msgstr "Die Ladereihenfolge konnte nicht geändert werden. Details: %1%"
 
 #: gui/main.cpp:894
 msgid ""
 "The load order displayed in the Details tab was not applied as sorting was "
 "canceled."
 msgstr ""
+"Die Ladereihenfolge, die im Details-Reiter angezeigt wird, wurde nicht "
+"angewandt, da die Sortierung abgebrochen wurde."
 
 #: gui/main.cpp:899
 msgid "Failed to calculate the load order. Details: %1%"
-msgstr ""
+msgstr "Die Ladereihenfolge konnte nicht berechnet werden. Details: %1%"
 
 #: gui/main.cpp:945
 msgid "Error: %1%"
-msgstr ""
+msgstr "Fehler: %1%"
 
 #: gui/main.cpp:997
 msgid "Error: Masterlist parsing failed. %1%"
-msgstr ""
+msgstr "Fehler: Die Masterlist konnte nicht gelesen werden. %1%"
 
 #: gui/main.cpp:1019
 msgid "Error: Userlist parsing failed. %1%"
-msgstr ""
+msgstr "Fehler: Die Benutzerliste konnte nicht gelesen werden. %1%"
 
 #: gui/main.cpp:1065
 msgid "LOOT: Metadata Editor"
-msgstr ""
+msgstr "LOOT: Metadaten-Editor"
 
 #: gui/main.cpp:1074
 msgid ""
@@ -637,481 +686,497 @@ msgid ""
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
 "will be re-downloaded by Steam. Do you wish to continue?"
 msgstr ""
+"Dieses Feature wird zur Verfügung gestellt, damit Modder, die das Creation "
+"Kit benutzen, die Ladereihenfolge setzen können, die dieses benutzt. Ein "
+"Seiteneffekt davon ist, dass jegliche abonnierten Mods aus dem Steam "
+"Workshop von Steam erneut heruntergeladen werden. Wollen Sie fortfahren?"
 
 #: gui/main.cpp:1084
 msgid "Error: Failed to get load order. %1%"
-msgstr ""
+msgstr "Fehler: Die Ladereihenfolge konnte nicht ermittelt werden. %1%"
 
 #: gui/main.cpp:1121
 msgid "Error: Failed to set plugin timestamps. %1%"
-msgstr ""
+msgstr "Fehler: Der Plugin-Zeitstempel konnte nicht gesetzt werden. %1%"
 
 #: gui/main.cpp:1128
 msgid "Plugins were successfully redated."
-msgstr ""
+msgstr "Die Zeitstempel der Plugins wurden erfolgreich bearbeitet."
 
 #: gui/main.cpp:1129
 msgid "LOOT: Plugin Redate"
-msgstr ""
+msgstr "LOOT: Plugin Zeitstempel bearbeiten"
 
 #: gui/misc.cpp:35
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 #: gui/misc.cpp:36
 msgid "Content"
-msgstr ""
+msgstr "Inhalt"
 
 #: gui/misc.cpp:38 gui/misc.cpp:181
 msgid "Language"
-msgstr ""
+msgstr "Sprache"
 
 #: gui/misc.cpp:117
 msgid "Filename (required):"
-msgstr ""
+msgstr "Dateiname (erforderlich):"
 
 #: gui/misc.cpp:120
 msgid "Displayed Name:"
-msgstr ""
+msgstr "Anzeigename:"
 
 #: gui/misc.cpp:123 gui/misc.cpp:207 gui/misc.cpp:363
 msgid "Condition:"
-msgstr ""
+msgstr "Bedingung:"
 
 #: gui/misc.cpp:177
 msgid "Add Content"
-msgstr ""
+msgstr "Inhalt hinzufügen"
 
 #: gui/misc.cpp:178
 msgid "Edit Content"
-msgstr ""
+msgstr "Inhalt bearbeiten"
 
 #: gui/misc.cpp:179
 msgid "Remove Content"
-msgstr ""
+msgstr "Inhalt entfernen"
 
 #: gui/misc.cpp:182
 msgid "String"
-msgstr ""
+msgstr "Zeichenkette"
 
 #: gui/misc.cpp:204 gui/settings.cpp:429
 msgid "Type:"
-msgstr ""
+msgstr "Typ:"
 
 #: gui/misc.cpp:219 gui/settings.cpp:109
 msgid "Language:"
-msgstr ""
+msgstr "Sprache:"
 
 #: gui/misc.cpp:222
 msgid "Content:"
-msgstr ""
+msgstr "Inhalt:"
 
 #: gui/misc.cpp:312 gui/misc.cpp:327
 msgid "Error: No content row selected."
-msgstr ""
+msgstr "Fehler: Keine Inhalts-Zeile ausgewählt."
 
 #: gui/misc.cpp:357
 msgid "Add/Remove:"
-msgstr ""
+msgstr "Hinzufügen/Entfernen:"
 
 #: gui/misc.cpp:360 gui/settings.cpp:426
 msgid "Name (required):"
-msgstr ""
+msgstr "Name (erforderlich):"
 
 #: gui/misc.cpp:425
 msgid "CRC (required):"
-msgstr ""
+msgstr "CRC (erforderlich):"
 
 #: gui/misc.cpp:428
 msgid "ITM Count:"
-msgstr ""
+msgstr "ITM Anzahl:"
 
 #: gui/misc.cpp:431
 msgid "UDR Count:"
-msgstr ""
+msgstr "UDR Anzahl:"
 
 #: gui/misc.cpp:434
 msgid "Deleted Navmesh Count:"
-msgstr ""
+msgstr "Anzahl gelöschter Navmeshs:"
 
 #: gui/misc.cpp:437
 msgid "Cleaning Utility (required):"
-msgstr ""
+msgstr "Bereinigungs-Tool (erforderlich):"
 
 #: gui/settings.cpp:42
 msgid "None"
-msgstr ""
+msgstr "Keine"
 
 #: gui/settings.cpp:43
 msgid "Low"
-msgstr ""
+msgstr "Niedrig"
 
 #: gui/settings.cpp:44
 msgid "Medium"
-msgstr ""
+msgstr "Mittel"
 
 #: gui/settings.cpp:45
 msgid "High"
-msgstr ""
+msgstr "Hoch"
 
 #: gui/settings.cpp:49
 msgid "Autodetect"
-msgstr ""
+msgstr "Automatisch erkennen"
 
 #: gui/settings.cpp:67
 msgid "Add Game"
-msgstr ""
+msgstr "Spiel hinzufügen"
 
 #: gui/settings.cpp:68
 msgid "Edit Game"
-msgstr ""
+msgstr "Spiel bearbeiten"
 
 #: gui/settings.cpp:69
 msgid "Remove Game"
-msgstr ""
+msgstr "Spiel entfernen"
 
 #: gui/settings.cpp:71
 msgid "Update masterlist before sorting."
-msgstr ""
+msgstr "Masterlist vorm Sortieren aktualisieren."
 
 #: gui/settings.cpp:72
 msgid "View reports externally in default browser."
-msgstr ""
+msgstr "Berichte extern im Standard-Browser anzeigen."
 
 #: gui/settings.cpp:75
 msgid "Name"
-msgstr ""
+msgstr "Name"
 
 #: gui/settings.cpp:76
 msgid "Base Game Type"
-msgstr ""
+msgstr "Haupt Spiel Typ"
 
 #: gui/settings.cpp:77
 msgid "LOOT Folder Name"
-msgstr ""
+msgstr "LOOT Ordnername"
 
 #: gui/settings.cpp:78
 msgid "Master File"
-msgstr ""
+msgstr "Master-Datei"
 
 #: gui/settings.cpp:79
 msgid "Masterlist Repository URL"
-msgstr ""
+msgstr "Masterlist Repository URL"
 
 #: gui/settings.cpp:80
 msgid "Masterlist Repository Branch"
-msgstr ""
+msgstr "Masterlist Repository Branch"
 
 #: gui/settings.cpp:81
 msgid "Install Path"
-msgstr ""
+msgstr "Installationspfad"
 
 #: gui/settings.cpp:82
 msgid "Install Path Registry Key"
-msgstr ""
+msgstr "Installationspfad Registrierungsschlüssel"
 
 #: gui/settings.cpp:106
 msgid "Default Game:"
-msgstr ""
+msgstr "Standard-Spiel:"
 
 #: gui/settings.cpp:112
 msgid "Debug Verbosity:"
-msgstr ""
+msgstr "Debug-Ausführlichkeit:"
 
 #: gui/settings.cpp:131
 msgid "Language and game changes will be applied after LOOT is restarted."
 msgstr ""
+"Änderungen der Sprache und der Spiele werden aktiv, nachdem LOOT "
+"neugestartet wurde."
 
 #: gui/settings.cpp:144
 msgid "The output is logged to the LOOTDebugLog.txt file."
-msgstr ""
+msgstr "Die Ausgabe wird in die LOOTDebugLog.txt-Datei geloggt."
 
 #: gui/settings.cpp:280
 msgid "LOOT: Add Game"
-msgstr ""
+msgstr "LOOT: Spiel hinzufügen"
 
 #: gui/settings.cpp:287 gui/settings.cpp:367
 msgid "Error: A path and/or registry key is required. Row will not be added."
 msgstr ""
+"Fehler: Ein Pfad und/oder Registrierungsschlüssel ist erforderlich. Die "
+"Reihe wird nicht hinzugefügt."
 
 #: gui/settings.cpp:299
 msgid "Error: A game with this name is already defined. Row will not be added."
 msgstr ""
+"Fehler: Ein Spiel mit diesem Namen existiert bereits. Die Reihe wird nicht "
+"hinzugefügt."
 
 #: gui/settings.cpp:307
 msgid ""
 "Error: A game with this folder name is already defined. Row will not be "
 "added."
 msgstr ""
+"Fehler: Ein Spiel mit diesem Ordnernamen existiert bereits. Die Reihe wird "
+"nicht hinzugefügt."
 
 #: gui/settings.cpp:330
 msgid "LOOT: Edit Game"
-msgstr ""
+msgstr "LOOT: Spiel bearbeiten"
 
 #: gui/settings.cpp:351
 msgid "Error: Name is required. Row will not be added."
-msgstr ""
+msgstr "Fehler: Name ist erforderlich. Die Reihe wird nicht hinzugefügt."
 
 #: gui/settings.cpp:359
 msgid "Error: Folder is required. Row will not be added."
-msgstr ""
+msgstr "Fehler: Ordner ist erforderlich. Die Reihe wird nicht hinzugefügt."
 
 #: gui/settings.cpp:432
 msgid "LOOT Folder Name (required):"
-msgstr ""
+msgstr "LOOT Ordner Name (erforderlich):"
 
 #: gui/settings.cpp:435
 msgid "Master File:"
-msgstr ""
+msgstr "Master-File:"
 
 #: gui/settings.cpp:438
 msgid "Masterlist Repository URL:"
-msgstr ""
+msgstr "Masterlist Repository URL:"
 
 #: gui/settings.cpp:441
 msgid "Masterlist Repository Branch:"
-msgstr ""
+msgstr "Masterlist Repository Branch:"
 
 #: gui/settings.cpp:444
 msgid "Install Path:"
-msgstr ""
+msgstr "Installationspfad:"
 
 #: gui/settings.cpp:447
 msgid "Install Path Registry Key:"
-msgstr ""
+msgstr "Installationspfad Registrierungsschlüssel:"
 
 #: backend/generators.cpp:324
 msgid "Version Information"
-msgstr ""
+msgstr "Informationen zur Version"
 
 #: backend/generators.cpp:330
 msgid "Masterlist Revision"
-msgstr ""
+msgstr "Masterlist Revision"
 
 #: backend/generators.cpp:333
 msgid "Masterlist Date"
-msgstr ""
+msgstr "Masterlist Datum"
 
 #: backend/generators.cpp:339
 msgid "Plugin & Message Counts"
-msgstr ""
+msgstr "Plugin & Nachrichten Anzahl"
 
 #: backend/generators.cpp:342
 msgid "Total Plugins"
-msgstr ""
+msgstr "Plugins insgesamt"
 
 #: backend/generators.cpp:345
 msgid "Active Plugins"
-msgstr ""
+msgstr "Aktive Plugins"
 
 #: backend/generators.cpp:348
 msgid "Dirty Plugins"
-msgstr ""
+msgstr "Unsaubere Plugins"
 
 #: backend/generators.cpp:351
 msgid "Total Messages"
-msgstr ""
+msgstr "Nachrichten insgesamt"
 
 #: backend/generators.cpp:354
 msgid "Warnings"
-msgstr ""
+msgstr "Warnungen"
 
 #: backend/generators.cpp:357
 msgid "Errors"
-msgstr ""
+msgstr "Fehler"
 
 #: backend/generators.h:57
 msgid "Note:"
-msgstr ""
+msgstr "Notiz:"
 
 #: backend/generators.h:59
 msgid "Bash Tag Suggestion(s):"
-msgstr ""
+msgstr "Bash Tag Vorschläge:"
 
 #: backend/generators.h:61
 msgid "Warning:"
-msgstr ""
+msgstr "Warnung:"
 
 #: backend/generators.h:63
 msgid "Error:"
-msgstr ""
+msgstr "Fehler:"
 
 #: backend/generators.h:128
 msgid "LOOT Report"
-msgstr ""
+msgstr "LOOT Bericht"
 
 #: backend/generators.h:154 backend/generators.h:217
 msgid "Summary"
-msgstr ""
+msgstr "Zusammenfassung"
 
 #: backend/generators.h:160
 msgid "Details"
-msgstr ""
+msgstr "Details"
 
 #: backend/generators.h:166
 msgid "Filters"
-msgstr ""
+msgstr "Filter"
 
 #: backend/generators.h:230
 msgid "LOOT Version"
-msgstr ""
+msgstr "LOOT Version"
 
 #: backend/generators.h:239
 msgid "Masterlist Version"
-msgstr ""
+msgstr "Masterlist Version"
 
 #: backend/generators.h:248
 msgid "Masterlist Updating"
-msgstr ""
+msgstr "Masterlist Aktualisierung"
 
 #: backend/generators.h:252
 msgid "Enabled"
-msgstr ""
+msgstr "Aktiviert"
 
 #: backend/generators.h:254
 msgid "Disabled"
-msgstr ""
+msgstr "Deaktiviert"
 
 #: backend/generators.h:263
 msgid ""
 "There have been no changes in the Details tab since LOOT was last run for "
 "this game."
 msgstr ""
+"Es hat keine Änderungen im Details-Reiter gegeben, seit LOOT das letzte Mal "
+"für dieses Spiel ausgeführt wurde."
 
 #: backend/generators.h:273
 msgid "General Messages"
-msgstr ""
+msgstr "Allgemeine Nachrichten"
 
 #: backend/generators.h:283
 msgid "Total Number of Messages"
-msgstr ""
+msgstr "Gesamtanzahl an Nachrichten"
 
 #: backend/generators.h:292
 msgid "Number of Warnings"
-msgstr ""
+msgstr "Anzahl Warnungen"
 
 #: backend/generators.h:301
 msgid "Number of Errors"
-msgstr ""
+msgstr "Anzahl Fehler"
 
 #: backend/generators.h:342
 msgid "Version:"
-msgstr ""
+msgstr "Version:"
 
 #: backend/generators.h:362
 msgid "Add:"
-msgstr ""
+msgstr "Hinzufügen:"
 
 #: backend/generators.h:368
 msgid "Remove:"
-msgstr ""
+msgstr "Entfernen:"
 
 #: backend/generators.h:376
 msgid ""
 "Contains %1% ITM records, %2% UDR records and %3% deleted navmeshes. Clean "
 "with %4%."
 msgstr ""
+"Enthält %1% ITM Einträge, %2% UDR Einträge und %3% gelöschte Navmeshes. "
+"Säubern mit %4%."
 
 #: backend/generators.h:378
 msgid "Clean with %1%."
-msgstr ""
+msgstr "Säubern mit %1%."
 
 #: backend/generators.h:382
 msgid "Contains %1% UDR records and %2% deleted navmeshes. Clean with %3%."
-msgstr ""
+msgstr "Enthält %1% UDR Einträge und %2% gelöschte Navmeshes. Säubern mit %3%."
 
 #: backend/generators.h:384
 msgid "Contains %1% deleted navmeshes. Clean with %2%."
-msgstr ""
+msgstr "Enthält %1% gelöschte Navmeshes. Säubern mit %2%."
 
 #: backend/generators.h:386
 msgid "Contains %1% UDR records. Clean with %2%."
-msgstr ""
+msgstr "Entält %1% UDR Einträge. Säubern mit %2%."
 
 #: backend/generators.h:389
 msgid "Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%."
-msgstr ""
+msgstr "Enthält %1% ITM Einträge und %2% gelöschte Navmeshes. Säubern mit %3%."
 
 #: backend/generators.h:391
 msgid "Contains %1% ITM records. Clean with %2%."
-msgstr ""
+msgstr "Enthält %1% ITM Einträge. Säubern mit %2%."
 
 #: backend/generators.h:394
 msgid "Contains %1% ITM records and %2% UDR records. Clean with %3%."
-msgstr ""
+msgstr "Enthält %1% ITM Einträge und %2% UDR Einträge. Säubern mit %3%."
 
 #: backend/generators.h:430
 msgid "The LOOT Report requires Javascript to be enabled in order to function."
-msgstr ""
+msgstr "Der LOOT Bericht benötigt Javascript um korrekt dargestellt zu werden."
 
 #: backend/generators.h:457
 msgid "Hide Version Numbers"
-msgstr ""
+msgstr "Versionsnummern verbergen"
 
 #: backend/generators.h:466
 msgid "Hide CRCs"
-msgstr ""
+msgstr "CRCs verbergen"
 
 #: backend/generators.h:475
 msgid "Hide Bash Tag Suggestions"
-msgstr ""
+msgstr "Bash Tag Vorschläge verbergen"
 
 #: backend/generators.h:483
 msgid "Hide Notes"
-msgstr ""
+msgstr "Hinweise verbergen"
 
 #: backend/generators.h:491
 msgid "Hide 'Do Not Clean' Messages"
-msgstr ""
+msgstr "'Nicht säubern'-Nachrichten verbergen"
 
 #: backend/generators.h:499
 msgid "Hide All Plugin Messages"
-msgstr ""
+msgstr "Alle Plugin-Nachrichten verbergen"
 
 #: backend/generators.h:507
 msgid "Hide Messageless Plugins"
-msgstr ""
+msgstr "Plugins ohne Nachrichten verbergen"
 
 #: backend/generators.h:517
 msgid "%1% of %2% plugins hidden."
-msgstr ""
+msgstr "%1% von %2% Plugins verborgen."
 
 #: backend/generators.h:525
 msgid "%1% of %2% messages hidden."
-msgstr ""
+msgstr "%1% von %2% Nachrichten verborgen."
 
 #: backend/parsers.h:470 backend/parsers.h:553
 msgid "Invalid file path:"
-msgstr ""
+msgstr "Ungültiger Dateipfad:"
 
 #: backend/parsers.h:518
 msgid "Invalid folder path:"
-msgstr ""
+msgstr "Ungültiger Ordnerpfad:"
 
 #: backend/parsers.h:535
 msgid "Invalid regex string:"
-msgstr ""
+msgstr "Ungültiger regulärer Ausdruck:"
 
 #: backend/parsers.h:630
 msgid "Expected \"%1%\" at \"%2%\"."
-msgstr ""
+msgstr "Erwartete  \"%1%\" an \"%2%\"."
 
 #: gui/misc.h:36
 msgid "Note"
-msgstr ""
+msgstr "Notiz"
 
 #: gui/misc.h:37
 msgid "Warning"
-msgstr ""
+msgstr "Warnung"
 
 #: gui/misc.h:38
 msgid "Error"
-msgstr ""
+msgstr "Fehler"
 
 #: gui/misc.h:42
 msgid "Add"
-msgstr ""
+msgstr "Hinzufügen"
 
 #: gui/misc.h:43
 msgid "Remove"
-msgstr ""
+msgstr "Entfernen"

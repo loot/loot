@@ -24,6 +24,9 @@
 
 #include "graph.h"
 #include "streams.h"
+#include "helpers.h"
+
+#include <cstdlib>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/log/trivial.hpp>
@@ -39,12 +42,38 @@ namespace loot {
 
     cycle_detector::cycle_detector() {}
 
+    void cycle_detector::tree_edge(edge_t e, const PluginGraph& g) {
+        vertex_t source = boost::source(e, g);
+
+        string name = g[source].Name();
+
+        // Check if the plugin already exists in the recorded trail.
+        auto it = find(trail.begin(), trail.end(), name);
+
+        if (it != trail.end()) {
+            // Erase everything from this position onwards, as it doesn't
+            // contribute to a forward-cycle.
+            trail.erase(it, trail.end());
+        }
+
+        trail.push_back(name);
+    }
+
     void cycle_detector::back_edge(edge_t e, const PluginGraph& g) {
         vertex_t vSource = boost::source(e, g);
         vertex_t vTarget = boost::target(e, g);
 
-        BOOST_LOG_TRIVIAL(error) << "Cyclic interaction detected between plugins \"" << g[vSource].Name() << "\" and \"" << g[vTarget].Name() << "\".";
-        throw loot::error(loot::error::sorting_error, (boost::format(lc::translate("Cyclic interaction detected between plugins \"%1%\" and \"%2%\".")) % g[vSource].Name() % g[vTarget].Name()).str());
+        trail.push_back(g[vSource].Name());
+        list<string>::iterator it = find(trail.begin(), trail.end(), g[vTarget].Name());
+        string backCycle;
+        for (list<string>::iterator endIt = trail.end(); it != endIt; ++it) {
+            backCycle += *it + ", ";
+        }
+        backCycle.erase(backCycle.length() - 2);
+
+        BOOST_LOG_TRIVIAL(error) << "Cyclic interaction detected between plugins \"" << g[vSource].Name() << "\" and \"" << g[vTarget].Name() << "\". Back cycle: " << backCycle;
+
+        throw loot::error(loot::error::sorting_error, (boost::format(lc::translate("Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: %3%")) % g[vSource].Name() % g[vTarget].Name() % backCycle).str());
     }
 
     bool GetVertexByName(const PluginGraph& graph, const std::string& name, vertex_t& vertex) {
@@ -61,7 +90,7 @@ namespace loot {
         return false;
     }
 
-    void Sort(const PluginGraph& graph, std::list<Plugin>& plugins) {
+    std::list<Plugin> Sort(const PluginGraph& graph) {
 
         //Topological sort requires an index map, which std::list-based VertexList graphs don't have, so one needs to be built separately.
 
@@ -76,13 +105,29 @@ namespace loot {
         std::list<vertex_t> sortedVertices;
         boost::topological_sort(graph, std::front_inserter(sortedVertices), boost::vertex_index_map(v_index_map));
 
+        /* Sorting now evaluates conditions inside the graph, so existing plugins list is missing
+        data present in the graph, so we need to swap the two lists. */
         BOOST_LOG_TRIVIAL(info) << "Calculated order: ";
-        list<loot::Plugin> tempPlugins;
-        for (std::list<vertex_t>::iterator it = sortedVertices.begin(), endit = sortedVertices.end(); it != endit; ++it) {
-            BOOST_LOG_TRIVIAL(info) << '\t' << graph[*it].Name();
-            tempPlugins.push_back(graph[*it]);
+        list<Plugin> plugins;
+        for (const auto &vertex: sortedVertices) {
+            BOOST_LOG_TRIVIAL(info) << '\t' << graph[vertex].Name();
+            plugins.push_back(graph[vertex]);
         }
-        plugins.swap(tempPlugins);
+        return plugins;
+
+        
+        //Now sort exist plugins list according to order in tempPlugins.
+        /*plugins.sort([tempPlugins](const Plugin& first, const Plugin& second){
+            //Find both plugins, and compare distances from beginning.
+            auto fIt = find(tempPlugins.begin(), tempPlugins.end(), first);
+            auto sIt = find(tempPlugins.begin(), tempPlugins.end(), second);
+
+            if (fIt == tempPlugins.end() || sIt == tempPlugins.end())
+                return false;
+
+            return distance(tempPlugins.begin(), fIt) < distance(tempPlugins.begin(), sIt);
+        });
+        */
     }
 
     void CheckForCycles(const PluginGraph& graph) {
@@ -99,11 +144,12 @@ namespace loot {
         boost::depth_first_search(graph, visitor(vis).vertex_index_map(v_index_map));
     }
 
-    void AddSpecificEdges(PluginGraph& graph) {
+    void AddSpecificEdges(PluginGraph& graph, std::map<std::string, int>& overriddenPriorities) {
         //Add edges for all relationships that aren't overlaps or priority differences.
         loot::vertex_it vit, vitend;
         for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
             vertex_t parentVertex;
+            int parentPriority = graph[*vit].Priority();
 
             BOOST_LOG_TRIVIAL(trace) << "Adding specific edges to vertex for \"" << graph[*vit].Name() << "\".";
 
@@ -138,40 +184,64 @@ namespace loot {
 
             BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for masters.";
             vector<string> strVec(graph[*vit].Masters());
-            for (vector<string>::const_iterator it=strVec.begin(), itend=strVec.end(); it != itend; ++it) {
-                if (loot::GetVertexByName(graph, *it, parentVertex) &&
+            for (const auto &master: strVec) {
+                if (loot::GetVertexByName(graph, master, parentVertex) &&
                     !boost::edge(parentVertex, *vit, graph).second) {
 
                     BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[*vit].Name() << "\".";
 
                     boost::add_edge(parentVertex, *vit, graph);
+
+                    int priority = graph[parentVertex].Priority();
+                    if (priority > parentPriority) {
+                        parentPriority = priority;
+                    }
                 }
             }
             BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for requirements.";
             set<File> fileset(graph[*vit].Reqs());
-            for (set<File>::const_iterator it=fileset.begin(), itend=fileset.end(); it != itend; ++it) {
-                if (loot::IsPlugin(it->Name()) &&
-                    loot::GetVertexByName(graph, it->Name(), parentVertex) &&
+            for (const auto &file: fileset) {
+                if (loot::IsPlugin(file.Name()) &&
+                    loot::GetVertexByName(graph, file.Name(), parentVertex) &&
                     !boost::edge(parentVertex, *vit, graph).second) {
 
                     BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[*vit].Name() << "\".";
 
                     boost::add_edge(parentVertex, *vit, graph);
+
+                    int priority = graph[parentVertex].Priority();
+                    if (priority > parentPriority) {
+                        parentPriority = priority;
+                    }
                 }
             }
 
             BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for 'load after's.";
             fileset = graph[*vit].LoadAfter();
-            for (set<File>::const_iterator it=fileset.begin(), itend=fileset.end(); it != itend; ++it) {
-                if (loot::IsPlugin(it->Name()) &&
-                    loot::GetVertexByName(graph, it->Name(), parentVertex) &&
+            for (const auto &file : fileset) {
+                if (loot::IsPlugin(file.Name()) &&
+                    loot::GetVertexByName(graph, file.Name(), parentVertex) &&
                     !boost::edge(parentVertex, *vit, graph).second) {
 
                     BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[*vit].Name() << "\".";
 
                     boost::add_edge(parentVertex, *vit, graph);
+
+                    int priority = graph[parentVertex].Priority();
+                    if (priority > parentPriority) {
+                        parentPriority = priority;
+                    }
                 }
             }
+
+            //parentPriority is now the highest priority value of any plugin that the current plugin needs to load after.
+            //Set the current plugin's priority to parentPlugin.
+            if (parentPriority > 0 && graph[*vit].Priority() < parentPriority) {
+                BOOST_LOG_TRIVIAL(trace) << "Overriding priority for " << graph[*vit].Name() << " from " << graph[*vit].Priority() << " to " << parentPriority;
+                overriddenPriorities.insert(pair<string, int>(graph[*vit].Name(), graph[*vit].Priority()));
+                graph[*vit].Priority(parentPriority);
+            }
+
         }
     }
 
@@ -189,7 +259,7 @@ namespace loot {
             for (boost::tie(vit2, vitend2) = boost::vertices(graph); vit2 != vitend2; ++vit2) {
 
                 if (graph[*vit].Priority() == graph[*vit2].Priority() 
-                    || (graph[*vit].Priority() < 1000000 && graph[*vit2].Priority() < 1000000 
+                    || (abs(graph[*vit].Priority()) < max_priority && abs(graph[*vit2].Priority()) < max_priority
                         && !graph[*vit].FormIDs().empty() && !graph[*vit2].FormIDs().empty() && !graph[*vit].DoFormIDsOverlap(graph[*vit2])
                        )
                    ) {
@@ -199,18 +269,9 @@ namespace loot {
                 BOOST_LOG_TRIVIAL(trace) << "Checking priority difference between \"" << graph[*vit].Name() << "\" and \"" << graph[*vit2].Name() << "\".";
 
                 vertex_t vertex, parentVertex;
-                //Modulo is not consistently defined for negative numbers, so figure it out explicitly.
-                int p1 = graph[*vit].Priority();
-                int p2 = graph[*vit2].Priority();
-                if (p1 < 0)
-                    p1 = -((-p1) % 1000000);
-                else
-                    p1 = p1 % 1000000;
-                if (p2 < 0)
-                    p2 = -((-p2) % 1000000);
-                else
-                    p2 = p2 % 1000000;
-
+                //Modulo operator is not consistently defined for negative numbers except in C++11, so use function.
+                int p1 = modulo(graph[*vit].Priority(), max_priority);
+                int p2 = modulo(graph[*vit2].Priority(), max_priority);
                 if (p1 < p2) {
                     parentVertex = *vit;
                     vertex = *vit2;

@@ -24,11 +24,9 @@
 #ifndef __LOOT_METADATA__
 #define __LOOT_METADATA__
 
-#include "game.h"
 #include "globals.h"
 
-
-#include <stdint.h>
+#include <cstdint>
 #include <string>
 #include <vector>
 #include <list>
@@ -36,6 +34,9 @@
 
 namespace loot {
 
+    const unsigned int max_priority = 1000000;
+
+    class Game;
 
     //A FormID is a 32 bit unsigned integer of the form xxYYYYYY in hex. The xx is the position in the masters list of the plugin that the FormID is from, and the YYYYYY is the rest of the FormID. Here the xx bit is stored as the corresponding filename to allow comparison between FormIDs from different plugins.
     class FormID {
@@ -243,22 +244,15 @@ namespace loot {
     };
 
     struct plugin_hash : std::unary_function<Plugin, size_t> {
-        inline size_t operator () (const Plugin& p) const {
-            size_t seed = 0;
-            boost::hash_combine(seed, p.Name());
-            return seed;
-        }
+        size_t operator () (const Plugin& p) const;
     };
+
 
     bool operator == (const File& lhs, const Plugin& rhs);
 
     bool operator == (const Plugin& lhs, const File& rhs);
 
     bool operator == (const std::string& lhs, const Plugin& rhs);
-
-    bool alpha_sort(const Plugin& lhs, const Plugin& rhs);
-
-    bool master_sort(const Plugin& lhs, const Plugin& rhs);
 
     bool IsPlugin(const std::string& file);
 }

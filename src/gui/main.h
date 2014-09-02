@@ -41,12 +41,11 @@ private:
 
     YAML::Node _settings;
     std::vector<loot::Game> _games;
-    loot::Game _game;
 };
 
 class Launcher : public wxFrame {
 public:
-    Launcher(const wxChar *title, YAML::Node& settings, loot::Game& inGame, std::vector<loot::Game>& games);
+    Launcher(const wxChar *title, YAML::Node& settings, std::vector<loot::Game>& games, size_t currentGame, wxPoint pos, wxSize size);
 
 	void OnSortPlugins(wxCommandEvent& event);
     void OnEditMetadata(wxCommandEvent& event);
@@ -66,9 +65,11 @@ private:
     wxMenuItem * RedatePluginsItem;
 	wxButton * ViewButton;
 
-	loot::Game& _game;
     YAML::Node& _settings;  //LOOT Settings.
     std::vector<loot::Game>& _games;
+    size_t _currentGame;
+
+    void GetWindowSizePos(const YAML::Node& node, wxPoint& pos, wxSize& size);
 };
 
 #endif

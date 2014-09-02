@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta charset="utf-8" />
+    <title>LOOT Report</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="polyfill.js"></script>
+    <script src="require.js"></script>
+</head>
+<body>
+    <div id="nav">
+    <div class="button current" data-section="summary" id="txtSummarySec"></div>
+    <div class="button" data-section="plugins" id="txtDetailsSec"></div>
+    <div class="button hidden" id="filtersToggle"></div>
+    </div>
+    <div id="main">
+        <noscript>The LOOT Report requires Javascript to be enabled in order to function.</noscript>
+        <div id="plugins" class="hidden">
+            <ul id="pluginsList">
+            </ul>
+        </div>
+        <div id="summary">
+            <div>
+                <h2 id="txtSummary"></h2>
+                <table>
+                    <tbody>
+                        <tr><td id="txtLootVersion"><td id="lootVersion">
+                        <tr><td id="txtMasterlistUpdating"><td id="masterlistUpdating">
+                        <tr><td id="txtMasterlistRevision"><td id="masterlistRevision">
+                        <tr><td id="txtMasterlistDate"><td id="masterlistDate">
+                </table>
+            </div>
+            <div>
+                <h2 id="txtCounts"></h2>
+                <table style="float:left;">
+                    <tbody>
+                        <tr><td id="txtActivePluginNo"><td id="activePluginNo">
+                        <tr><td id="txtDirtyPluginNo"><td id="dirtyPluginNo">
+                        <tr><td id="txtTotalPluginNo"><td id="totalPluginNo">
+                </table>
+                <table style="float:left;">
+                    <tbody>
+                        <tr><td id="txtTotalWarningNo"><td id="totalWarningNo">
+                        <tr><td id="txtTotalErrorNo"><td id="totalErrorNo">
+                        <tr><td id="txtTotalMessageNo"><td id="totalMessageNo">
+                </table>
+            </div>
+            <div>
+                <h2 id="txtGeneralMessages"></h2>
+                <ul id="generalMessagesList">
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id="filters" class="hidden">
+        <input type="checkbox" id="hideVersionNumbers" data-class="version" /><label id="txtHideVersionNumbers" for="hideVersionNumbers"></label><br>
+        <input type="checkbox" id="hideCRCs" data-class="crc" /><label id="txtHideCRCs" for="hideCRCs"></label><br>
+        <input type="checkbox" id="hideBashTags" data-class="tag" /><label id="txtHideBashTags" for="hideBashTags"></label><br>
+        <input type="checkbox" id="hideNotes" /><label id="txtHideNotes" for="hideNotes"></label><br>
+        <input type="checkbox" id="hideDoNotCleanMessages" /><label id="txtHideDoNotCleanMessages" for="hideDoNotCleanMessages"></label><br>
+        <input type="checkbox" id="hideInactivePluginMessages" /><label id="txtHideInactivePluginMessages" for="hideInactivePluginMessages"></label><br>
+        <input type="checkbox" id="hideAllPluginMessages" /><label id="txtHideAllPluginMessages" for="hideAllPluginMessages"></label><br>
+        <input type="checkbox" id="hideMessagelessPlugins" /><label id="txtHideMessagelessPlugins" for="hideMessagelessPlugins"></label><br>
+        <div>
+            <span id="txtPluginsHidden"></span>: <span id="hiddenPluginNo">0</span> / <span id="filterTotalPluginNo"></span>
+        </div>
+        <div>
+            <span id="txtMessagesHidden"></span>: <span id="hiddenMessageNo">0</span> / <span id="filterTotalMessageNo"></span>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>

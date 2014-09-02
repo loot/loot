@@ -7,8 +7,6 @@ Game:                auto   # auto, or one of the 'folder' values below.
 Last Game:           auto   # auto, or one of the 'folder' values below.
 Debug Verbosity:     0      # 0, 1, 2, 3. Logging takes place if > 0.
 Update Masterlist:   true
-View Report Externally: false
-Generate Graph Image: false
 
 # Games. The four types are 'Oblivion', 'Skyrim', 'Fallout3' and 'FalloutNV'. They correspond to each base game's libespm and libloadorder settings.
 Games:
@@ -50,4 +48,4 @@ Games:
     master: Nehrim.esm
     url: https://github.com/loot/oblivion.git
     path: ~
-    registry: Software\Microsoft\Windows\CurrentVersion\Uninstall\Nehrim - At Fate's Edge_is1
+    registry: Software\Microsoft\Windows\CurrentVersion\Uninstall\Nehrim - At Fate's Edge_is1\InstallLocation

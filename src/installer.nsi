@@ -74,9 +74,9 @@ FunctionEnd
 ;General
 
 	;Name, file and version info for installer.
-	Name "LOOT v0.5.0"
+	Name "LOOT v0.6.0"
 	OutFile "..\build\LOOT Installer.exe"
-	VIProductVersion 0.5.0.0
+	VIProductVersion 0.6.0.0
 
 	;Request application privileges for Windows Vista/7
 	RequestExecutionLevel admin
@@ -124,11 +124,12 @@ FunctionEnd
 
 	!insertmacro MUI_LANGUAGE "English"
 	!insertmacro MUI_LANGUAGE "Russian"
-	;!insertmacro MUI_LANGUAGE "German"
+	!insertmacro MUI_LANGUAGE "German"
 	!insertmacro MUI_LANGUAGE "Spanish"
 	!insertmacro MUI_LANGUAGE "SimpChinese"
 	!insertmacro MUI_LANGUAGE "French"
 	!insertmacro MUI_LANGUAGE "Polish"
+	!insertmacro MUI_LANGUAGE "Finnish"
 	!insertmacro MUI_RESERVEFILE_LANGDLL
 
 ;--------------------------------
@@ -137,8 +138,8 @@ FunctionEnd
 	VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "LOOT"
 	VIAddVersionKey /LANG=${LANG_ENGLISH} "CompanyName" "LOOT Team"
 	VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "© 2009-2014 LOOT Team"
-	VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "Installer for LOOT 0.5.0"
-	VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "0.5.0"
+	VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "Installer for LOOT 0.6.0"
+	VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "0.6.0"
 
 	LangString TEXT_MESSAGEBOX ${LANG_ENGLISH} "LOOT is already installed, and must be uninstalled before continuing. $\n$\nClick `OK` to remove the previous version or `Cancel` to cancel this upgrade."
 	LangString TEXT_RUN ${LANG_ENGLISH} "Run LOOT"
@@ -152,8 +153,8 @@ FunctionEnd
 	VIAddVersionKey /LANG=${LANG_RUSSIAN} "ProductName" "LOOT"
 	VIAddVersionKey /LANG=${LANG_RUSSIAN} "CompanyName" "LOOT Team"
 	VIAddVersionKey /LANG=${LANG_RUSSIAN} "LegalCopyright" "© 2009-2014 LOOT Team"
-	VIAddVersionKey /LANG=${LANG_RUSSIAN} "FileDescription" "Установщик для LOOT 0.5.0"
-	VIAddVersionKey /LANG=${LANG_RUSSIAN} "FileVersion" "0.5.0"
+	VIAddVersionKey /LANG=${LANG_RUSSIAN} "FileDescription" "Установщик для LOOT 0.6.0"
+	VIAddVersionKey /LANG=${LANG_RUSSIAN} "FileVersion" "0.6.0"
 
 	LangString TEXT_MESSAGEBOX ${LANG_RUSSIAN} "LOOT уже установлен и должен быть удален перед продолжением. $\n$\nНажмите `OK` для удаления предыдущей версии или `Отмена` для отмены обновления."
 	LangString TEXT_RUN ${LANG_RUSSIAN} "Запустить LOOT"
@@ -167,8 +168,8 @@ FunctionEnd
 	VIAddVersionKey /LANG=${LANG_FRENCH} "ProductName" "LOOT"
 	VIAddVersionKey /LANG=${LANG_FRENCH} "CompanyName" "LOOT Team"
 	VIAddVersionKey /LANG=${LANG_FRENCH} "LegalCopyright" "© 2009-2014 LOOT Team"
-	VIAddVersionKey /LANG=${LANG_FRENCH} "FileDescription" "Programme d'installation pour LOOT 0.5.0"
-	VIAddVersionKey /LANG=${LANG_FRENCH} "FileVersion" "0.5.0"
+	VIAddVersionKey /LANG=${LANG_FRENCH} "FileDescription" "Programme d'installation pour LOOT 0.6.0"
+	VIAddVersionKey /LANG=${LANG_FRENCH} "FileVersion" "0.6.0"
 
 	LangString TEXT_MESSAGEBOX ${LANG_FRENCH} "LOOT est déjà installé, et doit être désinstallé avant de continuer. $\n$\nCliquer sur `OK` pour désinstaller la version précédente ou 'Annuler' pour annuler la mise à jour."
 	LangString TEXT_RUN ${LANG_FRENCH} "Lancer LOOT"
@@ -182,8 +183,8 @@ FunctionEnd
 	VIAddVersionKey /LANG=${LANG_SPANISH} "ProductName" "LOOT"
 	VIAddVersionKey /LANG=${LANG_SPANISH} "CompanyName" "LOOT Team"
 	VIAddVersionKey /LANG=${LANG_SPANISH} "LegalCopyright" "© 2009-2014 LOOT Team"
-	VIAddVersionKey /LANG=${LANG_SPANISH} "FileDescription" "El instalador para LOOT 0.5.0"
-	VIAddVersionKey /LANG=${LANG_SPANISH} "FileVersion" "0.5.0"
+	VIAddVersionKey /LANG=${LANG_SPANISH} "FileDescription" "El instalador para LOOT 0.6.0"
+	VIAddVersionKey /LANG=${LANG_SPANISH} "FileVersion" "0.6.0"
 
 	LangString TEXT_MESSAGEBOX ${LANG_SPANISH} "LOOT está instalado, y debe ser desinstalado antes de continuar. $\n$\nPresione `OK` para eliminar la versión anterior o `Cancel` para cancelar la actualización."
 	LangString TEXT_RUN ${LANG_SPANISH} "Ejecutar LOOT"
@@ -194,17 +195,17 @@ FunctionEnd
 ;--------------------------------
 ;Simplified Chinese (简体中文) Strings
 
-    VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "ProductName" "LOOT"
-    VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "CompanyName" "LOOT Team"
-    VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "LegalCopyright" "© 2009-2014 LOOT Team"
-    VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "FileDescription" "LOOT 0.5.0安装包"
-    VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "FileVersion" "0.5.0"
+	VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "ProductName" "LOOT"
+	VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "CompanyName" "LOOT Team"
+	VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "LegalCopyright" "© 2009-2014 LOOT Team"
+	VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "FileDescription" "LOOT 0.6.0安装包"
+	VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "FileVersion" "0.6.0"
 
-    LangString TEXT_MESSAGEBOX ${LANG_SIMPCHINESE} "检测到旧版LOOT，您需要先卸载旧版才能安装新版。$\n$\n点击“确定”卸载旧版本或者“取消”取消更新。"
-    LangString TEXT_RUN ${LANG_SIMPCHINESE} "运行LOOT"
-    LangString TEXT_SHOWREADME ${LANG_SIMPCHINESE} "查看说明"
-    LangString TEXT_MAIN ${LANG_SIMPCHINESE} "所有LOOT文件（除userlist和配置文件）"
-    LangString TEXT_USERFILES ${LANG_SIMPCHINESE} "LOOT的userlist和配置文件。"
+	LangString TEXT_MESSAGEBOX ${LANG_SIMPCHINESE} "检测到旧版LOOT，您需要先卸载旧版才能安装新版。$\n$\n点击“确定”卸载旧版本或者“取消”取消更新。"
+	LangString TEXT_RUN ${LANG_SIMPCHINESE} "运行LOOT"
+	LangString TEXT_SHOWREADME ${LANG_SIMPCHINESE} "查看说明"
+	LangString TEXT_MAIN ${LANG_SIMPCHINESE} "所有LOOT文件（除userlist和配置文件）"
+	LangString TEXT_USERFILES ${LANG_SIMPCHINESE} "LOOT的userlist和配置文件。"
 
 ;--------------------------------
 ;Polish (POLSKI) Strings
@@ -212,14 +213,44 @@ FunctionEnd
 	VIAddVersionKey /LANG=${LANG_POLISH} "ProductName" "LOOT"
 	VIAddVersionKey /LANG=${LANG_POLISH} "CompanyName" "LOOT Team"
 	VIAddVersionKey /LANG=${LANG_POLISH} "LegalCopyright" "© 2009-2014 LOOT Team"
-	VIAddVersionKey /LANG=${LANG_POLISH} "FileDescription" "Instalator dla LOOT 0.5.0"
-	VIAddVersionKey /LANG=${LANG_POLISH} "FileVersion" "0.5.0"
+	VIAddVersionKey /LANG=${LANG_POLISH} "FileDescription" "Instalator dla LOOT 0.6.0"
+	VIAddVersionKey /LANG=${LANG_POLISH} "FileVersion" "0.6.0"
 
 	LangString TEXT_MESSAGEBOX ${LANG_POLISH} "LOOT jest już zainstalowany i musi zostać odinstalowany przed instalowaniem tej wersji. $\n$\nClick `OK` aby odinstalować lub `Cancel` aby anulować aktualizację."
 	LangString TEXT_RUN ${LANG_POLISH} " Uruchom LOOT"
 	LangString TEXT_SHOWREADME ${LANG_POLISH} "Czytaj Readme"
 	LangString TEXT_MAIN ${LANG_POLISH} "Wszystkie pliki LOOT bez ustawień i plików użytkownika."
 	LangString TEXT_USERFILES ${LANG_POLISH} "Wszystkie pliki LOOT oraz ustawienia użytkownika ."
+
+;--------------------------------
+;Finnish Strings
+
+	VIAddVersionKey /LANG=${LANG_FINNISH} "ProductName" "LOOT"
+	VIAddVersionKey /LANG=${LANG_FINNISH} "CompanyName" "LOOT Team"
+	VIAddVersionKey /LANG=${LANG_FINNISH} "LegalCopyright" "© 2009-2014 LOOT Team"
+	VIAddVersionKey /LANG=${LANG_FINNISH} "FileDescription" "LOOT 0.6.0 Asennusohjelma"
+	VIAddVersionKey /LANG=${LANG_FINNISH} "FileVersion" "0.6.0"
+
+	LangString TEXT_MESSAGEBOX ${LANG_FINNISH} "LOOT on jo asennettu ja vanha asennus on poistettava ennen jatkamista. $\n$\nKlikkaa 'OK' poistaaksesi vanhan version tai 'Peruuta' peruuttaaksesi päivityksen."
+	LangString TEXT_RUN ${LANG_FINNISH} "Käynnistä LOOT"
+	LangString TEXT_SHOWREADME ${LANG_FINNISH} "Näytä readme"
+	LangString TEXT_MAIN ${LANG_FINNISH} "Kaikki LOOTin tiedostot paitsi käyttäjälistat ja asetukset."
+	LangString TEXT_USERFILES ${LANG_FINNISH} "LOOTin käyttäjälistat ja asetukset."
+
+;--------------------------------
+;German Strings
+
+	VIAddVersionKey /LANG=${LANG_GERMAN} "ProductName" "LOOT"
+	VIAddVersionKey /LANG=${LANG_GERMAN} "CompanyName" "LOOT Team"
+	VIAddVersionKey /LANG=${LANG_GERMAN} "LegalCopyright" "© 2009-2014 LOOT Team"
+	VIAddVersionKey /LANG=${LANG_GERMAN} "FileDescription" "Installationsprogramm LOOT 0.6.0"
+	VIAddVersionKey /LANG=${LANG_GERMAN} "FileVersion" "0.6.0"
+
+	LangString TEXT_MESSAGEBOX ${LANG_GERMAN} "LOOT ist bereits installiert und muss zunächst deinstalliert werden. $\n$\nKlicken Sie auf 'OK', um die frühere Version zu deinstallieren oder auf 'Abbrechen', um diese Installation abzubrechen."
+	LangString TEXT_RUN ${LANG_GERMAN} "LOOT starten"
+	LangString TEXT_SHOWREADME ${LANG_GERMAN} "Readme öffnen"
+	LangString TEXT_MAIN ${LANG_GERMAN} "Alle LOOT Dateien mit Ausnahme der Benutzerlisten-Dateien und Konfigurationsdateien."
+	LangString TEXT_USERFILES ${LANG_GERMAN} "LOOT Benutzerlisten-Dateien und Konfigurationsdateien."
 
 ;--------------------------------
 ;Initialisations
@@ -268,10 +299,12 @@ FunctionEnd
 		;File "..\build\loot64.dll"
 
         ;Install resource files.
-        SetOutPath "$INSTDIR\resources"
-        File "..\resources\polyfill.js"
-        File "..\resources\script.js"
-        File "..\resources\style.css"
+        SetOutPath "$INSTDIR\resources\report"
+        File "..\resources\report\report.html"
+        File "..\resources\report\require.js"
+        File "..\resources\report\polyfill.js"
+        File "..\resources\report\script.js"
+        File "..\resources\report\style.css"
 
         ;Install documentation images.
 		SetOutPath "$INSTDIR\docs\images"
@@ -305,6 +338,13 @@ FunctionEnd
 		SetOutPath "$INSTDIR\resources\l10n\pt_BR\LC_MESSAGES"
 		File "..\resources\l10n\pt_BR\LC_MESSAGES\wxstd.mo"
 		File "..\resources\l10n\pt_BR\LC_MESSAGES\loot.mo"
+		SetOutPath "$INSTDIR\resources\l10n\fi\LC_MESSAGES"
+		File "..\resources\l10n\fi\LC_MESSAGES\wxstd.mo"
+		File "..\resources\l10n\fi\LC_MESSAGES\loot.mo"
+        SetOutPath "$INSTDIR\resources\l10n\de\LC_MESSAGES"
+		File "..\resources\l10n\de\LC_MESSAGES\wxstd.mo"
+		File "..\resources\l10n\de\LC_MESSAGES\loot.mo"
+
 
         ;Install settings file.
         SetOutPath "$LOCALAPPDATA\LOOT"
@@ -341,6 +381,16 @@ FunctionEnd
         ;    Push "Language:"
         ;    Push "Language: pt_BR"
         ;    Call ReplaceLineStr
+		StrCmp $LANGUAGE ${LANG_FINNISH} 0 +5
+            Push "$LOCALAPPDATA\LOOT\settings.yaml"
+            Push "Language:"
+            Push "Language: fi"
+            Call ReplaceLineStr
+        StrCmp $LANGUAGE ${LANG_GERMAN} 0 +5
+            Push "$LOCALAPPDATA\LOOT\settings.yaml"
+            Push "Language:"
+            Push "Language: de"
+            Call ReplaceLineStr
 
 		;Add Start Menu shortcuts. Set out path back to $INSTDIR otherwise the shortcuts start in the wrong place.
 		;Set Shell Var Context to all so that shortcuts are installed for all users, not just admin.
@@ -360,7 +410,7 @@ FunctionEnd
 		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\LOOT" "URLInfoAbout" 'http://loot.github.io/'
 		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\LOOT" "HelpLink" 'http://loot.github.io/'
 		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\LOOT" "Publisher" 'LOOT Development Team'
-		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\LOOT" "DisplayVersion" '0.5.0'
+		WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\LOOT" "DisplayVersion" '0.6.0'
 		WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\LOOT" "NoModify" 1
 		WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\LOOT" "NoRepair" 1
 
@@ -368,49 +418,6 @@ FunctionEnd
 		WriteUninstaller "$INSTDIR\Uninstall.exe"
 
 	SectionEnd
-
-    Section "Microsoft Visual C++ 2013 SP1 Redist"
-        ; Thanks to the pcsx2 installer for providing this!
-
-        ; Detection made easy: Unlike previous redists, VC2013 now generates a platform
-        ; independent key for checking availability.
-        ; HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\12.0\VC\Runtimes\x86  for x64 Windows
-        ; HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\12.0\VC\Runtimes\x86  for x86 Windows
-
-        ; Download from:
-        ; http://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4DD4-91DA-3737CD5CD6E3/vcredist_x86.exe
-
-        ClearErrors
-
-        ${If} ${RunningX64}
-            ReadRegDword $R0 HKLM "SOFTWARE\Wow6432Node\Microsoft\VisualStudio\12.0\VC\Runtimes\x86" "Installed"
-        ${Else}
-            ReadRegDword $R0 HKLM "SOFTWARE\Microsoft\VisualStudio\12.0\VC\Runtimes\x86" "Installed"
-        ${EndIf}
-
-        ${If} $R0 == "1"
-            DetailPrint "Visual C++ 2013 Redistributable is already installed; skipping!"
-        ${Else}
-            DetailPrint "Visual C++ 2013 Redistributable registry key was not found; assumed to be uninstalled."
-            DetailPrint "Downloading Visual C++ 2013 Redistributable Setup..."
-            SetOutPath $TEMP
-            NSISdl::download "http://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4DD4-91DA-3737CD5CD6E3/vcredist_x86.exe" "vcredist_x86.exe"
-
-            Pop $R0 ;Get the return value
-            ${If} $R0 == "success"
-                DetailPrint "Running Visual C++ 2013 Redistributable Setup..."
-                Sleep 2000
-                HideWindow
-                ExecWait '"$TEMP\vcredist_x86.exe" /qb'
-                BringToFront
-                DetailPrint "Finished Visual C++ 2013 SP1 Redistributable Setup"
-
-                Delete "$TEMP\vcredist_x86.exe"
-            ${Else}
-                DetailPrint "Could not contact Microsoft.com, or the file has been (re)moved!"
-            ${EndIf}
-        ${EndIf}
-    SectionEnd
 
 ;--------------------------------
 ;Uninstaller Section
@@ -438,9 +445,11 @@ FunctionEnd
 		RMDir  "$INSTDIR\docs"
 
         ;Remove resource files.
-        Delete "$INSTDIR\resources\polyfill.js"
-        Delete "$INSTDIR\resources\script.js"
-        Delete "$INSTDIR\resources\style.css"
+        Delete "$INSTDIR\resources\report\report.html"
+        Delete "$INSTDIR\resources\report\require.js"
+        Delete "$INSTDIR\resources\report\polyfill.js"
+        Delete "$INSTDIR\resources\report\script.js"
+        Delete "$INSTDIR\resources\report\style.css"
 
 		;Remove language files.
 		Delete "$INSTDIR\resources\l10n\ru\LC_MESSAGES\loot.mo"
@@ -455,6 +464,8 @@ FunctionEnd
 		Delete "$INSTDIR\resources\l10n\pl\LC_MESSAGES\wxstd.mo"
 		Delete "$INSTDIR\resources\l10n\pt_BR\LC_MESSAGES\loot.mo"
 		Delete "$INSTDIR\resources\l10n\pt_BR\LC_MESSAGES\wxstd.mo"
+		Delete "$INSTDIR\resources\l10n\fi\LC_MESSAGES\loot.mo"
+		Delete "$INSTDIR\resources\l10n\fi\LC_MESSAGES\wxstd.mo"
 		RMDir  "$INSTDIR\resources\l10n\ru\LC_MESSAGES"
 		RMDir  "$INSTDIR\resources\l10n\ru"
 		RMDir  "$INSTDIR\resources\l10n\es\LC_MESSAGES"
@@ -467,6 +478,10 @@ FunctionEnd
 		RMDir  "$INSTDIR\resources\l10n\pl"
 		RMDir  "$INSTDIR\resources\l10n\pt_BR\LC_MESSAGES"
 		RMDir  "$INSTDIR\resources\l10n\pt_BR"
+		RMDir  "$INSTDIR\resources\l10n\fi\LC_MESSAGES"
+		RMDir  "$INSTDIR\resources\l10n\fi"
+        RMDir  "$INSTDIR\resources\l10n\de\LC_MESSAGES"
+		RMDir  "$INSTDIR\resources\l10n\de"
 		RMDir  "$INSTDIR\resources\l10n"
         RMDir  "$INSTDIR\resources"
 
@@ -474,22 +489,26 @@ FunctionEnd
 		Delete "$LOCALAPPDATA\LOOT\LOOTDebugLog.txt"
 		;Trying to delete a file that doesn't exist doesn't cause an error, so delete all games' files.
         ;This doesn't handle user-defined games.
-		Delete "$LOCALAPPDATA\LOOT\Oblivion\report.html"
+		Delete "$LOCALAPPDATA\LOOT\Oblivion\reportdata.js"
 		Delete "$LOCALAPPDATA\LOOT\Oblivion\masterlist.yaml"
-		Delete "$LOCALAPPDATA\LOOT\Nehrim\report.html"
-		Delete "$LOCALAPPDATA\LOOT\Nehrim\masterlist.yaml"
-		Delete "$LOCALAPPDATA\LOOT\Skyrim\report.html"
+		Delete "$LOCALAPPDATA\LOOT\Skyrim\reportdata.js"
 		Delete "$LOCALAPPDATA\LOOT\Skyrim\masterlist.yaml"
-		Delete "$LOCALAPPDATA\LOOT\Fallout3\report.html"
+		Delete "$LOCALAPPDATA\LOOT\Fallout3\reportdata.js"
 		Delete "$LOCALAPPDATA\LOOT\Fallout3\masterlist.yaml"
-		Delete "$LOCALAPPDATA\LOOT\FalloutNV\report.html"
+		Delete "$LOCALAPPDATA\LOOT\FalloutNV\reportdata.js"
 		Delete "$LOCALAPPDATA\LOOT\FalloutNV\masterlist.yaml"
+        ;Delete repositories.
+        RMDir /r "$LOCALAPPDATA\LOOT\Oblivion\.git"
+        RMDir /r "$LOCALAPPDATA\LOOT\Skyrim\.git"
+        RMDir /r "$LOCALAPPDATA\LOOT\Fallout3\.git"
+        RMDir /r "$LOCALAPPDATA\LOOT\FalloutNV\.git"
+        ;Try deleting folders.
 		RMDir  "$LOCALAPPDATA\LOOT\Oblivion"
-		RMDir  "$LOCALAPPDATA\LOOT\Nehrim"
 		RMDir  "$LOCALAPPDATA\LOOT\Skyrim"
 		RMDir  "$LOCALAPPDATA\LOOT\Fallout3"
 		RMDir  "$LOCALAPPDATA\LOOT\FalloutNV"
         RMDir  "$LOCALAPPDATA\LOOT"
+
 
 		;Remove uninstaller.
 		Delete "$INSTDIR\Uninstall.exe"
@@ -525,13 +544,11 @@ FunctionEnd
 		;The following user files are only removed if set to.
 		Delete "$LOCALAPPDATA\LOOT\settings.yaml"
 		Delete "$LOCALAPPDATA\LOOT\Oblivion\userlist.yaml"
-		Delete "$LOCALAPPDATA\LOOT\Nehrim\userlist.yaml"
 		Delete "$LOCALAPPDATA\LOOT\Skyrim\userlist.yaml"
 		Delete "$LOCALAPPDATA\LOOT\Fallout3\userlist.yaml"
 		Delete "$LOCALAPPDATA\LOOT\FalloutNV\userlist.yaml"
 		;Also try removing the folders storing them, in case they are otherwise empty.
 		RMDir  "$LOCALAPPDATA\LOOT\Oblivion"
-		RMDir  "$LOCALAPPDATA\LOOT\Nehrim"
 		RMDir  "$LOCALAPPDATA\LOOT\Skyrim"
 		RMDir  "$LOCALAPPDATA\LOOT\Fallout3"
 		RMDir  "$LOCALAPPDATA\LOOT\FalloutNV"

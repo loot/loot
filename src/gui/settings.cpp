@@ -24,7 +24,6 @@
 
 #include "settings.h"
 #include "../backend/helpers.h"
-#include "../backend/globals.h"
 #include <boost/algorithm/string.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/log/core.hpp>
@@ -35,7 +34,7 @@
 
 using namespace std;
 
-SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node& settings, std::vector<loot::Game>& games) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER), _settings(settings), _games(games) {
+SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node& settings, std::vector<loot::Game>& games, size_t currentGameIndex, wxPoint pos, wxSize size) : wxDialog(parent, wxID_ANY, title, pos, size, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER), _settings(settings), _games(games), _currentGameIndex(currentGameIndex) {
 
     //Initialise drop-down list contents.
 	wxString DebugVerbosity[] = {
@@ -69,7 +68,6 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
     removeBtn = new wxButton(this, BUTTON_RemoveGame, translate("Remove Game"));
 
     UpdateMasterlistBox = new wxCheckBox(this, wxID_ANY, translate("Update masterlist before sorting."));
-    reportViewBox = new wxCheckBox(this, wxID_ANY, translate("View reports externally in default browser."));
 
     //Set up list columns.
     gamesList->AppendColumn(translate("Name"));
@@ -124,8 +122,6 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
 
     bigBox->Add(UpdateMasterlistBox, wholeItem);
 
-    bigBox->Add(reportViewBox, wholeItem);
-
     bigBox->AddSpacer(10);
 
 	bigBox->Add(new wxStaticText(this, wxID_ANY, translate("Language and game changes will be applied after LOOT is restarted.")), wholeItem);
@@ -134,7 +130,7 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
 	wxSizer * sizer = CreateSeparatedButtonSizer(wxOK|wxCANCEL);
 
 	//Now add TabHolder and OK button to window sizer.
-    if (sizer != NULL)
+    if (sizer != nullptr)
         bigBox->Add(sizer, 0, wxEXPAND|wxLEFT|wxBOTTOM|wxRIGHT, 15);
 
 	//Initialise options with values. For checkboxes, they are off by default.
@@ -147,6 +143,9 @@ SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node
 	SetBackgroundColour(wxColour(255,255,255));
     SetIcon(wxIconLocation("LOOT.exe"));
 	SetSizerAndFit(bigBox);
+
+    if (size != wxDefaultSize)
+        SetSize(size);
 }
 
 void SettingsFrame::SetDefaultValues() {
@@ -154,7 +153,7 @@ void SettingsFrame::SetDefaultValues() {
     BOOST_LOG_TRIVIAL(debug) << "Setting default values for LOOT's settings.";
 
     if (_settings["Language"]) {
-        LanguageChoice->SetSelection(loot::Language(_settings["Language"].as<string>()).Code());
+        LanguageChoice->SetSelection(loot::Language(_settings["Language"].as<string>()).Code() - 1);
     }
 
     if (_settings["Game"]) {
@@ -177,11 +176,6 @@ void SettingsFrame::SetDefaultValues() {
     if (_settings["Update Masterlist"]) {
         bool update = _settings["Update Masterlist"].as<bool>();
         UpdateMasterlistBox->SetValue(update);
-    }
-
-    if (_settings["View Report Externally"]) {
-        bool view = _settings["View Report Externally"].as<bool>();
-        reportViewBox->SetValue(view);
     }
 
     for (size_t i=0, max=_games.size(); i < max; ++i) {
@@ -210,7 +204,7 @@ void SettingsFrame::OnQuit(wxCommandEvent& event) {
         else
             _settings["Game"] = _games[GameChoice->GetSelection() - 1].FolderName();
 
-        _settings["Language"] = loot::Language(LanguageChoice->GetSelection()).Locale();
+        _settings["Language"] = loot::Language(LanguageChoice->GetSelection() + 1).Locale();
 
         _settings["Debug Verbosity"] = DebugVerbosityChoice->GetSelection();
 
@@ -230,21 +224,25 @@ void SettingsFrame::OnQuit(wxCommandEvent& event) {
 
         _settings["Update Masterlist"] = UpdateMasterlistBox->IsChecked();
 
-        _settings["View Report Externally"] = reportViewBox->IsChecked();
-
-        _games.clear();
+        unordered_set<string> newGameFolders;
         for (size_t i=0,max=gamesList->GetItemCount(); i < max; ++i) {
-            string name, folder, master, repo, branch, path, registry;
+            /* We want to avoid overwriting existing game objects as doing so
+               clears the game caches. Instead, recognise that game folder names
+               must be unique. Therefore, use Game::SetDetails() to set
+               the settings for each existing game, and add new games on.
+               For any games that have been deleted, check against the newGameNames
+               hashset and remove any not in it.
+            */
+
+            string name = gamesList->GetItemText(i, 0).ToUTF8();
+            string folder = gamesList->GetItemText(i, 2).ToUTF8();
+            string master = gamesList->GetItemText(i, 3).ToUTF8();
+            string repo = gamesList->GetItemText(i, 4).ToUTF8();
+            string branch = gamesList->GetItemText(i, 5).ToUTF8();
+            string path = gamesList->GetItemText(i, 6).ToUTF8();
+            string registry = gamesList->GetItemText(i, 7).ToUTF8();
+
             unsigned int id;
-
-            name = gamesList->GetItemText(i, 0).ToUTF8();
-            folder = gamesList->GetItemText(i, 2).ToUTF8();
-            master = gamesList->GetItemText(i, 3).ToUTF8();
-            repo = gamesList->GetItemText(i, 4).ToUTF8();
-            branch = gamesList->GetItemText(i, 5).ToUTF8();
-            path = gamesList->GetItemText(i, 6).ToUTF8();
-            registry = gamesList->GetItemText(i, 7).ToUTF8();
-
             if (gamesList->GetItemText(i, 1).ToUTF8() == loot::Game(loot::Game::tes4).FolderName())
                 id = loot::Game::tes4;
             else if (gamesList->GetItemText(i, 1).ToUTF8() == loot::Game(loot::Game::tes5).FolderName())
@@ -254,7 +252,23 @@ void SettingsFrame::OnQuit(wxCommandEvent& event) {
             else
                 id = loot::Game::fonv;
 
-            _games.push_back(loot::Game(id, folder).SetDetails(name, master, repo, branch, path, registry));
+            auto pos = find(_games.begin(), _games.end(), folder);
+
+            if (pos != _games.end()) {
+                pos->SetDetails(name, master, repo, branch, path, registry);
+            }
+            else {
+                _games.push_back(loot::Game(id, folder).SetDetails(name, master, repo, branch, path, registry));
+            }
+
+            newGameFolders.insert(folder);
+        }
+
+        for (auto it = _games.begin(); it != _games.end();) {
+            if (newGameFolders.find(it->FolderName()) == newGameFolders.end())
+                it = _games.erase(it);
+            else
+                ++it;
         }
     }
 
@@ -266,7 +280,8 @@ void SettingsFrame::OnGameSelect(wxListEvent& event) {
     if (name == loot::Game(loot::Game::tes4).Name()
      || name == loot::Game(loot::Game::tes5).Name()
      || name == loot::Game(loot::Game::fo3).Name()
-     || name == loot::Game(loot::Game::fonv).Name()) {
+     || name == loot::Game(loot::Game::fonv).Name()
+     || event.GetIndex() == _currentGameIndex) {
         removeBtn->Enable(false);
      } else {
         removeBtn->Enable(true);
@@ -454,7 +469,7 @@ GameEditDialog::GameEditDialog(wxWindow *parent, const wxString& title) : wxDial
 
     //Need to add 'OK' and 'Cancel' buttons.
 	wxSizer * sizer = CreateSeparatedButtonSizer(wxOK|wxCANCEL);
-    if (sizer != NULL)
+    if (sizer != nullptr)
         bigBox->Add(sizer, 0, wxEXPAND|wxLEFT|wxBOTTOM|wxRIGHT, 15);
 
     //Set defaults.

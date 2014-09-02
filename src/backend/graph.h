@@ -28,7 +28,8 @@
 #include "metadata.h"
 #include "error.h"
 
-#include <boost/unordered_map.hpp>
+#include <unordered_map>
+
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/topological_sort.hpp>
@@ -45,16 +46,19 @@ namespace loot {
     struct cycle_detector : public boost::dfs_visitor<> {
         cycle_detector();
 
+        std::list<std::string> trail;
+        
+        void tree_edge(edge_t e, const PluginGraph& g);
         void back_edge(edge_t e, const PluginGraph& g);
     };
 
     bool GetVertexByName(const PluginGraph& graph, const std::string& name, vertex_t& vertex);
 
-    void Sort(const PluginGraph& graph, std::list<Plugin>& plugins);
+    std::list<Plugin> Sort(const PluginGraph& graph);
 
     void CheckForCycles(const PluginGraph& graph);
 
-    void AddSpecificEdges(PluginGraph& graph);
+    void AddSpecificEdges(PluginGraph& graph, std::map<std::string, int>& overriddenPriorities);
 
     void AddPriorityEdges(PluginGraph& graph);
 

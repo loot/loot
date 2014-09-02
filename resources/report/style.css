@@ -26,7 +26,7 @@ body {
     margin:0;
     background:#f8f8f8;
 }
-noscript div {
+noscript {
     background:#c00;
     display:block;
     padding:10px 5px;
@@ -51,7 +51,7 @@ noscript div {
 .button.current {
     background: #ccc;
 }
-.button[id] {
+#filtersToggle {
     position:absolute;
     right:0;
     top:0;
@@ -78,6 +78,9 @@ table td:first-child {
     text-align:left;
     padding-left:0;
 }
+table:not(:last-child) {
+    margin-right: 3em;
+}
 #noChanges {
 	font-weight:bold;
 	font-size:12pt;
@@ -98,19 +101,19 @@ table td:first-child {
     display:none;
 }
 #filters label {
-    display:block;
+    display:inline-block;
     padding:0.2em 0.5em;
     white-space:nowrap;
     cursor:pointer;
 }
 #filters div {
-    padding:0.4em;
+    padding:0.2em 0.5em;
     font-style:italic;
 }
 input[type='checkbox'] {
     position:relative;
     top:0.15em;
-    margin-right:0.5em;
+    margin-left:0.5em;
 }
 ul {
     margin-top:0.5em;
@@ -128,10 +131,6 @@ ul {
 }
 .mod {
     font-size:1.3em;
-    display:block;
-    font-weight:normal;
-    margin-bottom:0em;
-    margin-top:0;
 }
 .version{
     color:#6394F8;

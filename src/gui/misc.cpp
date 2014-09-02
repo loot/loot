@@ -130,7 +130,7 @@ FileEditDialog::FileEditDialog(wxWindow *parent, const wxString& title) : wxDial
 
     //Need to add 'OK' and 'Cancel' buttons.
     wxSizer * sizer = CreateSeparatedButtonSizer(wxOK | wxCANCEL);
-    if (sizer != NULL)
+    if (sizer != nullptr)
         bigBox->Add(sizer, 0, wxEXPAND | wxLEFT | wxBOTTOM | wxRIGHT, 15);
 
     SetBackgroundColour(wxColour(255, 255, 255));
@@ -235,7 +235,7 @@ MessageEditDialog::MessageEditDialog(wxWindow *parent, const wxString& title) : 
 
     //Need to add 'OK' and 'Cancel' buttons.
     wxSizer * sizer = CreateSeparatedButtonSizer(wxOK | wxCANCEL);
-    if (sizer != NULL)
+    if (sizer != nullptr)
         bigBox->Add(sizer, 0, wxEXPAND | wxLEFT | wxBOTTOM | wxRIGHT, 15);
 
     //Set defaults.
@@ -312,7 +312,7 @@ void MessageEditDialog::OnEdit(wxCommandEvent& event) {
             translate("Error: No content row selected."),
             translate("LOOT: Error"),
             wxOK | wxICON_ERROR,
-            NULL);
+            nullptr);
         return;
     }
     long i = _content->GetFirstSelected();
@@ -327,7 +327,7 @@ void MessageEditDialog::OnRemove(wxCommandEvent& event) {
             translate("Error: No content row selected."),
             translate("LOOT: Error"),
             wxOK | wxICON_ERROR,
-            NULL);
+            nullptr);
         return;
     }
     _content->DeleteItem(_content->GetFirstSelected());
@@ -370,7 +370,7 @@ TagEditDialog::TagEditDialog(wxWindow *parent, const wxString& title) : wxDialog
 
     //Need to add 'OK' and 'Cancel' buttons.
     wxSizer * sizer = CreateSeparatedButtonSizer(wxOK | wxCANCEL);
-    if (sizer != NULL)
+    if (sizer != nullptr)
         bigBox->Add(sizer, 0, wxEXPAND | wxLEFT | wxBOTTOM | wxRIGHT, 15);
 
     //Set defaults.
@@ -444,7 +444,7 @@ DirtInfoEditDialog::DirtInfoEditDialog(wxWindow * parent, const wxString& title)
 
     //Need to add 'OK' and 'Cancel' buttons.
     wxSizer * sizer = CreateSeparatedButtonSizer(wxOK | wxCANCEL);
-    if (sizer != NULL)
+    if (sizer != nullptr)
         bigBox->Add(sizer, 0, wxEXPAND | wxLEFT | wxBOTTOM | wxRIGHT, 15);
 
     SetBackgroundColour(wxColour(255, 255, 255));

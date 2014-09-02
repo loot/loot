@@ -26,10 +26,13 @@
 
 #include "ids.h"
 #include "misc.h"
+
 #include "../backend/metadata.h"
+#include "../backend/game.h"
 
 #include <string>
 #include <list>
+#include <yaml-cpp/yaml.h>
 #include <wx/spinctrl.h>
 #include <wx/notebook.h>
 #include <wx/listctrl.h>
@@ -54,81 +57,40 @@
 
 class TextDropTarget : public wxTextDropTarget {  //Class to override virtual functions.
 public:
-    TextDropTarget(wxListView * owner, wxStaticText * name);
+    TextDropTarget(wxListView * owner, wxControl * name);
     virtual bool OnDropText(wxCoord x, wxCoord y, const wxString &data);
 private:
     wxListView * targetOwner;
-    wxStaticText * targetName;
+    wxControl * targetName;
 };
 
-class CommonEditor {
+class EditorPanel : public wxPanel {
 public:
-    CommonEditor(const std::list<loot::Plugin>& plugins, const loot::Game& game);
-    CommonEditor(const std::list<loot::Plugin>& plugins, const loot::Game& game, std::list<loot::Plugin>& editedPlugins);
-protected:
-    const loot::Game& _game;
-    const std::list<loot::Plugin> _basePlugins;
-    std::list<loot::Plugin> _editedPlugins;
+    EditorPanel(wxWindow *parent, const std::list<loot::Plugin>& basePlugins, std::list<loot::Plugin>& editedPlugins, const unsigned int language, const loot::Game& game);
 
-    loot::Plugin GetMasterData(const wxString& plugin) const;
-    loot::Plugin GetUserData(const wxString& plugin) const;
-    virtual loot::Plugin GetNewData(const wxString& plugin) const = 0;
+    void SetSimpleView(bool on = true);
+    void ApplyCurrentEdits();
 
-    void ApplyEdits(const wxString& plugin, wxListView * list);
-
-    loot::File RowToFile(wxListView * list, long row) const;
-    loot::Tag RowToTag(wxListView * list, long row) const;
-    loot::PluginDirtyInfo RowToPluginDirtyInfo(wxListView * list, long row) const;
-};
-
-class MiniEditor : public wxDialog, public CommonEditor {
-public:
-    MiniEditor(wxWindow *parent, const wxString& title, const std::list<loot::Plugin>& plugins, const loot::Game& game);
-
-    void OnPluginSelect(wxListEvent& event);
-    void OnRowSelect(wxListEvent& event);
-    void OnRemoveRow(wxCommandEvent& event);
-    void OnFilterToggle(wxCommandEvent& event);
-    void OnDragStart(wxListEvent& event);
-    void OnApply(wxCommandEvent& event);
-    void OnResize(wxSizeEvent& event);
-
-    const std::list<loot::Plugin>& GetEditedPlugins() const;
-private:
-    wxListView * pluginList;
-    wxPanel * editingPanel;
-    wxButton * removeBtn;
-    wxListView * loadAfterList;
-    wxCheckBox * filterCheckbox;
-    wxSpinCtrl * prioritySpin;
-    wxStaticText * pluginText;
-    wxStaticText * descText;
-
-    loot::Plugin GetNewData(const wxString& plugin) const;
-};
-
-class Editor : public wxFrame, public CommonEditor {
-public:
-    Editor(wxWindow *parent, const wxString& title, const std::string userlistPath, const std::list<loot::Plugin>& basePlugins, std::list<loot::Plugin>& editedPlugins, const unsigned int language, const loot::Game& game);
+    loot::MetadataList GetNewUserlist() const;
 
     void OnPluginSelect(wxListEvent& event);
     void OnPluginListRightClick(wxListEvent& event);
     void OnPluginCopyName(wxCommandEvent& event);
     void OnPluginCopyMetadata(wxCommandEvent& event);
     void OnPluginClearMetadata(wxCommandEvent& event);
+    void OnClearAllMetadata(wxCommandEvent& event);
     void OnListBookChange(wxBookCtrlEvent& event);
     void OnAddRow(wxCommandEvent& event);
     void OnEditRow(wxCommandEvent& event);
     void OnRemoveRow(wxCommandEvent& event);
     void OnRowSelect(wxListEvent& event);
-    void OnQuit(wxCommandEvent& event);
+    void OnFilterToggle(wxCommandEvent& event);
+    void OnDragStart(wxListEvent& event);
 private:
     wxMenu * pluginMenu;
     wxButton * addBtn;
     wxButton * editBtn;
     wxButton * removeBtn;
-    wxButton * applyBtn;
-    wxButton * cancelBtn;
     wxListView * pluginList;
     wxListView * reqsList;
     wxListView * incsList;
@@ -137,12 +99,63 @@ private:
     wxListView * tagsList;
     wxListView * dirtyList;
     wxNotebook * listBook;
-    wxCheckBox * enableUserEditsBox;
+    wxCheckBox * priorityCheckbox;
     wxSpinCtrl * prioritySpin;
-    wxStaticText * pluginText;
+    wxCheckBox * pluginCheckbox;
+    wxCheckBox * filterCheckbox;
 
-    const std::string _userlistPath;
+    wxPanel * reqsTab;
+    wxPanel * incsTab;
+    wxPanel * loadAfterTab;
+    wxPanel * messagesTab;
+    wxPanel * tagsTab;
+    wxPanel * dirtyTab;
 
+    void AddPluginToList(const loot::Plugin& plugin, int position);
+protected:
+    const loot::Game& _game;
+    const std::list<loot::Plugin> _basePlugins;
+    std::list<loot::Plugin> _editedPlugins;
+
+    loot::Plugin GetMasterData(const wxString& plugin) const;
+    loot::Plugin GetUserData(const wxString& plugin) const;
     loot::Plugin GetNewData(const wxString& plugin) const;
+
+    void ApplyEdits(const wxString& plugin);
+    long FindPlugin(const wxString& plugin);
+
+    loot::File RowToFile(wxListView * list, long row) const;
+    loot::Tag RowToTag(wxListView * list, long row) const;
+    loot::PluginDirtyInfo RowToPluginDirtyInfo(wxListView * list, long row) const;
+};
+
+class MiniEditor : public wxDialog {
+public:
+    MiniEditor(wxWindow *parent, const wxString& title, wxPoint pos, wxSize size, const std::list<loot::Plugin>& basePlugins, std::list<loot::Plugin>& editedPlugins, const loot::Game& game);
+
+    void OnApply(wxCommandEvent& event);
+    void OnResize(wxSizeEvent& event);
+
+    loot::MetadataList GetNewUserlist() const;
+private:
+    EditorPanel * editorPanel;
+    wxStaticText * descText;
+
+    wxString feedbackText;
+};
+
+class FullEditor : public wxFrame {
+public:
+    FullEditor(wxWindow *parent, const wxString& title, wxPoint pos, wxSize size, const boost::filesystem::path& userlistPath, const std::list<loot::Plugin>& basePlugins, std::list<loot::Plugin>& editedPlugins, const unsigned int language, const loot::Game& game, YAML::Node &settings);
+
+    void OnQuit(wxCommandEvent& event);
+    void OnClose(wxCloseEvent &event);
+private:
+    EditorPanel * editorPanel;
+    wxButton * applyBtn;
+    wxButton * cancelBtn;
+
+    const boost::filesystem::path _userlistPath;
+    YAML::Node& _settings;
 };
 #endif

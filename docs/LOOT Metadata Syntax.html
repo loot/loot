@@ -112,7 +112,7 @@ h3{
 <ul>
     <li>They are evaluated as paths relative to the game's Data folder.
     <li>They cannot reference a path outside of the game's folder structure, ie. they cannot contain the substring <code>../../</code>.
-    <li>Regular expression file paths must be written in the <a href="http://www.boost.org/doc/libs/1_54_0/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html">Perl</a> syntax.
+    <li>Regular expression file paths must be written in the <a href="http://www.cplusplus.com/reference/regex/ECMAScript/">EMCAScript</a> syntax.
     <li>Only the filename of a regex file path may contain non-literal regex syntax, ie. if the filename part of the regex file path is removed, the remainder must be an exact folder path (though with the regex syntax special characters escaped). For example, given the regex file path <code>Meshes\\Resources(1|2)\\(upperclass)?table.nif</code>, LOOT will look for a file named <code>table.nif</code> or <code>upperclasstable.nif</code> in the <code>Meshes\Resources(1|2)</code> folder, rather than looking in the <code>Meshes\Resources1</code> and <code>Meshes\Resources2</code> folders.
 </ul>
 <p>Please test any changes you make before uploading them. One way of doing this is to run LOOT, another is to copy/paste what you've changed into <a href="http://nodeca.github.io/js-yaml/">here</a>, though it won't catch condition syntax errors and doesn't use the same parser as LOOT so may give different results.
@@ -228,12 +228,10 @@ display: 'OBSE v18+'
 <code class="box">type: say
 condition: 'file("foo.esp")'
 content:
-  - lang: eng
+  - lang: en
     str: 'An example link: &lt;http://www.example.com&gt;'
-  - lang: rus
+  - lang: ru
     str: 'Это пример ссылки: &lt;http://www.example.com&gt;'
-  - lang: ger
-    str: 'Ein Beispiel-Link: &lt;http://www.example.com&gt;'
 </code>
 would be displayed as
 <blockquote>
@@ -300,7 +298,7 @@ nav: 0
         <tr><td><code>priority</code><td>integer<td>&#x2717;<td>Modifies plugin position relative to others that change one or more of the same records, but which are otherwise unrelated (ie. neither plugin lists the other as a master, requirement, or in its <code>after</code> list). Plugins that don't change any of the same records are not compared, unless:
             <ul>
                 <li>One of the plugins is a "dummy" plugin, containing only a header record.
-                <li>One of the plugins has a priority greater than or equal to 1,000,000. In this case, only the modulo (ie. remainder when divided) with 1,000,000 is used when comparing plugin priority values &endash; the rest is only used to signify that the plugin should be compared against all others.
+                <li>One of the plugins has a priority greater than or equal to 1,000,000. In this case, only the modulo (ie. remainder when divided) with 1,000,000 is used when comparing plugin priority values &ndash; the rest is only used to signify that the plugin should be compared against all others.
             </ul>
             <p>For example, <code>priority: 153000352</code> and <code>priority: 352</code> have equal values when compared, but a plugin with the first priority will be compared against all others, while a (non-dummy) plugin with the second priority will be compared against only those it conflicts with.
             <p>A plugin with a higher priority value will load after a plugin with a lower priority value. Value can be anything in the range <code>-2000000000</code> to <code>2000000000</code>, and if unspecified defaults to <code>0</code>.
@@ -443,11 +441,13 @@ both get displayed as
     <tbody>
         <tr><td>Chinese<td>zh_CN
         <tr><td>English<td>en
+        <tr><td>Finnish<td>fi
         <tr><td>French<td>fr
         <tr><td>Polish<td>pl
         <tr><td>Brazilian Portuguese<td>pt_BR
         <tr><td>Russian<td>ru
         <tr><td>Spanish<td>es
+        <tr><td>German<td>de
 </table>
 
 <h2 id="license">License</h2>

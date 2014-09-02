@@ -67,12 +67,11 @@ enum {
     BOOK_Lists,
     MENU_CopyName,
     MENU_CopyMetadata,
-    MENU_ClearMetadata,
+    MENU_ClearPluginMetadata,
+    MENU_ClearAllMetadata,
+    CHECKBOX_Filter,
     //Main window - dynamically created IDs.
     MENU_LowestDynamicGameID,
-    LIST_LoadOrder,
-    BUTTON_MoveUp,
-    BUTTON_MoveDown,
 };
 
 wxString translate(const std::string& str);
