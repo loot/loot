@@ -579,6 +579,9 @@ namespace loot {
             g_app_state.CurrentGame().conditionCache.clear();
             g_app_state.CurrentGame().crcCache.clear();
 
+            // Also refresh active plugins list.
+            g_app_state.CurrentGame().RefreshActivePluginsList();
+
             bool isFirstLoad = g_app_state.CurrentGame().plugins.empty();
             g_app_state.CurrentGame().LoadPlugins(true);
 
