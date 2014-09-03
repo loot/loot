@@ -10,7 +10,7 @@
 cmake_minimum_required (VERSION 2.8.9)
 project (LOOT)
 
-option(BUILD_SHARED_LIBS "Build a shared library" OFF)
+option(BUILD_SHARED_LIBS "Build a shared library" ON)
 option(PROJECT_STATIC_RUNTIME "Build with static runtime libs (/MT)" ON)
 
 IF (NOT DEFINED PROJECT_ARCH)
@@ -89,7 +89,7 @@ link_directories ("${LIBLOADORDER_ROOT}/build"
 
 # Settings when compiling for Windows. Since it's a Windows-only app this is always true, but useful to check for copy/paste into other projects.
 IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
-    add_definitions (-DUNICODE -D_UNICODE -D__WXMSW__ -DNDEBUG -DLIBLO_STATIC -DWIN32 -D_WINDOWS)
+    add_definitions (-DUNICODE -D_UNICODE -DNDEBUG -DLIBLO_STATIC -DWIN32 -D_WINDOWS)
     IF (BUILD_SHARED_LIBS)
         add_definitions (-DLOOT_EXPORT)
     ELSE ()
@@ -119,14 +119,14 @@ IF (MINGW)
                    loadorder${PROJECT_ARCH}
                    ssl
                    crypto
-                   ws2_32)
+                   ws2_32
+                   shlwapi)
     set (LOOT_GUI_LIBS ${LOOT_LIBS}
                        git2
                        cef_sandbox
                        libcef
                        libcef_dll_wrapper
                        rpcrt4
-                       shlwapi
                        comctl32)
 ELSEIF (MSVC)
 
@@ -146,14 +146,14 @@ ELSEIF (MSVC)
     set (LOOT_LIBS libyaml-cppmt
                    version
                    loadorder${PROJECT_ARCH}
-                   ws2_32)
+                   ws2_32
+                   shlwapi)
     set (LOOT_GUI_LIBS ${LOOT_LIBS}
                        git2
                        cef_sandbox
                        libcef
                        libcef_dll_wrapper
                        rpcrt4
-                       shlwapi
                        comctl32)
 ENDIF ()
 
