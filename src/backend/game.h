@@ -20,7 +20,7 @@
     You should have received a copy of the GNU General Public License
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
-*/
+    */
 
 #ifndef __LOOT_GAME__
 #define __LOOT_GAME__
@@ -41,7 +41,6 @@
 #include <yaml-cpp/yaml.h>
 
 namespace loot {
-
     class Game;
 
     /* Each Game object should store the config details specific to that game.
@@ -52,7 +51,7 @@ namespace loot {
        global message lists.
        Each game should have functions to load this plugin and masterlist / userlist
        data. Plugin data should be loaded as header-only and as full data.
-    */
+       */
 
     class MetadataList {
     public:
@@ -66,6 +65,9 @@ namespace loot {
         Plugin FindPlugin(const Plugin& plugin) const;
         void AddPlugin(const Plugin& plugin);
         void ErasePlugin(const Plugin& plugin);
+
+        // Eval plugin conditions.
+        void EvalAllConditions(Game& game, const unsigned int language);
 
         std::list<Message> messages;
     protected:
@@ -96,9 +98,8 @@ namespace loot {
         Game(const unsigned int baseGameCode, const std::string& lootFolder = "");
 
         Game& SetDetails(const std::string& name, const std::string& masterFile,
-                        const std::string& repositoryURL, const std::string& repositoryBranch,
-                        const std::string& path, const std::string& registry);
-        Game& SetPath(const std::string& path);  //Used by API.
+                         const std::string& repositoryURL, const std::string& repositoryBranch,
+                         const std::string& path, const std::string& registry);
         Game& Init();
 
         bool IsInstalled() const;

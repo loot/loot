@@ -216,6 +216,22 @@ namespace loot {
         }
     }
 
+    void MetadataList::EvalAllConditions(Game& game, const unsigned int language) {
+        unordered_set<Plugin> replacementSet;
+        for (auto &plugin : plugins) {
+            Plugin p(plugin);
+            p.EvalAllConditions(game, language);
+            replacementSet.insert(p);
+        }
+        plugins = replacementSet;
+        for (auto &plugin : regexPlugins) {
+            plugin.EvalAllConditions(game, language);
+        }
+        for (auto &message : messages) {
+            message.EvalCondition(game, language);
+        }
+    }
+
     // Masterlist member functions
     //----------------------------
 
@@ -317,12 +333,6 @@ namespace loot {
 
         if (!registry.empty())
             registryKey = registry;
-
-        return *this;
-    }
-
-    Game& Game::SetPath(const std::string& path) {
-        gamePath = path;
 
         return *this;
     }
