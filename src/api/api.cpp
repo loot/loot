@@ -88,21 +88,20 @@ const unsigned int loot_needs_cleaning_no       = 0;
 const unsigned int loot_needs_cleaning_yes      = 1;
 const unsigned int loot_needs_cleaning_unknown  = 2;
 
-struct _loot_db_int {
-    _loot_db_int()
-        : extTagMap(nullptr),
+struct _loot_db_int : public loot::Game {
+    _loot_db_int(const unsigned int clientGame, const std::string gamePath)
+        : Game(clientGame),
+        extTagMap(nullptr),
         extAddedTagIds(nullptr),
         extRemovedTagIds(nullptr),
         extMessageArray(nullptr),
         extMessageArraySize(0) {
-        extMessage.type = loot_message_say;
-        extMessage.message = nullptr;
+        this->SetDetails("", "", "", "", gamePath, "").Init();
     }
 
     ~_loot_db_int() {
         delete[] extAddedTagIds;
         delete[] extRemovedTagIds;
-        delete[] extMessage.message;
 
         if (extTagMap != nullptr) {
             for (size_t i=0; i < bashTagMap.size(); i++)
@@ -117,8 +116,8 @@ struct _loot_db_int {
         }
     }
 
-    loot::Game game;
-    std::list<loot::Plugin> metadata, rawMetadata, userMetadata, rawUserMetadata;
+    loot::MetadataList rawUserMetadata;
+    loot::Masterlist rawMetadata;
 
     std::unordered_map<std::string, unsigned int> bashTagMap;
 
@@ -127,7 +126,6 @@ struct _loot_db_int {
     unsigned int * extAddedTagIds;
     unsigned int * extRemovedTagIds;
 
-    loot_message extMessage;
     loot_message * extMessageArray;
     size_t extMessageArraySize;
 };
@@ -166,8 +164,9 @@ unsigned int c_error(const unsigned int code, const std::string& what) {
 namespace loot {
     void Masterlist::GetGitInfo(const boost::filesystem::path& path) {}
 
-    void Masterlist::Update(Game& game, const unsigned int language) {
+    bool Masterlist::Update(Game& game, const unsigned int language) {
         this->MetadataList::Load(game.MasterlistPath());
+        return false;
     }
 }
 
@@ -233,10 +232,8 @@ LOOT_API unsigned int loot_create_db(loot_db * const db, const unsigned int clie
         return c_error(loot_error_invalid_args, "Null pointer passed.");
 
     //Set the locale to get encoding conversions working correctly.
-    std::setlocale(LC_CTYPE, "");
-    std::locale global_loc = std::locale();
-    std::locale loc(global_loc, new boost::filesystem::detail::utf8_codecvt_facet());
-    boost::filesystem::path::imbue(loc);
+    std::locale::global(boost::locale::generator().generate(""));
+    boost::filesystem::path::imbue(std::locale());
 
     //Disable logging or else stdout will get overrun.
     boost::log::core::get()->set_logging_enabled(false);
@@ -245,22 +242,16 @@ LOOT_API unsigned int loot_create_db(loot_db * const db, const unsigned int clie
     if (gamePath != nullptr)
         game_path = gamePath;
 
-    loot::Game game;
+    loot_db retVal ={ 0 };
     try {
-        game = loot::Game(clientGame).SetPath(game_path).Init();  //This also checks to see if the game is installed if game_path is empty and throws an exception if it is not detected. It also creates a folder in %LOCALAPPDATA% and reads the active plugins list, but that shouldn't be an issue.
+        retVal = new _loot_db_int(clientGame, game_path);
     }
     catch (loot::error& e) {
         return c_error(e);
     }
-
-    loot_db retVal;
-    try {
-        retVal = new _loot_db_int;
-    }
     catch (std::bad_alloc& e) {
         return c_error(loot_error_no_mem, e.what());
     }
-    retVal->game = game;
     *db = retVal;
 
     return loot_ok;
@@ -284,15 +275,13 @@ LOOT_API unsigned int loot_load_lists(loot_db db, const char * const masterlistP
     if (db == nullptr || masterlistPath == nullptr)
         return c_error(loot_error_invalid_args, "Null pointer passed.");
 
-    std::list<loot::Plugin> temp;
-    std::list<loot::Plugin> userTemp;
+    loot::Masterlist temp;
+    loot::MetadataList userTemp;
 
     try {
         if (boost::filesystem::exists(masterlistPath)) {
-            loot::ifstream in(masterlistPath);
-            YAML::Node tempNode = YAML::Load(in);
-            in.close();
-            temp = tempNode["plugins"].as< std::list<loot::Plugin> >();
+            // We don't want to update the masterlist too.
+            temp.MetadataList::Load(masterlistPath);
         }
     }
     catch (std::exception& e) {
@@ -302,12 +291,7 @@ LOOT_API unsigned int loot_load_lists(loot_db db, const char * const masterlistP
     try {
         if (userlistPath != nullptr) {
             if (boost::filesystem::exists(userlistPath)) {
-                if (boost::algorithm::iends_with(userlistPath, ".yaml")) {
-                    loot::ifstream in(userlistPath);
-                    YAML::Node tempNode = YAML::Load(in);
-                    in.close();
-                    userTemp = tempNode["plugins"].as< std::list<loot::Plugin> >();
-                }
+                userTemp.Load(masterlistPath);
             }
         }
     }
@@ -337,9 +321,9 @@ LOOT_API unsigned int loot_load_lists(loot_db db, const char * const masterlistP
     db->extTagMap = nullptr;
     db->extMessageArray = nullptr;
 
+    db->masterlist = temp;
     db->rawMetadata = temp;
-    db->metadata = temp;
-    db->userMetadata = userTemp;
+    db->userlist = userTemp;
     db->rawUserMetadata = userTemp;
 
     return loot_ok;
@@ -355,72 +339,23 @@ LOOT_API unsigned int loot_eval_lists(loot_db db, const unsigned int language) {
     if (db == nullptr)
         return c_error(loot_error_invalid_args, "Null pointer passed.");
 
-    std::list<loot::Plugin> temp = db->rawMetadata;
-    try {
-        db->game.RefreshActivePluginsList();
-        for (auto it=temp.begin(); it != temp.end();) {
-            it->EvalAllConditions(db->game, language);
-            if (it->IsRegexPlugin()) {
-                std::regex reg;
-                try {
-                    reg = std::regex(it->Name(), std::regex::ECMAScript | std::regex::icase);
-                }
-                catch (std::exception& e) {
-                    return c_error(loot_error_regex_eval_fail, e.what());
-                }
+    // Clear caches before evaluating conditions.
+    db->conditionCache.clear();
+    db->crcCache.clear();
 
-                for (boost::filesystem::directory_iterator itr(db->game.DataPath()); itr != boost::filesystem::directory_iterator(); ++itr) {
-                    const std::string filename = itr->path().filename().string();
-                    if (std::regex_match(filename, reg)) {
-                        loot::Plugin p = *it;
-                        p.Name(filename);
-                        temp.push_back(p);
-                    }
-                }
-                it = temp.erase(it);
-            }
-            else {
-                ++it;
-            }
-        }
+    loot::Masterlist temp = db->rawMetadata;
+    loot::MetadataList userTemp = db->rawUserMetadata;
+    try {
+        // Refresh active plugins before evaluating conditions.
+        db->RefreshActivePluginsList();
+        temp.EvalAllConditions(*db, language);
+        userTemp.EvalAllConditions(*db, language);
     }
     catch (loot::error& e) {
         return c_error(e);
     }
-    db->metadata = temp;
-
-    temp = db->rawUserMetadata;
-    try {
-        for (auto it=temp.begin(); it != temp.end();) {
-            it->EvalAllConditions(db->game, language);
-            if (it->IsRegexPlugin()) {
-                std::regex reg;
-                try {
-                    reg = std::regex(it->Name(), std::regex::ECMAScript | std::regex::icase);
-                }
-                catch (std::exception& e) {
-                    return c_error(loot_error_regex_eval_fail, e.what());
-                }
-
-                for (boost::filesystem::directory_iterator itr(db->game.DataPath()); itr != boost::filesystem::directory_iterator(); ++itr) {
-                    const std::string filename = itr->path().filename().string();
-                    if (std::regex_match(filename, reg)) {
-                        loot::Plugin p = *it;
-                        p.Name(filename);
-                        temp.push_back(p);
-                    }
-                }
-                it = temp.erase(it);
-            }
-            else {
-                ++it;
-            }
-        }
-    }
-    catch (loot::error& e) {
-        return c_error(e);
-    }
-    db->userMetadata = temp;
+    db->masterlist = temp;
+    db->userlist = userTemp;
 
     return loot_ok;
 }
@@ -451,13 +386,13 @@ LOOT_API unsigned int loot_get_tag_map(loot_db db, char *** const tagMap, size_t
 
     std::unordered_set<std::string> allTags;
 
-    for (const auto &plugin : db->metadata) {
+    for (const auto &plugin : db->masterlist.Plugins()) {
         std::set<loot::Tag> tags(plugin.Tags());
         for (const auto &tag : tags) {
             allTags.insert(tag.Name());
         }
     }
-    for (const auto &plugin : db->userMetadata) {
+    for (const auto &plugin : db->userlist.Plugins()) {
         std::set<loot::Tag> tags(plugin.Tags());
         for (const auto &tag : tags) {
             allTags.insert(tag.Name());
@@ -523,10 +458,9 @@ LOOT_API unsigned int loot_get_plugin_tags(loot_db db, const char * const plugin
     *numTags_removed = 0;
 
     std::unordered_set<std::string> tagsAdded, tagsRemoved;
-    std::list<loot::Plugin>::iterator pluginIt = std::find(db->metadata.begin(), db->metadata.end(), loot::Plugin(plugin));
-    if (pluginIt != db->metadata.end()) {
-        std::set<loot::Tag> tags(pluginIt->Tags());
-        for (const auto &tag : tags) {
+    loot::Plugin p = db->masterlist.FindPlugin(loot::Plugin(plugin));
+    if (!p.HasNameOnly()) {
+        for (const auto &tag : p.Tags()) {
             if (tag.IsAddition())
                 tagsAdded.insert(tag.Name());
             else
@@ -534,11 +468,10 @@ LOOT_API unsigned int loot_get_plugin_tags(loot_db db, const char * const plugin
         }
     }
 
-    pluginIt = std::find(db->userMetadata.begin(), db->userMetadata.end(), loot::Plugin(plugin));
-    if (pluginIt != db->userMetadata.end()) {
+    p = db->userlist.FindPlugin(loot::Plugin(plugin));
+    if (!p.HasNameOnly()) {
         *userlistModified = true;
-        std::set<loot::Tag> tags(pluginIt->Tags());
-        for (const auto &tag : tags) {
+        for (const auto &tag : p.Tags()) {
             if (tag.IsAddition())
                 tagsAdded.insert(tag.Name());
             else
@@ -612,17 +545,12 @@ LOOT_API unsigned int loot_get_plugin_messages(loot_db db, const char * const pl
     *messages = nullptr;
     *numMessages = 0;
 
-    std::list<loot::Message> pluginMessages;
-    std::list<loot::Plugin>::iterator pluginIt = std::find(db->metadata.begin(), db->metadata.end(), loot::Plugin(plugin));
-    if (pluginIt != db->metadata.end()) {
-        pluginMessages = pluginIt->Messages();
-    }
+    loot::Plugin p = db->masterlist.FindPlugin(loot::Plugin(plugin));
+    std::list<loot::Message> pluginMessages(p.Messages());
 
-    pluginIt = std::find(db->userMetadata.begin(), db->userMetadata.end(), loot::Plugin(plugin));
-    if (pluginIt != db->userMetadata.end()) {
-        std::list<loot::Message> temp = pluginIt->Messages();
-        pluginMessages.insert(pluginMessages.end(), temp.begin(), temp.end());
-    }
+    p = db->userlist.FindPlugin(loot::Plugin(plugin));
+    std::list<loot::Message> temp(p.Messages());
+    pluginMessages.insert(pluginMessages.end(), temp.begin(), temp.end());
 
     db->extMessageArraySize = pluginMessages.size();
     try {
@@ -650,16 +578,12 @@ LOOT_API unsigned int loot_get_dirty_info(loot_db db, const char * const plugin,
     *needsCleaning = loot_needs_cleaning_unknown;
 
     //Get all dirty info.
-    std::set<loot::PluginDirtyInfo> dirtyInfo;
-    std::list<loot::Plugin>::iterator pluginIt = std::find(db->metadata.begin(), db->metadata.end(), loot::Plugin(plugin));
-    if (pluginIt != db->metadata.end()) {
-        dirtyInfo = pluginIt->DirtyInfo();
-    }
-    pluginIt = std::find(db->userMetadata.begin(), db->userMetadata.end(), loot::Plugin(plugin));
-    if (pluginIt != db->userMetadata.end()) {
-        std::set<loot::PluginDirtyInfo> temp = pluginIt->DirtyInfo();
-        dirtyInfo.insert(temp.begin(), temp.end());
-    }
+    loot::Plugin p = db->masterlist.FindPlugin(loot::Plugin(plugin));
+    std::set<loot::PluginDirtyInfo> dirtyInfo(p.DirtyInfo());
+
+    p = db->userlist.FindPlugin(loot::Plugin(plugin));
+    std::set<loot::PluginDirtyInfo> temp(p.DirtyInfo());
+    dirtyInfo.insert(temp.begin(), temp.end());
 
     if (!dirtyInfo.empty()) {
         *needsCleaning = loot_needs_cleaning_yes;
@@ -682,19 +606,19 @@ LOOT_API unsigned int loot_write_minimal_list(loot_db db, const char * const out
     if (boost::filesystem::exists(outputFile) && !overwrite)
         return c_error(loot_error_invalid_args, "Output file exists but overwrite is not set to true.");
 
-    std::list<loot::Plugin> temp = db->metadata;
-    for (auto &plugin : temp) {
+    loot::Masterlist temp = db->masterlist;
+    std::unordered_set<loot::Plugin> minimalPlugins;
+    for (const auto &plugin : temp.Plugins()) {
         loot::Plugin p(plugin.Name());
         p.Tags(plugin.Tags());
         p.DirtyInfo(plugin.DirtyInfo());
-
-        plugin = p;
+        minimalPlugins.insert(p);
     }
 
     YAML::Emitter yout;
     yout.SetIndent(2);
     yout << YAML::BeginMap
-        << YAML::Key << "plugins" << YAML::Value << temp
+        << YAML::Key << "plugins" << YAML::Value << minimalPlugins
         << YAML::EndMap;
 
     boost::filesystem::path p(outputFile);

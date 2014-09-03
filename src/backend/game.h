@@ -71,6 +71,9 @@ namespace loot {
         // be required for other plugins.
         void ErasePlugin(const Plugin& plugin);
 
+        // Eval plugin conditions.
+        void EvalAllConditions(Game& game, const unsigned int language);
+
         std::list<Message> messages;
     protected:
         std::unordered_set<Plugin> plugins;
@@ -102,7 +105,6 @@ namespace loot {
         Game& SetDetails(const std::string& name, const std::string& masterFile,
                          const std::string& repositoryURL, const std::string& repositoryBranch,
                          const std::string& path, const std::string& registry);
-        Game& SetPath(const std::string& path);  //Used by API.
         Game& Init();
 
         bool IsInstalled() const;
