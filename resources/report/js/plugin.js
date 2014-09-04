@@ -126,6 +126,7 @@ function Plugin(obj) {
                 messageUL.appendChild(messageLi);
 
             });
+            this.card.getElementsByTagName('ul')[0].classList.toggle('hidden', false);
         } else {
             this.card.getElementsByTagName('ul')[0].classList.toggle('hidden', true);
         }
