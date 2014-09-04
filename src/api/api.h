@@ -23,6 +23,44 @@
     */
 
 /**
+ *  @mainpage
+ *  @author WrinklyNinja
+ *  @version 0.7.0
+ *  @copyright
+ *      The LOOT API is distributed under the GNU General Public License v3.0.
+ *      For the full text of the license, see the "GNU GPL v3.txt" file
+ *      included in the source archive.
+ *
+ *  @section intro_sec Introduction
+ *      LOOT is a utility that helps users avoid serious conflicts between
+ *      their mods by setting their plugins in an optimal load order. It also
+ *      provides tens of thousands of plugin-specific messages, including usage
+ *      notes, requirements, incompatibilities, bug warnings and installation
+ *      mistake notifications, and thousands of Bash Tag suggestions.
+ *
+ *      This metadata that LOOT supplies is stored in its masterlist, which is
+ *      maintained by the LOOT team using information provided by mod authors
+ *      and users. Users can also add to and modify the metadata used by LOOT
+ *      through the use of userlist files. The LOOT API provides a way for
+ *      third-party developers to access this metadata for use in their own
+ *      programs.
+ *
+ *      All further API documentation is contained within the documentation for
+ *      api.h.
+ *
+ * @section credit_sec Credits
+ *      The LOOT API is written by WrinklyNinja in C/C++ and makes use of the
+ *      [Alphanum](http://www.davekoelle.com/alphanum.html),
+ *      [Boost](http://www.boost.org/),
+ *      [libespm](http://github.com/WrinklyNinja/libespm),
+ *      [libgit2](http://github.com/libgit2/libgit2),
+ *      [libloadorder](http://github.com/WrinklyNinja/libloadorder/) and
+ *      [yaml-cpp](http://code.google.com/p/yaml-cpp/) libraries. Copyright license
+ *      information for all these may be found in the "docs/licenses/Licenses.txt"
+ *      file.
+ */
+
+/**
  *  @file api.h
  *  @brief This file contains the API frontend.
  *
@@ -199,7 +237,7 @@ extern "C"
     /**@}*/
     /**********************************************************************//**
      *  @name Plugin Cleanliness Codes
-     *  @brief Used with loot_get_dirty_message().
+     *  @brief Used with loot_get_dirty_info().
      *************************************************************************/
     /**@{*/
 
