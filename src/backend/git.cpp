@@ -42,7 +42,7 @@ namespace lc = boost::locale;
 namespace loot {
     struct git_handler {
     public:
-        git_handler() : repo(nullptr), remote(nullptr), cfg(nullptr), obj(nullptr), commit(nullptr), ref(nullptr), ref2(nullptr), sig(nullptr), blob(nullptr), merge_head(nullptr), tree(nullptr), diff(nullptr), buf({ 0 }) {}
+        git_handler() : repo(nullptr), remote(nullptr), cfg(nullptr), obj(nullptr), commit(nullptr), ref(nullptr), ref2(nullptr), sig(nullptr), blob(nullptr), merge_head(nullptr), tree(nullptr), diff(nullptr), buf({0}) {}
 
         ~git_handler() {
             git_commit_free(commit);
@@ -183,7 +183,7 @@ namespace loot {
         git.call(git_signature_new(&git.sig, "LOOT", "loot@placeholder.net", 0, 0));
 
         BOOST_LOG_TRIVIAL(debug) << "Setting up checkout options.";
-        char * paths[] ={ "masterlist.yaml" };
+        char * paths[] = {"masterlist.yaml"};
         git_checkout_options checkout_opts = GIT_CHECKOUT_OPTIONS_INIT;
         checkout_opts.checkout_strategy = GIT_CHECKOUT_FORCE;
         checkout_opts.paths.strings = paths;
@@ -250,7 +250,7 @@ namespace loot {
         }
         else {
             // Repository exists: check settings are correct, then pull updates.
-            git.ui_message = "An error occurred while trying to access the local masterlist repository. If this error happens again, try deleting the \".git\" folder in \"%LOCALAPPDATA%\\LOOT\\" + game.FolderName() + "\".";
+            git.ui_message = "An error occurred while trying to access the local masterlist repository. If this error happens again, try deleting the \".git\" folder in " + repo_path.string() + ".";
 
             // Open the repository.
             BOOST_LOG_TRIVIAL(info) << "Existing repository found, attempting to open it.";
@@ -283,7 +283,7 @@ namespace loot {
             BOOST_LOG_TRIVIAL(info) << "Received " << stats->indexed_objects << " of " << stats->total_objects << " objects in " << stats->received_bytes << " bytes.";
 
             // Check that a branch with the correct name exists.
-            git.ui_message = "An error occurred while trying to access the local masterlist repository. If this error happens again, try deleting the \".git\" folder in \"%LOCALAPPDATA%\\LOOT\\" + game.FolderName() + "\".";
+            git.ui_message = "An error occurred while trying to access the local masterlist repository. If this error happens again, try deleting the \".git\" folder in " + repo_path.string() + "\".";
             int ret = git_branch_lookup(&git.ref, git.repo, repo_branch.c_str(), GIT_BRANCH_LOCAL);
             if (ret == GIT_ENOTFOUND) {
                 // Branch doesn't exist. Create a new branch using the remote branch's latest commit.
@@ -383,7 +383,7 @@ namespace loot {
 
         bool parsingFailed = false;
         std::string parsingError;
-        git.ui_message = "An error occurred while trying to read information on the updated masterlist. If this error happens again, try deleting the \".git\" folder in \"%LOCALAPPDATA%\\LOOT\\" + game.FolderName() + "\".";
+        git.ui_message = "An error occurred while trying to read information on the updated masterlist. If this error happens again, try deleting the \".git\" folder in " + repo_path.string() + "\".";
         do {
             // Get some descriptive info about what was checked out.
 
@@ -414,7 +414,7 @@ namespace loot {
             git.ref = nullptr;
             git.obj = nullptr;
             git.commit = nullptr;
-            git.buf ={ 0 };
+            git.buf = {0};
 
             //Now try parsing the masterlist.
             BOOST_LOG_TRIVIAL(debug) << "Testing masterlist parsing.";
