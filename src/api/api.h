@@ -176,14 +176,6 @@ extern "C"
     LOOT_API extern const unsigned int loot_message_warn;  /**< Denotes a warning message. */
     LOOT_API extern const unsigned int loot_message_error;  /**< Denotes an error message. */
 
-    /**
-     *  @brief Denites a Bash Tag suggestion message.
-     *  @details This type should never be seen client-side as it is only used
-     *           during conversion between internal Bash Tag and message
-     *           structures, but it is provided just in case.
-     */
-    LOOT_API extern const unsigned int loot_message_tag;
-
     /**@}*/
     /**********************************************************************//**
      *  @name Message Language Codes

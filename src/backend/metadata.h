@@ -20,7 +20,7 @@
     You should have received a copy of the GNU General Public License
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
-*/
+    */
 #ifndef __LOOT_METADATA__
 #define __LOOT_METADATA__
 
@@ -35,7 +35,6 @@
 #include <boost/locale.hpp>
 
 namespace loot {
-
     const unsigned int max_priority = 1000000;
 
     class Game;
@@ -123,10 +122,9 @@ namespace loot {
         std::vector<MessageContent> Content() const;
         MessageContent ChooseContent(const unsigned int language) const;
 
-        static const unsigned int say   = 0;
-        static const unsigned int warn  = 1;
+        static const unsigned int say = 0;
+        static const unsigned int warn = 1;
         static const unsigned int error = 2;
-        static const unsigned int tag   = 3;
     private:
         unsigned int _type;
         std::vector<MessageContent> _content;
@@ -136,7 +134,7 @@ namespace loot {
     public:
         File();
         File(const std::string& name, const std::string& display = "",
-                                     const std::string& condition = "");
+             const std::string& condition = "");
 
         bool operator < (const File& rhs) const;
         bool operator == (const File& rhs) const;
