@@ -111,14 +111,16 @@ extern "C"
 
     /**
      *  @brief A structure that holds the type of a message and the message
-     *         string itself.
-     *  @var loot_message::type
-     *      The type of the message, specified using one of the message type
-     *      codes given below.
-     *  @var loot_message::message
-     *      The message string itself.
+     *      string itself.
      */
     typedef struct {
+        /**
+         *  @var type
+         *      The type of the message, specified using one of the message
+         *      type codes.
+         *  @var message
+         *      The message string itself.
+         */
         unsigned int type;
         const char * message;
     } loot_message;
@@ -218,7 +220,7 @@ extern "C"
      *           time this function is called, the memory for the previous
      *           message is freed, so only one error message is available at
      *           any one time.
-     *  @param details
+     *  @param message
      *      A pointer to the error details string outputted by the function.
      *  @returns A return code.
      */
@@ -279,7 +281,7 @@ extern "C"
      *           database functions.
      *  @param db
      *      A pointer to the handle that is created by the function.
-     *  @param gameId
+     *  @param clientGame
      *      A game code for which to create the handle.
      *  @param gamePath
      *      The relative or absolute path to the game folder, or `NULL`.
