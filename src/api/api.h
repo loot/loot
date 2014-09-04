@@ -341,6 +341,112 @@ extern "C"
     LOOT_API unsigned int loot_eval_lists(loot_db db,
                                           const unsigned int language);
 
+    /**********************************************************************//**
+     *  @name LOOT Functionality Functions
+     *************************************************************************/
+    /**@{*/
+
+    /**
+     *  @brief Calculates a new load order for the game's installed plugins
+     *         (including inactive plugins) and outputs the sorted order.
+     *  @details Pulls metadata from the masterlist and userlist if they are
+     *           loaded, and reads the contents of each plugin. No changes are
+     *           applied to the load order used by the game. This function does
+     *           not load or evaluate the masterlist or userlist.
+     *  @param db
+     *      The database the function acts on.
+     *  @param sortedPlugins
+     *      A pointer to an array of plugin filenames in their sorted load
+     *      order.
+     *  @param numPlugins
+     *      A pointer to the size of the outputted array.
+     *  @returns A return code.
+     */
+    LOOT_API unsigned int loot_sort_plugins(loot_db db,
+                                            char *** const sortedPlugins,
+                                            size_t * numPlugins);
+
+    /**
+     *  @brief Applies the given load order.
+     *  @param db
+     *      The database the function acts on.
+     *  @param loadOrder
+     *      An array of plugin filenames in the load order to be set.
+     *  @param numPlugins
+     *      The size of the inputted array.
+     *  @returns A return code.
+     */
+    LOOT_API unsigned int loot_apply_load_order(loot_db db,
+                                                const char ** const loadOrder,
+                                                size_t numPlugins);
+
+    /**
+     *  @brief Update the given masterlist.
+     *  @details Uses Git to update the given masterlist to a given remote.
+     *           If the masterlist doesn't exist, this will create it. This
+     *           function also initialises a Git repository in the given
+     *           masterlist's parent folder. If the masterlist was not already
+     *           up-to-date, it will be re-loaded, but not re-evaluated.
+     *
+     *           If a Git repository is already present, it will be used to
+     *           perform a diff-only update, but if for any reason a
+     *           fast-forward merge update is not possible, the existing
+     *           repository will be deleted and a new repository cloned from
+     *           the given remote.
+     *  @param db
+     *      The database the function acts on.
+     *  @param masterlistPath
+     *      A string containing the relative or absolute path to the masterlist
+     *      file that should be updated.
+     *  @param remoteURL
+     *      The URL of the remote from which to fetch updates. This can also be
+     *      a relative or absolute path to a local repository.
+     *  @param remoteBranch
+     *      The branch of the remote from which to apply updates.
+     *  @param updated
+     *      `true` if the masterlist was updated. `false` if no update was
+     *      necessary, ie. it was already up-to-date. If `true`, the masterlist
+     *      will have been re-loaded, but will need to be re-evaluated
+     *      separately.
+     *  @returns A return code.
+     */
+    LOOT_API unsigned int loot_update_masterlist(loot_db db,
+                                                 const char * const masterlistPath,
+                                                 const char * const remoteURL,
+                                                 const char * const remoteBranch,
+                                                 bool * const updated);
+
+    /**
+     *  @brief Get the given masterlist's revision.
+     *  @details Getting a masterlist's revision is only possible if it is
+     *           found inside a local Git repository.
+     *  @param masterlistPath
+     *      A string containing the relative or absolute path to the masterlist
+     *      file that should be queried.
+     *  @param getShortID
+     *      If `true`, the shortest unique hexadecimal revision hash that is at
+     *      least 7 characters long will be outputted. Otherwise, the full 40
+     *      character hash will be outputted.
+     *  @param revisionID
+     *      A pointer to a string containing the outputted revision hash for
+     *      the masterlist. If the masterlist doesn't exist, or there is no Git
+     *      repository at its location, this will be `NULL`.
+     *  @param revisionDate
+     *      A pointer to a string containing the ISO 8601 formatted revision
+     *      date, ie. YYYY-MM-DD. If the masterlist doesn't exist, or there is
+     *      no Git repository at its location, this will be `NULL`.
+     *  @param isModified
+     *      A pointer to a boolean that is `true` if the masterlist has been
+     *      edited since the outputted revision, or `false` if it is at exactly
+     *      the revision given.
+     *  @returns A return code.
+     */
+    LOOT_API unsigned int loot_get_masterlist_revision(const char * const masterlistPath,
+                                                       const bool getShortID,
+                                                       char ** const revisionID,
+                                                       char ** const revisionDate,
+                                                       bool * const isModified);
+
     /**@}*/
     /**********************************************************************//**
      *  @name Database Access Functions

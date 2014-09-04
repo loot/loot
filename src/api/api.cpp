@@ -359,6 +359,38 @@ LOOT_API unsigned int loot_eval_lists(loot_db db, const unsigned int language) {
     return loot_ok;
 }
 
+////////////////////////////////////
+// LOOT Functionality Functions
+////////////////////////////////////
+
+LOOT_API unsigned int loot_sort_plugins(loot_db db,
+                                        char *** const sortedPlugins,
+                                        size_t * numPlugins) {
+    return loot_ok;
+}
+
+LOOT_API unsigned int loot_apply_load_order(loot_db db,
+                                            const char ** const loadOrder,
+                                            size_t numPlugins) {
+    return loot_ok;
+}
+
+LOOT_API unsigned int loot_update_masterlist(loot_db db,
+                                             const char * const masterlistPath,
+                                             const char * const remoteURL,
+                                             const char * const remoteBranch,
+                                             bool * const updated) {
+    return loot_ok;
+}
+
+LOOT_API unsigned int loot_get_masterlist_revision(const char * const masterlistPath,
+                                                   const bool getShortID,
+                                                   char ** const revisionID,
+                                                   char ** const revisionDate,
+                                                   bool * const isModified) {
+    return loot_ok;
+}
+
 //////////////////////////
 // DB Access Functions
 //////////////////////////
