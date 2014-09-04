@@ -47,7 +47,7 @@ CefSettings GetCefSettings() {
     CefSettings cef_settings;
 
     //Disable CEF command line args.
-    cef_settings.command_line_args_disabled = true;
+    cef_settings.command_line_args_disabled = false;
 
     // Set CEF logging.
     CefString(&cef_settings.log_file).FromString((g_path_local / "CEFDebugLog.txt").string());
