@@ -354,7 +354,7 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
                     this.shadowRoot.getElementById('editor').getElementsByTagName('h1')[0].textContent = loot.game.plugins[i].name;
                     this.shadowRoot.getElementById('editor').getElementsByClassName('version')[0].textContent = loot.game.plugins[i].version;
                     if (loot.game.plugins[i].crc != '0') {
-                        this.shadowRoot.getElementById('editor').getElementsByClassName('crc')[0].textContent = loot.game.plugins[i].crc;
+                        this.shadowRoot.getElementById('editor').getElementsByClassName('crc')[0].textContent = loot.game.plugins[i].crc.toString(16).toUpperCase();
                     }
 
                     /* Fill in the editor input values. */
@@ -466,14 +466,14 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
 
                             if (loot.game.plugins[i].masterlist && loot.game.plugins[i].masterlist.dirty) {
                                 loot.game.plugins[i].masterlist.dirty.forEach(function(info) {
-                                    info.crc = info.crc.toString(16);
+                                    info.crc = info.crc.toString(16).toUpperCase();
                                     var row = tables[j].addRow(info);
                                     tables[j].setReadOnly(row);
                                 });
                             }
                             if (loot.game.plugins[i].userlist && loot.game.plugins[i].userlist.dirty) {
                                 loot.game.plugins[i].userlist.dirty.forEach(function(info) {
-                                    info.crc = info.crc.toString(16);
+                                    info.crc = info.crc.toString(16).toUpperCase();
                                     tables[j].addRow(info);
                                 });
                             }

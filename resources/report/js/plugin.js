@@ -147,7 +147,7 @@ function Plugin(obj) {
         card.getElementsByTagName('h1')[0].textContent = this.name;
         card.getElementsByClassName('version')[0].textContent = this.version;
         if (this.crc != 0) {
-            card.getElementsByClassName('crc')[0].textContent = this.crc;
+            card.getElementsByClassName('crc')[0].textContent = this.crc.toString(16).toUpperCase();
         }
 
         /* Fill in Bash Tag suggestions. */
