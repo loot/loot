@@ -357,6 +357,57 @@ namespace loot {
                 file = new espm::fo3::File(filepath, game.espm_settings, false, headerOnly);
             else
                 file = new espm::fonv::File(filepath, game.espm_settings, false, headerOnly);
+
+            BOOST_LOG_TRIVIAL(trace) << name << ": " << "Checking master flag.";
+            isMaster = file->isMaster(game.espm_settings);
+
+            BOOST_LOG_TRIVIAL(trace) << name << ": " << "Getting masters.";
+            masters = file->getMasters();
+
+            BOOST_LOG_TRIVIAL(trace) << name << ": " << "Number of masters: " << masters.size();
+
+            BOOST_LOG_TRIVIAL(trace) << name << ": " << "Getting CRC.";
+            crc = file->crc;
+            game.crcCache.insert(pair<string, uint32_t>(n, crc));
+
+            BOOST_LOG_TRIVIAL(trace) << name << ": " << "Getting the FormIDs.";
+            vector<uint32_t> records = file->getFormIDs();
+            vector<string> plugins = masters;
+            plugins.push_back(name);
+            for (const auto &record : records) {
+                FormID fid = FormID(plugins, record);
+                formIDs.insert(fid);
+                if (!boost::iequals(fid.Plugin(), name))
+                    ++numOverrideRecords;
+            }
+
+            //Also read Bash Tags applied and version string in description.
+            BOOST_LOG_TRIVIAL(trace) << name << ": " << "Reading the description.";
+            string text = file->getDescription();
+
+            delete file;
+
+            BOOST_LOG_TRIVIAL(trace) << name << ": " << "Attempting to read the version from the description.";
+            for (size_t i = 0; i < 7; ++i) {
+                smatch what;
+                if (regex_search(text, what, version_checks[i])) {
+                    //Use the first sub-expression match.
+                    version = string(what[1].first, what[1].second);
+                    break;
+                }
+            }
+            BOOST_LOG_TRIVIAL(trace) << name << ": " << "Attempting to extract Bash Tags from the description.";
+            smatch results;
+            if (regex_search(text, results, bash_tag_check)) {
+                // Regex requires there to be at least one sub-expression match,
+                // so skip the first (which is the full expression.
+                for (size_t i = 1; i < results.size(); ++i) {
+                    // Tags in the description must be addition tags, because there's
+                    // nowhere else to remove them from.
+                    auto tag = tags.insert(Tag(string(results[i].first, results[i].second)));
+                    BOOST_LOG_TRIVIAL(trace) << name << ": " << "Extracted Bash Tag: " << tag.first->Name();
+                }
+            }
         }
         catch (std::exception& e) {
             BOOST_LOG_TRIVIAL(error) << "Cannot read plugin file \"" << name << "\". Details: " << e.what();
@@ -369,55 +420,6 @@ namespace loot {
             name = name.substr(0, name.length() - 6);
         }
 
-        BOOST_LOG_TRIVIAL(trace) << name << ": " << "Checking master flag.";
-        isMaster = file->isMaster(game.espm_settings);
-
-        BOOST_LOG_TRIVIAL(trace) << name << ": " << "Getting masters.";
-        masters = file->getMasters();
-
-        BOOST_LOG_TRIVIAL(trace) << name << ": " << "Number of masters: " << masters.size();
-
-        crc = file->crc;
-        game.crcCache.insert(pair<string, uint32_t>(n, crc));
-
-        BOOST_LOG_TRIVIAL(trace) << name << ": " << "Getting the FormIDs.";
-        vector<uint32_t> records = file->getFormIDs();
-        vector<string> plugins = masters;
-        plugins.push_back(name);
-        for (const auto &record : records) {
-            FormID fid = FormID(plugins, record);
-            formIDs.insert(fid);
-            if (!boost::iequals(fid.Plugin(), name))
-                ++numOverrideRecords;
-        }
-
-        //Also read Bash Tags applied and version string in description.
-        BOOST_LOG_TRIVIAL(trace) << name << ": " << "Reading the description.";
-        string text = file->getDescription();
-
-        delete file;
-
-        BOOST_LOG_TRIVIAL(trace) << name << ": " << "Attempting to read the version from the description.";
-        for (size_t i = 0; i < 7; ++i) {
-            smatch what;
-            if (regex_search(text, what, version_checks[i])) {
-                //Use the first sub-expression match.
-                version = string(what[1].first, what[1].second);
-                break;
-            }
-        }
-        BOOST_LOG_TRIVIAL(trace) << name << ": " << "Attempting to extract Bash Tags from the description.";
-        smatch results;
-        if (regex_search(text, results, bash_tag_check)) {
-            // Regex requires there to be at least one sub-expression match,
-            // so skip the first (which is the full expression.
-            for (size_t i = 1; i < results.size(); ++i) {
-                // Tags in the description must be addition tags, because there's
-                // nowhere else to remove them from.
-                auto tag = tags.insert(Tag(string(results[i].first, results[i].second)));
-                BOOST_LOG_TRIVIAL(trace) << name << ": " << "Extracted Bash Tag: " << tag.first->Name();
-            }
-        }
         BOOST_LOG_TRIVIAL(trace) << name << ": " << "Plugin loading complete.";
     }
 

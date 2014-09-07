@@ -464,6 +464,10 @@ function getConflictingPluginsFromFilter() {
                         if (loot.game.plugins[i].name == key) {
                             loot.game.plugins[i].crc = result[key].crc;
                             loot.game.plugins[i].isDummy = result[key].isDummy;
+
+                            loot.game.plugins[i].messages = result[key].messages;
+                            loot.game.plugins[i].tags = result[key].tags;
+                            loot.game.plugins[i].isDirty = result[key].isDirty;
                             break;
                         }
                     }
@@ -811,6 +815,10 @@ function sortPlugins(evt) {
                         if (loot.game.plugins[i].name == plugin.name) {
                             loot.game.plugins[i].crc = plugin.crc;
                             loot.game.plugins[i].isDummy = plugin.isDummy;
+
+                            loot.game.plugins[i].messages = plugin.messages;
+                            loot.game.plugins[i].tags = plugin.tags;
+                            loot.game.plugins[i].isDirty = plugin.isDirty;
                             break;
                         }
                     }

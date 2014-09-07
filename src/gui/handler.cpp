@@ -363,6 +363,14 @@ namespace loot {
             else {
                 pluginNode["conflicts"] = false;
             }
+
+            // Plugin loading may have produced an error message, so rederive displayed data.
+            YAML::Node derivedNode = GenerateDerivedMetadata(pluginPair.second.Name());
+            for (const auto &pair : derivedNode) {
+                const string key = pair.first.as<string>();
+                pluginNode[key] = pair.second;
+            }
+
             node[pluginPair.second.Name()] = pluginNode;
         }
 
@@ -800,9 +808,9 @@ namespace loot {
                     // putting any resulting metadata into the base of the pluginNode.
                     YAML::Node derivedNode = GenerateDerivedMetadata(pluginPair.second.Name());
 
-                    for (auto it = derivedNode.begin(); it != derivedNode.end(); ++it) {
-                        const string key = it->first.as<string>();
-                        pluginNode[key] = it->second;
+                    for (const auto &pair : derivedNode) {
+                        const string key = pair.first.as<string>();
+                        pluginNode[key] = pair.second;
                     }
 
                     gameNode["plugins"].push_back(pluginNode);
@@ -895,6 +903,14 @@ namespace loot {
             pluginNode["name"] = plugin.Name();
             pluginNode["crc"] = plugin.Crc();
             pluginNode["isDummy"] = plugin.FormIDs().size() == 0;
+
+            // Sorting may have produced a plugin loading error message, so rederive displayed data.
+            YAML::Node derivedNode = GenerateDerivedMetadata(plugin.Name());
+            for (const auto &pair : derivedNode) {
+                const string key = pair.first.as<string>();
+                pluginNode[key] = pair.second;
+            }
+
             node.push_back(pluginNode);
         }
         g_app_state.isMidSort = true;
