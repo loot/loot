@@ -171,7 +171,7 @@ add_executable        (LOOT ${LOOT_GUI_SRC})
 target_link_libraries (LOOT ${Boost_LIBRARIES} ${LOOT_GUI_LIBS})
 
 # Copy CEF DLLs.
-FOREACH(cef_dll d3dcompiler_43.dll d3dcompiler_46.dll libEGL.dll libGLESv2.dll libcef.dll)
+FOREACH(cef_dll d3dcompiler_43.dll d3dcompiler_46.dll libEGL.dll libGLESv2.dll libcef.dll wow_helper.exe)
     add_custom_command(TARGET LOOT POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
             "${CMAKE_SOURCE_DIR}/${CEF_ROOT}/$<CONFIGURATION>/${cef_dll}"

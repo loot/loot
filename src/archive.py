@@ -97,6 +97,7 @@ shutil.copy( os.path.join('..', 'build', 'Release', 'd3dcompiler_46.dll'), temp_
 shutil.copy( os.path.join('..', 'build', 'Release', 'libEGL.dll'), temp_path )
 shutil.copy( os.path.join('..', 'build', 'Release', 'libGLESv2.dll'), temp_path )
 shutil.copy( os.path.join('..', 'build', 'Release', 'libcef.dll'), temp_path )
+shutil.copy( os.path.join('..', 'build', 'Release', 'wow_helper.exe'), temp_path )
 shutil.copy( os.path.join('..', 'build', 'Release', 'cef.pak'), temp_path )
 shutil.copy( os.path.join('..', 'build', 'Release', 'cef_100_percent.pak'), temp_path )
 shutil.copy( os.path.join('..', 'build', 'Release', 'cef_200_percent.pak'), temp_path )
