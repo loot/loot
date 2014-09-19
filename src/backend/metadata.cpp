@@ -397,15 +397,22 @@ namespace loot {
                 }
             }
             BOOST_LOG_TRIVIAL(trace) << name << ": " << "Attempting to extract Bash Tags from the description.";
-            smatch results;
-            if (regex_search(text, results, bash_tag_check)) {
-                // Regex requires there to be at least one sub-expression match,
-                // so skip the first (which is the full expression.
-                for (size_t i = 1; i < results.size(); ++i) {
-                    // Tags in the description must be addition tags, because there's
-                    // nowhere else to remove them from.
-                    auto tag = tags.insert(Tag(string(results[i].first, results[i].second)));
-                    BOOST_LOG_TRIVIAL(trace) << name << ": " << "Extracted Bash Tag: " << tag.first->Name();
+            size_t pos1 = text.find("{{BASH:");
+            if (pos1 != string::npos && pos1 + 7 != text.length()) {
+                pos1 += 7;
+
+                size_t pos2 = text.find("}}", pos1);
+                if (pos2 != string::npos) {
+                    text = text.substr(pos1, pos2 - pos1);
+
+                    vector<string> bashTags;
+                    boost::split(bashTags, text, boost::is_any_of(","));
+
+                    for (auto &tag : bashTags) {
+                        boost::trim(tag);
+                        BOOST_LOG_TRIVIAL(trace) << name << ": " << "Extracted Bash Tag: " << tag;
+                        tags.insert(Tag(tag));
+                    }
                 }
             }
         }

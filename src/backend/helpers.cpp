@@ -116,9 +116,6 @@ namespace loot {
         regex(regex7, regex::ECMAScript | regex::icase)
     };
 
-    // A regular expression for finding Bash Tags in plugin descriptions.
-    const regex bash_tag_check("\\{\\{BASH:(?:[ ]*([-A-Za-z.]+)[ ]*,)+[ ]*\\}\\}", regex::ECMAScript | regex::icase);
-
     //////////////////////////////////////////////////////////////////////////
     // Helper functions
     //////////////////////////////////////////////////////////////////////////
