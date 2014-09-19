@@ -42,7 +42,20 @@ namespace lc = boost::locale;
 namespace loot {
     struct git_handler {
     public:
-        git_handler() : repo(nullptr), remote(nullptr), cfg(nullptr), obj(nullptr), commit(nullptr), ref(nullptr), ref2(nullptr), sig(nullptr), blob(nullptr), merge_head(nullptr), tree(nullptr), diff(nullptr), buf({ 0 }) {}
+        git_handler() :
+            repo(nullptr),
+            remote(nullptr),
+            cfg(nullptr),
+            obj(nullptr),
+            commit(nullptr),
+            ref(nullptr),
+            ref2(nullptr),
+            sig(nullptr),
+            blob(nullptr),
+            merge_head(nullptr),
+            tree(nullptr),
+            diff(nullptr),
+            buf({0}) {}
 
         ~git_handler() {
             git_commit_free(commit);
@@ -183,7 +196,7 @@ namespace loot {
         git.call(git_signature_new(&git.sig, "LOOT", "loot@placeholder.net", 0, 0));
 
         BOOST_LOG_TRIVIAL(debug) << "Setting up checkout options.";
-        char * paths[] ={ "masterlist.yaml" };
+        char * paths[] = {"masterlist.yaml"};
         git_checkout_options checkout_opts = GIT_CHECKOUT_OPTIONS_INIT;
         checkout_opts.checkout_strategy = GIT_CHECKOUT_FORCE;
         checkout_opts.paths.strings = paths;
@@ -352,13 +365,44 @@ namespace loot {
                     git.ref2 = nullptr;
                 }
                 else if ((analysis & GIT_MERGE_ANALYSIS_UP_TO_DATE) != 0) {
+                    // No merge is required, but HEAD might be ahead of the remote branch. Check
+                    // to see if that's the case, and move HEAD back to match the remote branch
+                    // if so. Otherwise, exit early to skip unnecessary masterlist parsing.
                     // No update necessary, so exit early to skip unnecessary masterlist parsing.
                     BOOST_LOG_TRIVIAL(trace) << "Local branch is up-to-date with remote branch.";
 
-                    BOOST_LOG_TRIVIAL(trace) << "Performing a Git checkout of HEAD.";
-                    git.call(git_checkout_head(git.repo, &checkout_opts));
+                    BOOST_LOG_TRIVIAL(trace) << "Checking to see if local and remote branch heads are equal.";
+                    // Get the local branch and remote branch head commit IDs.
 
-                    return false;
+                    // Local branch.
+                    git.call(git_reference_peel(&git.obj, git.ref, GIT_OBJ_COMMIT));
+                    const git_oid * local_commit_id = git_object_id(git.obj);
+                    git_object_free(git.obj);
+                    git.obj = nullptr;
+
+                    // Remote branch.
+                    git.call(git_reference_peel(&git.obj, git.ref2, GIT_OBJ_COMMIT));
+                    const git_oid * remote_commit_id = git_object_id(git.obj);
+                    git_reference_free(git.ref2);
+                    git.ref2 = nullptr;
+                    git_object_free(git.obj);
+                    git.obj = nullptr;
+
+                    if (local_commit_id->id != remote_commit_id->id) {
+                        BOOST_LOG_TRIVIAL(trace) << "Branch heads are not equal, updating local HEAD.";
+                        // Commit IDs don't match, update HEAD, and continue with normal update procedure.
+                        git.call(git_reference_set_target(&git.ref2, git.ref, remote_commit_id, git.sig, "Setting branch reference."));
+                        git_reference_free(git.ref2);
+                        git.ref2 = nullptr;
+                    }
+                    else {
+                        // Commit IDs match, just checkout HEAD then exit early.
+                        BOOST_LOG_TRIVIAL(trace) << "Branch heads are equal.";
+                        BOOST_LOG_TRIVIAL(trace) << "Performing a Git checkout of HEAD.";
+                        git.call(git_checkout_head(git.repo, &checkout_opts));
+
+                        return false;
+                    }
                 }
                 else {
                     // The local repository can't be easily merged. It's best just to delete and re-clone it.
@@ -414,7 +458,7 @@ namespace loot {
             git.ref = nullptr;
             git.obj = nullptr;
             git.commit = nullptr;
-            git.buf ={ 0 };
+            git.buf = {0};
 
             //Now try parsing the masterlist.
             BOOST_LOG_TRIVIAL(debug) << "Testing masterlist parsing.";
