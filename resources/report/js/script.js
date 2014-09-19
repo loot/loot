@@ -530,7 +530,6 @@ function applyFilters(evt) {
                 }
                 if (messages[j].className.indexOf('hidden') == -1) {
                     isMessageless = false;
-                    break;
                 }
             }
             if ((document.getElementById('hideMessagelessPlugins').checked && isMessageless)
