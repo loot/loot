@@ -58,6 +58,10 @@ namespace loot {
             buf({0}) {}
 
         ~git_handler() {
+            free();
+        }
+
+        void free() {
             git_commit_free(commit);
             git_object_free(obj);
             git_config_free(cfg);
@@ -71,6 +75,20 @@ namespace loot {
             git_tree_free(tree);
             git_diff_free(diff);
             git_buf_free(&buf);
+
+            commit = nullptr;
+            obj = nullptr;
+            cfg = nullptr;
+            remote = nullptr;
+            repo = nullptr;
+            ref = nullptr;
+            ref2 = nullptr;
+            sig = nullptr;
+            blob = nullptr;
+            merge_head = nullptr;
+            tree = nullptr;
+            diff = nullptr;
+            buf = {0};
         }
 
         void call(int error_code) {
@@ -118,7 +136,7 @@ namespace loot {
         BOOST_LOG_TRIVIAL(trace) << "Recursively setting write permission on directory: " << path;
         for (fs::recursive_directory_iterator it(path); it != fs::recursive_directory_iterator(); ++it) {
             BOOST_LOG_TRIVIAL(trace) << "Setting write permission for: " << it->path();
-            fs::permissions(it->path(), fs::add_perms | fs::owner_write);
+            fs::permissions(it->path(), fs::add_perms | fs::owner_write | fs::group_write | fs::others_write);
         }
     }
 
@@ -407,6 +425,7 @@ namespace loot {
                 else {
                     // The local repository can't be easily merged. It's best just to delete and re-clone it.
                     FixRepoPermissions(repo_path / ".git");
+                    git.free();
                     fs::remove_all(repo_path / ".git");
                     return this->Update(game, language);
                     //throw error(error::git_error, "Local repository has been edited, an automatic fast-forward merge update is not possible.");
