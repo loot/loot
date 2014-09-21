@@ -23,6 +23,7 @@
 */
 'use strict';
 var marked;
+var l10n;
 var loot = {
     hasFocus: true,
     installedGames: [],
@@ -1341,6 +1342,7 @@ function initVars() {
             try {
                 loot.settings = JSON.parse(results[2]);
                 applySavedFilters();
+                l10n.applyLocale(loot.settings.language);
             } catch (e) {
                 console.log(e);
                 console.log('getSettings response: ' + results[2]);
@@ -1441,8 +1443,9 @@ function onFocus(evt) {
 require.config({
     baseUrl: "js",
   });
-require(['marked', 'order!custom', 'order!plugin'], function(response) {
-    marked = response;
+require(['marked', 'l10n', 'order!custom', 'order!plugin'], function(markedResponse, l10nResponse) {
+    marked = markedResponse;
+    l10n = l10nResponse;
     /* Make sure settings are what I want. */
     marked.setOptions({
         gfm: true,
