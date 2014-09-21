@@ -241,12 +241,12 @@ var loot = {
                 if (change.object[change.name] && change.object[change.name].revision) {
                     document.getElementById('masterlistRevision').textContent = change.object[change.name].revision;
                 } else {
-                    document.getElementById('masterlistRevision').textContent = 'N/A';
+                    document.getElementById('masterlistRevision').textContent = l10n.translate("N/A").fetch();
                 }
                 if (change.object[change.name] && change.object[change.name].date) {
                     document.getElementById('masterlistDate').textContent = change.object[change.name].date;
                 } else {
-                    document.getElementById('masterlistDate').textContent = 'N/A';
+                    document.getElementById('masterlistDate').textContent = l10n.translate("N/A").fetch();
                 }
             } else if (change.name == 'globalMessages') {
                 /* For the messages, they don't have a JS 'class' so need to everything
@@ -517,7 +517,7 @@ function applyFilters(evt) {
                 if (messages[j].className.indexOf('say') != -1) {
                     hasNotes = true;
                 }
-                if (messages[j].textContent.indexOf('Do not clean.') != -1) {
+                if (messages[j].textContent.indexOf(l10n.translate("Do not clean.").fetch()) != -1) {
                     hasDoNotCleanMessages = true;
                 }
                 if ((document.getElementById('hideAllPluginMessages').checked && hasPluginMessages)
@@ -1296,10 +1296,6 @@ function initVars() {
             loot.query('getSettings'),
         ];
 
-        if (!result) {
-            parallelPromises.push(loot.query('getGameData'));
-        }
-
         updateProgressDialog('Initialising user interface...');
         openProgressDialog();
         Promise.all(parallelPromises).then(function(results) {
@@ -1326,33 +1322,37 @@ function initVars() {
                 console.log('getInstalledGames response: ' + results[1]);
             }
 
-            if (results.length > 3) {
-                try {
-                    var game = JSON.parse(results[3], jsonToPlugin);
-                    loot.game.folder = game.folder;
-                    loot.game.masterlist = game.masterlist;
-                    loot.game.globalMessages = game.globalMessages;
-                    loot.game.plugins = game.plugins;
-                } catch (e) {
-                    console.log(e);
-                    console.log('getGameData response: ' + results[3]);
-                }
-            }
-
             try {
                 loot.settings = JSON.parse(results[2]);
-                applySavedFilters();
-                l10n.applyLocale(loot.settings.language);
+                l10n.getJedInstance(loot.settings.language).then(function(jed){
+                    l10n.translateStaticText(jed);
+                    l10n = jed;
+                });
             } catch (e) {
                 console.log(e);
                 console.log('getSettings response: ' + results[2]);
             }
 
-            if (results.length == 3) {
-                document.getElementById('settingsButton').click();
-            }
+            if (!result) {
+                loot.query('getGameData').then(function(result){
+                    try {
+                        var game = JSON.parse(result, jsonToPlugin);
+                        loot.game.folder = game.folder;
+                        loot.game.masterlist = game.masterlist;
+                        loot.game.globalMessages = game.globalMessages;
+                        loot.game.plugins = game.plugins;
+                    } catch (e) {
+                        console.log(e);
+                        console.log('getGameData response: ' + results[3]);
+                    }
 
-            closeProgressDialog();
+                    applySavedFilters();
+                    closeProgressDialog();
+                }).catch(processCefError);
+            } else {
+                document.getElementById('settingsButton').click();
+                closeProgressDialog();
+            }
 
             /* So much easier than trying to set up my own C++ message loop to listen
                to window messages looking for a focus change. */

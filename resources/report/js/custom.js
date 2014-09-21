@@ -700,7 +700,7 @@ var messageDialogProto = Object.create(HTMLDialogElement.prototype, {
             this.getElementsByClassName('cancel')[0].addEventListener('click', this.onButtonClick, false);
 
             if (type == 'error' || type == 'info') {
-                this.getElementsByClassName('accept')[0].textContent = 'OK';
+                this.getElementsByClassName('accept')[0].textContent = l10n.translate("OK").fetch();
                 this.getElementsByClassName('cancel')[0].classList.toggle('hidden', true);
             }
 
@@ -728,12 +728,12 @@ var messageDialogProto = Object.create(HTMLDialogElement.prototype, {
 
             var accept = document.createElement('button');
             accept.className = 'accept';
-            accept.textContent = 'Yes';
+            accept.textContent = l10n.translate("Yes").fetch();
             buttons.appendChild(accept);
 
             var cancel = document.createElement('button');
             cancel.className = 'cancel';
-            cancel.textContent = 'Cancel';
+            cancel.textContent = l10n.translate("Cancel").fetch();
             buttons.appendChild(cancel);
         }
     },

@@ -38,9 +38,16 @@
             });
         },
 
-        applyLocale: function(locale) {
-            this.loadLocaleData(locale).then(function(result){
-                console.log(result);
+        translateStaticText: function(l10n) {
+            document.getElementById('hideVersionNumbers').nextElementSibling.textContent = l10n.translate("Hide version numbers").fetch();
+        },
+
+        getJedInstance: function(locale) {
+            return this.loadLocaleData(locale).then(function(result){
+                return new jed({
+                    'locale_data': result,
+                    'domain': 'messages'
+                });
             });
         }
 
