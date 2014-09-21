@@ -446,14 +446,14 @@
                     <input type="checkbox" id="hideMessagelessPlugins" />
                     <label for="hideMessagelessPlugins">Hide messageless plugins</label>
                     <div>
-                        <span>Hidden plugins</span>: <span id="hiddenPluginNo">0</span> / <span id="filterTotalPluginNo">0</span>
+                        <span id="hiddenPluginsTxt">Hidden plugins</span>: <span id="hiddenPluginNo">0</span> / <span id="filterTotalPluginNo">0</span>
                     </div>
                     <div>
-                        <span>Hidden messages</span>: <span id="hiddenMessageNo">0</span> / <span id="filterTotalMessageNo">0</span>
+                        <span id="hiddenMessagesTxt">Hidden messages</span>: <span id="hiddenMessageNo">0</span> / <span id="filterTotalMessageNo">0</span>
                     </div>
                 </ol>
                 <li id="filtersToggle"><span class="fa fa-fw fa-filter"></span>Filters
-                <li title="Press Enter when searching to select the next match."><input id="searchBox" type="search" placeholder="Search content...">
+                <li><input id="searchBox" type="search" placeholder="Search content..." title="Press Enter when searching to select the next match.">
             </ol>
         </nav>
         <main>
@@ -530,7 +530,7 @@ along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
                 <!-- Game rows go here. -->
                 <tr><td colspan="4">Add new row...</td><td></td></tr>
         </table>
-        <p>Language changes will be applied after LOOT is restarted.
+        <p id="languageRestartTxt">Language changes will be applied after LOOT is restarted.
         <hr>
         <div class="buttons">
             <button class="accept">Apply</button>
