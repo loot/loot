@@ -20,10 +20,11 @@
     You should have received a copy of the GNU General Public License
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
-*/
+    */
 
 #include "app.h"
 #include "handler.h"
+#include "scheme.h"
 
 #include "../backend/error.h"
 #include "../backend/globals.h"
@@ -52,17 +53,21 @@ using boost::format;
 namespace fs = boost::filesystem;
 
 namespace loot {
-
     LootState g_app_state = LootState();
 
     LootApp::LootApp() {}
-    
+
     CefRefPtr<CefBrowserProcessHandler> LootApp::GetBrowserProcessHandler() {
         return this;
     }
 
     CefRefPtr<CefRenderProcessHandler> LootApp::GetRenderProcessHandler() {
         return this;
+    }
+
+    void LootApp::OnRegisterCustomSchemes(CefRefPtr<CefSchemeRegistrar> registrar) {
+        // Register "loot" as a standard scheme.
+        registrar->AddCustomScheme("loot", true, false, false);
     }
 
     void LootApp::OnContextInitialized() {
@@ -79,6 +84,9 @@ namespace loot {
 
         // Set the handler for browser-level callbacks.
         CefRefPtr<LootHandler> handler(new LootHandler());
+
+        // Register the custom "loot" scheme handler.
+        CefRegisterSchemeHandlerFactory("loot", "l10n", new LootSchemeHandlerFactory());
 
         // Specify CEF browser settings here.
         CefBrowserSettings browser_settings;
@@ -104,11 +112,9 @@ namespace loot {
         return message_router_->OnProcessMessageReceived(browser, source_process, message);
     }
 
-
     void LootApp::OnContextCreated(CefRefPtr<CefBrowser> browser,
-        CefRefPtr<CefFrame> frame,
-        CefRefPtr<CefV8Context> context) {
-
+                                   CefRefPtr<CefFrame> frame,
+                                   CefRefPtr<CefV8Context> context) {
         // Register javascript functions.
         message_router_->OnContextCreated(browser, frame, context);
     }
@@ -116,7 +122,7 @@ namespace loot {
     // LootState member functions
     //---------------------------
 
-    LootState::LootState() : _currentGame(0) {}
+    LootState::LootState() : _currentGame(0), isMidSort(false) {}
 
     void LootState::Init(const std::string& cmdLineGame) {
         // Do some preliminary locale / UTF-8 support setup here, in case the settings file reading requires it.
@@ -167,23 +173,24 @@ namespace loot {
             )
             );
         boost::log::add_common_attributes();
-        unsigned int verbosity;
-        if (_settings["debugVerbosity"]) {
-            verbosity = _settings["debugVerbosity"].as<unsigned int>();
+        bool enableDebugLogging = false;
+        if (_settings["enableDebugLogging"]) {
+            enableDebugLogging = _settings["enableDebugLogging"].as<bool>();
         }
-        if (verbosity == 0)
-            boost::log::core::get()->set_logging_enabled(false);
-        else {
+        if (enableDebugLogging)
             boost::log::core::get()->set_logging_enabled(true);
+        else
+            boost::log::core::get()->set_logging_enabled(false);
 
-            if (verbosity == 1)
-                boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::warning);  //Log all warnings, errors and fatals.
-            else if (verbosity == 2)
-                boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::debug);  //Log debugs, infos, warnings, errors and fatals.
-            else
-                boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::trace);  //Log everything.
-        }
+        // Log some useful info.
         BOOST_LOG_TRIVIAL(info) << "LOOT Version: " << g_version_major << "." << g_version_minor << "." << g_version_patch;
+#ifdef _WIN32
+        // Check if LOOT is being run through Mod Organiser.
+        bool runFromMO = GetModuleHandle(ToWinWide("hook.dll").c_str()) != NULL;
+        if (runFromMO) {
+            BOOST_LOG_TRIVIAL(info) << "LOOT is being run through Mod Organiser.";
+        }
+#endif
 
         // The CEF debug log is appended to, not overwritten, so it gets really long.
         // Delete the current CEF debug log.
@@ -240,8 +247,10 @@ namespace loot {
         return _initErrors;
     }
 
-
     void LootState::UpdateGames(std::vector<Game>& games) {
+        // Acquire the lock for the scope of this method.
+        base::AutoLock lock_scope(_lock);
+
         unordered_set<string> newGameFolders;
 
         // Update existing games, add new games.
@@ -257,7 +266,8 @@ namespace loot {
 
             newGameFolders.insert(game.FolderName());
         }
-        // Remove deleted games. As the current game is stored using its index, 
+        // Remove deleted games. As the current game is stored using its index,
+
         // removing an earlier game may invalidate it.
         for (auto it = _games.begin(); it != _games.end();) {
             if (newGameFolders.find(it->FolderName()) == newGameFolders.end()) {
@@ -274,6 +284,9 @@ namespace loot {
     }
 
     void LootState::ChangeGame(const std::string& newGameFolder) {
+        // Acquire the lock for the scope of this method.
+        base::AutoLock lock_scope(_lock);
+
         BOOST_LOG_TRIVIAL(debug) << "Changing current game to that with folder: " << newGameFolder;
         auto it = find(_games.begin(), _games.end(), newGameFolder);
 
@@ -283,6 +296,9 @@ namespace loot {
     }
 
     Game& LootState::CurrentGame() {
+        // Acquire the lock for the scope of this method.
+        base::AutoLock lock_scope(_lock);
+
         return _games[_currentGame];
     }
 
@@ -300,11 +316,18 @@ namespace loot {
     }
 
     void LootState::UpdateSettings(const YAML::Node& settings) {
+        // Acquire the lock for the scope of this method.
+        base::AutoLock lock_scope(_lock);
+
         _settings = settings;
     }
 
     void LootState::SaveSettings() {
+        // Acquire the lock for the scope of this method.
+        base::AutoLock lock_scope(_lock);
+
         _settings["lastGame"] = _games[_currentGame].FolderName();
+        _settings["lastVersion"] = to_string(g_version_major) + "." + to_string(g_version_minor) + "." + to_string(g_version_patch);
 
         //Save settings.
         try {
@@ -321,14 +344,18 @@ namespace loot {
             BOOST_LOG_TRIVIAL(error) << "Failed to save LOOT's settings. Error: " << e.what();
         }
     }
-    
+
     bool LootState::AreSettingsValid() {
+        // Acquire the lock for the scope of this method.
+        base::AutoLock lock_scope(_lock);
+
         if (!_settings["language"]) {
             if (_settings["Language"]) {
                 // Conversion from 0.6 key.
                 _settings["language"] = _settings["Language"];
                 _settings.remove("Language");
-            } else
+            }
+            else
                 return false;
         }
         if (!_settings["game"]) {
@@ -349,23 +376,29 @@ namespace loot {
             else
                 return false;
         }
-        if (!_settings["debugVerbosity"]) {
+        if (!_settings["enableDebugLogging"]) {
             if (_settings["Debug Verbosity"]) {
                 // Conversion from 0.6 key.
-                _settings["debugVerbosity"] = _settings["Debug Verbosity"];
+                _settings["enableDebugLogging"] = (_settings["Debug Verbosity"].as<unsigned int>() > 0);
                 _settings.remove("Debug Verbosity");
+            }
+            else if (_settings["debugVerbosity"]) {
+                // Conversion from 0.7 alpha key
+                _settings["enableDebugLogging"] = (_settings["debugVerbosity"].as<unsigned int>() > 0);
+                _settings.remove("debugVerbosity");
             }
             else
                 return false;
         }
-        if (!_settings["updateMasterlist"])
+        if (!_settings["updateMasterlist"]) {
             if (_settings["Update Masterlist"]) {
-            // Conversion from 0.6 key.
-            _settings["updateMasterlist"] = _settings["Update Masterlist"];
-            _settings.remove("Update Masterlist");
+                // Conversion from 0.6 key.
+                _settings["updateMasterlist"] = _settings["Update Masterlist"];
+                _settings.remove("Update Masterlist");
             }
             else
                 return false;
+        }
         if (!_settings["games"]) {
             if (_settings["Games"]) {
                 // Conversion from 0.6 key.
@@ -384,6 +417,8 @@ namespace loot {
             else
                 return false;
         }
+        if (!_settings["autoRefresh"])
+            _settings["autoRefresh"] = true;
 
         if (_settings["windows"])
             _settings.remove("windows");
@@ -391,13 +426,13 @@ namespace loot {
         return true;
     }
 
-    YAML::Node LootState::GetDefaultSettings() {
+    YAML::Node LootState::GetDefaultSettings() const {
         YAML::Node root;
 
         root["language"] = "en";
         root["game"] = "auto";
         root["lastGame"] = "auto";
-        root["debugVerbosity"] = 0;
+        root["enableDebugLogging"] = false;
         root["updateMasterlist"] = true;
 
         std::vector<Game> games;

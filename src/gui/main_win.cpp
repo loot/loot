@@ -20,7 +20,7 @@
     You should have received a copy of the GNU General Public License
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
-*/
+    */
 
 #include "app.h"
 
@@ -47,11 +47,11 @@ CefSettings GetCefSettings() {
     CefSettings cef_settings;
 
     //Disable CEF command line args.
-    cef_settings.command_line_args_disabled = true;
+    cef_settings.command_line_args_disabled = false;
 
     // Set CEF logging.
     CefString(&cef_settings.log_file).FromString((g_path_local / "CEFDebugLog.txt").string());
- 
+
     // Enable remote debugging.
     cef_settings.remote_debugging_port = 8080;
 
@@ -83,7 +83,6 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
         // The sub-process has completed so return here.
         return exit_code;
     }
-
 
     // Check if LOOT is already running
     //---------------------------------

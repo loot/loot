@@ -20,7 +20,7 @@
     You should have received a copy of the GNU General Public License
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
-*/
+    */
 
 #include "error.h"
 #include "graph.h"
@@ -38,8 +38,7 @@
 using namespace std;
 
 namespace loot {
-
-    struct cycle_detector : public boost::dfs_visitor<> {
+    struct cycle_detector : public boost::dfs_visitor < > {
         cycle_detector() {}
 
         std::list<std::string> trail;
@@ -98,7 +97,7 @@ namespace loot {
 
         map<vertex_t, size_t> index_map;
         boost::associative_property_map< map<vertex_t, size_t> > v_index_map(index_map);
-        size_t i=0;
+        size_t i = 0;
         BGL_FORALL_VERTICES(v, graph, PluginGraph)
             put(v_index_map, v, i++);
 
@@ -139,7 +138,6 @@ namespace loot {
             loot::vertex_it vit2 = vit;
             ++vit2;
             while (vit2 != vitend) {
-
                 if (graph[*vit].IsMaster() == graph[*vit2].IsMaster()) {
                     ++vit2;
                     continue;
@@ -149,13 +147,13 @@ namespace loot {
                 if (graph[*vit2].IsMaster()) {
                     parentVertex = *vit2;
                     vertex = *vit;
-                } else {
+                }
+                else {
                     parentVertex = *vit;
                     vertex = *vit2;
                 }
 
                 if (!boost::edge(parentVertex, vertex, graph).second) {
-
                     BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[vertex].Name() << "\".";
 
                     boost::add_edge(parentVertex, vertex, graph);
@@ -165,10 +163,9 @@ namespace loot {
 
             BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for masters.";
             vector<string> strVec(graph[*vit].Masters());
-            for (const auto &master: strVec) {
+            for (const auto &master : strVec) {
                 if (loot::GetVertexByName(graph, master, parentVertex) &&
                     !boost::edge(parentVertex, *vit, graph).second) {
-
                     BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[*vit].Name() << "\".";
 
                     boost::add_edge(parentVertex, *vit, graph);
@@ -181,11 +178,10 @@ namespace loot {
             }
             BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for requirements.";
             set<File> fileset(graph[*vit].Reqs());
-            for (const auto &file: fileset) {
+            for (const auto &file : fileset) {
                 if (loot::IsPlugin(file.Name()) &&
                     loot::GetVertexByName(graph, file.Name(), parentVertex) &&
                     !boost::edge(parentVertex, *vit, graph).second) {
-
                     BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[*vit].Name() << "\".";
 
                     boost::add_edge(parentVertex, *vit, graph);
@@ -203,7 +199,6 @@ namespace loot {
                 if (loot::IsPlugin(file.Name()) &&
                     loot::GetVertexByName(graph, file.Name(), parentVertex) &&
                     !boost::edge(parentVertex, *vit, graph).second) {
-
                     BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[*vit].Name() << "\".";
 
                     boost::add_edge(parentVertex, *vit, graph);
@@ -221,7 +216,6 @@ namespace loot {
                 BOOST_LOG_TRIVIAL(trace) << "Overriding priority for " << graph[*vit].Name() << " from " << graph[*vit].Priority() << " to " << parentPriority;
                 graph[*vit].Priority(parentPriority);
             }
-
         }
     }
 
@@ -237,12 +231,11 @@ namespace loot {
 
             loot::vertex_it vit2, vitend2;
             for (boost::tie(vit2, vitend2) = boost::vertices(graph); vit2 != vitend2; ++vit2) {
-
                 if (graph[*vit].Priority() == graph[*vit2].Priority()
                     || (abs(graph[*vit].Priority()) < max_priority && abs(graph[*vit2].Priority()) < max_priority
-                        && !graph[*vit].FormIDs().empty() && !graph[*vit2].FormIDs().empty() && !graph[*vit].DoFormIDsOverlap(graph[*vit2])
-                       )
-                   ) {
+                    && !graph[*vit].FormIDs().empty() && !graph[*vit2].FormIDs().empty() && !graph[*vit].DoFormIDsOverlap(graph[*vit2])
+                    )
+                    ) {
                     continue;
                 }
 
@@ -255,14 +248,14 @@ namespace loot {
                 if (p1 < p2) {
                     parentVertex = *vit;
                     vertex = *vit2;
-                } else {
+                }
+                else {
                     parentVertex = *vit2;
                     vertex = *vit;
                 }
 
                 if (!boost::edge(parentVertex, vertex, graph).second &&
                     !EdgeCreatesCycle(graph, parentVertex, vertex)) {  //No edge going the other way, OK to add this edge.
-
                     BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[vertex].Name() << "\".";
 
                     boost::add_edge(parentVertex, vertex, graph);
@@ -275,7 +268,6 @@ namespace loot {
         loot::vertex_it vit, vitend;
 
         for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
-
             BOOST_LOG_TRIVIAL(trace) << "Adding overlap edges to vertex for \"" << graph[*vit].Name() << "\".";
 
             if (graph[*vit].NumOverrideFormIDs() == 0) {
@@ -310,7 +302,6 @@ namespace loot {
 
                     BOOST_LOG_TRIVIAL(trace) << "Checking edge validity between \"" << graph[*vit].Name() << "\" and \"" << graph[*vit2].Name() << "\".";
                     if (!EdgeCreatesCycle(graph, parentVertex, vertex)) {  //No edge going the other way, OK to add this edge.
-
                         BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[vertex].Name() << "\".";
 
                         boost::add_edge(parentVertex, vertex, graph);
@@ -321,7 +312,6 @@ namespace loot {
     }
 
     std::list<Plugin> Sort(PluginGraph& graph) {
-
         //Now add the interactions between plugins to the graph as edges.
         BOOST_LOG_TRIVIAL(info) << "Adding edges to plugin graph.";
         BOOST_LOG_TRIVIAL(debug) << "Adding non-overlap edges.";
@@ -339,7 +329,7 @@ namespace loot {
         //Topological sort requires an index map, which std::list-based VertexList graphs don't have, so one needs to be built separately.
         map<vertex_t, size_t> index_map;
         boost::associative_property_map< map<vertex_t, size_t> > v_index_map(index_map);
-        size_t i=0;
+        size_t i = 0;
         BGL_FORALL_VERTICES(v, graph, PluginGraph)
             put(v_index_map, v, i++);
 
@@ -351,7 +341,7 @@ namespace loot {
         // Output a plugin list using the sorted vertices.
         BOOST_LOG_TRIVIAL(info) << "Calculated order: ";
         list<Plugin> plugins;
-        for (const auto &vertex: sortedVertices) {
+        for (const auto &vertex : sortedVertices) {
             BOOST_LOG_TRIVIAL(info) << '\t' << graph[vertex].Name();
             plugins.push_back(graph[vertex]);
         }

@@ -198,7 +198,7 @@
                 <li id="dummyPlugin" class="fa fa-eye-slash" title="Dummy Plugin"></li>
                 <li id="loadsBSA" class="fa fa-paperclip" title="Loads BSA"></li>
                 <li id="hasUserEdits" class="fa fa-user" title="Has User Metadata"></li>
-                <li id="menuButton" class="fa fa-ellipsis-v fa-lg">
+                <li id="menuButton" class="fa fa-ellipsis-v fa-lg" title="Click to open the plugin menu.">
                 </li>
             </ol>
         </section>
@@ -285,33 +285,12 @@
         </section>
     </template>
     <template id="pluginLI">
-        <style>
-            @import 'css/font-awesome.min.css';
-            :host > span {
-                display: inline-block;
-                width: 1.2em;
-            }
-            :host([data-bsa=false]) .loadsBSA {
-                visibility: hidden;
-            }
-            :host([data-dummy=false]) .dummyPlugin {
-                visibility: hidden;
-            }
-            :host([data-edits=false]) .hasUserEdits {
-                visibility: hidden;
-            }
-            a {
-                text-decoration: none;
-                color: black;
-            }
-        </style>
         <span class="dummyPlugin fa fa-eye-slash" title="Dummy Plugin"></span>
         <span class="loadsBSA fa fa-paperclip" title="Loads BSA"></span>
         <span class="hasUserEdits fa fa-user" title="Has User Metadata"></span>
-        <a href="">
-            <content select=".name"></content>
-            <content select=".priority"></content>
-        </a>
+        <span class="hasGlobalPriority fa fa-globe" title="Priority Is Global"></span>
+        <span class="hasPriority fa fa-exclamation"></span>
+        <a href=""></a>
     </template>
     <template id="pluginMenu">
         <style>
@@ -410,17 +389,17 @@
             <td class="fa fa-trash-o fa-fw">
     </template>
 
-    <noscript>The LOOT Report requires Javascript to be enabled in order to function.</noscript>
     <header>
         <div id="headerOverlay"></div>
         <img src="../icon.ico">
         <ol>
             <li id="fileMenu">File
             <ol class="hidden">
-                <li id="redatePluginsButton"><span class="fa fa-fw fa-calendar-o"></span>Redate Plugins <!-- or fa-clock-o fa-history -->
+                <li id="redatePluginsButton"><span class="fa fa-fw fa-calendar-o"></span>Redate Plugins
                 <li id="openLogButton"><span class="fa fa-fw fa-folder-open"></span>Open Debug Log Location
                 <li id="wipeUserlistButton"><span class="fa fa-fw fa-trash-o"></span>Clear All User Metadata
                 <li id="copyContentButton"><span class="fa fa-fw fa-copy"></span>Copy Content As Text
+                <li id="refreshContentButton"><span class="fa fa-fw fa-refresh"></span>Refresh Content
             </ol>
             <li id="gameMenu">Game
             <ol class="hidden">
@@ -429,12 +408,12 @@
             <li id="settingsButton">Settings
             <li id="helpMenu">Help
             <ol class="hidden">
-                <li id="helpButton"><span class="fa fa-fw fa-question-circle"></span>Help <!-- fa-life-ring -->
+                <li id="helpButton"><span class="fa fa-fw fa-book"></span>View Documentation
                 <li id="aboutButton"><span class="fa fa-fw fa-info-circle"></span>About
             </ol>
         </ol>
         <ol>
-            <li id="updateMasterlistButton"><span class="fa fa-fw fa-refresh"></span>Update Masterlist
+            <li id="updateMasterlistButton"><span class="fa fa-fw fa-download"></span>Update Masterlist
             <li id="sortButton"><span class="fa fa-fw fa-magic"></span>Sort
             <li id="applySortButton" class="hidden"><span class="fa fa-fw fa-check"></span>Apply
             <li id="cancelSortButton" class="hidden"><span class="fa fa-fw fa-times"></span>Cancel
@@ -474,7 +453,7 @@
                     </div>
                 </ol>
                 <li id="filtersToggle"><span class="fa fa-fw fa-filter"></span>Filters
-                <li><input id="searchBox" type="search" placeholder="Search content...">
+                <li title="Press Enter when searching to select the next match."><input id="searchBox" type="search" placeholder="Search content...">
             </ol>
         </nav>
         <main>
@@ -541,13 +520,9 @@ along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
         <select id="languageSelect">
             <!-- Language <option> elements go here. -->
         </select><br>
-        <label for="debugVerbositySelect" title="The output is logged to the LOOTDebugLog.txt file.">Debug Verbosity</label>
-        <select id="debugVerbositySelect">
-            <option value="0">None</option>
-            <option value="1">Low</option>
-            <option value="2">Medium</option>
-            <option value="3">High</option>
-        </select>
+        <p><input type="checkbox" id="enableDebugLogging"><label for="enableDebugLogging" title="The output is logged to the LOOTDebugLog.txt file.">Enable debug logging</label>
+        <p><input type="checkbox" id="updateMasterlist"><label for="updateMasterlist">Update masterlist before sorting</label>
+        <p><input type="checkbox" id="autoRefresh"><label for="autoRefresh">Automatically refresh content on window refocus</label>
         <table is="editable-table" id="gameTable" data-template="gameRow">
             <thead>
                 <tr><th>Name<th>Base Game<th>LOOT Folder<th>Master File<th>Masterlist Repository URL<th>Masterlist Repository Branch<th>Install Path<th>Install Path Registry Key<th>
@@ -555,7 +530,6 @@ along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
                 <!-- Game rows go here. -->
                 <tr><td colspan="4">Add new row...</td><td></td></tr>
         </table>
-        <p><input type="checkbox" id="updateMasterlist"><label for="updateMasterlist">Update masterlist before sorting</label>
         <p>Language changes will be applied after LOOT is restarted.
         <hr>
         <div class="buttons">
@@ -565,6 +539,30 @@ along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
     </dialog>
 
     <div id="hoverText" class="hidden"></div>
+    <dialog id="progressDialog">
+        <!-- CEF doesn't seem to want to play any animation set through CSS
+             for <progress>'s internal value pseudo-element, so use this
+             instead. -->
+        <div class="progress bar">
+            <div class="value"></div>
+        </div>
+        <h1>Calculating the last digit of &pi;...</h1>
+    </dialog>
 
+    <dialog id="firstRun">
+        <h1>First-Time Tips</h1>
+        <p>This appears to be the first time you have run LOOT v<span id="firstTimeLootVersion"></span>. Here are some tips to help you get started with the interface.
+        <ul>
+            <li>As well as messages, LOOT displays plugin <span class="version">version numbers</span>, <span class="crc">CRCs</span> and Bash Tag suggestions for <span class="tag add">addition</span> and <span class="tag remove">removal</span>.</li>
+            <li>CRCs and dummy plugin icons <span class="fa fa-eye-slash"></span> are only displayed after plugins have been loaded, either by conflict filtering, or by sorting.</li>
+            <li>Each plugin has a menu that can be used to access extra features, including the plugin's metadata editor and conflict filter. Click the plugin's <span class="fa fa-ellipsis-v fa-lg"></span> icon to reveal it.</li>
+            <li>Multiple metadata editors can be opened at once, and the menu bar is disabled while any editors are open.</li>
+            <li>Plugins can be drag and dropped from the sidebar into editors' <q>load after</q>, <q>requirements</q> and <q>incompatibility</q> tables.</li>
+            <li>Many interface elements have tooltips. If you don't know what something is, try hovering your mouse over it to find out.
+        </ul>
+        <p>See LOOT's documentation, accessed through the <q>Help</q> menu, for further details.</p>
+        <button class="accept">OK</button>
+    </dialog>
+    <script src="js/encoding.js"></script>
     <script src="js/script.js"></script>
 </body>

@@ -20,7 +20,7 @@
     You should have received a copy of the GNU General Public License
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
-*/
+    */
 
 #include "handler.h"
 #include "resource.h"
@@ -33,6 +33,8 @@
 #include <include/cef_app.h>
 #include <include/cef_runnable.h>
 #include <include/cef_task.h>
+#include <include/base/cef_bind.h>
+#include <include/wrapper/cef_closure_task.h>
 
 #include <boost/log/trivial.hpp>
 #include <boost/filesystem.hpp>
@@ -41,7 +43,6 @@
 
 #include <sstream>
 #include <string>
-#include <cassert>
 
 using namespace std;
 
@@ -51,7 +52,6 @@ namespace fs = boost::filesystem;
 namespace loc = boost::locale;
 
 namespace loot {
-
     namespace {
         LootHandler * g_instance = NULL;
     }
@@ -63,12 +63,11 @@ namespace loot {
 
     // Called due to cefQuery execution in binding.html.
     bool Handler::OnQuery(CefRefPtr<CefBrowser> browser,
-                            CefRefPtr<CefFrame> frame,
-                            int64 query_id,
-                            const CefString& request,
-                            bool persistent,
-                            CefRefPtr<Callback> callback) {
-
+                          CefRefPtr<CefFrame> frame,
+                          int64 query_id,
+                          const CefString& request,
+                          bool persistent,
+                          CefRefPtr<Callback> callback) {
         if (request == "openReadme") {
             try {
                 OpenReadme();
@@ -125,18 +124,7 @@ namespace loot {
 #ifdef _WIN32
             SetWindowText(handle, ToWinWide("LOOT: " + g_app_state.CurrentGame().Name()).c_str());
 #endif
-            try {
-                callback->Success(GetGameData());
-            }
-            catch (error &e) {
-                BOOST_LOG_TRIVIAL(error) << "Failed to get game data. " << e.what();
-                callback->Failure(e.code(), e.what());
-            }
-            catch (exception &e) {
-                BOOST_LOG_TRIVIAL(error) << "Failed to get game data. " << e.what();
-                callback->Failure(-1, e.what());
-            }
-            return true;
+            return CefPostTask(TID_FILE, base::Bind(&Handler::GetGameData, base::Unretained(this), frame, callback));
         }
         else if (request == "cancelFind") {
             browser->GetHost()->StopFinding(true);
@@ -165,22 +153,10 @@ namespace loot {
             return true;
         }
         else if (request == "updateMasterlist") {
-            try {
-                callback->Success(UpdateMasterlist());
-            }
-            catch (error &e) {
-                BOOST_LOG_TRIVIAL(error) << "Failed to update the masterlist. " << e.what();
-                callback->Failure(e.code(), e.what());
-            }
-            catch (exception &e) {
-                BOOST_LOG_TRIVIAL(error) << "Failed to update the masterlist. " << e.what();
-                callback->Failure(-1, e.what());
-            }
-            return true;
+            return CefPostTask(TID_FILE, base::Bind(&Handler::UpdateMasterlist, base::Unretained(this), frame, callback));
         }
         else if (request == "sortPlugins") {
-            callback->Success(SortPlugins());
-            return true;
+            return CefPostTask(TID_FILE, base::Bind(&Handler::SortPlugins, base::Unretained(this), frame, callback));
         }
         else if (request == "getInitErrors") {
             YAML::Node node(g_app_state.InitErrors());
@@ -188,6 +164,11 @@ namespace loot {
                 callback->Success(JSON::stringify(node));
             else
                 callback->Success("null");
+            return true;
+        }
+        else if (request == "cancelSort") {
+            g_app_state.isMidSort = false;
+            callback->Success("");
             return true;
         }
         else {
@@ -202,17 +183,17 @@ namespace loot {
                 return true;
             }
 
-            return HandleComplexQuery(browser, req, callback);
+            return HandleComplexQuery(browser, frame, req, callback);
         }
 
         return false;
     }
 
     // Handle queries with input arguments.
-    bool Handler::HandleComplexQuery(CefRefPtr<CefBrowser> browser, YAML::Node& request,
-        CefRefPtr<Callback> callback) {
-
-
+    bool Handler::HandleComplexQuery(CefRefPtr<CefBrowser> browser,
+                                     CefRefPtr<CefFrame> frame,
+                                     YAML::Node& request,
+                                     CefRefPtr<Callback> callback) {
         const string requestName = request["name"].as<string>();
 
         if (requestName == "find") {
@@ -231,8 +212,7 @@ namespace loot {
 #ifdef _WIN32
                 SetWindowText(handle, ToWinWide("LOOT: " + g_app_state.CurrentGame().Name()).c_str());
 #endif
-
-                callback->Success(GetGameData());
+                CefPostTask(TID_FILE, base::Bind(&Handler::GetGameData, base::Unretained(this), frame, callback));
             }
             catch (loot::error &e) {
                 BOOST_LOG_TRIVIAL(error) << "Failed to change game. Details: " << e.what();
@@ -246,7 +226,7 @@ namespace loot {
         }
         else if (requestName == "getConflictingPlugins") {
             // Has one arg, which is the name of the plugin to get conflicts for.
-            callback->Success(GetConflictingPlugins(request["args"][0].as<string>()));
+            CefPostTask(TID_FILE, base::Bind(&Handler::GetConflictingPlugins, base::Unretained(this), request["args"][0].as<string>(), frame, callback));
             return true;
         }
         else if (requestName == "copyMetadata") {
@@ -278,7 +258,7 @@ namespace loot {
         }
         else if (requestName == "closeSettings") {
             BOOST_LOG_TRIVIAL(trace) << "Settings dialog closed and changes accepted, updating settings object.";
-            
+
             // Update the game details and settings.
             g_app_state.UpdateSettings(request["args"][0]);
             // If the user has deleted a default game, we don't want to restore it now.
@@ -287,11 +267,18 @@ namespace loot {
 
             g_app_state.UpdateGames(games);
 
+            // Also enable/disable debug logging as required.
+            if (request["args"][0]["enableDebugLogging"].as<bool>())
+                boost::log::core::get()->set_logging_enabled(true);
+            else
+                boost::log::core::get()->set_logging_enabled(false);
+
             // Now send back the new list of installed games to the UI.
             callback->Success(GetInstalledGames());
             return true;
         }
         else if (requestName == "applySort") {
+            g_app_state.isMidSort = false;
             BOOST_LOG_TRIVIAL(trace) << "User has accepted sorted load order, applying it.";
             try {
                 g_app_state.CurrentGame().SetLoadOrder(request["args"][0].as<list<string>>());
@@ -350,31 +337,47 @@ namespace loot {
         browser->GetHost()->Find(0, search, true, false, false);
     }
 
-    std::string Handler::GetConflictingPlugins(const std::string& pluginName) {
+    void Handler::GetConflictingPlugins(const std::string& pluginName, CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback) {
         BOOST_LOG_TRIVIAL(debug) << "Searching for plugins that conflict with " << pluginName;
 
         auto pluginIt = g_app_state.CurrentGame().plugins.find(boost::locale::to_lower(pluginName));
 
         // Checking for FormID overlap will only work if the plugins have been loaded, so check if
         // the plugins have been fully loaded, and if not load all plugins.
-        if (!g_app_state.CurrentGame().HasBeenLoaded())
+        if (!g_app_state.CurrentGame().HasBeenLoaded()) {
+            SendProgressUpdate(frame, "Loading plugin contents...");
             g_app_state.CurrentGame().LoadPlugins(false);
+        }
 
+        SendProgressUpdate(frame, "Checking for conflicting plugins...");
         YAML::Node node;
         for (const auto& pluginPair : g_app_state.CurrentGame().plugins) {
-            if (pluginIt != g_app_state.CurrentGame().plugins.end()) {
-                if (pluginIt->second.DoFormIDsOverlap(pluginPair.second)) {
-                    BOOST_LOG_TRIVIAL(debug) << "Found conflicting plugin: " << pluginPair.second.Name();
-                    node["conflicts"].push_back(pluginPair.second.Name());
-                }
+            YAML::Node pluginNode;
+
+            pluginNode["crc"] = pluginPair.second.Crc();
+            pluginNode["isDummy"] = pluginPair.second.FormIDs().size() == 0;
+            if (pluginIt != g_app_state.CurrentGame().plugins.end() && pluginIt->second.DoFormIDsOverlap(pluginPair.second)) {
+                BOOST_LOG_TRIVIAL(debug) << "Found conflicting plugin: " << pluginPair.second.Name();
+                pluginNode["conflicts"] = true;
             }
-            node["crcs"][pluginPair.second.Name()] = pluginPair.second.Crc();
+            else {
+                pluginNode["conflicts"] = false;
+            }
+
+            // Plugin loading may have produced an error message, so rederive displayed data.
+            YAML::Node derivedNode = GenerateDerivedMetadata(pluginPair.second.Name());
+            for (const auto &pair : derivedNode) {
+                const string key = pair.first.as<string>();
+                pluginNode[key] = pair.second;
+            }
+
+            node[pluginPair.second.Name()] = pluginNode;
         }
 
         if (node.size() > 0)
-            return JSON::stringify(node);
+            callback->Success(JSON::stringify(node));
         else
-            return "null";
+            callback->Success("null");
     }
 
     void Handler::CopyMetadata(const std::string& pluginName) {
@@ -567,216 +570,132 @@ namespace loot {
             return "[]";
     }
 
-    std::string Handler::GetGameData() {
-        /* GetGameData() can be called for initialising the UI for a game for the first time
-           in a session, or it can be called when changing to a game that has previously been
-           active. In the first case, all data should be loaded, but in the second, only load
-           order and plugin header info should be re-loaded.
-           Determine which case it is by checking to see if the game's plugins object is empty.
-        */
-        BOOST_LOG_TRIVIAL(info) << "Getting data specific to LOOT's active game.";
-        // Get masterlist revision info and parse if it exists. Also get plugin headers info and parse userlist if it exists.
+    void Handler::GetGameData(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback) {
+        try {
+            /* GetGameData() can be called for initialising the UI for a game for the first time
+               in a session, or it can be called when changing to a game that has previously been
+               active. In the first case, all data should be loaded, but in the second, only load
+               order and plugin header info should be re-loaded.
+               Determine which case it is by checking to see if the game's plugins object is empty.
+               */
+            BOOST_LOG_TRIVIAL(info) << "Getting data specific to LOOT's active game.";
+            // Get masterlist revision info and parse if it exists. Also get plugin headers info and parse userlist if it exists.
 
-        bool isFirstLoad = g_app_state.CurrentGame().plugins.empty();
-        g_app_state.CurrentGame().LoadPlugins(true);
+            SendProgressUpdate(frame, "Loading plugin headers...");
 
-        //Sort plugins into their load order.
-        list<loot::Plugin> installed;
-        list<string> loadOrder;
-        g_app_state.CurrentGame().GetLoadOrder(loadOrder);
-        for (const auto &pluginName : loadOrder) {
-            const auto pos = g_app_state.CurrentGame().plugins.find(boost::locale::to_lower(pluginName));
+            // First clear CRC and condition caches, otherwise they could lead to incorrect evaluations.
+            g_app_state.CurrentGame().conditionCache.clear();
+            g_app_state.CurrentGame().crcCache.clear();
 
-            if (pos != g_app_state.CurrentGame().plugins.end())
-                installed.push_back(pos->second);
-        }
+            // Also refresh active plugins list.
+            g_app_state.CurrentGame().RefreshActivePluginsList();
 
-        if (isFirstLoad) {
-            //Parse masterlist, don't update it.
-            if (fs::exists(g_app_state.CurrentGame().MasterlistPath())) {
-                BOOST_LOG_TRIVIAL(debug) << "Parsing masterlist.";
-                try {
-                    g_app_state.CurrentGame().masterlist.MetadataList::Load(g_app_state.CurrentGame().MasterlistPath());
-                }
-                catch (exception &e) {
-                    g_app_state.CurrentGame().masterlist.messages.push_back(Message(Message::error, string("An error occurred while parsing the masterlist: ") + e.what()));
-                }
+            bool isFirstLoad = g_app_state.CurrentGame().plugins.empty();
+            g_app_state.CurrentGame().LoadPlugins(true);
+
+            //Sort plugins into their load order.
+            list<loot::Plugin> installed;
+            list<string> loadOrder;
+            g_app_state.CurrentGame().GetLoadOrder(loadOrder);
+            for (const auto &pluginName : loadOrder) {
+                const auto pos = g_app_state.CurrentGame().plugins.find(boost::locale::to_lower(pluginName));
+
+                if (pos != g_app_state.CurrentGame().plugins.end())
+                    installed.push_back(pos->second);
             }
-
-            //Parse userlist.
-            if (fs::exists(g_app_state.CurrentGame().UserlistPath())) {
-                BOOST_LOG_TRIVIAL(debug) << "Parsing userlist.";
-                try {
-                    g_app_state.CurrentGame().userlist.Load(g_app_state.CurrentGame().UserlistPath());
-                }
-                catch (exception &e) {
-                    g_app_state.CurrentGame().userlist.messages.push_back(Message(Message::error, string("An error occurred while parsing the userlist: ") + e.what()));
-                }
-            }
-        }
-
-        // Now convert to a single object that can be turned into a JSON string
-        //---------------------------------------------------------------------
-
-        // The data structure is to be set as 'loot.game'.
-        YAML::Node gameNode;
-
-        // ID the game using its folder value.
-        gameNode["folder"] = g_app_state.CurrentGame().FolderName();
-
-        if (isFirstLoad) {
-            // Store the masterlist revision and date.
-            gameNode["masterlist"]["revision"] = g_app_state.CurrentGame().masterlist.GetRevision(g_app_state.CurrentGame().MasterlistPath());
-            gameNode["masterlist"]["date"] = g_app_state.CurrentGame().masterlist.GetDate(g_app_state.CurrentGame().MasterlistPath());
-        }
-
-        // Now store plugin data.
-        for (const auto& plugin : installed) {
-            /* Each plugin has members while hold its raw masterlist and userlist data for
-               the editor, and also processed data for the main display.
-            */
-            YAML::Node pluginNode;
-            // Find the masterlist metadata for this plugin. Treat Bash Tags from the plugin
-            // description as part of it.
-            BOOST_LOG_TRIVIAL(trace) << "Getting masterlist metadata for: " << plugin.Name();
-            Plugin mlistPlugin(plugin);
-            mlistPlugin.MergeMetadata(g_app_state.CurrentGame().masterlist.FindPlugin(plugin));
-
-            // Now do the same again for any userlist data.
-            BOOST_LOG_TRIVIAL(trace) << "Getting userlist metadata for: " << plugin.Name();
-            Plugin ulistPlugin(g_app_state.CurrentGame().userlist.FindPlugin(plugin));
-
-            pluginNode["__type"] = "Plugin";  // For conversion back into a JS typed object.
-            pluginNode["name"] = plugin.Name();
-            pluginNode["isActive"] = g_app_state.CurrentGame().IsActive(plugin.Name());
-            pluginNode["isDummy"] = false; // Set to false for now because null is a bit iffy and we just don't know yet. Although, we could read the record count from the TES4 header... Usual check is (plugin.second.FormIDs().size() == 0);
-            pluginNode["loadsBSA"] = plugin.LoadsBSA(g_app_state.CurrentGame());
-            pluginNode["crc"] = IntToHexString(plugin.Crc());
-            pluginNode["version"] = plugin.Version();
 
             if (isFirstLoad) {
-                if (!mlistPlugin.HasNameOnly()) {
-                    // Now add the masterlist metadata to the pluginNode.
-                    pluginNode["masterlist"]["after"] = mlistPlugin.LoadAfter();
-                    pluginNode["masterlist"]["req"] = mlistPlugin.Reqs();
-                    pluginNode["masterlist"]["inc"] = mlistPlugin.Incs();
-                    pluginNode["masterlist"]["msg"] = mlistPlugin.Messages();
-                    pluginNode["masterlist"]["tag"] = mlistPlugin.Tags();
-                    pluginNode["masterlist"]["dirty"] = mlistPlugin.DirtyInfo();
+                //Parse masterlist, don't update it.
+                if (fs::exists(g_app_state.CurrentGame().MasterlistPath())) {
+                    SendProgressUpdate(frame, "Parsing masterlist...");
+                    BOOST_LOG_TRIVIAL(debug) << "Parsing masterlist.";
+                    try {
+                        g_app_state.CurrentGame().masterlist.MetadataList::Load(g_app_state.CurrentGame().MasterlistPath());
+                    }
+                    catch (exception &e) {
+                        g_app_state.CurrentGame().masterlist.messages.push_back(Message(Message::error, string("An error occurred while parsing the masterlist: ") + e.what()));
+                    }
                 }
 
-                if (!ulistPlugin.HasNameOnly()) {
-                    // Now add the userlist metadata to the pluginNode.
-                    pluginNode["userlist"]["enabled"] = ulistPlugin.Enabled();
-                    pluginNode["userlist"]["after"] = ulistPlugin.LoadAfter();
-                    pluginNode["userlist"]["req"] = ulistPlugin.Reqs();
-                    pluginNode["userlist"]["inc"] = ulistPlugin.Incs();
-                    pluginNode["userlist"]["msg"] = ulistPlugin.Messages();
-                    pluginNode["userlist"]["tag"] = ulistPlugin.Tags();
-                    pluginNode["userlist"]["dirty"] = ulistPlugin.DirtyInfo();
+                //Parse userlist.
+                if (fs::exists(g_app_state.CurrentGame().UserlistPath())) {
+                    SendProgressUpdate(frame, "Parsing userlist...");
+                    BOOST_LOG_TRIVIAL(debug) << "Parsing userlist.";
+                    try {
+                        g_app_state.CurrentGame().userlist.Load(g_app_state.CurrentGame().UserlistPath());
+                    }
+                    catch (exception &e) {
+                        g_app_state.CurrentGame().userlist.messages.push_back(Message(Message::error, string("An error occurred while parsing the userlist: ") + e.what()));
+                    }
                 }
             }
 
-            // Now merge masterlist and userlist metadata and evaluate,
-            // putting any resulting metadata into the base of the pluginNode.
-            YAML::Node derivedNode = GenerateDerivedMetadata(plugin, mlistPlugin, ulistPlugin);
+            // Now convert to a single object that can be turned into a JSON string
+            //---------------------------------------------------------------------
 
-            for (auto it = derivedNode.begin(); it != derivedNode.end(); ++it) {
-                const string key = it->first.as<string>();
-                pluginNode[key] = it->second;
-            }
-
-            gameNode["plugins"].push_back(pluginNode);
-        }
-
-        if (isFirstLoad) {
-            //Set language.
-            unsigned int language;
-            if (g_app_state.GetSettings()["language"])
-                language = Language(g_app_state.GetSettings()["language"].as<string>()).Code();
-            else
-                language = Language::any;
-            BOOST_LOG_TRIVIAL(info) << "Using message language: " << Language(language).Name();
-
-            //Evaluate any conditions in the global messages.
-            BOOST_LOG_TRIVIAL(debug) << "Evaluating global message conditions.";
-            list<Message> messages = g_app_state.CurrentGame().masterlist.messages;
-            messages.insert(messages.end(), g_app_state.CurrentGame().userlist.messages.begin(), g_app_state.CurrentGame().userlist.messages.end());
-            try {
-                list<Message>::iterator it = messages.begin();
-                while (it != messages.end()) {
-                    if (!it->EvalCondition(g_app_state.CurrentGame(), language))
-                        it = messages.erase(it);
-                    else
-                        ++it;
-                }
-            }
-            catch (std::exception& e) {
-                BOOST_LOG_TRIVIAL(error) << "A global message contains a condition that could not be evaluated. Details: " << e.what();
-                messages.push_back(Message(Message::error, (format(loc::translate("A global message contains a condition that could not be evaluated. Details: %1%")) % e.what()).str()));
-            }
-
-            // Now store global messages from masterlist.
-            gameNode["globalMessages"] = messages;
-        }
-
-        return JSON::stringify(gameNode);
-    }
-
-    std::string Handler::UpdateMasterlist() {
-        BOOST_LOG_TRIVIAL(debug) << "Updating and parsing masterlist.";
-
-        //Set language.
-        unsigned int language;
-        if (g_app_state.GetSettings()["language"])
-            language = Language(g_app_state.GetSettings()["language"].as<string>()).Code();
-        else
-            language = Language::any;
-        BOOST_LOG_TRIVIAL(info) << "Using message language: " << Language(language).Name();
-
-        // Update / parse masterlist.
-        bool wasChanged = true;
-        try {
-            wasChanged = g_app_state.CurrentGame().masterlist.Load(g_app_state.CurrentGame(), language);
-        }
-        catch (loot::error &e) {
-            if (e.code() == loot::error::ok) {
-                // There was a parsing error, but roll-back was successful, so the process 
-                // should still complete.
-                g_app_state.CurrentGame().masterlist.messages.push_back(Message(Message::error, e.what()));
-                wasChanged = true;
-            }
-            else
-                throw e;
-        }
-
-        // Now regenerate the JS-side masterlist data if the masterlist was changed.
-        if (wasChanged) {
             // The data structure is to be set as 'loot.game'.
             YAML::Node gameNode;
 
-            // Store the masterlist revision and date.
-            gameNode["masterlist"]["revision"] = g_app_state.CurrentGame().masterlist.GetRevision(g_app_state.CurrentGame().MasterlistPath());
-            gameNode["masterlist"]["date"] = g_app_state.CurrentGame().masterlist.GetDate(g_app_state.CurrentGame().MasterlistPath());
+            // ID the game using its folder value.
+            gameNode["folder"] = g_app_state.CurrentGame().FolderName();
 
-            for (const auto& pluginPair : g_app_state.CurrentGame().plugins) {
-                Plugin mlistPlugin(pluginPair.second);
-                mlistPlugin.MergeMetadata(g_app_state.CurrentGame().masterlist.FindPlugin(pluginPair.second));
+            if (isFirstLoad) {
+                // Store the masterlist revision and date.
+                gameNode["masterlist"]["revision"] = g_app_state.CurrentGame().masterlist.GetRevision(g_app_state.CurrentGame().MasterlistPath());
+                gameNode["masterlist"]["date"] = g_app_state.CurrentGame().masterlist.GetDate(g_app_state.CurrentGame().MasterlistPath());
+            }
 
+            // Now store plugin data.
+            SendProgressUpdate(frame, "Merging and evaluating plugin metadata...");
+            for (const auto& plugin : installed) {
+                /* Each plugin has members while hold its raw masterlist and userlist data for
+                   the editor, and also processed data for the main display.
+                   */
                 YAML::Node pluginNode;
-                if (!mlistPlugin.HasNameOnly()) {
-                    // Now add the masterlist metadata to the pluginNode.
-                    pluginNode["masterlist"]["after"] = mlistPlugin.LoadAfter();
-                    pluginNode["masterlist"]["req"] = mlistPlugin.Reqs();
-                    pluginNode["masterlist"]["inc"] = mlistPlugin.Incs();
-                    pluginNode["masterlist"]["msg"] = mlistPlugin.Messages();
-                    pluginNode["masterlist"]["tag"] = mlistPlugin.Tags();
-                    pluginNode["masterlist"]["dirty"] = mlistPlugin.DirtyInfo();
+                // Find the masterlist metadata for this plugin. Treat Bash Tags from the plugin
+                // description as part of it.
+                BOOST_LOG_TRIVIAL(trace) << "Getting masterlist metadata for: " << plugin.Name();
+                Plugin mlistPlugin(plugin);
+                mlistPlugin.MergeMetadata(g_app_state.CurrentGame().masterlist.FindPlugin(plugin));
+
+                // Now do the same again for any userlist data.
+                BOOST_LOG_TRIVIAL(trace) << "Getting userlist metadata for: " << plugin.Name();
+                Plugin ulistPlugin(g_app_state.CurrentGame().userlist.FindPlugin(plugin));
+
+                pluginNode["__type"] = "Plugin";  // For conversion back into a JS typed object.
+                pluginNode["name"] = plugin.Name();
+                pluginNode["isActive"] = g_app_state.CurrentGame().IsActive(plugin.Name());
+                pluginNode["isDummy"] = false; // Set to false for now because we just don't know yet.
+                pluginNode["loadsBSA"] = plugin.LoadsBSA(g_app_state.CurrentGame());
+                pluginNode["crc"] = IntToHexString(plugin.Crc());
+                pluginNode["version"] = plugin.Version();
+
+                if (isFirstLoad) {
+                    if (!mlistPlugin.HasNameOnly()) {
+                        // Now add the masterlist metadata to the pluginNode.
+                        pluginNode["masterlist"]["after"] = mlistPlugin.LoadAfter();
+                        pluginNode["masterlist"]["req"] = mlistPlugin.Reqs();
+                        pluginNode["masterlist"]["inc"] = mlistPlugin.Incs();
+                        pluginNode["masterlist"]["msg"] = mlistPlugin.Messages();
+                        pluginNode["masterlist"]["tag"] = mlistPlugin.Tags();
+                        pluginNode["masterlist"]["dirty"] = mlistPlugin.DirtyInfo();
+                    }
+
+                    if (!ulistPlugin.HasNameOnly()) {
+                        // Now add the userlist metadata to the pluginNode.
+                        pluginNode["userlist"]["enabled"] = ulistPlugin.Enabled();
+                        pluginNode["userlist"]["after"] = ulistPlugin.LoadAfter();
+                        pluginNode["userlist"]["req"] = ulistPlugin.Reqs();
+                        pluginNode["userlist"]["inc"] = ulistPlugin.Incs();
+                        pluginNode["userlist"]["msg"] = ulistPlugin.Messages();
+                        pluginNode["userlist"]["tag"] = ulistPlugin.Tags();
+                        pluginNode["userlist"]["dirty"] = ulistPlugin.DirtyInfo();
+                    }
                 }
 
                 // Now merge masterlist and userlist metadata and evaluate,
                 // putting any resulting metadata into the base of the pluginNode.
-                YAML::Node derivedNode = GenerateDerivedMetadata(pluginPair.second.Name());
+                YAML::Node derivedNode = GenerateDerivedMetadata(plugin, mlistPlugin, ulistPlugin);
 
                 for (auto it = derivedNode.begin(); it != derivedNode.end(); ++it) {
                     const string key = it->first.as<string>();
@@ -786,30 +705,150 @@ namespace loot {
                 gameNode["plugins"].push_back(pluginNode);
             }
 
-            //Evaluate any conditions in the global messages.
-            BOOST_LOG_TRIVIAL(debug) << "Evaluating global message conditions.";
-            list<Message> messages = g_app_state.CurrentGame().masterlist.messages;
-            try {
-                list<Message>::iterator it = messages.begin();
-                while (it != messages.end()) {
-                    if (!it->EvalCondition(g_app_state.CurrentGame(), language))
-                        it = messages.erase(it);
-                    else
-                        ++it;
+            if (isFirstLoad) {
+                SendProgressUpdate(frame, "Loading general messages...");
+                //Set language.
+                unsigned int language;
+                if (g_app_state.GetSettings()["language"])
+                    language = Language(g_app_state.GetSettings()["language"].as<string>()).Code();
+                else
+                    language = Language::any;
+                BOOST_LOG_TRIVIAL(info) << "Using message language: " << Language(language).Name();
+
+                //Evaluate any conditions in the global messages.
+                BOOST_LOG_TRIVIAL(debug) << "Evaluating global message conditions.";
+                list<Message> messages = g_app_state.CurrentGame().masterlist.messages;
+                messages.insert(messages.end(), g_app_state.CurrentGame().userlist.messages.begin(), g_app_state.CurrentGame().userlist.messages.end());
+                try {
+                    list<Message>::iterator it = messages.begin();
+                    while (it != messages.end()) {
+                        if (!it->EvalCondition(g_app_state.CurrentGame(), language))
+                            it = messages.erase(it);
+                        else
+                            ++it;
+                    }
                 }
-            }
-            catch (std::exception& e) {
-                BOOST_LOG_TRIVIAL(error) << "A global message contains a condition that could not be evaluated. Details: " << e.what();
-                messages.push_back(Message(Message::error, (format(loc::translate("A global message contains a condition that could not be evaluated. Details: %1%")) % e.what()).str()));
+                catch (std::exception& e) {
+                    BOOST_LOG_TRIVIAL(error) << "A global message contains a condition that could not be evaluated. Details: " << e.what();
+                    messages.push_back(Message(Message::error, (format(loc::translate("A global message contains a condition that could not be evaluated. Details: %1%")) % e.what()).str()));
+                }
+
+                // Now store global messages from masterlist.
+                gameNode["globalMessages"] = messages;
             }
 
-            // Now store global messages from masterlist.
-            gameNode["globalMessages"] = messages;
-
-            return JSON::stringify(gameNode);
+            callback->Success(JSON::stringify(gameNode));
         }
-        else
-            return "null";
+        catch (loot::error &e) {
+            BOOST_LOG_TRIVIAL(error) << "Failed to change game. Details: " << e.what();
+            callback->Failure(e.code(), string("Failed to change game. Details: ") + e.what());
+        }
+        catch (std::exception& e) {
+            BOOST_LOG_TRIVIAL(error) << "Failed to change game. Details: " << e.what();
+            callback->Failure(-1, string("Failed to change game. Details: ") + e.what());
+        }
+    }
+
+    void Handler::UpdateMasterlist(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback) {
+        try {
+            BOOST_LOG_TRIVIAL(debug) << "Updating and parsing masterlist.";
+
+            //Set language.
+            unsigned int language;
+            if (g_app_state.GetSettings()["language"])
+                language = Language(g_app_state.GetSettings()["language"].as<string>()).Code();
+            else
+                language = Language::any;
+            BOOST_LOG_TRIVIAL(info) << "Using message language: " << Language(language).Name();
+
+            // Update / parse masterlist.
+            bool wasChanged = true;
+            try {
+                SendProgressUpdate(frame, "Updating and parsing masterlist...");
+                wasChanged = g_app_state.CurrentGame().masterlist.Load(g_app_state.CurrentGame(), language);
+            }
+            catch (loot::error &e) {
+                if (e.code() == loot::error::ok) {
+                    // There was a parsing error, but roll-back was successful, so the process
+
+                    // should still complete.
+                    g_app_state.CurrentGame().masterlist.messages.push_back(Message(Message::error, e.what()));
+                    wasChanged = true;
+                }
+                else
+                    throw e;
+            }
+
+            // Now regenerate the JS-side masterlist data if the masterlist was changed.
+            SendProgressUpdate(frame, "Regenerating displayed content...");
+            if (wasChanged) {
+                // The data structure is to be set as 'loot.game'.
+                YAML::Node gameNode;
+
+                // Store the masterlist revision and date.
+                gameNode["masterlist"]["revision"] = g_app_state.CurrentGame().masterlist.GetRevision(g_app_state.CurrentGame().MasterlistPath());
+                gameNode["masterlist"]["date"] = g_app_state.CurrentGame().masterlist.GetDate(g_app_state.CurrentGame().MasterlistPath());
+
+                for (const auto& pluginPair : g_app_state.CurrentGame().plugins) {
+                    Plugin mlistPlugin(pluginPair.second);
+                    mlistPlugin.MergeMetadata(g_app_state.CurrentGame().masterlist.FindPlugin(pluginPair.second));
+
+                    YAML::Node pluginNode;
+                    if (!mlistPlugin.HasNameOnly()) {
+                        // Now add the masterlist metadata to the pluginNode.
+                        pluginNode["masterlist"]["after"] = mlistPlugin.LoadAfter();
+                        pluginNode["masterlist"]["req"] = mlistPlugin.Reqs();
+                        pluginNode["masterlist"]["inc"] = mlistPlugin.Incs();
+                        pluginNode["masterlist"]["msg"] = mlistPlugin.Messages();
+                        pluginNode["masterlist"]["tag"] = mlistPlugin.Tags();
+                        pluginNode["masterlist"]["dirty"] = mlistPlugin.DirtyInfo();
+                    }
+
+                    // Now merge masterlist and userlist metadata and evaluate,
+                    // putting any resulting metadata into the base of the pluginNode.
+                    YAML::Node derivedNode = GenerateDerivedMetadata(pluginPair.second.Name());
+
+                    for (const auto &pair : derivedNode) {
+                        const string key = pair.first.as<string>();
+                        pluginNode[key] = pair.second;
+                    }
+
+                    gameNode["plugins"].push_back(pluginNode);
+                }
+
+                //Evaluate any conditions in the global messages.
+                BOOST_LOG_TRIVIAL(debug) << "Evaluating global message conditions.";
+                list<Message> messages = g_app_state.CurrentGame().masterlist.messages;
+                try {
+                    list<Message>::iterator it = messages.begin();
+                    while (it != messages.end()) {
+                        if (!it->EvalCondition(g_app_state.CurrentGame(), language))
+                            it = messages.erase(it);
+                        else
+                            ++it;
+                    }
+                }
+                catch (std::exception& e) {
+                    BOOST_LOG_TRIVIAL(error) << "A global message contains a condition that could not be evaluated. Details: " << e.what();
+                    messages.push_back(Message(Message::error, (format(loc::translate("A global message contains a condition that could not be evaluated. Details: %1%")) % e.what()).str()));
+                }
+
+                // Now store global messages from masterlist.
+                gameNode["globalMessages"] = messages;
+
+                callback->Success(JSON::stringify(gameNode));
+            }
+            else
+                callback->Success("null");
+        }
+        catch (error &e) {
+            BOOST_LOG_TRIVIAL(error) << "Failed to update the masterlist. " << e.what();
+            callback->Failure(e.code(), e.what());
+        }
+        catch (exception &e) {
+            BOOST_LOG_TRIVIAL(error) << "Failed to update the masterlist. " << e.what();
+            callback->Failure(-1, e.what());
+        }
     }
 
     std::string Handler::ClearAllMetadata() {
@@ -838,7 +877,8 @@ namespace loot {
             return "[]";
     }
 
-    std::string Handler::SortPlugins() {
+    void Handler::SortPlugins(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback) {
+        BOOST_LOG_TRIVIAL(info) << "Beginning sorting operation.";
         //Set language.
         unsigned int language;
         if (g_app_state.GetSettings()["language"])
@@ -847,23 +887,38 @@ namespace loot {
             language = Language::any;
         BOOST_LOG_TRIVIAL(info) << "Using message language: " << Language(language).Name();
 
-        // Check if the plugins have been fully loaded, and if not load all plugins.
-        if (!g_app_state.CurrentGame().HasBeenLoaded())
-            g_app_state.CurrentGame().LoadPlugins(false);
+        // Always reload all the plugins.
+        SendProgressUpdate(frame, "Loading plugin contents...");
+        g_app_state.CurrentGame().LoadPlugins(false);
 
         //Sort plugins into their load order.
-        list<Plugin> plugins = g_app_state.CurrentGame().Sort(language, [](const string& message){});
+        list<Plugin> plugins = g_app_state.CurrentGame().Sort(language, [this, frame](const string& message) {
+            this->SendProgressUpdate(frame, message);
+        });
 
         YAML::Node node;
         for (const auto &plugin : plugins) {
-            node["loadOrder"].push_back(plugin.Name());
-            node["crcs"][plugin.Name()] = plugin.Crc();
+            YAML::Node pluginNode;
+
+            pluginNode["name"] = plugin.Name();
+            pluginNode["crc"] = plugin.Crc();
+            pluginNode["isDummy"] = plugin.FormIDs().size() == 0;
+
+            // Sorting may have produced a plugin loading error message, so rederive displayed data.
+            YAML::Node derivedNode = GenerateDerivedMetadata(plugin.Name());
+            for (const auto &pair : derivedNode) {
+                const string key = pair.first.as<string>();
+                pluginNode[key] = pair.second;
+            }
+
+            node.push_back(pluginNode);
         }
+        g_app_state.isMidSort = true;
 
         if (node.size() > 0)
-            return JSON::stringify(node);
+            callback->Success(JSON::stringify(node));
         else
-            return "null";
+            callback->Success("null");
     }
 
     YAML::Node Handler::GenerateDerivedMetadata(const Plugin& file, const Plugin& masterlist, const Plugin& userlist) {
@@ -910,11 +965,9 @@ namespace loot {
     }
 
     YAML::Node Handler::GenerateDerivedMetadata(const std::string& pluginName) {
-        
         // Now rederive the displayed metadata from the masterlist and userlist.
         auto pluginIt = g_app_state.CurrentGame().plugins.find(boost::locale::to_lower(pluginName));
         if (pluginIt != g_app_state.CurrentGame().plugins.end()) {
-
             Plugin master(g_app_state.CurrentGame().masterlist.FindPlugin(pluginIt->second));
             Plugin user(g_app_state.CurrentGame().userlist.FindPlugin(pluginIt->second));
 
@@ -935,7 +988,8 @@ namespace loot {
         }
 
         // The clipboard takes a Unicode (ie. UTF-16) string that it then owns and must not
-        // be destroyed by LOOT. Convert the string, then copy it into a new block of 
+        // be destroyed by LOOT. Convert the string, then copy it into a new block of
+
         // memory for the clipboard.
         wstring wtext = ToWinWide(text);
         wchar_t * wcstr = new wchar_t[wtext.length() + 1];
@@ -949,6 +1003,10 @@ namespace loot {
             throw loot::error(loot::error::windows_error, "Failed to close the Windows clipboard.");
         }
 #endif
+    }
+
+    void Handler::SendProgressUpdate(CefRefPtr<CefFrame> frame, const std::string& message) {
+        frame->ExecuteJavaScript("updateProgressDialog('" + message + "');", frame->GetURL(), 0);
     }
 
     // LootHandler methods
@@ -977,14 +1035,14 @@ namespace loot {
     CefRefPtr<CefLifeSpanHandler> LootHandler::GetLifeSpanHandler() {
         return this;
     }
-    
+
     CefRefPtr<CefLoadHandler> LootHandler::GetLoadHandler() {
         return this;
     }
 
-    bool LootHandler::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser,
-                                                CefProcessId source_process,
-                                                CefRefPtr<CefProcessMessage> message) {
+    bool LootHandler::OnProcessMessageReceived(CefRefPtr<CefBrowser> browser,
+                                               CefProcessId source_process,
+                                               CefRefPtr<CefProcessMessage> message) {
         return browser_side_router_->OnProcessMessageReceived(browser, source_process, message);
     }
 
@@ -992,12 +1050,12 @@ namespace loot {
     //--------------------------
 
     void LootHandler::OnTitleChange(CefRefPtr<CefBrowser> browser,
-                                      const CefString& title) {
-      assert(CefCurrentlyOn(TID_UI));
+                                    const CefString& title) {
+        assert(CefCurrentlyOn(TID_UI));
 
-      CefWindowHandle hwnd = browser->GetHost()->GetWindowHandle();
+        CefWindowHandle hwnd = browser->GetHost()->GetWindowHandle();
 #ifdef _WIN32
-      SetWindowText(hwnd, ToWinWide(title).c_str());
+        SetWindowText(hwnd, ToWinWide(title).c_str());
 #endif
     }
 
@@ -1061,6 +1119,12 @@ namespace loot {
     bool LootHandler::DoClose(CefRefPtr<CefBrowser> browser) {
         assert(CefCurrentlyOn(TID_UI));
 
+        // Check if unapplied sorting changes exist.
+        if (g_app_state.isMidSort) {
+            browser->GetMainFrame()->ExecuteJavaScript("handleUnappliedChangesClose();", browser->GetMainFrame()->GetURL(), 0);
+            return true;
+        }
+
         // Closing the main window requires special handling. See the DoClose()
         // documentation in the CEF header for a detailed destription of this
         // process.
@@ -1113,10 +1177,10 @@ namespace loot {
     //-----------------------
 
     void LootHandler::OnLoadError(CefRefPtr<CefBrowser> browser,
-                            CefRefPtr<CefFrame> frame,
-                            ErrorCode errorCode,
-                            const CefString& errorText,
-                            const CefString& failedUrl) {
+                                  CefRefPtr<CefFrame> frame,
+                                  ErrorCode errorCode,
+                                  const CefString& errorText,
+                                  const CefString& failedUrl) {
         assert(CefCurrentlyOn(TID_UI));
 
         // Don't display an error for downloaded files.
@@ -1126,10 +1190,10 @@ namespace loot {
         // Display a load error message.
         std::stringstream ss;
         ss << "<html><body bgcolor=\"white\">"
-           << "<h2>Failed to load URL " << std::string(failedUrl)
-           << " with error " << std::string(errorText) << " (" << errorCode
-           << ").</h2></body></html>";
-        
+            << "<h2>Failed to load URL " << std::string(failedUrl)
+            << " with error " << std::string(errorText) << " (" << errorCode
+            << ").</h2></body></html>";
+
         frame->LoadString(ss.str(), failedUrl);
     }
 
@@ -1137,10 +1201,9 @@ namespace loot {
     //--------------------------
 
     bool LootHandler::OnBeforeBrowse(CefRefPtr< CefBrowser > browser,
-        CefRefPtr< CefFrame > frame,
-        CefRefPtr< CefRequest > request,
-        bool is_redirect) {
-
+                                     CefRefPtr< CefFrame > frame,
+                                     CefRefPtr< CefRequest > request,
+                                     bool is_redirect) {
         BOOST_LOG_TRIVIAL(trace) << "Attemping to open link: " << request->GetURL().ToString();
         BOOST_LOG_TRIVIAL(trace) << "Comparing with URL: " << ToFileURL(g_path_report);
 
@@ -1159,11 +1222,10 @@ namespace loot {
     }
 
     void LootHandler::CloseAllBrowsers(bool force_close) {
-
         if (!CefCurrentlyOn(TID_UI)) {
             // Execute on the UI thread.
             CefPostTask(TID_UI,
-            NewCefRunnableMethod(this, &LootHandler::CloseAllBrowsers, force_close));
+                        NewCefRunnableMethod(this, &LootHandler::CloseAllBrowsers, force_close));
             return;
         }
 
@@ -1174,5 +1236,4 @@ namespace loot {
             (*it)->GetHost()->CloseBrowser(force_close);
         }
     }
-
 }

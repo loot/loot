@@ -23,6 +23,7 @@
 */
 'use strict';
 var marked;
+var l10n;
 var loot = {
     hasFocus: true,
     installedGames: [],
@@ -68,10 +69,17 @@ var loot = {
                     break;
                 }
             }
+            var redateButton = document.getElementById('redatePluginsButton');
             if (index != undefined && loot.settings.games[index].type == 'Skyrim') {
-                document.getElementById('redatePluginsButton').classList.toggle('disabled', false);
+                redateButton.classList.toggle('disabled', false);
+                redateButton.title = '';
+                redateButton.removeEventListener('mouseenter', showHoverText, false);
+                redateButton.removeEventListener('mouseleave', hideHoverText, false);
             } else {
-                document.getElementById('redatePluginsButton').classList.toggle('disabled', true);
+                redateButton.classList.toggle('disabled', true);
+                redateButton.title = 'A Skyrim-specific feature';
+                redateButton.addEventListener('mouseenter', showHoverText, false);
+                redateButton.addEventListener('mouseleave', hideHoverText, false);
             }
         },
 
@@ -146,10 +154,16 @@ var loot = {
         for (var i = 0; i < gameMenuItems.length; ++i) {
             if (this.installedGames.indexOf(gameMenuItems[i].getAttribute('data-folder')) == -1) {
                 gameMenuItems[i].classList.toggle('disabled', true);
+                gameMenuItems[i].title = 'No install detected';
                 gameMenuItems[i].removeEventListener('click', changeGame, false);
+                gameMenuItems[i].addEventListener('mouseenter', showHoverText, false);
+                gameMenuItems[i].addEventListener('mouseleave', hideHoverText, false);
             } else {
                 gameMenuItems[i].classList.toggle('disabled', false);
+                gameMenuItems[i].title = '';
                 gameMenuItems[i].addEventListener('click', changeGame, false);
+                gameMenuItems[i].removeEventListener('mouseenter', showHoverText, false);
+                gameMenuItems[i].removeEventListener('mouseleave', hideHoverText, false);
             }
         }
     },
@@ -166,6 +180,8 @@ var loot = {
         }
         while (gameMenu.firstElementChild) {
             gameMenu.firstElementChild.removeEventListener('click', changeGame, false);
+            gameMenu.firstElementChild.removeEventListener('mouseenter', showHoverText, false);
+            gameMenu.firstElementChild.removeEventListener('mouseleave', hideHoverText, false);
             gameMenu.removeChild(gameMenu.firstElementChild);
         }
         gameTable.clear();
@@ -196,8 +212,9 @@ var loot = {
 
         gameSelect.value = this.settings.game;
         document.getElementById('languageSelect').value = this.settings.language;
-        document.getElementById('debugVerbositySelect').value = this.settings.debugVerbosity;
+        document.getElementById('enableDebugLogging').checked = this.settings.enableDebugLogging;
         document.getElementById('updateMasterlist').checked = this.settings.updateMasterlist;
+        document.getElementById('autoRefresh').checked = this.settings.autoRefresh;
 
         this.updateEnabledGames();
         this.game.updateSelectedGame();
@@ -224,12 +241,12 @@ var loot = {
                 if (change.object[change.name] && change.object[change.name].revision) {
                     document.getElementById('masterlistRevision').textContent = change.object[change.name].revision;
                 } else {
-                    document.getElementById('masterlistRevision').textContent = 'N/A';
+                    document.getElementById('masterlistRevision').textContent = l10n.translate("N/A").fetch();
                 }
                 if (change.object[change.name] && change.object[change.name].date) {
                     document.getElementById('masterlistDate').textContent = change.object[change.name].date;
                 } else {
-                    document.getElementById('masterlistDate').textContent = 'N/A';
+                    document.getElementById('masterlistDate').textContent = l10n.translate("N/A").fetch();
                 }
             } else if (change.name == 'globalMessages') {
                 /* For the messages, they don't have a JS 'class' so need to everything
@@ -341,10 +358,10 @@ var loot = {
     query: function(request) {
         return new Promise(function(resolve, reject) {
             window.cefQuery({
-            request: request,
-            persistent: false,
-            onSuccess: resolve,
-            onFailure: function(errorCode, errorMessage) {
+                request: request,
+                persistent: false,
+                onSuccess: resolve,
+                onFailure: function(errorCode, errorMessage) {
                     reject(Error('Error code: ' + errorCode + '; ' + errorMessage))
                 }
             });
@@ -359,6 +376,7 @@ function processCefError(err) {
     /* Error.stack seems to be Chromium-specific. It gives a lot more useful
        info than just the error message. */
     console.log(err.stack);
+    closeProgressDialog();
     showMessageBox('error', 'Error', err.message);
 }
 
@@ -431,24 +449,35 @@ function getConflictingPluginsFromFilter() {
             ]
         });
 
+        updateProgressDialog('Checking if plugins have been loaded...');
+        openProgressDialog();
+
         return loot.query(request).then(JSON.parse).then(function(result){
             if (result) {
-                for (var key in result.crcs) {
+                /* Filter everything but the plugin itself if there are no
+                   conflicts. */
+                var conflicts = [ conflictsPlugin ];
+                for (var key in result) {
+                    if (result[key].conflicts) {
+                        conflicts.push(key);
+                    }
                     for (var i = 0; i < loot.game.plugins.length; ++i) {
                         if (loot.game.plugins[i].name == key) {
-                            loot.game.plugins[i].crc = result.crcs[key];
+                            loot.game.plugins[i].crc = result[key].crc;
+                            loot.game.plugins[i].isDummy = result[key].isDummy;
+
+                            loot.game.plugins[i].messages = result[key].messages;
+                            loot.game.plugins[i].tags = result[key].tags;
+                            loot.game.plugins[i].isDirty = result[key].isDirty;
                             break;
                         }
                     }
                 }
-                if (result.conflicts) {
-                    return result.conflicts;
-                } else {
-                    /* No conflicts. Filter everything but the plugin itself. */
-                    return [ conflictsPlugin ];
-                }
+                closeProgressDialog();
+                return conflicts;
             }
-            return [];
+            closeProgressDialog();
+            return [ conflictsPlugin ];
         }).catch(processCefError);
     }
 
@@ -488,7 +517,7 @@ function applyFilters(evt) {
                 if (messages[j].className.indexOf('say') != -1) {
                     hasNotes = true;
                 }
-                if (messages[j].textContent.indexOf('Do not clean.') != -1) {
+                if (messages[j].textContent.indexOf(l10n.translate("Do not clean.").fetch()) != -1) {
                     hasDoNotCleanMessages = true;
                 }
                 if ((document.getElementById('hideAllPluginMessages').checked && hasPluginMessages)
@@ -502,7 +531,6 @@ function applyFilters(evt) {
                 }
                 if (messages[j].className.indexOf('hidden') == -1) {
                     isMessageless = false;
-                    break;
                 }
             }
             if ((document.getElementById('hideMessagelessPlugins').checked && isMessageless)
@@ -558,6 +586,8 @@ function changeGame(evt) {
     loot.games[index].masterlist = loot.game.masterlist;
     loot.games[index].plugins = loot.game.plugins;
 
+    updateProgressDialog('Loading game data...');
+    openProgressDialog();
 
     /* Now send off a CEF query with the folder name of the new game. */
     var request = JSON.stringify({
@@ -591,7 +621,7 @@ function changeGame(evt) {
             var gameInfo = JSON.parse(result, jsonToPlugin);
         } catch (e) {
             console.log(e);
-            console.log('getGameData response: ' + result);
+            console.log('changeGame response: ' + result);
         }
 
         /* This may not be the first time loading this game this instance of
@@ -653,14 +683,19 @@ function changeGame(evt) {
 
         /* Reapply previously active filters. */
         applyFilters();
+
+        closeProgressDialog();
     }).catch(processCefError);
 }
 function openReadme(evt) {
     loot.query('openReadme').catch(processCefError);
 }
 function updateMasterlist(evt) {
-    loot.query('updateMasterlist').then(JSON.parse).then(function(result){
-        if (result == null) {
+    updateProgressDialog('Updating masterlist...');
+    openProgressDialog();
+    return loot.query('updateMasterlist').then(JSON.parse).then(function(result){
+        if (!result) {
+            closeProgressDialog();
             return;
         }
         /* Update JS variables. */
@@ -681,6 +716,7 @@ function updateMasterlist(evt) {
                 }
             }
         });
+        closeProgressDialog();
     }).catch(processCefError);
 }
 function sortUIElements(pluginNames) {
@@ -705,8 +741,6 @@ function sortUIElements(pluginNames) {
            The first plugin is a special case.
            */
         var card = document.getElementById(name.replace(/\s+/g, ''));
-
-
         var move = false;
         if (index == 0) {
             /* Special case. */
@@ -719,7 +753,7 @@ function sortUIElements(pluginNames) {
             /* Also need to move plugin sidebar entry. */
             var li;
             for (var i = 0; i < entries.length; ++i) {
-                if (entries[i].getElementsByClassName('name')[0].textContent == name) {
+                if (entries[i].getElementsByTagName('a')[0].textContent == name) {
                     li = entries[i];
                 }
             }
@@ -744,44 +778,77 @@ function sortUIElements(pluginNames) {
         lastCard = card;
     });
 }
-function sortPlugins(evt) {
-    if (loot.settings.updateMasterlist) {
-        updateMasterlist(evt);
+function openProgressDialog() {
+    var progressDialog = document.getElementById('progressDialog');
+    if (!progressDialog.open) {
+        progressDialog.showModal();
     }
-    loot.query('sortPlugins').then(JSON.parse).then(function(result){
-        if (result) {
-            for (var key in result.crcs) {
-                for (var i = 0; i < loot.game.plugins.length; ++i) {
-                    if (loot.game.plugins[i].name == key) {
-                        loot.game.plugins[i].crc = result.crcs[key];
-                        break;
+}
+function updateProgressDialog(message) {
+    var progressDialog = document.getElementById('progressDialog');
+    progressDialog.getElementsByTagName('h1')[0].textContent = message;
+}
+function closeProgressDialog() {
+    var progressDialog = document.getElementById('progressDialog');
+    if (progressDialog.open) {
+        progressDialog.close();
+    }
+}
+function sortPlugins(evt) {
+    var mlistUpdate;
+    if (loot.settings.updateMasterlist) {
+        mlistUpdate = updateMasterlist(evt);
+    } else {
+        mlistUpdate = new Promise(function(resolve, reject){
+            resolve('');
+        });
+    }
+    mlistUpdate.then(function(){
+        updateProgressDialog('Sorting plugins...');
+        openProgressDialog();
+        loot.query('sortPlugins').then(JSON.parse).then(function(result){
+            if (result) {
+                var loadOrder = [];
+                result.forEach(function(plugin){
+                    loadOrder.push(plugin.name);
+                    for (var i = 0; i < loot.game.plugins.length; ++i) {
+                        if (loot.game.plugins[i].name == plugin.name) {
+                            loot.game.plugins[i].crc = plugin.crc;
+                            loot.game.plugins[i].isDummy = plugin.isDummy;
+
+                            loot.game.plugins[i].messages = plugin.messages;
+                            loot.game.plugins[i].tags = plugin.tags;
+                            loot.game.plugins[i].isDirty = plugin.isDirty;
+                            break;
+                        }
                     }
+                });
+
+                if (loot.settings.neverTellMeTheOdds) {
+                    /* Array shuffler from <https://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array-in-javascript> */
+                    for(var j, x, i = loadOrder.length; i; j = Math.floor(Math.random() * i), x = loadOrder[--i], loadOrder[i] = loadOrder[j], loadOrder[j] = x);
                 }
-            }
 
-            if (loot.neverTellMeTheOdds) {
-                /* Array shuffler from <https://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array-in-javascript> */
-                for(var j, x, i = result.loadOrder.length; i; j = Math.floor(Math.random() * i), x = result.loadOrder[--i], result.loadOrder[i] = result.loadOrder[j], result.loadOrder[j] = x);
-            }
+                /* Record the previous order in case the user cancels sorting. */
+                /* Start at 2 to skip summary and general messages. */
+                var cards = document.getElementsByTagName('main')[0].getElementsByTagName('plugin-card');
+                loot.newLoadOrder = loadOrder;
+                loot.lastLoadOrder = [];
+                for (var i = 0; i < cards.length; ++i) {
+                    loot.lastLoadOrder.push(cards[i].getElementsByTagName('h1')[0].textContent);
+                }
+                /* Now update the UI for the new order. */
+                sortUIElements(loadOrder);
 
-            /* Record the previous order in case the user cancels sorting. */
-            /* Start at 2 to skip summary and general messages. */
-            var cards = document.getElementsByTagName('main')[0].children;
-            loot.newLoadOrder = result.loadOrder;
-            loot.lastLoadOrder = [];
-            for (var i = 2; i < cards.length; ++i) {
-                loot.lastLoadOrder.push(cards[i].getElementsByTagName('h1')[0].textContent);
+                /* Now hide the masterlist update buttons, and display the accept and
+                   cancel sort buttons. */
+                hideElement(document.getElementById('updateMasterlistButton'));
+                hideElement(document.getElementById('sortButton'));
+                showElement(document.getElementById('applySortButton'));
+                showElement(document.getElementById('cancelSortButton'));
+                closeProgressDialog();
             }
-            /* Now update the UI for the new order. */
-            sortUIElements(result.loadOrder);
-
-            /* Now hide the masterlist update buttons, and display the accept and
-               cancel sort buttons. */
-            hideElement(document.getElementById('updateMasterlistButton'));
-            hideElement(document.getElementById('sortButton'));
-            showElement(document.getElementById('applySortButton'));
-            showElement(document.getElementById('cancelSortButton'));
-        }
+        }).catch(processCefError);
     }).catch(processCefError);
 }
 function applySort(evt) {
@@ -791,7 +858,7 @@ function applySort(evt) {
             loot.newLoadOrder
         ]
     });
-    loot.query(request).then(function(result){
+    return loot.query(request).then(function(result){
         /* Remove old load order storage. */
         delete loot.lastLoadOrder;
         delete loot.newLoadOrder;
@@ -805,17 +872,19 @@ function applySort(evt) {
     }).catch(processCefError);
 }
 function cancelSort(evt) {
-    /* Sort UI elements again according to stored old load order. */
-    sortUIElements(loot.lastLoadOrder);
-    delete loot.lastLoadOrder;
-    delete loot.newLoadOrder;
+    return loot.query('cancelSort').then(function(){
+        /* Sort UI elements again according to stored old load order. */
+        sortUIElements(loot.lastLoadOrder);
+        delete loot.lastLoadOrder;
+        delete loot.newLoadOrder;
 
-    /* Now show the masterlist update buttons, and hide the accept and
-       cancel sort buttons. */
-    showElement(document.getElementById('updateMasterlistButton'));
-    showElement(document.getElementById('sortButton'));
-    hideElement(document.getElementById('applySortButton'));
-    hideElement(document.getElementById('cancelSortButton'));
+        /* Now show the masterlist update buttons, and hide the accept and
+           cancel sort buttons. */
+        showElement(document.getElementById('updateMasterlistButton'));
+        showElement(document.getElementById('sortButton'));
+        hideElement(document.getElementById('applySortButton'));
+        hideElement(document.getElementById('cancelSortButton'));
+    }).catch(processCefError);
 }
 function redatePlugins(evt) {
     if (evt.target.classList.contains('disabled')) {
@@ -836,22 +905,24 @@ function clearAllMetadata(evt) {
     showMessageDialog('Clear All Metadata', 'Are you sure you want to clear all existing user-added metadata from all plugins?', function(result){
         if (result) {
             loot.query('clearAllMetadata').then(JSON.parse).then(function(result){
-                /* Need to empty the UI-side user metadata. */
-                result.forEach(function(plugin){
-                    for (var i = 0; i < loot.game.plugins.length; ++i) {
-                        if (loot.game.plugins[i].name == plugin.name) {
-                            loot.game.plugins[i].userlist = undefined;
+                if (result) {
+                    /* Need to empty the UI-side user metadata. */
+                    result.forEach(function(plugin){
+                        for (var i = 0; i < loot.game.plugins.length; ++i) {
+                            if (loot.game.plugins[i].name == plugin.name) {
+                                loot.game.plugins[i].userlist = undefined;
 
-                            loot.game.plugins[i].modPriority = plugin.modPriority;
-                            loot.game.plugins[i].isGlobalPriority = plugin.isGlobalPriority;
-                            loot.game.plugins[i].messages = plugin.messages;
-                            loot.game.plugins[i].tags = plugin.tags;
-                            loot.game.plugins[i].isDirty = plugin.isDirty;
+                                loot.game.plugins[i].modPriority = plugin.modPriority;
+                                loot.game.plugins[i].isGlobalPriority = plugin.isGlobalPriority;
+                                loot.game.plugins[i].messages = plugin.messages;
+                                loot.game.plugins[i].tags = plugin.tags;
+                                loot.game.plugins[i].isDirty = plugin.isDirty;
 
-                            break;
+                                break;
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }).catch(processCefError);
         }
     });
@@ -904,27 +975,6 @@ function copyContent(evt) {
 
     loot.query(request).catch(processCefError);
 }
-function handlePluginDrop(evt) {
-    evt.stopPropagation();
-
-    if (evt.currentTarget.tagName == 'TABLE' && (evt.currentTarget.id == 'req' || evt.currentTarget.id == 'inc' || evt.currentTarget.id == 'loadAfter')) {
-        var data = {
-            name: evt.dataTransfer.getData('text/plain')
-        };
-        evt.currentTarget.addRow(data);
-    }
-
-    return false;
-}
-function handlePluginDragStart(evt) {
-    evt.dataTransfer.effectAllowed = 'copy';
-    evt.dataTransfer.setData('text/plain', evt.target.getElementsByClassName('name')[0].textContent);
-}
-function handlePluginDragOver(evt) {
-    evt.preventDefault();
-    evt.dataTransfer.dropEffect = 'copy';
-}
-
 function areSettingsValid() {
     /* Validate inputs individually. */
     var inputs = document.getElementById('settings').getElementsByTagName('input');
@@ -996,14 +1046,23 @@ function closeSettingsDialog(evt) {
     if (evt.target.classList.contains('accept')) {
         /* Update the JS variable values. */
         var settings = {
-            debugVerbosity: document.getElementById('debugVerbositySelect').value,
+            enableDebugLogging: document.getElementById('enableDebugLogging').checked,
             game: document.getElementById('defaultGameSelect').value,
             games: document.getElementById('gameTable').getRowsData(false),
             language: document.getElementById('languageSelect').value,
             lastGame: loot.settings.lastGame,
             updateMasterlist: document.getElementById('updateMasterlist').checked,
             filters: loot.settings.filters,
+            autoRefresh: document.getElementById('autoRefresh').checked,
         };
+
+        /* There's no easy way to check if an event listener has been added
+           already, so just remove the window focus listener, and add it again
+           if auto-refresh is enabled. */
+        window.removeEventListener('focus', onFocus, false);
+        if (settings.autoRefresh) {
+            window.addEventListener('focus', onFocus, false);
+        }
 
         /* Send the settings back to the C++ side. */
         var request = JSON.stringify({
@@ -1057,6 +1116,8 @@ function showHoverText(evt) {
     hoverText.setAttribute('data-target', evt.target.id);
 
     var rect = evt.target.getBoundingClientRect();
+    hoverText.style.left = (rect.left + evt.target.offsetWidth/2) + 'px';
+    hoverText.style.top = (rect.bottom + 10) + 'px';
 
     var dialog = getDialogParent(evt.target);
     if (dialog) {
@@ -1064,8 +1125,6 @@ function showHoverText(evt) {
     } else {
         document.body.appendChild(hoverText);
     }
-    hoverText.style.left = (rect.left + evt.target.offsetWidth/2) + 'px';
-    hoverText.style.top = (rect.bottom + 10) + 'px';
 }
 function hideHoverText(evt) {
     var hoverText = document.getElementById('hoverText');
@@ -1102,6 +1161,22 @@ function focusSearch(evt) {
         document.getElementById('searchBox').focus();
     }
 }
+function closeFirstRunDialog(evt) {
+    evt.target.parentElement.close();
+}
+function handleUnappliedChangesClose() {
+    showMessageDialog('Unapplied Sorting Changes', 'You have not yet applied or cancelled your sorted load order. Apply your load order before quitting?', function(result){
+        if (result) {
+            applySort().then(function(){
+                window.close();
+            });
+        } else {
+            cancelSort().then(function(){
+                window.close();
+            });
+        }
+    });
+}
 function setupEventHandlers() {
     var elements;
     /*Set up filter value and CSS setting storage read/write handlers.*/
@@ -1126,6 +1201,7 @@ function setupEventHandlers() {
     document.getElementById('openLogButton').addEventListener('click', openLogLocation, false);
     document.getElementById('wipeUserlistButton').addEventListener('click', clearAllMetadata, false);
     document.getElementById('copyContentButton').addEventListener('click', copyContent, false);
+    document.getElementById('refreshContentButton').addEventListener('click', onFocus, false);
     document.getElementById('gameMenu').addEventListener('click', openMenu, false);
     document.getElementById('settingsButton').addEventListener('click', showSettingsDialog, false);
     document.getElementById('helpMenu').addEventListener('click', openMenu, false);
@@ -1142,8 +1218,11 @@ function setupEventHandlers() {
     settings.getElementsByClassName('accept')[0].addEventListener('click', closeSettingsDialog, false);
     settings.getElementsByClassName('cancel')[0].addEventListener('click', closeSettingsDialog, false);
 
-    /* Set up about dialog handlers. */
+    /* Set up about dialog handler. */
     document.getElementById('about').getElementsByTagName('button')[0].addEventListener('click', closeAboutDialog, false);
+
+    /* Set up event handler for closing the first-run dialog. */
+    document.getElementById('firstRun').getElementsByTagName('button')[0].addEventListener('click', closeFirstRunDialog, false);
 
     /* Set up event handler for hover text. */
     var hoverTargets = document.querySelectorAll('[title]');
@@ -1167,6 +1246,7 @@ function initVars() {
             loot.version = JSON.parse(result);
 
             document.getElementById('LOOTVersion').textContent = loot.version;
+            document.getElementById('firstTimeLootVersion').textContent = loot.version;
         } catch (e) {
             console.log(e);
             console.log('Response: ' + result);
@@ -1216,10 +1296,8 @@ function initVars() {
             loot.query('getSettings'),
         ];
 
-        if (!result) {
-            parallelPromises.push(loot.query('getGameData'));
-        }
-
+        updateProgressDialog('Initialising user interface...');
+        openProgressDialog();
         Promise.all(parallelPromises).then(function(results) {
             try {
                 loot.gameTypes = JSON.parse(results[0]);
@@ -1244,37 +1322,55 @@ function initVars() {
                 console.log('getInstalledGames response: ' + results[1]);
             }
 
-            if (results.length > 3) {
-                try {
-                    var game = JSON.parse(results[3], jsonToPlugin);
-                    loot.game.folder = game.folder;
-                    loot.game.masterlist = game.masterlist;
-                    loot.game.globalMessages = game.globalMessages;
-                    loot.game.plugins = game.plugins;
-                } catch (e) {
-                    console.log(e);
-                    console.log('getGameData response: ' + results[3]);
-                }
-            }
-
             try {
                 loot.settings = JSON.parse(results[2]);
-                applySavedFilters();
+                l10n.getJedInstance(loot.settings.language).then(function(jed){
+                    l10n.translateStaticText(jed);
+                    l10n = jed;
+                });
             } catch (e) {
                 console.log(e);
                 console.log('getSettings response: ' + results[2]);
             }
 
-            if (results.length == 3) {
+            if (!result) {
+                loot.query('getGameData').then(function(result){
+                    try {
+                        var game = JSON.parse(result, jsonToPlugin);
+                        loot.game.folder = game.folder;
+                        loot.game.masterlist = game.masterlist;
+                        loot.game.globalMessages = game.globalMessages;
+                        loot.game.plugins = game.plugins;
+                    } catch (e) {
+                        console.log(e);
+                        console.log('getGameData response: ' + results[3]);
+                    }
+
+                    applySavedFilters();
+                    closeProgressDialog();
+                }).catch(processCefError);
+            } else {
                 document.getElementById('settingsButton').click();
+                closeProgressDialog();
             }
 
+            /* So much easier than trying to set up my own C++ message loop to listen
+               to window messages looking for a focus change. */
+            if (loot.settings.autoRefresh) {
+                window.addEventListener('focus', onFocus, false);
+            }
+
+            if (!loot.settings.lastVersion || loot.settings.lastVersion != loot.version) {
+                document.getElementById('firstRun').showModal();
+            }
         }).catch(processCefError);
 
     }).catch(processCefError);
 }
-function onFocus() {
+function onFocus(evt) {
     /* Send a query for updated load order and plugin header info. */
+    updateProgressDialog('Refreshing data...');
+    openProgressDialog();
     loot.query('getGameData').then(function(result){
         /* Parse the data sent from C++. */
         try {
@@ -1339,22 +1435,17 @@ function onFocus() {
 
         /* Reapply filters. */
         applyFilters();
+
+        closeProgressDialog();
     }).catch(processCefError);
-}
-function checkFocus(){
-    if (document.hasFocus() && !loot.hasFocus) {
-        loot.hasFocus = true;
-        onFocus();
-    } else if (!document.hasFocus() && loot.hasFocus) {
-        loot.hasFocus = false;
-    }
 }
 
 require.config({
     baseUrl: "js",
   });
-require(['marked', 'order!custom', 'order!plugin'], function(response) {
-    marked = response;
+require(['marked', 'l10n', 'order!custom', 'order!plugin'], function(markedResponse, l10nResponse) {
+    marked = markedResponse;
+    l10n = l10nResponse;
     /* Make sure settings are what I want. */
     marked.setOptions({
         gfm: true,
@@ -1363,8 +1454,4 @@ require(['marked', 'order!custom', 'order!plugin'], function(response) {
     });
     setupEventHandlers();
     initVars();
-    /* So much easier than trying to set up my own C++ message loop to listen
-       to window messages looking for a focus change. */
-    loot.hasFocus = document.hasFocus();
-    setInterval(checkFocus, 500);
 });

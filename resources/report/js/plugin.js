@@ -103,13 +103,11 @@ function Plugin(obj) {
     }
 
     Plugin.prototype.getPriorityString = function() {
-        var priorityText = 'Priority: ' + this.modPriority + ', Global: ';
-        if (this.isGlobalPriority) {
-            priorityText += '✓';
+        if (this.modPriority != 0) {
+            return 'Priority: ' + this.modPriority;
         } else {
-            priorityText += '✗';
+            return '';
         }
-        return priorityText;
     }
 
     Plugin.prototype.updateCardMessages = function() {
@@ -128,6 +126,7 @@ function Plugin(obj) {
                 messageUL.appendChild(messageLi);
 
             });
+            this.card.getElementsByTagName('ul')[0].classList.toggle('hidden', false);
         } else {
             this.card.getElementsByTagName('ul')[0].classList.toggle('hidden', true);
         }
@@ -148,7 +147,7 @@ function Plugin(obj) {
         card.getElementsByTagName('h1')[0].textContent = this.name;
         card.getElementsByClassName('version')[0].textContent = this.version;
         if (this.crc != 0) {
-            card.getElementsByClassName('crc')[0].textContent = this.crc;
+            card.getElementsByClassName('crc')[0].textContent = this.crc.toString(16).toUpperCase();
         }
 
         /* Fill in Bash Tag suggestions. */
@@ -164,14 +163,15 @@ function Plugin(obj) {
         var li = new PluginListItem();
         this.li = li;
 
-        li.shadowRoot.getElementsByTagName('a')[0].href = '#' + this.id;
+        li.getElementsByTagName('a')[0].href = '#' + this.id;
 
-        li.getElementsByClassName('name')[0].textContent = this.name;
-        li.getElementsByClassName('priority')[0].textContent = this.getPriorityString();
+        li.getElementsByTagName('a')[0].textContent = this.name;
 
         li.setAttribute('data-dummy', this.isDummy);
         li.setAttribute('data-bsa', this.loadsBSA);
         li.setAttribute('data-edits', this.userlist != undefined);
+        li.setAttribute('data-global-priority', this.isGlobalPriority);
+        li.getElementsByClassName('hasPriority')[0].title = this.getPriorityString();
 
         document.getElementById('pluginsNav').appendChild(li);
     }
@@ -182,10 +182,10 @@ function Plugin(obj) {
                 change.object.li.setAttribute('data-edits', change.object[change.name] != undefined);
                 change.object.card.setAttribute('data-edits', change.object[change.name] != undefined);
             } else if (change.name == 'modPriority') {
-                change.object.li.getElementsByClassName('priority')[0].textContent = change.object.getPriorityString();
+                change.object.li.getElementsByClassName('hasPriority')[0].title = this.getPriorityString();
                 change.object.card.shadowRoot.getElementById('priorityValue').value = change.object[change.name];
             } else if (change.name == 'isGlobalPriority') {
-                change.object.li.getElementsByClassName('priority')[0].textContent = change.object.getPriorityString();
+                change.object.li.setAttribute('data-global-priority', change.object[change.name]);
             } else if (change.name == 'messages') {
                 change.object.updateCardMessages();
                 /* For messages, the card's messages need updating,
@@ -236,6 +236,9 @@ function Plugin(obj) {
                 if (change.object[change.name] != 0) {
                     change.object.card.getElementsByClassName('crc')[0].textContent = change.object[change.name].toString(16).toUpperCase();
                 }
+            } else if (change.name == 'isDummy') {
+                change.object.li.setAttribute('data-dummy', change.object[change.name]);
+                change.object.card.setAttribute('data-dummy', change.object[change.name]);
             }
         });
     }

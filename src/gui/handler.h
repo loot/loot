@@ -56,17 +56,19 @@ namespace loot {
         std::string GetLanguages();
         std::string GetGameTypes();
         std::string GetInstalledGames();
-        std::string GetGameData();
-        std::string UpdateMasterlist();
+        void GetGameData(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback);
+        void UpdateMasterlist(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback);
         std::string ClearAllMetadata();
-        std::string SortPlugins();
+        void SortPlugins(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback);
 
         // Handle queries with input arguments.
-        bool HandleComplexQuery(CefRefPtr<CefBrowser> browser, YAML::Node& request, 
+        bool HandleComplexQuery(CefRefPtr<CefBrowser> browser,
+                                CefRefPtr<CefFrame> frame, 
+                                YAML::Node& request,
                                 CefRefPtr<Callback> callback);
 
         void Find(CefRefPtr<CefBrowser> browser, const std::string& search);
-        std::string GetConflictingPlugins(const std::string& pluginName);
+        void GetConflictingPlugins(const std::string& pluginName, CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback);
         void CopyMetadata(const std::string& pluginName);
         std::string ClearPluginMetadata(const std::string& pluginName);
         void SaveFilterState(const std::string& filterId, const std::string& value);
@@ -76,6 +78,9 @@ namespace loot {
         YAML::Node Handler::GenerateDerivedMetadata(const Plugin& file, const Plugin& masterlist, const Plugin& userlist);
 
         void CopyToClipboard(const std::string& text);
+        void SendProgressUpdate(CefRefPtr<CefFrame> frame, const std::string& message);
+    private:
+        IMPLEMENT_REFCOUNTING(Handler);
     };
 
     class LootHandler : public CefClient,
@@ -127,9 +132,9 @@ namespace loot {
             return this;
         }
 
-        virtual bool OnBeforeBrowse(CefRefPtr< CefBrowser > browser, 
-                                    CefRefPtr< CefFrame > frame, 
-                                    CefRefPtr< CefRequest > request, 
+        virtual bool OnBeforeBrowse(CefRefPtr< CefBrowser > browser,
+                                    CefRefPtr< CefFrame > frame,
+                                    CefRefPtr< CefRequest > request,
                                     bool is_redirect) OVERRIDE;
 
         // Request that all existing browser windows close.

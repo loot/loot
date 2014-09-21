@@ -83,7 +83,8 @@ namespace loot {
         ConditionStruct(const std::string& condition);
 
         bool IsConditional() const;
-        bool EvalCondition(loot::Game& game) const;
+        bool EvalCondition(Game& game) const;
+        void ParseCondition(Game& game) const;  // Throws error on parsing failure.
 
         std::string Condition() const;
     private:
@@ -116,7 +117,7 @@ namespace loot {
         bool operator < (const Message& rhs) const;
         bool operator == (const Message& rhs) const;
 
-        bool EvalCondition(loot::Game& game, const unsigned int language);
+        bool EvalCondition(Game& game, const unsigned int language);
 
         unsigned int Type() const;
         std::vector<MessageContent> Content() const;
@@ -166,13 +167,13 @@ namespace loot {
     public:
         Plugin();
         Plugin(const std::string& name);
-        Plugin(loot::Game& game, const std::string& name, const bool headerOnly);
+        Plugin(Game& game, const std::string& name, const bool headerOnly);
 
         //Merges from the given plugin into this one, unless there is already equal metadata present.
         //For 'enabled' and 'priority' metadata, use the given plugin's values, but if the 'priority' user value is zero, ignore it.
         void MergeMetadata(const Plugin& plugin);
 
-        //Returns the difference in metadata between the two plugins. 
+        //Returns the difference in metadata between the two plugins.
         //For 'enabled', use the given plugin's value.
         //For 'priority', use the given plugin's value, unless it is equal to this plugin's value, in which case return 0.
         Plugin DiffMetadata(const Plugin& plugin) const;
@@ -204,7 +205,8 @@ namespace loot {
         void Tags(const std::set<Tag>& tags);
         void DirtyInfo(const std::set<PluginDirtyInfo>& info);
 
-        Plugin& EvalAllConditions(loot::Game& game, const unsigned int language);
+        Plugin& EvalAllConditions(Game& game, const unsigned int language);
+        void ParseAllConditions(Game& game) const;
         bool HasNameOnly() const;
         bool IsRegexPlugin() const;
         bool LoadsBSA(const Game& game) const;

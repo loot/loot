@@ -315,14 +315,14 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
                 /* Remove drag 'n' drop event handlers. */
                 var elements = document.getElementById('pluginsNav').children;
                 for (var i = 0; i < elements.length; ++i) {
-                    elements[i].removeAttribute('draggable', true);
-                    elements[i].removeEventListener('dragstart', handlePluginDragStart, false);
+                    elements[i].removeAttribute('draggable');
+                    elements[i].removeEventListener('dragstart', elements[i].handleDragStart, false);
                 }
                 elements = card.shadowRoot.getElementsByTagName('table');
                 for (var i = 0; i < elements.length; ++i) {
                     if (elements[i].id == 'loadAfter' || elements[i].id == 'req' || elements[i].id == 'inc') {
-                        elements[i].removeEventListener('drop', handlePluginDrop, false);
-                        elements[i].removeEventListener('dragover', handlePluginDragOver, false);
+                        elements[i].removeEventListener('drop', elements[i].handleDrop, false);
+                        elements[i].removeEventListener('dragover', elements[i].handleDragOver, false);
                     }
                 }
 
@@ -354,7 +354,7 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
                     this.shadowRoot.getElementById('editor').getElementsByTagName('h1')[0].textContent = loot.game.plugins[i].name;
                     this.shadowRoot.getElementById('editor').getElementsByClassName('version')[0].textContent = loot.game.plugins[i].version;
                     if (loot.game.plugins[i].crc != '0') {
-                        this.shadowRoot.getElementById('editor').getElementsByClassName('crc')[0].textContent = loot.game.plugins[i].crc;
+                        this.shadowRoot.getElementById('editor').getElementsByClassName('crc')[0].textContent = loot.game.plugins[i].crc.toString(16).toUpperCase();
                     }
 
                     /* Fill in the editor input values. */
@@ -466,14 +466,14 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
 
                             if (loot.game.plugins[i].masterlist && loot.game.plugins[i].masterlist.dirty) {
                                 loot.game.plugins[i].masterlist.dirty.forEach(function(info) {
-                                    info.crc = info.crc.toString(16);
+                                    info.crc = info.crc.toString(16).toUpperCase();
                                     var row = tables[j].addRow(info);
                                     tables[j].setReadOnly(row);
                                 });
                             }
                             if (loot.game.plugins[i].userlist && loot.game.plugins[i].userlist.dirty) {
                                 loot.game.plugins[i].userlist.dirty.forEach(function(info) {
-                                    info.crc = info.crc.toString(16);
+                                    info.crc = info.crc.toString(16).toUpperCase();
                                     tables[j].addRow(info);
                                 });
                             }
@@ -500,13 +500,13 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
             elements = document.getElementById('pluginsNav').children;
             for (var i = 0; i < elements.length; ++i) {
                 elements[i].draggable = true;
-                elements[i].addEventListener('dragstart', handlePluginDragStart, false);
+                elements[i].addEventListener('dragstart', elements[i].handleDragStart, false);
             }
             elements = this.shadowRoot.getElementsByTagName('table');
             for (var i = 0; i < elements.length; ++i) {
                 if (elements[i].id == 'loadAfter' || elements[i].id == 'req' || elements[i].id == 'inc') {
-                    elements[i].addEventListener('drop', handlePluginDrop, false);
-                    elements[i].addEventListener('dragover', handlePluginDragOver, false);
+                    elements[i].addEventListener('drop', elements[i].handleDrop, false);
+                    elements[i].addEventListener('dragover', elements[i].handleDragOver, false);
                 }
             }
 
@@ -539,20 +539,9 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
             var main = document.getElementsByTagName('main')[0];
 
             /* Set page position of menu. */
-            function getOffset( el, stopEl ) {
-                var _x = 0;
-                var _y = 0;
-                while( el && el != stopEl ) {
-                    _x += el.offsetLeft;
-                    _y += el.offsetTop;
-                    el = el.offsetParent;
-                }
-                return { top: _y, left: _x };
-            }
-            var offset = getOffset(evt.target, main);
-
-            menu.style.top = (offset.top + evt.target.offsetHeight + 10) + 'px';
-            menu.style.right = (main.offsetWidth - offset.left - evt.target.offsetWidth - 10) + 'px';
+            var rect = evt.target.getBoundingClientRect();
+            menu.style.right =  (main.offsetWidth - (rect.right - main.offsetLeft) - 15) + 'px';
+            menu.style.top = (rect.bottom - document.getElementById('container').offsetTop + main.scrollTop + 5) + 'px';
 
             main.appendChild(menu);
 
@@ -629,27 +618,26 @@ var PluginCard = document.registerElement('plugin-card', {prototype: pluginCardP
 /* Create a <plugin-li> element type that extends from <li>. */
 var pluginLIProto = Object.create(HTMLLIElement.prototype, {
 
+    handleDragStart: {
+        value: function(evt) {
+            evt.dataTransfer.effectAllowed = 'copy';
+            evt.dataTransfer.setData('text/plain', evt.currentTarget.getElementsByTagName('a')[0].textContent);
+        }
+    },
+
     createdCallback: {
 
         value: function() {
 
             var template = document.getElementById('pluginLI');
             var clone = document.importNode(template.content, true);
-
-            this.createShadowRoot().appendChild(clone);
-
-            var name = document.createElement('span');
-            name.className = 'name';
-            this.appendChild(name);
-            var priority = document.createElement('span');
-            priority.className = 'priority';
-            this.appendChild(priority);
+            this.appendChild(clone);
         }
     },
 
     attachedCallback: {
         value: function() {
-            var hoverTargets = this.shadowRoot.querySelectorAll('[title]');
+            var hoverTargets = this.querySelectorAll('[title]');
             for (var i = 0; i < hoverTargets.length; ++i) {
                 hoverTargets[i].addEventListener('mouseenter', showHoverText, false);
                 hoverTargets[i].addEventListener('mouseleave', hideHoverText, false);
@@ -659,7 +647,7 @@ var pluginLIProto = Object.create(HTMLLIElement.prototype, {
 
     detachedCallback: {
         value: function() {
-            var hoverTargets = this.shadowRoot.querySelectorAll('[title]');
+            var hoverTargets = this.querySelectorAll('[title]');
             for (var i = 0; i < hoverTargets.length; ++i) {
                 hoverTargets[i].removeEventListener('mouseenter', showHoverText, false);
                 hoverTargets[i].removeEventListener('mouseleave', hideHoverText, false);
@@ -712,8 +700,8 @@ var messageDialogProto = Object.create(HTMLDialogElement.prototype, {
             this.getElementsByClassName('cancel')[0].addEventListener('click', this.onButtonClick, false);
 
             if (type == 'error' || type == 'info') {
-                this.getElementsByClassName('accept')[0].textContent = 'OK';
-                this.getElementsByClassName('cancel')[0].style.display = 'hidden';
+                this.getElementsByClassName('accept')[0].textContent = l10n.translate("OK").fetch();
+                this.getElementsByClassName('cancel')[0].classList.toggle('hidden', true);
             }
 
             HTMLDialogElement.prototype.showModal.call(this);
@@ -740,12 +728,12 @@ var messageDialogProto = Object.create(HTMLDialogElement.prototype, {
 
             var accept = document.createElement('button');
             accept.className = 'accept';
-            accept.textContent = 'Yes';
+            accept.textContent = l10n.translate("Yes").fetch();
             buttons.appendChild(accept);
 
             var cancel = document.createElement('button');
             cancel.className = 'cancel';
-            cancel.textContent = 'Cancel';
+            cancel.textContent = l10n.translate("Cancel").fetch();
             buttons.appendChild(cancel);
         }
     },
@@ -771,6 +759,28 @@ var MessageDialog = document.registerElement('message-dialog', {
 
 /* Create a <editable-table> element type that extends from <table>. */
 var EditableTableProto = Object.create(HTMLTableElement.prototype, {
+
+    handleDrop: {
+        value: function(evt) {
+            evt.stopPropagation();
+
+            if (evt.currentTarget.tagName == 'TABLE' && (evt.currentTarget.id == 'req' || evt.currentTarget.id == 'inc' || evt.currentTarget.id == 'loadAfter')) {
+                var data = {
+                    name: evt.dataTransfer.getData('text/plain')
+                };
+                evt.currentTarget.addRow(data);
+            }
+
+            return false;
+        }
+    },
+
+    handleDragOver: {
+        value: function(evt) {
+            evt.preventDefault();
+            evt.dataTransfer.dropEffect = 'copy';
+        }
+    },
 
     getRowsData: {
         value: function(writableOnly) {

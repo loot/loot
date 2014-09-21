@@ -20,7 +20,7 @@
     You should have received a copy of the GNU General Public License
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
-*/
+    */
 
 #include "error.h"
 #include "parsers.h"
@@ -40,12 +40,28 @@ namespace fs = boost::filesystem;
 namespace lc = boost::locale;
 
 namespace loot {
-
     struct git_handler {
     public:
-        git_handler() : repo(nullptr), remote(nullptr), cfg(nullptr), obj(nullptr), commit(nullptr), ref(nullptr), ref2(nullptr), sig(nullptr), blob(nullptr), merge_head(nullptr), tree(nullptr), diff(nullptr) {}
+        git_handler() :
+            repo(nullptr),
+            remote(nullptr),
+            cfg(nullptr),
+            obj(nullptr),
+            commit(nullptr),
+            ref(nullptr),
+            ref2(nullptr),
+            sig(nullptr),
+            blob(nullptr),
+            merge_head(nullptr),
+            tree(nullptr),
+            diff(nullptr),
+            buf({0}) {}
 
         ~git_handler() {
+            free();
+        }
+
+        void free() {
             git_commit_free(commit);
             git_object_free(obj);
             git_config_free(cfg);
@@ -58,6 +74,21 @@ namespace loot {
             git_merge_head_free(merge_head);
             git_tree_free(tree);
             git_diff_free(diff);
+            git_buf_free(&buf);
+
+            commit = nullptr;
+            obj = nullptr;
+            cfg = nullptr;
+            remote = nullptr;
+            repo = nullptr;
+            ref = nullptr;
+            ref2 = nullptr;
+            sig = nullptr;
+            blob = nullptr;
+            merge_head = nullptr;
+            tree = nullptr;
+            diff = nullptr;
+            buf = {0};
         }
 
         void call(int error_code) {
@@ -91,7 +122,7 @@ namespace loot {
         git_merge_head * merge_head;
         git_tree * tree;
         git_diff * diff;
-
+        git_buf buf;
 
         std::string ui_message;
     };
@@ -105,7 +136,7 @@ namespace loot {
         BOOST_LOG_TRIVIAL(trace) << "Recursively setting write permission on directory: " << path;
         for (fs::recursive_directory_iterator it(path); it != fs::recursive_directory_iterator(); ++it) {
             BOOST_LOG_TRIVIAL(trace) << "Setting write permission for: " << it->path();
-            fs::permissions(it->path(), fs::add_perms | fs::owner_write);
+            fs::permissions(it->path(), fs::add_perms | fs::owner_write | fs::group_write | fs::others_write);
         }
     }
 
@@ -152,15 +183,12 @@ namespace loot {
             BOOST_LOG_TRIVIAL(info) << "Getting the Git object for the tree at HEAD.";
             git.call(git_revparse_single(&git.obj, git.repo, "HEAD"));
 
-            BOOST_LOG_TRIVIAL(trace) << "Getting the Git object ID.";
-            const git_oid * oid = git_object_id(git.obj);
-
             BOOST_LOG_TRIVIAL(trace) << "Generating hex string for Git object ID.";
-            char sha1[10];
-            git_oid_tostr(sha1, 10, oid);
-            revision = sha1;
+            git.call(git_object_short_id(&git.buf, git.obj));
+            revision = git.buf.ptr;
 
-            BOOST_LOG_TRIVIAL(trace) << "Getting date for Git object ID.";
+            BOOST_LOG_TRIVIAL(trace) << "Getting date for Git object.";
+            const git_oid * oid = git_object_id(git.obj);
             git.call(git_commit_lookup(&git.commit, git.repo, oid));
             git_time_t time = git_commit_time(git.commit);
             boost::locale::date_time dateTime(time);
@@ -186,7 +214,7 @@ namespace loot {
         git.call(git_signature_new(&git.sig, "LOOT", "loot@placeholder.net", 0, 0));
 
         BOOST_LOG_TRIVIAL(debug) << "Setting up checkout options.";
-        char * paths[] = { "masterlist.yaml" };
+        char * paths[] = {"masterlist.yaml"};
         git_checkout_options checkout_opts = GIT_CHECKOUT_OPTIONS_INIT;
         checkout_opts.checkout_strategy = GIT_CHECKOUT_FORCE;
         checkout_opts.paths.strings = paths;
@@ -204,7 +232,8 @@ namespace loot {
             if (!fs::is_empty(repo_path)) {
                 // Clear any read-only flags first.
                 FixRepoPermissions(repo_path);
-                // Now, libgit2 doesn't support cloning into non-empty folders. Rename the folder 
+                // Now, libgit2 doesn't support cloning into non-empty folders. Rename the folder
+
                 // temporarily, and move its contents back in afterwards, skipping any that then conflict.
                 BOOST_LOG_TRIVIAL(trace) << "Repo path not empty, renaming folder.";
                 // If the temp path already exists, it needs to be deleted.
@@ -295,7 +324,6 @@ namespace loot {
                 const git_oid * commit_id = git_object_id(git.obj);
 
                 BOOST_LOG_TRIVIAL(trace) << "Creating the new branch.";
-                
                 // Create a branch.
                 git.call(git_commit_lookup(&git.commit, git.repo, commit_id));
                 git.call(git_branch_create(&git.ref, git.repo, repo_branch.c_str(), git.commit, 0, git.sig, NULL));
@@ -304,7 +332,6 @@ namespace loot {
                 git.call(git_branch_set_upstream(git.ref, (string("origin/") + repo_branch).c_str()));
 
                 BOOST_LOG_TRIVIAL(trace) << "Setting the upstream for the new branch.";
-                
                 // Free tree and commit pointers. Reference pointer is still used below.
                 git_object_free(git.obj);
                 git_commit_free(git.commit);
@@ -327,7 +354,7 @@ namespace loot {
                    Need to merge the remote branch into it. Just do a fast-forward merge because
                    that's all that should be necessary as the local repo shouldn't get changed by
                    the user.
-                */
+                   */
 
                 BOOST_LOG_TRIVIAL(trace) << "Checking that local and remote branches can be merged by fast-forward.";
                 git_merge_analysis_t analysis;
@@ -356,22 +383,53 @@ namespace loot {
                     git.ref2 = nullptr;
                 }
                 else if ((analysis & GIT_MERGE_ANALYSIS_UP_TO_DATE) != 0) {
+                    // No merge is required, but HEAD might be ahead of the remote branch. Check
+                    // to see if that's the case, and move HEAD back to match the remote branch
+                    // if so. Otherwise, exit early to skip unnecessary masterlist parsing.
                     // No update necessary, so exit early to skip unnecessary masterlist parsing.
                     BOOST_LOG_TRIVIAL(trace) << "Local branch is up-to-date with remote branch.";
 
-                    BOOST_LOG_TRIVIAL(trace) << "Performing a Git checkout of HEAD.";
-                    git.call(git_checkout_head(git.repo, &checkout_opts));
+                    BOOST_LOG_TRIVIAL(trace) << "Checking to see if local and remote branch heads are equal.";
+                    // Get the local branch and remote branch head commit IDs.
 
-                    return false;
+                    // Local branch.
+                    git.call(git_reference_peel(&git.obj, git.ref, GIT_OBJ_COMMIT));
+                    const git_oid * local_commit_id = git_object_id(git.obj);
+                    git_object_free(git.obj);
+                    git.obj = nullptr;
+
+                    // Remote branch.
+                    git.call(git_reference_peel(&git.obj, git.ref2, GIT_OBJ_COMMIT));
+                    const git_oid * remote_commit_id = git_object_id(git.obj);
+                    git_reference_free(git.ref2);
+                    git.ref2 = nullptr;
+                    git_object_free(git.obj);
+                    git.obj = nullptr;
+
+                    if (local_commit_id->id != remote_commit_id->id) {
+                        BOOST_LOG_TRIVIAL(trace) << "Branch heads are not equal, updating local HEAD.";
+                        // Commit IDs don't match, update HEAD, and continue with normal update procedure.
+                        git.call(git_reference_set_target(&git.ref2, git.ref, remote_commit_id, git.sig, "Setting branch reference."));
+                        git_reference_free(git.ref2);
+                        git.ref2 = nullptr;
+                    }
+                    else {
+                        // Commit IDs match, just checkout HEAD then exit early.
+                        BOOST_LOG_TRIVIAL(trace) << "Branch heads are equal.";
+                        BOOST_LOG_TRIVIAL(trace) << "Performing a Git checkout of HEAD.";
+                        git.call(git_checkout_head(git.repo, &checkout_opts));
+
+                        return false;
+                    }
                 }
                 else {
                     // The local repository can't be easily merged. It's best just to delete and re-clone it.
                     FixRepoPermissions(repo_path / ".git");
+                    git.free();
                     fs::remove_all(repo_path / ".git");
                     return this->Update(game, language);
                     //throw error(error::git_error, "Local repository has been edited, an automatic fast-forward merge update is not possible.");
                 }
-
             }
 
             // Free branch pointer.
@@ -380,7 +438,6 @@ namespace loot {
 
             BOOST_LOG_TRIVIAL(trace) << "Performing a Git checkout of HEAD.";
             git.call(git_checkout_head(git.repo, &checkout_opts));
-
         }
 
         // Now whether the repository was cloned or updated, the working directory contains
@@ -396,19 +453,13 @@ namespace loot {
             BOOST_LOG_TRIVIAL(trace) << "Getting the Git object for HEAD.";
             git.call(git_repository_head(&git.ref, git.repo));
             git.call(git_reference_peel(&git.obj, git.ref, GIT_OBJ_COMMIT));
+
+            BOOST_LOG_TRIVIAL(trace) << "Generating hex string for Git object ID.";
+            git.call(git_object_short_id(&git.buf, git.obj));
+            revision = git.buf.ptr;
+
+            BOOST_LOG_TRIVIAL(trace) << "Getting date for Git object.";
             const git_oid * oid = git_object_id(git.obj);
-
-            BOOST_LOG_TRIVIAL(trace) << "Generating hex string for the Git object.";
-            // git_object_short_id seems to be unstable, or I'm just not freeing memory right somewhere, I can't tell.
-            /*git_buf buffer;
-            git.call(git_object_short_id(&buffer, git.obj));
-            revision = string(buffer.ptr, buffer.size);
-            git_buf_free(&buffer);*/
-            char sha1[10];
-            git_oid_tostr(sha1, 10, oid);
-            revision = sha1;
-
-            BOOST_LOG_TRIVIAL(trace) << "Getting date for Git object ID.";
             git.call(git_commit_lookup(&git.commit, git.repo, oid));
             git_time_t time = git_commit_time(git.commit);
             // Now convert into a nice text format.
@@ -421,32 +472,31 @@ namespace loot {
             BOOST_LOG_TRIVIAL(trace) << "Freeing pointers.";
             git_reference_free(git.ref);
             git_object_free(git.obj);
+            git_buf_free(&git.buf);
             git_commit_free(git.commit);
             git.ref = nullptr;
             git.obj = nullptr;
             git.commit = nullptr;
+            git.buf = {0};
 
             //Now try parsing the masterlist.
             BOOST_LOG_TRIVIAL(debug) << "Testing masterlist parsing.";
             try {
                 this->MetadataList::Load(game.MasterlistPath());
 
-                unordered_set<Plugin> tempSet;
                 for (auto &plugin : plugins) {
-                    tempSet.insert(Plugin(plugin).EvalAllConditions(game, language));
+                    plugin.ParseAllConditions(game);
                 }
-                plugins = tempSet;
                 for (auto &plugin : regexPlugins) {
-                    plugin.EvalAllConditions(game, language);
+                    plugin.ParseAllConditions(game);
                 }
-
-                for (auto &message: messages) {
-                    message.EvalCondition(game, language);
+                for (auto &message : messages) {
+                    message.ParseCondition(game);
                 }
 
                 parsingFailed = false;
-
-            } catch (std::exception& e) {
+            }
+            catch (std::exception& e) {
                 parsingFailed = true;
 
                 //Roll back one revision if there's an error.

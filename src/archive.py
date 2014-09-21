@@ -40,14 +40,14 @@ archive_name = 'LOOT Archive.zip'
 # There are two compression methods available:
 #
 #  * Zip (Deflate)
-#  * 7-zip (LZMA)
+#  * 7-Zip (LZMA)
 #
 # Python 3.3+ can also do BZIP2 and LZMA zip archives, but they don't have good
 # Windows OS support, so people think they should be able to open them without
 # an archiving utility, find they can't, and think the archive is broken. So
 # they won't be used.
 #
-# Look for 7-zip in its default install location, and use it if it is found.
+# Look for 7-Zip in its default install location, and use it if it is found.
 # Fall back to zip if not.
 #
 # Archives are named using the output of `git describe --tags --long`, if Git
@@ -97,6 +97,7 @@ shutil.copy( os.path.join('..', 'build', 'Release', 'd3dcompiler_46.dll'), temp_
 shutil.copy( os.path.join('..', 'build', 'Release', 'libEGL.dll'), temp_path )
 shutil.copy( os.path.join('..', 'build', 'Release', 'libGLESv2.dll'), temp_path )
 shutil.copy( os.path.join('..', 'build', 'Release', 'libcef.dll'), temp_path )
+shutil.copy( os.path.join('..', 'build', 'Release', 'wow_helper.exe'), temp_path )
 shutil.copy( os.path.join('..', 'build', 'Release', 'cef.pak'), temp_path )
 shutil.copy( os.path.join('..', 'build', 'Release', 'cef_100_percent.pak'), temp_path )
 shutil.copy( os.path.join('..', 'build', 'Release', 'cef_200_percent.pak'), temp_path )

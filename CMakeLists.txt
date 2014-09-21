@@ -10,7 +10,7 @@
 cmake_minimum_required (VERSION 2.8.9)
 project (LOOT)
 
-option(BUILD_SHARED_LIBS "Build a shared library" OFF)
+option(BUILD_SHARED_LIBS "Build a shared library" ON)
 option(PROJECT_STATIC_RUNTIME "Build with static runtime libs (/MT)" ON)
 
 IF (NOT DEFINED PROJECT_ARCH)
@@ -59,6 +59,7 @@ set (LOOT_GUI_SRC ${LOOT_SRC}
                   "${CMAKE_SOURCE_DIR}/src/gui/main_win.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/handler.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/app.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/gui/scheme.cpp"
                   "${CMAKE_SOURCE_DIR}/src/resource.rc")
 
 set (LOOT_API_SRC ${LOOT_SRC}
@@ -89,7 +90,7 @@ link_directories ("${LIBLOADORDER_ROOT}/build"
 
 # Settings when compiling for Windows. Since it's a Windows-only app this is always true, but useful to check for copy/paste into other projects.
 IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
-    add_definitions (-DUNICODE -D_UNICODE -D__WXMSW__ -DNDEBUG -DLIBLO_STATIC -DWIN32 -D_WINDOWS)
+    add_definitions (-DUNICODE -D_UNICODE -DNDEBUG -DLIBLO_STATIC -DWIN32 -D_WINDOWS)
     IF (BUILD_SHARED_LIBS)
         add_definitions (-DLOOT_EXPORT)
     ELSE ()
@@ -119,14 +120,14 @@ IF (MINGW)
                    loadorder${PROJECT_ARCH}
                    ssl
                    crypto
-                   ws2_32)
+                   ws2_32
+                   shlwapi)
     set (LOOT_GUI_LIBS ${LOOT_LIBS}
                        git2
                        cef_sandbox
                        libcef
                        libcef_dll_wrapper
                        rpcrt4
-                       shlwapi
                        comctl32)
 ELSEIF (MSVC)
 
@@ -146,14 +147,14 @@ ELSEIF (MSVC)
     set (LOOT_LIBS libyaml-cppmt
                    version
                    loadorder${PROJECT_ARCH}
-                   ws2_32)
+                   ws2_32
+                   shlwapi)
     set (LOOT_GUI_LIBS ${LOOT_LIBS}
                        git2
                        cef_sandbox
                        libcef
                        libcef_dll_wrapper
                        rpcrt4
-                       shlwapi
                        comctl32)
 ENDIF ()
 
@@ -171,7 +172,7 @@ add_executable        (LOOT ${LOOT_GUI_SRC})
 target_link_libraries (LOOT ${Boost_LIBRARIES} ${LOOT_GUI_LIBS})
 
 # Copy CEF DLLs.
-FOREACH(cef_dll d3dcompiler_43.dll d3dcompiler_46.dll libEGL.dll libGLESv2.dll libcef.dll)
+FOREACH(cef_dll d3dcompiler_43.dll d3dcompiler_46.dll libEGL.dll libGLESv2.dll libcef.dll wow_helper.exe)
     add_custom_command(TARGET LOOT POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
             "${CMAKE_SOURCE_DIR}/${CEF_ROOT}/$<CONFIGURATION>/${cef_dll}"

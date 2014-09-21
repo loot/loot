@@ -10,7 +10,6 @@ Although LOOT is able to calculate the correct load order positions for the vast
 
 LOOT is intended to make using mods easier, and mod users should still possess a working knowledge of mod load ordering. See the "Introduction To Load Orders" section of the LOOT readme for an overview.
 
-
 ## Building LOOT
 
 LOOT uses [CMake](http://cmake.org) to generate build files, and requires the following libraries (version numbers used in latest development revision given):
@@ -29,15 +28,18 @@ Although LOOT uses a cross-platform build system and cross-platform libraries, i
 
 ## Packaging Releases
 
-Installer and zip archive releases for the main LOOT application can be handled by running the scripts `installer.nsi` and `archive.py` in the `src` folder respectively. The installer script requires [Unicode NSIS](http://www.scratchpaper.com/), while the archive script requires [Python](http://www.python.org/).
+Installer and zip archive releases for the main LOOT application can be handled by running the scripts `installer.nsi` and `archive.py` in the `src` folder respectively. The installer script requires [NSIS 3](http://nsis.sourceforge.net/), while the archive script requires [Python](http://www.python.org/) (2 or 3). The installer and archive files are created in the `build/` folder, relative to the repository root.
 
-## Adding Translations
+If you have [Git for Windows (msysGit)](https://msysgit.github.io/) or [GitHub for Windows](https://windows.github.com/) installed and you're building from a clone of this repository, the archive script will give archives descriptive names using the output of `git describe --tags --long`. If you have [7-Zip](http://7-zip.org) installed, `.7z` archives will be created. Otherwise, archives will be named `LOOT Archive` and created as deflate-compressed zip files.
 
-If a translation for a new language is provided, here's what needs changing to make LOOT use that translation.
+## Snapshot Builds
 
-* In [helpers.h](src/backend/helpers.h), add a constant for the language to the `Language` class, and update `Language::Names()`.
-* In [helpers.cpp](src/backend/helpers.cpp), update `Language::Language(const std::string& nameOrCode)` and `Language::Construct(const unsigned int code)`.
-* Add constants for the language in [api.h](src/api/api.h) and [api.cpp](src/api/api.cpp).
-* In [archive.py](src/archive.py), add the language folder to the inline list on line 68.
-* In [installer.nsi](src/installer.nsi), add entries for the language folder to the install and uninstall sections. If there's an installer translation, also add its string definitions beside all the other language string definitions, and insert its macro beside all the other language macros.
-* The readmes should be updated with a link to the translation in the repository in the main readme, and the language's code in the metadata syntax readme.
+Snapshot build archives are made available on [Dropbox](https://www.dropbox.com/sh/scuvwwc6ovzagmd/AAD1TodBAwGQTuV1-4Z2d0sCa?dl=0) fairly regularly. If you can't or don't want to build LOOT yourself, but still want to test a more recent build than the latest release or pre-release, you can check to see if there is such a build available.
+
+The archives are named in the following manner:
+
+```
+LOOT [last tagged release]-[number of revisions since last tagged release]-g[first seven characters of the revision ID].7z
+```
+
+For example `LOOT v0.7.0-alpha-2-10-gf6d7e80.7z` was built using the revision with shortened commit hash `f6d7e80`, which is `10` revisions after the revision tagged `v0.7.0-alpha-2`.
