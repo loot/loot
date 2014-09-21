@@ -3,14 +3,14 @@ msgstr ""
 "Project-Id-Version: LOOT v3.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-09-21 21:26-0000\n"
-"PO-Revision-Date: 2014-02-26 05:57+0100\n"
+"PO-Revision-Date: 2014-09-21 23:22+0100\n"
 "Last-Translator: Frederik \"Freso\" S. Olesen <freso.dk@gmail.com>\n"
 "Language-Team: Danish\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.6.4\n"
+"X-Generator: Poedit 1.6.9\n"
 "X-Poedit-KeywordsList: translate:1,1t;translate:1c,2,t\n"
 "X-Poedit-Basepath: ../../src\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -108,7 +108,7 @@ msgstr "Kunne ikke fortolke betingelsen \"%1%\"."
 
 #: src/backend/metadata.cpp:421
 msgid "Cannot read \"%1%\". Details: %2%"
-msgstr ""
+msgstr "Kan ikke læse \"%1%\". Detaljer: %2%"
 
 #: src/backend/metadata.cpp:780 src/backend/metadata.cpp:791
 msgid "This plugin requires \"%1%\" to be installed, but it is missing."
@@ -127,42 +127,44 @@ msgid ""
 "Contains %1% ITM records, %2% UDR records and %3% deleted navmeshes. Clean "
 "with %4%."
 msgstr ""
+"Indeholder %1% ITM-poster, %2% UDR-poster og %3% slettede navmesh'er. Rengør "
+"med %4%."
 
 #: src/backend/metadata.cpp:810
 msgid "Clean with %1%."
-msgstr ""
+msgstr "Rengør med %1%."
 
 #: src/backend/metadata.cpp:813
 msgid "Contains %1% UDR records and %2% deleted navmeshes. Clean with %3%."
-msgstr ""
+msgstr "Indeholder %1% UDR-poster og %2% slettede navmesh'er. Rengør med %3%."
 
 #: src/backend/metadata.cpp:815
 msgid "Contains %1% deleted navmeshes. Clean with %2%."
-msgstr ""
+msgstr "Indeholder %1% slettede navmesh'er. Rengør med %2%."
 
 #: src/backend/metadata.cpp:817
 msgid "Contains %1% UDR records. Clean with %2%."
-msgstr ""
+msgstr "Indeholder %1% UDR-poster. Rengør med %2%."
 
 #: src/backend/metadata.cpp:820
 msgid "Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%."
-msgstr ""
+msgstr "Indeholder %1% ITM-poster og %2% slettede navmesh'er. Rengør med %3%."
 
 #: src/backend/metadata.cpp:822
 msgid "Contains %1% ITM records. Clean with %2%."
-msgstr ""
+msgstr "Indeholder %1% ITM-poster. Rengør med %2%."
 
 #: src/backend/metadata.cpp:825
 msgid "Contains %1% ITM records and %2% UDR records. Clean with %3%."
-msgstr ""
+msgstr "Indeholder %1% ITM-poster og %2% UDR-poster. Rengør med %3%."
 
 #: src/gui/app.cpp:146
 msgid "Error: Could not create LOOT settings file. %1%"
-msgstr ""
+msgstr "Fejl: kunne ikke oprette LOOT-indstillingsfil. %1%"
 
 #: src/gui/app.cpp:156
 msgid "Error: Settings parsing failed. %1%"
-msgstr ""
+msgstr "Fejl: kunne ikke læse indstillinger. %1%"
 
 #: src/gui/app.cpp:221
 msgid "Error: Games' settings parsing failed. %1%"
@@ -196,11 +198,11 @@ msgstr ""
 
 #: resources/report/js/custom.js:703
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: resources/report/js/custom.js:731
 msgid "Yes"
-msgstr ""
+msgstr "Ja"
 
 #: resources/report/js/custom.js:736 resources/report/js/l10n.js:96
 #: resources/report/js/l10n.js:144 resources/report/js/l10n.js:207
@@ -208,9 +210,8 @@ msgid "Cancel"
 msgstr "Annullér"
 
 #: resources/report/js/l10n.js:44
-#, fuzzy
 msgid "Active Plugin"
-msgstr "Tilføj plugin"
+msgstr "Aktivt plugin"
 
 #: resources/report/js/l10n.js:45 resources/report/js/l10n.js:100
 #, fuzzy
@@ -219,11 +220,11 @@ msgstr "Plugin"
 
 #: resources/report/js/l10n.js:46 resources/report/js/l10n.js:101
 msgid "Loads BSA"
-msgstr ""
+msgstr "Læser BSA"
 
 #: resources/report/js/l10n.js:47 resources/report/js/l10n.js:102
 msgid "Has User Metadata"
-msgstr ""
+msgstr "Har brugermetadata"
 
 #: resources/report/js/l10n.js:48
 msgid "Click to open the plugin menu."
@@ -238,28 +239,28 @@ msgid ""
 "Global priorities are compared against all other plugins. Normal priorities "
 "are compared against only conflicting plugins."
 msgstr ""
+"Globale prioriteter bliver sammenlignet med alle andre plugins. Normale "
+"prioriteter bliver kun sammenlignet med konfliktende plugins."
 
 #: resources/report/js/l10n.js:52
-#, fuzzy
 msgid "Global Priority"
-msgstr "Prioritet"
+msgstr "Global prioritet"
 
 #: resources/report/js/l10n.js:53
-#, fuzzy
 msgid "Priority Value"
-msgstr "Prioritet: "
+msgstr "Prioritetsværdi"
 
 #: resources/report/js/l10n.js:55
 msgid "Load After"
-msgstr ""
+msgstr "Indlæs efter"
 
 #: resources/report/js/l10n.js:56
 msgid "Requirements"
-msgstr ""
+msgstr "Krav"
 
 #: resources/report/js/l10n.js:57
 msgid "Incompatibilities"
-msgstr ""
+msgstr "Ukompatibiliteter"
 
 #: resources/report/js/l10n.js:58
 msgid "Messages"
@@ -294,15 +295,15 @@ msgstr "Betingelse"
 #: resources/report/js/l10n.js:86 resources/report/js/l10n.js:93
 #: resources/report/js/l10n.js:202
 msgid "Add new row..."
-msgstr ""
+msgstr "Tilføj ny række..."
 
 #: resources/report/js/l10n.js:77
 msgid "Type"
-msgstr ""
+msgstr "Type"
 
 #: resources/report/js/l10n.js:78
 msgid "Content"
-msgstr ""
+msgstr "Indhold"
 
 #: resources/report/js/l10n.js:80 resources/report/js/l10n.js:184
 msgid "Language"
@@ -329,9 +330,8 @@ msgid "UDR Count"
 msgstr "UDR-antal"
 
 #: resources/report/js/l10n.js:91
-#, fuzzy
 msgid "Deleted Navmeshes"
-msgstr "Antal slettede navmesh'es"
+msgstr "Slettede navmesh'er"
 
 #: resources/report/js/l10n.js:92
 msgid "Cleaning Utility"
@@ -343,17 +343,16 @@ msgid "Apply"
 msgstr ""
 
 #: resources/report/js/l10n.js:103
-#, fuzzy
 msgid "Priority Is Global"
-msgstr "Prioritet: "
+msgstr "Prioritet er global"
 
 #: resources/report/js/l10n.js:107
 msgid "Show Only Conflicts"
-msgstr ""
+msgstr "Vis kun konflikter"
 
 #: resources/report/js/l10n.js:108
 msgid "Edit Metadata"
-msgstr ""
+msgstr "Redigér metadata"
 
 #: resources/report/js/l10n.js:109
 msgid "Copy Metadata As Text"
@@ -361,45 +360,43 @@ msgstr "Kopiér metadata som tekst"
 
 #: resources/report/js/l10n.js:110
 msgid "Clear User Metadata"
-msgstr ""
+msgstr "Ryd brugermetadata"
 
 #: resources/report/js/l10n.js:114
 msgid "Note"
-msgstr ""
+msgstr "Notits"
 
 #: resources/report/js/l10n.js:115
 msgid "Warning"
-msgstr ""
+msgstr "Advarsel"
 
 #: resources/report/js/l10n.js:116
 msgid "Error"
-msgstr ""
+msgstr "Fejl"
 
 #: resources/report/js/l10n.js:120
 msgid "Add"
-msgstr ""
+msgstr "Tilføj"
 
 #: resources/report/js/l10n.js:121
 msgid "Remove"
-msgstr ""
+msgstr "Fjern"
 
 #: resources/report/js/l10n.js:124
-#, fuzzy
 msgid "File"
-msgstr "Filnavn"
+msgstr "Fil"
 
 #: resources/report/js/l10n.js:125
-#, fuzzy
 msgid "Redate Plugins"
-msgstr "Redigér plugin"
+msgstr "Omdatér plugins"
 
 #: resources/report/js/l10n.js:126
 msgid "Open Debug Log Location"
-msgstr ""
+msgstr "Åben sted for fejlsøgningslog"
 
 #: resources/report/js/l10n.js:127
 msgid "Clear All User Metadata"
-msgstr ""
+msgstr "Ryd al brugermetadata"
 
 #: resources/report/js/l10n.js:128
 #, fuzzy
@@ -408,36 +405,35 @@ msgstr "Kopiér metadata som tekst"
 
 #: resources/report/js/l10n.js:129
 msgid "Refresh Content"
-msgstr ""
+msgstr "Genindlæs indhold"
 
 #: resources/report/js/l10n.js:132
 msgid "Game"
-msgstr ""
+msgstr "Spil"
 
 #: resources/report/js/l10n.js:135
 msgid "Help"
-msgstr ""
+msgstr "Hjælp"
 
 #: resources/report/js/l10n.js:136
 msgid "View Documentation"
-msgstr ""
+msgstr "Vis dokumentation"
 
 #: resources/report/js/l10n.js:137
 msgid "About"
-msgstr ""
+msgstr "Om"
 
 #: resources/report/js/l10n.js:140 resources/report/js/l10n.js:179
 msgid "Settings"
-msgstr ""
+msgstr "Indstillinger"
 
 #: resources/report/js/l10n.js:141
-#, fuzzy
 msgid "Update Masterlist"
-msgstr "Ingen masterlist"
+msgstr "Opdatér masterlist"
 
 #: resources/report/js/l10n.js:142
 msgid "Sort"
-msgstr ""
+msgstr "Sortér"
 
 #: resources/report/js/l10n.js:147 resources/report/js/l10n.js:165
 msgid "Summary"
@@ -445,11 +441,11 @@ msgstr ""
 
 #: resources/report/js/l10n.js:148 resources/report/js/l10n.js:176
 msgid "General Messages"
-msgstr ""
+msgstr "Generelle beskeder"
 
 #: resources/report/js/l10n.js:149
 msgid "Filters"
-msgstr ""
+msgstr "Filtrer"
 
 #: resources/report/js/l10n.js:150
 msgid "Press Enter when searching to select the next match."
@@ -457,11 +453,11 @@ msgstr ""
 
 #: resources/report/js/l10n.js:153
 msgid "Hide version numbers"
-msgstr ""
+msgstr "Skjul versionsnumre"
 
 #: resources/report/js/l10n.js:154
 msgid "Hide CRCs"
-msgstr ""
+msgstr "Skjul CRC'er"
 
 #: resources/report/js/l10n.js:155
 #, fuzzy
@@ -470,73 +466,63 @@ msgstr "Bash-tags"
 
 #: resources/report/js/l10n.js:156
 msgid "Hide notes"
-msgstr ""
+msgstr "Skjul noter"
 
 #: resources/report/js/l10n.js:157
 msgid "Hide 'Do not clean' messages"
-msgstr ""
+msgstr "Skjul \"Rengør ikke\"-beskeder."
 
 #: resources/report/js/l10n.js:158
 msgid "Hide inactive plugin messages"
-msgstr ""
+msgstr "Skjul beskeder for inaktive plugins."
 
 #: resources/report/js/l10n.js:159
 msgid "Hide all plugin messages"
-msgstr ""
+msgstr "Skjul alle plugin-beskeder."
 
 #: resources/report/js/l10n.js:160
 msgid "Hide messageless plugins"
-msgstr ""
+msgstr "Skjul plugins uden beskeder."
 
 #: resources/report/js/l10n.js:161
-#, fuzzy
 msgid "Hidden plugins"
-msgstr "Tilføj plugin"
+msgstr "Skjulte plugins"
 
 #: resources/report/js/l10n.js:162
-#, fuzzy
 msgid "Hidden messages"
-msgstr "Tilføj besked"
+msgstr "Skjulte beskeder"
 
 #: resources/report/js/l10n.js:166
-#, fuzzy
 msgid "Masterlist Revision"
 msgstr "Masterlist-udgave"
 
 #: resources/report/js/l10n.js:167
-#, fuzzy
 msgid "Masterlist Date"
-msgstr "Masterlist-udgave"
+msgstr "Masterlist-dato"
 
 #: resources/report/js/l10n.js:168
-#, fuzzy
 msgid "Warnings"
-msgstr "LOOT: Advarsel"
+msgstr "Advarsler"
 
 #: resources/report/js/l10n.js:169
-#, fuzzy
 msgid "Errors"
-msgstr "Fejl: %1%"
+msgstr "Fejl"
 
 #: resources/report/js/l10n.js:170
-#, fuzzy
 msgid "Total Messages"
-msgstr "Beskeder"
+msgstr "Samlet antal beskeder"
 
 #: resources/report/js/l10n.js:171
-#, fuzzy
 msgid "Active Plugins"
-msgstr "Plugins"
+msgstr "Aktive plugins"
 
 #: resources/report/js/l10n.js:172
-#, fuzzy
 msgid "Dirty Plugins"
-msgstr "Redigér plugin"
+msgstr "Beskidte plugins"
 
 #: resources/report/js/l10n.js:173
-#, fuzzy
 msgid "Total Plugins"
-msgstr "Plugins"
+msgstr "Samlet antal plugins"
 
 #: resources/report/js/l10n.js:181
 msgid "Default Game"
@@ -548,15 +534,15 @@ msgstr ""
 
 #: resources/report/js/l10n.js:186
 msgid "Enable debug logging"
-msgstr ""
+msgstr "Slå fejlsøgningslogning til"
 
 #: resources/report/js/l10n.js:187
 msgid "The output is logged to the LOOTDebugLog.txt file."
-msgstr ""
+msgstr "Outputtet bliver logget til filen \"LOOTDebugLog.txt\"."
 
 #: resources/report/js/l10n.js:189
 msgid "Update masterlist before sorting"
-msgstr ""
+msgstr "Opdater masterlist før sortering"
 
 #: resources/report/js/l10n.js:191
 msgid "Automatically refresh content on window refocus"
@@ -564,16 +550,15 @@ msgstr ""
 
 #: resources/report/js/l10n.js:194
 msgid "Name"
-msgstr ""
+msgstr "Navn"
 
 #: resources/report/js/l10n.js:195
 msgid "Base Game"
 msgstr ""
 
 #: resources/report/js/l10n.js:196
-#, fuzzy
 msgid "LOOT Folder"
-msgstr "LOOT: Fejl"
+msgstr "LOOT-mappe"
 
 #: resources/report/js/l10n.js:197
 msgid "Master File"
@@ -597,7 +582,7 @@ msgstr ""
 
 #: resources/report/js/l10n.js:204
 msgid "Language changes will be applied after LOOT is restarted."
-msgstr ""
+msgstr "Sprogændringer vil blive taget i brug når LOOT er blevet genstartet."
 
 #: resources/report/js/script.js:244 resources/report/js/script.js:249
 msgid "N/A"
@@ -605,7 +590,7 @@ msgstr ""
 
 #: resources/report/js/script.js:520
 msgid "Do not clean."
-msgstr ""
+msgstr "Rengør ikke."
 
 #~ msgid "None Specified"
 #~ msgstr "Ingen angivet"
