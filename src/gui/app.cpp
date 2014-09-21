@@ -24,6 +24,7 @@
 
 #include "app.h"
 #include "handler.h"
+#include "scheme.h"
 
 #include "../backend/error.h"
 #include "../backend/globals.h"
@@ -64,6 +65,11 @@ namespace loot {
         return this;
     }
 
+    void LootApp::OnRegisterCustomSchemes(CefRefPtr<CefSchemeRegistrar> registrar) {
+        // Register "loot" as a standard scheme.
+        registrar->AddCustomScheme("loot", true, false, false);
+    }
+
     void LootApp::OnContextInitialized() {
         //Make sure this is running in the UI thread.
         assert(CefCurrentlyOn(TID_UI));
@@ -78,6 +84,9 @@ namespace loot {
 
         // Set the handler for browser-level callbacks.
         CefRefPtr<LootHandler> handler(new LootHandler());
+
+        // Register the custom "loot" scheme handler.
+        CefRegisterSchemeHandlerFactory("loot", "l10n", new LootSchemeHandlerFactory());
 
         // Specify CEF browser settings here.
         CefBrowserSettings browser_settings;
