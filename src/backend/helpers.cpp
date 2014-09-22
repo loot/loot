@@ -106,7 +106,7 @@ namespace loot {
 
     /// Array used to try each of the expressions defined above using
     /// an iteration for each of them.
-    const regex version_checks[7] ={
+    const regex version_checks[7] = {
         regex(regex1, regex::ECMAScript | regex::icase),
         regex(regex2, regex::ECMAScript | regex::icase),
         regex(regex3, regex::ECMAScript | regex::icase),
@@ -310,6 +310,7 @@ namespace loot {
         else if (_code == Language::danish) {
             _name = "Dansk";
             _locale = "da";
+        }
         else {
             _name = "English";
             _locale = "en";
@@ -352,10 +353,10 @@ namespace loot {
 
             VerQueryValue(point, L"\\", (LPVOID *)&info, &uLen);
 
-            DWORD dwLeftMost     = HIWORD(info->dwFileVersionMS);
-            DWORD dwSecondLeft   = LOWORD(info->dwFileVersionMS);
-            DWORD dwSecondRight  = HIWORD(info->dwFileVersionLS);
-            DWORD dwRightMost    = LOWORD(info->dwFileVersionLS);
+            DWORD dwLeftMost = HIWORD(info->dwFileVersionMS);
+            DWORD dwSecondLeft = LOWORD(info->dwFileVersionMS);
+            DWORD dwSecondRight = HIWORD(info->dwFileVersionLS);
+            DWORD dwRightMost = LOWORD(info->dwFileVersionLS);
 
             delete[] point;
 
