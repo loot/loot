@@ -120,8 +120,8 @@ namespace loot {
         }
         else if (request == "getGameData") {
             BOOST_LOG_TRIVIAL(info) << "Setting LOOT window title bar text to include game name: " << g_app_state.CurrentGame().Name();
-            HWND handle = browser->GetHost()->GetWindowHandle();
 #ifdef _WIN32
+            HWND handle = browser->GetHost()->GetWindowHandle();
             SetWindowText(handle, ToWinWide("LOOT: " + g_app_state.CurrentGame().Name()).c_str());
 #endif
             return CefPostTask(TID_FILE, base::Bind(&Handler::GetGameData, base::Unretained(this), frame, callback));
@@ -208,8 +208,8 @@ namespace loot {
                 g_app_state.ChangeGame(request["args"][0].as<string>());
 
                 BOOST_LOG_TRIVIAL(info) << "Setting LOOT window title bar text to include game name: " << g_app_state.CurrentGame().Name();
-                HWND handle = browser->GetHost()->GetWindowHandle();
 #ifdef _WIN32
+                HWND handle = browser->GetHost()->GetWindowHandle();
                 SetWindowText(handle, ToWinWide("LOOT: " + g_app_state.CurrentGame().Name()).c_str());
 #endif
                 CefPostTask(TID_FILE, base::Bind(&Handler::GetGameData, base::Unretained(this), frame, callback));
@@ -1053,9 +1053,9 @@ namespace loot {
                                     const CefString& title) {
         assert(CefCurrentlyOn(TID_UI));
 
-        CefWindowHandle hwnd = browser->GetHost()->GetWindowHandle();
 #ifdef _WIN32
-        SetWindowText(hwnd, ToWinWide(title).c_str());
+        HWND handle = browser->GetHost()->GetWindowHandle();
+        SetWindowText(handle, ToWinWide(title).c_str());
 #endif
     }
 
