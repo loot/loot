@@ -52,6 +52,16 @@ set (LOOT_SRC   "${CMAKE_SOURCE_DIR}/src/backend/metadata.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/generators.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/graph.cpp")
 
+set (LOOT_HEADERS "${CMAKE_SOURCE_DIR}/src/backend/metadata.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/game.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/helpers.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/globals.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/generators.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/graph.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/error.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/parsers.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/streams.h")
+
 set (LOOT_GUI_SRC ${LOOT_SRC}
                   # Code the API doesn't need.
                   "${CMAKE_SOURCE_DIR}/src/backend/git.cpp"
@@ -62,8 +72,22 @@ set (LOOT_GUI_SRC ${LOOT_SRC}
                   "${CMAKE_SOURCE_DIR}/src/gui/scheme.cpp"
                   "${CMAKE_SOURCE_DIR}/src/resource.rc")
 
+set (LOOT_GUI_HEADERS ${LOOT_HEADERS}
+                  # Code the API doesn't need.
+                  "${CMAKE_SOURCE_DIR}/src/backend/json.h"
+                  # Actual GUI code.
+                  "${CMAKE_SOURCE_DIR}/src/gui/handler.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/app.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/scheme.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/resource.h")
+
 set (LOOT_API_SRC ${LOOT_SRC}
                   "${CMAKE_SOURCE_DIR}/src/api/api.cpp")
+
+set (LOOT_API_HEADERS ${LOOT_HEADERS}
+                  "${CMAKE_SOURCE_DIR}/src/api/api.h")
+
+source_group("Header Files" FILES ${LOOT_HEADERS} ${LOOT_GUI_HEADERS} ${LOOT_API_HEADERS})
 
 find_package(Boost REQUIRED COMPONENTS log log_setup locale thread chrono date_time filesystem system regex iostreams)
 
@@ -164,11 +188,11 @@ ENDIF ()
 ##############################
 
 # Build API.
-add_library           (loot${PROJECT_ARCH} ${LOOT_API_SRC})
+add_library           (loot${PROJECT_ARCH} ${LOOT_API_SRC} ${LOOT_API_HEADERS})
 target_link_libraries (loot${PROJECT_ARCH} ${Boost_LIBRARIES} ${LOOT_LIBS})
 
 # Build application.
-add_executable        (LOOT ${LOOT_GUI_SRC})
+add_executable        (LOOT ${LOOT_GUI_SRC} ${LOOT_GUI_HEADERS})
 target_link_libraries (LOOT ${Boost_LIBRARIES} ${LOOT_GUI_LIBS})
 
 # Copy CEF DLLs.
