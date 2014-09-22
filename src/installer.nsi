@@ -367,6 +367,8 @@ FunctionEnd
         File "..\resources\l10n\fi\LC_MESSAGES\loot.mo"
         SetOutPath "$INSTDIR\resources\l10n\de\LC_MESSAGES"
         File "..\resources\l10n\de\LC_MESSAGES\loot.mo"
+        SetOutPath "$INSTDIR\resources\l10n\da\LC_MESSAGES"
+        File "..\resources\l10n\de\LC_MESSAGES\loot.mo"
 
 
         ;Install settings file.
@@ -500,6 +502,8 @@ FunctionEnd
         Delete "$INSTDIR\resources\l10n\pl\LC_MESSAGES\loot.mo"
         Delete "$INSTDIR\resources\l10n\pt_BR\LC_MESSAGES\loot.mo"
         Delete "$INSTDIR\resources\l10n\fi\LC_MESSAGES\loot.mo"
+        Delete "$INSTDIR\resources\l10n\de\LC_MESSAGES\loot.mo"
+        Delete "$INSTDIR\resources\l10n\da\LC_MESSAGES\loot.mo"
         RMDir  "$INSTDIR\resources\l10n\ru\LC_MESSAGES"
         RMDir  "$INSTDIR\resources\l10n\ru"
         RMDir  "$INSTDIR\resources\l10n\es\LC_MESSAGES"
