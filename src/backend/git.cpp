@@ -227,7 +227,6 @@ namespace loot {
             // Clone the remote repository.
             BOOST_LOG_TRIVIAL(info) << "Repository doesn't exist, cloning the remote repository.";
 
-            bool wasEmpty = true;
             fs::path temp_path = repo_path.string() + ".temp";
             if (!fs::is_empty(repo_path)) {
                 // Clear any read-only flags first.
@@ -247,7 +246,6 @@ namespace loot {
                 fs::rename(repo_path, temp_path);
                 // Recreate the game folder so that we don't inadvertently cause any other errors (everything past LOOT init assumes it exists).
                 fs::create_directory(repo_path);
-                wasEmpty = false;
             }
 
             //First set up clone options.

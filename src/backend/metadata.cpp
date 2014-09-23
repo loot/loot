@@ -206,7 +206,7 @@ namespace loot {
         return (_language == rhs.Language() && boost::iequals(_str, rhs.Str()));
     }
 
-    Message::Message() {}
+    Message::Message() : _type(Message::say) {}
 
     Message::Message(const unsigned int type, const std::string& content,
                      const std::string& condition) : _type(type), ConditionStruct(condition) {
@@ -330,8 +330,8 @@ namespace loot {
         return _name;
     }
 
-    Plugin::Plugin() : enabled(true), priority(0), isMaster(false), crc(0), numOverrideRecords(0), _isPriorityExplicit(false) {}
-    Plugin::Plugin(const std::string& n) : name(n), enabled(true), priority(0), isMaster(false), crc(0), numOverrideRecords(0), _isPriorityExplicit(false) {
+    Plugin::Plugin() : enabled(true), _isPriorityExplicit(false), priority(0), isMaster(false), crc(0), numOverrideRecords(0) {}
+    Plugin::Plugin(const std::string& n) : name(n), enabled(true), _isPriorityExplicit(false), priority(0), isMaster(false), crc(0), numOverrideRecords(0) {
         //If the name passed ends in '.ghost', that should be trimmed.
         if (boost::iends_with(name, ".ghost"))
             name = name.substr(0, name.length() - 6);

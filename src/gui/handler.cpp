@@ -776,7 +776,7 @@ namespace loot {
                     wasChanged = true;
                 }
                 else
-                    throw e;
+                    throw;
             }
 
             // Now regenerate the JS-side masterlist data if the masterlist was changed.

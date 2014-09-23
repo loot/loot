@@ -262,7 +262,7 @@ namespace loot {
                 }
                 catch (...) {}
             }
-            throw e;
+            throw;
         }
     }
 
@@ -478,6 +478,8 @@ namespace loot {
             ret = lo_create_handle(&gh, LIBLO_GAME_FO3, gamePath.string().c_str());
         else if (Id() == Game::fonv)
             ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str());
+        else
+            ret = LIBLO_ERROR_INVALID_ARGS;
 
         if (ret != LIBLO_OK && ret != LIBLO_WARN_LO_MISMATCH) {
             const char * e = nullptr;
@@ -559,6 +561,8 @@ namespace loot {
             ret = lo_create_handle(&gh, LIBLO_GAME_FO3, gamePath.string().c_str());
         else if (Id() == Game::fonv)
             ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str());
+        else
+            ret = LIBLO_ERROR_INVALID_ARGS;
 
         if (ret != LIBLO_OK && ret != LIBLO_WARN_LO_MISMATCH) {
             const char * e = nullptr;
@@ -635,6 +639,8 @@ namespace loot {
             ret = lo_create_handle(&gh, LIBLO_GAME_FO3, gamePath.string().c_str());
         else if (Id() == Game::fonv)
             ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str());
+        else
+            ret = LIBLO_ERROR_INVALID_ARGS;
 
         if (ret != LIBLO_OK && ret != LIBLO_WARN_LO_MISMATCH) {
             const char * e = nullptr;

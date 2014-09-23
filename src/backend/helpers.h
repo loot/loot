@@ -20,7 +20,7 @@
     You should have received a copy of the GNU General Public License
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
-*/
+    */
 
 #ifndef __LOOT_HELPERS__
 #define __LOOT_HELPERS__
@@ -33,7 +33,6 @@
 #include <boost/filesystem.hpp>
 
 namespace loot {
-
     /// Array used to try each of the expressions defined using
     /// an iteration for each of them.
     extern const std::regex version_checks[7];
@@ -125,12 +124,12 @@ namespace loot {
 
         std::string AsString() const;
 
-        bool operator > (Version);
-        bool operator < (Version);
-        bool operator >= (Version);
-        bool operator <= (Version);
-        bool operator == (Version);
-        bool operator != (Version);
+        bool operator > (const Version&) const;
+        bool operator < (const Version&) const;
+        bool operator >= (const Version&) const;
+        bool operator <= (const Version&) const;
+        bool operator == (const Version&) const;
+        bool operator != (const Version&) const;
     };
 }
 

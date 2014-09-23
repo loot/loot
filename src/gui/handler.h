@@ -20,7 +20,7 @@
     You should have received a copy of the GNU General Public License
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
-*/
+    */
 
 #ifndef __LOOT_GUI_HANDLER__
 #define __LOOT_GUI_HANDLER__
@@ -36,18 +36,17 @@
 #include <list>
 
 namespace loot {
-
     class Handler : public CefMessageRouterBrowserSide::Handler {
     public:
         Handler();
 
         // Called due to cefQuery execution in binding.html.
         virtual bool OnQuery(CefRefPtr<CefBrowser> browser,
-                            CefRefPtr<CefFrame> frame,
-                            int64 query_id,
-                            const CefString& request,
-                            bool persistent,
-                            CefRefPtr<Callback> callback) OVERRIDE;
+                             CefRefPtr<CefFrame> frame,
+                             int64 query_id,
+                             const CefString& request,
+                             bool persistent,
+                             CefRefPtr<Callback> callback) OVERRIDE;
     private:
         void OpenReadme();
         void OpenLogLocation();
@@ -63,7 +62,7 @@ namespace loot {
 
         // Handle queries with input arguments.
         bool HandleComplexQuery(CefRefPtr<CefBrowser> browser,
-                                CefRefPtr<CefFrame> frame, 
+                                CefRefPtr<CefFrame> frame,
                                 YAML::Node& request,
                                 CefRefPtr<Callback> callback);
 
@@ -74,8 +73,8 @@ namespace loot {
         void SaveFilterState(const std::string& filterId, const std::string& value);
         std::string ApplyUserEdits(const YAML::Node& pluginMetadata);
 
-        YAML::Node Handler::GenerateDerivedMetadata(const std::string& pluginName);
-        YAML::Node Handler::GenerateDerivedMetadata(const Plugin& file, const Plugin& masterlist, const Plugin& userlist);
+        YAML::Node GenerateDerivedMetadata(const std::string& pluginName);
+        YAML::Node GenerateDerivedMetadata(const Plugin& file, const Plugin& masterlist, const Plugin& userlist);
 
         void CopyToClipboard(const std::string& text);
         void SendProgressUpdate(CefRefPtr<CefFrame> frame, const std::string& message);
@@ -84,10 +83,10 @@ namespace loot {
     };
 
     class LootHandler : public CefClient,
-                        public CefDisplayHandler,
-                        public CefLifeSpanHandler,
-                        public CefLoadHandler,
-                        public CefRequestHandler {
+        public CefDisplayHandler,
+        public CefLifeSpanHandler,
+        public CefLoadHandler,
+        public CefRequestHandler {
     public:
         LootHandler();
         ~LootHandler();
@@ -102,13 +101,13 @@ namespace loot {
         virtual CefRefPtr<CefLoadHandler> GetLoadHandler() OVERRIDE;
 
         virtual bool OnProcessMessageReceived(CefRefPtr<CefBrowser> browser,
-                                CefProcessId source_process,
-                                CefRefPtr<CefProcessMessage> message) OVERRIDE;
+                                              CefProcessId source_process,
+                                              CefRefPtr<CefProcessMessage> message) OVERRIDE;
 
         // CefDisplayHandler methods
         //--------------------------
         virtual void OnTitleChange(CefRefPtr<CefBrowser> browser,
-                                 const CefString& title) OVERRIDE;
+                                   const CefString& title) OVERRIDE;
 
         // CefLifeSpanHandler methods
         //---------------------------
@@ -119,23 +118,22 @@ namespace loot {
         // CefLoadHandler methods
         //-----------------------
         virtual void OnLoadError(CefRefPtr<CefBrowser> browser,
-                               CefRefPtr<CefFrame> frame,
-                               ErrorCode errorCode,
-                               const CefString& errorText,
-                               const CefString& failedUrl) OVERRIDE;
+                                 CefRefPtr<CefFrame> frame,
+                                 ErrorCode errorCode,
+                                 const CefString& errorText,
+                                 const CefString& failedUrl) OVERRIDE;
 
         // CefRequestHandler methods
         //--------------------------
-
 
         virtual CefRefPtr<CefRequestHandler> GetRequestHandler() OVERRIDE{
             return this;
         }
 
-        virtual bool OnBeforeBrowse(CefRefPtr< CefBrowser > browser,
-                                    CefRefPtr< CefFrame > frame,
-                                    CefRefPtr< CefRequest > request,
-                                    bool is_redirect) OVERRIDE;
+            virtual bool OnBeforeBrowse(CefRefPtr< CefBrowser > browser,
+            CefRefPtr< CefFrame > frame,
+            CefRefPtr< CefRequest > request,
+            bool is_redirect) OVERRIDE;
 
         // Request that all existing browser windows close.
         void CloseAllBrowsers(bool force_close);

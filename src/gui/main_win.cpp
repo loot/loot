@@ -144,4 +144,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
     boost::filesystem::remove_all(boost::filesystem::current_path() / "pdf.dll");
 
     return 0;
+
+#ifdef _WIN32
 }
+#endif

@@ -133,12 +133,12 @@ namespace loot {
     //Calculate the CRC of the given file for comparison purposes.
     uint32_t GetCrc32(const fs::path& filename) {
         uint32_t chksum = 0;
-        static const size_t buffer_size = 8192;
-        char buffer[buffer_size];
         loot::ifstream ifile(filename, ios::binary);
         BOOST_LOG_TRIVIAL(trace) << "Calculating CRC for: " << filename.string();
         boost::crc_32_type result;
         if (ifile) {
+            static const size_t buffer_size = 8192;
+            char buffer[buffer_size];
             do {
                 ifile.read(buffer, buffer_size);
                 result.process_bytes(buffer, ifile.gcount());
@@ -347,7 +347,6 @@ namespace loot {
             LPBYTE point = new BYTE[size];
             UINT uLen;
             VS_FIXEDFILEINFO *info;
-            string ver;
 
             GetFileVersionInfo(ToWinWide(file.string()).c_str(), 0, size, point);
 
@@ -382,15 +381,13 @@ namespace loot {
 #endif
     }
 
-    Version::Version(const Plugin& plugin) {
-        verString = plugin.Version();
-    }
+    Version::Version(const Plugin& plugin) : verString(plugin.Version()) {}
 
     string Version::AsString() const {
         return verString;
     }
 
-    bool Version::operator < (Version ver) {
+    bool Version::operator < (const Version& ver) const {
         //Version string could have a wide variety of formats. Use regex to choose specific comparison types.
 
         regex reg1("(\\d+\\.?)+");  //a.b.c.d.e.f.... where the letters are all integers, and 'a' is the shortest possible match.
@@ -430,23 +427,23 @@ namespace loot {
         }
     }
 
-    bool Version::operator > (Version ver) {
+    bool Version::operator > (const Version& ver) const {
         return (*this != ver && !(*this < ver));
     }
 
-    bool Version::operator >= (Version ver) {
+    bool Version::operator >= (const Version& ver) const {
         return (*this == ver || *this > ver);
     }
 
-    bool Version::operator <= (Version ver) {
+    bool Version::operator <= (const Version& ver) const {
         return (*this == ver || *this < ver);
     }
 
-    bool Version::operator == (Version ver) {
+    bool Version::operator == (const Version& ver) const {
         return (verString == ver.AsString());
     }
 
-    bool Version::operator != (Version ver) {
+    bool Version::operator != (const Version& ver) const {
         return !(*this == ver);
     }
 }

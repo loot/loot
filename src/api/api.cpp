@@ -44,53 +44,53 @@
 #include <boost/filesystem/detail/utf8_codecvt_facet.hpp>
 #include <boost/filesystem.hpp>
 
-const unsigned int loot_ok                          = loot::error::ok;
-const unsigned int loot_error_liblo_error           = loot::error::liblo_error;
-const unsigned int loot_error_file_write_fail       = loot::error::path_write_fail;
-const unsigned int loot_error_parse_fail            = loot::error::path_read_fail;
-const unsigned int loot_error_condition_eval_fail   = loot::error::condition_eval_fail;
-const unsigned int loot_error_regex_eval_fail       = loot::error::regex_eval_fail;
-const unsigned int loot_error_no_mem                = loot::error::no_mem;
-const unsigned int loot_error_invalid_args          = loot::error::invalid_args;
-const unsigned int loot_error_no_tag_map            = loot::error::no_tag_map;
-const unsigned int loot_error_path_not_found        = loot::error::path_not_found;
-const unsigned int loot_error_no_game_detected      = loot::error::no_game_detected;
-const unsigned int loot_error_windows_error         = loot::error::windows_error;
-const unsigned int loot_error_sorting_error         = loot::error::sorting_error;
-const unsigned int loot_return_max                  = loot_error_sorting_error;
+const unsigned int loot_ok = loot::error::ok;
+const unsigned int loot_error_liblo_error = loot::error::liblo_error;
+const unsigned int loot_error_file_write_fail = loot::error::path_write_fail;
+const unsigned int loot_error_parse_fail = loot::error::path_read_fail;
+const unsigned int loot_error_condition_eval_fail = loot::error::condition_eval_fail;
+const unsigned int loot_error_regex_eval_fail = loot::error::regex_eval_fail;
+const unsigned int loot_error_no_mem = loot::error::no_mem;
+const unsigned int loot_error_invalid_args = loot::error::invalid_args;
+const unsigned int loot_error_no_tag_map = loot::error::no_tag_map;
+const unsigned int loot_error_path_not_found = loot::error::path_not_found;
+const unsigned int loot_error_no_game_detected = loot::error::no_game_detected;
+const unsigned int loot_error_windows_error = loot::error::windows_error;
+const unsigned int loot_error_sorting_error = loot::error::sorting_error;
+const unsigned int loot_return_max = loot_error_sorting_error;
 
 // The following are the games identifiers used by the API.
-const unsigned int loot_game_tes4                   = loot::Game::tes4;
-const unsigned int loot_game_tes5                   = loot::Game::tes5;
-const unsigned int loot_game_fo3                    = loot::Game::fo3;
-const unsigned int loot_game_fonv                   = loot::Game::fonv;
+const unsigned int loot_game_tes4 = loot::Game::tes4;
+const unsigned int loot_game_tes5 = loot::Game::tes5;
+const unsigned int loot_game_fo3 = loot::Game::fo3;
+const unsigned int loot_game_fonv = loot::Game::fonv;
 
 // LOOT message types.
-const unsigned int loot_message_say                 = loot::Message::say;
-const unsigned int loot_message_warn                = loot::Message::warn;
-const unsigned int loot_message_error               = loot::Message::error;
-const unsigned int loot_message_tag                 = loot::Message::tag;
+const unsigned int loot_message_say = loot::Message::say;
+const unsigned int loot_message_warn = loot::Message::warn;
+const unsigned int loot_message_error = loot::Message::error;
+const unsigned int loot_message_tag = loot::Message::tag;
 
 // LOOT message languages.
-const unsigned int loot_lang_any                    = loot::Language::any;
-const unsigned int loot_lang_english                = loot::Language::english;
-const unsigned int loot_lang_spanish                = loot::Language::spanish;
-const unsigned int loot_lang_russian                = loot::Language::russian;
-const unsigned int loot_lang_french                 = loot::Language::french;
-const unsigned int loot_lang_chinese                = loot::Language::chinese;
-const unsigned int loot_lang_polish                 = loot::Language::polish;
-const unsigned int loot_lang_brazilian_portuguese   = loot::Language::brazilian_portuguese;
-const unsigned int loot_lang_finnish                = loot::Language::finnish;
-const unsigned int loot_lang_german                 = loot::Language::german;
-const unsigned int loot_lang_danish                 = loot::Language::danish;
+const unsigned int loot_lang_any = loot::Language::any;
+const unsigned int loot_lang_english = loot::Language::english;
+const unsigned int loot_lang_spanish = loot::Language::spanish;
+const unsigned int loot_lang_russian = loot::Language::russian;
+const unsigned int loot_lang_french = loot::Language::french;
+const unsigned int loot_lang_chinese = loot::Language::chinese;
+const unsigned int loot_lang_polish = loot::Language::polish;
+const unsigned int loot_lang_brazilian_portuguese = loot::Language::brazilian_portuguese;
+const unsigned int loot_lang_finnish = loot::Language::finnish;
+const unsigned int loot_lang_german = loot::Language::german;
+const unsigned int loot_lang_danish = loot::Language::danish;
 
 // LOOT cleanliness codes.
-const unsigned int loot_needs_cleaning_no       = 0;
-const unsigned int loot_needs_cleaning_yes      = 1;
-const unsigned int loot_needs_cleaning_unknown  = 2;
+const unsigned int loot_needs_cleaning_no = 0;
+const unsigned int loot_needs_cleaning_yes = 1;
+const unsigned int loot_needs_cleaning_unknown = 2;
 
 struct _loot_db_int : public loot::Game {
-    _loot_db_int(const unsigned int clientGame, const std::string gamePath)
+    _loot_db_int(const unsigned int clientGame, const std::string& gamePath)
         : Game(clientGame),
         extTagMap(nullptr),
         extAddedTagIds(nullptr),
@@ -105,13 +105,13 @@ struct _loot_db_int : public loot::Game {
         delete[] extRemovedTagIds;
 
         if (extTagMap != nullptr) {
-            for (size_t i=0; i < bashTagMap.size(); i++)
+            for (size_t i = 0; i < bashTagMap.size(); i++)
                 delete[] extTagMap[i];  //Gotta clear those allocated strings.
             delete[] extTagMap;
         }
 
         if (extMessageArray != nullptr) {
-            for (size_t i=0; i < extMessageArraySize; i++)
+            for (size_t i = 0; i < extMessageArraySize; i++)
                 delete[] extMessageArray[i].message;  //Gotta clear those allocated strings.
             delete[] extMessageArray;
         }
@@ -243,7 +243,7 @@ LOOT_API unsigned int loot_create_db(loot_db * const db, const unsigned int clie
     if (gamePath != nullptr)
         game_path = gamePath;
 
-    loot_db retVal ={ 0 };
+    loot_db retVal = {0};
     try {
         retVal = new _loot_db_int(clientGame, game_path);
     }
@@ -306,13 +306,13 @@ LOOT_API unsigned int loot_load_lists(loot_db db, const char * const masterlistP
     delete[] db->extRemovedTagIds;
 
     if (db->extTagMap != nullptr) {
-        for (size_t i=0; i < db->bashTagMap.size(); i++)
+        for (size_t i = 0; i < db->bashTagMap.size(); i++)
             delete[] db->extTagMap[i];  //Gotta clear those allocated strings.
         delete[] db->extTagMap;
     }
 
     if (db->extMessageArray != nullptr) {
-        for (size_t i=0; i < db->extMessageArraySize; i++)
+        for (size_t i = 0; i < db->extMessageArraySize; i++)
             delete[] db->extMessageArray[i].message;  //Gotta clear those allocated strings.
         delete[] db->extMessageArray;
     }
@@ -374,7 +374,7 @@ LOOT_API unsigned int loot_get_tag_map(loot_db db, char *** const tagMap, size_t
 
     //Clear existing array allocation.
     if (db->extTagMap != nullptr) {
-        for (size_t i=0, max=db->bashTagMap.size(); i < max; ++i) {
+        for (size_t i = 0, max = db->bashTagMap.size(); i < max; ++i) {
             delete[] db->extTagMap[i];
         }
         delete[] db->extTagMap;
@@ -410,8 +410,8 @@ LOOT_API unsigned int loot_get_tag_map(loot_db db, char *** const tagMap, size_t
         return c_error(loot_error_no_mem, e.what());
     }
 
-    unsigned int UID = 0;
     try {
+        unsigned int UID = 0;
         for (const auto &tag : allTags) {
             db->bashTagMap.emplace(tag, UID);
             //Also allocate memory.
@@ -502,12 +502,12 @@ LOOT_API unsigned int loot_get_plugin_tags(loot_db db, const char * const plugin
     try {
         if (numAdded != 0) {
             db->extAddedTagIds = new uint32_t[numAdded];
-            for (size_t i=0; i < numAdded; i++)
+            for (size_t i = 0; i < numAdded; i++)
                 db->extAddedTagIds[i] = tagsAddedIDs[i];
         }
         if (numRemoved != 0) {
             db->extRemovedTagIds = new uint32_t[numRemoved];
-            for (size_t i=0; i < numRemoved; i++)
+            for (size_t i = 0; i < numRemoved; i++)
                 db->extRemovedTagIds[i] = tagsRemovedIDs[i];
         }
     }
@@ -535,7 +535,7 @@ LOOT_API unsigned int loot_get_plugin_messages(loot_db db, const char * const pl
 
     //Clear existing array allocation.
     if (db->extMessageArray != nullptr) {
-        for (size_t i=0; i < db->extMessageArraySize; ++i) {
+        for (size_t i = 0; i < db->extMessageArraySize; ++i) {
             delete[] db->extMessageArray[i].message;
         }
         delete[] db->extMessageArray;
