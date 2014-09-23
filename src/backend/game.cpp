@@ -466,7 +466,7 @@ namespace loot {
     void Game::RefreshActivePluginsList() {
         BOOST_LOG_TRIVIAL(debug) << "Refreshing active plugins list for game: " << _name;
 
-        lo_game_handle gh;
+        lo_game_handle gh = nullptr;
         char ** pluginArr;
         size_t pluginArrSize;
         int ret;
@@ -548,7 +548,7 @@ namespace loot {
     void Game::GetLoadOrder(std::list<std::string>& loadOrder) const {
         BOOST_LOG_TRIVIAL(debug) << "Getting load order for game: " << _name;
 
-        lo_game_handle gh;
+        lo_game_handle gh = nullptr;
         char ** pluginArr;
         size_t pluginArrSize;
 

@@ -20,7 +20,7 @@
     You should have received a copy of the GNU General Public License
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
-*/
+    */
 
 #ifndef __LOOT_PARSERS__
 #define __LOOT_PARSERS__
@@ -55,13 +55,12 @@
 #include <boost/format.hpp>
 
 namespace YAML {
-
     ///////////////////////
     // Parser
     ///////////////////////
 
     template<>
-    struct convert<loot::Game> {
+    struct convert < loot::Game > {
         static Node encode(const loot::Game& rhs) {
             Node node;
 
@@ -113,7 +112,7 @@ namespace YAML {
     };
 
     template<>
-    struct convert<loot::PluginDirtyInfo> {
+    struct convert < loot::PluginDirtyInfo > {
         static Node encode(const loot::PluginDirtyInfo& rhs) {
             Node node;
             node["crc"] = rhs.CRC();
@@ -152,7 +151,7 @@ namespace YAML {
     };
 
     template<>
-    struct convert<loot::MessageContent> {
+    struct convert < loot::MessageContent > {
         static Node encode(const loot::MessageContent& rhs) {
             Node node;
             node["str"] = rhs.Str();
@@ -175,7 +174,7 @@ namespace YAML {
     };
 
     template<>
-    struct convert<loot::Message> {
+    struct convert < loot::Message > {
         static Node encode(const loot::Message& rhs) {
             Node node;
             node["condition"] = rhs.Condition();
@@ -192,10 +191,10 @@ namespace YAML {
         }
 
         static bool decode(const Node& node, loot::Message& rhs) {
-            if(!node.IsMap() || !node["type"] || !node["content"])
+            if (!node.IsMap() || !node["type"] || !node["content"])
                 return false;
 
-            unsigned int typeNo;
+            unsigned int typeNo = loot::Message::say;
             if (node["type"]) {
                 std::string type;
                 type = node["type"].as<std::string>();
@@ -218,7 +217,7 @@ namespace YAML {
             //Check now that at least one item in content is English if there are multiple items.
             if (content.size() > 1) {
                 bool found = false;
-                for (const auto &mc: content) {
+                for (const auto &mc : content) {
                     if (mc.Language() == loot::Language::english)
                         found = true;
                 }
@@ -236,7 +235,7 @@ namespace YAML {
     };
 
     template<>
-    struct convert<loot::File> {
+    struct convert < loot::File > {
         static Node encode(const loot::File& rhs) {
             Node node;
             node["condition"] = rhs.Condition();
@@ -246,7 +245,7 @@ namespace YAML {
         }
 
         static bool decode(const Node& node, loot::File& rhs) {
-            if(node.IsMap()) {
+            if (node.IsMap()) {
                 std::string condition, name, display;
                 if (node["condition"])
                     condition = node["condition"].as<std::string>();
@@ -255,14 +254,15 @@ namespace YAML {
                 if (node["display"])
                     display = node["display"].as<std::string>();
                 rhs = loot::File(name, display, condition);
-            } else
+            }
+            else
                 rhs = loot::File(node.as<std::string>());
             return true;
         }
     };
 
     template<>
-    struct convert<loot::Tag> {
+    struct convert < loot::Tag > {
         static Node encode(const loot::Tag& rhs) {
             Node node;
             node["condition"] = rhs.Condition();
@@ -275,12 +275,13 @@ namespace YAML {
 
         static bool decode(const Node& node, loot::Tag& rhs) {
             std::string condition, tag;
-            if(node.IsMap()) {
+            if (node.IsMap()) {
                 if (node["condition"])
                     condition = node["condition"].as<std::string>();
                 if (node["name"])
                     tag = node["name"].as<std::string>();
-            } else if (node.IsScalar())
+            }
+            else if (node.IsScalar())
                 tag = node.as<std::string>();
 
             if (tag[0] == '-')
@@ -293,30 +294,29 @@ namespace YAML {
     };
 
     template<class T, class Compare>
-    struct convert< std::set<T, Compare> > {
-      static Node encode(const std::set<T, Compare>& rhs) {
-          Node node;
-          for (const auto &element: rhs) {
-              node.push_back(element);
-          }
-          return node;
-      }
-
-      static bool decode(const Node& node, std::set<T, Compare>& rhs) {
-        if(!node.IsSequence())
-            return false;
-
-        rhs.clear();
-        for (const auto &element : node) {
-            rhs.insert(element.as<T>());
+    struct convert < std::set<T, Compare> > {
+        static Node encode(const std::set<T, Compare>& rhs) {
+            Node node;
+            for (const auto &element : rhs) {
+                node.push_back(element);
+            }
+            return node;
         }
-        return true;
 
-      }
+        static bool decode(const Node& node, std::set<T, Compare>& rhs) {
+            if (!node.IsSequence())
+                return false;
+
+            rhs.clear();
+            for (const auto &element : node) {
+                rhs.insert(element.as<T>());
+            }
+            return true;
+        }
     };
 
     template<class T, class Hash>
-    struct convert< std::unordered_set<T, Hash> > {
+    struct convert < std::unordered_set<T, Hash> > {
         static Node encode(const std::unordered_set<T, Hash>& rhs) {
             Node node;
             for (const auto &element : rhs) {
@@ -334,12 +334,11 @@ namespace YAML {
                 rhs.insert(element.as<T>());
             }
             return true;
-
         }
     };
 
     template<>
-    struct convert<loot::Plugin> {
+    struct convert < loot::Plugin > {
         static Node encode(const loot::Plugin& rhs) {
             Node node;
             node["name"] = rhs.Name();
@@ -356,7 +355,7 @@ namespace YAML {
         }
 
         static bool decode(const Node& node, loot::Plugin& rhs) {
-            if(!node.IsMap())
+            if (!node.IsMap())
                 return false;
 
             if (node["name"])
@@ -388,7 +387,6 @@ namespace YAML {
 }
 
 namespace loot {
-
     ///////////////////////////////
     // Condition parser/evaluator
     ///////////////////////////////
@@ -398,32 +396,31 @@ namespace loot {
     namespace phoenix = boost::phoenix;
 
     template<typename Iterator, typename Skipper>
-    class condition_grammar : public qi::grammar<Iterator, bool(), Skipper> {
+    class condition_grammar : public qi::grammar < Iterator, bool(), Skipper > {
     public:
         condition_grammar(Game& game, bool parseOnly) : condition_grammar::base_type(expression, "condition grammar"), _game(game), _parseOnly(parseOnly) {
-
             expression =
-                compound                            [qi::labels::_val = qi::labels::_1]
-                >> *((qi::lit("or") >> compound)    [qi::labels::_val = qi::labels::_val || qi::labels::_1])
+                compound[qi::labels::_val = qi::labels::_1]
+                >> *((qi::lit("or") >> compound)[qi::labels::_val = qi::labels::_val || qi::labels::_1])
                 ;
 
             compound =
-                condition                           [qi::labels::_val = qi::labels::_1]
-                >> *((qi::lit("and") >> condition)  [qi::labels::_val = qi::labels::_val && qi::labels::_1])
+                condition[qi::labels::_val = qi::labels::_1]
+                >> *((qi::lit("and") >> condition)[qi::labels::_val = qi::labels::_val && qi::labels::_1])
                 ;
 
             condition =
-                  function                          [qi::labels::_val = qi::labels::_1]
-                | ( qi::lit("not") > condition )     [qi::labels::_val = !qi::labels::_1]
-                | ( '(' > expression > ')' )        [qi::labels::_val = qi::labels::_1]
+                function[qi::labels::_val = qi::labels::_1]
+                | (qi::lit("not") > condition)[qi::labels::_val = !qi::labels::_1]
+                | ('(' > expression > ')')[qi::labels::_val = qi::labels::_1]
                 ;
 
             function =
-                  ( "file("     > filePath > ')' )                                             [phoenix::bind(&condition_grammar::CheckFile, this, qi::labels::_val, qi::labels::_1)]
-                | ( "regex("     > quotedStr > ')' )                                             [phoenix::bind(&condition_grammar::CheckRegex, this, qi::labels::_val, qi::labels::_1)]
-                | ( "checksum(" > filePath > ',' > qi::hex > ')' )                    [phoenix::bind(&condition_grammar::CheckSum, this, qi::labels::_val, qi::labels::_1, qi::labels::_2)]
-                | ( "version("  > filePath > ',' > quotedStr  > ',' > comparator > ')' )   [phoenix::bind(&condition_grammar::CheckVersion, this, qi::labels::_val, qi::labels::_1, qi::labels::_2, qi::labels::_3)]
-                | ( "active("   > filePath > ')' )                                             [phoenix::bind(&condition_grammar::CheckActive, this, qi::labels::_val, qi::labels::_1)]
+                ("file(" > filePath > ')')[phoenix::bind(&condition_grammar::CheckFile, this, qi::labels::_val, qi::labels::_1)]
+                | ("regex(" > quotedStr > ')')[phoenix::bind(&condition_grammar::CheckRegex, this, qi::labels::_val, qi::labels::_1)]
+                | ("checksum(" > filePath > ',' > qi::hex > ')')[phoenix::bind(&condition_grammar::CheckSum, this, qi::labels::_val, qi::labels::_1, qi::labels::_2)]
+                | ("version(" > filePath > ',' > quotedStr > ',' > comparator > ')')[phoenix::bind(&condition_grammar::CheckVersion, this, qi::labels::_val, qi::labels::_1, qi::labels::_2, qi::labels::_3)]
+                | ("active(" > filePath > ')')[phoenix::bind(&condition_grammar::CheckActive, this, qi::labels::_val, qi::labels::_1)]
                 ;
 
             quotedStr %= '"' > +(unicode::char_ - '"') > '"';
@@ -431,7 +428,7 @@ namespace loot {
             filePath %= '"' > +(unicode::char_ - invalidPathChars) > '"';
 
             invalidPathChars %=
-                  unicode::char_(':')
+                unicode::char_(':')
                 | unicode::char_('*')
                 | unicode::char_('?')
                 | unicode::char_('"')
@@ -441,7 +438,7 @@ namespace loot {
                 ;
 
             comparator %=
-                  unicode::string("==")
+                unicode::string("==")
                 | unicode::string("!=")
                 | unicode::string("<=")
                 | unicode::string(">=")
@@ -458,14 +455,14 @@ namespace loot {
             comparator.name("comparator");
             invalidPathChars.name("invalid file path characters");
 
-            qi::on_error<qi::fail>(expression,  phoenix::bind(&condition_grammar::SyntaxError, this, qi::labels::_1, qi::labels::_2, qi::labels::_3, qi::labels::_4));
-            qi::on_error<qi::fail>(compound,   phoenix::bind(&condition_grammar::SyntaxError, this, qi::labels::_1, qi::labels::_2, qi::labels::_3, qi::labels::_4));
-            qi::on_error<qi::fail>(condition,   phoenix::bind(&condition_grammar::SyntaxError, this, qi::labels::_1, qi::labels::_2, qi::labels::_3, qi::labels::_4));
-            qi::on_error<qi::fail>(function,        phoenix::bind(&condition_grammar::SyntaxError, this, qi::labels::_1, qi::labels::_2, qi::labels::_3, qi::labels::_4));
-            qi::on_error<qi::fail>(quotedStr,   phoenix::bind(&condition_grammar::SyntaxError, this, qi::labels::_1, qi::labels::_2, qi::labels::_3, qi::labels::_4));
-            qi::on_error<qi::fail>(filePath,   phoenix::bind(&condition_grammar::SyntaxError, this, qi::labels::_1, qi::labels::_2, qi::labels::_3, qi::labels::_4));
-            qi::on_error<qi::fail>(comparator,   phoenix::bind(&condition_grammar::SyntaxError, this, qi::labels::_1, qi::labels::_2, qi::labels::_3, qi::labels::_4));
-            qi::on_error<qi::fail>(invalidPathChars,   phoenix::bind(&condition_grammar::SyntaxError, this, qi::labels::_1, qi::labels::_2, qi::labels::_3, qi::labels::_4));
+            qi::on_error<qi::fail>(expression, phoenix::bind(&condition_grammar::SyntaxError, this, qi::labels::_1, qi::labels::_2, qi::labels::_3, qi::labels::_4));
+            qi::on_error<qi::fail>(compound, phoenix::bind(&condition_grammar::SyntaxError, this, qi::labels::_1, qi::labels::_2, qi::labels::_3, qi::labels::_4));
+            qi::on_error<qi::fail>(condition, phoenix::bind(&condition_grammar::SyntaxError, this, qi::labels::_1, qi::labels::_2, qi::labels::_3, qi::labels::_4));
+            qi::on_error<qi::fail>(function, phoenix::bind(&condition_grammar::SyntaxError, this, qi::labels::_1, qi::labels::_2, qi::labels::_3, qi::labels::_4));
+            qi::on_error<qi::fail>(quotedStr, phoenix::bind(&condition_grammar::SyntaxError, this, qi::labels::_1, qi::labels::_2, qi::labels::_3, qi::labels::_4));
+            qi::on_error<qi::fail>(filePath, phoenix::bind(&condition_grammar::SyntaxError, this, qi::labels::_1, qi::labels::_2, qi::labels::_3, qi::labels::_4));
+            qi::on_error<qi::fail>(comparator, phoenix::bind(&condition_grammar::SyntaxError, this, qi::labels::_1, qi::labels::_2, qi::labels::_3, qi::labels::_4));
+            qi::on_error<qi::fail>(invalidPathChars, phoenix::bind(&condition_grammar::SyntaxError, this, qi::labels::_1, qi::labels::_2, qi::labels::_3, qi::labels::_4));
         }
 
     private:
@@ -535,14 +532,14 @@ namespace loot {
             components.pop_back();
 
             std::string parent;
-            for (std::vector<std::string>::const_iterator it=components.begin(), endIt=components.end()--; it != endIt; ++it) {
+            for (std::vector<std::string>::const_iterator it = components.begin(), endIt = components.end()--; it != endIt; ++it) {
                 if (*it == ".")
                     continue;
 
                 parent += *it + '/';
             }
 
-            if (boost::contains(parent, "../../")){
+            if (boost::contains(parent, "../../")) {
                 BOOST_LOG_TRIVIAL(error) << "Invalid folder path: " << parent;
                 throw loot::error(loot::error::invalid_args, boost::locale::translate("Invalid folder path:").str() + " " + parent);
             }
@@ -559,7 +556,8 @@ namespace loot {
             regex reg;
             try {
                 reg = regex(filename, regex::ECMAScript | regex::icase);
-            } catch (exception& /*e*/) {
+            }
+            catch (exception& /*e*/) {
                 BOOST_LOG_TRIVIAL(error) << "Invalid regex string:" << filename;
                 throw loot::error(loot::error::invalid_args, boost::locale::translate("Invalid regex string:").str() + " " + filename);
             }
@@ -585,7 +583,7 @@ namespace loot {
             }
 
             uint32_t crc;
-            unordered_map<std::string,uint32_t>::iterator it = _game.crcCache.find(boost::to_lower_copy(file));
+            unordered_map<std::string, uint32_t>::iterator it = _game.crcCache.find(boost::to_lower_copy(file));
 
             if (it != _game.crcCache.end())
                 crc = it->second;
@@ -628,12 +626,13 @@ namespace loot {
             else if (IsPlugin(file)) {
                 Plugin plugin(_game, file, true);
                 trueVersion = Version(plugin.Version());
-            } else
+            }
+            else
                 trueVersion = Version(_game.DataPath() / file);
 
             BOOST_LOG_TRIVIAL(trace) << "Version extracted: " << trueVersion.AsString();
 
-            if (   (comparator == "==" && trueVersion != givenVersion)
+            if ((comparator == "==" && trueVersion != givenVersion)
                 || (comparator == "!=" && trueVersion == givenVersion)
                 || (comparator == "<" && trueVersion >= givenVersion)
                 || (comparator == ">" && trueVersion <= givenVersion)
@@ -657,8 +656,7 @@ namespace loot {
         }
 
         void SyntaxError(Iterator const& /*first*/, Iterator const& last, Iterator const& errorpos, boost::spirit::info const& what) {
-
-            std::string context(errorpos, min(errorpos +50, last));
+            std::string context(errorpos, min(errorpos + 50, last));
             boost::trim(context);
 
             BOOST_LOG_TRIVIAL(error) << "Expected \"" << what.tag << "\" at \"" << context << "\".";
@@ -668,14 +666,13 @@ namespace loot {
 
         //Checks that the path (not regex) doesn't go outside any game folders.
         bool IsSafePath(const std::string& path) {
-
             BOOST_LOG_TRIVIAL(trace) << "Checking to see if the path \"" << path << "\" is safe.";
 
             std::vector<std::string> components;
             boost::split(components, path, boost::is_any_of("/\\"));
             components.pop_back();
             std::string parent_path;
-            for (auto it=components.cbegin(), endIt=components.cend()--; it != endIt; ++it) {
+            for (auto it = components.cbegin(), endIt = components.cend()--; it != endIt; ++it) {
                 if (*it == ".")
                     continue;
                 parent_path += *it + '/';

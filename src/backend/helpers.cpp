@@ -164,7 +164,7 @@ namespace loot {
 #ifdef _WIN32
     //Get registry subkey value string.
     string RegKeyStringValue(const std::string& keyStr, const std::string& subkey, const std::string& value) {
-        HKEY hKey, key;
+        HKEY hKey, key = NULL;
         DWORD BufferSize = 4096;
         wchar_t val[4096];
 
