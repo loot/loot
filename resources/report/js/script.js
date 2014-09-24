@@ -1124,13 +1124,26 @@ function showHoverText(evt) {
 
     var rect = evt.target.getBoundingClientRect();
     hoverText.style.left = (rect.left + evt.target.offsetWidth/2) + 'px';
-    hoverText.style.top = (rect.bottom + 10) + 'px';
+
+    if (rect.bottom + 30 > window.innerHeight) {
+        hoverText.style.top = (rect.top - 30) + 'px';
+    } else {
+        hoverText.style.top = (rect.bottom + 10) + 'px';
+    }
 
     var dialog = getDialogParent(evt.target);
     if (dialog) {
         dialog.appendChild(hoverText);
     } else {
         document.body.appendChild(hoverText);
+    }
+
+    /* Now check that the computed height isn't larger than expected. */
+    var height = getComputedStyle(hoverText).height;
+    height = parseInt(height.substr(0, height.length - 2), 10);
+    if (height > 20 && rect.bottom + height + 10 > window.innerHeight) {
+        /* Tooltip is either covering its source element, or is going off-window. */
+        hoverText.style.top = (rect.top - height - 10) + 'px';
     }
 }
 function hideHoverText(evt) {
