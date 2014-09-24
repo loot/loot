@@ -583,7 +583,7 @@ namespace loot {
             }
 
             uint32_t crc;
-            unordered_map<std::string, uint32_t>::iterator it = _game.crcCache.find(boost::to_lower_copy(file));
+            unordered_map<std::string, uint32_t>::iterator it = _game.crcCache.find(boost::locale::to_lower(file));
 
             if (it != _game.crcCache.end())
                 crc = it->second;
@@ -599,7 +599,7 @@ namespace loot {
                     return;
                 }
 
-                _game.crcCache.emplace(boost::to_lower_copy(file), crc);
+                _game.crcCache.emplace(boost::locale::to_lower(file), crc);
             }
 
             result = checksum == crc;

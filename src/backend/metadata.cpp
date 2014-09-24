@@ -339,11 +339,17 @@ namespace loot {
 
     Plugin::Plugin(loot::Game& game, const std::string& n, const bool headerOnly)
         : name(n), enabled(true), priority(0), isMaster(false), crc(0), numOverrideRecords(0), _isPriorityExplicit(false) {
+        //If the name passed ends in '.ghost', that should be trimmed.
+        if (boost::iends_with(name, ".ghost")) {
+            BOOST_LOG_TRIVIAL(trace) << name << ": " << "Trimming '.ghost' extension.";
+            name = name.substr(0, name.length() - 6);
+        }
+
         // Get data from file contents using libespm. Assumes libespm has already been initialised.
         BOOST_LOG_TRIVIAL(trace) << name << ": " << "Opening with libespm...";
         boost::filesystem::path filepath = game.DataPath() / name;
 
-        //In case the plugin is ghosted, but the extension already got trimmed.
+        //In case the plugin is ghosted.
         if (!boost::filesystem::exists(filepath) && boost::filesystem::exists(filepath.string() + ".ghost"))
             filepath += ".ghost";
 
@@ -368,7 +374,7 @@ namespace loot {
 
             BOOST_LOG_TRIVIAL(trace) << name << ": " << "Getting CRC.";
             crc = file->crc;
-            game.crcCache.insert(pair<string, uint32_t>(n, crc));
+            game.crcCache.insert(pair<string, uint32_t>(boost::locale::to_lower(name), crc));
 
             BOOST_LOG_TRIVIAL(trace) << name << ": " << "Getting the FormIDs.";
             vector<uint32_t> records = file->getFormIDs();
@@ -419,12 +425,6 @@ namespace loot {
         catch (std::exception& e) {
             BOOST_LOG_TRIVIAL(error) << "Cannot read plugin file \"" << name << "\". Details: " << e.what();
             messages.push_back(loot::Message(loot::Message::error, (boost::format(boost::locale::translate("Cannot read \"%1%\". Details: %2%")) % name % e.what()).str()));
-        }
-
-        //If the name passed ends in '.ghost', that should be trimmed.
-        if (boost::iends_with(name, ".ghost")) {
-            BOOST_LOG_TRIVIAL(trace) << name << ": " << "Trimming '.ghost' extension.";
-            name = name.substr(0, name.length() - 6);
         }
 
         BOOST_LOG_TRIVIAL(trace) << name << ": " << "Plugin loading complete.";
