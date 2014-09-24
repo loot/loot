@@ -182,6 +182,8 @@ dialog {
     padding: 2em;
     top: 3em;
     max-width: 40em;
+    max-height: calc(100% - 8em);
+    overflow: auto;
 }
 dialog > h1 {
     font-weight: normal;
