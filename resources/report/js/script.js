@@ -25,7 +25,7 @@
 var marked;
 var l10n;
 var loot = {
-    hasFocus: true,
+    pauseAutoRefresh: false,
     installedGames: [],
     settings: {},
     game: {
@@ -795,6 +795,7 @@ function closeProgressDialog() {
     }
 }
 function sortPlugins(evt) {
+    loot.pauseAutoRefresh = true;
     var mlistUpdate;
     if (loot.settings.updateMasterlist) {
         mlistUpdate = updateMasterlist(evt);
@@ -869,6 +870,9 @@ function applySort(evt) {
         showElement(document.getElementById('sortButton'));
         hideElement(document.getElementById('applySortButton'));
         hideElement(document.getElementById('cancelSortButton'));
+
+        /* Re-enable auto-refresh. */
+        loot.pauseAutoRefresh = false;
     }).catch(processCefError);
 }
 function cancelSort(evt) {
@@ -884,6 +888,9 @@ function cancelSort(evt) {
         showElement(document.getElementById('sortButton'));
         hideElement(document.getElementById('applySortButton'));
         hideElement(document.getElementById('cancelSortButton'));
+
+        /* Re-enable auto-refresh. */
+        loot.pauseAutoRefresh = false;
     }).catch(processCefError);
 }
 function redatePlugins(evt) {
@@ -1370,6 +1377,9 @@ function initVars() {
     }).catch(processCefError);
 }
 function onFocus(evt) {
+    if (loot.pauseAutoRefresh) {
+        return;
+    }
     /* Send a query for updated load order and plugin header info. */
     updateProgressDialog('Refreshing data...');
     openProgressDialog();
