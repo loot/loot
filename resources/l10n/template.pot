@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT v0.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-21 21:26-0000\n"
-"PO-Revision-Date: 2014-09-21 21:26-0000\n"
+"POT-Creation-Date: 2014-09-24 17:57-0000\n"
+"PO-Revision-Date: 2014-09-24 17:57-0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -30,53 +30,53 @@ msgstr ""
 msgid "Game path could not be detected."
 msgstr ""
 
-#: src/backend/game.cpp:488 src/backend/game.cpp:569 src/backend/game.cpp:645
+#: src/backend/game.cpp:490 src/backend/game.cpp:573 src/backend/game.cpp:651
 msgid ""
 "libloadorder failed to create a game handle. Details could not be fetched."
 msgstr ""
 
-#: src/backend/game.cpp:492 src/backend/game.cpp:573 src/backend/game.cpp:649
+#: src/backend/game.cpp:494 src/backend/game.cpp:577 src/backend/game.cpp:655
 msgid "libloadorder failed to create a game handle. Details:"
 msgstr ""
 
-#: src/backend/game.cpp:507 src/backend/game.cpp:588 src/backend/game.cpp:663
+#: src/backend/game.cpp:509 src/backend/game.cpp:592 src/backend/game.cpp:669
 msgid ""
 "libloadorder failed to initialise game master file support. Details could "
 "not be fetched."
 msgstr ""
 
-#: src/backend/game.cpp:511 src/backend/game.cpp:592 src/backend/game.cpp:667
+#: src/backend/game.cpp:513 src/backend/game.cpp:596 src/backend/game.cpp:673
 msgid "libloadorder failed to initialise game master file support. Details:"
 msgstr ""
 
-#: src/backend/game.cpp:524
+#: src/backend/game.cpp:526
 msgid ""
 "libloadorder failed to get the active plugins list. Details could not be "
 "fetched."
 msgstr ""
 
-#: src/backend/game.cpp:528
+#: src/backend/game.cpp:530
 msgid "libloadorder failed to get the active plugins list. Details:"
 msgstr ""
 
-#: src/backend/game.cpp:605 src/backend/game.cpp:692
+#: src/backend/game.cpp:609 src/backend/game.cpp:698
 msgid ""
 "libloadorder failed to set the load order. Details could not be fetched."
 msgstr ""
 
-#: src/backend/game.cpp:609
+#: src/backend/game.cpp:613
 msgid "libloadorder failed to get the load order. Details:"
 msgstr ""
 
-#: src/backend/game.cpp:696
+#: src/backend/game.cpp:702
 msgid "libloadorder failed to set the load order. Details:"
 msgstr ""
 
-#: src/backend/game.cpp:823
+#: src/backend/game.cpp:829
 msgid "Could not create LOOT folder for game. Details:"
 msgstr ""
 
-#: src/backend/game.cpp:857 src/gui/handler.cpp:947
+#: src/backend/game.cpp:863 src/gui/handler.cpp:947
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
 msgstr ""
 
@@ -84,11 +84,11 @@ msgstr ""
 msgid "Git operation failed. Error: %1%"
 msgstr ""
 
-#: src/backend/git.cpp:519
+#: src/backend/git.cpp:517
 msgid "Masterlist revision"
 msgstr ""
 
-#: src/backend/git.cpp:519
+#: src/backend/git.cpp:517
 msgid "Rolled back to the previous revision."
 msgstr ""
 
@@ -110,53 +110,53 @@ msgstr ""
 msgid "Failed to parse condition \"%1%\"."
 msgstr ""
 
-#: src/backend/metadata.cpp:421
+#: src/backend/metadata.cpp:429
 msgid "Cannot read \"%1%\". Details: %2%"
 msgstr ""
 
-#: src/backend/metadata.cpp:780 src/backend/metadata.cpp:791
+#: src/backend/metadata.cpp:782 src/backend/metadata.cpp:793
 msgid "This plugin requires \"%1%\" to be installed, but it is missing."
 msgstr ""
 
-#: src/backend/metadata.cpp:784
+#: src/backend/metadata.cpp:786
 msgid "This plugin requires \"%1%\" to be active, but it is inactive."
 msgstr ""
 
-#: src/backend/metadata.cpp:799
+#: src/backend/metadata.cpp:801
 msgid "This plugin is incompatible with \"%1%\", but both are present."
 msgstr ""
 
-#: src/backend/metadata.cpp:808
+#: src/backend/metadata.cpp:810
 msgid ""
 "Contains %1% ITM records, %2% UDR records and %3% deleted navmeshes. Clean "
 "with %4%."
 msgstr ""
 
-#: src/backend/metadata.cpp:810
+#: src/backend/metadata.cpp:812
 msgid "Clean with %1%."
 msgstr ""
 
-#: src/backend/metadata.cpp:813
+#: src/backend/metadata.cpp:815
 msgid "Contains %1% UDR records and %2% deleted navmeshes. Clean with %3%."
 msgstr ""
 
-#: src/backend/metadata.cpp:815
+#: src/backend/metadata.cpp:817
 msgid "Contains %1% deleted navmeshes. Clean with %2%."
 msgstr ""
 
-#: src/backend/metadata.cpp:817
+#: src/backend/metadata.cpp:819
 msgid "Contains %1% UDR records. Clean with %2%."
 msgstr ""
 
-#: src/backend/metadata.cpp:820
+#: src/backend/metadata.cpp:822
 msgid "Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%."
 msgstr ""
 
-#: src/backend/metadata.cpp:822
+#: src/backend/metadata.cpp:824
 msgid "Contains %1% ITM records. Clean with %2%."
 msgstr ""
 
-#: src/backend/metadata.cpp:825
+#: src/backend/metadata.cpp:827
 msgid "Contains %1% ITM records and %2% UDR records. Clean with %3%."
 msgstr ""
 
@@ -182,23 +182,23 @@ msgid ""
 "%1%"
 msgstr ""
 
-#: src/backend/parsers.h:493 src/backend/parsers.h:584
+#: src/backend/parsers.h:490 src/backend/parsers.h:582
 msgid "Invalid file path:"
 msgstr ""
 
-#: src/backend/parsers.h:547
+#: src/backend/parsers.h:544
 msgid "Invalid folder path:"
 msgstr ""
 
-#: src/backend/parsers.h:564
+#: src/backend/parsers.h:562
 msgid "Invalid regex string:"
 msgstr ""
 
-#: src/backend/parsers.h:666
+#: src/backend/parsers.h:664
 msgid "Expected \"%1%\" at \"%2%\"."
 msgstr ""
 
-#: resources/report/js/custom.js:703
+#: resources/report/js/custom.js:703 resources/report/js/l10n.js:216
 msgid "OK"
 msgstr ""
 
@@ -579,6 +579,22 @@ msgstr ""
 
 #: resources/report/js/l10n.js:204
 msgid "Language changes will be applied after LOOT is restarted."
+msgstr ""
+
+#: resources/report/js/l10n.js:211
+msgid "First-Time Tips"
+msgstr ""
+
+#: resources/report/js/l10n.js:213
+msgid ""
+"Multiple metadata editors can be opened at once, and the menu bar is "
+"disabled while any editors are open."
+msgstr ""
+
+#: resources/report/js/l10n.js:214
+msgid ""
+"Many interface elements have tooltips. If you don't know what something is, "
+"try hovering your mouse over it to find out."
 msgstr ""
 
 #: resources/report/js/script.js:244 resources/report/js/script.js:249

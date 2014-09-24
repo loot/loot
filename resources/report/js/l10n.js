@@ -206,6 +206,14 @@
             document.getElementById('settings').getElementsByClassName('accept')[0].textContent = l10n.translate("Apply").fetch();
             document.getElementById('settings').getElementsByClassName('cancel')[0].textContent = l10n.translate("Cancel").fetch();
 
+            /* First-run dialog */
+            var firstRun = document.getElementById('firstRun');
+            firstRun.getElementsByTagName('h1').textContent = l10n.translate("First-Time Tips").fetch();
+
+            firstRun.querySelector('li:nth-child(4)').textContent = l10n.translate("Multiple metadata editors can be opened at once, and the menu bar is disabled while any editors are open.").fetch();
+            firstRun.querySelector('li:last-child').textContent = l10n.translate("Many interface elements have tooltips. If you don't know what something is, try hovering your mouse over it to find out.").fetch();
+
+            firstRun.getElementsByClassName('accept')[0].textContent = l10n.translate("OK").fetch();
         },
 
         getJedInstance: function(locale) {
