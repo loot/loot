@@ -485,6 +485,16 @@ namespace loot {
         if (pluginMetadata["userlist"]["dirty"])
             newUserlistEntry.DirtyInfo(pluginMetadata["userlist"]["dirty"].as<set<PluginDirtyInfo>>());
 
+        // For cleanliness, only data that does not duplicate masterlist and plugin data should be retained, so diff that.
+        auto pluginIt = g_app_state.CurrentGame().plugins.find(boost::locale::to_lower(newUserlistEntry.Name()));
+        if (pluginIt != g_app_state.CurrentGame().plugins.end()) {
+            Plugin tempPlugin(pluginIt->second);
+            tempPlugin.MergeMetadata(g_app_state.CurrentGame().masterlist.FindPlugin(newUserlistEntry));
+            newUserlistEntry = newUserlistEntry.NewMetadata(tempPlugin);
+        }
+        else
+            newUserlistEntry = newUserlistEntry.NewMetadata(g_app_state.CurrentGame().masterlist.FindPlugin(newUserlistEntry));
+
         // Now replace existing userlist entry with the new one.
         if (!ulistPlugin.HasNameOnly()) {
             BOOST_LOG_TRIVIAL(trace) << "Replacing existing userlist entry with new metadata.";
