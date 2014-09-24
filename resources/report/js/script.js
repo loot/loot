@@ -1324,10 +1324,12 @@ function initVars() {
 
             try {
                 loot.settings = JSON.parse(results[2]);
-                l10n.getJedInstance(loot.settings.language).then(function(jed){
-                    l10n.translateStaticText(jed);
-                    l10n = jed;
-                });
+                if (loot.settings.language != 'en') {
+                    l10n.getJedInstance(loot.settings.language).then(function(jed){
+                        l10n.translateStaticText(jed);
+                        l10n = jed;
+                    });
+                }
             } catch (e) {
                 console.log(e);
                 console.log('getSettings response: ' + results[2]);
