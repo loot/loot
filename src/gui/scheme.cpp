@@ -47,13 +47,22 @@ namespace loot {
         // Get the file from the custom URL.
         string file = (g_path_l10n / string(request->GetURL()).substr(12)).string();
 
-        // Load the file into a CEF stream.
-        CefRefPtr<CefStreamReader> stream = CefStreamReader::CreateForFile(file);
-        BOOST_LOG_TRIVIAL(trace) << "Loaded file: " << file;
-
         CefResponse::HeaderMap headers;
         headers.emplace("Access-Control-Allow-Origin", "*");
 
-        return new CefStreamResourceHandler(200, "OK", "application/octet-stream", headers, stream);
+        if (boost::filesystem::exists(file)) {
+            // Load the file into a CEF stream.
+            CefRefPtr<CefStreamReader> stream = CefStreamReader::CreateForFile(file);
+            BOOST_LOG_TRIVIAL(trace) << "Loaded file: " << file;
+
+            return new CefStreamResourceHandler(200, "OK", "application/octet-stream", headers, stream);
+        }
+        else {
+            BOOST_LOG_TRIVIAL(trace) << "File " << file << " not found, sending 404.";
+
+            const string error404 = "File not found.";
+            CefRefPtr<CefStreamReader> stream = CefStreamReader::CreateForData((void*)error404.c_str(), error404.size());
+            return new CefStreamResourceHandler(404, "Not Found", "application/octet-stream", headers, stream);
+        }
     }
 }
