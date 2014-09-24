@@ -372,9 +372,11 @@ namespace loot {
 
             BOOST_LOG_TRIVIAL(trace) << name << ": " << "Number of masters: " << masters.size();
 
-            BOOST_LOG_TRIVIAL(trace) << name << ": " << "Getting CRC.";
-            crc = file->crc;
-            game.crcCache.insert(pair<string, uint32_t>(boost::locale::to_lower(name), crc));
+            if (!headerOnly) {
+                BOOST_LOG_TRIVIAL(trace) << name << ": " << "Getting CRC.";
+                crc = file->crc;
+                game.crcCache.insert(pair<string, uint32_t>(boost::locale::to_lower(name), crc));
+            }
 
             BOOST_LOG_TRIVIAL(trace) << name << ": " << "Getting the FormIDs.";
             vector<uint32_t> records = file->getFormIDs();
