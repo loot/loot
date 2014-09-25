@@ -96,29 +96,29 @@
             pluginCard.getElementById('cancel').textContent = l10n.translate("Cancel").fetch();
 
             /* Plugin List Item Template */
-            var pluginLI = document.getElementById('pluginLI');
-            pluginLI.getElementsByClassName('dummyPlugin')[0].title = l10n.translate("Dummy Plugin").fetch();
-            pluginLI.getElementsByClassName('loadsBSA')[0].title = l10n.translate("Loads BSA").fetch();
-            pluginLI.getElementsByClassName('hasUserEdits')[0].title = l10n.translate("Has User Metadata").fetch();
-            pluginLI.getElementsByClassName('hasGlobalPriority')[0].title = l10n.translate("Priority Is Global").fetch();
+            var pluginLI = document.getElementById('pluginLI').content;
+            pluginLI.querySelector('.dummyPlugin').title = l10n.translate("Dummy Plugin").fetch();
+            pluginLI.querySelector('.loadsBSA').title = l10n.translate("Loads BSA").fetch();
+            pluginLI.querySelector('.hasUserEdits').title = l10n.translate("Has User Metadata").fetch();
+            pluginLI.querySelector('.hasGlobalPriority').title = l10n.translate("Priority Is Global").fetch();
 
             /* Plugin menu template */
-            var pluginMenu = document.getElementById('pluginMenu');
+            var pluginMenu = document.getElementById('pluginMenu').content;
             pluginMenu.getElementById('showOnlyConflicts').nextSibling.textContent = l10n.translate("Show Only Conflicts").fetch();
             pluginMenu.getElementById('editMetadata').firstChild.nextSibling.textContent = l10n.translate("Edit Metadata").fetch();
             pluginMenu.getElementById('copyMetadata').firstChild.nextSibling.textContent = l10n.translate("Copy Metadata As Text").fetch();
             pluginMenu.getElementById('clearMetadata').firstChild.nextSibling.textContent = l10n.translate("Clear User Metadata").fetch();
 
             /* Message row template */
-            var messageRow = document.getElementById('messageRow');
-            messageRow.getElementsByClassName('type')[0].children[0].textContent = l10n.translate("Note").fetch();
-            messageRow.getElementsByClassName('type')[0].children[1].textContent = l10n.translate("Warning").fetch();
-            messageRow.getElementsByClassName('type')[0].children[2].textContent = l10n.translate("Error").fetch();
+            var messageRow = document.getElementById('messageRow').content;
+            messageRow.querySelector('.type').children[0].textContent = l10n.translate("Note").fetch();
+            messageRow.querySelector('.type').children[1].textContent = l10n.translate("Warning").fetch();
+            messageRow.querySelector('.type').children[2].textContent = l10n.translate("Error").fetch();
 
             /* Tag row template */
-            var tagRow = document.getElementById('tagRow');
-            tagRow.getElementsByClassName('type')[0].children[0].textContent = l10n.translate("Add").fetch();
-            tagRow.getElementsByClassName('type')[0].children[1].textContent = l10n.translate("Remove").fetch();
+            var tagRow = document.getElementById('tagRow').content;
+            tagRow.querySelector('.type').children[0].textContent = l10n.translate("Add").fetch();
+            tagRow.querySelector('.type').children[1].textContent = l10n.translate("Remove").fetch();
 
             /* File menu */
             document.getElementById('fileMenu').firstChild.textContent = l10n.translate("File").fetch();
@@ -144,8 +144,8 @@
             document.getElementById('cancelSortButton').firstChild.nextSibling.textContent = l10n.translate("Cancel").fetch();
 
             /* Nav items */
-            document.getElementById('container').querySelector('nav > ol li > a[href=#summary]').textContent = l10n.translate("Summary").fetch();
-            document.getElementById('container').querySelector('nav > ol li > a[href=#generalMessages]').textContent = l10n.translate("General Messages").fetch();
+            document.getElementById('container').querySelector('nav > ol li > a[href$=summary]').textContent = l10n.translate("Summary").fetch();
+            document.getElementById('container').querySelector('nav > ol li > a[href$=generalMessages]').textContent = l10n.translate("General Messages").fetch();
             document.getElementById('filtersToggle').firstChild.nextSibling.textContent = l10n.translate("Filters").fetch();
             document.getElementById('searchBox').parentElement.title = l10n.translate("Press Enter when searching to select the next match.").fetch();
 
@@ -217,7 +217,19 @@
         },
 
         getJedInstance: function(locale) {
-            return this.loadLocaleData(locale).then(function(result){
+            return this.loadLocaleData(locale).catch(function(error){
+                console.log(error);
+                return {
+                    messages: {
+                        "": {
+                            // Domain name
+                            "domain" : "messages",
+                            "lang" : "en",
+                            "plural_forms" : "nplurals=2; plural=(n != 1);"
+                        }
+                    }
+                }
+            }).then(function(result){
                 return new jed({
                     'locale_data': result,
                     'domain': 'messages'

@@ -241,12 +241,12 @@ var loot = {
                 if (change.object[change.name] && change.object[change.name].revision) {
                     document.getElementById('masterlistRevision').textContent = change.object[change.name].revision;
                 } else {
-                    document.getElementById('masterlistRevision').textContent = l10n.translate("N/A").fetch();
+                    document.getElementById('masterlistRevision').textContent = l10n.jed.translate("N/A").fetch();
                 }
                 if (change.object[change.name] && change.object[change.name].date) {
                     document.getElementById('masterlistDate').textContent = change.object[change.name].date;
                 } else {
-                    document.getElementById('masterlistDate').textContent = l10n.translate("N/A").fetch();
+                    document.getElementById('masterlistDate').textContent = l10n.jed.translate("N/A").fetch();
                 }
             } else if (change.name == 'globalMessages') {
                 /* For the messages, they don't have a JS 'class' so need to everything
@@ -517,7 +517,7 @@ function applyFilters(evt) {
                 if (messages[j].className.indexOf('say') != -1) {
                     hasNotes = true;
                 }
-                if (messages[j].textContent.indexOf(l10n.translate("Do not clean.").fetch()) != -1) {
+                if (messages[j].textContent.indexOf(l10n.jed.translate("Do not clean.").fetch()) != -1) {
                     hasDoNotCleanMessages = true;
                 }
                 if ((document.getElementById('hideAllPluginMessages').checked && hasPluginMessages)
@@ -1344,12 +1344,10 @@ function initVars() {
 
             try {
                 loot.settings = JSON.parse(results[2]);
-                if (loot.settings.language != 'en') {
-                    l10n.getJedInstance(loot.settings.language).then(function(jed){
-                        l10n.translateStaticText(jed);
-                        l10n = jed;
-                    });
-                }
+                l10n.getJedInstance(loot.settings.language).then(function(jed){
+                    l10n.translateStaticText(jed);
+                    l10n.jed = jed;
+                });
             } catch (e) {
                 console.log(e);
                 console.log('getSettings response: ' + results[2]);
