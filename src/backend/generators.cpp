@@ -143,6 +143,18 @@ namespace YAML {
         return out;
     }
 
+    Emitter& operator << (Emitter& out, const loot::Location& rhs) {
+        if (rhs.Versions().empty())
+            out << rhs.URL();
+        else {
+            out << BeginMap
+                << Key << "link" << Value << rhs.URL()
+                << Key << "ver" << Value << rhs.Versions()
+                << EndMap;
+        }
+        return out;
+    }
+
     Emitter& operator << (Emitter& out, const loot::Plugin& rhs) {
         if (!rhs.HasNameOnly()) {
             out << BeginMap
@@ -171,6 +183,9 @@ namespace YAML {
 
             if (!rhs.DirtyInfo().empty())
                 out << Key << "dirty" << Value << rhs.DirtyInfo();
+
+            if (!rhs.Locations().empty())
+                out << Key << "url" << Value << rhs.Locations();
 
             out << EndMap;
         }

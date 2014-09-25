@@ -241,6 +241,18 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
                                     data.crc = parseInt(data.crc, 16);
                                 });
                                 plugin.userlist.dirty = rowsData;
+                            } else if (tables[j].id == 'locations') {
+                                rowsData.forEach(function(data){
+                                    /* User metadata can only specify one version, but it should be a list. */
+                                    if (data.ver.length > 0) {
+                                        data.ver = [
+                                            data.ver
+                                        ];
+                                    } else {
+                                        delete data.ver;
+                                    }
+                                });
+                                plugin.userlist.url = rowsData;
                             }
                         }
                     }
@@ -475,6 +487,28 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
                                 loot.game.plugins[i].userlist.dirty.forEach(function(info) {
                                     info.crc = info.crc.toString(16).toUpperCase();
                                     tables[j].addRow(info);
+                                });
+                            }
+
+                        } else if (tables[j].id == 'locations') {
+
+                            if (loot.game.plugins[i].masterlist && loot.game.plugins[i].masterlist.url) {
+                                loot.game.plugins[i].masterlist.url.forEach(function(location) {
+                                    var temp = location;
+                                    if (temp.ver) {
+                                        temp.ver = temp.ver[0];
+                                    }
+                                    var row = tables[j].addRow(temp);
+                                    tables[j].setReadOnly(row);
+                                });
+                            }
+                            if (loot.game.plugins[i].userlist && loot.game.plugins[i].userlist.url) {
+                                loot.game.plugins[i].userlist.url.forEach(function(location) {
+                                    var temp = location;
+                                    if (temp.ver) {
+                                        temp.ver = temp.ver[0];
+                                    }
+                                    tables[j].addRow(temp);
                                 });
                             }
 
@@ -909,7 +943,7 @@ var EditableTableProto = Object.create(HTMLTableElement.prototype, {
             /* Data is an object with keys that match element class names. */
             for (var key in tableData) {
                 var elems = row.getElementsByClassName(key);
-                if (elems.length == 1) {
+                if (tableData[key] != undefined && elems.length == 1) {
                     elems[0].value = tableData[key];
                 }
             }

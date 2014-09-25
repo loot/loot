@@ -221,6 +221,7 @@
                 <span data-for="message">Messages</span>
                 <span data-for="tags">Bash Tags</span>
                 <span data-for="dirty">Dirty Info</span>
+                <span data-for="locations">Locations</span>
 
                 <table is="editable-table" id="loadAfter" data-template="fileRow">
                     <thead>
@@ -274,6 +275,15 @@
                     <tbody>
                         <!-- Dirty info rows go here. -->
                         <tr><td colspan="4">Add new row...</td><td></td></tr>
+                    </tbody>
+                </table>
+                <table is="editable-table" id="locations" class="hidden" data-template="locationRow">
+                    <thead>
+                        <tr><th>URL</th><th>Version</th><th></th></tr>
+                    </thead>
+                    <tbody>
+                        <!-- Location rows go here. -->
+                        <tr><td colspan="3">Add new row...</td><td></td></tr>
                     </tbody>
                 </table>
             </div>
@@ -371,6 +381,12 @@
             <td><input class="udr" type="number" min="0" step="1" value="0">
             <td><input class="nav" type="number" min="0" step="1" value="0">
             <td><input class="util" type="text" required>
+            <td class="fa fa-trash-o fa-fw">
+    </template>
+    <template id="locationRow">
+        <tr>
+            <td><input class="link" type="text" required>
+            <td><input class="ver" type="text">
             <td class="fa fa-trash-o fa-fw">
     </template>
     <template id="gameRow">

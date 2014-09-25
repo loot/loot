@@ -161,6 +161,21 @@ namespace loot {
         bool addTag;
     };
 
+    class Location {
+    public:
+        Location();
+        Location(const std::string& url);
+        Location(const std::string& url, const std::vector<std::string>& versions);
+
+        bool operator < (const Location& rhs) const;
+
+        std::string URL() const;
+        std::vector<std::string> Versions() const;
+    private:
+        std::string _url;
+        std::vector<std::string> _versions;
+    };
+
     class Plugin {
     public:
         Plugin();
@@ -190,6 +205,7 @@ namespace loot {
         std::list<Message> Messages() const;
         std::set<Tag> Tags() const;
         std::set<PluginDirtyInfo> DirtyInfo() const;
+        std::set<Location> Locations() const;
 
         const std::set<FormID>& FormIDs() const;
         std::vector<std::string> Masters() const;
@@ -207,6 +223,7 @@ namespace loot {
         void Messages(const std::list<Message>& messages);
         void Tags(const std::set<Tag>& tags);
         void DirtyInfo(const std::set<PluginDirtyInfo>& info);
+        void Locations(const std::set<Location>& locations);
 
         Plugin& EvalAllConditions(Game& game, const unsigned int language);
         void ParseAllConditions(Game& game) const;
@@ -239,6 +256,7 @@ namespace loot {
         std::list<Message> messages;
         std::set<Tag> tags;
         std::set<PluginDirtyInfo> _dirtyInfo;
+        std::set<Location> _locations;
 
         std::vector<std::string> masters;
         std::set<FormID> formIDs;

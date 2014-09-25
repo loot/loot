@@ -330,6 +330,24 @@ namespace loot {
         return _name;
     }
 
+    Location::Location() {}
+
+    Location::Location(const std::string& url) : _url(url) {}
+
+    Location::Location(const std::string& url, const std::vector<std::string>& versions) : _url(url), _versions(versions) {}
+
+    bool Location::operator < (const Location& rhs) const {
+        return boost::ilexicographical_compare(_url, rhs.URL());
+    }
+
+    std::string Location::URL() const {
+        return _url;
+    }
+
+    std::vector<std::string> Location::Versions() const {
+        return _versions;
+    }
+
     Plugin::Plugin() : enabled(true), _isPriorityExplicit(false), priority(0), isMaster(false), crc(0), numOverrideRecords(0) {}
     Plugin::Plugin(const std::string& n) : name(n), enabled(true), _isPriorityExplicit(false), priority(0), isMaster(false), crc(0), numOverrideRecords(0) {
         //If the name passed ends in '.ghost', that should be trimmed.
@@ -465,6 +483,9 @@ namespace loot {
         set<PluginDirtyInfo> dirtyInfo = plugin.DirtyInfo();
         _dirtyInfo.insert(dirtyInfo.begin(), dirtyInfo.end());
 
+        set<Location> locations = plugin.Locations();
+        _locations.insert(locations.begin(), locations.end());
+
         return;
     }
 
@@ -511,6 +532,11 @@ namespace loot {
         set_symmetric_difference(_dirtyInfo.begin(), _dirtyInfo.end(), dirtyInfo.begin(), dirtyInfo.end(), inserter(dirtDiff, dirtDiff.begin()));
         p.DirtyInfo(dirtDiff);
 
+        set<Location> locations = plugin.Locations();
+        set<Location> locationsDiff;
+        set_symmetric_difference(_locations.begin(), _locations.end(), locations.begin(), locations.end(), inserter(locationsDiff, locationsDiff.begin()));
+        p.Locations(locationsDiff);
+
         return p;
     }
 
@@ -552,6 +578,11 @@ namespace loot {
         set_difference(_dirtyInfo.begin(), _dirtyInfo.end(), dirtyInfo.begin(), dirtyInfo.end(), inserter(dirtDiff, dirtDiff.begin()));
         p.DirtyInfo(dirtDiff);
 
+        set<Location> locations = plugin.Locations();
+        set<Location> locationsDiff;
+        set_difference(_locations.begin(), _locations.end(), locations.begin(), locations.end(), inserter(locationsDiff, locationsDiff.begin()));
+        p.Locations(locationsDiff);
+
         return p;
     }
 
@@ -589,6 +620,10 @@ namespace loot {
 
     std::set<PluginDirtyInfo> Plugin::DirtyInfo() const {
         return _dirtyInfo;
+    }
+
+    std::set<Location> Plugin::Locations() const {
+        return _locations;
     }
 
     void Plugin::Name(const std::string& n) {
@@ -629,6 +664,10 @@ namespace loot {
 
     void Plugin::DirtyInfo(const std::set<PluginDirtyInfo>& dirtyInfo) {
         _dirtyInfo = dirtyInfo;
+    }
+
+    void Plugin::Locations(const std::set<Location>& locations) {
+        _locations = locations;
     }
 
     Plugin& Plugin::EvalAllConditions(Game& game, const unsigned int language) {
@@ -712,7 +751,7 @@ namespace loot {
     }
 
     bool Plugin::HasNameOnly() const {
-        return !IsPriorityExplicit() && loadAfter.empty() && requirements.empty() && incompatibilities.empty() && messages.empty() && tags.empty() && _dirtyInfo.empty();
+        return !IsPriorityExplicit() && loadAfter.empty() && requirements.empty() && incompatibilities.empty() && messages.empty() && tags.empty() && _dirtyInfo.empty() && _locations.empty();
     }
 
     bool Plugin::IsRegexPlugin() const {

@@ -293,6 +293,36 @@ namespace YAML {
         }
     };
 
+    template<>
+    struct convert < loot::Location > {
+        static Node encode(const loot::Location& rhs) {
+            Node node;
+
+            node["link"] = rhs.URL();
+            node["ver"] = rhs.Versions();
+
+            return node;
+        }
+
+        static bool decode(const Node& node, loot::Location& rhs) {
+            std::string url;
+            std::vector<std::string> versions;
+
+            if (node.IsMap()) {
+                if (node["link"])
+                    url = node["link"].as<std::string>();
+                if (node["ver"])
+                    versions = node["ver"].as<std::vector<std::string>>();
+            }
+            else if (node.IsScalar())
+                url = node.as<std::string>();
+
+            rhs = loot::Location(url, versions);
+
+            return true;
+        }
+    };
+
     template<class T, class Compare>
     struct convert < std::set<T, Compare> > {
         static Node encode(const std::set<T, Compare>& rhs) {
@@ -350,6 +380,7 @@ namespace YAML {
             node["msg"] = rhs.Messages();
             node["tag"] = rhs.Tags();
             node["dirty"] = rhs.DirtyInfo();
+            node["url"] = rhs.Locations();
 
             return node;
         }
@@ -380,6 +411,8 @@ namespace YAML {
                 rhs.Tags(node["tag"].as< std::set<loot::Tag> >());
             if (node["dirty"])
                 rhs.DirtyInfo(node["dirty"].as< std::set<loot::PluginDirtyInfo> >());
+            if (node["url"])
+                rhs.Locations(node["url"].as< std::set<loot::Location> >());
 
             return true;
         }

@@ -20,7 +20,7 @@
     You should have received a copy of the GNU General Public License
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
-*/
+    */
 #ifndef __LOOT_GENERATORS__
 #define __LOOT_GENERATORS__
 
@@ -37,7 +37,7 @@ namespace YAML {
     template<class T, class Compare>
     Emitter& operator << (Emitter& out, const std::set<T, Compare>& rhs) {
         out << BeginSeq;
-        for (const auto &element: rhs) {
+        for (const auto &element : rhs) {
             out << element;
         }
         out << EndSeq;
@@ -67,6 +67,8 @@ namespace YAML {
     Emitter& operator << (Emitter& out, const loot::File& rhs);
 
     Emitter& operator << (Emitter& out, const loot::Tag& rhs);
+
+    Emitter& operator << (Emitter& out, const loot::Location& rhs);
 
     Emitter& operator << (Emitter& out, const loot::Plugin& rhs);
 }

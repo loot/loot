@@ -484,8 +484,11 @@ namespace loot {
             newUserlistEntry.Tags(pluginMetadata["userlist"]["tag"].as<set<Tag>>());
         if (pluginMetadata["userlist"]["dirty"])
             newUserlistEntry.DirtyInfo(pluginMetadata["userlist"]["dirty"].as<set<PluginDirtyInfo>>());
+        if (pluginMetadata["userlist"]["url"])
+            newUserlistEntry.Locations(pluginMetadata["userlist"]["url"].as<set<Location>>());
 
         // For cleanliness, only data that does not duplicate masterlist and plugin data should be retained, so diff that.
+        BOOST_LOG_TRIVIAL(trace) << "Removing any user metadata that duplicates masterlist metadata.";
         auto pluginIt = g_app_state.CurrentGame().plugins.find(boost::locale::to_lower(newUserlistEntry.Name()));
         if (pluginIt != g_app_state.CurrentGame().plugins.end()) {
             Plugin tempPlugin(pluginIt->second);
@@ -689,6 +692,7 @@ namespace loot {
                         pluginNode["masterlist"]["msg"] = mlistPlugin.Messages();
                         pluginNode["masterlist"]["tag"] = mlistPlugin.Tags();
                         pluginNode["masterlist"]["dirty"] = mlistPlugin.DirtyInfo();
+                        pluginNode["masterlist"]["url"] = mlistPlugin.Locations();
                     }
 
                     if (!ulistPlugin.HasNameOnly()) {
@@ -700,6 +704,7 @@ namespace loot {
                         pluginNode["userlist"]["msg"] = ulistPlugin.Messages();
                         pluginNode["userlist"]["tag"] = ulistPlugin.Tags();
                         pluginNode["userlist"]["dirty"] = ulistPlugin.DirtyInfo();
+                        pluginNode["userlist"]["url"] = ulistPlugin.Locations();
                     }
                 }
 
@@ -812,6 +817,7 @@ namespace loot {
                         pluginNode["masterlist"]["msg"] = mlistPlugin.Messages();
                         pluginNode["masterlist"]["tag"] = mlistPlugin.Tags();
                         pluginNode["masterlist"]["dirty"] = mlistPlugin.DirtyInfo();
+                        pluginNode["masterlist"]["url"] = mlistPlugin.Locations();
                     }
 
                     // Now merge masterlist and userlist metadata and evaluate,
