@@ -365,13 +365,26 @@ LOOT_API unsigned int loot_eval_lists(loot_db db, const unsigned int language) {
 
 LOOT_API unsigned int loot_sort_plugins(loot_db db,
                                         char *** const sortedPlugins,
-                                        size_t * numPlugins) {
+                                        size_t * const numPlugins) {
+    if (db == nullptr || sortedPlugins == nullptr || numPlugins == nullptr)
+        return c_error(loot_error_invalid_args, "Null pointer passed.");
+
     return loot_ok;
 }
 
 LOOT_API unsigned int loot_apply_load_order(loot_db db,
-                                            const char ** const loadOrder,
-                                            size_t numPlugins) {
+                                            const char * const * const loadOrder,
+                                            const size_t numPlugins) {
+    if (db == nullptr || loadOrder == nullptr)
+        return c_error(loot_error_invalid_args, "Null pointer passed.");
+
+    try {
+        db->SetLoadOrder(loadOrder, numPlugins);
+    }
+    catch (loot::error &e) {
+        return c_error(e);
+    }
+
     return loot_ok;
 }
 
@@ -380,6 +393,9 @@ LOOT_API unsigned int loot_update_masterlist(loot_db db,
                                              const char * const remoteURL,
                                              const char * const remoteBranch,
                                              bool * const updated) {
+    if (db == nullptr || masterlistPath == nullptr || remoteURL == nullptr || remoteBranch == nullptr || updated == nullptr)
+        return c_error(loot_error_invalid_args, "Null pointer passed.");
+
     return loot_ok;
 }
 
@@ -388,6 +404,9 @@ LOOT_API unsigned int loot_get_masterlist_revision(const char * const masterlist
                                                    char ** const revisionID,
                                                    char ** const revisionDate,
                                                    bool * const isModified) {
+    if (masterlistPath == nullptr || revisionID == nullptr || revisionDate == nullptr || isModified == nullptr)
+        return c_error(loot_error_invalid_args, "Null pointer passed.");
+
     return loot_ok;
 }
 

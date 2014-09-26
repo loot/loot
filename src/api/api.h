@@ -404,7 +404,7 @@ extern "C"
      */
     LOOT_API unsigned int loot_sort_plugins(loot_db db,
                                             char *** const sortedPlugins,
-                                            size_t * numPlugins);
+                                            size_t * const numPlugins);
 
     /**
      *  @brief Applies the given load order.
@@ -417,8 +417,8 @@ extern "C"
      *  @returns A return code.
      */
     LOOT_API unsigned int loot_apply_load_order(loot_db db,
-                                                const char ** const loadOrder,
-                                                size_t numPlugins);
+                                                const char * const * const loadOrder,
+                                                const size_t numPlugins);
 
     /**
      *  @brief Update the given masterlist.
