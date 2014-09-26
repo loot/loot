@@ -654,8 +654,14 @@ namespace loot {
 
             if (isFirstLoad) {
                 // Store the masterlist revision and date.
-                gameNode["masterlist"]["revision"] = g_app_state.CurrentGame().masterlist.GetRevision(g_app_state.CurrentGame().MasterlistPath());
-                gameNode["masterlist"]["date"] = g_app_state.CurrentGame().masterlist.GetDate(g_app_state.CurrentGame().MasterlistPath());
+                try {
+                    gameNode["masterlist"]["revision"] = g_app_state.CurrentGame().masterlist.GetRevision(g_app_state.CurrentGame().MasterlistPath(), true);
+                    gameNode["masterlist"]["date"] = g_app_state.CurrentGame().masterlist.GetDate(g_app_state.CurrentGame().MasterlistPath());
+                }
+                catch (error &e) {
+                    gameNode["masterlist"]["revision"] = e.what();
+                    gameNode["masterlist"]["date"] = e.what();
+                }
             }
 
             // Now store plugin data.
@@ -801,8 +807,14 @@ namespace loot {
                 YAML::Node gameNode;
 
                 // Store the masterlist revision and date.
-                gameNode["masterlist"]["revision"] = g_app_state.CurrentGame().masterlist.GetRevision(g_app_state.CurrentGame().MasterlistPath());
-                gameNode["masterlist"]["date"] = g_app_state.CurrentGame().masterlist.GetDate(g_app_state.CurrentGame().MasterlistPath());
+                try {
+                    gameNode["masterlist"]["revision"] = g_app_state.CurrentGame().masterlist.GetRevision(g_app_state.CurrentGame().MasterlistPath(), true);
+                    gameNode["masterlist"]["date"] = g_app_state.CurrentGame().masterlist.GetDate(g_app_state.CurrentGame().MasterlistPath());
+                }
+                catch (error &e) {
+                    gameNode["masterlist"]["revision"] = e.what();
+                    gameNode["masterlist"]["date"] = e.what();
+                }
 
                 for (const auto& pluginPair : g_app_state.CurrentGame().plugins) {
                     Plugin mlistPlugin(pluginPair.second);

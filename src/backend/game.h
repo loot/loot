@@ -86,11 +86,11 @@ namespace loot {
         bool Load(Game& game, const unsigned int language);  //Handles update with load fallback.
         bool Update(Game& game, const unsigned int language);
 
-        std::string GetRevision(const boost::filesystem::path& path);
+        std::string GetRevision(const boost::filesystem::path& path, bool shortID);
         std::string GetDate(const boost::filesystem::path& path);
 
     private:
-        void GetGitInfo(const boost::filesystem::path& path);
+        void GetGitInfo(const boost::filesystem::path& path, bool shortID);
 
         std::string revision;
         std::string date;

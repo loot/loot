@@ -97,13 +97,17 @@ struct _loot_db_int : public loot::Game {
         extMessageArray(nullptr),
         extMessageArraySize(0),
         extStringArray(nullptr),
-        extStringArraySize(0) {
+        extStringArraySize(0),
+        extRevisionID(nullptr),
+        extRevisionDate(nullptr) {
         this->SetDetails("", "", "", "", gamePath, "").Init();
     }
 
     ~_loot_db_int() {
         delete[] extAddedTagIds;
         delete[] extRemovedTagIds;
+        delete[] extRevisionID;
+        delete[] extRevisionDate;
 
         if (extTagMap != nullptr) {
             for (size_t i = 0; i < bashTagMap.size(); i++)
@@ -133,6 +137,9 @@ struct _loot_db_int : public loot::Game {
 
     char ** extStringArray;
     size_t extStringArraySize;
+
+    char * extRevisionID;
+    char * extRevisionDate;
 
     unsigned int * extAddedTagIds;
     unsigned int * extRemovedTagIds;
@@ -447,16 +454,56 @@ LOOT_API unsigned int loot_update_masterlist(loot_db db,
     if (db == nullptr || masterlistPath == nullptr || remoteURL == nullptr || remoteBranch == nullptr || updated == nullptr)
         return c_error(loot_error_invalid_args, "Null pointer passed.");
 
+    *updated = false;
+
+    try {
+        loot::Masterlist masterlist;
+    }
+    catch (loot::error &e) {
+        return c_error(e);
+    }
+
     return loot_ok;
 }
 
-LOOT_API unsigned int loot_get_masterlist_revision(const char * const masterlistPath,
+LOOT_API unsigned int loot_get_masterlist_revision(loot_db db,
+                                                   const char * const masterlistPath,
                                                    const bool getShortID,
                                                    char ** const revisionID,
                                                    char ** const revisionDate,
                                                    bool * const isModified) {
     if (masterlistPath == nullptr || revisionID == nullptr || revisionDate == nullptr || isModified == nullptr)
         return c_error(loot_error_invalid_args, "Null pointer passed.");
+
+    *revisionID = nullptr;
+    *revisionDate = nullptr;
+    *isModified = false;
+
+    bool edited = false;
+    try {
+        loot::Masterlist masterlist;
+        std::string id = masterlist.GetRevision(masterlistPath, getShortID);
+        std::string date = masterlist.GetDate(masterlistPath);
+
+        if (boost::ends_with(id, " (edited)")) {
+            id = id.substr(0, id.length() - 9);
+            date = date.substr(0, date.length() - 9);
+            edited = true;
+        }
+
+        db->extRevisionID = ToNewCString(id);
+        db->extRevisionDate = ToNewCString(date);
+    }
+    catch (loot::error &e) {
+        return c_error(e);
+    }
+    catch (std::bad_alloc& e) {
+        return c_error(loot_error_no_mem, e.what());
+    }
+
+    *revisionID = db->extRevisionID;
+    *revisionDate = db->extRevisionDate;
+    *isModified = edited;
 
     return loot_ok;
 }

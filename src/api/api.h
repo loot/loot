@@ -482,7 +482,8 @@ extern "C"
      *      the revision given.
      *  @returns A return code.
      */
-    LOOT_API unsigned int loot_get_masterlist_revision(const char * const masterlistPath,
+    LOOT_API unsigned int loot_get_masterlist_revision(loot_db db,
+                                                       const char * const masterlistPath,
                                                        const bool getShortID,
                                                        char ** const revisionID,
                                                        char ** const revisionDate,

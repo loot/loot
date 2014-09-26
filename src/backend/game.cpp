@@ -266,16 +266,16 @@ namespace loot {
         }
     }
 
-    std::string Masterlist::GetRevision(const boost::filesystem::path& path) {
-        if (revision.empty())
-            GetGitInfo(path);
+    std::string Masterlist::GetRevision(const boost::filesystem::path& path, bool shortID) {
+        if (revision.empty() || (shortID && revision.length() == 40) || (!shortID && revision.length() < 40))
+            GetGitInfo(path, shortID);
 
         return revision;
     }
 
     std::string Masterlist::GetDate(const boost::filesystem::path& path) {
         if (date.empty())
-            GetGitInfo(path);
+            GetGitInfo(path, true);
 
         return date;
     }
@@ -695,7 +695,6 @@ namespace loot {
     }
 
     void Game::SetLoadOrder(const std::list<std::string>& loadOrder) const {
-
         size_t pluginArrSize = loadOrder.size();
         char ** pluginArr = new char*[pluginArrSize];
         int i = 0;

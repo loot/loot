@@ -150,14 +150,12 @@ namespace loot {
         return 0;
     }
 
-    void Masterlist::GetGitInfo(const boost::filesystem::path& path) {
+    void Masterlist::GetGitInfo(const boost::filesystem::path& path, bool shortID) {
         if (!isRepository(path.parent_path())) {
-            revision = "Unknown: Git repository missing";
-            date = "Unknown: Git repository missing";
+            throw error(error::git_error, "Unknown: Git repository missing");
         }
         else if (!fs::exists(path)) {
-            revision = "N/A: No masterlist present";
-            date = "N/A: No masterlist present";
+            throw error(error::git_error, "N/A: No masterlist present");
         }
         else {
             // Perform a git diff, then iterate the deltas to see if one exists for masterlist.yaml.
@@ -184,8 +182,14 @@ namespace loot {
             git.call(git_revparse_single(&git.obj, git.repo, "HEAD"));
 
             BOOST_LOG_TRIVIAL(trace) << "Generating hex string for Git object ID.";
-            git.call(git_object_short_id(&git.buf, git.obj));
-            revision = git.buf.ptr;
+            if (shortID) {
+                git.call(git_object_short_id(&git.buf, git.obj));
+                revision = git.buf.ptr;
+            }
+            else {
+                char c_rev[GIT_OID_HEXSZ + 1];
+                revision = git_oid_tostr(c_rev, GIT_OID_HEXSZ + 1, git_object_id(git.obj));
+            }
 
             BOOST_LOG_TRIVIAL(trace) << "Getting date for Git object.";
             const git_oid * oid = git_object_id(git.obj);
