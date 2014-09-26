@@ -126,7 +126,7 @@ namespace loot {
         if (it != game.conditionCache.end())
             return it->second;
 
-        condition_grammar<std::string::const_iterator, boost::spirit::qi::space_type> grammar(game, false);
+        condition_grammar<std::string::const_iterator, boost::spirit::qi::space_type> grammar(&game, false);
         boost::spirit::qi::space_type skipper;
         std::string::const_iterator begin, end;
         bool eval;
@@ -153,18 +153,13 @@ namespace loot {
         return eval;
     }
 
-    void ConditionStruct::ParseCondition(Game& game) const {
+    void ConditionStruct::ParseCondition() const {
         if (_condition.empty())
             return;
 
         BOOST_LOG_TRIVIAL(trace) << "Testing condition syntax: " << _condition;
 
-        // If the same condition string has already been evaluated, it must be written correctly.
-        unordered_map<std::string, bool>::const_iterator it = game.conditionCache.find(boost::locale::to_lower(_condition));
-        if (it != game.conditionCache.end())
-            return;
-
-        condition_grammar<std::string::const_iterator, boost::spirit::qi::space_type> grammar(game, true);
+        condition_grammar<std::string::const_iterator, boost::spirit::qi::space_type> grammar(nullptr, true);
         boost::spirit::qi::space_type skipper;
         std::string::const_iterator begin, end;
 
@@ -732,21 +727,21 @@ namespace loot {
         return *this;
     }
 
-    void Plugin::ParseAllConditions(Game& game) const {
+    void Plugin::ParseAllConditions() const {
         for (const File& file : loadAfter) {
-            file.ParseCondition(game);
+            file.ParseCondition();
         }
         for (const File& file : requirements) {
-            file.ParseCondition(game);
+            file.ParseCondition();
         }
         for (const File& file : incompatibilities) {
-            file.ParseCondition(game);
+            file.ParseCondition();
         }
         for (const Message& message : messages) {
-            message.ParseCondition(game);
+            message.ParseCondition();
         }
         for (const Tag& tag : tags) {
-            tag.ParseCondition(game);
+            tag.ParseCondition();
         }
     }
 

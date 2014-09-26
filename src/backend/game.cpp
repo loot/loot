@@ -252,7 +252,7 @@ namespace loot {
 
     bool Masterlist::Load(Game& game, const unsigned int language) {
         try {
-            return Update(game, language);
+            return Update(game);
         }
         catch (error& e) {
             if (e.code() != error::ok) {

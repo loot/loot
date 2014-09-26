@@ -431,7 +431,10 @@ namespace loot {
     template<typename Iterator, typename Skipper>
     class condition_grammar : public qi::grammar < Iterator, bool(), Skipper > {
     public:
-        condition_grammar(Game& game, bool parseOnly) : condition_grammar::base_type(expression, "condition grammar"), _game(game), _parseOnly(parseOnly) {
+        condition_grammar(Game * game, bool parseOnly) : condition_grammar::base_type(expression, "condition grammar"), _game(game), _parseOnly(parseOnly) {
+            if (!_parseOnly && _game == nullptr)
+                throw error(error::invalid_args, "A valid game pointer was not passed during a condition evaluation.");
+
             expression =
                 compound[qi::labels::_val = qi::labels::_1]
                 >> *((qi::lit("or") >> compound)[qi::labels::_val = qi::labels::_val || qi::labels::_1])
@@ -503,7 +506,7 @@ namespace loot {
         qi::rule<Iterator, std::string()> quotedStr, filePath, comparator;
         qi::rule<Iterator, char()> invalidPathChars;
 
-        Game& _game;
+        Game * _game;
         bool _parseOnly;
 
         //Eval's exact paths. Check for files and ghosted plugins.
@@ -524,9 +527,9 @@ namespace loot {
             }
 
             if (IsPlugin(file))
-                result = boost::filesystem::exists(_game.DataPath() / file) || boost::filesystem::exists(_game.DataPath() / (file + ".ghost"));
+                result = boost::filesystem::exists(_game->DataPath() / file) || boost::filesystem::exists(_game->DataPath() / (file + ".ghost"));
             else
-                result = boost::filesystem::exists(_game.DataPath() / file);
+                result = boost::filesystem::exists(_game->DataPath() / file);
 
             if (result)
                 BOOST_LOG_TRIVIAL(trace) << "The file does exist.";
@@ -580,7 +583,7 @@ namespace loot {
             //Now we have a valid parent path and a regex filename. Check that
             //the parent path exists and is a directory.
 
-            boost::filesystem::path parent_path = _game.DataPath() / parent;
+            boost::filesystem::path parent_path = _game->DataPath() / parent;
             if (!boost::filesystem::exists(parent_path) || !boost::filesystem::is_directory(parent_path)) {
                 BOOST_LOG_TRIVIAL(trace) << "The path \"" << parent_path << "\" does not exist or is not a directory.";
                 return;
@@ -616,23 +619,23 @@ namespace loot {
             }
 
             uint32_t crc;
-            unordered_map<std::string, uint32_t>::iterator it = _game.crcCache.find(boost::locale::to_lower(file));
+            unordered_map<std::string, uint32_t>::iterator it = _game->crcCache.find(boost::locale::to_lower(file));
 
-            if (it != _game.crcCache.end())
+            if (it != _game->crcCache.end())
                 crc = it->second;
             else {
                 if (file == "LOOT")
                     crc = GetCrc32(boost::filesystem::absolute("LOOT.exe"));
-                if (boost::filesystem::exists(_game.DataPath() / file))
-                    crc = GetCrc32(_game.DataPath() / file);
-                else if (IsPlugin(file) && boost::filesystem::exists(_game.DataPath() / (file + ".ghost")))
-                    crc = GetCrc32(_game.DataPath() / (file + ".ghost"));
+                if (boost::filesystem::exists(_game->DataPath() / file))
+                    crc = GetCrc32(_game->DataPath() / file);
+                else if (IsPlugin(file) && boost::filesystem::exists(_game->DataPath() / (file + ".ghost")))
+                    crc = GetCrc32(_game->DataPath() / (file + ".ghost"));
                 else {
                     result = false;
                     return;
                 }
 
-                _game.crcCache.emplace(boost::locale::to_lower(file), crc);
+                _game->crcCache.emplace(boost::locale::to_lower(file), crc);
             }
 
             result = checksum == crc;
@@ -657,11 +660,11 @@ namespace loot {
             if (file == "LOOT")
                 trueVersion = Version(boost::filesystem::absolute("LOOT.exe"));
             else if (IsPlugin(file)) {
-                Plugin plugin(_game, file, true);
+                Plugin plugin(*_game, file, true);
                 trueVersion = Version(plugin.Version());
             }
             else
-                trueVersion = Version(_game.DataPath() / file);
+                trueVersion = Version(_game->DataPath() / file);
 
             BOOST_LOG_TRIVIAL(trace) << "Version extracted: " << trueVersion.AsString();
 
@@ -683,7 +686,7 @@ namespace loot {
             if (file == "LOOT")
                 result = false;
             else
-                result = _game.IsActive(file);
+                result = _game->IsActive(file);
 
             BOOST_LOG_TRIVIAL(trace) << "Active check result: " << result;
         }

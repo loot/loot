@@ -83,7 +83,7 @@ namespace loot {
 
         bool IsConditional() const;
         bool EvalCondition(Game& game) const;
-        void ParseCondition(Game& game) const;  // Throws error on parsing failure.
+        void ParseCondition() const;  // Throws error on parsing failure.
 
         std::string Condition() const;
     private:
@@ -226,7 +226,7 @@ namespace loot {
         void Locations(const std::set<Location>& locations);
 
         Plugin& EvalAllConditions(Game& game, const unsigned int language);
-        void ParseAllConditions(Game& game) const;
+        void ParseAllConditions() const;
         bool HasNameOnly() const;
         bool IsRegexPlugin() const;
         bool LoadsBSA(const Game& game) const;

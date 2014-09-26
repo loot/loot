@@ -50,7 +50,8 @@ set (LOOT_SRC   "${CMAKE_SOURCE_DIR}/src/backend/metadata.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/globals.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/generators.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/graph.cpp")
+                "${CMAKE_SOURCE_DIR}/src/backend/graph.cpp"
+                "${CMAKE_SOURCE_DIR}/src/backend/git.cpp")
 
 set (LOOT_HEADERS "${CMAKE_SOURCE_DIR}/src/backend/metadata.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/game.h"
@@ -63,9 +64,6 @@ set (LOOT_HEADERS "${CMAKE_SOURCE_DIR}/src/backend/metadata.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/streams.h")
 
 set (LOOT_GUI_SRC ${LOOT_SRC}
-                  # Code the API doesn't need.
-                  "${CMAKE_SOURCE_DIR}/src/backend/git.cpp"
-                  # Actual GUI code.
                   "${CMAKE_SOURCE_DIR}/src/gui/main_win.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/handler.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/app.cpp"
@@ -168,13 +166,13 @@ ELSEIF (MSVC)
     ENDIF ()
 
     set (CMAKE_EXE_LINKER_FLAGS "/SUBSYSTEM:WINDOWS /LARGEADDRESSAWARE")
-    set (LOOT_LIBS libyaml-cppmt
-                   version
-                   loadorder${PROJECT_ARCH}
-                   ws2_32
-                   shlwapi)
+    set (LOOT_LIBS  git2
+					libyaml-cppmt
+					version
+					loadorder${PROJECT_ARCH}
+					ws2_32
+					shlwapi)
     set (LOOT_GUI_LIBS ${LOOT_LIBS}
-                       git2
                        cef_sandbox
                        libcef
                        libcef_dll_wrapper
