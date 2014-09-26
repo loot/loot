@@ -1121,6 +1121,16 @@ namespace loot {
             SetWindowPos(hWnd, HWND_TOP, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, SWP_SHOWWINDOW);
 #endif
         }
+        else {
+#ifdef _WIN32
+            // High DPI support doesn't seem to scale window content correctly
+            // unless the window is resized, so if no size info is recorded,
+            // just set its current size + 1.
+            RECT rc;
+            GetWindowRect(browser->GetHost()->GetWindowHandle(), &rc);
+            SetWindowPos(browser->GetHost()->GetWindowHandle(), HWND_TOP, rc.left, rc.top, rc.right - rc.left + 1, rc.bottom - rc.top + 1, SWP_SHOWWINDOW);
+#endif
+        }
 
         // Add to the list of existing browsers.
         browser_list_.push_back(browser);
