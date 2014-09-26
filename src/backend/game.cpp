@@ -624,12 +624,10 @@ namespace loot {
         lo_destroy_handle(gh);
     }
 
-    void Game::SetLoadOrder(const std::list<std::string>& loadOrder) const {
+    void Game::SetLoadOrder(const char * const * const loadOrder, const size_t numPlugins) const {
         BOOST_LOG_TRIVIAL(debug) << "Setting load order for game: " << _name;
 
         lo_game_handle gh = nullptr;
-        char ** pluginArr = nullptr;
-        size_t pluginArrSize = 0;
         int ret;
         if (Id() == Game::tes4)
             ret = lo_create_handle(&gh, LIBLO_GAME_TES4, gamePath.string().c_str());
@@ -676,19 +674,7 @@ namespace loot {
             throw error(error::liblo_error, err);
         }
 
-        pluginArrSize = loadOrder.size();
-        pluginArr = new char*[pluginArrSize];
-        int i = 0;
-        for (const auto &plugin : loadOrder) {
-            pluginArr[i] = new char[plugin.length() + 1];
-            strcpy(pluginArr[i], plugin.c_str());
-            ++i;
-        }
-
-        if (lo_set_load_order(gh, pluginArr, pluginArrSize) != LIBLO_OK) {
-            for (size_t i = 0; i < pluginArrSize; i++)
-                delete[] pluginArr[i];
-            delete[] pluginArr;
+        if (lo_set_load_order(gh, loadOrder, numPlugins) != LIBLO_OK) {
             const char * e = nullptr;
             string err;
             lo_get_error_message(&e);
@@ -705,11 +691,33 @@ namespace loot {
             throw error(error::liblo_error, err);
         }
 
+        lo_destroy_handle(gh);
+    }
+
+    void Game::SetLoadOrder(const std::list<std::string>& loadOrder) const {
+
+        size_t pluginArrSize = loadOrder.size();
+        char ** pluginArr = new char*[pluginArrSize];
+        int i = 0;
+        for (const auto &plugin : loadOrder) {
+            pluginArr[i] = new char[plugin.length() + 1];
+            strcpy(pluginArr[i], plugin.c_str());
+            ++i;
+        }
+
+        try {
+            SetLoadOrder(pluginArr, pluginArrSize);
+        }
+        catch (error &e) {
+            for (size_t i = 0; i < pluginArrSize; i++)
+                delete[] pluginArr[i];
+            delete[] pluginArr;
+            throw e;
+        }
+
         for (size_t i = 0; i < pluginArrSize; i++)
             delete[] pluginArr[i];
         delete[] pluginArr;
-
-        lo_destroy_handle(gh);
     }
 
     void Game::RedatePlugins() {

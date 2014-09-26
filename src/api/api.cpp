@@ -69,7 +69,6 @@ const unsigned int loot_game_fonv = loot::Game::fonv;
 const unsigned int loot_message_say = loot::Message::say;
 const unsigned int loot_message_warn = loot::Message::warn;
 const unsigned int loot_message_error = loot::Message::error;
-const unsigned int loot_message_tag = loot::Message::tag;
 
 // LOOT message languages.
 const unsigned int loot_lang_any = loot::Language::any;
@@ -96,7 +95,9 @@ struct _loot_db_int : public loot::Game {
         extAddedTagIds(nullptr),
         extRemovedTagIds(nullptr),
         extMessageArray(nullptr),
-        extMessageArraySize(0) {
+        extMessageArraySize(0),
+        extStringArray(nullptr),
+        extStringArraySize(0) {
         this->SetDetails("", "", "", "", gamePath, "").Init();
     }
 
@@ -115,6 +116,12 @@ struct _loot_db_int : public loot::Game {
                 delete[] extMessageArray[i].message;  //Gotta clear those allocated strings.
             delete[] extMessageArray;
         }
+
+        if (extStringArray != nullptr) {
+            for (size_t i = 0; i < extStringArraySize; i++)
+                delete[] extStringArray[i];  //Gotta clear those allocated strings.
+            delete[] extStringArray;
+        }
     }
 
     loot::MetadataList rawUserMetadata;
@@ -123,6 +130,9 @@ struct _loot_db_int : public loot::Game {
     std::unordered_map<std::string, unsigned int> bashTagMap;
 
     char ** extTagMap;
+
+    char ** extStringArray;
+    size_t extStringArraySize;
 
     unsigned int * extAddedTagIds;
     unsigned int * extRemovedTagIds;
@@ -357,6 +367,96 @@ LOOT_API unsigned int loot_eval_lists(loot_db db, const unsigned int language) {
     }
     db->masterlist = temp;
     db->userlist = userTemp;
+
+    return loot_ok;
+}
+
+////////////////////////////////////
+// LOOT Functionality Functions
+////////////////////////////////////
+
+LOOT_API unsigned int loot_sort_plugins(loot_db db,
+                                        char *** const sortedPlugins,
+                                        size_t * const numPlugins) {
+    if (db == nullptr || sortedPlugins == nullptr || numPlugins == nullptr)
+        return c_error(loot_error_invalid_args, "Null pointer passed.");
+
+    //Clear existing array allocation.
+    if (db->extStringArray != nullptr) {
+        for (size_t i = 0; i < db->extStringArraySize; ++i) {
+            delete[] db->extStringArray[i];
+        }
+        delete[] db->extStringArray;
+        db->extStringArray = nullptr;
+    }
+
+    //Initialise output.
+    *numPlugins = 0;
+    *sortedPlugins = nullptr;
+
+    try {
+        // Always reload all the plugins.
+        db->LoadPlugins(false);
+
+        //Sort plugins into their load order.
+        std::list<loot::Plugin> plugins = db->Sort(loot_lang_any, [](const std::string& message) {});
+
+        db->extStringArraySize = plugins.size();
+        db->extStringArray = new char*[db->extStringArraySize];
+
+        size_t i = 0;
+        for (const auto &plugin : plugins) {
+            db->extStringArray[i] = ToNewCString(plugin.Name());
+            ++i;
+        }
+    }
+    catch (loot::error &e) {
+        return c_error(e);
+    }
+    catch (std::bad_alloc& e) {
+        return c_error(loot_error_no_mem, e.what());
+    }
+
+    *numPlugins = db->extStringArraySize;
+    *sortedPlugins = db->extStringArray;
+
+    return loot_ok;
+}
+
+LOOT_API unsigned int loot_apply_load_order(loot_db db,
+                                            const char * const * const loadOrder,
+                                            const size_t numPlugins) {
+    if (db == nullptr || loadOrder == nullptr)
+        return c_error(loot_error_invalid_args, "Null pointer passed.");
+
+    try {
+        db->SetLoadOrder(loadOrder, numPlugins);
+    }
+    catch (loot::error &e) {
+        return c_error(e);
+    }
+
+    return loot_ok;
+}
+
+LOOT_API unsigned int loot_update_masterlist(loot_db db,
+                                             const char * const masterlistPath,
+                                             const char * const remoteURL,
+                                             const char * const remoteBranch,
+                                             bool * const updated) {
+    if (db == nullptr || masterlistPath == nullptr || remoteURL == nullptr || remoteBranch == nullptr || updated == nullptr)
+        return c_error(loot_error_invalid_args, "Null pointer passed.");
+
+    return loot_ok;
+}
+
+LOOT_API unsigned int loot_get_masterlist_revision(const char * const masterlistPath,
+                                                   const bool getShortID,
+                                                   char ** const revisionID,
+                                                   char ** const revisionDate,
+                                                   bool * const isModified) {
+    if (masterlistPath == nullptr || revisionID == nullptr || revisionDate == nullptr || isModified == nullptr)
+        return c_error(loot_error_invalid_args, "Null pointer passed.");
 
     return loot_ok;
 }

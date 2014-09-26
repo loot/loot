@@ -131,6 +131,7 @@ namespace loot {
 
         void GetLoadOrder(std::list<std::string>& loadOrder) const;
         void SetLoadOrder(const std::list<std::string>& loadOrder) const;  //Modifies game load order, even though const.
+        void SetLoadOrder(const char * const * const loadOrder, const size_t numPlugins) const;  // For API.
 
         void RefreshActivePluginsList();
         void RedatePlugins();  //Change timestamps to match load order (Skyrim only).

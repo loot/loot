@@ -279,7 +279,7 @@ namespace loot {
         }
         else {
             // Repository exists: check settings are correct, then pull updates.
-            git.ui_message = "An error occurred while trying to access the local masterlist repository. If this error happens again, try deleting the \".git\" folder in \"%LOCALAPPDATA%\\LOOT\\" + game.FolderName() + "\".";
+            git.ui_message = "An error occurred while trying to access the local masterlist repository. If this error happens again, try deleting the \".git\" folder in " + repo_path.string() + ".";
 
             // Open the repository.
             BOOST_LOG_TRIVIAL(info) << "Existing repository found, attempting to open it.";
@@ -312,7 +312,7 @@ namespace loot {
             BOOST_LOG_TRIVIAL(info) << "Received " << stats->indexed_objects << " of " << stats->total_objects << " objects in " << stats->received_bytes << " bytes.";
 
             // Check that a branch with the correct name exists.
-            git.ui_message = "An error occurred while trying to access the local masterlist repository. If this error happens again, try deleting the \".git\" folder in \"%LOCALAPPDATA%\\LOOT\\" + game.FolderName() + "\".";
+            git.ui_message = "An error occurred while trying to access the local masterlist repository. If this error happens again, try deleting the \".git\" folder in " + repo_path.string() + "\".";
             int ret = git_branch_lookup(&git.ref, git.repo, repo_branch.c_str(), GIT_BRANCH_LOCAL);
             if (ret == GIT_ENOTFOUND) {
                 // Branch doesn't exist. Create a new branch using the remote branch's latest commit.
@@ -444,7 +444,7 @@ namespace loot {
 
         bool parsingFailed = false;
         std::string parsingError;
-        git.ui_message = "An error occurred while trying to read information on the updated masterlist. If this error happens again, try deleting the \".git\" folder in \"%LOCALAPPDATA%\\LOOT\\" + game.FolderName() + "\".";
+        git.ui_message = "An error occurred while trying to read information on the updated masterlist. If this error happens again, try deleting the \".git\" folder in " + repo_path.string() + "\".";
         do {
             // Get some descriptive info about what was checked out.
 
