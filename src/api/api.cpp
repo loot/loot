@@ -94,7 +94,9 @@ struct _loot_db_int : public loot::Game {
         extAddedTagIds(nullptr),
         extRemovedTagIds(nullptr),
         extMessageArray(nullptr),
-        extMessageArraySize(0) {
+        extMessageArraySize(0),
+        extStringArray(nullptr),
+        extStringArraySize(0) {
         this->SetDetails("", "", "", "", gamePath, "").Init();
     }
 
@@ -113,6 +115,12 @@ struct _loot_db_int : public loot::Game {
                 delete[] extMessageArray[i].message;  //Gotta clear those allocated strings.
             delete[] extMessageArray;
         }
+
+        if (extStringArray != nullptr) {
+            for (size_t i = 0; i < extStringArraySize; i++)
+                delete[] extStringArray[i];  //Gotta clear those allocated strings.
+            delete[] extStringArray;
+        }
     }
 
     loot::MetadataList rawUserMetadata;
@@ -121,6 +129,9 @@ struct _loot_db_int : public loot::Game {
     std::unordered_map<std::string, unsigned int> bashTagMap;
 
     char ** extTagMap;
+
+    char ** extStringArray;
+    size_t extStringArraySize;
 
     unsigned int * extAddedTagIds;
     unsigned int * extRemovedTagIds;
@@ -368,6 +379,45 @@ LOOT_API unsigned int loot_sort_plugins(loot_db db,
                                         size_t * const numPlugins) {
     if (db == nullptr || sortedPlugins == nullptr || numPlugins == nullptr)
         return c_error(loot_error_invalid_args, "Null pointer passed.");
+
+    //Clear existing array allocation.
+    if (db->extStringArray != nullptr) {
+        for (size_t i = 0; i < db->extStringArraySize; ++i) {
+            delete[] db->extStringArray[i];
+        }
+        delete[] db->extStringArray;
+        db->extStringArray = nullptr;
+    }
+
+    //Initialise output.
+    *numPlugins = 0;
+    *sortedPlugins = nullptr;
+
+    try {
+        // Always reload all the plugins.
+        db->LoadPlugins(false);
+
+        //Sort plugins into their load order.
+        std::list<loot::Plugin> plugins = db->Sort(loot_lang_any, [](const std::string& message) {});
+
+        db->extStringArraySize = plugins.size();
+        db->extStringArray = new char*[db->extStringArraySize];
+
+        size_t i = 0;
+        for (const auto &plugin : plugins) {
+            db->extStringArray[i] = ToNewCString(plugin.Name());
+            ++i;
+        }
+    }
+    catch (loot::error &e) {
+        return c_error(e);
+    }
+    catch (std::bad_alloc& e) {
+        return c_error(loot_error_no_mem, e.what());
+    }
+
+    *numPlugins = db->extStringArraySize;
+    *sortedPlugins = db->extStringArray;
 
     return loot_ok;
 }
