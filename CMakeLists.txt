@@ -195,6 +195,13 @@ target_link_libraries (loot${PROJECT_ARCH} ${Boost_LIBRARIES} ${LOOT_LIBS})
 add_executable        (LOOT ${LOOT_GUI_SRC} ${LOOT_GUI_HEADERS})
 target_link_libraries (LOOT ${Boost_LIBRARIES} ${LOOT_GUI_LIBS})
 
+add_custom_command(
+    TARGET LOOT
+    POST_BUILD
+    COMMAND "mt.exe" -manifest \"${CMAKE_SOURCE_DIR}/src/gui/LOOT.exe.manifest\" -inputresource:"$(TargetDir)$(TargetFileName)"\;\#1 -outputresource:"$(TargetDir)$(TargetFileName)"\;\#1
+    COMMENT "Adding manifest..."
+)
+
 # Copy CEF DLLs.
 FOREACH(cef_dll d3dcompiler_43.dll d3dcompiler_46.dll libEGL.dll libGLESv2.dll libcef.dll wow_helper.exe)
     add_custom_command(TARGET LOOT POST_BUILD
