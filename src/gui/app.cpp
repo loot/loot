@@ -228,7 +228,7 @@ namespace loot {
             BOOST_LOG_TRIVIAL(debug) << "Selecting game.";
             _currentGame = SelectGame(_settings, _games, cmdLineGame);
             BOOST_LOG_TRIVIAL(debug) << "Initialising game-specific settings.";
-            _games[_currentGame].Init();
+            _games[_currentGame].Init(true);
         }
         catch (loot::error &e) {
             if (e.code() == loot::error::no_game_detected) {
@@ -291,7 +291,7 @@ namespace loot {
         auto it = find(_games.begin(), _games.end(), newGameFolder);
 
         _currentGame = std::distance(_games.begin(), it);
-        _games[_currentGame].Init();
+        _games[_currentGame].Init(true);
         BOOST_LOG_TRIVIAL(debug) << "New game is " << _games[_currentGame].Name();
     }
 

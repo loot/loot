@@ -352,7 +352,7 @@ namespace loot {
         return *this;
     }
 
-    Game& Game::Init() {
+    Game& Game::Init(bool createFolder) {
         if (id != Game::tes4 && id != Game::tes5 && id != Game::fo3 && id != Game::fonv) {
             throw error(error::invalid_args, lc::translate("Invalid game ID supplied.").str());
         }
@@ -382,7 +382,10 @@ namespace loot {
         }
 
         RefreshActivePluginsList();
-        CreateLOOTGameFolder();
+
+        if (createFolder) {
+            CreateLOOTGameFolder();
+        }
 
         return *this;
     }

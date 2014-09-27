@@ -100,7 +100,7 @@ struct _loot_db_int : public loot::Game {
         extStringArraySize(0),
         extRevisionID(nullptr),
         extRevisionDate(nullptr) {
-        this->SetDetails("", "", "", "", gamePath, "").Init();
+        this->SetDetails("", "", "", "", gamePath, "").Init(false);
     }
 
     ~_loot_db_int() {

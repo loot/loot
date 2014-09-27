@@ -108,7 +108,7 @@ namespace loot {
         Game& SetDetails(const std::string& name, const std::string& masterFile,
                          const std::string& repositoryURL, const std::string& repositoryBranch,
                          const std::string& path, const std::string& registry);
-        Game& Init();
+        Game& Init(bool createFolder);
 
         bool IsInstalled() const;
 
