@@ -195,10 +195,8 @@ namespace loot {
         else
             return "";
     }
-#endif
 
     boost::filesystem::path GetLocalAppDataPath() {
-#ifdef _WIN32
         HWND owner = 0;
         TCHAR path[MAX_PATH];
 
@@ -209,14 +207,12 @@ namespace loot {
             return fs::path(path);
         else
             return fs::path("");
-#endif
     }
 
     //Turns an absolute filesystem path into a valid file:// URL.
     std::string ToFileURL(const fs::path& file) {
         BOOST_LOG_TRIVIAL(trace) << "Converting file path " << file << " to a URL.";
 
-#ifdef _WIN32
         wstring wstr(MAX_PATH, 0);
         DWORD len = MAX_PATH;
         UrlCreateFromPath(ToWinWide(file.string()).c_str(), &wstr[0], &len, NULL);
@@ -224,10 +220,8 @@ namespace loot {
         BOOST_LOG_TRIVIAL(trace) << "Converted to: " << str;
 
         return str;
-#endif
     }
 
-#ifdef _WIN32
     //Helper to turn UTF8 strings into strings that can be used by WinAPI.
     std::wstring ToWinWide(const std::string& str) {
         int len = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), str.length(), 0, 0);

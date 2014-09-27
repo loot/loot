@@ -53,7 +53,6 @@ namespace loot {
 #ifdef _WIN32
     //Get registry subkey value string.
     std::string RegKeyStringValue(const std::string& keyStr, const std::string& subkey, const std::string& value);
-#endif
 
     //Get the local application data path, within which LOOT's data folder should be stored.
     boost::filesystem::path GetLocalAppDataPath();
@@ -61,7 +60,6 @@ namespace loot {
     //Turns an absolute filesystem path into a valid file:// URL.
     std::string ToFileURL(const boost::filesystem::path& file);
 
-#ifdef _WIN32
     //Helper to turn UTF8 strings into strings that can be used by WinAPI.
     std::wstring ToWinWide(const std::string& str);
 
