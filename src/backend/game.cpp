@@ -459,10 +459,6 @@ namespace loot {
         return g_path_local / lootFolderName / "userlist.yaml";
     }
 
-    fs::path Game::ReportDataPath() const {
-        return g_path_local / lootFolderName / "reportdata.js";
-    }
-
     void Game::RefreshActivePluginsList() {
         BOOST_LOG_TRIVIAL(debug) << "Refreshing active plugins list for game: " << _name;
 
