@@ -326,11 +326,18 @@ extern "C"
      *      The relative or absolute path to the game folder, or `NULL`.
      *      If `NULL`, the API will attempt to detect the data path of the
      *      specified game.
+     *  @param gameLocalPath
+     *      The relative or absolute path to the game's folder in
+     *      `%LOCALAPPDATA%`, or `NULL`. If `NULL`, the API will attempt to
+     *      look up the path that `%LOCALAPPDATA%` corresponds to. This
+     *      parameter is provided so that systems lacking that environmental
+     *      variable (eg. Linux) can still use the API.
      *  @returns A return code.
      */
     LOOT_API unsigned int loot_create_db(loot_db * const db,
                                          const unsigned int clientGame,
-                                         const char * const gamePath);
+                                         const char * const gamePath,
+                                         const char * const gameLocalPath);
 
     /**
      *  @brief Destroy an existing database handle.

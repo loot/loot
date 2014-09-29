@@ -352,7 +352,7 @@ namespace loot {
         return *this;
     }
 
-    Game& Game::Init(bool createFolder) {
+    Game& Game::Init(bool createFolder, const boost::filesystem::path& gameLocalAppData) {
         if (id != Game::tes4 && id != Game::tes5 && id != Game::fo3 && id != Game::fonv) {
             throw error(error::invalid_args, lc::translate("Invalid game ID supplied.").str());
         }
@@ -380,6 +380,9 @@ namespace loot {
             BOOST_LOG_TRIVIAL(error) << "Game path could not be detected.";
             throw error(error::path_not_found, lc::translate("Game path could not be detected.").str());
         }
+
+        // Set the path to the game's folder in %LOCALAPPDATA%.
+        _gameLocalDataPath = gameLocalAppData;
 
         RefreshActivePluginsList();
 
@@ -469,14 +472,19 @@ namespace loot {
         char ** pluginArr;
         size_t pluginArrSize;
         int ret;
+
+        const char * gameLocalDataPath = nullptr;
+        if (!_gameLocalDataPath.empty())
+            gameLocalDataPath = _gameLocalDataPath.string().c_str();
+
         if (Id() == Game::tes4)
-            ret = lo_create_handle(&gh, LIBLO_GAME_TES4, gamePath.string().c_str());
+            ret = lo_create_handle(&gh, LIBLO_GAME_TES4, gamePath.string().c_str(), gameLocalDataPath);
         else if (Id() == Game::tes5)
-            ret = lo_create_handle(&gh, LIBLO_GAME_TES5, gamePath.string().c_str());
+            ret = lo_create_handle(&gh, LIBLO_GAME_TES5, gamePath.string().c_str(), gameLocalDataPath);
         else if (Id() == Game::fo3)
-            ret = lo_create_handle(&gh, LIBLO_GAME_FO3, gamePath.string().c_str());
+            ret = lo_create_handle(&gh, LIBLO_GAME_FO3, gamePath.string().c_str(), gameLocalDataPath);
         else if (Id() == Game::fonv)
-            ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str());
+            ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str(), gameLocalDataPath);
         else
             ret = LIBLO_ERROR_INVALID_ARGS;
 
@@ -552,14 +560,19 @@ namespace loot {
         size_t pluginArrSize;
 
         int ret;
+
+        const char * gameLocalDataPath = nullptr;
+        if (!_gameLocalDataPath.empty())
+            gameLocalDataPath = _gameLocalDataPath.string().c_str();
+
         if (Id() == Game::tes4)
-            ret = lo_create_handle(&gh, LIBLO_GAME_TES4, gamePath.string().c_str());
+            ret = lo_create_handle(&gh, LIBLO_GAME_TES4, gamePath.string().c_str(), gameLocalDataPath);
         else if (Id() == Game::tes5)
-            ret = lo_create_handle(&gh, LIBLO_GAME_TES5, gamePath.string().c_str());
+            ret = lo_create_handle(&gh, LIBLO_GAME_TES5, gamePath.string().c_str(), gameLocalDataPath);
         else if (Id() == Game::fo3)
-            ret = lo_create_handle(&gh, LIBLO_GAME_FO3, gamePath.string().c_str());
+            ret = lo_create_handle(&gh, LIBLO_GAME_FO3, gamePath.string().c_str(), gameLocalDataPath);
         else if (Id() == Game::fonv)
-            ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str());
+            ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str(), gameLocalDataPath);
         else
             ret = LIBLO_ERROR_INVALID_ARGS;
 
@@ -628,14 +641,19 @@ namespace loot {
 
         lo_game_handle gh = nullptr;
         int ret;
+
+        const char * gameLocalDataPath = nullptr;
+        if (!_gameLocalDataPath.empty())
+            gameLocalDataPath = _gameLocalDataPath.string().c_str();
+
         if (Id() == Game::tes4)
-            ret = lo_create_handle(&gh, LIBLO_GAME_TES4, gamePath.string().c_str());
+            ret = lo_create_handle(&gh, LIBLO_GAME_TES4, gamePath.string().c_str(), gameLocalDataPath);
         else if (Id() == Game::tes5)
-            ret = lo_create_handle(&gh, LIBLO_GAME_TES5, gamePath.string().c_str());
+            ret = lo_create_handle(&gh, LIBLO_GAME_TES5, gamePath.string().c_str(), gameLocalDataPath);
         else if (Id() == Game::fo3)
-            ret = lo_create_handle(&gh, LIBLO_GAME_FO3, gamePath.string().c_str());
+            ret = lo_create_handle(&gh, LIBLO_GAME_FO3, gamePath.string().c_str(), gameLocalDataPath);
         else if (Id() == Game::fonv)
-            ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str());
+            ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str(), gameLocalDataPath);
         else
             ret = LIBLO_ERROR_INVALID_ARGS;
 
@@ -710,7 +728,7 @@ namespace loot {
             for (size_t i = 0; i < pluginArrSize; i++)
                 delete[] pluginArr[i];
             delete[] pluginArr;
-            throw e;
+            throw;
         }
 
         for (size_t i = 0; i < pluginArrSize; i++)

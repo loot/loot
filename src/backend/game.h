@@ -108,7 +108,7 @@ namespace loot {
         Game& SetDetails(const std::string& name, const std::string& masterFile,
                          const std::string& repositoryURL, const std::string& repositoryBranch,
                          const std::string& path, const std::string& registry);
-        Game& Init(bool createFolder);
+        Game& Init(bool createFolder, const boost::filesystem::path& gameLocalAppData = "");
 
         bool IsInstalled() const;
 
@@ -170,6 +170,7 @@ namespace loot {
         std::string _repositoryBranch;
 
         boost::filesystem::path gamePath;  //Path to the game's folder.
+        boost::filesystem::path _gameLocalDataPath;  // Path to the game's folder in %LOCALAPPDATA%.
 
         std::unordered_set<std::string> activePlugins;  //Holds lowercased strings.
 

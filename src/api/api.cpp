@@ -89,7 +89,7 @@ const unsigned int loot_needs_cleaning_yes = 1;
 const unsigned int loot_needs_cleaning_unknown = 2;
 
 struct _loot_db_int : public loot::Game {
-    _loot_db_int(const unsigned int clientGame, const std::string& gamePath)
+    _loot_db_int(const unsigned int clientGame, const std::string& gamePath, const boost::filesystem::path& gameLocalDataPath)
         : Game(clientGame),
         extTagMap(nullptr),
         extAddedTagIds(nullptr),
@@ -100,7 +100,7 @@ struct _loot_db_int : public loot::Game {
         extStringArraySize(0),
         extRevisionID(nullptr),
         extRevisionDate(nullptr) {
-        this->SetDetails("", "", "", "", gamePath, "").Init(false);
+        this->SetDetails("", "", "", "", gamePath, "").Init(false, gameLocalDataPath);
     }
 
     ~_loot_db_int() {
@@ -229,7 +229,10 @@ LOOT_API unsigned int loot_get_version(unsigned int * const versionMajor, unsign
 // plugins.txt and loadorder.txt (if they both exist) are in sync. If
 // dataPath == nullptr then the API will attempt to detect the data path of
 // the specified game.
-LOOT_API unsigned int loot_create_db(loot_db * const db, const unsigned int clientGame, const char * const gamePath) {
+LOOT_API unsigned int loot_create_db(loot_db * const db,
+                                     const unsigned int clientGame,
+                                     const char * const gamePath,
+                                     const char * const gameLocalPath) {
     if (db == nullptr || (clientGame != loot_game_tes4 && clientGame != loot_game_tes5 && clientGame != loot_game_fo3 && clientGame != loot_game_fonv))
         return c_error(loot_error_invalid_args, "Null pointer passed.");
 
@@ -244,9 +247,13 @@ LOOT_API unsigned int loot_create_db(loot_db * const db, const unsigned int clie
     if (gamePath != nullptr)
         game_path = gamePath;
 
+    boost::filesystem::path game_local_path = "";
+    if (gameLocalPath != nullptr)
+        game_local_path = gameLocalPath;
+
     loot_db retVal = {0};
     try {
-        retVal = new _loot_db_int(clientGame, game_path);
+        retVal = new _loot_db_int(clientGame, game_path, game_local_path);
     }
     catch (loot::error& e) {
         return c_error(e);
