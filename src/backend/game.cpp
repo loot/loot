@@ -203,11 +203,11 @@ namespace loot {
             match = *it;
 
         // Now we want to also match possibly multiple regex entries.
-        it = find(regexPlugins.begin(), regexPlugins.end(), plugin);
-        while (it != regexPlugins.end()) {
-            match.MergeMetadata(*it);
+        auto regIt = find(regexPlugins.begin(), regexPlugins.end(), plugin);
+        while (regIt != regexPlugins.end()) {
+            match.MergeMetadata(*regIt);
 
-            it = find(++it, regexPlugins.end(), plugin);
+            regIt = find(++regIt, regexPlugins.end(), plugin);
         }
 
         return match;
@@ -724,7 +724,7 @@ namespace loot {
         try {
             SetLoadOrder(pluginArr, pluginArrSize);
         }
-        catch (error &e) {
+        catch (error &/*e*/) {
             for (size_t i = 0; i < pluginArrSize; i++)
                 delete[] pluginArr[i];
             delete[] pluginArr;
@@ -782,7 +782,7 @@ namespace loot {
                 uintmax_t fileSize = fs::file_size(it->path());
                 meanFileSize += fileSize;
 
-                tempMap.emplace(it->path().filename().string(), fileSize);
+                tempMap.insert(pair<string, uintmax_t>(it->path().filename().string(), fileSize));
             }
         }
         meanFileSize /= tempMap.size();  //Rounding error, but not important.
@@ -792,7 +792,7 @@ namespace loot {
             BOOST_LOG_TRIVIAL(info) << "Found plugin: " << pluginPair.first;
 
             //Insert the lowercased name as a key for case-insensitive matching.
-            auto plugin = plugins.emplace(boost::locale::to_lower(pluginPair.first), Plugin(pluginPair.first));
+            auto plugin = plugins.insert(pair<string, Plugin>(boost::locale::to_lower(pluginPair.first), Plugin(pluginPair.first)));
 
             if (pluginPair.second > meanFileSize) {
                 BOOST_LOG_TRIVIAL(trace) << "Creating individual loading thread for: " << pluginPair.first;

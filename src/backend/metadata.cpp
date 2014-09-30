@@ -148,7 +148,7 @@ namespace loot {
             throw loot::error(loot::error::condition_eval_fail, (boost::format(lc::translate("Failed to parse condition \"%1%\".")) % _condition).str());
         }
 
-        game.conditionCache.emplace(boost::locale::to_lower(_condition), eval);
+        game.conditionCache.insert(pair<string, bool>(boost::locale::to_lower(_condition), eval));
 
         return eval;
     }
@@ -708,11 +708,11 @@ namespace loot {
             crc = it->second;
         else if (boost::filesystem::exists(game.DataPath() / name)) {
             crc = GetCrc32(game.DataPath() / name);
-            game.crcCache.emplace(boost::locale::to_lower(name), crc);
+            game.crcCache.insert(pair<string, uint32_t>(boost::locale::to_lower(name), crc));
         }
         else if (boost::filesystem::exists(game.DataPath() / (name + ".ghost"))) {
             crc = GetCrc32(game.DataPath() / (name + ".ghost"));
-            game.crcCache.emplace(boost::locale::to_lower(name), crc);
+            game.crcCache.insert(pair<string, uint32_t>(boost::locale::to_lower(name), crc));
         }
         else
             _dirtyInfo.clear();

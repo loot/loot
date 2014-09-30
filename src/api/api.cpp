@@ -552,7 +552,7 @@ LOOT_API unsigned int loot_get_tag_map(loot_db db, char *** const tagMap, size_t
     try {
         unsigned int UID = 0;
         for (const auto &tag : allTags) {
-            db->bashTagMap.emplace(tag, UID);
+            db->bashTagMap.insert(std::pair<std::string, unsigned int>(tag, UID));
             //Also allocate memory.
             db->extTagMap[UID] = ToNewCString(tag);
             UID++;

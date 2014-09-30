@@ -35,7 +35,11 @@ namespace loot {
     const boost::filesystem::path g_path_readme         = boost::filesystem::current_path() / "docs" / "LOOT Readme.html";
     const boost::filesystem::path g_path_report         = boost::filesystem::current_path() / "resources" / "report" / "report.html";
     const boost::filesystem::path g_path_l10n           = boost::filesystem::current_path() / "resources" / "l10n";
+#ifdef _WIN32
     const boost::filesystem::path g_path_local          = GetLocalAppDataPath() / "LOOT";
+#else
+    const boost::filesystem::path g_path_local          = boost::filesystem::current_path();
+#endif
     const boost::filesystem::path g_path_settings       = g_path_local / "settings.yaml";
     const boost::filesystem::path g_path_log            = g_path_local / "LOOTDebugLog.txt";
 }

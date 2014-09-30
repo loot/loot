@@ -339,7 +339,7 @@ namespace YAML {
 
             rhs.clear();
             for (const auto &element : node) {
-                rhs.insert(element.as<T>());
+                rhs.insert(element.template as<T>());
             }
             return true;
         }
@@ -361,7 +361,7 @@ namespace YAML {
 
             rhs.clear();
             for (const auto &element : node) {
-                rhs.insert(element.as<T>());
+                rhs.insert(element.template as<T>());
             }
             return true;
         }
@@ -555,7 +555,7 @@ namespace loot {
 
             BOOST_LOG_TRIVIAL(trace) << "Checking to see if any files matching the regex \"" << regexStr << "\" exist.";
 
-            regex sepReg("/|(\\\\\\\\)", regex::ECMAScript | regex::icase);
+            std::regex sepReg("/|(\\\\\\\\)", std::regex::ECMAScript | std::regex::icase);
 
             std::vector<std::string> components;
             std::sregex_token_iterator it(regexStr.begin(), regexStr.end(), sepReg, -1);
@@ -589,11 +589,11 @@ namespace loot {
                 return;
             }
 
-            regex reg;
+            std::regex reg;
             try {
-                reg = regex(filename, regex::ECMAScript | regex::icase);
+                reg = std::regex(filename, std::regex::ECMAScript | std::regex::icase);
             }
-            catch (exception& /*e*/) {
+            catch (std::exception& /*e*/) {
                 BOOST_LOG_TRIVIAL(error) << "Invalid regex string:" << filename;
                 throw loot::error(loot::error::invalid_args, boost::locale::translate("Invalid regex string:").str() + " " + filename);
             }
@@ -619,7 +619,7 @@ namespace loot {
             }
 
             uint32_t crc;
-            unordered_map<std::string, uint32_t>::iterator it = _game->crcCache.find(boost::locale::to_lower(file));
+            std::unordered_map<std::string, uint32_t>::iterator it = _game->crcCache.find(boost::locale::to_lower(file));
 
             if (it != _game->crcCache.end())
                 crc = it->second;
@@ -635,7 +635,7 @@ namespace loot {
                     return;
                 }
 
-                _game->crcCache.emplace(boost::locale::to_lower(file), crc);
+                _game->crcCache.insert(std::pair<std::string, uint32_t>(boost::locale::to_lower(file), crc));
             }
 
             result = checksum == crc;

@@ -132,7 +132,7 @@ IF (CMAKE_COMPILER_IS_GNUCXX)
     ENDIF ()
 
     set (LOOT_LIBS git2
-                   libyaml-cpp
+                   yaml-cpp
                    loadorder${PROJECT_ARCH})
 ENDIF ()
 

@@ -280,7 +280,7 @@ namespace loot {
 namespace std {
     template<>
     struct hash < loot::Plugin > {
-        size_t operator() (const loot::Plugin& plugin) {
+        size_t operator() (const loot::Plugin& plugin) const {
             return hash<string>()(boost::locale::to_lower(plugin.Name()));
         }
     };
