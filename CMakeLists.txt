@@ -7,7 +7,8 @@
 # General Settings
 ##############################
 
-cmake_minimum_required (VERSION 2.8.9)
+cmake_minimum_required (VERSION 2.8)
+cmake_policy(SET CMP0015 NEW)
 project (LOOT)
 
 option(BUILD_SHARED_LIBS "Build a shared library" ON)
@@ -41,9 +42,11 @@ IF (NOT DEFINED CEF_ROOT)
     set (CEF_ROOT "../../cef")
 ENDIF ()
 
-set (Boost_USE_STATIC_LIBS ON)
+set (Boost_USE_STATIC_LIBS ${PROJECT_STATIC_RUNTIME})
 set (Boost_USE_MULTITHREADED ON)
-set (Boost_USE_STATIC_RUNTIME PROJECT_STATIC_RUNTIME)
+set (Boost_USE_STATIC_RUNTIME ${PROJECT_STATIC_RUNTIME})
+
+find_package(Boost REQUIRED COMPONENTS log log_setup regex locale thread date_time chrono filesystem system iostreams)
 
 set (LOOT_SRC   "${CMAKE_SOURCE_DIR}/src/backend/metadata.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/game.cpp"
@@ -87,8 +90,6 @@ set (LOOT_API_HEADERS ${LOOT_HEADERS}
 
 source_group("Header Files" FILES ${LOOT_HEADERS} ${LOOT_GUI_HEADERS} ${LOOT_API_HEADERS})
 
-find_package(Boost REQUIRED COMPONENTS log log_setup locale thread chrono date_time filesystem system regex iostreams)
-
 # Include source and library directories.
 include_directories ("${CMAKE_SOURCE_DIR}/src"
                      ${ALPHANUM_ROOT}
@@ -120,39 +121,38 @@ IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
     ENDIF ()
 ENDIF ()
 
+# GCC and MinGW settings.
+IF (CMAKE_COMPILER_IS_GNUCXX)
+    set (CMAKE_C_FLAGS "-m${PROJECT_ARCH} -O3 -std=c++0x")
+    set (CMAKE_CXX_FLAGS "-m${PROJECT_ARCH} -O3 -std=c++0x")
+    IF (PROJECT_STATIC_RUNTIME)
+        set (CMAKE_EXE_LINKER_FLAGS "-static-libstdc++ -static-libgcc")
+        set (CMAKE_SHARED_LINKER_FLAGS "-static-libstdc++ -static-libgcc")
+        set (CMAKE_MODULE_LINKER_FLAGS "-static-libstdc++ -static-libgcc")
+    ENDIF ()
+
+    set (LOOT_LIBS git2
+                   libyaml-cpp
+                   loadorder${PROJECT_ARCH})
+ENDIF ()
+
 # MinGW settings.
 IF (MINGW)
-    set (CMAKE_C_FLAGS  "-m${PROJECT_ARCH} -O3")
-    set (CMAKE_CXX_FLAGS "-m${PROJECT_ARCH} -O3")
-    set (CMAKE_EXE_LINKER_FLAGS "-static-libstdc++ -static-libgcc -Wl,--subsystem,windows")
-    set (CMAKE_SHARED_LINKER_FLAGS "-static-libstdc++ -static-libgcc -Wl,--subsystem,windows")
-    set (CMAKE_MODULE_LINKER_FLAGS "-static-libstdc++ -static-libgcc -Wl,--subsystem,windows")
+    set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--subsystem,windows")
+    set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--subsystem,windows")
+    set (CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -Wl,--subsystem,windows")
+
     set (LOOT_LIBS ${LOOT_LIBS}
-                   yaml-cpp
-                   boost_log_setup
-                   boost_log
-                   boost_locale
-                   boost_thread_win32
-                   boost_chrono
-                   boost_date_time
-                   boost_filesystem
-                   boost_system
-                   boost_regex
                    version
-                   loadorder${PROJECT_ARCH}
-                   ssl
-                   crypto
-                   ws2_32
-                   shlwapi)
+				   ws2_32
+				   shlwapi)
     set (LOOT_GUI_LIBS ${LOOT_LIBS}
-                       git2
                        cef_sandbox
                        libcef
                        libcef_dll_wrapper
                        rpcrt4
                        comctl32)
 ELSEIF (MSVC)
-
     # Force static C++ runtime linkage.
     IF (PROJECT_STATIC_RUNTIME)
         FOREACH(flag
