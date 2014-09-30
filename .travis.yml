@@ -1,0 +1,60 @@
+language: cpp
+compiler:
+  - gcc
+
+before_install:
+  - sudo apt-get update -qq
+
+install:
+  # Currently inside the cloned repo path.
+  # Need Boost 1.54+, which isn't in the 12.04 repositories - install from a PPA.
+  - sudo add-apt-repository ppa:boost-latest/ppa -y
+  - sudo apt-get update -qq
+  - sudo apt-get install libboost-log1.55-dev libboost-date-time1.55-dev libboost-thread1.55-dev libboost-filesystem1.55-dev libboost-locale1.55-dev libboost-iostreams1.55-dev
+  # Install Alphanum
+  - cd ../..
+  - mkdir alphanum
+  - cd alphanum
+  - wget http://www.davekoelle.com/files/alphanum.hpp
+  - cd ..
+  # Install libespm.
+  - git clone https://github.com/WrinklyNinja/libespm.git libespm
+  # Build yaml-cpp
+  - git clone https://github.com/WrinklyNinja/yaml-cpp yaml-cpp
+  - mkdir yaml-cpp/build
+  - cd yaml-cpp/build
+  - cmake ..
+  - make yaml-cpp
+  - cd ../../
+  # Build libgit2
+  - wget https://github.com/libgit2/libgit2/archive/v0.21.1.tar.gz
+  - tar -xf v0.21.1.tar.gz
+  - mv libgit2-0.21.1 libgit2
+  - mkdir libgit2/build
+  - cd libgit2/build
+  - cmake ..
+  - make git2
+  - cd ../../
+  # Install Google Test
+  - wget https://googletest.googlecode.com/files/gtest-1.7.0.zip
+  - unzip gtest-1.7.0.zip
+  - cd gtest-1.7.0
+  - cmake .
+  - make
+  - cd ..
+  # Build libloadorder
+  - git clone https://github.com/WrinklyNinja/libloadorder.git libloadorder
+  - mkdir libloadorder/build
+  - cd libloadorder/build
+  - cmake .. -DPROJECT_ARCH=64 -DPROJECT_STATIC_RUNTIME=OFF -DGTEST_ROOT=../gtest-1.7.0
+  - make loadorder64
+  # Move back into the cloned LOOT repo path.
+  - cd $TRAVIS_BUILD_DIR
+
+before_script:
+  - mkdir build
+  - cd build
+  # Travis machines are 64 bit, and the deps use dynamic linking.
+  - cmake .. -DPROJECT_ARCH=64 -DPROJECT_STATIC_RUNTIME=OFF -DBUILD_SHARED_LIBS=OFF
+
+script: make loot64
