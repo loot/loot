@@ -104,6 +104,7 @@ namespace loot {
         //Game functions.
         Game();  //Sets game to LOOT_Game::autodetect, with all other vars being empty.
         Game(const unsigned int baseGameCode, const std::string& lootFolder = "");
+        ~Game();
 
         Game& SetDetails(const std::string& name, const std::string& masterFile,
                          const std::string& repositoryURL, const std::string& repositoryBranch,
@@ -174,8 +175,12 @@ namespace loot {
 
         std::unordered_set<std::string> activePlugins;  //Holds lowercased strings.
 
+        lo_game_handle gh;
+
         //Creates directory in LOOT folder for LOOT's game-specific files.
         void CreateLOOTGameFolder();
+
+        void InitLibloHandle();
     };
 
     std::vector<Game> GetGames(YAML::Node& settings);

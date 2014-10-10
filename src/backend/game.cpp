@@ -283,9 +283,9 @@ namespace loot {
     // Game member functions
     //----------------------
 
-    Game::Game() : id(Game::autodetect) {}
+    Game::Game() : id(Game::autodetect), gh(nullptr) {}
 
-    Game::Game(const unsigned int gameCode, const std::string& folder) : id(gameCode) {
+    Game::Game(const unsigned int gameCode, const std::string& folder) : id(gameCode), gh(nullptr) {
         if (Id() == Game::tes4) {
             _name = "TES IV: Oblivion";
             registryKey = "Software\\Bethesda Softworks\\Oblivion\\Installed Path";
@@ -325,6 +325,10 @@ namespace loot {
 
         if (!folder.empty())
             lootFolderName = folder;
+    }
+
+    Game::~Game() {
+        lo_destroy_handle(gh);
     }
 
     Game& Game::SetDetails(const std::string& name, const std::string& masterFile,
@@ -384,6 +388,7 @@ namespace loot {
         // Set the path to the game's folder in %LOCALAPPDATA%.
         _gameLocalDataPath = gameLocalAppData;
 
+        InitLibloHandle();
         RefreshActivePluginsList();
 
         if (createFolder) {
@@ -465,18 +470,12 @@ namespace loot {
         return g_path_local / lootFolderName / "userlist.yaml";
     }
 
-    void Game::RefreshActivePluginsList() {
-        BOOST_LOG_TRIVIAL(debug) << "Refreshing active plugins list for game: " << _name;
-
-        lo_game_handle gh = nullptr;
-        char ** pluginArr;
-        size_t pluginArrSize;
-        int ret;
-
+    void Game::InitLibloHandle() {
         const char * gameLocalDataPath = nullptr;
         if (!_gameLocalDataPath.empty())
             gameLocalDataPath = _gameLocalDataPath.string().c_str();
 
+        int ret;
         if (Id() == Game::tes4)
             ret = lo_create_handle(&gh, LIBLO_GAME_TES4, gamePath.string().c_str(), gameLocalDataPath);
         else if (Id() == Game::tes5)
@@ -504,25 +503,31 @@ namespace loot {
             throw error(error::liblo_error, err);
         }
 
-        ret = lo_set_game_master(gh, _masterFile.c_str());
-
-        if (ret != LIBLO_OK) {
-            const char * e = nullptr;
-            string err;
-            lo_get_error_message(&e);
-            lo_destroy_handle(gh);
-            if (e == nullptr) {
-                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to initialise game master file support. Details could not be fetched.";
-                err = lc::translate("libloadorder failed to initialise game master file support. Details could not be fetched.").str();
+        if (id != Game::tes5) {
+            if (lo_set_game_master(gh, _masterFile.c_str()) != LIBLO_OK) {
+                const char * e = nullptr;
+                string err;
+                lo_get_error_message(&e);
+                lo_destroy_handle(gh);
+                if (e == nullptr) {
+                    BOOST_LOG_TRIVIAL(error) << "libloadorder failed to initialise game master file support. Details could not be fetched.";
+                    err = lc::translate("libloadorder failed to initialise game master file support. Details could not be fetched.").str();
+                }
+                else {
+                    BOOST_LOG_TRIVIAL(error) << "libloadorder failed to initialise game master file support. Details: " << e;
+                    err = lc::translate("libloadorder failed to initialise game master file support. Details:").str() + " " + e;
+                }
+                lo_cleanup();
+                throw error(error::liblo_error, err);
             }
-            else {
-                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to initialise game master file support. Details: " << e;
-                err = lc::translate("libloadorder failed to initialise game master file support. Details:").str() + " " + e;
-            }
-            lo_cleanup();
-            throw error(error::liblo_error, err);
         }
+    }
 
+    void Game::RefreshActivePluginsList() {
+        BOOST_LOG_TRIVIAL(debug) << "Refreshing active plugins list for game: " << _name;
+
+        char ** pluginArr;
+        size_t pluginArrSize;
         if (lo_get_active_plugins(gh, &pluginArr, &pluginArrSize) != LIBLO_OK) {
             const char * e = nullptr;
             string err;
@@ -544,8 +549,6 @@ namespace loot {
         for (size_t i = 0; i < pluginArrSize; ++i) {
             activePlugins.insert(boost::locale::to_lower(string(pluginArr[i])));
         }
-
-        lo_destroy_handle(gh);
     }
 
     bool Game::IsActive(const std::string& plugin) const {
@@ -555,61 +558,8 @@ namespace loot {
     void Game::GetLoadOrder(std::list<std::string>& loadOrder) const {
         BOOST_LOG_TRIVIAL(debug) << "Getting load order for game: " << _name;
 
-        lo_game_handle gh = nullptr;
         char ** pluginArr;
         size_t pluginArrSize;
-
-        int ret;
-
-        const char * gameLocalDataPath = nullptr;
-        if (!_gameLocalDataPath.empty())
-            gameLocalDataPath = _gameLocalDataPath.string().c_str();
-
-        if (Id() == Game::tes4)
-            ret = lo_create_handle(&gh, LIBLO_GAME_TES4, gamePath.string().c_str(), gameLocalDataPath);
-        else if (Id() == Game::tes5)
-            ret = lo_create_handle(&gh, LIBLO_GAME_TES5, gamePath.string().c_str(), gameLocalDataPath);
-        else if (Id() == Game::fo3)
-            ret = lo_create_handle(&gh, LIBLO_GAME_FO3, gamePath.string().c_str(), gameLocalDataPath);
-        else if (Id() == Game::fonv)
-            ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str(), gameLocalDataPath);
-        else
-            ret = LIBLO_ERROR_INVALID_ARGS;
-
-        if (ret != LIBLO_OK && ret != LIBLO_WARN_LO_MISMATCH) {
-            const char * e = nullptr;
-            string err;
-            lo_get_error_message(&e);
-            if (e == nullptr) {
-                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to create a game handle. Details could not be fetched.";
-                err = lc::translate("libloadorder failed to create a game handle. Details could not be fetched.").str();
-            }
-            else {
-                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to create a game handle. Details: " << e;
-                err = lc::translate("libloadorder failed to create a game handle. Details:").str() + " " + e;
-            }
-            lo_cleanup();
-            throw error(error::liblo_error, err);
-        }
-
-        ret = lo_set_game_master(gh, _masterFile.c_str());
-
-        if (ret != LIBLO_OK) {
-            const char * e = nullptr;
-            string err;
-            lo_get_error_message(&e);
-            lo_destroy_handle(gh);
-            if (e == nullptr) {
-                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to initialise game master file support. Details could not be fetched.";
-                err = lc::translate("libloadorder failed to initialise game master file support. Details could not be fetched.").str();
-            }
-            else {
-                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to initialise game master file support. Details: " << e;
-                err = lc::translate("libloadorder failed to initialise game master file support. Details:").str() + " " + e;
-            }
-            lo_cleanup();
-            throw error(error::liblo_error, err);
-        }
 
         if (lo_get_load_order(gh, &pluginArr, &pluginArrSize) != LIBLO_OK) {
             const char * e = nullptr;
@@ -617,8 +567,8 @@ namespace loot {
             lo_get_error_message(&e);
             lo_destroy_handle(gh);
             if (e == nullptr) {
-                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to set the load order. Details could not be fetched.";
-                err = lc::translate("libloadorder failed to set the load order. Details could not be fetched.").str();
+                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to get the load order. Details could not be fetched.";
+                err = lc::translate("libloadorder failed to get the load order. Details could not be fetched.").str();
             }
             else {
                 BOOST_LOG_TRIVIAL(error) << "libloadorder failed to get the load order. Details: " << e;
@@ -632,64 +582,10 @@ namespace loot {
         for (size_t i = 0; i < pluginArrSize; ++i) {
             loadOrder.push_back(string(pluginArr[i]));
         }
-
-        lo_destroy_handle(gh);
     }
 
     void Game::SetLoadOrder(const char * const * const loadOrder, const size_t numPlugins) const {
         BOOST_LOG_TRIVIAL(debug) << "Setting load order for game: " << _name;
-
-        lo_game_handle gh = nullptr;
-        int ret;
-
-        const char * gameLocalDataPath = nullptr;
-        if (!_gameLocalDataPath.empty())
-            gameLocalDataPath = _gameLocalDataPath.string().c_str();
-
-        if (Id() == Game::tes4)
-            ret = lo_create_handle(&gh, LIBLO_GAME_TES4, gamePath.string().c_str(), gameLocalDataPath);
-        else if (Id() == Game::tes5)
-            ret = lo_create_handle(&gh, LIBLO_GAME_TES5, gamePath.string().c_str(), gameLocalDataPath);
-        else if (Id() == Game::fo3)
-            ret = lo_create_handle(&gh, LIBLO_GAME_FO3, gamePath.string().c_str(), gameLocalDataPath);
-        else if (Id() == Game::fonv)
-            ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str(), gameLocalDataPath);
-        else
-            ret = LIBLO_ERROR_INVALID_ARGS;
-
-        if (ret != LIBLO_OK && ret != LIBLO_WARN_LO_MISMATCH) {
-            const char * e = nullptr;
-            string err;
-            lo_get_error_message(&e);
-            if (e == nullptr) {
-                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to create a game handle. Details could not be fetched.";
-                err = lc::translate("libloadorder failed to create a game handle. Details could not be fetched.").str();
-            }
-            else {
-                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to create a game handle. Details: " << e;
-                err = lc::translate("libloadorder failed to create a game handle. Details:").str() + " " + e;
-            }
-            lo_cleanup();
-            throw error(error::liblo_error, err);
-        }
-
-        ret = lo_set_game_master(gh, _masterFile.c_str());
-        if (ret != LIBLO_OK) {
-            const char * e = nullptr;
-            string err;
-            lo_get_error_message(&e);
-            lo_destroy_handle(gh);
-            if (e == nullptr) {
-                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to initialise game master file support. Details could not be fetched.";
-                err = lc::translate("libloadorder failed to initialise game master file support. Details could not be fetched.").str();
-            }
-            else {
-                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to initialise game master file support. Details: " << e;
-                err = lc::translate("libloadorder failed to initialise game master file support. Details:").str() + " " + e;
-            }
-            lo_cleanup();
-            throw error(error::liblo_error, err);
-        }
 
         if (lo_set_load_order(gh, loadOrder, numPlugins) != LIBLO_OK) {
             const char * e = nullptr;
@@ -707,8 +603,6 @@ namespace loot {
             lo_cleanup();
             throw error(error::liblo_error, err);
         }
-
-        lo_destroy_handle(gh);
     }
 
     void Game::SetLoadOrder(const std::list<std::string>& loadOrder) const {
@@ -792,7 +686,8 @@ namespace loot {
             BOOST_LOG_TRIVIAL(info) << "Found plugin: " << pluginPair.first;
 
             //Insert the lowercased name as a key for case-insensitive matching.
-            auto plugin = plugins.insert(pair<string, Plugin>(boost::locale::to_lower(pluginPair.first), Plugin(pluginPair.first)));
+            Plugin temp(pluginPair.first);
+            auto plugin = plugins.insert(pair<string, Plugin>(boost::locale::to_lower(temp.Name()), temp));
 
             if (pluginPair.second > meanFileSize) {
                 BOOST_LOG_TRIVIAL(trace) << "Creating individual loading thread for: " << pluginPair.first;
