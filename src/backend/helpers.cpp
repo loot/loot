@@ -200,7 +200,6 @@ namespace loot {
         HWND owner = 0;
         TCHAR path[MAX_PATH];
 
-        BOOST_LOG_TRIVIAL(trace) << "Getting path to %LOCALAPPDATA%.";
         HRESULT res = SHGetFolderPath(owner, CSIDL_LOCAL_APPDATA, NULL, SHGFP_TYPE_CURRENT, path);
 
         if (res == S_OK)
