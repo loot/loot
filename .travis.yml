@@ -3,13 +3,13 @@ compiler:
   - gcc
 
 before_install:
+  # Add a PPA for Boost 1.55.
+  - sudo add-apt-repository ppa:boost-latest/ppa -y
   - sudo apt-get update -qq
 
 install:
   # Currently inside the cloned repo path.
-  # Need Boost 1.54+, which isn't in the 12.04 repositories - install from a PPA.
-  - sudo add-apt-repository ppa:boost-latest/ppa -y
-  - sudo apt-get update -qq
+  # Install Boost.
   - sudo apt-get install libboost-log1.55-dev libboost-date-time1.55-dev libboost-thread1.55-dev libboost-filesystem1.55-dev libboost-locale1.55-dev libboost-iostreams1.55-dev
   # Install Alphanum
   - cd ../..
@@ -54,7 +54,11 @@ install:
 before_script:
   - mkdir build
   - cd build
+  # Fetch plugins to test with.
+  - wget https://github.com/WrinklyNinja/testing-plugins/archive/master.zip
+  - unzip master.zip
+  - mv testing-plugins-master/* ./
   # Travis machines are 64 bit, and the deps use dynamic linking.
-  - cmake .. -DPROJECT_ARCH=64 -DPROJECT_STATIC_RUNTIME=OFF -DBUILD_SHARED_LIBS=OFF
+  - cmake .. -DPROJECT_ARCH=64 -DPROJECT_STATIC_RUNTIME=OFF -DBUILD_SHARED_LIBS=OFF -DGTEST_ROOT=../../gtest-1.7.0
 
-script: make loot64
+script: make tests && ./tests
