@@ -31,8 +31,6 @@ along with LOOT.  If not, see
 #include <boost/algorithm/string.hpp>
 #include <boost/locale.hpp>
 
-#include <regex>
-
 using namespace std;
 
 namespace YAML {

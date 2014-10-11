@@ -36,12 +36,10 @@
 #include <clocale>
 #include <list>
 #include <vector>
-#include <regex>
 #include <unordered_set>
 #include <unordered_map>
 
 #include <boost/algorithm/string.hpp>
-#include <boost/filesystem/detail/utf8_codecvt_facet.hpp>
 #include <boost/filesystem.hpp>
 
 const unsigned int loot_ok = loot::error::ok;

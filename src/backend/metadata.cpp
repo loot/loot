@@ -27,16 +27,19 @@
 #include "parsers.h"
 #include "streams.h"
 
-#include <regex>
-
 #include <src/libespm.h>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/locale.hpp>
+#include <boost/regex.hpp>
 
 using namespace std;
+using boost::regex;
+using boost::regex_match;
+using boost::regex_search;
+using boost::smatch;
 
 namespace loot {
     namespace lc = boost::locale;
