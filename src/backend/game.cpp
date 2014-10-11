@@ -472,8 +472,9 @@ namespace loot {
 
     void Game::InitLibloHandle() {
         const char * gameLocalDataPath = nullptr;
-        if (!_gameLocalDataPath.empty())
-            gameLocalDataPath = _gameLocalDataPath.string().c_str();
+        std::string localAppData = _gameLocalDataPath.string();
+        if (!localAppData.empty())
+            gameLocalDataPath = localAppData.c_str();
 
         int ret;
         if (Id() == Game::tes4)
@@ -509,6 +510,8 @@ namespace loot {
                 string err;
                 lo_get_error_message(&e);
                 lo_destroy_handle(gh);
+                gh = nullptr;
+
                 if (e == nullptr) {
                     BOOST_LOG_TRIVIAL(error) << "libloadorder failed to initialise game master file support. Details could not be fetched.";
                     err = lc::translate("libloadorder failed to initialise game master file support. Details could not be fetched.").str();
@@ -532,7 +535,6 @@ namespace loot {
             const char * e = nullptr;
             string err;
             lo_get_error_message(&e);
-            lo_destroy_handle(gh);
             if (e == nullptr) {
                 BOOST_LOG_TRIVIAL(error) << "libloadorder failed to get the active plugins list. Details could not be fetched.";
                 err = lc::translate("libloadorder failed to get the active plugins list. Details could not be fetched.").str();
@@ -565,7 +567,6 @@ namespace loot {
             const char * e = nullptr;
             string err;
             lo_get_error_message(&e);
-            lo_destroy_handle(gh);
             if (e == nullptr) {
                 BOOST_LOG_TRIVIAL(error) << "libloadorder failed to get the load order. Details could not be fetched.";
                 err = lc::translate("libloadorder failed to get the load order. Details could not be fetched.").str();
@@ -591,7 +592,6 @@ namespace loot {
             const char * e = nullptr;
             string err;
             lo_get_error_message(&e);
-            lo_destroy_handle(gh);
             if (e == nullptr) {
                 BOOST_LOG_TRIVIAL(error) << "libloadorder failed to set the load order. Details could not be fetched.";
                 err = lc::translate("libloadorder failed to set the load order. Details could not be fetched.").str();
