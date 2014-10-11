@@ -248,18 +248,30 @@ LOOT_API unsigned int loot_create_db(loot_db * const db,
     boost::filesystem::path game_local_path = "";
     if (gameLocalPath != nullptr)
         game_local_path = gameLocalPath;
+#ifndef _WIN32
+    else
+        return c_error(loot_error_invalid_args, "A local data path must be supplied on non-Windows platforms.");
+#endif
 
-    loot_db retVal = {0};
     try {
-        retVal = new _loot_db_int(clientGame, game_path, game_local_path);
-    }
+        // Check for valid paths.
+        if (gamePath != nullptr && !boost::filesystem::is_directory(gamePath))
+            return c_error(loot_error_invalid_args, "Given game path \"" + std::string(gamePath) + "\" is not a valid directory.");
+
+        if (gameLocalPath != nullptr && !boost::filesystem::is_directory(gameLocalPath))
+            return c_error(loot_error_invalid_args, "Given local data path \"" + std::string(gameLocalPath) + "\" is not a valid directory.");
+
+        *db = new _loot_db_int(clientGame, game_path, game_local_path);
+}
     catch (loot::error& e) {
         return c_error(e);
     }
     catch (std::bad_alloc& e) {
         return c_error(loot_error_no_mem, e.what());
     }
-    *db = retVal;
+    catch (std::exception& e) {
+        return c_error(loot_error_invalid_args, e.what());
+    }
 
     return loot_ok;
 }
