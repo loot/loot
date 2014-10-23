@@ -132,4 +132,63 @@ TEST_F(OblivionTest, CreateDbHandlesNullLocalPath) {
 TEST(GameHandleDestroyTest, HandledNullInput) {
     ASSERT_NO_THROW(loot_destroy_db(NULL));
 }
+
+TEST_F(OblivionAPIOperationsTest, UpdateMasterlist) {
+    bool updated;
+    EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(NULL, masterlistPath.string().c_str(), "https://github.com/loot/oblivion.git", "master", &updated));
+    EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(db, NULL, "https://github.com/loot/oblivion.git", "master", &updated));
+    EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(db, masterlistPath.string().c_str(), NULL, "master", &updated));
+    EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/oblivion.git", NULL, &updated));
+    EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/oblivion.git", "master", NULL));
+
+    EXPECT_EQ(loot_ok, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/oblivion.git", "master", &updated));
+    EXPECT_TRUE(updated);
+}
+
+TEST_F(OblivionAPIOperationsTest, LoadLists) {
+    EXPECT_EQ(loot_error_invalid_args, loot_load_lists(NULL, masterlistPath.string().c_str(), NULL));
+    EXPECT_EQ(loot_error_invalid_args, loot_load_lists(db, NULL, NULL));
+
+    bool updated;
+    ASSERT_EQ(loot_ok, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/oblivion.git", "master", &updated));
+    EXPECT_EQ(loot_error_path_not_found, loot_load_lists(db, masterlistPath.string().c_str(), NULL));
+    
+    ASSERT_NO_THROW(boost::filesystem::copy(masterlistPath, userlistPath));
+    EXPECT_EQ(loot_error_path_not_found, loot_load_lists(db, masterlistPath.string().c_str(), userlistPath.string().c_str()));
+}
+
+TEST_F(OblivionAPIOperationsTest, EvalLists) {
+    // No lists loaded.
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_any));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_english));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_spanish));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_russian));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_french));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_chinese));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_polish));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_brazilian_portuguese));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_finnish));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_german));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_danish));
+
+    // Invalid args.
+    EXPECT_EQ(loot_error_invalid_args, loot_eval_lists(NULL, loot_lang_any));
+    EXPECT_EQ(loot_error_invalid_args, loot_eval_lists(db, (unsigned int)-1));
+
+    // Now test different languages with a list loaded.
+    bool updated;
+    ASSERT_EQ(loot_ok, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/oblivion.git", "master", &updated));
+    ASSERT_EQ(loot_ok, loot_load_lists(db, masterlistPath.string().c_str(), NULL));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_any));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_english));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_spanish));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_russian));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_french));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_chinese));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_polish));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_brazilian_portuguese));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_finnish));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_german));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_danish));
+}
 #endif

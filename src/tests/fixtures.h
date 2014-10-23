@@ -39,12 +39,15 @@ along with LOOT.  If not, see
 class GameTest : public ::testing::Test {
 protected:
     GameTest(const boost::filesystem::path& gameDataPath, const boost::filesystem::path& gameLocalPath)
-        : dataPath(gameDataPath), localPath(gameLocalPath), missingPath("./missing"), db(nullptr) {}
+        : dataPath(gameDataPath), localPath(gameLocalPath), missingPath("./missing"), masterlistPath(localPath / "masterlist.yaml"), userlistPath(localPath / "userlist.yaml"), db(nullptr) {}
 
     inline virtual void SetUp() {
         ASSERT_NO_THROW(boost::filesystem::create_directories(localPath));
         ASSERT_TRUE(boost::filesystem::exists(localPath));
 
+        ASSERT_FALSE(boost::filesystem::exists(masterlistPath));
+        ASSERT_FALSE(boost::filesystem::exists(userlistPath));
+        ASSERT_FALSE(boost::filesystem::exists(localPath / ".git"));
         ASSERT_FALSE(boost::filesystem::exists(missingPath));
 
         ASSERT_TRUE(boost::filesystem::exists(dataPath / "Blank.esm"));
@@ -90,12 +93,22 @@ protected:
         ASSERT_FALSE(boost::filesystem::exists(dataPath / "EmptyFile.esm"));
         ASSERT_FALSE(boost::filesystem::exists(dataPath / "NotAPlugin.esm"));
 
+        // Masterlist & userlist may have been created during test, so delete them.
+        ASSERT_NO_THROW(boost::filesystem::remove(masterlistPath));
+        ASSERT_NO_THROW(boost::filesystem::remove(userlistPath));
+
+        // Also remove the ".git" folder if it has been created.
+        ASSERT_NO_THROW(boost::filesystem::remove_all(localPath / ".git"));
+
         ASSERT_NO_THROW(loot_destroy_db(db));
     }
 
     const boost::filesystem::path dataPath;
     const boost::filesystem::path localPath;
     const boost::filesystem::path missingPath;
+
+    const boost::filesystem::path masterlistPath;
+    const boost::filesystem::path userlistPath;
 
     loot_db db;
 };
