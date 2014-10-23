@@ -53,6 +53,7 @@ const unsigned int loot_error_invalid_args = loot::error::invalid_args;
 const unsigned int loot_error_no_tag_map = loot::error::no_tag_map;
 const unsigned int loot_error_path_not_found = loot::error::path_not_found;
 const unsigned int loot_error_no_game_detected = loot::error::no_game_detected;
+const unsigned int loot_error_git_error = loot::error::git_error;
 const unsigned int loot_error_windows_error = loot::error::windows_error;
 const unsigned int loot_error_sorting_error = loot::error::sorting_error;
 const unsigned int loot_return_max = loot_error_sorting_error;

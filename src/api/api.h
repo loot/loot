@@ -182,6 +182,7 @@ extern "C"
     LOOT_API extern const unsigned int loot_error_no_tag_map;  /**< No Bash Tag map has been generated yet. */
     LOOT_API extern const unsigned int loot_error_path_not_found;  /**< A file or folder path could not be found. */
     LOOT_API extern const unsigned int loot_error_no_game_detected;  /**< The given game could not be found. */
+    LOOT_API extern const unsigned int loot_error_git_error;  /**< An error occurred while performing a git operation (updating or getting the masterlist version). */
     LOOT_API extern const unsigned int loot_error_windows_error;  /**< An error occurred during a call to the Windows API. */
     LOOT_API extern const unsigned int loot_error_sorting_error;  /**< An error occurred while sorting plugins. */
 
