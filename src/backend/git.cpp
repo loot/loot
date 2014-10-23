@@ -68,10 +68,18 @@ namespace loot {
             buf({0}) {}
 
         ~git_handler() {
-            string path(git_repository_path(repo));
+            string path;
+            if (repo != nullptr)
+                path = git_repository_path(repo);
+
             free();
 
-            FixRepoPermissions(path);
+            if (!path.empty()) {
+                try {
+                    FixRepoPermissions(path);
+                }
+                catch (exception&) {}
+            }
         }
 
         void free() {
