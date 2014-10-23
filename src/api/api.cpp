@@ -303,6 +303,9 @@ LOOT_API unsigned int loot_load_lists(loot_db db, const char * const masterlistP
             // We don't want to update the masterlist too.
             temp.MetadataList::Load(masterlistPath);
         }
+        else {
+            return c_error(loot_error_path_not_found, std::string("The given masterlist path does not exist: ") + masterlistPath);
+        }
     }
     catch (std::exception& e) {
         return c_error(loot_error_parse_fail, e.what());
@@ -311,7 +314,10 @@ LOOT_API unsigned int loot_load_lists(loot_db db, const char * const masterlistP
     try {
         if (userlistPath != nullptr) {
             if (boost::filesystem::exists(userlistPath)) {
-                userTemp.Load(masterlistPath);
+                userTemp.Load(userlistPath);
+            }
+            else {
+                return c_error(loot_error_path_not_found, std::string("The given userlist path does not exist: ") + userlistPath);
             }
         }
     }

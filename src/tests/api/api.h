@@ -149,12 +149,13 @@ TEST_F(OblivionAPIOperationsTest, LoadLists) {
     EXPECT_EQ(loot_error_invalid_args, loot_load_lists(NULL, masterlistPath.string().c_str(), NULL));
     EXPECT_EQ(loot_error_invalid_args, loot_load_lists(db, NULL, NULL));
 
+    EXPECT_EQ(loot_error_path_not_found, loot_load_lists(db, masterlistPath.string().c_str(), NULL));
     bool updated;
     ASSERT_EQ(loot_ok, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/oblivion.git", "master", &updated));
-    EXPECT_EQ(loot_error_path_not_found, loot_load_lists(db, masterlistPath.string().c_str(), NULL));
-    
-    ASSERT_NO_THROW(boost::filesystem::copy(masterlistPath, userlistPath));
     EXPECT_EQ(loot_error_path_not_found, loot_load_lists(db, masterlistPath.string().c_str(), userlistPath.string().c_str()));
+
+    ASSERT_NO_THROW(boost::filesystem::copy(masterlistPath, userlistPath));
+    EXPECT_EQ(loot_ok, loot_load_lists(db, masterlistPath.string().c_str(), userlistPath.string().c_str()));
 }
 
 TEST_F(OblivionAPIOperationsTest, EvalLists) {
