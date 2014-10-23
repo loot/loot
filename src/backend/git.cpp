@@ -40,6 +40,16 @@ namespace fs = boost::filesystem;
 namespace lc = boost::locale;
 
 namespace loot {
+
+    // Removes the read-only flag from some files in git repositories created by libgit2.
+    void FixRepoPermissions(const fs::path& path) {
+        BOOST_LOG_TRIVIAL(trace) << "Recursively setting write permission on directory: " << path;
+        for (fs::recursive_directory_iterator it(path); it != fs::recursive_directory_iterator(); ++it) {
+            BOOST_LOG_TRIVIAL(trace) << "Setting write permission for: " << it->path();
+            fs::permissions(it->path(), fs::add_perms | fs::owner_write | fs::group_write | fs::others_write);
+        }
+    }
+
     struct git_handler {
     public:
         git_handler() :
@@ -58,7 +68,10 @@ namespace loot {
             buf({0}) {}
 
         ~git_handler() {
+            string path(git_repository_path(repo));
             free();
+
+            FixRepoPermissions(path);
         }
 
         void free() {
@@ -129,15 +142,6 @@ namespace loot {
 
     bool isRepository(const fs::path& path) {
         return git_repository_open_ext(NULL, path.string().c_str(), GIT_REPOSITORY_OPEN_NO_SEARCH, NULL) == 0;
-    }
-
-    // Removes the read-only flag from some files in git repositories created by libgit2.
-    void FixRepoPermissions(const fs::path& path) {
-        BOOST_LOG_TRIVIAL(trace) << "Recursively setting write permission on directory: " << path;
-        for (fs::recursive_directory_iterator it(path); it != fs::recursive_directory_iterator(); ++it) {
-            BOOST_LOG_TRIVIAL(trace) << "Setting write permission for: " << it->path();
-            fs::permissions(it->path(), fs::add_perms | fs::owner_write | fs::group_write | fs::others_write);
-        }
     }
 
     int diffFileCallback(const git_diff_delta *delta, float progress, void * payload) {
