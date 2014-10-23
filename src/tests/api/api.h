@@ -192,4 +192,37 @@ TEST_F(OblivionAPIOperationsTest, EvalLists) {
     EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_german));
     EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_danish));
 }
+
+TEST_F(OblivionAPIOperationsTest, SortPlugins) {
+    char ** sortedPlugins;
+    size_t numPlugins;
+    EXPECT_EQ(loot_error_invalid_args, loot_sort_plugins(NULL, &sortedPlugins, &numPlugins));
+    EXPECT_EQ(loot_error_invalid_args, loot_sort_plugins(db, NULL, &numPlugins));
+    EXPECT_EQ(loot_error_invalid_args, loot_sort_plugins(db, &sortedPlugins, NULL));
+
+    EXPECT_EQ(loot_ok, loot_sort_plugins(db, &sortedPlugins, &numPlugins));
+
+    // Expected order was obtained from running the API function once.
+    std::list<std::string> expectedOrder = {
+        "Blank.esm",
+        "Blank - Master Dependent.esm",
+        "Oblivion.esm",
+        "Blank - Different.esm",
+        "Blank - Different Master Dependent.esm",
+        "NotAPlugin.esm",
+        "EmptyFile.esm",
+        "Blank - Master Dependent.esp",
+        "Blank.esp",
+        "Blank - Plugin Dependent.esp",
+        "Blank - Different Master Dependent.esp",
+        "Blank - Different.esp",
+        "Blank - Different Plugin Dependent.esp"
+    };
+    std::list<std::string> actualOrder;
+    for (size_t i = 0; i < numPlugins; ++i) {
+        actualOrder.push_back(sortedPlugins[i]);
+    }
+    EXPECT_EQ(13, numPlugins);
+    EXPECT_EQ(expectedOrder, actualOrder);
+}
 #endif
