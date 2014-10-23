@@ -364,6 +364,18 @@ LOOT_API unsigned int loot_load_lists(loot_db db, const char * const masterlistP
 LOOT_API unsigned int loot_eval_lists(loot_db db, const unsigned int language) {
     if (db == nullptr)
         return c_error(loot_error_invalid_args, "Null pointer passed.");
+    if (language != loot_lang_any
+        && language != loot_lang_english
+        && language != loot_lang_spanish
+        && language != loot_lang_russian
+        && language != loot_lang_french
+        && language != loot_lang_chinese
+        && language != loot_lang_polish
+        && language != loot_lang_brazilian_portuguese
+        && language != loot_lang_finnish
+        && language != loot_lang_german
+        && language != loot_lang_danish)
+        return c_error(loot_error_invalid_args, "Invalid language code given.");
 
     // Clear caches before evaluating conditions.
     db->conditionCache.clear();
