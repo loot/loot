@@ -225,6 +225,20 @@ namespace YAML {
                     return false;
             }
 
+            // Make any substitutions at this point.
+            if (node["subs"]) {
+                std::vector<std::string> subs = node["subs"].as<std::vector<std::string>>();
+                for (auto& mc : content) {
+                    boost::format f(mc.Str());
+
+                    for (const auto& sub : subs) {
+                        f = f % sub;
+                    }
+
+                    mc = loot::MessageContent(f.str(), mc.Language());
+                }
+            }
+
             std::string condition;
             if (node["condition"])
                 condition = node["condition"].as<std::string>();
