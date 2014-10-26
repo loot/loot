@@ -133,7 +133,6 @@ namespace loot {
 
         //Boost.Locale initialisation: Generate and imbue locales.
         locale::global(gen(Language(Language::english).Locale() + ".UTF-8"));
-        cout.imbue(locale());
         boost::filesystem::path::imbue(locale());
 
         // Check if the LOOT local app data folder exists, and create it if not.
@@ -204,7 +203,6 @@ namespace loot {
 
             //Boost.Locale initialisation: Generate and imbue locales.
             locale::global(gen(lang.Locale() + ".UTF-8"));
-            cout.imbue(locale());
             boost::filesystem::path::imbue(locale());
         }
 
