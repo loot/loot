@@ -381,7 +381,9 @@ namespace loot {
             isMaster = file->isMaster(game.espm_settings);
 
             BOOST_LOG_TRIVIAL(trace) << name << ": " << "Getting masters.";
-            masters = file->getMasters();
+            for (const auto& master : file->getMasters()) {
+                masters.push_back(boost::locale::conv::to_utf<char>(master, "Windows-1252", boost::locale::conv::stop));
+            }
 
             BOOST_LOG_TRIVIAL(trace) << name << ": " << "Number of masters: " << masters.size();
 
@@ -404,9 +406,7 @@ namespace loot {
 
             //Also read Bash Tags applied and version string in description.
             BOOST_LOG_TRIVIAL(trace) << name << ": " << "Reading the description.";
-            string text = file->getDescription();
-
-            delete file;
+            string text = boost::locale::conv::to_utf<char>(file->getDescription(), "Windows-1252", boost::locale::conv::stop);
 
             BOOST_LOG_TRIVIAL(trace) << name << ": " << "Attempting to read the version from the description.";
             for (size_t i = 0; i < 7; ++i) {
@@ -438,6 +438,7 @@ namespace loot {
             }
         }
         catch (std::exception& e) {
+            delete file;
             BOOST_LOG_TRIVIAL(error) << "Cannot read plugin file \"" << name << "\". Details: " << e.what();
             messages.push_back(loot::Message(loot::Message::error, (boost::format(boost::locale::translate("Cannot read \"%1%\". Details: %2%")) % name % e.what()).str()));
         }
