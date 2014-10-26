@@ -761,12 +761,12 @@ namespace loot {
             callback->Success(JSON::stringify(gameNode));
         }
         catch (loot::error &e) {
-            BOOST_LOG_TRIVIAL(error) << "Failed to change game. Details: " << e.what();
-            callback->Failure(e.code(), string("Failed to change game. Details: ") + e.what());
+            BOOST_LOG_TRIVIAL(error) << "Failed to get game data. Details: " << e.what();
+            callback->Failure(e.code(), string("Failed to get game data. Details: ") + e.what());
         }
         catch (std::exception& e) {
-            BOOST_LOG_TRIVIAL(error) << "Failed to change game. Details: " << e.what();
-            callback->Failure(-1, string("Failed to change game. Details: ") + e.what());
+            BOOST_LOG_TRIVIAL(error) << "Failed to get game data. Details: " << e.what();
+            callback->Failure(-1, string("Failed to get game data. Details: ") + e.what());
         }
     }
 
