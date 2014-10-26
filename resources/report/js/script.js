@@ -813,6 +813,7 @@ function sortPlugins(evt) {
                 result.forEach(function(plugin){
                     loadOrder.push(plugin.name);
                     for (var i = 0; i < loot.game.plugins.length; ++i) {
+                        var found = false;
                         if (loot.game.plugins[i].name == plugin.name) {
                             loot.game.plugins[i].crc = plugin.crc;
                             loot.game.plugins[i].isDummy = plugin.isDummy;
@@ -820,7 +821,12 @@ function sortPlugins(evt) {
                             loot.game.plugins[i].messages = plugin.messages;
                             loot.game.plugins[i].tags = plugin.tags;
                             loot.game.plugins[i].isDirty = plugin.isDirty;
+
+                            found = true;
                             break;
+                        }
+                        if (!found) {
+                            loot.game.plugins.push(new Plugin(plugin));
                         }
                     }
                 });
