@@ -59,3 +59,10 @@ before_script:
   - cmake .. -DPROJECT_ARCH=64 -DPROJECT_STATIC_RUNTIME=OFF -DBUILD_SHARED_LIBS=OFF
 
 script: make loot64
+
+notifications:
+  irc:
+    channels:
+      - "chat.freenode.net#loot"
+    use_notice: true
+    skip_join: true
