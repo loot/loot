@@ -5,14 +5,13 @@ compiler:
 cache: apt
 
 before_install:
-  - sudo apt-get update -qq
-
-install:
-  # Currently inside the cloned repo path.
   # Need Boost 1.54+, which isn't in the 12.04 repositories - install from a PPA.
   - sudo add-apt-repository ppa:boost-latest/ppa -y
   - sudo apt-get update -qq
   - sudo apt-get install libboost-log1.55-dev libboost-date-time1.55-dev libboost-thread1.55-dev libboost-filesystem1.55-dev libboost-locale1.55-dev libboost-iostreams1.55-dev
+
+install:
+  # Currently inside the cloned repo path.
   # Install Alphanum
   - cd ../..
   - mkdir alphanum
