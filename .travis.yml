@@ -2,6 +2,8 @@ language: cpp
 compiler:
   - gcc
 
+cache: apt
+
 before_install:
   - sudo apt-get update -qq
 
