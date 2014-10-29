@@ -487,7 +487,7 @@ namespace loot {
         else
             ret = LIBLO_ERROR_INVALID_ARGS;
 
-        if (ret != LIBLO_OK && ret != LIBLO_WARN_LO_MISMATCH) {
+        if (ret != LIBLO_OK && ret != LIBLO_WARN_BAD_FILENAME && ret != LIBLO_WARN_INVALID_LIST && ret != LIBLO_WARN_LO_MISMATCH) {
             const char * e = nullptr;
             string err;
             lo_get_error_message(&e);
@@ -504,7 +504,8 @@ namespace loot {
         }
 
         if (id != Game::tes5) {
-            if (lo_set_game_master(gh, _masterFile.c_str()) != LIBLO_OK) {
+            ret = lo_set_game_master(gh, _masterFile.c_str());
+            if (ret != LIBLO_OK && ret != LIBLO_WARN_BAD_FILENAME && ret != LIBLO_WARN_INVALID_LIST && ret != LIBLO_WARN_LO_MISMATCH) {
                 const char * e = nullptr;
                 string err;
                 lo_get_error_message(&e);
@@ -528,7 +529,8 @@ namespace loot {
 
         char ** pluginArr;
         size_t pluginArrSize;
-        if (lo_get_active_plugins(gh, &pluginArr, &pluginArrSize) != LIBLO_OK) {
+        unsigned int ret = lo_get_active_plugins(gh, &pluginArr, &pluginArrSize);
+        if (ret != LIBLO_OK && ret != LIBLO_WARN_BAD_FILENAME && ret != LIBLO_WARN_INVALID_LIST && ret != LIBLO_WARN_LO_MISMATCH) {
             const char * e = nullptr;
             string err;
             lo_get_error_message(&e);
@@ -561,7 +563,8 @@ namespace loot {
         char ** pluginArr;
         size_t pluginArrSize;
 
-        if (lo_get_load_order(gh, &pluginArr, &pluginArrSize) != LIBLO_OK) {
+        unsigned int ret = lo_get_load_order(gh, &pluginArr, &pluginArrSize);
+        if (ret != LIBLO_OK && ret != LIBLO_WARN_BAD_FILENAME && ret != LIBLO_WARN_INVALID_LIST && ret != LIBLO_WARN_LO_MISMATCH) {
             const char * e = nullptr;
             string err;
             lo_get_error_message(&e);
@@ -587,7 +590,8 @@ namespace loot {
     void Game::SetLoadOrder(const char * const * const loadOrder, const size_t numPlugins) const {
         BOOST_LOG_TRIVIAL(debug) << "Setting load order for game: " << _name;
 
-        if (lo_set_load_order(gh, loadOrder, numPlugins) != LIBLO_OK) {
+        unsigned int ret = lo_set_load_order(gh, loadOrder, numPlugins);
+        if (ret != LIBLO_OK && ret != LIBLO_WARN_BAD_FILENAME && ret != LIBLO_WARN_INVALID_LIST && ret != LIBLO_WARN_LO_MISMATCH) {
             const char * e = nullptr;
             string err;
             lo_get_error_message(&e);
