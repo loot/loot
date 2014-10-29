@@ -812,8 +812,8 @@ function sortPlugins(evt) {
                 var loadOrder = [];
                 result.forEach(function(plugin){
                     loadOrder.push(plugin.name);
+                    var found = false;
                     for (var i = 0; i < loot.game.plugins.length; ++i) {
-                        var found = false;
                         if (loot.game.plugins[i].name == plugin.name) {
                             loot.game.plugins[i].crc = plugin.crc;
                             loot.game.plugins[i].isDummy = plugin.isDummy;
@@ -825,9 +825,9 @@ function sortPlugins(evt) {
                             found = true;
                             break;
                         }
-                        if (!found) {
-                            loot.game.plugins.push(new Plugin(plugin));
-                        }
+                    }
+                    if (!found) {
+                        loot.game.plugins.push(new Plugin(plugin));
                     }
                 });
 
