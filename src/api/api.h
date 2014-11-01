@@ -469,6 +469,8 @@ extern "C"
      *  @brief Get the given masterlist's revision.
      *  @details Getting a masterlist's revision is only possible if it is
      *           found inside a local Git repository.
+     *  @param db
+     *      The database the function acts on.
      *  @param masterlistPath
      *      A string containing the relative or absolute path to the masterlist
      *      file that should be queried.
