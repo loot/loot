@@ -49,15 +49,21 @@
  *      api.h.
  *
  * @section credit_sec Credits
- *      The LOOT API is written by WrinklyNinja in C/C++ and makes use of the
+ *      The LOOT API is written by [WrinklyNinja]
+ *      (http://github.com/WrinklyNinja) in C/C++ and makes use of the
  *      [Alphanum](http://www.davekoelle.com/alphanum.html),
  *      [Boost](http://www.boost.org/),
  *      [libespm](http://github.com/WrinklyNinja/libespm),
  *      [libgit2](http://github.com/libgit2/libgit2),
  *      [libloadorder](http://github.com/WrinklyNinja/libloadorder/) and
- *      [yaml-cpp](http://code.google.com/p/yaml-cpp/) libraries. Copyright license
- *      information for all these may be found in the "docs/licenses/Licenses.txt"
- *      file.
+ *      [yaml-cpp](http://code.google.com/p/yaml-cpp/) libraries. Copyright
+ *      license information for all these may be found in the
+ *      "docs/licenses/Licenses.txt" file.
+ *
+ * @section history_sec Version History
+ *      ## 0.7.0 - *X Y 2014*
+ *
+ *        * Initial API release.
  */
 
 /**
@@ -157,7 +163,9 @@ extern "C"
          *      The type of the message, specified using one of the message
          *      type codes.
          *  @var message
-         *      The message string itself.
+         *      The message string, which may be formatted using
+         *      [GitHub Flavored Markdown]
+         *      (https://help.github.com/articles/github-flavored-markdown).
          */
         unsigned int type;
         const char * message;
