@@ -105,7 +105,7 @@ h3{
 </ul>
 <p>Some important points that are more specific to how LOOT uses YAML:
 <ul>
-    <li>LOOT's support for YAML syntax is incomplete. A list of known limitations can be found <a href="https://github.com/WrinklyNinja/yaml-cpp/issues?labels=bug&amp;state=open">here</a>. The only major missing piece is support for merge keys (<code>&lt;&lt;:</code>).
+    <li>LOOT's support for YAML syntax is incomplete. A list of known limitations can be found <a href="https://github.com/WrinklyNinja/yaml-cpp/issues?labels=bug&amp;state=open">here</a>.
     <li>Strings are case-sensitive, apart from file paths, regular expressions and checksums.
 </ul>
 <p>Some properties of file paths as used by LOOT:
@@ -479,6 +479,6 @@ See the file <q>LOOT ReadMe.html</q> for copying conditions.
         <tr><th>Feature<th>&lt;= 0.6 <th>0.7
     <tbody>
         <tr><td>GitHub Flavored Markdown message formatting<td>Only URL hyperlinking is supported, for <code>file:</code>, <code>http:</code> and <code>https:</code> URLs, using the <code>[label](url)</code> and <code>&lt;url&gt;</code> syntaxes.<td>LOOT uses the <a href="https://github.com/chjj/marked">Marked</a> library (v0.3.2) to provide support for most of GitHub Flavored Markdown, minus the GitHub-specific features (like @mentions, issue/repo linking and emoji).
-        <tr><td>Message string substitution (ie. <code>sub:</code>)<td>Not supported.<td>Support planned, but not yet implemented in the latest alpha release.
-        <tr><td>YAML merge keys (ie. <code>&lt;&lt;:</code>)<td>Not supported.<td>Support planned, but not yet implemented in the latest alpha release.
+        <tr><td>Message string substitution (ie. <code>sub:</code>)<td>Not supported.<td>Supported in the latest snapshot build.
+        <tr><td>YAML merge keys (ie. <code>&lt;&lt;:</code>)<td>Not supported.<td>Supported in the latest snapshot build.
 </table>
