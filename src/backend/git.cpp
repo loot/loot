@@ -40,7 +40,6 @@ namespace fs = boost::filesystem;
 namespace lc = boost::locale;
 
 namespace loot {
-
     // Removes the read-only flag from some files in git repositories created by libgit2.
     void FixRepoPermissions(const fs::path& path) {
         BOOST_LOG_TRIVIAL(trace) << "Recursively setting write permission on directory: " << path;
@@ -65,7 +64,10 @@ namespace loot {
             merge_head(nullptr),
             tree(nullptr),
             diff(nullptr),
-            buf({0}) {}
+            buf({0}) {
+            // Init threading system and OpenSSL (for Linux builds).
+            git_threads_init();
+        }
 
         ~git_handler() {
             string path;
@@ -80,6 +82,8 @@ namespace loot {
                 }
                 catch (exception&) {}
             }
+
+            git_threads_shutdown();
         }
 
         void free() {
