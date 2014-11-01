@@ -93,7 +93,7 @@ def getNameSuffix():
 def createArchive(folder_path, archive_path):
     sevenzip_path = os.path.join('C:\\', 'Program Files', '7-Zip', '7z.exe')
     if os.path.exists(sevenzip_path):
-        args = [sevenzip_path, 'a', '-r', archive_path, folder_path]
+        args = [sevenzip_path, 'a', '-r', archive_path, os.path.join(folder_path, '*')]
         subprocess.call(args)
     else:
         zip = zipfile.ZipFile( archive_path, 'w', zipfile.ZIP_DEFLATED )
