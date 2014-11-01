@@ -36,12 +36,10 @@
 #include <clocale>
 #include <list>
 #include <vector>
-#include <regex>
 #include <unordered_set>
 #include <unordered_map>
 
 #include <boost/algorithm/string.hpp>
-#include <boost/filesystem/detail/utf8_codecvt_facet.hpp>
 #include <boost/filesystem.hpp>
 
 const unsigned int loot_ok = loot::error::ok;
@@ -55,6 +53,7 @@ const unsigned int loot_error_invalid_args = loot::error::invalid_args;
 const unsigned int loot_error_no_tag_map = loot::error::no_tag_map;
 const unsigned int loot_error_path_not_found = loot::error::path_not_found;
 const unsigned int loot_error_no_game_detected = loot::error::no_game_detected;
+const unsigned int loot_error_git_error = loot::error::git_error;
 const unsigned int loot_error_windows_error = loot::error::windows_error;
 const unsigned int loot_error_sorting_error = loot::error::sorting_error;
 const unsigned int loot_return_max = loot_error_sorting_error;
@@ -201,7 +200,7 @@ LOOT_API void     loot_cleanup() {
 // Returns whether this version of LOOT supports the API from the given
 // LOOT version. Abstracts LOOT API stability policy away from clients.
 LOOT_API bool loot_is_compatible(const unsigned int versionMajor, const unsigned int versionMinor, const unsigned int versionPatch) {
-    return versionMajor == loot::g_version_major && versionMinor == loot::g_version_minor;
+    return versionMajor == loot::g_version_major;
 }
 
 // Returns the version string for this version of LOOT.
@@ -250,18 +249,30 @@ LOOT_API unsigned int loot_create_db(loot_db * const db,
     boost::filesystem::path game_local_path = "";
     if (gameLocalPath != nullptr)
         game_local_path = gameLocalPath;
+#ifndef _WIN32
+    else
+        return c_error(loot_error_invalid_args, "A local data path must be supplied on non-Windows platforms.");
+#endif
 
-    loot_db retVal = {0};
     try {
-        retVal = new _loot_db_int(clientGame, game_path, game_local_path);
-    }
+        // Check for valid paths.
+        if (gamePath != nullptr && !boost::filesystem::is_directory(gamePath))
+            return c_error(loot_error_invalid_args, "Given game path \"" + std::string(gamePath) + "\" is not a valid directory.");
+
+        if (gameLocalPath != nullptr && !boost::filesystem::is_directory(gameLocalPath))
+            return c_error(loot_error_invalid_args, "Given local data path \"" + std::string(gameLocalPath) + "\" is not a valid directory.");
+
+        *db = new _loot_db_int(clientGame, game_path, game_local_path);
+}
     catch (loot::error& e) {
         return c_error(e);
     }
     catch (std::bad_alloc& e) {
         return c_error(loot_error_no_mem, e.what());
     }
-    *db = retVal;
+    catch (std::exception& e) {
+        return c_error(loot_error_invalid_args, e.what());
+    }
 
     return loot_ok;
 }
@@ -292,6 +303,9 @@ LOOT_API unsigned int loot_load_lists(loot_db db, const char * const masterlistP
             // We don't want to update the masterlist too.
             temp.MetadataList::Load(masterlistPath);
         }
+        else {
+            return c_error(loot_error_path_not_found, std::string("The given masterlist path does not exist: ") + masterlistPath);
+        }
     }
     catch (std::exception& e) {
         return c_error(loot_error_parse_fail, e.what());
@@ -300,7 +314,10 @@ LOOT_API unsigned int loot_load_lists(loot_db db, const char * const masterlistP
     try {
         if (userlistPath != nullptr) {
             if (boost::filesystem::exists(userlistPath)) {
-                userTemp.Load(masterlistPath);
+                userTemp.Load(userlistPath);
+            }
+            else {
+                return c_error(loot_error_path_not_found, std::string("The given userlist path does not exist: ") + userlistPath);
             }
         }
     }
@@ -347,6 +364,18 @@ LOOT_API unsigned int loot_load_lists(loot_db db, const char * const masterlistP
 LOOT_API unsigned int loot_eval_lists(loot_db db, const unsigned int language) {
     if (db == nullptr)
         return c_error(loot_error_invalid_args, "Null pointer passed.");
+    if (language != loot_lang_any
+        && language != loot_lang_english
+        && language != loot_lang_spanish
+        && language != loot_lang_russian
+        && language != loot_lang_french
+        && language != loot_lang_chinese
+        && language != loot_lang_polish
+        && language != loot_lang_brazilian_portuguese
+        && language != loot_lang_finnish
+        && language != loot_lang_german
+        && language != loot_lang_danish)
+        return c_error(loot_error_invalid_args, "Invalid language code given.");
 
     // Clear caches before evaluating conditions.
     db->conditionCache.clear();

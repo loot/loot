@@ -50,10 +50,14 @@ install:
 
 before_script:
   - mkdir build && cd build
+  # Fetch plugins to test with.
+  - wget https://github.com/WrinklyNinja/testing-plugins/archive/master.zip
+  - unzip master.zip
+  - mv testing-plugins-master/* ./
   # Travis machines are 64 bit, and the deps use dynamic linking.
-  - cmake .. -DPROJECT_ARCH=64 -DPROJECT_STATIC_RUNTIME=OFF -DBUILD_SHARED_LIBS=OFF
+  - cmake .. -DPROJECT_ARCH=64 -DPROJECT_STATIC_RUNTIME=OFF -DBUILD_SHARED_LIBS=OFF -DGTEST_ROOT=../../gtest-1.7.0
 
-script: make loot64
+script: make tests && ./tests
 
 notifications:
   irc:

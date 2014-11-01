@@ -25,13 +25,11 @@ along with LOOT.  If not, see
 #ifndef __LOOT_JSON__
 #define __LOOT_JSON__
 
-
 #include <yaml-cpp/yaml.h>
 
-#include <regex>
+#include <boost/regex.hpp>
 
 namespace loot {
-
     // Handy class for turning YAML objects into JSON and vice-versa.
     class JSON {
     public:
@@ -41,7 +39,6 @@ namespace loot {
         }
 
         inline static std::string stringify(const YAML::Node& yaml) {
-
             YAML::Emitter out;
             out.SetOutputCharset(YAML::EscapeNonAscii);
             out.SetStringFormat(YAML::DoubleQuoted);
@@ -65,14 +62,13 @@ namespace loot {
 
             // Using the definition at <http://www.json.org/>.
             // Version numbers should be kept as strings though.
-            std::regex numbers("\"(?!version)([^\"]+)\": \"(-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?)\"", std::regex::ECMAScript);
+            boost::regex numbers("\"(?!version)([^\"]+)\": \"(-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?)\"", boost::regex::ECMAScript);
 
-            json = std::regex_replace(json, numbers, "\"$1\": $2");
+            json = boost::regex_replace(json, numbers, "\"$1\": $2");
 
             return json;
         }
     };
 }
-
 
 #endif

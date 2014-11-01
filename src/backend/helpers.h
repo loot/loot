@@ -29,13 +29,13 @@
 
 #include <cstdint>
 #include <string>
-#include <regex>
+#include <boost/regex.hpp>
 #include <boost/filesystem.hpp>
 
 namespace loot {
     /// Array used to try each of the expressions defined using
     /// an iteration for each of them.
-    extern const std::regex version_checks[7];
+    extern const boost::regex version_checks[7];
 
     //////////////////////////////////////////////////////////////////////////
     // Helper functions

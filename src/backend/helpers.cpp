@@ -32,6 +32,7 @@
 #include <boost/log/trivial.hpp>
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
+#include <boost/regex.hpp>
 
 #include <alphanum.hpp>
 
@@ -41,7 +42,6 @@
 #include <cstdio>
 #include <ctime>
 #include <sstream>
-#include <regex>
 
 #ifdef _WIN32
 #   ifndef UNICODE
@@ -59,6 +59,9 @@ namespace loot {
     using namespace std;
     using boost::algorithm::replace_all;
     using boost::algorithm::replace_first;
+    using boost::regex;
+    using boost::regex_match;
+    using boost::regex_search;
     namespace karma = boost::spirit::karma;
     namespace fs = boost::filesystem;
     namespace lc = boost::locale;
@@ -200,7 +203,6 @@ namespace loot {
         HWND owner = 0;
         TCHAR path[MAX_PATH];
 
-        BOOST_LOG_TRIVIAL(trace) << "Getting path to %LOCALAPPDATA%.";
         HRESULT res = SHGetFolderPath(owner, CSIDL_LOCAL_APPDATA, NULL, SHGFP_TYPE_CURRENT, path);
 
         if (res == S_OK)
