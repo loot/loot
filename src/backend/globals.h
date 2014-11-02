@@ -33,6 +33,9 @@ namespace loot {
     extern const unsigned int g_version_minor;
     extern const unsigned int g_version_patch;
 
+    // Build revision
+    extern const char * g_build_revision;
+
     //Common paths.
     extern const boost::filesystem::path g_path_readme;
     extern const boost::filesystem::path g_path_report;

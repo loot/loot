@@ -22,14 +22,17 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#include "globals.h"
-#include "helpers.h"
+#include "backend/globals.h"
+#include "backend/helpers.h"
 
 namespace loot {
     //Version numbers.
     const unsigned int g_version_major = 0;
     const unsigned int g_version_minor = 7;
     const unsigned int g_version_patch = 0;
+
+    // Build revision
+    const char * g_build_revision = "@GIT_COMMIT_STRING@";
 
     //Common paths.
     const boost::filesystem::path g_path_readme         = boost::filesystem::current_path() / "docs" / "LOOT Readme.html";

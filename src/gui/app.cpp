@@ -183,6 +183,7 @@ namespace loot {
 
         // Log some useful info.
         BOOST_LOG_TRIVIAL(info) << "LOOT Version: " << g_version_major << "." << g_version_minor << "." << g_version_patch;
+        BOOST_LOG_TRIVIAL(info) << "LOOT Build Revision: " << g_build_revision;
 #ifdef _WIN32
         // Check if LOOT is being run through Mod Organiser.
         bool runFromMO = GetModuleHandle(ToWinWide("hook.dll").c_str()) != NULL;

@@ -4,6 +4,26 @@
 # LIBESPM_ROOT = the path to the root of the libespm source.
 
 ##############################
+# Get Build Revision
+##############################
+
+# Uses the CMake module in this repo: https://github.com/rpavlik/cmake-modules
+# On Windows, this requires the msysgit install of Git, as the script won't find
+# the one bundled with GitHub for Windows.
+
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
+include(GetGitRevisionDescription)
+git_describe(GIT_COMMIT_STRING --tags --long)
+
+# We just want the shortened commit ID, so get that.
+string(FIND ${GIT_COMMIT_STRING} "-g" REV_POS REVERSE)
+MATH(EXPR REV_POS "${REV_POS} + 2")
+string(SUBSTRING ${GIT_COMMIT_STRING} ${REV_POS} -1 GIT_COMMIT_STRING)
+
+# Write to file.
+configure_file("${CMAKE_SOURCE_DIR}/src/backend/globals.cpp.in" "${CMAKE_BINARY_DIR}/generated/globals.cpp" @ONLY)
+
+##############################
 # General Settings
 ##############################
 
@@ -56,10 +76,10 @@ find_package(GTest)
 set (LOOT_SRC   "${CMAKE_SOURCE_DIR}/src/backend/metadata.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/game.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/globals.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/generators.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/graph.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/git.cpp")
+                "${CMAKE_SOURCE_DIR}/src/backend/git.cpp"
+                "${CMAKE_BINARY_DIR}/generated/globals.cpp")
 
 set (LOOT_HEADERS "${CMAKE_SOURCE_DIR}/src/backend/metadata.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/game.h"
