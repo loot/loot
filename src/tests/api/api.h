@@ -209,8 +209,6 @@ TEST_F(OblivionAPIOperationsTest, SortPlugins) {
         "Oblivion.esm",
         "Blank - Different.esm",
         "Blank - Different Master Dependent.esm",
-        "NotAPlugin.esm",
-        "EmptyFile.esm",
         "Blank - Master Dependent.esp",
         "Blank.esp",
         "Blank - Plugin Dependent.esp",
@@ -222,7 +220,7 @@ TEST_F(OblivionAPIOperationsTest, SortPlugins) {
     for (size_t i = 0; i < numPlugins; ++i) {
         actualOrder.push_back(sortedPlugins[i]);
     }
-    EXPECT_EQ(13, numPlugins);
+    EXPECT_EQ(11, numPlugins);
     EXPECT_EQ(expectedOrder, actualOrder);
 }
 #endif

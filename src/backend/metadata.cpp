@@ -862,13 +862,13 @@ namespace loot {
             }
         }
         for (const auto &req : requirements) {
-            if (!boost::filesystem::exists(game.DataPath() / req.Name()) && !(IsPlugin(req.Name()) && boost::filesystem::exists(game.DataPath() / (req.Name() + ".ghost")))) {
+            if (!boost::filesystem::exists(game.DataPath() / req.Name()) && !((boost::iends_with(req.Name(), ".esp") || boost::iends_with(req.Name(), ".esm")) && boost::filesystem::exists(game.DataPath() / (req.Name() + ".ghost")))) {
                 BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" requires \"" << req.Name() << "\", but it is missing.";
                 messages.push_back(loot::Message(messageType, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % req.Name()).str()));
             }
         }
         for (const auto &inc : incompatibilities) {
-            if (boost::filesystem::exists(game.DataPath() / inc.Name()) || (IsPlugin(inc.Name()) && boost::filesystem::exists(game.DataPath() / (inc.Name() + ".ghost")))) {
+            if (boost::filesystem::exists(game.DataPath() / inc.Name()) || ((boost::iends_with(inc.Name(), ".esp") || boost::iends_with(inc.Name(), ".esm")) && boost::filesystem::exists(game.DataPath() / (inc.Name() + ".ghost")))) {
                 if (!game.IsActive(inc.Name()))
                     messageType = loot::Message::warn;
                 BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" is incompatible with \"" << inc.Name() << "\", but both are present.";
@@ -927,13 +927,5 @@ namespace loot {
 
     bool operator == (const Plugin& lhs, const std::string& rhs) {
         return rhs == lhs;
-    }
-
-    bool IsPlugin(const std::string& file) {
-        if (boost::iends_with(file, ".esp") || boost::iends_with(file, ".esm")
-            || boost::iends_with(file, ".esp.ghost") || boost::iends_with(file, ".esm.ghost"))
-            return true;
-        else
-            return false;
     }
 }

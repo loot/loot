@@ -676,7 +676,7 @@ namespace loot {
         std::vector<Plugin*> groupPlugins;
         //First calculate the mean plugin size. Store it temporarily in a map to reduce filesystem lookups and file size recalculation.
         for (fs::directory_iterator it(this->DataPath()); it != fs::directory_iterator(); ++it) {
-            if (fs::is_regular_file(it->status()) && IsPlugin(it->path().string())) {
+            if (fs::is_regular_file(it->status()) && this->IsValidPlugin(it->path().filename().string())) {
                 uintmax_t fileSize = fs::file_size(it->path());
                 meanFileSize += fileSize;
 
@@ -739,6 +739,38 @@ namespace loot {
             return !pairIt->second.FormIDs().empty();
 
         return false;
+    }
+
+    bool Game::IsValidPlugin(const std::string& name) const {
+        BOOST_LOG_TRIVIAL(trace) << "Checking to see if \"" << name << "\" is a valid plugin.";
+        // Rather than just checking the extension, try also parsing the file header, and see if it fails.
+        if (!boost::iends_with(name, ".esm") && !boost::iends_with(name, ".esp") && !boost::iends_with(name, ".esm.ghost") && !boost::iends_with(name, ".esp.ghost")) {
+            BOOST_LOG_TRIVIAL(warning) << "The .es(p|m) file \"" << name << "\" is not a valid plugin.";
+            return false;
+        }
+
+        try {
+            string filepath = (this->DataPath() / name).string();
+            if (fs::exists(this->DataPath() / fs::path(name + ".ghost")))
+                filepath += ".ghost";
+
+            espm::File * file = nullptr;
+            if (this->Id() == LIBLO_GAME_TES4)
+                file = new espm::tes4::File(filepath, this->espm_settings, false, true);
+            else if (this->Id() == LIBLO_GAME_TES5)
+                file = new espm::tes5::File(filepath, this->espm_settings, false, true);
+            else if (this->Id() == LIBLO_GAME_FO3)
+                file = new espm::fo3::File(filepath, this->espm_settings, false, true);
+            else
+                file = new espm::fonv::File(filepath, this->espm_settings, false, true);
+
+            delete file;
+        }
+        catch (std::exception& /*e*/) {
+            BOOST_LOG_TRIVIAL(warning) << "The .es(p|m) file \"" << name << "\" is not a valid plugin.";
+            return false;
+        }
+        return true;
     }
 
     void Game::CreateLOOTGameFolder() {

@@ -141,6 +141,8 @@ namespace loot {
         void LoadPlugins(bool headersOnly);  //Loads all installed plugins.
         bool HasBeenLoaded();  // Checks if the game's plugins have already been loaded.
 
+        bool IsValidPlugin(const std::string& name) const;
+
         std::list<Plugin> Sort(const unsigned int language, std::function<void(const std::string&)> progressCallback);
 
         //Caches for condition results, active plugins and CRCs.

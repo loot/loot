@@ -273,8 +273,6 @@ namespace loot {
     bool operator == (const Plugin& lhs, const File& rhs);
 
     bool operator == (const std::string& lhs, const Plugin& rhs);
-
-    bool IsPlugin(const std::string& file);
 }
 
 namespace std {

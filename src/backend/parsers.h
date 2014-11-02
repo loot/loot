@@ -540,7 +540,7 @@ namespace loot {
                 throw loot::error(loot::error::invalid_args, boost::locale::translate("Invalid file path:").str() + " " + file);
             }
 
-            if (IsPlugin(file))
+            if (boost::iends_with(file, ".esp") || boost::iends_with(file, ".esm"))
                 result = boost::filesystem::exists(_game->DataPath() / file) || boost::filesystem::exists(_game->DataPath() / (file + ".ghost"));
             else
                 result = boost::filesystem::exists(_game->DataPath() / file);
@@ -642,7 +642,7 @@ namespace loot {
                     crc = GetCrc32(boost::filesystem::absolute("LOOT.exe"));
                 if (boost::filesystem::exists(_game->DataPath() / file))
                     crc = GetCrc32(_game->DataPath() / file);
-                else if (IsPlugin(file) && boost::filesystem::exists(_game->DataPath() / (file + ".ghost")))
+                else if ((boost::iends_with(file, ".esp") || boost::iends_with(file, ".esm")) && boost::filesystem::exists(_game->DataPath() / (file + ".ghost")))
                     crc = GetCrc32(_game->DataPath() / (file + ".ghost"));
                 else {
                     result = false;
@@ -673,7 +673,7 @@ namespace loot {
             Version trueVersion;
             if (file == "LOOT")
                 trueVersion = Version(boost::filesystem::absolute("LOOT.exe"));
-            else if (IsPlugin(file)) {
+            else if (_game->IsValidPlugin(file)) {
                 Plugin plugin(*_game, file, true);
                 trueVersion = Version(plugin.Version());
             }

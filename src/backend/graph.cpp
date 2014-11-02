@@ -179,8 +179,7 @@ namespace loot {
             BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for requirements.";
             set<File> fileset(graph[*vit].Reqs());
             for (const auto &file : fileset) {
-                if (loot::IsPlugin(file.Name()) &&
-                    loot::GetVertexByName(graph, file.Name(), parentVertex) &&
+                if (loot::GetVertexByName(graph, file.Name(), parentVertex) &&
                     !boost::edge(parentVertex, *vit, graph).second) {
                     BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[*vit].Name() << "\".";
 
@@ -196,8 +195,7 @@ namespace loot {
             BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for 'load after's.";
             fileset = graph[*vit].LoadAfter();
             for (const auto &file : fileset) {
-                if (loot::IsPlugin(file.Name()) &&
-                    loot::GetVertexByName(graph, file.Name(), parentVertex) &&
+                if (loot::GetVertexByName(graph, file.Name(), parentVertex) &&
                     !boost::edge(parentVertex, *vit, graph).second) {
                     BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[*vit].Name() << "\".";
 
