@@ -217,6 +217,15 @@ LOOT_API unsigned int loot_get_version(unsigned int * const versionMajor, unsign
     return loot_ok;
 }
 
+LOOT_API unsigned int loot_get_build_id(const char ** const revision) {
+    if (revision == nullptr)
+        return c_error(loot_error_invalid_args, "Null message pointer passed.");
+
+    *revision = loot::g_build_revision;
+
+    return loot_ok;
+}
+
 ////////////////////////////////////
 // Lifecycle Management Functions
 ////////////////////////////////////
@@ -263,7 +272,7 @@ LOOT_API unsigned int loot_create_db(loot_db * const db,
             return c_error(loot_error_invalid_args, "Given local data path \"" + std::string(gameLocalPath) + "\" is not a valid directory.");
 
         *db = new _loot_db_int(clientGame, game_path, game_local_path);
-}
+    }
     catch (loot::error& e) {
         return c_error(e);
     }

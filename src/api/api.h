@@ -312,10 +312,20 @@ extern "C"
      *      A pointer to the minor version number.
      *  @param versionPatch
      *      A pointer to the patch version number.
+     *  @returns A return code.
      */
     LOOT_API unsigned int loot_get_version(unsigned int * const versionMajor,
                                            unsigned int * const versionMinor,
                                            unsigned int * const versionPatch);
+
+    /**
+     *  @brief Get the Git revision of the code from which the binary was
+     *         built.
+     *  @param revision
+     *      A pointer to the shortened Git revision ID string.
+     *  @returns A return code.
+     */
+    LOOT_API unsigned int loot_get_build_id(const char ** const revision);
 
     /**@}*/
     /**********************************************************************//**

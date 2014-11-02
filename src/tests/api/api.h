@@ -41,6 +41,17 @@ TEST(GetVersion, HandlesValidInput) {
     EXPECT_EQ(loot_ok, loot_get_version(&vMajor, &vMinor, &vPatch));
 }
 
+TEST(GetBuildID, HandlesNullInput) {
+    EXPECT_EQ(loot_error_invalid_args, loot_get_build_id(NULL));
+}
+
+TEST(GetBuildID, HandlesValidInput) {
+    const char * revision;
+    EXPECT_EQ(loot_ok, loot_get_build_id(&revision));
+    EXPECT_STRNE(NULL, revision);
+    EXPECT_STRNE("@GIT_COMMIT_STRING@", revision);  // The CMake placeholder.
+}
+
 TEST(IsCompatible, HandlesCompatibleVersion) {
     unsigned int vMajor, vMinor, vPatch;
     EXPECT_EQ(loot_ok, loot_get_version(&vMajor, &vMinor, &vPatch));
