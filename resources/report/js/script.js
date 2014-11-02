@@ -1271,6 +1271,15 @@ function initVars() {
         try {
             loot.version = JSON.parse(result);
 
+            /* The fourth part of the version string is the build number. Trim it. */
+            var pos = loot.version.lastIndexOf('.');
+            if (loot.version.length > pos + 1) {
+                document.getElementById('LOOTBuild').textContent = loot.version.substring(pos + 1);
+            } else {
+                document.getElementById('LOOTBuild').textContent = 'unknown';
+            }
+
+            loot.version = loot.version.substring(0, pos);
             document.getElementById('LOOTVersion').textContent = loot.version;
             document.getElementById('firstTimeLootVersion').textContent = loot.version;
         } catch (e) {

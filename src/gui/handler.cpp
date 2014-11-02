@@ -541,7 +541,7 @@ namespace loot {
 
     std::string Handler::GetVersion() {
         BOOST_LOG_TRIVIAL(info) << "Getting LOOT version.";
-        YAML::Node version(to_string(g_version_major) + "." + to_string(g_version_minor) + "." + to_string(g_version_patch));
+        YAML::Node version(to_string(g_version_major) + "." + to_string(g_version_minor) + "." + to_string(g_version_patch) + "." + g_build_revision);
         return JSON::stringify(version);
     }
 
