@@ -18,13 +18,13 @@ Most of the required binaries are pre-built, but the libcef_dll_wrapper dynamic 
 #### yaml-cpp
 
 1. Configure CMake and generate a build system for Visual Studio by running:
-2. 
+2.
   ```
   mkdir build
   cd build
   cmake.exe .. -G "Visual Studio 12" -DBOOST_ROOT={BOOST_ROOT} -DMSVC_SHARED_RT=OFF
   ```
-  
+
   Adapt the commands as necessary for your particular setup.
 2. Open the generated solution file, and build it with `Release` configuration.
 
@@ -37,17 +37,19 @@ Example CMake keys: `-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=build -DCMAKE_ARCHIVE_OUTP
 #### Libgit2
 
 1. Configure CMake and generate a build system for Visual Studio by running:
-2. 
+2.
   ```
   mkdir build
   cd build
   cmake.exe .. -G "Visual Studio 12" -DBUILD_SHARED_LIBS=OFF -DSTATIC_CRT=ON
   ```
-  
+
   Adapt the commands as necessary for your particular setup.
 2. Open the generated solution file, and build it with `Release` configuration.
 
 #### LOOT
+
+LOOT uses a third-party CMake module to generate its build revision data, so first download the `GetGitRevisionDescription.cmake` and `GetGitRevisionDescription.cmake.in` files found in [this repository](https://github.com/rpavlik/cmake-modules) to the `build` subdirectory of the LOOT folder.
 
 LOOT uses the following CMake variables to set build parameters:
 
