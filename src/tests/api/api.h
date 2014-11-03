@@ -235,6 +235,51 @@ TEST_F(OblivionAPIOperationsTest, SortPlugins) {
     EXPECT_EQ(expectedOrder, actualOrder);
 }
 
+TEST_F(OblivionAPIOperationsTest, GetPluginMessages) {
+    loot_message * messages;
+    size_t numMessages;
+    EXPECT_EQ(loot_error_invalid_args, loot_get_plugin_messages(NULL, "EnhancedWeatherSIOnly.esm", &messages, &numMessages));
+    EXPECT_EQ(loot_error_invalid_args, loot_get_plugin_messages(db, NULL, &messages, &numMessages));
+    EXPECT_EQ(loot_error_invalid_args, loot_get_plugin_messages(db, "EnhancedWeatherSIOnly.esm", NULL, &numMessages));
+    EXPECT_EQ(loot_error_invalid_args, loot_get_plugin_messages(db, "EnhancedWeatherSIOnly.esm", &messages, NULL));
+
+    // Fetch and load the metadata.
+    bool updated;
+    ASSERT_EQ(loot_ok, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/oblivion.git", "master", &updated));
+    ASSERT_EQ(loot_ok, loot_load_lists(db, masterlistPath.string().c_str(), NULL));
+
+    // Test for plugin with no messages.
+    EXPECT_EQ(loot_ok, loot_get_plugin_messages(db, "Silgrad_Tower.esm", &messages, &numMessages));
+    EXPECT_EQ(0, numMessages);
+    EXPECT_EQ(NULL, messages);
+
+    // Test for plugin with one note.
+    EXPECT_EQ(loot_ok, loot_get_plugin_messages(db, "No Lights Flicker.esm", &messages, &numMessages));
+    EXPECT_EQ(1, numMessages);
+    EXPECT_EQ(loot_message_say, messages[0].type);
+    EXPECT_STREQ("Use Wrye Bash Bashed Patch tweak instead.", messages[0].message);
+
+    // Test for plugin with one warning.
+    EXPECT_EQ(loot_ok, loot_get_plugin_messages(db, "bookplacing.esm", &messages, &numMessages));
+    EXPECT_EQ(1, numMessages);
+    EXPECT_EQ(loot_message_warn, messages[0].type);
+    EXPECT_STREQ("Check you are using v2+. If not, Update. v1 has a severe bug with the Mystic Emporium disappearing.", messages[0].message);
+
+    // Test for plugin with one error.
+    EXPECT_EQ(loot_ok, loot_get_plugin_messages(db, "EnhancedWeatherSIOnly.esm", &messages, &numMessages));
+    EXPECT_EQ(1, numMessages);
+    EXPECT_EQ(loot_message_error, messages[0].type);
+    EXPECT_STREQ("Obsolete. Remove this and install Enhanced Weather.", messages[0].message);
+
+    // Test for plugin with more than one message.
+    EXPECT_EQ(loot_ok, loot_get_plugin_messages(db, "nVidia Black Screen Fix.esp", &messages, &numMessages));
+    EXPECT_EQ(2, numMessages);
+    EXPECT_EQ(loot_message_say, messages[0].type);
+    EXPECT_STREQ("Use Wrye Bash Bashed Patch tweak instead.", messages[0].message);
+    EXPECT_EQ(loot_message_say, messages[1].type);
+    EXPECT_STREQ("Alternatively, remove this and use UOP v3.0.1+ instead.", messages[1].message);
+}
+
 TEST_F(OblivionAPIOperationsTest, GetDirtyInfo) {
     unsigned int needsCleaning;
     EXPECT_EQ(loot_error_invalid_args, loot_get_dirty_info(NULL, "Oblivion.esm", &needsCleaning));
