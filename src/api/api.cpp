@@ -755,16 +755,26 @@ LOOT_API unsigned int loot_get_dirty_info(loot_db db, const char * const plugin,
 
     *needsCleaning = loot_needs_cleaning_unknown;
 
-    //Get all dirty info.
-    loot::Plugin p = db->masterlist.FindPlugin(loot::Plugin(plugin));
-    std::set<loot::PluginDirtyInfo> dirtyInfo(p.DirtyInfo());
-
-    p = db->userlist.FindPlugin(loot::Plugin(plugin));
-    std::set<loot::PluginDirtyInfo> temp(p.DirtyInfo());
-    dirtyInfo.insert(temp.begin(), temp.end());
-
-    if (!dirtyInfo.empty()) {
+    // Is there any dirty info? Testing for applicability happens in loot_eval_lists().
+    if (!db->masterlist.FindPlugin(loot::Plugin(plugin)).DirtyInfo().empty()
+        || !db->userlist.FindPlugin(loot::Plugin(plugin)).DirtyInfo().empty()) {
         *needsCleaning = loot_needs_cleaning_yes;
+    }
+
+    // Is there a message beginning with the substring "Do not clean."?
+    // This isn't a very reliable system, because if the lists have been evaluated in some language
+    // other than English, the strings will be in different languages (and the API can't tell what they'd be)
+    // and the strings may be non-standard and begin with something other than "Do not clean." anyway.
+    std::list<loot::Message> messages(db->masterlist.FindPlugin(loot::Plugin(plugin)).Messages());
+
+    std::list<loot::Message> temp(db->userlist.FindPlugin(loot::Plugin(plugin)).Messages());
+    messages.insert(messages.end(), temp.begin(), temp.end());
+
+    for (const auto& message : messages) {
+        if (boost::starts_with(message.ChooseContent(loot::Language::english).Str(), "Do not clean")) {
+            *needsCleaning = loot_needs_cleaning_no;
+            break;
+        }
     }
 
     return loot_ok;

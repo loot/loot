@@ -607,7 +607,12 @@ extern "C"
     /**
      *  @brief Determines the database's knowledge of a plugin's dirtiness.
      *  @details Outputs whether the plugin should be cleaned or not, or if
-     *           no data is available.
+     *           no data is available. The mechanism used to determine that
+     *           a plugin should not be cleaned is not very reliable, and is
+     *           likely to fail if `loot_eval_lists()` was called with a
+     *           language other than English. As such, some plugins that should
+     *           not be cleaned may have the `loot_needs_cleaning_unknown`
+     *           code outputted.
      *  @param db
      *      The database the function acts on.
      *  @param plugin

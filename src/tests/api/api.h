@@ -234,4 +234,28 @@ TEST_F(OblivionAPIOperationsTest, SortPlugins) {
     EXPECT_EQ(11, numPlugins);
     EXPECT_EQ(expectedOrder, actualOrder);
 }
+
+TEST_F(OblivionAPIOperationsTest, GetDirtyInfo) {
+    unsigned int needsCleaning;
+    EXPECT_EQ(loot_error_invalid_args, loot_get_dirty_info(NULL, "Oblivion.esm", &needsCleaning));
+    EXPECT_EQ(loot_error_invalid_args, loot_get_dirty_info(db, NULL, &needsCleaning));
+    EXPECT_EQ(loot_error_invalid_args, loot_get_dirty_info(db, "Oblivion.esm", NULL));
+
+    // Fetch and load the metadata.
+    bool updated;
+    ASSERT_EQ(loot_ok, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/oblivion.git", "master", &updated));
+    ASSERT_EQ(loot_ok, loot_load_lists(db, masterlistPath.string().c_str(), NULL));
+
+    // A plugin with no metadata.
+    EXPECT_EQ(loot_ok, loot_get_dirty_info(db, "Oblivion.esm", &needsCleaning));
+    EXPECT_EQ(loot_needs_cleaning_unknown, needsCleaning);
+
+    // A plugin with dirty metadata.
+    EXPECT_EQ(loot_ok, loot_get_dirty_info(db, "Hammerfell.esm", &needsCleaning));
+    EXPECT_EQ(loot_needs_cleaning_yes, needsCleaning);
+
+    // A plugin with a standard "Do not clean" message.
+    EXPECT_EQ(loot_ok, loot_get_dirty_info(db, "Unofficial Oblivion Patch.esp", &needsCleaning));
+    EXPECT_EQ(loot_needs_cleaning_no, needsCleaning);
+}
 #endif
