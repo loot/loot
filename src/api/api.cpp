@@ -717,6 +717,7 @@ LOOT_API unsigned int loot_get_plugin_messages(loot_db db, const char * const pl
         }
         delete[] db->extMessageArray;
         db->extMessageArray = nullptr;
+        db->extMessageArraySize = 0;
     }
 
     //Initialise output.
@@ -730,17 +731,20 @@ LOOT_API unsigned int loot_get_plugin_messages(loot_db db, const char * const pl
     std::list<loot::Message> temp(p.Messages());
     pluginMessages.insert(pluginMessages.end(), temp.begin(), temp.end());
 
-    db->extMessageArraySize = pluginMessages.size();
-    try {
-        db->extMessageArray = new loot_message[db->extMessageArraySize];
-        int i = 0;
-        for (const auto &message : pluginMessages) {
-            db->extMessageArray[i].type = message.Type();
-            db->extMessageArray[i].message = ToNewCString(message.ChooseContent(loot::Language::any).Str());
+    if (!pluginMessages.empty()) {
+        db->extMessageArraySize = pluginMessages.size();
+        try {
+            db->extMessageArray = new loot_message[db->extMessageArraySize];
+            int i = 0;
+            for (const auto &message : pluginMessages) {
+                db->extMessageArray[i].type = message.Type();
+                db->extMessageArray[i].message = ToNewCString(message.ChooseContent(loot::Language::any).Str());
+                ++i;
+            }
         }
-    }
-    catch (std::bad_alloc& e) {
-        return c_error(loot_error_no_mem, e.what());
+        catch (std::bad_alloc& e) {
+            return c_error(loot_error_no_mem, e.what());
+        }
     }
 
     *messages = db->extMessageArray;
