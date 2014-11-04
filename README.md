@@ -40,7 +40,7 @@ Snapshot build archives are made available on [Dropbox](https://www.dropbox.com/
 The archives are named in the following manner:
 
 ```
-LOOT [last tagged release]-[number of revisions since last tagged release]-g[first seven characters of the revision ID].7z
+LOOT <last tag>-<revisions since tag>-g<short revision ID>.7z
 ```
 
-For example `LOOT v0.7.0-alpha-2-10-gf6d7e80.7z` was built using the revision with shortened commit hash `f6d7e80`, which is `10` revisions after the revision tagged `v0.7.0-alpha-2`.
+For example `LOOT v0.7.0-alpha-2-10-gf6d7e80.7z` was built using the revision with shortened commit ID `f6d7e80`, which is `10` revisions after the revision tagged `v0.7.0-alpha-2`.
