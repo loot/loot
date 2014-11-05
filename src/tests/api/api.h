@@ -215,16 +215,16 @@ TEST_F(OblivionAPIOperationsTest, SortPlugins) {
 
     // Expected order was obtained from running the API function once.
     std::list<std::string> expectedOrder = {
+        "Blank.esm",
         "Blank - Different.esm",
         "Blank - Different Master Dependent.esm",
-        "Blank.esm",
         "Blank - Master Dependent.esm",
         "Oblivion.esm",
-        "Blank - Different Master Dependent.esp",
+        "Blank.esp",
         "Blank - Different.esp",
+        "Blank - Different Master Dependent.esp",
         "Blank - Different Plugin Dependent.esp",
         "Blank - Master Dependent.esp",
-        "Blank.esp",
         "Blank - Plugin Dependent.esp",
     };
     std::list<std::string> actualOrder;
