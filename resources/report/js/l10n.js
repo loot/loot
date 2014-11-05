@@ -87,7 +87,7 @@
 
             pluginCard.getElementById('dirty').querySelector('th:first-child').textContent = l10n.translate("CRC").fetch();
             pluginCard.getElementById('dirty').querySelector('th:nth-child(2)').textContent = l10n.translate("ITM Count").fetch();
-            pluginCard.getElementById('dirty').querySelector('th:nth-child(3)').textContent = l10n.translate("UDR Count").fetch();
+            pluginCard.getElementById('dirty').querySelector('th:nth-child(3)').textContent = l10n.translate("Deleted References").fetch();
             pluginCard.getElementById('dirty').querySelector('th:nth-child(4)').textContent = l10n.translate("Deleted Navmeshes").fetch();
             pluginCard.getElementById('dirty').querySelector('th:nth-child(5)').textContent = l10n.translate("Cleaning Utility").fetch();
             pluginCard.getElementById('dirty').querySelector('td:first-child').textContent = l10n.translate("Add new row...").fetch();
