@@ -8,7 +8,7 @@ A general guide to contributing to LOOT, may be found on [LOOT's wiki](https://g
 The repository branching structure is pretty simple:
 
 * The `master` branch is a ready-to-release branch. It will generally hold code newer than the latest release, but which could be prepared (ie. update version number, changelog) and packaged for release fairly quickly and easily. Code on this branch *should* be reasonably bug free and features will be complete.
-* The `v0.7-alpha` branch is a next-release branch. It holds code that's working towards the next big release but which isn't there yet. Code is generally buggy and features incomplete (though this will vary considerably through the development cycle. After v0.7.0's release, this will be replaced with something a bit more generically named, probably `dev` or `next`.
+* The `dev` branch is a next-release branch. It holds code that's working towards the next big release but which isn't there yet. Code is generally buggy and features incomplete (though this will vary considerably through the development cycle.
 * Other branches are generally themed on specific features or groups of changes, and come and go as they are merged into one of the two above, or discarded.
 
 ## Getting Involved
