@@ -320,7 +320,13 @@ namespace loot {
                     continue;
 
                 vertex_t vertex, parentVertex;
-                if (boost::locale::to_lower(graph[*vit].Name()) < boost::locale::to_lower(graph[*vit2].Name())) {
+                // Compare plugin basenames.
+                string name1 = boost::locale::to_lower(graph[*vit].Name());
+                name1 = name1.substr(0, name1.length() - 4);
+                string name2 = boost::locale::to_lower(graph[*vit2].Name());
+                name2 = name2.substr(0, name2.length() - 4);
+
+                if (name1 < name2) {
                     parentVertex = *vit;
                     vertex = *vit2;
                 }
