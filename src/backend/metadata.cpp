@@ -79,9 +79,9 @@ namespace loot {
         return id;
     }
 
-    PluginDirtyInfo::PluginDirtyInfo() : _crc(0), _itm(0), _udr(0), _nav(0) {}
+    PluginDirtyInfo::PluginDirtyInfo() : _crc(0), _itm(0), _ref(0), _nav(0) {}
 
-    PluginDirtyInfo::PluginDirtyInfo(uint32_t crc, unsigned int itm, unsigned int udr, unsigned int nav, const std::string& utility) : _crc(crc), _itm(itm), _udr(udr), _nav(nav), _utility(utility) {}
+    PluginDirtyInfo::PluginDirtyInfo(uint32_t crc, unsigned int itm, unsigned int ref, unsigned int nav, const std::string& utility) : _crc(crc), _itm(itm), _ref(ref), _nav(nav), _utility(utility) {}
 
     bool PluginDirtyInfo::operator < (const PluginDirtyInfo& rhs) const {
         return _crc < rhs.CRC();
@@ -95,8 +95,8 @@ namespace loot {
         return _itm;
     }
 
-    unsigned int PluginDirtyInfo::UDRs() const {
-        return _udr;
+    unsigned int PluginDirtyInfo::DeletedRefs() const {
+        return _ref;
     }
 
     unsigned int PluginDirtyInfo::DeletedNavmeshes() const {
@@ -880,25 +880,25 @@ namespace loot {
         bool isDirty = false;
         for (const auto &element : _dirtyInfo) {
             boost::format f;
-            if (element.ITMs() > 0 && element.UDRs() > 0 && element.DeletedNavmeshes() > 0)
-                f = boost::format(boost::locale::translate("Contains %1% ITM records, %2% UDR records and %3% deleted navmeshes. Clean with %4%.")) % element.ITMs() % element.UDRs() % element.DeletedNavmeshes() % element.CleaningUtility();
-            else if (element.ITMs() == 0 && element.UDRs() == 0 && element.DeletedNavmeshes() == 0)
+            if (element.ITMs() > 0 && element.DeletedRefs() > 0 && element.DeletedNavmeshes() > 0)
+                f = boost::format(boost::locale::translate("Contains %1% ITM records, %2% deleted references and %3% deleted navmeshes. Clean with %4%.")) % element.ITMs() % element.DeletedRefs() % element.DeletedNavmeshes() % element.CleaningUtility();
+            else if (element.ITMs() == 0 && element.DeletedRefs() == 0 && element.DeletedNavmeshes() == 0)
                 f = boost::format(boost::locale::translate("Clean with %1%.")) % element.CleaningUtility();
 
-            else if (element.ITMs() == 0 && element.UDRs() > 0 && element.DeletedNavmeshes() > 0)
-                f = boost::format(boost::locale::translate("Contains %1% UDR records and %2% deleted navmeshes. Clean with %3%.")) % element.UDRs() % element.DeletedNavmeshes() % element.CleaningUtility();
-            else if (element.ITMs() == 0 && element.UDRs() == 0 && element.DeletedNavmeshes() > 0)
+            else if (element.ITMs() == 0 && element.DeletedRefs() > 0 && element.DeletedNavmeshes() > 0)
+                f = boost::format(boost::locale::translate("Contains %1% deleted references and %2% deleted navmeshes. Clean with %3%.")) % element.DeletedRefs() % element.DeletedNavmeshes() % element.CleaningUtility();
+            else if (element.ITMs() == 0 && element.DeletedRefs() == 0 && element.DeletedNavmeshes() > 0)
                 f = boost::format(boost::locale::translate("Contains %1% deleted navmeshes. Clean with %2%.")) % element.DeletedNavmeshes() % element.CleaningUtility();
-            else if (element.ITMs() == 0 && element.UDRs() > 0 && element.DeletedNavmeshes() == 0)
-                f = boost::format(boost::locale::translate("Contains %1% UDR records. Clean with %2%.")) % element.UDRs() % element.CleaningUtility();
+            else if (element.ITMs() == 0 && element.DeletedRefs() > 0 && element.DeletedNavmeshes() == 0)
+                f = boost::format(boost::locale::translate("Contains %1% deleted references. Clean with %2%.")) % element.DeletedRefs() % element.CleaningUtility();
 
-            else if (element.ITMs() > 0 && element.UDRs() == 0 && element.DeletedNavmeshes() > 0)
+            else if (element.ITMs() > 0 && element.DeletedRefs() == 0 && element.DeletedNavmeshes() > 0)
                 f = boost::format(boost::locale::translate("Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%.")) % element.ITMs() % element.DeletedNavmeshes() % element.CleaningUtility();
-            else if (element.ITMs() > 0 && element.UDRs() == 0 && element.DeletedNavmeshes() == 0)
+            else if (element.ITMs() > 0 && element.DeletedRefs() == 0 && element.DeletedNavmeshes() == 0)
                 f = boost::format(boost::locale::translate("Contains %1% ITM records. Clean with %2%.")) % element.ITMs() % element.CleaningUtility();
 
-            else if (element.ITMs() > 0 && element.UDRs() > 0 && element.DeletedNavmeshes() == 0)
-                f = boost::format(boost::locale::translate("Contains %1% ITM records and %2% UDR records. Clean with %3%.")) % element.ITMs() % element.UDRs() % element.CleaningUtility();
+            else if (element.ITMs() > 0 && element.DeletedRefs() > 0 && element.DeletedNavmeshes() == 0)
+                f = boost::format(boost::locale::translate("Contains %1% ITM records and %2% deleted references. Clean with %3%.")) % element.ITMs() % element.DeletedRefs() % element.CleaningUtility();
 
             messages.push_back(loot::Message(loot::Message::warn, f.str()));
             isDirty = true;

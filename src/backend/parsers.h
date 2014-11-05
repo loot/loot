@@ -120,8 +120,8 @@ namespace YAML {
 
             if (rhs.ITMs() > 0)
                 node["itm"] = rhs.ITMs();
-            if (rhs.UDRs() > 0)
-                node["udr"] = rhs.UDRs();
+            if (rhs.DeletedRefs() > 0)
+                node["udr"] = rhs.DeletedRefs();
             if (rhs.DeletedNavmeshes() > 0)
                 node["nav"] = rhs.DeletedNavmeshes();
 
@@ -133,18 +133,18 @@ namespace YAML {
                 return false;
 
             uint32_t crc = node["crc"].as<uint32_t>();
-            int itm = 0, udr = 0, nav = 0;
+            int itm = 0, ref = 0, nav = 0;
 
             if (node["itm"])
                 itm = node["itm"].as<unsigned int>();
             if (node["udr"])
-                udr = node["udr"].as<unsigned int>();
+                ref = node["udr"].as<unsigned int>();
             if (node["nav"])
                 nav = node["nav"].as<unsigned int>();
 
             std::string utility = node["util"].as<std::string>();
 
-            rhs = loot::PluginDirtyInfo(crc, itm, udr, nav, utility);
+            rhs = loot::PluginDirtyInfo(crc, itm, ref, nav, utility);
 
             return true;
         }

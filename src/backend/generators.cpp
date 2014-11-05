@@ -41,8 +41,8 @@ namespace YAML {
 
         if (rhs.ITMs() > 0)
             out << Key << "itm" << Value << rhs.ITMs();
-        if (rhs.UDRs() > 0)
-            out << Key << "udr" << Value << rhs.UDRs();
+        if (rhs.DeletedRefs() > 0)
+            out << Key << "udr" << Value << rhs.DeletedRefs();
         if (rhs.DeletedNavmeshes() > 0)
             out << Key << "nav" << Value << rhs.DeletedNavmeshes();
 

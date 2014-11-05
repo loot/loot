@@ -59,19 +59,19 @@ namespace loot {
     class PluginDirtyInfo {
     public:
         PluginDirtyInfo();
-        PluginDirtyInfo(uint32_t crc, unsigned int itm, unsigned int udr, unsigned int nav, const std::string& utility);
+        PluginDirtyInfo(uint32_t crc, unsigned int itm, unsigned int ref, unsigned int nav, const std::string& utility);
 
         bool operator < (const PluginDirtyInfo& rhs) const;
 
         uint32_t CRC() const;
         unsigned int ITMs() const;
-        unsigned int UDRs() const;
+        unsigned int DeletedRefs() const;
         unsigned int DeletedNavmeshes() const;
         std::string CleaningUtility() const;
     private:
         uint32_t _crc;
         unsigned int _itm;
-        unsigned int _udr;
+        unsigned int _ref;
         unsigned int _nav;
         std::string _utility;
     };
