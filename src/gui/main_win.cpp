@@ -46,7 +46,7 @@ using boost::format;
 CefSettings GetCefSettings() {
     CefSettings cef_settings;
 
-    //Disable CEF command line args.
+    //Enable CEF command line args.
     cef_settings.command_line_args_disabled = false;
 
     // Set CEF logging.
