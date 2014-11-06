@@ -41,6 +41,8 @@ namespace loot {
         LootApp();
 
         // Override CefApp methods.
+        virtual void OnBeforeCommandLineProcessing(const CefString& process_type,
+                                                   CefRefPtr<CefCommandLine> command_line);
         virtual CefRefPtr<CefBrowserProcessHandler> GetBrowserProcessHandler() OVERRIDE;
         virtual CefRefPtr<CefRenderProcessHandler> GetRenderProcessHandler() OVERRIDE;
         virtual void OnRegisterCustomSchemes(CefRefPtr<CefSchemeRegistrar> registrar) OVERRIDE;

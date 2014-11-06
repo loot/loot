@@ -57,6 +57,16 @@ namespace loot {
 
     LootApp::LootApp() {}
 
+    void LootApp::OnBeforeCommandLineProcessing(const CefString& process_type,
+                                                CefRefPtr<CefCommandLine> command_line) {
+        if (process_type.empty()) {
+            // Browser process, OK to modify the command line.
+
+            // Disable spell checking.
+            command_line->AppendSwitch("--disable-spell-checking");
+        }
+    }
+
     CefRefPtr<CefBrowserProcessHandler> LootApp::GetBrowserProcessHandler() {
         return this;
     }
