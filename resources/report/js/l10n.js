@@ -96,7 +96,7 @@
             pluginCard.getElementById('cancel').textContent = l10n.translate("Cancel").fetch();
 
             /* Plugin List Item Template */
-            var pluginLI = document.getElementById('pluginLI').content;
+            var pluginLI = pluginLiImportDoc.querySelector('#pluginLI').content;
             pluginLI.querySelector('.dummyPlugin').title = l10n.translate("Dummy Plugin").fetch();
             pluginLI.querySelector('.loadsBSA').title = l10n.translate("Loads BSA").fetch();
             pluginLI.querySelector('.hasUserEdits').title = l10n.translate("Has User Metadata").fetch();

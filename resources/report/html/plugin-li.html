@@ -31,7 +31,7 @@
 <script>
 'use strict';
 // Record this document.
-var importDoc = document.currentScript.ownerDocument;
+var pluginLiImportDoc = document.currentScript.ownerDocument;
 
 /* Create a <li is="plugin-li"> element type. */
 var pluginLIProto = Object.create(HTMLLIElement.prototype, {
@@ -57,7 +57,7 @@ var pluginLIProto = Object.create(HTMLLIElement.prototype, {
 
     createdCallback: {
         value: function() {
-            var template = importDoc.querySelector('#pluginLI');
+            var template = pluginLiImportDoc.querySelector('#pluginLI');
             var clone = document.importNode(template.content, true);
             var root = this.createShadowRoot();
             root.appendChild(clone);

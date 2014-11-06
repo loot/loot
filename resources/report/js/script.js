@@ -549,13 +549,17 @@ function applyFilters(evt) {
 }
 function showMessageDialog(title, text, closeCallback) {
     var dialog = new MessageDialog();
-
+    dialog.setButtonText(l10n.jed.translate('Yes').fetch(), l10n.jed.translate('Cancel').fetch());
     document.body.appendChild(dialog);
     dialog.showModal('warn', title, text, closeCallback);
 }
 function showMessageBox(type, title, text) {
     var dialog = new MessageDialog();
-
+    if (type == 'error' || type == 'info') {
+        dialog.setButtonText(l10n.jed.translate('OK').fetch(), l10n.jed.translate('Cancel').fetch());
+    } else {
+        dialog.setButtonText(l10n.jed.translate('Yes').fetch(), l10n.jed.translate('Cancel').fetch());
+    }
     document.body.appendChild(dialog);
     dialog.showModal(type, title, text);
 }

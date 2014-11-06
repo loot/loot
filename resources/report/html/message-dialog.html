@@ -23,32 +23,43 @@
     }
     .accept, .cancel {
         margin: 0.5em;
-        font-size: 2em;
+        font-size: 1.5em;
+        display: inline-block;
+        cursor: pointer;
     }
-    .accept {
+    .accept > span:last-child, .cancel > span:last-child {
+        margin-left: 0.5em;
+        display: inline-block;
+    }
+    .accept:hover {
         color: green;
-        cursor: pointer;
     }
-    .cancel {
+    .cancel:hover {
         color: red;
-        cursor: pointer;
     }
     </style>
     <span class="icon fa fa-exclamation-circle"></span>
     <h1><content select="h1"></content></h1>
     <p><content select="p"></content></p>
     <div class="buttons">
-        <span class="accept fa fa-check"></span>
-        <span class="cancel fa fa-close"></span>
+        <div class="accept"><span class="fa fa-check"></span><span></span></div>
+        <div class="cancel"><span class="fa fa-close"></span><span></span></div>
     </div>
 </template>
 <script>
 'use strict';
 // Record this document.
-var importDoc = document.currentScript.ownerDocument;
+var messageDialogImportDoc = document.currentScript.ownerDocument;
 
 /* Create a <dialog is="message-dialog"> element type. */
 var messageDialogProto = Object.create(HTMLDialogElement.prototype, {
+
+    setButtonText: {
+        value: function(accept, cancel) {
+            this.shadowRoot.getElementsByClassName('accept')[0].lastChild.textContent = accept;
+            this.shadowRoot.getElementsByClassName('cancel')[0].lastChild.textContent = cancel;
+        }
+    },
 
     onClose: {
         value: function(evt) {
@@ -90,7 +101,7 @@ var messageDialogProto = Object.create(HTMLDialogElement.prototype, {
     createdCallback: {
         value: function() {
 
-            var template = importDoc.querySelector('#messageDialog');
+            var template = messageDialogImportDoc.querySelector('#messageDialog');
             var clone = document.importNode(template.content, true);
             var root = this.createShadowRoot();
             root.appendChild(clone);
