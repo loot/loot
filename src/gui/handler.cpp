@@ -178,7 +178,7 @@ namespace loot {
                 req = JSON::parse(request.ToString());
             }
             catch (exception &e) {
-                BOOST_LOG_TRIVIAL(error) << "Failed to parse CEF query request \"" << request << "\": " << e.what();
+                BOOST_LOG_TRIVIAL(error) << "Failed to parse CEF query request \"" << request.ToString() << "\": " << e.what();
                 callback->Failure(-1, e.what());
                 return true;
             }
