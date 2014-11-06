@@ -649,52 +649,6 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
 });
 var PluginCard = document.registerElement('plugin-card', {prototype: pluginCardProto});
 
-/* Create a <plugin-li> element type that extends from <li>. */
-var pluginLIProto = Object.create(HTMLLIElement.prototype, {
-
-    handleDragStart: {
-        value: function(evt) {
-            evt.dataTransfer.effectAllowed = 'copy';
-            evt.dataTransfer.setData('text/plain', evt.currentTarget.getElementsByTagName('a')[0].textContent);
-        }
-    },
-
-    createdCallback: {
-
-        value: function() {
-
-            var template = document.getElementById('pluginLI');
-            var clone = document.importNode(template.content, true);
-            this.appendChild(clone);
-        }
-    },
-
-    attachedCallback: {
-        value: function() {
-            var hoverTargets = this.querySelectorAll('[title]');
-            for (var i = 0; i < hoverTargets.length; ++i) {
-                hoverTargets[i].addEventListener('mouseenter', showHoverText, false);
-                hoverTargets[i].addEventListener('mouseleave', hideHoverText, false);
-            }
-        }
-    },
-
-    detachedCallback: {
-        value: function() {
-            var hoverTargets = this.querySelectorAll('[title]');
-            for (var i = 0; i < hoverTargets.length; ++i) {
-                hoverTargets[i].removeEventListener('mouseenter', showHoverText, false);
-                hoverTargets[i].removeEventListener('mouseleave', hideHoverText, false);
-            }
-        }
-    }
-
-});
-var PluginListItem = document.registerElement('plugin-li', {
-    prototype: pluginLIProto,
-    extends: 'li'
-});
-
 /* Create a <editable-table> element type that extends from <table>. */
 var EditableTableProto = Object.create(HTMLTableElement.prototype, {
 

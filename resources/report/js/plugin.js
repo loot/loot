@@ -163,15 +163,14 @@ function Plugin(obj) {
         var li = new PluginListItem();
         this.li = li;
 
-        li.getElementsByTagName('a')[0].href = '#' + this.id;
-
-        li.getElementsByTagName('a')[0].textContent = this.name;
+        li.textContent = this.name;
+        li.setLink('#' + this.id);
+        li.setPriority(this.getPriorityString());
 
         li.setAttribute('data-dummy', this.isDummy);
         li.setAttribute('data-bsa', this.loadsBSA);
         li.setAttribute('data-edits', this.userlist != undefined);
         li.setAttribute('data-global-priority', this.isGlobalPriority);
-        li.getElementsByClassName('hasPriority')[0].title = this.getPriorityString();
 
         document.getElementById('pluginsNav').appendChild(li);
     }
@@ -182,7 +181,7 @@ function Plugin(obj) {
                 change.object.li.setAttribute('data-edits', change.object[change.name] != undefined);
                 change.object.card.setAttribute('data-edits', change.object[change.name] != undefined);
             } else if (change.name == 'modPriority') {
-                change.object.li.getElementsByClassName('hasPriority')[0].title = this.getPriorityString();
+                change.object.li.setPriority(this.getPriorityString());
                 change.object.card.shadowRoot.getElementById('priorityValue').value = change.object[change.name];
             } else if (change.name == 'isGlobalPriority') {
                 change.object.li.setAttribute('data-global-priority', change.object[change.name]);

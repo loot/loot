@@ -1,0 +1,92 @@
+<template id="pluginLI">
+    <style>
+    @import 'css/font-awesome.min.css';
+    :host([data-bsa=false]) > .loadsBSA,
+    :host([data-dummy=false]) > .dummyPlugin,
+    :host([data-edits=false]) > .hasUserEdits,
+    :host([data-global-priority=false]) > .hasGlobalPriority,
+    :host > .hasPriority:not([title^=Priority]) {
+        visibility: hidden;
+    }
+    :host > a {
+        text-decoration: none;
+        color: black;
+    }
+    :host > .hasGlobalPriority, :host > .hasPriority {
+        display:none;
+    }
+    :host-context(body.editMode) > .hasGlobalPriority,
+    :host-context(body.editMode) > .hasPriority {
+        display: inline-block;
+    }
+    </style>
+    <span class="dummyPlugin fa fa-eye-slash" title="Dummy Plugin"></span>
+    <span class="loadsBSA fa fa-paperclip" title="Loads BSA"></span>
+    <span class="hasUserEdits fa fa-user" title="Has User Metadata"></span>
+    <span class="hasGlobalPriority fa fa-globe" title="Priority Is Global"></span>
+    <span class="hasPriority fa fa-exclamation"></span>
+    <a href=""><content></content></a>
+</template>
+
+<script>
+'use strict';
+// Record this document.
+var importDoc = document.currentScript.ownerDocument;
+
+/* Create a <li is="plugin-li"> element type. */
+var pluginLIProto = Object.create(HTMLLIElement.prototype, {
+
+    setLink: {
+        value: function(url) {
+            this.shadowRoot.getElementsByTagName('a')[0].href = url;
+        }
+    },
+
+    setPriority: {
+        value: function(text) {
+            this.shadowRoot.getElementsByClassName('hasPriority')[0].title = text;
+        }
+    },
+
+    handleDragStart: {
+        value: function(evt) {
+            evt.dataTransfer.effectAllowed = 'copy';
+            evt.dataTransfer.setData('text/plain', evt.currentTarget.getElementsByTagName('a')[0].textContent);
+        }
+    },
+
+    createdCallback: {
+        value: function() {
+            var template = importDoc.querySelector('#pluginLI');
+            var clone = document.importNode(template.content, true);
+            var root = this.createShadowRoot();
+            root.appendChild(clone);
+        }
+    },
+
+    attachedCallback: {
+        value: function() {
+            var hoverTargets = this.shadowRoot.querySelectorAll('[title]');
+            for (var i = 0; i < hoverTargets.length; ++i) {
+                hoverTargets[i].addEventListener('mouseenter', showHoverText, false);
+                hoverTargets[i].addEventListener('mouseleave', hideHoverText, false);
+            }
+        }
+    },
+
+    detachedCallback: {
+        value: function() {
+            var hoverTargets = this.shadowRoot.querySelectorAll('[title]');
+            for (var i = 0; i < hoverTargets.length; ++i) {
+                hoverTargets[i].removeEventListener('mouseenter', showHoverText, false);
+                hoverTargets[i].removeEventListener('mouseleave', hideHoverText, false);
+            }
+        }
+    }
+
+});
+var PluginListItem = document.registerElement('plugin-li', {
+    prototype: pluginLIProto,
+    extends: 'li'
+});
+</script>
