@@ -1481,7 +1481,7 @@ function onFocus(evt) {
 require.config({
     baseUrl: "js",
   });
-require(['marked', 'l10n', 'order!custom', 'order!plugin'], function(markedResponse, l10nResponse) {
+require(['marked', 'l10n', 'custom', 'plugin'], function(markedResponse, l10nResponse) {
     marked = markedResponse;
     l10n = l10nResponse;
     /* Make sure settings are what I want. */

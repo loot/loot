@@ -171,7 +171,7 @@
             var msgBytes = this._readTranslationPair(originalOffset, translationOffset);
             var msg = this._splitPlurals( decoder.decode(msgBytes.id), decoder.decode(msgBytes.str) );
 
-            jedLocaleData[msg.id] = [ null ].concat(msg.str);
+            jedLocaleData[msg.id] = [].concat(msg.str);
 
             originalOffset += 8;
             translationOffset += 8;
