@@ -189,18 +189,6 @@ dialog > h1 {
     font-weight: normal;
     text-align: center;
 }
-dialog[is=message-dialog] > h1 {
-    margin: 0;
-    margin-bottom: 1em;
-    display: inline-block;
-    text-align: left;
-}
-dialog[is=message-dialog] > span:first-child {
-    font-size: 4em;
-    position: relative;
-    margin-right: 0.5em;
-    top: 0.2em;
-}
 dialog[data-type=warn] > span:first-child  {
     color: gold;
 }
