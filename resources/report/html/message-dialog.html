@@ -47,7 +47,7 @@
 // Record this document.
 var importDoc = document.currentScript.ownerDocument;
 
-/* Create a <message-dialog> element type that extends from <dialog>. */
+/* Create a <dialog is="message-dialog"> element type. */
 var messageDialogProto = Object.create(HTMLDialogElement.prototype, {
 
     onClose: {
