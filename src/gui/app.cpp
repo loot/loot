@@ -95,8 +95,9 @@ namespace loot {
         // Set the handler for browser-level callbacks.
         CefRefPtr<LootHandler> handler(new LootHandler());
 
-        // Register the custom "loot" scheme handler.
+        // Register the custom "loot" scheme handlers.
         CefRegisterSchemeHandlerFactory("loot", "l10n", new LootSchemeHandlerFactory());
+        CefRegisterSchemeHandlerFactory("loot", "import", new LootSchemeHandlerFactory());
 
         // Specify CEF browser settings here.
         CefBrowserSettings browser_settings;

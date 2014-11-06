@@ -20,14 +20,13 @@
     You should have received a copy of the GNU General Public License
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
-*/
+    */
 #ifndef __LOOT_GLOBALS__
 #define __LOOT_GLOBALS__
 
 #include <boost/filesystem.hpp>
 
 namespace loot {
-
     //Version numbers.
     extern const unsigned int g_version_major;
     extern const unsigned int g_version_minor;
@@ -39,6 +38,7 @@ namespace loot {
     //Common paths.
     extern const boost::filesystem::path g_path_readme;
     extern const boost::filesystem::path g_path_report;
+    extern const boost::filesystem::path g_path_imports;
     extern const boost::filesystem::path g_path_l10n;
     extern const boost::filesystem::path g_path_local;
     extern const boost::filesystem::path g_path_settings;

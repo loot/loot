@@ -30,6 +30,7 @@ along with LOOT.  If not, see
 
 #include <string>
 #include <boost/log/trivial.hpp>
+#include <boost/algorithm/string.hpp>
 
 using namespace std;
 
@@ -44,8 +45,19 @@ namespace loot {
                                                                    CefRefPtr<CefRequest> request) {
         BOOST_LOG_TRIVIAL(trace) << "Handling custom scheme: " << string(request->GetURL());
 
-        // Get the file from the custom URL.
-        string file = (g_path_l10n / string(request->GetURL()).substr(12)).string();
+        /* Two custom URLs are possible:
+            loot://l10n/<l10n path>
+            loot://import/<import filename>
+            */
+
+        // Get the path from the custom URL.
+        string file;
+        if (boost::starts_with(request->GetURL().ToString(), "loot://l10n/")) {
+            file = (g_path_l10n / request->GetURL().ToString().substr(12)).string();
+        }
+        else {
+            file = (g_path_imports / request->GetURL().ToString().substr(14)).string();
+        }
 
         CefResponse::HeaderMap headers;
         headers.emplace("Access-Control-Allow-Origin", "*");
