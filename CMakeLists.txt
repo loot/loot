@@ -13,12 +13,19 @@
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
 include(GetGitRevisionDescription)
-git_describe(GIT_COMMIT_STRING --tags --long)
+get_git_head_revision(GIT_REFSPEC GIT_COMMIT_STRING --tags --long)
 
-# We just want the shortened commit ID, so get that.
-string(FIND ${GIT_COMMIT_STRING} "-g" REV_POS REVERSE)
-MATH(EXPR REV_POS "${REV_POS} + 2")
-string(SUBSTRING ${GIT_COMMIT_STRING} ${REV_POS} -1 GIT_COMMIT_STRING)
+IF (GIT_COMMIT_STRING MATCHES "GITDIR-NOTFOUND")
+    set(GIT_COMMIT_STRING "unknown")
+ELSE ()
+    # Get a shortened ID. Although knowing the shortest unique string requires Git,
+    # 8 characters should be a good compromise between chance of ambiguity and length,
+    # especially since the version numbers would narrow down the range of possibly
+    # ambiguous commits.
+    string(SUBSTRING ${GIT_COMMIT_STRING} 0 8 GIT_COMMIT_STRING)
+ENDIF ()
+
+message(STATUS "Git revision: ${GIT_COMMIT_STRING}")
 
 # Write to file.
 configure_file("${CMAKE_SOURCE_DIR}/src/backend/globals.cpp.in" "${CMAKE_BINARY_DIR}/generated/globals.cpp" @ONLY)
