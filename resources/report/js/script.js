@@ -1374,7 +1374,7 @@ function initVars() {
                         loot.game.plugins = game.plugins;
                     } catch (e) {
                         console.log(e);
-                        console.log('getGameData response: ' + results[3]);
+                        console.log('getGameData response: ' + result);
                     }
 
                     applySavedFilters();
