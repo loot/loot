@@ -6,12 +6,11 @@
     <link rel="stylesheet" href="css/font-awesome.min.css" />
     <link rel="import" href="loot://import/message-dialog.html">
     <link rel="import" href="loot://import/plugin-li.html">
+    <link rel="import" href="loot://import/editable-table.html">
     <script src="js/require.js"></script>
 </head>
 <!-- oncontextmenu attribute disables the right-click menu. -->
 <body oncontextmenu="return false">
-
-
     <template id="pluginCard">
 
         <style>
@@ -336,68 +335,6 @@
         <div id="editMetadata"><span class="fa fa-pencil fa-fw"></span>Edit Metadata</div>
         <div id="copyMetadata"><span class="fa fa-copy fa-fw"></span>Copy Metadata As Text</div>
         <div id="clearMetadata"><span class="fa fa-trash-o fa-fw"></span>Clear User Metadata</div>
-    </template>
-
-    <template id="fileRow">
-        <tr>
-            <td><input class="name" type="text" required>
-            <td><input class="display" type="text">
-            <td><input class="condition" type="text">
-            <td class="fa fa-trash-o fa-fw">
-    </template>
-    <template id="messageRow">
-        <tr>
-            <td><select class="type">
-                    <option value="say">Note</option>
-                    <option value="warn">Warning</option>
-                    <option value="error">Error</option>
-                </select>
-            <td><input class="content" type="text" required>
-            <td><input class="condition" type="text">
-            <td><select class="language">
-                    <!-- Language <option> elements go here. -->
-                </select>
-            <td class="fa fa-trash-o fa-fw">
-    </template>
-    <template id="tagRow">
-        <tr>
-            <td><select class="type">
-                    <option value="add">Add</option>
-                    <option value="remove">Remove</option>
-                </select>
-            <td><input class="name" type="text" required>
-            <td><input class="condition" type="text">
-            <td class="fa fa-trash-o fa-fw">
-    </template>
-    <template id="dirtyInfoRow">
-        <tr>
-            <td><input class="crc" type="text" maxlength="8" minlength="8" pattern="[0-9A-Fa-f]{8}" required>
-            <td><input class="itm" type="number" min="0" step="1" value="0">
-            <td><input class="udr" type="number" min="0" step="1" value="0">
-            <td><input class="nav" type="number" min="0" step="1" value="0">
-            <td><input class="util" type="text" required>
-            <td class="fa fa-trash-o fa-fw">
-    </template>
-    <template id="locationRow">
-        <tr>
-            <td><input class="link" type="text" required>
-            <td><input class="ver" type="text">
-            <td class="fa fa-trash-o fa-fw">
-    </template>
-    <template id="gameRow">
-        <tr>
-            <td><input class="name" type="text" required>
-            <td>
-                <select class="type">
-                <!-- Game <option> elements go here. -->
-                </select>
-            <td><input class="folder" type="text" required>
-            <td><input class="master" type="text">
-            <td><input class="repo" type="text">
-            <td><input class="branch" type="text">
-            <td><input class="path" type="text">
-            <td><input class="registry" type="text">
-            <td class="fa fa-trash-o fa-fw">
     </template>
 
     <header>

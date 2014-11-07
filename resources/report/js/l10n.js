@@ -110,13 +110,13 @@
             pluginMenu.getElementById('clearMetadata').firstChild.nextSibling.textContent = l10n.translate("Clear User Metadata").fetch();
 
             /* Message row template */
-            var messageRow = document.getElementById('messageRow').content;
+            var messageRow = editableTableImportDoc.querySelector('#messageRow').content;
             messageRow.querySelector('.type').children[0].textContent = l10n.translate("Note").fetch();
             messageRow.querySelector('.type').children[1].textContent = l10n.translate("Warning").fetch();
             messageRow.querySelector('.type').children[2].textContent = l10n.translate("Error").fetch();
 
             /* Tag row template */
-            var tagRow = document.getElementById('tagRow').content;
+            var tagRow = editableTableImportDoc.querySelector('#tagRow').content;
             tagRow.querySelector('.type').children[0].textContent = l10n.translate("Add").fetch();
             tagRow.querySelector('.type').children[1].textContent = l10n.translate("Remove").fetch();
 

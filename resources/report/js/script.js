@@ -1298,7 +1298,7 @@ function initVars() {
 
             /* Now fill in language options. */
             var settingsLangSelect = document.getElementById('languageSelect');
-            var messageLangSelect = document.getElementById('messageRow').content.querySelector('.language');
+            var messageLangSelect = editableTableImportDoc.querySelector('#messageRow').content.querySelector('.language');
             for (var i = 0; i < loot.languages.length; ++i) {
                 var option = document.createElement('option');
                 option.value = loot.languages[i].locale;
@@ -1346,7 +1346,7 @@ function initVars() {
             }
 
             /* Fill in game row template's game type options. */
-            var select = document.getElementById('gameRow').content.querySelector('select');
+            var select = editableTableImportDoc.querySelector('#gameRow').content.querySelector('select');
             for (var j = 0; j < loot.gameTypes.length; ++j) {
                 var option = document.createElement('option');
                 option.value = loot.gameTypes[j];
