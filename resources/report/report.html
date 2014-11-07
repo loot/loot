@@ -15,6 +15,7 @@
     <link rel="import" href="bower_components/core-toolbar/core-toolbar.html">
     <link rel="import" href="bower_components/core-icon/core-icon.html">
     <link rel="import" href="bower_components/core-icons/core-icons.html">
+    <link rel="import" href="bower_components/core-tooltip/core-tooltip.html">
 
     <link rel="import" href="bower_components/paper-menu-button/paper-menu-button.html">
     <link rel="import" href="bower_components/paper-item/paper-item.html">
@@ -27,7 +28,7 @@
 <!-- oncontextmenu attribute disables the right-click menu. -->
 <body oncontextmenu="return false" unresolved fullbleed vertical layout >
     <core-toolbar id="mainToolbar">
-        <paper-menu-button src="logo.png">
+        <paper-menu-button icon="menu">
             <paper-item id="redatePluginsButton" icon="today" label="Redate Plugins"></paper-item>
             <paper-item id="openLogButton" icon="folder" label="Open Debug Log Location"></paper-item>
             <paper-item id="wipeUserlistButton" icon="delete" label="Clear All User Metadata"></paper-item>
@@ -41,16 +42,14 @@
             <!-- Generated game <li> elements go here. -->
         </paper-dropdown-menu>
         <span flex></span>
-        <paper-icon-button id="updateMasterlistButton" icon="file-download"></paper-icon-button>
+        <core-tooltip label="Update Masterlist">
+            <paper-icon-button id="updateMasterlistButton" icon="file-download"></paper-icon-button>
+        </core-tooltip>
+        <core-tooltip label="Sort Plugins">
         <paper-icon-button id="sortButton" icon="swap-vert"></paper-icon-button>
-        <paper-button id="applySortButton" class="colored custom hidden">
-            <core-icon icon="check"></core-icon>
-            Apply
-        </paper-button>
-        <paper-button id="cancelSortButton" class="colored custom hidden">
-            <core-icon icon="close"></core-icon>
-            Cancel
-        </paper-button>
+        </core-tooltip>
+        <paper-button id="applySortButton" class="hidden">Apply</paper-button>
+        <paper-button id="cancelSortButton" class="hidden">Cancel</paper-button>
     </core-toolbar>
     <div id="container">
         <nav>

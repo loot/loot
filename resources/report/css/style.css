@@ -38,11 +38,23 @@ noscript {
 }
 #mainToolbar {
     background:#e3e3e3;
-    font-size: 1em;
-    height: 3em;
+    background: #4285f4;
+    /*font-size: 1em;
+    height: 3em;*/
+      color: white;
 }
-#mainToolbar > * {
+/*#mainToolbar > * {
     top: -1em;
+}*/
+#gameMenu {
+    background: inherit;
+}
+#gameMenu::shadow #control[selected] {
+    color: white;
+    border-bottom-color: #f1f1f1;
+}
+#gameMenu::shadow #menu {
+    color: black;
 }
 header > ol {
     display: inline-block;
@@ -101,8 +113,8 @@ header li.disabled {
 
 #container {
     position: fixed;
-    top: 3em;
-    height: calc(100% - 3em);
+    top: 64px;
+    height: calc(100% - 64px);
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
