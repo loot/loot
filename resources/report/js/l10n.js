@@ -95,19 +95,17 @@
             pluginCard.getElementById('accept').textContent = l10n.translate("Apply").fetch();
             pluginCard.getElementById('cancel').textContent = l10n.translate("Cancel").fetch();
 
+            pluginCard.getElementById('showOnlyConflicts').nextSibling.textContent = l10n.translate("Show Only Conflicts").fetch();
+            pluginCard.getElementById('editMetadata').firstChild.nextSibling.textContent = l10n.translate("Edit Metadata").fetch();
+            pluginCard.getElementById('copyMetadata').firstChild.nextSibling.textContent = l10n.translate("Copy Metadata As Text").fetch();
+            pluginCard.getElementById('clearMetadata').firstChild.nextSibling.textContent = l10n.translate("Clear User Metadata").fetch();
+
             /* Plugin List Item Template */
             var pluginLI = pluginLiImportDoc.querySelector('#pluginLI').content;
             pluginLI.querySelector('.dummyPlugin').title = l10n.translate("Dummy Plugin").fetch();
             pluginLI.querySelector('.loadsBSA').title = l10n.translate("Loads BSA").fetch();
             pluginLI.querySelector('.hasUserEdits').title = l10n.translate("Has User Metadata").fetch();
             pluginLI.querySelector('.hasGlobalPriority').title = l10n.translate("Priority Is Global").fetch();
-
-            /* Plugin menu template */
-            var pluginMenu = pluginMenuImportDoc.querySelector('#pluginMenu').content;
-            pluginMenu.getElementById('showOnlyConflicts').nextSibling.textContent = l10n.translate("Show Only Conflicts").fetch();
-            pluginMenu.getElementById('editMetadata').firstChild.nextSibling.textContent = l10n.translate("Edit Metadata").fetch();
-            pluginMenu.getElementById('copyMetadata').firstChild.nextSibling.textContent = l10n.translate("Copy Metadata As Text").fetch();
-            pluginMenu.getElementById('clearMetadata').firstChild.nextSibling.textContent = l10n.translate("Clear User Metadata").fetch();
 
             /* Message row template */
             var messageRow = editableTableImportDoc.querySelector('#messageRow').content;
