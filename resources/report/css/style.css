@@ -335,31 +335,7 @@ td input {
     text-overflow: ellipsis;
 }
 
-table[is=editable-table] td:last-child {
-    cursor: pointer;
-}
-table[is=editable-table] td:last-child:hover {
-    color: red;
-}
-table[is=editable-table] {
-    margin: 3em 1em;
-    border-collapse: collapse;
-}
-table[is=editable-table] td, table[is=editable-table] th {
-    vertical-align: top;
-    text-align: left;
-    padding: 0.5em;
-}
-table[is=editable-table] th {
-    border-bottom: 1px black solid;
-}
-table[is=editable-table] tbody tr:last-child {
-    cursor: pointer;
-    color: grey;
-}
-table[is=editable-table] tbody tr:last-child:hover {
-    color: black;
-}
+
 
 #pluginsNav .priority {
     display: none;
