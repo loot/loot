@@ -558,6 +558,10 @@ function openLogLocation(evt) {
     loot.query('openLogLocation').catch(processCefError);
 }
 function changeGame(evt) {
+    /* Check that the selected game isn't the current one. */
+    if (evt.target.className.indexOf('core-selected') != -1) {
+        return;
+    }
     /* First store current game info in loot.games object.
        This object may not exist, so initialise it if not. */
     var index = undefined;
