@@ -37,12 +37,11 @@ var loot = {
         /* Call whenever game is changed or game menu / game table are rewritten. */
         updateSelectedGame: function() {
             /* Highlight game in menu. Could use fa-chevron-right instead. */
-            var gameMenuItems = document.getElementById('gameMenu').children[0].children;
+            var gameMenuItems = document.getElementById('gameMenu').children;
             for (var i = 0; i < gameMenuItems.length; ++i) {
                 if (gameMenuItems[i].getAttribute('data-folder') == this.folder) {
-                    gameMenuItems[i].getElementsByClassName('fa')[0].classList.toggle('fa-angle-double-right', true);
-                } else {
-                    gameMenuItems[i].getElementsByClassName('fa')[0].classList.toggle('fa-angle-double-right', false);
+                    document.getElementById('gameMenu').selected = i;
+                    break;
                 }
             }
 
@@ -150,7 +149,7 @@ var loot = {
     /* Call whenever installedGames is changed or game menu is rewritten. */
     updateEnabledGames: function() {
         /* Update the disabled games in the game menu. */
-        var gameMenuItems = document.getElementById('gameMenu').firstElementChild.children;
+        var gameMenuItems = document.getElementById('gameMenu').children;
         for (var i = 0; i < gameMenuItems.length; ++i) {
             if (this.installedGames.indexOf(gameMenuItems[i].getAttribute('data-folder')) == -1) {
                 gameMenuItems[i].classList.toggle('disabled', true);
@@ -171,7 +170,7 @@ var loot = {
     /* Call whenever settings are changed. */
     updateSettingsUI: function() {
         var gameSelect = document.getElementById('defaultGameSelect');
-        var gameMenu = document.getElementById('gameMenu').firstElementChild;
+        var gameMenu = document.getElementById('gameMenu');
         var gameTable = document.getElementById('gameTable');
 
         /* First make sure game listing elements don't have any existing entries. */
@@ -193,17 +192,9 @@ var loot = {
             option.textContent = game.name;
             gameSelect.appendChild(option);
 
-            var li = document.createElement('li');
+            var li = document.createElement('paper-item');
             li.setAttribute('data-folder', game.folder);
-
-            var icon = document.createElement('span');
-            icon.className = 'fa fa-fw';
-            li.appendChild(icon);
-
-            var text = document.createElement('span');
-            text.textContent = game.name;
-            li.appendChild(text);
-
+            li.setAttribute('label', game.name);
             gameMenu.appendChild(li);
 
             var row = gameTable.addRow(game);
@@ -1226,15 +1217,12 @@ function setupEventHandlers() {
     document.getElementById('hideMessagelessPlugins').addEventListener('click', applyFilters, false);
 
     /* Set up handlers for buttons. */
-    document.getElementById('fileMenu').addEventListener('click', openMenu, false);
     document.getElementById('redatePluginsButton').addEventListener('click', redatePlugins, false);
     document.getElementById('openLogButton').addEventListener('click', openLogLocation, false);
     document.getElementById('wipeUserlistButton').addEventListener('click', clearAllMetadata, false);
     document.getElementById('copyContentButton').addEventListener('click', copyContent, false);
     document.getElementById('refreshContentButton').addEventListener('click', onFocus, false);
-    document.getElementById('gameMenu').addEventListener('click', openMenu, false);
     document.getElementById('settingsButton').addEventListener('click', showSettingsDialog, false);
-    document.getElementById('helpMenu').addEventListener('click', openMenu, false);
     document.getElementById('helpButton').addEventListener('click', openReadme, false);
     document.getElementById('aboutButton').addEventListener('click', showAboutDialog, false);
     document.getElementById('updateMasterlistButton').addEventListener('click', updateMasterlist, false);

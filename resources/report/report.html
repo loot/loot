@@ -4,47 +4,54 @@
     <title>LOOT</title>
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/font-awesome.min.css" />
-    <link rel="import" href="loot://import/message-dialog.html">
-    <link rel="import" href="loot://import/plugin-li.html">
-    <link rel="import" href="loot://import/plugin-card.html">
-    <link rel="import" href="loot://import/editable-table.html">
+    <link rel="import" href="loot://import/html/message-dialog.html">
+    <link rel="import" href="loot://import/html/plugin-li.html">
+    <link rel="import" href="loot://import/html/plugin-card.html">
+    <link rel="import" href="loot://import/html/editable-table.html">
+
+    <script src="loot://import/bower_components/platform/platform.js"></script>
+    <link rel="import" href="loot://import/bower_components/polymer/polymer.html">
+
+    <link rel="import" href="loot://import/bower_components/core-toolbar/core-toolbar.html">
+    <link rel="import" href="loot://import/bower_components/core-icon/core-icon.html">
+    <link rel="import" href="loot://import/bower_components/core-icons/core-icons.html">
+
+    <link rel="import" href="loot://import/bower_components/paper-menu-button/paper-menu-button.html">
+    <link rel="import" href="loot://import/bower_components/paper-item/paper-item.html">
+    <link rel="import" href="loot://import/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+    <link rel="import" href="loot://import/bower_components/paper-icon-button/paper-icon-button.html">
+    <link rel="import" href="loot://import/bower_components/paper-button/paper-button.html">
+
     <script src="js/require.js"></script>
 </head>
 <!-- oncontextmenu attribute disables the right-click menu. -->
-<body oncontextmenu="return false">
-    <header>
-        <div id="headerOverlay"></div>
-        <img src="../icon.ico">
-        <ol>
-            <li id="fileMenu">File
-                <ol class="hidden">
-                    <li id="redatePluginsButton"><span class="fa fa-fw fa-calendar-o"></span>Redate Plugins</li>
-                    <li id="openLogButton"><span class="fa fa-fw fa-folder-open"></span>Open Debug Log Location</li>
-                    <li id="wipeUserlistButton"><span class="fa fa-fw fa-trash-o"></span>Clear All User Metadata</li>
-                    <li id="copyContentButton"><span class="fa fa-fw fa-copy"></span>Copy Content As Text</li>
-                    <li id="refreshContentButton"><span class="fa fa-fw fa-refresh"></span>Refresh Content</li>
-                </ol>
-            </li>
-            <li id="gameMenu">Game
-                <ol class="hidden">
-                    <!-- Generated game <li> elements go here. -->
-                </ol>
-            </li>
-            <li id="settingsButton">Settings</li>
-            <li id="helpMenu">Help
-                <ol class="hidden">
-                    <li id="helpButton"><span class="fa fa-fw fa-book"></span>View Documentation
-                    <li id="aboutButton"><span class="fa fa-fw fa-info-circle"></span>About
-                </ol>
-            </li>
-        </ol>
-        <ol>
-            <li id="updateMasterlistButton"><span class="fa fa-fw fa-download"></span>Update Masterlist</li>
-            <li id="sortButton"><span class="fa fa-fw fa-magic"></span>Sort</li>
-            <li id="applySortButton" class="hidden"><span class="fa fa-fw fa-check"></span>Apply</li>
-            <li id="cancelSortButton" class="hidden"><span class="fa fa-fw fa-times"></span>Cancel</li>
-        </ol>
-    </header>
+<body oncontextmenu="return false" unresolved fullbleed vertical layout >
+    <core-toolbar id="mainToolbar">
+        <paper-menu-button src="../icon.ico">
+            <paper-item id="redatePluginsButton" icon="today" label="Redate Plugins"></paper-item>
+            <paper-item id="openLogButton" icon="folder" label="Open Debug Log Location"></paper-item>
+            <paper-item id="wipeUserlistButton" icon="delete" label="Clear All User Metadata"></paper-item>
+            <paper-item id="copyContentButton" icon="copy-content" label="Copy Content As Text"></paper-item>
+            <paper-item id="refreshContentButton" icon="cache" label="Refresh Content"></paper-item>
+            <paper-item id="settingsButton" icon="settings" label="Settings"></paper-item>
+            <paper-item id="helpButton" icon="book" label="View Documentation"></paper-item>
+            <paper-item id="aboutButton" icon="help" label="About"></paper-item>
+        </paper-menu-button>
+        <paper-dropdown-menu id="gameMenu">
+            <!-- Generated game <li> elements go here. -->
+        </paper-dropdown-menu>
+        <span flex></span>
+        <paper-icon-button id="updateMasterlistButton" icon="file-download"></paper-icon-button>
+        <paper-icon-button id="sortButton" icon="swap-vert"></paper-icon-button>
+        <paper-button id="applySortButton" class="colored custom hidden">
+            <core-icon icon="check"></core-icon>
+            Apply
+        </paper-button>
+        <paper-button id="cancelSortButton" class="colored custom hidden">
+            <core-icon icon="close"></core-icon>
+            Cancel
+        </paper-button>
+    </core-toolbar>
     <div id="container">
         <nav>
             <ol>

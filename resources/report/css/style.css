@@ -36,14 +36,14 @@ noscript {
     padding:10px 5px;
     color:white;
 }
-header {
+#mainToolbar {
     background:#e3e3e3;
     position:fixed;
     top:0;
     left:0;
     z-index:2;
-    box-shadow: 0 0 3px 1px rgba(0,0,0,0.5);
     width:100%;
+    font-size: 1em;
     height: 3em;
 }
 header > ol {

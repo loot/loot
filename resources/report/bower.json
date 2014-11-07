@@ -1,0 +1,23 @@
+{
+  "name": "report",
+  "version": "0.7.0",
+  "description": "Load order optimisation tool",
+  "main": "report.html",
+  "license": "GPL",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#~0.4.2",
+    "paper-icon-button": "Polymer/paper-icon-button#~0.4.2",
+    "paper-dropdown-menu": "Polymer/paper-dropdown-menu#~0.4.2",
+    "core-header-panel": "Polymer/core-header-panel#~0.4.2",
+    "core-toolbar": "Polymer/core-toolbar#~0.4.2",
+    "core-icons": "Polymer/core-icons#~0.4.2"
+  }
+}
