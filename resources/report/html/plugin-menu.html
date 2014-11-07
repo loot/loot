@@ -1,0 +1,195 @@
+<!--
+<plugin-menu> element. Intended for use inside a <plugin-card> element. Clicking on menu items fires custom events:
+
+showConflicts:
+  bubbles: true,
+  detail: {
+    activate: <boolean> // true if the filter should be activated, false if it should be deactivated.
+  }
+
+-->
+<template id="pluginMenu">
+    <style>
+    @import 'css/font-awesome.min.css';
+    :host {
+        background: white;
+        box-shadow:0 0 3px 0px rgba(0,0,0,0.5);
+        font:10pt/1.5 Helvetica,sans-serif;
+        position: absolute;
+        z-index: 5;
+        width: 14em;
+        text-align: left;
+        padding:0;
+    }
+    div, label {
+        padding: 0.2em 0.5em;
+        cursor: pointer;
+        display: block;
+    }
+    div:hover, label:hover {
+        background: #e3e3e3;
+    }
+    span {
+        padding-right: 0.4em;
+    }
+    input {
+        position: relative;
+        top: 0.15em;
+        margin: 0em 0.3em 0 0.1em;
+    }
+    .disabled {
+        cursor: default;
+        color: #999;
+    }
+    </style>
+
+    <label><input type="checkbox" id="showOnlyConflicts" class="fa-fw">Show Only Conflicts</label>
+    <div id="editMetadata"><span class="fa fa-pencil fa-fw"></span>Edit Metadata</div>
+    <div id="copyMetadata"><span class="fa fa-copy fa-fw"></span>Copy Metadata As Text</div>
+    <div id="clearMetadata"><span class="fa fa-trash-o fa-fw"></span>Clear User Metadata</div>
+</template>
+
+<script>
+'use strict';
+// Record this document.
+var pluginMenuImportDoc = document.currentScript.ownerDocument;
+
+/* Create a <plugin-menu> element type. */
+var pluginMenuProto = Object.create(HTMLElement.prototype, {
+
+    onShowOnlyConflicts: {
+        value: function(evt) {
+            /* Depending on what was clicked, this function may be run before
+               the checkbox state has updated. Handle both cases. */
+            var activateFilter;
+            if (evt.currentTarget == evt.target) {
+                /* Clicked on the label, checkbox state isn't updated yet. */
+                activateFilter = !evt.target.firstElementChild.checked;
+            } else {
+                /* Clicked on the checkbox. */
+                activateFilter = evt.target.checked;
+            }
+            // Fire a custom event. It will appear to originate from the <plugin-menu> element.
+            evt.target.dispatchEvent(new CustomEvent('showConflicts', {
+                bubbles: true,
+                detail: {
+                    activate: activateFilter
+                }
+            }));
+            if (activateFilter) {
+                /* Un-highlight any existing filter plugin. */
+                var cards = document.getElementsByTagName('main')[0].getElementsByTagName('plugin-card');
+                for (var i = 0; i < cards.length; ++i) {
+                    cards[i].classList.toggle('highlight', false);
+                }
+                evt.currentTarget.parentNode.host.getPluginCard().classList.toggle('highlight', true);
+                document.body.setAttribute('data-conflicts', evt.currentTarget.parentNode.host.getPluginCard().getName());
+            } else {
+                evt.currentTarget.parentNode.host.getPluginCard().classList.toggle('highlight', false);
+                document.body.removeAttribute('data-conflicts');
+            }
+            applyFilters(evt);
+        }
+    },
+
+    onEditMetadata: {
+        value: function(evt) {
+            evt.target.parentNode.host.getPluginCard().showEditor();
+        }
+    },
+
+    onCopyMetadata: {
+        value: function(evt) {
+            var request = JSON.stringify({
+                name: 'copyMetadata',
+                args: [
+                    evt.target.parentNode.host.getPluginCard().getName()
+                ]
+            });
+
+            loot.query(request).catch(processCefError);
+        }
+    },
+
+    onClearMetadata: {
+        value: function(evt) {
+            var pluginCard = evt.target.parentNode.host.getPluginCard();
+
+            showMessageDialog('Clear Plugin Metadata', 'Are you sure you want to clear all existing user-added metadata from "' + pluginCard.getName() + '"?', function(result){
+                if (result) {
+                    var request = JSON.stringify({
+                        name: 'clearPluginMetadata',
+                        args: [
+                            pluginCard.getName()
+                        ]
+                    });
+
+                    loot.query(request).then(JSON.parse).then(function(result){
+                        if (result) {
+                            /* Need to empty the UI-side user metadata. */
+                            for (var i = 0; i < loot.game.plugins.length; ++i) {
+                                if (loot.game.plugins[i].id == pluginCard.id) {
+                                    loot.game.plugins[i].userlist = undefined;
+
+                                    loot.game.plugins[i].modPriority = result.modPriority;
+                                    loot.game.plugins[i].isGlobalPriority = result.isGlobalPriority;
+                                    loot.game.plugins[i].messages = result.messages;
+                                    loot.game.plugins[i].tags = result.tags;
+                                    loot.game.plugins[i].isDirty = result.isDirty;
+
+                                    break;
+                                }
+                            }
+                        }
+                    }).catch(processCefError);
+                }
+            });
+        }
+    },
+
+    createdCallback: {
+        value: function() {
+
+            var template = pluginMenuImportDoc.querySelector('#pluginMenu');
+            var clone = document.importNode(template.content, true);
+
+            this.createShadowRoot().appendChild(clone);
+        }
+    },
+
+    attachedCallback: {
+        value: function() {
+            /* Add event listeners for the menu items. */
+            /* For some reason clicking on the label is processed slower
+               than the checkbox state, and in the time difference the menu
+               gets closed, so that the conflicts filter never gets applied.
+               To get around this, listen for a click on the label rather
+               than for checkbox state change. */
+            if (document.body.getAttribute('data-conflicts') == this.getPluginCard().getName()) {
+                this.shadowRoot.getElementById('showOnlyConflicts').checked = true;
+            }
+            this.shadowRoot.getElementById('showOnlyConflicts').parentElement.addEventListener('click', this.onShowOnlyConflicts, false);
+            this.shadowRoot.getElementById('editMetadata').addEventListener('click', this.onEditMetadata, false);
+            this.shadowRoot.getElementById('copyMetadata').addEventListener('click', this.onCopyMetadata, false);
+            this.shadowRoot.getElementById('clearMetadata').addEventListener('click', this.onClearMetadata, false);
+        }
+    },
+
+    detachedCallback: {
+        value: function() {
+            /* Remove event listeners for the menu items. */
+            /* Nothing happens if we try to remove a listener that doesn't exist,
+               so don't bother checking first. */
+            this.shadowRoot.getElementById('showOnlyConflicts').parentElement.removeEventListener('click', this.onShowOnlyConflicts, false);
+            this.shadowRoot.getElementById('editMetadata').removeEventListener('click', this.onEditMetadata, false);
+            this.shadowRoot.getElementById('copyMetadata').removeEventListener('click', this.onCopyMetadata, false);
+            this.shadowRoot.getElementById('clearMetadata').removeEventListener('click', this.onClearMetadata, false);
+
+        }
+    }
+
+
+});
+var PluginMenu = document.registerElement('plugin-menu', {prototype: pluginMenuProto});
+
+</script>

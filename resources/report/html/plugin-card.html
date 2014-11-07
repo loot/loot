@@ -1,164 +1,293 @@
-/*  LOOT
+<link rel="import" href="loot://import/plugin-menu.html" />
 
-    A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
-    Fallout: New Vegas.
-
-    Copyright (C) 2013-2014    WrinklyNinja
-
-    This file is part of LOOT.
-
-    LOOT is free software: you can redistribute
-    it and/or modify it under the terms of the GNU General Public License
-    as published by the Free Software Foundation, either version 3 of
-    the License, or (at your option) any later version.
-
-    LOOT is distributed in the hope that it will
-    be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with LOOT.  If not, see
-    <http://www.gnu.org/licenses/>.
-*/
-'use strict';
-
-/* Create a <plugin-menu> element type. */
-var pluginMenuProto = Object.create(HTMLElement.prototype, {
-
-    getPluginCard: {
-        value: function() {
-            return document.getElementById(this.getAttribute('data-for'));
-        }
-    },
-
-    onShowOnlyConflicts: {
-        value: function(evt) {
-            /* Depending on what was clicked, this function may be run before
-               the checkbox state has updated. Handle both cases. */
-            var activateFilter;
-            if (evt.currentTarget == evt.target) {
-                /* Clicked on the label, checkbox state isn't updated yet. */
-                activateFilter = !evt.target.firstElementChild.checked;
-            } else {
-                /* Clicked on the checkbox. */
-                activateFilter = evt.target.checked;
-            }
-            if (activateFilter) {
-                /* Un-highlight any existing filter plugin. */
-                var cards = document.getElementsByTagName('main')[0].getElementsByTagName('plugin-card');
-                for (var i = 0; i < cards.length; ++i) {
-                    cards[i].classList.toggle('highlight', false);
-                }
-                evt.currentTarget.parentNode.host.getPluginCard().classList.toggle('highlight', true);
-                document.body.setAttribute('data-conflicts', evt.currentTarget.parentNode.host.getPluginCard().getName());
-            } else {
-                evt.currentTarget.parentNode.host.getPluginCard().classList.toggle('highlight', false);
-                document.body.removeAttribute('data-conflicts');
-            }
-            applyFilters(evt);
-        }
-    },
-
-    onEditMetadata: {
-        value: function(evt) {
-            evt.target.parentNode.host.getPluginCard().showEditor();
-        }
-    },
-
-    onCopyMetadata: {
-        value: function(evt) {
-            var request = JSON.stringify({
-                name: 'copyMetadata',
-                args: [
-                    evt.target.parentNode.host.getPluginCard().getName()
-                ]
-            });
-
-            loot.query(request).catch(processCefError);
-        }
-    },
-
-    onClearMetadata: {
-        value: function(evt) {
-            var pluginCard = evt.target.parentNode.host.getPluginCard();
-
-            showMessageDialog('Clear Plugin Metadata', 'Are you sure you want to clear all existing user-added metadata from "' + pluginCard.getName() + '"?', function(result){
-                if (result) {
-                    var request = JSON.stringify({
-                        name: 'clearPluginMetadata',
-                        args: [
-                            pluginCard.getName()
-                        ]
-                    });
-
-                    loot.query(request).then(JSON.parse).then(function(result){
-                        if (result) {
-                            /* Need to empty the UI-side user metadata. */
-                            for (var i = 0; i < loot.game.plugins.length; ++i) {
-                                if (loot.game.plugins[i].id == pluginCard.id) {
-                                    loot.game.plugins[i].userlist = undefined;
-
-                                    loot.game.plugins[i].modPriority = result.modPriority;
-                                    loot.game.plugins[i].isGlobalPriority = result.isGlobalPriority;
-                                    loot.game.plugins[i].messages = result.messages;
-                                    loot.game.plugins[i].tags = result.tags;
-                                    loot.game.plugins[i].isDirty = result.isDirty;
-
-                                    break;
-                                }
-                            }
-                        }
-                    }).catch(processCefError);
-                }
-            });
-        }
-    },
-
-    createdCallback: {
-        value: function() {
-
-            var template = document.getElementById('pluginMenu');
-            var clone = document.importNode(template.content, true);
-
-            this.createShadowRoot().appendChild(clone);
-        }
-    },
-
-    attachedCallback: {
-        value: function() {
-            /* Add event listeners for the menu items. */
-            /* For some reason clicking on the label is processed slower
-               than the checkbox state, and in the time difference the menu
-               gets closed, so that the conflicts filter never gets applied.
-               To get around this, listen for a click on the label rather
-               than for checkbox state change. */
-            if (document.body.getAttribute('data-conflicts') == this.getPluginCard().getName()) {
-                this.shadowRoot.getElementById('showOnlyConflicts').checked = true;
-            }
-            this.shadowRoot.getElementById('showOnlyConflicts').parentElement.addEventListener('click', this.onShowOnlyConflicts, false);
-            this.shadowRoot.getElementById('editMetadata').addEventListener('click', this.onEditMetadata, false);
-            this.shadowRoot.getElementById('copyMetadata').addEventListener('click', this.onCopyMetadata, false);
-            this.shadowRoot.getElementById('clearMetadata').addEventListener('click', this.onClearMetadata, false);
-        }
-    },
-
-    detachedCallback: {
-        value: function() {
-            /* Remove event listeners for the menu items. */
-            /* Nothing happens if we try to remove a listener that doesn't exist,
-               so don't bother checking first. */
-            this.shadowRoot.getElementById('showOnlyConflicts').parentElement.removeEventListener('click', this.onShowOnlyConflicts, false);
-            this.shadowRoot.getElementById('editMetadata').removeEventListener('click', this.onEditMetadata, false);
-            this.shadowRoot.getElementById('copyMetadata').removeEventListener('click', this.onCopyMetadata, false);
-            this.shadowRoot.getElementById('clearMetadata').removeEventListener('click', this.onClearMetadata, false);
-
-        }
+<template id="pluginCard">
+    <style>
+    @import 'css/font-awesome.min.css';
+    :host {
+        display: block;
+        background:white;
+        margin:1em;
+        box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+        padding:1em;
+        position: relative;
+        overflow:visible;
+        transition: 0.6s;
+        transform-style: preserve-3d;
+    }
+    :host([data-active=false]) #activeTick {
+        visibility: hidden;
+    }
+    :host([data-bsa=false]) #icons #loadsBSA {
+        display: none;
+    }
+    :host([data-dummy=false]) #icons #dummyPlugin {
+        display: none;
+    }
+    :host([data-edits=false]) #icons #hasUserEdits {
+        display: none;
     }
 
+    #front, #editor {
+        display: block;
+    }
 
-});
-var PluginMenu = document.registerElement('plugin-menu', {prototype: pluginMenuProto});
+    #editor {
+        transform: rotateY(180deg) translateZ(1px);
+        display:none;
+    }
+
+    :host(.flip) {
+        transform: rotateY(180deg);
+    }
+
+    :host(.flip) #front  {
+        display: none;
+    }
+
+    :host(.flip) #editor  {
+        display: block;
+    }
+
+    #icons {
+        background: transparent;
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+        position: absolute;
+        top: 1em;
+        right: 0.5em;
+        overflow:visible;
+    }
+    #icons .fa {
+        color: grey;
+        text-align: center;
+        display: inline-block;
+        margin: 0.2em;
+    }
+    #icons > li:hover {
+        color: black;
+    }
+    #menuButton {
+        width: 1.5em;
+        text-align: center;
+        margin: 0.2em;
+        cursor: pointer;
+    }
+    ::content h1, h1 {
+        margin: 0;
+        font-weight: normal;
+        font-size: 1.2em;
+        display: inline-block;
+    }
+    ::content .version, .version {
+        display: inline-block;
+        margin-left: 1em;
+        color:#6394F8;
+    }
+    ::content .crc, .crc {
+        display: inline-block;
+        margin-left: 1em;
+        color:#BC8923;
+    }
+    .hidden, ::content .hidden {
+        display: none;
+    }
+    #activeTick {
+        color: green;
+        padding-right: 0.5em;
+    }
+
+    #tableTabs {
+        margin: 1.5em 1em;
+        display: table;
+    }
+    #tableTabs > span {
+        display: inline-block;
+        padding: 0.5em;
+        border: 1px black solid;
+        border-bottom: none;
+        background: #e3e3e3;
+        cursor: pointer;
+    }
+    #tableTabs > span:not(:first-child) {
+        border-left: none;
+    }
+    #tableTabs > span:hover, #tableTabs span.selected {
+        background: #f8f8f8;
+    }
+    #tableTabs .editable {
+        margin: 0;
+        border-collapse: collapse;
+        border: 1px black solid;
+        width: 100%;
+    }
+
+    #enableEdits {
+        margin-bottom: 1em;
+    }
+    label[for=priorityValue] {
+        margin-left: 0.5em;
+    }
+    .buttons {
+        text-align: right;
+    }
+    input[readonly] {
+        border: none;
+        -webkit-user-select: none;
+    }
+    input:invalid {
+        background-color: pink;
+        color: white;
+    }
+    td input {
+        width: 100%;
+        text-overflow: ellipsis;
+    }
+    td:last-child {
+        cursor: pointer;
+    }
+    td:last-child:hover {
+        color: red;
+    }
+    table {
+        margin: 3em 1em;
+        border-collapse: collapse;
+    }
+    td, th {
+        vertical-align: top;
+        text-align: left;
+        padding: 0.5em;
+    }
+    th {
+        border-bottom: 1px black solid;
+    }
+    tbody tr:last-child {
+        cursor: pointer;
+        color: grey;
+    }
+    tbody tr:last-child:hover {
+        color: black;
+    }
+    input[type='checkbox'] {
+        position:relative;
+        top:0.15em;
+        margin-left:0.5em;
+    }
+    </style>
+
+    <section id="front">
+        <span id="activeTick" class="fa fa-check" title="Active Plugin"></span>
+        <content select="h1"></content>
+        <content select=".version"></content>
+        <content select=".crc"></content>
+        <content select=".tag.add"></content>
+        <content select=".tag.remove"></content>
+        <content select="ul"></content>
+        <ol id="icons">
+            <li id="dummyPlugin" class="fa fa-eye-slash" title="Dummy Plugin"></li>
+            <li id="loadsBSA" class="fa fa-paperclip" title="Loads BSA"></li>
+            <li id="hasUserEdits" class="fa fa-user" title="Has User Metadata"></li>
+            <li id="menuButton" class="fa fa-ellipsis-v fa-lg" title="Click to open the plugin menu.">
+            </li>
+        </ol>
+    </section>
+    <section id="editor">
+        <h1></h1>
+        <span class="version"></span>
+        <span class="crc"></span>
+        <div>
+            <input type="checkbox" id="enableEdits">
+            <label for="enableEdits">Enable Edits</label><br>
+            <input type="checkbox" id="globalPriority">
+            <label for="globalPriority" title="Global priorities are compared against all other plugins. Normal priorities are compared against only conflicting plugins.">Global Priority</label><br>
+            <label for="priorityValue">Priority Value</label>
+            <input id="priorityValue" type="number" max="999999" min="-999999" step="1" value="0">
+        </div>
+        <div id="tableTabs">
+            <span class="selected" data-for="loadAfter">Load After</span>
+            <span data-for="req">Requirements</span>
+            <span data-for="inc">Incompatibilities</span>
+            <span data-for="message">Messages</span>
+            <span data-for="tags">Bash Tags</span>
+            <span data-for="dirty">Dirty Info</span>
+            <span data-for="locations">Locations</span>
+
+            <table is="editable-table" id="loadAfter" data-template="fileRow">
+                <thead>
+                    <tr><th>Filename</th><th>Display Name</th><th>Condition</th><th></th></tr>
+                </thead>
+                <tbody>
+                    <!-- File rows go here. -->
+                    <tr><td colspan="4">Add new row...</td><td></td></tr>
+                </tbody>
+            </table>
+            <table is="editable-table" id="req" class="hidden" data-template="fileRow">
+                <thead>
+                    <tr><th>Filename</th><th>Display Name</th><th>Condition</th><th></th></tr>
+                </thead>
+                <tbody>
+                    <!-- File rows go here. -->
+                    <tr><td colspan="4">Add new row...</td><td></td></tr>
+                </tbody>
+            </table>
+            <table is="editable-table" id="inc" class="hidden" data-template="fileRow">
+                <thead>
+                    <tr><th>Filename</th><th>Display Name</th><th>Condition</th><th></th></tr>
+                </thead>
+                <tbody>
+                    <!-- File rows go here. -->
+                    <tr><td colspan="4">Add new row...</td><td></td></tr>
+                </tbody>
+            </table>
+            <table is="editable-table" id="message" class="hidden" data-template="messageRow">
+                <thead>
+                    <tr><th>Type</th><th>Content</th><th>Condition</th><th>Language</th><th></th></tr>
+                </thead>
+                <tbody>
+                    <!-- Message rows go here. -->
+                    <tr><td colspan="4">Add new row...</td><td></td></tr>
+                </tbody>
+            </table>
+            <table is="editable-table" id="tags" class="hidden" data-template="tagRow">
+                <thead>
+                    <tr><th>Add/Remove</th><th>Bash Tag</th><th>Condition</th><th></th></tr>
+                </thead>
+                <tbody>
+                    <!-- Bash Tag rows go here. -->
+                    <tr><td colspan="4">Add new row...</td><td></td></tr>
+                </tbody>
+            </table>
+            <table is="editable-table" id="dirty" class="hidden" data-template="dirtyInfoRow">
+                <thead>
+                    <tr><th>CRC</th><th>ITM Count</th><th>Deleted References</th><th>Deleted Navmeshes</th><th>Cleaning Utility</th><th></th></tr>
+                </thead>
+                <tbody>
+                    <!-- Dirty info rows go here. -->
+                    <tr><td colspan="4">Add new row...</td><td></td></tr>
+                </tbody>
+            </table>
+            <table is="editable-table" id="locations" class="hidden" data-template="locationRow">
+                <thead>
+                    <tr><th>URL</th><th>Version</th><th></th></tr>
+                </thead>
+                <tbody>
+                    <!-- Location rows go here. -->
+                    <tr><td colspan="3">Add new row...</td><td></td></tr>
+                </tbody>
+            </table>
+        </div>
+        <hr>
+        <div id="buttons">
+            <button id="accept">Apply</button>
+            <button id="cancel">Cancel</button>
+        </div>
+    </section>
+</template>
+
+<script>
+'use strict';
+// Record this document.
+var pluginCardImportDoc = document.currentScript.ownerDocument;
 
 /* Create a <plugin-card> element type. */
 var pluginCardProto = Object.create(HTMLElement.prototype, {
@@ -582,7 +711,7 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
 
         value: function() {
 
-            var template = document.getElementById('pluginCard');
+            var template = pluginCardImportDoc.getElementById('pluginCard');
             var clone = document.importNode(template.content, true);
 
             this.createShadowRoot().appendChild(clone);
@@ -634,3 +763,5 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
 
 });
 var PluginCard = document.registerElement('plugin-card', {prototype: pluginCardProto});
+
+</script>

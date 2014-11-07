@@ -40,7 +40,7 @@
 
         translateStaticText: function(l10n) {
             /* Plugin card template. */
-            var pluginCard = document.getElementById('pluginCard').content;
+            var pluginCard = pluginCardImportDoc.querySelector('#pluginCard').content;
             pluginCard.getElementById('activeTick').title = l10n.translate("Active Plugin").fetch();
             pluginCard.getElementById('dummyPlugin').title = l10n.translate("Dummy Plugin").fetch();
             pluginCard.getElementById('loadsBSA').title = l10n.translate("Loads BSA").fetch();
@@ -103,7 +103,7 @@
             pluginLI.querySelector('.hasGlobalPriority').title = l10n.translate("Priority Is Global").fetch();
 
             /* Plugin menu template */
-            var pluginMenu = document.getElementById('pluginMenu').content;
+            var pluginMenu = pluginMenuImportDoc.querySelector('#pluginMenu').content;
             pluginMenu.getElementById('showOnlyConflicts').nextSibling.textContent = l10n.translate("Show Only Conflicts").fetch();
             pluginMenu.getElementById('editMetadata').firstChild.nextSibling.textContent = l10n.translate("Edit Metadata").fetch();
             pluginMenu.getElementById('copyMetadata').firstChild.nextSibling.textContent = l10n.translate("Copy Metadata As Text").fetch();
