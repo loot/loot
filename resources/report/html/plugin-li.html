@@ -51,7 +51,7 @@ var pluginLIProto = Object.create(HTMLLIElement.prototype, {
     handleDragStart: {
         value: function(evt) {
             evt.dataTransfer.effectAllowed = 'copy';
-            evt.dataTransfer.setData('text/plain', evt.currentTarget.getElementsByTagName('a')[0].textContent);
+            evt.dataTransfer.setData('text/plain', evt.currentTarget.textContent);
         }
     },
 
