@@ -344,9 +344,9 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
             var tables = evt.target.parentElement.parentElement.getElementsByTagName('table');
             for (var i = 0; i < tables.length; ++i) {
                 if (tables[i].id != tableId) {
-                    hideElement(tables[i]);
+                    tables[i].classList.toggle('hidden', true);
                 } else {
-                    showElement(tables[i]);
+                    tables[i].classList.toggle('hidden', false);
                 }
             }
             evt.target.parentElement.getElementsByClassName('selected')[0].classList.toggle('selected');
@@ -867,7 +867,7 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
             var cards = this.parentElement.getElementsByTagName('plugin-card');
             for (var i = 0; i < cards.length; ++i) {
                 if (cards[i] == this) {
-                    this.style.zIndex = -1 * i;
+                    this.style.zIndex = 10000 - i;
                 }
             }
         }
