@@ -163,14 +163,14 @@
 
             /* Summary */
             document.getElementById('summary').firstElementChild.textContent = l10n.translate("Summary").fetch();
-            document.getElementById('masterlistRevision').previousSibling.textContent = l10n.translate("Masterlist Revision").fetch();
-            document.getElementById('masterlistDate').previousSibling.textContent = l10n.translate("Masterlist Date").fetch();
-            document.getElementById('totalWarningNo').previousSibling.textContent = l10n.translate("Warnings").fetch();
-            document.getElementById('totalErrorNo').previousSibling.textContent = l10n.translate("Errors").fetch();
-            document.getElementById('totalMessageNo').previousSibling.textContent = l10n.translate("Total Messages").fetch();
-            document.getElementById('activePluginNo').previousSibling.textContent = l10n.translate("Active Plugins").fetch();
-            document.getElementById('dirtyPluginNo').previousSibling.textContent = l10n.translate("Dirty Plugins").fetch();
-            document.getElementById('totalPluginNo').previousSibling.textContent = l10n.translate("Total Plugins").fetch();
+            document.getElementById('masterlistRevision').previousElementSibling.textContent = l10n.translate("Masterlist Revision").fetch();
+            document.getElementById('masterlistDate').previousElementSibling.textContent = l10n.translate("Masterlist Date").fetch();
+            document.getElementById('totalWarningNo').previousElementSibling.textContent = l10n.translate("Warnings").fetch();
+            document.getElementById('totalErrorNo').previousElementSibling.textContent = l10n.translate("Errors").fetch();
+            document.getElementById('totalMessageNo').previousElementSibling.textContent = l10n.translate("Total Messages").fetch();
+            document.getElementById('activePluginNo').previousElementSibling.textContent = l10n.translate("Active Plugins").fetch();
+            document.getElementById('dirtyPluginNo').previousElementSibling.textContent = l10n.translate("Dirty Plugins").fetch();
+            document.getElementById('totalPluginNo').previousElementSibling.textContent = l10n.translate("Total Plugins").fetch();
 
             /* General messages */
             document.getElementById('generalMessages').firstElementChild.textContent = l10n.translate("General Messages").fetch();

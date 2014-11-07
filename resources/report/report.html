@@ -18,66 +18,72 @@
         <img src="../icon.ico">
         <ol>
             <li id="fileMenu">File
-            <ol class="hidden">
-                <li id="redatePluginsButton"><span class="fa fa-fw fa-calendar-o"></span>Redate Plugins
-                <li id="openLogButton"><span class="fa fa-fw fa-folder-open"></span>Open Debug Log Location
-                <li id="wipeUserlistButton"><span class="fa fa-fw fa-trash-o"></span>Clear All User Metadata
-                <li id="copyContentButton"><span class="fa fa-fw fa-copy"></span>Copy Content As Text
-                <li id="refreshContentButton"><span class="fa fa-fw fa-refresh"></span>Refresh Content
-            </ol>
+                <ol class="hidden">
+                    <li id="redatePluginsButton"><span class="fa fa-fw fa-calendar-o"></span>Redate Plugins</li>
+                    <li id="openLogButton"><span class="fa fa-fw fa-folder-open"></span>Open Debug Log Location</li>
+                    <li id="wipeUserlistButton"><span class="fa fa-fw fa-trash-o"></span>Clear All User Metadata</li>
+                    <li id="copyContentButton"><span class="fa fa-fw fa-copy"></span>Copy Content As Text</li>
+                    <li id="refreshContentButton"><span class="fa fa-fw fa-refresh"></span>Refresh Content</li>
+                </ol>
+            </li>
             <li id="gameMenu">Game
-            <ol class="hidden">
-                <!-- Generated game <li> elements go here. -->
-            </ol>
-            <li id="settingsButton">Settings
+                <ol class="hidden">
+                    <!-- Generated game <li> elements go here. -->
+                </ol>
+            </li>
+            <li id="settingsButton">Settings</li>
             <li id="helpMenu">Help
-            <ol class="hidden">
-                <li id="helpButton"><span class="fa fa-fw fa-book"></span>View Documentation
-                <li id="aboutButton"><span class="fa fa-fw fa-info-circle"></span>About
-            </ol>
+                <ol class="hidden">
+                    <li id="helpButton"><span class="fa fa-fw fa-book"></span>View Documentation
+                    <li id="aboutButton"><span class="fa fa-fw fa-info-circle"></span>About
+                </ol>
+            </li>
         </ol>
         <ol>
-            <li id="updateMasterlistButton"><span class="fa fa-fw fa-download"></span>Update Masterlist
-            <li id="sortButton"><span class="fa fa-fw fa-magic"></span>Sort
-            <li id="applySortButton" class="hidden"><span class="fa fa-fw fa-check"></span>Apply
-            <li id="cancelSortButton" class="hidden"><span class="fa fa-fw fa-times"></span>Cancel
+            <li id="updateMasterlistButton"><span class="fa fa-fw fa-download"></span>Update Masterlist</li>
+            <li id="sortButton"><span class="fa fa-fw fa-magic"></span>Sort</li>
+            <li id="applySortButton" class="hidden"><span class="fa fa-fw fa-check"></span>Apply</li>
+            <li id="cancelSortButton" class="hidden"><span class="fa fa-fw fa-times"></span>Cancel</li>
         </ol>
     </header>
     <div id="container">
         <nav>
             <ol>
-                <li><a href="#summary">Summary</a>
-                <li><a href="#generalMessages">General Messages</a>
+                <li><a href="#summary">Summary</a></li>
+                <li><a href="#generalMessages">General Messages</a></li>
                 <li>
-                <ol id="pluginsNav">
-                    <!-- Generated <li> elements go here, containing # links to each plugin's section in the list. -->
-                </ol>
-                <ol id="filters" class="hidden" data-replace="pluginsNav">
-                    <input type="checkbox" id="hideVersionNumbers" data-class="version" />
-                    <label for="hideVersionNumbers">Hide version numbers</label><br>
-                    <input type="checkbox" id="hideCRCs" data-class="crc" />
-                    <label for="hideCRCs">Hide CRCs</label><br>
-                    <input type="checkbox" id="hideBashTags" data-class="tag" />
-                    <label for="hideBashTags">Hide Bash Tags</label><br>
-                    <input type="checkbox" id="hideNotes" />
-                    <label for="hideNotes">Hide notes</label><br>
-                    <input type="checkbox" id="hideDoNotCleanMessages" />
-                    <label for="hideDoNotCleanMessages">Hide 'Do not clean' messages</label><br>
-                    <input type="checkbox" id="hideInactivePluginMessages" />
-                    <label for="hideInactivePluginMessages">Hide inactive plugin messages</label><br>
-                    <input type="checkbox" id="hideAllPluginMessages" />
-                    <label for="hideAllPluginMessages">Hide all plugin messages</label><br>
-                    <input type="checkbox" id="hideMessagelessPlugins" />
-                    <label for="hideMessagelessPlugins">Hide messageless plugins</label>
-                    <div>
-                        <span id="hiddenPluginsTxt">Hidden plugins</span>: <span id="hiddenPluginNo">0</span> / <span id="filterTotalPluginNo">0</span>
-                    </div>
-                    <div>
-                        <span id="hiddenMessagesTxt">Hidden messages</span>: <span id="hiddenMessageNo">0</span> / <span id="filterTotalMessageNo">0</span>
-                    </div>
-                </ol>
+                    <ol id="pluginsNav">
+                        <!-- Generated <li> elements go here, containing # links to each plugin's section in the list. -->
+                    </ol>
+                    <ol id="filters" class="hidden" data-replace="pluginsNav">
+                        <input type="checkbox" id="hideVersionNumbers" data-class="version" />
+                        <label for="hideVersionNumbers">Hide version numbers</label><br>
+                        <input type="checkbox" id="hideCRCs" data-class="crc" />
+                        <label for="hideCRCs">Hide CRCs</label><br>
+                        <input type="checkbox" id="hideBashTags" data-class="tag" />
+                        <label for="hideBashTags">Hide Bash Tags</label><br>
+                        <input type="checkbox" id="hideNotes" />
+                        <label for="hideNotes">Hide notes</label><br>
+                        <input type="checkbox" id="hideDoNotCleanMessages" />
+                        <label for="hideDoNotCleanMessages">Hide 'Do not clean' messages</label><br>
+                        <input type="checkbox" id="hideInactivePluginMessages" />
+                        <label for="hideInactivePluginMessages">Hide inactive plugin messages</label><br>
+                        <input type="checkbox" id="hideAllPluginMessages" />
+                        <label for="hideAllPluginMessages">Hide all plugin messages</label><br>
+                        <input type="checkbox" id="hideMessagelessPlugins" />
+                        <label for="hideMessagelessPlugins">Hide messageless plugins</label>
+                        <div>
+                            <span id="hiddenPluginsTxt">Hidden plugins</span>: <span id="hiddenPluginNo">0</span> / <span id="filterTotalPluginNo">0</span>
+                        </div>
+                        <div>
+                            <span id="hiddenMessagesTxt">Hidden messages</span>: <span id="hiddenMessageNo">0</span> / <span id="filterTotalMessageNo">0</span>
+                        </div>
+                    </ol>
+                </li>
                 <li id="filtersToggle"><span class="fa fa-fw fa-filter"></span>Filters
+                </li>
                 <li><input id="searchBox" type="search" placeholder="Search content..." title="Press Enter when searching to select the next match.">
+                </li>
             </ol>
         </nav>
         <main>
@@ -85,20 +91,47 @@
                 <h1>Summary</h1>
                 <table>
                     <tbody>
-                        <tr><td>Masterlist Revision<td id="masterlistRevision">N/A
-                        <tr><td>Masterlist Date<td id="masterlistDate">N/A
+                        <tr>
+                            <td>Masterlist Revision</td>
+                            <td id="masterlistRevision">N/A</td>
+                        </tr>
+                        <tr>
+                            <td>Masterlist Date</td>
+                            <td id="masterlistDate">N/A</td>
+                        </tr>
+                    </tbody>
                 </table>
                 <table>
                     <tbody>
-                        <tr><td>Warnings<td id="totalWarningNo">0
-                        <tr><td>Errors<td id="totalErrorNo">0
-                        <tr><td>Total Messages<td id="totalMessageNo">0
+                        <tr>
+                            <td>Warnings</td>
+                            <td id="totalWarningNo">0</td>
+                        </tr>
+                        <tr>
+                            <td>Errors</td>
+                            <td id="totalErrorNo">0</td>
+                        </tr>
+                        <tr>
+                            <td>Total Messages</td>
+                            <td id="totalMessageNo">0</td>
+                        </tr>
+                    </tbody>
                 </table>
                 <table>
                     <tbody>
-                        <tr><td>Active Plugins<td id="activePluginNo">0
-                        <tr><td>Dirty Plugins<td id="dirtyPluginNo">0
-                        <tr><td>Total Plugins<td id="totalPluginNo">0
+                        <tr>
+                            <td>Active Plugins</td>
+                            <td id="activePluginNo">0</td>
+                        </tr>
+                        <tr>
+                            <td>Dirty Plugins</td>
+                            <td id="dirtyPluginNo">0</td>
+                        </tr>
+                        <tr>
+                            <td>Total Plugins</td>
+                            <td id="totalPluginNo">0</td>
+                        </tr>
+                    </tbody>
                 </table>
             </section>
             <section id="generalMessages">
@@ -113,10 +146,10 @@
 
     <dialog id="about">
         <h1>LOOT <span id="LOOTVersion"></span></h1>
-        <p><small>Build <span id="LOOTBuild"></span></small>
-        <p>Copyright &copy; 2012&ndash;2014 WrinklyNinja
-        <p>Load order optimisation for Oblivion, Skyrim, Fallout 3 and Fallout: New Vegas.
-        <p><a href="http://loot.github.io">http://loot.github.io</a>
+        <p><small>Build <span id="LOOTBuild"></span></small></p>
+        <p>Copyright &copy; 2012&ndash;2014 WrinklyNinja</p>
+        <p>Load order optimisation for Oblivion, Skyrim, Fallout 3 and Fallout: New Vegas.</p>
+        <p><a href="http://loot.github.io">http://loot.github.io</a></p>
         <blockquote>
 LOOT is free software: you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published
@@ -145,17 +178,32 @@ along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
         <select id="languageSelect">
             <!-- Language <option> elements go here. -->
         </select><br>
-        <p><input type="checkbox" id="enableDebugLogging"><label for="enableDebugLogging" title="The output is logged to the LOOTDebugLog.txt file.">Enable debug logging</label>
-        <p><input type="checkbox" id="updateMasterlist"><label for="updateMasterlist">Update masterlist before sorting</label>
-        <p><input type="checkbox" id="autoRefresh"><label for="autoRefresh">Automatically refresh content on window refocus</label>
+        <p><input type="checkbox" id="enableDebugLogging"><label for="enableDebugLogging" title="The output is logged to the LOOTDebugLog.txt file.">Enable debug logging</label></p>
+        <p><input type="checkbox" id="updateMasterlist"><label for="updateMasterlist">Update masterlist before sorting</label></p>
+        <p><input type="checkbox" id="autoRefresh"><label for="autoRefresh">Automatically refresh content on window refocus</label></p>
         <table is="editable-table" id="gameTable" data-template="gameRow">
             <thead>
-                <tr><th>Name<th>Base Game<th>LOOT Folder<th>Master File<th>Masterlist Repository URL<th>Masterlist Repository Branch<th>Install Path<th>Install Path Registry Key<th>
+                <tr>
+                    <th>Name</th>
+                    <th>Base Game</th>
+                    <th>LOOT Folder</th>
+                    <th>Master File</th>
+                    <th>Masterlist Repository URL</th>
+                    <th>Masterlist Repository Branch</th>
+                    <th>Install Path</th>
+                    <th>Install Path Registry Key</th>
+                    <th></th>
+                </tr>
+            </thead>
             <tbody>
                 <!-- Game rows go here. -->
-                <tr><td colspan="4">Add new row...</td><td></td></tr>
+                <tr>
+                    <td colspan="4">Add new row...</td>
+                    <td></td>
+                </tr>
+            </tbody>
         </table>
-        <p id="languageRestartTxt">Language changes will be applied after LOOT is restarted.
+        <p id="languageRestartTxt">Language changes will be applied after LOOT is restarted.</p>
         <hr>
         <div class="buttons">
             <button class="accept">Apply</button>
@@ -176,14 +224,14 @@ along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
 
     <dialog id="firstRun">
         <h1>First-Time Tips</h1>
-        <p>This appears to be the first time you have run LOOT v<span id="firstTimeLootVersion"></span>. Here are some tips to help you get started with the interface.
+        <p>This appears to be the first time you have run LOOT v<span id="firstTimeLootVersion"></span>. Here are some tips to help you get started with the interface.</p>
         <ul>
             <li>As well as messages, LOOT displays plugin <span class="version">version numbers</span>, <span class="crc">CRCs</span> and Bash Tag suggestions for <span class="tag add">addition</span> and <span class="tag remove">removal</span>.</li>
             <li>CRCs and dummy plugin icons <span class="fa fa-eye-slash"></span> are only displayed after plugins have been loaded, either by conflict filtering, or by sorting.</li>
             <li>Each plugin has a menu that can be used to access extra features, including the plugin's metadata editor and conflict filter. Click the plugin's <span class="fa fa-ellipsis-v fa-lg"></span> icon to reveal it.</li>
             <li>Multiple metadata editors can be opened at once, and the menu bar is disabled while any editors are open.</li>
             <li>Plugins can be drag and dropped from the sidebar into editors' <q>load after</q>, <q>requirements</q> and <q>incompatibility</q> tables.</li>
-            <li>Many interface elements have tooltips. If you don't know what something is, try hovering your mouse over it to find out.
+            <li>Many interface elements have tooltips. If you don't know what something is, try hovering your mouse over it to find out.</li>
         </ul>
         <p>See LOOT's documentation, accessed through the <q>Help</q> menu, for further details.</p>
         <button class="accept">OK</button>
