@@ -475,7 +475,7 @@ function getConflictingPluginsFromFilter() {
     return Promise.resolve([]);
 }
 function applyFilters(evt) {
-    var cards = document.getElementsByTagName('main')[0].getElementsByTagName('plugin-card');
+    var cards = document.getElementById('main').getElementsByTagName('plugin-card');
     var entries = document.getElementById('pluginsNav').children;
     var hiddenPluginNo = 0;
     var hiddenMessageNo = 0;
@@ -721,7 +721,7 @@ function updateMasterlist(evt) {
 function sortUIElements(pluginNames) {
     /* pluginNames is an array of plugin names in their sorted order. Rearrange
        the plugin cards and nav entries to match it. */
-    var main = document.getElementsByTagName('main')[0];
+    var main = document.getElementById('main');
     var pluginsNav = document.getElementById('pluginsNav');
     var entries = pluginsNav.children;
     if (main.getElementsByTagName('plugin-card').length != entries.length) {
@@ -837,7 +837,7 @@ function sortPlugins(evt) {
 
                 /* Record the previous order in case the user cancels sorting. */
                 /* Start at 2 to skip summary and general messages. */
-                var cards = document.getElementsByTagName('main')[0].getElementsByTagName('plugin-card');
+                var cards = document.getElementById('main').getElementsByTagName('plugin-card');
                 loot.newLoadOrder = loadOrder;
                 loot.lastLoadOrder = [];
                 for (var i = 0; i < cards.length; ++i) {

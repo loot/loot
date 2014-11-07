@@ -115,36 +115,34 @@ header li.disabled {
     position: fixed;
     top: 64px;
     height: calc(100% - 64px);
-    display: flex;
+    /*display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    width: 100%;
+    width: 100%;*/
 }
-nav {
+div[drawer] {
     height: 100%;
-    width: 33%;
-    flex-shrink: 0;
 }
-nav > ol {
+div[drawer] > ol {
     padding-left: 1em;
     list-style-type: none;
     height: calc(100% - 4em);
 }
-nav > ol > li:nth-child(3) {
+div[drawer] > ol > li:nth-child(3) {
     height: calc(100% - 7em);
     overflow: auto;
     padding: 0;
 }
-nav li:not(:last-child) {
+div[drawer] li:not(:last-child) {
     padding: 0.5em 0.5em;
 }
 #filtersToggle {
     cursor: pointer;
 }
-nav > ol > li:not(:nth-child(3)):hover, #pluginsNav li:hover {
+div[drawer] > ol > li:not(:nth-child(3)):hover, #pluginsNav li:hover {
     background: #ccc;
 }
-nav a {
+div[drawer] a {
     text-decoration: none;
     color:black;
     display: inline-block;
@@ -169,10 +167,9 @@ nav a {
     width: 100%;
     height: 100%;
 }
-main {
+#main {
     overflow: auto;
     position: relative;
-    flex-grow: 1;
 }
 
 section {

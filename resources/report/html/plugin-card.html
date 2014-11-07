@@ -734,7 +734,7 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
             }
             if (activateFilter) {
                 /* Un-highlight any existing filter plugin. */
-                var cards = document.getElementsByTagName('main')[0].getElementsByTagName('plugin-card');
+                var cards = document.getElementById('main').getElementsByTagName('plugin-card');
                 for (var i = 0; i < cards.length; ++i) {
                     cards[i].classList.toggle('highlight', false);
                 }

@@ -16,6 +16,7 @@
     <link rel="import" href="bower_components/core-icon/core-icon.html">
     <link rel="import" href="bower_components/core-icons/core-icons.html">
     <link rel="import" href="bower_components/core-tooltip/core-tooltip.html">
+    <link rel="import" href="bower_components/core-drawer-panel/core-drawer-panel.html">
 
     <link rel="import" href="bower_components/paper-menu-button/paper-menu-button.html">
     <link rel="import" href="bower_components/paper-item/paper-item.html">
@@ -51,8 +52,8 @@
         <paper-button id="applySortButton" class="hidden">Apply</paper-button>
         <paper-button id="cancelSortButton" class="hidden">Cancel</paper-button>
     </core-toolbar>
-    <div id="container">
-        <nav>
+    <core-drawer-panel id="container">
+        <div drawer>
             <ol>
                 <li><a href="#summary">Summary</a></li>
                 <li><a href="#generalMessages">General Messages</a></li>
@@ -90,8 +91,8 @@
                 <li><input id="searchBox" type="search" placeholder="Search content..." title="Press Enter when searching to select the next match.">
                 </li>
             </ol>
-        </nav>
-        <main>
+        </div>
+        <div main id="main">
             <section id="summary">
                 <h1>Summary</h1>
                 <table>
@@ -146,8 +147,8 @@
                 </ul>
             </section>
             <!-- Generated plugin #pluginSection elements go here. -->
-        </main>
-    </div>
+        </div>
+    </core-drawer-panel>
 
     <dialog id="about">
         <h1>LOOT <span id="LOOTVersion"></span></h1>
