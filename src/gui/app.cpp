@@ -64,6 +64,9 @@ namespace loot {
 
             // Disable spell checking.
             command_line->AppendSwitch("--disable-spell-checking");
+
+            // Temporary workaround until I figure out what's wrong with my custom URL handling.
+            command_line->AppendSwitch("--allow-file-access-from-files");
         }
     }
 

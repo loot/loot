@@ -4,35 +4,35 @@
     <title>LOOT</title>
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/font-awesome.min.css" />
-    <link rel="import" href="loot://import/html/message-dialog.html">
-    <link rel="import" href="loot://import/html/plugin-li.html">
-    <link rel="import" href="loot://import/html/plugin-card.html">
-    <link rel="import" href="loot://import/html/editable-table.html">
+    <link rel="import" href="html/message-dialog.html">
+    <link rel="import" href="html/plugin-li.html">
+    <link rel="import" href="html/plugin-card.html">
+    <link rel="import" href="html/editable-table.html">
 
-    <script src="loot://import/bower_components/platform/platform.js"></script>
-    <link rel="import" href="loot://import/bower_components/polymer/polymer.html">
+    <script src="bower_components/platform/platform.js"></script>
+    <link rel="import" href="bower_components/polymer/polymer.html">
 
-    <link rel="import" href="loot://import/bower_components/core-toolbar/core-toolbar.html">
-    <link rel="import" href="loot://import/bower_components/core-icon/core-icon.html">
-    <link rel="import" href="loot://import/bower_components/core-icons/core-icons.html">
+    <link rel="import" href="bower_components/core-toolbar/core-toolbar.html">
+    <link rel="import" href="bower_components/core-icon/core-icon.html">
+    <link rel="import" href="bower_components/core-icons/core-icons.html">
 
-    <link rel="import" href="loot://import/bower_components/paper-menu-button/paper-menu-button.html">
-    <link rel="import" href="loot://import/bower_components/paper-item/paper-item.html">
-    <link rel="import" href="loot://import/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
-    <link rel="import" href="loot://import/bower_components/paper-icon-button/paper-icon-button.html">
-    <link rel="import" href="loot://import/bower_components/paper-button/paper-button.html">
+    <link rel="import" href="bower_components/paper-menu-button/paper-menu-button.html">
+    <link rel="import" href="bower_components/paper-item/paper-item.html">
+    <link rel="import" href="bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+    <link rel="import" href="bower_components/paper-icon-button/paper-icon-button.html">
+    <link rel="import" href="bower_components/paper-button/paper-button.html">
 
     <script src="js/require.js"></script>
 </head>
 <!-- oncontextmenu attribute disables the right-click menu. -->
 <body oncontextmenu="return false" unresolved fullbleed vertical layout >
     <core-toolbar id="mainToolbar">
-        <paper-menu-button src="../icon.ico">
+        <paper-menu-button src="logo.png">
             <paper-item id="redatePluginsButton" icon="today" label="Redate Plugins"></paper-item>
             <paper-item id="openLogButton" icon="folder" label="Open Debug Log Location"></paper-item>
             <paper-item id="wipeUserlistButton" icon="delete" label="Clear All User Metadata"></paper-item>
-            <paper-item id="copyContentButton" icon="copy-content" label="Copy Content As Text"></paper-item>
-            <paper-item id="refreshContentButton" icon="cache" label="Refresh Content"></paper-item>
+            <paper-item id="copyContentButton" icon="content-copy" label="Copy Content As Text"></paper-item>
+            <paper-item id="refreshContentButton" icon="cached" label="Refresh Content"></paper-item>
             <paper-item id="settingsButton" icon="settings" label="Settings"></paper-item>
             <paper-item id="helpButton" icon="book" label="View Documentation"></paper-item>
             <paper-item id="aboutButton" icon="help" label="About"></paper-item>

@@ -38,13 +38,11 @@ noscript {
 }
 #mainToolbar {
     background:#e3e3e3;
-    position:fixed;
-    top:0;
-    left:0;
-    z-index:2;
-    width:100%;
     font-size: 1em;
     height: 3em;
+}
+#mainToolbar > * {
+    top: -1em;
 }
 header > ol {
     display: inline-block;
