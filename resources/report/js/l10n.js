@@ -118,46 +118,36 @@
             tagRow.querySelector('.type').children[0].textContent = l10n.translate("Add").fetch();
             tagRow.querySelector('.type').children[1].textContent = l10n.translate("Remove").fetch();
 
-            /* File menu */
-            document.getElementById('fileMenu').firstChild.textContent = l10n.translate("File").fetch();
-            document.getElementById('redatePluginsButton').firstChild.nextSibling.textContent = l10n.translate("Redate Plugins").fetch();
-            document.getElementById('openLogButton').firstChild.nextSibling.textContent = l10n.translate("Open Debug Log Location").fetch();
-            document.getElementById('wipeUserlistButton').firstChild.nextSibling.textContent = l10n.translate("Clear All User Metadata").fetch();
-            document.getElementById('copyContentButton').firstChild.nextSibling.textContent = l10n.translate("Copy Content As Text").fetch();
-            document.getElementById('refreshContentButton').firstChild.nextSibling.textContent = l10n.translate("Refresh Content").fetch();
-
-            /* Game menu */
-            document.getElementById('gameMenu').firstChild.textContent = l10n.translate("Game").fetch();
-
-            /* Help menu */
-            document.getElementById('helpMenu').firstChild.textContent = l10n.translate("Help").fetch();
-            document.getElementById('helpButton').firstChild.nextSibling.textContent = l10n.translate("View Documentation").fetch();
-            document.getElementById('aboutButton').firstChild.nextSibling.textContent = l10n.translate("About").fetch();
-
-            /* Header buttons */
-            document.getElementById('settingsButton').textContent = l10n.translate("Settings").fetch();
-            document.getElementById('updateMasterlistButton').firstChild.nextSibling.textContent = l10n.translate("Update Masterlist").fetch();
-            document.getElementById('sortButton').firstChild.nextSibling.textContent = l10n.translate("Sort").fetch();
-            document.getElementById('applySortButton').firstChild.nextSibling.textContent = l10n.translate("Apply").fetch();
-            document.getElementById('cancelSortButton').firstChild.nextSibling.textContent = l10n.translate("Cancel").fetch();
+            /* Toolbar menu */
+            document.getElementById('redatePluginsButton').label = l10n.translate("Redate Plugins").fetch();
+            document.getElementById('openLogButton').label = l10n.translate("Open Debug Log Location").fetch();
+            document.getElementById('wipeUserlistButton').label = l10n.translate("Clear All User Metadata").fetch();
+            document.getElementById('copyContentButton').label = l10n.translate("Copy Content As Text").fetch();
+            document.getElementById('refreshContentButton').label = l10n.translate("Refresh Content").fetch();
+            document.getElementById('helpButton').label = l10n.translate("View Documentation").fetch();
+            document.getElementById('aboutButton').label = l10n.translate("About").fetch();
+            document.getElementById('settingsButton').label = l10n.translate("Settings").fetch();
+            document.getElementById('applySortButton').textContent = l10n.translate("Apply").fetch();
+            document.getElementById('cancelSortButton').textContent = l10n.translate("Cancel").fetch();
 
             /* Nav items */
-            document.getElementById('container').querySelector('nav > ol li > a[href$=summary]').textContent = l10n.translate("Summary").fetch();
-            document.getElementById('container').querySelector('nav > ol li > a[href$=generalMessages]').textContent = l10n.translate("General Messages").fetch();
-            document.getElementById('filtersToggle').firstChild.nextSibling.textContent = l10n.translate("Filters").fetch();
-            document.getElementById('searchBox').parentElement.title = l10n.translate("Press Enter when searching to select the next match.").fetch();
+            document.getElementById('container').querySelector('div[drawer] > core-menu > paper-item[label=Summary]').label = l10n.translate("Summary").fetch();
+            document.getElementById('container').querySelector('div[drawer] > core-menu > paper-item[label^=General]').label = l10n.translate("General Messages").fetch();
+            document.getElementById('sidebarTabs').firstElementChild.textContent = l10n.translate("Plugins").fetch();
+            document.getElementById('sidebarTabs').firstElementChild.nextElementSibling.textContent = l10n.translate("Filters").fetch();
+            document.getElementById('searchBox').parentElement.label = l10n.translate("Press Enter when searching to select the next match.").fetch();
 
             /* Filters */
-            document.getElementById('hideVersionNumbers').nextElementSibling.textContent = l10n.translate("Hide version numbers").fetch();
-            document.getElementById('hideCRCs').nextElementSibling.textContent = l10n.translate("Hide CRCs").fetch();
-            document.getElementById('hideBashTags').nextElementSibling.textContent = l10n.translate("Hide Bash Tags").fetch();
-            document.getElementById('hideNotes').nextElementSibling.textContent = l10n.translate("Hide notes").fetch();
-            document.getElementById('hideDoNotCleanMessages').nextElementSibling.textContent = l10n.translate("Hide 'Do not clean' messages").fetch();
-            document.getElementById('hideInactivePluginMessages').nextElementSibling.textContent = l10n.translate("Hide inactive plugin messages").fetch();
-            document.getElementById('hideAllPluginMessages').nextElementSibling.textContent = l10n.translate("Hide all plugin messages").fetch();
-            document.getElementById('hideMessagelessPlugins').nextElementSibling.textContent = l10n.translate("Hide messageless plugins").fetch();
-            document.getElementById('hiddenPluginsTxt').textContent = l10n.translate("Hidden plugins").fetch();
-            document.getElementById('hiddenMessagesTxt').textContent = l10n.translate("Hidden messages").fetch();
+            document.getElementById('hideVersionNumbers').previousElementSibling.textContent = l10n.translate("Hide version numbers").fetch();
+            document.getElementById('hideCRCs').previousElementSibling.textContent = l10n.translate("Hide CRCs").fetch();
+            document.getElementById('hideBashTags').previousElementSibling.textContent = l10n.translate("Hide Bash Tags").fetch();
+            document.getElementById('hideNotes').previousElementSibling.textContent = l10n.translate("Hide notes").fetch();
+            document.getElementById('hideDoNotCleanMessages').previousElementSibling.textContent = l10n.translate("Hide 'Do not clean' messages").fetch();
+            document.getElementById('hideInactivePluginMessages').previousElementSibling.textContent = l10n.translate("Hide inactive plugin messages").fetch();
+            document.getElementById('hideAllPluginMessages').previousElementSibling.textContent = l10n.translate("Hide all plugin messages").fetch();
+            document.getElementById('hideMessagelessPlugins').previousElementSibling.textContent = l10n.translate("Hide messageless plugins").fetch();
+            document.getElementById('hiddenPluginsTxt').textContent = l10n.translate("Hidden plugins:").fetch();
+            document.getElementById('hiddenMessagesTxt').textContent = l10n.translate("Hidden messages:").fetch();
 
             /* Summary */
             document.getElementById('summary').firstElementChild.textContent = l10n.translate("Summary").fetch();
@@ -174,15 +164,15 @@
             document.getElementById('generalMessages').firstElementChild.textContent = l10n.translate("General Messages").fetch();
 
             /* Settings dialog */
-            document.getElementById('settings').firstElementChild.textContent = l10n.translate("Settings").fetch();
+            document.getElementById('settings').heading = l10n.translate("Settings").fetch();
 
             document.getElementById('defaultGameSelect').previousElementSibling.textContent = l10n.translate("Default Game").fetch();
-            document.getElementById('defaultGameSelect').children[0].textContent = l10n.translate("Autodetect").fetch();
+            document.getElementById('defaultGameSelect').children[0].label = l10n.translate("Autodetect").fetch();
 
             document.getElementById('languageSelect').previousElementSibling.textContent = l10n.translate("Language").fetch();
 
             document.getElementById('enableDebugLogging').nextElementSibling.textContent = l10n.translate("Enable debug logging").fetch();
-            document.getElementById('enableDebugLogging').nextElementSibling.title = l10n.translate("The output is logged to the LOOTDebugLog.txt file.").fetch();
+            document.getElementById('enableDebugLogging').parentElement.label = l10n.translate("The output is logged to the LOOTDebugLog.txt file.").fetch();
 
             document.getElementById('updateMasterlist').nextElementSibling.textContent = l10n.translate("Update masterlist before sorting").fetch();
 
@@ -206,12 +196,12 @@
 
             /* First-run dialog */
             var firstRun = document.getElementById('firstRun');
-            firstRun.getElementsByTagName('h1').textContent = l10n.translate("First-Time Tips").fetch();
+            firstRun.heading = l10n.translate("First-Time Tips").fetch();
 
             firstRun.querySelector('li:nth-child(4)').textContent = l10n.translate("Multiple metadata editors can be opened at once, and the menu bar is disabled while any editors are open.").fetch();
             firstRun.querySelector('li:last-child').textContent = l10n.translate("Many interface elements have tooltips. If you don't know what something is, try hovering your mouse over it to find out.").fetch();
 
-            firstRun.getElementsByClassName('accept')[0].textContent = l10n.translate("OK").fetch();
+            firstRun.getElementsByTagName('paper-button')[0].textContent = l10n.translate("OK").fetch();
         },
 
         getJedInstance: function(locale) {
