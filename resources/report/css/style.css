@@ -143,16 +143,13 @@ dialog button {
 
 
 
-#about h1, #about p {
-    text-align: center;
-}
+
 
 #about blockquote {
     white-space: pre;
 }
-#about button {
-    margin: 0 auto;
-    display: block;
+paper-button[autofocus] {
+  color: #4285f4;
 }
 
 section h1 {

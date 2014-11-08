@@ -1036,11 +1036,8 @@ function switchSidebarTab(evt) {
     evt.target.nextElementSibling.nextElementSibling.classList.toggle('hidden', isFirstSelected);
 }
 
-function closeAboutDialog(evt) {
-    evt.target.parentElement.close();
-}
 function showAboutDialog(evt) {
-    document.getElementById('about').showModal();
+    document.getElementById('about').opened = true;
 }
 function closeSettingsDialog(evt) {
     if (!areSettingsValid()) {
@@ -1232,9 +1229,6 @@ function setupEventHandlers() {
     var settings = document.getElementById('settings');
     settings.getElementsByClassName('accept')[0].addEventListener('click', closeSettingsDialog, false);
     settings.getElementsByClassName('cancel')[0].addEventListener('click', closeSettingsDialog, false);
-
-    /* Set up about dialog handler. */
-    document.getElementById('about').getElementsByTagName('button')[0].addEventListener('click', closeAboutDialog, false);
 
     /* Set up event handler for closing the first-run dialog. */
     document.getElementById('firstRun').getElementsByTagName('button')[0].addEventListener('click', closeFirstRunDialog, false);

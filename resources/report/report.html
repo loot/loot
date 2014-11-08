@@ -27,6 +27,8 @@
     <link rel="import" href="bower_components/paper-input/paper-input.html">
     <link rel="import" href="bower_components/paper-tabs/paper-tabs.html">
     <link rel="import" href="bower_components/paper-checkbox/paper-checkbox.html">
+    <link rel="import" href="bower_components/paper-dialog/paper-dialog.html">
+    <link rel="import" href="bower_components/paper-dialog/paper-dialog-transition.html">
 
     <script src="js/require.js"></script>
 </head>
@@ -178,12 +180,11 @@
         </div>
     </core-drawer-panel>
 
-    <dialog id="about">
-        <h1>LOOT <span id="LOOTVersion"></span></h1>
-        <p><small>Build <span id="LOOTBuild"></span></small></p>
-        <p>Copyright &copy; 2012&ndash;2014 WrinklyNinja</p>
+    <paper-dialog id="about" heading="About LOOT" transition="paper-dialog-transition-center" backdrop>
+        <p>Version <span id="LOOTVersion"></span> (build <span id="LOOTBuild"></span>)</p>
         <p>Load order optimisation for Oblivion, Skyrim, Fallout 3 and Fallout: New Vegas.</p>
         <p><a href="http://loot.github.io">http://loot.github.io</a></p>
+        <p>Copyright &copy; 2012&ndash;2014 WrinklyNinja</p>
         <blockquote>
 LOOT is free software: you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published
@@ -198,8 +199,8 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
         </blockquote>
-        <button>OK</button>
-    </dialog>
+        <paper-button affirmative autofocus>OK</paper-button>
+    </paper-dialog>
 
     <dialog id="settings">
         <h1>Settings</h1>
