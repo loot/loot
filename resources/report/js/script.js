@@ -187,22 +187,18 @@ var loot = {
 
         /* Now fill with new values. */
         this.settings.games.forEach(function(game){
-            var option = document.createElement('option');
-            option.value = game.folder;
-            option.textContent = game.name;
-            gameSelect.appendChild(option);
-
-            var li = document.createElement('paper-item');
-            li.setAttribute('data-folder', game.folder);
-            li.setAttribute('label', game.name);
-            gameMenu.appendChild(li);
+            var menuItem = document.createElement('paper-item');
+            menuItem.setAttribute('data-folder', game.folder);
+            menuItem.setAttribute('label', game.name);
+            gameMenu.appendChild(menuItem);
+            gameSelect.appendChild(menuItem.cloneNode());
 
             var row = gameTable.addRow(game);
             gameTable.setReadOnly(row, ['name','folder','type']);
         });
 
-        gameSelect.value = this.settings.game;
-        document.getElementById('languageSelect').value = this.settings.language;
+        gameSelect.selected = this.settings.game;
+        document.getElementById('languageSelect').selected = this.settings.language;
         document.getElementById('enableDebugLogging').checked = this.settings.enableDebugLogging;
         document.getElementById('updateMasterlist').checked = this.settings.updateMasterlist;
         document.getElementById('autoRefresh').checked = this.settings.autoRefresh;
@@ -1051,9 +1047,9 @@ function closeSettingsDialog(evt) {
         /* Update the JS variable values. */
         var settings = {
             enableDebugLogging: document.getElementById('enableDebugLogging').checked,
-            game: document.getElementById('defaultGameSelect').value,
+            game: document.getElementById('defaultGameSelect').selected,
             games: document.getElementById('gameTable').getRowsData(false),
-            language: document.getElementById('languageSelect').value,
+            language: document.getElementById('languageSelect').selected,
             lastGame: loot.settings.lastGame,
             updateMasterlist: document.getElementById('updateMasterlist').checked,
             filters: loot.settings.filters,
@@ -1090,11 +1086,10 @@ function closeSettingsDialog(evt) {
         /* Re-apply the existing settings to the settings dialog elements. */
         loot.updateSettingsUI();
     }
-    dialog.close();
 }
 
 function showSettingsDialog(evt) {
-    document.getElementById('settings').showModal();
+    document.getElementById('settings').opened = true;
 }
 
 function getDialogParent(element) {
@@ -1275,11 +1270,15 @@ function initVars() {
             var settingsLangSelect = document.getElementById('languageSelect');
             var messageLangSelect = editableTableImportDoc.querySelector('#messageRow').content.querySelector('.language');
             for (var i = 0; i < loot.languages.length; ++i) {
+                var settingsItem = document.createElement('paper-item');
+                settingsItem.setAttribute('value', loot.languages[i].locale);
+                settingsItem.setAttribute('label', loot.languages[i].name);
+                settingsLangSelect.appendChild(settingsItem);
+
                 var option = document.createElement('option');
                 option.value = loot.languages[i].locale;
                 option.textContent = loot.languages[i].name;
-                settingsLangSelect.appendChild(option);
-                messageLangSelect.appendChild(option.cloneNode(true));
+                messageLangSelect.appendChild(option);
             }
         } catch (e) {
             console.log(e);

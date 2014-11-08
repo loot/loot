@@ -202,20 +202,32 @@ along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
         <paper-button affirmative autofocus>OK</paper-button>
     </paper-dialog>
 
-    <dialog id="settings">
-        <h1>Settings</h1>
-        <label for="defaultGameSelect">Default Game</label>
-        <select id="defaultGameSelect">
-            <option value="auto">Autodetect</option>
-            <!-- Game <option> elements go here. -->
-        </select><br>
-        <label for="languageSelect">Language</label>
-        <select id="languageSelect">
-            <!-- Language <option> elements go here. -->
-        </select><br>
-        <p><input type="checkbox" id="enableDebugLogging"><label for="enableDebugLogging" title="The output is logged to the LOOTDebugLog.txt file.">Enable debug logging</label></p>
-        <p><input type="checkbox" id="updateMasterlist"><label for="updateMasterlist">Update masterlist before sorting</label></p>
-        <p><input type="checkbox" id="autoRefresh"><label for="autoRefresh">Automatically refresh content on window refocus</label></p>
+    <paper-dialog id="settings" heading="Settings" transition="paper-dialog-transition-center" backdrop autoCloseDisabled>
+        <div center horizontal layout>
+            <div>Default Game</div>
+            <paper-dropdown-menu id="defaultGameSelect" valueattr="data-folder">
+                <paper-item data-folder="auto" label="Autodetect"></paper-item>
+                <!-- Game <option> elements go here. -->
+            </paper-dropdown-menu>
+        </div>
+        <div center horizontal layout>
+            <div>Language</div>
+            <paper-dropdown-menu id="languageSelect" valueattr="value">
+                <!-- Language <option> elements go here. -->
+            </paper-dropdown-menu>
+        </div>
+        <paper-tooltip label="The output is logged to the LOOTDebugLog.txt file." center horizontal layout>
+            <paper-checkbox id="enableDebugLogging"></paper-checkbox>
+            <div>Enable debug logging</div>
+        </paper-tooltip>
+        <div center horizontal layout>
+            <paper-checkbox id="updateMasterlist"></paper-checkbox>
+            <div>Update masterlist before sorting</div>
+        </div>
+        <div center horizontal layout>
+            <paper-checkbox id="autoRefresh"></paper-checkbox>
+            <div>Automatically refresh content on window refocus</div>
+        </div>
         <table is="editable-table" id="gameTable" data-template="gameRow">
             <thead>
                 <tr>
@@ -239,12 +251,9 @@ along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
             </tbody>
         </table>
         <p id="languageRestartTxt">Language changes will be applied after LOOT is restarted.</p>
-        <hr>
-        <div class="buttons">
-            <button class="accept">Apply</button>
-            <button class="cancel">Cancel</button>
-        </div>
-    </dialog>
+        <paper-button class="accept" affirmative autofocus>Apply</paper-button>
+        <paper-button class="cancel" affirmative>Cancel</paper-button>
+    </paper-dialog>
 
     <div id="hoverText" class="hidden"></div>
     <paper-dialog id="progressDialog" transition="paper-dialog-transition-center" backdrop autoCloseDisabled>

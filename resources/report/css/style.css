@@ -48,7 +48,7 @@ noscript {
 #gameMenu {
     background: inherit;
 }
-#gameMenu::shadow #control[selected] {
+#gameMenu::shadow #control {
     color: white;
     border-bottom-color: #f1f1f1;
 }
@@ -132,9 +132,6 @@ dialog > h1 {
 }
 dialog[data-type=warn] > span:first-child  {
     color: gold;
-}
-dialog > .buttons {
-    text-align: center;
 }
 dialog button {
     margin: 0.5em;
@@ -230,10 +227,6 @@ plugin-card > ul {
     margin-left: 1.75em;
 }
 
-#settings {
-    width: auto;
-    max-width: 90%;
-}
 #settings > select {
     float: right;
     clear: both;
@@ -246,8 +239,13 @@ plugin-card > ul {
     padding: 1px;
     margin: 2px;
 }
-
-
+paper-checkbox {
+    padding: 0.5em 1em;
+}
+paper-dropdown-menu {
+    padding-left: 2em;
+    top: -0.25em;
+}
 
 input[readonly] {
     border: none;
