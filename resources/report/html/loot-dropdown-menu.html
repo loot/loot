@@ -1,0 +1,34 @@
+<!--
+<loot-dropdown-menu> is an extension of <paper-dropdown-menu> that gives
+it a <select>-like API. This means:
+
+1. `<paper-item>.value` attributes are used to reference items.
+2. `<loot-dropdown-menu>.value` references the currently selected item.
+
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+
+<polymer-element name="loot-dropdown-menu" extends="paper-dropdown-menu">
+    <template>
+        <shadow></shadow>
+    </template>
+    <script>
+    Polymer({
+        value: undefined,
+
+        ready: function() {
+            this.valueattr = 'value';
+        },
+
+        selectedChanged: function(oldValue, newValue) {
+            this.value = newValue;
+        },
+
+        valueChanged: function(oldValue, newValue) {
+            this.selected = newValue;
+        },
+    });
+    </script>
+</polymer-element>

@@ -242,7 +242,7 @@ plugin-card > ul {
 paper-checkbox {
     padding: 0.5em 1em;
 }
-paper-dropdown-menu {
+loot-dropdown-menu {
     padding-left: 2em;
     top: -0.25em;
 }

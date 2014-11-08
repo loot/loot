@@ -13,6 +13,7 @@
     <link rel="import" href="html/plugin-card.html">
     <link rel="import" href="html/editable-table.html">
     <link rel="import" href="html/loot-dialog.html">
+    <link rel="import" href="html/loot-dropdown-menu.html">
 
     <link rel="import" href="bower_components/core-toolbar/core-toolbar.html">
     <link rel="import" href="bower_components/core-icon/core-icon.html">
@@ -48,9 +49,9 @@
             <paper-item id="helpButton" icon="book" label="View Documentation"></paper-item>
             <paper-item id="aboutButton" icon="help" label="About"></paper-item>
         </paper-menu-button>
-        <paper-dropdown-menu id="gameMenu">
+        <loot-dropdown-menu id="gameMenu">
             <!-- Generated game <li> elements go here. -->
-        </paper-dropdown-menu>
+        </loot-dropdown-menu>
         <span flex></span>
         <core-tooltip label="Update Masterlist">
             <paper-icon-button id="updateMasterlistButton" icon="file-download"></paper-icon-button>
@@ -208,16 +209,16 @@ along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
     <loot-dialog id="settings" heading="Settings" transition="paper-dialog-transition-center" backdrop autoCloseDisabled>
         <div center horizontal layout>
             <div>Default Game</div>
-            <paper-dropdown-menu id="defaultGameSelect" valueattr="data-folder">
-                <paper-item data-folder="auto" label="Autodetect"></paper-item>
+            <loot-dropdown-menu id="defaultGameSelect">
+                <paper-item value="auto" label="Autodetect"></paper-item>
                 <!-- Game <option> elements go here. -->
-            </paper-dropdown-menu>
+            </loot-dropdown-menu>
         </div>
         <div center horizontal layout>
             <div>Language</div>
-            <paper-dropdown-menu id="languageSelect" valueattr="value">
+            <loot-dropdown-menu id="languageSelect">
                 <!-- Language <option> elements go here. -->
-            </paper-dropdown-menu>
+            </loot-dropdown-menu>
         </div>
         <core-tooltip label="The output is logged to the LOOTDebugLog.txt file." center horizontal layout>
             <paper-checkbox id="enableDebugLogging"></paper-checkbox>

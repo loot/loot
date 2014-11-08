@@ -39,8 +39,8 @@ var loot = {
             /* Highlight game in menu. Could use fa-chevron-right instead. */
             var gameMenuItems = document.getElementById('gameMenu').children;
             for (var i = 0; i < gameMenuItems.length; ++i) {
-                if (gameMenuItems[i].getAttribute('data-folder') == this.folder) {
-                    document.getElementById('gameMenu').selected = i;
+                if (gameMenuItems[i].getAttribute('value') == this.folder) {
+                    document.getElementById('gameMenu').value = this.folder;
                     break;
                 }
             }
@@ -151,14 +151,14 @@ var loot = {
         /* Update the disabled games in the game menu. */
         var gameMenuItems = document.getElementById('gameMenu').children;
         for (var i = 0; i < gameMenuItems.length; ++i) {
-            if (this.installedGames.indexOf(gameMenuItems[i].getAttribute('data-folder')) == -1) {
-                gameMenuItems[i].classList.toggle('disabled', true);
+            if (this.installedGames.indexOf(gameMenuItems[i].getAttribute('value')) == -1) {
+                gameMenuItems[i].setAttribute('disabled', true);
                 gameMenuItems[i].title = 'No install detected';
                 gameMenuItems[i].removeEventListener('click', changeGame, false);
                 gameMenuItems[i].addEventListener('mouseenter', showHoverText, false);
                 gameMenuItems[i].addEventListener('mouseleave', hideHoverText, false);
             } else {
-                gameMenuItems[i].classList.toggle('disabled', false);
+                gameMenuItems[i].removeAttribute('disabled');
                 gameMenuItems[i].title = '';
                 gameMenuItems[i].addEventListener('click', changeGame, false);
                 gameMenuItems[i].removeEventListener('mouseenter', showHoverText, false);
@@ -188,7 +188,7 @@ var loot = {
         /* Now fill with new values. */
         this.settings.games.forEach(function(game){
             var menuItem = document.createElement('paper-item');
-            menuItem.setAttribute('data-folder', game.folder);
+            menuItem.setAttribute('value', game.folder);
             menuItem.setAttribute('label', game.name);
             gameMenu.appendChild(menuItem);
             gameSelect.appendChild(menuItem.cloneNode());
@@ -197,8 +197,8 @@ var loot = {
             gameTable.setReadOnly(row, ['name','folder','type']);
         });
 
-        gameSelect.selected = this.settings.game;
-        document.getElementById('languageSelect').selected = this.settings.language;
+        gameSelect.value = this.settings.game;
+        document.getElementById('languageSelect').value = this.settings.language;
         document.getElementById('enableDebugLogging').checked = this.settings.enableDebugLogging;
         document.getElementById('updateMasterlist').checked = this.settings.updateMasterlist;
         document.getElementById('autoRefresh').checked = this.settings.autoRefresh;
@@ -588,7 +588,7 @@ function changeGame(evt) {
     var request = JSON.stringify({
         name: 'changeGame',
         args: [
-            evt.currentTarget.getAttribute('data-folder')
+            evt.currentTarget.getAttribute('value')
         ]
     });
     loot.query(request).then(function(result){
@@ -1047,9 +1047,9 @@ function closeSettingsDialog(evt) {
         /* Update the JS variable values. */
         var settings = {
             enableDebugLogging: document.getElementById('enableDebugLogging').checked,
-            game: document.getElementById('defaultGameSelect').selected,
+            game: document.getElementById('defaultGameSelect').value,
             games: document.getElementById('gameTable').getRowsData(false),
-            language: document.getElementById('languageSelect').selected,
+            language: document.getElementById('languageSelect').value,
             lastGame: loot.settings.lastGame,
             updateMasterlist: document.getElementById('updateMasterlist').checked,
             filters: loot.settings.filters,
