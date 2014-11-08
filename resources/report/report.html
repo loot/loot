@@ -8,12 +8,12 @@
     <script src="bower_components/platform/platform.js"></script>
     <link rel="import" href="bower_components/polymer/polymer.html">
 
-    <link rel="import" href="html/message-dialog.html">
     <link rel="import" href="html/plugin-li.html">
     <link rel="import" href="html/plugin-card.html">
     <link rel="import" href="html/editable-table.html">
     <link rel="import" href="html/loot-dialog.html">
     <link rel="import" href="html/loot-dropdown-menu.html">
+    <link rel="import" href="html/loot-message-dialog.html">
 
     <link rel="import" href="bower_components/core-toolbar/core-toolbar.html">
     <link rel="import" href="bower_components/core-icon/core-icon.html">
@@ -184,7 +184,7 @@
         </div>
     </core-drawer-panel>
 
-    <loot-dialog id="about" heading="About LOOT" transition="paper-dialog-transition-center" backdrop>
+    <loot-dialog id="about" heading="About LOOT">
         <p>Version <span id="LOOTVersion"></span> (build <span id="LOOTBuild"></span>)</p>
         <p>Load order optimisation for Oblivion, Skyrim, Fallout 3 and Fallout: New Vegas.</p>
         <p><a href="http://loot.github.io">http://loot.github.io</a></p>
@@ -206,7 +206,7 @@ along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
         <paper-button affirmative autofocus>OK</paper-button>
     </loot-dialog>
 
-    <loot-dialog id="settings" heading="Settings" transition="paper-dialog-transition-center" backdrop autoCloseDisabled>
+    <loot-dialog id="settings" heading="Settings" >
         <div center horizontal layout>
             <div>Default Game</div>
             <loot-dropdown-menu id="defaultGameSelect">
@@ -260,7 +260,7 @@ along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
     </loot-dialog>
 
     <div id="hoverText" class="hidden"></div>
-    <loot-dialog id="progressDialog" transition="paper-dialog-transition-center" backdrop autoCloseDisabled>
+    <loot-dialog id="progressDialog">
         <!-- CEF doesn't seem to want to play any animation set through CSS
              for <progress>'s internal value pseudo-element, so use this
              instead. -->
@@ -270,7 +270,7 @@ along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
         <h1>Calculating the last digit of &pi;...</h1>
     </loot-dialog>
 
-    <loot-dialog id="firstRun" heading="First-Time Tips" transition="paper-dialog-transition-center" backdrop>
+    <loot-dialog id="firstRun" heading="First-Time Tips">
         <p>This appears to be the first time you have run LOOT v<span id="firstTimeLootVersion"></span>. Here are some tips to help you get started with the interface.</p>
         <ul>
             <li>As well as messages, LOOT displays plugin <span class="version">version numbers</span>, <span class="crc">CRCs</span> and Bash Tag suggestions for <span class="tag add">addition</span> and <span class="tag remove">removal</span>.</li>

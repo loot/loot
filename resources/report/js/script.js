@@ -364,7 +364,7 @@ function processCefError(err) {
        info than just the error message. */
     console.log(err.stack);
     closeProgressDialog();
-    showMessageBox('error', 'Error', err.message);
+    showMessageBox('Error', err.message);
 }
 
 function saveFilterState(evt) {
@@ -535,20 +535,16 @@ function applyFilters(evt) {
     });
 }
 function showMessageDialog(title, text, closeCallback) {
-    var dialog = new MessageDialog();
+    var dialog = document.createElement('loot-message-dialog');
     dialog.setButtonText(l10n.jed.translate('Yes').fetch(), l10n.jed.translate('Cancel').fetch());
+    dialog.showModal(title, text, closeCallback);
     document.body.appendChild(dialog);
-    dialog.showModal('warn', title, text, closeCallback);
 }
-function showMessageBox(type, title, text) {
-    var dialog = new MessageDialog();
-    if (type == 'error' || type == 'info') {
-        dialog.setButtonText(l10n.jed.translate('OK').fetch(), l10n.jed.translate('Cancel').fetch());
-    } else {
-        dialog.setButtonText(l10n.jed.translate('Yes').fetch(), l10n.jed.translate('Cancel').fetch());
-    }
+function showMessageBox(title, text) {
+    var dialog = document.createElement('loot-message-dialog');
+    dialog.setButtonText(l10n.jed.translate('OK').fetch());
+    dialog.showModal(title, text);
     document.body.appendChild(dialog);
-    dialog.showModal(type, title, text);
 }
 function openLogLocation(evt) {
     loot.query('openLogLocation').catch(processCefError);
@@ -904,12 +900,10 @@ function redatePlugins(evt) {
     showMessageDialog('Redate Plugins', 'This feature is provided so that modders using the Creation Kit may set the load order it uses. A side-effect is that any subscribed Steam Workshop mods will be re-downloaded by Steam. Do you wish to continue?', function(result){
         if (result) {
             loot.query('redatePlugins').then(function(response){
-                showMessageBox('info', 'Redate Plugins', 'Plugins were successfully redated.');
+                showMessageBox('Redate Plugins', 'Plugins were successfully redated.');
             }).catch(processCefError);
         }
     });
-
-    //showMessageBox('info', 'Redate Plugins', 'Plugins were successfully redated.');
 }
 function clearAllMetadata(evt) {
     showMessageDialog('Clear All Metadata', 'Are you sure you want to clear all existing user-added metadata from all plugins?', function(result){
