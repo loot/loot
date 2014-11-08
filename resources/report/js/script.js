@@ -775,8 +775,8 @@ function sortUIElements(pluginNames) {
 }
 function openProgressDialog() {
     var progressDialog = document.getElementById('progressDialog');
-    if (!progressDialog.opened) {
-        progressDialog.opened = true;
+    if (!progressDialog.open) {
+        progressDialog.showModal();
         progressDialog.querySelector('.progress').classList.toggle('running');
     }
 }
@@ -786,8 +786,8 @@ function updateProgressDialog(message) {
 }
 function closeProgressDialog() {
     var progressDialog = document.getElementById('progressDialog');
-    if (progressDialog.opened) {
-        progressDialog.opened = false;
+    if (progressDialog.open) {
+        progressDialog.close();
         progressDialog.querySelector('.progress').classList.toggle('running');
     }
 }
@@ -1035,7 +1035,7 @@ function switchSidebarTab(evt) {
 }
 
 function showAboutDialog(evt) {
-    document.getElementById('about').opened = true;
+    document.getElementById('about').showModal();
 }
 function closeSettingsDialog(evt) {
     if (!areSettingsValid()) {
@@ -1089,7 +1089,7 @@ function closeSettingsDialog(evt) {
 }
 
 function showSettingsDialog(evt) {
-    document.getElementById('settings').opened = true;
+    document.getElementById('settings').showModal();
 }
 
 function getDialogParent(element) {
@@ -1374,7 +1374,7 @@ function initVars() {
             }
 
             if (!loot.settings.lastVersion || loot.settings.lastVersion != loot.version) {
-                document.getElementById('firstRun').opened = true;
+                document.getElementById('firstRun').showModal();
             }
         }).catch(processCefError);
 

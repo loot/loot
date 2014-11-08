@@ -1,9 +1,47 @@
 <!--
+<loot-dialog> is an extension of <paper-dialog> that gives it a <dialog>-like API.
 
-<loot-dialog> is an extension of <paper-dialog> that
+Still missing compared to <dialog> are:
 
+1. No `close` or `cancel` events.
+2. No ::backdrop pseudo-element.
+3. No `form[method="dialog"]`.
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 
+<polymer-element name="loot-dialog" extends="paper-dialog" attributes="open">
+    <template>
+
+        <shadow></shadow>
+    </template>
+    <script>
+    Polymer({
+        open: false,
+
+        openedChanged: function(oldValue, newValue) {
+            this.open = newValue;
+        },
+
+        openChanged: function(oldValue, newValue) {
+            this.opened = newValue;
+        },
+
+        show: function() {
+            this.backdrop = false;
+            this.opened = true;
+            this.layered = false;
+        },
+        showModal: function() {
+            this.backdrop = true;
+            this.opened = true;
+            // The layered attribute seems to cause the dialog to be destroyed for some reason, so don't use it. It doesn't seem to be necessary anyway.
+            this.layered = false;
+        },
+        close: function(retVal) {
+            this.setAttribute('returnValue', retVal);
+            this.opened = false;
+        },
+    });
+    </script>
