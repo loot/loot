@@ -1030,17 +1030,10 @@ function openMenu(evt) {
         }));
     }
 }
-function toggleFiltersList(evt) {
-    var filters = document.getElementById('filters');
-    var plugins = document.getElementById('pluginsNav');
-
-    if (isVisible(filters)) {
-        hideElement(filters);
-        showElement(plugins);
-    } else {
-        showElement(filters);
-        hideElement(plugins);
-    }
+function switchSidebarTab(evt) {
+    var isFirstSelected = evt.target.selected == 0;
+    evt.target.nextElementSibling.classList.toggle('hidden', !isFirstSelected);
+    evt.target.nextElementSibling.nextElementSibling.classList.toggle('hidden', isFirstSelected);
 }
 
 function closeAboutDialog(evt) {
@@ -1233,7 +1226,7 @@ function setupEventHandlers() {
     document.getElementById('sortButton').addEventListener('click', sortPlugins, false);
     document.getElementById('applySortButton').addEventListener('click', applySort, false);
     document.getElementById('cancelSortButton').addEventListener('click', cancelSort, false);
-    document.getElementById('filtersToggle').addEventListener('click', toggleFiltersList, false);
+    document.getElementById('sidebarTabs').addEventListener('core-select', switchSidebarTab, false);
 
     /* Set up event handlers for settings dialog. */
     var settings = document.getElementById('settings');

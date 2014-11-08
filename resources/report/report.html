@@ -17,12 +17,16 @@
     <link rel="import" href="bower_components/core-icons/core-icons.html">
     <link rel="import" href="bower_components/core-tooltip/core-tooltip.html">
     <link rel="import" href="bower_components/core-drawer-panel/core-drawer-panel.html">
+    <link rel="import" href="bower_components/core-menu/core-menu.html">
 
     <link rel="import" href="bower_components/paper-menu-button/paper-menu-button.html">
     <link rel="import" href="bower_components/paper-item/paper-item.html">
     <link rel="import" href="bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
     <link rel="import" href="bower_components/paper-icon-button/paper-icon-button.html">
     <link rel="import" href="bower_components/paper-button/paper-button.html">
+    <link rel="import" href="bower_components/paper-input/paper-input.html">
+    <link rel="import" href="bower_components/paper-tabs/paper-tabs.html">
+    <link rel="import" href="bower_components/paper-checkbox/paper-checkbox.html">
 
     <script src="js/require.js"></script>
 </head>
@@ -53,44 +57,68 @@
         <paper-button id="cancelSortButton" class="hidden">Cancel</paper-button>
     </core-toolbar>
     <core-drawer-panel id="container">
-        <div drawer>
-            <ol>
-                <li><a href="#summary">Summary</a></li>
-                <li><a href="#generalMessages">General Messages</a></li>
-                <li>
-                    <ol id="pluginsNav">
-                        <!-- Generated <li> elements go here, containing # links to each plugin's section in the list. -->
-                    </ol>
-                    <ol id="filters" class="hidden" data-replace="pluginsNav">
-                        <input type="checkbox" id="hideVersionNumbers" data-class="version" />
-                        <label for="hideVersionNumbers">Hide version numbers</label><br>
-                        <input type="checkbox" id="hideCRCs" data-class="crc" />
-                        <label for="hideCRCs">Hide CRCs</label><br>
-                        <input type="checkbox" id="hideBashTags" data-class="tag" />
-                        <label for="hideBashTags">Hide Bash Tags</label><br>
-                        <input type="checkbox" id="hideNotes" />
-                        <label for="hideNotes">Hide notes</label><br>
-                        <input type="checkbox" id="hideDoNotCleanMessages" />
-                        <label for="hideDoNotCleanMessages">Hide 'Do not clean' messages</label><br>
-                        <input type="checkbox" id="hideInactivePluginMessages" />
-                        <label for="hideInactivePluginMessages">Hide inactive plugin messages</label><br>
-                        <input type="checkbox" id="hideAllPluginMessages" />
-                        <label for="hideAllPluginMessages">Hide all plugin messages</label><br>
-                        <input type="checkbox" id="hideMessagelessPlugins" />
-                        <label for="hideMessagelessPlugins">Hide messageless plugins</label>
-                        <div>
-                            <span id="hiddenPluginsTxt">Hidden plugins</span>: <span id="hiddenPluginNo">0</span> / <span id="filterTotalPluginNo">0</span>
-                        </div>
-                        <div>
-                            <span id="hiddenMessagesTxt">Hidden messages</span>: <span id="hiddenMessageNo">0</span> / <span id="filterTotalMessageNo">0</span>
-                        </div>
-                    </ol>
-                </li>
-                <li id="filtersToggle"><span class="fa fa-fw fa-filter"></span>Filters
-                </li>
-                <li><input id="searchBox" type="search" placeholder="Search content..." title="Press Enter when searching to select the next match.">
-                </li>
-            </ol>
+        <div drawer vertical layout>
+            <paper-tabs id="sidebarTabs" selected="0">
+                <paper-tab>Nav</paper-tab>
+                <paper-tab>Filters</paper-tab>
+            </paper-tabs>
+            <core-menu class="tab-content">
+                <paper-item label="Summary">
+                    <a href="#summary"></a>
+                </paper-item>
+                <paper-item label="General Messages">
+                    <a href="#generalMessages"></a>
+                </paper-item>
+                <core-submenu id="pluginsNav">
+                    <!-- Generated <li> elements go here, containing # links to each plugin's section in the list. -->
+                </core-submenu>
+            </core-menu>
+            <core-menu id="filters" class="tab-content hidden">
+                <div center horizontal layout>
+                    <div flex>Hide version numbers</div>
+                    <paper-checkbox id="hideVersionNumbers" data-class="version"></paper-checkbox>
+                </div>
+                <div center horizontal layout>
+                    <div flex>Hide CRCs</div>
+                    <paper-checkbox id="hideCRCs" data-class="crc"></paper-checkbox>
+                </div>
+                <div center horizontal layout>
+                    <div flex>Hide Bash Tags</div>
+                    <paper-checkbox id="hideBashTags" data-class="tag"></paper-checkbox>
+                </div>
+                <div center horizontal layout>
+                    <div flex>Hide notes</div>
+                    <paper-checkbox id="hideNotes"></paper-checkbox>
+                </div>
+                <div center horizontal layout>
+                    <div flex>Hide 'Do not clean' messages</div>
+                    <paper-checkbox id="hideDoNotCleanMessages"></paper-checkbox>
+                </div>
+                <div center horizontal layout>
+                    <div flex>Hide inactive plugin messages</div>
+                    <paper-checkbox id="hideInactivePluginMessages"></paper-checkbox>
+                </div>
+                <div center horizontal layout>
+                    <div flex>Hide all plugin messages</div>
+                    <paper-checkbox id="hideAllPluginMessages"></paper-checkbox>
+                </div>
+                <div center horizontal layout>
+                    <div flex>Hide messageless plugins</div>
+                    <paper-checkbox id="hideMessagelessPlugins"></paper-checkbox>
+                </div>
+                <div center horizontal layout>
+                    <div id="hiddenPluginsTxt" flex>Hidden plugins:</div>
+                    <div><span id="hiddenPluginNo">0</span> / <span id="filterTotalPluginNo">0</span></div>
+                </div>
+                <div center horizontal layout>
+                    <div id="hiddenMessagesTxt" flex>Hidden messages:</div>
+                    <div><span id="hiddenMessageNo">0</span> / <span id="filterTotalMessageNo">0</span></div>
+                </div>
+            </core-menu>
+            <div flex></div>
+            <core-tooltip label="Press Enter when searching to select the next match." position="right">
+                <paper-input id="searchBox" type="search" label="Search content..."></paper-input>
+            </core-tooltip>
         </div>
         <div main id="main">
             <section id="summary">

@@ -20,6 +20,10 @@
     "core-toolbar": "Polymer/core-toolbar#~0.4.2",
     "core-icons": "Polymer/core-icons#~0.4.2",
     "core-tooltip": "Polymer/core-tooltip#~0.4.2",
-    "core-drawer-panel": "Polymer/core-drawer-panel#~0.4.2"
+    "core-drawer-panel": "Polymer/core-drawer-panel#~0.4.2",
+    "paper-input": "Polymer/paper-input#~0.4.2",
+    "paper-tabs": "Polymer/paper-tabs#~0.4.2",
+    "core-menu": "Polymer/core-menu#~0.4.2",
+    "paper-checkbox": "Polymer/paper-checkbox#~0.4.2"
   }
 }
