@@ -330,7 +330,7 @@ progress::-webkit-progress-value, .progress .value {
     background-color: green;
     -webkit-animation: indeterminate 2s linear 0 infinite alternate paused;
 }
-#progressDialog[open] > .progress > .value {
+.progress.running > .value {
     -webkit-animation-play-state: running;
 }
 
@@ -342,10 +342,6 @@ progress::-webkit-progress-value, .progress .value {
 #firstRun > ul {
     list-style-type: disc;
     padding-left: 40px;
-}
-#firstRun > button {
-    display: block;
-    margin: 0 auto;
 }
 #firstRun .tag {
     margin: 0;

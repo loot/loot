@@ -779,8 +779,9 @@ function sortUIElements(pluginNames) {
 }
 function openProgressDialog() {
     var progressDialog = document.getElementById('progressDialog');
-    if (!progressDialog.open) {
-        progressDialog.showModal();
+    if (!progressDialog.opened) {
+        progressDialog.opened = true;
+        progressDialog.querySelector('.progress').classList.toggle('running');
     }
 }
 function updateProgressDialog(message) {
@@ -789,8 +790,9 @@ function updateProgressDialog(message) {
 }
 function closeProgressDialog() {
     var progressDialog = document.getElementById('progressDialog');
-    if (progressDialog.open) {
-        progressDialog.close();
+    if (progressDialog.opened) {
+        progressDialog.opened = false;
+        progressDialog.querySelector('.progress').classList.toggle('running');
     }
 }
 function sortPlugins(evt) {
@@ -1176,9 +1178,6 @@ function focusSearch(evt) {
         document.getElementById('searchBox').focus();
     }
 }
-function closeFirstRunDialog(evt) {
-    evt.target.parentElement.close();
-}
 function handleUnappliedChangesClose() {
     showMessageDialog('Unapplied Sorting Changes', 'You have not yet applied or cancelled your sorted load order. Apply your load order before quitting?', function(result){
         if (result) {
@@ -1229,9 +1228,6 @@ function setupEventHandlers() {
     var settings = document.getElementById('settings');
     settings.getElementsByClassName('accept')[0].addEventListener('click', closeSettingsDialog, false);
     settings.getElementsByClassName('cancel')[0].addEventListener('click', closeSettingsDialog, false);
-
-    /* Set up event handler for closing the first-run dialog. */
-    document.getElementById('firstRun').getElementsByTagName('button')[0].addEventListener('click', closeFirstRunDialog, false);
 
     /* Set up event handler for hover text. */
     var hoverTargets = document.querySelectorAll('[title]');
@@ -1379,7 +1375,7 @@ function initVars() {
             }
 
             if (!loot.settings.lastVersion || loot.settings.lastVersion != loot.version) {
-                document.getElementById('firstRun').showModal();
+                document.getElementById('firstRun').opened = true;
             }
         }).catch(processCefError);
 
@@ -1464,15 +1460,17 @@ function onFocus(evt) {
 require.config({
     baseUrl: "js",
   });
-require(['marked', 'l10n', 'plugin'], function(markedResponse, l10nResponse) {
-    marked = markedResponse;
-    l10n = l10nResponse;
-    /* Make sure settings are what I want. */
-    marked.setOptions({
-        gfm: true,
-        tables: true,
-        sanitize: true
+window.addEventListener('polymer-ready', function(e) {
+    require(['marked', 'l10n', 'plugin'], function(markedResponse, l10nResponse) {
+        marked = markedResponse;
+        l10n = l10nResponse;
+        /* Make sure settings are what I want. */
+        marked.setOptions({
+            gfm: true,
+            tables: true,
+            sanitize: true
+        });
+        setupEventHandlers();
+        initVars();
     });
-    setupEventHandlers();
-    initVars();
-});
+}, false);

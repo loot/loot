@@ -247,7 +247,7 @@ along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
     </dialog>
 
     <div id="hoverText" class="hidden"></div>
-    <dialog id="progressDialog">
+    <paper-dialog id="progressDialog" transition="paper-dialog-transition-center" backdrop autoCloseDisabled>
         <!-- CEF doesn't seem to want to play any animation set through CSS
              for <progress>'s internal value pseudo-element, so use this
              instead. -->
@@ -255,10 +255,9 @@ along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
             <div class="value"></div>
         </div>
         <h1>Calculating the last digit of &pi;...</h1>
-    </dialog>
+    </paper-dialog>
 
-    <dialog id="firstRun">
-        <h1>First-Time Tips</h1>
+    <paper-dialog id="firstRun" heading="First-Time Tips" transition="paper-dialog-transition-center" backdrop>
         <p>This appears to be the first time you have run LOOT v<span id="firstTimeLootVersion"></span>. Here are some tips to help you get started with the interface.</p>
         <ul>
             <li>As well as messages, LOOT displays plugin <span class="version">version numbers</span>, <span class="crc">CRCs</span> and Bash Tag suggestions for <span class="tag add">addition</span> and <span class="tag remove">removal</span>.</li>
@@ -268,8 +267,8 @@ along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
             <li>Plugins can be drag and dropped from the sidebar into editors' <q>load after</q>, <q>requirements</q> and <q>incompatibility</q> tables.</li>
             <li>Many interface elements have tooltips. If you don't know what something is, try hovering your mouse over it to find out.</li>
         </ul>
-        <p>See LOOT's documentation, accessed through the <q>Help</q> menu, for further details.</p>
-        <button class="accept">OK</button>
-    </dialog>
+        <p>See LOOT's documentation, accessed through the toolbar menu, for further details.</p>
+        <paper-button affirmative autofocus>OK</paper-button>
+    </paper-dialog>
     <script src="js/script.js"></script>
 </body>
