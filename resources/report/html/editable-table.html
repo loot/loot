@@ -1,3 +1,6 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+
 <template id="fileRow">
     <tr>
         <td><input class="name" type="text" required></td>
@@ -54,18 +57,18 @@
 </template>
 <template id="gameRow">
     <tr>
-        <td><input class="name" type="text" required></td>
+        <td><paper-input class="name" type="text" required></paper-input></td>
         <td>
             <select class="type">
             <!-- Game <option> elements go here. -->
             </select>
         </td>
-        <td><input class="folder" type="text" required></td>
-        <td><input class="master" type="text"></td>
-        <td><input class="repo" type="text"></td>
-        <td><input class="branch" type="text"></td>
-        <td><input class="path" type="text"></td>
-        <td><input class="registry" type="text"></td>
+        <td><paper-input class="folder" type="text" required></paper-input></td>
+        <td><paper-input class="master" type="text"></paper-input></td>
+        <td><paper-input class="repo" type="text"></paper-input></td>
+        <td><paper-input class="branch" type="text"></paper-input></td>
+        <td><paper-input class="path" type="text"></paper-input></td>
+        <td><paper-input class="registry" type="text"></paper-input></td>
         <td class="fa fa-trash-o fa-fw"></td>
     </tr>
 </template>
@@ -136,7 +139,7 @@ var EditableTableProto = Object.create(HTMLTableElement.prototype, {
                 if (trash.length > 0 && (!writableOnly || !trash[0].classList.contains('hidden'))) {
                     var rowData = {};
 
-                    var inputs = rows[i].getElementsByTagName('input');
+                    var inputs = rows[i].querySelectorAll('input, paper-input');
                     for (var j = 0; j < inputs.length; ++j) {
                         rowData[inputs[j].className] = inputs[j].value;
                     }
@@ -172,17 +175,25 @@ var EditableTableProto = Object.create(HTMLTableElement.prototype, {
                 trash.classList.toggle('hidden', readOnly);
             }
 
-            var inputs = row.getElementsByTagName('input');
+            var inputs = row.querySelectorAll('input, paper-input');
             for (var i = 0; i < inputs.length; ++i) {
                 if (classMask) {
                     for (var j = 0; j < classMask.length; ++j) {
                         if (inputs[i].classList.contains(classMask[j])) {
-                            inputs[i].readOnly = readOnly;
+                            if (inputs[i].tagName == 'PAPER-INPUT') {
+                                inputs[i].readonly = readOnly;
+                            } else {
+                                inputs[i].readOnly = readOnly;
+                            }
                             break;
                         }
                     }
                 } else {
-                    inputs[i].readOnly = readOnly;
+                    if (inputs[i].tagName == 'PAPER-INPUT') {
+                        inputs[i].disabled = readOnly;
+                    } else {
+                        inputs[i].readOnly = readOnly;
+                    }
                 }
             }
 
@@ -254,7 +265,12 @@ var EditableTableProto = Object.create(HTMLTableElement.prototype, {
             for (var key in tableData) {
                 var elems = row.getElementsByClassName(key);
                 if (tableData[key] != undefined && elems.length == 1) {
-                    elems[0].value = tableData[key];
+                    /*if (elems[0].tagName == 'PAPER-INPUT') {
+                        elems[0].inputValue = tableData[key];
+                        elems[0].commit();
+                    } else {
+                    */    elems[0].value = tableData[key];
+                    //}
                 }
             }
 

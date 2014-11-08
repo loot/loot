@@ -4,13 +4,14 @@
     <title>LOOT</title>
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/font-awesome.min.css" />
+
+    <script src="bower_components/platform/platform.js"></script>
+    <link rel="import" href="bower_components/polymer/polymer.html">
+
     <link rel="import" href="html/message-dialog.html">
     <link rel="import" href="html/plugin-li.html">
     <link rel="import" href="html/plugin-card.html">
     <link rel="import" href="html/editable-table.html">
-
-    <script src="bower_components/platform/platform.js"></script>
-    <link rel="import" href="bower_components/polymer/polymer.html">
 
     <link rel="import" href="bower_components/core-toolbar/core-toolbar.html">
     <link rel="import" href="bower_components/core-icon/core-icon.html">
@@ -18,6 +19,7 @@
     <link rel="import" href="bower_components/core-tooltip/core-tooltip.html">
     <link rel="import" href="bower_components/core-drawer-panel/core-drawer-panel.html">
     <link rel="import" href="bower_components/core-menu/core-menu.html">
+    <link rel="import" href="bower_components/core-menu/core-submenu.html">
 
     <link rel="import" href="bower_components/paper-menu-button/paper-menu-button.html">
     <link rel="import" href="bower_components/paper-item/paper-item.html">
@@ -216,10 +218,10 @@ along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
                 <!-- Language <option> elements go here. -->
             </paper-dropdown-menu>
         </div>
-        <paper-tooltip label="The output is logged to the LOOTDebugLog.txt file." center horizontal layout>
+        <core-tooltip label="The output is logged to the LOOTDebugLog.txt file." center horizontal layout>
             <paper-checkbox id="enableDebugLogging"></paper-checkbox>
             <div>Enable debug logging</div>
-        </paper-tooltip>
+        </core-tooltip>
         <div center horizontal layout>
             <paper-checkbox id="updateMasterlist"></paper-checkbox>
             <div>Update masterlist before sorting</div>
