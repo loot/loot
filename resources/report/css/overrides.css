@@ -37,3 +37,13 @@ paper-tab::shadow #ink {
 loot-plugin-item::shadow ::content > a {
     left: 112px;
 }
+
+/* These overrides change the positioning of the progress dialog to adapt to content changes. */
+#progressDialog {
+    position: inherit !important;
+    margin: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
