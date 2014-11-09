@@ -1034,7 +1034,7 @@ namespace loot {
     }
 
     void Handler::SendProgressUpdate(CefRefPtr<CefFrame> frame, const std::string& message) {
-        frame->ExecuteJavaScript("updateProgressDialog('" + message + "');", frame->GetURL(), 0);
+        frame->ExecuteJavaScript("showProgress('" + message + "');", frame->GetURL(), 0);
     }
 
     // LootHandler methods

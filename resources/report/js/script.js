@@ -436,8 +436,7 @@ function getConflictingPluginsFromFilter() {
             ]
         });
 
-        updateProgressDialog('Checking if plugins have been loaded...');
-        openProgressDialog();
+        showProgress('Checking if plugins have been loaded...');
 
         return loot.query(request).then(JSON.parse).then(function(result){
             if (result) {
@@ -581,8 +580,7 @@ function changeGame(evt) {
     loot.games[index].masterlist = loot.game.masterlist;
     loot.games[index].plugins = loot.game.plugins;
 
-    updateProgressDialog('Loading game data...');
-    openProgressDialog();
+    showProgress('Loading game data...');
 
     /* Now send off a CEF query with the folder name of the new game. */
     var request = JSON.stringify({
@@ -686,31 +684,27 @@ function openReadme(evt) {
     loot.query('openReadme').catch(processCefError);
 }
 function updateMasterlist(evt) {
-    updateProgressDialog('Updating masterlist...');
-    openProgressDialog();
+    showProgress('Updating masterlist...');
     return loot.query('updateMasterlist').then(JSON.parse).then(function(result){
-        if (!result) {
-            closeProgressDialog();
-            return;
-        }
-        /* Update JS variables. */
+        if (result) {
+            /* Update JS variables. */
+            loot.game.masterlist = result.masterlist;
+            loot.game.globalMessages = result.globalMessages;
 
-        loot.game.masterlist = result.masterlist;
-        loot.game.globalMessages = result.globalMessages;
-
-        result.plugins.forEach(function(plugin){
-            for (var i = 0; i < loot.game.plugins.length; ++i) {
-                if (loot.game.plugins[i].name == plugin.name) {
-                    loot.game.plugins[i].isDirty = plugin.isDirty;
-                    loot.game.plugins[i].isGlobalPriority = plugin.isGlobalPriority;
-                    loot.game.plugins[i].masterlist = plugin.masterlist;
-                    loot.game.plugins[i].messages = plugin.messages;
-                    loot.game.plugins[i].modPriority = plugin.modPriority;
-                    loot.game.plugins[i].tags = plugin.tags;
-                    break;
+            result.plugins.forEach(function(plugin){
+                for (var i = 0; i < loot.game.plugins.length; ++i) {
+                    if (loot.game.plugins[i].name == plugin.name) {
+                        loot.game.plugins[i].isDirty = plugin.isDirty;
+                        loot.game.plugins[i].isGlobalPriority = plugin.isGlobalPriority;
+                        loot.game.plugins[i].masterlist = plugin.masterlist;
+                        loot.game.plugins[i].messages = plugin.messages;
+                        loot.game.plugins[i].modPriority = plugin.modPriority;
+                        loot.game.plugins[i].tags = plugin.tags;
+                        break;
+                    }
                 }
-            }
-        });
+            });
+        }
         closeProgressDialog();
     }).catch(processCefError);
 }
@@ -773,16 +767,15 @@ function sortUIElements(pluginNames) {
         lastCard = card;
     });
 }
-function openProgressDialog() {
+function showProgress(message) {
     var progressDialog = document.getElementById('progressDialog');
+    if (message) {
+        progressDialog.getElementsByTagName('h1')[0].textContent = message;
+    }
     if (!progressDialog.open) {
         progressDialog.showModal();
         progressDialog.querySelector('.progress').classList.toggle('running');
     }
-}
-function updateProgressDialog(message) {
-    var progressDialog = document.getElementById('progressDialog');
-    progressDialog.getElementsByTagName('h1')[0].textContent = message;
 }
 function closeProgressDialog() {
     var progressDialog = document.getElementById('progressDialog');
@@ -802,8 +795,7 @@ function sortPlugins(evt) {
         });
     }
     mlistUpdate.then(function(){
-        updateProgressDialog('Sorting plugins...');
-        openProgressDialog();
+        showProgress('Sorting plugins...');
         loot.query('sortPlugins').then(JSON.parse).then(function(result){
             if (result) {
                 var loadOrder = [];
@@ -1307,8 +1299,7 @@ function initVars() {
             loot.query('getSettings'),
         ];
 
-        updateProgressDialog('Initialising user interface...');
-        openProgressDialog();
+        showProgress('Initialising user interface...');
         Promise.all(parallelPromises).then(function(results) {
             try {
                 loot.gameTypes = JSON.parse(results[0]);
@@ -1383,8 +1374,7 @@ function onFocus(evt) {
         return;
     }
     /* Send a query for updated load order and plugin header info. */
-    updateProgressDialog('Refreshing data...');
-    openProgressDialog();
+    showProgress('Refreshing data...');
     loot.query('getGameData').then(function(result){
         /* Parse the data sent from C++. */
         try {
