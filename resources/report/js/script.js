@@ -744,7 +744,7 @@ function sortUIElements(pluginNames) {
             /* Also need to move plugin sidebar entry. */
             var li;
             for (var i = 0; i < entries.length; ++i) {
-                if (entries[i].getElementsByTagName('a')[0].textContent == name) {
+                if (entries[i].label == name) {
                     li = entries[i];
                 }
             }
