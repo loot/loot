@@ -683,8 +683,8 @@ function changeGame(evt) {
 function openReadme(evt) {
     loot.query('openReadme').catch(processCefError);
 }
-function updateMasterlist(evt) {
-    showProgress('Updating masterlist...');
+/* Masterlist update process, minus progress dialog. */
+function updateMasterlistNoProgress() {
     return loot.query('updateMasterlist').then(JSON.parse).then(function(result){
         if (result) {
             /* Update JS variables. */
@@ -705,8 +705,13 @@ function updateMasterlist(evt) {
                 }
             });
         }
-        closeProgressDialog();
     }).catch(processCefError);
+}
+function updateMasterlist(evt) {
+    showProgress('Updating masterlist...');
+    updateMasterlistNoProgress().then(function(result){
+        closeProgressDialog();
+    });
 }
 function sortUIElements(pluginNames) {
     /* pluginNames is an array of plugin names in their sorted order. Rearrange
@@ -788,7 +793,7 @@ function sortPlugins(evt) {
     loot.pauseAutoRefresh = true;
     var mlistUpdate;
     if (loot.settings.updateMasterlist) {
-        mlistUpdate = updateMasterlist(evt);
+        mlistUpdate = updateMasterlistNoProgress();
     } else {
         mlistUpdate = new Promise(function(resolve, reject){
             resolve('');
