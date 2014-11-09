@@ -908,9 +908,23 @@ namespace loot {
     }
 
     bool Plugin::LoadsBSA(const Game& game) const {
-        if (game.Id() != Game::tes5 || IsRegexPlugin())
+        if (IsRegexPlugin())
             return false;
-        return boost::filesystem::exists(game.DataPath() / (name.substr(0, name.length() - 3) + "bsa"));
+        if (game.Id() == Game::tes5) {
+            // Skyrim plugins only load BSAs that exactly match their basename.
+            return boost::filesystem::exists(game.DataPath() / (name.substr(0, name.length() - 3) + "bsa"));
+        }
+        else {
+            //Oblivion, FO3 and FNV .esp files can load BSAs which begin with the plugin basename.
+            if (boost::iends_with(name, ".esp")) {
+                string basename = name.substr(0, name.length() - 4);
+                for (boost::filesystem::directory_iterator it(game.DataPath()); it != boost::filesystem::directory_iterator(); ++it) {
+                    if (it->path().extension().string() == ".bsa" && boost::istarts_with(it->path().filename().string(), basename))
+                        return true;
+                }
+            }
+            return false;
+        }
     }
 
     bool operator == (const File& lhs, const Plugin& rhs) {
