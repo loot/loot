@@ -472,7 +472,7 @@ function getConflictingPluginsFromFilter() {
 }
 function applyFilters(evt) {
     var cards = document.getElementById('main').getElementsByTagName('plugin-card');
-    var entries = document.getElementById('pluginsNav').children;
+    var entries = document.getElementById('cardsNav').getElementsByTagName('loot-plugin-item');
     var hiddenPluginNo = 0;
     var hiddenMessageNo = 0;
     if (cards.length != entries.length) {
@@ -714,8 +714,8 @@ function sortUIElements(pluginNames) {
     /* pluginNames is an array of plugin names in their sorted order. Rearrange
        the plugin cards and nav entries to match it. */
     var main = document.getElementById('main');
-    var pluginsNav = document.getElementById('pluginsNav');
-    var entries = pluginsNav.children;
+    var cardsNav = document.getElementById('cardsNav');
+    var entries = cardsNav.getElementsByTagName('loot-plugin-item');
     if (main.getElementsByTagName('plugin-card').length != entries.length) {
         throw Error("Error: Number of plugins in sidebar doesn't match number of plugins in main area!");
     }
@@ -756,11 +756,11 @@ function sortUIElements(pluginNames) {
             } else {
                 main.insertBefore(card, main.getElementsByTagName('plugin-card')[0]);
             }
-            pluginsNav.removeChild(li);
+            cardsNav.removeChild(li);
             if (lastLi) {
-                pluginsNav.insertBefore(li, lastLi.nextElementSibling);
+                cardsNav.insertBefore(li, lastLi.nextElementSibling);
             } else {
-                pluginsNav.insertBefore(li, pluginsNav.firstElementChild);
+                cardsNav.insertBefore(li, cardsNav.firstElementChild);
             }
             lastLi = li;
         } else {

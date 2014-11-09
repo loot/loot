@@ -160,10 +160,10 @@ function Plugin(obj) {
     }
 
     Plugin.prototype.createListItem = function() {
-        var li = new PluginListItem();
+        var li = document.createElement('loot-plugin-item');
         this.li = li;
 
-        li.textContent = this.name;
+        li.label = this.name;
         li.setLink('#' + this.id);
         li.setPriority(this.getPriorityString());
 
@@ -172,7 +172,7 @@ function Plugin(obj) {
         li.setAttribute('data-edits', this.userlist != undefined);
         li.setAttribute('data-global-priority', this.isGlobalPriority);
 
-        document.getElementById('pluginsNav').appendChild(li);
+        document.getElementById('cardsNav').appendChild(li);
     }
 
     Plugin.prototype.observer = function(changes) {

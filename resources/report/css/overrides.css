@@ -1,0 +1,34 @@
+/* These styles override Polymer's own internal styling for certain elements. */
+
+/* The following 3 rules are for setting the sizes of the drawer and panel. */
+#container::shadow #main {
+    left: 33% !important;
+}
+#container::shadow .narrow-layout #main {
+    left: 0 !important;
+}
+#container::shadow #drawer {
+    width: 33% !important;
+}
+
+/* These overrides change the colour of the game menu's text and underline. */
+#gameMenu::shadow #control {
+    color: white;
+    border-bottom-color: #f1f1f1;
+}
+#gameMenu::shadow #menu {
+    color: black;
+}
+
+/* These overrides change the colour of the tab ink effect and their underline. */
+paper-tabs::shadow #selectionBar {
+    background-color: #4285f4;
+}
+paper-tab::shadow #ink {
+    color: #4285f4;
+}
+
+/* These overrides change the font size of the sidebar items to be the body text size. */
+#cardsNav /deep/ #label {
+    font-size: 10pt;
+}

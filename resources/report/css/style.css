@@ -48,47 +48,11 @@ noscript {
 #gameMenu {
     background: inherit;
 }
-#gameMenu::shadow #control {
-    color: white;
-    border-bottom-color: #f1f1f1;
-}
-#gameMenu::shadow #menu {
-    color: black;
-}
 
 #filtersToggle > span {
     margin-right: 1em;
 }
 
-#container {
-    position: fixed;
-    top: 64px;
-    height: calc(100% - 64px);
-    /*display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    width: 100%;*/
-}
-paper-tabs::shadow #selectionBar {
-    background-color: #4285f4;
-}
-paper-tab::shadow #ink {
-    color: #4285f4;
-}
-#pluginsNav {
-    height: 100%;
-    overflow: auto;
-    margin: 0;
-    padding: 0;
-}
-#pluginsNav li {
-    padding: 0 0.5em;
-    white-space:nowrap;
-}
-#pluginsNav li > span {
-    display: inline-block;
-    width: 1.2em;
-}
 div[drawer] > core-tooltip {
     width: 100%;
     margin: 0 12px;
@@ -99,6 +63,18 @@ div[drawer] > core-tooltip {
 #main {
     overflow: auto;
     position: relative;
+}
+#cardsNav {
+    margin: 0;
+    overflow: auto;
+}
+#cardsNav > paper-item, #cardsNav > loot-plugin-item {
+    height: 2em;
+}
+#container {
+    position: fixed;
+    top: 64px;
+    height: calc(100% - 64px);
 }
 
 section {
@@ -256,11 +232,6 @@ td input {
     text-overflow: ellipsis;
 }
 
-
-
-#pluginsNav .priority {
-    display: none;
-}
 body.editMode header {
     color: #999;
 }

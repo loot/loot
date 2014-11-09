@@ -1,0 +1,102 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/core-tooltip/core-tooltip.html">
+
+<polymer-element name="loot-plugin-item" extends="paper-item">
+    <template>
+        <style>
+        @import '../css/font-awesome.min.css';
+        :host {
+            display: block;
+            padding: 0.5em 1em;
+        }
+        :host([data-bsa=false]) .loadsBSA,
+        :host([data-dummy=false]) .dummyPlugin,
+        :host([data-edits=false]) .hasUserEdits,
+        :host([data-global-priority=false]) .hasGlobalPriority,
+        :host .hasPriority:not([title^=Priority]) {
+            visibility: hidden;
+        }
+        :host a {
+            text-decoration: none;
+            color: black;
+        }
+        :host .hasGlobalPriority, :host .hasPriority {
+            display:none;
+        }
+        :host-context(body.editMode) .hasGlobalPriority,
+        :host-context(body.editMode) .hasPriority {
+            display: inline-block;
+        }
+
+        :host::shadow paper-ripple {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            pointer-events: none;
+        }
+        :host {
+            display: block;
+            position: relative;
+            font-size: 16px;
+            -webkit-user-select: none;
+            cursor: pointer;
+            box-sizing: border-box;
+            height: 48px;
+            padding: 0 16px;
+            white-space: nowrap;
+        }
+        :host::shadow ::content > a {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+        div {
+            min-width: 62px;
+        }
+        </style>
+        <div center horizontal layout>
+            <core-tooltip label="Dummy Plugin">
+                <span class="dummyPlugin fa fa-fw fa-eye-slash"></span>
+            </core-tooltip>
+            <core-tooltip label="Loads BSA">
+                <span class="loadsBSA fa fa-fw fa-paperclip"></span>
+            </core-tooltip>
+            <core-tooltip label="Has User Metadata">
+                <span class="hasUserEdits fa fa-fw fa-user"></span>
+            </core-tooltip>
+            <core-tooltip label="Priority Is Global">
+                <span class="hasGlobalPriority fa fa-fw fa-globe"></span>
+            </core-tooltip>
+            <core-tooltip label="">
+                <span class="hasPriority fa fa-fw fa-exclamation"></span>
+            </core-tooltip>
+        </div>
+        <shadow></shadow>
+    </template>
+    <script>
+    Polymer({
+        setLink: function(url) {
+            this.getElementsByTagName('a')[0].href = url;
+        },
+
+        setPriority: function(text) {
+            this.shadowRoot.getElementsByClassName('hasPriority')[0].parentElement.label = text;
+        },
+
+        handleDragStart: function(evt) {
+            evt.dataTransfer.effectAllowed = 'copy';
+            evt.dataTransfer.setData('text/plain', evt.currentTarget.textContent);
+        },
+
+        created: function() {
+            var a = document.createElement('a');
+            this.appendChild(a);
+        },
+    });
+    </script>
+</polymer-element>
