@@ -534,9 +534,13 @@ function applyFilters(evt) {
         document.getElementById('hiddenPluginNo').textContent = hiddenPluginNo;
     });
 }
-function showMessageDialog(title, text, closeCallback) {
+function showMessageDialog(title, text, yesNo, closeCallback) {
     var dialog = document.createElement('loot-message-dialog');
-    dialog.setButtonText(l10n.jed.translate('Yes').fetch(), l10n.jed.translate('Cancel').fetch());
+    if (yesNo) {
+        dialog.setButtonText(l10n.jed.translate('Yes').fetch(), l10n.jed.translate('No').fetch());
+    } else {
+        dialog.setButtonText(l10n.jed.translate('Yes').fetch(), l10n.jed.translate('Cancel').fetch());
+    }
     dialog.showModal(title, text, closeCallback);
     document.body.appendChild(dialog);
 }
@@ -897,7 +901,7 @@ function redatePlugins(evt) {
         return;
     }
 
-    showMessageDialog('Redate Plugins', 'This feature is provided so that modders using the Creation Kit may set the load order it uses. A side-effect is that any subscribed Steam Workshop mods will be re-downloaded by Steam. Do you wish to continue?', function(result){
+    showMessageDialog('Redate Plugins', 'This feature is provided so that modders using the Creation Kit may set the load order it uses. A side-effect is that any subscribed Steam Workshop mods will be re-downloaded by Steam. Do you wish to continue?', false, function(result){
         if (result) {
             loot.query('redatePlugins').then(function(response){
                 showMessageBox('Redate Plugins', 'Plugins were successfully redated.');
@@ -906,7 +910,7 @@ function redatePlugins(evt) {
     });
 }
 function clearAllMetadata(evt) {
-    showMessageDialog('Clear All Metadata', 'Are you sure you want to clear all existing user-added metadata from all plugins?', function(result){
+    showMessageDialog('Clear All Metadata', 'Are you sure you want to clear all existing user-added metadata from all plugins?', false, function(result){
         if (result) {
             loot.query('clearAllMetadata').then(JSON.parse).then(function(result){
                 if (result) {
@@ -1168,7 +1172,7 @@ function focusSearch(evt) {
     }
 }
 function handleUnappliedChangesClose() {
-    showMessageDialog('Unapplied Sorting Changes', 'You have not yet applied or cancelled your sorted load order. Apply your load order before quitting?', function(result){
+    showMessageDialog('Unapplied Sorting Changes', 'You have not yet applied or cancelled your sorted load order. Apply your load order before quitting?', true, function(result){
         if (result) {
             applySort().then(function(){
                 window.close();

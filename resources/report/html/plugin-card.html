@@ -766,7 +766,7 @@ var pluginCardProto = Object.create(HTMLElement.prototype, {
         value: function(evt) {
             var pluginCard = evt.target.parentElement.parentElement.parentElement.parentElement.parentNode.host;
 
-            showMessageDialog('Clear Plugin Metadata', 'Are you sure you want to clear all existing user-added metadata from "' + pluginCard.getName() + '"?', function(result){
+            showMessageDialog('Clear Plugin Metadata', 'Are you sure you want to clear all existing user-added metadata from "' + pluginCard.getName() + '"?', false, function(result){
                 if (result) {
                     var request = JSON.stringify({
                         name: 'clearPluginMetadata',
