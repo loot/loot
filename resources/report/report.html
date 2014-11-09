@@ -79,38 +79,14 @@
                 <!-- Generated <loot-plugin-item> elements go here, containing # links to each plugin's section in the list. -->
             </core-menu>
             <core-menu id="filters" class="tab-content hidden" flex>
-                <div center horizontal layout>
-                    <div flex>Hide version numbers</div>
-                    <paper-checkbox id="hideVersionNumbers" data-class="version"></paper-checkbox>
-                </div>
-                <div center horizontal layout>
-                    <div flex>Hide CRCs</div>
-                    <paper-checkbox id="hideCRCs" data-class="crc"></paper-checkbox>
-                </div>
-                <div center horizontal layout>
-                    <div flex>Hide Bash Tags</div>
-                    <paper-checkbox id="hideBashTags" data-class="tag"></paper-checkbox>
-                </div>
-                <div center horizontal layout>
-                    <div flex>Hide notes</div>
-                    <paper-checkbox id="hideNotes"></paper-checkbox>
-                </div>
-                <div center horizontal layout>
-                    <div flex>Hide 'Do not clean' messages</div>
-                    <paper-checkbox id="hideDoNotCleanMessages"></paper-checkbox>
-                </div>
-                <div center horizontal layout>
-                    <div flex>Hide inactive plugin messages</div>
-                    <paper-checkbox id="hideInactivePluginMessages"></paper-checkbox>
-                </div>
-                <div center horizontal layout>
-                    <div flex>Hide all plugin messages</div>
-                    <paper-checkbox id="hideAllPluginMessages"></paper-checkbox>
-                </div>
-                <div center horizontal layout>
-                    <div flex>Hide messageless plugins</div>
-                    <paper-checkbox id="hideMessagelessPlugins"></paper-checkbox>
-                </div>
+                <paper-checkbox id="hideVersionNumbers" data-class="version" label="Hide version numbers"></paper-checkbox>
+                <paper-checkbox id="hideCRCs" data-class="crc" label="Hide CRCs"></paper-checkbox>
+                <paper-checkbox id="hideBashTags" data-class="tag" label="Hide Bash Tags"></paper-checkbox>
+                <paper-checkbox id="hideNotes" label="Hide notes"></paper-checkbox>
+                <paper-checkbox id="hideDoNotCleanMessages" label="Hide 'Do not clean' messages"></paper-checkbox>
+                <paper-checkbox id="hideInactivePluginMessages" label="Hide inactive plugin messages"></paper-checkbox>
+                <paper-checkbox id="hideAllPluginMessages" label="Hide all plugin messages"></paper-checkbox>
+                <paper-checkbox id="hideMessagelessPlugins" label="Hide messageless plugins"></paper-checkbox>
                 <div center horizontal layout>
                     <div id="hiddenPluginsTxt" flex>Hidden plugins:</div>
                     <div><span id="hiddenPluginNo">0</span> / <span id="filterTotalPluginNo">0</span></div>
@@ -219,17 +195,10 @@ along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
             </loot-dropdown-menu>
         </div>
         <core-tooltip label="The output is logged to the LOOTDebugLog.txt file." center horizontal layout>
-            <paper-checkbox id="enableDebugLogging"></paper-checkbox>
-            <div>Enable debug logging</div>
+            <paper-checkbox id="enableDebugLogging" label="Enable debug logging"></paper-checkbox>
         </core-tooltip>
-        <div center horizontal layout>
-            <paper-checkbox id="updateMasterlist"></paper-checkbox>
-            <div>Update masterlist before sorting</div>
-        </div>
-        <div center horizontal layout>
-            <paper-checkbox id="autoRefresh"></paper-checkbox>
-            <div>Automatically refresh content on window refocus</div>
-        </div>
+        <paper-checkbox id="updateMasterlist" label="Update masterlist before sorting"></paper-checkbox>
+        <paper-checkbox id="autoRefresh" label="Automatically refresh content on window refocus"></paper-checkbox>
         <table is="editable-table" id="gameTable" data-template="gameRow">
             <thead>
                 <tr>

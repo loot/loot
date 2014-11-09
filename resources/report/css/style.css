@@ -203,17 +203,8 @@ plugin-card > ul {
     margin-left: 1.75em;
 }
 
-#settings > select {
-    float: right;
-    clear: both;
-    position:relative;
-    top:-0.15em;
-}
-#settings > label {
-    display: inline-block;
-    height: 18px;
-    padding: 1px;
-    margin: 2px;
+#settings > paper-checkbox, #settings > core-tooltip, #filters > paper-checkbox {
+    display: block;
 }
 paper-checkbox {
     padding: 0.5em 1em;

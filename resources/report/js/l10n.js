@@ -138,14 +138,14 @@
             document.getElementById('searchBox').parentElement.label = l10n.translate("Press Enter when searching to select the next match.").fetch();
 
             /* Filters */
-            document.getElementById('hideVersionNumbers').previousElementSibling.textContent = l10n.translate("Hide version numbers").fetch();
-            document.getElementById('hideCRCs').previousElementSibling.textContent = l10n.translate("Hide CRCs").fetch();
-            document.getElementById('hideBashTags').previousElementSibling.textContent = l10n.translate("Hide Bash Tags").fetch();
-            document.getElementById('hideNotes').previousElementSibling.textContent = l10n.translate("Hide notes").fetch();
-            document.getElementById('hideDoNotCleanMessages').previousElementSibling.textContent = l10n.translate("Hide 'Do not clean' messages").fetch();
-            document.getElementById('hideInactivePluginMessages').previousElementSibling.textContent = l10n.translate("Hide inactive plugin messages").fetch();
-            document.getElementById('hideAllPluginMessages').previousElementSibling.textContent = l10n.translate("Hide all plugin messages").fetch();
-            document.getElementById('hideMessagelessPlugins').previousElementSibling.textContent = l10n.translate("Hide messageless plugins").fetch();
+            document.getElementById('hideVersionNumbers').label = l10n.translate("Hide version numbers").fetch();
+            document.getElementById('hideCRCs').label = l10n.translate("Hide CRCs").fetch();
+            document.getElementById('hideBashTags').label = l10n.translate("Hide Bash Tags").fetch();
+            document.getElementById('hideNotes').label = l10n.translate("Hide notes").fetch();
+            document.getElementById('hideDoNotCleanMessages').label = l10n.translate("Hide 'Do not clean' messages").fetch();
+            document.getElementById('hideInactivePluginMessages').label = l10n.translate("Hide inactive plugin messages").fetch();
+            document.getElementById('hideAllPluginMessages').label = l10n.translate("Hide all plugin messages").fetch();
+            document.getElementById('hideMessagelessPlugins').label = l10n.translate("Hide messageless plugins").fetch();
             document.getElementById('hiddenPluginsTxt').textContent = l10n.translate("Hidden plugins:").fetch();
             document.getElementById('hiddenMessagesTxt').textContent = l10n.translate("Hidden messages:").fetch();
 
@@ -171,12 +171,12 @@
 
             document.getElementById('languageSelect').previousElementSibling.textContent = l10n.translate("Language").fetch();
 
-            document.getElementById('enableDebugLogging').nextElementSibling.textContent = l10n.translate("Enable debug logging").fetch();
+            document.getElementById('enableDebugLogging').label = l10n.translate("Enable debug logging").fetch();
             document.getElementById('enableDebugLogging').parentElement.label = l10n.translate("The output is logged to the LOOTDebugLog.txt file.").fetch();
 
-            document.getElementById('updateMasterlist').nextElementSibling.textContent = l10n.translate("Update masterlist before sorting").fetch();
+            document.getElementById('updateMasterlist').label = l10n.translate("Update masterlist before sorting").fetch();
 
-            document.getElementById('autoRefresh').nextElementSibling.textContent = l10n.translate("Automatically refresh content on window refocus").fetch();
+            document.getElementById('autoRefresh').label = l10n.translate("Automatically refresh content on window refocus").fetch();
 
             var gameTable = document.getElementById('gameTable');
             gameTable.querySelector('th:first-child').textContent = l10n.translate("Name").fetch();
