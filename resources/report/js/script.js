@@ -1190,14 +1190,14 @@ function setupEventHandlers() {
     }
 
     /*Set up handlers for filters.*/
-    document.getElementById('hideVersionNumbers').addEventListener('click', toggleDisplayCSS, false);
-    document.getElementById('hideCRCs').addEventListener('click', toggleDisplayCSS, false);
-    document.getElementById('hideBashTags').addEventListener('click', toggleDisplayCSS, false);
-    document.getElementById('hideNotes').addEventListener('click', applyFilters, false);
-    document.getElementById('hideDoNotCleanMessages').addEventListener('click', applyFilters, false);
-    document.getElementById('hideInactivePluginMessages').addEventListener('click', applyFilters, false);
-    document.getElementById('hideAllPluginMessages').addEventListener('click', applyFilters, false);
-    document.getElementById('hideMessagelessPlugins').addEventListener('click', applyFilters, false);
+    document.getElementById('hideVersionNumbers').addEventListener('change', toggleDisplayCSS, false);
+    document.getElementById('hideCRCs').addEventListener('change', toggleDisplayCSS, false);
+    document.getElementById('hideBashTags').addEventListener('change', toggleDisplayCSS, false);
+    document.getElementById('hideNotes').addEventListener('change', applyFilters, false);
+    document.getElementById('hideDoNotCleanMessages').addEventListener('change', applyFilters, false);
+    document.getElementById('hideInactivePluginMessages').addEventListener('change', applyFilters, false);
+    document.getElementById('hideAllPluginMessages').addEventListener('change', applyFilters, false);
+    document.getElementById('hideMessagelessPlugins').addEventListener('change', applyFilters, false);
 
     /* Set up handlers for buttons. */
     document.getElementById('redatePluginsButton').addEventListener('click', redatePlugins, false);
