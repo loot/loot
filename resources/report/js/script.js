@@ -1032,7 +1032,7 @@ function closeSettingsDialog(evt) {
         return;
     }
 
-    var dialog = evt.target.parentElement.parentElement;
+    var dialog = evt.target.parentElement;
     if (evt.target.classList.contains('accept')) {
         /* Update the JS variable values. */
         var settings = {

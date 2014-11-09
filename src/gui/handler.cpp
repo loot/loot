@@ -263,18 +263,25 @@ namespace loot {
             g_app_state.UpdateSettings(request["args"][0]);
             // If the user has deleted a default game, we don't want to restore it now.
             // It will be restored when LOOT is next loaded.
-            vector<Game> games(request["args"][0]["games"].as< vector<Game> >());
+            try {
+                BOOST_LOG_TRIVIAL(trace) << "Updating games object.";
+                vector<Game> games(request["args"][0]["games"].as< vector<Game> >());
+                g_app_state.UpdateGames(games);
 
-            g_app_state.UpdateGames(games);
+                // Also enable/disable debug logging as required.
+                if (request["args"][0]["enableDebugLogging"] && request["args"][0]["enableDebugLogging"].as<bool>())
+                    boost::log::core::get()->set_logging_enabled(true);
+                else
+                    boost::log::core::get()->set_logging_enabled(false);
 
-            // Also enable/disable debug logging as required.
-            if (request["args"][0]["enableDebugLogging"].as<bool>())
-                boost::log::core::get()->set_logging_enabled(true);
-            else
-                boost::log::core::get()->set_logging_enabled(false);
-
-            // Now send back the new list of installed games to the UI.
-            callback->Success(GetInstalledGames());
+                // Now send back the new list of installed games to the UI.
+                BOOST_LOG_TRIVIAL(trace) << "Getting new list of installed games.";
+                callback->Success(GetInstalledGames());
+            }
+            catch (exception &e) {
+                BOOST_LOG_TRIVIAL(error) << e.what();
+                callback->Failure(-1, e.what());
+            }
             return true;
         }
         else if (requestName == "applySort") {
