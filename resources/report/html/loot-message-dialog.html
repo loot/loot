@@ -42,6 +42,8 @@ was pressed.
         onButtonClick: function(evt) {
             if (evt.target.parentElement.closeCallback) {
                 evt.target.parentElement.closeCallback(evt.target.classList.contains('accept'));
+                evt.target.parentElement.close();
+                evt.target.parentElement.parentElement.removeChild(evt.target.parentElement);
             }
         },
 
