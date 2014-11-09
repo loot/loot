@@ -1,34 +1,35 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/core-tooltip/core-tooltip.html">
+<link rel="import" href="../bower_components/core-icon/core-icon.html">
+<link rel="import" href="../bower_components/core-icons/core-icons.html">
 
 <polymer-element name="loot-plugin-item" extends="paper-item">
     <template>
         <style>
-        @import '../css/font-awesome.min.css';
-        :host {
-            display: block;
-            padding: 0.5em 1em;
-        }
-        :host([data-bsa=false]) .loadsBSA,
-        :host([data-dummy=false]) .dummyPlugin,
-        :host([data-edits=false]) .hasUserEdits,
-        :host([data-global-priority=false]) .hasGlobalPriority,
-        :host .hasPriority:not([title^=Priority]) {
+        :host([data-bsa=false]) #loadsBSA,
+        :host([data-dummy=false]) #dummyPlugin,
+        :host([data-edits=false]) #hasUserEdits,
+        :host([data-global-priority=false]) #hasGlobalPriority,
+        :host #hasPriority:not([title^=Priority]) {
             visibility: hidden;
         }
         :host a {
             text-decoration: none;
             color: black;
         }
-        :host .hasGlobalPriority, :host .hasPriority {
+        :host .hasGlobalPriority, :host #hasPriority {
             display:none;
         }
-        :host-context(body.editMode) .hasGlobalPriority,
-        :host-context(body.editMode) .hasPriority {
+        :host-context(body.editMode) #hasGlobalPriority,
+        :host-context(body.editMode) #hasPriority {
             display: inline-block;
         }
+        div {
+            min-width: 62px;
+        }
 
+        /* The default styling for Polymer's <paper-item>, which seems to be applied in an external stylesheet, so isn't inherited. */
         :host::shadow paper-ripple {
             position: absolute;
             top: 0;
@@ -55,25 +56,22 @@
             left: 0;
             right: 0;
         }
-        div {
-            min-width: 62px;
-        }
         </style>
         <div center horizontal layout>
-            <core-tooltip label="Dummy Plugin">
-                <span class="dummyPlugin fa fa-fw fa-eye-slash"></span>
+            <core-tooltip id="dummyPlugin" label="Dummy Plugin">
+                <core-icon icon="visibility-off"></core-icon>
             </core-tooltip>
-            <core-tooltip label="Loads BSA">
-                <span class="loadsBSA fa fa-fw fa-paperclip"></span>
+            <core-tooltip id="loadsBSA" label="Loads BSA">
+                <core-icon icon="attachment"></core-icon>
             </core-tooltip>
-            <core-tooltip label="Has User Metadata">
-                <span class="hasUserEdits fa fa-fw fa-user"></span>
+            <core-tooltip id="hasUserEdits" label="Has User Metadata">
+                <core-icon icon="account-circle"></core-icon>
             </core-tooltip>
-            <core-tooltip label="Priority Is Global">
-                <span class="hasGlobalPriority fa fa-fw fa-globe"></span>
+            <core-tooltip id="hasGlobalPriority" label="Priority Is Global">
+                <core-icon icon="language"></core-icon>
             </core-tooltip>
-            <core-tooltip label="">
-                <span class="hasPriority fa fa-fw fa-exclamation"></span>
+            <core-tooltip id="hasPriority" label="">
+                <core-icon icon="star"></core-icon>
             </core-tooltip>
         </div>
         <shadow></shadow>
@@ -85,7 +83,7 @@
         },
 
         setPriority: function(text) {
-            this.shadowRoot.getElementsByClassName('hasPriority')[0].parentElement.label = text;
+            this.shadowRoot.getElementById('hasPriority').label = text;
         },
 
         handleDragStart: function(evt) {

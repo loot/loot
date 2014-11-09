@@ -32,3 +32,8 @@ paper-tab::shadow #ink {
 #cardsNav /deep/ #label {
     font-size: 10pt;
 }
+
+/* These overrides change the position of the link in <loot-plugin-item> so that it doesn't cover up tooltips. */
+loot-plugin-item::shadow ::content > a {
+    left: 112px;
+}
