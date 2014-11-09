@@ -557,32 +557,9 @@ function changeGame(evt) {
     if (evt.target.className.indexOf('core-selected') != -1) {
         return;
     }
-    /* First store current game info in loot.games object.
-       This object may not exist, so initialise it if not. */
-    var index = undefined;
-    if (loot.games) {
-        for (var i = 0; i < loot.games.length; ++i) {
-            if (loot.games[i].folder == loot.game.folder) {
-                index = i;
-                break;
-            }
-        }
-    } else {
-        loot.games = [];
-    }
-    if (index == undefined) {
-        loot.games.push({
-            folder: loot.game.folder
-        });
-        index = loot.games.length - 1;
-    }
-    loot.games[index].globalMessages = loot.game.globalMessages;
-    loot.games[index].masterlist = loot.game.masterlist;
-    loot.games[index].plugins = loot.game.plugins;
 
+    /* Send off a CEF query with the folder name of the new game. */
     showProgress('Loading game data...');
-
-    /* Now send off a CEF query with the folder name of the new game. */
     var request = JSON.stringify({
         name: 'changeGame',
         args: [
@@ -598,7 +575,7 @@ function changeGame(evt) {
 
         /* Clear the UI of all existing game-specific data. Also
            clear the card and li variables for each plugin object. */
-        loot.games[index].plugins.forEach(function(plugin){
+        loot.game.plugins.forEach(function(plugin){
             plugin.card.parentElement.removeChild(plugin.card);
             plugin.card = undefined;
             plugin.li.parentElement.removeChild(plugin.li);
@@ -612,66 +589,13 @@ function changeGame(evt) {
         /* Parse the data sent from C++. */
         try {
             var gameInfo = JSON.parse(result, jsonToPlugin);
-        } catch (e) {
-            console.log(e);
-            console.log('changeGame response: ' + result);
-        }
-
-        /* This may not be the first time loading this game this instance of
-           LOOT. Restore cached data if it exists. */
-        index = undefined;
-        if (loot.games) {
-            for (var i = 0; i < loot.games.length; ++i) {
-                if (loot.games[i].folder == gameInfo.folder) {
-                    index = i;
-                    break;
-                }
-            }
-        }
-        if (index == undefined) {
-            /* Game data not cached, simply set what was sent. */
             loot.game.folder = gameInfo.folder;
             loot.game.masterlist = gameInfo.masterlist;
             loot.game.globalMessages = gameInfo.globalMessages;
             loot.game.plugins = gameInfo.plugins;
-        } else {
-            /* Game data cache exists. */
-            loot.game.folder = loot.games[i].folder;
-            loot.game.masterlist = loot.games[i].masterlist;
-            loot.game.globalMessages = loot.games[i].globalMessages;
-            loot.game.plugins = loot.games[i].plugins;
-            /* Now overwrite plugin data with the newly sent data. Also update
-               card and li vars as they were unset when the game was switched
-               from before. */
-            gameInfo.plugins.forEach(function(plugin){
-                var foundPlugin = false;
-                for (var i = 0; i < loot.game.plugins.length; ++i) {
-                    if (loot.game.plugins[i].name == plugin.name) {
-
-                        loot.game.plugins[i].isActive = plugin.isActive;
-                        loot.game.plugins[i].isDummy = plugin.isDummy;
-                        loot.game.plugins[i].loadsBSA = plugin.loadsBSA;
-                        loot.game.plugins[i].crc = plugin.crc;
-                        loot.game.plugins[i].version = plugin.version;
-
-                        loot.game.plugins[i].modPriority = plugin.modPriority;
-                        loot.game.plugins[i].isGlobalPriority = plugin.isGlobalPriority;
-                        loot.game.plugins[i].messages = plugin.messages;
-                        loot.game.plugins[i].tags = plugin.tags;
-                        loot.game.plugins[i].isDirty = plugin.isDirty;
-
-                        loot.game.plugins[i].card = plugin.card;
-                        loot.game.plugins[i].li = plugin.li;
-
-                        foundPlugin = true;
-                        break;
-                    }
-                }
-                if (!foundPlugin) {
-                    /* A new plugin. */
-                    loot.game.plugins.push(plugin);
-                }
-            });
+        } catch (e) {
+            console.log(e);
+            console.log('changeGame response: ' + result);
         }
 
         /* Reapply previously active filters. */
