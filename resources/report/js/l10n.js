@@ -102,10 +102,10 @@
 
             /* Plugin List Item Template */
             var pluginItem = document.querySelector('link[rel="import"][href$="loot-plugin-item.html"]').import.querySelector('template').content;
-            pluginItem.querySelector('.dummyPlugin').title = l10n.translate("Dummy Plugin").fetch();
-            pluginItem.querySelector('.loadsBSA').title = l10n.translate("Loads BSA").fetch();
-            pluginItem.querySelector('.hasUserEdits').title = l10n.translate("Has User Metadata").fetch();
-            pluginItem.querySelector('.hasGlobalPriority').title = l10n.translate("Priority Is Global").fetch();
+            pluginItem.querySelector('#dummyPlugin').label = l10n.translate("Dummy Plugin").fetch();
+            pluginItem.querySelector('#loadsBSA').label = l10n.translate("Loads BSA").fetch();
+            pluginItem.querySelector('#hasUserEdits').label = l10n.translate("Has User Metadata").fetch();
+            pluginItem.querySelector('#hasGlobalPriority').label = l10n.translate("Priority Is Global").fetch();
 
             /* Message row template */
             var messageRow = editableTableImportDoc.querySelector('#messageRow').content;
