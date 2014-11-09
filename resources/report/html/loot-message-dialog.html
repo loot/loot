@@ -16,6 +16,14 @@ was pressed.
 <link rel="import" href="loot-dialog.html">
 
 <polymer-element name="loot-message-dialog" extends="loot-dialog">
+    <template>
+    <style>
+    :host {
+        max-width: 50%;
+    }
+    </style>
+    <shadow></shadow>
+    </template>
     <script>
     Polymer({
         closeCallback: undefined,
