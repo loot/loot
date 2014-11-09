@@ -1069,7 +1069,16 @@ function hideHoverText(evt) {
     }
 }
 function startSearch(evt) {
-    if (evt.target.value == '') {
+    var findNext = false;
+    if (evt.type == 'keyup') {
+        if (evt.keyCode != 13) {
+            // Don't do anything for keyboard events that aren't enter - if valid, the input event will handle them.
+            return;
+        } else {
+            findNext = true;
+        }
+    }
+    if (evt.target.inputValue == '') {
         loot.query('cancelFind').then(function(result){
             evt.target.focus();
         }).catch(processCefError);
@@ -1077,7 +1086,8 @@ function startSearch(evt) {
         var request = JSON.stringify({
             name: 'find',
             args: [
-                evt.target.value
+                evt.target.inputValue,
+                findNext
             ]
         });
 
@@ -1153,7 +1163,7 @@ function setupEventHandlers() {
     /* Set up event handlers for content search. */
     var searchBox = document.getElementById('searchBox');
     searchBox.addEventListener('input', startSearch, false);
-    searchBox.addEventListener('search', startSearch, false);
+    searchBox.addEventListener('keyup', startSearch, false);
     window.addEventListener('keyup', focusSearch, false);
 
     /* Set up handler for closing menus. */

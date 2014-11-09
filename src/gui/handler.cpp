@@ -198,7 +198,7 @@ namespace loot {
 
         if (requestName == "find") {
             // Has one arg, which is the search string.
-            Find(browser, request["args"][0].as<string>());
+            Find(browser, request["args"][0].as<string>(), request["args"][1].as<bool>());
             callback->Success("");
             return true;
         }
@@ -334,14 +334,11 @@ namespace loot {
         return false;
     }
 
-    void Handler::Find(CefRefPtr<CefBrowser> browser, const std::string& search) {
-        // In case there is a search already running, cancel it.
-        browser->GetHost()->StopFinding(true);
-
+    void Handler::Find(CefRefPtr<CefBrowser> browser, const std::string& search, bool findNext) {
         // Only one search at a time is allowed, so give a constant identifier,
         // and we want case-insensitive forward searching, with no repeated
         // searches.
-        browser->GetHost()->Find(0, search, true, false, false);
+        browser->GetHost()->Find(0, search, true, false, findNext);
     }
 
     void Handler::GetConflictingPlugins(const std::string& pluginName, CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback) {
