@@ -101,11 +101,11 @@
             pluginCard.getElementById('clearMetadata').firstChild.nextSibling.textContent = l10n.translate("Clear User Metadata").fetch();
 
             /* Plugin List Item Template */
-            var pluginLI = pluginLiImportDoc.querySelector('#pluginLI').content;
-            pluginLI.querySelector('.dummyPlugin').title = l10n.translate("Dummy Plugin").fetch();
-            pluginLI.querySelector('.loadsBSA').title = l10n.translate("Loads BSA").fetch();
-            pluginLI.querySelector('.hasUserEdits').title = l10n.translate("Has User Metadata").fetch();
-            pluginLI.querySelector('.hasGlobalPriority').title = l10n.translate("Priority Is Global").fetch();
+            var pluginItem = document.querySelector('link[rel="import"][href$="loot-plugin-item.html"]').import.querySelector('template').content;
+            pluginItem.querySelector('.dummyPlugin').title = l10n.translate("Dummy Plugin").fetch();
+            pluginItem.querySelector('.loadsBSA').title = l10n.translate("Loads BSA").fetch();
+            pluginItem.querySelector('.hasUserEdits').title = l10n.translate("Has User Metadata").fetch();
+            pluginItem.querySelector('.hasGlobalPriority').title = l10n.translate("Priority Is Global").fetch();
 
             /* Message row template */
             var messageRow = editableTableImportDoc.querySelector('#messageRow').content;
