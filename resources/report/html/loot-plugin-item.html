@@ -88,7 +88,7 @@
 
         handleDragStart: function(evt) {
             evt.dataTransfer.effectAllowed = 'copy';
-            evt.dataTransfer.setData('text/plain', evt.currentTarget.textContent);
+            evt.dataTransfer.setData('text/plain', evt.currentTarget.label);
         },
 
         created: function() {
