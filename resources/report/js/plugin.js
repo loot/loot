@@ -133,7 +133,7 @@ function Plugin(obj) {
     }
 
     Plugin.prototype.createCard = function() {
-        var card = new PluginCard();
+        var card = document.createElement('loot-plugin-card');
         this.card = card;
 
         card.id = this.id;

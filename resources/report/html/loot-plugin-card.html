@@ -1,3 +1,20 @@
+<!-- Fires the following events:
+
+loot-editor-close
+  detail: boolean
+    True if the editor was closed using the Apply button.
+
+loot-editor-open
+
+loot-filter-conflicts
+  detail: boolean
+    True if the filter has been activated.
+
+loot-copy-metadata
+
+loot-clear-metadata
+-->
+
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/core-toolbar/core-toolbar.html">
 <link rel="import" href="../bower_components/core-tooltip/core-tooltip.html">
@@ -58,11 +75,9 @@
         :host(.flip) {
             transform: rotateY(180deg);
         }
-
         :host(.flip) #front  {
             display: none;
         }
-
         :host(.flip) #editor  {
             display: block;
         }
@@ -155,10 +170,18 @@
         #editor > div {
             padding: 1em;
         }
+        paper-menu-button paper-item:first-child {
+            padding: 0;
+        }
+        #showOnlyConflicts {
+            height: 48px;
+            line-height: 48px;
+            padding: 0 16px;
+        }
         </style>
         <section id="front">
             <core-toolbar>
-                <core-tooltip class="activeTick" label="Active">
+                <core-tooltip class="activeTick" label="Active Plugin">
                     <core-icon icon="check"></core-icon>
                 </core-tooltip>
                 <content select="h1"></content>
@@ -170,12 +193,12 @@
                 <core-tooltip class="loadsBSA" label="Loads BSA">
                     <core-icon icon="attachment"></core-icon>
                 </core-tooltip>
-                <core-tooltip id="front-hasUserEdits" label="Has User Metadata">
+                <core-tooltip id="hasUserEdits" label="Has User Metadata">
                     <core-icon icon="account-circle"></core-icon>
                 </core-tooltip>
                 <paper-menu-button icon="more-vert" halign="right">
                     <paper-item>
-                        <paper-checkbox id="showOnlyConflicts" label="Show Only Conflicts"></paper-checkbox>
+                        <paper-checkbox id="showOnlyConflicts" label="Show Only Conflicts" flex></paper-checkbox>
                     </paper-item>
                     <paper-item id="editMetadata" icon="create" label="Edit Metadata"></paper-item>
                     <paper-item id="copyMetadata" icon="content-copy" label="Copy Metadata As Text"></paper-item>
@@ -188,7 +211,7 @@
         </section>
         <section id="editor">
             <core-toolbar>
-                <core-tooltip class="activeTick" label="Active">
+                <core-tooltip class="activeTick" label="Active Plugin">
                     <core-icon icon="check"></core-icon>
                 </core-tooltip>
                 <h1></h1>
@@ -297,13 +320,380 @@
     </template>
     <script>
     Polymer({
+        created: function() {
+            var h1 = document.createElement('h1');
+            this.appendChild(h1);
+            var crc = document.createElement('div');
+            crc.className = 'crc';
+            this.appendChild(crc);
+            var version = document.createElement('div');
+            version.className = 'version';
+            this.appendChild(version);
+
+            var tagAdd = document.createElement('div');
+            tagAdd.className = 'tag add';
+            this.appendChild(tagAdd);
+            var tagRemove = document.createElement('div');
+            tagRemove.className = 'tag remove';
+            this.appendChild(tagRemove);
+
+            var messages = document.createElement('ul');
+            this.appendChild(messages);
+        },
+
+        attached: function() {
+            this.shadowRoot.getElementById('fileTabs').firstElementChild.addEventListener('core-select', this.onShowEditorTable, false);
+            this.shadowRoot.getElementById('miscTabs').firstElementChild.addEventListener('core-select', this.onShowEditorTable, false);
+
+            this.shadowRoot.getElementById('accept').addEventListener('click', this.onHideEditor, false);
+            this.shadowRoot.getElementById('cancel').addEventListener('click', this.onHideEditor, false);
+
+            this.shadowRoot.getElementById('showOnlyConflicts').addEventListener('change', this.onShowOnlyConflicts, false);
+            this.shadowRoot.getElementById('editMetadata').addEventListener('click', this.onShowEditor, false);
+            this.shadowRoot.getElementById('copyMetadata').addEventListener('click', this.onCopyMetadata, false);
+            this.shadowRoot.getElementById('clearMetadata').addEventListener('click', this.onClearMetadata, false);
+
+            /* Because of the 3D flip effect used when accessing the editor,
+               plugin menus get hidden underneath later plugin cards unless
+               those cards have a lower z-index than the card the menu is part
+               of. Therefore, set this card's z-index to the negative of its
+               position in the plugin list.
+            */
+            var cards = this.parentElement.getElementsByTagName('loot-plugin-card');
+            for (var i = 0; i < cards.length; ++i) {
+                if (cards[i] == this) {
+                    this.style.zIndex = 10000 - i;
+                }
+            }
+        },
+
+        detached: function() {
+            this.shadowRoot.getElementById('fileTabs').firstElementChild.removeEventListener('core-select', this.onShowEditorTable, false);
+            this.shadowRoot.getElementById('miscTabs').firstElementChild.removeEventListener('core-select', this.onShowEditorTable, false);
+
+            this.shadowRoot.getElementById('accept').removeEventListener('click', this.onHideEditor, false);
+            this.shadowRoot.getElementById('cancel').removeEventListener('click', this.onHideEditor, false);
+
+            this.shadowRoot.getElementById('showOnlyConflicts').removeEventListener('change', this.onShowOnlyConflicts, false);
+            this.shadowRoot.getElementById('editMetadata').removeEventListener('click', this.onShowEditor, false);
+            this.shadowRoot.getElementById('copyMetadata').removeEventListener('click', this.onCopyMetadata, false);
+            this.shadowRoot.getElementById('clearMetadata').addEventListener('click', this.onClearMetadata, false);
+        },
+
         ready: function() {
             var editor = this.shadowRoot.getElementById('editor');
 
             editor.querySelector('h1').textContent = this.querySelector('h1').textContent;
             editor.querySelector('.version').textContent = this.querySelector('.version').textContent;
             editor.querySelector('.crc').textContent = this.querySelector('.crc').textContent;
-        }
+        },
+
+        getName: function() {
+            return this.getElementsByTagName('h1')[0].textContent;
+        },
+
+        onShowEditorTable: function(evt) {
+            var tables = evt.target.parentElement.getElementsByTagName('table');
+            for (var i = 0; i < tables.length; ++i) {
+                if (tables[i].id != evt.target.selected) {
+                    tables[i].classList.toggle('hidden', true);
+                } else {
+                    tables[i].classList.toggle('hidden', false);
+                }
+            }
+        },
+
+        readFromEditor: function(oldData) {
+            /* Need to turn all the editor controls' values into data to
+               process. The control values can be compared with the existing
+               values to determine what's been changed, and masterlist rows in
+               the tables can be ignored because they're immutable. */
+
+            var plugin = {
+                name: this.getElementsByTagName('h1')[0].textContent,
+                userlist: {},
+            };
+
+            if (oldData.id == this.id) {
+
+                /* If either of the priority values have been changed, the
+                   base priority value they're derived from will have
+                   changed, so record both. */
+                if (this.shadowRoot.getElementById('globalPriority').checked != oldData.isGlobalPriority
+                    || this.shadowRoot.getElementById('priorityValue').value != oldData.modPriority) {
+                    plugin.isGlobalPriority = this.shadowRoot.getElementById('globalPriority').checked;
+                    plugin.modPriority = this.shadowRoot.getElementById('priorityValue').value;
+                }
+
+                plugin.userlist.enabled = this.shadowRoot.getElementById('enableEdits').checked;
+
+                var tables = this.shadowRoot.getElementsByTagName('table');
+                for (var j = 0; j < tables.length; ++j) {
+                    var rowsData = tables[j].getRowsData(true);
+                    if (rowsData.length > 0) {
+                        if (tables[j].id == 'loadAfter') {
+                            plugin.userlist.after = rowsData;
+                        } else if (tables[j].id == 'req') {
+                            plugin.userlist.req = rowsData;
+                        } else if (tables[j].id == 'inc') {
+                            plugin.userlist.inc = rowsData;
+                        } else if (tables[j].id == 'message') {
+                            rowsData.forEach(function(data){
+                                data.content = [{
+                                    str: data.content,
+                                    lang: data.language
+                                }]
+                                delete data.language;
+                            });
+                            plugin.userlist.msg = rowsData;
+                        } else if (tables[j].id == 'tags') {
+                            rowsData.forEach(function(data){
+                                data = oldData.convTagObj(data);
+                            });
+                            plugin.userlist.tag = rowsData;
+                        } else if (tables[j].id == 'dirty') {
+                            rowsData.forEach(function(data){
+                                data.crc = parseInt(data.crc, 16);
+                            });
+                            plugin.userlist.dirty = rowsData;
+                        } else if (tables[j].id == 'locations') {
+                            rowsData.forEach(function(data){
+                                /* User metadata can only specify one version, but it should be a list. */
+                                if (data.ver.length > 0) {
+                                    data.ver = [
+                                        data.ver
+                                    ];
+                                } else {
+                                    delete data.ver;
+                                }
+                            });
+                            plugin.userlist.url = rowsData;
+                        }
+                    }
+                }
+            }
+            return plugin;
+        },
+
+        onHideEditor: function(evt) {
+            var card = evt.target.parentElement.parentElement.parentElement.parentNode.host;
+
+            /* First validate table inputs. */
+            var isValid = true;
+            var inputs = evt.target.parentElement.parentElement.getElementsByTagName('input');
+            for (var i = 0; i < inputs.length; ++i) {
+                if (!inputs[i].checkValidity()) {
+                    isValid = false;
+                    console.log(inputs[i]);
+                }
+            }
+
+            if (isValid || evt.target-id != 'accept') {
+                /* Fire the close event, saying whether or not to save data. */
+                card.dispatchEvent(new CustomEvent('loot-editor-close', {
+                    bubbles: true,
+                    detail: (evt.target.id == 'accept'),
+                }));
+                card.classList.toggle('flip');
+            }
+        },
+
+        onTransitionEnd: function(evt) {
+            evt.target.removeEventListener('transitionend', evt.target.onTransitionEnd, false);
+            evt.target.shadowRoot.getElementById('editMetadata').parentElement.shadowRoot.getElementById('dropdown').style.display = 'none';
+        },
+
+        onShowEditor: function(evt) {
+            var card = evt.target.parentElement.parentElement.parentElement.parentNode.host;
+
+            /* Fire an open event, so that the UI can enter edit mode. */
+            card.dispatchEvent(new CustomEvent('loot-editor-open', {
+                bubbles: true,
+            }));
+
+            /* There's a bug where the hiding of the front panel interferes somehow with the
+               menu getting hidden, so do that manually once the transition ends. */
+            card.addEventListener('transitionend', card.onTransitionEnd, false);
+
+            /* Now show editor. */
+            card.classList.toggle('flip');
+        },
+
+        setEditorData: function(data) {
+            this.shadowRoot.getElementById('editor').getElementsByTagName('h1')[0].textContent = data.name;
+            this.shadowRoot.getElementById('editor').getElementsByClassName('version')[0].textContent = data.version;
+            if (data.crc != '0') {
+                this.shadowRoot.getElementById('editor').getElementsByClassName('crc')[0].textContent = data.crc.toString(16).toUpperCase();
+            }
+
+            /* Fill in the editor input values. */
+            if (data.userlist && !data.userlist.enabled) {
+                this.shadowRoot.getElementById('enableEdits').checked = false;
+            } else {
+                this.shadowRoot.getElementById('enableEdits').checked = true;
+            }
+            this.shadowRoot.getElementById('globalPriority').checked = data.isGlobalPriority;
+            this.shadowRoot.getElementById('priorityValue').value = data.modPriority;
+
+            /* Clear any existing editor table data. Don't remove the last row though,
+               that's the "add new row" one. */
+            var tables = this.shadowRoot.getElementsByTagName('table');
+            for (var j = 0; j < tables.length; ++j) {
+                tables[j].clear();
+            }
+
+            /* Fill in editor table data. Masterlist-originated rows should have
+               their contents made read-only, and be unremovable. */
+            var tables = this.shadowRoot.getElementsByTagName('table');
+            for (var j = 0; j < tables.length; ++j) {
+                if (tables[j].id == 'loadAfter') {
+
+                    if (data.masterlist && data.masterlist.after) {
+                        data.masterlist.after.forEach(function(file) {
+                            var row = tables[j].addRow(file);
+                            tables[j].setReadOnly(row);
+                        });
+                    }
+                    if (data.userlist && data.userlist.after) {
+                        data.userlist.after.forEach(function(file) {
+                            tables[j].addRow(file);
+                        });
+                    }
+
+                } else if (tables[j].id == 'req') {
+
+                    if (data.masterlist && data.masterlist.req) {
+                        data.masterlist.req.forEach(function(file) {
+                            var row = tables[j].addRow(file);
+                            tables[j].setReadOnly(row);
+                        });
+                    }
+                    if (data.userlist && data.userlist.req) {
+                        data.userlist.req.forEach(function(file) {
+                            tables[j].addRow(file);
+                        });
+                    }
+
+                } else if (tables[j].id == 'inc') {
+
+                    if (data.masterlist && data.masterlist.inc) {
+                        data.masterlist.inc.forEach(function(file) {
+                            var row = tables[j].addRow(file);
+                            tables[j].setReadOnly(row);
+                        });
+                    }
+                    if (data.userlist && data.userlist.inc) {
+                        data.userlist.inc.forEach(function(file) {
+                            tables[j].addRow(file);
+                        });
+                    }
+
+                } else if (tables[j].id == 'message') {
+
+                    if (data.masterlist && data.masterlist.msg) {
+                        data.masterlist.msg.forEach(function(message) {
+                            var data = {
+                                type: message.type,
+                                content: message.content[0].str,
+                                condition: message.condition,
+                                language: message.content[0].lang
+                            };
+                            var row = tables[j].addRow(data);
+                            tables[j].setReadOnly(row);
+
+                        });
+                    }
+                    if (data.userlist && data.userlist.msg) {
+                        data.userlist.msg.forEach(function(message) {
+                            var data = {
+                                type: message.type,
+                                content: message.content[0].str,
+                                condition: message.condition,
+                                language: message.content[0].lang
+                            };
+                            tables[j].addRow(data);
+                        });
+                    }
+
+                } else if (tables[j].id == 'tags') {
+
+                    if (data.masterlist && data.masterlist.tag) {
+                        data.masterlist.tag.forEach(function(tag) {
+                            var data = data.convTagObj(tag);
+                            var row = tables[j].addRow(data);
+                            tables[j].setReadOnly(row);
+                        }, data);
+                    }
+                    if (data.userlist && data.userlist.tag) {
+                        data.userlist.tag.forEach(function(tag) {
+                            var data = data.convTagObj(tag);
+                            tables[j].addRow(data);
+                        }, data);
+                    }
+
+                } else if (tables[j].id == 'dirty') {
+
+                    if (data.masterlist && data.masterlist.dirty) {
+                        data.masterlist.dirty.forEach(function(info) {
+                            info.crc = info.crc.toString(16).toUpperCase();
+                            var row = tables[j].addRow(info);
+                            tables[j].setReadOnly(row);
+                        });
+                    }
+                    if (data.userlist && data.userlist.dirty) {
+                        data.userlist.dirty.forEach(function(info) {
+                            info.crc = info.crc.toString(16).toUpperCase();
+                            tables[j].addRow(info);
+                        });
+                    }
+
+                } else if (tables[j].id == 'locations') {
+
+                    if (data.masterlist && data.masterlist.url) {
+                        data.masterlist.url.forEach(function(location) {
+                            var temp = location;
+                            if (temp.ver) {
+                                temp.ver = temp.ver[0];
+                            }
+                            var row = tables[j].addRow(temp);
+                            tables[j].setReadOnly(row);
+                        });
+                    }
+                    if (data.userlist && data.userlist.url) {
+                        data.userlist.url.forEach(function(location) {
+                            var temp = location;
+                            if (temp.ver) {
+                                temp.ver = temp.ver[0];
+                            }
+                            tables[j].addRow(temp);
+                        });
+                    }
+                }
+            }
+        },
+
+        deactivateConflictFilter: function() {
+            this.shadowRoot.getElementById('showOnlyConflicts').checked = false;
+        },
+
+        onShowOnlyConflicts: function(evt) {
+            evt.target.dispatchEvent(new CustomEvent('loot-filter-conflicts', {
+                bubbles: true,
+                detail: evt.target.checked,
+            }));
+        },
+
+        onCopyMetadata: function(evt) {
+            evt.target.dispatchEvent(new CustomEvent('loot-copy-metadata', {
+                bubbles: true,
+            }));
+        },
+
+        onClearMetadata: function(evt) {
+            evt.target.dispatchEvent(new CustomEvent('loot-clear-metadata', {
+                bubbles: true,
+            }));
+        },
     });
     </script>
 </polymer-element>

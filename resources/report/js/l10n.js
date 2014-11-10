@@ -51,24 +51,27 @@
 
         translateStaticText: function(l10n) {
             /* Plugin card template. */
-            var pluginCard = pluginCardImportDoc.querySelector('#pluginCard').content;
-            pluginCard.getElementById('activeTick').title = l10n.translate("Active Plugin").fetch();
-            pluginCard.getElementById('dummyPlugin').title = l10n.translate("Dummy Plugin").fetch();
-            pluginCard.getElementById('loadsBSA').title = l10n.translate("Loads BSA").fetch();
-            pluginCard.getElementById('hasUserEdits').title = l10n.translate("Has User Metadata").fetch();
-            pluginCard.getElementById('menuButton').title = l10n.translate("Click to open the plugin menu.").fetch();
+            var pluginCard = document.querySelector('link[rel="import"][href$="loot-plugin-card.html"]').import.querySelector('template').content;
+            pluginCard.getElementById('front').querySelector('.activeTick').label = l10n.translate("Active Plugin").fetch();
+            pluginCard.getElementById('editor').querySelector('.activeTick').label = l10n.translate("Active Plugin").fetch();
+            pluginCard.getElementById('front').querySelector('.dummyPlugin').label = l10n.translate("Dummy Plugin").fetch();
+            pluginCard.getElementById('editor').querySelector('.dummyPlugin').label = l10n.translate("Dummy Plugin").fetch();
+            pluginCard.getElementById('front').querySelector('.loadsBSA').label = l10n.translate("Loads BSA").fetch();
+            pluginCard.getElementById('editor').querySelector('.loadsBSA').label = l10n.translate("Loads BSA").fetch();
+            pluginCard.getElementById('hasUserEdits').label = l10n.translate("Has User Metadata").fetch();
 
-            pluginCard.getElementById('enableEdits').nextElementSibling.textContent = l10n.translate("Enable Edits").fetch();
-            pluginCard.getElementById('globalPriority').nextElementSibling.title = l10n.translate("Global priorities are compared against all other plugins. Normal priorities are compared against only conflicting plugins.").fetch();
-            pluginCard.getElementById('globalPriority').nextElementSibling.textContent = l10n.translate("Global Priority").fetch();
+            pluginCard.getElementById('enableEdits').label = l10n.translate("Enable Edits").fetch();
+            pluginCard.getElementById('globalPriority').parentElement.label = l10n.translate("Global priorities are compared against all other plugins. Normal priorities are compared against only conflicting plugins.").fetch();
+            pluginCard.getElementById('globalPriority').label = l10n.translate("Global Priority").fetch();
             pluginCard.getElementById('priorityValue').previousElementSibling.textContent = l10n.translate("Priority Value").fetch();
 
-            pluginCard.getElementById('tableTabs').querySelector('[data-for=loadAfter]').textContent = l10n.translate("Load After").fetch();
-            pluginCard.getElementById('tableTabs').querySelector('[data-for=req]').textContent = l10n.translate("Requirements").fetch();
-            pluginCard.getElementById('tableTabs').querySelector('[data-for=inc]').textContent = l10n.translate("Incompatibilities").fetch();
-            pluginCard.getElementById('tableTabs').querySelector('[data-for=message]').textContent = l10n.translate("Messages").fetch();
-            pluginCard.getElementById('tableTabs').querySelector('[data-for=tags]').textContent = l10n.translate("Bash Tags").fetch();
-            pluginCard.getElementById('tableTabs').querySelector('[data-for=dirty]').textContent = l10n.translate("Dirty Info").fetch();
+            pluginCard.getElementById('fileTabs').querySelector('[data-for=loadAfter]').textContent = l10n.translate("Load After").fetch();
+            pluginCard.getElementById('fileTabs').querySelector('[data-for=req]').textContent = l10n.translate("Requirements").fetch();
+            pluginCard.getElementById('fileTabs').querySelector('[data-for=inc]').textContent = l10n.translate("Incompatibilities").fetch();
+            pluginCard.getElementById('miscTabs').querySelector('[data-for=message]').textContent = l10n.translate("Messages").fetch();
+            pluginCard.getElementById('miscTabs').querySelector('[data-for=tags]').textContent = l10n.translate("Bash Tags").fetch();
+            pluginCard.getElementById('miscTabs').querySelector('[data-for=dirty]').textContent = l10n.translate("Dirty Info").fetch();
+            pluginCard.getElementById('miscTabs').querySelector('[data-for=locations]').textContent = l10n.translate("Locations").fetch();
 
             pluginCard.getElementById('loadAfter').querySelector('th:first-child').textContent = l10n.translate("Filename").fetch();
             pluginCard.getElementById('loadAfter').querySelector('th:nth-child(2)').textContent = l10n.translate("Display Name").fetch();
@@ -103,13 +106,17 @@
             pluginCard.getElementById('dirty').querySelector('th:nth-child(5)').textContent = l10n.translate("Cleaning Utility").fetch();
             pluginCard.getElementById('dirty').querySelector('td:first-child').textContent = l10n.translate("Add new row...").fetch();
 
+            pluginCard.getElementById('locations').querySelector('th:first-child').textContent = l10n.translate("URL").fetch();
+            pluginCard.getElementById('locations').querySelector('th:nth-child(2)').textContent = l10n.translate("Version").fetch();
+            pluginCard.getElementById('locations').querySelector('td:first-child').textContent = l10n.translate("Add new row...").fetch();
+
             pluginCard.getElementById('accept').textContent = l10n.translate("Apply").fetch();
             pluginCard.getElementById('cancel').textContent = l10n.translate("Cancel").fetch();
 
-            pluginCard.getElementById('showOnlyConflicts').nextSibling.textContent = l10n.translate("Show Only Conflicts").fetch();
-            pluginCard.getElementById('editMetadata').firstChild.nextSibling.textContent = l10n.translate("Edit Metadata").fetch();
-            pluginCard.getElementById('copyMetadata').firstChild.nextSibling.textContent = l10n.translate("Copy Metadata As Text").fetch();
-            pluginCard.getElementById('clearMetadata').firstChild.nextSibling.textContent = l10n.translate("Clear User Metadata").fetch();
+            pluginCard.getElementById('showOnlyConflicts').label = l10n.translate("Show Only Conflicts").fetch();
+            pluginCard.getElementById('editMetadata').label = l10n.translate("Edit Metadata").fetch();
+            pluginCard.getElementById('copyMetadata').label = l10n.translate("Copy Metadata As Text").fetch();
+            pluginCard.getElementById('clearMetadata').label = l10n.translate("Clear User Metadata").fetch();
 
             /* Plugin List Item Template */
             var pluginItem = document.querySelector('link[rel="import"][href$="loot-plugin-item.html"]').import.querySelector('template').content;

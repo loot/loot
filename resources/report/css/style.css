@@ -199,9 +199,6 @@ li.warn{
     color:red;
     margin-left: 1.75em;
 }
-plugin-card > ul {
-    margin-left: 1.75em;
-}
 
 #settings > paper-checkbox, #settings > core-tooltip, #filters > paper-checkbox {
     display: block;
@@ -239,7 +236,6 @@ body.editMode header #headerOverlay {
     cursor: move;
 }
 .highlight {
-    box-shadow: inset 0 0 10px 3px #69aaff;
     outline: 3px solid #69aaff;
 }
 #applySortButton {

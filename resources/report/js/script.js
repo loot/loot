@@ -466,7 +466,7 @@ function getConflictingPluginsFromFilter() {
     return Promise.resolve([]);
 }
 function applyFilters(evt) {
-    var cards = document.getElementById('main').getElementsByTagName('plugin-card');
+    var cards = document.getElementById('main').getElementsByTagName('loot-plugin-card');
     var entries = document.getElementById('cardsNav').getElementsByTagName('loot-plugin-item');
     var hiddenPluginNo = 0;
     var hiddenMessageNo = 0;
@@ -639,7 +639,7 @@ function sortUIElements(pluginNames) {
     var main = document.getElementById('main');
     var cardsNav = document.getElementById('cardsNav');
     var entries = cardsNav.getElementsByTagName('loot-plugin-item');
-    if (main.getElementsByTagName('plugin-card').length != entries.length) {
+    if (main.getElementsByTagName('loot-plugin-card').length != entries.length) {
         throw Error("Error: Number of plugins in sidebar doesn't match number of plugins in main area!");
     }
     var lastCard;
@@ -658,7 +658,7 @@ function sortUIElements(pluginNames) {
         var move = false;
         if (index == 0) {
             /* Special case. */
-            move = (card != card.parentElement.getElementsByTagName('plugin-card')[0]);
+            move = (card != card.parentElement.getElementsByTagName('loot-plugin-card')[0]);
         } else {
             move = (card.previousElementSibling.getName() != pluginNames[index-1]);
         }
@@ -677,7 +677,7 @@ function sortUIElements(pluginNames) {
             if (lastCard) {
                 main.insertBefore(card, lastCard.nextElementSibling);
             } else {
-                main.insertBefore(card, main.getElementsByTagName('plugin-card')[0]);
+                main.insertBefore(card, main.getElementsByTagName('loot-plugin-card')[0]);
             }
             cardsNav.removeChild(li);
             if (lastLi) {
@@ -752,7 +752,7 @@ function sortPlugins(evt) {
 
                 /* Record the previous order in case the user cancels sorting. */
                 /* Start at 2 to skip summary and general messages. */
-                var cards = document.getElementById('main').getElementsByTagName('plugin-card');
+                var cards = document.getElementById('main').getElementsByTagName('loot-plugin-card');
                 loot.newLoadOrder = loadOrder;
                 loot.lastLoadOrder = [];
                 for (var i = 0; i < cards.length; ++i) {
@@ -1111,6 +1111,139 @@ function handleUnappliedChangesClose() {
         }
     });
 }
+function handleEditorOpen(evt) {
+    /* Set up drag 'n' drop event handlers. */
+    var elements = document.getElementById('cardsNav').getElementsByTagName('loot-plugin-item');
+    for (var i = 0; i < elements.length; ++i) {
+        elements[i].draggable = true;
+        elements[i].addEventListener('dragstart', elements[i].handleDragStart, false);
+    }
+
+    /* Enable priority hover in plugins list and enable header
+       buttons if this is the only editor instance. */
+    var numEditors = 0;
+    if (document.body.hasAttribute('data-editors')) {
+        numEditors = parseInt(document.body.getAttribute('data-editors'), 10);
+    }
+    ++numEditors;
+
+    if (numEditors == 1) {
+        document.body.classList.add('editMode');
+    }
+    document.body.setAttribute('data-editors', numEditors);
+}
+function handleEditorClose(evt) {
+    /* evt.detail is true if the apply button was pressed. */
+    if (evt.detail) {
+        /* Need to record the editor control values and work out what's
+           changed, and update any UI elements necessary. Offload the
+           majority of the work to the C++ side of things. */
+
+        /* Find the plugin object. */
+        var index;
+        for (var i = 0; i < loot.game.plugins.length; ++i) {
+            if (loot.game.plugins[i].id == evt.target.id) {
+                index = i;
+                break;
+            }
+        }
+
+        var request = JSON.stringify({
+            name: 'editorClosed',
+            args: [
+                evt.target.readFromEditor(loot.game.plugins[index])
+            ]
+        });
+        loot.query(request).then(JSON.parse).then(function(result){
+            if (result) {
+                loot.game.plugins[index].modPriority = result.modPriority;
+                loot.game.plugins[index].isGlobalPriority = result.isGlobalPriority;
+                loot.game.plugins[index].messages = result.messages;
+                loot.game.plugins[index].tags = result.tags;
+                loot.game.plugins[index].isDirty = result.isDirty;
+            }
+        }).catch(processCefError);
+    }
+
+    /* Remove drag 'n' drop event handlers. */
+    var elements = document.getElementById('cardsNav').getElementsByTagName('loot-plugin-item');
+    for (var i = 0; i < elements.length; ++i) {
+        elements[i].removeAttribute('draggable');
+        elements[i].removeEventListener('dragstart', elements[i].handleDragStart, false);
+    }
+
+    /* Disable priority hover in plugins list and enable header
+       buttons if this is the only editor instance. */
+    var numEditors = parseInt(document.body.getAttribute('data-editors'), 10);
+    --numEditors;
+
+    if (numEditors == 0) {
+        document.body.classList.remove('editMode');
+    }
+    document.body.setAttribute('data-editors', numEditors);
+}
+function handleConflictsFilter(evt) {
+    /* evt.detail is true if the filter has been activated. */
+    if (evt.detail) {
+        /* Un-highlight any existing filter plugin. */
+        var cards = document.getElementById('main').getElementsByTagName('loot-plugin-card');
+        for (var i = 0; i < cards.length; ++i) {
+            cards[i].classList.toggle('highlight', false);
+            cards[i].deactivateConflictFilter();
+        }
+        evt.target.classList.toggle('highlight', true);
+        document.body.setAttribute('data-conflicts', evt.target.getName());
+    } else {
+        evt.target.classList.toggle('highlight', false);
+        document.body.removeAttribute('data-conflicts');
+    }
+    applyFilters(evt);
+}
+function handleCopyMetadata(evt) {
+    /* evt.detail is the name of the plugin. */
+    var request = JSON.stringify({
+        name: 'copyMetadata',
+        args: [
+            evt.target.getName(),
+        ]
+    });
+
+    loot.query(request).catch(processCefError);
+}
+function handleClearMetadata(evt) {
+    showMessageDialog('Clear Plugin Metadata', 'Are you sure you want to clear all existing user-added metadata from "' + evt.target.getName() + '"?', false, function(result){
+        if (result) {
+            var request = JSON.stringify({
+                name: 'clearPluginMetadata',
+                args: [
+                    evt.target.getName()
+                ]
+            });
+
+            loot.query(request).then(JSON.parse).then(function(result){
+                if (result) {
+                    /* Need to empty the UI-side user metadata. */
+                    for (var i = 0; i < loot.game.plugins.length; ++i) {
+                        if (loot.game.plugins[i].id == evt.target.id) {
+                            loot.game.plugins[i].userlist = undefined;
+
+                            loot.game.plugins[i].modPriority = result.modPriority;
+                            loot.game.plugins[i].isGlobalPriority = result.isGlobalPriority;
+                            loot.game.plugins[i].messages = result.messages;
+                            loot.game.plugins[i].tags = result.tags;
+                            loot.game.plugins[i].isDirty = result.isDirty;
+
+                            /* Also update the card content. */
+                            loot.game.plugins[i].card.setEditorData(loot.game.plugins[i]);
+
+                            break;
+                        }
+                    }
+                }
+            }).catch(processCefError);
+        }
+    });
+}
 function setupEventHandlers() {
     var elements;
     /*Set up filter value and CSS setting storage read/write handlers.*/
@@ -1128,6 +1261,7 @@ function setupEventHandlers() {
     document.getElementById('hideInactivePluginMessages').addEventListener('change', applyFilters, false);
     document.getElementById('hideAllPluginMessages').addEventListener('change', applyFilters, false);
     document.getElementById('hideMessagelessPlugins').addEventListener('change', applyFilters, false);
+    document.body.addEventListener('loot-filter-conflicts', handleConflictsFilter, false);
 
     /* Set up handlers for buttons. */
     document.getElementById('redatePluginsButton').addEventListener('click', redatePlugins, false);
@@ -1164,6 +1298,12 @@ function setupEventHandlers() {
 
     /* Set up handler for closing menus. */
     document.body.addEventListener('click', onBodyClick, false);
+
+    /* Set up handler for opening and closing editors. */
+    document.body.addEventListener('loot-editor-open', handleEditorOpen, false);
+    document.body.addEventListener('loot-editor-close', handleEditorClose, false);
+    document.body.addEventListener('loot-copy-metadata', handleCopyMetadata, false);
+    document.body.addEventListener('loot-clear-metadata', handleClearMetadata, false);
 }
 function initVars() {
     loot.query('getVersion').then(function(result){
