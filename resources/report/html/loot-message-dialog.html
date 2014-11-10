@@ -42,9 +42,10 @@ was pressed.
         onButtonClick: function(evt) {
             if (evt.target.parentElement.closeCallback) {
                 evt.target.parentElement.closeCallback(evt.target.classList.contains('accept'));
-                evt.target.parentElement.close();
-                evt.target.parentElement.parentElement.removeChild(evt.target.parentElement);
             }
+            evt.target.parentElement.addEventListener('core-overlay-close-completed', function(evt){
+                evt.target.parentElement.removeChild(evt.target);
+            }, false);
         },
 
         showModal: function(title, text, closeCallback) {
