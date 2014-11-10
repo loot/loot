@@ -1,0 +1,124 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/core-toolbar/core-toolbar.html">
+<link rel="import" href="../bower_components/core-tooltip/core-tooltip.html">
+<link rel="import" href="../bower_components/core-icon/core-icon.html">
+<link rel="import" href="../bower_components/core-icons/core-icons.html">
+<link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+
+
+<polymer-element name="loot-plugin-card">
+    <template>
+        <style>
+        :host {
+            display: block;
+            background:white;
+            margin:1em;
+            position: relative;
+            border-top-left-radius: 2px;
+            border-top-right-radius: 2px;
+            border-bottom-right-radius: 2px;
+            border-bottom-left-radius: 2px;
+            box-shadow: rgba(0, 0, 0, 0.0980392) 0px 2px 4px, rgba(0, 0, 0, 0.0980392) 0px 0px 3px;
+            position: relative;
+            transition: 0.6s;
+            transform-style: preserve-3d;
+        }
+        #front {
+            padding-bottom: 1em;
+        }
+        #front, #editor {
+            display: block;
+        }
+
+        #editor {
+            transform: rotateY(180deg) translateZ(1px);
+            display:none;
+        }
+
+        :host(.flip) {
+            transform: rotateY(180deg);
+        }
+
+        :host(.flip) #front  {
+            display: none;
+        }
+
+        :host(.flip) #editor  {
+            display: block;
+        }
+
+        ::content .tag.add, ::content .tag.remove, ::content ul {
+            padding: 0 1em;
+        }
+        core-toolbar {
+            background: white;
+        }
+        .activeTick {
+            color: green;
+        }
+        ::content h1, h1 {
+            font-weight: normal;
+            font-size: 1em;
+        }
+        </style>
+        <section id="front">
+            <core-toolbar>
+                <core-tooltip class="activeTick" label="Active">
+                    <core-icon icon="check"></core-icon>
+                </core-tooltip>
+                <content select="h1"></content>
+                <content select=".version"></content>
+                <span flex><content select=".crc"></content></span>
+                <core-tooltip class="dummyPlugin" label="Dummy Plugin">
+                    <core-icon icon="visibility-off"></core-icon>
+                </core-tooltip>
+                <core-tooltip class="loadsBSA" label="Loads BSA">
+                    <core-icon icon="attachment"></core-icon>
+                </core-tooltip>
+                <core-tooltip id="front-hasUserEdits" label="Has User Metadata">
+                    <core-icon icon="account-circle"></core-icon>
+                </core-tooltip>
+                <paper-menu-button icon="more-vert" halign="right">
+                    <paper-item>
+                        <paper-checkbox id="showOnlyConflicts" label="Show Only Conflicts"></paper-checkbox>
+                    </paper-item>
+                    <paper-item id="editMetadata" icon="create" label="Edit Metadata"></paper-item>
+                    <paper-item id="copyMetadata" icon="content-copy" label="Copy Metadata As Text"></paper-item>
+                    <paper-item id="clearMetadata" icon="delete" label="Clear User Metadata"></paper-item>
+                </paper-menu-button>
+            </core-toolbar>
+            <content select=".tag.add"></content>
+            <content select=".tag.remove"></content>
+            <content select="ul"></content>
+        </section>
+        <section id="editor">
+            <core-toolbar>
+                <core-tooltip class="activeTick" label="Active">
+                    <core-icon icon="check"></core-icon>
+                </core-tooltip>
+                <h1></h1>
+                <span class="version"></span>
+                <span class="crc" flex></span>
+                <core-tooltip class="dummyPlugin" label="Dummy Plugin">
+                    <core-icon icon="visibility-off"></core-icon>
+                </core-tooltip>
+                <core-tooltip class="loadsBSA" label="Loads BSA">
+                    <core-icon icon="attachment"></core-icon>
+                </core-tooltip>
+            </core-toolbar>
+        </section>
+    </template>
+    <script>
+    Polymer({
+        ready: function() {
+            var editor = this.shadowRoot.getElementById('editor');
+
+            editor.querySelector('h1').textContent = this.querySelector('h1').textContent;
+            editor.querySelector('.version').textContent = this.querySelector('.version').textContent;
+            editor.querySelector('.crc').textContent = this.querySelector('.crc').textContent;
+        }
+    });
+    </script>
+</polymer-element>
