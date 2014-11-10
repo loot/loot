@@ -1,12 +1,14 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/core-icons/core-icons.html">
 
 <template id="fileRow">
     <tr>
         <td><input class="name" type="text" required></td>
         <td><input class="display" type="text"></td>
         <td><input class="condition" type="text"></td>
-        <td class="fa fa-trash-o fa-fw"></td>
+        <td><paper-icon-button class="delete" icon="delete"></paper-icon-button></td>
     </tr>
 </template>
 <template id="messageRow">
@@ -23,7 +25,7 @@
                 <!-- Language <option> elements go here. -->
             </select>
         </td>
-        <td class="fa fa-trash-o fa-fw"></td>
+        <td><paper-icon-button class="delete" icon="delete"></paper-icon-button></td>
     </tr>
 </template>
 <template id="tagRow">
@@ -35,7 +37,7 @@
         </td>
         <td><input class="name" type="text" required></td>
         <td><input class="condition" type="text"></td>
-        <td class="fa fa-trash-o fa-fw"></td>
+        <td><paper-icon-button class="delete" icon="delete"></paper-icon-button></td>
     </tr>
 </template>
 <template id="dirtyInfoRow">
@@ -45,14 +47,14 @@
         <td><input class="udr" type="number" min="0" step="1" value="0"></td>
         <td><input class="nav" type="number" min="0" step="1" value="0"></td>
         <td><input class="util" type="text" required></td>
-        <td class="fa fa-trash-o fa-fw"></td>
+        <td><paper-icon-button class="delete" icon="delete"></paper-icon-button></td>
     </tr>
 </template>
 <template id="locationRow">
     <tr>
         <td><input class="link" type="text" required></td>
         <td><input class="ver" type="text"></td>
-        <td class="fa fa-trash-o fa-fw"></td>
+        <td><paper-icon-button class="delete" icon="delete"></paper-icon-button></td>
     </tr>
 </template>
 <template id="gameRow">
@@ -69,7 +71,7 @@
         <td><input class="branch" type="text"></td>
         <td><input class="path" type="text"></td>
         <td><input class="registry" type="text"></td>
-        <td class="fa fa-trash-o fa-fw"></td>
+        <td><paper-icon-button class="delete" icon="delete"></paper-icon-button></td>
     </tr>
 </template>
 <style>
@@ -97,6 +99,10 @@ table[is=editable-table] tbody tr:last-child {
 }
 table[is=editable-table] tbody tr:last-child:hover {
     color: black;
+}
+td paper-icon-button.hidden {
+    display: block;
+    visibility: hidden;
 }
 </style>
 <script>
@@ -135,7 +141,7 @@ var EditableTableProto = Object.create(HTMLTableElement.prototype, {
             var rows = this.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
 
             for (var i = 0; i < rows.length; ++i) {
-                var trash = rows[i].getElementsByClassName('fa-trash-o');
+                var trash = rows[i].getElementsByClassName('delete');
                 if (trash.length > 0 && (!writableOnly || !trash[0].classList.contains('hidden'))) {
                     var rowData = {};
 
@@ -163,13 +169,10 @@ var EditableTableProto = Object.create(HTMLTableElement.prototype, {
                 readOnly = true;
             }
 
-            var trash = row.getElementsByClassName('fa-trash-o')[0];
+            var trash = row.getElementsByClassName('delete')[0];
             if (classMask) {
-                for (var i = 0; i < classMask.length; ++i) {
-                    if (trash.classList.contains(classMask[i])) {
-                        trash.classList.toggle('hidden', readOnly);
-                        break;
-                    }
+                if (classMask.indexOf('delete') != -1) {
+                    trash.classList.toggle('hidden', readOnly);
                 }
             } else {
                 trash.classList.toggle('hidden', readOnly);
@@ -215,7 +218,7 @@ var EditableTableProto = Object.create(HTMLTableElement.prototype, {
 
     clear: {
         value: function() {
-            var rowDeletes = this.getElementsByTagName('tbody')[0].getElementsByClassName('fa-trash-o');
+            var rowDeletes = this.getElementsByTagName('tbody')[0].getElementsByClassName('delete');
 
             while (rowDeletes.length > 0) {
                 rowDeletes[0].click();
@@ -225,8 +228,8 @@ var EditableTableProto = Object.create(HTMLTableElement.prototype, {
 
     removeRow: {
         value: function(evt) {
-            var tr = evt.target.parentElement;
-            var tbody = tr.parentElement
+            var tr = evt.target.parentElement.parentElement;
+            var tbody = tr.parentElement;
             var table = tbody.parentElement;
 
             /* Remove deletion listener. */
@@ -248,7 +251,7 @@ var EditableTableProto = Object.create(HTMLTableElement.prototype, {
             row = evt.currentTarget.previousElementSibling;
 
             /* Add deletion listener. */
-            row.getElementsByClassName('fa-trash-o')[0].addEventListener('click', table.removeRow, false);
+            row.getElementsByClassName('delete')[0].addEventListener('click', table.removeRow, false);
         }
     },
 
@@ -275,7 +278,7 @@ var EditableTableProto = Object.create(HTMLTableElement.prototype, {
             }
 
             /* Add deletion listener. */
-            row.getElementsByClassName('fa-trash-o')[0].addEventListener('click', this.removeRow, false);
+            row.getElementsByClassName('delete')[0].addEventListener('click', this.removeRow, false);
 
             return row;
         }
@@ -302,7 +305,7 @@ var EditableTableProto = Object.create(HTMLTableElement.prototype, {
             var tbody = this.getElementsByTagName('tbody')[0];
 
             /* Remove deletion listener. */
-            var icons = tbody.getElementsByClassName('fa-trash-o');
+            var icons = tbody.getElementsByClassName('delete');
             for (var i = 0; i < icons.length; ++i) {
                 icons[i].removeEventListener('click', this.removeRow, false);
             }

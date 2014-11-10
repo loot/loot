@@ -36,7 +36,6 @@ var loot = {
 
         /* Call whenever game is changed or game menu / game table are rewritten. */
         updateSelectedGame: function() {
-            /* Highlight game in menu. Could use fa-chevron-right instead. */
             var gameMenuItems = document.getElementById('gameMenu').children;
             for (var i = 0; i < gameMenuItems.length; ++i) {
                 if (gameMenuItems[i].getAttribute('value') == this.folder) {
@@ -50,9 +49,9 @@ var loot = {
             for (var i = 0; i < rows.length; ++i) {
                 if (rows[i].getElementsByClassName('folder').length > 0) {
                     if (rows[i].getElementsByClassName('folder')[0].value == this.folder) {
-                        document.getElementById('gameTable').setReadOnly(rows[i], ['fa-trash-o']);
+                        document.getElementById('gameTable').setReadOnly(rows[i], ['delete']);
                     } else {
-                        document.getElementById('gameTable').setReadOnly(rows[i], ['fa-trash-o'], false);
+                        document.getElementById('gameTable').setReadOnly(rows[i], ['delete'], false);
                     }
                 }
             }
@@ -71,12 +70,8 @@ var loot = {
             var redateButton = document.getElementById('redatePluginsButton');
             if (index != undefined && loot.settings.games[index].type == 'Skyrim') {
                 redateButton.removeAttribute('disabled');
-                redateButton.removeEventListener('mouseenter', showHoverText, false);
-                redateButton.removeEventListener('mouseleave', hideHoverText, false);
             } else {
                 redateButton.setAttribute('disabled', true);
-                redateButton.addEventListener('mouseenter', showHoverText, false);
-                redateButton.addEventListener('mouseleave', hideHoverText, false);
             }
         },
 
@@ -152,13 +147,9 @@ var loot = {
             if (this.installedGames.indexOf(gameMenuItems[i].getAttribute('value')) == -1) {
                 gameMenuItems[i].setAttribute('disabled', true);
                 gameMenuItems[i].removeEventListener('click', changeGame, false);
-                gameMenuItems[i].addEventListener('mouseenter', showHoverText, false);
-                gameMenuItems[i].addEventListener('mouseleave', hideHoverText, false);
             } else {
                 gameMenuItems[i].removeAttribute('disabled');
                 gameMenuItems[i].addEventListener('click', changeGame, false);
-                gameMenuItems[i].removeEventListener('mouseenter', showHoverText, false);
-                gameMenuItems[i].removeEventListener('mouseleave', hideHoverText, false);
             }
         }
     },
@@ -175,8 +166,6 @@ var loot = {
         }
         while (gameMenu.firstElementChild) {
             gameMenu.firstElementChild.removeEventListener('click', changeGame, false);
-            gameMenu.firstElementChild.removeEventListener('mouseenter', showHoverText, false);
-            gameMenu.firstElementChild.removeEventListener('mouseleave', hideHoverText, false);
             gameMenu.removeChild(gameMenu.firstElementChild);
         }
         gameTable.clear();
@@ -911,22 +900,6 @@ function areSettingsValid() {
     }
     return true;
 }
-/* Close any open menus. */
-function onBodyClick(evt) {
-    var toolbarMenus = document.querySelectorAll('header > ol > li > ol');
-    for (var i = 0; i < toolbarMenus.length; ++i) {
-        if (!evt.detail.newMenu || evt.detail.newMenu != toolbarMenus[i]) {
-            hideElement(toolbarMenus[i]);
-        }
-    }
-
-    var pluginMenus = document.getElementsByTagName('plugin-menu');
-    for (var i = 0; i < pluginMenus.length; ++i) {
-        if (!evt.detail.newMenu || evt.detail.newMenu != pluginMenus[i]) {
-            pluginMenus[i].parentElement.removeChild(pluginMenus[i]);
-        }
-    }
-}
 function openMenu(evt) {
     if (!isVisible(evt.currentTarget.firstElementChild)) {
         showElement(evt.currentTarget.firstElementChild)
@@ -1007,63 +980,6 @@ function showSettingsDialog(evt) {
     document.getElementById('settings').showModal();
 }
 
-function getDialogParent(element) {
-    var element = element.parentElement;
-    while (element) {
-        if (element.nodeName == 'DIALOG') {
-            return element;
-        }
-        element = element.parentElement;
-    }
-    return null;
-}
-function showHoverText(evt) {
-    hideHoverText(evt);
-
-    var hoverText = document.createElement('div');
-    hoverText.id = 'hoverText';
-    hoverText.textContent = evt.target.title;
-
-    if (!evt.target.id) {
-        evt.target.id = 'hoverTarget';
-    }
-    hoverText.setAttribute('data-target', evt.target.id);
-
-    var rect = evt.target.getBoundingClientRect();
-    hoverText.style.left = (rect.left + evt.target.offsetWidth/2) + 'px';
-
-    if (rect.bottom + 30 > window.innerHeight) {
-        hoverText.style.top = (rect.top - 30) + 'px';
-    } else {
-        hoverText.style.top = (rect.bottom + 10) + 'px';
-    }
-
-    var dialog = getDialogParent(evt.target);
-    if (dialog) {
-        dialog.appendChild(hoverText);
-    } else {
-        document.body.appendChild(hoverText);
-    }
-
-    /* Now check that the computed height isn't larger than expected. */
-    var height = getComputedStyle(hoverText).height;
-    height = parseInt(height.substr(0, height.length - 2), 10);
-    if (height > 20 && rect.bottom + height + 10 > window.innerHeight) {
-        /* Tooltip is either covering its source element, or is going off-window. */
-        hoverText.style.top = (rect.top - height - 10) + 'px';
-    }
-}
-function hideHoverText(evt) {
-    var hoverText = document.getElementById('hoverText');
-
-    if (hoverText) {
-        var hoverTarget = document.getElementById('hoverTarget');
-        if (hoverTarget) {
-            hoverTarget.id = '';
-        }
-        hoverText.parentElement.removeChild(hoverText);
-    }
-}
 function startSearch(evt) {
     var findNext = false;
     if (evt.type == 'keyup') {
@@ -1283,21 +1199,11 @@ function setupEventHandlers() {
     settings.getElementsByClassName('accept')[0].addEventListener('click', closeSettingsDialog, false);
     settings.getElementsByClassName('cancel')[0].addEventListener('click', closeSettingsDialog, false);
 
-    /* Set up event handler for hover text. */
-    var hoverTargets = document.querySelectorAll('[title]');
-    for (var i = 0; i < hoverTargets.length; ++i) {
-        hoverTargets[i].addEventListener('mouseenter', showHoverText, false);
-        hoverTargets[i].addEventListener('mouseleave', hideHoverText, false);
-    }
-
     /* Set up event handlers for content search. */
     var searchBox = document.getElementById('searchBox');
     searchBox.addEventListener('input', startSearch, false);
     searchBox.addEventListener('keyup', startSearch, false);
     window.addEventListener('keyup', focusSearch, false);
-
-    /* Set up handler for closing menus. */
-    document.body.addEventListener('click', onBodyClick, false);
 
     /* Set up handler for opening and closing editors. */
     document.body.addEventListener('loot-editor-open', handleEditorOpen, false);
@@ -1519,11 +1425,8 @@ function onFocus(evt) {
     }).catch(processCefError);
 }
 
-require.config({
-    baseUrl: "js",
-  });
 window.addEventListener('polymer-ready', function(e) {
-    require(['marked', 'l10n', 'plugin'], function(markedResponse, l10nResponse) {
+    require(['bower_components/marked/lib/marked', 'js/l10n', 'js/plugin'], function(markedResponse, l10nResponse) {
         marked = markedResponse;
         l10n = l10nResponse;
         /* Make sure settings are what I want. */

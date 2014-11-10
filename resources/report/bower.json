@@ -25,6 +25,9 @@
     "core-menu": "Polymer/core-menu#~0.4.2",
     "paper-checkbox": "Polymer/paper-checkbox#~0.4.2",
     "paper-dialog": "Polymer/paper-dialog#~0.4.2",
-    "paper-menu-button": "Polymer/paper-menu-button#~0.4.2"
+    "paper-menu-button": "Polymer/paper-menu-button#~0.4.2",
+    "Jed": "SlexAxton/Jed#~1.1.0",
+    "marked": "chjj/marked#~0.3.2",
+    "requirejs": "jrburke/requirejs-bower#~2.1.15"
   }
 }
