@@ -9,14 +9,25 @@
         root.amdWeb = factory(root.jed, root.jedGettextParser);
     }
 }(this, function (jed, jedGettextParser) {
-    //use b in some fashion.
 
-    // Just return a value to define the module export.
-    // This example returns an object, but the module
-    // can return a function as the exported value.
+    var defaultData = {
+        "messages": {
+            "": {
+                "domain" : "messages",
+                "lang" : "en",
+                "plural_forms" : "nplurals=2; plural=(n != 1);"
+            }
+        }
+    };
+
     return {
 
         loadLocaleData: function(locale) {
+            if (locale == 'en') {
+                return new Promise(function(resolve, reject){
+                    resolve(defaultData);
+                });
+            }
 
             var url = 'loot://l10n/' + locale + '/LC_MESSAGES/loot.mo';
 
@@ -207,16 +218,7 @@
         getJedInstance: function(locale) {
             return this.loadLocaleData(locale).catch(function(error){
                 console.log(error);
-                return {
-                    messages: {
-                        "": {
-                            // Domain name
-                            "domain" : "messages",
-                            "lang" : "en",
-                            "plural_forms" : "nplurals=2; plural=(n != 1);"
-                        }
-                    }
-                }
+                return defaultData;
             }).then(function(result){
                 return new jed({
                     'locale_data': result,
