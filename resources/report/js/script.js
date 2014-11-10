@@ -70,13 +70,11 @@ var loot = {
             }
             var redateButton = document.getElementById('redatePluginsButton');
             if (index != undefined && loot.settings.games[index].type == 'Skyrim') {
-                redateButton.classList.toggle('disabled', false);
-                redateButton.title = '';
+                redateButton.removeAttribute('disabled');
                 redateButton.removeEventListener('mouseenter', showHoverText, false);
                 redateButton.removeEventListener('mouseleave', hideHoverText, false);
             } else {
-                redateButton.classList.toggle('disabled', true);
-                redateButton.title = 'A Skyrim-specific feature';
+                redateButton.setAttribute('disabled', true);
                 redateButton.addEventListener('mouseenter', showHoverText, false);
                 redateButton.addEventListener('mouseleave', hideHoverText, false);
             }
@@ -153,13 +151,11 @@ var loot = {
         for (var i = 0; i < gameMenuItems.length; ++i) {
             if (this.installedGames.indexOf(gameMenuItems[i].getAttribute('value')) == -1) {
                 gameMenuItems[i].setAttribute('disabled', true);
-                gameMenuItems[i].title = 'No install detected';
                 gameMenuItems[i].removeEventListener('click', changeGame, false);
                 gameMenuItems[i].addEventListener('mouseenter', showHoverText, false);
                 gameMenuItems[i].addEventListener('mouseleave', hideHoverText, false);
             } else {
                 gameMenuItems[i].removeAttribute('disabled');
-                gameMenuItems[i].title = '';
                 gameMenuItems[i].addEventListener('click', changeGame, false);
                 gameMenuItems[i].removeEventListener('mouseenter', showHoverText, false);
                 gameMenuItems[i].removeEventListener('mouseleave', hideHoverText, false);
@@ -818,7 +814,7 @@ function cancelSort(evt) {
     }).catch(processCefError);
 }
 function redatePlugins(evt) {
-    if (evt.target.classList.contains('disabled')) {
+    if (evt.target.hasAttribute('disabled')) {
         return;
     }
 
