@@ -11,7 +11,7 @@
         :host([data-dummy=false]) #dummyPlugin,
         :host([data-edits=false]) #hasUserEdits,
         :host([data-global-priority=false]) #hasGlobalPriority,
-        :host #hasPriority:not([title^=Priority]) {
+        :host #hasPriority:not([label^=Priority]) {
             visibility: hidden;
         }
         :host a {
