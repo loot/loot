@@ -36,10 +36,10 @@ html /deep/ paper-item[disabled]  {
 }
 
 /* These overrides change the colour of the tab ink effect and their underline. */
-paper-tabs::shadow #selectionBar {
+html /deep/ paper-tabs::shadow #selectionBar {
     background-color: #4285f4;
 }
-paper-tab::shadow #ink {
+html /deep/ paper-tab::shadow #ink {
     color: #4285f4;
 }
 
