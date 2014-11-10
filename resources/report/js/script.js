@@ -953,12 +953,11 @@ function showAboutDialog(evt) {
     document.getElementById('about').showModal();
 }
 function closeSettingsDialog(evt) {
-    if (!areSettingsValid()) {
-        return;
-    }
-
-    var dialog = evt.target.parentElement;
     if (evt.target.classList.contains('accept')) {
+        if (!areSettingsValid()) {
+            return;
+        }
+
         /* Update the JS variable values. */
         var settings = {
             enableDebugLogging: document.getElementById('enableDebugLogging').checked,
@@ -1001,6 +1000,7 @@ function closeSettingsDialog(evt) {
         /* Re-apply the existing settings to the settings dialog elements. */
         loot.updateSettingsUI();
     }
+    evt.target.parentElement.close();
 }
 
 function showSettingsDialog(evt) {
