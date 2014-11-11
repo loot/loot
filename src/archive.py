@@ -111,6 +111,7 @@ def createAppArchive(archive_path):
     os.makedirs(temp_path)
 
     # Now copy everything into the temporary folder.
+    # LOOT executable and CEF files.
     shutil.copy( os.path.join('..', 'build', 'Release', 'LOOT.exe'), temp_path )
     shutil.copy( os.path.join('..', 'build', 'Release', 'd3dcompiler_43.dll'), temp_path )
     shutil.copy( os.path.join('..', 'build', 'Release', 'd3dcompiler_46.dll'), temp_path )
@@ -124,12 +125,36 @@ def createAppArchive(archive_path):
     shutil.copy( os.path.join('..', 'build', 'Release', 'devtools_resources.pak'), temp_path )
     shutil.copy( os.path.join('..', 'build', 'Release', 'icudtl.dat'), temp_path )
 
+    # Translation files.
     for lang in ['es', 'ru', 'fr', 'zh_CN', 'pl', 'pt_BR', 'fi', 'de', 'da']:
         os.makedirs(os.path.join(temp_path, 'resources', 'l10n', lang, 'LC_MESSAGES'))
         shutil.copy( os.path.join('..', 'resources', 'l10n', lang, 'LC_MESSAGES', 'loot.mo'), os.path.join(temp_path, 'resources', 'l10n', lang, 'LC_MESSAGES') )
 
-    shutil.copytree( os.path.join('..', 'resources', 'report'), os.path.join(temp_path, 'resources', 'report') )
+    # UI files.
+    os.makedirs( os.path.join(temp_path, 'resources', 'report') )
+    os.makedirs( os.path.join(temp_path, 'resources', 'report', 'bower_components', 'platform') )
+    os.makedirs( os.path.join(temp_path, 'resources', 'report', 'bower_components', 'polymer') )
+    os.makedirs( os.path.join(temp_path, 'resources', 'report', 'bower_components', 'web-animations-js') )
+    os.makedirs( os.path.join(temp_path, 'resources', 'report', 'bower_components', 'requirejs') )
+    os.makedirs( os.path.join(temp_path, 'resources', 'report', 'bower_components', 'marked', 'lib') )
+    os.makedirs( os.path.join(temp_path, 'resources', 'report', 'bower_components', 'Jed') )
+    os.makedirs( os.path.join(temp_path, 'resources', 'report', 'css') )
+    os.makedirs( os.path.join(temp_path, 'resources', 'report', 'js') )
+    shutil.copy( os.path.join('..', 'resources', 'report', 'index.html'), os.path.join(temp_path, 'resources', 'report') )
+    shutil.copy( os.path.join('..', 'resources', 'report', 'bower_components', 'platform', 'platform.js'), os.path.join(temp_path, 'resources', 'report', 'bower_components', 'platform') )
+    shutil.copy( os.path.join('..', 'resources', 'report', 'bower_components', 'polymer', 'polymer.js'), os.path.join(temp_path, 'resources', 'report', 'bower_components', 'polymer') )
+    shutil.copy( os.path.join('..', 'resources', 'report', 'bower_components', 'web-animations-js', 'web-animations.js'), os.path.join(temp_path, 'resources', 'report', 'bower_components', 'web-animations-js') )
+    shutil.copy( os.path.join('..', 'resources', 'report', 'bower_components', 'requirejs', 'require.js'), os.path.join(temp_path, 'resources', 'report', 'bower_components', 'requirejs') )
+    shutil.copy( os.path.join('..', 'resources', 'report', 'bower_components', 'marked', 'lib', 'marked.js'), os.path.join(temp_path, 'resources', 'report', 'bower_components', 'marked', 'lib') )
+    shutil.copy( os.path.join('..', 'resources', 'report', 'bower_components', 'Jed', 'jed.js'), os.path.join(temp_path, 'resources', 'report', 'bower_components', 'Jed') )
+    shutil.copy( os.path.join('..', 'resources', 'report', 'css', 'style.css'), os.path.join(temp_path, 'resources', 'report', 'css') )
+    shutil.copy( os.path.join('..', 'resources', 'report', 'css', 'overrides.css'), os.path.join(temp_path, 'resources', 'report', 'css') )
+    shutil.copy( os.path.join('..', 'resources', 'report', 'js', 'jedGettextParser.js'), os.path.join(temp_path, 'resources', 'report', 'js') )
+    shutil.copy( os.path.join('..', 'resources', 'report', 'js', 'l10n.js'), os.path.join(temp_path, 'resources', 'report', 'js') )
+    shutil.copy( os.path.join('..', 'resources', 'report', 'js', 'plugin.js'), os.path.join(temp_path, 'resources', 'report', 'js') )
+    shutil.copy( os.path.join('..', 'resources', 'report', 'js', 'script.js'), os.path.join(temp_path, 'resources', 'report', 'js') )
 
+    # Docs.
     shutil.copytree( os.path.join('..', 'docs', 'images'), os.path.join(temp_path, 'docs', 'images') )
     shutil.copytree( os.path.join('..', 'docs', 'licenses'), os.path.join(temp_path, 'docs', 'licenses') )
     shutil.copy( os.path.join('..', 'docs', 'LOOT Metadata Syntax.html'), os.path.join(temp_path, 'docs') )
