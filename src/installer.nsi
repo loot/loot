@@ -323,19 +323,9 @@ FunctionEnd
         ;Install resource files.
         SetOutPath "$INSTDIR\resources\report"
         File "..\resources\report\report.html"
-        File "..\resources\report\js\custom.js"
-        File "..\resources\report\js\marked.js"
-        File "..\resources\report\js\order.js"
         File "..\resources\report\js\plugin.js"
-        File "..\resources\report\js\require.js"
         File "..\resources\report\js\script.js"
         File "..\resources\report\css\style.css"
-        File "..\resources\report\css\font-awesome.min.css"
-        File "..\resources\report\fonts\fontawesome-webfont.woff"
-
-        ;Install icon image.
-        SetOutPath "$INSTDIR\resources"
-        FIle "..\resources\icon.ico"
 
         ;Install documentation images.
         SetOutPath "$INSTDIR\docs\images"
@@ -482,17 +472,9 @@ FunctionEnd
 
         ;Remove resource files.
         Delete "$INSTDIR\resources\report\report.html"
-        Delete "$INSTDIR\resources\report\js\custom.js"
-        Delete "$INSTDIR\resources\report\js\marked.js"
-        Delete "$INSTDIR\resources\report\js\order.js"
         Delete "$INSTDIR\resources\report\js\plugin.js"
-        Delete "$INSTDIR\resources\report\js\require.js"
         Delete "$INSTDIR\resources\report\js\script.js"
         Delete "$INSTDIR\resources\report\css\style.css"
-        Delete "$INSTDIR\resources\report\css\font-awesome.min.css"
-        Delete "$INSTDIR\resources\report\fonts\fontawesome-webfont.woff"
-
-        Delete "$INSTDIR\resources\icon.ico"
 
         ;Remove language files.
         Delete "$INSTDIR\resources\l10n\ru\LC_MESSAGES\loot.mo"

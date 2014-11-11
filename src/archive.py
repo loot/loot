@@ -129,7 +129,6 @@ def createAppArchive(archive_path):
         shutil.copy( os.path.join('..', 'resources', 'l10n', lang, 'LC_MESSAGES', 'loot.mo'), os.path.join(temp_path, 'resources', 'l10n', lang, 'LC_MESSAGES') )
 
     shutil.copytree( os.path.join('..', 'resources', 'report'), os.path.join(temp_path, 'resources', 'report') )
-    shutil.copy( os.path.join('..', 'resources', 'icon.ico'), os.path.join(temp_path, 'resources') )
 
     shutil.copytree( os.path.join('..', 'docs', 'images'), os.path.join(temp_path, 'docs', 'images') )
     shutil.copytree( os.path.join('..', 'docs', 'licenses'), os.path.join(temp_path, 'docs', 'licenses') )
