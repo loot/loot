@@ -656,16 +656,14 @@ namespace loot {
             // ID the game using its folder value.
             gameNode["folder"] = g_app_state.CurrentGame().FolderName();
 
-            if (isFirstLoad) {
-                // Store the masterlist revision and date.
-                try {
-                    gameNode["masterlist"]["revision"] = g_app_state.CurrentGame().masterlist.GetRevision(g_app_state.CurrentGame().MasterlistPath(), true);
-                    gameNode["masterlist"]["date"] = g_app_state.CurrentGame().masterlist.GetDate(g_app_state.CurrentGame().MasterlistPath());
-                }
-                catch (error &e) {
-                    gameNode["masterlist"]["revision"] = e.what();
-                    gameNode["masterlist"]["date"] = e.what();
-                }
+            // Store the masterlist revision and date.
+            try {
+                gameNode["masterlist"]["revision"] = g_app_state.CurrentGame().masterlist.GetRevision(g_app_state.CurrentGame().MasterlistPath(), true);
+                gameNode["masterlist"]["date"] = g_app_state.CurrentGame().masterlist.GetDate(g_app_state.CurrentGame().MasterlistPath());
+            }
+            catch (error &e) {
+                gameNode["masterlist"]["revision"] = e.what();
+                gameNode["masterlist"]["date"] = e.what();
             }
 
             // Now store plugin data.
@@ -730,37 +728,35 @@ namespace loot {
                 gameNode["plugins"].push_back(pluginNode);
             }
 
-            if (isFirstLoad) {
-                SendProgressUpdate(frame, "Loading general messages...");
-                //Set language.
-                unsigned int language;
-                if (g_app_state.GetSettings()["language"])
-                    language = Language(g_app_state.GetSettings()["language"].as<string>()).Code();
-                else
-                    language = Language::any;
-                BOOST_LOG_TRIVIAL(info) << "Using message language: " << Language(language).Name();
+            SendProgressUpdate(frame, "Loading general messages...");
+            //Set language.
+            unsigned int language;
+            if (g_app_state.GetSettings()["language"])
+                language = Language(g_app_state.GetSettings()["language"].as<string>()).Code();
+            else
+                language = Language::any;
+            BOOST_LOG_TRIVIAL(info) << "Using message language: " << Language(language).Name();
 
-                //Evaluate any conditions in the global messages.
-                BOOST_LOG_TRIVIAL(debug) << "Evaluating global message conditions.";
-                list<Message> messages = g_app_state.CurrentGame().masterlist.messages;
-                messages.insert(messages.end(), g_app_state.CurrentGame().userlist.messages.begin(), g_app_state.CurrentGame().userlist.messages.end());
-                try {
-                    list<Message>::iterator it = messages.begin();
-                    while (it != messages.end()) {
-                        if (!it->EvalCondition(g_app_state.CurrentGame(), language))
-                            it = messages.erase(it);
-                        else
-                            ++it;
-                    }
+            //Evaluate any conditions in the global messages.
+            BOOST_LOG_TRIVIAL(debug) << "Evaluating global message conditions.";
+            list<Message> messages = g_app_state.CurrentGame().masterlist.messages;
+            messages.insert(messages.end(), g_app_state.CurrentGame().userlist.messages.begin(), g_app_state.CurrentGame().userlist.messages.end());
+            try {
+                list<Message>::iterator it = messages.begin();
+                while (it != messages.end()) {
+                    if (!it->EvalCondition(g_app_state.CurrentGame(), language))
+                        it = messages.erase(it);
+                    else
+                        ++it;
                 }
-                catch (std::exception& e) {
-                    BOOST_LOG_TRIVIAL(error) << "A global message contains a condition that could not be evaluated. Details: " << e.what();
-                    messages.push_back(Message(Message::error, (format(loc::translate("A global message contains a condition that could not be evaluated. Details: %1%")) % e.what()).str()));
-                }
-
-                // Now store global messages from masterlist.
-                gameNode["globalMessages"] = messages;
             }
+            catch (std::exception& e) {
+                BOOST_LOG_TRIVIAL(error) << "A global message contains a condition that could not be evaluated. Details: " << e.what();
+                messages.push_back(Message(Message::error, (format(loc::translate("A global message contains a condition that could not be evaluated. Details: %1%")) % e.what()).str()));
+            }
+
+            // Now store global messages.
+            gameNode["globalMessages"] = messages;
 
             callback->Success(JSON::stringify(gameNode));
         }
