@@ -53,3 +53,4 @@ docs/html
 docs/latex
 *.mo
 resources/report/bower_components
+resources/report/index.html

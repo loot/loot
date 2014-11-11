@@ -12,6 +12,8 @@ LOOT is intended to make using mods easier, and mod users should still possess a
 
 ## Building LOOT
 
+### C++ Backend
+
 LOOT uses [CMake](http://cmake.org) to generate build files, and requires the following libraries (version numbers used in latest development revision given):
 
 * [Alphanum](http://www.davekoelle.com/files/alphanum.hpp)
@@ -27,14 +29,20 @@ Alphanum and Libespm do not require any additional setup. The rest of the librar
 
 Although LOOT uses a cross-platform build system and cross-platform libraries, it does rely on some Windows API functionality. Anyone wishing to port LOOT to other platforms will need to ensure equivalent functionality is implemented for their target platform. The Windows API code is wrapped in `#ifdef _WIN32` blocks so that it can be easily identified.
 
-LOOT's UI also relies on a few web libraries:
+### User Interface
+
+LOOT's UI relies on a few web libraries:
 
 * [Polymer](https://www.polymer-project.org)
 * [Jed](https://github.com/SlexAxton/Jed)
 * [Marked](https://github.com/chjj/marked)
 * [RequireJS](http://requirejs.org/)
 
-These dependencies are most easily managed using [Bower](http://bower.io/). To install Bower, first install [Node](http://nodejs.org/), and run `npm install -g bower` from the command line (on Windows, it needs to be the Node command prompt). Once Bower is installed, LOOT's UI dependencies can be fetched by running `bower install ./` from inside this repository's `resources/report` folder. Bower doesn't need to be run from the Node command prompt on Windows.
+These dependencies are most easily managed using [Bower](http://bower.io/), and are built for distribution using [Vulcanize](https://github.com/Polymer/vulcanize).
+
+To install Bower and Vulcanize, first install [Node](http://nodejs.org/), and run `npm install -g bower vulcanize` from the command line (on Windows, it needs to be the Node command prompt). Once they are installed, fetch and build the dependencies by running `bower install ./ && vulcanize -o index.html report.html` from inside this repository's `resources/report` folder (this command doesn't need to be run through Node).
+
+**Note:** There is currently a bug in Vulcanize (#97) that prevents it from correctly building the dependencies, so some manual editing is required to add `<tr>` and `<td>` elements back into the row templates originally found in `resources/report/html/editable-table.html`.
 
 ## Packaging Releases
 
