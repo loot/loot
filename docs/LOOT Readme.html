@@ -1,63 +1,105 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <title>LOOT Readme</title>
-<link rel="stylesheet" href="../resources/report/css/font-awesome.min.css" />
+<script src="http://www.polymer-project.org/components/platform/platform.js"></script>
+<link rel="import" href="http://www.polymer-project.org/components/polymer/polymer.html">
+<link rel="import" href="http://www.polymer-project.org/components/core-icon/core-icon.html">
+<link rel="import" href="http://www.polymer-project.org/components/core-icons/core-icons.html">
 <style>
-    body {
-        font:10pt/1.5 Helvetica,sans-serif;
-        text-rendering:optimizeLegibility;}
-    p, ul, li {margin:1.5em 0;}
-    h1,h3,h2 {font-weight:normal;}
-h1{
-    font-size:36pt;
-    line-height:0.5;
-    margin-top:1.125em;
-    margin-bottom:0.375em;}
-h2{
-    font-size:24pt;
-    line-height:0.75;
-    margin-top:3em;
-    margin-bottom:1.5em;}
-h3{
-    font-size:18pt;
-    line-height:1;
-    margin-top:3.5em;
-    margin-bottom:1em;}
-    ul, ol {margin-top:0.5em; margin-bottom:1em;}
-    li {margin:0.75em 0;}
-    a:link {text-decoration:none;}
-    a:hover {text-decoration:underline;}
-    ol ol {list-style:lower-alpha;}
-
-    code {display:inline-block; padding:0 3px; background:#eee;}
-    td, th {border:1px solid #ddd; padding: 5px 10px; vertical-align:top;}
-    table {border-collapse:collapse; margin:1.5em; margin-bottom: 3em; background:#fafafa;}
-    thead {background:#6badf6;}
-    th {font-weight:normal;}
-    code.box {border-radius:5px; border:1px solid #ccc; padding:0.75em; white-space:pre; overflow-x:auto; display:table; margin:1.5em;}
-
-    blockquote {border:1px solid #ccc; border-radius:3px; padding:10px; background:#eee; display:table;margin:1.5em;}
-
-    a[href^="http"]:after {padding-left:2px; content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAVklEQVR4Xn3PgQkAMQhDUXfqTu7kTtkpd5RA8AInfArtQ2iRXFWT2QedAfttj2FsPIOE1eCOlEuoWWjgzYaB/IkeGOrxXhqB+uA9Bfcm0lAZuh+YIeAD+cAqSz4kCMUAAAAASUVORK5CYII=);}
-
-    .slideshow img {opacity:0;
-        position:absolute;
-        transition: opacity 1.5s;
-        -moz-transition: opacity 1.5s;
-        -webkit-transition: opacity 1.5s;
-        -o-transition: opacity 1.5s;}
-    .slideshow img:first-child {opacity:1;}
-
-    span[title] {border-bottom: 1px dotted; font-family: sans-serif; cursor:help;}
-    abbr {cursor:help; border-bottom: 1px dotted black;}
-
-    #warning {background:#fbb; padding:10px 5px;margin:-8px;}
-    .warning {background:#fbb; border-color:#d00;}
-    var {color:#8B4513;}
-
-    .teamTableBody td:not(:first-child) {text-align:center;}
-    dt {margin-bottom:0.5em; margin-top:1em; font-style:italic;}
-    dd {margin-bottom:0.75em;}
+body {
+    font: 10pt/1.5 Helvetica,sans-serif;
+    text-rendering: optimizeLegibility;
+}
+p, ul, li {
+    margin: 1.5em 0;
+}
+h1, h3, h2 {
+    font-weight: normal;
+}
+h1 {
+    font-size: 36pt;
+    line-height: 0.5;
+    margin-top: 1.125em;
+    margin-bottom: 0.375em;
+}
+h2 {
+    font-size: 24pt;
+    line-height: 0.75;
+    margin-top: 3em;
+    margin-bottom: 1.5em;
+}
+h3 {
+    font-size: 18pt;
+    line-height: 1;
+    margin-top: 3.5em;
+    margin-bottom: 1em;
+}
+ul, ol {
+    margin-top:0.5em;
+    margin-bottom:1em;
+}
+ol ol {
+    list-style:lower-alpha;
+}
+li {
+    margin:0.75em 0;
+}
+a:link {
+    text-decoration:none;
+}
+a:hover {
+    text-decoration:underline;
+}
+pre > code {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 0.75em;
+    white-space: pre;
+    overflow-x: auto;
+    display: table;
+    margin: 1.5em;
+}
+code {
+    display: inline-block;
+    padding: 0 3px;
+    background: #eee;
+}
+table {
+    border-collapse: collapse;
+    margin: 1.5em;
+    margin-bottom: 3em;
+    background: #fafafa;
+}
+thead {
+    background: #6badf6;
+}
+td, th {
+    border: 1px solid #ddd;
+    padding: 5px 10px;
+    vertical-align: top;
+}
+th {
+    font-weight: normal;
+}
+blockquote {
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 10px;
+    background: #eee;
+    display: table;
+    margin: 1.5em;
+}
+a[href^="http"]:after {
+    padding-left: 2px;
+    content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAVklEQVR4Xn3PgQkAMQhDUXfqTu7kTtkpd5RA8AInfArtQ2iRXFWT2QedAfttj2FsPIOE1eCOlEuoWWjgzYaB/IkeGOrxXhqB+uA9Bfcm0lAZuh+YIeAD+cAqSz4kCMUAAAAASUVORK5CYII=);
+}
+abbr {
+    cursor: help;
+    border-bottom: 1px dotted black;
+}
+var {
+    color: #8B4513;
+}
 </style>
 <!--  LOOT
 
@@ -193,10 +235,10 @@ h3{
     <img src="images/editor.png">
     <figcaption>A metadata editor panel.</figcaption>
 </figure>
-<p>LOOT uses metadata to supply plugins with messages and Bash Tag suggestions, and to help it sort plugins that it otherwise can't sort correctly. Users can add to their plugins' metadata through each plugin's metadata editor panel, and plugins with user metadata are labelled with a <span class="fa fa-user"></span> icon.
+<p>LOOT uses metadata to supply plugins with messages and Bash Tag suggestions, and to help it sort plugins that it otherwise can't sort correctly. Users can add to their plugins' metadata through each plugin's metadata editor panel, and plugins with user metadata are labelled with a <core-icon icon="account-circle"></core-icon> icon.
 <p>A plugin's editor panel is accessed by clicking the <q>Edit Metadata</q> item in the plugin's menu. Multiple plugins can have their editor panels open at once, but everything in LOOT's menu bar is disabled while there is at least one panel open.
 
-<p>Table rows that are for masterlist metadata cannot be edited or deleted. User metadata rows can be deleted by clicking their <span class="fa fa-trash-o"></span> icon.
+<p>Table rows that are for masterlist metadata cannot be edited or deleted. User metadata rows can be deleted by clicking their <core-icon icon="delete"></core-icon> icon.
 <p>Rows can be added to the <q>Requirements</q>, <q>Incompatibilities</q> and <q>Load After</q> tables by dragging and dropping plugins from the sidebar into the table area.
 
 <p>The <q>Apply</q> button will save any changes made, then exit the editor panel. The <q>Cancel</q> button will exit the editor panel without saving any changes.
@@ -257,7 +299,7 @@ h3{
         <tr><td>Automatically refresh content on window refocus<td>Controls whether or not LOOT re-scans installed plugin headers and regenerates displayed content when its window regains focus.
 </table>
 <p>LOOT's game-specific settings can be customised in the games table. Settings can also be added for additional game instances, making it easy to use LOOT across multiple copies of a game, including total conversion mods. LOOT ships with settings for the <q>Nehrim - At Fate's Edge</q> total conversion mod as an example.
-<p>The games instances defined in this table are displayed in LOOT's <q>Game</q> menu, and can be selected there if detected. Game instance settings may be deleted by clicking the <span class="fa fa-trash-o"></span> icon at the end of the game's row. The current game cannot have its settings deleted. If you delete the settings for one of LOOT's core four supported games (Oblivion, Skyrim, Fallout 3, Fallout: New Vegas), they will be recreated when LOOT is next run.
+<p>The games instances defined in this table are displayed in LOOT's <q>Game</q> menu, and can be selected there if detected. Game instance settings may be deleted by clicking the <core-icon icon="delete"></core-icon> icon at the end of the game's row. The current game cannot have its settings deleted. If you delete the settings for one of LOOT's core four supported games (Oblivion, Skyrim, Fallout 3, Fallout: New Vegas), they will be recreated when LOOT is next run.
 <p>The game settings are explained in the table below.
 <table>
     <thead>
@@ -313,7 +355,18 @@ h3{
     </ol>
     <li>Beta testing: Too many to list, thank you all!
 </ul>
-<p>LOOT is written in C++, HTML5, CSS3 and JavaScript, and uses the <a href="http://www.davekoelle.com/alphanum.html">Alphanum</a>, <a href="http://www.boost.org/">Boost</a>, <a href="https://github.com/chjj/marked">Marked</a>, <a href="http://github.com/WrinklyNinja/libespm">libespm</a>, <a href="http://github.com/libgit2/libgit2">libgit2</a>, <a href="http://github.com/WrinklyNinja/libloadorder">libloadorder</a>, <a href="http://requirejs.org">RequireJS</a> and <a href="http://code.google.com/p/yaml-cpp/">yaml-cpp</a> libraries, the <a href="https://code.google.com/p/chromiumembedded/">Chromium Embedded Framework</a>, and the <a href="http://fontawesome.io/">FontAwesome</a> icon font. Copyright license information for all these may be found <a href="licenses/Licenses.txt">here</a>.
+<p>LOOT is written in C/C++, HTML5, CSS3 and JavaScript, and uses the
+<a href="http://www.davekoelle.com/alphanum.html">Alphanum</a>,
+<a href="http://www.boost.org/">Boost</a>,
+<a href="https://github.com/SlexAxton/Jed">Jed</a>,
+<a href="https://github.com/WrinklyNinja/jed-gettext-parser">Jed Gettext Parser</a>,
+<a href="https://github.com/WrinklyNinja/libespm">libespm</a>,
+<a href="https://github.com/libgit2/libgit2">libgit2</a>,
+<a href="https://github.com/WrinklyNinja/libloadorder">libloadorder</a>,
+<a href="https://github.com/chjj/marked">Marked</a>,
+<a href="https://www.polymer-project.org/">Polymer</a>
+<a href="http://requirejs.org">RequireJS</a> and
+<a href="http://code.google.com/p/yaml-cpp/">yaml-cpp</a> libraries, and the <a href="https://code.google.com/p/chromiumembedded/">Chromium Embedded Framework</a>. Copyright license information for all these may be found <a href="licenses/Licenses.txt">here</a>.
 
 <h2 id="license">License</h2>
 <p>LOOT is distributed under the <a href="http://www.gnu.org/licenses/gpl.html">GNU General Public License v3.0</a>, aside from the documentation, which is distributed under the <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License v1.3</a>. The full texts of the licenses are included with LOOT in the accompanying <a href="licenses/GNU%20GPL%20v3.txt">GNU GPL v3.txt</a> and <a href="licenses/GNU%20FDL%20v1.3.txt">GNU FDL v1.3.txt</a> files.
@@ -357,7 +410,7 @@ A copy of the license is included in the file named "GNU FDL v1.3.txt".</blockqu
 <ul>
     <li><i><abbr title="Cyclic Redundancy Check">CRC</abbr> value</i>: CRC values are a highly accurate way of identifying files based on their contents, as if the contents change, so does the CRC value. LOOT identifies an unclean plugin by comparing the installed plugin's CRC value against the CRC values for known unclean versions of that plugin. This identification method has the limitation that it can't detect unclean plugins that aren't already known as such, and won't detect unclean but edited plugins, but it's a lot faster than actually checking for dirty edits in the plugin.
     <li><i><abbr title="Identical To Master">ITM</abbr> Count</i>: ITM records are a type of dirty edit where a mod has overwritten something in the game without actually changing anything. If another mod higher up in the load order makes an intentional change to that thing, it will have its effect cancelled out by the ITM record, which can cause problems. The ITM count is the number of ITM records found and corrected in the mod plugin.
-    <li><i><abbr title="Undeleted and Disabled Reference">UDR</abbr> Count</i>: Deleting records is a significant cause of crashes and game bugs. UDRs are records that the mod deleted from the game or from another mod that have been corrected safely by undeleting them and disabling them instead, which has the same intended effect without causing issues. The UDR count is the number of deleted reference records found and corrected in the mod plugin.
+    <li><i>Deleted Reference Count</i>: Deleted references are a significant cause of crashes and game bugs. They can be fixed by undeleting and disabling the references, which has the same effect without causing issues. The deleted reference count is equivalent to the <abbr title="Undeleted and Disabled Reference">UDR</abbr> count, which is the number of deleted references that have been fixed, and the two terms are used interchangeably in many places.
     <li><i>Deleted Navmesh Count</i>: Like deleting records, deleting navmeshes can cause crashes. However, these cannot be automatically corrected, and require manual cleaning. Navmeshes don't exist in Oblivion, so this information doesn't apply.
 </ul>
 <p>In addition to the above, there is another type of dirty edit known as a <em>wild edit</em>. These are any edit that is unrelated to the purpose of the mod, and so provide unnecessary opportunity for conflicts with other mods that do need to change the same thing. It can be difficult to tell if an edit is a wild edit, and so they cannot be automatically cleaned. LOOT can still notify users of wild edits and link to information on fixing them if the CRCs of plugins with wild edits are reported, along with details on what needs cleaning.
@@ -493,30 +546,3 @@ A copy of the license is included in the file named "GNU FDL v1.3.txt".</blockqu
 <ul>
     <li>Initial release.
 </ul>
-
-<script>
-"use strict";
-function nextImage(imgs, i){
-    for(var i=0;i<imgs.length;i++){
-        if(imgs[i].style.opacity=='1' || imgs[i].style.opacity==''){
-            imgs[i].style.opacity='0';
-            if(i+1<imgs.length){
-                imgs[i+1].style.opacity='1';
-            }else{
-                imgs[0].style.opacity='1';
-            }
-            break;
-        }
-    }
-    var t=setTimeout(nextImage, 5000, imgs);
-}
-
-var figures = document.getElementsByTagName('figure');
-if(figures!=null){
-    for (var i=0; i < figures.length; i++) {
-        if (figures[i].className == 'slideshow'){
-            var t=setTimeout(nextImage,5000, figures[i].getElementsByTagName('img'));
-        }
-    }
-}
-</script>
