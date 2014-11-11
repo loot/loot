@@ -126,13 +126,13 @@
             pluginItem.querySelector('#hasGlobalPriority').label = l10n.translate("Priority Is Global").fetch();
 
             /* Message row template */
-            var messageRow = editableTableImportDoc.querySelector('#messageRow').content;
+            var messageRow = document.querySelector('link[rel="import"][href$="editable-table.html"]').import.querySelector('#messageRow').content;
             messageRow.querySelector('.type').children[0].textContent = l10n.translate("Note").fetch();
             messageRow.querySelector('.type').children[1].textContent = l10n.translate("Warning").fetch();
             messageRow.querySelector('.type').children[2].textContent = l10n.translate("Error").fetch();
 
             /* Tag row template */
-            var tagRow = editableTableImportDoc.querySelector('#tagRow').content;
+            var tagRow = document.querySelector('link[rel="import"][href$="editable-table.html"]').import.querySelector('#tagRow').content;
             tagRow.querySelector('.type').children[0].textContent = l10n.translate("Add").fetch();
             tagRow.querySelector('.type').children[1].textContent = l10n.translate("Remove").fetch();
 
