@@ -2,48 +2,100 @@
 <meta charset="utf-8">
 <title>LOOT Metadata Syntax</title>
 <style>
-    body {
-        font:10pt/1.5 Helvetica,sans-serif;
-        text-rendering:optimizeLegibility;}
-    p, ul, li {margin:1.5em 0;}
-    h1,h3,h2 {font-weight:normal;}
-h1{
-    font-size:36pt;
-    line-height:0.5;
-    margin-top:1.125em;
-    margin-bottom:0.375em;}
-h2{
-    font-size:24pt;
-    line-height:0.75;
-    margin-top:3em;
-    margin-bottom:1.5em;}
-h3{
-    font-size:18pt;
-    line-height:1;
-    margin-top:3.5em;
-    margin-bottom:1em;}
-    ul, ol {margin-top:0.5em; margin-bottom:1em;}
-    li {margin:0.75em 0;}
-    a:link {text-decoration:none;}
-    a:hover {text-decoration:underline;}
-    ol ol {list-style:lower-alpha;}
-
-    code {display:inline-block; padding:0 3px; background:#eee;}
-    td, th {border:1px solid #ddd; padding: 5px; vertical-align:top;}
-    table {border-collapse:collapse; margin:1.5em; margin-bottom: 3em; background:#fafafa;}
-    thead {background:#99CCFF;}
-    code.box {border-radius:5px; border:1px solid #ccc; padding:0.75em; white-space:pre; overflow-x:auto; display:table; margin:1.5em;}
-
-    blockquote {border-radius:3px; border:1px solid #0c0; padding:5px; background:#7e7; display:table;margin:1.5em;}
-
-    a[href^="http"]:after {padding-left:2px; content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAVklEQVR4Xn3PgQkAMQhDUXfqTu7kTtkpd5RA8AInfArtQ2iRXFWT2QedAfttj2FsPIOE1eCOlEuoWWjgzYaB/IkeGOrxXhqB+uA9Bfcm0lAZuh+YIeAD+cAqSz4kCMUAAAAASUVORK5CYII=);}
-
-    span[title] {border-bottom: 1px dotted; font-family: sans-serif; cursor:help;}
-    abbr {cursor:help; border-bottom: 1px dotted black;}
-
-    #warning {background:#fbb; padding:10px 5px;margin:-8px;}
-    .warning {background:#fbb; border-color:#d00;}
-    var {color:#8B4513;}
+body {
+    font: 10pt/1.5 Helvetica,sans-serif;
+    text-rendering: optimizeLegibility;
+}
+p, ul, li {
+    margin: 1.5em 0;
+}
+h1, h3, h2 {
+    font-weight: normal;
+}
+h1 {
+    font-size: 36pt;
+    line-height: 0.5;
+    margin-top: 1.125em;
+    margin-bottom: 0.375em;
+}
+h2 {
+    font-size: 24pt;
+    line-height: 0.75;
+    margin-top: 3em;
+    margin-bottom: 1.5em;
+}
+h3 {
+    font-size: 18pt;
+    line-height: 1;
+    margin-top: 3.5em;
+    margin-bottom: 1em;
+}
+ul, ol {
+    margin-top:0.5em;
+    margin-bottom:1em;
+}
+ol ol {
+    list-style:lower-alpha;
+}
+li {
+    margin:0.75em 0;
+}
+a:link {
+    text-decoration:none;
+}
+a:hover {
+    text-decoration:underline;
+}
+pre > code {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 0.75em;
+    white-space: pre;
+    overflow-x: auto;
+    display: table;
+    margin: 1.5em;
+}
+code {
+    display: inline-block;
+    padding: 0 3px;
+    background: #eee;
+}
+table {
+    border-collapse: collapse;
+    margin: 1.5em;
+    margin-bottom: 3em;
+    background: #fafafa;
+}
+thead {
+    background: #6badf6;
+}
+td, th {
+    border: 1px solid #ddd;
+    padding: 5px 10px;
+    vertical-align: top;
+}
+th {
+    font-weight: normal;
+}
+blockquote {
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 10px;
+    background: #eee;
+    display: table;
+    margin: 1.5em;
+}
+a[href^="http"]:after {
+    padding-left: 2px;
+    content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAVklEQVR4Xn3PgQkAMQhDUXfqTu7kTtkpd5RA8AInfArtQ2iRXFWT2QedAfttj2FsPIOE1eCOlEuoWWjgzYaB/IkeGOrxXhqB+uA9Bfcm0lAZuh+YIeAD+cAqSz4kCMUAAAAASUVORK5CYII=);
+}
+abbr {
+    cursor: help;
+    border-bottom: 1px dotted black;
+}
+var {
+    color: #8B4513;
+}
 </style>
 <!--  LOOT
 
@@ -127,7 +179,7 @@ h3{
 </table>
 <p>Other keys may also be present, but are not processed by LOOT. The message and plugin data structures are detailed in the next section.
 <p>An example metadata file:
-<code class="box">globals:
+<pre><code>globals:
   - type: say
     content: 'You are using the latest version of LOOT.'
     condition: 'version("LOOT", "0.5.0.0", ==)'
@@ -144,7 +196,7 @@ plugins:
       - Graphics
       - Hair
       - R.Relations
-</code>
+</code></pre>
 
 
 <h2 id="structs">Data Structures</h2>
@@ -153,7 +205,7 @@ plugins:
 <h3 id="structs-tag">Tag Data Structure</h3>
 <p>LOOT metadata files can contain suggestions for the addition or removal of Bash Tags, and this is the structure used for them. It has two forms: the first is a simple string, and the second is a key-value map. All values in the map are strings.
 <p>The simple form:
-<code class="box"><var>tag</var></code>
+<pre><code><var>tag</var></code></pre>
 <p>where <code><var>tag</var></code> is the Bash Tag, preceded by a minus sign if it is suggested for removal.
 <p>The map form:
 <table>
@@ -163,16 +215,16 @@ plugins:
         <tr><td><code>condition</code><td>&#x2717;<td>A condition string that is evaluated to determine whether this Bash Tag should be suggested: if it evaluates to true, the Tag is suggested, otherwise it is ignored. See <a href="#cond">Condition Strings</a> for details.
 </table>
 <p>Examples:
-<code class="box">Relations</code>
+<pre><code>Relations</code></pre>
 or
-<code class="box">name: -Relations
+<pre><code>name: -Relations
 condition: 'file("Mart''s Monster Mod for OOO.esm") or file("FCOM_Convergence.esm")'
-</code>
+</code></pre>
 
 <h3 id="structs-file">File Data Structure</h3>
 <p>Not to be confused with the structure of the metadata file itself, this structure can be used to hold file paths. It has two forms: the first is a simple string, and the second is a key-value map. All values in the map are strings.
 <p>The simple form:
-<code class="box"><var>filepath</var></code>
+<pre><code><var>filepath</var></code></pre>
 <p>where <code><var>filepath</var></code> is an exact (ie. not regex) file path relative to the game's Data folder.
 <p>The map form:
 <table>
@@ -184,12 +236,12 @@ condition: 'file("Mart''s Monster Mod for OOO.esm") or file("FCOM_Convergence.es
 </table>
 
 <p>Examples:
-<code class="box">'../obse_loader.exe'</code>
+<pre><code>'../obse_loader.exe'</code></pre>
 or
-<code class="box">name: '../obse_loader.exe'
+<pre><code>name: '../obse_loader.exe'
 condition: 'version("../obse_loader.exe", "0.0.18.0", &gt;=)'
 display: 'OBSE v18+'
-</code>
+</code></pre>
 
 <h3 id="structs-message">Message Data Structure</h3>
 <p>Messages are given as key-value maps.
@@ -226,33 +278,33 @@ display: 'OBSE v18+'
 </ol>
 
 <p>Examples (translations by Google):
-<code class="box">type: say
+<pre><code>type: say
 condition: 'file("foo.esp")'
 content:
   - lang: en
     str: 'An example link: &lt;http://www.example.com&gt;'
   - lang: ru
     str: 'Это пример ссылки: &lt;http://www.example.com&gt;'
-</code>
+</code></pre>
 would be displayed as
 <blockquote>
 отмечать: Это пример ссылки: <a href="http://www.example.com">http://www.example.com</a>
 </blockquote>
 if the current language was Russian and <code>foo.esp</code> was installed, while
-<code class="box">type: say
+<pre><code>type: say
 content: 'An alternative [example link](http://www.example.com), with no translations.'
-</code>
+</code></pre>
 would be displayed as
 <blockquote>
 отмечать: An alternative <a href="http://www.example.com">example link</a>, with no translations.
 </blockquote>
 In English,
-<code class="box">type: say
+<pre><code>type: say
 content: 'A newer version of %1% [is available](%2%).
 subs:
   - 'this plugin'
   - 'http://www.example.com'
-</code>
+</code></pre>
 would be displayed as
 <blockquote>
 Note: A newer version of this plugin <a href="http://www.example.com">is available</a>.
@@ -263,7 +315,7 @@ Note: A newer version of this plugin <a href="http://www.example.com">is availab
 <p>This data structure is used to hold information on where a plugin is hosted online. It is not currently used by LOOT, but it was suggested that since the LOOT team receives a considerable number of plugin URLs, they should be recorded in a standard format, as there is no existing store of such information and it could prove useful in the future.
 <p>The data structure has two forms: the first is a simple string, and the second is a key-value map. The first form should be used for a URL without any associated version data, such as when it is not clear which version is found there, or when it is the only known hosting location for the plugin and as such hosts all available versions. The second form should be used when version data can be associated with the URL, such as when the URL only hosts a subset of the available versions of the plugin.
 <p>The simple form:
-<code class="box"><var>URL</var></code>
+<pre><code><var>URL</var></code></pre>
 <p>where <code><var>URL</var></code> is a URL at which the plugin may be found.
 <p>The map form:
 <table>
@@ -273,12 +325,12 @@ Note: A newer version of this plugin <a href="http://www.example.com">is availab
         <tr><td><code>ver</code><td>string list<td>&#x2713;<td>A list of versions that can be found at the URL.
 </table>
 <p>Examples:
-<code class="box">'http://skyrim.nexusmods.com/mods/19/'</code>
+<pre><code>'http://skyrim.nexusmods.com/mods/19/'</code></pre>
 or
-<code class="box">link: 'http://steamcommunity.com/sharedfiles/filedetails/?id=87144366'
+<pre><code>link: 'http://steamcommunity.com/sharedfiles/filedetails/?id=87144366'
 ver:
   - '1.3.2c'
-</code>
+</code></pre>
 
 <h3 id="structs-dirty">Dirty Info Data Structure</h3>
 <p>This structure holds information on which versions of a plugin are dirty, and how many identical-to-master records, deleted records and deleted navmeshes (if applicable) it contains. Dirty info is given as a key-value map.
@@ -292,12 +344,12 @@ ver:
         <tr><td><code>nav</code><td>integer<td>&#x2717;<td>The number of deleted navmeshes reported for the dirty plugin. If the number is unknown, this field should not be supplied. If the number is known and zero, this field should be supplied.
 </table>
 <p>Examples:
-<code class="box">crc: 0x3DF62ABC
+<pre><code>crc: 0x3DF62ABC
 util: '[TES5Edit](http://www.creationkit.com/TES5Edit_Cleaning_Guide_-_TES5Edit)'
 itm: 4
 udr: 160
 nav: 0
-</code>
+</code></pre>
 
 
 <h3 id="structs-plugin">Plugin Data Structure</h3>
@@ -341,7 +393,7 @@ nav: 0
 </table>
 
 <p>Example:
-<code class="box">name: 'Oscuro''s_Oblivion_Overhaul.esm'
+<pre><code>name: 'Oscuro''s_Oblivion_Overhaul.esm'
 req:
   - 'Oblivion.esm'  # Don't do this, Oblivion.esm is a master of Oscuro's_Oblivion_Overhaul.esm, so LOOT already knows it's required.
   - name: 'example.esp'
@@ -359,11 +411,11 @@ tag:
 msg:
   - type: say
     content: 'Do not clean. "Dirty" edits are intentional and required for the mod to function.'
-</code>
+</code></pre>
 
 <h2 id="cond">Condition Strings</h2>
 <p>Condition strings can be used to ensure that data is only acted on by LOOT under certain circumstances. They are very similar to boolean conditional expressions in programming languages such as Python, though more limited. Their <a href="https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_Form">EBNF</a> grammar is:
-<code class="box">[ negator ], function, { junctor, [ negator ], function } ;</code>
+<pre><code>[ negator ], function, { junctor, [ negator ], function } ;</code></pre>
 <p>The <code>[ negator ], function</code> grammar is referred to as a condition, and two conditions joined by an operator, ie. <code>condition, operator, condition</code> is referred to as a compound condition.
 <p>LOOT caches the results of condition evaluations, so performance is not really an issue. A regular expression check will still take longer than a file check though, so use the former only when appropriate to do so.
 
@@ -392,7 +444,7 @@ msg:
 
 <h3 id="cond-operator">The Negator &amp; Junctors</h3>
 <p>The negator, or logical negation operator, inverts the value of the function that follows it. Its inclusion is optional, and its syntax is simply:
-<code class="box">not</code>
+<pre><code>not</code></pre>
 <p>Below is a truth table for the negator.
 <table>
     <thead><tr><th>Value of <code><var>function</var></code><th>Value of <code>not <var>function</var></code>
