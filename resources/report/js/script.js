@@ -846,29 +846,33 @@ function copyContent(evt) {
     var plugins = [];
 
     if (loot.game) {
-        loot.game.globalMessages.forEach(function(message){
-            var m = {};
-            messages.push({
-                type: message.type,
-                content: message.content[0].str
+        if (loot.game.globalMessages) {
+            loot.game.globalMessages.forEach(function(message){
+                var m = {};
+                messages.push({
+                    type: message.type,
+                    content: message.content[0].str
+                });
             });
-        });
-        loot.game.plugins.forEach(function(plugin){
-            plugins.push({
-                name: plugin.name,
-                crc: plugin.crc,
-                version: plugin.version,
-                isActive: plugin.isActive,
-                isDummy: plugin.isDummy,
-                loadsBSA: plugin.loadsBSA,
+        }
+        if (loot.game.plugins) {
+            loot.game.plugins.forEach(function(plugin){
+                plugins.push({
+                    name: plugin.name,
+                    crc: plugin.crc,
+                    version: plugin.version,
+                    isActive: plugin.isActive,
+                    isDummy: plugin.isDummy,
+                    loadsBSA: plugin.loadsBSA,
 
-                modPriority: plugin.modPriority,
-                isGlobalPriority: plugin.isGlobalPriority,
-                messages: plugin.messages,
-                tags: plugin.tags,
-                isDirty: plugin.isDirty
+                    modPriority: plugin.modPriority,
+                    isGlobalPriority: plugin.isGlobalPriority,
+                    messages: plugin.messages,
+                    tags: plugin.tags,
+                    isDirty: plugin.isDirty
+                });
             });
-        });
+        }
     } else {
         var message = document.getElementById('generalMessagesList').getElementsByTagName('ul')[0].firstElementChild;
         if (message) {
@@ -891,7 +895,7 @@ function copyContent(evt) {
 }
 function areSettingsValid() {
     /* Validate inputs individually. */
-    var inputs = document.getElementById('settings').getElementsByTagName('input');
+    var inputs = document.getElementById('settingsDialog').getElementsByTagName('input');
     for (var i = 0; i < inputs.length; ++i) {
         if (!inputs[i].checkValidity()) {
             return false;
@@ -977,7 +981,7 @@ function closeSettingsDialog(evt) {
 }
 
 function showSettingsDialog(evt) {
-    document.getElementById('settings').showModal();
+    document.getElementById('settingsDialog').showModal();
 }
 
 function startSearch(evt) {
@@ -1195,7 +1199,7 @@ function setupEventHandlers() {
     document.getElementById('sidebarTabs').addEventListener('core-select', switchSidebarTab, false);
 
     /* Set up event handlers for settings dialog. */
-    var settings = document.getElementById('settings');
+    var settings = document.getElementById('settingsDialog');
     settings.getElementsByClassName('accept')[0].addEventListener('click', closeSettingsDialog, false);
     settings.getElementsByClassName('cancel')[0].addEventListener('click', closeSettingsDialog, false);
 
@@ -1239,7 +1243,13 @@ function initVars() {
 
             /* Now fill in language options. */
             var settingsLangSelect = document.getElementById('languageSelect');
-            var messageLangSelect = document.querySelector('link[rel="import"][href$="editable-table.html"]').import.querySelector('#messageRow').content.querySelector('.language');
+            var messageLangSelect = document.querySelector('link[rel="import"][href$="editable-table.html"]');
+            if (messageLangSelect) {
+                messageLangSelect = messageLangSelect.import.querySelector('#messageRow').content.querySelector('.language');
+            } else {
+                messageLangSelect = document.querySelector('#messageRow').content.querySelector('.language');
+            }
+
             for (var i = 0; i < loot.languages.length; ++i) {
                 var settingsItem = document.createElement('paper-item');
                 settingsItem.setAttribute('value', loot.languages[i].locale);
@@ -1290,7 +1300,12 @@ function initVars() {
             }
 
             /* Fill in game row template's game type options. */
-            var select = document.querySelector('link[rel="import"][href$="editable-table.html"]').import.querySelector('#gameRow').content.querySelector('select');
+            var select = document.querySelector('link[rel="import"][href$="editable-table.html"]');
+            if (select) {
+                select = select.import.querySelector('#gameRow').content.querySelector('select')
+            } else {
+                select = document.querySelector('#gameRow').content.querySelector('select');
+            }
             for (var j = 0; j < loot.gameTypes.length; ++j) {
                 var option = document.createElement('option');
                 option.value = loot.gameTypes[j];

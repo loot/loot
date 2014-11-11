@@ -51,7 +51,13 @@
 
         translateStaticText: function(l10n) {
             /* Plugin card template. */
-            var pluginCard = document.querySelector('link[rel="import"][href$="loot-plugin-card.html"]').import.querySelector('template').content;
+            var pluginCard = document.querySelector('link[rel="import"][href$="loot-plugin-card.html"]');
+            if (pluginCard) {
+                pluginCard = pluginCard.import.querySelector('template').content;
+            } else {
+                pluginCard = document.querySelector('polymer-element[name="loot-plugin-card"]').querySelector('template').content;
+            }
+
             pluginCard.getElementById('front').querySelector('.activeTick').label = l10n.translate("Active Plugin").fetch();
             pluginCard.getElementById('editor').querySelector('.activeTick').label = l10n.translate("Active Plugin").fetch();
             pluginCard.getElementById('front').querySelector('.dummyPlugin').label = l10n.translate("Dummy Plugin").fetch();
@@ -119,20 +125,35 @@
             pluginCard.getElementById('clearMetadata').label = l10n.translate("Clear User Metadata").fetch();
 
             /* Plugin List Item Template */
-            var pluginItem = document.querySelector('link[rel="import"][href$="loot-plugin-item.html"]').import.querySelector('template').content;
+            var pluginItem = document.querySelector('link[rel="import"][href$="loot-plugin-item.html"]');
+            if (pluginItem) {
+                pluginItem = pluginItem.import.querySelector('template').content;
+            } else {
+                pluginItem = document.querySelector('polymer-element[name="loot-plugin-item"]').querySelector('template').content;
+            }
             pluginItem.querySelector('#dummyPlugin').label = l10n.translate("Dummy Plugin").fetch();
             pluginItem.querySelector('#loadsBSA').label = l10n.translate("Loads BSA").fetch();
             pluginItem.querySelector('#hasUserEdits').label = l10n.translate("Has User Metadata").fetch();
             pluginItem.querySelector('#hasGlobalPriority').label = l10n.translate("Priority Is Global").fetch();
 
             /* Message row template */
-            var messageRow = document.querySelector('link[rel="import"][href$="editable-table.html"]').import.querySelector('#messageRow').content;
+            var messageRow = document.querySelector('link[rel="import"][href$="editable-table.html"]');
+            if (messageRow) {
+                messageRow = messageRow.querySelector('#messageRow').content;
+            } else {
+                messageRow = document.querySelector('#messageRow').content;
+            }
             messageRow.querySelector('.type').children[0].textContent = l10n.translate("Note").fetch();
             messageRow.querySelector('.type').children[1].textContent = l10n.translate("Warning").fetch();
             messageRow.querySelector('.type').children[2].textContent = l10n.translate("Error").fetch();
 
             /* Tag row template */
-            var tagRow = document.querySelector('link[rel="import"][href$="editable-table.html"]').import.querySelector('#tagRow').content;
+            var tagRow = document.querySelector('link[rel="import"][href$="editable-table.html"]');
+            if (tagRow) {
+                tagRow = tagRow.querySelector('#tagRow').content;
+            } else {
+                tagRow = document.querySelector('#tagRow').content;
+            }
             tagRow.querySelector('.type').children[0].textContent = l10n.translate("Add").fetch();
             tagRow.querySelector('.type').children[1].textContent = l10n.translate("Remove").fetch();
 
@@ -182,7 +203,7 @@
             document.getElementById('generalMessages').firstElementChild.textContent = l10n.translate("General Messages").fetch();
 
             /* Settings dialog */
-            document.getElementById('settings').heading = l10n.translate("Settings").fetch();
+            document.getElementById('settingsDialog').heading = l10n.translate("Settings").fetch();
 
             document.getElementById('defaultGameSelect').previousElementSibling.textContent = l10n.translate("Default Game").fetch();
             document.getElementById('defaultGameSelect').children[0].label = l10n.translate("Autodetect").fetch();
@@ -209,8 +230,8 @@
 
             document.getElementById('languageRestartTxt').textContent = l10n.translate("Language changes will be applied after LOOT is restarted.").fetch();
 
-            document.getElementById('settings').getElementsByClassName('accept')[0].textContent = l10n.translate("Apply").fetch();
-            document.getElementById('settings').getElementsByClassName('cancel')[0].textContent = l10n.translate("Cancel").fetch();
+            document.getElementById('settingsDialog').getElementsByClassName('accept')[0].textContent = l10n.translate("Apply").fetch();
+            document.getElementById('settingsDialog').getElementsByClassName('cancel')[0].textContent = l10n.translate("Cancel").fetch();
 
             /* First-run dialog */
             var firstRun = document.getElementById('firstRun');

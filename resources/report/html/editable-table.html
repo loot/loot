@@ -231,7 +231,12 @@ td paper-icon-button.hidden {
                 /* Create new row. */
                 var table = evt.currentTarget.parentElement.parentElement;
                 var rowTemplateId = table.getAttribute('data-template');
-                var content = document.querySelector('link[rel="import"][href$="editable-table.html"]').import.getElementById(rowTemplateId).content;
+                var content = document.querySelector('link[rel="import"][href$="editable-table.html"]');
+                if (content) {
+                    content = content.import.getElementById(rowTemplateId).content;
+                } else {
+                    content = document.getElementById(rowTemplateId).content;
+                }
                 var rowContent = document.importNode(content, true);
 
                 var row = document.createElement('tr');
@@ -247,7 +252,12 @@ td paper-icon-button.hidden {
         addRow: {
             value: function(tableData) {
                 var rowTemplateId = this.getAttribute('data-template');
-                var content = document.querySelector('link[rel="import"][href$="editable-table.html"]').import.getElementById(rowTemplateId).content;
+                var content = document.querySelector('link[rel="import"][href$="editable-table.html"]');
+                if (content) {
+                    content = content.import.getElementById(rowTemplateId).content;
+                } else {
+                    content = document.getElementById(rowTemplateId).content;
+                }
                 var rowContent = document.importNode(content, true);
 
                 var row = document.createElement('tr');
