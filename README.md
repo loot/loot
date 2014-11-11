@@ -27,6 +27,15 @@ Alphanum and Libespm do not require any additional setup. The rest of the librar
 
 Although LOOT uses a cross-platform build system and cross-platform libraries, it does rely on some Windows API functionality. Anyone wishing to port LOOT to other platforms will need to ensure equivalent functionality is implemented for their target platform. The Windows API code is wrapped in `#ifdef _WIN32` blocks so that it can be easily identified.
 
+LOOT's UI also relies on a few web libraries:
+
+* [Polymer](https://www.polymer-project.org)
+* [Jed](https://github.com/SlexAxton/Jed)
+* [Marked](https://github.com/chjj/marked)
+* [RequireJS](http://requirejs.org/)
+
+These dependencies are most easily managed using [Bower](http://bower.io/). To install Bower, first install [Node](http://nodejs.org/), and run `npm install -g bower` from the command line (on Windows, it needs to be the Node command prompt). Once Bower is installed, LOOT's UI dependencies can be fetched by running `bower install ./` from inside this repository's `resources/report` folder. Bower doesn't need to be run from the Node command prompt on Windows.
+
 ## Packaging Releases
 
 Installer and zip archive releases for the main LOOT application can be handled by running the scripts `installer.nsi` and `archive.py` in the `src` folder respectively. The installer script requires [NSIS 3](http://nsis.sourceforge.net/), while the archive script requires [Python](http://www.python.org/) (2 or 3). The installer and archive files are created in the `build/` folder, relative to the repository root.
