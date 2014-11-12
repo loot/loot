@@ -440,32 +440,47 @@ A copy of the license is included in the file named "GNU FDL v1.3.txt".</blockqu
 <h3>0.7.0 - <i>X Y 2014</i></h3>
 <h4>Fixes</h4>
 <ul>
-    <li>Default registry key for Nehrim was wrong.
-    <li>Messages were displayed in the wrong language.
+    <li>The default registry key for Nehrim was wrong.
+    <li>Messages were displayed in the wrong language if LOOT's language was not English.
     <li>Cyclic interaction errors listed plugins not involved in the cycle.
     <li>Bash Tags suggestions were not displayed correctly.
-    <li>API crashed when writing a minimal list to a location that doesn't exist.
-    <li>Inactive incompatibilities no longer cause error messages. Instead, they are displayed as warnings.
-    <li>Masterlist update failed when a fast-forward merge was not possible (eg. when remote has been rebased, or a different repository is used). Such cases are now handled by deleting the local repository and re-cloning the remote.
+    <li>The API crashed when writing a minimal list to a location that doesn't exist.
+    <li>Inactive incompatibilities were displayed as error messages. They are now displayed as warnings.
+    <li>Masterlist updating failed when a fast-forward merge was not possible (eg. when remote has been rebased, or a different repository is used). Such cases are now handled by deleting the local repository and re-cloning the remote.
     <li>The <code>settings.yaml</code> included with the installer was very old.
     <li>LOOT forgot plugin CRCs and active status if the settings dialog was opened and exited using the <q>OK</q> button, leading to conditional messages being wrongly displayed or hidden.
+    <li>LOOT crashed when trying to read corrupt plugins.
+    <li>Masterlist entries that matched the same plugin were not being merged. Now one exact match and any number of regex matches will be merged.
+    <li>Masterlists would not 'update' to older revisions. This can be useful for testing, so now they do.
+    <li>Permissions errors would occur when deleting local masterlist repositories.
+    <li>A crash could occur after masterlist update completed.
+    <li>Plugins with non-ASCII description text would cause <code>codecvt to wstring</code> errors.
+    <li>LOOT would accept any file with a <code>.esp</code> or <code>.esm</code> extension as a plugin. It now checks more thoroughly, by attempting to parse such files' headers.
+    <li>LOOT would only detect Skyrim plugins as loading BSAs. Plugins for the other games that also load BSAs are now correctly detected as such.
 </ul>
 <h4>Additions</h4>
 <ul>
     <li>German translation.
-    <li>Support for the full range of GitHub Flavored Markdown in masterlist messages.
+    <li>Support for GitHub Flavored Markdown in masterlist messages, minus features specific to the GitHub site, such as @mentions and emoji.
     <li>If LOOT can't detect any installed games, it now launches to the settings dialog, where the game settings can be edited to allow a game to be detected.
     <li><q>Copy Content As Text</q> menu item to copy the plugin list and all information it contains to the clipboard as YAML-formatted text.
-    <li>LOOT now re-scans plugin headers and updates the plugin list when its window regains focus. This can be disabled using the new <q>Automatically refresh content on window refocus</q> setting.
-    <li>A <q>Refresh Content</q> item has been added to the <q>File</q> menu, which manually performs the same refresh that happens by default when LOOT's window regains focus.
+    <li>A <q>Refresh Content</q> item has been added to the main menu, which re-scans plugin headers and updates LOOT's content.
+    <li>An <q>Automatically refresh content on window refocus</q> setting has been added. It is disabled by default to prevent what would be unnecessary disruption to most users.
     <li>LOOT is now built as with the Large Address Aware flag.
-    <li>Masterlist update can now be performed without then sorting.
+    <li>Masterlist update can now be performed separately from sorting.
+    <li>A <q>First-Time Tips</q> dialog will be displayed on the first run of any particular version of LOOT.
+    <li>If LOOT is closed before a sorted load order is applied, it will first ask if the sorted order should be applied or discarded.
+    <li>High DPI display support.
+    <li>Support for message content substitution metadata syntax in the masterlist.
+    <li>Display of LOOT's build revision has been added to the <q>About</q> dialog.
+    <li>Plugin location metadata can now be added through the user interface.
 </ul>
 <h4>Changes</h4>
 <ul>
-    <li>New single-window HTML5-based user interface, replacing wxWidgets with the Chromium Embedded Framework.
+    <li>New single-window HTML5-based interface, using elements of Google's Material Design.
     <ul>
-        <li>LOOT now opens into a combination of the old main and report windows. The masterlist and plugin headers are parsed on startup, and the resulting content displayed with the plugins in their current load order.
+        <li>wxWidgets has been replaced with the Chromium Embedded Framework.
+        <li>LOOT now parses the masterlist and plugin headers on startup, and the resulting content is displayed with the plugins in their current load order.
         <li>A sidebar containing a list of plugin sections, the filters and a search box has been added.
         <li>Icons have been added to show if plugins are active, contain no records, load BSAs and/or have user metadata. The latter three are displayed on each plugin's card and in the sidebar, while the first is only displayed on each plugin's card.
         <li>A menu has been added to the top-right of each plugin's card, through which plugin-specific functionality can be accessed.
@@ -473,7 +488,7 @@ A copy of the license is included in the file named "GNU FDL v1.3.txt".</blockqu
         <li>Plugin priorities can be viewed by hovering over their names in the sidebar while an editor is open.
         <li>Drag 'n' drop of plugins from the sidebar into metadata editor tables no longer requires the conflicts filter to be enabled.
         <li>CRCs are calculated and records are counted during conflict filtering or sorting, so CRCs and dummy plugin icons are not displayed until either process has been performed.
-        <li>The <q>Remove All User-Added Metadata</q> menu item has been renamed to <q>Clear All User Metadata</q> and moved into the <q>File</q> menu.
+        <li>The <q>Remove All User-Added Metadata</q> menu item has been renamed to <q>Clear All User Metadata</q> and moved into the main menu.
         <li>The <q>Remove Plugin User-Added Metadata</q> menu item has been renamed to <q>Clear User Metadata</q> and moved into the plugin menu.
         <li>The <q>Show only conflicting plugins</q> filter has been renamed to <q>Show Only Conflicts</q> and moved into the plugin menu.
     </ul>
@@ -483,12 +498,30 @@ A copy of the license is included in the file named "GNU FDL v1.3.txt".</blockqu
     <li>Masterlist updating now exits earlier if the masterlist is already up-to-date.
     <li>Masterlist revisions are now displayed using the shortest unique substring that is at least 7 characters long.
     <li>Making edits to plugin metadata before applying a calculated load order no longer causes LOOT to recalculate the load order. Instead, the displayed load order is applied, and the metadata edits will be applied the next time sorting is performed.
+    <li>Updated dependencies: Boost (v1.57.0), libespm (latest), libloadorder (v6.0.1),  yaml-cpp (latest).
+    <li>LOOT's calculated load orders are now more intuitive: an additional constraint was added so that plugins will be placed in alphabetical order so long as doing so does not violate any of the other constraints.
+    <li>All references to <q>UDRs</q> have been replaced by the more technically-correct <q>Deleted References</q> term.
 </ul>
 <h4>Removals</h4>
 <ul>
     <li>Messages with multiple language strings can no longer be created through the user interface. User-added multiple-language messages will be converted to single-language strings if their plugin's editor is opened then closed using the <q>OK</q> button.
     <li>The <q>Copy Name</q> menu item has been removed, as plugin names can now be selected and copied using <code>Ctrl-C</code>.
     <li>As LOOT no longer generates reports, it doesn't save them either.
+</ul>
+<h4>API</h4>
+<ul>
+    <li>Fixed some documentation errors.
+    <li>Fixed the API creating a LOOT folder when being initialised.
+    <li>Fixed false successes for <code>loot_create_db()</code> when invalid paths were supplied.
+    <li>Fixed <code>loot_load_lists()</code> ignoring userlist paths, and accepting invalid paths.
+    <li>Fixed <code>loot_eval_lists()</code> accepting invalid language codes.
+    <li>Fixed <code>loot_get_dirty_info()</code> never outputting the <code>loot_needs_cleaning_no</code> code.
+    <li>Added load order sorting and application functions.
+    <li>Added masterlist update and revision checking functions.
+    <li>Added support for native Linux builds.
+    <li>Added unit testing of API functions to help ensure correctness and consistency of functionality.
+    <li>Added <code>loot_get_build_id()</code>, which outputs the shortened revision ID that the API was built from.
+    <li>API updates are now released alongside application updates, in a separate archive. The archive contains the documentation in PDF format, the API's header file, and a 32-bit DLL.
 </ul>
 
 <h3>0.6.0 - <i>05 July 2014</i></h3>
