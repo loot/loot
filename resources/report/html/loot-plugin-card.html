@@ -199,9 +199,9 @@ loot-clear-metadata
                 <core-tooltip id="hasUserEdits" label="Has User Metadata">
                     <core-icon icon="account-circle"></core-icon>
                 </core-tooltip>
-                <paper-menu-button halign="right">
+                <paper-menu-button>
                     <paper-icon-button icon="more-vert"></paper-icon-button>
-                    <paper-dropdown class="dropdown">
+                    <paper-dropdown class="dropdown" halign="right">
                         <core-menu>
                             <paper-item>
                                 <paper-checkbox id="showOnlyConflicts" label="Show Only Conflicts" flex></paper-checkbox>
@@ -512,7 +512,7 @@ loot-clear-metadata
         },
 
         onShowEditor: function(evt) {
-            var card = evt.target.parentElement.parentElement.parentElement.parentNode.host;
+            var card = evt.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentNode.host;
 
             /* Fire an open event, so that the UI can enter edit mode. */
             card.dispatchEvent(new CustomEvent('loot-editor-open', {

@@ -18,7 +18,7 @@
 #gameMenu::shadow > paper-dropdown-menu::shadow #label, #gameMenu::shadow > paper-dropdown-menu::shadow #arrow {
     color: white;
 }
-#gameMenu::shadow > paper-dropdown-menu::shadow #menu {
+#gameMenu {
     color: black;
 }
 

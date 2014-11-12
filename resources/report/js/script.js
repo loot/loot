@@ -1458,6 +1458,6 @@ window.addEventListener('polymer-ready', function(e) {
             sanitize: true
         });
         setupEventHandlers();
-        //initVars();
+        initVars();
     });
 }, false);
