@@ -11,30 +11,23 @@ Still missing compared to <dialog> are:
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-action-dialog.html">
 
-<polymer-element name="loot-dialog" extends="paper-action-dialog" attributes="open" transition="core-transition-center" autoCloseDisabled backdrop>
+<polymer-element name="loot-dialog" extends="paper-action-dialog" transition="core-transition-center" layered="false">
     <script>
     Polymer({
-        open: false,
-
-        openedChanged: function(oldValue, newValue) {
-            this.open = newValue;
-        },
-
-        openChanged: function(oldValue, newValue) {
-            this.opened = newValue;
-        },
-
         show: function() {
             this.backdrop = false;
+            this.autoCloseDisabled = false;
             this.setAttribute(opened, true);
         },
         showModal: function() {
             this.backdrop = true;
+            this.autoCloseDisabled = true;
+            this.open();
             this.setAttribute('opened', true);
         },
         close: function(retVal) {
             this.setAttribute('returnValue', retVal);
-            this.removeAttribute(opened);
+            this.super();
         },
     });
     </script>

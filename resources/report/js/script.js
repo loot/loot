@@ -686,14 +686,14 @@ function showProgress(message) {
     if (message) {
         progressDialog.getElementsByTagName('h1')[0].textContent = message;
     }
-    if (!progressDialog.open) {
+    if (!progressDialog.opened) {
         progressDialog.showModal();
         progressDialog.querySelector('.progress').classList.toggle('running');
     }
 }
 function closeProgressDialog() {
     var progressDialog = document.getElementById('progressDialog');
-    if (progressDialog.open) {
+    if (progressDialog.opened) {
         progressDialog.close();
         progressDialog.querySelector('.progress').classList.toggle('running');
     }
