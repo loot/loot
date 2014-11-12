@@ -261,27 +261,8 @@ progress, .progress {
     display: block;
     margin: 0 auto;
 }
-#progressDialog > h1 {
-    font-size: 1.5em;
-}
-
-@-webkit-keyframes indeterminate {
-	0% { width: 0% }
-	100% { width: 100% }
-}
-
-progress::-webkit-progress-bar, .progress.bar {
-    background-color: #eee;
-    border-radius: 2px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
-}
-progress::-webkit-progress-value, .progress .value {
-    height: 100%;
-    background-color: green;
-    -webkit-animation: indeterminate 2s linear 0 infinite alternate paused;
-}
-.progress.running > .value {
-    -webkit-animation-play-state: running;
+#progressDialog > paper-progress {
+    width: 100%;
 }
 
 :host > span {

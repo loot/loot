@@ -33,6 +33,7 @@
     <link rel="import" href="bower_components/paper-dialog/paper-dialog.html">
     <link rel="import" href="bower_components/paper-dialog/paper-dialog-transition.html">
     <link rel="import" href="bower_components/paper-dropdown/paper-dropdown.html">
+    <link rel="import" href="bower_components/paper-progress/paper-progress.html">
 
     <script src="bower_components/requirejs/require.js"></script>
 </head>
@@ -234,13 +235,8 @@ along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
 
     <div id="hoverText" class="hidden"></div>
     <loot-dialog id="progressDialog">
-        <!-- CEF doesn't seem to want to play any animation set through CSS
-             for <progress>'s internal value pseudo-element, so use this
-             instead. -->
-        <div class="progress bar">
-            <div class="value"></div>
-        </div>
-        <h1>Calculating the last digit of &pi;...</h1>
+        <paper-progress indeterminate></paper-progress>
+        <p>Calculating the last digit of &pi;...</p>
     </loot-dialog>
 
     <loot-dialog id="firstRun" heading="First-Time Tips">

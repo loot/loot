@@ -133,21 +133,20 @@ function Plugin(obj) {
     }
 
     Plugin.prototype.createCard = function() {
-        var card = document.createElement('loot-plugin-card');
-        this.card = card;
+        this.card = document.createElement('loot-plugin-card');
 
-        card.id = this.id;
+        this.card.id = this.id;
 
-        card.setAttribute('data-active', this.isActive);
-        card.setAttribute('data-dummy', this.isDummy);
-        card.setAttribute('data-bsa', this.loadsBSA);
-        card.setAttribute('data-edits', this.userlist != undefined);
+        this.card.setAttribute('data-active', this.isActive);
+        this.card.setAttribute('data-dummy', this.isDummy);
+        this.card.setAttribute('data-bsa', this.loadsBSA);
+        this.card.setAttribute('data-edits', this.userlist != undefined);
 
         /* Fill in name, version, CRC. */
-        card.getElementsByTagName('h1')[0].textContent = this.name;
-        card.getElementsByClassName('version')[0].textContent = this.version;
+        this.card.getElementsByTagName('h1')[0].textContent = this.name;
+        this.card.getElementsByClassName('version')[0].textContent = this.version;
         if (this.crc != 0) {
-            card.getElementsByClassName('crc')[0].textContent = this.crc.toString(16).toUpperCase();
+            this.card.getElementsByClassName('crc')[0].textContent = this.crc.toString(16).toUpperCase();
         }
 
         /* Fill in Bash Tag suggestions. */
@@ -156,23 +155,22 @@ function Plugin(obj) {
         /* Fill in messages. */
         this.updateCardMessages();
 
-        document.getElementById('main').appendChild(card);
+        document.getElementById('main').appendChild(this.card);
     }
 
     Plugin.prototype.createListItem = function() {
-        var li = document.createElement('loot-plugin-item');
-        this.li = li;
+        this.li = document.createElement('loot-plugin-item');
 
-        li.label = this.name;
-        li.setLink('#' + this.id);
-        li.setPriority(this.getPriorityString());
+        this.li.label = this.name;
+        this.li.setLink('#' + this.id);
+        this.li.setPriority(this.getPriorityString());
 
-        li.setAttribute('data-dummy', this.isDummy);
-        li.setAttribute('data-bsa', this.loadsBSA);
-        li.setAttribute('data-edits', this.userlist != undefined);
-        li.setAttribute('data-global-priority', this.isGlobalPriority);
+        this.li.setAttribute('data-dummy', this.isDummy);
+        this.li.setAttribute('data-bsa', this.loadsBSA);
+        this.li.setAttribute('data-edits', this.userlist != undefined);
+        this.li.setAttribute('data-global-priority', this.isGlobalPriority);
 
-        document.getElementById('cardsNav').appendChild(li);
+        document.getElementById('cardsNav').appendChild(this.li);
     }
 
     Plugin.prototype.observer = function(changes) {

@@ -684,18 +684,16 @@ function sortUIElements(pluginNames) {
 function showProgress(message) {
     var progressDialog = document.getElementById('progressDialog');
     if (message) {
-        progressDialog.getElementsByTagName('h1')[0].textContent = message;
+        progressDialog.getElementsByTagName('p')[0].textContent = message;
     }
     if (!progressDialog.opened) {
         progressDialog.showModal();
-        progressDialog.querySelector('.progress').classList.toggle('running');
     }
 }
 function closeProgressDialog() {
     var progressDialog = document.getElementById('progressDialog');
     if (progressDialog.opened) {
         progressDialog.close();
-        progressDialog.querySelector('.progress').classList.toggle('running');
     }
 }
 function sortPlugins(evt) {
@@ -1340,16 +1338,11 @@ function initVars() {
                 });
             } else {
                 promise = loot.query('getGameData').then(function(result){
-                    try {
-                        var game = JSON.parse(result, jsonToPlugin);
-                        loot.game.folder = game.folder;
-                        loot.game.masterlist = game.masterlist;
-                        loot.game.globalMessages = game.globalMessages;
-                        loot.game.plugins = game.plugins;
-                    } catch (e) {
-                        console.log(e);
-                        console.log('getGameData response: ' + result);
-                    }
+                    var game = JSON.parse(result, jsonToPlugin);
+                    loot.game.folder = game.folder;
+                    loot.game.masterlist = game.masterlist;
+                    loot.game.globalMessages = game.globalMessages;
+                    loot.game.plugins = game.plugins;
 
                     applySavedFilters();
                     closeProgressDialog();
