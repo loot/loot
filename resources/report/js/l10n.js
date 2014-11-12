@@ -139,7 +139,7 @@
             /* Message row template */
             var messageRow = document.querySelector('link[rel="import"][href$="editable-table.html"]');
             if (messageRow) {
-                messageRow = messageRow.querySelector('#messageRow').content;
+                messageRow = messageRow.import.querySelector('#messageRow').content;
             } else {
                 messageRow = document.querySelector('#messageRow').content;
             }
@@ -150,7 +150,7 @@
             /* Tag row template */
             var tagRow = document.querySelector('link[rel="import"][href$="editable-table.html"]');
             if (tagRow) {
-                tagRow = tagRow.querySelector('#tagRow').content;
+                tagRow = tagRow.import.querySelector('#tagRow').content;
             } else {
                 tagRow = document.querySelector('#tagRow').content;
             }
