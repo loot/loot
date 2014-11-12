@@ -12,35 +12,36 @@ it a <select>-like API. This means:
 <link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../bower_components/core-menu/core-menu.html">
 
-<polymer-element name="loot-dropdown-menu" extends="paper-dropdown-menu">
+<polymer-element name="loot-dropdown-menu">
     <template>
-        <shadow></shadow>
-        <paper-dropdown class="dropdown">
-            <core-menu valueattr="value">
-                <content></content>
-            </core-menu>
-        </paper-dropdown>
+        <paper-dropdown-menu>
+            <paper-dropdown class="dropdown">
+                <core-menu valueattr="value">
+                    <content></content>
+                </core-menu>
+            </paper-dropdown>
+        </paper-dropdown-menu>
     </template>
     <script>
     Polymer({
         value: undefined,
 
         attached: function() {
-            this.shadowRoot.lastElementChild.firstElementChild.addEventListener('core-select', this.onItemSelect, false);
+            this.shadowRoot.firstElementChild.lastElementChild.firstElementChild.addEventListener('core-select', this.onItemSelect, false);
         },
 
         detached: function() {
-            this.shadowRoot.lastElementChild.firstElementChild.removeEventListener('core-select', this.onItemSelect, false);
+            this.shadowRoot.firstElementChild.lastElementChild.firstElementChild.removeEventListener('core-select', this.onItemSelect, false);
         },
 
         onItemSelect: function(evt) {
             if (evt.detail.isSelected) {
-                evt.currentTarget.parentElement.parentNode.host.value = evt.currentTarget.selected;
+                evt.currentTarget.parentElement.parentElement.parentNode.host.value = evt.currentTarget.selected;
             }
         },
 
         valueChanged: function(oldValue, newValue) {
-            this.shadowRoot.lastElementChild.firstElementChild.selected = newValue;
+            this.shadowRoot.firstElementChild.lastElementChild.firstElementChild.selected = newValue;
         },
     });
     </script>
