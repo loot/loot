@@ -20,12 +20,15 @@ loot-clear-metadata
 <link rel="import" href="../bower_components/core-tooltip/core-tooltip.html">
 <link rel="import" href="../bower_components/core-icon/core-icon.html">
 <link rel="import" href="../bower_components/core-icons/core-icons.html">
+<link rel="import" href="../bower_components/core-menu/core-menu.html">
 <link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-dropdown/paper-dropdown.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 
 <link rel="import" href="editable-table.html">
 
@@ -196,13 +199,18 @@ loot-clear-metadata
                 <core-tooltip id="hasUserEdits" label="Has User Metadata">
                     <core-icon icon="account-circle"></core-icon>
                 </core-tooltip>
-                <paper-menu-button icon="more-vert" halign="right">
-                    <paper-item>
-                        <paper-checkbox id="showOnlyConflicts" label="Show Only Conflicts" flex></paper-checkbox>
-                    </paper-item>
-                    <paper-item id="editMetadata" icon="create" label="Edit Metadata"></paper-item>
-                    <paper-item id="copyMetadata" icon="content-copy" label="Copy Metadata As Text"></paper-item>
-                    <paper-item id="clearMetadata" icon="delete" label="Clear User Metadata"></paper-item>
+                <paper-menu-button halign="right">
+                    <paper-icon-button icon="more-vert"></paper-icon-button>
+                    <paper-dropdown class="dropdown">
+                        <core-menu>
+                            <paper-item>
+                                <paper-checkbox id="showOnlyConflicts" label="Show Only Conflicts" flex></paper-checkbox>
+                            </paper-item>
+                            <paper-item id="editMetadata" icon="create" label="Edit Metadata"></paper-item>
+                            <paper-item id="copyMetadata" icon="content-copy" label="Copy Metadata As Text"></paper-item>
+                            <paper-item id="clearMetadata" icon="delete" label="Clear User Metadata"></paper-item>
+                        </core-menu>
+                    </paper-dropdown>
                 </paper-menu-button>
             </core-toolbar>
             <content select=".tag.add"></content>

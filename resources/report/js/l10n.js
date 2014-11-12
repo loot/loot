@@ -206,7 +206,7 @@
             document.getElementById('settingsDialog').heading = l10n.translate("Settings").fetch();
 
             document.getElementById('defaultGameSelect').previousElementSibling.textContent = l10n.translate("Default Game").fetch();
-            document.getElementById('defaultGameSelect').children[0].label = l10n.translate("Autodetect").fetch();
+            document.getElementById('defaultGameSelect').firstElementChild.label = l10n.translate("Autodetect").fetch();
 
             document.getElementById('languageSelect').previousElementSibling.textContent = l10n.translate("Language").fetch();
 

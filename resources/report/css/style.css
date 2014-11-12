@@ -38,19 +38,13 @@ noscript {
 }
 #mainToolbar {
     background: #4285f4;
-    /*font-size: 1em;
-    height: 3em;*/
-      color: white;
+    color: white;
 }
-/*#mainToolbar > * {
-    top: -1em;
-}*/
+#mainToolbar paper-dropdown {
+    color: black;
+}
 #gameMenu {
     background: inherit;
-}
-
-#filtersToggle > span {
-    margin-right: 1em;
 }
 
 div[drawer] > core-tooltip {

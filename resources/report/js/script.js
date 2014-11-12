@@ -1331,8 +1331,15 @@ function initVars() {
                 console.log('getSettings response: ' + results[2]);
             }
 
-            if (!result) {
-                loot.query('getGameData').then(function(result){
+            var promise;
+            if (result) {
+                promise = new Promise(function(resolve, reject){
+                    closeProgressDialog();
+                    document.getElementById('settingsButton').click();
+                    resolve('');
+                });
+            } else {
+                promise = loot.query('getGameData').then(function(result){
                     try {
                         var game = JSON.parse(result, jsonToPlugin);
                         loot.game.folder = game.folder;
@@ -1346,21 +1353,21 @@ function initVars() {
 
                     applySavedFilters();
                     closeProgressDialog();
+                    return '';
                 }).catch(processCefError);
-            } else {
-                document.getElementById('settingsButton').click();
-                closeProgressDialog();
             }
 
-            /* So much easier than trying to set up my own C++ message loop to listen
-               to window messages looking for a focus change. */
-            if (loot.settings.autoRefresh) {
-                window.addEventListener('focus', onFocus, false);
-            }
+            promise.then(function(){
+                /* So much easier than trying to set up my own C++ message loop to listen
+                   to window messages looking for a focus change. */
+                if (loot.settings.autoRefresh) {
+                    window.addEventListener('focus', onFocus, false);
+                }
 
-            if (!loot.settings.lastVersion || loot.settings.lastVersion != loot.version) {
-                document.getElementById('firstRun').showModal();
-            }
+                if (!loot.settings.lastVersion || loot.settings.lastVersion != loot.version) {
+                    document.getElementById('firstRun').showModal();
+                }
+            });
         }).catch(processCefError);
 
     }).catch(processCefError);
@@ -1451,6 +1458,6 @@ window.addEventListener('polymer-ready', function(e) {
             sanitize: true
         });
         setupEventHandlers();
-        initVars();
+        //initVars();
     });
 }, false);

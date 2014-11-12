@@ -12,9 +12,11 @@
 }
 
 /* These overrides change the colour of the game menu's text and underline. */
-#gameMenu::shadow #control {
-    color: white;
+#gameMenu {
     border-bottom-color: #f1f1f1;
+}
+#gameMenu::shadow #label, #gameMenu::shadow #arrow {
+    color: white;
 }
 #gameMenu::shadow #menu {
     color: black;
@@ -54,7 +56,7 @@ loot-plugin-item::shadow ::content > a {
 }
 
 /* This override change the positioning of the progress dialog to adapt to content changes. */
-#progressDialog {
+html /deep/ paper-dialog#progressDialog {
     position: inherit !important;
     margin: 0 auto;
     top: 0;

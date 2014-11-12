@@ -182,7 +182,7 @@ td paper-icon-button.hidden {
                         for (var j = 0; j < classMask.length; ++j) {
                             if (inputs[i].classList.contains(classMask[j])) {
                                 if (inputs[i].tagName == 'PAPER-INPUT') {
-                                    inputs[i].readonly = readOnly;
+                                    inputs[i].disabled = readOnly;
                                 } else {
                                     inputs[i].readOnly = readOnly;
                                 }
