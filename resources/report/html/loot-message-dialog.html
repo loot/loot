@@ -13,6 +13,7 @@ was pressed.
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="loot-dialog.html">
 
 <polymer-element name="loot-message-dialog" extends="loot-dialog">
@@ -50,15 +51,15 @@ was pressed.
 
         showModal: function(title, text, closeCallback) {
             this.heading = title;
-            this.querySelector('#message').textContent = text;
+            this.querySelector('.message').textContent = text;
 
             this.closeCallback = closeCallback;
             this.super();
         },
 
-        ready: function() {
+        created: function() {
             var p = document.createElement('p');
-            p.id = 'message';
+            p.className = 'message';
             this.appendChild(p);
 
             var accept = document.createElement('paper-button');
