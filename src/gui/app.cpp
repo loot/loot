@@ -431,7 +431,7 @@ namespace loot {
                 return false;
         }
         if (!_settings["autoRefresh"])
-            _settings["autoRefresh"] = true;
+            _settings["autoRefresh"] = false;
 
         if (_settings["windows"])
             _settings.remove("windows");
@@ -447,6 +447,7 @@ namespace loot {
         root["lastGame"] = "auto";
         root["enableDebugLogging"] = false;
         root["updateMasterlist"] = true;
+        root["autoRefresh"] = false;
 
         std::vector<Game> games;
         games.push_back(Game(Game::tes4));
