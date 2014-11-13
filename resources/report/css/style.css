@@ -30,12 +30,6 @@ body {
     background:#f8f8f8;
     height: 100%;
 }
-noscript {
-    background:#c00;
-    display:block;
-    padding:10px 5px;
-    color:white;
-}
 #mainToolbar {
     background: #4285f4;
     color: white;
@@ -43,16 +37,9 @@ noscript {
 #mainToolbar paper-dropdown {
     color: black;
 }
-#gameMenu {
-    background: inherit;
-}
 
 div[drawer] > core-tooltip {
-    width: 100%;
     margin: 0 12px;
-}
-#searchBox {
-    width: calc(100% - 24px);
 }
 #main {
     overflow: auto;
@@ -89,27 +76,6 @@ section {
     box-shadow: rgba(0, 0, 0, 0.0980392) 0px 2px 4px, rgba(0, 0, 0, 0.0980392) 0px 0px 3px;
 }
 
-dialog {
-    border: 1px solid rgba(0, 0, 0, 0.3);
-    border-radius: 6px;
-    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
-    overflow:hidden;
-    padding: 2em;
-    top: 3em;
-    max-width: 40em;
-    max-height: calc(100% - 8em);
-    overflow: auto;
-}
-dialog > h1 {
-    font-weight: normal;
-    text-align: center;
-}
-dialog[data-type=warn] > span:first-child  {
-    color: gold;
-}
-dialog button {
-    margin: 0.5em;
-}
 paper-item > core-icon {
     margin-right: 0.5em;
 }
@@ -152,11 +118,6 @@ section h1 {
 #summary > table td:first-child {
     text-align:left;
     padding-left:0;
-}
-input[type='checkbox'] {
-    position:relative;
-    top:0.15em;
-    margin-left:0.5em;
 }
 ul {
     margin-top:0.5em;
