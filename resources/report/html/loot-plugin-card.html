@@ -242,11 +242,15 @@ loot-clear-metadata
                     <div>Priority Value</div>
                     <paper-input type="number" id="priorityValue" max="999999" min="-999999" step="1" value="0" error="Input must be an integer!"></paper-input>
                 </div>
-                <div id="fileTabs">
-                    <paper-tabs selected="loadAfter" valueattr="data-for">
+                <div id="tableTabs">
+                    <paper-tabs selected="loadAfter" valueattr="data-for" scrollable>
                         <paper-tab data-for="loadAfter">Load After</paper-tab>
                         <paper-tab data-for="req">Requirements</paper-tab>
                         <paper-tab data-for="inc">Incompatibilities</paper-tab>
+                        <paper-tab data-for="message">Messages</paper-tab>
+                        <paper-tab data-for="tags">Bash Tags</paper-tab>
+                        <paper-tab data-for="dirty">Dirty Info</paper-tab>
+                        <paper-tab data-for="locations">Locations</paper-tab>
                     </paper-tabs>
                     <table is="editable-table" id="loadAfter" data-template="fileRow">
                         <thead>
@@ -275,15 +279,7 @@ loot-clear-metadata
                             <tr><td colspan="4">Add new row...</td><td></td></tr>
                         </tbody>
                     </table>
-                </div>
-                <div id="miscTabs">
-                    <paper-tabs selected="message" valueattr="data-for">
-                        <paper-tab data-for="message">Messages</paper-tab>
-                        <paper-tab data-for="tags">Bash Tags</paper-tab>
-                        <paper-tab data-for="dirty">Dirty Info</paper-tab>
-                        <paper-tab data-for="locations">Locations</paper-tab>
-                    </paper-tabs>
-                    <table is="editable-table" id="message" data-template="messageRow">
+                    <table is="editable-table" id="message" class="hidden" data-template="messageRow">
                         <thead>
                             <tr><th>Type</th><th>Content</th><th>Condition</th><th>Language</th><th></th></tr>
                         </thead>
@@ -351,8 +347,7 @@ loot-clear-metadata
         },
 
         attached: function() {
-            this.shadowRoot.getElementById('fileTabs').firstElementChild.addEventListener('core-select', this.onShowEditorTable, false);
-            this.shadowRoot.getElementById('miscTabs').firstElementChild.addEventListener('core-select', this.onShowEditorTable, false);
+            this.shadowRoot.getElementById('tableTabs').firstElementChild.addEventListener('core-select', this.onShowEditorTable, false);
 
             this.shadowRoot.getElementById('accept').addEventListener('click', this.onHideEditor, false);
             this.shadowRoot.getElementById('cancel').addEventListener('click', this.onHideEditor, false);
@@ -377,8 +372,7 @@ loot-clear-metadata
         },
 
         detached: function() {
-            this.shadowRoot.getElementById('fileTabs').firstElementChild.removeEventListener('core-select', this.onShowEditorTable, false);
-            this.shadowRoot.getElementById('miscTabs').firstElementChild.removeEventListener('core-select', this.onShowEditorTable, false);
+            this.shadowRoot.getElementById('tableTabs').firstElementChild.removeEventListener('core-select', this.onShowEditorTable, false);
 
             this.shadowRoot.getElementById('accept').removeEventListener('click', this.onHideEditor, false);
             this.shadowRoot.getElementById('cancel').removeEventListener('click', this.onHideEditor, false);
