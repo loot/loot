@@ -41,9 +41,13 @@ body {
 div[drawer] > core-tooltip {
     margin: 0 12px;
 }
+div[drawer] {
+    z-index: 1;
+}
 #main {
     overflow: auto;
     position: relative;
+    z-index: 0;
 }
 #cardsNav {
     margin: 0;
