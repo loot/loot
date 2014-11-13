@@ -69,7 +69,7 @@
             pluginCard.getElementById('enableEdits').label = l10n.translate("Enable Edits").fetch();
             pluginCard.getElementById('globalPriority').parentElement.label = l10n.translate("Global priorities are compared against all other plugins. Normal priorities are compared against only conflicting plugins.").fetch();
             pluginCard.getElementById('globalPriority').label = l10n.translate("Global Priority").fetch();
-            pluginCard.getElementById('priorityValue').previousElementSibling.textContent = l10n.translate("Priority Value").fetch();
+            pluginCard.getElementById('priorityValue').parentElement.previousElementSibling.textContent = l10n.translate("Priority Value").fetch();
 
             pluginCard.getElementById('fileTabs').querySelector('[data-for=loadAfter]').textContent = l10n.translate("Load After").fetch();
             pluginCard.getElementById('fileTabs').querySelector('[data-for=req]').textContent = l10n.translate("Requirements").fetch();
