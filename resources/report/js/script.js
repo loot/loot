@@ -576,8 +576,18 @@ function changeGame(evt) {
             loot.game.masterlist = gameInfo.masterlist;
             loot.game.globalMessages = gameInfo.globalMessages;
             loot.game.plugins = gameInfo.plugins;
-            document.getElementById('cardsNav').querySelector('core-list').data = loot.game.plugins;
-            document.getElementById('main').querySelector('core-list').data = loot.game.plugins;
+
+            /* Reset virtual list positions. */
+            document.getElementById('cardsNav').lastElementChild.scrollToItem(0);
+            document.getElementById('main').lastElementChild.scrollToItem(0);
+
+            /* Now update virtual lists. */
+            document.getElementById('cardsNav').lastElementChild.data = loot.game.plugins;
+            document.getElementById('main').lastElementChild.data = loot.game.plugins;
+
+            /* Update the list sizes to take into account data changes. */
+            document.getElementById('cardsNav').lastElementChild.updateSize();
+            document.getElementById('main').lastElementChild.updateSize();
         } catch (e) {
             console.log(e);
             console.log('changeGame response: ' + result);
