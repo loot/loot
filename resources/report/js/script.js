@@ -1304,9 +1304,9 @@ function initVars() {
             /* Fill in game row template's game type options. */
             var select = document.querySelector('link[rel="import"][href$="editable-table.html"]');
             if (select) {
-                select = select.import.querySelector('#gameRow').content.querySelector('select')
+                select = select.import.querySelector('#gameRow').content.querySelector('.type')
             } else {
-                select = document.querySelector('#gameRow').content.querySelector('select');
+                select = document.querySelector('#gameRow').content.querySelector('.type');
             }
             for (var j = 0; j < loot.gameTypes.length; ++j) {
                 var option = document.createElement('option');
