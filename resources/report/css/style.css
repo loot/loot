@@ -59,6 +59,11 @@ div[drawer] {
 paper-item > a {
     text-decoration: none;
     color: black;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
 #container {
     position: fixed;
