@@ -110,7 +110,9 @@ dialog[data-type=warn] > span:first-child  {
 dialog button {
     margin: 0.5em;
 }
-
+paper-item > core-icon {
+    margin-right: 0.5em;
+}
 
 
 
