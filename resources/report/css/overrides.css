@@ -51,7 +51,7 @@ loot-plugin-item::shadow ::content > a {
 }
 
 /* This override change the positioning of the progress dialog to adapt to content changes. */
-html /deep/ paper-dialog#progressDialog {
+#progressDialog {
     position: inherit !important;
     margin: 0 auto;
     top: 0;
