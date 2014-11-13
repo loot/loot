@@ -14,7 +14,7 @@ it a <select>-like API. This means:
 
 <polymer-element name="loot-dropdown-menu">
     <template>
-        <paper-dropdown-menu>
+        <paper-dropdown-menu disabled="{{disabled}}">
             <paper-dropdown class="dropdown">
                 <core-menu valueattr="value">
                     <content></content>
@@ -25,6 +25,7 @@ it a <select>-like API. This means:
     <script>
     Polymer({
         value: undefined,
+        disabled: false,
 
         attached: function() {
             this.shadowRoot.firstElementChild.lastElementChild.firstElementChild.addEventListener('core-select', this.onItemSelect, false);
