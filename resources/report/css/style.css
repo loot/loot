@@ -233,3 +233,6 @@ paper-progress {
         visibility: visible;
     }
 }
+#settingsDialog > paper-checkbox {
+    display: block;
+}
