@@ -919,9 +919,7 @@ function openMenu(evt) {
     }
 }
 function switchSidebarTab(evt) {
-    var isFirstSelected = evt.target.selected == 0;
-    evt.target.nextElementSibling.classList.toggle('hidden', !isFirstSelected);
-    evt.target.nextElementSibling.nextElementSibling.classList.toggle('hidden', isFirstSelected);
+    evt.target.nextElementSibling.selected = evt.target.selected;
 }
 
 function showAboutDialog(evt) {

@@ -64,3 +64,8 @@ html /deep/ paper-dialog#progressDialog {
     bottom: 0;
     right: 0;
 }
+
+/* This stops transitions from overflowing onto other elements. */
+html /deep/ core-animated-pages {
+    overflow: hidden;
+}
