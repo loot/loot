@@ -173,14 +173,6 @@ loot-clear-metadata
         #editor > div {
             padding: 1em;
         }
-        paper-menu-button paper-item:first-child {
-            padding: 0;
-        }
-        #showOnlyConflicts {
-            height: 48px;
-            line-height: 48px;
-            padding: 0 16px;
-        }
         </style>
         <section id="front">
             <core-toolbar>
@@ -507,11 +499,6 @@ loot-clear-metadata
             }
         },
 
-        onTransitionEnd: function(evt) {
-            evt.target.removeEventListener('transitionend', evt.target.onTransitionEnd, false);
-            evt.target.shadowRoot.getElementById('editMetadata').parentElement.shadowRoot.getElementById('dropdown').style.display = 'none';
-        },
-
         onShowEditor: function(evt) {
             var card = evt.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentNode.host;
 
@@ -525,10 +512,6 @@ loot-clear-metadata
             card.dispatchEvent(new CustomEvent('loot-editor-open', {
                 bubbles: true,
             }));
-
-            /* There's a bug where the hiding of the front panel interferes somehow with the
-               menu getting hidden, so do that manually once the transition ends. */
-            card.addEventListener('transitionend', card.onTransitionEnd, false);
 
             /* Now show editor. */
             card.classList.toggle('flip');
