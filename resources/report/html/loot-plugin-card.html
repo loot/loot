@@ -483,7 +483,7 @@ loot-clear-metadata
                 }
             }
 
-            if (isValid || evt.target-id != 'accept') {
+            if (isValid || evt.target.id != 'accept') {
                 /* Fire the close event, saying whether or not to save data. */
                 card.dispatchEvent(new CustomEvent('loot-editor-close', {
                     bubbles: true,
