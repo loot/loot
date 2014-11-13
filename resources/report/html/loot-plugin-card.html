@@ -397,14 +397,6 @@ loot-clear-metadata
             this.shadowRoot.getElementById('clearMetadata').addEventListener('click', this.onClearMetadata, false);
         },
 
-        ready: function() {
-            var editor = this.shadowRoot.getElementById('editor');
-
-            editor.querySelector('h1').textContent = this.querySelector('h1').textContent;
-            editor.querySelector('.version').textContent = this.querySelector('.version').textContent;
-            editor.querySelector('.crc').textContent = this.querySelector('.crc').textContent;
-        },
-
         getName: function() {
             return this.getElementsByTagName('h1')[0].textContent;
         },
@@ -522,6 +514,12 @@ loot-clear-metadata
 
         onShowEditor: function(evt) {
             var card = evt.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentNode.host;
+
+            /* Fill in editor toolbar. */
+            var editor = card.shadowRoot.getElementById('editor');
+            editor.querySelector('h1').textContent = card.querySelector('h1').textContent;
+            editor.querySelector('.version').textContent = card.querySelector('.version').textContent;
+            editor.querySelector('.crc').textContent = card.querySelector('.crc').textContent;
 
             /* Fire an open event, so that the UI can enter edit mode. */
             card.dispatchEvent(new CustomEvent('loot-editor-open', {
