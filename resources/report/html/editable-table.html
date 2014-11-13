@@ -1,20 +1,15 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../bower_components/paper-input/paper-input-decorator.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/core-icons/core-icons.html">
-<link rel="import" href="../bower_components/core-input/core-input.html">
 
 <link rel="import" href="loot-dropdown-menu.html">
+<link rel="import" href="loot-validated-input.html">
 
 <template id="fileRow">
     <tr>
-        <td>
-            <paper-input-decorator error="A filename is required.">
-                <input is="core-input" class="name" required>
-            </paper-input-decorator>
-        </td>
+        <td><loot-validated-input error="A filename is required." class="name" required></loot-validated-input></td>
         <td><paper-input class="display"></paper-input></td>
         <td><paper-input class="condition"></paper-input></td>
         <td><paper-icon-button class="delete" icon="delete"></paper-icon-button></td>
@@ -29,11 +24,7 @@
                 <paper-item value="error">Error</paper-item>
             </loot-dropdown-menu>
         </td>
-        <td>
-            <paper-input-decorator error="A content string is required.">
-                <input is="core-input" class="content" required>
-            </paper-input-decorator>
-        </td>
+        <td><loot-validated-input error="A content string is required." class="content" required></loot-validated-input></td>
         <td><paper-input class="condition"></paper-input></td>
         <td>
             <loot-dropdown-menu class="language" valueattr="value">
@@ -51,72 +42,37 @@
                 <paper-item value="remove">Remove</paper-item>
             </loot-dropdown-menu>
         </td>
-        <td>
-            <paper-input-decorator error="A name is required.">
-                <input is="core-input" class="name" required>
-            </paper-input-decorator></td>
+        <td><loot-validated-input error="A name is required." class="name" required></loot-validated-input></td>
         <td><paper-input class="condition"></paper-input></td>
         <td><paper-icon-button class="delete" icon="delete"></paper-icon-button></td>
     </tr>
 </template>
 <template id="dirtyInfoRow">
     <tr>
-        <td>
-            <paper-input-decorator error="A CRC is required.">
-                <input is="core-input" class="crc" maxlength="8" minlength="8" pattern="[0-9A-Fa-f]{8}" required>
-            </paper-input-decorator>
-        </td>
-        <td>
-            <paper-input-decorator>
-                <input is="core-input" class="itm" type="number" min="0" step="1" value="0">
-            </paper-input-decorator>
-        </td>
-        <td>
-            <paper-input-decorator>
-                <input is="core-input" class="udr" type="number" min="0" step="1" value="0">
-            </paper-input-decorator>
-        </td>
-        <td>
-            <paper-input-decorator>
-                <input is="core-input" class="nav" type="number" min="0" step="1" value="0">
-            </paper-input-decorator>
-        </td>
-        <td>
-            <paper-input-decorator error="A utility name is required.">
-                <input is="core-input" class="util" required>
-            </paper-input-decorator>
-        </td>
+        <td><loot-validated-input error="A CRC is required." class="crc" maxlength="8" minlength="8" pattern="[0-9A-Fa-f]{8}" required></loot-validated-input></td>
+        <td><loot-validated-input error="Values must be integers." class="itm" type="number" min="0" step="1" value="0"></loot-validated-input></td>
+        <td><loot-validated-input error="Values must be integers." class="udr" type="number" min="0" step="1" value="0"></loot-validated-input></td>
+        <td><loot-validated-input error="Values must be integers." class="nav" type="number" min="0" step="1" value="0"></loot-validated-input></td>
+        <td><loot-validated-input error="A utility name is required." class="util" required></loot-validated-input></td>
         <td><paper-icon-button class="delete" icon="delete"></paper-icon-button></td>
     </tr>
 </template>
 <template id="locationRow">
     <tr>
-        <td>
-            <paper-input-decorator error="A link is required.">
-                <input is="core-input" class="link" required>
-            </paper-input-decorator>
-        </td>
+        <td><loot-validated-input error="A link is required." class="link" required></loot-validated-input></td>
         <td><paper-input class="ver"></paper-input></td>
         <td><paper-icon-button class="delete" icon="delete"></paper-icon-button></td>
     </tr>
 </template>
 <template id="gameRow">
     <tr>
-        <td>
-            <paper-input-decorator error="A name is required.">
-                <input is="core-input" class="name" required>
-            </paper-input-decorator>
-        </td>
+        <td><loot-validated-input error="A name is required." class="name" required></loot-validated-input></td>
         <td>
             <loot-dropdown-menu class="type" valueattr="value">
                 <!-- Game <option> elements go here. -->
             </loot-dropdown-menu>
         </td>
-        <td>
-            <paper-input-decorator error="A folder is required.">
-                <input is="core-input" class="folder" required>
-            </paper-input-decorator>
-        </td>
+        <td><loot-validated-input error="A folder is required." class="folder" required></loot-validated-input></td>
         <td><paper-input class="master"></paper-input></td>
         <td><paper-input class="repo"></paper-input></td>
         <td><paper-input class="branch"></paper-input></td>
@@ -194,7 +150,7 @@ td paper-icon-button.hidden {
                     if (trash.length > 0 && (!writableOnly || !trash[0].classList.contains('hidden'))) {
                         var rowData = {};
 
-                        var inputs = rows[i].querySelectorAll('input, paper-input, loot-dropdown-menu');
+                        var inputs = rows[i].querySelectorAll('paper-input, loot-validated-input, loot-dropdown-menu');
                         for (var j = 0; j < inputs.length; ++j) {
                             rowData[inputs[j].className] = inputs[j].value;
                         }
@@ -222,7 +178,7 @@ td paper-icon-button.hidden {
                     trash.classList.toggle('hidden', readOnly);
                 }
 
-                var inputs = row.querySelectorAll('input, paper-input, loot-dropdown-menu');
+                var inputs = row.querySelectorAll('paper-input, loot-validated-input, loot-dropdown-menu');
                 for (var i = 0; i < inputs.length; ++i) {
                     if (classMask) {
                         for (var j = 0; j < classMask.length; ++j) {
