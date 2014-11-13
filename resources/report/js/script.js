@@ -808,7 +808,9 @@ function redatePlugins(evt) {
     showMessageDialog('Redate Plugins', 'This feature is provided so that modders using the Creation Kit may set the load order it uses. A side-effect is that any subscribed Steam Workshop mods will be re-downloaded by Steam. Do you wish to continue?', false, function(result){
         if (result) {
             loot.query('redatePlugins').then(function(response){
-                showMessageBox('Redate Plugins', 'Plugins were successfully redated.');
+                var toast = document.getElementById('toast');
+                toast.text = 'Plugins were successfully redated.';
+                toast.show();
             }).catch(processCefError);
         }
     });
@@ -834,6 +836,10 @@ function clearAllMetadata(evt) {
                             }
                         }
                     });
+
+                    var toast = document.getElementById('toast');
+                    toast.text = 'All user-added metadata has been cleared.';
+                    toast.show();
                 }
             }).catch(processCefError);
         }
@@ -889,7 +895,11 @@ function copyContent(evt) {
         }]
     });
 
-    loot.query(request).catch(processCefError);
+    loot.query(request).then(function(){
+        var toast = document.getElementById('toast');
+        toast.text = "LOOT's content has been copied to the clipboard.";
+        toast.show();
+    }).catch(processCefError);
 }
 function areSettingsValid() {
     /* Validate inputs individually. */
@@ -901,22 +911,6 @@ function areSettingsValid() {
         }
     }
     return true;
-}
-function openMenu(evt) {
-    if (!isVisible(evt.currentTarget.firstElementChild)) {
-        showElement(evt.currentTarget.firstElementChild)
-
-        /* To prevent the click event closing this menu just after it was
-           opened, stop the current event and send off a new one. */
-        evt.stopPropagation();
-
-        document.body.dispatchEvent(new CustomEvent('click', {
-            bubbles: true,
-            detail: {
-                newMenu: evt.currentTarget.firstElementChild
-            }
-        }));
-    }
 }
 function switchSidebarTab(evt) {
     evt.target.nextElementSibling.selected = evt.target.selected;
@@ -1124,7 +1118,11 @@ function handleCopyMetadata(evt) {
         ]
     });
 
-    loot.query(request).catch(processCefError);
+    loot.query(request).then(function(){
+        var toast = document.getElementById('toast');
+        toast.text = 'The metadata for ' + evt.target.getName() + ' has been copied to the clipboard.';
+        toast.show();
+    }).catch(processCefError);
 }
 function handleClearMetadata(evt) {
     showMessageDialog('Clear Plugin Metadata', 'Are you sure you want to clear all existing user-added metadata from "' + evt.target.getName() + '"?', false, function(result){
@@ -1155,6 +1153,9 @@ function handleClearMetadata(evt) {
                             break;
                         }
                     }
+                    var toast = document.getElementById('toast');
+                    toast.text = 'The user-added metadata for ' + evt.target.getName() + ' has been cleared.';
+                    toast.show();
                 }
             }).catch(processCefError);
         }

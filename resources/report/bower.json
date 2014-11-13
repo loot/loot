@@ -30,6 +30,7 @@
     "marked": "chjj/marked#~0.3.2",
     "requirejs": "jrburke/requirejs-bower#~2.1.15",
     "paper-progress": "Polymer/paper-progress#~0.5.0",
-    "core-animated-pages": "Polymer/core-animated-pages#~0.5.1"
+    "core-animated-pages": "Polymer/core-animated-pages#~0.5.1",
+    "paper-toast": "Polymer/paper-toast#~0.5.1"
   }
 }

@@ -36,6 +36,7 @@
     <link rel="import" href="bower_components/paper-dialog/paper-dialog-transition.html">
     <link rel="import" href="bower_components/paper-dropdown/paper-dropdown.html">
     <link rel="import" href="bower_components/paper-progress/paper-progress.html">
+    <link rel="import" href="bower_components/paper-toast/paper-toast.html">
 
     <script src="bower_components/requirejs/require.js"></script>
 </head>
@@ -193,6 +194,11 @@
             <!-- Generated plugin <loot-plugin-card> elements go here. -->
         </div>
     </core-drawer-panel>
+    <paper-toast id="toast"></paper-toast>
+    <loot-dialog id="progressDialog">
+        <paper-progress indeterminate></paper-progress>
+        <p>Calculating the last digit of &pi;...</p>
+    </loot-dialog>
 
     <loot-dialog id="about" heading="About LOOT">
         <p>Version <span id="LOOTVersion"></span> (build <span id="LOOTBuild"></span>)</p>
@@ -260,12 +266,6 @@ along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
         <p id="languageRestartTxt">Language changes will be applied after LOOT is restarted.</p>
         <paper-button class="accept" affirmative autofocus>Apply</paper-button>
         <paper-button class="cancel" affirmative>Cancel</paper-button>
-    </loot-dialog>
-
-    <div id="hoverText" class="hidden"></div>
-    <loot-dialog id="progressDialog">
-        <paper-progress indeterminate></paper-progress>
-        <p>Calculating the last digit of &pi;...</p>
     </loot-dialog>
 
     <loot-dialog id="firstRun" heading="First-Time Tips">
