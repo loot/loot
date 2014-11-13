@@ -132,32 +132,6 @@ function Plugin(obj) {
         }
     }
 
-    Plugin.prototype.createCard = function() {
-        this.card = document.createElement('loot-plugin-card');
-
-        this.card.id = this.id;
-
-        this.card.setAttribute('data-active', this.isActive);
-        this.card.setAttribute('data-dummy', this.isDummy);
-        this.card.setAttribute('data-bsa', this.loadsBSA);
-        this.card.setAttribute('data-edits', this.userlist != undefined);
-
-        /* Fill in name, version, CRC. */
-        this.card.getElementsByTagName('h1')[0].textContent = this.name;
-        this.card.getElementsByClassName('version')[0].textContent = this.version;
-        if (this.crc != 0) {
-            this.card.getElementsByClassName('crc')[0].textContent = this.crc.toString(16).toUpperCase();
-        }
-
-        /* Fill in Bash Tag suggestions. */
-        this.updateCardTags();
-
-        /* Fill in messages. */
-        this.updateCardMessages();
-
-        document.getElementById('main').appendChild(this.card);
-    }
-
     Plugin.prototype.observer = function(changes) {
         changes.forEach(function(change) {
             if (change.name == 'userlist') {
@@ -220,7 +194,6 @@ function Plugin(obj) {
         });
     }
 
-    this.createCard();
     Object.observe(this, this.observer);
 }
 

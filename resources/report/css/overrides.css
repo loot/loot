@@ -74,3 +74,8 @@ paper-item.core-selected {
 html /deep/ paper-dropdown > div {
     margin: 12px;
 }
+
+/* This stops the main core-list having its own scrollbars. */
+#main > core-list {
+    overflow-y: initial !important;
+}

@@ -564,10 +564,6 @@ function changeGame(evt) {
 
         /* Clear the UI of all existing game-specific data. Also
            clear the card and li variables for each plugin object. */
-        loot.game.plugins.forEach(function(plugin){
-            plugin.card.parentElement.removeChild(plugin.card);
-            plugin.card = undefined;
-        });
         var globalMessages = document.getElementById('generalMessages').getElementsByTagName('ul')[0];
         while (globalMessages.firstElementChild) {
             globalMessages.removeChild(globalMessages.firstElementChild);
@@ -581,6 +577,7 @@ function changeGame(evt) {
             loot.game.globalMessages = gameInfo.globalMessages;
             loot.game.plugins = gameInfo.plugins;
             document.getElementById('cardsNav').querySelector('core-list').data = loot.game.plugins;
+            document.getElementById('main').querySelector('core-list').data = loot.game.plugins;
         } catch (e) {
             console.log(e);
             console.log('changeGame response: ' + result);
@@ -1345,6 +1342,7 @@ function initVars() {
                     loot.game.globalMessages = game.globalMessages;
                     loot.game.plugins = game.plugins;
                     document.getElementById('cardsNav').querySelector('core-list').data = loot.game.plugins;
+                    document.getElementById('main').querySelector('core-list').data = loot.game.plugins;
 
                     applySavedFilters();
                     closeProgressDialog();
@@ -1443,6 +1441,9 @@ function onFocus(evt) {
 }
 
 window.addEventListener('polymer-ready', function(e) {
+    /* Set the plugin list's scroll target to its parent. */
+    document.getElementById('main').querySelector('core-list').scrollTarget = document.getElementById('main');
+
     require(['bower_components/marked/lib/marked', 'js/l10n', 'js/plugin'], function(markedResponse, l10nResponse) {
         marked = markedResponse;
         l10n = l10nResponse;

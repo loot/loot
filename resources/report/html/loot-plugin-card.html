@@ -40,10 +40,10 @@ loot-clear-metadata
     <template>
         <style>
         /* Host and front/editor styling. */
-        :host {
+        #wrapper {
             display: block;
             background:white;
-            margin:1em;
+            margin: 0.5em 1em;
             position: relative;
             border-top-left-radius: 2px;
             border-top-right-radius: 2px;
@@ -177,182 +177,163 @@ loot-clear-metadata
             padding: 1em;
         }
         </style>
-        <section id="front">
-            <core-toolbar>
-                <core-tooltip class="activeTick" label="Active Plugin">
-                    <core-icon icon="check"></core-icon>
-                </core-tooltip>
-                <content select="h1"></content>
-                <content select=".version"></content>
-                <span flex><content select=".crc"></content></span>
-                <core-tooltip class="dummyPlugin" label="Dummy Plugin">
-                    <core-icon icon="visibility-off"></core-icon>
-                </core-tooltip>
-                <core-tooltip class="loadsBSA" label="Loads BSA">
-                    <core-icon icon="attachment"></core-icon>
-                </core-tooltip>
-                <core-tooltip id="hasUserEdits" label="Has User Metadata">
-                    <core-icon icon="account-circle"></core-icon>
-                </core-tooltip>
-                <paper-menu-button>
-                    <paper-icon-button icon="more-vert"></paper-icon-button>
-                    <paper-dropdown class="dropdown" halign="right">
-                        <div>
-                            <paper-item>
-                                <paper-checkbox id="showOnlyConflicts" label="Show Only Conflicts" flex></paper-checkbox>
-                            </paper-item>
-                            <paper-item id="editMetadata">
-                                <core-icon icon="create"></core-icon>
-                                Edit Metadata
-                            </paper-item>
-                            <paper-item id="copyMetadata">
-                                <core-icon icon="content-copy"></core-icon>
-                                Copy Metadata As Text
-                            </paper-item>
-                            <paper-item id="clearMetadata">
-                                <core-icon icon="delete"></core-icon>
-                                Clear User Metadata
-                            </paper-item>
-                        </div>
-                    </paper-dropdown>
-                </paper-menu-button>
-            </core-toolbar>
-            <content select=".tag.add"></content>
-            <content select=".tag.remove"></content>
-            <content select="ul"></content>
-        </section>
-        <section id="editor">
-            <core-toolbar>
-                <core-tooltip class="activeTick" label="Active Plugin">
-                    <core-icon icon="check"></core-icon>
-                </core-tooltip>
-                <h1></h1>
-                <span class="version"></span>
-                <span class="crc" flex></span>
-                <core-tooltip class="dummyPlugin" label="Dummy Plugin">
-                    <core-icon icon="visibility-off"></core-icon>
-                </core-tooltip>
-                <core-tooltip class="loadsBSA" label="Loads BSA">
-                    <core-icon icon="attachment"></core-icon>
-                </core-tooltip>
-            </core-toolbar>
-            <div>
-                <paper-checkbox id="enableEdits" label="Enable Edits"></paper-checkbox>
-                <core-tooltip label="Global priorities are compared against all other plugins. Normal priorities are compared against only conflicting plugins." position="right">
-                    <paper-checkbox id="globalPriority" label="Global Priority"></paper-checkbox>
-                </core-tooltip>
-                <div horizontal layout center>
-                    <div>Priority Value</div>
-                    <paper-input-decorator>
-                        <input id="priorityValue" is="core-input" type="number" max="999999" min="-999999" step="1" value="0" preventInvalidInput>
-                    </paper-input-decorator>
+        <div id="wrapper">
+            <section id="front">
+                <core-toolbar>
+                    <core-tooltip class="activeTick" label="Active Plugin">
+                        <core-icon icon="check"></core-icon>
+                    </core-tooltip>
+                    <content select="h1"></content>
+                    <content select=".version"></content>
+                    <span flex><content select=".crc"></content></span>
+                    <core-tooltip class="dummyPlugin" label="Dummy Plugin">
+                        <core-icon icon="visibility-off"></core-icon>
+                    </core-tooltip>
+                    <core-tooltip class="loadsBSA" label="Loads BSA">
+                        <core-icon icon="attachment"></core-icon>
+                    </core-tooltip>
+                    <core-tooltip id="hasUserEdits" label="Has User Metadata">
+                        <core-icon icon="account-circle"></core-icon>
+                    </core-tooltip>
+                    <paper-menu-button>
+                        <paper-icon-button icon="more-vert"></paper-icon-button>
+                        <paper-dropdown class="dropdown" halign="right">
+                            <div>
+                                <paper-item>
+                                    <paper-checkbox id="showOnlyConflicts" label="Show Only Conflicts" flex></paper-checkbox>
+                                </paper-item>
+                                <paper-item id="editMetadata">
+                                    <core-icon icon="create"></core-icon>
+                                    Edit Metadata
+                                </paper-item>
+                                <paper-item id="copyMetadata">
+                                    <core-icon icon="content-copy"></core-icon>
+                                    Copy Metadata As Text
+                                </paper-item>
+                                <paper-item id="clearMetadata">
+                                    <core-icon icon="delete"></core-icon>
+                                    Clear User Metadata
+                                </paper-item>
+                            </div>
+                        </paper-dropdown>
+                    </paper-menu-button>
+                </core-toolbar>
+                <content select=".tag.add"></content>
+                <content select=".tag.remove"></content>
+                <content select="ul"></content>
+            </section>
+            <section id="editor">
+                <core-toolbar>
+                    <core-tooltip class="activeTick" label="Active Plugin">
+                        <core-icon icon="check"></core-icon>
+                    </core-tooltip>
+                    <h1></h1>
+                    <span class="version"></span>
+                    <span class="crc" flex></span>
+                    <core-tooltip class="dummyPlugin" label="Dummy Plugin">
+                        <core-icon icon="visibility-off"></core-icon>
+                    </core-tooltip>
+                    <core-tooltip class="loadsBSA" label="Loads BSA">
+                        <core-icon icon="attachment"></core-icon>
+                    </core-tooltip>
+                </core-toolbar>
+                <div>
+                    <paper-checkbox id="enableEdits" label="Enable Edits"></paper-checkbox>
+                    <core-tooltip label="Global priorities are compared against all other plugins. Normal priorities are compared against only conflicting plugins." position="right">
+                        <paper-checkbox id="globalPriority" label="Global Priority"></paper-checkbox>
+                    </core-tooltip>
+                    <div horizontal layout center>
+                        <div>Priority Value</div>
+                        <paper-input-decorator>
+                            <input id="priorityValue" is="core-input" type="number" max="999999" min="-999999" step="1" value="0" preventInvalidInput>
+                        </paper-input-decorator>
+                    </div>
+                    <div id="tableTabs">
+                        <paper-tabs selected="loadAfter" valueattr="data-for" scrollable>
+                            <paper-tab data-for="loadAfter">Load After</paper-tab>
+                            <paper-tab data-for="req">Requirements</paper-tab>
+                            <paper-tab data-for="inc">Incompatibilities</paper-tab>
+                            <paper-tab data-for="message">Messages</paper-tab>
+                            <paper-tab data-for="tags">Bash Tags</paper-tab>
+                            <paper-tab data-for="dirty">Dirty Info</paper-tab>
+                            <paper-tab data-for="locations">Locations</paper-tab>
+                        </paper-tabs>
+                        <core-animated-pages selected="loadAfter" valueattr="id" transitions="slide-from-right">
+                            <table is="editable-table" id="loadAfter" data-template="fileRow">
+                                <thead>
+                                    <tr><th>Filename</th><th>Display Name</th><th>Condition</th><th></th></tr>
+                                </thead>
+                                <tbody>
+                                    <!-- File rows go here. -->
+                                    <tr><td colspan="4">Add new row...</td><td></td></tr>
+                                </tbody>
+                            </table>
+                            <table is="editable-table" id="req" data-template="fileRow">
+                                <thead>
+                                    <tr><th>Filename</th><th>Display Name</th><th>Condition</th><th></th></tr>
+                                </thead>
+                                <tbody>
+                                    <!-- File rows go here. -->
+                                    <tr><td colspan="4">Add new row...</td><td></td></tr>
+                                </tbody>
+                            </table>
+                            <table is="editable-table" id="inc" data-template="fileRow">
+                                <thead>
+                                    <tr><th>Filename</th><th>Display Name</th><th>Condition</th><th></th></tr>
+                                </thead>
+                                <tbody>
+                                    <!-- File rows go here. -->
+                                    <tr><td colspan="4">Add new row...</td><td></td></tr>
+                                </tbody>
+                            </table>
+                            <table is="editable-table" id="message" data-template="messageRow">
+                                <thead>
+                                    <tr><th>Type</th><th>Content</th><th>Condition</th><th>Language</th><th></th></tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Message rows go here. -->
+                                    <tr><td colspan="4">Add new row...</td><td></td></tr>
+                                </tbody>
+                            </table>
+                            <table is="editable-table" id="tags" data-template="tagRow">
+                                <thead>
+                                    <tr><th>Add/Remove</th><th>Bash Tag</th><th>Condition</th><th></th></tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Bash Tag rows go here. -->
+                                    <tr><td colspan="4">Add new row...</td><td></td></tr>
+                                </tbody>
+                            </table>
+                            <table is="editable-table" id="dirty" data-template="dirtyInfoRow">
+                                <thead>
+                                    <tr><th>CRC</th><th>ITM Count</th><th>Deleted References</th><th>Deleted Navmeshes</th><th>Cleaning Utility</th><th></th></tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Dirty info rows go here. -->
+                                    <tr><td colspan="4">Add new row...</td><td></td></tr>
+                                </tbody>
+                            </table>
+                            <table is="editable-table" id="locations" data-template="locationRow">
+                                <thead>
+                                    <tr><th>URL</th><th>Version</th><th></th></tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Location rows go here. -->
+                                    <tr><td colspan="3">Add new row...</td><td></td></tr>
+                                </tbody>
+                            </table>
+                        </core-animated-pages>
+                    </div>
+                    <div id="buttons">
+                        <paper-button id="accept">Apply</paper-button>
+                        <paper-button id="cancel">Cancel</paper-button>
+                    </div>
                 </div>
-                <div id="tableTabs">
-                    <paper-tabs selected="loadAfter" valueattr="data-for" scrollable>
-                        <paper-tab data-for="loadAfter">Load After</paper-tab>
-                        <paper-tab data-for="req">Requirements</paper-tab>
-                        <paper-tab data-for="inc">Incompatibilities</paper-tab>
-                        <paper-tab data-for="message">Messages</paper-tab>
-                        <paper-tab data-for="tags">Bash Tags</paper-tab>
-                        <paper-tab data-for="dirty">Dirty Info</paper-tab>
-                        <paper-tab data-for="locations">Locations</paper-tab>
-                    </paper-tabs>
-                    <core-animated-pages selected="loadAfter" valueattr="id" transitions="slide-from-right">
-                        <table is="editable-table" id="loadAfter" data-template="fileRow">
-                            <thead>
-                                <tr><th>Filename</th><th>Display Name</th><th>Condition</th><th></th></tr>
-                            </thead>
-                            <tbody>
-                                <!-- File rows go here. -->
-                                <tr><td colspan="4">Add new row...</td><td></td></tr>
-                            </tbody>
-                        </table>
-                        <table is="editable-table" id="req" data-template="fileRow">
-                            <thead>
-                                <tr><th>Filename</th><th>Display Name</th><th>Condition</th><th></th></tr>
-                            </thead>
-                            <tbody>
-                                <!-- File rows go here. -->
-                                <tr><td colspan="4">Add new row...</td><td></td></tr>
-                            </tbody>
-                        </table>
-                        <table is="editable-table" id="inc" data-template="fileRow">
-                            <thead>
-                                <tr><th>Filename</th><th>Display Name</th><th>Condition</th><th></th></tr>
-                            </thead>
-                            <tbody>
-                                <!-- File rows go here. -->
-                                <tr><td colspan="4">Add new row...</td><td></td></tr>
-                            </tbody>
-                        </table>
-                        <table is="editable-table" id="message" data-template="messageRow">
-                            <thead>
-                                <tr><th>Type</th><th>Content</th><th>Condition</th><th>Language</th><th></th></tr>
-                            </thead>
-                            <tbody>
-                                <!-- Message rows go here. -->
-                                <tr><td colspan="4">Add new row...</td><td></td></tr>
-                            </tbody>
-                        </table>
-                        <table is="editable-table" id="tags" data-template="tagRow">
-                            <thead>
-                                <tr><th>Add/Remove</th><th>Bash Tag</th><th>Condition</th><th></th></tr>
-                            </thead>
-                            <tbody>
-                                <!-- Bash Tag rows go here. -->
-                                <tr><td colspan="4">Add new row...</td><td></td></tr>
-                            </tbody>
-                        </table>
-                        <table is="editable-table" id="dirty" data-template="dirtyInfoRow">
-                            <thead>
-                                <tr><th>CRC</th><th>ITM Count</th><th>Deleted References</th><th>Deleted Navmeshes</th><th>Cleaning Utility</th><th></th></tr>
-                            </thead>
-                            <tbody>
-                                <!-- Dirty info rows go here. -->
-                                <tr><td colspan="4">Add new row...</td><td></td></tr>
-                            </tbody>
-                        </table>
-                        <table is="editable-table" id="locations" data-template="locationRow">
-                            <thead>
-                                <tr><th>URL</th><th>Version</th><th></th></tr>
-                            </thead>
-                            <tbody>
-                                <!-- Location rows go here. -->
-                                <tr><td colspan="3">Add new row...</td><td></td></tr>
-                            </tbody>
-                        </table>
-                    </core-animated-pages>
-                </div>
-                <div id="buttons">
-                    <paper-button id="accept">Apply</paper-button>
-                    <paper-button id="cancel">Cancel</paper-button>
-                </div>
-            </div>
-        </section>
+            </section>
+        </div>
     </template>
     <script>
     Polymer({
-        created: function() {
-            var h1 = document.createElement('h1');
-            this.appendChild(h1);
-            var crc = document.createElement('div');
-            crc.className = 'crc';
-            this.appendChild(crc);
-            var version = document.createElement('div');
-            version.className = 'version';
-            this.appendChild(version);
-
-            var tagAdd = document.createElement('div');
-            tagAdd.className = 'tag add';
-            this.appendChild(tagAdd);
-            var tagRemove = document.createElement('div');
-            tagRemove.className = 'tag remove';
-            this.appendChild(tagRemove);
-
-            var messages = document.createElement('ul');
-            this.appendChild(messages);
-        },
-
         attached: function() {
             this.shadowRoot.getElementById('tableTabs').firstElementChild.addEventListener('core-select', this.onShowEditorTable, false);
 
@@ -471,7 +452,7 @@ loot-clear-metadata
         },
 
         onHideEditor: function(evt) {
-            var card = evt.target.parentElement.parentElement.parentElement.parentNode.host;
+            var card = evt.target.parentElement.parentElement.parentElement.parentElement.parentNode.host;
 
             /* First validate table inputs. */
             var isValid = true;
@@ -494,7 +475,7 @@ loot-clear-metadata
         },
 
         onShowEditor: function(evt) {
-            var card = evt.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentNode.host;
+            var card = evt.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentNode.host;
 
             /* Fill in editor toolbar. */
             var editor = card.shadowRoot.getElementById('editor');

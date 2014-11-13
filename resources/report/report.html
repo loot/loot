@@ -118,8 +118,8 @@
                                 <a href="#{{model.id}}">{{model.name}}</a>
                             </loot-plugin-item>
                         </template>
+                        <!-- Generated <loot-plugin-item> elements go here. -->
                     </core-list>
-                    <!-- Generated <loot-plugin-item> elements go here, containing # links to each plugin's section in the list. -->
                 </div>
                 <div id="filters" class="tab-content" flex>
                     <paper-checkbox id="hideVersionNumbers" data-class="version" label="Hide version numbers"></paper-checkbox>
@@ -200,7 +200,19 @@
                     <!-- Generated message <li> elements go here. -->
                 </ul>
             </section>
-            <!-- Generated plugin <loot-plugin-card> elements go here. -->
+            <core-list>
+                <template>
+                    <loot-plugin-card id="{{model.id}}" data-active="{{model.isActive}}" data-dummy="{{model.isDummy}}" data-bsa="{{model.loadsBSA}}" data-edits="{{model.userlist != undefined}}">
+                        <h1>{{model.name}}</h1>
+                        <span class="version">{{model.version}}</span>
+                        <span class="crc"></span>
+                        <span class="tag add"></span>
+                        <span class="tag remove"></span>
+                        <ul></ul>
+                    </loot-plugin-card>
+                </template>
+                <!-- Generated <loot-plugin-card> elements go here. -->
+            </core-list>
         </div>
     </core-drawer-panel>
     <paper-toast id="toast"></paper-toast>

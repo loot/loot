@@ -79,7 +79,9 @@ section {
     border-bottom-left-radius: 2px;
     box-shadow: rgba(0, 0, 0, 0.0980392) 0px 2px 4px, rgba(0, 0, 0, 0.0980392) 0px 0px 3px;
 }
-
+#generalMessages {
+    margin-bottom: 0.5em;
+}
 paper-item > core-icon {
     margin-right: 0.5em;
 }
