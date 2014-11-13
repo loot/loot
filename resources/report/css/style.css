@@ -82,13 +82,6 @@ section {
 #generalMessages {
     margin-bottom: 0.5em;
 }
-paper-item > core-icon {
-    margin-right: 0.5em;
-}
-
-
-
-
 
 #about blockquote {
     white-space: pre;

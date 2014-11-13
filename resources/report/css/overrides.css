@@ -45,11 +45,6 @@ html /deep/ paper-tab::shadow #ink {
     font-size: 10pt;
 }
 
-/* This override change the position of the link in <loot-plugin-item> so that it doesn't cover up tooltips. */
-loot-plugin-item::shadow ::content > a {
-    left: 112px;
-}
-
 /* This override change the positioning of the progress dialog to adapt to content changes. */
 #progressDialog {
     position: inherit !important;
@@ -78,4 +73,26 @@ html /deep/ paper-dropdown > div {
 /* This stops the main core-list having its own scrollbars. */
 #main > core-list {
     overflow-y: initial !important;
+}
+
+/* This makes paper-menu-button icons align like paper-icon-buttons do. */
+html /deep/ paper-menu-button > paper-icon-button,
+html /deep/ core-tooltip > paper-icon-button,
+html /deep/ core-tooltip > core-icon {
+    display: block;
+}
+
+/* Center paper-dropdown-menu text better. */
+html /deep/ paper-dropdown-menu {
+    padding-top: 0;
+}
+
+/* This adds padding between icons and text in menus. */
+html /deep/ paper-item > core-icon {
+    margin-right: 1em;
+}
+
+/* This makes checkboxes have the same padding as icons in lists. */
+html /deep/ paper-checkbox::shadow #checkboxLabel {
+    padding-left: 1em;
 }
