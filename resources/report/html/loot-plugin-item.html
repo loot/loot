@@ -7,41 +7,28 @@
 <polymer-element name="loot-plugin-item" attributes="priorityText">
     <template>
         <style>
-        :host([data-bsa=false]) #loadsBSA,
-        :host([data-dummy=false]) #dummyPlugin,
-        :host([data-edits=false]) #hasUserEdits,
-        :host([data-global-priority=false]) #hasGlobalPriority,
-        :host #hasPriority:not([label^=Priority]) {
+        :host(:not([data-bsa])) #loadsBSA,
+        :host(:not([data-edits])) #hasUserEdits {
             visibility: hidden;
         }
         ::content a {
             text-decoration: none;
             color: black;
         }
-        .hasGlobalPriority, #hasPriority {
-            display:none;
+        core-tooltip {
+            margin: 0.25em;
         }
-        :host-context(body.editMode) #hasGlobalPriority,
-        :host-context(body.editMode) #hasPriority {
-            display: inline-block;
+        ::content > a {
+            padding-left: 0.75em;
         }
         </style>
 
         <paper-item>
-            <core-tooltip id="dummyPlugin" label="Dummy Plugin">
-                <core-icon icon="visibility-off"></core-icon>
-            </core-tooltip>
             <core-tooltip id="loadsBSA" label="Loads BSA">
                 <core-icon icon="attachment"></core-icon>
             </core-tooltip>
             <core-tooltip id="hasUserEdits" label="Has User Metadata">
                 <core-icon icon="account-circle"></core-icon>
-            </core-tooltip>
-            <core-tooltip id="hasGlobalPriority" label="Priority Is Global">
-                <core-icon icon="language"></core-icon>
-            </core-tooltip>
-            <core-tooltip id="hasPriority" label="{{priorityText}}">
-                <core-icon icon="star"></core-icon>
             </core-tooltip>
             <content></content>
         </paper-item>

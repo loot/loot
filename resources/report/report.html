@@ -114,7 +114,7 @@
                     </paper-item>
                     <core-list flex>
                         <template>
-                            <loot-plugin-item priorityText="{{model.modPriority}}" data-dummy="{{model.isDummy}}" data-bsa="{{model.loadsBSA}}" data-edits="{{model.userlist != undefined}}" data-global-priority="{{isGlobalPriority}}">
+                            <loot-plugin-item data-bsa?="{{model.loadsBSA}}" data-edits?="{{model.userlist != undefined}}">
                                 <a href="#{{model.id}}">{{model.name}}</a>
                             </loot-plugin-item>
                         </template>
