@@ -161,8 +161,7 @@ function Plugin(obj) {
     Plugin.prototype.createListItem = function() {
         this.li = document.createElement('loot-plugin-item');
 
-        this.li.label = this.name;
-        this.li.setLink('#' + this.id);
+        this.li.setLink(this.id, this.name);
         this.li.setPriority(this.getPriorityString());
 
         this.li.setAttribute('data-dummy', this.isDummy);

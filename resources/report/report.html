@@ -44,16 +44,40 @@
             <paper-icon-button icon="menu"></paper-icon-button>
             <paper-dropdown class="dropdown">
                 <core-menu>
-                    <paper-item id="redatePluginsButton" icon="today" label="Redate Plugins"></paper-item>
-                    <paper-item id="wipeUserlistButton" icon="delete" label="Clear All User Metadata"></paper-item>
-                    <paper-item id="copyContentButton" icon="content-copy" label="Copy Content As Text"></paper-item>
-                    <paper-item id="refreshContentButton" icon="cached" label="Refresh Content"></paper-item>
+                    <paper-item id="redatePluginsButton">
+                        <core-icon icon="today"></core-icon>
+                        Redate Plugins
+                    </paper-item>
+                    <paper-item id="wipeUserlistButton">
+                        <core-icon icon="delete"></core-icon>
+                        Clear All User Metadata
+                    </paper-item>
+                    <paper-item id="copyContentButton">
+                        <core-icon icon="content-copy"></core-icon>
+                        Copy Content As Text
+                    </paper-item>
+                    <paper-item id="refreshContentButton">
+                        <core-icon icon="cached"></core-icon>
+                        Refresh Content
+                    </paper-item>
                     <paper-item separator></paper-item>
-                    <paper-item id="settingsButton" icon="settings" label="Settings"></paper-item>
+                    <paper-item id="settingsButton">
+                        <core-icon icon="settings"></core-icon>
+                        Settings
+                    </paper-item>
                     <paper-item separator></paper-item>
-                    <paper-item id="helpButton" icon="book" label="View Documentation"></paper-item>
-                    <paper-item id="openLogButton" icon="folder" label="Open Debug Log Location"></paper-item>
-                    <paper-item id="aboutButton" icon="help" label="About"></paper-item>
+                    <paper-item id="helpButton">
+                        <core-icon icon="book"></core-icon>
+                        View Documentation
+                    </paper-item>
+                    <paper-item id="openLogButton">
+                        <core-icon icon="folder"></core-icon>
+                        Open Debug Log Location
+                    </paper-item>
+                    <paper-item id="aboutButton">
+                        <core-icon icon="help"></core-icon>
+                        About
+                    </paper-item>
                 </core-menu>
             </paper-dropdown>
         </paper-menu-button>
@@ -77,11 +101,11 @@
                 <paper-tab>Filters</paper-tab>
             </paper-tabs>
             <core-menu id="cardsNav" class="tab-content" flex>
-                <paper-item label="Summary">
-                    <a href="#summary"></a>
+                <paper-item>
+                    <a href="#summary">Summary</a>
                 </paper-item>
-                <paper-item label="General Messages">
-                    <a href="#generalMessages"></a>
+                <paper-item>
+                    <a href="#generalMessages">General Messages</a>
                 </paper-item>
                 <!-- Generated <loot-plugin-item> elements go here, containing # links to each plugin's section in the list. -->
             </core-menu>
@@ -191,7 +215,7 @@ along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
         <div center horizontal layout>
             <div>Default Game</div>
             <loot-dropdown-menu id="defaultGameSelect">
-                <paper-item value="auto" label="Autodetect"></paper-item>
+                <paper-item value="auto">Autodetect</paper-item>
                 <!-- Game <option> elements go here. -->
             </loot-dropdown-menu>
         </div>

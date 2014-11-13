@@ -63,7 +63,11 @@ div[drawer] > core-tooltip {
     overflow: auto;
 }
 #cardsNav > paper-item, #cardsNav > loot-plugin-item {
-    height: 2em;
+    /*height: 2em;*/
+}
+paper-item > a {
+    text-decoration: none;
+    color: black;
 }
 #container {
     position: fixed;

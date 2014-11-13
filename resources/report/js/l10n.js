@@ -120,9 +120,9 @@
             pluginCard.getElementById('cancel').textContent = l10n.translate("Cancel").fetch();
 
             pluginCard.getElementById('showOnlyConflicts').label = l10n.translate("Show Only Conflicts").fetch();
-            pluginCard.getElementById('editMetadata').label = l10n.translate("Edit Metadata").fetch();
-            pluginCard.getElementById('copyMetadata').label = l10n.translate("Copy Metadata As Text").fetch();
-            pluginCard.getElementById('clearMetadata').label = l10n.translate("Clear User Metadata").fetch();
+            pluginCard.getElementById('editMetadata').lastChild.textContent = l10n.translate("Edit Metadata").fetch();
+            pluginCard.getElementById('copyMetadata').lastChild.textContent = l10n.translate("Copy Metadata As Text").fetch();
+            pluginCard.getElementById('clearMetadata').lastChild.textContent = l10n.translate("Clear User Metadata").fetch();
 
             /* Plugin List Item Template */
             var pluginItem = document.querySelector('link[rel="import"][href$="loot-plugin-item.html"]');
@@ -158,20 +158,20 @@
             tagRow.querySelector('.type').children[1].textContent = l10n.translate("Remove").fetch();
 
             /* Toolbar menu */
-            document.getElementById('redatePluginsButton').label = l10n.translate("Redate Plugins").fetch();
-            document.getElementById('openLogButton').label = l10n.translate("Open Debug Log Location").fetch();
-            document.getElementById('wipeUserlistButton').label = l10n.translate("Clear All User Metadata").fetch();
-            document.getElementById('copyContentButton').label = l10n.translate("Copy Content As Text").fetch();
-            document.getElementById('refreshContentButton').label = l10n.translate("Refresh Content").fetch();
-            document.getElementById('helpButton').label = l10n.translate("View Documentation").fetch();
-            document.getElementById('aboutButton').label = l10n.translate("About").fetch();
-            document.getElementById('settingsButton').label = l10n.translate("Settings").fetch();
+            document.getElementById('redatePluginsButton').lastChild.textContent = l10n.translate("Redate Plugins").fetch();
+            document.getElementById('openLogButton').lastChild.textContent = l10n.translate("Open Debug Log Location").fetch();
+            document.getElementById('wipeUserlistButton').lastChild.textContent = l10n.translate("Clear All User Metadata").fetch();
+            document.getElementById('copyContentButton').lastChild.textContent = l10n.translate("Copy Content As Text").fetch();
+            document.getElementById('refreshContentButton').lastChild.textContent = l10n.translate("Refresh Content").fetch();
+            document.getElementById('helpButton').lastChild.textContent = l10n.translate("View Documentation").fetch();
+            document.getElementById('aboutButton').lastChild.textContent = l10n.translate("About").fetch();
+            document.getElementById('settingsButton').lastChild.textContent = l10n.translate("Settings").fetch();
             document.getElementById('applySortButton').textContent = l10n.translate("Apply").fetch();
             document.getElementById('cancelSortButton').textContent = l10n.translate("Cancel").fetch();
 
             /* Nav items */
-            document.getElementById('container').querySelector('div[drawer] > core-menu > paper-item[label=Summary]').label = l10n.translate("Summary").fetch();
-            document.getElementById('container').querySelector('div[drawer] > core-menu > paper-item[label^=General]').label = l10n.translate("General Messages").fetch();
+            document.getElementById('container').querySelector('div[drawer] > core-menu > paper-item[label=Summary]').lastChild.textContent = l10n.translate("Summary").fetch();
+            document.getElementById('container').querySelector('div[drawer] > core-menu > paper-item[label^=General]').lastChild.textContent = l10n.translate("General Messages").fetch();
             document.getElementById('sidebarTabs').firstElementChild.textContent = l10n.translate("Plugins").fetch();
             document.getElementById('sidebarTabs').firstElementChild.nextElementSibling.textContent = l10n.translate("Filters").fetch();
             document.getElementById('searchBox').parentElement.label = l10n.translate("Press Enter when searching to select the next match.").fetch();
@@ -206,7 +206,7 @@
             document.getElementById('settingsDialog').heading = l10n.translate("Settings").fetch();
 
             document.getElementById('defaultGameSelect').previousElementSibling.textContent = l10n.translate("Default Game").fetch();
-            document.getElementById('defaultGameSelect').firstElementChild.label = l10n.translate("Autodetect").fetch();
+            document.getElementById('defaultGameSelect').firstElementChild.textContent = l10n.translate("Autodetect").fetch();
 
             document.getElementById('languageSelect').previousElementSibling.textContent = l10n.translate("Language").fetch();
 

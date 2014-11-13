@@ -174,7 +174,7 @@ var loot = {
         this.settings.games.forEach(function(game){
             var menuItem = document.createElement('paper-item');
             menuItem.setAttribute('value', game.folder);
-            menuItem.setAttribute('label', game.name);
+            menuItem.textContent = game.name;
             gameMenu.appendChild(menuItem);
             gameSelect.appendChild(menuItem.cloneNode());
 
@@ -656,7 +656,7 @@ function sortUIElements(pluginNames) {
             /* Also need to move plugin sidebar entry. */
             var li;
             for (var i = 0; i < entries.length; ++i) {
-                if (entries[i].label == name) {
+                if (entries[i].getName() == name) {
                     li = entries[i];
                 }
             }
@@ -1251,7 +1251,7 @@ function initVars() {
             for (var i = 0; i < loot.languages.length; ++i) {
                 var settingsItem = document.createElement('paper-item');
                 settingsItem.setAttribute('value', loot.languages[i].locale);
-                settingsItem.setAttribute('label', loot.languages[i].name);
+                settingsItem.textContent = loot.languages[i].name;
                 settingsLangSelect.appendChild(settingsItem);
 
                 var option = document.createElement('option');
