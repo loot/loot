@@ -220,16 +220,16 @@ td input {
     text-overflow: ellipsis;
 }
 
-body.editMode header {
-    color: #999;
+.editMode core-toolbar {
+    opacity: 0.7
 }
-body.editMode header #headerOverlay {
+.editMode #headerOverlay {
     z-index: 3;
-    width: 100%;
-    height: 100%;
     position: absolute;
     top: 0;
     left: 0;
+    bottom: 0;
+    right: 0;
 }
 [draggable] {
     -webkit-user-select: none;
