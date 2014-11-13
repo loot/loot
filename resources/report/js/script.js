@@ -1158,6 +1158,14 @@ function handleClearMetadata(evt) {
 function toggleDrawer(evt) {
     document.getElementById('container').togglePanel();
 }
+function handleSidebarClick(evt) {
+    if (evt.target.hasAttribute('data-index')) {
+        window.location.hash = '';
+        document.getElementById('main').querySelector('core-list').scrollToItem(evt.target.getAttribute('data-index'));
+        /* However, the scroll bar that the plugin card list uses is for the whole main content area, so the position is offset by the heights of the summary and general messages cards. Adjust to compensate. */
+        document.getElementById('main').scrollTop += document.getElementById('main').querySelector('core-list').offsetTop;
+    }
+}
 function setupEventHandlers() {
     var elements;
     /*Set up filter value and CSS setting storage read/write handlers.*/
@@ -1210,6 +1218,7 @@ function setupEventHandlers() {
     document.body.addEventListener('loot-clear-metadata', handleClearMetadata, false);
 
     document.getElementById('drawerToggle').addEventListener('click', toggleDrawer, false);
+    document.getElementById('cardsNav').addEventListener('click', handleSidebarClick, false);
 }
 function initVars() {
     loot.query('getVersion').then(function(result){

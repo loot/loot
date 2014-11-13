@@ -114,8 +114,8 @@
                     </paper-item>
                     <core-list flex>
                         <template>
-                            <loot-plugin-item data-bsa?="{{model.loadsBSA}}" data-edits?="{{model.userlist != undefined}}">
-                                <a href="#{{model.id}}">{{model.name}}</a>
+                            <loot-plugin-item data-bsa?="{{model.loadsBSA}}" data-edits?="{{model.userlist != undefined}}" data-index="{{index}}">
+                                {{model.name}}
                             </loot-plugin-item>
                         </template>
                         <!-- Generated <loot-plugin-item> elements go here. -->
