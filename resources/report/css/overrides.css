@@ -1,5 +1,11 @@
 /* These styles override Polymer's own internal styling for certain elements. */
 
+/* The following is for setting the size of the drawer in narrow mode. */
+#container::shadow .narrow-layout #drawer {
+    width: 50% !important;
+    background: white;
+}
+
 /* These overrides change the colour of the game menu's text and underline. */
 #gameMenu::shadow > paper-dropdown-menu {
     border-bottom-color: #f1f1f1;
@@ -60,7 +66,6 @@ html /deep/ core-animated-pages {
 }
 
 /* This stops menus keeping the last item clicked highlighted. */
-
 paper-item.core-selected {
     background: white;
 }

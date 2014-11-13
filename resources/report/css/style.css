@@ -206,10 +206,6 @@ li.warn{
 paper-checkbox {
     padding: 0.5em 1em;
 }
-loot-dropdown-menu {
-    padding-left: 2em;
-    top: -0.25em;
-}
 
 input[readonly] {
     border: none;
@@ -252,34 +248,27 @@ input:valid {
     background-color: white;
     color: black;
 }
-#hoverText {
-    position: fixed;
-    z-index: 5;
-    background: white;
-    box-shadow:0 0 3px 0px rgba(0,0,0,0.5);
-    padding: 2px 5px;
-}
-progress, .progress {
-    /* Reset the default appearance */
-    -webkit-appearance: none;
-    width: 250px;
-    height: 20px;
-    display: block;
-    margin: 0 auto;
-}
-#progressDialog > paper-progress {
+paper-progress {
     width: 100%;
 }
-
-:host > span {
-    display: inline-block;
-    width: 1.2em;
-}
-
 #firstRun > ul {
     list-style-type: disc;
     padding-left: 40px;
 }
 #firstRun .tag {
     margin: 0;
+}
+
+
+/* This animates the drawer toggle appearing in narrow view. */
+#drawerToggle {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s;
+}
+@media screen and (max-width: 640px) {
+    #drawerToggle {
+        opacity: 1;
+        visibility: visible;
+    }
 }

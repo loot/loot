@@ -1161,6 +1161,9 @@ function handleClearMetadata(evt) {
         }
     });
 }
+function toggleDrawer(evt) {
+    document.getElementById('container').togglePanel();
+}
 function setupEventHandlers() {
     var elements;
     /*Set up filter value and CSS setting storage read/write handlers.*/
@@ -1211,6 +1214,8 @@ function setupEventHandlers() {
     document.body.addEventListener('loot-editor-close', handleEditorClose, false);
     document.body.addEventListener('loot-copy-metadata', handleCopyMetadata, false);
     document.body.addEventListener('loot-clear-metadata', handleClearMetadata, false);
+
+    document.getElementById('drawerToggle').addEventListener('click', toggleDrawer, false);
 }
 function initVars() {
     loot.query('getVersion').then(function(result){
