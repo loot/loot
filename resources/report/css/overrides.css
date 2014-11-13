@@ -69,3 +69,9 @@ html /deep/ paper-dialog#progressDialog {
 html /deep/ core-animated-pages {
     overflow: hidden;
 }
+
+/* This stops menus keeping the last item clicked highlighted. */
+
+paper-item.core-selected {
+    background: white;
+}
