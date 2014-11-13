@@ -69,3 +69,8 @@ html /deep/ core-animated-pages {
 paper-item.core-selected {
     background: inherit;
 }
+
+/* This styles divs like core-menus. */
+html /deep/ paper-dropdown > div {
+    margin: 12px;
+}

@@ -19,14 +19,11 @@
     <link rel="import" href="bower_components/core-icons/core-icons.html">
     <link rel="import" href="bower_components/core-tooltip/core-tooltip.html">
     <link rel="import" href="bower_components/core-drawer-panel/core-drawer-panel.html">
-    <link rel="import" href="bower_components/core-menu/core-menu.html">
-    <link rel="import" href="bower_components/core-menu/core-submenu.html">
     <link rel="import" href="bower_components/core-animated-pages/core-animated-pages.html">
     <link rel="import" href="bower_components/core-animated-pages/transitions/slide-from-right.html">
 
     <link rel="import" href="bower_components/paper-menu-button/paper-menu-button.html">
     <link rel="import" href="bower_components/paper-item/paper-item.html">
-    <link rel="import" href="bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
     <link rel="import" href="bower_components/paper-icon-button/paper-icon-button.html">
     <link rel="import" href="bower_components/paper-button/paper-button.html">
     <link rel="import" href="bower_components/paper-input/paper-input.html">
@@ -48,7 +45,7 @@
         <paper-menu-button>
             <paper-icon-button icon="menu"></paper-icon-button>
             <paper-dropdown class="dropdown">
-                <core-menu>
+                <div>
                     <paper-item id="redatePluginsButton">
                         <core-icon icon="today"></core-icon>
                         Redate Plugins
@@ -83,7 +80,7 @@
                         <core-icon icon="help"></core-icon>
                         About
                     </paper-item>
-                </core-menu>
+                </div>
             </paper-dropdown>
         </paper-menu-button>
         <paper-icon-button icon="drawer" id="drawerToggle"></paper-icon-button>
@@ -107,7 +104,7 @@
                 <paper-tab>Filters</paper-tab>
             </paper-tabs>
             <core-animated-pages selected="0" transitions="slide-from-right" flex>
-                <core-menu id="cardsNav" class="tab-content" flex>
+                <div id="cardsNav" class="tab-content" flex>
                     <paper-item>
                         <a href="#summary">Summary</a>
                     </paper-item>
@@ -115,8 +112,8 @@
                         <a href="#generalMessages">General Messages</a>
                     </paper-item>
                     <!-- Generated <loot-plugin-item> elements go here, containing # links to each plugin's section in the list. -->
-                </core-menu>
-                <core-menu id="filters" class="tab-content" flex>
+                </div>
+                <div id="filters" class="tab-content" flex>
                     <paper-checkbox id="hideVersionNumbers" data-class="version" label="Hide version numbers"></paper-checkbox>
                     <paper-checkbox id="hideCRCs" data-class="crc" label="Hide CRCs"></paper-checkbox>
                     <paper-checkbox id="hideBashTags" data-class="tag" label="Hide Bash Tags"></paper-checkbox>
@@ -133,7 +130,7 @@
                         <div id="hiddenMessagesTxt" flex>Hidden messages:</div>
                         <div><span id="hiddenMessageNo">0</span> / <span id="filterTotalMessageNo">0</span></div>
                     </div>
-                </core-menu>
+                </div>
             </core-animated-pages>
             <core-tooltip label="Press Enter when searching to select the next match." position="top">
                 <paper-input-decorator label="Search content...">
