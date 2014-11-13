@@ -567,8 +567,6 @@ function changeGame(evt) {
         loot.game.plugins.forEach(function(plugin){
             plugin.card.parentElement.removeChild(plugin.card);
             plugin.card = undefined;
-            plugin.li.parentElement.removeChild(plugin.li);
-            plugin.li = undefined;
         });
         var globalMessages = document.getElementById('generalMessages').getElementsByTagName('ul')[0];
         while (globalMessages.firstElementChild) {
@@ -582,6 +580,7 @@ function changeGame(evt) {
             loot.game.masterlist = gameInfo.masterlist;
             loot.game.globalMessages = gameInfo.globalMessages;
             loot.game.plugins = gameInfo.plugins;
+            document.getElementById('cardsNav').querySelector('core-list').data = loot.game.plugins;
         } catch (e) {
             console.log(e);
             console.log('changeGame response: ' + result);
@@ -1345,6 +1344,7 @@ function initVars() {
                     loot.game.masterlist = game.masterlist;
                     loot.game.globalMessages = game.globalMessages;
                     loot.game.plugins = game.plugins;
+                    document.getElementById('cardsNav').querySelector('core-list').data = loot.game.plugins;
 
                     applySavedFilters();
                     closeProgressDialog();

@@ -4,7 +4,7 @@
 <link rel="import" href="../bower_components/core-icon/core-icon.html">
 <link rel="import" href="../bower_components/core-icons/core-icons.html">
 
-<polymer-element name="loot-plugin-item">
+<polymer-element name="loot-plugin-item" attributes="priorityText">
     <template>
         <style>
         :host([data-bsa=false]) #loadsBSA,
@@ -14,7 +14,7 @@
         :host #hasPriority:not([label^=Priority]) {
             visibility: hidden;
         }
-        a {
+        ::content a {
             text-decoration: none;
             color: black;
         }
@@ -40,25 +40,16 @@
             <core-tooltip id="hasGlobalPriority" label="Priority Is Global">
                 <core-icon icon="language"></core-icon>
             </core-tooltip>
-            <core-tooltip id="hasPriority" label="">
+            <core-tooltip id="hasPriority" label="{{priorityText}}">
                 <core-icon icon="star"></core-icon>
             </core-tooltip>
-            <a id="link" href=""></a>
+            <content></content>
         </paper-item>
     </template>
     <script>
     Polymer({
-        setLink: function(id, name) {
-            this.shadowRoot.getElementById('link').href = '#' + id;
-            this.shadowRoot.getElementById('link').textContent = name;
-        },
-
         getName: function() {
-            return this.shadowRoot.getElementById('link').textContent;
-        },
-
-        setPriority: function(text) {
-            this.shadowRoot.getElementById('hasPriority').label = text;
+            return this.getElementsByTagName('a')[0].textContent;
         },
 
         handleDragStart: function(evt) {

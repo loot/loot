@@ -21,6 +21,7 @@
     <link rel="import" href="bower_components/core-drawer-panel/core-drawer-panel.html">
     <link rel="import" href="bower_components/core-animated-pages/core-animated-pages.html">
     <link rel="import" href="bower_components/core-animated-pages/transitions/slide-from-right.html">
+    <link rel="import" href="bower_components/core-list/core-list.html">
 
     <link rel="import" href="bower_components/paper-menu-button/paper-menu-button.html">
     <link rel="import" href="bower_components/paper-item/paper-item.html">
@@ -104,13 +105,20 @@
                 <paper-tab>Filters</paper-tab>
             </paper-tabs>
             <core-animated-pages selected="0" transitions="slide-from-right" flex>
-                <div id="cardsNav" class="tab-content" flex>
+                <div id="cardsNav" class="tab-content" layout vertical>
                     <paper-item>
                         <a href="#summary">Summary</a>
                     </paper-item>
                     <paper-item>
                         <a href="#generalMessages">General Messages</a>
                     </paper-item>
+                    <core-list flex>
+                        <template>
+                            <loot-plugin-item priorityText="{{model.modPriority}}" data-dummy="{{model.isDummy}}" data-bsa="{{model.loadsBSA}}" data-edits="{{model.userlist != undefined}}" data-global-priority="{{isGlobalPriority}}">
+                                <a href="#{{model.id}}">{{model.name}}</a>
+                            </loot-plugin-item>
+                        </template>
+                    </core-list>
                     <!-- Generated <loot-plugin-item> elements go here, containing # links to each plugin's section in the list. -->
                 </div>
                 <div id="filters" class="tab-content" flex>

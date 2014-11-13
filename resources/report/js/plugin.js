@@ -104,7 +104,7 @@ function Plugin(obj) {
 
     Plugin.prototype.getPriorityString = function() {
         if (this.modPriority != 0) {
-            return 'Priority: ' + this.modPriority;
+            return this.modPriority.toString();
         } else {
             return '';
         }
@@ -158,30 +158,12 @@ function Plugin(obj) {
         document.getElementById('main').appendChild(this.card);
     }
 
-    Plugin.prototype.createListItem = function() {
-        this.li = document.createElement('loot-plugin-item');
-
-        this.li.setLink(this.id, this.name);
-        this.li.setPriority(this.getPriorityString());
-
-        this.li.setAttribute('data-dummy', this.isDummy);
-        this.li.setAttribute('data-bsa', this.loadsBSA);
-        this.li.setAttribute('data-edits', this.userlist != undefined);
-        this.li.setAttribute('data-global-priority', this.isGlobalPriority);
-
-        document.getElementById('cardsNav').appendChild(this.li);
-    }
-
     Plugin.prototype.observer = function(changes) {
         changes.forEach(function(change) {
             if (change.name == 'userlist') {
-                change.object.li.setAttribute('data-edits', change.object[change.name] != undefined);
                 change.object.card.setAttribute('data-edits', change.object[change.name] != undefined);
             } else if (change.name == 'modPriority') {
-                change.object.li.setPriority(this.getPriorityString());
                 change.object.card.shadowRoot.getElementById('priorityValue').value = change.object[change.name];
-            } else if (change.name == 'isGlobalPriority') {
-                change.object.li.setAttribute('data-global-priority', change.object[change.name]);
             } else if (change.name == 'messages') {
                 change.object.updateCardMessages();
                 /* For messages, the card's messages need updating,
@@ -233,14 +215,12 @@ function Plugin(obj) {
                     change.object.card.getElementsByClassName('crc')[0].textContent = change.object[change.name].toString(16).toUpperCase();
                 }
             } else if (change.name == 'isDummy') {
-                change.object.li.setAttribute('data-dummy', change.object[change.name]);
                 change.object.card.setAttribute('data-dummy', change.object[change.name]);
             }
         });
     }
 
     this.createCard();
-    this.createListItem();
     Object.observe(this, this.observer);
 }
 
