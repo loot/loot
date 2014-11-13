@@ -992,7 +992,7 @@ function startSearch(evt) {
         var request = JSON.stringify({
             name: 'find',
             args: [
-                evt.target.inputValue,
+                evt.target.value,
                 findNext
             ]
         });

@@ -198,8 +198,14 @@ namespace loot {
 
         if (requestName == "find") {
             // Has one arg, which is the search string.
-            Find(browser, request["args"][0].as<string>(), request["args"][1].as<bool>());
-            callback->Success("");
+            try {
+                Find(browser, request["args"][0].as<string>(), request["args"][1].as<bool>());
+                callback->Success("");
+            }
+            catch (std::exception& e) {
+                BOOST_LOG_TRIVIAL(error) << "Failed to perform search. Details: " << e.what();
+                callback->Failure(-1, string("Failed to perform search. Details: ") + e.what());
+            }
             return true;
         }
         else if (requestName == "changeGame") {
