@@ -262,8 +262,10 @@ loot-editor-close
                 oldValue.editor = this.readFromEditor(oldValue);
             }
 
-            /* Set the new editor data. */
-            this.setEditorData(newValue);
+            if (newValue) {
+                /* Set the new editor data. */
+                this.setEditorData(newValue);
+            }
         },
 
         readFromEditor: function(oldData) {
