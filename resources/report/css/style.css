@@ -66,6 +66,9 @@ paper-item > a {
     left: 0;
     right: 0;
 }
+#searchBox {
+    display: block;
+}
 #container {
     position: fixed;
     top: 64px;

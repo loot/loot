@@ -196,19 +196,7 @@ namespace loot {
                                      CefRefPtr<Callback> callback) {
         const string requestName = request["name"].as<string>();
 
-        if (requestName == "find") {
-            // Has one arg, which is the search string.
-            try {
-                Find(browser, request["args"][0].as<string>(), request["args"][1].as<bool>());
-                callback->Success("");
-            }
-            catch (std::exception& e) {
-                BOOST_LOG_TRIVIAL(error) << "Failed to perform search. Details: " << e.what();
-                callback->Failure(-1, string("Failed to perform search. Details: ") + e.what());
-            }
-            return true;
-        }
-        else if (requestName == "changeGame") {
+        if (requestName == "changeGame") {
             try {
                 // Has one arg, which is the folder name of the new game.
                 g_app_state.ChangeGame(request["args"][0].as<string>());
@@ -338,13 +326,6 @@ namespace loot {
             return true;
         }
         return false;
-    }
-
-    void Handler::Find(CefRefPtr<CefBrowser> browser, const std::string& search, bool findNext) {
-        // Only one search at a time is allowed, so give a constant identifier,
-        // and we want case-insensitive forward searching, with no repeated
-        // searches.
-        browser->GetHost()->Find(0, search, true, false, findNext);
     }
 
     void Handler::GetConflictingPlugins(const std::string& pluginName, CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback) {

@@ -522,6 +522,28 @@ function applyFilters(evt) {
         document.getElementById('hiddenPluginNo').textContent = hiddenPluginNo;
     });
 }
+
+function searchFilter(plugins) {
+    var search = document.getElementById('searchBox').value.toLowerCase();
+    if (search.length > 0) {
+        var hiddenPluginNo = 0;
+        var hiddenMessageNo = 0;
+        var filteredPlugins = [];
+        /* Check each plugin entry to see if the current search string exists in
+           its name, version, crc, Bash Tag or message strings. */
+        for (var i = 0; i < plugins.length; ++i) {
+            if (plugins[i].name.toLowerCase().indexOf(search) != -1
+                || plugins[i].getCrcString().toLowerCase().indexOf(search) != -1) {
+                filteredPlugins.push(plugins[i]);
+            }
+        }
+
+        return filteredPlugins;
+    } else {
+        return plugins;
+    }
+}
+
 function showMessageDialog(title, text, yesNo, closeCallback) {
     var dialog = document.createElement('loot-message-dialog');
     if (yesNo) {
@@ -982,34 +1004,9 @@ function showSettingsDialog(evt) {
     document.getElementById('settingsDialog').showModal();
 }
 
-function startSearch(evt) {
-    var findNext = false;
-    if (evt.type == 'keyup') {
-        if (evt.keyCode != 13) {
-            // Don't do anything for keyboard events that aren't enter - if valid, the input event will handle them.
-            return;
-        } else {
-            findNext = true;
-        }
-    }
-    if (evt.target.inputValue == '') {
-        loot.query('cancelFind').then(function(result){
-            evt.target.focus();
-        }).catch(processCefError);
-    } else {
-        var request = JSON.stringify({
-            name: 'find',
-            args: [
-                evt.target.value,
-                findNext
-            ]
-        });
-
-        loot.query(request).then(function(result){
-            evt.target.focus();
-        }).catch(processCefError);
-    }
-
+function handleSearch(evt) {
+    document.getElementById('cardsNav').lastElementChild.data = searchFilter(loot.game.plugins);
+    document.getElementById('main').lastElementChild.data = searchFilter(loot.game.plugins);
 }
 function focusSearch(evt) {
     if (evt.ctrlKey && evt.keyCode == 70) { //'f'
@@ -1229,9 +1226,7 @@ function setupEventHandlers() {
     settings.getElementsByClassName('cancel')[0].addEventListener('click', closeSettingsDialog, false);
 
     /* Set up event handlers for content search. */
-    var searchBox = document.getElementById('searchBox');
-    searchBox.addEventListener('input', startSearch, false);
-    searchBox.addEventListener('keyup', startSearch, false);
+    document.getElementById('searchBox').addEventListener('change', handleSearch, false);
     window.addEventListener('keyup', focusSearch, false);
 
     /* Set up handler for opening and closing editors. */

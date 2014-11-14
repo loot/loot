@@ -28,7 +28,6 @@
     <link rel="import" href="bower_components/paper-icon-button/paper-icon-button.html">
     <link rel="import" href="bower_components/paper-button/paper-button.html">
     <link rel="import" href="bower_components/paper-input/paper-input.html">
-    <link rel="import" href="bower_components/paper-input/paper-input-decorator.html">
     <link rel="import" href="bower_components/paper-tabs/paper-tabs.html">
     <link rel="import" href="bower_components/paper-checkbox/paper-checkbox.html">
     <link rel="import" href="bower_components/paper-dialog/paper-dialog.html">
@@ -139,10 +138,8 @@
                     </div>
                 </div>
             </core-animated-pages>
-            <core-tooltip label="Press Enter when searching to select the next match." position="top">
-                <paper-input-decorator label="Search content...">
-                    <input id="searchBox" is="core-input" type="search">
-                </paper-input-decorator>
+            <core-tooltip label="Press Enter or click outside the input to set the filter." position="top">
+                <paper-input id="searchBox" label="Filter content..."></paper-input>
             </core-tooltip>
         </div>
         <div main id="main">
