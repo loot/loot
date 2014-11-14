@@ -16,8 +16,7 @@ loot-editor-close
 <link rel="import" href="../bower_components/paper-input/paper-input-decorator.html">
 <link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../bower_components/core-animated-pages/core-animated-pages.html">
-<link rel="import" href="../bower_components/core-animated-pages/transitions/slide-from-right.html">
+<link rel="import" href="../bower_components/core-selector/core-selector.html">
 
 <link rel="import" href="editable-table.html">
 
@@ -77,6 +76,9 @@ loot-editor-close
             margin: 0;
             border-collapse: collapse;
             width: 100%;
+        }
+        table:not(.core-selected) {
+            display: none;
         }
         td input {
             width: 100%;
@@ -150,7 +152,7 @@ loot-editor-close
                     <paper-tab data-for="dirty">Dirty Info</paper-tab>
                     <paper-tab data-for="locations">Locations</paper-tab>
                 </paper-tabs>
-                <core-animated-pages selected="loadAfter" valueattr="id" transitions="slide-from-right">
+                <core-selector selected="loadAfter" valueattr="id">
                     <table is="editable-table" id="loadAfter" data-template="fileRow">
                         <thead>
                             <tr><th>Filename</th><th>Display Name</th><th>Condition</th><th></th></tr>
@@ -214,7 +216,7 @@ loot-editor-close
                             <tr><td colspan="3">Add new row...</td><td></td></tr>
                         </tbody>
                     </table>
-                </core-animated-pages>
+                </core-selector>
             </div>
             <div id="buttons">
                 <paper-button id="accept">Apply</paper-button>
@@ -225,22 +227,25 @@ loot-editor-close
     <script>
     Polymer({
         attached: function() {
-            this.shadowRoot.getElementById('tableTabs').firstElementChild.addEventListener('core-select', this.onShowEditorTable, false);
+            this.shadowRoot.getElementById('tableTabs').firstElementChild.addEventListener('core-select', this.onTabSelect, false);
 
             this.shadowRoot.getElementById('accept').addEventListener('click', this.onHideEditor, false);
             this.shadowRoot.getElementById('cancel').addEventListener('click', this.onHideEditor, false);
+
+            /* Need to set the table tab height explicitly, so set it to the tallest table. */
         },
 
         detached: function() {
-            this.shadowRoot.getElementById('tableTabs').firstElementChild.removeEventListener('core-select', this.onShowEditorTable, false);
+            this.shadowRoot.getElementById('tableTabs').firstElementChild.removeEventListener('core-select', this.onTabSelect, false);
 
             this.shadowRoot.getElementById('accept').removeEventListener('click', this.onHideEditor, false);
             this.shadowRoot.getElementById('cancel').removeEventListener('click', this.onHideEditor, false);
         },
 
-
-        onShowEditorTable: function(evt) {
-            evt.target.nextElementSibling.selected = evt.target.selected;
+        onTabSelect: function(evt) {
+            if (evt.detail.isSelected) {
+                evt.target.nextElementSibling.selected = evt.target.selected;
+            }
         },
 
         readFromEditor: function(oldData) {
