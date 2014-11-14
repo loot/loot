@@ -20,7 +20,7 @@ loot-editor-close
 
 <link rel="import" href="editable-table.html">
 
-<polymer-element name="loot-plugin-editor">
+<polymer-element name="loot-plugin-editor" attributes="{{data}}">
     <template>
         <style>
         /* Icon styling. */
@@ -38,17 +38,21 @@ loot-editor-close
         }
 
         /* Content styling. */
-        ::content .version, .version {
+        h1 {
+            font-weight: normal;
+            font-size: 1em;
+        }
+        .version {
             display: inline-block;
             margin-left: 1em;
             color:#6394F8;
         }
-        ::content .crc, .crc {
+        .crc {
             display: inline-block;
             margin-left: 1em;
             color:#BC8923;
         }
-        ::content .hidden, .hidden {
+        .hidden {
             display: none;
         }
 
@@ -121,9 +125,9 @@ loot-editor-close
             <core-tooltip id="activeTick" label="Active Plugin">
                 <core-icon icon="check"></core-icon>
             </core-tooltip>
-            <content select="h1"></content>
-            <content select=".version"></content>
-            <span flex><content select=".crc"></content></span>
+            <h1>{{data.name}}</h1>
+            <span class="version">{{data.version}}</span>
+            <span class="crc" flex>{{data.crc}}</span>
             <core-tooltip id="dummyPlugin" label="Dummy Plugin">
                 <core-icon icon="visibility-off"></core-icon>
             </core-tooltip>
@@ -139,7 +143,7 @@ loot-editor-close
             <div horizontal layout center>
                 <div>Priority Value</div>
                 <paper-input-decorator>
-                    <input id="priorityValue" is="core-input" type="number" max="999999" min="-999999" step="1" value="0" preventInvalidInput>
+                    <input id="priorityValue" is="core-input" type="number" max="999999" min="-999999" step="1" value="{{data.modPriority}}" preventInvalidInput>
                 </paper-input-decorator>
             </div>
             <div id="tableTabs">

@@ -24,7 +24,7 @@ loot-clear-metadata
 <link rel="import" href="loot-plugin-editor.html">
 
 
-<polymer-element name="loot-plugin-card">
+<polymer-element name="loot-plugin-card" attributes="data">
     <template>
         <style>
         /* Host and front/editor styling. */
@@ -153,15 +153,17 @@ loot-clear-metadata
                 <content select=".tag.remove"></content>
                 <content select="ul"></content>
             </section>
-            <loot-plugin-editor id="editor">
-                <h1></h1>
-                <span class="version"></span>
-                <span class="crc"></span>
-            </loot-plugin-editor>
+            <loot-plugin-editor id="editor" data="{{data}}"></loot-plugin-editor>
         </div>
     </template>
     <script>
     Polymer({
+        data: undefined,
+
+        observe: {
+            'data.crc': 'onCrcChange',
+        },
+
         attached: function() {
             this.shadowRoot.getElementById('showOnlyConflicts').addEventListener('change', this.onShowOnlyConflicts, false);
             this.shadowRoot.getElementById('editMetadata').addEventListener('click', this.onShowEditor, false);
@@ -189,18 +191,46 @@ loot-clear-metadata
             this.shadowRoot.getElementById('clearMetadata').addEventListener('click', this.onClearMetadata, false);
         },
 
+        dataChanged: function(oldValue, newValue) {
+            /* Share the data with the editor. */
+            this.shadowRoot.getElementById('editor').data = this.data;
+            if (newValue != undefined) {
+                /* Also initialise the non-simple-string data. */
+
+                /* CRC */
+                this.getElementsByClassName('crc')[0].textContent = newValue.getCrcString();
+
+                /* Bash Tags */
+                var tags = newValue.getTagStrings();
+                this.getElementsByClassName('tag add')[0].textContent = tags.added;
+                this.getElementsByClassName('tag add')[0].classList.toggle('hidden', tags.added.length == 0);
+                this.getElementsByClassName('tag remove')[0].textContent = tags.removed;
+                this.getElementsByClassName('tag remove')[0].classList.toggle('hidden', tags.removed.length == 0);
+
+                /* Messages */
+                /* First clear any existing messages. */
+                var messageUL = this.getElementsByTagName('ul')[0];
+                while(messageUL.firstElementChild) {
+                    messageUL.removeChild(messageUL.firstElementChild);
+                }
+                var messages = newValue.getUIMessages();
+                for (var i = 0; i < messages.length; ++i) {
+                    messageUL.appendChild(messages[i]);
+                }
+                messageUL.classList.toggle('hidden', messages.length == 0);
+            }
+        },
+
+        onCrcChange: function(oldValue, newValue) {
+            this.getElementsByClassName('crc')[0].textContent = this.data.getCrcString();
+        },
+
         getName: function() {
             return this.getElementsByTagName('h1')[0].textContent;
         },
 
         onShowEditor: function(evt) {
             var card = evt.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentNode.host;
-
-            /* Fill in editor toolbar. */
-            var editor = card.shadowRoot.getElementById('editor');
-            editor.querySelector('h1').textContent = card.querySelector('h1').textContent;
-            editor.querySelector('.version').textContent = card.querySelector('.version').textContent;
-            editor.querySelector('.crc').textContent = card.querySelector('.crc').textContent;
 
             /* Fire an open event, so that the UI can enter edit mode. */
             card.dispatchEvent(new CustomEvent('loot-editor-open', {
