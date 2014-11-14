@@ -182,17 +182,6 @@ td input {
     text-overflow: ellipsis;
 }
 
-.editMode core-toolbar {
-    opacity: 0.7
-}
-.editMode #headerOverlay {
-    z-index: 3;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-}
 [draggable] {
     -webkit-user-select: none;
     cursor: move;

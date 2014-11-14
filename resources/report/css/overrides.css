@@ -10,8 +10,14 @@
 #gameMenu::shadow > paper-dropdown-menu {
     border-bottom-color: #f1f1f1;
 }
+#gameMenu[disabled]::shadow > paper-dropdown-menu {
+    border-bottom-color: #c9c9c9;
+}
 #gameMenu::shadow > paper-dropdown-menu::shadow #label, #gameMenu::shadow > paper-dropdown-menu::shadow #arrow {
     color: white;
+}
+#gameMenu[disabled]::shadow > paper-dropdown-menu::shadow #label, #gameMenu[disabled]::shadow > paper-dropdown-menu::shadow #arrow {
+    color: #c9c9c9;
 }
 #gameMenu {
     color: black;

@@ -1049,7 +1049,14 @@ function handleEditorOpen(evt) {
     ++numEditors;
 
     if (numEditors == 1) {
-        document.body.classList.add('editMode');
+        /* Disable the toolbar elements. */
+        document.getElementById('wipeUserlistButton').setAttribute('disabled', '');
+        document.getElementById('copyContentButton').setAttribute('disabled', '');
+        document.getElementById('refreshContentButton').setAttribute('disabled', '');
+        document.getElementById('settingsButton').setAttribute('disabled', '');
+        document.getElementById('gameMenu').setAttribute('disabled', '');
+        document.getElementById('updateMasterlistButton').setAttribute('disabled', '');
+        document.getElementById('sortButton').setAttribute('disabled', '');
     }
     document.body.setAttribute('data-editors', numEditors);
 }
@@ -1102,7 +1109,14 @@ function handleEditorClose(evt) {
     --numEditors;
 
     if (numEditors == 0) {
-        document.body.classList.remove('editMode');
+        /* Re-enable toolbar elements. */
+        document.getElementById('wipeUserlistButton').removeAttribute('disabled');
+        document.getElementById('copyContentButton').removeAttribute('disabled');
+        document.getElementById('refreshContentButton').removeAttribute('disabled');
+        document.getElementById('settingsButton').removeAttribute('disabled');
+        document.getElementById('gameMenu').removeAttribute('disabled');
+        document.getElementById('updateMasterlistButton').removeAttribute('disabled');
+        document.getElementById('sortButton').removeAttribute('disabled');
     }
     document.body.setAttribute('data-editors', numEditors);
 }
