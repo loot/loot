@@ -162,6 +162,8 @@ loot-clear-metadata
 
         observe: {
             'data.crc': 'onCrcChange',
+            'data.tags': 'onTagsChange',
+            'data.messages': 'onMessagesChange'
         },
 
         attached: function() {
@@ -196,33 +198,49 @@ loot-clear-metadata
             this.shadowRoot.getElementById('editor').data = this.data;
             if (newValue != undefined) {
                 /* Also initialise the non-simple-string data. */
+                this.onCrcChange();
+                this.onTagsChange();
+                this.onMessagesChange();
+            }
+        },
 
-                /* CRC */
-                this.getElementsByClassName('crc')[0].textContent = newValue.getCrcString();
+        onCrcChange: function(oldValue, newValue) {
+            if (this.data) {
+                this.getElementsByClassName('crc')[0].textContent = this.data.getCrcString();
+            } else {
+                this.getElementsByClassName('crc')[0].textContent = '';
+            }
+        },
 
-                /* Bash Tags */
-                var tags = newValue.getTagStrings();
-                this.getElementsByClassName('tag add')[0].textContent = tags.added;
-                this.getElementsByClassName('tag add')[0].classList.toggle('hidden', tags.added.length == 0);
-                this.getElementsByClassName('tag remove')[0].textContent = tags.removed;
-                this.getElementsByClassName('tag remove')[0].classList.toggle('hidden', tags.removed.length == 0);
+        onTagsChange: function(oldValue, newValue) {
+            var tags;
+            if (this.data) {
+                tags = this.data.getTagStrings();
+            } else {
+                tags = {
+                    added: [],
+                    removed: []
+                };
+            }
+            this.getElementsByClassName('tag add')[0].textContent = tags.added;
+            this.getElementsByClassName('tag add')[0].classList.toggle('hidden', tags.added.length == 0);
+            this.getElementsByClassName('tag remove')[0].textContent = tags.removed;
+            this.getElementsByClassName('tag remove')[0].classList.toggle('hidden', tags.removed.length == 0);
+        },
 
-                /* Messages */
-                /* First clear any existing messages. */
-                var messageUL = this.getElementsByTagName('ul')[0];
-                while(messageUL.firstElementChild) {
-                    messageUL.removeChild(messageUL.firstElementChild);
-                }
-                var messages = newValue.getUIMessages();
+        onMessagesChange: function(oldValue, newValue) {
+            /* First clear any existing messages. */
+            var messageUL = this.getElementsByTagName('ul')[0];
+            while(messageUL.firstElementChild) {
+                messageUL.removeChild(messageUL.firstElementChild);
+            }
+            if (this.data) {
+                var messages = this.data.getUIMessages();
                 for (var i = 0; i < messages.length; ++i) {
                     messageUL.appendChild(messages[i]);
                 }
                 messageUL.classList.toggle('hidden', messages.length == 0);
             }
-        },
-
-        onCrcChange: function(oldValue, newValue) {
-            this.getElementsByClassName('crc')[0].textContent = this.data.getCrcString();
         },
 
         getName: function() {
