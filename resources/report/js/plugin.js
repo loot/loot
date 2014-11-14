@@ -41,6 +41,8 @@ function Plugin(obj) {
     this.isDirty = obj.isDirty;
 
     this.id = this.name.replace(/\s+/g, '');
+    this.isMenuOpen = false;
+    this.isEditorOpen = false;
 
     /* Converts between the LOOT metadata object for tags, and their
        editor row representation. */
