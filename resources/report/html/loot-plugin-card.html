@@ -172,6 +172,8 @@ loot-clear-metadata
             this.shadowRoot.getElementById('copyMetadata').addEventListener('click', this.onCopyMetadata, false);
             this.shadowRoot.getElementById('clearMetadata').addEventListener('click', this.onClearMetadata, false);
 
+            this.addEventListener('transitionend', this.onFlipEnd, false);
+
             /* Because of the 3D flip effect used when accessing the editor,
                plugin menus get hidden underneath later plugin cards unless
                those cards have a lower z-index than the card the menu is part
@@ -247,6 +249,17 @@ loot-clear-metadata
             return this.getElementsByTagName('h1')[0].textContent;
         },
 
+        onFlipEnd: function(evt) {
+            /* Re-calculate tooltip positions, since the flip animation tends to mess with them. */
+            this.shadowRoot.getElementById('activeTick').setPosition();
+            this.shadowRoot.getElementById('dummyPlugin').setPosition();
+            this.shadowRoot.getElementById('hasUserEdits').setPosition();
+            this.shadowRoot.getElementById('loadsBSA').setPosition();
+
+            /* Also re-calculate editor tooltip positions. */
+            this.shadowRoot.getElementById('editor').setTooltipPositions();
+        },
+
         onShowEditor: function(evt) {
             var card = evt.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentNode.host;
 
@@ -254,6 +267,10 @@ loot-clear-metadata
             card.dispatchEvent(new CustomEvent('loot-editor-open', {
                 bubbles: true,
             }));
+        },
+
+        readFromEditor: function(oldData) {
+            return this.shadowRoot.getElementById('editor').readFromEditor(oldData);
         },
 
         deactivateConflictFilter: function() {

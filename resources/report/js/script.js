@@ -1067,28 +1067,24 @@ function handleEditorClose(evt) {
            changed, and update any UI elements necessary. Offload the
            majority of the work to the C++ side of things. */
 
-        /* Find the plugin object. */
-        var index;
-        for (var i = 0; i < loot.game.plugins.length; ++i) {
-            if (loot.game.plugins[i].id == evt.target.id) {
-                index = i;
-                break;
-            }
-        }
+        var edits = evt.target.readFromEditor(evt.target.data);
 
         var request = JSON.stringify({
             name: 'editorClosed',
             args: [
-                evt.target.readFromEditor(loot.game.plugins[index])
+                edits
             ]
         });
         loot.query(request).then(JSON.parse).then(function(result){
             if (result) {
-                loot.game.plugins[index].modPriority = result.modPriority;
-                loot.game.plugins[index].isGlobalPriority = result.isGlobalPriority;
-                loot.game.plugins[index].messages = result.messages;
-                loot.game.plugins[index].tags = result.tags;
-                loot.game.plugins[index].isDirty = result.isDirty;
+                evt.target.data.modPriority = result.modPriority;
+                evt.target.data.isGlobalPriority = result.isGlobalPriority;
+                evt.target.data.messages = result.messages;
+                evt.target.data.tags = result.tags;
+                evt.target.data.isDirty = result.isDirty;
+
+                evt.target.data.userlist = edits.userlist;
+                delete evt.target.data.editor;
             }
         }).catch(processCefError);
     }
@@ -1172,9 +1168,6 @@ function handleClearMetadata(evt) {
                             loot.game.plugins[i].messages = result.messages;
                             loot.game.plugins[i].tags = result.tags;
                             loot.game.plugins[i].isDirty = result.isDirty;
-
-                            /* Also update the card content. */
-                            loot.game.plugins[i].card.setEditorData(loot.game.plugins[i]);
 
                             break;
                         }
@@ -1462,8 +1455,6 @@ function onFocus(evt) {
             }
             if (!foundPlugin) {
                 /* Remove plugin. */
-                loot.game.plugins[i].card.parentElement.removeChild(loot.game.plugins[i].card);
-                loot.game.plugins[i].li.parentElement.removeChild(loot.game.plugins[i].li);
                 loot.game.plugins.splice(i, 1);
             } else {
                 ++i;

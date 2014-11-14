@@ -120,6 +120,9 @@ loot-editor-close
         main {
             padding: 1em;
         }
+        main > core-tooltip, main > paper-checkbox {
+            display: table;
+        }
         </style>
         <core-toolbar>
             <core-tooltip id="activeTick" label="Active Plugin">
@@ -143,7 +146,7 @@ loot-editor-close
             <div horizontal layout center>
                 <div>Priority Value</div>
                 <paper-input-decorator>
-                    <input id="priorityValue" is="core-input" type="number" max="999999" min="-999999" step="1" value="{{data.modPriority}}" preventInvalidInput>
+                    <input id="priorityValue" is="core-input" type="number" max="999999" min="-999999" step="1" preventInvalidInput>
                 </paper-input-decorator>
             </div>
             <div id="tableTabs">
@@ -252,6 +255,17 @@ loot-editor-close
             }
         },
 
+        dataChanged: function(oldValue, newValue) {
+            /* Record the current editor data. This is only strictly necessary
+               if the editor is currently open, but editor state isn't yet recorded. */
+            if (oldValue) {
+                oldValue.editor = this.readFromEditor(oldValue);
+            }
+
+            /* Set the new editor data. */
+            this.setEditorData(newValue);
+        },
+
         readFromEditor: function(oldData) {
             /* Need to turn all the editor controls' values into data to
                process. The control values can be compared with the existing
@@ -259,68 +273,66 @@ loot-editor-close
                the tables can be ignored because they're immutable. */
 
             var plugin = {
-                name: this.getElementsByTagName('h1')[0].textContent,
+                name: this.shadowRoot.getElementsByTagName('h1')[0].textContent,
                 userlist: {},
             };
 
-            if (oldData.id == this.id) {
+            /* If either of the priority values have been changed, the
+               base priority value they're derived from will have
+               changed, so record both. */
+            if (this.shadowRoot.getElementById('globalPriority').checked != oldData.isGlobalPriority
+                || this.shadowRoot.getElementById('priorityValue').value != oldData.modPriority) {
+                plugin.isGlobalPriority = this.shadowRoot.getElementById('globalPriority').checked;
+                plugin.modPriority = this.shadowRoot.getElementById('priorityValue').value;
+            }
 
-                /* If either of the priority values have been changed, the
-                   base priority value they're derived from will have
-                   changed, so record both. */
-                if (this.shadowRoot.getElementById('globalPriority').checked != oldData.isGlobalPriority
-                    || this.shadowRoot.getElementById('priorityValue').value != oldData.modPriority) {
-                    plugin.isGlobalPriority = this.shadowRoot.getElementById('globalPriority').checked;
-                    plugin.modPriority = this.shadowRoot.getElementById('priorityValue').value;
-                }
+            plugin.userlist.enabled = this.shadowRoot.getElementById('enableEdits').checked;
 
-                plugin.userlist.enabled = this.shadowRoot.getElementById('enableEdits').checked;
-
-                var tables = this.shadowRoot.getElementsByTagName('table');
-                for (var j = 0; j < tables.length; ++j) {
-                    var rowsData = tables[j].getRowsData(true);
-                    if (rowsData.length > 0) {
-                        if (tables[j].id == 'loadAfter') {
-                            plugin.userlist.after = rowsData;
-                        } else if (tables[j].id == 'req') {
-                            plugin.userlist.req = rowsData;
-                        } else if (tables[j].id == 'inc') {
-                            plugin.userlist.inc = rowsData;
-                        } else if (tables[j].id == 'message') {
-                            rowsData.forEach(function(data){
-                                data.content = [{
-                                    str: data.content,
-                                    lang: data.language
-                                }]
-                                delete data.language;
-                            });
-                            plugin.userlist.msg = rowsData;
-                        } else if (tables[j].id == 'tags') {
-                            rowsData.forEach(function(data){
-                                data = oldData.convTagObj(data);
-                            });
-                            plugin.userlist.tag = rowsData;
-                        } else if (tables[j].id == 'dirty') {
-                            rowsData.forEach(function(data){
-                                data.crc = parseInt(data.crc, 16);
-                            });
-                            plugin.userlist.dirty = rowsData;
-                        } else if (tables[j].id == 'locations') {
-                            rowsData.forEach(function(data){
-                                /* User metadata can only specify one version, but it should be a list. */
-                                if (data.ver.length > 0) {
-                                    data.ver = [
-                                        data.ver
-                                    ];
-                                } else {
-                                    delete data.ver;
-                                }
-                            });
-                            plugin.userlist.url = rowsData;
-                        }
+            var tables = this.shadowRoot.getElementsByTagName('table');
+            for (var j = 0; j < tables.length; ++j) {
+                var rowsData = tables[j].getRowsData(true);
+                if (rowsData.length > 0) {
+                    if (tables[j].id == 'loadAfter') {
+                        plugin.userlist.after = rowsData;
+                    } else if (tables[j].id == 'req') {
+                        plugin.userlist.req = rowsData;
+                    } else if (tables[j].id == 'inc') {
+                        plugin.userlist.inc = rowsData;
+                    } else if (tables[j].id == 'message') {
+                        rowsData.forEach(function(data){
+                            data.content = [{
+                                str: data.content,
+                                lang: data.language
+                            }]
+                            delete data.language;
+                        });
+                        plugin.userlist.msg = rowsData;
+                    } else if (tables[j].id == 'tags') {
+                        rowsData.forEach(function(data){
+                            data = oldData.convTagObj(data);
+                        });
+                        plugin.userlist.tag = rowsData;
+                    } else if (tables[j].id == 'dirty') {
+                        rowsData.forEach(function(data){
+                            data.crc = parseInt(data.crc, 16);
+                        });
+                        plugin.userlist.dirty = rowsData;
+                    } else if (tables[j].id == 'locations') {
+                        rowsData.forEach(function(data){
+                            /* User metadata can only specify one version, but it should be a list. */
+                            if (data.ver.length > 0) {
+                                data.ver = [
+                                    data.ver
+                                ];
+                            } else {
+                                delete data.ver;
+                            }
+                        });
+                        plugin.userlist.url = rowsData;
                     }
                 }
             }
+
             return plugin;
         },
 
@@ -344,129 +356,137 @@ loot-editor-close
             }
         },
 
-        setEditorData: function(data) {
-            this.shadowRoot.getElementById('editor').getElementsByTagName('h1')[0].textContent = data.name;
-            this.shadowRoot.getElementById('editor').getElementsByClassName('version')[0].textContent = data.version;
-            if (data.crc != '0') {
-                this.shadowRoot.getElementById('editor').getElementsByClassName('crc')[0].textContent = data.crc.toString(16).toUpperCase();
+        setEditorData: function(newData) {
+            /* newData is a Plugin object reference. There may be existing
+               recorded data from a previous instance of the editor, so use
+               that for userlist and priority data if so. */
+            var tempData = {};
+            if (newData.editor) {
+                if (newData.editor.isGlobalPriority) {
+                    tempData.isGlobalPriority = newData.editor.isGlobalPriority;
+                }
+                if (newData.editor.modPriority) {
+                    tempData.modPriority = newData.editor.modPriority;
+                }
+                tempData.userlist = newData.editor.userlist;
+            } else {
+                tempData = {
+                    isGlobalPriority: newData.isGlobalPriority,
+                    modPriority: newData.modPriority,
+                    userlist: newData.userlist
+                }
             }
 
             /* Fill in the editor input values. */
-            if (data.userlist && !data.userlist.enabled) {
+            if (tempData.userlist && !tempData.userlist.enabled) {
                 this.shadowRoot.getElementById('enableEdits').checked = false;
             } else {
                 this.shadowRoot.getElementById('enableEdits').checked = true;
             }
-            this.shadowRoot.getElementById('globalPriority').checked = data.isGlobalPriority;
-            this.shadowRoot.getElementById('priorityValue').value = data.modPriority;
+            this.shadowRoot.getElementById('globalPriority').checked = tempData.isGlobalPriority;
+            this.shadowRoot.getElementById('priorityValue').value = tempData.modPriority;
 
-            /* Clear any existing editor table data. Don't remove the last row though,
-               that's the "add new row" one. */
+            /* Clear then fill in editor table data. Masterlist-originated
+               rows should have their contents made read-only. */
             var tables = this.shadowRoot.getElementsByTagName('table');
             for (var j = 0; j < tables.length; ++j) {
                 tables[j].clear();
-            }
-
-            /* Fill in editor table data. Masterlist-originated rows should have
-               their contents made read-only, and be unremovable. */
-            var tables = this.shadowRoot.getElementsByTagName('table');
-            for (var j = 0; j < tables.length; ++j) {
                 if (tables[j].id == 'loadAfter') {
 
-                    if (data.masterlist && data.masterlist.after) {
-                        data.masterlist.after.forEach(function(file) {
+                    if (newData.masterlist && newData.masterlist.after) {
+                        newData.masterlist.after.forEach(function(file) {
                             var row = tables[j].addRow(file);
                             tables[j].setReadOnly(row);
                         });
                     }
-                    if (data.userlist && data.userlist.after) {
-                        data.userlist.after.forEach(function(file) {
+                    if (tempData.userlist && tempData.userlist.after) {
+                        tempData.userlist.after.forEach(function(file) {
                             tables[j].addRow(file);
                         });
                     }
 
                 } else if (tables[j].id == 'req') {
 
-                    if (data.masterlist && data.masterlist.req) {
-                        data.masterlist.req.forEach(function(file) {
+                    if (newData.masterlist && newData.masterlist.req) {
+                        newData.masterlist.req.forEach(function(file) {
                             var row = tables[j].addRow(file);
                             tables[j].setReadOnly(row);
                         });
                     }
-                    if (data.userlist && data.userlist.req) {
-                        data.userlist.req.forEach(function(file) {
+                    if (tempData.userlist && tempData.userlist.req) {
+                        tempData.userlist.req.forEach(function(file) {
                             tables[j].addRow(file);
                         });
                     }
 
                 } else if (tables[j].id == 'inc') {
 
-                    if (data.masterlist && data.masterlist.inc) {
-                        data.masterlist.inc.forEach(function(file) {
+                    if (newData.masterlist && newData.masterlist.inc) {
+                        newData.masterlist.inc.forEach(function(file) {
                             var row = tables[j].addRow(file);
                             tables[j].setReadOnly(row);
                         });
                     }
-                    if (data.userlist && data.userlist.inc) {
-                        data.userlist.inc.forEach(function(file) {
+                    if (tempData.userlist && tempData.userlist.inc) {
+                        tempData.userlist.inc.forEach(function(file) {
                             tables[j].addRow(file);
                         });
                     }
 
                 } else if (tables[j].id == 'message') {
 
-                    if (data.masterlist && data.masterlist.msg) {
-                        data.masterlist.msg.forEach(function(message) {
-                            var data = {
+                    if (newData.masterlist && newData.masterlist.msg) {
+                        newData.masterlist.msg.forEach(function(message) {
+                            var messageData = {
                                 type: message.type,
                                 content: message.content[0].str,
                                 condition: message.condition,
                                 language: message.content[0].lang
                             };
-                            var row = tables[j].addRow(data);
+                            var row = tables[j].addRow(messageData);
                             tables[j].setReadOnly(row);
 
                         });
                     }
-                    if (data.userlist && data.userlist.msg) {
-                        data.userlist.msg.forEach(function(message) {
-                            var data = {
+                    if (tempData.userlist && tempData.userlist.msg) {
+                        tempData.userlist.msg.forEach(function(message) {
+                            var messageData = {
                                 type: message.type,
                                 content: message.content[0].str,
                                 condition: message.condition,
                                 language: message.content[0].lang
                             };
-                            tables[j].addRow(data);
+                            tables[j].addRow(messageData);
                         });
                     }
 
                 } else if (tables[j].id == 'tags') {
 
-                    if (data.masterlist && data.masterlist.tag) {
-                        data.masterlist.tag.forEach(function(tag) {
-                            var data = data.convTagObj(tag);
-                            var row = tables[j].addRow(data);
+                    if (newData.masterlist && newData.masterlist.tag) {
+                        newData.masterlist.tag.forEach(function(tag) {
+                            var tagData = newData.convTagObj(tag);
+                            var row = tables[j].addRow(tagData);
                             tables[j].setReadOnly(row);
-                        }, data);
+                        }, newData);
                     }
-                    if (data.userlist && data.userlist.tag) {
-                        data.userlist.tag.forEach(function(tag) {
-                            var data = data.convTagObj(tag);
-                            tables[j].addRow(data);
-                        }, data);
+                    if (tempData.userlist && tempData.userlist.tag) {
+                        tempData.userlist.tag.forEach(function(tag) {
+                            var tagData = tempData.convTagObj(tag);
+                            tables[j].addRow(tagData);
+                        }, tempData);
                     }
 
                 } else if (tables[j].id == 'dirty') {
 
-                    if (data.masterlist && data.masterlist.dirty) {
-                        data.masterlist.dirty.forEach(function(info) {
+                    if (newData.masterlist && newData.masterlist.dirty) {
+                        newData.masterlist.dirty.forEach(function(info) {
                             info.crc = info.crc.toString(16).toUpperCase();
                             var row = tables[j].addRow(info);
                             tables[j].setReadOnly(row);
                         });
                     }
-                    if (data.userlist && data.userlist.dirty) {
-                        data.userlist.dirty.forEach(function(info) {
+                    if (tempData.userlist && tempData.userlist.dirty) {
+                        tempData.userlist.dirty.forEach(function(info) {
                             info.crc = info.crc.toString(16).toUpperCase();
                             tables[j].addRow(info);
                         });
@@ -474,8 +494,8 @@ loot-editor-close
 
                 } else if (tables[j].id == 'locations') {
 
-                    if (data.masterlist && data.masterlist.url) {
-                        data.masterlist.url.forEach(function(location) {
+                    if (newData.masterlist && newData.masterlist.url) {
+                        newData.masterlist.url.forEach(function(location) {
                             var temp = location;
                             if (temp.ver) {
                                 temp.ver = temp.ver[0];
@@ -484,8 +504,8 @@ loot-editor-close
                             tables[j].setReadOnly(row);
                         });
                     }
-                    if (data.userlist && data.userlist.url) {
-                        data.userlist.url.forEach(function(location) {
+                    if (tempData.userlist && tempData.userlist.url) {
+                        tempData.userlist.url.forEach(function(location) {
                             var temp = location;
                             if (temp.ver) {
                                 temp.ver = temp.ver[0];
@@ -495,6 +515,13 @@ loot-editor-close
                     }
                 }
             }
+        },
+
+        setTooltipPositions: function() {
+            this.shadowRoot.getElementById('activeTick').setPosition();
+            this.shadowRoot.getElementById('dummyPlugin').setPosition();
+            this.shadowRoot.getElementById('loadsBSA').setPosition();
+            this.shadowRoot.getElementById('globalPriority').parentElement.setPosition();
         },
     });
     </script>
