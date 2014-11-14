@@ -531,12 +531,30 @@ function searchFilter(plugins) {
         var filteredPlugins = [];
         /* Check each plugin entry to see if the current search string exists in
            its name, version, crc, Bash Tag or message strings. */
-        for (var i = 0; i < plugins.length; ++i) {
-            if (plugins[i].name.toLowerCase().indexOf(search) != -1
-                || plugins[i].getCrcString().toLowerCase().indexOf(search) != -1) {
-                filteredPlugins.push(plugins[i]);
+        plugins.forEach(function(plugin){
+            if (plugin.name.toLowerCase().indexOf(search) != -1
+                || plugin.getCrcString().toLowerCase().indexOf(search) != -1
+                || plugin.version.toLowerCase().indexOf(search) != -1) {
+
+                filteredPlugins.push(plugin);
+                return;
             }
-        }
+
+            var tags = plugin.getTagStrings();
+            if (tags.added.toLowerCase().indexOf(search) != -1
+                || tags.removed.toLowerCase().indexOf(search) != -1) {
+
+                filteredPlugins.push(plugin);
+                return;
+            }
+
+            for (var i = 0; i < plugin.messages.length; ++i) {
+                if (plugin.messages[i].content[0].str.toLowerCase().indexOf(search) != -1) {
+                    filteredPlugins.push(plugin);
+                    return;
+                }
+            }
+        });
 
         return filteredPlugins;
     } else {
@@ -1005,8 +1023,9 @@ function showSettingsDialog(evt) {
 }
 
 function handleSearch(evt) {
-    document.getElementById('cardsNav').lastElementChild.data = searchFilter(loot.game.plugins);
-    document.getElementById('main').lastElementChild.data = searchFilter(loot.game.plugins);
+    var filtered = searchFilter(loot.game.plugins);
+    document.getElementById('cardsNav').lastElementChild.data = filtered;
+    document.getElementById('main').lastElementChild.data = filtered;
 }
 function focusSearch(evt) {
     if (evt.ctrlKey && evt.keyCode == 70) { //'f'
