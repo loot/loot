@@ -143,7 +143,7 @@ td paper-icon-button.hidden {
         getRowsData: {
             value: function(writableOnly) {
                 var writableRows = [];
-                var rows = this.tBodies[0].rows[0];
+                var rows = this.tBodies[0].rows;
 
                 for (var i = 0; i < rows.length; ++i) {
                     var trash = rows[i].getElementsByClassName('delete');
