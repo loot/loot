@@ -45,7 +45,8 @@ div[drawer] {
     z-index: 1;
 }
 #main {
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
     position: relative;
     z-index: 0;
 }

@@ -1037,6 +1037,9 @@ function handleEditorOpen(evt) {
         elements[i].addEventListener('dragstart', elements[i].handleDragStart, false);
     }
 
+    /* Now show editor. */
+    evt.target.classList.toggle('flip');
+
     /* Enable priority hover in plugins list and enable header
        buttons if this is the only editor instance. */
     var numEditors = 0;
@@ -1082,6 +1085,9 @@ function handleEditorClose(evt) {
             }
         }).catch(processCefError);
     }
+
+    /* Now hide editor. */
+    evt.target.classList.toggle('flip');
 
     /* Remove drag 'n' drop event handlers. */
     var elements = document.getElementById('cardsNav').getElementsByTagName('loot-plugin-item');
