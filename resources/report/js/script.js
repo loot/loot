@@ -1105,10 +1105,10 @@ function setupEventHandlers() {
     document.getElementById('hideVersionNumbers').addEventListener('change', toggleDisplayCSS, false);
     document.getElementById('hideCRCs').addEventListener('change', toggleDisplayCSS, false);
     document.getElementById('hideBashTags').addEventListener('change', toggleDisplayCSS, false);
-    document.getElementById('hideNotes').addEventListener('change', applyFilters, false);
-    document.getElementById('hideDoNotCleanMessages').addEventListener('change', applyFilters, false);
+    document.getElementById('hideNotes').addEventListener('change', setFilteredUIData, false);
+    document.getElementById('hideDoNotCleanMessages').addEventListener('change', setFilteredUIData, false);
     document.getElementById('hideInactivePluginMessages').addEventListener('change', applyFilters, false);
-    document.getElementById('hideAllPluginMessages').addEventListener('change', applyFilters, false);
+    document.getElementById('hideAllPluginMessages').addEventListener('change', setFilteredUIData, false);
     document.getElementById('hideMessagelessPlugins').addEventListener('change', setFilteredUIData, false);
     document.body.addEventListener('loot-filter-conflicts', handleConflictsFilter, false);
 
