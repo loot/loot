@@ -265,6 +265,9 @@ loot-editor-close
             if (newValue) {
                 /* Set the new editor data. */
                 this.setEditorData(newValue);
+                this.shadowRoot.getElementsByClassName('crc')[0].textContent = this.data.getCrcString();
+            } else {
+                this.shadowRoot.getElementsByClassName('crc')[0].textContent = '';
             }
         },
 
