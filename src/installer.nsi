@@ -323,18 +323,12 @@ FunctionEnd
         ;Install UI files.
         SetOutPath "$INSTDIR\resources\report"
         File "..\resources\report\index.html"
-        File "..\resources\report\bower_components\platform\platform.js"
-        File "..\resources\report\bower_components\polymer\polymer.js"
-        File "..\resources\report\bower_components\web-animations-js\web-animations.js"
-        File "..\resources\report\bower_components\requirejs\require.js"
         File "..\resources\report\bower_components\marked\lib\marked.js"
         File "..\resources\report\bower_components\Jed\jed.js"
         File "..\resources\report\js\jedGettextParser.js"
         File "..\resources\report\js\l10n.js"
         File "..\resources\report\js\plugin.js"
-        File "..\resources\report\js\script.js"
-        File "..\resources\report\css\style.css"
-        File "..\resources\report\css\overrides.css"
+        File "..\resources\report\js\filters.js"
 
         ;Install documentation images.
         SetOutPath "$INSTDIR\docs\images"
@@ -481,18 +475,12 @@ FunctionEnd
 
         ;Remove resource files.
         Delete "$INSTDIR\resources\report\index.html"
-        Delete "$INSTDIR\resources\report\bower_components\platform\platform.js"
-        Delete "$INSTDIR\resources\report\bower_components\polymer\polymer.js"
-        Delete "$INSTDIR\resources\report\bower_components\web-animations-js\web-animations.js"
-        Delete "$INSTDIR\resources\report\bower_components\requirejs\require.js"
         Delete "$INSTDIR\resources\report\bower_components\marked\lib\marked.js"
         Delete "$INSTDIR\resources\report\bower_components\Jed\jed.js"
         Delete "$INSTDIR\resources\report\js\jedGettextParser.js"
         Delete "$INSTDIR\resources\report\js\l10n.js"
         Delete "$INSTDIR\resources\report\js\plugin.js"
-        Delete "$INSTDIR\resources\report\js\script.js"
-        Delete "$INSTDIR\resources\report\css\style.css"
-        Delete "$INSTDIR\resources\report\css\overrides.css"
+        Delete "$INSTDIR\resources\report\js\filters.js"
         RMDir /r "$INSTDIR\resources\report"
 
         ;Remove language files.
