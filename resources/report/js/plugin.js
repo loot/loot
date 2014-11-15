@@ -41,6 +41,9 @@ function Plugin(obj) {
     this.isDirty = obj.isDirty;
 
     this.id = this.name.replace(/\s+/g, '');
+    this.isMenuOpen = false;
+    this.isEditorOpen = false;
+    this.isConflictFilterChecked = false;
 
     /* Converts between the LOOT metadata object for tags, and their
        editor row representation. */
@@ -63,7 +66,7 @@ function Plugin(obj) {
         return tag;
     }
 
-    Plugin.prototype.updateCardTags = function() {
+    Plugin.prototype.getTagStrings = function() {
         var tagsAdded = [];
         var tagsRemoved = [];
 
@@ -88,107 +91,50 @@ function Plugin(obj) {
             }
         }
 
-        if (tagsAdded.length != 0) {
-            this.card.getElementsByClassName('tag add')[0].textContent = tagsAdded.join(', ');
-            this.card.getElementsByClassName('tag add')[0].classList.toggle('hidden', false);
-        } else {
-            this.card.getElementsByClassName('tag add')[0].classList.toggle('hidden', true);
-        }
-        if (tagsRemoved.length != 0) {
-            this.card.getElementsByClassName('tag remove')[0].textContent = tagsRemoved.join(', ');
-            this.card.getElementsByClassName('tag remove')[0].classList.toggle('hidden', false);
-        } else {
-            this.card.getElementsByClassName('tag remove')[0].classList.toggle('hidden', true);
-        }
+        return {
+            added: tagsAdded.join(', '),
+            removed: tagsRemoved.join(', ')
+        };
     }
 
     Plugin.prototype.getPriorityString = function() {
         if (this.modPriority != 0) {
-            return 'Priority: ' + this.modPriority;
+            return this.modPriority.toString();
         } else {
             return '';
         }
     }
 
-    Plugin.prototype.updateCardMessages = function() {
-        var messageUL = this.card.getElementsByTagName('ul')[0];
-        /* First clear any existing messages. */
-        while(messageUL.firstElementChild) {
-            messageUL.removeChild(messageUL.firstElementChild);
+    Plugin.prototype.getCrcString = function() {
+        if (this.crc == 0) {
+            return '';
+        } else {
+            return this.crc.toString(16).toUpperCase();
         }
+    }
+
+    Plugin.prototype.getUIMessages = function() {
+        var uiMessages = [];
         /* Now add the new messages. */
         if (this.messages && this.messages.length != 0) {
-            this.messages.forEach(function(message) {
+            var messages = filters.applyMessageFilters(this.messages);
+            messages.forEach(function(message) {
                 var messageLi = document.createElement('li');
                 messageLi.className = message.type;
                 // Use the Marked library for Markdown formatting support.
                 messageLi.innerHTML = marked(message.content[0].str);
-                messageUL.appendChild(messageLi);
+                uiMessages.push(messageLi);
 
             });
-            this.card.getElementsByTagName('ul')[0].classList.toggle('hidden', false);
-        } else {
-            this.card.getElementsByTagName('ul')[0].classList.toggle('hidden', true);
-        }
-    }
-
-    Plugin.prototype.createCard = function() {
-        var card = document.createElement('loot-plugin-card');
-        this.card = card;
-
-        card.id = this.id;
-
-        card.setAttribute('data-active', this.isActive);
-        card.setAttribute('data-dummy', this.isDummy);
-        card.setAttribute('data-bsa', this.loadsBSA);
-        card.setAttribute('data-edits', this.userlist != undefined);
-
-        /* Fill in name, version, CRC. */
-        card.getElementsByTagName('h1')[0].textContent = this.name;
-        card.getElementsByClassName('version')[0].textContent = this.version;
-        if (this.crc != 0) {
-            card.getElementsByClassName('crc')[0].textContent = this.crc.toString(16).toUpperCase();
         }
 
-        /* Fill in Bash Tag suggestions. */
-        this.updateCardTags();
-
-        /* Fill in messages. */
-        this.updateCardMessages();
-
-        document.getElementById('main').appendChild(card);
-    }
-
-    Plugin.prototype.createListItem = function() {
-        var li = document.createElement('loot-plugin-item');
-        this.li = li;
-
-        li.label = this.name;
-        li.setLink('#' + this.id);
-        li.setPriority(this.getPriorityString());
-
-        li.setAttribute('data-dummy', this.isDummy);
-        li.setAttribute('data-bsa', this.loadsBSA);
-        li.setAttribute('data-edits', this.userlist != undefined);
-        li.setAttribute('data-global-priority', this.isGlobalPriority);
-
-        document.getElementById('cardsNav').appendChild(li);
+        return uiMessages;
     }
 
     Plugin.prototype.observer = function(changes) {
         changes.forEach(function(change) {
-            if (change.name == 'userlist') {
-                change.object.li.setAttribute('data-edits', change.object[change.name] != undefined);
-                change.object.card.setAttribute('data-edits', change.object[change.name] != undefined);
-            } else if (change.name == 'modPriority') {
-                change.object.li.setPriority(this.getPriorityString());
-                change.object.card.shadowRoot.getElementById('priorityValue').value = change.object[change.name];
-            } else if (change.name == 'isGlobalPriority') {
-                change.object.li.setAttribute('data-global-priority', change.object[change.name]);
-            } else if (change.name == 'messages') {
-                change.object.updateCardMessages();
-                /* For messages, the card's messages need updating,
-                   as do the message counts. */
+            if (change.name == 'messages') {
+                /* Update the message counts. */
                 var oldTotal = 0;
                 var newTotal = 0;
                 var oldWarns = 0;
@@ -223,27 +169,17 @@ function Plugin(obj) {
                 document.getElementById('totalMessageNo').textContent = parseInt(document.getElementById('totalMessageNo').textContent, 10) + newTotal - oldTotal;
                 document.getElementById('totalWarningNo').textContent = parseInt(document.getElementById('totalWarningNo').textContent, 10) + newWarns - oldWarns;
                 document.getElementById('totalErrorNo').textContent = parseInt(document.getElementById('totalErrorNo').textContent, 10) + newErrs - oldErrs;
-            } else if (change.name == 'tags') {
-                change.object.updateCardTags();
             } else if (change.name == 'isDirty') {
+                /* Update dirty counts. */
                 if (change.object[change.name]) {
                     document.getElementById('dirtyPluginNo').textContent = ++parseInt(document.getElementById('dirtyPluginNo').textContent, 10);
                 } else {
                     document.getElementById('dirtyPluginNo').textContent = --parseInt(document.getElementById('dirtyPluginNo').textContent, 10);
                 }
-            } else if (change.name == 'crc') {
-                if (change.object[change.name] != 0) {
-                    change.object.card.getElementsByClassName('crc')[0].textContent = change.object[change.name].toString(16).toUpperCase();
-                }
-            } else if (change.name == 'isDummy') {
-                change.object.li.setAttribute('data-dummy', change.object[change.name]);
-                change.object.card.setAttribute('data-dummy', change.object[change.name]);
             }
         });
     }
 
-    this.createCard();
-    this.createListItem();
     Object.observe(this, this.observer);
 }
 

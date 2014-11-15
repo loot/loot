@@ -66,11 +66,9 @@ namespace loot {
                                 YAML::Node& request,
                                 CefRefPtr<Callback> callback);
 
-        void Find(CefRefPtr<CefBrowser> browser, const std::string& search, bool findNext);
         void GetConflictingPlugins(const std::string& pluginName, CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback);
         void CopyMetadata(const std::string& pluginName);
         std::string ClearPluginMetadata(const std::string& pluginName);
-        void SaveFilterState(const std::string& filterId, const std::string& value);
         std::string ApplyUserEdits(const YAML::Node& pluginMetadata);
 
         YAML::Node GenerateDerivedMetadata(const std::string& pluginName);

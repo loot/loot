@@ -1,0 +1,535 @@
+<!-- Fires the following events:
+
+loot-editor-close
+  detail: boolean
+    True if the editor was closed using the Apply button.
+
+--->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/core-toolbar/core-toolbar.html">
+<link rel="import" href="../bower_components/core-tooltip/core-tooltip.html">
+<link rel="import" href="../bower_components/core-icon/core-icon.html">
+<link rel="import" href="../bower_components/core-icons/core-icons.html">
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-input/paper-input-decorator.html">
+<link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/core-selector/core-selector.html">
+
+<link rel="import" href="editable-table.html">
+
+<polymer-element name="loot-plugin-editor" attributes="{{data}}">
+    <template>
+        <style>
+        /* Icon styling. */
+        :host-context(loot-plugin-card[data-active=false]) #activeTick {
+            visibility: hidden;
+        }
+        :host-context(loot-plugin-card[data-bsa=false]) #loadsBSA {
+            display: none;
+        }
+        :host-context(loot-plugin-card[data-dummy=false]) #dummyPlugin {
+            display: none;
+        }
+        #activeTick {
+            color: green;
+        }
+
+        /* Content styling. */
+        h1 {
+            font-weight: normal;
+            font-size: 1em;
+        }
+        .version {
+            display: inline-block;
+            margin-left: 1em;
+            color:#6394F8;
+        }
+        .crc {
+            display: inline-block;
+            margin-left: 1em;
+            color:#BC8923;
+        }
+        .hidden {
+            display: none;
+        }
+
+        /* Editor input styling. */
+        #editor > div > paper-checkbox, #editor > div > core-tooltip {
+            display: table;
+        }
+        #enableEdits {
+            margin-bottom: 1em;
+        }
+        #priorityValue {
+            margin-left: 0.5em;
+        }
+        input[readonly] {
+            border: none;
+            -webkit-user-select: none;
+        }
+        input:invalid {
+            background-color: pink;
+            color: white;
+        }
+
+        /* Table styling. */
+        table {
+            margin: 0;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        table:not(.core-selected) {
+            display: none;
+        }
+        td input {
+            width: 100%;
+            text-overflow: ellipsis;
+        }
+        td:last-child {
+            cursor: pointer;
+        }
+        td:last-child:hover {
+            color: red;
+        }
+        td, th {
+            vertical-align: top;
+            text-align: left;
+            padding: 0.5em;
+        }
+        th {
+            border-bottom: 1px black solid;
+        }
+        tbody tr:last-child {
+            cursor: pointer;
+            color: grey;
+        }
+        tbody tr:last-child:hover {
+            color: black;
+        }
+
+        /* Misc Styling. */
+        core-toolbar {
+            background: white;
+        }
+        #buttons {
+            text-align: right;
+        }
+        main {
+            padding: 1em;
+        }
+        main > core-tooltip, main > paper-checkbox {
+            display: table;
+        }
+        </style>
+        <core-toolbar>
+            <core-tooltip id="activeTick" label="Active Plugin">
+                <core-icon icon="check"></core-icon>
+            </core-tooltip>
+            <h1>{{data.name}}</h1>
+            <span class="version">{{data.version}}</span>
+            <span class="crc" flex>{{data.crc}}</span>
+            <core-tooltip id="dummyPlugin" label="Dummy Plugin">
+                <core-icon icon="visibility-off"></core-icon>
+            </core-tooltip>
+            <core-tooltip id="loadsBSA" label="Loads BSA">
+                <core-icon icon="attachment"></core-icon>
+            </core-tooltip>
+        </core-toolbar>
+        <main>
+            <paper-checkbox id="enableEdits" label="Enable Edits"></paper-checkbox>
+            <core-tooltip label="Global priorities are compared against all other plugins. Normal priorities are compared against only conflicting plugins." position="right">
+                <paper-checkbox id="globalPriority" label="Global Priority"></paper-checkbox>
+            </core-tooltip>
+            <div horizontal layout center>
+                <div>Priority Value</div>
+                <paper-input-decorator>
+                    <input id="priorityValue" is="core-input" type="number" max="999999" min="-999999" step="1" preventInvalidInput>
+                </paper-input-decorator>
+            </div>
+            <div id="tableTabs">
+                <paper-tabs selected="loadAfter" valueattr="data-for" scrollable>
+                    <paper-tab data-for="loadAfter">Load After</paper-tab>
+                    <paper-tab data-for="req">Requirements</paper-tab>
+                    <paper-tab data-for="inc">Incompatibilities</paper-tab>
+                    <paper-tab data-for="message">Messages</paper-tab>
+                    <paper-tab data-for="tags">Bash Tags</paper-tab>
+                    <paper-tab data-for="dirty">Dirty Info</paper-tab>
+                    <paper-tab data-for="locations">Locations</paper-tab>
+                </paper-tabs>
+                <core-selector selected="loadAfter" valueattr="id">
+                    <table is="editable-table" id="loadAfter" data-template="fileRow">
+                        <thead>
+                            <tr><th>Filename</th><th>Display Name</th><th>Condition</th><th></th></tr>
+                        </thead>
+                        <tbody>
+                            <!-- File rows go here. -->
+                            <tr><td colspan="4">Add new row...</td><td></td></tr>
+                        </tbody>
+                    </table>
+                    <table is="editable-table" id="req" data-template="fileRow">
+                        <thead>
+                            <tr><th>Filename</th><th>Display Name</th><th>Condition</th><th></th></tr>
+                        </thead>
+                        <tbody>
+                            <!-- File rows go here. -->
+                            <tr><td colspan="4">Add new row...</td><td></td></tr>
+                        </tbody>
+                    </table>
+                    <table is="editable-table" id="inc" data-template="fileRow">
+                        <thead>
+                            <tr><th>Filename</th><th>Display Name</th><th>Condition</th><th></th></tr>
+                        </thead>
+                        <tbody>
+                            <!-- File rows go here. -->
+                            <tr><td colspan="4">Add new row...</td><td></td></tr>
+                        </tbody>
+                    </table>
+                    <table is="editable-table" id="message" data-template="messageRow">
+                        <thead>
+                            <tr><th>Type</th><th>Content</th><th>Condition</th><th>Language</th><th></th></tr>
+                        </thead>
+                        <tbody>
+                            <!-- Message rows go here. -->
+                            <tr><td colspan="4">Add new row...</td><td></td></tr>
+                        </tbody>
+                    </table>
+                    <table is="editable-table" id="tags" data-template="tagRow">
+                        <thead>
+                            <tr><th>Add/Remove</th><th>Bash Tag</th><th>Condition</th><th></th></tr>
+                        </thead>
+                        <tbody>
+                            <!-- Bash Tag rows go here. -->
+                            <tr><td colspan="4">Add new row...</td><td></td></tr>
+                        </tbody>
+                    </table>
+                    <table is="editable-table" id="dirty" data-template="dirtyInfoRow">
+                        <thead>
+                            <tr><th>CRC</th><th>ITM Count</th><th>Deleted References</th><th>Deleted Navmeshes</th><th>Cleaning Utility</th><th></th></tr>
+                        </thead>
+                        <tbody>
+                            <!-- Dirty info rows go here. -->
+                            <tr><td colspan="4">Add new row...</td><td></td></tr>
+                        </tbody>
+                    </table>
+                    <table is="editable-table" id="locations" data-template="locationRow">
+                        <thead>
+                            <tr><th>URL</th><th>Version</th><th></th></tr>
+                        </thead>
+                        <tbody>
+                            <!-- Location rows go here. -->
+                            <tr><td colspan="3">Add new row...</td><td></td></tr>
+                        </tbody>
+                    </table>
+                </core-selector>
+            </div>
+            <div id="buttons">
+                <paper-button id="accept">Apply</paper-button>
+                <paper-button id="cancel">Cancel</paper-button>
+            </div>
+        </main>
+    </template>
+    <script>
+    Polymer({
+        attached: function() {
+            this.shadowRoot.getElementById('tableTabs').firstElementChild.addEventListener('core-select', this.onTabSelect, false);
+
+            this.shadowRoot.getElementById('accept').addEventListener('click', this.onHideEditor, false);
+            this.shadowRoot.getElementById('cancel').addEventListener('click', this.onHideEditor, false);
+
+            /* Need to set the table tab height explicitly, so set it to the tallest table. */
+        },
+
+        detached: function() {
+            this.shadowRoot.getElementById('tableTabs').firstElementChild.removeEventListener('core-select', this.onTabSelect, false);
+
+            this.shadowRoot.getElementById('accept').removeEventListener('click', this.onHideEditor, false);
+            this.shadowRoot.getElementById('cancel').removeEventListener('click', this.onHideEditor, false);
+        },
+
+        onTabSelect: function(evt) {
+            if (evt.detail.isSelected) {
+                evt.target.nextElementSibling.selected = evt.target.selected;
+            }
+        },
+
+        dataChanged: function(oldValue, newValue) {
+            /* Record the current editor data. This is only strictly necessary
+               if the editor is currently open, but editor state isn't yet recorded. */
+            if (oldValue) {
+                oldValue.editor = this.readFromEditor(oldValue);
+            }
+
+            if (newValue) {
+                /* Set the new editor data. */
+                this.setEditorData(newValue);
+                this.shadowRoot.getElementsByClassName('crc')[0].textContent = this.data.getCrcString();
+            } else {
+                this.shadowRoot.getElementsByClassName('crc')[0].textContent = '';
+            }
+        },
+
+        readFromEditor: function(oldData) {
+            /* Need to turn all the editor controls' values into data to
+               process. The control values can be compared with the existing
+               values to determine what's been changed, and masterlist rows in
+               the tables can be ignored because they're immutable. */
+
+            var plugin = {
+                name: this.shadowRoot.getElementsByTagName('h1')[0].textContent,
+                userlist: {},
+            };
+
+            /* If either of the priority values have been changed, the
+               base priority value they're derived from will have
+               changed, so record both. */
+            if (this.shadowRoot.getElementById('globalPriority').checked != oldData.isGlobalPriority
+                || this.shadowRoot.getElementById('priorityValue').value != oldData.modPriority) {
+                plugin.isGlobalPriority = this.shadowRoot.getElementById('globalPriority').checked;
+                plugin.modPriority = this.shadowRoot.getElementById('priorityValue').value;
+            }
+
+            plugin.userlist.enabled = this.shadowRoot.getElementById('enableEdits').checked;
+
+            var tables = this.shadowRoot.getElementsByTagName('table');
+            for (var j = 0; j < tables.length; ++j) {
+                var rowsData = tables[j].getRowsData(true);
+                if (rowsData.length > 0) {
+                    if (tables[j].id == 'loadAfter') {
+                        plugin.userlist.after = rowsData;
+                    } else if (tables[j].id == 'req') {
+                        plugin.userlist.req = rowsData;
+                    } else if (tables[j].id == 'inc') {
+                        plugin.userlist.inc = rowsData;
+                    } else if (tables[j].id == 'message') {
+                        rowsData.forEach(function(data){
+                            data.content = [{
+                                str: data.content,
+                                lang: data.language
+                            }]
+                            delete data.language;
+                        });
+                        plugin.userlist.msg = rowsData;
+                    } else if (tables[j].id == 'tags') {
+                        rowsData.forEach(function(data){
+                            data = oldData.convTagObj(data);
+                        });
+                        plugin.userlist.tag = rowsData;
+                    } else if (tables[j].id == 'dirty') {
+                        rowsData.forEach(function(data){
+                            data.crc = parseInt(data.crc, 16);
+                        });
+                        plugin.userlist.dirty = rowsData;
+                    } else if (tables[j].id == 'locations') {
+                        rowsData.forEach(function(data){
+                            /* User metadata can only specify one version, but it should be a list. */
+                            if (data.ver.length > 0) {
+                                data.ver = [
+                                    data.ver
+                                ];
+                            } else {
+                                delete data.ver;
+                            }
+                        });
+                        plugin.userlist.url = rowsData;
+                    }
+                }
+            }
+
+            return plugin;
+        },
+
+        onHideEditor: function(evt) {
+            /* First validate table inputs. */
+            var isValid = true;
+            var inputs = evt.target.parentElement.parentElement.getElementsByTagName('input');
+            for (var i = 0; i < inputs.length; ++i) {
+                if (!inputs[i].checkValidity()) {
+                    isValid = false;
+                    console.log(inputs[i]);
+                }
+            }
+
+            if (isValid || evt.target.id != 'accept') {
+                /* Fire the close event, saying whether or not to save data. */
+                evt.target.dispatchEvent(new CustomEvent('loot-editor-close', {
+                    bubbles: true,
+                    detail: (evt.target.id == 'accept'),
+                }));
+
+                evt.target.parentElement.parentElement.parentNode.host.data.isEditorOpen = false;
+            }
+        },
+
+        setEditorData: function(newData) {
+            /* newData is a Plugin object reference. There may be existing
+               recorded data from a previous instance of the editor, so use
+               that for userlist and priority data if so. */
+            var tempData = {};
+            if (newData.editor) {
+                if (newData.editor.isGlobalPriority) {
+                    tempData.isGlobalPriority = newData.editor.isGlobalPriority;
+                }
+                if (newData.editor.modPriority) {
+                    tempData.modPriority = newData.editor.modPriority;
+                }
+                tempData.userlist = newData.editor.userlist;
+            } else {
+                tempData = {
+                    isGlobalPriority: newData.isGlobalPriority,
+                    modPriority: newData.modPriority,
+                    userlist: newData.userlist
+                }
+            }
+
+            /* Fill in the editor input values. */
+            if (tempData.userlist && !tempData.userlist.enabled) {
+                this.shadowRoot.getElementById('enableEdits').checked = false;
+            } else {
+                this.shadowRoot.getElementById('enableEdits').checked = true;
+            }
+            this.shadowRoot.getElementById('globalPriority').checked = tempData.isGlobalPriority;
+            this.shadowRoot.getElementById('priorityValue').value = tempData.modPriority;
+
+            /* Clear then fill in editor table data. Masterlist-originated
+               rows should have their contents made read-only. */
+            var tables = this.shadowRoot.getElementsByTagName('table');
+            for (var j = 0; j < tables.length; ++j) {
+                tables[j].clear();
+                if (tables[j].id == 'loadAfter') {
+
+                    if (newData.masterlist && newData.masterlist.after) {
+                        newData.masterlist.after.forEach(function(file) {
+                            var row = tables[j].addRow(file);
+                            tables[j].setReadOnly(row);
+                        });
+                    }
+                    if (tempData.userlist && tempData.userlist.after) {
+                        tempData.userlist.after.forEach(function(file) {
+                            tables[j].addRow(file);
+                        });
+                    }
+
+                } else if (tables[j].id == 'req') {
+
+                    if (newData.masterlist && newData.masterlist.req) {
+                        newData.masterlist.req.forEach(function(file) {
+                            var row = tables[j].addRow(file);
+                            tables[j].setReadOnly(row);
+                        });
+                    }
+                    if (tempData.userlist && tempData.userlist.req) {
+                        tempData.userlist.req.forEach(function(file) {
+                            tables[j].addRow(file);
+                        });
+                    }
+
+                } else if (tables[j].id == 'inc') {
+
+                    if (newData.masterlist && newData.masterlist.inc) {
+                        newData.masterlist.inc.forEach(function(file) {
+                            var row = tables[j].addRow(file);
+                            tables[j].setReadOnly(row);
+                        });
+                    }
+                    if (tempData.userlist && tempData.userlist.inc) {
+                        tempData.userlist.inc.forEach(function(file) {
+                            tables[j].addRow(file);
+                        });
+                    }
+
+                } else if (tables[j].id == 'message') {
+
+                    if (newData.masterlist && newData.masterlist.msg) {
+                        newData.masterlist.msg.forEach(function(message) {
+                            var messageData = {
+                                type: message.type,
+                                content: message.content[0].str,
+                                condition: message.condition,
+                                language: message.content[0].lang
+                            };
+                            var row = tables[j].addRow(messageData);
+                            tables[j].setReadOnly(row);
+
+                        });
+                    }
+                    if (tempData.userlist && tempData.userlist.msg) {
+                        tempData.userlist.msg.forEach(function(message) {
+                            var messageData = {
+                                type: message.type,
+                                content: message.content[0].str,
+                                condition: message.condition,
+                                language: message.content[0].lang
+                            };
+                            tables[j].addRow(messageData);
+                        });
+                    }
+
+                } else if (tables[j].id == 'tags') {
+
+                    if (newData.masterlist && newData.masterlist.tag) {
+                        newData.masterlist.tag.forEach(function(tag) {
+                            var tagData = newData.convTagObj(tag);
+                            var row = tables[j].addRow(tagData);
+                            tables[j].setReadOnly(row);
+                        }, newData);
+                    }
+                    if (tempData.userlist && tempData.userlist.tag) {
+                        tempData.userlist.tag.forEach(function(tag) {
+                            var tagData = tempData.convTagObj(tag);
+                            tables[j].addRow(tagData);
+                        }, tempData);
+                    }
+
+                } else if (tables[j].id == 'dirty') {
+
+                    if (newData.masterlist && newData.masterlist.dirty) {
+                        newData.masterlist.dirty.forEach(function(info) {
+                            info.crc = info.crc.toString(16).toUpperCase();
+                            var row = tables[j].addRow(info);
+                            tables[j].setReadOnly(row);
+                        });
+                    }
+                    if (tempData.userlist && tempData.userlist.dirty) {
+                        tempData.userlist.dirty.forEach(function(info) {
+                            info.crc = info.crc.toString(16).toUpperCase();
+                            tables[j].addRow(info);
+                        });
+                    }
+
+                } else if (tables[j].id == 'locations') {
+
+                    if (newData.masterlist && newData.masterlist.url) {
+                        newData.masterlist.url.forEach(function(location) {
+                            var temp = location;
+                            if (temp.ver) {
+                                temp.ver = temp.ver[0];
+                            }
+                            var row = tables[j].addRow(temp);
+                            tables[j].setReadOnly(row);
+                        });
+                    }
+                    if (tempData.userlist && tempData.userlist.url) {
+                        tempData.userlist.url.forEach(function(location) {
+                            var temp = location;
+                            if (temp.ver) {
+                                temp.ver = temp.ver[0];
+                            }
+                            tables[j].addRow(temp);
+                        });
+                    }
+                }
+            }
+        },
+
+        setTooltipPositions: function() {
+            this.shadowRoot.getElementById('activeTick').setPosition();
+            this.shadowRoot.getElementById('dummyPlugin').setPosition();
+            this.shadowRoot.getElementById('loadsBSA').setPosition();
+            this.shadowRoot.getElementById('globalPriority').parentElement.setPosition();
+        },
+    });
+    </script>
+</polymer-element>

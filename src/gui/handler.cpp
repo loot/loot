@@ -196,13 +196,7 @@ namespace loot {
                                      CefRefPtr<Callback> callback) {
         const string requestName = request["name"].as<string>();
 
-        if (requestName == "find") {
-            // Has one arg, which is the search string.
-            Find(browser, request["args"][0].as<string>(), request["args"][1].as<bool>());
-            callback->Success("");
-            return true;
-        }
-        else if (requestName == "changeGame") {
+        if (requestName == "changeGame") {
             try {
                 // Has one arg, which is the folder name of the new game.
                 g_app_state.ChangeGame(request["args"][0].as<string>());
@@ -302,13 +296,6 @@ namespace loot {
 
             return true;
         }
-        else if (requestName == "saveFilterState") {
-            const string id = request["args"][0].as<string>();
-            const string value = request["args"][1].as<string>();
-            SaveFilterState(id, value);
-            callback->Success("");
-            return true;
-        }
         else if (requestName == "copyContent") {
             // Has one arg, just convert it to a YAML output string.
             try {
@@ -332,13 +319,6 @@ namespace loot {
             return true;
         }
         return false;
-    }
-
-    void Handler::Find(CefRefPtr<CefBrowser> browser, const std::string& search, bool findNext) {
-        // Only one search at a time is allowed, so give a constant identifier,
-        // and we want case-insensitive forward searching, with no repeated
-        // searches.
-        browser->GetHost()->Find(0, search, true, false, findNext);
     }
 
     void Handler::GetConflictingPlugins(const std::string& pluginName, CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback) {
@@ -420,20 +400,6 @@ namespace loot {
             return JSON::stringify(derivedMetadata);
         else
             return "null";
-    }
-
-    void Handler::SaveFilterState(const std::string& id, const std::string& value) {
-        BOOST_LOG_TRIVIAL(trace) << "Saving state of filter " << id << " as " << value;
-        YAML::Node settings = g_app_state.GetSettings();
-
-        if (value == "true")
-            settings["filters"][id] = true;
-        else if (value == "false" || value.empty())
-            settings["filters"].remove(id);
-        else
-            settings["filters"][id] = value;
-
-        g_app_state.UpdateSettings(settings);
     }
 
     std::string Handler::ApplyUserEdits(const YAML::Node& pluginMetadata) {

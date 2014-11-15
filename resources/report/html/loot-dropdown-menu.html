@@ -8,26 +8,41 @@ it a <select>-like API. This means:
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-dropdown/paper-dropdown.html">
 <link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../bower_components/core-menu/core-menu.html">
 
-<polymer-element name="loot-dropdown-menu" extends="paper-dropdown-menu">
+<polymer-element name="loot-dropdown-menu">
     <template>
-        <shadow></shadow>
+        <paper-dropdown-menu disabled="{{disabled}}">
+            <paper-dropdown class="dropdown">
+                <core-menu valueattr="value">
+                    <content></content>
+                </core-menu>
+            </paper-dropdown>
+        </paper-dropdown-menu>
     </template>
     <script>
     Polymer({
         value: undefined,
+        disabled: false,
 
-        ready: function() {
-            this.valueattr = 'value';
+        attached: function() {
+            this.shadowRoot.firstElementChild.lastElementChild.firstElementChild.addEventListener('core-select', this.onItemSelect, false);
         },
 
-        selectedChanged: function(oldValue, newValue) {
-            this.value = newValue;
+        detached: function() {
+            this.shadowRoot.firstElementChild.lastElementChild.firstElementChild.removeEventListener('core-select', this.onItemSelect, false);
+        },
+
+        onItemSelect: function(evt) {
+            if (evt.detail.isSelected) {
+                evt.currentTarget.parentElement.parentElement.parentNode.host.value = evt.currentTarget.selected;
+            }
         },
 
         valueChanged: function(oldValue, newValue) {
-            this.selected = newValue;
+            this.shadowRoot.firstElementChild.lastElementChild.firstElementChild.selected = newValue;
         },
     });
     </script>

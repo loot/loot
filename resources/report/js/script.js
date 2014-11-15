@@ -174,7 +174,7 @@ var loot = {
         this.settings.games.forEach(function(game){
             var menuItem = document.createElement('paper-item');
             menuItem.setAttribute('value', game.folder);
-            menuItem.setAttribute('label', game.name);
+            menuItem.textContent = game.name;
             gameMenu.appendChild(menuItem);
             gameSelect.appendChild(menuItem.cloneNode());
 
@@ -352,41 +352,6 @@ function processCefError(err) {
     showMessageBox('Error', err.message);
 }
 
-function saveFilterState(evt) {
-    if (evt.currentTarget.checked) {
-        if (!loot.settings.filters) {
-            loot.settings.filters = {};
-        }
-        loot.settings.filters[evt.currentTarget.id] = true;
-    } else {
-        if (loot.settings.filters) {
-            delete loot.settings.filters[evt.currentTarget.id];
-        }
-    }
-
-    var request = JSON.stringify({
-        name: 'saveFilterState',
-        args: [
-            evt.currentTarget.id,
-            evt.currentTarget.checked
-        ]
-    });
-
-    loot.query(request).catch(processCefError);
-}
-function applySavedFilters() {
-    if (loot.settings.filters) {
-        for (var key in loot.settings.filters) {
-            var elem = document.getElementById(key);
-            if (elem) {
-                elem.dispatchEvent(new MouseEvent('click'));
-            }
-        }
-    }
-}
-function isVisible(element) {
-    return (element.className.indexOf('hidden') == -1);
-}
 function showElement(element) {
     if (element != null) {
         element.classList.toggle('hidden', false);
@@ -409,7 +374,11 @@ function toggleDisplayCSS(evt) {
         }
     }
 }
-
+function toast(text) {
+    var toast = document.getElementById('toast');
+    toast.text = text;
+    toast.show();
+}
 function getConflictingPluginsFromFilter() {
     var conflictsPlugin = document.body.getAttribute('data-conflicts');
     if (conflictsPlugin) {
@@ -454,70 +423,6 @@ function getConflictingPluginsFromFilter() {
 
     return Promise.resolve([]);
 }
-function applyFilters(evt) {
-    var cards = document.getElementById('main').getElementsByTagName('loot-plugin-card');
-    var entries = document.getElementById('cardsNav').getElementsByTagName('loot-plugin-item');
-    var hiddenPluginNo = 0;
-    var hiddenMessageNo = 0;
-    if (cards.length != entries.length) {
-        throw Error("Error: Number of plugins in sidebar doesn't match number of plugins in main area!");
-    }
-    /* The conflict filter, if enabled, executes C++ code, so needs to be
-       handled using a promise, so the rest of the function should wait until
-       it is completed.
-    */
-    getConflictingPluginsFromFilter().then(function(conflicts) {
-        for (var i = 0; i < cards.length; ++i) {
-            var isConflictingPlugin = false;
-            var isMessageless = true;
-            var hasInactivePluginMessages = false;
-            var messages = cards[i].getElementsByTagName('ul')[0].getElementsByTagName('li');
-            if (cards[i].getAttribute('data-active') == 'false') {
-                hasInactivePluginMessages = true;
-            }
-            if (conflicts.indexOf(cards[i].getName()) != -1) {
-                isConflictingPlugin = true;
-            }
-            for (var j = 0; j < messages.length; ++j) {
-                var hasPluginMessages = false;
-                var hasNotes = false;
-                var hasDoNotCleanMessages = false;
-                if (messages[j].parentElement.parentElement.id != 'generalMessages') {
-                    hasPluginMessages = true;
-                }
-                if (messages[j].className.indexOf('say') != -1) {
-                    hasNotes = true;
-                }
-                if (messages[j].textContent.indexOf(l10n.jed.translate("Do not clean.").fetch()) != -1) {
-                    hasDoNotCleanMessages = true;
-                }
-                if ((document.getElementById('hideAllPluginMessages').checked && hasPluginMessages)
-                    || (document.getElementById('hideNotes').checked && hasNotes)
-                    || (document.getElementById('hideDoNotCleanMessages').checked && hasDoNotCleanMessages)
-                    || (document.getElementById('hideInactivePluginMessages').checked && hasInactivePluginMessages)) {
-                    hideElement(messages[j]);
-                    ++hiddenMessageNo;
-                } else {
-                    showElement(messages[j]);
-                }
-                if (messages[j].className.indexOf('hidden') == -1) {
-                    isMessageless = false;
-                }
-            }
-            if ((document.getElementById('hideMessagelessPlugins').checked && isMessageless)
-                || conflicts.length > 0 && !isConflictingPlugin) {
-                hideElement(cards[i]);
-                hideElement(entries[i]);
-                ++hiddenPluginNo;
-            } else {
-                showElement(cards[i]);
-                showElement(entries[i]);
-            }
-        }
-        document.getElementById('hiddenMessageNo').textContent = hiddenMessageNo;
-        document.getElementById('hiddenPluginNo').textContent = hiddenPluginNo;
-    });
-}
 function showMessageDialog(title, text, yesNo, closeCallback) {
     var dialog = document.createElement('loot-message-dialog');
     if (yesNo) {
@@ -560,12 +465,6 @@ function changeGame(evt) {
 
         /* Clear the UI of all existing game-specific data. Also
            clear the card and li variables for each plugin object. */
-        loot.game.plugins.forEach(function(plugin){
-            plugin.card.parentElement.removeChild(plugin.card);
-            plugin.card = undefined;
-            plugin.li.parentElement.removeChild(plugin.li);
-            plugin.li = undefined;
-        });
         var globalMessages = document.getElementById('generalMessages').getElementsByTagName('ul')[0];
         while (globalMessages.firstElementChild) {
             globalMessages.removeChild(globalMessages.firstElementChild);
@@ -578,13 +477,21 @@ function changeGame(evt) {
             loot.game.masterlist = gameInfo.masterlist;
             loot.game.globalMessages = gameInfo.globalMessages;
             loot.game.plugins = gameInfo.plugins;
+
+            /* Reset virtual list positions. */
+            document.getElementById('cardsNav').lastElementChild.scrollToItem(0);
+            document.getElementById('main').lastElementChild.scrollToItem(0);
+
+            /* Now update virtual lists. */
+            setFilteredUIData();
+
+            /* Update the list sizes to take into account data changes. */
+            document.getElementById('cardsNav').lastElementChild.updateSize();
+            document.getElementById('main').lastElementChild.updateSize();
         } catch (e) {
             console.log(e);
             console.log('changeGame response: ' + result);
         }
-
-        /* Reapply previously active filters. */
-        applyFilters();
 
         closeProgressDialog();
     }).catch(processCefError);
@@ -613,6 +520,10 @@ function updateMasterlistNoProgress() {
                     }
                 }
             });
+
+            toast('Masterlist updated to revision ' + loot.game.masterlist.revision + '.');
+        } else {
+            toast('No masterlist update was necessary.');
         }
     }).catch(processCefError);
 }
@@ -656,7 +567,7 @@ function sortUIElements(pluginNames) {
             /* Also need to move plugin sidebar entry. */
             var li;
             for (var i = 0; i < entries.length; ++i) {
-                if (entries[i].label == name) {
+                if (entries[i].getName() == name) {
                     li = entries[i];
                 }
             }
@@ -684,18 +595,16 @@ function sortUIElements(pluginNames) {
 function showProgress(message) {
     var progressDialog = document.getElementById('progressDialog');
     if (message) {
-        progressDialog.getElementsByTagName('h1')[0].textContent = message;
+        progressDialog.getElementsByTagName('p')[0].textContent = message;
     }
-    if (!progressDialog.open) {
+    if (!progressDialog.opened) {
         progressDialog.showModal();
-        progressDialog.querySelector('.progress').classList.toggle('running');
     }
 }
 function closeProgressDialog() {
     var progressDialog = document.getElementById('progressDialog');
-    if (progressDialog.open) {
+    if (progressDialog.opened) {
         progressDialog.close();
-        progressDialog.querySelector('.progress').classList.toggle('running');
     }
 }
 function sortPlugins(evt) {
@@ -810,7 +719,7 @@ function redatePlugins(evt) {
     showMessageDialog('Redate Plugins', 'This feature is provided so that modders using the Creation Kit may set the load order it uses. A side-effect is that any subscribed Steam Workshop mods will be re-downloaded by Steam. Do you wish to continue?', false, function(result){
         if (result) {
             loot.query('redatePlugins').then(function(response){
-                showMessageBox('Redate Plugins', 'Plugins were successfully redated.');
+                toast('Plugins were successfully redated.');
             }).catch(processCefError);
         }
     });
@@ -836,6 +745,8 @@ function clearAllMetadata(evt) {
                             }
                         }
                     });
+
+                    toast.text('All user-added metadata has been cleared.');
                 }
             }).catch(processCefError);
         }
@@ -891,7 +802,9 @@ function copyContent(evt) {
         }]
     });
 
-    loot.query(request).catch(processCefError);
+    loot.query(request).then(function(){
+        toast("LOOT's content has been copied to the clipboard.");
+    }).catch(processCefError);
 }
 function areSettingsValid() {
     /* Validate inputs individually. */
@@ -904,26 +817,11 @@ function areSettingsValid() {
     }
     return true;
 }
-function openMenu(evt) {
-    if (!isVisible(evt.currentTarget.firstElementChild)) {
-        showElement(evt.currentTarget.firstElementChild)
-
-        /* To prevent the click event closing this menu just after it was
-           opened, stop the current event and send off a new one. */
-        evt.stopPropagation();
-
-        document.body.dispatchEvent(new CustomEvent('click', {
-            bubbles: true,
-            detail: {
-                newMenu: evt.currentTarget.firstElementChild
-            }
-        }));
-    }
-}
 function switchSidebarTab(evt) {
-    var isFirstSelected = evt.target.selected == 0;
-    evt.target.nextElementSibling.classList.toggle('hidden', !isFirstSelected);
-    evt.target.nextElementSibling.nextElementSibling.classList.toggle('hidden', isFirstSelected);
+    evt.target.nextElementSibling.selected = evt.target.selected;
+    if (evt.target.selected == 0) {
+        document.getElementById('cardsNav').lastElementChild.updateSize();
+    }
 }
 
 function showAboutDialog(evt) {
@@ -983,36 +881,6 @@ function closeSettingsDialog(evt) {
 function showSettingsDialog(evt) {
     document.getElementById('settingsDialog').showModal();
 }
-
-function startSearch(evt) {
-    var findNext = false;
-    if (evt.type == 'keyup') {
-        if (evt.keyCode != 13) {
-            // Don't do anything for keyboard events that aren't enter - if valid, the input event will handle them.
-            return;
-        } else {
-            findNext = true;
-        }
-    }
-    if (evt.target.inputValue == '') {
-        loot.query('cancelFind').then(function(result){
-            evt.target.focus();
-        }).catch(processCefError);
-    } else {
-        var request = JSON.stringify({
-            name: 'find',
-            args: [
-                evt.target.inputValue,
-                findNext
-            ]
-        });
-
-        loot.query(request).then(function(result){
-            evt.target.focus();
-        }).catch(processCefError);
-    }
-
-}
 function focusSearch(evt) {
     if (evt.ctrlKey && evt.keyCode == 70) { //'f'
         document.getElementById('searchBox').focus();
@@ -1039,6 +907,9 @@ function handleEditorOpen(evt) {
         elements[i].addEventListener('dragstart', elements[i].handleDragStart, false);
     }
 
+    /* Now show editor. */
+    evt.target.classList.toggle('flip');
+
     /* Enable priority hover in plugins list and enable header
        buttons if this is the only editor instance. */
     var numEditors = 0;
@@ -1048,7 +919,14 @@ function handleEditorOpen(evt) {
     ++numEditors;
 
     if (numEditors == 1) {
-        document.body.classList.add('editMode');
+        /* Disable the toolbar elements. */
+        document.getElementById('wipeUserlistButton').setAttribute('disabled', '');
+        document.getElementById('copyContentButton').setAttribute('disabled', '');
+        document.getElementById('refreshContentButton').setAttribute('disabled', '');
+        document.getElementById('settingsButton').setAttribute('disabled', '');
+        document.getElementById('gameMenu').setAttribute('disabled', '');
+        document.getElementById('updateMasterlistButton').setAttribute('disabled', '');
+        document.getElementById('sortButton').setAttribute('disabled', '');
     }
     document.body.setAttribute('data-editors', numEditors);
 }
@@ -1059,31 +937,30 @@ function handleEditorClose(evt) {
            changed, and update any UI elements necessary. Offload the
            majority of the work to the C++ side of things. */
 
-        /* Find the plugin object. */
-        var index;
-        for (var i = 0; i < loot.game.plugins.length; ++i) {
-            if (loot.game.plugins[i].id == evt.target.id) {
-                index = i;
-                break;
-            }
-        }
+        var edits = evt.target.readFromEditor(evt.target.data);
 
         var request = JSON.stringify({
             name: 'editorClosed',
             args: [
-                evt.target.readFromEditor(loot.game.plugins[index])
+                edits
             ]
         });
         loot.query(request).then(JSON.parse).then(function(result){
             if (result) {
-                loot.game.plugins[index].modPriority = result.modPriority;
-                loot.game.plugins[index].isGlobalPriority = result.isGlobalPriority;
-                loot.game.plugins[index].messages = result.messages;
-                loot.game.plugins[index].tags = result.tags;
-                loot.game.plugins[index].isDirty = result.isDirty;
+                evt.target.data.modPriority = result.modPriority;
+                evt.target.data.isGlobalPriority = result.isGlobalPriority;
+                evt.target.data.messages = result.messages;
+                evt.target.data.tags = result.tags;
+                evt.target.data.isDirty = result.isDirty;
+
+                evt.target.data.userlist = edits.userlist;
+                delete evt.target.data.editor;
             }
         }).catch(processCefError);
     }
+
+    /* Now hide editor. */
+    evt.target.classList.toggle('flip');
 
     /* Remove drag 'n' drop event handlers. */
     var elements = document.getElementById('cardsNav').getElementsByTagName('loot-plugin-item');
@@ -1098,7 +975,14 @@ function handleEditorClose(evt) {
     --numEditors;
 
     if (numEditors == 0) {
-        document.body.classList.remove('editMode');
+        /* Re-enable toolbar elements. */
+        document.getElementById('wipeUserlistButton').removeAttribute('disabled');
+        document.getElementById('copyContentButton').removeAttribute('disabled');
+        document.getElementById('refreshContentButton').removeAttribute('disabled');
+        document.getElementById('settingsButton').removeAttribute('disabled');
+        document.getElementById('gameMenu').removeAttribute('disabled');
+        document.getElementById('updateMasterlistButton').removeAttribute('disabled');
+        document.getElementById('sortButton').removeAttribute('disabled');
     }
     document.body.setAttribute('data-editors', numEditors);
 }
@@ -1109,7 +993,9 @@ function handleConflictsFilter(evt) {
         var cards = document.getElementById('main').getElementsByTagName('loot-plugin-card');
         for (var i = 0; i < cards.length; ++i) {
             cards[i].classList.toggle('highlight', false);
-            cards[i].deactivateConflictFilter();
+            if (cards[i] != evt.target) {
+                cards[i].deactivateConflictFilter();
+            }
         }
         evt.target.classList.toggle('highlight', true);
         document.body.setAttribute('data-conflicts', evt.target.getName());
@@ -1117,7 +1003,7 @@ function handleConflictsFilter(evt) {
         evt.target.classList.toggle('highlight', false);
         document.body.removeAttribute('data-conflicts');
     }
-    applyFilters(evt);
+    setFilteredUIData(evt);
 }
 function handleCopyMetadata(evt) {
     /* evt.detail is the name of the plugin. */
@@ -1128,7 +1014,9 @@ function handleCopyMetadata(evt) {
         ]
     });
 
-    loot.query(request).catch(processCefError);
+    loot.query(request).then(function(){
+        toast('The metadata for ' + evt.target.getName() + ' has been copied to the clipboard.');
+    }).catch(processCefError);
 }
 function handleClearMetadata(evt) {
     showMessageDialog('Clear Plugin Metadata', 'Are you sure you want to clear all existing user-added metadata from "' + evt.target.getName() + '"?', false, function(result){
@@ -1153,35 +1041,41 @@ function handleClearMetadata(evt) {
                             loot.game.plugins[i].tags = result.tags;
                             loot.game.plugins[i].isDirty = result.isDirty;
 
-                            /* Also update the card content. */
-                            loot.game.plugins[i].card.setEditorData(loot.game.plugins[i]);
-
                             break;
                         }
                     }
+                    toast('The user-added metadata for ' + evt.target.getName() + ' has been cleared.');
                 }
             }).catch(processCefError);
         }
     });
 }
-function setupEventHandlers() {
-    var elements;
-    /*Set up filter value and CSS setting storage read/write handlers.*/
-    elements = document.getElementById('filters').getElementsByTagName('input');
-    for (var i = 0; i < elements.length; ++i) {
-        elements[i].addEventListener('click', saveFilterState, false);
+function toggleDrawer(evt) {
+    document.getElementById('container').togglePanel();
+}
+function handleSidebarClick(evt) {
+    if (evt.target.hasAttribute('data-index')) {
+        window.location.hash = '';
+        document.getElementById('main').querySelector('core-list').scrollToItem(evt.target.getAttribute('data-index'));
+        /* However, the scroll bar that the plugin card list uses is for the whole main content area, so the position is offset by the heights of the summary and general messages cards. Adjust to compensate. */
+        document.getElementById('main').scrollTop += document.getElementById('main').querySelector('core-list').offsetTop;
     }
-
+}
+function setupEventHandlers() {
     /*Set up handlers for filters.*/
     document.getElementById('hideVersionNumbers').addEventListener('change', toggleDisplayCSS, false);
     document.getElementById('hideCRCs').addEventListener('change', toggleDisplayCSS, false);
     document.getElementById('hideBashTags').addEventListener('change', toggleDisplayCSS, false);
-    document.getElementById('hideNotes').addEventListener('change', applyFilters, false);
-    document.getElementById('hideDoNotCleanMessages').addEventListener('change', applyFilters, false);
-    document.getElementById('hideInactivePluginMessages').addEventListener('change', applyFilters, false);
-    document.getElementById('hideAllPluginMessages').addEventListener('change', applyFilters, false);
-    document.getElementById('hideMessagelessPlugins').addEventListener('change', applyFilters, false);
+    document.getElementById('hideNotes').addEventListener('change', setFilteredUIData, false);
+    document.getElementById('hideDoNotCleanMessages').addEventListener('change', setFilteredUIData, false);
+    document.getElementById('hideInactivePlugins').addEventListener('change', setFilteredUIData, false);
+    document.getElementById('hideAllPluginMessages').addEventListener('change', setFilteredUIData, false);
+    document.getElementById('hideMessagelessPlugins').addEventListener('change', setFilteredUIData, false);
     document.body.addEventListener('loot-filter-conflicts', handleConflictsFilter, false);
+
+    /* Set up event handlers for content filter. */
+    document.getElementById('searchBox').addEventListener('change', setFilteredUIData, false);
+    window.addEventListener('keyup', focusSearch, false);
 
     /* Set up handlers for buttons. */
     document.getElementById('redatePluginsButton').addEventListener('click', redatePlugins, false);
@@ -1203,17 +1097,14 @@ function setupEventHandlers() {
     settings.getElementsByClassName('accept')[0].addEventListener('click', closeSettingsDialog, false);
     settings.getElementsByClassName('cancel')[0].addEventListener('click', closeSettingsDialog, false);
 
-    /* Set up event handlers for content search. */
-    var searchBox = document.getElementById('searchBox');
-    searchBox.addEventListener('input', startSearch, false);
-    searchBox.addEventListener('keyup', startSearch, false);
-    window.addEventListener('keyup', focusSearch, false);
-
     /* Set up handler for opening and closing editors. */
     document.body.addEventListener('loot-editor-open', handleEditorOpen, false);
     document.body.addEventListener('loot-editor-close', handleEditorClose, false);
     document.body.addEventListener('loot-copy-metadata', handleCopyMetadata, false);
     document.body.addEventListener('loot-clear-metadata', handleClearMetadata, false);
+
+    document.getElementById('drawerToggle').addEventListener('click', toggleDrawer, false);
+    document.getElementById('cardsNav').addEventListener('click', handleSidebarClick, false);
 }
 function initVars() {
     loot.query('getVersion').then(function(result){
@@ -1253,7 +1144,7 @@ function initVars() {
             for (var i = 0; i < loot.languages.length; ++i) {
                 var settingsItem = document.createElement('paper-item');
                 settingsItem.setAttribute('value', loot.languages[i].locale);
-                settingsItem.setAttribute('label', loot.languages[i].name);
+                settingsItem.textContent = loot.languages[i].name;
                 settingsLangSelect.appendChild(settingsItem);
 
                 var option = document.createElement('option');
@@ -1302,9 +1193,9 @@ function initVars() {
             /* Fill in game row template's game type options. */
             var select = document.querySelector('link[rel="import"][href$="editable-table.html"]');
             if (select) {
-                select = select.import.querySelector('#gameRow').content.querySelector('select')
+                select = select.import.querySelector('#gameRow').content.querySelector('.type')
             } else {
-                select = document.querySelector('#gameRow').content.querySelector('select');
+                select = document.querySelector('#gameRow').content.querySelector('.type');
             }
             for (var j = 0; j < loot.gameTypes.length; ++j) {
                 var option = document.createElement('option');
@@ -1331,36 +1222,39 @@ function initVars() {
                 console.log('getSettings response: ' + results[2]);
             }
 
-            if (!result) {
-                loot.query('getGameData').then(function(result){
-                    try {
-                        var game = JSON.parse(result, jsonToPlugin);
-                        loot.game.folder = game.folder;
-                        loot.game.masterlist = game.masterlist;
-                        loot.game.globalMessages = game.globalMessages;
-                        loot.game.plugins = game.plugins;
-                    } catch (e) {
-                        console.log(e);
-                        console.log('getGameData response: ' + result);
-                    }
-
-                    applySavedFilters();
+            var promise;
+            if (result) {
+                promise = new Promise(function(resolve, reject){
                     closeProgressDialog();
-                }).catch(processCefError);
+                    document.getElementById('settingsButton').click();
+                    resolve('');
+                });
             } else {
-                document.getElementById('settingsButton').click();
-                closeProgressDialog();
+                promise = loot.query('getGameData').then(function(result){
+                    var game = JSON.parse(result, jsonToPlugin);
+                    loot.game.folder = game.folder;
+                    loot.game.masterlist = game.masterlist;
+                    loot.game.globalMessages = game.globalMessages;
+                    loot.game.plugins = game.plugins;
+                    document.getElementById('cardsNav').lastElementChild.data = loot.game.plugins;
+                    document.getElementById('main').lastElementChild.data = loot.game.plugins;
+
+                    closeProgressDialog();
+                    return '';
+                }).catch(processCefError);
             }
 
-            /* So much easier than trying to set up my own C++ message loop to listen
-               to window messages looking for a focus change. */
-            if (loot.settings.autoRefresh) {
-                window.addEventListener('focus', onFocus, false);
-            }
+            promise.then(function(){
+                /* So much easier than trying to set up my own C++ message loop to listen
+                   to window messages looking for a focus change. */
+                if (loot.settings.autoRefresh) {
+                    window.addEventListener('focus', onFocus, false);
+                }
 
-            if (!loot.settings.lastVersion || loot.settings.lastVersion != loot.version) {
-                document.getElementById('firstRun').showModal();
-            }
+                if (!loot.settings.lastVersion || loot.settings.lastVersion != loot.version) {
+                    document.getElementById('firstRun').showModal();
+                }
+            });
         }).catch(processCefError);
 
     }).catch(processCefError);
@@ -1423,8 +1317,6 @@ function onFocus(evt) {
             }
             if (!foundPlugin) {
                 /* Remove plugin. */
-                loot.game.plugins[i].card.parentElement.removeChild(loot.game.plugins[i].card);
-                loot.game.plugins[i].li.parentElement.removeChild(loot.game.plugins[i].li);
                 loot.game.plugins.splice(i, 1);
             } else {
                 ++i;
@@ -1434,14 +1326,17 @@ function onFocus(evt) {
         sortUIElements(pluginNames);
 
         /* Reapply filters. */
-        applyFilters();
+        setFilteredUIData();
 
         closeProgressDialog();
     }).catch(processCefError);
 }
 
 window.addEventListener('polymer-ready', function(e) {
-    require(['bower_components/marked/lib/marked', 'js/l10n', 'js/plugin'], function(markedResponse, l10nResponse) {
+    /* Set the plugin list's scroll target to its parent. */
+    document.getElementById('main').querySelector('core-list').scrollTarget = document.getElementById('main');
+
+    require(['bower_components/marked/lib/marked', 'js/l10n', 'js/plugin', 'js/filters'], function(markedResponse, l10nResponse) {
         marked = markedResponse;
         l10n = l10nResponse;
         /* Make sure settings are what I want. */

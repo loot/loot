@@ -30,46 +30,44 @@ body {
     background:#f8f8f8;
     height: 100%;
 }
-noscript {
-    background:#c00;
-    display:block;
-    padding:10px 5px;
-    color:white;
-}
 #mainToolbar {
     background: #4285f4;
-    /*font-size: 1em;
-    height: 3em;*/
-      color: white;
+    color: white;
 }
-/*#mainToolbar > * {
-    top: -1em;
-}*/
-#gameMenu {
-    background: inherit;
-}
-
-#filtersToggle > span {
-    margin-right: 1em;
+#mainToolbar paper-dropdown {
+    color: black;
 }
 
 div[drawer] > core-tooltip {
-    width: 100%;
     margin: 0 12px;
 }
-#searchBox {
-    width: calc(100% - 24px);
+div[drawer] {
+    z-index: 1;
 }
 #main {
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
     position: relative;
+    z-index: 0;
 }
 #cardsNav {
     margin: 0;
     overflow: auto;
 }
 #cardsNav > paper-item, #cardsNav > loot-plugin-item {
-    height: 2em;
+    /*height: 2em;*/
+}
+paper-item > a {
+    text-decoration: none;
+    color: black;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+#searchBox {
+    display: block;
 }
 #container {
     position: fixed;
@@ -90,33 +88,9 @@ section {
     border-bottom-left-radius: 2px;
     box-shadow: rgba(0, 0, 0, 0.0980392) 0px 2px 4px, rgba(0, 0, 0, 0.0980392) 0px 0px 3px;
 }
-
-dialog {
-    border: 1px solid rgba(0, 0, 0, 0.3);
-    border-radius: 6px;
-    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
-    overflow:hidden;
-    padding: 2em;
-    top: 3em;
-    max-width: 40em;
-    max-height: calc(100% - 8em);
-    overflow: auto;
+#generalMessages {
+    margin-bottom: 0.5em;
 }
-dialog > h1 {
-    font-weight: normal;
-    text-align: center;
-}
-dialog[data-type=warn] > span:first-child  {
-    color: gold;
-}
-dialog button {
-    margin: 0.5em;
-}
-
-
-
-
-
 
 #about blockquote {
     white-space: pre;
@@ -152,11 +126,6 @@ section h1 {
 #summary > table td:first-child {
     text-align:left;
     padding-left:0;
-}
-input[type='checkbox'] {
-    position:relative;
-    top:0.15em;
-    margin-left:0.5em;
 }
 ul {
     margin-top:0.5em;
@@ -206,10 +175,6 @@ li.warn{
 paper-checkbox {
     padding: 0.5em 1em;
 }
-loot-dropdown-menu {
-    padding-left: 2em;
-    top: -0.25em;
-}
 
 input[readonly] {
     border: none;
@@ -220,23 +185,9 @@ td input {
     text-overflow: ellipsis;
 }
 
-body.editMode header {
-    color: #999;
-}
-body.editMode header #headerOverlay {
-    z-index: 3;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-}
 [draggable] {
     -webkit-user-select: none;
     cursor: move;
-}
-.highlight {
-    outline: 3px solid #69aaff;
 }
 #applySortButton {
     box-shadow: none;
@@ -252,53 +203,30 @@ input:valid {
     background-color: white;
     color: black;
 }
-#hoverText {
-    position: fixed;
-    z-index: 5;
-    background: white;
-    box-shadow:0 0 3px 0px rgba(0,0,0,0.5);
-    padding: 2px 5px;
+paper-progress {
+    width: 100%;
 }
-progress, .progress {
-    /* Reset the default appearance */
-    -webkit-appearance: none;
-    width: 250px;
-    height: 20px;
-    display: block;
-    margin: 0 auto;
-}
-#progressDialog > h1 {
-    font-size: 1.5em;
-}
-
-@-webkit-keyframes indeterminate {
-	0% { width: 0% }
-	100% { width: 100% }
-}
-
-progress::-webkit-progress-bar, .progress.bar {
-    background-color: #eee;
-    border-radius: 2px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
-}
-progress::-webkit-progress-value, .progress .value {
-    height: 100%;
-    background-color: green;
-    -webkit-animation: indeterminate 2s linear 0 infinite alternate paused;
-}
-.progress.running > .value {
-    -webkit-animation-play-state: running;
-}
-
-:host > span {
-    display: inline-block;
-    width: 1.2em;
-}
-
 #firstRun > ul {
     list-style-type: disc;
     padding-left: 40px;
 }
 #firstRun .tag {
     margin: 0;
+}
+
+
+/* This animates the drawer toggle appearing in narrow view. */
+#drawerToggle {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s;
+}
+@media screen and (max-width: 640px) {
+    #drawerToggle {
+        opacity: 1;
+        visibility: visible;
+    }
+}
+#settingsDialog > paper-checkbox {
+    display: block;
 }

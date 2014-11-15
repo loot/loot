@@ -58,71 +58,80 @@
                 pluginCard = document.querySelector('polymer-element[name="loot-plugin-card"]').querySelector('template').content;
             }
 
-            pluginCard.getElementById('front').querySelector('.activeTick').label = l10n.translate("Active Plugin").fetch();
-            pluginCard.getElementById('editor').querySelector('.activeTick').label = l10n.translate("Active Plugin").fetch();
-            pluginCard.getElementById('front').querySelector('.dummyPlugin').label = l10n.translate("Dummy Plugin").fetch();
-            pluginCard.getElementById('editor').querySelector('.dummyPlugin').label = l10n.translate("Dummy Plugin").fetch();
-            pluginCard.getElementById('front').querySelector('.loadsBSA').label = l10n.translate("Loads BSA").fetch();
-            pluginCard.getElementById('editor').querySelector('.loadsBSA').label = l10n.translate("Loads BSA").fetch();
+            pluginCard.getElementById('activeTick').label = l10n.translate("Active Plugin").fetch();
+            pluginCard.getElementById('dummyPlugin').label = l10n.translate("Dummy Plugin").fetch();
+            pluginCard.getElementById('loadsBSA').label = l10n.translate("Loads BSA").fetch();
             pluginCard.getElementById('hasUserEdits').label = l10n.translate("Has User Metadata").fetch();
 
-            pluginCard.getElementById('enableEdits').label = l10n.translate("Enable Edits").fetch();
-            pluginCard.getElementById('globalPriority').parentElement.label = l10n.translate("Global priorities are compared against all other plugins. Normal priorities are compared against only conflicting plugins.").fetch();
-            pluginCard.getElementById('globalPriority').label = l10n.translate("Global Priority").fetch();
-            pluginCard.getElementById('priorityValue').previousElementSibling.textContent = l10n.translate("Priority Value").fetch();
-
-            pluginCard.getElementById('fileTabs').querySelector('[data-for=loadAfter]').textContent = l10n.translate("Load After").fetch();
-            pluginCard.getElementById('fileTabs').querySelector('[data-for=req]').textContent = l10n.translate("Requirements").fetch();
-            pluginCard.getElementById('fileTabs').querySelector('[data-for=inc]').textContent = l10n.translate("Incompatibilities").fetch();
-            pluginCard.getElementById('miscTabs').querySelector('[data-for=message]').textContent = l10n.translate("Messages").fetch();
-            pluginCard.getElementById('miscTabs').querySelector('[data-for=tags]').textContent = l10n.translate("Bash Tags").fetch();
-            pluginCard.getElementById('miscTabs').querySelector('[data-for=dirty]').textContent = l10n.translate("Dirty Info").fetch();
-            pluginCard.getElementById('miscTabs').querySelector('[data-for=locations]').textContent = l10n.translate("Locations").fetch();
-
-            pluginCard.getElementById('loadAfter').querySelector('th:first-child').textContent = l10n.translate("Filename").fetch();
-            pluginCard.getElementById('loadAfter').querySelector('th:nth-child(2)').textContent = l10n.translate("Display Name").fetch();
-            pluginCard.getElementById('loadAfter').querySelector('th:nth-child(3)').textContent = l10n.translate("Condition").fetch();
-            pluginCard.getElementById('loadAfter').querySelector('td:first-child').textContent = l10n.translate("Add new row...").fetch();
-
-            pluginCard.getElementById('req').querySelector('th:first-child').textContent = l10n.translate("Filename").fetch();
-            pluginCard.getElementById('req').querySelector('th:nth-child(2)').textContent = l10n.translate("Display Name").fetch();
-            pluginCard.getElementById('req').querySelector('th:nth-child(3)').textContent = l10n.translate("Condition").fetch();
-            pluginCard.getElementById('req').querySelector('td:first-child').textContent = l10n.translate("Add new row...").fetch();
-
-            pluginCard.getElementById('inc').querySelector('th:first-child').textContent = l10n.translate("Filename").fetch();
-            pluginCard.getElementById('inc').querySelector('th:nth-child(2)').textContent = l10n.translate("Display Name").fetch();
-            pluginCard.getElementById('inc').querySelector('th:nth-child(3)').textContent = l10n.translate("Condition").fetch();
-            pluginCard.getElementById('inc').querySelector('td:first-child').textContent = l10n.translate("Add new row...").fetch();
-
-            pluginCard.getElementById('message').querySelector('th:first-child').textContent = l10n.translate("Type").fetch();
-            pluginCard.getElementById('message').querySelector('th:nth-child(2)').textContent = l10n.translate("Content").fetch();
-            pluginCard.getElementById('message').querySelector('th:nth-child(3)').textContent = l10n.translate("Condition").fetch();
-            pluginCard.getElementById('message').querySelector('th:nth-child(4)').textContent = l10n.translate("Language").fetch();
-            pluginCard.getElementById('message').querySelector('td:first-child').textContent = l10n.translate("Add new row...").fetch();
-
-            pluginCard.getElementById('tags').querySelector('th:first-child').textContent = l10n.translate("Add/Remove").fetch();
-            pluginCard.getElementById('tags').querySelector('th:nth-child(2)').textContent = l10n.translate("Bash Tag").fetch();
-            pluginCard.getElementById('tags').querySelector('th:nth-child(3)').textContent = l10n.translate("Condition").fetch();
-            pluginCard.getElementById('tags').querySelector('td:first-child').textContent = l10n.translate("Add new row...").fetch();
-
-            pluginCard.getElementById('dirty').querySelector('th:first-child').textContent = l10n.translate("CRC").fetch();
-            pluginCard.getElementById('dirty').querySelector('th:nth-child(2)').textContent = l10n.translate("ITM Count").fetch();
-            pluginCard.getElementById('dirty').querySelector('th:nth-child(3)').textContent = l10n.translate("Deleted References").fetch();
-            pluginCard.getElementById('dirty').querySelector('th:nth-child(4)').textContent = l10n.translate("Deleted Navmeshes").fetch();
-            pluginCard.getElementById('dirty').querySelector('th:nth-child(5)').textContent = l10n.translate("Cleaning Utility").fetch();
-            pluginCard.getElementById('dirty').querySelector('td:first-child').textContent = l10n.translate("Add new row...").fetch();
-
-            pluginCard.getElementById('locations').querySelector('th:first-child').textContent = l10n.translate("URL").fetch();
-            pluginCard.getElementById('locations').querySelector('th:nth-child(2)').textContent = l10n.translate("Version").fetch();
-            pluginCard.getElementById('locations').querySelector('td:first-child').textContent = l10n.translate("Add new row...").fetch();
-
-            pluginCard.getElementById('accept').textContent = l10n.translate("Apply").fetch();
-            pluginCard.getElementById('cancel').textContent = l10n.translate("Cancel").fetch();
-
             pluginCard.getElementById('showOnlyConflicts').label = l10n.translate("Show Only Conflicts").fetch();
-            pluginCard.getElementById('editMetadata').label = l10n.translate("Edit Metadata").fetch();
-            pluginCard.getElementById('copyMetadata').label = l10n.translate("Copy Metadata As Text").fetch();
-            pluginCard.getElementById('clearMetadata').label = l10n.translate("Clear User Metadata").fetch();
+            pluginCard.getElementById('editMetadata').lastChild.textContent = l10n.translate("Edit Metadata").fetch();
+            pluginCard.getElementById('copyMetadata').lastChild.textContent = l10n.translate("Copy Metadata As Text").fetch();
+            pluginCard.getElementById('clearMetadata').lastChild.textContent = l10n.translate("Clear User Metadata").fetch();
+
+            /* Plugin editor template. */
+            var pluginEditor = document.querySelector('link[rel="import"][href$="loot-plugin-card.html"]');
+            if (pluginEditor) {
+                pluginEditor = pluginEditor.import.querySelector('link[rel="import"][href$="loot-plugin-editor.html"]').import.querySelector('template').content;
+            } else {
+                pluginEditor = document.querySelector('polymer-element[name="loot-plugin-editor"]').querySelector('template').content;
+            }
+
+            pluginEditor.getElementById('activeTick').label = l10n.translate("Active Plugin").fetch();
+            pluginEditor.getElementById('dummyPlugin').label = l10n.translate("Dummy Plugin").fetch();
+            pluginEditor.getElementById('loadsBSA').label = l10n.translate("Loads BSA").fetch();
+
+            pluginEditor.getElementById('enableEdits').label = l10n.translate("Enable Edits").fetch();
+            pluginEditor.getElementById('globalPriority').parentElement.label = l10n.translate("Global priorities are compared against all other plugins. Normal priorities are compared against only conflicting plugins.").fetch();
+            pluginEditor.getElementById('globalPriority').label = l10n.translate("Global Priority").fetch();
+            pluginEditor.getElementById('priorityValue').parentElement.previousElementSibling.textContent = l10n.translate("Priority Value").fetch();
+
+            pluginEditor.getElementById('tableTabs').querySelector('[data-for=loadAfter]').textContent = l10n.translate("Load After").fetch();
+            pluginEditor.getElementById('tableTabs').querySelector('[data-for=req]').textContent = l10n.translate("Requirements").fetch();
+            pluginEditor.getElementById('tableTabs').querySelector('[data-for=inc]').textContent = l10n.translate("Incompatibilities").fetch();
+            pluginEditor.getElementById('tableTabs').querySelector('[data-for=message]').textContent = l10n.translate("Messages").fetch();
+            pluginEditor.getElementById('tableTabs').querySelector('[data-for=tags]').textContent = l10n.translate("Bash Tags").fetch();
+            pluginEditor.getElementById('tableTabs').querySelector('[data-for=dirty]').textContent = l10n.translate("Dirty Info").fetch();
+            pluginEditor.getElementById('tableTabs').querySelector('[data-for=locations]').textContent = l10n.translate("Locations").fetch();
+
+            pluginEditor.getElementById('loadAfter').querySelector('th:first-child').textContent = l10n.translate("Filename").fetch();
+            pluginEditor.getElementById('loadAfter').querySelector('th:nth-child(2)').textContent = l10n.translate("Display Name").fetch();
+            pluginEditor.getElementById('loadAfter').querySelector('th:nth-child(3)').textContent = l10n.translate("Condition").fetch();
+            pluginEditor.getElementById('loadAfter').querySelector('td:first-child').textContent = l10n.translate("Add new row...").fetch();
+
+            pluginEditor.getElementById('req').querySelector('th:first-child').textContent = l10n.translate("Filename").fetch();
+            pluginEditor.getElementById('req').querySelector('th:nth-child(2)').textContent = l10n.translate("Display Name").fetch();
+            pluginEditor.getElementById('req').querySelector('th:nth-child(3)').textContent = l10n.translate("Condition").fetch();
+            pluginEditor.getElementById('req').querySelector('td:first-child').textContent = l10n.translate("Add new row...").fetch();
+
+            pluginEditor.getElementById('inc').querySelector('th:first-child').textContent = l10n.translate("Filename").fetch();
+            pluginEditor.getElementById('inc').querySelector('th:nth-child(2)').textContent = l10n.translate("Display Name").fetch();
+            pluginEditor.getElementById('inc').querySelector('th:nth-child(3)').textContent = l10n.translate("Condition").fetch();
+            pluginEditor.getElementById('inc').querySelector('td:first-child').textContent = l10n.translate("Add new row...").fetch();
+
+            pluginEditor.getElementById('message').querySelector('th:first-child').textContent = l10n.translate("Type").fetch();
+            pluginEditor.getElementById('message').querySelector('th:nth-child(2)').textContent = l10n.translate("Content").fetch();
+            pluginEditor.getElementById('message').querySelector('th:nth-child(3)').textContent = l10n.translate("Condition").fetch();
+            pluginEditor.getElementById('message').querySelector('th:nth-child(4)').textContent = l10n.translate("Language").fetch();
+            pluginEditor.getElementById('message').querySelector('td:first-child').textContent = l10n.translate("Add new row...").fetch();
+
+            pluginEditor.getElementById('tags').querySelector('th:first-child').textContent = l10n.translate("Add/Remove").fetch();
+            pluginEditor.getElementById('tags').querySelector('th:nth-child(2)').textContent = l10n.translate("Bash Tag").fetch();
+            pluginEditor.getElementById('tags').querySelector('th:nth-child(3)').textContent = l10n.translate("Condition").fetch();
+            pluginEditor.getElementById('tags').querySelector('td:first-child').textContent = l10n.translate("Add new row...").fetch();
+
+            pluginEditor.getElementById('dirty').querySelector('th:first-child').textContent = l10n.translate("CRC").fetch();
+            pluginEditor.getElementById('dirty').querySelector('th:nth-child(2)').textContent = l10n.translate("ITM Count").fetch();
+            pluginEditor.getElementById('dirty').querySelector('th:nth-child(3)').textContent = l10n.translate("Deleted References").fetch();
+            pluginEditor.getElementById('dirty').querySelector('th:nth-child(4)').textContent = l10n.translate("Deleted Navmeshes").fetch();
+            pluginEditor.getElementById('dirty').querySelector('th:nth-child(5)').textContent = l10n.translate("Cleaning Utility").fetch();
+            pluginEditor.getElementById('dirty').querySelector('td:first-child').textContent = l10n.translate("Add new row...").fetch();
+
+            pluginEditor.getElementById('locations').querySelector('th:first-child').textContent = l10n.translate("URL").fetch();
+            pluginEditor.getElementById('locations').querySelector('th:nth-child(2)').textContent = l10n.translate("Version").fetch();
+            pluginEditor.getElementById('locations').querySelector('td:first-child').textContent = l10n.translate("Add new row...").fetch();
+
+            pluginEditor.getElementById('accept').textContent = l10n.translate("Apply").fetch();
+            pluginEditor.getElementById('cancel').textContent = l10n.translate("Cancel").fetch();
 
             /* Plugin List Item Template */
             var pluginItem = document.querySelector('link[rel="import"][href$="loot-plugin-item.html"]');
@@ -131,10 +140,8 @@
             } else {
                 pluginItem = document.querySelector('polymer-element[name="loot-plugin-item"]').querySelector('template').content;
             }
-            pluginItem.querySelector('#dummyPlugin').label = l10n.translate("Dummy Plugin").fetch();
-            pluginItem.querySelector('#loadsBSA').label = l10n.translate("Loads BSA").fetch();
-            pluginItem.querySelector('#hasUserEdits').label = l10n.translate("Has User Metadata").fetch();
-            pluginItem.querySelector('#hasGlobalPriority').label = l10n.translate("Priority Is Global").fetch();
+            pluginItem.getElementById('loadsBSA').label = l10n.translate("Loads BSA").fetch();
+            pluginItem.getElementById('hasUserEdits').label = l10n.translate("Has User Metadata").fetch();
 
             /* Message row template */
             var messageRow = document.querySelector('link[rel="import"][href$="editable-table.html"]');
@@ -158,20 +165,20 @@
             tagRow.querySelector('.type').children[1].textContent = l10n.translate("Remove").fetch();
 
             /* Toolbar menu */
-            document.getElementById('redatePluginsButton').label = l10n.translate("Redate Plugins").fetch();
-            document.getElementById('openLogButton').label = l10n.translate("Open Debug Log Location").fetch();
-            document.getElementById('wipeUserlistButton').label = l10n.translate("Clear All User Metadata").fetch();
-            document.getElementById('copyContentButton').label = l10n.translate("Copy Content As Text").fetch();
-            document.getElementById('refreshContentButton').label = l10n.translate("Refresh Content").fetch();
-            document.getElementById('helpButton').label = l10n.translate("View Documentation").fetch();
-            document.getElementById('aboutButton').label = l10n.translate("About").fetch();
-            document.getElementById('settingsButton').label = l10n.translate("Settings").fetch();
+            document.getElementById('redatePluginsButton').lastChild.textContent = l10n.translate("Redate Plugins").fetch();
+            document.getElementById('openLogButton').lastChild.textContent = l10n.translate("Open Debug Log Location").fetch();
+            document.getElementById('wipeUserlistButton').lastChild.textContent = l10n.translate("Clear All User Metadata").fetch();
+            document.getElementById('copyContentButton').lastChild.textContent = l10n.translate("Copy Content As Text").fetch();
+            document.getElementById('refreshContentButton').lastChild.textContent = l10n.translate("Refresh Content").fetch();
+            document.getElementById('helpButton').lastChild.textContent = l10n.translate("View Documentation").fetch();
+            document.getElementById('aboutButton').lastChild.textContent = l10n.translate("About").fetch();
+            document.getElementById('settingsButton').lastChild.textContent = l10n.translate("Settings").fetch();
             document.getElementById('applySortButton').textContent = l10n.translate("Apply").fetch();
             document.getElementById('cancelSortButton').textContent = l10n.translate("Cancel").fetch();
 
             /* Nav items */
-            document.getElementById('container').querySelector('div[drawer] > core-menu > paper-item[label=Summary]').label = l10n.translate("Summary").fetch();
-            document.getElementById('container').querySelector('div[drawer] > core-menu > paper-item[label^=General]').label = l10n.translate("General Messages").fetch();
+            document.getElementById('cardsNav').firstElementChild.lastChild.textContent = l10n.translate("Summary").fetch();
+            document.getElementById('cardsNav').firstElementChild.nextElementSibling.lastChild.textContent = l10n.translate("General Messages").fetch();
             document.getElementById('sidebarTabs').firstElementChild.textContent = l10n.translate("Plugins").fetch();
             document.getElementById('sidebarTabs').firstElementChild.nextElementSibling.textContent = l10n.translate("Filters").fetch();
             document.getElementById('searchBox').parentElement.label = l10n.translate("Press Enter when searching to select the next match.").fetch();
@@ -206,7 +213,7 @@
             document.getElementById('settingsDialog').heading = l10n.translate("Settings").fetch();
 
             document.getElementById('defaultGameSelect').previousElementSibling.textContent = l10n.translate("Default Game").fetch();
-            document.getElementById('defaultGameSelect').children[0].label = l10n.translate("Autodetect").fetch();
+            document.getElementById('defaultGameSelect').firstElementChild.textContent = l10n.translate("Autodetect").fetch();
 
             document.getElementById('languageSelect').previousElementSibling.textContent = l10n.translate("Language").fetch();
 

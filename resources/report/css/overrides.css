@@ -1,22 +1,25 @@
 /* These styles override Polymer's own internal styling for certain elements. */
 
-/* The following 3 rules are for setting the sizes of the drawer and panel. */
-#container::shadow #main {
-    left: 33% !important;
-}
-#container::shadow .narrow-layout #main {
-    left: 0 !important;
-}
-#container::shadow #drawer {
-    width: 33% !important;
+/* The following is for setting the size of the drawer in narrow mode. */
+#container::shadow .narrow-layout #drawer {
+    width: 50% !important;
+    background: #f8f8f8;
 }
 
 /* These overrides change the colour of the game menu's text and underline. */
-#gameMenu::shadow #control {
-    color: white;
+#gameMenu::shadow > paper-dropdown-menu {
     border-bottom-color: #f1f1f1;
 }
-#gameMenu::shadow #menu {
+#gameMenu[disabled]::shadow > paper-dropdown-menu {
+    border-bottom-color: #c9c9c9;
+}
+#gameMenu::shadow > paper-dropdown-menu::shadow #label, #gameMenu::shadow > paper-dropdown-menu::shadow #arrow {
+    color: white;
+}
+#gameMenu[disabled]::shadow > paper-dropdown-menu::shadow #label, #gameMenu[disabled]::shadow > paper-dropdown-menu::shadow #arrow {
+    color: #c9c9c9;
+}
+#gameMenu {
     color: black;
 }
 
@@ -43,16 +46,6 @@ html /deep/ paper-tab::shadow #ink {
     color: #4285f4;
 }
 
-/* This override change the font size of the sidebar items to be the body text size. */
-#cardsNav /deep/ #label {
-    font-size: 10pt;
-}
-
-/* This override change the position of the link in <loot-plugin-item> so that it doesn't cover up tooltips. */
-loot-plugin-item::shadow ::content > a {
-    left: 112px;
-}
-
 /* This override change the positioning of the progress dialog to adapt to content changes. */
 #progressDialog {
     position: inherit !important;
@@ -61,4 +54,46 @@ loot-plugin-item::shadow ::content > a {
     left: 0;
     bottom: 0;
     right: 0;
+}
+
+/* This stops transitions from overflowing onto other elements. */
+html /deep/ core-animated-pages {
+    overflow: hidden;
+}
+
+/* This stops menus keeping the last item clicked highlighted. */
+paper-item.core-selected {
+    background: inherit;
+}
+
+/* This styles divs like core-menus. */
+html /deep/ paper-dropdown > div {
+    margin: 12px;
+}
+
+/* This stops the main core-list having its own scrollbars. */
+#main > core-list {
+    overflow-y: initial !important;
+}
+
+/* This makes paper-menu-button icons align like paper-icon-buttons do. */
+html /deep/ paper-menu-button > paper-icon-button,
+html /deep/ core-tooltip > paper-icon-button,
+html /deep/ core-tooltip > core-icon {
+    display: block;
+}
+
+/* Center paper-dropdown-menu text better. */
+html /deep/ paper-dropdown-menu {
+    padding-top: 0;
+}
+
+/* This adds padding between icons and text in menus. */
+html /deep/ paper-item > core-icon {
+    margin-right: 1em;
+}
+
+/* This makes checkboxes have the same padding as icons in lists. */
+html /deep/ paper-checkbox::shadow #checkboxLabel {
+    padding-left: 1em;
 }
