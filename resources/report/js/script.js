@@ -993,7 +993,9 @@ function handleConflictsFilter(evt) {
         var cards = document.getElementById('main').getElementsByTagName('loot-plugin-card');
         for (var i = 0; i < cards.length; ++i) {
             cards[i].classList.toggle('highlight', false);
-            cards[i].deactivateConflictFilter();
+            if (cards[i] != evt.target) {
+                cards[i].deactivateConflictFilter();
+            }
         }
         evt.target.classList.toggle('highlight', true);
         document.body.setAttribute('data-conflicts', evt.target.getName());
