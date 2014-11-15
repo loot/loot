@@ -3,7 +3,7 @@
 /* The following is for setting the size of the drawer in narrow mode. */
 #container::shadow .narrow-layout #drawer {
     width: 50% !important;
-    background: white;
+    background: #f8f8f8;
 }
 
 /* These overrides change the colour of the game menu's text and underline. */
