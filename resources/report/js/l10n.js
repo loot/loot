@@ -65,7 +65,7 @@
 
             pluginCard.getElementById('showOnlyConflicts').label = l10n.translate("Show Only Conflicts").fetch();
             pluginCard.getElementById('editMetadata').lastChild.textContent = l10n.translate("Edit Metadata").fetch();
-            pluginCard.getElementById('copyMetadata').lastChild.textContent = l10n.translate("Copy Metadata As Text").fetch();
+            pluginCard.getElementById('copyMetadata').lastChild.textContent = l10n.translate("Copy Metadata").fetch();
             pluginCard.getElementById('clearMetadata').lastChild.textContent = l10n.translate("Clear User Metadata").fetch();
 
             /* Plugin editor template. */
@@ -168,7 +168,7 @@
             document.getElementById('redatePluginsButton').lastChild.textContent = l10n.translate("Redate Plugins").fetch();
             document.getElementById('openLogButton').lastChild.textContent = l10n.translate("Open Debug Log Location").fetch();
             document.getElementById('wipeUserlistButton').lastChild.textContent = l10n.translate("Clear All User Metadata").fetch();
-            document.getElementById('copyContentButton').lastChild.textContent = l10n.translate("Copy Content As Text").fetch();
+            document.getElementById('copyContentButton').lastChild.textContent = l10n.translate("Copy Content").fetch();
             document.getElementById('refreshContentButton').lastChild.textContent = l10n.translate("Refresh Content").fetch();
             document.getElementById('helpButton').lastChild.textContent = l10n.translate("View Documentation").fetch();
             document.getElementById('aboutButton').lastChild.textContent = l10n.translate("About").fetch();
