@@ -352,41 +352,6 @@ function processCefError(err) {
     showMessageBox('Error', err.message);
 }
 
-function saveFilterState(evt) {
-    if (evt.currentTarget.checked) {
-        if (!loot.settings.filters) {
-            loot.settings.filters = {};
-        }
-        loot.settings.filters[evt.currentTarget.id] = true;
-    } else {
-        if (loot.settings.filters) {
-            delete loot.settings.filters[evt.currentTarget.id];
-        }
-    }
-
-    var request = JSON.stringify({
-        name: 'saveFilterState',
-        args: [
-            evt.currentTarget.id,
-            evt.currentTarget.checked
-        ]
-    });
-
-    loot.query(request).catch(processCefError);
-}
-function applySavedFilters() {
-    if (loot.settings.filters) {
-        for (var key in loot.settings.filters) {
-            var elem = document.getElementById(key);
-            if (elem) {
-                elem.dispatchEvent(new MouseEvent('click'));
-            }
-        }
-    }
-}
-function isVisible(element) {
-    return (element.className.indexOf('hidden') == -1);
-}
 function showElement(element) {
     if (element != null) {
         element.classList.toggle('hidden', false);
@@ -459,13 +424,6 @@ function getConflictingPluginsFromFilter() {
     return Promise.resolve([]);
 }
 function applyFilters(evt) {
-    var cards = document.getElementById('main').getElementsByTagName('loot-plugin-card');
-    var entries = document.getElementById('cardsNav').getElementsByTagName('loot-plugin-item');
-    var hiddenPluginNo = 0;
-    var hiddenMessageNo = 0;
-    if (cards.length != entries.length) {
-        throw Error("Error: Number of plugins in sidebar doesn't match number of plugins in main area!");
-    }
     /* The conflict filter, if enabled, executes C++ code, so needs to be
        handled using a promise, so the rest of the function should wait until
        it is completed.
@@ -1206,13 +1164,6 @@ function handleSidebarClick(evt) {
     }
 }
 function setupEventHandlers() {
-    var elements;
-    /*Set up filter value and CSS setting storage read/write handlers.*/
-    elements = document.getElementById('filters').getElementsByTagName('input');
-    for (var i = 0; i < elements.length; ++i) {
-        elements[i].addEventListener('click', saveFilterState, false);
-    }
-
     /*Set up handlers for filters.*/
     document.getElementById('hideVersionNumbers').addEventListener('change', toggleDisplayCSS, false);
     document.getElementById('hideCRCs').addEventListener('change', toggleDisplayCSS, false);
@@ -1223,6 +1174,10 @@ function setupEventHandlers() {
     document.getElementById('hideAllPluginMessages').addEventListener('change', applyFilters, false);
     document.getElementById('hideMessagelessPlugins').addEventListener('change', applyFilters, false);
     document.body.addEventListener('loot-filter-conflicts', handleConflictsFilter, false);
+
+    /* Set up event handlers for content filter. */
+    document.getElementById('searchBox').addEventListener('change', handleSearch, false);
+    window.addEventListener('keyup', focusSearch, false);
 
     /* Set up handlers for buttons. */
     document.getElementById('redatePluginsButton').addEventListener('click', redatePlugins, false);
@@ -1243,10 +1198,6 @@ function setupEventHandlers() {
     var settings = document.getElementById('settingsDialog');
     settings.getElementsByClassName('accept')[0].addEventListener('click', closeSettingsDialog, false);
     settings.getElementsByClassName('cancel')[0].addEventListener('click', closeSettingsDialog, false);
-
-    /* Set up event handlers for content search. */
-    document.getElementById('searchBox').addEventListener('change', handleSearch, false);
-    window.addEventListener('keyup', focusSearch, false);
 
     /* Set up handler for opening and closing editors. */
     document.body.addEventListener('loot-editor-open', handleEditorOpen, false);

@@ -296,13 +296,6 @@ namespace loot {
 
             return true;
         }
-        else if (requestName == "saveFilterState") {
-            const string id = request["args"][0].as<string>();
-            const string value = request["args"][1].as<string>();
-            SaveFilterState(id, value);
-            callback->Success("");
-            return true;
-        }
         else if (requestName == "copyContent") {
             // Has one arg, just convert it to a YAML output string.
             try {
@@ -407,20 +400,6 @@ namespace loot {
             return JSON::stringify(derivedMetadata);
         else
             return "null";
-    }
-
-    void Handler::SaveFilterState(const std::string& id, const std::string& value) {
-        BOOST_LOG_TRIVIAL(trace) << "Saving state of filter " << id << " as " << value;
-        YAML::Node settings = g_app_state.GetSettings();
-
-        if (value == "true")
-            settings["filters"][id] = true;
-        else if (value == "false" || value.empty())
-            settings["filters"].remove(id);
-        else
-            settings["filters"][id] = value;
-
-        g_app_state.UpdateSettings(settings);
     }
 
     std::string Handler::ApplyUserEdits(const YAML::Node& pluginMetadata) {
