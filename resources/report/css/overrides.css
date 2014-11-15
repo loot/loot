@@ -46,11 +46,6 @@ html /deep/ paper-tab::shadow #ink {
     color: #4285f4;
 }
 
-/* This override change the font size of the sidebar items to be the body text size. */
-#cardsNav /deep/ #label {
-    font-size: 10pt;
-}
-
 /* This override change the positioning of the progress dialog to adapt to content changes. */
 #progressDialog {
     position: inherit !important;
