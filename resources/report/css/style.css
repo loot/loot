@@ -189,9 +189,6 @@ td input {
     -webkit-user-select: none;
     cursor: move;
 }
-.highlight {
-    outline: 3px solid #69aaff;
-}
 #applySortButton {
     box-shadow: none;
     outline: none;

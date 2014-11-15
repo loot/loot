@@ -42,6 +42,9 @@ loot-clear-metadata
             transition: 0.6s;
             transform-style: preserve-3d;
         }
+        :host(.highlight) #wrapper {
+            outline: 3px solid #69aaff;
+        }
         :host([data-active=false]) #activeTick {
             visibility: hidden;
         }
@@ -160,7 +163,7 @@ loot-clear-metadata
                 </core-toolbar>
                 <content select=".tag.add"></content>
                 <content select=".tag.remove"></content>
-                <content select="ul"></content>
+                <content></content>
             </section>
             <loot-plugin-editor id="editor" data="{{data}}"></loot-plugin-editor>
         </div>
