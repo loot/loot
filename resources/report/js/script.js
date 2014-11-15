@@ -431,7 +431,6 @@ function applyFilters(evt) {
     getConflictingPluginsFromFilter().then(function(conflicts) {
         for (var i = 0; i < cards.length; ++i) {
             var isConflictingPlugin = false;
-            var isMessageless = true;
             var hasInactivePluginMessages = false;
             var messages = cards[i].getElementsByTagName('ul')[0].getElementsByTagName('li');
             if (cards[i].getAttribute('data-active') == 'false') {
@@ -441,33 +440,14 @@ function applyFilters(evt) {
                 isConflictingPlugin = true;
             }
             for (var j = 0; j < messages.length; ++j) {
-                var hasPluginMessages = false;
-                var hasNotes = false;
-                var hasDoNotCleanMessages = false;
-                if (messages[j].parentElement.parentElement.id != 'generalMessages') {
-                    hasPluginMessages = true;
-                }
-                if (messages[j].className.indexOf('say') != -1) {
-                    hasNotes = true;
-                }
-                if (messages[j].textContent.indexOf(l10n.jed.translate("Do not clean.").fetch()) != -1) {
-                    hasDoNotCleanMessages = true;
-                }
-                if ((document.getElementById('hideAllPluginMessages').checked && hasPluginMessages)
-                    || (document.getElementById('hideNotes').checked && hasNotes)
-                    || (document.getElementById('hideDoNotCleanMessages').checked && hasDoNotCleanMessages)
-                    || (document.getElementById('hideInactivePluginMessages').checked && hasInactivePluginMessages)) {
+                if (document.getElementById('hideInactivePluginMessages').checked && hasInactivePluginMessages) {
                     hideElement(messages[j]);
                     ++hiddenMessageNo;
                 } else {
                     showElement(messages[j]);
                 }
-                if (messages[j].className.indexOf('hidden') == -1) {
-                    isMessageless = false;
-                }
             }
-            if ((document.getElementById('hideMessagelessPlugins').checked && isMessageless)
-                || conflicts.length > 0 && !isConflictingPlugin) {
+            if (conflicts.length > 0 && !isConflictingPlugin) {
                 hideElement(cards[i]);
                 hideElement(entries[i]);
                 ++hiddenPluginNo;
@@ -479,45 +459,6 @@ function applyFilters(evt) {
         document.getElementById('hiddenMessageNo').textContent = hiddenMessageNo;
         document.getElementById('hiddenPluginNo').textContent = hiddenPluginNo;
     });
-}
-
-function searchFilter(plugins) {
-    var search = document.getElementById('searchBox').value.toLowerCase();
-    if (search.length > 0) {
-        var hiddenPluginNo = 0;
-        var hiddenMessageNo = 0;
-        var filteredPlugins = [];
-        /* Check each plugin entry to see if the current search string exists in
-           its name, version, crc, Bash Tag or message strings. */
-        plugins.forEach(function(plugin){
-            if (plugin.name.toLowerCase().indexOf(search) != -1
-                || plugin.getCrcString().toLowerCase().indexOf(search) != -1
-                || plugin.version.toLowerCase().indexOf(search) != -1) {
-
-                filteredPlugins.push(plugin);
-                return;
-            }
-
-            var tags = plugin.getTagStrings();
-            if (tags.added.toLowerCase().indexOf(search) != -1
-                || tags.removed.toLowerCase().indexOf(search) != -1) {
-
-                filteredPlugins.push(plugin);
-                return;
-            }
-
-            for (var i = 0; i < plugin.messages.length; ++i) {
-                if (plugin.messages[i].content[0].str.toLowerCase().indexOf(search) != -1) {
-                    filteredPlugins.push(plugin);
-                    return;
-                }
-            }
-        });
-
-        return filteredPlugins;
-    } else {
-        return plugins;
-    }
 }
 
 function showMessageDialog(title, text, yesNo, closeCallback) {
@@ -580,8 +521,7 @@ function changeGame(evt) {
             document.getElementById('main').lastElementChild.scrollToItem(0);
 
             /* Now update virtual lists. */
-            document.getElementById('cardsNav').lastElementChild.data = loot.game.plugins;
-            document.getElementById('main').lastElementChild.data = loot.game.plugins;
+            setFilteredUIData();
 
             /* Update the list sizes to take into account data changes. */
             document.getElementById('cardsNav').lastElementChild.updateSize();
@@ -920,6 +860,9 @@ function areSettingsValid() {
 }
 function switchSidebarTab(evt) {
     evt.target.nextElementSibling.selected = evt.target.selected;
+    if (evt.target.selected == 0) {
+        document.getElementById('cardsNav').lastElementChild.updateSize();
+    }
 }
 
 function showAboutDialog(evt) {
@@ -978,12 +921,6 @@ function closeSettingsDialog(evt) {
 
 function showSettingsDialog(evt) {
     document.getElementById('settingsDialog').showModal();
-}
-
-function handleSearch(evt) {
-    var filtered = searchFilter(loot.game.plugins);
-    document.getElementById('cardsNav').lastElementChild.data = filtered;
-    document.getElementById('main').lastElementChild.data = filtered;
 }
 function focusSearch(evt) {
     if (evt.ctrlKey && evt.keyCode == 70) { //'f'
@@ -1172,11 +1109,11 @@ function setupEventHandlers() {
     document.getElementById('hideDoNotCleanMessages').addEventListener('change', applyFilters, false);
     document.getElementById('hideInactivePluginMessages').addEventListener('change', applyFilters, false);
     document.getElementById('hideAllPluginMessages').addEventListener('change', applyFilters, false);
-    document.getElementById('hideMessagelessPlugins').addEventListener('change', applyFilters, false);
+    document.getElementById('hideMessagelessPlugins').addEventListener('change', setFilteredUIData, false);
     document.body.addEventListener('loot-filter-conflicts', handleConflictsFilter, false);
 
     /* Set up event handlers for content filter. */
-    document.getElementById('searchBox').addEventListener('change', handleSearch, false);
+    document.getElementById('searchBox').addEventListener('change', setFilteredUIData, false);
     window.addEventListener('keyup', focusSearch, false);
 
     /* Set up handlers for buttons. */
@@ -1338,10 +1275,9 @@ function initVars() {
                     loot.game.masterlist = game.masterlist;
                     loot.game.globalMessages = game.globalMessages;
                     loot.game.plugins = game.plugins;
-                    document.getElementById('cardsNav').querySelector('core-list').data = loot.game.plugins;
-                    document.getElementById('main').querySelector('core-list').data = loot.game.plugins;
+                    document.getElementById('cardsNav').lastElementChild.data = loot.game.plugins;
+                    document.getElementById('main').lastElementChild.data = loot.game.plugins;
 
-                    applySavedFilters();
                     closeProgressDialog();
                     return '';
                 }).catch(processCefError);
@@ -1439,7 +1375,7 @@ window.addEventListener('polymer-ready', function(e) {
     /* Set the plugin list's scroll target to its parent. */
     document.getElementById('main').querySelector('core-list').scrollTarget = document.getElementById('main');
 
-    require(['bower_components/marked/lib/marked', 'js/l10n', 'js/plugin'], function(markedResponse, l10nResponse) {
+    require(['bower_components/marked/lib/marked', 'js/l10n', 'js/plugin', 'js/filters'], function(markedResponse, l10nResponse) {
         marked = markedResponse;
         l10n = l10nResponse;
         /* Make sure settings are what I want. */
