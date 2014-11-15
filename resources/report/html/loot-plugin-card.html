@@ -19,6 +19,7 @@ loot-clear-metadata
 <link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/paper-dropdown/paper-dropdown.html">
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 
 <link rel="import" href="loot-plugin-editor.html">
@@ -143,7 +144,7 @@ loot-clear-metadata
                         <paper-dropdown class="dropdown" halign="right" opened="{{data.isMenuOpen}}">
                             <div>
                                 <paper-item>
-                                    <paper-checkbox id="showOnlyConflicts" label="Show Only Conflicts" flex></paper-checkbox>
+                                    <paper-checkbox id="showOnlyConflicts" label="Show Only Conflicts" checked="{{data.isConflictFilterChecked}}" flex></paper-checkbox>
                                 </paper-item>
                                 <paper-item id="editMetadata">
                                     <core-icon icon="create"></core-icon>
@@ -223,6 +224,9 @@ loot-clear-metadata
                 this.onCrcChange();
                 this.onTagsChange();
                 this.onMessagesChange();
+
+                /* Also set highlight if the conflict filter is active. */
+                this.classList.toggle('highlight', this.data.isConflictFilterChecked);
             }
         },
 
