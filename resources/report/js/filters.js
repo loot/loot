@@ -62,6 +62,14 @@ var filters = {
         }
     },
 
+    inactiveFilter: function(plugin) {
+        if (document.getElementById('hideInactivePlugins').checked) {
+            return plugin.isActive;
+        } else {
+            return true;
+        }
+    },
+
     applyPluginFilters: function(plugins) {
         var search = document.getElementById('searchBox').value.toLowerCase();
         hiddenPluginNo = 0;
@@ -71,6 +79,7 @@ var filters = {
         plugins.forEach(function(plugin){
             /* Messageless filter needs to run first. */
             if (this.messagelessFilter(plugin)
+                && this.inactiveFilter(plugin)
                 && this.searchFilter(plugin, search)) {
 
                 filteredPlugins.push(plugin);

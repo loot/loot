@@ -430,24 +430,7 @@ function applyFilters(evt) {
     */
     getConflictingPluginsFromFilter().then(function(conflicts) {
         for (var i = 0; i < cards.length; ++i) {
-            var isConflictingPlugin = false;
-            var hasInactivePluginMessages = false;
-            var messages = cards[i].getElementsByTagName('ul')[0].getElementsByTagName('li');
-            if (cards[i].getAttribute('data-active') == 'false') {
-                hasInactivePluginMessages = true;
-            }
-            if (conflicts.indexOf(cards[i].getName()) != -1) {
-                isConflictingPlugin = true;
-            }
-            for (var j = 0; j < messages.length; ++j) {
-                if (document.getElementById('hideInactivePluginMessages').checked && hasInactivePluginMessages) {
-                    hideElement(messages[j]);
-                    ++hiddenMessageNo;
-                } else {
-                    showElement(messages[j]);
-                }
-            }
-            if (conflicts.length > 0 && !isConflictingPlugin) {
+            if (conflicts.length > 0 && !conflicts.indexOf(cards[i].getName()) != -1) {
                 hideElement(cards[i]);
                 hideElement(entries[i]);
                 ++hiddenPluginNo;
@@ -1107,7 +1090,7 @@ function setupEventHandlers() {
     document.getElementById('hideBashTags').addEventListener('change', toggleDisplayCSS, false);
     document.getElementById('hideNotes').addEventListener('change', setFilteredUIData, false);
     document.getElementById('hideDoNotCleanMessages').addEventListener('change', setFilteredUIData, false);
-    document.getElementById('hideInactivePluginMessages').addEventListener('change', applyFilters, false);
+    document.getElementById('hideInactivePlugins').addEventListener('change', setFilteredUIData, false);
     document.getElementById('hideAllPluginMessages').addEventListener('change', setFilteredUIData, false);
     document.getElementById('hideMessagelessPlugins').addEventListener('change', setFilteredUIData, false);
     document.body.addEventListener('loot-filter-conflicts', handleConflictsFilter, false);
