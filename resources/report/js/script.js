@@ -423,27 +423,6 @@ function getConflictingPluginsFromFilter() {
 
     return Promise.resolve([]);
 }
-function applyFilters(evt) {
-    /* The conflict filter, if enabled, executes C++ code, so needs to be
-       handled using a promise, so the rest of the function should wait until
-       it is completed.
-    */
-    getConflictingPluginsFromFilter().then(function(conflicts) {
-        for (var i = 0; i < cards.length; ++i) {
-            if (conflicts.length > 0 && !conflicts.indexOf(cards[i].getName()) != -1) {
-                hideElement(cards[i]);
-                hideElement(entries[i]);
-                ++hiddenPluginNo;
-            } else {
-                showElement(cards[i]);
-                showElement(entries[i]);
-            }
-        }
-        document.getElementById('hiddenMessageNo').textContent = hiddenMessageNo;
-        document.getElementById('hiddenPluginNo').textContent = hiddenPluginNo;
-    });
-}
-
 function showMessageDialog(title, text, yesNo, closeCallback) {
     var dialog = document.createElement('loot-message-dialog');
     if (yesNo) {
@@ -513,9 +492,6 @@ function changeGame(evt) {
             console.log(e);
             console.log('changeGame response: ' + result);
         }
-
-        /* Reapply previously active filters. */
-        applyFilters();
 
         closeProgressDialog();
     }).catch(processCefError);
@@ -1025,7 +1001,7 @@ function handleConflictsFilter(evt) {
         evt.target.classList.toggle('highlight', false);
         document.body.removeAttribute('data-conflicts');
     }
-    applyFilters(evt);
+    setFilteredUIData(evt);
 }
 function handleCopyMetadata(evt) {
     /* evt.detail is the name of the plugin. */
@@ -1348,7 +1324,7 @@ function onFocus(evt) {
         sortUIElements(pluginNames);
 
         /* Reapply filters. */
-        applyFilters();
+        setFilteredUIData();
 
         closeProgressDialog();
     }).catch(processCefError);

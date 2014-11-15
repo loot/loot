@@ -4,6 +4,7 @@ var filters = {
 
     hiddenPluginNo: 0,
     hiddenMessageNo: 0,
+    conflicts: [],
 
     searchFilter: function(plugin, needle) {
         if (needle.length == 0) {
@@ -70,6 +71,14 @@ var filters = {
         }
     },
 
+    conflictsFilter: function(plugin) {
+        if (this.conflicts.length > 0) {
+            return this.conflicts.indexOf(plugin.name) != -1;
+        } else {
+            return true;
+        }
+    },
+
     applyPluginFilters: function(plugins) {
         var search = document.getElementById('searchBox').value.toLowerCase();
         hiddenPluginNo = 0;
@@ -80,6 +89,7 @@ var filters = {
             /* Messageless filter needs to run first. */
             if (this.messagelessFilter(plugin)
                 && this.inactiveFilter(plugin)
+                && this.conflictsFilter(plugin)
                 && this.searchFilter(plugin, search)) {
 
                 filteredPlugins.push(plugin);
@@ -137,13 +147,20 @@ var filters = {
 };
 
 function setFilteredUIData(evt) {
-    var filtered = filters.applyPluginFilters(loot.game.plugins);
-    document.getElementById('cardsNav').lastElementChild.data = filtered;
-    document.getElementById('main').lastElementChild.data = filtered;
+    /* The conflict filter, if enabled, executes C++ code, so needs to be
+       handled using a promise, so the rest of the function should wait until
+       it is completed.
+    */
+    getConflictingPluginsFromFilter().then(function(conflicts) {
+        filters.conflicts = conflicts;
+        var filtered = filters.applyPluginFilters(loot.game.plugins);
+        document.getElementById('cardsNav').lastElementChild.data = filtered;
+        document.getElementById('main').lastElementChild.data = filtered;
 
-    /* Also run message filters on the current card elements. */
-    var cards = document.getElementById('main').getElementsByTagName('loot-plugin-card');
-    for (var i = 0; i < cards.length; ++i) {
-        cards[i].onMessagesChange();  // Calls Plugin.getUIMessages(), which calls filters.applyMessageFilters().
-    }
+        /* Also run message filters on the current card elements. */
+        var cards = document.getElementById('main').getElementsByTagName('loot-plugin-card');
+        for (var i = 0; i < cards.length; ++i) {
+            cards[i].onMessagesChange();  // Calls Plugin.getUIMessages(), which calls filters.applyMessageFilters().
+        }
+    });
 }
