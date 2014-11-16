@@ -534,65 +534,6 @@ function updateMasterlist(evt) {
         closeProgressDialog();
     }).catch(processCefError);
 }
-function sortUIElements(pluginNames) {
-    /* pluginNames is an array of plugin names in their sorted order. Rearrange
-       the plugin cards and nav entries to match it. */
-    var main = document.getElementById('main');
-    var cardsNav = document.getElementById('cardsNav');
-    var entries = cardsNav.getElementsByTagName('loot-plugin-item');
-    if (main.getElementsByTagName('loot-plugin-card').length != entries.length) {
-        throw Error("Error: Number of plugins in sidebar doesn't match number of plugins in main area!");
-    }
-    var lastCard;
-    var lastLi;
-    pluginNames.forEach(function(name, index){
-
-        /* Just removing and appending everything is the easiest way, but
-           redrawing the UI so much is expensive. Try to only move elements
-           that need to be moved.
-           The previous plugin in pluginNames has already been sorted, so check
-           if this plugin's card is after the previous plugin's card, and if so
-           do nothing.
-           The first plugin is a special case.
-           */
-        var card = document.getElementById(name.replace(/\s+/g, ''));
-        var move = false;
-        if (index == 0) {
-            /* Special case. */
-            move = (card != card.parentElement.getElementsByTagName('loot-plugin-card')[0]);
-        } else {
-            move = (card.previousElementSibling.getName() != pluginNames[index-1]);
-        }
-
-        if (move) {
-            /* Also need to move plugin sidebar entry. */
-            var li;
-            for (var i = 0; i < entries.length; ++i) {
-                if (entries[i].getName() == name) {
-                    li = entries[i];
-                }
-            }
-
-            /* Easiest just to remove them and add them on at the end. */
-            main.removeChild(card);
-            if (lastCard) {
-                main.insertBefore(card, lastCard.nextElementSibling);
-            } else {
-                main.insertBefore(card, main.getElementsByTagName('loot-plugin-card')[0]);
-            }
-            cardsNav.removeChild(li);
-            if (lastLi) {
-                cardsNav.insertBefore(li, lastLi.nextElementSibling);
-            } else {
-                cardsNav.insertBefore(li, cardsNav.firstElementChild);
-            }
-            lastLi = li;
-        } else {
-            lastLi = entries[index];
-        }
-        lastCard = card;
-    });
-}
 function showProgress(message) {
     var progressDialog = document.getElementById('progressDialog');
     if (message) {
@@ -622,9 +563,9 @@ function sortPlugins(evt) {
         showProgress('Sorting plugins...');
         loot.query('sortPlugins').then(JSON.parse).then(function(result){
             if (result) {
-                var loadOrder = [];
+                loot.game.oldLoadOrder = loot.game.plugins;
+                loot.game.loadOrder = [];
                 result.forEach(function(plugin){
-                    loadOrder.push(plugin.name);
                     var found = false;
                     for (var i = 0; i < loot.game.plugins.length; ++i) {
                         if (loot.game.plugins[i].name == plugin.name) {
@@ -635,30 +576,26 @@ function sortPlugins(evt) {
                             loot.game.plugins[i].tags = plugin.tags;
                             loot.game.plugins[i].isDirty = plugin.isDirty;
 
+                            loot.game.loadOrder.push(loot.game.plugins[i]);
+
                             found = true;
                             break;
                         }
                     }
                     if (!found) {
-                        loot.game.plugins.push(new Plugin(plugin));
+                        loot.game.plugins[i].push(new Plugin(plugin));
+                        loot.game.loadOrder.push(loot.game.plugins[i]);
                     }
                 });
 
                 if (loot.settings.neverTellMeTheOdds) {
                     /* Array shuffler from <https://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array-in-javascript> */
-                    for(var j, x, i = loadOrder.length; i; j = Math.floor(Math.random() * i), x = loadOrder[--i], loadOrder[i] = loadOrder[j], loadOrder[j] = x);
+                    for(var j, x, i = loot.game.loadOrder.length; i; j = Math.floor(Math.random() * i), x = loadOrder[--i], loot.game.loadOrder[i] = loot.game.loadOrder[j], loot.game.loadOrder[j] = x);
                 }
 
-                /* Record the previous order in case the user cancels sorting. */
-                /* Start at 2 to skip summary and general messages. */
-                var cards = document.getElementById('main').getElementsByTagName('loot-plugin-card');
-                loot.newLoadOrder = loadOrder;
-                loot.lastLoadOrder = [];
-                for (var i = 0; i < cards.length; ++i) {
-                    loot.lastLoadOrder.push(cards[i].getElementsByTagName('h1')[0].textContent);
-                }
                 /* Now update the UI for the new order. */
-                sortUIElements(loadOrder);
+                loot.game.plugins = loot.game.loadOrder;
+                setFilteredUIData();
 
                 /* Now hide the masterlist update buttons, and display the accept and
                    cancel sort buttons. */
@@ -672,16 +609,20 @@ function sortPlugins(evt) {
     }).catch(processCefError);
 }
 function applySort(evt) {
+    var loadOrder = [];
+    loot.game.plugins.forEach(function(plugin){
+        loadOrder.push(plugin.name);
+    });
     var request = JSON.stringify({
         name: 'applySort',
         args: [
-            loot.newLoadOrder
+            loadOrder
         ]
     });
     return loot.query(request).then(function(result){
         /* Remove old load order storage. */
-        delete loot.lastLoadOrder;
-        delete loot.newLoadOrder;
+        delete loot.game.loadOrder;
+        delete loot.game.oldLoadOrder;
 
         /* Now show the masterlist update buttons, and hide the accept and
            cancel sort buttons. */
@@ -697,9 +638,10 @@ function applySort(evt) {
 function cancelSort(evt) {
     return loot.query('cancelSort').then(function(){
         /* Sort UI elements again according to stored old load order. */
-        sortUIElements(loot.lastLoadOrder);
-        delete loot.lastLoadOrder;
-        delete loot.newLoadOrder;
+        loot.game.plugins = loot.game.oldLoadOrder;
+        setFilteredUIData();
+        delete loot.game.loadOrder;
+        delete loot.game.oldLoadOrder;
 
         /* Now show the masterlist update buttons, and hide the accept and
            cancel sort buttons. */
@@ -1331,8 +1273,6 @@ function onFocus(evt) {
                 ++i;
             }
         }
-        /* Now sort the cards to match the load order. */
-        sortUIElements(pluginNames);
 
         /* Reapply filters. */
         setFilteredUIData();
