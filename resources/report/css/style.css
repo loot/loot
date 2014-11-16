@@ -33,6 +33,7 @@ body {
 #mainToolbar {
     background: #4285f4;
     color: white;
+    width: 99.99vw;  /* Fix for scollbars when LOOT is run through Mod Organiser. */
 }
 #mainToolbar paper-dropdown {
     color: black;
