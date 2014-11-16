@@ -176,7 +176,7 @@ var loot = {
             menuItem.setAttribute('value', game.folder);
             menuItem.textContent = game.name;
             gameMenu.appendChild(menuItem);
-            gameSelect.appendChild(menuItem.cloneNode());
+            gameSelect.appendChild(menuItem.cloneNode(true));
 
             var row = gameTable.addRow(game);
             gameTable.setReadOnly(row, ['name','folder','type']);
