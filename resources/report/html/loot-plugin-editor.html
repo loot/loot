@@ -256,9 +256,8 @@ loot-editor-close
         },
 
         dataChanged: function(oldValue, newValue) {
-            /* Record the current editor data. This is only strictly necessary
-               if the editor is currently open, but editor state isn't yet recorded. */
-            if (oldValue) {
+            /* Record the current editor data if the editor is open. */
+            if (oldValue && this.data.isEditorOpen) {
                 oldValue.editor = this.readFromEditor(oldValue);
             }
 

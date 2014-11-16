@@ -196,11 +196,14 @@ loot-clear-metadata
         },
 
         dataChanged: function(oldValue, newValue) {
-            /* Share the data with the editor. */
-            this.shadowRoot.getElementById('editor').data = this.data;
             if (newValue != undefined) {
+                if (newValue.isEditorOpen) {
+                    /* Share the data with the editor. */
+                    this.shadowRoot.getElementById('editor').data = newValue;
+                }
+
                 /* Set the card flip state. */
-                if (this.classList.contains('flip') != this.data.isEditorOpen) {
+                if (this.classList.contains('flip') != newValue.isEditorOpen) {
                     /* Temporarily speed up the flip effect, as otherwise fast
                        scrolling lets the user see the end of it. */
                     this.classList.add('fastflip');
@@ -213,7 +216,7 @@ loot-clear-metadata
                 this.onMessagesChange();
 
                 /* Also set highlight if the conflict filter is active. */
-                this.classList.toggle('highlight', this.data.isConflictFilterChecked);
+                this.classList.toggle('highlight', newValue.isConflictFilterChecked);
             }
         },
 
@@ -276,6 +279,11 @@ loot-clear-metadata
 
         onShowEditor: function(evt) {
             var card = evt.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentNode.host;
+
+            /* If the editor hasn't already been opened, its data is not yet set, so do that now. */
+            if (!card.data.isEditorOpen && !card.data.editor) {
+                card.shadowRoot.getElementById('editor').data = card.data;
+            }
 
             card.data.isEditorOpen = true;
 
