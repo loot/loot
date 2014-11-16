@@ -346,7 +346,8 @@ Object.observe(loot.game, loot.gameObserver);
 
 function processCefError(err) {
     /* Error.stack seems to be Chromium-specific. It gives a lot more useful
-       info than just the error message. */
+       info than just the error message. Also, this can be used to catch any
+       promise errors, not just CEF errors. */
     console.log(err.stack);
     closeProgressDialog();
     showMessageBox('Error', err.message);
@@ -531,7 +532,7 @@ function updateMasterlist(evt) {
     showProgress('Updating masterlist...');
     updateMasterlistNoProgress().then(function(result){
         closeProgressDialog();
-    });
+    }).catch(processCefError);
 }
 function sortUIElements(pluginNames) {
     /* pluginNames is an array of plugin names in their sorted order. Rearrange
@@ -891,11 +892,11 @@ function handleUnappliedChangesClose() {
         if (result) {
             applySort().then(function(){
                 window.close();
-            });
+            }).catch(processCefError);
         } else {
             cancelSort().then(function(){
                 window.close();
-            });
+            }).catch(processCefError);
         }
     });
 }
@@ -1224,7 +1225,7 @@ function initVars() {
                 l10n.getJedInstance(loot.settings.language).then(function(jed){
                     l10n.translateStaticText(jed);
                     l10n.jed = jed;
-                });
+                }).catch(processCefError);
             } catch (e) {
                 console.log(e);
                 console.log('getSettings response: ' + results[2]);
@@ -1262,7 +1263,7 @@ function initVars() {
                 if (!loot.settings.lastVersion || loot.settings.lastVersion != loot.version) {
                     document.getElementById('firstRun').showModal();
                 }
-            });
+            }).catch(processCefError);
         }).catch(processCefError);
 
     }).catch(processCefError);
