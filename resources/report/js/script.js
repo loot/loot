@@ -1061,6 +1061,13 @@ function handleSidebarClick(evt) {
         document.getElementById('main').scrollTop += document.getElementById('main').querySelector('core-list').offsetTop;
     }
 }
+function handleQuit(evt) {
+    if (document.getElementById('applySortButton').classList.contains('hidden')) {
+        window.close();
+    } else {
+        handleUnappliedChangesClose();
+    }
+}
 function setupEventHandlers() {
     /*Set up handlers for filters.*/
     document.getElementById('hideVersionNumbers').addEventListener('change', toggleDisplayCSS, false);
@@ -1086,6 +1093,7 @@ function setupEventHandlers() {
     document.getElementById('settingsButton').addEventListener('click', showSettingsDialog, false);
     document.getElementById('helpButton').addEventListener('click', openReadme, false);
     document.getElementById('aboutButton').addEventListener('click', showAboutDialog, false);
+    document.getElementById('quitButton').addEventListener('click', handleQuit, false);
     document.getElementById('updateMasterlistButton').addEventListener('click', updateMasterlist, false);
     document.getElementById('sortButton').addEventListener('click', sortPlugins, false);
     document.getElementById('applySortButton').addEventListener('click', applySort, false);
