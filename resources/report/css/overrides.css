@@ -74,6 +74,7 @@ html /deep/ paper-dropdown > div {
 /* This stops the main core-list having its own scrollbars. */
 #main > core-list {
     overflow-y: initial !important;
+    transform-style: preserve-3d;
 }
 
 /* This makes paper-menu-button icons align like paper-icon-buttons do. */

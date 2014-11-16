@@ -186,19 +186,6 @@ loot-clear-metadata
             this.shadowRoot.getElementById('clearMetadata').addEventListener('click', this.onClearMetadata, false);
 
             this.addEventListener('transitionend', this.onFlipEnd, false);
-
-            /* Because of the 3D flip effect used when accessing the editor,
-               plugin menus get hidden underneath later plugin cards unless
-               those cards have a lower z-index than the card the menu is part
-               of. Therefore, set this card's z-index to the negative of its
-               position in the plugin list.
-            */
-            var cards = this.parentElement.getElementsByTagName('loot-plugin-card');
-            for (var i = 0; i < cards.length; ++i) {
-                if (cards[i] == this) {
-                    this.style.zIndex = 10000 - i;
-                }
-            }
         },
 
         detached: function() {
