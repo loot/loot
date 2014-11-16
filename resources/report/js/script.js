@@ -999,9 +999,9 @@ function toggleDrawer(evt) {
 function handleSidebarClick(evt) {
     if (evt.target.hasAttribute('data-index')) {
         window.location.hash = '';
-        document.getElementById('main').querySelector('core-list').scrollToItem(evt.target.getAttribute('data-index'));
+        document.getElementById('main').lastElementChild.scrollToItem(evt.target.getAttribute('data-index'));
         /* However, the scroll bar that the plugin card list uses is for the whole main content area, so the position is offset by the heights of the summary and general messages cards. Adjust to compensate. */
-        document.getElementById('main').scrollTop += document.getElementById('main').querySelector('core-list').offsetTop;
+        document.getElementById('main').scrollTop += document.getElementById('main').lastElementChild.offsetTop;
     }
 }
 function handleQuit(evt) {
@@ -1283,7 +1283,7 @@ function onFocus(evt) {
 
 window.addEventListener('polymer-ready', function(e) {
     /* Set the plugin list's scroll target to its parent. */
-    document.getElementById('main').querySelector('core-list').scrollTarget = document.getElementById('main');
+    document.getElementById('main').lastElementChild.scrollTarget = document.getElementById('main');
 
     require(['bower_components/marked/lib/marked', 'js/l10n', 'js/plugin', 'js/filters'], function(markedResponse, l10nResponse) {
         marked = markedResponse;
