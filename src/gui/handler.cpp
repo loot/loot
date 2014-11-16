@@ -881,38 +881,44 @@ namespace loot {
             language = Language::any;
         BOOST_LOG_TRIVIAL(info) << "Using message language: " << Language(language).Name();
 
-        // Always reload all the plugins.
-        SendProgressUpdate(frame, "Loading plugin contents...");
-        g_app_state.CurrentGame().LoadPlugins(false);
+        try {
+            // Always reload all the plugins.
+            SendProgressUpdate(frame, "Loading plugin contents...");
+            g_app_state.CurrentGame().LoadPlugins(false);
 
-        //Sort plugins into their load order.
-        list<Plugin> plugins = g_app_state.CurrentGame().Sort(language, [this, frame](const string& message) {
-            this->SendProgressUpdate(frame, message);
-        });
+            //Sort plugins into their load order.
+            list<Plugin> plugins = g_app_state.CurrentGame().Sort(language, [this, frame](const string& message) {
+                this->SendProgressUpdate(frame, message);
+            });
 
-        YAML::Node node;
-        for (const auto &plugin : plugins) {
-            YAML::Node pluginNode;
+            YAML::Node node;
+            for (const auto &plugin : plugins) {
+                YAML::Node pluginNode;
 
-            pluginNode["name"] = plugin.Name();
-            pluginNode["crc"] = plugin.Crc();
-            pluginNode["isDummy"] = plugin.FormIDs().size() == 0;
+                pluginNode["name"] = plugin.Name();
+                pluginNode["crc"] = plugin.Crc();
+                pluginNode["isDummy"] = plugin.FormIDs().size() == 0;
 
-            // Sorting may have produced a plugin loading error message, so rederive displayed data.
-            YAML::Node derivedNode = GenerateDerivedMetadata(plugin.Name());
-            for (const auto &pair : derivedNode) {
-                const string key = pair.first.as<string>();
-                pluginNode[key] = pair.second;
+                // Sorting may have produced a plugin loading error message, so rederive displayed data.
+                YAML::Node derivedNode = GenerateDerivedMetadata(plugin.Name());
+                for (const auto &pair : derivedNode) {
+                    const string key = pair.first.as<string>();
+                    pluginNode[key] = pair.second;
+                }
+
+                node.push_back(pluginNode);
             }
+            g_app_state.isMidSort = true;
 
-            node.push_back(pluginNode);
+            if (node.size() > 0)
+                callback->Success(JSON::stringify(node));
+            else
+                callback->Success("null");
         }
-        g_app_state.isMidSort = true;
-
-        if (node.size() > 0)
-            callback->Success(JSON::stringify(node));
-        else
-            callback->Success("null");
+        catch (loot::error& e) {
+            BOOST_LOG_TRIVIAL(error) << "Failed to sort plugins. Details: " << e.what();
+            callback->Failure(e.code(), e.what());
+        }
     }
 
     YAML::Node Handler::GenerateDerivedMetadata(const Plugin& file, const Plugin& masterlist, const Plugin& userlist) {
