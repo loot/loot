@@ -170,11 +170,9 @@ li.warn{
 }
 .tag.add {
     color:green;
-    margin-left: 1.75em;
 }
 .tag.remove {
     color:red;
-    margin-left: 1.75em;
 }
 
 #settings > paper-checkbox, #settings > core-tooltip, #filters > paper-checkbox {
