@@ -175,8 +175,11 @@ li.warn{
     color:red;
 }
 
-#settings > paper-checkbox, #settings > core-tooltip, #filters > paper-checkbox {
+#settingsDialog > paper-checkbox, #settingsDialog > core-tooltip, #filters > paper-checkbox {
     display: block;
+}
+#settingsDialog > div[center] > div:first-child {
+    margin-right: 2em;
 }
 paper-checkbox {
     padding: 0.5em 1em;
@@ -229,7 +232,4 @@ paper-progress {
     #drawerToggle {
         display: block;
     }
-}
-#settingsDialog > paper-checkbox {
-    display: block;
 }
