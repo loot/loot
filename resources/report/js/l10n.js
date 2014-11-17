@@ -181,7 +181,7 @@
             document.getElementById('cardsNav').firstElementChild.nextElementSibling.lastChild.textContent = l10n.translate("General Messages").fetch();
             document.getElementById('sidebarTabs').firstElementChild.textContent = l10n.translate("Plugins").fetch();
             document.getElementById('sidebarTabs').firstElementChild.nextElementSibling.textContent = l10n.translate("Filters").fetch();
-            document.getElementById('searchBox').parentElement.label = l10n.translate("Press Enter when searching to select the next match.").fetch();
+            document.getElementById('searchBox').parentElement.label = l10n.translate("Press Enter or click outside the input to set the filter.").fetch();
 
             /* Filters */
             document.getElementById('hideVersionNumbers').label = l10n.translate("Hide version numbers").fetch();
@@ -242,7 +242,7 @@
             var firstRun = document.getElementById('firstRun');
             firstRun.heading = l10n.translate("First-Time Tips").fetch();
 
-            firstRun.querySelector('li:nth-child(4)').textContent = l10n.translate("Multiple metadata editors can be opened at once, and the menu bar is disabled while any editors are open.").fetch();
+            firstRun.querySelector('li:nth-child(4)').textContent = l10n.translate("Multiple metadata editors can be opened at once, and many options in the header bar are disabled while any editors are open.").fetch();
             firstRun.querySelector('li:last-child').textContent = l10n.translate("Many interface elements have tooltips. If you don't know what something is, try hovering your mouse over it to find out.").fetch();
 
             firstRun.getElementsByTagName('paper-button')[0].textContent = l10n.translate("OK").fetch();
