@@ -752,9 +752,11 @@ function areSettingsValid() {
     return true;
 }
 function switchSidebarTab(evt) {
-    evt.target.nextElementSibling.selected = evt.target.selected;
-    if (evt.target.selected == 0) {
-        document.getElementById('cardsNav').lastElementChild.updateSize();
+    if (evt.detail.isSelected) {
+        document.getElementById(evt.target.selected).parentElement.selected = evt.target.selected;
+        if (evt.target.selected == 'cardsNav') {
+            document.getElementById('cardsNav').lastElementChild.updateSize();
+        }
     }
 }
 

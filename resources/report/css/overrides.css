@@ -40,10 +40,11 @@ html /deep/ paper-item[disabled]  {
 
 /* These overrides change the colour of the tab ink effect and their underline. */
 html /deep/ paper-tabs::shadow #selectionBar {
-    background-color: #4285f4;
+    background-color: white;
+    height: 4px;
 }
 html /deep/ paper-tab::shadow #ink {
-    color: #4285f4;
+    color: #f1f1f1;
 }
 
 /* This override change the positioning of the progress dialog to adapt to content changes. */

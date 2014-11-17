@@ -88,6 +88,10 @@
             </paper-dropdown>
         </paper-menu-button>
         <paper-icon-button icon="drawer" id="drawerToggle"></paper-icon-button>
+        <paper-tabs id="sidebarTabs" selected="cardsNav" valueattr="data-id">
+            <paper-tab data-id="cardsNav">Plugins</paper-tab>
+            <paper-tab data-id="filters">Filters</paper-tab>
+        </paper-tabs>
         <loot-dropdown-menu id="gameMenu">
             <!-- Generated game <li> elements go here. -->
         </loot-dropdown-menu>
@@ -103,11 +107,7 @@
     </core-toolbar>
     <core-drawer-panel id="container" drawerWidth="33%">
         <div drawer vertical layout>
-            <paper-tabs id="sidebarTabs" selected="0">
-                <paper-tab>Plugins</paper-tab>
-                <paper-tab>Filters</paper-tab>
-            </paper-tabs>
-            <core-animated-pages selected="0" transitions="" flex>
+            <core-animated-pages selected="cardsNav" valueattr="id" transitions="" flex>
                 <div id="cardsNav" class="tab-content" layout vertical>
                     <paper-item>
                         <a href="#summary"></a>Summary

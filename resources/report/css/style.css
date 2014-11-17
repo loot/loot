@@ -38,6 +38,10 @@ body {
 #mainToolbar paper-dropdown {
     color: black;
 }
+#sidebarTabs {
+    width: calc(33% - 68px);
+    height: 64px;
+}
 
 div[drawer] > core-tooltip {
     margin: 0 12px;
@@ -104,6 +108,9 @@ section h1 {
     margin: 0;
     font-weight: normal;
     font-size: 1.2em;
+}
+#filters {
+    padding: 0.9em 1em;
 }
 #filters div {
     padding:0.2em 0.5em;
@@ -218,14 +225,11 @@ paper-progress {
 
 /* This animates the drawer toggle appearing in narrow view. */
 #drawerToggle {
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.5s;
+    display: none;
 }
 @media screen and (max-width: 640px) {
     #drawerToggle {
-        opacity: 1;
-        visibility: visible;
+        display: block;
     }
 }
 #settingsDialog > paper-checkbox {
