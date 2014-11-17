@@ -265,7 +265,7 @@ loot-clear-metadata
             this.shadowRoot.getElementById('loadsBSA').setPosition();
 
             /* Also re-calculate editor tooltip positions. */
-            this.shadowRoot.getElementById('editor').setTooltipPositions();
+            this.shadowRoot.getElementById('editor').updatePolymerElements();
         },
 
         onShowEditor: function(evt) {

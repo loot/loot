@@ -131,6 +131,19 @@ loot-editor-close
         core-icon {
             vertical-align: inherit !important;
         }
+        #tableTabs {
+            border: 2px solid #f1f1f1;
+        }
+        paper-tabs {
+            background: #f1f1f1;
+        }
+        /* These overrides change the colour of the tab ink effect and their underline. */
+        paper-tabs::shadow #selectionBar {
+            background-color: #4285f4;
+        }
+        paper-tab::shadow #ink {
+            color: #4285f4;
+        }
         </style>
         <core-toolbar>
             <core-tooltip id="activeTick" label="Active Plugin">
@@ -528,11 +541,18 @@ loot-editor-close
             }
         },
 
-        setTooltipPositions: function() {
+        updatePolymerElements: function() {
+            /* Set tooltip positions. */
             this.shadowRoot.getElementById('activeTick').setPosition();
             this.shadowRoot.getElementById('dummyPlugin').setPosition();
             this.shadowRoot.getElementById('loadsBSA').setPosition();
             this.shadowRoot.getElementById('globalPriority').parentElement.setPosition();
+
+            /* Update tab bar position. */
+            this.shadowRoot.getElementById('tableTabs').firstElementChild.updateBar();
+
+            /* Also make sure right arrow is visible. */
+            this.shadowRoot.getElementById('tableTabs').firstElementChild.shadowRoot.querySelector('.scroll-button:last-child').firstElementChild.classList.remove('hidden');
         },
     });
     </script>
