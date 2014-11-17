@@ -1260,6 +1260,13 @@ window.addEventListener('polymer-ready', function(e) {
     /* Set the plugin list's scroll target to its parent. */
     document.getElementById('main').lastElementChild.scrollTarget = document.getElementById('main');
 
+    /* Add Roboto font loader. */
+    var link = document.createElement('link');
+    link.href = 'http://fonts.googleapis.com/css?family=RobotoDraft:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en';
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    document.head.appendChild(link);
+
     require(['bower_components/marked/lib/marked', 'js/l10n', 'js/plugin', 'js/filters'], function(markedResponse, l10nResponse) {
         marked = markedResponse;
         l10n = l10nResponse;
