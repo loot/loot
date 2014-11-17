@@ -25,7 +25,6 @@
 var marked;
 var l10n;
 var loot = {
-    pauseAutoRefresh: false,
     installedGames: [],
     settings: {},
     game: {
@@ -186,7 +185,6 @@ var loot = {
         document.getElementById('languageSelect').value = this.settings.language;
         document.getElementById('enableDebugLogging').checked = this.settings.enableDebugLogging;
         document.getElementById('updateMasterlist').checked = this.settings.updateMasterlist;
-        document.getElementById('autoRefresh').checked = this.settings.autoRefresh;
 
         this.updateEnabledGames();
         this.game.updateSelectedGame();
@@ -550,7 +548,6 @@ function closeProgressDialog() {
     }
 }
 function sortPlugins(evt) {
-    loot.pauseAutoRefresh = true;
     var mlistUpdate;
     if (loot.settings.updateMasterlist) {
         mlistUpdate = updateMasterlistNoProgress();
@@ -630,9 +627,6 @@ function applySort(evt) {
         showElement(document.getElementById('sortButton'));
         hideElement(document.getElementById('applySortButton'));
         hideElement(document.getElementById('cancelSortButton'));
-
-        /* Re-enable auto-refresh. */
-        loot.pauseAutoRefresh = false;
     }).catch(processCefError);
 }
 function cancelSort(evt) {
@@ -649,9 +643,6 @@ function cancelSort(evt) {
         showElement(document.getElementById('sortButton'));
         hideElement(document.getElementById('applySortButton'));
         hideElement(document.getElementById('cancelSortButton'));
-
-        /* Re-enable auto-refresh. */
-        loot.pauseAutoRefresh = false;
     }).catch(processCefError);
 }
 function redatePlugins(evt) {
@@ -785,16 +776,7 @@ function closeSettingsDialog(evt) {
             lastGame: loot.settings.lastGame,
             updateMasterlist: document.getElementById('updateMasterlist').checked,
             filters: loot.settings.filters,
-            autoRefresh: document.getElementById('autoRefresh').checked,
         };
-
-        /* There's no easy way to check if an event listener has been added
-           already, so just remove the window focus listener, and add it again
-           if auto-refresh is enabled. */
-        window.removeEventListener('focus', onFocus, false);
-        if (settings.autoRefresh) {
-            window.addEventListener('focus', onFocus, false);
-        }
 
         /* Send the settings back to the C++ side. */
         var request = JSON.stringify({
@@ -1032,7 +1014,7 @@ function setupEventHandlers() {
     document.getElementById('openLogButton').addEventListener('click', openLogLocation, false);
     document.getElementById('wipeUserlistButton').addEventListener('click', clearAllMetadata, false);
     document.getElementById('copyContentButton').addEventListener('click', copyContent, false);
-    document.getElementById('refreshContentButton').addEventListener('click', onFocus, false);
+    document.getElementById('refreshContentButton').addEventListener('click', onContentRefresh, false);
     document.getElementById('settingsButton').addEventListener('click', showSettingsDialog, false);
     document.getElementById('helpButton').addEventListener('click', openReadme, false);
     document.getElementById('aboutButton').addEventListener('click', showAboutDialog, false);
@@ -1196,12 +1178,6 @@ function initVars() {
             }
 
             promise.then(function(){
-                /* So much easier than trying to set up my own C++ message loop to listen
-                   to window messages looking for a focus change. */
-                if (loot.settings.autoRefresh) {
-                    window.addEventListener('focus', onFocus, false);
-                }
-
                 if (!loot.settings.lastVersion || loot.settings.lastVersion != loot.version) {
                     document.getElementById('firstRun').showModal();
                 }
@@ -1210,10 +1186,7 @@ function initVars() {
 
     }).catch(processCefError);
 }
-function onFocus(evt) {
-    if (loot.pauseAutoRefresh) {
-        return;
-    }
+function onContentRefresh(evt) {
     /* Send a query for updated load order and plugin header info. */
     showProgress('Refreshing data...');
     loot.query('getGameData').then(function(result){

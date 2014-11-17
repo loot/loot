@@ -222,8 +222,6 @@
 
             document.getElementById('updateMasterlist').label = l10n.translate("Update masterlist before sorting").fetch();
 
-            document.getElementById('autoRefresh').label = l10n.translate("Automatically refresh content on window refocus").fetch();
-
             var gameTable = document.getElementById('gameTable');
             gameTable.querySelector('th:first-child').textContent = l10n.translate("Name").fetch();
             gameTable.querySelector('th:nth-child(2)').textContent = l10n.translate("Base Game").fetch();

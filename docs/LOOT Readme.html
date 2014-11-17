@@ -365,7 +365,6 @@ The <paper-icon-button icon="more-vert"></paper-icon-button> icon is a menu butt
         <tr><td>Language<td>Controls the language LOOT uses in its interfaces. Any plugin messages that do not have translations in the selected language will be displayed in English, if available, or in their available language otherwise.
         <tr><td>Enable Debug Logging<td>If enabled, writes debug output to <code>%LOCALAPPDATA%\LOOT\LOOTDebugLog.txt</code>. Debug logging can have a noticeable impact on performance, so it is off by default.
         <tr><td id="settingsUpdateMasterlist">Update masterlist before sorting<td>If checked, LOOT will update its masterlist, should an update be available, before sorting plugins.
-        <tr><td>Automatically refresh content on window refocus<td>Controls whether or not LOOT re-scans installed plugin headers and regenerates displayed content when its window regains focus.
 </table>
 <p>LOOT's game-specific settings can be customised in the games table. Settings can also be added for additional game instances, making it easy to use LOOT across multiple copies of a game, including total conversion mods. LOOT ships with settings for the <q>Nehrim - At Fate's Edge</q> total conversion mod as an example.
 <p>The games instances defined in this table are displayed in LOOT's <q>Game</q> menu, and can be selected there if detected. Game instance settings may be deleted by clicking the <core-icon icon="delete"></core-icon> icon at the end of the game's row. The current game cannot have its settings deleted. If you delete the settings for one of LOOT's core four supported games (Oblivion, Skyrim, Fallout 3, Fallout: New Vegas), they will be recreated when LOOT is next run.
@@ -534,7 +533,6 @@ A copy of the license is included in the file named "GNU FDL v1.3.txt".</blockqu
     <li>If LOOT can't detect any installed games, it now launches to the settings dialog, where the game settings can be edited to allow a game to be detected.
     <li><q>Copy Content As Text</q> menu item to copy the plugin list and all information it contains to the clipboard as YAML-formatted text.
     <li>A <q>Refresh Content</q> item has been added to the main menu, which re-scans plugin headers and updates LOOT's content.
-    <li>An <q>Automatically refresh content on window refocus</q> setting has been added. It is disabled by default to prevent what would be unnecessary disruption to most users.
     <li>LOOT is now built as with the Large Address Aware flag.
     <li>Masterlist update can now be performed separately from sorting.
     <li>A <q>First-Time Tips</q> dialog will be displayed on the first run of any particular version of LOOT.
