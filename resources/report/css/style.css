@@ -109,8 +109,8 @@ section h1 {
     font-weight: normal;
     font-size: 1.2em;
 }
-#filters {
-    padding: 0.9em 1em;
+#filters, #cardsNav {
+    padding: 1em 0 0 1em;
 }
 #filters div {
     padding:0.2em 0.5em;

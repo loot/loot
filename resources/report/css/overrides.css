@@ -23,6 +23,17 @@
     color: black;
 }
 
+/* This makes sidebar items smaller. */
+#cardsNav /deep/ paper-item {
+    /*font-size: 1em;*/
+}
+#cardsNav /deep/ paper-item::shadow .button-content {
+    padding: 0.4em 1em;
+}
+#cardsNav loot-plugin-item::shadow > paper-item::shadow .button-content {
+    padding: 0.12em 1em;
+}
+
 /* This override adds separator menu items. */
 html /deep/ paper-item[separator] {
     height: 1px;
