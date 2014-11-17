@@ -195,7 +195,7 @@ loot-clear-metadata
         },
 
         dataChanged: function(oldValue, newValue) {
-            if (newValue != undefined) {
+            if (newValue) {
                 if (newValue.isEditorOpen) {
                     /* Share the data with the editor. */
                     this.shadowRoot.getElementById('editor').data = newValue;
@@ -219,32 +219,24 @@ loot-clear-metadata
         },
 
         onTagsChange: function(oldValue, newValue) {
-            var tags;
             if (this.data) {
-                tags = this.data.computed.tags;
-            } else {
-                tags = {
-                    added: [],
-                    removed: []
-                };
+                this.getElementsByClassName('tag add')[0].classList.toggle('hidden', this.data.computed.tags.added.length == 0);
+                this.getElementsByClassName('tag remove')[0].classList.toggle('hidden', this.data.computed.tags.removed.length == 0);
             }
-
-            this.getElementsByClassName('tag add')[0].classList.toggle('hidden', tags.added.length == 0);
-            this.getElementsByClassName('tag remove')[0].classList.toggle('hidden', tags.removed.length == 0);
         },
 
         onMessagesChange: function(oldValue, newValue) {
-            /* First clear any existing messages. */
-            var messageUL = this.getElementsByTagName('ul')[0];
-            while(messageUL.firstElementChild) {
-                messageUL.removeChild(messageUL.firstElementChild);
-            }
             if (this.data) {
-                var messages = this.data.computed.messages;
-                for (var i = 0; i < messages.length; ++i) {
-                    messageUL.appendChild(messages[i]);
+                /* First clear any existing messages. */
+                var messageUL = this.getElementsByTagName('ul')[0];
+                while(messageUL.firstElementChild) {
+                    messageUL.removeChild(messageUL.firstElementChild);
                 }
-                messageUL.classList.toggle('hidden', messages.length == 0);
+                /* Now add new messages. */
+                this.data.computed.messages.forEach(function(message){
+                    messageUL.appendChild(message);
+                });
+                messageUL.classList.toggle('hidden', this.data.computed.messages.length == 0);
             }
         },
 

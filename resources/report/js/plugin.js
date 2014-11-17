@@ -117,8 +117,7 @@ function Plugin(obj) {
         var uiMessages = [];
         /* Now add the new messages. */
         if (this.messages && this.messages.length != 0) {
-            var messages = filters.applyMessageFilters(this.messages);
-            messages.forEach(function(message) {
+            filters.applyMessageFilters(this.messages).forEach(function(message) {
                 var messageLi = document.createElement('li');
                 messageLi.className = message.type;
                 // Use the Marked library for Markdown formatting support.
