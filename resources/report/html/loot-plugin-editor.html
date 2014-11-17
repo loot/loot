@@ -113,6 +113,11 @@ loot-editor-close
         /* Misc Styling. */
         core-toolbar {
             background: white;
+            height: 56px;
+        }
+        core-toolbar > h1, core-toolbar > span {
+            position: relative;
+            top: -0.15em;
         }
         #buttons {
             text-align: right;
@@ -122,6 +127,9 @@ loot-editor-close
         }
         main > core-tooltip, main > paper-checkbox {
             display: table;
+        }
+        core-icon {
+            vertical-align: inherit !important;
         }
         </style>
         <core-toolbar>

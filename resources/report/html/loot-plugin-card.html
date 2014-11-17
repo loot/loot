@@ -58,9 +58,6 @@ loot-clear-metadata
         :host([data-edits=false]) #hasUserEdits {
             display: none;
         }
-        #front {
-            padding-bottom: 1em;
-        }
         #front, #editor {
             display: block;
         }
@@ -89,12 +86,14 @@ loot-clear-metadata
         }
 
         /* Content styling. */
-        ::content .tag.add, ::content .tag.remove, ::content ul {
-            padding: 0 1em;
+        ::content .tag, ::content ul {
+            padding: 0 1em 1em;
         }
         ::content h1, h1 {
+            display: inline-block;
             font-weight: normal;
             font-size: 1em;
+            margin: 0;
         }
         ::content .version, .version {
             display: inline-block;
@@ -112,13 +111,21 @@ loot-clear-metadata
 
         /* Misc Styling. */
         core-toolbar {
-            background: white;
+            background: inherit;
+            height: 56px;
+        }
+        core-toolbar > div {
+            position: relative;
+            top: -0.15em;
         }
         paper-item:first-child::shadow .button-content {
             padding: 0;
         }
         paper-checkbox {
             padding: 0.9em 1em;
+        }
+        core-icon {
+            vertical-align: inherit !important;
         }
         </style>
         <div id="wrapper">
@@ -127,9 +134,11 @@ loot-clear-metadata
                     <core-tooltip id="activeTick" label="Active Plugin">
                         <core-icon icon="check"></core-icon>
                     </core-tooltip>
-                    <content select="h1"></content>
-                    <content select=".version"></content>
-                    <span flex><content select=".crc"></content></span>
+                    <div flex>
+                        <content select="h1"></content>
+                        <content select=".version"></content>
+                        <content select=".crc"></content>
+                    </div>
                     <core-tooltip id="dummyPlugin" label="Dummy Plugin">
                         <core-icon icon="visibility-off"></core-icon>
                     </core-tooltip>

@@ -78,13 +78,6 @@ html /deep/ paper-dropdown > div {
     transform-style: preserve-3d;
 }
 
-/* This makes paper-menu-button icons align like paper-icon-buttons do. */
-html /deep/ paper-menu-button > paper-icon-button,
-html /deep/ core-tooltip > paper-icon-button,
-html /deep/ core-tooltip > core-icon {
-    display: block;
-}
-
 /* Center paper-dropdown-menu text better. */
 html /deep/ paper-dropdown-menu {
     padding-top: 0;
