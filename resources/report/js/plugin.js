@@ -133,7 +133,16 @@ function Plugin(obj) {
 
     Plugin.prototype.observer = function(changes) {
         changes.forEach(function(change) {
-            if (change.name == 'messages') {
+            if (change.name == 'tags') {
+                change.object.computed.tags = change.object.getTagStrings();
+            } else if (change.name == 'modPriority') {
+                change.object.computed.priority = change.object.getPriorityString();
+            } else if (change.name == 'crc') {
+                change.object.computed.crc = change.object.getCrcString();
+            } else if (change.name == 'messages') {
+                /* Update computed list items. */
+                change.object.computed.messages = change.object.getUIMessages();
+
                 /* Update the message counts. */
                 var oldTotal = 0;
                 var newTotal = 0;
@@ -180,6 +189,12 @@ function Plugin(obj) {
         });
     }
 
+    this.computed = {
+        tags: this.getTagStrings(),
+        priority: this.getPriorityString(),
+        crc: this.getCrcString(),
+        messages: this.getUIMessages(),
+    };
     Object.observe(this, this.observer);
 }
 

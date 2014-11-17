@@ -130,7 +130,7 @@ loot-editor-close
             </core-tooltip>
             <h1>{{data.name}}</h1>
             <span class="version">{{data.version}}</span>
-            <span class="crc" flex></span>
+            <span class="crc" flex>{{data.computed.crc}}</span>
             <core-tooltip id="dummyPlugin" label="Dummy Plugin">
                 <core-icon icon="visibility-off"></core-icon>
             </core-tooltip>
@@ -264,9 +264,6 @@ loot-editor-close
             if (newValue) {
                 /* Set the new editor data. */
                 this.setEditorData(newValue);
-                this.shadowRoot.getElementsByClassName('crc')[0].textContent = this.data.getCrcString();
-            } else {
-                this.shadowRoot.getElementsByClassName('crc')[0].textContent = '';
             }
         },
 

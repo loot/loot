@@ -174,7 +174,6 @@ loot-clear-metadata
         data: undefined,
 
         observe: {
-            'data.crc': 'onCrcChange',
             'data.tags': 'onTagsChange',
             'data.messages': 'onMessagesChange'
         },
@@ -211,7 +210,6 @@ loot-clear-metadata
                 }
 
                 /* Also initialise the non-simple-string data. */
-                this.onCrcChange();
                 this.onTagsChange();
                 this.onMessagesChange();
 
@@ -220,27 +218,18 @@ loot-clear-metadata
             }
         },
 
-        onCrcChange: function(oldValue, newValue) {
-            if (this.data) {
-                this.getElementsByClassName('crc')[0].textContent = this.data.getCrcString();
-            } else {
-                this.getElementsByClassName('crc')[0].textContent = '';
-            }
-        },
-
         onTagsChange: function(oldValue, newValue) {
             var tags;
             if (this.data) {
-                tags = this.data.getTagStrings();
+                tags = this.data.computed.tags;
             } else {
                 tags = {
                     added: [],
                     removed: []
                 };
             }
-            this.getElementsByClassName('tag add')[0].textContent = tags.added;
+
             this.getElementsByClassName('tag add')[0].classList.toggle('hidden', tags.added.length == 0);
-            this.getElementsByClassName('tag remove')[0].textContent = tags.removed;
             this.getElementsByClassName('tag remove')[0].classList.toggle('hidden', tags.removed.length == 0);
         },
 
@@ -251,7 +240,7 @@ loot-clear-metadata
                 messageUL.removeChild(messageUL.firstElementChild);
             }
             if (this.data) {
-                var messages = this.data.getUIMessages();
+                var messages = this.data.computed.messages;
                 for (var i = 0; i < messages.length; ++i) {
                     messageUL.appendChild(messages[i]);
                 }
