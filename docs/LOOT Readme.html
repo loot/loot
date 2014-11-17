@@ -160,12 +160,6 @@ paper-icon-button::shadow #icon {
     <li><a href="#contrib">Contributing &amp; Support</a>
     <li><a href="#credits">Credits</a>
     <li><a href="#license">License</a>
-    <li><a href="#appendix">Appendices</a>
-    <ol>
-        <li><a href="#appendix-intro">Introduction To Load Orders</a>
-        <li><a href="#appendix-dirty">Dirty Edits, Mod Cleaning &amp; CRCs</a>
-        <li><a href="#appendix-permissions">File Permissions</a>
-    </ol>
     <li><a href="#history">Version History</a>
 </ol>
 
@@ -177,7 +171,7 @@ paper-icon-button::shadow #icon {
 
 <p>While LOOT is able to calculate correct load order positions for the vast majority of plugins using only their content, it cannot do so for all plugins. As such, LOOT provides a mechanism for supplying additional plugin metadata so that it may sort them correctly. An online <em>masterlist</em> is provided to supply metadata for many plugins that need it, while users can make their own metadata additions, which are saved in their <em>userlist</em>.
 
-<p>LOOT is intended to make using mods easier, and mod users should still possess a working knowledge of mod load ordering. See <a href="#appendix-intro">Introduction To Load Orders</a> for an overview.
+<p>LOOT is intended to make using mods easier, and mod users should still possess a working knowledge of mod load ordering. See <a href="https://github.com/loot/loot.github.io/wiki/Introduction-To-Load-Orders">Introduction To Load Orders</a> for an overview.
 
 
 <h2 id="install">Installation &amp; Uninstallation</h2>
@@ -451,56 +445,6 @@ or any later version published by the Free Software Foundation;
 with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.<br />
 A copy of the license is included in the file named "GNU FDL v1.3.txt".</blockquote>
 
-<h2 id="appendix">Appendices</h2>
-<h3 id="appendix-intro">Introduction To Load Orders</h3>
-<p>This appendix provides a general overview of load ordering in the games LOOT supports for those who are unfamiliar with the concept. For simplicity, <q>the game</q> will be used when the text refers to any of the games that LOOT supports.
-<p>Mod plugins for the game are files that end in <code>.esp</code> or <code>.esm</code>. These files are created by the game's official editing tools, or by third-party modders' tools. They contain various data <em>records</em>, which  cover almost all aspects of what is in the game &ndash; NPCs, items, races, interiors, worlds, quests, etc. &ndash; and can either be new or changes to the records added by another plugin.
-<p>When the game is run, it loads each installed plugin one by one in a certain <em>load order</em>. The load order is important for two reasons:
-<ul>
-<li>If one plugin changes a record added by another plugin, the former must load after the latter. If it doesn't, the game will crash on launch.
-<li>The game can only apply one version of a record, so if multiple plugins contain the same record, the last-loaded plugin's version overrides all others. This is known as the <em>rule of one</em>, and it holds true for almost all record types. Some overrides can cause problems in-game, and a good load order is one that arranges plugins to avoid such problems.
-</ul>
-<p>There are a few hardcoded rules related to load order:
-<ul>
- <li>Master plugins always load before non-master plugins. The difference between the two plugin types isn't really relevant, except that a plugin's type is decided by a setting inside it, and not by its file extension (even though <code>.esm</code> stands for Elder Scrolls Master).
- <li>There is a limit of 255 active plugins that can be loaded by the game. This isn't strictly a load <em>order</em> thing, but is worth mentioning.
- <li>In Skyrim, <code>Skyrim.esm</code> always loads before all other plugins.
- <li>In Skyrim, if <code>Update.esm</code> is present, it is always loaded. It loads after all other master plugins, unless it has another position explicitly set.
-</ul>
-<p>A plugin's position in the load order is often displayed by mod managers as a hexadecimal number, from 00 to FE (0 to 255 in decimal). The plugin with position 00 loads first, and the plugin with position FE is loaded last. Hexadecimal numbers are used to display the load order positions of plugins because these numbers form the first two digits of the code that the game uses to reference the records that the plugin adds, so knowing the numbers allows modders and mod users to determine from which plugin a record is from.
-<p>In Oblivion, Fallout 3 and Fallout: New Vegas, load order is determined by plugin timestamps, and the plugins you have accessed are listed in <code>%LOCALAPPDATA%\&lt;game&gt;\plugins.txt</code>. As such, it's best to use a mod manager to create a backup of your load order. In Skyrim, the load order of active plugins is stored in <code>%LOCALAPPDATA%\&lt;game&gt;\plugins.txt</code>, and modding utilities generally use <code>%LOCALAPPDATA%\&lt;game&gt;\loadorder.txt</code> to store the load order of all plugins. This makes backing up your load order as easy as making copies of those two files.
-
-<h3 id="appendix-dirty">Dirty Edits, Mod Cleaning &amp; CRCs</h3>
-<p>Dirty edits are often a side-effect of mod creation, and are often due to bugs in the utilities Bethesda has provided to create mods, rather than bad practice by mod authors. Dirty edits can cause a wide range of issues, including incorrect game settings, missing content, broken quests and crashing to desktop. The more dirty edits there are in a mod, and the more mods with dirty edits you use, the more likely you are to experience issues.
-<p>Thankfully there is a way to remove dirty edits from mods relatively easily, a process known as <i>mod cleaning</i>, using TES4Edit, FO3Edit,  FNVEdit or TES5Edit (for Oblivion, Fallout 3, Fallout: New Vegas and Skyrim respectively). Detailed instructions and information on mod cleaning are available for <a href="http://cs.elderscrolls.com/constwiki/index.php/TES4Edit_Cleaning_Guide">Oblivion</a> and <a href="http://www.creationkit.com/TES5Edit_Cleaning_Guide_-_TES5Edit">Skyrim</a>, with the process being largely the same for the others.
-<p>The problem of dirty edits is largely a problem of ignorance on the part of mod authors and users alike of the problems dirty mods can cause. As such, there are community efforts to raise awareness of dirty edits and cleaning. LOOT plays a key role in these efforts, as it holds the complete list of all known dirty mods (as does BOSS), and it uses this information to provide notification messages to users for any dirty mods they have installed.
-<p>LOOT identifies and describes unclean plugins using four key pieces of information. They are:
-<ul>
-    <li><i><abbr title="Cyclic Redundancy Check">CRC</abbr> value</i>: CRC values are a highly accurate way of identifying files based on their contents, as if the contents change, so does the CRC value. LOOT identifies an unclean plugin by comparing the installed plugin's CRC value against the CRC values for known unclean versions of that plugin. This identification method has the limitation that it can't detect unclean plugins that aren't already known as such, and won't detect unclean but edited plugins, but it's a lot faster than actually checking for dirty edits in the plugin.
-    <li><i><abbr title="Identical To Master">ITM</abbr> Count</i>: ITM records are a type of dirty edit where a mod has overwritten something in the game without actually changing anything. If another mod higher up in the load order makes an intentional change to that thing, it will have its effect cancelled out by the ITM record, which can cause problems. The ITM count is the number of ITM records found and corrected in the mod plugin.
-    <li><i>Deleted Reference Count</i>: Deleted references are a significant cause of crashes and game bugs. They can be fixed by undeleting and disabling the references, which has the same effect without causing issues. The deleted reference count is equivalent to the <abbr title="Undeleted and Disabled Reference">UDR</abbr> count, which is the number of deleted references that have been fixed, and the two terms are used interchangeably in many places.
-    <li><i>Deleted Navmesh Count</i>: Like deleting records, deleting navmeshes can cause crashes. However, these cannot be automatically corrected, and require manual cleaning. Navmeshes don't exist in Oblivion, so this information doesn't apply.
-</ul>
-<p>In addition to the above, there is another type of dirty edit known as a <em>wild edit</em>. These are any edit that is unrelated to the purpose of the mod, and so provide unnecessary opportunity for conflicts with other mods that do need to change the same thing. It can be difficult to tell if an edit is a wild edit, and so they cannot be automatically cleaned. LOOT can still notify users of wild edits and link to information on fixing them if the CRCs of plugins with wild edits are reported, along with details on what needs cleaning.
-<p>LOOT and the modding communities rely on user contribution of this information to progress. For information on how to contribute, see <a href="#contrib">Contributing To LOOT</a>. If you find that a mod contains dirty edits, you should also report this to the mod's author so that they can fix it.
-<p><b>Note:</b> TES4Edit et al. will include a variety of <em>junk records</em> in the ITM count for a plugin, such as new empty cells that are automatically generated and are almost impossible to remove. These junk records are non-harmful, and LOOT may inform users when a mod contains these and no true ITMs to avoid confusion.
-
-<h3 id="appendix-permissions">File Permissions</h3>
-<p>If you are running Windows Vista or a later version of Windows, LOOT (and other modding programs) may be prevented from working correctly by the UAC security feature. There are four common workarounds to this problem:
-<ol>
-    <li>Install the game outside the <q>Program Files</q> (or <q>Program Files (x86)</q> if on 64-bit Windows). UAC prevents unauthorised edits to these folders, so by installing the game outside of them, you remove it from UAC's reach, allowing you to use mods more easily.
-    <li>Deactivate UAC. This can be done from the Control Panel, and will turn UAC off across the whole of your computer. It is up to you whether you feel that you have adequate security measures in place to do this without risk.
-    <li>Give yourself <q>Full Control</q> permissions over your game install folder. This will allow you to make any edits you desire while keeping UAC active and on guard for any edits made by programs you do not run, and also means that you do not need to reinstall your game to a new location.
-    <li>Run LOOT as an Administrator. Right-click the LOOT executable, or the shortcut if launching from a shortcut, and select <q>Run as administrator</q>.
-</ol>
-<p>For those that wish to take the third option and give themselves <q>Full Control</q> permissions, here is a guide:
-<ol>
-    <li>Right-click the folder you wish to change the permissions for, and select <q>Properties</q>.
-    <li>In <q>Properties</q>, select the <q>Security</q> tab, and click the <q>Edit...</q> button. A UAC prompt may appear, simply allow yourself to continue.
-    <li>In the <q>Group or user names</q> box, select the <q>Users</q> option.
-    <li>In the lower box, check the box opposite <q>Full Control</q> in the <q>Allow</q> column. Press OK to exit. If a UAC prompt appears, allow the change.
-    <li>In the <q>Properties</q> window, select OK to exit. You should now have Full Control permissions over your chosen folder.
-</ol>
 
 <h2 id="history">Version History</h2>
 <p>Only program history is recorded here. The masterlists are updated far too frequently for their changes to be concisely recorded here, but a full history of changes to them may be viewed by browsing the GitHub repositories.
