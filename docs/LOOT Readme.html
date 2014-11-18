@@ -152,9 +152,11 @@ paper-icon-button::shadow #icon {
     <li><a href="#install">Installation &amp; Uninstallation</a>
     <li><a href="#usage">Using LOOT</a>
     <ol>
-        <li><a href="#usage-sort">Sorting Plugins</a>
-        <li><a href="#usage-log">The Results Report</a>
-        <li><a href="#usage-custom">Customising LOOT's Results</a>
+        <li><a href="#usage-init">Initialisation</a>
+        <li><a href="#usage-header">The Header Bar</a>
+        <li><a href="#usage-cards">Plugin Cards &amp; Sidebar Items</a>
+        <li><a href="#usage-filters">Filters</a>
+        <li><a href="#usage-editing">Editing Plugin Metadata</a>
         <li><a href="#usage-settings">Editing Settings</a>
     </ol>
     <li><a href="#contrib">Contributing &amp; Support</a>
@@ -206,28 +208,40 @@ paper-icon-button::shadow #icon {
 
 <p>If LOOT detects that it is the first time you have run that version of LOOT, it will display a <q>First-Time Tips</q> dialog, which provides some information about the user interface that may not be immediately obvious.
 
-<h3 id="usage-cards">Plugin Cards</h3>
-<p>Each plugin is displayed on its own <q>card</q>. The front of the card displays information about the plugin, while the back of the card holds the plugin's metadata editor.
+<h3 id="usage-header">The Header Bar</h3>
 
-<p>LOOT uses a few icons on plugin cards to convey information about plugins:
-<ul>
-    <li><core-icon icon="check"></core-icon> is displayed if the plugin is active.
-    <li><core-icon icon="visibility-off"></core-icon> is displayed if the plugin contains no data. Such plugins are generally used to load BSAs.
-    <li><core-icon icon="attachment"></core-icon> is displayed if the plugin loads one or more BSAs. BSAs are special archives that contain resource files used by the game.
-    <li><core-icon icon="account-circle"></core-icon> is displayed if the plugin has any user metadata.
-</ul>
+<p>The header bar provides access to LOOT's main features. Most of these features get disabled while there is at least one plugin editor open, so if you're trying to use an option that has been <span class="disabled">greyed out</span>, first close any editors you have open.
 
-The <paper-icon-button icon="more-vert"></paper-icon-button> icon is a menu button. Clicking it displays the plugin's menu, which holds options for:
+<h4>Main Menu</h4>
+
+<p>The <paper-icon-button icon="menu"></paper-icon-button> button opens the main menu. A few items may not be obvious in their function:
 <ol>
-    <li id="cardConflictFilter"><p>Toggling the plugin's conflict filter. This filters the plugin cards displayed so that only plugins which conflict with this plugin will be visible. If this plugin loads a BSA, other plugins that load BSAs which <em>may</em> contain conflicting resources are also displayed.</p>
-
-    Only one plugin's conflict filter can be active at any one time, so activating a second conflict filter will deactivate the first. The plugin for which the filter is currently active is outlined in blue, like <span class="highlight">this text is</span>.
-    <li>Editing the plugin's metadata. This flips the card over to show the editor controls.
-    <li id="copyMetadata">Copying the plugin's metadata. The metadata is copied using the format that it is saved in, which makes it an easy way to share any edits you make with masterlist maintainers, for example. If posting the metadata in an online forum that supports BBCode (as most forums do), be sure to wrap it in <code>[code]</code> tags, eg. <code>[code]copied text[/code]</code>, so that the spaces are not removed by the forum software.
-    <li>Clearing all user metadata from the plugin. This is irreversible, so LOOT will double-check that's what you want if you click on it.
+    <li><q>Redate Plugins</q> is provided so that Skyrim modders may set the load order for the Creation Kit. It is only enabled for Skyrim, and changes the timestamps of the plugins in its Data folder to match their current load order. A side effect of changing the timestamps is that any Steam Workshop mods installed will be re-downloaded.
+    <li><q>Copy Content</q> copies the data displayed in LOOT's cards as YAML-formatted text.
+    <li><q>Refresh Content</q> re-scans the installed plugins' headers and regenerates the content LOOT displays. This can be useful if you have made changes to your installed plugins while LOOT was open.
 </ol>
 
-<p>The plugin filename is given in the card header beside the icons, along with the plugin's <abbr title="Cyclic Redundancy Check">CRC</abbr> value (if it has been calculated), and the plugin's version (if one has been found). LOOT looks for version numbers in plugins' description fields, so if a plugin supplies no version number, it cannot be displayed.
+<h4>Game Menu</h4>
+
+<p>The game LOOT is currently run for is displayed in the header bar, and clicking on it will allow you to switch to another game from the drop-down list that is displayed. Games which do not have installs detected are greyed out and cannot be selected.
+
+<h4 id="usage-update">Masterlist Update &amp; Sorting</h4>
+
+<p>The <paper-icon-button icon="file-download"></paper-icon-button> button updates LOOT's masterlist for the current game to the latest available revision. If the latest revision contains errors (eg. due to typos), then LOOT will roll back until it finds a revision that works.
+
+<p>The <paper-icon-button icon="sort"></paper-icon-button> button begins LOOT's sorting process. By <a href="#settingsUpdateMasterlist">default</a>, sorting first updates the masterlist. LOOT then sorts your plugins according to a combination of data from the plugins themselves, and any metadata they may have. If a cyclic interaction is detected (eg. A depends on B depends on A), then sorting will fail. Once sorting has calculated a new load order, the plugin cards are sorted into that order, and the <paper-icon-button icon="file-download"></paper-icon-button> and <paper-icon-button icon="sort"></paper-icon-button> buttons are replaced with <paper-button>Apply</paper-button> and <paper-button>Cancel</paper-button> buttons, which apply and discard the calculated load order respectively.
+
+<p>LOOT is able to sort plugins ghosted by Wrye Bash, and can extract Bash Tags and version numbers from plugin descriptions. Provided that they have the <code>Filter</code> Bash Tag present in their description, LOOT can recognise filter patches and so avoid displaying unnecessary error messages for any of their masters that may be missing.
+
+<h3 id="usage-cards">Plugin Cards &amp; Sidebar Items</h3>
+
+<p>Each plugin is displayed on its own <q>card</q>, which displays all the information LOOT has for that plugin, and holds its metadata editor. Each plugin also has an entry in the Plugins tab of the sidebar. The sidebar entry contains the plugin's name and icons for plugins that load BSAs or have user metadata. Clicking on a plugin's sidebar entry will navigate to its card in the main content area.
+
+<p>The card's <paper-icon-button icon="more-vert"></paper-icon-button> button opens the plugin's menu, which provides access to a few plugin-specific features, including a conflict filter and access to its metadata editor. These are explained in later sections.
+
+<p id="copyMetadata">The <q>Copy Metadata</q> option copies the plugin's metadata in the same format that it is saved in, which makes it an easy way to share any edits you make with masterlist maintainers, for example. If posting the metadata in an online forum that supports BBCode (as most forums do), be sure to wrap it in <code>[code]</code> tags, eg. <code>[code]copied text[/code]</code>, so that the spaces are not removed by the forum software.
+
+<p>The dummy plugin icon <core-icon icon="visibility-off"></core-icon> and <abbr title="Cyclic Redundancy Check">CRC</abbr> values are only displayed on plugin cards after plugins have been fully loaded, which happens during conflict filtering and sorting. LOOT will also display a version number if one can be found in the plugin's description field.
 
 <p>If LOOT suggests any Bash Tags to be added, they will be displayed in <span style="color:green;">green text</span>, while any Bash Tags to be removed will be displayed in <span style="color:red;">red text</span>. Users generally don't need to do anything with this information, as if they're using Wrye Bash it will automatically apply LOOT's suggestions, and if they're not using Wrye Bash then this information doesn't apply.
 
@@ -235,54 +249,23 @@ The <paper-icon-button icon="more-vert"></paper-icon-button> icon is a menu butt
 
 <p>If you think a message suggests an unnecessary action, report it to an official LOOT thread. If you encounter a message that is non-conditional, ie. it suggests an action but is still displayed on subsequent runs of LOOT after the action has been carried out, also report it to an official LOOT thread, so that it can be made conditional.
 
-<h3 id="usage-header">The Header Bar</h3>
-
-<p>The header bar provides access to LOOT's main features. Most of these features get disabled while there is at least one plugin editor open, so if you're trying to use an option that has been <span class="disabled">greyed out</span>, first close any editors you have open.
-
-<p>The main menu is accessed by clicking on the <paper-icon-button icon="menu"></paper-icon-button> button. It contains the following items:
-<ol>
-    <li><q>Redate Plugins</q> is provided so that Skyrim modders may set the load order for the Creation Kit. It is only enabled for Skyrim, and changes the timestamps of the plugins in its Data folder to match their current load order. A side effect of changing the timestamps is that any Steam Workshop mods installed will be re-downloaded.
-    <li><q>Clear All User Metadata</q> removes all user-added metadata from all plugins. If this is clicked, LOOT will first request confirmation before removing any data, as the process is irreversible.
-    <li><q>Copy Content</q> copies the data displayed in LOOT's cards as raw YAML data, which emphasises completeness over readability.
-    <li><q>Refresh Content</q> re-scans the installed plugins' headers and regenerates the content LOOT displays. This can be useful if you have made changes to your installed plugins while LOOT was open, as it is faster than closing and re-opening LOOT.
-    <li><q>Settings</q> opens up LOOT's settings dialog.
-    <li><q>View Documentation</q> opens this readme file in your default web browser.
-    <li><q>Open Debug Log Location</q> opens the folder in which LOOT stores its debug logs and other data, which can be useful when troubleshooting.
-    <li><q>About</q> displays LOOT's about dialog.
-</ol>
-
-<p>Next to the main menu button is the drawer button, <paper-icon-button icon="drawer"></paper-icon-button>. This is only displayed when LOOT's window is sufficiently narrow that the sidebar is displayed as a slide-out drawer, and is used to toggle the drawer state.
-
-<p>To the right of the menu and drawer icons is the game menu. The current game's name is displayed, and clicking on it will reveal a drop-down menu where other games can be selected. Selecting a game will switch LOOT to run for that game. Games which cannot be detected as installed are disabled in the list.
-
-
-<h4 id="usage-update">Masterlist Update &amp; Sorting</h4>
-
-<p>LOOT's masterlists are metadata databases that LOOT uses to provide messages and help sort plugins. By default, LOOT uses a separate masterlist for each game, with each masterlist being hosted online and maintained by the LOOT team.
-
-<p>Clicking the <paper-icon-button icon="file-download"></paper-icon-button> button updates LOOT's masterlist for the current game to the latest available revision. If the latest revision cannot be parsed (eg. due to typos), then LOOT will roll back until it finds a revision that works.
-
-<p>Clicking the <paper-icon-button icon="sort"></paper-icon-button> button begins LOOT's sorting process. By <a href="#settingsUpdateMasterlist">default</a>, sorting first updates the masterlist. LOOT then sorts your plugins according to a combination of data from the plugins themselves, and any metadata they may have. If a cyclic interaction is detected (eg. A depends on B depends on A), then sorting will fail.
-
-<p>Once sorting has calculated a new load order, the plugin cards are sorted into that order, and the <paper-icon-button icon="file-download"></paper-icon-button> and <paper-icon-button icon="sort"></paper-icon-button> buttons are replaced with <paper-button>Apply</paper-button> and <paper-button>Cancel</paper-button> buttons. If the <paper-button>Apply</paper-button> button is clicked, LOOT applies the load order. If the <paper-button>Cancel</paper-button> button is clicked, then the load order and any edits made are discarded.
-
-<p>LOOT is able to sort plugins ghosted by Wrye Bash, and can extract Bash Tags and version numbers from plugin descriptions. Provided that they have the <code>Filter</code> Bash Tag present in their description, LOOT can recognise filter patches and so avoid displaying unnecessary error messages for any of their masters that may be missing.
-
 <h3 id="usage-filters">Filters</h3>
 <p>Clicking the <q>Filters</q> tab in the sidebar will replace the sidebar's plugin list with a list of filter toggles that can be applied to hide various combinations of plugins and other content. The available filter toggles are:
 <ul>
-    <li><i>Hide version numbers</i>: Hides the version numbers printed in blue next to those plugins that provide them.
-    <li><i>Hide CRCs</i>: Hides the CRCs printed in orange next to those plugins that provide them.
+    <li><i>Hide version numbers</i>: Hides the version numbers displayed in blue next to those plugins that provide them.
+    <li><i>Hide CRCs</i>: Hides the CRCs displayed in orange next to those plugins that provide them.
     <li><i>Hide Bash Tags</i>: Hides all Bash Tag suggestions.
     <li><i>Hide notes</i>: Hides all plugin messages that have the <i>Note:</i> prefix.
-    <li><i>Hide 'Do not clean' messages</i>: Hides any messages that contain the string <q>Do not clean.</q>.
+    <li><i>Hide 'Do not clean' messages</i>: Hides all messages that contain the text <q>Do not clean</q>.
     <li><i>Hide all plugin messages</i>: Hides all plugin messages.
     <li><i>Hide inactive plugins</i>: Hides all plugins that are inactive.
-    <li><i>Hide messageless plugins</i>: Hides any plugins that have no visible messages.
+    <li><i>Hide messageless plugins</i>: Hides all plugins that have no visible messages.
 </ul>
 <p>There are also two other filters:
 <ul>
-    <li>A <a href="cardConflictFilter">conflict filter</a> that can be accessed through each plugin's menu.
+    <li>A conflict filter that can be accessed through each plugin's menu. This filters the plugin cards displayed so that only plugins which conflict with this plugin will be visible. If this plugin loads a BSA, other plugins that load BSAs which <em>may</em> contain conflicting resources are also displayed.</p>
+
+    Only one plugin's conflict filter can be active at any one time, so activating a second conflict filter will deactivate the first. The plugin for which the filter is currently active is outlined in blue, like <span class="highlight">this text is</span>.
     <li>A content filter, located at the bottom of the sidebar. This hides any plugins that don't have the filter input value present in any of the following:
     <ul>
         <li>Filename
@@ -293,40 +276,38 @@ The <paper-icon-button icon="more-vert"></paper-icon-button> icon is a menu butt
     </ul>
 </ul>
 
-<h3 id="usage-custom">Editing Plugin Metadata</h3>
+<h3 id="usage-editing">Editing Plugin Metadata</h3>
 <figure>
     <img src="images/editor.png">
     <figcaption>A metadata editor panel.</figcaption>
 </figure>
 <p>LOOT uses metadata to supply plugins with messages and Bash Tag suggestions, and to help it sort plugins that it otherwise can't sort correctly. Users can add to their plugins' metadata through each plugin's metadata editor panel, and plugins with user metadata are labelled with a <core-icon icon="account-circle"></core-icon> icon.
-<p>A plugin's editor panel is accessed by clicking the <q>Edit Metadata</q> item in the plugin's menu. Multiple plugins can have their editor panels open at once, but everything in LOOT's menu bar is disabled while there is at least one panel open.
 
-<p>Table rows that are for masterlist metadata cannot be edited or deleted. User metadata rows can be deleted by clicking their <core-icon icon="delete"></core-icon> icon.
-<p>Rows can be added to the <q>Requirements</q>, <q>Incompatibilities</q> and <q>Load After</q> tables by dragging and dropping plugins from the sidebar into the table area.
+<p>A plugin's editor panel is accessed by clicking the <q>Edit Metadata</q> item in the plugin's menu. Multiple plugins can have their editor panels open at once. Clicking the editor's <paper-button>Apply</paper-button> will apply any changes made before exiting, while the <paper-button>Cancel</paper-button> button will exit the editor and discard any changes made.
 
-<p>The <q>Apply</q> button will save any changes made, then exit the editor panel. The <q>Cancel</q> button will exit the editor panel without saving any changes.
+<p>The editor contains a few simple inputs and a set of tabbed tables through which metadata can be supplied. The simple inputs are:
+<ul>
+    <li>The <q>Enable Edits</q> checkbox must be checked for LOOT to use any user-added metadata, otherwise it will be ignored.
+    <li>The <q>Global Priority</q> checkbox controls how LOOT compares plugin priorities. If unchecked, the plugin's priority will only be compared against plugins that conflict, and <q>dummy</q> plugins. If checked, the plugin's priority will be compared against all plugins.
+    <li>The <q>Priority Value</q> input sets the plugin's priority value, which is used to modify plugin position relative to others. Plugins with higher priority values load after plugins with lower priority values. Plugins have a default priority of 0.
+</ul>
+<p>The various metadata tables can be switched between by clicking on their tabs: depending on the size of LOOT's window, not all tabs may be visible without scrolling.
+<p>Rows can be added by clicking the <q>Add new row...</q> text and filling in the input fields. Alternatively, the <q>Load After</q>, <q>Requirements</q> and <q>Incompatibilities</q> tables can have rows added by dragging and dropping plugins from the sidebar into the table area.
+<p>Rows that are for masterlist metadata cannot be edited or deleted. User metadata rows can be deleted by clicking their <core-icon icon="delete"></core-icon> icon.
 <table>
     <thead>
-        <tr><th>Control<th>Description
+        <tr><th>Table Tab<th>Description
     <tbody>
-        <tr><td>Enable User Changes<td>If this is checked, LOOT will use the metadata you supplied. Otherwise, your metadata will be ignored.
-        <tr><td id="editingPriority">Priority<td>Modifies plugin position relative to others. Plugins with higher priority values load after plugins with lower priority values. Plugins have a default priority of 0. Plugin priorities are only compared if:
-        <ul>
-            <li>The two plugins conflict with each other.
-            <li>One or both of the plugins is a "dummy" plugin, containing only a header record.
-            <li>One or both of the plugins has a global priority.
-        </ul>
-        <tr><td>Requirements<td>This is a list of files that are required by the current plugin for it to function correctly. The current plugin will be loaded after any plugins listed. LOOT will also display an error message if any of the listed files are missing. Any file, not just plugins, can be listed here, and each entry has three fields:
+        <tr><td>Load After<td>This is a list of plugins which, if present, the current plugin must load after, but which are not required. This metadata can be used for resolving specific compatibility issues. Each entry has three fields:
         <ul>
             <li>The <var>filename</var> is the path, relative to the game's Data folder, of the file to be checked for. This field is required.
             <li>The <var>display name</var> is optional, and if specified will be used instead of the <var>filename</var> in any error messages that are displayed if a problem is encountered relating to the file.
             <li>The <var>condition</var> is the optional condition string that is used to determine if the file should be checked for. If left blank, the file will always be checked for. Condition strings are a relatively advanced part of LOOT's functionality, and their syntax is covered in the <a href="LOOT%20Metadata%20Syntax.html">Metadata Syntax</a> documentation.
         </ul>
+        <tr><td>Requirements<td>This is a list of files that are required by the current plugin for it to function correctly. The current plugin will be loaded after any plugins listed. LOOT will also display an error message if any of the listed files are missing. Any file, not just plugins, can be listed here, and each entry has the same three fields as for the load after table.
         <p>Note that listing a plugin's masters as requirements is unnecessary, as LOOT already checks them.
-        <tr><td>Incompatibilities<td>This is a list of files that are incompatible with the plugin. LOOT will display an error message if any of the listed files are found. Any file, not just plugins, can be listed here, and each entry has the same three fields as for the requirements table.
-        <tr><td>Load After<td>This is a list of plugins which, if present, the current plugin must load after, but which are not required. This metadata can be used for resolving specific compatibility issues. Each entry has the same three fields as for the requirements table.
-        <tr><td>Messages<td>A list of messages that are to be displayed for the plugin in LOOT's report. These have no bearing on a plugin's position in the load order.
-        <p>Each message has four fields:
+        <tr><td>Incompatibilities<td>This is a list of files that are incompatible with the plugin. LOOT will display an error message if any of the listed files are found. Any file, not just plugins, can be listed here, and each entry has the same three fields as for the load after table.
+        <tr><td>Messages<td>A list of messages that are to be displayed for the plugin in LOOT's report. These have no bearing on a plugin's position in the load order. Each message has four fields:
         <ul>
             <li>The <var>type</var> is fairly self-explanatory, and is used to provide messages of varying severity with appropriate emphasis in LOOT's report.
             <li>The <var>content</var> is the actual message text.
@@ -336,13 +317,27 @@ The <paper-icon-button icon="more-vert"></paper-icon-button> icon is a menu butt
         <p>If a message's condition determines that it should not be displayed, then it will not be displayed, no matter the language. However, if a message's condition determines that it should be displayed, but the language is specified and doesn't match the language LOOT is running in, the message will not be displayed.
         <tr><td>Bash Tags<td>A list of Bash Tags. These are used by Wrye Bash when generating a Bashed Patch. LOOT's metadata includes Bash Tag addition and removal suggestions, and any Bash Tags that came with the plugin are also displayed.
         <p>As LOOT can suggest Bash Tags be added or removed, it is possible for the same Tag to appear twice, being suggested for addition and removal. In such cases, removal overrides addition.
-        <p>Each Bash Tag has three sub-fields:
+        <p>Each Bash Tag has three fields:
         <ul>
             <li>The <var>state</var> determines whether the Tag is to be suggested for addition or removal.
             <li>The <var>name</var> is the actual Bash Tag name.
             <li>The <var>condition</var> decides if the Tag is to be suggested or not. It functions as for files and messages.
         </ul>
         <p>If a plugin's masters are missing, an error message will be displayed for it. Filter patches are special mods designed for use with a Bashed Patch that do not require all their masters to be present, and so any plugin with the <code>Filter</code> tag applied and missing masters will not cause any errors to be displayed.
+        <tr><td>Dirty Info<td>A list of dirty plugin CRCs and related information. Each row has five fields:
+        <ul>
+            <li>The <var>CRC</var> of the dirty plugin.
+            <li>The <var>ITM Count</var> for the dirty plugin.
+            <li>The number of <var>Deleted References</var> that the dirty plugin contains.
+            <li>The number of <var>Deleted Navmeshes</var> that the dirty plugin contains.
+            <li>The name of the <var>Cleaning Utility</var> to use to clean the dirty plugin.
+        </ul>
+        <p>LOOT uses the information supplied to construct a warning message for the plugin if it matches any of the given CRCs.
+        <tr><td>Locations<td>A list of URLs that the mod to which the plugin belongs can be found at. This metadata is not currently used by LOOT, but it may be useful to record it. Each location has two fields:
+        <ul>
+            <li>The <var>URL</var> at which the plugin's parent mod can be found.
+            <li>The <var>Version</var> which can be found at the given URL.
+        </ul>
 </table>
 
 <h3 id="usage-settings">Editing Settings</h3>
@@ -367,7 +362,7 @@ The <paper-icon-button icon="more-vert"></paper-icon-button> icon is a menu butt
     <thead>
         <tr><th>Game Setting<th>Description
     <tbody>
-        <tr><td>Name<td>The name of the game, or another identifying string, that is displayed in menus and the LOOT's title bar.
+        <tr><td>Name<td>The name of the game, or another identifying text, that is displayed in menus and the LOOT's title bar.
         <tr><td>Base Game Type<td>Every game LOOT runs for must use the plugin file format and load order system of one of the following games:
         <ul>
             <li>TES IV: Oblivion
@@ -377,7 +372,7 @@ The <paper-icon-button icon="more-vert"></paper-icon-button> icon is a menu butt
         </ul>
         <tr><td>LOOT Folder Name<td>The sub-folder which LOOT uses to store the game's files in. Each game must be given a unique sub-folder.
         <tr><td>Master File<td>The game's main master file. This is specified as it must load before all other plugins. Note that Skyrim-based games will always load Skyrim.esm first, so this column must always be set to <q>Skyrim.esm</q> for such games.
-        <tr><td id="settingsMasterlistURL">Masterlist Repository URL<td>The URL of the repository that LOOT uses to update its local copy of the masterlist. If set to an empty string, masterlist updating will be skipped.
+        <tr><td id="settingsMasterlistURL">Masterlist Repository URL<td>The URL of the repository that LOOT uses to update its local copy of the masterlist. If left empty, masterlist updating will be skipped.
         <br><br>
         Masterlist repositories are <a href="http://git-scm.com/">Git</a> repositories that are configured to allow unauthenticated read access and contain a masterlist file named <code>masterlist.yaml</code> in their root directory. The LOOT team maintains a set of official repositories for the games that LOOT supports by default.
         <tr><td>Masterlist Repository Branch<td>The branch of the masterlist repository that LOOT should get masterlist updates from.
@@ -453,65 +448,50 @@ A copy of the license is included in the file named "GNU FDL v1.3.txt".</blockqu
 <h4>Fixes</h4>
 <ul>
     <li>The default registry key for Nehrim was wrong.
+    <li>The <code>settings.yaml</code> included with the installer was very old.
     <li>Messages were displayed in the wrong language if LOOT's language was not English.
+    <li>LOOT forgot plugin CRCs and active status if the settings dialog was opened and exited using the <q>OK</q> button, leading to conditional messages being wrongly displayed or hidden.
+    <li>Inactive incompatibilities were displayed as error messages. They are now displayed as warnings.
     <li>Cyclic interaction errors listed plugins not involved in the cycle.
     <li>Bash Tags suggestions were not displayed correctly.
-    <li>The API crashed when writing a minimal list to a location that doesn't exist.
-    <li>Inactive incompatibilities were displayed as error messages. They are now displayed as warnings.
-    <li>Masterlist updating failed when a fast-forward merge was not possible (eg. when remote has been rebased, or a different repository is used). Such cases are now handled by deleting the local repository and re-cloning the remote.
-    <li>The <code>settings.yaml</code> included with the installer was very old.
-    <li>LOOT forgot plugin CRCs and active status if the settings dialog was opened and exited using the <q>OK</q> button, leading to conditional messages being wrongly displayed or hidden.
-    <li>LOOT crashed when trying to read corrupt plugins.
     <li>Masterlist entries that matched the same plugin were not being merged. Now one exact match and any number of regex matches will be merged.
+    <li>Masterlist updating failed when a fast-forward merge was not possible (eg. when remote has been rebased, or a different repository is used). Such cases are now handled by deleting the local repository and re-cloning the remote.
     <li>Masterlists would not 'update' to older revisions. This can be useful for testing, so now they can do so.
-    <li>Permissions errors would occur when deleting local masterlist repositories.
-    <li>A crash could occur after masterlist update completed.
+    <li>Crashes when trying to read corrupt plugins and after masterlist update completion.
     <li>Plugins with non-ASCII description text would cause <code>codecvt to wstring</code> errors.
     <li>LOOT would accept any file with a <code>.esp</code> or <code>.esm</code> extension as a plugin. It now checks more thoroughly, by attempting to parse such files' headers.
     <li>LOOT would only detect Skyrim plugins as loading BSAs. Plugins for the other games that also load BSAs are now correctly detected as such.
 </ul>
 <h4>Additions</h4>
 <ul>
-    <li>German translation.
-    <li>Support for GitHub Flavored Markdown in masterlist messages, minus features specific to the GitHub site, such as @mentions and emoji.
+    <li>German and Danish translations.
     <li>If LOOT can't detect any installed games, it now launches to the settings dialog, where the game settings can be edited to allow a game to be detected.
-    <li><q>Copy Content As Text</q> menu item to copy the plugin list and all information it contains to the clipboard as YAML-formatted text.
+    <li><q>Copy Content</q> menu item to copy the plugin list and all information it contains to the clipboard as YAML-formatted text.
     <li>A <q>Refresh Content</q> item has been added to the main menu, which re-scans plugin headers and updates LOOT's content.
-    <li>LOOT is now built as with the Large Address Aware flag.
-    <li>Masterlist update can now be performed separately from sorting.
+    <li>LOOT is now built with High DPI display support, and with the Large Address Aware flag set.
+    <li>Masterlist updates can now be performed independently of sorting.
     <li>A <q>First-Time Tips</q> dialog will be displayed on the first run of any particular version of LOOT.
     <li>If LOOT is closed before a sorted load order is applied, it will first ask if the sorted order should be applied or discarded.
-    <li>High DPI display support.
+    <li>Support for GitHub Flavored Markdown in messages, minus features specific to the GitHub site, such as @mentions and emoji.
     <li>Support for message content substitution metadata syntax in the masterlist.
     <li>Display of LOOT's build revision has been added to the <q>About</q> dialog.
     <li>Plugin location metadata can now be added through the user interface.
-    <li>A content filter has been added, which hides plugins that don't have the filter string present in their filenames, versions, CRCs, Bash Tags or messages.
+    <li>A content filter, which hides plugins that don't have the filter text present in their filenames, versions, CRCs, Bash Tags or messages.
 </ul>
 <h4>Changes</h4>
 <ul>
     <li>New single-window HTML5-based interface, using elements of Google's Material Design.
-    <ul>
-        <li>wxWidgets has been replaced with the Chromium Embedded Framework.
-        <li>LOOT now parses the masterlist and plugin headers on startup, and the resulting content is displayed with the plugins in their current load order.
-        <li>A sidebar containing a list of plugin sections, the filters and a search box has been added.
-        <li>Icons have been added to show if plugins are active, contain no records, load BSAs and/or have user metadata. The latter three are displayed on each plugin's card and in the sidebar, while the first is only displayed on each plugin's card.
-        <li>A menu has been added to the top-right of each plugin's card, through which plugin-specific functionality can be accessed.
-        <li>Metadata editing controls are now accessed through each plugin's menu. Each plugin now has its own editor, displayed on the reverse of its card. Multiple editors can be opened at once. Any operations performed through the menu bar (eg. sorting, game changing) are disabled while there is an editor open.
-        <li>Plugin priorities can be viewed by hovering over their names in the sidebar while an editor is open.
-        <li>Drag 'n' drop of plugins from the sidebar into metadata editor tables no longer requires the conflicts filter to be enabled.
-        <li>CRCs are calculated and records are counted during conflict filtering or sorting, so CRCs and dummy plugin icons are not displayed until either process has been performed.
-        <li>The <q>Remove All User-Added Metadata</q> menu item has been renamed to <q>Clear All User Metadata</q> and moved into the main menu.
-        <li>The <q>Remove Plugin User-Added Metadata</q> menu item has been renamed to <q>Clear User Metadata</q> and moved into the plugin menu.
-        <li>The <q>Show only conflicting plugins</q> filter has been renamed to <q>Show Only Conflicts</q> and moved into the plugin menu.
-    </ul>
+    <li>LOOT's calculated load orders are now more intuitive: an additional constraint was added so that plugins will be placed in alphabetical order so long as doing so does not violate any of the other constraints.
+    <li>LOOT now parses the masterlist and plugin headers on startup, and the resulting content is displayed with the plugins in their current load order.
+    <li>Each plugin now has its own editor, and multiple editors can be opened at once.
+    <li>Drag 'n' drop of plugins from the sidebar into metadata editor tables no longer requires the conflicts filter to be enabled.
+    <li>CRCs are calculated and records are counted during conflict filtering or sorting, so CRCs and dummy plugin icons are not displayed until either process has been performed.
     <li>The <q>View Debug Log</q> menu item has been replaced with a <q>Open Debug Log Location</q> menu item to make it easier to upload the file itself.
     <li>Debug logging control has been simplified to enable/disable, replacing the <q>Debug Verbosity</q> setting with an <q>Enable Debug Logging</q> checkbox.
     <li>Changes to game settings now take immediate effect.
     <li>Masterlist updating now exits earlier if the masterlist is already up-to-date.
     <li>Masterlist revisions are now displayed using the shortest unique substring that is at least 7 characters long.
     <li>Making edits to plugin metadata before applying a calculated load order no longer causes LOOT to recalculate the load order. Instead, the displayed load order is applied, and the metadata edits will be applied the next time sorting is performed.
-    <li>Updated dependencies: Boost (v1.57.0), libespm (latest), libloadorder (v6.0.1),  yaml-cpp (latest).
-    <li>LOOT's calculated load orders are now more intuitive: an additional constraint was added so that plugins will be placed in alphabetical order so long as doing so does not violate any of the other constraints.
     <li>All references to <q>UDRs</q> have been replaced by the more technically-correct <q>Deleted References</q> term.
     <li>The <q>Hide inactive plugin messages</q> filter has been replaced by a <q>Hide inactive plugins</q> filter.
 </ul>
@@ -529,12 +509,12 @@ A copy of the license is included in the file named "GNU FDL v1.3.txt".</blockqu
     <li>Fixed <code>loot_load_lists()</code> ignoring userlist paths, and accepting invalid paths.
     <li>Fixed <code>loot_eval_lists()</code> accepting invalid language codes.
     <li>Fixed <code>loot_get_dirty_info()</code> never outputting the <code>loot_needs_cleaning_no</code> code.
+    <li>Fixed <code>loot_write_minimal_list()</code> causing a crash when passed an invalid output path.
     <li>Added load order sorting and application functions.
     <li>Added masterlist update and revision checking functions.
     <li>Added support for native Linux builds.
     <li>Added unit testing of API functions to help ensure correctness and consistency of functionality.
     <li>Added <code>loot_get_build_id()</code>, which outputs the shortened revision ID that the API was built from.
-    <li>API updates are now released alongside application updates, in a separate archive. The archive contains the documentation in PDF format, the API's header file, and a 32-bit DLL.
 </ul>
 
 <h3>0.6.0 - <i>05 July 2014</i></h3>
