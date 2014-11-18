@@ -198,9 +198,11 @@ td input {
     -webkit-user-select: none;
     cursor: move;
 }
+#applySortButton, #cancelSortButton {
+    position: relative;
+    top: -4px;
+}
 #applySortButton {
-    box-shadow: none;
-    outline: none;
     color: #4285f4;
     background-color: white;
 }
