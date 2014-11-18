@@ -41,9 +41,26 @@
 <!-- oncontextmenu attribute disables the right-click menu. -->
 <body oncontextmenu="return false" unresolved fullbleed vertical layout >
     <core-toolbar id="mainToolbar">
+        <paper-icon-button icon="drawer" id="drawerToggle"></paper-icon-button>
+        <paper-tabs id="sidebarTabs" selected="cardsNav" valueattr="data-id">
+            <paper-tab data-id="cardsNav">Plugins</paper-tab>
+            <paper-tab data-id="filters">Filters</paper-tab>
+        </paper-tabs>
+        <loot-dropdown-menu id="gameMenu">
+            <!-- Generated game <li> elements go here. -->
+        </loot-dropdown-menu>
+        <span flex></span>
+        <core-tooltip label="Sort Plugins">
+            <paper-icon-button id="sortButton" icon="sort"></paper-icon-button>
+        </core-tooltip>
+        <core-tooltip label="Update Masterlist">
+            <paper-icon-button id="updateMasterlistButton" icon="file-download"></paper-icon-button>
+        </core-tooltip>
+        <paper-button id="applySortButton" class="hidden">Apply</paper-button>
+        <paper-button id="cancelSortButton" class="hidden">Cancel</paper-button>
         <paper-menu-button>
-            <paper-icon-button icon="menu"></paper-icon-button>
-            <paper-dropdown class="dropdown">
+            <paper-icon-button icon="more-vert"></paper-icon-button>
+            <paper-dropdown class="dropdown" halign="right">
                 <div>
                     <paper-item id="redatePluginsButton">
                         <core-icon icon="today"></core-icon>
@@ -87,23 +104,6 @@
                 </div>
             </paper-dropdown>
         </paper-menu-button>
-        <paper-icon-button icon="drawer" id="drawerToggle"></paper-icon-button>
-        <paper-tabs id="sidebarTabs" selected="cardsNav" valueattr="data-id">
-            <paper-tab data-id="cardsNav">Plugins</paper-tab>
-            <paper-tab data-id="filters">Filters</paper-tab>
-        </paper-tabs>
-        <loot-dropdown-menu id="gameMenu">
-            <!-- Generated game <li> elements go here. -->
-        </loot-dropdown-menu>
-        <span flex></span>
-        <core-tooltip label="Update Masterlist">
-            <paper-icon-button id="updateMasterlistButton" icon="file-download"></paper-icon-button>
-        </core-tooltip>
-        <core-tooltip label="Sort Plugins">
-        <paper-icon-button id="sortButton" icon="sort"></paper-icon-button>
-        </core-tooltip>
-        <paper-button id="applySortButton" class="hidden">Apply</paper-button>
-        <paper-button id="cancelSortButton" class="hidden">Cancel</paper-button>
     </core-toolbar>
     <core-drawer-panel id="container" drawerWidth="33%">
         <div drawer vertical layout>

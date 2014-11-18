@@ -40,7 +40,7 @@ body {
     color: black;
 }
 #sidebarTabs {
-    width: calc(33% - 68px);
+    width: calc(33% - 11px);
 }
 
 div[drawer] > core-tooltip {
