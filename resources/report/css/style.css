@@ -30,17 +30,9 @@ body {
     background:#f8f8f8;
     height: 100%;
 }
-#mainToolbar {
-    background: #4285f4;
-    color: white;
-    width: 99.99vw;  /* Fix for scollbars when LOOT is run through Mod Organiser. */
-    height: 56px;
-}
+
 #mainToolbar paper-dropdown {
     color: black;
-}
-#sidebarTabs {
-    width: calc(33% - 11px);
 }
 
 div[drawer] > core-tooltip {
@@ -73,6 +65,7 @@ paper-item > a {
 }
 #searchBox {
     display: block;
+    padding: 0 1em;
 }
 #container {
     position: fixed;
@@ -223,15 +216,4 @@ paper-progress {
 }
 #firstRun .tag {
     margin: 0;
-}
-
-
-/* This animates the drawer toggle appearing in narrow view. */
-#drawerToggle {
-    display: none;
-}
-@media screen and (max-width: 640px) {
-    #drawerToggle {
-        display: block;
-    }
 }
