@@ -146,22 +146,22 @@ loot-editor-close
         }
         </style>
         <core-toolbar>
-            <core-tooltip id="activeTick" label="Active Plugin">
+            <core-tooltip id="activeTick" label="Active Plugin" noarrow>
                 <core-icon icon="check"></core-icon>
             </core-tooltip>
             <h1>{{data.name}}</h1>
             <span class="version">{{data.version}}</span>
             <span class="crc" flex>{{data.computed.crc}}</span>
-            <core-tooltip id="dummyPlugin" label="Dummy Plugin">
+            <core-tooltip id="dummyPlugin" label="Dummy Plugin" noarrow>
                 <core-icon icon="visibility-off"></core-icon>
             </core-tooltip>
-            <core-tooltip id="loadsBSA" label="Loads BSA">
+            <core-tooltip id="loadsBSA" label="Loads BSA" noarrow>
                 <core-icon icon="attachment"></core-icon>
             </core-tooltip>
         </core-toolbar>
         <main>
             <paper-checkbox id="enableEdits" label="Enable Edits"></paper-checkbox>
-            <core-tooltip label="Global priorities are compared against all other plugins. Normal priorities are compared against only conflicting plugins." position="right">
+            <core-tooltip label="Global priorities are compared against all other plugins. Normal priorities are compared against only conflicting plugins." position="right" noarrow>
                 <paper-checkbox id="globalPriority" label="Global Priority"></paper-checkbox>
             </core-tooltip>
             <div horizontal layout center>

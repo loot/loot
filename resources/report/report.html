@@ -84,7 +84,7 @@
                     </div>
                 </div>
             </core-animated-pages>
-            <core-tooltip label="Press Enter or click outside the input to set the filter." position="top">
+            <core-tooltip label="Press Enter or click outside the input to set the filter." position="top" noarrow>
                 <paper-input id="searchBox" label="Filter content..."></paper-input>
             </core-tooltip>
         </div>
@@ -95,10 +95,10 @@
                     <!-- Generated game <li> elements go here. -->
                 </loot-dropdown-menu>
                 <span flex></span>
-                <core-tooltip label="Sort Plugins">
+                <core-tooltip label="Sort Plugins" noarrow>
                     <paper-icon-button id="sortButton" icon="sort"></paper-icon-button>
                 </core-tooltip>
-                <core-tooltip label="Update Masterlist">
+                <core-tooltip label="Update Masterlist" noarrow>
                     <paper-icon-button id="updateMasterlistButton" icon="file-download"></paper-icon-button>
                 </core-tooltip>
                 <paper-button id="applySortButton" class="hidden">Apply</paper-button>
@@ -262,7 +262,7 @@ along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
                 <!-- Language <option> elements go here. -->
             </loot-dropdown-menu>
         </div>
-        <core-tooltip label="The output is logged to the LOOTDebugLog.txt file." center horizontal layout>
+        <core-tooltip label="The output is logged to the LOOTDebugLog.txt file." center horizontal layout noarrow>
             <paper-checkbox id="enableDebugLogging" label="Enable debug logging"></paper-checkbox>
         </core-tooltip>
         <paper-checkbox id="updateMasterlist" label="Update masterlist before sorting"></paper-checkbox>
