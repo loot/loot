@@ -19,11 +19,9 @@
     <link rel="import" href="bower_components/core-icons/core-icons.html">
     <link rel="import" href="bower_components/core-tooltip/core-tooltip.html">
     <link rel="import" href="bower_components/core-drawer-panel/core-drawer-panel.html">
-    <link rel="import" href="bower_components/core-header-panel/core-header-panel.html">
     <link rel="import" href="bower_components/core-animated-pages/core-animated-pages.html">
     <link rel="import" href="bower_components/core-animated-pages/transitions/slide-from-right.html">
     <link rel="import" href="bower_components/core-list/core-list.html">
-    <link rel="import" href="bower_components/core-scaffold/core-scaffold.html">
 
     <link rel="import" href="bower_components/paper-menu-button/paper-menu-button.html">
     <link rel="import" href="bower_components/paper-item/paper-item.html">
@@ -41,15 +39,74 @@
     <script src="bower_components/requirejs/require.js"></script>
 </head>
 <!-- oncontextmenu attribute disables the right-click menu. -->
-<body oncontextmenu="return false" unresolved fullbleed vertical layout>
-    <core-scaffold drawerWidth="33%" mode="standard">
-        <core-header-panel navigation flex>
-            <core-toolbar>
-                <paper-tabs id="sidebarTabs" selected="cardsNav" valueattr="data-id">
-                    <paper-tab data-id="cardsNav">Plugins</paper-tab>
-                    <paper-tab data-id="filters">Filters</paper-tab>
-                </paper-tabs>
-            </core-toolbar>
+<body oncontextmenu="return false" unresolved fullbleed vertical layout >
+    <core-toolbar id="mainToolbar">
+        <paper-icon-button icon="drawer" id="drawerToggle"></paper-icon-button>
+        <paper-tabs id="sidebarTabs" selected="cardsNav" valueattr="data-id">
+            <paper-tab data-id="cardsNav">Plugins</paper-tab>
+            <paper-tab data-id="filters">Filters</paper-tab>
+        </paper-tabs>
+        <loot-dropdown-menu id="gameMenu">
+            <!-- Generated game <li> elements go here. -->
+        </loot-dropdown-menu>
+        <span flex></span>
+        <core-tooltip label="Sort Plugins">
+            <paper-icon-button id="sortButton" icon="sort"></paper-icon-button>
+        </core-tooltip>
+        <core-tooltip label="Update Masterlist">
+            <paper-icon-button id="updateMasterlistButton" icon="file-download"></paper-icon-button>
+        </core-tooltip>
+        <paper-button id="applySortButton" class="hidden">Apply</paper-button>
+        <paper-button id="cancelSortButton" class="hidden">Cancel</paper-button>
+        <paper-menu-button>
+            <paper-icon-button icon="more-vert"></paper-icon-button>
+            <paper-dropdown class="dropdown" halign="right">
+                <div>
+                    <paper-item id="redatePluginsButton">
+                        <core-icon icon="today"></core-icon>
+                        Redate Plugins
+                    </paper-item>
+                    <paper-item id="wipeUserlistButton">
+                        <core-icon icon="delete"></core-icon>
+                        Clear All User Metadata
+                    </paper-item>
+                    <paper-item id="copyContentButton">
+                        <core-icon icon="content-copy"></core-icon>
+                        Copy Content
+                    </paper-item>
+                    <paper-item id="refreshContentButton">
+                        <core-icon icon="cached"></core-icon>
+                        Refresh Content
+                    </paper-item>
+                    <paper-item separator></paper-item>
+                    <paper-item id="settingsButton">
+                        <core-icon icon="settings"></core-icon>
+                        Settings
+                    </paper-item>
+                    <paper-item separator></paper-item>
+                    <paper-item id="helpButton">
+                        <core-icon icon="book"></core-icon>
+                        View Documentation
+                    </paper-item>
+                    <paper-item id="openLogButton">
+                        <core-icon icon="folder"></core-icon>
+                        Open Debug Log Location
+                    </paper-item>
+                    <paper-item id="aboutButton">
+                        <core-icon icon="help"></core-icon>
+                        About
+                    </paper-item>
+                    <paper-item separator></paper-item>
+                    <paper-item id="quitButton">
+                        <core-icon icon="close"></core-icon>
+                        Quit
+                    </paper-item>
+                </div>
+            </paper-dropdown>
+        </paper-menu-button>
+    </core-toolbar>
+    <core-drawer-panel id="container" drawerWidth="33%">
+        <div drawer vertical layout>
             <core-animated-pages selected="cardsNav" valueattr="id" transitions="" flex>
                 <div id="cardsNav" class="tab-content" layout vertical>
                     <paper-item>
@@ -89,68 +146,8 @@
             <core-tooltip label="Press Enter or click outside the input to set the filter." position="top">
                 <paper-input id="searchBox" label="Filter content..."></paper-input>
             </core-tooltip>
-        </core-header-panel>
-        <div tool id="mainToolbar" layout horizontal center flex>
-            <loot-dropdown-menu id="gameMenu">
-                <!-- Generated game <li> elements go here. -->
-            </loot-dropdown-menu>
-            <span flex></span>
-            <core-tooltip label="Sort Plugins">
-                <paper-icon-button id="sortButton" icon="sort"></paper-icon-button>
-            </core-tooltip>
-            <core-tooltip label="Update Masterlist">
-                <paper-icon-button id="updateMasterlistButton" icon="file-download"></paper-icon-button>
-            </core-tooltip>
-            <paper-button id="applySortButton" class="hidden">Apply</paper-button>
-            <paper-button id="cancelSortButton" class="hidden">Cancel</paper-button>
-            <paper-menu-button>
-                <paper-icon-button icon="more-vert"></paper-icon-button>
-                <paper-dropdown class="dropdown" halign="right">
-                    <div>
-                        <paper-item id="redatePluginsButton">
-                            <core-icon icon="today"></core-icon>
-                            Redate Plugins
-                        </paper-item>
-                        <paper-item id="wipeUserlistButton">
-                            <core-icon icon="delete"></core-icon>
-                            Clear All User Metadata
-                        </paper-item>
-                        <paper-item id="copyContentButton">
-                            <core-icon icon="content-copy"></core-icon>
-                            Copy Content
-                        </paper-item>
-                        <paper-item id="refreshContentButton">
-                            <core-icon icon="cached"></core-icon>
-                            Refresh Content
-                        </paper-item>
-                        <paper-item separator></paper-item>
-                        <paper-item id="settingsButton">
-                            <core-icon icon="settings"></core-icon>
-                            Settings
-                        </paper-item>
-                        <paper-item separator></paper-item>
-                        <paper-item id="helpButton">
-                            <core-icon icon="book"></core-icon>
-                            View Documentation
-                        </paper-item>
-                        <paper-item id="openLogButton">
-                            <core-icon icon="folder"></core-icon>
-                            Open Debug Log Location
-                        </paper-item>
-                        <paper-item id="aboutButton">
-                            <core-icon icon="help"></core-icon>
-                            About
-                        </paper-item>
-                        <paper-item separator></paper-item>
-                        <paper-item id="quitButton">
-                            <core-icon icon="close"></core-icon>
-                            Quit
-                        </paper-item>
-                    </div>
-                </paper-dropdown>
-            </paper-menu-button>
         </div>
-        <div id="main">
+        <div main id="main">
             <section id="summary">
                 <h1>Summary</h1>
                 <table>
@@ -218,7 +215,7 @@
                 <!-- Generated <loot-plugin-card> elements go here. -->
             </core-list>
         </div>
-    </core-scaffold>
+    </core-drawer-panel>
     <paper-toast id="toast"></paper-toast>
     <loot-dialog id="progressDialog">
         <paper-progress indeterminate></paper-progress>

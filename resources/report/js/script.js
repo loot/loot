@@ -977,6 +977,9 @@ function handleClearMetadata(evt) {
         }
     });
 }
+function toggleDrawer(evt) {
+    document.getElementById('container').togglePanel();
+}
 function handleSidebarClick(evt) {
     if (evt.target.hasAttribute('data-index')) {
         window.location.hash = '';
@@ -1035,6 +1038,7 @@ function setupEventHandlers() {
     document.body.addEventListener('loot-copy-metadata', handleCopyMetadata, false);
     document.body.addEventListener('loot-clear-metadata', handleClearMetadata, false);
 
+    document.getElementById('drawerToggle').addEventListener('click', toggleDrawer, false);
     document.getElementById('cardsNav').addEventListener('click', handleSidebarClick, false);
 }
 function initVars() {

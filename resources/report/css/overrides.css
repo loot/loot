@@ -1,22 +1,9 @@
 /* These styles override Polymer's own internal styling for certain elements. */
 
-/* The following is for the app and drawer bars. */
-core-toolbar, core-scaffold::shadow core-toolbar {
-    background: #4285f4;
-    color: white;
-    height: 56px;
-}
-
 /* The following is for setting the size of the drawer in narrow mode. */
-html /deep/  .narrow-layout #drawer {
+#container::shadow .narrow-layout #drawer {
     width: 50% !important;
-    background: white;
-}
-
-/* Let the <core-animated-pages> element stretch to fit the sidebar. */
-core-header-panel::shadow #mainContainer {
-    display: flex;
-    flex-direction: column;
+    background: #f8f8f8;
 }
 
 /* These overrides change the colour of the game menu's text and underline. */
@@ -63,11 +50,11 @@ html /deep/ paper-item[disabled]  {
 }
 
 /* These overrides change the colour of the tab ink effect and their underline. */
-core-toolbar > paper-tabs::shadow #selectionBar {
+#mainToolbar paper-tabs::shadow #selectionBar {
     background-color: white;
     height: 4px;
 }
-core-toolbar paper-tab::shadow #ink {
+#mainToolbar paper-tab::shadow #ink {
     color: #f1f1f1;
 }
 
