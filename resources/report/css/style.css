@@ -30,23 +30,20 @@ body {
     background:#f8f8f8;
     height: 100%;
 }
-#mainToolbar {
+core-toolbar {
     background: #4285f4;
     color: white;
-    width: 99.99vw;  /* Fix for scollbars when LOOT is run through Mod Organiser. */
     height: 56px;
 }
 #mainToolbar paper-dropdown {
     color: black;
 }
-#sidebarTabs {
-    width: calc(33% - 11px);
-}
-
 div[drawer] > core-tooltip {
     margin: 0 12px;
 }
 div[drawer] {
+    background: white;
+    box-shadow: rgba(0, 0, 0, 0.0980392) 0px 2px 4px, rgba(0, 0, 0, 0.0980392) 0px 0px 3px;
     z-index: 1;
 }
 #main {
@@ -54,6 +51,7 @@ div[drawer] {
     overflow-x: hidden;
     position: relative;
     z-index: 0;
+    height: calc(100% - 56px);
 }
 #cardsNav {
     margin: 0;
@@ -74,17 +72,11 @@ paper-item > a {
 #searchBox {
     display: block;
 }
-#container {
-    position: fixed;
-    top: 56px;
-    height: calc(100% - 56px);
-}
 
 section {
     background:white;
     overflow:hidden;
     margin:1em;
-    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
     padding:1em;
     position: relative;
     border-top-left-radius: 2px;
