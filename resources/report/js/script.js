@@ -1174,7 +1174,11 @@ function initVars() {
                     document.getElementById('cardsNav').lastElementChild.data = loot.game.plugins;
                     document.getElementById('main').lastElementChild.data = loot.game.plugins;
 
-                    closeProgressDialog();
+                    setTimeout(function() {
+                        document.getElementById('cardsNav').lastElementChild.updateSize();
+                        closeProgressDialog();
+                    }, 100);
+
                     return '';
                 }).catch(processCefError);
             }
