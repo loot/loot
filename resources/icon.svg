@@ -15,7 +15,10 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.5 r10040"
-   sodipodi:docname="icon.svg">
+   sodipodi:docname="icon.svg"
+   inkscape:export-filename="C:\Users\olive_000\Documents\GitHub\LOOT\loot\resources\icon.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
   <defs
      id="defs4">
     <linearGradient
@@ -194,11 +197,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="3.959798"
-     inkscape:cx="93.962943"
-     inkscape:cy="100.55125"
+     inkscape:zoom="11.2"
+     inkscape:cx="79.516976"
+     inkscape:cy="107.42051"
      inkscape:document-units="px"
-     inkscape:current-layer="layer11"
+     inkscape:current-layer="layer4"
      showgrid="true"
      fit-margin-top="0"
      fit-margin-left="0"
@@ -216,8 +219,8 @@
        visible="true"
        enabled="true"
        snapvisiblegridlinesonly="true"
-       spacingx="2px"
-       spacingy="2px"
+       spacingx="4px"
+       spacingy="4px"
        originx="4px"
        originy="4px" />
   </sodipodi:namedview>
@@ -294,20 +297,20 @@
      inkscape:groupmode="layer"
      id="layer9"
      inkscape:label="Lid Edge Shading &amp; Tinting"
-     sodipodi:insensitive="true"
-     style="display:inline">
+     style="display:inline"
+     sodipodi:insensitive="true">
     <rect
        style="fill:#212121;fill-opacity:0.17647059;stroke:none;display:inline"
        id="rect4179-7"
        width="152"
-       height="2"
+       height="4"
        x="20"
-       y="98" />
+       y="96" />
     <rect
        style="fill:#ffffff;fill-opacity:0.17647059;stroke:none;display:inline"
        id="rect4175"
        width="152"
-       height="2"
+       height="4"
        x="20"
        y="92" />
   </g>
@@ -315,8 +318,8 @@
      inkscape:groupmode="layer"
      id="layer11"
      inkscape:label="Keyhole Shadows"
-     sodipodi:insensitive="true"
-     style="display:inline">
+     style="display:inline"
+     sodipodi:insensitive="true">
     <rect
        style="fill:#bf360c;fill-opacity:0;stroke:none"
        id="rect4269"
@@ -330,20 +333,21 @@
        width="12"
        height="20"
        x="68"
-       y="90" />
+       y="92" />
     <rect
        style="fill:#2d2d2d;fill-opacity:1;stroke:none"
        id="rect4279-6"
        width="12"
        height="20"
        x="112"
-       y="90" />
+       y="92" />
   </g>
   <g
      inkscape:groupmode="layer"
      id="layer13"
      inkscape:label="Lettering Shadow"
-     style="display:inline">
+     style="display:inline"
+     sodipodi:insensitive="true">
     <rect
        style="fill:#ff5722;fill-opacity:0.17647059;stroke:none;filter:url(#filter4481)"
        id="rect4353"
@@ -403,149 +407,151 @@
     <path
        inkscape:connector-curvature="0"
        id="path3983"
-       d="m 20,20 0,152 152,0 0,-18 -128,0 0,-134 z"
-       style="fill:#ffeb3b;fill-opacity:1;stroke:none" />
+       d="m 20,20 0,152 152,0 0,-16 -128,0 0,-136 z"
+       style="fill:#ffeb3b;fill-opacity:1;stroke:none"
+       sodipodi:nodetypes="ccccccc" />
     <path
        sodipodi:nodetypes="ccccccccccccc"
        inkscape:connector-curvature="0"
        id="path3985"
-       d="m 172,20 -24,0 0,24 -14,0 0,18 14,0 0,86 24,0 0,-86 14,0 0,-18 -14,0 z"
+       d="m 172,20 -24,0 0,24 -12,0 0,20 12,0 0,84 24,0 0,-84 12,0 0,-20 -12,0 z"
        style="fill:#ffeb3b;fill-opacity:1;stroke:none" />
     <path
        style="fill:#ffeb3b;fill-opacity:1;stroke:none;display:inline"
-       d="m 100,74 0,48 36,0 0,-48 -36,0 z m 12,16 12,0 0,20 -12,0 0,-20 z"
+       d="m 100,76 0,48 36,0 0,-48 z m 12,16 12,0 0,20 -12,0 z"
        id="path3777-8-2"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccccccccc" />
     <path
        style="fill:#ffeb3b;fill-opacity:1;stroke:none;display:inline"
-       d="m 56,74 0,48 36,0 0,-48 -36,0 z m 12,16 12,0 0,20 -12,0 0,-20 z"
+       d="m 56,76 0,48 36,0 0,-48 z m 12,16 12,0 0,20 -12,0 z"
        id="path3777-8-2-4"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccccccccc" />
   </g>
   <g
      inkscape:groupmode="layer"
      id="layer4"
      inkscape:label="Lettering Shading &amp; Tinting"
-     style="display:inline"
-     sodipodi:insensitive="true">
+     style="display:inline">
     <rect
        style="fill:#bf360c;fill-opacity:0.17647059;stroke:none"
        id="rect3810"
        width="152"
-       height="2.0000021"
+       height="4.0000067"
        x="20"
-       y="170" />
+       y="168" />
     <rect
        style="fill:#bf360c;fill-opacity:0.17647059;stroke:none"
        id="rect3812"
        width="24"
-       height="2"
+       height="4"
        x="148"
-       y="146" />
+       y="144" />
     <rect
        style="fill:#bf360c;fill-opacity:0.17647059;stroke:none"
        id="rect3814"
        width="36"
-       height="2"
+       height="4"
        x="100"
        y="120" />
     <rect
        style="fill:#bf360c;fill-opacity:0.17647059;stroke:none"
        id="rect3816"
        width="36"
-       height="2"
+       height="4"
        x="56"
        y="120" />
     <rect
        style="fill:#bf360c;fill-opacity:0.17647059;stroke:none;display:inline"
        id="rect3814-1"
        width="12"
-       height="2"
+       height="4"
        x="112"
        y="88" />
     <rect
        style="fill:#bf360c;fill-opacity:0.17647059;stroke:none;display:inline"
        id="rect3814-1-7"
        width="12"
-       height="2"
+       height="4"
        x="68"
        y="88" />
     <rect
        style="fill:#bf360c;fill-opacity:0.17647059;stroke:none;display:inline"
        id="rect3814-1-1"
-       width="14"
-       height="2"
-       x="134"
+       width="12"
+       height="4"
+       x="136"
        y="60" />
     <rect
        style="fill:#bf360c;fill-opacity:0.17647059;stroke:none;display:inline"
        id="rect3814-1-1-1"
-       width="14"
-       height="2"
+       width="12"
+       height="4"
        x="172"
        y="60" />
     <rect
        style="fill:#ffffff;fill-opacity:0.17647059;stroke:none;display:inline"
        id="rect3804"
        width="36"
-       height="2"
+       height="4"
        x="100"
-       y="74" />
+       y="76" />
     <rect
        style="fill:#ffffff;fill-opacity:0.17647059;stroke:none;display:inline"
        id="rect3806"
        width="36"
-       height="2"
+       height="4"
        x="56"
-       y="74" />
+       y="76" />
     <rect
        style="fill:#ffffff;fill-opacity:0.17647059;stroke:none;display:inline"
        id="rect3808"
        width="128"
-       height="2"
+       height="4"
        x="44"
-       y="154" />
+       y="156" />
     <rect
        style="fill:#ffffff;fill-opacity:0.17647059;stroke:none;display:inline"
        id="rect3818"
        width="24"
-       height="2"
+       height="4"
        x="20"
        y="20" />
     <rect
        style="fill:#ffffff;fill-opacity:0.17647059;stroke:none;display:inline"
        id="rect3820"
        width="24"
-       height="2"
+       height="4"
        x="148"
        y="20" />
     <rect
        style="fill:#ffffff;fill-opacity:0.17647059;stroke:none;display:inline"
        id="rect3804-5"
        width="12"
-       height="2"
+       height="4"
        x="112"
-       y="110" />
+       y="112" />
     <rect
        style="fill:#ffffff;fill-opacity:0.17647059;stroke:none;display:inline"
        id="rect3804-5-5"
        width="12"
-       height="2"
+       height="4"
        x="68"
-       y="110" />
+       y="112" />
     <rect
        style="fill:#ffffff;fill-opacity:0.17647059;stroke:none;display:inline"
        id="rect3820-5"
-       width="14"
-       height="2"
+       width="12"
+       height="4"
        x="172"
        y="44" />
     <rect
        style="fill:#ffffff;fill-opacity:0.17647059;stroke:none;display:inline"
        id="rect3820-5-2"
-       width="14"
-       height="2"
-       x="134"
+       width="12"
+       height="4"
+       x="136"
        y="44" />
   </g>
   <g
