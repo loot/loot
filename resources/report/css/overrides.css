@@ -1,5 +1,10 @@
 /* These styles override Polymer's own internal styling for certain elements. */
 
+/* The following stops the main toolbar from overshadowing into the drawer. */
+#container::shadow #drawer {
+    z-index: 1;
+}
+
 /* The following is for setting the size of the drawer in narrow mode. */
 #container::shadow .narrow-layout #drawer {
     width: 50% !important;

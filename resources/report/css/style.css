@@ -35,6 +35,10 @@ core-toolbar {
     color: white;
     height: 56px;
 }
+#mainToolbar {
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+    z-index: 1;
+}
 #mainToolbar paper-dropdown {
     color: black;
 }
