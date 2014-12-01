@@ -108,3 +108,8 @@ html /deep/ paper-item > core-icon {
 html /deep/ paper-checkbox::shadow #checkboxLabel {
     padding-left: 1em;
 }
+
+/* This makes the medium-tall toolbars 2x the 56px height, rather than the 64px height. */
+html /deep/ core-toolbar.medium-tall {
+    height: 112px;
+}
