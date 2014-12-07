@@ -305,6 +305,7 @@ namespace loot {
                 string text = yout.c_str();
                 // Get rid of yaml-cpp weirdness.
                 boost::replace_all(text, "!<!> ", "");
+                text = "[spoiler][code]" + text + "[/code][/spoiler]";
                 CopyToClipboard(text);
                 callback->Success("");
             }
@@ -383,6 +384,7 @@ namespace loot {
             // Get rid of yaml-cpp weirdness.
             boost::replace_all(text, "!<!> ", "");
         }
+        text = "[spoiler][code]" + text + "[/code][/spoiler]";
 
         CopyToClipboard(text);
 
