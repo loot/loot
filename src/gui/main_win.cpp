@@ -135,10 +135,6 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
     if (hMutex != NULL)
         ReleaseMutex(hMutex);
 
-    // Now save LOOT's settings and user metadata.
-    g_app_state.CurrentGame().userlist.Save(g_app_state.CurrentGame().UserlistPath());
-    g_app_state.SaveSettings();
-
     // Delete the folders CEF generates that LOOT doesn't need.
     boost::filesystem::remove_all(boost::filesystem::current_path() / "locales");
     boost::filesystem::remove_all(boost::filesystem::current_path() / "pdf.dll");

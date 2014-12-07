@@ -486,6 +486,9 @@ namespace loot {
             g_app_state.CurrentGame().userlist.AddPlugin(newUserlistEntry);
         }
 
+        // Save edited userlist.
+        g_app_state.CurrentGame().userlist.Save(g_app_state.CurrentGame().UserlistPath());
+
         // Now rederive the derived metadata.
         BOOST_LOG_TRIVIAL(trace) << "Returning newly derived display metadata.";
         YAML::Node derivedMetadata = GenerateDerivedMetadata(newUserlistEntry.Name());
@@ -1167,6 +1170,7 @@ namespace loot {
 #endif
 
         g_app_state.UpdateSettings(settings);
+        g_app_state.SaveSettings();
 
         // Cancel any javascript callbacks.
         browser_side_router_->OnBeforeClose(browser);
