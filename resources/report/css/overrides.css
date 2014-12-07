@@ -1,5 +1,10 @@
 /* These styles override Polymer's own internal styling for certain elements. */
 
+/* The following stops the main toolbar from overshadowing into the drawer. */
+#container::shadow #drawer {
+    z-index: 1;
+}
+
 /* The following is for setting the size of the drawer in narrow mode. */
 #container::shadow .narrow-layout #drawer {
     width: 50% !important;
@@ -50,11 +55,11 @@ html /deep/ paper-item[disabled]  {
 }
 
 /* These overrides change the colour of the tab ink effect and their underline. */
-#mainToolbar paper-tabs::shadow #selectionBar {
+paper-tabs::shadow #selectionBar {
     background-color: white;
     height: 4px;
 }
-#mainToolbar paper-tab::shadow #ink {
+paper-tab::shadow #ink {
     color: #f1f1f1;
 }
 
@@ -102,4 +107,9 @@ html /deep/ paper-item > core-icon {
 /* This makes checkboxes have the same padding as icons in lists. */
 html /deep/ paper-checkbox::shadow #checkboxLabel {
     padding-left: 1em;
+}
+
+/* This makes the medium-tall toolbars 2x the 56px height, rather than the 64px height. */
+html /deep/ core-toolbar.medium-tall {
+    height: 112px;
 }

@@ -15,7 +15,7 @@ loot-editor-close
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-input/paper-input-decorator.html">
 <link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
-<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/core-selector/core-selector.html">
 
 <link rel="import" href="editable-table.html">
@@ -35,6 +35,12 @@ loot-editor-close
         }
         #activeTick {
             color: green;
+        }
+        #accept {
+            color: #4285f4;
+        }
+        #cancel {
+            color: red;
         }
 
         /* Content styling. */
@@ -57,7 +63,7 @@ loot-editor-close
         }
 
         /* Editor input styling. */
-        #editor > div > paper-checkbox, #editor > div > core-tooltip {
+        #main > paper-checkbox, #main > core-tooltip {
             display: table;
         }
         #enableEdits {
@@ -81,7 +87,7 @@ loot-editor-close
             border-collapse: collapse;
             width: 100%;
         }
-        table:not(.core-selected) {
+        table:not(.core-selected), #main:not(.core-selected) {
             display: none;
         }
         td input {
@@ -112,7 +118,7 @@ loot-editor-close
 
         /* Misc Styling. */
         core-toolbar {
-            background: white;
+            background: #f1f1f1;
             height: 56px;
         }
         core-toolbar > h1, core-toolbar > span {
@@ -122,20 +128,14 @@ loot-editor-close
         #buttons {
             text-align: right;
         }
-        main {
+        #main {
             padding: 1em;
-        }
-        main > core-tooltip, main > paper-checkbox {
-            display: table;
         }
         core-icon {
             vertical-align: inherit !important;
         }
         #tableTabs {
             border: 2px solid #f1f1f1;
-        }
-        paper-tabs {
-            background: #f1f1f1;
         }
         /* These overrides change the colour of the tab ink effect and their underline. */
         paper-tabs::shadow #selectionBar {
@@ -145,117 +145,118 @@ loot-editor-close
             color: #4285f4;
         }
         </style>
-        <core-toolbar>
-            <core-tooltip id="activeTick" label="Active Plugin">
+        <core-toolbar class="medium-tall">
+            <core-tooltip id="activeTick" label="Active Plugin" noarrow>
                 <core-icon icon="check"></core-icon>
             </core-tooltip>
             <h1>{{data.name}}</h1>
             <span class="version">{{data.version}}</span>
             <span class="crc" flex>{{data.computed.crc}}</span>
-            <core-tooltip id="dummyPlugin" label="Dummy Plugin">
+            <core-tooltip id="dummyPlugin" label="Dummy Plugin" noarrow>
                 <core-icon icon="visibility-off"></core-icon>
             </core-tooltip>
-            <core-tooltip id="loadsBSA" label="Loads BSA">
+            <core-tooltip id="loadsBSA" label="Loads BSA" noarrow>
                 <core-icon icon="attachment"></core-icon>
             </core-tooltip>
-        </core-toolbar>
-        <main>
-            <paper-checkbox id="enableEdits" label="Enable Edits"></paper-checkbox>
-            <core-tooltip label="Global priorities are compared against all other plugins. Normal priorities are compared against only conflicting plugins." position="right">
-                <paper-checkbox id="globalPriority" label="Global Priority"></paper-checkbox>
+            <core-tooltip label="Apply" noarrow>
+                <paper-icon-button id="accept" icon="check"></paper-icon-button>
             </core-tooltip>
-            <div horizontal layout center>
-                <div>Priority Value</div>
-                <paper-input-decorator>
-                    <input id="priorityValue" is="core-input" type="number" max="999999" min="-999999" step="1" preventInvalidInput>
-                </paper-input-decorator>
+            <core-tooltip label="Cancel" noarrow>
+                <paper-icon-button id="cancel" icon="close"</paper-icon-button>
+            </core-tooltip>
+            <paper-tabs id="tableTabs" class="bottom fit" selected="main" valueattr="data-for" scrollable>
+                <paper-tab data-for="main">Main</paper-tab>
+                <paper-tab data-for="loadAfter">Load After</paper-tab>
+                <paper-tab data-for="req">Requirements</paper-tab>
+                <paper-tab data-for="inc">Incompatibilities</paper-tab>
+                <paper-tab data-for="message">Messages</paper-tab>
+                <paper-tab data-for="tags">Bash Tags</paper-tab>
+                <paper-tab data-for="dirty">Dirty Info</paper-tab>
+                <paper-tab data-for="locations">Locations</paper-tab>
+            </paper-tabs>
+        </core-toolbar>
+        <core-selector selected="main" valueattr="id">
+            <div id="main">
+                <paper-checkbox id="enableEdits" label="Enable Edits"></paper-checkbox>
+                <core-tooltip label="Global priorities are compared against all other plugins. Normal priorities are compared against only conflicting plugins." position="right" noarrow>
+                    <paper-checkbox id="globalPriority" label="Global Priority"></paper-checkbox>
+                </core-tooltip>
+                <div horizontal layout center>
+                    <div>Priority Value</div>
+                    <paper-input-decorator>
+                        <input id="priorityValue" is="core-input" type="number" max="999999" min="-999999" step="1" preventInvalidInput>
+                    </paper-input-decorator>
+                </div>
             </div>
-            <div id="tableTabs">
-                <paper-tabs selected="loadAfter" valueattr="data-for" scrollable>
-                    <paper-tab data-for="loadAfter">Load After</paper-tab>
-                    <paper-tab data-for="req">Requirements</paper-tab>
-                    <paper-tab data-for="inc">Incompatibilities</paper-tab>
-                    <paper-tab data-for="message">Messages</paper-tab>
-                    <paper-tab data-for="tags">Bash Tags</paper-tab>
-                    <paper-tab data-for="dirty">Dirty Info</paper-tab>
-                    <paper-tab data-for="locations">Locations</paper-tab>
-                </paper-tabs>
-                <core-selector selected="loadAfter" valueattr="id">
-                    <table is="editable-table" id="loadAfter" data-template="fileRow">
-                        <thead>
-                            <tr><th>Filename</th><th>Display Name</th><th>Condition</th><th></th></tr>
-                        </thead>
-                        <tbody>
-                            <!-- File rows go here. -->
-                            <tr><td colspan="4">Add new row...</td><td></td></tr>
-                        </tbody>
-                    </table>
-                    <table is="editable-table" id="req" data-template="fileRow">
-                        <thead>
-                            <tr><th>Filename</th><th>Display Name</th><th>Condition</th><th></th></tr>
-                        </thead>
-                        <tbody>
-                            <!-- File rows go here. -->
-                            <tr><td colspan="4">Add new row...</td><td></td></tr>
-                        </tbody>
-                    </table>
-                    <table is="editable-table" id="inc" data-template="fileRow">
-                        <thead>
-                            <tr><th>Filename</th><th>Display Name</th><th>Condition</th><th></th></tr>
-                        </thead>
-                        <tbody>
-                            <!-- File rows go here. -->
-                            <tr><td colspan="4">Add new row...</td><td></td></tr>
-                        </tbody>
-                    </table>
-                    <table is="editable-table" id="message" data-template="messageRow">
-                        <thead>
-                            <tr><th>Type</th><th>Content</th><th>Condition</th><th>Language</th><th></th></tr>
-                        </thead>
-                        <tbody>
-                            <!-- Message rows go here. -->
-                            <tr><td colspan="4">Add new row...</td><td></td></tr>
-                        </tbody>
-                    </table>
-                    <table is="editable-table" id="tags" data-template="tagRow">
-                        <thead>
-                            <tr><th>Add/Remove</th><th>Bash Tag</th><th>Condition</th><th></th></tr>
-                        </thead>
-                        <tbody>
-                            <!-- Bash Tag rows go here. -->
-                            <tr><td colspan="4">Add new row...</td><td></td></tr>
-                        </tbody>
-                    </table>
-                    <table is="editable-table" id="dirty" data-template="dirtyInfoRow">
-                        <thead>
-                            <tr><th>CRC</th><th>ITM Count</th><th>Deleted References</th><th>Deleted Navmeshes</th><th>Cleaning Utility</th><th></th></tr>
-                        </thead>
-                        <tbody>
-                            <!-- Dirty info rows go here. -->
-                            <tr><td colspan="4">Add new row...</td><td></td></tr>
-                        </tbody>
-                    </table>
-                    <table is="editable-table" id="locations" data-template="locationRow">
-                        <thead>
-                            <tr><th>URL</th><th>Version</th><th></th></tr>
-                        </thead>
-                        <tbody>
-                            <!-- Location rows go here. -->
-                            <tr><td colspan="3">Add new row...</td><td></td></tr>
-                        </tbody>
-                    </table>
-                </core-selector>
-            </div>
-            <div id="buttons">
-                <paper-button id="accept">Apply</paper-button>
-                <paper-button id="cancel">Cancel</paper-button>
-            </div>
-        </main>
+            <table is="editable-table" id="loadAfter" data-template="fileRow">
+                <thead>
+                    <tr><th>Filename</th><th>Display Name</th><th>Condition</th><th></th></tr>
+                </thead>
+                <tbody>
+                    <!-- File rows go here. -->
+                    <tr><td colspan="4">Add new row...</td><td></td></tr>
+                </tbody>
+            </table>
+            <table is="editable-table" id="req" data-template="fileRow">
+                <thead>
+                    <tr><th>Filename</th><th>Display Name</th><th>Condition</th><th></th></tr>
+                </thead>
+                <tbody>
+                    <!-- File rows go here. -->
+                    <tr><td colspan="4">Add new row...</td><td></td></tr>
+                </tbody>
+            </table>
+            <table is="editable-table" id="inc" data-template="fileRow">
+                <thead>
+                    <tr><th>Filename</th><th>Display Name</th><th>Condition</th><th></th></tr>
+                </thead>
+                <tbody>
+                    <!-- File rows go here. -->
+                    <tr><td colspan="4">Add new row...</td><td></td></tr>
+                </tbody>
+            </table>
+            <table is="editable-table" id="message" data-template="messageRow">
+                <thead>
+                    <tr><th>Type</th><th>Content</th><th>Condition</th><th>Language</th><th></th></tr>
+                </thead>
+                <tbody>
+                    <!-- Message rows go here. -->
+                    <tr><td colspan="4">Add new row...</td><td></td></tr>
+                </tbody>
+            </table>
+            <table is="editable-table" id="tags" data-template="tagRow">
+                <thead>
+                    <tr><th>Add/Remove</th><th>Bash Tag</th><th>Condition</th><th></th></tr>
+                </thead>
+                <tbody>
+                    <!-- Bash Tag rows go here. -->
+                    <tr><td colspan="4">Add new row...</td><td></td></tr>
+                </tbody>
+            </table>
+            <table is="editable-table" id="dirty" data-template="dirtyInfoRow">
+                <thead>
+                    <tr><th>CRC</th><th>ITM Count</th><th>Deleted References</th><th>Deleted Navmeshes</th><th>Cleaning Utility</th><th></th></tr>
+                </thead>
+                <tbody>
+                    <!-- Dirty info rows go here. -->
+                    <tr><td colspan="4">Add new row...</td><td></td></tr>
+                </tbody>
+            </table>
+            <table is="editable-table" id="locations" data-template="locationRow">
+                <thead>
+                    <tr><th>URL</th><th>Version</th><th></th></tr>
+                </thead>
+                <tbody>
+                    <!-- Location rows go here. -->
+                    <tr><td colspan="3">Add new row...</td><td></td></tr>
+                </tbody>
+            </table>
+        </core-selector>
     </template>
     <script>
     Polymer({
         attached: function() {
-            this.shadowRoot.getElementById('tableTabs').firstElementChild.addEventListener('core-select', this.onTabSelect, false);
+            this.shadowRoot.getElementById('tableTabs').addEventListener('core-select', this.onTabSelect, false);
 
             this.shadowRoot.getElementById('accept').addEventListener('click', this.onHideEditor, false);
             this.shadowRoot.getElementById('cancel').addEventListener('click', this.onHideEditor, false);
@@ -264,7 +265,7 @@ loot-editor-close
         },
 
         detached: function() {
-            this.shadowRoot.getElementById('tableTabs').firstElementChild.removeEventListener('core-select', this.onTabSelect, false);
+            this.shadowRoot.getElementById('tableTabs').removeEventListener('core-select', this.onTabSelect, false);
 
             this.shadowRoot.getElementById('accept').removeEventListener('click', this.onHideEditor, false);
             this.shadowRoot.getElementById('cancel').removeEventListener('click', this.onHideEditor, false);
@@ -272,7 +273,7 @@ loot-editor-close
 
         onTabSelect: function(evt) {
             if (evt.detail.isSelected) {
-                evt.target.nextElementSibling.selected = evt.target.selected;
+                evt.target.parentElement.nextElementSibling.selected = evt.target.selected;
             }
         },
 
@@ -549,10 +550,10 @@ loot-editor-close
             this.shadowRoot.getElementById('globalPriority').parentElement.setPosition();
 
             /* Update tab bar position. */
-            this.shadowRoot.getElementById('tableTabs').firstElementChild.updateBar();
+            this.shadowRoot.getElementById('tableTabs').updateBar();
 
             /* Also make sure right arrow is visible. */
-            this.shadowRoot.getElementById('tableTabs').firstElementChild.shadowRoot.querySelector('.scroll-button:last-child').firstElementChild.classList.remove('hidden');
+            this.shadowRoot.getElementById('tableTabs').shadowRoot.querySelector('.scroll-button:last-child').firstElementChild.classList.remove('hidden');
         },
     });
     </script>

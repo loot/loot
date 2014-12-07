@@ -40,11 +40,9 @@ LOOT's UI relies on a few web libraries:
 * [Marked](https://github.com/chjj/marked)
 * [RequireJS](http://requirejs.org/)
 
-These dependencies are most easily managed using [Bower](http://bower.io/), and are built for distribution using [Vulcanize](https://github.com/Polymer/vulcanize).
+These dependencies are most easily managed using [Bower](http://bower.io/), and are built for distribution using [Vulcanize](https://github.com/Polymer/vulcanize) (v0.7.1+, earlier versions break LOOT's templates).
 
 To install Bower and Vulcanize, first install [Node](http://nodejs.org/), and run `npm install -g bower vulcanize` from the command line (on Windows, it needs to be the Node command prompt). Once they are installed, fetch and build the dependencies by running `bower install ./ && vulcanize -o index.html report.html` from inside this repository's `resources/report` folder (this command doesn't need to be run through Node).
-
-**Note:** There is currently a bug in Vulcanize (#97) that prevents it from correctly building the dependencies, so some manual editing is required to add `<tr>` and `<td>` elements back into the row templates originally found in `resources/report/html/editable-table.html`.
 
 ## Packaging Releases
 
