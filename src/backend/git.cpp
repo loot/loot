@@ -166,6 +166,43 @@ namespace loot {
         return 0;
     }
 
+    bool IsMasterlistDifferent(git_handler& git) {
+        if (git.obj) {
+            throw error(error::git_error, "Object memory already allocated!");
+        }
+        else if (git.tree) {
+            throw error(error::git_error, "Tree memory already allocated!");
+        }
+        else if (git.diff) {
+            throw error(error::git_error, "Diff memory already allocated!");
+        }
+        else if (!git.repo) {
+            throw error(error::git_error, "Repository handle not open!");
+        }
+
+        // Perform a git diff, then iterate the deltas to see if one exists for masterlist.yaml.
+        BOOST_LOG_TRIVIAL(trace) << "Getting the tree for the HEAD revision.";
+        git.call(git_revparse_single(&git.obj, git.repo, "HEAD^{tree}"));
+        git.call(git_tree_lookup(&git.tree, git.repo, git_object_id(git.obj)));
+
+        BOOST_LOG_TRIVIAL(trace) << "Performing git diff.";
+        git.call(git_diff_tree_to_workdir_with_index(&git.diff, git.repo, git.tree, NULL));
+
+        BOOST_LOG_TRIVIAL(trace) << "Iterating over git diff deltas.";
+        bool isMasterlistDifferent = false;
+        git.call(git_diff_foreach(git.diff, &diffFileCallback, NULL, NULL, &isMasterlistDifferent));
+
+        // Clean up memory
+        git_object_free(git.obj);
+        git.obj = nullptr;
+        git_tree_free(git.tree);
+        git.tree = nullptr;
+        git_diff_free(git.diff);
+        git.diff = nullptr;
+
+        return isMasterlistDifferent;
+    }
+
     void Masterlist::GetGitInfo(const boost::filesystem::path& path, bool shortID) {
         if (!isRepository(path.parent_path())) {
             throw error(error::git_error, "Unknown: Git repository missing");
@@ -173,53 +210,44 @@ namespace loot {
         else if (!fs::exists(path)) {
             throw error(error::git_error, "N/A: No masterlist present");
         }
+
+        // Compare HEAD and working copy, and get revision info.
+        git_handler git;
+        git.ui_message = "An error occurred while trying to read the local masterlist's version. If this error happens again, try deleting the \".git\" folder in " + path.parent_path().string() + ".";
+        BOOST_LOG_TRIVIAL(debug) << "Existing repository found, attempting to open it.";
+        git.call(git_repository_open(&git.repo, path.parent_path().string().c_str()));
+
+        //Need to get the HEAD object, because the individual file has a different SHA.
+        BOOST_LOG_TRIVIAL(info) << "Getting the Git object for the tree at HEAD.";
+        git.call(git_revparse_single(&git.obj, git.repo, "HEAD"));
+
+        BOOST_LOG_TRIVIAL(trace) << "Generating hex string for Git object ID.";
+        if (shortID) {
+            git.call(git_object_short_id(&git.buf, git.obj));
+            revision = git.buf.ptr;
+        }
         else {
-            // Perform a git diff, then iterate the deltas to see if one exists for masterlist.yaml.
-            git_handler git;
-            git.ui_message = "An error occurred while trying to read the local masterlist's version. If this error happens again, try deleting the \".git\" folder in " + path.parent_path().string() + ".";
-            BOOST_LOG_TRIVIAL(debug) << "Existing repository found, attempting to open it.";
-            git.call(git_repository_open(&git.repo, path.parent_path().string().c_str()));
+            char c_rev[GIT_OID_HEXSZ + 1];
+            revision = git_oid_tostr(c_rev, GIT_OID_HEXSZ + 1, git_object_id(git.obj));
+        }
 
-            BOOST_LOG_TRIVIAL(trace) << "Getting the tree for the HEAD revision.";
-            git.call(git_revparse_single(&git.obj, git.repo, "HEAD^{tree}"));
-            git.call(git_tree_lookup(&git.tree, git.repo, git_object_id(git.obj)));
+        BOOST_LOG_TRIVIAL(trace) << "Getting date for Git object.";
+        const git_oid * oid = git_object_id(git.obj);
+        git.call(git_commit_lookup(&git.commit, git.repo, oid));
+        git_time_t time = git_commit_time(git.commit);
+        boost::locale::date_time dateTime(time);
+        stringstream out;
+        out << boost::locale::as::ftime("%Y-%m-%d") << dateTime;
+        date = out.str();
 
-            BOOST_LOG_TRIVIAL(trace) << "Performing git diff.";
-            git.call(git_diff_tree_to_workdir_with_index(&git.diff, git.repo, git.tree, NULL));
+        // Free object memory.
+        git_object_free(git.obj);
+        git.obj = nullptr;
 
-            BOOST_LOG_TRIVIAL(trace) << "Iterating over git diff deltas.";
-            bool isMasterlistDifferent = false;
-            git.call(git_diff_foreach(git.diff, &diffFileCallback, NULL, NULL, &isMasterlistDifferent));
-
-            //Need to get the HEAD object, because the individual file has a different SHA.
-            git_object_free(git.obj);
-            git.obj = nullptr;  //Just to be safe.
-            BOOST_LOG_TRIVIAL(info) << "Getting the Git object for the tree at HEAD.";
-            git.call(git_revparse_single(&git.obj, git.repo, "HEAD"));
-
-            BOOST_LOG_TRIVIAL(trace) << "Generating hex string for Git object ID.";
-            if (shortID) {
-                git.call(git_object_short_id(&git.buf, git.obj));
-                revision = git.buf.ptr;
-            }
-            else {
-                char c_rev[GIT_OID_HEXSZ + 1];
-                revision = git_oid_tostr(c_rev, GIT_OID_HEXSZ + 1, git_object_id(git.obj));
-            }
-
-            BOOST_LOG_TRIVIAL(trace) << "Getting date for Git object.";
-            const git_oid * oid = git_object_id(git.obj);
-            git.call(git_commit_lookup(&git.commit, git.repo, oid));
-            git_time_t time = git_commit_time(git.commit);
-            boost::locale::date_time dateTime(time);
-            stringstream out;
-            out << boost::locale::as::ftime("%Y-%m-%d") << dateTime;
-            date = out.str();
-
-            if (isMasterlistDifferent) {
-                revision += " (edited)";
-                date += " (edited)";
-            }
+        BOOST_LOG_TRIVIAL(trace) << "Diffing masterlist HEAD and working copy.";
+        if (IsMasterlistDifferent(git)) {
+            revision += " (edited)";
+            date += " (edited)";
         }
     }
 
@@ -406,8 +434,7 @@ namespace loot {
                 else if ((analysis & GIT_MERGE_ANALYSIS_UP_TO_DATE) != 0) {
                     // No merge is required, but HEAD might be ahead of the remote branch. Check
                     // to see if that's the case, and move HEAD back to match the remote branch
-                    // if so. Otherwise, exit early to skip unnecessary masterlist parsing.
-                    // No update necessary, so exit early to skip unnecessary masterlist parsing.
+                    // if so.
                     BOOST_LOG_TRIVIAL(trace) << "Local branch is up-to-date with remote branch.";
 
                     BOOST_LOG_TRIVIAL(trace) << "Checking to see if local and remote branch heads are equal.";
@@ -435,12 +462,16 @@ namespace loot {
                         git.ref2 = nullptr;
                     }
                     else {
-                        // Commit IDs match, just checkout HEAD then exit early.
+                        // HEAD matches the remote branch. If the masterlist in
+                        // HEAD also matches the masterlist file, no further
+                        // action needs to be taken. Otherwise, a checkout
+                        // must be performed and the checked-out file parsed.
                         BOOST_LOG_TRIVIAL(trace) << "Branch heads are equal.";
-                        BOOST_LOG_TRIVIAL(trace) << "Performing a Git checkout of HEAD.";
-                        git.call(git_checkout_head(git.repo, &checkout_opts));
 
-                        return false;
+                        BOOST_LOG_TRIVIAL(trace) << "Diffing HEAD and filesystem masterlists.";
+                        if (!IsMasterlistDifferent(git)) {
+                            return false;
+                        }
                     }
                 }
                 else {
