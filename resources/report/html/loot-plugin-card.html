@@ -86,27 +86,32 @@ loot-clear-metadata
         }
 
         /* Content styling. */
-        ::content .tag, ::content ul {
+        content::content > .tag,
+        content::content > ul {
             display: block;
             padding: 0 1em 1em;
         }
-        ::content h1, h1 {
+        content::content > h1 {
             display: inline-block;
             font-weight: normal;
             font-size: 1em;
             margin: 0;
         }
-        ::content .version, .version {
+        content::content > .version {
             display: inline-block;
             margin-left: 1em;
             color:#6394F8;
         }
-        ::content .crc, .crc {
+        content::content > .crc {
             display: inline-block;
             margin-left: 1em;
             color:#BC8923;
         }
-        ::content .hidden, .hidden {
+        .hidden,
+        content::content > .hidden,
+        :host-context(#main[data-hide-crc]) content::content > .crc,
+        :host-context(#main[data-hide-tag]) content::content > .tag,
+        :host-context(#main[data-hide-version]) content::content > .version {
             display: none;
         }
 

@@ -4,7 +4,7 @@ loot-editor-close
   detail: boolean
     True if the editor was closed using the Apply button.
 
---->
+-->
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/core-toolbar/core-toolbar.html">
@@ -45,20 +45,23 @@ loot-editor-close
 
         /* Content styling. */
         h1 {
+            display: inline-block;
             font-weight: normal;
             font-size: 1em;
+            margin: 0;
         }
-        .version {
+        #version {
             display: inline-block;
             margin-left: 1em;
             color:#6394F8;
         }
-        .crc {
+        #crc {
             display: inline-block;
             margin-left: 1em;
             color:#BC8923;
         }
-        .hidden {
+        :host-context(#main[data-hide-version]) #version,
+        :host-context(#main[data-hide-crc]) #crc {
             display: none;
         }
 
@@ -149,9 +152,11 @@ loot-editor-close
             <core-tooltip id="activeTick" label="Active Plugin" noarrow>
                 <core-icon icon="check"></core-icon>
             </core-tooltip>
-            <h1>{{data.name}}</h1>
-            <span class="version">{{data.version}}</span>
-            <span class="crc" flex>{{data.computed.crc}}</span>
+            <div flex>
+                <h1>{{data.name}}</h1>
+                <span id="version">{{data.version}}</span>
+                <span id="crc">{{data.computed.crc}}</span>
+            </div>
             <core-tooltip id="dummyPlugin" label="Dummy Plugin" noarrow>
                 <core-icon icon="visibility-off"></core-icon>
             </core-tooltip>

@@ -362,15 +362,11 @@ function hideElement(element) {
     }
 }
 function toggleDisplayCSS(evt) {
-    var e = document.getElementsByClassName(evt.target.getAttribute('data-class'));
+    var attr = 'data-hide-' + evt.target.getAttribute('data-class');
     if (evt.target.checked) {
-        for (var i = 0, z = e.length; i < z; i++) {
-            e[i].classList.toggle('hidden', true);
-        }
+        document.getElementById('main').setAttribute(attr, true);
     } else {
-        for (var i = 0, z = e.length; i < z; i++) {
-            e[i].classList.toggle('hidden', false);
-        }
+        document.getElementById('main').removeAttribute(attr);
     }
 }
 function toast(text) {
