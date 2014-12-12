@@ -750,9 +750,6 @@ function areSettingsValid() {
 function switchSidebarTab(evt) {
     if (evt.detail.isSelected) {
         document.getElementById(evt.target.selected).parentElement.selected = evt.target.selected;
-        if (evt.target.selected == 'cardsNav') {
-            document.getElementById('cardsNav').lastElementChild.updateSize();
-        }
     }
 }
 
