@@ -323,8 +323,11 @@ FunctionEnd
         ;Install UI files.
         SetOutPath "$INSTDIR\resources\report"
         File "..\resources\report\index.html"
+        SetOutPath "$INSTDIR\resources\report\bower_components\marked\lib"
         File "..\resources\report\bower_components\marked\lib\marked.js"
+        SetOutPath "$INSTDIR\resources\report\bower_components\Jed"
         File "..\resources\report\bower_components\Jed\jed.js"
+        SetOutPath "$INSTDIR\resources\report\js"
         File "..\resources\report\js\jedGettextParser.js"
         File "..\resources\report\js\l10n.js"
         File "..\resources\report\js\plugin.js"
@@ -567,6 +570,8 @@ FunctionEnd
 
     Section /o "un.User Files" UserFiles
         ;The following user files are only removed if set to.
+        Delete "$LOCALAPPDATA\LOOT\LOOTDebugLog.txt"
+        Delete "$LOCALAPPDATA\LOOT\CEFDebugLog.txt"
         Delete "$LOCALAPPDATA\LOOT\settings.yaml"
         Delete "$LOCALAPPDATA\LOOT\Oblivion\userlist.yaml"
         Delete "$LOCALAPPDATA\LOOT\Skyrim\userlist.yaml"
