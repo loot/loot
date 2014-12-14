@@ -1,7 +1,7 @@
 # Example Default LOOT Settings File
 # This file is written in YAML <http://www.yaml.org/>.
 
-language:            eng    # One of 'eng', 'spa', 'rus' or ''.
+language:            en     # A locale code (see resources\l10n subfolders).
 
 game:                auto   # auto, or one of the 'folder' values below.
 lastGame:            auto   # auto, or one of the 'folder' values below.
