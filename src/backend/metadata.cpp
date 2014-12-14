@@ -417,6 +417,7 @@ namespace loot {
                 if (regex_search(text, what, version_checks[i])) {
                     //Use the first sub-expression match.
                     version = string(what[1].first, what[1].second);
+                    boost::trim(version);
                     break;
                 }
             }
