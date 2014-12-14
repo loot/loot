@@ -231,7 +231,7 @@
             gameTable.querySelector('th:nth-child(6)').textContent = l10n.translate("Masterlist Repository Branch").fetch();
             gameTable.querySelector('th:nth-child(7)').textContent = l10n.translate("Install Path").fetch();
             gameTable.querySelector('th:nth-child(8)').textContent = l10n.translate("Install Path Registry Key").fetch();
-            gameTable.querySelector('td').textContent = l10n.translate("Add new row...").fetch();
+            gameTable.querySelector('tr:last-child td:first-child').textContent = l10n.translate("Add new row...").fetch();
 
             document.getElementById('languageRestartTxt').textContent = l10n.translate("Language changes will be applied after LOOT is restarted.").fetch();
 
@@ -262,5 +262,3 @@
 
     };
 }));
-
-
