@@ -35,22 +35,16 @@ var loot = {
 
         /* Call whenever game is changed or game menu / game table are rewritten. */
         updateSelectedGame: function() {
-            var gameMenuItems = document.getElementById('gameMenu').children;
-            for (var i = 0; i < gameMenuItems.length; ++i) {
-                if (gameMenuItems[i].getAttribute('value') == this.folder) {
-                    document.getElementById('gameMenu').value = this.folder;
-                    break;
-                }
-            }
+            document.getElementById('gameMenu').value = this.folder;
 
             /* Also disable deletion of the game's row in the settings dialog. */
-            var rows = document.getElementById('gameTable').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-            for (var i = 0; i < rows.length; ++i) {
-                if (rows[i].getElementsByClassName('folder').length > 0) {
-                    if (rows[i].getElementsByClassName('folder')[0].value == this.folder) {
-                        document.getElementById('gameTable').setReadOnly(rows[i], ['delete']);
+            var table = document.getElementById('gameTable');
+            for (var i = 0; i < table.tBodies[0].rows.length; ++i) {
+                if (table.tBodies[0].rows[i].getElementsByClassName('folder').length > 0) {
+                    if (table.tBodies[0].rows[i].getElementsByClassName('folder')[0].value == this.folder) {
+                        table.setReadOnly(table.tBodies[0].rows[i], ['delete']);
                     } else {
-                        document.getElementById('gameTable').setReadOnly(rows[i], ['delete'], false);
+                        table.setReadOnly(table.tBodies[0].rows[i], ['delete'], false);
                     }
                 }
             }
