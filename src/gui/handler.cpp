@@ -1011,6 +1011,7 @@ namespace loot {
     }
 
     void Handler::SendProgressUpdate(CefRefPtr<CefFrame> frame, const std::string& message) {
+        BOOST_LOG_TRIVIAL(trace) << "Sending progress update: " << message;
         frame->ExecuteJavaScript("showProgress('" + message + "');", frame->GetURL(), 0);
     }
 

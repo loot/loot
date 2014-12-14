@@ -675,6 +675,7 @@ namespace loot {
         unordered_map<std::string, uintmax_t> tempMap;
         std::vector<Plugin*> groupPlugins;
         //First calculate the mean plugin size. Store it temporarily in a map to reduce filesystem lookups and file size recalculation.
+        BOOST_LOG_TRIVIAL(trace) << "Scanning for plugins in " << this->DataPath();
         for (fs::directory_iterator it(this->DataPath()); it != fs::directory_iterator(); ++it) {
             if (fs::is_regular_file(it->status()) && this->IsValidPlugin(it->path().filename().string())) {
                 uintmax_t fileSize = fs::file_size(it->path());
