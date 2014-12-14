@@ -242,6 +242,8 @@ namespace loot {
             _currentGame = SelectGame(_settings, _games, cmdLineGame);
             BOOST_LOG_TRIVIAL(debug) << "Initialising game-specific settings.";
             _games[_currentGame].Init(true);
+            // Update game path in settings object.
+            _settings["games"] = _games;
         }
         catch (loot::error &e) {
             if (e.code() == loot::error::no_game_detected) {
@@ -279,8 +281,8 @@ namespace loot {
 
             newGameFolders.insert(game.FolderName());
         }
-        // Remove deleted games. As the current game is stored using its index,
 
+        // Remove deleted games. As the current game is stored using its index,
         // removing an earlier game may invalidate it.
         for (auto it = _games.begin(); it != _games.end();) {
             if (newGameFolders.find(it->FolderName()) == newGameFolders.end()) {
@@ -294,6 +296,11 @@ namespace loot {
             else
                 ++it;
         }
+
+        // Re-initialise the current game in case the game path setting was changed.
+        _games[_currentGame].Init(true);
+        // Update game path in settings object.
+        _settings["games"] = _games;
     }
 
     void LootState::ChangeGame(const std::string& newGameFolder) {
@@ -305,6 +312,8 @@ namespace loot {
 
         _currentGame = std::distance(_games.begin(), it);
         _games[_currentGame].Init(true);
+        // Update game path in settings object.
+        _settings["games"] = _games;
         BOOST_LOG_TRIVIAL(debug) << "New game is " << _games[_currentGame].Name();
     }
 
