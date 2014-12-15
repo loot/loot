@@ -610,10 +610,12 @@ namespace loot {
     }
 
     void Game::SetLoadOrder(const std::list<std::string>& loadOrder) const {
+        BOOST_LOG_TRIVIAL(info) << "Setting load order:";
         size_t pluginArrSize = loadOrder.size();
         char ** pluginArr = new char*[pluginArrSize];
         int i = 0;
         for (const auto &plugin : loadOrder) {
+            BOOST_LOG_TRIVIAL(info) << '\t' << '\t' << plugin;
             pluginArr[i] = new char[plugin.length() + 1];
             strcpy(pluginArr[i], plugin.c_str());
             ++i;
