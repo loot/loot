@@ -48,45 +48,47 @@
                     <paper-tab data-id="filters">Filters</paper-tab>
                 </paper-tabs>
             </core-toolbar>
-            <core-animated-pages selected="cardsNav" valueattr="id" transitions="" flex>
-                <div id="cardsNav" class="tab-content" layout vertical>
-                    <paper-item>
-                        <a href="#summary"></a>Summary
-                    </paper-item>
-                    <paper-item>
-                        <a href="#generalMessages"></a>General Messages
-                    </paper-item>
-                    <core-list flex>
-                        <template>
-                            <loot-plugin-item data-bsa?="{{model.loadsBSA}}" data-edits?="{{model.userlist != undefined}}" data-index="{{index}}">
-                                {{model.name}}
-                            </loot-plugin-item>
-                        </template>
-                        <!-- Generated <loot-plugin-item> elements go here. -->
-                    </core-list>
-                </div>
-                <div id="filters" class="tab-content" flex>
-                    <paper-checkbox id="hideVersionNumbers" data-class="version" label="Hide version numbers"></paper-checkbox>
-                    <paper-checkbox id="hideCRCs" data-class="crc" label="Hide CRCs"></paper-checkbox>
-                    <paper-checkbox id="hideBashTags" data-class="tag" label="Hide Bash Tags"></paper-checkbox>
-                    <paper-checkbox id="hideNotes" label="Hide notes"></paper-checkbox>
-                    <paper-checkbox id="hideDoNotCleanMessages" label="Hide 'Do not clean' messages"></paper-checkbox>
-                    <paper-checkbox id="hideAllPluginMessages" label="Hide all plugin messages"></paper-checkbox>
-                    <paper-checkbox id="hideInactivePlugins" label="Hide inactive plugins"></paper-checkbox>
-                    <paper-checkbox id="hideMessagelessPlugins" label="Hide messageless plugins"></paper-checkbox>
-                    <div center horizontal layout>
-                        <div id="hiddenPluginsTxt" flex>Hidden plugins:</div>
-                        <div><span id="hiddenPluginNo">0</span> / <span id="filterTotalPluginNo">0</span></div>
+            <div flex layout vertical>
+                <core-animated-pages selected="cardsNav" valueattr="id" transitions="" flex>
+                    <div id="cardsNav" class="tab-content" layout vertical>
+                        <paper-item>
+                            <a href="#summary"></a>Summary
+                        </paper-item>
+                        <paper-item>
+                            <a href="#generalMessages"></a>General Messages
+                        </paper-item>
+                        <core-list flex>
+                            <template>
+                                <loot-plugin-item data-bsa?="{{model.loadsBSA}}" data-edits?="{{model.userlist != undefined}}" data-index="{{index}}">
+                                    {{model.name}}
+                                </loot-plugin-item>
+                            </template>
+                            <!-- Generated <loot-plugin-item> elements go here. -->
+                        </core-list>
                     </div>
-                    <div center horizontal layout>
-                        <div id="hiddenMessagesTxt" flex>Hidden messages:</div>
-                        <div><span id="hiddenMessageNo">0</span> / <span id="filterTotalMessageNo">0</span></div>
+                    <div id="filters" class="tab-content" flex>
+                        <paper-checkbox id="hideVersionNumbers" data-class="version" label="Hide version numbers"></paper-checkbox>
+                        <paper-checkbox id="hideCRCs" data-class="crc" label="Hide CRCs"></paper-checkbox>
+                        <paper-checkbox id="hideBashTags" data-class="tag" label="Hide Bash Tags"></paper-checkbox>
+                        <paper-checkbox id="hideNotes" label="Hide notes"></paper-checkbox>
+                        <paper-checkbox id="hideDoNotCleanMessages" label="Hide 'Do not clean' messages"></paper-checkbox>
+                        <paper-checkbox id="hideAllPluginMessages" label="Hide all plugin messages"></paper-checkbox>
+                        <paper-checkbox id="hideInactivePlugins" label="Hide inactive plugins"></paper-checkbox>
+                        <paper-checkbox id="hideMessagelessPlugins" label="Hide messageless plugins"></paper-checkbox>
+                        <div center horizontal layout>
+                            <div id="hiddenPluginsTxt" flex>Hidden plugins:</div>
+                            <div><span id="hiddenPluginNo">0</span> / <span id="filterTotalPluginNo">0</span></div>
+                        </div>
+                        <div center horizontal layout>
+                            <div id="hiddenMessagesTxt" flex>Hidden messages:</div>
+                            <div><span id="hiddenMessageNo">0</span> / <span id="filterTotalMessageNo">0</span></div>
+                        </div>
                     </div>
-                </div>
-            </core-animated-pages>
-            <core-tooltip label="Press Enter or click outside the input to set the filter." position="top" noarrow>
-                <paper-input id="searchBox" label="Filter content..."></paper-input>
-            </core-tooltip>
+                </core-animated-pages>
+                <core-tooltip label="Press Enter or click outside the input to set the filter." position="top" noarrow>
+                    <paper-input id="searchBox" label="Filter content..."></paper-input>
+                </core-tooltip>
+            </div>
         </div>
         <div main>
             <core-toolbar id="mainToolbar">

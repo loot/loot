@@ -43,13 +43,15 @@ core-toolbar {
 #mainToolbar paper-dropdown {
     color: black;
 }
-div[drawer] > core-tooltip {
+div[drawer] core-tooltip {
     margin: 0 12px;
 }
 div[drawer] {
     background: white;
-    box-shadow: rgba(0, 0, 0, 0.0980392) 0px 2px 4px, rgba(0, 0, 0, 0.0980392) 0px 0px 3px;
     z-index: 1;
+}
+div[drawer] > div, div[drawer] > core-toolbar {
+    border-right: 1px rgba(0, 0, 0, 0.12) solid;
 }
 #main {
     overflow-y: auto;
