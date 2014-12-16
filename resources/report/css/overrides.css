@@ -8,21 +8,26 @@
 /* The following is for setting the size of the drawer in narrow mode. */
 #container::shadow .narrow-layout #drawer {
     width: 50% !important;
-    background: #f8f8f8;
 }
 
 /* These overrides change the colour of the game menu's text and underline. */
 #gameMenu::shadow > paper-dropdown-menu {
-    border-bottom-color: #f1f1f1;
+    border-bottom-color: #64B5F6;
 }
 #gameMenu[disabled]::shadow > paper-dropdown-menu {
-    border-bottom-color: #c9c9c9;
+    border-bottom-color: rgba(100, 181, 246, 0.26);
 }
-#gameMenu::shadow > paper-dropdown-menu::shadow #label, #gameMenu::shadow > paper-dropdown-menu::shadow #arrow {
+#gameMenu::shadow > paper-dropdown-menu::shadow #label {
     color: white;
 }
-#gameMenu[disabled]::shadow > paper-dropdown-menu::shadow #label, #gameMenu[disabled]::shadow > paper-dropdown-menu::shadow #arrow {
-    color: #c9c9c9;
+#gameMenu::shadow > paper-dropdown-menu::shadow #arrow {
+    color: #64B5F6;
+}
+#gameMenu[disabled]::shadow > paper-dropdown-menu::shadow #label {
+    color: rgba(255, 255, 255, 0.3);
+}
+#gameMenu[disabled]::shadow > paper-dropdown-menu::shadow #arrow {
+    color: rgba(100, 181, 246, 0.26);
 }
 #gameMenu {
     color: black;
@@ -44,23 +49,23 @@ html /deep/ paper-item[separator] {
     height: 1px;
     min-height: 1px;
     margin: 10px 0;
-    background: #CECECE;
+    background: rgba(0, 0, 0, 0.12);
     pointer-events: none;
 }
 
 /* This override disable menu items. */
 html /deep/ paper-item[disabled]  {
-    opacity: 0.6 !important;
+    color: rgba(0, 0, 0, 0.26);
     pointer-events: none;
 }
 
 /* These overrides change the colour of the tab ink effect and their underline. */
-paper-tabs::shadow #selectionBar {
-    background-color: white;
+html /deep/ paper-tabs::shadow #selectionBar {
+    background-color: #64B5F6;
     height: 4px;
 }
-paper-tab::shadow #ink {
-    color: #f1f1f1;
+html /deep/ paper-tab::shadow #ink {
+    color: #64B5F6;
 }
 
 /* This override change the positioning of the progress dialog to adapt to content changes. */
@@ -112,4 +117,9 @@ html /deep/ paper-checkbox::shadow #checkboxLabel {
 /* This makes the medium-tall toolbars 2x the 56px height, rather than the 64px height. */
 html /deep/ core-toolbar.medium-tall {
     height: 112px;
+}
+
+/* Change color of disabled icon buttons to match Material Design spec. */
+paper-icon-button[disabled] {
+    color: rgba(255, 255, 255, 0.30);
 }

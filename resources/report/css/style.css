@@ -27,11 +27,12 @@
 body {
     font: 10pt/1.5 RobotoDraft, Helvetica, sans-serif;
     margin:0;
-    background:#f8f8f8;
+    background:#FAFAFA;
     height: 100%;
+    color: rgba(0, 0, 0, 0.87);
 }
 core-toolbar {
-    background: #4285f4;
+    background: #3F51B5;
     color: white;
     height: 56px;
 }
@@ -97,7 +98,7 @@ section {
     white-space: pre;
 }
 paper-button[autofocus] {
-  color: #4285f4;
+  color: #64B5F6;
 }
 
 section h1 {
