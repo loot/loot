@@ -34,12 +34,18 @@
 #include "../backend/helpers.h"
 #include "../backend/generators.h"
 #include "../backend/streams.h"
+//#include "../backend/graph.h"
 
+#include <ostream>
 #include <algorithm>
+#include <iterator>
+#include <ctime>
 #include <clocale>
+#include <unordered_map>
 
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/detail/utf8_codecvt_facet.hpp>
+#include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
 #include <boost/log/core.hpp>
@@ -48,6 +54,7 @@
 #include <boost/log/utility/setup/file.hpp>
 #include <boost/log/utility/setup/common_attributes.hpp>
 #include <boost/log/support/date_time.hpp>
+#include <boost/thread.hpp>
 
 #include <wx/snglinst.h>
 #include <wx/aboutdlg.h>
@@ -230,6 +237,7 @@ bool LOOT::OnInit() {
 
     BOOST_LOG_TRIVIAL(debug) << "Selecting game.";
     string target;
+    int gameIndex = -1;
 
     wxCmdLineEntryDesc cmdLineDesc[2];
     cmdLineDesc[0].kind = wxCMD_LINE_OPTION;
@@ -255,18 +263,36 @@ bool LOOT::OnInit() {
         break;
     }
 
-    size_t gameIndex(0);
-    try {
-        gameIndex = SelectGame(_settings, _games, target);
+    if (target.empty()) {
+        if (_settings["Game"] && _settings["Game"].as<string>() != "auto")
+            target = _settings["Game"].as<string>();
+        else if (_settings["Last Game"] && _settings["Last Game"].as<string>() != "auto")
+            target = _settings["Last Game"].as<string>();
     }
-    catch (exception &e) {
-        BOOST_LOG_TRIVIAL(error) << "None of the supported games were detected.";
-        wxMessageBox(
-            translate("Error: None of the supported games were detected."),
-            translate("LOOT: Error"),
-            wxOK | wxICON_ERROR,
-            nullptr);
-        return false;
+
+    if (!target.empty()) {
+        for (size_t i=0, max=_games.size(); i < max; ++i) {
+            if (target == _games[i].FolderName() && _games[i].IsInstalled())
+                gameIndex = i;
+        }
+    }
+    if (gameIndex < 0) {
+        //Set gameIndex to the first installed game.
+        for (size_t i=0, max=_games.size(); i < max; ++i) {
+            if (_games[i].IsInstalled()) {
+                gameIndex = i;
+                break;
+            }
+        }
+        if (gameIndex < 0) {
+            BOOST_LOG_TRIVIAL(error) << "None of the supported games were detected.";
+            wxMessageBox(
+                translate("Error: None of the supported games were detected."),
+                translate("LOOT: Error"),
+                wxOK | wxICON_ERROR,
+                nullptr);
+            return false;
+        }
     }
     BOOST_LOG_TRIVIAL(debug) << "Game selected is " << _games[gameIndex].Name();
 
