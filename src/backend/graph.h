@@ -54,7 +54,7 @@ namespace loot {
 
     bool GetVertexByName(const PluginGraph& graph, const std::string& name, vertex_t& vertex);
 
-    std::list<Plugin> Sort(const PluginGraph& graph);
+    void Sort(const PluginGraph& graph, std::list<Plugin>& plugins);
 
     void CheckForCycles(const PluginGraph& graph);
 

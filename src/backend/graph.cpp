@@ -90,7 +90,7 @@ namespace loot {
         return false;
     }
 
-    std::list<Plugin> Sort(const PluginGraph& graph) {
+    void Sort(const PluginGraph& graph, std::list<Plugin>& plugins) {
 
         //Topological sort requires an index map, which std::list-based VertexList graphs don't have, so one needs to be built separately.
 
@@ -108,12 +108,11 @@ namespace loot {
         /* Sorting now evaluates conditions inside the graph, so existing plugins list is missing
         data present in the graph, so we need to swap the two lists. */
         BOOST_LOG_TRIVIAL(info) << "Calculated order: ";
-        list<Plugin> plugins;
+        plugins.clear();
         for (const auto &vertex: sortedVertices) {
             BOOST_LOG_TRIVIAL(info) << '\t' << graph[vertex].Name();
             plugins.push_back(graph[vertex]);
         }
-        return plugins;
 
         
         //Now sort exist plugins list according to order in tempPlugins.

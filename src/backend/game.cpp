@@ -29,7 +29,6 @@
 #include "metadata.h"
 #include "parsers.h"
 #include "streams.h"
-#include "generators.h"
 
 #include <boost/algorithm/string.hpp>
 #include <boost/thread.hpp>
@@ -81,19 +80,6 @@ namespace loot {
             messages = metadataList["globals"].as< list<Message> >();
 
         BOOST_LOG_TRIVIAL(debug) << "File loaded successfully.";
-    }
-
-    void MetadataList::Save(boost::filesystem::path& filepath) {
-        YAML::Emitter yout;
-        yout.SetIndent(2);
-        yout << YAML::BeginMap
-            << YAML::Key << "plugins" << YAML::Value << plugins
-            << YAML::Key << "globals" << YAML::Value << messages
-            << YAML::EndMap;
-
-        loot::ofstream uout(filepath);
-        uout << yout.c_str();
-        uout.close();
     }
 
     // Masterlist member functions
