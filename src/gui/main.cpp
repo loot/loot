@@ -294,12 +294,14 @@ bool LOOT::OnInit() {
             return false;
         }
     }
-    BOOST_LOG_TRIVIAL(debug) << "Game selected is " << _games[gameIndex].Name();
+    loot::Game & _game(_games[gameIndex]);
+    BOOST_LOG_TRIVIAL(debug) << "Game selected is " << _game.Name();
 
     //Now that game is selected, initialise it.
     BOOST_LOG_TRIVIAL(debug) << "Initialising game-specific settings.";
     try {
-        _games[gameIndex].Init();
+        _game.Init();
+        *find(_games.begin(), _games.end(), _game) = _game;  //Sync changes.
     } catch (std::exception& e) {
         BOOST_LOG_TRIVIAL(error) << "Game-specific settings could not be initialised. " << e.what();
         wxMessageBox(
@@ -337,7 +339,7 @@ bool LOOT::OnInit() {
 
     //Create launcher window.
     BOOST_LOG_TRIVIAL(debug) << "Opening the main LOOT window.";
-    Launcher * launcher = new Launcher(wxT("LOOT"), _settings, _games, gameIndex, pos, size);
+    Launcher * launcher = new Launcher(wxT("LOOT"), _settings, &_game, _games, pos, size);
 
     launcher->SetIcon(wxIconLocation("LOOT.exe"));
 	launcher->Show();
@@ -346,7 +348,7 @@ bool LOOT::OnInit() {
     return true;
 }
 
-Launcher::Launcher(const wxChar *title, YAML::Node& settings, vector<loot::Game>& games, size_t currentGame, wxPoint pos, wxSize size) : wxFrame(nullptr, wxID_ANY, title, pos, size), _settings(settings), _games(games), _currentGame(currentGame) {
+Launcher::Launcher(const wxChar *title, YAML::Node& settings, Game * game, vector<loot::Game>& games, wxPoint pos, wxSize size) : wxFrame(nullptr, wxID_ANY, title, pos, size), _game(game), _settings(settings), _games(games) {
 
     //Initialise menu items.
     wxMenuBar * MenuBar = new wxMenuBar();
@@ -376,7 +378,7 @@ Launcher::Launcher(const wxChar *title, YAML::Node& settings, vector<loot::Game>
 	//Game menu - set up initial item states here too.
     for (size_t i=0,max=_games.size(); i < max; ++i) {
         wxMenuItem * item = GameMenu->AppendRadioItem(MENU_LowestDynamicGameID + i, FromUTF8(_games[i].Name()));
-        if (_games[_currentGame] == _games[i])
+        if (*_game == _games[i])
             item->Check();
 
         if (_games[i].IsInstalled())
@@ -423,13 +425,13 @@ Launcher::Launcher(const wxChar *title, YAML::Node& settings, vector<loot::Game>
     if (!fs::exists(g_path_report))
         ViewButton->Enable(false);
 
-    if (_games[_currentGame].Id() == loot::Game::tes5)
+    if (_game->Id() == loot::Game::tes5)
         RedatePluginsItem->Enable(true);
     else
         RedatePluginsItem->Enable(false);
 
     //Set title bar text.
-    SetTitle(FromUTF8("LOOT - " + _games[_currentGame].Name()));
+    SetTitle(FromUTF8("LOOT - " + _game->Name()));
 
     //Now set the layout and sizes.
     SetMenuBar(MenuBar);
@@ -463,7 +465,7 @@ void Launcher::OnClose(wxCloseEvent& event) {
     _settings["windows"]["main"] = main;
 
     //Record game settings.
-    _settings["Last Game"] = _games[_currentGame].FolderName();
+    _settings["Last Game"] = _game->FolderName();
     _settings["Games"] = _games;
 
     //Save settings.
@@ -493,7 +495,7 @@ void Launcher::OnViewLastReport(wxCommandEvent& event) {
     }
     //Create viewer window.
     BOOST_LOG_TRIVIAL(debug) << "Opening viewer window...";
-    Viewer *viewer = new Viewer(this, translate("LOOT: Report Viewer"), FromUTF8(ToFileURL(g_path_report.string() + "?data=" + _games[_currentGame].ReportDataPath().string())), pos, size, _settings);
+    Viewer *viewer = new Viewer(this, translate("LOOT: Report Viewer"), FromUTF8(ToFileURL(g_path_report.string() + "?data=" + _game->ReportDataPath().string())), pos, size, _settings);
     viewer->Show();
     BOOST_LOG_TRIVIAL(debug) << "Report displayed.";
 }
@@ -541,10 +543,10 @@ void Launcher::OnOpenSettings(wxCommandEvent& event) {
 
 void Launcher::OnGameChange(wxCommandEvent& event) {
     BOOST_LOG_TRIVIAL(debug) << "Changing current game...";
-    _currentGame = event.GetId() - MENU_LowestDynamicGameID;
+    _game = &_games[event.GetId() - MENU_LowestDynamicGameID];
     try {
-        _games[_currentGame].Init();  //In case it hasn't already been done.
-        BOOST_LOG_TRIVIAL(debug) << "New game is " << _games[_currentGame].Name();
+        _game->Init();  //In case it hasn't already been done.
+        BOOST_LOG_TRIVIAL(debug) << "New game is " << _game->Name();
     }
     catch (std::exception& e) {
         BOOST_LOG_TRIVIAL(error) << "Game-specific settings could not be initialised." << e.what();
@@ -554,8 +556,8 @@ void Launcher::OnGameChange(wxCommandEvent& event) {
             wxOK | wxICON_ERROR,
             nullptr);
     }
-    SetTitle(FromUTF8("LOOT - " + _games[_currentGame].Name()));
-    if (_games[_currentGame].Id() == loot::Game::tes5)
+    SetTitle(FromUTF8("LOOT - " + _game->Name()));
+    if (_game->Id() == loot::Game::tes5)
         RedatePluginsItem->Enable(true);
     else
         RedatePluginsItem->Enable(false);
@@ -641,23 +643,23 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     group.create_thread([this, lang, &messages]() {
         try {
-            this->_games[_currentGame].masterlist.Load(this->_games[_currentGame], lang);
+            this->_game->masterlist.Load(*this->_game, lang);
         }
         catch (exception &e) {
             messages.push_back(loot::Message(loot::Message::error, (format(loc::translate("Masterlist parsing failed. Details: %1%")) % e.what()).str()));
         }
     });
     group.create_thread([this]() {
-        this->_games[_currentGame].LoadPlugins(false);
+        this->_game->LoadPlugins(false);
     });
     group.join_all();
 
     //Now load userlist.
-    if (fs::exists(_games[_currentGame].UserlistPath())) {
-        BOOST_LOG_TRIVIAL(debug) << "Parsing userlist at: " << _games[_currentGame].UserlistPath();
+    if (fs::exists(_game->UserlistPath())) {
+        BOOST_LOG_TRIVIAL(debug) << "Parsing userlist at: " << _game->UserlistPath();
 
         try {
-            _games[_currentGame].userlist.Load(_games[_currentGame].UserlistPath());
+            _game->userlist.Load(_game->UserlistPath());
         } catch (exception& e) {
             BOOST_LOG_TRIVIAL(error) << "Userlist parsing failed. Details: " << e.what();
             messages.push_back(loot::Message(loot::Message::error, (format(loc::translate("Userlist parsing failed. Details: %1%")) % e.what()).str()));
@@ -672,17 +674,17 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     //Merge all global message lists.
     BOOST_LOG_TRIVIAL(debug) << "Merging all global message lists.";
-    if (!_games[_currentGame].masterlist.messages.empty())
-        messages.insert(messages.end(), _games[_currentGame].masterlist.messages.begin(), _games[_currentGame].masterlist.messages.end());
-    if (!_games[_currentGame].userlist.messages.empty())
-        messages.insert(messages.end(), _games[_currentGame].userlist.messages.begin(), _games[_currentGame].userlist.messages.end());
+    if (!_game->masterlist.messages.empty())
+        messages.insert(messages.end(), _game->masterlist.messages.begin(), _game->masterlist.messages.end());
+    if (!_game->userlist.messages.empty())
+        messages.insert(messages.end(), _game->userlist.messages.begin(), _game->userlist.messages.end());
 
     //Evaluate any conditions in the global messages.
     BOOST_LOG_TRIVIAL(debug) << "Evaluating global message conditions.";
     try {
         list<loot::Message>::iterator it=messages.begin();
         while (it != messages.end()) {
-            if (!it->EvalCondition(_games[_currentGame], lang))
+            if (!it->EvalCondition(*_game, lang))
                 it = messages.erase(it);
             else
                 ++it;
@@ -711,7 +713,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     //Check for back-edges, then perform a topological sort.
     list<loot::Plugin> plugins;
-    for (auto &plugin : _games[_currentGame].plugins) {
+    for (auto &plugin : _game->plugins) {
         plugins.push_back(plugin.second);
 
         // Merge the masterlist data down into the plugins now, as userlist changes won't affect
@@ -719,9 +721,9 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         BOOST_LOG_TRIVIAL(trace) << "Merging for plugin \"" << plugins.back().Name() << "\"";
 
         //Check if there is a plugin entry in the masterlist. This will also find matching regex entries.
-        list<loot::Plugin>::iterator pos = std::find(_games[_currentGame].masterlist.plugins.begin(), _games[_currentGame].masterlist.plugins.end(), plugins.back());
+        list<loot::Plugin>::iterator pos = std::find(_game->masterlist.plugins.begin(), _game->masterlist.plugins.end(), plugins.back());
 
-        if (pos != _games[_currentGame].masterlist.plugins.end()) {
+        if (pos != _game->masterlist.plugins.end()) {
             BOOST_LOG_TRIVIAL(trace) << "Merging masterlist data down to plugin list data.";
             plugins.back().MergeMetadata(*pos);
         }
@@ -742,9 +744,9 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                 BOOST_LOG_TRIVIAL(trace) << "Merging for plugin \"" << graph[*vit].Name() << "\"";
 
                 //Check if there is a plugin entry in the userlist. This will also find matching regex entries.
-                list<loot::Plugin>::iterator pos = std::find(_games[_currentGame].userlist.plugins.begin(), _games[_currentGame].userlist.plugins.end(), graph[*vit]);
+                list<loot::Plugin>::iterator pos = std::find(_game->userlist.plugins.begin(), _game->userlist.plugins.end(), graph[*vit]);
 
-                if (pos != _games[_currentGame].userlist.plugins.end() && pos->Enabled()) {
+                if (pos != _game->userlist.plugins.end() && pos->Enabled()) {
                     BOOST_LOG_TRIVIAL(trace) << "Merging userlist data down to plugin list data.";
                     graph[*vit].MergeMetadata(*pos);
                 }
@@ -754,7 +756,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                 //Now that items are merged, evaluate any conditions they have.
                 BOOST_LOG_TRIVIAL(trace) << "Evaluate conditions for merged plugin data.";
                 try {
-                    graph[*vit].EvalAllConditions(_games[_currentGame], lang);
+                    graph[*vit].EvalAllConditions(*_game, lang);
                 }
                 catch (std::exception& e) {
                     BOOST_LOG_TRIVIAL(error) << "\"" << graph[*vit].Name() << "\" contains a condition that could not be evaluated. Details: " << e.what();
@@ -765,7 +767,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
                 //Also check install validity.
                 BOOST_LOG_TRIVIAL(trace) << "Checking that the current install is valid according to this plugin's data.";
-                graph[*vit].CheckInstallValidity(_games[_currentGame]);
+                graph[*vit].CheckInstallValidity(*_game);
 
                 progDia->Pulse();
             }
@@ -810,7 +812,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                 GetWindowSizePos(_settings["windows"]["editor"], pos, size);
             }
 
-            MiniEditor editor(this, translate("LOOT: Calculated Load Order"), pos, size, plugins, _games[_currentGame].userlist.plugins, _games[_currentGame]);
+            MiniEditor editor(this, translate("LOOT: Calculated Load Order"), pos, size, plugins, _game->userlist.plugins, *_game);
 
             long ret = editor.ShowModal();
             const std::list<loot::Plugin>& newUserlist = editor.GetNewUserlist();
@@ -826,14 +828,14 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
             //Need to determine if any new edits have been made.
             bool haveNewEdits = false;
-            if (newUserlist.size() != _games[_currentGame].userlist.plugins.size()) {
+            if (newUserlist.size() != _game->userlist.plugins.size()) {
                 BOOST_LOG_TRIVIAL(info) << "Metadata edited for some plugin, new and old userlists differ in size.";
                 haveNewEdits = true;
             }
             else {
                 for (const auto& newEdit : newUserlist) {
-                    const auto it = std::find(_games[_currentGame].userlist.plugins.begin(), _games[_currentGame].userlist.plugins.end(), newEdit);
-                    if (it == _games[_currentGame].userlist.plugins.end()) {
+                    const auto it = std::find(_game->userlist.plugins.begin(), _game->userlist.plugins.end(), newEdit);
+                    if (it == _game->userlist.plugins.end()) {
                         BOOST_LOG_TRIVIAL(info) << "Metadata added for plugin: " << it->Name();
                         haveNewEdits = true;
                         break;
@@ -860,17 +862,17 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                 progDia = new wxProgressDialog(translate("LOOT: Working..."), translate("Recalculating load order..."), 1000, this, wxPD_APP_MODAL | wxPD_AUTO_HIDE | wxPD_ELAPSED_TIME);
 
                 //User accepted edits, now apply them, then loop.
-                _games[_currentGame].userlist.plugins = newUserlist;
+                _game->userlist.plugins = newUserlist;
 
                 //Save edits to userlist.
                 BOOST_LOG_TRIVIAL(info) << "Saving edited userlist.";
                 YAML::Emitter yout;
                 yout.SetIndent(2);
                 yout << YAML::BeginMap
-                    << YAML::Key << "plugins" << YAML::Value << _games[_currentGame].userlist.plugins
+                    << YAML::Key << "plugins" << YAML::Value << _game->userlist.plugins
                     << YAML::EndMap;
 
-                loot::ofstream uout(_games[_currentGame].UserlistPath());
+                loot::ofstream uout(_game->UserlistPath());
                 uout << yout.c_str();
                 uout.close();
 
@@ -882,7 +884,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             //Applying the load order.
             BOOST_LOG_TRIVIAL(debug) << "Setting load order.";
             try {
-                _games[_currentGame].SetLoadOrder(plugins);
+                _game->SetLoadOrder(plugins);
             }
             catch (std::exception& e) {
                 BOOST_LOG_TRIVIAL(error) << "Failed to set the load order. Details: " << e.what();
@@ -913,11 +915,11 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     BOOST_LOG_TRIVIAL(debug) << "Generating report...";
     try {
-        GenerateReportData(_games[_currentGame],
+        GenerateReportData(*_game,
                         messages,
                         plugins,
-                        _games[_currentGame].masterlist.GetRevision(_games[_currentGame].MasterlistPath()),
-                        _games[_currentGame].masterlist.GetDate(_games[_currentGame].MasterlistPath()),
+                        _game->masterlist.GetRevision(_game->MasterlistPath()),
+                        _game->masterlist.GetDate(_game->MasterlistPath()),
                         true);
     } catch (std::exception& e) {
         wxMessageBox(
@@ -942,7 +944,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     }
 
     //Create viewer window.
-    Viewer *viewer = new Viewer(this, translate("LOOT: Report Viewer"), FromUTF8(ToFileURL(g_path_report.string() + "?data=" + _games[_currentGame].ReportDataPath().string())), pos, size, _settings);
+    Viewer *viewer = new Viewer(this, translate("LOOT: Report Viewer"), FromUTF8(ToFileURL(g_path_report.string() + "?data=" + _game->ReportDataPath().string())), pos, size, _settings);
     viewer->Show();
 
     BOOST_LOG_TRIVIAL(debug) << "Report display successful. Sorting process complete.";
@@ -964,36 +966,36 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
 
     //Scan for installed plugins.
     BOOST_LOG_TRIVIAL(debug) << "Reading installed plugins' headers.";
-    _games[_currentGame].LoadPlugins(true);
+    _game->LoadPlugins(true);
     //Sort plugins into their load order.
     list<string> loadOrder;
-    _games[_currentGame].GetLoadOrder(loadOrder);
+    _game->GetLoadOrder(loadOrder);
     for (const auto &pluginName: loadOrder) {
-        const auto pos = _games[_currentGame].plugins.find(pluginName);
+        const auto pos = _game->plugins.find(pluginName);
 
-        if (pos != _games[_currentGame].plugins.end())
+        if (pos != _game->plugins.end())
             installed.push_back(pos->second);
     }
 
     //Parse masterlist.
-    if (fs::exists(_games[_currentGame].MasterlistPath())) {
+    if (fs::exists(_game->MasterlistPath())) {
         BOOST_LOG_TRIVIAL(debug) << "Parsing masterlist.";
-        _games[_currentGame].masterlist.Load(_games[_currentGame], lang);
+        _game->masterlist.Load(*_game, lang);
     }
 
     progDia->Pulse();
 
     //Parse userlist.
-    if (fs::exists(_games[_currentGame].UserlistPath())) {
+    if (fs::exists(_game->UserlistPath())) {
         BOOST_LOG_TRIVIAL(debug) << "Parsing userlist.";
-        _games[_currentGame].userlist.Load(_games[_currentGame].UserlistPath());
+        _game->userlist.Load(_game->UserlistPath());
     }
 
     progDia->Pulse();
 
     //Merge the masterlist down into the installed mods list.
     BOOST_LOG_TRIVIAL(debug) << "Merging the masterlist down into the installed mods list.";
-    for (const auto &plugin: _games[_currentGame].masterlist.plugins) {
+    for (const auto &plugin: _game->masterlist.plugins) {
         auto pos = find(installed.begin(), installed.end(), plugin);
 
         if (pos != installed.end())
@@ -1004,7 +1006,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
 
     //Add empty entries for any userlist entries that aren't installed.
     BOOST_LOG_TRIVIAL(debug) << "Padding the installed mods list to match the plugins in the userlist.";
-    for (const auto &plugin : _games[_currentGame].userlist.plugins) {
+    for (const auto &plugin : _game->userlist.plugins) {
         if (find(installed.begin(), installed.end(), plugin) == installed.end())
             installed.push_back(loot::Plugin(plugin.Name()));
     }
@@ -1020,7 +1022,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
 
     //Create editor window.
     BOOST_LOG_TRIVIAL(debug) << "Opening editor window.";
-    FullEditor *editor = new FullEditor(this, translate("LOOT: Metadata Editor"), pos, size, _games[_currentGame].UserlistPath().string(), installed, _games[_currentGame].userlist.plugins, lang, _games[_currentGame], _settings);
+    FullEditor *editor = new FullEditor(this, translate("LOOT: Metadata Editor"), pos, size, _game->UserlistPath().string(), installed, _game->userlist.plugins, lang, *_game, _settings);
 
     progDia->Destroy();
 
@@ -1034,7 +1036,7 @@ void Launcher::OnRedatePlugins(wxCommandEvent& event) {
     if (dia->ShowModal() == wxID_YES) {
         BOOST_LOG_TRIVIAL(debug) << "Redating plugins.";
         try {
-            _games[_currentGame].RedatePlugins();
+            _game->RedatePlugins();
         } catch (std::exception& e) {
             BOOST_LOG_TRIVIAL(error) << "Failed to redate plugins. " << e.what();
             wxMessageBox(
