@@ -623,10 +623,11 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     BOOST_LOG_TRIVIAL(debug) << "Beginning sorting process.";
 
-    list<loot::Message> messages;
+    YAML::Node mlist, ulist;
+    list<loot::Message> messages, mlist_messages, ulist_messages;
+    list<loot::Plugin> mlist_plugins, ulist_plugins;
     list<loot::Plugin> plugins;
     boost::thread_group group;
-    unsigned int lang;
 
     wxProgressDialog *progDia = new wxProgressDialog(translate("LOOT: Working..."),translate("LOOT working..."), 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_ELAPSED_TIME);
 
@@ -635,6 +636,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
     ///////////////////////////////////////////////////////
 
     //Set language.
+    unsigned int lang;
     if (_settings["Language"])
         lang = Language(_settings["Language"].as<string>()).Code();
     else
@@ -642,6 +644,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     BOOST_LOG_TRIVIAL(info) << "Using message language: " << Language(lang).Name();
 
+    bool doUpdate = _settings["Update Masterlist"] && _settings["Update Masterlist"].as<bool>();
     group.create_thread([this, lang, &messages]() {
         try {
             this->_game->masterlist.Load(*this->_game, lang);
@@ -689,11 +692,18 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
         BOOST_LOG_TRIVIAL(debug) << "Parsing userlist at: " << _game->UserlistPath();
 
         try {
-            _game->userlist.Load(_game->UserlistPath());
-        } catch (exception& e) {
+            loot::ifstream in(_game->UserlistPath());
+            YAML::Node ulist = YAML::Load(in);
+            in.close();
+
+            if (ulist["plugins"])
+                ulist_plugins = ulist["plugins"].as< list<loot::Plugin> >();
+        } catch (YAML::ParserException& e) {
             BOOST_LOG_TRIVIAL(error) << "Userlist parsing failed. Details: " << e.what();
             messages.push_back(loot::Message(loot::Message::error, (format(loc::translate("Userlist parsing failed. Details: %1%")) % e.what()).str()));
         }
+        if (ulist["plugins"])
+            ulist_plugins = ulist["plugins"].as< list<loot::Plugin> >();
     }
 
     progDia->Pulse();
@@ -707,10 +717,10 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
         //Merge all global message lists.
         BOOST_LOG_TRIVIAL(debug) << "Merging all global message lists.";
-        if (!_game->masterlist.messages.empty())
-            messages.insert(messages.end(), _game->masterlist.messages.begin(), _game->masterlist.messages.end());
-        if (!_game->userlist.messages.empty())
-            messages.insert(messages.end(), _game->userlist.messages.begin(), _game->userlist.messages.end());
+        if (!mlist_messages.empty())
+            messages.insert(messages.end(), mlist_messages.begin(), mlist_messages.end());
+        if (!ulist_messages.empty())
+            messages.insert(messages.end(), ulist_messages.begin(), ulist_messages.end());
 
         //Evaluate any conditions in the global messages.
         BOOST_LOG_TRIVIAL(debug) << "Evaluating global message conditions.";
@@ -734,9 +744,9 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
             BOOST_LOG_TRIVIAL(trace) << "Merging for plugin \"" << plugin.Name() << "\"";
 
             //Check if there is a plugin entry in the masterlist. This will also find matching regex entries.
-            list<loot::Plugin>::iterator pos = std::find(_game->masterlist.plugins.begin(), _game->masterlist.plugins.end(), plugin);
+            list<loot::Plugin>::iterator pos = std::find(mlist_plugins.begin(), mlist_plugins.end(), plugin);
 
-            if (pos != _game->masterlist.plugins.end()) {
+            if (pos != mlist_plugins.end()) {
                 BOOST_LOG_TRIVIAL(trace) << "Merging masterlist data down to plugin list data.";
                 plugin.MergeMetadata(*pos);
             }
@@ -778,9 +788,9 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                 BOOST_LOG_TRIVIAL(trace) << "Merging for plugin \"" << graph[*vit].Name() << "\"";
 
                 //Check if there is a plugin entry in the userlist. This will also find matching regex entries.
-                list<loot::Plugin>::iterator pos = std::find(_game->userlist.plugins.begin(), _game->userlist.plugins.end(), graph[*vit]);
+                list<loot::Plugin>::iterator pos = std::find(ulist_plugins.begin(), ulist_plugins.end(), graph[*vit]);
 
-                if (pos != _game->userlist.plugins.end() && pos->Enabled()) {
+                if (pos != ulist_plugins.end() && pos->Enabled()) {
                     BOOST_LOG_TRIVIAL(trace) << "Merging userlist data down to plugin list data.";
                     graph[*vit].MergeMetadata(*pos);
                 }
@@ -846,7 +856,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                 GetWindowSizePos(_settings["windows"]["editor"], pos, size);
             }
 
-            MiniEditor editor(this, translate("LOOT: Calculated Load Order"), pos, size, plugins, _game->userlist.plugins, *_game);
+            MiniEditor editor(this, translate("LOOT: Calculated Load Order"), pos, size, plugins, ulist_plugins, *_game);
 
             long ret = editor.ShowModal();
             const std::list<loot::Plugin>& newUserlist = editor.GetNewUserlist();
@@ -862,14 +872,14 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
             //Need to determine if any new edits have been made.
             bool haveNewEdits = false;
-            if (newUserlist.size() != _game->userlist.plugins.size()) {
+            if (newUserlist.size() != ulist_plugins.size()) {
                 BOOST_LOG_TRIVIAL(info) << "Metadata edited for some plugin, new and old userlists differ in size.";
                 haveNewEdits = true;
             }
             else {
                 for (const auto& newEdit : newUserlist) {
-                    const auto it = std::find(_game->userlist.plugins.begin(), _game->userlist.plugins.end(), newEdit);
-                    if (it == _game->userlist.plugins.end()) {
+                    const auto it = std::find(ulist_plugins.begin(), ulist_plugins.end(), newEdit);
+                    if (it == ulist_plugins.end()) {
                         BOOST_LOG_TRIVIAL(info) << "Metadata added for plugin: " << it->Name();
                         haveNewEdits = true;
                         break;
@@ -896,14 +906,14 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                 progDia = new wxProgressDialog(translate("LOOT: Working..."), translate("Recalculating load order..."), 1000, this, wxPD_APP_MODAL | wxPD_AUTO_HIDE | wxPD_ELAPSED_TIME);
 
                 //User accepted edits, now apply them, then loop.
-                _game->userlist.plugins = newUserlist;
+                ulist_plugins = newUserlist;
 
                 //Save edits to userlist.
                 BOOST_LOG_TRIVIAL(info) << "Saving edited userlist.";
                 YAML::Emitter yout;
                 yout.SetIndent(2);
                 yout << YAML::BeginMap
-                    << YAML::Key << "plugins" << YAML::Value << _game->userlist.plugins
+                    << YAML::Key << "plugins" << YAML::Value << ulist_plugins
                     << YAML::EndMap;
 
                 loot::ofstream uout(_game->UserlistPath());
@@ -954,7 +964,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                         plugins,
                         _game->masterlist.GetRevision(_game->MasterlistPath()),
                         _game->masterlist.GetDate(_game->MasterlistPath()),
-                        true);
+                        doUpdate);
     } catch (std::exception& e) {
         wxMessageBox(
             FromUTF8(format(loc::translate("Error: %1%")) % e.what()),
@@ -987,16 +997,9 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 void Launcher::OnEditMetadata(wxCommandEvent& event) {
 
     //Should probably check for masterlist updates before opening metadata editor.
-    list<loot::Plugin> installed;
-    unsigned int lang;
+    list<loot::Plugin> installed, mlist_plugins, ulist_plugins;
 
-    wxProgressDialog *progDia = new wxProgressDialog(translate("LOOT: Working..."), translate("LOOT working..."), 1000, this, wxPD_APP_MODAL | wxPD_AUTO_HIDE | wxPD_ELAPSED_TIME);
-
-    //Set language.
-    if (_settings["Language"])
-        lang = Language(_settings["Language"].as<string>()).Code();
-    else
-        lang = loot::Language::any;
+    wxProgressDialog *progDia = new wxProgressDialog(translate("LOOT: Working..."),translate("LOOT working..."), 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_ELAPSED_TIME);
 
     //Scan for installed plugins.
     BOOST_LOG_TRIVIAL(debug) << "Reading installed plugins' headers.";
@@ -1014,7 +1017,21 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
     //Parse masterlist.
     if (fs::exists(_game->MasterlistPath())) {
         BOOST_LOG_TRIVIAL(debug) << "Parsing masterlist.";
-        _game->masterlist.Load(*_game, lang);
+        YAML::Node mlist;
+        try {
+            loot::ifstream in(_game->MasterlistPath());
+            mlist = YAML::Load(in);
+            in.close();
+        } catch (YAML::ParserException& e) {
+            BOOST_LOG_TRIVIAL(error) << "Masterlist parsing failed. " << e.what();
+            wxMessageBox(
+                FromUTF8(format(loc::translate("Error: Masterlist parsing failed. %1%")) % e.what()),
+                translate("LOOT: Error"),
+                wxOK | wxICON_ERROR,
+                this);
+        }
+        if (mlist["plugins"])
+            mlist_plugins = mlist["plugins"].as< list<loot::Plugin> >();
     }
 
     progDia->Pulse();
@@ -1022,14 +1039,28 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
     //Parse userlist.
     if (fs::exists(_game->UserlistPath())) {
         BOOST_LOG_TRIVIAL(debug) << "Parsing userlist.";
-        _game->userlist.Load(_game->UserlistPath());
+        YAML::Node ulist;
+        try {
+            loot::ifstream in(_game->UserlistPath());
+            ulist = YAML::Load(in);
+            in.close();
+        } catch (YAML::ParserException& e) {
+            BOOST_LOG_TRIVIAL(error) << "Userlist parsing failed. " << e.what();
+            wxMessageBox(
+				FromUTF8(format(loc::translate("Error: Userlist parsing failed. %1%")) % e.what()),
+				translate("LOOT: Error"),
+				wxOK | wxICON_ERROR,
+				this);
+        }
+        if (ulist["plugins"])
+            ulist_plugins = ulist["plugins"].as< list<loot::Plugin> >();
     }
 
     progDia->Pulse();
 
     //Merge the masterlist down into the installed mods list.
     BOOST_LOG_TRIVIAL(debug) << "Merging the masterlist down into the installed mods list.";
-    for (const auto &plugin: _game->masterlist.plugins) {
+    for (const auto &plugin: mlist_plugins) {
         auto pos = find(installed.begin(), installed.end(), plugin);
 
         if (pos != installed.end())
@@ -1040,12 +1071,19 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
 
     //Add empty entries for any userlist entries that aren't installed.
     BOOST_LOG_TRIVIAL(debug) << "Padding the installed mods list to match the plugins in the userlist.";
-    for (const auto &plugin : _game->userlist.plugins) {
+    for (const auto &plugin : ulist_plugins) {
         if (find(installed.begin(), installed.end(), plugin) == installed.end())
             installed.push_back(loot::Plugin(plugin.Name()));
     }
 
     progDia->Pulse();
+
+    //Set language.
+    unsigned int lang;
+    if (_settings["Language"])
+        lang = Language(_settings["Language"].as<string>()).Code();
+    else
+        lang = loot::Language::any;
 
     //Load window size/pos settings.
     wxSize size = wxDefaultSize;
@@ -1056,7 +1094,7 @@ void Launcher::OnEditMetadata(wxCommandEvent& event) {
 
     //Create editor window.
     BOOST_LOG_TRIVIAL(debug) << "Opening editor window.";
-    FullEditor *editor = new FullEditor(this, translate("LOOT: Metadata Editor"), pos, size, _game->UserlistPath().string(), installed, _game->userlist.plugins, lang, *_game, _settings);
+    FullEditor *editor = new FullEditor(this, translate("LOOT: Metadata Editor"), pos, size, _game->UserlistPath().string(), installed, ulist_plugins, lang, *_game, _settings);
 
     progDia->Destroy();
 
