@@ -18,11 +18,11 @@ LOOT uses [CMake](http://cmake.org) for cross-platform building support, as thou
 LOOT requires the following libraries (version numbers used in latest development revision given):
 
 * [Alphanum](http://www.davekoelle.com/files/alphanum.hpp)
-* [Boost](http://www.boost.org) v1.56.0
+* [Boost](http://www.boost.org) v1.57.0
 * [Libespm](http://github.com/WrinklyNinja/libespm)
-* [Libgit2](http://libgit2.github.com/) v0.21.1
+* [Libgit2](http://libgit2.github.com/) v0.21.3
 * [Libloadorder](http://github.com/WrinklyNinja/libloadorder)
-* [wxWidgets](http://www.wxwidgets.org) v3.0.1
+* [wxWidgets](http://www.wxwidgets.org) v3.0.2
 * [yaml-cpp](http://github.com/WrinklyNinja/yaml-cpp)
 
 Alphanum and Libespm do not require any additional setup. The rest of the libraries must be built separately. Instructions for building them and LOOT itself using MSVC or MinGW are given in [docs/BUILD.MSVC.md](docs/BUILD.MSVC.md) and [docs/BUILD.MinGW.md](docs/BUILD.MinGW.md) respectively.
