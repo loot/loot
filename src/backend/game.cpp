@@ -245,13 +245,13 @@ namespace loot {
         size_t pluginArrSize;
         int ret;
         if (Id() == Game::tes4)
-            ret = lo_create_handle(&gh, LIBLO_GAME_TES4, gamePath.string().c_str());
+            ret = lo_create_handle(&gh, LIBLO_GAME_TES4, gamePath.string().c_str(), NULL);
         else if (Id() == Game::tes5)
-            ret = lo_create_handle(&gh, LIBLO_GAME_TES5, gamePath.string().c_str());
+            ret = lo_create_handle(&gh, LIBLO_GAME_TES5, gamePath.string().c_str(), NULL);
         else if (Id() == Game::fo3)
-            ret = lo_create_handle(&gh, LIBLO_GAME_FO3, gamePath.string().c_str());
+            ret = lo_create_handle(&gh, LIBLO_GAME_FO3, gamePath.string().c_str(), NULL);
         else if (Id() == Game::fonv)
-            ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str());
+            ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str(), NULL);
 
         if (ret != LIBLO_OK && ret != LIBLO_WARN_LO_MISMATCH) {
             const char * e = nullptr;
@@ -326,13 +326,13 @@ namespace loot {
 
         int ret;
         if (Id() == Game::tes4)
-            ret = lo_create_handle(&gh, LIBLO_GAME_TES4, gamePath.string().c_str());
+            ret = lo_create_handle(&gh, LIBLO_GAME_TES4, gamePath.string().c_str(), NULL);
         else if (Id() == Game::tes5)
-            ret = lo_create_handle(&gh, LIBLO_GAME_TES5, gamePath.string().c_str());
+            ret = lo_create_handle(&gh, LIBLO_GAME_TES5, gamePath.string().c_str(), NULL);
         else if (Id() == Game::fo3)
-            ret = lo_create_handle(&gh, LIBLO_GAME_FO3, gamePath.string().c_str());
+            ret = lo_create_handle(&gh, LIBLO_GAME_FO3, gamePath.string().c_str(), NULL);
         else if (Id() == Game::fonv)
-            ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str());
+            ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str(), NULL);
 
         if (ret != LIBLO_OK && ret != LIBLO_WARN_LO_MISMATCH) {
             const char * e = nullptr;
@@ -402,13 +402,13 @@ namespace loot {
         size_t pluginArrSize = 0;
         int ret;
         if (Id() == Game::tes4)
-            ret = lo_create_handle(&gh, LIBLO_GAME_TES4, gamePath.string().c_str());
+            ret = lo_create_handle(&gh, LIBLO_GAME_TES4, gamePath.string().c_str(), NULL);
         else if (Id() == Game::tes5)
-            ret = lo_create_handle(&gh, LIBLO_GAME_TES5, gamePath.string().c_str());
+            ret = lo_create_handle(&gh, LIBLO_GAME_TES5, gamePath.string().c_str(), NULL);
         else if (Id() == Game::fo3)
-            ret = lo_create_handle(&gh, LIBLO_GAME_FO3, gamePath.string().c_str());
+            ret = lo_create_handle(&gh, LIBLO_GAME_FO3, gamePath.string().c_str(), NULL);
         else if (Id() == Game::fonv)
-            ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str());
+            ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str(), NULL);
 
         if (ret != LIBLO_OK && ret != LIBLO_WARN_LO_MISMATCH) {
             const char * e = nullptr;
