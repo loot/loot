@@ -34,7 +34,7 @@
 
 using namespace std;
 
-SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node& settings, std::vector<loot::Game>& games, size_t currentGameIndex, wxPoint pos, wxSize size) : wxDialog(parent, wxID_ANY, title, pos, size, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER), _settings(settings), _games(games), _currentGameIndex(currentGameIndex) {
+SettingsFrame::SettingsFrame(wxWindow *parent, const wxString& title, YAML::Node& settings, std::vector<loot::Game>& games, loot::Game * currentGame, wxPoint pos, wxSize size) : wxDialog(parent, wxID_ANY, title, pos, size, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER), _settings(settings), _games(games), _currentGame(currentGame) {
 
     //Initialise drop-down list contents.
 	wxString DebugVerbosity[] = {
@@ -281,7 +281,7 @@ void SettingsFrame::OnGameSelect(wxListEvent& event) {
      || name == loot::Game(loot::Game::tes5).Name()
      || name == loot::Game(loot::Game::fo3).Name()
      || name == loot::Game(loot::Game::fonv).Name()
-     || event.GetIndex() == _currentGameIndex) {
+     || name == _currentGame->Name()) {
         removeBtn->Enable(false);
      } else {
         removeBtn->Enable(true);
