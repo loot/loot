@@ -370,6 +370,7 @@ To translate the LOOT application:
     <li>Russian translation: Tokc.D.K.
     <li>Brazilian Portuguese translation: Kassane
     <li>Finnish translation: 3ventic
+    <li>German translation: Lukas Pradel
     <li>Beta testing: Too many to list, thank you all!
 </ul>
 <p>LOOT is written in C++ and makes use of the <a href="http://www.davekoelle.com/alphanum.html">Alphanum</a>, <a href="http://www.boost.org/">Boost</a>, <a href="http://github.com/WrinklyNinja/libespm">libespm</a>, <a href="http://github.com/libgit2/libgit2">libgit2</a>, <a href="http://github.com/WrinklyNinja/libloadorder">libloadorder</a>, <a href="http://www.wxwidgets.org/">wxWidgets</a> and <a href="http://code.google.com/p/yaml-cpp/">yaml-cpp</a> libraries. LOOT's reports are written in HTML5/CSS3/Javascript and make use of <a href="http://github.com/inexorabletash/polyfill">Polyfill.js</a> and <a href="http://requirejs.org">RequireJS</a>. Copyright license information for all these may be found <a href="licenses/Licenses.txt">here</a>.
@@ -442,6 +443,25 @@ A copy of the license is included in the file named "GNU FDL v1.3.txt".</blockqu
 
 <h2 id="history">Version History</h2>
 <p>Only program history is recorded here. The masterlists are updated far too frequently for their changes to be concisely recorded here, but a full history of changes to them may be viewed by browsing the GitHub repositories.
+
+<h3>0.6.1 - <i>X December 2014</i></h3>
+<ul>
+    <li>Fixed: Default Nehrim registry entry path.
+    <li>Fixed: Messages in the wrong language being selected.
+    <li>Fixed: LOOT windows opening off-screen if the screen area had been changed since last run.
+    <li>Fixed: Read-only <code>.git</code> folders preventing repository deletion.
+    <li>Fixed: Unnecessary plugins in cyclic dependency error messages.
+    <li>Fixed: Bash Tag suggestions displaying incorrectly.
+    <li>Fixed: The current game can no longer be deleted from the settings window.
+    <li>Fixed: Plugin metadata being lost when the settings window was exited with the "OK" button, leading to possible condition evaluation issues.
+    <li>Fixed: A blank report bug when running on systems which don't have Internet Explorer 11 installed.
+    <li>Changed: Updated Boost (1.57.0), libgit2 (0.21.3), wxWidgets (3.0.2) and libloadorder dependencies. <b>This includes a critical security vulnerability fix in libgit2</b>.
+    <li>Changed: The game menu is now updated when the settings window is exited with the "OK" button.
+    <li>Changed: Updated Russian translation.
+    <li>Changed: Updated Brazilian Portuguese translation.
+    <li>Added: German translation.
+    <li>Added: The Large Address Aware flag to the LOOT executable.
+</ul>
 
 <h3>0.6.0 - <i>05 July 2014</i></h3>
 <ul>
