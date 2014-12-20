@@ -11,26 +11,24 @@
 }
 
 /* These overrides change the colour of the game menu's text and underline. */
-#gameMenu::shadow > paper-dropdown-menu {
+#gameMenu::shadow > paper-dropdown-menu,
+#gameMenu::shadow > paper-dropdown-menu::shadow #arrow {
     border-bottom-color: #64B5F6;
 }
 #gameMenu[disabled]::shadow > paper-dropdown-menu {
     border-bottom-color: rgba(100, 181, 246, 0.26);
 }
-#gameMenu::shadow > paper-dropdown-menu::shadow #label {
-    color: white;
-}
-#gameMenu::shadow > paper-dropdown-menu::shadow #arrow {
-    color: #64B5F6;
-}
-#gameMenu[disabled]::shadow > paper-dropdown-menu::shadow #label {
-    color: rgba(255, 255, 255, 0.3);
-}
 #gameMenu[disabled]::shadow > paper-dropdown-menu::shadow #arrow {
     color: rgba(100, 181, 246, 0.26);
 }
 #gameMenu {
-    color: black;
+    color: rgba(0, 0, 0, 0.87);
+}
+#gameMenu::shadow > paper-dropdown-menu::shadow #label {
+    color: white;
+}
+#gameMenu[disabled]::shadow > paper-dropdown-menu::shadow #label {
+    color: rgba(255, 255, 255, 0.3);
 }
 
 /* This makes sidebar items smaller. */

@@ -202,7 +202,7 @@ td input {
     top: -4px;
 }
 #applySortButton {
-    color: #4285f4;
+    color: #64B5F6;
     background-color: white;
 }
 input:invalid {
@@ -223,7 +223,13 @@ paper-progress {
 #firstRun .tag {
     margin: 0;
 }
-
+a {
+    color: #64B5F6;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
 
 /* This animates the drawer toggle appearing in narrow view. */
 #drawerToggle {
