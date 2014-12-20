@@ -243,6 +243,14 @@ namespace loot {
         size_t numOverrideRecords;
     };
 
+    class MetadataList {
+    public:
+        void Load(boost::filesystem::path& filepath);
+
+        std::list<Plugin> plugins;
+        std::list<Message> messages;
+    };
+
     struct plugin_hash : std::unary_function<Plugin, size_t> {
         size_t operator () (const Plugin& p) const;
     };

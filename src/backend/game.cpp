@@ -28,7 +28,6 @@
 #include "error.h"
 #include "metadata.h"
 #include "parsers.h"
-#include "streams.h"
 
 #include <boost/algorithm/string.hpp>
 
@@ -59,63 +58,6 @@ namespace loot {
 
         return games;
     }
-
-    // MetadataList member functions
-    //------------------------------
-
-    void MetadataList::Load(boost::filesystem::path& filepath) {
-        plugins.clear();
-        messages.clear();
-
-        BOOST_LOG_TRIVIAL(debug) << "Loading file: " << filepath;
-
-        loot::ifstream in(filepath);
-        YAML::Node metadataList = YAML::Load(in);
-        in.close();
-
-        if (metadataList["plugins"])
-            plugins = metadataList["plugins"].as< list<Plugin> >();
-        if (metadataList["globals"])
-            messages = metadataList["globals"].as< list<Message> >();
-
-        BOOST_LOG_TRIVIAL(debug) << "File loaded successfully.";
-    }
-
-    // Masterlist member functions
-    //----------------------------
-
-    void Masterlist::Load(Game& game, const unsigned int language) {
-        try {
-            Update(game, language);
-        }
-        catch (error& e) {
-            if (e.code() != error::ok) {
-                // Error wasn't a parsing error. Need to try parsing masterlist if it exists.
-                try {
-                    MetadataList::Load(game.MasterlistPath());
-                }
-                catch (...) {}
-            }
-            throw e;
-        }
-    }
-
-    std::string Masterlist::GetRevision(boost::filesystem::path& path) {
-        if (revision.empty())
-            GetGitInfo(path);
-
-        return revision;
-    }
-
-    std::string Masterlist::GetDate(boost::filesystem::path& path) {
-        if (date.empty())
-            GetGitInfo(path);
-
-        return date;
-    }
-
-    // Game member functions
-    //----------------------
 
     Game::Game() : id(Game::autodetect) {}
 
