@@ -11,12 +11,14 @@
 }
 
 /* These overrides change the colour of the game menu's text and underline. */
-#gameMenu::shadow > paper-dropdown-menu,
-#gameMenu::shadow > paper-dropdown-menu::shadow #arrow {
+#gameMenu::shadow > paper-dropdown-menu {
     border-bottom-color: #64B5F6;
 }
 #gameMenu[disabled]::shadow > paper-dropdown-menu {
     border-bottom-color: rgba(100, 181, 246, 0.26);
+}
+#gameMenu::shadow > paper-dropdown-menu::shadow #arrow {
+    color: #64B5F6;
 }
 #gameMenu[disabled]::shadow > paper-dropdown-menu::shadow #arrow {
     color: rgba(100, 181, 246, 0.26);
