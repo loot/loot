@@ -90,7 +90,7 @@
                 </core-tooltip>
             </div>
         </div>
-        <div main>
+        <div main layout vertical>
             <core-toolbar id="mainToolbar">
                 <paper-icon-button icon="menu" id="drawerToggle"></paper-icon-button>
                 <loot-dropdown-menu id="gameMenu">
@@ -152,7 +152,7 @@
                     </paper-dropdown>
                 </paper-menu-button>
             </core-toolbar>
-            <div id="main">
+            <div id="main" flex layout vertical>
                 <section id="summary">
                     <h1>Summary</h1>
                     <table>
@@ -206,7 +206,7 @@
                         <!-- Generated message <li> elements go here. -->
                     </ul>
                 </section>
-                <core-list>
+                <core-list flex>
                     <template>
                         <loot-plugin-card data="{{model}}" id="{{model.id}}" data-active="{{model.isActive}}" data-dummy="{{model.isDummy}}" data-bsa="{{model.loadsBSA}}" data-edits="{{model.userlist != undefined}}">
                             <h1>{{model.name}}</h1>
