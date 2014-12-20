@@ -1158,6 +1158,7 @@ function initVars() {
                     document.getElementById('main').lastElementChild.data = loot.game.plugins;
 
                     setTimeout(function() {
+                        document.getElementById('cardsNav').lastElementChild.updateSize();
                         closeProgressDialog();
                     }, 100);
 
