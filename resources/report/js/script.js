@@ -473,10 +473,6 @@ function changeGame(evt) {
 
             /* Now update virtual lists. */
             setFilteredUIData();
-
-            /* Update the list sizes to take into account data changes. */
-            document.getElementById('cardsNav').lastElementChild.updateSize();
-            document.getElementById('main').lastElementChild.updateSize();
         } catch (e) {
             console.log(e);
             console.log('changeGame response: ' + result);
@@ -1162,7 +1158,6 @@ function initVars() {
                     document.getElementById('main').lastElementChild.data = loot.game.plugins;
 
                     setTimeout(function() {
-                        document.getElementById('cardsNav').lastElementChild.updateSize();
                         closeProgressDialog();
                     }, 100);
 

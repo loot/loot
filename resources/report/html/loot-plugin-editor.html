@@ -544,9 +544,6 @@ loot-editor-close
             this.shadowRoot.getElementById('loadsBSA').setPosition();
             this.shadowRoot.getElementById('globalPriority').parentElement.setPosition();
 
-            /* Update tab bar position. */
-            this.shadowRoot.getElementById('tableTabs').updateBar();
-
             /* Also make sure right arrow is visible. */
             this.shadowRoot.getElementById('tableTabs').shadowRoot.querySelector('.scroll-button:last-child').firstElementChild.classList.remove('hidden');
         },
