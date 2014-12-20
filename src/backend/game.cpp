@@ -85,7 +85,7 @@ namespace loot {
     // MetadataList member functions
     //------------------------------
 
-    void MetadataList::Load(const boost::filesystem::path& filepath) {
+    void MetadataList::Load(boost::filesystem::path& filepath) {
         plugins.clear();
         messages.clear();
 
@@ -103,7 +103,7 @@ namespace loot {
         BOOST_LOG_TRIVIAL(debug) << "File loaded successfully.";
     }
 
-    void MetadataList::Save(const boost::filesystem::path& filepath) {
+    void MetadataList::Save(boost::filesystem::path& filepath) {
         YAML::Emitter yout;
         yout.SetIndent(2);
         yout << YAML::BeginMap
@@ -114,38 +114,6 @@ namespace loot {
         loot::ofstream uout(filepath);
         uout << yout.c_str();
         uout.close();
-    }
-
-    bool MetadataList::operator == (const MetadataList& rhs) const {
-        if (this->plugins.size() != rhs.plugins.size() || this->messages.size() != rhs.messages.size()) {
-            BOOST_LOG_TRIVIAL(info) << "Metadata edited for some plugin, new and old userlists differ in size.";
-            return false;
-        }
-        else {
-            for (const auto& rhsPlugin : rhs.plugins) {
-                const auto it = std::find(this->plugins.begin(), this->plugins.end(), rhsPlugin);
-
-                if (it == this->plugins.end()) {
-                    BOOST_LOG_TRIVIAL(info) << "Metadata added for plugin: " << it->Name();
-                    return false;
-                }
-
-                if (!it->DiffMetadata(rhsPlugin).HasNameOnly()) {
-                    BOOST_LOG_TRIVIAL(info) << "Metadata edited for plugin: " << it->Name();
-                    return false;
-                }
-            }
-            // Messages are compared exactly by the '==' operator, so there's no need to do a more
-            // fine-grained check.
-            for (const auto& rhsMessage : rhs.messages) {
-                const auto it = std::find(this->messages.begin(), this->messages.end(), rhsMessage);
-
-                if (it == this->messages.end()) {
-                    return  false;
-                }
-            }
-        }
-        return true;
     }
 
     // Masterlist member functions
@@ -167,14 +135,14 @@ namespace loot {
         }
     }
 
-    std::string Masterlist::GetRevision(const boost::filesystem::path& path) {
+    std::string Masterlist::GetRevision(boost::filesystem::path& path) {
         if (revision.empty())
             GetGitInfo(path);
 
         return revision;
     }
 
-    std::string Masterlist::GetDate(const boost::filesystem::path& path) {
+    std::string Masterlist::GetDate(boost::filesystem::path& path) {
         if (date.empty())
             GetGitInfo(path);
 

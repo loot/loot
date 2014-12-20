@@ -259,7 +259,7 @@ bool LOOT::OnInit() {
     try {
         gameIndex = SelectGame(_settings, _games, target);
     }
-    catch (exception &) {
+    catch (exception &e) {
         BOOST_LOG_TRIVIAL(error) << "None of the supported games were detected.";
         wxMessageBox(
             translate("Error: None of the supported games were detected."),
@@ -632,13 +632,13 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
     */
 
+    //Check for back-edges, then perform a topological sort.
     list<loot::Plugin> plugins;
     try {
         bool applyLoadOrder = false;
 
         do {
             
-            // Perform sort.
             plugins = _games[_currentGame].Sort(lang, messages, progressCallback);
 
             progDia->Destroy();
@@ -653,11 +653,10 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                 GetWindowSizePos(_settings["windows"]["editor"], pos, size);
             }
 
-            // Display mini editor.
             MiniEditor editor(this, translate("LOOT: Calculated Load Order"), pos, size, plugins, _games[_currentGame].userlist.plugins, _games[_currentGame]);
 
             long ret = editor.ShowModal();
-            MetadataList newUserlist = editor.GetNewUserlist();
+            const std::list<loot::Plugin>& newUserlist = editor.GetNewUserlist();
 
             //Record window settings.
             YAML::Node node;
@@ -668,11 +667,34 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
 
             _settings["windows"]["editor"] = node;
 
+            //Need to determine if any new edits have been made.
+            bool haveNewEdits = false;
+            if (newUserlist.size() != _games[_currentGame].userlist.plugins.size()) {
+                BOOST_LOG_TRIVIAL(info) << "Metadata edited for some plugin, new and old userlists differ in size.";
+                haveNewEdits = true;
+            }
+            else {
+                for (const auto& newEdit : newUserlist) {
+                    const auto it = std::find(_games[_currentGame].userlist.plugins.begin(), _games[_currentGame].userlist.plugins.end(), newEdit);
+                    if (it == _games[_currentGame].userlist.plugins.end()) {
+                        BOOST_LOG_TRIVIAL(info) << "Metadata added for plugin: " << it->Name();
+                        haveNewEdits = true;
+                        break;
+                    }
+
+                    if (!it->DiffMetadata(newEdit).HasNameOnly()) {
+                        BOOST_LOG_TRIVIAL(info) << "Metadata edited for plugin: " << it->Name();
+                        haveNewEdits = true;
+                        break;
+                    }
+                }
+            }
+
             if (ret != wxID_APPLY) {
                 applyLoadOrder = false;
                 break;
             }
-            else if (_games[_currentGame].userlist == newUserlist) {
+            else if (!haveNewEdits) {
                 applyLoadOrder = true;
                 break;
             }
@@ -681,7 +703,7 @@ void Launcher::OnSortPlugins(wxCommandEvent& event) {
                 progDia = new wxProgressDialog(translate("LOOT: Working..."), translate("Recalculating load order..."), 1000, this, wxPD_APP_MODAL | wxPD_AUTO_HIDE | wxPD_ELAPSED_TIME);
 
                 //User accepted edits, now apply them, then loop.
-                _games[_currentGame].userlist = newUserlist;
+                _games[_currentGame].userlist.plugins = newUserlist;
 
                 //Save edits to userlist.
                 _games[_currentGame].userlist.Save(_games[_currentGame].UserlistPath());

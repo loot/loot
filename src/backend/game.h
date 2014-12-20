@@ -55,10 +55,8 @@ namespace loot {
 
     class MetadataList {
     public:
-        void Load(const boost::filesystem::path& filepath);
-        void Save(const boost::filesystem::path& filepath);
-
-        bool operator == (const MetadataList& rhs) const;  //Compares content.
+        void Load(boost::filesystem::path& filepath);
+        void Save(boost::filesystem::path& filepath);
 
         std::list<Plugin> plugins;
         std::list<Message> messages;
@@ -70,11 +68,11 @@ namespace loot {
         void Load(Game& game, const unsigned int language);  //Handles update with load fallback.
         void Update(Game& game, const unsigned int language);
         
-        std::string GetRevision(const boost::filesystem::path& path);
-        std::string GetDate(const boost::filesystem::path& path);
+        std::string GetRevision(boost::filesystem::path& path);
+        std::string GetDate(boost::filesystem::path& path);
 
     private:
-        void GetGitInfo(const boost::filesystem::path& path);
+        void GetGitInfo(boost::filesystem::path& path);
 
         std::string revision;
         std::string date;

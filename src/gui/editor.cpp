@@ -1041,10 +1041,8 @@ void EditorPanel::ApplyCurrentEdits() {
         ApplyEdits(currentPlugin);
 }
 
-loot::MetadataList EditorPanel::GetNewUserlist() const {
-    loot::MetadataList newUserlist;
-    newUserlist.plugins = _editedPlugins;
-    return newUserlist;
+const std::list<loot::Plugin>& EditorPanel::GetNewUserlist() const {
+    return _editedPlugins;
 }
 
 loot::Plugin EditorPanel::GetMasterData(const wxString& plugin) const {
@@ -1199,7 +1197,7 @@ void MiniEditor::OnResize(wxSizeEvent& event) {
     event.Skip();
 }
 
-loot::MetadataList MiniEditor::GetNewUserlist() const {
+const std::list<loot::Plugin>& MiniEditor::GetNewUserlist() const {
     return editorPanel->GetNewUserlist();
 }
 
@@ -1208,7 +1206,7 @@ loot::MetadataList MiniEditor::GetNewUserlist() const {
 // Full Editor Class
 ///////////////////////////////////
 
-FullEditor::FullEditor(wxWindow *parent, const wxString& title, wxPoint pos, wxSize size, const boost::filesystem::path& userlistPath, const std::list<loot::Plugin>& basePlugins, std::list<loot::Plugin>& editedPlugins, const unsigned int language, const loot::Game& game, YAML::Node &settings) : wxFrame(parent, wxID_ANY, title, pos, size), _userlistPath(userlistPath), _settings(settings) {
+FullEditor::FullEditor(wxWindow *parent, const wxString& title, wxPoint pos, wxSize size, const std::string userlistPath, const std::list<loot::Plugin>& basePlugins, std::list<loot::Plugin>& editedPlugins, const unsigned int language, const loot::Game& game, YAML::Node &settings) : wxFrame(parent, wxID_ANY, title, pos, size), _userlistPath(userlistPath), _settings(settings) {
     //Set up content.
     editorPanel = new EditorPanel(this, basePlugins, editedPlugins, language, game);
     applyBtn = new wxButton(this, BUTTON_Apply, translate("Save Changes"));
@@ -1247,8 +1245,17 @@ void FullEditor::OnQuit(wxCommandEvent& event) {
 
         BOOST_LOG_TRIVIAL(debug) << "Saving metadata edits to userlist.";
 
-        loot::MetadataList userlist = editorPanel->GetNewUserlist();
-        userlist.Save(_userlistPath);
+        //Save edits to userlist.
+        YAML::Emitter yout;
+        yout.SetIndent(2);
+        yout << YAML::BeginMap
+            << YAML::Key << "plugins" << YAML::Value << editorPanel->GetNewUserlist()
+            << YAML::EndMap;
+
+        boost::filesystem::path p(_userlistPath);
+        loot::ofstream out(p);
+        out << yout.c_str();
+        out.close();
     }
     Close();
 }

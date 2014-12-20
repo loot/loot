@@ -26,9 +26,7 @@
 
 #include "ids.h"
 #include "misc.h"
-
 #include "../backend/metadata.h"
-#include "../backend/game.h"
 
 #include <string>
 #include <list>
@@ -71,7 +69,7 @@ public:
     void SetSimpleView(bool on = true);
     void ApplyCurrentEdits();
 
-    loot::MetadataList GetNewUserlist() const;
+    const std::list<loot::Plugin>& GetNewUserlist() const;
 
     void OnPluginSelect(wxListEvent& event);
     void OnPluginListRightClick(wxListEvent& event);
@@ -136,7 +134,7 @@ public:
     void OnApply(wxCommandEvent& event);
     void OnResize(wxSizeEvent& event);
 
-    loot::MetadataList GetNewUserlist() const;
+    const std::list<loot::Plugin>& GetNewUserlist() const;
 private:
     EditorPanel * editorPanel;
     wxStaticText * descText;
@@ -146,7 +144,7 @@ private:
 
 class FullEditor : public wxFrame {
 public:
-    FullEditor(wxWindow *parent, const wxString& title, wxPoint pos, wxSize size, const boost::filesystem::path& userlistPath, const std::list<loot::Plugin>& basePlugins, std::list<loot::Plugin>& editedPlugins, const unsigned int language, const loot::Game& game, YAML::Node &settings);
+    FullEditor(wxWindow *parent, const wxString& title, wxPoint pos, wxSize size, const std::string userlistPath, const std::list<loot::Plugin>& basePlugins, std::list<loot::Plugin>& editedPlugins, const unsigned int language, const loot::Game& game, YAML::Node &settings);
 
     void OnQuit(wxCommandEvent& event);
     void OnClose(wxCloseEvent &event);
@@ -155,7 +153,7 @@ private:
     wxButton * applyBtn;
     wxButton * cancelBtn;
 
-    const boost::filesystem::path _userlistPath;
+    const std::string _userlistPath;
     YAML::Node& _settings;
 };
 #endif
