@@ -54,7 +54,7 @@ set (LOOT_SRC   "${CMAKE_SOURCE_DIR}/src/backend/metadata.cpp"
 set (LOOT_GUI_SRC ${LOOT_SRC}
                   # Code the API doesn't need.
                   "${CMAKE_SOURCE_DIR}/src/backend/graph.cpp"
-                  "${CMAKE_SOURCE_DIR}/src/backend/git.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/backend/network.cpp"
                   # Actual GUI code.
                   "${CMAKE_SOURCE_DIR}/src/gui/ids.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/main.cpp"
