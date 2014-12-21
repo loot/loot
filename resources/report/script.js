@@ -230,21 +230,23 @@ function processURLParams() {
             document.getElementById('masterlistRevision').textContent = data.masterlist.revision;
             document.getElementById('masterlistDate').textContent = data.masterlist.date;
             document.getElementById('masterlistUpdating').textContent = data.masterlist.updaterEnabled;
-            var generalMessagesList = document.getElementById('generalMessagesList');
-            for (var i = 0; i < data.globalMessages.length; ++i) {
-                var li = document.createElement('li');
-                li.className = data.globalMessages[i].type;
-                /* innerHTML is open to abuse, but for hyperlinking it's too useful. */
-                li.innerHTML = data.globalMessages[i].content;
-                generalMessagesList.appendChild(li);
+            if (data.globalMessages) {
+                var generalMessagesList = document.getElementById('generalMessagesList');
+                for (var i = 0; i < data.globalMessages.length; ++i) {
+                    var li = document.createElement('li');
+                    li.className = data.globalMessages[i].type;
+                    /* innerHTML is open to abuse, but for hyperlinking it's too useful. */
+                    li.innerHTML = data.globalMessages[i].content;
+                    generalMessagesList.appendChild(li);
 
-                if (li.className == 'warn') {
-                    warnMessageNo++;
-                } else if (li.className == 'error') {
-                    errorMessageNo++;
+                    if (li.className == 'warn') {
+                        warnMessageNo++;
+                    } else if (li.className == 'error') {
+                        errorMessageNo++;
+                    }
                 }
+                totalMessageNo = data.globalMessages.length;
             }
-            totalMessageNo = data.globalMessages.length;
             var pluginsList = document.getElementById('pluginsList');
             for (var i = 0; i < data.plugins.length; ++i) {
                 var li = document.createElement('li');
