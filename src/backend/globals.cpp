@@ -30,7 +30,7 @@ namespace loot {
     //Version numbers.
     const unsigned int g_version_major = 0;
     const unsigned int g_version_minor = 6;
-    const unsigned int g_version_patch = 0;
+    const unsigned int g_version_patch = 1;
 
     //Common paths.
     const boost::filesystem::path g_path_readme         = boost::filesystem::current_path() / "docs" / "LOOT Readme.html";
