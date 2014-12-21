@@ -43,7 +43,10 @@ namespace loot {
 
     struct git_handler {
     public:
-        git_handler() : repo(nullptr), remote(nullptr), cfg(nullptr), obj(nullptr), commit(nullptr), ref(nullptr), ref2(nullptr), sig(nullptr), blob(nullptr), merge_head(nullptr) {}
+        git_handler() : repo(nullptr), remote(nullptr), cfg(nullptr), obj(nullptr), commit(nullptr), ref(nullptr), ref2(nullptr), sig(nullptr), blob(nullptr), merge_head(nullptr) {
+            // Init threading system and OpenSSL (for Linux builds).
+            git_threads_init();
+        }
 
         ~git_handler() {
             git_commit_free(commit);
