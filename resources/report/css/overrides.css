@@ -1,15 +1,5 @@
 /* These styles override Polymer's own internal styling for certain elements. */
 
-/* The following stops the main toolbar from overshadowing into the drawer. */
-#container::shadow #drawer {
-    z-index: 1;
-}
-
-/* The following is for setting the size of the drawer in narrow mode. */
-#container::shadow .narrow-layout #drawer {
-    width: 50% !important;
-}
-
 /* These overrides change the colour of the game menu's text and underline. */
 #gameMenu::shadow > paper-dropdown-menu {
     border-bottom-color: #64B5F6;
@@ -59,14 +49,7 @@ html /deep/ paper-item[disabled]  {
     pointer-events: none;
 }
 
-/* These overrides change the colour of the tab ink effect and their underline. */
-html /deep/ paper-tabs::shadow #selectionBar {
-    background-color: #64B5F6;
-    height: 4px;
-}
-html /deep/ paper-tab::shadow #ink {
-    color: #64B5F6;
-}
+
 
 /* This override change the positioning of the progress dialog to adapt to content changes. */
 #progressDialog {
@@ -130,4 +113,153 @@ html /deep/ core-tooltip::shadow .core-tooltip {
     font-family: RobotoDraft, sans-serif;
     font-weight: 500;
     background-color: rgba(0, 0, 0, 0.9);
+}
+
+
+/* paper-button */
+paper-button {
+    min-width: 88px;
+    height: 36px;
+    line-height: 36px;
+    margin: 6px 4px;
+}
+paper-button::shadow .button-content {
+    padding: 0 8px;
+}
+paper-button::shadow .button-content ::content a {
+    margin: 0 -8px;
+    padding: 0 8px;
+    -ms-flex: 1 1 auto;
+}
+/* paper-item */
+nav > paper-item, core-menu > paper-item {
+    color: rgba(0, 0, 0, 0.87);
+    height: 48px;
+    line-height: 48px;
+}
+nav > paper-item:first-child {
+    margin-top: 8px;
+}
+paper-item core-icon {
+    margin-right: 32px;
+    color: rgba(0, 0, 0, 0.54);
+}
+paper-item .avatar {
+    width: 40px;
+    height: 40px;
+    margin-right: 16px;
+    vertical-align: top;
+}
+paper-item::shadow .button-content {
+    padding: 0 16px;
+}
+paper-item::shadow .button-content ::content * {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+paper-item::shadow .button-content ::content a {
+    margin: 0 -16px;
+    padding: 0 16px;
+    -ms-flex: 1 1 auto;
+}
+/* paper-item (two-line) */
+paper-item.two-line {
+    height: 72px;
+}
+paper-item.two-line::shadow .button-content {
+    padding: 16px 16px;
+}
+paper-item.two-line::shadow .button-content ::content a {
+    margin: -16px -16px;
+    padding: 16px 16px;
+}
+paper-item.two-line .text {
+    /* Padding is disabled as otherwise text won't fit in correctly. */
+    /*padding: 4px 0;*/
+    line-height: normal;
+}
+paper-item.two-line .primary {
+    /* MD spec says 16sp, but that doesn't fit, so use 14sp. */
+    /*font-size: 1.143rem;*/
+    font-size: 1rem;
+}
+paper-item.two-line .secondary {
+    /* MD spec says 14sp, but that doesn't fit, so use 12sp. */
+    /*font-size: 1rem; */
+    font-size: 0.857rem;
+    color: rgba(0, 0, 0, 0.54);
+}
+/* paper-input-decorator */
+paper-input-decorator {
+    display: inline-block !important;
+    margin: 0 4px;
+}
+paper-input-decorator::shadow .underline .unfocused-underline {
+    /* line color when the input is unfocused */
+    background-color: rgba(0, 0, 0, 0.12);
+}
+paper-input-decorator::shadow .underline .focused-underline {
+    /* line color when the input is focused */
+    background-color: #64B5F6;
+}
+/* input */
+paper-input-decorator::shadow .label-text,
+input::-webkit-input-placeholder {
+    color: rgba(0, 0, 0, 0.26);
+}
+::-moz-placeholder {
+    opacity:  1 !important;
+    color: rgba(0, 0, 0, 0.26) !important;
+}
+:-ms-input-placeholder {
+    color: rgba(0, 0, 0, 0.26) !important;
+}
+
+/* paper-dropdown-menu */
+paper-dropdown-menu {
+    margin-left: 4px;
+    margin-right: 4px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+paper-dropdown-menu::shadow #label {
+    color: rgba(0, 0, 0, 0.87);
+}
+paper-dropdown-menu::shadow #arrow {
+    color: rgba(0, 0, 0, 0.26);
+}
+paper-dropdown-menu .core-selected {
+    color: #64B5F6;
+    background-color: inherit;
+}
+/* paper-dropdown */
+paper-dropdown {
+    padding: 8px 0;
+}
+paper-dropdown::shadow #scroller {
+    /* The calculated height is too high for the content. */
+    height: auto !important;
+}
+/* core-menu */
+core-menu {
+    margin: 0;
+}
+/* paper-tabs */
+html /deep/ paper-tabs::shadow #selectionBar {
+    background-color: #64B5F6;
+    height: 2px;
+}
+html /deep/ paper-tab::shadow #ink {
+    color: #64B5F6;
+}
+/* core-drawer-panel */
+#container::shadow #drawer {
+    z-index: 1;
+    /* max-width disabled because the panel doesn't shift over when the max
+       is reached, due to the percentage drawer width, and setting it to a
+       constant 400px is too wide in many window sizes. */
+    /*max-width: 400px;*/
+}
+#container::shadow .narrow-layout #drawer {
+    width: calc(100vw - 56px) !important;
 }

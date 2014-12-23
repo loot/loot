@@ -42,15 +42,15 @@
 <body oncontextmenu="return false" unresolved fullbleed vertical layout >
     <core-drawer-panel id="container" drawerWidth="33%">
         <div drawer vertical layout>
-            <core-toolbar>
-                <paper-tabs id="sidebarTabs" selected="cardsNav" valueattr="data-id">
+            <div layout horizontal end>
+                <paper-tabs id="sidebarTabs" selected="cardsNav" valueattr="data-id" flex>
                     <paper-tab data-id="cardsNav">Plugins</paper-tab>
                     <paper-tab data-id="filters">Filters</paper-tab>
                 </paper-tabs>
-            </core-toolbar>
+            </div>
             <div flex layout vertical>
                 <core-animated-pages selected="cardsNav" valueattr="id" transitions="" flex>
-                    <div id="cardsNav" class="tab-content" layout vertical>
+                    <nav id="cardsNav" class="tab-content" layout vertical>
                         <paper-item>
                             <a href="#summary"></a>Summary
                         </paper-item>
@@ -65,7 +65,7 @@
                             </template>
                             <!-- Generated <loot-plugin-item> elements go here. -->
                         </core-list>
-                    </div>
+                    </nav>
                     <div id="filters" class="tab-content" flex>
                         <paper-checkbox id="hideVersionNumbers" data-class="version" label="Hide version numbers"></paper-checkbox>
                         <paper-checkbox id="hideCRCs" data-class="crc" label="Hide CRCs"></paper-checkbox>
@@ -92,7 +92,7 @@
         </div>
         <div main layout vertical>
             <core-toolbar id="mainToolbar">
-                <paper-icon-button icon="menu" id="drawerToggle"></paper-icon-button>
+                <paper-icon-button icon="menu" id="drawerToggle" core-drawer-toggle></paper-icon-button>
                 <loot-dropdown-menu id="gameMenu">
                     <!-- Generated game <li> elements go here. -->
                 </loot-dropdown-menu>

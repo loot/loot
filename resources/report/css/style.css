@@ -21,17 +21,90 @@
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
 */
+html {
+    font:11pt/1.429 RobotoDraft, sans-serif;
+    color: rgba(0, 0, 0, 0.87);
+    font-weight: 400;
+    text-rendering: optimizeLegibility;
+}
+.display4 {
+    font-weight: 300;
+    font-size: 8rem;
+    color: rgba(0, 0, 0, 0.54);
+    /*letter-spacing: -0.01em;*/
+}
+.display3 {
+    font-weight: 400;
+    font-size: 4rem;
+    color: rgba(0, 0, 0, 0.54);
+    /*letter-spacing: -0.005em;*/
+}
+.display2 {
+    font-weight: 400;
+    font-size: 3.214rem;
+    color: rgba(0, 0, 0, 0.54);
+    line-height: 1.067;
+}
+.display1 {
+    font-weight: 400;
+    font-size: 2.429rem;
+    color: rgba(0, 0, 0, 0.54);
+    line-height: 1.176;
+}
+.headline {
+    font-weight: 400;
+    font-size: 1.714rem;
+    line-height: 1.333;
+}
+.title {
+    font-weight: 500;
+    font-size: 1.429rem;
+    /*letter-spacing: 0.005em;*/
+}
+.subhead {
+    font-weight: 400;
+    font-size: 1.143rem;
+    line-height: 1.75;
+    /* Alternate line height: */
+    /* line-height: 1.5; */
+    /*letter-spacing: 0.01em;*/
+}
+.body2, html /deep/ paper-tabs {
+    font-weight: 500;
+    font-size: 1rem;
+    line-height: 1.714;
+    /*letter-spacing: 0.01em;*/
+}
+.body1 {
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1.429;
+    /*letter-spacing: 0.01em;*/
+}
+.caption {
+    font-weight: 400;
+    font-size: 0.857rem;
+    color: rgba(0, 0, 0, 0.54);
+    /*letter-spacing: 0.02em;*/
+}
+.button, html /deep/ paper-button {
+    font-weight: 500;
+    font-size: 1rem;
+    text-transform: uppercase;
+    /*letter-spacing: 0.01em;*/
+}
+.display4.dark, .display3.dark, .display2.dark, .display1.dark, .caption.dark {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Misc */
 ::-webkit-scrollbar-corner {
     background: inherit;
 }
 body {
-    font: 10pt/1.5 RobotoDraft, Helvetica, sans-serif;
-    margin:0;
     background:#FAFAFA;
-    height: 100%;
-    color: rgba(0, 0, 0, 0.87);
 }
-core-toolbar {
+core-toolbar, div[drawer] > div:first-child {
     background: #3F51B5;
     color: white;
     height: 56px;
@@ -40,17 +113,11 @@ core-toolbar {
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
     z-index: 1;
 }
-#mainToolbar paper-dropdown {
-    color: black;
-}
-div[drawer] core-tooltip {
-    margin: 0 12px;
-}
 div[drawer] {
     background: white;
     z-index: 1;
 }
-div[drawer] > div, div[drawer] > core-toolbar {
+div[drawer] > * {
     border-right: 1px rgba(0, 0, 0, 0.12) solid;
 }
 #main {
@@ -62,39 +129,26 @@ div[drawer] > div, div[drawer] > core-toolbar {
     transform-style: preserve-3d;
 }
 #cardsNav {
-    margin: 0;
     overflow: auto;
-}
-#cardsNav > paper-item, #cardsNav > loot-plugin-item {
-    /*height: 2em;*/
 }
 paper-item > a {
     -webkit-user-drag: none;
-    text-decoration: none;
-    color: black;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
 }
 #searchBox {
     display: block;
+    margin: 0 16px;
 }
 
 section {
-    background:white;
-    margin:1em;
+    background: white;
+    margin: 8px;
     margin-bottom: 0;
-    padding:1em;
+    padding: 16px;
     border-top-left-radius: 2px;
     border-top-right-radius: 2px;
     border-bottom-right-radius: 2px;
     border-bottom-left-radius: 2px;
     box-shadow: rgba(0, 0, 0, 0.0980392) 0px 2px 4px, rgba(0, 0, 0, 0.0980392) 0px 0px 3px;
-}
-#generalMessages {
-    margin-bottom: 0.5em;
 }
 
 #about blockquote {
@@ -213,14 +267,4 @@ a {
 }
 a:hover {
     text-decoration: underline;
-}
-
-/* This animates the drawer toggle appearing in narrow view. */
-#drawerToggle {
-    display: none;
-}
-@media screen and (max-width: 640px) {
-    #drawerToggle {
-        display: block;
-    }
 }

@@ -32,7 +32,8 @@ loot-clear-metadata
         #wrapper {
             display: block;
             background:white;
-            margin: 0.5em 1em;
+            margin: 8px;
+            margin-bottom: 0;
             position: relative;
             border-top-left-radius: 2px;
             border-top-right-radius: 2px;
@@ -89,7 +90,7 @@ loot-clear-metadata
         content::content > .tag,
         content::content > ul {
             display: block;
-            padding: 0 1em 1em;
+            padding: 0 16px 16px;
         }
         content::content > h1 {
             display: inline-block;
@@ -99,12 +100,12 @@ loot-clear-metadata
         }
         content::content > .version {
             display: inline-block;
-            margin-left: 1em;
+            margin-left: 16px;
             color:#6394F8;
         }
         content::content > .crc {
             display: inline-block;
-            margin-left: 1em;
+            margin-left: 16px;
             color:#BC8923;
         }
         .hidden,
@@ -120,18 +121,8 @@ loot-clear-metadata
             background: inherit;
             height: 56px;
         }
-        core-toolbar > div {
-            position: relative;
-            top: -0.15em;
-        }
-        paper-item:first-child::shadow .button-content {
-            padding: 0;
-        }
         paper-checkbox {
             padding: 0.9em 1em;
-        }
-        core-icon {
-            vertical-align: inherit !important;
         }
         </style>
         <div id="wrapper">
@@ -158,9 +149,7 @@ loot-clear-metadata
                         <paper-icon-button icon="more-vert"></paper-icon-button>
                         <paper-dropdown class="dropdown" halign="right" opened="{{data.isMenuOpen}}">
                             <div>
-                                <paper-item>
-                                    <paper-checkbox id="showOnlyConflicts" label="Show Only Conflicts" checked="{{data.isConflictFilterChecked}}" flex></paper-checkbox>
-                                </paper-item>
+                                <paper-checkbox id="showOnlyConflicts" label="Show Only Conflicts" checked="{{data.isConflictFilterChecked}}" flex></paper-checkbox>
                                 <paper-item id="editMetadata">
                                     <core-icon icon="create"></core-icon>
                                     Edit Metadata

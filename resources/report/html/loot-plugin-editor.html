@@ -72,17 +72,6 @@ loot-editor-close
         #enableEdits {
             margin-bottom: 1em;
         }
-        #priorityValue {
-            margin-left: 0.5em;
-        }
-        input[readonly] {
-            border: none;
-            -webkit-user-select: none;
-        }
-        input:invalid {
-            background-color: pink;
-            color: white;
-        }
 
         /* Table styling. */
         table {
@@ -92,10 +81,6 @@ loot-editor-close
         }
         table:not(.core-selected), #main:not(.core-selected) {
             display: none;
-        }
-        td input {
-            width: 100%;
-            text-overflow: ellipsis;
         }
         td:last-child {
             cursor: pointer;
@@ -124,18 +109,11 @@ loot-editor-close
             background: #E8EAF6;
             height: 56px;
         }
-        core-toolbar > h1, core-toolbar > span {
-            position: relative;
-            top: -0.15em;
-        }
         #buttons {
             text-align: right;
         }
         #main {
-            padding: 1em;
-        }
-        core-icon {
-            vertical-align: inherit !important;
+            padding: 16px;
         }
         </style>
         <core-toolbar class="medium-tall">
