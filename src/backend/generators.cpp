@@ -37,7 +37,7 @@ namespace YAML {
     Emitter& operator << (Emitter& out, const loot::PluginDirtyInfo& rhs) {
         out << BeginMap
             << Key << "crc" << Value << Hex << rhs.CRC() << Dec
-            << Key << "util" << Value << rhs.CleaningUtility();
+            << Key << "util" << Value << YAML::SingleQuoted << rhs.CleaningUtility();
 
         if (rhs.ITMs() > 0)
             out << Key << "itm" << Value << rhs.ITMs();
@@ -53,14 +53,14 @@ namespace YAML {
 
     Emitter& operator << (Emitter& out, const loot::Game& rhs) {
         out << BeginMap
-            << Key << "type" << Value << loot::Game(rhs.Id()).FolderName()
-            << Key << "folder" << Value << rhs.FolderName()
-            << Key << "name" << Value << rhs.Name()
-            << Key << "master" << Value << rhs.Master()
-            << Key << "repo" << Value << rhs.RepoURL()
-            << Key << "branch" << Value << rhs.RepoBranch()
-            << Key << "path" << Value << rhs.GamePath().string()
-            << Key << "registry" << Value << rhs.RegistryKey()
+            << Key << "type" << Value << YAML::SingleQuoted << loot::Game(rhs.Id()).FolderName()
+            << Key << "folder" << Value << YAML::SingleQuoted << rhs.FolderName()
+            << Key << "name" << Value << YAML::SingleQuoted << rhs.Name()
+            << Key << "master" << Value << YAML::SingleQuoted << rhs.Master()
+            << Key << "repo" << Value << YAML::SingleQuoted << rhs.RepoURL()
+            << Key << "branch" << Value << YAML::SingleQuoted << rhs.RepoBranch()
+            << Key << "path" << Value << YAML::SingleQuoted << rhs.GamePath().string()
+            << Key << "registry" << Value << YAML::SingleQuoted << rhs.RegistryKey()
             << EndMap;
 
         return out;
@@ -71,7 +71,7 @@ namespace YAML {
 
         out << Key << "lang" << Value << loot::Language(rhs.Language()).Locale();
 
-        out << Key << "str" << Value << rhs.Str();
+        out << Key << "str" << Value << YAML::SingleQuoted << rhs.Str();
 
         out << EndMap;
 
@@ -89,12 +89,12 @@ namespace YAML {
             out << Key << "type" << Value << "error";
 
         if (rhs.Content().size() == 1)
-            out << Key << "content" << Value << rhs.Content().front().Str();
+            out << Key << "content" << Value << YAML::SingleQuoted << rhs.Content().front().Str();
         else
             out << Key << "content" << Value << rhs.Content();
 
         if (!rhs.Condition().empty())
-            out << Key << "condition" << Value << rhs.Condition();
+            out << Key << "condition" << Value << YAML::SingleQuoted << rhs.Condition();
 
         out << EndMap;
 
@@ -106,13 +106,13 @@ namespace YAML {
             out << rhs.Name();
         else {
             out << BeginMap
-                << Key << "name" << Value << rhs.Name();
+                << Key << "name" << Value << YAML::SingleQuoted << rhs.Name();
 
             if (rhs.IsConditional())
-                out << Key << "condition" << Value << rhs.Condition();
+                out << Key << "condition" << Value << YAML::SingleQuoted << rhs.Condition();
 
             if (rhs.DisplayName() != rhs.Name())
-                out << Key << "display" << Value << rhs.DisplayName();
+                out << Key << "display" << Value << YAML::SingleQuoted << rhs.DisplayName();
 
             out << EndMap;
         }
@@ -134,7 +134,7 @@ namespace YAML {
             else
                 out << Key << "name" << Value << ('-' + rhs.Name());
 
-            out << Key << "condition" << Value << rhs.Condition()
+            out << Key << "condition" << Value << YAML::SingleQuoted << rhs.Condition()
                 << EndMap;
         }
 
@@ -146,8 +146,8 @@ namespace YAML {
             out << rhs.URL();
         else {
             out << BeginMap
-                << Key << "link" << Value << rhs.URL()
-                << Key << "ver" << Value << rhs.Versions()
+                << Key << "link" << Value << YAML::SingleQuoted << rhs.URL()
+                << Key << "ver" << Value << YAML::SingleQuoted << rhs.Versions()
                 << EndMap;
         }
         return out;
@@ -156,7 +156,7 @@ namespace YAML {
     Emitter& operator << (Emitter& out, const loot::Plugin& rhs) {
         if (!rhs.HasNameOnly()) {
             out << BeginMap
-                << Key << "name" << Value << rhs.Name();
+                << Key << "name" << Value << YAML::SingleQuoted << rhs.Name();
 
             if (rhs.IsPriorityExplicit())
                 out << Key << "priority" << Value << rhs.Priority();

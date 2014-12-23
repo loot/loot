@@ -374,16 +374,12 @@ namespace loot {
 
         // Generate text representation.
         string text;
-        if (plugin.HasNameOnly())
-            text = "name: " + plugin.Name();
-        else {
-            YAML::Emitter yout;
-            yout.SetIndent(2);
-            yout << plugin;
-            text = yout.c_str();
-            // Get rid of yaml-cpp weirdness.
-            boost::replace_all(text, "!<!> ", "");
-        }
+        YAML::Emitter yout;
+        yout.SetIndent(2);
+        yout << plugin;
+        text = yout.c_str();
+        // Get rid of yaml-cpp weirdness.
+        boost::replace_all(text, "!<!> ", "");
         text = "[spoiler][code]" + text + "[/code][/spoiler]";
 
         CopyToClipboard(text);
@@ -994,7 +990,6 @@ namespace loot {
 
         // The clipboard takes a Unicode (ie. UTF-16) string that it then owns and must not
         // be destroyed by LOOT. Convert the string, then copy it into a new block of
-
         // memory for the clipboard.
         wstring wtext = ToWinWide(text);
         wchar_t * wcstr = new wchar_t[wtext.length() + 1];
