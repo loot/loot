@@ -69,6 +69,7 @@ div[drawer] > div, div[drawer] > core-toolbar {
     /*height: 2em;*/
 }
 paper-item > a {
+    -webkit-user-drag: none;
     text-decoration: none;
     color: black;
     position: absolute;
