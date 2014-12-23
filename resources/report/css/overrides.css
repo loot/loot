@@ -117,3 +117,17 @@ html /deep/ core-toolbar.medium-tall {
 paper-icon-button[disabled] {
     color: rgba(255, 255, 255, 0.30);
 }
+
+/* This makes inputs display overflowing values with ellipsis. */
+html /deep/ input {
+    text-overflow: ellipsis;
+}
+
+
+/* core-tooltip */
+html /deep/ core-tooltip::shadow .core-tooltip {
+    font-size: 0.714rem;
+    font-family: RobotoDraft, sans-serif;
+    font-weight: 500;
+    background-color: rgba(0, 0, 0, 0.9);
+}
