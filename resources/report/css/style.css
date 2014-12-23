@@ -184,15 +184,6 @@ paper-checkbox {
     padding: 0.5em 1em;
 }
 
-input[readonly] {
-    border: none;
-    -webkit-user-select: none;
-}
-td input {
-    width: 100%;
-    text-overflow: ellipsis;
-}
-
 [draggable] {
     -webkit-user-select: none;
     cursor: move;
@@ -204,14 +195,6 @@ td input {
 #applySortButton {
     color: #64B5F6;
     background-color: white;
-}
-input:invalid {
-    background-color: pink;
-    color: white;
-}
-input:valid {
-    background-color: white;
-    color: black;
 }
 paper-progress {
     width: 100%;
