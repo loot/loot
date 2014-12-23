@@ -991,6 +991,10 @@ function handleSidebarClick(evt) {
         document.getElementById('main').lastElementChild.scrollToItem(evt.target.getAttribute('data-index'));
         /* However, the scroll bar that the plugin card list uses is for the whole main content area, so the position is offset by the heights of the summary and general messages cards. Adjust to compensate. */
         document.getElementById('main').scrollTop += document.getElementById('main').lastElementChild.offsetTop;
+
+        if (evt.type == 'dblclick') {
+            document.getElementById(evt.target.getAttribute('data-id')).onShowEditor();
+        }
     }
 }
 function handleQuit(evt) {
@@ -1047,6 +1051,7 @@ function setupEventHandlers() {
 
     document.getElementById('drawerToggle').addEventListener('click', toggleDrawer, false);
     document.getElementById('cardsNav').addEventListener('click', handleSidebarClick, false);
+    document.getElementById('cardsNav').addEventListener('dblclick', handleSidebarClick, false);
 }
 function initVars() {
     loot.query('getVersion').then(function(result){

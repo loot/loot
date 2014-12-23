@@ -286,7 +286,12 @@ loot-clear-metadata
         },
 
         onShowEditor: function(evt) {
-            var card = evt.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentNode.host;
+            var card;
+            if (this.tagName == 'LOOT-PLUGIN-CARD') {
+                card = this;
+            } else {
+                card = this.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentNode.host;
+            }
 
             /* If the editor hasn't already been opened, its data is not yet set, so do that now. */
             if (!card.data.isEditorOpen && !card.data.editor) {
