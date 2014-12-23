@@ -796,14 +796,21 @@ function focusSearch(evt) {
         document.getElementById('searchBox').focus();
     }
 }
-function handleUnappliedChangesClose() {
-    showMessageDialog('Unapplied Sorting Changes', 'You have not yet applied or cancelled your sorted load order. Apply your load order before quitting?', true, function(result){
+function handleUnappliedChangesClose(change) {
+    showMessageDialog('Unapplied Sorting Changes', 'You have not yet applied or cancelled your ' + change + '. Are you sure you want to quit?', true, function(result){
         if (result) {
-            applySort().then(function(){
-                window.close();
-            }).catch(processCefError);
-        } else {
-            cancelSort().then(function(){
+            /* Cancel any sorting and close any editors. Cheat by sending a
+               cancelSort query for as many times as necessary. */
+            var queries = [];
+            var numQueries = 0;
+            if (!document.getElementById('applySortButton').classList.contains('hidden')) {
+                numQueries += 1;
+            }
+            numQueries += document.body.getAttribute('data-editors');
+            for (var i = 0; i < numQueries; ++i) {
+                queries.push(loot.query('cancelSort'));
+            }
+            Promise.all(queries).then(function(){
                 window.close();
             }).catch(processCefError);
         }
@@ -839,6 +846,8 @@ function handleEditorOpen(evt) {
         document.getElementById('sortButton').setAttribute('disabled', '');
     }
     document.body.setAttribute('data-editors', numEditors);
+
+    return loot.query('editorOpened').catch(processCefError);
 }
 function handleEditorClose(evt) {
     /* evt.detail is true if the apply button was pressed. */
@@ -972,10 +981,12 @@ function handleSidebarClick(evt) {
     }
 }
 function handleQuit(evt) {
-    if (document.getElementById('applySortButton').classList.contains('hidden')) {
-        window.close();
+    if (!document.getElementById('applySortButton').classList.contains('hidden')) {
+        handleUnappliedChangesClose('sorted load order');
+    } else if (document.body.hasAttribute('data-editors')) {
+        handleUnappliedChangesClose('metadata edits');
     } else {
-        handleUnappliedChangesClose();
+        window.close();
     }
 }
 function setupEventHandlers() {

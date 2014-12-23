@@ -167,7 +167,12 @@ namespace loot {
             return true;
         }
         else if (request == "cancelSort") {
-            g_app_state.isMidSort = false;
+            --g_app_state.numUnappliedChanges;
+            callback->Success("");
+            return true;
+        }
+        else if (request == "editorOpened") {
+            ++g_app_state.numUnappliedChanges;
             callback->Success("");
             return true;
         }
@@ -248,6 +253,7 @@ namespace loot {
             BOOST_LOG_TRIVIAL(debug) << "Editor for plugin closed.";
             // One argument, which is the plugin metadata that has changed (+ its name).
             callback->Success(ApplyUserEdits(request["args"][0]));
+            --g_app_state.numUnappliedChanges;
             return true;
         }
         else if (requestName == "closeSettings") {
@@ -279,7 +285,7 @@ namespace loot {
             return true;
         }
         else if (requestName == "applySort") {
-            g_app_state.isMidSort = false;
+            --g_app_state.numUnappliedChanges;
             BOOST_LOG_TRIVIAL(trace) << "User has accepted sorted load order, applying it.";
             try {
                 g_app_state.CurrentGame().SetLoadOrder(request["args"][0].as<list<string>>());
@@ -909,7 +915,7 @@ namespace loot {
 
                 node.push_back(pluginNode);
             }
-            g_app_state.isMidSort = true;
+            ++g_app_state.numUnappliedChanges;
 
             if (node.size() > 0)
                 callback->Success(JSON::stringify(node));
@@ -1131,8 +1137,8 @@ namespace loot {
         assert(CefCurrentlyOn(TID_UI));
 
         // Check if unapplied sorting changes exist.
-        if (g_app_state.isMidSort) {
-            browser->GetMainFrame()->ExecuteJavaScript("handleUnappliedChangesClose();", browser->GetMainFrame()->GetURL(), 0);
+        if (g_app_state.numUnappliedChanges > 0) {
+            browser->GetMainFrame()->ExecuteJavaScript("handleQuit();", browser->GetMainFrame()->GetURL(), 0);
             return true;
         }
 
