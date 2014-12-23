@@ -109,7 +109,8 @@ function Plugin(obj) {
         if (this.crc == 0) {
             return '';
         } else {
-            return this.crc.toString(16).toUpperCase();
+            /* Pad CRC string to 8 characters. */
+            return ('00000000' + this.crc.toString(16).toUpperCase()).slice(-8);
         }
     }
 
@@ -204,23 +205,3 @@ function jsonToPlugin(key, value) {
     }
     return value;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
