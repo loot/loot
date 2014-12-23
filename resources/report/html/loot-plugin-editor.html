@@ -250,6 +250,11 @@ loot-editor-close
     </template>
     <script>
     Polymer({
+        observe: {
+            'data.isGlobalPriority': 'onPriorityChange',
+            'data.modPriority': 'onPriorityChange',
+        },
+
         attached: function() {
             this.shadowRoot.getElementById('tableTabs').addEventListener('core-select', this.onTabSelect, false);
 
@@ -281,6 +286,14 @@ loot-editor-close
             if (newValue) {
                 /* Set the new editor data. */
                 this.setEditorData(newValue);
+            }
+        },
+
+        onPriorityChange: function(oldValue, newValue) {
+            /* Handle priority change due to masterlist update. */
+            if (this.data) {
+                /* Set the new editor data. */
+                this.setEditorData(this.data);
             }
         },
 
