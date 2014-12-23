@@ -586,6 +586,9 @@ function sortPlugins(evt) {
                 hideElement(document.getElementById('sortButton'));
                 showElement(document.getElementById('applySortButton'));
                 showElement(document.getElementById('cancelSortButton'));
+
+                /* Disable changing game. */
+                document.getElementById('gameMenu').setAttribute('disabled', '');
                 closeProgressDialog();
             }
         }).catch(processCefError);
@@ -613,6 +616,9 @@ function applySort(evt) {
         showElement(document.getElementById('sortButton'));
         hideElement(document.getElementById('applySortButton'));
         hideElement(document.getElementById('cancelSortButton'));
+
+        /* Enable changing game. */
+        document.getElementById('gameMenu').removeAttribute('disabled');
     }).catch(processCefError);
 }
 function cancelSort(evt) {
@@ -629,6 +635,9 @@ function cancelSort(evt) {
         showElement(document.getElementById('sortButton'));
         hideElement(document.getElementById('applySortButton'));
         hideElement(document.getElementById('cancelSortButton'));
+
+        /* Enable changing game. */
+        document.getElementById('gameMenu').removeAttribute('disabled');
     }).catch(processCefError);
 }
 function redatePlugins(evt) {
