@@ -55,7 +55,7 @@ loot-clear-metadata
         :host([data-dummy=false]) #dummyPlugin {
             display: none;
         }
-        :host([data-edits=false]) #hasUserEdits {
+        :host(:not([data-edits])) #hasUserEdits {
             display: none;
         }
         #front, #editor {
@@ -190,7 +190,8 @@ loot-clear-metadata
 
         observe: {
             'data.tags': 'onTagsChange',
-            'data.messages': 'onMessagesChange'
+            'data.messages': 'onMessagesChange',
+            'data.userlist': 'onUserlistChange'
         },
 
         attached: function() {
@@ -227,6 +228,7 @@ loot-clear-metadata
                 /* Also initialise the non-simple-string data. */
                 this.onTagsChange();
                 this.onMessagesChange();
+                this.onUserlistChange();
 
                 /* Also set highlight if the conflict filter is active. */
                 this.classList.toggle('highlight', newValue.isConflictFilterChecked);
@@ -252,6 +254,16 @@ loot-clear-metadata
                     messageUL.appendChild(message);
                 });
                 messageUL.classList.toggle('hidden', this.data.computed.messages.length == 0);
+            }
+        },
+
+        onUserlistChange: function(oldValue, newValue) {
+            /* The enabled key will always be set on application of edits, even
+            if there were none to apply, so long for more than just that key. */
+            if (this.data && this.data.userlist && Object.keys(this.data.userlist).length > 1) {
+                this.setAttribute('data-edits', 'true');
+            } else {
+                this.removeAttribute('data-edits');
             }
         },
 

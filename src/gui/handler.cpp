@@ -694,6 +694,11 @@ namespace loot {
                         pluginNode["userlist"]["tag"] = ulistPlugin.Tags();
                         pluginNode["userlist"]["dirty"] = ulistPlugin.DirtyInfo();
                         pluginNode["userlist"]["url"] = ulistPlugin.Locations();
+                        // The raw priority data isn't used, but should be set
+                        // that LOOT knows it exists.
+                        if (ulistPlugin.IsPriorityExplicit()) {
+                            pluginNode["userlist"]["hasExplicitPriority"] = true;
+                        }
                     }
                 }
 

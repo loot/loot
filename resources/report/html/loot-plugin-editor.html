@@ -302,6 +302,8 @@ loot-editor-close
                 || this.shadowRoot.getElementById('priorityValue').value != oldData.modPriority) {
                 plugin.isGlobalPriority = this.shadowRoot.getElementById('globalPriority').checked;
                 plugin.modPriority = this.shadowRoot.getElementById('priorityValue').value;
+                /* Also mark the priority as being explicitly set in the userlist. */
+                plugin.userlist.hasExplicitPriority = true;
             }
 
             plugin.userlist.enabled = this.shadowRoot.getElementById('enableEdits').checked;

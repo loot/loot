@@ -4,7 +4,7 @@
 <link rel="import" href="../bower_components/core-icon/core-icon.html">
 <link rel="import" href="../bower_components/core-icons/core-icons.html">
 
-<polymer-element name="loot-plugin-item" attributes="priorityText">
+<polymer-element name="loot-plugin-item" attributes="priorityText data">
     <template>
         <style>
         :host(:not([data-bsa])) #loadsBSA,
@@ -39,6 +39,26 @@
     </template>
     <script>
     Polymer({
+        data: undefined,
+
+        observe: {
+            'data.userlist': 'onUserlistChange'
+        },
+
+        dataChanged: function(oldValue, newValue) {
+            this.onUserlistChange();
+        },
+
+        onUserlistChange: function(oldValue, newValue) {
+            /* The enabled key will always be set on application of edits, even
+               if there were none to apply, so long for more than just that key. */
+            if (this.data && this.data.userlist && Object.keys(this.data.userlist).length > 1) {
+                this.setAttribute('data-edits', 'true');
+            } else {
+                this.removeAttribute('data-edits');
+            }
+        },
+
         getName: function() {
             return this.getElementsByTagName('a')[0].textContent;
         },
