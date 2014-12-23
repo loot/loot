@@ -885,6 +885,10 @@ function handleEditorClose(evt) {
                 delete evt.target.data.editor;
             }
         }).catch(processCefError);
+    } else {
+        /* Don't need to record changes, but still need to notify C++ side that
+           the editor has been closed. */
+        loot.query('editorClosed').catch(processCefError);
     }
 
     /* Now hide editor. */

@@ -176,6 +176,14 @@ namespace loot {
             callback->Success("");
             return true;
         }
+        else if (request == "editorClosed") {
+            // This version of the editorClosed query has no arguments as it is
+            // sent when editing is cancelled. Just update the unapplied changes
+            // counter.
+            --g_app_state.numUnappliedChanges;
+            callback->Success("");
+            return true;
+        }
         else {
             // May be a request with arguments.
             YAML::Node req;
