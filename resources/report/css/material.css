@@ -56,8 +56,10 @@ html /deep/ paper-input-decorator {
    margin: 0 4px;
 }
 html /deep/ paper-input-decorator::shadow .underline .unfocused-underline {
-   /* line color when the input is unfocused */
    background-color: rgba(0, 0, 0, 0.12);
+}
+html /deep/ paper-input-decorator[disabled]::shadow .underline {
+    border-bottom-color: rgba(0, 0, 0, 0.12);
 }
 html /deep/ paper-input-decorator::shadow .label-text,
 html /deep/ input::-webkit-input-placeholder {
