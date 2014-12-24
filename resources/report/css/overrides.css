@@ -1,4 +1,5 @@
-/* These styles override Polymer's own internal styling for certain elements. */
+/* These styles override Polymer's own internal styling for certain elements to
+   suit LOOT's needs. */
 
 /* Change color of disabled menu items to match Material Design spec. */
 html /deep/ paper-item[disabled]  {
@@ -9,8 +10,6 @@ html /deep/ paper-item[disabled]  {
 paper-icon-button[disabled] {
     color: rgba(255, 255, 255, 0.30);
 }
-
-
 /* This override change the positioning of the progress dialog to adapt to content changes. */
 #progressDialog {
     position: inherit !important;
@@ -20,113 +19,20 @@ paper-icon-button[disabled] {
     bottom: 0;
     right: 0;
 }
-
 /* This stops transitions from overflowing onto other elements. */
 html /deep/ core-animated-pages {
     overflow: hidden;
 }
-
 /* This makes checkboxes have the same padding as icons in lists. */
 html /deep/ core-menu paper-checkbox::shadow #checkboxLabel {
     padding-left: 32px;
 }
-
-
-
-/* core-tooltip */
-html /deep/ core-tooltip::shadow .core-tooltip {
-    font-size: 0.714rem;
-    font-family: RobotoDraft, sans-serif;
-    font-weight: 500;
-    background-color: rgba(0, 0, 0, 0.9);
-}
-/* paper-button */
-html /deep/ paper-button {
-    min-width: 88px;
-    height: 36px;
-    line-height: 36px;
-    margin: 6px 4px;
-}
-html /deep/ paper-button::shadow .button-content {
-    padding: 0 8px;
-}
-html /deep/ paper-button::shadow .button-content ::content a {
-    margin: 0 -8px;
-    padding: 0 8px;
-    -ms-flex: 1 1 auto;
-}
-/* paper-item */
-html /deep/ paper-item, html /deep/ core-menu > paper-item {
-    color: rgba(0, 0, 0, 0.87);
-    height: 48px;
-    line-height: 48px;
-}
-html /deep/ paper-item:first-child {
-    margin-top: 8px;
-}
-html /deep/ paper-item core-icon {
-    margin-right: 32px;
-    color: rgba(0, 0, 0, 0.54);
-}
-html /deep/ paper-item .avatar {
-    width: 40px;
-    height: 40px;
-    margin-right: 16px;
-    vertical-align: top;
-}
-html /deep/ paper-item::shadow .button-content {
-    padding: 0 16px;
-}
-html /deep/ paper-item::shadow .button-content ::content *:not(core-tooltip) {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-}
-html /deep/ paper-item::shadow .button-content ::content a {
-    margin: 0 -16px;
-    padding: 0 16px;
-    -ms-flex: 1 1 auto;
-}
-/* paper-input-decorator & input */
-html /deep/ paper-input-decorator {
-    margin: 0 4px;
-}
-html /deep/ paper-input-decorator::shadow .underline .unfocused-underline {
-    /* line color when the input is unfocused */
-    background-color: rgba(0, 0, 0, 0.12);
-}
+/* Set the underline colour of focussed paper inputs. */
 html /deep/ paper-input-decorator::shadow .underline .focused-underline {
     /* line color when the input is focused */
     background-color: #64B5F6;
 }
-html /deep/ paper-input-decorator::shadow .label-text,
-html /deep/ input::-webkit-input-placeholder {
-    color: rgba(0, 0, 0, 0.26);
-}
-html /deep/ ::-moz-placeholder {
-    opacity:  1 !important;
-    color: rgba(0, 0, 0, 0.26) !important;
-}
-html /deep/ :-ms-input-placeholder {
-    color: rgba(0, 0, 0, 0.26) !important;
-}
-html /deep/ input {
-    text-overflow: ellipsis;
-}
-
-/* paper-dropdown-menu */
-html /deep/ paper-dropdown-menu {
-    margin-left: 4px;
-    margin-right: 4px;
-    border-bottom-color: rgba(0, 0, 0, 0.12);
-}
-html /deep/ paper-dropdown-menu::shadow #label {
-    color: rgba(0, 0, 0, 0.87);
-}
-html /deep/ paper-dropdown-menu[disabled]::shadow #label,
-html /deep/ paper-dropdown-menu::shadow #arrow {
-    color: rgba(0, 0, 0, 0.26);
-}
+/* Set the underline and arrow colours for dropdown menus on dark backgrounds. */
 html .dark /deep/ paper-dropdown-menu {
     border-bottom-color: rgba(255, 255, 255, 0.12);
 }
@@ -137,42 +43,24 @@ html .dark /deep/ paper-dropdown-menu[disabled]::shadow #label,
 html .dark /deep/ paper-dropdown-menu::shadow #arrow {
     color: rgba(255, 255, 255, 0.30);
 }
+/* Set the highlight colour for dropdown menu selections. */
 html /deep/ loot-dropdown-menu .core-selected,
 html /deep/ paper-dropdown-menu .core-selected {
     color: #64B5F6;
     background-color: inherit;
 }
-/* paper-dropdown */
-html /deep/ paper-dropdown {
-    padding: 8px 0;
-}
-html /deep/ paper-dropdown::shadow #scroller {
-    /* The calculated height is too high for the content. */
-    height: auto !important;
-}
-/* core-menu */
-html /deep/ core-menu {
-    margin: 0;
-}
-html /deep/ core-menu .core-selected {
-    background-color: inherit;
-}
-/* paper-tabs */
+/* Set the tab colours. */
 html /deep/ paper-tabs::shadow #selectionBar {
     background-color: #64B5F6;
-    height: 2px;
 }
 html /deep/ paper-tab::shadow #ink {
     color: #64B5F6;
 }
-/* core-drawer-panel */
+/* Set the drawer z-index so that it doesn't appear below plugin cards. */
 core-drawer-panel::shadow #drawer {
     z-index: 1;
     /* max-width disabled because the panel doesn't shift over when the max
-       is reached, due to the percentage drawer width, and setting it to a
-       constant 400px is too wide in many window sizes. */
+    is reached, due to the percentage drawer width, and setting it to a
+    constant 400px is too wide in many window sizes. */
     /*max-width: 400px;*/
-}
-core-drawer-panel::shadow .narrow-layout #drawer {
-    width: calc(100vw - 56px) !important;
 }
