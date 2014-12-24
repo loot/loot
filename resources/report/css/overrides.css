@@ -52,3 +52,7 @@ core-drawer-panel::shadow #drawer {
     constant 400px is too wide in many window sizes. */
     /*max-width: 400px;*/
 }
+/* Align dropdown label text with the descriptive text beside it. */
+#settingsDialog loot-dropdown-menu::shadow paper-dropdown-menu {
+    padding-top: 4px;
+}

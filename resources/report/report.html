@@ -252,23 +252,25 @@ along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
     </loot-dialog>
 
     <loot-dialog id="settingsDialog" heading="Settings" closeSelector="">
-        <div center horizontal layout>
-            <div>Default Game</div>
-            <loot-dropdown-menu id="defaultGameSelect">
-                <paper-item value="auto">Autodetect</paper-item>
-                <!-- Game <option> elements go here. -->
-            </loot-dropdown-menu>
+        <div layout horizontal center wrap>
+            <div center horizontal layout>
+                <div>Default Game</div>
+                <loot-dropdown-menu id="defaultGameSelect">
+                    <paper-item value="auto">Autodetect</paper-item>
+                    <!-- Game <option> elements go here. -->
+                </loot-dropdown-menu>
+            </div>
+            <core-tooltip center horizontal layout label="Language changes will be applied after LOOT is restarted." noarrow position="right">
+                <div>Language</div>
+                <loot-dropdown-menu id="languageSelect">
+                    <!-- Language <option> elements go here. -->
+                </loot-dropdown-menu>
+            </core-tooltip>
+            <core-tooltip label="The output is logged to the LOOTDebugLog.txt file." center horizontal layout noarrow position="right">
+                <paper-checkbox id="enableDebugLogging" label="Enable debug logging"></paper-checkbox>
+            </core-tooltip>
+            <paper-checkbox id="updateMasterlist" label="Update masterlist before sorting"></paper-checkbox>
         </div>
-        <div center horizontal layout>
-            <div>Language</div>
-            <loot-dropdown-menu id="languageSelect">
-                <!-- Language <option> elements go here. -->
-            </loot-dropdown-menu>
-        </div>
-        <core-tooltip label="The output is logged to the LOOTDebugLog.txt file." center horizontal layout noarrow position="right">
-            <paper-checkbox id="enableDebugLogging" label="Enable debug logging"></paper-checkbox>
-        </core-tooltip>
-        <paper-checkbox id="updateMasterlist" label="Update masterlist before sorting"></paper-checkbox>
         <table is="editable-table" id="gameTable" data-template="gameRow">
             <thead>
                 <tr>
@@ -291,7 +293,6 @@ along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
                 </tr>
             </tbody>
         </table>
-        <p id="languageRestartTxt">Language changes will be applied after LOOT is restarted.</p>
         <paper-button class="accept" affirmative autofocus>Apply</paper-button>
         <paper-button class="cancel" affirmative>Cancel</paper-button>
     </loot-dialog>

@@ -216,6 +216,7 @@
             document.getElementById('defaultGameSelect').firstElementChild.textContent = l10n.translate("Autodetect").fetch();
 
             document.getElementById('languageSelect').previousElementSibling.textContent = l10n.translate("Language").fetch();
+            document.getElementById('languageSelect').parentElement.label = l10n.translate("Language changes will be applied after LOOT is restarted.").fetch();
 
             document.getElementById('enableDebugLogging').label = l10n.translate("Enable debug logging").fetch();
             document.getElementById('enableDebugLogging').parentElement.label = l10n.translate("The output is logged to the LOOTDebugLog.txt file.").fetch();
@@ -232,8 +233,6 @@
             gameTable.querySelector('th:nth-child(7)').textContent = l10n.translate("Install Path").fetch();
             gameTable.querySelector('th:nth-child(8)').textContent = l10n.translate("Install Path Registry Key").fetch();
             gameTable.querySelector('tr:last-child td:first-child').textContent = l10n.translate("Add new row...").fetch();
-
-            document.getElementById('languageRestartTxt').textContent = l10n.translate("Language changes will be applied after LOOT is restarted.").fetch();
 
             document.getElementById('settingsDialog').getElementsByClassName('accept')[0].textContent = l10n.translate("Apply").fetch();
             document.getElementById('settingsDialog').getElementsByClassName('cancel')[0].textContent = l10n.translate("Cancel").fetch();
