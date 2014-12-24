@@ -12,9 +12,9 @@ it a <select>-like API. This means:
 <link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../bower_components/core-menu/core-menu.html">
 
-<polymer-element name="loot-dropdown-menu">
+<polymer-element name="loot-dropdown-menu" attributes="disabled">
     <template>
-        <paper-dropdown-menu disabled="{{disabled}}">
+        <paper-dropdown-menu disabled?="{{disabled}}">
             <paper-dropdown class="dropdown">
                 <core-menu valueattr="value">
                     <content></content>
