@@ -9,32 +9,25 @@
         <style>
         :host(:not([data-bsa])) #loadsBSA,
         :host(:not([data-edits])) #hasUserEdits {
-            visibility: hidden;
+            display: none;
         }
-        ::content a {
-            text-decoration: none;
-            color: black;
+        #loadsBSA > core-icon, #hasUserEdits > core-icon {
+            display: block;
+            margin-right: 0;
         }
         core-tooltip {
-            margin: 0.25em;
-            min-width: 24px;
-        }
-        core-icon {
-            display: block;
-        }
-        div {
-            padding-left: 0.75em;
+            margin-left: 16px;
         }
         </style>
 
         <paper-item>
-            <core-tooltip id="loadsBSA" label="Loads BSA" noarrow>
+            <div flex><content></content></div>
+            <core-tooltip id="loadsBSA" label="Loads BSA" noarrow position="left">
                 <core-icon icon="attachment"></core-icon>
             </core-tooltip>
-            <core-tooltip id="hasUserEdits" label="Has User Metadata" noarrow>
+            <core-tooltip id="hasUserEdits" label="Has User Metadata" noarrow position="left">
                 <core-icon icon="account-circle"></core-icon>
             </core-tooltip>
-            <div><content></content></div>
         </paper-item>
     </template>
     <script>
