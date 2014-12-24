@@ -1085,11 +1085,7 @@ function initVars() {
                 settingsItem.setAttribute('value', loot.languages[i].locale);
                 settingsItem.textContent = loot.languages[i].name;
                 settingsLangSelect.appendChild(settingsItem);
-
-                var option = document.createElement('option');
-                option.value = loot.languages[i].locale;
-                option.textContent = loot.languages[i].name;
-                messageLangSelect.appendChild(option);
+                messageLangSelect.appendChild(settingsItem.cloneNode(true));
             }
         } catch (e) {
             console.log(e);
@@ -1137,10 +1133,10 @@ function initVars() {
                 select = document.querySelector('#gameRow').content.querySelector('.type');
             }
             for (var j = 0; j < loot.gameTypes.length; ++j) {
-                var option = document.createElement('option');
-                option.value = loot.gameTypes[j];
-                option.textContent = loot.gameTypes[j];
-                select.appendChild(option);
+                var item = document.createElement('paper-item');
+                item.setAttribute('value', loot.gameTypes[j]);
+                item.textContent = loot.gameTypes[j];
+                select.appendChild(item);
             }
 
             try {
