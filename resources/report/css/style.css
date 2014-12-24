@@ -69,13 +69,16 @@ html {
     /* line-height: 1.5; */
     /*letter-spacing: 0.01em;*/
 }
-.body2, html /deep/ paper-tabs, html /deep/ paper-menu-button paper-item {
+.body2,
+html /deep/ paper-tabs,
+html /deep/ paper-menu-button paper-item,
+html /deep/ paper-menu-button paper-checkbox {
     font-weight: 500;
     font-size: 1rem;
     line-height: 1.714;
     /*letter-spacing: 0.01em;*/
 }
-.body1 {
+.body1, html /deep/ paper-checkbox {
     font-weight: 400;
     font-size: 1rem;
     line-height: 1.429;
@@ -136,6 +139,10 @@ div[drawer] > * {
 }
 paper-item > a {
     -webkit-user-drag: none;
+    color: inherit;
+}
+paper-item > a:hover {
+    text-decoration: none;
 }
 #searchBox {
     display: block;
@@ -166,11 +173,16 @@ section h1 {
     font-weight: normal;
     font-size: 1.2em;
 }
-#filters, #cardsNav {
-    padding: 1em 0 0 1em;
+#filters {
+    padding: 8px 0;
 }
-#filters div {
-    padding:0.2em 0.5em;
+#filters > * {
+    padding: 0 16px;
+    height: 48px;
+    line-height: 48px;
+}
+#filters > paper-checkbox {
+    display: block;
 }
 
 #summary > table {
@@ -232,7 +244,7 @@ li.warn{
     color:red;
 }
 
-#settingsDialog > paper-checkbox, #settingsDialog > core-tooltip, #filters > paper-checkbox {
+#settingsDialog > paper-checkbox, #settingsDialog > core-tooltip {
     display: table;
 }
 #settingsDialog > div[center] > div:first-child {

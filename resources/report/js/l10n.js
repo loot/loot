@@ -177,8 +177,8 @@
             document.getElementById('cancelSortButton').textContent = l10n.translate("Cancel").fetch();
 
             /* Nav items */
-            document.getElementById('cardsNav').firstElementChild.lastChild.textContent = l10n.translate("Summary").fetch();
-            document.getElementById('cardsNav').firstElementChild.nextElementSibling.lastChild.textContent = l10n.translate("General Messages").fetch();
+            document.getElementById('cardsNav').firstElementChild.firstElementChild.textContent = l10n.translate("Summary").fetch();
+            document.getElementById('cardsNav').firstElementChild.nextElementSibling.firstElementChild.textContent = l10n.translate("General Messages").fetch();
             document.getElementById('sidebarTabs').firstElementChild.textContent = l10n.translate("Plugins").fetch();
             document.getElementById('sidebarTabs').firstElementChild.nextElementSibling.textContent = l10n.translate("Filters").fetch();
             document.getElementById('searchBox').parentElement.label = l10n.translate("Press Enter or click outside the input to set the filter.").fetch();

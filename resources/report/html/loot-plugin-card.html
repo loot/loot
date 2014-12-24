@@ -121,8 +121,11 @@ loot-clear-metadata
             background: inherit;
             height: 56px;
         }
-        paper-checkbox {
-            padding: 0.9em 1em;
+        #showOnlyConflicts {
+            display: block;
+            padding: 0 16px;
+            height: 48px;
+            line-height: 48px;
         }
         </style>
         <div id="wrapper">
@@ -148,7 +151,7 @@ loot-clear-metadata
                     <paper-menu-button>
                         <paper-icon-button icon="more-vert"></paper-icon-button>
                         <paper-dropdown class="dropdown" halign="right" opened="{{data.isMenuOpen}}">
-                            <div>
+                            <core-menu class="menu">
                                 <paper-checkbox id="showOnlyConflicts" label="Show Only Conflicts" checked="{{data.isConflictFilterChecked}}" flex></paper-checkbox>
                                 <paper-item id="editMetadata">
                                     <core-icon icon="create"></core-icon>
@@ -162,7 +165,7 @@ loot-clear-metadata
                                     <core-icon icon="delete"></core-icon>
                                     Clear User Metadata
                                 </paper-item>
-                            </div>
+                            </core-menu>
                         </paper-dropdown>
                     </paper-menu-button>
                 </core-toolbar>

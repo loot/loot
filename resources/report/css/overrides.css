@@ -27,8 +27,8 @@ html /deep/ core-animated-pages {
 }
 
 /* This makes checkboxes have the same padding as icons in lists. */
-html /deep/ paper-checkbox::shadow #checkboxLabel {
-    padding-left: 1em;
+html /deep/ core-menu paper-checkbox::shadow #checkboxLabel {
+    padding-left: 32px;
 }
 
 
@@ -77,7 +77,7 @@ html /deep/ paper-item .avatar {
 html /deep/ paper-item::shadow .button-content {
     padding: 0 16px;
 }
-html /deep/ paper-item::shadow .button-content ::content * {
+html /deep/ paper-item::shadow .button-content ::content *:not(core-tooltip) {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
