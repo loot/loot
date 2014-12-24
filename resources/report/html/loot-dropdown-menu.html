@@ -14,9 +14,40 @@ it a <select>-like API. This means:
 
 <polymer-element name="loot-dropdown-menu" attributes="disabled">
     <template>
+        <style>
+        /* Material Design overrides */
+        paper-dropdown-menu {
+            margin-left: 4px;
+            margin-right: 4px;
+            border-bottom-color: rgba(0, 0, 0, 0.12);
+        }
+        paper-dropdown-menu::shadow #label {
+            color: rgba(0, 0, 0, 0.87);
+        }
+        paper-dropdown-menu[disabled]::shadow #label,
+        paper-dropdown-menu::shadow #arrow {
+            color: rgba(0, 0, 0, 0.26);
+        }
+
+        /* LOOT-specific overrides */
+        ::content .core-selected {
+            color: #64B5F6;
+            background-color: inherit;
+        }
+        :host(.dark) paper-dropdown-menu {
+            border-bottom-color: rgba(255, 255, 255, 0.12);
+        }
+        :host(.dark) paper-dropdown-menu::shadow #label {
+            color: white;
+        }
+        :host(.dark) paper-dropdown-menu[disabled]::shadow #label,
+        :host(.dark) paper-dropdown-menu::shadow #arrow {
+            color: rgba(255, 255, 255, 0.30);
+        }
+        </style>
         <paper-dropdown-menu disabled?="{{disabled}}">
             <paper-dropdown class="dropdown">
-                <core-menu class="menu" valueattr="value">
+                <core-menu id="menu" class="menu" valueattr="value">
                     <content></content>
                 </core-menu>
             </paper-dropdown>
@@ -28,11 +59,11 @@ it a <select>-like API. This means:
         disabled: false,
 
         attached: function() {
-            this.shadowRoot.firstElementChild.lastElementChild.firstElementChild.addEventListener('core-select', this.onItemSelect, false);
+            this.shadowRoot.getElementById('menu').addEventListener('core-select', this.onItemSelect, false);
         },
 
         detached: function() {
-            this.shadowRoot.firstElementChild.lastElementChild.firstElementChild.removeEventListener('core-select', this.onItemSelect, false);
+            this.shadowRoot.getElementById('menu').removeEventListener('core-select', this.onItemSelect, false);
         },
 
         onItemSelect: function(evt) {
@@ -42,7 +73,7 @@ it a <select>-like API. This means:
         },
 
         valueChanged: function(oldValue, newValue) {
-            this.shadowRoot.firstElementChild.lastElementChild.firstElementChild.selected = newValue;
+            this.shadowRoot.getElementById('menu').selected = newValue;
         },
     });
     </script>

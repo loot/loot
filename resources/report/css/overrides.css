@@ -32,23 +32,6 @@ html /deep/ paper-input-decorator::shadow .underline .focused-underline {
     /* line color when the input is focused */
     background-color: #64B5F6;
 }
-/* Set the underline and arrow colours for dropdown menus on dark backgrounds. */
-html .dark /deep/ paper-dropdown-menu {
-    border-bottom-color: rgba(255, 255, 255, 0.12);
-}
-html .dark /deep/ paper-dropdown-menu::shadow #label {
-    color: white;
-}
-html .dark /deep/ paper-dropdown-menu[disabled]::shadow #label,
-html .dark /deep/ paper-dropdown-menu::shadow #arrow {
-    color: rgba(255, 255, 255, 0.30);
-}
-/* Set the highlight colour for dropdown menu selections. */
-html /deep/ loot-dropdown-menu .core-selected,
-html /deep/ paper-dropdown-menu .core-selected {
-    color: #64B5F6;
-    background-color: inherit;
-}
 /* Set the tab colours. */
 html /deep/ paper-tabs::shadow #selectionBar {
     background-color: #64B5F6;

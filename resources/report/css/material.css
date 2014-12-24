@@ -73,20 +73,6 @@ html /deep/ :-ms-input-placeholder {
 html /deep/ input {
    text-overflow: ellipsis;
 }
-
-/* paper-dropdown-menu */
-html /deep/ paper-dropdown-menu {
-   margin-left: 4px;
-   margin-right: 4px;
-   border-bottom-color: rgba(0, 0, 0, 0.12);
-}
-html /deep/ paper-dropdown-menu::shadow #label {
-   color: rgba(0, 0, 0, 0.87);
-}
-html /deep/ paper-dropdown-menu[disabled]::shadow #label,
-html /deep/ paper-dropdown-menu::shadow #arrow {
-   color: rgba(0, 0, 0, 0.26);
-}
 /* paper-dropdown */
 html /deep/ paper-dropdown {
    padding: 8px 0;
