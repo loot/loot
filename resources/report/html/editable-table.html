@@ -82,32 +82,37 @@
     </tr>
 </template>
 <style>
-table[is=editable-table] td:last-child {
-    cursor: pointer;
-}
-table[is=editable-table] td:last-child:hover {
-    color: red;
-}
-table[is=editable-table] {
-    margin: 3em 1em;
+
+/* Table styling. */
+
+
+html /deep/ table[is=editable-table] {
+    margin: 32px 0;
     border-collapse: collapse;
+    width: 100%;
 }
-table[is=editable-table] td, table[is=editable-table] th {
+html /deep/ table[is=editable-table] td, table[is=editable-table] th {
     vertical-align: top;
     text-align: left;
-    padding: 0.5em;
+    padding: 8px;
 }
-table[is=editable-table] th {
-    border-bottom: 1px black solid;
+html /deep/ table[is=editable-table] th {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 }
-table[is=editable-table] tbody tr:last-child {
+html /deep/ table[is=editable-table] td:last-child {
     cursor: pointer;
-    color: grey;
 }
-table[is=editable-table] tbody tr:last-child:hover {
-    color: black;
+html /deep/ table[is=editable-table] td:last-child:hover {
+    color: red;
 }
-td paper-icon-button.hidden {
+html /deep/ table[is=editable-table] tbody tr:last-child {
+    cursor: pointer;
+    color: rgba(0, 0, 0, 0.30);
+}
+html /deep/ table[is=editable-table] tbody tr:last-child:hover {
+    color: rgba(0, 0, 0, 0.87);
+}
+html /deep/ table[is=editable-table] td paper-icon-button.hidden {
     display: block;
     visibility: hidden;
 }
