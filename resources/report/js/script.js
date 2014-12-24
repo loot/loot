@@ -412,13 +412,9 @@ function getConflictingPluginsFromFilter() {
 
     return Promise.resolve([]);
 }
-function showMessageDialog(title, text, yesNo, closeCallback) {
+function showMessageDialog(title, text, positiveText, closeCallback) {
     var dialog = document.createElement('loot-message-dialog');
-    if (yesNo) {
-        dialog.setButtonText(l10n.jed.translate('Yes').fetch(), l10n.jed.translate('No').fetch());
-    } else {
-        dialog.setButtonText(l10n.jed.translate('Yes').fetch(), l10n.jed.translate('Cancel').fetch());
-    }
+    dialog.setButtonText(positiveText, l10n.jed.translate('Cancel').fetch());
     dialog.showModal(title, text, closeCallback);
     document.body.appendChild(dialog);
 }
@@ -645,7 +641,7 @@ function redatePlugins(evt) {
         return;
     }
 
-    showMessageDialog('Redate Plugins', 'This feature is provided so that modders using the Creation Kit may set the load order it uses. A side-effect is that any subscribed Steam Workshop mods will be re-downloaded by Steam. Do you wish to continue?', false, function(result){
+    showMessageDialog('Redate Plugins?', 'This feature is provided so that modders using the Creation Kit may set the load order it uses. A side-effect is that any subscribed Steam Workshop mods will be re-downloaded by Steam. Do you wish to continue?', l10n.jed.translate('Redate').fetch(), function(result){
         if (result) {
             loot.query('redatePlugins').then(function(response){
                 toast('Plugins were successfully redated.');
@@ -654,7 +650,7 @@ function redatePlugins(evt) {
     });
 }
 function clearAllMetadata(evt) {
-    showMessageDialog('Clear All Metadata', 'Are you sure you want to clear all existing user-added metadata from all plugins?', false, function(result){
+    showMessageDialog('', 'Are you sure you want to clear all existing user-added metadata from all plugins?', l10n.jed.translate('Clear').fetch(), function(result){
         if (result) {
             loot.query('clearAllMetadata').then(JSON.parse).then(function(result){
                 if (result) {
@@ -806,7 +802,7 @@ function focusSearch(evt) {
     }
 }
 function handleUnappliedChangesClose(change) {
-    showMessageDialog('Unapplied Sorting Changes', 'You have not yet applied or cancelled your ' + change + '. Are you sure you want to quit?', true, function(result){
+    showMessageDialog('', 'You have not yet applied or cancelled your ' + change + '. Are you sure you want to quit?', l10n.jed.translate('Quit').fetch(), function(result){
         if (result) {
             /* Cancel any sorting and close any editors. Cheat by sending a
                cancelSort query for as many times as necessary. */
@@ -951,7 +947,7 @@ function handleCopyMetadata(evt) {
     }).catch(processCefError);
 }
 function handleClearMetadata(evt) {
-    showMessageDialog('Clear Plugin Metadata', 'Are you sure you want to clear all existing user-added metadata from "' + evt.target.getName() + '"?', false, function(result){
+    showMessageDialog('', 'Are you sure you want to clear all existing user-added metadata from "' + evt.target.getName() + '"?', l10n.jed.translate('Clear').fetch(), function(result){
         if (result) {
             var request = JSON.stringify({
                 name: 'clearPluginMetadata',
