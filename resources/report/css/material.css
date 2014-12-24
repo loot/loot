@@ -51,6 +51,7 @@ html /deep/ paper-item::shadow .button-content ::content a {
    padding: 0 16px;
    -ms-flex: 1 1 auto;
 }
+
 /* paper-input-decorator & input */
 html /deep/ paper-input-decorator {
    margin: 0 4px;
@@ -75,6 +76,7 @@ html /deep/ :-ms-input-placeholder {
 html /deep/ input {
    text-overflow: ellipsis;
 }
+
 /* paper-dropdown */
 html /deep/ paper-dropdown {
    padding: 8px 0;
@@ -83,6 +85,7 @@ html /deep/ paper-dropdown::shadow #scroller {
    /* The calculated height is too high for the content. */
    height: auto !important;
 }
+
 /* core-menu */
 html /deep/ core-menu {
    margin: 0;
@@ -90,10 +93,12 @@ html /deep/ core-menu {
 html /deep/ core-menu .core-selected {
    background-color: inherit;
 }
+
 /* paper-tabs */
 html /deep/ paper-tabs::shadow #selectionBar {
    height: 2px;
 }
+
 /* core-drawer-panel */
 core-drawer-panel::shadow .narrow-layout #drawer {
    width: calc(100vw - 56px) !important;
