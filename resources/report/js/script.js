@@ -167,6 +167,7 @@ var loot = {
         this.settings.games.forEach(function(game){
             var menuItem = document.createElement('paper-item');
             menuItem.setAttribute('value', game.folder);
+            menuItem.setAttribute('noink', '');
             menuItem.textContent = game.name;
             gameMenu.appendChild(menuItem);
             gameSelect.appendChild(menuItem.cloneNode(true));
@@ -1083,6 +1084,7 @@ function initVars() {
             for (var i = 0; i < loot.languages.length; ++i) {
                 var settingsItem = document.createElement('paper-item');
                 settingsItem.setAttribute('value', loot.languages[i].locale);
+                settingsItem.setAttribute('noink', '');
                 settingsItem.textContent = loot.languages[i].name;
                 settingsLangSelect.appendChild(settingsItem);
                 messageLangSelect.appendChild(settingsItem.cloneNode(true));
@@ -1135,6 +1137,7 @@ function initVars() {
             for (var j = 0; j < loot.gameTypes.length; ++j) {
                 var item = document.createElement('paper-item');
                 item.setAttribute('value', loot.gameTypes[j]);
+                item.setAttribute('noink', '');
                 item.textContent = loot.gameTypes[j];
                 select.appendChild(item);
             }
