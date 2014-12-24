@@ -61,7 +61,7 @@ html {
     font-size: 1.429rem;
     /*letter-spacing: 0.005em;*/
 }
-.subhead {
+.subhead, html /deep/ paper-item {
     font-weight: 400;
     font-size: 1.143rem;
     line-height: 1.75;
@@ -69,7 +69,7 @@ html {
     /* line-height: 1.5; */
     /*letter-spacing: 0.01em;*/
 }
-.body2, html /deep/ paper-tabs {
+.body2, html /deep/ paper-tabs, html /deep/ paper-menu-button paper-item {
     font-weight: 500;
     font-size: 1rem;
     line-height: 1.714;
@@ -112,6 +112,9 @@ core-toolbar, div[drawer] > div:first-child {
 #mainToolbar {
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
     z-index: 1;
+}
+#gameMenu {
+    margin-top: -0.5em;
 }
 div[drawer] {
     background: white;
@@ -267,4 +270,11 @@ a {
 }
 a:hover {
     text-decoration: underline;
+}
+
+/* For Material Design generic dividers. */
+.divider {
+    height: 1px;
+    background: rgba(0, 0, 0, 0.12);
+    margin-top: -1px;
 }
