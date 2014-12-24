@@ -78,7 +78,9 @@ html /deep/ paper-menu-button paper-checkbox {
     line-height: 1.714;
     /*letter-spacing: 0.01em;*/
 }
-.body1, html /deep/ paper-checkbox {
+.body1,
+html /deep/ paper-checkbox,
+paper-toast {
     font-weight: 400;
     font-size: 1rem;
     line-height: 1.429;
@@ -195,10 +197,7 @@ section {
     margin: 8px;
     margin-bottom: 0;
     padding: 16px;
-    border-top-left-radius: 2px;
-    border-top-right-radius: 2px;
-    border-bottom-right-radius: 2px;
-    border-bottom-left-radius: 2px;
+    border-radius: 2px;
     box-shadow: rgba(0, 0, 0, 0.0980392) 0px 2px 4px, rgba(0, 0, 0, 0.0980392) 0px 0px 3px;
 }
 section h1 {
