@@ -23,17 +23,20 @@ loot-editor-close
 <polymer-element name="loot-plugin-editor" attributes="{{data}}">
     <template>
         <style>
+        /* Material Design for non-button icons. */
+        core-tooltip > core-icon {
+            color: rgba(0, 0, 0, 0.54);
+        }
+
         /* Icon styling. */
         :host-context(loot-plugin-card[data-active=false]) #activeTick {
             visibility: hidden;
         }
-        :host-context(loot-plugin-card[data-bsa=false]) #loadsBSA {
-            display: none;
-        }
+        :host-context(loot-plugin-card[data-bsa=false]) #loadsBSA,
         :host-context(loot-plugin-card[data-dummy=false]) #dummyPlugin {
             display: none;
         }
-        #activeTick {
+        #activeTick > core-icon {
             color: green;
         }
         #accept {
@@ -46,18 +49,18 @@ loot-editor-close
         /* Content styling. */
         h1 {
             display: inline-block;
-            font-weight: normal;
-            font-size: 1em;
+            font-weight: 400;
+            font-size: 1rem;
             margin: 0;
         }
         #version {
             display: inline-block;
-            margin-left: 1em;
+            margin-left: 16px;
             color:#6394F8;
         }
         #crc {
             display: inline-block;
-            margin-left: 1em;
+            margin-left: 16px;
             color:#BC8923;
         }
         :host-context(#main[data-hide-version]) #version,
@@ -66,54 +69,38 @@ loot-editor-close
         }
 
         /* Editor input styling. */
+        #main > * {
+            padding: 0 16px;
+            height: 48px;
+        }
         #main > paper-checkbox, #main > core-tooltip {
             display: table;
+            line-height: 48px;
         }
-        #enableEdits {
-            margin-bottom: 1em;
-        }
-
-        /* Table styling. */
-        table {
-            margin: 0;
-            border-collapse: collapse;
-            width: 100%;
-        }
-        table:not(.core-selected), #main:not(.core-selected) {
+        core-selector > *:not(.core-selected) {
             display: none;
-        }
-        td:last-child {
-            cursor: pointer;
-        }
-        td:last-child:hover {
-            color: red;
-        }
-        td, th {
-            vertical-align: top;
-            text-align: left;
-            padding: 0.5em;
-        }
-        th {
-            border-bottom: 1px black solid;
-        }
-        tbody tr:last-child {
-            cursor: pointer;
-            color: grey;
-        }
-        tbody tr:last-child:hover {
-            color: black;
         }
 
         /* Misc Styling. */
-        core-toolbar {
+        core-toolbar.medium-tall {
             background: #E8EAF6;
-            height: 56px;
+            height: 104px;
         }
-        #buttons {
-            text-align: right;
+        core-toolbar > div {
+            position: relative;
+            top: -4px;
         }
-        #main {
-            padding: 16px;
+        core-tooltip > core-icon {
+            vertical-align: inherit !important;
+        }
+        #loadAfter,
+        #req,
+        #inc,
+        #message,
+        #tags,
+        #dirty,
+        #locations {
+            margin: 0;
         }
         </style>
         <core-toolbar class="medium-tall">
@@ -167,7 +154,7 @@ loot-editor-close
                 </thead>
                 <tbody>
                     <!-- File rows go here. -->
-                    <tr><td colspan="4">Add new row...</td><td></td></tr>
+                    <tr><td colspan="3">Add new row...</td><td></td></tr>
                 </tbody>
             </table>
             <table is="editable-table" id="req" data-template="fileRow">
@@ -176,7 +163,7 @@ loot-editor-close
                 </thead>
                 <tbody>
                     <!-- File rows go here. -->
-                    <tr><td colspan="4">Add new row...</td><td></td></tr>
+                    <tr><td colspan="3">Add new row...</td><td></td></tr>
                 </tbody>
             </table>
             <table is="editable-table" id="inc" data-template="fileRow">
@@ -185,7 +172,7 @@ loot-editor-close
                 </thead>
                 <tbody>
                     <!-- File rows go here. -->
-                    <tr><td colspan="4">Add new row...</td><td></td></tr>
+                    <tr><td colspan="3">Add new row...</td><td></td></tr>
                 </tbody>
             </table>
             <table is="editable-table" id="message" data-template="messageRow">
@@ -203,7 +190,7 @@ loot-editor-close
                 </thead>
                 <tbody>
                     <!-- Bash Tag rows go here. -->
-                    <tr><td colspan="4">Add new row...</td><td></td></tr>
+                    <tr><td colspan="3">Add new row...</td><td></td></tr>
                 </tbody>
             </table>
             <table is="editable-table" id="dirty" data-template="dirtyInfoRow">
@@ -212,7 +199,7 @@ loot-editor-close
                 </thead>
                 <tbody>
                     <!-- Dirty info rows go here. -->
-                    <tr><td colspan="4">Add new row...</td><td></td></tr>
+                    <tr><td colspan="5">Add new row...</td><td></td></tr>
                 </tbody>
             </table>
             <table is="editable-table" id="locations" data-template="locationRow">
@@ -221,7 +208,7 @@ loot-editor-close
                 </thead>
                 <tbody>
                     <!-- Location rows go here. -->
-                    <tr><td colspan="3">Add new row...</td><td></td></tr>
+                    <tr><td colspan="2">Add new row...</td><td></td></tr>
                 </tbody>
             </table>
         </core-selector>

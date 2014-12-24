@@ -28,6 +28,11 @@ loot-clear-metadata
 <polymer-element name="loot-plugin-card" attributes="data">
     <template>
         <style>
+        /* Material Design for non-button icons. */
+        core-tooltip > core-icon {
+            color: rgba(0, 0, 0, 0.54);
+        }
+
         /* Host and front/editor styling. */
         #wrapper {
             display: block;
@@ -42,21 +47,17 @@ loot-clear-metadata
             transform-style: preserve-3d;
         }
         :host(.highlight) #wrapper {
-            outline: 3px solid #69aaff;
+            outline: 4px solid #69aaff;
         }
         :host([data-active=false]) #activeTick {
             visibility: hidden;
         }
-        :host([data-bsa=false]) #loadsBSA {
-            display: none;
-        }
-        :host([data-dummy=false]) #dummyPlugin {
-            display: none;
-        }
+        :host([data-bsa=false]) #loadsBSA,
+        :host([data-dummy=false]) #dummyPlugin,
         :host(:not([data-edits])) #hasUserEdits {
             display: none;
         }
-        #front, #editor {
+        #front {
             display: block;
         }
         #editor {
@@ -79,7 +80,7 @@ loot-clear-metadata
         }
 
         /* Icon styling. */
-        #activeTick {
+        #activeTick > core-icon {
             color: green;
         }
 
@@ -91,14 +92,14 @@ loot-clear-metadata
         }
         content::content > h1 {
             display: inline-block;
-            font-weight: normal;
-            font-size: 1em;
+            font-weight: 400;
+            font-size: 1rem;
             margin: 0;
         }
         content::content > .version {
             display: inline-block;
             margin-left: 16px;
-            color:#6394F8;
+            color: #6394F8;
         }
         content::content > .crc {
             display: inline-block;
@@ -117,6 +118,13 @@ loot-clear-metadata
         core-toolbar {
             background: inherit;
             height: 56px;
+        }
+        core-toolbar > div {
+            position: relative;
+            top: -4px;
+        }
+        core-tooltip > core-icon {
+            vertical-align: inherit !important;
         }
         #showOnlyConflicts {
             display: block;
