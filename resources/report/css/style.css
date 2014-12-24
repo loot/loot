@@ -107,6 +107,25 @@ html /deep/ paper-menu-button paper-checkbox {
 body {
     background:#FAFAFA;
 }
+paper-button[autofocus] {
+    color: #64B5F6;
+}
+.hidden {
+    display:none;
+}
+[draggable] {
+    -webkit-user-select: none;
+    cursor: move;
+}
+a {
+    color: #64B5F6;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+
+/* App bar */
 core-toolbar, div[drawer] > div:first-child {
     background: #3F51B5;
     color: white;
@@ -119,20 +138,22 @@ core-toolbar, div[drawer] > div:first-child {
 #gameMenu {
     margin-top: -0.5em;
 }
+#applySortButton, #cancelSortButton {
+    position: relative;
+    top: -4px;
+}
+#applySortButton {
+    color: #64B5F6;
+    background-color: white;
+}
+
+/* Drawer / Sidebar */
 div[drawer] {
     background: white;
     z-index: 1;
 }
 div[drawer] > * {
     border-right: 1px rgba(0, 0, 0, 0.12) solid;
-}
-#main {
-    overflow: auto;
-    position: relative;
-    z-index: 0;
-}
-#main > core-list {
-    transform-style: preserve-3d;
 }
 #cardsNav {
     overflow: auto;
@@ -148,31 +169,6 @@ paper-item > a:hover {
     display: block;
     margin: 0 16px;
 }
-
-section {
-    background: white;
-    margin: 8px;
-    margin-bottom: 0;
-    padding: 16px;
-    border-top-left-radius: 2px;
-    border-top-right-radius: 2px;
-    border-bottom-right-radius: 2px;
-    border-bottom-left-radius: 2px;
-    box-shadow: rgba(0, 0, 0, 0.0980392) 0px 2px 4px, rgba(0, 0, 0, 0.0980392) 0px 0px 3px;
-}
-
-#about blockquote {
-    white-space: pre;
-}
-paper-button[autofocus] {
-  color: #64B5F6;
-}
-
-section h1 {
-    margin: 0;
-    font-weight: normal;
-    font-size: 1.2em;
-}
 #filters {
     padding: 8px 0;
 }
@@ -185,6 +181,31 @@ section h1 {
     display: block;
 }
 
+/* Panel */
+#main {
+    overflow: auto;
+    position: relative;
+    z-index: 0;
+}
+#main > core-list {
+    transform-style: preserve-3d;
+}
+section {
+    background: white;
+    margin: 8px;
+    margin-bottom: 0;
+    padding: 16px;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+    border-bottom-left-radius: 2px;
+    box-shadow: rgba(0, 0, 0, 0.0980392) 0px 2px 4px, rgba(0, 0, 0, 0.0980392) 0px 0px 3px;
+}
+section h1 {
+    margin: 0;
+    font-weight: normal;
+    font-size: 1.2em;
+}
 #summary > table {
     border-collapse:separate;
     border-spacing:0;
@@ -204,19 +225,15 @@ section h1 {
     text-align:left;
     padding-left:0;
 }
+#summary li, li > ul > li {
+    padding:0.5em 1em;
+    list-style:disc inside;
+}
 ul {
     margin-top:0.5em;
     margin-bottom:0;
     list-style:none;
     padding-left:0;
-}
-
-.hidden, section .buttons li.hidden, .fa.hidden {
-    display:none;
-}
-#summary li, li > ul > li {
-    padding:0.5em 1em;
-    list-style:disc inside;
 }
 li.say, li.error, li.warn {
     padding:0.5em 1em;
@@ -244,44 +261,25 @@ li.warn{
     color:red;
 }
 
+/* Dialogs */
+#about blockquote {
+    white-space: pre;
+}
 #settingsDialog > paper-checkbox, #settingsDialog > core-tooltip {
     display: table;
 }
 #settingsDialog > div[center] > div:first-child {
-    margin-right: 2em;
-}
-paper-checkbox {
-    padding: 0.5em 1em;
-}
-
-[draggable] {
-    -webkit-user-select: none;
-    cursor: move;
-}
-#applySortButton, #cancelSortButton {
-    position: relative;
-    top: -4px;
-}
-#applySortButton {
-    color: #64B5F6;
-    background-color: white;
+    margin-right: 16px;
 }
 paper-progress {
     width: 100%;
 }
 #firstRun > ul {
     list-style-type: disc;
-    padding-left: 40px;
+    padding-left: 32px;
 }
 #firstRun .tag {
     margin: 0;
-}
-a {
-    color: #64B5F6;
-    text-decoration: none;
-}
-a:hover {
-    text-decoration: underline;
 }
 
 /* For Material Design generic dividers. */
