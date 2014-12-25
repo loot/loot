@@ -476,6 +476,12 @@ namespace loot {
         if (!localAppData.empty())
             gameLocalDataPath = localAppData.c_str();
 
+        // If the handle has already been initialised, close it and open another.
+        if (gh != nullptr) {
+            lo_destroy_handle(gh);
+            gh = nullptr;
+        }
+
         int ret;
         if (Id() == Game::tes4)
             ret = lo_create_handle(&gh, LIBLO_GAME_TES4, gamePath.string().c_str(), gameLocalDataPath);
