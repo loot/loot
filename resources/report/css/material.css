@@ -99,6 +99,11 @@ html /deep/ paper-tabs::shadow #selectionBar {
    height: 2px;
 }
 
+/* paper-tab */
+html /deep/ paper-tab::shadow .tab-content {
+    text-transform: uppercase;
+}
+
 /* core-drawer-panel */
 core-drawer-panel::shadow .narrow-layout #drawer {
    width: calc(100vw - 56px) !important;
