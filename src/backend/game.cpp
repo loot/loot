@@ -335,23 +335,35 @@ namespace loot {
                            const std::string& repositoryURL, const std::string& repositoryBranch, const std::string& path, const std::string& registry) {
         BOOST_LOG_TRIVIAL(info) << "Setting new details for game: " << _name;
 
-        if (!name.empty())
+        if (!name.empty()) {
+            BOOST_LOG_TRIVIAL(trace) << '\t' << "Setting name to :" << name;
             _name = name;
+        }
 
-        if (!masterFile.empty())
+        if (!masterFile.empty()) {
+            BOOST_LOG_TRIVIAL(trace) << '\t' << "Setting master file to :" << masterFile;
             _masterFile = masterFile;
+        }
 
-        if (!repositoryURL.empty())
+        if (!repositoryURL.empty()) {
+            BOOST_LOG_TRIVIAL(trace) << '\t' << "Setting repo URL to :" << repositoryURL;
             _repositoryURL = repositoryURL;
+        }
 
-        if (!repositoryBranch.empty())
+        if (!repositoryBranch.empty()) {
+            BOOST_LOG_TRIVIAL(trace) << '\t' << "Setting repo branch to :" << repositoryBranch;
             _repositoryBranch = repositoryBranch;
+        }
 
-        if (!path.empty())
+        if (!path.empty()) {
+            BOOST_LOG_TRIVIAL(trace) << '\t' << "Setting game path to :" << path;
             gamePath = path;
+        }
 
-        if (!registry.empty())
+        if (!registry.empty()) {
+            BOOST_LOG_TRIVIAL(trace) << '\t' << "Setting registry key to :" << registry;
             registryKey = registry;
+        }
 
         return *this;
     }
