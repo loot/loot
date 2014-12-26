@@ -61,7 +61,9 @@ html {
     font-size: 1.429rem;
     /*letter-spacing: 0.005em;*/
 }
-.subhead, html /deep/ paper-item {
+.subhead,
+#summary > h1,
+html /deep/ paper-item {
     font-weight: 400;
     font-size: 1.143rem;
     line-height: 1.75;
@@ -192,7 +194,7 @@ paper-item > a:hover {
 #main > core-list {
     transform-style: preserve-3d;
 }
-section {
+#summary {
     background: white;
     margin: 8px;
     margin-bottom: 0;
@@ -200,10 +202,9 @@ section {
     border-radius: 2px;
     box-shadow: rgba(0, 0, 0, 0.0980392) 0px 2px 4px, rgba(0, 0, 0, 0.0980392) 0px 0px 3px;
 }
-section h1 {
-    margin: 0;
-    font-weight: normal;
-    font-size: 1.2em;
+#summary > h1 {
+    margin: -16px 0 0;
+    line-height: 56px;
 }
 #summary > table {
     border-collapse:separate;
