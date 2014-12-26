@@ -18,10 +18,37 @@
         core-tooltip {
             margin-left: 16px;
         }
+
+        /* paper-item (two-line) */
+        paper-item.two-line {
+            height: 48px;
+        }
+        paper-item.two-line::shadow .button-content {
+            padding: 7.5px 16px;
+        }
+        paper-item.two-line .text {
+            /* Padding is disabled as otherwise text won't fit in correctly. */
+            /*padding: 4px 0;*/
+            line-height: normal;
+        }
+        paper-item.two-line .primary {
+            /* MD spec says 16sp, but that doesn't fit, so use 14sp. */
+            /*font-size: 1.143rem;*/
+            font-size: 1rem;
+        }
+        paper-item.two-line .secondary {
+            /* MD spec says 14sp, but that doesn't fit, so use 12sp. */
+            /*font-size: 1rem; */
+            font-size: 0.857rem;
+            color: rgba(0, 0, 0, 0.54);
+        }
         </style>
 
-        <paper-item>
-            <div flex><content></content></div>
+        <paper-item class="two-line">
+            <div class="text" flex>
+                <div class="primary"><content select=".name"></content></div>
+                <div class="secondary"><content select=".priority"></content></div>
+            </div>
             <core-tooltip id="loadsBSA" label="Loads BSA" noarrow position="left">
                 <core-icon icon="attachment"></core-icon>
             </core-tooltip>
