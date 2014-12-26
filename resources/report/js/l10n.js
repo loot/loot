@@ -194,7 +194,7 @@
             document.getElementById('hiddenMessagesTxt').textContent = l10n.translate("Hidden messages:").fetch();
 
             /* Summary */
-            document.getElementById('summary').firstElementChild.textContent = l10n.translate("Summary & General Messages").fetch();
+            document.getElementById('summary').firstElementChild.textContent = l10n.translate("General Information").fetch();
             document.getElementById('masterlistRevision').previousElementSibling.textContent = l10n.translate("Masterlist Revision").fetch();
             document.getElementById('masterlistDate').previousElementSibling.textContent = l10n.translate("Masterlist Date").fetch();
             document.getElementById('totalWarningNo').previousElementSibling.textContent = l10n.translate("Warnings").fetch();
