@@ -42,12 +42,19 @@
             font-size: 0.857rem;
             color: rgba(0, 0, 0, 0.54);
         }
+        paper-item.two-line .secondary core-icon {
+            height: 13px;
+            margin-right: 0;
+        }
         </style>
 
         <paper-item class="two-line">
             <div class="text" flex>
                 <div class="primary"><content select=".name"></content></div>
-                <div class="secondary"><content select=".priority"></content></div>
+                <div class="secondary" layout horizontal center>
+                    <core-icon icon="star"></core-icon>
+                    <content select=".priority"></content>
+                </div>
             </div>
             <core-tooltip id="loadsBSA" label="Loads BSA" noarrow position="left">
                 <core-icon icon="attachment"></core-icon>
