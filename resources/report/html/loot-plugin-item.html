@@ -53,7 +53,7 @@
         },
 
         getName: function() {
-            return this.getElementsByTagName('a')[0].textContent;
+            return this.textContent.trim();
         },
 
         handleDragStart: function(evt) {
