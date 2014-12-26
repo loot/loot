@@ -136,7 +136,7 @@ namespace loot {
     // LootState member functions
     //---------------------------
 
-    LootState::LootState() : numUnappliedChanges(0), _currentGame(0) {}
+    LootState::LootState() : numUnappliedChanges(0), _currentGame(_games.end()) {}
 
     void LootState::Init(const std::string& cmdLineGame) {
         // Do some preliminary locale / UTF-8 support setup here, in case the settings file reading requires it.
@@ -239,9 +239,9 @@ namespace loot {
 
         try {
             BOOST_LOG_TRIVIAL(debug) << "Selecting game.";
-            _currentGame = SelectGame(_settings, _games, cmdLineGame);
+            SelectGame(cmdLineGame);
             BOOST_LOG_TRIVIAL(debug) << "Initialising game-specific settings.";
-            _games[_currentGame].Init(true);
+            _currentGame->Init(true);
             // Update game path in settings object.
             _settings["games"] = _games;
         }
@@ -255,20 +255,21 @@ namespace loot {
                 _initErrors.push_back((format(translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()).str());
             }
         }
-        BOOST_LOG_TRIVIAL(debug) << "Game selected is " << _games[_currentGame].Name();
+        BOOST_LOG_TRIVIAL(debug) << "Game selected is " << _currentGame->Name();
     }
 
     const std::vector<std::string>& LootState::InitErrors() const {
         return _initErrors;
     }
 
-    void LootState::UpdateGames(std::vector<Game>& games) {
+    void LootState::UpdateGames(std::list<Game>& games) {
         // Acquire the lock for the scope of this method.
         base::AutoLock lock_scope(_lock);
 
         unordered_set<string> newGameFolders;
 
         // Update existing games, add new games.
+        BOOST_LOG_TRIVIAL(trace) << "Updating existing games and adding new games.";
         for (auto &game : games) {
             auto pos = find(_games.begin(), _games.end(), game);
 
@@ -276,6 +277,7 @@ namespace loot {
                 pos->SetDetails(game.Name(), game.Master(), game.RepoURL(), game.RepoBranch(), game.GamePath().string(), game.RegistryKey());
             }
             else {
+                BOOST_LOG_TRIVIAL(trace) << "Adding new game entry for: " << game.FolderName();
                 _games.push_back(game);
             }
 
@@ -284,13 +286,10 @@ namespace loot {
 
         // Remove deleted games. As the current game is stored using its index,
         // removing an earlier game may invalidate it.
+        BOOST_LOG_TRIVIAL(trace) << "Removing deleted games.";
         for (auto it = _games.begin(); it != _games.end();) {
             if (newGameFolders.find(it->FolderName()) == newGameFolders.end()) {
-                if (distance(_games.begin(), it) < _currentGame) {
-                    // Deleting a game before the current game, so the current game's
-                    // index decreases by one.
-                    --_currentGame;
-                }
+                BOOST_LOG_TRIVIAL(trace) << "Removing game: " << it->FolderName();
                 it = _games.erase(it);
             }
             else
@@ -298,7 +297,7 @@ namespace loot {
         }
 
         // Re-initialise the current game in case the game path setting was changed.
-        _games[_currentGame].Init(true);
+        _currentGame->Init(true);
         // Update game path in settings object.
         _settings["games"] = _games;
     }
@@ -308,20 +307,19 @@ namespace loot {
         base::AutoLock lock_scope(_lock);
 
         BOOST_LOG_TRIVIAL(debug) << "Changing current game to that with folder: " << newGameFolder;
-        auto it = find(_games.begin(), _games.end(), newGameFolder);
+        _currentGame = find(_games.begin(), _games.end(), newGameFolder);
+        _currentGame->Init(true);
 
-        _currentGame = std::distance(_games.begin(), it);
-        _games[_currentGame].Init(true);
         // Update game path in settings object.
         _settings["games"] = _games;
-        BOOST_LOG_TRIVIAL(debug) << "New game is " << _games[_currentGame].Name();
+        BOOST_LOG_TRIVIAL(debug) << "New game is " << _currentGame->Name();
     }
 
     Game& LootState::CurrentGame() {
         // Acquire the lock for the scope of this method.
         base::AutoLock lock_scope(_lock);
 
-        return _games[_currentGame];
+        return *_currentGame;
     }
 
     std::vector<std::string> LootState::InstalledGames() const {
@@ -348,7 +346,7 @@ namespace loot {
         // Acquire the lock for the scope of this method.
         base::AutoLock lock_scope(_lock);
 
-        _settings["lastGame"] = _games[_currentGame].FolderName();
+        _settings["lastGame"] = _currentGame->FolderName();
         _settings["lastVersion"] = to_string(g_version_major) + "." + to_string(g_version_minor) + "." + to_string(g_version_patch);
 
         //Save settings.
@@ -365,6 +363,36 @@ namespace loot {
         catch (std::exception &e) {
             BOOST_LOG_TRIVIAL(error) << "Failed to save LOOT's settings. Error: " << e.what();
         }
+    }
+
+    void LootState::SelectGame(std::string preferredGame) {
+        if (preferredGame.empty()) {
+            // Get preferred game from settings.
+            if (_settings["game"] && _settings["game"].as<string>() != "auto")
+                preferredGame = _settings["game"].as<string>();
+            else if (_settings["lastGame"] && _settings["lastGame"].as<string>() != "auto")
+                preferredGame = _settings["lastGame"].as<string>();
+        }
+
+        // Get iterator to preferred game if there is one.
+        _currentGame = _games.end();
+        for (auto it = _games.begin(); it != _games.end(); ++it) {
+            if ((preferredGame.empty() && it->IsInstalled())
+                || (!preferredGame.empty() && preferredGame == it->FolderName() && it->IsInstalled())) {
+                _currentGame = it;
+                return;
+            }
+        }
+
+        // Preferred game not found, just pick the first installed one.
+        for (auto it = _games.begin(); it != _games.end(); ++it) {
+            if (it->IsInstalled()) {
+                _currentGame = it;
+                return;
+            }
+        }
+
+        throw error(error::no_game_detected, "None of the supported games were detected.");
     }
 
     bool LootState::AreSettingsValid() {
@@ -455,7 +483,7 @@ namespace loot {
         root["enableDebugLogging"] = false;
         root["updateMasterlist"] = true;
 
-        std::vector<Game> games;
+        std::list<Game> games;
         games.push_back(Game(Game::tes4));
         games.push_back(Game(Game::tes5));
         games.push_back(Game(Game::fo3));

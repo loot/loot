@@ -273,7 +273,7 @@ namespace loot {
             // It will be restored when LOOT is next loaded.
             try {
                 BOOST_LOG_TRIVIAL(trace) << "Updating games object.";
-                vector<Game> games(request["args"][0]["games"].as< vector<Game> >());
+                list<Game> games(request["args"][0]["games"].as< list<Game> >());
                 g_app_state.UpdateGames(games);
 
                 // Also enable/disable debug logging as required.

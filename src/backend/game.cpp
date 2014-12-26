@@ -43,11 +43,11 @@ namespace fs = boost::filesystem;
 namespace lc = boost::locale;
 
 namespace loot {
-    std::vector<Game> GetGames(YAML::Node& settings) {
-        vector<Game> games;
+    std::list<Game> GetGames(YAML::Node& settings) {
+        list<Game> games;
 
         if (settings["games"])
-            games = settings["games"].as< vector<Game> >();
+            games = settings["games"].as< list<Game> >();
 
         if (find(games.begin(), games.end(), Game(Game::tes4)) == games.end())
             games.push_back(Game(Game::tes4));
@@ -65,32 +65,6 @@ namespace loot {
         settings["games"] = games;
 
         return games;
-    }
-
-    size_t SelectGame(const YAML::Node& settings, const std::vector<Game>& games, const std::string& cmdLineGame) {
-        string preferredGame(cmdLineGame);
-        if (preferredGame.empty()) {
-            // Get preferred game from settings.
-            if (settings["game"] && settings["game"].as<string>() != "auto")
-                preferredGame = settings["game"].as<string>();
-            else if (settings["lastGame"] && settings["lastGame"].as<string>() != "auto")
-                preferredGame = settings["lastGame"].as<string>();
-        }
-
-        // Get index of preferred game if there is one.
-        for (size_t i = 0; i < games.size(); ++i) {
-            if (preferredGame.empty() && games[i].IsInstalled())
-                return i;
-            else if (!preferredGame.empty() && preferredGame == games[i].FolderName() && games[i].IsInstalled())
-                return i;
-        }
-        // Preferred game not found, just pick the first installed one.
-        for (size_t i = 0; i < games.size(); ++i) {
-            if (games[i].IsInstalled())
-                return i;
-        }
-
-        throw error(error::no_game_detected, "None of the supported games were detected.");
     }
 
     // MetadataList member functions

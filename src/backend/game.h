@@ -185,9 +185,7 @@ namespace loot {
         void InitLibloHandle();
     };
 
-    std::vector<Game> GetGames(YAML::Node& settings);
-
-    size_t SelectGame(const YAML::Node& settings, const std::vector<Game>& games, const std::string& cmdLineGame);
+    std::list<Game> GetGames(YAML::Node& settings);
 }
 
 #endif

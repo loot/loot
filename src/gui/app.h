@@ -74,7 +74,7 @@ namespace loot {
 
         Game& CurrentGame();
         void ChangeGame(const std::string& newGameFolder);
-        void UpdateGames(std::vector<Game>& games);
+        void UpdateGames(std::list<Game>& games);
         // Get the folder names of the installed games.
         std::vector<std::string> InstalledGames() const;
 
@@ -86,9 +86,12 @@ namespace loot {
         int numUnappliedChanges;
     private:
         YAML::Node _settings;
-        std::vector<Game> _games;
-        size_t _currentGame;
+        std::list<Game> _games;
+        std::list<Game>::iterator _currentGame;
         std::vector<std::string> _initErrors;
+
+        // Select initial game.
+        void SelectGame(std::string cmdLineGame);
 
         // Check if the settings file has the right root keys (doesn't check their values).
         bool AreSettingsValid();
