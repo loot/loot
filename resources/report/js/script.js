@@ -237,7 +237,7 @@ var loot = {
                 });
 
                 /* Remove old messages from UI. */
-                var generalMessagesList = document.getElementById('generalMessages').getElementsByTagName('ul')[0];
+                var generalMessagesList = document.getElementById('summary').getElementsByTagName('ul')[0];
                 while (generalMessagesList.firstElementChild) {
                     generalMessagesList.removeChild(generalMessagesList.firstElementChild);
                 }
@@ -451,7 +451,7 @@ function changeGame(evt) {
 
         /* Clear the UI of all existing game-specific data. Also
            clear the card and li variables for each plugin object. */
-        var globalMessages = document.getElementById('generalMessages').getElementsByTagName('ul')[0];
+        var globalMessages = document.getElementById('summary').getElementsByTagName('ul')[0];
         while (globalMessages.firstElementChild) {
             globalMessages.removeChild(globalMessages.firstElementChild);
         }
@@ -465,7 +465,7 @@ function changeGame(evt) {
             loot.game.plugins = gameInfo.plugins;
 
             /* Reset virtual list positions. */
-            document.getElementById('cardsNav').lastElementChild.scrollToItem(0);
+            document.getElementById('cardsNav').scrollToItem(0);
             document.getElementById('main').lastElementChild.scrollToItem(0);
 
             /* Now update virtual lists. */
@@ -711,7 +711,7 @@ function copyContent(evt) {
             });
         }
     } else {
-        var message = document.getElementById('generalMessagesList').getElementsByTagName('ul')[0].firstElementChild;
+        var message = document.getElementById('summary').getElementsByTagName('ul')[0].firstElementChild;
         if (message) {
             messages.push({
                 type: 'error',
@@ -1097,7 +1097,7 @@ function initVars() {
 
     loot.query('getInitErrors').then(JSON.parse).then(function(result){
         if (result) {
-            var generalMessagesList = document.getElementById('generalMessages').getElementsByTagName('ul')[0];
+            var generalMessagesList = document.getElementById('summary').getElementsByTagName('ul')[0];
 
             result.forEach(function(message){
                 var li = document.createElement('li');
@@ -1174,11 +1174,11 @@ function initVars() {
                     loot.game.masterlist = game.masterlist;
                     loot.game.globalMessages = game.globalMessages;
                     loot.game.plugins = game.plugins;
-                    document.getElementById('cardsNav').lastElementChild.data = loot.game.plugins;
+                    document.getElementById('cardsNav').data = loot.game.plugins;
                     document.getElementById('main').lastElementChild.data = loot.game.plugins;
 
                     setTimeout(function() {
-                        document.getElementById('cardsNav').lastElementChild.updateSize();
+                        document.getElementById('cardsNav').updateSize();
                         closeProgressDialog();
                     }, 100);
 

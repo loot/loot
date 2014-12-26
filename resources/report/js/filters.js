@@ -154,7 +154,7 @@ function setFilteredUIData(evt) {
     getConflictingPluginsFromFilter().then(function(conflicts) {
         filters.conflicts = conflicts;
         var filtered = filters.applyPluginFilters(loot.game.plugins);
-        document.getElementById('cardsNav').lastElementChild.data = filtered;
+        document.getElementById('cardsNav').data = filtered;
         document.getElementById('main').lastElementChild.data = filtered;
 
         /* Also run message filters on the current card elements. */

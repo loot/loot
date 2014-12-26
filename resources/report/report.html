@@ -51,22 +51,14 @@
             </div>
             <div flex layout vertical>
                 <core-animated-pages selected="cardsNav" valueattr="id" transitions="" flex>
-                    <nav id="cardsNav" class="tab-content" layout vertical>
-                        <paper-item>
-                            <a href="#summary">Summary</a>
-                        </paper-item>
-                        <paper-item>
-                            <a href="#generalMessages">General Messages</a>
-                        </paper-item>
-                        <core-list flex>
-                            <template>
-                                <loot-plugin-item data-id="{{model.id}}" data-bsa?="{{model.loadsBSA}}" data="{{model}}" data-index="{{index}}">
-                                    {{model.name}}
-                                </loot-plugin-item>
-                            </template>
-                            <!-- Generated <loot-plugin-item> elements go here. -->
-                        </core-list>
-                    </nav>
+                    <core-list  id="cardsNav" class="tab-content" flex>
+                        <template>
+                            <loot-plugin-item data-id="{{model.id}}" data-bsa?="{{model.loadsBSA}}" data="{{model}}" data-index="{{index}}">
+                                {{model.name}}
+                            </loot-plugin-item>
+                        </template>
+                        <!-- Generated <loot-plugin-item> elements go here. -->
+                    </core-list>
                     <div id="filters" class="tab-content" flex>
                         <paper-checkbox id="hideVersionNumbers" data-class="version" label="Hide version numbers"></paper-checkbox>
                         <paper-checkbox id="hideCRCs" data-class="crc" label="Hide CRCs"></paper-checkbox>
@@ -86,6 +78,7 @@
                         </div>
                     </div>
                 </core-animated-pages>
+                <div class="divider"></div>
                 <core-tooltip label="Press Enter or click outside the input to set the filter." position="top" noarrow>
                     <paper-input id="searchBox" label="Filter content..."></paper-input>
                 </core-tooltip>
@@ -94,6 +87,7 @@
         <div main layout vertical>
             <core-toolbar id="mainToolbar">
                 <paper-icon-button icon="menu" id="drawerToggle" core-drawer-toggle></paper-icon-button>
+                <a href="#summary"><paper-icon-button icon="home"></paper-icon-button></a>
                 <loot-dropdown-menu id="gameMenu" class="title dark">
                     <!-- Generated game <li> elements go here. -->
                 </loot-dropdown-menu>
@@ -123,7 +117,7 @@
                                 Copy Content
                             </paper-item>
                             <paper-item id="refreshContentButton" noink>
-                                <core-icon icon="cached"></core-icon>
+                                <core-icon icon="refresh"></core-icon>
                                 Refresh Content
                             </paper-item>
                             <div class="divider"></div>
@@ -155,7 +149,7 @@
             </core-toolbar>
             <div id="main" flex layout vertical>
                 <section id="summary">
-                    <h1>Summary</h1>
+                    <h1>Summary &amp; General Messages</h1>
                     <table>
                         <tbody>
                             <tr>
@@ -200,9 +194,6 @@
                             </tr>
                         </tbody>
                     </table>
-                </section>
-                <section id="generalMessages">
-                    <h1>General Messages</h1>
                     <ul>
                         <!-- Generated message <li> elements go here. -->
                     </ul>

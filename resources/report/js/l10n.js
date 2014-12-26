@@ -177,8 +177,6 @@
             document.getElementById('cancelSortButton').textContent = l10n.translate("Cancel").fetch();
 
             /* Nav items */
-            document.getElementById('cardsNav').firstElementChild.firstElementChild.textContent = l10n.translate("Summary").fetch();
-            document.getElementById('cardsNav').firstElementChild.nextElementSibling.firstElementChild.textContent = l10n.translate("General Messages").fetch();
             document.getElementById('sidebarTabs').firstElementChild.textContent = l10n.translate("Plugins").fetch();
             document.getElementById('sidebarTabs').firstElementChild.nextElementSibling.textContent = l10n.translate("Filters").fetch();
             document.getElementById('searchBox').parentElement.label = l10n.translate("Press Enter or click outside the input to set the filter.").fetch();
@@ -196,7 +194,7 @@
             document.getElementById('hiddenMessagesTxt').textContent = l10n.translate("Hidden messages:").fetch();
 
             /* Summary */
-            document.getElementById('summary').firstElementChild.textContent = l10n.translate("Summary").fetch();
+            document.getElementById('summary').firstElementChild.textContent = l10n.translate("Summary & General Messages").fetch();
             document.getElementById('masterlistRevision').previousElementSibling.textContent = l10n.translate("Masterlist Revision").fetch();
             document.getElementById('masterlistDate').previousElementSibling.textContent = l10n.translate("Masterlist Date").fetch();
             document.getElementById('totalWarningNo').previousElementSibling.textContent = l10n.translate("Warnings").fetch();
@@ -205,9 +203,6 @@
             document.getElementById('activePluginNo').previousElementSibling.textContent = l10n.translate("Active Plugins").fetch();
             document.getElementById('dirtyPluginNo').previousElementSibling.textContent = l10n.translate("Dirty Plugins").fetch();
             document.getElementById('totalPluginNo').previousElementSibling.textContent = l10n.translate("Total Plugins").fetch();
-
-            /* General messages */
-            document.getElementById('generalMessages').firstElementChild.textContent = l10n.translate("General Messages").fetch();
 
             /* Settings dialog */
             document.getElementById('settingsDialog').heading = l10n.translate("Settings").fetch();

@@ -133,6 +133,9 @@ core-toolbar, div[drawer] > div:first-child {
     color: white;
     height: 56px;
 }
+core-toolbar > a {
+    color: white;
+}
 #mainToolbar {
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
     z-index: 1;
@@ -140,9 +143,9 @@ core-toolbar, div[drawer] > div:first-child {
 #gameMenu {
     margin-top: -0.5em;
 }
-#applySortButton, #cancelSortButton {
+#drawerToggle, #applySortButton, #cancelSortButton {
     position: relative;
-    top: -4px;
+    top: -3px;
 }
 #applySortButton {
     color: #64B5F6;
@@ -156,9 +159,6 @@ div[drawer] {
 }
 div[drawer] > * {
     border-right: 1px rgba(0, 0, 0, 0.12) solid;
-}
-#cardsNav {
-    overflow: auto;
 }
 paper-item > a {
     -webkit-user-drag: none;
