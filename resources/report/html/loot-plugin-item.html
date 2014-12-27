@@ -15,7 +15,7 @@
             display: block;
             margin-right: 0;
         }
-        core-tooltip {
+        paper-item > core-tooltip {
             margin-left: 16px;
         }
 
@@ -25,9 +25,9 @@
                Squeeze the height to fit more items in. */
             /*height: 72px;*/
         }
-        #text,
         #primary,
         #secondary,
+        #secondary core-icon,
         paper-item.two-line::shadow .button-content {
             transition: 0.6s;
         }
@@ -41,6 +41,7 @@
             /* Padding is disabled as otherwise text won't fit in correctly. */
             /*padding: 4px 0;*/
             line-height: normal;
+            overflow: visible;
         }
         :host-context(body[data-editors]) #primary {
             /* MD spec says 16sp, but that doesn't fit, so use 14sp. */
@@ -53,6 +54,7 @@
             font-size: 0.857rem;
             color: rgba(0, 0, 0, 0.54);
             height: 13px;
+            overflow: visible;
         }
         #secondary core-icon {
             margin-right: 0;
@@ -60,8 +62,16 @@
         }
 
         /* When not in edit mode, hide secondary text. */
+        #secondary.hidden,
         :host-context(body:not([data-editors])) #secondary {
             height: 0;
+            overflow: hidden;
+        }
+
+        core-tooltip.hidden {
+            opacity: 0;
+            pointer-events: none;
+            overflow: hidden;
         }
         </style>
 
@@ -69,7 +79,9 @@
             <div id="text" flex>
                 <div id="primary"><content select=".name"></content></div>
                 <div id="secondary" layout horizontal center>
-                    <core-icon icon="star"></core-icon>
+                    <core-tooltip label="Global Priority" noarrow position="right">
+                        <core-icon icon="star"></core-icon>
+                    </core-tooltip>
                     <content select=".priority"></content>
                 </div>
             </div>
