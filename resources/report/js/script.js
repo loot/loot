@@ -502,6 +502,8 @@ function updateMasterlistNoProgress() {
                     }
                 }
             });
+            /* Hack to stop cards overlapping. */
+            document.getElementById('main').lastElementChild.updateSize();
 
             toast('Masterlist updated to revision ' + loot.game.masterlist.revision + '.');
         } else {
@@ -985,8 +987,6 @@ function handleSidebarClick(evt) {
     if (evt.target.hasAttribute('data-index')) {
         window.location.hash = '';
         document.getElementById('main').lastElementChild.scrollToItem(evt.target.getAttribute('data-index'));
-        /* However, the scroll bar that the plugin card list uses is for the whole main content area, so the position is offset by the heights of the summary and general messages cards. Adjust to compensate. */
-        document.getElementById('main').scrollTop += document.getElementById('main').lastElementChild.offsetTop;
 
         if (evt.type == 'dblclick') {
             document.getElementById(evt.target.getAttribute('data-id')).onShowEditor();
