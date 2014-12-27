@@ -187,8 +187,8 @@
             document.getElementById('hideBashTags').label = l10n.translate("Hide Bash Tags").fetch();
             document.getElementById('hideNotes').label = l10n.translate("Hide notes").fetch();
             document.getElementById('hideDoNotCleanMessages').label = l10n.translate("Hide 'Do not clean' messages").fetch();
-            document.getElementById('hideInactivePlugins').label = l10n.translate("Hide inactive plugin messages").fetch();
             document.getElementById('hideAllPluginMessages').label = l10n.translate("Hide all plugin messages").fetch();
+            document.getElementById('hideInactivePlugins').label = l10n.translate("Hide inactive plugins").fetch();
             document.getElementById('hideMessagelessPlugins').label = l10n.translate("Hide messageless plugins").fetch();
             document.getElementById('hiddenPluginsTxt').textContent = l10n.translate("Hidden plugins:").fetch();
             document.getElementById('hiddenMessagesTxt').textContent = l10n.translate("Hidden messages:").fetch();
