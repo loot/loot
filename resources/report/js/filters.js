@@ -160,7 +160,9 @@ function setFilteredUIData(evt) {
         /* Also run message filters on the current card elements. */
         var cards = document.getElementById('main').getElementsByTagName('loot-plugin-card');
         for (var i = 0; i < cards.length; ++i) {
-            cards[i].onMessagesChange();  // Calls Plugin.getUIMessages(), which calls filters.applyMessageFilters().
+            // Force re-filtering of messages.
+            cards[i].data.computed.messages = cards[i].data.getUIMessages();
+            cards[i].onMessagesChange();
         }
     });
 }
