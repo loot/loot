@@ -318,7 +318,7 @@ li.warn{
 #settingsDialog > div > * {
     margin: 16px;
 }
-#settingsDialog > div div:first-child {
+#settingsDialog > div > div > :first-child {
     margin-right: 16px;
     margin-left: 0;
 }

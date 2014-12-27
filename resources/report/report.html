@@ -252,12 +252,14 @@ along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
                     <!-- Game <option> elements go here. -->
                 </loot-dropdown-menu>
             </div>
-            <core-tooltip center horizontal layout label="Language changes will be applied after LOOT is restarted." noarrow>
-                <div>Language</div>
+            <div center horizontal layout>
+                <core-tooltip label="Language changes will be applied after LOOT is restarted." noarrow>
+                    Language
+                </core-tooltip>
                 <loot-dropdown-menu id="languageSelect">
                     <!-- Language <option> elements go here. -->
                 </loot-dropdown-menu>
-            </core-tooltip>
+            </div>
             <core-tooltip label="The output is logged to the LOOTDebugLog.txt file." center horizontal layout noarrow>
                 <paper-checkbox id="enableDebugLogging" label="Enable debug logging"></paper-checkbox>
             </core-tooltip>
