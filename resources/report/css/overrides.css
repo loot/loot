@@ -14,6 +14,7 @@ html /deep/ paper-item[disabled] > core-icon {
 /* Change color of disabled icon buttons to match Material Design spec. */
 paper-icon-button[disabled] {
     color: rgba(255, 255, 255, 0.30);
+    transition: color 0.6s;
 }
 /* This override change the positioning of the progress dialog to adapt to content changes. */
 #progressDialog {

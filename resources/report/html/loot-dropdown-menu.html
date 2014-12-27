@@ -37,6 +37,9 @@ it a <select>-like API. This means:
         :host(.dark) paper-dropdown-menu {
             border-bottom-color: rgba(255, 255, 255, 0.12);
         }
+        paper-dropdown-menu[disabled]::shadow #label {
+            transition: color 0.6s;
+        }
         :host(.dark) paper-dropdown-menu::shadow #label {
             color: white;
         }
