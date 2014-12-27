@@ -4,7 +4,7 @@
 /* core-tooltip */
 html /deep/ core-tooltip::shadow .core-tooltip {
    font-size: 0.714rem;
-   font-family: RobotoDraft, sans-serif;
+   font-family: Roboto, sans-serif;
    font-weight: 500;
    background-color: rgba(0, 0, 0, 0.9);
 }

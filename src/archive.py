@@ -138,6 +138,7 @@ def createAppArchive(archive_path):
     shutil.copy( os.path.join('..', 'resources', 'report', 'index.html'), os.path.join(temp_path, 'resources', 'report') )
     shutil.copy( os.path.join('..', 'resources', 'report', 'bower_components', 'marked', 'lib', 'marked.js'), os.path.join(temp_path, 'resources', 'report', 'bower_components', 'marked', 'lib') )
     shutil.copy( os.path.join('..', 'resources', 'report', 'bower_components', 'Jed', 'jed.js'), os.path.join(temp_path, 'resources', 'report', 'bower_components', 'Jed') )
+    shutil.copytree( os.path.join('..', 'resources', 'report', 'fonts'), os.path.join(temp_path, 'resources', 'report', 'fonts') )
     shutil.copy( os.path.join('..', 'resources', 'report', 'js', 'jedGettextParser.js'), os.path.join(temp_path, 'resources', 'report', 'js') )
     shutil.copy( os.path.join('..', 'resources', 'report', 'js', 'l10n.js'), os.path.join(temp_path, 'resources', 'report', 'js') )
     shutil.copy( os.path.join('..', 'resources', 'report', 'js', 'plugin.js'), os.path.join(temp_path, 'resources', 'report', 'js') )
