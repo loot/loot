@@ -904,6 +904,7 @@ function handleEditorClose(evt) {
     --numEditors;
 
     if (numEditors == 0) {
+        document.body.removeAttribute('data-editors');
         /* Re-enable toolbar elements. */
         document.getElementById('wipeUserlistButton').removeAttribute('disabled');
         document.getElementById('copyContentButton').removeAttribute('disabled');
@@ -912,8 +913,9 @@ function handleEditorClose(evt) {
         document.getElementById('gameMenu').removeAttribute('disabled');
         document.getElementById('updateMasterlistButton').removeAttribute('disabled');
         document.getElementById('sortButton').removeAttribute('disabled');
+    } else {
+        document.body.setAttribute('data-editors', numEditors);
     }
-    document.body.setAttribute('data-editors', numEditors);
 }
 function handleConflictsFilter(evt) {
     /* evt.detail is true if the filter has been activated. */

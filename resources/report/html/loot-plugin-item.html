@@ -15,13 +15,76 @@
             display: block;
             margin-right: 0;
         }
-        core-tooltip {
+        paper-item > core-tooltip {
             margin-left: 16px;
+        }
+
+        /* paper-item (two-line) */
+        paper-item.two-line {
+            /* Two-line items should be 72px high according to Material Design.
+               Squeeze the height to fit more items in. */
+            /*height: 72px;*/
+        }
+        #primary,
+        #secondary,
+        #secondary core-icon,
+        paper-item.two-line::shadow .button-content {
+            transition: 0.6s;
+        }
+        paper-item.two-line::shadow .button-content {
+            padding: 14px 16px;
+        }
+        :host-context(body[data-editors]) paper-item.two-line::shadow .button-content {
+            padding: 7.5px 16px;
+        }
+        #text {
+            /* Padding is disabled as otherwise text won't fit in correctly. */
+            /*padding: 4px 0;*/
+            line-height: normal;
+            overflow: visible;
+        }
+        :host-context(body[data-editors]) #primary {
+            /* MD spec says 16sp, but that doesn't fit, so use 14sp. */
+            /*font-size: 1.143rem;*/
+            font-size: 1rem;
+        }
+        #secondary {
+            /* MD spec says 14sp, but that doesn't fit, so use 12sp. */
+            /*font-size: 1rem; */
+            font-size: 0.857rem;
+            color: rgba(0, 0, 0, 0.54);
+            height: 13px;
+            overflow: visible;
+        }
+        #secondary core-icon {
+            margin-right: 0;
+            height: 13px;
+        }
+
+        /* When not in edit mode, hide secondary text. */
+        #secondary.hidden,
+        :host-context(body:not([data-editors])) #secondary {
+            height: 0;
+            overflow: hidden;
+        }
+
+        core-tooltip.hidden {
+            opacity: 0;
+            pointer-events: none;
+            overflow: hidden;
         }
         </style>
 
-        <paper-item>
-            <div flex><content></content></div>
+        <paper-item class="two-line">
+            <div id="text" flex>
+                <div id="primary"><content select=".name"></content></div>
+                <div id="secondary" layout horizontal center>
+                    <core-tooltip label="Global Priority" noarrow position="right">
+                        <core-icon icon="star"></core-icon>
+                    </core-tooltip>
+                    <content select=".priority"></content>
+                </div>
+            </div>
             <core-tooltip id="loadsBSA" label="Loads BSA" noarrow position="left">
                 <core-icon icon="attachment"></core-icon>
             </core-tooltip>
@@ -35,11 +98,14 @@
         data: undefined,
 
         observe: {
-            'data.userlist': 'onUserlistChange'
+            'data.userlist': 'onUserlistChange',
+            'data.modPriority': 'onPriorityChange',
+            'data.isGlobalPriority': 'onPriorityChange'
         },
 
         dataChanged: function(oldValue, newValue) {
             this.onUserlistChange();
+            this.onPriorityChange();
         },
 
         onUserlistChange: function(oldValue, newValue) {
@@ -52,8 +118,26 @@
             }
         },
 
+        onPriorityChange: function(oldValue, newValue) {
+            if (this.data) {
+                if (this.data.modPriority != 0) {
+                    this.shadowRoot.getElementById('secondary').classList.remove('hidden');
+                } else {
+                    this.shadowRoot.getElementById('secondary').classList.add('hidden');
+                }
+                if (this.data.isGlobalPriority) {
+                    this.shadowRoot.getElementById('secondary').firstElementChild.classList.remove('hidden');
+                } else {
+                    this.shadowRoot.getElementById('secondary').firstElementChild.classList.add('hidden');
+                }
+            } else {
+                this.shadowRoot.getElementById('secondary').classList.add('hidden');
+                this.shadowRoot.getElementById('secondary').firstElementChild.classList.add('hidden');
+            }
+        },
+
         getName: function() {
-            return this.textContent.trim();
+            return this.querySelector('.name').textContent.trim();
         },
 
         handleDragStart: function(evt) {

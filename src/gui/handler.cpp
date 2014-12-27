@@ -429,11 +429,13 @@ namespace loot {
             // Priority value was changed, so add it to the userlist data.
             int priority = pluginMetadata["modPriority"].as<int>();
 
-            if (priority >= 0) {
-                priority += max_priority;
-            }
-            else {
-                priority -= max_priority;
+            if (pluginMetadata["isGlobalPriority"].as<bool>()) {
+                if (priority >= 0) {
+                    priority += max_priority;
+                }
+                else {
+                    priority -= max_priority;
+                }
             }
             newUserlistEntry.Priority(priority);
             newUserlistEntry.SetPriorityExplicit(true);
