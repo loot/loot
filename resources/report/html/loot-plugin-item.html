@@ -25,34 +25,43 @@
                Squeeze the height to fit more items in. */
             /*height: 72px;*/
         }
+        #text,
+        #primary,
+        #secondary,
+        paper-item.two-line::shadow .button-content {
+            transition: 0.6s;
+        }
+        paper-item.two-line::shadow .button-content {
+            padding: 14px 16px;
+        }
         :host-context(body[data-editors]) paper-item.two-line::shadow .button-content {
             padding: 7.5px 16px;
         }
-        :host-context(body[data-editors]) paper-item.two-line #text {
+        #text {
             /* Padding is disabled as otherwise text won't fit in correctly. */
             /*padding: 4px 0;*/
             line-height: normal;
         }
-        :host-context(body[data-editors]) paper-item.two-line #primary {
+        :host-context(body[data-editors]) #primary {
             /* MD spec says 16sp, but that doesn't fit, so use 14sp. */
             /*font-size: 1.143rem;*/
             font-size: 1rem;
         }
-        :host-context(body[data-editors]) paper-item.two-line #secondary {
+        #secondary {
             /* MD spec says 14sp, but that doesn't fit, so use 12sp. */
             /*font-size: 1rem; */
             font-size: 0.857rem;
             color: rgba(0, 0, 0, 0.54);
-            display: flex;
-        }
-        :host-context(body[data-editors]) paper-item.two-line #secondary core-icon {
             height: 13px;
+        }
+        #secondary core-icon {
             margin-right: 0;
+            height: 13px;
         }
 
         /* When not in edit mode, hide secondary text. */
-        :host-context(body:not([data-editors])) paper-item.two-line #secondary {
-            display: none;
+        :host-context(body:not([data-editors])) #secondary {
+            height: 0;
         }
         </style>
 
