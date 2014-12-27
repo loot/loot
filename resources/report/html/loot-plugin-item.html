@@ -21,37 +21,45 @@
 
         /* paper-item (two-line) */
         paper-item.two-line {
-            height: 48px;
+            /* Two-line items should be 72px high according to Material Design.
+               Squeeze the height to fit more items in. */
+            /*height: 72px;*/
         }
-        paper-item.two-line::shadow .button-content {
+        :host-context(body[data-editors]) paper-item.two-line::shadow .button-content {
             padding: 7.5px 16px;
         }
-        paper-item.two-line .text {
+        :host-context(body[data-editors]) paper-item.two-line #text {
             /* Padding is disabled as otherwise text won't fit in correctly. */
             /*padding: 4px 0;*/
             line-height: normal;
         }
-        paper-item.two-line .primary {
+        :host-context(body[data-editors]) paper-item.two-line #primary {
             /* MD spec says 16sp, but that doesn't fit, so use 14sp. */
             /*font-size: 1.143rem;*/
             font-size: 1rem;
         }
-        paper-item.two-line .secondary {
+        :host-context(body[data-editors]) paper-item.two-line #secondary {
             /* MD spec says 14sp, but that doesn't fit, so use 12sp. */
             /*font-size: 1rem; */
             font-size: 0.857rem;
             color: rgba(0, 0, 0, 0.54);
+            display: flex;
         }
-        paper-item.two-line .secondary core-icon {
+        :host-context(body[data-editors]) paper-item.two-line #secondary core-icon {
             height: 13px;
             margin-right: 0;
+        }
+
+        /* When not in edit mode, hide secondary text. */
+        :host-context(body:not([data-editors])) paper-item.two-line #secondary {
+            display: none;
         }
         </style>
 
         <paper-item class="two-line">
-            <div class="text" flex>
-                <div class="primary"><content select=".name"></content></div>
-                <div class="secondary" layout horizontal center>
+            <div id="text" flex>
+                <div id="primary"><content select=".name"></content></div>
+                <div id="secondary" layout horizontal center>
                     <core-icon icon="star"></core-icon>
                     <content select=".priority"></content>
                 </div>
