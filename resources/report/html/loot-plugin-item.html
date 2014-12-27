@@ -98,11 +98,14 @@
         data: undefined,
 
         observe: {
-            'data.userlist': 'onUserlistChange'
+            'data.userlist': 'onUserlistChange',
+            'data.modPriority': 'onPriorityChange',
+            'data.isGlobalPriority': 'onPriorityChange'
         },
 
         dataChanged: function(oldValue, newValue) {
             this.onUserlistChange();
+            this.onPriorityChange();
         },
 
         onUserlistChange: function(oldValue, newValue) {
@@ -112,6 +115,24 @@
                 this.setAttribute('data-edits', 'true');
             } else {
                 this.removeAttribute('data-edits');
+            }
+        },
+
+        onPriorityChange: function(oldValue, newValue) {
+            if (this.data) {
+                if (this.data.modPriority != 0) {
+                    this.shadowRoot.getElementById('secondary').classList.remove('hidden');
+                } else {
+                    this.shadowRoot.getElementById('secondary').classList.add('hidden');
+                }
+                if (this.data.isGlobalPriority) {
+                    this.shadowRoot.getElementById('secondary').firstElementChild.classList.remove('hidden');
+                } else {
+                    this.shadowRoot.getElementById('secondary').firstElementChild.classList.add('hidden');
+                }
+            } else {
+                this.shadowRoot.getElementById('secondary').classList.add('hidden');
+                this.shadowRoot.getElementById('secondary').firstElementChild.classList.add('hidden');
             }
         },
 
