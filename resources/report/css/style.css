@@ -26,9 +26,6 @@
 ::-webkit-scrollbar-corner {
     background: inherit;
 }
-body {
-    background:#FAFAFA;
-}
 paper-button[autofocus] {
     color: #64B5F6;
 }
@@ -106,6 +103,7 @@ paper-item > a:hover {
 
 /* Panel */
 #main {
+    background:#FAFAFA;
     overflow: auto;
     position: relative;
     z-index: 0;
