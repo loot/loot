@@ -37,7 +37,7 @@ paper-button[autofocus] {
     cursor: move;
 }
 a {
-    color: #64B5F6;
+    color: #2196F3;
     text-decoration: none;
 }
 a:hover {
@@ -65,7 +65,7 @@ core-toolbar > a {
     top: -3px;
 }
 #applySortButton {
-    color: #64B5F6;
+    color: #2196F3;
     background-color: white;
 }
 
@@ -153,7 +153,7 @@ li.warn {
     background:#FFDD55;
 }
 .version {
-    color:#6394F8;
+    color:#2196F3;
 }
 .crc {
     color:#BC8923;
