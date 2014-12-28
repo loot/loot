@@ -225,6 +225,7 @@ paper-item > a:hover {
 }
 #filters {
     padding: 8px 0;
+    overflow: hidden;
 }
 #filters > * {
     padding: 0 16px;
