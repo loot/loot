@@ -185,11 +185,13 @@ core-toolbar, div[drawer] > div:first-child {
     background: #3F51B5;
     color: white;
     height: 56px;
-    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
-    z-index: 1;
 }
 core-toolbar > a {
     color: white;
+}
+#mainToolbar {
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+    z-index: 1;
 }
 #gameMenu {
     margin-top: -0.5em;
@@ -207,7 +209,6 @@ core-toolbar > a {
 div[drawer] {
     background: white;
     z-index: 1;
-    overflow: hidden;
 }
 div[drawer] > * {
     border-right: 1px rgba(0, 0, 0, 0.12) solid;
