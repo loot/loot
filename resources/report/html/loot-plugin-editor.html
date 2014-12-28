@@ -521,7 +521,7 @@ loot-editor-close
             this.shadowRoot.getElementById('globalPriority').parentElement.setPosition();
 
             /* Also make sure right arrow is visible if the tabs are scrollable. */
-            this.shadowRoot.getElementById('tableTabs').scroll();
+            this.shadowRoot.getElementById('tableTabs').resizeHandler();
         },
     });
     </script>
