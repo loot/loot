@@ -127,6 +127,8 @@ paper-item > a:hover {
     display: inline-block;
     vertical-align: top;
     margin-right: 32px;
+    width: auto;
+    background-color: inherit;
 }
 #summary > table:last-child {
     margin-right: 0;
