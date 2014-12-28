@@ -236,6 +236,7 @@
             var firstRun = document.getElementById('firstRun');
             firstRun.heading = l10n.translate("First-Time Tips").fetch();
 
+            firstRun.querySelector('li:nth-child(2)').textContent = l10n.translate("CRCs are only displayed after plugins have been loaded, either by conflict filtering, or by sorting.").fetch();
             firstRun.querySelector('li:nth-child(4)').textContent = l10n.translate("Multiple metadata editors can be opened at once, and many options in the header bar are disabled while any editors are open.").fetch();
             firstRun.querySelector('li:last-child').textContent = l10n.translate("Many interface elements have tooltips. If you don't know what something is, try hovering your mouse over it to find out.").fetch();
 

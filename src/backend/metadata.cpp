@@ -407,6 +407,15 @@ namespace loot {
                     ++numOverrideRecords;
             }
 
+            BOOST_LOG_TRIVIAL(trace) << name << ": " << "Checking if plugin is a dummy.";
+            if (headerOnly) {
+                // Check the header records count.
+                _isDummy = file->getNumRecords() == 0;
+            }
+            else {
+                _isDummy = formIDs.empty();
+            }
+
             //Also read Bash Tags applied and version string in description.
             BOOST_LOG_TRIVIAL(trace) << name << ": " << "Reading the description.";
             string text = boost::locale::conv::to_utf<char>(file->getDescription(), "Windows-1252", boost::locale::conv::stop);
@@ -825,6 +834,10 @@ namespace loot {
 
     bool Plugin::IsMaster() const {
         return isMaster;
+    }
+
+    bool Plugin::IsDummy() const {
+        return _isDummy;
     }
 
     std::string Plugin::Version() const {
