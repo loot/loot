@@ -84,18 +84,11 @@
 <style>
 
 /* Table styling. */
-
-
 html /deep/ table[is=editable-table] {
-    border-collapse: collapse;
-    width: 100%;
+    background-color: inherit;
 }
 html /deep/ table[is=editable-table] td, table[is=editable-table] th {
-    vertical-align: top;
-    text-align: left;
-}
-html /deep/ table[is=editable-table] th {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    padding: 0;
 }
 html /deep/ table[is=editable-table] td:last-child {
     cursor: pointer;

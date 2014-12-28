@@ -270,12 +270,11 @@ paper-item > a:hover {
     text-align: right;
     padding-left: 16px;
 }
-ul {
-    margin-top: 8px;
-    margin-bottom: 0;
+ul, ol {
+    margin: 8px 0;
 }
 #main li {
-    padding:8px 16px;
+    padding: 8px 16px;
 }
 li p {
     margin: 0;
@@ -325,4 +324,19 @@ paper-progress {
     height: 1px;
     background: rgba(0, 0, 0, 0.12);
     margin-top: -1px;
+}
+
+/* Tables */
+html /deep/ table {
+    border-collapse: collapse;
+    width: 100%;
+    background-color: #E8EAF6;
+}
+html /deep/ table td, table th {
+    vertical-align: top;
+    text-align: left;
+    padding: 8px 16px;
+}
+html /deep/ table th {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 }
