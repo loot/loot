@@ -444,16 +444,11 @@ A copy of the license is included in the file named "GNU FDL v1.3.txt".</blockqu
 <h2 id="history">Version History</h2>
 <p>Only program history is recorded here. The masterlists are updated far too frequently for their changes to be concisely recorded here, but a full history of changes to them may be viewed by browsing the GitHub repositories.
 
-<h3>0.7.0 - <i>X Y 2014</i></h3>
+<h3>0.7.0 - <i>X Y 2015</i></h3>
 <h4>Fixes</h4>
 <ul>
-    <li>The default registry key for Nehrim was wrong.
     <li>The <code>settings.yaml</code> included with the installer was very old.
-    <li>Messages were displayed in the wrong language if LOOT's language was not English.
-    <li>LOOT forgot plugin CRCs and active status if the settings dialog was opened and exited using the <q>OK</q> button, leading to conditional messages being wrongly displayed or hidden.
     <li>Inactive incompatibilities were displayed as error messages. They are now displayed as warnings.
-    <li>Cyclic interaction errors listed plugins not involved in the cycle.
-    <li>Bash Tags suggestions were not displayed correctly.
     <li>Masterlist entries that matched the same plugin were not being merged. Now one exact match and any number of regex matches will be merged.
     <li>Masterlist updating failed when a fast-forward merge was not possible (eg. when remote has been rebased, or a different repository is used). Such cases are now handled by deleting the local repository and re-cloning the remote.
     <li>Masterlists would not 'update' to older revisions. This can be useful for testing, so now they can do so.
@@ -464,14 +459,14 @@ A copy of the license is included in the file named "GNU FDL v1.3.txt".</blockqu
 </ul>
 <h4>Additions</h4>
 <ul>
-    <li>German and Danish translations.
+    <li>Danish translation.
     <li>If LOOT can't detect any installed games, it now launches to the settings dialog, where the game settings can be edited to allow a game to be detected.
     <li><q>Copy Content</q> menu item to copy the plugin list and all information it contains to the clipboard as YAML-formatted text.
     <li>A <q>Refresh Content</q> item has been added to the main menu, which re-scans plugin headers and updates LOOT's content.
-    <li>LOOT is now built with High DPI display support, and with the Large Address Aware flag set.
+    <li>LOOT is now built with High DPI display support.
     <li>Masterlist updates can now be performed independently of sorting.
     <li>A <q>First-Time Tips</q> dialog will be displayed on the first run of any particular version of LOOT.
-    <li>If LOOT is closed before a sorted load order is applied, it will first ask if the sorted order should be applied or discarded.
+    <li>Attempting to close LOOT with an unapplied sorted load order or an open plugin editor will trigger a confirmation dialog.
     <li>Support for GitHub Flavored Markdown in messages, minus features specific to the GitHub site, such as @mentions and emoji.
     <li>Support for message content substitution metadata syntax in the masterlist.
     <li>Display of LOOT's build revision has been added to the <q>About</q> dialog.
@@ -480,7 +475,7 @@ A copy of the license is included in the file named "GNU FDL v1.3.txt".</blockqu
 </ul>
 <h4>Changes</h4>
 <ul>
-    <li>New single-window HTML5-based interface, using elements of Google's Material Design.
+    <li>New single-window HTML5-based interface, based on Google's Material Design.
     <li>LOOT's calculated load orders are now more intuitive: an additional constraint was added so that plugins will be placed in alphabetical order so long as doing so does not violate any of the other constraints.
     <li>LOOT now parses the masterlist and plugin headers on startup, and the resulting content is displayed with the plugins in their current load order.
     <li>Each plugin now has its own editor, and multiple editors can be opened at once.
@@ -494,6 +489,9 @@ A copy of the license is included in the file named "GNU FDL v1.3.txt".</blockqu
     <li>Making edits to plugin metadata before applying a calculated load order no longer causes LOOT to recalculate the load order. Instead, the displayed load order is applied, and the metadata edits will be applied the next time sorting is performed.
     <li>All references to <q>UDRs</q> have been replaced by the more technically-correct <q>Deleted References</q> term.
     <li>The <q>Hide inactive plugin messages</q> filter has been replaced by a <q>Hide inactive plugins</q> filter.
+    <li>New icon!
+    <li>Copied metadata is now wrapped in BBCode <code>[spoiler][code]...[/code][/spoiler]</code> tags for easier pasting into forum posts.
+    <li>The Summary and General Messages cards have been combined into a General Information card.
 </ul>
 <h4>Removals</h4>
 <ul>
@@ -515,6 +513,26 @@ A copy of the license is included in the file named "GNU FDL v1.3.txt".</blockqu
     <li>Added support for native Linux builds.
     <li>Added unit testing of API functions to help ensure correctness and consistency of functionality.
     <li>Added <code>loot_get_build_id()</code>, which outputs the shortened revision ID that the API was built from.
+</ul>
+
+<h3>0.6.1 - <i>22 December 2014</i></h3>
+<ul>
+    <li>Fixed: Default Nehrim registry entry path.
+    <li>Fixed: Messages in the wrong language being selected.
+    <li>Fixed: LOOT windows opening off-screen if the screen area had been changed since last run.
+    <li>Fixed: Read-only <code>.git</code> folders preventing repository deletion.
+    <li>Fixed: Unnecessary plugins in cyclic dependency error messages.
+    <li>Fixed: Bash Tag suggestions displaying incorrectly.
+    <li>Fixed: The current game can no longer be deleted from the settings window.
+    <li>Fixed: Plugin metadata being lost when the settings window was exited with the "OK" button, leading to possible condition evaluation issues.
+    <li>Fixed: A blank report bug when running on systems which don't have Internet Explorer 11 installed.
+    <li>Fixed: Reports appearing empty of all content when no global messages are to be displayed.
+    <li>Changed: Updated Boost (1.57.0), libgit2 (0.21.3), wxWidgets (3.0.2) and libloadorder (6.0.3) dependencies. <b>This includes a critical security vulnerability fix in libgit2</b>.
+    <li>Changed: The game menu is now updated when the settings window is exited with the "OK" button.
+    <li>Changed: Updated Russian translation.
+    <li>Changed: Updated Brazilian Portuguese translation.
+    <li>Added: German translation.
+    <li>Added: The Large Address Aware flag to the LOOT executable.
 </ul>
 
 <h3>0.6.0 - <i>05 July 2014</i></h3>
