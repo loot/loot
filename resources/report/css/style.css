@@ -259,51 +259,37 @@ paper-item > a:hover {
     line-height: 56px;
 }
 #summary > table {
-    border-collapse:separate;
-    border-spacing:0;
     display: inline-block;
     vertical-align: top;
+    margin-right: 32px;
 }
-#summary > table:not(:last-child) {
-    margin-right: 4em;
+#summary > table:last-child {
+    margin-right: 0;
 }
-#summary td {
-    padding:0.5em;
-    line-height:1.5;
-    text-align:right;
-    padding-left:3em;
-}
-#summary > table td:first-child {
-    text-align:left;
-    padding-left:0;
-}
-#summary li, li > ul > li {
-    padding:0.5em 1em;
-    list-style:disc inside;
+#summary td:last-child {
+    text-align: right;
+    padding-left: 16px;
 }
 ul {
-    margin-top:0.5em;
-    margin-bottom:0;
-    list-style:none;
-    padding-left:0;
+    margin-top: 8px;
+    margin-bottom: 0;
 }
-li.say, li.error, li.warn {
-    padding:0.5em 1em;
-    list-style:disc inside;
+li {
+    padding:8px 16px;
 }
-li.say > p, li.error > p, li.warn > p {
+li p {
     margin: 0;
 }
-li.error{
+li.error {
     background:#ff9090;
 }
-li.warn{
+li.warn {
     background:#FFDD55;
 }
-.version{
+.version {
     color:#6394F8;
 }
-.crc{
+.crc {
     color:#BC8923;
 }
 .tag.add {
@@ -332,13 +318,6 @@ li.warn{
 }
 paper-progress {
     width: 100%;
-}
-#firstRun > ul {
-    list-style-type: disc;
-    padding-left: 32px;
-}
-#firstRun .tag {
-    margin: 0;
 }
 
 /* For Material Design generic dividers. */
