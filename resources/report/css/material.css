@@ -98,10 +98,15 @@ html /deep/ core-menu .core-selected {
 html /deep/ paper-tabs::shadow #selectionBar {
    height: 2px;
 }
+html /deep/ paper-tabs::shadow .scroll-button > paper-icon-button {
+    vertical-align: middle;
+    color: rgba(0, 0, 0, 0.54);
+}
 
 /* paper-tab */
 html /deep/ paper-tab::shadow .tab-content {
     text-transform: uppercase;
+    line-height: 48px;
 }
 
 /* core-drawer-panel */

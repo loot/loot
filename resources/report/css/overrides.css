@@ -47,6 +47,11 @@ html /deep/ paper-tabs::shadow #selectionBar {
 html /deep/ paper-tab::shadow #ink {
     color: #64B5F6;
 }
+/* Set the paper tab scroll buttons so they don't cause the cursor to display as
+   as a pointer when they are disabled. */
+html /deep/ paper-tabs::shadow .scroll-button .hidden {
+    pointer-events: none;
+}
 /* Set the drawer z-index so that it doesn't appear below plugin cards. */
 core-drawer-panel::shadow #drawer {
     z-index: 1;
