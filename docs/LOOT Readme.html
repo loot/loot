@@ -214,7 +214,7 @@ paper-icon-button::shadow #icon {
 
 <h4>Main Menu</h4>
 
-<p>The <paper-icon-button icon="menu"></paper-icon-button> button opens the main menu. A few items may not be obvious in their function:
+<p>The <core-icon icon="menu"></core-icon> button opens the main menu. A few items may not be obvious in their function:
 <ol>
     <li><q>Redate Plugins</q> is provided so that Skyrim modders may set the load order for the Creation Kit. It is only enabled for Skyrim, and changes the timestamps of the plugins in its Data folder to match their current load order. A side effect of changing the timestamps is that any Steam Workshop mods installed will be re-downloaded.
     <li><q>Copy Content</q> copies the data displayed in LOOT's cards as YAML-formatted text.
@@ -227,9 +227,9 @@ paper-icon-button::shadow #icon {
 
 <h4 id="usage-update">Masterlist Update &amp; Sorting</h4>
 
-<p>The <paper-icon-button icon="file-download"></paper-icon-button> button updates LOOT's masterlist for the current game to the latest available revision. If the latest revision contains errors (eg. due to typos), then LOOT will roll back until it finds a revision that works.
+<p>The <core-icon icon="file-download"></core-icon> button updates LOOT's masterlist for the current game to the latest available revision. If the latest revision contains errors (eg. due to typos), then LOOT will roll back until it finds a revision that works.
 
-<p>The <paper-icon-button icon="sort"></paper-icon-button> button begins LOOT's sorting process. By <a href="#settingsUpdateMasterlist">default</a>, sorting first updates the masterlist. LOOT then sorts your plugins according to a combination of data from the plugins themselves, and any metadata they may have. If a cyclic interaction is detected (eg. A depends on B depends on A), then sorting will fail. Once sorting has calculated a new load order, the plugin cards are sorted into that order, and the <paper-icon-button icon="file-download"></paper-icon-button> and <paper-icon-button icon="sort"></paper-icon-button> buttons are replaced with <paper-button>Apply</paper-button> and <paper-button>Cancel</paper-button> buttons, which apply and discard the calculated load order respectively.
+<p>The <core-icon icon="sort"></core-icon> button begins LOOT's sorting process. By <a href="#settingsUpdateMasterlist">default</a>, sorting first updates the masterlist. LOOT then sorts your plugins according to a combination of data from the plugins themselves, and any metadata they may have. If a cyclic interaction is detected (eg. A depends on B depends on A), then sorting will fail. Once sorting has calculated a new load order, the plugin cards are sorted into that order, and the <core-icon icon="file-download"></core-icon> and <core-icon icon="sort"></core-icon> buttons are replaced with <paper-button>Apply</paper-button> and <paper-button>Cancel</paper-button> buttons, which apply and discard the calculated load order respectively.
 
 <p>LOOT is able to sort plugins ghosted by Wrye Bash, and can extract Bash Tags and version numbers from plugin descriptions. Provided that they have the <code>Filter</code> Bash Tag present in their description, LOOT can recognise filter patches and so avoid displaying unnecessary error messages for any of their masters that may be missing.
 
@@ -237,7 +237,7 @@ paper-icon-button::shadow #icon {
 
 <p>Each plugin is displayed on its own <q>card</q>, which displays all the information LOOT has for that plugin, and holds its metadata editor. Each plugin also has an entry in the Plugins tab of the sidebar. The sidebar entry contains the plugin's name and icons for plugins that load BSAs or have user metadata. Clicking on a plugin's sidebar entry will navigate to its card in the main content area.
 
-<p>The card's <paper-icon-button icon="more-vert"></paper-icon-button> button opens the plugin's menu, which provides access to a few plugin-specific features, including a conflict filter and access to its metadata editor. These are explained in later sections.
+<p>The card's <core-icon icon="more-vert"></core-icon> button opens the plugin's menu, which provides access to a few plugin-specific features, including a conflict filter and access to its metadata editor. These are explained in later sections.
 
 <p id="copyMetadata">The <q>Copy Metadata</q> option copies the plugin's metadata in the same format that it is saved in, which makes it an easy way to share any edits you make with masterlist maintainers, for example. If posting the metadata in an online forum that supports BBCode (as most forums do), be sure to wrap it in <code>[code]</code> tags, eg. <code>[code]copied text[/code]</code>, so that the spaces are not removed by the forum software.
 
