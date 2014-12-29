@@ -985,7 +985,6 @@ function handleClearMetadata(evt) {
 }
 function handleSidebarClick(evt) {
     if (evt.target.hasAttribute('data-index')) {
-        window.location.hash = '';
         document.getElementById('main').lastElementChild.scrollToItem(evt.target.getAttribute('data-index'));
 
         if (evt.type == 'dblclick') {
@@ -1001,6 +1000,10 @@ function handleQuit(evt) {
     } else {
         window.close();
     }
+}
+function jumpToGeneralInfo(evt) {
+    window.location.hash = '';
+    document.getElementById('main').scrollTop = 0;
 }
 function setupEventHandlers() {
     /*Set up handlers for filters.*/
@@ -1033,6 +1036,7 @@ function setupEventHandlers() {
     document.getElementById('applySortButton').addEventListener('click', applySort, false);
     document.getElementById('cancelSortButton').addEventListener('click', cancelSort, false);
     document.getElementById('sidebarTabs').addEventListener('core-select', switchSidebarTab, false);
+    document.getElementById('jumpToGeneralInfo').addEventListener('click', jumpToGeneralInfo, false);
 
     /* Set up event handlers for settings dialog. */
     var settings = document.getElementById('settingsDialog');

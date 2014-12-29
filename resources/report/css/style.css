@@ -50,9 +50,6 @@ core-toolbar, div[drawer] > div:first-child {
     color: white;
     height: 56px;
 }
-core-toolbar > a {
-    color: white;
-}
 #mainToolbar {
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
     z-index: 1;
@@ -72,7 +69,6 @@ core-toolbar > a {
 /* Drawer / Sidebar */
 div[drawer] {
     background: white;
-    z-index: 1;
 }
 div[drawer] > * {
     border-right: 1px rgba(0, 0, 0, 0.12) solid;
@@ -122,6 +118,7 @@ paper-item > a:hover {
 #summary > h1 {
     margin: -16px 0 0;
     line-height: 56px;
+    color: inherit;
 }
 #summary > table {
     display: inline-block;
@@ -136,9 +133,6 @@ paper-item > a:hover {
 #summary td:last-child {
     text-align: right;
     padding-left: 16px;
-}
-ul, ol {
-    margin: 8px 0;
 }
 #main li {
     padding: 8px 16px;

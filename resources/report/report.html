@@ -88,7 +88,9 @@
         <div main layout vertical>
             <core-toolbar id="mainToolbar">
                 <paper-icon-button icon="menu" id="drawerToggle" core-drawer-toggle></paper-icon-button>
-                <a href="#summary"><paper-icon-button icon="home"></paper-icon-button></a>
+                <core-tooltip label="Jump To General Information" noarrow>
+                    <paper-icon-button id="jumpToGeneralInfo" icon="home"></paper-icon-button>
+                </core-tooltip>
                 <loot-dropdown-menu id="gameMenu" class="title dark">
                     <!-- Generated game <li> elements go here. -->
                 </loot-dropdown-menu>

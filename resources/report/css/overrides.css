@@ -54,7 +54,6 @@ html /deep/ paper-tabs::shadow .scroll-button .hidden {
 }
 /* Set the drawer z-index so that it doesn't appear below plugin cards. */
 core-drawer-panel::shadow #drawer {
-    z-index: 1;
     /* max-width disabled because the panel doesn't shift over when the max
     is reached, due to the percentage drawer width, and setting it to a
     constant 400px is too wide in many window sizes. */
