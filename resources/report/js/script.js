@@ -394,7 +394,7 @@ function getConflictingPluginsFromFilter() {
                     for (var i = 0; i < loot.game.plugins.length; ++i) {
                         if (loot.game.plugins[i].name == key) {
                             loot.game.plugins[i].crc = result[key].crc;
-                            loot.game.plugins[i].isDummy = result[key].isDummy;
+                            loot.game.plugins[i].isEmpty = result[key].isEmpty;
 
                             loot.game.plugins[i].messages = result[key].messages;
                             loot.game.plugins[i].tags = result[key].tags;
@@ -552,7 +552,7 @@ function sortPlugins(evt) {
                     for (var i = 0; i < loot.game.plugins.length; ++i) {
                         if (loot.game.plugins[i].name == plugin.name) {
                             loot.game.plugins[i].crc = plugin.crc;
-                            loot.game.plugins[i].isDummy = plugin.isDummy;
+                            loot.game.plugins[i].isEmpty = plugin.isEmpty;
 
                             loot.game.plugins[i].messages = plugin.messages;
                             loot.game.plugins[i].tags = plugin.tags;
@@ -701,7 +701,7 @@ function copyContent(evt) {
                     crc: plugin.crc,
                     version: plugin.version,
                     isActive: plugin.isActive,
-                    isDummy: plugin.isDummy,
+                    isEmpty: plugin.isEmpty,
                     loadsBSA: plugin.loadsBSA,
 
                     modPriority: plugin.modPriority,
@@ -1225,7 +1225,7 @@ function onContentRefresh(evt) {
                 if (loot.game.plugins[i].name == plugin.name) {
 
                     loot.game.plugins[i].isActive = plugin.isActive;
-                    loot.game.plugins[i].isDummy = plugin.isDummy;
+                    loot.game.plugins[i].isEmpty = plugin.isEmpty;
                     loot.game.plugins[i].loadsBSA = plugin.loadsBSA;
                     loot.game.plugins[i].crc = plugin.crc;
                     loot.game.plugins[i].version = plugin.version;

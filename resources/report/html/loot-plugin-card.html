@@ -53,7 +53,7 @@ loot-clear-metadata
             visibility: hidden;
         }
         :host([data-bsa=false]) #loadsBSA,
-        :host([data-dummy=false]) #dummyPlugin,
+        :host([data-empty=false]) #emptyPlugin,
         :host(:not([data-edits])) #hasUserEdits {
             display: none;
         }
@@ -101,6 +101,7 @@ loot-clear-metadata
             font-size: 1.143rem;
             display: inline-block;
             margin: 0;
+            color: inherit;
         }
         content::content > .version {
             display: inline-block;
@@ -152,7 +153,7 @@ loot-clear-metadata
                         <content select=".version"></content>
                         <content select=".crc"></content>
                     </div>
-                    <core-tooltip id="dummyPlugin" label="Dummy Plugin" noarrow>
+                    <core-tooltip id="emptyPlugin" label="Empty Plugin" noarrow>
                         <core-icon icon="visibility-off"></core-icon>
                     </core-tooltip>
                     <core-tooltip id="loadsBSA" label="Loads BSA" noarrow>
@@ -282,7 +283,7 @@ loot-clear-metadata
 
             /* Re-calculate tooltip positions, since the flip animation tends to mess with them. */
             this.shadowRoot.getElementById('activeTick').setPosition();
-            this.shadowRoot.getElementById('dummyPlugin').setPosition();
+            this.shadowRoot.getElementById('emptyPlugin').setPosition();
             this.shadowRoot.getElementById('hasUserEdits').setPosition();
             this.shadowRoot.getElementById('loadsBSA').setPosition();
 

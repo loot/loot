@@ -59,7 +59,7 @@
             }
 
             pluginCard.getElementById('activeTick').label = l10n.translate("Active Plugin").fetch();
-            pluginCard.getElementById('dummyPlugin').label = l10n.translate("Dummy Plugin").fetch();
+            pluginCard.getElementById('emptyPlugin').label = l10n.translate("Empty Plugin").fetch();
             pluginCard.getElementById('loadsBSA').label = l10n.translate("Loads BSA").fetch();
             pluginCard.getElementById('hasUserEdits').label = l10n.translate("Has User Metadata").fetch();
 
@@ -77,7 +77,7 @@
             }
 
             pluginEditor.getElementById('activeTick').label = l10n.translate("Active Plugin").fetch();
-            pluginEditor.getElementById('dummyPlugin').label = l10n.translate("Dummy Plugin").fetch();
+            pluginEditor.getElementById('emptyPlugin').label = l10n.translate("Empty Plugin").fetch();
             pluginEditor.getElementById('loadsBSA').label = l10n.translate("Loads BSA").fetch();
 
             pluginEditor.getElementById('enableEdits').label = l10n.translate("Enable Edits").fetch();

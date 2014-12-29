@@ -33,7 +33,7 @@ loot-editor-close
             visibility: hidden;
         }
         :host-context(loot-plugin-card[data-bsa=false]) #loadsBSA,
-        :host-context(loot-plugin-card[data-dummy=false]) #dummyPlugin {
+        :host-context(loot-plugin-card[data-empty=false]) #emptyPlugin {
             display: none;
         }
         #activeTick > core-icon {
@@ -108,7 +108,7 @@ loot-editor-close
                 <span id="version">{{data.version}}</span>
                 <span id="crc">{{data.computed.crc}}</span>
             </div>
-            <core-tooltip id="dummyPlugin" label="Dummy Plugin" noarrow>
+            <core-tooltip id="emptyPlugin" label="Empty Plugin" noarrow>
                 <core-icon icon="visibility-off"></core-icon>
             </core-tooltip>
             <core-tooltip id="loadsBSA" label="Loads BSA" noarrow>
@@ -516,7 +516,7 @@ loot-editor-close
         updatePolymerElements: function() {
             /* Set tooltip positions. */
             this.shadowRoot.getElementById('activeTick').setPosition();
-            this.shadowRoot.getElementById('dummyPlugin').setPosition();
+            this.shadowRoot.getElementById('emptyPlugin').setPosition();
             this.shadowRoot.getElementById('loadsBSA').setPosition();
             this.shadowRoot.getElementById('globalPriority').parentElement.setPosition();
 

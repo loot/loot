@@ -407,13 +407,13 @@ namespace loot {
                     ++numOverrideRecords;
             }
 
-            BOOST_LOG_TRIVIAL(trace) << name << ": " << "Checking if plugin is a dummy.";
+            BOOST_LOG_TRIVIAL(trace) << name << ": " << "Checking if plugin is empty.";
             if (headerOnly) {
                 // Check the header records count.
-                _isDummy = file->getNumRecords() == 0;
+                _isEmpty = file->getNumRecords() == 0;
             }
             else {
-                _isDummy = formIDs.empty();
+                _isEmpty = formIDs.empty();
             }
 
             //Also read Bash Tags applied and version string in description.
@@ -836,8 +836,8 @@ namespace loot {
         return isMaster;
     }
 
-    bool Plugin::IsDummy() const {
-        return _isDummy;
+    bool Plugin::IsEmpty() const {
+        return _isEmpty;
     }
 
     std::string Plugin::Version() const {

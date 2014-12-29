@@ -354,7 +354,7 @@ namespace loot {
             YAML::Node pluginNode;
 
             pluginNode["crc"] = pluginPair.second.Crc();
-            pluginNode["isDummy"] = pluginPair.second.IsDummy();
+            pluginNode["isEmpty"] = pluginPair.second.IsEmpty();
             if (pluginIt != g_app_state.CurrentGame().plugins.end() && pluginIt->second.DoFormIDsOverlap(pluginPair.second)) {
                 BOOST_LOG_TRIVIAL(debug) << "Found conflicting plugin: " << pluginPair.second.Name();
                 pluginNode["conflicts"] = true;
@@ -669,7 +669,7 @@ namespace loot {
                 pluginNode["__type"] = "Plugin";  // For conversion back into a JS typed object.
                 pluginNode["name"] = plugin.Name();
                 pluginNode["isActive"] = g_app_state.CurrentGame().IsActive(plugin.Name());
-                pluginNode["isDummy"] = plugin.IsDummy();
+                pluginNode["isEmpty"] = plugin.IsEmpty();
                 pluginNode["loadsBSA"] = plugin.LoadsBSA(g_app_state.CurrentGame());
                 pluginNode["crc"] = IntToHexString(plugin.Crc());
                 pluginNode["version"] = plugin.Version();
@@ -919,7 +919,7 @@ namespace loot {
 
                 pluginNode["name"] = plugin.Name();
                 pluginNode["crc"] = plugin.Crc();
-                pluginNode["isDummy"] = plugin.IsDummy();
+                pluginNode["isEmpty"] = plugin.IsEmpty();
 
                 // Sorting may have produced a plugin loading error message, so rederive displayed data.
                 YAML::Node derivedNode = GenerateDerivedMetadata(plugin.Name());
