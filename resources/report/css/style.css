@@ -26,6 +26,15 @@
 ::-webkit-scrollbar-corner {
     background: inherit;
 }
+::-webkit-scrollbar {
+    width: 12px;
+}
+::-webkit-scrollbar-track {
+    background: inherit;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.26);
+}
 paper-button[autofocus] {
     color: #64B5F6;
 }
