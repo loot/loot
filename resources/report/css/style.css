@@ -23,16 +23,16 @@
 */
 
 /* Misc */
-::-webkit-scrollbar-corner {
+html /deep/ ::-webkit-scrollbar-corner {
     background: inherit;
 }
-::-webkit-scrollbar {
+html /deep/ ::-webkit-scrollbar {
     width: 12px;
 }
-::-webkit-scrollbar-track {
+html /deep/ ::-webkit-scrollbar-track {
     background: inherit;
 }
-::-webkit-scrollbar-thumb {
+html /deep/ ::-webkit-scrollbar-thumb {
     background: rgba(0, 0, 0, 0.26);
 }
 paper-button[autofocus] {
