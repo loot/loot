@@ -41,10 +41,6 @@ paper-button[autofocus] {
 .hidden {
     display:none;
 }
-[draggable] {
-    -webkit-user-select: none;
-    cursor: move;
-}
 a {
     color: #2196F3;
     text-decoration: none;
