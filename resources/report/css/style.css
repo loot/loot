@@ -165,8 +165,11 @@ li.warn {
 }
 
 /* Dialogs */
+#about {
+    max-width: 580px;
+}
 #about blockquote {
-    white-space: pre;
+    white-space: pre-line;
 }
 #settingsDialog > div > * {
     margin: 16px;
