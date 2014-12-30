@@ -105,7 +105,6 @@ html /deep/ paper-tabs::shadow .scroll-button > paper-icon-button {
 
 /* paper-tab */
 html /deep/ paper-tab::shadow .tab-content {
-    text-transform: uppercase;
     line-height: 48px;
 }
 

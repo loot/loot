@@ -100,7 +100,6 @@ html /deep/ paper-item {
     /*letter-spacing: 0.01em;*/
 }
 .body2,
-html /deep/ paper-tabs,
 html /deep/ paper-menu-button paper-item,
 html /deep/ paper-menu-button paper-checkbox {
     font-weight: 500;
@@ -122,7 +121,9 @@ paper-toast {
     color: rgba(0, 0, 0, 0.54);
     /*letter-spacing: 0.02em;*/
 }
-.button, html /deep/ paper-button {
+.button,
+html /deep/ paper-tab,
+html /deep/ paper-button {
     font-weight: 500;
     font-size: 1rem;
     text-transform: uppercase;
