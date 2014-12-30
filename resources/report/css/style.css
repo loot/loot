@@ -85,6 +85,9 @@ paper-item > a {
 paper-item > a:hover {
     text-decoration: none;
 }
+#cardsNav[data-editModeToggle] > loot-plugin-item {
+    transition: transform 0.6s;
+}
 #searchBox {
     display: block;
     margin: 0 16px;

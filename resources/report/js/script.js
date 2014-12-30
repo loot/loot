@@ -844,6 +844,8 @@ function handleEditorOpen(evt) {
     ++numEditors;
 
     if (numEditors == 1) {
+        /* Set the edit mode toggle attribute. */
+        document.getElementById('cardsNav').setAttribute('data-editModeToggle', '');
         /* Disable the toolbar elements. */
         document.getElementById('wipeUserlistButton').setAttribute('disabled', '');
         document.getElementById('copyContentButton').setAttribute('disabled', '');
@@ -854,6 +856,7 @@ function handleEditorOpen(evt) {
         document.getElementById('sortButton').setAttribute('disabled', '');
     }
     document.body.setAttribute('data-editors', numEditors);
+    document.getElementById('cardsNav').updateSize();
 
     return loot.query('editorOpened').catch(processCefError);
 }
@@ -907,6 +910,8 @@ function handleEditorClose(evt) {
 
     if (numEditors == 0) {
         document.body.removeAttribute('data-editors');
+        /* Set the edit mode toggle attribute. */
+        document.getElementById('cardsNav').setAttribute('data-editModeToggle', '');
         /* Re-enable toolbar elements. */
         document.getElementById('wipeUserlistButton').removeAttribute('disabled');
         document.getElementById('copyContentButton').removeAttribute('disabled');
@@ -918,6 +923,7 @@ function handleEditorClose(evt) {
     } else {
         document.body.setAttribute('data-editors', numEditors);
     }
+    document.getElementById('cardsNav').updateSize();
 }
 function handleConflictsFilter(evt) {
     /* evt.detail is true if the filter has been activated. */

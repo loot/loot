@@ -290,6 +290,9 @@ loot-clear-metadata
 
             /* Also re-calculate editor tooltip positions. */
             this.shadowRoot.getElementById('editor').updatePolymerElements();
+
+            /* Remove the edit mode toggle if present. */
+            document.getElementById('cardsNav').removeAttribute('data-editModeToggle');
         },
 
         onShowEditor: function(evt) {
