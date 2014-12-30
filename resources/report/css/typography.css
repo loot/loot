@@ -67,7 +67,7 @@ html {
     color: rgba(0, 0, 0, 0.54);
     /*letter-spacing: -0.005em;*/
 }
-.display2 {
+.display2, h1 {
     font-weight: 400;
     font-size: 3.214rem;
     color: rgba(0, 0, 0, 0.54);
@@ -79,17 +79,17 @@ html {
     color: rgba(0, 0, 0, 0.54);
     line-height: 1.176;
 }
-.headline {
+.headline, h2 {
     font-weight: 400;
     font-size: 1.714rem;
     line-height: 1.333;
 }
-.title {
+.title, h3 {
     font-weight: 500;
     font-size: 1.429rem;
     /*letter-spacing: 0.005em;*/
 }
-.subhead,
+.subhead, h4,
 #summary > h1,
 html /deep/ paper-item {
     font-weight: 400;

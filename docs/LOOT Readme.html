@@ -1,123 +1,171 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <title>LOOT Readme</title>
-<script src="http://www.polymer-project.org/components/webcomponentsjs/webcomponents.js"></script>
-<link rel="import" href="http://www.polymer-project.org/components/polymer/polymer.html">
-<link rel="import" href="http://www.polymer-project.org/components/core-icon/core-icon.html">
-<link rel="import" href="http://www.polymer-project.org/components/core-icons/core-icons.html">
-<link rel="import" href="http://www.polymer-project.org/components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="http://www.polymer-project.org/components/paper-button/paper-button.html">
-<link href="http://fonts.googleapis.com/css?family=RobotoDraft:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en" rel="stylesheet" type="text/css">
 <style>
-body {
-    font-family: RobotoDraft, Helvetica, sans-serif;
-    line-height: 1.5;
+/* This styling is from the report's typography.css file. The font paths
+   have been edited. */
+/* Font definitions */
+@font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 300;
+    src: url('../resources/report/fonts/Roboto-Light.ttf');
+}
+@font-face {
+    font-family: 'Roboto';
+    font-style: italic;
+    font-weight: 300;
+    src: url('../resources/report/fonts/Roboto-LightItalic.ttf');
+}
+@font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../resources/report/fonts/Roboto-Regular.ttf');
+}
+@font-face {
+    font-family: 'Roboto';
+    font-style: italic;
+    font-weight: 400;
+    src: url('../resources/report/fonts/Roboto-Italic.ttf');
+}
+@font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    src: url('../resources/report/fonts/Roboto-Medium.ttf');
+}
+@font-face {
+    font-family: 'Roboto';
+    font-style: italic;
+    font-weight: 500;
+    src: url('../resources/report/fonts/Roboto-MediumItalic.ttf');
+}
+@font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 700;
+    src: url('../resources/report/fonts/Roboto-Bold.ttf');
+}
+@font-face {
+    font-family: 'Roboto';
+    font-style: italic;
+    font-weight: 700;
+    src: url('../resources/report/fonts/Roboto-BoldItalic.ttf');
+}
+
+/* Typography */
+html {
+    font:11pt/1.429 Roboto, sans-serif;
+    color: rgba(0, 0, 0, 0.87);
+    font-weight: 400;
     text-rendering: optimizeLegibility;
 }
-p, ul, li {
-    margin: 1.5em 0;
+.display2, h1 {
+    font-weight: 400;
+    font-size: 3.214rem;
+    color: rgba(0, 0, 0, 0.54);
+    line-height: 1.067;
 }
-h1, h3, h2 {
-    font-weight: normal;
+.headline, h2 {
+    font-weight: 400;
+    font-size: 1.714rem;
+    line-height: 1.333;
 }
-h1 {
-    font-size: 36pt;
-    line-height: 0.5;
-    margin-top: 1.125em;
-    margin-bottom: 0.375em;
+.title, h3 {
+    font-weight: 500;
+    font-size: 1.429rem;
+    /*letter-spacing: 0.005em;*/
 }
-h2 {
-    font-size: 24pt;
-    line-height: 0.75;
-    margin-top: 3em;
-    margin-bottom: 1.5em;
+.subhead, h4,
+#summary > h1,
+html /deep/ paper-item {
+    font-weight: 400;
+    font-size: 1.143rem;
+    line-height: 1.75;
+    /* Alternate line height: */
+    /* line-height: 1.5; */
+    /*letter-spacing: 0.01em;*/
 }
-h3 {
-    font-size: 18pt;
-    line-height: 1;
-    margin-top: 3.5em;
-    margin-bottom: 1em;
+.button,
+html /deep/ paper-tab,
+html /deep/ paper-button {
+    font-weight: 500;
+    font-size: 1rem;
+    text-transform: uppercase;
+    /*letter-spacing: 0.01em;*/
 }
-ul, ol {
-    margin-top:0.5em;
-    margin-bottom:1em;
+
+/* This styling is from the report's style.css file. */
+a {
+    color: #2196F3;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+/* Tables */
+html /deep/ table {
+    border-collapse: collapse;
+    width: 100%;
+    background-color: #E8EAF6;
+}
+html /deep/ table td, table th {
+    vertical-align: top;
+    text-align: left;
+    padding: 8px 16px;
+}
+html /deep/ table th {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+
+/* The styling below is specific to the readmes. */
+h1, ol ol, ul ul, table {
+    margin: 0.5em 0;
+}
+h2, h3 {
+    margin-top: 2em;
+    margin-bottom: 0;
+}
+h4, ol, ul, p {
+    margin-top: 1em;
+    margin-bottom: 0;
 }
 ol ol {
     list-style:lower-alpha;
 }
-li {
-    margin:0.75em 0;
-}
-a:link {
-    text-decoration:none;
-}
-a:hover {
-    text-decoration:underline;
+pre > code, blockquote {
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 2px;
+    padding: 16px;
+    margin: 16px;
+    display: table;
 }
 pre > code {
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    padding: 0.75em;
-    white-space: pre;
     overflow-x: auto;
-    display: table;
-    margin: 1.5em;
+}
+blockquote {
+    background: #eee;
 }
 code {
     display: inline-block;
-    padding: 0 3px;
+    padding: 0 4px;
     background: #eee;
 }
-table {
-    border-collapse: collapse;
-    margin: 1.5em;
-    margin-bottom: 3em;
-    background: #fafafa;
-}
-thead {
-    background: #6badf6;
-}
-td, th {
-    border: 1px solid #ddd;
-    padding: 5px 10px;
-    vertical-align: top;
-}
-th {
-    font-weight: normal;
-}
-blockquote {
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    padding: 10px;
-    background: #eee;
-    display: table;
-    margin: 1.5em;
-}
-a[href^="http"]:after {
-    padding-left: 2px;
-    content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAVklEQVR4Xn3PgQkAMQhDUXfqTu7kTtkpd5RA8AInfArtQ2iRXFWT2QedAfttj2FsPIOE1eCOlEuoWWjgzYaB/IkeGOrxXhqB+uA9Bfcm0lAZuh+YIeAD+cAqSz4kCMUAAAAASUVORK5CYII=);
+a[href^=http]::after {
+    content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 24 24" height="10px" width="10px" preserveAspectRatio="xMidYMid meet" fit="" style="pointer-events: none; display: block; color: #2196F3; fill: currentcolor; position: relative; top: -2px;"><g><path d="M9 5v2h6.59l-11.59 11.59 1.41 1.41 11.59-11.59v6.59h2v-10z"></path></g></svg>');
 }
 abbr {
     cursor: help;
-    border-bottom: 1px dotted black;
+    border-bottom: 1px dotted rgba(0, 0, 0, 0.12);
 }
 var {
-    color: #8B4513;
+    color: #303F9F;
 }
 
-core-icon[icon=check] {
-    color: green;
-}
-.disabled {
-    color: grey;
-}
-.highlight {
-    border: 3px solid #69aaff;
-    padding: 0.2em;
-}
-paper-icon-button::shadow #icon {
-    display: inline-block;
-    margin-left: 1px;
+.clipper {
+    overflow: hidden;
 }
 </style>
 <!--  LOOT
