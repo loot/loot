@@ -674,7 +674,7 @@ function clearAllMetadata(evt) {
                         }
                     });
 
-                    toast.text('All user-added metadata has been cleared.');
+                    toast('All user-added metadata has been cleared.');
                 }
             }).catch(processCefError);
         }
