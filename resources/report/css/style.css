@@ -146,22 +146,22 @@ li p {
     margin: 0;
 }
 li.error {
-    background:#ff9090;
+    background: #FF8A80;
 }
 li.warn {
-    background:#FFDD55;
+    background: #FFE082;
 }
 .version {
-    color:#2196F3;
+    color: #607D8B;
 }
 .crc {
-    color:#BC8923;
+    color: #795548;
 }
 .tag.add {
-    color:green;
+    color: #4CAF50;
 }
 .tag.remove {
-    color:red;
+    color: #F44336;
 }
 
 /* Dialogs */
