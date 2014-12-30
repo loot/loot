@@ -30,6 +30,7 @@ paper-icon-button[disabled] {
 core-animated-pages::shadow ::content > *:not(.core-selected):not([animate]) {
     display: block !important;
     height: 1px;
+    pointer-events: none;
 }
 /* This makes checkboxes have the same padding as icons in lists. */
 html /deep/ core-menu paper-checkbox::shadow #checkboxLabel {
