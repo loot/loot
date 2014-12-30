@@ -150,7 +150,6 @@ loot-editor-close
                 </thead>
                 <tbody>
                     <!-- File rows go here. -->
-                    <tr><td colspan="3">Add new row...</td><td></td></tr>
                 </tbody>
             </table>
             <table is="editable-table" id="req" data-template="fileRow">
@@ -159,7 +158,6 @@ loot-editor-close
                 </thead>
                 <tbody>
                     <!-- File rows go here. -->
-                    <tr><td colspan="3">Add new row...</td><td></td></tr>
                 </tbody>
             </table>
             <table is="editable-table" id="inc" data-template="fileRow">
@@ -168,7 +166,6 @@ loot-editor-close
                 </thead>
                 <tbody>
                     <!-- File rows go here. -->
-                    <tr><td colspan="3">Add new row...</td><td></td></tr>
                 </tbody>
             </table>
             <table is="editable-table" id="message" data-template="messageRow">
@@ -177,7 +174,6 @@ loot-editor-close
                 </thead>
                 <tbody>
                     <!-- Message rows go here. -->
-                    <tr><td colspan="4">Add new row...</td><td></td></tr>
                 </tbody>
             </table>
             <table is="editable-table" id="tags" data-template="tagRow">
@@ -186,7 +182,6 @@ loot-editor-close
                 </thead>
                 <tbody>
                     <!-- Bash Tag rows go here. -->
-                    <tr><td colspan="3">Add new row...</td><td></td></tr>
                 </tbody>
             </table>
             <table is="editable-table" id="dirty" data-template="dirtyInfoRow">
@@ -195,7 +190,6 @@ loot-editor-close
                 </thead>
                 <tbody>
                     <!-- Dirty info rows go here. -->
-                    <tr><td colspan="5">Add new row...</td><td></td></tr>
                 </tbody>
             </table>
             <table is="editable-table" id="locations" data-template="locationRow">
@@ -204,7 +198,6 @@ loot-editor-close
                 </thead>
                 <tbody>
                     <!-- Location rows go here. -->
-                    <tr><td colspan="2">Add new row...</td><td></td></tr>
                 </tbody>
             </table>
         </core-selector>
@@ -515,10 +508,10 @@ loot-editor-close
 
         updatePolymerElements: function() {
             /* Set tooltip positions. */
-            this.shadowRoot.getElementById('activeTick').setPosition();
-            this.shadowRoot.getElementById('emptyPlugin').setPosition();
-            this.shadowRoot.getElementById('loadsBSA').setPosition();
-            this.shadowRoot.getElementById('globalPriority').parentElement.setPosition();
+            var tooltips = this.shadowRoot.getElementsByTagName('core-tooltip');
+            for (var i = 0; i < tooltips.length; ++i) {
+                tooltips[i].setPosition();
+            }
 
             /* Also make sure right arrow is visible if the tabs are scrollable. */
             this.shadowRoot.getElementById('tableTabs').resizeHandler();

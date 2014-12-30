@@ -96,39 +96,32 @@
             pluginEditor.getElementById('loadAfter').querySelector('th:first-child').textContent = l10n.translate("Filename").fetch();
             pluginEditor.getElementById('loadAfter').querySelector('th:nth-child(2)').textContent = l10n.translate("Display Name").fetch();
             pluginEditor.getElementById('loadAfter').querySelector('th:nth-child(3)').textContent = l10n.translate("Condition").fetch();
-            pluginEditor.getElementById('loadAfter').querySelector('td:first-child').textContent = l10n.translate("Add new row...").fetch();
 
             pluginEditor.getElementById('req').querySelector('th:first-child').textContent = l10n.translate("Filename").fetch();
             pluginEditor.getElementById('req').querySelector('th:nth-child(2)').textContent = l10n.translate("Display Name").fetch();
             pluginEditor.getElementById('req').querySelector('th:nth-child(3)').textContent = l10n.translate("Condition").fetch();
-            pluginEditor.getElementById('req').querySelector('td:first-child').textContent = l10n.translate("Add new row...").fetch();
 
             pluginEditor.getElementById('inc').querySelector('th:first-child').textContent = l10n.translate("Filename").fetch();
             pluginEditor.getElementById('inc').querySelector('th:nth-child(2)').textContent = l10n.translate("Display Name").fetch();
             pluginEditor.getElementById('inc').querySelector('th:nth-child(3)').textContent = l10n.translate("Condition").fetch();
-            pluginEditor.getElementById('inc').querySelector('td:first-child').textContent = l10n.translate("Add new row...").fetch();
 
             pluginEditor.getElementById('message').querySelector('th:first-child').textContent = l10n.translate("Type").fetch();
             pluginEditor.getElementById('message').querySelector('th:nth-child(2)').textContent = l10n.translate("Content").fetch();
             pluginEditor.getElementById('message').querySelector('th:nth-child(3)').textContent = l10n.translate("Condition").fetch();
             pluginEditor.getElementById('message').querySelector('th:nth-child(4)').textContent = l10n.translate("Language").fetch();
-            pluginEditor.getElementById('message').querySelector('td:first-child').textContent = l10n.translate("Add new row...").fetch();
 
             pluginEditor.getElementById('tags').querySelector('th:first-child').textContent = l10n.translate("Add/Remove").fetch();
             pluginEditor.getElementById('tags').querySelector('th:nth-child(2)').textContent = l10n.translate("Bash Tag").fetch();
             pluginEditor.getElementById('tags').querySelector('th:nth-child(3)').textContent = l10n.translate("Condition").fetch();
-            pluginEditor.getElementById('tags').querySelector('td:first-child').textContent = l10n.translate("Add new row...").fetch();
 
             pluginEditor.getElementById('dirty').querySelector('th:first-child').textContent = l10n.translate("CRC").fetch();
             pluginEditor.getElementById('dirty').querySelector('th:nth-child(2)').textContent = l10n.translate("ITM Count").fetch();
             pluginEditor.getElementById('dirty').querySelector('th:nth-child(3)').textContent = l10n.translate("Deleted References").fetch();
             pluginEditor.getElementById('dirty').querySelector('th:nth-child(4)').textContent = l10n.translate("Deleted Navmeshes").fetch();
             pluginEditor.getElementById('dirty').querySelector('th:nth-child(5)').textContent = l10n.translate("Cleaning Utility").fetch();
-            pluginEditor.getElementById('dirty').querySelector('td:first-child').textContent = l10n.translate("Add new row...").fetch();
 
             pluginEditor.getElementById('locations').querySelector('th:first-child').textContent = l10n.translate("URL").fetch();
             pluginEditor.getElementById('locations').querySelector('th:nth-child(2)').textContent = l10n.translate("Version").fetch();
-            pluginEditor.getElementById('locations').querySelector('td:first-child').textContent = l10n.translate("Add new row...").fetch();
 
             pluginEditor.getElementById('accept').textContent = l10n.translate("Apply").fetch();
             pluginEditor.getElementById('cancel').textContent = l10n.translate("Cancel").fetch();
@@ -143,6 +136,15 @@
             pluginItem.getElementById('loadsBSA').label = l10n.translate("Loads BSA").fetch();
             pluginItem.getElementById('hasUserEdits').label = l10n.translate("Has User Metadata").fetch();
 
+            /* File row template */
+            var fileRow = document.querySelector('link[rel="import"][href$="editable-table.html"]');
+            if (fileRow) {
+                fileRow = fileRow.import.querySelector('#fileRow').content;
+            } else {
+                fileRow = document.querySelector('#fileRow').content;
+            }
+            fileRow.querySelector('core-tooltip').label = l10n.translate("Delete Row").fetch();
+
             /* Message row template */
             var messageRow = document.querySelector('link[rel="import"][href$="editable-table.html"]');
             if (messageRow) {
@@ -153,6 +155,7 @@
             messageRow.querySelector('.type').children[0].textContent = l10n.translate("Note").fetch();
             messageRow.querySelector('.type').children[1].textContent = l10n.translate("Warning").fetch();
             messageRow.querySelector('.type').children[2].textContent = l10n.translate("Error").fetch();
+            messageRow.querySelector('core-tooltip').label = l10n.translate("Delete Row").fetch();
 
             /* Tag row template */
             var tagRow = document.querySelector('link[rel="import"][href$="editable-table.html"]');
@@ -163,6 +166,43 @@
             }
             tagRow.querySelector('.type').children[0].textContent = l10n.translate("Add").fetch();
             tagRow.querySelector('.type').children[1].textContent = l10n.translate("Remove").fetch();
+            tagRow.querySelector('core-tooltip').label = l10n.translate("Delete Row").fetch();
+
+            /* Dirty Info row template */
+            var dirtyInfoRow = document.querySelector('link[rel="import"][href$="editable-table.html"]');
+            if (dirtyInfoRow) {
+                dirtyInfoRow = dirtyInfoRow.import.querySelector('#dirtyInfoRow').content;
+            } else {
+                dirtyInfoRow = document.querySelector('#dirtyInfoRow').content;
+            }
+            dirtyInfoRow.querySelector('core-tooltip').label = l10n.translate("Delete Row").fetch();
+
+            /* Location row template */
+            var locationRow = document.querySelector('link[rel="import"][href$="editable-table.html"]');
+            if (locationRow) {
+                locationRow = locationRow.import.querySelector('#locationRow').content;
+            } else {
+                locationRow = document.querySelector('#locationRow').content;
+            }
+            locationRow.querySelector('core-tooltip').label = l10n.translate("Delete Row").fetch();
+
+            /* Game row template */
+            var gameRow = document.querySelector('link[rel="import"][href$="editable-table.html"]');
+            if (gameRow) {
+                gameRow = gameRow.import.querySelector('#gameRow').content;
+            } else {
+                gameRow = document.querySelector('#gameRow').content;
+            }
+            gameRow.querySelector('core-tooltip').label = l10n.translate("Delete Row").fetch();
+
+            /* New row template */
+            var newRow = document.querySelector('link[rel="import"][href$="editable-table.html"]');
+            if (newRow) {
+                newRow = newRow.import.querySelector('#newRow').content;
+            } else {
+                newRow = document.querySelector('#newRow').content;
+            }
+            newRow.querySelector('core-tooltip').label = l10n.translate("Add New Row").fetch();
 
             /* Toolbar menu */
             document.getElementById('redatePluginsButton').lastChild.textContent = l10n.translate("Redate Plugins").fetch();
@@ -227,7 +267,6 @@
             gameTable.querySelector('th:nth-child(6)').textContent = l10n.translate("Masterlist Repository Branch").fetch();
             gameTable.querySelector('th:nth-child(7)').textContent = l10n.translate("Install Path").fetch();
             gameTable.querySelector('th:nth-child(8)').textContent = l10n.translate("Install Path Registry Key").fetch();
-            gameTable.querySelector('tr:last-child td:first-child').textContent = l10n.translate("Add new row...").fetch();
 
             document.getElementById('settingsDialog').getElementsByClassName('accept')[0].textContent = l10n.translate("Apply").fetch();
             document.getElementById('settingsDialog').getElementsByClassName('cancel')[0].textContent = l10n.translate("Cancel").fetch();
