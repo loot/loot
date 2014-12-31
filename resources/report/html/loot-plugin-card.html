@@ -196,7 +196,8 @@ loot-clear-metadata
         observe: {
             'data.tags': 'onTagsChange',
             'data.messages': 'onMessagesChange',
-            'data.userlist': 'onUserlistChange'
+            'data.userlist': 'onUserlistChange',
+            'data.isMenuOpen': 'onMenuToggle'
         },
 
         attached: function() {
@@ -269,6 +270,14 @@ loot-clear-metadata
                 this.setAttribute('data-edits', 'true');
             } else {
                 this.removeAttribute('data-edits');
+            }
+        },
+
+        onMenuToggle: function(oldValue, newValue) {
+            if (newValue) {
+                this.style.marginBottom = '190px';
+            } else {
+                this.style.marginBottom = '0';
             }
         },
 

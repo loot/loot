@@ -73,3 +73,8 @@ html /deep/ core-tooltip:hover:not([disabled])::shadow .core-tooltip {
     opacity: 1;
     transition-delay: 0s;
 }
+
+/* The max-height doesn't allow for expansion into newly-created scroll space. */
+#main /deep/ paper-dropdown::shadow #scroller {
+    max-height: none !important;
+}
