@@ -97,6 +97,7 @@ loot-editor-close
         }
         #main {
             padding: 16px;
+            overflow: hidden;
         }
         </style>
         <core-toolbar class="medium-tall">
@@ -134,7 +135,7 @@ loot-editor-close
         <core-selector selected="main" valueattr="id">
             <div id="main">
                 <paper-checkbox id="enableEdits" label="Enable Edits"></paper-checkbox>
-                <core-tooltip label="Global priorities are compared against all other plugins. Normal priorities are compared against only conflicting plugins." position="right" noarrow>
+                <core-tooltip label="Compare against all other plugins, not just conflicting plugins." position="right" noarrow>
                     <paper-checkbox id="globalPriority" label="Global Priority"></paper-checkbox>
                 </core-tooltip>
                 <div horizontal layout center>
