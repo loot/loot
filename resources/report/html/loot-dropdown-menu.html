@@ -12,7 +12,7 @@ it a <select>-like API. This means:
 <link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../bower_components/core-menu/core-menu.html">
 
-<polymer-element name="loot-dropdown-menu" attributes="disabled">
+<polymer-element name="loot-dropdown-menu" attributes="disabled halign">
     <template>
         <style>
         /* Material Design overrides */
@@ -49,7 +49,7 @@ it a <select>-like API. This means:
         }
         </style>
         <paper-dropdown-menu disabled?="{{disabled}}">
-            <paper-dropdown class="dropdown">
+            <paper-dropdown class="dropdown" halign="{{halign}}">
                 <core-menu id="menu" class="menu" valueattr="value">
                     <content></content>
                 </core-menu>
