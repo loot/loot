@@ -21,7 +21,7 @@
     "core-tooltip": "Polymer/core-tooltip#~0.5.0",
     "core-drawer-panel": "Polymer/core-drawer-panel#~0.5.0",
     "paper-input": "Polymer/paper-input#~0.5.0",
-    "paper-tabs": "Polymer/paper-tabs#~0.5.0",
+    "paper-tabs": "WrinklyNinja/paper-tabs#fix-scroll-button-flicker",
     "core-menu": "Polymer/core-menu#~0.5.0",
     "paper-checkbox": "Polymer/paper-checkbox#~0.5.0",
     "paper-dialog": "Polymer/paper-dialog#~0.5.0",
