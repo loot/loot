@@ -28,6 +28,10 @@
             line-height: 32px;
             font-size: 1rem;
         }
+        /* Don't have a margin for this paper-item. */
+        paper-item.two-line:last-child {
+            margin-bottom: 0;
+        }
         :host-context(body[data-editors]) paper-item.two-line {
             height: 40px;
         }

@@ -34,6 +34,9 @@ html /deep/ paper-item, html /deep/ core-menu > paper-item {
 html /deep/ paper-item:first-child {
    margin-top: 8px;
 }
+html /deep/ paper-item:last-child {
+    margin-bottom: 8px;
+}
 html /deep/ paper-item core-icon {
    margin-right: 32px;
    color: rgba(0, 0, 0, 0.54);
@@ -75,15 +78,6 @@ html /deep/ :-ms-input-placeholder {
 }
 html /deep/ input {
    text-overflow: ellipsis;
-}
-
-/* paper-dropdown */
-html /deep/ paper-dropdown {
-   padding: 8px 0;
-}
-html /deep/ paper-dropdown::shadow #scroller {
-   /* The calculated height is too high for the content. */
-   height: auto !important;
 }
 
 /* core-menu */
