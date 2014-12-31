@@ -205,14 +205,15 @@
             newRow.querySelector('core-tooltip').label = l10n.translate("Add New Row").fetch();
 
             /* Toolbar menu */
-            document.getElementById('redatePluginsButton').lastChild.textContent = l10n.translate("Redate Plugins").fetch();
-            document.getElementById('openLogButton').lastChild.textContent = l10n.translate("Open Debug Log Location").fetch();
-            document.getElementById('wipeUserlistButton').lastChild.textContent = l10n.translate("Clear All User Metadata").fetch();
-            document.getElementById('copyContentButton').lastChild.textContent = l10n.translate("Copy Content").fetch();
-            document.getElementById('refreshContentButton').lastChild.textContent = l10n.translate("Refresh Content").fetch();
-            document.getElementById('helpButton').lastChild.textContent = l10n.translate("View Documentation").fetch();
-            document.getElementById('aboutButton').lastChild.textContent = l10n.translate("About").fetch();
-            document.getElementById('settingsButton').lastChild.textContent = l10n.translate("Settings").fetch();
+            document.getElementById('redatePluginsButton').lastElementChild.textContent = l10n.translate("Redate Plugins").fetch();
+            document.getElementById('openLogButton').lastElementChild.textContent = l10n.translate("Open Debug Log Location").fetch();
+            document.getElementById('wipeUserlistButton').lastElementChild.textContent = l10n.translate("Clear All User Metadata").fetch();
+            document.getElementById('copyContentButton').lastElementChild.textContent = l10n.translate("Copy Content").fetch();
+            document.getElementById('refreshContentButton').lastElementChild.textContent = l10n.translate("Refresh Content").fetch();
+            document.getElementById('helpButton').lastElementChild.textContent = l10n.translate("View Documentation").fetch();
+            document.getElementById('aboutButton').lastElementChild.textContent = l10n.translate("About").fetch();
+            document.getElementById('settingsButton').lastElementChild.textContent = l10n.translate("Settings").fetch();
+            document.getElementById('quitButton').lastElementChild.textContent = l10n.translate("Quit").fetch();
             document.getElementById('applySortButton').textContent = l10n.translate("Apply").fetch();
             document.getElementById('cancelSortButton').textContent = l10n.translate("Cancel").fetch();
 
