@@ -698,7 +698,7 @@ namespace loot {
                     catch (exception &e) {
                         BOOST_LOG_TRIVIAL(error) << plugin.first->second.Name() << ": Exception occurred: " << e.what();
                         Plugin p;
-                        p.Messages(list<Message>(1, Message(Message::error, string("An exception occurred while loading this plugin. Details: ") + e.what())));
+                        p.Messages(list<Message>(1, Message(Message::error, lc::translate("An exception occurred while loading this plugin. Details: ").str() + " " + e.what())));
                         plugin.first->second = p;
                     }
                 });
@@ -716,7 +716,7 @@ namespace loot {
                 catch (exception &e) {
                     BOOST_LOG_TRIVIAL(error) << plugin->Name() << ": Exception occurred: " << e.what();
                     Plugin p;
-                    p.Messages(list<Message>(1, Message(Message::error, string("An exception occurred while loading this plugin. Details: ") + e.what())));
+                    p.Messages(list<Message>(1, Message(Message::error, lc::translate("An exception occurred while loading this plugin. Details:").str() + " " + e.what())));
                     *plugin = p;
                 }
             }
