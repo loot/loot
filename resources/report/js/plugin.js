@@ -29,6 +29,7 @@ function Plugin(obj) {
     this.version = obj.version;
     this.isActive = obj.isActive;
     this.isEmpty = obj.isEmpty;
+    this.isMaster = obj.isMaster;
     this.loadsBSA = obj.loadsBSA;
 
     this.masterlist = obj.masterlist;

@@ -670,6 +670,7 @@ namespace loot {
                 pluginNode["name"] = plugin.Name();
                 pluginNode["isActive"] = g_app_state.CurrentGame().IsActive(plugin.Name());
                 pluginNode["isEmpty"] = plugin.IsEmpty();
+                pluginNode["isMaster"] = plugin.IsMaster();
                 pluginNode["loadsBSA"] = plugin.LoadsBSA(g_app_state.CurrentGame());
                 pluginNode["crc"] = IntToHexString(plugin.Crc());
                 pluginNode["version"] = plugin.Version();

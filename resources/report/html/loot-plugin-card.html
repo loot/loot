@@ -23,6 +23,7 @@ loot-clear-metadata
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 
 <link rel="import" href="loot-plugin-editor.html">
+<link rel="import" href="loot-custom-icons.html">
 
 
 <polymer-element name="loot-plugin-card" attributes="data">
@@ -53,6 +54,7 @@ loot-clear-metadata
         }
         :host([data-bsa=false]) #loadsBSA,
         :host([data-empty=false]) #emptyPlugin,
+        :host([data-master=false]) #isMaster,
         :host(:not([data-edits])) #hasUserEdits {
             display: none;
         }
@@ -151,6 +153,9 @@ loot-clear-metadata
                         <content select=".version"></content>
                         <content select=".crc"></content>
                     </div>
+                    <core-tooltip id="isMaster" label="Master File" noarrow>
+                        <core-icon icon="loot-custom-icons:crown"></core-icon>
+                    </core-tooltip>
                     <core-tooltip id="emptyPlugin" label="Empty Plugin" noarrow>
                         <core-icon icon="visibility-off"></core-icon>
                     </core-tooltip>
