@@ -138,7 +138,7 @@ FunctionEnd
 
     VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "LOOT"
     VIAddVersionKey /LANG=${LANG_ENGLISH} "CompanyName" "LOOT Team"
-    VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "© 2009-2014 LOOT Team"
+    VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "© 2009-2015 LOOT Team"
     VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "Installer for LOOT 0.7.0"
     VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "0.7.0"
 
@@ -153,7 +153,7 @@ FunctionEnd
 
     VIAddVersionKey /LANG=${LANG_RUSSIAN} "ProductName" "LOOT"
     VIAddVersionKey /LANG=${LANG_RUSSIAN} "CompanyName" "LOOT Team"
-    VIAddVersionKey /LANG=${LANG_RUSSIAN} "LegalCopyright" "© 2009-2014 LOOT Team"
+    VIAddVersionKey /LANG=${LANG_RUSSIAN} "LegalCopyright" "© 2009-2015 LOOT Team"
     VIAddVersionKey /LANG=${LANG_RUSSIAN} "FileDescription" "Установщик для LOOT 0.7.0"
     VIAddVersionKey /LANG=${LANG_RUSSIAN} "FileVersion" "0.7.0"
 
@@ -168,7 +168,7 @@ FunctionEnd
 
     VIAddVersionKey /LANG=${LANG_FRENCH} "ProductName" "LOOT"
     VIAddVersionKey /LANG=${LANG_FRENCH} "CompanyName" "LOOT Team"
-    VIAddVersionKey /LANG=${LANG_FRENCH} "LegalCopyright" "© 2009-2014 LOOT Team"
+    VIAddVersionKey /LANG=${LANG_FRENCH} "LegalCopyright" "© 2009-2015 LOOT Team"
     VIAddVersionKey /LANG=${LANG_FRENCH} "FileDescription" "Programme d'installation pour LOOT 0.7.0"
     VIAddVersionKey /LANG=${LANG_FRENCH} "FileVersion" "0.7.0"
 
@@ -183,7 +183,7 @@ FunctionEnd
 
     VIAddVersionKey /LANG=${LANG_SPANISH} "ProductName" "LOOT"
     VIAddVersionKey /LANG=${LANG_SPANISH} "CompanyName" "LOOT Team"
-    VIAddVersionKey /LANG=${LANG_SPANISH} "LegalCopyright" "© 2009-2014 LOOT Team"
+    VIAddVersionKey /LANG=${LANG_SPANISH} "LegalCopyright" "© 2009-2015 LOOT Team"
     VIAddVersionKey /LANG=${LANG_SPANISH} "FileDescription" "El instalador para LOOT 0.7.0"
     VIAddVersionKey /LANG=${LANG_SPANISH} "FileVersion" "0.7.0"
 
@@ -198,7 +198,7 @@ FunctionEnd
 
     VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "ProductName" "LOOT"
     VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "CompanyName" "LOOT Team"
-    VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "LegalCopyright" "© 2009-2014 LOOT Team"
+    VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "LegalCopyright" "© 2009-2015 LOOT Team"
     VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "FileDescription" "LOOT 0.7.0安装包"
     VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "FileVersion" "0.7.0"
 
@@ -213,7 +213,7 @@ FunctionEnd
 
     VIAddVersionKey /LANG=${LANG_POLISH} "ProductName" "LOOT"
     VIAddVersionKey /LANG=${LANG_POLISH} "CompanyName" "LOOT Team"
-    VIAddVersionKey /LANG=${LANG_POLISH} "LegalCopyright" "© 2009-2014 LOOT Team"
+    VIAddVersionKey /LANG=${LANG_POLISH} "LegalCopyright" "© 2009-2015 LOOT Team"
     VIAddVersionKey /LANG=${LANG_POLISH} "FileDescription" "Instalator dla LOOT 0.7.0"
     VIAddVersionKey /LANG=${LANG_POLISH} "FileVersion" "0.7.0"
 
@@ -228,7 +228,7 @@ FunctionEnd
 
     VIAddVersionKey /LANG=${LANG_FINNISH} "ProductName" "LOOT"
     VIAddVersionKey /LANG=${LANG_FINNISH} "CompanyName" "LOOT Team"
-    VIAddVersionKey /LANG=${LANG_FINNISH} "LegalCopyright" "© 2009-2014 LOOT Team"
+    VIAddVersionKey /LANG=${LANG_FINNISH} "LegalCopyright" "© 2009-2015 LOOT Team"
     VIAddVersionKey /LANG=${LANG_FINNISH} "FileDescription" "LOOT 0.7.0 Asennusohjelma"
     VIAddVersionKey /LANG=${LANG_FINNISH} "FileVersion" "0.7.0"
 
@@ -243,7 +243,7 @@ FunctionEnd
 
     VIAddVersionKey /LANG=${LANG_GERMAN} "ProductName" "LOOT"
     VIAddVersionKey /LANG=${LANG_GERMAN} "CompanyName" "LOOT Team"
-    VIAddVersionKey /LANG=${LANG_GERMAN} "LegalCopyright" "© 2009-2014 LOOT Team"
+    VIAddVersionKey /LANG=${LANG_GERMAN} "LegalCopyright" "© 2009-2015 LOOT Team"
     VIAddVersionKey /LANG=${LANG_GERMAN} "FileDescription" "Installationsprogramm LOOT 0.7.0"
     VIAddVersionKey /LANG=${LANG_GERMAN} "FileVersion" "0.7.0"
 
@@ -258,7 +258,7 @@ FunctionEnd
 
     VIAddVersionKey /LANG=${LANG_DANISH} "ProductName" "LOOT"
     VIAddVersionKey /LANG=${LANG_DANISH} "CompanyName" "LOOT Team"
-    VIAddVersionKey /LANG=${LANG_DANISH} "LegalCopyright" "© 2009-2014 LOOT Team"
+    VIAddVersionKey /LANG=${LANG_DANISH} "LegalCopyright" "© 2009-2015 LOOT Team"
     VIAddVersionKey /LANG=${LANG_DANISH} "FileDescription" "Installationsprogram for LOOT 0.7.0"
     VIAddVersionKey /LANG=${LANG_DANISH} "FileVersion" "0.7.0"
 

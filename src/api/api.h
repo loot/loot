@@ -3,7 +3,7 @@
     A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
     Fallout: New Vegas.
 
-    Copyright (C) 2013-2014    WrinklyNinja
+    Copyright (C) 2013-2015    WrinklyNinja
 
     This file is part of LOOT.
 
@@ -61,7 +61,7 @@
  *      "docs/licenses/Licenses.txt" file.
  *
  * @section history_sec Version History
- *      ## 0.7.0 - *X Y 2014*
+ *      ## 0.7.0 - *X Y 2015*
  *
  *        * Initial API release.
  */
