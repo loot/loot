@@ -675,33 +675,31 @@ namespace loot {
                 pluginNode["crc"] = IntToHexString(plugin.Crc());
                 pluginNode["version"] = plugin.Version();
 
-                if (isFirstLoad) {
-                    if (!mlistPlugin.HasNameOnly()) {
-                        // Now add the masterlist metadata to the pluginNode.
-                        pluginNode["masterlist"]["after"] = mlistPlugin.LoadAfter();
-                        pluginNode["masterlist"]["req"] = mlistPlugin.Reqs();
-                        pluginNode["masterlist"]["inc"] = mlistPlugin.Incs();
-                        pluginNode["masterlist"]["msg"] = mlistPlugin.Messages();
-                        pluginNode["masterlist"]["tag"] = mlistPlugin.Tags();
-                        pluginNode["masterlist"]["dirty"] = mlistPlugin.DirtyInfo();
-                        pluginNode["masterlist"]["url"] = mlistPlugin.Locations();
-                    }
+                if (!mlistPlugin.HasNameOnly()) {
+                    // Now add the masterlist metadata to the pluginNode.
+                    pluginNode["masterlist"]["after"] = mlistPlugin.LoadAfter();
+                    pluginNode["masterlist"]["req"] = mlistPlugin.Reqs();
+                    pluginNode["masterlist"]["inc"] = mlistPlugin.Incs();
+                    pluginNode["masterlist"]["msg"] = mlistPlugin.Messages();
+                    pluginNode["masterlist"]["tag"] = mlistPlugin.Tags();
+                    pluginNode["masterlist"]["dirty"] = mlistPlugin.DirtyInfo();
+                    pluginNode["masterlist"]["url"] = mlistPlugin.Locations();
+                }
 
-                    if (!ulistPlugin.HasNameOnly()) {
-                        // Now add the userlist metadata to the pluginNode.
-                        pluginNode["userlist"]["enabled"] = ulistPlugin.Enabled();
-                        pluginNode["userlist"]["after"] = ulistPlugin.LoadAfter();
-                        pluginNode["userlist"]["req"] = ulistPlugin.Reqs();
-                        pluginNode["userlist"]["inc"] = ulistPlugin.Incs();
-                        pluginNode["userlist"]["msg"] = ulistPlugin.Messages();
-                        pluginNode["userlist"]["tag"] = ulistPlugin.Tags();
-                        pluginNode["userlist"]["dirty"] = ulistPlugin.DirtyInfo();
-                        pluginNode["userlist"]["url"] = ulistPlugin.Locations();
-                        // The raw priority data isn't used, but should be set
-                        // that LOOT knows it exists.
-                        if (ulistPlugin.IsPriorityExplicit()) {
-                            pluginNode["userlist"]["hasExplicitPriority"] = true;
-                        }
+                if (!ulistPlugin.HasNameOnly()) {
+                    // Now add the userlist metadata to the pluginNode.
+                    pluginNode["userlist"]["enabled"] = ulistPlugin.Enabled();
+                    pluginNode["userlist"]["after"] = ulistPlugin.LoadAfter();
+                    pluginNode["userlist"]["req"] = ulistPlugin.Reqs();
+                    pluginNode["userlist"]["inc"] = ulistPlugin.Incs();
+                    pluginNode["userlist"]["msg"] = ulistPlugin.Messages();
+                    pluginNode["userlist"]["tag"] = ulistPlugin.Tags();
+                    pluginNode["userlist"]["dirty"] = ulistPlugin.DirtyInfo();
+                    pluginNode["userlist"]["url"] = ulistPlugin.Locations();
+                    // The raw priority data isn't used, but should be set
+                    // that LOOT knows it exists.
+                    if (ulistPlugin.IsPriorityExplicit()) {
+                        pluginNode["userlist"]["hasExplicitPriority"] = true;
                     }
                 }
 
