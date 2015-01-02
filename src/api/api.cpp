@@ -796,7 +796,7 @@ LOOT_API unsigned int loot_write_minimal_list(loot_db db, const char * const out
         return c_error(loot_error_invalid_args, "Output directory does not exist.");
 
     if (boost::filesystem::exists(outputFile) && !overwrite)
-        return c_error(loot_error_invalid_args, "Output file exists but overwrite is not set to true.");
+        return c_error(loot_error_file_write_fail, "Output file exists but overwrite is not set to true.");
 
     loot::Masterlist temp = db->masterlist;
     std::unordered_set<loot::Plugin> minimalPlugins;
@@ -814,11 +814,16 @@ LOOT_API unsigned int loot_write_minimal_list(loot_db db, const char * const out
         << YAML::EndMap;
 
     boost::filesystem::path p(outputFile);
-    loot::ofstream out(p);
-    if (out.fail())
-        return c_error(loot_error_invalid_args, "Couldn't open output file");
-    out << yout.c_str();
-    out.close();
+    try {
+        loot::ofstream out(p);
+        if (out.fail())
+            return c_error(loot_error_invalid_args, "Couldn't open output file.");
+        out << yout.c_str();
+        out.close();
+    }
+    catch (std::exception& e) {
+        return c_error(loot_error_file_write_fail, e.what());
+    }
 
     return loot_ok;
 }
