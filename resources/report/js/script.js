@@ -994,7 +994,10 @@ function handleSidebarClick(evt) {
         document.getElementById('main').lastElementChild.scrollToItem(evt.target.getAttribute('data-index'));
 
         if (evt.type == 'dblclick') {
-            document.getElementById(evt.target.getAttribute('data-id')).onShowEditor();
+            var card = document.getElementById(evt.target.getAttribute('data-id'));
+            if (!card.classList.contains('flip')) {
+                document.getElementById(evt.target.getAttribute('data-id')).onShowEditor();
+            }
         }
     }
 }
