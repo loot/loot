@@ -303,4 +303,22 @@ TEST_F(OblivionAPIOperationsTest, GetDirtyInfo) {
     EXPECT_EQ(loot_ok, loot_get_dirty_info(db, "Unofficial Oblivion Patch.esp", &needsCleaning));
     EXPECT_EQ(loot_needs_cleaning_no, needsCleaning);
 }
+
+TEST_F(OblivionAPIOperationsTest, WriteMinimalList) {
+    std::string outputFile = (localPath / "minimal.yml").string();
+    EXPECT_EQ(loot_error_invalid_args, loot_write_minimal_list(NULL, outputFile.c_str(), false));
+    EXPECT_EQ(loot_error_invalid_args, loot_write_minimal_list(db, NULL, false));
+    EXPECT_EQ(loot_error_file_write_fail, loot_write_minimal_list(db, "/:?*", false));
+
+    ASSERT_EQ(false, boost::filesystem::exists(outputFile));
+    EXPECT_EQ(loot_ok, loot_write_minimal_list(db, outputFile.c_str(), false));
+    EXPECT_EQ(true, boost::filesystem::exists(outputFile));
+    EXPECT_EQ(loot_error_file_write_fail, loot_write_minimal_list(db, outputFile.c_str(), false));
+
+    EXPECT_EQ(loot_ok, loot_write_minimal_list(db, outputFile.c_str(), true));
+    ASSERT_NO_THROW(boost::filesystem::remove(outputFile));
+    EXPECT_EQ(loot_ok, loot_write_minimal_list(db, outputFile.c_str(), true));
+    EXPECT_EQ(true, boost::filesystem::exists(outputFile));
+    ASSERT_NO_THROW(boost::filesystem::remove(outputFile));
+}
 #endif
