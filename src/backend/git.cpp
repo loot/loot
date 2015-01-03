@@ -152,21 +152,28 @@ namespace loot {
         std::string ui_message;
     };
 
+    struct git_diff_payload {
+    public:
+        bool fileFound;
+        const char * fileToFind;
+    };
+
     bool isRepository(const fs::path& path) {
         return git_repository_open_ext(NULL, path.string().c_str(), GIT_REPOSITORY_OPEN_NO_SEARCH, NULL) == 0;
     }
 
     int diffFileCallback(const git_diff_delta *delta, float progress, void * payload) {
         BOOST_LOG_TRIVIAL(trace) << "Checking diff for: " << delta->old_file.path;
-        if (strcmp(delta->old_file.path, "masterlist.yaml") == 0) {
+        git_diff_payload * gdp = (git_diff_payload*)payload;
+        if (strcmp(delta->old_file.path, gdp->fileToFind) == 0) {
             BOOST_LOG_TRIVIAL(warning) << "Edited masterlist found.";
-            *(bool*)payload = true;
+            gdp->fileFound = true;
         }
 
         return 0;
     }
 
-    bool IsMasterlistDifferent(git_handler& git) {
+    bool IsMasterlistDifferent(git_handler& git, const std::string& filename) {
         if (git.obj) {
             throw error(error::git_error, "Object memory already allocated!");
         }
@@ -180,7 +187,7 @@ namespace loot {
             throw error(error::git_error, "Repository handle not open!");
         }
 
-        // Perform a git diff, then iterate the deltas to see if one exists for masterlist.yaml.
+        // Perform a git diff, then iterate the deltas to see if one exists for the masterlist.
         BOOST_LOG_TRIVIAL(trace) << "Getting the tree for the HEAD revision.";
         git.call(git_revparse_single(&git.obj, git.repo, "HEAD^{tree}"));
         git.call(git_tree_lookup(&git.tree, git.repo, git_object_id(git.obj)));
@@ -189,8 +196,10 @@ namespace loot {
         git.call(git_diff_tree_to_workdir_with_index(&git.diff, git.repo, git.tree, NULL));
 
         BOOST_LOG_TRIVIAL(trace) << "Iterating over git diff deltas.";
-        bool isMasterlistDifferent = false;
-        git.call(git_diff_foreach(git.diff, &diffFileCallback, NULL, NULL, &isMasterlistDifferent));
+        git_diff_payload payload;
+        payload.fileFound = false;
+        payload.fileToFind = filename.c_str();
+        git.call(git_diff_foreach(git.diff, &diffFileCallback, NULL, NULL, &payload));
 
         // Clean up memory
         git_object_free(git.obj);
@@ -200,7 +209,7 @@ namespace loot {
         git_diff_free(git.diff);
         git.diff = nullptr;
 
-        return isMasterlistDifferent;
+        return payload.fileFound;
     }
 
     void Masterlist::GetGitInfo(const boost::filesystem::path& path, bool shortID) {
@@ -245,7 +254,7 @@ namespace loot {
         git.obj = nullptr;
 
         BOOST_LOG_TRIVIAL(trace) << "Diffing masterlist HEAD and working copy.";
-        if (IsMasterlistDifferent(git)) {
+        if (IsMasterlistDifferent(git, path.filename().string())) {
             revision += " (edited)";
             date += " (edited)";
         }
@@ -258,6 +267,7 @@ namespace loot {
     bool Masterlist::Update(const boost::filesystem::path& path, const std::string& repoURL, const std::string& repoBranch) {
         git_handler git;
         fs::path repo_path = path.parent_path();
+        string filename = path.filename().string();
 
         // First initialise some stuff that isn't specific to a repository.
         BOOST_LOG_TRIVIAL(debug) << "Creating a reflog signature to use.";
@@ -265,10 +275,11 @@ namespace loot {
         git.call(git_signature_new(&git.sig, "LOOT", "loot@placeholder.net", 0, 0));
 
         BOOST_LOG_TRIVIAL(debug) << "Setting up checkout options.";
-        char * paths[] = {"masterlist.yaml"};
+        char * paths = new char[filename.length() + 1];
+        strcpy(paths, filename.c_str());
         git_checkout_options checkout_opts = GIT_CHECKOUT_OPTIONS_INIT;
         checkout_opts.checkout_strategy = GIT_CHECKOUT_FORCE;
-        checkout_opts.paths.strings = paths;
+        checkout_opts.paths.strings = &paths;
         checkout_opts.paths.count = 1;
 
         // Now try to access the repository if it exists, or clone one if it doesn't.
@@ -469,7 +480,7 @@ namespace loot {
                         BOOST_LOG_TRIVIAL(trace) << "Branch heads are equal.";
 
                         BOOST_LOG_TRIVIAL(trace) << "Diffing HEAD and filesystem masterlists.";
-                        if (!IsMasterlistDifferent(git)) {
+                        if (!IsMasterlistDifferent(git, filename)) {
                             return false;
                         }
                     }
