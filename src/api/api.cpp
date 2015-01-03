@@ -482,6 +482,8 @@ LOOT_API unsigned int loot_update_masterlist(loot_db db,
                                              bool * const updated) {
     if (db == nullptr || masterlistPath == nullptr || remoteURL == nullptr || remoteBranch == nullptr || updated == nullptr)
         return c_error(loot_error_invalid_args, "Null pointer passed.");
+    if (!boost::filesystem::is_directory(boost::filesystem::path(masterlistPath).parent_path()))
+        return c_error(loot_error_invalid_args, "Given masterlist path \"" + std::string(masterlistPath) + "\" does not have a valid parent directory.");
 
     *updated = false;
 
