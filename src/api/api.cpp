@@ -527,7 +527,10 @@ LOOT_API unsigned int loot_get_masterlist_revision(loot_db db,
         db->extRevisionDate = ToNewCString(date);
     }
     catch (loot::error &e) {
-        return c_error(e);
+        if (e.code() == loot_ok)
+            return loot_ok;
+        else
+            return c_error(e);
     }
     catch (std::bad_alloc& e) {
         return c_error(loot_error_no_mem, e.what());

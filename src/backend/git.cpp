@@ -214,10 +214,10 @@ namespace loot {
 
     void Masterlist::GetGitInfo(const boost::filesystem::path& path, bool shortID) {
         if (!isRepository(path.parent_path())) {
-            throw error(error::git_error, "Unknown: Git repository missing");
+            throw error(error::ok, "Unknown: Git repository missing");
         }
         else if (!fs::exists(path)) {
-            throw error(error::git_error, "N/A: No masterlist present");
+            throw error(error::ok, "N/A: No masterlist present");
         }
 
         // Compare HEAD and working copy, and get revision info.
