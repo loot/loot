@@ -464,7 +464,11 @@ extern "C"
      *      The database the function acts on.
      *  @param masterlistPath
      *      A string containing the relative or absolute path to the masterlist
-     *      file that should be updated.
+     *      file that should be updated. The filename must match the filename
+     *      of the masterlist file in the given remote repository, otherwise it
+     *      will not be updated correctly. Although LOOT itself expects this
+     *      filename to be "masterlist.yaml", the API does not check for any
+     *      specific filename.
      *  @param remoteURL
      *      The URL of the remote from which to fetch updates. This can also be
      *      a relative or absolute path to a local repository.
