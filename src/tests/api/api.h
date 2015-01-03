@@ -196,14 +196,27 @@ TEST_F(OblivionAPIOperationsTest, GetMasterlistRevision) {
     ASSERT_TRUE(updated);
     EXPECT_EQ(loot_ok, loot_get_masterlist_revision(db, masterlistPath.string().c_str(), false, &revisionID, &revisionDate, &isModified));
     EXPECT_STRNE(NULL, revisionID);
+    EXPECT_EQ(40, strlen(revisionID));
     EXPECT_STRNE(NULL, revisionDate);
+    EXPECT_EQ(10, strlen(revisionDate));
+    EXPECT_FALSE(isModified);
+
+    // Test with a short revision string.
+    EXPECT_EQ(loot_ok, loot_get_masterlist_revision(db, masterlistPath.string().c_str(), true, &revisionID, &revisionDate, &isModified));
+    EXPECT_STRNE(NULL, revisionID);
+    EXPECT_GE(size_t(40), strlen(revisionID));
+    EXPECT_LE(size_t(7), strlen(revisionID));
+    EXPECT_STRNE(NULL, revisionDate);
+    EXPECT_EQ(10, strlen(revisionDate));
     EXPECT_FALSE(isModified);
 
     // Overwrite the masterlist with a generated one.
     ASSERT_NO_THROW(GenerateMasterlist());
     EXPECT_EQ(loot_ok, loot_get_masterlist_revision(db, masterlistPath.string().c_str(), false, &revisionID, &revisionDate, &isModified));
     EXPECT_STRNE(NULL, revisionID);
+    EXPECT_EQ(40, strlen(revisionID));
     EXPECT_STRNE(NULL, revisionDate);
+    EXPECT_EQ(10, strlen(revisionDate));
     EXPECT_TRUE(isModified);
 }
 
