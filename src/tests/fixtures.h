@@ -169,6 +169,66 @@ protected:
         // Delete existing plugins.txt.
         ASSERT_NO_THROW(boost::filesystem::remove(localPath / "plugins.txt"));
     };
+
+    inline void GenerateMasterlist() {
+        loot::ofstream masterlist(masterlistPath);
+        masterlist
+            << "plugins:" << std::endl
+            << "  - name: Oblivion.esm" << std::endl
+            << "  - name: Silgrad_Tower.esm" << std::endl
+            << "  - name: No Lights Flicker.esm" << std::endl
+            << "    msg:" << std::endl
+            << "      - type: say" << std::endl
+            << "        content: Use Wrye Bash Bashed Patch tweak instead." << std::endl
+            << "  - name: bookplacing.esm" << std::endl
+            << "    msg:" << std::endl
+            << "      - type: warn" << std::endl
+            << "        content: 'Check you are using v2+. If not, Update. v1 has a severe bug with the Mystic Emporium disappearing.'" << std::endl
+            << "  - name: EnhancedWeatherSIOnly.esm" << std::endl
+            << "    msg:" << std::endl
+            << "      - type: error" << std::endl
+            << "        content: Obsolete. Remove this and install Enhanced Weather." << std::endl
+            << "  - name: Hammerfell.esm" << std::endl
+            << "    dirty:" << std::endl
+            << "      - crc: 0x7d22f9df" << std::endl
+            << "        util: TES4Edit" << std::endl
+            << "        udr: 4" << std::endl
+            << "  - name: nVidia Black Screen Fix.esp" << std::endl
+            << "    msg:" << std::endl
+            << "      - type: say" << std::endl
+            << "        content: Use Wrye Bash Bashed Patch tweak instead." << std::endl
+            << "      - type: say" << std::endl
+            << "        content: 'Alternatively, remove this and use UOP v3.0.1+ instead.'" << std::endl
+            << "  - name: Unofficial Oblivion Patch.esp" << std::endl
+            << "    msg:" << std::endl
+            << "      - type: say" << std::endl
+            << "        content: 'Do not clean ITM records, they are intentional and required for the mod to function.'" << std::endl
+            << "    tag:" << std::endl
+            << "      - Actors.ACBS" << std::endl
+            << "      - Actors.AIData" << std::endl
+            << "      - Actors.AIPackages" << std::endl
+            << "      - Actors.CombatStyle" << std::endl
+            << "      - Actors.DeathItem" << std::endl
+            << "      - Actors.Stats" << std::endl
+            << "      - C.Climate" << std::endl
+            << "      - C.Light" << std::endl
+            << "      - C.Music" << std::endl
+            << "      - C.Name" << std::endl
+            << "      - C.Owner" << std::endl
+            << "      - Creatures.Blood" << std::endl
+            << "      - Delev" << std::endl
+            << "      - Factions" << std::endl
+            << "      - Invent" << std::endl
+            << "      - Names" << std::endl
+            << "      - NPC.Class" << std::endl
+            << "      - Relations" << std::endl
+            << "      - Relev" << std::endl
+            << "      - Scripts" << std::endl
+            << "      - Stats" << std::endl
+            << "      - '-C.Water'" << std::endl;
+
+        masterlist.close();
+    }
 };
 
 class OblivionAPIOperationsTest : public OblivionTest {

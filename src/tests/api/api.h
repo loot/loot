@@ -244,8 +244,7 @@ TEST_F(OblivionAPIOperationsTest, GetPluginMessages) {
     EXPECT_EQ(loot_error_invalid_args, loot_get_plugin_messages(db, "EnhancedWeatherSIOnly.esm", &messages, NULL));
 
     // Fetch and load the metadata.
-    bool updated;
-    ASSERT_EQ(loot_ok, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/oblivion.git", "master", &updated));
+    ASSERT_NO_THROW(GenerateMasterlist());
     ASSERT_EQ(loot_ok, loot_load_lists(db, masterlistPath.string().c_str(), NULL));
 
     // Test for plugin with no messages.
@@ -287,8 +286,7 @@ TEST_F(OblivionAPIOperationsTest, GetDirtyInfo) {
     EXPECT_EQ(loot_error_invalid_args, loot_get_dirty_info(db, "Oblivion.esm", NULL));
 
     // Fetch and load the metadata.
-    bool updated;
-    ASSERT_EQ(loot_ok, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/oblivion.git", "master", &updated));
+    ASSERT_NO_THROW(GenerateMasterlist());
     ASSERT_EQ(loot_ok, loot_load_lists(db, masterlistPath.string().c_str(), NULL));
 
     // A plugin with no metadata.
