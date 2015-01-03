@@ -491,7 +491,6 @@ namespace loot {
                     git.free();
                     fs::remove_all(repo_path / ".git");
                     return this->Update(path, repoURL, repoBranch);
-                    //throw error(error::git_error, "Local repository has been edited, an automatic fast-forward merge update is not possible.");
                 }
             }
 
