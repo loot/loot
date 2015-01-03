@@ -152,8 +152,59 @@ TEST_F(OblivionAPIOperationsTest, UpdateMasterlist) {
     EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/oblivion.git", NULL, &updated));
     EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/oblivion.git", "master", NULL));
 
+    EXPECT_EQ(loot_error_git_error, loot_update_masterlist(db, ";//\?", "https://github.com/loot/oblivion.git", "master", &updated));
+    EXPECT_EQ(loot_error_git_error, loot_update_masterlist(db, "", "https://github.com/loot/oblivion.git", "master", &updated));
+    EXPECT_EQ(loot_error_git_error, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/oblivion-does-not-exist.git", "master", &updated));
+    EXPECT_EQ(loot_error_git_error, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/oblivion.git", "missing-branch", &updated));
+    EXPECT_EQ(loot_error_git_error, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/oblivion.git", "", &updated));
+
+    // Test actual masterlist update.
     EXPECT_EQ(loot_ok, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/oblivion.git", "master", &updated));
     EXPECT_TRUE(updated);
+
+    // Test with an up-to-date masterlist.
+    EXPECT_EQ(loot_ok, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/oblivion.git", "master", &updated));
+    EXPECT_FALSE(updated);
+}
+
+TEST_F(OblivionAPIOperationsTest, GetMasterlistRevision) {
+    char * revisionID;
+    char * revisionDate;
+    bool isModified;
+    EXPECT_EQ(loot_error_invalid_args, loot_get_masterlist_revision(NULL, masterlistPath.string().c_str(), false, &revisionID, &revisionDate, &isModified));
+    EXPECT_EQ(loot_error_invalid_args, loot_get_masterlist_revision(db, NULL, false, &revisionID, &revisionDate, &isModified));
+    EXPECT_EQ(loot_error_invalid_args, loot_get_masterlist_revision(db, masterlistPath.string().c_str(), false, NULL, &revisionDate, &isModified));
+    EXPECT_EQ(loot_error_invalid_args, loot_get_masterlist_revision(db, masterlistPath.string().c_str(), false, &revisionID, NULL, &isModified));
+    EXPECT_EQ(loot_error_invalid_args, loot_get_masterlist_revision(db, masterlistPath.string().c_str(), false, &revisionID, &revisionDate, NULL));
+
+    // Test with no masterlist.
+    EXPECT_EQ(loot_ok, loot_get_masterlist_revision(db, masterlistPath.string().c_str(), false, &revisionID, &revisionDate, &isModified));
+    EXPECT_EQ(NULL, revisionID);
+    EXPECT_EQ(NULL, revisionDate);
+    EXPECT_FALSE(isModified);
+
+    // Test with a generated (non-revision-control) masterlist.
+    ASSERT_NO_THROW(GenerateMasterlist());
+    EXPECT_EQ(loot_ok, loot_get_masterlist_revision(db, masterlistPath.string().c_str(), false, &revisionID, &revisionDate, &isModified));
+    EXPECT_EQ(NULL, revisionID);
+    EXPECT_EQ(NULL, revisionDate);
+    EXPECT_FALSE(isModified);
+
+    // Update the masterlist and test.
+    bool updated;
+    ASSERT_EQ(loot_ok, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/oblivion.git", "master", &updated));
+    ASSERT_TRUE(updated);
+    EXPECT_EQ(loot_ok, loot_get_masterlist_revision(db, masterlistPath.string().c_str(), false, &revisionID, &revisionDate, &isModified));
+    EXPECT_STRNE(NULL, revisionID);
+    EXPECT_STRNE(NULL, revisionDate);
+    EXPECT_FALSE(isModified);
+
+    // Overwrite the masterlist with a generated one.
+    ASSERT_NO_THROW(GenerateMasterlist());
+    EXPECT_EQ(loot_ok, loot_get_masterlist_revision(db, masterlistPath.string().c_str(), false, &revisionID, &revisionDate, &isModified));
+    EXPECT_STRNE(NULL, revisionID);
+    EXPECT_STRNE(NULL, revisionDate);
+    EXPECT_TRUE(isModified);
 }
 
 TEST_F(OblivionAPIOperationsTest, LoadLists) {
