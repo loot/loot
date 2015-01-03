@@ -235,6 +235,111 @@ TEST_F(OblivionAPIOperationsTest, SortPlugins) {
     EXPECT_EQ(expectedOrder, actualOrder);
 }
 
+TEST_F(OblivionAPIOperationsTest, GetTagMap) {
+    char ** tagMap;
+    size_t numTags;
+    EXPECT_EQ(loot_error_invalid_args, loot_get_tag_map(NULL, &tagMap, &numTags));
+    EXPECT_EQ(loot_error_invalid_args, loot_get_tag_map(db, NULL, &numTags));
+    EXPECT_EQ(loot_error_invalid_args, loot_get_tag_map(db, &tagMap, NULL));
+
+    // Get tag map with no masterlist loaded: should have no tags.
+    EXPECT_EQ(loot_ok, loot_get_tag_map(db, &tagMap, &numTags));
+    EXPECT_EQ(0, numTags);
+    EXPECT_EQ(NULL, tagMap);
+
+    // Get a masterlist, then get tags from it.
+    ASSERT_NO_THROW(GenerateMasterlist());
+    ASSERT_EQ(loot_ok, loot_load_lists(db, masterlistPath.string().c_str(), NULL));
+    EXPECT_EQ(loot_ok, loot_get_tag_map(db, &tagMap, &numTags));
+    ASSERT_EQ(22, numTags);
+    EXPECT_STREQ("Actors.ACBS", tagMap[0]);
+    EXPECT_STREQ("Actors.AIData", tagMap[1]);
+    EXPECT_STREQ("Actors.AIPackages", tagMap[2]);
+    EXPECT_STREQ("Actors.CombatStyle", tagMap[3]);
+    EXPECT_STREQ("Actors.DeathItem", tagMap[4]);
+    EXPECT_STREQ("Actors.Stats", tagMap[5]);
+    EXPECT_STREQ("C.Climate", tagMap[6]);
+    EXPECT_STREQ("C.Light", tagMap[7]);
+    EXPECT_STREQ("C.Music", tagMap[8]);
+    EXPECT_STREQ("C.Name", tagMap[9]);
+    EXPECT_STREQ("C.Owner", tagMap[10]);
+    EXPECT_STREQ("C.Water", tagMap[11]);
+    EXPECT_STREQ("Creatures.Blood", tagMap[12]);
+    EXPECT_STREQ("Delev", tagMap[13]);
+    EXPECT_STREQ("Factions", tagMap[14]);
+    EXPECT_STREQ("Invent", tagMap[15]);
+    EXPECT_STREQ("NPC.Class", tagMap[16]);
+    EXPECT_STREQ("Names", tagMap[17]);
+    EXPECT_STREQ("Relations", tagMap[18]);
+    EXPECT_STREQ("Relev", tagMap[19]);
+    EXPECT_STREQ("Scripts", tagMap[20]);
+    EXPECT_STREQ("Stats", tagMap[21]);
+}
+
+TEST_F(OblivionAPIOperationsTest, GetPluginTags) {
+    unsigned int * added;
+    unsigned int * removed;
+    size_t numAdded, numRemoved;
+    bool modified;
+    EXPECT_EQ(loot_error_invalid_args, loot_get_plugin_tags(NULL, "Unofficial Oblivion Patch.esp", &added, &numAdded, &removed, &numRemoved, &modified));
+    EXPECT_EQ(loot_error_invalid_args, loot_get_plugin_tags(db, NULL, &added, &numAdded, &removed, &numRemoved, &modified));
+    EXPECT_EQ(loot_error_invalid_args, loot_get_plugin_tags(db, "Unofficial Oblivion Patch.esp", NULL, &numAdded, &removed, &numRemoved, &modified));
+    EXPECT_EQ(loot_error_invalid_args, loot_get_plugin_tags(db, "Unofficial Oblivion Patch.esp", &added, NULL, &removed, &numRemoved, &modified));
+    EXPECT_EQ(loot_error_invalid_args, loot_get_plugin_tags(db, "Unofficial Oblivion Patch.esp", &added, &numAdded, NULL, &numRemoved, &modified));
+    EXPECT_EQ(loot_error_invalid_args, loot_get_plugin_tags(db, "Unofficial Oblivion Patch.esp", &added, &numAdded, &removed, NULL, &modified));
+    EXPECT_EQ(loot_error_invalid_args, loot_get_plugin_tags(db, "Unofficial Oblivion Patch.esp", &added, &numAdded, &removed, &numRemoved, NULL));
+
+    // Get tags before getting a tag map.
+    EXPECT_EQ(loot_error_no_tag_map, loot_get_plugin_tags(db, "Unofficial Oblivion Patch.esp", &added, &numAdded, &removed, &numRemoved, &modified));
+
+    // Load tag map.
+    char ** tagMap;
+    size_t numTags;
+    ASSERT_NO_THROW(GenerateMasterlist());
+    ASSERT_EQ(loot_ok, loot_load_lists(db, masterlistPath.string().c_str(), NULL));
+    ASSERT_EQ(loot_ok, loot_get_tag_map(db, &tagMap, &numTags));
+
+    // Get tags for a plugin without any.
+    EXPECT_EQ(loot_ok, loot_get_plugin_tags(db, "Blank.esp", &added, &numAdded, &removed, &numRemoved, &modified));
+    EXPECT_EQ(0, numAdded);
+    EXPECT_EQ(NULL, added);
+    EXPECT_EQ(0, numRemoved);
+    EXPECT_EQ(NULL, removed);
+    EXPECT_EQ(false, modified);
+
+    // Get tags for a plugin with some.
+    EXPECT_EQ(loot_ok, loot_get_plugin_tags(db, "Unofficial Oblivion Patch.esp", &added, &numAdded, &removed, &numRemoved, &modified));
+    ASSERT_EQ(21, numAdded);
+    for (size_t i = 0; i < 11; ++i) {
+        EXPECT_EQ(i, added[i]);
+    }
+    for (size_t i = 11; i < 21; ++i) {
+        EXPECT_EQ(i + 1, added[i]);
+    }
+
+    ASSERT_EQ(1, numRemoved);
+    EXPECT_EQ(11, removed[0]);
+    EXPECT_EQ(false, modified);
+
+    // Now load the masterlist as the userlist too, and check the modified flag.
+    ASSERT_NO_THROW(boost::filesystem::copy_file(masterlistPath, userlistPath));
+    ASSERT_EQ(loot_ok, loot_load_lists(db, masterlistPath.string().c_str(), userlistPath.string().c_str()));
+    ASSERT_EQ(loot_ok, loot_get_tag_map(db, &tagMap, &numTags));
+
+    EXPECT_EQ(loot_ok, loot_get_plugin_tags(db, "Unofficial Oblivion Patch.esp", &added, &numAdded, &removed, &numRemoved, &modified));
+    ASSERT_EQ(21, numAdded);
+    for (size_t i = 0; i < 11; ++i) {
+        EXPECT_EQ(i, added[i]);
+    }
+    for (size_t i = 11; i < 21; ++i) {
+        EXPECT_EQ(i + 1, added[i]);
+    }
+    EXPECT_EQ(NULL, added[0]);
+    ASSERT_EQ(1, numRemoved);
+    EXPECT_EQ(11, removed[0]);
+    EXPECT_EQ(true, modified);
+}
+
 TEST_F(OblivionAPIOperationsTest, GetPluginMessages) {
     loot_message * messages;
     size_t numMessages;
