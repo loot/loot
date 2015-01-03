@@ -504,7 +504,7 @@ LOOT_API unsigned int loot_get_masterlist_revision(loot_db db,
                                                    char ** const revisionID,
                                                    char ** const revisionDate,
                                                    bool * const isModified) {
-    if (masterlistPath == nullptr || revisionID == nullptr || revisionDate == nullptr || isModified == nullptr)
+    if (db == nullptr || masterlistPath == nullptr || revisionID == nullptr || revisionDate == nullptr || isModified == nullptr)
         return c_error(loot_error_invalid_args, "Null pointer passed.");
 
     *revisionID = nullptr;
