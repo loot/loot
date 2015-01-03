@@ -305,7 +305,7 @@ TEST_F(OblivionAPIOperationsTest, GetPluginTags) {
     EXPECT_EQ(NULL, added);
     EXPECT_EQ(0, numRemoved);
     EXPECT_EQ(NULL, removed);
-    EXPECT_EQ(false, modified);
+    EXPECT_FALSE(modified);
 
     // Get tags for a plugin with some.
     EXPECT_EQ(loot_ok, loot_get_plugin_tags(db, "Unofficial Oblivion Patch.esp", &added, &numAdded, &removed, &numRemoved, &modified));
@@ -319,7 +319,7 @@ TEST_F(OblivionAPIOperationsTest, GetPluginTags) {
 
     ASSERT_EQ(1, numRemoved);
     EXPECT_EQ(11, removed[0]);
-    EXPECT_EQ(false, modified);
+    EXPECT_FALSE(modified);
 
     // Now load the masterlist as the userlist too, and check the modified flag.
     ASSERT_NO_THROW(boost::filesystem::copy_file(masterlistPath, userlistPath));
@@ -337,7 +337,7 @@ TEST_F(OblivionAPIOperationsTest, GetPluginTags) {
     EXPECT_EQ(NULL, added[0]);
     ASSERT_EQ(1, numRemoved);
     EXPECT_EQ(11, removed[0]);
-    EXPECT_EQ(true, modified);
+    EXPECT_TRUE(modified);
 }
 
 TEST_F(OblivionAPIOperationsTest, GetPluginMessages) {
@@ -413,15 +413,15 @@ TEST_F(OblivionAPIOperationsTest, WriteMinimalList) {
     EXPECT_EQ(loot_error_invalid_args, loot_write_minimal_list(db, NULL, false));
     EXPECT_EQ(loot_error_file_write_fail, loot_write_minimal_list(db, "/:?*", false));
 
-    ASSERT_EQ(false, boost::filesystem::exists(outputFile));
+    ASSERT_FALSE(boost::filesystem::exists(outputFile));
     EXPECT_EQ(loot_ok, loot_write_minimal_list(db, outputFile.c_str(), false));
-    EXPECT_EQ(true, boost::filesystem::exists(outputFile));
+    EXPECT_TRUE(boost::filesystem::exists(outputFile));
     EXPECT_EQ(loot_error_file_write_fail, loot_write_minimal_list(db, outputFile.c_str(), false));
 
     EXPECT_EQ(loot_ok, loot_write_minimal_list(db, outputFile.c_str(), true));
     ASSERT_NO_THROW(boost::filesystem::remove(outputFile));
     EXPECT_EQ(loot_ok, loot_write_minimal_list(db, outputFile.c_str(), true));
-    EXPECT_EQ(true, boost::filesystem::exists(outputFile));
+    EXPECT_TRUE(boost::filesystem::exists(outputFile));
     ASSERT_NO_THROW(boost::filesystem::remove(outputFile));
 }
 #endif
