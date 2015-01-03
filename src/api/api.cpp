@@ -562,17 +562,15 @@ LOOT_API unsigned int loot_get_tag_map(loot_db db, char *** const tagMap, size_t
     *tagMap = nullptr;
     *numTags = 0;
 
-    std::unordered_set<std::string> allTags;
+    std::set<std::string> allTags;
 
     for (const auto &plugin : db->masterlist.Plugins()) {
-        std::set<loot::Tag> tags(plugin.Tags());
-        for (const auto &tag : tags) {
+        for (const auto &tag : plugin.Tags()) {
             allTags.insert(tag.Name());
         }
     }
     for (const auto &plugin : db->userlist.Plugins()) {
-        std::set<loot::Tag> tags(plugin.Tags());
-        for (const auto &tag : tags) {
+        for (const auto &tag : plugin.Tags()) {
             allTags.insert(tag.Name());
         }
     }
@@ -622,6 +620,10 @@ LOOT_API unsigned int loot_get_plugin_tags(loot_db db, const char * const plugin
     if (db == nullptr || plugin == nullptr || tagIds_added == nullptr || numTags_added == nullptr || tagIds_removed == nullptr || numTags_removed == nullptr || userlistModified == nullptr)
         return c_error(loot_error_invalid_args, "Null pointer passed.");
 
+    if (db->bashTagMap.empty()) {
+        return c_error(loot_error_no_tag_map, "No Bash Tag map has been previously generated.");
+    }
+
     //Clear existing array allocations.
     delete[] db->extAddedTagIds;
     delete[] db->extRemovedTagIds;
@@ -635,42 +637,35 @@ LOOT_API unsigned int loot_get_plugin_tags(loot_db db, const char * const plugin
     *numTags_added = 0;
     *numTags_removed = 0;
 
-    std::unordered_set<std::string> tagsAdded, tagsRemoved;
+    std::set<std::string> tagsAdded, tagsRemoved;
     loot::Plugin p = db->masterlist.FindPlugin(loot::Plugin(plugin));
-    if (!p.HasNameOnly()) {
-        for (const auto &tag : p.Tags()) {
-            if (tag.IsAddition())
-                tagsAdded.insert(tag.Name());
-            else
-                tagsRemoved.insert(tag.Name());
-        }
+    for (const auto &tag : p.Tags()) {
+        if (tag.IsAddition())
+            tagsAdded.insert(tag.Name());
+        else
+            tagsRemoved.insert(tag.Name());
     }
 
     p = db->userlist.FindPlugin(loot::Plugin(plugin));
-    if (!p.HasNameOnly()) {
+    *userlistModified = !p.Tags().empty();
+    for (const auto &tag : p.Tags()) {
         *userlistModified = true;
-        for (const auto &tag : p.Tags()) {
-            if (tag.IsAddition())
-                tagsAdded.insert(tag.Name());
-            else
-                tagsRemoved.insert(tag.Name());
-        }
-    }
-
-    if ((!tagsAdded.empty() || !tagsRemoved.empty()) && db->bashTagMap.empty()) {
-        return c_error(loot_error_no_tag_map, "No Bash Tag map has been previously generated.");
+        if (tag.IsAddition())
+            tagsAdded.insert(tag.Name());
+        else
+            tagsRemoved.insert(tag.Name());
     }
 
     std::vector<unsigned int> tagsAddedIDs, tagsRemovedIDs;
-    for (const auto &tagNames : tagsAdded) {
-        const auto mapIter(db->bashTagMap.find(tagNames));
+    for (const auto &tagName : tagsAdded) {
+        const auto mapIter(db->bashTagMap.find(tagName));
         if (mapIter != db->bashTagMap.end())
             tagsAddedIDs.push_back(mapIter->second);
     }
-    for (const auto &tagNames : tagsRemoved) {
-        const auto mapIter(db->bashTagMap.find(tagNames));
+    for (const auto &tagName : tagsRemoved) {
+        const auto mapIter(db->bashTagMap.find(tagName));
         if (mapIter != db->bashTagMap.end())
-            tagsAddedIDs.push_back(mapIter->second);
+            tagsRemovedIDs.push_back(mapIter->second);
     }
 
     //Allocate memory.
