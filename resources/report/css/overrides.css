@@ -59,6 +59,7 @@ core-drawer-panel::shadow #drawer {
     is reached, due to the percentage drawer width, and setting it to a
     constant 400px is too wide in many window sizes. */
     /*max-width: 400px;*/
+    z-index: 1;
 }
 /* Align dropdown label text with the descriptive text beside it. */
 #settingsDialog loot-dropdown-menu::shadow paper-dropdown-menu {
