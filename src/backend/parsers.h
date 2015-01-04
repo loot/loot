@@ -260,6 +260,9 @@ namespace YAML {
 
         static bool decode(const Node& node, loot::File& rhs) {
             if (node.IsMap()) {
+                if (!node["name"])
+                    return false;
+
                 std::string condition, name, display;
                 if (node["condition"])
                     condition = node["condition"].as<std::string>();
@@ -290,6 +293,9 @@ namespace YAML {
         static bool decode(const Node& node, loot::Tag& rhs) {
             std::string condition, tag;
             if (node.IsMap()) {
+                if (!node["name"])
+                    return false;
+
                 if (node["condition"])
                     condition = node["condition"].as<std::string>();
                 if (node["name"])
@@ -323,6 +329,9 @@ namespace YAML {
             std::vector<std::string> versions;
 
             if (node.IsMap()) {
+                if (!node["link"] || !node["ver"])
+                    return false;
+
                 if (node["link"])
                     url = node["link"].as<std::string>();
                 if (node["ver"])
@@ -400,11 +409,11 @@ namespace YAML {
         }
 
         static bool decode(const Node& node, loot::Plugin& rhs) {
-            if (!node.IsMap())
+            if (!node.IsMap() || !node["name"])
                 return false;
 
-            if (node["name"])
-                rhs = loot::Plugin(node["name"].as<std::string>());
+            rhs = loot::Plugin(node["name"].as<std::string>());
+
             if (node["enabled"])
                 rhs.Enabled(node["enabled"].as<bool>());
 
