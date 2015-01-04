@@ -432,8 +432,12 @@ namespace YAML {
                 rhs.Messages(node["msg"].as< std::list<loot::Message> >());
             if (node["tag"])
                 rhs.Tags(node["tag"].as< std::set<loot::Tag> >());
-            if (node["dirty"])
-                rhs.DirtyInfo(node["dirty"].as< std::set<loot::PluginDirtyInfo> >());
+            if (node["dirty"]) {
+                if (rhs.IsRegexPlugin())
+                    return false;
+                else
+                    rhs.DirtyInfo(node["dirty"].as< std::set<loot::PluginDirtyInfo> >());
+            }
             if (node["url"])
                 rhs.Locations(node["url"].as< std::set<loot::Location> >());
 
