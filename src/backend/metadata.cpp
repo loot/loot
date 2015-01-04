@@ -715,27 +715,38 @@ namespace loot {
                 ++it;
         }
 
-        //First need to get plugin's CRC.
-        uint32_t crc = 0;
-        unordered_map<std::string, uint32_t>::iterator it = game.crcCache.find(boost::locale::to_lower(name));
-        if (it != game.crcCache.end())
-            crc = it->second;
-        else if (boost::filesystem::exists(game.DataPath() / name)) {
-            crc = GetCrc32(game.DataPath() / name);
-            game.crcCache.insert(pair<string, uint32_t>(boost::locale::to_lower(name), crc));
-        }
-        else if (boost::filesystem::exists(game.DataPath() / (name + ".ghost"))) {
-            crc = GetCrc32(game.DataPath() / (name + ".ghost"));
-            game.crcCache.insert(pair<string, uint32_t>(boost::locale::to_lower(name), crc));
-        }
-        else
-            _dirtyInfo.clear();
+        //First need to get plugin's CRC, if it is an exact plugin and it does not have its CRC set.
+        if (!IsRegexPlugin()) {
+            if (crc == 0) {
+                unordered_map<std::string, uint32_t>::iterator it = game.crcCache.find(boost::locale::to_lower(name));
+                if (it != game.crcCache.end())
+                    crc = it->second;
+                else if (boost::filesystem::exists(game.DataPath() / name)) {
+                    crc = GetCrc32(game.DataPath() / name);
+                }
+                else if (boost::filesystem::exists(game.DataPath() / (name + ".ghost"))) {
+                    crc = GetCrc32(game.DataPath() / (name + ".ghost"));
+                }
+                else {
+                    // The plugin isn't installed, discard the dirty info.
+                    _dirtyInfo.clear();
+                }
+            }
 
-        for (auto it = _dirtyInfo.begin(); it != _dirtyInfo.end();) {
-            if (it->CRC() != crc)
-                _dirtyInfo.erase(it++);
-            else
-                ++it;
+            // Store the CRC in the cache in case it's not already in there.
+            game.crcCache.insert(pair<string, uint32_t>(boost::locale::to_lower(name), crc));
+
+            // Now use the CRC to evaluate the dirty info.
+            for (auto it = _dirtyInfo.begin(); it != _dirtyInfo.end();) {
+                if (it->CRC() != crc)
+                    _dirtyInfo.erase(it++);
+                else
+                    ++it;
+            }
+        }
+        else {
+            // Regex plugins shouldn't have dirty info, but just clear in case.
+            _dirtyInfo.clear();
         }
 
         return *this;
