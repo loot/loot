@@ -74,8 +74,17 @@ loot-editor-close
             height: 48px;
         }
         #main > paper-checkbox, #main > core-tooltip {
-            display: table;
             line-height: 48px;
+        }
+        #main > core-tooltip {
+            display: table;
+        }
+        #main > div > div:first-child {
+            margin-right: 16px;
+        }
+        #main paper-input-decorator {
+            position: relative;
+            top: -2px;
         }
         core-selector > *:not(.core-selected) {
             display: none;
