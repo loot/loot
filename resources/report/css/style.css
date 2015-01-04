@@ -209,7 +209,7 @@ html /deep/ table {
     width: 100%;
     background-color: #E8EAF6;
 }
-html /deep/ table td, table th {
+html /deep/ table td, html /deep/ table th {
     vertical-align: top;
     text-align: left;
     padding: 8px 16px;

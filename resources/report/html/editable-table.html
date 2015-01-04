@@ -123,8 +123,11 @@
 html /deep/ table[is=editable-table] {
     background-color: inherit;
 }
-html /deep/ table[is=editable-table] td, table[is=editable-table] th {
+html /deep/ table[is=editable-table] td {
     padding: 0;
+}
+html /deep/ table[is=editable-table] th {
+    padding: 0 4px;
 }
 html /deep/ table[is=editable-table] paper-icon-button {
     color: rgba(0, 0, 0, 0.54);
