@@ -140,6 +140,39 @@ TEST_F(OblivionTest, CreateDbHandlesNullLocalPath) {
 }
 #endif
 
+TEST_F(SkyrimTest, CreateDbHandlesValidInputs) {
+    EXPECT_EQ(loot_ok, loot_create_db(&db, loot_game_tes5, dataPath.parent_path().string().c_str(), localPath.string().c_str()));
+    ASSERT_NO_THROW(loot_destroy_db(db));
+    db = nullptr;
+
+    // Also test absolute paths.
+    boost::filesystem::path game = boost::filesystem::current_path() / dataPath.parent_path();
+    boost::filesystem::path local = boost::filesystem::current_path() / localPath;
+    EXPECT_EQ(loot_ok, loot_create_db(&db, loot_game_tes5, game.string().c_str(), local.string().c_str()));
+}
+
+TEST_F(SkyrimTest, CreateDbHandlesInvalidHandleInput) {
+    EXPECT_EQ(loot_error_invalid_args, loot_create_db(NULL, loot_game_tes5, dataPath.parent_path().string().c_str(), localPath.string().c_str()));
+}
+
+TEST_F(SkyrimTest, CreateDbHandlesInvalidGameType) {
+    EXPECT_EQ(loot_error_invalid_args, loot_create_db(&db, UINT_MAX, dataPath.parent_path().string().c_str(), localPath.string().c_str()));
+}
+
+TEST_F(SkyrimTest, CreateDbHandlesInvalidGamePathInput) {
+    EXPECT_EQ(loot_error_invalid_args, loot_create_db(&db, loot_game_tes5, missingPath.string().c_str(), localPath.string().c_str()));
+}
+
+TEST_F(SkyrimTest, CreateDbHandlesInvalidLocalPathInput) {
+    EXPECT_EQ(loot_error_invalid_args, loot_create_db(&db, loot_game_tes5, dataPath.parent_path().string().c_str(), missingPath.string().c_str()));
+}
+
+#ifdef _WIN32
+TEST_F(SkyrimTest, CreateDbHandlesNullLocalPath) {
+    EXPECT_EQ(loot_ok, loot_create_db(&db, loot_game_tes5, dataPath.parent_path().string().c_str(), NULL));
+}
+#endif
+
 TEST(GameHandleDestroyTest, HandledNullInput) {
     ASSERT_NO_THROW(loot_destroy_db(NULL));
 }
@@ -233,6 +266,19 @@ TEST_F(OblivionAPIOperationsTest, LoadLists) {
     EXPECT_EQ(loot_ok, loot_load_lists(db, masterlistPath.string().c_str(), userlistPath.string().c_str()));
 }
 
+TEST_F(SkyrimAPIOperationsTest, LoadLists) {
+    EXPECT_EQ(loot_error_invalid_args, loot_load_lists(NULL, masterlistPath.string().c_str(), NULL));
+    EXPECT_EQ(loot_error_invalid_args, loot_load_lists(db, NULL, NULL));
+
+    EXPECT_EQ(loot_error_path_not_found, loot_load_lists(db, masterlistPath.string().c_str(), NULL));
+    bool updated;
+    ASSERT_EQ(loot_ok, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/skyrim.git", "master", &updated));
+    EXPECT_EQ(loot_error_path_not_found, loot_load_lists(db, masterlistPath.string().c_str(), userlistPath.string().c_str()));
+
+    ASSERT_NO_THROW(boost::filesystem::copy(masterlistPath, userlistPath));
+    EXPECT_EQ(loot_ok, loot_load_lists(db, masterlistPath.string().c_str(), userlistPath.string().c_str()));
+}
+
 TEST_F(OblivionAPIOperationsTest, EvalLists) {
     // No lists loaded.
     EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_any));
@@ -254,6 +300,41 @@ TEST_F(OblivionAPIOperationsTest, EvalLists) {
     // Now test different languages with a list loaded.
     bool updated;
     ASSERT_EQ(loot_ok, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/oblivion.git", "master", &updated));
+    ASSERT_EQ(loot_ok, loot_load_lists(db, masterlistPath.string().c_str(), NULL));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_any));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_english));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_spanish));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_russian));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_french));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_chinese));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_polish));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_brazilian_portuguese));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_finnish));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_german));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_danish));
+}
+
+TEST_F(SkyrimAPIOperationsTest, EvalLists) {
+    // No lists loaded.
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_any));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_english));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_spanish));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_russian));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_french));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_chinese));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_polish));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_brazilian_portuguese));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_finnish));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_german));
+    EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_danish));
+
+    // Invalid args.
+    EXPECT_EQ(loot_error_invalid_args, loot_eval_lists(NULL, loot_lang_any));
+    EXPECT_EQ(loot_error_invalid_args, loot_eval_lists(db, UINT_MAX));
+
+    // Now test different languages with a list loaded.
+    bool updated;
+    ASSERT_EQ(loot_ok, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/skyrim.git", "master", &updated));
     ASSERT_EQ(loot_ok, loot_load_lists(db, masterlistPath.string().c_str(), NULL));
     EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_any));
     EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_english));
@@ -297,6 +378,79 @@ TEST_F(OblivionAPIOperationsTest, SortPlugins) {
     }
     EXPECT_EQ(11, numPlugins);
     EXPECT_EQ(expectedOrder, actualOrder);
+}
+
+TEST_F(SkyrimAPIOperationsTest, SortPlugins) {
+    char ** sortedPlugins;
+    size_t numPlugins;
+    EXPECT_EQ(loot_error_invalid_args, loot_sort_plugins(NULL, &sortedPlugins, &numPlugins));
+    EXPECT_EQ(loot_error_invalid_args, loot_sort_plugins(db, NULL, &numPlugins));
+    EXPECT_EQ(loot_error_invalid_args, loot_sort_plugins(db, &sortedPlugins, NULL));
+
+    EXPECT_EQ(loot_ok, loot_sort_plugins(db, &sortedPlugins, &numPlugins));
+
+    // Expected order was obtained from running the API function once.
+    std::list<std::string> expectedOrder = {
+        "Blank.esm",
+        "Blank - Different.esm",
+        "Blank - Different Master Dependent.esm",
+        "Blank - Master Dependent.esm",
+        "Skyrim.esm",
+        "Blank.esp",
+        "Blank - Different.esp",
+        "Blank - Different Master Dependent.esp",
+        "Blank - Different Plugin Dependent.esp",
+        "Blank - Master Dependent.esp",
+        "Blank - Plugin Dependent.esp",
+    };
+    std::list<std::string> actualOrder;
+    for (size_t i = 0; i < numPlugins; ++i) {
+        actualOrder.push_back(sortedPlugins[i]);
+    }
+    EXPECT_EQ(11, numPlugins);
+    EXPECT_EQ(expectedOrder, actualOrder);
+}
+
+TEST_F(OblivionAPIOperationsTest, ApplyLoadOrder) {
+    char * loadOrder[11] = {
+        "Oblivion.esm",
+        "Blank.esm",
+        "Blank - Different.esm",
+        "Blank - Different Master Dependent.esm",
+        "Blank - Master Dependent.esm",
+        "Blank.esp",
+        "Blank - Different.esp",
+        "Blank - Different Master Dependent.esp",
+        "Blank - Different Plugin Dependent.esp",
+        "Blank - Master Dependent.esp",
+        "Blank - Plugin Dependent.esp",
+    };
+    size_t numPlugins = 11;
+    EXPECT_EQ(loot_error_invalid_args, loot_apply_load_order(NULL, loadOrder, numPlugins));
+    EXPECT_EQ(loot_error_invalid_args, loot_apply_load_order(db, NULL, numPlugins));
+
+    EXPECT_EQ(loot_ok, loot_apply_load_order(db, loadOrder, numPlugins));
+}
+
+TEST_F(SkyrimAPIOperationsTest, ApplyLoadOrder) {
+    char * loadOrder[11] = {
+        "Skyrim.esm",
+        "Blank.esm",
+        "Blank - Different.esm",
+        "Blank - Different Master Dependent.esm",
+        "Blank - Master Dependent.esm",
+        "Blank.esp",
+        "Blank - Different.esp",
+        "Blank - Different Master Dependent.esp",
+        "Blank - Different Plugin Dependent.esp",
+        "Blank - Master Dependent.esp",
+        "Blank - Plugin Dependent.esp",
+    };
+    size_t numPlugins = 11;
+    EXPECT_EQ(loot_error_invalid_args, loot_apply_load_order(NULL, loadOrder, numPlugins));
+    EXPECT_EQ(loot_error_invalid_args, loot_apply_load_order(db, NULL, numPlugins));
+
+    EXPECT_EQ(loot_ok, loot_apply_load_order(db, loadOrder, numPlugins));
 }
 
 TEST_F(OblivionAPIOperationsTest, GetTagMap) {
