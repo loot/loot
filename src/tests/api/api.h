@@ -249,7 +249,7 @@ TEST_F(OblivionAPIOperationsTest, EvalLists) {
 
     // Invalid args.
     EXPECT_EQ(loot_error_invalid_args, loot_eval_lists(NULL, loot_lang_any));
-    EXPECT_EQ(loot_error_invalid_args, loot_eval_lists(db, (unsigned int)-1));
+    EXPECT_EQ(loot_error_invalid_args, loot_eval_lists(db, UINT_MAX));
 
     // Now test different languages with a list loaded.
     bool updated;
