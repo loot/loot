@@ -48,6 +48,9 @@ a {
 a:hover {
     text-decoration: underline;
 }
+html /deep/ *:focus {
+    outline: none;
+}
 
 /* App bar */
 core-toolbar, div[drawer] > div:first-child {
