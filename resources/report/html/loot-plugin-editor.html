@@ -412,7 +412,7 @@ loot-editor-close
             var tables = this.shadowRoot.getElementsByTagName('table');
             for (var j = 0; j < tables.length; ++j) {
                 tables[j].clear();
-                if (tables[j].id == 'loadAfter') {
+                if (tables[j].parentElement.id == 'loadAfter') {
 
                     if (newData.masterlist && newData.masterlist.after) {
                         newData.masterlist.after.forEach(function(file) {
@@ -426,7 +426,7 @@ loot-editor-close
                         });
                     }
 
-                } else if (tables[j].id == 'req') {
+                } else if (tables[j].parentElement.id == 'req') {
 
                     if (newData.masterlist && newData.masterlist.req) {
                         newData.masterlist.req.forEach(function(file) {
@@ -440,7 +440,7 @@ loot-editor-close
                         });
                     }
 
-                } else if (tables[j].id == 'inc') {
+                } else if (tables[j].parentElement.id == 'inc') {
 
                     if (newData.masterlist && newData.masterlist.inc) {
                         newData.masterlist.inc.forEach(function(file) {
@@ -454,7 +454,7 @@ loot-editor-close
                         });
                     }
 
-                } else if (tables[j].id == 'message') {
+                } else if (tables[j].parentElement.id == 'message') {
 
                     if (newData.masterlist && newData.masterlist.msg) {
                         newData.masterlist.msg.forEach(function(message) {
@@ -481,7 +481,7 @@ loot-editor-close
                         });
                     }
 
-                } else if (tables[j].id == 'tags') {
+                } else if (tables[j].parentElement.id == 'tags') {
 
                     if (newData.masterlist && newData.masterlist.tag) {
                         newData.masterlist.tag.forEach(function(tag) {
@@ -497,7 +497,7 @@ loot-editor-close
                         }, tempData);
                     }
 
-                } else if (tables[j].id == 'dirty') {
+                } else if (tables[j].parentElement.id == 'dirty') {
 
                     if (newData.masterlist && newData.masterlist.dirty) {
                         newData.masterlist.dirty.forEach(function(info) {
@@ -513,7 +513,7 @@ loot-editor-close
                         });
                     }
 
-                } else if (tables[j].id == 'locations') {
+                } else if (tables[j].parentElement.id == 'locations') {
 
                     if (newData.masterlist && newData.masterlist.url) {
                         newData.masterlist.url.forEach(function(location) {
