@@ -49,22 +49,27 @@ function Plugin(obj) {
     /* Converts between the LOOT metadata object for tags, and their
        editor row representation. */
     Plugin.prototype.convTagObj = function(tag) {
+        var newTag = {
+            condition: tag.condition
+        };
         if (tag.type) {
             /* Input is row data. */
             if (tag.type == 'remove') {
-                tag.name = '-' + tag.name;
+                newTag.name = '-' + tag.name;
+            } else {
+                newTag.name = tag.name;
             }
-            delete tag.type;
         } else {
             /* Input is metadata object. */
             if (tag.name[0] == '-') {
-                tag.type = 'remove';
-                tag.name = tag.name.substr(1);
+                newTag.type = 'remove';
+                newTag.name = tag.name.substr(1);
             } else {
-                tag.type = 'add';
+                newTag.type = 'add';
+                newTag.name = tag.name;
             }
         }
-        return tag;
+        return newTag;
     }
 
     Plugin.prototype.getTagStrings = function() {
