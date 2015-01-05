@@ -1,19 +1,8 @@
 /* These styles override Polymer's own internal styling for certain elements to
    suit LOOT's needs. */
 
-/* Change color of disabled menu items to match Material Design spec. These are
-   treated as LOOT-specific overrides because vanilla paper-item doesn't
-   recognise the disabled attribute (at least it isn't documented). */
-html /deep/ paper-item[disabled]  {
-    color: rgba(0, 0, 0, 0.26);
-    pointer-events: none;
-}
-html /deep/ paper-item[disabled] > core-icon {
-    color: rgba(0, 0, 0, 0.26);
-}
-/* Change color of disabled icon buttons to match Material Design spec. */
+/* Transition icon button colour over same time period that plugin cards flip. */
 paper-icon-button[disabled] {
-    color: rgba(255, 255, 255, 0.30);
     transition: color 0.6s;
 }
 /* This override change the positioning of the progress dialog to adapt to content changes. */

@@ -25,21 +25,26 @@ html /deep/ paper-button::shadow .button-content ::content a {
    -ms-flex: 1 1 auto;
 }
 
+/* paper-icon-button */
+paper-icon-button[disabled] {
+    color: rgba(255, 255, 255, 0.30);
+}
+
 /* paper-item */
 html /deep/ paper-item, html /deep/ core-menu > paper-item {
    color: rgba(0, 0, 0, 0.87);
    height: 48px;
    line-height: 48px;
 }
-html /deep/ paper-item:first-child {
-   margin-top: 8px;
-}
-html /deep/ paper-item:last-child {
-    margin-bottom: 8px;
+html /deep/ paper-item[disabled]  {
+    color: rgba(0, 0, 0, 0.26);
 }
 html /deep/ paper-item core-icon {
    margin-right: 32px;
    color: rgba(0, 0, 0, 0.54);
+}
+html /deep/ paper-item[disabled] > core-icon {
+    color: rgba(0, 0, 0, 0.26);
 }
 html /deep/ paper-item::shadow .button-content {
    padding: 0 16px;
@@ -80,11 +85,11 @@ html /deep/ input {
    text-overflow: ellipsis;
 }
 
-/* core-menu */
-html /deep/ core-menu {
-   margin: 0;
+/* paper-dropdown */
+html /deep/ paper-dropdown > core-menu {
+   margin: 8px 0;
 }
-html /deep/ core-menu .core-selected {
+html /deep/ paper-dropdown .core-selected {
    background-color: inherit;
 }
 
