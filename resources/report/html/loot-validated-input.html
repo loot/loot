@@ -6,7 +6,7 @@
 <polymer-element name="loot-validated-input" attributes="error type required maxlength minlength pattern max min step value disabled">
     <template>
         <paper-input-decorator error="{{error}}" isInvalid="{{!$.input.validity.valid}}" disabled?="{{disabled != undefined}}">
-            <input id="input" is="core-input" type="{{type}}" class="{{class}}" required?="{{required != undefined}}" maxlength?="{{maxlength}}" minlength?="{{minlength}}" pattern?="{{pattern}}" max?="{{max}}" min?="{{min}}" step?="{{step}}" value="{{value}}" disabled?="{{disabled != undefined}}">
+            <input id="input" is="core-input" type="{{type}}" class="{{class}}" required?="{{required != undefined}}" maxlength?="{{maxlength}}" minlength?="{{minlength}}" pattern?="{{pattern}}" max?="{{max}}" min?="{{min}}" step?="{{step}}" value="{{value}}" readonly?="{{disabled != undefined}}">
         </paper-input-decorator>
     </template>
     <script>
