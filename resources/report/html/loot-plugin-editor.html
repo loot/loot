@@ -20,7 +20,7 @@ loot-editor-close
 
 <link rel="import" href="editable-table.html">
 
-<polymer-element name="loot-plugin-editor" attributes="{{data}}">
+<polymer-element name="loot-plugin-editor" attributes="data">
     <template>
         <style>
         /* Material Design for non-button icons. */
@@ -236,6 +236,8 @@ loot-editor-close
     </template>
     <script>
     Polymer({
+        data: undefined,
+        
         observe: {
             'data.isGlobalPriority': 'onPriorityChange',
             'data.modPriority': 'onPriorityChange',
