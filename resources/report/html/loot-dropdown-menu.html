@@ -12,7 +12,7 @@ it a <select>-like API. This means:
 <link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../bower_components/core-menu/core-menu.html">
 
-<polymer-element name="loot-dropdown-menu" attributes="disabled halign">
+<polymer-element name="loot-dropdown-menu" attributes="disabled halign value">
     <template>
         <style>
         /* Material Design overrides */
@@ -50,7 +50,7 @@ it a <select>-like API. This means:
         </style>
         <paper-dropdown-menu disabled?="{{disabled}}">
             <paper-dropdown class="dropdown" halign="{{halign}}">
-                <core-menu id="menu" class="menu" valueattr="value">
+                <core-menu id="menu" class="menu" valueattr="value" selected="{{value}}">
                     <content></content>
                 </core-menu>
             </paper-dropdown>
@@ -59,25 +59,7 @@ it a <select>-like API. This means:
     <script>
     Polymer({
         value: undefined,
-        disabled: false,
-
-        attached: function() {
-            this.shadowRoot.getElementById('menu').addEventListener('core-select', this.onItemSelect, false);
-        },
-
-        detached: function() {
-            this.shadowRoot.getElementById('menu').removeEventListener('core-select', this.onItemSelect, false);
-        },
-
-        onItemSelect: function(evt) {
-            if (evt.detail.isSelected) {
-                evt.currentTarget.parentElement.parentElement.parentNode.host.value = evt.currentTarget.selected;
-            }
-        },
-
-        valueChanged: function(oldValue, newValue) {
-            this.shadowRoot.getElementById('menu').selected = newValue;
-        },
+        disabled: false
     });
     </script>
 </polymer-element>
