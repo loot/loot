@@ -95,7 +95,7 @@ namespace loot {
     // Matches isolated versions as last resort
     const char* regex5 =
         "(?:(?:\\bv|\\br)(?:\\s?)(?:[-.:])?(?:\\s*))"
-        "((?:(?:\\balpha\\b)?|(?:\\bbeta\\b)?)\\s*[0-9][-0-9a-zA-Z._]*\\+?)"
+        "((?:(?:\\balpha\\b)?|(?:\\bbeta\\b)?)\\s*[0-9]+([-._]*(?!esp|esm)[0-9a-zA-Z]+)*\\+?)"
         ;
 
     // Matches isolated versions as last resort
