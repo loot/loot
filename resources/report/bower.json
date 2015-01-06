@@ -33,6 +33,7 @@
     "core-animated-pages": "Polymer/core-animated-pages#~0.5.1",
     "paper-toast": "Polymer/paper-toast#~0.5.1",
     "core-list": "WrinklyNinja/core-list#z-order-items",
-    "core-dropdown": "kysonic/core-dropdown#b2e3b0f37afec1f1447060d7988fb271f46566c2"
+    "core-dropdown": "kysonic/core-dropdown#b2e3b0f37afec1f1447060d7988fb271f46566c2",
+    "jed-gettext-parser": "~1.0.0"
   }
 }
