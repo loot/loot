@@ -427,6 +427,7 @@ namespace loot {
                     //Use the first sub-expression match.
                     version = string(what[1].first, what[1].second);
                     boost::trim(version);
+                    BOOST_LOG_TRIVIAL(info) << name << ": " << "Extracted version \"" << version << "\" using regex " << i + 1;
                     break;
                 }
             }
