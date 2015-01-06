@@ -265,6 +265,8 @@ namespace loot {
             Construct(Language::german);
         else if (nameOrCode == Language(Language::danish).Name() || nameOrCode == Language(Language::danish).Locale())
             Construct(Language::danish);
+        else if (nameOrCode == Language(Language::korean).Name() || nameOrCode == Language(Language::korean).Locale())
+            Construct(Language::korean);
         else
             Construct(Language::english);
     }
@@ -306,6 +308,10 @@ namespace loot {
         else if (_code == Language::danish) {
             _name = "Dansk";
             _locale = "da";
+        }
+        else if (_code == Language::korean) {
+            _name = "한국어";
+            _locale = "ko";
         }
         else {
             _name = "English";

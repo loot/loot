@@ -131,6 +131,7 @@ FunctionEnd
     !insertmacro MUI_LANGUAGE "Polish"
     !insertmacro MUI_LANGUAGE "Finnish"
     !insertmacro MUI_LANGUAGE "Danish"
+    !insertmacro MUI_LANGUAGE "Korean"
     !insertmacro MUI_RESERVEFILE_LANGDLL
 
 ;--------------------------------
@@ -270,19 +271,19 @@ FunctionEnd
 
 ;--------------------------------
 ;Korean (한국어) Strings
-	
+
 	VIAddVersionKey /LANG=${LANG_KOREAN} "ProductName" "LOOT"
 	VIAddVersionKey /LANG=${LANG_KOREAN} "CompanyName" "LOOT Team"
 	VIAddVersionKey /LANG=${LANG_KOREAN} "LegalCopyright" "© 2009-2015 LOOT Team"
 	VIAddVersionKey /LANG=${LANG_KOREAN} "FileDescription" "LOOT 0.7.0 인스톨러"
 	VIAddVersionKey /LANG=${LANG_KOREAN} "FileVersion" "0.7.0"
-	
+
 	LangString TEXT_MESSAGEBOX ${LANG_KOREAN} "Loot가 이미 설치되있으며, 진행하기 전에 제거해야합니다. $\n$\n'확인'을 클릭하면 이전 버전을 제거하며, '취소'를 클릭하면 업그레이드를 취소합니다."
 	LangString TEXT_RUN ${LANG_KOREAN} "LOOT 실행"
 	LangString TEXT_SHOWREADME ${LANG_KOREAN} "추가 정보 보기"
 	LangString TEXT_MAIN ${LANG_KOREAN} "유저리스트와 설정을 제외한 LOOT의 모든 파일."
 	LangString TEXT_USERFILES ${LANG_KOREAN} "LOOT의 유저리스트와 설정 파일."
-	
+
 ;--------------------------------
 ;Initialisations
 
@@ -383,6 +384,8 @@ FunctionEnd
         File "..\resources\l10n\de\LC_MESSAGES\loot.mo"
         SetOutPath "$INSTDIR\resources\l10n\da\LC_MESSAGES"
         File "..\resources\l10n\da\LC_MESSAGES\loot.mo"
+        SetOutPath "$INSTDIR\resources\l10n\ko\LC_MESSAGES"
+        File "..\resources\l10n\ko\LC_MESSAGES\loot.mo"
 
 
         ;Install settings file.
@@ -434,6 +437,11 @@ FunctionEnd
             Push "$LOCALAPPDATA\LOOT\settings.yaml"
             Push "Language:"
             Push "Language: da"
+            Call ReplaceLineStr
+        StrCmp $LANGUAGE ${LANG_KOREAN} 0 +5
+            Push "$LOCALAPPDATA\LOOT\settings.yaml"
+            Push "Language:"
+            Push "Language: ko"
             Call ReplaceLineStr
 
         ;Add Start Menu shortcuts. Set out path back to $INSTDIR otherwise the shortcuts start in the wrong place.
@@ -515,6 +523,7 @@ FunctionEnd
         Delete "$INSTDIR\resources\l10n\fi\LC_MESSAGES\loot.mo"
         Delete "$INSTDIR\resources\l10n\de\LC_MESSAGES\loot.mo"
         Delete "$INSTDIR\resources\l10n\da\LC_MESSAGES\loot.mo"
+        Delete "$INSTDIR\resources\l10n\ko\LC_MESSAGES\loot.mo"
         RMDir  "$INSTDIR\resources\l10n\ru\LC_MESSAGES"
         RMDir  "$INSTDIR\resources\l10n\ru"
         RMDir  "$INSTDIR\resources\l10n\es\LC_MESSAGES"
@@ -533,6 +542,8 @@ FunctionEnd
         RMDir  "$INSTDIR\resources\l10n\de"
         RMDir  "$INSTDIR\resources\l10n\da\LC_MESSAGES"
         RMDir  "$INSTDIR\resources\l10n\da"
+        RMDir  "$INSTDIR\resources\l10n\ko\LC_MESSAGES"
+        RMDir  "$INSTDIR\resources\l10n\ko"
         RMDir  "$INSTDIR\resources\l10n"
         RMDir  "$INSTDIR\resources"
 

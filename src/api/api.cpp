@@ -81,6 +81,7 @@ const unsigned int loot_lang_brazilian_portuguese = loot::Language::brazilian_po
 const unsigned int loot_lang_finnish = loot::Language::finnish;
 const unsigned int loot_lang_german = loot::Language::german;
 const unsigned int loot_lang_danish = loot::Language::danish;
+const unsigned int loot_lang_korean = loot::Language::korean;
 
 // LOOT cleanliness codes.
 const unsigned int loot_needs_cleaning_no = 0;

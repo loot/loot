@@ -243,6 +243,7 @@ extern "C"
     LOOT_API extern const unsigned int loot_lang_finnish; /**< Tells the API to preferentially select Finnish messages. */
     LOOT_API extern const unsigned int loot_lang_german; /**< Tells the API to preferentially select German messages. */
     LOOT_API extern const unsigned int loot_lang_danish; /**< Tells the API to preferentially select Danish messages. */
+    LOOT_API extern const unsigned int loot_lang_korean; /**< Tells the API to preferentially select Korean messages. */
 
     /**@}*/
     /**********************************************************************//**
