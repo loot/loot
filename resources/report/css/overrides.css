@@ -68,3 +68,9 @@ html /deep/ core-tooltip:hover:not([disabled])::shadow .core-tooltip {
 #main /deep/ paper-dropdown::shadow #scroller {
     max-height: none !important;
 }
+
+/* Don't center the "Jump to General Information" tooltip, as it gets cut off
+   by the sidebar. */
+#drawerToggle + core-tooltip::shadow #tooltip {
+    left: inherit !important;
+}
