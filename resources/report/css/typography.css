@@ -1,4 +1,5 @@
 /* Font definitions */
+/* Roboto */
 @font-face {
     font-family: 'Roboto';
     font-style: normal;
@@ -47,10 +48,60 @@
     font-weight: 700;
     src: url('../fonts/Roboto-BoldItalic.ttf');
 }
+/* Noto - Korean */
+@font-face {
+    font-family: 'Noto';
+    font-style: normal;
+    font-weight: 300;
+    src: url('../fonts/NotoSansCJKkr-Light.otf');
+}
+@font-face {
+    font-family: 'Noto';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/NotoSansCJKkr-Regular.otf');
+}
+@font-face {
+    font-family: 'Noto';
+    font-style: normal;
+    font-weight: 500;
+    src: url('../fonts/NotoSansCJKkr-Medium.otf');
+}
+@font-face {
+    font-family: 'Noto';
+    font-style: normal;
+    font-weight: 700;
+    src: url('../fonts/NotoSansCJKkr-Bold.otf');
+}
+/* Noto - Simplified Chinese */
+@font-face {
+    font-family: 'Noto';
+    font-style: normal;
+    font-weight: 300;
+    src: url('../fonts/NotoSansCJKsc-Light.otf');
+}
+@font-face {
+    font-family: 'Noto';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/NotoSansCJKsc-Regular.otf');
+}
+@font-face {
+    font-family: 'Noto';
+    font-style: normal;
+    font-weight: 500;
+    src: url('../fonts/NotoSansCJKsc-Medium.otf');
+}
+@font-face {
+    font-family: 'Noto';
+    font-style: normal;
+    font-weight: 700;
+    src: url('../fonts/NotoSansCJKsc-Bold.otf');
+}
 
 /* Typography */
 html {
-    font:11pt/1.429 Roboto, sans-serif;
+    font:11pt/1.429 Roboto, Noto, sans-serif;
     color: rgba(0, 0, 0, 0.87);
     font-weight: 400;
     text-rendering: optimizeLegibility;
