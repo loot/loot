@@ -1,4 +1,4 @@
-﻿;LOOT NSIS Installer Script
+;LOOT NSIS Installer Script
 
 ;--------------------------------
 ;Include NSIS files.
@@ -268,6 +268,21 @@ FunctionEnd
     LangString TEXT_MAIN ${LANG_DANISH} "Alle LOOT's filer, undtagen brugerlister og indstillingsfiler."
     LangString TEXT_USERFILES ${LANG_DANISH} "LOOT's brugerliste- og indstillingsfile."
 
+;--------------------------------
+;Korean (한국어) Strings
+	
+	VIAddVersionKey /LANG=${LANG_KOREAN} "ProductName" "LOOT"
+	VIAddVersionKey /LANG=${LANG_KOREAN} "CompanyName" "LOOT Team"
+	VIAddVersionKey /LANG=${LANG_KOREAN} "LegalCopyright" "© 2009-2015 LOOT Team"
+	VIAddVersionKey /LANG=${LANG_KOREAN} "FileDescription" "LOOT 0.7.0 인스톨러"
+	VIAddVersionKey /LANG=${LANG_KOREAN} "FileVersion" "0.7.0"
+	
+	LangString TEXT_MESSAGEBOX ${LANG_KOREAN} "Loot가 이미 설치되있으며, 진행하기 전에 제거해야합니다. $\n$\n'확인'을 클릭하면 이전 버전을 제거하며, '취소'를 클릭하면 업그레이드를 취소합니다."
+	LangString TEXT_RUN ${LANG_KOREAN} "LOOT 실행"
+	LangString TEXT_SHOWREADME ${LANG_KOREAN} "추가 정보 보기"
+	LangString TEXT_MAIN ${LANG_KOREAN} "유저리스트와 설정을 제외한 LOOT의 모든 파일."
+	LangString TEXT_USERFILES ${LANG_KOREAN} "LOOT의 유저리스트와 설정 파일."
+	
 ;--------------------------------
 ;Initialisations
 
