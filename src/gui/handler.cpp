@@ -223,11 +223,11 @@ namespace loot {
             }
             catch (loot::error &e) {
                 BOOST_LOG_TRIVIAL(error) << "Failed to change game. Details: " << e.what();
-                callback->Failure(e.code(), string("Failed to change game. Details: ") + e.what());
+                callback->Failure(e.code(), (boost::format(loc::translate("Failed to change game. Details: %1%")) % e.what()).str());
             }
             catch (std::exception& e) {
                 BOOST_LOG_TRIVIAL(error) << "Failed to change game. Details: " << e.what();
-                callback->Failure(-1, string("Failed to change game. Details: ") + e.what());
+                callback->Failure(-1, (boost::format(loc::translate("Failed to change game. Details: %1%")) % e.what()).str());
             }
             return true;
         }
@@ -244,11 +244,11 @@ namespace loot {
             }
             catch (loot::error &e) {
                 BOOST_LOG_TRIVIAL(error) << "Failed to copy plugin metadata. Details: " << e.what();
-                callback->Failure(e.code(), string("Failed to copy plugin metadata. Details: ") + e.what());
+                callback->Failure(e.code(), (boost::format(loc::translate("Failed to copy plugin metadata. Details: %1%")) % e.what()).str());
             }
             catch (std::exception& e) {
                 BOOST_LOG_TRIVIAL(error) << "Failed to copy plugin metadata. Details: " << e.what();
-                callback->Failure(-1, string("Failed to copy plugin metadata. Details: ") + e.what());
+                callback->Failure(-1, (boost::format(loc::translate("Failed to copy plugin metadata. Details: %1%")) % e.what()).str());
             }
             return true;
         }
@@ -325,11 +325,11 @@ namespace loot {
             }
             catch (loot::error &e) {
                 BOOST_LOG_TRIVIAL(error) << "Failed to copy plugin metadata. Details: " << e.what();
-                callback->Failure(e.code(), string("Failed to copy plugin metadata. Details: ") + e.what());
+                callback->Failure(e.code(), (boost::format(loc::translate("Failed to copy plugin metadata. Details: %1%")) % e.what()).str());
             }
             catch (std::exception& e) {
                 BOOST_LOG_TRIVIAL(error) << "Failed to copy plugin metadata. Details: " << e.what();
-                callback->Failure(-1, string("Failed to copy plugin metadata. Details: ") + e.what());
+                callback->Failure(-1, (boost::format(loc::translate("Failed to copy plugin metadata. Details: %1%")) % e.what()).str());
             }
             return true;
         }
@@ -348,7 +348,7 @@ namespace loot {
             g_app_state.CurrentGame().LoadPlugins(false);
         }
 
-        SendProgressUpdate(frame, "Checking for conflicting plugins...");
+        SendProgressUpdate(frame, loc::translate("Checking for conflicting plugins..."));
         YAML::Node node;
         for (const auto& pluginPair : g_app_state.CurrentGame().plugins) {
             YAML::Node pluginNode;
@@ -515,7 +515,7 @@ namespace loot {
         // Open readme in default application.
         HINSTANCE ret = ShellExecute(0, NULL, ToWinWide(ToFileURL(g_path_readme)).c_str(), NULL, NULL, SW_SHOWNORMAL);
         if ((int)ret <= 32)
-            throw error(error::windows_error, "Shell execute failed.");
+            throw error(error::windows_error, loc::translate("Shell execute failed."));
     }
 
     void Handler::OpenLogLocation() {
@@ -523,7 +523,7 @@ namespace loot {
         //Open debug log folder.
         HINSTANCE ret = ShellExecute(NULL, L"open", ToWinWide(g_path_log.parent_path().string()).c_str(), NULL, NULL, SW_SHOWNORMAL);
         if ((int)ret <= 32)
-            throw error(error::windows_error, "Shell execute failed.");
+            throw error(error::windows_error, loc::translate("Shell execute failed."));
     }
 
     std::string Handler::GetVersion() {
@@ -581,7 +581,7 @@ namespace loot {
             BOOST_LOG_TRIVIAL(info) << "Getting data specific to LOOT's active game.";
             // Get masterlist revision info and parse if it exists. Also get plugin headers info and parse userlist if it exists.
 
-            SendProgressUpdate(frame, "Loading plugin headers...");
+            SendProgressUpdate(frame, loc::translate("Loading plugin headers..."));
 
             // First clear CRC and condition caches, otherwise they could lead to incorrect evaluations.
             g_app_state.CurrentGame().conditionCache.clear();
@@ -607,25 +607,25 @@ namespace loot {
             if (isFirstLoad) {
                 //Parse masterlist, don't update it.
                 if (fs::exists(g_app_state.CurrentGame().MasterlistPath())) {
-                    SendProgressUpdate(frame, "Parsing masterlist...");
+                    SendProgressUpdate(frame, loc::translate("Parsing masterlist..."));
                     BOOST_LOG_TRIVIAL(debug) << "Parsing masterlist.";
                     try {
                         g_app_state.CurrentGame().masterlist.MetadataList::Load(g_app_state.CurrentGame().MasterlistPath());
                     }
                     catch (exception &e) {
-                        g_app_state.CurrentGame().masterlist.messages.push_back(Message(Message::error, string("An error occurred while parsing the masterlist: ") + e.what()));
+                        g_app_state.CurrentGame().masterlist.messages.push_back(Message(Message::error, (boost::format(loc::translate("An error occurred while parsing the masterlist: %1%")) % e.what()).str()));
                     }
                 }
 
                 //Parse userlist.
                 if (fs::exists(g_app_state.CurrentGame().UserlistPath())) {
-                    SendProgressUpdate(frame, "Parsing userlist...");
+                    SendProgressUpdate(frame, loc::translate("Parsing userlist..."));
                     BOOST_LOG_TRIVIAL(debug) << "Parsing userlist.";
                     try {
                         g_app_state.CurrentGame().userlist.Load(g_app_state.CurrentGame().UserlistPath());
                     }
                     catch (exception &e) {
-                        g_app_state.CurrentGame().userlist.messages.push_back(Message(Message::error, string("An error occurred while parsing the userlist: ") + e.what()));
+                        g_app_state.CurrentGame().userlist.messages.push_back(Message(Message::error, (boost::format(loc::translate("An error occurred while parsing the userlist: %1%")) % e.what()).str()));
                     }
                 }
             }
@@ -650,7 +650,7 @@ namespace loot {
             }
 
             // Now store plugin data.
-            SendProgressUpdate(frame, "Merging and evaluating plugin metadata...");
+            SendProgressUpdate(frame, loc::translate("Merging and evaluating plugin metadata..."));
             for (const auto& plugin : installed) {
                 /* Each plugin has members while hold its raw masterlist and userlist data for
                    the editor, and also processed data for the main display.
@@ -715,7 +715,7 @@ namespace loot {
                 gameNode["plugins"].push_back(pluginNode);
             }
 
-            SendProgressUpdate(frame, "Loading general messages...");
+            SendProgressUpdate(frame, loc::translate("Loading general messages..."));
             //Set language.
             unsigned int language;
             if (g_app_state.GetSettings()["language"])
@@ -749,11 +749,11 @@ namespace loot {
         }
         catch (loot::error &e) {
             BOOST_LOG_TRIVIAL(error) << "Failed to get game data. Details: " << e.what();
-            callback->Failure(e.code(), string("Failed to get game data. Details: ") + e.what());
+            callback->Failure(e.code(), (boost::format(loc::translate("Failed to get game data. Details: %1%")) % e.what()).str());
         }
         catch (std::exception& e) {
             BOOST_LOG_TRIVIAL(error) << "Failed to get game data. Details: " << e.what();
-            callback->Failure(-1, string("Failed to get game data. Details: ") + e.what());
+            callback->Failure(-1, (boost::format(loc::translate("Failed to get game data. Details: %1%")) % e.what()).str());
         }
     }
 
@@ -772,7 +772,7 @@ namespace loot {
             // Update / parse masterlist.
             bool wasChanged = true;
             try {
-                SendProgressUpdate(frame, "Updating and parsing masterlist...");
+                SendProgressUpdate(frame, loc::translate("Updating and parsing masterlist..."));
                 wasChanged = g_app_state.CurrentGame().masterlist.Load(g_app_state.CurrentGame(), language);
             }
             catch (loot::error &e) {
@@ -788,7 +788,7 @@ namespace loot {
             }
 
             // Now regenerate the JS-side masterlist data if the masterlist was changed.
-            SendProgressUpdate(frame, "Regenerating displayed content...");
+            SendProgressUpdate(frame, loc::translate("Regenerating displayed content..."));
             if (wasChanged) {
                 // The data structure is to be set as 'loot.game'.
                 YAML::Node gameNode;
@@ -857,12 +857,12 @@ namespace loot {
                 callback->Success("null");
         }
         catch (error &e) {
-            BOOST_LOG_TRIVIAL(error) << "Failed to update the masterlist. " << e.what();
-            callback->Failure(e.code(), e.what());
+            BOOST_LOG_TRIVIAL(error) << "Failed to update the masterlist. Details: " << e.what();
+            callback->Failure(e.code(), (boost::format(loc::translate("Failed to update the masterlist. Details: %1%")) % e.what()).str());
         }
         catch (exception &e) {
-            BOOST_LOG_TRIVIAL(error) << "Failed to update the masterlist. " << e.what();
-            callback->Failure(-1, e.what());
+            BOOST_LOG_TRIVIAL(error) << "Failed to update the masterlist. Details: " << e.what();
+            callback->Failure(-1, (boost::format(loc::translate("Failed to update the masterlist. Details: %1%")) % e.what()).str());
         }
     }
 
@@ -904,7 +904,7 @@ namespace loot {
 
         try {
             // Always reload all the plugins.
-            SendProgressUpdate(frame, "Loading plugin contents...");
+            SendProgressUpdate(frame, loc::translate("Loading plugin contents..."));
             g_app_state.CurrentGame().LoadPlugins(false);
 
             //Sort plugins into their load order.
@@ -938,7 +938,7 @@ namespace loot {
         }
         catch (loot::error& e) {
             BOOST_LOG_TRIVIAL(error) << "Failed to sort plugins. Details: " << e.what();
-            callback->Failure(e.code(), e.what());
+            callback->Failure(e.code(), (boost::format(loc::translate("Failed to sort plugins. Details: %1%")) % e.what()).str());
         }
     }
 

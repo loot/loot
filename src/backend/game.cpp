@@ -784,7 +784,7 @@ namespace loot {
         //Create a plugin graph containing the plugin and masterlist data.
         loot::PluginGraph graph;
 
-        progressCallback("Building plugin graph...");
+        progressCallback(lc::translate("Building plugin graph..."));
         BOOST_LOG_TRIVIAL(info) << "Merging masterlist, userlist into plugin list, evaluating conditions and checking for install validity.";
         for (const auto &plugin : this->plugins) {
             vertex_t v = boost::add_vertex(plugin.second, graph);
@@ -820,7 +820,7 @@ namespace loot {
         }
 
         // Now add edges and sort.
-        progressCallback("Adding edges to plugin graph and performing topological sort...");
+        progressCallback(lc::translate("Adding edges to plugin graph and performing topological sort..."));
         return loot::Sort(graph);
     }
 }

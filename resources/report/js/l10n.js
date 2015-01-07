@@ -59,6 +59,7 @@
             }
 
             pluginCard.getElementById('activeTick').label = l10n.translate("Active Plugin").fetch();
+            pluginCard.getElementById('isMaster').label = l10n.translate("Master File").fetch();
             pluginCard.getElementById('emptyPlugin').label = l10n.translate("Empty Plugin").fetch();
             pluginCard.getElementById('loadsBSA').label = l10n.translate("Loads BSA").fetch();
             pluginCard.getElementById('hasUserEdits').label = l10n.translate("Has User Metadata").fetch();
@@ -123,8 +124,8 @@
             pluginEditor.getElementById('locations').querySelector('th:first-child').textContent = l10n.translate("URL").fetch();
             pluginEditor.getElementById('locations').querySelector('th:nth-child(2)').textContent = l10n.translate("Version").fetch();
 
-            pluginEditor.getElementById('accept').textContent = l10n.translate("Apply").fetch();
-            pluginEditor.getElementById('cancel').textContent = l10n.translate("Cancel").fetch();
+            pluginEditor.getElementById('accept').parentElement.label = l10n.translate("Apply").fetch();
+            pluginEditor.getElementById('cancel').parentElement.label = l10n.translate("Cancel").fetch();
 
             /* Plugin List Item Template */
             var pluginItem = document.querySelector('link[rel="import"][href$="loot-plugin-item.html"]');
@@ -133,6 +134,7 @@
             } else {
                 pluginItem = document.querySelector('polymer-element[name="loot-plugin-item"]').querySelector('template').content;
             }
+            pluginItem.querySelector('#secondary core-tooltip').label = l10n.translate("Global Priority").fetch();
             pluginItem.getElementById('loadsBSA').label = l10n.translate("Loads BSA").fetch();
             pluginItem.getElementById('hasUserEdits').label = l10n.translate("Has User Metadata").fetch();
 
@@ -143,6 +145,7 @@
             } else {
                 fileRow = document.querySelector('#fileRow').content;
             }
+            fileRow.querySelector('loot-validated-input').error = l10n.translate("A filename is required.").fetch();
             fileRow.querySelector('core-tooltip').label = l10n.translate("Delete Row").fetch();
 
             /* Message row template */
@@ -155,6 +158,7 @@
             messageRow.querySelector('.type').children[0].textContent = l10n.translate("Note").fetch();
             messageRow.querySelector('.type').children[1].textContent = l10n.translate("Warning").fetch();
             messageRow.querySelector('.type').children[2].textContent = l10n.translate("Error").fetch();
+            messageRow.querySelector('loot-validated-input').error = l10n.translate("A content string is required.").fetch();
             messageRow.querySelector('core-tooltip').label = l10n.translate("Delete Row").fetch();
 
             /* Tag row template */
@@ -166,6 +170,7 @@
             }
             tagRow.querySelector('.type').children[0].textContent = l10n.translate("Add").fetch();
             tagRow.querySelector('.type').children[1].textContent = l10n.translate("Remove").fetch();
+            tagRow.querySelector('loot-validated-input').error = l10n.translate("A name is required.").fetch();
             tagRow.querySelector('core-tooltip').label = l10n.translate("Delete Row").fetch();
 
             /* Dirty Info row template */
@@ -175,6 +180,11 @@
             } else {
                 dirtyInfoRow = document.querySelector('#dirtyInfoRow').content;
             }
+            dirtyInfoRow.querySelector('loot-validated-input.crc').error = l10n.translate("A CRC is required.").fetch();
+            dirtyInfoRow.querySelector('loot-validated-input.itm').error = l10n.translate("Values must be integers.").fetch();
+            dirtyInfoRow.querySelector('loot-validated-input.udr').error = l10n.translate("Values must be integers.").fetch();
+            dirtyInfoRow.querySelector('loot-validated-input.nav').error = l10n.translate("Values must be integers.").fetch();
+            dirtyInfoRow.querySelector('loot-validated-input.util').error = l10n.translate("A utility name is required.").fetch();
             dirtyInfoRow.querySelector('core-tooltip').label = l10n.translate("Delete Row").fetch();
 
             /* Location row template */
@@ -184,6 +194,7 @@
             } else {
                 locationRow = document.querySelector('#locationRow').content;
             }
+            locationRow.querySelector('loot-validated-input').error = l10n.translate("A link is required.").fetch();
             locationRow.querySelector('core-tooltip').label = l10n.translate("Delete Row").fetch();
 
             /* Game row template */
@@ -193,6 +204,8 @@
             } else {
                 gameRow = document.querySelector('#gameRow').content;
             }
+            gameRow.querySelector('loot-validated-input.name').error = l10n.translate("A name is required.").fetch();
+            gameRow.querySelector('loot-validated-input.folder').error = l10n.translate("A folder is required.").fetch();
             gameRow.querySelector('core-tooltip').label = l10n.translate("Delete Row").fetch();
 
             /* New row template */
@@ -204,6 +217,13 @@
             }
             newRow.querySelector('core-tooltip').label = l10n.translate("Add New Row").fetch();
 
+            /* Main toolbar */
+            document.getElementById('jumpToGeneralInfo').parentElement.label = l10n.translate("Jump To General Information").fetch();
+            document.getElementById('sortButton').parentElement.label = l10n.translate("Sort Plugins").fetch();
+            document.getElementById('updateMasterlistButton').parentElement.label = l10n.translate("Update Masterlist").fetch();
+            document.getElementById('applySortButton').textContent = l10n.translate("Apply").fetch();
+            document.getElementById('cancelSortButton').textContent = l10n.translate("Cancel").fetch();
+
             /* Toolbar menu */
             document.getElementById('redatePluginsButton').lastElementChild.textContent = l10n.translate("Redate Plugins").fetch();
             document.getElementById('openLogButton').lastElementChild.textContent = l10n.translate("Open Debug Log Location").fetch();
@@ -214,8 +234,6 @@
             document.getElementById('aboutButton').lastElementChild.textContent = l10n.translate("About").fetch();
             document.getElementById('settingsButton').lastElementChild.textContent = l10n.translate("Settings").fetch();
             document.getElementById('quitButton').lastElementChild.textContent = l10n.translate("Quit").fetch();
-            document.getElementById('applySortButton').textContent = l10n.translate("Apply").fetch();
-            document.getElementById('cancelSortButton').textContent = l10n.translate("Cancel").fetch();
 
             /* Nav items */
             document.getElementById('sidebarTabs').firstElementChild.textContent = l10n.translate("Plugins").fetch();
@@ -252,7 +270,7 @@
             document.getElementById('defaultGameSelect').firstElementChild.textContent = l10n.translate("Autodetect").fetch();
 
             document.getElementById('languageSelect').previousElementSibling.textContent = l10n.translate("Language").fetch();
-            document.getElementById('languageSelect').parentElement.label = l10n.translate("Language changes will be applied after LOOT is restarted.").fetch();
+            document.getElementById('languageSelect').previousElementSibling.label = l10n.translate("Language changes will be applied after LOOT is restarted.").fetch();
 
             document.getElementById('enableDebugLogging').label = l10n.translate("Enable debug logging").fetch();
             document.getElementById('enableDebugLogging').parentElement.label = l10n.translate("The output is logged to the LOOTDebugLog.txt file.").fetch();

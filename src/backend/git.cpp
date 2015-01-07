@@ -175,16 +175,20 @@ namespace loot {
 
     bool IsMasterlistDifferent(git_handler& git, const std::string& filename) {
         if (git.obj) {
-            throw error(error::git_error, "Object memory already allocated!");
+            BOOST_LOG_TRIVIAL(error) << "Object memory already allocated!";
+            throw error(error::git_error, lc::translate("Object memory already allocated!"));
         }
         else if (git.tree) {
-            throw error(error::git_error, "Tree memory already allocated!");
+            BOOST_LOG_TRIVIAL(error) << "Tree memory already allocated!";
+            throw error(error::git_error, lc::translate("Tree memory already allocated!"));
         }
         else if (git.diff) {
-            throw error(error::git_error, "Diff memory already allocated!");
+            BOOST_LOG_TRIVIAL(error) << "Diff memory already allocated!";
+            throw error(error::git_error, lc::translate("Diff memory already allocated!"));
         }
         else if (!git.repo) {
-            throw error(error::git_error, "Repository handle not open!");
+            BOOST_LOG_TRIVIAL(error) << "Repository handle not open!";
+            throw error(error::git_error, lc::translate("Repository handle not open!"));
         }
 
         // Perform a git diff, then iterate the deltas to see if one exists for the masterlist.
@@ -214,15 +218,17 @@ namespace loot {
 
     void Masterlist::GetGitInfo(const boost::filesystem::path& path, bool shortID) {
         if (!isRepository(path.parent_path())) {
-            throw error(error::ok, "Unknown: Git repository missing");
+            BOOST_LOG_TRIVIAL(info) << "Unknown masterlist revision: Git repository missing.";
+            throw error(error::ok, lc::translate("Unknown: Git repository missing"));
         }
         else if (!fs::exists(path)) {
-            throw error(error::ok, "N/A: No masterlist present");
+            BOOST_LOG_TRIVIAL(info) << "Unknown masterlist revision: No masterlist present.";
+            throw error(error::ok, lc::translate("N/A: No masterlist present"));
         }
 
         // Compare HEAD and working copy, and get revision info.
         git_handler git;
-        git.ui_message = "An error occurred while trying to read the local masterlist's version. If this error happens again, try deleting the \".git\" folder in " + path.parent_path().string() + ".";
+        git.ui_message = (boost::format(lc::translate("An error occurred while trying to read the local masterlist's version. If this error happens again, try deleting the \".git\" folder in %1%.")) % path.parent_path().string()).str();
         BOOST_LOG_TRIVIAL(debug) << "Existing repository found, attempting to open it.";
         git.call(git_repository_open(&git.repo, path.parent_path().string().c_str()));
 
@@ -255,8 +261,8 @@ namespace loot {
 
         BOOST_LOG_TRIVIAL(trace) << "Diffing masterlist HEAD and working copy.";
         if (IsMasterlistDifferent(git, path.filename().string())) {
-            revision += " (edited)";
-            date += " (edited)";
+            revision += string(" ") + lc::translate("(edited)").str();
+            date += string(" ") + lc::translate("(edited)").str();
         }
     }
 
@@ -285,7 +291,7 @@ namespace loot {
         // Now try to access the repository if it exists, or clone one if it doesn't.
         BOOST_LOG_TRIVIAL(trace) << "Attempting to open the Git repository at: " << repo_path;
         if (!isRepository(repo_path)) {
-            git.ui_message = "An error occurred while trying to clone the remote masterlist repository.";
+            git.ui_message = lc::translate("An error occurred while trying to clone the remote masterlist repository.");
             // Clone the remote repository.
             BOOST_LOG_TRIVIAL(info) << "Repository doesn't exist, cloning the remote repository.";
 
@@ -341,7 +347,7 @@ namespace loot {
         }
         else {
             // Repository exists: check settings are correct, then pull updates.
-            git.ui_message = "An error occurred while trying to access the local masterlist repository. If this error happens again, try deleting the \".git\" folder in " + repo_path.string() + ".";
+            git.ui_message = (boost::format(lc::translate("An error occurred while trying to access the local masterlist repository. If this error happens again, try deleting the \".git\" folder in %1%.")) % repo_path.string()).str();
 
             // Open the repository.
             BOOST_LOG_TRIVIAL(info) << "Existing repository found, attempting to open it.";
@@ -365,7 +371,7 @@ namespace loot {
 
             // Now fetch updates from the remote.
             BOOST_LOG_TRIVIAL(trace) << "Fetching updates from remote.";
-            git.ui_message = "An error occurred while trying to update the masterlist. This could be due to a server-side error. Try again in a few minutes.";
+            git.ui_message = lc::translate("An error occurred while trying to update the masterlist. This could be due to a server-side error. Try again in a few minutes.");
 
             git.call(git_remote_fetch(git.remote, git.sig, nullptr));
 
@@ -374,7 +380,7 @@ namespace loot {
             BOOST_LOG_TRIVIAL(info) << "Received " << stats->indexed_objects << " of " << stats->total_objects << " objects in " << stats->received_bytes << " bytes.";
 
             // Check that a branch with the correct name exists.
-            git.ui_message = "An error occurred while trying to access the local masterlist repository. If this error happens again, try deleting the \".git\" folder in " + repo_path.string() + "\".";
+            git.ui_message = (boost::format(lc::translate("An error occurred while trying to access the local masterlist repository. If this error happens again, try deleting the \".git\" folder in %1%.")) % repo_path.string()).str();
             int ret = git_branch_lookup(&git.ref, git.repo, repoBranch.c_str(), GIT_BRANCH_LOCAL);
             if (ret == GIT_ENOTFOUND) {
                 // Branch doesn't exist. Create a new branch using the remote branch's latest commit.
@@ -508,7 +514,7 @@ namespace loot {
 
         bool parsingFailed = false;
         std::string parsingError;
-        git.ui_message = "An error occurred while trying to read information on the updated masterlist. If this error happens again, try deleting the \".git\" folder in " + repo_path.string() + "\".";
+        git.ui_message = (boost::format(lc::translate("An error occurred while trying to read information on the updated masterlist. If this error happens again, try deleting the \".git\" folder in %1%.")) % repo_path.string()).str();
         do {
             // Get some descriptive info about what was checked out.
 

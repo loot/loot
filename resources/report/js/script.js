@@ -505,14 +505,14 @@ function updateMasterlistNoProgress() {
             /* Hack to stop cards overlapping. */
             document.getElementById('main').lastElementChild.updateSize();
 
-            toast('Masterlist updated to revision ' + loot.game.masterlist.revision + '.');
+            toast(l10n.jed.translate('Masterlist updated to revision %s.').fetch(loot.game.masterlist.revision));
         } else {
-            toast('No masterlist update was necessary.');
+            toast(l10n.jed.translate('No masterlist update was necessary.').fetch());
         }
     }).catch(processCefError);
 }
 function updateMasterlist(evt) {
-    showProgress('Updating masterlist...');
+    showProgress(l10n.jed.translate('Updating masterlist...').fetch());
     updateMasterlistNoProgress().then(function(result){
         closeProgressDialog();
     }).catch(processCefError);
@@ -542,7 +542,7 @@ function sortPlugins(evt) {
         });
     }
     mlistUpdate.then(function(){
-        showProgress('Sorting plugins...');
+        showProgress(l10n.jed.translate('Sorting plugins...').fetch());
         loot.query('sortPlugins').then(JSON.parse).then(function(result){
             if (result) {
                 loot.game.oldLoadOrder = loot.game.plugins;
@@ -644,7 +644,7 @@ function redatePlugins(evt) {
         return;
     }
 
-    showMessageDialog('Redate Plugins?', 'This feature is provided so that modders using the Creation Kit may set the load order it uses. A side-effect is that any subscribed Steam Workshop mods will be re-downloaded by Steam. Do you wish to continue?', l10n.jed.translate('Redate').fetch(), function(result){
+    showMessageDialog(l10n.jed.translate('Redate Plugins?').fetch(), l10n.jed.translate('This feature is provided so that modders using the Creation Kit may set the load order it uses. A side-effect is that any subscribed Steam Workshop mods will be re-downloaded by Steam. Do you wish to continue?').fetch(), l10n.jed.translate('Redate').fetch(), function(result){
         if (result) {
             loot.query('redatePlugins').then(function(response){
                 toast('Plugins were successfully redated.');
@@ -653,7 +653,7 @@ function redatePlugins(evt) {
     });
 }
 function clearAllMetadata(evt) {
-    showMessageDialog('', 'Are you sure you want to clear all existing user-added metadata from all plugins?', l10n.jed.translate('Clear').fetch(), function(result){
+    showMessageDialog('', l10n.jed.translate('Are you sure you want to clear all existing user-added metadata from all plugins?').fetch(), l10n.jed.translate('Clear').fetch(), function(result){
         if (result) {
             loot.query('clearAllMetadata').then(JSON.parse).then(function(result){
                 if (result) {
@@ -674,7 +674,7 @@ function clearAllMetadata(evt) {
                         }
                     });
 
-                    toast('All user-added metadata has been cleared.');
+                    toast(l10n.jed.translate('All user-added metadata has been cleared.').fetch());
                 }
             }).catch(processCefError);
         }
@@ -731,7 +731,7 @@ function copyContent(evt) {
     });
 
     loot.query(request).then(function(){
-        toast("LOOT's content has been copied to the clipboard.");
+        toast(l10n.jed.translate("LOOT's content has been copied to the clipboard.").fetch());
     }).catch(processCefError);
 }
 function areSettingsValid() {
@@ -805,7 +805,7 @@ function focusSearch(evt) {
     }
 }
 function handleUnappliedChangesClose(change) {
-    showMessageDialog('', 'You have not yet applied or cancelled your ' + change + '. Are you sure you want to quit?', l10n.jed.translate('Quit').fetch(), function(result){
+    showMessageDialog('', l10n.jed.translate('You have not yet applied or cancelled your %s. Are you sure you want to quit?').fetch(change), l10n.jed.translate('Quit').fetch(), function(result){
         if (result) {
             /* Cancel any sorting and close any editors. Cheat by sending a
                cancelSort query for as many times as necessary. */
@@ -954,11 +954,11 @@ function handleCopyMetadata(evt) {
     });
 
     loot.query(request).then(function(){
-        toast('The metadata for ' + evt.target.getName() + ' has been copied to the clipboard.');
+        toast(l10n.jed.translate('The metadata for "%s" has been copied to the clipboard.').fetch(evt.target.getName()));
     }).catch(processCefError);
 }
 function handleClearMetadata(evt) {
-    showMessageDialog('', 'Are you sure you want to clear all existing user-added metadata from "' + evt.target.getName() + '"?', l10n.jed.translate('Clear').fetch(), function(result){
+    showMessageDialog('', l10n.jed.translate('Are you sure you want to clear all existing user-added metadata from "%s"?').fetch(evt.target.getName()), l10n.jed.translate('Clear').fetch(), function(result){
         if (result) {
             var request = JSON.stringify({
                 name: 'clearPluginMetadata',
@@ -983,7 +983,7 @@ function handleClearMetadata(evt) {
                             break;
                         }
                     }
-                    toast('The user-added metadata for ' + evt.target.getName() + ' has been cleared.');
+                    toast(l10n.jed.translate('The user-added metadata for "%s" has been cleared.').fetch(evt.target.getName()));
                 }
             }).catch(processCefError);
         }
@@ -1003,9 +1003,9 @@ function handleSidebarClick(evt) {
 }
 function handleQuit(evt) {
     if (!document.getElementById('applySortButton').classList.contains('hidden')) {
-        handleUnappliedChangesClose('sorted load order');
+        handleUnappliedChangesClose(l10n.jed.translate('sorted load order').fetch());
     } else if (document.body.hasAttribute('data-editors')) {
-        handleUnappliedChangesClose('metadata edits');
+        handleUnappliedChangesClose(l10n.jed.translate('metadata edits').fetch());
     } else {
         window.close();
     }
@@ -1212,7 +1212,7 @@ function initVars() {
 }
 function onContentRefresh(evt) {
     /* Send a query for updated load order and plugin header info. */
-    showProgress('Refreshing data...');
+    showProgress(l10n.jed.translate('Refreshing data...').fetch());
     loot.query('getGameData').then(function(result){
         /* Parse the data sent from C++. */
         try {

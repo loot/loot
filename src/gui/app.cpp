@@ -247,7 +247,6 @@ namespace loot {
         }
         catch (loot::error &e) {
             if (e.code() == loot::error::no_game_detected) {
-                BOOST_LOG_TRIVIAL(error) << e.what();
                 _initErrors.push_back(e.what());
             }
             else {
@@ -392,7 +391,8 @@ namespace loot {
             }
         }
 
-        throw error(error::no_game_detected, "None of the supported games were detected.");
+        BOOST_LOG_TRIVIAL(error) << "None of the supported games were detected.";
+        throw error(error::no_game_detected, translate("None of the supported games were detected."));
     }
 
     bool LootState::AreSettingsValid() {
