@@ -117,7 +117,10 @@
 
 /* Typography */
 html {
-    font:11pt/1.429 Roboto, Noto, sans-serif;
+    /* Microsoft Yahei is for Chinese characters, and Malgun Gothic for Korean
+       characters. If Noto isn't present, they're better than the sans-serif
+       defaults. */
+    font:11pt/1.429 Roboto, Noto, 'Microsoft Yahei', 'Malgun Gothic', sans-serif;
     color: rgba(0, 0, 0, 0.87);
     font-weight: 400;
     text-rendering: optimizeLegibility;
