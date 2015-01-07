@@ -37,6 +37,7 @@ LOOT's UI relies on a few web libraries:
 
 * [Polymer](https://www.polymer-project.org)
 * [Jed](https://github.com/SlexAxton/Jed)
+* [Jed Gettext Parser](https://github.com/WrinklyNinja/jed-gettext-parser)
 * [Marked](https://github.com/chjj/marked)
 * [RequireJS](http://requirejs.org/)
 
