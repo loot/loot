@@ -58,13 +58,13 @@
                 pluginCard = document.querySelector('polymer-element[name="loot-plugin-card"]').querySelector('template').content;
             }
 
-            pluginCard.getElementById('activeTick').label = l10n.translate("Active Plugin").fetch();
-            pluginCard.getElementById('isMaster').label = l10n.translate("Master File").fetch();
-            pluginCard.getElementById('emptyPlugin').label = l10n.translate("Empty Plugin").fetch();
-            pluginCard.getElementById('loadsBSA').label = l10n.translate("Loads BSA").fetch();
-            pluginCard.getElementById('hasUserEdits').label = l10n.translate("Has User Metadata").fetch();
+            pluginCard.getElementById('activeTick').setAttribute('label', l10n.translate("Active Plugin").fetch());
+            pluginCard.getElementById('isMaster').setAttribute('label', l10n.translate("Master File").fetch());
+            pluginCard.getElementById('emptyPlugin').setAttribute('label', l10n.translate("Empty Plugin").fetch());
+            pluginCard.getElementById('loadsBSA').setAttribute('label', l10n.translate("Loads BSA").fetch());
+            pluginCard.getElementById('hasUserEdits').setAttribute('label', l10n.translate("Has User Metadata").fetch());
 
-            pluginCard.getElementById('showOnlyConflicts').label = l10n.translate("Show Only Conflicts").fetch();
+            pluginCard.getElementById('showOnlyConflicts').setAttribute('label', l10n.translate("Show Only Conflicts").fetch());
             pluginCard.getElementById('editMetadata').lastChild.textContent = l10n.translate("Edit Metadata").fetch();
             pluginCard.getElementById('copyMetadata').lastChild.textContent = l10n.translate("Copy Metadata").fetch();
             pluginCard.getElementById('clearMetadata').lastChild.textContent = l10n.translate("Clear User Metadata").fetch();
@@ -77,13 +77,13 @@
                 pluginEditor = document.querySelector('polymer-element[name="loot-plugin-editor"]').querySelector('template').content;
             }
 
-            pluginEditor.getElementById('activeTick').label = l10n.translate("Active Plugin").fetch();
-            pluginEditor.getElementById('emptyPlugin').label = l10n.translate("Empty Plugin").fetch();
-            pluginEditor.getElementById('loadsBSA').label = l10n.translate("Loads BSA").fetch();
+            pluginEditor.getElementById('activeTick').setAttribute('label', l10n.translate("Active Plugin").fetch());
+            pluginEditor.getElementById('emptyPlugin').setAttribute('label', l10n.translate("Empty Plugin").fetch());
+            pluginEditor.getElementById('loadsBSA').setAttribute('label', l10n.translate("Loads BSA").fetch());
 
-            pluginEditor.getElementById('enableEdits').label = l10n.translate("Enable Edits").fetch();
-            pluginEditor.getElementById('globalPriority').parentElement.label = l10n.translate("Global priorities are compared against all other plugins. Normal priorities are compared against only conflicting plugins.").fetch();
-            pluginEditor.getElementById('globalPriority').label = l10n.translate("Global Priority").fetch();
+            pluginEditor.getElementById('enableEdits').setAttribute('label', l10n.translate("Enable Edits").fetch());
+            pluginEditor.getElementById('globalPriority').parentElement.setAttribute('label', l10n.translate("Global priorities are compared against all other plugins. Normal priorities are compared against only conflicting plugins.").fetch());
+            pluginEditor.getElementById('globalPriority').setAttribute('label', l10n.translate("Global Priority").fetch());
             pluginEditor.getElementById('priorityValue').parentElement.previousElementSibling.textContent = l10n.translate("Priority Value").fetch();
 
             pluginEditor.getElementById('tableTabs').querySelector('[data-for=main]').textContent = l10n.translate("Main").fetch();
@@ -125,8 +125,8 @@
             pluginEditor.getElementById('locations').querySelector('th:first-child').textContent = l10n.translate("URL").fetch();
             pluginEditor.getElementById('locations').querySelector('th:nth-child(2)').textContent = l10n.translate("Version").fetch();
 
-            pluginEditor.getElementById('accept').parentElement.label = l10n.translate("Apply").fetch();
-            pluginEditor.getElementById('cancel').parentElement.label = l10n.translate("Cancel").fetch();
+            pluginEditor.getElementById('accept').parentElement.setAttribute('label', l10n.translate("Apply").fetch());
+            pluginEditor.getElementById('cancel').parentElement.setAttribute('label', l10n.translate("Cancel").fetch());
 
             /* Plugin List Item Template */
             var pluginItem = document.querySelector('link[rel="import"][href$="loot-plugin-item.html"]');
@@ -135,9 +135,9 @@
             } else {
                 pluginItem = document.querySelector('polymer-element[name="loot-plugin-item"]').querySelector('template').content;
             }
-            pluginItem.querySelector('#secondary core-tooltip').label = l10n.translate("Global Priority").fetch();
-            pluginItem.getElementById('loadsBSA').label = l10n.translate("Loads BSA").fetch();
-            pluginItem.getElementById('hasUserEdits').label = l10n.translate("Has User Metadata").fetch();
+            pluginItem.querySelector('#secondary core-tooltip').setAttribute('label', l10n.translate("Global Priority").fetch());
+            pluginItem.getElementById('loadsBSA').setAttribute('label', l10n.translate("Loads BSA").fetch());
+            pluginItem.getElementById('hasUserEdits').setAttribute('label', l10n.translate("Has User Metadata").fetch());
 
             /* File row template */
             var fileRow = document.querySelector('link[rel="import"][href$="editable-table.html"]');
@@ -146,8 +146,8 @@
             } else {
                 fileRow = document.querySelector('#fileRow').content;
             }
-            fileRow.querySelector('loot-validated-input').error = l10n.translate("A filename is required.").fetch();
-            fileRow.querySelector('core-tooltip').label = l10n.translate("Delete Row").fetch();
+            fileRow.querySelector('loot-validated-input').setAttribute('error', l10n.translate("A filename is required.").fetch());
+            fileRow.querySelector('core-tooltip').setAttribute('label', l10n.translate("Delete Row").fetch());
 
             /* Message row template */
             var messageRow = document.querySelector('link[rel="import"][href$="editable-table.html"]');
@@ -159,8 +159,8 @@
             messageRow.querySelector('.type').children[0].textContent = l10n.translate("Note").fetch();
             messageRow.querySelector('.type').children[1].textContent = l10n.translate("Warning").fetch();
             messageRow.querySelector('.type').children[2].textContent = l10n.translate("Error").fetch();
-            messageRow.querySelector('loot-validated-input').error = l10n.translate("A content string is required.").fetch();
-            messageRow.querySelector('core-tooltip').label = l10n.translate("Delete Row").fetch();
+            messageRow.querySelector('loot-validated-input').setAttribute('error', l10n.translate("A content string is required.").fetch());
+            messageRow.querySelector('core-tooltip').setAttribute('label', l10n.translate("Delete Row").fetch());
 
             /* Tag row template */
             var tagRow = document.querySelector('link[rel="import"][href$="editable-table.html"]');
@@ -171,8 +171,8 @@
             }
             tagRow.querySelector('.type').children[0].textContent = l10n.translate("Add").fetch();
             tagRow.querySelector('.type').children[1].textContent = l10n.translate("Remove").fetch();
-            tagRow.querySelector('loot-validated-input').error = l10n.translate("A name is required.").fetch();
-            tagRow.querySelector('core-tooltip').label = l10n.translate("Delete Row").fetch();
+            tagRow.querySelector('loot-validated-input').setAttribute('error', l10n.translate("A name is required.").fetch());
+            tagRow.querySelector('core-tooltip').setAttribute('label', l10n.translate("Delete Row").fetch());
 
             /* Dirty Info row template */
             var dirtyInfoRow = document.querySelector('link[rel="import"][href$="editable-table.html"]');
@@ -181,12 +181,12 @@
             } else {
                 dirtyInfoRow = document.querySelector('#dirtyInfoRow').content;
             }
-            dirtyInfoRow.querySelector('loot-validated-input.crc').error = l10n.translate("A CRC is required.").fetch();
-            dirtyInfoRow.querySelector('loot-validated-input.itm').error = l10n.translate("Values must be integers.").fetch();
-            dirtyInfoRow.querySelector('loot-validated-input.udr').error = l10n.translate("Values must be integers.").fetch();
-            dirtyInfoRow.querySelector('loot-validated-input.nav').error = l10n.translate("Values must be integers.").fetch();
-            dirtyInfoRow.querySelector('loot-validated-input.util').error = l10n.translate("A utility name is required.").fetch();
-            dirtyInfoRow.querySelector('core-tooltip').label = l10n.translate("Delete Row").fetch();
+            dirtyInfoRow.querySelector('loot-validated-input.crc').setAttribute('error', l10n.translate("A CRC is required.").fetch());
+            dirtyInfoRow.querySelector('loot-validated-input.itm').setAttribute('error', l10n.translate("Values must be integers.").fetch());
+            dirtyInfoRow.querySelector('loot-validated-input.udr').setAttribute('error', l10n.translate("Values must be integers.").fetch());
+            dirtyInfoRow.querySelector('loot-validated-input.nav').setAttribute('error', l10n.translate("Values must be integers.").fetch());
+            dirtyInfoRow.querySelector('loot-validated-input.util').setAttribute('error', l10n.translate("A utility name is required.").fetch());
+            dirtyInfoRow.querySelector('core-tooltip').setAttribute('label', l10n.translate("Delete Row").fetch());
 
             /* Location row template */
             var locationRow = document.querySelector('link[rel="import"][href$="editable-table.html"]');
@@ -195,8 +195,8 @@
             } else {
                 locationRow = document.querySelector('#locationRow').content;
             }
-            locationRow.querySelector('loot-validated-input').error = l10n.translate("A link is required.").fetch();
-            locationRow.querySelector('core-tooltip').label = l10n.translate("Delete Row").fetch();
+            locationRow.querySelector('loot-validated-input').setAttribute('error', l10n.translate("A link is required.").fetch());
+            locationRow.querySelector('core-tooltip').setAttribute('label', l10n.translate("Delete Row").fetch());
 
             /* Game row template */
             var gameRow = document.querySelector('link[rel="import"][href$="editable-table.html"]');
@@ -205,9 +205,9 @@
             } else {
                 gameRow = document.querySelector('#gameRow').content;
             }
-            gameRow.querySelector('loot-validated-input.name').error = l10n.translate("A name is required.").fetch();
-            gameRow.querySelector('loot-validated-input.folder').error = l10n.translate("A folder is required.").fetch();
-            gameRow.querySelector('core-tooltip').label = l10n.translate("Delete Row").fetch();
+            gameRow.querySelector('loot-validated-input.name').setAttribute('error', l10n.translate("A name is required.").fetch());
+            gameRow.querySelector('loot-validated-input.folder').setAttribute('error', l10n.translate("A folder is required.").fetch());
+            gameRow.querySelector('core-tooltip').setAttribute('label', l10n.translate("Delete Row").fetch());
 
             /* New row template */
             var newRow = document.querySelector('link[rel="import"][href$="editable-table.html"]');
@@ -216,7 +216,7 @@
             } else {
                 newRow = document.querySelector('#newRow').content;
             }
-            newRow.querySelector('core-tooltip').label = l10n.translate("Add New Row").fetch();
+            newRow.querySelector('core-tooltip').setAttribute('label', l10n.translate("Add New Row").fetch());
 
             /* Main toolbar */
             document.getElementById('jumpToGeneralInfo').parentElement.label = l10n.translate("Jump To General Information").fetch();
@@ -268,8 +268,11 @@
             /* Settings dialog */
             document.getElementById('settingsDialog').heading = l10n.translate("Settings").fetch();
 
-            document.getElementById('defaultGameSelect').previousElementSibling.textContent = l10n.translate("Default Game").fetch();
-            document.getElementById('defaultGameSelect').firstElementChild.textContent = l10n.translate("Autodetect").fetch();
+            var defaultGameSelect = document.getElementById('defaultGameSelect');
+            defaultGameSelect.previousElementSibling.textContent = l10n.translate("Default Game").fetch();
+            defaultGameSelect.firstElementChild.textContent = l10n.translate("Autodetect").fetch();
+            /* The selected text doesn't update, so force that translation. */
+            defaultGameSelect.shadowRoot.querySelector('paper-dropdown-menu').shadowRoot.getElementById('label').textContent = l10n.translate("Autodetect").fetch();
 
             document.getElementById('languageSelect').previousElementSibling.textContent = l10n.translate("Language").fetch();
             document.getElementById('languageSelect').previousElementSibling.label = l10n.translate("Language changes will be applied after LOOT is restarted.").fetch();
@@ -288,6 +291,10 @@
             gameTable.querySelector('th:nth-child(6)').textContent = l10n.translate("Masterlist Repository Branch").fetch();
             gameTable.querySelector('th:nth-child(7)').textContent = l10n.translate("Install Path").fetch();
             gameTable.querySelector('th:nth-child(8)').textContent = l10n.translate("Install Path Registry Key").fetch();
+
+            /* As the game table is attached on launch, its "Add New Row"
+               tooltip doesn't benefit from the template translation above. */
+            gameTable.querySelector('tr:last-child core-tooltip').setAttribute('label', l10n.translate("Add New Row").fetch());
 
             document.getElementById('settingsDialog').getElementsByClassName('accept')[0].textContent = l10n.translate("Apply").fetch();
             document.getElementById('settingsDialog').getElementsByClassName('cancel')[0].textContent = l10n.translate("Cancel").fetch();
