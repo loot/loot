@@ -305,6 +305,7 @@
 
             firstRun.querySelector('li:nth-child(3)').textContent = l10n.translate("CRCs are only displayed after plugins have been loaded, either by conflict filtering, or by sorting.").fetch();
             firstRun.querySelector('li:nth-child(4)').textContent = l10n.translate("Double-click a plugin in the sidebar to quickly open its metadata editor. Multiple metadata editors can be opened at once.").fetch();
+            firstRun.querySelector('li:nth-child(5)').textContent = l10n.translate("Plugins can be drag and dropped from the sidebar into editors' \"load after, \"requirements\" and \"incompatibility\" tables.").fetch();
             firstRun.querySelector('li:nth-child(6)').textContent = l10n.translate("Some features are disabled while there is an editor open, or while there is a sorted load order that has not been applied or discarded.").fetch();
             firstRun.querySelector('li:last-child').textContent = l10n.translate("Many interface elements have tooltips. If you don't know what something is, try hovering your mouse over it to find out. Otherwise, LOOT's documentation can be accessed through the main menu.").fetch();
 
