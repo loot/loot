@@ -105,6 +105,21 @@ namespace loot {
         // Specify CEF browser settings here.
         CefBrowserSettings browser_settings;
 
+        // Need to set the global locale for this process so that messages will
+        // be translated.
+        BOOST_LOG_TRIVIAL(debug) << "Initialising language settings in UI thread.";
+        const YAML::Node& settings = g_app_state.GetSettings();
+        if (settings["language"] && settings["language"].as<string>() != Language(Language::english).Locale()) {
+            boost::locale::generator gen;
+            gen.add_messages_path(g_path_l10n.string());
+            gen.add_messages_domain("loot");
+
+            loot::Language lang(settings["language"].as<string>());
+            BOOST_LOG_TRIVIAL(debug) << "Selected language: " << lang.Name();
+            locale::global(gen(lang.Locale() + ".UTF-8"));
+            boost::filesystem::path::imbue(locale());
+        }
+
         // Set URL to load. Ignore any command line values.
         std::string url = ToFileURL(g_path_report);
 
