@@ -69,8 +69,9 @@ html /deep/ core-tooltip:hover:not([disabled])::shadow .core-tooltip {
     max-height: none !important;
 }
 
-/* Don't center the "Jump to General Information" tooltip, as it gets cut off
-   by the sidebar. */
-#drawerToggle + core-tooltip::shadow #tooltip {
+/* Don't center the "Jump to General Information" or active plugin tooltips, as
+   they can get cut off by the sidebar. */
+#drawerToggle + core-tooltip::shadow #tooltip,
+loot-plugin-card /deep/ #activeTick::shadow #tooltip {
     left: inherit !important;
 }
