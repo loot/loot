@@ -1166,24 +1166,27 @@ function initVars() {
 
             try {
                 loot.settings = JSON.parse(results[2]);
-                l10n.getJedInstance(loot.settings.language).then(function(jed){
-                    l10n.translateStaticText(jed);
-                    l10n.jed = jed;
-                }).catch(processCefError);
             } catch (e) {
                 console.log(e);
                 console.log('getSettings response: ' + results[2]);
             }
+        }).then(function(){
+            return l10n.getJedInstance(loot.settings.language).then(function(jed){
+                l10n.translateStaticText(jed);
+                l10n.jed = jed;
 
-            var promise;
+                /* Also need to update the settings UI. */
+                loot.updateSettingsUI();
+            }).catch(processCefError);
+        }).then(function(){
             if (result) {
-                promise = new Promise(function(resolve, reject){
+                return new Promise(function(resolve, reject){
                     closeProgressDialog();
                     document.getElementById('settingsButton').click();
                     resolve('');
                 });
             } else {
-                promise = loot.query('getGameData').then(function(result){
+                return loot.query('getGameData').then(function(result){
                     var game = JSON.parse(result, jsonToPlugin);
                     loot.game.folder = game.folder;
                     loot.game.masterlist = game.masterlist;
@@ -1200,14 +1203,11 @@ function initVars() {
                     return '';
                 }).catch(processCefError);
             }
-
-            promise.then(function(){
-                if (!loot.settings.lastVersion || loot.settings.lastVersion != loot.version) {
-                    document.getElementById('firstRun').showModal();
-                }
-            }).catch(processCefError);
+        }).then(function(){
+            if (!loot.settings.lastVersion || loot.settings.lastVersion != loot.version) {
+                document.getElementById('firstRun').showModal();
+            }
         }).catch(processCefError);
-
     }).catch(processCefError);
 }
 function onContentRefresh(evt) {
