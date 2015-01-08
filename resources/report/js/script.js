@@ -343,7 +343,7 @@ function processCefError(err) {
        promise errors, not just CEF errors. */
     console.log(err.stack);
     closeProgressDialog();
-    showMessageBox('Error', err.message);
+    showMessageBox(l10n.jed.translate('Error').fetch(), err.message);
 }
 
 function showElement(element) {
@@ -380,7 +380,7 @@ function getConflictingPluginsFromFilter() {
             ]
         });
 
-        showProgress('Checking if plugins have been loaded...');
+        showProgress(l10n.jed.translate('Checking if plugins have been loaded...').fetch());
 
         return loot.query(request).then(JSON.parse).then(function(result){
             if (result) {
@@ -435,7 +435,7 @@ function changeGame(evt) {
     }
 
     /* Send off a CEF query with the folder name of the new game. */
-    showProgress('Loading game data...');
+    showProgress(l10n.jed.translate('Loading game data...').fetch());
     var request = JSON.stringify({
         name: 'changeGame',
         args: [
@@ -1071,7 +1071,7 @@ function initVars() {
             if (loot.version.length > pos + 1) {
                 document.getElementById('LOOTBuild').textContent = loot.version.substring(pos + 1);
             } else {
-                document.getElementById('LOOTBuild').textContent = 'unknown';
+                document.getElementById('LOOTBuild').textContent = l10n.jed.translate('unknown').fetch();
             }
 
             loot.version = loot.version.substring(0, pos);

@@ -86,6 +86,7 @@
             pluginEditor.getElementById('globalPriority').label = l10n.translate("Global Priority").fetch();
             pluginEditor.getElementById('priorityValue').parentElement.previousElementSibling.textContent = l10n.translate("Priority Value").fetch();
 
+            pluginEditor.getElementById('tableTabs').querySelector('[data-for=main]').textContent = l10n.translate("Main").fetch();
             pluginEditor.getElementById('tableTabs').querySelector('[data-for=loadAfter]').textContent = l10n.translate("Load After").fetch();
             pluginEditor.getElementById('tableTabs').querySelector('[data-for=req]').textContent = l10n.translate("Requirements").fetch();
             pluginEditor.getElementById('tableTabs').querySelector('[data-for=inc]').textContent = l10n.translate("Incompatibilities").fetch();
@@ -239,6 +240,7 @@
             document.getElementById('sidebarTabs').firstElementChild.textContent = l10n.translate("Plugins").fetch();
             document.getElementById('sidebarTabs').firstElementChild.nextElementSibling.textContent = l10n.translate("Filters").fetch();
             document.getElementById('searchBox').parentElement.label = l10n.translate("Press Enter or click outside the input to set the filter.").fetch();
+            document.getElementById('searchBox').label = l10n.translate("Filter content...").fetch();
 
             /* Filters */
             document.getElementById('hideVersionNumbers').label = l10n.translate("Hide version numbers").fetch();
