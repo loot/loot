@@ -254,7 +254,6 @@
      inkscape:label="Wood"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,-860.36218)"
      style="display:inline"
      sodipodi:insensitive="true">
     <rect
@@ -263,7 +262,7 @@
        width="152"
        height="152"
        x="20"
-       y="880.36218" />
+       y="20" />
   </g>
   <g
      inkscape:groupmode="layer"
