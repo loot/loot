@@ -89,21 +89,7 @@ namespace loot {
         static const unsigned int danish = 10;
         static const unsigned int korean = 11;
 
-        static std::vector<std::string> Names() {
-            std::vector<std::string> vec;
-            vec.push_back(Language(Language::english).Name());
-            vec.push_back(Language(Language::spanish).Name());
-            vec.push_back(Language(Language::russian).Name());
-            vec.push_back(Language(Language::french).Name());
-            vec.push_back(Language(Language::chinese).Name());
-            vec.push_back(Language(Language::polish).Name());
-            vec.push_back(Language(Language::brazilian_portuguese).Name());
-            vec.push_back(Language(Language::finnish).Name());
-            vec.push_back(Language(Language::german).Name());
-            vec.push_back(Language(Language::danish).Name());
-            vec.push_back(Language(Language::korean).Name());
-            return vec;
-        }
+        static const std::vector<std::string> Names;
     private:
         unsigned int _code;
         std::string _name;

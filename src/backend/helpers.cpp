@@ -331,6 +331,20 @@ namespace loot {
         return _locale;
     }
 
+    const std::vector<std::string> Language::Names({
+        Language(Language::english).Name(),
+        Language(Language::spanish).Name(),
+        Language(Language::russian).Name(),
+        Language(Language::french).Name(),
+        Language(Language::chinese).Name(),
+        Language(Language::polish).Name(),
+        Language(Language::brazilian_portuguese).Name(),
+        Language(Language::finnish).Name(),
+        Language(Language::german).Name(),
+        Language(Language::danish).Name(),
+        Language(Language::korean).Name()
+    });
+
     //////////////////////////////
     // Version Class Functions
     //////////////////////////////
