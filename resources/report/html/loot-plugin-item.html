@@ -7,11 +7,10 @@
 <polymer-element name="loot-plugin-item" attributes="priorityText data">
     <template>
         <style>
-        :host(:not([data-bsa])) #loadsBSA,
         :host(:not([data-edits])) #hasUserEdits {
             display: none;
         }
-        #loadsBSA > core-icon, #hasUserEdits > core-icon {
+        #hasUserEdits > core-icon {
             display: block;
             margin-right: 0;
         }
@@ -97,9 +96,6 @@
                     <div id="priority"></div>
                 </div>
             </div>
-            <core-tooltip id="loadsBSA" label="Loads BSA" noarrow position="left">
-                <core-icon icon="attachment"></core-icon>
-            </core-tooltip>
             <core-tooltip id="hasUserEdits" label="Has User Metadata" noarrow position="left">
                 <core-icon icon="account-circle"></core-icon>
             </core-tooltip>

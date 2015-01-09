@@ -136,7 +136,6 @@
                 pluginItem = document.querySelector('polymer-element[name="loot-plugin-item"]').querySelector('template').content;
             }
             pluginItem.querySelector('#secondary core-tooltip').setAttribute('label', l10n.translate("Global Priority").fetch());
-            pluginItem.getElementById('loadsBSA').setAttribute('label', l10n.translate("Loads BSA").fetch());
             pluginItem.getElementById('hasUserEdits').setAttribute('label', l10n.translate("Has User Metadata").fetch());
 
             /* File row template */
