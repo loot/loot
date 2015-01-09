@@ -152,7 +152,7 @@ html /deep/ table[is=editable-table] paper-icon-button[icon=add]:hover {
             value: function(evt) {
                 evt.stopPropagation();
 
-                if (evt.currentTarget.tagName == 'TABLE' && (evt.currentTarget.id == 'req' || evt.currentTarget.id == 'inc' || evt.currentTarget.id == 'loadAfter')) {
+                if (evt.currentTarget.tagName == 'TABLE' && evt.currentTarget.getAttribute('data-template') == 'fileRow') {
                     var data = {
                         name: evt.dataTransfer.getData('text/plain')
                     };
