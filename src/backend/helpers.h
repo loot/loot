@@ -35,7 +35,7 @@
 namespace loot {
     /// Array used to try each of the expressions defined using
     /// an iteration for each of them.
-    extern const boost::regex version_checks[7];
+    extern const std::vector<boost::regex> version_checks;
 
     //////////////////////////////////////////////////////////////////////////
     // Helper functions

@@ -109,15 +109,15 @@ namespace loot {
 
     /// Array used to try each of the expressions defined above using
     /// an iteration for each of them.
-    const regex version_checks[7] = {
+    const std::vector<boost::regex> version_checks({
         regex(regex1, regex::ECMAScript | regex::icase),
         regex(regex2, regex::ECMAScript | regex::icase),
         regex(regex3, regex::ECMAScript | regex::icase),
         regex(regex4, regex::ECMAScript | regex::icase),
         regex(regex5, regex::ECMAScript | regex::icase),  //This incorrectly identifies "OBSE v19" where 19 is any integer.
-        regex(regex6, regex::ECMAScript | regex::icase),  //This is responsible for metallicow's false positive.
+        //regex(regex6, regex::ECMAScript | regex::icase),  //This is responsible for metallicow's false positive.
         regex(regex7, regex::ECMAScript | regex::icase)
-    };
+    });
 
     //////////////////////////////////////////////////////////////////////////
     // Helper functions

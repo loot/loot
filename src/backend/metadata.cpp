@@ -421,7 +421,7 @@ namespace loot {
             string text = boost::locale::conv::to_utf<char>(file->getDescription(), "Windows-1252", boost::locale::conv::stop);
 
             BOOST_LOG_TRIVIAL(trace) << name << ": " << "Attempting to read the version from the description.";
-            for (size_t i = 0; i < 7; ++i) {
+            for (size_t i = 0; i < version_checks.size(); ++i) {
                 smatch what;
                 if (regex_search(text, what, version_checks[i])) {
                     //Use the first sub-expression match.
