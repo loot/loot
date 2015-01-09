@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT v0.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-08 21:05-0000\n"
-"PO-Revision-Date: 2015-01-08 21:12-0000\n"
+"POT-Creation-Date: 2015-01-09 10:40-0000\n"
+"PO-Revision-Date: 2015-01-09 10:40-0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -266,6 +266,10 @@ msgstr ""
 msgid "Failed to copy plugin metadata. Details: %1%"
 msgstr ""
 
+#: src/gui/handler.cpp:347 src/gui/handler.cpp:907
+msgid "Loading plugin contents..."
+msgstr ""
+
 #: src/gui/handler.cpp:351
 msgid "Checking for conflicting plugins..."
 msgstr ""
@@ -322,10 +326,6 @@ msgstr ""
 
 #: src/gui/handler.cpp:861 src/gui/handler.cpp:865
 msgid "Failed to update the masterlist. Details: %1%"
-msgstr ""
-
-#: src/gui/handler.cpp:907
-msgid "Loading plugin contents..."
 msgstr ""
 
 #: src/gui/handler.cpp:941
@@ -786,18 +786,24 @@ msgstr ""
 
 #: resources/report/js/l10n.js:308
 msgid ""
+"Plugins can be drag and dropped from the sidebar into editors' \"load after, "
+"\"requirements\" and \"incompatibility\" tables."
+msgstr ""
+
+#: resources/report/js/l10n.js:309
+msgid ""
 "Some features are disabled while there is an editor open, or while there is "
 "a sorted load order that has not been applied or discarded."
 msgstr ""
 
-#: resources/report/js/l10n.js:309
+#: resources/report/js/l10n.js:310
 msgid ""
 "Many interface elements have tooltips. If you don't know what something is, "
 "try hovering your mouse over it to find out. Otherwise, LOOT's documentation "
 "can be accessed through the main menu."
 msgstr ""
 
-#: resources/report/js/l10n.js:311 resources/report/js/script.js:424
+#: resources/report/js/l10n.js:312 resources/report/js/script.js:424
 msgid "OK"
 msgstr ""
 

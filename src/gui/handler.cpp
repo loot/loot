@@ -344,7 +344,7 @@ namespace loot {
         // Checking for FormID overlap will only work if the plugins have been loaded, so check if
         // the plugins have been fully loaded, and if not load all plugins.
         if (!g_app_state.CurrentGame().HasBeenLoaded()) {
-            SendProgressUpdate(frame, "Loading plugin contents...");
+            SendProgressUpdate(frame, loc::translate("Loading plugin contents..."));
             g_app_state.CurrentGame().LoadPlugins(false);
         }
 
