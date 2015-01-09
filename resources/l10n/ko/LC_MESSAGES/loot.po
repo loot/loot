@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT v0.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-07 10:39-0000\n"
-"PO-Revision-Date: 2015-01-08 00:33+0900\n"
+"POT-Creation-Date: 2015-01-08 21:05-0000\n"
+"PO-Revision-Date: 2015-01-09 14:25+0900\n"
 "Last-Translator: SteamB23 <steamb23@gmail.com>\n"
 "Language-Team: SteamB23 <steamb23@gmail.com>\n"
 "Language: ko\n"
@@ -138,15 +138,15 @@ msgstr "알 수 없음: Git 저장소 누락"
 
 #: src/backend/git.cpp:226
 msgid "N/A: No masterlist present"
-msgstr "N/A: 마스터리스트가 존재하지 않음"
+msgstr "N/A: 마스터 리스트가 존재하지 않음"
 
 #: src/backend/git.cpp:231
 msgid ""
 "An error occurred while trying to read the local masterlist's version. If "
 "this error happens again, try deleting the \".git\" folder in %1%."
 msgstr ""
-"로컬 마스터리스트의 버전을 읽는 동안 오류가 발생했습니다. 이 오류가 다시 발생"
-"한다면 %1%에서 \".git\" 폴더를 삭제하십시오."
+"로컬 마스터 리스트의 버전을 읽는 동안 오류가 발생했습니다. 이 오류가 다시 발"
+"생한다면 %1%에서 \".git\" 폴더를 삭제하십시오."
 
 #: src/backend/git.cpp:264 src/backend/git.cpp:265
 msgid "(edited)"
@@ -155,22 +155,22 @@ msgstr "(편집됨)"
 #: src/backend/git.cpp:294
 msgid ""
 "An error occurred while trying to clone the remote masterlist repository."
-msgstr "원격 마스터리스트 저장소를 복재하는 동안 오류가 발생했습니다."
+msgstr "원격 마스터 리스트 저장소를 복재하는 동안 오류가 발생했습니다."
 
 #: src/backend/git.cpp:350 src/backend/git.cpp:383
 msgid ""
 "An error occurred while trying to access the local masterlist repository. If "
 "this error happens again, try deleting the \".git\" folder in %1%."
 msgstr ""
-"로컬 마스터리스트 저장소에 저장하는 동안 오류가 발생했습니다. 이 오류가 다시 "
-"발생한다면 %1%에서 \".git\" 폴더를 삭제하십시오."
+"로컬 마스터 리스트 저장소에 저장하는 동안 오류가 발생했습니다. 이 오류가 다"
+"시 발생한다면 %1%에서 \".git\" 폴더를 삭제하십시오."
 
 #: src/backend/git.cpp:374
 msgid ""
 "An error occurred while trying to update the masterlist. This could be due "
 "to a server-side error. Try again in a few minutes."
 msgstr ""
-"마스터리스트를 갱신하는 동안 오류가 발생했습니다. 이것은 서버 측의 오류로 인"
+"마스터 리스트를 갱신하는 동안 오류가 발생했습니다. 이것은 서버 측의 오류로 인"
 "한 것일 수도 있습니다. 잠시 후에 다시 시도하십시오."
 
 #: src/backend/git.cpp:517
@@ -179,12 +179,12 @@ msgid ""
 "masterlist. If this error happens again, try deleting the \".git\" folder in "
 "%1%."
 msgstr ""
-"갱신된 마스터리스트에 대한 정보를 읽는 동안 오류가 발생했습니다. 이 오류가 다"
-"시 발생한다면 %1%에서 \".git\" 폴더를 삭제하십시오."
+"갱신된 마스터 리스트에 대한 정보를 읽는 동안 오류가 발생했습니다. 이 오류가 "
+"다시 발생한다면 %1%에서 \".git\" 폴더를 삭제하십시오."
 
 #: src/backend/git.cpp:587
 msgid "Masterlist revision"
-msgstr "마스터리스트 버전"
+msgstr "마스터 리스트 버전"
 
 #: src/backend/git.cpp:587
 msgid "Rolled back to the previous revision."
@@ -269,23 +269,23 @@ msgstr ""
 "%1%개의 ITM 레코드와 %2%개의 삭제된 참조가 포함되어있습니다. %3%를 사용하여 "
 "청소하십시오."
 
-#: src/gui/app.cpp:159
+#: src/gui/app.cpp:174
 msgid "Error: Could not create LOOT settings file. %1%"
 msgstr "오류: LOOT 설정 파일을 만들 수 없습니다. %1%"
 
-#: src/gui/app.cpp:169
+#: src/gui/app.cpp:184
 msgid "Error: Settings parsing failed. %1%"
 msgstr "오류: 설정의 구문 분석을 하지 못했습니다. %1%"
 
-#: src/gui/app.cpp:234
+#: src/gui/app.cpp:249
 msgid "Error: Games' settings parsing failed. %1%"
 msgstr "오류: 게임 설정의 구문 분석을 하지 못했습니다. %1%"
 
-#: src/gui/app.cpp:254
+#: src/gui/app.cpp:269
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr "오류: 게임별 설정을 초기화 할 수 없습니다. %1%"
 
-#: src/gui/app.cpp:395
+#: src/gui/app.cpp:410
 msgid "None of the supported games were detected."
 msgstr "지원되는 게임 중 어느 것도 감지되지 않았습니다."
 
@@ -312,11 +312,11 @@ msgstr "플러그인 헤더 로드 중..."
 
 #: src/gui/handler.cpp:610
 msgid "Parsing masterlist..."
-msgstr "마스터리스트 구문 분석 중..."
+msgstr "마스터 리스트 구문 분석 중..."
 
 #: src/gui/handler.cpp:616
 msgid "An error occurred while parsing the masterlist: %1%"
-msgstr "마스터리스트를 구문 분석하는 동안 오류가 발생했습니다: %1%"
+msgstr "마스터 리스트를 구문 분석하는 동안 오류가 발생했습니다: %1%"
 
 #: src/gui/handler.cpp:622
 msgid "Parsing userlist..."
@@ -347,7 +347,7 @@ msgstr "게임 데이터를 가져오지 못했습니다. 자세한 사항: %1%"
 
 #: src/gui/handler.cpp:775
 msgid "Updating and parsing masterlist..."
-msgstr "마스터리스트 갱신 및 구문 분석 중..."
+msgstr "마스터 리스트 갱신 및 구문 분석 중..."
 
 #: src/gui/handler.cpp:791
 msgid "Regenerating displayed content..."
@@ -355,7 +355,7 @@ msgstr "표시되는 내용을 재생성 중..."
 
 #: src/gui/handler.cpp:861 src/gui/handler.cpp:865
 msgid "Failed to update the masterlist. Details: %1%"
-msgstr "마스터리스트를 갱신하지 못했습니다. 자세한 사항: %1%"
+msgstr "마스터 리스트를 갱신하지 못했습니다. 자세한 사항: %1%"
 
 #: src/gui/handler.cpp:907
 msgid "Loading plugin contents..."
@@ -389,7 +389,7 @@ msgstr "청소 금지"
 msgid "Active Plugin"
 msgstr "활성화된 플러그인"
 
-#: resources/report/js/l10n.js:62 resources/report/js/l10n.js:284
+#: resources/report/js/l10n.js:62 resources/report/js/l10n.js:289
 msgid "Master File"
 msgstr "마스터 파일"
 
@@ -398,11 +398,11 @@ msgid "Empty Plugin"
 msgstr "빈 플러그인"
 
 #: resources/report/js/l10n.js:64 resources/report/js/l10n.js:82
-#: resources/report/js/l10n.js:138
+#: resources/report/js/l10n.js:139
 msgid "Loads BSA"
 msgstr "BSA 로드"
 
-#: resources/report/js/l10n.js:65 resources/report/js/l10n.js:139
+#: resources/report/js/l10n.js:65 resources/report/js/l10n.js:140
 msgid "Has User Metadata"
 msgstr "사용자 메타데이터를 가짐"
 
@@ -434,7 +434,7 @@ msgstr ""
 "전역 우선 순위는 다른 모든 플러그인에 대해 비교됩니다. 일반 우선 순위는 충돌"
 "하는 플러그인과 비교됩니다."
 
-#: resources/report/js/l10n.js:86 resources/report/js/l10n.js:137
+#: resources/report/js/l10n.js:86 resources/report/js/l10n.js:138
 msgid "Global Priority"
 msgstr "전역 우선 순위"
 
@@ -443,370 +443,378 @@ msgid "Priority Value"
 msgstr "우선 순위 값"
 
 #: resources/report/js/l10n.js:89
-msgid "Load After"
-msgstr "로드 후"
+msgid "Main"
+msgstr "메인"
 
 #: resources/report/js/l10n.js:90
+msgid "Load After"
+msgstr "이후 로드"
+
+#: resources/report/js/l10n.js:91
 msgid "Requirements"
 msgstr "요구 사항"
 
-#: resources/report/js/l10n.js:91
+#: resources/report/js/l10n.js:92
 msgid "Incompatibilities"
 msgstr "비호환성"
 
-#: resources/report/js/l10n.js:92
+#: resources/report/js/l10n.js:93
 msgid "Messages"
 msgstr "메시지"
 
-#: resources/report/js/l10n.js:93
+#: resources/report/js/l10n.js:94
 msgid "Bash Tags"
 msgstr "배쉬 태그"
 
-#: resources/report/js/l10n.js:94
+#: resources/report/js/l10n.js:95
 msgid "Dirty Info"
 msgstr "지저분한 정보"
 
-#: resources/report/js/l10n.js:95
+#: resources/report/js/l10n.js:96
 msgid "Locations"
 msgstr "위치"
 
-#: resources/report/js/l10n.js:97 resources/report/js/l10n.js:101
-#: resources/report/js/l10n.js:105
+#: resources/report/js/l10n.js:98 resources/report/js/l10n.js:102
+#: resources/report/js/l10n.js:106
 msgid "Filename"
 msgstr "파일 이름"
 
-#: resources/report/js/l10n.js:98 resources/report/js/l10n.js:102
-#: resources/report/js/l10n.js:106
+#: resources/report/js/l10n.js:99 resources/report/js/l10n.js:103
+#: resources/report/js/l10n.js:107
 msgid "Display Name"
 msgstr "표시되는 이름"
 
-#: resources/report/js/l10n.js:99 resources/report/js/l10n.js:103
-#: resources/report/js/l10n.js:107 resources/report/js/l10n.js:111
-#: resources/report/js/l10n.js:116
+#: resources/report/js/l10n.js:100 resources/report/js/l10n.js:104
+#: resources/report/js/l10n.js:108 resources/report/js/l10n.js:112
+#: resources/report/js/l10n.js:117
 msgid "Condition"
 msgstr "상태"
 
-#: resources/report/js/l10n.js:109
+#: resources/report/js/l10n.js:110
 msgid "Type"
 msgstr "형식"
 
-#: resources/report/js/l10n.js:110
+#: resources/report/js/l10n.js:111
 msgid "Content"
 msgstr "내용"
 
-#: resources/report/js/l10n.js:112 resources/report/js/l10n.js:272
+#: resources/report/js/l10n.js:113 resources/report/js/l10n.js:277
 msgid "Language"
 msgstr "언어"
 
-#: resources/report/js/l10n.js:114
+#: resources/report/js/l10n.js:115
 msgid "Add/Remove"
 msgstr "추가/제거"
 
-#: resources/report/js/l10n.js:115
+#: resources/report/js/l10n.js:116
 msgid "Bash Tag"
 msgstr "배쉬 태그"
 
-#: resources/report/js/l10n.js:118
+#: resources/report/js/l10n.js:119
 msgid "CRC"
 msgstr "CRC"
 
-#: resources/report/js/l10n.js:119
+#: resources/report/js/l10n.js:120
 msgid "ITM Count"
 msgstr "ITM 개수"
 
-#: resources/report/js/l10n.js:120
+#: resources/report/js/l10n.js:121
 msgid "Deleted References"
 msgstr "삭제된 참조"
 
-#: resources/report/js/l10n.js:121
+#: resources/report/js/l10n.js:122
 msgid "Deleted Navmeshes"
 msgstr "삭제된 Navmesh"
 
-#: resources/report/js/l10n.js:122
+#: resources/report/js/l10n.js:123
 msgid "Cleaning Utility"
 msgstr "청소 유틸리티"
 
-#: resources/report/js/l10n.js:124
+#: resources/report/js/l10n.js:125
 msgid "URL"
 msgstr "URL"
 
-#: resources/report/js/l10n.js:125
+#: resources/report/js/l10n.js:126
 msgid "Version"
 msgstr "버전"
 
-#: resources/report/js/l10n.js:127 resources/report/js/l10n.js:224
-#: resources/report/js/l10n.js:290
+#: resources/report/js/l10n.js:128 resources/report/js/l10n.js:225
+#: resources/report/js/l10n.js:299
 msgid "Apply"
 msgstr "적용"
 
-#: resources/report/js/l10n.js:128 resources/report/js/l10n.js:225
-#: resources/report/js/l10n.js:291 resources/report/js/script.js:418
+#: resources/report/js/l10n.js:129 resources/report/js/l10n.js:226
+#: resources/report/js/l10n.js:300 resources/report/js/script.js:418
 msgid "Cancel"
 msgstr "취소"
 
-#: resources/report/js/l10n.js:148
+#: resources/report/js/l10n.js:149
 msgid "A filename is required."
 msgstr "파일 이름이 필요합니다."
 
-#: resources/report/js/l10n.js:149 resources/report/js/l10n.js:162
-#: resources/report/js/l10n.js:174 resources/report/js/l10n.js:188
-#: resources/report/js/l10n.js:198 resources/report/js/l10n.js:209
+#: resources/report/js/l10n.js:150 resources/report/js/l10n.js:163
+#: resources/report/js/l10n.js:175 resources/report/js/l10n.js:189
+#: resources/report/js/l10n.js:199 resources/report/js/l10n.js:210
 msgid "Delete Row"
 msgstr "행 삭제"
 
-#: resources/report/js/l10n.js:158
+#: resources/report/js/l10n.js:159
 msgid "Note"
 msgstr "노트"
 
-#: resources/report/js/l10n.js:159
+#: resources/report/js/l10n.js:160
 msgid "Warning"
 msgstr "경고"
 
-#: resources/report/js/l10n.js:160
+#: resources/report/js/l10n.js:161 resources/report/js/script.js:346
 msgid "Error"
 msgstr "오류"
 
-#: resources/report/js/l10n.js:161
+#: resources/report/js/l10n.js:162
 msgid "A content string is required."
 msgstr "내용 문자열이 필요합니다."
 
-#: resources/report/js/l10n.js:171
+#: resources/report/js/l10n.js:172
 msgid "Add"
 msgstr "추가"
 
-#: resources/report/js/l10n.js:172
+#: resources/report/js/l10n.js:173
 msgid "Remove"
 msgstr "제거"
 
-#: resources/report/js/l10n.js:173 resources/report/js/l10n.js:207
+#: resources/report/js/l10n.js:174 resources/report/js/l10n.js:208
 msgid "A name is required."
 msgstr "이름이 필요합니다."
 
-#: resources/report/js/l10n.js:183
+#: resources/report/js/l10n.js:184
 msgid "A CRC is required."
 msgstr "CRC가 필요합니다."
 
-#: resources/report/js/l10n.js:184 resources/report/js/l10n.js:185
-#: resources/report/js/l10n.js:186
+#: resources/report/js/l10n.js:185 resources/report/js/l10n.js:186
+#: resources/report/js/l10n.js:187
 msgid "Values must be integers."
 msgstr "값은 정수여야 합니다."
 
-#: resources/report/js/l10n.js:187
+#: resources/report/js/l10n.js:188
 msgid "A utility name is required."
 msgstr "유틸리티 이름이 필요합니다."
 
-#: resources/report/js/l10n.js:197
+#: resources/report/js/l10n.js:198
 msgid "A link is required."
 msgstr "링크가 필요합니다."
 
-#: resources/report/js/l10n.js:208
+#: resources/report/js/l10n.js:209
 msgid "A folder is required."
 msgstr "폴더가 필요합니다."
 
-#: resources/report/js/l10n.js:218
+#: resources/report/js/l10n.js:219 resources/report/js/l10n.js:297
 msgid "Add New Row"
 msgstr "새 행 추가"
 
-#: resources/report/js/l10n.js:221
+#: resources/report/js/l10n.js:222
 msgid "Jump To General Information"
 msgstr "일반 정보로 이동"
 
-#: resources/report/js/l10n.js:222
+#: resources/report/js/l10n.js:223
 msgid "Sort Plugins"
 msgstr "플러그인 정렬"
 
-#: resources/report/js/l10n.js:223
+#: resources/report/js/l10n.js:224
 msgid "Update Masterlist"
-msgstr "마스터리스트 갱신"
+msgstr "마스터 리스트 갱신"
 
-#: resources/report/js/l10n.js:228
+#: resources/report/js/l10n.js:229
 msgid "Redate Plugins"
 msgstr "플러그인 날짜 변경"
 
-#: resources/report/js/l10n.js:229
+#: resources/report/js/l10n.js:230
 msgid "Open Debug Log Location"
 msgstr "디버그 로그 위치 열기"
 
-#: resources/report/js/l10n.js:230
+#: resources/report/js/l10n.js:231
 msgid "Clear All User Metadata"
 msgstr "유저 메타데이터 모두 삭제"
 
-#: resources/report/js/l10n.js:231
+#: resources/report/js/l10n.js:232
 msgid "Copy Content"
 msgstr "내용 복사"
 
-#: resources/report/js/l10n.js:232
+#: resources/report/js/l10n.js:233
 msgid "Refresh Content"
 msgstr "내용 새로고침"
 
-#: resources/report/js/l10n.js:233
+#: resources/report/js/l10n.js:234
 msgid "View Documentation"
 msgstr "문서 보기"
 
-#: resources/report/js/l10n.js:234
+#: resources/report/js/l10n.js:235
 msgid "About"
 msgstr "정보"
 
-#: resources/report/js/l10n.js:235 resources/report/js/l10n.js:267
+#: resources/report/js/l10n.js:236 resources/report/js/l10n.js:269
 msgid "Settings"
 msgstr "설정"
 
-#: resources/report/js/l10n.js:236 resources/report/js/script.js:808
+#: resources/report/js/l10n.js:237 resources/report/js/script.js:808
 msgid "Quit"
 msgstr "종료"
 
-#: resources/report/js/l10n.js:239
+#: resources/report/js/l10n.js:240
 msgid "Plugins"
 msgstr "플러그인"
 
-#: resources/report/js/l10n.js:240
+#: resources/report/js/l10n.js:241
 msgid "Filters"
 msgstr "필터"
 
-#: resources/report/js/l10n.js:241
+#: resources/report/js/l10n.js:242
 msgid "Press Enter or click outside the input to set the filter."
 msgstr "필터를 설정하기 위해 Enter를 누르거나 바깥 쪽을 클릭하십시오."
 
-#: resources/report/js/l10n.js:244
+#: resources/report/js/l10n.js:243
+msgid "Filter content..."
+msgstr "필터링할 콘텐츠..."
+
+#: resources/report/js/l10n.js:246
 msgid "Hide version numbers"
 msgstr "버전 번호 숨기기"
 
-#: resources/report/js/l10n.js:245
+#: resources/report/js/l10n.js:247
 msgid "Hide CRCs"
 msgstr "CRC 숨기기"
 
-#: resources/report/js/l10n.js:246
+#: resources/report/js/l10n.js:248
 msgid "Hide Bash Tags"
 msgstr "배쉬 태그 숨기기"
 
-#: resources/report/js/l10n.js:247
+#: resources/report/js/l10n.js:249
 msgid "Hide notes"
 msgstr "노트 숨기기"
 
-#: resources/report/js/l10n.js:248
+#: resources/report/js/l10n.js:250
 msgid "Hide 'Do not clean' messages"
 msgstr "'청소 금지'메시지 숨기기"
 
-#: resources/report/js/l10n.js:249
+#: resources/report/js/l10n.js:251
 msgid "Hide all plugin messages"
 msgstr "모든 플러그인 메시지 숨기기"
 
-#: resources/report/js/l10n.js:250
+#: resources/report/js/l10n.js:252
 msgid "Hide inactive plugins"
 msgstr "비활성 플러그인 숨기기"
 
-#: resources/report/js/l10n.js:251
+#: resources/report/js/l10n.js:253
 msgid "Hide messageless plugins"
 msgstr "메시지 적은 플러그인 숨기기"
 
-#: resources/report/js/l10n.js:252
+#: resources/report/js/l10n.js:254
 msgid "Hidden plugins:"
 msgstr "숨겨진 플러그인:"
 
-#: resources/report/js/l10n.js:253
+#: resources/report/js/l10n.js:255
 msgid "Hidden messages:"
 msgstr "숨겨진 메시지:"
 
-#: resources/report/js/l10n.js:256
+#: resources/report/js/l10n.js:258
 msgid "General Information"
 msgstr "일반 정보"
 
-#: resources/report/js/l10n.js:257
-msgid "Masterlist Revision"
-msgstr "마스터리스트 버전"
-
-#: resources/report/js/l10n.js:258
-msgid "Masterlist Date"
-msgstr "마스터리스트 일자"
-
 #: resources/report/js/l10n.js:259
+msgid "Masterlist Revision"
+msgstr "마스터 리스트 버전"
+
+#: resources/report/js/l10n.js:260
+msgid "Masterlist Date"
+msgstr "마스터 리스트 일자"
+
+#: resources/report/js/l10n.js:261
 msgid "Warnings"
 msgstr "경고"
 
-#: resources/report/js/l10n.js:260
+#: resources/report/js/l10n.js:262
 msgid "Errors"
 msgstr "오류"
 
-#: resources/report/js/l10n.js:261
+#: resources/report/js/l10n.js:263
 msgid "Total Messages"
 msgstr "전체 메시지"
 
-#: resources/report/js/l10n.js:262
+#: resources/report/js/l10n.js:264
 msgid "Active Plugins"
 msgstr "활성화된 플러그인"
 
-#: resources/report/js/l10n.js:263
+#: resources/report/js/l10n.js:265
 msgid "Dirty Plugins"
 msgstr "지저분한 플러그인"
 
-#: resources/report/js/l10n.js:264
+#: resources/report/js/l10n.js:266
 msgid "Total Plugins"
 msgstr "전체 플러그인"
 
-#: resources/report/js/l10n.js:269
+#: resources/report/js/l10n.js:272
 msgid "Default Game"
 msgstr "기본 게임"
 
-#: resources/report/js/l10n.js:270
+#: resources/report/js/l10n.js:273 resources/report/js/l10n.js:275
 msgid "Autodetect"
 msgstr "자동 감지"
 
-#: resources/report/js/l10n.js:273
+#: resources/report/js/l10n.js:278
 msgid "Language changes will be applied after LOOT is restarted."
 msgstr "LOOT가 다시 시작 된후 언어 변경이 적용됩니다."
 
-#: resources/report/js/l10n.js:275
+#: resources/report/js/l10n.js:280
 msgid "Enable debug logging"
 msgstr "디버그 로깅 사용"
 
-#: resources/report/js/l10n.js:276
+#: resources/report/js/l10n.js:281
 msgid "The output is logged to the LOOTDebugLog.txt file."
 msgstr "출력은 LOOTDebugLog.txt 파일에 기록됩니다."
 
-#: resources/report/js/l10n.js:278
+#: resources/report/js/l10n.js:283
 msgid "Update masterlist before sorting"
-msgstr "정렬하기 전에 마스터리스트 갱신"
+msgstr "정렬하기 전에 마스터 리스트 갱신"
 
-#: resources/report/js/l10n.js:281
+#: resources/report/js/l10n.js:286
 msgid "Name"
 msgstr "이름"
 
-#: resources/report/js/l10n.js:282
+#: resources/report/js/l10n.js:287
 msgid "Base Game"
 msgstr "기반 게임"
 
-#: resources/report/js/l10n.js:283
+#: resources/report/js/l10n.js:288
 msgid "LOOT Folder"
 msgstr "LOOT 폴더"
 
-#: resources/report/js/l10n.js:285
+#: resources/report/js/l10n.js:290
 msgid "Masterlist Repository URL"
-msgstr "마스터리스트 저장소 URL"
+msgstr "마스터 리스트 저장소 URL"
 
-#: resources/report/js/l10n.js:286
+#: resources/report/js/l10n.js:291
 msgid "Masterlist Repository Branch"
-msgstr "마스터리스트 저장소 브랜치"
+msgstr "마스터 리스트 저장소 브랜치"
 
-#: resources/report/js/l10n.js:287
+#: resources/report/js/l10n.js:292
 msgid "Install Path"
 msgstr "설치 경로"
 
-#: resources/report/js/l10n.js:288
+#: resources/report/js/l10n.js:293
 msgid "Install Path Registry Key"
 msgstr "설치 경로 레지스트리 키"
 
-#: resources/report/js/l10n.js:295
+#: resources/report/js/l10n.js:304
 msgid "First-Time Tips"
 msgstr "처음 팁"
 
-#: resources/report/js/l10n.js:297
+#: resources/report/js/l10n.js:306
 msgid ""
 "CRCs are only displayed after plugins have been loaded, either by conflict "
 "filtering, or by sorting."
 msgstr ""
 "CRC는 플러그인이 로드된후 충돌 필터링이나 정렬 중 하나에 의해 표시됩니다."
 
-#: resources/report/js/l10n.js:298
+#: resources/report/js/l10n.js:307
 msgid ""
 "Double-click a plugin in the sidebar to quickly open its metadata editor. "
 "Multiple metadata editors can be opened at once."
@@ -814,7 +822,7 @@ msgstr ""
 "사이드바에서 플러그인을 두번 클릭하여 빠르게 메타데이터 편집기를 엽니다. 메타"
 "데이터 편집기는 한번에 여러개를 열 수 있습니다."
 
-#: resources/report/js/l10n.js:299
+#: resources/report/js/l10n.js:308
 msgid ""
 "Some features are disabled while there is an editor open, or while there is "
 "a sorted load order that has not been applied or discarded."
@@ -822,7 +830,7 @@ msgstr ""
 "편집기가 열렸을 때는 일부 기능을 사용하거나 정렬된 로드 순서를 적용 또는 폐기"
 "할 수 없습니다."
 
-#: resources/report/js/l10n.js:300
+#: resources/report/js/l10n.js:309
 msgid ""
 "Many interface elements have tooltips. If you don't know what something is, "
 "try hovering your mouse over it to find out. Otherwise, LOOT's documentation "
@@ -832,7 +840,7 @@ msgstr ""
 "스를 올려 찾을 수 있습니다. 그렇지 않다면 메인 메뉴를 통해 LOOT의 문서에 접근"
 "할 수 있습니다."
 
-#: resources/report/js/l10n.js:302 resources/report/js/script.js:424
+#: resources/report/js/l10n.js:311 resources/report/js/script.js:424
 msgid "OK"
 msgstr "확인"
 
@@ -840,18 +848,26 @@ msgstr "확인"
 msgid "N/A"
 msgstr "N/A"
 
+#: resources/report/js/script.js:383
+msgid "Checking if plugins have been loaded..."
+msgstr "플러그인이 로드되었는지 확인 중..."
+
+#: resources/report/js/script.js:438
+msgid "Loading game data..."
+msgstr "게임 데이터 로드 중..."
+
 #: resources/report/js/script.js:508
 #, javascript-format
 msgid "Masterlist updated to revision %s."
-msgstr "마스터리스트를 %s버전으로 갱신되었습니다."
+msgstr "마스터 리스트를 %s버전으로 갱신되었습니다."
 
 #: resources/report/js/script.js:510
 msgid "No masterlist update was necessary."
-msgstr "마스터리스트를 갱신할 필요가 없었습니다."
+msgstr "마스터 리스트를 갱신할 필요가 없었습니다."
 
 #: resources/report/js/script.js:515
 msgid "Updating masterlist..."
-msgstr "마스터리스트 갱신 중..."
+msgstr "마스터 리스트 갱신 중..."
 
 #: resources/report/js/script.js:545
 msgid "Sorting plugins..."
@@ -867,9 +883,9 @@ msgid ""
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
 "will be re-downloaded by Steam. Do you wish to continue?"
 msgstr ""
-"이 기능은 모더가 크리에이션 킷을 사용해 이것이 사용하는 로드 순서를 설정할 "
-"수 있도록 제공합니다. 부작용으로 모든 구독된 스팀 워크샵 모드들을 다시 다운로"
-"드할 것입니다. 계속하시겠습니까?"
+"이 기능은 모더가 크리에이션 킷을 사용해 로드 순서를 설정할 수 있도록 제공합니"
+"다. 부작용으로 모든 구독된 스팀 워크샵 모드들을 다시 다운로드할 것입니다. 계"
+"속하시겠습니까?"
 
 #: resources/report/js/script.js:647
 msgid "Redate"
@@ -923,6 +939,10 @@ msgstr "정렬된 로드 순서"
 #: resources/report/js/script.js:1008
 msgid "metadata edits"
 msgstr "메타데이터 편집"
+
+#: resources/report/js/script.js:1074
+msgid "unknown"
+msgstr "알 수 없음"
 
 #: resources/report/js/script.js:1215
 msgid "Refreshing data..."
