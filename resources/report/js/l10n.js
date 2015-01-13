@@ -78,6 +78,7 @@
             }
 
             pluginEditor.getElementById('activeTick').setAttribute('label', l10n.translate("Active Plugin").fetch());
+            pluginEditor.getElementById('isMaster').setAttribute('label', l10n.translate("Master File").fetch());
             pluginEditor.getElementById('emptyPlugin').setAttribute('label', l10n.translate("Empty Plugin").fetch());
             pluginEditor.getElementById('loadsBSA').setAttribute('label', l10n.translate("Loads BSA").fetch());
 

@@ -33,7 +33,8 @@ loot-editor-close
             visibility: hidden;
         }
         :host-context(loot-plugin-card[data-bsa=false]) #loadsBSA,
-        :host-context(loot-plugin-card[data-empty=false]) #emptyPlugin {
+        :host-context(loot-plugin-card[data-empty=false]) #emptyPlugin,
+        :host-context(loot-plugin-card[data-master=false]) #isMaster {
             display: none;
         }
         #activeTick > core-icon {
@@ -126,6 +127,9 @@ loot-editor-close
                 <span id="version">{{data.version}}</span>
                 <span id="crc">{{data.computed.crc}}</span>
             </div>
+            <core-tooltip id="isMaster" label="Master File" noarrow>
+                <core-icon icon="loot-custom-icons:crown"></core-icon>
+            </core-tooltip>
             <core-tooltip id="emptyPlugin" label="Empty Plugin" noarrow>
                 <core-icon icon="visibility-off"></core-icon>
             </core-tooltip>
@@ -237,7 +241,7 @@ loot-editor-close
     <script>
     Polymer({
         data: undefined,
-        
+
         observe: {
             'data.isGlobalPriority': 'onPriorityChange',
             'data.modPriority': 'onPriorityChange',
