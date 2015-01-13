@@ -498,7 +498,7 @@ loot-editor-close
                     }
                     if (tempData.userlist && tempData.userlist.tag) {
                         tempData.userlist.tag.forEach(function(tag) {
-                            var tagData = tempData.convTagObj(tag);
+                            var tagData = Plugin.prototype.convTagObj(tag);
                             tables[j].addRow(tagData);
                         }, tempData);
                     }
