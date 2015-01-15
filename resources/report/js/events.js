@@ -310,7 +310,7 @@ function onShowAboutDialog(evt) {
 }
 function areSettingsValid() {
     /* Validate inputs individually. */
-    var inputs = document.getElementById('settingsDialog').getElementsByTagName('input');
+    var inputs = document.getElementById('settingsDialog').getElementsByTagName('loot-validated-input');
     for (var i = 0; i < inputs.length; ++i) {
         if (!inputs[i].checkValidity()) {
             return false;

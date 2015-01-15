@@ -12,6 +12,10 @@
     <script>
     Polymer({
         type: 'text',
+
+        checkValidity: function() {
+            return this.shadowRoot.getElementById('input').checkValidity();
+        }
     });
     </script>
 </polymer-element>
