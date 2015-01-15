@@ -301,6 +301,17 @@ function switchSidebarTab(evt) {
 function showAboutDialog(evt) {
     document.getElementById('about').showModal();
 }
+function areSettingsValid() {
+    /* Validate inputs individually. */
+    var inputs = document.getElementById('settingsDialog').getElementsByTagName('input');
+    for (var i = 0; i < inputs.length; ++i) {
+        if (!inputs[i].checkValidity()) {
+            return false;
+            console.log(inputs[i]);
+        }
+    }
+    return true;
+}
 function closeSettingsDialog(evt) {
     if (evt.target.classList.contains('accept')) {
         if (!areSettingsValid()) {
@@ -540,6 +551,73 @@ function handleQuit(evt) {
 function jumpToGeneralInfo(evt) {
     window.location.hash = '';
     document.getElementById('main').scrollTop = 0;
+}
+function onContentRefresh(evt) {
+    /* Send a query for updated load order and plugin header info. */
+    showProgress(l10n.jed.translate('Refreshing data...').fetch());
+    loot.query('getGameData').then(function(result){
+        /* Parse the data sent from C++. */
+        try {
+            /* We don't want the plugin info creating cards, so don't convert
+               to plugin objects. */
+            var gameInfo = JSON.parse(result);
+        } catch (e) {
+            console.log(e);
+            console.log('getGameData response: ' + result);
+        }
+
+        /* Now overwrite plugin data with the newly sent data. Also update
+           card and li vars as they were unset when the game was switched
+           from before. */
+        var pluginNames = [];
+        gameInfo.plugins.forEach(function(plugin){
+            var foundPlugin = false;
+            for (var i = 0; i < loot.game.plugins.length; ++i) {
+                if (loot.game.plugins[i].name == plugin.name) {
+
+                    loot.game.plugins[i].isActive = plugin.isActive;
+                    loot.game.plugins[i].isEmpty = plugin.isEmpty;
+                    loot.game.plugins[i].loadsBSA = plugin.loadsBSA;
+                    loot.game.plugins[i].crc = plugin.crc;
+                    loot.game.plugins[i].version = plugin.version;
+
+                    loot.game.plugins[i].modPriority = plugin.modPriority;
+                    loot.game.plugins[i].isGlobalPriority = plugin.isGlobalPriority;
+                    loot.game.plugins[i].messages = plugin.messages;
+                    loot.game.plugins[i].tags = plugin.tags;
+                    loot.game.plugins[i].isDirty = plugin.isDirty;
+
+                    foundPlugin = true;
+                    break;
+                }
+            }
+            if (!foundPlugin) {
+                /* A new plugin. */
+                loot.game.plugins.push(new Plugin(plugin));
+            }
+            pluginNames.push(plugin.name);
+        });
+        for (var i = 0; i < loot.game.plugins.length;) {
+            var foundPlugin = false;
+            for (var j = 0; j < pluginNames.length; ++j) {
+                if (loot.game.plugins[i].name == pluginNames[j]) {
+                    foundPlugin = true;
+                    break;
+                }
+            }
+            if (!foundPlugin) {
+                /* Remove plugin. */
+                loot.game.plugins.splice(i, 1);
+            } else {
+                ++i;
+            }
+        }
+
+        /* Reapply filters. */
+        setFilteredUIData();
+
+        closeProgressDialog();
+    }).catch(processCefError);
 }
 function setupEventHandlers() {
     /*Set up handlers for filters.*/
