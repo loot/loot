@@ -149,7 +149,7 @@
             return this.textContent.trim();
         },
 
-        handleDragStart: function(evt) {
+        onDragStart: function(evt) {
             evt.dataTransfer.effectAllowed = 'copy';
             evt.dataTransfer.setData('text/plain', evt.currentTarget.getName());
         },

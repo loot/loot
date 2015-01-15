@@ -191,7 +191,7 @@ function getConflictingPluginsFromFilter() {
     return Promise.resolve([]);
 }
 
-function setFilteredUIData(evt) {
+function setFilteredUIData() {
     /* The conflict filter, if enabled, executes C++ code, so needs to be
        handled using a promise, so the rest of the function should wait until
        it is completed.

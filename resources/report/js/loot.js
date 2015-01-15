@@ -113,10 +113,10 @@ var loot = {
         for (var i = 0; i < gameMenuItems.length; ++i) {
             if (this.installedGames.indexOf(gameMenuItems[i].getAttribute('value')) == -1) {
                 gameMenuItems[i].setAttribute('disabled', true);
-                gameMenuItems[i].removeEventListener('click', changeGame, false);
+                gameMenuItems[i].removeEventListener('click', onChangeGame, false);
             } else {
                 gameMenuItems[i].removeAttribute('disabled');
-                gameMenuItems[i].addEventListener('click', changeGame, false);
+                gameMenuItems[i].addEventListener('click', onChangeGame, false);
             }
         }
     },
@@ -132,7 +132,7 @@ var loot = {
             gameSelect.removeChild(gameSelect.lastElementChild);
         }
         while (gameMenu.firstElementChild) {
-            gameMenu.firstElementChild.removeEventListener('click', changeGame, false);
+            gameMenu.firstElementChild.removeEventListener('click', onChangeGame, false);
             gameMenu.removeChild(gameMenu.firstElementChild);
         }
         gameTable.clear();

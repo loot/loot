@@ -1,4 +1,4 @@
-function toggleDisplayCSS(evt) {
+function onToggleDisplayCSS(evt) {
     var attr = 'data-hide-' + evt.target.getAttribute('data-class');
     if (evt.target.checked) {
         document.getElementById('main').setAttribute(attr, true);
@@ -6,10 +6,10 @@ function toggleDisplayCSS(evt) {
         document.getElementById('main').removeAttribute(attr);
     }
 }
-function openLogLocation(evt) {
+function onOpenLogLocation(evt) {
     loot.query('openLogLocation').catch(processCefError);
 }
-function changeGame(evt) {
+function onChangeGame(evt) {
     /* Check that the selected game isn't the current one. */
     if (evt.target.className.indexOf('core-selected') != -1) {
         return;
@@ -59,7 +59,7 @@ function changeGame(evt) {
         closeProgressDialog();
     }).catch(processCefError);
 }
-function openReadme(evt) {
+function onOpenReadme(evt) {
     loot.query('openReadme').catch(processCefError);
 }
 /* Masterlist update process, minus progress dialog. */
@@ -92,13 +92,13 @@ function updateMasterlistNoProgress() {
         }
     }).catch(processCefError);
 }
-function updateMasterlist(evt) {
+function onUpdateMasterlist(evt) {
     showProgress(l10n.jed.translate('Updating masterlist...').fetch());
     updateMasterlistNoProgress().then(function(result){
         closeProgressDialog();
     }).catch(processCefError);
 }
-function sortPlugins(evt) {
+function onSortPlugins(evt) {
     var mlistUpdate;
     if (loot.settings.updateMasterlist) {
         mlistUpdate = updateMasterlistNoProgress();
@@ -159,7 +159,7 @@ function sortPlugins(evt) {
         }).catch(processCefError);
     }).catch(processCefError);
 }
-function applySort(evt) {
+function onApplySort(evt) {
     var loadOrder = [];
     loot.game.plugins.forEach(function(plugin){
         loadOrder.push(plugin.name);
@@ -186,7 +186,7 @@ function applySort(evt) {
         document.getElementById('gameMenu').removeAttribute('disabled');
     }).catch(processCefError);
 }
-function cancelSort(evt) {
+function onCancelSort(evt) {
     return loot.query('cancelSort').then(function(){
         /* Sort UI elements again according to stored old load order. */
         loot.game.plugins = loot.game.oldLoadOrder;
@@ -205,7 +205,7 @@ function cancelSort(evt) {
         document.getElementById('gameMenu').removeAttribute('disabled');
     }).catch(processCefError);
 }
-function redatePlugins(evt) {
+function onRedatePlugins(evt) {
     if (evt.target.hasAttribute('disabled')) {
         return;
     }
@@ -218,7 +218,7 @@ function redatePlugins(evt) {
         }
     });
 }
-function clearAllMetadata(evt) {
+function onClearAllMetadata(evt) {
     showMessageDialog('', l10n.jed.translate('Are you sure you want to clear all existing user-added metadata from all plugins?').fetch(), l10n.jed.translate('Clear').fetch(), function(result){
         if (result) {
             loot.query('clearAllMetadata').then(JSON.parse).then(function(result){
@@ -246,7 +246,7 @@ function clearAllMetadata(evt) {
         }
     });
 }
-function copyContent(evt) {
+function onCopyContent(evt) {
     var messages = [];
     var plugins = [];
 
@@ -300,12 +300,12 @@ function copyContent(evt) {
         toast(l10n.jed.translate("LOOT's content has been copied to the clipboard.").fetch());
     }).catch(processCefError);
 }
-function switchSidebarTab(evt) {
+function onSwitchSidebarTab(evt) {
     if (evt.detail.isSelected) {
         document.getElementById(evt.target.selected).parentElement.selected = evt.target.selected;
     }
 }
-function showAboutDialog(evt) {
+function onShowAboutDialog(evt) {
     document.getElementById('about').showModal();
 }
 function areSettingsValid() {
@@ -319,7 +319,7 @@ function areSettingsValid() {
     }
     return true;
 }
-function closeSettingsDialog(evt) {
+function onCloseSettingsDialog(evt) {
     if (evt.target.classList.contains('accept')) {
         if (!areSettingsValid()) {
             return;
@@ -360,20 +360,20 @@ function closeSettingsDialog(evt) {
     }
     evt.target.parentElement.close();
 }
-function showSettingsDialog(evt) {
+function onShowSettingsDialog(evt) {
     document.getElementById('settingsDialog').showModal();
 }
-function focusSearch(evt) {
+function onFocusSearch(evt) {
     if (evt.ctrlKey && evt.keyCode == 70) { //'f'
         document.getElementById('searchBox').focus();
     }
 }
-function handleEditorOpen(evt) {
+function onEditorOpen(evt) {
     /* Set up drag 'n' drop event handlers. */
     var elements = document.getElementById('cardsNav').getElementsByTagName('loot-plugin-item');
     for (var i = 0; i < elements.length; ++i) {
         elements[i].draggable = true;
-        elements[i].addEventListener('dragstart', elements[i].handleDragStart, false);
+        elements[i].addEventListener('dragstart', elements[i].onDragStart, false);
     }
 
     /* Now show editor. */
@@ -404,7 +404,7 @@ function handleEditorOpen(evt) {
 
     return loot.query('editorOpened').catch(processCefError);
 }
-function handleEditorClose(evt) {
+function onEditorClose(evt) {
     /* evt.detail is true if the apply button was pressed. */
     if (evt.detail) {
         /* Need to record the editor control values and work out what's
@@ -444,7 +444,7 @@ function handleEditorClose(evt) {
     var elements = document.getElementById('cardsNav').getElementsByTagName('loot-plugin-item');
     for (var i = 0; i < elements.length; ++i) {
         elements[i].removeAttribute('draggable');
-        elements[i].removeEventListener('dragstart', elements[i].handleDragStart, false);
+        elements[i].removeEventListener('dragstart', elements[i].onDragStart, false);
     }
 
     /* Disable priority hover in plugins list and enable header
@@ -469,7 +469,7 @@ function handleEditorClose(evt) {
     }
     document.getElementById('cardsNav').updateSize();
 }
-function handleConflictsFilter(evt) {
+function onConflictsFilter(evt) {
     /* evt.detail is true if the filter has been activated. */
     if (evt.detail) {
         /* Un-highlight any existing filter plugin. */
@@ -488,7 +488,7 @@ function handleConflictsFilter(evt) {
     }
     setFilteredUIData(evt);
 }
-function handleCopyMetadata(evt) {
+function onCopyMetadata(evt) {
     /* evt.detail is the name of the plugin. */
     var request = JSON.stringify({
         name: 'copyMetadata',
@@ -501,7 +501,7 @@ function handleCopyMetadata(evt) {
         toast(l10n.jed.translate('The metadata for "%s" has been copied to the clipboard.').fetch(evt.target.getName()));
     }).catch(processCefError);
 }
-function handleClearMetadata(evt) {
+function onClearMetadata(evt) {
     showMessageDialog('', l10n.jed.translate('Are you sure you want to clear all existing user-added metadata from "%s"?').fetch(evt.target.getName()), l10n.jed.translate('Clear').fetch(), function(result){
         if (result) {
             var request = JSON.stringify({
@@ -533,7 +533,7 @@ function handleClearMetadata(evt) {
         }
     });
 }
-function handleSidebarClick(evt) {
+function onSidebarClick(evt) {
     if (evt.target.hasAttribute('data-index')) {
         document.getElementById('main').lastElementChild.scrollToItem(evt.target.getAttribute('data-index'));
 
@@ -545,7 +545,7 @@ function handleSidebarClick(evt) {
         }
     }
 }
-function handleQuit(evt) {
+function onQuit(evt) {
     if (!document.getElementById('applySortButton').classList.contains('hidden')) {
         handleUnappliedChangesClose(l10n.jed.translate('sorted load order').fetch());
     } else if (document.body.hasAttribute('data-editors')) {
@@ -554,7 +554,7 @@ function handleQuit(evt) {
         window.close();
     }
 }
-function jumpToGeneralInfo(evt) {
+function onJumpToGeneralInfo(evt) {
     window.location.hash = '';
     document.getElementById('main').scrollTop = 0;
 }
@@ -627,48 +627,48 @@ function onContentRefresh(evt) {
 }
 function setupEventHandlers() {
     /*Set up handlers for filters.*/
-    document.getElementById('hideVersionNumbers').addEventListener('change', toggleDisplayCSS, false);
-    document.getElementById('hideCRCs').addEventListener('change', toggleDisplayCSS, false);
-    document.getElementById('hideBashTags').addEventListener('change', toggleDisplayCSS, false);
+    document.getElementById('hideVersionNumbers').addEventListener('change', onToggleDisplayCSS, false);
+    document.getElementById('hideCRCs').addEventListener('change', onToggleDisplayCSS, false);
+    document.getElementById('hideBashTags').addEventListener('change', onToggleDisplayCSS, false);
     document.getElementById('hideNotes').addEventListener('change', setFilteredUIData, false);
     document.getElementById('hideDoNotCleanMessages').addEventListener('change', setFilteredUIData, false);
     document.getElementById('hideInactivePlugins').addEventListener('change', setFilteredUIData, false);
     document.getElementById('hideAllPluginMessages').addEventListener('change', setFilteredUIData, false);
     document.getElementById('hideMessagelessPlugins').addEventListener('change', setFilteredUIData, false);
-    document.body.addEventListener('loot-filter-conflicts', handleConflictsFilter, false);
+    document.body.addEventListener('loot-filter-conflicts', onConflictsFilter, false);
 
     /* Set up event handlers for content filter. */
     document.getElementById('searchBox').addEventListener('change', setFilteredUIData, false);
-    window.addEventListener('keyup', focusSearch, false);
+    window.addEventListener('keyup', onFocusSearch, false);
 
     /* Set up handlers for buttons. */
-    document.getElementById('redatePluginsButton').addEventListener('click', redatePlugins, false);
-    document.getElementById('openLogButton').addEventListener('click', openLogLocation, false);
-    document.getElementById('wipeUserlistButton').addEventListener('click', clearAllMetadata, false);
-    document.getElementById('copyContentButton').addEventListener('click', copyContent, false);
+    document.getElementById('redatePluginsButton').addEventListener('click', onRedatePlugins, false);
+    document.getElementById('openLogButton').addEventListener('click', onOpenLogLocation, false);
+    document.getElementById('wipeUserlistButton').addEventListener('click', onClearAllMetadata, false);
+    document.getElementById('copyContentButton').addEventListener('click', onCopyContent, false);
     document.getElementById('refreshContentButton').addEventListener('click', onContentRefresh, false);
-    document.getElementById('settingsButton').addEventListener('click', showSettingsDialog, false);
-    document.getElementById('helpButton').addEventListener('click', openReadme, false);
-    document.getElementById('aboutButton').addEventListener('click', showAboutDialog, false);
-    document.getElementById('quitButton').addEventListener('click', handleQuit, false);
-    document.getElementById('updateMasterlistButton').addEventListener('click', updateMasterlist, false);
-    document.getElementById('sortButton').addEventListener('click', sortPlugins, false);
-    document.getElementById('applySortButton').addEventListener('click', applySort, false);
-    document.getElementById('cancelSortButton').addEventListener('click', cancelSort, false);
-    document.getElementById('sidebarTabs').addEventListener('core-select', switchSidebarTab, false);
-    document.getElementById('jumpToGeneralInfo').addEventListener('click', jumpToGeneralInfo, false);
+    document.getElementById('settingsButton').addEventListener('click', onShowSettingsDialog, false);
+    document.getElementById('helpButton').addEventListener('click', onOpenReadme, false);
+    document.getElementById('aboutButton').addEventListener('click', onShowAboutDialog, false);
+    document.getElementById('quitButton').addEventListener('click', onQuit, false);
+    document.getElementById('updateMasterlistButton').addEventListener('click', onUpdateMasterlist, false);
+    document.getElementById('sortButton').addEventListener('click', onSortPlugins, false);
+    document.getElementById('applySortButton').addEventListener('click', onApplySort, false);
+    document.getElementById('cancelSortButton').addEventListener('click', onCancelSort, false);
+    document.getElementById('sidebarTabs').addEventListener('core-select', onSwitchSidebarTab, false);
+    document.getElementById('jumpToGeneralInfo').addEventListener('click', onJumpToGeneralInfo, false);
 
     /* Set up event handlers for settings dialog. */
     var settings = document.getElementById('settingsDialog');
-    settings.getElementsByClassName('accept')[0].addEventListener('click', closeSettingsDialog, false);
-    settings.getElementsByClassName('cancel')[0].addEventListener('click', closeSettingsDialog, false);
+    settings.getElementsByClassName('accept')[0].addEventListener('click', onCloseSettingsDialog, false);
+    settings.getElementsByClassName('cancel')[0].addEventListener('click', onCloseSettingsDialog, false);
 
     /* Set up handler for opening and closing editors. */
-    document.body.addEventListener('loot-editor-open', handleEditorOpen, false);
-    document.body.addEventListener('loot-editor-close', handleEditorClose, false);
-    document.body.addEventListener('loot-copy-metadata', handleCopyMetadata, false);
-    document.body.addEventListener('loot-clear-metadata', handleClearMetadata, false);
+    document.body.addEventListener('loot-editor-open', onEditorOpen, false);
+    document.body.addEventListener('loot-editor-close', onEditorClose, false);
+    document.body.addEventListener('loot-copy-metadata', onCopyMetadata, false);
+    document.body.addEventListener('loot-clear-metadata', onClearMetadata, false);
 
-    document.getElementById('cardsNav').addEventListener('click', handleSidebarClick, false);
-    document.getElementById('cardsNav').addEventListener('dblclick', handleSidebarClick, false);
+    document.getElementById('cardsNav').addEventListener('click', onSidebarClick, false);
+    document.getElementById('cardsNav').addEventListener('dblclick', onSidebarClick, false);
 }
