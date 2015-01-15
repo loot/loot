@@ -148,7 +148,7 @@ html /deep/ table[is=editable-table] paper-icon-button[icon=add]:hover {
     /* Create a <editable-table> element type that extends from <table>. */
     var EditableTableProto = Object.create(HTMLTableElement.prototype, {
 
-        handleDrop: {
+        onDrop: {
             value: function(evt) {
                 evt.stopPropagation();
 
@@ -163,7 +163,7 @@ html /deep/ table[is=editable-table] paper-icon-button[icon=add]:hover {
             }
         },
 
-        handleDragOver: {
+        onDragOver: {
             value: function(evt) {
                 evt.preventDefault();
                 evt.dataTransfer.dropEffect = 'copy';
@@ -234,21 +234,21 @@ html /deep/ table[is=editable-table] paper-icon-button[icon=add]:hover {
             }
         },
 
-        removeRow: {
+        onRemoveRow: {
             value: function(evt) {
                 var tr = evt.target.parentElement.parentElement.parentElement;
                 var tbody = tr.parentElement;
                 var table = tbody.parentElement;
 
                 /* Remove deletion listener. */
-                evt.target.removeEventListener('click', table.removeRow, false);
+                evt.target.removeEventListener('click', table.onRemoveRow, false);
 
                 /* Now remove row. */
                 tbody.removeChild(tr);
             }
         },
 
-        addEmptyRow: {
+        onAddEmptyRow: {
             value: function(evt) {
                 /* Create new row. */
                 var table = evt.currentTarget.parentElement.parentElement.parentElement.parentElement.parentElement;
@@ -264,7 +264,7 @@ html /deep/ table[is=editable-table] paper-icon-button[icon=add]:hover {
                 table.tBodies[0].insertBefore(row, table.tBodies[0].lastElementChild);
 
                 /* Add deletion listener. */
-                table.tBodies[0].lastElementChild.previousElementSibling.getElementsByClassName('delete')[0].addEventListener('click', table.removeRow, false);
+                table.tBodies[0].lastElementChild.previousElementSibling.getElementsByClassName('delete')[0].addEventListener('click', table.onRemoveRow, false);
             }
         },
 
@@ -292,7 +292,7 @@ html /deep/ table[is=editable-table] paper-icon-button[icon=add]:hover {
                 }
 
                 /* Add deletion listener. */
-                row.getElementsByClassName('delete')[0].addEventListener('click', this.removeRow, false);
+                row.getElementsByClassName('delete')[0].addEventListener('click', this.onRemoveRow, false);
 
                 return row;
             }
@@ -312,14 +312,14 @@ html /deep/ table[is=editable-table] paper-icon-button[icon=add]:hover {
                 row = this.tBodies[0].lastElementChild;
 
                 /* Add new row listener. */
-                row.querySelector('paper-icon-button').addEventListener('click', this.addEmptyRow, false);
+                row.querySelector('paper-icon-button').addEventListener('click', this.onAddEmptyRow, false);
 
                 /* Add drag 'n' drop listeners.
                    Drag 'n' drop should only be enabled for file-row tables.
                 */
                 if (this.getAttribute('data-template') == 'fileRow') {
-                    this.addEventListener('drop', this.handleDrop, false);
-                    this.addEventListener('dragover', this.handleDragOver, false);
+                    this.addEventListener('drop', this.onDrop, false);
+                    this.addEventListener('dragover', this.onDragOver, false);
                 }
             }
         },
@@ -329,15 +329,15 @@ html /deep/ table[is=editable-table] paper-icon-button[icon=add]:hover {
                 /* Remove deletion listener. */
                 var icons = this.tBodies[0].getElementsByClassName('delete');
                 for (var i = 0; i < icons.length; ++i) {
-                    icons[i].removeEventListener('click', this.removeRow, false);
+                    icons[i].removeEventListener('click', this.onRemoveRow, false);
                 }
 
                 /* Remove new row listener. */
-                this.querySelector('tbody tr:last-child paper-icon-button').removeEventListener('click', this.addEmptyRow, false);
+                this.querySelector('tbody tr:last-child paper-icon-button').removeEventListener('click', this.onAddEmptyRow, false);
 
                 /* Remove drag 'n' drop listeners. */
-                this.removeEventListener('drop', this.handleDrop, false);
-                this.removeEventListener('dragover', this.handleDragOver, false);
+                this.removeEventListener('drop', this.onDrop, false);
+                this.removeEventListener('dragover', this.onDragOver, false);
             }
         },
 

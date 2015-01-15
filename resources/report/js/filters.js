@@ -146,7 +146,52 @@ var filters = {
     },
 };
 
-function setFilteredUIData(evt) {
+function getConflictingPluginsFromFilter() {
+    var conflictsPlugin = document.body.getAttribute('data-conflicts');
+    if (conflictsPlugin) {
+        /* Now get conflicts for the plugin. */
+        var request = JSON.stringify({
+            name: 'getConflictingPlugins',
+            args: [
+                conflictsPlugin
+            ]
+        });
+
+        showProgress(l10n.jed.translate('Checking if plugins have been loaded...').fetch());
+
+        return loot.query(request).then(JSON.parse).then(function(result){
+            if (result) {
+                /* Filter everything but the plugin itself if there are no
+                   conflicts. */
+                var conflicts = [ conflictsPlugin ];
+                for (var key in result) {
+                    if (result[key].conflicts) {
+                        conflicts.push(key);
+                    }
+                    for (var i = 0; i < loot.game.plugins.length; ++i) {
+                        if (loot.game.plugins[i].name == key) {
+                            loot.game.plugins[i].crc = result[key].crc;
+                            loot.game.plugins[i].isEmpty = result[key].isEmpty;
+
+                            loot.game.plugins[i].messages = result[key].messages;
+                            loot.game.plugins[i].tags = result[key].tags;
+                            loot.game.plugins[i].isDirty = result[key].isDirty;
+                            break;
+                        }
+                    }
+                }
+                closeProgressDialog();
+                return conflicts;
+            }
+            closeProgressDialog();
+            return [ conflictsPlugin ];
+        }).catch(processCefError);
+    }
+
+    return Promise.resolve([]);
+}
+
+function setFilteredUIData() {
     /* The conflict filter, if enabled, executes C++ code, so needs to be
        handled using a promise, so the rest of the function should wait until
        it is completed.

@@ -141,9 +141,12 @@ def createAppArchive(archive_path):
     shutil.copy( os.path.join('..', 'resources', 'report', 'bower_components', 'Jed', 'jed.js'), os.path.join(temp_path, 'resources', 'report', 'bower_components', 'Jed') )
     shutil.copy( os.path.join('..', 'resources', 'report', 'bower_components', 'jed-gettext-parser', 'jedGettextParser.js'), os.path.join(temp_path, 'resources', 'report', 'bower_components', 'jed-gettext-parser') )
     shutil.copytree( os.path.join('..', 'resources', 'report', 'fonts'), os.path.join(temp_path, 'resources', 'report', 'fonts') )
-    shutil.copy( os.path.join('..', 'resources', 'report', 'js', 'l10n.js'), os.path.join(temp_path, 'resources', 'report', 'js') )
-    shutil.copy( os.path.join('..', 'resources', 'report', 'js', 'plugin.js'), os.path.join(temp_path, 'resources', 'report', 'js') )
+    shutil.copy( os.path.join('..', 'resources', 'report', 'js', 'events.js'), os.path.join(temp_path, 'resources', 'report', 'js') )
     shutil.copy( os.path.join('..', 'resources', 'report', 'js', 'filters.js'), os.path.join(temp_path, 'resources', 'report', 'js') )
+    shutil.copy( os.path.join('..', 'resources', 'report', 'js', 'helpers.js'), os.path.join(temp_path, 'resources', 'report', 'js') )
+    shutil.copy( os.path.join('..', 'resources', 'report', 'js', 'l10n.js'), os.path.join(temp_path, 'resources', 'report', 'js') )
+    shutil.copy( os.path.join('..', 'resources', 'report', 'js', 'loot.js'), os.path.join(temp_path, 'resources', 'report', 'js') )
+    shutil.copy( os.path.join('..', 'resources', 'report', 'js', 'plugin.js'), os.path.join(temp_path, 'resources', 'report', 'js') )
 
     # Docs.
     shutil.copytree( os.path.join('..', 'docs', 'images'), os.path.join(temp_path, 'docs', 'images') )
