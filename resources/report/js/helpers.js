@@ -17,14 +17,6 @@ function hideElement(element) {
         element.classList.toggle('hidden', true);
     }
 }
-function toggleDisplayCSS(evt) {
-    var attr = 'data-hide-' + evt.target.getAttribute('data-class');
-    if (evt.target.checked) {
-        document.getElementById('main').setAttribute(attr, true);
-    } else {
-        document.getElementById('main').removeAttribute(attr);
-    }
-}
 function toast(text) {
     var toast = document.getElementById('toast');
     toast.text = text;

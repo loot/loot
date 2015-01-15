@@ -1,3 +1,11 @@
+function toggleDisplayCSS(evt) {
+    var attr = 'data-hide-' + evt.target.getAttribute('data-class');
+    if (evt.target.checked) {
+        document.getElementById('main').setAttribute(attr, true);
+    } else {
+        document.getElementById('main').removeAttribute(attr);
+    }
+}
 function openLogLocation(evt) {
     loot.query('openLogLocation').catch(processCefError);
 }
@@ -297,7 +305,6 @@ function switchSidebarTab(evt) {
         document.getElementById(evt.target.selected).parentElement.selected = evt.target.selected;
     }
 }
-
 function showAboutDialog(evt) {
     document.getElementById('about').showModal();
 }
@@ -353,7 +360,6 @@ function closeSettingsDialog(evt) {
     }
     evt.target.parentElement.close();
 }
-
 function showSettingsDialog(evt) {
     document.getElementById('settingsDialog').showModal();
 }
