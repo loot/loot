@@ -348,9 +348,12 @@ FunctionEnd
         SetOutPath "$INSTDIR\resources\report\fonts"
         File "..\resources\report\fonts\*"
         SetOutPath "$INSTDIR\resources\report\js"
-        File "..\resources\report\js\l10n.js"
-        File "..\resources\report\js\plugin.js"
+        File "..\resources\report\js\events.js"
         File "..\resources\report\js\filters.js"
+        File "..\resources\report\js\helpers.js"
+        File "..\resources\report\js\l10n.js"
+        File "..\resources\report\js\loot.js"
+        File "..\resources\report\js\plugin.js"
 
         ;Install documentation images.
         SetOutPath "$INSTDIR\docs\images"
@@ -508,9 +511,12 @@ FunctionEnd
         Delete "$INSTDIR\resources\report\bower_components\Jed\jed.js"
         Delete "$INSTDIR\resources\report\bower_components\jed-gettext-parser\jedGettextParser.js"
         RMDir /r "$INSTDIR\resources\report\fonts"
-        Delete "$INSTDIR\resources\report\js\l10n.js"
-        Delete "$INSTDIR\resources\report\js\plugin.js"
+        Delete "$INSTDIR\resources\report\js\events.js"
         Delete "$INSTDIR\resources\report\js\filters.js"
+        Delete "$INSTDIR\resources\report\js\helpers.js"
+        Delete "$INSTDIR\resources\report\js\l10n.js"
+        Delete "$INSTDIR\resources\report\js\loot.js"
+        Delete "$INSTDIR\resources\report\js\plugin.js"
         RMDir /r "$INSTDIR\resources\report"
 
         ;Remove language files.
