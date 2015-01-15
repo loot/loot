@@ -324,33 +324,33 @@ loot-editor-close
                     } else if (tables[j].parentElement.id == 'inc') {
                         plugin.userlist.inc = rowsData;
                     } else if (tables[j].parentElement.id == 'message') {
-                        rowsData.forEach(function(data){
-                            data.content = [{
-                                str: data.content,
-                                lang: data.language
+                        rowsData.forEach(function(value, index, arr){
+                            arr[index].content = [{
+                                str: value.content,
+                                lang: value.language
                             }]
-                            delete data.language;
+                            delete arr[index].language;
                         });
                         plugin.userlist.msg = rowsData;
                     } else if (tables[j].parentElement.id == 'tags') {
-                        rowsData.forEach(function(data){
-                            data = oldData.convTagObj(data);
+                        rowsData.forEach(function(value, index, arr){
+                            arr[index] = oldData.convTagObj(value);
                         });
                         plugin.userlist.tag = rowsData;
                     } else if (tables[j].parentElement.id == 'dirty') {
-                        rowsData.forEach(function(data){
-                            data.crc = parseInt(data.crc, 16);
+                        rowsData.forEach(function(value, index, arr){
+                            arr[index].crc = parseInt(value.crc, 16);
                         });
                         plugin.userlist.dirty = rowsData;
                     } else if (tables[j].parentElement.id == 'locations') {
-                        rowsData.forEach(function(data){
+                        rowsData.forEach(function(value, index, arr){
                             /* User metadata can only specify one version, but it should be a list. */
-                            if (data.ver.length > 0) {
-                                data.ver = [
-                                    data.ver
+                            if (value.ver.length > 0) {
+                                arr[index].ver = [
+                                    value.ver
                                 ];
                             } else {
-                                delete data.ver;
+                                delete arr[index].ver;
                             }
                         });
                         plugin.userlist.url = rowsData;
