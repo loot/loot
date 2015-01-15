@@ -252,19 +252,8 @@ html /deep/ table[is=editable-table] paper-icon-button[icon=add]:hover {
             value: function(evt) {
                 /* Create new row. */
                 var table = evt.currentTarget.parentElement.parentElement.parentElement.parentElement.parentElement;
-                var rowTemplateId = table.getAttribute('data-template');
-                var content = document.querySelector('link[rel="import"][href$="editable-table.html"]');
-                if (content) {
-                    content = content.import.getElementById(rowTemplateId).content;
-                } else {
-                    content = document.getElementById(rowTemplateId).content;
-                }
-                var row = document.importNode(content, true);
 
-                table.tBodies[0].insertBefore(row, table.tBodies[0].lastElementChild);
-
-                /* Add deletion listener. */
-                table.tBodies[0].lastElementChild.previousElementSibling.getElementsByClassName('delete')[0].addEventListener('click', table.onRemoveRow, false);
+                table.addRow({});
             }
         },
 

@@ -314,7 +314,6 @@ function areSettingsValid() {
     for (var i = 0; i < inputs.length; ++i) {
         if (!inputs[i].checkValidity()) {
             return false;
-            console.log(inputs[i]);
         }
     }
     return true;
