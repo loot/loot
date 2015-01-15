@@ -317,13 +317,13 @@ loot-editor-close
             for (var j = 0; j < tables.length; ++j) {
                 var rowsData = tables[j].getRowsData(true);
                 if (rowsData.length > 0) {
-                    if (tables[j].id == 'loadAfter') {
+                    if (tables[j].parentElement.id == 'loadAfter') {
                         plugin.userlist.after = rowsData;
-                    } else if (tables[j].id == 'req') {
+                    } else if (tables[j].parentElement.id == 'req') {
                         plugin.userlist.req = rowsData;
-                    } else if (tables[j].id == 'inc') {
+                    } else if (tables[j].parentElement.id == 'inc') {
                         plugin.userlist.inc = rowsData;
-                    } else if (tables[j].id == 'message') {
+                    } else if (tables[j].parentElement.id == 'message') {
                         rowsData.forEach(function(data){
                             data.content = [{
                                 str: data.content,
@@ -332,17 +332,17 @@ loot-editor-close
                             delete data.language;
                         });
                         plugin.userlist.msg = rowsData;
-                    } else if (tables[j].id == 'tags') {
+                    } else if (tables[j].parentElement.id == 'tags') {
                         rowsData.forEach(function(data){
                             data = oldData.convTagObj(data);
                         });
                         plugin.userlist.tag = rowsData;
-                    } else if (tables[j].id == 'dirty') {
+                    } else if (tables[j].parentElement.id == 'dirty') {
                         rowsData.forEach(function(data){
                             data.crc = parseInt(data.crc, 16);
                         });
                         plugin.userlist.dirty = rowsData;
-                    } else if (tables[j].id == 'locations') {
+                    } else if (tables[j].parentElement.id == 'locations') {
                         rowsData.forEach(function(data){
                             /* User metadata can only specify one version, but it should be a list. */
                             if (data.ver.length > 0) {
