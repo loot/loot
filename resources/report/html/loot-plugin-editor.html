@@ -364,7 +364,7 @@ loot-editor-close
         onHideEditor: function(evt) {
             /* First validate table inputs. */
             var isValid = true;
-            var inputs = evt.target.parentElement.parentElement.getElementsByTagName('input');
+            var inputs = evt.target.parentElement.parentElement.parentNode.getElementsByTagName('loot-validated-input');
             for (var i = 0; i < inputs.length; ++i) {
                 if (!inputs[i].checkValidity()) {
                     isValid = false;

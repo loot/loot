@@ -68,6 +68,8 @@ function initVars() {
                 settingsLangSelect.appendChild(settingsItem);
                 messageLangSelect.appendChild(settingsItem.cloneNode(true));
             }
+
+            messageLangSelect.setAttribute('value', messageLangSelect.firstElementChild.getAttribute('value'));
         } catch (e) {
             console.log(e);
             console.log('Response: ' + result);
@@ -120,6 +122,7 @@ function initVars() {
                 item.textContent = loot.gameTypes[j];
                 select.appendChild(item);
             }
+            select.setAttribute('value', select.firstElementChild.getAttribute('value'));
 
             try {
                 loot.installedGames = JSON.parse(results[1]);

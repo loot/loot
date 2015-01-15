@@ -23,7 +23,7 @@
 <template id="messageRow">
     <tr>
         <td>
-            <loot-dropdown-menu class="type" valueattr="value">
+            <loot-dropdown-menu class="type" value="say">
                 <paper-item value="say" noink>Note</paper-item>
                 <paper-item value="warn" noink>Warning</paper-item>
                 <paper-item value="error" noink>Error</paper-item>
@@ -32,7 +32,7 @@
         <td><loot-validated-input error="A content string is required." class="content" required></loot-validated-input></td>
         <td><paper-input class="condition"></paper-input></td>
         <td>
-            <loot-dropdown-menu class="language" valueattr="value" halign="right">
+            <loot-dropdown-menu class="language" halign="right">
                 <!-- Language <option> elements go here. -->
             </loot-dropdown-menu>
         </td>
@@ -46,7 +46,7 @@
 <template id="tagRow">
     <tr>
         <td>
-            <loot-dropdown-menu class="type" valueattr="value">
+            <loot-dropdown-menu class="type" value="add">
                 <paper-item value="add" noink>Add</paper-item>
                 <paper-item value="remove" noink>Remove</paper-item>
             </loot-dropdown-menu>
@@ -89,7 +89,7 @@
     <tr>
         <td><loot-validated-input error="A name is required." class="name" required></loot-validated-input></td>
         <td>
-            <loot-dropdown-menu class="type" valueattr="value">
+            <loot-dropdown-menu class="type">
                 <!-- Game <option> elements go here. -->
             </loot-dropdown-menu>
         </td>
