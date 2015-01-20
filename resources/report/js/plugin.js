@@ -187,9 +187,9 @@ function Plugin(obj) {
             } else if (change.name == 'isDirty') {
                 /* Update dirty counts. */
                 if (change.object[change.name]) {
-                    document.getElementById('dirtyPluginNo').textContent = ++parseInt(document.getElementById('dirtyPluginNo').textContent, 10);
+                    document.getElementById('dirtyPluginNo').textContent = parseInt(document.getElementById('dirtyPluginNo').textContent, 10) + 1;
                 } else {
-                    document.getElementById('dirtyPluginNo').textContent = --parseInt(document.getElementById('dirtyPluginNo').textContent, 10);
+                    document.getElementById('dirtyPluginNo').textContent = parseInt(document.getElementById('dirtyPluginNo').textContent, 10) - 1;
                 }
             }
         });
