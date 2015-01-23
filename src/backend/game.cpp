@@ -310,32 +310,32 @@ namespace loot {
         BOOST_LOG_TRIVIAL(info) << "Setting new details for game: " << _name;
 
         if (!name.empty()) {
-            BOOST_LOG_TRIVIAL(trace) << '\t' << "Setting name to :" << name;
+            BOOST_LOG_TRIVIAL(trace) << '\t' << "Setting name to: " << name;
             _name = name;
         }
 
         if (!masterFile.empty()) {
-            BOOST_LOG_TRIVIAL(trace) << '\t' << "Setting master file to :" << masterFile;
+            BOOST_LOG_TRIVIAL(trace) << '\t' << "Setting master file to: " << masterFile;
             _masterFile = masterFile;
         }
 
         if (!repositoryURL.empty()) {
-            BOOST_LOG_TRIVIAL(trace) << '\t' << "Setting repo URL to :" << repositoryURL;
+            BOOST_LOG_TRIVIAL(trace) << '\t' << "Setting repo URL to: " << repositoryURL;
             _repositoryURL = repositoryURL;
         }
 
         if (!repositoryBranch.empty()) {
-            BOOST_LOG_TRIVIAL(trace) << '\t' << "Setting repo branch to :" << repositoryBranch;
+            BOOST_LOG_TRIVIAL(trace) << '\t' << "Setting repo branch to: " << repositoryBranch;
             _repositoryBranch = repositoryBranch;
         }
 
         if (!path.empty()) {
-            BOOST_LOG_TRIVIAL(trace) << '\t' << "Setting game path to :" << path;
+            BOOST_LOG_TRIVIAL(trace) << '\t' << "Setting game path to: " << path;
             gamePath = path;
         }
 
         if (!registry.empty()) {
-            BOOST_LOG_TRIVIAL(trace) << '\t' << "Setting registry key to :" << registry;
+            BOOST_LOG_TRIVIAL(trace) << '\t' << "Setting registry key to: " << registry;
             registryKey = registry;
         }
 
