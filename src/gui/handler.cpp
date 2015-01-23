@@ -406,6 +406,9 @@ namespace loot {
 
         g_app_state.CurrentGame().userlist.ErasePlugin(Plugin(pluginName));
 
+        // Save userlist edits.
+        g_app_state.CurrentGame().userlist.Save(g_app_state.CurrentGame().UserlistPath());
+
         // Now rederive the displayed metadata from the masterlist.
         YAML::Node derivedMetadata = GenerateDerivedMetadata(pluginName);
         if (derivedMetadata.size() > 0)
@@ -876,6 +879,9 @@ namespace loot {
 
         // Clear the user metadata.
         g_app_state.CurrentGame().userlist.clear();
+
+        // Save userlist edits.
+        g_app_state.CurrentGame().userlist.Save(g_app_state.CurrentGame().UserlistPath());
 
         // Regenerate the derived metadata (priority, messages, tags and dirty state)
         // for any plugins with userlist entries.
