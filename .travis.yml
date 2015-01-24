@@ -27,9 +27,9 @@ install:
   - make yaml-cpp
   - cd ../../
   # Build libgit2
-  - wget https://github.com/libgit2/libgit2/archive/v0.21.1.tar.gz
-  - tar -xf v0.21.1.tar.gz
-  - mv libgit2-0.21.1 libgit2
+  - wget https://github.com/libgit2/libgit2/archive/v0.22.1.tar.gz
+  - tar -xf v0.22.1.tar.gz
+  - mv libgit2-0.22.1 libgit2
   - mkdir libgit2/build && cd libgit2/build
   - cmake ..
   - make git2
