@@ -217,6 +217,10 @@ namespace loot {
     }
 
     void Masterlist::GetGitInfo(const boost::filesystem::path& path, bool shortID) {
+        // Compare HEAD and working copy, and get revision info.
+        git_handler git;
+        git.ui_message = (boost::format(lc::translate("An error occurred while trying to read the local masterlist's version. If this error happens again, try deleting the \".git\" folder in %1%.")) % path.parent_path().string()).str();
+
         if (!isRepository(path.parent_path())) {
             BOOST_LOG_TRIVIAL(info) << "Unknown masterlist revision: Git repository missing.";
             throw error(error::ok, lc::translate("Unknown: Git repository missing"));
@@ -226,9 +230,6 @@ namespace loot {
             throw error(error::ok, lc::translate("N/A: No masterlist present"));
         }
 
-        // Compare HEAD and working copy, and get revision info.
-        git_handler git;
-        git.ui_message = (boost::format(lc::translate("An error occurred while trying to read the local masterlist's version. If this error happens again, try deleting the \".git\" folder in %1%.")) % path.parent_path().string()).str();
         BOOST_LOG_TRIVIAL(debug) << "Existing repository found, attempting to open it.";
         git.call(git_repository_open(&git.repo, path.parent_path().string().c_str()));
 
