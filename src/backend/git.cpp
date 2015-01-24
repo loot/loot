@@ -61,12 +61,12 @@ namespace loot {
             ref2(nullptr),
             sig(nullptr),
             blob(nullptr),
-            merge_head(nullptr),
+            annotated_commit(nullptr),
             tree(nullptr),
             diff(nullptr),
             buf({0}) {
             // Init threading system and OpenSSL (for Linux builds).
-            git_threads_init();
+            git_libgit2_init();
         }
 
         ~git_handler() {
@@ -83,7 +83,7 @@ namespace loot {
                 catch (exception&) {}
             }
 
-            git_threads_shutdown();
+            git_libgit2_shutdown();
         }
 
         void free() {
@@ -96,7 +96,7 @@ namespace loot {
             git_reference_free(ref2);
             git_signature_free(sig);
             git_blob_free(blob);
-            git_merge_head_free(merge_head);
+            git_annotated_commit_free(annotated_commit);
             git_tree_free(tree);
             git_diff_free(diff);
             git_buf_free(&buf);
@@ -110,7 +110,7 @@ namespace loot {
             ref2 = nullptr;
             sig = nullptr;
             blob = nullptr;
-            merge_head = nullptr;
+            annotated_commit = nullptr;
             tree = nullptr;
             diff = nullptr;
             buf = {0};
@@ -144,7 +144,7 @@ namespace loot {
         git_reference * ref2;
         git_signature * sig;
         git_blob * blob;
-        git_merge_head * merge_head;
+        git_annotated_commit * annotated_commit;
         git_tree * tree;
         git_diff * diff;
         git_buf buf;
@@ -323,10 +323,6 @@ namespace loot {
             clone_options.bare = 0;
             clone_options.checkout_branch = repoBranch.c_str();
             clone_options.signature = git.sig;
-#ifndef _WIN32
-            //OpenSSL doesn't seem to like GitHub's certificate.
-            clone_options.ignore_cert_errors = 1;
-#endif
 
             //Now perform the clone.
             git.call(git_clone(&git.repo, repoURL.c_str(), repo_path.string().c_str(), &clone_options));
@@ -355,7 +351,7 @@ namespace loot {
 
             // Check that the repository's remote settings match LOOT's.
             BOOST_LOG_TRIVIAL(info) << "Checking to see if remote URL matches URL in settings.";
-            git.call(git_remote_load(&git.remote, git.repo, "origin"));
+            git.call(git_remote_lookup(&git.remote, git.repo, "origin"));
             const char * url = git_remote_url(git.remote);
 
             BOOST_LOG_TRIVIAL(info) << "Remote URL given: " << repoURL;
@@ -373,7 +369,7 @@ namespace loot {
             BOOST_LOG_TRIVIAL(trace) << "Fetching updates from remote.";
             git.ui_message = lc::translate("An error occurred while trying to update the masterlist. This could be due to a server-side error. Try again in a few minutes.");
 
-            git.call(git_remote_fetch(git.remote, git.sig, nullptr));
+            git.call(git_remote_fetch(git.remote, nullptr, git.sig, nullptr));
 
             // Print some stats on what was fetched either during update or clone.
             const git_transfer_progress * stats = git_remote_stats(git.remote);
@@ -426,8 +422,8 @@ namespace loot {
                 git_merge_analysis_t analysis;
                 git_merge_preference_t pref;
                 git.call(git_reference_lookup(&git.ref2, git.repo, (string("refs/remotes/origin/") + repoBranch).c_str()));
-                git.call(git_merge_head_from_ref(&git.merge_head, git.repo, git.ref2));
-                git.call(git_merge_analysis(&analysis, &pref, git.repo, (const git_merge_head **)&git.merge_head, 1));
+                git.call(git_annotated_commit_from_ref(&git.annotated_commit, git.repo, git.ref2));
+                git.call(git_merge_analysis(&analysis, &pref, git.repo, (const git_annotated_commit **)&git.annotated_commit, 1));
 
                 if ((analysis & GIT_MERGE_ANALYSIS_FASTFORWARD) != 0) {
                     BOOST_LOG_TRIVIAL(trace) << "Local branch can be fast-forwarded to remote branch.";
