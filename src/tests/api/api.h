@@ -412,7 +412,7 @@ TEST_F(SkyrimAPIOperationsTest, SortPlugins) {
 }
 
 TEST_F(OblivionAPIOperationsTest, ApplyLoadOrder) {
-    char * loadOrder[11] = {
+    const char * loadOrder[11] = {
         "Oblivion.esm",
         "Blank.esm",
         "Blank - Different.esm",
@@ -433,7 +433,7 @@ TEST_F(OblivionAPIOperationsTest, ApplyLoadOrder) {
 }
 
 TEST_F(SkyrimAPIOperationsTest, ApplyLoadOrder) {
-    char * loadOrder[11] = {
+    const char * loadOrder[11] = {
         "Skyrim.esm",
         "Blank.esm",
         "Blank - Different.esm",
@@ -552,7 +552,7 @@ TEST_F(OblivionAPIOperationsTest, GetPluginTags) {
     for (size_t i = 11; i < 21; ++i) {
         EXPECT_EQ(i + 1, added[i]);
     }
-    EXPECT_EQ(NULL, added[0]);
+    EXPECT_EQ(0, added[0]);
     ASSERT_EQ(1, numRemoved);
     EXPECT_EQ(11, removed[0]);
     EXPECT_TRUE(modified);
