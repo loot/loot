@@ -23,7 +23,7 @@ LOOT uses [CMake](http://cmake.org) to generate build files, and requires the fo
 * [Chromium Embedded Framework](https://code.google.com/p/chromiumembedded/) branch 2171
 * [Google Test](https://code.google.com/p/googletest/) v1.7: Required to build the LOOT API's tests, but not the API itself or the LOOT application.
 * [Libespm](http://github.com/WrinklyNinja/libespm)
-* [Libgit2](http://libgit2.github.com/) v0.21.3
+* [Libgit2](http://libgit2.github.com/) v0.22.1
 * [Libloadorder](http://github.com/WrinklyNinja/libloadorder)
 * [yaml-cpp](http://github.com/WrinklyNinja/yaml-cpp)
 
