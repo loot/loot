@@ -75,3 +75,9 @@ html /deep/ core-tooltip:hover:not([disabled])::shadow .core-tooltip {
 loot-plugin-card /deep/ #activeTick::shadow #tooltip {
     left: inherit !important;
 }
+
+/* Style the paper-checkbox background. */
+html /deep/ paper-checkbox::shadow #checkbox.checked {
+    border-color: #3F51B5;
+    background-color: #3F51B5;
+}
