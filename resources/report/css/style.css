@@ -207,7 +207,6 @@ paper-progress {
 html /deep/ table {
     border-collapse: collapse;
     width: 100%;
-    background-color: #E8EAF6;
 }
 html /deep/ table td, html /deep/ table th {
     vertical-align: top;
