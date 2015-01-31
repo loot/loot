@@ -1155,9 +1155,9 @@ namespace loot {
     bool LootHandler::DoClose(CefRefPtr<CefBrowser> browser) {
         assert(CefCurrentlyOn(TID_UI));
 
-        // Check if unapplied sorting changes exist.
+        // Check if unapplied changes exist.
         if (g_app_state.numUnappliedChanges > 0) {
-            browser->GetMainFrame()->ExecuteJavaScript("handleQuit();", browser->GetMainFrame()->GetURL(), 0);
+            browser->GetMainFrame()->ExecuteJavaScript("onQuit();", browser->GetMainFrame()->GetURL(), 0);
             return true;
         }
 
