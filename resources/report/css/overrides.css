@@ -25,6 +25,11 @@ core-animated-pages::shadow ::content > *:not(.core-selected):not([animate]) {
 html /deep/ core-menu paper-checkbox::shadow #checkboxLabel {
     padding-left: 32px;
 }
+/* Set the sidebar checkboxes to have balanced padding on either side. 32px
+   makes the label just seem too far away. */
+#filters paper-checkbox::shadow #checkboxLabel {
+    padding-left: 16px;
+}
 /* Set the underline colour of focussed paper inputs. */
 html /deep/ paper-input-decorator::shadow .underline .focused-underline {
     /* line color when the input is focused */
