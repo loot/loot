@@ -140,18 +140,19 @@ loot-clear-metadata
         core-tooltip > core-icon {
             vertical-align: inherit !important;
         }
-        core-menu > core-label {
+        #conflictsLabel {
             font-size: 1rem;
             font-weight: 500;
             padding: 0 16px;
             height: 48px;
             line-height: 48px;
+            cursor: pointer;
         }
-        core-menu > core-label > core-icon {
+        #conflictsLabel > core-icon {
             margin-right: 32px;
             color: rgba(0, 0, 0, 0.54);
         }
-        core-menu > core-label [for] {
+        #conflictsLabel [for] {
             margin-left: 32px;
         }
         </style>
@@ -182,7 +183,7 @@ loot-clear-metadata
                         <paper-icon-button icon="more-vert"></paper-icon-button>
                         <paper-dropdown class="dropdown" halign="right" opened="{{data.isMenuOpen}}">
                             <core-menu class="menu">
-                                <core-label center horizontal layout>
+                                <core-label id="conflictsLabel" center horizontal layout>
                                     <core-icon icon="filter-list"></core-icon>
                                     <div flex>Show Only Conflicts</div>
                                     <paper-toggle-button id="showOnlyConflicts" checked="{{data.isConflictFilterChecked}}" for></paper-toggle-button>
