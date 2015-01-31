@@ -24,6 +24,7 @@
     <link rel="import" href="bower_components/core-animated-pages/core-animated-pages.html">
     <link rel="import" href="bower_components/core-animated-pages/transitions/slide-from-right.html">
     <link rel="import" href="bower_components/core-list/core-list.html">
+    <link rel="import" href="bower_components/core-label/core-label.html">
 
     <link rel="import" href="bower_components/paper-menu-button/paper-menu-button.html">
     <link rel="import" href="bower_components/paper-item/paper-item.html">
@@ -37,6 +38,7 @@
     <link rel="import" href="bower_components/paper-dropdown/paper-dropdown.html">
     <link rel="import" href="bower_components/paper-progress/paper-progress.html">
     <link rel="import" href="bower_components/paper-toast/paper-toast.html">
+    <link rel="import" href="bower_components/paper-toggle-button/paper-toggle-button.html">
 
     <script src="bower_components/requirejs/require.js"></script>
 </head>
@@ -256,10 +258,16 @@
                     <!-- Language <option> elements go here. -->
                 </loot-dropdown-menu>
             </div>
-            <core-tooltip label="The output is logged to the LOOTDebugLog.txt file." center horizontal layout noarrow>
-                <paper-checkbox id="enableDebugLogging" label="Enable debug logging"></paper-checkbox>
+            <core-tooltip label="The output is logged to the LOOTDebugLog.txt file." noarrow>
+                <core-label center horizontal layout>
+                    <div>Enable debug logging</div>
+                    <paper-toggle-button id="enableDebugLogging" for></paper-toggle-button>
+                </core-label>
             </core-tooltip>
-            <paper-checkbox id="updateMasterlist" label="Update masterlist before sorting"></paper-checkbox>
+            <core-label center horizontal layout>
+                <div>Update masterlist before sorting</div>
+                <paper-toggle-button id="updateMasterlist" for></paper-toggle-button>
+            </core-label>
         </div>
         <table is="editable-table" id="gameTable" data-template="gameRow">
             <thead>

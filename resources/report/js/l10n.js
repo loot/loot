@@ -64,7 +64,7 @@
             pluginCard.getElementById('loadsBSA').setAttribute('label', l10n.translate("Loads BSA").fetch());
             pluginCard.getElementById('hasUserEdits').setAttribute('label', l10n.translate("Has User Metadata").fetch());
 
-            pluginCard.getElementById('showOnlyConflicts').setAttribute('label', l10n.translate("Show Only Conflicts").fetch());
+            pluginCard.getElementById('showOnlyConflicts').previousElementSibling.textContent = l10n.translate("Show Only Conflicts").fetch();
             pluginCard.getElementById('editMetadata').lastChild.textContent = l10n.translate("Edit Metadata").fetch();
             pluginCard.getElementById('copyMetadata').lastChild.textContent = l10n.translate("Copy Metadata").fetch();
             pluginCard.getElementById('clearMetadata').lastChild.textContent = l10n.translate("Clear User Metadata").fetch();
@@ -82,9 +82,9 @@
             pluginEditor.getElementById('emptyPlugin').setAttribute('label', l10n.translate("Empty Plugin").fetch());
             pluginEditor.getElementById('loadsBSA').setAttribute('label', l10n.translate("Loads BSA").fetch());
 
-            pluginEditor.getElementById('enableEdits').setAttribute('label', l10n.translate("Enable Edits").fetch());
-            pluginEditor.getElementById('globalPriority').parentElement.setAttribute('label', l10n.translate("Global priorities are compared against all other plugins. Normal priorities are compared against only conflicting plugins.").fetch());
-            pluginEditor.getElementById('globalPriority').setAttribute('label', l10n.translate("Global Priority").fetch());
+            pluginEditor.getElementById('enableEdits').previousElementSibling.textContent = l10n.translate("Enable Edits").fetch();
+            pluginEditor.getElementById('globalPriority').parentElement.parentElement.setAttribute('label', l10n.translate("Global priorities are compared against all other plugins. Normal priorities are compared against only conflicting plugins.").fetch());
+            pluginEditor.getElementById('globalPriority').previousElementSibling.textContent = l10n.translate("Global Priority").fetch();
             pluginEditor.getElementById('priorityValue').parentElement.previousElementSibling.textContent = l10n.translate("Priority Value").fetch();
 
             pluginEditor.getElementById('tableTabs').querySelector('[data-for=main]').textContent = l10n.translate("Main").fetch();
@@ -277,10 +277,10 @@
             document.getElementById('languageSelect').previousElementSibling.textContent = l10n.translate("Language").fetch();
             document.getElementById('languageSelect').previousElementSibling.label = l10n.translate("Language changes will be applied after LOOT is restarted.").fetch();
 
-            document.getElementById('enableDebugLogging').label = l10n.translate("Enable debug logging").fetch();
+            document.getElementById('enableDebugLogging').previousElementSibling.textContent = l10n.translate("Enable debug logging").fetch();
             document.getElementById('enableDebugLogging').parentElement.label = l10n.translate("The output is logged to the LOOTDebugLog.txt file.").fetch();
 
-            document.getElementById('updateMasterlist').label = l10n.translate("Update masterlist before sorting").fetch();
+            document.getElementById('updateMasterlist').previousElementSibling.textContent = l10n.translate("Update masterlist before sorting").fetch();
 
             var gameTable = document.getElementById('gameTable');
             gameTable.querySelector('th:first-child').textContent = l10n.translate("Name").fetch();

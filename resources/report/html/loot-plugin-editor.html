@@ -11,12 +11,14 @@ loot-editor-close
 <link rel="import" href="../bower_components/core-tooltip/core-tooltip.html">
 <link rel="import" href="../bower_components/core-icon/core-icon.html">
 <link rel="import" href="../bower_components/core-icons/core-icons.html">
+<link rel="import" href="../bower_components/core-selector/core-selector.html">
+<link rel="import" href="../bower_components/core-label/core-label.html">
 <link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-input/paper-input-decorator.html">
 <link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../bower_components/core-selector/core-selector.html">
+<link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
 
 <link rel="import" href="editable-table.html">
 
@@ -76,9 +78,6 @@ loot-editor-close
         }
         #main > paper-checkbox, #main > core-tooltip {
             line-height: 48px;
-        }
-        #main > core-tooltip {
-            display: table;
         }
         #main > div > div:first-child {
             margin-right: 16px;
@@ -155,9 +154,15 @@ loot-editor-close
         </core-toolbar>
         <core-selector selected="main" valueattr="id">
             <div id="main">
-                <paper-checkbox id="enableEdits" label="Enable Edits"></paper-checkbox>
-                <core-tooltip label="Compare against all other plugins, not just conflicting plugins." position="right" noarrow>
-                    <paper-checkbox id="globalPriority" label="Global Priority"></paper-checkbox>
+                <core-label center horizontal layout>
+                    <div flex>Enable Edits</div>
+                    <paper-toggle-button id="enableEdits" for></paper-toggle-button>
+                </core-label>
+                <core-tooltip label="Compare against all other plugins, not just conflicting plugins." noarrow center horizontal layout>
+                    <core-label center horizontal layout flex>
+                        <div flex>Global Priority</div>
+                        <paper-toggle-button id="globalPriority" for></paper-toggle-button>
+                    </core-label>
                 </core-tooltip>
                 <div horizontal layout center>
                     <div>Priority Value</div>

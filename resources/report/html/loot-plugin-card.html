@@ -16,11 +16,13 @@ loot-clear-metadata
 <link rel="import" href="../bower_components/core-tooltip/core-tooltip.html">
 <link rel="import" href="../bower_components/core-icon/core-icon.html">
 <link rel="import" href="../bower_components/core-icons/core-icons.html">
+<link rel="import" href="../bower_components/core-label/core-label.html">
 <link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/paper-dropdown/paper-dropdown.html">
 <link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
 
 <link rel="import" href="loot-plugin-editor.html">
 <link rel="import" href="loot-custom-icons.html">
@@ -138,11 +140,19 @@ loot-clear-metadata
         core-tooltip > core-icon {
             vertical-align: inherit !important;
         }
-        #showOnlyConflicts {
-            display: block;
+        core-menu > core-label {
+            font-size: 1rem;
+            font-weight: 500;
             padding: 0 16px;
             height: 48px;
             line-height: 48px;
+        }
+        core-menu > core-label > core-icon {
+            margin-right: 32px;
+            color: rgba(0, 0, 0, 0.54);
+        }
+        core-menu > core-label [for] {
+            margin-left: 32px;
         }
         </style>
         <div id="wrapper">
@@ -172,7 +182,11 @@ loot-clear-metadata
                         <paper-icon-button icon="more-vert"></paper-icon-button>
                         <paper-dropdown class="dropdown" halign="right" opened="{{data.isMenuOpen}}">
                             <core-menu class="menu">
-                                <paper-checkbox id="showOnlyConflicts" label="Show Only Conflicts" checked="{{data.isConflictFilterChecked}}" flex></paper-checkbox>
+                                <core-label center horizontal layout>
+                                    <core-icon icon="filter-list"></core-icon>
+                                    <div flex>Show Only Conflicts</div>
+                                    <paper-toggle-button id="showOnlyConflicts" checked="{{data.isConflictFilterChecked}}" for></paper-toggle-button>
+                                </core-label>
                                 <paper-item id="editMetadata" noink>
                                     <core-icon icon="create"></core-icon>
                                     Edit Metadata

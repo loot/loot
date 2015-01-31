@@ -86,3 +86,14 @@ html /deep/ paper-checkbox::shadow #checkbox.checked {
     border-color: #3F51B5;
     background-color: #3F51B5;
 }
+
+/* Style the paper-toggle-button colours. */
+html /deep/ paper-toggle-button::shadow [checked] .toggle-bar {
+    background-color: rgba(63, 81, 181, 0.5);
+}
+html /deep/ paper-toggle-button::shadow [checked] .toggle-button {
+    background-color: #3F51B5;
+}
+html /deep/ paper-toggle-button::shadow [checked] .toggle-ink {
+    color: #3F51B5;
+}

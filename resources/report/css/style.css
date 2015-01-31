@@ -189,6 +189,9 @@ li.warn {
 #settingsDialog > div > :last-child {
     margin-right: 0;
 }
+#settingsDialog core-label [for]:last-child {
+    margin-left: 16px;
+}
 #gameTable {
     margin: 32px 0 0;
 }

@@ -34,6 +34,7 @@
     "paper-toast": "Polymer/paper-toast#~0.5.1",
     "core-list": "WrinklyNinja/core-list#z-order-items",
     "core-dropdown": "WrinklyNinja/core-dropdown#null-dimensions-positions-fix",
-    "jed-gettext-parser": "~1.0.0"
+    "jed-gettext-parser": "~1.0.0",
+    "paper-toggle-button": "Polymer/paper-toggle-button#~0.5.4"
   }
 }
