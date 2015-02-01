@@ -113,7 +113,6 @@ def createAppArchive(archive_path):
     # Now copy everything into the temporary folder.
     # LOOT executable and CEF files.
     shutil.copy( os.path.join('..', 'build', 'Release', 'LOOT.exe'), temp_path )
-    shutil.copy( os.path.join('..', 'build', 'Release', 'd3dcompiler_43.dll'), temp_path )
     shutil.copy( os.path.join('..', 'build', 'Release', 'd3dcompiler_46.dll'), temp_path )
     shutil.copy( os.path.join('..', 'build', 'Release', 'libEGL.dll'), temp_path )
     shutil.copy( os.path.join('..', 'build', 'Release', 'libGLESv2.dll'), temp_path )
