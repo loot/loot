@@ -51,6 +51,9 @@ a:hover {
 html /deep/ *:focus {
     outline: none;
 }
+tt, code, kbd, samp {
+    font-family: Consolas, monospace; 
+}
 
 /* App bar */
 core-toolbar, div[drawer] > div:first-child {
