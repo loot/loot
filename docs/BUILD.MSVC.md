@@ -13,19 +13,27 @@ b2 toolset=msvc threadapi=win32 link=static runtime-link=static variant=release 
 
 #### Chromium Embedded Framework
 
-Most of the required binaries are pre-built, but the libcef_dll_wrapper dynamic library must be built. Just open its project file and build it with the `Release` configuration.
+Most of the required binaries are pre-built, but the libcef_dll_wrapper dynamic library must be built.
+
+1. Configure CMake and generate a build system for Visual Studio by running:
+
+   ```
+   mkdir build && cd build
+   cmake.exe .. -G "Visual Studio 12"
+   ```
+
+2. Open the generated solution file, and build it with `Release` configuration.
 
 #### yaml-cpp
 
 1. Configure CMake and generate a build system for Visual Studio by running:
-2.
-  ```
-  mkdir build
-  cd build
-  cmake.exe .. -G "Visual Studio 12" -DBOOST_ROOT={BOOST_ROOT} -DMSVC_SHARED_RT=OFF
-  ```
 
-  Adapt the commands as necessary for your particular setup.
+   ```
+   mkdir build && cd build
+   cmake.exe .. -G "Visual Studio 12" -DBOOST_ROOT={BOOST_ROOT} -DMSVC_SHARED_RT=OFF
+   ```
+
+   Adapt the commands as necessary for your particular setup.
 2. Open the generated solution file, and build it with `Release` configuration.
 
 #### Libloadorder
@@ -37,12 +45,11 @@ Example CMake keys: `-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=build -DCMAKE_ARCHIVE_OUTP
 #### Libgit2
 
 1. Configure CMake and generate a build system for Visual Studio by running:
-2.
-  ```
-  mkdir build
-  cd build
-  cmake.exe .. -G "Visual Studio 12" -DBUILD_SHARED_LIBS=OFF -DSTATIC_CRT=ON -DTHREADSAFE=ON
-  ```
+
+   ```
+   mkdir build && cd build
+   cmake.exe .. -G "Visual Studio 12" -DBUILD_SHARED_LIBS=OFF -DSTATIC_CRT=ON -DTHREADSAFE=ON
+   ```
 
   Adapt the commands as necessary for your particular setup.
 2. Open the generated solution file, and build it with `Release` configuration.

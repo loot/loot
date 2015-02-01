@@ -324,7 +324,7 @@ FunctionEnd
         ;Install executable.
         SetOutPath "$INSTDIR"
         File "..\build\Release\LOOT.exe"
-        File "..\build\Release\d3dcompiler_46.dll"
+        File "..\build\Release\d3dcompiler_47.dll"
         File "..\build\Release\libEGL.dll"
         File "..\build\Release\libGLESv2.dll"
         File "..\build\Release\libcef.dll"
@@ -481,7 +481,7 @@ FunctionEnd
 
         ;Remove main executables.
         Delete "$INSTDIR\LOOT.exe"
-        Delete "$INSTDIR\d3dcompiler_46.dll"
+        Delete "$INSTDIR\d3dcompiler_47.dll"
         Delete "$INSTDIR\libEGL.dll"
         Delete "$INSTDIR\libGLESv2.dll"
         Delete "$INSTDIR\libcef.dll"
