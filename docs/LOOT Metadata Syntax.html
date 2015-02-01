@@ -335,7 +335,7 @@ display: 'OBSE v18+'
         <tr><td><code>str</code><td>&#x2713;<td>The actual message content string.
         <tr><td><code>lang</code><td>&#x2713;<td>The language that <code>str</code> is written in, given as a POSIX language code. The languages LOOT supports are given in <a href="#lang">Language Codes</a>.
 </table>
-<p>LOOT supports formatting of messages using <a href="https://help.github.com/articles/github-flavored-markdown">GitHub Flavored Markdown</a>. Support is provided by the <a href="https://github.com/chjj/marked">Marked</a> library (v0.3.2). Strings that get substituted into messages, such as file display names and dirty info utility strings, also support the same formatting options.
+<p>LOOT supports formatting of messages using <a href="https://help.github.com/articles/github-flavored-markdown">GitHub Flavored Markdown</a>. Support is provided by the <a href="https://github.com/chjj/marked">Marked</a> library (v0.3). Strings that get substituted into messages, such as file display names and dirty info utility strings, also support the same formatting options.
 
 <p>LOOT handles messages and languages as follows:
 <ol>
@@ -596,7 +596,7 @@ See the file <q>LOOT ReadMe.html</q> for copying conditions.
     <thead>
         <tr><th>Feature<th> LOOT v0.6 and earlier<th>LOOT v0.7
     <tbody>
-        <tr><td>GitHub Flavored Markdown message formatting<td>Only URL hyperlinking is supported, for <code>file:</code>, <code>http:</code> and <code>https:</code> URLs, using the <code>[label](url)</code> and <code>&lt;url&gt;</code> syntaxes.<td>LOOT uses the <a href="https://github.com/chjj/marked">Marked</a> library (v0.3.2) to provide support for most of GitHub Flavored Markdown, minus the GitHub-specific features (like @mentions, issue/repo linking and emoji).
+        <tr><td>GitHub Flavored Markdown message formatting<td>Only URL hyperlinking is supported, for <code>file:</code>, <code>http:</code> and <code>https:</code> URLs, using the <code>[label](url)</code> and <code>&lt;url&gt;</code> syntaxes.<td>LOOT uses the <a href="https://github.com/chjj/marked">Marked</a> library (v0.3) to provide support for most of GitHub Flavored Markdown, minus the GitHub-specific features (like @mentions, issue/repo linking and emoji).
         <tr><td>Message string substitution (ie. <code>sub:</code>)<td>Not supported.<td>Supported.
         <tr><td>YAML merge keys (ie. <code>&lt;&lt;:</code>)<td>Not supported.<td>Supported.
 </table>
