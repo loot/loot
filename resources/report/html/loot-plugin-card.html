@@ -91,7 +91,9 @@ loot-clear-metadata
         }
 
         /* Content styling. */
-        content::content * {
+        content::content h1,
+        content::content .version
+        content::content .crc {
             font-weight: 400;
             font-size: 1rem;
         }
@@ -110,10 +112,7 @@ loot-clear-metadata
             margin: 0;
             color: inherit;
         }
-        content::content > .version {
-            display: inline-block;
-            margin-left: 16px;
-        }
+        content::content > .version,
         content::content > .crc {
             display: inline-block;
             margin-left: 16px;
