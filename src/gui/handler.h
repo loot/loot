@@ -102,11 +102,6 @@ namespace loot {
                                               CefProcessId source_process,
                                               CefRefPtr<CefProcessMessage> message) OVERRIDE;
 
-        // CefDisplayHandler methods
-        //--------------------------
-        virtual void OnTitleChange(CefRefPtr<CefBrowser> browser,
-                                   const CefString& title) OVERRIDE;
-
         // CefLifeSpanHandler methods
         //---------------------------
         virtual void OnAfterCreated(CefRefPtr<CefBrowser> browser) OVERRIDE;

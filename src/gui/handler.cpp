@@ -119,11 +119,6 @@ namespace loot {
             return true;
         }
         else if (request == "getGameData") {
-            BOOST_LOG_TRIVIAL(info) << "Setting LOOT window title bar text to include game name: " << g_app_state.CurrentGame().Name();
-#ifdef _WIN32
-            HWND handle = browser->GetHost()->GetWindowHandle();
-            SetWindowText(handle, ToWinWide("LOOT: " + g_app_state.CurrentGame().Name()).c_str());
-#endif
             return CefPostTask(TID_FILE, base::Bind(&Handler::GetGameData, base::Unretained(this), frame, callback));
         }
         else if (request == "cancelFind") {
@@ -214,11 +209,6 @@ namespace loot {
                 // Has one arg, which is the folder name of the new game.
                 g_app_state.ChangeGame(request["args"][0].as<string>());
 
-                BOOST_LOG_TRIVIAL(info) << "Setting LOOT window title bar text to include game name: " << g_app_state.CurrentGame().Name();
-#ifdef _WIN32
-                HWND handle = browser->GetHost()->GetWindowHandle();
-                SetWindowText(handle, ToWinWide("LOOT: " + g_app_state.CurrentGame().Name()).c_str());
-#endif
                 CefPostTask(TID_FILE, base::Bind(&Handler::GetGameData, base::Unretained(this), frame, callback));
             }
             catch (loot::error &e) {
@@ -1072,31 +1062,23 @@ namespace loot {
         return browser_side_router_->OnProcessMessageReceived(browser, source_process, message);
     }
 
-    // CefDisplayHandler methods
-    //--------------------------
-
-    void LootHandler::OnTitleChange(CefRefPtr<CefBrowser> browser,
-                                    const CefString& title) {
-        assert(CefCurrentlyOn(TID_UI));
-
-#ifdef _WIN32
-        HWND handle = browser->GetHost()->GetWindowHandle();
-        SetWindowText(handle, ToWinWide(title).c_str());
-#endif
-    }
-
     // CefLifeSpanHandler methods
     //---------------------------
 
     void LootHandler::OnAfterCreated(CefRefPtr<CefBrowser> browser) {
         assert(CefCurrentlyOn(TID_UI));
 
+#ifdef _WIN32
         // Set the title bar icon.
         HWND hWnd = browser->GetHost()->GetWindowHandle();
         HANDLE hIcon = LoadImage(GetModuleHandle(NULL), MAKEINTRESOURCE(MAINICON), IMAGE_ICON, 0, 0, LR_DEFAULTSIZE);
         HANDLE hIconSm = LoadImage(GetModuleHandle(NULL), MAKEINTRESOURCE(MAINICON), IMAGE_ICON, 0, 0, LR_DEFAULTSIZE);
         SendMessage(hWnd, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
         SendMessage(hWnd, WM_SETICON, ICON_SMALL, (LPARAM)hIconSm);
+
+        // Set the window title.
+        SetWindowText(hWnd, L"LOOT");
+#endif
 
         // Set window size & position.
         YAML::Node settings = g_app_state.GetSettings();

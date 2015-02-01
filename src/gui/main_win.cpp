@@ -86,7 +86,9 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 
     HANDLE hMutex = ::OpenMutex(MUTEX_ALL_ACCESS, FALSE, L"LOOT.Shell.Instance");
     if (hMutex != NULL) {
-        // An instance of LOOT is already running, so quit.
+        // An instance of LOOT is already running, so focus its window then quit.
+        HWND hWnd = ::FindWindow(NULL, L"LOOT");
+        ::SetForegroundWindow(hWnd);
         return 0;
     }
     else {
