@@ -64,9 +64,6 @@ namespace loot {
 
             // Disable spell checking.
             command_line->AppendSwitch("--disable-spell-checking");
-
-            // Temporary workaround until I figure out what's wrong with my custom URL handling.
-            command_line->AppendSwitch("--allow-file-access-from-files");
         }
     }
 
@@ -100,7 +97,6 @@ namespace loot {
 
         // Register the custom "loot" scheme handlers.
         CefRegisterSchemeHandlerFactory("loot", "l10n", new LootSchemeHandlerFactory());
-        CefRegisterSchemeHandlerFactory("loot", "import", new LootSchemeHandlerFactory());
 
         // Specify CEF browser settings here.
         CefBrowserSettings browser_settings;

@@ -38,7 +38,6 @@ namespace loot {
     //Common paths.
     extern const boost::filesystem::path g_path_readme;
     extern const boost::filesystem::path g_path_report;
-    extern const boost::filesystem::path g_path_imports;
     extern const boost::filesystem::path g_path_l10n;
     extern const boost::filesystem::path g_path_local;
     extern const boost::filesystem::path g_path_settings;

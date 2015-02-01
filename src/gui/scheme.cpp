@@ -45,19 +45,9 @@ namespace loot {
                                                                    CefRefPtr<CefRequest> request) {
         BOOST_LOG_TRIVIAL(trace) << "Handling custom scheme: " << string(request->GetURL());
 
-        /* Two custom URLs are possible:
-            loot://l10n/<l10n path>
-            loot://import/<import filename>
-            */
-
-        // Get the path from the custom URL.
-        string file;
-        if (boost::starts_with(request->GetURL().ToString(), "loot://l10n/")) {
-            file = (g_path_l10n / request->GetURL().ToString().substr(12)).string();
-        }
-        else {
-            file = (g_path_imports / request->GetURL().ToString().substr(14)).string();
-        }
+        // Get the path from the custom URL, which is of the form
+        // loot://l10n/<l10n path>
+        string file = (g_path_l10n / request->GetURL().ToString().substr(12)).string();
 
         CefResponse::HeaderMap headers;
         headers.emplace("Access-Control-Allow-Origin", "*");
