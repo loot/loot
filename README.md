@@ -27,7 +27,7 @@ LOOT uses [CMake](http://cmake.org) to generate build files, and requires the fo
 * [Libloadorder](http://github.com/WrinklyNinja/libloadorder)
 * [yaml-cpp](http://github.com/WrinklyNinja/yaml-cpp)
 
-Alphanum and Libespm do not require any additional setup. The rest of the libraries must be built separately. Instructions for building them and LOOT itself using MSVC or MinGW are given in [docs/BUILD.MSVC.md](docs/BUILD.MSVC.md) and [docs/BUILD.MinGW.md](docs/BUILD.MinGW.md) respectively.
+Alphanum and Libespm do not require any additional setup. The rest of the libraries must be built separately. Instructions for building them and LOOT itself using Microsoft Visual Studio are given in [docs/BUILD.MSVC.md](docs/BUILD.MSVC.md).
 
 Although LOOT uses a cross-platform build system and cross-platform libraries, it does rely on some Windows API functionality. Anyone wishing to port LOOT to other platforms will need to ensure equivalent functionality is implemented for their target platform. The Windows API code is wrapped in `#ifdef _WIN32` blocks so that it can be easily identified.
 
