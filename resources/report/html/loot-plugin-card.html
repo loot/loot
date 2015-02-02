@@ -135,6 +135,9 @@ loot-clear-metadata
         core-tooltip > core-icon {
             vertical-align: inherit !important;
         }
+        #content {
+            overflow: hidden;
+        }
         #conflictsLabel {
             font-size: 1rem;
             font-weight: 500;
@@ -199,9 +202,11 @@ loot-clear-metadata
                         </paper-dropdown>
                     </paper-menu-button>
                 </core-toolbar>
-                <content select=".tag.add"></content>
-                <content select=".tag.remove"></content>
-                <content></content>
+                <div id="content">
+                    <content select=".tag.add"></content>
+                    <content select=".tag.remove"></content>
+                    <content></content>
+                </div>
             </section>
             <loot-plugin-editor id="editor"></loot-plugin-editor>
         </div>
