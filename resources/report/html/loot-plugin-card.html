@@ -260,6 +260,12 @@ loot-clear-metadata
 
                 /* Also set highlight if the conflict filter is active. */
                 this.classList.toggle('highlight', newValue.isConflictFilterChecked);
+
+                /* Update tooltip positions. */
+                var tooltips = this.shadowRoot.getElementsByTagName('core-tooltip');
+                for (var i = 0; i < tooltips.length; ++i) {
+                    tooltips[i].setPosition();
+                }
             }
         },
 
