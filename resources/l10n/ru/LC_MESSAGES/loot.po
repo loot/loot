@@ -2,15 +2,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-07 10:39-0000\n"
-"PO-Revision-Date: 2015-01-07 23:08+0500\n"
+"POT-Creation-Date: 2015-01-09 10:40-0000\n"
+"PO-Revision-Date: 2015-02-02 23:14+0500\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.7.1\n"
+"X-Generator: Poedit 1.7.4\n"
 
 #: src/backend/game.cpp:347
 msgid "Invalid game ID supplied."
@@ -33,8 +33,8 @@ msgstr "libloadorder не удалось создать дескриптор и�
 
 #: src/backend/game.cpp:510
 msgid ""
-"libloadorder failed to initialise game master file support. Details could "
-"not be fetched."
+"libloadorder failed to initialise game master file support. Details could not "
+"be fetched."
 msgstr ""
 "libloadorder не удалось инициализировать поддержку мастер-файла игры. Детали "
 "не могут быть получены."
@@ -57,8 +57,7 @@ msgid "libloadorder failed to get the active plugins list. Details:"
 msgstr "libloadorder не удалось получить список активных плагинов. Детали:"
 
 #: src/backend/game.cpp:567
-msgid ""
-"libloadorder failed to get the load order. Details could not be fetched."
+msgid "libloadorder failed to get the load order. Details could not be fetched."
 msgstr ""
 "libloadorder не удалось получить порядок загрузки. Детали не могут быть "
 "извлечены."
@@ -68,8 +67,7 @@ msgid "libloadorder failed to get the load order. Details:"
 msgstr "libloadorder не удалось получить порядок загрузки. Детали:"
 
 #: src/backend/game.cpp:593
-msgid ""
-"libloadorder failed to set the load order. Details could not be fetched."
+msgid "libloadorder failed to set the load order. Details could not be fetched."
 msgstr ""
 "libloadorder не удалось установить порядок загрузки. Детали не могут быть "
 "получены."
@@ -101,7 +99,7 @@ msgstr "\"%1%\" включает выражение, которое не мож�
 #: src/backend/game.cpp:823
 msgid "Adding edges to plugin graph and performing topological sort..."
 msgstr ""
-"Добавление раниц к графику плагина и выполнение топологической сортировки..."
+"Добавление страниц к графику плагина и выполнение топологической сортировки..."
 
 #: src/backend/git.cpp:132
 msgid "Git operation failed. Error: %1%"
@@ -109,7 +107,7 @@ msgstr "Не удалась операция с Git. Ошибка: %1%"
 
 #: src/backend/git.cpp:179
 msgid "Object memory already allocated!"
-msgstr "Память объекта уже выдедлена!"
+msgstr "Память объекта уже выделена!"
 
 #: src/backend/git.cpp:183
 msgid "Tree memory already allocated!"
@@ -125,7 +123,7 @@ msgstr "Обрабатываемое хранилище не открыть!"
 
 #: src/backend/git.cpp:222
 msgid "Unknown: Git repository missing"
-msgstr "Неизвестн.: Отсутствует хранилище Git"
+msgstr "Неизвестно: Отсутствует хранилище Git"
 
 #: src/backend/git.cpp:226
 msgid "N/A: No masterlist present"
@@ -158,17 +156,16 @@ msgstr ""
 
 #: src/backend/git.cpp:374
 msgid ""
-"An error occurred while trying to update the masterlist. This could be due "
-"to a server-side error. Try again in a few minutes."
+"An error occurred while trying to update the masterlist. This could be due to "
+"a server-side error. Try again in a few minutes."
 msgstr ""
 "Ошибка при попытке обновления мастерлиста. Это может быть из-за ошибка на "
 "стороне сервера. Попробуйте через несколько минут."
 
 #: src/backend/git.cpp:517
 msgid ""
-"An error occurred while trying to read information on the updated "
-"masterlist. If this error happens again, try deleting the \".git\" folder in "
-"%1%."
+"An error occurred while trying to read information on the updated masterlist. "
+"If this error happens again, try deleting the \".git\" folder in %1%."
 msgstr ""
 "Ошибка при попытке прочитать информацию об обновлении мастерлиста. Если эта "
 "ошибка происходит повторно, попробуйте удалить папку \".git\" в %1%."
@@ -222,7 +219,7 @@ msgid ""
 "Contains %1% ITM records, %2% deleted references and %3% deleted navmeshes. "
 "Clean with %4%."
 msgstr ""
-"Включает %1% ITM записей, %2% удаленных ссылоки %3% удаленных навмешей. "
+"Включает %1% ITM записей, %2% удаленных ссылок и %3% удаленных навмешей. "
 "Очистить в %4%."
 
 #: src/backend/metadata.cpp:912
@@ -232,8 +229,7 @@ msgstr "Очистить с помощью %1%."
 #: src/backend/metadata.cpp:915
 msgid ""
 "Contains %1% deleted references and %2% deleted navmeshes. Clean with %3%."
-msgstr ""
-"Включает %1% удаленных ссылок и %2% удаленных навмешей. Очистить в %3%."
+msgstr "Включает %1% удаленных ссылок и %2% удаленных навмешей. Очистить в %3%."
 
 #: src/backend/metadata.cpp:917
 msgid "Contains %1% deleted navmeshes. Clean with %2%."
@@ -257,24 +253,24 @@ msgstr "Содержит %1% ITM записей. Очистить с помощ�
 msgid "Contains %1% ITM records and %2% deleted references. Clean with %3%."
 msgstr "Включает %1% ITM записей и %2% удаленных ссылок. Очистить в %3%."
 
-#: src/gui/app.cpp:159
+#: src/gui/app.cpp:174
 msgid "Error: Could not create LOOT settings file. %1%"
 msgstr "Ошибка: Невозможно создать файл настроек LOOT. %1%"
 
-#: src/gui/app.cpp:169
+#: src/gui/app.cpp:184
 msgid "Error: Settings parsing failed. %1%"
 msgstr "Ошибка: Обработка настроек не удалась. %1%"
 
-#: src/gui/app.cpp:234
+#: src/gui/app.cpp:249
 msgid "Error: Games' settings parsing failed. %1%"
 msgstr "Ошибка: Обработка настроек игры не удалась. %1%"
 
-#: src/gui/app.cpp:254
+#: src/gui/app.cpp:269
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr ""
 "Ошибка: Специфические для игры настройки не могут быть инициализированы. %1%"
 
-#: src/gui/app.cpp:395
+#: src/gui/app.cpp:410
 msgid "None of the supported games were detected."
 msgstr "Не удалось найти поддерживаемые игры."
 
@@ -287,6 +283,10 @@ msgstr "Не удалось изменить игру. Детали: %1%"
 msgid "Failed to copy plugin metadata. Details: %1%"
 msgstr "Не удалось скопировать метаданные. Детали: %1%"
 
+#: src/gui/handler.cpp:347 src/gui/handler.cpp:907
+msgid "Loading plugin contents..."
+msgstr "Загрузка содержимого плагина."
+
 #: src/gui/handler.cpp:351
 msgid "Checking for conflicting plugins..."
 msgstr "Проверка на конфликтующие плагины..."
@@ -297,7 +297,7 @@ msgstr "Исполнение оболочки не удалось."
 
 #: src/gui/handler.cpp:584
 msgid "Loading plugin headers..."
-msgstr "Загрузкм заголовков плагинов..."
+msgstr "Загрузка заголовков плагинов..."
 
 #: src/gui/handler.cpp:610
 msgid "Parsing masterlist..."
@@ -347,10 +347,6 @@ msgstr "Генерация отображаемого содержимого..."
 msgid "Failed to update the masterlist. Details: %1%"
 msgstr "Не удалось обновить мастерлист. Детали: %1%"
 
-#: src/gui/handler.cpp:907
-msgid "Loading plugin contents..."
-msgstr "Загрузка содержимого плагина."
-
 #: src/gui/handler.cpp:941
 msgid "Failed to sort plugins. Details: %1%"
 msgstr "Не удалось отсортировать плагины. Детали: %1%"
@@ -379,7 +375,7 @@ msgstr "Не чистить"
 msgid "Active Plugin"
 msgstr "Активный плагин"
 
-#: resources/report/js/l10n.js:62 resources/report/js/l10n.js:284
+#: resources/report/js/l10n.js:62 resources/report/js/l10n.js:289
 msgid "Master File"
 msgstr "Мастерфайл"
 
@@ -388,11 +384,11 @@ msgid "Empty Plugin"
 msgstr "Очистить плагин"
 
 #: resources/report/js/l10n.js:64 resources/report/js/l10n.js:82
-#: resources/report/js/l10n.js:138
+#: resources/report/js/l10n.js:139
 msgid "Loads BSA"
 msgstr "Загружает BSA"
 
-#: resources/report/js/l10n.js:65 resources/report/js/l10n.js:139
+#: resources/report/js/l10n.js:65 resources/report/js/l10n.js:140
 msgid "Has User Metadata"
 msgstr "Имеет метаданные пользователя"
 
@@ -414,7 +410,7 @@ msgstr "Очистить метаданные пользователя"
 
 #: resources/report/js/l10n.js:84
 msgid "Enable Edits"
-msgstr "Вклить правки"
+msgstr "Включить правки"
 
 #: resources/report/js/l10n.js:85
 msgid ""
@@ -424,7 +420,7 @@ msgstr ""
 "Глобальные приоритеты сравниваются со всеми прочими плагинами. Нормальные "
 "приоритеты сравниваются только с конфликтующими."
 
-#: resources/report/js/l10n.js:86 resources/report/js/l10n.js:137
+#: resources/report/js/l10n.js:86 resources/report/js/l10n.js:138
 msgid "Global Priority"
 msgstr "Глобальный приоритет"
 
@@ -433,363 +429,371 @@ msgid "Priority Value"
 msgstr "Значение приоритета"
 
 #: resources/report/js/l10n.js:89
+msgid "Main"
+msgstr "Основные"
+
+#: resources/report/js/l10n.js:90
 msgid "Load After"
 msgstr "Грузить после"
 
-#: resources/report/js/l10n.js:90
+#: resources/report/js/l10n.js:91
 msgid "Requirements"
 msgstr "Требования"
 
-#: resources/report/js/l10n.js:91
+#: resources/report/js/l10n.js:92
 msgid "Incompatibilities"
 msgstr "Несовместимости"
 
-#: resources/report/js/l10n.js:92
+#: resources/report/js/l10n.js:93
 msgid "Messages"
 msgstr "Сообщения"
 
-#: resources/report/js/l10n.js:93
+#: resources/report/js/l10n.js:94
 msgid "Bash Tags"
 msgstr "Bash-теги"
 
-#: resources/report/js/l10n.js:94
+#: resources/report/js/l10n.js:95
 msgid "Dirty Info"
 msgstr "Инфо. о \"грязных\" правках"
 
-#: resources/report/js/l10n.js:95
+#: resources/report/js/l10n.js:96
 msgid "Locations"
 msgstr "Местоположения"
 
-#: resources/report/js/l10n.js:97 resources/report/js/l10n.js:101
-#: resources/report/js/l10n.js:105
+#: resources/report/js/l10n.js:98 resources/report/js/l10n.js:102
+#: resources/report/js/l10n.js:106
 msgid "Filename"
 msgstr "Имя файла"
 
-#: resources/report/js/l10n.js:98 resources/report/js/l10n.js:102
-#: resources/report/js/l10n.js:106
+#: resources/report/js/l10n.js:99 resources/report/js/l10n.js:103
+#: resources/report/js/l10n.js:107
 msgid "Display Name"
 msgstr "Отображаемое имя"
 
-#: resources/report/js/l10n.js:99 resources/report/js/l10n.js:103
-#: resources/report/js/l10n.js:107 resources/report/js/l10n.js:111
-#: resources/report/js/l10n.js:116
+#: resources/report/js/l10n.js:100 resources/report/js/l10n.js:104
+#: resources/report/js/l10n.js:108 resources/report/js/l10n.js:112
+#: resources/report/js/l10n.js:117
 msgid "Condition"
 msgstr "Выражение"
 
-#: resources/report/js/l10n.js:109
+#: resources/report/js/l10n.js:110
 msgid "Type"
 msgstr "Тип"
 
-#: resources/report/js/l10n.js:110
+#: resources/report/js/l10n.js:111
 msgid "Content"
 msgstr "Содержимое"
 
-#: resources/report/js/l10n.js:112 resources/report/js/l10n.js:272
+#: resources/report/js/l10n.js:113 resources/report/js/l10n.js:277
 msgid "Language"
 msgstr "Язык"
 
-#: resources/report/js/l10n.js:114
+#: resources/report/js/l10n.js:115
 msgid "Add/Remove"
 msgstr "Добавить/удалить"
 
-#: resources/report/js/l10n.js:115
+#: resources/report/js/l10n.js:116
 msgid "Bash Tag"
 msgstr "Bash-тег"
 
-#: resources/report/js/l10n.js:118
+#: resources/report/js/l10n.js:119
 msgid "CRC"
 msgstr "CRC"
 
-#: resources/report/js/l10n.js:119
+#: resources/report/js/l10n.js:120
 msgid "ITM Count"
 msgstr "Число ITM"
 
-#: resources/report/js/l10n.js:120
+#: resources/report/js/l10n.js:121
 msgid "Deleted References"
 msgstr "Удаленные ссылки"
 
-#: resources/report/js/l10n.js:121
+#: resources/report/js/l10n.js:122
 msgid "Deleted Navmeshes"
 msgstr "Удаленные Navmesh-записи"
 
-#: resources/report/js/l10n.js:122
+#: resources/report/js/l10n.js:123
 msgid "Cleaning Utility"
 msgstr "Утилита для очистки"
 
-#: resources/report/js/l10n.js:124
+#: resources/report/js/l10n.js:125
 msgid "URL"
 msgstr "URL"
 
-#: resources/report/js/l10n.js:125
+#: resources/report/js/l10n.js:126
 msgid "Version"
 msgstr "Версия"
 
-#: resources/report/js/l10n.js:127 resources/report/js/l10n.js:224
-#: resources/report/js/l10n.js:290
+#: resources/report/js/l10n.js:128 resources/report/js/l10n.js:225
+#: resources/report/js/l10n.js:299
 msgid "Apply"
 msgstr "Принять"
 
-#: resources/report/js/l10n.js:128 resources/report/js/l10n.js:225
-#: resources/report/js/l10n.js:291 resources/report/js/script.js:418
+#: resources/report/js/l10n.js:129 resources/report/js/l10n.js:226
+#: resources/report/js/l10n.js:300 resources/report/js/script.js:418
 msgid "Cancel"
 msgstr "Отмена"
 
-#: resources/report/js/l10n.js:148
+#: resources/report/js/l10n.js:149
 msgid "A filename is required."
 msgstr "Необходимо имя файла."
 
-#: resources/report/js/l10n.js:149 resources/report/js/l10n.js:162
-#: resources/report/js/l10n.js:174 resources/report/js/l10n.js:188
-#: resources/report/js/l10n.js:198 resources/report/js/l10n.js:209
+#: resources/report/js/l10n.js:150 resources/report/js/l10n.js:163
+#: resources/report/js/l10n.js:175 resources/report/js/l10n.js:189
+#: resources/report/js/l10n.js:199 resources/report/js/l10n.js:210
 msgid "Delete Row"
 msgstr "Удалить строку"
 
-#: resources/report/js/l10n.js:158
+#: resources/report/js/l10n.js:159
 msgid "Note"
 msgstr "Примечание"
 
-#: resources/report/js/l10n.js:159
+#: resources/report/js/l10n.js:160
 msgid "Warning"
 msgstr "Предупреждение"
 
-#: resources/report/js/l10n.js:160
+#: resources/report/js/l10n.js:161 resources/report/js/script.js:346
 msgid "Error"
 msgstr "Ошибка"
 
-#: resources/report/js/l10n.js:161
+#: resources/report/js/l10n.js:162
 msgid "A content string is required."
 msgstr "Необходимо содержимое строки."
 
-#: resources/report/js/l10n.js:171
+#: resources/report/js/l10n.js:172
 msgid "Add"
 msgstr "Добавить"
 
-#: resources/report/js/l10n.js:172
+#: resources/report/js/l10n.js:173
 msgid "Remove"
 msgstr "Удалить"
 
-#: resources/report/js/l10n.js:173 resources/report/js/l10n.js:207
+#: resources/report/js/l10n.js:174 resources/report/js/l10n.js:208
 msgid "A name is required."
 msgstr "Необходимо имя."
 
-#: resources/report/js/l10n.js:183
+#: resources/report/js/l10n.js:184
 msgid "A CRC is required."
 msgstr "Необходима контрольная сумма (CRC)."
 
-#: resources/report/js/l10n.js:184 resources/report/js/l10n.js:185
-#: resources/report/js/l10n.js:186
+#: resources/report/js/l10n.js:185 resources/report/js/l10n.js:186
+#: resources/report/js/l10n.js:187
 msgid "Values must be integers."
 msgstr "Значениями должны быть целые числа."
 
-#: resources/report/js/l10n.js:187
+#: resources/report/js/l10n.js:188
 msgid "A utility name is required."
 msgstr "Необходимо имя утилиты."
 
-#: resources/report/js/l10n.js:197
+#: resources/report/js/l10n.js:198
 msgid "A link is required."
 msgstr "Необходима ссылка."
 
-#: resources/report/js/l10n.js:208
+#: resources/report/js/l10n.js:209
 msgid "A folder is required."
 msgstr "Необходима папка."
 
-#: resources/report/js/l10n.js:218
+#: resources/report/js/l10n.js:219 resources/report/js/l10n.js:297
 msgid "Add New Row"
 msgstr "Добавить новую строку"
 
-#: resources/report/js/l10n.js:221
+#: resources/report/js/l10n.js:222
 msgid "Jump To General Information"
 msgstr "Перейти к основной информации"
 
-#: resources/report/js/l10n.js:222
+#: resources/report/js/l10n.js:223
 msgid "Sort Plugins"
 msgstr "Сортировать плагины"
 
-#: resources/report/js/l10n.js:223
+#: resources/report/js/l10n.js:224
 msgid "Update Masterlist"
 msgstr "Обновить мастерлист"
 
-#: resources/report/js/l10n.js:228
+#: resources/report/js/l10n.js:229
 msgid "Redate Plugins"
 msgstr "Редатировать плагины"
 
-#: resources/report/js/l10n.js:229
+#: resources/report/js/l10n.js:230
 msgid "Open Debug Log Location"
 msgstr "Открыть папку с логом отладки"
 
-#: resources/report/js/l10n.js:230
+#: resources/report/js/l10n.js:231
 msgid "Clear All User Metadata"
 msgstr "Очистить все пользовательские метаданные"
 
-#: resources/report/js/l10n.js:231
+#: resources/report/js/l10n.js:232
 msgid "Copy Content"
 msgstr "Скопировать содержимое"
 
-#: resources/report/js/l10n.js:232
+#: resources/report/js/l10n.js:233
 msgid "Refresh Content"
 msgstr "Обновить содержимое"
 
-#: resources/report/js/l10n.js:233
+#: resources/report/js/l10n.js:234
 msgid "View Documentation"
 msgstr "Смотреть документацию"
 
-#: resources/report/js/l10n.js:234
+#: resources/report/js/l10n.js:235
 msgid "About"
 msgstr "О программе"
 
-#: resources/report/js/l10n.js:235 resources/report/js/l10n.js:267
+#: resources/report/js/l10n.js:236 resources/report/js/l10n.js:269
 msgid "Settings"
 msgstr "Настройки"
 
-#: resources/report/js/l10n.js:236 resources/report/js/script.js:808
+#: resources/report/js/l10n.js:237 resources/report/js/script.js:808
 msgid "Quit"
 msgstr "Выход"
 
-#: resources/report/js/l10n.js:239
+#: resources/report/js/l10n.js:240
 msgid "Plugins"
 msgstr "Плагины"
 
-#: resources/report/js/l10n.js:240
+#: resources/report/js/l10n.js:241
 msgid "Filters"
 msgstr "Фильтры"
 
-#: resources/report/js/l10n.js:241
+#: resources/report/js/l10n.js:242
 msgid "Press Enter or click outside the input to set the filter."
-msgstr "Для установки фильтра нажмите Ввод или ликните за пределами ввода."
+msgstr "Для установки фильтра нажмите Ввод или кликните за пределами ввода."
 
-#: resources/report/js/l10n.js:244
+#: resources/report/js/l10n.js:243
+msgid "Filter content..."
+msgstr "Фильтр содержимого..."
+
+#: resources/report/js/l10n.js:246
 msgid "Hide version numbers"
 msgstr "Скрыть номера версии"
 
-#: resources/report/js/l10n.js:245
+#: resources/report/js/l10n.js:247
 msgid "Hide CRCs"
 msgstr "Скрыть CRC"
 
-#: resources/report/js/l10n.js:246
+#: resources/report/js/l10n.js:248
 msgid "Hide Bash Tags"
 msgstr "Скрыть bash-теги"
 
-#: resources/report/js/l10n.js:247
+#: resources/report/js/l10n.js:249
 msgid "Hide notes"
 msgstr "Скрыть примечания"
 
-#: resources/report/js/l10n.js:248
+#: resources/report/js/l10n.js:250
 msgid "Hide 'Do not clean' messages"
 msgstr "Скрыть сообщения 'Не чистить'"
 
-#: resources/report/js/l10n.js:249
+#: resources/report/js/l10n.js:251
 msgid "Hide all plugin messages"
 msgstr "Скрыть все сообщения плагинов"
 
-#: resources/report/js/l10n.js:250
+#: resources/report/js/l10n.js:252
 msgid "Hide inactive plugins"
 msgstr "Скрыть неактивные плагины"
 
-#: resources/report/js/l10n.js:251
+#: resources/report/js/l10n.js:253
 msgid "Hide messageless plugins"
 msgstr "Скрыть плагины без сообщений"
 
-#: resources/report/js/l10n.js:252
+#: resources/report/js/l10n.js:254
 msgid "Hidden plugins:"
 msgstr "Скрытые плагины:"
 
-#: resources/report/js/l10n.js:253
+#: resources/report/js/l10n.js:255
 msgid "Hidden messages:"
 msgstr "Скрытые сообщения:"
 
-#: resources/report/js/l10n.js:256
+#: resources/report/js/l10n.js:258
 msgid "General Information"
 msgstr "Основная информация"
 
-#: resources/report/js/l10n.js:257
+#: resources/report/js/l10n.js:259
 msgid "Masterlist Revision"
 msgstr "Версия мастерлиста"
 
-#: resources/report/js/l10n.js:258
+#: resources/report/js/l10n.js:260
 msgid "Masterlist Date"
 msgstr "Дата мастерлиста"
 
-#: resources/report/js/l10n.js:259
+#: resources/report/js/l10n.js:261
 msgid "Warnings"
 msgstr "Предупреждения"
 
-#: resources/report/js/l10n.js:260
+#: resources/report/js/l10n.js:262
 msgid "Errors"
 msgstr "Ошибки"
 
-#: resources/report/js/l10n.js:261
+#: resources/report/js/l10n.js:263
 msgid "Total Messages"
 msgstr "Всего сообщений"
 
-#: resources/report/js/l10n.js:262
+#: resources/report/js/l10n.js:264
 msgid "Active Plugins"
 msgstr "Активных плагинов"
 
-#: resources/report/js/l10n.js:263
+#: resources/report/js/l10n.js:265
 msgid "Dirty Plugins"
 msgstr "Грязных плагинов"
 
-#: resources/report/js/l10n.js:264
+#: resources/report/js/l10n.js:266
 msgid "Total Plugins"
 msgstr "Плагинов всего"
 
-#: resources/report/js/l10n.js:269
+#: resources/report/js/l10n.js:272
 msgid "Default Game"
 msgstr "Игра по умолчанию"
 
-#: resources/report/js/l10n.js:270
+#: resources/report/js/l10n.js:273 resources/report/js/l10n.js:275
 msgid "Autodetect"
 msgstr "Автообнаружение"
 
-#: resources/report/js/l10n.js:273
+#: resources/report/js/l10n.js:278
 msgid "Language changes will be applied after LOOT is restarted."
 msgstr "Установки языка будут применены после перезапуска LOOT."
 
-#: resources/report/js/l10n.js:275
+#: resources/report/js/l10n.js:280
 msgid "Enable debug logging"
 msgstr "Включить лог отладки"
 
-#: resources/report/js/l10n.js:276
+#: resources/report/js/l10n.js:281
 msgid "The output is logged to the LOOTDebugLog.txt file."
 msgstr "Выходной поток записан в файл LOOTDebugLog.txt."
 
-#: resources/report/js/l10n.js:278
+#: resources/report/js/l10n.js:283
 msgid "Update masterlist before sorting"
 msgstr "Обновить мастерлист перед сортировкой"
 
-#: resources/report/js/l10n.js:281
+#: resources/report/js/l10n.js:286
 msgid "Name"
 msgstr "Имя"
 
-#: resources/report/js/l10n.js:282
+#: resources/report/js/l10n.js:287
 msgid "Base Game"
 msgstr "Основная игра"
 
-#: resources/report/js/l10n.js:283
+#: resources/report/js/l10n.js:288
 msgid "LOOT Folder"
 msgstr "Папка LOOT"
 
-#: resources/report/js/l10n.js:285
+#: resources/report/js/l10n.js:290
 msgid "Masterlist Repository URL"
 msgstr "URL хранилища мастерлиста"
 
-#: resources/report/js/l10n.js:286
+#: resources/report/js/l10n.js:291
 msgid "Masterlist Repository Branch"
 msgstr "Ветка хранилища мастерлиста"
 
-#: resources/report/js/l10n.js:287
+#: resources/report/js/l10n.js:292
 msgid "Install Path"
 msgstr "Путь установки"
 
-#: resources/report/js/l10n.js:288
+#: resources/report/js/l10n.js:293
 msgid "Install Path Registry Key"
 msgstr "Ключ реестра для пути установки"
 
-#: resources/report/js/l10n.js:295
+#: resources/report/js/l10n.js:304
 msgid "First-Time Tips"
 msgstr "Советы для новичков"
 
-#: resources/report/js/l10n.js:297
+#: resources/report/js/l10n.js:306
 msgid ""
 "CRCs are only displayed after plugins have been loaded, either by conflict "
 "filtering, or by sorting."
@@ -797,7 +801,7 @@ msgstr ""
 "CRC отображаются только после загрузки плагинов, фильтрации конфликтов или "
 "сортировки."
 
-#: resources/report/js/l10n.js:298
+#: resources/report/js/l10n.js:307
 msgid ""
 "Double-click a plugin in the sidebar to quickly open its metadata editor. "
 "Multiple metadata editors can be opened at once."
@@ -805,15 +809,23 @@ msgstr ""
 "Кликнете два раза на боковую панель для быстрого открытия редактора "
 "метаданных. Несколько редакторов могут быть открыты одновременно."
 
-#: resources/report/js/l10n.js:299
+#: resources/report/js/l10n.js:308
 msgid ""
-"Some features are disabled while there is an editor open, or while there is "
-"a sorted load order that has not been applied or discarded."
+"Plugins can be drag and dropped from the sidebar into editors' \"load after, "
+"\"requirements\" and \"incompatibility\" tables."
+msgstr ""
+"Плагины можно перетащить из боковой панели в таблицы редакторов ' \"грузить "
+"после, \"требования\" и  \"несовместимости\"."
+
+#: resources/report/js/l10n.js:309
+msgid ""
+"Some features are disabled while there is an editor open, or while there is a "
+"sorted load order that has not been applied or discarded."
 msgstr ""
 "Некоторые возможности отключены пока открыт редактор или пока не принята или "
-"пока порядок загрузки не был примененн/отклонен."
+"пока порядок загрузки не был применен/отклонен."
 
-#: resources/report/js/l10n.js:300
+#: resources/report/js/l10n.js:310
 msgid ""
 "Many interface elements have tooltips. If you don't know what something is, "
 "try hovering your mouse over it to find out. Otherwise, LOOT's documentation "
@@ -823,13 +835,21 @@ msgstr ""
 "элемент, попробуйте навести на него курсор мышки. В противном случае "
 "документация LOOT доступна через главное меню."
 
-#: resources/report/js/l10n.js:302 resources/report/js/script.js:424
+#: resources/report/js/l10n.js:312 resources/report/js/script.js:424
 msgid "OK"
 msgstr "Принять"
 
 #: resources/report/js/script.js:209 resources/report/js/script.js:214
 msgid "N/A"
 msgstr "Нет"
+
+#: resources/report/js/script.js:383
+msgid "Checking if plugins have been loaded..."
+msgstr "Проверка загруженности плагинов..."
+
+#: resources/report/js/script.js:438
+msgid "Loading game data..."
+msgstr "Загрузка данных игры..."
 
 #: resources/report/js/script.js:508
 #, javascript-format
@@ -919,16 +939,20 @@ msgstr "отсортированный порядок загрузки"
 msgid "metadata edits"
 msgstr "правки метаданных"
 
+#: resources/report/js/script.js:1074
+msgid "unknown"
+msgstr "неизвестно"
+
 #: resources/report/js/script.js:1215
 msgid "Refreshing data..."
 msgstr "Обновление данных..."
 
 #~ msgid ""
-#~ "Contains %1% ITM records, %2% UDR records and %3% deleted navmeshes. "
-#~ "Clean with %4%."
+#~ "Contains %1% ITM records, %2% UDR records and %3% deleted navmeshes. Clean "
+#~ "with %4%."
 #~ msgstr ""
-#~ "Содержит %1% ITM записей, %2% UDR записей и %3% удаленных navmesh-"
-#~ "записей. Очистить с помощью %1%."
+#~ "Содержит %1% ITM записей, %2% UDR записей и %3% удаленных navmesh-записей. "
+#~ "Очистить с помощью %1%."
 
 #~ msgid "Contains %1% UDR records and %2% deleted navmeshes. Clean with %3%."
 #~ msgstr ""
@@ -949,7 +973,7 @@ msgstr "Обновление данных..."
 #~ msgstr "Грязных плагинов"
 
 #~ msgid "Click to open the plugin menu."
-#~ msgstr "Нажать для отукрытия меню плагина"
+#~ msgstr "Нажать для открытия меню плагина"
 
 #~ msgid "Add new row..."
 #~ msgstr "Добавить новую строку..."
@@ -959,7 +983,7 @@ msgstr "Обновление данных..."
 
 #, fuzzy
 #~ msgid "Priority Is Global"
-#~ msgstr "Приоритет: "
+#~ msgstr "Глобальный приоритет"
 
 #~ msgid "Copy Metadata As Text"
 #~ msgstr "Копировать метаданные как текст"
@@ -990,7 +1014,7 @@ msgstr "Обновление данных..."
 #~ msgstr "Сообщения общего назначения"
 
 #~ msgid "Press Enter when searching to select the next match."
-#~ msgstr "Нажмите Ввод во время поиска, чтобы перейти к следущему совпадению"
+#~ msgstr "Нажмите Ввод во время поиска, чтобы перейти к следующему совпадению"
 
 #, fuzzy
 #~ msgid "Hide inactive plugin messages"
@@ -1019,7 +1043,7 @@ msgstr "Обновление данных..."
 #~ "is, try hovering your mouse over it to find out."
 #~ msgstr ""
 #~ "Большинство элементов интерфейса имеют подсказки. Если вы что-то не "
-#~ "знаете, попробуйте навести мышь на эелемент."
+#~ "знаете, попробуйте навести мышь на элемент."
 
 #~ msgid "Do not clean."
 #~ msgstr "Не чистить."
@@ -1043,8 +1067,8 @@ msgstr "Обновление данных..."
 #~ msgstr "Удалить пользовательские метаданные плагина"
 
 #~ msgid ""
-#~ "Please submit any edits made for reasons other than personal preference "
-#~ "to the LOOT team so that they may be included in the masterlist."
+#~ "Please submit any edits made for reasons other than personal preference to "
+#~ "the LOOT team so that they may be included in the masterlist."
 #~ msgstr ""
 #~ "Пожалуйста, сообщайте команде LOOT о любых сделанных изменениях (кроме "
 #~ "личных предпочтений), для того, чтобы эти изменения могли быть внесены в "
@@ -1067,8 +1091,8 @@ msgstr "Обновление данных..."
 #~ msgstr "Выберете плагин для правки его метаданных порядка загрузки."
 
 #~ msgid ""
-#~ "Drag and drop a plugin here to make the selected plugin load after it. "
-#~ "The \"Show only conflicting plugins\" checkbox must be checked."
+#~ "Drag and drop a plugin here to make the selected plugin load after it. The "
+#~ "\"Show only conflicting plugins\" checkbox must be checked."
 #~ msgstr ""
 #~ "Перетащите сюда плагин, чтобы сделать его загружвемым после выбранного. "
 #~ "Поле \"Показать только конфликтующие плагины\" должно быть отмечено."
@@ -1078,19 +1102,19 @@ msgstr "Обновление данных..."
 #~ "priorities that they conflict with, unless one must explicitly load after "
 #~ "the other."
 #~ msgstr ""
-#~ "Плагины с большим приоритетом будут загружены после конфликтующих "
-#~ "плагинов с меньшим, если конечно какой-либо из них должен грузиться "
-#~ "конкретно после определенного другого."
+#~ "Плагины с большим приоритетом будут загружены после конфликтующих плагинов "
+#~ "с меньшим, если конечно какой-либо из них должен грузиться конкретно после "
+#~ "определенного другого."
 
 #~ msgid ""
 #~ "Filters the plugin list to only display plugins which can be loaded after "
 #~ "the currently selected plugin, and which either conflict with it, or, if "
-#~ "it loads a BSA, also load BSAs. Also enables drag and drop of plugins "
-#~ "into the Load After box."
+#~ "it loads a BSA, also load BSAs. Also enables drag and drop of plugins into "
+#~ "the Load After box."
 #~ msgstr ""
 #~ "Фильтры для списка плагинов, для отображения только плагинов, которые "
 #~ "могут быть загружены после выбранного плагина и которые имеют любой "
-#~ "конфликт с ним или если  он грузит BSA, также грузят BSA. Также включает "
+#~ "конфликт с ним или если он грузит BSA, также грузят BSA. Также включает "
 #~ "перетаскивание плагинов в поле Грузить после."
 
 #~ msgid ""
@@ -1119,8 +1143,7 @@ msgstr "Обновление данных..."
 #~ msgid "Copy Name"
 #~ msgstr "Скопировать имя"
 
-#~ msgid ""
-#~ "If unchecked, any user-added metadata will be ignored during sorting."
+#~ msgid "If unchecked, any user-added metadata will be ignored during sorting."
 #~ msgstr ""
 #~ "Если не помечено, любые добавленные пользователем метаданные будут "
 #~ "проигнорированы при сортировке."
@@ -1202,8 +1225,8 @@ msgstr "Обновление данных..."
 #~ "If LOOT has gotten something wrong, please let the team know. See the "
 #~ "Contributing To LOOT section of the readme for details."
 #~ msgstr ""
-#~ "Если LOOT сделал что-то неправильно, пожалуйста, сообщите об этом "
-#~ "команде. Подробнее в секции Contributing To LOOT, в документации."
+#~ "Если LOOT сделал что-то неправильно, пожалуйста, сообщите об этом команде. "
+#~ "Подробнее в секции Contributing To LOOT, в документации."
 
 #~ msgid "Masterlist update failed. Details: %1%"
 #~ msgstr "Проверка обновлений мастерлиста не удалась. Детали: %1%"
@@ -1296,8 +1319,8 @@ msgstr "Обновление данных..."
 #~ msgstr "Не удалось установить порядок загрузки. Детали: %1%"
 
 #~ msgid ""
-#~ "The load order displayed in the Details tab was not applied as sorting "
-#~ "was canceled."
+#~ "The load order displayed in the Details tab was not applied as sorting was "
+#~ "canceled."
 #~ msgstr ""
 #~ "Порядок загрузки, показанный на вкладке Детали не был применен, так как "
 #~ "сортировка была отменена."
@@ -1410,8 +1433,7 @@ msgstr "Обновление данных..."
 #~ msgid "LOOT: Add Game"
 #~ msgstr "LOOT: Добавить игру"
 
-#~ msgid ""
-#~ "Error: A path and/or registry key is required. Row will not be added."
+#~ msgid "Error: A path and/or registry key is required. Row will not be added."
 #~ msgstr ""
 #~ "Ошибка: Требуется путь и/или ключ реестра. Строка не будет добавлена."
 
@@ -1424,8 +1446,7 @@ msgstr "Обновление данных..."
 #~ "Error: A game with this folder name is already defined. Row will not be "
 #~ "added."
 #~ msgstr ""
-#~ "Ошибка: Игра с этим именем папки уже определена. Строка не будет "
-#~ "добавлена."
+#~ "Ошибка: Игра с этим именем папки уже определена. Строка не будет добавлена."
 
 #~ msgid "LOOT: Edit Game"
 #~ msgstr "LOOT: Править игру"
@@ -1550,8 +1571,8 @@ msgstr "Обновление данных..."
 #~ "A load order optimisation tool for games using the Elder Scrolls Plugin/"
 #~ "Master system."
 #~ msgstr ""
-#~ "Инструмент для оптимизации порядка загрузки, для игр, использующих "
-#~ "систему плагин/мастер Elder Scrolls."
+#~ "Инструмент для оптимизации порядка загрузки, для игр, использующих систему "
+#~ "плагин/мастер Elder Scrolls."
 
 #~ msgid "Up"
 #~ msgstr "Выше"
