@@ -965,7 +965,6 @@ namespace loot {
         }
 
         //Also check install validity.
-        BOOST_LOG_TRIVIAL(trace) << "Checking that the current install is valid according to this plugin's data.";
         bool isDirty = tempPlugin.CheckInstallValidity(g_app_state.CurrentGame());
 
         // Now add to pluginNode.

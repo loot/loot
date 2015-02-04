@@ -815,7 +815,6 @@ namespace loot {
             }
 
             //Also check install validity.
-            BOOST_LOG_TRIVIAL(trace) << "Checking that the current install is valid according to this plugin's data.";
             graph[v].CheckInstallValidity(*this);
         }
 
