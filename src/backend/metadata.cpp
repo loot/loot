@@ -870,7 +870,7 @@ namespace loot {
     }
 
     bool Plugin::CheckInstallValidity(const Game& game) {
-        BOOST_LOG_TRIVIAL(trace) << "Checking that the current install is valid according to " << _name << "'s data.";
+        BOOST_LOG_TRIVIAL(trace) << "Checking that the current install is valid according to " << name << "'s data.";
         unsigned int messageType;
         if (game.IsActive(name))
             messageType = loot::Message::error;
