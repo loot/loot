@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: LOOT\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-09 10:40-0000\n"
-"PO-Revision-Date: 2015-02-02 23:14+0500\n"
+"PO-Revision-Date: 2015-02-04 12:04-0000\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru\n"
@@ -233,7 +233,7 @@ msgstr "Включает %1% удаленных ссылок и %2% удален
 
 #: src/backend/metadata.cpp:917
 msgid "Contains %1% deleted navmeshes. Clean with %2%."
-msgstr "Содержит %1% удаленных navmesh-записей. Очистить с помощью %1%."
+msgstr "Содержит %1% удаленных navmesh-записей. Очистить с помощью %2%."
 
 #: src/backend/metadata.cpp:919
 msgid "Contains %1% deleted references. Clean with %2%."
@@ -243,11 +243,11 @@ msgstr "Включает %1% удаленных ссылок. Очистить �
 msgid "Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%."
 msgstr ""
 "Содержит %1% ITM записей и %2% удаленных navmesh-записей. Очистить с помощью "
-"%1%."
+"%3%."
 
 #: src/backend/metadata.cpp:924
 msgid "Contains %1% ITM records. Clean with %2%."
-msgstr "Содержит %1% ITM записей. Очистить с помощью %1%."
+msgstr "Содержит %1% ITM записей. Очистить с помощью %2%."
 
 #: src/backend/metadata.cpp:927
 msgid "Contains %1% ITM records and %2% deleted references. Clean with %3%."
