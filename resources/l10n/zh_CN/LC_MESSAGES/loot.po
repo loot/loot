@@ -1,566 +1,852 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Better Oblivion Mod Manager 2.1\n"
+"Project-Id-Version: LOOT v0.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-26 11:41-0000\n"
-"PO-Revision-Date: 2014-02-04 20:21-0000\n"
-"Last-Translator: icedream <icedream@tesfans.org>\n"
-"Language-Team: 上古卷轴爱好者 <icedream@tesfans.org>\n"
-"Language: zh\n"
+"POT-Creation-Date: 2015-01-09 10:40-0000\n"
+"PO-Revision-Date: 2015-02-07 01:05+0800\n"
+"Last-Translator: S猫 <silentdark@skycitizen.net>\n"
+"Language-Team: 天际公民 <silentdark@skycitizen.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.6.3\n"
+"X-Generator: Poedit 1.7.3\n"
+"X-Poedit-KeywordsList: translate:1,1t;translate:1c,2,t\n"
+"X-Poedit-Basepath: ../../\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: zh_CN\n"
+"X-Poedit-SearchPath-0: src/backend\n"
+"X-Poedit-SearchPath-1: src/gui\n"
+"X-Poedit-SearchPath-2: resources/report/js\n"
 
-#: backend/game.cpp:96
+#: src/backend/game.cpp:347
 msgid "Invalid game ID supplied."
 msgstr "无效的游戏ID"
 
-#: backend/game.cpp:147
+#: src/backend/game.cpp:371
 msgid "Game path could not be detected."
 msgstr "无法检测到游戏路径。"
 
-#: backend/game.cpp:248 backend/game.cpp:308 backend/game.cpp:363
+#: src/backend/game.cpp:489
+msgid ""
+"libloadorder failed to create a game handle. Details could not be fetched."
+msgstr "加载顺序数据库无法创建游戏处理器，详细信息无法获取。"
+
+#: src/backend/game.cpp:493
 msgid "libloadorder failed to create a game handle. Details:"
-msgstr "libloadorder 无法创建游戏处理器，详细信息："
+msgstr "加载顺序数据库无法创建游戏处理器，详细信息："
 
-#: backend/game.cpp:260 backend/game.cpp:320 backend/game.cpp:374
+#: src/backend/game.cpp:510
+msgid ""
+"libloadorder failed to initialise game master file support. Details could "
+"not be fetched."
+msgstr "加载顺序数据库无法初始化游戏master文件支持，详细信息无法获取。"
+
+#: src/backend/game.cpp:514
 msgid "libloadorder failed to initialise game master file support. Details:"
-msgstr "libloadorder 无法初始化游戏master文件支持，详细信息："
+msgstr "加载顺序数据库无法初始化游戏master文件支持，详细信息："
 
-#: backend/game.cpp:270
+#: src/backend/game.cpp:534
+msgid ""
+"libloadorder failed to get the active plugins list. Details could not be "
+"fetched."
+msgstr "加载顺序数据库无法获取活跃插件列表，详细信息无法获取。"
+
+#: src/backend/game.cpp:538
 msgid "libloadorder failed to get the active plugins list. Details:"
-msgstr "libloadorder 无法获取活跃插件列表，详细信息："
+msgstr "加载顺序数据库无法获取活跃插件列表，详细信息："
 
-#: backend/game.cpp:330 backend/game.cpp:396
+#: src/backend/game.cpp:567
+msgid ""
+"libloadorder failed to get the load order. Details could not be fetched."
+msgstr "加载顺序数据库无法获取加载顺序，详细信息无法获取。"
+
+#: src/backend/game.cpp:571
+msgid "libloadorder failed to get the load order. Details:"
+msgstr "加载顺序数据库无法获取加载顺序，详细信息："
+
+#: src/backend/game.cpp:593
+msgid ""
+"libloadorder failed to set the load order. Details could not be fetched."
+msgstr "加载顺序数据库无法设置加载顺序，详细信息无法获取。"
+
+#: src/backend/game.cpp:597
 msgid "libloadorder failed to set the load order. Details:"
-msgstr "libloadorder 无法设置排序，详细信息："
+msgstr "加载顺序数据库无法设置加载顺序，详细信息："
 
-#: backend/game.cpp:415
-msgid "Could not create BOSS folder for game. Details:"
-msgstr "BOSS无法创建游戏专属路径，详细信息："
+#: src/backend/game.cpp:701
+msgid "An exception occurred while loading this plugin. Details: "
+msgstr "载入这个插件是发生意外，详细信息无法获取。"
 
-#: backend/graph.cpp:46
-msgid "Cyclic interaction detected between plugins \"%1%\" and \"%2%\"."
-msgstr "在插件\"%1%\"和\"%2%\"检测到死循环。"
+#: src/backend/game.cpp:719
+msgid "An exception occurred while loading this plugin. Details:"
+msgstr "载入这个插件是发生意外，详细信息："
 
-#: backend/helpers.cpp:140
-msgid "Unable to open \"%1%\" for CRC calculation."
-msgstr "无法打开\"%1%\"进行CRC计算。"
+#: src/backend/game.cpp:779
+msgid "Could not create LOOT folder for game. Details:"
+msgstr "无法创建 LOOT 文件夹。详细信息："
 
-#: backend/helpers.cpp:302
-msgid "Could not create pipe for process."
-msgstr "无法创建进程点。"
+#: src/backend/game.cpp:787
+msgid "Building plugin graph..."
+msgstr "构建插件图表..."
 
-#: backend/helpers.cpp:335
-msgid "Could not create process."
-msgstr "无法创建进程。"
+#: src/backend/game.cpp:813 src/gui/handler.cpp:968
+msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
+msgstr "\"%1%\"包含一条无法被解析的条件。详细信息：%2%"
 
-#: backend/helpers.cpp:346
-msgid "Could not get process exit code."
-msgstr "无法获取进程退出代码。"
+#: src/backend/game.cpp:823
+msgid "Adding edges to plugin graph and performing topological sort..."
+msgstr "添加插件图表路段并执行拓扑排序..."
 
-#: backend/helpers.cpp:353
-msgid "Could not read process output."
-msgstr "无法获取进程输出。"
-
-#: backend/metadata.cpp:142
-msgid "Failed to parse condition \"%1%\": %2%"
-msgstr "无法解析条件\"%1%\":%2%"
-
-#: backend/metadata.cpp:147
-msgid "Failed to parse condition \"%1%\"."
-msgstr "无法解析条件 \"%1%\"。"
-
-#: backend/network.cpp:75
+#: src/backend/git.cpp:132
 msgid "Git operation failed. Error: %1%"
 msgstr "Git 操作失败。错误：%1%"
 
-#: backend/network.cpp:338
+#: src/backend/git.cpp:179
+msgid "Object memory already allocated!"
+msgstr "记忆对象已分配！"
+
+#: src/backend/git.cpp:183
+msgid "Tree memory already allocated!"
+msgstr "记忆树已分配！"
+
+#: src/backend/git.cpp:187
+msgid "Diff memory already allocated!"
+msgstr "记忆对比已分配！"
+
+#: src/backend/git.cpp:191
+msgid "Repository handle not open!"
+msgstr "库处理没有打开！"
+
+#: src/backend/git.cpp:222
+msgid "Unknown: Git repository missing"
+msgstr "未知：Git 库缺失"
+
+#: src/backend/git.cpp:226
+msgid "N/A: No masterlist present"
+msgstr "N/A：没有主列表"
+
+#: src/backend/git.cpp:231
+msgid ""
+"An error occurred while trying to read the local masterlist's version. If "
+"this error happens again, try deleting the \".git\" folder in %1%."
+msgstr ""
+"读取本地主列表版本时发生错误。如果错误再次发生，请尝试删除%1%里的\".git\"文件"
+"夹。"
+
+#: src/backend/git.cpp:264 src/backend/git.cpp:265
+msgid "(edited)"
+msgstr "(已修改)"
+
+#: src/backend/git.cpp:294
+msgid ""
+"An error occurred while trying to clone the remote masterlist repository."
+msgstr "试图复制远程主列表库时发生错误。"
+
+#: src/backend/git.cpp:350 src/backend/git.cpp:383
+msgid ""
+"An error occurred while trying to access the local masterlist repository. If "
+"this error happens again, try deleting the \".git\" folder in %1%."
+msgstr ""
+"存取本地主列表库时发生错误。如果错误再次发生，请尝试删除%1%里的\".git\"文件"
+"夹。"
+
+#: src/backend/git.cpp:374
+msgid ""
+"An error occurred while trying to update the masterlist. This could be due "
+"to a server-side error. Try again in a few minutes."
+msgstr "更新主列表时发生错误。这可能是由于服务器端故障。过几分钟后再进行尝试。"
+
+#: src/backend/git.cpp:517
+msgid ""
+"An error occurred while trying to read information on the updated "
+"masterlist. If this error happens again, try deleting the \".git\" folder in "
+"%1%."
+msgstr ""
+"更新主列表时读取信息发生错误。如果错误再次发生，请尝试删除%1%里的\".git\"文件"
+"夹。"
+
+#: src/backend/git.cpp:587
 msgid "Masterlist revision"
-msgstr "Masterlist 版本"
-
-#: gui/editor.cpp:37
-msgid "Note"
-msgstr "注意"
-
-#: gui/editor.cpp:38
-msgid "Warning"
-msgstr "警告"
-
-#: gui/editor.cpp:39
-msgid "Error"
-msgstr "错误"
-
-#: gui/editor.cpp:43
-msgid "Add"
-msgstr "添加"
-
-#: gui/editor.cpp:44
-msgid "Remove"
-msgstr "移除"
-
-#: gui/editor.cpp:48
-msgid "Type"
-msgstr "类型"
-
-#: gui/editor.cpp:49
-msgid "Content"
-msgstr "内容"
-
-#: gui/editor.cpp:50 gui/editor.cpp:155 gui/editor.cpp:159 gui/editor.cpp:163
-#: gui/editor.cpp:167
-msgid "Condition"
-msgstr "条件"
-
-#: gui/editor.cpp:51 gui/editor.cpp:990
-msgid "Language"
-msgstr "界面语言"
-
-#: gui/editor.cpp:125
-msgid "Enable User Changes"
-msgstr "允许用户修改"
-
-#: gui/editor.cpp:127 gui/editor.cpp:375
-msgid "Add File"
-msgstr "添加文件"
-
-#: gui/editor.cpp:128 gui/editor.cpp:376
-msgid "Edit File"
-msgstr "编辑文件"
-
-#: gui/editor.cpp:129 gui/editor.cpp:377
-msgid "Remove File"
-msgstr "移除文件"
-
-#: gui/editor.cpp:130
-msgid "Save Changes"
-msgstr "保存修改"
-
-#: gui/editor.cpp:131
-msgid "Cancel"
-msgstr "取消"
-
-#: gui/editor.cpp:132
-msgid "Copy Metadata As Text"
-msgstr "复制Meta信息为文本"
-
-#: gui/editor.cpp:143
-msgid "Requirements"
-msgstr "需求信息"
-
-#: gui/editor.cpp:144
-msgid "Incompatibilities"
-msgstr "不兼容信息"
-
-#: gui/editor.cpp:145
-msgid "Load After"
-msgstr "加载在……后面"
-
-#: gui/editor.cpp:146
-msgid "Messages"
-msgstr "信息"
-
-#: gui/editor.cpp:147
-msgid "Bash Tags"
-msgstr "Bash 标签"
-
-#: gui/editor.cpp:148
-msgid "Dirty Info"
-msgstr "Dirty 信息"
-
-#: gui/editor.cpp:151
-msgid "Plugins"
-msgstr " 个插件"
-
-#: gui/editor.cpp:153 gui/editor.cpp:157 gui/editor.cpp:161
-msgid "Filename"
-msgstr "文件"
-
-#: gui/editor.cpp:154 gui/editor.cpp:158 gui/editor.cpp:162
-msgid "Display Name"
-msgstr "显示名字"
-
-#: gui/editor.cpp:165
-msgid "Add/Remove"
-msgstr "添加/移除"
-
-#: gui/editor.cpp:166
-msgid "Bash Tag"
-msgstr "Bash 标签"
-
-#: gui/editor.cpp:169
-msgid "CRC"
-msgstr "CRC"
-
-#: gui/editor.cpp:170
-msgid "ITM Count"
-msgstr "ITM 数量"
-
-#: gui/editor.cpp:171
-msgid "UDR Count"
-msgstr "UDR 数量"
-
-#: gui/editor.cpp:172
-msgid "Deleted Navmesh Count"
-msgstr "已删除Navmesh数量"
-
-#: gui/editor.cpp:173
-msgid "Cleaning Utility"
-msgstr "清除工具"
-
-#: gui/editor.cpp:217
-msgid "Priority: "
-msgstr "优先级："
-
-#: gui/editor.cpp:379
-msgid "Add Plugin"
-msgstr "添加插件"
-
-#: gui/editor.cpp:380
-msgid "Edit Plugin"
-msgstr "编辑插件"
-
-#: gui/editor.cpp:381
-msgid "Remove Plugin"
-msgstr "移除插件"
-
-#: gui/editor.cpp:383
-msgid "Add Message"
-msgstr "添加信息"
-
-#: gui/editor.cpp:384
-msgid "Edit Message"
-msgstr "编辑信息"
-
-#: gui/editor.cpp:385
-msgid "Remove Message"
-msgstr "移除信息"
-
-#: gui/editor.cpp:387
-msgid "Add Bash Tag"
-msgstr "添加Bash标签"
-
-#: gui/editor.cpp:388
-msgid "Edit Bash Tag"
-msgstr "编辑Bash标签"
-
-#: gui/editor.cpp:389
-msgid "Remove Bash Tag"
-msgstr "移除Bash标签"
-
-#: gui/editor.cpp:391
-msgid "Add Dirty Info"
-msgstr "添加Dirty信息"
-
-#: gui/editor.cpp:392
-msgid "Edit Dirty Info"
-msgstr "编辑Dirty信息"
-
-#: gui/editor.cpp:393
-msgid "Remove Dirty Info"
-msgstr "移除Dirty信息"
-
-#: gui/editor.cpp:411
-msgid "BOSS: Add File/Plugin"
-msgstr "BOSS：添加文件/插件"
-
-#: gui/editor.cpp:433
-msgid "BOSS: Add Message"
-msgstr "BOSS：添加信息"
-
-#: gui/editor.cpp:443
-msgid "Error: No content specified. Row will not be added."
-msgstr "错误：未指定内容，列不会被添加。"
-
-#: gui/editor.cpp:444 gui/editor.cpp:526 gui/editor.cpp:1122
-#: gui/editor.cpp:1137 gui/main.cpp:164 gui/main.cpp:181 gui/main.cpp:194
-#: gui/main.cpp:273 gui/main.cpp:283 gui/main.cpp:296 gui/main.cpp:304
-#: gui/main.cpp:335 gui/main.cpp:352 gui/main.cpp:820 gui/main.cpp:873
-#: gui/main.cpp:893 gui/main.cpp:972 gui/main.cpp:1009 gui/main.cpp:1040
-#: gui/main.cpp:1060 gui/main.cpp:1075 gui/main.cpp:1182 gui/main.cpp:1227
-#: gui/settings.cpp:287 gui/settings.cpp:299 gui/settings.cpp:307
-#: gui/settings.cpp:350 gui/settings.cpp:358 gui/settings.cpp:366
-msgid "BOSS: Error"
-msgstr "BOSS：错误"
-
-#: gui/editor.cpp:454
-msgid "BOSS: Add Tag"
-msgstr "BOSS：添加标签"
-
-#: gui/editor.cpp:468
-msgid "BOSS: Add Dirty Info"
-msgstr "BOSS：添加Dirty信息"
-
-#: gui/editor.cpp:487
-msgid "BOSS: Edit File/Plugin"
-msgstr "BOSS：编辑文件/插件"
-
-#: gui/editor.cpp:511
-msgid "BOSS: Edit Message"
-msgstr "BOSS：编辑信息"
-
-#: gui/editor.cpp:525
-msgid "Error: No content specified. Row will not be edited."
-msgstr "错误：未检测到内容。行不会被修改。"
-
-#: gui/editor.cpp:535
-msgid "BOSS: Edit Tag"
-msgstr "BOSS：编辑标签"
-
-#: gui/editor.cpp:557
-msgid "BOSS: Edit Dirty Info"
-msgstr "BOSS：编辑Dirty信息"
-
-#: gui/editor.cpp:932
-msgid "Filename (required):"
-msgstr "文件名（必需）："
-
-#: gui/editor.cpp:935
-msgid "Displayed Name:"
-msgstr "显示名称："
-
-#: gui/editor.cpp:938 gui/editor.cpp:1016 gui/editor.cpp:1172
-msgid "Condition:"
-msgstr "条件："
-
-#: gui/editor.cpp:986
-msgid "Add Content"
-msgstr "添加内容"
-
-#: gui/editor.cpp:987
-msgid "Edit Content"
-msgstr "编辑内容"
-
-#: gui/editor.cpp:988
-msgid "Remove Content"
-msgstr "移除内容"
-
-#: gui/editor.cpp:991
-msgid "String"
-msgstr "字符串"
-
-#: gui/editor.cpp:1013 gui/settings.cpp:425
-msgid "Type:"
-msgstr "类型："
-
-#: gui/editor.cpp:1028 gui/settings.cpp:101
-msgid "Language:"
-msgstr "界面语言："
-
-#: gui/editor.cpp:1031
-msgid "Content:"
-msgstr "内容："
-
-#: gui/editor.cpp:1121 gui/editor.cpp:1136
-msgid "Error: No content row selected."
-msgstr "错误：未选择内容行。"
-
-#: gui/editor.cpp:1166
-msgid "Add/Remove:"
-msgstr "添加/移除："
-
-#: gui/editor.cpp:1169 gui/settings.cpp:422
-msgid "Name (required):"
-msgstr "名字（必需）："
-
-#: gui/editor.cpp:1234
-msgid "CRC (required):"
-msgstr "CRC（必需）："
-
-#: gui/editor.cpp:1237
-msgid "ITM Count:"
-msgstr "ITM数量："
-
-#: gui/editor.cpp:1240
-msgid "UDR Count:"
-msgstr "UDR数量："
-
-#: gui/editor.cpp:1243
-msgid "Deleted Navmesh Count:"
-msgstr "已删除Navmesh数量："
-
-#: gui/editor.cpp:1246
-msgid "Cleaning Utility (required):"
-msgstr "清除工具（必需）："
-
-#: gui/ids.cpp:31
-msgid "None Specified"
-msgstr "未指定"
-
-#: gui/main.cpp:118
-msgid "Masterlist update failed. Details: %1%"
-msgstr "Masterlist更新失败。详细信息：%1%"
-
-#: gui/main.cpp:134
-msgid "Masterlist parsing failed. Details: %1%"
-msgstr "Masterlist解析失败。详细信息：%1%"
-
-#: gui/main.cpp:142
-msgid "Unknown"
-msgstr "未知"
-
-#: gui/main.cpp:144
-msgid "No masterlist"
-msgstr "无 masterlist"
-
-#: gui/main.cpp:163
-msgid "Error: BOSS is already running. This instance will now quit."
-msgstr "错误：BOSS正在运行。当前操作即将退出。"
-
-#: gui/main.cpp:180
-msgid "Error: Could not create local app data BOSS folder."
-msgstr "错误：无法创建local app data BOSS目录。"
-
-#: gui/main.cpp:193
+msgstr "主列表版本"
+
+#: src/backend/git.cpp:587
+msgid "Rolled back to the previous revision."
+msgstr "返回上一个版本。"
+
+#: src/backend/graph.cpp:77
+msgid ""
+"Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: "
+"%3%"
+msgstr "插件\"%1%\"和 \"%2%\"之间产生循环。反循环：%3%"
+
+#: src/backend/helpers.cpp:153
+msgid "Unable to open \"%1%\" for CRC calculation."
+msgstr "无法打开\"%1%\"进行CRC计算。"
+
+#: src/backend/metadata.cpp:146 src/backend/metadata.cpp:178
+msgid "Failed to parse condition \"%1%\": %2%"
+msgstr "无法解析条件\"%1%\"：%2%"
+
+#: src/backend/metadata.cpp:151 src/backend/metadata.cpp:183
+msgid "Failed to parse condition \"%1%\"."
+msgstr "无法解析条件 \"%1%\"。"
+
+#: src/backend/metadata.cpp:457
+msgid "Cannot read \"%1%\". Details: %2%"
+msgstr "无法读取\"%1%\"。详细信息：%2%"
+
+#: src/backend/metadata.cpp:882 src/backend/metadata.cpp:893
+msgid "This plugin requires \"%1%\" to be installed, but it is missing."
+msgstr "这个插件需要安装\"%1%\"。"
+
+#: src/backend/metadata.cpp:886
+msgid "This plugin requires \"%1%\" to be active, but it is inactive."
+msgstr "这个插件激活\"%1%\"。"
+
+#: src/backend/metadata.cpp:901
+msgid "This plugin is incompatible with \"%1%\", but both are present."
+msgstr "这个插件\"%1%\"与\"%2%\"不兼容，但是两者都存在。"
+
+#: src/backend/metadata.cpp:910
+msgid ""
+"Contains %1% ITM records, %2% deleted references and %3% deleted navmeshes. "
+"Clean with %4%."
+msgstr "包含%1%个ITM记录，%2%个已删除引用和%3%已删除导航。使用%4%清理。"
+
+#: src/backend/metadata.cpp:912
+msgid "Clean with %1%."
+msgstr "使用%1%清理。"
+
+#: src/backend/metadata.cpp:915
+msgid ""
+"Contains %1% deleted references and %2% deleted navmeshes. Clean with %3%."
+msgstr "包含%1%个已删除引用和%2%个已删除导航。使用%3%清理。"
+
+#: src/backend/metadata.cpp:917
+msgid "Contains %1% deleted navmeshes. Clean with %2%."
+msgstr "包含%1%个已删除导航。使用%2%清理。"
+
+#: src/backend/metadata.cpp:919
+msgid "Contains %1% deleted references. Clean with %2%."
+msgstr "包含%1%个已删除引用。使用%2%清理。"
+
+#: src/backend/metadata.cpp:922
+msgid "Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%."
+msgstr "包含%1%个ITM记录和%2%个UDR记录。使用%3%清理。"
+
+#: src/backend/metadata.cpp:924
+msgid "Contains %1% ITM records. Clean with %2%."
+msgstr "包含%1%个ITM记录。使用%2%清理。"
+
+#: src/backend/metadata.cpp:927
+msgid "Contains %1% ITM records and %2% deleted references. Clean with %3%."
+msgstr "包含%1%个ITM记录和%2%个已删除引用。使用%3%清理。"
+
+#: src/gui/app.cpp:174
+msgid "Error: Could not create LOOT settings file. %1%"
+msgstr "错误：无法创建LOOT配置文件。%1%"
+
+#: src/gui/app.cpp:184
 msgid "Error: Settings parsing failed. %1%"
 msgstr "错误：设置解析失败。%1%"
 
-#: gui/main.cpp:272
-msgid "Error: Could not apply translation."
-msgstr "错误：无法加载翻译包。"
-
-#: gui/main.cpp:282
-msgid "Error: The selected language is not available on this system."
-msgstr "错误：所选择语言在本系统中不可用。"
-
-#: gui/main.cpp:295 gui/main.cpp:351 gui/main.cpp:1039
-msgid "Error: Game-specific settings could not be initialised. %1%"
-msgstr "错误：游戏专属设置无法初始化。%1%"
-
-#: gui/main.cpp:303
+#: src/gui/app.cpp:249
 msgid "Error: Games' settings parsing failed. %1%"
 msgstr "错误：游戏设置解析失败。%1%"
 
-#: gui/main.cpp:334
-msgid "Error: None of the supported games were detected."
-msgstr "错误：未检测到支持的游戏。"
+#: src/gui/app.cpp:269
+msgid "Error: Game-specific settings could not be initialised. %1%"
+msgstr "错误：游戏专属设置无法初始化。%1%"
 
-#: gui/main.cpp:379
-msgid "Edit Metadata"
-msgstr "编辑Meta信息"
+#: src/gui/app.cpp:410
+msgid "None of the supported games were detected."
+msgstr "没有支持的游戏被选中。"
 
-#: gui/main.cpp:380
-msgid "Sort Plugins"
-msgstr "调整排序"
+#: src/gui/handler.cpp:226 src/gui/handler.cpp:230
+msgid "Failed to change game. Details: %1%"
+msgstr "无法更换游戏，详细信息：%1%"
 
-#: gui/main.cpp:381
-msgid "View Last Report"
-msgstr "查看最近报告"
+#: src/gui/handler.cpp:247 src/gui/handler.cpp:251 src/gui/handler.cpp:328
+#: src/gui/handler.cpp:332
+msgid "Failed to copy plugin metadata. Details: %1%"
+msgstr "无法复制插件元数据，详细信息：%1%"
 
-#: gui/main.cpp:385
-msgid "&View Last Report"
-msgstr "查看最近报告"
+#: src/gui/handler.cpp:347 src/gui/handler.cpp:907
+msgid "Loading plugin contents..."
+msgstr "加载插件内容..."
 
-#: gui/main.cpp:386
-msgid "View &Debug Log"
-msgstr "查看调试日志"
+#: src/gui/handler.cpp:351
+msgid "Checking for conflicting plugins..."
+msgstr "检查插件冲突..."
 
-#: gui/main.cpp:387
-msgid "&Sort Plugins"
-msgstr "插件排序"
+#: src/gui/handler.cpp:518 src/gui/handler.cpp:526
+msgid "Shell execute failed."
+msgstr "Shell 执行失败。"
 
-#: gui/main.cpp:388
-msgid "&Redate Plugins"
-msgstr "修改插件时间"
+#: src/gui/handler.cpp:584
+msgid "Loading plugin headers..."
+msgstr "加载插件信息..."
 
-#: gui/main.cpp:391
-msgid "&File"
-msgstr "文件"
+#: src/gui/handler.cpp:610
+msgid "Parsing masterlist..."
+msgstr "解析主列表..."
 
-#: gui/main.cpp:393
-msgid "&Metadata..."
-msgstr "Meta信息..."
+#: src/gui/handler.cpp:616
+msgid "An error occurred while parsing the masterlist: %1%"
+msgstr "解析主列表时出错：%1%"
 
-#: gui/main.cpp:394
-msgid "&Settings..."
-msgstr "设置..."
+#: src/gui/handler.cpp:622
+msgid "Parsing userlist..."
+msgstr "解析用户列表..."
 
-#: gui/main.cpp:395
-msgid "&Edit"
-msgstr "编辑"
+#: src/gui/handler.cpp:628
+msgid "An error occurred while parsing the userlist: %1%"
+msgstr "解析用户列表时出错：%1%"
 
-#: gui/main.cpp:407
-msgid "&Game"
-msgstr "游戏"
+#: src/gui/handler.cpp:653
+msgid "Merging and evaluating plugin metadata..."
+msgstr "融合并评估插件元数据..."
 
-#: gui/main.cpp:412
-msgid "&Help"
-msgstr "帮助"
+#: src/gui/handler.cpp:718
+msgid "Loading general messages..."
+msgstr "载入一般信息..."
 
-#: gui/main.cpp:496 gui/main.cpp:851
-msgid "BOSS: Working..."
-msgstr "BOSS：正在排序..."
-
-#: gui/main.cpp:496 gui/main.cpp:851
-msgid "BOSS working..."
-msgstr "BOSS正在运行..."
-
-#: gui/main.cpp:547
-msgid "Userlist parsing failed. Details: %1%"
-msgstr "Userlist解析失败。详细信息：%1%"
-
-#: gui/main.cpp:584
+#: src/gui/handler.cpp:742 src/gui/handler.cpp:848
 msgid ""
 "A global message contains a condition that could not be evaluated. Details: "
 "%1%"
 msgstr "一条全局信息包含的条件无法被解析，详细信息：%1%"
 
-#: gui/main.cpp:615
-msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
-msgstr "\"%1%\"包含一条无法被解析的条件。详细信息：%2%"
+#: src/gui/handler.cpp:752 src/gui/handler.cpp:756
+msgid "Failed to get game data. Details: %1%"
+msgstr "无法获取游戏数据，详细信息：%1%"
 
-#: gui/main.cpp:627
-msgid "\"%1%\" is incompatible with \"%2%\" and is present."
-msgstr "\"%1%\"不兼容的\"%2%\"当前存在着。"
+#: src/gui/handler.cpp:775
+msgid "Updating and parsing masterlist..."
+msgstr "更新并解析主列表..."
 
-#: gui/main.cpp:630
-msgid "\"%1%\" is required by \"%2%\" but is missing."
-msgstr "\"%2%\"需要的\"%1%\"当前丢失了。"
+#: src/gui/handler.cpp:791
+msgid "Regenerating displayed content..."
+msgstr "重建显示内容..."
 
-#: gui/main.cpp:670
-msgid "Failed to generate graph image. Details: %1%"
-msgstr "无法生成图片。详细信息：%1%"
+#: src/gui/handler.cpp:861 src/gui/handler.cpp:865
+msgid "Failed to update the masterlist. Details: %1%"
+msgstr "无法更新主列表，详细信息：%1%"
 
-#: gui/main.cpp:687
-msgid "BOSS: Calculated Load Order"
-msgstr "BOSS：已计算加载顺序"
+#: src/gui/handler.cpp:941
+msgid "Failed to sort plugins. Details: %1%"
+msgstr "无法调整排序，详细信息：%1%"
 
-#: gui/main.cpp:765
-msgid "Failed to set the load order. Details: %1%"
-msgstr "无法设置加载顺序。详细信息：%1%"
+#: src/backend/parsers.h:553 src/backend/parsers.h:645
+msgid "Invalid file path:"
+msgstr "无效文件路径："
 
-#: gui/main.cpp:769
+#: src/backend/parsers.h:607
+msgid "Invalid folder path:"
+msgstr "无效文件夹路径："
+
+#: src/backend/parsers.h:625
+msgid "Invalid regex string:"
+msgstr "无效表达式："
+
+#: src/backend/parsers.h:727
+msgid "Expected \"%1%\" at \"%2%\"."
+msgstr "预期\"%1%\"在\"%2%\"。"
+
+#: resources/report/js/filters.js:121
+msgid "Do not clean"
+msgstr "不要清理"
+
+#: resources/report/js/l10n.js:61 resources/report/js/l10n.js:80
+msgid "Active Plugin"
+msgstr "激活插件"
+
+#: resources/report/js/l10n.js:62 resources/report/js/l10n.js:289
+msgid "Master File"
+msgstr "Master文件"
+
+#: resources/report/js/l10n.js:63 resources/report/js/l10n.js:81
+msgid "Empty Plugin"
+msgstr "空插件"
+
+#: resources/report/js/l10n.js:64 resources/report/js/l10n.js:82
+#: resources/report/js/l10n.js:139
+msgid "Loads BSA"
+msgstr "装载BSA"
+
+#: resources/report/js/l10n.js:65 resources/report/js/l10n.js:140
+msgid "Has User Metadata"
+msgstr "有用户元数据"
+
+#: resources/report/js/l10n.js:67
+msgid "Show Only Conflicts"
+msgstr "只显示冲突"
+
+#: resources/report/js/l10n.js:68
+msgid "Edit Metadata"
+msgstr "编辑元数据"
+
+#: resources/report/js/l10n.js:69
+msgid "Copy Metadata"
+msgstr "复制元数据"
+
+#: resources/report/js/l10n.js:70
+msgid "Clear User Metadata"
+msgstr "清除用户元数据"
+
+#: resources/report/js/l10n.js:84
+msgid "Enable Edits"
+msgstr "启用编辑"
+
+#: resources/report/js/l10n.js:85
 msgid ""
-"The load order displayed in the Details tab was not applied as sorting was "
-"canceled."
-msgstr "详细信息栏中的排序未被应用，因为排序被取消了。"
+"Global priorities are compared against all other plugins. Normal priorities "
+"are compared against only conflicting plugins."
+msgstr "全局优先级相对于所有其他插件。普通优先级只相对于冲突的插件。"
 
-#: gui/main.cpp:778
-msgid "Failed to calculate the load order. Details: %1%"
-msgstr "无法计算加载顺序。详细信息：%1%"
+#: resources/report/js/l10n.js:86 resources/report/js/l10n.js:138
+msgid "Global Priority"
+msgstr "全局优先级"
 
-#: gui/main.cpp:819
-msgid "Error: %1%"
-msgstr "错误：%1%"
+#: resources/report/js/l10n.js:87
+msgid "Priority Value"
+msgstr "优先值"
 
-#: gui/main.cpp:839 gui/main.cpp:954
-msgid "BOSS: Report Viewer"
-msgstr "BOSS：报告查看工具"
+#: resources/report/js/l10n.js:89
+msgid "Main"
+msgstr "主要"
 
-#: gui/main.cpp:872
-msgid "Error: Masterlist parsing failed. %1%"
-msgstr "错误：masterlist解析失败。%1%"
+#: resources/report/js/l10n.js:90
+msgid "Load After"
+msgstr "加载在……后面"
 
-#: gui/main.cpp:892
-msgid "Error: Userlist parsing failed. %1%"
-msgstr "错误：userlist解析失败，%1%"
+#: resources/report/js/l10n.js:91
+msgid "Requirements"
+msgstr "需求信息"
 
-#: gui/main.cpp:939
-msgid "BOSS: Metadata Editor"
-msgstr "BOSS：Meta信息编辑器"
+#: resources/report/js/l10n.js:92
+msgid "Incompatibilities"
+msgstr "不兼容信息"
 
-#: gui/main.cpp:961
+#: resources/report/js/l10n.js:93
+msgid "Messages"
+msgstr "信息"
+
+#: resources/report/js/l10n.js:94
+msgid "Bash Tags"
+msgstr "Bash 标签"
+
+#: resources/report/js/l10n.js:95
+msgid "Dirty Info"
+msgstr "Dirty 信息"
+
+#: resources/report/js/l10n.js:96
+msgid "Locations"
+msgstr "地址"
+
+#: resources/report/js/l10n.js:98 resources/report/js/l10n.js:102
+#: resources/report/js/l10n.js:106
+msgid "Filename"
+msgstr "文件"
+
+#: resources/report/js/l10n.js:99 resources/report/js/l10n.js:103
+#: resources/report/js/l10n.js:107
+msgid "Display Name"
+msgstr "显示名字"
+
+#: resources/report/js/l10n.js:100 resources/report/js/l10n.js:104
+#: resources/report/js/l10n.js:108 resources/report/js/l10n.js:112
+#: resources/report/js/l10n.js:117
+msgid "Condition"
+msgstr "条件"
+
+#: resources/report/js/l10n.js:110
+msgid "Type"
+msgstr "类型"
+
+#: resources/report/js/l10n.js:111
+msgid "Content"
+msgstr "内容"
+
+#: resources/report/js/l10n.js:113 resources/report/js/l10n.js:277
+msgid "Language"
+msgstr "界面语言"
+
+#: resources/report/js/l10n.js:115
+msgid "Add/Remove"
+msgstr "添加/移除"
+
+#: resources/report/js/l10n.js:116
+msgid "Bash Tag"
+msgstr "Bash 标签"
+
+#: resources/report/js/l10n.js:119
+msgid "CRC"
+msgstr "CRC"
+
+#: resources/report/js/l10n.js:120
+msgid "ITM Count"
+msgstr "ITM 数量"
+
+#: resources/report/js/l10n.js:121
+msgid "Deleted References"
+msgstr "已删除的引用"
+
+#: resources/report/js/l10n.js:122
+msgid "Deleted Navmeshes"
+msgstr "已删除的导航"
+
+#: resources/report/js/l10n.js:123
+msgid "Cleaning Utility"
+msgstr "清除工具"
+
+#: resources/report/js/l10n.js:125
+msgid "URL"
+msgstr "链接"
+
+#: resources/report/js/l10n.js:126
+msgid "Version"
+msgstr "版本"
+
+#: resources/report/js/l10n.js:128 resources/report/js/l10n.js:225
+#: resources/report/js/l10n.js:299
+msgid "Apply"
+msgstr "应用"
+
+#: resources/report/js/l10n.js:129 resources/report/js/l10n.js:226
+#: resources/report/js/l10n.js:300 resources/report/js/script.js:418
+msgid "Cancel"
+msgstr "取消"
+
+#: resources/report/js/l10n.js:149
+msgid "A filename is required."
+msgstr "需要一个文件名。"
+
+#: resources/report/js/l10n.js:150 resources/report/js/l10n.js:163
+#: resources/report/js/l10n.js:175 resources/report/js/l10n.js:189
+#: resources/report/js/l10n.js:199 resources/report/js/l10n.js:210
+msgid "Delete Row"
+msgstr "删除行"
+
+#: resources/report/js/l10n.js:159
+msgid "Note"
+msgstr "注意"
+
+#: resources/report/js/l10n.js:160
+msgid "Warning"
+msgstr "警告"
+
+#: resources/report/js/l10n.js:161 resources/report/js/script.js:346
+msgid "Error"
+msgstr "错误"
+
+#: resources/report/js/l10n.js:162
+msgid "A content string is required."
+msgstr "需要一个有内容的字符串。"
+
+#: resources/report/js/l10n.js:172
+msgid "Add"
+msgstr "添加"
+
+#: resources/report/js/l10n.js:173
+msgid "Remove"
+msgstr "移除"
+
+#: resources/report/js/l10n.js:174 resources/report/js/l10n.js:208
+msgid "A name is required."
+msgstr "需要一个名字。"
+
+#: resources/report/js/l10n.js:184
+msgid "A CRC is required."
+msgstr "需要一个CRC。"
+
+#: resources/report/js/l10n.js:185 resources/report/js/l10n.js:186
+#: resources/report/js/l10n.js:187
+msgid "Values must be integers."
+msgstr "值必须是整数。"
+
+#: resources/report/js/l10n.js:188
+msgid "A utility name is required."
+msgstr "需要一个实用名。"
+
+#: resources/report/js/l10n.js:198
+msgid "A link is required."
+msgstr "需要一个链接。"
+
+#: resources/report/js/l10n.js:209
+msgid "A folder is required."
+msgstr "需要一个文件夹。"
+
+#: resources/report/js/l10n.js:219 resources/report/js/l10n.js:297
+msgid "Add New Row"
+msgstr "添加行"
+
+#: resources/report/js/l10n.js:222
+msgid "Jump To General Information"
+msgstr "跳转到一般信息"
+
+#: resources/report/js/l10n.js:223
+msgid "Sort Plugins"
+msgstr "调整排序"
+
+#: resources/report/js/l10n.js:224
+msgid "Update Masterlist"
+msgstr "更新主列表"
+
+#: resources/report/js/l10n.js:229
+msgid "Redate Plugins"
+msgstr "修改插件时间"
+
+#: resources/report/js/l10n.js:230
+msgid "Open Debug Log Location"
+msgstr "打开本地调试日志"
+
+#: resources/report/js/l10n.js:231
+msgid "Clear All User Metadata"
+msgstr "清除所有用户元数据"
+
+#: resources/report/js/l10n.js:232
+msgid "Copy Content"
+msgstr "复制内容"
+
+#: resources/report/js/l10n.js:233
+msgid "Refresh Content"
+msgstr "刷新内容"
+
+#: resources/report/js/l10n.js:234
+msgid "View Documentation"
+msgstr "查看文档"
+
+#: resources/report/js/l10n.js:235
+msgid "About"
+msgstr "关于"
+
+#: resources/report/js/l10n.js:236 resources/report/js/l10n.js:269
+msgid "Settings"
+msgstr "设置"
+
+#: resources/report/js/l10n.js:237 resources/report/js/script.js:808
+msgid "Quit"
+msgstr "退出"
+
+#: resources/report/js/l10n.js:240
+msgid "Plugins"
+msgstr "插件"
+
+#: resources/report/js/l10n.js:241
+msgid "Filters"
+msgstr "筛选配置"
+
+#: resources/report/js/l10n.js:242
+msgid "Press Enter or click outside the input to set the filter."
+msgstr "按下回车键或点击输入框以外设置筛选。"
+
+#: resources/report/js/l10n.js:243
+msgid "Filter content..."
+msgstr "筛选内容..."
+
+#: resources/report/js/l10n.js:246
+msgid "Hide version numbers"
+msgstr "隐藏版本号"
+
+#: resources/report/js/l10n.js:247
+msgid "Hide CRCs"
+msgstr "隐藏CRC"
+
+#: resources/report/js/l10n.js:248
+msgid "Hide Bash Tags"
+msgstr "隐藏Bash标签"
+
+#: resources/report/js/l10n.js:249
+msgid "Hide notes"
+msgstr "隐藏注释"
+
+#: resources/report/js/l10n.js:250
+msgid "Hide 'Do not clean' messages"
+msgstr "隐藏 '不要清理' 信息"
+
+#: resources/report/js/l10n.js:251
+msgid "Hide all plugin messages"
+msgstr "隐藏所有插件信息"
+
+#: resources/report/js/l10n.js:252
+msgid "Hide inactive plugins"
+msgstr "隐藏未激活插件"
+
+#: resources/report/js/l10n.js:253
+msgid "Hide messageless plugins"
+msgstr "隐藏无信息的插件"
+
+#: resources/report/js/l10n.js:254
+msgid "Hidden plugins:"
+msgstr "已隐藏插件："
+
+#: resources/report/js/l10n.js:255
+msgid "Hidden messages:"
+msgstr "已隐藏信息："
+
+#: resources/report/js/l10n.js:258
+msgid "General Information"
+msgstr "一般信息"
+
+#: resources/report/js/l10n.js:259
+msgid "Masterlist Revision"
+msgstr "主列表版本"
+
+#: resources/report/js/l10n.js:260
+msgid "Masterlist Date"
+msgstr "主列表日期"
+
+#: resources/report/js/l10n.js:261
+msgid "Warnings"
+msgstr "警告"
+
+#: resources/report/js/l10n.js:262
+msgid "Errors"
+msgstr "错误"
+
+#: resources/report/js/l10n.js:263
+msgid "Total Messages"
+msgstr "信息总计"
+
+#: resources/report/js/l10n.js:264
+msgid "Active Plugins"
+msgstr "激活插件"
+
+#: resources/report/js/l10n.js:265
+msgid "Dirty Plugins"
+msgstr "Dirty 插件"
+
+#: resources/report/js/l10n.js:266
+msgid "Total Plugins"
+msgstr "插件总计"
+
+#: resources/report/js/l10n.js:272
+msgid "Default Game"
+msgstr "默认游戏"
+
+#: resources/report/js/l10n.js:273 resources/report/js/l10n.js:275
+msgid "Autodetect"
+msgstr "自动检测"
+
+#: resources/report/js/l10n.js:278
+msgid "Language changes will be applied after LOOT is restarted."
+msgstr "语言会在 LOOT 重启后应用。"
+
+#: resources/report/js/l10n.js:280
+msgid "Enable debug logging"
+msgstr "启用调试日志"
+
+#: resources/report/js/l10n.js:281
+msgid "The output is logged to the LOOTDebugLog.txt file."
+msgstr "输出被记录在 LOOTDebugLog.txt 文件中。"
+
+#: resources/report/js/l10n.js:283
+msgid "Update masterlist before sorting"
+msgstr "在排序前更新主列表"
+
+#: resources/report/js/l10n.js:286
+msgid "Name"
+msgstr "名字"
+
+#: resources/report/js/l10n.js:287
+msgid "Base Game"
+msgstr "基于游戏"
+
+#: resources/report/js/l10n.js:288
+msgid "LOOT Folder"
+msgstr "LOOT 文件夹"
+
+#: resources/report/js/l10n.js:290
+msgid "Masterlist Repository URL"
+msgstr "主列表库链接"
+
+#: resources/report/js/l10n.js:291
+msgid "Masterlist Repository Branch"
+msgstr "主列表库分支"
+
+#: resources/report/js/l10n.js:292
+msgid "Install Path"
+msgstr "安装路径"
+
+#: resources/report/js/l10n.js:293
+msgid "Install Path Registry Key"
+msgstr "注册表键安装路径键值"
+
+#: resources/report/js/l10n.js:304
+msgid "First-Time Tips"
+msgstr "首次运行小贴士"
+
+#: resources/report/js/l10n.js:306
+msgid ""
+"CRCs are only displayed after plugins have been loaded, either by conflict "
+"filtering, or by sorting."
+msgstr ""
+
+#: resources/report/js/l10n.js:307
+msgid ""
+"Double-click a plugin in the sidebar to quickly open its metadata editor. "
+"Multiple metadata editors can be opened at once."
+msgstr ""
+
+#: resources/report/js/l10n.js:308
+msgid ""
+"Plugins can be drag and dropped from the sidebar into editors' \"load after, "
+"\"requirements\" and \"incompatibility\" tables."
+msgstr ""
+
+#: resources/report/js/l10n.js:309
+msgid ""
+"Some features are disabled while there is an editor open, or while there is "
+"a sorted load order that has not been applied or discarded."
+msgstr ""
+
+#: resources/report/js/l10n.js:310
+msgid ""
+"Many interface elements have tooltips. If you don't know what something is, "
+"try hovering your mouse over it to find out. Otherwise, LOOT's documentation "
+"can be accessed through the main menu."
+msgstr ""
+
+#: resources/report/js/l10n.js:312 resources/report/js/script.js:424
+msgid "OK"
+msgstr "确定"
+
+#: resources/report/js/script.js:209 resources/report/js/script.js:214
+msgid "N/A"
+msgstr "N/A"
+
+#: resources/report/js/script.js:383
+msgid "Checking if plugins have been loaded..."
+msgstr "检查插件是否被加载..."
+
+#: resources/report/js/script.js:438
+msgid "Loading game data..."
+msgstr "载入游戏数据..."
+
+#: resources/report/js/script.js:508
+#, javascript-format
+msgid "Masterlist updated to revision %s."
+msgstr "主列表已更新到版本%s。"
+
+#: resources/report/js/script.js:510
+msgid "No masterlist update was necessary."
+msgstr "主列表无需更新。"
+
+#: resources/report/js/script.js:515
+msgid "Updating masterlist..."
+msgstr "更新主列表..."
+
+#: resources/report/js/script.js:545
+msgid "Sorting plugins..."
+msgstr "排序插件..."
+
+#: resources/report/js/script.js:647
+msgid "Redate Plugins?"
+msgstr "修改插件时间？"
+
+#: resources/report/js/script.js:647
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
@@ -569,1599 +855,62 @@ msgstr ""
 "此功能方便使用Creation Kit的modder可以设定个人顺序。副作用是所有在Steam "
 "Workshop订阅的mod都会被Steam重新下载，您确定要继续吗？"
 
-#: gui/main.cpp:961
-msgid "BOSS: Warning"
-msgstr "BOSS：警告"
+#: resources/report/js/script.js:647
+msgid "Redate"
+msgstr "修改时间"
 
-#: gui/main.cpp:971
-msgid "Error: Failed to get load order. %1%"
-msgstr "错误：无法获取加载顺序。%1%"
-
-#: gui/main.cpp:1008
-msgid "Error: Failed to set plugin timestamps. %1%"
-msgstr "错误：无法设置插件时间戳。%1%"
-
-#: gui/main.cpp:1015
-msgid "Plugins were successfully redated."
-msgstr "插件已成功调整时间。"
-
-#: gui/main.cpp:1016
-msgid "BOSS: Plugin Redate"
-msgstr "BOSS：修改插件时间"
-
-#: gui/main.cpp:1024
-msgid "BOSS: Settings"
-msgstr "BOSS：设置"
-
-#: gui/main.cpp:1059 gui/main.cpp:1074
-msgid "Error: \"%1%\" cannot be found."
-msgstr "错误：找不到\"%1%\"。"
-
-#: gui/main.cpp:1086
+#: resources/report/js/script.js:656
 msgid ""
-"A load order optimisation tool for games using the Elder Scrolls Plugin/"
-"Master system."
-msgstr "一个对使用the Elder Scrolls Plugin/Master系统的游戏的MOD排序优化工具。"
+"Are you sure you want to clear all existing user-added metadata from all "
+"plugins?"
+msgstr "你确定要清除所有插件里用户添加的元数据？"
 
-#: gui/main.cpp:1110
-msgid "Up"
-msgstr "向上"
+#: resources/report/js/script.js:656 resources/report/js/script.js:961
+msgid "Clear"
+msgstr "清除"
 
-#: gui/main.cpp:1111
-msgid "Down"
-msgstr "向下"
+#: resources/report/js/script.js:677
+msgid "All user-added metadata has been cleared."
+msgstr "所有用户添加的元数据已被清除。"
 
-#: gui/main.cpp:1114
-msgid "Load Order"
-msgstr "加载顺序"
+#: resources/report/js/script.js:734
+msgid "LOOT's content has been copied to the clipboard."
+msgstr "LOOT 的内容已被复制到剪贴板。"
 
-#: gui/main.cpp:1136
+#: resources/report/js/script.js:808
+#, javascript-format
 msgid ""
-"Please submit any alterations made for reasons other than user preference \n"
-"to the BOSS team so that they may include the changes in the masterlist."
-msgstr ""
-"请提交修改的原因而不是个人配置信息给BOSS团队，这样他们才可以在masterlist中修"
-"改。"
+"You have not yet applied or cancelled your %s. Are you sure you want to quit?"
+msgstr "你还没用应用或取消你的%s。确定要退出吗？"
 
-#: gui/main.cpp:1181 gui/main.cpp:1226
-msgid "Error: Cannot load \"%1%\" before \"%2%\"."
-msgstr "错误：无法加载\"%1%\"在\"%2%\"前面。"
+#: resources/report/js/script.js:957
+#, javascript-format
+msgid "The metadata for \"%s\" has been copied to the clipboard."
+msgstr "\"%s\"的元数据已被复制到剪贴板。"
 
-#: gui/settings.cpp:40
-msgid "None"
-msgstr "无"
-
-#: gui/settings.cpp:41
-msgid "Low"
-msgstr "低"
-
-#: gui/settings.cpp:42
-msgid "Medium"
-msgstr "中"
-
-#: gui/settings.cpp:43
-msgid "High"
-msgstr "高"
-
-#: gui/settings.cpp:47
-msgid "Autodetect"
-msgstr "自动检测"
-
-#: gui/settings.cpp:59
-msgid "Add Game"
-msgstr "添加游戏"
-
-#: gui/settings.cpp:60
-msgid "Edit Game"
-msgstr "编辑游戏"
-
-#: gui/settings.cpp:61
-msgid "Remove Game"
-msgstr "移除游戏"
-
-#: gui/settings.cpp:63
-msgid "Update masterlist before sorting."
-msgstr "排序之前更新masterlist。"
-
-#: gui/settings.cpp:64
-msgid "View reports externally in default browser."
-msgstr "在外部浏览器查看报告"
-
-#: gui/settings.cpp:65
-msgid "Generate and display plugin graph images."
-msgstr "产生并显示插件图片。"
-
-#: gui/settings.cpp:68
-msgid "Name"
-msgstr "名字"
-
-#: gui/settings.cpp:69
-msgid "Base Game Type"
-msgstr "基础游戏类型"
-
-#: gui/settings.cpp:70
-msgid "BOSS Folder Name"
-msgstr "BOSS路径"
-
-#: gui/settings.cpp:71
-msgid "Master File"
-msgstr "Master文件"
-
-#: gui/settings.cpp:72
-msgid "Online Masterlist URL"
-msgstr "在线 masterlist URL"
-
-#: gui/settings.cpp:73
-msgid "Install Path"
-msgstr "安装路径"
-
-#: gui/settings.cpp:74
-msgid "Install Path Registry Key"
-msgstr "注册表键安装路径键值"
-
-#: gui/settings.cpp:98
-msgid "Default Game:"
-msgstr "默认游戏："
-
-#: gui/settings.cpp:104
-msgid "Debug Verbosity:"
-msgstr "调试输出冗长程度："
-
-#: gui/settings.cpp:126
-msgid "Language and game changes will be applied after BOSS is restarted."
-msgstr "界面语言与游戏的修改必须重启才能生效。"
-
-#: gui/settings.cpp:139
-msgid "The output is logged to the BOSSDebugLog.txt file."
-msgstr "调试报告输出到BOSSDebugLog.txt中。"
-
-#: gui/settings.cpp:279
-msgid "BOSS: Add Game"
-msgstr "BOSS：添加游戏"
-
-#: gui/settings.cpp:286 gui/settings.cpp:365
-msgid "Error: A path and/or registry key is required. Row will not be added."
-msgstr "错误：需要路径或者键值，列不会被添加。"
-
-#: gui/settings.cpp:298
-msgid "Error: A game with this name is already defined. Row will not be added."
-msgstr "错误：已存在此名字的游戏，列不会被添加。"
-
-#: gui/settings.cpp:306
+#: resources/report/js/script.js:961
+#, javascript-format
 msgid ""
-"Error: A game with this folder name is already defined. Row will not be "
-"added."
-msgstr "错误：已定义此路径的游戏，列不会被添加。"
-
-#: gui/settings.cpp:328
-msgid "BOSS: Edit Game"
-msgstr "BOSS：编辑游戏"
-
-#: gui/settings.cpp:349
-msgid "Error: Name is required. Row will not be added."
-msgstr "错误：名字是必需的，列不会被添加。"
-
-#: gui/settings.cpp:357
-msgid "Error: Folder is required. Row will not be added."
-msgstr "错误：路径是必须的，列不会被添加。"
-
-#: gui/settings.cpp:428
-msgid "BOSS Folder Name (required):"
-msgstr "BOSS路径（必需）："
-
-#: gui/settings.cpp:431
-msgid "Master File:"
-msgstr "master 文件："
-
-#: gui/settings.cpp:434
-msgid "Masterlist URL:"
-msgstr "masterlist URL："
-
-#: gui/settings.cpp:437
-msgid "Install Path:"
-msgstr "安装路径："
-
-#: gui/settings.cpp:440
-msgid "Install Path Registry Key:"
-msgstr "注册表键安装路径键值："
-
-#: backend/generators.h:80
-msgid "Note:"
-msgstr "注意："
-
-#: backend/generators.h:82
-msgid "Bash Tag Suggestion(s):"
-msgstr "Bash标签建议："
-
-#: backend/generators.h:84
-msgid "Warning:"
-msgstr "警告："
-
-#: backend/generators.h:86
-msgid "Error:"
-msgstr "错误："
-
-#: backend/generators.h:159
-msgid "BOSS Report"
-msgstr "BOSS报告"
-
-#: backend/generators.h:191 backend/generators.h:262
-msgid "Summary"
-msgstr "总结"
-
-#: backend/generators.h:197
-msgid "Details"
-msgstr "详细信息"
-
-#: backend/generators.h:204
-msgid "Graph"
-msgstr "图片"
-
-#: backend/generators.h:211
-msgid "Filters"
-msgstr "过滤配置"
-
-#: backend/generators.h:275
-msgid "BOSS Version"
-msgstr "BOSS 版本 "
-
-#: backend/generators.h:284
-msgid "Masterlist Version"
-msgstr "masterlist 版本"
-
-#: backend/generators.h:293
-msgid "Masterlist Updating"
-msgstr "masterlist 正在更新"
-
-#: backend/generators.h:297
-msgid "Enabled"
-msgstr "启用"
-
-#: backend/generators.h:299
-msgid "Disabled"
-msgstr "禁用"
-
-#: backend/generators.h:306
-msgid "No change in details since last run."
-msgstr "与上一次操作相比，详细信息未发生变化。"
-
-#: backend/generators.h:316
-msgid "General Messages"
-msgstr "全局信息"
-
-#: backend/generators.h:326
-msgid "Total Number of Messages"
-msgstr "总信息数"
-
-#: backend/generators.h:335
-msgid "Number of Warnings"
-msgstr "警告数"
-
-#: backend/generators.h:344
-msgid "Number of Errors"
-msgstr "错误数"
-
-#: backend/generators.h:385
-msgid "Version:"
-msgstr "版本："
-
-#: backend/generators.h:405
-msgid "Add:"
-msgstr "添加："
-
-#: backend/generators.h:411
-msgid "Remove:"
-msgstr "移除："
-
-#: backend/generators.h:419
-msgid ""
-"Contains %1% ITM records, %2% UDR records and %3% deleted navmeshes. Clean "
-"with %4%."
-msgstr ""
-"包含 %1% 个ITM记录，%2% 个UDR记录和 %3% 个被删除navmesh。使用 %4% 清理。"
-
-#: backend/generators.h:421
-msgid "Clean with %1%."
-msgstr "使用 %1% 清理。"
-
-#: backend/generators.h:425
-msgid "Contains %1% UDR records and %2% deleted navmeshes. Clean with %3%."
-msgstr "包含 %1% 个ITM记录和 %2% 个被删除navmesh。使用 %3% 清理。"
-
-#: backend/generators.h:427
-msgid "Contains %1% deleted navmeshes. Clean with %2%."
-msgstr "包含 %1% 个被删除navmesh。使用 %2% 清理。"
-
-#: backend/generators.h:429
-msgid "Contains %1% UDR records. Clean with %2%."
-msgstr "包含 %1% 个UDR记录。使用 %2% 清理。"
-
-#: backend/generators.h:432
-msgid "Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%."
-msgstr "包含 %1% 个ITM记录和 %2% 个UDR记录。使用 %3% 清理。"
-
-#: backend/generators.h:434
-msgid "Contains %1% ITM records. Clean with %2%."
-msgstr "包含 %1% 个ITM记录。使用 %2% 清理。"
-
-#: backend/generators.h:437
-msgid "Contains %1% ITM records and %2% UDR records. Clean with %3%."
-msgstr "包含 %1% 个ITM记录和 %2% 个UDR记录。使用 %3% 清理。"
-
-#: backend/generators.h:474
-msgid "The BOSS Report requires Javascript to be enabled in order to function."
-msgstr "BOSS日志需要开启Javascript才能运行函数。"
-
-#: backend/generators.h:521
-msgid "Hide Version Numbers"
-msgstr "隐藏版本信息"
-
-#: backend/generators.h:530
-msgid "Hide CRCs"
-msgstr "隐藏CRC"
-
-#: backend/generators.h:539
-msgid "Hide Bash Tag Suggestions"
-msgstr "隐藏Bash标签建议"
-
-#: backend/generators.h:547
-msgid "Hide Notes"
-msgstr "隐藏注意事项"
-
-#: backend/generators.h:555
-msgid "Hide 'Do Not Clean' Messages"
-msgstr "隐藏 'Do Not Clean'(不要清理)信息"
-
-#: backend/generators.h:563
-msgid "Hide All Plugin Messages"
-msgstr "隐藏所有插件信息"
-
-#: backend/generators.h:571
-msgid "Hide Messageless Plugins"
-msgstr "隐藏无信息的插件"
-
-#: backend/generators.h:581
-msgid "%1% of %2% plugins hidden."
-msgstr "%1%/%2%可识别插件已隐藏。"
-
-#: backend/generators.h:589
-msgid "%1% of %2% messages hidden."
-msgstr "%1%/%2%信息已隐藏。"
-
-#: backend/generators.h:631
-msgid "Could not write BOSS report."
-msgstr "无法写入BOSS报告。"
-
-#: backend/parsers.h:466 backend/parsers.h:549
-msgid "Invalid file path:"
-msgstr "无效文件路径："
-
-#: backend/parsers.h:514
-msgid "Invalid folder path:"
-msgstr "无效路径："
-
-#: backend/parsers.h:531
-msgid "Invalid regex string:"
-msgstr "无效表达式："
-
-#: backend/parsers.h:626
-msgid "Expected \"%1%\" at \"%2%\"."
-msgstr "预期 \"%1%\" 在 \"%2%\"。"
-
-#~ msgid "Masterlist Parsing Error: Expected a %1% at:"
-#~ msgstr "解析Masterlist出错: 预计%1%于:"
-
-#~ msgid "Ini Parsing Error: Expected a %1% at:"
-#~ msgstr "解析Ini出错: 预计%1%于:"
-
-#~ msgid "Userlist Parsing Error: Expected a %1% at:"
-#~ msgstr "解析Userlist出错: 预计%1%于:"
-
-#~ msgid "Userlist Syntax Error: The rule beginning \"%1%: %2%\" %3%"
-#~ msgstr "Userlist语法出错: 规则起始于\"%1%: %2%\" %3%"
-
-#~ msgid "Masterlist parsing aborted. Utility will end now."
-#~ msgstr "Masterlist解析已终止。程序即将关闭。"
-
-#~ msgid ""
-#~ "Ini parsing aborted. Some or all of the options may not have been set "
-#~ "correctly."
-#~ msgstr "Ini解析已终止。多个或者全部选项可能没有设置正确。"
-
-#~ msgid "Userlist parsing aborted. No rules will be applied."
-#~ msgstr "Userlist解析已终止。未应用任何规则。"
-
-#~ msgid "includes a sort line in a rule with a FOR rule keyword."
-#~ msgstr "含一条带For规则关键词的排序行。"
-
-#~ msgid "tries to add a group."
-#~ msgstr "试图添加群组。"
-
-#~ msgid "tries to sort the group \"ESMs\"."
-#~ msgstr "试图排序群组\"ESMs\"。"
-
-#~ msgid "tries to sort the master .ESM file."
-#~ msgstr "试图排序.ESM文件。"
-
-#~ msgid "references a mod and a group."
-#~ msgstr "引用mod和群组。"
-
-#~ msgid "tries to sort a group before the group \"ESMs\"."
-#~ msgstr "试图将一个群组排到群组\"ESMs\"前面。"
-
-#~ msgid "tries to sort a mod before the master .ESM file."
-#~ msgstr "试图将一个mod排到.ESM文件前面。"
-
-#~ msgid ""
-#~ "tries to insert a mod into the top of the group \"ESMs\", before the "
-#~ "master .ESM file."
-#~ msgstr "试图将一个mod插入群组\"ESMs\"顶部，位于.ESM文件前面。"
-
-#~ msgid "tries to insert a group or insert something into a mod."
-#~ msgstr "试图插入群组或者其他到mod内。"
-
-#~ msgid "tries to attach a message to a group."
-#~ msgstr "试图给群组添加信息。"
-
-#~ msgid "has more than one sort line."
-#~ msgstr "含不止一个排序行。"
-
-#~ msgid "has more than one REPLACE-using message line."
-#~ msgstr "含不止一个REPLACE消息行。"
-
-#~ msgid "has a REPLACE-using message line that is not the first message line."
-#~ msgstr "含一个非首个信息行的REPLACE信息行。"
-
-#~ msgid "has a sort line that is not the second line of the rule."
-#~ msgstr "含一个非规则第二行的排序行。"
-
-#~ msgid "tries to sort a mod or group relative to itself."
-#~ msgstr "视图修改mod或者群组到本来的位置。"
-
-#~ msgid "tries to attach an malformatted message."
-#~ msgstr "视图添加非法格式的信息。"
-
-#~ msgid "tries to sort a plugin before a master file."
-#~ msgstr "试图将.ESP排在.ESM文件前面。"
-
-#~ msgid "tries to sort a master file before a plugin."
-#~ msgstr "试图将.ESM排在.ESP文件前面。"
-
-#~ msgid "No error."
-#~ msgstr "未出现错误。"
-
-#~ msgid "No game master .esm file found!"
-#~ msgstr "找不到游戏.ESM文件！"
-
-#~ msgid "\"%1%\" cannot be read!"
-#~ msgstr "\"%1%\" 无法读取！"
-
-#~ msgid "\"%1%\" cannot be written to!"
-#~ msgstr "\"%1%\" 无法写入！"
-
-#~ msgid "\"%1%\" is not encoded in valid UTF-8!"
-#~ msgstr "\"%1%\" 未以UTF-8编码！"
-
-#~ msgid "\"%1%\" cannot be found!"
-#~ msgstr "\"%1%\" 无法找到！"
-
-#~ msgid "Evaluation of conditional \"%1%\" for item \"%2%\" failed!"
-#~ msgstr "对象\"%2%\"的条件\"%1%\"评估出错！"
-
-#~ msgid "\"%1%\" is not a valid regular expression. Item skipped."
-#~ msgstr "\"%1%\" 不是有效的正则表达式。已跳过。"
-
-#~ msgid "No game detected!"
-#~ msgstr "未检测游戏！"
-
-#~ msgid "\"%1%\" cannot be converted from UTF-8 to \"%2%\"."
-#~ msgstr "无法将\"%1%\"由UTF-8转换为\"%2%\"。"
-
-#~ msgid "Master file \"%1%\" loading after non-master plugins!"
-#~ msgstr "master文件\"%1%\"排在一个非Mater文件后面！"
-
-#~ msgid "Cannot find online masterlist revision number!"
-#~ msgstr "找不到在线masterlist修订编号！"
-
-#~ msgid "Cannot find online masterlist revision date!"
-#~ msgstr "找不到在线masterlist修订日期！"
-
-#~ msgid "Cannot read list of files to be updated!"
-#~ msgstr "无法读取需要更新的文件列表！"
-
-#~ msgid "Downloaded file \"%1%\" failed verification test!"
-#~ msgstr "已下载的文件\"%1%\"验证失败！"
-
-#~ msgid ""
-#~ "The modification date of \"%1%\" cannot be read! Filesystem response: "
-#~ "\"%2%\"."
-#~ msgstr "无法获取文件\"%1%\"的修改时间！系统错误提示：\"%2%\"。"
-
-#~ msgid "\"%1%\" cannot be renamed! Filesystem response: \"%2%\"."
-#~ msgstr "无法重命名文件\"%1%\"！系统错误提示：\"%2%\"。"
-
-#~ msgid "\"%1%\" cannot be deleted! Filesystem response: \"%2%\"."
-#~ msgstr "无法删除文件\"%1%\"！系统错误提示：\"%2%\"。"
-
-#~ msgid "\"%1%\" cannot be created! Filesystem response: \"%2%\"."
-#~ msgstr "无法创建目录\"%1%\"！系统错误提示：\"%2%\"。"
-
-#~ msgid "\"%1%\" cannot be scanned! Filesystem response: \"%2%\"."
-#~ msgstr "无法扫描目录\"%1%\"！系统错误提示：\"%2%\"。"
-
-#~ msgid "cURL cannot be initialised!"
-#~ msgstr "cURL无法初始化！"
-
-#~ msgid "cURL's error buffer could not be set! cURL response: \"%1%\"."
-#~ msgstr "cURL错误缓冲器无法设置！cURL错误提示：\"%1%\"。"
-
-#~ msgid "A cURL option could not be set! cURL response: \"%1%\"."
-#~ msgstr "一个cURL选项无法设置！cURL错误提示：\"%1%\"。"
-
-#~ msgid "Proxy hostname or port invalid! cURL response: \"%1%\"."
-#~ msgstr "代理服务器或者端口无效！cURL错误提示：\"%1%\"。"
-
-#~ msgid ""
-#~ "Proxy authentication username or password invalid! cURL response: \"%1%\"."
-#~ msgstr "代理用户名或者密码无效！cURL错误提示：\"%1%\"."
-
-#~ msgid "Failed to set proxy authentication type! cURL response: \"%1%\"."
-#~ msgstr "代理验证类型无法设置！cURL错误提示：\"%1%\"。"
-
-#~ msgid "cURL could not perform task! cURL response: \"%1%\"."
-#~ msgstr "cURL无法运行任务！cURL错误提示：\"%1%\"。"
-
-#~ msgid "Cancelled by user."
-#~ msgstr "用户已取消。"
-
-#~ msgid "Parsing of \"%1%\" failed!"
-#~ msgstr "解析\"%1%\"失败！"
-
-#~ msgid ""
-#~ "The modification date of \"%1%\" cannot be written! Filesystem response: "
-#~ "\"%2%\"."
-#~ msgstr "\"%1%\"的修改时间无法写入！系统错误提示：\"%2%\"。"
-
-#~ msgid "The window \"%1%\" failed to initialise. Details: \"%2%\"."
-#~ msgstr "窗口\"%1%\"初始化失败。详细信息：\"%2%\"。"
-
-#~ msgid "Memory allocation failed."
-#~ msgstr "记忆分配出错。"
-
-#~ msgid "No Internet connection detected."
-#~ msgstr "未检测到可用网络。"
-
-#~ msgid "No tag map has yet been initialised."
-#~ msgstr "标签映射未初始化。"
-
-#~ msgid ""
-#~ "The requested change to the active plugins list would result in over 255 "
-#~ "plugins being active."
-#~ msgstr "对已激活插件列表的修改将导致超过255个插件被激活。"
-
-#~ msgid "Rule is disabled."
-#~ msgstr "规则已禁止。"
-
-#~ msgid " is not installed or in the masterlist."
-#~ msgstr "未安装或者已存在于masterlist中。"
-
-#~ msgid " is already in the masterlist."
-#~ msgstr "已存在于masterlist中。"
-
-#~ msgid " is not in the masterlist, cannot override."
-#~ msgstr "不存在于masterlist中，不能覆盖。"
-
-#~ msgid " is not installed, and is not in the masterlist."
-#~ msgstr "未安装，并且不存在于masterlist中。"
-
-#~ msgid " is not in the masterlist and has not been sorted by a rule."
-#~ msgstr "不存在于masterlist中并且未定义排序规则。"
-
-#~ msgid "The group "
-#~ msgstr "群组"
-
-#~ msgid " is not in the masterlist or is malformatted."
-#~ msgstr "不存在于masterlist中或者格式错误。"
-
-#~ msgid "Checksum: "
-#~ msgstr "CRC："
-
-#~ msgid ""
-#~ "The order of plugins set by BOSS differs from their order in its "
-#~ "masterlist, as one or more of the installed plugins is false-flagged. For "
-#~ "more information, see \"file:../Docs/BOSS%20Readme.html#appendix-c False-"
-#~ "Flagged Plugins\"."
-#~ msgstr ""
-#~ "由BOSS调整的排序与masterlist中的排序不一致，因为一个或者多个插件标记错"
-#~ "误。\n"
-#~ "详细信息可以查看\"http://www.tesfans.org/esp-esm-master/#i\"。"
-
-#~ msgid "Could not enforce load order master/plugin partition. Details: "
-#~ msgstr "无法运行.ESM、.ESP排序比较。详细信息："
-
-#~ msgid "Active"
-#~ msgstr "已激活"
-
-#~ msgid "Critical Error: "
-#~ msgstr "严重错误："
-
-#~ msgid ""
-#~ "Check the Troubleshooting section of the ReadMe for more information and "
-#~ "possible solutions."
-#~ msgstr ""
-#~ "请检查说明文档中问题解决部分的介绍，获取更多相关信息以及可能的解决办法。"
-
-#~ msgid "Utility will end now."
-#~ msgstr "程序即将关闭。"
-
-#~ msgid "Incompatible with"
-#~ msgstr "冲突"
-
-#~ msgid "Contains dirty edits"
-#~ msgstr "含dirty edits"
-
-#~ msgid "Sort %1% after %2%"
-#~ msgstr "将%1%排在%2%后面"
-
-#~ msgid "Insert %1% at the top of %2%"
-#~ msgstr "将%1%插到%2%顶部"
-
-#~ msgid "Insert %1% at the bottom of %2%"
-#~ msgstr "将%1%插到%2%底部"
-
-#~ msgid "Add the following messages to %1%:"
-#~ msgstr "添加以下信息到%1%："
-
-#~ msgid "Add the following messages:"
-#~ msgstr "添加以下信息："
-
-#~ msgid "Replace the messages attached to %1% with:"
-#~ msgstr "替换%1%的信息为："
-
-#~ msgid "Replace the attached messages with:"
-#~ msgstr "替换信息为："
-
-#~ msgid "\tVersion "
-#~ msgstr ""
-#~ "由<a href=\"http://www.tesfans.org/boss-chinese-translator/\" target="
-#~ "\"_blank\">icedream</a>汉化<br />\t版本 "
-
-#~ msgid "Log Feature Support"
-#~ msgstr "日志功能支持"
-
-#~ msgid "Colours must be specified using lowercase hex codes."
-#~ msgstr "颜色代码必须使用小写十六进制数。"
-
-#~ msgid ""
-#~ "The BOSS Log can be displayed using an alternative colour scheme, which "
-#~ "can be enabled and customised using the options below. Colours must be "
-#~ "specified using their lowercase hex codes. The default value for each "
-#~ "element is displayed as the placeholder for its text box, and this value "
-#~ "is used if the text box is left empty."
-#~ msgstr ""
-#~ "您可以在下面开启并且自定义BOSS日志主题颜色。<br />颜色代码必须使用小写十六"
-#~ "进制数。每个元素的默认数值已显示在文本框背景中，文本框放空时，该数值将被使"
-#~ "用。<br />"
-
-#~ msgid ""
-#~ " Some examples of colour codes that can be used may be found <a "
-#~ "href='http://en.wikipedia.org/wiki/Web_colors#Color_table'>here</a>."
-#~ msgstr ""
-#~ "常见颜色代码可以在<a href='http://en.wikipedia.org/wiki/"
-#~ "Web_colors#Color_table'>此处</a>查看。"
-
-#~ msgid "Use Alternative Colour Scheme"
-#~ msgstr "使用自定义颜色主题"
-
-#~ msgid "Element"
-#~ msgstr "元素"
-
-#~ msgid "Colour"
-#~ msgstr "颜色"
-
-#~ msgid "General Text"
-#~ msgstr "普通文本"
-
-#~ msgid "Window Backgrounds"
-#~ msgstr "窗口背景"
-
-#~ msgid "Menu Background"
-#~ msgstr "菜单背景"
-
-#~ msgid "Menu Button Hover"
-#~ msgstr "菜单按钮（鼠标经过）"
-
-#~ msgid "Active Menu Button"
-#~ msgstr "菜单按钮（已选择）"
-
-#~ msgid "Links"
-#~ msgstr "超链接"
-
-#~ msgid "Visited Links"
-#~ msgstr "超链接（已浏览）"
-
-#~ msgid "CRC Labels"
-#~ msgstr "文字“CRC”"
-
-#~ msgid "Active Labels"
-#~ msgstr "文字“已激活”"
-
-#~ msgid "Version Labels"
-#~ msgstr "文字“版本”"
-
-#~ msgid "Errors"
-#~ msgstr "错误"
-
-#~ msgid "Bash Tag Suggestion Prefixes"
-#~ msgstr "Bash标签建议"
-
-#~ msgid "CSS Settings Panel File Drag Highlight"
-#~ msgstr "CSS设置菜单面板文件拖拽高亮"
-
-#~ msgid "Filters Background"
-#~ msgstr "过滤工具背景"
-
-#~ msgid "Quoted Userlist Messages"
-#~ msgstr "Userlist调用信息"
-
-#~ msgid "Summary Messages Default Background"
-#~ msgstr "总结信息默认背景"
-
-#~ msgid ""
-#~ "You can <span class='button' id='cssButtonBackup'>back up</span> your "
-#~ "display settings to avoid losing them when you <span "
-#~ "id='loseSettingsClose'>close the BOSS Log</span><span "
-#~ "id='loseSettingsCacheClear'>clear your browser's cache</span>."
-#~ msgstr ""
-#~ "您可以<span class='button' id='cssButtonBackup'>备份</span>您的显示设置避"
-#~ "免<span id='loseSettingsClose'>关闭BOSS日志</span><span "
-#~ "id='loseSettingsCacheClear'>清理浏览器缓存</span>后丢失设置。<br />"
-
-#~ msgid ""
-#~ "Backup files are given nonsensical names by your browser, but you can "
-#~ "rename them to whatever you want. Drag and drop a backup file into this "
-#~ "panel to restore the settings it contains."
-#~ msgstr ""
-#~ "备份文件的名字由浏览器自动设置，但您可以把他修改成您容易识别的名字。<br />"
-#~ "拖拽文件到菜单面板可以恢复备份文件内保存的设置。"
-
-#~ msgid "Apply"
-#~ msgstr "应用"
-
-#~ msgid ""
-#~ "Support for the BOSS Log's more advanced features varies. Here's what "
-#~ "your browser supports:"
-#~ msgstr ""
-#~ "不同浏览器对BOSS日志高级功能的支持有所不同。以下是您的浏览器支持的功能："
-
-#~ msgid "Functionality"
-#~ msgstr "功能"
-
-#~ msgid "In-Log Plugin Submission"
-#~ msgstr "内置插件提交功能"
-
-#~ msgid ""
-#~ "Allows unrecognised plugins to be anonymously submitted to the BOSS team "
-#~ "directly from the BOSS Log."
-#~ msgstr "允许直接从BOSS日志中匿名提交无法识别的插件给BOSS团队。"
-
-#~ msgid "Backup/Restore of Display Settings"
-#~ msgstr "备份/恢复显示设置"
-
-#~ msgid "Allows the backup and restore of custom display settings."
-#~ msgstr "允许备份与恢复自定义显示设置。"
-
-#~ msgid "Settings Memory"
-#~ msgstr "保存设置"
-
-#~ msgid ""
-#~ "Allows the BOSS Log to automatically restore the display settings and "
-#~ "filter configuration last used, and to hide this panel, whenever the BOSS "
-#~ "Log is opened."
-#~ msgstr ""
-#~ "允许每次打开BOSS日志时，自动应用上一次的显示设置、过滤配置或者隐藏此面板。"
-
-#~ msgid "Appearance"
-#~ msgstr "外观"
-
-#~ msgid "Opacity"
-#~ msgstr "透明度"
-
-#~ msgid "Shadows"
-#~ msgstr "阴影"
-
-#~ msgid "Transforms"
-#~ msgstr "变换"
-
-#~ msgid "Input Placeholders"
-#~ msgstr "输入占位符"
-
-#~ msgid "Form Validation"
-#~ msgstr "格式检查"
-
-#~ msgid ""
-#~ "Do not display this panel again for this browser. If this checkbox is "
-#~ "left unchecked, this panel will be displayed every time you open the BOSS "
-#~ "Log."
-#~ msgstr ""
-#~ "不再在此浏览器显示此面板。如果不勾选此选项，您每次打开BOSS日志都会看到此面"
-#~ "板。"
-
-#~ msgid "Hide 'Active' Label"
-#~ msgstr "隐藏文字“已激活”"
-
-#~ msgid "Hide Checksums"
-#~ msgstr "隐藏CRC数据"
-
-#~ msgid "Hide Inactive Plugins"
-#~ msgstr "隐藏未激活插件"
-
-#~ msgid "Hide Clean Plugins"
-#~ msgstr "隐藏不需清理的插件"
-
-#~ msgid "Plugin"
-#~ msgstr "插件名"
-
-#~ msgid "Download Location"
-#~ msgstr "下载地址"
-
-#~ msgctxt ""
-#~ "Label for text box. Do not use a single quote in translation, use "
-#~ "'&#x27;' instead"
-#~ msgid "A link to the plugin&#x27;s download location."
-#~ msgstr "插件的下载地址。"
-
-#~ msgid "Additional Notes"
-#~ msgstr "补充信息"
-
-#~ msgid ""
-#~ "Any additional information, such as recommended Bash Tags, load order "
-#~ "suggestions, ITM/UDR counts and dirty CRCs, can be supplied here. If no "
-#~ "download link is available, this information is crucial."
-#~ msgstr ""
-#~ "任何补充信息，比如推荐的Bash标签、排序建议、ITM/UDR数量以及需要清理的插件"
-#~ "的CRC数值，你都可以填在这边。如果没有下载地址的话，此数据就十分重要！"
-
-#~ msgid "Submit"
-#~ msgstr "提交"
-
-#~ msgid "Close"
-#~ msgstr "关闭"
-
-#~ msgid "Checking for existing submission..."
-#~ msgstr "正在检查已存在的提案..."
-
-#~ msgid "Error: Existing submission check failed!"
-#~ msgstr "错误：已存在提案检查失败！"
-
-#~ msgid "Previous submission found, updating with supplied details..."
-#~ msgstr "找到旧版的提案，正在更新详细信息..."
-
-#~ msgid "Plugin submission updated!"
-#~ msgstr "插件提案已更新！"
-
-#~ msgid "Error: Plugin submission could not be updated."
-#~ msgstr "错误：插件提案无法更新。"
-
-#~ msgid "No previous submission found, creating new submission..."
-#~ msgstr "未找到旧版的提案数据，正在创建新提案..."
-
-#~ msgid "Plugin submitted!"
-#~ msgstr "插件已提交！"
-
-#~ msgid "Error: Plugin could not be submitted."
-#~ msgstr "错误：插件无法提交。"
-
-#~ msgid ""
-#~ "Web storage quota for this document has been exceeded. Please empty your "
-#~ "browser\\'s cache. Note that this will delete all locally stored data."
-#~ msgstr ""
-#~ "文档网络存储空间不足。请清空您的浏览器缓存。注意此步骤将删除所有本地保存的"
-#~ "数据。"
-
-#~ msgid "Please supply at least a link or some notes."
-#~ msgstr "请至少提供一个链接或者一些补充信息。"
-
-#~ msgid "Exception occurred:"
-#~ msgstr "发生例外："
-
-#~ msgid "User Rules"
-#~ msgstr "用户规则"
-
-#~ msgid "%1% Plugins"
-#~ msgstr "%1%插件"
-
-#~ msgid "Unrecognised Plugins"
-#~ msgstr "无法识别插件"
-
-#~ msgid "Plugin Type"
-#~ msgstr "插件类型"
-
-#~ msgid "Recognised (or sorted by user rules)"
-#~ msgstr "已识别(或者由用户规则排序)"
-
-#~ msgid "Unrecognised"
-#~ msgstr "无法识别"
-
-#~ msgid "Inactive"
-#~ msgstr "未激活"
-
-#~ msgid "All"
-#~ msgstr "全部"
-
-#~ msgid "Plugin Message Type"
-#~ msgstr "信息类型"
-
-#~ msgid "Rule"
-#~ msgstr "规则"
-
-#~ msgid "Applied"
-#~ msgstr "应用情况"
-
-#~ msgid "Details (if applicable)"
-#~ msgstr "详细信息(如果可用)"
-
-#~ msgid "Restored Load Order (Using modlist.txt)"
-#~ msgstr "已恢复排序(使用modlist.txt)"
-
-#~ msgid "Restored Load Order (Using modlist.old)"
-#~ msgstr "已恢复排序(使用modlist.old)"
-
-#~ msgid ""
-#~ "These plugins are recognised by BOSS and have been sorted according to "
-#~ "its masterlist. Please read any attached messages and act on any that "
-#~ "require action."
-#~ msgstr ""
-#~ "以下插件已被BOSS识别并且根据masterlist调整了排序。请阅读提示信息做出相应调"
-#~ "整。"
-
-#~ msgid ""
-#~ "The following plugins were not found in the masterlist, and must be "
-#~ "positioned manually, using your favourite mod manager or by using BOSS's "
-#~ "user rules functionality."
-#~ msgstr ""
-#~ "以下插件masterlist中不存在，所以需要手动排序，您可以使用mod管理工具或者再"
-#~ "使用BOSS用户规则的功能修改这些插件的排序。"
-
-#~ msgid ""
-#~ " You can submit unrecognised plugins for addition to the masterlist "
-#~ "directly from this log by clicking on a plugin and supplying a link and/"
-#~ "or description of its contents in the panel that is displayed."
-#~ msgstr ""
-#~ " 您还可以提交无法识别的插件到masterlist中，只需要点击插件然后在窗口中输入"
-#~ "插件的下载地址或者内容介绍。"
-
-#~ msgid ""
-#~ "Please read any attached messages and act on any that require action."
-#~ msgstr "请阅读相关的信息并且适时做出相应调整。"
-
-#~ msgid "Description:"
-#~ msgstr "介绍："
-
-#~ msgid ""
-#~ "  BOSS is a utility that sorts the mod load order of TESIV: Oblivion, "
-#~ "Nehrim,  Fallout 3, Fallout: New Vegas and TESV: Skyrim according to a "
-#~ "frequently updated  masterlist to minimise incompatibilities between mods."
-#~ msgstr ""
-#~ " BOSS是一个可以帮忙调整 TESIV: Oblivion, Nehrim,  Fallout 3, Fallout: New "
-#~ "Vegas 与 TESV: Skyrim 等游戏插件的排序的工具。主要依靠长期更新的masterlist"
-#~ "以达到mod之间最小的冲突。"
-
-#~ msgid "Examples:"
-#~ msgstr "例："
-
-#~ msgid "    updates the masterlist, sorts your mods, and shows the log"
-#~ msgstr "    更新masterlist，排序，然后显示日志"
-
-#~ msgid "    reverts your load order 1 level and skips showing the log"
-#~ msgstr "    恢复到上一次的排序，然后显示日志"
-
-#~ msgid "    reverts your load order 2 levels and shows the log"
-#~ msgstr "    恢复到上上一次的排序，然后显示日志"
-
-#~ msgid "Downloading: %s; %3.0f%% of %3.0f KB"
-#~ msgstr "正在下载: %s; %3.0f%% 总大小 %3.0f KB"
-
-#~ msgid "produces this help message"
-#~ msgstr "生成此帮助信息"
-
-#~ msgid "prints the version banner"
-#~ msgstr "打印版本标语"
-
-#~ msgid ""
-#~ "automatically update the local copy of the masterlist to the latest "
-#~ "version available on the web before sorting"
-#~ msgstr "排序之前自动更新本地masterlist副本到网络上的最新版本"
-
-#~ msgid "inhibit the automatic masterlist updater"
-#~ msgstr "禁止自动更新masterlist"
-
-#~ msgid ""
-#~ "automatically update the local copy of the masterlist to the latest "
-#~ "version available on the web but don't sort right now"
-#~ msgstr "自动更新本地masterlist副本到网络上的最新版本但不立即更新排序"
-
-#~ msgid "don't launch a browser to show the HTML log at program completion"
-#~ msgstr "完成排序后不在浏览器中显示HTML格式日志。"
-
-#~ msgid ""
-#~ "revert to a previous load order.  this parameter optionally accepts "
-#~ "values of 1 or 2, indicating how many undo steps to apply.  if no option "
-#~ "value is specified, it defaults to 1"
-#~ msgstr ""
-#~ "恢复到旧的版本呢。此参数可设置为1或者2，分别表示恢复的等级。如果未输入数"
-#~ "值，将使用默认值1。"
-
-#~ msgid ""
-#~ "specify verbosity level (0-3) of the debugging output.  0 is the default, "
-#~ "showing only WARN and ERROR messges. 1 (INFO and above) is implied if "
-#~ "this option is specified without an argument.  higher values increase the "
-#~ "verbosity further"
-#~ msgstr ""
-#~ "定义调试输出内容的冗长级别。0为默认值，仅显示警告与错误信息。如果未设置此"
-#~ "项，将使用数值1(显示提示警告、错误、提示信息)。数值越高，输出内容越冗长。"
-
-#~ msgid ""
-#~ "override game autodetection.  valid values are: 'Oblivion', 'Nehrim', "
-#~ "'Fallout3', 'FalloutNV', and 'Skyrim'"
-#~ msgstr ""
-#~ "覆盖游戏检测。有效数值"
-#~ "为：'Oblivion'、'Nehrim'、'Fallout3'、'FalloutNV'和'Skyrim'"
-
-#~ msgid "add source file references to debug statements"
-#~ msgstr "添加源代码信息到调试报告中"
-
-#~ msgid ""
-#~ "show mod file CRCs, so that a file's CRC can be added to the masterlist "
-#~ "in a conditional"
-#~ msgstr "显示插件的CRC，这样文件的CRC将有条件的添加到masterlist中"
-
-#~ msgid "select output format. valid values are: 'html', 'text'"
-#~ msgstr "选择输出格式。有效数值为：'html'或者'text'"
-
-#~ msgid "run BOSS without actually making any changes to load order"
-#~ msgstr "运行BOSS，但不修改排序"
-
-#~ msgid "sets the proxy hostname for the masterlist updater"
-#~ msgstr "设置masterlist更新的代理服务器"
-
-#~ msgid "sets the proxy port number for the masterlist updater"
-#~ msgstr "设置masterlist更新的代理端口"
-
-#~ msgid ""
-#~ "logs the debug output to the BOSSDebugLog.txt file instead of the command "
-#~ "line."
-#~ msgstr "将调试报告输出到BOSSDebugLog.txt，而不是显示在命令栏中。"
-
-#~ msgid "Checking for BOSS updates..."
-#~ msgstr "正在检查BOSS更新..."
-
-#~ msgid "You are already using the latest version of BOSS."
-#~ msgstr "您正在使用的BOSS已是最新版。"
-
-#~ msgid "Update available! New version: %s"
-#~ msgstr "检测到新版本：%s"
-
-#~ msgid ""
-#~ "The update may be downloaded from any of the locations listed in the BOSS "
-#~ "Log."
-#~ msgstr "您可以从BOSS日志中所列举的下载链接中任选一个下载最新版。"
-
-#~ msgid "Release notes:"
-#~ msgstr "发行说明："
-
-#~ msgid "Do you want to download and install the update? (y/n)"
-#~ msgstr "您确定要下载并安装该更新？(是/否)"
-
-#~ msgid "No update has been downloaded or installed."
-#~ msgstr "未下载或者安装任何更新。"
-
-#~ msgid ""
-#~ "BOSS will now launch the downloaded installer and exit. Complete the "
-#~ "installer to complete the update."
-#~ msgstr ""
-#~ "BOSS现在将退出并运行已下载的安装程序。您只要运行完安装程序即可更新BOSS。"
-
-#~ msgid "Update cancelled."
-#~ msgstr "更新已取消。"
-
-#~ msgid "BOSS Update check failed. No Internet connection detected."
-#~ msgstr "BOSS检查更新出错。未检测到可用网络。"
-
-#~ msgid "Please pick which game to run BOSS for:"
-#~ msgstr "请选择您要BOSS管理的游戏："
-
-#~ msgid "Updating to the latest masterlist from the Google Code repository..."
-#~ msgstr "正从Google Code repository下载最新masterlist...."
-
-#~ msgid ""
-#~ "Your masterlist is already at the latest revision (r%1%; %2%). No update "
-#~ "necessary."
-#~ msgstr "您的masterlist已是最新版本(r%1%; %2%)，不需要更新。"
-
-#~ msgid "Your masterlist has been updated to revision %1% (%2%)."
-#~ msgstr "您的masterlist已更新到版本%1% (%2%)。"
-
-#~ msgid ""
-#~ "No internet connection detected. Masterlist auto-updater could not check "
-#~ "for updates."
-#~ msgstr "未检测到可用网络。无法检查masterlist的更新。"
-
-#~ msgid "Downloading: %1%"
-#~ msgstr "正在下载：%1%"
-
-#~ msgid "Are you sure you want to cancel?"
-#~ msgstr "您确定要取消？"
-
-#~ msgid "Error: %1% Details: %2%"
-#~ msgstr "错误：%1% 详细信息：%2%"
-
-#~ msgid " (not detected)"
-#~ msgstr "(未检测到)"
-
-#~ msgid "Plain Text"
-#~ msgstr "纯文本"
-
-#~ msgid "Last Run"
-#~ msgstr "最近一次运行"
-
-#~ msgid "2nd Last Run"
-#~ msgstr "上上一次运行"
-
-#~ msgid "&View BOSS Log"
-#~ msgstr "查看BOSS日志"
-
-#~ msgid "Opens your BOSSlog."
-#~ msgstr "打开BOSS日志。"
-
-#~ msgid "&Run BOSS"
-#~ msgstr "运行BOSS"
-
-#~ msgid "Runs BOSS with the options you have chosen."
-#~ msgstr "按上面的设置运行BOSS。"
-
-#~ msgid "&Quit"
-#~ msgstr "退出"
-
-#~ msgid "Quit BOSS."
-#~ msgstr "退出BOSS。"
-
-#~ msgid "&User Rules..."
-#~ msgstr "用户规则"
-
-#~ msgid "Opens your userlist in your default text editor."
-#~ msgstr "在系统文本编辑器中打开userlist。"
-
-#~ msgid "Opens the Settings window."
-#~ msgstr "打开设置窗口。"
-
-#~ msgid "&Oblivion"
-#~ msgstr "Oblivion"
-
-#~ msgid "Switch to running BOSS for Oblivion."
-#~ msgstr "对Oblivion运行BOSS排序。"
-
-#~ msgid "&Nehrim"
-#~ msgstr "Nehrim"
-
-#~ msgid "Switch to running BOSS for Nehrim."
-#~ msgstr "对Nehrim运行BOSS排序。"
-
-#~ msgid "&Skyrim"
-#~ msgstr "Skyrim"
-
-#~ msgid "Switch to running BOSS for Skyrim."
-#~ msgstr "对Skyrim运行BOSS排序。"
-
-#~ msgid "&Fallout 3"
-#~ msgstr "Fallout 3"
-
-#~ msgid "Switch to running BOSS for Fallout 3."
-#~ msgstr "对Fallout 3运行BOSS排序。"
-
-#~ msgid "&Fallout: New Vegas"
-#~ msgstr "Fallout: New Vegas"
-
-#~ msgid "Switch to running BOSS for Fallout: New Vegas."
-#~ msgstr "对Fallout: New Vegas运行BOSS排序。"
-
-#~ msgid "&Morrowind"
-#~ msgstr "Morrowind"
-
-#~ msgid "Switch to running BOSS for Morrowind."
-#~ msgstr "对Morrowind运行BOSS排序。"
-
-#~ msgid "Open &Main Readme"
-#~ msgstr "查看说明文档"
-
-#~ msgid "Opens the main BOSS readme in your default web browser."
-#~ msgstr "浏览器打开说明文档。"
-
-#~ msgid "Open &Userlist Syntax Doc"
-#~ msgstr "查看Userlist语法规则"
-
-#~ msgid ""
-#~ "Opens the BOSS userlist syntax documentation in your default web browser."
-#~ msgstr "浏览器打开用户规则语法说明。"
-
-#~ msgid "Open &Masterlist Syntax Doc"
-#~ msgstr "查看Masterlist语法规则"
-
-#~ msgid ""
-#~ "Opens the BOSS masterlist syntax documentation in your default web "
-#~ "browser."
-#~ msgstr "浏览器打开masterlist语法说明。"
-
-#~ msgid "&Open API Readme"
-#~ msgstr "查看API说明"
-
-#~ msgid "Opens the BOSS API readme in your default web browser."
-#~ msgstr "浏览器打开API说明。"
-
-#~ msgid "Open &Version History"
-#~ msgstr "查看版本历史"
-
-#~ msgid "Opens the BOSS version history in your default web browser."
-#~ msgstr "浏览器打开BOSS版本历史。"
-
-#~ msgid "View &Copyright Licenses"
-#~ msgstr "查看版权许可"
-
-#~ msgid ""
-#~ "View the GNU General Public License v3.0 and GNU Free Documentation "
-#~ "License v1.3."
-#~ msgstr ""
-#~ "浏览器打开GNU General Public License v3.0和GNU Free Documentation License "
-#~ "v1.3。"
-
-#~ msgid "&Check For Updates..."
-#~ msgstr "检查更新..."
-
-#~ msgid "Checks for updates to BOSS."
-#~ msgstr "检查BOSS的更新。"
-
-#~ msgid "&About BOSS..."
-#~ msgstr "关于..."
-
-#~ msgid "Shows information about BOSS."
-#~ msgstr "显示BOSS相关信息。"
-
-#~ msgid "Output Options"
-#~ msgstr "输出选项"
-
-#~ msgid "Show BOSS Log On Completion"
-#~ msgstr "完成后显示BOSS日志"
-
-#~ msgid "Display File CRCs"
-#~ msgstr "显示文件CRC"
-
-#~ msgid "BOSS Log Format: "
-#~ msgstr "BOSS日志格式："
-
-#~ msgid "Edit User Rules"
-#~ msgstr " 编辑用户规则 "
-
-#~ msgid "Run BOSS"
-#~ msgstr "   运行BOSS   "
-
-#~ msgid "Run Options"
-#~ msgstr "运行选项"
-
-#~ msgid "Update Masterlist"
-#~ msgstr "更新masterlist"
-
-#~ msgid "Perform Trial Run"
-#~ msgstr "试运行"
-
-#~ msgid "Undo Level: "
-#~ msgstr "恢复级别："
-
-#~ msgid ""
-#~ "This decides both the format of BOSSlog generated when you click the "
-#~ "\"Run BOSS\" button and the BOSSlog format opened when you click the "
-#~ "\"View BOSSlog\" button."
-#~ msgstr ""
-#~ "决定单击\"运行BOSS\"按钮后生成的BOSS日志与单击\"查看BOSS日志\"按钮后打开的"
-#~ "BOSS日志的格式。"
-
-#~ msgid ""
-#~ "The format of BOSSlog this opens is decided by the setting of the "
-#~ "\"BOSSlog Format\" Output Option above."
-#~ msgstr "从这边打开的BOSS日志的格式取决于上面\"BOSS日志格式\"的设定。"
-
-#~ msgid ""
-#~ "Runs BOSS, simulating its changes to your load order, but doesn't "
-#~ "actually reorder your mods."
-#~ msgstr "运行BOSS，模拟修改排序，但不改变mod的顺序。"
-
-#~ msgid "Ready"
-#~ msgstr "已就绪"
-
-#~ msgid "Masterlist already up-to-date."
-#~ msgstr "masterlist已是最新版本。"
-
-#~ msgid "Masterlist updated successfully."
-#~ msgstr "masterlist更新成功。"
-
-#~ msgid "BOSS: User Rules Manager"
-#~ msgstr "BOSS：用户规则管理工具"
-
-#~ msgid ""
-#~ "A \"one-click\" program for users that quickly optimises and avoids "
-#~ "detrimental conflicts in their\n"
-#~ "TES IV: Oblivion, Nehrim - At Fate's Edge, TES V: Skyrim, Fallout 3 and "
-#~ "Fallout: New Vegas mod load orders."
-#~ msgstr ""
-#~ "         “一键”调整MOD顺序，帮助用户优化并减少MOD间的冲突，当前支持的游戏"
-#~ "有：         \n"
-#~ "TES IV: Oblivion, Nehrim - At Fate's Edge, TES V: Skyrim, Fallout 3 与 "
-#~ "Fallout: New Vegas。"
-
-#~ msgid ""
-#~ "The automatic updater will download the installer for the new version to "
-#~ "this BOSS folder.\n"
-#~ "\n"
-#~ msgstr ""
-#~ "自动更新工具将下载最新安装程序到此文件夹中。\n"
-#~ "\n"
-
-#~ msgid ""
-#~ "It will then launch the installer before exiting. Complete the installer "
-#~ "to complete the update."
-#~ msgstr "退出之前将运行安装程序。您只要运行完安装程序即可更新BOSS。"
-
-#~ msgid "BOSS: Automatic Updater"
-#~ msgstr "BOSS：自动更新工具"
-
-#~ msgid "Automatic updater cancelled."
-#~ msgstr "自动更新已取消。"
-
-#~ msgid "Initialising download..."
-#~ msgstr "正在初始化下载功能..."
-
-#~ msgid ""
-#~ "New installer successfully downloaded! When you click 'OK', BOSS will "
-#~ "launch the downloaded installer and exit. Complete the installer to "
-#~ "complete the update."
-#~ msgstr ""
-#~ "新安装包已成功下载！单击“确定”，BOSS将运行安装包并退出程序。您只要运行完安"
-#~ "装程序即可更新BOSS。"
-
-#~ msgid ""
-#~ "Update failed. Details: %1%\n"
-#~ "\n"
-#~ "Update cancelled."
-#~ msgstr ""
-#~ "更新失败。详细信息：%1%\n"
-#~ "\n"
-#~ "更新已取消。"
-
-#~ msgid ""
-#~ "Update failed. Details: %1%; %2%\n"
-#~ "\n"
-#~ "Update cancelled."
-#~ msgstr ""
-#~ "更新失败。详细信息：%1%; %2%\n"
-#~ "\n"
-#~ "更新已取消。"
-
-#~ msgid "Update check failed. No Internet connection detected."
-#~ msgstr "BOSS检查更新出错。未检测到可用网络。"
-
-#~ msgid "BOSS: Check For Updates"
-#~ msgstr "BOSS：检查更新"
-
-#~ msgid ""
-#~ "Update available! New version: %1%\n"
-#~ "The update may be downloaded from any of the locations listed in the BOSS "
-#~ "Log."
-#~ msgstr ""
-#~ "有可用更新！新版本：%1%\n"
-#~ "您可以从BOSS日志中所列举的下载链接中任选一个下载最新版。"
-
-#~ msgid ""
-#~ "Update available! New version: %1%\n"
-#~ "Release notes:\n"
-#~ "\n"
-#~ "%2%\n"
-#~ "\n"
-#~ "Do you want to download and install the update?"
-#~ msgstr ""
-#~ "Update available! New version: %1%\n"
-#~ "发行说明:\n"
-#~ "\n"
-#~ "%2%\n"
-#~ "\n"
-#~ "是否下载并安装此更新？"
-
-#~ msgid "Standard (0)"
-#~ msgstr "标准(0)"
-
-#~ msgid "Level 1"
-#~ msgstr "级别 1"
-
-#~ msgid "Level 2"
-#~ msgstr "级别 2"
-
-#~ msgid "Level 3"
-#~ msgstr "级别 3"
-
-#~ msgid "Check for BOSS updates on startup"
-#~ msgstr "启动BOSS时检查更新"
-
-#~ msgid "Use User Rules Manager"
-#~ msgstr "使用用户规则管理工具"
-
-#~ msgid "Close the GUI after running BOSS"
-#~ msgstr "排序完成后关闭GUI"
-
-#~ msgid "Proxy Hostname:"
-#~ msgstr "代理服务器："
-
-#~ msgid "Proxy Port Number:"
-#~ msgstr "代理端口："
-
-#~ msgid "Proxy Username:"
-#~ msgstr "代理用户名："
-
-#~ msgid "Proxy Password:"
-#~ msgstr "代理密码："
-
-#~ msgid "Include Source Code References"
-#~ msgstr "包含源代码信息"
-
-#~ msgid "Log Debug Output"
-#~ msgstr "输出调试日志"
-
-#~ msgid "General"
-#~ msgstr "常规"
-
-#~ msgid "Internet"
-#~ msgstr "网络"
-
-#~ msgid "Debugging"
-#~ msgstr "调试"
-
-#~ msgid "OK"
-#~ msgstr "确定"
-
-#~ msgid "Adds source code references to command line output."
-#~ msgstr "添加源代码信息到命令栏输出。"
-
-#~ msgid ""
-#~ "The higher the verbosity level, the more information is outputted to the "
-#~ "command line."
-#~ msgstr "冗长级别越高，输出到命令栏的内容越多。"
-
-#~ msgid ""
-#~ "The User Rules Manager requires the BOSS masterlist for %1% to have been "
-#~ "downloaded, but it cannot be detected. Do you wish to download the latest "
-#~ "masterlist now?"
-#~ msgstr ""
-#~ "用户规则管理器的运行需要先下载游戏%1%的masterlist才能运行，但当前未检测到"
-#~ "该文件。是否马上下载最新版的masterlist？"
-
-#~ msgid "Initialising User Rules Manager..."
-#~ msgstr "正在初始化用户规则管理工具..."
-
-#~ msgid "before"
-#~ msgstr "早于"
-
-#~ msgid "top"
-#~ msgstr "群组顶部"
-
-#~ msgid "bottom"
-#~ msgstr "群组底部"
-
-#~ msgid "Rule Editor"
-#~ msgstr "规则编辑器"
-
-#~ msgid "For"
-#~ msgstr "对象"
-
-#~ msgid "Sort Item"
-#~ msgstr "排序对象"
-
-#~ msgid "Sort"
-#~ msgstr "排序"
-
-#~ msgid "Insert at the"
-#~ msgstr "插入到"
-
-#~ msgid "of"
-#~ msgstr "群组："
-
-#~ msgid "Replace existing messages"
-#~ msgstr "替换已存在的信息"
-
-#~ msgid "Default Plugin Messages"
-#~ msgstr "插件默认信息"
-
-#~ msgid "Create New Rule"
-#~ msgstr "新建规则"
-
-#~ msgid "Save Edited Rule"
-#~ msgstr "保存修改的规则"
-
-#~ msgid "Delete Rule"
-#~ msgstr "删除规则"
-
-#~ msgid "Move Rule Up"
-#~ msgstr "上移规则"
-
-#~ msgid "Move Rule Down"
-#~ msgstr "下移规则"
-
-#~ msgid "Save and Exit"
-#~ msgstr "保存并退出"
-
-#~ msgid ""
-#~ "Messages must be entered in the correct format. See the User Rules Readme "
-#~ "for more information."
-#~ msgstr "信息必须以正确的格式输入。更多信息查看Userlist Syntax帮助文档。"
-
-#~ msgid "Rule Syntax Error: %1% Please correct the mistake before continuing."
-#~ msgstr "规则语法错误：%1% 请调整错误再继续。"
-
-#~ msgid "Are you sure you want to save your changes to the selected rule?"
-#~ msgstr "您确定要保存对所选规则的修改？"
-
-#~ msgid "Are you sure you want to delete the selected rule?"
-#~ msgstr "您确定要删除所选规则？"
-
-#~ msgid "User Rules Manager"
-#~ msgstr "用户规则管理工具"
-
-#~ msgid "No mod is specified to sort relative to."
-#~ msgstr "没有定义排序参考对象。"
-
-#~ msgid "Cannot sort a plugin relative to a group."
-#~ msgstr "无法定义插件的排序参考对象为群组。"
-
-#~ msgid "No group is specified to insert into."
-#~ msgstr "未定义要插入的群组。"
-
-#~ msgid "Cannot insert into a plugin."
-#~ msgstr "无法插入到插件中。"
-
-#~ msgid "Cannot add messages when none are given."
-#~ msgstr "无法添加空白信息。"
-
-#~ msgid "No group is specified to sort relative to."
-#~ msgstr "没有定义排序参考对象。"
-
-#~ msgid "Cannot sort a group relative to a plugin."
-#~ msgstr "不能设置群组的排序参考对象为插件。"
-
-#~ msgid "Cannot insert groups."
-#~ msgstr "无法插入群组。"
-
-#~ msgid "Cannot add messages to groups."
-#~ msgstr "无法给群组添加信息。"
-
-#~ msgid ""
-#~ "The rule mod is not being sorted nor having its attached messages altered."
-#~ msgstr "规则对象未排序或者没有捆绑信息未修改。"
-
-#~ msgid "Rule Syntax Error: Cannot sort a plugin relative to a group."
-#~ msgstr "规则语法错误：不能设置群组的排序参考对象为插件。"
-
-#~ msgid "Rule Syntax Error: Cannot insert into a plugin."
-#~ msgstr "规则语法错误：无法插入到插件中。"
-
-#~ msgid "Rule Syntax Error: Cannot sort a group relative to a plugin."
-#~ msgstr "规则语法错误：不能设置群组的排序参考对象为插件。"
-
-#~ msgid "Rule Syntax Error: Cannot insert groups."
-#~ msgstr "规则语法错误：无法插入群组。"
-
-#~ msgid ""
-#~ "The rule sorting the unrecognised plugin \"%1%\" has been disabled as the "
-#~ "plugin is now recognised. If you wish to override its position in the "
-#~ "masterlist, re-enable the rule."
-#~ msgstr ""
-#~ "因插件\"%1%\"已经可以识别，现在禁止该插件的排序规则。如果您希望修改该插件"
-#~ "在masterlist的位置，您可以重新开启该规则。"
-
-#~ msgid "BOSS: Rule Disabled"
-#~ msgstr "BOSS：规则已禁止"
+"Are you sure you want to clear all existing user-added metadata from \"%s\"?"
+msgstr "你确定要清除从\"%s\"清除所有用户添加的元数据？"
+
+#: resources/report/js/script.js:986
+#, javascript-format
+msgid "The user-added metadata for \"%s\" has been cleared."
+msgstr "\"%s\"中用户添加的元数据已被清除。"
+
+#: resources/report/js/script.js:1006
+msgid "sorted load order"
+msgstr "已调整的加载顺序"
+
+#: resources/report/js/script.js:1008
+msgid "metadata edits"
+msgstr "元数据编辑"
+
+#: resources/report/js/script.js:1074
+msgid "unknown"
+msgstr "未知"
+
+#: resources/report/js/script.js:1215
+msgid "Refreshing data..."
+msgstr "刷新数据..."
