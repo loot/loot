@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: LOOT v0.7\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-09 10:40-0000\n"
-"PO-Revision-Date: 2015-02-07 13:08+0800\n"
+"PO-Revision-Date: 2015-02-08 01:33+0800\n"
 "Last-Translator: S猫 <silentdark@skycitizen.net>\n"
 "Language-Team: 天际公民 <silentdark@skycitizen.net>\n"
 "MIME-Version: 1.0\n"
@@ -30,49 +30,49 @@ msgstr "无法检测到游戏路径。"
 #: src/backend/game.cpp:489
 msgid ""
 "libloadorder failed to create a game handle. Details could not be fetched."
-msgstr "加载顺序数据库无法创建游戏处理器，详细信息无法获取。"
+msgstr "libloadorder 无法创建游戏处理器，详细信息无法获取。"
 
 #: src/backend/game.cpp:493
 msgid "libloadorder failed to create a game handle. Details:"
-msgstr "加载顺序数据库无法创建游戏处理器，详细信息："
+msgstr "libloadorder 无法创建游戏处理器，详细信息："
 
 #: src/backend/game.cpp:510
 msgid ""
 "libloadorder failed to initialise game master file support. Details could "
 "not be fetched."
-msgstr "加载顺序数据库无法初始化游戏master文件支持，详细信息无法获取。"
+msgstr "libloadorder 无法初始化游戏master文件支持，详细信息无法获取。"
 
 #: src/backend/game.cpp:514
 msgid "libloadorder failed to initialise game master file support. Details:"
-msgstr "加载顺序数据库无法初始化游戏master文件支持，详细信息："
+msgstr "libloadorder 无法初始化游戏master文件支持，详细信息："
 
 #: src/backend/game.cpp:534
 msgid ""
 "libloadorder failed to get the active plugins list. Details could not be "
 "fetched."
-msgstr "加载顺序数据库无法获取活跃插件列表，详细信息无法获取。"
+msgstr "libloadorder 无法获取活跃插件列表，详细信息无法获取。"
 
 #: src/backend/game.cpp:538
 msgid "libloadorder failed to get the active plugins list. Details:"
-msgstr "加载顺序数据库无法获取活跃插件列表，详细信息："
+msgstr "libloadorder 无法获取活跃插件列表，详细信息："
 
 #: src/backend/game.cpp:567
 msgid ""
 "libloadorder failed to get the load order. Details could not be fetched."
-msgstr "加载顺序数据库无法获取加载顺序，详细信息无法获取。"
+msgstr "libloadorder 无法获取加载顺序，详细信息无法获取。"
 
 #: src/backend/game.cpp:571
 msgid "libloadorder failed to get the load order. Details:"
-msgstr "加载顺序数据库无法获取加载顺序，详细信息："
+msgstr "libloadorder 无法获取加载顺序，详细信息："
 
 #: src/backend/game.cpp:593
 msgid ""
 "libloadorder failed to set the load order. Details could not be fetched."
-msgstr "加载顺序数据库无法设置加载顺序，详细信息无法获取。"
+msgstr "libloadorder 无法设置加载顺序，详细信息无法获取。"
 
 #: src/backend/game.cpp:597
 msgid "libloadorder failed to set the load order. Details:"
-msgstr "加载顺序数据库无法设置加载顺序，详细信息："
+msgstr "libloadorder 无法设置加载顺序，详细信息："
 
 #: src/backend/game.cpp:701
 msgid "An exception occurred while loading this plugin. Details: "
@@ -178,7 +178,7 @@ msgstr "返回上一个版本。"
 msgid ""
 "Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: "
 "%3%"
-msgstr "插件\"%1%\"和 \"%2%\"之间产生循环。反循环：%3%"
+msgstr "插件\"%1%\"和 \"%2%\"之间产生循环。回环：%3%"
 
 #: src/backend/helpers.cpp:153
 msgid "Unable to open \"%1%\" for CRC calculation."
@@ -206,7 +206,7 @@ msgstr "这个插件激活\"%1%\"。"
 
 #: src/backend/metadata.cpp:901
 msgid "This plugin is incompatible with \"%1%\", but both are present."
-msgstr "这个插件\"%1%\"与\"%2%\"不兼容，但是两者都存在。"
+msgstr "这个插件与\"%1%\"不兼容，但是两者都存在。"
 
 #: src/backend/metadata.cpp:910
 msgid ""
