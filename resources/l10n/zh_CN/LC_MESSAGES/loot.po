@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: LOOT v0.7\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-09 10:40-0000\n"
-"PO-Revision-Date: 2015-02-07 01:05+0800\n"
+"PO-Revision-Date: 2015-02-07 13:08+0800\n"
 "Last-Translator: S猫 <silentdark@skycitizen.net>\n"
 "Language-Team: 天际公民 <silentdark@skycitizen.net>\n"
 "MIME-Version: 1.0\n"
@@ -310,7 +310,7 @@ msgstr "融合并评估插件元数据..."
 
 #: src/gui/handler.cpp:718
 msgid "Loading general messages..."
-msgstr "载入一般信息..."
+msgstr "载入综合信息..."
 
 #: src/gui/handler.cpp:742 src/gui/handler.cpp:848
 msgid ""
@@ -584,7 +584,7 @@ msgstr "添加行"
 
 #: resources/report/js/l10n.js:222
 msgid "Jump To General Information"
-msgstr "跳转到一般信息"
+msgstr "跳转到综合信息"
 
 #: resources/report/js/l10n.js:223
 msgid "Sort Plugins"
@@ -688,7 +688,7 @@ msgstr "已隐藏信息："
 
 #: resources/report/js/l10n.js:258
 msgid "General Information"
-msgstr "一般信息"
+msgstr "综合信息"
 
 #: resources/report/js/l10n.js:259
 msgid "Masterlist Revision"
@@ -782,25 +782,28 @@ msgstr "首次运行小贴士"
 msgid ""
 "CRCs are only displayed after plugins have been loaded, either by conflict "
 "filtering, or by sorting."
-msgstr ""
+msgstr "CRC只在插件被载入后，通过冲突筛选或者排序来显示。"
 
 #: resources/report/js/l10n.js:307
 msgid ""
 "Double-click a plugin in the sidebar to quickly open its metadata editor. "
 "Multiple metadata editors can be opened at once."
 msgstr ""
+"在侧边栏双击一个插件可以快速打开它的元数据编辑器。可以一次打开多个元数据编辑"
+"器。"
 
 #: resources/report/js/l10n.js:308
 msgid ""
 "Plugins can be drag and dropped from the sidebar into editors' \"load after, "
 "\"requirements\" and \"incompatibility\" tables."
 msgstr ""
+"插件可以从侧边栏拖动进入编辑器的\"加载在……后面，\"需求\"和\"不兼容\"表格。"
 
 #: resources/report/js/l10n.js:309
 msgid ""
 "Some features are disabled while there is an editor open, or while there is "
 "a sorted load order that has not been applied or discarded."
-msgstr ""
+msgstr "有些功能在编辑器打开时，或者排序未应用和取消时会被禁用。"
 
 #: resources/report/js/l10n.js:310
 msgid ""
@@ -808,6 +811,8 @@ msgid ""
 "try hovering your mouse over it to find out. Otherwise, LOOT's documentation "
 "can be accessed through the main menu."
 msgstr ""
+"许多界面元素都有使用提示。如果你不知道某些功能什么，试着将鼠标停在它上。另"
+"外，LOOT的帮助文档可以从主菜单进入。"
 
 #: resources/report/js/l10n.js:312 resources/report/js/script.js:424
 msgid "OK"
