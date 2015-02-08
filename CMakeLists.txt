@@ -281,3 +281,11 @@ FOREACH(cef_resource cef.pak cef_100_percent.pak cef_200_percent.pak devtools_re
             "${CMAKE_SOURCE_DIR}/${CEF_ROOT}/Resources/${cef_resource}"
             $<TARGET_FILE_DIR:LOOT>)
 ENDFOREACH()
+
+# Copy CEF locale resources. This is just to reduce error messages while debugging.
+FOREACH(cef_resource en-US.pak)
+    add_custom_command(TARGET LOOT POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${CMAKE_SOURCE_DIR}/${CEF_ROOT}/Resources/locales/${cef_resource}"
+            $<TARGET_FILE_DIR:LOOT>/resources/l10n)
+ENDFOREACH()

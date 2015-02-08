@@ -54,6 +54,11 @@ CefSettings GetCefSettings(bool debuggingEnabled) {
 
     // Disable pack file loading if debugging is not enabled.
     cef_settings.pack_loading_disabled = !debuggingEnabled;
+
+    // If pack file loading is not disabled, load locale pack files from LOOT's
+    // l10n path.
+    CefString(&cef_settings.locales_dir_path).FromString(g_path_l10n.string());
+
     return cef_settings;
 }
 
@@ -140,7 +145,6 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
         ReleaseMutex(hMutex);
 
     // Delete the folders CEF generates that LOOT doesn't need.
-    boost::filesystem::remove_all(boost::filesystem::current_path() / "locales");
     boost::filesystem::remove_all(boost::filesystem::current_path() / "pdf.dll");
 
     return 0;
