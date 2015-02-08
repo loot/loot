@@ -301,7 +301,7 @@ loot-editor-close
                the tables can be ignored because they're immutable. */
 
             var plugin = {
-                name: this.shadowRoot.getElementsByTagName('h1')[0].textContent,
+                name: this.shadowRoot.querySelector('h1').textContent,
                 userlist: {},
             };
 
@@ -318,7 +318,7 @@ loot-editor-close
 
             plugin.userlist.enabled = this.shadowRoot.getElementById('enableEdits').checked;
 
-            var tables = this.shadowRoot.getElementsByTagName('table');
+            var tables = this.shadowRoot.querySelectorAll('table');
             for (var j = 0; j < tables.length; ++j) {
                 var rowsData = tables[j].getRowsData(true);
                 if (rowsData.length > 0) {
@@ -369,7 +369,7 @@ loot-editor-close
         onHideEditor: function(evt) {
             /* First validate table inputs. */
             var isValid = true;
-            var inputs = evt.target.parentElement.parentElement.parentNode.getElementsByTagName('loot-validated-input');
+            var inputs = evt.target.parentElement.parentElement.parentNode.querySelectorAll('loot-validated-input');
             for (var i = 0; i < inputs.length; ++i) {
                 if (!inputs[i].checkValidity()) {
                     isValid = false;
@@ -419,7 +419,7 @@ loot-editor-close
 
             /* Clear then fill in editor table data. Masterlist-originated
                rows should have their contents made read-only. */
-            var tables = this.shadowRoot.getElementsByTagName('table');
+            var tables = this.shadowRoot.querySelectorAll('table');
             for (var j = 0; j < tables.length; ++j) {
                 tables[j].clear();
                 if (tables[j].parentElement.id == 'loadAfter') {
@@ -550,7 +550,7 @@ loot-editor-close
 
         updatePolymerElements: function() {
             /* Set tooltip positions. */
-            var tooltips = this.shadowRoot.getElementsByTagName('core-tooltip');
+            var tooltips = this.shadowRoot.querySelectorAll('core-tooltip');
             for (var i = 0; i < tooltips.length; ++i) {
                 tooltips[i].setPosition();
             }

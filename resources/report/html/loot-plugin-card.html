@@ -262,7 +262,7 @@ loot-clear-metadata
                 this.classList.toggle('highlight', newValue.isConflictFilterChecked);
 
                 /* Update tooltip positions. */
-                var tooltips = this.shadowRoot.getElementsByTagName('core-tooltip');
+                var tooltips = this.shadowRoot.querySelectorAll('core-tooltip');
                 for (var i = 0; i < tooltips.length; ++i) {
                     tooltips[i].setPosition();
                 }
