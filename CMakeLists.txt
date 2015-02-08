@@ -274,7 +274,7 @@ FOREACH(cef_dll d3dcompiler_47.dll libEGL.dll libGLESv2.dll libcef.dll wow_helpe
             $<TARGET_FILE_DIR:LOOT>)
 ENDFOREACH()
 
-# Copy CEF resources. The .pak files are for debugging only.
+# Copy CEF resources.
 FOREACH(cef_resource cef.pak cef_100_percent.pak cef_200_percent.pak devtools_resources.pak icudtl.dat)
     add_custom_command(TARGET LOOT POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
