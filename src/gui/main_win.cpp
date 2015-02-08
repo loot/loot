@@ -43,7 +43,7 @@ using namespace loot;
 using boost::locale::translate;
 using boost::format;
 
-CefSettings GetCefSettings() {
+CefSettings GetCefSettings(bool debuggingEnabled) {
     CefSettings cef_settings;
 
     //Enable CEF command line args.
@@ -52,6 +52,8 @@ CefSettings GetCefSettings() {
     // Set CEF logging.
     CefString(&cef_settings.log_file).FromString((g_path_local / "CEFDebugLog.txt").string());
 
+    // Disable pack file loading if debugging is not enabled.
+    cef_settings.pack_loading_disabled = !debuggingEnabled;
     return cef_settings;
 }
 
@@ -109,6 +111,9 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
     if (command_line->HasSwitch("game")) {  // Format is: --game=<game>
         gameStr = command_line->GetSwitchValue("game");
     }
+    // The CEF pack files are only used for debugging using the dev tools.
+    // Disable them unless a remote debugging port is set.
+    bool debuggingEnabled = command_line->HasSwitch("remote-debugging-port");
 
     loot::g_app_state.Init(gameStr);
 
@@ -116,7 +121,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
     //------------
 
     // Initialise CEF settings.
-    CefSettings cef_settings = GetCefSettings();
+    CefSettings cef_settings = GetCefSettings(debuggingEnabled);
 
     // Initialize CEF.
     CefInitialize(main_args, cef_settings, app.get(), sandbox_info);
