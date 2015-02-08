@@ -118,6 +118,10 @@ def createAppArchive(archive_path):
     shutil.copy( os.path.join('..', 'build', 'Release', 'libGLESv2.dll'), temp_path )
     shutil.copy( os.path.join('..', 'build', 'Release', 'libcef.dll'), temp_path )
     shutil.copy( os.path.join('..', 'build', 'Release', 'wow_helper.exe'), temp_path )
+    shutil.copy( os.path.join('..', 'build', 'Release', 'cef.pak'), temp_path )
+    shutil.copy( os.path.join('..', 'build', 'Release', 'cef_100_percent.pak'), temp_path )
+    shutil.copy( os.path.join('..', 'build', 'Release', 'cef_200_percent.pak'), temp_path )
+    shutil.copy( os.path.join('..', 'build', 'Release', 'devtools_resources.pak'), temp_path )
     shutil.copy( os.path.join('..', 'build', 'Release', 'icudtl.dat'), temp_path )
 
     # Translation files.
