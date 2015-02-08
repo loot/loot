@@ -329,10 +329,6 @@ FunctionEnd
         File "..\build\Release\libGLESv2.dll"
         File "..\build\Release\libcef.dll"
         File "..\build\Release\wow_helper.exe"
-        File "..\build\Release\cef.pak"
-        File "..\build\Release\cef_100_percent.pak"
-        File "..\build\Release\cef_200_percent.pak"
-        File "..\build\Release\devtools_resources.pak"
         File "..\build\Release\icudtl.dat"
 
         ;Install UI files.
@@ -486,10 +482,6 @@ FunctionEnd
         Delete "$INSTDIR\libGLESv2.dll"
         Delete "$INSTDIR\libcef.dll"
         Delete "$INSTDIR\wow_helper.exe"
-        Delete "$INSTDIR\cef.pak"
-        Delete "$INSTDIR\cef_100_percent.pak"
-        Delete "$INSTDIR\cef_200_percent.pak"
-        Delete "$INSTDIR\devtools_resources.pak"
         Delete "$INSTDIR\icudtl.dat"
 
         ;Remove readme images.
