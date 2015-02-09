@@ -7,10 +7,13 @@
 <polymer-element name="loot-plugin-item" attributes="priorityText data">
     <template>
         <style>
-        :host(:not([data-edits])) #hasUserEdits {
+        :host(:not([data-edits])) #hasUserEdits,
+        :host([data-editor-open]) #hasUserEdits,
+        :host(:not([data-editor-open])) #editorIsOpen {
             display: none;
         }
-        #hasUserEdits > core-icon {
+        #hasUserEdits > core-icon,
+        #editorIsOpen > core-icon {
             display: block;
             margin-right: 0;
         }
@@ -98,6 +101,9 @@
             </div>
             <core-tooltip id="hasUserEdits" label="Has User Metadata" noarrow position="left">
                 <core-icon icon="account-circle"></core-icon>
+            </core-tooltip>
+            <core-tooltip id="editorIsOpen" label="Editor Is Open" noarrow position="left">
+                <core-icon icon="create"></core-icon>
             </core-tooltip>
         </paper-item>
     </template>

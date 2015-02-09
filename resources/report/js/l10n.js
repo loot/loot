@@ -138,6 +138,7 @@
             }
             pluginItem.querySelector('#secondary core-tooltip').setAttribute('label', l10n.translate("Global Priority").fetch());
             pluginItem.getElementById('hasUserEdits').setAttribute('label', l10n.translate("Has User Metadata").fetch());
+            pluginItem.getElementById('editorIsOpen').setAttribute('label', l10n.translate("Editor Is Open").fetch());
 
             /* File row template */
             var fileRow = document.querySelector('link[rel="import"][href$="editable-table.html"]');
