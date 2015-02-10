@@ -7,15 +7,22 @@
 <polymer-element name="loot-plugin-item" attributes="priorityText data">
     <template>
         <style>
-        :host(:not([data-edits])) #hasUserEdits,
-        :host([data-editor-open]) #hasUserEdits,
-        :host(:not([data-editor-open])) #editorIsOpen {
+        :host(:not([data-edits]):not([data-editor-open])) #iconTooltip {
+            pointer-events: none;
+        }
+        :host(:not([data-edits])) #hasUserEditsTooltip,
+        :host([data-editor-open]) #hasUserEditsTooltip,
+        :host(:not([data-editor-open])) #editorIsOpenTooltip {
             display: none;
         }
-        #hasUserEdits > core-icon,
-        #editorIsOpen > core-icon {
+        :host(:not([data-edits])) #hasUserEdits {
+            visibility: hidden;
+        }
+        #hasUserEdits,
+        #editorIsOpen {
             display: block;
             margin-right: 0;
+            backface-visibility: hidden;
         }
         paper-item > core-tooltip {
             margin-left: 16px;
@@ -30,12 +37,11 @@
         :host([data-editor-open]) #flipper {
             transform: rotateY(180deg);
         }
-        #hasUserEdits, #editorIsOpen {
-            backface-visibility: hidden;
-            display: block;
-        }
         #hasUserEdits {
             transform: translateZ(1px);
+            position: absolute;
+            top: 0;
+            left: 0;
         }
         #editorIsOpen {
             transform: rotateY(180deg) translateZ(-1px);
@@ -77,11 +83,6 @@
         :host-context(body[data-editors]) #text {
             line-height: normal;
         }
-        :host-context(body[data-editors]) #primary {
-            /* MD spec says 16sp, but that doesn't fit, so use 14sp. */
-            /*font-size: 1.143rem;*/
-            font-size: 1rem;
-        }
         #secondary {
             /* MD spec says 14sp, but that doesn't fit, so use 12sp. */
             /*font-size: 1rem; */
@@ -93,6 +94,10 @@
         #secondary core-icon {
             margin-right: 0;
             height: 13px;
+        }
+        #hasUserEditsTooltip,
+        #editorIsOpenTooltip {
+            overflow: visible;
         }
 
         /* When not in edit mode, hide secondary text. */
@@ -119,14 +124,14 @@
                     <div id="priority"></div>
                 </div>
             </div>
-            <div id="flipper">
-                <core-tooltip id="hasUserEdits" label="Has User Metadata" noarrow position="left">
-                    <core-icon icon="account-circle"></core-icon>
-                </core-tooltip>
-                <core-tooltip id="editorIsOpen" label="Editor Is Open" noarrow position="left">
-                    <core-icon icon="create"></core-icon>
-                </core-tooltip>
-            </div>
+            <core-tooltip id="iconTooltip" noarrow position="left">
+                <div tip id="hasUserEditsTooltip">Has User Metadata</div>
+                <div tip id="editorIsOpenTooltip">Editor Is Open</div>
+                <div id="flipper">
+                    <core-icon id="hasUserEdits" icon="account-circle"></core-icon>
+                    <core-icon id="editorIsOpen" icon="create"></core-icon>
+                </div>
+            </core-tooltip>
         </paper-item>
     </template>
     <script>
