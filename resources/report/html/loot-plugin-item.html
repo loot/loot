@@ -21,6 +21,26 @@
             margin-left: 16px;
         }
 
+        /* Flip effect for user metadata / editor open icons. */
+        #flipper {
+            transform-style: preserve-3d;
+            transition: 0.6s;
+            overflow: visible;
+        }
+        :host([data-editor-open]) #flipper {
+            transform: rotateY(180deg);
+        }
+        #hasUserEdits, #editorIsOpen {
+            backface-visibility: hidden;
+            display: block;
+        }
+        #hasUserEdits {
+            transform: translateZ(1px);
+        }
+        #editorIsOpen {
+            transform: rotateY(180deg) translateZ(-1px);
+        }
+
         /* paper-item (two-line) */
         paper-item.two-line {
             /* Two-line items should be 72px high according to Material Design.
@@ -99,12 +119,14 @@
                     <div id="priority"></div>
                 </div>
             </div>
-            <core-tooltip id="hasUserEdits" label="Has User Metadata" noarrow position="left">
-                <core-icon icon="account-circle"></core-icon>
-            </core-tooltip>
-            <core-tooltip id="editorIsOpen" label="Editor Is Open" noarrow position="left">
-                <core-icon icon="create"></core-icon>
-            </core-tooltip>
+            <div id="flipper">
+                <core-tooltip id="hasUserEdits" label="Has User Metadata" noarrow position="left">
+                    <core-icon icon="account-circle"></core-icon>
+                </core-tooltip>
+                <core-tooltip id="editorIsOpen" label="Editor Is Open" noarrow position="left">
+                    <core-icon icon="create"></core-icon>
+                </core-tooltip>
+            </div>
         </paper-item>
     </template>
     <script>
