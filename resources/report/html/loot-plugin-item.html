@@ -185,6 +185,7 @@
         onDragStart: function(evt) {
             evt.dataTransfer.effectAllowed = 'copy';
             evt.dataTransfer.setData('text/plain', evt.currentTarget.getName());
+            evt.dataTransfer.setDragImage(evt.currentTarget, 325, 175);
         },
     });
     </script>
