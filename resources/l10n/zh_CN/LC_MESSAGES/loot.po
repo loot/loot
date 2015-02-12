@@ -2,10 +2,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT v0.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-09 10:40-0000\n"
-"PO-Revision-Date: 2015-02-08 01:33+0800\n"
+"POT-Creation-Date: 2015-02-09 21:40-0000\n"
+"PO-Revision-Date: 2015-02-12 21:57+0800\n"
 "Last-Translator: S猫 <silentdark@skycitizen.net>\n"
 "Language-Team: 天际公民 <silentdark@skycitizen.net>\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +15,6 @@ msgstr ""
 "X-Poedit-Basepath: ../../\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"Language: zh_CN\n"
 "X-Poedit-SearchPath-0: src/backend\n"
 "X-Poedit-SearchPath-1: src/gui\n"
 "X-Poedit-SearchPath-2: resources/report/js\n"
@@ -90,11 +90,11 @@ msgstr "无法创建 LOOT 文件夹。详细信息："
 msgid "Building plugin graph..."
 msgstr "构建插件图表..."
 
-#: src/backend/game.cpp:813 src/gui/handler.cpp:968
+#: src/backend/game.cpp:813 src/gui/handler.cpp:963
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
 msgstr "\"%1%\"包含一条无法被解析的条件。详细信息：%2%"
 
-#: src/backend/game.cpp:823
+#: src/backend/game.cpp:822
 msgid "Adding edges to plugin graph and performing topological sort..."
 msgstr "添加插件图表路段并执行拓扑排序..."
 
@@ -119,14 +119,6 @@ msgid "Repository handle not open!"
 msgstr "库处理没有打开！"
 
 #: src/backend/git.cpp:222
-msgid "Unknown: Git repository missing"
-msgstr "未知：Git 库缺失"
-
-#: src/backend/git.cpp:226
-msgid "N/A: No masterlist present"
-msgstr "N/A：没有主列表"
-
-#: src/backend/git.cpp:231
 msgid ""
 "An error occurred while trying to read the local masterlist's version. If "
 "this error happens again, try deleting the \".git\" folder in %1%."
@@ -134,16 +126,24 @@ msgstr ""
 "读取本地主列表版本时发生错误。如果错误再次发生，请尝试删除%1%里的\".git\"文件"
 "夹。"
 
-#: src/backend/git.cpp:264 src/backend/git.cpp:265
+#: src/backend/git.cpp:226
+msgid "Unknown: Git repository missing"
+msgstr "未知：Git 库缺失"
+
+#: src/backend/git.cpp:230
+msgid "N/A: No masterlist present"
+msgstr "N/A：没有主列表"
+
+#: src/backend/git.cpp:265 src/backend/git.cpp:266
 msgid "(edited)"
 msgstr "(已修改)"
 
-#: src/backend/git.cpp:294
+#: src/backend/git.cpp:295
 msgid ""
 "An error occurred while trying to clone the remote masterlist repository."
 msgstr "试图复制远程主列表库时发生错误。"
 
-#: src/backend/git.cpp:350 src/backend/git.cpp:383
+#: src/backend/git.cpp:347 src/backend/git.cpp:380
 msgid ""
 "An error occurred while trying to access the local masterlist repository. If "
 "this error happens again, try deleting the \".git\" folder in %1%."
@@ -151,13 +151,13 @@ msgstr ""
 "存取本地主列表库时发生错误。如果错误再次发生，请尝试删除%1%里的\".git\"文件"
 "夹。"
 
-#: src/backend/git.cpp:374
+#: src/backend/git.cpp:371
 msgid ""
 "An error occurred while trying to update the masterlist. This could be due "
 "to a server-side error. Try again in a few minutes."
 msgstr "更新主列表时发生错误。这可能是由于服务器端故障。过几分钟后再进行尝试。"
 
-#: src/backend/git.cpp:517
+#: src/backend/git.cpp:514
 msgid ""
 "An error occurred while trying to read information on the updated "
 "masterlist. If this error happens again, try deleting the \".git\" folder in "
@@ -166,11 +166,11 @@ msgstr ""
 "更新主列表时读取信息发生错误。如果错误再次发生，请尝试删除%1%里的\".git\"文件"
 "夹。"
 
-#: src/backend/git.cpp:587
+#: src/backend/git.cpp:584
 msgid "Masterlist revision"
 msgstr "主列表版本"
 
-#: src/backend/git.cpp:587
+#: src/backend/git.cpp:584
 msgid "Rolled back to the previous revision."
 msgstr "返回上一个版本。"
 
@@ -196,145 +196,145 @@ msgstr "无法解析条件 \"%1%\"。"
 msgid "Cannot read \"%1%\". Details: %2%"
 msgstr "无法读取\"%1%\"。详细信息：%2%"
 
-#: src/backend/metadata.cpp:882 src/backend/metadata.cpp:893
+#: src/backend/metadata.cpp:883 src/backend/metadata.cpp:894
 msgid "This plugin requires \"%1%\" to be installed, but it is missing."
 msgstr "这个插件需要安装\"%1%\"。"
 
-#: src/backend/metadata.cpp:886
+#: src/backend/metadata.cpp:887
 msgid "This plugin requires \"%1%\" to be active, but it is inactive."
 msgstr "这个插件激活\"%1%\"。"
 
-#: src/backend/metadata.cpp:901
+#: src/backend/metadata.cpp:902
 msgid "This plugin is incompatible with \"%1%\", but both are present."
 msgstr "这个插件与\"%1%\"不兼容，但是两者都存在。"
 
-#: src/backend/metadata.cpp:910
+#: src/backend/metadata.cpp:911
 msgid ""
 "Contains %1% ITM records, %2% deleted references and %3% deleted navmeshes. "
 "Clean with %4%."
 msgstr "包含%1%个ITM记录，%2%个已删除引用和%3%已删除导航。使用%4%清理。"
 
-#: src/backend/metadata.cpp:912
+#: src/backend/metadata.cpp:913
 msgid "Clean with %1%."
 msgstr "使用%1%清理。"
 
-#: src/backend/metadata.cpp:915
+#: src/backend/metadata.cpp:916
 msgid ""
 "Contains %1% deleted references and %2% deleted navmeshes. Clean with %3%."
 msgstr "包含%1%个已删除引用和%2%个已删除导航。使用%3%清理。"
 
-#: src/backend/metadata.cpp:917
+#: src/backend/metadata.cpp:918
 msgid "Contains %1% deleted navmeshes. Clean with %2%."
 msgstr "包含%1%个已删除导航。使用%2%清理。"
 
-#: src/backend/metadata.cpp:919
+#: src/backend/metadata.cpp:920
 msgid "Contains %1% deleted references. Clean with %2%."
 msgstr "包含%1%个已删除引用。使用%2%清理。"
 
-#: src/backend/metadata.cpp:922
+#: src/backend/metadata.cpp:923
 msgid "Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%."
 msgstr "包含%1%个ITM记录和%2%个UDR记录。使用%3%清理。"
 
-#: src/backend/metadata.cpp:924
+#: src/backend/metadata.cpp:925
 msgid "Contains %1% ITM records. Clean with %2%."
 msgstr "包含%1%个ITM记录。使用%2%清理。"
 
-#: src/backend/metadata.cpp:927
+#: src/backend/metadata.cpp:928
 msgid "Contains %1% ITM records and %2% deleted references. Clean with %3%."
 msgstr "包含%1%个ITM记录和%2%个已删除引用。使用%3%清理。"
 
-#: src/gui/app.cpp:174
+#: src/gui/app.cpp:170
 msgid "Error: Could not create LOOT settings file. %1%"
 msgstr "错误：无法创建LOOT配置文件。%1%"
 
-#: src/gui/app.cpp:184
+#: src/gui/app.cpp:180
 msgid "Error: Settings parsing failed. %1%"
 msgstr "错误：设置解析失败。%1%"
 
-#: src/gui/app.cpp:249
+#: src/gui/app.cpp:245
 msgid "Error: Games' settings parsing failed. %1%"
 msgstr "错误：游戏设置解析失败。%1%"
 
-#: src/gui/app.cpp:269
+#: src/gui/app.cpp:265
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr "错误：游戏专属设置无法初始化。%1%"
 
-#: src/gui/app.cpp:410
+#: src/gui/app.cpp:406
 msgid "None of the supported games were detected."
 msgstr "没有支持的游戏被选中。"
 
-#: src/gui/handler.cpp:226 src/gui/handler.cpp:230
+#: src/gui/handler.cpp:216 src/gui/handler.cpp:220
 msgid "Failed to change game. Details: %1%"
 msgstr "无法更换游戏，详细信息：%1%"
 
-#: src/gui/handler.cpp:247 src/gui/handler.cpp:251 src/gui/handler.cpp:328
-#: src/gui/handler.cpp:332
+#: src/gui/handler.cpp:237 src/gui/handler.cpp:241 src/gui/handler.cpp:318
+#: src/gui/handler.cpp:322
 msgid "Failed to copy plugin metadata. Details: %1%"
 msgstr "无法复制插件元数据，详细信息：%1%"
 
-#: src/gui/handler.cpp:347 src/gui/handler.cpp:907
+#: src/gui/handler.cpp:337 src/gui/handler.cpp:902
 msgid "Loading plugin contents..."
 msgstr "加载插件内容..."
 
-#: src/gui/handler.cpp:351
+#: src/gui/handler.cpp:341
 msgid "Checking for conflicting plugins..."
 msgstr "检查插件冲突..."
 
-#: src/gui/handler.cpp:518 src/gui/handler.cpp:526
+#: src/gui/handler.cpp:511 src/gui/handler.cpp:519
 msgid "Shell execute failed."
 msgstr "Shell 执行失败。"
 
-#: src/gui/handler.cpp:584
+#: src/gui/handler.cpp:576
 msgid "Loading plugin headers..."
 msgstr "加载插件信息..."
 
-#: src/gui/handler.cpp:610
+#: src/gui/handler.cpp:602
 msgid "Parsing masterlist..."
 msgstr "解析主列表..."
 
-#: src/gui/handler.cpp:616
+#: src/gui/handler.cpp:608
 msgid "An error occurred while parsing the masterlist: %1%"
 msgstr "解析主列表时出错：%1%"
 
-#: src/gui/handler.cpp:622
+#: src/gui/handler.cpp:614
 msgid "Parsing userlist..."
 msgstr "解析用户列表..."
 
-#: src/gui/handler.cpp:628
+#: src/gui/handler.cpp:620
 msgid "An error occurred while parsing the userlist: %1%"
 msgstr "解析用户列表时出错：%1%"
 
-#: src/gui/handler.cpp:653
+#: src/gui/handler.cpp:645
 msgid "Merging and evaluating plugin metadata..."
 msgstr "融合并评估插件元数据..."
 
-#: src/gui/handler.cpp:718
+#: src/gui/handler.cpp:710
 msgid "Loading general messages..."
 msgstr "载入综合信息..."
 
-#: src/gui/handler.cpp:742 src/gui/handler.cpp:848
+#: src/gui/handler.cpp:734 src/gui/handler.cpp:840
 msgid ""
 "A global message contains a condition that could not be evaluated. Details: "
 "%1%"
 msgstr "一条全局信息包含的条件无法被解析，详细信息：%1%"
 
-#: src/gui/handler.cpp:752 src/gui/handler.cpp:756
+#: src/gui/handler.cpp:744 src/gui/handler.cpp:748
 msgid "Failed to get game data. Details: %1%"
 msgstr "无法获取游戏数据，详细信息：%1%"
 
-#: src/gui/handler.cpp:775
+#: src/gui/handler.cpp:767
 msgid "Updating and parsing masterlist..."
 msgstr "更新并解析主列表..."
 
-#: src/gui/handler.cpp:791
+#: src/gui/handler.cpp:783
 msgid "Regenerating displayed content..."
 msgstr "重建显示内容..."
 
-#: src/gui/handler.cpp:861 src/gui/handler.cpp:865
+#: src/gui/handler.cpp:853 src/gui/handler.cpp:857
 msgid "Failed to update the masterlist. Details: %1%"
 msgstr "无法更新主列表，详细信息：%1%"
 
-#: src/gui/handler.cpp:941
+#: src/gui/handler.cpp:936
 msgid "Failed to sort plugins. Details: %1%"
 msgstr "无法调整排序，详细信息：%1%"
 
@@ -354,24 +354,139 @@ msgstr "无效表达式："
 msgid "Expected \"%1%\" at \"%2%\"."
 msgstr "预期\"%1%\"在\"%2%\"。"
 
+#: resources/report/js/events.js:19
+msgid "Loading game data..."
+msgstr "载入游戏数据..."
+
+#: resources/report/js/events.js:89
+#, javascript-format
+msgid "Masterlist updated to revision %s."
+msgstr "主列表已更新到版本%s。"
+
+#: resources/report/js/events.js:91
+msgid "No masterlist update was necessary."
+msgstr "主列表无需更新。"
+
+#: resources/report/js/events.js:96
+msgid "Updating masterlist..."
+msgstr "更新主列表..."
+
+#: resources/report/js/events.js:111
+msgid "Sorting plugins..."
+msgstr "排序插件..."
+
+#: resources/report/js/events.js:213
+msgid "Redate Plugins?"
+msgstr "修改插件时间？"
+
+#: resources/report/js/events.js:213
+msgid ""
+"This feature is provided so that modders using the Creation Kit may set the "
+"load order it uses. A side-effect is that any subscribed Steam Workshop mods "
+"will be re-downloaded by Steam. Do you wish to continue?"
+msgstr ""
+"此功能方便使用Creation Kit的modder可以设定个人顺序。副作用是所有在Steam "
+"Workshop订阅的mod都会被Steam重新下载，您确定要继续吗？"
+
+#: resources/report/js/events.js:213
+msgid "Redate"
+msgstr "修改时间"
+
+#: resources/report/js/events.js:222
+msgid ""
+"Are you sure you want to clear all existing user-added metadata from all "
+"plugins?"
+msgstr "你确定要清除所有插件里用户添加的元数据？"
+
+#: resources/report/js/events.js:222 resources/report/js/events.js:514
+msgid "Clear"
+msgstr "清除"
+
+#: resources/report/js/events.js:243
+msgid "All user-added metadata has been cleared."
+msgstr "所有用户添加的元数据已被清除。"
+
+#: resources/report/js/events.js:300
+msgid "LOOT's content has been copied to the clipboard."
+msgstr "LOOT 的内容已被复制到剪贴板。"
+
+#: resources/report/js/events.js:510
+#, javascript-format
+msgid "The metadata for \"%s\" has been copied to the clipboard."
+msgstr "\"%s\"的元数据已被复制到剪贴板。"
+
+#: resources/report/js/events.js:514
+#, javascript-format
+msgid ""
+"Are you sure you want to clear all existing user-added metadata from \"%s\"?"
+msgstr "你确定要清除从\"%s\"清除所有用户添加的元数据？"
+
+#: resources/report/js/events.js:539
+#, javascript-format
+msgid "The user-added metadata for \"%s\" has been cleared."
+msgstr "\"%s\"中用户添加的元数据已被清除。"
+
+#: resources/report/js/events.js:559
+msgid "sorted load order"
+msgstr "已调整的加载顺序"
+
+#: resources/report/js/events.js:561
+msgid "metadata edits"
+msgstr "元数据编辑"
+
+#: resources/report/js/events.js:572
+msgid "Refreshing data..."
+msgstr "刷新数据..."
+
 #: resources/report/js/filters.js:121
 msgid "Do not clean"
-msgstr "不要清理"
+msgstr "不干净"
+
+#: resources/report/js/filters.js:160
+msgid "Checking if plugins have been loaded..."
+msgstr "检查插件是否被加载..."
+
+#: resources/report/js/helpers.js:7 resources/report/js/l10n.js:162
+msgid "Error"
+msgstr "错误"
+
+#: resources/report/js/helpers.js:27 resources/report/js/l10n.js:130
+#: resources/report/js/l10n.js:227 resources/report/js/l10n.js:301
+msgid "Cancel"
+msgstr "取消"
+
+#: resources/report/js/helpers.js:33 resources/report/js/l10n.js:313
+msgid "OK"
+msgstr "确定"
+
+#: resources/report/js/helpers.js:54
+#, javascript-format
+msgid ""
+"You have not yet applied or cancelled your %s. Are you sure you want to quit?"
+msgstr "你还没用应用或取消你的%s。确定要退出吗？"
+
+#: resources/report/js/helpers.js:54 resources/report/js/l10n.js:238
+msgid "Quit"
+msgstr "退出"
+
+#: resources/report/js/init.js:38
+msgid "unknown"
+msgstr "未知"
 
 #: resources/report/js/l10n.js:61 resources/report/js/l10n.js:80
 msgid "Active Plugin"
 msgstr "激活插件"
 
-#: resources/report/js/l10n.js:62 resources/report/js/l10n.js:289
+#: resources/report/js/l10n.js:62 resources/report/js/l10n.js:81
+#: resources/report/js/l10n.js:290
 msgid "Master File"
 msgstr "Master文件"
 
-#: resources/report/js/l10n.js:63 resources/report/js/l10n.js:81
+#: resources/report/js/l10n.js:63 resources/report/js/l10n.js:82
 msgid "Empty Plugin"
 msgstr "空插件"
 
-#: resources/report/js/l10n.js:64 resources/report/js/l10n.js:82
-#: resources/report/js/l10n.js:139
+#: resources/report/js/l10n.js:64 resources/report/js/l10n.js:83
 msgid "Loads BSA"
 msgstr "装载BSA"
 
@@ -395,396 +510,387 @@ msgstr "复制元数据"
 msgid "Clear User Metadata"
 msgstr "清除用户元数据"
 
-#: resources/report/js/l10n.js:84
+#: resources/report/js/l10n.js:85
 msgid "Enable Edits"
 msgstr "启用编辑"
 
-#: resources/report/js/l10n.js:85
+#: resources/report/js/l10n.js:86
 msgid ""
 "Global priorities are compared against all other plugins. Normal priorities "
 "are compared against only conflicting plugins."
 msgstr "全局优先级相对于所有其他插件。普通优先级只相对于冲突的插件。"
 
-#: resources/report/js/l10n.js:86 resources/report/js/l10n.js:138
+#: resources/report/js/l10n.js:87 resources/report/js/l10n.js:139
 msgid "Global Priority"
 msgstr "全局优先级"
 
-#: resources/report/js/l10n.js:87
+#: resources/report/js/l10n.js:88
 msgid "Priority Value"
 msgstr "优先值"
 
-#: resources/report/js/l10n.js:89
+#: resources/report/js/l10n.js:90
 msgid "Main"
 msgstr "主要"
 
-#: resources/report/js/l10n.js:90
+#: resources/report/js/l10n.js:91
 msgid "Load After"
 msgstr "加载在……后面"
 
-#: resources/report/js/l10n.js:91
+#: resources/report/js/l10n.js:92
 msgid "Requirements"
 msgstr "需求信息"
 
-#: resources/report/js/l10n.js:92
+#: resources/report/js/l10n.js:93
 msgid "Incompatibilities"
 msgstr "不兼容信息"
 
-#: resources/report/js/l10n.js:93
+#: resources/report/js/l10n.js:94
 msgid "Messages"
 msgstr "信息"
 
-#: resources/report/js/l10n.js:94
+#: resources/report/js/l10n.js:95
 msgid "Bash Tags"
 msgstr "Bash 标签"
 
-#: resources/report/js/l10n.js:95
+#: resources/report/js/l10n.js:96
 msgid "Dirty Info"
 msgstr "Dirty 信息"
 
-#: resources/report/js/l10n.js:96
+#: resources/report/js/l10n.js:97
 msgid "Locations"
 msgstr "地址"
 
-#: resources/report/js/l10n.js:98 resources/report/js/l10n.js:102
-#: resources/report/js/l10n.js:106
+#: resources/report/js/l10n.js:99 resources/report/js/l10n.js:103
+#: resources/report/js/l10n.js:107
 msgid "Filename"
 msgstr "文件"
 
-#: resources/report/js/l10n.js:99 resources/report/js/l10n.js:103
-#: resources/report/js/l10n.js:107
+#: resources/report/js/l10n.js:100 resources/report/js/l10n.js:104
+#: resources/report/js/l10n.js:108
 msgid "Display Name"
 msgstr "显示名字"
 
-#: resources/report/js/l10n.js:100 resources/report/js/l10n.js:104
-#: resources/report/js/l10n.js:108 resources/report/js/l10n.js:112
-#: resources/report/js/l10n.js:117
+#: resources/report/js/l10n.js:101 resources/report/js/l10n.js:105
+#: resources/report/js/l10n.js:109 resources/report/js/l10n.js:113
+#: resources/report/js/l10n.js:118
 msgid "Condition"
 msgstr "条件"
 
-#: resources/report/js/l10n.js:110
+#: resources/report/js/l10n.js:111
 msgid "Type"
 msgstr "类型"
 
-#: resources/report/js/l10n.js:111
+#: resources/report/js/l10n.js:112
 msgid "Content"
 msgstr "内容"
 
-#: resources/report/js/l10n.js:113 resources/report/js/l10n.js:277
+#: resources/report/js/l10n.js:114 resources/report/js/l10n.js:278
 msgid "Language"
 msgstr "界面语言"
 
-#: resources/report/js/l10n.js:115
+#: resources/report/js/l10n.js:116
 msgid "Add/Remove"
 msgstr "添加/移除"
 
-#: resources/report/js/l10n.js:116
+#: resources/report/js/l10n.js:117
 msgid "Bash Tag"
 msgstr "Bash 标签"
 
-#: resources/report/js/l10n.js:119
+#: resources/report/js/l10n.js:120
 msgid "CRC"
 msgstr "CRC"
 
-#: resources/report/js/l10n.js:120
+#: resources/report/js/l10n.js:121
 msgid "ITM Count"
 msgstr "ITM 数量"
 
-#: resources/report/js/l10n.js:121
+#: resources/report/js/l10n.js:122
 msgid "Deleted References"
 msgstr "已删除的引用"
 
-#: resources/report/js/l10n.js:122
+#: resources/report/js/l10n.js:123
 msgid "Deleted Navmeshes"
 msgstr "已删除的导航"
 
-#: resources/report/js/l10n.js:123
+#: resources/report/js/l10n.js:124
 msgid "Cleaning Utility"
 msgstr "清除工具"
 
-#: resources/report/js/l10n.js:125
+#: resources/report/js/l10n.js:126
 msgid "URL"
 msgstr "链接"
 
-#: resources/report/js/l10n.js:126
+#: resources/report/js/l10n.js:127
 msgid "Version"
 msgstr "版本"
 
-#: resources/report/js/l10n.js:128 resources/report/js/l10n.js:225
-#: resources/report/js/l10n.js:299
+#: resources/report/js/l10n.js:129 resources/report/js/l10n.js:226
+#: resources/report/js/l10n.js:300
 msgid "Apply"
 msgstr "应用"
 
-#: resources/report/js/l10n.js:129 resources/report/js/l10n.js:226
-#: resources/report/js/l10n.js:300 resources/report/js/script.js:418
-msgid "Cancel"
-msgstr "取消"
+#: resources/report/js/l10n.js:141
+msgid "Editor Is Open"
+msgstr "编辑器已打开"
 
-#: resources/report/js/l10n.js:149
+#: resources/report/js/l10n.js:150
 msgid "A filename is required."
 msgstr "需要一个文件名。"
 
-#: resources/report/js/l10n.js:150 resources/report/js/l10n.js:163
-#: resources/report/js/l10n.js:175 resources/report/js/l10n.js:189
-#: resources/report/js/l10n.js:199 resources/report/js/l10n.js:210
+#: resources/report/js/l10n.js:151 resources/report/js/l10n.js:164
+#: resources/report/js/l10n.js:176 resources/report/js/l10n.js:190
+#: resources/report/js/l10n.js:200 resources/report/js/l10n.js:211
 msgid "Delete Row"
 msgstr "删除行"
 
-#: resources/report/js/l10n.js:159
+#: resources/report/js/l10n.js:160
 msgid "Note"
 msgstr "注意"
 
-#: resources/report/js/l10n.js:160
+#: resources/report/js/l10n.js:161
 msgid "Warning"
 msgstr "警告"
 
-#: resources/report/js/l10n.js:161 resources/report/js/script.js:346
-msgid "Error"
-msgstr "错误"
-
-#: resources/report/js/l10n.js:162
+#: resources/report/js/l10n.js:163
 msgid "A content string is required."
 msgstr "需要一个有内容的字符串。"
 
-#: resources/report/js/l10n.js:172
+#: resources/report/js/l10n.js:173
 msgid "Add"
 msgstr "添加"
 
-#: resources/report/js/l10n.js:173
+#: resources/report/js/l10n.js:174
 msgid "Remove"
 msgstr "移除"
 
-#: resources/report/js/l10n.js:174 resources/report/js/l10n.js:208
+#: resources/report/js/l10n.js:175 resources/report/js/l10n.js:209
 msgid "A name is required."
 msgstr "需要一个名字。"
 
-#: resources/report/js/l10n.js:184
+#: resources/report/js/l10n.js:185
 msgid "A CRC is required."
 msgstr "需要一个CRC。"
 
-#: resources/report/js/l10n.js:185 resources/report/js/l10n.js:186
-#: resources/report/js/l10n.js:187
+#: resources/report/js/l10n.js:186 resources/report/js/l10n.js:187
+#: resources/report/js/l10n.js:188
 msgid "Values must be integers."
 msgstr "值必须是整数。"
 
-#: resources/report/js/l10n.js:188
+#: resources/report/js/l10n.js:189
 msgid "A utility name is required."
 msgstr "需要一个实用名。"
 
-#: resources/report/js/l10n.js:198
+#: resources/report/js/l10n.js:199
 msgid "A link is required."
 msgstr "需要一个链接。"
 
-#: resources/report/js/l10n.js:209
+#: resources/report/js/l10n.js:210
 msgid "A folder is required."
 msgstr "需要一个文件夹。"
 
-#: resources/report/js/l10n.js:219 resources/report/js/l10n.js:297
+#: resources/report/js/l10n.js:220 resources/report/js/l10n.js:298
 msgid "Add New Row"
 msgstr "添加行"
 
-#: resources/report/js/l10n.js:222
+#: resources/report/js/l10n.js:223
 msgid "Jump To General Information"
 msgstr "跳转到综合信息"
 
-#: resources/report/js/l10n.js:223
+#: resources/report/js/l10n.js:224
 msgid "Sort Plugins"
 msgstr "调整排序"
 
-#: resources/report/js/l10n.js:224
+#: resources/report/js/l10n.js:225
 msgid "Update Masterlist"
 msgstr "更新主列表"
 
-#: resources/report/js/l10n.js:229
+#: resources/report/js/l10n.js:230
 msgid "Redate Plugins"
 msgstr "修改插件时间"
 
-#: resources/report/js/l10n.js:230
+#: resources/report/js/l10n.js:231
 msgid "Open Debug Log Location"
 msgstr "打开本地调试日志"
 
-#: resources/report/js/l10n.js:231
+#: resources/report/js/l10n.js:232
 msgid "Clear All User Metadata"
 msgstr "清除所有用户元数据"
 
-#: resources/report/js/l10n.js:232
+#: resources/report/js/l10n.js:233
 msgid "Copy Content"
 msgstr "复制内容"
 
-#: resources/report/js/l10n.js:233
+#: resources/report/js/l10n.js:234
 msgid "Refresh Content"
 msgstr "刷新内容"
 
-#: resources/report/js/l10n.js:234
+#: resources/report/js/l10n.js:235
 msgid "View Documentation"
 msgstr "查看文档"
 
-#: resources/report/js/l10n.js:235
+#: resources/report/js/l10n.js:236
 msgid "About"
 msgstr "关于"
 
-#: resources/report/js/l10n.js:236 resources/report/js/l10n.js:269
+#: resources/report/js/l10n.js:237 resources/report/js/l10n.js:270
 msgid "Settings"
 msgstr "设置"
 
-#: resources/report/js/l10n.js:237 resources/report/js/script.js:808
-msgid "Quit"
-msgstr "退出"
-
-#: resources/report/js/l10n.js:240
+#: resources/report/js/l10n.js:241
 msgid "Plugins"
 msgstr "插件"
 
-#: resources/report/js/l10n.js:241
+#: resources/report/js/l10n.js:242
 msgid "Filters"
 msgstr "筛选配置"
 
-#: resources/report/js/l10n.js:242
+#: resources/report/js/l10n.js:243
 msgid "Press Enter or click outside the input to set the filter."
 msgstr "按下回车键或点击输入框以外设置筛选。"
 
-#: resources/report/js/l10n.js:243
+#: resources/report/js/l10n.js:244
 msgid "Filter content..."
 msgstr "筛选内容..."
 
-#: resources/report/js/l10n.js:246
+#: resources/report/js/l10n.js:247
 msgid "Hide version numbers"
 msgstr "隐藏版本号"
 
-#: resources/report/js/l10n.js:247
+#: resources/report/js/l10n.js:248
 msgid "Hide CRCs"
 msgstr "隐藏CRC"
 
-#: resources/report/js/l10n.js:248
+#: resources/report/js/l10n.js:249
 msgid "Hide Bash Tags"
 msgstr "隐藏Bash标签"
 
-#: resources/report/js/l10n.js:249
+#: resources/report/js/l10n.js:250
 msgid "Hide notes"
 msgstr "隐藏注释"
 
-#: resources/report/js/l10n.js:250
-msgid "Hide 'Do not clean' messages"
-msgstr "隐藏 '不要清理' 信息"
-
 #: resources/report/js/l10n.js:251
+msgid "Hide 'Do not clean' messages"
+msgstr "隐藏 '不干净' 信息"
+
+#: resources/report/js/l10n.js:252
 msgid "Hide all plugin messages"
 msgstr "隐藏所有插件信息"
 
-#: resources/report/js/l10n.js:252
+#: resources/report/js/l10n.js:253
 msgid "Hide inactive plugins"
 msgstr "隐藏未激活插件"
 
-#: resources/report/js/l10n.js:253
+#: resources/report/js/l10n.js:254
 msgid "Hide messageless plugins"
 msgstr "隐藏无信息的插件"
 
-#: resources/report/js/l10n.js:254
+#: resources/report/js/l10n.js:255
 msgid "Hidden plugins:"
 msgstr "已隐藏插件："
 
-#: resources/report/js/l10n.js:255
+#: resources/report/js/l10n.js:256
 msgid "Hidden messages:"
 msgstr "已隐藏信息："
 
-#: resources/report/js/l10n.js:258
+#: resources/report/js/l10n.js:259
 msgid "General Information"
 msgstr "综合信息"
 
-#: resources/report/js/l10n.js:259
+#: resources/report/js/l10n.js:260
 msgid "Masterlist Revision"
 msgstr "主列表版本"
 
-#: resources/report/js/l10n.js:260
+#: resources/report/js/l10n.js:261
 msgid "Masterlist Date"
 msgstr "主列表日期"
 
-#: resources/report/js/l10n.js:261
+#: resources/report/js/l10n.js:262
 msgid "Warnings"
 msgstr "警告"
 
-#: resources/report/js/l10n.js:262
+#: resources/report/js/l10n.js:263
 msgid "Errors"
 msgstr "错误"
 
-#: resources/report/js/l10n.js:263
+#: resources/report/js/l10n.js:264
 msgid "Total Messages"
 msgstr "信息总计"
 
-#: resources/report/js/l10n.js:264
+#: resources/report/js/l10n.js:265
 msgid "Active Plugins"
 msgstr "激活插件"
 
-#: resources/report/js/l10n.js:265
+#: resources/report/js/l10n.js:266
 msgid "Dirty Plugins"
 msgstr "Dirty 插件"
 
-#: resources/report/js/l10n.js:266
+#: resources/report/js/l10n.js:267
 msgid "Total Plugins"
 msgstr "插件总计"
 
-#: resources/report/js/l10n.js:272
+#: resources/report/js/l10n.js:273
 msgid "Default Game"
 msgstr "默认游戏"
 
-#: resources/report/js/l10n.js:273 resources/report/js/l10n.js:275
+#: resources/report/js/l10n.js:274 resources/report/js/l10n.js:276
 msgid "Autodetect"
 msgstr "自动检测"
 
-#: resources/report/js/l10n.js:278
+#: resources/report/js/l10n.js:279
 msgid "Language changes will be applied after LOOT is restarted."
 msgstr "语言会在 LOOT 重启后应用。"
 
-#: resources/report/js/l10n.js:280
+#: resources/report/js/l10n.js:281
 msgid "Enable debug logging"
 msgstr "启用调试日志"
 
-#: resources/report/js/l10n.js:281
+#: resources/report/js/l10n.js:282
 msgid "The output is logged to the LOOTDebugLog.txt file."
 msgstr "输出被记录在 LOOTDebugLog.txt 文件中。"
 
-#: resources/report/js/l10n.js:283
+#: resources/report/js/l10n.js:284
 msgid "Update masterlist before sorting"
 msgstr "在排序前更新主列表"
 
-#: resources/report/js/l10n.js:286
+#: resources/report/js/l10n.js:287
 msgid "Name"
 msgstr "名字"
 
-#: resources/report/js/l10n.js:287
+#: resources/report/js/l10n.js:288
 msgid "Base Game"
 msgstr "基于游戏"
 
-#: resources/report/js/l10n.js:288
+#: resources/report/js/l10n.js:289
 msgid "LOOT Folder"
 msgstr "LOOT 文件夹"
 
-#: resources/report/js/l10n.js:290
+#: resources/report/js/l10n.js:291
 msgid "Masterlist Repository URL"
 msgstr "主列表库链接"
 
-#: resources/report/js/l10n.js:291
+#: resources/report/js/l10n.js:292
 msgid "Masterlist Repository Branch"
 msgstr "主列表库分支"
 
-#: resources/report/js/l10n.js:292
+#: resources/report/js/l10n.js:293
 msgid "Install Path"
 msgstr "安装路径"
 
-#: resources/report/js/l10n.js:293
+#: resources/report/js/l10n.js:294
 msgid "Install Path Registry Key"
 msgstr "注册表键安装路径键值"
 
-#: resources/report/js/l10n.js:304
+#: resources/report/js/l10n.js:305
 msgid "First-Time Tips"
 msgstr "首次运行小贴士"
 
-#: resources/report/js/l10n.js:306
+#: resources/report/js/l10n.js:307
 msgid ""
 "CRCs are only displayed after plugins have been loaded, either by conflict "
 "filtering, or by sorting."
 msgstr "CRC只在插件被载入后，通过冲突筛选或者排序来显示。"
 
-#: resources/report/js/l10n.js:307
+#: resources/report/js/l10n.js:308
 msgid ""
 "Double-click a plugin in the sidebar to quickly open its metadata editor. "
 "Multiple metadata editors can be opened at once."
@@ -792,20 +898,20 @@ msgstr ""
 "在侧边栏双击一个插件可以快速打开它的元数据编辑器。可以一次打开多个元数据编辑"
 "器。"
 
-#: resources/report/js/l10n.js:308
+#: resources/report/js/l10n.js:309
 msgid ""
 "Plugins can be drag and dropped from the sidebar into editors' \"load after, "
 "\"requirements\" and \"incompatibility\" tables."
 msgstr ""
 "插件可以从侧边栏拖动进入编辑器的\"加载在……后面，\"需求\"和\"不兼容\"表格。"
 
-#: resources/report/js/l10n.js:309
+#: resources/report/js/l10n.js:310
 msgid ""
 "Some features are disabled while there is an editor open, or while there is "
 "a sorted load order that has not been applied or discarded."
 msgstr "有些功能在编辑器打开时，或者排序未应用和取消时会被禁用。"
 
-#: resources/report/js/l10n.js:310
+#: resources/report/js/l10n.js:311
 msgid ""
 "Many interface elements have tooltips. If you don't know what something is, "
 "try hovering your mouse over it to find out. Otherwise, LOOT's documentation "
@@ -814,108 +920,6 @@ msgstr ""
 "许多界面元素都有使用提示。如果你不知道某些功能什么，试着将鼠标停在它上。另"
 "外，LOOT的帮助文档可以从主菜单进入。"
 
-#: resources/report/js/l10n.js:312 resources/report/js/script.js:424
-msgid "OK"
-msgstr "确定"
-
-#: resources/report/js/script.js:209 resources/report/js/script.js:214
+#: resources/report/js/loot.js:183 resources/report/js/loot.js:188
 msgid "N/A"
 msgstr "N/A"
-
-#: resources/report/js/script.js:383
-msgid "Checking if plugins have been loaded..."
-msgstr "检查插件是否被加载..."
-
-#: resources/report/js/script.js:438
-msgid "Loading game data..."
-msgstr "载入游戏数据..."
-
-#: resources/report/js/script.js:508
-#, javascript-format
-msgid "Masterlist updated to revision %s."
-msgstr "主列表已更新到版本%s。"
-
-#: resources/report/js/script.js:510
-msgid "No masterlist update was necessary."
-msgstr "主列表无需更新。"
-
-#: resources/report/js/script.js:515
-msgid "Updating masterlist..."
-msgstr "更新主列表..."
-
-#: resources/report/js/script.js:545
-msgid "Sorting plugins..."
-msgstr "排序插件..."
-
-#: resources/report/js/script.js:647
-msgid "Redate Plugins?"
-msgstr "修改插件时间？"
-
-#: resources/report/js/script.js:647
-msgid ""
-"This feature is provided so that modders using the Creation Kit may set the "
-"load order it uses. A side-effect is that any subscribed Steam Workshop mods "
-"will be re-downloaded by Steam. Do you wish to continue?"
-msgstr ""
-"此功能方便使用Creation Kit的modder可以设定个人顺序。副作用是所有在Steam "
-"Workshop订阅的mod都会被Steam重新下载，您确定要继续吗？"
-
-#: resources/report/js/script.js:647
-msgid "Redate"
-msgstr "修改时间"
-
-#: resources/report/js/script.js:656
-msgid ""
-"Are you sure you want to clear all existing user-added metadata from all "
-"plugins?"
-msgstr "你确定要清除所有插件里用户添加的元数据？"
-
-#: resources/report/js/script.js:656 resources/report/js/script.js:961
-msgid "Clear"
-msgstr "清除"
-
-#: resources/report/js/script.js:677
-msgid "All user-added metadata has been cleared."
-msgstr "所有用户添加的元数据已被清除。"
-
-#: resources/report/js/script.js:734
-msgid "LOOT's content has been copied to the clipboard."
-msgstr "LOOT 的内容已被复制到剪贴板。"
-
-#: resources/report/js/script.js:808
-#, javascript-format
-msgid ""
-"You have not yet applied or cancelled your %s. Are you sure you want to quit?"
-msgstr "你还没用应用或取消你的%s。确定要退出吗？"
-
-#: resources/report/js/script.js:957
-#, javascript-format
-msgid "The metadata for \"%s\" has been copied to the clipboard."
-msgstr "\"%s\"的元数据已被复制到剪贴板。"
-
-#: resources/report/js/script.js:961
-#, javascript-format
-msgid ""
-"Are you sure you want to clear all existing user-added metadata from \"%s\"?"
-msgstr "你确定要清除从\"%s\"清除所有用户添加的元数据？"
-
-#: resources/report/js/script.js:986
-#, javascript-format
-msgid "The user-added metadata for \"%s\" has been cleared."
-msgstr "\"%s\"中用户添加的元数据已被清除。"
-
-#: resources/report/js/script.js:1006
-msgid "sorted load order"
-msgstr "已调整的加载顺序"
-
-#: resources/report/js/script.js:1008
-msgid "metadata edits"
-msgstr "元数据编辑"
-
-#: resources/report/js/script.js:1074
-msgid "unknown"
-msgstr "未知"
-
-#: resources/report/js/script.js:1215
-msgid "Refreshing data..."
-msgstr "刷新数据..."
