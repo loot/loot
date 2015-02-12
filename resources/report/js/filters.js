@@ -206,8 +206,10 @@ function setFilteredUIData() {
         var cards = document.getElementById('main').getElementsByTagName('loot-plugin-card');
         for (var i = 0; i < cards.length; ++i) {
             // Force re-filtering of messages.
-            cards[i].data.computed.messages = cards[i].data.getUIMessages();
-            cards[i].onMessagesChange();
+            if (cards[i].data) {
+                cards[i].data.computed.messages = cards[i].data.getUIMessages();
+                cards[i].onMessagesChange();
+            }
         }
     });
 }
