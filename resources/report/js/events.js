@@ -228,6 +228,7 @@ function onClearAllMetadata(evt) {
                         for (var i = 0; i < loot.game.plugins.length; ++i) {
                             if (loot.game.plugins[i].name == plugin.name) {
                                 loot.game.plugins[i].userlist = undefined;
+                                loot.game.plugins[i].editor = undefined;
 
                                 loot.game.plugins[i].modPriority = plugin.modPriority;
                                 loot.game.plugins[i].isGlobalPriority = plugin.isGlobalPriority;
@@ -526,6 +527,7 @@ function onClearMetadata(evt) {
                     for (var i = 0; i < loot.game.plugins.length; ++i) {
                         if (loot.game.plugins[i].id == evt.target.id) {
                             loot.game.plugins[i].userlist = undefined;
+                            loot.game.plugins[i].editor = undefined;
 
                             loot.game.plugins[i].modPriority = result.modPriority;
                             loot.game.plugins[i].isGlobalPriority = result.isGlobalPriority;

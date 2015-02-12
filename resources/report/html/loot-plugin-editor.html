@@ -250,6 +250,7 @@ loot-editor-close
         observe: {
             'data.isGlobalPriority': 'onPriorityChange',
             'data.modPriority': 'onPriorityChange',
+            'data.userlist': 'onDataCacheChange',
         },
 
         attached: function() {
@@ -288,6 +289,13 @@ loot-editor-close
 
         onPriorityChange: function(oldValue, newValue) {
             /* Handle priority change due to masterlist update. */
+            if (this.data) {
+                /* Set the new editor data. */
+                this.setEditorData(this.data);
+            }
+        },
+
+        onDataCacheChange: function(oldValue, newValue) {
             if (this.data) {
                 /* Set the new editor data. */
                 this.setEditorData(this.data);
