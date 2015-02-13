@@ -740,7 +740,6 @@ namespace loot {
         BOOST_LOG_TRIVIAL(trace) << "Checking to see if \"" << name << "\" is a valid plugin.";
         // Rather than just checking the extension, try also parsing the file header, and see if it fails.
         if (!boost::iends_with(name, ".esm") && !boost::iends_with(name, ".esp") && !boost::iends_with(name, ".esm.ghost") && !boost::iends_with(name, ".esp.ghost")) {
-            BOOST_LOG_TRIVIAL(warning) << "The .es(p|m) file \"" << name << "\" is not a valid plugin.";
             return false;
         }
 
