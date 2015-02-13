@@ -141,13 +141,15 @@
         observe: {
             'data.userlist': 'onUserlistChange',
             'data.modPriority': 'onPriorityChange',
-            'data.isGlobalPriority': 'onPriorityIsGlobalChange'
+            'data.isGlobalPriority': 'onPriorityIsGlobalChange',
+            'data.isEditorOpen': 'onEditorStateChange',
         },
 
         dataChanged: function(oldValue, newValue) {
             this.onUserlistChange();
             this.onPriorityChange();
             this.onPriorityIsGlobalChange();
+            this.onEditorStateChange();
         },
 
         onUserlistChange: function(oldValue, newValue) {
@@ -175,6 +177,14 @@
                 this.shadowRoot.getElementById('secondary').firstElementChild.classList.remove('hidden');
             } else {
                 this.shadowRoot.getElementById('secondary').firstElementChild.classList.add('hidden');
+            }
+        },
+
+        onEditorStateChange: function(oldValue, newValue) {
+            if (this.data && this.data.isEditorOpen) {
+                this.setAttribute('data-editor-open', true);
+            } else {
+                this.removeAttribute('data-editor-open');
             }
         },
 

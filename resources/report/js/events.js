@@ -374,11 +374,6 @@ function onEditorOpen(evt) {
     for (var i = 0; i < elements.length; ++i) {
         elements[i].draggable = true;
         elements[i].addEventListener('dragstart', elements[i].onDragStart, false);
-
-        /* Also add data-editor-is-open attribute to the plugin's item. */
-        if (elements[i].getAttribute('data-id') == evt.target.id) {
-            elements[i].setAttribute('data-editor-open', true);
-        }
     }
 
     /* Now show editor. */
@@ -450,11 +445,6 @@ function onEditorClose(evt) {
     for (var i = 0; i < elements.length; ++i) {
         elements[i].removeAttribute('draggable');
         elements[i].removeEventListener('dragstart', elements[i].onDragStart, false);
-
-        /* Also remove data-editor-is-open attribute from the plugin's item. */
-        if (elements[i].getAttribute('data-id') == evt.target.id) {
-            elements[i].removeAttribute('data-editor-open');
-        }
     }
 
     /* Disable priority hover in plugins list and enable header
