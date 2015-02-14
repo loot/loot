@@ -52,51 +52,71 @@ import subprocess
 # The current path throughout the script is the `src` folder, where this script
 # is located.
 
-def getNameSuffix():
-    # First check for a Git install.
-    # Python 3.3+ has shutil.which, but 2.7 doesn't.
+# Find an executable's path from its name. Like Python 3.3's shutil.which, but
+# also checks likely paths for hardcoded programs.
+def which(cmd):
     if 'which' in dir(shutil):
-        git = shutil.which('git.exe')
+        exe_path = shutil.which(cmd)
     else:
-        git = None
+        # Check the PATH environmental variable manually.
+        exe_path = None
         path = os.getenv('PATH')
         for p in path.split(os.path.pathsep):
-            p = os.path.join(p, 'git.exe')
+            p = os.path.join(p, cmd)
             if os.path.exists(p) and os.access(p, os.X_OK):
-                git = p
+                exe_path = p
 
-    if not git:
-        # Git wasn't found in PATH, do a search (in GitHub install location).
-        github = os.path.join( os.getenv('LOCALAPPDATA'), 'GitHub' )
-        for folder, subdirs, files in os.walk(github):
-            for subdir in subdirs:
-                # Check for a <github>\<subdir>\cmd\git.exe
-                if os.path.exists( os.path.join( folder, subdir, 'cmd', 'git.exe') ):
-                    git = os.path.join( folder, subdir, 'cmd', 'git.exe')
+    if not exe_path:
+        # Now look in likely paths, depending on what cmd is.
+        if cmd == 'git.exe':
+            # Git wasn't found in PATH, do a search (in GitHub install location).
+            github = os.path.join( os.getenv('LOCALAPPDATA'), 'GitHub' )
+            for folder, subdirs, files in os.walk(github):
+                for subdir in subdirs:
+                    # Check for a <github>\<subdir>\cmd\git.exe
+                    if os.path.exists( os.path.join( folder, subdir, 'cmd', 'git.exe') ):
+                        exe_path = os.path.join( folder, subdir, 'cmd', 'git.exe')
+        elif cmd == '7z.exe':
+            sevenzip_path = os.path.join('C:\\', 'Program Files', '7-Zip', '7z.exe')
+            if os.path.exists(sevenzip_path):
+                exe_path = sevenzip_path
+        elif cmd == 'vulcanize.cmd':
+            npm = os.path.join( os.getenv('APPDATA'), 'npm' )
+            if (os.path.exists(npm, 'vulcanize.cmd')):
+                exe_path = os.path.join(npm, 'vulcanize.cmd')
 
-    sevenzip_path = os.path.join('C:\\', 'Program Files', '7-Zip', '7z.exe')
-    if os.path.exists(sevenzip_path):
-        archive_ext = '.7z'
-    else:
-        archive_ext = '.zip'
+    return exe_path
 
+def getNameSuffix():
+    # Check for a Git install, and get the revision info if found.
+    git = which('git.exe')
     if git:
         args = [git, 'describe', '--tags', '--long']
         output = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
         if len(output[1]) == 0:
-            return output[0].decode('ascii')[:-1] + archive_ext
-        else:
-            return 'Archive' + archive_ext
-    else:
-        return 'Archive' + archive_ext
+            return output[0].decode('ascii')[:-1]
+
+    return ''
+
+def buildUIFiles(ui_path):
+    # Vulcanize the UI's files.
+    vulcanize = which('vulcanize.cmd')
+    args = [
+        vulcanize,
+        '--inline',
+        '--strip',
+        '-o',
+        os.path.join(ui_path, 'index.html'),
+        os.path.join(ui_path, 'report.html')];
+    subprocess.call(args);
 
 def createArchive(folder_path, archive_path):
     sevenzip_path = os.path.join('C:\\', 'Program Files', '7-Zip', '7z.exe')
     if os.path.exists(sevenzip_path):
-        args = [sevenzip_path, 'a', '-r', archive_path, os.path.join(folder_path, '*')]
+        args = [sevenzip_path, 'a', '-r', archive_path + '.7z', os.path.join(folder_path, '*')]
         subprocess.call(args)
     else:
-        zip = zipfile.ZipFile( archive_path, 'w', zipfile.ZIP_DEFLATED )
+        zip = zipfile.ZipFile( archive_path + '.zip', 'w', zipfile.ZIP_DEFLATED )
         for root, dirs, files in os.walk(folder_path):
             for file in files:
                 zip.write(os.path.join(root, file))
@@ -186,5 +206,6 @@ def createApiArchive(archive_path):
 
 # Create the archives.
 archive_suffix = getNameSuffix()
+buildUIFiles( os.path.join('..', 'resources', 'report') );
 createAppArchive( os.path.join('..', 'build', 'LOOT ' + archive_suffix) )
 createApiArchive( os.path.join('..', 'build', 'LOOT API ' + archive_suffix) )
