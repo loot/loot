@@ -1,4 +1,4 @@
-;LOOT NSIS Installer Script
+﻿;LOOT NSIS Installer Script
 
 ;--------------------------------
 ;Include NSIS files.
@@ -7,6 +7,38 @@
     !include "x64.nsh"
     !include "LogicLib.nsh"
     !include "nsDialogs.nsh"
+
+;--------------------------------
+;General
+
+    ; Display Unicode text correctly.
+    Unicode true
+
+    ;Name, file and version info for installer.
+    Name "LOOT v0.7.0"
+    OutFile "..\build\LOOT Installer.exe"
+    VIProductVersion 0.7.0.0
+
+    ;Request application privileges for Windows Vista/7
+    RequestExecutionLevel admin
+
+    ;Icon for installer\uninstaller
+    !define MUI_ICON "..\resources\icon.ico"
+    !define MUI_UNICON "..\resources\icon.ico"
+
+    ; This causes an "are you sure?" message to be displayed if you try to quit the installer or uninstaller.
+    !define MUI_ABORTWARNING
+    !define MUI_UNABORTWARNING
+
+    ;Checks that the installer's CRC is correct.
+    CRCCheck force
+
+    ;The SOLID lzma compressor gives the best compression ratio.
+    SetCompressor /SOLID lzma
+
+    ;Default install directory.
+    InstallDir "$PROGRAMFILES\LOOT"
+    InstallDirRegKey HKLM "Software\LOOT" "Installed Path"
 
 ;--------------------------------
 ; Helper Function
@@ -69,35 +101,6 @@ Function ReplaceLineStr
  Pop $R1
  Pop $R0
 FunctionEnd
-
-;--------------------------------
-;General
-
-    ;Name, file and version info for installer.
-    Name "LOOT v0.7.0"
-    OutFile "..\build\LOOT Installer.exe"
-    VIProductVersion 0.7.0.0
-
-    ;Request application privileges for Windows Vista/7
-    RequestExecutionLevel admin
-
-    ;Icon for installer\uninstaller
-    !define MUI_ICON "..\resources\icon.ico"
-    !define MUI_UNICON "..\resources\icon.ico"
-
-    ; This causes an "are you sure?" message to be displayed if you try to quit the installer or uninstaller.
-    !define MUI_ABORTWARNING
-    !define MUI_UNABORTWARNING
-
-    ;Checks that the installer's CRC is correct.
-    CRCCheck force
-
-    ;The SOLID lzma compressor gives the best compression ratio.
-    SetCompressor /SOLID lzma
-
-    ;Default install directory.
-    InstallDir "$PROGRAMFILES\LOOT"
-    InstallDirRegKey HKLM "Software\LOOT" "Installed Path"
 
 ;--------------------------------
 ;Pages
