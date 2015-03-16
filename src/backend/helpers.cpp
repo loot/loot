@@ -164,6 +164,22 @@ namespace loot {
         return out;
     }
 
+    //Turns a positive integer into a more qualitative description of its value (eg. "few", "many").
+    std::string IntToVagueString(const unsigned int i) {
+        if (i < 10) {
+            return boost::locale::translate("a few");
+        }
+        else if (i < 100) {
+            return boost::locale::translate("several");
+        }
+        else if (i < 1000) {
+            return boost::locale::translate("a lot of");
+        }
+        else {
+            return boost::locale::translate("a plethora of");
+        }
+    }
+
 #ifdef _WIN32
     //Get registry subkey value string.
     string RegKeyStringValue(const std::string& keyStr, const std::string& subkey, const std::string& value) {

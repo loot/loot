@@ -908,24 +908,24 @@ namespace loot {
         for (const auto &element : _dirtyInfo) {
             boost::format f;
             if (element.ITMs() > 0 && element.DeletedRefs() > 0 && element.DeletedNavmeshes() > 0)
-                f = boost::format(boost::locale::translate("Contains %1% ITM records, %2% deleted references and %3% deleted navmeshes. Clean with %4%.")) % element.ITMs() % element.DeletedRefs() % element.DeletedNavmeshes() % element.CleaningUtility();
+                f = boost::format(boost::locale::translate("Contains %1% ITM records, %2% deleted references and %3% deleted navmeshes. Clean with %4%.")) % IntToVagueString(element.ITMs()) % IntToVagueString(element.DeletedRefs()) % IntToVagueString(element.DeletedNavmeshes()) % element.CleaningUtility();
             else if (element.ITMs() == 0 && element.DeletedRefs() == 0 && element.DeletedNavmeshes() == 0)
                 f = boost::format(boost::locale::translate("Clean with %1%.")) % element.CleaningUtility();
 
             else if (element.ITMs() == 0 && element.DeletedRefs() > 0 && element.DeletedNavmeshes() > 0)
-                f = boost::format(boost::locale::translate("Contains %1% deleted references and %2% deleted navmeshes. Clean with %3%.")) % element.DeletedRefs() % element.DeletedNavmeshes() % element.CleaningUtility();
+                f = boost::format(boost::locale::translate("Contains %1% deleted references and %2% deleted navmeshes. Clean with %3%.")) % IntToVagueString(element.DeletedRefs()) % IntToVagueString(element.DeletedNavmeshes()) % element.CleaningUtility();
             else if (element.ITMs() == 0 && element.DeletedRefs() == 0 && element.DeletedNavmeshes() > 0)
-                f = boost::format(boost::locale::translate("Contains %1% deleted navmeshes. Clean with %2%.")) % element.DeletedNavmeshes() % element.CleaningUtility();
+                f = boost::format(boost::locale::translate("Contains %1% deleted navmeshes. Clean with %2%.")) % IntToVagueString(element.DeletedNavmeshes()) % element.CleaningUtility();
             else if (element.ITMs() == 0 && element.DeletedRefs() > 0 && element.DeletedNavmeshes() == 0)
-                f = boost::format(boost::locale::translate("Contains %1% deleted references. Clean with %2%.")) % element.DeletedRefs() % element.CleaningUtility();
+                f = boost::format(boost::locale::translate("Contains %1% deleted references. Clean with %2%.")) % IntToVagueString(element.DeletedRefs()) % element.CleaningUtility();
 
             else if (element.ITMs() > 0 && element.DeletedRefs() == 0 && element.DeletedNavmeshes() > 0)
-                f = boost::format(boost::locale::translate("Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%.")) % element.ITMs() % element.DeletedNavmeshes() % element.CleaningUtility();
+                f = boost::format(boost::locale::translate("Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%.")) % IntToVagueString(element.ITMs()) % IntToVagueString(element.DeletedNavmeshes()) % element.CleaningUtility();
             else if (element.ITMs() > 0 && element.DeletedRefs() == 0 && element.DeletedNavmeshes() == 0)
-                f = boost::format(boost::locale::translate("Contains %1% ITM records. Clean with %2%.")) % element.ITMs() % element.CleaningUtility();
+                f = boost::format(boost::locale::translate("Contains %1% ITM records. Clean with %2%.")) % IntToVagueString(element.ITMs()) % element.CleaningUtility();
 
             else if (element.ITMs() > 0 && element.DeletedRefs() > 0 && element.DeletedNavmeshes() == 0)
-                f = boost::format(boost::locale::translate("Contains %1% ITM records and %2% deleted references. Clean with %3%.")) % element.ITMs() % element.DeletedRefs() % element.CleaningUtility();
+                f = boost::format(boost::locale::translate("Contains %1% ITM records and %2% deleted references. Clean with %3%.")) % IntToVagueString(element.ITMs()) % IntToVagueString(element.DeletedRefs()) % element.CleaningUtility();
 
             messages.push_back(loot::Message(loot::Message::warn, f.str()));
             isDirty = true;
