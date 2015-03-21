@@ -50,9 +50,6 @@ namespace loot {
     //Converts an integer to a hex string using BOOST's Spirit.Karma. Faster than a stringstream conversion.
     std::string IntToHexString(const int n);
 
-    //Turns a positive integer into a more qualitative description of its value (eg. "few", "many").
-    std::string IntToVagueString(const unsigned int i);
-
 #ifdef _WIN32
     //Get registry subkey value string.
     std::string RegKeyStringValue(const std::string& keyStr, const std::string& subkey, const std::string& value);
