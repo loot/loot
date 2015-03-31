@@ -23,13 +23,14 @@ install:
   # Build yaml-cpp
   - git clone https://github.com/WrinklyNinja/yaml-cpp yaml-cpp
   - mkdir yaml-cpp/build && cd yaml-cpp/build
+  - git checkout patched-for-loot
   - cmake ..
   - make yaml-cpp
   - cd ../../
   # Build libgit2
-  - wget https://github.com/libgit2/libgit2/archive/v0.22.1.tar.gz
-  - tar -xf v0.22.1.tar.gz
-  - mv libgit2-0.22.1 libgit2
+  - wget https://github.com/libgit2/libgit2/archive/v0.22.2.tar.gz
+  - tar -xf v0.22.2.tar.gz
+  - mv libgit2-0.22.2 libgit2
   - mkdir libgit2/build && cd libgit2/build
   - cmake ..
   - make git2
