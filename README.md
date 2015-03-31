@@ -25,7 +25,7 @@ LOOT uses [CMake](http://cmake.org) to generate build files, and requires the fo
 * [Libespm](http://github.com/WrinklyNinja/libespm)
 * [Libgit2](http://libgit2.github.com/) v0.22.1
 * [Libloadorder](http://github.com/WrinklyNinja/libloadorder)
-* [yaml-cpp](http://github.com/WrinklyNinja/yaml-cpp)
+* [yaml-cpp](http://github.com/WrinklyNinja/yaml-cpp): Use the `v0.5.1++` branch.
 
 Alphanum and Libespm do not require any additional setup. The rest of the libraries must be built separately. Instructions for building them and LOOT itself using Microsoft Visual Studio are given in [docs/BUILD.MSVC.md](docs/BUILD.MSVC.md).
 
