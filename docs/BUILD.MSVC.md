@@ -70,7 +70,6 @@ Parameter | Values | Default |Description
 `LIBESPM_ROOT` | path | `../../libespm` | Path to the root of the libespm repository folder.
 `LIBGIT2_ROOT` | path | `../../libgit2` | Path to the root of the libgit2 repository folder.
 `LIBLOADORDER_ROOT` | path | `../../libloadorder` | Path to the root of the libloadorder repository folder.
-`YAMLCPP_ROOT` | path | `../../yaml-cpp` | Path to the root of the yaml-cpp folder.
 
 The default paths given in the table above are relative to LOOT's `CMakeLists.txt`.
 
