@@ -61,10 +61,6 @@ IF (NOT DEFINED LIBLOADORDER_ROOT)
     set (LIBLOADORDER_ROOT "../../libloadorder")
 ENDIF ()
 
-IF (NOT DEFINED YAMLCPP_ROOT)
-    set (YAMLCPP_ROOT "../../yaml-cpp")
-ENDIF ()
-
 IF (NOT DEFINED CEF_ROOT)
     set (CEF_ROOT "../../cef")
 ENDIF ()
@@ -78,6 +74,7 @@ IF (NOT Boost_USE_STATIC_LIBS)
 ENDIF ()
 
 find_package(Boost REQUIRED COMPONENTS log log_setup regex locale thread date_time chrono filesystem system iostreams)
+find_package(yaml-cpp)
 find_package(GTest)
 
 set (LOOT_SRC   "${CMAKE_SOURCE_DIR}/src/backend/metadata.cpp"
@@ -130,17 +127,16 @@ source_group("Header Files" FILES ${LOOT_HEADERS} ${LOOT_GUI_HEADERS} ${LOOT_API
 # Include source and library directories.
 include_directories ("${CMAKE_SOURCE_DIR}/src"
                      ${ALPHANUM_ROOT}
-                     "${YAMLCPP_ROOT}/include"
                      "${LIBLOADORDER_ROOT}/src"
                      "${LIBGIT2_ROOT}/include"
                      ${CEF_ROOT}
                      ${LIBESPM_ROOT}
                      ${Boost_INCLUDE_DIRS}
+					 ${YAML_CPP_INCLUDE_DIR}
                      ${GTEST_INCLUDE_DIRS})
 
 link_directories ("${LIBLOADORDER_ROOT}/build"
                   "${LIBGIT2_ROOT}/build"
-                  "${YAMLCPP_ROOT}/build"
                   "${CEF_ROOT}/Release"
                   "${CEF_ROOT}/build/libcef_dll/Release")
 
@@ -165,7 +161,6 @@ IF (CMAKE_COMPILER_IS_GNUCXX)
     ENDIF ()
 
     set (LOOT_LIBS git2
-                   yaml-cpp
                    loadorder${PROJECT_ARCH})
 ENDIF ()
 
@@ -199,7 +194,6 @@ ELSEIF (MSVC)
     ENDIF ()
 
     set (LOOT_LIBS  git2
-                    libyaml-cppmt
                     version
                     loadorder${PROJECT_ARCH}
                     ws2_32
@@ -219,17 +213,17 @@ ENDIF ()
 
 # Build API.
 add_library           (loot${PROJECT_ARCH} ${LOOT_API_SRC} ${LOOT_API_HEADERS})
-target_link_libraries (loot${PROJECT_ARCH} ${Boost_LIBRARIES} ${LOOT_LIBS})
+target_link_libraries (loot${PROJECT_ARCH} ${Boost_LIBRARIES} ${YAML_CPP_LIBRARIES} ${LOOT_LIBS})
 
 IF (${GTEST_FOUND})
     # Build tests.
     add_executable(tests ${LOOT_TESTS_SRC} ${LOOT_TESTS_HEADERS})
-    target_link_libraries(tests loot${PROJECT_ARCH} ${Boost_LIBRARIES} ${LOOT_LIBS} ${GTEST_BOTH_LIBRARIES})
+    target_link_libraries(tests loot${PROJECT_ARCH} ${Boost_LIBRARIES} ${YAML_CPP_LIBRARIES} ${LOOT_LIBS} ${GTEST_BOTH_LIBRARIES})
 ENDIF ()
 
 # Build application.
 add_executable        (LOOT ${LOOT_GUI_SRC} ${LOOT_GUI_HEADERS})
-target_link_libraries (LOOT ${Boost_LIBRARIES} ${LOOT_GUI_LIBS})
+target_link_libraries (LOOT ${Boost_LIBRARIES} ${YAML_CPP_LIBRARIES} ${LOOT_GUI_LIBS})
 
 
 ##############################
