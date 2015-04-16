@@ -56,26 +56,6 @@ namespace loot {
         uint32_t id;
     };
 
-    class PluginDirtyInfo {
-    public:
-        PluginDirtyInfo();
-        PluginDirtyInfo(uint32_t crc, unsigned int itm, unsigned int ref, unsigned int nav, const std::string& utility);
-
-        bool operator < (const PluginDirtyInfo& rhs) const;
-
-        uint32_t CRC() const;
-        unsigned int ITMs() const;
-        unsigned int DeletedRefs() const;
-        unsigned int DeletedNavmeshes() const;
-        std::string CleaningUtility() const;
-    private:
-        uint32_t _crc;
-        unsigned int _itm;
-        unsigned int _ref;
-        unsigned int _nav;
-        std::string _utility;
-    };
-
     class ConditionStruct {
     public:
         ConditionStruct();
@@ -128,6 +108,28 @@ namespace loot {
     private:
         unsigned int _type;
         std::vector<MessageContent> _content;
+    };
+
+    class PluginDirtyInfo {
+    public:
+        PluginDirtyInfo();
+        PluginDirtyInfo(uint32_t crc, unsigned int itm, unsigned int ref, unsigned int nav, const std::string& utility);
+
+        bool operator < (const PluginDirtyInfo& rhs) const;
+
+        uint32_t CRC() const;
+        unsigned int ITMs() const;
+        unsigned int DeletedRefs() const;
+        unsigned int DeletedNavmeshes() const;
+        std::string CleaningUtility() const;
+
+        Message AsMessage() const;
+    private:
+        uint32_t _crc;
+        unsigned int _itm;
+        unsigned int _ref;
+        unsigned int _nav;
+        std::string _utility;
     };
 
     class File : public ConditionStruct {
