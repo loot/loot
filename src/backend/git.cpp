@@ -285,7 +285,7 @@ namespace loot {
         char * paths = new char[filename.length() + 1];
         strcpy(paths, filename.c_str());
         git_checkout_options checkout_opts = GIT_CHECKOUT_OPTIONS_INIT;
-        checkout_opts.checkout_strategy = GIT_CHECKOUT_FORCE;
+        checkout_opts.checkout_strategy = GIT_CHECKOUT_FORCE | GIT_CHECKOUT_DONT_REMOVE_EXISTING;
         checkout_opts.paths.strings = &paths;
         checkout_opts.paths.count = 1;
 
