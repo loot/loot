@@ -32,7 +32,7 @@
     "paper-progress": "Polymer/paper-progress#~0.5.0",
     "core-animated-pages": "Polymer/core-animated-pages#~0.5.1",
     "paper-toast": "Polymer/paper-toast#~0.5.1",
-    "core-list": "WrinklyNinja/core-list#z-order-items",
+    "core-list": "WrinklyNinja/core-list#patched-for-loot",
     "core-dropdown": "WrinklyNinja/core-dropdown#null-dimensions-positions-fix",
     "jed-gettext-parser": "~1.0.0",
     "paper-toggle-button": "Polymer/paper-toggle-button#~0.5.4",
