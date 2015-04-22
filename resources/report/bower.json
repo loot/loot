@@ -35,6 +35,7 @@
     "core-list": "WrinklyNinja/core-list#z-order-items",
     "core-dropdown": "WrinklyNinja/core-dropdown#null-dimensions-positions-fix",
     "jed-gettext-parser": "~1.0.0",
-    "paper-toggle-button": "Polymer/paper-toggle-button#~0.5.4"
+    "paper-toggle-button": "Polymer/paper-toggle-button#~0.5.4",
+    "core-overlay": "WrinklyNinja/core-overlay#fix-focus-self-as-next"
   }
 }
