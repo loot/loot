@@ -470,20 +470,21 @@ function onEditorClose(evt) {
     document.getElementById('cardsNav').updateSize();
 }
 function onConflictsFilter(evt) {
+    /* Deactivate any existing plugin conflict filter. */
+    for (var i = 0; i < loot.game.plugins.length; ++i) {
+        if (loot.game.plugins[i].id != evt.target.id) {
+            loot.game.plugins[i].isConflictFilterChecked = false;
+        }
+    }
+    /* Un-highlight any existing filter plugin. */
+    var cards = document.getElementById('main').getElementsByTagName('loot-plugin-card');
+    for (var i = 0; i < cards.length; ++i) {
+        cards[i].classList.toggle('highlight', false);
+    }
     /* evt.detail is true if the filter has been activated. */
     if (evt.detail) {
-        /* Un-highlight any existing filter plugin. */
-        var cards = document.getElementById('main').getElementsByTagName('loot-plugin-card');
-        for (var i = 0; i < cards.length; ++i) {
-            cards[i].classList.toggle('highlight', false);
-            if (cards[i] != evt.target) {
-                cards[i].deactivateConflictFilter();
-            }
-        }
-        evt.target.classList.toggle('highlight', true);
         document.body.setAttribute('data-conflicts', evt.target.getName());
     } else {
-        evt.target.classList.toggle('highlight', false);
         document.body.removeAttribute('data-conflicts');
     }
     setFilteredUIData(evt);

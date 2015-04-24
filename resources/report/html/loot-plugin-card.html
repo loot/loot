@@ -355,10 +355,6 @@ loot-clear-metadata
             return this.shadowRoot.getElementById('editor').readFromEditor(oldData);
         },
 
-        deactivateConflictFilter: function() {
-            this.shadowRoot.getElementById('showOnlyConflicts').checked = false;
-        },
-
         onShowOnlyConflicts: function(evt) {
             evt.target.dispatchEvent(new CustomEvent('loot-filter-conflicts', {
                 bubbles: true,
