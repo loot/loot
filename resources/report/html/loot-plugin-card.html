@@ -335,7 +335,7 @@ loot-clear-metadata
             if (this.tagName == 'LOOT-PLUGIN-CARD') {
                 card = this;
             } else {
-                card = this.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentNode.host;
+                card = getMenuItemCard(this);
             }
 
             /* If the editor hasn't already been opened, its data is not yet set, so do that now. */
@@ -344,6 +344,7 @@ loot-clear-metadata
             }
 
             card.data.isEditorOpen = true;
+            card.data.isMenuOpen = false;
 
             /* Fire an open event, so that the UI can enter edit mode. */
             card.dispatchEvent(new CustomEvent('loot-editor-open', {
@@ -356,6 +357,7 @@ loot-clear-metadata
         },
 
         onShowOnlyConflicts: function(evt) {
+            getMenuItemCard(this).data.isMenuOpen = false;
             evt.target.dispatchEvent(new CustomEvent('loot-filter-conflicts', {
                 bubbles: true,
                 detail: evt.target.checked,
@@ -363,16 +365,25 @@ loot-clear-metadata
         },
 
         onCopyMetadata: function(evt) {
+            getMenuItemCard(this).data.isMenuOpen = false;
             evt.target.dispatchEvent(new CustomEvent('loot-copy-metadata', {
                 bubbles: true,
             }));
         },
 
         onClearMetadata: function(evt) {
+            getMenuItemCard(this).data.isMenuOpen = false;
             evt.target.dispatchEvent(new CustomEvent('loot-clear-metadata', {
                 bubbles: true,
             }));
         },
     });
+
+    function getMenuItemCard(element) {
+        while (element.parentElement) {
+            element = element.parentElement;
+        }
+        return element.parentNode.host;
+    }
     </script>
 </polymer-element>
