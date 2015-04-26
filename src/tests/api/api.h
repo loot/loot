@@ -402,6 +402,9 @@ TEST_F(SkyrimAPIOperationsTest, SortPlugins) {
         "Blank - Different Plugin Dependent.esp",
         "Blank - Master Dependent.esp",
         "Blank - Plugin Dependent.esp",
+        "Blank - Different Master Dependent.esp",
+        "Blank - Different.esp",
+        "Blank - Different Plugin Dependent.esp"
     };
     std::list<std::string> actualOrder;
     for (size_t i = 0; i < numPlugins; ++i) {

@@ -266,7 +266,6 @@ namespace loot {
     void AddOverlapEdges(PluginGraph& graph, const vertex_map_t& v_index_map) {
         loot::vertex_it vit, vitend;
 
-        // Add edges between plugins that conflict.
         for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
             BOOST_LOG_TRIVIAL(trace) << "Adding overlap edges to vertex for \"" << graph[*vit].Name() << "\".";
 
@@ -291,7 +290,7 @@ namespace loot {
                         parentVertex = *vit2;
                         vertex = *vit;
                     }
-                    else if (boost::locale::to_lower(graph[*vit].Name()) < boost::locale::to_lower(graph[*vit2].Name())) {  //There needs to be an edge between the two, but direction cannot be decided using overlap size. Just use names.
+                    else if (graph[*vit].Name() < graph[*vit2].Name()) {  //There needs to be an edge between the two, but direction cannot be decided using overlap size. Just use names.
                         parentVertex = *vit;
                         vertex = *vit2;
                     }
@@ -306,35 +305,6 @@ namespace loot {
 
                         boost::add_edge(parentVertex, vertex, graph);
                     }
-                }
-            }
-        }
-
-        // LOOT for Humans - add edges so that if nothing else, the plugins get sorted alphabetically. Meatbags find that appealing.
-        for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
-            BOOST_LOG_TRIVIAL(trace) << "Adding lexicographical edges to vertex for \"" << graph[*vit].Name() << "\".";
-
-            loot::vertex_it vit2, vitend2;
-            for (boost::tie(vit2, vitend2) = boost::vertices(graph); vit2 != vitend2; ++vit2) {
-                if (vit == vit2 || boost::edge(*vit, *vit2, graph).second || boost::edge(*vit2, *vit, graph).second)
-                    //Vertices are the same or are already linked.
-                    continue;
-
-                vertex_t vertex, parentVertex;
-                if (boost::locale::to_lower(graph[*vit].Name()) < boost::locale::to_lower(graph[*vit2].Name())) {
-                    parentVertex = *vit;
-                    vertex = *vit2;
-                }
-                else {
-                    parentVertex = *vit2;
-                    vertex = *vit;
-                }
-
-                //BOOST_LOG_TRIVIAL(trace) << "Checking edge validity between \"" << graph[*vit].Name() << "\" and \"" << graph[*vit2].Name() << "\".";
-                if (!EdgeCreatesCycle(parentVertex, vertex, graph, v_index_map)) {  //No edge going the other way, OK to add this edge.
-                    BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[vertex].Name() << "\".";
-
-                    boost::add_edge(parentVertex, vertex, graph);
                 }
             }
         }
