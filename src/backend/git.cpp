@@ -221,13 +221,13 @@ namespace loot {
         git_handler git;
         git.ui_message = (boost::format(lc::translate("An error occurred while trying to read the local masterlist's version. If this error happens again, try deleting the \".git\" folder in %1%.")) % path.parent_path().string()).str();
 
-        if (!isRepository(path.parent_path())) {
-            BOOST_LOG_TRIVIAL(info) << "Unknown masterlist revision: Git repository missing.";
-            throw error(error::ok, lc::translate("Unknown: Git repository missing"));
-        }
-        else if (!fs::exists(path)) {
+        if (!fs::exists(path)) {
             BOOST_LOG_TRIVIAL(info) << "Unknown masterlist revision: No masterlist present.";
             throw error(error::ok, lc::translate("N/A: No masterlist present"));
+        }
+        else if (!isRepository(path.parent_path())) {
+            BOOST_LOG_TRIVIAL(info) << "Unknown masterlist revision: Git repository missing.";
+            throw error(error::ok, lc::translate("Unknown: Git repository missing"));
         }
 
         BOOST_LOG_TRIVIAL(debug) << "Existing repository found, attempting to open it.";
