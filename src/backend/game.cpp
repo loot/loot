@@ -817,8 +817,15 @@ namespace loot {
             graph[v].CheckInstallValidity(*this);
         }
 
+        // Get the existing load order.
+        list<string> loadorder;
+        GetLoadOrder(loadorder);
+        BOOST_LOG_TRIVIAL(info) << "Fetched existing load order: ";
+        for (const auto &plugin : loadorder)
+            BOOST_LOG_TRIVIAL(info) << plugin;
+
         // Now add edges and sort.
         progressCallback(lc::translate("Adding edges to plugin graph and performing topological sort..."));
-        return loot::Sort(graph);
+        return loot::Sort(graph, loadorder);
     }
 }

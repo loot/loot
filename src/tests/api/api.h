@@ -360,17 +360,17 @@ TEST_F(OblivionAPIOperationsTest, SortPlugins) {
 
     // Expected order was obtained from running the API function once.
     std::list<std::string> expectedOrder = {
+        "Oblivion.esm",
         "Blank.esm",
         "Blank - Different.esm",
-        "Blank - Different Master Dependent.esm",
         "Blank - Master Dependent.esm",
-        "Oblivion.esm",
+        "Blank - Different Master Dependent.esm",
         "Blank.esp",
         "Blank - Different.esp",
-        "Blank - Different Master Dependent.esp",
-        "Blank - Different Plugin Dependent.esp",
         "Blank - Master Dependent.esp",
+        "Blank - Different Master Dependent.esp",
         "Blank - Plugin Dependent.esp",
+        "Blank - Different Plugin Dependent.esp",
     };
     std::list<std::string> actualOrder;
     for (size_t i = 0; i < numPlugins; ++i) {
@@ -391,20 +391,17 @@ TEST_F(SkyrimAPIOperationsTest, SortPlugins) {
 
     // Expected order was obtained from running the API function once.
     std::list<std::string> expectedOrder = {
+        "Skyrim.esm",
         "Blank.esm",
         "Blank - Different.esm",
-        "Blank - Different Master Dependent.esm",
         "Blank - Master Dependent.esm",
-        "Skyrim.esm",
+        "Blank - Different Master Dependent.esm",
         "Blank.esp",
         "Blank - Different.esp",
-        "Blank - Different Master Dependent.esp",
-        "Blank - Different Plugin Dependent.esp",
         "Blank - Master Dependent.esp",
-        "Blank - Plugin Dependent.esp",
         "Blank - Different Master Dependent.esp",
-        "Blank - Different.esp",
-        "Blank - Different Plugin Dependent.esp"
+        "Blank - Plugin Dependent.esp",
+        "Blank - Different Plugin Dependent.esp",
     };
     std::list<std::string> actualOrder;
     for (size_t i = 0; i < numPlugins; ++i) {

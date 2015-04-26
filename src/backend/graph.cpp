@@ -290,13 +290,10 @@ namespace loot {
                         parentVertex = *vit2;
                         vertex = *vit;
                     }
-                    else if (graph[*vit].Name() < graph[*vit2].Name()) {  //There needs to be an edge between the two, but direction cannot be decided using overlap size. Just use names.
-                        parentVertex = *vit;
-                        vertex = *vit2;
-                    }
                     else {
-                        parentVertex = *vit2;
-                        vertex = *vit;
+                        // There's no way to determine the order between the two, so just leave them to be treated like
+                        // any two unlinked, non-conflicting plugins in the next pass.
+                        continue;
                     }
 
                     //BOOST_LOG_TRIVIAL(trace) << "Checking edge validity between \"" << graph[*vit].Name() << "\" and \"" << graph[*vit2].Name() << "\".";
@@ -310,7 +307,50 @@ namespace loot {
         }
     }
 
-    std::list<Plugin> Sort(PluginGraph& graph) {
+    size_t LoadOrderPos(const list<string>& loadorder, const std::string& plugin) {
+        auto it = find(loadorder.begin(), loadorder.end(), plugin);
+
+        if (it != loadorder.end())
+            return distance(loadorder.begin(), it);
+        else
+            throw error(error::sorting_error, "No existing load order position for " + plugin);
+    }
+
+    void AddTieBreakEdges(PluginGraph& graph, const list<string>& loadorder, const vertex_map_t& v_index_map) {
+        // In order for the sort to be performed stably, there must be only one possible result.
+        // This can be enforced by adding edges between all vertices that aren't already linked.
+        // Use existing load order to decide the direction of these edges.
+        loot::vertex_it vit, vitend;
+        for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
+            BOOST_LOG_TRIVIAL(trace) << "Adding tie-break edges to vertex for \"" << graph[*vit].Name() << "\".";
+
+            loot::vertex_it vit2, vitend2;
+            for (boost::tie(vit2, vitend2) = boost::vertices(graph); vit2 != vitend2; ++vit2) {
+                if (vit == vit2 || boost::edge(*vit, *vit2, graph).second || boost::edge(*vit2, *vit, graph).second)
+                    //Vertices are the same or are already linked.
+                    continue;
+
+                vertex_t vertex, parentVertex;
+                if (LoadOrderPos(loadorder, graph[*vit].Name()) < LoadOrderPos(loadorder, graph[*vit2].Name())) {
+                    parentVertex = *vit;
+                    vertex = *vit2;
+                }
+                else {
+                    parentVertex = *vit2;
+                    vertex = *vit;
+                }
+
+                //BOOST_LOG_TRIVIAL(trace) << "Checking edge validity between \"" << graph[*vit].Name() << "\" and \"" << graph[*vit2].Name() << "\".";
+                if (!EdgeCreatesCycle(parentVertex, vertex, graph, v_index_map)) {  //No edge going the other way, OK to add this edge.
+                    BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[vertex].Name() << "\".";
+
+                    boost::add_edge(parentVertex, vertex, graph);
+                }
+            }
+        }
+    }
+
+    std::list<Plugin> Sort(PluginGraph& graph, const list<string>& loadorder) {
         // Prebuild an index map, which std::list-based VertexList graphs don't have.
         map<vertex_t, size_t> index_map;
         vertex_map_t v_index_map(index_map);
@@ -328,6 +368,9 @@ namespace loot {
 
         BOOST_LOG_TRIVIAL(debug) << "Adding overlap edges.";
         AddOverlapEdges(graph, v_index_map);
+
+        BOOST_LOG_TRIVIAL(debug) << "Adding tie-break edges.";
+        AddTieBreakEdges(graph, loadorder, v_index_map);
 
         BOOST_LOG_TRIVIAL(info) << "Checking to see if the graph is cyclic.";
         CheckForCycles(graph, v_index_map);

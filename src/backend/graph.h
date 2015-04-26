@@ -20,7 +20,7 @@
     You should have received a copy of the GNU General Public License
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
-*/
+    */
 
 #ifndef __LOOT_GRAPH__
 #define __LOOT_GRAPH__
@@ -33,11 +33,10 @@
 #include <boost/graph/graphviz.hpp>
 
 namespace loot {
-
     typedef boost::adjacency_list<boost::listS, boost::listS, boost::directedS, loot::Plugin> PluginGraph;
     typedef boost::graph_traits<PluginGraph>::vertex_descriptor vertex_t;
 
-    std::list<Plugin> Sort(PluginGraph& graph);
+    std::list<Plugin> Sort(PluginGraph& graph, const std::list<std::string>& loadorder);
 }
 
 #endif
