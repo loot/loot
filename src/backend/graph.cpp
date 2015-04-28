@@ -38,6 +38,9 @@
 using namespace std;
 
 namespace loot {
+    typedef boost::graph_traits<PluginGraph>::vertex_iterator vertex_it;
+    typedef boost::graph_traits<PluginGraph>::edge_descriptor edge_t;
+    typedef boost::graph_traits<PluginGraph>::edge_iterator edge_it;
     struct cycle_detector : public boost::dfs_visitor < > {
         cycle_detector() {}
 
