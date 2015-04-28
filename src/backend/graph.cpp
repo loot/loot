@@ -41,6 +41,8 @@ namespace loot {
     typedef boost::graph_traits<PluginGraph>::vertex_iterator vertex_it;
     typedef boost::graph_traits<PluginGraph>::edge_descriptor edge_t;
     typedef boost::graph_traits<PluginGraph>::edge_iterator edge_it;
+    typedef boost::associative_property_map<map<vertex_t, size_t>> vertex_map_t;
+
     struct cycle_detector : public boost::dfs_visitor < > {
         cycle_detector() {}
 
@@ -95,30 +97,13 @@ namespace loot {
         return false;
     }
 
-    void CheckForCycles(const PluginGraph& graph) {
-        //Depth-first search requires an index map, which std::list-based VertexList graphs don't have, so one needs to be built separately.
-
-        map<vertex_t, size_t> index_map;
-        boost::associative_property_map< map<vertex_t, size_t> > v_index_map(index_map);
-        size_t i = 0;
-        BGL_FORALL_VERTICES(v, graph, PluginGraph)
-            put(v_index_map, v, i++);
-
-        loot::cycle_detector vis;
+    void CheckForCycles(const PluginGraph& graph, const vertex_map_t& v_index_map) {
+        cycle_detector vis;
         boost::depth_first_search(graph, visitor(vis).vertex_index_map(v_index_map));
     }
 
-    bool EdgeCreatesCycle(PluginGraph& graph, vertex_t u, vertex_t v) {
+    bool EdgeCreatesCycle(const vertex_t& u, const vertex_t& v, const PluginGraph& graph, const vertex_map_t& v_index_map) {
         //A cycle is created when adding the edge (u,v) if there already exists a path from v to u, so check for that using a breadth-first search.
-
-        //Breadth-first search requires an index map, which std::list-based VertexList graphs don't have, so one needs to be built separately.
-
-        map<vertex_t, size_t> index_map;
-        boost::associative_property_map< map<vertex_t, size_t> > v_index_map(index_map);
-        size_t i = 0;
-        BGL_FORALL_VERTICES(v, graph, PluginGraph)
-            put(v_index_map, v, i++);
-
         map<vertex_t, vertex_t> predecessor_map;
         boost::associative_property_map< map<vertex_t, vertex_t> > v_predecessor_map(predecessor_map);
 
@@ -127,7 +112,7 @@ namespace loot {
         return predecessor_map.find(u) != predecessor_map.end();
     }
 
-    void AddSpecificEdges(PluginGraph& graph) {
+    void AddSpecificEdges(PluginGraph& graph, const vertex_map_t& v_index_map) {
         //Add edges for all relationships that aren't overlaps or priority differences.
         loot::vertex_it vit, vitend;
         for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
@@ -220,7 +205,7 @@ namespace loot {
         }
     }
 
-    void AddPriorityEdges(PluginGraph& graph) {
+    void AddPriorityEdges(PluginGraph& graph, const vertex_map_t& v_index_map) {
         loot::vertex_it vit, vitend;
 
         for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
@@ -256,7 +241,7 @@ namespace loot {
                 }
 
                 if (!boost::edge(parentVertex, vertex, graph).second &&
-                    !EdgeCreatesCycle(graph, parentVertex, vertex)) {  //No edge going the other way, OK to add this edge.
+                    !EdgeCreatesCycle(parentVertex, vertex, graph, v_index_map)) {  //No edge going the other way, OK to add this edge.
                     BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[vertex].Name() << "\".";
 
                     boost::add_edge(parentVertex, vertex, graph);
@@ -265,7 +250,7 @@ namespace loot {
         }
     }
 
-    void AddOverlapEdges(PluginGraph& graph) {
+    void AddOverlapEdges(PluginGraph& graph, const vertex_map_t& v_index_map) {
         loot::vertex_it vit, vitend;
 
         // Add edges between plugins that conflict.
@@ -303,7 +288,7 @@ namespace loot {
                     }
 
                     //BOOST_LOG_TRIVIAL(trace) << "Checking edge validity between \"" << graph[*vit].Name() << "\" and \"" << graph[*vit2].Name() << "\".";
-                    if (!EdgeCreatesCycle(graph, parentVertex, vertex)) {  //No edge going the other way, OK to add this edge.
+                    if (!EdgeCreatesCycle(parentVertex, vertex, graph, v_index_map)) {  //No edge going the other way, OK to add this edge.
                         BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[vertex].Name() << "\".";
 
                         boost::add_edge(parentVertex, vertex, graph);
@@ -339,7 +324,7 @@ namespace loot {
                 }
 
                 //BOOST_LOG_TRIVIAL(trace) << "Checking edge validity between \"" << graph[*vit].Name() << "\" and \"" << graph[*vit2].Name() << "\".";
-                if (!EdgeCreatesCycle(graph, parentVertex, vertex)) {  //No edge going the other way, OK to add this edge.
+                if (!EdgeCreatesCycle(parentVertex, vertex, graph, v_index_map)) {  //No edge going the other way, OK to add this edge.
                     BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[vertex].Name() << "\".";
 
                     boost::add_edge(parentVertex, vertex, graph);
@@ -349,26 +334,26 @@ namespace loot {
     }
 
     std::list<Plugin> Sort(PluginGraph& graph) {
-        //Now add the interactions between plugins to the graph as edges.
-        BOOST_LOG_TRIVIAL(info) << "Adding edges to plugin graph.";
-        BOOST_LOG_TRIVIAL(debug) << "Adding non-overlap edges.";
-        AddSpecificEdges(graph);
-
-        BOOST_LOG_TRIVIAL(debug) << "Adding priority edges.";
-        AddPriorityEdges(graph);
-
-        BOOST_LOG_TRIVIAL(debug) << "Adding overlap edges.";
-        AddOverlapEdges(graph);
-
-        BOOST_LOG_TRIVIAL(info) << "Checking to see if the graph is cyclic.";
-        CheckForCycles(graph);
-
-        //Topological sort requires an index map, which std::list-based VertexList graphs don't have, so one needs to be built separately.
+        // Prebuild an index map, which std::list-based VertexList graphs don't have.
         map<vertex_t, size_t> index_map;
-        boost::associative_property_map< map<vertex_t, size_t> > v_index_map(index_map);
+        vertex_map_t v_index_map(index_map);
         size_t i = 0;
         BGL_FORALL_VERTICES(v, graph, PluginGraph)
             put(v_index_map, v, i++);
+
+        //Now add the interactions between plugins to the graph as edges.
+        BOOST_LOG_TRIVIAL(info) << "Adding edges to plugin graph.";
+        BOOST_LOG_TRIVIAL(debug) << "Adding non-overlap edges.";
+        AddSpecificEdges(graph, v_index_map);
+
+        BOOST_LOG_TRIVIAL(debug) << "Adding priority edges.";
+        AddPriorityEdges(graph, v_index_map);
+
+        BOOST_LOG_TRIVIAL(debug) << "Adding overlap edges.";
+        AddOverlapEdges(graph, v_index_map);
+
+        BOOST_LOG_TRIVIAL(info) << "Checking to see if the graph is cyclic.";
+        CheckForCycles(graph, v_index_map);
 
         //Now we can sort.
         BOOST_LOG_TRIVIAL(info) << "Performing a topological sort.";
