@@ -83,6 +83,15 @@ namespace loot {
         }
     };
 
+    struct path_detector : public boost::bfs_visitor < > {
+        vertex_t target;
+
+        inline void discover_vertex(vertex_t u, const PluginGraph& g) {
+            if (u == target)
+                throw error(error::ok, "Found a path.");
+        }
+    };
+
     bool GetVertexByName(const PluginGraph& graph, const std::string& name, vertex_t& vertex) {
         vertex_it vit, vit_end;
         boost::tie(vit, vit_end) = boost::vertices(graph);
@@ -104,12 +113,16 @@ namespace loot {
 
     bool EdgeCreatesCycle(const vertex_t& u, const vertex_t& v, const PluginGraph& graph, const vertex_map_t& v_index_map) {
         //A cycle is created when adding the edge (u,v) if there already exists a path from v to u, so check for that using a breadth-first search.
-        map<vertex_t, vertex_t> predecessor_map;
-        boost::associative_property_map< map<vertex_t, vertex_t> > v_predecessor_map(predecessor_map);
-
-        boost::breadth_first_search(graph, v, visitor(boost::make_bfs_visitor(boost::record_predecessors(v_predecessor_map, boost::on_tree_edge()))).vertex_index_map(v_index_map));
-
-        return predecessor_map.find(u) != predecessor_map.end();
+        path_detector vis;
+        vis.target = u;
+        try {
+            boost::breadth_first_search(graph, v, visitor(vis).vertex_index_map(v_index_map));
+        }
+        catch (error& e) {
+            if (e.code() == error::ok)
+                return true;
+        }
+        return false;
     }
 
     void AddSpecificEdges(PluginGraph& graph, const vertex_map_t& v_index_map) {
