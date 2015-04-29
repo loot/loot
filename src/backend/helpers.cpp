@@ -167,34 +167,34 @@ namespace loot {
 #ifdef _WIN32
     //Get registry subkey value string.
     string RegKeyStringValue(const std::string& keyStr, const std::string& subkey, const std::string& value) {
-        HKEY hKey, key = NULL;
+        HKEY hKey = NULL;
         DWORD BufferSize = 4096;
         wchar_t val[4096];
 
         if (keyStr == "HKEY_CLASSES_ROOT")
-            key = HKEY_CLASSES_ROOT;
+            hKey = HKEY_CLASSES_ROOT;
         else if (keyStr == "HKEY_CURRENT_CONFIG")
-            key = HKEY_CURRENT_CONFIG;
+            hKey = HKEY_CURRENT_CONFIG;
         else if (keyStr == "HKEY_CURRENT_USER")
-            key = HKEY_CURRENT_USER;
+            hKey = HKEY_CURRENT_USER;
         else if (keyStr == "HKEY_LOCAL_MACHINE")
-            key = HKEY_LOCAL_MACHINE;
+            hKey = HKEY_LOCAL_MACHINE;
         else if (keyStr == "HKEY_USERS")
-            key = HKEY_USERS;
+            hKey = HKEY_USERS;
+        else
+            throw error(error::invalid_args, "Invalid registry key given.");
 
-        BOOST_LOG_TRIVIAL(trace) << "Getting registry object for key and subkey: " << keyStr << " + " << subkey;
-        LONG ret = RegOpenKeyEx(key, ToWinWide(subkey).c_str(), 0, KEY_READ | KEY_WOW64_32KEY, &hKey);
+        BOOST_LOG_TRIVIAL(trace) << "Getting registry object for key, subkey and value: " << keyStr << " + " << subkey << " + " << value;
+        LONG ret = RegGetValue(hKey,
+                               ToWinWide(subkey).c_str(),
+                               ToWinWide(value).c_str(),
+                               RRF_RT_REG_SZ | KEY_WOW64_32KEY,
+                               NULL,
+                               &val,
+                               &BufferSize);
 
-        if (ret == ERROR_SUCCESS) {
-            BOOST_LOG_TRIVIAL(trace) << "Getting value for entry: " << value;
-            ret = RegQueryValueEx(hKey, ToWinWide(value).c_str(), NULL, NULL, (LPBYTE)&val, &BufferSize);
-            RegCloseKey(hKey);
-
-            if (ret == ERROR_SUCCESS)
-                return fs::path(val).string();  //Easiest way to convert from wide to narrow character strings.
-            else
-                return "";
-        }
+        if (ret == ERROR_SUCCESS)
+            return FromWinWide(val);
         else
             return "";
     }
