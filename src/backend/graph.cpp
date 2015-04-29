@@ -373,6 +373,14 @@ namespace loot {
         list<vertex_t> sortedVertices;
         boost::topological_sort(graph, std::front_inserter(sortedVertices), boost::vertex_index_map(v_index_map));
 
+        // Check that the sorted path is Hamiltonian (ie. unique).
+        for (auto it = sortedVertices.begin(); it != sortedVertices.end(); ++it) {
+            if (next(it) != sortedVertices.end() && !boost::edge(*it, *next(it), graph).second) {
+                BOOST_LOG_TRIVIAL(error) << "The calculated load order is not unique. No edge exists between"
+                    << graph[*it].Name() << " and " << graph[*next(it)].Name() << ".";
+            }
+        }
+
         // Output a plugin list using the sorted vertices.
         BOOST_LOG_TRIVIAL(info) << "Calculated order: ";
         list<Plugin> plugins;
