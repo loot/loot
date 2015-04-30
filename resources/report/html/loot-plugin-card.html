@@ -344,7 +344,6 @@ loot-clear-metadata
             }
 
             card.data.isEditorOpen = true;
-            card.data.isMenuOpen = false;
 
             /* Fire an open event, so that the UI can enter edit mode. */
             card.dispatchEvent(new CustomEvent('loot-editor-open', {
@@ -365,14 +364,12 @@ loot-clear-metadata
         },
 
         onCopyMetadata: function(evt) {
-            getMenuItemCard(this).data.isMenuOpen = false;
             evt.target.dispatchEvent(new CustomEvent('loot-copy-metadata', {
                 bubbles: true,
             }));
         },
 
         onClearMetadata: function(evt) {
-            getMenuItemCard(this).data.isMenuOpen = false;
             evt.target.dispatchEvent(new CustomEvent('loot-clear-metadata', {
                 bubbles: true,
             }));
