@@ -168,8 +168,8 @@ namespace loot {
     //Get registry subkey value string.
     string RegKeyStringValue(const std::string& keyStr, const std::string& subkey, const std::string& value) {
         HKEY hKey = NULL;
-        DWORD BufferSize = 4096;
-        wchar_t val[4096];
+        DWORD len = MAX_PATH;
+        wstring wstr(MAX_PATH, 0);
 
         if (keyStr == "HKEY_CLASSES_ROOT")
             hKey = HKEY_CLASSES_ROOT;
@@ -190,11 +190,11 @@ namespace loot {
                                ToWinWide(value).c_str(),
                                RRF_RT_REG_SZ | KEY_WOW64_32KEY,
                                NULL,
-                               &val,
-                               &BufferSize);
+                               &wstr[0],
+                               &len);
 
         if (ret == ERROR_SUCCESS)
-            return FromWinWide(val);
+            return FromWinWide(wstr.c_str());  // Passing c_str() cuts off any unused buffer.
         else
             return "";
     }
@@ -228,12 +228,12 @@ namespace loot {
     std::wstring ToWinWide(const std::string& str) {
         int len = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), str.length(), 0, 0);
         std::wstring wstr(len, 0);
-        MultiByteToWideChar(CP_UTF8, 0, str.c_str(), str.length(), &(wstr[0]), len);
+        MultiByteToWideChar(CP_UTF8, 0, str.c_str(), str.length(), &wstr[0], len);
         return wstr;
     }
 
     std::string FromWinWide(const std::wstring& wstr) {
-        int len = WideCharToMultiByte(CP_UTF8, 0, &wstr[0], wstr.length(), NULL, 0, NULL, NULL);
+        int len = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), wstr.length(), NULL, 0, NULL, NULL);
         std::string str(len, 0);
         WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), wstr.length(), &str[0], len, NULL, NULL);
         return str;
