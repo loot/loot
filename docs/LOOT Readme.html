@@ -240,7 +240,7 @@ var {
 
 <p>LOOT can also be launched with the <code>--game=&lt;game folder name&gt;</code> command line parameter to set the game to run for. If the supplied game folder name is valid, the default and last game values are ignored. The default folder names are <code>Oblivion</code>, <code>Skyrim</code>, <code>Fallout3</code> and <code>FalloutNV</code>.
 
-<p>If LOOT cannot detect any supported game installs, it will immediately open the <a href="#usage-settings">Settings dialog</a>. There you can edit LOOT's settings to provide a path to a supported game, after which you can select it from the Game menu.
+<p>If LOOT cannot detect any supported game installs, it will immediately open the <a href="#usage-settings">Settings dialog</a>. There you can edit LOOT's settings to provide a path to a supported game, after which you can select it from the game menu.
 
 <p>Once a game has been set, LOOT will scan its plugins and load the game's masterlist, if one is present. The plugins and any metadata they have are then listed in their current load order.
 
@@ -257,7 +257,7 @@ var {
 <figcaption>LOOT's header bar, divided into sidebar and panel areas. The sidebar area contains the plugins and filters tabs. From left to right in the panel area are the <q>Jump To General Information</q> button, the game menu, and the sorting, masterlist update and main menu buttons. The game menu, masterlist update button and sorting button have been disabled, as a plugin metadata editor is open.</figcaption>
 </figure>
 
-<p>The header bar provides access to LOOT's main features. Most of these features get disabled while there is at least one plugin editor open, so if you're trying to use an option that has been greyed out, first close any editors you have open.
+<p>The header bar provides access to LOOT's main features. Most of these features get disabled while there is at least one plugin editor open, so if you're trying to use an option that is faded out, first close any editors you have open.
 
 <h4>Game Menu</h4>
 
@@ -361,8 +361,8 @@ var {
 <p>The editor's header bar is similar to the header on the front of the plugin card, minus the <q>Has User Metadata</q> icon, and with the addition of <q>Apply</q> and <q>Cancel</q> icon buttons and a row of tabs. The <span class="button">Main</span> tab contains the following inputs:
 
 <ul>
-    <li>The <q>Enable Edits</q> checkbox must be checked for LOOT to use any user-added metadata, otherwise it will be ignored.
-    <li>The <q>Global Priority</q> checkbox controls how LOOT compares plugin priorities. If unchecked, the plugin's priority will only be compared against plugins that conflict, and empty plugins. If checked, the plugin's priority will be compared against all plugins.
+    <li>The <q>Enable Edits</q> toggle must be on for LOOT to use any user-added metadata, otherwise it will be ignored.
+    <li>The <q>Global Priority</q> toggle controls how LOOT compares plugin priorities. If off, the plugin's priority will only be compared against plugins that conflict, and empty plugins. If on, the plugin's priority will be compared against all plugins.
     <li>The <q>Priority Value</q> input sets the plugin's priority value, which is used to modify plugin position relative to others. Plugins with higher priority values load after plugins with lower priority values. Plugins have a default priority of 0.
 </ul>
 
@@ -429,7 +429,7 @@ var {
         <tr><th>Setting<th>Description
     <tbody>
         <tr><td id="settingsDefaultGame">Default Game<td>If set to something other than <q>Autodetect</q>, this overrides game autodetection. If the game specified is not detected, LOOT falls back to autodetection.
-        <tr><td>Language<td>Controls the language LOOT uses in its interfaces. Any plugin messages that do not have translations in the selected language will be displayed in English, if available, or in their available language otherwise.
+        <tr><td>Language<td>Controls the language LOOT uses. Any plugin messages that do not have translations in the selected language will be displayed in English, if available, or in their available language otherwise.
         <tr><td>Enable Debug Logging<td>If enabled, writes debug output to <code>%LOCALAPPDATA%\LOOT\LOOTDebugLog.txt</code>. Debug logging can have a noticeable impact on performance, so it is off by default.
         <tr><td id="settingsUpdateMasterlist">Update masterlist before sorting<td>If checked, LOOT will update its masterlist, should an update be available, before sorting plugins.
 </table>
@@ -460,11 +460,11 @@ var {
 
 
 <h2 id="contrib">Contributing &amp; Support</h2>
-<p>LOOT is very much a community project, and contributions from its users are vital to its upkeep, whether they be metadata, translations, code or anything else. The best way to contribute is to <a href="https://github.com/loot/loot.github.io/wiki/How-To-Contribute">make changes yourself</a> at GitHub! It's the fastest way to get changes you want applied, and you'll get your name automatically immortalised in our <a href="http://loot.github.io/credits/">credits</a>.
+<p>LOOT is very much a community project, and contributions from its users are very welcome, whether they be metadata, translations, code or anything else. The best way to contribute is to <a href="https://github.com/loot/loot.github.io/wiki/How-To-Contribute">make changes yourself</a> at GitHub! It's the fastest way to get changes you want applied, and you'll get your name automatically immortalised in our <a href="http://loot.github.io/credits/">credits</a>.
 
 <p>If you encounter an issue with LOOT, check the <a href="https://github.com/loot/loot.github.io/wiki/LOOT-FAQs">Frequently Asked Questions</a> wiki page in case a solution is available there.
 
-<p>Otherwise, general discussion and support takes place in LOOT's official forum threads. These are linked to at the bottom of <a href="http://loot.github.io">LOOT's homepage</a>.
+<p>Otherwise, general discussion and support takes place in LOOT's official forum thread, which is linked to on <a href="http://loot.github.io">LOOT's homepage</a>.
 
 <p>If you want to submit metadata, the easiest way to do so is to add the metadata to your own LOOT install, then use the <a href="#copyMetadata">Copy Metadata</a> feature to easily get it in a form that you can then edit into a masterlist on GitHub or post in the official forum threads.
 
@@ -476,7 +476,7 @@ var {
 <p>LOOT's masterlists were largely converted from <a href="http://boss-developers.github.io">BOSS</a>'s masterlists, and so credit is due to the very large number of sources and people who have contributed to them.
 <p>In addition, the following are credited with application-related support:
 <ul>
-    <li>Icon: jonwd7
+    <li>Original icon: jonwd7
     <li>Translations:
     <ul>
         <li>Brazilian Portuguese: Kassane
@@ -502,7 +502,7 @@ var {
 <a href="https://github.com/chjj/marked">Marked</a>,
 <a href="https://www.polymer-project.org/">Polymer</a>
 <a href="http://requirejs.org">RequireJS</a> and
-<a href="http://code.google.com/p/yaml-cpp/">yaml-cpp</a> libraries, and the <a href="https://code.google.com/p/chromiumembedded/">Chromium Embedded Framework</a>. Copyright license information for all these may be found <a href="licenses/Licenses.txt">here</a>.
+<a href="https://github.com/WrinklyNinja/yaml-cpp">yaml-cpp</a> libraries, and the <a href="https://bitbucket.org/chromiumembedded/cef">Chromium Embedded Framework</a>. Copyright license information for all these may be found <a href="licenses/Licenses.txt">here</a>.
 
 <h2 id="license">License</h2>
 <p>LOOT is distributed under the <a href="http://www.gnu.org/licenses/gpl.html">GNU General Public License v3.0</a>, aside from the documentation, which is distributed under the <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License v1.3</a>. The full texts of the licenses are included with LOOT in the accompanying <a href="licenses/GNU%20GPL%20v3.txt">GNU GPL v3.txt</a> and <a href="licenses/GNU%20FDL%20v1.3.txt">GNU FDL v1.3.txt</a> files.
@@ -521,7 +521,7 @@ A copy of the license is included in the file named "GNU FDL v1.3.txt".</blockqu
 
 
 <h2 id="history">Version History</h2>
-<p>Only program history is recorded here. The masterlists are updated far too frequently for their changes to be concisely recorded here, but a full history of changes to them may be viewed by browsing the GitHub repositories.
+<p>Only program history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
 <h3>0.7.0 - <i>X Y 2015</i></h3>
 <h4>Fixes</h4>
@@ -530,18 +530,20 @@ A copy of the license is included in the file named "GNU FDL v1.3.txt".</blockqu
     <li>Inactive incompatibilities were displayed as error messages. They are now displayed as warnings.
     <li>Masterlist entries that matched the same plugin were not being merged. Now one exact match and any number of regex matches will be merged.
     <li>Masterlist updating failed when a fast-forward merge was not possible (eg. when remote has been rebased, or a different repository is used). Such cases are now handled by deleting the local repository and re-cloning the remote.
+    <li>Masterlist updating failed when the path to LOOT's folder included a junction link.
     <li>Masterlists would not 'update' to older revisions. This can be useful for testing, so now they can do so.
     <li>Crashes when trying to read corrupt plugins and after masterlist update completion.
     <li>Plugins with non-ASCII description text would cause <code>codecvt to wstring</code> errors.
     <li>LOOT would accept any file with a <code>.esp</code> or <code>.esm</code> extension as a plugin. It now checks more thoroughly, by attempting to parse such files' headers.
     <li>LOOT would only detect Skyrim plugins as loading BSAs. Plugins for the other games that also load BSAs are now correctly detected as such.
+    <li>Depending on the plugins involved, sorting could produce a different load order every time it was run. Sorting now produces unchanging load orders, using existing load order position where there is no reason to move a plugin.
 </ul>
 <h4>Additions</h4>
 <ul>
     <li>Danish and Korean translations.
     <li>If LOOT can't detect any installed games, it now launches to the settings dialog, where the game settings can be edited to allow a game to be detected.
-    <li><q>Copy Content</q> menu item to copy the plugin list and all information it contains to the clipboard as YAML-formatted text.
-    <li>A <q>Refresh Content</q> item has been added to the main menu, which re-scans plugin headers and updates LOOT's content.
+    <li>A <q>Copy Content</q> item in the main menu, to copy the plugin list and all information it contains to the clipboard as YAML-formatted text.
+    <li>A <q>Refresh Content</q> item in the main menu, which re-scans plugin headers and updates LOOT's content.
     <li>LOOT is now built with High DPI display support.
     <li>Masterlist updates can now be performed independently of sorting.
     <li>A <q>First-Time Tips</q> dialog will be displayed on the first run of any particular version of LOOT.
@@ -554,23 +556,23 @@ A copy of the license is included in the file named "GNU FDL v1.3.txt".</blockqu
 </ul>
 <h4>Changes</h4>
 <ul>
-    <li>New single-window HTML5-based interface, based on Google's Material Design.
-    <li>LOOT's calculated load orders are now more intuitive: an additional constraint was added so that plugins will be placed in alphabetical order so long as doing so does not violate any of the other constraints.
+    <li>New single-window HTML5-based interface and a new icon, based on Google's Material Design.
     <li>LOOT now parses the masterlist and plugin headers on startup, and the resulting content is displayed with the plugins in their current load order.
     <li>Each plugin now has its own editor, and multiple editors can be opened at once.
     <li>Drag 'n' drop of plugins from the sidebar into metadata editor tables no longer requires the conflicts filter to be enabled.
     <li>CRCs are calculated during conflict filtering or sorting, so are not displayed until either process has been performed.
-    <li>The <q>View Debug Log</q> menu item has been replaced with a <q>Open Debug Log Location</q> menu item to make it easier to upload the file itself.
-    <li>Debug logging control has been simplified to enable/disable, replacing the <q>Debug Verbosity</q> setting with an <q>Enable Debug Logging</q> checkbox.
+    <li>The <q>View Debug Log</q> menu item has been replaced with a <q>Open Debug Log Location</q> menu item to make it easier to share the file itself.
+    <li>Debug logging control has been simplified to enable/disable, replacing the <q>Debug Verbosity</q> setting with an <q>Enable Debug Logging</q> toggle.
     <li>Changes to game settings now take immediate effect.
     <li>Masterlist updating now exits earlier if the masterlist is already up-to-date.
     <li>Masterlist revisions are now displayed using the shortest unique substring that is at least 7 characters long.
     <li>Making edits to plugin metadata before applying a calculated load order no longer causes LOOT to recalculate the load order. Instead, the displayed load order is applied, and the metadata edits will be applied the next time sorting is performed.
     <li>All references to <q>UDRs</q> have been replaced by the more technically-correct <q>Deleted References</q> term.
     <li>The <q>Hide inactive plugin messages</q> filter has been replaced by a <q>Hide inactive plugins</q> filter.
-    <li>New icon!
     <li>Copied metadata is now wrapped in BBCode <code>[spoiler][code]...[/code][/spoiler]</code> tags for easier pasting into forum posts.
     <li>The Summary and General Messages cards have been combined into a General Information card.
+    <li>Sorting performance improvements.
+    <li>Updated Boost (1.58.0), libgit2 (0.22.2) and libloadorder dependencies.
 </ul>
 <h4>Removals</h4>
 <ul>
