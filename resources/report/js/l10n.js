@@ -273,7 +273,7 @@
             defaultGameSelect.previousElementSibling.textContent = l10n.translate("Default Game").fetch();
             defaultGameSelect.firstElementChild.textContent = l10n.translate("Autodetect").fetch();
             /* The selected text doesn't update, so force that translation. */
-            defaultGameSelect.shadowRoot.querySelector('paper-dropdown-menu').shadowRoot.getElementById('label').textContent = l10n.translate("Autodetect").fetch();
+            defaultGameSelect.shadowRoot.querySelector('paper-dropdown-menu').selectedItemLabel = defaultGameSelect.shadowRoot.querySelector('core-menu').selectedItem.textContent;
 
             document.getElementById('languageSelect').previousElementSibling.textContent = l10n.translate("Language").fetch();
             document.getElementById('languageSelect').previousElementSibling.label = l10n.translate("Language changes will be applied after LOOT is restarted.").fetch();
