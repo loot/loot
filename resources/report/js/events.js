@@ -6,6 +6,10 @@ function onToggleDisplayCSS(evt) {
         document.getElementById('main').removeAttribute(attr);
     }
 }
+function onToggleBashTags(evt) {
+    onToggleDisplayCSS(evt);
+    document.getElementById('main').lastElementChild.updateSize();
+}
 function onOpenLogLocation(evt) {
     loot.query('openLogLocation').catch(processCefError);
 }
@@ -631,7 +635,7 @@ function setupEventHandlers() {
     /*Set up handlers for filters.*/
     document.getElementById('hideVersionNumbers').addEventListener('change', onToggleDisplayCSS, false);
     document.getElementById('hideCRCs').addEventListener('change', onToggleDisplayCSS, false);
-    document.getElementById('hideBashTags').addEventListener('change', onToggleDisplayCSS, false);
+    document.getElementById('hideBashTags').addEventListener('change', onToggleBashTags, false);
     document.getElementById('hideNotes').addEventListener('change', setFilteredUIData, false);
     document.getElementById('hideDoNotCleanMessages').addEventListener('change', setFilteredUIData, false);
     document.getElementById('hideInactivePlugins').addEventListener('change', setFilteredUIData, false);
