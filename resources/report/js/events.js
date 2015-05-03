@@ -103,15 +103,24 @@ function onUpdateMasterlist(evt) {
     }).catch(processCefError);
 }
 function onSortPlugins(evt) {
-    var mlistUpdate;
-    if (loot.settings.updateMasterlist) {
-        mlistUpdate = updateMasterlistNoProgress();
-    } else {
-        mlistUpdate = new Promise(function(resolve, reject){
-            resolve('');
-        });
+    if (document.body.hasAttribute('data-conflicts')) {
+        /* Deactivate any existing plugin conflict filter. */
+        for (var i = 0; i < loot.game.plugins.length; ++i) {
+            loot.game.plugins[i].isConflictFilterChecked = false;
+        }
+        /* Un-highlight any existing filter plugin. */
+        var cards = document.getElementById('main').getElementsByTagName('loot-plugin-card');
+        for (var i = 0; i < cards.length; ++i) {
+            cards[i].classList.toggle('highlight', false);
+        }
+        document.body.removeAttribute('data-conflicts');
     }
-    mlistUpdate.then(function(){
+
+    var promise = Promise.resolve('');
+    if (loot.settings.updateMasterlist) {
+        promise = promise.then(updateMasterlistNoProgress());
+    }
+    promise.then(function(){
         showProgress(l10n.jed.translate('Sorting plugins...').fetch());
         loot.query('sortPlugins').then(JSON.parse).then(function(result){
             if (result) {
