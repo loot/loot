@@ -4,13 +4,13 @@
 
 ## Introduction
 
-LOOT is a plugin load order optimiser for TES IV: Oblivion, TES V: Skyrim, Fallout 3 and Fallout: New Vegas. It is designed to assist mod users in avoiding detrimental conflicts, by automatically calculating a load order that satisfies all plugin dependencies and maximises each plugin's impact on the user's game.
+LOOT is a plugin load order optimisation tool for TES IV: Oblivion, TES V: Skyrim, Fallout 3 and Fallout: New Vegas. It is designed to assist mod users in avoiding detrimental conflicts, by automatically calculating a load order that satisfies all plugin dependencies and maximises each plugin's impact on the user's game.
 
 LOOT also provides some load order error checking, including checks for requirements, incompatibilities and cyclic dependencies. In addition, it provides a large number of plugin-specific usage notes, bug warnings and Bash Tag suggestions.
 
 Although LOOT is able to calculate the correct load order positions for the vast majority of mods without any user input, some plugins are designed to load at certain positions in a load order, and LOOT may be unable to determine this from the plugins themselves. As such, LOOT provides a mechanism for supplying additional plugin metadata so that it may sort them correctly.
 
-LOOT is intended to make using mods easier, and mod users should still possess a working knowledge of mod load ordering. See the "Introduction To Load Orders" section of the LOOT readme for an overview.
+LOOT is intended to make using mods easier, and mod users should still possess a working knowledge of mod load ordering. See [Introduction To Load Orders](https://github.com/loot/loot.github.io/wiki/Introduction-To-Load-Orders) for an overview.
 
 ## Building LOOT
 
@@ -19,7 +19,7 @@ LOOT is intended to make using mods easier, and mod users should still possess a
 LOOT uses [CMake](http://cmake.org) to generate build files, and requires the following libraries (version numbers used in latest development revision given):
 
 * [Alphanum](http://www.davekoelle.com/files/alphanum.hpp)
-* [Boost](http://www.boost.org) v1.57.0
+* [Boost](http://www.boost.org) v1.58.0
 * [Chromium Embedded Framework](https://bitbucket.org/chromiumembedded/cef) branch 2272
 * [Google Test](https://code.google.com/p/googletest/) v1.7: Required to build the LOOT API's tests, but not the API itself or the LOOT application.
 * [Libespm](http://github.com/WrinklyNinja/libespm)
@@ -41,7 +41,7 @@ LOOT's UI relies on a few web libraries:
 * [Marked](https://github.com/chjj/marked)
 * [RequireJS](http://requirejs.org/)
 
-These dependencies are most easily managed using [Bower](http://bower.io/), and are built for distribution using [Vulcanize](https://github.com/Polymer/vulcanize) (v0.7.1+, earlier versions break LOOT's templates).
+These dependencies are most easily managed using [Bower](http://bower.io/), and are built for distribution using [Vulcanize](https://github.com/Polymer/vulcanize).
 
 To install Bower and Vulcanize, first install [Node](http://nodejs.org/), and run `npm install -g bower vulcanize` from the command line (on Windows, it needs to be the Node command prompt). Once they are installed, fetch and build the dependencies by running `bower install ./ && vulcanize --inline --strip -o index.html report.html` from inside this repository's `resources/report` folder (this command doesn't need to be run through Node).
 
