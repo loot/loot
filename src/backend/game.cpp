@@ -385,21 +385,26 @@ namespace loot {
     }
 
     bool Game::IsInstalled() const {
-        BOOST_LOG_TRIVIAL(trace) << "Checking if game \"" << _name << "\" is installed.";
-        if (!gamePath.empty() && fs::exists(gamePath / "Data" / _masterFile))
-            return true;
+        try {
+            BOOST_LOG_TRIVIAL(trace) << "Checking if game \"" << _name << "\" is installed.";
+            if (!gamePath.empty() && fs::exists(gamePath / "Data" / _masterFile))
+                return true;
 
-        if (fs::exists(fs::path("..") / "Data" / _masterFile))
-            return true;
+            if (fs::exists(fs::path("..") / "Data" / _masterFile))
+                return true;
 
 #ifdef _WIN32
-        string path;
-        string key_parent = fs::path(registryKey).parent_path().string();
-        string key_name = fs::path(registryKey).filename().string();
-        path = RegKeyStringValue("HKEY_LOCAL_MACHINE", key_parent, key_name);
-        if (!path.empty() && fs::exists(fs::path(path) / "Data" / _masterFile))
-            return true;
+            string path;
+            string key_parent = fs::path(registryKey).parent_path().string();
+            string key_name = fs::path(registryKey).filename().string();
+            path = RegKeyStringValue("HKEY_LOCAL_MACHINE", key_parent, key_name);
+            if (!path.empty() && fs::exists(fs::path(path) / "Data" / _masterFile))
+                return true;
 #endif
+        }
+        catch (exception &e) {
+            BOOST_LOG_TRIVIAL(error) << "Error while checking if game \"" << _name << "\" is installed: " << e.what();
+        }
 
         return false;
     }
