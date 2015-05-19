@@ -497,6 +497,7 @@ function onConflictsFilter(evt) {
     /* evt.detail is true if the filter has been activated. */
     if (evt.detail) {
         document.body.setAttribute('data-conflicts', evt.target.getName());
+        evt.target.classList.toggle('highlight', true);
     } else {
         document.body.removeAttribute('data-conflicts');
     }
