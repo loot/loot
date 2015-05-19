@@ -332,7 +332,7 @@ var {
 <ul>
     <li>A conflict filter that can be accessed through each plugin's menu. This filters the plugin cards displayed so that only plugins which conflict with this plugin will be visible. If this plugin loads a BSA, other plugins that load BSAs which <em>may</em> contain conflicting resources are also displayed.</p>
 
-    Only one plugin's conflict filter can be active at any one time, so activating a second conflict filter will deactivate the first. The plugin for which the filter is currently active has its card highlighted.
+    Only one plugin's conflict filter can be active at any one time, so activating a second conflict filter will deactivate the first. The plugin for which the filter is currently active has its card highlighted. Sorting with a conflict filter active will first deactivate it.
     <li>A content filter, located at the bottom of the sidebar. This hides any plugins that don't have the filter input value present in any of the following:
     <ul>
         <li>Filename
@@ -533,6 +533,7 @@ A copy of the license is included in the file named "GNU FDL v1.3.txt".</blockqu
     <li>Masterlist updating failed when the path to LOOT's folder included a junction link.
     <li>Masterlists would not 'update' to older revisions. This can be useful for testing, so now they can do so.
     <li>Crashes when trying to read corrupt plugins and after masterlist update completion.
+    <li>LOOT would crash when trying to detect a game installed to a location in which the user does not have read permissions, now such games are treated as not being installed.
     <li>Plugins with non-ASCII description text would cause <code>codecvt to wstring</code> errors.
     <li>LOOT would accept any file with a <code>.esp</code> or <code>.esm</code> extension as a plugin. It now checks more thoroughly, by attempting to parse such files' headers.
     <li>LOOT would only detect Skyrim plugins as loading BSAs. Plugins for the other games that also load BSAs are now correctly detected as such.
