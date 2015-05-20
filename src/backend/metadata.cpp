@@ -3,7 +3,7 @@
     A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
     Fallout: New Vegas.
 
-    Copyright (C) 2012-2014    WrinklyNinja
+    Copyright (C) 2012-2015    WrinklyNinja
 
     This file is part of LOOT.
 
@@ -20,14 +20,12 @@
     You should have received a copy of the GNU General Public License
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
-*/
+    */
 
 #include "helpers.h"
 #include "metadata.h"
 #include "parsers.h"
 #include "streams.h"
-
-#include <regex>
 
 #include <src/libespm.h>
 
@@ -35,11 +33,15 @@
 #include <boost/filesystem.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/locale.hpp>
+#include <boost/regex.hpp>
 
 using namespace std;
+using boost::regex;
+using boost::regex_match;
+using boost::regex_search;
+using boost::smatch;
 
 namespace loot {
-
     namespace lc = boost::locale;
 
     FormID::FormID() : id(0) {}
@@ -77,35 +79,6 @@ namespace loot {
         return id;
     }
 
-    PluginDirtyInfo::PluginDirtyInfo() : _crc(0), _itm(0), _udr(0), _nav(0) {}
-
-    PluginDirtyInfo::PluginDirtyInfo(uint32_t crc, unsigned int itm, unsigned int udr, unsigned int nav, const std::string& utility) : _crc(crc), _itm(itm), _udr(udr), _nav(nav), _utility(utility) {}
-
-    bool PluginDirtyInfo::operator < (const PluginDirtyInfo& rhs) const {
-        return _crc < rhs.CRC();
-    }
-
-    uint32_t PluginDirtyInfo::CRC() const {
-        return _crc;
-    }
-
-    unsigned int PluginDirtyInfo::ITMs() const {
-        return _itm;
-    }
-
-    unsigned int PluginDirtyInfo::UDRs() const {
-        return _udr;
-    }
-
-    unsigned int PluginDirtyInfo::DeletedNavmeshes() const {
-        return _nav;
-    }
-
-    std::string PluginDirtyInfo::CleaningUtility() const {
-        return _utility;
-    }
-
-
     ConditionStruct::ConditionStruct() {}
 
     ConditionStruct::ConditionStruct(const string& condition) : _condition(condition) {}
@@ -118,29 +91,29 @@ namespace loot {
         return _condition;
     }
 
-    bool ConditionStruct::EvalCondition(loot::Game& game) const {
+    bool ConditionStruct::EvalCondition(Game& game) const {
         if (_condition.empty())
             return true;
 
         BOOST_LOG_TRIVIAL(trace) << "Evaluating condition: " << _condition;
 
-        unordered_map<std::string, bool>::const_iterator it = game.conditionCache.find(boost::to_lower_copy(_condition));
+        unordered_map<std::string, bool>::const_iterator it = game.conditionCache.find(boost::locale::to_lower(_condition));
         if (it != game.conditionCache.end())
             return it->second;
 
-        condition_grammar<std::string::const_iterator, boost::spirit::qi::space_type> grammar;
+        condition_grammar<std::string::const_iterator, boost::spirit::qi::space_type> grammar(&game, false);
         boost::spirit::qi::space_type skipper;
         std::string::const_iterator begin, end;
         bool eval;
 
-        grammar.SetGame(game);
         begin = _condition.begin();
         end = _condition.end();
 
         bool r;
         try {
             r = boost::spirit::qi::phrase_parse(begin, end, grammar, skipper, eval);
-        } catch (std::exception& e) {
+        }
+        catch (std::exception& e) {
             BOOST_LOG_TRIVIAL(error) << "Failed to parse condition \"" << _condition << "\": " << e.what();
             throw loot::error(loot::error::condition_eval_fail, (boost::format(lc::translate("Failed to parse condition \"%1%\": %2%")) % _condition % e.what()).str());
         }
@@ -150,9 +123,37 @@ namespace loot {
             throw loot::error(loot::error::condition_eval_fail, (boost::format(lc::translate("Failed to parse condition \"%1%\".")) % _condition).str());
         }
 
-        game.conditionCache.emplace(boost::to_lower_copy(_condition), eval);
+        game.conditionCache.insert(pair<string, bool>(boost::locale::to_lower(_condition), eval));
 
         return eval;
+    }
+
+    void ConditionStruct::ParseCondition() const {
+        if (_condition.empty())
+            return;
+
+        BOOST_LOG_TRIVIAL(trace) << "Testing condition syntax: " << _condition;
+
+        condition_grammar<std::string::const_iterator, boost::spirit::qi::space_type> grammar(nullptr, true);
+        boost::spirit::qi::space_type skipper;
+        std::string::const_iterator begin, end;
+
+        begin = _condition.begin();
+        end = _condition.end();
+
+        bool r;
+        try {
+            r = boost::spirit::qi::phrase_parse(begin, end, grammar, skipper);
+        }
+        catch (std::exception& e) {
+            BOOST_LOG_TRIVIAL(error) << "Failed to parse condition \"" << _condition << "\": " << e.what();
+            throw loot::error(loot::error::condition_eval_fail, (boost::format(lc::translate("Failed to parse condition \"%1%\": %2%")) % _condition % e.what()).str());
+        }
+
+        if (!r || begin != end) {
+            BOOST_LOG_TRIVIAL(error) << "Failed to parse condition \"" << _condition << "\".";
+            throw loot::error(loot::error::condition_eval_fail, (boost::format(lc::translate("Failed to parse condition \"%1%\".")) % _condition).str());
+        }
     }
 
     MessageContent::MessageContent() : _language(Language::english) {}
@@ -175,7 +176,7 @@ namespace loot {
         return (_language == rhs.Language() && boost::iequals(_str, rhs.Str()));
     }
 
-    Message::Message() {}
+    Message::Message() : _type(Message::say) {}
 
     Message::Message(const unsigned int type, const std::string& content,
                      const std::string& condition) : _type(type), ConditionStruct(condition) {
@@ -183,7 +184,7 @@ namespace loot {
     }
 
     Message::Message(const unsigned int type, const std::vector<MessageContent>& content,
-                const std::string& condition) : _type(type), _content(content), ConditionStruct(condition) {}
+                     const std::string& condition) : _type(type), _content(content), ConditionStruct(condition) {}
 
     bool Message::operator < (const Message& rhs) const {
         if (!_content.empty() && !rhs.Content().empty())
@@ -199,7 +200,6 @@ namespace loot {
     }
 
     bool Message::EvalCondition(loot::Game& game, const unsigned int language) {
-
         BOOST_LOG_TRIVIAL(trace) << "Choosing message content for language: " << Language(language).Name();
 
         if (_content.size() > 1) {
@@ -207,7 +207,7 @@ namespace loot {
                 _content.resize(1);
             else {
                 MessageContent english, match;
-                for (const auto &mc: _content) {
+                for (const auto &mc : _content) {
                     if (mc.Language() == language) {
                         match = mc;
                         break;
@@ -252,6 +252,59 @@ namespace loot {
 
     std::vector<MessageContent> Message::Content() const {
         return _content;
+    }
+
+    PluginDirtyInfo::PluginDirtyInfo() : _crc(0), _itm(0), _ref(0), _nav(0) {}
+
+    PluginDirtyInfo::PluginDirtyInfo(uint32_t crc, unsigned int itm, unsigned int ref, unsigned int nav, const std::string& utility) : _crc(crc), _itm(itm), _ref(ref), _nav(nav), _utility(utility) {}
+
+    bool PluginDirtyInfo::operator < (const PluginDirtyInfo& rhs) const {
+        return _crc < rhs.CRC();
+    }
+
+    uint32_t PluginDirtyInfo::CRC() const {
+        return _crc;
+    }
+
+    unsigned int PluginDirtyInfo::ITMs() const {
+        return _itm;
+    }
+
+    unsigned int PluginDirtyInfo::DeletedRefs() const {
+        return _ref;
+    }
+
+    unsigned int PluginDirtyInfo::DeletedNavmeshes() const {
+        return _nav;
+    }
+
+    std::string PluginDirtyInfo::CleaningUtility() const {
+        return _utility;
+    }
+
+    Message PluginDirtyInfo::AsMessage() const {
+        boost::format f;
+        if (this->_itm > 0 && this->_ref > 0 && this->_nav > 0)
+            f = boost::format(boost::locale::translate("Contains %1% ITM records, %2% deleted references and %3% deleted navmeshes. Clean with %4%.")) % this->_itm % this->_ref % this->_nav % this->_utility;
+        else if (this->_itm == 0 && this->_ref == 0 && this->_nav == 0)
+            f = boost::format(boost::locale::translate("Clean with %1%.")) % this->_utility;
+
+        else if (this->_itm == 0 && this->_ref > 0 && this->_nav > 0)
+            f = boost::format(boost::locale::translate("Contains %1% deleted references and %2% deleted navmeshes. Clean with %3%.")) % this->_ref % this->_nav % this->_utility;
+        else if (this->_itm == 0 && this->_ref == 0 && this->_nav > 0)
+            f = boost::format(boost::locale::translate("Contains %1% deleted navmeshes. Clean with %2%.")) % this->_nav % this->_utility;
+        else if (this->_itm == 0 && this->_ref > 0 && this->_nav == 0)
+            f = boost::format(boost::locale::translate("Contains %1% deleted references. Clean with %2%.")) % this->_ref % this->_utility;
+
+        else if (this->_itm > 0 && this->_ref == 0 && this->_nav > 0)
+            f = boost::format(boost::locale::translate("Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%.")) % this->_itm % this->_nav % this->_utility;
+        else if (this->_itm > 0 && this->_ref == 0 && this->_nav == 0)
+            f = boost::format(boost::locale::translate("Contains %1% ITM records. Clean with %2%.")) % this->_itm % this->_utility;
+
+        else if (this->_itm > 0 && this->_ref > 0 && this->_nav == 0)
+            f = boost::format(boost::locale::translate("Contains %1% ITM records and %2% deleted references. Clean with %3%.")) % this->_itm % this->_ref % this->_utility;
+
+        return Message(Message::warn, f.str());
     }
 
     File::File() {}
@@ -300,21 +353,44 @@ namespace loot {
         return _name;
     }
 
-    Plugin::Plugin() : enabled(true), priority(0), isMaster(false), crc(0), numOverrideRecords(0), _isPriorityExplicit(false) {}
-    Plugin::Plugin(const std::string& n) : name(n), enabled(true), priority(0), isMaster(false), crc(0), numOverrideRecords(0), _isPriorityExplicit(false) {
+    Location::Location() {}
+
+    Location::Location(const std::string& url) : _url(url) {}
+
+    Location::Location(const std::string& url, const std::vector<std::string>& versions) : _url(url), _versions(versions) {}
+
+    bool Location::operator < (const Location& rhs) const {
+        return boost::ilexicographical_compare(_url, rhs.URL());
+    }
+
+    std::string Location::URL() const {
+        return _url;
+    }
+
+    std::vector<std::string> Location::Versions() const {
+        return _versions;
+    }
+
+    Plugin::Plugin() : enabled(true), _isPriorityExplicit(false), priority(0), isMaster(false), crc(0), numOverrideRecords(0) {}
+    Plugin::Plugin(const std::string& n) : name(n), enabled(true), _isPriorityExplicit(false), priority(0), isMaster(false), crc(0), numOverrideRecords(0) {
         //If the name passed ends in '.ghost', that should be trimmed.
         if (boost::iends_with(name, ".ghost"))
             name = name.substr(0, name.length() - 6);
     }
 
-	Plugin::Plugin(loot::Game& game, const std::string& n, const bool headerOnly)
+    Plugin::Plugin(loot::Game& game, const std::string& n, const bool headerOnly)
         : name(n), enabled(true), priority(0), isMaster(false), crc(0), numOverrideRecords(0), _isPriorityExplicit(false) {
+        //If the name passed ends in '.ghost', that should be trimmed.
+        if (boost::iends_with(name, ".ghost")) {
+            BOOST_LOG_TRIVIAL(trace) << name << ": " << "Trimming '.ghost' extension.";
+            name = name.substr(0, name.length() - 6);
+        }
 
-		// Get data from file contents using libespm. Assumes libespm has already been initialised.
+        // Get data from file contents using libespm. Assumes libespm has already been initialised.
         BOOST_LOG_TRIVIAL(trace) << name << ": " << "Opening with libespm...";
-		boost::filesystem::path filepath = game.DataPath() / name;
+        boost::filesystem::path filepath = game.DataPath() / name;
 
-        //In case the plugin is ghosted, but the extension already got trimmed.
+        //In case the plugin is ghosted.
         if (!boost::filesystem::exists(filepath) && boost::filesystem::exists(filepath.string() + ".ghost"))
             filepath += ".ghost";
 
@@ -328,91 +404,91 @@ namespace loot {
                 file = new espm::fo3::File(filepath, game.espm_settings, false, headerOnly);
             else
                 file = new espm::fonv::File(filepath, game.espm_settings, false, headerOnly);
+
+            BOOST_LOG_TRIVIAL(trace) << name << ": " << "Checking master flag.";
+            isMaster = file->isMaster(game.espm_settings);
+
+            BOOST_LOG_TRIVIAL(trace) << name << ": " << "Getting masters.";
+            for (const auto& master : file->getMasters()) {
+                masters.push_back(boost::locale::conv::to_utf<char>(master, "Windows-1252", boost::locale::conv::stop));
+            }
+
+            BOOST_LOG_TRIVIAL(trace) << name << ": " << "Number of masters: " << masters.size();
+
+            if (!headerOnly) {
+                BOOST_LOG_TRIVIAL(trace) << name << ": " << "Getting CRC.";
+                crc = file->crc;
+                game.crcCache.insert(pair<string, uint32_t>(boost::locale::to_lower(name), crc));
+            }
+
+            BOOST_LOG_TRIVIAL(trace) << name << ": " << "Getting the FormIDs.";
+            vector<uint32_t> records = file->getFormIDs();
+            vector<string> plugins = masters;
+            plugins.push_back(name);
+            for (const auto &record : records) {
+                FormID fid = FormID(plugins, record);
+                formIDs.insert(fid);
+                if (!boost::iequals(fid.Plugin(), name))
+                    ++numOverrideRecords;
+            }
+
+            BOOST_LOG_TRIVIAL(trace) << name << ": " << "Checking if plugin is empty.";
+            if (headerOnly) {
+                // Check the header records count.
+                _isEmpty = file->getNumRecords() == 0;
+            }
+            else {
+                _isEmpty = formIDs.empty();
+            }
+
+            //Also read Bash Tags applied and version string in description.
+            BOOST_LOG_TRIVIAL(trace) << name << ": " << "Reading the description.";
+            string text = boost::locale::conv::to_utf<char>(file->getDescription(), "Windows-1252", boost::locale::conv::stop);
+
+            BOOST_LOG_TRIVIAL(trace) << name << ": " << "Attempting to read the version from the description.";
+            for (size_t i = 0; i < version_checks.size(); ++i) {
+                smatch what;
+                if (regex_search(text, what, version_checks[i])) {
+                    //Use the first sub-expression match.
+                    version = string(what[1].first, what[1].second);
+                    boost::trim(version);
+                    BOOST_LOG_TRIVIAL(info) << name << ": " << "Extracted version \"" << version << "\" using regex " << i + 1;
+                    break;
+                }
+            }
+            BOOST_LOG_TRIVIAL(trace) << name << ": " << "Attempting to extract Bash Tags from the description.";
+            size_t pos1 = text.find("{{BASH:");
+            if (pos1 != string::npos && pos1 + 7 != text.length()) {
+                pos1 += 7;
+
+                size_t pos2 = text.find("}}", pos1);
+                if (pos2 != string::npos) {
+                    text = text.substr(pos1, pos2 - pos1);
+
+                    vector<string> bashTags;
+                    boost::split(bashTags, text, boost::is_any_of(","));
+
+                    for (auto &tag : bashTags) {
+                        boost::trim(tag);
+                        BOOST_LOG_TRIVIAL(trace) << name << ": " << "Extracted Bash Tag: " << tag;
+                        tags.insert(Tag(tag));
+                    }
+                }
+            }
         }
         catch (std::exception& e) {
+            delete file;
             BOOST_LOG_TRIVIAL(error) << "Cannot read plugin file \"" << name << "\". Details: " << e.what();
             messages.push_back(loot::Message(loot::Message::error, (boost::format(boost::locale::translate("Cannot read \"%1%\". Details: %2%")) % name % e.what()).str()));
         }
 
-        //If the name passed ends in '.ghost', that should be trimmed.
-        if (boost::iends_with(name, ".ghost")) {
-            BOOST_LOG_TRIVIAL(trace) << name << ": " << "Trimming '.ghost' extension.";
-            name = name.substr(0, name.length() - 6);
-        }
-
-        BOOST_LOG_TRIVIAL(trace) << name << ": " << "Checking master flag.";
-		isMaster = file->isMaster(game.espm_settings);
-
-        BOOST_LOG_TRIVIAL(trace) << name << ": " << "Getting masters.";
-		masters = file->getMasters();
-
-        BOOST_LOG_TRIVIAL(trace) << name << ": " << "Number of masters: " << masters.size();
-
-        crc = file->crc;
-        game.crcCache.insert(pair<string, uint32_t>(n, crc));
-
-        BOOST_LOG_TRIVIAL(trace) << name << ": " << "Getting the FormIDs.";
-		vector<uint32_t> records = file->getFormIDs();
-        vector<string> plugins = masters;
-        plugins.push_back(name);
-		for (const auto &record: records) {
-            FormID fid = FormID(plugins, record);
-			formIDs.insert(fid);
-            if (!boost::iequals(fid.Plugin(), name))
-                ++numOverrideRecords;
-        }
-
-        //Also read Bash Tags applied and version string in description.
-        BOOST_LOG_TRIVIAL(trace) << name << ": " << "Reading the description.";
-        string text = file->getDescription();
-
-        delete file;
-
-        string::const_iterator begin, end;
-        begin = text.begin();
-        end = text.end();
-
-        BOOST_LOG_TRIVIAL(trace) << name << ": " << "Attempting to read the version from the description.";
-        for (int j = 0; j < 7 && version.empty(); j++) {
-            smatch what;
-            while (regex_search(begin, end, what, version_checks[j])) {
-                if (what.empty())
-                    continue;
-
-                ssub_match match = what[1];
-                if (!match.matched)
-                    continue;
-
-                version = boost::trim_copy(string(match.first, match.second));
-                break;
-            }
-        }
-
-        BOOST_LOG_TRIVIAL(trace) << name << ": " << "Attempting to extract Bash Tags from the description.";
-        size_t pos1 = text.find("{{BASH:");
-        if (pos1 == string::npos || pos1 + 7 == text.length())
-            return;
-
-        pos1 += 7;
-
-        size_t pos2 = text.find("}}", pos1);
-        if (pos2 == string::npos)
-            return;
-
-        text = text.substr(pos1, pos2-pos1);
-
-        vector<string> bashTags;
-        boost::split(bashTags, text, boost::is_any_of(","));
-
-        for (auto &tag: bashTags) {
-            boost::trim(tag);
-            BOOST_LOG_TRIVIAL(trace) << name << ": " << "Extracted Bash Tag: " << tag;
-            tags.insert(Tag(tag));
-        }
-	}
+        BOOST_LOG_TRIVIAL(trace) << name << ": " << "Plugin loading complete.";
+    }
 
     void Plugin::MergeMetadata(const Plugin& plugin) {
         BOOST_LOG_TRIVIAL(trace) << "Merging metadata for: " << name;
+        if (plugin.HasNameOnly())
+            return;
 
         //For 'enabled' and 'priority' metadata, use the given plugin's values, but if the 'priority' user value is not explicit, ignore it.
         enabled = plugin.Enabled();
@@ -442,6 +518,9 @@ namespace loot {
         set<PluginDirtyInfo> dirtyInfo = plugin.DirtyInfo();
         _dirtyInfo.insert(dirtyInfo.begin(), dirtyInfo.end());
 
+        set<Location> locations = plugin.Locations();
+        _locations.insert(locations.begin(), locations.end());
+
         return;
     }
 
@@ -449,31 +528,25 @@ namespace loot {
         BOOST_LOG_TRIVIAL(trace) << "Calculating metadata difference for: " << name;
         Plugin p(*this);
 
-        p.Enabled(plugin.Enabled());
-        if (priority != plugin.Priority()) {
-            p.Priority(plugin.Priority());
-            p.SetPriorityExplicit(plugin.IsPriorityExplicit());
-        }
-        else {
+        if (priority == plugin.Priority()) {
             p.Priority(0);
             p.SetPriorityExplicit(false);
         }
-            
 
         //Compare this plugin against the given plugin.
         set<File> files = plugin.LoadAfter();
         set<File> filesDiff;
-        set_symmetric_difference(files.begin(), files.end(), loadAfter.begin(), loadAfter.end(), inserter(filesDiff, filesDiff.begin()));
+        set_symmetric_difference(loadAfter.begin(), loadAfter.end(), files.begin(), files.end(), inserter(filesDiff, filesDiff.begin()));
         p.LoadAfter(filesDiff);
 
         filesDiff.clear();
         files = plugin.Reqs();
-        set_symmetric_difference(files.begin(), files.end(), requirements.begin(), requirements.end(), inserter(filesDiff, filesDiff.begin()));
+        set_symmetric_difference(requirements.begin(), requirements.end(), files.begin(), files.end(), inserter(filesDiff, filesDiff.begin()));
         p.Reqs(filesDiff);
 
         filesDiff.clear();
         files = plugin.Incs();
-        set_symmetric_difference(files.begin(), files.end(), incompatibilities.begin(), incompatibilities.end(), inserter(filesDiff, filesDiff.begin()));
+        set_symmetric_difference(incompatibilities.begin(), incompatibilities.end(), files.begin(), files.end(), inserter(filesDiff, filesDiff.begin()));
         p.Incs(filesDiff);
 
         list<Message> msgs1 = plugin.Messages();
@@ -481,18 +554,69 @@ namespace loot {
         msgs1.sort();
         msgs2.sort();
         list<Message> mDiff;
-        set_symmetric_difference(msgs1.begin(), msgs1.end(), msgs2.begin(), msgs2.end(), inserter(mDiff, mDiff.begin()));
+        set_symmetric_difference(msgs2.begin(), msgs2.end(), msgs1.begin(), msgs1.end(), inserter(mDiff, mDiff.begin()));
         p.Messages(mDiff);
 
         set<Tag> bashTags = plugin.Tags();
         set<Tag> tagDiff;
-        set_symmetric_difference(bashTags.begin(), bashTags.end(), tags.begin(), tags.end(), inserter(tagDiff, tagDiff.begin()));
+        set_symmetric_difference(tags.begin(), tags.end(), bashTags.begin(), bashTags.end(), inserter(tagDiff, tagDiff.begin()));
         p.Tags(tagDiff);
 
         set<PluginDirtyInfo> dirtyInfo = plugin.DirtyInfo();
         set<PluginDirtyInfo> dirtDiff;
-        set_symmetric_difference(dirtyInfo.begin(), dirtyInfo.end(), _dirtyInfo.begin(), _dirtyInfo.end(), inserter(dirtDiff, dirtDiff.begin()));
+        set_symmetric_difference(_dirtyInfo.begin(), _dirtyInfo.end(), dirtyInfo.begin(), dirtyInfo.end(), inserter(dirtDiff, dirtDiff.begin()));
         p.DirtyInfo(dirtDiff);
+
+        set<Location> locations = plugin.Locations();
+        set<Location> locationsDiff;
+        set_symmetric_difference(_locations.begin(), _locations.end(), locations.begin(), locations.end(), inserter(locationsDiff, locationsDiff.begin()));
+        p.Locations(locationsDiff);
+
+        return p;
+    }
+
+    Plugin Plugin::NewMetadata(const Plugin& plugin) const {
+        BOOST_LOG_TRIVIAL(trace) << "Comparing new metadata for: " << name;
+        Plugin p(*this);
+
+        //Compare this plugin against the given plugin.
+        set<File> files = plugin.LoadAfter();
+        set<File> filesDiff;
+        set_difference(loadAfter.begin(), loadAfter.end(), files.begin(), files.end(), inserter(filesDiff, filesDiff.begin()));
+        p.LoadAfter(filesDiff);
+
+        filesDiff.clear();
+        files = plugin.Reqs();
+        set_difference(requirements.begin(), requirements.end(), files.begin(), files.end(), inserter(filesDiff, filesDiff.begin()));
+        p.Reqs(filesDiff);
+
+        filesDiff.clear();
+        files = plugin.Incs();
+        set_difference(incompatibilities.begin(), incompatibilities.end(), files.begin(), files.end(), inserter(filesDiff, filesDiff.begin()));
+        p.Incs(filesDiff);
+
+        list<Message> msgs1 = plugin.Messages();
+        list<Message> msgs2 = messages;
+        msgs1.sort();
+        msgs2.sort();
+        list<Message> mDiff;
+        set_difference(msgs2.begin(), msgs2.end(), msgs1.begin(), msgs1.end(), inserter(mDiff, mDiff.begin()));
+        p.Messages(mDiff);
+
+        set<Tag> bashTags = plugin.Tags();
+        set<Tag> tagDiff;
+        set_difference(tags.begin(), tags.end(), bashTags.begin(), bashTags.end(), inserter(tagDiff, tagDiff.begin()));
+        p.Tags(tagDiff);
+
+        set<PluginDirtyInfo> dirtyInfo = plugin.DirtyInfo();
+        set<PluginDirtyInfo> dirtDiff;
+        set_difference(_dirtyInfo.begin(), _dirtyInfo.end(), dirtyInfo.begin(), dirtyInfo.end(), inserter(dirtDiff, dirtDiff.begin()));
+        p.DirtyInfo(dirtDiff);
+
+        set<Location> locations = plugin.Locations();
+        set<Location> locationsDiff;
+        set_difference(_locations.begin(), _locations.end(), locations.begin(), locations.end(), inserter(locationsDiff, locationsDiff.begin()));
+        p.Locations(locationsDiff);
 
         return p;
     }
@@ -531,6 +655,10 @@ namespace loot {
 
     std::set<PluginDirtyInfo> Plugin::DirtyInfo() const {
         return _dirtyInfo;
+    }
+
+    std::set<Location> Plugin::Locations() const {
+        return _locations;
     }
 
     void Plugin::Name(const std::string& n) {
@@ -573,7 +701,11 @@ namespace loot {
         _dirtyInfo = dirtyInfo;
     }
 
-    void Plugin::EvalAllConditions(loot::Game& game, const unsigned int language) {
+    void Plugin::Locations(const std::set<Location>& locations) {
+        _locations = locations;
+    }
+
+    Plugin& Plugin::EvalAllConditions(Game& game, const unsigned int language) {
         for (auto it = loadAfter.begin(); it != loadAfter.end();) {
             if (!it->EvalCondition(game))
                 loadAfter.erase(it++);
@@ -609,30 +741,63 @@ namespace loot {
                 ++it;
         }
 
-        //First need to get plugin's CRC.
-        uint32_t crc = 0;
-        unordered_map<std::string,uint32_t>::iterator it = game.crcCache.find(boost::to_lower_copy(name));
-        if (it != game.crcCache.end())
-            crc = it->second;
-        else if (boost::filesystem::exists(game.DataPath() / name)) {
-            crc = GetCrc32(game.DataPath() / name);
-            game.crcCache.emplace(boost::to_lower_copy(name), crc);
-        } else if (boost::filesystem::exists(game.DataPath() / (name + ".ghost"))) {
-            crc = GetCrc32(game.DataPath() / (name + ".ghost"));
-            game.crcCache.emplace(boost::to_lower_copy(name), crc);
-        } else
-            _dirtyInfo.clear();
+        //First need to get plugin's CRC, if it is an exact plugin and it does not have its CRC set.
+        if (!IsRegexPlugin()) {
+            if (crc == 0) {
+                unordered_map<std::string, uint32_t>::iterator it = game.crcCache.find(boost::locale::to_lower(name));
+                if (it != game.crcCache.end())
+                    crc = it->second;
+                else if (boost::filesystem::exists(game.DataPath() / name)) {
+                    crc = GetCrc32(game.DataPath() / name);
+                }
+                else if (boost::filesystem::exists(game.DataPath() / (name + ".ghost"))) {
+                    crc = GetCrc32(game.DataPath() / (name + ".ghost"));
+                }
+                else {
+                    // The plugin isn't installed, discard the dirty info.
+                    _dirtyInfo.clear();
+                }
+            }
 
-        for (auto it = _dirtyInfo.begin(); it != _dirtyInfo.end();) {
-            if (it->CRC() != crc)
-                _dirtyInfo.erase(it++);
-            else
-                ++it;
+            // Store the CRC in the cache in case it's not already in there.
+            game.crcCache.insert(pair<string, uint32_t>(boost::locale::to_lower(name), crc));
+
+            // Now use the CRC to evaluate the dirty info.
+            for (auto it = _dirtyInfo.begin(); it != _dirtyInfo.end();) {
+                if (it->CRC() != crc)
+                    _dirtyInfo.erase(it++);
+                else
+                    ++it;
+            }
+        }
+        else {
+            // Regex plugins shouldn't have dirty info, but just clear in case.
+            _dirtyInfo.clear();
+        }
+
+        return *this;
+    }
+
+    void Plugin::ParseAllConditions() const {
+        for (const File& file : loadAfter) {
+            file.ParseCondition();
+        }
+        for (const File& file : requirements) {
+            file.ParseCondition();
+        }
+        for (const File& file : incompatibilities) {
+            file.ParseCondition();
+        }
+        for (const Message& message : messages) {
+            message.ParseCondition();
+        }
+        for (const Tag& tag : tags) {
+            tag.ParseCondition();
         }
     }
 
     bool Plugin::HasNameOnly() const {
-        return !IsPriorityExplicit() && loadAfter.empty() && requirements.empty() && incompatibilities.empty() && messages.empty() && tags.empty() && _dirtyInfo.empty();
+        return !IsPriorityExplicit() && loadAfter.empty() && requirements.empty() && incompatibilities.empty() && messages.empty() && tags.empty() && _dirtyInfo.empty() && _locations.empty();
     }
 
     bool Plugin::IsRegexPlugin() const {
@@ -645,8 +810,8 @@ namespace loot {
 
     bool Plugin::operator == (const Plugin& rhs) const {
         return (boost::iequals(name, rhs.Name())
-            || (IsRegexPlugin() && boost::regex_match(rhs.Name(), boost::regex(name, boost::regex::perl|boost::regex::icase)))
-            || (rhs.IsRegexPlugin() && boost::regex_match(name, boost::regex(rhs.Name(), boost::regex::perl|boost::regex::icase))));
+                || (IsRegexPlugin() && regex_match(rhs.Name(), regex(name, regex::ECMAScript | regex::icase)))
+                || (rhs.IsRegexPlugin() && regex_match(name, regex(rhs.Name(), regex::ECMAScript | regex::icase))));
     }
 
     bool Plugin::operator != (const Plugin& rhs) const {
@@ -654,17 +819,17 @@ namespace loot {
     }
 
     const std::set<FormID>& Plugin::FormIDs() const {
-		return formIDs;
-	}
+        return formIDs;
+    }
 
     bool Plugin::DoFormIDsOverlap(const Plugin& plugin) const {
         //Basically std::set_intersection except with an early exit instead of an append to results.
-        BOOST_LOG_TRIVIAL(trace) << "Checking for FormID overlap between \"" << name << "\" and \"" << plugin.Name() << "\".";
+        //BOOST_LOG_TRIVIAL(trace) << "Checking for FormID overlap between \"" << name << "\" and \"" << plugin.Name() << "\".";
 
         set<FormID>::const_iterator i = formIDs.begin(),
-                                    j = plugin.FormIDs().begin(),
-                                    iend = formIDs.end(),
-                                    jend = plugin.FormIDs().end();
+            j = plugin.FormIDs().begin(),
+            iend = formIDs.end(),
+            jend = plugin.FormIDs().end();
 
         while (i != iend && j != jend) {
             if (*i < *j)
@@ -696,17 +861,21 @@ namespace loot {
         for (const auto &formID : formIDs) {
             if (!boost::iequals(formID.Plugin(), name))
                 fidSubset.insert(formID);
-		}
-		return fidSubset;
+        }
+        return fidSubset;
     }
 
-	std::vector<std::string> Plugin::Masters() const {
-		return masters;
-	}
+    std::vector<std::string> Plugin::Masters() const {
+        return masters;
+    }
 
-	bool Plugin::IsMaster() const {
-		return isMaster;
-	}
+    bool Plugin::IsMaster() const {
+        return isMaster;
+    }
+
+    bool Plugin::IsEmpty() const {
+        return _isEmpty;
+    }
 
     std::string Plugin::Version() const {
         return version;
@@ -718,73 +887,75 @@ namespace loot {
 
     bool Plugin::MustLoadAfter(const Plugin& plugin) const {
         if ((!isMaster && plugin.IsMaster())
-         || find(masters.begin(), masters.end(), plugin) != masters.end()
-         || find(requirements.begin(), requirements.end(), plugin) != requirements.end()
-         || find(loadAfter.begin(), loadAfter.end(), plugin) != loadAfter.end())
+            || find(masters.begin(), masters.end(), plugin) != masters.end()
+            || find(requirements.begin(), requirements.end(), plugin) != requirements.end()
+            || find(loadAfter.begin(), loadAfter.end(), plugin) != loadAfter.end())
             return true;
         return false;
     }
 
-    void Plugin::CheckInstallValidity(const Game& game) {
+    bool Plugin::CheckInstallValidity(const Game& game) {
+        BOOST_LOG_TRIVIAL(trace) << "Checking that the current install is valid according to " << name << "'s data.";
         unsigned int messageType;
         if (game.IsActive(name))
             messageType = loot::Message::error;
         else
             messageType = loot::Message::warn;
         if (tags.find(Tag("Filter")) == tags.end()) {
-            for (const auto &master: masters) {
+            for (const auto &master : masters) {
                 if (!boost::filesystem::exists(game.DataPath() / master) && !boost::filesystem::exists(game.DataPath() / (master + ".ghost"))) {
                     BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" requires \"" << master << "\", but it is missing.";
                     messages.push_back(loot::Message(messageType, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % master).str()));
                 }
                 else if (!game.IsActive(master)) {
-                    BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" requires \"" << master  << "\", but it is inactive.";
+                    BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" requires \"" << master << "\", but it is inactive.";
                     messages.push_back(loot::Message(messageType, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be active, but it is inactive.")) % master).str()));
                 }
             }
         }
-        for (const auto &req: requirements) {
-            if (!boost::filesystem::exists(game.DataPath() / req.Name()) && !(IsPlugin(req.Name()) && boost::filesystem::exists(game.DataPath() / (req.Name() + ".ghost")))) {
+        for (const auto &req : requirements) {
+            if (!boost::filesystem::exists(game.DataPath() / req.Name()) && !((boost::iends_with(req.Name(), ".esp") || boost::iends_with(req.Name(), ".esm")) && boost::filesystem::exists(game.DataPath() / (req.Name() + ".ghost")))) {
                 BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" requires \"" << req.Name() << "\", but it is missing.";
                 messages.push_back(loot::Message(messageType, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % req.Name()).str()));
             }
         }
-        for (const auto &inc: incompatibilities) {
-            if (boost::filesystem::exists(game.DataPath() / inc.Name()) || (IsPlugin(inc.Name()) && boost::filesystem::exists(game.DataPath() / (inc.Name() + ".ghost")))) {
+        for (const auto &inc : incompatibilities) {
+            if (boost::filesystem::exists(game.DataPath() / inc.Name()) || ((boost::iends_with(inc.Name(), ".esp") || boost::iends_with(inc.Name(), ".esm")) && boost::filesystem::exists(game.DataPath() / (inc.Name() + ".ghost")))) {
+                if (!game.IsActive(inc.Name()))
+                    messageType = loot::Message::warn;
                 BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" is incompatible with \"" << inc.Name() << "\", but both are present.";
                 messages.push_back(loot::Message(messageType, (boost::format(boost::locale::translate("This plugin is incompatible with \"%1%\", but both are present.")) % inc.Name()).str()));
             }
         }
+
+        // Also evaluate dirty info.
+        bool isDirty = false;
+        for (const auto &element : _dirtyInfo) {
+            messages.push_back(element.AsMessage());
+            isDirty = true;
+        }
+
+        return isDirty;
     }
 
     bool Plugin::LoadsBSA(const Game& game) const {
-        if (game.Id() != Game::tes5 || IsRegexPlugin())
+        if (IsRegexPlugin())
             return false;
-        return boost::filesystem::exists(game.DataPath() / (name.substr(0, name.length() - 3) + "bsa"));
-    }
-
-    void MetadataList::Load(boost::filesystem::path& filepath) {
-        plugins.clear();
-        messages.clear();
-
-        BOOST_LOG_TRIVIAL(debug) << "Loading file: " << filepath;
-
-        loot::ifstream in(filepath);
-        YAML::Node metadataList = YAML::Load(in);
-        in.close();
-
-        if (metadataList["plugins"])
-            plugins = metadataList["plugins"].as< list<Plugin> >();
-        if (metadataList["globals"])
-            messages = metadataList["globals"].as< list<Message> >();
-
-        BOOST_LOG_TRIVIAL(debug) << "File loaded successfully.";
-    }
-
-    size_t plugin_hash::operator () (const Plugin& p) const {
-        size_t seed = 0;
-        boost::hash_combine(seed, p.Name());
-        return seed;
+        if (game.Id() == Game::tes5) {
+            // Skyrim plugins only load BSAs that exactly match their basename.
+            return boost::filesystem::exists(game.DataPath() / (name.substr(0, name.length() - 3) + "bsa"));
+        }
+        else {
+            //Oblivion .esp files and FO3, FNV plugins can load BSAs which begin with the plugin basename.
+            if (game.Id() != Game::tes4 || boost::iends_with(name, ".esp")) {
+                string basename = name.substr(0, name.length() - 4);
+                for (boost::filesystem::directory_iterator it(game.DataPath()); it != boost::filesystem::directory_iterator(); ++it) {
+                    if (it->path().extension().string() == ".bsa" && boost::istarts_with(it->path().filename().string(), basename))
+                        return true;
+                }
+            }
+            return false;
+        }
     }
 
     bool operator == (const File& lhs, const Plugin& rhs) {
@@ -801,13 +972,5 @@ namespace loot {
 
     bool operator == (const Plugin& lhs, const std::string& rhs) {
         return rhs == lhs;
-    }
-
-    bool IsPlugin(const std::string& file) {
-        if (boost::iends_with(file, ".esp") || boost::iends_with(file, ".esm")
-         || boost::iends_with(file, ".esp.ghost") || boost::iends_with(file, ".esm.ghost"))
-            return true;
-        else
-            return false;
     }
 }

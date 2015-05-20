@@ -11,19 +11,29 @@ b2 toolset=msvc threadapi=win32 link=static runtime-link=static variant=release 
 
 `link`, `runtime-link` and `address-model` can all be modified if shared linking or 64 bit builds are desired. LOOT uses statically-linked Boost libraries by default: to change this, edit [CMakeLists.txt](../CMakeLists.txt).
 
-#### wxWidgets
+#### Chromium Embedded Framework
 
-Just build the solution provided by wxWidgets. You may need to change the C/C++ Runtime Library setting in each project to `Multi-threaded (/MT)`.
+Most of the required binaries are pre-built, but the libcef_dll_wrapper dynamic library must be built.
+
+1. Configure CMake and generate a build system for Visual Studio by running:
+
+   ```
+   mkdir build && cd build
+   cmake.exe .. -G "Visual Studio 12"
+   ```
+
+2. Open the generated solution file, and build it with `Release` configuration.
 
 #### yaml-cpp
 
 1. Configure CMake and generate a build system for Visual Studio by running:
-  ```
-  mkdir build
-  cd build
-  cmake.exe .. -G "Visual Studio 12" -DBOOST_ROOT={BOOST_ROOT} -DMSVC_SHARED_RT=OFF
-  ```
-  Adapt the commands as necessary for your particular setup.
+
+   ```
+   mkdir build && cd build
+   cmake.exe .. -G "Visual Studio 12" -DBOOST_ROOT={BOOST_ROOT} -DMSVC_SHARED_RT=OFF
+   ```
+
+   Adapt the commands as necessary for your particular setup.
 2. Open the generated solution file, and build it with `Release` configuration.
 
 #### Libloadorder
@@ -35,15 +45,18 @@ Example CMake keys: `-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=build -DCMAKE_ARCHIVE_OUTP
 #### Libgit2
 
 1. Configure CMake and generate a build system for Visual Studio by running:
-  ```
-  mkdir build
-  cd build
-  cmake.exe .. -G "Visual Studio 12" -DBUILD_SHARED_LIBS=OFF -DSTATIC_CRT=ON
-  ```
+
+   ```
+   mkdir build && cd build
+   cmake.exe .. -G "Visual Studio 12" -DBUILD_SHARED_LIBS=OFF -DSTATIC_CRT=ON -DTHREADSAFE=ON
+   ```
+
   Adapt the commands as necessary for your particular setup.
 2. Open the generated solution file, and build it with `Release` configuration.
 
 #### LOOT
+
+LOOT uses a third-party CMake module to generate its build revision data, so first download the `GetGitRevisionDescription.cmake` and `GetGitRevisionDescription.cmake.in` files found in [this repository](https://github.com/rpavlik/cmake-modules) to the `build` subdirectory of the LOOT folder.
 
 LOOT uses the following CMake variables to set build parameters:
 
@@ -53,11 +66,10 @@ Parameter | Values | Default |Description
 `PROJECT_STATIC_RUNTIME` | `ON`, `OFF` | `ON` | Whether to link the C++ runtime statically or not. This also affects the Boost libraries used.
 `PROJECT_ARCH` | `32`, `64` | `32` | Whether to build 32 or 64 bit LOOT binaries.
 `ALPHANUM_ROOT` | path | `../../alphanum` | Path to the folder containing `alphanum.hpp`.
+`CEF_ROOT` | path | `../../cef` | Path to the root of the Chromium Embedded Framework folder.
 `LIBESPM_ROOT` | path | `../../libespm` | Path to the root of the libespm repository folder.
 `LIBGIT2_ROOT` | path | `../../libgit2` | Path to the root of the libgit2 repository folder.
 `LIBLOADORDER_ROOT` | path | `../../libloadorder` | Path to the root of the libloadorder repository folder.
-`YAMLCPP_ROOT` | path | `../../yaml-cpp` | Path to the root of the yaml-cpp folder.
-`WXWIDGETS_ROOT` | path | `../../wxWidgets` | Path to the root of the wxWidgets folder.
 
 The default paths given in the table above are relative to LOOT's `CMakeLists.txt`.
 

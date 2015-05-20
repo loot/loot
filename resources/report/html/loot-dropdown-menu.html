@@ -1,0 +1,65 @@
+<!--
+<loot-dropdown-menu> is an extension of <paper-dropdown-menu> that gives
+it a <select>-like API. This means:
+
+1. `<paper-item>.value` attributes are used to reference items.
+2. `<loot-dropdown-menu>.value` references the currently selected item.
+
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-dropdown/paper-dropdown.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../bower_components/core-menu/core-menu.html">
+
+<polymer-element name="loot-dropdown-menu" attributes="disabled halign value">
+    <template>
+        <style>
+        /* Material Design overrides */
+        paper-dropdown-menu {
+            margin-left: 4px;
+            margin-right: 4px;
+            border-bottom-color: rgba(0, 0, 0, 0.12);
+        }
+        paper-dropdown-menu::shadow #label {
+            color: rgba(0, 0, 0, 0.87);
+        }
+        paper-dropdown-menu[disabled]::shadow #label,
+        paper-dropdown-menu::shadow #arrow {
+            color: rgba(0, 0, 0, 0.26);
+        }
+
+        /* LOOT-specific overrides */
+        ::content .core-selected {
+            color: #2196F3;
+            background-color: inherit;
+        }
+        :host(.dark) paper-dropdown-menu {
+            border-bottom-color: rgba(255, 255, 255, 0.12);
+        }
+        paper-dropdown-menu[disabled]::shadow #label {
+            transition: color 0.6s;
+        }
+        :host(.dark) paper-dropdown-menu::shadow #label {
+            color: white;
+        }
+        :host(.dark) paper-dropdown-menu[disabled]::shadow #label,
+        :host(.dark) paper-dropdown-menu::shadow #arrow {
+            color: rgba(255, 255, 255, 0.30);
+        }
+        </style>
+        <paper-dropdown-menu disabled?="{{disabled}}">
+            <paper-dropdown class="dropdown" halign="{{halign}}">
+                <core-menu id="menu" class="menu" valueattr="value" selected="{{value}}">
+                    <content></content>
+                </core-menu>
+            </paper-dropdown>
+        </paper-dropdown-menu>
+    </template>
+    <script>
+    Polymer({
+        value: undefined,
+        disabled: false
+    });
+    </script>
+</polymer-element>

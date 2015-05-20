@@ -3,7 +3,7 @@
     A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
     Fallout: New Vegas.
 
-    Copyright (C) 2012-2014    WrinklyNinja
+    Copyright (C) 2012-2015    WrinklyNinja
 
     This file is part of LOOT.
 
@@ -20,7 +20,7 @@
     You should have received a copy of the GNU General Public License
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
-*/
+    */
 
 #ifndef __LOOT_HELPERS__
 #define __LOOT_HELPERS__
@@ -29,14 +29,13 @@
 
 #include <cstdint>
 #include <string>
-#include <regex>
+#include <boost/regex.hpp>
 #include <boost/filesystem.hpp>
 
 namespace loot {
-
     /// Array used to try each of the expressions defined using
-	/// an iteration for each of them.
-    extern std::regex version_checks[7];
+    /// an iteration for each of them.
+    extern const std::vector<boost::regex> version_checks;
 
     //////////////////////////////////////////////////////////////////////////
     // Helper functions
@@ -51,14 +50,21 @@ namespace loot {
     //Converts an integer to a hex string using BOOST's Spirit.Karma. Faster than a stringstream conversion.
     std::string IntToHexString(const int n);
 
+#ifdef _WIN32
     //Get registry subkey value string.
     std::string RegKeyStringValue(const std::string& keyStr, const std::string& subkey, const std::string& value);
 
-    //Get the local application data path.
+    //Get the local application data path, within which LOOT's data folder should be stored.
     boost::filesystem::path GetLocalAppDataPath();
 
     //Turns an absolute filesystem path into a valid file:// URL.
     std::string ToFileURL(const boost::filesystem::path& file);
+
+    //Helper to turn UTF8 strings into strings that can be used by WinAPI.
+    std::wstring ToWinWide(const std::string& str);
+
+    std::string FromWinWide(const std::wstring& wstr);
+#endif
 
     //Language class for simpler language support.
     class Language {
@@ -80,20 +86,10 @@ namespace loot {
         static const unsigned int brazilian_portuguese = 7;
         static const unsigned int finnish = 8;
         static const unsigned int german = 9;
+        static const unsigned int danish = 10;
+        static const unsigned int korean = 11;
 
-        static std::vector<std::string> Names() {
-            std::vector<std::string> vec;
-            vec.push_back(Language(Language::english).Name());
-            vec.push_back(Language(Language::spanish).Name());
-            vec.push_back(Language(Language::russian).Name());
-            vec.push_back(Language(Language::french).Name());
-            vec.push_back(Language(Language::chinese).Name());
-            vec.push_back(Language(Language::polish).Name());
-            vec.push_back(Language(Language::brazilian_portuguese).Name());
-            vec.push_back(Language(Language::finnish).Name());
-            vec.push_back(Language(Language::german).Name());
-            return vec;
-        }
+        static const std::vector<std::string> Names;
     private:
         unsigned int _code;
         std::string _name;
@@ -114,12 +110,12 @@ namespace loot {
 
         std::string AsString() const;
 
-        bool operator > (Version);
-        bool operator < (Version);
-        bool operator >= (Version);
-        bool operator <= (Version);
-        bool operator == (Version);
-        bool operator != (Version);
+        bool operator > (const Version&) const;
+        bool operator < (const Version&) const;
+        bool operator >= (const Version&) const;
+        bool operator <= (const Version&) const;
+        bool operator == (const Version&) const;
+        bool operator != (const Version&) const;
     };
 }
 

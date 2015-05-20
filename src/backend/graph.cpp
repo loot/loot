@@ -3,7 +3,7 @@
     A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
     Fallout: New Vegas.
 
-    Copyright (C) 2012-2014    WrinklyNinja
+    Copyright (C) 2012-2015    WrinklyNinja
 
     This file is part of LOOT.
 
@@ -20,8 +20,9 @@
     You should have received a copy of the GNU General Public License
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
-*/
+    */
 
+#include "error.h"
 #include "graph.h"
 #include "streams.h"
 #include "helpers.h"
@@ -36,45 +37,60 @@
 
 using namespace std;
 
-namespace lc = boost::locale;
-
 namespace loot {
+    typedef boost::graph_traits<PluginGraph>::vertex_iterator vertex_it;
+    typedef boost::graph_traits<PluginGraph>::edge_descriptor edge_t;
+    typedef boost::graph_traits<PluginGraph>::edge_iterator edge_it;
+    typedef boost::associative_property_map<map<vertex_t, size_t>> vertex_map_t;
 
-    cycle_detector::cycle_detector() {}
+    struct cycle_detector : public boost::dfs_visitor < > {
+        cycle_detector() {}
 
-    void cycle_detector::tree_edge(edge_t e, const PluginGraph& g) {
-        vertex_t source = boost::source(e, g);
+        std::list<std::string> trail;
 
-        string name = g[source].Name();
+        inline void tree_edge(edge_t e, const PluginGraph& g) {
+            vertex_t source = boost::source(e, g);
 
-        // Check if the plugin already exists in the recorded trail.
-        auto it = find(trail.begin(), trail.end(), name);
+            string name = g[source].Name();
 
-        if (it != trail.end()) {
-            // Erase everything from this position onwards, as it doesn't
-            // contribute to a forward-cycle.
-            trail.erase(it, trail.end());
+            // Check if the plugin already exists in the recorded trail.
+            auto it = find(trail.begin(), trail.end(), name);
+
+            if (it != trail.end()) {
+                // Erase everything from this position onwards, as it doesn't
+                // contribute to a forward-cycle.
+                trail.erase(it, trail.end());
+            }
+
+            trail.push_back(name);
         }
 
-        trail.push_back(name);
-    }
+        inline void back_edge(edge_t e, const PluginGraph& g) {
+            vertex_t vSource = boost::source(e, g);
+            vertex_t vTarget = boost::target(e, g);
 
-    void cycle_detector::back_edge(edge_t e, const PluginGraph& g) {
-        vertex_t vSource = boost::source(e, g);
-        vertex_t vTarget = boost::target(e, g);
+            trail.push_back(g[vSource].Name());
+            list<string>::iterator it = find(trail.begin(), trail.end(), g[vTarget].Name());
+            string backCycle;
+            for (list<string>::iterator endIt = trail.end(); it != endIt; ++it) {
+                backCycle += *it + ", ";
+            }
+            backCycle.erase(backCycle.length() - 2);
 
-        trail.push_back(g[vSource].Name());
-        list<string>::iterator it = find(trail.begin(), trail.end(), g[vTarget].Name());
-        string backCycle;
-        for (list<string>::iterator endIt = trail.end(); it != endIt; ++it) {
-            backCycle += *it + ", ";
+            BOOST_LOG_TRIVIAL(error) << "Cyclic interaction detected between plugins \"" << g[vSource].Name() << "\" and \"" << g[vTarget].Name() << "\". Back cycle: " << backCycle;
+
+            throw loot::error(loot::error::sorting_error, (boost::format(boost::locale::translate("Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: %3%")) % g[vSource].Name() % g[vTarget].Name() % backCycle).str());
         }
-        backCycle.erase(backCycle.length() - 2);
+    };
 
-        BOOST_LOG_TRIVIAL(error) << "Cyclic interaction detected between plugins \"" << g[vSource].Name() << "\" and \"" << g[vTarget].Name() << "\". Back cycle: " << backCycle;
+    struct path_detector : public boost::bfs_visitor < > {
+        vertex_t target;
 
-        throw loot::error(loot::error::sorting_error, (boost::format(lc::translate("Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: %3%")) % g[vSource].Name() % g[vTarget].Name() % backCycle).str());
-    }
+        inline void discover_vertex(vertex_t u, const PluginGraph& g) {
+            if (u == target)
+                throw error(error::ok, "Found a path.");
+        }
+    };
 
     bool GetVertexByName(const PluginGraph& graph, const std::string& name, vertex_t& vertex) {
         vertex_it vit, vit_end;
@@ -90,56 +106,26 @@ namespace loot {
         return false;
     }
 
-    void Sort(const PluginGraph& graph, std::list<Plugin>& plugins) {
-
-        //Topological sort requires an index map, which std::list-based VertexList graphs don't have, so one needs to be built separately.
-
-        map<vertex_t, size_t> index_map;
-        boost::associative_property_map< map<vertex_t, size_t> > v_index_map(index_map);
-        size_t i=0;
-        BGL_FORALL_VERTICES(v, graph, PluginGraph)
-            put(v_index_map, v, i++);
-
-        //Now we can sort.
-
-        std::list<vertex_t> sortedVertices;
-        boost::topological_sort(graph, std::front_inserter(sortedVertices), boost::vertex_index_map(v_index_map));
-
-        BOOST_LOG_TRIVIAL(info) << "Calculated order: ";
-        list<string> tempPlugins;
-        for (const auto &vertex: sortedVertices) {
-            BOOST_LOG_TRIVIAL(info) << '\t' << graph[vertex].Name();
-            tempPlugins.push_back(graph[vertex].Name());
-        }
-
-        //Now sort exist plugins list according to order in tempPlugins.
-        plugins.sort([tempPlugins](const Plugin& first, const Plugin& second){
-            //Find both plugins, and compare distances from beginning.
-            auto fIt = find(tempPlugins.begin(), tempPlugins.end(), first);
-            auto sIt = find(tempPlugins.begin(), tempPlugins.end(), second);
-
-            if (fIt == tempPlugins.end() || sIt == tempPlugins.end())
-                return false;
-
-            return distance(tempPlugins.begin(), fIt) < distance(tempPlugins.begin(), sIt);
-        });
-    }
-
-    void CheckForCycles(const PluginGraph& graph) {
-
-        //Depth-first search requires an index map, which std::list-based VertexList graphs don't have, so one needs to be built separately.
-
-        map<vertex_t, size_t> index_map;
-        boost::associative_property_map< map<vertex_t, size_t> > v_index_map(index_map);
-        size_t i=0;
-        BGL_FORALL_VERTICES(v, graph, PluginGraph)
-            put(v_index_map, v, i++);
-
-        loot::cycle_detector vis;
+    void CheckForCycles(const PluginGraph& graph, const vertex_map_t& v_index_map) {
+        cycle_detector vis;
         boost::depth_first_search(graph, visitor(vis).vertex_index_map(v_index_map));
     }
 
-    void AddSpecificEdges(PluginGraph& graph, std::map<std::string, int>& overriddenPriorities) {
+    bool EdgeCreatesCycle(const vertex_t& u, const vertex_t& v, const PluginGraph& graph, const vertex_map_t& v_index_map) {
+        //A cycle is created when adding the edge (u,v) if there already exists a path from v to u, so check for that using a breadth-first search.
+        path_detector vis;
+        vis.target = u;
+        try {
+            boost::breadth_first_search(graph, v, visitor(vis).vertex_index_map(v_index_map));
+        }
+        catch (error& e) {
+            if (e.code() == error::ok)
+                return true;
+        }
+        return false;
+    }
+
+    void AddSpecificEdges(PluginGraph& graph, const vertex_map_t& v_index_map) {
         //Add edges for all relationships that aren't overlaps or priority differences.
         loot::vertex_it vit, vitend;
         for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
@@ -153,7 +139,6 @@ namespace loot {
             loot::vertex_it vit2 = vit;
             ++vit2;
             while (vit2 != vitend) {
-
                 if (graph[*vit].IsMaster() == graph[*vit2].IsMaster()) {
                     ++vit2;
                     continue;
@@ -163,13 +148,13 @@ namespace loot {
                 if (graph[*vit2].IsMaster()) {
                     parentVertex = *vit2;
                     vertex = *vit;
-                } else {
+                }
+                else {
                     parentVertex = *vit;
                     vertex = *vit2;
                 }
 
                 if (!boost::edge(parentVertex, vertex, graph).second) {
-
                     BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[vertex].Name() << "\".";
 
                     boost::add_edge(parentVertex, vertex, graph);
@@ -179,10 +164,9 @@ namespace loot {
 
             BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for masters.";
             vector<string> strVec(graph[*vit].Masters());
-            for (const auto &master: strVec) {
+            for (const auto &master : strVec) {
                 if (loot::GetVertexByName(graph, master, parentVertex) &&
                     !boost::edge(parentVertex, *vit, graph).second) {
-
                     BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[*vit].Name() << "\".";
 
                     boost::add_edge(parentVertex, *vit, graph);
@@ -195,11 +179,9 @@ namespace loot {
             }
             BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for requirements.";
             set<File> fileset(graph[*vit].Reqs());
-            for (const auto &file: fileset) {
-                if (loot::IsPlugin(file.Name()) &&
-                    loot::GetVertexByName(graph, file.Name(), parentVertex) &&
+            for (const auto &file : fileset) {
+                if (loot::GetVertexByName(graph, file.Name(), parentVertex) &&
                     !boost::edge(parentVertex, *vit, graph).second) {
-
                     BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[*vit].Name() << "\".";
 
                     boost::add_edge(parentVertex, *vit, graph);
@@ -214,10 +196,8 @@ namespace loot {
             BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for 'load after's.";
             fileset = graph[*vit].LoadAfter();
             for (const auto &file : fileset) {
-                if (loot::IsPlugin(file.Name()) &&
-                    loot::GetVertexByName(graph, file.Name(), parentVertex) &&
+                if (loot::GetVertexByName(graph, file.Name(), parentVertex) &&
                     !boost::edge(parentVertex, *vit, graph).second) {
-
                     BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[*vit].Name() << "\".";
 
                     boost::add_edge(parentVertex, *vit, graph);
@@ -233,35 +213,32 @@ namespace loot {
             //Set the current plugin's priority to parentPlugin.
             if (parentPriority > 0 && graph[*vit].Priority() < parentPriority) {
                 BOOST_LOG_TRIVIAL(trace) << "Overriding priority for " << graph[*vit].Name() << " from " << graph[*vit].Priority() << " to " << parentPriority;
-                overriddenPriorities.insert(pair<string, int>(graph[*vit].Name(), graph[*vit].Priority()));
                 graph[*vit].Priority(parentPriority);
             }
-
         }
     }
 
-    void AddPriorityEdges(PluginGraph& graph) {
+    void AddPriorityEdges(PluginGraph& graph, const vertex_map_t& v_index_map) {
         loot::vertex_it vit, vitend;
 
         for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
             BOOST_LOG_TRIVIAL(trace) << "Adding priority difference edges to vertex for \"" << graph[*vit].Name() << "\".";
-            //Priority differences should only be taken account between plugins that conflict. 
+            //Priority differences should only be taken account between plugins that conflict.
             //However, an exception is made for plugins that contain only a header record,
             //as they are for loading BSAs, and in Skyrim that means the resources they load can
             //be affected by load order.
 
             loot::vertex_it vit2, vitend2;
             for (boost::tie(vit2, vitend2) = boost::vertices(graph); vit2 != vitend2; ++vit2) {
-
-                if (graph[*vit].Priority() == graph[*vit2].Priority() 
+                if (graph[*vit].Priority() == graph[*vit2].Priority()
                     || (abs(graph[*vit].Priority()) < max_priority && abs(graph[*vit2].Priority()) < max_priority
-                        && !graph[*vit].FormIDs().empty() && !graph[*vit2].FormIDs().empty() && !graph[*vit].DoFormIDsOverlap(graph[*vit2])
-                       )
-                   ) {
+                    && !graph[*vit].FormIDs().empty() && !graph[*vit2].FormIDs().empty() && !graph[*vit].DoFormIDsOverlap(graph[*vit2])
+                    )
+                    ) {
                     continue;
                 }
 
-                BOOST_LOG_TRIVIAL(trace) << "Checking priority difference between \"" << graph[*vit].Name() << "\" and \"" << graph[*vit2].Name() << "\".";
+                //BOOST_LOG_TRIVIAL(trace) << "Checking priority difference between \"" << graph[*vit].Name() << "\" and \"" << graph[*vit2].Name() << "\".";
 
                 vertex_t vertex, parentVertex;
                 //Modulo operator is not consistently defined for negative numbers except in C++11, so use function.
@@ -270,14 +247,14 @@ namespace loot {
                 if (p1 < p2) {
                     parentVertex = *vit;
                     vertex = *vit2;
-                } else {
+                }
+                else {
                     parentVertex = *vit2;
                     vertex = *vit;
                 }
 
                 if (!boost::edge(parentVertex, vertex, graph).second &&
-                    !EdgeCreatesCycle(graph, parentVertex, vertex)) {  //No edge going the other way, OK to add this edge.
-
+                    !EdgeCreatesCycle(parentVertex, vertex, graph, v_index_map)) {  //No edge going the other way, OK to add this edge.
                     BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[vertex].Name() << "\".";
 
                     boost::add_edge(parentVertex, vertex, graph);
@@ -286,11 +263,10 @@ namespace loot {
         }
     }
 
-    void AddOverlapEdges(PluginGraph& graph) {
+    void AddOverlapEdges(PluginGraph& graph, const vertex_map_t& v_index_map) {
         loot::vertex_it vit, vitend;
 
         for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
-
             BOOST_LOG_TRIVIAL(trace) << "Adding overlap edges to vertex for \"" << graph[*vit].Name() << "\".";
 
             if (graph[*vit].NumOverrideFormIDs() == 0) {
@@ -304,8 +280,6 @@ namespace loot {
                     //Vertices are the same or are already linked.
                     continue;
 
-                BOOST_LOG_TRIVIAL(trace) << "Checking edge validity between \"" << graph[*vit].Name() << "\" and \"" << graph[*vit2].Name() << "\".";
-
                 if (graph[*vit].DoFormIDsOverlap(graph[*vit2])) {
                     vertex_t vertex, parentVertex;
                     if (graph[*vit].NumOverrideFormIDs() > graph[*vit2].NumOverrideFormIDs()) {
@@ -316,17 +290,14 @@ namespace loot {
                         parentVertex = *vit2;
                         vertex = *vit;
                     }
-                    else if (graph[*vit].Name() < graph[*vit2].Name()) {  //There needs to be an edge between the two, but direction cannot be decided using overlap size. Just use names.
-                        parentVertex = *vit;
-                        vertex = *vit2;
-                    }
                     else {
-                        parentVertex = *vit2;
-                        vertex = *vit;
+                        // There's no way to determine the order between the two, so just leave them to be treated like
+                        // any two unlinked, non-conflicting plugins in the next pass.
+                        continue;
                     }
 
-                    if (!EdgeCreatesCycle(graph, parentVertex, vertex)) {  //No edge going the other way, OK to add this edge.
-
+                    //BOOST_LOG_TRIVIAL(trace) << "Checking edge validity between \"" << graph[*vit].Name() << "\" and \"" << graph[*vit2].Name() << "\".";
+                    if (!EdgeCreatesCycle(parentVertex, vertex, graph, v_index_map)) {  //No edge going the other way, OK to add this edge.
                         BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[vertex].Name() << "\".";
 
                         boost::add_edge(parentVertex, vertex, graph);
@@ -336,22 +307,94 @@ namespace loot {
         }
     }
 
-    bool EdgeCreatesCycle(PluginGraph& graph, vertex_t u, vertex_t v) {
-        //A cycle is created when adding the edge (u,v) if there already exists a path from v to u, so check for that using a breadth-first search.
+    size_t LoadOrderPos(const list<string>& loadorder, const std::string& plugin) {
+        auto it = find(loadorder.begin(), loadorder.end(), plugin);
 
-        //Breadth-first search requires an index map, which std::list-based VertexList graphs don't have, so one needs to be built separately.
+        if (it != loadorder.end())
+            return distance(loadorder.begin(), it);
+        else
+            throw error(error::sorting_error, "No existing load order position for " + plugin);
+    }
 
+    void AddTieBreakEdges(PluginGraph& graph, const list<string>& loadorder, const vertex_map_t& v_index_map) {
+        // In order for the sort to be performed stably, there must be only one possible result.
+        // This can be enforced by adding edges between all vertices that aren't already linked.
+        // Use existing load order to decide the direction of these edges.
+        loot::vertex_it vit, vitend;
+        for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
+            BOOST_LOG_TRIVIAL(trace) << "Adding tie-break edges to vertex for \"" << graph[*vit].Name() << "\".";
+
+            loot::vertex_it vit2, vitend2;
+            for (boost::tie(vit2, vitend2) = boost::vertices(graph); vit2 != vitend2; ++vit2) {
+                if (vit == vit2 || boost::edge(*vit, *vit2, graph).second || boost::edge(*vit2, *vit, graph).second)
+                    //Vertices are the same or are already linked.
+                    continue;
+
+                vertex_t vertex, parentVertex;
+                if (LoadOrderPos(loadorder, graph[*vit].Name()) < LoadOrderPos(loadorder, graph[*vit2].Name())) {
+                    parentVertex = *vit;
+                    vertex = *vit2;
+                }
+                else {
+                    parentVertex = *vit2;
+                    vertex = *vit;
+                }
+
+                //BOOST_LOG_TRIVIAL(trace) << "Checking edge validity between \"" << graph[*vit].Name() << "\" and \"" << graph[*vit2].Name() << "\".";
+                if (!EdgeCreatesCycle(parentVertex, vertex, graph, v_index_map)) {  //No edge going the other way, OK to add this edge.
+                    BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[vertex].Name() << "\".";
+
+                    boost::add_edge(parentVertex, vertex, graph);
+                }
+            }
+        }
+    }
+
+    std::list<Plugin> Sort(PluginGraph& graph, const list<string>& loadorder) {
+        // Prebuild an index map, which std::list-based VertexList graphs don't have.
         map<vertex_t, size_t> index_map;
-        boost::associative_property_map< map<vertex_t, size_t> > v_index_map(index_map);
-        size_t i=0;
+        vertex_map_t v_index_map(index_map);
+        size_t i = 0;
         BGL_FORALL_VERTICES(v, graph, PluginGraph)
             put(v_index_map, v, i++);
 
-        map<vertex_t, vertex_t> predecessor_map;
-        boost::associative_property_map< map<vertex_t, vertex_t> > v_predecessor_map(predecessor_map);
+        //Now add the interactions between plugins to the graph as edges.
+        BOOST_LOG_TRIVIAL(info) << "Adding edges to plugin graph.";
+        BOOST_LOG_TRIVIAL(debug) << "Adding non-overlap edges.";
+        AddSpecificEdges(graph, v_index_map);
 
-        boost::breadth_first_search(graph, v, visitor(boost::make_bfs_visitor(boost::record_predecessors(v_predecessor_map, boost::on_tree_edge()))).vertex_index_map(v_index_map));
+        BOOST_LOG_TRIVIAL(debug) << "Adding priority edges.";
+        AddPriorityEdges(graph, v_index_map);
 
-        return predecessor_map.find(u) != predecessor_map.end();
+        BOOST_LOG_TRIVIAL(debug) << "Adding overlap edges.";
+        AddOverlapEdges(graph, v_index_map);
+
+        BOOST_LOG_TRIVIAL(debug) << "Adding tie-break edges.";
+        AddTieBreakEdges(graph, loadorder, v_index_map);
+
+        BOOST_LOG_TRIVIAL(info) << "Checking to see if the graph is cyclic.";
+        CheckForCycles(graph, v_index_map);
+
+        //Now we can sort.
+        BOOST_LOG_TRIVIAL(info) << "Performing a topological sort.";
+        list<vertex_t> sortedVertices;
+        boost::topological_sort(graph, std::front_inserter(sortedVertices), boost::vertex_index_map(v_index_map));
+
+        // Check that the sorted path is Hamiltonian (ie. unique).
+        for (auto it = sortedVertices.begin(); it != sortedVertices.end(); ++it) {
+            if (next(it) != sortedVertices.end() && !boost::edge(*it, *next(it), graph).second) {
+                BOOST_LOG_TRIVIAL(error) << "The calculated load order is not unique. No edge exists between"
+                    << graph[*it].Name() << " and " << graph[*next(it)].Name() << ".";
+            }
+        }
+
+        // Output a plugin list using the sorted vertices.
+        BOOST_LOG_TRIVIAL(info) << "Calculated order: ";
+        list<Plugin> plugins;
+        for (const auto &vertex : sortedVertices) {
+            BOOST_LOG_TRIVIAL(info) << '\t' << graph[vertex].Name();
+            plugins.push_back(graph[vertex]);
+        }
+        return plugins;
     }
 }

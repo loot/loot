@@ -3,7 +3,7 @@
     A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
     Fallout: New Vegas.
 
-    Copyright (C) 2012-2014    WrinklyNinja
+    Copyright (C) 2012-2015    WrinklyNinja
 
     This file is part of LOOT.
 
@@ -20,7 +20,7 @@
     You should have received a copy of the GNU General Public License
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
-*/
+    */
 #ifndef __LOOT_METADATA__
 #define __LOOT_METADATA__
 
@@ -32,8 +32,9 @@
 #include <list>
 #include <set>
 
-namespace loot {
+#include <boost/locale.hpp>
 
+namespace loot {
     const unsigned int max_priority = 1000000;
 
     class Game;
@@ -55,33 +56,14 @@ namespace loot {
         uint32_t id;
     };
 
-    class PluginDirtyInfo {
-    public:
-        PluginDirtyInfo();
-        PluginDirtyInfo(uint32_t crc, unsigned int itm, unsigned int udr, unsigned int nav, const std::string& utility);
-
-        bool operator < (const PluginDirtyInfo& rhs) const;
-
-        uint32_t CRC() const;
-        unsigned int ITMs() const;
-        unsigned int UDRs() const;
-        unsigned int DeletedNavmeshes() const;
-        std::string CleaningUtility() const;
-    private:
-        uint32_t _crc;
-        unsigned int _itm;
-        unsigned int _udr;
-        unsigned int _nav;
-        std::string _utility;
-    };
-
     class ConditionStruct {
     public:
         ConditionStruct();
         ConditionStruct(const std::string& condition);
 
         bool IsConditional() const;
-        bool EvalCondition(loot::Game& game) const;
+        bool EvalCondition(Game& game) const;
+        void ParseCondition() const;  // Throws error on parsing failure.
 
         std::string Condition() const;
     private:
@@ -114,26 +96,47 @@ namespace loot {
         bool operator < (const Message& rhs) const;
         bool operator == (const Message& rhs) const;
 
-        bool EvalCondition(loot::Game& game, const unsigned int language);
+        bool EvalCondition(Game& game, const unsigned int language);
 
         unsigned int Type() const;
         std::vector<MessageContent> Content() const;
         MessageContent ChooseContent(const unsigned int language) const;
 
-        static const unsigned int say   = 0;
-        static const unsigned int warn  = 1;
+        static const unsigned int say = 0;
+        static const unsigned int warn = 1;
         static const unsigned int error = 2;
-        static const unsigned int tag   = 3;
     private:
         unsigned int _type;
         std::vector<MessageContent> _content;
+    };
+
+    class PluginDirtyInfo {
+    public:
+        PluginDirtyInfo();
+        PluginDirtyInfo(uint32_t crc, unsigned int itm, unsigned int ref, unsigned int nav, const std::string& utility);
+
+        bool operator < (const PluginDirtyInfo& rhs) const;
+
+        uint32_t CRC() const;
+        unsigned int ITMs() const;
+        unsigned int DeletedRefs() const;
+        unsigned int DeletedNavmeshes() const;
+        std::string CleaningUtility() const;
+
+        Message AsMessage() const;
+    private:
+        uint32_t _crc;
+        unsigned int _itm;
+        unsigned int _ref;
+        unsigned int _nav;
+        std::string _utility;
     };
 
     class File : public ConditionStruct {
     public:
         File();
         File(const std::string& name, const std::string& display = "",
-                                     const std::string& condition = "");
+             const std::string& condition = "");
 
         bool operator < (const File& rhs) const;
         bool operator == (const File& rhs) const;
@@ -160,20 +163,40 @@ namespace loot {
         bool addTag;
     };
 
+    class Location {
+    public:
+        Location();
+        Location(const std::string& url);
+        Location(const std::string& url, const std::vector<std::string>& versions);
+
+        bool operator < (const Location& rhs) const;
+
+        std::string URL() const;
+        std::vector<std::string> Versions() const;
+    private:
+        std::string _url;
+        std::vector<std::string> _versions;
+    };
+
     class Plugin {
     public:
         Plugin();
         Plugin(const std::string& name);
-        Plugin(loot::Game& game, const std::string& name, const bool headerOnly);
+        Plugin(Game& game, const std::string& name, const bool headerOnly);
 
         //Merges from the given plugin into this one, unless there is already equal metadata present.
         //For 'enabled' and 'priority' metadata, use the given plugin's values, but if the 'priority' user value is zero, ignore it.
         void MergeMetadata(const Plugin& plugin);
 
-        //Returns the difference in metadata between the two plugins. 
-        //For 'enabled', use the given plugin's value.
-        //For 'priority', use the given plugin's value, unless it is equal to this plugin's value, in which case return 0.
+        //Returns the difference in metadata between the two plugins.
+        //For 'enabled', use this plugin's value.
+        //For 'priority', use 0 if the two plugin priorities are equal, and make it not explicit. Otherwise use this plugin's value.
         Plugin DiffMetadata(const Plugin& plugin) const;
+
+        // Returns metadata in this plugin not in the given plugin.
+        //For 'enabled', use this plugin's value.
+        //For 'priority', use 0 if the two plugin priorities are equal, and make it not explicit. Otherwise use this plugin's value.
+        Plugin NewMetadata(const Plugin& plugin) const;
 
         std::string Name() const;
         bool Enabled() const;
@@ -184,10 +207,12 @@ namespace loot {
         std::list<Message> Messages() const;
         std::set<Tag> Tags() const;
         std::set<PluginDirtyInfo> DirtyInfo() const;
+        std::set<Location> Locations() const;
 
         const std::set<FormID>& FormIDs() const;
         std::vector<std::string> Masters() const;
         bool IsMaster() const;  //Checks master bit flag.
+        bool IsEmpty() const;
         std::string Version() const;
         uint32_t Crc() const;
 
@@ -201,8 +226,10 @@ namespace loot {
         void Messages(const std::list<Message>& messages);
         void Tags(const std::set<Tag>& tags);
         void DirtyInfo(const std::set<PluginDirtyInfo>& info);
+        void Locations(const std::set<Location>& locations);
 
-        void EvalAllConditions(loot::Game& game, const unsigned int language);
+        Plugin& EvalAllConditions(Game& game, const unsigned int language);
+        void ParseAllConditions() const;
         bool HasNameOnly() const;
         bool IsRegexPlugin() const;
         bool LoadsBSA(const Game& game) const;
@@ -220,11 +247,12 @@ namespace loot {
         bool MustLoadAfter(const Plugin& plugin) const;  //Checks masters, reqs and loadAfter.
 
         //Validity checks.
-        void CheckInstallValidity(const Game& game);  //Checks that reqs and masters are all present, and that no incs are present. Returns a map of filenames and whether they are missing (if bool is true, then filename is a req or master, otherwise it's an inc).
+        bool CheckInstallValidity(const Game& game);  //Checks that reqs and masters are all present, and that no incs are present. Returns true if the plugin is dirty.
     private:
         std::string name;
         bool enabled;  //Default to true.
         bool _isPriorityExplicit;  //If false and priority is 0, then priority was not explicitly set as such.
+        bool _isEmpty;  // Does the plugin contain any records other than the TES4 header?
         int priority;  //Default to 0 : >0 is lower down in load order, <0 is higher up.
         std::set<File> loadAfter;
         std::set<File> requirements;
@@ -232,6 +260,7 @@ namespace loot {
         std::list<Message> messages;
         std::set<Tag> tags;
         std::set<PluginDirtyInfo> _dirtyInfo;
+        std::set<Location> _locations;
 
         std::vector<std::string> masters;
         std::set<FormID> formIDs;
@@ -243,26 +272,20 @@ namespace loot {
         size_t numOverrideRecords;
     };
 
-    class MetadataList {
-    public:
-        void Load(boost::filesystem::path& filepath);
-
-        std::list<Plugin> plugins;
-        std::list<Message> messages;
-    };
-
-    struct plugin_hash : std::unary_function<Plugin, size_t> {
-        size_t operator () (const Plugin& p) const;
-    };
-
-
     bool operator == (const File& lhs, const Plugin& rhs);
 
     bool operator == (const Plugin& lhs, const File& rhs);
 
     bool operator == (const std::string& lhs, const Plugin& rhs);
+}
 
-    bool IsPlugin(const std::string& file);
+namespace std {
+    template<>
+    struct hash < loot::Plugin > {
+        size_t operator() (const loot::Plugin& plugin) const {
+            return hash<string>()(boost::locale::to_lower(plugin.Name()));
+        }
+    };
 }
 
 #endif

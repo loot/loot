@@ -1,0 +1,56 @@
+<!--
+<loot-dialog> is an extension of <paper-dialog> that gives it a <dialog>-like API.
+
+Still missing compared to <dialog> are:
+
+1. No `close` or `cancel` events.
+2. No ::backdrop pseudo-element.
+3. No `form[method="dialog"]`.
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-action-dialog.html">
+
+<polymer-element name="loot-dialog" extends="paper-action-dialog" transition="core-transition-center" layered="false">
+    <template>
+    <style>
+    :host {
+        margin: 24px 40px;
+    }
+    :host::shadow #actions {
+        padding: 16px 16px 8px;
+        /* This is and the div CSS would be better done by moving the div before
+           both content elements, this is a hack to do the same without editing
+           the HTML. */
+        justify-content: flex-end;
+    }
+    :host::shadow #actions > div {
+        flex: none;
+    }
+    :host::shadow h1 {
+        font-weight: 500;
+        font-size: 1.429rem;
+    }
+    </style>
+    <shadow></shadow>
+    </template>
+    <script>
+    Polymer({
+        show: function() {
+            this.backdrop = false;
+            this.autoCloseDisabled = false;
+            this.setAttribute(opened, true);
+        },
+        showModal: function() {
+            this.backdrop = true;
+            this.autoCloseDisabled = true;
+            this.open();
+            this.setAttribute('opened', true);
+        },
+        close: function(retVal) {
+            this.setAttribute('returnValue', retVal);
+            this.super();
+        },
+    });
+    </script>
+</polymer-element>

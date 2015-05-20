@@ -3,7 +3,7 @@
     A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
     Fallout: New Vegas.
 
-    Copyright (C) 2012-2014    WrinklyNinja
+    Copyright (C) 2012-2015    WrinklyNinja
 
     This file is part of LOOT.
 
@@ -20,18 +20,20 @@
     You should have received a copy of the GNU General Public License
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
-*/
+    */
 #ifndef __LOOT_GLOBALS__
 #define __LOOT_GLOBALS__
 
 #include <boost/filesystem.hpp>
 
 namespace loot {
-
     //Version numbers.
     extern const unsigned int g_version_major;
     extern const unsigned int g_version_minor;
     extern const unsigned int g_version_patch;
+
+    // Build revision
+    extern const char * g_build_revision;
 
     //Common paths.
     extern const boost::filesystem::path g_path_readme;

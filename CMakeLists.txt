@@ -4,13 +4,41 @@
 # LIBESPM_ROOT = the path to the root of the libespm source.
 
 ##############################
+# Get Build Revision
+##############################
+
+# Uses the CMake module in this repo: https://github.com/rpavlik/cmake-modules
+# On Windows, this requires the msysgit install of Git, as the script won't find
+# the one bundled with GitHub for Windows.
+
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
+include(GetGitRevisionDescription)
+get_git_head_revision(GIT_REFSPEC GIT_COMMIT_STRING --tags --long)
+
+IF (GIT_COMMIT_STRING MATCHES "GITDIR-NOTFOUND")
+    set(GIT_COMMIT_STRING "unknown")
+ELSE ()
+    # Get a shortened ID. Although knowing the shortest unique string requires Git,
+    # 8 characters should be a good compromise between chance of ambiguity and length,
+    # especially since the version numbers would narrow down the range of possibly
+    # ambiguous commits.
+    string(SUBSTRING ${GIT_COMMIT_STRING} 0 8 GIT_COMMIT_STRING)
+ENDIF ()
+
+message(STATUS "Git revision: ${GIT_COMMIT_STRING}")
+
+# Write to file.
+configure_file("${CMAKE_SOURCE_DIR}/src/backend/globals.cpp.in" "${CMAKE_BINARY_DIR}/generated/globals.cpp" @ONLY)
+
+##############################
 # General Settings
 ##############################
 
-cmake_minimum_required (VERSION 2.8.9)
+cmake_minimum_required (VERSION 2.8)
+cmake_policy(SET CMP0015 NEW)
 project (LOOT)
 
-option(BUILD_SHARED_LIBS "Build a shared library" OFF)
+option(BUILD_SHARED_LIBS "Build a shared library" ON)
 option(PROJECT_STATIC_RUNTIME "Build with static runtime libs (/MT)" ON)
 
 IF (NOT DEFINED PROJECT_ARCH)
@@ -33,55 +61,84 @@ IF (NOT DEFINED LIBLOADORDER_ROOT)
     set (LIBLOADORDER_ROOT "../../libloadorder")
 ENDIF ()
 
-IF (NOT DEFINED YAMLCPP_ROOT)
-    set (YAMLCPP_ROOT "../../yaml-cpp")
+IF (NOT DEFINED CEF_ROOT)
+    set (CEF_ROOT "../../cef")
 ENDIF ()
 
-IF (NOT DEFINED WXWIDGETS_ROOT)
-    set (WXWIDGETS_ROOT "../../wxWidgets")
-ENDIF ()
-
-set (Boost_USE_STATIC_LIBS ON)
+set (Boost_USE_STATIC_LIBS ${PROJECT_STATIC_RUNTIME})
 set (Boost_USE_MULTITHREADED ON)
-set (Boost_USE_STATIC_RUNTIME PROJECT_STATIC_RUNTIME)
+set (Boost_USE_STATIC_RUNTIME ${PROJECT_STATIC_RUNTIME})
+
+IF (NOT Boost_USE_STATIC_LIBS)
+    add_definitions(-DBOOST_LOG_DYN_LINK)
+ENDIF ()
+
+find_package(Boost REQUIRED COMPONENTS log log_setup regex locale thread date_time chrono filesystem system iostreams)
+find_package(yaml-cpp)
+find_package(GTest)
 
 set (LOOT_SRC   "${CMAKE_SOURCE_DIR}/src/backend/metadata.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/game.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/globals.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/generators.cpp")
+                "${CMAKE_SOURCE_DIR}/src/backend/generators.cpp"
+                "${CMAKE_SOURCE_DIR}/src/backend/graph.cpp"
+                "${CMAKE_SOURCE_DIR}/src/backend/git.cpp"
+                "${CMAKE_BINARY_DIR}/generated/globals.cpp")
+
+set (LOOT_HEADERS "${CMAKE_SOURCE_DIR}/src/backend/metadata.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/game.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/helpers.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/globals.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/generators.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/graph.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/error.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/parsers.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/streams.h")
 
 set (LOOT_GUI_SRC ${LOOT_SRC}
-                  # Code the API doesn't need.
-                  "${CMAKE_SOURCE_DIR}/src/backend/graph.cpp"
-                  "${CMAKE_SOURCE_DIR}/src/backend/network.cpp"
-                  # Actual GUI code.
-                  "${CMAKE_SOURCE_DIR}/src/gui/ids.cpp"
-                  "${CMAKE_SOURCE_DIR}/src/gui/main.cpp"
-                  "${CMAKE_SOURCE_DIR}/src/gui/settings.cpp"
-                  "${CMAKE_SOURCE_DIR}/src/gui/editor.cpp"
-                  "${CMAKE_SOURCE_DIR}/src/gui/viewer.cpp"
-                  "${CMAKE_SOURCE_DIR}/src/gui/misc.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/gui/main_win.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/gui/handler.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/gui/app.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/gui/scheme.cpp"
                   "${CMAKE_SOURCE_DIR}/src/resource.rc")
+
+set (LOOT_GUI_HEADERS ${LOOT_HEADERS}
+                  # Code the API doesn't need.
+                  "${CMAKE_SOURCE_DIR}/src/backend/json.h"
+                  # Actual GUI code.
+                  "${CMAKE_SOURCE_DIR}/src/gui/handler.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/app.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/scheme.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/resource.h")
 
 set (LOOT_API_SRC ${LOOT_SRC}
                   "${CMAKE_SOURCE_DIR}/src/api/api.cpp")
 
-find_package(Boost REQUIRED COMPONENTS log log_setup locale thread chrono date_time filesystem system regex iostreams)
+set (LOOT_API_HEADERS ${LOOT_HEADERS}
+                  "${CMAKE_SOURCE_DIR}/src/api/api.h")
+
+set (LOOT_TESTS_SRC "${CMAKE_SOURCE_DIR}/src/tests/main.cpp")
+
+set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/fixtures.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/api/api.h")
+
+source_group("Header Files" FILES ${LOOT_HEADERS} ${LOOT_GUI_HEADERS} ${LOOT_API_HEADERS} ${LOOT_TESTS_HEADERS})
 
 # Include source and library directories.
 include_directories ("${CMAKE_SOURCE_DIR}/src"
                      ${ALPHANUM_ROOT}
-                     "${YAMLCPP_ROOT}/include"
                      "${LIBLOADORDER_ROOT}/src"
                      "${LIBGIT2_ROOT}/include"
-                     "${WXWIDGETS_ROOT}/include"
+                     ${CEF_ROOT}
                      ${LIBESPM_ROOT}
-                     ${Boost_INCLUDE_DIRS})
+                     ${Boost_INCLUDE_DIRS}
+					 ${YAML_CPP_INCLUDE_DIR}
+                     ${GTEST_INCLUDE_DIRS})
 
 link_directories ("${LIBLOADORDER_ROOT}/build"
                   "${LIBGIT2_ROOT}/build"
-                  "${YAMLCPP_ROOT}/build")
+                  "${CEF_ROOT}/Release"
+                  "${CEF_ROOT}/build/libcef_dll/Release")
 
 
 ##############################
@@ -90,52 +147,40 @@ link_directories ("${LIBLOADORDER_ROOT}/build"
 
 # Settings when compiling for Windows. Since it's a Windows-only app this is always true, but useful to check for copy/paste into other projects.
 IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
-    add_definitions (-DUNICODE -D_UNICODE -D__WXMSW__ -DNDEBUG -DLIBLO_STATIC -DWIN32 -D_WINDOWS)
-    IF (BUILD_SHARED_LIBS)
-        add_definitions (-DLOOT_EXPORT)
-    ELSE ()
-        add_definitions (-DLOOT_STATIC)
+    add_definitions (-DUNICODE -D_UNICODE -DLIBLO_STATIC)
+ENDIF ()
+
+# GCC and MinGW settings.
+IF (CMAKE_COMPILER_IS_GNUCXX)
+    set (CMAKE_C_FLAGS "-m${PROJECT_ARCH} -O3 -std=c++0x")
+    set (CMAKE_CXX_FLAGS "-m${PROJECT_ARCH} -O3 -std=c++0x")
+    IF (PROJECT_STATIC_RUNTIME)
+        set (CMAKE_EXE_LINKER_FLAGS "-static-libstdc++ -static-libgcc")
+        set (CMAKE_SHARED_LINKER_FLAGS "-static-libstdc++ -static-libgcc")
+        set (CMAKE_MODULE_LINKER_FLAGS "-static-libstdc++ -static-libgcc")
     ENDIF ()
+
+    set (LOOT_LIBS git2
+                   loadorder${PROJECT_ARCH})
 ENDIF ()
 
 # MinGW settings.
 IF (MINGW)
-    include_directories("${WXWIDGETS_ROOT}/lib/wx/include/${COMPILER_PREFIX}-msw-unicode-static-3.0")
-    link_directories("${WXWIDGETS_ROOT}/lib")
-    set (CMAKE_C_FLAGS  "-m${PROJECT_ARCH} -O3")
-    set (CMAKE_CXX_FLAGS "-m${PROJECT_ARCH} -O3")
-    set (CMAKE_EXE_LINKER_FLAGS "-static-libstdc++ -static-libgcc -Wl,--subsystem,windows")
-    set (CMAKE_SHARED_LINKER_FLAGS "-static-libstdc++ -static-libgcc -Wl,--subsystem,windows")
-    set (CMAKE_MODULE_LINKER_FLAGS "-static-libstdc++ -static-libgcc -Wl,--subsystem,windows")
+    set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--subsystem,windows")
+    set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--subsystem,windows")
+    set (CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -Wl,--subsystem,windows")
+
     set (LOOT_LIBS ${LOOT_LIBS}
-                   yaml-cpp
-                   boost_log_setup
-                   boost_log
-                   boost_locale
-                   boost_thread_win32
-                   boost_chrono
-                   boost_date_time
-                   boost_filesystem
-                   boost_system
-                   boost_regex
                    version
-                   loadorder${PROJECT_ARCH}
-                   ssl
-                   crypto
-                   ws2_32)
+                   ws2_32
+                   shlwapi)
     set (LOOT_GUI_LIBS ${LOOT_LIBS}
-                       git2
-                       wx_mswu_webview-3.0-${COMPILER_PREFIX}
-                       wx_mswu_core-3.0-${COMPILER_PREFIX}
-                       wx_baseu-3.0-${COMPILER_PREFIX}
-                       wx_mswu_adv-3.0-${COMPILER_PREFIX}
-                       wxpng-3.0-${COMPILER_PREFIX}
-                       wxzlib-3.0-${COMPILER_PREFIX}
+                       cef_sandbox
+                       libcef
+                       libcef_dll_wrapper
+                       rpcrt4
                        comctl32)
 ELSEIF (MSVC)
-    include_directories("${WXWIDGETS_ROOT}/lib/vc_lib/mswu")
-    link_directories("${WXWIDGETS_ROOT}/lib/vc_lib")
-
     # Force static C++ runtime linkage.
     IF (PROJECT_STATIC_RUNTIME)
         FOREACH(flag
@@ -148,31 +193,93 @@ ELSEIF (MSVC)
         ENDFOREACH()
     ENDIF ()
 
-    set (CMAKE_EXE_LINKER_FLAGS "/SUBSYSTEM:WINDOWS /LARGEADDRESSAWARE")
-    set (LOOT_LIBS libyaml-cppmt
-                   version
-                   loadorder${PROJECT_ARCH}
-                   ws2_32)
+    set (LOOT_LIBS  git2
+                    version
+                    loadorder${PROJECT_ARCH}
+                    ws2_32
+                    shlwapi)
     set (LOOT_GUI_LIBS ${LOOT_LIBS}
-                       git2
-                       wxmsw30u_webview
-                       wxmsw30u_adv
-                       wxmsw30u_core
-                       wxbase30u
-                       wxpng
-                       wxzlib
+                       cef_sandbox
+                       libcef
+                       libcef_dll_wrapper
+                       rpcrt4
                        comctl32)
 ENDIF ()
 
 
 ##############################
-# Actual Building
+# Define Targets
 ##############################
 
 # Build API.
-add_library           (loot${PROJECT_ARCH} ${LOOT_API_SRC})
-target_link_libraries (loot${PROJECT_ARCH} ${Boost_LIBRARIES} ${LOOT_LIBS})
+add_library           (loot${PROJECT_ARCH} ${LOOT_API_SRC} ${LOOT_API_HEADERS})
+target_link_libraries (loot${PROJECT_ARCH} ${Boost_LIBRARIES} ${YAML_CPP_LIBRARIES} ${LOOT_LIBS})
+
+IF (${GTEST_FOUND})
+    # Build tests.
+    add_executable(tests ${LOOT_TESTS_SRC} ${LOOT_TESTS_HEADERS})
+    target_link_libraries(tests loot${PROJECT_ARCH} ${Boost_LIBRARIES} ${YAML_CPP_LIBRARIES} ${LOOT_LIBS} ${GTEST_BOTH_LIBRARIES})
+ENDIF ()
 
 # Build application.
-add_executable        (LOOT ${LOOT_GUI_SRC})
-target_link_libraries (LOOT ${Boost_LIBRARIES} ${LOOT_GUI_LIBS})
+add_executable        (LOOT ${LOOT_GUI_SRC} ${LOOT_GUI_HEADERS})
+target_link_libraries (LOOT ${Boost_LIBRARIES} ${YAML_CPP_LIBRARIES} ${LOOT_GUI_LIBS})
+
+
+##############################
+# Set Target-Specific Flags
+##############################
+
+IF (MSVC)
+    set (LOOT_LINK_FLAGS "/SUBSYSTEM:WINDOWS /LARGEADDRESSAWARE")
+    get_target_property (EXISTING_LINK_FLAGS LOOT LINK_FLAGS)
+    IF (EXISTING_LINK_FLAGS)
+        set (LOOT_LINK_FLAGS "${EXISTING_LINK_FLAGS} ${LOOT_LINK_FLAGS}")
+    ENDIF ()
+    set_target_properties (LOOT PROPERTIES LINK_FLAGS ${LOOT_LINK_FLAGS})
+ENDIF ()
+
+
+IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
+    IF (BUILD_SHARED_LIBS)
+        set_target_properties (loot${PROJECT_ARCH} PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_EXPORT")
+    ELSE ()
+        set_target_properties (loot${PROJECT_ARCH} PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_STATIC")
+    ENDIF ()
+ENDIF ()
+
+
+##############################
+# Post-Build Steps
+##############################
+
+add_custom_command(
+    TARGET LOOT
+    POST_BUILD
+    COMMAND "mt.exe" -manifest \"${CMAKE_SOURCE_DIR}/src/gui/LOOT.exe.manifest\" -inputresource:"$(TargetDir)$(TargetFileName)"\;\#1 -outputresource:"$(TargetDir)$(TargetFileName)"\;\#1
+    COMMENT "Adding manifest..."
+)
+
+# Copy CEF DLLs.
+FOREACH(cef_dll d3dcompiler_47.dll libEGL.dll libGLESv2.dll libcef.dll wow_helper.exe)
+    add_custom_command(TARGET LOOT POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${CMAKE_SOURCE_DIR}/${CEF_ROOT}/$<CONFIGURATION>/${cef_dll}"
+            $<TARGET_FILE_DIR:LOOT>)
+ENDFOREACH()
+
+# Copy CEF resources.
+FOREACH(cef_resource cef.pak cef_100_percent.pak cef_200_percent.pak devtools_resources.pak icudtl.dat)
+    add_custom_command(TARGET LOOT POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${CMAKE_SOURCE_DIR}/${CEF_ROOT}/Resources/${cef_resource}"
+            $<TARGET_FILE_DIR:LOOT>)
+ENDFOREACH()
+
+# Copy CEF locale resources. This is just to reduce error messages while debugging.
+FOREACH(cef_resource en-US.pak)
+    add_custom_command(TARGET LOOT POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${CMAKE_SOURCE_DIR}/${CEF_ROOT}/Resources/locales/${cef_resource}"
+            $<TARGET_FILE_DIR:LOOT>/resources/l10n)
+ENDFOREACH()

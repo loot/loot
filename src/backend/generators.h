@@ -3,7 +3,7 @@
     A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
     Fallout: New Vegas.
 
-    Copyright (C) 2013-2014    WrinklyNinja
+    Copyright (C) 2013-2015    WrinklyNinja
 
     This file is part of LOOT.
 
@@ -20,7 +20,7 @@
     You should have received a copy of the GNU General Public License
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
-*/
+    */
 #ifndef __LOOT_GENERATORS__
 #define __LOOT_GENERATORS__
 
@@ -30,31 +30,30 @@
 
 #include <string>
 #include <list>
+#include <unordered_set>
 #include <boost/filesystem.hpp>
-
-namespace loot {
-    //LOOT Report generation stuff.
-    void GenerateReportData(const Game& game,
-        std::list<Message>& messages,
-        const std::list<Plugin>& plugins,
-        const std::string& masterlistVersion,
-        const std::string& masterlistDate,
-        const bool masterlistUpdateEnabled);
-
-    //Default settings file generation.
-    void GenerateDefaultSettingsFile(const std::string& file);
-}
 
 namespace YAML {
     template<class T, class Compare>
     Emitter& operator << (Emitter& out, const std::set<T, Compare>& rhs) {
         out << BeginSeq;
-        for (const auto &element: rhs) {
+        for (const auto &element : rhs) {
             out << element;
         }
-		out << EndSeq;
+        out << EndSeq;
 
-		return out;
+        return out;
+    }
+
+    template<class T, class Hash>
+    Emitter& operator << (Emitter& out, const std::unordered_set<T, Hash>& rhs) {
+        out << BeginSeq;
+        for (const auto &element : rhs) {
+            out << element;
+        }
+        out << EndSeq;
+
+        return out;
     }
 
     Emitter& operator << (Emitter& out, const loot::PluginDirtyInfo& rhs);
@@ -68,6 +67,8 @@ namespace YAML {
     Emitter& operator << (Emitter& out, const loot::File& rhs);
 
     Emitter& operator << (Emitter& out, const loot::Tag& rhs);
+
+    Emitter& operator << (Emitter& out, const loot::Location& rhs);
 
     Emitter& operator << (Emitter& out, const loot::Plugin& rhs);
 }

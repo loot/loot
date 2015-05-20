@@ -3,7 +3,7 @@
     A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
     Fallout: New Vegas.
 
-    Copyright (C) 2012-2014    WrinklyNinja
+    Copyright (C) 2012-2015    WrinklyNinja
 
     This file is part of LOOT.
 
@@ -20,15 +20,12 @@
     You should have received a copy of the GNU General Public License
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
-*/
+    */
 
 #ifndef __LOOT_GRAPH__
 #define __LOOT_GRAPH__
 
 #include "metadata.h"
-#include "error.h"
-
-#include <unordered_map>
 
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/adjacency_list.hpp>
@@ -36,35 +33,10 @@
 #include <boost/graph/graphviz.hpp>
 
 namespace loot {
-
-    typedef boost::adjacency_list<boost::listS, boost::listS, boost::bidirectionalS, loot::Plugin> PluginGraph;
+    typedef boost::adjacency_list<boost::listS, boost::listS, boost::directedS, loot::Plugin> PluginGraph;
     typedef boost::graph_traits<PluginGraph>::vertex_descriptor vertex_t;
-    typedef boost::graph_traits<PluginGraph>::vertex_iterator vertex_it;
-    typedef boost::graph_traits<PluginGraph>::edge_descriptor edge_t;
-    typedef boost::graph_traits<PluginGraph>::edge_iterator edge_it;
 
-    struct cycle_detector : public boost::dfs_visitor<> {
-        cycle_detector();
-
-        std::list<std::string> trail;
-        
-        void tree_edge(edge_t e, const PluginGraph& g);
-        void back_edge(edge_t e, const PluginGraph& g);
-    };
-
-    bool GetVertexByName(const PluginGraph& graph, const std::string& name, vertex_t& vertex);
-
-    void Sort(const PluginGraph& graph, std::list<Plugin>& plugins);
-
-    void CheckForCycles(const PluginGraph& graph);
-
-    void AddSpecificEdges(PluginGraph& graph, std::map<std::string, int>& overriddenPriorities);
-
-    void AddPriorityEdges(PluginGraph& graph);
-
-    void AddOverlapEdges(PluginGraph& graph);
-
-    bool EdgeCreatesCycle(PluginGraph& graph, vertex_t u, vertex_t v);
+    std::list<Plugin> Sort(PluginGraph& graph, const std::list<std::string>& loadorder);
 }
 
 #endif

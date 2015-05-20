@@ -1,0 +1,204 @@
+/* Font definitions */
+/* Roboto */
+@font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 300;
+    src: local('Roboto'),
+         url('../fonts/Roboto-Light.ttf');
+}
+@font-face {
+    font-family: 'Roboto';
+    font-style: italic;
+    font-weight: 300;
+    src: local('Roboto'),
+         url('../fonts/Roboto-LightItalic.ttf');
+}
+@font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Roboto'),
+         url('../fonts/Roboto-Regular.ttf');
+}
+@font-face {
+    font-family: 'Roboto';
+    font-style: italic;
+    font-weight: 400;
+    src: local('Roboto'),
+         url('../fonts/Roboto-Italic.ttf');
+}
+@font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    src: local('Roboto'),
+         url('../fonts/Roboto-Medium.ttf');
+}
+@font-face {
+    font-family: 'Roboto';
+    font-style: italic;
+    font-weight: 500;
+    src: local('Roboto'),
+         url('../fonts/Roboto-MediumItalic.ttf');
+}
+@font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 700;
+    src: local('Roboto'),
+         url('../fonts/Roboto-Bold.ttf');
+}
+@font-face {
+    font-family: 'Roboto';
+    font-style: italic;
+    font-weight: 700;
+    src: local('Roboto'),
+         url('../fonts/Roboto-BoldItalic.ttf');
+}
+/* Noto - Korean */
+@font-face {
+    font-family: 'Noto';
+    font-style: normal;
+    font-weight: 300;
+    src: local('Noto Sans CJK KR Light'),
+         url('../fonts/NotoSansCJKkr-Light.otf');
+}
+@font-face {
+    font-family: 'Noto';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Noto Sans CJK KR Regular'),
+         url('../fonts/NotoSansCJKkr-Regular.otf');
+}
+@font-face {
+    font-family: 'Noto';
+    font-style: normal;
+    font-weight: 500;
+    src: local('Noto Sans CJK KR Medium'),
+         url('../fonts/NotoSansCJKkr-Medium.otf');
+}
+@font-face {
+    font-family: 'Noto';
+    font-style: normal;
+    font-weight: 700;
+    src: local('Noto Sans CJK KR Bold'),
+         url('../fonts/NotoSansCJKkr-Bold.otf');
+}
+/* Noto - Simplified Chinese */
+@font-face {
+    font-family: 'Noto';
+    font-style: normal;
+    font-weight: 300;
+    src: local('Noto Sans CJK SC Light'),
+         url('../fonts/NotoSansCJKsc-Light.otf');
+}
+@font-face {
+    font-family: 'Noto';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Noto Sans CJK SC Regular'),
+         url('../fonts/NotoSansCJKsc-Regular.otf');
+}
+@font-face {
+    font-family: 'Noto';
+    font-style: normal;
+    font-weight: 500;
+    src: local('Noto Sans CJK SC Medium'),
+         url('../fonts/NotoSansCJKsc-Medium.otf');
+}
+@font-face {
+    font-family: 'Noto';
+    font-style: normal;
+    font-weight: 700;
+    src: local('Noto Sans CJK SC Bold'),
+         url('../fonts/NotoSansCJKsc-Bold.otf');
+}
+
+/* Typography */
+html {
+    /* Microsoft Yahei is for Chinese characters, and Malgun Gothic for Korean
+       characters. If Noto isn't present, they're better than the sans-serif
+       defaults. */
+    font:11pt/1.429 Roboto, Noto, 'Microsoft Yahei', 'Malgun Gothic', sans-serif;
+    color: rgba(0, 0, 0, 0.87);
+    font-weight: 400;
+    text-rendering: optimizeLegibility;
+}
+.display4 {
+    font-weight: 300;
+    font-size: 8rem;
+    color: rgba(0, 0, 0, 0.54);
+    /*letter-spacing: -0.01em;*/
+}
+.display3 {
+    font-weight: 400;
+    font-size: 4rem;
+    color: rgba(0, 0, 0, 0.54);
+    /*letter-spacing: -0.005em;*/
+}
+.display2, h1 {
+    font-weight: 400;
+    font-size: 3.214rem;
+    color: rgba(0, 0, 0, 0.54);
+    line-height: 1.067;
+}
+.display1 {
+    font-weight: 400;
+    font-size: 2.429rem;
+    color: rgba(0, 0, 0, 0.54);
+    line-height: 1.176;
+}
+.headline, h2 {
+    font-weight: 400;
+    font-size: 1.714rem;
+    line-height: 1.333;
+}
+.title, h3 {
+    font-weight: 500;
+    font-size: 1.429rem;
+    /*letter-spacing: 0.005em;*/
+}
+.subhead, h4,
+#summary > h1,
+html /deep/ paper-item {
+    font-weight: 400;
+    font-size: 1.143rem;
+    line-height: 1.75;
+    /* Alternate line height: */
+    /* line-height: 1.5; */
+    /*letter-spacing: 0.01em;*/
+}
+.body2,
+html /deep/ paper-menu-button paper-item,
+html /deep/ paper-menu-button paper-checkbox {
+    font-weight: 500;
+    font-size: 1rem;
+    line-height: 1.714;
+    /*letter-spacing: 0.01em;*/
+}
+.body1,
+html /deep/ paper-checkbox,
+paper-toast {
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1.429;
+    /*letter-spacing: 0.01em;*/
+}
+.caption {
+    font-weight: 400;
+    font-size: 0.857rem;
+    color: rgba(0, 0, 0, 0.54);
+    /*letter-spacing: 0.02em;*/
+}
+.button,
+html /deep/ paper-tab,
+html /deep/ paper-button {
+    font-weight: 500;
+    font-size: 1rem;
+    text-transform: uppercase;
+    /*letter-spacing: 0.01em;*/
+}
+.display4.dark, .display3.dark, .display2.dark, .display1.dark, .caption.dark {
+    color: rgba(255, 255, 255, 0.7);
+}

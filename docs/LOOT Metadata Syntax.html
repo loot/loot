@@ -2,54 +2,172 @@
 <meta charset="utf-8">
 <title>LOOT Metadata Syntax</title>
 <style>
-    body {
-        font:10pt/1.5 Helvetica,sans-serif;
-        text-rendering:optimizeLegibility;}
-    p, ul, li {margin:1.5em 0;}
-    h1,h3,h2 {font-weight:normal;}
-h1{
-    font-size:36pt;
-    line-height:0.5;
-    margin-top:1.125em;
-    margin-bottom:0.375em;}
-h2{
-    font-size:24pt;
-    line-height:0.75;
-    margin-top:3em;
-    margin-bottom:1.5em;}
-h3{
-    font-size:18pt;
-    line-height:1;
-    margin-top:3.5em;
-    margin-bottom:1em;}
-    ul, ol {margin-top:0.5em; margin-bottom:1em;}
-    li {margin:0.75em 0;}
-    a:link {text-decoration:none;}
-    a:hover {text-decoration:underline;}
-    ol ol {list-style:lower-alpha;}
+/* This styling is from the report's typography.css file. The font paths
+   have been edited. */
+/* Font definitions */
+@font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 300;
+    src: url('../resources/report/fonts/Roboto-Light.ttf');
+}
+@font-face {
+    font-family: 'Roboto';
+    font-style: italic;
+    font-weight: 300;
+    src: url('../resources/report/fonts/Roboto-LightItalic.ttf');
+}
+@font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../resources/report/fonts/Roboto-Regular.ttf');
+}
+@font-face {
+    font-family: 'Roboto';
+    font-style: italic;
+    font-weight: 400;
+    src: url('../resources/report/fonts/Roboto-Italic.ttf');
+}
+@font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    src: url('../resources/report/fonts/Roboto-Medium.ttf');
+}
+@font-face {
+    font-family: 'Roboto';
+    font-style: italic;
+    font-weight: 500;
+    src: url('../resources/report/fonts/Roboto-MediumItalic.ttf');
+}
+@font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 700;
+    src: url('../resources/report/fonts/Roboto-Bold.ttf');
+}
+@font-face {
+    font-family: 'Roboto';
+    font-style: italic;
+    font-weight: 700;
+    src: url('../resources/report/fonts/Roboto-BoldItalic.ttf');
+}
 
-    code {display:inline-block; padding:0 3px; background:#eee;}
-    td, th {border:1px solid #ddd; padding: 5px; vertical-align:top;}
-    table {border-collapse:collapse; margin:1.5em; margin-bottom: 3em; background:#fafafa;}
-    thead {background:#99CCFF;}
-    code.box {border-radius:5px; border:1px solid #ccc; padding:0.75em; white-space:pre; overflow-x:auto; display:table; margin:1.5em;}
+/* Typography */
+html {
+    font:11pt/1.429 Roboto, sans-serif;
+    color: rgba(0, 0, 0, 0.87);
+    font-weight: 400;
+    text-rendering: optimizeLegibility;
+}
+.display2, h1 {
+    font-weight: 400;
+    font-size: 3.214rem;
+    color: rgba(0, 0, 0, 0.54);
+    line-height: 1.067;
+}
+.headline, h2 {
+    font-weight: 400;
+    font-size: 1.714rem;
+    line-height: 1.333;
+}
+.title, h3 {
+    font-weight: 500;
+    font-size: 1.429rem;
+    /*letter-spacing: 0.005em;*/
+}
+.subhead, h4 {
+    font-weight: 400;
+    font-size: 1.143rem;
+    line-height: 1.75;
+    /* Alternate line height: */
+    /* line-height: 1.5; */
+    /*letter-spacing: 0.01em;*/
+}
+.button {
+    font-weight: 500;
+    font-size: 1rem;
+    text-transform: uppercase;
+    /*letter-spacing: 0.01em;*/
+}
 
-    blockquote {border-radius:3px; border:1px solid #0c0; padding:5px; background:#7e7; display:table;margin:1.5em;}
+/* This styling is from the report's style.css file. */
+a {
+    color: #2196F3;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+/* Tables */
+table {
+    border-collapse: collapse;
+    background-color: #E8EAF6;
+}
+table td, table th {
+    vertical-align: top;
+    text-align: left;
+    padding: 8px 16px;
+}
+table th {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
 
-    a[href^="http"]:after {padding-left:2px; content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAVklEQVR4Xn3PgQkAMQhDUXfqTu7kTtkpd5RA8AInfArtQ2iRXFWT2QedAfttj2FsPIOE1eCOlEuoWWjgzYaB/IkeGOrxXhqB+uA9Bfcm0lAZuh+YIeAD+cAqSz4kCMUAAAAASUVORK5CYII=);}
 
-    span[title] {border-bottom: 1px dotted; font-family: sans-serif; cursor:help;}
-    abbr {cursor:help; border-bottom: 1px dotted black;}
+/* The styling below is specific to the readmes. */
+h1, ol ol, ul ul, table {
+    margin: 0.5em 0;
+}
+h2, h3 {
+    margin-top: 2em;
+    margin-bottom: 0;
+}
+h4, ol, ul, p {
+    margin-top: 1em;
+    margin-bottom: 0;
+}
+ol ol {
+    list-style:lower-alpha;
+}
+pre > code, blockquote {
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 2px;
+    padding: 16px;
+    margin: 16px;
+    display: table;
+}
+pre > code {
+    overflow-x: auto;
+}
+blockquote {
+    background: #eee;
+}
+code {
+    display: inline-block;
+    padding: 0 4px;
+    background: #eee;
+}
+a[href^=http]::after {
+    content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 24 24" height="10px" width="10px" preserveAspectRatio="xMidYMid meet" fit="" style="pointer-events: none; display: block; color: #2196F3; fill: currentcolor; position: relative; top: -2px;"><g><path d="M9 5v2h6.59l-11.59 11.59 1.41 1.41 11.59-11.59v6.59h2v-10z"></path></g></svg>');
+}
+abbr {
+    cursor: help;
+    border-bottom: 1px dotted rgba(0, 0, 0, 0.12);
+}
+var {
+    color: #303F9F;
+}
 
-    #warning {background:#fbb; padding:10px 5px;margin:-8px;}
-    .warning {background:#fbb; border-color:#d00;}
-    var {color:#8B4513;}
+.clipper {
+    overflow: hidden;
+}
 </style>
 <!--  LOOT
 
     A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and Fallout: New Vegas.
 
-    Copyright (C) 2012–2014    WrinklyNinja
+    Copyright (C) 2012–2015    WrinklyNinja
 
     This file is part of LOOT.
 
@@ -83,7 +201,6 @@ h3{
         <li><a href="#structs-dirty">Dirty Info Data Structure</a>
         <li><a href="#structs-plugin">Plugin Data Structure</a>
     </ol>
-    <li><a href="#links">URL Hyperlinking</a>
     <li><a href="#cond">Condition Strings</a>
     <ol>
         <li><a href="#cond-function">Functions</a>
@@ -92,6 +209,7 @@ h3{
     </ol>
     <li><a href="#lang">Language Codes</a>
     <li><a href="#license">License</a>
+    <li><a href="#support">Feature Support</a>
 </ol>
 
 <h2 id="intro">Introduction</h2>
@@ -105,7 +223,7 @@ h3{
 </ul>
 <p>Some important points that are more specific to how LOOT uses YAML:
 <ul>
-    <li>LOOT's support for YAML syntax is incomplete. A list of known limitations can be found <a href="https://github.com/WrinklyNinja/yaml-cpp/issues?labels=bug&amp;state=open">here</a>. The only major missing piece is support for merge keys (<code>&lt;&lt;:</code>).
+    <li>LOOT's support for YAML syntax is incomplete. A list of known limitations can be found <a href="https://github.com/WrinklyNinja/yaml-cpp/issues?labels=bug&amp;state=open">here</a>.
     <li>Strings are case-sensitive, apart from file paths, regular expressions and checksums.
 </ul>
 <p>Some properties of file paths as used by LOOT:
@@ -127,7 +245,7 @@ h3{
 </table>
 <p>Other keys may also be present, but are not processed by LOOT. The message and plugin data structures are detailed in the next section.
 <p>An example metadata file:
-<code class="box">globals:
+<pre><code>globals:
   - type: say
     content: 'You are using the latest version of LOOT.'
     condition: 'version("LOOT", "0.5.0.0", ==)'
@@ -144,7 +262,7 @@ plugins:
       - Graphics
       - Hair
       - R.Relations
-</code>
+</code></pre>
 
 
 <h2 id="structs">Data Structures</h2>
@@ -153,7 +271,7 @@ plugins:
 <h3 id="structs-tag">Tag Data Structure</h3>
 <p>LOOT metadata files can contain suggestions for the addition or removal of Bash Tags, and this is the structure used for them. It has two forms: the first is a simple string, and the second is a key-value map. All values in the map are strings.
 <p>The simple form:
-<code class="box"><var>tag</var></code>
+<pre><code><var>tag</var></code></pre>
 <p>where <code><var>tag</var></code> is the Bash Tag, preceded by a minus sign if it is suggested for removal.
 <p>The map form:
 <table>
@@ -163,33 +281,33 @@ plugins:
         <tr><td><code>condition</code><td>&#x2717;<td>A condition string that is evaluated to determine whether this Bash Tag should be suggested: if it evaluates to true, the Tag is suggested, otherwise it is ignored. See <a href="#cond">Condition Strings</a> for details.
 </table>
 <p>Examples:
-<code class="box">Relations</code>
+<pre><code>Relations</code></pre>
 or
-<code class="box">name: -Relations
+<pre><code>name: -Relations
 condition: 'file("Mart''s Monster Mod for OOO.esm") or file("FCOM_Convergence.esm")'
-</code>
+</code></pre>
 
 <h3 id="structs-file">File Data Structure</h3>
 <p>Not to be confused with the structure of the metadata file itself, this structure can be used to hold file paths. It has two forms: the first is a simple string, and the second is a key-value map. All values in the map are strings.
 <p>The simple form:
-<code class="box"><var>filepath</var></code>
+<pre><code><var>filepath</var></code></pre>
 <p>where <code><var>filepath</var></code> is an exact (ie. not regex) file path relative to the game's Data folder.
 <p>The map form:
 <table>
     <thead><tr><th>Key Name<th>Required<th>Notes
     <tbody>
         <tr><td><code>name</code><td>&#x2713;<td>An exact (ie. not regex) file path or name.
-        <tr><td><code>display</code><td>&#x2717;<td>A substitute string to be displayed instead of the file path in any generated messages, eg. the name of the mod the file belongs to. Double-quoted URLs will be hyperlinked in the LOOT report. See <a href="#links">URL Hyperlinking</a> for details.
+        <tr><td><code>display</code><td>&#x2717;<td>A substitute string to be displayed instead of the file path in any generated messages, eg. the name of the mod the file belongs to.
         <tr><td><code>condition</code><td>&#x2717;<td>A condition string that is evaluated to determine whether this file data should be used: if it evaluates to true, the data is used, otherwise it is ignored. See <a href="#cond">Condition Strings</a> for details.
 </table>
 
 <p>Examples:
-<code class="box">'../obse_loader.exe'</code>
+<pre><code>'../obse_loader.exe'</code></pre>
 or
-<code class="box">name: '../obse_loader.exe'
+<pre><code>name: '../obse_loader.exe'
 condition: 'version("../obse_loader.exe", "0.0.18.0", &gt;=)'
 display: 'OBSE v18+'
-</code>
+</code></pre>
 
 <h3 id="structs-message">Message Data Structure</h3>
 <p>Messages are given as key-value maps.
@@ -199,6 +317,7 @@ display: 'OBSE v18+'
         <tr><td><code>type</code><td>string<td>&#x2713;<td>The type string can be one of three keywords, see the table below for their semantics.
         <tr><td><code>content</code><td>string <i>or</i> localised content list<td>&#x2713;<td>Either simply a string, or a list of localised content data structures. If the latter, one of the structures must be for English.
         <tr><td><code>condition</code><td>string<td>&#x2717;<td>A condition string that is evaluated to determine whether the message should be displayed: if it evaluates to true, the message is displayed, otherwise it is not. See <a href="#cond">Condition Strings</a> for details.
+        <tr><td><code>subs</code><td>list of strings<td>&#x2717;<td>A list of strings to be substituted into the message content string. The content string must use numbered specifiers (<code>%1%</code>, <code>%2%</code>, etc.), where the numbers correspond to the position of the substitution string in this list to use, to denote where these strings are to be substituted.
 </table>
 
 <p>There are three message types:
@@ -213,9 +332,10 @@ display: 'OBSE v18+'
 <table>
     <thead><tr><th>Key Name<th>Required<th>Notes
     <tbody>
-        <tr><td><code>str</code><td>&#x2713;<td>The actual message content string. Double-quoted URLs will be hyperlinked in the LOOT report. See <a href="#links">URL Hyperlinking</a> for details.
+        <tr><td><code>str</code><td>&#x2713;<td>The actual message content string.
         <tr><td><code>lang</code><td>&#x2713;<td>The language that <code>str</code> is written in, given as a POSIX language code. The languages LOOT supports are given in <a href="#lang">Language Codes</a>.
 </table>
+<p>LOOT supports formatting of messages using <a href="https://help.github.com/articles/github-flavored-markdown">GitHub Flavored Markdown</a>. Support is provided by the <a href="https://github.com/chjj/marked">Marked</a> library (v0.3). Strings that get substituted into messages, such as file display names and dirty info utility strings, also support the same formatting options.
 
 <p>LOOT handles messages and languages as follows:
 <ol>
@@ -223,27 +343,37 @@ display: 'OBSE v18+'
     <li>If a message's <code>content</code> value is a list of localised content structures, then the first structure with a language that matches LOOT's current language will be used as the message's content if displayed. If there are no matches, then the first structure in English will be used.
 </ol>
 
-
 <p>Examples (translations by Google):
-<code class="box">type: say
+<pre><code>type: say
 condition: 'file("foo.esp")'
 content:
   - lang: en
     str: 'An example link: &lt;http://www.example.com&gt;'
   - lang: ru
     str: 'Это пример ссылки: &lt;http://www.example.com&gt;'
-</code>
+</code></pre>
 would be displayed as
 <blockquote>
 отмечать: Это пример ссылки: <a href="http://www.example.com">http://www.example.com</a>
 </blockquote>
 if the current language was Russian and <code>foo.esp</code> was installed, while
-<code class="box">type: say
+<pre><code>type: say
 content: 'An alternative [example link](http://www.example.com), with no translations.'
-</code>
+</code></pre>
 would be displayed as
 <blockquote>
 отмечать: An alternative <a href="http://www.example.com">example link</a>, with no translations.
+</blockquote>
+In English,
+<pre><code>type: say
+content: 'A newer version of %1% [is available](%2%).
+subs:
+  - 'this plugin'
+  - 'http://www.example.com'
+</code></pre>
+would be displayed as
+<blockquote>
+Note: A newer version of this plugin <a href="http://www.example.com">is available</a>.
 </blockquote>
 
 
@@ -251,7 +381,7 @@ would be displayed as
 <p>This data structure is used to hold information on where a plugin is hosted online. It is not currently used by LOOT, but it was suggested that since the LOOT team receives a considerable number of plugin URLs, they should be recorded in a standard format, as there is no existing store of such information and it could prove useful in the future.
 <p>The data structure has two forms: the first is a simple string, and the second is a key-value map. The first form should be used for a URL without any associated version data, such as when it is not clear which version is found there, or when it is the only known hosting location for the plugin and as such hosts all available versions. The second form should be used when version data can be associated with the URL, such as when the URL only hosts a subset of the available versions of the plugin.
 <p>The simple form:
-<code class="box"><var>URL</var></code>
+<pre><code><var>URL</var></code></pre>
 <p>where <code><var>URL</var></code> is a URL at which the plugin may be found.
 <p>The map form:
 <table>
@@ -261,12 +391,12 @@ would be displayed as
         <tr><td><code>ver</code><td>string list<td>&#x2713;<td>A list of versions that can be found at the URL.
 </table>
 <p>Examples:
-<code class="box">'http://skyrim.nexusmods.com/mods/19/'</code>
+<pre><code>'http://skyrim.nexusmods.com/mods/19/'</code></pre>
 or
-<code class="box">link: 'http://steamcommunity.com/sharedfiles/filedetails/?id=87144366'
+<pre><code>link: 'http://steamcommunity.com/sharedfiles/filedetails/?id=87144366'
 ver:
   - '1.3.2c'
-</code>
+</code></pre>
 
 <h3 id="structs-dirty">Dirty Info Data Structure</h3>
 <p>This structure holds information on which versions of a plugin are dirty, and how many identical-to-master records, deleted records and deleted navmeshes (if applicable) it contains. Dirty info is given as a key-value map.
@@ -274,18 +404,18 @@ ver:
     <thead><tr><th>Key Name<th>Data Type<th>Required<th>Notes
     <tbody>
         <tr><td><code>crc</code><td>hexadecimal integer<td>&#x2713;<td>The CRC checksum of the dirty plugin, before cleaning. LOOT displays the CRCs of installed plugins in its report. The 8-character CRC should be preceded by <code>0x</code> so that it is correctly interpreted.
-        <tr><td><code>util</code><td>string<td>&#x2713;<td>The utility that should be used to clean the plugin. This field supports <a href="#links">URL Hyperlinking</a>, and it is recommended that a URL to the game's cleaning guide is supplied.
+        <tr><td><code>util</code><td>string<td>&#x2713;<td>The utility that should be used to clean the plugin.
         <tr><td><code>itm</code><td>integer<td>&#x2717;<td>The number of identical-to-master records reported for the dirty plugin. If the number is unknown, this field should not be supplied. If the number is known and zero, this field should be supplied.
         <tr><td><code>udr</code><td>integer<td>&#x2717;<td>The number of undeleted records reported for the dirty plugin. If the number is unknown, this field should not be supplied. If the number is known and zero, this field should be supplied.
         <tr><td><code>nav</code><td>integer<td>&#x2717;<td>The number of deleted navmeshes reported for the dirty plugin. If the number is unknown, this field should not be supplied. If the number is known and zero, this field should be supplied.
 </table>
 <p>Examples:
-<code class="box">crc: 0x3DF62ABC
+<pre><code>crc: 0x3DF62ABC
 util: '[TES5Edit](http://www.creationkit.com/TES5Edit_Cleaning_Guide_-_TES5Edit)'
 itm: 4
 udr: 160
 nav: 0
-</code>
+</code></pre>
 
 
 <h3 id="structs-plugin">Plugin Data Structure</h3>
@@ -297,21 +427,39 @@ nav: 0
         <tr><td><code>enabled</code><td>boolean<td>&#x2717;<td>Enables or disables use of the plugin object. Used for user rules, but no reason to use it in the masterlist. If unspecified, defaults to <code>true</code>.
         <tr><td><code>priority</code><td>integer<td>&#x2717;<td>Modifies plugin position relative to others that change one or more of the same records, but which are otherwise unrelated (ie. neither plugin lists the other as a master, requirement, or in its <code>after</code> list). Plugins that don't change any of the same records are not compared, unless:
             <ul>
-                <li>One of the plugins is a "dummy" plugin, containing only a header record.
+                <li>One of the plugins is an empty plugin, containing only a header record.
                 <li>One of the plugins has a priority greater than or equal to 1,000,000. In this case, only the modulo (ie. remainder when divided) with 1,000,000 is used when comparing plugin priority values &ndash; the rest is only used to signify that the plugin should be compared against all others.
             </ul>
-            <p>For example, <code>priority: 153000352</code> and <code>priority: 352</code> have equal values when compared, but a plugin with the first priority will be compared against all others, while a (non-dummy) plugin with the second priority will be compared against only those it conflicts with.
-            <p>A plugin with a higher priority value will load after a plugin with a lower priority value. Value can be anything in the range <code>-2000000000</code> to <code>2000000000</code>, and if unspecified defaults to <code>0</code>.
+            <p>For example, <code>priority: 153000352</code> and <code>priority: 352</code> have equal values when compared, but a plugin with the first priority will be compared against all others, while a (non-empty) plugin with the second priority will be compared against only those it conflicts with.
+            <p>A plugin with a higher priority value will load after a plugin with a lower priority value. The value can be anything in the range <code>-2000000000</code> to <code>2000000000</code>, and if unspecified defaults to <code>0</code>.
         <tr><td><code>after</code><td>file list<td>&#x2717;<td>An unordered list of plugins that this plugin must load after, but which are not dependencies. Used for resolving specific compatibility issues and by user rules for specifying custom plugin positions.
         <tr><td><code>req</code><td>file list<td>&#x2717;<td>An unordered list of files that this plugin requires to be present. This plugin will load after any plugins listed. If any of these files are missing, an error message will be displayed. Intended for use specifying implicit dependencies, as LOOT will detect a plugin's explicit masters itself.
         <tr><td><code>inc</code><td>file list<td>&#x2717;<td>An unordered list of files that this plugin is incompatible with. If any of these files are present, an error message will be displayed.
         <tr><td><code>msg</code><td>message list<td>&#x2717;<td>The messages attached to this plugin. The messages will be displayed in the order that they are listed.
         <tr><td><code>tag</code><td>tag list<td>&#x2717;<td>An unordered list of Bash Tags suggested for this plugin. If a Bash Tag is suggested for both addition and removal, the latter will override the former when the list is evaluated.
         <tr><td><code>url</code><td>location list<td>&#x2717;<td>An unordered list of locations for this plugin. If the same version can be found at multiple locations, only one location should be recorded. This metadata is not currently used by LOOT.
-        <tr><td><code>dirty</code><td>dirty info list<td>&#x2717;<td>An unordered list of dirty info structures for this plugin.
+        <tr><td><code>dirty</code><td>dirty info list<td>&#x2717;<td>An unordered list of dirty info structures for this plugin. Plugin entries with regular expression filenames <strong>must not</strong> contain dirty info.
 </table>
+<p><strong>Each plugin must have only one matching non-regex entry.</strong> If multiple non-regex entries exist with the same <code>name</code> value, all but the first will be ignored. A plugin may match any number of regex entries though, and their metadata will be merged, with later entries being merged into earlier entries as detailed in the table below. Merging only takes place if both entries have their <code>enabled</code> value set to <code>true</code> (which is the default if unspecified).
+
+<table>
+    <thead>
+        <tr><th>Key Name<th>Merge Behaviour (merging B into A)
+    <tbody>
+        <tr><td><code>name</code><td>Not merged.
+        <tr><td><code>enabled</code><td>Replaced but must be `true` anyway.
+        <tr><td><code>priority</code><td>Replaced by B's value.
+        <tr><td><code>after</code><td>Merged. If A and B both contain an entry with the same <code>name</code> value, B's copy is skipped.
+        <tr><td><code>req</code><td>Merged. If A and B both contain an entry with the same <code>name</code> value, B's copy is skipped.
+        <tr><td><code>inc</code><td>Merged. If A and B both contain an entry with the same <code>name</code> value, B's copy is skipped.
+        <tr><td><code>msg</code><td>Merged. If A and B both contain an entry with the same content string (if there are multiple content strings, the first is checked), then B's copy is skipped.
+        <tr><td><code>tag</code><td>Merged. If A and B both contain an entry with the same <code>name</code> value, B's copy is skipped, unless one is suggesting the tag for addition and the other is suggesting it for removal, in which case both entries are kept.
+        <tr><td><code>url</code><td>Currently skipped by the parser, so neither A nor B will contain any entries anyway.
+        <tr><td><code>dirty</code><td>Merged. If A and B both contain an entry with the same <code>crc</code> value, B's copy is skipped.
+</table>
+
 <p>Example:
-<code class="box">name: 'Oscuro''s_Oblivion_Overhaul.esm'
+<pre><code>name: 'Oscuro''s_Oblivion_Overhaul.esm'
 req:
   - 'Oblivion.esm'  # Don't do this, Oblivion.esm is a master of Oscuro's_Oblivion_Overhaul.esm, so LOOT already knows it's required.
   - name: 'example.esp'
@@ -329,27 +477,11 @@ tag:
 msg:
   - type: say
     content: 'Do not clean. "Dirty" edits are intentional and required for the mod to function.'
-</code>
-
-
-<h2 id="links">URL Hyperlinking</h2>
-<p>File <code>display</code> strings and message <code>content</code> strings (including the strings in localised content structures) that contain recognised URLs have them displayed as hyperlinks in the LOOT report.
-<p>URLs must begin with <code>file:</code>, <code>http:</code> or <code>https:</code>, and be written according to the following subset of <a href="http://daringfireball.net/projects/markdown/syntax">Markdown</a> syntax. Note that LOOT does not recognise additional Markdown syntaxes to those given below.
-<p>For labelled URLs, the syntax is <code>[<var>label</var>](<var>url</var>)</code>. A single optional space may be included between the closing square bracket and the opening parenthesis, ie. <code>[<var>label</var>] (<var>url</var>)</code>.
-<p>For unlabelled URLs, the syntax is <code>&lt;<var>url</var>&gt;</code>. The URL shall be used as its own label.
-<p>Note that the URLs given as part of a location data structure should not be labelled or enclosed in less-than or greater-than signs, as they consist of raw URL data, rather than text to be displayed in a message.
-<p>Examples:
-<code class="box">'This [string](https://en.wikipedia.org/wiki/String_(computer_science)) contains a labelled hyperlink.'</code>
-would be displayed as
-<blockquote>This <a href="https://en.wikipedia.org/wiki/String_(computer_science)">string</a> contains a labelled hyperlink.</blockquote>
-<p>While
-<code class="box">'This string (see: &lt;https://en.wikipedia.org/wiki/String_(computer_science)&gt;) contains an unlabelled hyperlink.'</code>
-both get displayed as
-<blockquote>This string (see: <a href="https://en.wikipedia.org/wiki/String_(computer_science)">https://en.wikipedia.org/wiki/String_(computer_science)</a>) contains an unlabelled hyperlink.</blockquote>
+</code></pre>
 
 <h2 id="cond">Condition Strings</h2>
 <p>Condition strings can be used to ensure that data is only acted on by LOOT under certain circumstances. They are very similar to boolean conditional expressions in programming languages such as Python, though more limited. Their <a href="https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_Form">EBNF</a> grammar is:
-<code class="box">[ negator ], function, { junctor, [ negator ], function } ;</code>
+<pre><code>[ negator ], function, { junctor, [ negator ], function } ;</code></pre>
 <p>The <code>[ negator ], function</code> grammar is referred to as a condition, and two conditions joined by an operator, ie. <code>condition, operator, condition</code> is referred to as a compound condition.
 <p>LOOT caches the results of condition evaluations, so performance is not really an issue. A regular expression check will still take longer than a file check though, so use the former only when appropriate to do so.
 
@@ -378,7 +510,7 @@ both get displayed as
 
 <h3 id="cond-operator">The Negator &amp; Junctors</h3>
 <p>The negator, or logical negation operator, inverts the value of the function that follows it. Its inclusion is optional, and its syntax is simply:
-<code class="box">not</code>
+<pre><code>not</code></pre>
 <p>Below is a truth table for the negator.
 <table>
     <thead><tr><th>Value of <code><var>function</var></code><th>Value of <code>not <var>function</var></code>
@@ -448,9 +580,23 @@ both get displayed as
         <tr><td>Russian<td>ru
         <tr><td>Spanish<td>es
         <tr><td>German<td>de
+        <tr><td>Danish<td>da
+        <tr><td>Korean<td>ko
 </table>
 
 <h2 id="license">License</h2>
 <p>This document is part of the LOOT documentation.<br>
-Copyright (C) 2012&mdash;2014 WrinklyNinja<br>
+Copyright (C) 2012&mdash;2015 WrinklyNinja<br>
 See the file <q>LOOT ReadMe.html</q> for copying conditions.
+
+<h2 id="support">Feature Support</h2>
+<p>Different versions of LOOT may have varying levels of support for the syntax detailed in this document. Such variation in support is detailed in the table below. Unless otherwise noted, all syntax changes are backwards-compatible (ie. you can use the features without breaking the masterlist for users on older versions).
+
+<table>
+    <thead>
+        <tr><th>Feature<th> LOOT v0.6 and earlier<th>LOOT v0.7
+    <tbody>
+        <tr><td>GitHub Flavored Markdown message formatting<td>Only URL hyperlinking is supported, for <code>file:</code>, <code>http:</code> and <code>https:</code> URLs, using the <code>[label](url)</code> and <code>&lt;url&gt;</code> syntaxes.<td>LOOT uses the <a href="https://github.com/chjj/marked">Marked</a> library (v0.3) to provide support for most of GitHub Flavored Markdown, minus the GitHub-specific features (like @mentions, issue/repo linking and emoji).
+        <tr><td>Message string substitution (ie. <code>sub:</code>)<td>Not supported.<td>Supported.
+        <tr><td>YAML merge keys (ie. <code>&lt;&lt;:</code>)<td>Not supported.<td>Supported.
+</table>
