@@ -61,7 +61,7 @@
  *      "docs/licenses/Licenses.txt" file.
  *
  * @section history_sec Version History
- *      ## 0.7.0 - *X Y 2015*
+ *      ## 0.7.0 - *20 May 2015*
  *
  *        * Initial API release.
  */
