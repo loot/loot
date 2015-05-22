@@ -1225,7 +1225,7 @@ namespace loot {
         BOOST_LOG_TRIVIAL(trace) << "Attemping to open link: " << request->GetURL().ToString();
         BOOST_LOG_TRIVIAL(trace) << "Comparing with URL: " << ToFileURL(g_path_report);
 
-        if (request->GetURL() == ToFileURL(g_path_report)) {
+        if (boost::iequals(request->GetURL().ToString(), ToFileURL(g_path_report))) {
             BOOST_LOG_TRIVIAL(trace) << "Link is to LOOT page, allowing CEF's default handling.";
             return false;
         }
