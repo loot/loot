@@ -307,13 +307,44 @@ namespace loot {
         }
     }
 
-    size_t LoadOrderPos(const list<string>& loadorder, const std::string& plugin) {
-        auto it = find(loadorder.begin(), loadorder.end(), plugin);
+    int plugincmp(const list<string>& loadorder, const std::string& plugin1, const std::string& plugin2) {
+        auto it1 = find(loadorder.begin(), loadorder.end(), plugin1);
+        auto it2 = find(loadorder.begin(), loadorder.end(), plugin2);
 
-        if (it != loadorder.end())
-            return distance(loadorder.begin(), it);
-        else
-            throw error(error::sorting_error, "No existing load order position for " + plugin);
+        if (it1 != loadorder.end() && it2 == loadorder.end())
+            return -1;
+        else if (it1 == loadorder.end() && it2 != loadorder.end())
+            return 1;
+        else if (it1 != loadorder.end() && it2 != loadorder.end()) {
+            if (distance(loadorder.begin(), it1) < distance(loadorder.begin(), it2))
+                return -1;
+            else
+                return 1;
+        }
+        else {
+            // Neither plugin has a load order position. Need to use another
+            // comparison to get an ordering.
+
+            // Compare plugin basenames.
+            string name1 = boost::locale::to_lower(plugin1);
+            name1 = name1.substr(0, name1.length() - 4);
+            string name2 = boost::locale::to_lower(plugin2);
+            name2 = name2.substr(0, name2.length() - 4);
+
+            if (name1 < name2)
+                return -1;
+            else if (name2 < name1)
+                return 1;
+            else {
+                // Could be a .esp and .esm plugin with the same basename,
+                // compare whole filenames.
+                if (plugin1 < plugin2)
+                    return -1;
+                else
+                    return 1;
+            }
+        }
+        return 0;
     }
 
     void AddTieBreakEdges(PluginGraph& graph, const list<string>& loadorder, const vertex_map_t& v_index_map) {
@@ -331,7 +362,7 @@ namespace loot {
                     continue;
 
                 vertex_t vertex, parentVertex;
-                if (LoadOrderPos(loadorder, graph[*vit].Name()) < LoadOrderPos(loadorder, graph[*vit2].Name())) {
+                if (plugincmp(loadorder, graph[*vit].Name(), graph[*vit2].Name()) < 0) {
                     parentVertex = *vit;
                     vertex = *vit2;
                 }
