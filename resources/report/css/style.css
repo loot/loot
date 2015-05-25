@@ -61,9 +61,14 @@ core-toolbar, div[drawer] > div:first-child {
     color: white;
     height: 56px;
 }
-#mainToolbar {
+#mainToolbar,
+#searchBar {
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
     z-index: 1;
+}
+#mainToolbar:not(.search) + #searchBar,
+#mainToolbar.search {
+    display: none;
 }
 #gameMenu {
     margin-top: -0.5em;

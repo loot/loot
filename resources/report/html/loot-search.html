@@ -1,0 +1,158 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/core-toolbar/core-toolbar.html">
+<link rel="import" href="../bower_components/core-tooltip/core-tooltip.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+
+<!--
+searchTarget is the ID of the core-list element to search the elements of.
+-->
+<polymer-element name="loot-search" attributes="searchTarget">
+    <template>
+        <style>
+        core-toolbar {
+            background: #3F51B5;
+            color: white;
+            height: 56px;
+        }
+        core-toolbar > * {
+            top: -3px;
+        }
+        paper-input /deep/ paper-input-decorator::shadow .label-text,
+        paper-input /deep/ input::-webkit-input-placeholder {
+           color: rgba(255, 255, 255, 0.3) !important;
+        }
+        .caption {
+            font-weight: 400;
+            font-size: 0.857rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        .hidden {
+            display: none;
+        }
+        </style>
+        <core-toolbar>
+            <core-tooltip label="Press Enter to search." position="bottom" noarrow flex layout horizontal center>
+                <paper-input id="search" label="Search" flex></paper-input>
+            </core-tooltip>
+            <div id="count" class="caption hidden">
+                {{currentResult}}/{{numResults}}
+            </div>
+            <paper-icon-button id="prev" icon="expand-less" disabled></paper-icon-button>
+            <paper-icon-button id="next" icon="expand-more" disabled></paper-icon-button>
+            <paper-icon-button id="close" icon="close"></paper-icon-button>
+        </core-toolbar>
+    </template>
+    <script>
+    Polymer({
+        currentResult: 0,
+        results: [],
+        numResults: 0,
+        searchTarget: undefined,
+
+        resultsChanged: function(oldValue, newValue) {
+            this.numResults = newValue.length;
+            if (newValue.length == 0) {
+                this.shadowRoot.getElementById('prev').setAttribute('disabled', '');
+                this.shadowRoot.getElementById('next').setAttribute('disabled', '');
+            } else {
+                this.shadowRoot.getElementById('prev').removeAttribute('disabled');
+                this.shadowRoot.getElementById('next').removeAttribute('disabled');
+            }
+        },
+
+        currentResultChanged: function(oldValue, newValue) {
+            if (this.results.length > 0) {
+                if (this.results.length == 1) {
+                    this.shadowRoot.getElementById('prev').setAttribute('disabled', '');
+                    this.shadowRoot.getElementById('next').setAttribute('disabled', '');
+                } else if (newValue == 1) {
+                    this.shadowRoot.getElementById('prev').setAttribute('disabled', '');
+                    this.shadowRoot.getElementById('next').removeAttribute('disabled');
+                } else if (newValue == this.results.length) {
+                    this.shadowRoot.getElementById('prev').removeAttribute('disabled');
+                    this.shadowRoot.getElementById('next').setAttribute('disabled', '');
+                } else {
+                    this.shadowRoot.getElementById('prev').removeAttribute('disabled');
+                    this.shadowRoot.getElementById('next').removeAttribute('disabled');
+                }
+            }
+        },
+
+        attached: function() {
+            this.shadowRoot.getElementById('search').addEventListener('change', this.onSearch, false);
+            this.shadowRoot.getElementById('prev').addEventListener('click', this.onPrev, false);
+            this.shadowRoot.getElementById('next').addEventListener('click', this.onNext, false);
+            this.shadowRoot.getElementById('close').addEventListener('click', this.onClose, false);
+        },
+
+        detached: function() {
+            this.shadowRoot.getElementById('search').removeEventListener('change', this.onSearch, false);
+            this.shadowRoot.getElementById('prev').removeEventListener('click', this.onPrev, false);
+            this.shadowRoot.getElementById('next').removeEventListener('click', this.onNext, false);
+            this.shadowRoot.getElementById('close').removeEventListener('change', this.onClose, false);
+        },
+
+        onSearch: function(evt) {
+            var needle = evt.target.value.toLowerCase();
+            var host = evt.target.parentElement.parentElement.parentNode.host;
+            host.currentResult = 0;
+            host.results = [];
+
+            host.shadowRoot.getElementById('count').classList.toggle('hidden', !evt.target.value);
+            if (!evt.target.value) {
+                return;
+            }
+
+            document.getElementById(host.searchTarget).data.forEach(function(plugin, index){
+                if (plugin.name.toLowerCase().indexOf(needle) != -1
+                    || plugin.getCrcString().toLowerCase().indexOf(needle) != -1
+                    || plugin.version.toLowerCase().indexOf(needle) != -1) {
+
+                    host.results.push(index);
+                    return;
+                }
+
+                var tags = plugin.getTagStrings();
+                if (tags.added.toLowerCase().indexOf(needle) != -1
+                    || tags.removed.toLowerCase().indexOf(needle) != -1) {
+
+                    host.results.push(index);
+                    return;
+                }
+
+                for (var i = 0; i < plugin.messages.length; ++i) {
+                    if (plugin.messages[i].content[0].str.toLowerCase().indexOf(needle) != -1) {
+                        host.results.push(index);
+                        return;
+                    }
+                }
+            });
+
+            if (host.results.length > 0) {
+                host.currentResult = 1;
+                document.getElementById(host.searchTarget).scrollToItem(host.results[host.currentResult - 1]);
+            }
+        },
+
+        onPrev: function(evt) {
+            var host = evt.target.parentElement.parentNode.host;
+            --host.currentResult;
+            document.getElementById(host.searchTarget).scrollToItem(host.results[host.currentResult - 1]);
+        },
+
+        onNext: function(evt) {
+            var host = evt.target.parentElement.parentNode.host;
+            ++host.currentResult;
+            document.getElementById(host.searchTarget).scrollToItem(host.results[host.currentResult - 1]);
+        },
+
+        onClose: function(evt) {
+            evt.target.parentElement.parentNode.host.currentResult = 0;
+            evt.target.parentElement.parentNode.host.results = [];
+            evt.target.parentElement.parentNode.getElementById('search').value = '';
+            evt.target.parentElement.parentNode.getElementById('count').classList.toggle('hidden', true);
+            evt.target.dispatchEvent(new CustomEvent('loot-search-close'));
+        },
+    });
+    </script>
+</polymer-element>

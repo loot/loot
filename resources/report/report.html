@@ -15,6 +15,7 @@
     <link rel="import" href="html/loot-message-dialog.html">
     <link rel="import" href="html/loot-plugin-item.html">
     <link rel="import" href="html/loot-plugin-card.html">
+    <link rel="import" href="html/loot-search.html">
 
     <link rel="import" href="bower_components/core-toolbar/core-toolbar.html">
     <link rel="import" href="bower_components/core-icon/core-icon.html">
@@ -103,6 +104,9 @@
                 </core-tooltip>
                 <paper-button id="applySortButton" class="hidden">Apply</paper-button>
                 <paper-button id="cancelSortButton" class="hidden">Cancel</paper-button>
+                <core-tooltip label="Search Cards" noarrow>
+                    <paper-icon-button id="showSearch" icon="search"></paper-icon-button>
+                </core-tooltip>
                 <paper-menu-button>
                     <paper-icon-button icon="more-vert"></paper-icon-button>
                     <paper-dropdown class="dropdown" halign="right">
@@ -150,6 +154,7 @@
                     </paper-dropdown>
                 </paper-menu-button>
             </core-toolbar>
+            <loot-search id="searchBar" searchTarget="pluginCardList"></loot-search>
             <div id="main" flex layout vertical>
                 <section id="summary">
                     <h1>General Information</h1>
@@ -201,7 +206,7 @@
                         <!-- Generated message <li> elements go here. -->
                     </ul>
                 </section>
-                <core-list flex>
+                <core-list id="pluginCardList" flex>
                     <template>
                         <loot-plugin-card data="{{model}}" id="{{model.id}}" data-active="{{model.isActive}}" data-empty="{{model.isEmpty}}" data-bsa="{{model.loadsBSA}}" data-master="{{model.isMaster}}">
                             <h1>{{model.name}}</h1>

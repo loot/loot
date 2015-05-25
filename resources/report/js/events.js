@@ -646,6 +646,12 @@ function onContentRefresh(evt) {
         closeProgressDialog();
     }).catch(processCefError);
 }
+function onSearchOpen(evt) {
+    document.getElementById('mainToolbar').classList.add('search');
+}
+function onSearchClose(evt) {
+    document.getElementById('mainToolbar').classList.remove('search');
+}
 function setupEventHandlers() {
     /*Set up handlers for filters.*/
     document.getElementById('hideVersionNumbers').addEventListener('change', onToggleDisplayCSS, false);
@@ -685,6 +691,10 @@ function setupEventHandlers() {
     document.getElementById('cancelSortButton').addEventListener('click', onCancelSort, false);
     document.getElementById('sidebarTabs').addEventListener('core-select', onSwitchSidebarTab, false);
     document.getElementById('jumpToGeneralInfo').addEventListener('click', onJumpToGeneralInfo, false);
+
+
+    document.getElementById('showSearch').addEventListener('click', onSearchOpen, false);
+    document.getElementById('searchBar').addEventListener('loot-search-close', onSearchClose, false);
 
     /* Set up event handlers for settings dialog. */
     var settings = document.getElementById('settingsDialog');
