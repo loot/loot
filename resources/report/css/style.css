@@ -97,7 +97,7 @@ paper-item > a:hover {
 #cardsNav > loot-plugin-item {
     margin: 8px 0;
 }
-#searchBox {
+#contentFilter {
     display: block;
     line-height: initial;
 }

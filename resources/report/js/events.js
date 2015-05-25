@@ -386,11 +386,6 @@ function onCloseSettingsDialog(evt) {
 function onShowSettingsDialog(evt) {
     document.getElementById('settingsDialog').showModal();
 }
-function onFocusSearch(evt) {
-    if (evt.ctrlKey && evt.keyCode == 70) { //'f'
-        document.getElementById('searchBox').focus();
-    }
-}
 function onEditorOpen(evt) {
     /* Set up drag 'n' drop event handlers. */
     var elements = document.getElementById('cardsNav').getElementsByTagName('loot-plugin-item');
@@ -672,8 +667,7 @@ function setupEventHandlers() {
     document.body.addEventListener('loot-filter-conflicts', onConflictsFilter, false);
 
     /* Set up event handlers for content filter. */
-    document.getElementById('searchBox').addEventListener('change', setFilteredUIData, false);
-    window.addEventListener('keyup', onFocusSearch, false);
+    document.getElementById('contentFilter').addEventListener('change', setFilteredUIData, false);
 
     /* Set up handlers for buttons. */
     document.getElementById('redatePluginsButton').addEventListener('click', onRedatePlugins, false);

@@ -80,7 +80,7 @@ var filters = {
     },
 
     applyPluginFilters: function(plugins) {
-        var search = document.getElementById('searchBox').value.toLowerCase();
+        var search = document.getElementById('contentFilter').value.toLowerCase();
         hiddenPluginNo = 0;
         hiddenMessageNo = 0;
         var filteredPlugins = [];
@@ -216,7 +216,7 @@ function setFilteredUIData() {
 function restoreFilterStates() {
     if (loot.settings.filters) {
 
-        //document.getElementById('searchBox').value = loot.settings.filters.content;
+        //document.getElementById('contentFilter').value = loot.settings.filters.content;
         document.getElementById('hideMessagelessPlugins').checked = loot.settings.filters.hideMessagelessPlugins;
         document.getElementById('hideInactivePlugins').checked = loot.settings.filters.hideInactivePlugins;
         document.getElementById('hideNotes').checked = loot.settings.filters.hideNotes;
