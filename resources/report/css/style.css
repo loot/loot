@@ -52,7 +52,7 @@ html /deep/ *:focus {
     outline: none;
 }
 tt, code, kbd, samp {
-    font-family: Consolas, monospace; 
+    font-family: Consolas, monospace;
 }
 
 /* App bar */
@@ -116,7 +116,7 @@ paper-item > a:hover {
 
 /* Panel */
 #main {
-    background:#FAFAFA;
+    background: #EEE;
     overflow: auto;
     position: relative;
     z-index: 0;
