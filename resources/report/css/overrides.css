@@ -14,13 +14,6 @@ paper-icon-button[disabled] {
     bottom: 0;
     right: 0;
 }
-/* This speeds up tab switching. The 1px height is so that core-list children
-   don't complain about not having a height set. */
-core-animated-pages::shadow ::content > *:not(.core-selected):not([animate]) {
-    display: block !important;
-    height: 1px;
-    pointer-events: none;
-}
 /* This makes checkboxes have the same padding as icons in lists. */
 html /deep/ core-menu paper-checkbox::shadow #checkboxLabel {
     padding-left: 32px;

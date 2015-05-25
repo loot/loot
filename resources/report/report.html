@@ -21,8 +21,7 @@
     <link rel="import" href="bower_components/core-icons/core-icons.html">
     <link rel="import" href="bower_components/core-tooltip/core-tooltip.html">
     <link rel="import" href="bower_components/core-drawer-panel/core-drawer-panel.html">
-    <link rel="import" href="bower_components/core-animated-pages/core-animated-pages.html">
-    <link rel="import" href="bower_components/core-animated-pages/transitions/slide-from-right.html">
+    <link rel="import" href="bower_components/core-pages/core-pages.html">
     <link rel="import" href="bower_components/core-list/core-list.html">
     <link rel="import" href="bower_components/core-label/core-label.html">
 
@@ -53,7 +52,7 @@
                 </paper-tabs>
             </div>
             <div flex layout vertical>
-                <core-animated-pages selected="cardsNav" valueattr="id" transitions="" flex>
+                <core-pages selected="cardsNav" valueattr="id" flex>
                     <core-list  id="cardsNav" class="tab-content" flex>
                         <template>
                             <loot-plugin-item data-id="{{model.id}}" data="{{model}}" data-index="{{index}}">
@@ -80,7 +79,7 @@
                             <div><span id="hiddenMessageNo">0</span> / <span id="filterTotalMessageNo">0</span></div>
                         </div>
                     </div>
-                </core-animated-pages>
+                </core-pages>
                 <div class="divider"></div>
                 <core-tooltip label="Press Enter or click outside the input to set the filter." position="top" noarrow>
                     <paper-input id="searchBox" label="Filter content..."></paper-input>
