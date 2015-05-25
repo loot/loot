@@ -133,6 +133,7 @@ function initVars() {
 
             try {
                 loot.settings = JSON.parse(results[2]);
+                restoreFilterStates();
             } catch (e) {
                 console.log(e);
                 console.log('getSettings response: ' + results[2]);

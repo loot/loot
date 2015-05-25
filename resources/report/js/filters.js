@@ -213,3 +213,37 @@ function setFilteredUIData() {
         }
     });
 }
+function restoreFilterStates() {
+    if (loot.settings.filters) {
+
+        //document.getElementById('searchBox').value = loot.settings.filters.content;
+        document.getElementById('hideMessagelessPlugins').checked = loot.settings.filters.hideMessagelessPlugins;
+        document.getElementById('hideInactivePlugins').checked = loot.settings.filters.hideInactivePlugins;
+        document.getElementById('hideNotes').checked = loot.settings.filters.hideNotes;
+        document.getElementById('hideDoNotCleanMessages').checked = loot.settings.filters.hideDoNotCleanMessages;
+        document.getElementById('hideAllPluginMessages').checked = loot.settings.filters.hideAllPluginMessages;
+        document.getElementById('hideVersionNumbers').checked = loot.settings.filters.hideVersionNumbers;
+        document.getElementById('hideCRCs').checked = loot.settings.filters.hideCRCs;
+        document.getElementById('hideBashTags').checked = loot.settings.filters.hideBashTags;
+
+        if (loot.settings.filters.hideMessagelessPlugins
+            || loot.settings.filters.hideInactivePlugins
+            || loot.settings.filters.hideNotes
+            || loot.settings.filters.hideDoNotCleanMessages
+            || loot.settings.filters.hideAllPluginMessages) {
+            setFilteredUIData();
+        }
+
+        if (loot.settings.filters.hideVersionNumbers) {
+            document.getElementById('hideVersionNumbers').dispatchEvent(new Event('change'));
+        }
+
+        if (loot.settings.filters.hideCRCs) {
+            document.getElementById('hideCRCs').dispatchEvent(new Event('change'));
+        }
+
+        if (loot.settings.filters.hideBashTags) {
+            document.getElementById('hideBashTags').dispatchEvent(new Event('change'));
+        }
+    }
+}

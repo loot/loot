@@ -323,6 +323,23 @@ namespace loot {
             }
             return true;
         }
+        else if (requestName == "saveFilterState") {
+            // Has two args: the first is the filter ID, the second is the value.
+            BOOST_LOG_TRIVIAL(trace) << "Saving filter states.";
+            try {
+                YAML::Node settings = g_app_state.GetSettings();
+
+                settings["filters"][request["args"][0].as<string>()] = request["args"][1];
+
+                g_app_state.UpdateSettings(settings);
+                callback->Success("");
+            }
+            catch (exception &e) {
+                BOOST_LOG_TRIVIAL(error) << e.what();
+                callback->Failure(-1, e.what());
+            }
+            return true;
+        }
         return false;
     }
 

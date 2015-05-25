@@ -1,3 +1,13 @@
+function saveFilterState(evt) {
+    var request = JSON.stringify({
+        name: 'saveFilterState',
+        args: [
+            evt.target.id,
+            evt.target.checked,
+        ]
+    });
+    loot.query(request).catch(processCefError);
+}
 function onToggleDisplayCSS(evt) {
     var attr = 'data-hide-' + evt.target.getAttribute('data-class');
     if (evt.target.checked) {
@@ -644,13 +654,21 @@ function onContentRefresh(evt) {
 function setupEventHandlers() {
     /*Set up handlers for filters.*/
     document.getElementById('hideVersionNumbers').addEventListener('change', onToggleDisplayCSS, false);
+    document.getElementById('hideVersionNumbers').addEventListener('change', saveFilterState, false);
     document.getElementById('hideCRCs').addEventListener('change', onToggleDisplayCSS, false);
+    document.getElementById('hideCRCs').addEventListener('change', saveFilterState, false);
     document.getElementById('hideBashTags').addEventListener('change', onToggleBashTags, false);
+    document.getElementById('hideBashTags').addEventListener('change', saveFilterState, false);
     document.getElementById('hideNotes').addEventListener('change', setFilteredUIData, false);
+    document.getElementById('hideNotes').addEventListener('change', saveFilterState, false);
     document.getElementById('hideDoNotCleanMessages').addEventListener('change', setFilteredUIData, false);
+    document.getElementById('hideDoNotCleanMessages').addEventListener('change', saveFilterState, false);
     document.getElementById('hideInactivePlugins').addEventListener('change', setFilteredUIData, false);
+    document.getElementById('hideInactivePlugins').addEventListener('change', saveFilterState, false);
     document.getElementById('hideAllPluginMessages').addEventListener('change', setFilteredUIData, false);
+    document.getElementById('hideAllPluginMessages').addEventListener('change', saveFilterState, false);
     document.getElementById('hideMessagelessPlugins').addEventListener('change', setFilteredUIData, false);
+    document.getElementById('hideMessagelessPlugins').addEventListener('change', saveFilterState, false);
     document.body.addEventListener('loot-filter-conflicts', onConflictsFilter, false);
 
     /* Set up event handlers for content filter. */
