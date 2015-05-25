@@ -99,18 +99,21 @@ paper-item > a:hover {
 }
 #searchBox {
     display: block;
-    margin: 0 16px;
+    line-height: initial;
 }
 #filters {
     padding: 8px 0;
     overflow: hidden;
 }
-#filters > * {
+#filters > paper-checkbox,
+#filters > core-tooltip,
+#filters > div:not(.divider) {
     padding: 0 16px;
     height: 48px;
     line-height: 48px;
 }
-#filters > paper-checkbox {
+#filters > paper-checkbox,
+#filters > core-tooltip {
     display: block;
 }
 
