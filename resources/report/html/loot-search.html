@@ -81,6 +81,7 @@ searchTarget is the ID of the core-list element to search the elements of.
 
         attached: function() {
             this.shadowRoot.getElementById('search').addEventListener('input', this.onSearch, false);
+            this.shadowRoot.getElementById('search').addEventListener('keyup', this.onEnter, false);
             this.shadowRoot.getElementById('prev').addEventListener('click', this.onPrev, false);
             this.shadowRoot.getElementById('next').addEventListener('click', this.onNext, false);
             this.shadowRoot.getElementById('close').addEventListener('click', this.onClose, false);
@@ -88,6 +89,7 @@ searchTarget is the ID of the core-list element to search the elements of.
 
         detached: function() {
             this.shadowRoot.getElementById('search').removeEventListener('input', this.onSearch, false);
+            this.shadowRoot.getElementById('search').removeEventListener('keyup', this.onEnter, false);
             this.shadowRoot.getElementById('prev').removeEventListener('click', this.onPrev, false);
             this.shadowRoot.getElementById('next').removeEventListener('click', this.onNext, false);
             this.shadowRoot.getElementById('close').removeEventListener('change', this.onClose, false);
@@ -96,6 +98,20 @@ searchTarget is the ID of the core-list element to search the elements of.
         resetResults: function() {
             this.currentResult = 0;
             this.results = [];
+        },
+
+        onEnter: function(evt) {
+            var host = evt.target.parentElement.parentNode.host;
+            if (evt.keyCode != 13 || host.results.length == 0) {
+                return;
+            }
+
+            if (host.currentResult == host.results.length) {
+                host.currentResult = 1;
+            } else {
+                ++host.currentResult;
+            }
+            document.getElementById(host.searchTarget).scrollToItem(host.results[host.currentResult - 1]);
         },
 
         onSearch: function(evt) {
