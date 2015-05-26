@@ -36,7 +36,7 @@ searchTarget is the ID of the core-list element to search the elements of.
         <core-toolbar>
             <paper-input id="search" label="Search Cards" flex></paper-input>
             <div id="count" class="caption hidden">
-                {{currentResult}}/{{numResults}}
+                {{currentResult + 1}}/{{numResults}}
             </div>
             <paper-icon-button id="prev" icon="expand-less" disabled></paper-icon-button>
             <paper-icon-button id="next" icon="expand-more" disabled></paper-icon-button>
@@ -45,7 +45,7 @@ searchTarget is the ID of the core-list element to search the elements of.
     </template>
     <script>
     Polymer({
-        currentResult: 0,
+        currentResult: -1,
         results: [],
         numResults: 0,
         searchTarget: undefined,
@@ -66,10 +66,10 @@ searchTarget is the ID of the core-list element to search the elements of.
                 if (this.results.length == 1) {
                     this.shadowRoot.getElementById('prev').setAttribute('disabled', '');
                     this.shadowRoot.getElementById('next').setAttribute('disabled', '');
-                } else if (newValue == 1) {
+                } else if (newValue == 0) {
                     this.shadowRoot.getElementById('prev').setAttribute('disabled', '');
                     this.shadowRoot.getElementById('next').removeAttribute('disabled');
-                } else if (newValue == this.results.length) {
+                } else if (newValue == this.results.length - 1) {
                     this.shadowRoot.getElementById('prev').removeAttribute('disabled');
                     this.shadowRoot.getElementById('next').setAttribute('disabled', '');
                 } else {
@@ -96,8 +96,8 @@ searchTarget is the ID of the core-list element to search the elements of.
         },
 
         resetResults: function() {
-            this.currentResult = 0;
             this.results = [];
+            this.currentResult = -1;
         },
 
         onEnter: function(evt) {
@@ -106,12 +106,12 @@ searchTarget is the ID of the core-list element to search the elements of.
                 return;
             }
 
-            if (host.currentResult == host.results.length) {
-                host.currentResult = 1;
+            if (host.currentResult == host.results.length - 1) {
+                host.currentResult = 0;
             } else {
                 ++host.currentResult;
             }
-            document.getElementById(host.searchTarget).scrollToItem(host.results[host.currentResult - 1]);
+            document.getElementById(host.searchTarget).scrollToItem(host.results[host.currentResult]);
         },
 
         onSearch: function(evt) {
@@ -151,21 +151,21 @@ searchTarget is the ID of the core-list element to search the elements of.
             });
 
             if (host.results.length > 0) {
-                host.currentResult = 1;
-                document.getElementById(host.searchTarget).scrollToItem(host.results[host.currentResult - 1]);
+                host.currentResult = 0;
+                document.getElementById(host.searchTarget).scrollToItem(host.results[host.currentResult]);
             }
         },
 
         onPrev: function(evt) {
             var host = evt.target.parentElement.parentNode.host;
             --host.currentResult;
-            document.getElementById(host.searchTarget).scrollToItem(host.results[host.currentResult - 1]);
+            document.getElementById(host.searchTarget).scrollToItem(host.results[host.currentResult]);
         },
 
         onNext: function(evt) {
             var host = evt.target.parentElement.parentNode.host;
             ++host.currentResult;
-            document.getElementById(host.searchTarget).scrollToItem(host.results[host.currentResult - 1]);
+            document.getElementById(host.searchTarget).scrollToItem(host.results[host.currentResult]);
         },
 
         onClose: function(evt) {
