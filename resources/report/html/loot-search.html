@@ -92,13 +92,18 @@ searchTarget is the ID of the core-list element to search the elements of.
             this.shadowRoot.getElementById('close').removeEventListener('change', this.onClose, false);
         },
 
+        resetResults: function() {
+            this.currentResult = 0;
+            this.results = [];
+        },
+
         onSearch: function(evt) {
             var needle = evt.target.value.toLowerCase();
             var host = evt.target.parentElement.parentElement.parentNode.host;
-            host.currentResult = 0;
-            host.results = [];
 
+            host.resetResults();
             host.shadowRoot.getElementById('count').classList.toggle('hidden', !evt.target.value);
+
             if (!evt.target.value) {
                 return;
             }
@@ -147,8 +152,7 @@ searchTarget is the ID of the core-list element to search the elements of.
         },
 
         onClose: function(evt) {
-            evt.target.parentElement.parentNode.host.currentResult = 0;
-            evt.target.parentElement.parentNode.host.results = [];
+            evt.target.parentElement.parentNode.host.resetResults();
             evt.target.parentElement.parentNode.getElementById('search').value = '';
             evt.target.parentElement.parentNode.getElementById('count').classList.toggle('hidden', true);
             evt.target.dispatchEvent(new CustomEvent('loot-search-close'));
