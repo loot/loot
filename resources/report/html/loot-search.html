@@ -120,25 +120,30 @@ searchTarget is the ID of the core-list element to search the elements of.
                 return;
             }
 
+            var versionHidden = document.getElementById('hideVersionNumbers').checked;
+            var crcHidden = document.getElementById('hideCRCs').checked;
+            var bashTagHidden = document.getElementById('hideBashTags').checked;
             document.getElementById(host.searchTarget).data.forEach(function(plugin, index){
                 if (plugin.name.toLowerCase().indexOf(needle) != -1
-                    || plugin.getCrcString().toLowerCase().indexOf(needle) != -1
-                    || plugin.version.toLowerCase().indexOf(needle) != -1) {
+                    || (!versionHidden && plugin.version.toLowerCase().indexOf(needle) != -1)
+                    || (!crcHidden && plugin.getCrcString().toLowerCase().indexOf(needle) != -1)) {
 
                     host.results.push(index);
                     return;
                 }
 
-                var tags = plugin.getTagStrings();
-                if (tags.added.toLowerCase().indexOf(needle) != -1
-                    || tags.removed.toLowerCase().indexOf(needle) != -1) {
+                if (!bashTagHidden) {
+                    var tags = plugin.getTagStrings();
+                    if (tags.added.toLowerCase().indexOf(needle) != -1
+                        || tags.removed.toLowerCase().indexOf(needle) != -1) {
 
-                    host.results.push(index);
-                    return;
+                        host.results.push(index);
+                        return;
+                    }
                 }
 
-                for (var i = 0; i < plugin.messages.length; ++i) {
-                    if (plugin.messages[i].content[0].str.toLowerCase().indexOf(needle) != -1) {
+                for (var i = 0; i < plugin.computed.messages.length; ++i) {
+                    if (plugin.computed.messages[i].textContent.toLowerCase().indexOf(needle) != -1) {
                         host.results.push(index);
                         return;
                     }
