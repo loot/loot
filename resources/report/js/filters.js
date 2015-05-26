@@ -211,6 +211,10 @@ function setFilteredUIData() {
                 cards[i].onMessagesChange();
             }
         }
+
+        /* Now perform search again. If there is no current search, this won't
+           do anything. */
+        document.getElementById('searchBar').search();
     });
 }
 function restoreFilterStates() {

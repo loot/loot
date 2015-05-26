@@ -109,6 +109,10 @@ searchTarget is the ID of the core-list element to search the elements of.
             document.getElementById(host.searchTarget).scrollToItem(host.results[host.currentResult]);
         },
 
+        search: function() {
+            this.shadowRoot.getElementById('search').dispatchEvent(new Event('input'));
+        },
+
         onSearch: function(evt) {
             var needle = evt.target.value.toLowerCase();
             var host = evt.target.parentElement.parentNode.host;
