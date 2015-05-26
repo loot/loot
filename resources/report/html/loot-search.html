@@ -52,13 +52,6 @@ searchTarget is the ID of the core-list element to search the elements of.
 
         resultsChanged: function(oldValue, newValue) {
             this.numResults = newValue.length;
-            if (newValue.length == 0) {
-                this.shadowRoot.getElementById('prev').setAttribute('disabled', '');
-                this.shadowRoot.getElementById('next').setAttribute('disabled', '');
-            } else {
-                this.shadowRoot.getElementById('prev').removeAttribute('disabled');
-                this.shadowRoot.getElementById('next').removeAttribute('disabled');
-            }
         },
 
         currentResultChanged: function(oldValue, newValue) {
@@ -98,6 +91,8 @@ searchTarget is the ID of the core-list element to search the elements of.
         resetResults: function() {
             this.results = [];
             this.currentResult = -1;
+            this.shadowRoot.getElementById('prev').setAttribute('disabled', '');
+            this.shadowRoot.getElementById('next').setAttribute('disabled', '');
         },
 
         onEnter: function(evt) {
@@ -152,6 +147,8 @@ searchTarget is the ID of the core-list element to search the elements of.
 
             if (host.results.length > 0) {
                 host.currentResult = 0;
+                // For some reason change watcher doesn't run, call it manually.
+                host.currentResultChanged(-1, 0);
                 document.getElementById(host.searchTarget).scrollToItem(host.results[host.currentResult]);
             }
         },
