@@ -162,6 +162,7 @@ function initVars() {
                     loot.game.plugins = game.plugins;
                     document.getElementById('cardsNav').data = loot.game.plugins;
                     document.getElementById('main').lastElementChild.data = loot.game.plugins;
+                    applyEnabledFilters();
 
                     setTimeout(function() {
                         document.getElementById('cardsNav').updateSize();
