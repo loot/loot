@@ -17,6 +17,9 @@ searchTarget is the ID of the core-list element to search the elements of.
         core-toolbar > * {
             top: -3px;
         }
+        paper-input {
+            position: relative;
+        }
         paper-input /deep/ paper-input-decorator::shadow .label-text,
         paper-input /deep/ input::-webkit-input-placeholder {
            color: rgba(255, 255, 255, 0.3) !important;
@@ -31,9 +34,7 @@ searchTarget is the ID of the core-list element to search the elements of.
         }
         </style>
         <core-toolbar>
-            <core-tooltip label="Press Enter to search." position="bottom" noarrow flex layout horizontal center>
-                <paper-input id="search" label="Search" flex></paper-input>
-            </core-tooltip>
+            <paper-input id="search" label="Search Cards" flex></paper-input>
             <div id="count" class="caption hidden">
                 {{currentResult}}/{{numResults}}
             </div>
@@ -79,14 +80,14 @@ searchTarget is the ID of the core-list element to search the elements of.
         },
 
         attached: function() {
-            this.shadowRoot.getElementById('search').addEventListener('change', this.onSearch, false);
+            this.shadowRoot.getElementById('search').addEventListener('input', this.onSearch, false);
             this.shadowRoot.getElementById('prev').addEventListener('click', this.onPrev, false);
             this.shadowRoot.getElementById('next').addEventListener('click', this.onNext, false);
             this.shadowRoot.getElementById('close').addEventListener('click', this.onClose, false);
         },
 
         detached: function() {
-            this.shadowRoot.getElementById('search').removeEventListener('change', this.onSearch, false);
+            this.shadowRoot.getElementById('search').removeEventListener('input', this.onSearch, false);
             this.shadowRoot.getElementById('prev').removeEventListener('click', this.onPrev, false);
             this.shadowRoot.getElementById('next').removeEventListener('click', this.onNext, false);
             this.shadowRoot.getElementById('close').removeEventListener('change', this.onClose, false);
@@ -99,7 +100,7 @@ searchTarget is the ID of the core-list element to search the elements of.
 
         onSearch: function(evt) {
             var needle = evt.target.value.toLowerCase();
-            var host = evt.target.parentElement.parentElement.parentNode.host;
+            var host = evt.target.parentElement.parentNode.host;
 
             host.resetResults();
             host.shadowRoot.getElementById('count').classList.toggle('hidden', !evt.target.value);
