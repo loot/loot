@@ -456,6 +456,10 @@ function onEditorClose(evt) {
 
                 evt.target.data.userlist = edits.userlist;
                 delete evt.target.data.editor;
+
+                /* Now perform search again. If there is no current search, this won't
+                   do anything. */
+                document.getElementById('searchBar').search();
             }
         }).catch(processCefError);
     } else {
@@ -558,6 +562,9 @@ function onClearMetadata(evt) {
                         }
                     }
                     toast(l10n.jed.translate('The user-added metadata for "%s" has been cleared.').fetch(evt.target.getName()));
+                    /* Now perform search again. If there is no current search, this won't
+                       do anything. */
+                    document.getElementById('searchBar').search();
                 }
             }).catch(processCefError);
         }
