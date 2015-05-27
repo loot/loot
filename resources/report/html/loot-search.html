@@ -89,6 +89,9 @@ searchTarget is the ID of the core-list element to search the elements of.
         },
 
         resetResults: function() {
+            loot.game.plugins.forEach(function(plugin){
+                plugin.isSearchResult = false;
+            });
             this.results = [];
             this.currentResult = -1;
             this.shadowRoot.getElementById('prev').setAttribute('disabled', '');
@@ -137,6 +140,7 @@ searchTarget is the ID of the core-list element to search the elements of.
                     || (!crcHidden && plugin.getCrcString().toLowerCase().indexOf(needle) != -1)) {
 
                     host.results.push(index);
+                    plugin.isSearchResult = true;
                     return;
                 }
 
@@ -146,6 +150,7 @@ searchTarget is the ID of the core-list element to search the elements of.
                         || tags.removed.toLowerCase().indexOf(needle) != -1) {
 
                         host.results.push(index);
+                        plugin.isSearchResult = true;
                         return;
                     }
                 }
@@ -153,6 +158,7 @@ searchTarget is the ID of the core-list element to search the elements of.
                 for (var i = 0; i < plugin.computed.messages.length; ++i) {
                     if (plugin.computed.messages[i].textContent.toLowerCase().indexOf(needle) != -1) {
                         host.results.push(index);
+                        plugin.isSearchResult = true;
                         return;
                     }
                 }

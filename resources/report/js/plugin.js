@@ -45,6 +45,7 @@ function Plugin(obj) {
     this.isMenuOpen = false;
     this.isEditorOpen = false;
     this.isConflictFilterChecked = false;
+    this.isSearchResult = false;
 
     /* Converts between the LOOT metadata object for tags, and their
        editor row representation. */
