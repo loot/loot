@@ -267,7 +267,7 @@ loot-clear-metadata
                 this.classList.toggle('highlight', newValue.isConflictFilterChecked);
 
                 /* Set highlight if the plugin is a search result. */
-                this.onSearchResultChange(oldValue.isSearchResult, newValue.isSearchResult);
+                this.onSearchResultChange(undefined, newValue.isSearchResult);
 
                 /* Update tooltip positions. */
                 var tooltips = this.shadowRoot.querySelectorAll('core-tooltip');
