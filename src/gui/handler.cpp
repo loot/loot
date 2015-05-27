@@ -43,6 +43,7 @@
 
 #include <sstream>
 #include <string>
+#include <iomanip>
 
 using namespace std;
 
@@ -311,6 +312,34 @@ namespace loot {
                 boost::replace_all(text, "!<!> ", "");
                 text = "[spoiler][code]" + text + "[/code][/spoiler]";
                 CopyToClipboard(text);
+                callback->Success("");
+            }
+            catch (loot::error &e) {
+                BOOST_LOG_TRIVIAL(error) << "Failed to copy plugin metadata. Details: " << e.what();
+                callback->Failure(e.code(), (boost::format(loc::translate("Failed to copy plugin metadata. Details: %1%")) % e.what()).str());
+            }
+            catch (std::exception& e) {
+                BOOST_LOG_TRIVIAL(error) << "Failed to copy plugin metadata. Details: " << e.what();
+                callback->Failure(-1, (boost::format(loc::translate("Failed to copy plugin metadata. Details: %1%")) % e.what()).str());
+            }
+            return true;
+        }
+        else if (requestName == "copyLoadOrder") {
+            // Has one arg, an array of plugins in load order. Output them with indices in dec and hex.
+            try {
+                stringstream ss;
+                vector<string> plugins = request["args"][0].as<vector<string>>();
+                int decLength = 1;
+                if (plugins.size() > 99) {
+                    decLength = 3;
+                }
+                else if (plugins.size() > 9) {
+                    decLength = 2;
+                }
+                for (size_t i = 0; i < plugins.size(); ++i) {
+                    ss << setw(decLength) << i << " " << hex << setw(2) << i << dec << " " << plugins[i] << "\r\n";
+                }
+                CopyToClipboard(ss.str());
                 callback->Success("");
             }
             catch (loot::error &e) {

@@ -333,6 +333,28 @@ function onCopyContent(evt) {
         toast(l10n.jed.translate("LOOT's content has been copied to the clipboard.").fetch());
     }).catch(processCefError);
 }
+function onCopyLoadOrder(evt) {
+    var plugins = [];
+
+    if (loot.game) {
+        if (loot.game.plugins) {
+            loot.game.plugins.forEach(function(plugin){
+                plugins.push(plugin.name);
+            });
+        }
+    }
+
+    var request = JSON.stringify({
+        name: 'copyLoadOrder',
+        args: [
+            plugins
+        ]
+    });
+
+    loot.query(request).then(function(){
+        toast(l10n.jed.translate("The load order has been copied to the clipboard.").fetch());
+    }).catch(processCefError);
+}
 function onSwitchSidebarTab(evt) {
     if (evt.detail.isSelected) {
         document.getElementById(evt.target.selected).parentElement.selected = evt.target.selected;
@@ -696,6 +718,7 @@ function setupEventHandlers() {
     document.getElementById('redatePluginsButton').addEventListener('click', onRedatePlugins, false);
     document.getElementById('openLogButton').addEventListener('click', onOpenLogLocation, false);
     document.getElementById('wipeUserlistButton').addEventListener('click', onClearAllMetadata, false);
+    document.getElementById('copyLoadOrderButton').addEventListener('click', onCopyLoadOrder, false);
     document.getElementById('copyContentButton').addEventListener('click', onCopyContent, false);
     document.getElementById('refreshContentButton').addEventListener('click', onContentRefresh, false);
     document.getElementById('settingsButton').addEventListener('click', onShowSettingsDialog, false);
