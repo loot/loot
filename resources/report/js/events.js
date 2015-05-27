@@ -648,6 +648,7 @@ function onContentRefresh(evt) {
 }
 function onSearchOpen(evt) {
     document.getElementById('mainToolbar').classList.add('search');
+    document.getElementById('searchBar').focusInput();
 }
 function onSearchClose(evt) {
     document.getElementById('mainToolbar').classList.remove('search');
