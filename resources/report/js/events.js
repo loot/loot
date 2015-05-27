@@ -15,10 +15,19 @@ function onToggleDisplayCSS(evt) {
     } else {
         document.getElementById('main').removeAttribute(attr);
     }
+
+    if (evt.target.id != 'hideBashTags') {
+        /* Now perform search again. If there is no current search, this won't
+           do anything. */
+        document.getElementById('searchBar').search();
+    }
 }
 function onToggleBashTags(evt) {
     onToggleDisplayCSS(evt);
     document.getElementById('main').lastElementChild.updateSize();
+    /* Now perform search again. If there is no current search, this won't
+       do anything. */
+    document.getElementById('searchBar').search();
 }
 function onOpenLogLocation(evt) {
     loot.query('openLogLocation').catch(processCefError);
