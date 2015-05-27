@@ -15,10 +15,19 @@ function onToggleDisplayCSS(evt) {
     } else {
         document.getElementById('main').removeAttribute(attr);
     }
+
+    if (evt.target.id != 'hideBashTags') {
+        /* Now perform search again. If there is no current search, this won't
+           do anything. */
+        document.getElementById('searchBar').search();
+    }
 }
 function onToggleBashTags(evt) {
     onToggleDisplayCSS(evt);
     document.getElementById('main').lastElementChild.updateSize();
+    /* Now perform search again. If there is no current search, this won't
+       do anything. */
+    document.getElementById('searchBar').search();
 }
 function onOpenLogLocation(evt) {
     loot.query('openLogLocation').catch(processCefError);
@@ -447,6 +456,10 @@ function onEditorClose(evt) {
 
                 evt.target.data.userlist = edits.userlist;
                 delete evt.target.data.editor;
+
+                /* Now perform search again. If there is no current search, this won't
+                   do anything. */
+                document.getElementById('searchBar').search();
             }
         }).catch(processCefError);
     } else {
@@ -549,6 +562,9 @@ function onClearMetadata(evt) {
                         }
                     }
                     toast(l10n.jed.translate('The user-added metadata for "%s" has been cleared.').fetch(evt.target.getName()));
+                    /* Now perform search again. If there is no current search, this won't
+                       do anything. */
+                    document.getElementById('searchBar').search();
                 }
             }).catch(processCefError);
         }
@@ -648,6 +664,7 @@ function onContentRefresh(evt) {
 }
 function onSearchOpen(evt) {
     document.getElementById('mainToolbar').classList.add('search');
+    document.getElementById('searchBar').focusInput();
 }
 function onSearchClose(evt) {
     document.getElementById('mainToolbar').classList.remove('search');

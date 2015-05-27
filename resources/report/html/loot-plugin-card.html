@@ -60,6 +60,10 @@ loot-clear-metadata
         :host(:not([data-edits])) #hasUserEdits {
             display: none;
         }
+        :host(.search-result) #front,
+        :host(.search-result) #editor {
+            box-shadow: inset 4px 0 #3F51B5;
+        }
         #front {
             display: block;
             transform: translateZ(1px);
@@ -219,6 +223,7 @@ loot-clear-metadata
             'data.tags': 'onTagsChange',
             'data.computed.messages': 'onMessagesChange',
             'data.userlist': 'onUserlistChange',
+            'data.isSearchResult' : 'onSearchResultChange',
             'data.isMenuOpen': 'onMenuToggle'
         },
 
@@ -261,6 +266,9 @@ loot-clear-metadata
                 /* Also set highlight if the conflict filter is active. */
                 this.classList.toggle('highlight', newValue.isConflictFilterChecked);
 
+                /* Set highlight if the plugin is a search result. */
+                this.onSearchResultChange(oldValue.isSearchResult, newValue.isSearchResult);
+
                 /* Update tooltip positions. */
                 var tooltips = this.shadowRoot.querySelectorAll('core-tooltip');
                 for (var i = 0; i < tooltips.length; ++i) {
@@ -299,6 +307,10 @@ loot-clear-metadata
             } else {
                 this.removeAttribute('data-edits');
             }
+        },
+
+        onSearchResultChange: function(oldValue, newValue) {
+            this.classList.toggle('search-result', newValue);
         },
 
         onMenuToggle: function(oldValue, newValue) {

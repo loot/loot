@@ -206,6 +206,10 @@ function setFilteredUIData() {
         filtered.forEach(function(plugin){
             plugin.computed.messages = plugin.getUIMessages();
         });
+
+        /* Now perform search again. If there is no current search, this won't
+           do anything. */
+        document.getElementById('searchBar').search();
     });
 }
 function restoreFilterStates() {
