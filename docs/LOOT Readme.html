@@ -275,11 +275,20 @@ var {
 
 <p>Any errors encountered during sorting or masterlist update will be displayed on the <q>General Information</q> card.
 
+<h4>Search</h4>
+
+<p>The search toolbar is displayed by clicking the search icon in the header bar, or using the <kbd>Ctrl-F</kbd> keyboard shortcut. It may be closed using the close button at the right of the toolbar.
+
+<p>Searching is performed as-you-type, or when the <kbd>Enter</kbd> key is pressed. All content visible on the front of plugin cards is searched, so the results may be affected by any filters you have active.
+
+<p>The plugin card list will be scrolled to the first card that contains a match. Matches may be scrolled between using the up and down chevron buttons, and the current match and the number of matches are displayed between them and the search input.
+
 <h4>Main Menu</h4>
 
 <p>A few items in the main menu are not self-explanatory:
 <ul>
     <li><q>Redate Plugins</q> is provided so that Skyrim modders may set the load order for the Creation Kit. It is only enabled for Skyrim, and changes the timestamps of the plugins in its Data folder to match their current load order. A side effect of changing the timestamps is that any Steam Workshop mods installed will be re-downloaded.
+    <li><q>Copy Load Order</q> copies the displayed list of plugins together with their decimal and hexadecimal indices.
     <li><q>Copy Content</q> copies the data displayed in LOOT's cards as YAML-formatted text.
     <li><q>Refresh Content</q> re-scans the installed plugins' headers and regenerates the content LOOT displays. This can be useful if you have made changes to your installed plugins while LOOT was open. Refreshing content will also discard any CRCs that were previously calculated, as they may have changed.
 </ul>
@@ -328,12 +337,9 @@ var {
     <li><i>Hide inactive plugins</i>: Hides all plugins that are inactive.
     <li><i>Hide messageless plugins</i>: Hides all plugins that have no visible messages.
 </ul>
-<p>There are also two other filters:
+<p>The filter toggles have their states saved on quitting LOOT, and they are restored when LOOT is next launched. There are also two other filters:
 <ul>
-    <li>A conflict filter that can be accessed through each plugin's menu. This filters the plugin cards displayed so that only plugins which conflict with this plugin will be visible. If this plugin loads a BSA, other plugins that load BSAs which <em>may</em> contain conflicting resources are also displayed.</p>
-
-    Only one plugin's conflict filter can be active at any one time, so activating a second conflict filter will deactivate the first. The plugin for which the filter is currently active has its card highlighted. Sorting with a conflict filter active will first deactivate it.
-    <li>A content filter, located at the bottom of the sidebar. This hides any plugins that don't have the filter input value present in any of the following:
+    <li>A content filter, located beneath the filter toggles in the <span class="button">Filters</span> sidebar tab. This hides any plugins that don't have the filter input value present in any of the following:
     <ul>
         <li>Filename
         <li>Version
@@ -341,6 +347,10 @@ var {
         <li>Bash Tag suggestions
         <li>Messages
     </ul>
+    <li>A conflict filter that can be accessed through each plugin's menu. This filters the plugin cards displayed so that only plugins which conflict with this plugin will be visible. If this plugin loads a BSA, other plugins that load BSAs which <em>may</em> contain conflicting resources are also displayed.</p>
+
+    Only one plugin's conflict filter can be active at any one time, so activating a second conflict filter will deactivate the first. The plugin for which the filter is currently active has its card highlighted. Sorting with a conflict filter active will first deactivate it.
+
 </ul>
 
 <h3 id="usage-editing">Editing Plugin Metadata</h3>
@@ -522,6 +532,18 @@ A copy of the license is included in the file named "GNU FDL v1.3.txt".</blockqu
 
 <h2 id="history">Version History</h2>
 <p>Only program history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
+
+<h3>0.7.1 - <i>X Y 2015</i></h3>
+<ul>
+    <li>Fixed LOOT UI opening in default browser on launch.</li>
+    <li>Fixed <q>No existing load order position</q> errors when sorting.</li>
+    <li>Fixed message filters being ignored by plugin cards after navigating the list.</li>
+    <li>Moved content filter into Filters sidebar tab. The <kbd>Ctrl-F</kbd> keyboard shortcut no longer focusses the content filter.</li>
+    <li>Checkbox-toggled filters now have their last state restored on launch.</li>
+    <li>Darkened background behind cards to increase contrast.</li>
+    <li>Added content search, accessible from an icon button in the header bar, and using the <kbd>Ctrl-F</kbd> keyboard shortcut.</li>
+    <li>Added <q>Copy Load Order</q> feature to main menu.</li>
+</ul>
 
 <h3>0.7.0 - <i>20 May 2015</i></h3>
 <h4>Fixes</h4>
