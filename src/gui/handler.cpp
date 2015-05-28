@@ -336,8 +336,16 @@ namespace loot {
                 else if (plugins.size() > 9) {
                     decLength = 2;
                 }
-                for (size_t i = 0; i < plugins.size(); ++i) {
-                    ss << setw(decLength) << i << " " << hex << setw(2) << i << dec << " " << plugins[i] << "\r\n";
+                size_t i = 0;
+                for (const auto& plugin : plugins) {
+                    if (g_app_state.CurrentGame().IsActive(plugin)) {
+                        ss << setw(decLength) << i << " " << hex << setw(2) << i << dec << " ";
+                        ++i;
+                    }
+                    else {
+                        ss << setw(decLength + 4) << "     ";
+                    }
+                    ss << plugin << "\r\n";
                 }
                 CopyToClipboard(ss.str());
                 callback->Success("");
