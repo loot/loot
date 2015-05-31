@@ -225,17 +225,22 @@
             document.getElementById('updateMasterlistButton').parentElement.label = l10n.translate("Update Masterlist").fetch();
             document.getElementById('applySortButton').textContent = l10n.translate("Apply").fetch();
             document.getElementById('cancelSortButton').textContent = l10n.translate("Cancel").fetch();
+            document.getElementById('showSearch').parentElement.label = l10n.translate("Search Cards").fetch();
 
             /* Toolbar menu */
             document.getElementById('redatePluginsButton').lastElementChild.textContent = l10n.translate("Redate Plugins").fetch();
             document.getElementById('openLogButton').lastElementChild.textContent = l10n.translate("Open Debug Log Location").fetch();
             document.getElementById('wipeUserlistButton').lastElementChild.textContent = l10n.translate("Clear All User Metadata").fetch();
+            document.getElementById('copyLoadOrderButton').lastElementChild.textContent = l10n.translate("Copy Load Order").fetch();
             document.getElementById('copyContentButton').lastElementChild.textContent = l10n.translate("Copy Content").fetch();
             document.getElementById('refreshContentButton').lastElementChild.textContent = l10n.translate("Refresh Content").fetch();
             document.getElementById('helpButton').lastElementChild.textContent = l10n.translate("View Documentation").fetch();
             document.getElementById('aboutButton').lastElementChild.textContent = l10n.translate("About").fetch();
             document.getElementById('settingsButton').lastElementChild.textContent = l10n.translate("Settings").fetch();
             document.getElementById('quitButton').lastElementChild.textContent = l10n.translate("Quit").fetch();
+
+            /* Search bar */
+            document.getElementById('searchBar').shadowRoot.getElementById('search').label = l10n.translate("Search cards").fetch();
 
             /* Nav items */
             document.getElementById('sidebarTabs').firstElementChild.textContent = l10n.translate("Plugins").fetch();
