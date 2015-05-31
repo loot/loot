@@ -28,6 +28,8 @@ along with LOOT.  If not, see
 #include "../../api/api.h"
 #include "tests/fixtures.h"
 
+#include <boost/algorithm/string/predicate.hpp>
+
 TEST(GetVersion, HandlesNullInput) {
     unsigned int vMajor, vMinor, vPatch;
     EXPECT_EQ(loot_error_invalid_args, loot_get_version(&vMajor, NULL, NULL));
@@ -641,5 +643,18 @@ TEST_F(OblivionAPIOperationsTest, WriteMinimalList) {
     EXPECT_EQ(loot_ok, loot_write_minimal_list(db, outputFile.c_str(), true));
     EXPECT_TRUE(boost::filesystem::exists(outputFile));
     ASSERT_NO_THROW(boost::filesystem::remove(outputFile));
+
+    // Check that Bash Tag removals get outputted correctly.
+    bool updated;
+    ASSERT_EQ(loot_ok, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/oblivion.git", "master", &updated));
+    EXPECT_EQ(loot_ok, loot_load_lists(db, masterlistPath.string().c_str(), NULL));
+    EXPECT_EQ(loot_ok, loot_write_minimal_list(db, outputFile.c_str(), false));
+
+    loot::ifstream in(outputFile);
+    std::string line;
+    while (std::getline(in, line)) {
+        EXPECT_FALSE(boost::contains(line, "- \"-\""));
+    }
+    in.close();
 }
 #endif

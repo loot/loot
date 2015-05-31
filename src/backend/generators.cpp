@@ -125,7 +125,7 @@ namespace YAML {
             if (rhs.IsAddition())
                 out << rhs.Name();
             else
-                out << '-' << rhs.Name();
+                out << ('-' + rhs.Name());
         }
         else {
             out << BeginMap;
