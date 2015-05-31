@@ -2,511 +2,326 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BOSS v3.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-26 11:41-0000\n"
-"PO-Revision-Date: 2014-05-19 19:39+0100\n"
+"POT-Creation-Date: 2015-02-09 21:40-0000\n"
+"PO-Revision-Date: 2015-05-31 01:28+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.6.5\n"
+"X-Generator: Poedit 1.7.4\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
-#: backend/game.cpp:96
+#: src/backend/game.cpp:347
 msgid "Invalid game ID supplied."
 msgstr "ID du jeu fournie incorrecte."
 
-#: backend/game.cpp:147
+#: src/backend/game.cpp:371
 msgid "Game path could not be detected."
 msgstr "Le chemin du jeu n'a pas pu être trouvé. "
 
-#: backend/game.cpp:248 backend/game.cpp:308 backend/game.cpp:363
+#: src/backend/game.cpp:489
+msgid ""
+"libloadorder failed to create a game handle. Details could not be fetched."
+msgstr ""
+"libloadorder n'est pas parvenu à créer une poignée du jeu. Les détails ne "
+"peuvent pas être récupérés."
+
+#: src/backend/game.cpp:493
 msgid "libloadorder failed to create a game handle. Details:"
 msgstr "libloadorder n'est pas parvenu à créer une poignée du jeu. Détails :"
 
-#: backend/game.cpp:260 backend/game.cpp:320 backend/game.cpp:374
+#: src/backend/game.cpp:510
+msgid ""
+"libloadorder failed to initialise game master file support. Details could "
+"not be fetched."
+msgstr ""
+"libloadorder a échoué dans l'initialisation du support de fichier maître du "
+"jeu. Les détails ne peuvent pas être récupérés."
+
+#: src/backend/game.cpp:514
 msgid "libloadorder failed to initialise game master file support. Details:"
 msgstr ""
 "libloadorder a échoué dans l'initialisation du support de fichier maître du "
 "jeu. Détails :"
 
-#: backend/game.cpp:270
+#: src/backend/game.cpp:534
+msgid ""
+"libloadorder failed to get the active plugins list. Details could not be "
+"fetched."
+msgstr ""
+"libloadorer n'a pas pu obtenir la liste des plugins actifs. Les détails ne "
+"peuvent pas être récupérés."
+
+#: src/backend/game.cpp:538
 msgid "libloadorder failed to get the active plugins list. Details:"
 msgstr "libloadorer n'a pas pu obtenir la liste des plugins actifs. Détails :"
 
-#: backend/game.cpp:330 backend/game.cpp:396
+#: src/backend/game.cpp:567
+msgid ""
+"libloadorder failed to get the load order. Details could not be fetched."
+msgstr ""
+
+#: src/backend/game.cpp:571
+msgid "libloadorder failed to get the load order. Details:"
+msgstr ""
+
+#: src/backend/game.cpp:593
+msgid ""
+"libloadorder failed to set the load order. Details could not be fetched."
+msgstr ""
+"libloadorder n'a pas pu définir l'ordre de chargement. Les détails ne "
+"peuvent pas être récupérés."
+
+#: src/backend/game.cpp:597
 msgid "libloadorder failed to set the load order. Details:"
 msgstr "libloadorder n'a pas pu définir l'ordre de chargement. Détails :"
 
-#: backend/game.cpp:415
-msgid "Could not create BOSS folder for game. Details:"
-msgstr "Impossible de créer le dossier de LOOT pour ce jeu. Détails :"
+#: src/backend/game.cpp:701
+msgid "An exception occurred while loading this plugin. Details: "
+msgstr ""
 
-#: backend/graph.cpp:46
-msgid "Cyclic interaction detected between plugins \"%1%\" and \"%2%\"."
-msgstr "Interaction cyclique détectée entre les plugins \"%1%\" et \"%2%\"."
+#: src/backend/game.cpp:719
+msgid "An exception occurred while loading this plugin. Details:"
+msgstr ""
 
-#: backend/helpers.cpp:140
-msgid "Unable to open \"%1%\" for CRC calculation."
-msgstr "Impossible d'ouvrir \"%1%\" pour le calcul du CRC. "
+#: src/backend/game.cpp:779
+msgid "Could not create LOOT folder for game. Details:"
+msgstr ""
 
-#: backend/helpers.cpp:302
-msgid "Could not create pipe for process."
-msgstr "Impossible de créer le tube pour le processus."
+#: src/backend/game.cpp:787
+msgid "Building plugin graph..."
+msgstr ""
 
-#: backend/helpers.cpp:335
-msgid "Could not create process."
-msgstr "Impossible de créer le processus."
+#: src/backend/game.cpp:813 src/gui/handler.cpp:963
+msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
+msgstr ""
+"\"%1%\" contient une condition qui n'a pas pu être évaluée. Détails : %2%"
 
-#: backend/helpers.cpp:346
-msgid "Could not get process exit code."
-msgstr "Impossible d'obtenir le code pour arrêter le processus. "
+#: src/backend/game.cpp:822
+msgid "Adding edges to plugin graph and performing topological sort..."
+msgstr ""
 
-#: backend/helpers.cpp:353
-msgid "Could not read process output."
-msgstr "Impossible de lire la sortie du processus. "
-
-#: backend/metadata.cpp:142
-msgid "Failed to parse condition \"%1%\": %2%"
-msgstr "Échec de l'analyse de la condition \"%1%\": %2%"
-
-#: backend/metadata.cpp:147
-msgid "Failed to parse condition \"%1%\"."
-msgstr "Échec de l'analyse de la condition \"%1%\"."
-
-#: backend/network.cpp:75
+#: src/backend/git.cpp:132
 msgid "Git operation failed. Error: %1%"
 msgstr "L'opération d'obtention a échoué. Erreur : %1%"
 
-#: backend/network.cpp:338
+#: src/backend/git.cpp:179
+msgid "Object memory already allocated!"
+msgstr ""
+
+#: src/backend/git.cpp:183
+msgid "Tree memory already allocated!"
+msgstr ""
+
+#: src/backend/git.cpp:187
+msgid "Diff memory already allocated!"
+msgstr ""
+
+#: src/backend/git.cpp:191
+msgid "Repository handle not open!"
+msgstr ""
+
+#: src/backend/git.cpp:222
+msgid ""
+"An error occurred while trying to read the local masterlist's version. If "
+"this error happens again, try deleting the \".git\" folder in %1%."
+msgstr ""
+
+#: src/backend/git.cpp:226
+msgid "Unknown: Git repository missing"
+msgstr ""
+
+#: src/backend/git.cpp:230
+msgid "N/A: No masterlist present"
+msgstr ""
+
+#: src/backend/git.cpp:265 src/backend/git.cpp:266
+msgid "(edited)"
+msgstr "(modifié)"
+
+#: src/backend/git.cpp:295
+msgid ""
+"An error occurred while trying to clone the remote masterlist repository."
+msgstr ""
+
+#: src/backend/git.cpp:347 src/backend/git.cpp:380
+msgid ""
+"An error occurred while trying to access the local masterlist repository. If "
+"this error happens again, try deleting the \".git\" folder in %1%."
+msgstr ""
+
+#: src/backend/git.cpp:371
+msgid ""
+"An error occurred while trying to update the masterlist. This could be due "
+"to a server-side error. Try again in a few minutes."
+msgstr ""
+
+#: src/backend/git.cpp:514
+msgid ""
+"An error occurred while trying to read information on the updated "
+"masterlist. If this error happens again, try deleting the \".git\" folder in "
+"%1%."
+msgstr ""
+
+#: src/backend/git.cpp:584
 msgid "Masterlist revision"
 msgstr "Révision de la masterlist"
 
-#: gui/editor.cpp:37
-msgid "Note"
-msgstr "Note"
+#: src/backend/git.cpp:584
+msgid "Rolled back to the previous revision."
+msgstr "Revenir à la révision précédente."
 
-#: gui/editor.cpp:38
-msgid "Warning"
-msgstr "Avertissement"
-
-#: gui/editor.cpp:39
-msgid "Error"
-msgstr "Erreur"
-
-#: gui/editor.cpp:43
-msgid "Add"
-msgstr "Ajouter"
-
-#: gui/editor.cpp:44
-msgid "Remove"
-msgstr "Retirer"
-
-#: gui/editor.cpp:48
-msgid "Type"
+#: src/backend/graph.cpp:77
+msgid ""
+"Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: "
+"%3%"
 msgstr ""
 
-#: gui/editor.cpp:49
-msgid "Content"
-msgstr "Contenu"
+#: src/backend/helpers.cpp:153
+msgid "Unable to open \"%1%\" for CRC calculation."
+msgstr "Impossible d'ouvrir \"%1%\" pour le calcul du CRC. "
 
-#: gui/editor.cpp:50 gui/editor.cpp:155 gui/editor.cpp:159 gui/editor.cpp:163
-#: gui/editor.cpp:167
-msgid "Condition"
+#: src/backend/metadata.cpp:146 src/backend/metadata.cpp:178
+msgid "Failed to parse condition \"%1%\": %2%"
+msgstr "Échec de l'analyse de la condition \"%1%\": %2%"
+
+#: src/backend/metadata.cpp:151 src/backend/metadata.cpp:183
+msgid "Failed to parse condition \"%1%\"."
+msgstr "Échec de l'analyse de la condition \"%1%\"."
+
+#: src/backend/metadata.cpp:457
+msgid "Cannot read \"%1%\". Details: %2%"
+msgstr "Impossible de charger  \"%1%\". Détails : %2%"
+
+#: src/backend/metadata.cpp:883 src/backend/metadata.cpp:894
+msgid "This plugin requires \"%1%\" to be installed, but it is missing."
 msgstr ""
 
-#: gui/editor.cpp:51 gui/editor.cpp:990
-msgid "Language"
-msgstr "Langue"
-
-#: gui/editor.cpp:125
-msgid "Enable User Changes"
-msgstr "Activer les modifications de l'utilisateurs"
-
-#: gui/editor.cpp:127 gui/editor.cpp:375
-msgid "Add File"
-msgstr "Ajouter un fichier"
-
-#: gui/editor.cpp:128 gui/editor.cpp:376
-msgid "Edit File"
-msgstr "Éditer un fichier"
-
-#: gui/editor.cpp:129 gui/editor.cpp:377
-msgid "Remove File"
-msgstr "Retirer un fichier"
-
-#: gui/editor.cpp:130
-msgid "Save Changes"
-msgstr "Sauvegarder les modifications"
-
-#: gui/editor.cpp:131
-msgid "Cancel"
-msgstr "Annuler"
-
-#: gui/editor.cpp:132
-msgid "Copy Metadata As Text"
-msgstr "Copier les métadonnées comme du texte "
-
-#: gui/editor.cpp:143
-msgid "Requirements"
-msgstr "Requis"
-
-#: gui/editor.cpp:144
-msgid "Incompatibilities"
-msgstr "Incompatibilités"
-
-#: gui/editor.cpp:145
-msgid "Load After"
-msgstr "Charger après"
-
-#: gui/editor.cpp:146
-msgid "Messages"
+#: src/backend/metadata.cpp:887
+msgid "This plugin requires \"%1%\" to be active, but it is inactive."
 msgstr ""
 
-#: gui/editor.cpp:147
-msgid "Bash Tags"
-msgstr "Étiquettes du bash"
-
-#: gui/editor.cpp:148
-msgid "Dirty Info"
-msgstr "Infos sur les entrées sales"
-
-#: gui/editor.cpp:151
-msgid "Plugins"
-msgstr "Plugins"
-
-#: gui/editor.cpp:153 gui/editor.cpp:157 gui/editor.cpp:161
-msgid "Filename"
-msgstr "Nom du fichier"
-
-#: gui/editor.cpp:154 gui/editor.cpp:158 gui/editor.cpp:162
-msgid "Display Name"
-msgstr "Afficher le nom"
-
-#: gui/editor.cpp:165
-msgid "Add/Remove"
-msgstr "Ajouter/Retirer"
-
-#: gui/editor.cpp:166
-msgid "Bash Tag"
-msgstr "Étiquette du bash"
-
-#: gui/editor.cpp:169
-msgid "CRC"
+#: src/backend/metadata.cpp:902
+msgid "This plugin is incompatible with \"%1%\", but both are present."
 msgstr ""
 
-#: gui/editor.cpp:170
-msgid "ITM Count"
-msgstr "Énumération des ITM "
+#: src/backend/metadata.cpp:911
+msgid ""
+"Contains %1% ITM records, %2% deleted references and %3% deleted navmeshes. "
+"Clean with %4%."
+msgstr ""
+"Contient %1% enregistrements d'ITM, %2% références supprimées et %3% "
+"navmeshes supprimés. Nettoyez-les avec %4%. "
 
-#: gui/editor.cpp:171
-msgid "UDR Count"
-msgstr "Énumération des UDR"
+#: src/backend/metadata.cpp:913
+msgid "Clean with %1%."
+msgstr "Nettoyez avec %1%. "
 
-#: gui/editor.cpp:172
-msgid "Deleted Navmesh Count"
-msgstr "Énumération des Navmesh supprimés"
+#: src/backend/metadata.cpp:916
+msgid ""
+"Contains %1% deleted references and %2% deleted navmeshes. Clean with %3%."
+msgstr ""
+"Contient %1% références supprimées et %2% navmeshes supprimés. Nettoyez-les "
+"avec %3%. "
 
-#: gui/editor.cpp:173
-msgid "Cleaning Utility"
-msgstr "Utilitaire de nettoyage"
+#: src/backend/metadata.cpp:918
+msgid "Contains %1% deleted navmeshes. Clean with %2%."
+msgstr "Contient %1% navmeshes supprimés. Nettoyez-les avec %2%. "
 
-#: gui/editor.cpp:217
-msgid "Priority: "
-msgstr "Priorité :"
+#: src/backend/metadata.cpp:920
+msgid "Contains %1% deleted references. Clean with %2%."
+msgstr "Contient %1% références supprimées. Nettoyez-les avec %2%."
 
-#: gui/editor.cpp:379
-msgid "Add Plugin"
-msgstr "Ajouter un plugin"
+#: src/backend/metadata.cpp:923
+msgid "Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%."
+msgstr ""
+"Contient %1% enregistrements d'ITM, %2% navmeshes supprimés. Nettoyez-les "
+"avec %3%. "
 
-#: gui/editor.cpp:380
-msgid "Edit Plugin"
-msgstr "Éditer un plugin"
+#: src/backend/metadata.cpp:925
+msgid "Contains %1% ITM records. Clean with %2%."
+msgstr "Contient %1% enregistrements d'ITM. Nettoyez-les avec %2%. "
 
-#: gui/editor.cpp:381
-msgid "Remove Plugin"
-msgstr "Retirer un plugin"
+#: src/backend/metadata.cpp:928
+msgid "Contains %1% ITM records and %2% deleted references. Clean with %3%."
+msgstr ""
+"Contient %1% enregistrements d'ITM, %2% références supprimées. Nettoyez-les "
+"avec %3%."
 
-#: gui/editor.cpp:383
-msgid "Add Message"
-msgstr "Ajouter un message"
+#: src/gui/app.cpp:170
+msgid "Error: Could not create LOOT settings file. %1%"
+msgstr ""
 
-#: gui/editor.cpp:384
-msgid "Edit Message"
-msgstr "Éditer un message"
-
-#: gui/editor.cpp:385
-msgid "Remove Message"
-msgstr "Retirer un message"
-
-#: gui/editor.cpp:387
-msgid "Add Bash Tag"
-msgstr "Ajouter une étiquette"
-
-#: gui/editor.cpp:388
-msgid "Edit Bash Tag"
-msgstr "Éditer l'étiquette"
-
-#: gui/editor.cpp:389
-msgid "Remove Bash Tag"
-msgstr "Retirer l'étiquette"
-
-#: gui/editor.cpp:391
-msgid "Add Dirty Info"
-msgstr "Ajouter une information sur les entrée sales"
-
-#: gui/editor.cpp:392
-msgid "Edit Dirty Info"
-msgstr "Éditer les informations sur les entrées sales"
-
-#: gui/editor.cpp:393
-msgid "Remove Dirty Info"
-msgstr "Retirer l'information sur les entrées sales "
-
-#: gui/editor.cpp:411
-msgid "BOSS: Add File/Plugin"
-msgstr "LOOT : Ajouter un fichier / plugin"
-
-#: gui/editor.cpp:433
-msgid "BOSS: Add Message"
-msgstr "LOOT : Ajouter un message"
-
-#: gui/editor.cpp:443
-msgid "Error: No content specified. Row will not be added."
-msgstr "Erreur : Aucun contenu spécifié. Rien ne sera ajouté. "
-
-#: gui/editor.cpp:444 gui/editor.cpp:526 gui/editor.cpp:1122
-#: gui/editor.cpp:1137 gui/main.cpp:164 gui/main.cpp:181 gui/main.cpp:194
-#: gui/main.cpp:273 gui/main.cpp:283 gui/main.cpp:296 gui/main.cpp:304
-#: gui/main.cpp:335 gui/main.cpp:352 gui/main.cpp:820 gui/main.cpp:873
-#: gui/main.cpp:893 gui/main.cpp:972 gui/main.cpp:1009 gui/main.cpp:1040
-#: gui/main.cpp:1060 gui/main.cpp:1075 gui/main.cpp:1182 gui/main.cpp:1227
-#: gui/settings.cpp:287 gui/settings.cpp:299 gui/settings.cpp:307
-#: gui/settings.cpp:350 gui/settings.cpp:358 gui/settings.cpp:366
-msgid "BOSS: Error"
-msgstr "Erreur de LOOT "
-
-#: gui/editor.cpp:454
-msgid "BOSS: Add Tag"
-msgstr "LOOT : Ajouter une étiquette"
-
-#: gui/editor.cpp:468
-msgid "BOSS: Add Dirty Info"
-msgstr "LOOT : Ajouter des informations sur les entrées sales"
-
-#: gui/editor.cpp:487
-msgid "BOSS: Edit File/Plugin"
-msgstr "LOOT : Éditer le fichier / plugin"
-
-#: gui/editor.cpp:511
-msgid "BOSS: Edit Message"
-msgstr "LOOT : Éditer le message"
-
-#: gui/editor.cpp:525
-msgid "Error: No content specified. Row will not be edited."
-msgstr "Erreur : Aucun contenu spécifié. Rien ne sera modifié. "
-
-#: gui/editor.cpp:535
-msgid "BOSS: Edit Tag"
-msgstr "LOOT : Édition des étiquettes"
-
-#: gui/editor.cpp:557
-msgid "BOSS: Edit Dirty Info"
-msgstr "LOOT : Édition des informations sur entrées sales"
-
-#: gui/editor.cpp:932
-msgid "Filename (required):"
-msgstr "Nom du fichier (requis) :"
-
-#: gui/editor.cpp:935
-msgid "Displayed Name:"
-msgstr "Nom affiché :"
-
-#: gui/editor.cpp:938 gui/editor.cpp:1016 gui/editor.cpp:1172
-msgid "Condition:"
-msgstr "Condition :"
-
-#: gui/editor.cpp:986
-msgid "Add Content"
-msgstr "Ajouter du contenu"
-
-#: gui/editor.cpp:987
-msgid "Edit Content"
-msgstr "Éditer du contenu"
-
-#: gui/editor.cpp:988
-msgid "Remove Content"
-msgstr "Retirer du contenu"
-
-#: gui/editor.cpp:991
-msgid "String"
-msgstr "String"
-
-#: gui/editor.cpp:1013 gui/settings.cpp:425
-msgid "Type:"
-msgstr "Type :"
-
-#: gui/editor.cpp:1028 gui/settings.cpp:101
-msgid "Language:"
-msgstr "Langue :"
-
-#: gui/editor.cpp:1031
-msgid "Content:"
-msgstr "Contenu :"
-
-#: gui/editor.cpp:1121 gui/editor.cpp:1136
-msgid "Error: No content row selected."
-msgstr "Erreur : Aucun contenu sélectionné. "
-
-#: gui/editor.cpp:1166
-msgid "Add/Remove:"
-msgstr "Ajouter/Retirer :"
-
-#: gui/editor.cpp:1169 gui/settings.cpp:422
-msgid "Name (required):"
-msgstr "Nom (requis) :"
-
-#: gui/editor.cpp:1234
-msgid "CRC (required):"
-msgstr "CRC (requis) :"
-
-#: gui/editor.cpp:1237
-msgid "ITM Count:"
-msgstr "Énumération des ITM :"
-
-#: gui/editor.cpp:1240
-msgid "UDR Count:"
-msgstr "Énumération des UDR :"
-
-#: gui/editor.cpp:1243
-msgid "Deleted Navmesh Count:"
-msgstr "Énumération des Navmesh supprimés :"
-
-#: gui/editor.cpp:1246
-msgid "Cleaning Utility (required):"
-msgstr "Utilitaire de nettoyage (requis) :"
-
-#: gui/ids.cpp:31
-msgid "None Specified"
-msgstr "Non spécifié"
-
-#: gui/main.cpp:118
-msgid "Masterlist update failed. Details: %1%"
-msgstr "Le fichier masterlist n'a pas pu être actualisé. Détails: %1%"
-
-#: gui/main.cpp:134
-msgid "Masterlist parsing failed. Details: %1%"
-msgstr "L'analyse de la masterlist a échoué. Détails : %1%"
-
-#: gui/main.cpp:142
-msgid "Unknown"
-msgstr "Inconnu"
-
-#: gui/main.cpp:144
-msgid "No masterlist"
-msgstr "Pas de masterlist"
-
-# Version est assez étrange comme formulation.
-#: gui/main.cpp:163
-msgid "Error: BOSS is already running. This instance will now quit."
-msgstr "Erreur : LOOT est déjà lancé. Cette version va maintenant s'arrêter. "
-
-#: gui/main.cpp:180
-msgid "Error: Could not create local app data BOSS folder."
-msgstr "Erreur : Impossible de créer le dossier local app data LOOT."
-
-#: gui/main.cpp:193
+#: src/gui/app.cpp:180
 msgid "Error: Settings parsing failed. %1%"
 msgstr "Erreur : Les paramètres d'analyse ont échoué. %1%"
 
-#: gui/main.cpp:272
-msgid "Error: Could not apply translation."
-msgstr "Erreur : Impossible d'appliquer la traduction."
+#: src/gui/app.cpp:245
+msgid "Error: Games' settings parsing failed. %1%"
+msgstr "Erreur : Les paramètres d'analyse du jeu ont échoué. %1%"
 
-#: gui/main.cpp:282
-msgid "Error: The selected language is not available on this system."
-msgstr "Erreur : La langue sélectionnée n'est pas disponible sur ce système. "
-
-#: gui/main.cpp:295 gui/main.cpp:351 gui/main.cpp:1039
+#: src/gui/app.cpp:265
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr ""
 "Erreur : Les paramètres spécifiques du jeu ne peuvent pas être initialisés. "
 "%1%"
 
-#: gui/main.cpp:303
-msgid "Error: Games' settings parsing failed. %1%"
-msgstr "Erreur : Les paramètres d'analyse du jeu ont échoué. %1%"
+#: src/gui/app.cpp:406
+msgid "None of the supported games were detected."
+msgstr ""
 
-#: gui/main.cpp:334
-msgid "Error: None of the supported games were detected."
-msgstr "Erreur : Aucun des jeux pris en charge n'a été détecté. "
+#: src/gui/handler.cpp:216 src/gui/handler.cpp:220
+msgid "Failed to change game. Details: %1%"
+msgstr ""
 
-#: gui/main.cpp:379
-msgid "Edit Metadata"
-msgstr "Éditer les métadonnées"
+#: src/gui/handler.cpp:237 src/gui/handler.cpp:241 src/gui/handler.cpp:318
+#: src/gui/handler.cpp:322
+msgid "Failed to copy plugin metadata. Details: %1%"
+msgstr ""
 
-#: gui/main.cpp:380
-msgid "Sort Plugins"
-msgstr "Trier les plugins"
+#: src/gui/handler.cpp:337 src/gui/handler.cpp:902
+msgid "Loading plugin contents..."
+msgstr ""
 
-#: gui/main.cpp:381
-msgid "View Last Report"
-msgstr "Voir le dernier rapport"
+#: src/gui/handler.cpp:341
+msgid "Checking for conflicting plugins..."
+msgstr ""
 
-#: gui/main.cpp:385
-msgid "&View Last Report"
-msgstr "&Voir le dernier rapport"
+#: src/gui/handler.cpp:511 src/gui/handler.cpp:519
+msgid "Shell execute failed."
+msgstr ""
 
-#: gui/main.cpp:386
-msgid "View &Debug Log"
-msgstr "Voir le &journal débogage"
+#: src/gui/handler.cpp:576
+msgid "Loading plugin headers..."
+msgstr ""
 
-#: gui/main.cpp:387
-msgid "&Sort Plugins"
-msgstr "&Trier les plugins"
+#: src/gui/handler.cpp:602
+msgid "Parsing masterlist..."
+msgstr ""
 
-#: gui/main.cpp:388
-msgid "&Redate Plugins"
-msgstr "&Redater les plugins"
+#: src/gui/handler.cpp:608
+msgid "An error occurred while parsing the masterlist: %1%"
+msgstr ""
 
-#: gui/main.cpp:391
-msgid "&File"
-msgstr "&Fichier"
+#: src/gui/handler.cpp:614
+msgid "Parsing userlist..."
+msgstr ""
 
-#: gui/main.cpp:393
-msgid "&Metadata..."
-msgstr "&Métadonnées"
+#: src/gui/handler.cpp:620
+msgid "An error occurred while parsing the userlist: %1%"
+msgstr ""
 
-#: gui/main.cpp:394
-msgid "&Settings..."
-msgstr "&Paramètres"
+#: src/gui/handler.cpp:645
+msgid "Merging and evaluating plugin metadata..."
+msgstr ""
 
-#: gui/main.cpp:395
-msgid "&Edit"
-msgstr "&Éditer"
+#: src/gui/handler.cpp:710
+msgid "Loading general messages..."
+msgstr ""
 
-#: gui/main.cpp:407
-msgid "&Game"
-msgstr "&Jeu"
-
-#: gui/main.cpp:412
-msgid "&Help"
-msgstr "&Aide"
-
-#: gui/main.cpp:496 gui/main.cpp:851
-msgid "BOSS: Working..."
-msgstr "LOOT : En cours"
-
-#: gui/main.cpp:496 gui/main.cpp:851
-msgid "BOSS working..."
-msgstr "LOOT en cours..."
-
-#: gui/main.cpp:547
-msgid "Userlist parsing failed. Details: %1%"
-msgstr "L'analyse de l'userlist a échoué. Détails : 1%1"
-
-#: gui/main.cpp:584
+#: src/gui/handler.cpp:734 src/gui/handler.cpp:840
 msgid ""
 "A global message contains a condition that could not be evaluated. Details: "
 "%1%"
@@ -514,64 +329,68 @@ msgstr ""
 "Un message global contient une condition qui n'a pas pu être évaluée. "
 "Détails : %1%"
 
-#: gui/main.cpp:615
-msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
+#: src/gui/handler.cpp:744 src/gui/handler.cpp:748
+msgid "Failed to get game data. Details: %1%"
 msgstr ""
-"\"%1%\" contient une condition qui n'a pas pu être évaluée. Détails : %2%"
 
-#: gui/main.cpp:627
-msgid "\"%1%\" is incompatible with \"%2%\" and is present."
-msgstr "\"%1%\" est incompatible avec \"%2%\" et est présent."
-
-#: gui/main.cpp:630
-msgid "\"%1%\" is required by \"%2%\" but is missing."
-msgstr "\"%1%\" est requis par \"%2%\" mais est manquant."
-
-#: gui/main.cpp:670
-msgid "Failed to generate graph image. Details: %1%"
-msgstr "Impossible de générer l'image graphique. Détails : %1%"
-
-#: gui/main.cpp:687
-msgid "BOSS: Calculated Load Order"
-msgstr "LOOT : Ordre de chargement défini"
-
-#: gui/main.cpp:765
-msgid "Failed to set the load order. Details: %1%"
-msgstr "Impossible de définir l'ordre de chargement. Détails : %1%"
-
-#: gui/main.cpp:769
-msgid ""
-"The load order displayed in the Details tab was not applied as sorting was "
-"canceled."
+#: src/gui/handler.cpp:767
+msgid "Updating and parsing masterlist..."
 msgstr ""
-"L'ordre de chargement affiché dans l'onglet Détails n'a pas été appliqué car "
-"le tri a été annulé. "
 
-#: gui/main.cpp:778
-msgid "Failed to calculate the load order. Details: %1%"
-msgstr "Impossible de définir l'ordre de chargement. Détails : %1%"
+#: src/gui/handler.cpp:783
+msgid "Regenerating displayed content..."
+msgstr ""
 
-#: gui/main.cpp:819
-msgid "Error: %1%"
-msgstr "Erreur : %1%"
+#: src/gui/handler.cpp:853 src/gui/handler.cpp:857
+msgid "Failed to update the masterlist. Details: %1%"
+msgstr "Impossible de mettre à jour la masterlist. Détails : %1%"
 
-#: gui/main.cpp:839 gui/main.cpp:954
-msgid "BOSS: Report Viewer"
-msgstr "LOOT : Visualiser le rapport"
+#: src/gui/handler.cpp:936
+msgid "Failed to sort plugins. Details: %1%"
+msgstr "Impossible de trier les plugins. Détails : %1%"
 
-#: gui/main.cpp:872
-msgid "Error: Masterlist parsing failed. %1%"
-msgstr "Erreur : l'analyse de la masterlist a échoué. 1%1"
+#: src/backend/parsers.h:553 src/backend/parsers.h:645
+msgid "Invalid file path:"
+msgstr "Chemin du fichier invalide :"
 
-#: gui/main.cpp:892
-msgid "Error: Userlist parsing failed. %1%"
-msgstr "Erreur : l'analyse de l'userlist a échoué. 1%1"
+#: src/backend/parsers.h:607
+msgid "Invalid folder path:"
+msgstr "Chemin du dossier invalide :"
 
-#: gui/main.cpp:939
-msgid "BOSS: Metadata Editor"
-msgstr "LOOT : Éditeur de métadonnées"
+#: src/backend/parsers.h:625
+msgid "Invalid regex string:"
+msgstr "Regex string invalide :"
 
-#: gui/main.cpp:961
+#: src/backend/parsers.h:727
+msgid "Expected \"%1%\" at \"%2%\"."
+msgstr "Prévu \"%1%\" à \"%2%\"."
+
+#: resources/report/js/events.js:19
+msgid "Loading game data..."
+msgstr "Chargement des données du jeu..."
+
+#: resources/report/js/events.js:89
+#, javascript-format
+msgid "Masterlist updated to revision %s."
+msgstr "Masterlist mise à jour vers la révision %s."
+
+#: resources/report/js/events.js:91
+msgid "No masterlist update was necessary."
+msgstr "La mise à jour de la masterlist n'est pas nécessaire."
+
+#: resources/report/js/events.js:96
+msgid "Updating masterlist..."
+msgstr "Mise à jour de la masterlist..."
+
+#: resources/report/js/events.js:111
+msgid "Sorting plugins..."
+msgstr "Tri des plugins..."
+
+#: resources/report/js/events.js:213
+msgid "Redate Plugins?"
+msgstr "Redater les plugins ?"
+
+#: resources/report/js/events.js:213
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
@@ -582,399 +401,1081 @@ msgstr ""
 "secondaire est que les mods choisis sur le Steam Workshop seront "
 "retéléchargés par Steam. Voulez-vous continuer ? "
 
-#: gui/main.cpp:961
-msgid "BOSS: Warning"
-msgstr "LOOT : Avertissement"
+#: resources/report/js/events.js:213
+msgid "Redate"
+msgstr "Redater"
 
-#: gui/main.cpp:971
-msgid "Error: Failed to get load order. %1%"
-msgstr "Erreur : Impossible d'obtenir l'ordre de chargement. %1%"
-
-#: gui/main.cpp:1008
-msgid "Error: Failed to set plugin timestamps. %1%"
-msgstr "Erreur : Impossible de définir l'horodatage du plugin. %1%"
-
-#: gui/main.cpp:1015
-msgid "Plugins were successfully redated."
-msgstr "Les plugins ont été redaté avec succès. "
-
-#: gui/main.cpp:1016
-msgid "BOSS: Plugin Redate"
-msgstr "LOOT : Redater le plug-in"
-
-#: gui/main.cpp:1024
-msgid "BOSS: Settings"
-msgstr "LOOT : Configuration"
-
-#: gui/main.cpp:1059 gui/main.cpp:1074
-msgid "Error: \"%1%\" cannot be found."
-msgstr "Erreur: \"%1%\" n'a pas être trouvé."
-
-#: gui/main.cpp:1086
+#: resources/report/js/events.js:222
 msgid ""
-"A load order optimisation tool for games using the Elder Scrolls Plugin/"
-"Master system."
+"Are you sure you want to clear all existing user-added metadata from all "
+"plugins?"
 msgstr ""
-"Un outil d'optimisation de l'ordre de chargement pour les jeux qui utilisent "
-"le système des Elder Scrols plugin/master."
 
-#: gui/main.cpp:1110
-msgid "Up"
-msgstr "Monter"
+#: resources/report/js/events.js:222 resources/report/js/events.js:514
+msgid "Clear"
+msgstr "Confirmer"
 
-#: gui/main.cpp:1111
-msgid "Down"
-msgstr "Descendre"
+#: resources/report/js/events.js:243
+msgid "All user-added metadata has been cleared."
+msgstr ""
 
-#: gui/main.cpp:1114
-msgid "Load Order"
-msgstr "Ordre de chargement"
+#: resources/report/js/events.js:300
+msgid "LOOT's content has been copied to the clipboard."
+msgstr ""
 
-#: gui/main.cpp:1136
+#: resources/report/js/events.js:510
+#, javascript-format
+msgid "The metadata for \"%s\" has been copied to the clipboard."
+msgstr ""
+
+#: resources/report/js/events.js:514
+#, javascript-format
 msgid ""
-"Please submit any alterations made for reasons other than user preference \n"
-"to the BOSS team so that they may include the changes in the masterlist."
+"Are you sure you want to clear all existing user-added metadata from \"%s\"?"
 msgstr ""
-"Veuillez soumettre les modifications apportées pour des raisons autres que "
-"la préfèrence de l'utilisateur \n"
-" à l'équipe de LOOT afin qu'elle puisse inclure les changements dans la "
-"masterlist. "
 
-#: gui/main.cpp:1181 gui/main.cpp:1226
-msgid "Error: Cannot load \"%1%\" before \"%2%\"."
-msgstr "Erreur : Impossible de charger \"%1%\" avant \"%2%\"."
+#: resources/report/js/events.js:539
+#, javascript-format
+msgid "The user-added metadata for \"%s\" has been cleared."
+msgstr ""
 
-#: gui/settings.cpp:40
-msgid "None"
-msgstr "Aucun"
+#: resources/report/js/events.js:559
+msgid "sorted load order"
+msgstr ""
 
-#: gui/settings.cpp:41
-msgid "Low"
-msgstr "Bas"
+#: resources/report/js/events.js:561
+msgid "metadata edits"
+msgstr ""
 
-#: gui/settings.cpp:42
-msgid "Medium"
-msgstr "Moyen"
+#: resources/report/js/events.js:572
+msgid "Refreshing data..."
+msgstr "Actualisation des données..."
 
-#: gui/settings.cpp:43
-msgid "High"
-msgstr "Haut"
+#: resources/report/js/filters.js:121
+msgid "Do not clean"
+msgstr "Ne pas nettoyer"
 
-#: gui/settings.cpp:47
-msgid "Autodetect"
-msgstr "Détection automatique"
+#: resources/report/js/filters.js:160
+msgid "Checking if plugins have been loaded..."
+msgstr ""
 
-#: gui/settings.cpp:59
-msgid "Add Game"
-msgstr "Ajout d'un jeu"
+#: resources/report/js/helpers.js:7 resources/report/js/l10n.js:162
+msgid "Error"
+msgstr "Erreur"
 
-#: gui/settings.cpp:60
-msgid "Edit Game"
-msgstr "Éditer un jeu"
+#: resources/report/js/helpers.js:27 resources/report/js/l10n.js:130
+#: resources/report/js/l10n.js:227 resources/report/js/l10n.js:301
+msgid "Cancel"
+msgstr "Annuler"
 
-#: gui/settings.cpp:61
-msgid "Remove Game"
-msgstr "Retirer un jeu"
+#: resources/report/js/helpers.js:33 resources/report/js/l10n.js:313
+msgid "OK"
+msgstr "OK"
 
-#: gui/settings.cpp:63
-msgid "Update masterlist before sorting."
-msgstr "Mise à jour de la masterlist avant le tri. "
+#: resources/report/js/helpers.js:54
+#, javascript-format
+msgid ""
+"You have not yet applied or cancelled your %s. Are you sure you want to quit?"
+msgstr ""
 
-#: gui/settings.cpp:64
-msgid "View reports externally in default browser."
-msgstr "Afficher les rapports externes dans le navigateur par défaut. "
+#: resources/report/js/helpers.js:54 resources/report/js/l10n.js:238
+msgid "Quit"
+msgstr "Quitter"
 
-#: gui/settings.cpp:65
-msgid "Generate and display plugin graph images."
-msgstr "Générer et afficher une image graphique des plugins. "
+#: resources/report/js/init.js:38
+msgid "unknown"
+msgstr "inconnu"
 
-#: gui/settings.cpp:68
-msgid "Name"
-msgstr "Nom"
+#: resources/report/js/l10n.js:61 resources/report/js/l10n.js:80
+msgid "Active Plugin"
+msgstr "Plugin actif"
 
-#: gui/settings.cpp:69
-msgid "Base Game Type"
-msgstr "Type du jeu de base"
-
-#: gui/settings.cpp:70
-msgid "BOSS Folder Name"
-msgstr "Nom du dossier de LOOT"
-
-#: gui/settings.cpp:71
+#: resources/report/js/l10n.js:62 resources/report/js/l10n.js:81
+#: resources/report/js/l10n.js:290
 msgid "Master File"
 msgstr "Fichier maître"
 
-#: gui/settings.cpp:72
-msgid "Online Masterlist URL"
-msgstr "URL de la masterlist en ligne. "
+#: resources/report/js/l10n.js:63 resources/report/js/l10n.js:82
+msgid "Empty Plugin"
+msgstr "Plugin vide"
 
-#: gui/settings.cpp:73
-msgid "Install Path"
-msgstr "Chemin d'installation"
+#: resources/report/js/l10n.js:64 resources/report/js/l10n.js:83
+msgid "Loads BSA"
+msgstr "Charger les BSA"
 
-#: gui/settings.cpp:74
-msgid "Install Path Registry Key"
-msgstr "Clé du registre du chemin d'installation. "
+#: resources/report/js/l10n.js:65 resources/report/js/l10n.js:140
+msgid "Has User Metadata"
+msgstr "A des métadonnées utilisateur"
 
-#: gui/settings.cpp:98
-msgid "Default Game:"
-msgstr "Jeu par défaut :"
+#: resources/report/js/l10n.js:67
+msgid "Show Only Conflicts"
+msgstr "Afficher seulement les conflits"
 
-#: gui/settings.cpp:104
-msgid "Debug Verbosity:"
-msgstr "Niveau de détails de la sortie du débogage :"
+#: resources/report/js/l10n.js:68
+msgid "Edit Metadata"
+msgstr "Éditer les métadonnées"
 
-#: gui/settings.cpp:126
-msgid "Language and game changes will be applied after BOSS is restarted."
-msgstr ""
-"Les changements concernant les jeux et les langues seront appliqués après le "
-"redémarrage de LOOT. "
+#: resources/report/js/l10n.js:69
+msgid "Copy Metadata"
+msgstr "Copier les métadonnées"
 
-#: gui/settings.cpp:139
-msgid "The output is logged to the BOSSDebugLog.txt file."
-msgstr "Les informations sont enregistrées dans le fichier LOOTDEbugLog.txt."
+#: resources/report/js/l10n.js:70
+msgid "Clear User Metadata"
+msgstr "Vider les métadonnées utilsateur"
 
-#: gui/settings.cpp:279
-msgid "BOSS: Add Game"
-msgstr "LOOT : Ajouter un jeu"
+#: resources/report/js/l10n.js:85
+msgid "Enable Edits"
+msgstr "Activer les modifications"
 
-#: gui/settings.cpp:286 gui/settings.cpp:365
-msgid "Error: A path and/or registry key is required. Row will not be added."
-msgstr ""
-"Erreur : Un chemin et/ou une clé de registre est requis. Rien n'a été "
-"ajouté. "
-
-#: gui/settings.cpp:298
-msgid "Error: A game with this name is already defined. Row will not be added."
-msgstr "Erreur : Un jeu avec ce nom est déjà défini. Rien n'a été ajouté. "
-
-#: gui/settings.cpp:306
+#: resources/report/js/l10n.js:86
 msgid ""
-"Error: A game with this folder name is already defined. Row will not be "
-"added."
+"Global priorities are compared against all other plugins. Normal priorities "
+"are compared against only conflicting plugins."
 msgstr ""
-"Erreur : Un jeu avec un dossier portant le même nom est déjà défini. Rien "
-"n'a été ajouté. "
 
-#: gui/settings.cpp:328
-msgid "BOSS: Edit Game"
-msgstr "LOOT : Éditer le jeu "
+#: resources/report/js/l10n.js:87 resources/report/js/l10n.js:139
+msgid "Global Priority"
+msgstr "Priorité globale"
 
-#: gui/settings.cpp:349
-msgid "Error: Name is required. Row will not be added."
-msgstr "Erreur : Un nom est requis. Rien n'a été ajouté. "
+#: resources/report/js/l10n.js:88
+msgid "Priority Value"
+msgstr "Valeur de priorité"
 
-#: gui/settings.cpp:357
-msgid "Error: Folder is required. Row will not be added."
-msgstr "Erreur : Un dossier est requis. Rien n'a été ajouté. "
+#: resources/report/js/l10n.js:90
+msgid "Main"
+msgstr "Principal"
 
-#: gui/settings.cpp:428
-msgid "BOSS Folder Name (required):"
-msgstr "Nom du dossier de LOOT (requis) : "
+#: resources/report/js/l10n.js:91
+msgid "Load After"
+msgstr "Charger après"
 
-#: gui/settings.cpp:431
-msgid "Master File:"
-msgstr "Fichier master : "
+#: resources/report/js/l10n.js:92
+msgid "Requirements"
+msgstr "Requis"
 
-#: gui/settings.cpp:434
-msgid "Masterlist URL:"
-msgstr "URL de la masterlist : "
+#: resources/report/js/l10n.js:93
+msgid "Incompatibilities"
+msgstr "Incompatibilités"
 
-#: gui/settings.cpp:437
-msgid "Install Path:"
-msgstr "Chemin d'installation : "
+#: resources/report/js/l10n.js:94
+msgid "Messages"
+msgstr "Messages"
 
-#: gui/settings.cpp:440
-msgid "Install Path Registry Key:"
-msgstr "Clé de registre du chemin d'installation : "
+#: resources/report/js/l10n.js:95
+msgid "Bash Tags"
+msgstr "Étiquettes du bash"
 
-#: backend/generators.h:80
-msgid "Note:"
-msgstr "Note : "
+#: resources/report/js/l10n.js:96
+msgid "Dirty Info"
+msgstr "Infos sur les entrées sales"
 
-#: backend/generators.h:82
-msgid "Bash Tag Suggestion(s):"
-msgstr "Suggestion(s) d'étiquette : "
+#: resources/report/js/l10n.js:97
+msgid "Locations"
+msgstr "Emplacements"
 
-#: backend/generators.h:84
-msgid "Warning:"
-msgstr "Avertissement : "
+#: resources/report/js/l10n.js:99 resources/report/js/l10n.js:103
+#: resources/report/js/l10n.js:107
+msgid "Filename"
+msgstr "Nom du fichier"
 
-#: backend/generators.h:86
-msgid "Error:"
-msgstr "Erreur : "
+#: resources/report/js/l10n.js:100 resources/report/js/l10n.js:104
+#: resources/report/js/l10n.js:108
+msgid "Display Name"
+msgstr "Afficher le nom"
 
-#: backend/generators.h:159
-msgid "BOSS Report"
-msgstr "Rapport de LOOT"
+#: resources/report/js/l10n.js:101 resources/report/js/l10n.js:105
+#: resources/report/js/l10n.js:109 resources/report/js/l10n.js:113
+#: resources/report/js/l10n.js:118
+msgid "Condition"
+msgstr ""
 
-#: backend/generators.h:191 backend/generators.h:262
-msgid "Summary"
-msgstr "Résumé"
+#: resources/report/js/l10n.js:111
+msgid "Type"
+msgstr "Type"
 
-#: backend/generators.h:197
-msgid "Details"
-msgstr "Détails"
+#: resources/report/js/l10n.js:112
+msgid "Content"
+msgstr "Contenu"
 
-#: backend/generators.h:204
-msgid "Graph"
-msgstr "Graphique"
+#: resources/report/js/l10n.js:114 resources/report/js/l10n.js:278
+msgid "Language"
+msgstr "Langue"
 
-#: backend/generators.h:211
+#: resources/report/js/l10n.js:116
+msgid "Add/Remove"
+msgstr "Ajouter/Retirer"
+
+#: resources/report/js/l10n.js:117
+msgid "Bash Tag"
+msgstr "Étiquette du bash"
+
+#: resources/report/js/l10n.js:120
+msgid "CRC"
+msgstr "CRC"
+
+#: resources/report/js/l10n.js:121
+msgid "ITM Count"
+msgstr "Énumération des ITM "
+
+#: resources/report/js/l10n.js:122
+msgid "Deleted References"
+msgstr "Références supprimées"
+
+#: resources/report/js/l10n.js:123
+msgid "Deleted Navmeshes"
+msgstr "Navmeshes supprimés"
+
+#: resources/report/js/l10n.js:124
+msgid "Cleaning Utility"
+msgstr "Utilitaire de nettoyage"
+
+#: resources/report/js/l10n.js:126
+msgid "URL"
+msgstr "URL"
+
+#: resources/report/js/l10n.js:127
+msgid "Version"
+msgstr "Version"
+
+#: resources/report/js/l10n.js:129 resources/report/js/l10n.js:226
+#: resources/report/js/l10n.js:300
+msgid "Apply"
+msgstr "Appliquer"
+
+#: resources/report/js/l10n.js:141
+msgid "Editor Is Open"
+msgstr "L'éditeur est ouvert"
+
+#: resources/report/js/l10n.js:150
+msgid "A filename is required."
+msgstr "Un nom de fichier est requis."
+
+#: resources/report/js/l10n.js:151 resources/report/js/l10n.js:164
+#: resources/report/js/l10n.js:176 resources/report/js/l10n.js:190
+#: resources/report/js/l10n.js:200 resources/report/js/l10n.js:211
+msgid "Delete Row"
+msgstr "Supprimer la ligne"
+
+#: resources/report/js/l10n.js:160
+msgid "Note"
+msgstr "Note"
+
+#: resources/report/js/l10n.js:161
+msgid "Warning"
+msgstr "Avertissement"
+
+#: resources/report/js/l10n.js:163
+msgid "A content string is required."
+msgstr ""
+
+#: resources/report/js/l10n.js:173
+msgid "Add"
+msgstr "Ajouter"
+
+#: resources/report/js/l10n.js:174
+msgid "Remove"
+msgstr "Retirer"
+
+#: resources/report/js/l10n.js:175 resources/report/js/l10n.js:209
+msgid "A name is required."
+msgstr "Un nom est requis."
+
+#: resources/report/js/l10n.js:185
+msgid "A CRC is required."
+msgstr "Un CRC est requis."
+
+#: resources/report/js/l10n.js:186 resources/report/js/l10n.js:187
+#: resources/report/js/l10n.js:188
+msgid "Values must be integers."
+msgstr "Les valeurs doivent être des nombres entiers."
+
+#: resources/report/js/l10n.js:189
+msgid "A utility name is required."
+msgstr "Un nom d'utilitaire est requis."
+
+#: resources/report/js/l10n.js:199
+msgid "A link is required."
+msgstr "Un lien est requis."
+
+#: resources/report/js/l10n.js:210
+msgid "A folder is required."
+msgstr "Un dossier est requis."
+
+#: resources/report/js/l10n.js:220 resources/report/js/l10n.js:298
+msgid "Add New Row"
+msgstr "Ajouter une nouvelle ligne"
+
+#: resources/report/js/l10n.js:223
+msgid "Jump To General Information"
+msgstr "Aller aux informations générales"
+
+#: resources/report/js/l10n.js:224
+msgid "Sort Plugins"
+msgstr "Trier les plugins"
+
+#: resources/report/js/l10n.js:225
+msgid "Update Masterlist"
+msgstr "Mettre à jour la masterlist"
+
+#: resources/report/js/l10n.js:230
+msgid "Redate Plugins"
+msgstr "Redater les plugins"
+
+#: resources/report/js/l10n.js:231
+msgid "Open Debug Log Location"
+msgstr "Ouvrir le dossier du journal de débogage"
+
+#: resources/report/js/l10n.js:232
+msgid "Clear All User Metadata"
+msgstr "Vider toutes les métadonnées utilisateur"
+
+#: resources/report/js/l10n.js:233
+msgid "Copy Content"
+msgstr "Copier le contenu"
+
+#: resources/report/js/l10n.js:234
+msgid "Refresh Content"
+msgstr "Actualiser le contenu"
+
+#: resources/report/js/l10n.js:235
+msgid "View Documentation"
+msgstr "Afficher la documentation"
+
+#: resources/report/js/l10n.js:236
+msgid "About"
+msgstr "A propos"
+
+#: resources/report/js/l10n.js:237 resources/report/js/l10n.js:270
+msgid "Settings"
+msgstr "Paramètres"
+
+#: resources/report/js/l10n.js:241
+msgid "Plugins"
+msgstr "Plugins"
+
+#: resources/report/js/l10n.js:242
 msgid "Filters"
 msgstr "Filtres"
 
-#: backend/generators.h:275
-msgid "BOSS Version"
-msgstr "Version de LOOT"
-
-#: backend/generators.h:284
-msgid "Masterlist Version"
-msgstr "Version de la masterlist"
-
-#: backend/generators.h:293
-msgid "Masterlist Updating"
-msgstr "Mise à jour de la masterlist"
-
-#: backend/generators.h:297
-msgid "Enabled"
-msgstr "Activer"
-
-#: backend/generators.h:299
-msgid "Disabled"
-msgstr "Désactiver"
-
-#: backend/generators.h:306
-msgid "No change in details since last run."
-msgstr "Aucun changement dans les détails depuis le dernier lancement. "
-
-#: backend/generators.h:316
-msgid "General Messages"
-msgstr "Messages généraux"
-
-#: backend/generators.h:326
-msgid "Total Number of Messages"
-msgstr "Nombre total de messages"
-
-#: backend/generators.h:335
-msgid "Number of Warnings"
-msgstr "Nombre d'avertissements"
-
-#: backend/generators.h:344
-msgid "Number of Errors"
-msgstr "Nombre d'erreurs"
-
-#: backend/generators.h:385
-msgid "Version:"
-msgstr "Version :"
-
-#: backend/generators.h:405
-msgid "Add:"
-msgstr "Ajouter :"
-
-#: backend/generators.h:411
-msgid "Remove:"
-msgstr "Retirer :"
-
-#: backend/generators.h:419
-msgid ""
-"Contains %1% ITM records, %2% UDR records and %3% deleted navmeshes. Clean "
-"with %4%."
+#: resources/report/js/l10n.js:243
+msgid "Press Enter or click outside the input to set the filter."
 msgstr ""
-"Contient %1% enregistrements d'ITM, %2% enregistrements d'UDR et %3% "
-"navmeshes supprimés. Nettoyez-les avec %4%. "
+"Pour appliquer le filtre, appuyez sur Entrée ou cliquez hors du champ de "
+"saisie."
 
-#: backend/generators.h:421
-msgid "Clean with %1%."
-msgstr "Nettoyez avec %1%. "
+#: resources/report/js/l10n.js:244
+msgid "Filter content..."
+msgstr "Filtrer..."
 
-#: backend/generators.h:425
-msgid "Contains %1% UDR records and %2% deleted navmeshes. Clean with %3%."
-msgstr ""
-"Contient  %1% enregistrements d'UDR et %2% navmeshes supprimés. Nettoyez-les "
-"avec %3%. "
+#: resources/report/js/l10n.js:247
+msgid "Hide version numbers"
+msgstr "Cacher les numéros de versions"
 
-#: backend/generators.h:427
-msgid "Contains %1% deleted navmeshes. Clean with %2%."
-msgstr "Contient %1% navmeshes supprimés. Nettoyez-les avec %2%. "
-
-#: backend/generators.h:429
-msgid "Contains %1% UDR records. Clean with %2%."
-msgstr "Contient %1% enregistrements d'UDR. Nettoyez-les avec %2%. "
-
-#: backend/generators.h:432
-msgid "Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%."
-msgstr ""
-"Contient %1% enregistrements d'ITM, %2% navmeshes supprimés. Nettoyez-les "
-"avec %3%. "
-
-#: backend/generators.h:434
-msgid "Contains %1% ITM records. Clean with %2%."
-msgstr "Contient %1% enregistrements d'ITM. Nettoyez-les avec %2%. "
-
-#: backend/generators.h:437
-msgid "Contains %1% ITM records and %2% UDR records. Clean with %3%."
-msgstr ""
-"Contient %1% enregistrements d'ITM et %2% enregistrements d'UDR. Nettoyez-"
-"les avec %3%. "
-
-#: backend/generators.h:474
-msgid "The BOSS Report requires Javascript to be enabled in order to function."
-msgstr ""
-"Le rapport de LOOT nécessite l'activation de Javascript pour fonctionner. "
-
-#: backend/generators.h:521
-msgid "Hide Version Numbers"
-msgstr "Cacher le numéro de version"
-
-#: backend/generators.h:530
+#: resources/report/js/l10n.js:248
 msgid "Hide CRCs"
 msgstr "Cacher le CRC"
 
-#: backend/generators.h:539
-msgid "Hide Bash Tag Suggestions"
-msgstr "Cacher les suggestions d'étiquettes"
+#: resources/report/js/l10n.js:249
+msgid "Hide Bash Tags"
+msgstr "Cacher les étiquettes bash"
 
-#: backend/generators.h:547
-msgid "Hide Notes"
+#: resources/report/js/l10n.js:250
+msgid "Hide notes"
 msgstr "Cacher les notes"
 
-#: backend/generators.h:555
-msgid "Hide 'Do Not Clean' Messages"
+#: resources/report/js/l10n.js:251
+msgid "Hide 'Do not clean' messages"
 msgstr "Cacher les messages 'Ne pas nettoyer'"
 
-#: backend/generators.h:563
-msgid "Hide All Plugin Messages"
-msgstr "Cacher tous les messages concernant les plugins. "
+#: resources/report/js/l10n.js:252
+msgid "Hide all plugin messages"
+msgstr "Cacher les messages des plugins"
 
-#: backend/generators.h:571
-msgid "Hide Messageless Plugins"
-msgstr "Cacher tous les plugins sans message"
+#: resources/report/js/l10n.js:253
+msgid "Hide inactive plugins"
+msgstr "Cacher les plugins inactifs"
 
-#: backend/generators.h:581
-msgid "%1% of %2% plugins hidden."
-msgstr "%1% sur %2% plugins cachés."
+#: resources/report/js/l10n.js:254
+msgid "Hide messageless plugins"
+msgstr "Cacher les plugins sans messages"
 
-#: backend/generators.h:589
-msgid "%1% of %2% messages hidden."
-msgstr "%1% sur %2% messages cachés."
+#: resources/report/js/l10n.js:255
+msgid "Hidden plugins:"
+msgstr "Plugins cachés :"
 
-#: backend/generators.h:631
-msgid "Could not write BOSS report."
-msgstr "Impossible d'écrire le rapport de LOOT. "
+#: resources/report/js/l10n.js:256
+msgid "Hidden messages:"
+msgstr "Message cachés :"
 
-#: backend/parsers.h:466 backend/parsers.h:549
-msgid "Invalid file path:"
-msgstr "Chemin du fichier invalide :"
+#: resources/report/js/l10n.js:259
+msgid "General Information"
+msgstr "Informations générales"
 
-#: backend/parsers.h:514
-msgid "Invalid folder path:"
-msgstr "Chemin du dossier invalide :"
+#: resources/report/js/l10n.js:260
+msgid "Masterlist Revision"
+msgstr "Révision de la masterlist"
 
-#: backend/parsers.h:531
-msgid "Invalid regex string:"
-msgstr "Regex string invalide :"
+#: resources/report/js/l10n.js:261
+msgid "Masterlist Date"
+msgstr "Date de la masterlist"
 
-#: backend/parsers.h:626
-msgid "Expected \"%1%\" at \"%2%\"."
-msgstr "Prévu \"%1%\" à \"%2%\"."
+#: resources/report/js/l10n.js:262
+msgid "Warnings"
+msgstr "Avertissements"
+
+#: resources/report/js/l10n.js:263
+msgid "Errors"
+msgstr "Erreurs"
+
+#: resources/report/js/l10n.js:264
+msgid "Total Messages"
+msgstr "Total de messages"
+
+#: resources/report/js/l10n.js:265
+msgid "Active Plugins"
+msgstr "Plugins actifs"
+
+#: resources/report/js/l10n.js:266
+msgid "Dirty Plugins"
+msgstr "Plugins sales"
+
+#: resources/report/js/l10n.js:267
+msgid "Total Plugins"
+msgstr "Total de plugins"
+
+#: resources/report/js/l10n.js:273
+msgid "Default Game"
+msgstr "Jeu par défaut"
+
+#: resources/report/js/l10n.js:274 resources/report/js/l10n.js:276
+msgid "Autodetect"
+msgstr "Détection automatique"
+
+#: resources/report/js/l10n.js:279
+msgid "Language changes will be applied after LOOT is restarted."
+msgstr "Le changement de langage sera effectif après un redémarrage de LOOT."
+
+#: resources/report/js/l10n.js:281
+msgid "Enable debug logging"
+msgstr "Activer le journal de débogage"
+
+#: resources/report/js/l10n.js:282
+msgid "The output is logged to the LOOTDebugLog.txt file."
+msgstr "Les informations sont enregistrées dans le fichier LOOTDEbugLog.txt."
+
+#: resources/report/js/l10n.js:284
+msgid "Update masterlist before sorting"
+msgstr "Mettre à jour la masterlist avant de trier"
+
+#: resources/report/js/l10n.js:287
+msgid "Name"
+msgstr "Nom"
+
+#: resources/report/js/l10n.js:288
+msgid "Base Game"
+msgstr "Jeu de base"
+
+#: resources/report/js/l10n.js:289
+msgid "LOOT Folder"
+msgstr "Dossier LOOT"
+
+#: resources/report/js/l10n.js:291
+msgid "Masterlist Repository URL"
+msgstr "URL du dépôt de la masterlist"
+
+#: resources/report/js/l10n.js:292
+msgid "Masterlist Repository Branch"
+msgstr "Branche du dépôt de la masterlist"
+
+#: resources/report/js/l10n.js:293
+msgid "Install Path"
+msgstr "Chemin d'installation"
+
+#: resources/report/js/l10n.js:294
+msgid "Install Path Registry Key"
+msgstr "Clé du registre du chemin d'installation"
+
+#: resources/report/js/l10n.js:305
+msgid "First-Time Tips"
+msgstr ""
+
+#: resources/report/js/l10n.js:307
+msgid ""
+"CRCs are only displayed after plugins have been loaded, either by conflict "
+"filtering, or by sorting."
+msgstr ""
+
+#: resources/report/js/l10n.js:308
+msgid ""
+"Double-click a plugin in the sidebar to quickly open its metadata editor. "
+"Multiple metadata editors can be opened at once."
+msgstr ""
+
+#: resources/report/js/l10n.js:309
+msgid ""
+"Plugins can be drag and dropped from the sidebar into editors' \"load after, "
+"\"requirements\" and \"incompatibility\" tables."
+msgstr ""
+
+#: resources/report/js/l10n.js:310
+msgid ""
+"Some features are disabled while there is an editor open, or while there is "
+"a sorted load order that has not been applied or discarded."
+msgstr ""
+
+#: resources/report/js/l10n.js:311
+msgid ""
+"Many interface elements have tooltips. If you don't know what something is, "
+"try hovering your mouse over it to find out. Otherwise, LOOT's documentation "
+"can be accessed through the main menu."
+msgstr ""
+
+#: resources/report/js/loot.js:183 resources/report/js/loot.js:188
+msgid "N/A"
+msgstr ""
+
+#~ msgid "Could not create BOSS folder for game. Details:"
+#~ msgstr "Impossible de créer le dossier de LOOT pour ce jeu. Détails :"
+
+#~ msgid "Cyclic interaction detected between plugins \"%1%\" and \"%2%\"."
+#~ msgstr "Interaction cyclique détectée entre les plugins \"%1%\" et \"%2%\"."
+
+#~ msgid "Could not create pipe for process."
+#~ msgstr "Impossible de créer le tube pour le processus."
+
+#~ msgid "Could not create process."
+#~ msgstr "Impossible de créer le processus."
+
+#~ msgid "Could not get process exit code."
+#~ msgstr "Impossible d'obtenir le code pour arrêter le processus. "
+
+#~ msgid "Could not read process output."
+#~ msgstr "Impossible de lire la sortie du processus. "
+
+#~ msgid "Enable User Changes"
+#~ msgstr "Activer les modifications de l'utilisateurs"
+
+#~ msgid "Add File"
+#~ msgstr "Ajouter un fichier"
+
+#~ msgid "Edit File"
+#~ msgstr "Éditer un fichier"
+
+#~ msgid "Remove File"
+#~ msgstr "Retirer un fichier"
+
+#~ msgid "Save Changes"
+#~ msgstr "Sauvegarder les modifications"
+
+#~ msgid "Copy Metadata As Text"
+#~ msgstr "Copier les métadonnées comme du texte "
+
+#~ msgid "UDR Count"
+#~ msgstr "Énumération des UDR"
+
+#~ msgid "Deleted Navmesh Count"
+#~ msgstr "Énumération des Navmesh supprimés"
+
+#~ msgid "Priority: "
+#~ msgstr "Priorité :"
+
+#~ msgid "Add Plugin"
+#~ msgstr "Ajouter un plugin"
+
+#~ msgid "Edit Plugin"
+#~ msgstr "Éditer un plugin"
+
+#~ msgid "Remove Plugin"
+#~ msgstr "Retirer un plugin"
+
+#~ msgid "Add Message"
+#~ msgstr "Ajouter un message"
+
+#~ msgid "Edit Message"
+#~ msgstr "Éditer un message"
+
+#~ msgid "Remove Message"
+#~ msgstr "Retirer un message"
+
+#~ msgid "Add Bash Tag"
+#~ msgstr "Ajouter une étiquette"
+
+#~ msgid "Edit Bash Tag"
+#~ msgstr "Éditer l'étiquette"
+
+#~ msgid "Remove Bash Tag"
+#~ msgstr "Retirer l'étiquette"
+
+#~ msgid "Add Dirty Info"
+#~ msgstr "Ajouter une information sur les entrée sales"
+
+#~ msgid "Edit Dirty Info"
+#~ msgstr "Éditer les informations sur les entrées sales"
+
+#~ msgid "Remove Dirty Info"
+#~ msgstr "Retirer l'information sur les entrées sales "
+
+#~ msgid "BOSS: Add File/Plugin"
+#~ msgstr "LOOT : Ajouter un fichier / plugin"
+
+#~ msgid "BOSS: Add Message"
+#~ msgstr "LOOT : Ajouter un message"
+
+#~ msgid "Error: No content specified. Row will not be added."
+#~ msgstr "Erreur : Aucun contenu spécifié. Rien ne sera ajouté. "
+
+#~ msgid "BOSS: Error"
+#~ msgstr "Erreur de LOOT "
+
+#~ msgid "BOSS: Add Tag"
+#~ msgstr "LOOT : Ajouter une étiquette"
+
+#~ msgid "BOSS: Add Dirty Info"
+#~ msgstr "LOOT : Ajouter des informations sur les entrées sales"
+
+#~ msgid "BOSS: Edit File/Plugin"
+#~ msgstr "LOOT : Éditer le fichier / plugin"
+
+#~ msgid "BOSS: Edit Message"
+#~ msgstr "LOOT : Éditer le message"
+
+#~ msgid "Error: No content specified. Row will not be edited."
+#~ msgstr "Erreur : Aucun contenu spécifié. Rien ne sera modifié. "
+
+#~ msgid "BOSS: Edit Tag"
+#~ msgstr "LOOT : Édition des étiquettes"
+
+#~ msgid "BOSS: Edit Dirty Info"
+#~ msgstr "LOOT : Édition des informations sur entrées sales"
+
+#~ msgid "Filename (required):"
+#~ msgstr "Nom du fichier (requis) :"
+
+#~ msgid "Displayed Name:"
+#~ msgstr "Nom affiché :"
+
+#~ msgid "Condition:"
+#~ msgstr "Condition :"
+
+#~ msgid "Add Content"
+#~ msgstr "Ajouter du contenu"
+
+#~ msgid "Edit Content"
+#~ msgstr "Éditer du contenu"
+
+#~ msgid "Remove Content"
+#~ msgstr "Retirer du contenu"
+
+#~ msgid "String"
+#~ msgstr "String"
+
+#~ msgid "Type:"
+#~ msgstr "Type :"
+
+#~ msgid "Language:"
+#~ msgstr "Langue :"
+
+#~ msgid "Content:"
+#~ msgstr "Contenu :"
+
+#~ msgid "Error: No content row selected."
+#~ msgstr "Erreur : Aucun contenu sélectionné. "
+
+#~ msgid "Add/Remove:"
+#~ msgstr "Ajouter/Retirer :"
+
+#~ msgid "Name (required):"
+#~ msgstr "Nom (requis) :"
+
+#~ msgid "CRC (required):"
+#~ msgstr "CRC (requis) :"
+
+#~ msgid "ITM Count:"
+#~ msgstr "Énumération des ITM :"
+
+#~ msgid "UDR Count:"
+#~ msgstr "Énumération des UDR :"
+
+#~ msgid "Deleted Navmesh Count:"
+#~ msgstr "Énumération des Navmesh supprimés :"
+
+#~ msgid "Cleaning Utility (required):"
+#~ msgstr "Utilitaire de nettoyage (requis) :"
+
+#~ msgid "None Specified"
+#~ msgstr "Non spécifié"
+
+#~ msgid "Masterlist update failed. Details: %1%"
+#~ msgstr "Le fichier masterlist n'a pas pu être actualisé. Détails: %1%"
+
+#~ msgid "Masterlist parsing failed. Details: %1%"
+#~ msgstr "L'analyse de la masterlist a échoué. Détails : %1%"
+
+#~ msgid "Unknown"
+#~ msgstr "Inconnu"
+
+#~ msgid "No masterlist"
+#~ msgstr "Pas de masterlist"
+
+# Version est assez étrange comme formulation.
+#~ msgid "Error: BOSS is already running. This instance will now quit."
+#~ msgstr ""
+#~ "Erreur : LOOT est déjà lancé. Cette version va maintenant s'arrêter. "
+
+#~ msgid "Error: Could not create local app data BOSS folder."
+#~ msgstr "Erreur : Impossible de créer le dossier local app data LOOT."
+
+#~ msgid "Error: Could not apply translation."
+#~ msgstr "Erreur : Impossible d'appliquer la traduction."
+
+#~ msgid "Error: The selected language is not available on this system."
+#~ msgstr ""
+#~ "Erreur : La langue sélectionnée n'est pas disponible sur ce système. "
+
+#~ msgid "Error: None of the supported games were detected."
+#~ msgstr "Erreur : Aucun des jeux pris en charge n'a été détecté. "
+
+#~ msgid "View Last Report"
+#~ msgstr "Voir le dernier rapport"
+
+#~ msgid "&View Last Report"
+#~ msgstr "&Voir le dernier rapport"
+
+#~ msgid "View &Debug Log"
+#~ msgstr "Voir le &journal débogage"
+
+#~ msgid "&Sort Plugins"
+#~ msgstr "&Trier les plugins"
+
+#~ msgid "&Redate Plugins"
+#~ msgstr "&Redater les plugins"
+
+#~ msgid "&File"
+#~ msgstr "&Fichier"
+
+#~ msgid "&Metadata..."
+#~ msgstr "&Métadonnées"
+
+#~ msgid "&Settings..."
+#~ msgstr "&Paramètres"
+
+#~ msgid "&Edit"
+#~ msgstr "&Éditer"
+
+#~ msgid "&Game"
+#~ msgstr "&Jeu"
+
+#~ msgid "&Help"
+#~ msgstr "&Aide"
+
+#~ msgid "BOSS: Working..."
+#~ msgstr "LOOT : En cours"
+
+#~ msgid "BOSS working..."
+#~ msgstr "LOOT en cours..."
+
+#~ msgid "Userlist parsing failed. Details: %1%"
+#~ msgstr "L'analyse de l'userlist a échoué. Détails : 1%1"
+
+#~ msgid "\"%1%\" is incompatible with \"%2%\" and is present."
+#~ msgstr "\"%1%\" est incompatible avec \"%2%\" et est présent."
+
+#~ msgid "\"%1%\" is required by \"%2%\" but is missing."
+#~ msgstr "\"%1%\" est requis par \"%2%\" mais est manquant."
+
+#~ msgid "Failed to generate graph image. Details: %1%"
+#~ msgstr "Impossible de générer l'image graphique. Détails : %1%"
+
+#~ msgid "BOSS: Calculated Load Order"
+#~ msgstr "LOOT : Ordre de chargement défini"
+
+#~ msgid "Failed to set the load order. Details: %1%"
+#~ msgstr "Impossible de définir l'ordre de chargement. Détails : %1%"
+
+#~ msgid ""
+#~ "The load order displayed in the Details tab was not applied as sorting "
+#~ "was canceled."
+#~ msgstr ""
+#~ "L'ordre de chargement affiché dans l'onglet Détails n'a pas été appliqué "
+#~ "car le tri a été annulé. "
+
+#~ msgid "Failed to calculate the load order. Details: %1%"
+#~ msgstr "Impossible de définir l'ordre de chargement. Détails : %1%"
+
+#~ msgid "Error: %1%"
+#~ msgstr "Erreur : %1%"
+
+#~ msgid "BOSS: Report Viewer"
+#~ msgstr "LOOT : Visualiser le rapport"
+
+#~ msgid "Error: Masterlist parsing failed. %1%"
+#~ msgstr "Erreur : l'analyse de la masterlist a échoué. 1%1"
+
+#~ msgid "Error: Userlist parsing failed. %1%"
+#~ msgstr "Erreur : l'analyse de l'userlist a échoué. 1%1"
+
+#~ msgid "BOSS: Metadata Editor"
+#~ msgstr "LOOT : Éditeur de métadonnées"
+
+#~ msgid "BOSS: Warning"
+#~ msgstr "LOOT : Avertissement"
+
+#~ msgid "Error: Failed to get load order. %1%"
+#~ msgstr "Erreur : Impossible d'obtenir l'ordre de chargement. %1%"
+
+#~ msgid "Error: Failed to set plugin timestamps. %1%"
+#~ msgstr "Erreur : Impossible de définir l'horodatage du plugin. %1%"
+
+#~ msgid "Plugins were successfully redated."
+#~ msgstr "Les plugins ont été redaté avec succès. "
+
+#~ msgid "BOSS: Plugin Redate"
+#~ msgstr "LOOT : Redater le plug-in"
+
+#~ msgid "BOSS: Settings"
+#~ msgstr "LOOT : Configuration"
+
+#~ msgid "Error: \"%1%\" cannot be found."
+#~ msgstr "Erreur: \"%1%\" n'a pas être trouvé."
+
+#~ msgid ""
+#~ "A load order optimisation tool for games using the Elder Scrolls Plugin/"
+#~ "Master system."
+#~ msgstr ""
+#~ "Un outil d'optimisation de l'ordre de chargement pour les jeux qui "
+#~ "utilisent le système des Elder Scrols plugin/master."
+
+#~ msgid "Up"
+#~ msgstr "Monter"
+
+#~ msgid "Down"
+#~ msgstr "Descendre"
+
+#~ msgid "Load Order"
+#~ msgstr "Ordre de chargement"
+
+#~ msgid ""
+#~ "Please submit any alterations made for reasons other than user "
+#~ "preference \n"
+#~ "to the BOSS team so that they may include the changes in the masterlist."
+#~ msgstr ""
+#~ "Veuillez soumettre les modifications apportées pour des raisons autres "
+#~ "que la préfèrence de l'utilisateur \n"
+#~ " à l'équipe de LOOT afin qu'elle puisse inclure les changements dans la "
+#~ "masterlist. "
+
+#~ msgid "Error: Cannot load \"%1%\" before \"%2%\"."
+#~ msgstr "Erreur : Impossible de charger \"%1%\" avant \"%2%\"."
+
+#~ msgid "None"
+#~ msgstr "Aucun"
+
+#~ msgid "Low"
+#~ msgstr "Bas"
+
+#~ msgid "Medium"
+#~ msgstr "Moyen"
+
+#~ msgid "High"
+#~ msgstr "Haut"
+
+#~ msgid "Add Game"
+#~ msgstr "Ajout d'un jeu"
+
+#~ msgid "Edit Game"
+#~ msgstr "Éditer un jeu"
+
+#~ msgid "Remove Game"
+#~ msgstr "Retirer un jeu"
+
+#~ msgid "Update masterlist before sorting."
+#~ msgstr "Mise à jour de la masterlist avant le tri. "
+
+#~ msgid "View reports externally in default browser."
+#~ msgstr "Afficher les rapports externes dans le navigateur par défaut. "
+
+#~ msgid "Generate and display plugin graph images."
+#~ msgstr "Générer et afficher une image graphique des plugins. "
+
+#~ msgid "Base Game Type"
+#~ msgstr "Type du jeu de base"
+
+#~ msgid "BOSS Folder Name"
+#~ msgstr "Nom du dossier de LOOT"
+
+#~ msgid "Online Masterlist URL"
+#~ msgstr "URL de la masterlist en ligne. "
+
+#~ msgid "Default Game:"
+#~ msgstr "Jeu par défaut :"
+
+#~ msgid "Debug Verbosity:"
+#~ msgstr "Niveau de détails de la sortie du débogage :"
+
+#~ msgid "Language and game changes will be applied after BOSS is restarted."
+#~ msgstr ""
+#~ "Les changements concernant les jeux et les langues seront appliqués après "
+#~ "le redémarrage de LOOT. "
+
+#~ msgid "The output is logged to the BOSSDebugLog.txt file."
+#~ msgstr ""
+#~ "Les informations sont enregistrées dans le fichier LOOTDEbugLog.txt."
+
+#~ msgid "BOSS: Add Game"
+#~ msgstr "LOOT : Ajouter un jeu"
+
+#~ msgid ""
+#~ "Error: A path and/or registry key is required. Row will not be added."
+#~ msgstr ""
+#~ "Erreur : Un chemin et/ou une clé de registre est requis. Rien n'a été "
+#~ "ajouté. "
+
+#~ msgid ""
+#~ "Error: A game with this name is already defined. Row will not be added."
+#~ msgstr "Erreur : Un jeu avec ce nom est déjà défini. Rien n'a été ajouté. "
+
+#~ msgid ""
+#~ "Error: A game with this folder name is already defined. Row will not be "
+#~ "added."
+#~ msgstr ""
+#~ "Erreur : Un jeu avec un dossier portant le même nom est déjà défini. Rien "
+#~ "n'a été ajouté. "
+
+#~ msgid "BOSS: Edit Game"
+#~ msgstr "LOOT : Éditer le jeu "
+
+#~ msgid "Error: Name is required. Row will not be added."
+#~ msgstr "Erreur : Un nom est requis. Rien n'a été ajouté. "
+
+#~ msgid "Error: Folder is required. Row will not be added."
+#~ msgstr "Erreur : Un dossier est requis. Rien n'a été ajouté. "
+
+#~ msgid "BOSS Folder Name (required):"
+#~ msgstr "Nom du dossier de LOOT (requis) : "
+
+#~ msgid "Master File:"
+#~ msgstr "Fichier master : "
+
+#~ msgid "Masterlist URL:"
+#~ msgstr "URL de la masterlist : "
+
+#~ msgid "Install Path:"
+#~ msgstr "Chemin d'installation : "
+
+#~ msgid "Install Path Registry Key:"
+#~ msgstr "Clé de registre du chemin d'installation : "
+
+#~ msgid "Note:"
+#~ msgstr "Note : "
+
+#~ msgid "Bash Tag Suggestion(s):"
+#~ msgstr "Suggestion(s) d'étiquette : "
+
+#~ msgid "Warning:"
+#~ msgstr "Avertissement : "
+
+#~ msgid "Error:"
+#~ msgstr "Erreur : "
+
+#~ msgid "BOSS Report"
+#~ msgstr "Rapport de LOOT"
+
+#~ msgid "Summary"
+#~ msgstr "Résumé"
+
+#~ msgid "Details"
+#~ msgstr "Détails"
+
+#~ msgid "Graph"
+#~ msgstr "Graphique"
+
+#~ msgid "BOSS Version"
+#~ msgstr "Version de LOOT"
+
+#~ msgid "Masterlist Version"
+#~ msgstr "Version de la masterlist"
+
+#~ msgid "Masterlist Updating"
+#~ msgstr "Mise à jour de la masterlist"
+
+#~ msgid "Enabled"
+#~ msgstr "Activer"
+
+#~ msgid "Disabled"
+#~ msgstr "Désactiver"
+
+#~ msgid "No change in details since last run."
+#~ msgstr "Aucun changement dans les détails depuis le dernier lancement. "
+
+#~ msgid "General Messages"
+#~ msgstr "Messages généraux"
+
+#~ msgid "Total Number of Messages"
+#~ msgstr "Nombre total de messages"
+
+#~ msgid "Number of Warnings"
+#~ msgstr "Nombre d'avertissements"
+
+#~ msgid "Number of Errors"
+#~ msgstr "Nombre d'erreurs"
+
+#~ msgid "Version:"
+#~ msgstr "Version :"
+
+#~ msgid "Add:"
+#~ msgstr "Ajouter :"
+
+#~ msgid "Remove:"
+#~ msgstr "Retirer :"
+
+#~ msgid ""
+#~ "Contains %1% ITM records, %2% UDR records and %3% deleted navmeshes. "
+#~ "Clean with %4%."
+#~ msgstr ""
+#~ "Contient %1% enregistrements d'ITM, %2% enregistrements d'UDR et %3% "
+#~ "navmeshes supprimés. Nettoyez-les avec %4%. "
+
+#~ msgid "Contains %1% UDR records and %2% deleted navmeshes. Clean with %3%."
+#~ msgstr ""
+#~ "Contient  %1% enregistrements d'UDR et %2% navmeshes supprimés. Nettoyez-"
+#~ "les avec %3%. "
+
+#~ msgid "Contains %1% UDR records. Clean with %2%."
+#~ msgstr "Contient %1% enregistrements d'UDR. Nettoyez-les avec %2%. "
+
+#~ msgid "Contains %1% ITM records and %2% UDR records. Clean with %3%."
+#~ msgstr ""
+#~ "Contient %1% enregistrements d'ITM et %2% enregistrements d'UDR. Nettoyez-"
+#~ "les avec %3%. "
+
+#~ msgid ""
+#~ "The BOSS Report requires Javascript to be enabled in order to function."
+#~ msgstr ""
+#~ "Le rapport de LOOT nécessite l'activation de Javascript pour fonctionner. "
+
+#~ msgid "Hide Version Numbers"
+#~ msgstr "Cacher le numéro de version"
+
+#~ msgid "Hide Bash Tag Suggestions"
+#~ msgstr "Cacher les suggestions d'étiquettes"
+
+#~ msgid "Hide Notes"
+#~ msgstr "Cacher les notes"
+
+#~ msgid "Hide 'Do Not Clean' Messages"
+#~ msgstr "Cacher les messages 'Ne pas nettoyer'"
+
+#~ msgid "Hide All Plugin Messages"
+#~ msgstr "Cacher tous les messages concernant les plugins. "
+
+#~ msgid "Hide Messageless Plugins"
+#~ msgstr "Cacher tous les plugins sans message"
+
+#~ msgid "%1% of %2% plugins hidden."
+#~ msgstr "%1% sur %2% plugins cachés."
+
+#~ msgid "%1% of %2% messages hidden."
+#~ msgstr "%1% sur %2% messages cachés."
+
+#~ msgid "Could not write BOSS report."
+#~ msgstr "Impossible d'écrire le rapport de LOOT. "
