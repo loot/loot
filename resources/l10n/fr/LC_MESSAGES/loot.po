@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT v0.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-02-09 21:40-0000\n"
-"PO-Revision-Date: 2015-05-31 11:26+0100\n"
+"POT-Creation-Date: 2015-05-31 13:36+0100\n"
+"PO-Revision-Date: 2015-05-31 14:00+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -21,18 +21,18 @@ msgstr "ID du jeu fournie incorrecte."
 msgid "Game path could not be detected."
 msgstr "Le chemin du jeu n'a pas pu être trouvé. "
 
-#: src/backend/game.cpp:489
+#: src/backend/game.cpp:494
 msgid ""
 "libloadorder failed to create a game handle. Details could not be fetched."
 msgstr ""
 "libloadorder n'est pas parvenu à créer une poignée du jeu. Les détails ne "
 "peuvent pas être récupérés."
 
-#: src/backend/game.cpp:493
+#: src/backend/game.cpp:498
 msgid "libloadorder failed to create a game handle. Details:"
 msgstr "libloadorder n'est pas parvenu à créer une poignée du jeu. Détails :"
 
-#: src/backend/game.cpp:510
+#: src/backend/game.cpp:515
 msgid ""
 "libloadorder failed to initialise game master file support. Details could "
 "not be fetched."
@@ -40,13 +40,13 @@ msgstr ""
 "libloadorder a échoué dans l'initialisation du support de fichier maître du "
 "jeu. Les détails ne peuvent pas être récupérés."
 
-#: src/backend/game.cpp:514
+#: src/backend/game.cpp:519
 msgid "libloadorder failed to initialise game master file support. Details:"
 msgstr ""
 "libloadorder a échoué dans l'initialisation du support de fichier maître du "
 "jeu. Détails :"
 
-#: src/backend/game.cpp:534
+#: src/backend/game.cpp:539
 msgid ""
 "libloadorder failed to get the active plugins list. Details could not be "
 "fetched."
@@ -54,54 +54,54 @@ msgstr ""
 "libloadorer n'a pas pu obtenir la liste des plugins actifs. Les détails ne "
 "peuvent pas être récupérés."
 
-#: src/backend/game.cpp:538
+#: src/backend/game.cpp:543
 msgid "libloadorder failed to get the active plugins list. Details:"
 msgstr "libloadorer n'a pas pu obtenir la liste des plugins actifs. Détails :"
 
-#: src/backend/game.cpp:567
+#: src/backend/game.cpp:572
 msgid ""
 "libloadorder failed to get the load order. Details could not be fetched."
 msgstr ""
 "libloadorder n'a pas pu obtenir l'ordre de chargement. Les détails ne "
 "peuvent pas être récupérés."
 
-#: src/backend/game.cpp:571
+#: src/backend/game.cpp:576
 msgid "libloadorder failed to get the load order. Details:"
 msgstr "libloadorder n'a pas pu obtenir l'ordre de chargement. Détails :"
 
-#: src/backend/game.cpp:593
+#: src/backend/game.cpp:598
 msgid ""
 "libloadorder failed to set the load order. Details could not be fetched."
 msgstr ""
 "libloadorder n'a pas pu définir l'ordre de chargement. Les détails ne "
 "peuvent pas être récupérés."
 
-#: src/backend/game.cpp:597
+#: src/backend/game.cpp:602
 msgid "libloadorder failed to set the load order. Details:"
 msgstr "libloadorder n'a pas pu définir l'ordre de chargement. Détails :"
 
-#: src/backend/game.cpp:701
+#: src/backend/game.cpp:706
 msgid "An exception occurred while loading this plugin. Details: "
 msgstr "Une erreur est survenue lors du chargement de ce plugin. Détails:"
 
-#: src/backend/game.cpp:719
+#: src/backend/game.cpp:724
 msgid "An exception occurred while loading this plugin. Details:"
 msgstr "Une erreur est survenue lors du chargement de ce plugin. Détails:"
 
-#: src/backend/game.cpp:779
+#: src/backend/game.cpp:783
 msgid "Could not create LOOT folder for game. Details:"
 msgstr "Impossible de créer le dossier de LOOT pour ce jeu. Détails :"
 
-#: src/backend/game.cpp:787
+#: src/backend/game.cpp:791
 msgid "Building plugin graph..."
 msgstr ""
 
-#: src/backend/game.cpp:813 src/gui/handler.cpp:963
+#: src/backend/game.cpp:817 src/gui/handler.cpp:1017
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
 msgstr ""
 "\"%1%\" contient une condition qui n'a pas pu être évaluée. Détails : %2%"
 
-#: src/backend/game.cpp:822
+#: src/backend/game.cpp:833
 msgid "Adding edges to plugin graph and performing topological sort..."
 msgstr ""
 
@@ -132,12 +132,12 @@ msgid ""
 msgstr ""
 
 #: src/backend/git.cpp:226
-msgid "Unknown: Git repository missing"
-msgstr "Inconnu : dépôt Git manquant"
-
-#: src/backend/git.cpp:230
 msgid "N/A: No masterlist present"
 msgstr "N/A : aucune masterlist présente"
+
+#: src/backend/git.cpp:230
+msgid "Unknown: Git repository missing"
+msgstr "Inconnu : dépôt Git manquant"
 
 #: src/backend/git.cpp:265 src/backend/git.cpp:266
 msgid "(edited)"
@@ -175,7 +175,7 @@ msgstr "Révision de la masterlist"
 msgid "Rolled back to the previous revision."
 msgstr "Revenir à la révision précédente."
 
-#: src/backend/graph.cpp:77
+#: src/backend/graph.cpp:82
 msgid ""
 "Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: "
 "%3%"
@@ -187,31 +187,15 @@ msgstr ""
 msgid "Unable to open \"%1%\" for CRC calculation."
 msgstr "Impossible d'ouvrir \"%1%\" pour le calcul du CRC. "
 
-#: src/backend/metadata.cpp:146 src/backend/metadata.cpp:178
+#: src/backend/metadata.cpp:118 src/backend/metadata.cpp:150
 msgid "Failed to parse condition \"%1%\": %2%"
 msgstr "Échec de l'analyse de la condition \"%1%\": %2%"
 
-#: src/backend/metadata.cpp:151 src/backend/metadata.cpp:183
+#: src/backend/metadata.cpp:123 src/backend/metadata.cpp:155
 msgid "Failed to parse condition \"%1%\"."
 msgstr "Échec de l'analyse de la condition \"%1%\"."
 
-#: src/backend/metadata.cpp:457
-msgid "Cannot read \"%1%\". Details: %2%"
-msgstr "Impossible de charger  \"%1%\". Détails : %2%"
-
-#: src/backend/metadata.cpp:883 src/backend/metadata.cpp:894
-msgid "This plugin requires \"%1%\" to be installed, but it is missing."
-msgstr "Ce plugin nécessite \"%1%\" d'être installé, mais il est absent."
-
-#: src/backend/metadata.cpp:887
-msgid "This plugin requires \"%1%\" to be active, but it is inactive."
-msgstr "Ce plugin nécessite \"%1%\" d'être actif, mais il est inactif."
-
-#: src/backend/metadata.cpp:902
-msgid "This plugin is incompatible with \"%1%\", but both are present."
-msgstr "Ce plugin est incompatible avec \"%1%\", mais les deux sont présents."
-
-#: src/backend/metadata.cpp:911
+#: src/backend/metadata.cpp:288
 msgid ""
 "Contains %1% ITM records, %2% deleted references and %3% deleted navmeshes. "
 "Clean with %4%."
@@ -219,113 +203,129 @@ msgstr ""
 "Contient %1% enregistrements d'ITM, %2% références supprimées et %3% "
 "navmeshes supprimés. Nettoyez-les avec %4%. "
 
-#: src/backend/metadata.cpp:913
+#: src/backend/metadata.cpp:290
 msgid "Clean with %1%."
 msgstr "Nettoyez avec %1%. "
 
-#: src/backend/metadata.cpp:916
+#: src/backend/metadata.cpp:293
 msgid ""
 "Contains %1% deleted references and %2% deleted navmeshes. Clean with %3%."
 msgstr ""
 "Contient %1% références supprimées et %2% navmeshes supprimés. Nettoyez-les "
 "avec %3%. "
 
-#: src/backend/metadata.cpp:918
+#: src/backend/metadata.cpp:295
 msgid "Contains %1% deleted navmeshes. Clean with %2%."
 msgstr "Contient %1% navmeshes supprimés. Nettoyez-les avec %2%. "
 
-#: src/backend/metadata.cpp:920
+#: src/backend/metadata.cpp:297
 msgid "Contains %1% deleted references. Clean with %2%."
 msgstr "Contient %1% références supprimées. Nettoyez-les avec %2%."
 
-#: src/backend/metadata.cpp:923
+#: src/backend/metadata.cpp:300
 msgid "Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%."
 msgstr ""
 "Contient %1% enregistrements d'ITM, %2% navmeshes supprimés. Nettoyez-les "
 "avec %3%. "
 
-#: src/backend/metadata.cpp:925
+#: src/backend/metadata.cpp:302
 msgid "Contains %1% ITM records. Clean with %2%."
 msgstr "Contient %1% enregistrements d'ITM. Nettoyez-les avec %2%. "
 
-#: src/backend/metadata.cpp:928
+#: src/backend/metadata.cpp:305
 msgid "Contains %1% ITM records and %2% deleted references. Clean with %3%."
 msgstr ""
 "Contient %1% enregistrements d'ITM, %2% références supprimées. Nettoyez-les "
 "avec %3%."
 
+#: src/backend/metadata.cpp:482
+msgid "Cannot read \"%1%\". Details: %2%"
+msgstr "Impossible de charger  \"%1%\". Détails : %2%"
+
+#: src/backend/metadata.cpp:908 src/backend/metadata.cpp:919
+msgid "This plugin requires \"%1%\" to be installed, but it is missing."
+msgstr "Ce plugin nécessite \"%1%\" d'être installé, mais il est absent."
+
+#: src/backend/metadata.cpp:912
+msgid "This plugin requires \"%1%\" to be active, but it is inactive."
+msgstr "Ce plugin nécessite \"%1%\" d'être actif, mais il est inactif."
+
+#: src/backend/metadata.cpp:927
+msgid "This plugin is incompatible with \"%1%\", but both are present."
+msgstr "Ce plugin est incompatible avec \"%1%\", mais les deux sont présents."
+
 #: src/gui/app.cpp:170
 msgid "Error: Could not create LOOT settings file. %1%"
-msgstr "Erreur : Impossible de créer le fichier de paramètres de LOOT. %1%"
+msgstr "Erreur : impossible de créer le fichier de paramètres de LOOT. %1%"
 
 #: src/gui/app.cpp:180
 msgid "Error: Settings parsing failed. %1%"
-msgstr "Erreur : Les paramètres d'analyse ont échoué. %1%"
+msgstr "Erreur : les paramètres d'analyse ont échoué. %1%"
 
 #: src/gui/app.cpp:245
 msgid "Error: Games' settings parsing failed. %1%"
-msgstr "Erreur : Les paramètres d'analyse du jeu ont échoué. %1%"
+msgstr "Erreur : les paramètres d'analyse du jeu ont échoué. %1%"
 
 #: src/gui/app.cpp:265
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr ""
-"Erreur : Les paramètres spécifiques du jeu ne peuvent pas être initialisés. "
+"Erreur : les paramètres spécifiques du jeu ne peuvent pas être initialisés. "
 "%1%"
 
 #: src/gui/app.cpp:406
 msgid "None of the supported games were detected."
 msgstr "Aucuns des jeux pris en charge n'a été détecté."
 
-#: src/gui/handler.cpp:216 src/gui/handler.cpp:220
+#: src/gui/handler.cpp:217 src/gui/handler.cpp:221
 msgid "Failed to change game. Details: %1%"
 msgstr "Impossible de changer jeu. Détails : %1%"
 
-#: src/gui/handler.cpp:237 src/gui/handler.cpp:241 src/gui/handler.cpp:318
-#: src/gui/handler.cpp:322
+#: src/gui/handler.cpp:238 src/gui/handler.cpp:242 src/gui/handler.cpp:319
+#: src/gui/handler.cpp:323 src/gui/handler.cpp:355 src/gui/handler.cpp:359
 msgid "Failed to copy plugin metadata. Details: %1%"
 msgstr "Impossible de copier les métadonnées du plugin. Détails : %1%"
 
-#: src/gui/handler.cpp:337 src/gui/handler.cpp:902
+#: src/gui/handler.cpp:391 src/gui/handler.cpp:956
 msgid "Loading plugin contents..."
 msgstr "Chargement du contenu des plugins..."
 
-#: src/gui/handler.cpp:341
+#: src/gui/handler.cpp:395
 msgid "Checking for conflicting plugins..."
 msgstr "Vérification des conflits de plugins..."
 
-#: src/gui/handler.cpp:511 src/gui/handler.cpp:519
+#: src/gui/handler.cpp:565 src/gui/handler.cpp:573
 msgid "Shell execute failed."
 msgstr ""
 
-#: src/gui/handler.cpp:576
+#: src/gui/handler.cpp:630
 msgid "Loading plugin headers..."
 msgstr "Chargement des en-têtes des plugins..."
 
-#: src/gui/handler.cpp:602
+#: src/gui/handler.cpp:656
 msgid "Parsing masterlist..."
 msgstr "Traitement de la masterlist..."
 
-#: src/gui/handler.cpp:608
+#: src/gui/handler.cpp:662
 msgid "An error occurred while parsing the masterlist: %1%"
 msgstr "Une erreur s'est produite pendant le traitement de la masterlist : %1%"
 
-#: src/gui/handler.cpp:614
+#: src/gui/handler.cpp:668
 msgid "Parsing userlist..."
 msgstr "Traitement de l'userlist..."
 
-#: src/gui/handler.cpp:620
+#: src/gui/handler.cpp:674
 msgid "An error occurred while parsing the userlist: %1%"
 msgstr "Une erreur s'est produite pendant le traitement de l'userlist : %1%"
 
-#: src/gui/handler.cpp:645
+#: src/gui/handler.cpp:699
 msgid "Merging and evaluating plugin metadata..."
 msgstr "Fusion et évaluation des métadonnées des plugins..."
 
-#: src/gui/handler.cpp:710
+#: src/gui/handler.cpp:764
 msgid "Loading general messages..."
 msgstr "Chargement des messages généraux ..."
 
-#: src/gui/handler.cpp:734 src/gui/handler.cpp:840
+#: src/gui/handler.cpp:788 src/gui/handler.cpp:894
 msgid ""
 "A global message contains a condition that could not be evaluated. Details: "
 "%1%"
@@ -333,23 +333,23 @@ msgstr ""
 "Un message global contient une condition qui n'a pas pu être évaluée. "
 "Détails : %1%"
 
-#: src/gui/handler.cpp:744 src/gui/handler.cpp:748
+#: src/gui/handler.cpp:798 src/gui/handler.cpp:802
 msgid "Failed to get game data. Details: %1%"
 msgstr "Impossible d'obtenir les données du jeux. Détails : %1%"
 
-#: src/gui/handler.cpp:767
+#: src/gui/handler.cpp:821
 msgid "Updating and parsing masterlist..."
 msgstr "Mise à jour et traitement de la masterlist..."
 
-#: src/gui/handler.cpp:783
+#: src/gui/handler.cpp:837
 msgid "Regenerating displayed content..."
 msgstr "Régénération du contenu affiché..."
 
-#: src/gui/handler.cpp:853 src/gui/handler.cpp:857
+#: src/gui/handler.cpp:907 src/gui/handler.cpp:911
 msgid "Failed to update the masterlist. Details: %1%"
 msgstr "Impossible de mettre à jour la masterlist. Détails : %1%"
 
-#: src/gui/handler.cpp:936
+#: src/gui/handler.cpp:990
 msgid "Failed to sort plugins. Details: %1%"
 msgstr "Impossible de trier les plugins. Détails : %1%"
 
@@ -369,32 +369,32 @@ msgstr "Regex string invalide :"
 msgid "Expected \"%1%\" at \"%2%\"."
 msgstr "Prévu \"%1%\" à \"%2%\"."
 
-#: resources/report/js/events.js:19
+#: resources/report/js/events.js:42
 msgid "Loading game data..."
 msgstr "Chargement des données du jeu..."
 
-#: resources/report/js/events.js:89
+#: resources/report/js/events.js:112
 #, javascript-format
 msgid "Masterlist updated to revision %s."
 msgstr "Masterlist mise à jour vers la révision %s."
 
-#: resources/report/js/events.js:91
+#: resources/report/js/events.js:114
 msgid "No masterlist update was necessary."
 msgstr "La mise à jour de la masterlist n'est pas nécessaire."
 
-#: resources/report/js/events.js:96
+#: resources/report/js/events.js:119
 msgid "Updating masterlist..."
 msgstr "Mise à jour de la masterlist..."
 
-#: resources/report/js/events.js:111
+#: resources/report/js/events.js:143
 msgid "Sorting plugins..."
 msgstr "Tri des plugins..."
 
-#: resources/report/js/events.js:213
+#: resources/report/js/events.js:245
 msgid "Redate Plugins?"
 msgstr "Redater les plugins ?"
 
-#: resources/report/js/events.js:213
+#: resources/report/js/events.js:245
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
@@ -405,11 +405,11 @@ msgstr ""
 "secondaire est que les mods choisis sur le Steam Workshop seront "
 "retéléchargés par Steam. Voulez-vous continuer ? "
 
-#: resources/report/js/events.js:213
+#: resources/report/js/events.js:245
 msgid "Redate"
 msgstr "Redater"
 
-#: resources/report/js/events.js:222
+#: resources/report/js/events.js:254
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from all "
 "plugins?"
@@ -417,24 +417,28 @@ msgstr ""
 "Êtes-vous sûr de vouloir effacer toutes les métadonnées utilisateur "
 "existantes dans tous les plugins ?"
 
-#: resources/report/js/events.js:222 resources/report/js/events.js:514
+#: resources/report/js/events.js:254 resources/report/js/events.js:566
 msgid "Clear"
 msgstr "Confirmer"
 
-#: resources/report/js/events.js:243
+#: resources/report/js/events.js:276
 msgid "All user-added metadata has been cleared."
 msgstr "Toutes les métadonnées utilisateur ont été supprimées."
 
-#: resources/report/js/events.js:300
+#: resources/report/js/events.js:333
 msgid "LOOT's content has been copied to the clipboard."
 msgstr "Le contenu de LOOT a été copié dans le presse-papiers."
 
-#: resources/report/js/events.js:510
+#: resources/report/js/events.js:355
+msgid "The load order has been copied to the clipboard."
+msgstr "L'ordre de chargement a été copié dans le presse-papiers."
+
+#: resources/report/js/events.js:562
 #, javascript-format
 msgid "The metadata for \"%s\" has been copied to the clipboard."
 msgstr "Les métadonnées de \"%s\" ont été copiées dans le presse-papiers."
 
-#: resources/report/js/events.js:514
+#: resources/report/js/events.js:566
 #, javascript-format
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from \"%s\"?"
@@ -442,20 +446,20 @@ msgstr ""
 "Êtes-vous sûr de vouloir effacer toutes les métadonnées utilisateur "
 "existantes de \"%s\" ?"
 
-#: resources/report/js/events.js:539
+#: resources/report/js/events.js:592
 #, javascript-format
 msgid "The user-added metadata for \"%s\" has been cleared."
 msgstr "Les métadonnées utilisateur de \"%s\" ont été supprimées."
 
-#: resources/report/js/events.js:559
+#: resources/report/js/events.js:615
 msgid "sorted load order"
 msgstr ""
 
-#: resources/report/js/events.js:561
+#: resources/report/js/events.js:617
 msgid "metadata edits"
 msgstr "modifications de métadonnées"
 
-#: resources/report/js/events.js:572
+#: resources/report/js/events.js:628
 msgid "Refreshing data..."
 msgstr "Actualisation des données..."
 
@@ -472,11 +476,11 @@ msgid "Error"
 msgstr "Erreur"
 
 #: resources/report/js/helpers.js:27 resources/report/js/l10n.js:130
-#: resources/report/js/l10n.js:227 resources/report/js/l10n.js:301
+#: resources/report/js/l10n.js:227 resources/report/js/l10n.js:306
 msgid "Cancel"
 msgstr "Annuler"
 
-#: resources/report/js/helpers.js:33 resources/report/js/l10n.js:313
+#: resources/report/js/helpers.js:33 resources/report/js/l10n.js:318
 msgid "OK"
 msgstr "OK"
 
@@ -488,7 +492,7 @@ msgstr ""
 "Vous n'êtes pas encore appliquée ou annulé votre %s. Êtes-vous sûr de "
 "vouloir quitter ?"
 
-#: resources/report/js/helpers.js:54 resources/report/js/l10n.js:238
+#: resources/report/js/helpers.js:54 resources/report/js/l10n.js:240
 msgid "Quit"
 msgstr "Quitter"
 
@@ -501,7 +505,7 @@ msgid "Active Plugin"
 msgstr "Plugin actif"
 
 #: resources/report/js/l10n.js:62 resources/report/js/l10n.js:81
-#: resources/report/js/l10n.js:290
+#: resources/report/js/l10n.js:295
 msgid "Master File"
 msgstr "Fichier maître"
 
@@ -609,7 +613,7 @@ msgstr "Type"
 msgid "Content"
 msgstr "Contenu"
 
-#: resources/report/js/l10n.js:114 resources/report/js/l10n.js:278
+#: resources/report/js/l10n.js:114 resources/report/js/l10n.js:283
 msgid "Language"
 msgstr "Langue"
 
@@ -650,7 +654,7 @@ msgid "Version"
 msgstr "Version"
 
 #: resources/report/js/l10n.js:129 resources/report/js/l10n.js:226
-#: resources/report/js/l10n.js:300
+#: resources/report/js/l10n.js:305
 msgid "Apply"
 msgstr "Appliquer"
 
@@ -713,7 +717,7 @@ msgstr "Un lien est requis."
 msgid "A folder is required."
 msgstr "Un dossier est requis."
 
-#: resources/report/js/l10n.js:220 resources/report/js/l10n.js:298
+#: resources/report/js/l10n.js:220 resources/report/js/l10n.js:303
 msgid "Add New Row"
 msgstr "Ajouter une nouvelle ligne"
 
@@ -729,189 +733,202 @@ msgstr "Trier les plugins"
 msgid "Update Masterlist"
 msgstr "Mettre à jour la masterlist"
 
-#: resources/report/js/l10n.js:230
+# afficher à quel endroit ? à vérifier.
+#: resources/report/js/l10n.js:228
+msgid "Search Cards"
+msgstr ""
+
+#: resources/report/js/l10n.js:231
 msgid "Redate Plugins"
 msgstr "Redater les plugins"
 
-#: resources/report/js/l10n.js:231
+#: resources/report/js/l10n.js:232
 msgid "Open Debug Log Location"
 msgstr "Ouvrir le dossier du journal de débogage"
 
-#: resources/report/js/l10n.js:232
+#: resources/report/js/l10n.js:233
 msgid "Clear All User Metadata"
 msgstr "Vider toutes les métadonnées utilisateur"
 
-#: resources/report/js/l10n.js:233
+#: resources/report/js/l10n.js:234
+msgid "Copy Load Order"
+msgstr "Copier l'ordre de chargement"
+
+#: resources/report/js/l10n.js:235
 msgid "Copy Content"
 msgstr "Copier le contenu"
 
-#: resources/report/js/l10n.js:234
+#: resources/report/js/l10n.js:236
 msgid "Refresh Content"
 msgstr "Actualiser le contenu"
 
-#: resources/report/js/l10n.js:235
+#: resources/report/js/l10n.js:237
 msgid "View Documentation"
 msgstr "Afficher la documentation"
 
-#: resources/report/js/l10n.js:236
+#: resources/report/js/l10n.js:238
 msgid "About"
 msgstr "A propos"
 
-#: resources/report/js/l10n.js:237 resources/report/js/l10n.js:270
+#: resources/report/js/l10n.js:239 resources/report/js/l10n.js:275
 msgid "Settings"
 msgstr "Paramètres"
 
-#: resources/report/js/l10n.js:241
+#: resources/report/js/l10n.js:243
+msgid "Search cards"
+msgstr "Rechercher..."
+
+#: resources/report/js/l10n.js:246
 msgid "Plugins"
 msgstr "Plugins"
 
-#: resources/report/js/l10n.js:242
+#: resources/report/js/l10n.js:247
 msgid "Filters"
 msgstr "Filtres"
 
-#: resources/report/js/l10n.js:243
+#: resources/report/js/l10n.js:248
 msgid "Press Enter or click outside the input to set the filter."
 msgstr ""
 "Pour appliquer le filtre, appuyez sur Entrée ou cliquez hors du champ de "
 "saisie."
 
-#: resources/report/js/l10n.js:244
+#: resources/report/js/l10n.js:249
 msgid "Filter content..."
-msgstr "Filtrer..."
+msgstr "Filtrer le contenu..."
 
-#: resources/report/js/l10n.js:247
+#: resources/report/js/l10n.js:252
 msgid "Hide version numbers"
 msgstr "Cacher les numéros de versions"
 
-#: resources/report/js/l10n.js:248
+#: resources/report/js/l10n.js:253
 msgid "Hide CRCs"
 msgstr "Cacher le CRC"
 
-#: resources/report/js/l10n.js:249
+#: resources/report/js/l10n.js:254
 msgid "Hide Bash Tags"
 msgstr "Cacher les étiquettes bash"
 
-#: resources/report/js/l10n.js:250
+#: resources/report/js/l10n.js:255
 msgid "Hide notes"
 msgstr "Cacher les notes"
 
-#: resources/report/js/l10n.js:251
+#: resources/report/js/l10n.js:256
 msgid "Hide 'Do not clean' messages"
 msgstr "Cacher les messages 'Ne pas nettoyer'"
 
-#: resources/report/js/l10n.js:252
+#: resources/report/js/l10n.js:257
 msgid "Hide all plugin messages"
 msgstr "Cacher les messages des plugins"
 
-#: resources/report/js/l10n.js:253
+#: resources/report/js/l10n.js:258
 msgid "Hide inactive plugins"
 msgstr "Cacher les plugins inactifs"
 
-#: resources/report/js/l10n.js:254
+#: resources/report/js/l10n.js:259
 msgid "Hide messageless plugins"
 msgstr "Cacher les plugins sans messages"
 
-#: resources/report/js/l10n.js:255
+#: resources/report/js/l10n.js:260
 msgid "Hidden plugins:"
 msgstr "Plugins cachés :"
 
-#: resources/report/js/l10n.js:256
+#: resources/report/js/l10n.js:261
 msgid "Hidden messages:"
 msgstr "Message cachés :"
 
-#: resources/report/js/l10n.js:259
+#: resources/report/js/l10n.js:264
 msgid "General Information"
 msgstr "Informations générales"
 
-#: resources/report/js/l10n.js:260
+#: resources/report/js/l10n.js:265
 msgid "Masterlist Revision"
 msgstr "Révision de la masterlist"
 
-#: resources/report/js/l10n.js:261
+#: resources/report/js/l10n.js:266
 msgid "Masterlist Date"
 msgstr "Date de la masterlist"
 
-#: resources/report/js/l10n.js:262
+#: resources/report/js/l10n.js:267
 msgid "Warnings"
 msgstr "Avertissements"
 
-#: resources/report/js/l10n.js:263
+#: resources/report/js/l10n.js:268
 msgid "Errors"
 msgstr "Erreurs"
 
-#: resources/report/js/l10n.js:264
+#: resources/report/js/l10n.js:269
 msgid "Total Messages"
 msgstr "Total de messages"
 
-#: resources/report/js/l10n.js:265
+#: resources/report/js/l10n.js:270
 msgid "Active Plugins"
 msgstr "Plugins actifs"
 
-#: resources/report/js/l10n.js:266
+#: resources/report/js/l10n.js:271
 msgid "Dirty Plugins"
 msgstr "Plugins sales"
 
-#: resources/report/js/l10n.js:267
+#: resources/report/js/l10n.js:272
 msgid "Total Plugins"
 msgstr "Total de plugins"
 
-#: resources/report/js/l10n.js:273
+#: resources/report/js/l10n.js:278
 msgid "Default Game"
 msgstr "Jeu par défaut"
 
-#: resources/report/js/l10n.js:274 resources/report/js/l10n.js:276
+#: resources/report/js/l10n.js:279
 msgid "Autodetect"
 msgstr "Détection automatique"
 
-#: resources/report/js/l10n.js:279
+#: resources/report/js/l10n.js:284
 msgid "Language changes will be applied after LOOT is restarted."
 msgstr "Le changement de langage sera effectif après un redémarrage de LOOT."
 
-#: resources/report/js/l10n.js:281
+#: resources/report/js/l10n.js:286
 msgid "Enable debug logging"
 msgstr "Activer le journal de débogage"
 
-#: resources/report/js/l10n.js:282
+#: resources/report/js/l10n.js:287
 msgid "The output is logged to the LOOTDebugLog.txt file."
 msgstr "Les informations sont enregistrées dans le fichier LOOTDEbugLog.txt."
 
-#: resources/report/js/l10n.js:284
+#: resources/report/js/l10n.js:289
 msgid "Update masterlist before sorting"
 msgstr "Mettre à jour la masterlist avant de trier"
 
-#: resources/report/js/l10n.js:287
+#: resources/report/js/l10n.js:292
 msgid "Name"
 msgstr "Nom"
 
-#: resources/report/js/l10n.js:288
+#: resources/report/js/l10n.js:293
 msgid "Base Game"
 msgstr "Jeu de base"
 
-#: resources/report/js/l10n.js:289
+#: resources/report/js/l10n.js:294
 msgid "LOOT Folder"
 msgstr "Dossier LOOT"
 
-#: resources/report/js/l10n.js:291
+#: resources/report/js/l10n.js:296
 msgid "Masterlist Repository URL"
 msgstr "URL du dépôt de la masterlist"
 
-#: resources/report/js/l10n.js:292
+#: resources/report/js/l10n.js:297
 msgid "Masterlist Repository Branch"
 msgstr "Branche du dépôt de la masterlist"
 
-#: resources/report/js/l10n.js:293
+#: resources/report/js/l10n.js:298
 msgid "Install Path"
 msgstr "Chemin d'installation"
 
-#: resources/report/js/l10n.js:294
+#: resources/report/js/l10n.js:299
 msgid "Install Path Registry Key"
 msgstr "Clé du registre du chemin d'installation"
 
-#: resources/report/js/l10n.js:305
+#: resources/report/js/l10n.js:310
 msgid "First-Time Tips"
 msgstr "Astuces"
 
-#: resources/report/js/l10n.js:307
+#: resources/report/js/l10n.js:312
 msgid ""
 "CRCs are only displayed after plugins have been loaded, either by conflict "
 "filtering, or by sorting."
@@ -919,7 +936,7 @@ msgstr ""
 "Les CRC sont affichés uniquement après que les plugins aient été chargés, "
 "soit par filtrage des conflits, ou par le tri."
 
-#: resources/report/js/l10n.js:308
+#: resources/report/js/l10n.js:313
 msgid ""
 "Double-click a plugin in the sidebar to quickly open its metadata editor. "
 "Multiple metadata editors can be opened at once."
@@ -928,13 +945,15 @@ msgstr ""
 "son éditeur de métadonnées. Plusieurs éditeurs de métadonnées peuvent être "
 "ouverts à la fois."
 
-#: resources/report/js/l10n.js:309
+#: resources/report/js/l10n.js:314
 msgid ""
 "Plugins can be drag and dropped from the sidebar into editors' \"load after, "
 "\"requirements\" and \"incompatibility\" tables."
 msgstr ""
+"Les plugins peuvent être déplacés de la barre latérale vers les panneaux "
+"d'édition \"Charger après\", \"Requis\" et \"Incompatibilités\"."
 
-#: resources/report/js/l10n.js:310
+#: resources/report/js/l10n.js:315
 msgid ""
 "Some features are disabled while there is an editor open, or while there is "
 "a sorted load order that has not been applied or discarded."
@@ -943,7 +962,7 @@ msgstr ""
 "qu'une modification de l'ordre de chargement n'a pas été appliquée ou "
 "annulée."
 
-#: resources/report/js/l10n.js:311
+#: resources/report/js/l10n.js:316
 msgid ""
 "Many interface elements have tooltips. If you don't know what something is, "
 "try hovering your mouse over it to find out. Otherwise, LOOT's documentation "
