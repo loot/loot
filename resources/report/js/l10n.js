@@ -246,7 +246,7 @@
             document.getElementById('sidebarTabs').firstElementChild.textContent = l10n.translate("Plugins").fetch();
             document.getElementById('sidebarTabs').firstElementChild.nextElementSibling.textContent = l10n.translate("Filters").fetch();
             document.getElementById('contentFilter').parentElement.label = l10n.translate("Press Enter or click outside the input to set the filter.").fetch();
-            document.getElementById('contentFilter').label = l10n.translate("Filter content...").fetch();
+            document.getElementById('contentFilter').label = l10n.translate("Filter content").fetch();
 
             /* Filters */
             document.getElementById('hideVersionNumbers').label = l10n.translate("Hide version numbers").fetch();
