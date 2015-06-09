@@ -25,15 +25,11 @@
 #ifndef __LOOT_GUI_HANDLER__
 #define __LOOT_GUI_HANDLER__
 
-#include "../backend/globals.h"
-#include "../backend/helpers.h"
+#include "../backend/plugin.h"
 
-#include <include/cef_client.h>
 #include <include/wrapper/cef_message_router.h>
 
 #include <yaml-cpp/yaml.h>
-
-#include <list>
 
 namespace loot {
     class Handler : public CefMessageRouterBrowserSide::Handler {
@@ -78,71 +74,6 @@ namespace loot {
         void SendProgressUpdate(CefRefPtr<CefFrame> frame, const std::string& message);
     private:
         IMPLEMENT_REFCOUNTING(Handler);
-    };
-
-    class LootHandler : public CefClient,
-        public CefDisplayHandler,
-        public CefLifeSpanHandler,
-        public CefLoadHandler,
-        public CefRequestHandler {
-    public:
-        LootHandler();
-        ~LootHandler();
-
-        // Provide access to the single global instance of this object.
-        static LootHandler * GetInstance();
-
-        // CefClient methods
-        //------------------
-        virtual CefRefPtr<CefDisplayHandler> GetDisplayHandler() OVERRIDE;
-        virtual CefRefPtr<CefLifeSpanHandler> GetLifeSpanHandler() OVERRIDE;
-        virtual CefRefPtr<CefLoadHandler> GetLoadHandler() OVERRIDE;
-
-        virtual bool OnProcessMessageReceived(CefRefPtr<CefBrowser> browser,
-                                              CefProcessId source_process,
-                                              CefRefPtr<CefProcessMessage> message) OVERRIDE;
-
-        // CefLifeSpanHandler methods
-        //---------------------------
-        virtual void OnAfterCreated(CefRefPtr<CefBrowser> browser) OVERRIDE;
-        virtual bool DoClose(CefRefPtr<CefBrowser> browser) OVERRIDE;
-        virtual void OnBeforeClose(CefRefPtr<CefBrowser> browser) OVERRIDE;
-
-        // CefLoadHandler methods
-        //-----------------------
-        virtual void OnLoadError(CefRefPtr<CefBrowser> browser,
-                                 CefRefPtr<CefFrame> frame,
-                                 ErrorCode errorCode,
-                                 const CefString& errorText,
-                                 const CefString& failedUrl) OVERRIDE;
-
-        // CefRequestHandler methods
-        //--------------------------
-
-        virtual CefRefPtr<CefRequestHandler> GetRequestHandler() OVERRIDE{
-            return this;
-        }
-
-            virtual bool OnBeforeBrowse(CefRefPtr< CefBrowser > browser,
-            CefRefPtr< CefFrame > frame,
-            CefRefPtr< CefRequest > request,
-            bool is_redirect) OVERRIDE;
-
-        // Request that all existing browser windows close.
-        void CloseAllBrowsers(bool force_close);
-
-        bool IsClosing() const { return is_closing_; }
-
-    private:
-        // List of existing browser windows. Only accessed on the CEF UI thread.
-        typedef std::list<CefRefPtr<CefBrowser> > BrowserList;
-        BrowserList browser_list_;
-        CefRefPtr<CefMessageRouterBrowserSide> browser_side_router_;
-
-        bool is_closing_;
-
-        // Include the default reference counting implementation.
-        IMPLEMENT_REFCOUNTING(LootHandler);
     };
 }
 

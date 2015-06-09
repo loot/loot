@@ -22,21 +22,36 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#ifndef __LOOT_GRAPH__
-#define __LOOT_GRAPH__
+#ifndef __LOOT_MASTERLIST__
+#define __LOOT_MASTERLIST__
 
-#include "plugin.h"
+#include "metadata_list.h"
 
-#include <boost/graph/graph_traits.hpp>
-#include <boost/graph/adjacency_list.hpp>
-#include <boost/graph/topological_sort.hpp>
-#include <boost/graph/graphviz.hpp>
+#include <string>
+
+#include <boost/filesystem.hpp>
 
 namespace loot {
-    typedef boost::adjacency_list<boost::listS, boost::listS, boost::directedS, loot::Plugin> PluginGraph;
-    typedef boost::graph_traits<PluginGraph>::vertex_descriptor vertex_t;
+    class Game;
 
-    std::list<Plugin> Sort(PluginGraph& graph, const std::list<std::string>& loadorder);
+    class Masterlist : public MetadataList {
+    public:
+
+        bool Load(Game& game, const unsigned int language);  //Handles update with load fallback.
+        bool Update(const Game& game);
+        bool Update(const boost::filesystem::path& path,
+                    const std::string& repoURL,
+                    const std::string& repoBranch);
+
+        std::string GetRevision(const boost::filesystem::path& path, bool shortID);
+        std::string GetDate(const boost::filesystem::path& path);
+
+    private:
+        void GetGitInfo(const boost::filesystem::path& path, bool shortID);
+
+        std::string revision;
+        std::string date;
+    };
 }
 
 #endif

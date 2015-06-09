@@ -21,10 +21,16 @@
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
     */
-#ifndef __LOOT_METADATA__
-#define __LOOT_METADATA__
+#ifndef __LOOT_METADATA_PLUGIN__
+#define __LOOT_METADATA_PLUGIN__
 
-#include "globals.h"
+#include "metadata/file.h"
+#include "metadata/formid.h"
+#include "metadata/location.h"
+#include "metadata/message.h"
+#include "metadata/plugin_dirty_info.h"
+#include "metadata/tag.h"
+#include "yaml_set_helpers.h"
 
 #include <cstdint>
 #include <string>
@@ -34,149 +40,12 @@
 
 #include <boost/locale.hpp>
 
+#include <yaml-cpp/yaml.h>
+
 namespace loot {
     const unsigned int max_priority = 1000000;
 
     class Game;
-
-    //A FormID is a 32 bit unsigned integer of the form xxYYYYYY in hex. The xx is the position in the masters list of the plugin that the FormID is from, and the YYYYYY is the rest of the FormID. Here the xx bit is stored as the corresponding filename to allow comparison between FormIDs from different plugins.
-    class FormID {
-    public:
-        FormID();
-        FormID(const std::string& pluginName, const uint32_t objectID);
-        FormID(const std::vector<std::string>& masters, const uint32_t formID);  //The masters here also includes the plugin that they are masters of as the last element.
-
-        bool operator < (const FormID& rhs) const;
-        bool operator == (const FormID& rhs) const;
-
-        std::string Plugin() const;
-        uint32_t Id() const;
-    private:
-        std::string plugin;
-        uint32_t id;
-    };
-
-    class ConditionStruct {
-    public:
-        ConditionStruct();
-        ConditionStruct(const std::string& condition);
-
-        bool IsConditional() const;
-        bool EvalCondition(Game& game) const;
-        void ParseCondition() const;  // Throws error on parsing failure.
-
-        std::string Condition() const;
-    private:
-        std::string _condition;
-    };
-
-    class MessageContent {
-    public:
-        MessageContent();
-        MessageContent(const std::string& str, const unsigned int language);
-
-        std::string Str() const;
-        unsigned int Language() const;
-
-        bool operator < (const MessageContent& rhs) const;
-        bool operator == (const MessageContent& rhs) const;
-    private:
-        std::string _str;
-        unsigned int _language;
-    };
-
-    class Message : public ConditionStruct {
-    public:
-        Message();
-        Message(const unsigned int type, const std::string& content,
-                const std::string& condition = "");
-        Message(const unsigned int type, const std::vector<MessageContent>& content,
-                const std::string& condition = "");
-
-        bool operator < (const Message& rhs) const;
-        bool operator == (const Message& rhs) const;
-
-        bool EvalCondition(Game& game, const unsigned int language);
-
-        unsigned int Type() const;
-        std::vector<MessageContent> Content() const;
-        MessageContent ChooseContent(const unsigned int language) const;
-
-        static const unsigned int say = 0;
-        static const unsigned int warn = 1;
-        static const unsigned int error = 2;
-    private:
-        unsigned int _type;
-        std::vector<MessageContent> _content;
-    };
-
-    class PluginDirtyInfo {
-    public:
-        PluginDirtyInfo();
-        PluginDirtyInfo(uint32_t crc, unsigned int itm, unsigned int ref, unsigned int nav, const std::string& utility);
-
-        bool operator < (const PluginDirtyInfo& rhs) const;
-
-        uint32_t CRC() const;
-        unsigned int ITMs() const;
-        unsigned int DeletedRefs() const;
-        unsigned int DeletedNavmeshes() const;
-        std::string CleaningUtility() const;
-
-        Message AsMessage() const;
-    private:
-        uint32_t _crc;
-        unsigned int _itm;
-        unsigned int _ref;
-        unsigned int _nav;
-        std::string _utility;
-    };
-
-    class File : public ConditionStruct {
-    public:
-        File();
-        File(const std::string& name, const std::string& display = "",
-             const std::string& condition = "");
-
-        bool operator < (const File& rhs) const;
-        bool operator == (const File& rhs) const;
-
-        std::string Name() const;
-        std::string DisplayName() const;
-    private:
-        std::string _name;
-        std::string _display;
-    };
-
-    class Tag : public ConditionStruct {
-    public:
-        Tag();
-        Tag(const std::string& tag, const bool isAddition = true, const std::string& condition = "");
-
-        bool operator < (const Tag& rhs) const;
-        bool operator == (const Tag& rhs) const;
-
-        bool IsAddition() const;
-        std::string Name() const;
-    private:
-        std::string _name;
-        bool addTag;
-    };
-
-    class Location {
-    public:
-        Location();
-        Location(const std::string& url);
-        Location(const std::string& url, const std::vector<std::string>& versions);
-
-        bool operator < (const Location& rhs) const;
-
-        std::string URL() const;
-        std::vector<std::string> Versions() const;
-    private:
-        std::string _url;
-        std::vector<std::string> _versions;
-    };
 
     class Plugin {
     public:
@@ -286,6 +155,65 @@ namespace std {
             return hash<string>()(boost::locale::to_lower(plugin.Name()));
         }
     };
+}
+
+namespace YAML {
+    template<>
+    struct convert < loot::Plugin > {
+        static Node encode(const loot::Plugin& rhs) {
+            Node node;
+            node["name"] = rhs.Name();
+            node["enabled"] = rhs.Enabled();
+            node["priority"] = rhs.Priority();
+            node["after"] = rhs.LoadAfter();
+            node["req"] = rhs.Reqs();
+            node["inc"] = rhs.Incs();
+            node["msg"] = rhs.Messages();
+            node["tag"] = rhs.Tags();
+            node["dirty"] = rhs.DirtyInfo();
+            node["url"] = rhs.Locations();
+
+            return node;
+        }
+
+        static bool decode(const Node& node, loot::Plugin& rhs) {
+            if (!node.IsMap() || !node["name"])
+                return false;
+
+            rhs = loot::Plugin(node["name"].as<std::string>());
+
+            if (node["enabled"])
+                rhs.Enabled(node["enabled"].as<bool>());
+
+            if (node["priority"]) {
+                rhs.Priority(node["priority"].as<int>());
+                rhs.SetPriorityExplicit(true);
+            }
+
+            if (node["after"])
+                rhs.LoadAfter(node["after"].as< std::set<loot::File> >());
+            if (node["req"])
+                rhs.Reqs(node["req"].as< std::set<loot::File> >());
+            if (node["inc"])
+                rhs.Incs(node["inc"].as< std::set<loot::File> >());
+            if (node["msg"])
+                rhs.Messages(node["msg"].as< std::list<loot::Message> >());
+            if (node["tag"])
+                rhs.Tags(node["tag"].as< std::set<loot::Tag> >());
+            if (node["dirty"]) {
+                if (rhs.IsRegexPlugin())
+                    return false;
+                else
+                    rhs.DirtyInfo(node["dirty"].as< std::set<loot::PluginDirtyInfo> >());
+            }
+            if (node["url"])
+                rhs.Locations(node["url"].as< std::set<loot::Location> >());
+
+            return true;
+        }
+    };
+
+    Emitter& operator << (Emitter& out, const loot::Plugin& rhs);
 }
 
 #endif

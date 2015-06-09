@@ -23,7 +23,6 @@
     */
 
 #include "error.h"
-#include "parsers.h"
 #include "streams.h"
 #include "helpers.h"
 #include "game.h"

@@ -25,7 +25,9 @@
 #ifndef __LOOT_GAME__
 #define __LOOT_GAME__
 
-#include "metadata.h"
+#include "plugin.h"
+#include "metadata_list.h"
+#include "masterlist.h"
 
 #include <string>
 #include <vector>
@@ -41,64 +43,6 @@
 #include <yaml-cpp/yaml.h>
 
 namespace loot {
-    class Game;
-
-    /* Each Game object should store the config details specific to that game.
-       It should also store the plugin and masterlist data for that game.
-       Plugin data should be stored as an unordered hashset, the elements of which are
-       referenced by ordered lists and other structures.
-       Masterlist / userlist data should be stored as structures which hold plugin and
-       global message lists.
-       Each game should have functions to load this plugin and masterlist / userlist
-       data. Plugin data should be loaded as header-only and as full data.
-       */
-
-    class MetadataList {
-    public:
-        void Load(const boost::filesystem::path& filepath);
-        void Save(const boost::filesystem::path& filepath);
-        void clear();
-
-        bool operator == (const MetadataList& rhs) const;  //Compares content.
-
-        std::list<Plugin> Plugins() const;
-
-        // Merges multiple matching regex entries if any are found.
-        Plugin FindPlugin(const Plugin& plugin) const;
-        void AddPlugin(const Plugin& plugin);
-
-        // Doesn't erase matching regex entries, because they might also
-        // be required for other plugins.
-        void ErasePlugin(const Plugin& plugin);
-
-        // Eval plugin conditions.
-        void EvalAllConditions(Game& game, const unsigned int language);
-
-        std::list<Message> messages;
-    protected:
-        std::unordered_set<Plugin> plugins;
-        std::list<Plugin> regexPlugins;
-    };
-
-    class Masterlist : public MetadataList {
-    public:
-
-        bool Load(Game& game, const unsigned int language);  //Handles update with load fallback.
-        bool Update(const Game& game);
-        bool Update(const boost::filesystem::path& path,
-                    const std::string& repoURL,
-                    const std::string& repoBranch);
-
-        std::string GetRevision(const boost::filesystem::path& path, bool shortID);
-        std::string GetDate(const boost::filesystem::path& path);
-
-    private:
-        void GetGitInfo(const boost::filesystem::path& path, bool shortID);
-
-        std::string revision;
-        std::string date;
-    };
-
     class Game {
     public:
         //Game functions.
@@ -186,6 +130,62 @@ namespace loot {
     };
 
     std::list<Game> GetGames(YAML::Node& settings);
+}
+
+namespace YAML {
+    template<>
+    struct convert < loot::Game > {
+        static Node encode(const loot::Game& rhs) {
+            Node node;
+
+            node["type"] = loot::Game(rhs.Id()).FolderName();
+            node["name"] = rhs.Name();
+            node["folder"] = rhs.FolderName();
+            node["master"] = rhs.Master();
+            node["repo"] = rhs.RepoURL();
+            node["branch"] = rhs.RepoBranch();
+            node["path"] = rhs.GamePath().string();
+            node["registry"] = rhs.RegistryKey();
+
+            return node;
+        }
+
+        static bool decode(const Node& node, loot::Game& rhs) {
+            if (!node.IsMap() || !node["folder"] || !node["type"])
+                return false;
+
+            if (node["type"].as<std::string>() == loot::Game(loot::Game::tes4).FolderName())
+                rhs = loot::Game(loot::Game::tes4, node["folder"].as<std::string>());
+            else if (node["type"].as<std::string>() == loot::Game(loot::Game::tes5).FolderName())
+                rhs = loot::Game(loot::Game::tes5, node["folder"].as<std::string>());
+            else if (node["type"].as<std::string>() == loot::Game(loot::Game::fo3).FolderName())
+                rhs = loot::Game(loot::Game::fo3, node["folder"].as<std::string>());
+            else if (node["type"].as<std::string>() == loot::Game(loot::Game::fonv).FolderName())
+                rhs = loot::Game(loot::Game::fonv, node["folder"].as<std::string>());
+            else
+                return false;
+
+            std::string name, master, repo, branch, path, registry;
+            if (node["name"])
+                name = node["name"].as<std::string>();
+            if (node["master"])
+                master = node["master"].as<std::string>();
+            if (node["repo"])
+                repo = node["repo"].as<std::string>();
+            if (node["branch"])
+                branch = node["branch"].as<std::string>();
+            if (node["path"])
+                path = node["path"].as<std::string>();
+            if (node["registry"])
+                registry = node["registry"].as<std::string>();
+
+            rhs.SetDetails(name, master, repo, branch, path, registry);
+
+            return true;
+        }
+    };
+
+    Emitter& operator << (Emitter& out, const loot::Game& rhs);
 }
 
 #endif

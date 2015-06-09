@@ -21,22 +21,26 @@
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
     */
+#ifndef __LOOT_METADATA_CONDITIONAL_METADATA__
+#define __LOOT_METADATA_CONDITIONAL_METADATA__
 
-#ifndef __LOOT_GRAPH__
-#define __LOOT_GRAPH__
-
-#include "plugin.h"
-
-#include <boost/graph/graph_traits.hpp>
-#include <boost/graph/adjacency_list.hpp>
-#include <boost/graph/topological_sort.hpp>
-#include <boost/graph/graphviz.hpp>
+#include <string>
 
 namespace loot {
-    typedef boost::adjacency_list<boost::listS, boost::listS, boost::directedS, loot::Plugin> PluginGraph;
-    typedef boost::graph_traits<PluginGraph>::vertex_descriptor vertex_t;
+    class Game;
 
-    std::list<Plugin> Sort(PluginGraph& graph, const std::list<std::string>& loadorder);
+    class ConditionalMetadata {
+    public:
+        ConditionalMetadata();
+        ConditionalMetadata(const std::string& condition);
+
+        bool IsConditional() const;
+        bool EvalCondition(Game& game) const;
+        void ParseCondition() const;  // Throws error on parsing failure.
+
+        std::string Condition() const;
+    private:
+        std::string _condition;
+    };
 }
-
 #endif

@@ -22,16 +22,16 @@
     <http://www.gnu.org/licenses/>.
     */
 
+#include "plugin.h"
+#include "game.h"
 #include "helpers.h"
-#include "metadata.h"
-#include "parsers.h"
-#include "streams.h"
 
 #include <src/libespm.h>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/log/trivial.hpp>
+#include <boost/format.hpp>
 #include <boost/locale.hpp>
 #include <boost/regex.hpp>
 
@@ -42,336 +42,8 @@ using boost::regex_search;
 using boost::smatch;
 
 namespace loot {
-    namespace lc = boost::locale;
-
-    FormID::FormID() : id(0) {}
-
-    FormID::FormID(const std::string& sourcePlugin, const uint32_t objectID) : plugin(sourcePlugin), id(objectID) {}
-
-    FormID::FormID(const std::vector<std::string>& sourcePlugins, const uint32_t formID) {
-        unsigned int index = formID >> 24;
-        id = formID & ~((uint32_t)index << 24);
-
-        if (index >= sourcePlugins.size()) {
-            BOOST_LOG_TRIVIAL(trace) << hex << formID << dec << " in " << sourcePlugins.back() << " has a higher modIndex than expected.";
-            index = sourcePlugins.size() - 1;
-        }
-
-        plugin = sourcePlugins[index];
-    }
-
-    bool FormID::operator == (const FormID& rhs) const {
-        return (id == rhs.Id() && boost::iequals(plugin, rhs.Plugin()));
-    }
-
-    bool FormID::operator < (const FormID& rhs) const {
-        if (id != rhs.Id())
-            return id < rhs.Id();
-        else
-            return boost::ilexicographical_compare(plugin, rhs.Plugin());
-    }
-
-    std::string FormID::Plugin() const {
-        return plugin;
-    }
-
-    uint32_t FormID::Id() const {
-        return id;
-    }
-
-    ConditionStruct::ConditionStruct() {}
-
-    ConditionStruct::ConditionStruct(const string& condition) : _condition(condition) {}
-
-    bool ConditionStruct::IsConditional() const {
-        return !_condition.empty();
-    }
-
-    std::string ConditionStruct::Condition() const {
-        return _condition;
-    }
-
-    bool ConditionStruct::EvalCondition(Game& game) const {
-        if (_condition.empty())
-            return true;
-
-        BOOST_LOG_TRIVIAL(trace) << "Evaluating condition: " << _condition;
-
-        unordered_map<std::string, bool>::const_iterator it = game.conditionCache.find(boost::locale::to_lower(_condition));
-        if (it != game.conditionCache.end())
-            return it->second;
-
-        condition_grammar<std::string::const_iterator, boost::spirit::qi::space_type> grammar(&game, false);
-        boost::spirit::qi::space_type skipper;
-        std::string::const_iterator begin, end;
-        bool eval;
-
-        begin = _condition.begin();
-        end = _condition.end();
-
-        bool r;
-        try {
-            r = boost::spirit::qi::phrase_parse(begin, end, grammar, skipper, eval);
-        }
-        catch (std::exception& e) {
-            BOOST_LOG_TRIVIAL(error) << "Failed to parse condition \"" << _condition << "\": " << e.what();
-            throw loot::error(loot::error::condition_eval_fail, (boost::format(lc::translate("Failed to parse condition \"%1%\": %2%")) % _condition % e.what()).str());
-        }
-
-        if (!r || begin != end) {
-            BOOST_LOG_TRIVIAL(error) << "Failed to parse condition \"" << _condition << "\".";
-            throw loot::error(loot::error::condition_eval_fail, (boost::format(lc::translate("Failed to parse condition \"%1%\".")) % _condition).str());
-        }
-
-        game.conditionCache.insert(pair<string, bool>(boost::locale::to_lower(_condition), eval));
-
-        return eval;
-    }
-
-    void ConditionStruct::ParseCondition() const {
-        if (_condition.empty())
-            return;
-
-        BOOST_LOG_TRIVIAL(trace) << "Testing condition syntax: " << _condition;
-
-        condition_grammar<std::string::const_iterator, boost::spirit::qi::space_type> grammar(nullptr, true);
-        boost::spirit::qi::space_type skipper;
-        std::string::const_iterator begin, end;
-
-        begin = _condition.begin();
-        end = _condition.end();
-
-        bool r;
-        try {
-            r = boost::spirit::qi::phrase_parse(begin, end, grammar, skipper);
-        }
-        catch (std::exception& e) {
-            BOOST_LOG_TRIVIAL(error) << "Failed to parse condition \"" << _condition << "\": " << e.what();
-            throw loot::error(loot::error::condition_eval_fail, (boost::format(lc::translate("Failed to parse condition \"%1%\": %2%")) % _condition % e.what()).str());
-        }
-
-        if (!r || begin != end) {
-            BOOST_LOG_TRIVIAL(error) << "Failed to parse condition \"" << _condition << "\".";
-            throw loot::error(loot::error::condition_eval_fail, (boost::format(lc::translate("Failed to parse condition \"%1%\".")) % _condition).str());
-        }
-    }
-
-    MessageContent::MessageContent() : _language(Language::english) {}
-
-    MessageContent::MessageContent(const std::string& str, const unsigned int language) : _str(str), _language(language) {}
-
-    std::string MessageContent::Str() const {
-        return _str;
-    }
-
-    unsigned int MessageContent::Language() const {
-        return _language;
-    }
-
-    bool MessageContent::operator < (const MessageContent& rhs) const {
-        return boost::ilexicographical_compare(_str, rhs.Str());
-    }
-
-    bool MessageContent::operator == (const MessageContent& rhs) const {
-        return (_language == rhs.Language() && boost::iequals(_str, rhs.Str()));
-    }
-
-    Message::Message() : _type(Message::say) {}
-
-    Message::Message(const unsigned int type, const std::string& content,
-                     const std::string& condition) : _type(type), ConditionStruct(condition) {
-        _content.push_back(MessageContent(content, Language::english));
-    }
-
-    Message::Message(const unsigned int type, const std::vector<MessageContent>& content,
-                     const std::string& condition) : _type(type), _content(content), ConditionStruct(condition) {}
-
-    bool Message::operator < (const Message& rhs) const {
-        if (!_content.empty() && !rhs.Content().empty())
-            return boost::ilexicographical_compare(_content.front().Str(), rhs.Content().front().Str());
-        else if (_content.empty())
-            return true;
-        else
-            return false;
-    }
-
-    bool Message::operator == (const Message& rhs) const {
-        return (_type == rhs.Type() && _content == rhs.Content());
-    }
-
-    bool Message::EvalCondition(loot::Game& game, const unsigned int language) {
-        BOOST_LOG_TRIVIAL(trace) << "Choosing message content for language: " << Language(language).Name();
-
-        if (_content.size() > 1) {
-            if (language == Language::any)  //Can use a message of any language, so use the first string.
-                _content.resize(1);
-            else {
-                MessageContent english, match;
-                for (const auto &mc : _content) {
-                    if (mc.Language() == language) {
-                        match = mc;
-                        break;
-                    }
-                    else if (mc.Language() == Language::english)
-                        english = mc;
-                }
-                _content.resize(1);
-                if (!match.Str().empty())
-                    _content[0] = match;
-                else
-                    _content[0] = english;
-            }
-        }
-        return ConditionStruct::EvalCondition(game);
-    }
-
-    MessageContent Message::ChooseContent(const unsigned int language) const {
-        BOOST_LOG_TRIVIAL(trace) << "Choosing message content.";
-        if (_content.size() == 1 || language == Language::any)
-            return _content[0];
-        else {
-            MessageContent english, match;
-            for (const auto &mc : _content) {
-                if (mc.Language() == language) {
-                    match = mc;
-                    break;
-                }
-                else if (mc.Language() == Language::english)
-                    english = mc;
-            }
-            if (!match.Str().empty())
-                return match;
-            else
-                return english;
-        }
-    }
-
-    unsigned int Message::Type() const {
-        return _type;
-    }
-
-    std::vector<MessageContent> Message::Content() const {
-        return _content;
-    }
-
-    PluginDirtyInfo::PluginDirtyInfo() : _crc(0), _itm(0), _ref(0), _nav(0) {}
-
-    PluginDirtyInfo::PluginDirtyInfo(uint32_t crc, unsigned int itm, unsigned int ref, unsigned int nav, const std::string& utility) : _crc(crc), _itm(itm), _ref(ref), _nav(nav), _utility(utility) {}
-
-    bool PluginDirtyInfo::operator < (const PluginDirtyInfo& rhs) const {
-        return _crc < rhs.CRC();
-    }
-
-    uint32_t PluginDirtyInfo::CRC() const {
-        return _crc;
-    }
-
-    unsigned int PluginDirtyInfo::ITMs() const {
-        return _itm;
-    }
-
-    unsigned int PluginDirtyInfo::DeletedRefs() const {
-        return _ref;
-    }
-
-    unsigned int PluginDirtyInfo::DeletedNavmeshes() const {
-        return _nav;
-    }
-
-    std::string PluginDirtyInfo::CleaningUtility() const {
-        return _utility;
-    }
-
-    Message PluginDirtyInfo::AsMessage() const {
-        boost::format f;
-        if (this->_itm > 0 && this->_ref > 0 && this->_nav > 0)
-            f = boost::format(boost::locale::translate("Contains %1% ITM records, %2% deleted references and %3% deleted navmeshes. Clean with %4%.")) % this->_itm % this->_ref % this->_nav % this->_utility;
-        else if (this->_itm == 0 && this->_ref == 0 && this->_nav == 0)
-            f = boost::format(boost::locale::translate("Clean with %1%.")) % this->_utility;
-
-        else if (this->_itm == 0 && this->_ref > 0 && this->_nav > 0)
-            f = boost::format(boost::locale::translate("Contains %1% deleted references and %2% deleted navmeshes. Clean with %3%.")) % this->_ref % this->_nav % this->_utility;
-        else if (this->_itm == 0 && this->_ref == 0 && this->_nav > 0)
-            f = boost::format(boost::locale::translate("Contains %1% deleted navmeshes. Clean with %2%.")) % this->_nav % this->_utility;
-        else if (this->_itm == 0 && this->_ref > 0 && this->_nav == 0)
-            f = boost::format(boost::locale::translate("Contains %1% deleted references. Clean with %2%.")) % this->_ref % this->_utility;
-
-        else if (this->_itm > 0 && this->_ref == 0 && this->_nav > 0)
-            f = boost::format(boost::locale::translate("Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%.")) % this->_itm % this->_nav % this->_utility;
-        else if (this->_itm > 0 && this->_ref == 0 && this->_nav == 0)
-            f = boost::format(boost::locale::translate("Contains %1% ITM records. Clean with %2%.")) % this->_itm % this->_utility;
-
-        else if (this->_itm > 0 && this->_ref > 0 && this->_nav == 0)
-            f = boost::format(boost::locale::translate("Contains %1% ITM records and %2% deleted references. Clean with %3%.")) % this->_itm % this->_ref % this->_utility;
-
-        return Message(Message::warn, f.str());
-    }
-
-    File::File() {}
-    File::File(const std::string& name, const std::string& display, const std::string& condition)
-        : _name(name), _display(display), ConditionStruct(condition) {}
-
-    bool File::operator < (const File& rhs) const {
-        return boost::ilexicographical_compare(Name(), rhs.Name());
-    }
-
-    bool File::operator == (const File& rhs) const {
-        return boost::iequals(Name(), rhs.Name());
-    }
-
-    std::string File::Name() const {
-        return _name;
-    }
-
-    std::string File::DisplayName() const {
-        if (_display.empty())
-            return _name;
-        else
-            return _display;
-    }
-
-    Tag::Tag() : addTag(true) {}
-
-    Tag::Tag(const string& tag, const bool isAddition, const string& condition) : _name(tag), addTag(isAddition), ConditionStruct(condition) {}
-
-    bool Tag::operator < (const Tag& rhs) const {
-        if (addTag != rhs.IsAddition())
-            return (addTag && !rhs.IsAddition());
-        else
-            return boost::ilexicographical_compare(Name(), rhs.Name());
-    }
-
-    bool Tag::operator == (const Tag& rhs) const {
-        return (addTag == rhs.IsAddition() && boost::iequals(Name(), rhs.Name()));
-    }
-
-    bool Tag::IsAddition() const {
-        return addTag;
-    }
-
-    std::string Tag::Name() const {
-        return _name;
-    }
-
-    Location::Location() {}
-
-    Location::Location(const std::string& url) : _url(url) {}
-
-    Location::Location(const std::string& url, const std::vector<std::string>& versions) : _url(url), _versions(versions) {}
-
-    bool Location::operator < (const Location& rhs) const {
-        return boost::ilexicographical_compare(_url, rhs.URL());
-    }
-
-    std::string Location::URL() const {
-        return _url;
-    }
-
-    std::vector<std::string> Location::Versions() const {
-        return _versions;
-    }
-
     Plugin::Plugin() : enabled(true), _isPriorityExplicit(false), priority(0), isMaster(false), crc(0), numOverrideRecords(0) {}
+
     Plugin::Plugin(const std::string& n) : name(n), enabled(true), _isPriorityExplicit(false), priority(0), isMaster(false), crc(0), numOverrideRecords(0) {
         //If the name passed ends in '.ghost', that should be trimmed.
         if (boost::iends_with(name, ".ghost"))
@@ -972,5 +644,45 @@ namespace loot {
 
     bool operator == (const Plugin& lhs, const std::string& rhs) {
         return rhs == lhs;
+    }
+}
+
+namespace YAML {
+    Emitter& operator << (Emitter& out, const loot::Plugin& rhs) {
+        if (!rhs.HasNameOnly()) {
+            out << BeginMap
+                << Key << "name" << Value << YAML::SingleQuoted << rhs.Name();
+
+            if (rhs.IsPriorityExplicit())
+                out << Key << "priority" << Value << rhs.Priority();
+
+            if (!rhs.Enabled())
+                out << Key << "enabled" << Value << rhs.Enabled();
+
+            if (!rhs.LoadAfter().empty())
+                out << Key << "after" << Value << rhs.LoadAfter();
+
+            if (!rhs.Reqs().empty())
+                out << Key << "req" << Value << rhs.Reqs();
+
+            if (!rhs.Incs().empty())
+                out << Key << "inc" << Value << rhs.Incs();
+
+            if (!rhs.Messages().empty())
+                out << Key << "msg" << Value << rhs.Messages();
+
+            if (!rhs.Tags().empty())
+                out << Key << "tag" << Value << rhs.Tags();
+
+            if (!rhs.DirtyInfo().empty())
+                out << Key << "dirty" << Value << rhs.DirtyInfo();
+
+            if (!rhs.Locations().empty())
+                out << Key << "url" << Value << rhs.Locations();
+
+            out << EndMap;
+        }
+
+        return out;
     }
 }

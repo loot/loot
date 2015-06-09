@@ -22,49 +22,17 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#ifndef __LOOT_GUI_APP__
-#define __LOOT_GUI_APP__
+#ifndef __LOOT_GUI_LOOT_STATE__
+#define __LOOT_GUI_LOOT_STATE__
 
 #include "../backend/game.h"
 
 #include <include/cef_app.h>
-#include <include/wrapper/cef_message_router.h>
 #include <include/base/cef_lock.h>
 
 #include <yaml-cpp/yaml.h>
 
 namespace loot {
-    class LootApp : public CefApp,
-        public CefBrowserProcessHandler,
-        public CefRenderProcessHandler {
-    public:
-        LootApp();
-
-        // Override CefApp methods.
-        virtual void OnBeforeCommandLineProcessing(const CefString& process_type,
-                                                   CefRefPtr<CefCommandLine> command_line);
-        virtual CefRefPtr<CefBrowserProcessHandler> GetBrowserProcessHandler() OVERRIDE;
-        virtual CefRefPtr<CefRenderProcessHandler> GetRenderProcessHandler() OVERRIDE;
-        virtual void OnRegisterCustomSchemes(CefRefPtr<CefSchemeRegistrar> registrar) OVERRIDE;
-
-        // Override CefBrowserProcessHandler methods.
-        virtual void OnContextInitialized() OVERRIDE;
-        virtual void OnWebKitInitialized() OVERRIDE;
-
-        // Override CefRenderProcessHandler methods.
-        virtual bool OnProcessMessageReceived(CefRefPtr<CefBrowser> browser,
-                                              CefProcessId source_process,
-                                              CefRefPtr<CefProcessMessage> message) OVERRIDE;
-    private:
-        CefRefPtr<CefMessageRouterRendererSide> message_router_;
-
-        virtual void OnContextCreated(CefRefPtr<CefBrowser> browser,
-                                      CefRefPtr<CefFrame> frame,
-                                      CefRefPtr<CefV8Context> context) OVERRIDE;
-
-        IMPLEMENT_REFCOUNTING(LootApp);
-    };
-
     class LootState : public CefBase {
     public:
         LootState();

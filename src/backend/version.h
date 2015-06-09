@@ -22,21 +22,34 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#ifndef __LOOT_GRAPH__
-#define __LOOT_GRAPH__
+#ifndef __LOOT_VERSION__
+#define __LOOT_VERSION__
 
 #include "plugin.h"
 
-#include <boost/graph/graph_traits.hpp>
-#include <boost/graph/adjacency_list.hpp>
-#include <boost/graph/topological_sort.hpp>
-#include <boost/graph/graphviz.hpp>
+#include <string>
+#include <boost/filesystem.hpp>
 
 namespace loot {
-    typedef boost::adjacency_list<boost::listS, boost::listS, boost::directedS, loot::Plugin> PluginGraph;
-    typedef boost::graph_traits<PluginGraph>::vertex_descriptor vertex_t;
+    //Version class for more robust version comparisons.
+    class Version {
+    private:
+        std::string verString;
+    public:
+        Version();
+        Version(const std::string& ver);
+        Version(const boost::filesystem::path& file);
+        Version(const Plugin& plugin);
 
-    std::list<Plugin> Sort(PluginGraph& graph, const std::list<std::string>& loadorder);
+        std::string AsString() const;
+
+        bool operator > (const Version&) const;
+        bool operator < (const Version&) const;
+        bool operator >= (const Version&) const;
+        bool operator <= (const Version&) const;
+        bool operator == (const Version&) const;
+        bool operator != (const Version&) const;
+    };
 }
 
 #endif

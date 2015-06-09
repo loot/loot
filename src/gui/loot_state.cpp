@@ -22,20 +22,13 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#include "app.h"
-#include "handler.h"
-#include "scheme.h"
+#include "loot_state.h"
 
 #include "../backend/error.h"
 #include "../backend/globals.h"
 #include "../backend/helpers.h"
-#include "../backend/parsers.h"
-#include "../backend/generators.h"
+#include "../backend/language.h"
 #include "../backend/streams.h"
-
-#include <include/cef_browser.h>
-#include <include/cef_task.h>
-#include <include/cef_runnable.h>
 
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
@@ -54,98 +47,6 @@ namespace fs = boost::filesystem;
 
 namespace loot {
     LootState g_app_state = LootState();
-
-    LootApp::LootApp() {}
-
-    void LootApp::OnBeforeCommandLineProcessing(const CefString& process_type,
-                                                CefRefPtr<CefCommandLine> command_line) {
-        if (process_type.empty()) {
-            // Browser process, OK to modify the command line.
-
-            // Disable spell checking.
-            command_line->AppendSwitch("--disable-spell-checking");
-        }
-    }
-
-    CefRefPtr<CefBrowserProcessHandler> LootApp::GetBrowserProcessHandler() {
-        return this;
-    }
-
-    CefRefPtr<CefRenderProcessHandler> LootApp::GetRenderProcessHandler() {
-        return this;
-    }
-
-    void LootApp::OnRegisterCustomSchemes(CefRefPtr<CefSchemeRegistrar> registrar) {
-        // Register "loot" as a standard scheme.
-        registrar->AddCustomScheme("loot", true, false, false);
-    }
-
-    void LootApp::OnContextInitialized() {
-        //Make sure this is running in the UI thread.
-        assert(CefCurrentlyOn(TID_UI));
-
-        // Information used when creating the native window.
-        CefWindowInfo window_info;
-
-#ifdef _WIN32
-        // On Windows we need to specify certain flags that will be passed to CreateWindowEx().
-        window_info.SetAsPopup(NULL, "LOOT");
-#endif
-
-        // Set the handler for browser-level callbacks.
-        CefRefPtr<LootHandler> handler(new LootHandler());
-
-        // Register the custom "loot" scheme handlers.
-        CefRegisterSchemeHandlerFactory("loot", "l10n", new LootSchemeHandlerFactory());
-
-        // Specify CEF browser settings here.
-        CefBrowserSettings browser_settings;
-
-        // Need to set the global locale for this process so that messages will
-        // be translated.
-        BOOST_LOG_TRIVIAL(debug) << "Initialising language settings in UI thread.";
-        const YAML::Node& settings = g_app_state.GetSettings();
-        if (settings["language"] && settings["language"].as<string>() != Language(Language::english).Locale()) {
-            boost::locale::generator gen;
-            gen.add_messages_path(g_path_l10n.string());
-            gen.add_messages_domain("loot");
-
-            loot::Language lang(settings["language"].as<string>());
-            BOOST_LOG_TRIVIAL(debug) << "Selected language: " << lang.Name();
-            locale::global(gen(lang.Locale() + ".UTF-8"));
-            boost::filesystem::path::imbue(locale());
-        }
-
-        // Set URL to load. Ignore any command line values.
-        std::string url = ToFileURL(g_path_report);
-
-        // Create the first browser window.
-        CefBrowserHost::CreateBrowser(window_info, handler.get(), url, browser_settings, NULL);
-    }
-
-    void LootApp::OnWebKitInitialized() {
-        // Create the renderer-side router for query handling.
-        CefMessageRouterConfig config;
-        message_router_ = CefMessageRouterRendererSide::Create(config);
-    }
-
-    bool LootApp::OnProcessMessageReceived(
-        CefRefPtr<CefBrowser> browser,
-        CefProcessId source_process,
-        CefRefPtr<CefProcessMessage> message) {
-        // Handle IPC messages from the browser process...
-        return message_router_->OnProcessMessageReceived(browser, source_process, message);
-    }
-
-    void LootApp::OnContextCreated(CefRefPtr<CefBrowser> browser,
-                                   CefRefPtr<CefFrame> frame,
-                                   CefRefPtr<CefV8Context> context) {
-        // Register javascript functions.
-        message_router_->OnContextCreated(browser, frame, context);
-    }
-
-    // LootState member functions
-    //---------------------------
 
     LootState::LootState() : numUnappliedChanges(0), _currentGame(_games.end()) {}
 

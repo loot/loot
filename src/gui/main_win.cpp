@@ -22,7 +22,9 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#include "app.h"
+#include "loot_app.h"
+#include "loot_state.h"
+#include "../backend/globals.h"
 
 #include <windows.h>
 #include <include/cef_sandbox_win.h>

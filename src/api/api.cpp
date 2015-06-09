@@ -24,9 +24,8 @@
 
 #include "api.h"
 #include "../backend/game.h"
-#include "../backend/metadata.h"
-#include "../backend/parsers.h"
-#include "../backend/generators.h"
+#include "../backend/globals.h"
+#include "../backend/plugin.h"
 #include "../backend/error.h"
 #include "../backend/streams.h"
 
@@ -41,6 +40,7 @@
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/log/core.hpp>
 
 const unsigned int loot_ok = loot::error::ok;
 const unsigned int loot_error_liblo_error = loot::error::liblo_error;

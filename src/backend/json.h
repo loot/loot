@@ -28,6 +28,7 @@ along with LOOT.  If not, see
 #include <yaml-cpp/yaml.h>
 
 #include <boost/regex.hpp>
+#include <boost/algorithm/string.hpp>
 
 namespace loot {
     // Handy class for turning YAML objects into JSON and vice-versa.

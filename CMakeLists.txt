@@ -77,28 +77,53 @@ find_package(Boost REQUIRED COMPONENTS log log_setup regex locale thread date_ti
 find_package(yaml-cpp)
 find_package(GTest)
 
-set (LOOT_SRC   "${CMAKE_SOURCE_DIR}/src/backend/metadata.cpp"
+set (LOOT_SRC   "${CMAKE_SOURCE_DIR}/src/backend/metadata/conditional_metadata.cpp"
+                "${CMAKE_SOURCE_DIR}/src/backend/metadata/file.cpp"
+                "${CMAKE_SOURCE_DIR}/src/backend/metadata/formid.cpp"
+                "${CMAKE_SOURCE_DIR}/src/backend/metadata/location.cpp"
+                "${CMAKE_SOURCE_DIR}/src/backend/metadata/message.cpp"
+                "${CMAKE_SOURCE_DIR}/src/backend/metadata/message_content.cpp"
+                "${CMAKE_SOURCE_DIR}/src/backend/metadata/plugin_dirty_info.cpp"
+                "${CMAKE_SOURCE_DIR}/src/backend/metadata/tag.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/game.cpp"
+                "${CMAKE_SOURCE_DIR}/src/backend/metadata_list.cpp"
+                "${CMAKE_SOURCE_DIR}/src/backend/masterlist.cpp"
+                "${CMAKE_SOURCE_DIR}/src/backend/plugin.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/generators.cpp"
+                "${CMAKE_SOURCE_DIR}/src/backend/language.cpp"
+                "${CMAKE_SOURCE_DIR}/src/backend/version.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/graph.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/git.cpp"
                 "${CMAKE_BINARY_DIR}/generated/globals.cpp")
 
-set (LOOT_HEADERS "${CMAKE_SOURCE_DIR}/src/backend/metadata.h"
+set (LOOT_HEADERS "${CMAKE_SOURCE_DIR}/src/backend/metadata/condition_grammar.h"
+				"${CMAKE_SOURCE_DIR}/src/backend/metadata/conditional_metadata.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/metadata/file.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/metadata/formid.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/metadata/location.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/metadata/message.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/metadata/message_content.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/metadata/plugin_dirty_info.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/metadata/tag.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/game.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/metadata_list.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/masterlist.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/plugin.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/language.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/version.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/globals.h"
-                "${CMAKE_SOURCE_DIR}/src/backend/generators.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/yaml_set_helpers.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/graph.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/error.h"
-                "${CMAKE_SOURCE_DIR}/src/backend/parsers.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/streams.h")
 
 set (LOOT_GUI_SRC ${LOOT_SRC}
                   "${CMAKE_SOURCE_DIR}/src/gui/main_win.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/handler.cpp"
-                  "${CMAKE_SOURCE_DIR}/src/gui/app.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/gui/loot_handler.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/gui/loot_app.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/gui/loot_state.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/scheme.cpp"
                   "${CMAKE_SOURCE_DIR}/src/resource.rc")
 
@@ -107,7 +132,9 @@ set (LOOT_GUI_HEADERS ${LOOT_HEADERS}
                   "${CMAKE_SOURCE_DIR}/src/backend/json.h"
                   # Actual GUI code.
                   "${CMAKE_SOURCE_DIR}/src/gui/handler.h"
-                  "${CMAKE_SOURCE_DIR}/src/gui/app.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/loot_handler.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/loot_app.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/loot_state.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/scheme.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/resource.h")
 
