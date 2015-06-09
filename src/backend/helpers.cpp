@@ -184,7 +184,7 @@ namespace loot {
         else
             throw error(error::invalid_args, "Invalid registry key given.");
 
-        BOOST_LOG_TRIVIAL(trace) << "Getting registry object for key, subkey and value: " << keyStr << " + " << subkey << " + " << value;
+        BOOST_LOG_TRIVIAL(trace) << "Getting string for registry key, subkey and value: " << keyStr << " + " << subkey << " + " << value;
         LONG ret = RegGetValue(hKey,
                                ToWinWide(subkey).c_str(),
                                ToWinWide(value).c_str(),
@@ -193,10 +193,14 @@ namespace loot {
                                &wstr[0],
                                &len);
 
-        if (ret == ERROR_SUCCESS)
+        if (ret == ERROR_SUCCESS) {
+            BOOST_LOG_TRIVIAL(info) << "Found string: " << wstr.c_str();
             return FromWinWide(wstr.c_str());  // Passing c_str() cuts off any unused buffer.
-        else
+        }
+        else {
+            BOOST_LOG_TRIVIAL(error) << "Failed to get string value.";
             return "";
+        }
     }
 
     boost::filesystem::path GetLocalAppDataPath() {
