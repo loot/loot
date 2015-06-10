@@ -56,22 +56,7 @@ namespace fs = boost::filesystem;
 namespace loc = boost::locale;
 
 namespace loot {
-    namespace {
-        LootHandler * g_instance = NULL;
-    }
-
-    LootHandler::LootHandler() : is_closing_(false) {
-        assert(!g_instance);
-        g_instance = this;
-    }
-
-    LootHandler::~LootHandler() {
-        g_instance = NULL;
-    }
-
-    LootHandler* LootHandler::GetInstance() {
-        return g_instance;
-    }
+    LootHandler::LootHandler() : is_closing_(false) {}
 
     // CefClient methods
     //------------------

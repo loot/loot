@@ -38,10 +38,6 @@ namespace loot {
         public CefRequestHandler {
     public:
         LootHandler();
-        ~LootHandler();
-
-        // Provide access to the single global instance of this object.
-        static LootHandler * GetInstance();
 
         // CefClient methods
         //------------------
