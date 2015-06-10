@@ -25,6 +25,8 @@
 #ifndef __LOOT_GUI_LOOT_APP__
 #define __LOOT_GUI_LOOT_APP__
 
+#include "loot_state.h"
+
 #include <include/cef_app.h>
 #include <include/wrapper/cef_message_router.h>
 #include <include/base/cef_lock.h>
@@ -51,6 +53,8 @@ namespace loot {
         virtual bool OnProcessMessageReceived(CefRefPtr<CefBrowser> browser,
                                               CefProcessId source_process,
                                               CefRefPtr<CefProcessMessage> message) OVERRIDE;
+
+        LootState lootState;
     private:
         CefRefPtr<CefMessageRouterRendererSide> message_router_;
 

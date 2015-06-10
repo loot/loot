@@ -25,6 +25,7 @@
 #ifndef __LOOT_GUI_HANDLER__
 #define __LOOT_GUI_HANDLER__
 
+#include "loot_state.h"
 #include "../backend/plugin.h"
 
 #include <include/wrapper/cef_message_router.h>
@@ -34,7 +35,7 @@
 namespace loot {
     class Handler : public CefMessageRouterBrowserSide::Handler {
     public:
-        Handler();
+        Handler(LootState& lootState);
 
         // Called due to cefQuery execution in binding.html.
         virtual bool OnQuery(CefRefPtr<CefBrowser> browser,
@@ -72,6 +73,8 @@ namespace loot {
 
         void CopyToClipboard(const std::string& text);
         void SendProgressUpdate(CefRefPtr<CefFrame> frame, const std::string& message);
+
+        LootState& _lootState;
     private:
         IMPLEMENT_REFCOUNTING(Handler);
     };

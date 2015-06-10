@@ -69,8 +69,6 @@ namespace loot {
         base::Lock _lock;
         IMPLEMENT_REFCOUNTING(LootState);
     };
-
-    extern LootState g_app_state;
 }
 
 #endif

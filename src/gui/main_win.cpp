@@ -115,7 +115,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
         gameStr = command_line->GetSwitchValue("game");
     }
 
-    loot::g_app_state.Init(gameStr);
+    app.get()->lootState.Init(gameStr);
 
     // Back to CEF
     //------------

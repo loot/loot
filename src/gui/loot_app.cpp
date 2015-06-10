@@ -23,7 +23,6 @@
     */
 
 #include "loot_app.h"
-#include "loot_state.h"
 #include "loot_handler.h"
 #include "scheme.h"
 
@@ -86,7 +85,7 @@ namespace loot {
 #endif
 
         // Set the handler for browser-level callbacks.
-        CefRefPtr<LootHandler> handler(new LootHandler());
+        CefRefPtr<LootHandler> handler(new LootHandler(lootState));
 
         // Register the custom "loot" scheme handlers.
         CefRegisterSchemeHandlerFactory("loot", "l10n", new LootSchemeHandlerFactory());
@@ -97,7 +96,7 @@ namespace loot {
         // Need to set the global locale for this process so that messages will
         // be translated.
         BOOST_LOG_TRIVIAL(debug) << "Initialising language settings in UI thread.";
-        const YAML::Node& settings = g_app_state.GetSettings();
+        const YAML::Node& settings = lootState.GetSettings();
         if (settings["language"] && settings["language"].as<string>() != Language(Language::english).Locale()) {
             boost::locale::generator gen;
             gen.add_messages_path(g_path_l10n.string());

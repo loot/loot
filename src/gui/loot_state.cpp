@@ -46,8 +46,6 @@ using boost::format;
 namespace fs = boost::filesystem;
 
 namespace loot {
-    LootState g_app_state = LootState();
-
     LootState::LootState() : numUnappliedChanges(0), _currentGame(_games.end()) {}
 
     void LootState::Init(const std::string& cmdLineGame) {

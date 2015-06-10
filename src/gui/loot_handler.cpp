@@ -26,7 +26,6 @@
 #include "handler.h"
 #include "resource.h"
 #include "loot_app.h"
-#include "loot_state.h"
 
 #include "../backend/error.h"
 #include "../backend/globals.h"
@@ -56,7 +55,7 @@ namespace fs = boost::filesystem;
 namespace loc = boost::locale;
 
 namespace loot {
-    LootHandler::LootHandler() : is_closing_(false) {}
+    LootHandler::LootHandler(LootState& lootState) : is_closing_(false), _lootState(lootState) {}
 
     // CefClient methods
     //------------------
@@ -98,7 +97,7 @@ namespace loot {
 #endif
 
         // Set window size & position.
-        YAML::Node settings = g_app_state.GetSettings();
+        YAML::Node settings = _lootState.GetSettings();
 
         if (settings["window"]["left"] && settings["window"]["top"] && settings["window"]["right"] && settings["window"]["bottom"]) {
 #ifdef _WIN32
@@ -148,14 +147,14 @@ namespace loot {
         CefMessageRouterConfig config;
         browser_side_router_ = CefMessageRouterBrowserSide::Create(config);
 
-        browser_side_router_->AddHandler(new Handler(), false);
+        browser_side_router_->AddHandler(new Handler(_lootState), false);
     }
 
     bool LootHandler::DoClose(CefRefPtr<CefBrowser> browser) {
         assert(CefCurrentlyOn(TID_UI));
 
         // Check if unapplied changes exist.
-        if (g_app_state.numUnappliedChanges > 0) {
+        if (_lootState.numUnappliedChanges > 0) {
             browser->GetMainFrame()->ExecuteJavaScript("onQuit();", browser->GetMainFrame()->GetURL(), 0);
             return true;
         }
@@ -177,7 +176,7 @@ namespace loot {
         assert(CefCurrentlyOn(TID_UI));
 
         // Save window size & position.
-        YAML::Node settings = g_app_state.GetSettings();
+        YAML::Node settings = _lootState.GetSettings();
 
 #ifdef _WIN32
         RECT rc;
@@ -189,8 +188,8 @@ namespace loot {
         settings["window"]["bottom"] = rc.bottom;
 #endif
 
-        g_app_state.UpdateSettings(settings);
-        g_app_state.SaveSettings();
+        _lootState.UpdateSettings(settings);
+        _lootState.SaveSettings();
 
         // Cancel any javascript callbacks.
         browser_side_router_->OnBeforeClose(browser);

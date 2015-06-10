@@ -25,6 +25,8 @@
 #ifndef __LOOT_GUI_LOOT_HANDLER__
 #define __LOOT_GUI_LOOT_HANDLER__
 
+#include "loot_state.h"
+
 #include <include/cef_client.h>
 #include <include/wrapper/cef_message_router.h>
 
@@ -37,7 +39,7 @@ namespace loot {
         public CefLoadHandler,
         public CefRequestHandler {
     public:
-        LootHandler();
+        LootHandler(LootState& lootState);
 
         // CefClient methods
         //------------------
@@ -79,6 +81,8 @@ namespace loot {
         void CloseAllBrowsers(bool force_close);
 
         bool IsClosing() const { return is_closing_; }
+
+        LootState& _lootState;
 
     private:
         // List of existing browser windows. Only accessed on the CEF UI thread.
