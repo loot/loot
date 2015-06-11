@@ -143,8 +143,6 @@ def createAppArchive(archive_path):
     shutil.copy( os.path.join('..', 'build', 'Release', 'cef_200_percent.pak'), temp_path )
     shutil.copy( os.path.join('..', 'build', 'Release', 'devtools_resources.pak'), temp_path )
     shutil.copy( os.path.join('..', 'build', 'Release', 'icudtl.dat'), temp_path )
-    shutil.copy( os.path.join('..', 'build', 'Release', 'natives_blob.bin'), temp_path )
-    shutil.copy( os.path.join('..', 'build', 'Release', 'snapshot_blob.bin'), temp_path )
 
     # Translation files.
     for lang in ['es', 'ru', 'fr', 'zh_CN', 'pl', 'pt_BR', 'fi', 'de', 'da', 'ko']:

@@ -288,7 +288,7 @@ add_custom_command(
 )
 
 # Copy CEF DLLs.
-FOREACH(cef_dll d3dcompiler_47.dll libEGL.dll libGLESv2.dll libcef.dll wow_helper.exe natives_blob.bin snapshot_blob.bin)
+FOREACH(cef_dll d3dcompiler_47.dll libEGL.dll libGLESv2.dll libcef.dll wow_helper.exe)
     add_custom_command(TARGET LOOT POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
             "${CMAKE_SOURCE_DIR}/${CEF_ROOT}/$<CONFIGURATION>/${cef_dll}"

@@ -337,8 +337,6 @@ FunctionEnd
         File "..\build\Release\cef_200_percent.pak"
         File "..\build\Release\devtools_resources.pak"
         File "..\build\Release\icudtl.dat"
-        File "..\build\Release\natives_blob.bin"
-        File "..\build\Release\snapshot_blob.bin"
 
         ;Install UI files.
         SetOutPath "$INSTDIR\resources\report"
@@ -496,8 +494,6 @@ FunctionEnd
         Delete "$INSTDIR\cef_200_percent.pak"
         Delete "$INSTDIR\devtools_resources.pak"
         Delete "$INSTDIR\icudtl.dat"
-        Delete "$INSTDIR\natives_blob.bin"
-        Delete "$INSTDIR\snapshot_blob.bin"
 
         ;Remove readme images.
         RMDir /r "$INSTDIR\docs\images"
