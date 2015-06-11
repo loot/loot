@@ -113,7 +113,6 @@ namespace loot {
         size_t NumOverrideFormIDs() const;
         std::set<FormID> OverlapFormIDs(const Plugin& plugin) const;
         std::set<FormID> OverrideFormIDs() const;
-        bool MustLoadAfter(const Plugin& plugin) const;  //Checks masters, reqs and loadAfter.
 
         //Validity checks.
         bool CheckInstallValidity(const Game& game);  //Checks that reqs and masters are all present, and that no incs are present. Returns true if the plugin is dirty.

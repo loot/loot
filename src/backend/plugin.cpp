@@ -557,15 +557,6 @@ namespace loot {
         return crc;
     }
 
-    bool Plugin::MustLoadAfter(const Plugin& plugin) const {
-        if ((!isMaster && plugin.IsMaster())
-            || find(masters.begin(), masters.end(), plugin) != masters.end()
-            || find(requirements.begin(), requirements.end(), plugin) != requirements.end()
-            || find(loadAfter.begin(), loadAfter.end(), plugin) != loadAfter.end())
-            return true;
-        return false;
-    }
-
     bool Plugin::CheckInstallValidity(const Game& game) {
         BOOST_LOG_TRIVIAL(trace) << "Checking that the current install is valid according to " << name << "'s data.";
         unsigned int messageType;
