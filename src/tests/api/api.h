@@ -656,5 +656,6 @@ TEST_F(OblivionAPIOperationsTest, WriteMinimalList) {
         EXPECT_FALSE(boost::contains(line, "- \"-\""));
     }
     in.close();
+    ASSERT_NO_THROW(boost::filesystem::remove(outputFile));
 }
 #endif
