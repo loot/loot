@@ -45,7 +45,7 @@ namespace loot {
 
         if (metadataList["plugins"]) {
             for (const auto& node : metadataList["plugins"]) {
-                Plugin plugin(node.as<Plugin>());
+                PluginMetadata plugin(node.as<PluginMetadata>());
                 if (plugin.IsRegexPlugin())
                     regexPlugins.push_back(plugin);
                 else
@@ -122,8 +122,8 @@ namespace loot {
         return true;
     }
 
-    std::list<Plugin> MetadataList::Plugins() const {
-        list<Plugin> pluginList(plugins.begin(), plugins.end());
+    std::list<PluginMetadata> MetadataList::Plugins() const {
+        list<PluginMetadata> pluginList(plugins.begin(), plugins.end());
 
         pluginList.insert(pluginList.end(), regexPlugins.begin(), regexPlugins.end());
 
@@ -131,8 +131,8 @@ namespace loot {
     }
 
     // Merges multiple matching regex entries if any are found.
-    Plugin MetadataList::FindPlugin(const Plugin& plugin) const {
-        Plugin match(plugin.Name());
+    PluginMetadata MetadataList::FindPlugin(const PluginMetadata& plugin) const {
+        PluginMetadata match(plugin.Name());
 
         auto it = plugins.find(plugin);
 
@@ -150,7 +150,7 @@ namespace loot {
         return match;
     }
 
-    void MetadataList::AddPlugin(const Plugin& plugin) {
+    void MetadataList::AddPlugin(const PluginMetadata& plugin) {
         if (plugin.IsRegexPlugin())
             regexPlugins.push_back(plugin);
         else
@@ -159,7 +159,7 @@ namespace loot {
 
     // Doesn't erase matching regex entries, because they might also
     // be required for other plugins.
-    void MetadataList::ErasePlugin(const Plugin& plugin) {
+    void MetadataList::ErasePlugin(const PluginMetadata& plugin) {
         auto it = plugins.find(plugin);
 
         if (it != plugins.end()) {
@@ -169,9 +169,9 @@ namespace loot {
     }
 
     void MetadataList::EvalAllConditions(Game& game, const unsigned int language) {
-        unordered_set<Plugin> replacementSet;
+        unordered_set<PluginMetadata> replacementSet;
         for (auto &plugin : plugins) {
-            Plugin p(plugin);
+            PluginMetadata p(plugin);
             p.EvalAllConditions(game, language);
             replacementSet.insert(p);
         }

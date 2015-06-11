@@ -25,9 +25,6 @@
 #ifndef __LOOT_HELPERS__
 #define __LOOT_HELPERS__
 
-#include "plugin.h"
-
-#include <cstdint>
 #include <string>
 #include <boost/regex.hpp>
 #include <boost/filesystem.hpp>

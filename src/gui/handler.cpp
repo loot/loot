@@ -422,7 +422,7 @@ namespace loot {
         BOOST_LOG_TRIVIAL(debug) << "Copying metadata for plugin " << pluginName;
 
         // Get metadata from masterlist and userlist.
-        Plugin plugin = _lootState.CurrentGame().masterlist.FindPlugin(pluginName);
+        PluginMetadata plugin = _lootState.CurrentGame().masterlist.FindPlugin(pluginName);
         plugin.MergeMetadata(_lootState.CurrentGame().userlist.FindPlugin(pluginName));
 
         // Generate text representation.
@@ -459,10 +459,10 @@ namespace loot {
     std::string Handler::ApplyUserEdits(const YAML::Node& pluginMetadata) {
         BOOST_LOG_TRIVIAL(trace) << "Applying user edits for: " << pluginMetadata["name"].as<string>();
         // Create new object for userlist entry.
-        Plugin newUserlistEntry(pluginMetadata["name"].as<string>());
+        PluginMetadata newUserlistEntry(pluginMetadata["name"].as<string>());
 
         // Find existing userlist entry.
-        Plugin ulistPlugin = _lootState.CurrentGame().userlist.FindPlugin(newUserlistEntry);
+        PluginMetadata ulistPlugin = _lootState.CurrentGame().userlist.FindPlugin(newUserlistEntry);
 
         // First sort out the priority value. This is only given if it was changed.
         BOOST_LOG_TRIVIAL(trace) << "Calculating userlist metadata priority value from Javascript variables.";
@@ -705,7 +705,7 @@ namespace loot {
 
                 // Now do the same again for any userlist data.
                 BOOST_LOG_TRIVIAL(trace) << "Getting userlist metadata for: " << plugin.Name();
-                Plugin ulistPlugin(_lootState.CurrentGame().userlist.FindPlugin(plugin));
+                PluginMetadata ulistPlugin(_lootState.CurrentGame().userlist.FindPlugin(plugin));
 
                 pluginNode["__type"] = "Plugin";  // For conversion back into a JS typed object.
                 pluginNode["name"] = plugin.Name();
@@ -986,7 +986,7 @@ namespace loot {
         }
     }
 
-    YAML::Node Handler::GenerateDerivedMetadata(const Plugin& file, const Plugin& masterlist, const Plugin& userlist) {
+    YAML::Node Handler::GenerateDerivedMetadata(const Plugin& file, const PluginMetadata& masterlist, const PluginMetadata& userlist) {
         //Set language.
         unsigned int language;
         if (_lootState.GetSettings()["language"])
@@ -1032,8 +1032,8 @@ namespace loot {
         // Now rederive the displayed metadata from the masterlist and userlist.
         auto pluginIt = _lootState.CurrentGame().plugins.find(boost::locale::to_lower(pluginName));
         if (pluginIt != _lootState.CurrentGame().plugins.end()) {
-            Plugin master(_lootState.CurrentGame().masterlist.FindPlugin(pluginIt->second));
-            Plugin user(_lootState.CurrentGame().userlist.FindPlugin(pluginIt->second));
+            PluginMetadata master(_lootState.CurrentGame().masterlist.FindPlugin(pluginIt->second));
+            PluginMetadata user(_lootState.CurrentGame().userlist.FindPlugin(pluginIt->second));
 
             return this->GenerateDerivedMetadata(pluginIt->second, master, user);
         }

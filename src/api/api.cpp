@@ -25,7 +25,6 @@
 #include "api.h"
 #include "../backend/game.h"
 #include "../backend/globals.h"
-#include "../backend/plugin.h"
 #include "../backend/error.h"
 #include "../backend/streams.h"
 
@@ -644,7 +643,7 @@ LOOT_API unsigned int loot_get_plugin_tags(loot_db db, const char * const plugin
     *numTags_removed = 0;
 
     std::set<std::string> tagsAdded, tagsRemoved;
-    loot::Plugin p = db->masterlist.FindPlugin(loot::Plugin(plugin));
+    loot::PluginMetadata p = db->masterlist.FindPlugin(loot::PluginMetadata(plugin));
     for (const auto &tag : p.Tags()) {
         if (tag.IsAddition())
             tagsAdded.insert(tag.Name());
@@ -652,7 +651,7 @@ LOOT_API unsigned int loot_get_plugin_tags(loot_db db, const char * const plugin
             tagsRemoved.insert(tag.Name());
     }
 
-    p = db->userlist.FindPlugin(loot::Plugin(plugin));
+    p = db->userlist.FindPlugin(loot::PluginMetadata(plugin));
     *userlistModified = !p.Tags().empty();
     for (const auto &tag : p.Tags()) {
         *userlistModified = true;
@@ -725,10 +724,10 @@ LOOT_API unsigned int loot_get_plugin_messages(loot_db db, const char * const pl
     *messages = nullptr;
     *numMessages = 0;
 
-    loot::Plugin p = db->masterlist.FindPlugin(loot::Plugin(plugin));
+    loot::PluginMetadata p = db->masterlist.FindPlugin(loot::PluginMetadata(plugin));
     std::list<loot::Message> pluginMessages(p.Messages());
 
-    p = db->userlist.FindPlugin(loot::Plugin(plugin));
+    p = db->userlist.FindPlugin(loot::PluginMetadata(plugin));
     std::list<loot::Message> temp(p.Messages());
     pluginMessages.insert(pluginMessages.end(), temp.begin(), temp.end());
 

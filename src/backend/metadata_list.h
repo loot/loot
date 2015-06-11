@@ -25,7 +25,7 @@
 #ifndef __LOOT_METADATA_LIST__
 #define __LOOT_METADATA_LIST__
 
-#include "plugin.h"
+#include "metadata/plugin_metadata.h"
 
 #include <string>
 #include <vector>
@@ -54,23 +54,23 @@ namespace loot {
 
         bool operator == (const MetadataList& rhs) const;  //Compares content.
 
-        std::list<Plugin> Plugins() const;
+        std::list<PluginMetadata> Plugins() const;
 
         // Merges multiple matching regex entries if any are found.
-        Plugin FindPlugin(const Plugin& plugin) const;
-        void AddPlugin(const Plugin& plugin);
+        PluginMetadata FindPlugin(const PluginMetadata& plugin) const;
+        void AddPlugin(const PluginMetadata& plugin);
 
         // Doesn't erase matching regex entries, because they might also
         // be required for other plugins.
-        void ErasePlugin(const Plugin& plugin);
+        void ErasePlugin(const PluginMetadata& plugin);
 
         // Eval plugin conditions.
         void EvalAllConditions(Game& game, const unsigned int language);
 
         std::list<Message> messages;
     protected:
-        std::unordered_set<Plugin> plugins;
-        std::list<Plugin> regexPlugins;
+        std::unordered_set<PluginMetadata> plugins;
+        std::list<PluginMetadata> regexPlugins;
     };
 }
 

@@ -26,7 +26,6 @@
 #include "globals.h"
 #include "helpers.h"
 #include "error.h"
-#include "plugin.h"
 #include "streams.h"
 #include "graph.h"
 
@@ -610,7 +609,7 @@ namespace loot {
             graph[v].MergeMetadata(this->masterlist.FindPlugin(graph[v]));
 
             //Check if there is a plugin entry in the userlist. This will also find matching regex entries.
-            Plugin ulistPlugin = this->userlist.FindPlugin(graph[v]);
+            PluginMetadata ulistPlugin = this->userlist.FindPlugin(graph[v]);
 
             if (!ulistPlugin.HasNameOnly() && ulistPlugin.Enabled()) {
                 BOOST_LOG_TRIVIAL(trace) << "Merging userlist data down to plugin list data.";

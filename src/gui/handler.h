@@ -27,6 +27,7 @@
 
 #include "loot_state.h"
 #include "../backend/plugin.h"
+#include "../backend/metadata/plugin_metadata.h"
 
 #include <include/wrapper/cef_message_router.h>
 
@@ -69,7 +70,7 @@ namespace loot {
         std::string ApplyUserEdits(const YAML::Node& pluginMetadata);
 
         YAML::Node GenerateDerivedMetadata(const std::string& pluginName);
-        YAML::Node GenerateDerivedMetadata(const Plugin& file, const Plugin& masterlist, const Plugin& userlist);
+        YAML::Node GenerateDerivedMetadata(const Plugin& file, const PluginMetadata& masterlist, const PluginMetadata& userlist);
 
         void CopyToClipboard(const std::string& text);
         void SendProgressUpdate(CefRefPtr<CefFrame> frame, const std::string& message);
