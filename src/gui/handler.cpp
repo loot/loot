@@ -333,7 +333,7 @@ namespace loot {
                 }
                 size_t i = 0;
                 for (const auto& plugin : plugins) {
-                    if (_lootState.CurrentGame().IsActive(plugin)) {
+                    if (Plugin(plugin).IsActive(_lootState.CurrentGame())) {
                         ss << setw(decLength) << i << " " << hex << setw(2) << i << dec << " ";
                         ++i;
                     }
@@ -709,7 +709,7 @@ namespace loot {
 
                 pluginNode["__type"] = "Plugin";  // For conversion back into a JS typed object.
                 pluginNode["name"] = plugin.Name();
-                pluginNode["isActive"] = _lootState.CurrentGame().IsActive(plugin.Name());
+                pluginNode["isActive"] = plugin.IsActive(_lootState.CurrentGame());
                 pluginNode["isEmpty"] = plugin.IsEmpty();
                 pluginNode["isMaster"] = plugin.IsMaster();
                 pluginNode["loadsBSA"] = plugin.LoadsBSA(_lootState.CurrentGame());

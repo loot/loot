@@ -214,6 +214,42 @@ namespace loot {
         return _isEmpty;
     }
 
+    bool Plugin::IsValid(const Game& game) const {
+        BOOST_LOG_TRIVIAL(trace) << "Checking to see if \"" << name << "\" is a valid plugin.";
+        // Rather than just checking the extension, try also parsing the file header, and see if it fails.
+        if (!boost::iends_with(name, ".esm") && !boost::iends_with(name, ".esp")) {
+            return false;
+        }
+
+        try {
+            boost::filesystem::path filepath = game.DataPath() / name;
+            //In case the plugin is ghosted.
+            if (!boost::filesystem::exists(filepath) && boost::filesystem::exists(filepath.string() + ".ghost"))
+                filepath += ".ghost";
+
+            espm::File * file = nullptr;
+            if (game.Id() == Game::tes4)
+                file = new espm::tes4::File(filepath, game.espm_settings, false, true);
+            else if (game.Id() == Game::tes5)
+                file = new espm::tes5::File(filepath, game.espm_settings, false, true);
+            else if (game.Id() == Game::fo3)
+                file = new espm::fo3::File(filepath, game.espm_settings, false, true);
+            else
+                file = new espm::fonv::File(filepath, game.espm_settings, false, true);
+
+            delete file;
+        }
+        catch (std::exception& /*e*/) {
+            BOOST_LOG_TRIVIAL(warning) << "The .es(p|m) file \"" << name << "\" is not a valid plugin.";
+            return false;
+        }
+        return true;
+    }
+
+    bool Plugin::IsActive(const Game& game) const {
+        return game.activePlugins.find(boost::locale::to_lower(name)) != game.activePlugins.end();
+    }
+
     std::string Plugin::Version() const {
         return version;
     }
@@ -225,7 +261,7 @@ namespace loot {
     bool Plugin::CheckInstallValidity(const Game& game) {
         BOOST_LOG_TRIVIAL(trace) << "Checking that the current install is valid according to " << name << "'s data.";
         unsigned int messageType;
-        if (game.IsActive(name))
+        if (IsActive(game))
             messageType = loot::Message::error;
         else
             messageType = loot::Message::warn;
@@ -235,7 +271,7 @@ namespace loot {
                     BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" requires \"" << master << "\", but it is missing.";
                     messages.push_back(loot::Message(messageType, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % master).str()));
                 }
-                else if (!game.IsActive(master)) {
+                else if (!Plugin(master).IsActive(game)) {
                     BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" requires \"" << master << "\", but it is inactive.";
                     messages.push_back(loot::Message(messageType, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be active, but it is inactive.")) % master).str()));
                 }
@@ -249,7 +285,7 @@ namespace loot {
         }
         for (const auto &inc : incompatibilities) {
             if (boost::filesystem::exists(game.DataPath() / inc.Name()) || ((boost::iends_with(inc.Name(), ".esp") || boost::iends_with(inc.Name(), ".esm")) && boost::filesystem::exists(game.DataPath() / (inc.Name() + ".ghost")))) {
-                if (!game.IsActive(inc.Name()))
+                if (!Plugin(inc.Name()).IsActive(game))
                     messageType = loot::Message::warn;
                 BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" is incompatible with \"" << inc.Name() << "\", but both are present.";
                 messages.push_back(loot::Message(messageType, (boost::format(boost::locale::translate("This plugin is incompatible with \"%1%\", but both are present.")) % inc.Name()).str()));

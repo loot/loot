@@ -52,6 +52,8 @@ namespace loot {
         uint32_t Crc() const;
 
         bool LoadsBSA(const Game& game) const;
+        bool IsValid(const Game& game) const;
+        bool IsActive(const Game& game) const;
 
         //Compare name strings.
         bool operator == (const Plugin& rhs) const;
