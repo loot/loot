@@ -96,8 +96,6 @@ namespace loot {
 #endif
     }
 
-    Version::Version(const Plugin& plugin) : verString(plugin.Version()) {}
-
     string Version::AsString() const {
         return verString;
     }

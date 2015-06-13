@@ -25,8 +25,6 @@
 #ifndef __LOOT_VERSION__
 #define __LOOT_VERSION__
 
-#include "plugin/plugin.h"
-
 #include <string>
 #include <boost/filesystem.hpp>
 
@@ -39,7 +37,6 @@ namespace loot {
         Version();
         Version(const std::string& ver);
         Version(const boost::filesystem::path& file);
-        Version(const Plugin& plugin);
 
         std::string AsString() const;
 
