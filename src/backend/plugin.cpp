@@ -23,10 +23,9 @@
     */
 
 #include "plugin.h"
+#include "plugin_loader.h"
 #include "game.h"
 #include "helpers.h"
-
-#include <src/libespm.h>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
@@ -42,71 +41,34 @@ using boost::regex_search;
 using boost::smatch;
 
 namespace loot {
-    Plugin::Plugin() : PluginMetadata(), isMaster(false), crc(0), numOverrideRecords(0) {}
+    Plugin::Plugin() : PluginMetadata(), _isEmpty(true), isMaster(false), crc(0), numOverrideRecords(0) {}
 
-    Plugin::Plugin(const std::string& n) : PluginMetadata(n), isMaster(false), crc(0), numOverrideRecords(0) {}
+    Plugin::Plugin(const std::string& n) : PluginMetadata(n), _isEmpty(true), isMaster(false), crc(0), numOverrideRecords(0) {}
 
     Plugin::Plugin(loot::Game& game, const std::string& n, const bool headerOnly)
-        : PluginMetadata(n), isMaster(false), crc(0), numOverrideRecords(0) {
-        // Get data from file contents using libespm. Assumes libespm has already been initialised.
-        BOOST_LOG_TRIVIAL(trace) << name << ": " << "Opening with libespm...";
-        boost::filesystem::path filepath = game.DataPath() / name;
-
-        //In case the plugin is ghosted.
-        if (!boost::filesystem::exists(filepath) && boost::filesystem::exists(filepath.string() + ".ghost"))
-            filepath += ".ghost";
-
-        espm::File * file = nullptr;
+        : PluginMetadata(n), _isEmpty(true), isMaster(false), crc(0), numOverrideRecords(0) {
         try {
-            if (game.Id() == Game::tes4)
-                file = new espm::tes4::File(filepath, game.espm_settings, false, headerOnly);
-            else if (game.Id() == Game::tes5)
-                file = new espm::tes5::File(filepath, game.espm_settings, false, headerOnly);
-            else if (game.Id() == Game::fo3)
-                file = new espm::fo3::File(filepath, game.espm_settings, false, headerOnly);
-            else
-                file = new espm::fonv::File(filepath, game.espm_settings, false, headerOnly);
-
-            BOOST_LOG_TRIVIAL(trace) << name << ": " << "Checking master flag.";
-            isMaster = file->isMaster(game.espm_settings);
-
-            BOOST_LOG_TRIVIAL(trace) << name << ": " << "Getting masters.";
-            for (const auto& master : file->getMasters()) {
-                masters.push_back(boost::locale::conv::to_utf<char>(master, "Windows-1252", boost::locale::conv::stop));
-            }
-
-            BOOST_LOG_TRIVIAL(trace) << name << ": " << "Number of masters: " << masters.size();
+            PluginLoader loader;
+            loader.Load(game, name, headerOnly, false);
+            isMaster = loader.IsMaster();
+            masters = loader.Masters();
+            _isEmpty = loader.IsEmpty();
+            formIDs.insert(loader.FormIDs().begin(), loader.FormIDs().end());
 
             if (!headerOnly) {
-                BOOST_LOG_TRIVIAL(trace) << name << ": " << "Getting CRC.";
-                crc = file->crc;
+                BOOST_LOG_TRIVIAL(trace) << name << ": Caching CRC value.";
+                crc = loader.Crc();
                 game.crcCache.insert(pair<string, uint32_t>(boost::locale::to_lower(name), crc));
             }
 
-            BOOST_LOG_TRIVIAL(trace) << name << ": " << "Getting the FormIDs.";
-            vector<uint32_t> records = file->getFormIDs();
-            vector<string> plugins = masters;
-            plugins.push_back(name);
-            for (const auto &record : records) {
-                FormID fid = FormID(plugins, record);
-                formIDs.insert(fid);
-                if (!boost::iequals(fid.Plugin(), name))
+            BOOST_LOG_TRIVIAL(trace) << name << ": Counting override FormIDs.";
+            for (const auto& formID : formIDs) {
+                if (!boost::iequals(formID.Plugin(), name))
                     ++numOverrideRecords;
             }
 
-            BOOST_LOG_TRIVIAL(trace) << name << ": " << "Checking if plugin is empty.";
-            if (headerOnly) {
-                // Check the header records count.
-                _isEmpty = file->getNumRecords() == 0;
-            }
-            else {
-                _isEmpty = formIDs.empty();
-            }
-
             //Also read Bash Tags applied and version string in description.
-            BOOST_LOG_TRIVIAL(trace) << name << ": " << "Reading the description.";
-            string text = boost::locale::conv::to_utf<char>(file->getDescription(), "Windows-1252", boost::locale::conv::stop);
-
+            string text = loader.Description();
             BOOST_LOG_TRIVIAL(trace) << name << ": " << "Attempting to read the version from the description.";
             for (size_t i = 0; i < version_checks.size(); ++i) {
                 smatch what;
@@ -139,7 +101,6 @@ namespace loot {
             }
         }
         catch (std::exception& e) {
-            delete file;
             BOOST_LOG_TRIVIAL(error) << "Cannot read plugin file \"" << name << "\". Details: " << e.what();
             messages.push_back(loot::Message(loot::Message::error, (boost::format(boost::locale::translate("Cannot read \"%1%\". Details: %2%")) % name % e.what()).str()));
         }
@@ -222,22 +183,8 @@ namespace loot {
         }
 
         try {
-            boost::filesystem::path filepath = game.DataPath() / name;
-            //In case the plugin is ghosted.
-            if (!boost::filesystem::exists(filepath) && boost::filesystem::exists(filepath.string() + ".ghost"))
-                filepath += ".ghost";
-
-            espm::File * file = nullptr;
-            if (game.Id() == Game::tes4)
-                file = new espm::tes4::File(filepath, game.espm_settings, false, true);
-            else if (game.Id() == Game::tes5)
-                file = new espm::tes5::File(filepath, game.espm_settings, false, true);
-            else if (game.Id() == Game::fo3)
-                file = new espm::fo3::File(filepath, game.espm_settings, false, true);
-            else
-                file = new espm::fonv::File(filepath, game.espm_settings, false, true);
-
-            delete file;
+            PluginLoader loader;
+            return loader.Load(game, name, true, true);
         }
         catch (std::exception& /*e*/) {
             BOOST_LOG_TRIVIAL(warning) << "The .es(p|m) file \"" << name << "\" is not a valid plugin.";

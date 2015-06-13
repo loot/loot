@@ -51,20 +51,7 @@ namespace loot {
                          gameSettings.RegistryKey());
     }
 
-    Game::Game(const unsigned int gameCode, const std::string& folder) : GameSettings(gameCode, folder), gh(nullptr) {
-        if (Id() == Game::tes4) {
-            espm_settings = espm::Settings("tes4");
-        }
-        else if (Id() == Game::tes5) {
-            espm_settings = espm::Settings("tes5");
-        }
-        else if (Id() == Game::fo3) {
-            espm_settings = espm::Settings("fo3");
-        }
-        else if (Id() == Game::fonv) {
-            espm_settings = espm::Settings("fonv");
-        }
-    }
+    Game::Game(const unsigned int gameCode, const std::string& folder) : GameSettings(gameCode, folder), gh(nullptr) {}
 
     Game::~Game() {
         lo_destroy_handle(gh);
