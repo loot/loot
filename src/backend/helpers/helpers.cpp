@@ -23,7 +23,7 @@
     */
 
 #include "helpers.h"
-#include "error.h"
+#include "../error.h"
 #include "streams.h"
 
 #include <boost/spirit/include/karma.hpp>

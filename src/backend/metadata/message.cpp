@@ -23,7 +23,7 @@
     */
 
 #include "message.h"
-#include "../language.h"
+#include "../helpers/language.h"
 
 #include <boost/log/trivial.hpp>
 

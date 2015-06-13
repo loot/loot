@@ -27,8 +27,8 @@
 #include "scheme.h"
 
 #include "../backend/globals.h"
-#include "../backend/helpers.h"
-#include "../backend/language.h"
+#include "../backend/helpers/helpers.h"
+#include "../backend/helpers/language.h"
 
 #include <include/cef_browser.h>
 #include <include/cef_task.h>

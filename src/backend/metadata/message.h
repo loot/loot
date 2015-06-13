@@ -26,7 +26,7 @@
 
 #include "conditional_metadata.h"
 #include "message_content.h"
-#include "../language.h"
+#include "../helpers/language.h"
 
 #include <string>
 #include <vector>

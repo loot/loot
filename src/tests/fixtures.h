@@ -25,7 +25,7 @@ along with LOOT.  If not, see
 #ifndef LOOT_TEST_FIXTURES
 #define LOOT_TEST_FIXTURES
 
-#include "backend/streams.h"
+#include "backend/helpers/streams.h"
 
 #include <gtest/gtest.h>
 

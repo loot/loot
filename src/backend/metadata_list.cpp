@@ -25,7 +25,7 @@
 #include "metadata_list.h"
 #include "globals.h"
 #include "error.h"
-#include "streams.h"
+#include "helpers/streams.h"
 
 #include <boost/algorithm/string.hpp>
 #include <boost/log/trivial.hpp>

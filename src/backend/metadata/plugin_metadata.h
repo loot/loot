@@ -30,7 +30,7 @@
 #include "message.h"
 #include "plugin_dirty_info.h"
 #include "tag.h"
-#include "../yaml_set_helpers.h"
+#include "../helpers/yaml_set_helpers.h"
 
 #include <cstdint>
 #include <string>

@@ -29,8 +29,8 @@
 
 #include "../backend/error.h"
 #include "../backend/globals.h"
-#include "../backend/helpers.h"
-#include "../backend/json.h"
+#include "../backend/helpers/helpers.h"
+#include "../backend/helpers/json.h"
 
 #include <include/cef_app.h>
 #include <include/cef_runnable.h>

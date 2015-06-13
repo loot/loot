@@ -24,7 +24,7 @@
 #ifndef __LOOT_METADATA_MESSAGE_CONTENT__
 #define __LOOT_METADATA_MESSAGE_CONTENT__
 
-#include "../language.h"
+#include "../helpers/language.h"
 
 #include <string>
 

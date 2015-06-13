@@ -24,8 +24,8 @@
 
 #include "error.h"
 #include "graph.h"
-#include "streams.h"
-#include "helpers.h"
+#include "helpers/streams.h"
+#include "helpers/helpers.h"
 
 #include <cstdlib>
 

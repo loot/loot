@@ -93,9 +93,9 @@ set (LOOT_SRC   "${CMAKE_SOURCE_DIR}/src/backend/metadata/conditional_metadata.c
                 "${CMAKE_SOURCE_DIR}/src/backend/masterlist.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/plugin/plugin.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/plugin/plugin_loader.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/helpers.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/language.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/version.cpp"
+                "${CMAKE_SOURCE_DIR}/src/backend/helpers/helpers.cpp"
+                "${CMAKE_SOURCE_DIR}/src/backend/helpers/language.cpp"
+                "${CMAKE_SOURCE_DIR}/src/backend/helpers/version.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/graph.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/git.cpp"
                 "${CMAKE_BINARY_DIR}/generated/globals.cpp")
@@ -117,14 +117,14 @@ set (LOOT_HEADERS "${CMAKE_SOURCE_DIR}/src/backend/metadata/condition_grammar.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/masterlist.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/plugin/plugin.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/plugin/plugin_loader.h"
-                "${CMAKE_SOURCE_DIR}/src/backend/helpers.h"
-                "${CMAKE_SOURCE_DIR}/src/backend/language.h"
-                "${CMAKE_SOURCE_DIR}/src/backend/version.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/helpers/helpers.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/helpers/language.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/helpers/streams.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/helpers/version.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/helpers/yaml_set_helpers.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/globals.h"
-                "${CMAKE_SOURCE_DIR}/src/backend/yaml_set_helpers.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/graph.h"
-                "${CMAKE_SOURCE_DIR}/src/backend/error.h"
-                "${CMAKE_SOURCE_DIR}/src/backend/streams.h")
+                "${CMAKE_SOURCE_DIR}/src/backend/error.h")
 
 set (LOOT_GUI_SRC ${LOOT_SRC}
                   "${CMAKE_SOURCE_DIR}/src/gui/main_win.cpp"
@@ -137,7 +137,7 @@ set (LOOT_GUI_SRC ${LOOT_SRC}
 
 set (LOOT_GUI_HEADERS ${LOOT_HEADERS}
                   # Code the API doesn't need.
-                  "${CMAKE_SOURCE_DIR}/src/backend/json.h"
+                  "${CMAKE_SOURCE_DIR}/src/backend/helpers/json.h"
                   # Actual GUI code.
                   "${CMAKE_SOURCE_DIR}/src/gui/handler.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_handler.h"

@@ -23,8 +23,8 @@
     */
 
 #include "error.h"
-#include "streams.h"
-#include "helpers.h"
+#include "helpers/streams.h"
+#include "helpers/helpers.h"
 #include "game/game.h"
 
 #include <boost/log/trivial.hpp>

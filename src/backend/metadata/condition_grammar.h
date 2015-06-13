@@ -34,9 +34,9 @@
 #endif
 
 #include "../game/game.h"
-#include "../helpers.h"
+#include "../helpers/helpers.h"
 #include "../plugin/plugin.h"
-#include "../version.h"
+#include "../helpers/version.h"
 #include "../error.h"
 
 #include <cstdint>

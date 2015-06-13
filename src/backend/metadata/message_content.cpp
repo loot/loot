@@ -23,7 +23,7 @@
     */
 
 #include "message_content.h"
-#include "../language.h"
+#include "../helpers/language.h"
 
 #include <boost/algorithm/string.hpp>
 

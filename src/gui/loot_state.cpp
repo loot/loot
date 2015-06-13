@@ -26,9 +26,9 @@
 
 #include "../backend/error.h"
 #include "../backend/globals.h"
-#include "../backend/helpers.h"
-#include "../backend/language.h"
-#include "../backend/streams.h"
+#include "../backend/helpers/helpers.h"
+#include "../backend/helpers/language.h"
+#include "../backend/helpers/streams.h"
 
 #include <boost/format.hpp>
 #include <boost/locale.hpp>

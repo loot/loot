@@ -24,9 +24,9 @@
 
 #include "game.h"
 #include "../globals.h"
-#include "../helpers.h"
+#include "../helpers/helpers.h"
 #include "../error.h"
-#include "../streams.h"
+#include "../helpers/streams.h"
 #include "../graph.h"
 
 #include <boost/algorithm/string.hpp>

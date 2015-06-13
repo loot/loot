@@ -23,7 +23,7 @@
     */
 
 #include "backend/globals.h"
-#include "backend/helpers.h"
+#include "backend/helpers/helpers.h"
 
 namespace loot {
     //Version numbers.
