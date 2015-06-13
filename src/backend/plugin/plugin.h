@@ -24,8 +24,8 @@
 #ifndef __LOOT_PLUGIN__
 #define __LOOT_PLUGIN__
 
-#include "metadata/formid.h"
-#include "metadata/plugin_metadata.h"
+#include "../metadata/formid.h"
+#include "../metadata/plugin_metadata.h"
 
 #include <cstdint>
 #include <string>

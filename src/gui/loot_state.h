@@ -25,7 +25,7 @@
 #ifndef __LOOT_GUI_LOOT_STATE__
 #define __LOOT_GUI_LOOT_STATE__
 
-#include "../backend/game.h"
+#include "../backend/game/game.h"
 
 #include <include/cef_app.h>
 #include <include/base/cef_lock.h>

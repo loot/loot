@@ -24,8 +24,8 @@
 
 #include "plugin.h"
 #include "plugin_loader.h"
-#include "game.h"
-#include "helpers.h"
+#include "../game/game.h"
+#include "../helpers.h"
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>

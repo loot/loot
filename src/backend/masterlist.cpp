@@ -23,7 +23,7 @@
     */
 
 #include "masterlist.h"
-#include "game.h"
+#include "game/game.h"
 #include "error.h"
 
 using namespace std;

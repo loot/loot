@@ -25,7 +25,7 @@
 #ifndef __LOOT_GRAPH__
 #define __LOOT_GRAPH__
 
-#include "plugin.h"
+#include "plugin/plugin.h"
 
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/adjacency_list.hpp>

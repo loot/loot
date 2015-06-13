@@ -25,7 +25,7 @@
 #ifndef __LOOT_LOAD_ORDER_HANDLER__
 #define __LOOT_LOAD_ORDER_HANDLER__
 
-#include "../game_settings.h"
+#include "game_settings.h"
 
 #include <string>
 #include <list>

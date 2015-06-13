@@ -25,7 +25,7 @@
 #include "error.h"
 #include "streams.h"
 #include "helpers.h"
-#include "game.h"
+#include "game/game.h"
 
 #include <boost/log/trivial.hpp>
 #include <boost/locale.hpp>

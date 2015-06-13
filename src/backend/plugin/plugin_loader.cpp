@@ -23,8 +23,8 @@
     */
 
 #include "plugin_loader.h"
-#include "game.h"
-#include "helpers.h"
+#include "../game/game.h"
+#include "../helpers.h"
 
 #include <src/libespm.h>
 
@@ -110,7 +110,7 @@ namespace loot {
             BOOST_LOG_TRIVIAL(trace) << name << ": " << "Reading the description.";
             _description = boost::locale::conv::to_utf<char>(file->getDescription(), "Windows-1252", boost::locale::conv::stop);
         }
-        catch (std::exception& e) {
+        catch (std::exception&) {
             delete file;
             throw;
         }

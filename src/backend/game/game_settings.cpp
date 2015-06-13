@@ -23,9 +23,9 @@
     */
 
 #include "game_settings.h"
-#include "globals.h"
-#include "helpers.h"
-#include "error.h"
+#include "../globals.h"
+#include "../helpers.h"
+#include "../error.h"
 
 #include <boost/algorithm/string.hpp>
 #include <boost/locale.hpp>

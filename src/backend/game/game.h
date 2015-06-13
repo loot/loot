@@ -26,10 +26,10 @@
 #define __LOOT_GAME__
 
 #include "game_settings.h"
-#include "game/load_order_handler.h"
-#include "plugin.h"
-#include "metadata_list.h"
-#include "masterlist.h"
+#include "load_order_handler.h"
+#include "../plugin/plugin.h"
+#include "../metadata_list.h"
+#include "../masterlist.h"
 
 #include <string>
 #include <vector>

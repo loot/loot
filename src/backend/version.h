@@ -25,7 +25,7 @@
 #ifndef __LOOT_VERSION__
 #define __LOOT_VERSION__
 
-#include "plugin.h"
+#include "plugin/plugin.h"
 
 #include <string>
 #include <boost/filesystem.hpp>

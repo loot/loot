@@ -23,11 +23,11 @@
     */
 
 #include "game.h"
-#include "globals.h"
-#include "helpers.h"
-#include "error.h"
-#include "streams.h"
-#include "graph.h"
+#include "../globals.h"
+#include "../helpers.h"
+#include "../error.h"
+#include "../streams.h"
+#include "../graph.h"
 
 #include <boost/algorithm/string.hpp>
 #include <boost/thread.hpp>

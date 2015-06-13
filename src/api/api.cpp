@@ -23,7 +23,7 @@
     */
 
 #include "api.h"
-#include "../backend/game.h"
+#include "../backend/game/game.h"
 #include "../backend/globals.h"
 #include "../backend/error.h"
 #include "../backend/streams.h"

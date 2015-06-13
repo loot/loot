@@ -23,7 +23,7 @@
     */
 
 #include "plugin_metadata.h"
-#include "../game.h"
+#include "../game/game.h"
 #include "../helpers.h"
 
 #include <boost/algorithm/string.hpp>
