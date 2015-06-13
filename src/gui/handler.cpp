@@ -636,8 +636,7 @@ namespace loot {
 
             //Sort plugins into their load order.
             list<loot::Plugin> installed;
-            list<string> loadOrder;
-            _lootState.CurrentGame().GetLoadOrder(loadOrder);
+            list<string> loadOrder = _lootState.CurrentGame().GetLoadOrder();
             for (const auto &pluginName : loadOrder) {
                 const auto pos = _lootState.CurrentGame().plugins.find(boost::locale::to_lower(pluginName));
 

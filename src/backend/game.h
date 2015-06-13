@@ -26,6 +26,7 @@
 #define __LOOT_GAME__
 
 #include "game_settings.h"
+#include "game/load_order_handler.h"
 #include "plugin.h"
 #include "metadata_list.h"
 #include "masterlist.h"
@@ -43,24 +44,20 @@
 #include <yaml-cpp/yaml.h>
 
 namespace loot {
-    class Game : public GameSettings {
+    class Game : public GameSettings, public LoadOrderHandler {
     public:
         //Game functions.
         Game();  //Sets game to LOOT_Game::autodetect, with all other vars being empty.
         Game(const GameSettings& gameSettings);
         Game(const unsigned int baseGameCode, const std::string& lootFolder = "");
-        ~Game();
 
-        Game& Init(bool createFolder, const boost::filesystem::path& gameLocalAppData = "");
+        void Init(bool createFolder, const boost::filesystem::path& gameLocalAppData = "");
 
         //Compare names and folder names.
         bool operator == (const Game& rhs) const;
         bool operator == (const GameSettings& rhs) const;
         bool operator == (const std::string& nameOrFolderName) const;
 
-        void GetLoadOrder(std::list<std::string>& loadOrder) const;
-        void SetLoadOrder(const std::list<std::string>& loadOrder) const;  //Modifies game load order, even though const.
-        void SetLoadOrder(const char * const * const loadOrder, const size_t numPlugins) const;  // For API.
         void RefreshActivePluginsList();
         void RedatePlugins();  //Change timestamps to match load order (Skyrim only).
 
@@ -77,12 +74,6 @@ namespace loot {
         Masterlist masterlist;
         MetadataList userlist;
         std::unordered_map<std::string, Plugin> plugins;  //Map so that plugin data can be edited.
-    private:
-        boost::filesystem::path _gameLocalDataPath;  // Path to the game's folder in %LOCALAPPDATA%.
-
-        lo_game_handle gh;
-
-        void InitLibloHandle();
     };
 
     std::list<Game> ToGames(const std::list<GameSettings>& settings);

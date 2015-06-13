@@ -40,7 +40,7 @@ namespace fs = boost::filesystem;
 namespace lc = boost::locale;
 
 namespace loot {
-    Game::Game() : GameSettings(), gh(nullptr) {}
+    Game::Game() {}
 
     Game::Game(const GameSettings& gameSettings) : Game(gameSettings.Id(), gameSettings.FolderName()) {
         this->SetDetails(gameSettings.Name(),
@@ -51,13 +51,9 @@ namespace loot {
                          gameSettings.RegistryKey());
     }
 
-    Game::Game(const unsigned int gameCode, const std::string& folder) : GameSettings(gameCode, folder), gh(nullptr) {}
+    Game::Game(const unsigned int gameCode, const std::string& folder) : GameSettings(gameCode, folder) {}
 
-    Game::~Game() {
-        lo_destroy_handle(gh);
-    }
-
-    Game& Game::Init(bool createFolder, const boost::filesystem::path& gameLocalAppData) {
+    void Game::Init(bool createFolder, const boost::filesystem::path& gameLocalAppData) {
         if (Id() != Game::tes4 && Id() != Game::tes5 && Id() != Game::fo3 && Id() != Game::fonv) {
             throw error(error::invalid_args, lc::translate("Invalid game ID supplied.").str());
         }
@@ -69,17 +65,13 @@ namespace loot {
             throw error(error::path_not_found, lc::translate("Game path could not be detected.").str());
         }
 
-        // Set the path to the game's folder in %LOCALAPPDATA%.
-        _gameLocalDataPath = gameLocalAppData;
-
-        InitLibloHandle();
-        RefreshActivePluginsList();
-
         if (createFolder) {
             CreateLOOTGameFolder();
         }
 
-        return *this;
+        LoadOrderHandler::Init(*this, gameLocalAppData);
+
+        RefreshActivePluginsList();
     }
 
     bool Game::operator == (const Game& rhs) const {
@@ -94,181 +86,15 @@ namespace loot {
         return (boost::iequals(Name(), nameOrFolderName) || boost::iequals(FolderName(), nameOrFolderName));
     }
 
-    void Game::InitLibloHandle() {
-        const char * gameLocalDataPath = nullptr;
-        std::string localAppData = _gameLocalDataPath.string();
-        if (!localAppData.empty())
-            gameLocalDataPath = localAppData.c_str();
-
-        // If the handle has already been initialised, close it and open another.
-        if (gh != nullptr) {
-            lo_destroy_handle(gh);
-            gh = nullptr;
-        }
-
-        int ret;
-        if (Id() == Game::tes4)
-            ret = lo_create_handle(&gh, LIBLO_GAME_TES4, GamePath().string().c_str(), gameLocalDataPath);
-        else if (Id() == Game::tes5)
-            ret = lo_create_handle(&gh, LIBLO_GAME_TES5, GamePath().string().c_str(), gameLocalDataPath);
-        else if (Id() == Game::fo3)
-            ret = lo_create_handle(&gh, LIBLO_GAME_FO3, GamePath().string().c_str(), gameLocalDataPath);
-        else if (Id() == Game::fonv)
-            ret = lo_create_handle(&gh, LIBLO_GAME_FNV, GamePath().string().c_str(), gameLocalDataPath);
-        else
-            ret = LIBLO_ERROR_INVALID_ARGS;
-
-        if (ret != LIBLO_OK && ret != LIBLO_WARN_BAD_FILENAME && ret != LIBLO_WARN_INVALID_LIST && ret != LIBLO_WARN_LO_MISMATCH) {
-            const char * e = nullptr;
-            string err;
-            lo_get_error_message(&e);
-            if (e == nullptr) {
-                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to create a game handle. Details could not be fetched.";
-                err = lc::translate("libloadorder failed to create a game handle. Details could not be fetched.").str();
-            }
-            else {
-                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to create a game handle. Details: " << e;
-                err = lc::translate("libloadorder failed to create a game handle. Details:").str() + " " + e;
-            }
-            lo_cleanup();
-            throw error(error::liblo_error, err);
-        }
-
-        if (Id() != Game::tes5) {
-            ret = lo_set_game_master(gh, Master().c_str());
-            if (ret != LIBLO_OK && ret != LIBLO_WARN_BAD_FILENAME && ret != LIBLO_WARN_INVALID_LIST && ret != LIBLO_WARN_LO_MISMATCH) {
-                const char * e = nullptr;
-                string err;
-                lo_get_error_message(&e);
-                lo_destroy_handle(gh);
-                gh = nullptr;
-
-                if (e == nullptr) {
-                    BOOST_LOG_TRIVIAL(error) << "libloadorder failed to initialise game master file support. Details could not be fetched.";
-                    err = lc::translate("libloadorder failed to initialise game master file support. Details could not be fetched.").str();
-                }
-                else {
-                    BOOST_LOG_TRIVIAL(error) << "libloadorder failed to initialise game master file support. Details: " << e;
-                    err = lc::translate("libloadorder failed to initialise game master file support. Details:").str() + " " + e;
-                }
-                lo_cleanup();
-                throw error(error::liblo_error, err);
-            }
-        }
-    }
-
     void Game::RefreshActivePluginsList() {
-        BOOST_LOG_TRIVIAL(debug) << "Refreshing active plugins list for game: " << Name();
-
-        char ** pluginArr;
-        size_t pluginArrSize;
-        unsigned int ret = lo_get_active_plugins(gh, &pluginArr, &pluginArrSize);
-        if (ret != LIBLO_OK && ret != LIBLO_WARN_BAD_FILENAME && ret != LIBLO_WARN_INVALID_LIST && ret != LIBLO_WARN_LO_MISMATCH) {
-            const char * e = nullptr;
-            string err;
-            lo_get_error_message(&e);
-            if (e == nullptr) {
-                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to get the active plugins list. Details could not be fetched.";
-                err = lc::translate("libloadorder failed to get the active plugins list. Details could not be fetched.").str();
-            }
-            else {
-                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to get the active plugins list. Details: " << e;
-                err = lc::translate("libloadorder failed to get the active plugins list. Details:").str() + " " + e;
-            }
-            lo_cleanup();
-            throw error(error::liblo_error, err);
-        }
-
-        activePlugins.clear();
-        for (size_t i = 0; i < pluginArrSize; ++i) {
-            activePlugins.insert(boost::locale::to_lower(string(pluginArr[i])));
-        }
-    }
-
-    void Game::GetLoadOrder(std::list<std::string>& loadOrder) const {
-        BOOST_LOG_TRIVIAL(debug) << "Getting load order for game: " << Name();
-
-        char ** pluginArr;
-        size_t pluginArrSize;
-
-        unsigned int ret = lo_get_load_order(gh, &pluginArr, &pluginArrSize);
-        if (ret != LIBLO_OK && ret != LIBLO_WARN_BAD_FILENAME && ret != LIBLO_WARN_INVALID_LIST && ret != LIBLO_WARN_LO_MISMATCH) {
-            const char * e = nullptr;
-            string err;
-            lo_get_error_message(&e);
-            if (e == nullptr) {
-                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to get the load order. Details could not be fetched.";
-                err = lc::translate("libloadorder failed to get the load order. Details could not be fetched.").str();
-            }
-            else {
-                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to get the load order. Details: " << e;
-                err = lc::translate("libloadorder failed to get the load order. Details:").str() + " " + e;
-            }
-            lo_cleanup();
-            throw error(error::liblo_error, err);
-        }
-
-        loadOrder.clear();
-        for (size_t i = 0; i < pluginArrSize; ++i) {
-            loadOrder.push_back(string(pluginArr[i]));
-        }
-    }
-
-    void Game::SetLoadOrder(const char * const * const loadOrder, const size_t numPlugins) const {
-        BOOST_LOG_TRIVIAL(debug) << "Setting load order for game: " << Name();
-
-        unsigned int ret = lo_set_load_order(gh, loadOrder, numPlugins);
-        if (ret != LIBLO_OK && ret != LIBLO_WARN_BAD_FILENAME && ret != LIBLO_WARN_INVALID_LIST && ret != LIBLO_WARN_LO_MISMATCH) {
-            const char * e = nullptr;
-            string err;
-            lo_get_error_message(&e);
-            if (e == nullptr) {
-                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to set the load order. Details could not be fetched.";
-                err = lc::translate("libloadorder failed to set the load order. Details could not be fetched.").str();
-            }
-            else {
-                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to set the load order. Details: " << e;
-                err = lc::translate("libloadorder failed to set the load order. Details:").str() + " " + e;
-            }
-            lo_cleanup();
-            throw error(error::liblo_error, err);
-        }
-    }
-
-    void Game::SetLoadOrder(const std::list<std::string>& loadOrder) const {
-        BOOST_LOG_TRIVIAL(info) << "Setting load order:";
-        size_t pluginArrSize = loadOrder.size();
-        char ** pluginArr = new char*[pluginArrSize];
-        int i = 0;
-        for (const auto &plugin : loadOrder) {
-            BOOST_LOG_TRIVIAL(info) << '\t' << '\t' << plugin;
-            pluginArr[i] = new char[plugin.length() + 1];
-            strcpy(pluginArr[i], plugin.c_str());
-            ++i;
-        }
-
-        try {
-            SetLoadOrder(pluginArr, pluginArrSize);
-        }
-        catch (error &/*e*/) {
-            for (size_t i = 0; i < pluginArrSize; i++)
-                delete[] pluginArr[i];
-            delete[] pluginArr;
-            throw;
-        }
-
-        for (size_t i = 0; i < pluginArrSize; i++)
-            delete[] pluginArr[i];
-        delete[] pluginArr;
+        activePlugins = GetActivePlugins();
     }
 
     void Game::RedatePlugins() {
         if (Id() != tes5)
             return;
 
-        list<string> loadorder;
-        GetLoadOrder(loadorder);
-
+        list<string> loadorder = GetLoadOrder();
         if (!loadorder.empty()) {
             time_t lastTime;
             fs::path filepath = DataPath() / *loadorder.begin();
@@ -409,8 +235,7 @@ namespace loot {
         }
 
         // Get the existing load order.
-        list<string> loadorder;
-        GetLoadOrder(loadorder);
+        list<string> loadorder = GetLoadOrder();
         BOOST_LOG_TRIVIAL(info) << "Fetched existing load order: ";
         for (const auto &plugin : loadorder)
             BOOST_LOG_TRIVIAL(info) << plugin;
