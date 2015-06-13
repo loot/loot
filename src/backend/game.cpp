@@ -40,143 +40,44 @@ namespace fs = boost::filesystem;
 namespace lc = boost::locale;
 
 namespace loot {
-    std::list<Game> GetGames(YAML::Node& settings) {
-        list<Game> games;
+    Game::Game() : GameSettings(), gh(nullptr) {}
 
-        if (settings["games"])
-            games = settings["games"].as< list<Game> >();
-
-        if (find(games.begin(), games.end(), Game(Game::tes4)) == games.end())
-            games.push_back(Game(Game::tes4));
-
-        if (find(games.begin(), games.end(), Game(Game::tes5)) == games.end())
-            games.push_back(Game(Game::tes5));
-
-        if (find(games.begin(), games.end(), Game(Game::fo3)) == games.end())
-            games.push_back(Game(Game::fo3));
-
-        if (find(games.begin(), games.end(), Game(Game::fonv)) == games.end())
-            games.push_back(Game(Game::fonv));
-
-        // If there were any missing defaults, make sure they're in settings now.
-        settings["games"] = games;
-
-        return games;
+    Game::Game(const GameSettings& gameSettings) : Game(gameSettings.Id(), gameSettings.FolderName()) {
+        this->SetDetails(gameSettings.Name(),
+                         gameSettings.Master(),
+                         gameSettings.RepoURL(),
+                         gameSettings.RepoBranch(),
+                         gameSettings.GamePath().string(),
+                         gameSettings.RegistryKey());
     }
 
-    // Game member functions
-    //----------------------
-
-    Game::Game() : id(Game::autodetect), gh(nullptr) {}
-
-    Game::Game(const unsigned int gameCode, const std::string& folder) : id(gameCode), gh(nullptr) {
+    Game::Game(const unsigned int gameCode, const std::string& folder) : GameSettings(gameCode, folder), gh(nullptr) {
         if (Id() == Game::tes4) {
-            _name = "TES IV: Oblivion";
-            registryKey = "Software\\Bethesda Softworks\\Oblivion\\Installed Path";
-            lootFolderName = "Oblivion";
-            _masterFile = "Oblivion.esm";
             espm_settings = espm::Settings("tes4");
-            _repositoryURL = "https://github.com/loot/oblivion.git";
-            _repositoryBranch = "master";
         }
         else if (Id() == Game::tes5) {
-            _name = "TES V: Skyrim";
-            registryKey = "Software\\Bethesda Softworks\\Skyrim\\Installed Path";
-            lootFolderName = "Skyrim";
-            _masterFile = "Skyrim.esm";
             espm_settings = espm::Settings("tes5");
-            _repositoryURL = "https://github.com/loot/skyrim.git";
-            _repositoryBranch = "master";
         }
         else if (Id() == Game::fo3) {
-            _name = "Fallout 3";
-            registryKey = "Software\\Bethesda Softworks\\Fallout3\\Installed Path";
-            lootFolderName = "Fallout3";
-            _masterFile = "Fallout3.esm";
             espm_settings = espm::Settings("fo3");
-            _repositoryURL = "https://github.com/loot/fallout3.git";
-            _repositoryBranch = "master";
         }
         else if (Id() == Game::fonv) {
-            _name = "Fallout: New Vegas";
-            registryKey = "Software\\Bethesda Softworks\\FalloutNV\\Installed Path";
-            lootFolderName = "FalloutNV";
-            _masterFile = "FalloutNV.esm";
             espm_settings = espm::Settings("fonv");
-            _repositoryURL = "https://github.com/loot/falloutnv.git";
-            _repositoryBranch = "master";
         }
-
-        if (!folder.empty())
-            lootFolderName = folder;
     }
 
     Game::~Game() {
         lo_destroy_handle(gh);
     }
 
-    Game& Game::SetDetails(const std::string& name, const std::string& masterFile,
-                           const std::string& repositoryURL, const std::string& repositoryBranch, const std::string& path, const std::string& registry) {
-        BOOST_LOG_TRIVIAL(info) << "Setting new details for game: " << _name;
-
-        if (!name.empty()) {
-            BOOST_LOG_TRIVIAL(trace) << '\t' << "Setting name to: " << name;
-            _name = name;
-        }
-
-        if (!masterFile.empty()) {
-            BOOST_LOG_TRIVIAL(trace) << '\t' << "Setting master file to: " << masterFile;
-            _masterFile = masterFile;
-        }
-
-        if (!repositoryURL.empty()) {
-            BOOST_LOG_TRIVIAL(trace) << '\t' << "Setting repo URL to: " << repositoryURL;
-            _repositoryURL = repositoryURL;
-        }
-
-        if (!repositoryBranch.empty()) {
-            BOOST_LOG_TRIVIAL(trace) << '\t' << "Setting repo branch to: " << repositoryBranch;
-            _repositoryBranch = repositoryBranch;
-        }
-
-        if (!path.empty()) {
-            BOOST_LOG_TRIVIAL(trace) << '\t' << "Setting game path to: " << path;
-            gamePath = path;
-        }
-
-        if (!registry.empty()) {
-            BOOST_LOG_TRIVIAL(trace) << '\t' << "Setting registry key to: " << registry;
-            registryKey = registry;
-        }
-
-        return *this;
-    }
-
     Game& Game::Init(bool createFolder, const boost::filesystem::path& gameLocalAppData) {
-        if (id != Game::tes4 && id != Game::tes5 && id != Game::fo3 && id != Game::fonv) {
+        if (Id() != Game::tes4 && Id() != Game::tes5 && Id() != Game::fo3 && Id() != Game::fonv) {
             throw error(error::invalid_args, lc::translate("Invalid game ID supplied.").str());
         }
 
-        BOOST_LOG_TRIVIAL(info) << "Initialising filesystem-related data for game: " << _name;
+        BOOST_LOG_TRIVIAL(info) << "Initialising filesystem-related data for game: " << Name();
 
-        //First look for local install, then look for Registry.
-        if (gamePath.empty() || !fs::exists(gamePath / "Data" / _masterFile)) {
-            if (fs::exists(fs::path("..") / "Data" / _masterFile)) {
-                gamePath = "..";
-#ifdef _WIN32
-            }
-            else {
-                string path;
-                string key_parent = fs::path(registryKey).parent_path().string();
-                string key_name = fs::path(registryKey).filename().string();
-                path = RegKeyStringValue("HKEY_LOCAL_MACHINE", key_parent, key_name);
-                if (!path.empty() && fs::exists(fs::path(path) / "Data" / _masterFile))
-                    gamePath = fs::path(path);
-#endif
-            }
-        }
-
-        if (gamePath.empty()) {
+        if (!this->IsInstalled()) {
             BOOST_LOG_TRIVIAL(error) << "Game path could not be detected.";
             throw error(error::path_not_found, lc::translate("Game path could not be detected.").str());
         }
@@ -194,81 +95,16 @@ namespace loot {
         return *this;
     }
 
-    bool Game::IsInstalled() const {
-        try {
-            BOOST_LOG_TRIVIAL(trace) << "Checking if game \"" << _name << "\" is installed.";
-            if (!gamePath.empty() && fs::exists(gamePath / "Data" / _masterFile))
-                return true;
-
-            if (fs::exists(fs::path("..") / "Data" / _masterFile))
-                return true;
-
-#ifdef _WIN32
-            string path;
-            string key_parent = fs::path(registryKey).parent_path().string();
-            string key_name = fs::path(registryKey).filename().string();
-            path = RegKeyStringValue("HKEY_LOCAL_MACHINE", key_parent, key_name);
-            if (!path.empty() && fs::exists(fs::path(path) / "Data" / _masterFile))
-                return true;
-#endif
-        }
-        catch (exception &e) {
-            BOOST_LOG_TRIVIAL(error) << "Error while checking if game \"" << _name << "\" is installed: " << e.what();
-        }
-
-        return false;
+    bool Game::operator == (const Game& rhs) const {
+        return (boost::iequals(Name(), rhs.Name()) || boost::iequals(FolderName(), rhs.FolderName()));
     }
 
-    bool Game::operator == (const Game& rhs) const {
-        return (boost::iequals(_name, rhs.Name()) || boost::iequals(lootFolderName, rhs.FolderName()));
+    bool Game::operator == (const GameSettings& rhs) const {
+        return (boost::iequals(Name(), rhs.Name()) || boost::iequals(FolderName(), rhs.FolderName()));
     }
 
     bool Game::operator == (const std::string& nameOrFolderName) const {
-        return (boost::iequals(_name, nameOrFolderName) || boost::iequals(lootFolderName, nameOrFolderName));
-    }
-
-    unsigned int Game::Id() const {
-        return id;
-    }
-
-    string Game::Name() const {
-        return _name;
-    }
-
-    string Game::FolderName() const {
-        return lootFolderName;
-    }
-
-    std::string Game::Master() const {
-        return _masterFile;
-    }
-
-    std::string Game::RegistryKey() const {
-        return registryKey;
-    }
-
-    std::string Game::RepoURL() const {
-        return _repositoryURL;
-    }
-
-    std::string Game::RepoBranch() const {
-        return _repositoryBranch;
-    }
-
-    fs::path Game::GamePath() const {
-        return gamePath;
-    }
-
-    fs::path Game::DataPath() const {
-        return GamePath() / "Data";
-    }
-
-    fs::path Game::MasterlistPath() const {
-        return g_path_local / lootFolderName / "masterlist.yaml";
-    }
-
-    fs::path Game::UserlistPath() const {
-        return g_path_local / lootFolderName / "userlist.yaml";
+        return (boost::iequals(Name(), nameOrFolderName) || boost::iequals(FolderName(), nameOrFolderName));
     }
 
     void Game::InitLibloHandle() {
@@ -285,13 +121,13 @@ namespace loot {
 
         int ret;
         if (Id() == Game::tes4)
-            ret = lo_create_handle(&gh, LIBLO_GAME_TES4, gamePath.string().c_str(), gameLocalDataPath);
+            ret = lo_create_handle(&gh, LIBLO_GAME_TES4, GamePath().string().c_str(), gameLocalDataPath);
         else if (Id() == Game::tes5)
-            ret = lo_create_handle(&gh, LIBLO_GAME_TES5, gamePath.string().c_str(), gameLocalDataPath);
+            ret = lo_create_handle(&gh, LIBLO_GAME_TES5, GamePath().string().c_str(), gameLocalDataPath);
         else if (Id() == Game::fo3)
-            ret = lo_create_handle(&gh, LIBLO_GAME_FO3, gamePath.string().c_str(), gameLocalDataPath);
+            ret = lo_create_handle(&gh, LIBLO_GAME_FO3, GamePath().string().c_str(), gameLocalDataPath);
         else if (Id() == Game::fonv)
-            ret = lo_create_handle(&gh, LIBLO_GAME_FNV, gamePath.string().c_str(), gameLocalDataPath);
+            ret = lo_create_handle(&gh, LIBLO_GAME_FNV, GamePath().string().c_str(), gameLocalDataPath);
         else
             ret = LIBLO_ERROR_INVALID_ARGS;
 
@@ -311,8 +147,8 @@ namespace loot {
             throw error(error::liblo_error, err);
         }
 
-        if (id != Game::tes5) {
-            ret = lo_set_game_master(gh, _masterFile.c_str());
+        if (Id() != Game::tes5) {
+            ret = lo_set_game_master(gh, Master().c_str());
             if (ret != LIBLO_OK && ret != LIBLO_WARN_BAD_FILENAME && ret != LIBLO_WARN_INVALID_LIST && ret != LIBLO_WARN_LO_MISMATCH) {
                 const char * e = nullptr;
                 string err;
@@ -335,7 +171,7 @@ namespace loot {
     }
 
     void Game::RefreshActivePluginsList() {
-        BOOST_LOG_TRIVIAL(debug) << "Refreshing active plugins list for game: " << _name;
+        BOOST_LOG_TRIVIAL(debug) << "Refreshing active plugins list for game: " << Name();
 
         char ** pluginArr;
         size_t pluginArrSize;
@@ -363,7 +199,7 @@ namespace loot {
     }
 
     void Game::GetLoadOrder(std::list<std::string>& loadOrder) const {
-        BOOST_LOG_TRIVIAL(debug) << "Getting load order for game: " << _name;
+        BOOST_LOG_TRIVIAL(debug) << "Getting load order for game: " << Name();
 
         char ** pluginArr;
         size_t pluginArrSize;
@@ -392,7 +228,7 @@ namespace loot {
     }
 
     void Game::SetLoadOrder(const char * const * const loadOrder, const size_t numPlugins) const {
-        BOOST_LOG_TRIVIAL(debug) << "Setting load order for game: " << _name;
+        BOOST_LOG_TRIVIAL(debug) << "Setting load order for game: " << Name();
 
         unsigned int ret = lo_set_load_order(gh, loadOrder, numPlugins);
         if (ret != LIBLO_OK && ret != LIBLO_WARN_BAD_FILENAME && ret != LIBLO_WARN_INVALID_LIST && ret != LIBLO_WARN_LO_MISMATCH) {
@@ -440,7 +276,7 @@ namespace loot {
     }
 
     void Game::RedatePlugins() {
-        if (id != tes5)
+        if (Id() != tes5)
             return;
 
         list<string> loadorder;
@@ -539,24 +375,12 @@ namespace loot {
     bool Game::HasBeenLoaded() {
         // Easy way to check is by checking the game's master file,
         // which definitely shouldn't be empty.
-        auto pairIt = plugins.find(boost::locale::to_lower(_masterFile));
+        auto pairIt = plugins.find(boost::locale::to_lower(Master()));
 
         if (pairIt != plugins.end())
             return !pairIt->second.FormIDs().empty();
 
         return false;
-    }
-
-    void Game::CreateLOOTGameFolder() {
-        //Make sure that the LOOT game path exists.
-        try {
-            if (fs::exists(g_path_local) && !fs::exists(g_path_local / lootFolderName))
-                fs::create_directory(g_path_local / lootFolderName);
-        }
-        catch (fs::filesystem_error& e) {
-            BOOST_LOG_TRIVIAL(error) << "Could not create LOOT folder for game. Details: " << e.what();
-            throw error(error::path_write_fail, lc::translate("Could not create LOOT folder for game. Details:").str() + " " + e.what());
-        }
     }
 
     std::list<Plugin> Game::Sort(const unsigned int language, std::function<void(const std::string&)> progressCallback) {
@@ -608,21 +432,12 @@ namespace loot {
         progressCallback(lc::translate("Adding edges to plugin graph and performing topological sort..."));
         return loot::Sort(graph, loadorder);
     }
-}
 
-namespace YAML {
-    Emitter& operator << (Emitter& out, const loot::Game& rhs) {
-        out << BeginMap
-            << Key << "type" << Value << YAML::SingleQuoted << loot::Game(rhs.Id()).FolderName()
-            << Key << "folder" << Value << YAML::SingleQuoted << rhs.FolderName()
-            << Key << "name" << Value << YAML::SingleQuoted << rhs.Name()
-            << Key << "master" << Value << YAML::SingleQuoted << rhs.Master()
-            << Key << "repo" << Value << YAML::SingleQuoted << rhs.RepoURL()
-            << Key << "branch" << Value << YAML::SingleQuoted << rhs.RepoBranch()
-            << Key << "path" << Value << YAML::SingleQuoted << rhs.GamePath().string()
-            << Key << "registry" << Value << YAML::SingleQuoted << rhs.RegistryKey()
-            << EndMap;
+    std::list<Game> ToGames(const std::list<GameSettings>& settings) {
+        return list<Game>(settings.begin(), settings.end());
+    }
 
-        return out;
+    std::list<GameSettings> ToGameSettings(const std::list<Game>& games) {
+        return list<GameSettings>(games.begin(), games.end());
     }
 }

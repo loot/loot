@@ -259,7 +259,7 @@ namespace loot {
             // It will be restored when LOOT is next loaded.
             try {
                 BOOST_LOG_TRIVIAL(trace) << "Updating games object.";
-                list<Game> games(request["args"][0]["games"].as< list<Game> >());
+                list<GameSettings> games(request["args"][0]["games"].as< list<GameSettings> >());
                 _lootState.UpdateGames(games);
 
                 // Also enable/disable debug logging as required.

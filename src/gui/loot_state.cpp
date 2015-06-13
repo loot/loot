@@ -137,14 +137,14 @@ namespace loot {
         //Detect installed games.
         BOOST_LOG_TRIVIAL(debug) << "Detecting installed games.";
         try {
-            _games = GetGames(_settings);
+            _games = ToGames(GetGameSettings(_settings));
         }
         catch (YAML::Exception& e) {
             BOOST_LOG_TRIVIAL(error) << "Games' settings parsing failed. " << e.what();
             _initErrors.push_back((format(translate("Error: Games' settings parsing failed. %1%")) % e.what()).str());
             // Now redo, but with no games settings, so only the hardcoded defaults get loaded. It means the user can
             // at least still then edit them.
-            _games = GetGames(YAML::Node());
+            _games = ToGames(GetGameSettings(YAML::Node()));
         }
 
         try {
@@ -153,7 +153,7 @@ namespace loot {
             BOOST_LOG_TRIVIAL(debug) << "Initialising game-specific settings.";
             _currentGame->Init(true);
             // Update game path in settings object.
-            _settings["games"] = _games;
+            _settings["games"] = ToGameSettings(_games);
         }
         catch (loot::error &e) {
             if (e.code() == loot::error::no_game_detected) {
@@ -171,7 +171,7 @@ namespace loot {
         return _initErrors;
     }
 
-    void LootState::UpdateGames(std::list<Game>& games) {
+    void LootState::UpdateGames(std::list<GameSettings>& games) {
         // Acquire the lock for the scope of this method.
         base::AutoLock lock_scope(_lock);
 
@@ -208,7 +208,7 @@ namespace loot {
         // Re-initialise the current game in case the game path setting was changed.
         _currentGame->Init(true);
         // Update game path in settings object.
-        _settings["games"] = _games;
+        _settings["games"] = ToGameSettings(_games);
     }
 
     void LootState::ChangeGame(const std::string& newGameFolder) {
@@ -220,7 +220,7 @@ namespace loot {
         _currentGame->Init(true);
 
         // Update game path in settings object.
-        _settings["games"] = _games;
+        _settings["games"] = ToGameSettings(_games);
         BOOST_LOG_TRIVIAL(debug) << "New game is " << _currentGame->Name();
     }
 
@@ -231,9 +231,9 @@ namespace loot {
         return *_currentGame;
     }
 
-    std::vector<std::string> LootState::InstalledGames() const {
+    std::vector<std::string> LootState::InstalledGames() {
         vector<string> installedGames;
-        for (const auto &game : _games) {
+        for (auto &game : _games) {
             if (game.IsInstalled())
                 installedGames.push_back(game.FolderName());
         }
@@ -393,14 +393,9 @@ namespace loot {
         root["enableDebugLogging"] = false;
         root["updateMasterlist"] = true;
 
-        std::list<Game> games;
-        games.push_back(Game(Game::tes4));
-        games.push_back(Game(Game::tes5));
-        games.push_back(Game(Game::fo3));
-        games.push_back(Game(Game::fonv));
-        games.push_back(Game(Game::tes4, "Nehrim").SetDetails("Nehrim - At Fate's Edge", "Nehrim.esm", "https://github.com/loot/oblivion.git", "master", "", "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim - At Fate's Edge_is1\\InstallLocation"));
-
-        root["games"] = games;
+        // Add base game definitions, and Nehrim.
+        GetGameSettings(root);
+        root["games"].push_back(GameSettings(GameSettings::tes4, "Nehrim").SetDetails("Nehrim - At Fate's Edge", "Nehrim.esm", "https://github.com/loot/oblivion.git", "master", "", "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim - At Fate's Edge_is1\\InstallLocation"));
 
         return root;
     }
