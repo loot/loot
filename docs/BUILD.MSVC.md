@@ -1,6 +1,6 @@
 # Build Instructions using Microsoft Visual C++
 
-These instructions were used to build LOOT using Microsoft Visual Studio 2012 and Microsoft Visual Studio Express 2013 for Desktop, though they should also apply to other versions of MSVC.
+These instructions were used to build LOOT using Microsoft Visual Studio 2013 Community, though they should apply to other versions of MSVC.
 
 #### Boost
 
