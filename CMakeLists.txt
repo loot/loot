@@ -97,7 +97,7 @@ set (LOOT_SRC   "${CMAKE_SOURCE_DIR}/src/backend/metadata/conditional_metadata.c
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/helpers.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/language.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/version.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/graph.cpp"
+                "${CMAKE_SOURCE_DIR}/src/backend/plugin_sorter.cpp"
                 "${CMAKE_BINARY_DIR}/generated/globals.cpp")
 
 set (LOOT_HEADERS "${CMAKE_SOURCE_DIR}/src/backend/metadata/condition_grammar.h"
@@ -124,7 +124,7 @@ set (LOOT_HEADERS "${CMAKE_SOURCE_DIR}/src/backend/metadata/condition_grammar.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/version.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/yaml_set_helpers.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/globals.h"
-                "${CMAKE_SOURCE_DIR}/src/backend/graph.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/plugin_sorter.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/error.h")
 
 set (LOOT_GUI_SRC ${LOOT_SRC}

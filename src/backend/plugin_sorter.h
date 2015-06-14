@@ -27,16 +27,41 @@
 
 #include "plugin/plugin.h"
 
+#include <map>
+
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/adjacency_list.hpp>
-#include <boost/graph/topological_sort.hpp>
-#include <boost/graph/graphviz.hpp>
 
 namespace loot {
     typedef boost::adjacency_list<boost::listS, boost::listS, boost::directedS, loot::Plugin> PluginGraph;
     typedef boost::graph_traits<PluginGraph>::vertex_descriptor vertex_t;
+    typedef boost::associative_property_map<std::map<vertex_t, size_t>> vertex_map_t;
 
-    std::list<Plugin> Sort(PluginGraph& graph, const std::list<std::string>& loadorder);
+    class Game;
+
+    class PluginSorter {
+    public:
+        std::list<Plugin> Sort(Game& game,
+                               const unsigned int language,
+                               std::function<void(const std::string&)> progressCallback);
+    private:
+        PluginGraph graph;
+        std::map<vertex_t, size_t> indexMap;
+        vertex_map_t vertexIndexMap;
+        std::list<std::string> oldLoadOrder;
+
+        bool GetVertexByName(const std::string& name, vertex_t& vertex) const;
+        void CheckForCycles() const;
+        bool EdgeCreatesCycle(const vertex_t& u, const vertex_t& v) const;
+
+        int plugincmp(const std::string& plugin1, const std::string& plugin2) const;
+
+        void BuildPluginGraph(Game& game, const unsigned int language);
+        void AddSpecificEdges();
+        void AddPriorityEdges();
+        void AddOverlapEdges();
+        void AddTieBreakEdges();
+    };
 }
 
 #endif

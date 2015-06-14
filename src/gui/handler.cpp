@@ -29,6 +29,7 @@
 
 #include "../backend/error.h"
 #include "../backend/globals.h"
+#include "../backend/plugin_sorter.h"
 #include "../backend/helpers/helpers.h"
 #include "../backend/helpers/json.h"
 
@@ -951,7 +952,8 @@ namespace loot {
             _lootState.CurrentGame().LoadPlugins(false);
 
             //Sort plugins into their load order.
-            list<Plugin> plugins = _lootState.CurrentGame().Sort(language, [this, frame](const string& message) {
+            PluginSorter sorter;
+            list<Plugin> plugins = sorter.Sort(_lootState.CurrentGame(), language, [this, frame](const string& message) {
                 this->SendProgressUpdate(frame, message);
             });
 

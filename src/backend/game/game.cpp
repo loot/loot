@@ -27,7 +27,6 @@
 #include "../helpers/helpers.h"
 #include "../error.h"
 #include "../helpers/streams.h"
-#include "../graph.h"
 
 #include <boost/algorithm/string.hpp>
 #include <boost/thread.hpp>
@@ -194,55 +193,6 @@ namespace loot {
             return !pairIt->second.FormIDs().empty();
 
         return false;
-    }
-
-    std::list<Plugin> Game::Sort(const unsigned int language, std::function<void(const std::string&)> progressCallback) {
-        //Create a plugin graph containing the plugin and masterlist data.
-        loot::PluginGraph graph;
-
-        progressCallback(lc::translate("Building plugin graph..."));
-        BOOST_LOG_TRIVIAL(info) << "Merging masterlist, userlist into plugin list, evaluating conditions and checking for install validity.";
-        for (const auto &plugin : this->plugins) {
-            vertex_t v = boost::add_vertex(plugin.second, graph);
-            BOOST_LOG_TRIVIAL(trace) << "Merging for plugin \"" << graph[v].Name() << "\"";
-
-            //Check if there is a plugin entry in the masterlist. This will also find matching regex entries.
-            BOOST_LOG_TRIVIAL(trace) << "Merging masterlist data down to plugin list data.";
-            graph[v].MergeMetadata(this->masterlist.FindPlugin(graph[v]));
-
-            //Check if there is a plugin entry in the userlist. This will also find matching regex entries.
-            PluginMetadata ulistPlugin = this->userlist.FindPlugin(graph[v]);
-
-            if (!ulistPlugin.HasNameOnly() && ulistPlugin.Enabled()) {
-                BOOST_LOG_TRIVIAL(trace) << "Merging userlist data down to plugin list data.";
-                graph[v].MergeMetadata(ulistPlugin);
-            }
-
-            //Now that items are merged, evaluate any conditions they have.
-            BOOST_LOG_TRIVIAL(trace) << "Evaluate conditions for merged plugin data.";
-            try {
-                graph[v].EvalAllConditions(*this, language);
-            }
-            catch (std::exception& e) {
-                BOOST_LOG_TRIVIAL(error) << "\"" << graph[v].Name() << "\" contains a condition that could not be evaluated. Details: " << e.what();
-                list<Message> messages(graph[v].Messages());
-                messages.push_back(loot::Message(loot::Message::error, (boost::format(lc::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % graph[v].Name() % e.what()).str()));
-                graph[v].Messages(messages);
-            }
-
-            //Also check install validity.
-            graph[v].CheckInstallValidity(*this);
-        }
-
-        // Get the existing load order.
-        list<string> loadorder = GetLoadOrder();
-        BOOST_LOG_TRIVIAL(info) << "Fetched existing load order: ";
-        for (const auto &plugin : loadorder)
-            BOOST_LOG_TRIVIAL(info) << plugin;
-
-        // Now add edges and sort.
-        progressCallback(lc::translate("Adding edges to plugin graph and performing topological sort..."));
-        return loot::Sort(graph, loadorder);
     }
 
     std::list<Game> ToGames(const std::list<GameSettings>& settings) {

@@ -27,6 +27,7 @@
 #include "../backend/globals.h"
 #include "../backend/error.h"
 #include "../backend/helpers/streams.h"
+#include "../backend/plugin_sorter.h"
 
 #include <yaml-cpp/yaml.h>
 
@@ -436,7 +437,8 @@ LOOT_API unsigned int loot_sort_plugins(loot_db db,
         db->LoadPlugins(false);
 
         //Sort plugins into their load order.
-        std::list<loot::Plugin> plugins = db->Sort(loot_lang_any, [](const std::string& message) {});
+        loot::PluginSorter sorter;
+        std::list<loot::Plugin> plugins = sorter.Sort(*db, loot_lang_any, [](const std::string& message) {});
 
         db->extStringArraySize = plugins.size();
         db->extStringArray = new char*[db->extStringArraySize];
