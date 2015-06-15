@@ -41,7 +41,7 @@ namespace lc = boost::locale;
 namespace loot {
     Game::Game() {}
 
-    Game::Game(const GameSettings& gameSettings) : Game(gameSettings.Id(), gameSettings.FolderName()) {
+    Game::Game(const GameSettings& gameSettings) : GameSettings(gameSettings.Id(), gameSettings.FolderName()) {
         this->SetDetails(gameSettings.Name(),
                          gameSettings.Master(),
                          gameSettings.RepoURL(),
