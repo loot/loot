@@ -239,7 +239,7 @@ namespace loot {
                                      CefRefPtr< CefFrame > frame,
                                      CefRefPtr< CefRequest > request,
                                      bool is_redirect) {
-        BOOST_LOG_TRIVIAL(trace) << "Attemping to open link: " << request->GetURL().ToString();
+        BOOST_LOG_TRIVIAL(trace) << "Attempting to open link: " << request->GetURL().ToString();
         BOOST_LOG_TRIVIAL(trace) << "Comparing with URL: " << ToFileURL(g_path_report);
 
         if (boost::iequals(request->GetURL().ToString(), ToFileURL(g_path_report))) {
