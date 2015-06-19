@@ -25,7 +25,7 @@
 /**
  *  @mainpage
  *  @author WrinklyNinja
- *  @version 0.7.0
+ *  @version 0.7.1
  *  @copyright
  *      The LOOT API is distributed under the GNU General Public License v3.0.
  *      For the full text of the license, see the "GNU GPL v3.txt" file
@@ -61,6 +61,11 @@
  *      "docs/licenses/Licenses.txt" file.
  *
  * @section history_sec Version History
+ *      ## 0.7.1 - *22 June 2015*
+ *
+ *        * Fixed "No existing load order position" errors when sorting.
+ *        * Fixed output of Bash Tag removal suggestions in `loot_write_minimal_list()`.
+ *
  *      ## 0.7.0 - *20 May 2015*
  *
  *        * Initial API release.
