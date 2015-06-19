@@ -208,8 +208,8 @@ var {
         <li><a href="#cond-order">Order Of Evaluation</a>
     </ol>
     <li><a href="#lang">Language Codes</a>
+    <li><a href="#support">Version History &amp; Feature Support</a>
     <li><a href="#license">License</a>
-    <li><a href="#support">Feature Support</a>
 </ol>
 
 <h2 id="intro">Introduction</h2>
@@ -584,19 +584,20 @@ msg:
         <tr><td>Korean<td>ko
 </table>
 
+<h2 id="support">Version History &amp; Feature Support</h2>
+
+<p>As LOOT develops, so does its metadata format, and to keep things simple, they share the same version numbers. The table below summarises the evolution of the metadata format.
+
+<table>
+    <head>
+        <tr><th>Feature Supported?<th>v0.5<th>v0.6<th>v0.7
+    <tbody>
+        <tr><td>GitHub Flavored Markdown message formatting<td colspan="2">Only URL hyperlinking is supported, for <code>file:</code>, <code>http:</code> and <code>https:</code> URLs, using the <code>[label](url)</code> and <code>&lt;url&gt;</code> syntaxes.<td>LOOT uses the <a href="https://github.com/chjj/marked">Marked</a> library (v0.3) to provide support for most of GitHub Flavored Markdown, minus the GitHub-specific features (like @mentions, issue/repo linking and emoji).
+        <tr><td>Message string substitution (ie. <code>sub:</code>)<td colspan="2">No<td>Yes
+        <tr><td>YAML merge keys (ie. <code>&lt;&lt;:</code>)<td colspan="2">No<td>Yes
+</table>
+
 <h2 id="license">License</h2>
 <p>This document is part of the LOOT documentation.<br>
 Copyright (C) 2012&mdash;2015 WrinklyNinja<br>
 See the file <q>LOOT ReadMe.html</q> for copying conditions.
-
-<h2 id="support">Feature Support</h2>
-<p>Different versions of LOOT may have varying levels of support for the syntax detailed in this document. Such variation in support is detailed in the table below. Unless otherwise noted, all syntax changes are backwards-compatible (ie. you can use the features without breaking the masterlist for users on older versions).
-
-<table>
-    <thead>
-        <tr><th>Feature<th> LOOT v0.6 and earlier<th>LOOT v0.7
-    <tbody>
-        <tr><td>GitHub Flavored Markdown message formatting<td>Only URL hyperlinking is supported, for <code>file:</code>, <code>http:</code> and <code>https:</code> URLs, using the <code>[label](url)</code> and <code>&lt;url&gt;</code> syntaxes.<td>LOOT uses the <a href="https://github.com/chjj/marked">Marked</a> library (v0.3) to provide support for most of GitHub Flavored Markdown, minus the GitHub-specific features (like @mentions, issue/repo linking and emoji).
-        <tr><td>Message string substitution (ie. <code>sub:</code>)<td>Not supported.<td>Supported.
-        <tr><td>YAML merge keys (ie. <code>&lt;&lt;:</code>)<td>Not supported.<td>Supported.
-</table>
