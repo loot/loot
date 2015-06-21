@@ -395,7 +395,10 @@ namespace loot {
 
         // Add base game definitions, and Nehrim.
         GetGameSettings(root);
-        root["games"].push_back(GameSettings(GameSettings::tes4, "Nehrim").SetDetails("Nehrim - At Fate's Edge", "Nehrim.esm", "https://github.com/loot/oblivion.git", "master", "", "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim - At Fate's Edge_is1\\InstallLocation"));
+
+        GameSettings settings(GameSettings::tes4, "Nehrim");
+
+        root["games"].push_back(settings.SetDetails("Nehrim - At Fate's Edge", "Nehrim.esm", settings.RepoURL(), settings.RepoBranch(), "", "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim - At Fate's Edge_is1\\InstallLocation"));
 
         return root;
     }
