@@ -377,6 +377,18 @@ namespace loot {
             else
                 return false;
         }
+        else {
+            // Update existing default branches to new version default, if the
+            // default repositories are used.
+            for (auto &node : _settings["games"]) {
+                GameSettings settings(node.as<GameSettings>());
+
+                if (settings.RepoURL() == GameSettings(settings.Id()).RepoURL()
+                    && settings.RepoBranch() == "master") {
+                    node["branch"] = "v0.7";
+                }
+            }
+        }
 
         if (_settings["windows"])
             _settings.remove("windows");
