@@ -367,7 +367,7 @@ namespace loot {
                 for (auto &node : _settings["games"]) {
                     if (node["url"]) {
                         node["repo"] = node["url"];
-                        node["branch"] = "master";
+                        node["branch"] = "v0.7";
                         node.remove("url");
                     }
                 }
