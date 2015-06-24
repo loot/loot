@@ -33,7 +33,7 @@ namespace loot {
 
     Location::Location(const std::string& url) : _url(url) {}
 
-    Location::Location(const std::string& url, const std::vector<std::string>& versions) : _url(url), _versions(versions) {}
+    Location::Location(const std::string& url, const std::string& name) : _url(url), _name(name) {}
 
     bool Location::operator < (const Location& rhs) const {
         return boost::ilexicographical_compare(_url, rhs.URL());
@@ -47,19 +47,19 @@ namespace loot {
         return _url;
     }
 
-    std::vector<std::string> Location::Versions() const {
-        return _versions;
+    std::string Location::Name() const {
+        return _name;
     }
 }
 
 namespace YAML {
     Emitter& operator << (Emitter& out, const loot::Location& rhs) {
-        if (rhs.Versions().empty())
+        if (rhs.Name().empty())
             out << YAML::SingleQuoted << rhs.URL();
         else {
             out << BeginMap
                 << Key << "link" << Value << YAML::SingleQuoted << rhs.URL()
-                << Key << "ver" << Value << YAML::SingleQuoted << rhs.Versions()
+                << Key << "name" << Value << YAML::SingleQuoted << rhs.Name()
                 << EndMap;
         }
         return out;

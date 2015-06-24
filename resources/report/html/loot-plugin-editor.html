@@ -238,7 +238,7 @@ loot-editor-close
             <div id="locations">
                 <table is="editable-table" data-template="locationRow">
                     <thead>
-                        <tr><th>URL</th><th>Version</th><th></th></tr>
+                        <tr><th>URL</th><th>Name</th><th></th></tr>
                     </thead>
                     <tbody>
                         <!-- Location rows go here. -->
@@ -360,16 +360,6 @@ loot-editor-close
                         });
                         plugin.userlist.dirty = rowsData;
                     } else if (tables[j].parentElement.id == 'locations') {
-                        rowsData.forEach(function(value, index, arr){
-                            /* User metadata can only specify one version, but it should be a list. */
-                            if (value.ver.length > 0) {
-                                arr[index].ver = [
-                                    value.ver
-                                ];
-                            } else {
-                                delete arr[index].ver;
-                            }
-                        });
                         plugin.userlist.url = rowsData;
                     }
                 }
@@ -539,21 +529,13 @@ loot-editor-close
 
                     if (newData.masterlist && newData.masterlist.url) {
                         newData.masterlist.url.forEach(function(location) {
-                            var temp = location;
-                            if (temp.ver) {
-                                temp.ver = temp.ver[0];
-                            }
-                            var row = tables[j].addRow(temp);
+                            var row = tables[j].addRow(location);
                             tables[j].setReadOnly(row);
                         });
                     }
                     if (tempData.userlist && tempData.userlist.url) {
                         tempData.userlist.url.forEach(function(location) {
-                            var temp = location;
-                            if (temp.ver) {
-                                temp.ver = temp.ver[0];
-                            }
-                            tables[j].addRow(temp);
+                            tables[j].addRow(location);
                         });
                     }
                 }

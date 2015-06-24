@@ -379,23 +379,22 @@ Note: A newer version of this plugin <a href="http://www.example.com">is availab
 
 <h3 id="structs-location">Location Data Structure</h3>
 <p>This data structure is used to hold information on where a plugin is hosted online. It is not currently used by LOOT, but it was suggested that since the LOOT team receives a considerable number of plugin URLs, they should be recorded in a standard format, as there is no existing store of such information and it could prove useful in the future.
-<p>The data structure has two forms: the first is a simple string, and the second is a key-value map. The first form should be used for a URL without any associated version data, such as when it is not clear which version is found there, or when it is the only known hosting location for the plugin and as such hosts all available versions. The second form should be used when version data can be associated with the URL, such as when the URL only hosts a subset of the available versions of the plugin.
+<p>The data structure has two forms: the first is a simple string, and the second is a key-value map. All values in the map are strings.
 <p>The simple form:
 <pre><code><var>URL</var></code></pre>
 <p>where <code><var>URL</var></code> is a URL at which the plugin may be found.
 <p>The map form:
 <table>
-    <thead><tr><th>Key Name<th>Data Type<th>Required<th>Notes
+    <thead><tr><th>Key Name<th>Required<th>Notes
     <tbody>
-        <tr><td><code>link</code><td>string<td>&#x2713;<td>A URL at which the plugin may be found.
-        <tr><td><code>ver</code><td>string list<td>&#x2713;<td>A list of versions that can be found at the URL. <strong>This key is deprecated, and it will be removed in a future version of the syntax. Do not use it.</strong>
+        <tr><td><code>link</code><td>&#x2713;<td>A URL at which the plugin may be found.
+        <tr><td><code>name</code><td>&#x2717;<td>A descriptive name for the URL, which may be used as hyperlink text.
 </table>
 <p>Examples:
 <pre><code>'http://skyrim.nexusmods.com/mods/19/'</code></pre>
 or
-<pre><code>link: 'http://steamcommunity.com/sharedfiles/filedetails/?id=87144366'
-ver:
-  - '1.3.2c'
+<pre><code>link: 'https://steamcommunity.com/sharedfiles/filedetails/?id=419668499'
+name: 'Unofficial Skyrim Patch on Steam Workshop'
 </code></pre>
 
 <h3 id="structs-dirty">Dirty Info Data Structure</h3>
@@ -590,11 +589,13 @@ msg:
 
 <table>
     <head>
-        <tr><th>Feature Supported?<th>v0.5<th>v0.6<th>v0.7
+        <tr><th>Feature Supported?<th>v0.5<th>v0.6<th>v0.7<th>v0.8
     <tbody>
         <tr><td>GitHub Flavored Markdown message formatting<td colspan="2">Only URL hyperlinking is supported, for <code>file:</code>, <code>http:</code> and <code>https:</code> URLs, using the <code>[label](url)</code> and <code>&lt;url&gt;</code> syntaxes.<td>LOOT uses the <a href="https://github.com/chjj/marked">Marked</a> library (v0.3) to provide support for most of GitHub Flavored Markdown, minus the GitHub-specific features (like @mentions, issue/repo linking and emoji).
         <tr><td>Message string substitution (ie. <code>sub:</code>)<td colspan="2">No<td>Yes
         <tr><td>YAML merge keys (ie. <code>&lt;&lt;:</code>)<td colspan="2">No<td>Yes
+        <tr><td>Location <code>ver</code> key<td colspan="3">Yes<td>No
+        <tr><td>Location <code>name</code> key<td colspan="3">No<td>Yes
 </table>
 
 <h2 id="license">License</h2>

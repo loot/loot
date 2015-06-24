@@ -124,7 +124,7 @@
             pluginEditor.getElementById('dirty').querySelector('th:nth-child(5)').textContent = l10n.translate("Cleaning Utility").fetch();
 
             pluginEditor.getElementById('locations').querySelector('th:first-child').textContent = l10n.translate("URL").fetch();
-            pluginEditor.getElementById('locations').querySelector('th:nth-child(2)').textContent = l10n.translate("Version").fetch();
+            pluginEditor.getElementById('locations').querySelector('th:nth-child(2)').textContent = l10n.translate("Name").fetch();
 
             pluginEditor.getElementById('accept').parentElement.setAttribute('label', l10n.translate("Apply").fetch());
             pluginEditor.getElementById('cancel').parentElement.setAttribute('label', l10n.translate("Cancel").fetch());

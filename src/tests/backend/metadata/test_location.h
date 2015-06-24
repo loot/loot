@@ -37,15 +37,9 @@ TEST(Location, ConstructorsAndDataAccess) {
     loc = Location("http://www.example.com");
     EXPECT_EQ("http://www.example.com", loc.URL());
 
-    loc = Location("http://www.example.com", {
-        "1.0",
-        "1.1"
-    });
+    loc = Location("http://www.example.com", "example");
     EXPECT_EQ("http://www.example.com", loc.URL());
-    EXPECT_EQ(std::vector<std::string>({
-        "1.0",
-        "1.1"
-    }), loc.Versions());
+    EXPECT_EQ("example", loc.Name());
 }
 
 TEST(Location, EqualityOperator) {
@@ -56,8 +50,8 @@ TEST(Location, EqualityOperator) {
     loc2 = Location("HTTP://WWW.EXAMPLE.COM");
     EXPECT_TRUE(loc1 == loc2);
 
-    loc1 = Location("http://www.example.com", {"1.0"});
-    loc2 = Location("http://www.example.com", {"1.1"});
+    loc1 = Location("http://www.example.com", "example1");
+    loc2 = Location("http://www.example.com", "example2");
     EXPECT_TRUE(loc1 == loc2);
 
     loc1 = Location("http://www.example1.com");
@@ -75,8 +69,8 @@ TEST(Location, LessThanOperator) {
     EXPECT_FALSE(loc1 < loc2);
     EXPECT_FALSE(loc2 < loc1);
 
-    loc1 = Location("http://www.example.com", {"1.0"});
-    loc2 = Location("http://www.example.com", {"1.1"});
+    loc1 = Location("http://www.example.com", "example1");
+    loc2 = Location("http://www.example.com", "example2");
     EXPECT_FALSE(loc1 < loc2);
     EXPECT_FALSE(loc2 < loc1);
 
@@ -92,13 +86,10 @@ TEST(Location, YamlEmitter) {
     e1 << loc;
     EXPECT_STREQ("'http://www.example.com'", e1.c_str());
 
-    loc = Location("http://www.example.com", {
-        "1.0",
-        "1.1"
-    });
+    loc = Location("http://www.example.com", "example");
     YAML::Emitter e2;
     e2 << loc;
-    EXPECT_STREQ("link: 'http://www.example.com'\nver:\n  - '1.0'\n  - '1.1'", e2.c_str());
+    EXPECT_STREQ("link: 'http://www.example.com'\nname: 'example'", e2.c_str());
 }
 
 TEST(Location, YamlEncode) {
@@ -107,18 +98,12 @@ TEST(Location, YamlEncode) {
     Location loc("http://www.example.com");
     node = loc;
     EXPECT_EQ("http://www.example.com", node["link"].as<std::string>());
-    EXPECT_EQ(std::vector<std::string>(), node["ver"].as<std::vector<std::string>>());
+    EXPECT_FALSE(node["name"]);
 
-    loc = Location("http://www.example.com", {
-        "1.0",
-        "1.1"
-    });
+    loc = Location("http://www.example.com", "example");
     node = loc;
     EXPECT_EQ("http://www.example.com", node["link"].as<std::string>());
-    EXPECT_EQ(std::vector<std::string>({
-        "1.0",
-        "1.1"
-    }), node["ver"].as<std::vector<std::string>>());
+    EXPECT_EQ("example", node["name"].as<std::string>());
 }
 
 TEST(Location, YamlDecode) {
@@ -128,15 +113,12 @@ TEST(Location, YamlDecode) {
     node = YAML::Load("http://www.example.com");
     loc = node.as<Location>();
     EXPECT_EQ("http://www.example.com", loc.URL());
-    EXPECT_EQ(std::vector<std::string>(), loc.Versions());
+    EXPECT_EQ("", loc.Name());
 
-    node = YAML::Load("{link: http://www.example.com, ver: [ 1.0, 1.1]}");
+    node = YAML::Load("{link: http://www.example.com, name: example}");
     loc = node.as<Location>();
     EXPECT_EQ("http://www.example.com", loc.URL());
-    EXPECT_EQ(std::vector<std::string>({
-        "1.0",
-        "1.1"
-    }), loc.Versions());
+    EXPECT_EQ("example", loc.Name());
 
     node = YAML::Load("[0, 1, 2]");
     EXPECT_ANY_THROW(node.as<Location>());
