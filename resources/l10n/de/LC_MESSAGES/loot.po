@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BOSS v3.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-22 09:51+0100\n"
-"PO-Revision-Date: 2015-06-22 10:33+0100\n"
+"POT-Creation-Date: 2015-06-24 18:59+0100\n"
+"PO-Revision-Date: 2015-06-24 19:05+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de_DE\n"
@@ -579,7 +579,7 @@ msgstr "Prioritäts-Wert"
 
 #: resources/report/js/l10n.js:90
 msgid "Main"
-msgstr ""
+msgstr "Allgemein"
 
 #: resources/report/js/l10n.js:91
 msgid "Load After"
@@ -603,7 +603,7 @@ msgstr "Bash Tags"
 
 #: resources/report/js/l10n.js:96
 msgid "Dirty Info"
-msgstr "Informationen über unsaubere Einträge"
+msgstr "Informationen über schmutzige Einträge"
 
 #: resources/report/js/l10n.js:97
 msgid "Locations"
@@ -885,7 +885,7 @@ msgstr "Aktive Plugins"
 
 #: resources/report/js/l10n.js:271
 msgid "Dirty Plugins"
-msgstr "Unsaubere Plugins"
+msgstr "Schmutzige Plugins"
 
 #: resources/report/js/l10n.js:272
 msgid "Total Plugins"
