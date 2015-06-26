@@ -156,7 +156,8 @@ set (LOOT_API_HEADERS ${LOOT_HEADERS}
 set (LOOT_TESTS_SRC "${CMAKE_SOURCE_DIR}/src/tests/main.cpp")
 
 set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/fixtures.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/api/test_api.h")
+                        "${CMAKE_SOURCE_DIR}/src/tests/api/test_api.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/test_file.h")
 
 source_group("Header Files" FILES ${LOOT_HEADERS} ${LOOT_GUI_HEADERS} ${LOOT_API_HEADERS} ${LOOT_TESTS_HEADERS})
 
@@ -256,7 +257,7 @@ target_link_libraries (loot${PROJECT_ARCH} ${Boost_LIBRARIES} ${YAML_CPP_LIBRARI
 
 IF (${GTEST_FOUND})
     # Build tests.
-    add_executable(tests ${LOOT_TESTS_SRC} ${LOOT_TESTS_HEADERS})
+    add_executable(tests ${LOOT_TESTS_SRC} ${LOOT_SRC} ${LOOT_TESTS_HEADERS})
     target_link_libraries(tests loot${PROJECT_ARCH} ${Boost_LIBRARIES} ${YAML_CPP_LIBRARIES} ${LOOT_LIBS} ${GTEST_BOTH_LIBRARIES})
 ENDIF ()
 
