@@ -33,7 +33,7 @@ namespace loot {
     class Language {
     public:
         Language(const unsigned int code);
-        Language(const std::string& nameOrCode);
+        Language(const std::string& locale);
 
         unsigned int Code() const;
         std::string Name() const;
@@ -52,7 +52,7 @@ namespace loot {
         static const unsigned int danish = 10;
         static const unsigned int korean = 11;
 
-        static const std::vector<std::string> Names;
+        static const std::vector<unsigned int> Codes;
     private:
         unsigned int _code;
         std::string _name;

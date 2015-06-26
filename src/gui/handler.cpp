@@ -584,10 +584,11 @@ namespace loot {
         BOOST_LOG_TRIVIAL(info) << "Getting LOOT's supported languages.";
         // Need to get an array of language names and their corresponding codes.
         YAML::Node temp;
-        for (const auto& name : Language::Names) {
+        for (const auto& code : Language::Codes) {
             YAML::Node lang;
-            lang["name"] = name;
-            lang["locale"] = Language(name).Locale();
+            Language language(code);
+            lang["name"] = language.Name();
+            lang["locale"] = language.Locale();
             temp.push_back(lang);
         }
         return JSON::stringify(temp);
