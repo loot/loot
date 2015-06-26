@@ -52,7 +52,8 @@ namespace YAML {
     struct convert < loot::Tag > {
         static Node encode(const loot::Tag& rhs) {
             Node node;
-            node["condition"] = rhs.Condition();
+            if (rhs.IsConditional())
+                node["condition"] = rhs.Condition();
             if (rhs.IsAddition())
                 node["name"] = rhs.Name();
             else
@@ -61,17 +62,19 @@ namespace YAML {
         }
 
         static bool decode(const Node& node, loot::Tag& rhs) {
+            if (!node.IsMap() && !node.IsScalar())
+                return false;
+
             std::string condition, tag;
             if (node.IsMap()) {
                 if (!node["name"])
                     return false;
 
+                tag = node["name"].as<std::string>();
                 if (node["condition"])
                     condition = node["condition"].as<std::string>();
-                if (node["name"])
-                    tag = node["name"].as<std::string>();
             }
-            else if (node.IsScalar())
+            else
                 tag = node.as<std::string>();
 
             if (tag[0] == '-')
