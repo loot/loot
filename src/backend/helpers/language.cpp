@@ -99,6 +99,7 @@ namespace loot {
             _locale = "ko";
         }
         else {
+            _code = Language::english;
             _name = "English";
             _locale = "en";
         }
