@@ -22,7 +22,7 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#include "tests/api/api.h"
+#include "api/test_api.h"
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
