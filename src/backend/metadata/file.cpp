@@ -56,8 +56,8 @@ namespace loot {
 
 namespace YAML {
     Emitter& operator << (Emitter& out, const loot::File& rhs) {
-        if (!rhs.IsConditional() && rhs.DisplayName().empty())
-            out << rhs.Name();
+        if (!rhs.IsConditional() && (rhs.DisplayName().empty() || rhs.DisplayName() == rhs.Name()))
+            out << YAML::SingleQuoted << rhs.Name();
         else {
             out << BeginMap
                 << Key << "name" << Value << YAML::SingleQuoted << rhs.Name();
