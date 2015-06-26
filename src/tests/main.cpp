@@ -25,6 +25,7 @@
 #include "api/test_api.h"
 #include "backend/metadata/test_file.h"
 #include "backend/metadata/test_formid.h"
+#include "backend/helpers/test_language.h"
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
