@@ -59,6 +59,9 @@ namespace YAML {
         }
 
         static bool decode(const Node& node, loot::Location& rhs) {
+            if (!node.IsMap() && !node.IsScalar())
+                return false;
+
             std::string url;
             std::vector<std::string> versions;
 
@@ -66,12 +69,10 @@ namespace YAML {
                 if (!node["link"] || !node["ver"])
                     return false;
 
-                if (node["link"])
-                    url = node["link"].as<std::string>();
-                if (node["ver"])
-                    versions = node["ver"].as<std::vector<std::string>>();
+                url = node["link"].as<std::string>();
+                versions = node["ver"].as<std::vector<std::string>>();
             }
-            else if (node.IsScalar())
+            else
                 url = node.as<std::string>();
 
             rhs = loot::Location(url, versions);

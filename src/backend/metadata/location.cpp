@@ -51,7 +51,7 @@ namespace loot {
 namespace YAML {
     Emitter& operator << (Emitter& out, const loot::Location& rhs) {
         if (rhs.Versions().empty())
-            out << rhs.URL();
+            out << YAML::SingleQuoted << rhs.URL();
         else {
             out << BeginMap
                 << Key << "link" << Value << YAML::SingleQuoted << rhs.URL()
