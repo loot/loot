@@ -27,11 +27,17 @@
 #include "backend/metadata/test_formid.h"
 #include "backend/metadata/test_location.h"
 #include "backend/metadata/test_message_content.h"
+#include "backend/metadata/test_plugin_dirty_info.h"
 #include "backend/metadata/test_tag.h"
 #include "backend/helpers/test_language.h"
 #include "backend/helpers/test_yaml_set_helpers.h"
 
+#include <boost/log/core.hpp>
+
 int main(int argc, char **argv) {
+    //Disable logging or else stdout will get overrun.
+    boost::log::core::get()->set_logging_enabled(false);
+
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
