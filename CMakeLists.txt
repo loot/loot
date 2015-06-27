@@ -160,6 +160,7 @@ set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/fixtures.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/helpers/test_language.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/test_file.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/test_formid.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/test_location.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/test_message_content.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/test_tag.h")
 
