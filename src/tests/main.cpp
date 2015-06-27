@@ -29,6 +29,7 @@
 #include "backend/metadata/test_message_content.h"
 #include "backend/metadata/test_tag.h"
 #include "backend/helpers/test_language.h"
+#include "backend/helpers/test_yaml_set_helpers.h"
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
