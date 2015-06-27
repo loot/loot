@@ -25,6 +25,7 @@
 #include "api/test_api.h"
 #include "backend/metadata/test_file.h"
 #include "backend/metadata/test_formid.h"
+#include "backend/metadata/test_message_content.h"
 #include "backend/metadata/test_tag.h"
 #include "backend/helpers/test_language.h"
 
