@@ -123,57 +123,64 @@ namespace loot {
     }
 
     void Game::LoadPlugins(bool headersOnly) {
-        // First find out how many plugins there are.
+        boost::thread_group group;
+        uintmax_t meanFileSize = 0;
+        unordered_map<std::string, uintmax_t> tempMap;
+        std::vector<Plugin*> groupPlugins;
+        //First calculate the mean plugin size. Store it temporarily in a map to reduce filesystem lookups and file size recalculation.
         BOOST_LOG_TRIVIAL(trace) << "Scanning for plugins in " << this->DataPath();
         for (fs::directory_iterator it(this->DataPath()); it != fs::directory_iterator(); ++it) {
             if (fs::is_regular_file(it->status()) && Plugin(it->path().filename().string()).IsValid(*this)) {
-                Plugin temp(it->path().filename().string());
-                BOOST_LOG_TRIVIAL(info) << "Found plugin: " << temp.Name();
+                uintmax_t fileSize = fs::file_size(it->path());
+                meanFileSize += fileSize;
 
-                //Insert the lowercased name as a key for case-insensitive matching.
-                plugins.insert(pair<string, Plugin>(boost::locale::to_lower(temp.Name()), temp));
+                tempMap.insert(pair<string, uintmax_t>(it->path().filename().string(), fileSize));
             }
         }
+        meanFileSize /= tempMap.size();  //Rounding error, but not important.
 
-        // Get the number of threads to use.
-        // hardware_concurrency() may be zero, if so then use only one thread.
-        unsigned int threadsToUse = std::min(boost::thread::hardware_concurrency(), plugins.size());
-        threadsToUse = std::max(threadsToUse, (unsigned)1);
+        //Now load plugins.
+        for (const auto &pluginPair : tempMap) {
+            BOOST_LOG_TRIVIAL(info) << "Found plugin: " << pluginPair.first;
 
-        // Divide the plugins up by thread.
-        unsigned int pluginsPerThread = ceil((double)plugins.size() / threadsToUse);
-        BOOST_LOG_TRIVIAL(info) << "Loading " << plugins.size() << " plugins using " << threadsToUse << " threads, with up to " << pluginsPerThread << " plugins per thread.";
+            //Insert the lowercased name as a key for case-insensitive matching.
+            Plugin temp(pluginPair.first);
+            auto plugin = plugins.insert(pair<string, Plugin>(boost::locale::to_lower(temp.Name()), temp));
 
-        std::vector<std::vector<std::unordered_map<std::string, Plugin>::iterator>> pluginGroups(4);
-        size_t pluginGroup = 0;
-        for (auto it = plugins.begin(); it != plugins.end(); ++it) {
-            if (pluginGroups[pluginGroup].size() == pluginsPerThread) {
-                ++pluginGroup;
-            }
-            BOOST_LOG_TRIVIAL(trace) << "Adding plugin " << it->second.Name() << " to loading group " << pluginGroup;
-            pluginGroups[pluginGroup].push_back(it);
-        }
-
-        // Load the plugins.
-        BOOST_LOG_TRIVIAL(trace) << "Starting plugin loading.";
-        boost::thread_group group;
-        while (group.size() < threadsToUse) {
-            std::vector<std::unordered_map<std::string, Plugin>::iterator>& pluginGroup = pluginGroups[group.size()];
-            group.create_thread([this, &pluginGroup, headersOnly]() {
-                for (auto it : pluginGroup) {
-                    BOOST_LOG_TRIVIAL(trace) << "Loading " << it->second.Name();
+            if (pluginPair.second > meanFileSize) {
+                BOOST_LOG_TRIVIAL(trace) << "Creating individual loading thread for: " << pluginPair.first;
+                group.create_thread([this, plugin, headersOnly]() {
+                    BOOST_LOG_TRIVIAL(trace) << "Loading " << plugin.first->second.Name() << " individually.";
                     try {
-                        it->second = Plugin(*this, it->second.Name(), headersOnly);
+                        plugin.first->second = Plugin(*this, plugin.first->second.Name(), headersOnly);
                     }
                     catch (exception &e) {
-                        BOOST_LOG_TRIVIAL(error) << it->second.Name() << ": Exception occurred: " << e.what();
-                        Plugin p(it->second.Name());
+                        BOOST_LOG_TRIVIAL(error) << plugin.first->second.Name() << ": Exception occurred: " << e.what();
+                        Plugin p;
                         p.Messages(list<Message>(1, Message(Message::error, lc::translate("An exception occurred while loading this plugin. Details: ").str() + " " + e.what())));
-                        it->second = p;
+                        plugin.first->second = p;
                     }
-                }
-            });
+                });
+            }
+            else {
+                groupPlugins.push_back(&plugin.first->second);
+            }
         }
+        group.create_thread([this, &groupPlugins, headersOnly]() {
+            for (auto plugin : groupPlugins) {
+                BOOST_LOG_TRIVIAL(trace) << "Loading " << plugin->Name() << " as part of a group.";
+                try {
+                    *plugin = Plugin(*this, plugin->Name(), headersOnly);
+                }
+                catch (exception &e) {
+                    BOOST_LOG_TRIVIAL(error) << plugin->Name() << ": Exception occurred: " << e.what();
+                    Plugin p;
+                    p.Messages(list<Message>(1, Message(Message::error, lc::translate("An exception occurred while loading this plugin. Details:").str() + " " + e.what())));
+                    *plugin = p;
+                }
+            }
+        });
+
         group.join_all();
     }
 
