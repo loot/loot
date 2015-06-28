@@ -123,26 +123,17 @@ namespace loot {
     }
 
     void Game::LoadPlugins(bool headersOnly) {
-        uintmax_t meanFileSize = 0;
-        map<uintmax_t, string> sizeMap;
-
-        // First find out how many plugins there are, and their sizes.
+        // First find out how many plugins there are.
         BOOST_LOG_TRIVIAL(trace) << "Scanning for plugins in " << this->DataPath();
         for (fs::directory_iterator it(this->DataPath()); it != fs::directory_iterator(); ++it) {
             if (fs::is_regular_file(it->status()) && Plugin(it->path().filename().string()).IsValid(*this)) {
                 Plugin temp(it->path().filename().string());
                 BOOST_LOG_TRIVIAL(info) << "Found plugin: " << temp.Name();
 
-                uintmax_t fileSize = fs::file_size(it->path());
-                meanFileSize += fileSize;
-
                 //Insert the lowercased name as a key for case-insensitive matching.
-                std::string name = boost::locale::to_lower(temp.Name());
-                plugins.insert(pair<string, Plugin>(name, temp));
-                sizeMap.insert(pair<uintmax_t, string>(fileSize, name));
+                plugins.insert(pair<string, Plugin>(boost::locale::to_lower(temp.Name()), temp));
             }
         }
-        meanFileSize /= sizeMap.size();  //Rounding error, but not important.
 
         // Get the number of threads to use.
         // hardware_concurrency() may be zero, if so then use only one thread.
@@ -151,18 +142,16 @@ namespace loot {
 
         // Divide the plugins up by thread.
         unsigned int pluginsPerThread = ceil((double)plugins.size() / threadsToUse);
-        std::vector<std::vector<std::unordered_map<std::string, Plugin>::iterator>> pluginGroups(threadsToUse);
         BOOST_LOG_TRIVIAL(info) << "Loading " << plugins.size() << " plugins using " << threadsToUse << " threads, with up to " << pluginsPerThread << " plugins per thread.";
 
-        // The plugins should be split between the threads so that the data
-        // load is as evenly spread as possible.
-        size_t currentGroup = 0;
-        for (auto& plugin : sizeMap) {
-            if (currentGroup == threadsToUse)
-                currentGroup = 0;
-            BOOST_LOG_TRIVIAL(trace) << "Adding plugin " << plugin.second << " to loading group " << currentGroup;
-            pluginGroups[currentGroup].push_back(plugins.find(plugin.second));
-            ++currentGroup;
+        std::vector<std::vector<std::unordered_map<std::string, Plugin>::iterator>> pluginGroups(threadsToUse);
+        size_t pluginGroup = 0;
+        for (auto it = plugins.begin(); it != plugins.end(); ++it) {
+            if (pluginGroups[pluginGroup].size() == pluginsPerThread) {
+                ++pluginGroup;
+            }
+            BOOST_LOG_TRIVIAL(trace) << "Adding plugin " << it->second.Name() << " to loading group " << pluginGroup;
+            pluginGroups[pluginGroup].push_back(it);
         }
 
         // Load the plugins.
