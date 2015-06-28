@@ -144,7 +144,7 @@ namespace loot {
         unsigned int pluginsPerThread = ceil((double)plugins.size() / threadsToUse);
         BOOST_LOG_TRIVIAL(info) << "Loading " << plugins.size() << " plugins using " << threadsToUse << " threads, with up to " << pluginsPerThread << " plugins per thread.";
 
-        std::vector<std::vector<std::unordered_map<std::string, Plugin>::iterator>> pluginGroups(threadsToUse);
+        std::vector<std::vector<std::unordered_map<std::string, Plugin>::iterator>> pluginGroups(4);
         size_t pluginGroup = 0;
         for (auto it = plugins.begin(); it != plugins.end(); ++it) {
             if (pluginGroups[pluginGroup].size() == pluginsPerThread) {
