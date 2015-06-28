@@ -61,8 +61,8 @@ protected:
         ASSERT_TRUE(boost::filesystem::exists(dataPath / "Blank - Plugin Dependent.esp"));
         ASSERT_TRUE(boost::filesystem::exists(dataPath / "Blank - Different Plugin Dependent.esp"));
 
-        ASSERT_FALSE(boost::filesystem::exists(dataPath / "Blank.esm.missing"));
-        ASSERT_FALSE(boost::filesystem::exists(dataPath / "Blank.esp.missing"));
+        ASSERT_FALSE(boost::filesystem::exists(dataPath / "Blank.missing.esm"));
+        ASSERT_FALSE(boost::filesystem::exists(dataPath / "Blank.missing.esp"));
 
         // Ghost a plugin.
         ASSERT_FALSE(boost::filesystem::exists(dataPath / "Blank - Master Dependent.esm.ghost"));
