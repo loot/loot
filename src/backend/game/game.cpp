@@ -146,7 +146,7 @@ namespace loot {
 
         // Get the number of threads to use.
         // hardware_concurrency() may be zero, if so then use only one thread.
-        unsigned int threadsToUse = std::min((size_t)boost::thread::hardware_concurrency(), plugins.size());
+        unsigned int threadsToUse = std::min(boost::thread::hardware_concurrency(), plugins.size());
         threadsToUse = std::max(threadsToUse, (unsigned)1);
 
         // Divide the plugins up by thread.
