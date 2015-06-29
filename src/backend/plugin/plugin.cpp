@@ -32,13 +32,9 @@
 #include <boost/log/trivial.hpp>
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
-#include <boost/regex.hpp>
+#include <regex>
 
 using namespace std;
-using boost::regex;
-using boost::regex_match;
-using boost::regex_search;
-using boost::smatch;
 
 namespace loot {
     /// REGEX expression definition
@@ -84,7 +80,7 @@ namespace loot {
 
     /// Array used to try each of the expressions defined above using
     /// an iteration for each of them.
-    const std::vector<boost::regex> version_checks({
+    const vector<regex> version_checks({
         regex(regex1, regex::ECMAScript | regex::icase),
         regex(regex2, regex::ECMAScript | regex::icase),
         regex(regex3, regex::ECMAScript | regex::icase),

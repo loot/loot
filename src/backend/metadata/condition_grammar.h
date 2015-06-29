@@ -40,7 +40,7 @@
 #include "../error.h"
 
 #include <cstdint>
-#include <boost/regex.hpp>
+#include <regex>
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/regex.hpp>
@@ -188,11 +188,11 @@ namespace loot {
 
             BOOST_LOG_TRIVIAL(trace) << "Checking to see if any files matching the regex \"" << regexStr << "\" exist.";
 
-            boost::regex sepReg("/|(\\\\\\\\)", boost::regex::ECMAScript | boost::regex::icase);
+            std::regex sepReg("/|(\\\\\\\\)", std::regex::ECMAScript | std::regex::icase);
 
             std::vector<std::string> components;
-            boost::sregex_token_iterator it(regexStr.begin(), regexStr.end(), sepReg, -1);
-            boost::sregex_token_iterator itend;
+            std::sregex_token_iterator it(regexStr.begin(), regexStr.end(), sepReg, -1);
+            std::sregex_token_iterator itend;
             for (; it != itend; ++it) {
                 components.push_back(*it);
             }
@@ -222,9 +222,9 @@ namespace loot {
                 return;
             }
 
-            boost::regex reg;
+            std::regex reg;
             try {
-                reg = boost::regex(filename, boost::regex::ECMAScript | boost::regex::icase);
+                reg = std::regex(filename, std::regex::ECMAScript | std::regex::icase);
             }
             catch (std::exception& /*e*/) {
                 BOOST_LOG_TRIVIAL(error) << "Invalid regex string:" << filename;
@@ -232,7 +232,7 @@ namespace loot {
             }
 
             for (boost::filesystem::directory_iterator itr(parent_path); itr != boost::filesystem::directory_iterator(); ++itr) {
-                if (boost::regex_match(itr->path().filename().string(), reg)) {
+                if (std::regex_match(itr->path().filename().string(), reg)) {
                     result = true;
                     BOOST_LOG_TRIVIAL(trace) << "Matching file found: " << itr->path();
                     return;

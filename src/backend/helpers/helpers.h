@@ -26,13 +26,13 @@
 #define __LOOT_HELPERS__
 
 #include <string>
-#include <boost/regex.hpp>
+#include <regex>
 #include <boost/filesystem.hpp>
 
 namespace loot {
     /// Array used to try each of the expressions defined using
     /// an iteration for each of them.
-    extern const std::vector<boost::regex> version_checks;
+    extern const std::vector<std::regex> version_checks;
 
     //////////////////////////////////////////////////////////////////////////
     // Helper functions

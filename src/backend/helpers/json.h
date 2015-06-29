@@ -27,7 +27,7 @@ along with LOOT.  If not, see
 
 #include <yaml-cpp/yaml.h>
 
-#include <boost/regex.hpp>
+#include <regex>
 #include <boost/algorithm/string.hpp>
 
 namespace loot {
@@ -63,9 +63,9 @@ namespace loot {
 
             // Using the definition at <http://www.json.org/>.
             // Version numbers and revision IDs should be kept as strings though.
-            boost::regex numbers("\"(?!version|revision)([^\"]+)\": \"(-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?)\"", boost::regex::ECMAScript);
+            std::regex numbers("\"(?!version|revision)([^\"]+)\": \"(-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?)\"", std::regex::ECMAScript);
 
-            json = boost::regex_replace(json, numbers, "\"$1\": $2");
+            json = std::regex_replace(json, numbers, "\"$1\": $2");
 
             return json;
         }

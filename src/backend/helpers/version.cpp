@@ -25,10 +25,9 @@
 #include "helpers.h"
 #include "version.h"
 
-#include <boost/regex.hpp>
-
 #include <alphanum.hpp>
 
+#include <regex>
 #include <sstream>
 
 #ifdef _WIN32
@@ -45,8 +44,6 @@
 
 namespace loot {
     using namespace std;
-    using boost::regex;
-    using boost::regex_match;
 
     Version::Version() {}
 
@@ -159,4 +156,4 @@ namespace loot {
     bool Version::operator != (const Version& ver) const {
         return !(*this == ver);
     }
-        }
+    }
