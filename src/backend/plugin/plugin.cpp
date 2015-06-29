@@ -260,35 +260,35 @@ namespace loot {
 
     bool Plugin::CheckInstallValidity(const Game& game) {
         BOOST_LOG_TRIVIAL(trace) << "Checking that the current install is valid according to " << name << "'s data.";
-        unsigned int messageType;
-        if (IsActive(game))
-            messageType = loot::Message::error;
-        else
-            messageType = loot::Message::warn;
-        if (tags.find(Tag("Filter")) == tags.end()) {
-            for (const auto &master : masters) {
-                if (!boost::filesystem::exists(game.DataPath() / master) && !boost::filesystem::exists(game.DataPath() / (master + ".ghost"))) {
-                    BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" requires \"" << master << "\", but it is missing.";
-                    messages.push_back(loot::Message(messageType, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % master).str()));
-                }
-                else if (!Plugin(master).IsActive(game)) {
-                    BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" requires \"" << master << "\", but it is inactive.";
-                    messages.push_back(loot::Message(messageType, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be active, but it is inactive.")) % master).str()));
+        if (IsActive(game)) {
+            if (tags.find(Tag("Filter")) == tags.end()) {
+                for (const auto &master : masters) {
+                    if (!boost::filesystem::exists(game.DataPath() / master) && !boost::filesystem::exists(game.DataPath() / (master + ".ghost"))) {
+                        BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" requires \"" << master << "\", but it is missing.";
+                        messages.push_back(Message(Message::error, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % master).str()));
+                    }
+                    else if (!Plugin(master).IsActive(game)) {
+                        BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" requires \"" << master << "\", but it is inactive.";
+                        messages.push_back(Message(Message::error, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be active, but it is inactive.")) % master).str()));
+                    }
                 }
             }
-        }
-        for (const auto &req : requirements) {
-            if (!boost::filesystem::exists(game.DataPath() / req.Name()) && !((boost::iends_with(req.Name(), ".esp") || boost::iends_with(req.Name(), ".esm")) && boost::filesystem::exists(game.DataPath() / (req.Name() + ".ghost")))) {
-                BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" requires \"" << req.Name() << "\", but it is missing.";
-                messages.push_back(loot::Message(messageType, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % req.Name()).str()));
+
+            auto pluginExists = [](const Game& game, const File& file) {
+                return boost::filesystem::exists(game.DataPath() / file.Name())
+                    || ((boost::iends_with(file.Name(), ".esp") || boost::iends_with(file.Name(), ".esm")) && boost::filesystem::exists(game.DataPath() / (file.Name() + ".ghost")));
+            };
+            for (const auto &req : requirements) {
+                if (!pluginExists(game, req)) {
+                    BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" requires \"" << req.Name() << "\", but it is missing.";
+                    messages.push_back(loot::Message(Message::error, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % req.Name()).str()));
+                }
             }
-        }
-        for (const auto &inc : incompatibilities) {
-            if (boost::filesystem::exists(game.DataPath() / inc.Name()) || ((boost::iends_with(inc.Name(), ".esp") || boost::iends_with(inc.Name(), ".esm")) && boost::filesystem::exists(game.DataPath() / (inc.Name() + ".ghost")))) {
-                if (!Plugin(inc.Name()).IsActive(game))
-                    messageType = loot::Message::warn;
-                BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" is incompatible with \"" << inc.Name() << "\", but both are present.";
-                messages.push_back(loot::Message(messageType, (boost::format(boost::locale::translate("This plugin is incompatible with \"%1%\", but both are present.")) % inc.Name()).str()));
+            for (const auto &inc : incompatibilities) {
+                if (pluginExists(game, inc) && Plugin(inc.Name()).IsActive(game)) {
+                    BOOST_LOG_TRIVIAL(error) << "\"" << name << "\" is incompatible with \"" << inc.Name() << "\", but both are present.";
+                    messages.push_back(loot::Message(Message::error, (boost::format(boost::locale::translate("This plugin is incompatible with \"%1%\", but both are present.")) % inc.Name()).str()));
+                }
             }
         }
 
