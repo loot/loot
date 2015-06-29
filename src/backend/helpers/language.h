@@ -39,18 +39,18 @@ namespace loot {
         std::string Name() const;
         std::string Locale() const;
 
-        static const unsigned int any = 0; // This shouldn't be used as a selectable language, just for when picking any string in a message.
-        static const unsigned int english = 1;
-        static const unsigned int spanish = 2;
-        static const unsigned int russian = 3;
-        static const unsigned int french = 4;
-        static const unsigned int chinese = 5;
-        static const unsigned int polish = 6;
-        static const unsigned int brazilian_portuguese = 7;
-        static const unsigned int finnish = 8;
-        static const unsigned int german = 9;
-        static const unsigned int danish = 10;
-        static const unsigned int korean = 11;
+        static const unsigned int any; // This shouldn't be used as a selectable language, just for when picking any string in a message.
+        static const unsigned int english;
+        static const unsigned int spanish;
+        static const unsigned int russian;
+        static const unsigned int french;
+        static const unsigned int chinese;
+        static const unsigned int polish;
+        static const unsigned int brazilian_portuguese;
+        static const unsigned int finnish;
+        static const unsigned int german;
+        static const unsigned int danish;
+        static const unsigned int korean;
 
         static const std::vector<unsigned int> Codes;
     private:

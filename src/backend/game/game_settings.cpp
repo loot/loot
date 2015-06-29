@@ -37,6 +37,12 @@ namespace fs = boost::filesystem;
 namespace lc = boost::locale;
 
 namespace loot {
+    const unsigned int GameSettings::autodetect = 0;
+    const unsigned int GameSettings::tes4 = 1;
+    const unsigned int GameSettings::tes5 = 2;
+    const unsigned int GameSettings::fo3 = 3;
+    const unsigned int GameSettings::fonv = 4;
+
     GameSettings::GameSettings() : _id(GameSettings::autodetect) {}
 
     GameSettings::GameSettings(const unsigned int gameCode, const std::string& folder) : _id(gameCode) {

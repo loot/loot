@@ -61,11 +61,11 @@ namespace loot {
         boost::filesystem::path MasterlistPath() const;
         boost::filesystem::path UserlistPath() const;
 
-        static const unsigned int autodetect = 0;
-        static const unsigned int tes4 = 1;
-        static const unsigned int tes5 = 2;
-        static const unsigned int fo3 = 3;
-        static const unsigned int fonv = 4;
+        static const unsigned int autodetect;
+        static const unsigned int tes4;
+        static const unsigned int tes5;
+        static const unsigned int fo3;
+        static const unsigned int fonv;
     protected:
         //Creates directory in LOOT folder for LOOT's game-specific files.
         void CreateLOOTGameFolder();

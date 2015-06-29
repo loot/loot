@@ -30,6 +30,10 @@
 using namespace std;
 
 namespace loot {
+    const unsigned int Message::say = 0;
+    const unsigned int Message::warn = 1;
+    const unsigned int Message::error = 2;
+
     Message::Message() : _type(Message::say) {}
 
     Message::Message(const unsigned int type, const std::string& content,

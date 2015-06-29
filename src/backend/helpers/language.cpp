@@ -25,6 +25,19 @@
 #include "language.h"
 
 namespace loot {
+    const unsigned int Language::any = 0;
+    const unsigned int Language::english = 1;
+    const unsigned int Language::spanish = 2;
+    const unsigned int Language::russian = 3;
+    const unsigned int Language::french = 4;
+    const unsigned int Language::chinese = 5;
+    const unsigned int Language::polish = 6;
+    const unsigned int Language::brazilian_portuguese = 7;
+    const unsigned int Language::finnish = 8;
+    const unsigned int Language::german = 9;
+    const unsigned int Language::danish = 10;
+    const unsigned int Language::korean = 11;
+
     Language::Language(const unsigned int code) {
         Construct(code);
     }
