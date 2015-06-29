@@ -66,9 +66,6 @@ namespace loot {
         static const unsigned int tes5;
         static const unsigned int fo3;
         static const unsigned int fonv;
-    protected:
-        //Creates directory in LOOT folder for LOOT's game-specific files.
-        void CreateLOOTGameFolder();
     private:
         unsigned int _id;
         std::string _name;

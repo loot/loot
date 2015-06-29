@@ -201,16 +201,6 @@ namespace loot {
         return g_path_local / _lootFolderName / "userlist.yaml";
     }
 
-    void GameSettings::CreateLOOTGameFolder() {
-        //Make sure that the LOOT game path exists.
-        try {
-            if (fs::exists(g_path_local) && !fs::exists(g_path_local / _lootFolderName))
-                fs::create_directory(g_path_local / _lootFolderName);
-        }
-        catch (fs::filesystem_error& e) {
-            BOOST_LOG_TRIVIAL(error) << "Could not create LOOT folder for game. Details: " << e.what();
-            throw error(error::path_write_fail, lc::translate("Could not create LOOT folder for game. Details:").str() + " " + e.what());
-        }
     }
 
     std::list<GameSettings> GetGameSettings(YAML::Node& settings) {
