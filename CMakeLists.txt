@@ -188,8 +188,8 @@ ENDIF ()
 
 # GCC and MinGW settings.
 IF (CMAKE_COMPILER_IS_GNUCXX)
-    set (CMAKE_C_FLAGS "-m${PROJECT_ARCH} -O3 -std=c++0x")
-    set (CMAKE_CXX_FLAGS "-m${PROJECT_ARCH} -O3 -std=c++0x")
+    set (CMAKE_C_FLAGS "-m${PROJECT_ARCH} -O3 -std=c++11")
+    set (CMAKE_CXX_FLAGS "-m${PROJECT_ARCH} -O3 -std=c++11")
     IF (PROJECT_STATIC_RUNTIME)
         set (CMAKE_EXE_LINKER_FLAGS "-static-libstdc++ -static-libgcc")
         set (CMAKE_SHARED_LINKER_FLAGS "-static-libstdc++ -static-libgcc")

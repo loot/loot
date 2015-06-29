@@ -11,6 +11,7 @@ addons:
   apt:
     sources:
       - boost-latest
+      - ubuntu-toolchain-r-test
     packages:
       - libboost-log1.55-dev
       - libboost-date-time1.55-dev
@@ -19,8 +20,12 @@ addons:
       - libboost-locale1.55-dev
       - libboost-iostreams1.55-dev
       - libssl-dev
+      - gcc-5
+      - g++-5
 
 install:
+  # Use GCC 5.
+  - if [ "$CXX" = "g++" ]; then export CXX="g++-5" CC="gcc-5"; fi
   # Currently inside the cloned repo path.
   # Install Alphanum
   - cd ../..
