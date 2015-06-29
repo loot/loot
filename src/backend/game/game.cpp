@@ -28,8 +28,9 @@
 #include "../error.h"
 #include "../helpers/streams.h"
 
+#include <thread>
+
 #include <boost/algorithm/string.hpp>
-#include <boost/thread.hpp>
 #include <boost/locale.hpp>
 #include <boost/log/trivial.hpp>
 
@@ -123,7 +124,7 @@ namespace loot {
     }
 
     void Game::LoadPlugins(bool headersOnly) {
-        boost::thread_group group;
+        vector<thread> threads;
         uintmax_t meanFileSize = 0;
         unordered_map<std::string, uintmax_t> tempMap;
         std::vector<Plugin*> groupPlugins;
@@ -149,7 +150,7 @@ namespace loot {
 
             if (pluginPair.second > meanFileSize) {
                 BOOST_LOG_TRIVIAL(trace) << "Creating individual loading thread for: " << pluginPair.first;
-                group.create_thread([this, plugin, headersOnly]() {
+                threads.push_back(thread([this, plugin, headersOnly]() {
                     BOOST_LOG_TRIVIAL(trace) << "Loading " << plugin.first->second.Name() << " individually.";
                     try {
                         plugin.first->second = Plugin(*this, plugin.first->second.Name(), headersOnly);
@@ -160,13 +161,13 @@ namespace loot {
                         p.Messages(list<Message>(1, Message(Message::error, lc::translate("An exception occurred while loading this plugin. Details: ").str() + " " + e.what())));
                         plugin.first->second = p;
                     }
-                });
+                }));
             }
             else {
                 groupPlugins.push_back(&plugin.first->second);
             }
         }
-        group.create_thread([this, &groupPlugins, headersOnly]() {
+        threads.push_back(thread([this, &groupPlugins, headersOnly]() {
             for (auto plugin : groupPlugins) {
                 BOOST_LOG_TRIVIAL(trace) << "Loading " << plugin->Name() << " as part of a group.";
                 try {
@@ -179,9 +180,13 @@ namespace loot {
                     *plugin = p;
                 }
             }
-        });
+        }));
 
-        group.join_all();
+        // Join all threads.
+        for (auto& thread : threads) {
+            if (thread.joinable())
+                thread.join();
+        }
     }
 
     bool Game::HasBeenLoaded() {
