@@ -39,10 +39,6 @@ namespace loot {
         GameSettings();  //Sets game to LOOT_Game::autodetect, with all other vars being empty.
         GameSettings(const unsigned int baseGameCode, const std::string& lootFolder = "");
 
-        GameSettings& SetDetails(const std::string& name, const std::string& masterFile,
-                                 const std::string& repositoryURL, const std::string& repositoryBranch,
-                                 const std::string& path, const std::string& registry);
-
         bool IsInstalled();  //Sets gamePath if the current value is not valid and a valid path is found.
 
         bool operator == (const GameSettings& rhs) const;  //Compares names and folder names.
@@ -60,6 +56,13 @@ namespace loot {
         boost::filesystem::path DataPath() const;
         boost::filesystem::path MasterlistPath() const;
         boost::filesystem::path UserlistPath() const;
+
+        GameSettings& SetName(const std::string& name);
+        GameSettings& SetMaster(const std::string& masterFile);
+        GameSettings& SetRegistryKey(const std::string& registry);
+        GameSettings& SetRepoURL(const std::string& repositoryURL);
+        GameSettings& SetRepoBranch(const std::string& repositoryBranch);
+        GameSettings& SetGamePath(const boost::filesystem::path& path);
 
         static const unsigned int autodetect;
         static const unsigned int tes4;
@@ -116,21 +119,18 @@ namespace YAML {
             else
                 return false;
 
-            std::string name, master, repo, branch, path, registry;
             if (node["name"])
-                name = node["name"].as<std::string>();
+                rhs.SetName(node["name"].as<std::string>());
             if (node["master"])
-                master = node["master"].as<std::string>();
+                rhs.SetMaster(node["master"].as<std::string>());
             if (node["repo"])
-                repo = node["repo"].as<std::string>();
+                rhs.SetRepoURL(node["repo"].as<std::string>());
             if (node["branch"])
-                branch = node["branch"].as<std::string>();
+                rhs.SetRepoBranch(node["branch"].as<std::string>());
             if (node["path"])
-                path = node["path"].as<std::string>();
+                rhs.SetGamePath(node["path"].as<std::string>());
             if (node["registry"])
-                registry = node["registry"].as<std::string>();
-
-            rhs.SetDetails(name, master, repo, branch, path, registry);
+                rhs.SetRegistryKey(node["registry"].as<std::string>());
 
             return true;
         }

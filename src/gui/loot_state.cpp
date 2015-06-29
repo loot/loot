@@ -183,7 +183,12 @@ namespace loot {
             auto pos = find(_games.begin(), _games.end(), game);
 
             if (pos != _games.end()) {
-                pos->SetDetails(game.Name(), game.Master(), game.RepoURL(), game.RepoBranch(), game.GamePath().string(), game.RegistryKey());
+                pos->SetName(game.Name())
+                    .SetMaster(game.Master())
+                    .SetRepoURL(game.RepoURL())
+                    .SetRepoBranch(game.RepoBranch())
+                    .SetGamePath(game.GamePath())
+                    .SetRegistryKey(game.RegistryKey());
             }
             else {
                 BOOST_LOG_TRIVIAL(trace) << "Adding new game entry for: " << game.FolderName();
@@ -409,8 +414,11 @@ namespace loot {
         GetGameSettings(root);
 
         GameSettings settings(GameSettings::tes4, "Nehrim");
+        settings.SetName("Nehrim - At Fate's Edge")
+            .SetMaster("Nehrim.esm")
+            .SetRegistryKey("Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim - At Fate's Edge_is1\\InstallLocation");
 
-        root["games"].push_back(settings.SetDetails("Nehrim - At Fate's Edge", "Nehrim.esm", settings.RepoURL(), settings.RepoBranch(), "", "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim - At Fate's Edge_is1\\InstallLocation"));
+        root["games"].push_back(settings);
 
         return root;
     }

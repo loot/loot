@@ -43,12 +43,12 @@ namespace loot {
     Game::Game() {}
 
     Game::Game(const GameSettings& gameSettings) : GameSettings(gameSettings.Id(), gameSettings.FolderName()) {
-        this->SetDetails(gameSettings.Name(),
-                         gameSettings.Master(),
-                         gameSettings.RepoURL(),
-                         gameSettings.RepoBranch(),
-                         gameSettings.GamePath().string(),
-                         gameSettings.RegistryKey());
+        this->SetName(gameSettings.Name())
+            .SetMaster(gameSettings.Master())
+            .SetRepoURL(gameSettings.RepoURL())
+            .SetRepoBranch(gameSettings.RepoBranch())
+            .SetGamePath(gameSettings.GamePath())
+            .SetRegistryKey(gameSettings.RegistryKey());
     }
 
     Game::Game(const unsigned int gameCode, const std::string& folder) : GameSettings(gameCode, folder) {}
@@ -203,8 +203,8 @@ namespace loot {
     void Game::CreateLOOTGameFolder() {
         //Make sure that the LOOT game path exists.
         try {
-            if (fs::exists(g_path_local) && !fs::exists(g_path_local / _lootFolderName))
-                fs::create_directory(g_path_local / _lootFolderName);
+            if (fs::exists(g_path_local) && !fs::exists(g_path_local / FolderName()))
+                fs::create_directory(g_path_local / FolderName());
         }
         catch (fs::filesystem_error& e) {
             BOOST_LOG_TRIVIAL(error) << "Could not create LOOT folder for game. Details: " << e.what();

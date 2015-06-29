@@ -83,43 +83,6 @@ namespace loot {
             _lootFolderName = folder;
     }
 
-    GameSettings& GameSettings::SetDetails(const std::string& name, const std::string& masterFile,
-                                           const std::string& repositoryURL, const std::string& repositoryBranch, const std::string& path, const std::string& registry) {
-        BOOST_LOG_TRIVIAL(info) << "Setting new details for game: " << _name;
-
-        if (!name.empty()) {
-            BOOST_LOG_TRIVIAL(trace) << '\t' << "Setting name to: " << name;
-            _name = name;
-        }
-
-        if (!masterFile.empty()) {
-            BOOST_LOG_TRIVIAL(trace) << '\t' << "Setting master file to: " << masterFile;
-            _masterFile = masterFile;
-        }
-
-        if (!repositoryURL.empty()) {
-            BOOST_LOG_TRIVIAL(trace) << '\t' << "Setting repo URL to: " << repositoryURL;
-            _repositoryURL = repositoryURL;
-        }
-
-        if (!repositoryBranch.empty()) {
-            BOOST_LOG_TRIVIAL(trace) << '\t' << "Setting repo branch to: " << repositoryBranch;
-            _repositoryBranch = repositoryBranch;
-        }
-
-        if (!path.empty()) {
-            BOOST_LOG_TRIVIAL(trace) << '\t' << "Setting game path to: " << path;
-            _gamePath = path;
-        }
-
-        if (!registry.empty()) {
-            BOOST_LOG_TRIVIAL(trace) << '\t' << "Setting registry key to: " << registry;
-            _registryKey = registry;
-        }
-
-        return *this;
-    }
-
     bool GameSettings::IsInstalled() {
         try {
             BOOST_LOG_TRIVIAL(trace) << "Checking if game \"" << _name << "\" is installed.";
@@ -201,6 +164,40 @@ namespace loot {
         return g_path_local / _lootFolderName / "userlist.yaml";
     }
 
+    GameSettings& GameSettings::SetName(const std::string& name) {
+        BOOST_LOG_TRIVIAL(trace) << "Setting \"" << _name << "\" name to: " << name;
+        _name = name;
+        return *this;
+    }
+
+    GameSettings& GameSettings::SetMaster(const std::string& masterFile) {
+        BOOST_LOG_TRIVIAL(trace) << "Setting \"" << _name << "\" master file to: " << masterFile;
+        _masterFile = masterFile;
+        return *this;
+    }
+
+    GameSettings& GameSettings::SetRegistryKey(const std::string& registry) {
+        BOOST_LOG_TRIVIAL(trace) << "Setting \"" << _name << "\" registry key to: " << registry;
+        _registryKey = registry;
+        return *this;
+    }
+
+    GameSettings& GameSettings::SetRepoURL(const std::string& repositoryURL) {
+        BOOST_LOG_TRIVIAL(trace) << "Setting \"" << _name << "\" repo URL to: " << repositoryURL;
+        _repositoryURL = repositoryURL;
+        return *this;
+    }
+
+    GameSettings& GameSettings::SetRepoBranch(const std::string& repositoryBranch) {
+        BOOST_LOG_TRIVIAL(trace) << "Setting \"" << _name << "\" repo branch to: " << repositoryBranch;
+        _repositoryBranch = repositoryBranch;
+        return *this;
+    }
+
+    GameSettings& GameSettings::SetGamePath(const boost::filesystem::path& path) {
+        BOOST_LOG_TRIVIAL(trace) << "Setting \"" << _name << "\" game path to: " << path;
+        _gamePath = path;
+        return *this;
     }
 
     std::list<GameSettings> GetGameSettings(YAML::Node& settings) {
