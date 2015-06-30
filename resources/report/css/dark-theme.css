@@ -1,0 +1,111 @@
+/* Dark theme CSS overrides. */
+html,
+html /deep/ paper-item, html /deep/ core-menu > paper-item,
+html /deep/ paper-dropdown-menu::shadow #label {
+    color: white !important;
+}
+
+html, body {
+    background: black;
+}
+
+html /deep/ paper-item[disabled],
+html /deep/ paper-item[disabled] > core-icon,
+html /deep/ paper-input-decorator::shadow .label-text,
+html /deep/ input::-webkit-input-placeholder,
+html /deep/ table[is=editable-table] paper-icon-button[disabled],
+html /deep/ loot-dropdown-menu::shadow paper-dropdown-menu[disabled]::shadow #label,
+html /deep/ loot-dropdown-menu::shadow paper-dropdown-menu::shadow #arrow {
+    color: rgba(255, 255, 255, 0.3) !important;
+}
+
+html /deep/ paper-item core-icon,
+html /deep/ paper-tabs::shadow .scroll-button > paper-icon-button,
+html /deep/ table[is=editable-table] paper-icon-button,
+html /deep/ loot-plugin-card::shadow core-tooltip:not(#activeTick) > core-icon,
+html /deep/ loot-plugin-card::shadow #conflictsLabel > core-icon,
+html /deep/ loot-plugin-item::shadow #secondary,
+html /deep/ loot-plugin-editor::shadow core-tooltip:not(#activeTick) > core-icon {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+html /deep/ paper-input-decorator::shadow .underline .unfocused-underline,
+.divider {
+    background-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+html /deep/ paper-input-decorator[disabled]::shadow .underline,
+html /deep/ table th,
+html /deep/ paper-dropdown-menu {
+    border-bottom-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+html /deep/ paper-checkbox::shadow #checkbox.checked {
+    border-color: #1A237E !important;
+}
+
+html /deep/ paper-toggle-button::shadow [checked] .toggle-bar {
+    background-color: rgba(26, 35, 126, 0.5) !important;
+}
+
+html /deep/ paper-toggle-button::shadow [checked] .toggle-button,
+html /deep/ paper-checkbox::shadow #checkbox.checked {
+    background-color: #1A237E !important;
+}
+
+html /deep/ paper-toggle-button::shadow [checked] .toggle-ink {
+    color: #1A237E !important;
+}
+
+/* Dark dropdown menus. */
+html /deep/ paper-dropdown::shadow #background,
+loot-dialog,
+loot-message-dialog,
+div[drawer],
+#summary,
+html /deep/ loot-plugin-card::shadow #wrapper,
+html /deep/ loot-plugin-editor::shadow core-selector > * {
+    background: #424242 !important;
+}
+
+/* Dark dialogs. */
+loot-dialog,
+loot-message-dialog {
+    color: white !important;
+}
+
+/* Dark progress bar background. */
+paper-progress::shadow #progressContainer {
+    background-color: #303030 !important;
+}
+
+core-toolbar,
+div[drawer] > div:first-child,
+html /deep/ loot-search::shadow core-toolbar,
+html /deep/ loot-plugin-editor {
+    background: #212121 !important;
+}
+
+#main {
+    background: #303030 !important;
+}
+
+li.error > p,
+li.warn > p {
+    color: black !important;
+}
+
+.version {
+    color: #78909C !important;
+}
+.crc {
+    color: #8D6E63 !important;
+}
+
+html /deep/ loot-plugin-card.search-result::shadow #editor {
+    box-shadow: inset 4px 0 #1A237E !important;
+}
+
+html /deep/ loot-plugin-editor::shadow core-selector > * {
+    border-bottom: 4px solid #212121 !important;
+}

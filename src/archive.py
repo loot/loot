@@ -105,6 +105,8 @@ def buildUIFiles(ui_path):
         vulcanize,
         '--inline',
         '--strip',
+        '--config',
+        os.path.join(ui_path, 'vulcanize.config.json'),
         '-o',
         os.path.join(ui_path, 'index.html'),
         os.path.join(ui_path, 'report.html')];
