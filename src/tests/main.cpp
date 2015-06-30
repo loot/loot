@@ -30,6 +30,7 @@
 #include "backend/metadata/test_message_content.h"
 #include "backend/metadata/test_plugin_dirty_info.h"
 #include "backend/metadata/test_tag.h"
+#include "backend/helpers/test_helpers.h"
 #include "backend/helpers/test_language.h"
 #include "backend/helpers/test_yaml_set_helpers.h"
 
