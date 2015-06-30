@@ -30,14 +30,6 @@
 #include <boost/filesystem.hpp>
 
 namespace loot {
-    /// Array used to try each of the expressions defined using
-    /// an iteration for each of them.
-    extern const std::vector<std::regex> version_checks;
-
-    //////////////////////////////////////////////////////////////////////////
-    // Helper functions
-    //////////////////////////////////////////////////////////////////////////
-
     //Calculate the CRC of the given file for comparison purposes.
     uint32_t GetCrc32(const boost::filesystem::path& filename);
 
