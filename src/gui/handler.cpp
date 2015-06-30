@@ -1021,7 +1021,7 @@ namespace loot {
         // Now add to pluginNode.
         YAML::Node pluginNode;
         pluginNode["name"] = tempPlugin.Name();
-        pluginNode["modPriority"] = modulo(tempPlugin.Priority(), max_priority);
+        pluginNode["modPriority"] = tempPlugin.Priority() % max_priority;
         pluginNode["isGlobalPriority"] = (abs(tempPlugin.Priority()) >= max_priority);
         pluginNode["messages"] = tempPlugin.Messages();
         pluginNode["tags"] = tempPlugin.Tags();

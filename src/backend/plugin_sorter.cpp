@@ -340,8 +340,8 @@ namespace loot {
 
                 vertex_t vertex, parentVertex;
                 //Modulo operator is not consistently defined for negative numbers except in C++11, so use function.
-                int p1 = modulo(graph[*vit].Priority(), max_priority);
-                int p2 = modulo(graph[*vit2].Priority(), max_priority);
+                int p1 = graph[*vit].Priority() % max_priority;
+                int p2 = graph[*vit2].Priority() % max_priority;
                 if (p1 < p2) {
                     parentVertex = *vit;
                     vertex = *vit2;

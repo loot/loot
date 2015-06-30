@@ -38,9 +38,6 @@ namespace loot {
     // Helper functions
     //////////////////////////////////////////////////////////////////////////
 
-    //Calculate modulo with dividend sign preserved, matching behaviour of C++11.
-    int modulo(int dividend, int divisor);
-
     //Calculate the CRC of the given file for comparison purposes.
     uint32_t GetCrc32(const boost::filesystem::path& filename);
 
