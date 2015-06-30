@@ -153,15 +153,24 @@ namespace loot {
     }
 
     fs::path GameSettings::DataPath() const {
-        return _gamePath / "Data";
+        if (_gamePath.empty())
+            return "";
+        else
+            return _gamePath / "Data";
     }
 
     fs::path GameSettings::MasterlistPath() const {
-        return g_path_local / _lootFolderName / "masterlist.yaml";
+        if (_lootFolderName.empty())
+            return "";
+        else
+            return g_path_local / _lootFolderName / "masterlist.yaml";
     }
 
     fs::path GameSettings::UserlistPath() const {
-        return g_path_local / _lootFolderName / "userlist.yaml";
+        if (_lootFolderName.empty())
+            return "";
+        else
+            return g_path_local / _lootFolderName / "userlist.yaml";
     }
 
     GameSettings& GameSettings::SetName(const std::string& name) {
