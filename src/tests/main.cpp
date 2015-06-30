@@ -35,6 +35,24 @@
 
 #include <boost/log/core.hpp>
 
+TEST(ModuloOperator, Cpp11Conformance) {
+    // C++11 defines the modulo operator more strongly
+    // (only x % 0 is left undefined), whereas C++03
+    // only defined the operator for positive first operand.
+    // Test that the modulo operator has been implemented
+    // according to C++11.
+
+    EXPECT_EQ(0, 20 % 5);
+    EXPECT_EQ(0, 20 % -5);
+    EXPECT_EQ(0, -20 % 5);
+    EXPECT_EQ(0, -20 % -5);
+
+    EXPECT_EQ(2, 9 % 7);
+    EXPECT_EQ(2, 9 % -7);
+    EXPECT_EQ(-2, -9 % 7);
+    EXPECT_EQ(-2, -9 % -7);
+}
+
 int main(int argc, char **argv) {
     //Disable logging or else stdout will get overrun.
     boost::log::core::get()->set_logging_enabled(false);
