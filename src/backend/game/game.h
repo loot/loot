@@ -68,9 +68,6 @@ namespace loot {
         Masterlist masterlist;
         MetadataList userlist;
         std::unordered_map<std::string, Plugin> plugins;  //Map so that plugin data can be edited.
-    private:
-        //Creates directory in LOOT folder for LOOT's game-specific files.
-        void CreateLOOTGameFolder();
     };
 
     std::list<Game> ToGames(const std::list<GameSettings>& settings);

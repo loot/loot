@@ -66,7 +66,15 @@ namespace loot {
         }
 
         if (createFolder) {
-            CreateLOOTGameFolder();
+            //Make sure that the LOOT game path exists.
+            try {
+                if (fs::exists(g_path_local) && !fs::exists(g_path_local / FolderName()))
+                    fs::create_directory(g_path_local / FolderName());
+            }
+            catch (fs::filesystem_error& e) {
+                BOOST_LOG_TRIVIAL(error) << "Could not create LOOT folder for game. Details: " << e.what();
+                throw error(error::path_write_fail, lc::translate("Could not create LOOT folder for game. Details:").str() + " " + e.what());
+            }
         }
 
         LoadOrderHandler::Init(*this, gameLocalAppData);
@@ -186,18 +194,6 @@ namespace loot {
             return !pairIt->second.FormIDs().empty();
 
         return false;
-    }
-
-    void Game::CreateLOOTGameFolder() {
-        //Make sure that the LOOT game path exists.
-        try {
-            if (fs::exists(g_path_local) && !fs::exists(g_path_local / FolderName()))
-                fs::create_directory(g_path_local / FolderName());
-        }
-        catch (fs::filesystem_error& e) {
-            BOOST_LOG_TRIVIAL(error) << "Could not create LOOT folder for game. Details: " << e.what();
-            throw error(error::path_write_fail, lc::translate("Could not create LOOT folder for game. Details:").str() + " " + e.what());
-        }
     }
 
     std::list<Game> ToGames(const std::list<GameSettings>& settings) {
