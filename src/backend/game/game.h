@@ -57,7 +57,7 @@ namespace loot {
         void RedatePlugins();  //Change timestamps to match load order (Skyrim only).
 
         void LoadPlugins(bool headersOnly);  //Loads all installed plugins.
-        bool HasBeenLoaded();  // Checks if the game's plugins have already been loaded.
+        bool ArePluginsFullyLoaded() const;  // Checks if the game's plugins have already been loaded.
 
         //Caches for condition results, active plugins and CRCs.
         std::unordered_map<std::string, bool> conditionCache;  //Holds lowercased strings.
@@ -68,6 +68,8 @@ namespace loot {
         Masterlist masterlist;
         MetadataList userlist;
         std::unordered_map<std::string, Plugin> plugins;  //Map so that plugin data can be edited.
+    private:
+        bool _pluginsFullyLoaded;
     };
 
     std::list<Game> ToGames(const std::list<GameSettings>& settings);

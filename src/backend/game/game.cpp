@@ -40,9 +40,9 @@ namespace fs = boost::filesystem;
 namespace lc = boost::locale;
 
 namespace loot {
-    Game::Game() {}
+    Game::Game() : _pluginsFullyLoaded(false) {}
 
-    Game::Game(const GameSettings& gameSettings) : GameSettings(gameSettings.Id(), gameSettings.FolderName()) {
+    Game::Game(const GameSettings& gameSettings) : GameSettings(gameSettings.Id(), gameSettings.FolderName()), _pluginsFullyLoaded(false) {
         this->SetName(gameSettings.Name())
             .SetMaster(gameSettings.Master())
             .SetRepoURL(gameSettings.RepoURL())
@@ -51,7 +51,7 @@ namespace loot {
             .SetRegistryKey(gameSettings.RegistryKey());
     }
 
-    Game::Game(const unsigned int gameCode, const std::string& folder) : GameSettings(gameCode, folder) {}
+    Game::Game(const unsigned int gameCode, const std::string& folder) : GameSettings(gameCode, folder), _pluginsFullyLoaded(false) {}
 
     void Game::Init(bool createFolder, const boost::filesystem::path& gameLocalAppData) {
         if (Id() != Game::tes4 && Id() != Game::tes5 && Id() != Game::fo3 && Id() != Game::fonv) {
@@ -183,17 +183,12 @@ namespace loot {
             if (thread.joinable())
                 thread.join();
         }
+
+        _pluginsFullyLoaded = !headersOnly;
     }
 
-    bool Game::HasBeenLoaded() {
-        // Easy way to check is by checking the game's master file,
-        // which definitely shouldn't be empty.
-        auto pairIt = plugins.find(boost::locale::to_lower(Master()));
-
-        if (pairIt != plugins.end())
-            return !pairIt->second.FormIDs().empty();
-
-        return false;
+    bool Game::ArePluginsFullyLoaded() const {
+        return _pluginsFullyLoaded;
     }
 
     std::list<Game> ToGames(const std::list<GameSettings>& settings) {
