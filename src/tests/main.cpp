@@ -22,6 +22,11 @@
     <http://www.gnu.org/licenses/>.
     */
 
+#ifdef TRAVIS
+#pragma message("This is a Travis build, so defining BOOST_NO_CXX11_SCOPED_ENUMS to avoid boost::filesystem::copy_file() linking errors.")
+#define BOOST_NO_CXX11_SCOPED_ENUMS
+#endif
+
 #include "api/test_api.h"
 #include "backend/game/test_game.h"
 #include "backend/game/test_game_settings.h"

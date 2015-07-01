@@ -28,6 +28,7 @@ along with LOOT.  If not, see
 #include "backend/error.h"
 #include "backend/globals.h"
 #include "backend/game/game.h"
+
 #include "tests/fixtures.h"
 
 class Game : public SkyrimTest {};

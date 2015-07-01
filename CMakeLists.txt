@@ -193,6 +193,11 @@ link_directories ("${LIBLOADORDER_ROOT}/build"
 # System-Specific Settings
 ##############################
 
+# If building on Travis, set a preprocessor definition.
+IF ($ENV{TRAVIS})
+	add_definitions (-DTRAVIS)
+ENDIF ()
+
 # Settings when compiling for Windows. Since it's a Windows-only app this is always true, but useful to check for copy/paste into other projects.
 IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
     add_definitions (-DUNICODE -D_UNICODE -DLIBLO_STATIC)
