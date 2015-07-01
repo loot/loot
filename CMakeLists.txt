@@ -157,6 +157,7 @@ set (LOOT_TESTS_SRC "${CMAKE_SOURCE_DIR}/src/tests/main.cpp")
 
 set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/fixtures.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/api/test_api.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/game/test_game.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/game/test_game_settings.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/helpers/test_git_helper.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/helpers/test_helpers.h"
