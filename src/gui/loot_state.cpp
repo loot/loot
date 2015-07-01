@@ -221,7 +221,7 @@ namespace loot {
         base::AutoLock lock_scope(_lock);
 
         BOOST_LOG_TRIVIAL(debug) << "Changing current game to that with folder: " << newGameFolder;
-        _currentGame = find(_games.begin(), _games.end(), newGameFolder);
+        _currentGame = find(_games.begin(), _games.end(), Game(Game::autodetect, newGameFolder));
         _currentGame->Init(true);
 
         // Update game path in settings object.

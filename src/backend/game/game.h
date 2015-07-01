@@ -53,11 +53,6 @@ namespace loot {
 
         void Init(bool createFolder, const boost::filesystem::path& gameLocalAppData = "");
 
-        //Compare names and folder names.
-        bool operator == (const Game& rhs) const;
-        bool operator == (const GameSettings& rhs) const;
-        bool operator == (const std::string& nameOrFolderName) const;
-
         void RefreshActivePluginsList();
         void RedatePlugins();  //Change timestamps to match load order (Skyrim only).
 

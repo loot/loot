@@ -74,18 +74,6 @@ namespace loot {
         RefreshActivePluginsList();
     }
 
-    bool Game::operator == (const Game& rhs) const {
-        return (boost::iequals(Name(), rhs.Name()) || boost::iequals(FolderName(), rhs.FolderName()));
-    }
-
-    bool Game::operator == (const GameSettings& rhs) const {
-        return (boost::iequals(Name(), rhs.Name()) || boost::iequals(FolderName(), rhs.FolderName()));
-    }
-
-    bool Game::operator == (const std::string& nameOrFolderName) const {
-        return (boost::iequals(Name(), nameOrFolderName) || boost::iequals(FolderName(), nameOrFolderName));
-    }
-
     void Game::RefreshActivePluginsList() {
         activePlugins = GetActivePlugins();
     }

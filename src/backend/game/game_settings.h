@@ -42,7 +42,6 @@ namespace loot {
         bool IsInstalled();  //Sets gamePath if the current value is not valid and a valid path is found.
 
         bool operator == (const GameSettings& rhs) const;  //Compares names and folder names.
-        bool operator == (const std::string& nameOrFolderName) const;
 
         unsigned int Id() const;
         std::string Name() const;  //Returns the game's name, eg. "TES IV: Oblivion".
