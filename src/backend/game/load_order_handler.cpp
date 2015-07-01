@@ -55,8 +55,9 @@ namespace loot {
         }
 
         const char * gameLocalDataPath = nullptr;
-        if (!gameLocalAppData.empty())
-            gameLocalDataPath = gameLocalAppData.string().c_str();
+        string tempPathString = gameLocalAppData.string();
+        if (!tempPathString.empty())
+            gameLocalDataPath = tempPathString.c_str();
 
         // If the handle has already been initialised, close it and open another.
         if (_gh != nullptr) {
