@@ -39,9 +39,8 @@ TEST_F(GetCrc32, ValidFile) {
     EXPECT_EQ(0x0B5B7B90, loot::GetCrc32(dataPath / "Blank.esp"));
 }
 
-TEST(IntToHexString, PositiveNegativeZeroValues) {
+TEST(IntToHexString, PositiveAndZeroValues) {
     EXPECT_EQ("14", loot::IntToHexString(20));
-    EXPECT_EQ("-14", loot::IntToHexString(-20));
     EXPECT_EQ("0", loot::IntToHexString(0));
 }
 

@@ -92,7 +92,7 @@ namespace loot {
     }
 
     //Converts an integer to a hex string using BOOST's Spirit.Karma, which is apparently a lot faster than a stringstream conversion...
-    std::string IntToHexString(const int n) {
+    std::string IntToHexString(const uint32_t n) {
         string out;
         back_insert_iterator<string> sink(out);
         karma::generate(sink, karma::upper[karma::hex], n);

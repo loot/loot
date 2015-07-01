@@ -33,8 +33,8 @@ namespace loot {
     //Calculate the CRC of the given file for comparison purposes.
     uint32_t GetCrc32(const boost::filesystem::path& filename);
 
-    //Converts an integer to a hex string using BOOST's Spirit.Karma. Faster than a stringstream conversion.
-    std::string IntToHexString(const int n);
+    //Converts an unsigned 32-bit integer to a hex string using BOOST's Spirit.Karma. Faster than a stringstream conversion.
+    std::string IntToHexString(const uint32_t n);
 
 #ifdef _WIN32
     //Get registry subkey value string.
