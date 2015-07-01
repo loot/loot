@@ -67,19 +67,23 @@ namespace loot {
     //Calculate the CRC of the given file for comparison purposes.
     uint32_t GetCrc32(const fs::path& filename) {
         uint32_t chksum = 0;
-        loot::ifstream ifile(filename, ios::binary);
-        BOOST_LOG_TRIVIAL(trace) << "Calculating CRC for: " << filename.string();
-        boost::crc_32_type result;
-        if (ifile) {
-            static const size_t buffer_size = 8192;
-            char buffer[buffer_size];
-            do {
-                ifile.read(buffer, buffer_size);
-                result.process_bytes(buffer, ifile.gcount());
-            } while (ifile);
-            chksum = result.checksum();
+        try {
+            loot::ifstream ifile(filename, ios::binary);
+            BOOST_LOG_TRIVIAL(trace) << "Calculating CRC for: " << filename.string();
+            boost::crc_32_type result;
+            if (ifile) {
+                static const size_t buffer_size = 8192;
+                char buffer[buffer_size];
+                do {
+                    ifile.read(buffer, buffer_size);
+                    result.process_bytes(buffer, ifile.gcount());
+                } while (ifile);
+                chksum = result.checksum();
+            }
+            else
+                throw exception();
         }
-        else {
+        catch (exception&) {
             BOOST_LOG_TRIVIAL(error) << "Unable to open \"" << filename.string() << "\" for CRC calculation.";
             throw error(error::path_read_fail, (boost::format(lc::translate("Unable to open \"%1%\" for CRC calculation.")) % filename.string()).str());
         }
