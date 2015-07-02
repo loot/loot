@@ -41,7 +41,7 @@ namespace loot {
 #ifdef _WIN32
     const boost::filesystem::path g_path_local          = GetLocalAppDataPath() / "LOOT";
 #else
-    const boost::filesystem::path g_path_local          = boost::filesystem::current_path();
+    const boost::filesystem::path g_path_local          = boost::filesystem::current_path() / "LOOT";
 #endif
     const boost::filesystem::path g_path_settings       = g_path_local / "settings.yaml";
     const boost::filesystem::path g_path_log            = g_path_local / "LOOTDebugLog.txt";
