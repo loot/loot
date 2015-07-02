@@ -108,7 +108,7 @@ namespace YAML {
         else
             out << Key << "content" << Value << rhs.Content();
 
-        if (!rhs.Condition().empty())
+        if (rhs.IsConditional())
             out << Key << "condition" << Value << YAML::SingleQuoted << rhs.Condition();
 
         out << EndMap;

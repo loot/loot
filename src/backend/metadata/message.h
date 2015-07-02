@@ -70,7 +70,6 @@ namespace YAML {
     struct convert < loot::Message > {
         static Node encode(const loot::Message& rhs) {
             Node node;
-            node["condition"] = rhs.Condition();
             node["content"] = rhs.Content();
 
             if (rhs.Type() == loot::Message::say)
@@ -80,6 +79,9 @@ namespace YAML {
             else
                 node["type"] = "error";
 
+            if (rhs.IsConditional())
+                node["condition"] = rhs.Condition();
+
             return node;
         }
 
@@ -87,18 +89,14 @@ namespace YAML {
             if (!node.IsMap() || !node["type"] || !node["content"])
                 return false;
 
-            unsigned int typeNo = loot::Message::say;
-            if (node["type"]) {
-                std::string type;
-                type = node["type"].as<std::string>();
+            std::string type;
+            type = node["type"].as<std::string>();
 
-                if (boost::iequals(type, "say"))
-                    typeNo = loot::Message::say;
-                else if (boost::iequals(type, "warn"))
-                    typeNo = loot::Message::warn;
-                else
-                    typeNo = loot::Message::error;
-            }
+            unsigned int typeNo = loot::Message::say;
+            if (boost::iequals(type, "warn"))
+                typeNo = loot::Message::warn;
+            else if (boost::iequals(type, "error"))
+                typeNo = loot::Message::error;
 
             std::vector<loot::MessageContent> content;
             if (node["content"].IsSequence())
