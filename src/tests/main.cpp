@@ -42,6 +42,7 @@
 #include "backend/helpers/test_git_helper.h"
 #include "backend/helpers/test_helpers.h"
 #include "backend/helpers/test_language.h"
+#include "backend/helpers/test_version.h"
 #include "backend/helpers/test_yaml_set_helpers.h"
 
 #include <boost/log/core.hpp>
