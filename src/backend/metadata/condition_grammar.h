@@ -69,6 +69,7 @@ namespace loot {
                 throw error(error::invalid_args, "A valid game pointer was not passed during a condition evaluation.");
 
             expression =
+                qi::eps >
                 compound[qi::labels::_val = qi::labels::_1]
                 >> *((qi::lit("or") >> compound)[qi::labels::_val = qi::labels::_val || qi::labels::_1])
                 ;
