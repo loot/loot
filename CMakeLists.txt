@@ -170,6 +170,7 @@ set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/fixtures.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/test_file.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/test_formid.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/test_location.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/test_message.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/test_message_content.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/test_plugin_dirty_info.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/test_tag.h")

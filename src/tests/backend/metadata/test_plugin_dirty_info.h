@@ -29,7 +29,6 @@ along with LOOT.  If not, see
 #include "tests/fixtures.h"
 
 using loot::PluginDirtyInfo;
-using loot::Message;
 
 TEST(PluginDirtyInfo, ConstructorsAndDataAccess) {
     PluginDirtyInfo info;
@@ -48,38 +47,38 @@ TEST(PluginDirtyInfo, ConstructorsAndDataAccess) {
 }
 
 TEST(PluginDirtyInfo, MessageOutput) {
-    Message message;
+    loot::Message message;
 
     message = PluginDirtyInfo(0x12345678, 2, 10, 30, "cleaner").AsMessage();
-    EXPECT_EQ(Message::warn, message.Type());
+    EXPECT_EQ(loot::Message::warn, message.Type());
     EXPECT_EQ("Contains 2 ITM records, 10 deleted references and 30 deleted navmeshes. Clean with cleaner.", message.ChooseContent(Language::any).Str());
 
     message = PluginDirtyInfo(0x12345678, 0, 0, 0, "cleaner").AsMessage();
-    EXPECT_EQ(Message::warn, message.Type());
+    EXPECT_EQ(loot::Message::warn, message.Type());
     EXPECT_EQ("Clean with cleaner.", message.ChooseContent(Language::any).Str());
 
     message = PluginDirtyInfo(0x12345678, 0, 10, 30, "cleaner").AsMessage();
-    EXPECT_EQ(Message::warn, message.Type());
+    EXPECT_EQ(loot::Message::warn, message.Type());
     EXPECT_EQ("Contains 10 deleted references and 30 deleted navmeshes. Clean with cleaner.", message.ChooseContent(Language::any).Str());
 
     message = PluginDirtyInfo(0x12345678, 0, 0, 30, "cleaner").AsMessage();
-    EXPECT_EQ(Message::warn, message.Type());
+    EXPECT_EQ(loot::Message::warn, message.Type());
     EXPECT_EQ("Contains 30 deleted navmeshes. Clean with cleaner.", message.ChooseContent(Language::any).Str());
 
     message = PluginDirtyInfo(0x12345678, 0, 10, 0, "cleaner").AsMessage();
-    EXPECT_EQ(Message::warn, message.Type());
+    EXPECT_EQ(loot::Message::warn, message.Type());
     EXPECT_EQ("Contains 10 deleted references. Clean with cleaner.", message.ChooseContent(Language::any).Str());
 
     message = PluginDirtyInfo(0x12345678, 2, 0, 30, "cleaner").AsMessage();
-    EXPECT_EQ(Message::warn, message.Type());
+    EXPECT_EQ(loot::Message::warn, message.Type());
     EXPECT_EQ("Contains 2 ITM records and 30 deleted navmeshes. Clean with cleaner.", message.ChooseContent(Language::any).Str());
 
     message = PluginDirtyInfo(0x12345678, 2, 0, 0, "cleaner").AsMessage();
-    EXPECT_EQ(Message::warn, message.Type());
+    EXPECT_EQ(loot::Message::warn, message.Type());
     EXPECT_EQ("Contains 2 ITM records. Clean with cleaner.", message.ChooseContent(Language::any).Str());
 
     message = PluginDirtyInfo(0x12345678, 2, 10, 0, "cleaner").AsMessage();
-    EXPECT_EQ(Message::warn, message.Type());
+    EXPECT_EQ(loot::Message::warn, message.Type());
     EXPECT_EQ("Contains 2 ITM records and 10 deleted references. Clean with cleaner.", message.ChooseContent(Language::any).Str());
 }
 

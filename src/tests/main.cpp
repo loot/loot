@@ -36,6 +36,7 @@
 #include "backend/metadata/test_file.h"
 #include "backend/metadata/test_formid.h"
 #include "backend/metadata/test_location.h"
+#include "backend/metadata/test_message.h"
 #include "backend/metadata/test_message_content.h"
 #include "backend/metadata/test_plugin_dirty_info.h"
 #include "backend/metadata/test_tag.h"
