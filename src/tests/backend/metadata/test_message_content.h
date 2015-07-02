@@ -55,7 +55,7 @@ TEST(MessageContent, EqualityOperator) {
 
     mc1 = MessageContent("content", Language::english);
     mc2 = MessageContent("Content", Language::french);
-    EXPECT_FALSE(mc1 == mc2);
+    EXPECT_TRUE(mc1 == mc2);
 }
 
 TEST(MessageContent, LessThanOperator) {

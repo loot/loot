@@ -47,7 +47,7 @@ namespace loot {
     }
 
     bool MessageContent::operator == (const MessageContent& rhs) const {
-        return (_language == rhs.Language() && boost::iequals(_str, rhs.Str()));
+        return (boost::iequals(_str, rhs.Str()));
     }
 }
 

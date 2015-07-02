@@ -47,14 +47,14 @@ namespace loot {
     bool Message::operator < (const Message& rhs) const {
         if (!_content.empty() && !rhs.Content().empty())
             return boost::ilexicographical_compare(_content.front().Str(), rhs.Content().front().Str());
-        else if (_content.empty())
+        else if (_content.empty() && !rhs.Content().empty())
             return true;
         else
             return false;
     }
 
     bool Message::operator == (const Message& rhs) const {
-        return (_type == rhs.Type() && _content == rhs.Content());
+        return (_content == rhs.Content());
     }
 
     bool Message::EvalCondition(loot::Game& game, const unsigned int language) {
