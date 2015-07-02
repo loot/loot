@@ -59,27 +59,8 @@ namespace loot {
 
     bool Message::EvalCondition(loot::Game& game, const unsigned int language) {
         BOOST_LOG_TRIVIAL(trace) << "Choosing message content for language: " << Language(language).Name();
+        _content.assign({ChooseContent(language)});
 
-        if (_content.size() > 1) {
-            if (language == Language::any)  //Can use a message of any language, so use the first string.
-                _content.resize(1);
-            else {
-                MessageContent english, match;
-                for (const auto &mc : _content) {
-                    if (mc.Language() == language) {
-                        match = mc;
-                        break;
-                    }
-                    else if (mc.Language() == Language::english)
-                        english = mc;
-                }
-                _content.resize(1);
-                if (!match.Str().empty())
-                    _content[0] = match;
-                else
-                    _content[0] = english;
-            }
-        }
         return ConditionalMetadata::EvalCondition(game);
     }
 
