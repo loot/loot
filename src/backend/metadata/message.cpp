@@ -71,19 +71,15 @@ namespace loot {
         else if (_content.size() == 1 || language == Language::any)
             return _content[0];
         else {
-            MessageContent english, match;
+            MessageContent english;
             for (const auto &mc : _content) {
                 if (mc.Language() == language) {
-                    match = mc;
-                    break;
+                    return mc;
                 }
                 else if (mc.Language() == Language::english)
                     english = mc;
             }
-            if (!match.Str().empty())
-                return match;
-            else
-                return english;
+            return english;
         }
     }
 
