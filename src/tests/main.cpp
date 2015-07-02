@@ -32,6 +32,7 @@
 #include "backend/game/test_game_settings.h"
 #include "backend/game/test_load_order_handler.h"
 #include "backend/metadata/test_condition_grammar.h"
+#include "backend/metadata/test_conditional_metadata.h"
 #include "backend/metadata/test_file.h"
 #include "backend/metadata/test_formid.h"
 #include "backend/metadata/test_location.h"
