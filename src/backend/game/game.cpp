@@ -68,8 +68,8 @@ namespace loot {
         if (createFolder) {
             //Make sure that the LOOT game path exists.
             try {
-                if (fs::exists(g_path_local) && !fs::exists(g_path_local / FolderName()))
-                    fs::create_directory(g_path_local / FolderName());
+                if (!fs::exists(g_path_local / FolderName()))
+                    fs::create_directories(g_path_local / FolderName());
             }
             catch (fs::filesystem_error& e) {
                 BOOST_LOG_TRIVIAL(error) << "Could not create LOOT folder for game. Details: " << e.what();
