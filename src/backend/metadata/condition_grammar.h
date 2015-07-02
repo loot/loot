@@ -317,6 +317,11 @@ namespace loot {
             if (_parseOnly)
                 return;
 
+            if (!IsSafePath(file)) {
+                BOOST_LOG_TRIVIAL(error) << "Invalid file path: " << file;
+                throw loot::error(loot::error::invalid_args, boost::locale::translate("Invalid file path:").str() + " " + file);
+            }
+
             if (file == "LOOT")
                 result = false;
             else
