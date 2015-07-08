@@ -163,8 +163,8 @@ function onSortPlugins(evt) {
                         }
                     }
                     if (!found) {
-                        loot.game.plugins[i].push(new Plugin(plugin));
-                        loot.game.loadOrder.push(loot.game.plugins[i]);
+                        loot.game.plugins.push(new Plugin(plugin));
+                        loot.game.loadOrder.push(loot.game.plugins[loot.game.plugins.length - 1]);
                     }
                 });
 
