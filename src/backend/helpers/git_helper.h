@@ -56,7 +56,6 @@ namespace loot {
         git_commit * commit;
         git_reference * ref;
         git_reference * ref2;
-        git_signature * sig;
         git_blob * blob;
         git_annotated_commit * annotated_commit;
         git_tree * tree;

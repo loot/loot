@@ -233,7 +233,10 @@ ELSEIF (MSVC)
                     version
                     loadorder${PROJECT_ARCH}
                     ws2_32
-                    shlwapi)
+                    shlwapi
+                    winhttp
+                    crypt32
+                    Rpcrt4)
     set (LOOT_GUI_LIBS ${LOOT_LIBS}
                        cef_sandbox
                        libcef

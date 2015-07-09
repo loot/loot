@@ -43,7 +43,6 @@ namespace loot {
         commit(nullptr),
         ref(nullptr),
         ref2(nullptr),
-        sig(nullptr),
         blob(nullptr),
         annotated_commit(nullptr),
         tree(nullptr),
@@ -101,7 +100,6 @@ namespace loot {
         git_repository_free(repo);
         git_reference_free(ref);
         git_reference_free(ref2);
-        git_signature_free(sig);
         git_blob_free(blob);
         git_annotated_commit_free(annotated_commit);
         git_tree_free(tree);
@@ -115,7 +113,6 @@ namespace loot {
         repo = nullptr;
         ref = nullptr;
         ref2 = nullptr;
-        sig = nullptr;
         blob = nullptr;
         annotated_commit = nullptr;
         tree = nullptr;
@@ -170,7 +167,7 @@ namespace loot {
         GitHelper::git_diff_payload payload;
         payload.fileFound = false;
         payload.fileToFind = filename.c_str();
-        git.Call(git_diff_foreach(git.diff, &git.diff_file_cb, NULL, NULL, &payload));
+        git.Call(git_diff_foreach(git.diff, &git.diff_file_cb, NULL, NULL, NULL, &payload));
 
         // Clean up memory
         git_object_free(git.obj);

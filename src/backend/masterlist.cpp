@@ -126,10 +126,6 @@ namespace loot {
         string filename = path.filename().string();
 
         // First initialise some stuff that isn't specific to a repository.
-        BOOST_LOG_TRIVIAL(debug) << "Creating a reflog signature to use.";
-        // Create a reflog signature for any changes.
-        git.Call(git_signature_new(&git.sig, "LOOT", "loot@placeholder.net", 0, 0));
-
         BOOST_LOG_TRIVIAL(debug) << "Setting up checkout options.";
         char * paths = new char[filename.length() + 1];
         strcpy(paths, filename.c_str());
@@ -172,7 +168,6 @@ namespace loot {
             clone_options.checkout_opts = checkout_opts;
             clone_options.bare = 0;
             clone_options.checkout_branch = repoBranch.c_str();
-            clone_options.signature = git.sig;
 
             //Now perform the clone.
             git.Call(git_clone(&git.repo, repoURL.c_str(), repo_path.string().c_str(), &clone_options));
@@ -209,17 +204,19 @@ namespace loot {
             if (url != repoURL) {
                 BOOST_LOG_TRIVIAL(info) << "URLs do not match, setting repository URL to URL in settings.";
                 // The URLs don't match. Change the remote URL to match the one LOOT has.
-                git.Call(git_remote_set_url(git.remote, repoURL.c_str()));
+                git.Call(git_remote_set_url(git.repo, "origin", repoURL.c_str()));
 
-                // Now save change.
-                git.Call(git_remote_save(git.remote));
+                // Reload the remote object.
+                git_remote_free(git.remote);
+                git.Call(git_remote_lookup(&git.remote, git.repo, "origin"));
             }
 
             // Now fetch updates from the remote.
             BOOST_LOG_TRIVIAL(trace) << "Fetching updates from remote.";
             git.SetErrorMessage(lc::translate("An error occurred while trying to update the masterlist. This could be due to a server-side error. Try again in a few minutes."));
 
-            git.Call(git_remote_fetch(git.remote, nullptr, git.sig, nullptr));
+            git_fetch_options fetch_options = GIT_FETCH_OPTIONS_INIT;
+            git.Call(git_remote_fetch(git.remote, nullptr, &fetch_options, nullptr));
 
             // Print some stats on what was fetched either during update or clone.
             const git_transfer_progress * stats = git_remote_stats(git.remote);
@@ -238,7 +235,7 @@ namespace loot {
                 BOOST_LOG_TRIVIAL(trace) << "Creating the new branch.";
                 // Create a branch.
                 git.Call(git_commit_lookup(&git.commit, git.repo, commit_id));
-                git.Call(git_branch_create(&git.ref, git.repo, repoBranch.c_str(), git.commit, 0, git.sig, NULL));
+                git.Call(git_branch_create(&git.ref, git.repo, repoBranch.c_str(), git.commit, 0));
 
                 // Set upstream. Don't really know if this is necessary or not.
                 git.Call(git_branch_set_upstream(git.ref, (string("origin/") + repoBranch).c_str()));
@@ -258,7 +255,7 @@ namespace loot {
             // Check if HEAD points to the desired branch and set it to if not.
             if (!git_branch_is_head(git.ref)) {
                 BOOST_LOG_TRIVIAL(trace) << "Setting HEAD to follow branch: " << repoBranch;
-                git.Call(git_repository_set_head(git.repo, (string("refs/heads/") + repoBranch).c_str(), git.sig, (string("Updated HEAD to ") + repoBranch).c_str()));
+                git.Call(git_repository_set_head(git.repo, (string("refs/heads/") + repoBranch).c_str()));
             }
 
             if (ret == 0) {
@@ -289,7 +286,7 @@ namespace loot {
                     git.obj = nullptr;
 
                     // Set the reference target.
-                    git.Call(git_reference_set_target(&git.ref2, git.ref, commit_id, git.sig, "Setting branch reference."));
+                    git.Call(git_reference_set_target(&git.ref2, git.ref, commit_id, "Setting branch reference."));
 
                     git_reference_free(git.ref2);
                     git.ref2 = nullptr;
@@ -320,7 +317,7 @@ namespace loot {
                     if (local_commit_id->id != remote_commit_id->id) {
                         BOOST_LOG_TRIVIAL(trace) << "Branch heads are not equal, updating local HEAD.";
                         // Commit IDs don't match, update HEAD, and continue with normal update procedure.
-                        git.Call(git_reference_set_target(&git.ref2, git.ref, remote_commit_id, git.sig, "Setting branch reference."));
+                        git.Call(git_reference_set_target(&git.ref2, git.ref, remote_commit_id, "Setting branch reference."));
                         git_reference_free(git.ref2);
                         git.ref2 = nullptr;
                     }
@@ -423,7 +420,7 @@ namespace loot {
                 git.obj = nullptr;
 
                 // Detach HEAD to HEAD~1. This will roll back HEAD by one commit each time it is called.
-                git.Call(git_repository_set_head_detached(git.repo, oid, git.sig, "Updated HEAD to HEAD~1"));
+                git.Call(git_repository_set_head_detached(git.repo, oid));
 
                 // Checkout the new HEAD.
                 BOOST_LOG_TRIVIAL(trace) << "Performing a Git checkout of HEAD.";
