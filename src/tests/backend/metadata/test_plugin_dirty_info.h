@@ -82,6 +82,19 @@ TEST(PluginDirtyInfo, MessageOutput) {
     EXPECT_EQ("Contains 2 ITM records and 10 deleted references. Clean with cleaner.", message.ChooseContent(Language::any).Str());
 }
 
+TEST(PluginDirtyInfo, EqualityOperator) {
+    PluginDirtyInfo info1, info2;
+    EXPECT_TRUE(info1 == info2);
+
+    info1 = PluginDirtyInfo(0x12345678, 2, 10, 30, "cleaner1");
+    info2 = PluginDirtyInfo(0x12345678, 4, 20, 60, "cleaner2");
+    EXPECT_TRUE(info1 == info2);
+
+    info1 = PluginDirtyInfo(0x12345678, 2, 10, 30, "cleaner");
+    info2 = PluginDirtyInfo(0x87654321, 2, 10, 30, "cleaner");
+    EXPECT_FALSE(info1 == info2);
+}
+
 TEST(PluginDirtyInfo, LessThanOperator) {
     PluginDirtyInfo info1, info2;
     EXPECT_FALSE(info1 < info2);

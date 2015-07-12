@@ -38,6 +38,10 @@ namespace loot {
         return _crc < rhs.CRC();
     }
 
+    bool PluginDirtyInfo::operator == (const PluginDirtyInfo& rhs) const {
+        return _crc == rhs.CRC();
+    }
+
     uint32_t PluginDirtyInfo::CRC() const {
         return _crc;
     }

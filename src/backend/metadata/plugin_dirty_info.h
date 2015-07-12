@@ -38,6 +38,7 @@ namespace loot {
         PluginDirtyInfo(uint32_t crc, unsigned int itm, unsigned int ref, unsigned int nav, const std::string& utility);
 
         bool operator < (const PluginDirtyInfo& rhs) const;
+        bool operator == (const PluginDirtyInfo& rhs) const;
 
         uint32_t CRC() const;
         unsigned int ITMs() const;
