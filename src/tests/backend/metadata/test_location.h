@@ -48,6 +48,23 @@ TEST(Location, ConstructorsAndDataAccess) {
     }), loc.Versions());
 }
 
+TEST(Location, EqualityOperator) {
+    Location loc1, loc2;
+    EXPECT_TRUE(loc1 == loc2);
+
+    loc1 = Location("http://www.example.com");
+    loc2 = Location("HTTP://WWW.EXAMPLE.COM");
+    EXPECT_TRUE(loc1 == loc2);
+
+    loc1 = Location("http://www.example.com", {"1.0"});
+    loc2 = Location("http://www.example.com", {"1.1"});
+    EXPECT_TRUE(loc1 == loc2);
+
+    loc1 = Location("http://www.example1.com");
+    loc2 = Location("http://www.example2.com");
+    EXPECT_FALSE(loc1 == loc2);
+}
+
 TEST(Location, LessThanOperator) {
     Location loc1, loc2;
     EXPECT_FALSE(loc1 < loc2);

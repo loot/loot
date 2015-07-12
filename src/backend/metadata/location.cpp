@@ -39,6 +39,10 @@ namespace loot {
         return boost::ilexicographical_compare(_url, rhs.URL());
     }
 
+    bool Location::operator == (const Location& rhs) const {
+        return boost::iequals(_url, rhs.URL());
+    }
+
     std::string Location::URL() const {
         return _url;
     }

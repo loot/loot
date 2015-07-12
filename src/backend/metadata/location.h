@@ -37,6 +37,7 @@ namespace loot {
         Location(const std::string& url, const std::vector<std::string>& versions);
 
         bool operator < (const Location& rhs) const;
+        bool operator == (const Location& rhs) const;
 
         std::string URL() const;
         std::vector<std::string> Versions() const;
