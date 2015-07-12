@@ -38,7 +38,7 @@ namespace loot {
     public:
 
         bool Load(Game& game, const unsigned int language);  //Handles update with load fallback.
-        bool Update(const Game& game);
+
         bool Update(const boost::filesystem::path& path,
                     const std::string& repoURL,
                     const std::string& repoBranch);
@@ -47,6 +47,7 @@ namespace loot {
         std::string GetDate(const boost::filesystem::path& path);
 
     private:
+        bool Update(const Game& game);
         void GetGitInfo(const boost::filesystem::path& path, bool shortID);
 
         std::string revision;
