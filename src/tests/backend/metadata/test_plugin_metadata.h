@@ -57,6 +57,18 @@ TEST(PluginMetadata, EqualityOperator) {
     EXPECT_TRUE(pm2 == pm1);
 }
 
+TEST(PluginMetadata, MergeMetadata) {
+    FAIL() << "Test is unimplemented";
+}
+
+TEST(PluginMetadata, DiffMetadata) {
+    FAIL() << "Test is unimplemented";
+}
+
+TEST(PluginMetadata, NewMetadata) {
+    FAIL() << "Test is unimplemented";
+}
+
 TEST(PluginMetadata, Name) {
     PluginMetadata pm;
     ASSERT_NE("Blank.esm", pm.Name());
@@ -160,6 +172,14 @@ TEST(PluginMetadata, Locations) {
     EXPECT_EQ(std::set<loot::Location>({
         loot::Location("http://www.example.com")
     }), pm.Locations());
+}
+
+TEST(PluginMetadata, EvalAllConditions) {
+    FAIL() << "Test is unimplemented";
+}
+
+TEST(PluginMetadata, ParseAllConditions) {
+    FAIL() << "Test is unimplemented";
 }
 
 TEST(PluginMetadata, HasNameOnly) {
@@ -484,4 +504,3 @@ TEST(PluginMetadata, YamlDecode) {
 }
 
 #endif
-

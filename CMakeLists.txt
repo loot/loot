@@ -174,7 +174,12 @@ set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/fixtures.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/test_message_content.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/test_plugin_dirty_info.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/test_plugin_metadata.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/test_tag.h")
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/test_tag.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/plugin/test_plugin.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/plugin/test_plugin_loader.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/test_metadata_list.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/test_masterlist.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/test_plugin_sorter.h")
 
 source_group("Header Files" FILES ${LOOT_HEADERS} ${LOOT_GUI_HEADERS} ${LOOT_API_HEADERS} ${LOOT_TESTS_HEADERS})
 

@@ -31,6 +31,11 @@
 #include "backend/game/test_game.h"
 #include "backend/game/test_game_settings.h"
 #include "backend/game/test_load_order_handler.h"
+#include "backend/helpers/test_git_helper.h"
+#include "backend/helpers/test_helpers.h"
+#include "backend/helpers/test_language.h"
+#include "backend/helpers/test_version.h"
+#include "backend/helpers/test_yaml_set_helpers.h"
 #include "backend/metadata/test_condition_grammar.h"
 #include "backend/metadata/test_conditional_metadata.h"
 #include "backend/metadata/test_file.h"
@@ -41,11 +46,11 @@
 #include "backend/metadata/test_plugin_dirty_info.h"
 #include "backend/metadata/test_plugin_metadata.h"
 #include "backend/metadata/test_tag.h"
-#include "backend/helpers/test_git_helper.h"
-#include "backend/helpers/test_helpers.h"
-#include "backend/helpers/test_language.h"
-#include "backend/helpers/test_version.h"
-#include "backend/helpers/test_yaml_set_helpers.h"
+#include "backend/plugin/test_plugin.h"
+#include "backend/plugin/test_plugin_loader.h"
+#include "backend/test_metadata_list.h"
+#include "backend/test_masterlist.h"
+#include "backend/test_plugin_sorter.h"
 
 #include <boost/log/core.hpp>
 
