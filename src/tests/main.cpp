@@ -39,6 +39,7 @@
 #include "backend/metadata/test_message.h"
 #include "backend/metadata/test_message_content.h"
 #include "backend/metadata/test_plugin_dirty_info.h"
+#include "backend/metadata/test_plugin_metadata.h"
 #include "backend/metadata/test_tag.h"
 #include "backend/helpers/test_git_helper.h"
 #include "backend/helpers/test_helpers.h"
