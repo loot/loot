@@ -52,8 +52,6 @@ namespace loot {
         void Save(const boost::filesystem::path& filepath);
         void clear();
 
-        bool operator == (const MetadataList& rhs) const;  //Compares content.
-
         std::list<PluginMetadata> Plugins() const;
 
         // Merges multiple matching regex entries if any are found.

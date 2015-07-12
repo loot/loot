@@ -77,51 +77,6 @@ namespace loot {
         messages.clear();
     }
 
-    bool MetadataList::operator == (const MetadataList& rhs) const {
-        if (this->plugins.size() != rhs.plugins.size() || this->messages.size() != rhs.messages.size() || this->regexPlugins.size() != rhs.regexPlugins.size()) {
-            BOOST_LOG_TRIVIAL(info) << "Metadata edited for some plugin, new and old userlists differ in size.";
-            return false;
-        }
-        else {
-            for (const auto& rhsPlugin : rhs.plugins) {
-                const auto it = this->plugins.find(rhsPlugin);
-
-                if (it == this->plugins.end()) {
-                    BOOST_LOG_TRIVIAL(info) << "Metadata added for plugin: " << it->Name();
-                    return false;
-                }
-
-                if (!it->DiffMetadata(rhsPlugin).HasNameOnly()) {
-                    BOOST_LOG_TRIVIAL(info) << "Metadata edited for plugin: " << it->Name();
-                    return false;
-                }
-            }
-            for (const auto& rhsPlugin : rhs.regexPlugins) {
-                const auto it = find(regexPlugins.begin(), regexPlugins.end(), rhsPlugin);
-
-                if (it == this->regexPlugins.end()) {
-                    BOOST_LOG_TRIVIAL(info) << "Metadata added for plugin: " << it->Name();
-                    return false;
-                }
-
-                if (!it->DiffMetadata(rhsPlugin).HasNameOnly()) {
-                    BOOST_LOG_TRIVIAL(info) << "Metadata edited for plugin: " << it->Name();
-                    return false;
-                }
-            }
-            // Messages are compared exactly by the '==' operator, so there's no need to do a more
-            // fine-grained check.
-            for (const auto& rhsMessage : rhs.messages) {
-                const auto it = std::find(this->messages.begin(), this->messages.end(), rhsMessage);
-
-                if (it == this->messages.end()) {
-                    return  false;
-                }
-            }
-        }
-        return true;
-    }
-
     std::list<PluginMetadata> MetadataList::Plugins() const {
         list<PluginMetadata> pluginList(plugins.begin(), plugins.end());
 

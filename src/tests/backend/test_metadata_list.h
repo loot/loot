@@ -42,10 +42,6 @@ TEST_F(MetadataList, clear) {
     FAIL() << "Test is unimplemented";
 }
 
-TEST_F(MetadataList, EqualityOperator) {
-    FAIL() << "Test is unimplemented";
-}
-
 TEST_F(MetadataList, Plugins) {
     FAIL() << "Test is unimplemented";
 }
