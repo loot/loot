@@ -423,7 +423,7 @@ nav: 0
 <table>
     <thead><tr><th>Key Name<th>Data Type<th>Required<th>Notes
     <tbody>
-        <tr><td><code>name</code><td>string<td>&#x2713;<td>Can be an exact plugin filename or a regular expression plugin filename. If the period that precedes the file extension has been escaped (eg. <code>\.esp</code>, <code>\.esm</code>), the string is treated as a regular expression, otherwise it is treated as an exact filename.
+        <tr><td><code>name</code><td>string<td>&#x2713;<td>Can be an exact plugin filename or a regular expression plugin filename. If the filename contains any of the characters <code>:\*?|</code>, the string will be treated as a regular expression, otherwise it will be treated as an exact filename. For example, <code>Example\.esm</code> will be treated as a regular expression, as it contains a <code>\</code> character.
         <tr><td><code>enabled</code><td>boolean<td>&#x2717;<td>Enables or disables use of the plugin object. Used for user rules, but no reason to use it in the masterlist. If unspecified, defaults to <code>true</code>.
         <tr><td><code>priority</code><td>integer<td>&#x2717;<td>Modifies plugin position relative to others that change one or more of the same records, but which are otherwise unrelated (ie. neither plugin lists the other as a master, requirement, or in its <code>after</code> list). Plugins that don't change any of the same records are not compared, unless:
             <ul>
@@ -590,11 +590,12 @@ msg:
 
 <table>
     <head>
-        <tr><th>Feature Supported?<th>v0.5<th>v0.6<th>v0.7
+        <tr><th>Feature Supported?<th>v0.5<th>v0.6<th>v0.7<th>v0.8
     <tbody>
         <tr><td>GitHub Flavored Markdown message formatting<td colspan="2">Only URL hyperlinking is supported, for <code>file:</code>, <code>http:</code> and <code>https:</code> URLs, using the <code>[label](url)</code> and <code>&lt;url&gt;</code> syntaxes.<td>LOOT uses the <a href="https://github.com/chjj/marked">Marked</a> library (v0.3) to provide support for most of GitHub Flavored Markdown, minus the GitHub-specific features (like @mentions, issue/repo linking and emoji).
         <tr><td>Message string substitution (ie. <code>sub:</code>)<td colspan="2">No<td>Yes
         <tr><td>YAML merge keys (ie. <code>&lt;&lt;:</code>)<td colspan="2">No<td>Yes
+        <tr><td>Regex plugin entries<td colspan="3">Must end with <code>\.esp</code> or <code>\.esm</code>.<td>Must contain any of <code>:\*?|</code>
 </table>
 
 <h2 id="license">License</h2>
