@@ -102,7 +102,6 @@ namespace loot {
         std::string name;
         bool enabled;  //Default to true.
         bool _isPriorityExplicit;  //If false and priority is 0, then priority was not explicitly set as such.
-        bool _isEmpty;  // Does the plugin contain any records other than the TES4 header?
         int priority;  //Default to 0 : >0 is lower down in load order, <0 is higher up.
         std::set<File> loadAfter;
         std::set<File> requirements;
