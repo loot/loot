@@ -128,15 +128,27 @@ namespace YAML {
         static Node encode(const loot::PluginMetadata& rhs) {
             Node node;
             node["name"] = rhs.Name();
-            node["enabled"] = rhs.Enabled();
-            node["priority"] = rhs.Priority();
-            node["after"] = rhs.LoadAfter();
-            node["req"] = rhs.Reqs();
-            node["inc"] = rhs.Incs();
-            node["msg"] = rhs.Messages();
-            node["tag"] = rhs.Tags();
-            node["dirty"] = rhs.DirtyInfo();
-            node["url"] = rhs.Locations();
+
+            if (!rhs.Enabled())
+                node["enabled"] = rhs.Enabled();
+
+            if (rhs.IsPriorityExplicit())
+                node["priority"] = rhs.Priority();
+
+            if (!rhs.LoadAfter().empty())
+                node["after"] = rhs.LoadAfter();
+            if (!rhs.Reqs().empty())
+                node["req"] = rhs.Reqs();
+            if (!rhs.Incs().empty())
+                node["inc"] = rhs.Incs();
+            if (!rhs.Messages().empty())
+                node["msg"] = rhs.Messages();
+            if (!rhs.Tags().empty())
+                node["tag"] = rhs.Tags();
+            if (!rhs.DirtyInfo().empty())
+                node["dirty"] = rhs.DirtyInfo();
+            if (!rhs.Locations().empty())
+                node["url"] = rhs.Locations();
 
             return node;
         }
