@@ -22,83 +22,384 @@ along with LOOT.  If not, see
 <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TEST_BACKEND_METADATA_PLUGIN_METADATA
-#define LOOT_TEST_BACKEND_METADATA_PLUGIN_METADATA
+#ifndef LOOT_TEST_F_BACKEND_METADATA_PLUGIN_METADATA
+#define LOOT_TEST_F_BACKEND_METADATA_PLUGIN_METADATA
 
 #include "backend/metadata/plugin_metadata.h"
 #include "tests/fixtures.h"
 
-using loot::PluginMetadata;
+class PluginMetadata : public SkyrimTest {};
 
-TEST(PluginMetadata, Constructors) {
-    PluginMetadata pm;
+TEST_F(PluginMetadata, Constructors) {
+    loot::PluginMetadata pm;
     EXPECT_TRUE(pm.Enabled());
     EXPECT_FALSE(pm.IsPriorityExplicit());
     EXPECT_EQ(0, pm.Priority());
 
-    pm = PluginMetadata("Blank.esm");
+    pm = loot::PluginMetadata("Blank.esm");
     EXPECT_EQ("Blank.esm", pm.Name());
     EXPECT_TRUE(pm.Enabled());
     EXPECT_FALSE(pm.IsPriorityExplicit());
     EXPECT_EQ(0, pm.Priority());
 }
 
-TEST(PluginMetadata, EqualityOperator) {
-    PluginMetadata pm1, pm2;
+TEST_F(PluginMetadata, EqualityOperator) {
+    loot::PluginMetadata pm1, pm2;
     EXPECT_TRUE(pm1 == pm2);
 
-    pm1 = PluginMetadata("Blank.esm");
-    pm2 = PluginMetadata("blank.esm");
+    pm1 = loot::PluginMetadata("Blank.esm");
+    pm2 = loot::PluginMetadata("blank.esm");
     EXPECT_TRUE(pm1 == pm2);
 
-    pm1 = PluginMetadata("Blank.esm");
-    pm2 = PluginMetadata("Blan.\\.esm");
+    pm1 = loot::PluginMetadata("Blank.esm");
+    pm2 = loot::PluginMetadata("Blan.\\.esm");
     EXPECT_TRUE(pm1 == pm2);
     EXPECT_TRUE(pm2 == pm1);
 }
 
-TEST(PluginMetadata, MergeMetadata) {
-    FAIL() << "Test is unimplemented";
+TEST_F(PluginMetadata, MergeMetadata) {
+    loot::PluginMetadata pm1(YAML::Load(
+        "name: 'Blank.esp'\n"
+        "enabled: false\n"
+        "priority: 5\n"
+        "after:\n"
+        "  - 'Blank.esm'\n"
+        "req:\n"
+        "  - 'Blank.esm'\n"
+        "inc:\n"
+        "  - 'Blank.esm'\n"
+        "msg:\n"
+        "  - type: say\n"
+        "    content: 'content'\n"
+        "tag:\n"
+        "  - Relev\n"
+        "dirty:\n"
+        "  - crc: 0x5\n"
+        "    util: 'utility'\n"
+        "    udr: 1\n"
+        "    nav: 2\n"
+        "url:\n"
+        "  - 'http://www.example.com'"
+        ).as<loot::PluginMetadata>());
+
+    loot::PluginMetadata pm2(YAML::Load(
+        "name: 'Blank - Different.esp'\n"
+        "after:\n"
+        "  - 'Blank.esm'\n"
+        "  - 'Blank.esp'\n"
+        "req:\n"
+        "  - 'Blank.esm'\n"
+        "  - 'Blank.esp'\n"
+        "inc:\n"
+        "  - 'Blank.esm'\n"
+        "  - 'Blank.esp'\n"
+        "msg:\n"
+        "  - type: say\n"
+        "    content: 'content'\n"
+        "tag:\n"
+        "  - Relev\n"
+        "  - -Relev\n"
+        "  - Delev\n"
+        "dirty:\n"
+        "  - crc: 0x5\n"
+        "    util: 'utility'\n"
+        "    udr: 1\n"
+        "    nav: 2\n"
+        "  - crc: 0x9\n"
+        "    util: 'utility'\n"
+        "    udr: 1\n"
+        "    nav: 2\n"
+        "url:\n"
+        "  - 'http://www.example.com'\n"
+        "  - 'http://www.example2.com'"
+        ).as<loot::PluginMetadata>());
+
+    EXPECT_NO_THROW(pm1.MergeMetadata(pm2));
+    EXPECT_EQ("Blank.esp", pm1.Name());
+    EXPECT_TRUE(pm1.Enabled());
+    EXPECT_EQ(5, pm1.Priority());
+    EXPECT_TRUE(pm1.IsPriorityExplicit());
+    EXPECT_EQ(std::set<loot::File>({
+        loot::File("Blank.esm"),
+        loot::File("Blank.esp"),
+    }), pm1.LoadAfter());
+    EXPECT_EQ(std::set<loot::File>({
+        loot::File("Blank.esm"),
+        loot::File("Blank.esp"),
+    }), pm1.Reqs());
+    EXPECT_EQ(std::set<loot::File>({
+        loot::File("Blank.esm"),
+        loot::File("Blank.esp"),
+    }), pm1.Incs());
+    EXPECT_EQ(std::list<loot::Message>({
+        loot::Message(loot::Message::say, "content"),
+        loot::Message(loot::Message::say, "content"),
+    }), pm1.Messages());
+    EXPECT_EQ(std::set<loot::Tag>({
+        loot::Tag("Relev"),
+        loot::Tag("Relev", false),
+        loot::Tag("Delev"),
+    }), pm1.Tags());
+    EXPECT_EQ(std::set<loot::PluginDirtyInfo>({
+        loot::PluginDirtyInfo(5, 0, 1, 2, "utility"),
+        loot::PluginDirtyInfo(9, 0, 1, 2, "utility"),
+    }), pm1.DirtyInfo());
+    EXPECT_EQ(std::set<loot::Location>({
+        loot::Location("http://www.example.com"),
+        loot::Location("http://www.example2.com"),
+    }), pm1.Locations());
+
+    pm2.SetPriorityExplicit(true);
+    EXPECT_NO_THROW(pm1.MergeMetadata(pm2));
+    EXPECT_EQ(0, pm1.Priority());
+    EXPECT_TRUE(pm1.IsPriorityExplicit());
 }
 
-TEST(PluginMetadata, DiffMetadata) {
-    FAIL() << "Test is unimplemented";
+TEST_F(PluginMetadata, DiffMetadata) {
+    loot::PluginMetadata pm1(YAML::Load(
+        "name: 'Blank.esp'\n"
+        "enabled: false\n"
+        "after:\n"
+        "  - 'Blank.esm'\n"
+        "  - 'Blank - Different.esm'\n"
+        "req:\n"
+        "  - 'Blank.esm'\n"
+        "  - 'Blank - Different.esm'\n"
+        "inc:\n"
+        "  - 'Blank.esm'\n"
+        "  - 'Blank - Different.esm'\n"
+        "msg:\n"
+        "  - type: say\n"
+        "    content: 'content'\n"
+        "  - type: say\n"
+        "    content: 'content2'\n"
+        "tag:\n"
+        "  - Relev\n"
+        "  - NoMerge\n"
+        "dirty:\n"
+        "  - crc: 0x5\n"
+        "    util: 'utility'\n"
+        "    udr: 1\n"
+        "    nav: 2\n"
+        "  - crc: 0x1\n"
+        "    util: 'utility'\n"
+        "    udr: 1\n"
+        "    nav: 2\n"
+        "url:\n"
+        "  - 'http://www.example.com'\n"
+        "  - 'http://www.other-example.com'"
+        ).as<loot::PluginMetadata>());
+
+    loot::PluginMetadata pm2(YAML::Load(
+        "name: 'Blank - Different.esp'\n"
+        "after:\n"
+        "  - 'Blank.esm'\n"
+        "  - 'Blank.esp'\n"
+        "req:\n"
+        "  - 'Blank.esm'\n"
+        "  - 'Blank.esp'\n"
+        "inc:\n"
+        "  - 'Blank.esm'\n"
+        "  - 'Blank.esp'\n"
+        "msg:\n"
+        "  - type: say\n"
+        "    content: 'content'\n"
+        "  - type: say\n"
+        "    content: 'content3'\n"
+        "tag:\n"
+        "  - Relev\n"
+        "  - -Relev\n"
+        "  - Delev\n"
+        "dirty:\n"
+        "  - crc: 0x5\n"
+        "    util: 'utility'\n"
+        "    udr: 1\n"
+        "    nav: 2\n"
+        "  - crc: 0x9\n"
+        "    util: 'utility'\n"
+        "    udr: 1\n"
+        "    nav: 2\n"
+        "url:\n"
+        "  - 'http://www.example.com'\n"
+        "  - 'http://www.example2.com'"
+        ).as<loot::PluginMetadata>());
+
+    loot::PluginMetadata result = pm1.DiffMetadata(pm2);
+    EXPECT_EQ("Blank.esp", result.Name());
+    EXPECT_FALSE(result.Enabled());
+    EXPECT_EQ(0, result.Priority());
+    EXPECT_FALSE(result.IsPriorityExplicit());
+    EXPECT_EQ(std::set<loot::File>({
+        loot::File("Blank.esp"),
+        loot::File("Blank - Different.esm"),
+    }), result.LoadAfter());
+    EXPECT_EQ(std::set<loot::File>({
+        loot::File("Blank.esp"),
+        loot::File("Blank - Different.esm"),
+    }), result.Reqs());
+    EXPECT_EQ(std::set<loot::File>({
+        loot::File("Blank.esp"),
+        loot::File("Blank - Different.esm"),
+    }), result.Incs());
+    EXPECT_EQ(std::list<loot::Message>({
+        loot::Message(loot::Message::say, "content2"),
+        loot::Message(loot::Message::say, "content3"),
+    }), result.Messages());
+    EXPECT_EQ(std::set<loot::Tag>({
+        loot::Tag("Relev", false),
+        loot::Tag("Delev"),
+        loot::Tag("NoMerge"),
+    }), result.Tags());
+    EXPECT_EQ(std::set<loot::PluginDirtyInfo>({
+        loot::PluginDirtyInfo(9, 0, 1, 2, "utility"),
+        loot::PluginDirtyInfo(1, 0, 1, 2, "utility"),
+    }), result.DirtyInfo());
+    EXPECT_EQ(std::set<loot::Location>({
+        loot::Location("http://www.example2.com"),
+        loot::Location("http://www.other-example.com"),
+    }), result.Locations());
+
+    pm1.Priority(5);
+    result = pm1.DiffMetadata(pm2);
+
+    EXPECT_EQ(5, result.Priority());
+    EXPECT_TRUE(result.IsPriorityExplicit());
 }
 
-TEST(PluginMetadata, NewMetadata) {
-    FAIL() << "Test is unimplemented";
+TEST_F(PluginMetadata, NewMetadata) {
+    loot::PluginMetadata pm1(YAML::Load(
+        "name: 'Blank.esp'\n"
+        "enabled: false\n"
+        "after:\n"
+        "  - 'Blank.esm'\n"
+        "  - 'Blank - Different.esm'\n"
+        "req:\n"
+        "  - 'Blank.esm'\n"
+        "  - 'Blank - Different.esm'\n"
+        "inc:\n"
+        "  - 'Blank.esm'\n"
+        "  - 'Blank - Different.esm'\n"
+        "msg:\n"
+        "  - type: say\n"
+        "    content: 'content'\n"
+        "  - type: say\n"
+        "    content: 'content2'\n"
+        "tag:\n"
+        "  - Relev\n"
+        "  - NoMerge\n"
+        "dirty:\n"
+        "  - crc: 0x5\n"
+        "    util: 'utility'\n"
+        "    udr: 1\n"
+        "    nav: 2\n"
+        "  - crc: 0x1\n"
+        "    util: 'utility'\n"
+        "    udr: 1\n"
+        "    nav: 2\n"
+        "url:\n"
+        "  - 'http://www.example.com'\n"
+        "  - 'http://www.other-example.com'"
+        ).as<loot::PluginMetadata>());
+
+    loot::PluginMetadata pm2(YAML::Load(
+        "name: 'Blank - Different.esp'\n"
+        "after:\n"
+        "  - 'Blank.esm'\n"
+        "  - 'Blank.esp'\n"
+        "req:\n"
+        "  - 'Blank.esm'\n"
+        "  - 'Blank.esp'\n"
+        "inc:\n"
+        "  - 'Blank.esm'\n"
+        "  - 'Blank.esp'\n"
+        "msg:\n"
+        "  - type: say\n"
+        "    content: 'content'\n"
+        "  - type: say\n"
+        "    content: 'content3'\n"
+        "tag:\n"
+        "  - Relev\n"
+        "  - -Relev\n"
+        "  - Delev\n"
+        "dirty:\n"
+        "  - crc: 0x5\n"
+        "    util: 'utility'\n"
+        "    udr: 1\n"
+        "    nav: 2\n"
+        "  - crc: 0x9\n"
+        "    util: 'utility'\n"
+        "    udr: 1\n"
+        "    nav: 2\n"
+        "url:\n"
+        "  - 'http://www.example.com'\n"
+        "  - 'http://www.example2.com'"
+        ).as<loot::PluginMetadata>());
+
+    loot::PluginMetadata result = pm2.NewMetadata(pm1);
+    EXPECT_EQ("Blank - Different.esp", result.Name());
+    EXPECT_TRUE(result.Enabled());
+    EXPECT_EQ(0, result.Priority());
+    EXPECT_FALSE(result.IsPriorityExplicit());
+    EXPECT_EQ(std::set<loot::File>({
+        loot::File("Blank.esp")
+    }), result.LoadAfter());
+    EXPECT_EQ(std::set<loot::File>({
+        loot::File("Blank.esp")
+    }), result.Reqs());
+    EXPECT_EQ(std::set<loot::File>({
+        loot::File("Blank.esp")
+    }), result.Incs());
+    EXPECT_EQ(std::list<loot::Message>({
+        loot::Message(loot::Message::say, "content3"),
+    }), result.Messages());
+    EXPECT_EQ(std::set<loot::Tag>({
+        loot::Tag("Relev", false),
+        loot::Tag("Delev"),
+    }), result.Tags());
+    EXPECT_EQ(std::set<loot::PluginDirtyInfo>({
+        loot::PluginDirtyInfo(9, 0, 1, 2, "utility")
+    }), result.DirtyInfo());
+    EXPECT_EQ(std::set<loot::Location>({
+        loot::Location("http://www.example2.com")
+    }), result.Locations());
+
+    pm1.Priority(5);
+    result = pm2.NewMetadata(pm1);
+
+    EXPECT_EQ(0, result.Priority());
+    EXPECT_FALSE(result.IsPriorityExplicit());
 }
 
-TEST(PluginMetadata, Name) {
-    PluginMetadata pm;
+TEST_F(PluginMetadata, Name) {
+    loot::PluginMetadata pm;
     ASSERT_NE("Blank.esm", pm.Name());
     pm.Name("Blank.esm");
     EXPECT_EQ("Blank.esm", pm.Name());
 }
 
-TEST(PluginMetadata, Enabled) {
-    PluginMetadata pm;
+TEST_F(PluginMetadata, Enabled) {
+    loot::PluginMetadata pm;
     ASSERT_TRUE(pm.Enabled());
     pm.Enabled(false);
     EXPECT_FALSE(pm.Enabled());
 }
 
-TEST(PluginMetadata, SetPriorityExplicit) {
-    PluginMetadata pm;
+TEST_F(PluginMetadata, SetPriorityExplicit) {
+    loot::PluginMetadata pm;
     ASSERT_FALSE(pm.IsPriorityExplicit());
     pm.SetPriorityExplicit(true);
     EXPECT_TRUE(pm.IsPriorityExplicit());
 }
 
-TEST(PluginMetadata, Priority) {
-    PluginMetadata pm;
+TEST_F(PluginMetadata, Priority) {
+    loot::PluginMetadata pm;
     ASSERT_NE(10, pm.Priority());
     pm.Priority(10);
     EXPECT_EQ(10, pm.Priority());
 }
 
-TEST(PluginMetadata, LoadAfter) {
-    PluginMetadata pm;
+TEST_F(PluginMetadata, LoadAfter) {
+    loot::PluginMetadata pm;
     ASSERT_TRUE(pm.LoadAfter().empty());
     pm.LoadAfter({
         loot::File("Blank.esm")
@@ -108,8 +409,8 @@ TEST(PluginMetadata, LoadAfter) {
     }), pm.LoadAfter());
 }
 
-TEST(PluginMetadata, Reqs) {
-    PluginMetadata pm;
+TEST_F(PluginMetadata, Reqs) {
+    loot::PluginMetadata pm;
     ASSERT_TRUE(pm.Reqs().empty());
     pm.Reqs({
         loot::File("Blank.esm")
@@ -119,8 +420,8 @@ TEST(PluginMetadata, Reqs) {
     }), pm.Reqs());
 }
 
-TEST(PluginMetadata, Incs) {
-    PluginMetadata pm;
+TEST_F(PluginMetadata, Incs) {
+    loot::PluginMetadata pm;
     ASSERT_TRUE(pm.Incs().empty());
     pm.Incs({
         loot::File("Blank.esm")
@@ -130,8 +431,8 @@ TEST(PluginMetadata, Incs) {
     }), pm.Incs());
 }
 
-TEST(PluginMetadata, Messages) {
-    PluginMetadata pm;
+TEST_F(PluginMetadata, Messages) {
+    loot::PluginMetadata pm;
     ASSERT_TRUE(pm.Messages().empty());
     pm.Messages({
         loot::Message(loot::Message::say, "content")
@@ -141,8 +442,8 @@ TEST(PluginMetadata, Messages) {
     }), pm.Messages());
 }
 
-TEST(PluginMetadata, Tags) {
-    PluginMetadata pm;
+TEST_F(PluginMetadata, Tags) {
+    loot::PluginMetadata pm;
     ASSERT_TRUE(pm.Tags().empty());
     pm.Tags({
         loot::Tag("Relev")
@@ -152,8 +453,8 @@ TEST(PluginMetadata, Tags) {
     }), pm.Tags());
 }
 
-TEST(PluginMetadata, DirtyInfo) {
-    PluginMetadata pm;
+TEST_F(PluginMetadata, DirtyInfo) {
+    loot::PluginMetadata pm;
     ASSERT_TRUE(pm.DirtyInfo().empty());
     pm.DirtyInfo({
         loot::PluginDirtyInfo(5, 0, 1, 2, "utility")
@@ -163,8 +464,8 @@ TEST(PluginMetadata, DirtyInfo) {
     }), pm.DirtyInfo());
 }
 
-TEST(PluginMetadata, Locations) {
-    PluginMetadata pm;
+TEST_F(PluginMetadata, Locations) {
+    loot::PluginMetadata pm;
     ASSERT_TRUE(pm.Locations().empty());
     pm.Locations({
         loot::Location("http://www.example.com")
@@ -174,60 +475,133 @@ TEST(PluginMetadata, Locations) {
     }), pm.Locations());
 }
 
-TEST(PluginMetadata, EvalAllConditions) {
-    FAIL() << "Test is unimplemented";
+TEST_F(PluginMetadata, EvalAllConditions) {
+    loot::Game game(loot::Game::tes5);
+    game.SetGamePath(dataPath.parent_path());
+    ASSERT_NO_THROW(game.Init(false, localPath));
+
+    loot::PluginMetadata pm(YAML::Load(
+        "name: 'Blank.esp'\n"
+        "after:\n"
+        "  - name: 'Blank.esm'\n"
+        "    condition: 'file(\"Blank.esm\")'\n"
+        "req:\n"
+        "  - name: 'Blank.esm'\n"
+        "    condition: 'file(\"Blank.missing.esm\")'\n"
+        "inc:\n"
+        "  - name: 'Blank.esm'\n"
+        "    condition: 'file(\"Blank.esm\")'\n"
+        "msg:\n"
+        "  - type: say\n"
+        "    content: 'content'\n"
+        "    condition: 'condition'\n"
+        "tag:\n"
+        "  - name: Relev\n"
+        "    condition: 'file(\"Blank.missing.esm\")'\n"
+        "dirty:\n"
+        "  - crc: 0x0B5B7B90\n"
+        "    util: 'utility'\n"
+        "    udr: 1\n"
+        "    nav: 2\n"
+        "  - crc: 0xDEADBEEF\n"
+        "    util: 'utility'\n"
+        "    udr: 1\n"
+        "    nav: 2"
+        ).as<loot::PluginMetadata>());
+
+    EXPECT_ANY_THROW(pm.EvalAllConditions(game, loot::Language::english));
+
+    pm.Messages({loot::Message(loot::Message::say, "content")});
+    EXPECT_NO_THROW(pm.EvalAllConditions(game, loot::Language::english));
+    EXPECT_EQ(std::set<loot::File>({
+        loot::File("Blank.esm", "", "file(\"Blank.esm\")")
+    }), pm.LoadAfter());
+    EXPECT_TRUE(pm.Reqs().empty());
+    EXPECT_EQ(std::set<loot::File>({
+        loot::File("Blank.esm", "", "file(\"Blank.esm\")")
+    }), pm.Incs());
+    EXPECT_EQ(std::list<loot::Message>({
+        loot::Message(loot::Message::say, "content")
+    }), pm.Messages());
+    EXPECT_TRUE(pm.Tags().empty());
+    EXPECT_EQ(std::set<loot::PluginDirtyInfo>({
+        loot::PluginDirtyInfo(0x0B5B7B90, 0, 1, 2, "utility")
+    }), pm.DirtyInfo());
 }
 
-TEST(PluginMetadata, ParseAllConditions) {
-    FAIL() << "Test is unimplemented";
+TEST_F(PluginMetadata, ParseAllConditions) {
+    loot::PluginMetadata pm(YAML::Load(
+        "name: 'Blank.esp'\n"
+        "after:\n"
+        "  - name: 'Blank.esm'\n"
+        "    condition: 'file(\"Blank.esm\")'\n"
+        "req:\n"
+        "  - name: 'Blank.esm'\n"
+        "    condition: 'file(\"Blank.missing.esm\")'\n"
+        "inc:\n"
+        "  - name: 'Blank.esm'\n"
+        "    condition: 'file(\"Blank.esm\")'\n"
+        "msg:\n"
+        "  - type: say\n"
+        "    content: 'content'\n"
+        "    condition: 'condition'\n"
+        "tag:\n"
+        "  - name: Relev\n"
+        "    condition: 'file(\"Blank.missing.esm\")'"
+        ).as<loot::PluginMetadata>());
+
+    EXPECT_ANY_THROW(pm.ParseAllConditions());
+
+    pm.Messages({loot::Message(loot::Message::say, "content")});
+    EXPECT_NO_THROW(pm.ParseAllConditions());
 }
 
-TEST(PluginMetadata, HasNameOnly) {
-    PluginMetadata pm;
+TEST_F(PluginMetadata, HasNameOnly) {
+    loot::PluginMetadata pm;
     EXPECT_TRUE(pm.HasNameOnly());
 
-    pm = PluginMetadata("Blank.esp");
+    pm = loot::PluginMetadata("Blank.esp");
     EXPECT_TRUE(pm.HasNameOnly());
 
-    pm = PluginMetadata("Blank.esp");
+    pm = loot::PluginMetadata("Blank.esp");
     pm.Enabled(false);
     EXPECT_TRUE(pm.HasNameOnly());
 
-    pm = PluginMetadata("Blank.esp");
+    pm = loot::PluginMetadata("Blank.esp");
     pm.SetPriorityExplicit(true);
     EXPECT_FALSE(pm.HasNameOnly());
 
-    pm = PluginMetadata("Blank.esp");
+    pm = loot::PluginMetadata("Blank.esp");
     pm.LoadAfter({loot::File("Blank.esm")});
     EXPECT_FALSE(pm.HasNameOnly());
 
-    pm = PluginMetadata("Blank.esp");
+    pm = loot::PluginMetadata("Blank.esp");
     pm.Reqs({loot::File("Blank.esm")});
     EXPECT_FALSE(pm.HasNameOnly());
 
-    pm = PluginMetadata("Blank.esp");
+    pm = loot::PluginMetadata("Blank.esp");
     pm.Incs({loot::File("Blank.esm")});
     EXPECT_FALSE(pm.HasNameOnly());
 
-    pm = PluginMetadata("Blank.esp");
+    pm = loot::PluginMetadata("Blank.esp");
     pm.Messages({loot::Message(loot::Message::say, "content")});
     EXPECT_FALSE(pm.HasNameOnly());
 
-    pm = PluginMetadata("Blank.esp");
+    pm = loot::PluginMetadata("Blank.esp");
     pm.Tags({loot::Tag("Relev")});
     EXPECT_FALSE(pm.HasNameOnly());
 
-    pm = PluginMetadata("Blank.esp");
+    pm = loot::PluginMetadata("Blank.esp");
     pm.DirtyInfo({loot::PluginDirtyInfo(5, 0, 1, 2, "utility")});
     EXPECT_FALSE(pm.HasNameOnly());
 
-    pm = PluginMetadata("Blank.esp");
+    pm = loot::PluginMetadata("Blank.esp");
     pm.Locations({loot::Location("http://www.example.com")});
     EXPECT_FALSE(pm.HasNameOnly());
 }
 
-TEST(PluginMetadata, IsRegexPlugin) {
-    PluginMetadata pm;
+TEST_F(PluginMetadata, IsRegexPlugin) {
+    loot::PluginMetadata pm;
     EXPECT_FALSE(pm.IsRegexPlugin());
 
     pm.Name("Blank.esm");
@@ -249,8 +623,8 @@ TEST(PluginMetadata, IsRegexPlugin) {
     EXPECT_FALSE(pm.IsRegexPlugin());
 }
 
-TEST(PluginMetadata, YamlEmitter) {
-    PluginMetadata pm("Blank.esp");
+TEST_F(PluginMetadata, YamlEmitter) {
+    loot::PluginMetadata pm("Blank.esp");
     YAML::Emitter e1;
     e1 << pm;
     EXPECT_STREQ("", e1.c_str());
@@ -384,10 +758,10 @@ TEST(PluginMetadata, YamlEmitter) {
                  "  - 'http://www.example.com'", e10.c_str());
 }
 
-TEST(PluginMetadata, YamlEncode) {
+TEST_F(PluginMetadata, YamlEncode) {
     YAML::Node node;
 
-    PluginMetadata pm("Blank.esp");
+    loot::PluginMetadata pm("Blank.esp");
     node = pm;
     EXPECT_EQ("Blank.esp", node["name"].as<std::string>());
     EXPECT_FALSE(node["enabled"]);
@@ -437,16 +811,18 @@ TEST(PluginMetadata, YamlEncode) {
     EXPECT_EQ(pm.Locations(), node["url"].as<std::set<loot::Location>>());
 }
 
-TEST(PluginMetadata, YamlDecode) {
+TEST_F(PluginMetadata, YamlDecode) {
     YAML::Node node;
-    PluginMetadata pm;
+    loot::PluginMetadata pm;
 
     node = YAML::Load("Blank.esp");
-    EXPECT_ANY_THROW(node.as<PluginMetadata>());
+    EXPECT_ANY_THROW(node.as<loot::PluginMetadata>());
 
     node = YAML::Load("name: Blank.esp");
     pm = node.as<loot::PluginMetadata>();
     EXPECT_EQ("Blank.esp", pm.Name());
+    EXPECT_EQ(0, pm.Priority());
+    EXPECT_FALSE(pm.IsPriorityExplicit());
 
     node = YAML::Load("name: 'Blank.esp'\n"
                       "priority: 5\n"
@@ -497,10 +873,10 @@ TEST(PluginMetadata, YamlDecode) {
     }), pm.Locations());
 
     node = YAML::Load("scalar");
-    EXPECT_ANY_THROW(node.as<PluginMetadata>());
+    EXPECT_ANY_THROW(node.as<loot::PluginMetadata>());
 
     node = YAML::Load("[0, 1, 2]");
-    EXPECT_ANY_THROW(node.as<PluginMetadata>());
+    EXPECT_ANY_THROW(node.as<loot::PluginMetadata>());
 }
 
 #endif
