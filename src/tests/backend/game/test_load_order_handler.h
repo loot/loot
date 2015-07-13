@@ -74,7 +74,8 @@ TEST_F(LoadOrderHandler, GetActivePlugins) {
 
     std::unordered_set<std::string> expected({
         "skyrim.esm",
-        "blank.esm"
+        "blank.esm",
+        "blank - different master dependent.esp",
     });
 
     EXPECT_EQ(expected, loh.GetActivePlugins());

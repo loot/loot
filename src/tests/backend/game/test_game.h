@@ -171,9 +171,10 @@ TEST_F(Game, RefreshActivePluginsList) {
     EXPECT_NO_THROW(game.activePlugins.clear());
     EXPECT_NO_THROW(game.RefreshActivePluginsList());
     EXPECT_FALSE(game.activePlugins.empty());
-    ASSERT_EQ(2, game.activePlugins.size());
+    ASSERT_EQ(3, game.activePlugins.size());
     EXPECT_EQ(1, game.activePlugins.count("skyrim.esm"));
     EXPECT_EQ(1, game.activePlugins.count("blank.esm"));
+    EXPECT_EQ(1, game.activePlugins.count("blank - different master dependent.esp"));
 }
 
 TEST_F(Game, RedatePlugins) {
