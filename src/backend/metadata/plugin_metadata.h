@@ -77,7 +77,6 @@ namespace loot {
         std::set<PluginDirtyInfo> DirtyInfo() const;
         std::set<Location> Locations() const;
 
-        void Name(const std::string& name);
         void Enabled(const bool enabled);
         void SetPriorityExplicit(bool state);
         void Priority(const int priority);

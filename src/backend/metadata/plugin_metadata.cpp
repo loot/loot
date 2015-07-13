@@ -220,10 +220,6 @@ namespace loot {
         return _locations;
     }
 
-    void PluginMetadata::Name(const std::string& n) {
-        name = n;
-    }
-
     void PluginMetadata::Enabled(const bool e) {
         enabled = e;
     }

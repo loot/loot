@@ -370,13 +370,6 @@ TEST_F(PluginMetadata, NewMetadata) {
     EXPECT_FALSE(result.IsPriorityExplicit());
 }
 
-TEST_F(PluginMetadata, Name) {
-    loot::PluginMetadata pm;
-    ASSERT_NE("Blank.esm", pm.Name());
-    pm.Name("Blank.esm");
-    EXPECT_EQ("Blank.esm", pm.Name());
-}
-
 TEST_F(PluginMetadata, Enabled) {
     loot::PluginMetadata pm;
     ASSERT_TRUE(pm.Enabled());
@@ -604,22 +597,22 @@ TEST_F(PluginMetadata, IsRegexPlugin) {
     loot::PluginMetadata pm;
     EXPECT_FALSE(pm.IsRegexPlugin());
 
-    pm.Name("Blank.esm");
+    pm = loot::PluginMetadata("Blank.esm");
     EXPECT_FALSE(pm.IsRegexPlugin());
 
-    pm.Name("Blank[[:blank:]]- Different.esm");
+    pm = loot::PluginMetadata("Blank[[:blank:]]- Different.esm");
     EXPECT_FALSE(pm.IsRegexPlugin());
 
-    pm.Name("Blank\\.esm");
+    pm = loot::PluginMetadata("Blank\\.esm");
     EXPECT_TRUE(pm.IsRegexPlugin());
 
-    pm.Name("Blank - (Different )*Master Dependent.esm");
+    pm = loot::PluginMetadata("Blank - (Different )*Master Dependent.esm");
     EXPECT_FALSE(pm.IsRegexPlugin());
 
-    pm.Name("Blank - (Different )?Master Dependent.esm");
+    pm = loot::PluginMetadata("Blank - (Different )?Master Dependent.esm");
     EXPECT_FALSE(pm.IsRegexPlugin());
 
-    pm.Name("Blank.es(p|m)");
+    pm = loot::PluginMetadata("Blank.es(p|m)");
     EXPECT_FALSE(pm.IsRegexPlugin());
 }
 
