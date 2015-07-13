@@ -31,11 +31,118 @@ along with LOOT.  If not, see
 class PluginLoader : public SkyrimTest {};
 
 TEST_F(PluginLoader, Constructor) {
-    FAIL() << "Test is unimplemented";
+    loot::PluginLoader pl;
+    EXPECT_TRUE(pl.IsEmpty());
+    EXPECT_FALSE(pl.IsMaster());
+    EXPECT_TRUE(pl.FormIDs().empty());
+    EXPECT_TRUE(pl.Masters().empty());
+    EXPECT_EQ("", pl.Description());
+    EXPECT_EQ(0, pl.Crc());
+}
+
+TEST_F(PluginLoader, Load_CheckValidityOnly) {
+    loot::Game game(loot::Game::tes5);
+    game.SetGamePath(dataPath.parent_path());
+    ASSERT_NO_THROW(game.Init(false, localPath));
+
+    loot::PluginLoader pl;
+    EXPECT_NO_THROW(pl.Load(game, "Blank.esm", true, true));
+    EXPECT_TRUE(pl.IsEmpty());
+    EXPECT_FALSE(pl.IsMaster());
+    EXPECT_TRUE(pl.FormIDs().empty());
+    EXPECT_TRUE(pl.Masters().empty());
+    EXPECT_EQ("", pl.Description());
+    EXPECT_EQ(0, pl.Crc());
+
+    EXPECT_ANY_THROW(pl.Load(game, "NotAPlugin.esm", true, true));
+    EXPECT_TRUE(pl.IsEmpty());
+    EXPECT_FALSE(pl.IsMaster());
+    EXPECT_TRUE(pl.FormIDs().empty());
+    EXPECT_TRUE(pl.Masters().empty());
+    EXPECT_EQ("", pl.Description());
+    EXPECT_EQ(0, pl.Crc());
+
+    EXPECT_NO_THROW(pl.Load(game, "Blank.esm", false, true));
+    EXPECT_TRUE(pl.IsEmpty());
+    EXPECT_FALSE(pl.IsMaster());
+    EXPECT_TRUE(pl.FormIDs().empty());
+    EXPECT_TRUE(pl.Masters().empty());
+    EXPECT_EQ("", pl.Description());
+    EXPECT_EQ(0, pl.Crc());
+
+    EXPECT_ANY_THROW(pl.Load(game, "NotAPlugin.esm", false, true));
+    EXPECT_TRUE(pl.IsEmpty());
+    EXPECT_FALSE(pl.IsMaster());
+    EXPECT_TRUE(pl.FormIDs().empty());
+    EXPECT_TRUE(pl.Masters().empty());
+    EXPECT_EQ("", pl.Description());
+    EXPECT_EQ(0, pl.Crc());
+}
+
+TEST_F(PluginLoader, Load_HeaderOnly) {
+    loot::Game game(loot::Game::tes5);
+    game.SetGamePath(dataPath.parent_path());
+    ASSERT_NO_THROW(game.Init(false, localPath));
+
+    loot::PluginLoader pl;
+    EXPECT_NO_THROW(pl.Load(game, "Blank.esm", true, false));
+    EXPECT_FALSE(pl.IsEmpty());
+    EXPECT_TRUE(pl.IsMaster());
+    EXPECT_TRUE(pl.FormIDs().empty());
+    EXPECT_TRUE(pl.Masters().empty());
+    EXPECT_EQ("v5.0", pl.Description());
+    EXPECT_EQ(0, pl.Crc());
+
+    EXPECT_NO_THROW(pl.Load(game, "Blank - Master Dependent.esp", true, false));
+    EXPECT_FALSE(pl.IsEmpty());
+    EXPECT_FALSE(pl.IsMaster());
+    EXPECT_TRUE(pl.FormIDs().empty());
+    EXPECT_EQ(std::vector<std::string>({
+        "Blank.esm"
+    }), pl.Masters());
+    EXPECT_EQ("", pl.Description());
+    EXPECT_EQ(0, pl.Crc());
 }
 
 TEST_F(PluginLoader, Load) {
-    FAIL() << "Test is unimplemented";
+    loot::Game game(loot::Game::tes5);
+    game.SetGamePath(dataPath.parent_path());
+    ASSERT_NO_THROW(game.Init(false, localPath));
+
+    loot::PluginLoader pl;
+    EXPECT_NO_THROW(pl.Load(game, "Blank.esm", false, false));
+    EXPECT_FALSE(pl.IsEmpty());
+    EXPECT_TRUE(pl.IsMaster());
+    EXPECT_EQ(std::set<loot::FormID>({
+        loot::FormID("Blank.esm", 0xCF0),
+        loot::FormID("Blank.esm", 0xCF1),
+        loot::FormID("Blank.esm", 0xCF2),
+        loot::FormID("Blank.esm", 0xCF3),
+        loot::FormID("Blank.esm", 0xCF4),
+        loot::FormID("Blank.esm", 0xCF5),
+        loot::FormID("Blank.esm", 0xCF6),
+        loot::FormID("Blank.esm", 0xCF7),
+        loot::FormID("Blank.esm", 0xCF8),
+        loot::FormID("Blank.esm", 0xCF9),
+    }), pl.FormIDs());
+    EXPECT_TRUE(pl.Masters().empty());
+    EXPECT_EQ("v5.0", pl.Description());
+    EXPECT_EQ(0xD33753E4, pl.Crc());
+
+    EXPECT_NO_THROW(pl.Load(game, "Blank - Master Dependent.esp", false, false));
+    EXPECT_FALSE(pl.IsEmpty());
+    EXPECT_FALSE(pl.IsMaster());
+    EXPECT_EQ(std::set<loot::FormID>({
+        loot::FormID("Blank.esm", 0xCF0),
+        loot::FormID("Blank.esm", 0xCF1),
+        loot::FormID("Blank - Master Dependent.esp", 0xCE9),
+        loot::FormID("Blank - Master Dependent.esp", 0xCEA),
+    }), pl.FormIDs());
+    EXPECT_EQ(std::vector<std::string>({
+        "Blank.esm"
+    }), pl.Masters());
+    EXPECT_EQ("", pl.Description());
+    EXPECT_EQ(0x832152DC, pl.Crc());
 }
 
 #endif
