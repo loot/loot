@@ -233,7 +233,8 @@ namespace loot {
 
         try {
             PluginLoader loader;
-            return loader.Load(game, name, true, true);
+            loader.Load(game, name, true, true);
+            return true;
         }
         catch (std::exception& /*e*/) {
             BOOST_LOG_TRIVIAL(warning) << "The .es(p|m) file \"" << name << "\" is not a valid plugin.";

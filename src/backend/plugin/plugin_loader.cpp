@@ -38,7 +38,10 @@ using namespace std;
 namespace loot {
     PluginLoader::PluginLoader() : _isEmpty(true), _isMaster(false), _crc(0) {}
 
-    bool PluginLoader::Load(const Game& game, const std::string& name, const bool headerOnly, const bool checkValidityOnly) {
+    void PluginLoader::Load(const Game& game,
+                            const std::string& name,
+                            const bool headerOnly,
+                            const bool checkValidityOnly) {
         espm::File * file = nullptr;
         espm::Settings espmSettings;
 
@@ -71,7 +74,7 @@ namespace loot {
             // If only wanting to test for valid parsing, quit now.
             if (checkValidityOnly) {
                 delete file;
-                return true;
+                return;
             }
 
             BOOST_LOG_TRIVIAL(trace) << filepath.filename() << ": " << "Checking master flag.";
@@ -116,7 +119,6 @@ namespace loot {
         }
 
         BOOST_LOG_TRIVIAL(trace) << name << ": " << "Plugin loading complete.";
-        return true;
     }
 
     bool PluginLoader::IsEmpty() const {

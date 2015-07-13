@@ -38,7 +38,10 @@ namespace loot {
     public:
         PluginLoader();
 
-        bool Load(const Game& game, const std::string& name, const bool headerOnly, const bool checkValidityOnly);
+        void Load(const Game& game,
+                  const std::string& name,
+                  const bool headerOnly,
+                  const bool checkValidityOnly);
 
         bool IsEmpty() const;
         bool IsMaster() const;  //Checks master bit flag.
