@@ -97,6 +97,11 @@ namespace loot {
     std::list<Plugin> PluginSorter::Sort(Game& game,
                                          const unsigned int language,
                                          std::function<void(const std::string&)> progressCallback) {
+        // Clear existing data.
+        graph.clear();
+        indexMap.clear();
+        oldLoadOrder.clear();
+
         progressCallback(boost::locale::translate("Building plugin graph..."));
         BuildPluginGraph(game, language);
 
