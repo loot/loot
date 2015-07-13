@@ -43,7 +43,7 @@
 #include <yaml-cpp/yaml.h>
 
 namespace loot {
-    const unsigned int max_priority = 1000000;
+    const int max_priority = 1000000;
 
     class Game;
 
