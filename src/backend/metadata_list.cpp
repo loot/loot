@@ -35,6 +35,7 @@ using namespace std;
 namespace loot {
     void MetadataList::Load(const boost::filesystem::path& filepath) {
         plugins.clear();
+        regexPlugins.clear();
         messages.clear();
 
         BOOST_LOG_TRIVIAL(debug) << "Loading file: " << filepath;
@@ -74,6 +75,7 @@ namespace loot {
 
     void MetadataList::clear() {
         plugins.clear();
+        regexPlugins.clear();
         messages.clear();
     }
 
