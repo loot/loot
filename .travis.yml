@@ -69,7 +69,12 @@ before_script:
   # Fetch plugins to test with.
   - wget https://github.com/WrinklyNinja/testing-plugins/archive/master.zip
   - unzip master.zip
+  - rm master.zip
   - mv testing-plugins-master/* ./
+  # Fetch metadata to test with.
+  - wget https://github.com/loot/testing-metadata/archive/master.zip
+  - unzip master.zip
+  - rm master.zip
   # Get the 3rd-party CMake modules.
   - wget https://raw.githubusercontent.com/rpavlik/cmake-modules/master/GetGitRevisionDescription.cmake
   - wget https://raw.githubusercontent.com/rpavlik/cmake-modules/master/GetGitRevisionDescription.cmake.in

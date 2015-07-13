@@ -28,38 +28,193 @@ along with LOOT.  If not, see
 #include "backend/metadata_list.h"
 #include "tests/fixtures.h"
 
-class MetadataList : public SkyrimTest {};
+class MetadataList : public SkyrimTest {
+protected:
+    MetadataList() :
+        metadataPath("./testing-metadata-master/masterlist.yaml"),
+        savedMetadataPath("./testing-metadata-master/saved.masterlist.yaml") {}
+
+    inline virtual void SetUp() {
+        SkyrimTest::SetUp();
+
+        ASSERT_TRUE(boost::filesystem::exists(metadataPath));
+        ASSERT_FALSE(boost::filesystem::exists(savedMetadataPath));
+
+        game = loot::Game(loot::Game::tes5);
+        game.SetGamePath(dataPath.parent_path());
+        ASSERT_NO_THROW(game.Init(false, localPath));
+
+        PluginMetadataToString = [](const loot::PluginMetadata& plugin) {
+            return plugin.Name();
+        };
+    }
+
+    inline virtual void TearDown() {
+        SkyrimTest::TearDown();
+
+        ASSERT_TRUE(boost::filesystem::exists(metadataPath));
+        ASSERT_NO_THROW(boost::filesystem::remove(savedMetadataPath));
+    }
+
+    loot::Game game;
+    const boost::filesystem::path metadataPath;
+    const boost::filesystem::path savedMetadataPath;
+
+    std::function<std::string(const loot::PluginMetadata&)> PluginMetadataToString;
+};
 
 TEST_F(MetadataList, Load) {
-    FAIL() << "Test is unimplemented";
+    loot::MetadataList ml;
+    EXPECT_NO_THROW(ml.Load(metadataPath));
+    EXPECT_EQ(std::list<loot::Message>({
+        loot::Message(loot::Message::say, "A global message."),
+    }), ml.messages);
+
+    // Non-regex plugins can be outputted in any order, and regex entries can
+    // match each other, so convert the list to a set of strings for
+    // comparison.
+    std::list<loot::PluginMetadata> result(ml.Plugins());
+    std::set<std::string> names;
+    std::transform(result.begin(),
+                   result.end(),
+                   std::insert_iterator<std::set<std::string>>(names, names.begin()),
+                   PluginMetadataToString);
+    EXPECT_EQ(std::set<std::string>({
+        "Blank.esm",
+        "Blank.esp",
+        "Blank.+\\.esp",
+        "Blank.+(Different)?.*\\.esp",
+    }), names);
+
+    EXPECT_ANY_THROW(ml.Load("NotAPlugin.esm"));
+    EXPECT_TRUE(ml.messages.empty());
+    EXPECT_TRUE(ml.Plugins().empty());
+
+    // Fill the list again.
+    ASSERT_NO_THROW(ml.Load(metadataPath));
+
+    EXPECT_ANY_THROW(ml.Load("Blank.missing.esm"));
+    EXPECT_TRUE(ml.messages.empty());
+    EXPECT_TRUE(ml.Plugins().empty());
 }
 
 TEST_F(MetadataList, Save) {
-    FAIL() << "Test is unimplemented";
+    loot::MetadataList ml;
+    ASSERT_NO_THROW(ml.Load(metadataPath));
+
+    EXPECT_NO_THROW(ml.Save(savedMetadataPath));
+    EXPECT_TRUE(boost::filesystem::exists(savedMetadataPath));
+    EXPECT_NO_THROW(ml.Load(savedMetadataPath));
+
+    EXPECT_EQ(std::list<loot::Message>({
+        loot::Message(loot::Message::say, "A global message."),
+    }), ml.messages);
+
+    // Non-regex plugins can be outputted in any order, and regex entries can
+    // match each other, so convert the list to a set of strings for
+    // comparison.
+    std::list<loot::PluginMetadata> result(ml.Plugins());
+    std::set<std::string> names;
+    std::transform(result.begin(),
+                   result.end(),
+                   std::insert_iterator<std::set<std::string>>(names, names.begin()),
+                   PluginMetadataToString);
+    EXPECT_EQ(std::set<std::string>({
+        "Blank.esm",
+        "Blank.esp",
+        "Blank.+\\.esp",
+        "Blank.+(Different)?.*\\.esp",
+    }), names);
 }
 
 TEST_F(MetadataList, clear) {
-    FAIL() << "Test is unimplemented";
-}
+    loot::MetadataList ml;
+    ASSERT_NO_THROW(ml.Load(metadataPath));
+    ASSERT_FALSE(ml.messages.empty());
+    ASSERT_FALSE(ml.Plugins().empty());
 
-TEST_F(MetadataList, Plugins) {
-    FAIL() << "Test is unimplemented";
+    ml.clear();
+    EXPECT_TRUE(ml.messages.empty());
+    EXPECT_TRUE(ml.Plugins().empty());
 }
 
 TEST_F(MetadataList, FindPlugin) {
-    FAIL() << "Test is unimplemented";
+    loot::MetadataList ml;
+    ASSERT_NO_THROW(ml.Load(metadataPath));
+
+    loot::PluginMetadata pm = ml.FindPlugin(loot::PluginMetadata("Blank - Different.esm"));
+    EXPECT_EQ("Blank - Different.esm", pm.Name());
+    EXPECT_TRUE(pm.HasNameOnly());
+
+    pm = ml.FindPlugin(loot::PluginMetadata("Blank - Different.esp"));
+    EXPECT_EQ("Blank - Different.esp", pm.Name());
+    EXPECT_EQ(std::set<loot::File>({
+        loot::File("Blank.esm"),
+    }), pm.LoadAfter());
+    EXPECT_EQ(std::set<loot::File>({
+        loot::File("Blank.esp"),
+    }), pm.Incs());
 }
 
 TEST_F(MetadataList, AddPlugin) {
-    FAIL() << "Test is unimplemented";
+    loot::MetadataList ml;
+    ASSERT_NO_THROW(ml.Load(metadataPath));
+
+    loot::PluginMetadata pm = ml.FindPlugin(loot::PluginMetadata("Blank - Different.esm"));
+    ASSERT_EQ("Blank - Different.esm", pm.Name());
+    ASSERT_TRUE(pm.HasNameOnly());
+
+    pm.Priority(1000);
+    ml.AddPlugin(pm);
+    pm = ml.FindPlugin(pm);
+    EXPECT_EQ("Blank - Different.esm", pm.Name());
+    EXPECT_EQ(1000, pm.Priority());
+
+    pm = loot::PluginMetadata(".+Dependent\\.esp");
+    pm.Priority(-10);
+    ml.AddPlugin(pm);
+    pm = ml.FindPlugin(loot::PluginMetadata("Blank - Plugin Dependent.esp"));
+    EXPECT_EQ(-10, pm.Priority());
 }
 
 TEST_F(MetadataList, ErasePlugin) {
-    FAIL() << "Test is unimplemented";
+    loot::MetadataList ml;
+    ASSERT_NO_THROW(ml.Load(metadataPath));
+
+    loot::PluginMetadata pm = ml.FindPlugin(loot::PluginMetadata("Blank.esp"));
+    ASSERT_EQ("Blank.esp", pm.Name());
+    ASSERT_FALSE(pm.HasNameOnly());
+
+    ml.ErasePlugin(pm);
+    pm = ml.FindPlugin(pm);
+    ASSERT_EQ("Blank.esp", pm.Name());
+    ASSERT_TRUE(pm.HasNameOnly());
 }
 
 TEST_F(MetadataList, EvalAllConditions) {
-    FAIL() << "Test is unimplemented";
+    loot::MetadataList ml;
+    ASSERT_NO_THROW(ml.Load(metadataPath));
+
+    loot::PluginMetadata pm = ml.FindPlugin(loot::PluginMetadata("Blank.esm"));
+    ASSERT_EQ(std::list<loot::Message>({
+        loot::Message(loot::Message::warn, "This is a warning."),
+        loot::Message(loot::Message::say, "This message should be removed when evaluating conditions."),
+    }), pm.Messages());
+
+    pm = ml.FindPlugin(loot::PluginMetadata("Blank.esp"));
+    ASSERT_EQ("Blank.esp", pm.Name());
+    ASSERT_FALSE(pm.HasNameOnly());
+
+    EXPECT_NO_THROW(ml.EvalAllConditions(game, loot::Language::english));
+
+    pm = ml.FindPlugin(loot::PluginMetadata("Blank.esm"));
+    EXPECT_EQ(std::list<loot::Message>({
+        loot::Message(loot::Message::warn, "This is a warning."),
+    }), pm.Messages());
+
+    pm = ml.FindPlugin(loot::PluginMetadata("Blank.esp"));
+    EXPECT_EQ("Blank.esp", pm.Name());
+    EXPECT_TRUE(pm.HasNameOnly());
 }
 
 #endif
