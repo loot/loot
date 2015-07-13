@@ -242,6 +242,9 @@ protected:
     inline virtual void SetUp() {
         GameTest::SetUp();
 
+        ASSERT_TRUE(boost::filesystem::exists(dataPath / "Blank.bsa"));
+        ASSERT_TRUE(boost::filesystem::exists(dataPath / "Blank.bsl"));
+
         // Can't change Skyrim's main master file, so mock it.
         ASSERT_FALSE(boost::filesystem::exists(dataPath / "Skyrim.esm"));
         ASSERT_NO_THROW(boost::filesystem::copy_file(dataPath / "Blank.esm", dataPath / "Skyrim.esm"));
