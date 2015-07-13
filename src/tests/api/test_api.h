@@ -181,24 +181,24 @@ TEST(GameHandleDestroyTest, HandledNullInput) {
 
 TEST_F(OblivionAPIOperationsTest, UpdateMasterlist) {
     bool updated;
-    EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(NULL, masterlistPath.string().c_str(), "https://github.com/loot/oblivion.git", "master", &updated));
-    EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(db, NULL, "https://github.com/loot/oblivion.git", "master", &updated));
+    EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(NULL, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", "master", &updated));
+    EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(db, NULL, "https://github.com/loot/testing-metadata.git", "master", &updated));
     EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(db, masterlistPath.string().c_str(), NULL, "master", &updated));
-    EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/oblivion.git", NULL, &updated));
-    EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/oblivion.git", "master", NULL));
+    EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", NULL, &updated));
+    EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", "master", NULL));
 
-    EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(db, ";//\?", "https://github.com/loot/oblivion.git", "master", &updated));
-    EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(db, "", "https://github.com/loot/oblivion.git", "master", &updated));
+    EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(db, ";//\?", "https://github.com/loot/testing-metadata.git", "master", &updated));
+    EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(db, "", "https://github.com/loot/testing-metadata.git", "master", &updated));
     EXPECT_EQ(loot_error_git_error, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/oblivion-does-not-exist.git", "master", &updated));
-    EXPECT_EQ(loot_error_git_error, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/oblivion.git", "missing-branch", &updated));
-    EXPECT_EQ(loot_error_git_error, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/oblivion.git", "", &updated));
+    EXPECT_EQ(loot_error_git_error, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", "missing-branch", &updated));
+    EXPECT_EQ(loot_error_git_error, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", "", &updated));
 
     // Test actual masterlist update.
-    EXPECT_EQ(loot_ok, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/oblivion.git", "master", &updated));
+    EXPECT_EQ(loot_ok, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", "master", &updated));
     EXPECT_TRUE(updated);
 
     // Test with an up-to-date masterlist.
-    EXPECT_EQ(loot_ok, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/oblivion.git", "master", &updated));
+    EXPECT_EQ(loot_ok, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", "master", &updated));
     EXPECT_FALSE(updated);
 }
 
@@ -227,7 +227,7 @@ TEST_F(OblivionAPIOperationsTest, GetMasterlistRevision) {
 
     // Update the masterlist and test.
     bool updated;
-    ASSERT_EQ(loot_ok, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/oblivion.git", "master", &updated));
+    ASSERT_EQ(loot_ok, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", "master", &updated));
     ASSERT_TRUE(updated);
     EXPECT_EQ(loot_ok, loot_get_masterlist_revision(db, masterlistPath.string().c_str(), false, &revisionID, &revisionDate, &isModified));
     EXPECT_STRNE(NULL, revisionID);
@@ -261,7 +261,7 @@ TEST_F(OblivionAPIOperationsTest, LoadLists) {
 
     EXPECT_EQ(loot_error_path_not_found, loot_load_lists(db, masterlistPath.string().c_str(), NULL));
     bool updated;
-    ASSERT_EQ(loot_ok, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/oblivion.git", "master", &updated));
+    ASSERT_EQ(loot_ok, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", "master", &updated));
     EXPECT_EQ(loot_error_path_not_found, loot_load_lists(db, masterlistPath.string().c_str(), userlistPath.string().c_str()));
 
     ASSERT_NO_THROW(boost::filesystem::copy(masterlistPath, userlistPath));
@@ -274,7 +274,7 @@ TEST_F(SkyrimAPIOperationsTest, LoadLists) {
 
     EXPECT_EQ(loot_error_path_not_found, loot_load_lists(db, masterlistPath.string().c_str(), NULL));
     bool updated;
-    ASSERT_EQ(loot_ok, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/skyrim.git", "master", &updated));
+    ASSERT_EQ(loot_ok, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", "master", &updated));
     EXPECT_EQ(loot_error_path_not_found, loot_load_lists(db, masterlistPath.string().c_str(), userlistPath.string().c_str()));
 
     ASSERT_NO_THROW(boost::filesystem::copy(masterlistPath, userlistPath));
@@ -301,7 +301,7 @@ TEST_F(OblivionAPIOperationsTest, EvalLists) {
 
     // Now test different languages with a list loaded.
     bool updated;
-    ASSERT_EQ(loot_ok, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/oblivion.git", "master", &updated));
+    ASSERT_EQ(loot_ok, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", "master", &updated));
     ASSERT_EQ(loot_ok, loot_load_lists(db, masterlistPath.string().c_str(), NULL));
     EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_any));
     EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_english));
@@ -336,7 +336,7 @@ TEST_F(SkyrimAPIOperationsTest, EvalLists) {
 
     // Now test different languages with a list loaded.
     bool updated;
-    ASSERT_EQ(loot_ok, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/skyrim.git", "master", &updated));
+    ASSERT_EQ(loot_ok, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", "master", &updated));
     ASSERT_EQ(loot_ok, loot_load_lists(db, masterlistPath.string().c_str(), NULL));
     EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_any));
     EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_english));
@@ -646,7 +646,7 @@ TEST_F(OblivionAPIOperationsTest, WriteMinimalList) {
 
     // Check that Bash Tag removals get outputted correctly.
     bool updated;
-    ASSERT_EQ(loot_ok, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/oblivion.git", "master", &updated));
+    ASSERT_EQ(loot_ok, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", "master", &updated));
     EXPECT_EQ(loot_ok, loot_load_lists(db, masterlistPath.string().c_str(), NULL));
     EXPECT_EQ(loot_ok, loot_write_minimal_list(db, outputFile.c_str(), false));
 
