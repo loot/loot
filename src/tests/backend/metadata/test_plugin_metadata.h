@@ -499,7 +499,7 @@ TEST_F(PluginMetadata, EvalAllConditions) {
         "  - name: Relev\n"
         "    condition: 'file(\"Blank.missing.esm\")'\n"
         "dirty:\n"
-        "  - crc: 0x0B5B7B90\n"
+        "  - crc: 0xE12EFAAA\n"
         "    util: 'utility'\n"
         "    udr: 1\n"
         "    nav: 2\n"
@@ -525,7 +525,7 @@ TEST_F(PluginMetadata, EvalAllConditions) {
     }), pm.Messages());
     EXPECT_TRUE(pm.Tags().empty());
     EXPECT_EQ(std::set<loot::PluginDirtyInfo>({
-        loot::PluginDirtyInfo(0x0B5B7B90, 0, 1, 2, "utility")
+        loot::PluginDirtyInfo(0xE12EFAAA, 0, 1, 2, "utility")
     }), pm.DirtyInfo());
 }
 
