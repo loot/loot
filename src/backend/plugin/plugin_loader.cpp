@@ -36,7 +36,7 @@
 using namespace std;
 
 namespace loot {
-    PluginLoader::PluginLoader() : _isMaster(false), _crc(0) {}
+    PluginLoader::PluginLoader() : _isEmpty(true), _isMaster(false), _crc(0) {}
 
     bool PluginLoader::Load(const Game& game, const std::string& name, const bool headerOnly, const bool checkValidityOnly) {
         espm::File * file = nullptr;
