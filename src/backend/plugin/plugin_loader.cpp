@@ -45,6 +45,14 @@ namespace loot {
         espm::File * file = nullptr;
         espm::Settings espmSettings;
 
+        // Clear existing data.
+        _isEmpty = true;
+        _isMaster = false;
+        _formIDs.clear();
+        _masters.clear();
+        _description.clear();
+        _crc = 0;
+
         // Get data from file contents using libespm.
         BOOST_LOG_TRIVIAL(trace) << name << ": " << "Opening with libespm...";
         boost::filesystem::path filepath = game.DataPath() / name;
