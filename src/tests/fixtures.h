@@ -269,7 +269,8 @@ protected:
         // Set Skyrim's active plugins to a known list before running the test.
         loot::ofstream activePlugins(localPath / "plugins.txt");
         activePlugins
-            << "Blank.esm" << std::endl;
+            << "Blank.esm" << std::endl
+            << "Blank - Different Master Dependent.esp" << std::endl;
         activePlugins.close();
     }
 
