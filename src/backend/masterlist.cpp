@@ -76,10 +76,6 @@ namespace loot {
         out << boost::locale::as::ftime("%Y-%m-%d") << dateTime;
         info.date = out.str();
 
-        // Free object memory.
-        git_object_free(git.obj);
-        git.obj = nullptr;
-
         BOOST_LOG_TRIVIAL(trace) << "Diffing masterlist HEAD and working copy.";
         if (IsFileDifferent(path.parent_path(), path.filename().string())) {
             info.revision += string(" ") + lc::translate("(edited)").str();

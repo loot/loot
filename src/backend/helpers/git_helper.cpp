@@ -169,14 +169,6 @@ namespace loot {
         payload.fileToFind = filename.c_str();
         git.Call(git_diff_foreach(git.diff, &git.diff_file_cb, NULL, NULL, NULL, &payload));
 
-        // Clean up memory
-        git_object_free(git.obj);
-        git.obj = nullptr;
-        git_tree_free(git.tree);
-        git.tree = nullptr;
-        git_diff_free(git.diff);
-        git.diff = nullptr;
-
         return payload.fileFound;
     }
 }
