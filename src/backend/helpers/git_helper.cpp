@@ -128,8 +128,10 @@ namespace loot {
     void GitHelper::FixRepoPermissions(const boost::filesystem::path& path) {
         BOOST_LOG_TRIVIAL(trace) << "Recursively setting write permission on directory: " << path;
         for (fs::recursive_directory_iterator it(path); it != fs::recursive_directory_iterator(); ++it) {
-            BOOST_LOG_TRIVIAL(trace) << "Setting write permission for: " << it->path();
-            fs::permissions(it->path(), fs::add_perms | fs::owner_write | fs::group_write | fs::others_write);
+            if ((it->status().permissions() & (fs::owner_write | fs::group_write | fs::others_write)) == 0) {
+                BOOST_LOG_TRIVIAL(trace) << "Setting write permission for: " << it->path();
+                fs::permissions(it->path(), fs::add_perms | fs::owner_write);
+            }
         }
     }
 
