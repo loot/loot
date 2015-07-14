@@ -190,8 +190,9 @@ TEST_F(OblivionAPIOperationsTest, UpdateMasterlist) {
     EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(db, ";//\?", "https://github.com/loot/testing-metadata.git", "master", &updated));
     EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(db, "", "https://github.com/loot/testing-metadata.git", "master", &updated));
     EXPECT_EQ(loot_error_git_error, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/oblivion-does-not-exist.git", "master", &updated));
+    EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(db, masterlistPath.string().c_str(), "", "master", &updated));
     EXPECT_EQ(loot_error_git_error, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", "missing-branch", &updated));
-    EXPECT_EQ(loot_error_git_error, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", "", &updated));
+    EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", "", &updated));
 
     // Test actual masterlist update.
     EXPECT_EQ(loot_ok, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", "master", &updated));
