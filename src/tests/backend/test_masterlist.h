@@ -28,22 +28,136 @@ along with LOOT.  If not, see
 #include "backend/masterlist.h"
 #include "tests/fixtures.h"
 
-class Masterlist : public SkyrimTest {};
+class Masterlist : public SkyrimTest {
+protected:
+    inline virtual void SetUp() {
+        SkyrimTest::SetUp();
 
-TEST_F(Masterlist, Load) {
-    FAIL() << "Test is unimplemented";
+        // 'bad cast' exceptions are thrown for some reason unless a game is
+        // initialised.
+        loot::Game game(loot::Game::tes5);
+        game.SetGamePath(dataPath.parent_path());
+        ASSERT_NO_THROW(game.Init(false, localPath));
+    }
+};
+
+TEST_F(Masterlist, Update_Game) {
+    loot::Game game(loot::Game::tes5);
+    game.SetGamePath(dataPath.parent_path());
+    game.SetRepoURL("https://github.com/loot/testing-metadata.git");
+    game.SetRepoBranch("master");
+    ASSERT_NO_THROW(game.Init(false, localPath));
+
+    // This may fail on Windows if a 'real' LOOT install is also present.
+    loot::Masterlist masterlist;
+    EXPECT_TRUE(masterlist.Update(game));
+    EXPECT_TRUE(boost::filesystem::exists(game.MasterlistPath()));
+
+    EXPECT_FALSE(masterlist.Update(game));
+    EXPECT_TRUE(boost::filesystem::exists(game.MasterlistPath()));
 }
 
-TEST_F(Masterlist, Update) {
-    FAIL() << "Test is unimplemented";
+TEST_F(Masterlist, Update_NonGame_InvalidPath) {
+    loot::Masterlist masterlist;
+    EXPECT_ANY_THROW(masterlist.Update(";//\?",
+        "https://github.com/loot/testing-metadata.git",
+        "master"));
 }
 
-TEST_F(Masterlist, GetRevision) {
-    FAIL() << "Test is unimplemented";
+TEST_F(Masterlist, Update_NonGame_EmptyPath) {
+    loot::Masterlist masterlist;
+    EXPECT_ANY_THROW(masterlist.Update("",
+        "https://github.com/loot/testing-metadata.git",
+        "master"));
 }
 
-TEST_F(Masterlist, GetDate) {
-    FAIL() << "Test is unimplemented";
+TEST_F(Masterlist, Update_NonGame_InvalidBranch) {
+    loot::Masterlist masterlist;
+    EXPECT_ANY_THROW(masterlist.Update(masterlistPath,
+        "https://github.com/loot/testing-metadata.git",
+        "missing-branch"));
+}
+
+TEST_F(Masterlist, Update_NonGame_EmptyBranch) {
+    loot::Masterlist masterlist;
+    EXPECT_ANY_THROW(masterlist.Update(masterlistPath,
+        "https://github.com/loot/testing-metadata.git",
+        ""));
+}
+
+TEST_F(Masterlist, Update_NonGame_InvalidUrl) {
+    loot::Masterlist masterlist;
+    EXPECT_ANY_THROW(masterlist.Update(masterlistPath,
+        "https://github.com/loot/does-not-exist.git",
+        "master"));
+}
+
+TEST_F(Masterlist, Update_NonGame_EmptyUrl) {
+    loot::Masterlist masterlist;
+    EXPECT_ANY_THROW(masterlist.Update(masterlistPath,
+        "",
+        "master"));
+}
+
+TEST_F(Masterlist, Update_NonGame) {
+    loot::Masterlist masterlist;
+    EXPECT_TRUE(masterlist.Update(masterlistPath,
+        "https://github.com/loot/testing-metadata.git",
+        "master"));
+
+    EXPECT_FALSE(masterlist.Update(masterlistPath,
+        "https://github.com/loot/testing-metadata.git",
+        "master"));
+}
+
+TEST_F(Masterlist, GetInfo_NoMasterlist) {
+    loot::Masterlist masterlist;
+    EXPECT_ANY_THROW(masterlist.GetInfo(masterlistPath, false));
+}
+
+TEST_F(Masterlist, GetInfo_NoRepository) {
+    ASSERT_NO_THROW(boost::filesystem::copy("./testing-metadata-master/masterlist.yaml", masterlistPath));
+
+    loot::Masterlist masterlist;
+    EXPECT_ANY_THROW(masterlist.GetInfo(masterlistPath, false));
+}
+
+TEST_F(Masterlist, GetInfo_LongID) {
+    loot::Masterlist masterlist;
+    ASSERT_TRUE(masterlist.Update(masterlistPath,
+        "https://github.com/loot/testing-metadata.git",
+        "master"));
+
+    loot::Masterlist::Info info = masterlist.GetInfo(masterlistPath, false);
+    EXPECT_EQ(40, info.revision.length());
+    EXPECT_EQ(10, info.date.length());
+}
+
+TEST_F(Masterlist, GetInfo_ShortID) {
+    loot::Masterlist masterlist;
+    ASSERT_TRUE(masterlist.Update(masterlistPath,
+        "https://github.com/loot/testing-metadata.git",
+        "master"));
+
+    loot::Masterlist::Info info = masterlist.GetInfo(masterlistPath, true);
+    EXPECT_GE((unsigned)40, info.revision.length());
+    EXPECT_LE((unsigned)7, info.revision.length());
+    EXPECT_EQ(10, info.date.length());
+}
+
+TEST_F(Masterlist, GetInfo_Edited) {
+    loot::Masterlist masterlist;
+    ASSERT_TRUE(masterlist.Update(masterlistPath,
+        "https://github.com/loot/testing-metadata.git",
+        "master"));
+    loot::ofstream out(masterlistPath);
+    out.close();
+
+    loot::Masterlist::Info info = masterlist.GetInfo(masterlistPath, false);
+    EXPECT_EQ(49, info.revision.length());
+    EXPECT_EQ(" (edited)", info.revision.substr(40));
+    EXPECT_EQ(19, info.date.length());
+    EXPECT_EQ(" (edited)", info.date.substr(10));
 }
 
 #endif
