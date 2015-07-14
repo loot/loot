@@ -88,6 +88,7 @@ namespace loot {
             function =
                 ("file(" > filePath > ')')[phoenix::bind(&ConditionGrammar::CheckFile, this, qi::labels::_val, qi::labels::_1)]
                 | ("regex(" > quotedStr > ')')[phoenix::bind(&ConditionGrammar::CheckRegex, this, qi::labels::_val, qi::labels::_1)]
+                | ("many(" > quotedStr > ')')[phoenix::bind(&ConditionGrammar::CheckMany, this, qi::labels::_val, qi::labels::_1)]
                 | ("checksum(" > filePath > ',' > qi::hex > ')')[phoenix::bind(&ConditionGrammar::CheckSum, this, qi::labels::_val, qi::labels::_1, qi::labels::_2)]
                 | ("version(" > filePath > ',' > quotedStr > ',' > comparator > ')')[phoenix::bind(&ConditionGrammar::CheckVersion, this, qi::labels::_val, qi::labels::_1, qi::labels::_2, qi::labels::_3)]
                 | ("active(" > filePath > ')')[phoenix::bind(&ConditionGrammar::CheckActive, this, qi::labels::_val, qi::labels::_1)]
@@ -171,10 +172,8 @@ namespace loot {
                 BOOST_LOG_TRIVIAL(trace) << "The file does not exist.";
         }
 
-        void CheckRegex(bool& result, const std::string& regexStr) {
-            if (_parseOnly)
-                return;
-            result = false;
+        // Split a regex string into the non-regex filesystem parent path, and the regex filename.
+        std::pair<boost::filesystem::path, std::regex> SplitRegex(const std::string& regex) const {
             //Can't support a regex string where all path components may be regex, since this could
             //lead to massive scanning if an unfortunately-named directory is encountered.
             //As such, only the filename portion can be a regex. Need to separate that from the rest
@@ -185,14 +184,10 @@ namespace loot {
             In C++ string literals, the backslash must be escaped once more to give "\\\\".
             Split the regex with another regex! */
 
-            //Need to also check if the regex is for a safe path.
-
-            BOOST_LOG_TRIVIAL(trace) << "Checking to see if any files matching the regex \"" << regexStr << "\" exist.";
-
             std::regex sepReg("/|(\\\\\\\\)", std::regex::ECMAScript | std::regex::icase);
 
             std::vector<std::string> components;
-            std::sregex_token_iterator it(regexStr.begin(), regexStr.end(), sepReg, -1);
+            std::sregex_token_iterator it(regex.begin(), regex.end(), sepReg, -1);
             std::sregex_token_iterator itend;
             for (; it != itend; ++it) {
                 components.push_back(*it);
@@ -201,26 +196,17 @@ namespace loot {
             std::string filename = components.back();
             components.pop_back();
 
-            std::string parent;
+            boost::filesystem::path parent;
             for (std::vector<std::string>::const_iterator it = components.begin(), endIt = components.end()--; it != endIt; ++it) {
                 if (*it == ".")
                     continue;
 
-                parent += *it + '/';
+                parent += *it;
             }
 
-            if (boost::contains(parent, "../../")) {
+            if (!IsSafePath(parent.string())) {
                 BOOST_LOG_TRIVIAL(error) << "Invalid folder path: " << parent;
-                throw loot::error(loot::error::invalid_args, boost::locale::translate("Invalid folder path:").str() + " " + parent);
-            }
-
-            //Now we have a valid parent path and a regex filename. Check that
-            //the parent path exists and is a directory.
-
-            boost::filesystem::path parent_path = _game->DataPath() / parent;
-            if (!boost::filesystem::exists(parent_path) || !boost::filesystem::is_directory(parent_path)) {
-                BOOST_LOG_TRIVIAL(trace) << "The path \"" << parent_path << "\" does not exist or is not a directory.";
-                return;
+                throw loot::error(loot::error::invalid_args, boost::locale::translate("Invalid folder path:").str() + " " + parent.string());
             }
 
             std::regex reg;
@@ -232,13 +218,63 @@ namespace loot {
                 throw loot::error(loot::error::invalid_args, boost::locale::translate("Invalid regex string:").str() + " " + filename);
             }
 
+            return std::pair<boost::filesystem::path, std::regex>(parent, reg);
+        }
+
+        void CheckRegex(bool& result, const std::string& regexStr) const {
+            if (_parseOnly)
+                return;
+            result = false;
+
+            BOOST_LOG_TRIVIAL(trace) << "Checking to see if any files matching the regex \"" << regexStr << "\" exist.";
+
+            std::pair<boost::filesystem::path, std::regex> pathRegex = SplitRegex(regexStr);
+
+            //Now we have a valid parent path and a regex filename. Check that
+            //the parent path exists and is a directory.
+
+            boost::filesystem::path parent_path = _game->DataPath() / pathRegex.first;
+            if (!boost::filesystem::exists(parent_path) || !boost::filesystem::is_directory(parent_path)) {
+                BOOST_LOG_TRIVIAL(trace) << "The path \"" << parent_path << "\" does not exist or is not a directory.";
+                return;
+            }
+
             for (boost::filesystem::directory_iterator itr(parent_path); itr != boost::filesystem::directory_iterator(); ++itr) {
-                if (std::regex_match(itr->path().filename().string(), reg)) {
+                if (std::regex_match(itr->path().filename().string(), pathRegex.second)) {
                     result = true;
                     BOOST_LOG_TRIVIAL(trace) << "Matching file found: " << itr->path();
                     return;
                 }
             }
+        }
+
+        void CheckMany(bool& result, const std::string& regexStr) const {
+            if (_parseOnly)
+                return;
+            result = false;
+
+            BOOST_LOG_TRIVIAL(trace) << "Checking to see if more than one file matching the regex \"" << regexStr << "\" exist.";
+
+            std::pair<boost::filesystem::path, std::regex> pathRegex = SplitRegex(regexStr);
+
+            //Now we have a valid parent path and a regex filename. Check that
+            //the parent path exists and is a directory.
+
+            boost::filesystem::path parent_path = _game->DataPath() / pathRegex.first;
+            if (!boost::filesystem::exists(parent_path) || !boost::filesystem::is_directory(parent_path)) {
+                BOOST_LOG_TRIVIAL(trace) << "The path \"" << parent_path << "\" does not exist or is not a directory.";
+                return;
+            }
+
+            size_t count = 0;
+            for (boost::filesystem::directory_iterator itr(parent_path); itr != boost::filesystem::directory_iterator(); ++itr) {
+                if (std::regex_match(itr->path().filename().string(), pathRegex.second)) {
+                    ++count;
+                    BOOST_LOG_TRIVIAL(trace) << "Matching file found: " << itr->path();
+                }
+            }
+
+            result = count > 1;
         }
 
         void CheckSum(bool& result, const std::string& file, const uint32_t checksum) {
