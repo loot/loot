@@ -515,9 +515,9 @@ LOOT_API unsigned int loot_get_masterlist_revision(loot_db db,
 
     bool edited = false;
     try {
-        loot::Masterlist masterlist;
-        std::string id = masterlist.GetRevision(masterlistPath, getShortID);
-        std::string date = masterlist.GetDate(masterlistPath);
+        loot::Masterlist::Info info = loot::Masterlist::GetInfo(masterlistPath, getShortID);
+        std::string id = info.revision;
+        std::string date = info.date;
 
         if (boost::ends_with(id, " (edited)")) {
             id = id.substr(0, id.length() - 9);

@@ -35,23 +35,10 @@ namespace fs = boost::filesystem;
 namespace lc = boost::locale;
 
 namespace loot {
-    std::string Masterlist::GetRevision(const boost::filesystem::path& path, bool shortID) {
-        if (revision.empty() || (shortID && revision.length() == 40) || (!shortID && revision.length() < 40))
-            GetGitInfo(path, shortID);
-
-        return revision;
-    }
-
-    std::string Masterlist::GetDate(const boost::filesystem::path& path) {
-        if (date.empty())
-            GetGitInfo(path, true);
-
-        return date;
-    }
-
-    void Masterlist::GetGitInfo(const boost::filesystem::path& path, bool shortID) {
+    Masterlist::Info Masterlist::GetInfo(const boost::filesystem::path& path, bool shortID) {
         // Compare HEAD and working copy, and get revision info.
         GitHelper git;
+        Info info;
         git.SetErrorMessage((boost::format(lc::translate("An error occurred while trying to read the local masterlist's version. If this error happens again, try deleting the \".git\" folder in %1%.")) % path.parent_path().string()).str());
 
         if (!fs::exists(path)) {
@@ -73,11 +60,11 @@ namespace loot {
         BOOST_LOG_TRIVIAL(trace) << "Generating hex string for Git object ID.";
         if (shortID) {
             git.Call(git_object_short_id(&git.buf, git.obj));
-            revision = git.buf.ptr;
+            info.revision = git.buf.ptr;
         }
         else {
             char c_rev[GIT_OID_HEXSZ + 1];
-            revision = git_oid_tostr(c_rev, GIT_OID_HEXSZ + 1, git_object_id(git.obj));
+            info.revision = git_oid_tostr(c_rev, GIT_OID_HEXSZ + 1, git_object_id(git.obj));
         }
 
         BOOST_LOG_TRIVIAL(trace) << "Getting date for Git object.";
@@ -87,7 +74,7 @@ namespace loot {
         boost::locale::date_time dateTime(time);
         stringstream out;
         out << boost::locale::as::ftime("%Y-%m-%d") << dateTime;
-        date = out.str();
+        info.date = out.str();
 
         // Free object memory.
         git_object_free(git.obj);
@@ -95,9 +82,11 @@ namespace loot {
 
         BOOST_LOG_TRIVIAL(trace) << "Diffing masterlist HEAD and working copy.";
         if (IsFileDifferent(path.parent_path(), path.filename().string())) {
-            revision += string(" ") + lc::translate("(edited)").str();
-            date += string(" ") + lc::translate("(edited)").str();
+            info.revision += string(" ") + lc::translate("(edited)").str();
+            info.date += string(" ") + lc::translate("(edited)").str();
         }
+
+        return info;
     }
 
     bool Masterlist::Update(const Game& game) {
@@ -344,6 +333,7 @@ namespace loot {
         git.SetErrorMessage((boost::format(lc::translate("An error occurred while trying to read information on the updated masterlist. If this error happens again, try deleting the \".git\" folder in %1%.")) % repo_path.string()).str());
         do {
             // Get some descriptive info about what was checked out.
+            string revision, date;
 
             BOOST_LOG_TRIVIAL(trace) << "Getting the Git object for HEAD.";
             git.Call(git_repository_head(&git.ref, git.repo));

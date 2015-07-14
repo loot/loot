@@ -683,8 +683,9 @@ namespace loot {
 
             // Store the masterlist revision and date.
             try {
-                gameNode["masterlist"]["revision"] = _lootState.CurrentGame().masterlist.GetRevision(_lootState.CurrentGame().MasterlistPath(), true);
-                gameNode["masterlist"]["date"] = _lootState.CurrentGame().masterlist.GetDate(_lootState.CurrentGame().MasterlistPath());
+                Masterlist::Info info = _lootState.CurrentGame().masterlist.GetInfo(_lootState.CurrentGame().MasterlistPath(), true);
+                gameNode["masterlist"]["revision"] = info.revision;
+                gameNode["masterlist"]["date"] = info.date;
             }
             catch (error &e) {
                 gameNode["masterlist"]["revision"] = e.what();
@@ -843,8 +844,9 @@ namespace loot {
 
                 // Store the masterlist revision and date.
                 try {
-                    gameNode["masterlist"]["revision"] = _lootState.CurrentGame().masterlist.GetRevision(_lootState.CurrentGame().MasterlistPath(), true);
-                    gameNode["masterlist"]["date"] = _lootState.CurrentGame().masterlist.GetDate(_lootState.CurrentGame().MasterlistPath());
+                    Masterlist::Info info = _lootState.CurrentGame().masterlist.GetInfo(_lootState.CurrentGame().MasterlistPath(), true);
+                    gameNode["masterlist"]["revision"] = info.revision;
+                    gameNode["masterlist"]["date"] = info.date;
                 }
                 catch (error &e) {
                     gameNode["masterlist"]["revision"] = e.what();

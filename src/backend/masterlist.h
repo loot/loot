@@ -36,20 +36,17 @@ namespace loot {
 
     class Masterlist : public MetadataList {
     public:
+        struct Info {
+            std::string revision;
+            std::string date;
+        };
 
         bool Update(const Game& game);
         bool Update(const boost::filesystem::path& path,
                     const std::string& repoURL,
                     const std::string& repoBranch);
 
-        std::string GetRevision(const boost::filesystem::path& path, bool shortID);
-        std::string GetDate(const boost::filesystem::path& path);
-
-    private:
-        void GetGitInfo(const boost::filesystem::path& path, bool shortID);
-
-        std::string revision;
-        std::string date;
+        static Info GetInfo(const boost::filesystem::path& path, bool shortID);
     };
 }
 
