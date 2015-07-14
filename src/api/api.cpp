@@ -311,8 +311,7 @@ LOOT_API unsigned int loot_load_lists(loot_db db, const char * const masterlistP
 
     try {
         if (boost::filesystem::exists(masterlistPath)) {
-            // We don't want to update the masterlist too.
-            temp.MetadataList::Load(masterlistPath);
+            temp.Load(masterlistPath);
         }
         else {
             return c_error(loot_error_path_not_found, std::string("The given masterlist path does not exist: ") + masterlistPath);

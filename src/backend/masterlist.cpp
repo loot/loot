@@ -35,22 +35,6 @@ namespace fs = boost::filesystem;
 namespace lc = boost::locale;
 
 namespace loot {
-    bool Masterlist::Load(Game& game, const unsigned int language) {
-        try {
-            return Update(game);
-        }
-        catch (error& e) {
-            if (e.code() != error::ok) {
-                // Error wasn't a parsing error. Need to try parsing masterlist if it exists.
-                try {
-                    MetadataList::Load(game.MasterlistPath());
-                }
-                catch (...) {}
-            }
-            throw;
-        }
-    }
-
     std::string Masterlist::GetRevision(const boost::filesystem::path& path, bool shortID) {
         if (revision.empty() || (shortID && revision.length() == 40) || (!shortID && revision.length() < 40))
             GetGitInfo(path, shortID);
@@ -393,7 +377,7 @@ namespace loot {
             //Now try parsing the masterlist.
             BOOST_LOG_TRIVIAL(debug) << "Testing masterlist parsing.";
             try {
-                this->MetadataList::Load(path);
+                this->Load(path);
 
                 for (auto &plugin : plugins) {
                     plugin.ParseAllConditions();

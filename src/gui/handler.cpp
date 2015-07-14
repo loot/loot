@@ -652,7 +652,7 @@ namespace loot {
                     SendProgressUpdate(frame, loc::translate("Parsing masterlist..."));
                     BOOST_LOG_TRIVIAL(debug) << "Parsing masterlist.";
                     try {
-                        _lootState.CurrentGame().masterlist.MetadataList::Load(_lootState.CurrentGame().MasterlistPath());
+                        _lootState.CurrentGame().masterlist.Load(_lootState.CurrentGame().MasterlistPath());
                     }
                     catch (exception &e) {
                         _lootState.CurrentGame().masterlist.messages.push_back(Message(Message::error, (boost::format(loc::translate("An error occurred while parsing the masterlist: %1%")) % e.what()).str()));
@@ -815,7 +815,7 @@ namespace loot {
             bool wasChanged = true;
             try {
                 SendProgressUpdate(frame, loc::translate("Updating and parsing masterlist..."));
-                wasChanged = _lootState.CurrentGame().masterlist.Load(_lootState.CurrentGame(), language);
+                wasChanged = _lootState.CurrentGame().masterlist.Update(_lootState.CurrentGame());
             }
             catch (loot::error &e) {
                 if (e.code() == loot::error::ok) {
@@ -825,8 +825,14 @@ namespace loot {
                     _lootState.CurrentGame().masterlist.messages.push_back(Message(Message::error, e.what()));
                     wasChanged = true;
                 }
-                else
-                    throw;
+                else {
+                    // Error wasn't a parsing error. Need to try parsing masterlist if it exists.
+                    try {
+                        _lootState.CurrentGame().masterlist.Load(_lootState.CurrentGame().MasterlistPath());
+                    }
+                    catch (...) {}
+                }
+                throw;
             }
 
             // Now regenerate the JS-side masterlist data if the masterlist was changed.
