@@ -32,23 +32,17 @@ class MetadataList : public SkyrimTest {
 protected:
     MetadataList() :
         metadataPath("./testing-metadata-master/masterlist.yaml"),
-        savedMetadataPath("./testing-metadata-master/saved.masterlist.yaml") {}
+        savedMetadataPath("./testing-metadata-master/saved.masterlist.yaml") {
+        PluginMetadataToString = [](const loot::PluginMetadata& plugin) {
+            return plugin.Name();
+        };
+    }
 
     inline virtual void SetUp() {
         SkyrimTest::SetUp();
 
         ASSERT_TRUE(boost::filesystem::exists(metadataPath));
         ASSERT_FALSE(boost::filesystem::exists(savedMetadataPath));
-
-        // 'bad cast' exceptions are thrown for some reason unless a game is
-        // initialised.
-        loot::Game game(loot::Game::tes5);
-        game.SetGamePath(dataPath.parent_path());
-        ASSERT_NO_THROW(game.Init(false, localPath));
-
-        PluginMetadataToString = [](const loot::PluginMetadata& plugin) {
-            return plugin.Name();
-        };
     }
 
     inline virtual void TearDown() {

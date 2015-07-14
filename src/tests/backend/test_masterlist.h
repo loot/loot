@@ -28,18 +28,7 @@ along with LOOT.  If not, see
 #include "backend/masterlist.h"
 #include "tests/fixtures.h"
 
-class Masterlist : public SkyrimTest {
-protected:
-    inline virtual void SetUp() {
-        SkyrimTest::SetUp();
-
-        // 'bad cast' exceptions are thrown for some reason unless a game is
-        // initialised.
-        loot::Game game(loot::Game::tes5);
-        game.SetGamePath(dataPath.parent_path());
-        ASSERT_NO_THROW(game.Init(false, localPath));
-    }
-};
+class Masterlist : public SkyrimTest {};
 
 TEST_F(Masterlist, Update_Game) {
     loot::Game game(loot::Game::tes5);
