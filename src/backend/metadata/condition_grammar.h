@@ -144,7 +144,7 @@ namespace loot {
         bool _parseOnly;
 
         //Eval's exact paths. Check for files and ghosted plugins.
-        void CheckFile(bool& result, const std::string& file) {
+        void CheckFile(bool& result, const std::string& file) const {
             if (_parseOnly)
                 return;
 
@@ -275,7 +275,7 @@ namespace loot {
             result = checksum == crc;
         }
 
-        void CheckVersion(bool& result, const std::string&  file, const std::string& version, const std::string& comparator) {
+        void CheckVersion(bool& result, const std::string&  file, const std::string& version, const std::string& comparator) const {
             if (_parseOnly)
                 return;
 
@@ -313,7 +313,7 @@ namespace loot {
             BOOST_LOG_TRIVIAL(trace) << "Version check result: " << result;
         }
 
-        void CheckActive(bool& result, const std::string& file) {
+        void CheckActive(bool& result, const std::string& file) const {
             if (_parseOnly)
                 return;
 
@@ -340,7 +340,7 @@ namespace loot {
         }
 
         //Checks that the path (not regex) doesn't go outside any game folders.
-        bool IsSafePath(const std::string& path) {
+        bool IsSafePath(const std::string& path) const {
             BOOST_LOG_TRIVIAL(trace) << "Checking to see if the path \"" << path << "\" is safe.";
 
             std::vector<std::string> components;
