@@ -40,7 +40,9 @@ protected:
         ASSERT_TRUE(boost::filesystem::exists(metadataPath));
         ASSERT_FALSE(boost::filesystem::exists(savedMetadataPath));
 
-        game = loot::Game(loot::Game::tes5);
+        // 'bad cast' exceptions are thrown for some reason unless a game is
+        // initialised.
+        loot::Game game(loot::Game::tes5);
         game.SetGamePath(dataPath.parent_path());
         ASSERT_NO_THROW(game.Init(false, localPath));
 
@@ -56,7 +58,6 @@ protected:
         ASSERT_NO_THROW(boost::filesystem::remove(savedMetadataPath));
     }
 
-    loot::Game game;
     const boost::filesystem::path metadataPath;
     const boost::filesystem::path savedMetadataPath;
 
@@ -192,6 +193,10 @@ TEST_F(MetadataList, ErasePlugin) {
 }
 
 TEST_F(MetadataList, EvalAllConditions) {
+    loot::Game game(loot::Game::tes5);
+    game.SetGamePath(dataPath.parent_path());
+    ASSERT_NO_THROW(game.Init(false, localPath));
+
     loot::MetadataList ml;
     ASSERT_NO_THROW(ml.Load(metadataPath));
 
