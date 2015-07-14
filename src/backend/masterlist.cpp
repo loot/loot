@@ -94,6 +94,9 @@ namespace loot {
         fs::path repo_path = path.parent_path();
         string filename = path.filename().string();
 
+        if (repoURL.empty() || repoBranch.empty())
+            throw error(error::invalid_args, "Repository URL and branch must not be empty.");
+
         // First initialise some stuff that isn't specific to a repository.
         BOOST_LOG_TRIVIAL(debug) << "Setting up checkout options.";
         char * paths = new char[filename.length() + 1];
