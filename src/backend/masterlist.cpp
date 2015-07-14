@@ -400,7 +400,11 @@ namespace loot {
                 git.Call(git_checkout_head(git.repo, &checkout_opts));
 
                 if (parsingError.empty())
-                    parsingError = boost::locale::translate("Masterlist revision").str() + " " + string(revision) + ": " + e.what() + ". " + boost::locale::translate("Rolled back to the previous revision.").str();
+                    parsingError = boost::locale::translate("Masterlist revision").str() +
+                    " " + string(revision) +
+                    ": " + e.what() +
+                    ". " +
+                    boost::locale::translate("The latest masterlist revision contains a syntax error, LOOT is using the most recent valid revision instead. Syntax errors are usually minor and fixed within hours.").str();
             }
         } while (parsingFailed);
 
