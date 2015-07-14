@@ -50,6 +50,7 @@ namespace loot {
         bool IsEmpty() const;
         std::string Version() const;
         uint32_t Crc() const;
+        size_t NumOverrideFormIDs() const;
 
         bool LoadsBSA(const Game& game) const;
         bool IsValid(const Game& game) const;
@@ -61,9 +62,7 @@ namespace loot {
 
         //Load ordering functions.
         bool DoFormIDsOverlap(const Plugin& plugin) const;
-        size_t NumOverrideFormIDs() const;
         std::set<FormID> OverlapFormIDs(const Plugin& plugin) const;
-        std::set<FormID> OverrideFormIDs() const;
 
         //Validity checks.
         bool CheckInstallValidity(const Game& game);  //Checks that reqs and masters are all present, and that no incs are present. Returns true if the plugin is dirty.

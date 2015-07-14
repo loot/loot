@@ -102,7 +102,7 @@ namespace loot {
             isMaster = loader.IsMaster();
             masters = loader.Masters();
             _isEmpty = loader.IsEmpty();
-            formIDs.insert(loader.FormIDs().begin(), loader.FormIDs().end());
+            formIDs = loader.FormIDs();
 
             if (!headerOnly) {
                 BOOST_LOG_TRIVIAL(trace) << name << ": Caching CRC value.";
@@ -201,15 +201,6 @@ namespace loot {
         set_intersection(formIDs.begin(), formIDs.end(), otherFormIDs.begin(), otherFormIDs.end(), inserter(overlap, overlap.end()));
 
         return overlap;
-    }
-
-    std::set<FormID> Plugin::OverrideFormIDs() const {
-        set<FormID> fidSubset;
-        for (const auto &formID : formIDs) {
-            if (!boost::iequals(formID.Plugin(), name))
-                fidSubset.insert(formID);
-        }
-        return fidSubset;
     }
 
     std::vector<std::string> Plugin::Masters() const {
