@@ -355,7 +355,10 @@ namespace loot {
     }
 
     bool PluginMetadata::IsRegexPlugin() const {
-        return boost::iends_with(name, "\\.esm") || boost::iends_with(name, "\\.esp");
+        // Treat as regex if the plugin filename contains any of ":\*?|" as
+        // they are not valid Windows filename characters, but have meaning
+        // in regexes.
+        return strpbrk(name.c_str(), ":\\*?|") != nullptr;
     }
 
     bool PluginMetadata::IsPriorityExplicit() const {

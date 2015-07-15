@@ -601,19 +601,19 @@ TEST_F(PluginMetadata, IsRegexPlugin) {
     EXPECT_FALSE(pm.IsRegexPlugin());
 
     pm = loot::PluginMetadata("Blank[[:blank:]]- Different.esm");
-    EXPECT_FALSE(pm.IsRegexPlugin());
+    EXPECT_TRUE(pm.IsRegexPlugin());
 
     pm = loot::PluginMetadata("Blank\\.esm");
     EXPECT_TRUE(pm.IsRegexPlugin());
 
     pm = loot::PluginMetadata("Blank - (Different )*Master Dependent.esm");
-    EXPECT_FALSE(pm.IsRegexPlugin());
+    EXPECT_TRUE(pm.IsRegexPlugin());
 
     pm = loot::PluginMetadata("Blank - (Different )?Master Dependent.esm");
-    EXPECT_FALSE(pm.IsRegexPlugin());
+    EXPECT_TRUE(pm.IsRegexPlugin());
 
     pm = loot::PluginMetadata("Blank.es(p|m)");
-    EXPECT_FALSE(pm.IsRegexPlugin());
+    EXPECT_TRUE(pm.IsRegexPlugin());
 }
 
 TEST_F(PluginMetadata, YamlEmitter) {
