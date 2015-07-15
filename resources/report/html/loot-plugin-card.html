@@ -353,6 +353,7 @@ loot-clear-metadata
             /* If the editor hasn't already been opened, its data is not yet set, so do that now. */
             if (!card.data.isEditorOpen && !card.data.editor) {
                 card.shadowRoot.getElementById('editor').data = card.data;
+                card.shadowRoot.getElementById('editor').setEditorData(card.data);
             }
 
             card.data.isEditorOpen = true;
