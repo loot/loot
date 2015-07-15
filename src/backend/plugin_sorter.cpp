@@ -156,8 +156,35 @@ namespace loot {
 
     void PluginSorter::BuildPluginGraph(Game& game, const unsigned int language) {
         BOOST_LOG_TRIVIAL(info) << "Merging masterlist, userlist into plugin list, evaluating conditions and checking for install validity.";
+
+        // The resolution of tie-breaks in the plugin graph may be dependent
+        // on the order in which vertices are iterated over, as an earlier tie
+        // break resolution may cause a potential later tie break to instead
+        // cause a cycle. Vertices are stored in a std::list and added to the
+        // list using push_back().
+        // Plugins are stored in an unordered map, so simply iterating over
+        // its elements is not guarunteed to produce a consistent vertex order.
+        // MSVC 2013 and GCC 5.0 have been shown to produce consistent
+        // iteration orders that differ, and while MSVC 2013's order seems to
+        // be independent on the order in which the unordered map was filled
+        // (being lexicographical), GCC 5.0's unordered map iteration order is
+        // dependent on its insertion order.
+        // Given that, the order of vertex creation should be made consistent
+        // in order to produce consistent sorting results. While MSVC 2013
+        // doesn't strictly need this, there is no guaruntee that this
+        // unspecified behaviour will remain in future compiler updates, so
+        // implement it generally.
+
+        // Using a set of plugin names followed by finding the matching key
+        // in the unordered map, as it's probably faster than copying the
+        // full plugin objects then sorting them.
+        set<string> pluginNames;
         for (const auto &plugin : game.plugins) {
-            vertex_t v = boost::add_vertex(plugin.second, graph);
+            pluginNames.insert(plugin.first);
+        }
+
+        for (const auto &plugin : pluginNames) {
+            vertex_t v = boost::add_vertex(game.plugins.find(plugin)->second, graph);
             BOOST_LOG_TRIVIAL(trace) << "Merging for plugin \"" << graph[v].Name() << "\"";
 
             //Check if there is a plugin entry in the masterlist. This will also find matching regex entries.

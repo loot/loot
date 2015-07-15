@@ -217,11 +217,360 @@ TEST_F(Game, LoadPlugins) {
     loot::Game game(loot::Game::tes5);
     game.SetGamePath(dataPath.parent_path());
 
-    // Try loading only plugin headers first.
-    EXPECT_NO_THROW(game.LoadPlugins(true));
-
-    // Test fullly loading plugins.
     EXPECT_NO_THROW(game.LoadPlugins(false));
+    EXPECT_EQ(11, game.plugins.size());
+
+    // Check that all the plugins' data have loaded correctly.
+    ASSERT_NE(game.plugins.end(), game.plugins.find("skyrim.esm"));
+    loot::Plugin plugin = game.plugins.find("skyrim.esm")->second;
+    EXPECT_EQ("Skyrim.esm", plugin.Name());
+    EXPECT_FALSE(plugin.IsEmpty());
+    EXPECT_TRUE(plugin.IsMaster());
+    EXPECT_EQ(std::set<loot::FormID>({
+        loot::FormID("Skyrim.esm", 0xCF0),
+        loot::FormID("Skyrim.esm", 0xCF1),
+        loot::FormID("Skyrim.esm", 0xCF2),
+        loot::FormID("Skyrim.esm", 0xCF3),
+        loot::FormID("Skyrim.esm", 0xCF4),
+        loot::FormID("Skyrim.esm", 0xCF5),
+        loot::FormID("Skyrim.esm", 0xCF6),
+        loot::FormID("Skyrim.esm", 0xCF7),
+        loot::FormID("Skyrim.esm", 0xCF8),
+        loot::FormID("Skyrim.esm", 0xCF9),
+    }), plugin.FormIDs());
+    EXPECT_TRUE(plugin.Masters().empty());
+    EXPECT_EQ("5.0", plugin.Version());
+    EXPECT_EQ(0xD33753E4, plugin.Crc());
+    EXPECT_EQ(0, plugin.NumOverrideFormIDs());
+
+    ASSERT_NE(game.plugins.end(), game.plugins.find("blank.esm"));
+    plugin = game.plugins.find("blank.esm")->second;
+    EXPECT_EQ("Blank.esm", plugin.Name());
+    EXPECT_FALSE(plugin.IsEmpty());
+    EXPECT_TRUE(plugin.IsMaster());
+    EXPECT_EQ(std::set<loot::FormID>({
+        loot::FormID("Blank.esm", 0xCF0),
+        loot::FormID("Blank.esm", 0xCF1),
+        loot::FormID("Blank.esm", 0xCF2),
+        loot::FormID("Blank.esm", 0xCF3),
+        loot::FormID("Blank.esm", 0xCF4),
+        loot::FormID("Blank.esm", 0xCF5),
+        loot::FormID("Blank.esm", 0xCF6),
+        loot::FormID("Blank.esm", 0xCF7),
+        loot::FormID("Blank.esm", 0xCF8),
+        loot::FormID("Blank.esm", 0xCF9),
+    }), plugin.FormIDs());
+    EXPECT_TRUE(plugin.Masters().empty());
+    EXPECT_EQ("5.0", plugin.Version());
+    EXPECT_EQ(0xD33753E4, plugin.Crc());
+    EXPECT_EQ(0, plugin.NumOverrideFormIDs());
+
+    ASSERT_NE(game.plugins.end(), game.plugins.find("blank - different.esm"));
+    plugin = game.plugins.find("blank - different.esm")->second;
+    EXPECT_EQ("Blank - Different.esm", plugin.Name());
+    EXPECT_FALSE(plugin.IsEmpty());
+    EXPECT_TRUE(plugin.IsMaster());
+    EXPECT_EQ(std::set<loot::FormID>({
+        loot::FormID("Blank - Different.esm", 0xCEF),
+        loot::FormID("Blank - Different.esm", 0xCF0),
+        loot::FormID("Blank - Different.esm", 0xCF1),
+        loot::FormID("Blank - Different.esm", 0xCF2),
+        loot::FormID("Blank - Different.esm", 0xCF3),
+        loot::FormID("Blank - Different.esm", 0xCF4),
+        loot::FormID("Blank - Different.esm", 0xCF5),
+        loot::FormID("Blank - Different.esm", 0xCF6),
+        loot::FormID("Blank - Different.esm", 0xCF7),
+    }), plugin.FormIDs());
+    EXPECT_TRUE(plugin.Masters().empty());
+    EXPECT_EQ("", plugin.Version());
+    EXPECT_EQ(0x64B9F757, plugin.Crc());
+    EXPECT_EQ(0, plugin.NumOverrideFormIDs());
+
+    ASSERT_NE(game.plugins.end(), game.plugins.find("blank - master dependent.esm"));
+    plugin = game.plugins.find("blank - master dependent.esm")->second;
+    EXPECT_EQ("Blank - Master Dependent.esm", plugin.Name());
+    EXPECT_FALSE(plugin.IsEmpty());
+    EXPECT_TRUE(plugin.IsMaster());
+    EXPECT_EQ(std::set<loot::FormID>({
+        loot::FormID("Blank.esm", 0xCF0),
+        loot::FormID("Blank.esm", 0xCF1),
+        loot::FormID("Blank.esm", 0xCF2),
+        loot::FormID("Blank.esm", 0xCF3),
+        loot::FormID("Blank - Master Dependent.esm", 0xCEA),
+        loot::FormID("Blank - Master Dependent.esm", 0xCEB),
+        loot::FormID("Blank - Master Dependent.esm", 0xCEC),
+        loot::FormID("Blank - Master Dependent.esm", 0xCED),
+    }), plugin.FormIDs());
+    EXPECT_EQ(std::vector<std::string>({
+        "Blank.esm"
+    }), plugin.Masters());
+    EXPECT_EQ("", plugin.Version());
+    EXPECT_EQ(0xB2D4119E, plugin.Crc());
+    EXPECT_EQ(4, plugin.NumOverrideFormIDs());
+
+    ASSERT_NE(game.plugins.end(), game.plugins.find("blank - different master dependent.esm"));
+    plugin = game.plugins.find("blank - different master dependent.esm")->second;
+    EXPECT_EQ("Blank - Different Master Dependent.esm", plugin.Name());
+    EXPECT_FALSE(plugin.IsEmpty());
+    EXPECT_TRUE(plugin.IsMaster());
+    EXPECT_EQ(std::set<loot::FormID>({
+        loot::FormID("Blank - Different.esm", 0xCEF),
+        loot::FormID("Blank - Different.esm", 0xCF0),
+        loot::FormID("Blank - Different.esm", 0xCF1),
+        loot::FormID("Blank - Different.esm", 0xCF2),
+        loot::FormID("Blank - Different Master Dependent.esm", 0xCE9),
+        loot::FormID("Blank - Different Master Dependent.esm", 0xCEA),
+        loot::FormID("Blank - Different Master Dependent.esm", 0xCEB),
+    }), plugin.FormIDs());
+    EXPECT_EQ(std::vector<std::string>({
+        "Blank - Different.esm"
+    }), plugin.Masters());
+    EXPECT_EQ("", plugin.Version());
+    EXPECT_EQ(0xAADF6710, plugin.Crc());
+    EXPECT_EQ(4, plugin.NumOverrideFormIDs());
+
+    ASSERT_NE(game.plugins.end(), game.plugins.find("blank.esp"));
+    plugin = game.plugins.find("blank.esp")->second;
+    EXPECT_EQ("Blank.esp", plugin.Name());
+    EXPECT_FALSE(plugin.IsEmpty());
+    EXPECT_FALSE(plugin.IsMaster());
+    EXPECT_EQ(std::set<loot::FormID>({
+        loot::FormID("Blank.esp", 0xCEC),
+        loot::FormID("Blank.esp", 0xCED),
+        loot::FormID("Blank.esp", 0xCEE),
+        loot::FormID("Blank.esp", 0xCEF),
+        loot::FormID("Blank.esp", 0xCF0),
+        loot::FormID("Blank.esp", 0xCF1),
+    }), plugin.FormIDs());
+    EXPECT_TRUE(plugin.Masters().empty());
+    EXPECT_EQ("", plugin.Version());
+    EXPECT_EQ(0xE12EFAAA, plugin.Crc());
+    EXPECT_EQ(0, plugin.NumOverrideFormIDs());
+
+    ASSERT_NE(game.plugins.end(), game.plugins.find("blank - different.esp"));
+    plugin = game.plugins.find("blank - different.esp")->second;
+    EXPECT_EQ("Blank - Different.esp", plugin.Name());
+    EXPECT_FALSE(plugin.IsEmpty());
+    EXPECT_FALSE(plugin.IsMaster());
+    EXPECT_EQ(std::set<loot::FormID>({
+        loot::FormID("Blank - Different.esp", 0xCEB),
+        loot::FormID("Blank - Different.esp", 0xCEC),
+        loot::FormID("Blank - Different.esp", 0xCED),
+        loot::FormID("Blank - Different.esp", 0xCEE),
+        loot::FormID("Blank - Different.esp", 0xCEF),
+    }), plugin.FormIDs());
+    EXPECT_TRUE(plugin.Masters().empty());
+    EXPECT_EQ("", plugin.Version());
+    EXPECT_EQ(0xD4C9B7AE, plugin.Crc());
+    EXPECT_EQ(0, plugin.NumOverrideFormIDs());
+
+    ASSERT_NE(game.plugins.end(), game.plugins.find("blank - master dependent.esp"));
+    plugin = game.plugins.find("blank - master dependent.esp")->second;
+    EXPECT_EQ("Blank - Master Dependent.esp", plugin.Name());
+    EXPECT_FALSE(plugin.IsEmpty());
+    EXPECT_FALSE(plugin.IsMaster());
+    EXPECT_EQ(std::set<loot::FormID>({
+        loot::FormID("Blank.esm", 0xCF0),
+        loot::FormID("Blank.esm", 0xCF1),
+        loot::FormID("Blank - Master Dependent.esp", 0xCE9),
+        loot::FormID("Blank - Master Dependent.esp", 0xCEA),
+    }), plugin.FormIDs());
+    EXPECT_EQ(std::vector<std::string>({
+        "Blank.esm"
+    }), plugin.Masters());
+    EXPECT_EQ("", plugin.Version());
+    EXPECT_EQ(0x832152DC, plugin.Crc());
+    EXPECT_EQ(2, plugin.NumOverrideFormIDs());
+
+    ASSERT_NE(game.plugins.end(), game.plugins.find("blank - different master dependent.esp"));
+    plugin = game.plugins.find("blank - different master dependent.esp")->second;
+    EXPECT_EQ("Blank - Different Master Dependent.esp", plugin.Name());
+    EXPECT_FALSE(plugin.IsEmpty());
+    EXPECT_FALSE(plugin.IsMaster());
+    EXPECT_EQ(std::set<loot::FormID>({
+        loot::FormID("Blank - Different.esm", 0xCEF),
+        loot::FormID("Blank - Different.esm", 0xCF0),
+        loot::FormID("Blank - Different Master Dependent.esp", 0xCE7),
+    }), plugin.FormIDs());
+    EXPECT_EQ(std::vector<std::string>({
+        "Blank - Different.esm"
+    }), plugin.Masters());
+    EXPECT_EQ("", plugin.Version());
+    EXPECT_EQ(0x3AD17683, plugin.Crc());
+    EXPECT_EQ(2, plugin.NumOverrideFormIDs());
+
+    ASSERT_NE(game.plugins.end(), game.plugins.find("blank - plugin dependent.esp"));
+    plugin = game.plugins.find("blank - plugin dependent.esp")->second;
+    EXPECT_EQ("Blank - Plugin Dependent.esp", plugin.Name());
+    EXPECT_FALSE(plugin.IsEmpty());
+    EXPECT_FALSE(plugin.IsMaster());
+    EXPECT_EQ(std::set<loot::FormID>({
+        loot::FormID("Blank.esp", 0xCEC),
+        loot::FormID("Blank - Plugin Dependent.esp", 0xCE7),
+    }), plugin.FormIDs());
+    EXPECT_EQ(std::vector<std::string>({
+        "Blank.esp"
+    }), plugin.Masters());
+    EXPECT_EQ("", plugin.Version());
+    EXPECT_EQ(0x28EF26DB, plugin.Crc());
+    EXPECT_EQ(1, plugin.NumOverrideFormIDs());
+
+    ASSERT_NE(game.plugins.end(), game.plugins.find("blank - different plugin dependent.esp"));
+    plugin = game.plugins.find("blank - different plugin dependent.esp")->second;
+    EXPECT_EQ("Blank - Different Plugin Dependent.esp", plugin.Name());
+    EXPECT_FALSE(plugin.IsEmpty());
+    EXPECT_FALSE(plugin.IsMaster());
+    EXPECT_EQ(std::set<loot::FormID>({
+        loot::FormID("Blank - Different.esp", 0xCEB),
+    }), plugin.FormIDs());
+    EXPECT_EQ(std::vector<std::string>({
+        "Blank - Different.esp"
+    }), plugin.Masters());
+    EXPECT_EQ("", plugin.Version());
+    EXPECT_EQ(0xEB47BE63, plugin.Crc());
+    EXPECT_EQ(1, plugin.NumOverrideFormIDs());
+}
+
+TEST_F(Game, LoadPlugins_HeadersOnly) {
+    loot::Game game(loot::Game::tes5);
+    game.SetGamePath(dataPath.parent_path());
+
+    EXPECT_NO_THROW(game.LoadPlugins(true));
+    EXPECT_EQ(11, game.plugins.size());
+
+    // Check that all the plugins' data have loaded correctly.
+    ASSERT_NE(game.plugins.end(), game.plugins.find("skyrim.esm"));
+    loot::Plugin plugin = game.plugins.find("skyrim.esm")->second;
+    EXPECT_EQ("Skyrim.esm", plugin.Name());
+    EXPECT_FALSE(plugin.IsEmpty());
+    EXPECT_TRUE(plugin.IsMaster());
+    EXPECT_TRUE(plugin.FormIDs().empty());
+    EXPECT_TRUE(plugin.Masters().empty());
+    EXPECT_EQ("5.0", plugin.Version());
+    EXPECT_EQ(0, plugin.Crc());
+    EXPECT_EQ(0, plugin.NumOverrideFormIDs());
+
+    ASSERT_NE(game.plugins.end(), game.plugins.find("blank.esm"));
+    plugin = game.plugins.find("blank.esm")->second;
+    EXPECT_EQ("Blank.esm", plugin.Name());
+    EXPECT_FALSE(plugin.IsEmpty());
+    EXPECT_TRUE(plugin.IsMaster());
+    EXPECT_TRUE(plugin.FormIDs().empty());
+    EXPECT_TRUE(plugin.Masters().empty());
+    EXPECT_EQ("5.0", plugin.Version());
+    EXPECT_EQ(0, plugin.Crc());
+    EXPECT_EQ(0, plugin.NumOverrideFormIDs());
+
+    ASSERT_NE(game.plugins.end(), game.plugins.find("blank - different.esm"));
+    plugin = game.plugins.find("blank - different.esm")->second;
+    EXPECT_EQ("Blank - Different.esm", plugin.Name());
+    EXPECT_FALSE(plugin.IsEmpty());
+    EXPECT_TRUE(plugin.IsMaster());
+    EXPECT_TRUE(plugin.FormIDs().empty());
+    EXPECT_TRUE(plugin.Masters().empty());
+    EXPECT_EQ("", plugin.Version());
+    EXPECT_EQ(0, plugin.Crc());
+    EXPECT_EQ(0, plugin.NumOverrideFormIDs());
+
+    ASSERT_NE(game.plugins.end(), game.plugins.find("blank - master dependent.esm"));
+    plugin = game.plugins.find("blank - master dependent.esm")->second;
+    EXPECT_EQ("Blank - Master Dependent.esm", plugin.Name());
+    EXPECT_FALSE(plugin.IsEmpty());
+    EXPECT_TRUE(plugin.IsMaster());
+    EXPECT_TRUE(plugin.FormIDs().empty());
+    EXPECT_EQ(std::vector<std::string>({
+        "Blank.esm"
+    }), plugin.Masters());
+    EXPECT_EQ("", plugin.Version());
+    EXPECT_EQ(0, plugin.Crc());
+    EXPECT_EQ(0, plugin.NumOverrideFormIDs());
+
+    ASSERT_NE(game.plugins.end(), game.plugins.find("blank - different master dependent.esm"));
+    plugin = game.plugins.find("blank - different master dependent.esm")->second;
+    EXPECT_EQ("Blank - Different Master Dependent.esm", plugin.Name());
+    EXPECT_FALSE(plugin.IsEmpty());
+    EXPECT_TRUE(plugin.IsMaster());
+    EXPECT_TRUE(plugin.FormIDs().empty());
+    EXPECT_EQ(std::vector<std::string>({
+        "Blank - Different.esm"
+    }), plugin.Masters());
+    EXPECT_EQ("", plugin.Version());
+    EXPECT_EQ(0, plugin.Crc());
+    EXPECT_EQ(0, plugin.NumOverrideFormIDs());
+
+    ASSERT_NE(game.plugins.end(), game.plugins.find("blank.esp"));
+    plugin = game.plugins.find("blank.esp")->second;
+    EXPECT_EQ("Blank.esp", plugin.Name());
+    EXPECT_FALSE(plugin.IsEmpty());
+    EXPECT_FALSE(plugin.IsMaster());
+    EXPECT_TRUE(plugin.FormIDs().empty());
+    EXPECT_TRUE(plugin.Masters().empty());
+    EXPECT_EQ("", plugin.Version());
+    EXPECT_EQ(0, plugin.Crc());
+    EXPECT_EQ(0, plugin.NumOverrideFormIDs());
+
+    ASSERT_NE(game.plugins.end(), game.plugins.find("blank - different.esp"));
+    plugin = game.plugins.find("blank - different.esp")->second;
+    EXPECT_EQ("Blank - Different.esp", plugin.Name());
+    EXPECT_FALSE(plugin.IsEmpty());
+    EXPECT_FALSE(plugin.IsMaster());
+    EXPECT_TRUE(plugin.FormIDs().empty());
+    EXPECT_TRUE(plugin.Masters().empty());
+    EXPECT_EQ("", plugin.Version());
+    EXPECT_EQ(0, plugin.Crc());
+    EXPECT_EQ(0, plugin.NumOverrideFormIDs());
+
+    ASSERT_NE(game.plugins.end(), game.plugins.find("blank - master dependent.esp"));
+    plugin = game.plugins.find("blank - master dependent.esp")->second;
+    EXPECT_EQ("Blank - Master Dependent.esp", plugin.Name());
+    EXPECT_FALSE(plugin.IsEmpty());
+    EXPECT_FALSE(plugin.IsMaster());
+    EXPECT_TRUE(plugin.FormIDs().empty());
+    EXPECT_EQ(std::vector<std::string>({
+        "Blank.esm"
+    }), plugin.Masters());
+    EXPECT_EQ("", plugin.Version());
+    EXPECT_EQ(0, plugin.Crc());
+    EXPECT_EQ(0, plugin.NumOverrideFormIDs());
+
+    ASSERT_NE(game.plugins.end(), game.plugins.find("blank - different master dependent.esp"));
+    plugin = game.plugins.find("blank - different master dependent.esp")->second;
+    EXPECT_EQ("Blank - Different Master Dependent.esp", plugin.Name());
+    EXPECT_FALSE(plugin.IsEmpty());
+    EXPECT_FALSE(plugin.IsMaster());
+    EXPECT_TRUE(plugin.FormIDs().empty());
+    EXPECT_EQ(std::vector<std::string>({
+        "Blank - Different.esm"
+    }), plugin.Masters());
+    EXPECT_EQ("", plugin.Version());
+    EXPECT_EQ(0, plugin.Crc());
+    EXPECT_EQ(0, plugin.NumOverrideFormIDs());
+
+    ASSERT_NE(game.plugins.end(), game.plugins.find("blank - plugin dependent.esp"));
+    plugin = game.plugins.find("blank - plugin dependent.esp")->second;
+    EXPECT_EQ("Blank - Plugin Dependent.esp", plugin.Name());
+    EXPECT_FALSE(plugin.IsEmpty());
+    EXPECT_FALSE(plugin.IsMaster());
+    EXPECT_TRUE(plugin.FormIDs().empty());
+    EXPECT_EQ(std::vector<std::string>({
+        "Blank.esp"
+    }), plugin.Masters());
+    EXPECT_EQ("", plugin.Version());
+    EXPECT_EQ(0, plugin.Crc());
+    EXPECT_EQ(0, plugin.NumOverrideFormIDs());
+
+    ASSERT_NE(game.plugins.end(), game.plugins.find("blank - different plugin dependent.esp"));
+    plugin = game.plugins.find("blank - different plugin dependent.esp")->second;
+    EXPECT_EQ("Blank - Different Plugin Dependent.esp", plugin.Name());
+    EXPECT_FALSE(plugin.IsEmpty());
+    EXPECT_FALSE(plugin.IsMaster());
+    EXPECT_TRUE(plugin.FormIDs().empty());
+    EXPECT_EQ(std::vector<std::string>({
+        "Blank - Different.esp"
+    }), plugin.Masters());
+    EXPECT_EQ("", plugin.Version());
+    EXPECT_EQ(0, plugin.Crc());
+    EXPECT_EQ(0, plugin.NumOverrideFormIDs());
 }
 
 TEST_F(Game, ArePluginsFullyLoaded) {
