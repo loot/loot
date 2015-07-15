@@ -26,6 +26,7 @@ along with LOOT.  If not, see
 #define LOOT_TEST_FIXTURES
 
 #include "backend/helpers/streams.h"
+#include "printers.h"
 
 #include <gtest/gtest.h>
 
