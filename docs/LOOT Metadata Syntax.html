@@ -208,7 +208,7 @@ var {
         <li><a href="#cond-order">Order Of Evaluation</a>
     </ol>
     <li><a href="#lang">Language Codes</a>
-    <li><a href="#support">Version History &amp; Feature Support</a>
+    <li><a href="#support">Version History</a>
     <li><a href="#license">License</a>
 </ol>
 
@@ -584,22 +584,30 @@ msg:
         <tr><td>Korean<td>ko
 </table>
 
-<h2 id="support">Version History &amp; Feature Support</h2>
+<h2 id="support">Version History</h2>
 
-<p>As LOOT develops, so does its metadata format, and to keep things simple, they share the same version numbers. The table below summarises the evolution of the metadata format.
+<p>Each version of LOOT has a corresponding version of the metadata format, and its version history is given below.
 
-<table>
-    <head>
-        <tr><th>Feature Supported?<th>v0.5<th>v0.6<th>v0.7<th>v0.8
-    <tbody>
-        <tr><td>GitHub Flavored Markdown message formatting<td colspan="2">Only URL hyperlinking is supported, for <code>file:</code>, <code>http:</code> and <code>https:</code> URLs, using the <code>[label](url)</code> and <code>&lt;url&gt;</code> syntaxes.<td>LOOT uses the <a href="https://github.com/chjj/marked">Marked</a> library (v0.3) to provide support for most of GitHub Flavored Markdown, minus the GitHub-specific features (like @mentions, issue/repo linking and emoji).
-        <tr><td>Message string substitution (ie. <code>sub:</code>)<td colspan="2">No<td>Yes
-        <tr><td>YAML merge keys (ie. <code>&lt;&lt;:</code>)<td colspan="2">No<td>Yes
-        <tr><td>Location <code>ver</code> key<td colspan="3">Yes<td>No
-        <tr><td>Location <code>name</code> key<td colspan="3">No<td>Yes
-        <tr><td><code>many("<var>regex</var>")</code> condition function<td colspan="3">No<td>Yes
-        <tr><td>Regex plugin entries<td colspan="3">Must end with <code>\.esp</code> or <code>\.esm</code>.<td>Must contain any of <code>:\*?|</code>
-</table>
+<h3>0.8</h3>
+<ul>
+    <li>Removed support for the <code>ver</code> key in location data structures.</li>
+    <li>Added support for the <code>name</code> key in location data structures.</li>
+    <li>Added support for the <code>many("<var>regex</var>")</code> condition function.</li>
+    <li>Changed detection of regular expression plugin entries. Previously, a plugin entry was treated as having a regular expression filename if the filename ended with <code>\.esp</code> or <code>\.esp</code>. Now, a plugin entry is treated as having a regular expression filename if the filename contains one or more of <code>:\*?|</code>.</li>
+</ul>
+
+<h3>0.7</h3>
+<ul>
+    <li>Changed support for Markdown formatting in messages. Previously, only URL hyperlinking was supported, and only for <code>file:</code>, <code>http:</code> and <code>https:</code> URLs using the <code>[label](url)</code> or <code>&lt;url&gt;</code> syntaxes. Now, the <a href="https://github.com/chjj/marked">Marked</a> library (v0.3) is used to provide support for most of GitHub Flavored Markdown, minus the GitHub-specific features (like @mentions, issue/repo linking and emoji).</li>
+    <li>Added support for message string substitution keys, i.e. <code>sub</code>, in message data structures.</li>
+    <li>Added support for YAML merge keys, i.e. <code>&lt;&lt;</code>.</li>
+</ul>
+
+<h3>0.6</h3>
+<p><i>No changes.</i></p>
+
+<h3>0.5</h3>
+<p><i>Initial release.</i></p>
 
 <h2 id="license">License</h2>
 <p>This document is part of the LOOT documentation.<br>
