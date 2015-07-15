@@ -372,7 +372,7 @@ namespace loot {
                 for (auto &node : _settings["games"]) {
                     if (node["url"]) {
                         node["repo"] = node["url"];
-                        node["branch"] = "v0.7";
+                        node["branch"] = "v0.8";
                         node.remove("url");
                     }
                 }
@@ -388,9 +388,14 @@ namespace loot {
             for (auto &node : _settings["games"]) {
                 GameSettings settings(node.as<GameSettings>());
 
+                set<string> oldDefaultBranches({
+                    "master",
+                    "v0.7",
+                });
+
                 if (settings.RepoURL() == GameSettings(settings.Id()).RepoURL()
-                    && settings.RepoBranch() == "master") {
-                    node["branch"] = "v0.7";
+                    && oldDefaultBranches.count(settings.RepoBranch()) == 1) {
+                    node["branch"] = "v0.8";
                 }
             }
         }

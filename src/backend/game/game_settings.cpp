@@ -52,7 +52,7 @@ namespace loot {
             _lootFolderName = "Oblivion";
             _masterFile = "Oblivion.esm";
             _repositoryURL = "https://github.com/loot/oblivion.git";
-            _repositoryBranch = "v0.7";
+            _repositoryBranch = "v0.8";
         }
         else if (Id() == GameSettings::tes5) {
             _name = "TES V: Skyrim";
@@ -60,7 +60,7 @@ namespace loot {
             _lootFolderName = "Skyrim";
             _masterFile = "Skyrim.esm";
             _repositoryURL = "https://github.com/loot/skyrim.git";
-            _repositoryBranch = "v0.7";
+            _repositoryBranch = "v0.8";
         }
         else if (Id() == GameSettings::fo3) {
             _name = "Fallout 3";
@@ -68,7 +68,7 @@ namespace loot {
             _lootFolderName = "Fallout3";
             _masterFile = "Fallout3.esm";
             _repositoryURL = "https://github.com/loot/fallout3.git";
-            _repositoryBranch = "v0.7";
+            _repositoryBranch = "v0.8";
         }
         else if (Id() == GameSettings::fonv) {
             _name = "Fallout: New Vegas";
@@ -76,7 +76,7 @@ namespace loot {
             _lootFolderName = "FalloutNV";
             _masterFile = "FalloutNV.esm";
             _repositoryURL = "https://github.com/loot/falloutnv.git";
-            _repositoryBranch = "v0.7";
+            _repositoryBranch = "v0.8";
         }
 
         if (!folder.empty())
