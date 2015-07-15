@@ -164,6 +164,42 @@ TEST_F(ConditionGrammar, RegexConditionFalse) {
     EXPECT_FALSE(eval);
 }
 
+TEST_F(ConditionGrammar, ManyConditionTrue) {
+    loot::Game game(loot::Game::tes5);
+    game.SetGamePath(dataPath.parent_path());
+
+    boost::spirit::qi::space_type skipper;
+    bool eval = false;
+    bool r = false;
+    Grammar cg(&game, false);
+
+    std::string condition("many(\"Blank.+\\.esm\")");
+    std::string::const_iterator begin = condition.begin();
+    std::string::const_iterator end = condition.end();
+
+    EXPECT_NO_THROW(r = boost::spirit::qi::phrase_parse(begin, end, cg, skipper, eval));
+    EXPECT_TRUE(r);
+    EXPECT_TRUE(eval);
+}
+
+TEST_F(ConditionGrammar, ManyConditionFalse) {
+    loot::Game game(loot::Game::tes5);
+    game.SetGamePath(dataPath.parent_path());
+
+    boost::spirit::qi::space_type skipper;
+    bool eval = true;
+    bool r = false;
+    Grammar cg(&game, false);
+
+    std::string condition("many(\"Blank\\.esm\")");
+    std::string::const_iterator begin = condition.begin();
+    std::string::const_iterator end = condition.end();
+
+    EXPECT_NO_THROW(r = boost::spirit::qi::phrase_parse(begin, end, cg, skipper, eval));
+    EXPECT_TRUE(r);
+    EXPECT_FALSE(eval);
+}
+
 TEST_F(ConditionGrammar, ChecksumConditionTrue) {
     loot::Game game(loot::Game::tes5);
     game.SetGamePath(dataPath.parent_path());
