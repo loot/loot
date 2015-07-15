@@ -57,7 +57,7 @@ namespace loot {
 
     void PrintTo(const Location& value, ::std::ostream* os) {
         *os << "loot::Location(\"" << value.URL() << "\", "
-            << ::testing::PrintToString(value.Versions())
+            << "\"" << value.Name() << "\", "
             << ")";
     }
 
