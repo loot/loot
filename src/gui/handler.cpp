@@ -256,8 +256,15 @@ namespace loot {
                 callback->Failure(e.code(), (boost::format(loc::translate("Failed to apply plugin metadata. Details: %1%")) % e.what()).str());
             }
             catch (std::exception& e) {
+                // If this was a YAML conversion error, cut off the line and column numbers,
+                // since the YAML wasn't written to a file.
+                string error = e.what();
+                size_t pos = string::npos;
+                if ((pos = error.find("bad conversion")) != string::npos) {
+                    error = error.substr(pos);
+                }
                 BOOST_LOG_TRIVIAL(error) << "Failed to apply plugin metadata. Details: " << e.what();
-                callback->Failure(-1, (boost::format(loc::translate("Failed to apply plugin metadata. Details: %1%")) % e.what()).str());
+                callback->Failure(-1, (boost::format(loc::translate("Failed to apply plugin metadata. Details: %1%")) % error).str());
             }
             return true;
         }
@@ -666,7 +673,12 @@ namespace loot {
                         _lootState.CurrentGame().masterlist.Load(_lootState.CurrentGame().MasterlistPath());
                     }
                     catch (exception &e) {
-                        parsingErrors.push_back(Message(Message::error, (boost::format(loc::translate("An error occurred while parsing the masterlist: %1%")) % e.what()).str()));
+                        parsingErrors.push_back(Message(Message::error, (boost::format(loc::translate(
+                            "An error occurred while parsing the masterlist: %1%. "
+                            "This probably happened because an update to LOOT changed "
+                            "its metadata syntax support. Try updating your masterlist "
+                            "to resolve the error."
+                            )) % e.what()).str()));
                     }
                 }
 
@@ -678,7 +690,19 @@ namespace loot {
                         _lootState.CurrentGame().userlist.Load(_lootState.CurrentGame().UserlistPath());
                     }
                     catch (exception &e) {
-                        parsingErrors.push_back(Message(Message::error, (boost::format(loc::translate("An error occurred while parsing the userlist: %1%")) % e.what()).str()));
+                        parsingErrors.push_back(Message(Message::error, (boost::format(loc::translate(
+                            "An error occurred while parsing the userlist: %1%. "
+                            "This probably happened because an update to LOOT changed "
+                            "its metadata syntax support. Your user metadata will have "
+                            "to be updated manually.\n\n"
+                            "To do so, use the 'Open Debug Log Location' in LOOT's main "
+                            "menu to open its data folder, then open your 'userlist.yaml' "
+                            "file in the relevant game folder. You can then edit the "
+                            "metadata it contains with reference to the "
+                            "[syntax documentation](http://loot.github.io/docs/%2%.%3%.%4%/LOOT%%20Metadata%%20Syntax.html).\n\n"
+                            "You can also seek support on LOOT's forum thread, which is "
+                            "linked to on [LOOT's website](http://loot.github.io/)."
+                            )) % e.what() % g_version_major % g_version_minor % g_version_patch).str()));
                     }
                 }
             }
