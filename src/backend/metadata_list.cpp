@@ -51,7 +51,7 @@ namespace loot {
                     regexPlugins.push_back(plugin);
                 else {
                     if (!plugins.insert(plugin).second)
-                        throw error(error::path_read_fail, "More than one entry exists for \"" + plugin.Name() + "\".");
+                        throw error(error::path_read_fail, "More than one entry exists for \"" + plugin.Name() + "\"");
                 }
             }
         }
