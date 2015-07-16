@@ -59,8 +59,12 @@ namespace YAML {
         }
 
         static bool decode(const Node& node, loot::MessageContent& rhs) {
-            if (!node.IsMap() || !node["str"] || !node["lang"])
-                return false;
+            if (!node.IsMap())
+                throw RepresentationException(node.Mark(), "bad conversion: 'message content' object must be a map");
+            if (!node["str"])
+                throw RepresentationException(node.Mark(), "bad conversion: 'str' key missing from 'message content' object");
+            if (!node["lang"])
+                throw RepresentationException(node.Mark(), "bad conversion: 'lang' key missing from 'message content' object");
 
             std::string str = node["str"].as<std::string>();
             unsigned int lang = loot::Language(node["lang"].as<std::string>()).Code();

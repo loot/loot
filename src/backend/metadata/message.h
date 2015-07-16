@@ -86,8 +86,12 @@ namespace YAML {
         }
 
         static bool decode(const Node& node, loot::Message& rhs) {
-            if (!node.IsMap() || !node["type"] || !node["content"])
-                return false;
+            if (!node.IsMap())
+                throw RepresentationException(node.Mark(), "bad conversion: 'message' object must be a map");
+            if (!node["type"])
+                throw RepresentationException(node.Mark(), "bad conversion: 'type' key missing from 'message' object");
+            if (!node["content"])
+                throw RepresentationException(node.Mark(), "bad conversion: 'content' key missing from 'message' object");
 
             std::string type;
             type = node["type"].as<std::string>();
@@ -113,7 +117,7 @@ namespace YAML {
                         found = true;
                 }
                 if (!found)
-                    return false;
+                    throw RepresentationException(node.Mark(), "bad conversion: multilingual messages must contain an English content string");
             }
 
             // Make any substitutions at this point.

@@ -153,8 +153,10 @@ namespace YAML {
         }
 
         static bool decode(const Node& node, loot::PluginMetadata& rhs) {
-            if (!node.IsMap() || !node["name"])
-                return false;
+            if (!node.IsMap())
+                throw RepresentationException(node.Mark(), "bad conversion: 'plugin metadata' object must be a map");
+            if (!node["name"])
+                throw RepresentationException(node.Mark(), "bad conversion: 'name' key missing from 'plugin metadata' object");
 
             rhs = loot::PluginMetadata(node["name"].as<std::string>());
 
@@ -178,7 +180,7 @@ namespace YAML {
                 rhs.Tags(node["tag"].as< std::set<loot::Tag> >());
             if (node["dirty"]) {
                 if (rhs.IsRegexPlugin())
-                    return false;
+                    throw RepresentationException(node.Mark(), "bad conversion: 'dirty' key must not be present in a regex 'plugin metadata' object");
                 else
                     rhs.DirtyInfo(node["dirty"].as< std::set<loot::PluginDirtyInfo> >());
             }

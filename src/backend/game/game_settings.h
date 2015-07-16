@@ -104,8 +104,12 @@ namespace YAML {
         }
 
         static bool decode(const Node& node, loot::GameSettings& rhs) {
-            if (!node.IsMap() || !node["folder"] || !node["type"])
-                return false;
+            if (!node.IsMap())
+                throw RepresentationException(node.Mark(), "bad conversion: 'game settings' object must be a map");
+            if (!node["folder"])
+                throw RepresentationException(node.Mark(), "bad conversion: 'folder' key missing from 'game settings' object");
+            if (!node["type"])
+                throw RepresentationException(node.Mark(), "bad conversion: 'type' key missing from 'game settings' object");
 
             if (node["type"].as<std::string>() == loot::GameSettings(loot::GameSettings::tes4).FolderName())
                 rhs = loot::GameSettings(loot::GameSettings::tes4, node["folder"].as<std::string>());
@@ -116,7 +120,7 @@ namespace YAML {
             else if (node["type"].as<std::string>() == loot::GameSettings(loot::GameSettings::fonv).FolderName())
                 rhs = loot::GameSettings(loot::GameSettings::fonv, node["folder"].as<std::string>());
             else
-                return false;
+                throw RepresentationException(node.Mark(), "bad conversion: invalid value for 'type' key in 'game settings' object");
 
             if (node["name"])
                 rhs.SetName(node["name"].as<std::string>());

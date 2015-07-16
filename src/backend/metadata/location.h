@@ -62,14 +62,14 @@ namespace YAML {
 
         static bool decode(const Node& node, loot::Location& rhs) {
             if (!node.IsMap() && !node.IsScalar())
-                return false;
+                throw RepresentationException(node.Mark(), "bad conversion: 'location' object must be a map or scalar");
 
             std::string url;
             std::string name;
 
             if (node.IsMap()) {
                 if (!node["link"])
-                    return false;
+                    throw RepresentationException(node.Mark(), "bad conversion: 'link' key missing from 'location' map object");
 
                 url = node["link"].as<std::string>();
                 if (node["name"])

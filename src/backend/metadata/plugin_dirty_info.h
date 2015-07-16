@@ -75,8 +75,12 @@ namespace YAML {
         }
 
         static bool decode(const Node& node, loot::PluginDirtyInfo& rhs) {
-            if (!node.IsMap() || !node["crc"] || !node["util"])
-                return false;
+            if (!node.IsMap())
+                throw RepresentationException(node.Mark(), "bad conversion: 'dirty info' object must be a map");
+            if (!node["crc"])
+                throw RepresentationException(node.Mark(), "bad conversion: 'crc' key missing from 'dirty info' object");
+            if (!node["util"])
+                throw RepresentationException(node.Mark(), "bad conversion: 'util' key missing from 'dirty info' object");
 
             uint32_t crc = node["crc"].as<uint32_t>();
             int itm = 0, ref = 0, nav = 0;

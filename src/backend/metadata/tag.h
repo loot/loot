@@ -63,12 +63,12 @@ namespace YAML {
 
         static bool decode(const Node& node, loot::Tag& rhs) {
             if (!node.IsMap() && !node.IsScalar())
-                return false;
+                throw RepresentationException(node.Mark(), "bad conversion: 'tag' object must be a map or scalar");
 
             std::string condition, tag;
             if (node.IsMap()) {
                 if (!node["name"])
-                    return false;
+                    throw RepresentationException(node.Mark(), "bad conversion: 'name' key missing from 'tag' map object");
 
                 tag = node["name"].as<std::string>();
                 if (node["condition"])

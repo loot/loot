@@ -43,12 +43,12 @@ namespace YAML {
 
         static bool decode(const Node& node, std::set<T, Compare>& rhs) {
             if (!node.IsSequence())
-                return false;
+                throw RepresentationException(node.Mark(), "bad conversion: set must be a sequence of elements");
 
             rhs.clear();
             for (const auto &element : node) {
                 if (!rhs.insert(element.template as<T>()).second)
-                    return false;
+                    throw RepresentationException(node.Mark(), "bad conversion: set elements must be unique");
             }
             return true;
         }
@@ -77,12 +77,12 @@ namespace YAML {
 
         static bool decode(const Node& node, std::unordered_set<T, Hash>& rhs) {
             if (!node.IsSequence())
-                return false;
+                throw RepresentationException(node.Mark(), "bad conversion: unordered set must be a sequence of elements");
 
             rhs.clear();
             for (const auto &element : node) {
                 if (!rhs.insert(element.template as<T>()).second)
-                    return false;
+                    throw RepresentationException(node.Mark(), "bad conversion: unordered set elements must be unique");
             }
             return true;
         }
