@@ -269,30 +269,35 @@ plugins:
 <p>LOOT expects metadata to be laid out using a certain set of data structures, described in this section.
 
 <h3 id="structs-tag">Tag Data Structure</h3>
-<p>LOOT metadata files can contain suggestions for the addition or removal of Bash Tags, and this is the structure used for them. It has two forms: the first is a simple string, and the second is a key-value map. All values in the map are strings.
-<p>The simple form:
-<pre><code><var>tag</var></code></pre>
-<p>where <code><var>tag</var></code> is the Bash Tag, preceded by a minus sign if it is suggested for removal.
-<p>The map form:
+<p>LOOT metadata files can contain suggestions for the addition or removal of Bash Tags, and this is the structure used for them. It has two forms: a key-value map and a scalar string.
+
+<h4>Map Form</h4>
+<p>All values in the map are strings.</p>
 <table>
     <thead><tr><th>Key Name<th>Required<th>Notes
     <tbody>
         <tr><td><code>name</code><td>&#x2713;<td>A Bash Tag, preceded by a minus sign if it is suggested for removal.
         <tr><td><code>condition</code><td>&#x2717;<td>A condition string that is evaluated to determine whether this Bash Tag should be suggested: if it evaluates to true, the Tag is suggested, otherwise it is ignored. See <a href="#cond">Condition Strings</a> for details.
 </table>
-<p>Examples:
+
+<h4>Scalar Form</h4>
+<pre><code><var>tag</var></code></pre>
+<p>where <code><var>tag</var></code> is equivalent to the value of the <code>name</code> key in the map form.
+
+<h4>Equality</h4>
+<p>Two tag data structures are equal if the lowercased values of their <code>name</code> keys are identical.
+
+<h4>Examples</h4>
 <pre><code>Relations</code></pre>
-or
 <pre><code>name: -Relations
 condition: 'file("Mart''s Monster Mod for OOO.esm") or file("FCOM_Convergence.esm")'
 </code></pre>
 
 <h3 id="structs-file">File Data Structure</h3>
-<p>Not to be confused with the structure of the metadata file itself, this structure can be used to hold file paths. It has two forms: the first is a simple string, and the second is a key-value map. All values in the map are strings.
-<p>The simple form:
-<pre><code><var>filepath</var></code></pre>
-<p>where <code><var>filepath</var></code> is an exact (ie. not regex) file path relative to the game's Data folder.
-<p>The map form:
+<p>Not to be confused with the structure of the metadata file itself, this structure can be used to hold file paths. It has two forms: a key-value map and a scalar string.
+
+<h4>Map Form</h4>
+<p>All values in the map are strings.</p>
 <table>
     <thead><tr><th>Key Name<th>Required<th>Notes
     <tbody>
@@ -301,9 +306,15 @@ condition: 'file("Mart''s Monster Mod for OOO.esm") or file("FCOM_Convergence.es
         <tr><td><code>condition</code><td>&#x2717;<td>A condition string that is evaluated to determine whether this file data should be used: if it evaluates to true, the data is used, otherwise it is ignored. See <a href="#cond">Condition Strings</a> for details.
 </table>
 
-<p>Examples:
+<h4>Scalar Form</h4>
+<pre><code><var>filepath</var></code></pre>
+<p>where <code><var>filepath</var></code> is equivalent to the value of the <code>name</code> key in the map form.
+
+<h4>Equality</h4>
+<p>Two file data structures are equal if the lowercased values of their <code>name</code> keys are identical.
+
+<h4>Examples</h4>
 <pre><code>'../obse_loader.exe'</code></pre>
-or
 <pre><code>name: '../obse_loader.exe'
 condition: 'version("../obse_loader.exe", "0.0.18.0", &gt;=)'
 display: 'OBSE v18+'
@@ -319,8 +330,14 @@ display: 'OBSE v18+'
         <tr><td><code>condition</code><td>string<td>&#x2717;<td>A condition string that is evaluated to determine whether the message should be displayed: if it evaluates to true, the message is displayed, otherwise it is not. See <a href="#cond">Condition Strings</a> for details.
         <tr><td><code>subs</code><td>list of strings<td>&#x2717;<td>A list of strings to be substituted into the message content string. The content string must use numbered specifiers (<code>%1%</code>, <code>%2%</code>, etc.), where the numbers correspond to the position of the substitution string in this list to use, to denote where these strings are to be substituted.
 </table>
+<p>LOOT supports formatting of messages using <a href="https://help.github.com/articles/github-flavored-markdown">GitHub Flavored Markdown</a>. Support is provided by the <a href="https://github.com/chjj/marked">Marked</a> library (v0.3). Strings that get substituted into messages, such as file display names and dirty info utility strings, also support the same formatting options.
+<p>LOOT handles messages and languages as follows:
+<ol>
+    <li>If a message's <code>content</code> value is a string, the message will use the string as its content if displayed.
+    <li>If a message's <code>content</code> value is a list of localised content structures, then the first structure with a language that matches LOOT's current language will be used as the message's content if displayed. If there are no matches, then the first structure in English will be used.
+</ol>
 
-<p>There are three message types:
+<h4>Message Types</h4>
 <table>
     <thead><tr><th>Keyword<th>Description
     <tbody>
@@ -328,6 +345,8 @@ display: 'OBSE v18+'
         <tr><td><code>warn</code><td>A warning message, describing a non-critical issue with the user's mods (eg. dirty mods).
         <tr><td><code>error</code><td>An error message, decribing a critical installation issue (eg. missing masters, corrupt plugins).
 </table>
+
+<h4>Localised Content Data Structure</h4>
 <p>The localised content data structure is a key-value map, with all values being strings:
 <table>
     <thead><tr><th>Key Name<th>Required<th>Notes
@@ -335,15 +354,16 @@ display: 'OBSE v18+'
         <tr><td><code>str</code><td>&#x2713;<td>The actual message content string.
         <tr><td><code>lang</code><td>&#x2713;<td>The language that <code>str</code> is written in, given as a POSIX language code. The languages LOOT supports are given in <a href="#lang">Language Codes</a>.
 </table>
-<p>LOOT supports formatting of messages using <a href="https://help.github.com/articles/github-flavored-markdown">GitHub Flavored Markdown</a>. Support is provided by the <a href="https://github.com/chjj/marked">Marked</a> library (v0.3). Strings that get substituted into messages, such as file display names and dirty info utility strings, also support the same formatting options.
 
-<p>LOOT handles messages and languages as follows:
-<ol>
-    <li>If a message's <code>content</code> value is a string, the message will use the string as its content if displayed.
-    <li>If a message's <code>content</code> value is a list of localised content structures, then the first structure with a language that matches LOOT's current language will be used as the message's content if displayed. If there are no matches, then the first structure in English will be used.
-</ol>
+<h4>Equality</h4>
+<p>The equality of two message data structures is determined by comparing the values of their <code>content</code> keys. As the values of the keys can be different data types, a comparison value is selected for each message using the following logic:
+<ul>
+    <li>If a value's data type is a localised content list, then the English content string in that list is selected as the comparison value.
+    <li>If a value's data type is a string, then that string is selected as the comparison value.
+</ul>
+<p>The two message data structures are then equal if their lowercased comparison values are identical.
 
-<p>Examples (translations by Google):
+<h4>Examples<br><small>(translations by Google)</small></h4>
 <pre><code>type: say
 condition: 'file("foo.esp")'
 content:
@@ -378,21 +398,26 @@ Note: A newer version of this plugin <a href="http://www.example.com">is availab
 
 
 <h3 id="structs-location">Location Data Structure</h3>
-<p>This data structure is used to hold information on where a plugin is hosted online. It is not currently used by LOOT, but it was suggested that since the LOOT team receives a considerable number of plugin URLs, they should be recorded in a standard format, as there is no existing store of such information and it could prove useful in the future.
-<p>The data structure has two forms: the first is a simple string, and the second is a key-value map. All values in the map are strings.
-<p>The simple form:
-<pre><code><var>URL</var></code></pre>
-<p>where <code><var>URL</var></code> is a URL at which the plugin may be found.
-<p>The map form:
+<p>This data structure is used to hold information on where a plugin is hosted online. It has two forms: a key-value map and a scalar string.
+
+<h4>Map Form</h4>
+<p>All values in the map are strings.</p>
 <table>
     <thead><tr><th>Key Name<th>Required<th>Notes
     <tbody>
         <tr><td><code>link</code><td>&#x2713;<td>A URL at which the plugin may be found.
         <tr><td><code>name</code><td>&#x2717;<td>A descriptive name for the URL, which may be used as hyperlink text.
 </table>
-<p>Examples:
+
+<h4>Scalar Form</h4>
+<pre><code><var>URL</var></code></pre>
+<p>where <code><var>URL</var></code> is equivalent to the value of the <code>link</code> key in the map form.
+
+<h4>Equality</h4>
+<p>Two location data structures are equal if the lowercased values of their <code>link</code> keys are identical.
+
+<h4>Examples</h4>
 <pre><code>'http://skyrim.nexusmods.com/mods/19/'</code></pre>
-or
 <pre><code>link: 'https://steamcommunity.com/sharedfiles/filedetails/?id=419668499'
 name: 'Unofficial Skyrim Patch on Steam Workshop'
 </code></pre>
@@ -408,7 +433,11 @@ name: 'Unofficial Skyrim Patch on Steam Workshop'
         <tr><td><code>udr</code><td>integer<td>&#x2717;<td>The number of undeleted records reported for the dirty plugin. If the number is unknown, this field should not be supplied. If the number is known and zero, this field should be supplied.
         <tr><td><code>nav</code><td>integer<td>&#x2717;<td>The number of deleted navmeshes reported for the dirty plugin. If the number is unknown, this field should not be supplied. If the number is known and zero, this field should be supplied.
 </table>
-<p>Examples:
+
+<h4>Equality</h4>
+<p>Two location data structures are equal if the values of their <code>crc</code> keys are identical.
+
+<h4>Examples</h4>
 <pre><code>crc: 0x3DF62ABC
 util: '[TES5Edit](http://www.creationkit.com/TES5Edit_Cleaning_Guide_-_TES5Edit)'
 itm: 4
@@ -431,14 +460,15 @@ nav: 0
             </ul>
             <p>For example, <code>priority: 153000352</code> and <code>priority: 352</code> have equal values when compared, but a plugin with the first priority will be compared against all others, while a (non-empty) plugin with the second priority will be compared against only those it conflicts with.
             <p>A plugin with a higher priority value will load after a plugin with a lower priority value. The value can be anything in the range <code>-2000000000</code> to <code>2000000000</code>, and if unspecified defaults to <code>0</code>.
-        <tr><td><code>after</code><td>file list<td>&#x2717;<td>An unordered list of plugins that this plugin must load after, but which are not dependencies. Used for resolving specific compatibility issues and by user rules for specifying custom plugin positions.
-        <tr><td><code>req</code><td>file list<td>&#x2717;<td>An unordered list of files that this plugin requires to be present. This plugin will load after any plugins listed. If any of these files are missing, an error message will be displayed. Intended for use specifying implicit dependencies, as LOOT will detect a plugin's explicit masters itself.
-        <tr><td><code>inc</code><td>file list<td>&#x2717;<td>An unordered list of files that this plugin is incompatible with. If any of these files are present, an error message will be displayed.
+        <tr><td><code>after</code><td>file set<td>&#x2717;<td>An unordered list of plugins that this plugin must load after, but which are not dependencies. Used for resolving specific compatibility issues and by user rules for specifying custom plugin positions.
+        <tr><td><code>req</code><td>file set<td>&#x2717;<td>An unordered list of files that this plugin requires to be present. This plugin will load after any plugins listed. If any of these files are missing, an error message will be displayed. Intended for use specifying implicit dependencies, as LOOT will detect a plugin's explicit masters itself.
+        <tr><td><code>inc</code><td>file set<td>&#x2717;<td>An unordered list of files that this plugin is incompatible with. If any of these files are present, an error message will be displayed.
         <tr><td><code>msg</code><td>message list<td>&#x2717;<td>The messages attached to this plugin. The messages will be displayed in the order that they are listed.
-        <tr><td><code>tag</code><td>tag list<td>&#x2717;<td>An unordered list of Bash Tags suggested for this plugin. If a Bash Tag is suggested for both addition and removal, the latter will override the former when the list is evaluated.
-        <tr><td><code>url</code><td>location list<td>&#x2717;<td>An unordered list of locations for this plugin. If the same version can be found at multiple locations, only one location should be recorded. This metadata is not currently used by LOOT.
-        <tr><td><code>dirty</code><td>dirty info list<td>&#x2717;<td>An unordered list of dirty info structures for this plugin. Plugin entries with regular expression filenames <strong>must not</strong> contain dirty info.
+        <tr><td><code>tag</code><td>tag set<td>&#x2717;<td>An unordered list of Bash Tags suggested for this plugin. If a Bash Tag is suggested for both addition and removal, the latter will override the former when the list is evaluated.
+        <tr><td><code>url</code><td>location set<td>&#x2717;<td>An unordered list of locations for this plugin. If the same version can be found at multiple locations, only one location should be recorded. This metadata is not currently used by LOOT.
+        <tr><td><code>dirty</code><td>dirty info set<td>&#x2717;<td>An unordered list of dirty info structures for this plugin. Plugin entries with regular expression filenames <strong>must not</strong> contain dirty info.
 </table>
+<p>Where a key's data type is an <code>X set</code>, this is equivalent to <code>X list</code>, with the additional constraint that each item in the list <strong>must be</strong> unique. Uniqueness is determined using the equality criteria for each data structure, as defined earlier.
 <p><strong>Each plugin must have only one matching non-regex entry.</strong> A plugin may match any number of regex entries though, and their metadata will be merged, with later entries being merged into earlier entries as detailed in the table below.
 
 <table>
@@ -448,16 +478,16 @@ nav: 0
         <tr><td><code>name</code><td>Not merged.
         <tr><td><code>enabled</code><td>Replaced by B's value.
         <tr><td><code>priority</code><td>Replaced by B's value, unless that value is <code>0</code> and it was not explicitly set.
-        <tr><td><code>after</code><td>Merged. If A and B both contain an entry with the same <code>name</code> value, B's copy is skipped.
-        <tr><td><code>req</code><td>Merged. If A and B both contain an entry with the same <code>name</code> value, B's copy is skipped.
-        <tr><td><code>inc</code><td>Merged. If A and B both contain an entry with the same <code>name</code> value, B's copy is skipped.
-        <tr><td><code>msg</code><td>Merged. If A and B both contain an entry with the same content string, then B's copy is skipped. If there are multiple content strings, the English strings are compared.
-        <tr><td><code>tag</code><td>Merged. If A and B both contain an entry with the same <code>name</code> value, B's copy is skipped, unless one is suggesting the tag for addition and the other is suggesting it for removal, in which case both entries are kept.
-        <tr><td><code>url</code><td>Merged. If A and B both contain an entry with the same <code>link</code> value, B's copy is skipped.
-        <tr><td><code>dirty</code><td>Merged. If A and B both contain an entry with the same <code>crc</code> value, B's copy is skipped.
+        <tr><td><code>after</code><td>Merged. If B's file set contains an item that is equal to one already present in A's file set, B's item is discarded.
+        <tr><td><code>req</code><td>Merged. If B's file set contains an item that is equal to one already present in A's file set, B's item is discarded.
+        <tr><td><code>inc</code><td>Merged. If B's file set contains an item that is equal to one already present in A's file set, B's item is discarded.
+        <tr><td><code>msg</code><td>Merged. If B's message list contains an item that is equal to one already present in A's message list, B's item is discarded.
+        <tr><td><code>tag</code><td>Merged.If B's tag set contains an item that is equal to one already present in A's tag set, B's item is discarded.
+        <tr><td><code>url</code><td>Merged. If B's location set contains an item that is equal to one already present in A's location set, B's item is discarded.
+        <tr><td><code>dirty</code><td>Merged.If B's dirty info set contains an item that is equal to one already present in A's dirty info set, B's item is discarded.
 </table>
 
-<p>Example:
+<h4>Examples</h4>
 <pre><code>name: 'Oscuro''s_Oblivion_Overhaul.esm'
 req:
   - 'Oblivion.esm'  # Don't do this, Oblivion.esm is a master of Oscuro's_Oblivion_Overhaul.esm, so LOOT already knows it's required.
