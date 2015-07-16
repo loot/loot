@@ -46,7 +46,7 @@ namespace loot {
 
     bool Message::operator < (const Message& rhs) const {
         if (!_content.empty() && !rhs.Content().empty())
-            return boost::ilexicographical_compare(_content.front().Str(), rhs.Content().front().Str());
+            return boost::ilexicographical_compare(ChooseContent(Language::english).Str(), rhs.ChooseContent(Language::english).Str());
         else if (_content.empty() && !rhs.Content().empty())
             return true;
         else
