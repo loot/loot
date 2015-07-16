@@ -49,8 +49,10 @@ namespace loot {
                 PluginMetadata plugin(node.as<PluginMetadata>());
                 if (plugin.IsRegexPlugin())
                     regexPlugins.push_back(plugin);
-                else
-                    plugins.insert(plugin);
+                else {
+                    if (!plugins.insert(plugin).second)
+                        throw error(error::path_read_fail, "More than one entry exists for \"" + plugin.Name() + "\".");
+                }
             }
         }
         if (metadataList["globals"])
@@ -110,8 +112,10 @@ namespace loot {
     void MetadataList::AddPlugin(const PluginMetadata& plugin) {
         if (plugin.IsRegexPlugin())
             regexPlugins.push_back(plugin);
-        else
-            plugins.insert(plugin);
+        else {
+            if (!plugins.insert(plugin).second)
+                throw error(error::invalid_args, "Cannot add \"" + plugin.Name() + "\" to the metadata list as another entry already exists.");
+        }
     }
 
     // Doesn't erase matching regex entries, because they might also

@@ -32,7 +32,8 @@ class MetadataList : public SkyrimTest {
 protected:
     MetadataList() :
         metadataPath("./testing-metadata-master/masterlist.yaml"),
-        savedMetadataPath("./testing-metadata-master/saved.masterlist.yaml") {
+        savedMetadataPath("./testing-metadata-master/saved.masterlist.yaml"),
+        invalidMetadataPaths({"./testing-metadata-master/invalid/non_unique.yaml"}) {
         PluginMetadataToString = [](const loot::PluginMetadata& plugin) {
             return plugin.Name();
         };
@@ -43,6 +44,10 @@ protected:
 
         ASSERT_TRUE(boost::filesystem::exists(metadataPath));
         ASSERT_FALSE(boost::filesystem::exists(savedMetadataPath));
+
+        for (const auto& path : invalidMetadataPaths) {
+            ASSERT_TRUE(boost::filesystem::exists(path));
+        }
     }
 
     inline virtual void TearDown() {
@@ -50,10 +55,15 @@ protected:
 
         ASSERT_TRUE(boost::filesystem::exists(metadataPath));
         ASSERT_NO_THROW(boost::filesystem::remove(savedMetadataPath));
+
+        for (const auto& path : invalidMetadataPaths) {
+            ASSERT_TRUE(boost::filesystem::exists(path));
+        }
     }
 
     const boost::filesystem::path metadataPath;
     const boost::filesystem::path savedMetadataPath;
+    const std::vector<boost::filesystem::path> invalidMetadataPaths;
 
     std::function<std::string(const loot::PluginMetadata&)> PluginMetadataToString;
 };
@@ -91,6 +101,13 @@ TEST_F(MetadataList, Load) {
     EXPECT_ANY_THROW(ml.Load("Blank.missing.esm"));
     EXPECT_TRUE(ml.messages.empty());
     EXPECT_TRUE(ml.Plugins().empty());
+}
+
+TEST_F(MetadataList, Load_Invalid) {
+    loot::MetadataList ml;
+    for (const auto& path : invalidMetadataPaths) {
+        EXPECT_ANY_THROW(ml.Load(path));
+    }
 }
 
 TEST_F(MetadataList, Save) {
@@ -170,6 +187,17 @@ TEST_F(MetadataList, AddPlugin) {
     ml.AddPlugin(pm);
     pm = ml.FindPlugin(loot::PluginMetadata("Blank - Plugin Dependent.esp"));
     EXPECT_EQ(-10, pm.Priority());
+}
+
+TEST_F(MetadataList, AddPlugin_NonUnique) {
+    loot::MetadataList ml;
+    ASSERT_NO_THROW(ml.Load(metadataPath));
+
+    loot::PluginMetadata pm = ml.FindPlugin(loot::PluginMetadata("Blank.esm"));
+    ASSERT_EQ("Blank.esm", pm.Name());
+    ASSERT_FALSE(pm.HasNameOnly());
+
+    ASSERT_ANY_THROW(ml.AddPlugin(loot::PluginMetadata("Blank.esm")));
 }
 
 TEST_F(MetadataList, ErasePlugin) {
