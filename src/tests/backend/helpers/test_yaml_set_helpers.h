@@ -46,6 +46,9 @@ TEST(set, YamlDecode) {
     EXPECT_EQ(stringSet.begin(), stringSet.find("a"));
     EXPECT_EQ(++stringSet.begin(), stringSet.find("b"));
     EXPECT_EQ(--stringSet.end(), stringSet.find("c"));
+
+    node = YAML::Load("[a, b, c, c]");
+    EXPECT_ANY_THROW(node.as<std::set<std::string>>());
 }
 
 TEST(set, YamlEmitter) {
@@ -82,6 +85,9 @@ TEST(unordered_set, YAMLDecode) {
     EXPECT_EQ(1, stringSet.count("a"));
     EXPECT_EQ(1, stringSet.count("b"));
     EXPECT_EQ(1, stringSet.count("c"));
+
+    node = YAML::Load("[a, b, c, c]");
+    EXPECT_ANY_THROW(node.as<std::unordered_set<std::string>>());
 }
 
 bool sequenceOf(const char val1,

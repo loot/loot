@@ -47,7 +47,8 @@ namespace YAML {
 
             rhs.clear();
             for (const auto &element : node) {
-                rhs.insert(element.template as<T>());
+                if (!rhs.insert(element.template as<T>()).second)
+                    return false;
             }
             return true;
         }
@@ -80,7 +81,8 @@ namespace YAML {
 
             rhs.clear();
             for (const auto &element : node) {
-                rhs.insert(element.template as<T>());
+                if (!rhs.insert(element.template as<T>()).second)
+                    return false;
             }
             return true;
         }
