@@ -461,6 +461,7 @@ function onEditorOpen(evt) {
 }
 function onEditorClose(evt) {
     /* evt.detail is true if the apply button was pressed. */
+    var promise;
     if (evt.detail) {
         /* Need to record the editor control values and work out what's
            changed, and update any UI elements necessary. Offload the
@@ -474,7 +475,7 @@ function onEditorClose(evt) {
                 edits
             ]
         });
-        loot.query(request).then(JSON.parse).then(function(result){
+        promise = loot.query(request).then(JSON.parse).then(function(result){
             if (result) {
                 evt.target.data.modPriority = result.modPriority;
                 evt.target.data.isGlobalPriority = result.isGlobalPriority;
@@ -483,51 +484,53 @@ function onEditorClose(evt) {
                 evt.target.data.isDirty = result.isDirty;
 
                 evt.target.data.userlist = edits.userlist;
-                delete evt.target.data.editor;
 
                 /* Now perform search again. If there is no current search, this won't
                    do anything. */
                 document.getElementById('searchBar').search();
             }
-        }).catch(processCefError);
+        });
     } else {
         /* Don't need to record changes, but still need to notify C++ side that
            the editor has been closed. */
-        loot.query('editorClosed').catch(processCefError);
+        promise = loot.query('editorClosed');
+    }
+    promise.then(function(){
         delete evt.target.data.editor;
-    }
 
-    /* Now hide editor. */
-    evt.target.classList.toggle('flip');
+        /* Now hide editor. */
+        evt.target.classList.toggle('flip');
+        evt.target.data.isEditorOpen = false;
 
-    /* Remove drag 'n' drop event handlers. */
-    var elements = document.getElementById('cardsNav').getElementsByTagName('loot-plugin-item');
-    for (var i = 0; i < elements.length; ++i) {
-        elements[i].removeAttribute('draggable');
-        elements[i].removeEventListener('dragstart', elements[i].onDragStart, false);
-    }
+        /* Remove drag 'n' drop event handlers. */
+        var elements = document.getElementById('cardsNav').getElementsByTagName('loot-plugin-item');
+        for (var i = 0; i < elements.length; ++i) {
+            elements[i].removeAttribute('draggable');
+            elements[i].removeEventListener('dragstart', elements[i].onDragStart, false);
+        }
 
-    /* Disable priority hover in plugins list and enable header
-       buttons if this is the only editor instance. */
-    var numEditors = parseInt(document.body.getAttribute('data-editors'), 10);
-    --numEditors;
+        /* Disable priority hover in plugins list and enable header
+           buttons if this is the only editor instance. */
+        var numEditors = parseInt(document.body.getAttribute('data-editors'), 10);
+        --numEditors;
 
-    if (numEditors == 0) {
-        document.body.removeAttribute('data-editors');
-        /* Set the edit mode toggle attribute. */
-        document.getElementById('cardsNav').setAttribute('data-editModeToggle', '');
-        /* Re-enable toolbar elements. */
-        document.getElementById('wipeUserlistButton').removeAttribute('disabled');
-        document.getElementById('copyContentButton').removeAttribute('disabled');
-        document.getElementById('refreshContentButton').removeAttribute('disabled');
-        document.getElementById('settingsButton').removeAttribute('disabled');
-        document.getElementById('gameMenu').removeAttribute('disabled');
-        document.getElementById('updateMasterlistButton').removeAttribute('disabled');
-        document.getElementById('sortButton').removeAttribute('disabled');
-    } else {
-        document.body.setAttribute('data-editors', numEditors);
-    }
-    document.getElementById('cardsNav').updateSize();
+        if (numEditors == 0) {
+            document.body.removeAttribute('data-editors');
+            /* Set the edit mode toggle attribute. */
+            document.getElementById('cardsNav').setAttribute('data-editModeToggle', '');
+            /* Re-enable toolbar elements. */
+            document.getElementById('wipeUserlistButton').removeAttribute('disabled');
+            document.getElementById('copyContentButton').removeAttribute('disabled');
+            document.getElementById('refreshContentButton').removeAttribute('disabled');
+            document.getElementById('settingsButton').removeAttribute('disabled');
+            document.getElementById('gameMenu').removeAttribute('disabled');
+            document.getElementById('updateMasterlistButton').removeAttribute('disabled');
+            document.getElementById('sortButton').removeAttribute('disabled');
+        } else {
+            document.body.setAttribute('data-editors', numEditors);
+        }
+        document.getElementById('cardsNav').updateSize();
+    }).catch(processCefError);
 }
 function onConflictsFilter(evt) {
     /* Deactivate any existing plugin conflict filter. */
