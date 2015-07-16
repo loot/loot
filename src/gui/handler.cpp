@@ -656,6 +656,7 @@ namespace loot {
                     installed.push_back(pos->second);
             }
 
+            list<Message> parsingErrors;
             if (isFirstLoad) {
                 //Parse masterlist, don't update it.
                 if (fs::exists(_lootState.CurrentGame().MasterlistPath())) {
@@ -665,7 +666,7 @@ namespace loot {
                         _lootState.CurrentGame().masterlist.Load(_lootState.CurrentGame().MasterlistPath());
                     }
                     catch (exception &e) {
-                        _lootState.CurrentGame().masterlist.messages.push_back(Message(Message::error, (boost::format(loc::translate("An error occurred while parsing the masterlist: %1%")) % e.what()).str()));
+                        parsingErrors.push_back(Message(Message::error, (boost::format(loc::translate("An error occurred while parsing the masterlist: %1%")) % e.what()).str()));
                     }
                 }
 
@@ -677,7 +678,7 @@ namespace loot {
                         _lootState.CurrentGame().userlist.Load(_lootState.CurrentGame().UserlistPath());
                     }
                     catch (exception &e) {
-                        _lootState.CurrentGame().userlist.messages.push_back(Message(Message::error, (boost::format(loc::translate("An error occurred while parsing the userlist: %1%")) % e.what()).str()));
+                        parsingErrors.push_back(Message(Message::error, (boost::format(loc::translate("An error occurred while parsing the userlist: %1%")) % e.what()).str()));
                     }
                 }
             }
@@ -779,8 +780,13 @@ namespace loot {
 
             //Evaluate any conditions in the global messages.
             BOOST_LOG_TRIVIAL(debug) << "Evaluating global message conditions.";
-            list<Message> messages = _lootState.CurrentGame().masterlist.messages;
-            messages.insert(messages.end(), _lootState.CurrentGame().userlist.messages.begin(), _lootState.CurrentGame().userlist.messages.end());
+            list<Message> messages = parsingErrors;
+            messages.insert(messages.end(), 
+                            _lootState.CurrentGame().masterlist.messages.begin(),
+                            _lootState.CurrentGame().masterlist.messages.end());
+            messages.insert(messages.end(), 
+                            _lootState.CurrentGame().userlist.messages.begin(),
+                            _lootState.CurrentGame().userlist.messages.end());
             try {
                 list<Message>::iterator it = messages.begin();
                 while (it != messages.end()) {
