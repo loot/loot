@@ -247,8 +247,18 @@ namespace loot {
         else if (requestName == "editorClosed") {
             BOOST_LOG_TRIVIAL(debug) << "Editor for plugin closed.";
             // One argument, which is the plugin metadata that has changed (+ its name).
-            callback->Success(ApplyUserEdits(request["args"][0]));
-            --_lootState.numUnappliedChanges;
+            try {
+                callback->Success(ApplyUserEdits(request["args"][0]));
+                --_lootState.numUnappliedChanges;
+            }
+            catch (loot::error &e) {
+                BOOST_LOG_TRIVIAL(error) << "Failed to apply plugin metadata. Details: " << e.what();
+                callback->Failure(e.code(), (boost::format(loc::translate("Failed to apply plugin metadata. Details: %1%")) % e.what()).str());
+            }
+            catch (std::exception& e) {
+                BOOST_LOG_TRIVIAL(error) << "Failed to apply plugin metadata. Details: " << e.what();
+                callback->Failure(-1, (boost::format(loc::translate("Failed to apply plugin metadata. Details: %1%")) % e.what()).str());
+            }
             return true;
         }
         else if (requestName == "closeSettings") {
