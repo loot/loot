@@ -865,6 +865,15 @@ TEST_F(PluginMetadata, YamlDecode) {
         loot::Location("http://www.example.com")
     }), pm.Locations());
 
+    // Don't allow dirty metadata in regex entries.
+    node = YAML::Load("name: 'Blank\\.esp'\n"
+                      "dirty:\n"
+                      "  - crc: 0x5\n"
+                      "    util: 'utility'\n"
+                      "    udr: 1\n"
+                      "    nav: 2");
+    EXPECT_ANY_THROW(node.as<loot::PluginMetadata>());
+
     node = YAML::Load("scalar");
     EXPECT_ANY_THROW(node.as<loot::PluginMetadata>());
 
