@@ -8,7 +8,7 @@ A general guide to contributing to LOOT, may be found on [LOOT's wiki](https://g
 The repository branching structure is pretty simple:
 
 * The `master` branch is a ready-to-release branch. It will generally hold code newer than the latest release, but which could be prepared (ie. update version number, changelog) and packaged for release fairly quickly and easily. Code on this branch *should* be reasonably bug free and features will be complete.
-* The `dev` branch is a next-release branch. It holds code that's working towards the next big release but which isn't there yet. Code is generally buggy and features incomplete (though this will vary considerably through the development cycle.
+* The `dev` branch is a next-release branch. It holds code that's working towards the next big release but which isn't there yet. Code is generally buggy and features incomplete (though this will vary considerably through the development cycle).
 * Other branches are generally themed on specific features or groups of changes, and come and go as they are merged into one of the two above, or discarded.
 
 ## Getting Involved
@@ -33,11 +33,13 @@ To translate everything but masterlist messages, first fork this repository. All
 
 ### Translating the Installer
 
-1. Open the installer script at `src/installer.nsi` in a text editor of your choice.
-2. The English strings are located in the section with the heading `English Strings`. Create a copy of this section below the original.
-3. Translate the quoted strings in the copied section, replacing the English text. For the lines beginning `VIAddVersionKey`, only translate the second quoted string.
-4. Add an `!insertmacro MUI_LANGUAGE "<name>"` line to the section with the headering `Languages`. `<name>` is the NSIS name for your language: a perhaps incomplete example of accepted values can be found in [this script](http://nsis.sourceforge.net/Examples/Modern%20UI/MultiLanguage.nsi).
-3. Save your changes.
+First check that an [Inno Setup translation](http://www.jrsoftware.org/files/istrans/) exists for your language. Unofficial translations are acceptable, but require a bit of extra handling. If there isn't an official or unofficial translation for Inno Setup, you're better off making a translation and getting it listed on the linked page before continuing.
+
+1. Open the installer script at `src/installer.iss` in a text editor of your choice.
+2. If your language only has an unofficial translation, add a `#define <Language>Exists` block for it near the top of the script, like it has been done for Korean and Simplified Chinese.
+3. Add your language to the `[Languages]` section. The `Name` must be the POSIX locale code for your language. The `MessagesFile` filename is the filename of the Inno Setup translation that you checked exists. If your language only has an unofficial translation, wrap its line in `#ifdef` and `#endif` lines, again like it has been done for Korean and Simplified Chinese.
+4. Translate the string(s) in the `[CustomMessages]` into your language, following the example of the existing translations. Again, if your language only has an unofficial translation, wrap its line(s) in `#ifdef` and `#endif` lines.
+5. Save your changes.
 
 ### Translating the LOOT application
 
@@ -45,7 +47,7 @@ To translate everything but masterlist messages, first fork this repository. All
 2. If you are starting a new translation, select `File->New catalogue from POT file...` and choose the template file at `resources/l10n/template.pot`. In the `Catalog properties` dialog, just click `OK` without changing anything.
 3. If you are updating a previous translation, open in Poedit the `loot.po` translation file in the relevant subdirectory of `resources/l10n`, then select `Catalogue->Update from POT file...` and choose the template file you downloaded. Click `OK` in the `Update summary` dialog.
 4. Edit the translation file to add or update translations of the programs' text. Strings that were added since the last translation are displayed in bold and dark blue, and strings you have edited the translations of are marked with a star to the left of their source text in the main list.
-5. Save the translation file with the filename `loot.po` in `resources/l10n/<locale>/LC_MESSAGES/`, where `<locale>` is your language's locale code.
+5. Save the translation file with the filename `loot.po` in `resources/l10n/<locale>/LC_MESSAGES/`, where `<locale>` is your language's POSIX locale code.
 
 Some languages may use different words or phrases for different contexts where only one word or phrase may be used for all contexts in English. While no contextual information is supplied to translators by default, it can be added on request. To request the addition of contextual information to a text string, create an issue for your request in LOOT's [source code issue tracker](https://github.com/loot/loot/issues), quoting the string for which you are requesting contextual information.
 
@@ -58,9 +60,9 @@ Some strings to be translated may contain special characters. Different types of
 
 If you're adding a new translation, LOOT's source code must be updated to recognise it. You can do this yourself and include the changes in your translation's pull request if you wish. The files and functions which must be updated are given below.
 
-* In [helpers.h](src/backend/helpers.h), add a constant for the language to the `Language` class, and update `Language::Names()`.
-* In [helpers.cpp](src/backend/helpers.cpp), update `Language::Language(const std::string& nameOrCode)` and `Language::Construct(const unsigned int code)`.
+* In [language.h](src/backend/helpers/language.h), add a static constant for the language to the `Language` class.
+* In [language.cpp](src/backend/helpers/language.cpp), define the value for the constant you added, and update `Language::Language(const std::string& locale)`, `Language::Construct(const unsigned int code)` and `Language::Codes({...})` to include lines for your language.
 * Add constants for the language in [api.h](src/api/api.h) and [api.cpp](src/api/api.cpp).
 * In [archive.py](src/archive.py), add the language folder to the inline list on line 68.
-* In [installer.nsi](src/installer.nsi), add entries for the language folder to the install and uninstall sections.
+* In [installer.iss](src/installer.iss), add an entry for your language's translation file to the `[Files]` section.
 * In [LOOT Metadata Syntax.html](docs/LOOT%20Metadata%20Syntax.html), add a row for your language to the Language Codes table.

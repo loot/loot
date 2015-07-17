@@ -47,7 +47,9 @@ To install Bower and Vulcanize, first install [Node](http://nodejs.org/), and ru
 
 ## Packaging Releases
 
-Installer and zip archive releases for the main LOOT application can be handled by running the scripts `installer.nsi` and `archive.py` in the `src` folder respectively. The installer script requires [NSIS 3](http://nsis.sourceforge.net/), while the archive script requires [Python](http://www.python.org/) (2 or 3). The installer and archive files are created in the `build/` folder, relative to the repository root.
+Installer and zip archive releases for the main LOOT application can be handled by running the `src/installer.iss` and `src/archive.py` scripts respectively. The installer script requires [Inno Setup](http://www.jrsoftware.org/isinfo.php), with the unofficial Korean and Simplified C, while the archive script requires [Python](http://www.python.org/) (2 or 3). The installer and archive files are created in the `build/` folder, relative to the repository root.
+
+If the unofficial Korean and Simplified Chinese Inno Setup translation files are installed alongside the official translation files, then the installer script will also offer those language options. If they are not found, the installer will be built without them.
 
 If you have [Git for Windows (msysGit)](https://msysgit.github.io/) or [GitHub for Windows](https://windows.github.com/) installed and you're building from a clone of this repository, the archive script will give archives descriptive names using the output of `git describe --tags --long`. If you have [7-Zip](http://7-zip.org) installed, `.7z` archives will be created. Otherwise, archives will be named `LOOT Archive` and created as deflate-compressed zip files.
 
