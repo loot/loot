@@ -542,18 +542,13 @@ namespace loot {
         else
             newUserlistEntry = newUserlistEntry.NewMetadata(_lootState.CurrentGame().masterlist.FindPlugin(newUserlistEntry));
 
-        // Now replace existing userlist entry with the new one.
+        // Now erase any existing userlist entry.
         if (!ulistPlugin.HasNameOnly()) {
-            BOOST_LOG_TRIVIAL(trace) << "Replacing existing userlist entry with new metadata.";
-            if (newUserlistEntry.HasNameOnly())
-                _lootState.CurrentGame().userlist.ErasePlugin(ulistPlugin);
-            else {
-                // Set members are static, so just erase and add the new data.
-                _lootState.CurrentGame().userlist.ErasePlugin(ulistPlugin);
-                _lootState.CurrentGame().userlist.AddPlugin(newUserlistEntry);
-            }
+            BOOST_LOG_TRIVIAL(trace) << "Erasing the existing userlist entry.";
+            _lootState.CurrentGame().userlist.ErasePlugin(ulistPlugin);
         }
-        else {
+        // Add a new userlist entry if necessary.
+        if (!newUserlistEntry.HasNameOnly()) {
             BOOST_LOG_TRIVIAL(trace) << "Adding new metadata to new userlist entry.";
             _lootState.CurrentGame().userlist.AddPlugin(newUserlistEntry);
         }
@@ -805,10 +800,10 @@ namespace loot {
             //Evaluate any conditions in the global messages.
             BOOST_LOG_TRIVIAL(debug) << "Evaluating global message conditions.";
             list<Message> messages = parsingErrors;
-            messages.insert(messages.end(), 
+            messages.insert(messages.end(),
                             _lootState.CurrentGame().masterlist.messages.begin(),
                             _lootState.CurrentGame().masterlist.messages.end());
-            messages.insert(messages.end(), 
+            messages.insert(messages.end(),
                             _lootState.CurrentGame().userlist.messages.begin(),
                             _lootState.CurrentGame().userlist.messages.end());
             try {
