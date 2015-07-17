@@ -149,6 +149,11 @@ set (LOOT_API_SRC ${LOOT_SRC}
 set (LOOT_API_HEADERS ${LOOT_HEADERS}
                   "${CMAKE_SOURCE_DIR}/src/api/api.h")
 
+set (LOOT_VALIDATOR_SRC ${LOOT_SRC}
+                        "${CMAKE_SOURCE_DIR}/src/validator/main.cpp")
+
+set (LOOT_VALIDATOR_HEADERS ${LOOT_HEADERS})
+
 set (LOOT_TESTS_SRC "${CMAKE_SOURCE_DIR}/src/tests/main.cpp")
 
 set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/fixtures.h"
@@ -288,6 +293,11 @@ ENDIF ()
 # Build application.
 add_executable        (LOOT ${LOOT_GUI_SRC} ${LOOT_GUI_HEADERS})
 target_link_libraries (LOOT ${Boost_LIBRARIES} ${YAML_CPP_LIBRARIES} ${LOOT_GUI_LIBS})
+
+# Build validator.
+add_executable        (metadata-validator ${LOOT_VALIDATOR_SRC} ${LOOT_VALIDATOR_HEADERS})
+target_link_libraries (metadata-validator ${Boost_LIBRARIES} ${YAML_CPP_LIBRARIES} ${LOOT_LIBS})
+
 
 
 ##############################
