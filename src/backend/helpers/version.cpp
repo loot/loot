@@ -138,22 +138,22 @@ namespace loot {
     }
 
     bool Version::operator > (const Version& ver) const {
-        return (*this != ver && !(*this < ver));
+        return ver < *this;
     }
 
     bool Version::operator >= (const Version& ver) const {
-        return (*this == ver || *this > ver);
+        return ver < *this || !(*this < ver);
     }
 
     bool Version::operator <= (const Version& ver) const {
-        return (*this == ver || *this < ver);
+        return *this < ver || !(ver < *this);
     }
 
     bool Version::operator == (const Version& ver) const {
-        return (verString == ver.AsString());
+        return !(*this < ver) && !(ver < *this);
     }
 
     bool Version::operator != (const Version& ver) const {
-        return !(*this == ver);
+        return *this < ver || ver < *this;
     }
-    }
+}
