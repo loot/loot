@@ -259,7 +259,7 @@ begin
     end
     else begin
       if RegQueryStringValue(HKLM, 'Software\LOOT', 'Installed Path', RegValue) then begin
-        Exec(RegValue + '\Uninstall.exe', '/VERYSILENT', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+        Exec(RegValue + '\Uninstall.exe', '/S', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
       end;
     end;
   end;
