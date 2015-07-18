@@ -146,4 +146,360 @@ TEST_F(Version, NotEqual) {
     EXPECT_TRUE(version2 != version1);
 }
 
+TEST_F(Version, SemVer_Patch) {
+    loot::Version version1, version2;
+
+    version1 = loot::Version(std::string("0.0.1"));
+    version2 = loot::Version(std::string("0.0.1"));
+    EXPECT_FALSE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_TRUE(version1 == version2);
+    EXPECT_TRUE(version2 == version1);
+
+    version1 = loot::Version(std::string("0.0.1"));
+    version2 = loot::Version(std::string("0.0.2"));
+    EXPECT_TRUE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_FALSE(version1 == version2);
+    EXPECT_FALSE(version2 == version1);
+
+    version1 = loot::Version(std::string("0.0.2"));
+    version2 = loot::Version(std::string("0.0.10"));
+    EXPECT_TRUE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_FALSE(version1 == version2);
+    EXPECT_FALSE(version2 == version1);
+}
+
+TEST_F(Version, SemVer_Minor) {
+    loot::Version version1, version2;
+
+    version1 = loot::Version(std::string("0.0.2"));
+    version2 = loot::Version(std::string("0.1.0"));
+    EXPECT_TRUE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_FALSE(version1 == version2);
+    EXPECT_FALSE(version2 == version1);
+
+    version1 = loot::Version(std::string("0.1.0"));
+    version2 = loot::Version(std::string("0.1.0"));
+    EXPECT_FALSE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_TRUE(version1 == version2);
+    EXPECT_TRUE(version2 == version1);
+
+    version1 = loot::Version(std::string("0.1.0"));
+    version2 = loot::Version(std::string("0.2.0"));
+    EXPECT_TRUE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_FALSE(version1 == version2);
+    EXPECT_FALSE(version2 == version1);
+
+    version1 = loot::Version(std::string("0.2.0"));
+    version2 = loot::Version(std::string("0.10.0"));
+    EXPECT_TRUE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_FALSE(version1 == version2);
+    EXPECT_FALSE(version2 == version1);
+}
+
+TEST_F(Version, SemVer_Major) {
+    loot::Version version1, version2;
+
+    version1 = loot::Version(std::string("0.2.0"));
+    version2 = loot::Version(std::string("1.0.0"));
+    EXPECT_TRUE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_FALSE(version1 == version2);
+    EXPECT_FALSE(version2 == version1);
+
+    version1 = loot::Version(std::string("1.0.0"));
+    version2 = loot::Version(std::string("1.0.0"));
+    EXPECT_FALSE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_TRUE(version1 == version2);
+    EXPECT_TRUE(version2 == version1);
+
+    version1 = loot::Version(std::string("0.1.0"));
+    version2 = loot::Version(std::string("0.2.0"));
+    EXPECT_TRUE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_FALSE(version1 == version2);
+    EXPECT_FALSE(version2 == version1);
+
+    version1 = loot::Version(std::string("0.2.0"));
+    version2 = loot::Version(std::string("0.10.0"));
+    EXPECT_TRUE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_FALSE(version1 == version2);
+    EXPECT_FALSE(version2 == version1);
+}
+
+TEST_F(Version, SemVer_PreRelease) {
+    loot::Version version1, version2;
+
+    version1 = loot::Version(std::string("0.0.1-1"));
+    version2 = loot::Version(std::string("0.0.1-1.alpha"));
+    EXPECT_TRUE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_FALSE(version1 == version2);
+    EXPECT_FALSE(version2 == version1);
+
+    version1 = loot::Version(std::string("0.0.1-1.alpha"));
+    version2 = loot::Version(std::string("0.0.1-2"));
+    EXPECT_TRUE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_FALSE(version1 == version2);
+    EXPECT_FALSE(version2 == version1);
+
+    version1 = loot::Version(std::string("0.0.1-2"));
+    version2 = loot::Version(std::string("0.0.1-alpha"));
+    EXPECT_TRUE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_FALSE(version1 == version2);
+    EXPECT_FALSE(version2 == version1);
+
+    version1 = loot::Version(std::string("0.0.1-alpha"));
+    version2 = loot::Version(std::string("0.0.1-alpha.1"));
+    EXPECT_TRUE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_FALSE(version1 == version2);
+    EXPECT_FALSE(version2 == version1);
+
+    version1 = loot::Version(std::string("0.0.1-alpha.1"));
+    version2 = loot::Version(std::string("0.0.1-alpha.beta"));
+    EXPECT_TRUE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_FALSE(version1 == version2);
+    EXPECT_FALSE(version2 == version1);
+
+    version1 = loot::Version(std::string("0.0.1-alpha.beta"));
+    version2 = loot::Version(std::string("0.0.1-beta"));
+    EXPECT_TRUE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_FALSE(version1 == version2);
+    EXPECT_FALSE(version2 == version1);
+
+    version1 = loot::Version(std::string("0.0.1-beta.2"));
+    version2 = loot::Version(std::string("0.0.1-beta.11"));
+    EXPECT_TRUE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_FALSE(version1 == version2);
+    EXPECT_FALSE(version2 == version1);
+
+    version1 = loot::Version(std::string("0.0.1-rc.1"));
+    version2 = loot::Version(std::string("0.0.1"));
+    EXPECT_TRUE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_FALSE(version1 == version2);
+    EXPECT_FALSE(version2 == version1);
+
+    version1 = loot::Version(std::string("0.0.0-alpha"));
+    version2 = loot::Version(std::string("0.0.1"));
+    EXPECT_TRUE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_FALSE(version1 == version2);
+    EXPECT_FALSE(version2 == version1);
+}
+
+TEST_F(Version, SemVer_Metadata) {
+    // Metadata should be ignored.
+    loot::Version version1, version2;
+
+    version1 = loot::Version(std::string("0.0.1+alpha"));
+    version2 = loot::Version(std::string("0.0.1+beta"));
+    EXPECT_FALSE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_TRUE(version1 == version2);
+    EXPECT_TRUE(version2 == version1);
+
+    version1 = loot::Version(std::string("0.0.1+alpha"));
+    version2 = loot::Version(std::string("0.0.1+1"));
+    EXPECT_FALSE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_TRUE(version1 == version2);
+    EXPECT_TRUE(version2 == version1);
+
+    version1 = loot::Version(std::string("0.0.1+1"));
+    version2 = loot::Version(std::string("0.0.1+2"));
+    EXPECT_FALSE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_TRUE(version1 == version2);
+    EXPECT_TRUE(version2 == version1);
+}
+
+TEST_F(Version, SemVer_Extension_LeadingZeroes) {
+    loot::Version version1, version2;
+
+    version1 = loot::Version(std::string("0.0.1-01"));
+    version2 = loot::Version(std::string("0.0.1-1"));
+    EXPECT_FALSE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_TRUE(version1 == version2);
+    EXPECT_TRUE(version2 == version1);
+
+    version1 = loot::Version(std::string("0.0.1-01"));
+    version2 = loot::Version(std::string("0.0.1-02"));
+    EXPECT_TRUE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_FALSE(version1 == version2);
+    EXPECT_FALSE(version2 == version1);
+
+    version1 = loot::Version(std::string("0.0.1-02"));
+    version2 = loot::Version(std::string("0.0.1-010"));
+    EXPECT_TRUE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_FALSE(version1 == version2);
+    EXPECT_FALSE(version2 == version1);
+
+    version1 = loot::Version(std::string("0.0.01"));
+    version2 = loot::Version(std::string("0.0.1"));
+    EXPECT_FALSE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_TRUE(version1 == version2);
+    EXPECT_TRUE(version2 == version1);
+
+    version1 = loot::Version(std::string("0.0.01"));
+    version2 = loot::Version(std::string("0.0.02"));
+    EXPECT_TRUE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_FALSE(version1 == version2);
+    EXPECT_FALSE(version2 == version1);
+
+    version1 = loot::Version(std::string("0.0.02"));
+    version2 = loot::Version(std::string("0.0.010"));
+    EXPECT_TRUE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_FALSE(version1 == version2);
+    EXPECT_FALSE(version2 == version1);
+
+    version1 = loot::Version(std::string("0.01.0"));
+    version2 = loot::Version(std::string("0.1.0"));
+    EXPECT_FALSE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_TRUE(version1 == version2);
+    EXPECT_TRUE(version2 == version1);
+
+    version1 = loot::Version(std::string("0.01.0"));
+    version2 = loot::Version(std::string("0.02.0"));
+    EXPECT_TRUE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_FALSE(version1 == version2);
+    EXPECT_FALSE(version2 == version1);
+
+    version1 = loot::Version(std::string("0.02.0"));
+    version2 = loot::Version(std::string("0.010.0"));
+    EXPECT_TRUE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_FALSE(version1 == version2);
+    EXPECT_FALSE(version2 == version1);
+
+    version1 = loot::Version(std::string("01.0.0"));
+    version2 = loot::Version(std::string("1.0.0"));
+    EXPECT_FALSE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_TRUE(version1 == version2);
+    EXPECT_TRUE(version2 == version1);
+
+    version1 = loot::Version(std::string("01.0.0"));
+    version2 = loot::Version(std::string("02.0.0"));
+    EXPECT_TRUE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_FALSE(version1 == version2);
+    EXPECT_FALSE(version2 == version1);
+
+    version1 = loot::Version(std::string("02.0.0"));
+    version2 = loot::Version(std::string("010.0.0"));
+    EXPECT_TRUE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_FALSE(version1 == version2);
+    EXPECT_FALSE(version2 == version1);
+}
+
+TEST_F(Version, SemVer_Extension_ArbitraryPeriods) {
+    loot::Version version1, version2;
+
+    version1 = loot::Version(std::string("1.0.0.0.0.0"));
+    version2 = loot::Version(std::string("1.0.0.0.0.1"));
+    EXPECT_TRUE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_FALSE(version1 == version2);
+    EXPECT_FALSE(version2 == version1);
+
+    version1 = loot::Version(std::string("1.0.0.01.0.0"));
+    version2 = loot::Version(std::string("1.0.0.1.0.0"));
+    EXPECT_FALSE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_TRUE(version1 == version2);
+    EXPECT_TRUE(version2 == version1);
+}
+
+TEST_F(Version, SemVer_Extension_Padding) {
+    loot::Version version1, version2;
+
+    version1 = loot::Version(std::string("1.0.0.0.0"));
+    version2 = loot::Version(std::string("1"));
+    EXPECT_FALSE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_TRUE(version1 == version2);
+    EXPECT_TRUE(version2 == version1);
+
+    version1 = loot::Version(std::string("0.1.0.0-beta"));
+    version2 = loot::Version(std::string("0.1-beta"));
+    EXPECT_FALSE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_TRUE(version1 == version2);
+    EXPECT_TRUE(version2 == version1);
+
+    version1 = loot::Version(std::string("0.1.0.0-alpha"));
+    version2 = loot::Version(std::string("0.1-beta"));
+    EXPECT_TRUE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_FALSE(version1 == version2);
+    EXPECT_FALSE(version2 == version1);
+
+    version1 = loot::Version(std::string("0.1-alpha"));
+    version2 = loot::Version(std::string("0.1.0.0-beta"));
+    EXPECT_TRUE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_FALSE(version1 == version2);
+    EXPECT_FALSE(version2 == version1);
+
+    version1 = loot::Version(std::string("0.0.0.1.0.0"));
+    version2 = loot::Version(std::string("0.0.0.1"));
+    EXPECT_FALSE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_TRUE(version1 == version2);
+    EXPECT_TRUE(version2 == version1);
+
+    version1 = loot::Version(std::string("1.0.0.0.0.0"));
+    version2 = loot::Version(std::string("1.0.0.1"));
+    EXPECT_TRUE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_FALSE(version1 == version2);
+    EXPECT_FALSE(version2 == version1);
+}
+
+TEST_F(Version, SemVer_Extension_Separators) {
+    loot::Version version1, version2;
+
+    version1 = loot::Version(std::string("1.0.0-alpha.1.2.3"));
+    version2 = loot::Version(std::string("1.0.0 alpha:1-2_3"));
+    EXPECT_FALSE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_TRUE(version1 == version2);
+    EXPECT_TRUE(version2 == version1);
+}
+
+TEST_F(Version, SemVer_Extension_Case) {
+    loot::Version version1, version2;
+
+    version1 = loot::Version(std::string("1.0.0-Alpha"));
+    version2 = loot::Version(std::string("1.0.0-beta"));
+    EXPECT_TRUE(version1 < version2);
+    EXPECT_FALSE(version2 < version1);
+    EXPECT_FALSE(version1 == version2);
+    EXPECT_FALSE(version2 == version1);
+}
+
 #endif
