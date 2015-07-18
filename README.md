@@ -47,7 +47,7 @@ To install Bower and Vulcanize, first install [Node](http://nodejs.org/), and ru
 
 ## Packaging Releases
 
-Installer and zip archive releases for the main LOOT application can be handled by running the `src/installer.iss` and `src/archive.py` scripts respectively. The installer script requires [Inno Setup](http://www.jrsoftware.org/isinfo.php), with the unofficial Korean and Simplified C, while the archive script requires [Python](http://www.python.org/) (2 or 3). The installer and archive files are created in the `build/` folder, relative to the repository root.
+Installer and zip archive releases for the main LOOT application can be handled by running the `src/installer.iss` and `src/archive.py` scripts respectively. The installer script requires [Inno Setup](http://www.jrsoftware.org/isinfo.php), while the archive script requires [Python](http://www.python.org/) (2 or 3). The installer and archive files are created in the `build/` folder, relative to the repository root.
 
 If the unofficial Korean and Simplified Chinese Inno Setup translation files are installed alongside the official translation files, then the installer script will also offer those language options. If they are not found, the installer will be built without them.
 
