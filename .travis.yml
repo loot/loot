@@ -1,9 +1,6 @@
 sudo: false
 language: cpp
-compiler:
-  - gcc
-
-cache: apt
+compiler: gcc
 
 # Need Boost 1.54+, which isn't in the 12.04 repositories - install from a PPA.
 # Also need the OpenSSL dev package, for git clone from HTTPS URLs support.
@@ -27,53 +24,50 @@ install:
   # Use GCC 5.
   - if [ "$CXX" = "g++" ]; then export CXX="g++-5" CC="gcc-5"; fi
   # Currently inside the cloned repo path.
+  # Get the 3rd-party CMake modules.
+  - wget -P build https://raw.githubusercontent.com/rpavlik/cmake-modules/master/GetGitRevisionDescription.cmake
+  - wget -P build https://raw.githubusercontent.com/rpavlik/cmake-modules/master/GetGitRevisionDescription.cmake.in
   - cd ../..
   # Install libespm.
-  - git clone https://github.com/WrinklyNinja/libespm.git libespm
+  - wget https://github.com/WrinklyNinja/libespm/archive/master.tar.gz -O - | tar -xz
+  - mv libespm-master libespm
   # Build yaml-cpp
-  - git clone https://github.com/WrinklyNinja/yaml-cpp yaml-cpp
+  - wget https://github.com/WrinklyNinja/yaml-cpp/archive/patched-for-loot.tar.gz -O - | tar -xz
+  - mv yaml-cpp-patched-for-loot yaml-cpp
   - mkdir yaml-cpp/build && cd yaml-cpp/build
-  - git checkout patched-for-loot
   - cmake ..
   - make yaml-cpp
-  - cd ../../
+  - cd ../..
   # Build libgit2
-  - wget https://github.com/libgit2/libgit2/archive/v0.23.0.tar.gz
-  - tar -xf v0.23.0.tar.gz
+  - wget https://github.com/libgit2/libgit2/archive/v0.23.0.tar.gz -O - | tar -xz
   - mv libgit2-0.23.0 libgit2
   - mkdir libgit2/build && cd libgit2/build
   - cmake ..
   - make git2
-  - cd ../../
-  # Install Google Test
+  - cd ../..
+  # Build libloadorder
+  - wget https://github.com/WrinklyNinja/libloadorder/archive/master.tar.gz -O - | tar -xz
+  - mv libloadorder-master libloadorder
+  - mkdir libloadorder/build && cd libloadorder/build
+  - cmake .. -DPROJECT_ARCH=64 -DPROJECT_STATIC_RUNTIME=OFF -DGTEST_ROOT=../gtest-1.7.0
+  - make loadorder64
+  - cd ../..
+
+before_script:
+  # Build Google Test
+  - cd ../..
   - wget https://googletest.googlecode.com/files/gtest-1.7.0.zip
   - unzip gtest-1.7.0.zip
   - cd gtest-1.7.0
   - cmake .
   - make
-  - cd ..
-  # Build libloadorder
-  - git clone https://github.com/WrinklyNinja/libloadorder.git libloadorder
-  - mkdir libloadorder/build && cd libloadorder/build
-  - cmake .. -DPROJECT_ARCH=64 -DPROJECT_STATIC_RUNTIME=OFF -DGTEST_ROOT=../gtest-1.7.0
-  - make loadorder64
   # Move back into the cloned LOOT repo path.
-  - cd $TRAVIS_BUILD_DIR
-
-before_script:
-  - mkdir build && cd build
+  - cd $TRAVIS_BUILD_DIR/build
   # Fetch plugins to test with.
-  - wget https://github.com/WrinklyNinja/testing-plugins/archive/master.zip
-  - unzip master.zip
-  - rm master.zip
+  - wget https://github.com/WrinklyNinja/testing-plugins/archive/master.tar.gz -O - | tar -xz
   - mv testing-plugins-master/* ./
   # Fetch metadata to test with.
-  - wget https://github.com/loot/testing-metadata/archive/master.zip
-  - unzip master.zip
-  - rm master.zip
-  # Get the 3rd-party CMake modules.
-  - wget https://raw.githubusercontent.com/rpavlik/cmake-modules/master/GetGitRevisionDescription.cmake
-  - wget https://raw.githubusercontent.com/rpavlik/cmake-modules/master/GetGitRevisionDescription.cmake.in
+  - wget https://github.com/loot/testing-metadata/archive/master.tar.gz -O - | tar -xz
   # Travis machines are 64 bit, and the deps use dynamic linking.
   - cmake .. -DPROJECT_ARCH=64 -DPROJECT_STATIC_RUNTIME=OFF -DBUILD_SHARED_LIBS=OFF -DGTEST_ROOT=../../gtest-1.7.0
 
