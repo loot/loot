@@ -221,9 +221,8 @@ var {
     <li>That YAML files must be written in a Unicode encoding.
     <li>That each key in a key-value map must only appear once per map object.
 </ul>
-<p>Some important points that are more specific to how LOOT uses YAML:
+<p>An important point that is more specific to how LOOT uses YAML:
 <ul>
-    <li>LOOT's support for YAML syntax is incomplete. A list of known limitations can be found <a href="https://github.com/WrinklyNinja/yaml-cpp/issues?labels=bug&amp;state=open">here</a>.
     <li>Strings are case-sensitive, apart from file paths, regular expressions and checksums.
 </ul>
 <p>Some properties of file paths as used by LOOT:
@@ -233,7 +232,7 @@ var {
     <li>Regular expression file paths must be written in the <a href="http://www.cplusplus.com/reference/regex/ECMAScript/">EMCAScript</a> syntax.
     <li>Only the filename of a regex file path may contain non-literal regex syntax, ie. if the filename part of the regex file path is removed, the remainder must be an exact folder path (though with the regex syntax special characters escaped). For example, given the regex file path <code>Meshes\\Resources(1|2)\\(upperclass)?table.nif</code>, LOOT will look for a file named <code>table.nif</code> or <code>upperclasstable.nif</code> in the <code>Meshes\Resources(1|2)</code> folder, rather than looking in the <code>Meshes\Resources1</code> and <code>Meshes\Resources2</code> folders.
 </ul>
-<p>Please test any changes you make before uploading them. One way of doing this is to run LOOT, another is to copy/paste what you've changed into <a href="http://nodeca.github.io/js-yaml/">here</a>, though it won't catch condition syntax errors and doesn't use the same parser as LOOT so may give different results.
+<p>In this document, where a value's type is given as <code><var>X</var> list</code>, this is equivalent to a YAML sequence of values which are of the data type <var>X</var>. Where a value's type is given as <code><var>X</var> set</code>, this is equivalent to a YAML sequence of <strong>unique</strong> values which are of the data type <var>X</var>. Uniqueness is determined using the equality criteria for that data type. All the non-standard data types that LOOT's metadata syntax uses have their equality criteria defined later in this document.
 
 <h2 id="filestruct">Metadata File Contents</h2>
 <p>The root of a metadata file is a key-value map. LOOT will recognise the following keys, none of which are required:
@@ -241,7 +240,8 @@ var {
     <thead><tr><th>Key Name<th>Value Type<th>Notes
     <tbody>
         <tr><td><code>globals</code><td>message list<td>A list of message data structures for messages that are displayed independently of any plugin.
-        <tr><td><code>plugins</code><td>plugin list<td>A list of plugin data structures, holding all the plugin metadata within the file.
+        <tr><td><code>plugins</code><td>plugin list <i>and</i> plugin set<td>The plugin data structures that hold all the plugin metadata within the file. It is a mixture of a list and a set because <strong>no non-regex plugin value may be equal to any other non-regex plugin value</strong>, but there may be any number of equal regex plugin values, and non-regex plugin values may be equal to regex plugin values.
+            <p>If multiple plugin values match a single plugin, their metadata is merged in the order the values are listed, and as defined <a href="#structs-plugin-merge">later in this document</a>.
 </table>
 <p>Other keys may also be present, but are not processed by LOOT. The message and plugin data structures are detailed in the next section.
 <p>An example metadata file:
@@ -323,12 +323,12 @@ display: 'OBSE v18+'
 <h3 id="structs-message">Message Data Structure</h3>
 <p>Messages are given as key-value maps.
 <table>
-    <thead><tr><th>Key Name<th>Data Type<th>Required<th>Notes
+    <thead><tr><th>Key Name<th>Value Type<th>Required<th>Notes
     <tbody>
         <tr><td><code>type</code><td>string<td>&#x2713;<td>The type string can be one of three keywords, see the table below for their semantics.
         <tr><td><code>content</code><td>string <i>or</i> localised content list<td>&#x2713;<td>Either simply a string, or a list of localised content data structures. If the latter, one of the structures must be for English.
         <tr><td><code>condition</code><td>string<td>&#x2717;<td>A condition string that is evaluated to determine whether the message should be displayed: if it evaluates to true, the message is displayed, otherwise it is not. See <a href="#cond">Condition Strings</a> for details.
-        <tr><td><code>subs</code><td>list of strings<td>&#x2717;<td>A list of strings to be substituted into the message content string. The content string must use numbered specifiers (<code>%1%</code>, <code>%2%</code>, etc.), where the numbers correspond to the position of the substitution string in this list to use, to denote where these strings are to be substituted.
+        <tr><td><code>subs</code><td>string list<td>&#x2717;<td>A list of strings to be substituted into the message content string. The content string must use numbered specifiers (<code>%1%</code>, <code>%2%</code>, etc.), where the numbers correspond to the position of the substitution string in this list to use, to denote where these strings are to be substituted.
 </table>
 <p>LOOT supports formatting of messages using <a href="https://help.github.com/articles/github-flavored-markdown">GitHub Flavored Markdown</a>. Support is provided by the <a href="https://github.com/chjj/marked">Marked</a> library (v0.3). Strings that get substituted into messages, such as file display names and dirty info utility strings, also support the same formatting options.
 <p>LOOT handles messages and languages as follows:
@@ -356,10 +356,10 @@ display: 'OBSE v18+'
 </table>
 
 <h4>Equality</h4>
-<p>The equality of two message data structures is determined by comparing the values of their <code>content</code> keys. As the values of the keys can be different data types, a comparison value is selected for each message using the following logic:
+<p>The equality of two message data structures is determined by comparing the values of their <code>content</code> keys. As the values of the keys can be different types, a comparison value is selected for each message using the following logic:
 <ul>
-    <li>If a value's data type is a localised content list, then the English content string in that list is selected as the comparison value.
-    <li>If a value's data type is a string, then that string is selected as the comparison value.
+    <li>If a value's type is a localised content list, then the English content string in that list is selected as the comparison value.
+    <li>If a value's type is a string, then that string is selected as the comparison value.
 </ul>
 <p>The two message data structures are then equal if their lowercased comparison values are identical.
 
@@ -405,7 +405,7 @@ Note: A newer version of this plugin <a href="http://www.example.com">is availab
 <table>
     <thead><tr><th>Key Name<th>Required<th>Notes
     <tbody>
-        <tr><td><code>link</code><td>&#x2713;<td>A URL at which the plugin may be found.
+        <tr><td><code>link</code><td>&#x2713;<td>A URL at which the plugin is found.
         <tr><td><code>name</code><td>&#x2717;<td>A descriptive name for the URL, which may be used as hyperlink text.
 </table>
 
@@ -425,7 +425,7 @@ name: 'Unofficial Skyrim Patch on Steam Workshop'
 <h3 id="structs-dirty">Dirty Info Data Structure</h3>
 <p>This structure holds information on which versions of a plugin are dirty, and how many identical-to-master records, deleted records and deleted navmeshes (if applicable) it contains. Dirty info is given as a key-value map.
 <table>
-    <thead><tr><th>Key Name<th>Data Type<th>Required<th>Notes
+    <thead><tr><th>Key Name<th>Value Type<th>Required<th>Notes
     <tbody>
         <tr><td><code>crc</code><td>hexadecimal integer<td>&#x2713;<td>The CRC checksum of the dirty plugin, before cleaning. LOOT displays the CRCs of installed plugins in its report. The 8-character CRC should be preceded by <code>0x</code> so that it is correctly interpreted.
         <tr><td><code>util</code><td>string<td>&#x2713;<td>The utility that should be used to clean the plugin.
@@ -449,7 +449,7 @@ nav: 0
 <h3 id="structs-plugin">Plugin Data Structure</h3>
 <p>This is the structure that brings all the others together, and forms the main component of a metadata file. It is a key-value map.
 <table>
-    <thead><tr><th>Key Name<th>Data Type<th>Required<th>Notes
+    <thead><tr><th>Key Name<th>Value Type<th>Required<th>Notes
     <tbody>
         <tr><td><code>name</code><td>string<td>&#x2713;<td>Can be an exact plugin filename or a regular expression plugin filename. If the filename contains any of the characters <code>:\*?|</code>, the string will be treated as a regular expression, otherwise it will be treated as an exact filename. For example, <code>Example\.esm</code> will be treated as a regular expression, as it contains a <code>\</code> character.
         <tr><td><code>enabled</code><td>boolean<td>&#x2717;<td>Enables or disables use of the plugin object. Used for user rules, but no reason to use it in the masterlist. If unspecified, defaults to <code>true</code>.
@@ -460,17 +460,23 @@ nav: 0
             </ul>
             <p>For example, <code>priority: 153000352</code> and <code>priority: 352</code> have equal values when compared, but a plugin with the first priority will be compared against all others, while a (non-empty) plugin with the second priority will be compared against only those it conflicts with.
             <p>A plugin with a higher priority value will load after a plugin with a lower priority value. The value can be anything in the range <code>-2000000000</code> to <code>2000000000</code>, and if unspecified defaults to <code>0</code>.
-        <tr><td><code>after</code><td>file set<td>&#x2717;<td>An unordered list of plugins that this plugin must load after, but which are not dependencies. Used for resolving specific compatibility issues and by user rules for specifying custom plugin positions.
-        <tr><td><code>req</code><td>file set<td>&#x2717;<td>An unordered list of files that this plugin requires to be present. This plugin will load after any plugins listed. If any of these files are missing, an error message will be displayed. Intended for use specifying implicit dependencies, as LOOT will detect a plugin's explicit masters itself.
-        <tr><td><code>inc</code><td>file set<td>&#x2717;<td>An unordered list of files that this plugin is incompatible with. If any of these files are present, an error message will be displayed.
+        <tr><td><code>after</code><td>file set<td>&#x2717;<td>An unordered set of plugins that this plugin must load after, but which are not dependencies. Used for resolving specific compatibility issues and by user rules for specifying custom plugin positions.
+        <tr><td><code>req</code><td>file set<td>&#x2717;<td>An unordered set of files that this plugin requires to be present. This plugin will load after any plugins listed. If any of these files are missing, an error message will be displayed. Intended for use specifying implicit dependencies, as LOOT will detect a plugin's explicit masters itself.
+        <tr><td><code>inc</code><td>file set<td>&#x2717;<td>An unordered set of files that this plugin is incompatible with. If any of these files are present, an error message will be displayed.
         <tr><td><code>msg</code><td>message list<td>&#x2717;<td>The messages attached to this plugin. The messages will be displayed in the order that they are listed.
-        <tr><td><code>tag</code><td>tag set<td>&#x2717;<td>An unordered list of Bash Tags suggested for this plugin. If a Bash Tag is suggested for both addition and removal, the latter will override the former when the list is evaluated.
-        <tr><td><code>url</code><td>location set<td>&#x2717;<td>An unordered list of locations for this plugin. If the same version can be found at multiple locations, only one location should be recorded. This metadata is not currently used by LOOT.
-        <tr><td><code>dirty</code><td>dirty info set<td>&#x2717;<td>An unordered list of dirty info structures for this plugin. Plugin entries with regular expression filenames <strong>must not</strong> contain dirty info.
+        <tr><td><code>tag</code><td>tag set<td>&#x2717;<td>An unordered set of Bash Tags suggested for this plugin. If a Bash Tag is suggested for both addition and removal, the latter will override the former when the list is evaluated.
+        <tr><td><code>url</code><td>location set<td>&#x2717;<td>An unordered set of locations for this plugin. If the same version can be found at multiple locations, only one location should be recorded. This metadata is not currently used by LOOT.
+        <tr><td><code>dirty</code><td>dirty info set<td>&#x2717;<td>An unordered set of dirty info structures for this plugin. Plugin entries with regular expression filenames <strong>must not</strong> contain dirty info.
 </table>
-<p>Where a key's data type is an <code>X set</code>, this is equivalent to <code>X list</code>, with the additional constraint that each item in the list <strong>must be</strong> unique. Uniqueness is determined using the equality criteria for each data structure, as defined earlier.
-<p><strong>Each plugin must have only one matching non-regex entry.</strong> A plugin may match any number of regex entries though, and their metadata will be merged, with later entries being merged into earlier entries as detailed in the table below.
 
+<h4>Equality</h4>
+<p>The equality of two plugin data structures is determined by comparing the values of their <code>name</code> keys.
+<ul>
+    <li>If neither or both values are regular expressions, then the plugin data structures are equal if the lowercased values are identical.
+    <li>If one value is a regular expression, then the plugin data structures are equal if the other value is an exact match for it.
+</ul>
+
+<h4 id="structs-plugin-merge">Merging Behaviour</h4>
 <table>
     <thead>
         <tr><th>Key Name<th>Merge Behaviour (merging B into A)
@@ -523,7 +529,7 @@ msg:
         <tr><td>File<td><code>regex("<var>regex</var>")</code><td>Returns true if a file matching <var>regex</var> is found, false otherwise.
         <tr><td>Many<td><code>many("<var>regex</var>")</code><td>Returns true if more than one file matching <var>regex</var> is found, and false otherwise.
         <tr><td>Checksum<td><code>checksum("<var>filepath</var>", <var>checksum</var>)</code><td>Returns true if the calculated checksum of <var>filepath</var> matches <var>checksum</var>, false otherwise. If <var>filepath</var> does not exist, returns false.
-        <tr><td>Version<td><code>version("<var>filepath</var>", "<var>version</var>", <var>comparator</var>)</code><td>Returns true if the boolean expression <code>(actual version of <var>filepath</var>) <var>comparator version</var></code> holds true, false otherwise. If <var>filepath</var> does not exist and <var>comparator</var> is <code>==</code>, <code>&gt;</code> or <code>&gt;=</code>, returns false. If <var>filepath</var> does not exist and <var>comparator</var> is <code>!=</code>, <code>&lt;</code> or <code>&lt;=</code>, returns true. The comparison is not a straightforward per-character comparison, but instead uses the precedence rules defined by <a href="http://semver.org/">Semantic Versioning</a>, extended to allow leading zeroes, an arbitrary of release version numbers, case-insensitivity and a wider range of separator characters.
+        <tr><td>Version<td><code>version("<var>filepath</var>", "<var>version</var>", <var>comparator</var>)</code><td>Returns true if the boolean expression <code>(actual version of <var>filepath</var>) <var>comparator version</var></code> holds true, false otherwise. If <var>filepath</var> does not exist and <var>comparator</var> is <code>==</code>, <code>&gt;</code> or <code>&gt;=</code>, returns false. If <var>filepath</var> does not exist and <var>comparator</var> is <code>!=</code>, <code>&lt;</code> or <code>&lt;=</code>, returns true. The comparison is not a straightforward per-character comparison, but instead uses the precedence rules defined by <a href="http://semver.org/">Semantic Versioning</a>, extended to allow leading zeroes, an arbitrary number of release version numbers, case-insensitivity and a wider range of separator characters.
         <tr><td>Plugin Active Status<td><code>active("<var>filepath</var>")</code><td>Returns true if <var>filepath</var> is a <code>.esp</code> or <code>.esm</code> file that is both installed and active, false otherwise.
 </table>
 
@@ -601,17 +607,17 @@ msg:
 <table>
     <thead><tr><th>Language<th>POSIX Code
     <tbody>
+        <tr><td>Brazilian Portuguese<td>pt_BR
         <tr><td>Chinese<td>zh_CN
+        <tr><td>Danish<td>da
         <tr><td>English<td>en
         <tr><td>Finnish<td>fi
         <tr><td>French<td>fr
+        <tr><td>German<td>de
+        <tr><td>Korean<td>ko
         <tr><td>Polish<td>pl
-        <tr><td>Brazilian Portuguese<td>pt_BR
         <tr><td>Russian<td>ru
         <tr><td>Spanish<td>es
-        <tr><td>German<td>de
-        <tr><td>Danish<td>da
-        <tr><td>Korean<td>ko
 </table>
 
 <h2 id="support">Version History</h2>
@@ -624,6 +630,9 @@ msg:
     <li>Added support for the <code>name</code> key in location data structures.</li>
     <li>Added support for the <code>many("<var>regex</var>")</code> condition function.</li>
     <li>Changed detection of regular expression plugin entries. Previously, a plugin entry was treated as having a regular expression filename if the filename ended with <code>\.esp</code> or <code>\.esp</code>. Now, a plugin entry is treated as having a regular expression filename if the filename contains one or more of <code>:\*?|</code>.</li>
+    <li>The plugin data structure definition in this document was fixed so that it correctly gives the values of the <code>after</code>, <code>req</code>, <code>inc</code>, <code>tag</code>, <code>url</code> and <code>dirty</code> keys as sets, not lists.
+    <li>This document now defines the equality criteria for all of the metadata syntax's non-standard data structures.
+    <li>The algorithm used for version comparison has been changed to give better results for a wider variety of version strings.
 </ul>
 
 <h3>0.7</h3>

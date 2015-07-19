@@ -255,7 +255,7 @@ var {
             <img src="images/main.png">
         </div>
     </div>
-<figcaption>LOOT's header bar, divided into sidebar and panel areas. The sidebar area contains the plugins and filters tabs. From left to right in the panel area are the <q>Jump To General Information</q> button, the game menu, and the sorting, masterlist update and main menu buttons. The game menu, masterlist update button and sorting button have been disabled, as a plugin metadata editor is open.</figcaption>
+<figcaption>LOOT's header bar, divided into sidebar and panel areas. The sidebar area contains the plugins and filters tabs. From left to right in the panel area are the <q>Jump To General Information</q> button, the game menu, and the sorting, masterlist update, search and main menu buttons. The game menu, masterlist update button and sorting button have been disabled, as a plugin metadata editor is open.</figcaption>
 </figure>
 
 <p>The header bar provides access to LOOT's main features. Most of these features get disabled while there is at least one plugin editor open, so if you're trying to use an option that is faded out, first close any editors you have open.
@@ -298,8 +298,8 @@ var {
 
 <figure>
     <div style="width: 100%; overflow-x: auto;">
-        <div class="clipper" style="height: 315px; width: 670px;">
-            <img src="images/main.png" style="position: relative; top: -116px; left: -340px;">
+        <div class="clipper" style="height: 235px; width: 665px;">
+            <img src="images/main.png" style="position: relative; top: -60px; left: -340px;">
         </div>
     </div>
 <figcaption>Examples of plugin cards.</figcaption>
@@ -358,8 +358,8 @@ var {
 
 <figure>
     <div style="width: 100%; overflow-x: auto;">
-        <div class="clipper" style="height: 290px; width: 670px;">
-            <img src="images/main.png" style="position: relative; top: -435px; left: -340px;">
+        <div class="clipper" style="height: 295px; width: 665px;">
+            <img src="images/main.png" style="position: relative; top: -295px; left: -340px;">
         </div>
     </div>
 <figcaption>A metadata editor panel.</figcaption>
@@ -421,7 +421,7 @@ var {
         <tr><td>Locations<td>A list of URLs that the mod to which the plugin belongs can be found at. This metadata is not currently used by LOOT, but it may be useful to record it. Each location has two fields:
         <ul>
             <li>The <var>URL</var> at which the plugin's parent mod can be found.
-            <li>The <var>Version</var> which can be found at the given URL.
+            <li>The <var>Name</var> you wish to give the URL.
         </ul>
 </table>
 
@@ -470,9 +470,7 @@ var {
 </table>
 
 <h2 id="themes">Themes</h2>
-<p>LOOT's user interface has experimental support for the use of alternative and custom CSS themes. To use a theme, place its CSS file into the <code>resources/report/css</code> folder inside LOOT's installation folder, and rename the file to <code>theme.css</code>. LOOT will then load this file when it launches. A dark user interface theme is provided with LOOT: to use it, rename <code>dark-theme.css</code> in the <code>resources/report/css</code> folder to <code>theme.css</code>.</p>
-
-<p>Theme support is experimental because future updates to LOOT's user interface may break existing CSS selectors. Theme contributions from users for inclusion into LOOT are welcome, see the section below for more information. Users wishing to write new themes may either use the dark theme as a starting point, or browse LOOT's source code to determine the CSS selectors to use.</p>
+<p>LOOT's user interface has experimental support for the use of alternative and custom CSS themes. To use a theme, place its CSS file into the <code>resources/report/css</code> folder inside LOOT's installation folder, and rename the file to <code>theme.css</code>. LOOT will then load this file when it launches. A dark user interface theme is provided with LOOT: to use it, rename <code>dark-theme.css</code> in the <code>resources/report/css</code> folder to <code>theme.css</code>. Theme support is experimental because future updates to LOOT's user interface may break existing CSS selectors.</p>
 
 
 <h2 id="contrib">Contributing &amp; Support</h2>
@@ -538,16 +536,22 @@ A copy of the license is included in the file named "GNU FDL v1.3.txt".</blockqu
 <h2 id="history">Version History</h2>
 <p>Only program history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
-<h3>0.8.0 - <i>X July 2015</i></h3>
+<h3>0.8.0 - <i>22 July 2015</i></h3>
 <ul>
     <li>Fixed <q>Cannot read property 'push' of undefined</q> errors when sorting.</li>
     <li>Fixed many miscellaneous bugs, including initialisation crashes and incorrect metadata input/output handling.</li>
     <li>Fixed metadata editors not clearing unsaved edits when editing is cancelled.</li>
+    <li>Fixed LOOT silently discarding some non-unique metadata: an error message will now be displayed when loading or attempting to apply such metadata.</li>
+    <li>Fixed userlist parsing errors being saved as general messages in the userlist.</li>
+    <li>Fixed and improved LOOT's version comparison behaviour for a wide variety of version string formats. This involved removing LOOT's usage of the Alphanum code library.</li>
+    <li>Improved detail of metadata syntax error messages.</li>
     <li>Improved plugin loading performance for computers with weaker multithreading capabilities (eg. non-hyperthreaded dual-core or single-core CPUs).</li>
     <li>LOOT no longer displays validity warnings for inactive plugins.</li>
     <li>LOOT now displays a more user-friendly error when a syntax error is encountered in an updated masterlist.</li>
     <li>Added support for loading custom user interface themes, and added a dark theme.</li>
-    <li>Metadata syntax support changes.</li>
+    <li>Metadata syntax support changes, see the metadata syntax document for details.</li>
+    <li>LOOT's installer now uses Inno Setup instead of NSIS.</li>
+    <li>LOOT's installer now uninstalls previous versions of LOOT silently, preserving user data, instead of displaying the uninstaller UI.</li>
     <li>Updated German translation.</li>
     <li>Updated libgit2 to v0.23.0.</li>
 </ul>

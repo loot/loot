@@ -60,6 +60,16 @@
  *      "docs/licenses/Licenses.txt" file.
  *
  * @section history_sec Version History
+ *      ## 0.8.0 - *22 July 2015*
+ *
+ *        * Fixed many miscellaneous bugs, including initialisation crashes and incorrect metadata input/output handling.
+ *        * Fixed LOOT silently discarding some non-unique metadata: an error will now occur when loading or attempting to apply such metadata.
+ *        * Fixed and improved LOOT's version comparison behaviour for a wide variety of version string formats. This involved removing LOOT's usage of the Alphanum code library.
+ *        * Improved plugin loading performance for computers with weaker multithreading capabilities (eg. non-hyperthreaded dual-core or single-core CPUs).
+ *        * LOOT no longer outputs validity warnings for inactive plugins.
+ *        * Metadata syntax support changes, see the metadata syntax document for details.
+ *        * Updated libgit2 to v0.23.0.
+ *
  *      ## 0.7.1 - *22 June 2015*
  *
  *        * Fixed "No existing load order position" errors when sorting.
