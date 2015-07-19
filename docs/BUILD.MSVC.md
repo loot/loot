@@ -65,7 +65,6 @@ Parameter | Values | Default |Description
 `BUILD_SHARED_LIBS` | `ON`, `OFF` | `OFF` | Whether or not to build a shared libloot.
 `PROJECT_STATIC_RUNTIME` | `ON`, `OFF` | `ON` | Whether to link the C++ runtime statically or not. This also affects the Boost libraries used.
 `PROJECT_ARCH` | `32`, `64` | `32` | Whether to build 32 or 64 bit LOOT binaries.
-`ALPHANUM_ROOT` | path | `../../alphanum` | Path to the folder containing `alphanum.hpp`.
 `CEF_ROOT` | path | `../../cef` | Path to the root of the Chromium Embedded Framework folder.
 `LIBESPM_ROOT` | path | `../../libespm` | Path to the root of the libespm repository folder.
 `LIBGIT2_ROOT` | path | `../../libgit2` | Path to the root of the libgit2 repository folder.

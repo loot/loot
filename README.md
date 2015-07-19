@@ -18,16 +18,15 @@ LOOT is intended to make using mods easier, and mod users should still possess a
 
 LOOT uses [CMake](http://cmake.org) to generate build files, and requires the following libraries (version numbers used in latest development revision given):
 
-* [Alphanum](http://www.davekoelle.com/files/alphanum.hpp)
 * [Boost](http://www.boost.org) v1.58.0
-* [Chromium Embedded Framework](https://bitbucket.org/chromiumembedded/cef) branch 2272
-* [Google Test](https://code.google.com/p/googletest/) v1.7: Required to build the LOOT API's tests, but not the API itself or the LOOT application.
+* [Chromium Embedded Framework](https://bitbucket.org/chromiumembedded/cef) branch 2272: Required to build the GUI, but not the API or tests.
+* [Google Test](https://code.google.com/p/googletest/) v1.7: Required to build the tests, but not the API or the GUI.
 * [Libespm](http://github.com/WrinklyNinja/libespm)
 * [Libgit2](http://libgit2.github.com/) v0.23.0
 * [Libloadorder](http://github.com/WrinklyNinja/libloadorder)
 * [yaml-cpp](http://github.com/WrinklyNinja/yaml-cpp): Use the `patched-for-loot` branch.
 
-Alphanum and Libespm do not require any additional setup. The rest of the libraries must be built separately. Instructions for building them and LOOT itself using Microsoft Visual Studio are given in [docs/BUILD.MSVC.md](docs/BUILD.MSVC.md).
+Libespm does not require any additional setup. The rest of the libraries must be built separately. Instructions for building them and LOOT itself using Microsoft Visual Studio are given in [docs/BUILD.MSVC.md](docs/BUILD.MSVC.md).
 
 Although LOOT uses a cross-platform build system and cross-platform libraries, it does rely on some Windows API functionality. Anyone wishing to port LOOT to other platforms will need to ensure equivalent functionality is implemented for their target platform. The Windows API code is wrapped in `#ifdef _WIN32` blocks so that it can be easily identified.
 

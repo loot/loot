@@ -45,10 +45,6 @@ IF (NOT DEFINED PROJECT_ARCH)
     set (PROJECT_ARCH "32")
 ENDIF ()
 
-IF (NOT DEFINED ALPHANUM_ROOT)
-    set (ALPHANUM_ROOT "../../alphanum")
-ENDIF ()
-
 IF (NOT DEFINED LIBESPM_ROOT)
     set (LIBESPM_ROOT "../../libespm")
 ENDIF ()
@@ -186,7 +182,6 @@ source_group("Header Files" FILES ${LOOT_HEADERS} ${LOOT_GUI_HEADERS} ${LOOT_API
 
 # Include source and library directories.
 include_directories ("${CMAKE_SOURCE_DIR}/src"
-                     ${ALPHANUM_ROOT}
                      "${LIBLOADORDER_ROOT}/src"
                      "${LIBGIT2_ROOT}/include"
                      ${CEF_ROOT}

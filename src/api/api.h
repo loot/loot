@@ -51,12 +51,11 @@
  * @section credit_sec Credits
  *      The LOOT API is written by [WrinklyNinja]
  *      (http://github.com/WrinklyNinja) in C/C++ and makes use of the
- *      [Alphanum](http://www.davekoelle.com/alphanum.html),
  *      [Boost](http://www.boost.org/),
  *      [libespm](http://github.com/WrinklyNinja/libespm),
  *      [libgit2](http://github.com/libgit2/libgit2),
  *      [libloadorder](http://github.com/WrinklyNinja/libloadorder/) and
- *      [yaml-cpp](http://code.google.com/p/yaml-cpp/) libraries. Copyright
+ *      [yaml-cpp](http://github.com/WrinklyNinja/yaml-cpp) libraries. Copyright
  *      license information for all these may be found in the
  *      "docs/licenses/Licenses.txt" file.
  *

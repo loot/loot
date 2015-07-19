@@ -39,6 +39,8 @@ namespace loot {
         Version(const boost::filesystem::path& file);
 
         std::string AsString() const;
+        void Decompose(std::vector<unsigned long>& release,
+                       std::vector<std::string>& preRelease) const;
 
         bool operator > (const Version&) const;
         bool operator < (const Version&) const;

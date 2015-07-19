@@ -27,11 +27,7 @@ install:
   # Use GCC 5.
   - if [ "$CXX" = "g++" ]; then export CXX="g++-5" CC="gcc-5"; fi
   # Currently inside the cloned repo path.
-  # Install Alphanum
   - cd ../..
-  - mkdir alphanum && cd alphanum
-  - wget http://www.davekoelle.com/files/alphanum.hpp
-  - cd ..
   # Install libespm.
   - git clone https://github.com/WrinklyNinja/libespm.git libespm
   # Build yaml-cpp
