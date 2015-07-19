@@ -144,27 +144,73 @@ TEST_F(Plugin, IsActive) {
 TEST_F(Plugin, EqualityOperator) {
     loot::Plugin plugin1, plugin2;
     EXPECT_TRUE(plugin1 == plugin2);
+    EXPECT_TRUE(plugin2 == plugin1);
 
     plugin1 = loot::Plugin("Blank.esm");
     plugin2 = loot::Plugin("blank.esm");
     EXPECT_TRUE(plugin1 == plugin2);
+    EXPECT_TRUE(plugin2 == plugin1);
 
     plugin1 = loot::Plugin("Blank.esm");
     plugin2 = loot::Plugin("Blank.esp");
     EXPECT_FALSE(plugin1 == plugin2);
+    EXPECT_FALSE(plugin2 == plugin1);
+
+    plugin1 = loot::Plugin("Blank.esm");
+    plugin2 = loot::Plugin("Blan.\\.esm");
+    EXPECT_TRUE(plugin1 == plugin2);
+    EXPECT_TRUE(plugin2 == plugin1);
+
+    plugin1 = loot::Plugin("Blan.esm");
+    plugin2 = loot::Plugin("Blan.\\.esm");
+    EXPECT_FALSE(plugin1 == plugin2);
+    EXPECT_FALSE(plugin2 == plugin1);
+
+    plugin1 = loot::Plugin("Blan.\\.esm");
+    plugin2 = loot::Plugin("Blan.\\.esm");
+    EXPECT_TRUE(plugin1 == plugin2);
+    EXPECT_TRUE(plugin2 == plugin1);
+
+    plugin1 = loot::Plugin("Blan(k|p).esm");
+    plugin2 = loot::Plugin("Blan.\\.esm");
+    EXPECT_FALSE(plugin1 == plugin2);
+    EXPECT_FALSE(plugin2 == plugin1);
 }
 
 TEST_F(Plugin, InequalityOperator) {
     loot::Plugin plugin1, plugin2;
     EXPECT_FALSE(plugin1 != plugin2);
+    EXPECT_FALSE(plugin2 != plugin1);
 
     plugin1 = loot::Plugin("Blank.esm");
     plugin2 = loot::Plugin("blank.esm");
     EXPECT_FALSE(plugin1 != plugin2);
+    EXPECT_FALSE(plugin2 != plugin1);
 
     plugin1 = loot::Plugin("Blank.esm");
     plugin2 = loot::Plugin("Blank.esp");
     EXPECT_TRUE(plugin1 != plugin2);
+    EXPECT_TRUE(plugin2 != plugin1);
+
+    plugin1 = loot::Plugin("Blank.esm");
+    plugin2 = loot::Plugin("Blan.\\.esm");
+    EXPECT_FALSE(plugin1 != plugin2);
+    EXPECT_FALSE(plugin2 != plugin1);
+
+    plugin1 = loot::Plugin("Blan.esm");
+    plugin2 = loot::Plugin("Blan.\\.esm");
+    EXPECT_TRUE(plugin1 != plugin2);
+    EXPECT_TRUE(plugin2 != plugin1);
+
+    plugin1 = loot::Plugin("Blan.\\.esm");
+    plugin2 = loot::Plugin("Blan.\\.esm");
+    EXPECT_FALSE(plugin1 != plugin2);
+    EXPECT_FALSE(plugin2 != plugin1);
+
+    plugin1 = loot::Plugin("Blan(k|p).esm");
+    plugin2 = loot::Plugin("Blan.\\.esm");
+    EXPECT_TRUE(plugin1 != plugin2);
+    EXPECT_TRUE(plugin2 != plugin1);
 }
 
 TEST_F(Plugin, DoFormIDsOverlap) {

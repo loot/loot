@@ -55,6 +55,21 @@ TEST_F(PluginMetadata, EqualityOperator) {
     pm2 = loot::PluginMetadata("Blan.\\.esm");
     EXPECT_TRUE(pm1 == pm2);
     EXPECT_TRUE(pm2 == pm1);
+
+    pm1 = loot::PluginMetadata("Blan.esm");
+    pm2 = loot::PluginMetadata("Blan.\\.esm");
+    EXPECT_FALSE(pm1 == pm2);
+    EXPECT_FALSE(pm2 == pm1);
+
+    pm1 = loot::PluginMetadata("Blan.\\.esm");
+    pm2 = loot::PluginMetadata("Blan.\\.esm");
+    EXPECT_TRUE(pm1 == pm2);
+    EXPECT_TRUE(pm2 == pm1);
+
+    pm1 = loot::PluginMetadata("Blan(k|p).esm");
+    pm2 = loot::PluginMetadata("Blan.\\.esm");
+    EXPECT_FALSE(pm1 == pm2);
+    EXPECT_FALSE(pm2 == pm1);
 }
 
 TEST_F(PluginMetadata, MergeMetadata) {

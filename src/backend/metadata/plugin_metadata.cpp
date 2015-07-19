@@ -366,9 +366,13 @@ namespace loot {
     }
 
     bool PluginMetadata::operator == (const PluginMetadata& rhs) const {
-        return (boost::iequals(name, rhs.Name())
-                || (IsRegexPlugin() && regex_match(rhs.Name(), regex(name, regex::ECMAScript | regex::icase)))
-                || (rhs.IsRegexPlugin() && regex_match(name, regex(rhs.Name(), regex::ECMAScript | regex::icase))));
+        if (IsRegexPlugin() == rhs.IsRegexPlugin())
+            return boost::iequals(name, rhs.Name());
+
+        if (IsRegexPlugin())
+            return regex_match(rhs.Name(), regex(name, regex::ECMAScript | regex::icase));
+        else
+            return regex_match(name, regex(rhs.Name(), regex::ECMAScript | regex::icase));
     }
 
     bool PluginMetadata::operator != (const PluginMetadata& rhs) const {

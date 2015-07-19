@@ -158,7 +158,7 @@ namespace loot {
     }
 
     bool Plugin::operator == (const Plugin& rhs) const {
-        return boost::iequals(name, rhs.Name());
+        return PluginMetadata(name) == PluginMetadata(rhs.Name());
     }
 
     bool Plugin::operator != (const Plugin& rhs) const {
