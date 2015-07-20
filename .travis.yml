@@ -47,6 +47,21 @@ before_script:
 
 script: make tests && ./tests
 
+before_deploy:
+  # Build the metadata editor
+  - make metadata-validator
+  - tar -pczf metadata-validator.tar.gz metadata-validator
+
+deploy:
+  provider: releases
+  api_key:
+    secure: NXzSdk+TrMSRRaCf0hpCv0LS5Ow+LJTsI5pymUThljk2w7QEQMws3lET82W4fnVLYTB3hde94g2tT2oclzQzdbg6l9E6uNwv6mznu8ovTzvOLwnOAvWXtA7aB6ovxu1WrkCkKfcBB0sk8Ezt7UejQu5o0G09z699coWeuUxLFJk=
+  file: metadata-validator.tar.gz
+  skip_cleanup: true
+  on:
+    repo: loot/loot
+    tags: true
+
 notifications:
   irc:
     channels:
