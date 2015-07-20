@@ -23,7 +23,7 @@ cd ../..
 wget https://github.com/libgit2/libgit2/archive/v0.23.0.tar.gz -O - | tar -xz
 mv libgit2-0.23.0 libgit2
 mkdir libgit2/build && cd libgit2/build
-cmake ..
+cmake .. -DBUILD_SHARED_LIBS=OFF
 make git2
 cd ../..
 
@@ -31,6 +31,6 @@ cd ../..
 wget https://github.com/WrinklyNinja/libloadorder/archive/master.tar.gz -O - | tar -xz
 mv libloadorder-master libloadorder
 mkdir libloadorder/build && cd libloadorder/build
-cmake .. -DPROJECT_ARCH=64 -DPROJECT_STATIC_RUNTIME=OFF -DGTEST_ROOT=../gtest-1.7.0
+cmake .. -DPROJECT_ARCH=64 -DPROJECT_STATIC_RUNTIME=OFF -DBUILD_SHARED_LIBS=OFF -DGTEST_ROOT=../gtest-1.7.0
 make loadorder64
 cd ../..
