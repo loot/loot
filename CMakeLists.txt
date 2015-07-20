@@ -12,17 +12,21 @@
 # the one bundled with GitHub for Windows.
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
-include(GetGitRevisionDescription)
-get_git_head_revision(GIT_REFSPEC GIT_COMMIT_STRING --tags --long)
+include(GetGitRevisionDescription OPTIONAL RESULT_VARIABLE GIT_MODULE_PATH)
+IF (NOT GIT_MODULE_PATH MATCHES "NOTFOUND")
+    get_git_head_revision(GIT_REFSPEC GIT_COMMIT_STRING --tags --long)
 
-IF (GIT_COMMIT_STRING MATCHES "GITDIR-NOTFOUND")
-    set(GIT_COMMIT_STRING "unknown")
+    IF (GIT_COMMIT_STRING MATCHES "GITDIR-NOTFOUND")
+        set(GIT_COMMIT_STRING "unknown")
+    ELSE ()
+        # Get a shortened ID. Although knowing the shortest unique string requires Git,
+        # 8 characters should be a good compromise between chance of ambiguity and length,
+        # especially since the version numbers would narrow down the range of possibly
+        # ambiguous commits.
+        string(SUBSTRING ${GIT_COMMIT_STRING} 0 8 GIT_COMMIT_STRING)
+    ENDIF ()
 ELSE ()
-    # Get a shortened ID. Although knowing the shortest unique string requires Git,
-    # 8 characters should be a good compromise between chance of ambiguity and length,
-    # especially since the version numbers would narrow down the range of possibly
-    # ambiguous commits.
-    string(SUBSTRING ${GIT_COMMIT_STRING} 0 8 GIT_COMMIT_STRING)
+    SET (GIT_COMMIT_STRING "unknown")
 ENDIF ()
 
 message(STATUS "Git revision: ${GIT_COMMIT_STRING}")
