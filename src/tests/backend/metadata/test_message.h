@@ -355,13 +355,14 @@ TEST_F(Message, YamlDecode) {
     EXPECT_EQ(MessageContents({MessageContent("content1", Language::french)}), message.Content());
     EXPECT_EQ("", message.Condition());
 
+    // Throw because no English string is given in a multilingual message.
     node = YAML::Load("type: say\n"
                       "content:\n"
                       "  - lang: de\n"
                       "    str: content1\n"
                       "  - lang: fr\n"
                       "    str: content2");
-    EXPECT_ANY_THROW(message = node.as<loot::Message>());
+    EXPECT_THROW(node.as<loot::Message>(), YAML::RepresentationException);
 
     node = YAML::Load("type: say\n"
                       "content: con%1%tent1\n"
@@ -372,11 +373,43 @@ TEST_F(Message, YamlDecode) {
     EXPECT_EQ(MessageContents({MessageContent("consub1tent1", Language::english)}), message.Content());
     EXPECT_EQ("", message.Condition());
 
+    // Check that subs apply to all languages of a multilingual message.
+    node = YAML::Load("type: say\n"
+                      "content:\n"
+                      "  - lang: en\n"
+                      "    str: content1 %1%\n"
+                      "  - lang: de\n"
+                      "    str: content2 %1%\n"
+                      "subs:\n"
+                      "  - sub");
+    message = node.as<loot::Message>();
+    EXPECT_EQ(loot::Message::say, message.Type());
+    EXPECT_EQ(MessageContents({
+        MessageContent("content1 sub", Language::english),
+        MessageContent("content2 sub", Language::german),
+    }), message.Content());
+    EXPECT_EQ("", message.Condition());
+
+    // Throw because there aren't the same number of subs as referred to in the content string.
+    node = YAML::Load("type: say\n"
+                      "content: '%1% %2%'\n"
+                      "subs:\n"
+                      "  - sub1");
+    EXPECT_THROW(node.as<loot::Message>(), YAML::RepresentationException);
+
+    // Don't throw because no subs are given, so none are expected in the content string.
+    node = YAML::Load("type: say\n"
+                      "content: con%1%tent1\n");
+    message = node.as<loot::Message>();
+    EXPECT_EQ(loot::Message::say, message.Type());
+    EXPECT_EQ(MessageContents({MessageContent("con%1%tent1", Language::english)}), message.Content());
+    EXPECT_EQ("", message.Condition());
+
     node = YAML::Load("scalar");
-    EXPECT_ANY_THROW(node.as<loot::Message>());
+    EXPECT_THROW(node.as<loot::Message>(), YAML::RepresentationException);
 
     node = YAML::Load("[0, 1, 2]");
-    EXPECT_ANY_THROW(node.as<loot::Message>());
+    EXPECT_THROW(node.as<loot::Message>(), YAML::RepresentationException);
 }
 
 #endif

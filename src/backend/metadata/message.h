@@ -130,7 +130,12 @@ namespace YAML {
                         f = f % sub;
                     }
 
-                    mc = loot::MessageContent(f.str(), mc.Language());
+                    try {
+                        mc = loot::MessageContent(f.str(), mc.Language());
+                    }
+                    catch (boost::io::format_error& e) {
+                        throw RepresentationException(node.Mark(), std::string("bad conversion: content substitution error: ") + e.what());
+                    }
                 }
             }
 
