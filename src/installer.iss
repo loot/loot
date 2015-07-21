@@ -189,7 +189,7 @@ de.DeleteUserFiles=Möchten Sie Ihre Einstellungen und Benutzer-Metadaten lösch
 ko.DeleteUserFiles=당신은 당신의 설정과 사용자 메타 데이터를 삭제 하시겠습니까?
 #endif
 pl.DeleteUserFiles=Czy chcesz usunąć ustawienia i metadane użytkownika?
-ru.DeleteUserFiles=Вы хотите, чтобы удалить настройки и метаданные пользователя?
+ru.DeleteUserFiles=Вы хотите удалить ваши настройки и метаданные пользователя?
 #ifdef SimplifiedChineseExists
 zh_CN.DeleteUserFiles=你想要删除你的设置和用户数据吗？
 #endif
