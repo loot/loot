@@ -55,7 +55,7 @@ namespace loot {
         if (it != game.conditionCache.end())
             return it->second;
 
-        ConditionGrammar<std::string::const_iterator, boost::spirit::qi::space_type> grammar(&game, false);
+        ConditionGrammar<std::string::const_iterator, boost::spirit::qi::space_type> grammar(&game);
         boost::spirit::qi::space_type skipper;
         std::string::const_iterator begin, end;
         bool eval;
@@ -88,7 +88,7 @@ namespace loot {
 
         BOOST_LOG_TRIVIAL(trace) << "Testing condition syntax: " << _condition;
 
-        ConditionGrammar<std::string::const_iterator, boost::spirit::qi::space_type> grammar(nullptr, true);
+        ConditionGrammar<std::string::const_iterator, boost::spirit::qi::space_type> grammar(nullptr);
         boost::spirit::qi::space_type skipper;
         std::string::const_iterator begin, end;
 

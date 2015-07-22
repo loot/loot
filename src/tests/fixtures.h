@@ -35,7 +35,13 @@ along with LOOT.  If not, see
 class GameTest : public ::testing::Test {
 protected:
     GameTest(const boost::filesystem::path& gameDataPath, const boost::filesystem::path& gameLocalPath)
-        : dataPath(gameDataPath), localPath(gameLocalPath), missingPath("./missing"), masterlistPath(localPath / "masterlist.yaml"), userlistPath(localPath / "userlist.yaml"), db(nullptr) {}
+        : dataPath(gameDataPath),
+        localPath(gameLocalPath),
+        missingPath("./missing"),
+        masterlistPath(localPath / "masterlist.yaml"),
+        userlistPath(localPath / "userlist.yaml"),
+        resourcePath(dataPath / "resource" / "detail" / "resource.txt"),
+        db(nullptr) {}
 
     inline virtual void SetUp() {
         ASSERT_NO_THROW(boost::filesystem::create_directories(localPath));
@@ -70,6 +76,12 @@ protected:
         out.close();
         ASSERT_TRUE(boost::filesystem::exists(dataPath / "EmptyFile.esm"));
 
+        // Write out an empty resource file.
+        ASSERT_NO_THROW(boost::filesystem::create_directories(resourcePath.parent_path()));
+        out.open(resourcePath);
+        out.close();
+        ASSERT_TRUE(boost::filesystem::exists(resourcePath));
+
         // Write out an non-empty, non-plugin file.
         out.open(dataPath / "NotAPlugin.esm");
         out << "This isn't a valid plugin file.";
@@ -85,8 +97,10 @@ protected:
 
         // Delete generated files.
         ASSERT_NO_THROW(boost::filesystem::remove(dataPath / "EmptyFile.esm"));
+        ASSERT_NO_THROW(boost::filesystem::remove(resourcePath));
         ASSERT_NO_THROW(boost::filesystem::remove(dataPath / "NotAPlugin.esm"));
         ASSERT_FALSE(boost::filesystem::exists(dataPath / "EmptyFile.esm"));
+        ASSERT_FALSE(boost::filesystem::exists(resourcePath));
         ASSERT_FALSE(boost::filesystem::exists(dataPath / "NotAPlugin.esm"));
 
         // Masterlist & userlist may have been created during test, so delete them.
@@ -105,6 +119,8 @@ protected:
 
     const boost::filesystem::path masterlistPath;
     const boost::filesystem::path userlistPath;
+
+    const boost::filesystem::path resourcePath;
 
     loot_db db;
 };

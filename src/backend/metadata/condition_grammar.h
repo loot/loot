@@ -64,10 +64,8 @@ namespace loot {
     template<typename Iterator, typename Skipper>
     class ConditionGrammar : public qi::grammar < Iterator, bool(), Skipper > {
     public:
-        ConditionGrammar(Game * game, bool parseOnly) : ConditionGrammar::base_type(expression, "condition grammar"), _game(game), _parseOnly(parseOnly) {
-            if (!_parseOnly && _game == nullptr)
-                throw error(error::invalid_args, "A valid game pointer was not passed during a condition evaluation.");
-
+        ConditionGrammar() : ConditionGrammar(nullptr) {}
+        ConditionGrammar(Game * game) : ConditionGrammar::base_type(expression, "condition grammar"), _game(game) {
             expression =
                 qi::eps >
                 compound[qi::labels::_val = qi::labels::_1]
@@ -142,13 +140,9 @@ namespace loot {
         qi::rule<Iterator, char()> invalidPathChars;
 
         Game * _game;
-        bool _parseOnly;
 
         //Eval's exact paths. Check for files and ghosted plugins.
         void CheckFile(bool& result, const std::string& file) const {
-            if (_parseOnly)
-                return;
-
             BOOST_LOG_TRIVIAL(trace) << "Checking to see if the file \"" << file << "\" exists.";
 
             if (file == "LOOT") {
@@ -160,6 +154,9 @@ namespace loot {
                 BOOST_LOG_TRIVIAL(error) << "Invalid file path: " << file;
                 throw loot::error(loot::error::invalid_args, boost::locale::translate("Invalid file path:").str() + " " + file);
             }
+
+            if (_game == nullptr)
+                return;
 
             if (boost::iends_with(file, ".esp") || boost::iends_with(file, ".esm"))
                 result = boost::filesystem::exists(_game->DataPath() / file) || boost::filesystem::exists(_game->DataPath() / (file + ".ghost"));
@@ -191,27 +188,20 @@ namespace loot {
                 throw loot::error(loot::error::invalid_args, (boost::format(boost::locale::translate("Invalid regex string \"%1%\": %2%")) % regex % e.what()).str());
             }
 
-            std::regex sepReg("/|(\\\\\\\\)", std::regex::ECMAScript | std::regex::icase);
+            std::regex sepReg("/|(\\\\\\\\)", std::regex::ECMAScript);
 
-            std::vector<std::string> components;
             std::sregex_token_iterator it(regex.begin(), regex.end(), sepReg, -1);
-            std::sregex_token_iterator itend;
-            for (; it != itend; ++it) {
-                components.push_back(*it);
-            }
+            std::vector<std::string> components(it, std::sregex_token_iterator());
 
             std::string filename = components.back();
             components.pop_back();
 
             boost::filesystem::path parent;
-            for (std::vector<std::string>::const_iterator it = components.begin(), endIt = components.end()--; it != endIt; ++it) {
-                if (*it == ".")
-                    continue;
-
-                parent += *it;
+            for (const auto& component : components) {
+                parent /= component;
             }
 
-            if (!IsSafePath(parent.string())) {
+            if (!IsSafePath(parent)) {
                 BOOST_LOG_TRIVIAL(error) << "Invalid folder path: " << parent;
                 throw loot::error(loot::error::invalid_args, boost::locale::translate("Invalid folder path:").str() + " " + parent.string());
             }
@@ -235,7 +225,7 @@ namespace loot {
 
             std::pair<boost::filesystem::path, std::regex> pathRegex = SplitRegex(regexStr);
 
-            if (_parseOnly)
+            if (_game == nullptr)
                 return;
 
             //Now we have a valid parent path and a regex filename. Check that
@@ -263,7 +253,7 @@ namespace loot {
 
             std::pair<boost::filesystem::path, std::regex> pathRegex = SplitRegex(regexStr);
 
-            if (_parseOnly)
+            if (_game == nullptr)
                 return;
 
             //Now we have a valid parent path and a regex filename. Check that
@@ -287,7 +277,6 @@ namespace loot {
         }
 
         void CheckSum(bool& result, const std::string& file, const uint32_t checksum) {
-
             BOOST_LOG_TRIVIAL(trace) << "Checking the CRC of the file \"" << file << "\".";
 
             if (!IsSafePath(file)) {
@@ -295,7 +284,7 @@ namespace loot {
                 throw loot::error(loot::error::invalid_args, boost::locale::translate("Invalid file path:").str() + " " + file);
             }
 
-            if (_parseOnly)
+            if (_game == nullptr)
                 return;
 
             uint32_t crc;
@@ -322,12 +311,13 @@ namespace loot {
         }
 
         void CheckVersion(bool& result, const std::string&  file, const std::string& version, const std::string& comparator) const {
-            if (_parseOnly)
-                return;
-
             BOOST_LOG_TRIVIAL(trace) << "Checking version of file \"" << file << "\".";
 
             CheckFile(result, file);
+
+            if (_game == nullptr)
+                return;
+
             if (!result) {
                 if (comparator == "!=" || comparator == "<" || comparator == "<=")
                     result = true;
@@ -360,13 +350,13 @@ namespace loot {
         }
 
         void CheckActive(bool& result, const std::string& file) const {
-            if (_parseOnly)
-                return;
-
             if (!IsSafePath(file)) {
                 BOOST_LOG_TRIVIAL(error) << "Invalid file path: " << file;
                 throw loot::error(loot::error::invalid_args, boost::locale::translate("Invalid file path:").str() + " " + file);
             }
+
+            if (_game == nullptr)
+                return;
 
             if (file == "LOOT")
                 result = false;
@@ -386,19 +376,21 @@ namespace loot {
         }
 
         //Checks that the path (not regex) doesn't go outside any game folders.
-        bool IsSafePath(const std::string& path) const {
+        bool IsSafePath(const boost::filesystem::path& path) const {
             BOOST_LOG_TRIVIAL(trace) << "Checking to see if the path \"" << path << "\" is safe.";
 
-            std::vector<std::string> components;
-            boost::split(components, path, boost::is_any_of("/\\"));
-            components.pop_back();
-            std::string parent_path;
-            for (auto it = components.cbegin(), endIt = components.cend()--; it != endIt; ++it) {
-                if (*it == ".")
+            boost::filesystem::path temp;
+            for (const auto& component : path) {
+                if (component == ".")
                     continue;
-                parent_path += *it + '/';
+
+                if (component == ".." && temp.filename() == "..")
+                    return false;
+
+                temp /= component;
             }
-            return !boost::contains(parent_path, "../../");
+
+            return true;
         }
     };
 }
