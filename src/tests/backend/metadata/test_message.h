@@ -326,11 +326,11 @@ TEST_F(Message, YamlDecode) {
 
     node = YAML::Load("type: say\n"
                       "content: content1\n"
-                      "condition: condition1");
+                      "condition: 'file(\"Foo.esp\")'");
     message = node.as<loot::Message>();
     EXPECT_EQ(loot::Message::say, message.Type());
     EXPECT_EQ(MessageContents({MessageContent("content1", Language::english)}), message.Content());
-    EXPECT_EQ("condition1", message.Condition());
+    EXPECT_EQ("file(\"Foo.esp\")", message.Condition());
 
     node = YAML::Load("type: say\n"
                       "content:\n"
@@ -404,6 +404,11 @@ TEST_F(Message, YamlDecode) {
     EXPECT_EQ(loot::Message::say, message.Type());
     EXPECT_EQ(MessageContents({MessageContent("con%1%tent1", Language::english)}), message.Content());
     EXPECT_EQ("", message.Condition());
+
+    node = YAML::Load("type: say\n"
+                      "content: content1\n"
+                      "condition: invalid");
+    EXPECT_THROW(node.as<loot::Message>(), YAML::RepresentationException);
 
     node = YAML::Load("scalar");
     EXPECT_THROW(node.as<loot::Message>(), YAML::RepresentationException);

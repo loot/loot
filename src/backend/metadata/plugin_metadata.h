@@ -37,6 +37,7 @@
 #include <vector>
 #include <list>
 #include <set>
+#include <regex>
 
 #include <boost/locale.hpp>
 
@@ -89,7 +90,6 @@ namespace loot {
         void Locations(const std::set<Location>& locations);
 
         PluginMetadata& EvalAllConditions(Game& game, const unsigned int language);
-        void ParseAllConditions() const;
         bool HasNameOnly() const;
         bool IsRegexPlugin() const;
         bool IsPriorityExplicit() const;
@@ -159,6 +159,16 @@ namespace YAML {
                 throw RepresentationException(node.Mark(), "bad conversion: 'name' key missing from 'plugin metadata' object");
 
             rhs = loot::PluginMetadata(node["name"].as<std::string>());
+
+            // Test for valid regex.
+            if (rhs.IsRegexPlugin()) {
+                try {
+                    std::regex(rhs.Name(), std::regex::ECMAScript | std::regex::icase);
+                }
+                catch (std::regex_error& e) {
+                    throw RepresentationException(node.Mark(), std::string("bad conversion: invalid regex in 'name' key: ") + e.what());
+                }
+            }
 
             if (node["enabled"])
                 rhs.Enabled(node["enabled"].as<bool>());

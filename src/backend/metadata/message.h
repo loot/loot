@@ -144,6 +144,15 @@ namespace YAML {
                 condition = node["condition"].as<std::string>();
 
             rhs = loot::Message(typeNo, content, condition);
+
+            // Test condition syntax.
+            try {
+                rhs.ParseCondition();
+            }
+            catch (std::exception& e) {
+                throw RepresentationException(node.Mark(), std::string("bad conversion: invalid condition syntax: ") + e.what());
+            }
+
             return true;
         }
     };

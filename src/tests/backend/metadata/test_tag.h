@@ -164,14 +164,17 @@ TEST(Tag, YamlDecode) {
     EXPECT_FALSE(tag.IsAddition());
     EXPECT_EQ("", tag.Condition());
 
-    node = YAML::Load("{name: name1, condition: condition1}");
+    node = YAML::Load("{name: name1, condition: 'file(\"Foo.esp\")'}");
     tag = node.as<Tag>();
     EXPECT_EQ("name1", tag.Name());
     EXPECT_TRUE(tag.IsAddition());
-    EXPECT_EQ("condition1", tag.Condition());
+    EXPECT_EQ("file(\"Foo.esp\")", tag.Condition());
+
+    node = YAML::Load("{name: name1, condition: invalid}");
+    EXPECT_THROW(node.as<Tag>(), YAML::RepresentationException);
 
     node = YAML::Load("[0, 1, 2]");
-    EXPECT_ANY_THROW(node.as<Tag>());
+    EXPECT_THROW(node.as<Tag>(), YAML::RepresentationException);
 }
 
 #endif

@@ -332,24 +332,6 @@ namespace loot {
         return *this;
     }
 
-    void PluginMetadata::ParseAllConditions() const {
-        for (const File& file : loadAfter) {
-            file.ParseCondition();
-        }
-        for (const File& file : requirements) {
-            file.ParseCondition();
-        }
-        for (const File& file : incompatibilities) {
-            file.ParseCondition();
-        }
-        for (const Message& message : messages) {
-            message.ParseCondition();
-        }
-        for (const Tag& tag : tags) {
-            tag.ParseCondition();
-        }
-    }
-
     bool PluginMetadata::HasNameOnly() const {
         return !IsPriorityExplicit() && loadAfter.empty() && requirements.empty() && incompatibilities.empty() && messages.empty() && tags.empty() && _dirtyInfo.empty() && _locations.empty();
     }

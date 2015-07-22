@@ -184,6 +184,13 @@ namespace loot {
             In C++ string literals, the backslash must be escaped once more to give "\\\\".
             Split the regex with another regex! */
 
+            try {
+                std::regex(regex, std::regex::ECMAScript | std::regex::icase);
+            }
+            catch (std::regex_error& e) {
+                throw loot::error(loot::error::invalid_args, (boost::format(boost::locale::translate("Invalid regex string \"%1%\": %2%")) % regex % e.what()).str());
+            }
+
             std::regex sepReg("/|(\\\\\\\\)", std::regex::ECMAScript | std::regex::icase);
 
             std::vector<std::string> components;
@@ -213,22 +220,23 @@ namespace loot {
             try {
                 reg = std::regex(filename, std::regex::ECMAScript | std::regex::icase);
             }
-            catch (std::exception& /*e*/) {
+            catch (std::regex_error& e) {
                 BOOST_LOG_TRIVIAL(error) << "Invalid regex string:" << filename;
-                throw loot::error(loot::error::invalid_args, boost::locale::translate("Invalid regex string:").str() + " " + filename);
+                throw loot::error(loot::error::invalid_args, (boost::format(boost::locale::translate("Invalid regex string \"%1%\": %2%")) % filename % e.what()).str());
             }
 
             return std::pair<boost::filesystem::path, std::regex>(parent, reg);
         }
 
         void CheckRegex(bool& result, const std::string& regexStr) const {
-            if (_parseOnly)
-                return;
             result = false;
 
             BOOST_LOG_TRIVIAL(trace) << "Checking to see if any files matching the regex \"" << regexStr << "\" exist.";
 
             std::pair<boost::filesystem::path, std::regex> pathRegex = SplitRegex(regexStr);
+
+            if (_parseOnly)
+                return;
 
             //Now we have a valid parent path and a regex filename. Check that
             //the parent path exists and is a directory.
@@ -249,13 +257,14 @@ namespace loot {
         }
 
         void CheckMany(bool& result, const std::string& regexStr) const {
-            if (_parseOnly)
-                return;
             result = false;
 
             BOOST_LOG_TRIVIAL(trace) << "Checking to see if more than one file matching the regex \"" << regexStr << "\" exist.";
 
             std::pair<boost::filesystem::path, std::regex> pathRegex = SplitRegex(regexStr);
+
+            if (_parseOnly)
+                return;
 
             //Now we have a valid parent path and a regex filename. Check that
             //the parent path exists and is a directory.
@@ -278,8 +287,6 @@ namespace loot {
         }
 
         void CheckSum(bool& result, const std::string& file, const uint32_t checksum) {
-            if (_parseOnly)
-                return;
 
             BOOST_LOG_TRIVIAL(trace) << "Checking the CRC of the file \"" << file << "\".";
 
@@ -287,6 +294,9 @@ namespace loot {
                 BOOST_LOG_TRIVIAL(error) << "Invalid file path: " << file;
                 throw loot::error(loot::error::invalid_args, boost::locale::translate("Invalid file path:").str() + " " + file);
             }
+
+            if (_parseOnly)
+                return;
 
             uint32_t crc;
             std::unordered_map<std::string, uint32_t>::iterator it = _game->crcCache.find(boost::locale::to_lower(file));
