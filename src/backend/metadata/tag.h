@@ -82,6 +82,14 @@ namespace YAML {
             else
                 rhs = loot::Tag(tag, true, condition);
 
+            // Test condition syntax.
+            try {
+                rhs.ParseCondition();
+            }
+            catch (std::exception& e) {
+                throw RepresentationException(node.Mark(), std::string("bad conversion: invalid condition syntax: ") + e.what());
+            }
+
             return true;
         }
     };

@@ -34,14 +34,12 @@ class ConditionGrammar : public SkyrimTest {};
 typedef loot::ConditionGrammar<std::string::const_iterator, boost::spirit::qi::space_type> Grammar;
 
 TEST_F(ConditionGrammar, Constructor) {
-    EXPECT_NO_THROW(Grammar cg(nullptr, true));
-    EXPECT_THROW(Grammar cg(nullptr, false), loot::error);
+    EXPECT_NO_THROW(Grammar cg(nullptr));
 
     loot::Game game(loot::Game::tes5);
     game.SetGamePath(dataPath.parent_path());
 
-    EXPECT_NO_THROW(Grammar cg(&game, true));
-    EXPECT_NO_THROW(Grammar cg(&game, false));
+    EXPECT_NO_THROW(Grammar cg(&game));
 }
 
 TEST_F(ConditionGrammar, InvalidSyntax) {
@@ -51,7 +49,7 @@ TEST_F(ConditionGrammar, InvalidSyntax) {
     boost::spirit::qi::space_type skipper;
     bool eval = false;
     bool r = false;
-    Grammar cg(&game, false);
+    Grammar cg(&game);
 
     std::string condition("file(foo)");
     std::string::const_iterator begin = condition.begin();
@@ -67,7 +65,7 @@ TEST_F(ConditionGrammar, EmptyCondition) {
     boost::spirit::qi::space_type skipper;
     bool eval = false;
     bool r = false;
-    Grammar cg(&game, false);
+    Grammar cg(&game);
 
     std::string condition("");
     std::string::const_iterator begin = condition.begin();
@@ -83,13 +81,13 @@ TEST_F(ConditionGrammar, FileConditionTrue) {
     boost::spirit::qi::space_type skipper;
     bool eval = false;
     bool r = false;
-    Grammar cg(&game, false);
+    Grammar cg(&game);
 
     std::string condition("file(\"Blank.esm\")");
     std::string::const_iterator begin = condition.begin();
     std::string::const_iterator end = condition.end();
 
-    EXPECT_NO_THROW(r = boost::spirit::qi::phrase_parse(begin, end, cg, skipper, eval));
+    r = boost::spirit::qi::phrase_parse(begin, end, cg, skipper, eval);
     EXPECT_TRUE(r);
     EXPECT_TRUE(eval);
 }
@@ -101,7 +99,7 @@ TEST_F(ConditionGrammar, FileConditionFalse) {
     boost::spirit::qi::space_type skipper;
     bool eval = true;
     bool r = false;
-    Grammar cg(&game, false);
+    Grammar cg(&game);
 
     std::string condition("file(\"Blank.missing.esm\")");
     std::string::const_iterator begin = condition.begin();
@@ -119,7 +117,7 @@ TEST_F(ConditionGrammar, UnsafePath) {
     boost::spirit::qi::space_type skipper;
     bool eval = false;
     bool r = false;
-    Grammar cg(&game, false);
+    Grammar cg(&game);
 
     std::string condition("file(\"../../Blank.esm\")");
     std::string::const_iterator begin = condition.begin();
@@ -135,7 +133,7 @@ TEST_F(ConditionGrammar, RegexConditionTrue) {
     boost::spirit::qi::space_type skipper;
     bool eval = false;
     bool r = false;
-    Grammar cg(&game, false);
+    Grammar cg(&game);
 
     std::string condition("regex(\"Blank.+\\.esm\")");
     std::string::const_iterator begin = condition.begin();
@@ -153,7 +151,7 @@ TEST_F(ConditionGrammar, RegexConditionFalse) {
     boost::spirit::qi::space_type skipper;
     bool eval = true;
     bool r = false;
-    Grammar cg(&game, false);
+    Grammar cg(&game);
 
     std::string condition("regex(\"Blank\\.m.+\\.esm\")");
     std::string::const_iterator begin = condition.begin();
@@ -164,6 +162,24 @@ TEST_F(ConditionGrammar, RegexConditionFalse) {
     EXPECT_FALSE(eval);
 }
 
+TEST_F(ConditionGrammar, RegexCondition_Subfolder) {
+    loot::Game game(loot::Game::tes5);
+    game.SetGamePath(dataPath.parent_path());
+
+    boost::spirit::qi::space_type skipper;
+    bool eval = true;
+    bool r = false;
+    Grammar cg(&game);
+
+    std::string condition("regex(\"resource\\\\detail\\\\resource\\.txt\")");
+    std::string::const_iterator begin = condition.begin();
+    std::string::const_iterator end = condition.end();
+
+    EXPECT_NO_THROW(r = boost::spirit::qi::phrase_parse(begin, end, cg, skipper, eval));
+    EXPECT_TRUE(r);
+    EXPECT_TRUE(eval);
+}
+
 TEST_F(ConditionGrammar, ManyConditionTrue) {
     loot::Game game(loot::Game::tes5);
     game.SetGamePath(dataPath.parent_path());
@@ -171,7 +187,7 @@ TEST_F(ConditionGrammar, ManyConditionTrue) {
     boost::spirit::qi::space_type skipper;
     bool eval = false;
     bool r = false;
-    Grammar cg(&game, false);
+    Grammar cg(&game);
 
     std::string condition("many(\"Blank.+\\.esm\")");
     std::string::const_iterator begin = condition.begin();
@@ -189,7 +205,7 @@ TEST_F(ConditionGrammar, ManyConditionFalse) {
     boost::spirit::qi::space_type skipper;
     bool eval = true;
     bool r = false;
-    Grammar cg(&game, false);
+    Grammar cg(&game);
 
     std::string condition("many(\"Blank\\.esm\")");
     std::string::const_iterator begin = condition.begin();
@@ -208,7 +224,7 @@ TEST_F(ConditionGrammar, ChecksumConditionTrue) {
     boost::spirit::qi::space_type skipper;
     bool eval = false;
     bool r = false;
-    Grammar cg(&game, false);
+    Grammar cg(&game);
 
     std::string condition("checksum(\"Blank.esp\", E12EFAAA)");
     std::string::const_iterator begin = condition.begin();
@@ -227,7 +243,7 @@ TEST_F(ConditionGrammar, ChecksumConditionFalse) {
     boost::spirit::qi::space_type skipper;
     bool eval = true;
     bool r = false;
-    Grammar cg(&game, false);
+    Grammar cg(&game);
 
     std::string condition("checksum(\"Blank.esp\", DEADBEEF)");
     std::string::const_iterator begin = condition.begin();
@@ -247,7 +263,7 @@ TEST_F(ConditionGrammar, VersionConditionEqualTrue) {
     boost::spirit::qi::space_type skipper;
     bool eval = false;
     bool r = false;
-    Grammar cg(&game, false);
+    Grammar cg(&game);
 
     std::string condition("version(\"Blank.esm\", \"5.0\", ==)");
     std::string::const_iterator begin = condition.begin();
@@ -267,7 +283,7 @@ TEST_F(ConditionGrammar, VersionConditionEqualFalse) {
     boost::spirit::qi::space_type skipper;
     bool eval = true;
     bool r = false;
-    Grammar cg(&game, false);
+    Grammar cg(&game);
 
     std::string condition("version(\"Blank.esm\", \"6.0\", ==)");
     std::string::const_iterator begin = condition.begin();
@@ -287,7 +303,7 @@ TEST_F(ConditionGrammar, VersionConditionNotEqualTrue) {
     boost::spirit::qi::space_type skipper;
     bool eval = false;
     bool r = false;
-    Grammar cg(&game, false);
+    Grammar cg(&game);
 
     std::string condition("version(\"Blank.esm\", \"6.0\", !=)");
     std::string::const_iterator begin = condition.begin();
@@ -307,7 +323,7 @@ TEST_F(ConditionGrammar, VersionConditionNotEqualFalse) {
     boost::spirit::qi::space_type skipper;
     bool eval = true;
     bool r = false;
-    Grammar cg(&game, false);
+    Grammar cg(&game);
 
     std::string condition("version(\"Blank.esm\", \"5.0\", !=)");
     std::string::const_iterator begin = condition.begin();
@@ -327,7 +343,7 @@ TEST_F(ConditionGrammar, VersionConditionLessThanTrue) {
     boost::spirit::qi::space_type skipper;
     bool eval = false;
     bool r = false;
-    Grammar cg(&game, false);
+    Grammar cg(&game);
 
     std::string condition("version(\"Blank.esm\", \"6.0\", <)");
     std::string::const_iterator begin = condition.begin();
@@ -347,7 +363,7 @@ TEST_F(ConditionGrammar, VersionConditionLessThanFalse) {
     boost::spirit::qi::space_type skipper;
     bool eval = true;
     bool r = false;
-    Grammar cg(&game, false);
+    Grammar cg(&game);
 
     std::string condition("version(\"Blank.esm\", \"5.0\", <)");
     std::string::const_iterator begin = condition.begin();
@@ -367,7 +383,7 @@ TEST_F(ConditionGrammar, VersionConditionGreaterThanTrue) {
     boost::spirit::qi::space_type skipper;
     bool eval = false;
     bool r = false;
-    Grammar cg(&game, false);
+    Grammar cg(&game);
 
     std::string condition("version(\"Blank.esm\", \"4.0\", >)");
     std::string::const_iterator begin = condition.begin();
@@ -387,7 +403,7 @@ TEST_F(ConditionGrammar, VersionConditionGreaterThanFalse) {
     boost::spirit::qi::space_type skipper;
     bool eval = true;
     bool r = false;
-    Grammar cg(&game, false);
+    Grammar cg(&game);
 
     std::string condition("version(\"Blank.esm\", \"5.0\", >)");
     std::string::const_iterator begin = condition.begin();
@@ -407,7 +423,7 @@ TEST_F(ConditionGrammar, VersionConditionLETrue) {
     boost::spirit::qi::space_type skipper;
     bool eval = false;
     bool r = false;
-    Grammar cg(&game, false);
+    Grammar cg(&game);
 
     std::string condition("version(\"Blank.esm\", \"5.0\", <=)");
     std::string::const_iterator begin = condition.begin();
@@ -427,7 +443,7 @@ TEST_F(ConditionGrammar, VersionConditionLEFalse) {
     boost::spirit::qi::space_type skipper;
     bool eval = true;
     bool r = false;
-    Grammar cg(&game, false);
+    Grammar cg(&game);
 
     std::string condition("version(\"Blank.esm\", \"4.0\", <=)");
     std::string::const_iterator begin = condition.begin();
@@ -447,7 +463,7 @@ TEST_F(ConditionGrammar, VersionConditionGETrue) {
     boost::spirit::qi::space_type skipper;
     bool eval = false;
     bool r = false;
-    Grammar cg(&game, false);
+    Grammar cg(&game);
 
     std::string condition("version(\"Blank.esm\", \"5.0\", >=)");
     std::string::const_iterator begin = condition.begin();
@@ -466,7 +482,7 @@ TEST_F(ConditionGrammar, VersionConditionGEFalse) {
     boost::spirit::qi::space_type skipper;
     bool eval = true;
     bool r = false;
-    Grammar cg(&game, false);
+    Grammar cg(&game);
 
     std::string condition("version(\"Blank.esm\", \"6.0\", >=)");
     std::string::const_iterator begin = condition.begin();
@@ -485,7 +501,7 @@ TEST_F(ConditionGrammar, ActiveConditionTrue) {
     boost::spirit::qi::space_type skipper;
     bool eval = false;
     bool r = false;
-    Grammar cg(&game, false);
+    Grammar cg(&game);
 
     std::string condition("active(\"Blank.esm\")");
     std::string::const_iterator begin = condition.begin();
@@ -504,7 +520,7 @@ TEST_F(ConditionGrammar, ActiveConditionFalse) {
     boost::spirit::qi::space_type skipper;
     bool eval = true;
     bool r = false;
-    Grammar cg(&game, false);
+    Grammar cg(&game);
 
     std::string condition("active(\"Blank.esp\")");
     std::string::const_iterator begin = condition.begin();
@@ -522,7 +538,7 @@ TEST_F(ConditionGrammar, NegatorTrue) {
     boost::spirit::qi::space_type skipper;
     bool eval = false;
     bool r = false;
-    Grammar cg(&game, false);
+    Grammar cg(&game);
 
     std::string condition("not file(\"Blank.missing.esm\")");
     std::string::const_iterator begin = condition.begin();
@@ -540,7 +556,7 @@ TEST_F(ConditionGrammar, NegatorFalse) {
     boost::spirit::qi::space_type skipper;
     bool eval = true;
     bool r = false;
-    Grammar cg(&game, false);
+    Grammar cg(&game);
 
     std::string condition("not file(\"Blank.esm\")");
     std::string::const_iterator begin = condition.begin();
@@ -558,7 +574,7 @@ TEST_F(ConditionGrammar, CompoundAndTrue) {
     boost::spirit::qi::space_type skipper;
     bool eval = true;
     bool r = false;
-    Grammar cg(&game, false);
+    Grammar cg(&game);
 
     std::string condition("file(\"Blank.esm\") and file(\"Blank.esp\")");
     std::string::const_iterator begin = condition.begin();
@@ -576,7 +592,7 @@ TEST_F(ConditionGrammar, CompoundAndFalse) {
     boost::spirit::qi::space_type skipper;
     bool eval = true;
     bool r = false;
-    Grammar cg(&game, false);
+    Grammar cg(&game);
 
     std::string condition("file(\"Blank.esm\") and file(\"Blank.missing.esp\")");
     std::string::const_iterator begin = condition.begin();
@@ -594,7 +610,7 @@ TEST_F(ConditionGrammar, CompoundOrTrue) {
     boost::spirit::qi::space_type skipper;
     bool eval = true;
     bool r = false;
-    Grammar cg(&game, false);
+    Grammar cg(&game);
 
     std::string condition("file(\"Blank.missing.esm\") or file(\"Blank.esp\")");
     std::string::const_iterator begin = condition.begin();
@@ -612,7 +628,7 @@ TEST_F(ConditionGrammar, CompoundOrFalse) {
     boost::spirit::qi::space_type skipper;
     bool eval = true;
     bool r = false;
-    Grammar cg(&game, false);
+    Grammar cg(&game);
 
     std::string condition("file(\"Blank.missing.esm\") or file(\"Blank.missing.esp\")");
     std::string::const_iterator begin = condition.begin();
@@ -630,7 +646,7 @@ TEST_F(ConditionGrammar, OrderOfEvaluation) {
     boost::spirit::qi::space_type skipper;
     bool eval = true;
     bool r = false;
-    Grammar cg(&game, false);
+    Grammar cg(&game);
 
     std::string condition("file(\"Blank.esm\") and ( not file(\"Blank.esm\") or file(\"Blank.esp\") ) or file(\"Blank.missing.esp\")");
     std::string::const_iterator begin = condition.begin();

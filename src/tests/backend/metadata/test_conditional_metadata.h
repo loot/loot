@@ -72,6 +72,10 @@ TEST_F(ConditionalMetadata, ParseCondition) {
     cm = loot::ConditionalMetadata("condition");
     EXPECT_THROW(cm.ParseCondition(), loot::error);
 
+    // Check that invalid regex also throws.
+    cm = loot::ConditionalMetadata("regex(\"RagnvaldBook(Farengar(+Ragnvald)?)?\\.esp\")");
+    EXPECT_THROW(cm.ParseCondition(), loot::error);
+
     cm = loot::ConditionalMetadata("file(\"Blank.esm\")");
     EXPECT_NO_THROW(cm.ParseCondition());
 

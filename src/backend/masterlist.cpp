@@ -368,16 +368,6 @@ namespace loot {
             try {
                 this->Load(path);
 
-                for (auto &plugin : plugins) {
-                    plugin.ParseAllConditions();
-                }
-                for (auto &plugin : regexPlugins) {
-                    plugin.ParseAllConditions();
-                }
-                for (auto &message : messages) {
-                    message.ParseCondition();
-                }
-
                 parsingFailed = false;
             }
             catch (std::exception& e) {

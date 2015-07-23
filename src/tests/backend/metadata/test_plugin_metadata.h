@@ -502,7 +502,6 @@ TEST_F(PluginMetadata, EvalAllConditions) {
         "msg:\n"
         "  - type: say\n"
         "    content: 'content'\n"
-        "    condition: 'condition'\n"
         "tag:\n"
         "  - name: Relev\n"
         "    condition: 'file(\"Blank.missing.esm\")'\n"
@@ -516,8 +515,6 @@ TEST_F(PluginMetadata, EvalAllConditions) {
         "    udr: 1\n"
         "    nav: 2"
         ).as<loot::PluginMetadata>());
-
-    EXPECT_ANY_THROW(pm.EvalAllConditions(game, loot::Language::english));
 
     pm.Messages({loot::Message(loot::Message::say, "content")});
     EXPECT_NO_THROW(pm.EvalAllConditions(game, loot::Language::english));
@@ -535,33 +532,6 @@ TEST_F(PluginMetadata, EvalAllConditions) {
     EXPECT_EQ(std::set<loot::PluginDirtyInfo>({
         loot::PluginDirtyInfo(0xE12EFAAA, 0, 1, 2, "utility")
     }), pm.DirtyInfo());
-}
-
-TEST_F(PluginMetadata, ParseAllConditions) {
-    loot::PluginMetadata pm(YAML::Load(
-        "name: 'Blank.esp'\n"
-        "after:\n"
-        "  - name: 'Blank.esm'\n"
-        "    condition: 'file(\"Blank.esm\")'\n"
-        "req:\n"
-        "  - name: 'Blank.esm'\n"
-        "    condition: 'file(\"Blank.missing.esm\")'\n"
-        "inc:\n"
-        "  - name: 'Blank.esm'\n"
-        "    condition: 'file(\"Blank.esm\")'\n"
-        "msg:\n"
-        "  - type: say\n"
-        "    content: 'content'\n"
-        "    condition: 'condition'\n"
-        "tag:\n"
-        "  - name: Relev\n"
-        "    condition: 'file(\"Blank.missing.esm\")'"
-        ).as<loot::PluginMetadata>());
-
-    EXPECT_ANY_THROW(pm.ParseAllConditions());
-
-    pm.Messages({loot::Message(loot::Message::say, "content")});
-    EXPECT_NO_THROW(pm.ParseAllConditions());
 }
 
 TEST_F(PluginMetadata, HasNameOnly) {
@@ -823,9 +793,6 @@ TEST_F(PluginMetadata, YamlDecode) {
     YAML::Node node;
     loot::PluginMetadata pm;
 
-    node = YAML::Load("Blank.esp");
-    EXPECT_ANY_THROW(node.as<loot::PluginMetadata>());
-
     node = YAML::Load("name: Blank.esp");
     pm = node.as<loot::PluginMetadata>();
     EXPECT_EQ("Blank.esp", pm.Name());
@@ -887,13 +854,44 @@ TEST_F(PluginMetadata, YamlDecode) {
                       "    util: 'utility'\n"
                       "    udr: 1\n"
                       "    nav: 2");
-    EXPECT_ANY_THROW(node.as<loot::PluginMetadata>());
+    EXPECT_THROW(node.as<loot::PluginMetadata>(), YAML::RepresentationException);
+
+    // Don't allow invalid regex.
+    node = YAML::Load("name: 'RagnvaldBook(Farengar(+Ragnvald)?)?\\.esp'\n"
+                      "dirty:\n"
+                      "  - crc: 0x5\n"
+                      "    util: 'utility'\n"
+                      "    udr: 1\n"
+                      "    nav: 2");
+    EXPECT_THROW(node.as<loot::PluginMetadata>(), YAML::RepresentationException);
+
+    // Catch condition syntax errors.
+    node = YAML::Load(
+        "name: 'Blank.esp'\n"
+        "after:\n"
+        "  - name: 'Blank.esm'\n"
+        "    condition: 'file(\"Blank.esm\")'\n"
+        "req:\n"
+        "  - name: 'Blank.esm'\n"
+        "    condition: 'file(\"Blank.missing.esm\")'\n"
+        "inc:\n"
+        "  - name: 'Blank.esm'\n"
+        "    condition: 'file(\"Blank.esm\")'\n"
+        "msg:\n"
+        "  - type: say\n"
+        "    content: 'content'\n"
+        "    condition: 'condition'\n"
+        "tag:\n"
+        "  - name: Relev\n"
+        "    condition: 'file(\"Blank.missing.esm\")'"
+        );
+    EXPECT_THROW(node.as<loot::PluginMetadata>(), YAML::RepresentationException);
 
     node = YAML::Load("scalar");
-    EXPECT_ANY_THROW(node.as<loot::PluginMetadata>());
+    EXPECT_THROW(node.as<loot::PluginMetadata>(), YAML::RepresentationException);
 
     node = YAML::Load("[0, 1, 2]");
-    EXPECT_ANY_THROW(node.as<loot::PluginMetadata>());
+    EXPECT_THROW(node.as<loot::PluginMetadata>(), YAML::RepresentationException);
 }
 
 #endif

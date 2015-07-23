@@ -144,11 +144,11 @@ TEST(File, YamlEncode) {
 }
 
 TEST(File, YamlDecode) {
-    YAML::Node node = YAML::Load("{name: name1, display: display1, condition: condition1}");
+    YAML::Node node = YAML::Load("{name: name1, display: display1, condition: 'file(\"Foo.esp\")'}");
     File file = node.as<File>();
     EXPECT_EQ("name1", file.Name());
     EXPECT_EQ("display1", file.DisplayName());
-    EXPECT_EQ("condition1", file.Condition());
+    EXPECT_EQ("file(\"Foo.esp\")", file.Condition());
 
     node = YAML::Load("name1");
     file = node.as<File>();
@@ -162,11 +162,14 @@ TEST(File, YamlDecode) {
     EXPECT_EQ("display1", file.DisplayName());
     EXPECT_EQ("", file.Condition());
 
-    node = YAML::Load("{name: name1, condition: condition1}");
+    node = YAML::Load("{name: name1, condition: 'file(\"Foo.esp\")'}");
     file = node.as<File>();
     EXPECT_EQ("name1", file.Name());
     EXPECT_EQ("name1", file.DisplayName());
-    EXPECT_EQ("condition1", file.Condition());
+    EXPECT_EQ("file(\"Foo.esp\")", file.Condition());
+
+    node = YAML::Load("{name: name1, condition: invalid}");
+    EXPECT_THROW(node.as<File>(), YAML::RepresentationException);
 
     node = YAML::Load("[0, 1, 2]");
     EXPECT_ANY_THROW(node.as<File>());

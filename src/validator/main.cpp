@@ -65,14 +65,6 @@ int main(int argc, char **argv) {
         // Test YAML parsing.
         loot::MetadataList metadata;
         metadata.Load(argv[1]);
-
-        // Test condition parsing.
-        for (auto &plugin : metadata.Plugins()) {
-            plugin.ParseAllConditions();
-        }
-        for (auto &message : metadata.messages) {
-            message.ParseCondition();
-        }
     }
     catch (std::exception& e) {
         std::cout << "ERROR: " << e.what() << std::endl << std::endl;

@@ -83,6 +83,14 @@ namespace YAML {
             else
                 rhs = loot::File(node.as<std::string>());
 
+            // Test condition syntax.
+            try {
+                rhs.ParseCondition();
+            }
+            catch (std::exception& e) {
+                throw RepresentationException(node.Mark(), std::string("bad conversion: invalid condition syntax: ") + e.what());
+            }
+
             return true;
         }
     };
