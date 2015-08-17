@@ -278,7 +278,8 @@ ELSEIF (MSVC)
                        libcef
                        libcef_dll_wrapper
                        rpcrt4
-                       comctl32)
+                       comctl32
+                       Psapi)
 ENDIF ()
 
 
@@ -340,8 +341,8 @@ add_custom_command(
     COMMENT "Adding manifest..."
 )
 
-# Copy CEF DLLs.
-FOREACH(cef_dll d3dcompiler_47.dll libEGL.dll libGLESv2.dll libcef.dll wow_helper.exe)
+# Copy CEF binaries.
+FOREACH(cef_dll libcef.dll natives_blob.bin snapshot_blob.bin d3dcompiler_47.dll libEGL.dll libGLESv2.dll wow_helper.exe)
     add_custom_command(TARGET LOOT POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
             "${CMAKE_SOURCE_DIR}/${CEF_ROOT}/$<CONFIGURATION>/${cef_dll}"
@@ -349,17 +350,15 @@ FOREACH(cef_dll d3dcompiler_47.dll libEGL.dll libGLESv2.dll libcef.dll wow_helpe
 ENDFOREACH()
 
 # Copy CEF resources.
-FOREACH(cef_resource cef.pak cef_100_percent.pak cef_200_percent.pak devtools_resources.pak icudtl.dat)
+FOREACH(cef_resource icudtl.dat cef.pak cef_100_percent.pak cef_200_percent.pak devtools_resources.pak)
     add_custom_command(TARGET LOOT POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
             "${CMAKE_SOURCE_DIR}/${CEF_ROOT}/Resources/${cef_resource}"
             $<TARGET_FILE_DIR:LOOT>)
 ENDFOREACH()
 
-# Copy CEF locale resources. This is just to reduce error messages while debugging.
-FOREACH(cef_resource en-US.pak)
-    add_custom_command(TARGET LOOT POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "${CMAKE_SOURCE_DIR}/${CEF_ROOT}/Resources/locales/${cef_resource}"
-            $<TARGET_FILE_DIR:LOOT>/resources/l10n)
-ENDFOREACH()
+# Copy CEF en-US locale resource.
+add_custom_command(TARGET LOOT POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${CMAKE_SOURCE_DIR}/${CEF_ROOT}/Resources/locales/en-US.pak"
+        $<TARGET_FILE_DIR:LOOT>/resources/l10n)

@@ -83,6 +83,12 @@ Source: "build\Release\libGLESv2.dll"; \
 DestDir: "{app}"; Flags: ignoreversion
 Source: "build\Release\wow_helper.exe"; \
 DestDir: "{app}"; Flags: ignoreversion
+Source: "build\Release\natives_blob.bin"; \
+DestDir: "{app}"; Flags: ignoreversion
+Source: "build\Release\snapshot_blob.bin"; \
+DestDir: "{app}"; Flags: ignoreversion
+Source: "build\Release\resources\l10n\en-US.pak"; \
+DestDir: "{app}\resources\l10n"; Flags: ignoreversion
 
 Source: "docs\LOOT Metadata Syntax.html"; \
 DestDir: "{app}\docs"; Flags: ignoreversion

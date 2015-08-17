@@ -140,6 +140,8 @@ def createAppArchive(archive_path):
     shutil.copy( os.path.join('..', 'build', 'Release', 'libGLESv2.dll'), temp_path )
     shutil.copy( os.path.join('..', 'build', 'Release', 'libcef.dll'), temp_path )
     shutil.copy( os.path.join('..', 'build', 'Release', 'wow_helper.exe'), temp_path )
+    shutil.copy( os.path.join('..', 'build', 'Release', 'natives_blob.bin'), temp_path )
+    shutil.copy( os.path.join('..', 'build', 'Release', 'snapshot_blob.bin'), temp_path )
     shutil.copy( os.path.join('..', 'build', 'Release', 'cef.pak'), temp_path )
     shutil.copy( os.path.join('..', 'build', 'Release', 'cef_100_percent.pak'), temp_path )
     shutil.copy( os.path.join('..', 'build', 'Release', 'cef_200_percent.pak'), temp_path )
@@ -147,6 +149,8 @@ def createAppArchive(archive_path):
     shutil.copy( os.path.join('..', 'build', 'Release', 'icudtl.dat'), temp_path )
 
     # Translation files.
+    os.makedirs(os.path.join(temp_path, 'resources', 'l10n'))
+    shutil.copy( os.path.join('..', 'build', 'Release', 'resources', 'l10n', 'en-US.pak'), os.path.join(temp_path, 'resources', 'l10n') )
     for lang in ['es', 'ru', 'fr', 'zh_CN', 'pl', 'pt_BR', 'fi', 'de', 'da', 'ko']:
         os.makedirs(os.path.join(temp_path, 'resources', 'l10n', lang, 'LC_MESSAGES'))
         shutil.copy( os.path.join('..', 'resources', 'l10n', lang, 'LC_MESSAGES', 'loot.mo'), os.path.join(temp_path, 'resources', 'l10n', lang, 'LC_MESSAGES') )

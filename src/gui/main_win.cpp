@@ -67,6 +67,9 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
     // Do all the standard CEF setup stuff.
     //-------------------------------------
 
+    // Enable High-DPI support on Windows 7 or newer.
+    CefEnableHighDPISupport();
+
     // Set up CEF sandbox.
     CefScopedSandboxInfo scoped_sandbox;
     void * sandbox_info = scoped_sandbox.sandbox_info();

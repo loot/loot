@@ -20,8 +20,8 @@ make yaml-cpp
 cd ../..
 
 # Build libgit2
-wget https://github.com/libgit2/libgit2/archive/v0.23.0.tar.gz -O - | tar -xz
-mv libgit2-0.23.0 libgit2
+wget https://github.com/libgit2/libgit2/archive/v0.23.1.tar.gz -O - | tar -xz
+mv libgit2-0.23.1 libgit2
 mkdir libgit2/build && cd libgit2/build
 cmake .. -DBUILD_SHARED_LIBS=OFF
 make git2

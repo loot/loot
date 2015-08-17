@@ -18,11 +18,11 @@ LOOT is intended to make using mods easier, and mod users should still possess a
 
 LOOT uses [CMake](http://cmake.org) to generate build files, and requires the following libraries (version numbers used in latest development revision given):
 
-* [Boost](http://www.boost.org) v1.58.0
-* [Chromium Embedded Framework](https://bitbucket.org/chromiumembedded/cef) branch 2272: Required to build the GUI, but not the API or tests.
+* [Boost](http://www.boost.org) v1.59.0
+* [Chromium Embedded Framework](https://bitbucket.org/chromiumembedded/cef) branch 2454: Required to build the GUI, but not the API or tests.
 * [Google Test](https://code.google.com/p/googletest/) v1.7: Required to build the tests, but not the API or the GUI.
 * [Libespm](http://github.com/WrinklyNinja/libespm)
-* [Libgit2](http://libgit2.github.com/) v0.23.0
+* [Libgit2](http://libgit2.github.com/) v0.23.1
 * [Libloadorder](http://github.com/WrinklyNinja/libloadorder)
 * [yaml-cpp](http://github.com/WrinklyNinja/yaml-cpp): Use the `patched-for-loot` branch.
 

@@ -85,18 +85,18 @@ namespace loot {
                 return;
             }
 
-            BOOST_LOG_TRIVIAL(trace) << filepath.filename() << ": " << "Checking master flag.";
+            BOOST_LOG_TRIVIAL(trace) << filepath.filename().string() << ": " << "Checking master flag.";
             _isMaster = file->isMaster(espmSettings);
 
-            BOOST_LOG_TRIVIAL(trace) << filepath.filename() << ": " << "Getting masters.";
+            BOOST_LOG_TRIVIAL(trace) << filepath.filename().string() << ": " << "Getting masters.";
             for (const auto& master : file->getMasters()) {
                 _masters.push_back(boost::locale::conv::to_utf<char>(master, "Windows-1252", boost::locale::conv::stop));
             }
 
-            BOOST_LOG_TRIVIAL(trace) << filepath.filename() << ": " << "Number of masters: " << _masters.size();
+            BOOST_LOG_TRIVIAL(trace) << filepath.filename().string() << ": " << "Number of masters: " << _masters.size();
 
             if (!headerOnly) {
-                BOOST_LOG_TRIVIAL(trace) << filepath.filename() << ": " << "Getting CRC.";
+                BOOST_LOG_TRIVIAL(trace) << filepath.filename().string() << ": " << "Getting CRC.";
                 _crc = file->crc;
             }
 
