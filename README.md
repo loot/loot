@@ -50,7 +50,7 @@ Installer and zip archive releases for the main LOOT application can be handled 
 
 If the unofficial Korean and Simplified Chinese Inno Setup translation files are installed alongside the official translation files, then the installer script will also offer those language options. If they are not found, the installer will be built without them.
 
-If you have [Git for Windows (msysGit)](https://msysgit.github.io/) or [GitHub for Windows](https://windows.github.com/) installed and you're building from a clone of this repository, the archive script will give archives descriptive names using the output of `git describe --tags --long`. If you have [7-Zip](http://7-zip.org) installed, `.7z` archives will be created. Otherwise, archives will be named `LOOT Archive` and created as deflate-compressed zip files.
+If you have [Git for Windows](http://git-for-windows.github.io/) installed and you're building from a clone of this repository, the archive script will give archives descriptive names using the output of `git describe --tags --long`. If you have [7-Zip](http://7-zip.org) installed, `.7z` archives will be created. Otherwise, archives will be named `LOOT Archive` and created as deflate-compressed zip files.
 
 ## Snapshot Builds
 

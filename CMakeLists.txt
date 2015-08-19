@@ -8,8 +8,7 @@
 ##############################
 
 # Uses the CMake module in this repo: https://github.com/rpavlik/cmake-modules
-# On Windows, this requires the msysgit install of Git, as the script won't find
-# the one bundled with GitHub for Windows.
+# On Windows, this requires Git for Windows to be installed.
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
 include(GetGitRevisionDescription OPTIONAL RESULT_VARIABLE GIT_MODULE_PATH)

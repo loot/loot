@@ -67,16 +67,7 @@ def which(cmd):
                 exe_path = p
 
     if not exe_path:
-        # Now look in likely paths, depending on what cmd is.
-        if cmd == 'git.exe':
-            # Git wasn't found in PATH, do a search (in GitHub install location).
-            github = os.path.join( os.getenv('LOCALAPPDATA'), 'GitHub' )
-            for folder, subdirs, files in os.walk(github):
-                for subdir in subdirs:
-                    # Check for a <github>\<subdir>\cmd\git.exe
-                    if os.path.exists( os.path.join( folder, subdir, 'cmd', 'git.exe') ):
-                        exe_path = os.path.join( folder, subdir, 'cmd', 'git.exe')
-        elif cmd == '7z.exe':
+        if cmd == '7z.exe':
             sevenzip_path = os.path.join('C:\\', 'Program Files', '7-Zip', '7z.exe')
             if os.path.exists(sevenzip_path):
                 exe_path = sevenzip_path
