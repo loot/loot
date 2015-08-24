@@ -34,3 +34,7 @@ mkdir libloadorder/build && cd libloadorder/build
 cmake .. -DPROJECT_ARCH=64 -DPROJECT_STATIC_RUNTIME=OFF -DBUILD_SHARED_LIBS=OFF -DGTEST_ROOT=../gtest-1.7.0
 make loadorder64
 cd ../..
+
+# Install pseudosem
+wget https://github.com/WrinklyNinja/pseudosem/archive/1.0.0.tar.gz -O - | tar -xz
+mv pseudosem-1.0.0 pseudosem

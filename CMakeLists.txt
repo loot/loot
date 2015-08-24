@@ -64,6 +64,10 @@ IF (NOT DEFINED CEF_ROOT)
     set (CEF_ROOT "../../cef")
 ENDIF ()
 
+IF (NOT DEFINED PSEUDOSEM_ROOT)
+    set (PSEUDOSEM_ROOT "../../pseudosem")
+ENDIF ()
+
 set (Boost_USE_STATIC_LIBS ${PROJECT_STATIC_RUNTIME})
 set (Boost_USE_MULTITHREADED ON)
 set (Boost_USE_STATIC_RUNTIME ${PROJECT_STATIC_RUNTIME})
@@ -196,7 +200,8 @@ include_directories ("${CMAKE_SOURCE_DIR}/src"
                      ${LIBESPM_ROOT}
                      ${Boost_INCLUDE_DIRS}
 					 ${YAML_CPP_INCLUDE_DIR}
-                     ${GTEST_INCLUDE_DIRS})
+                     ${GTEST_INCLUDE_DIRS}
+                     "${PSEUDOSEM_ROOT}/include")
 
 link_directories ("${LIBLOADORDER_ROOT}/build"
                   "${LIBGIT2_ROOT}/build"

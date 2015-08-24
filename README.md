@@ -24,9 +24,10 @@ LOOT uses [CMake](http://cmake.org) to generate build files, and requires the fo
 * [Libespm](http://github.com/WrinklyNinja/libespm)
 * [Libgit2](http://libgit2.github.com/) v0.23.1
 * [Libloadorder](http://github.com/WrinklyNinja/libloadorder)
+* [Pseudosem](http://github.com/WrinklyNinja/pseudosem): v1.0.0
 * [yaml-cpp](http://github.com/WrinklyNinja/yaml-cpp): Use the `patched-for-loot` branch.
 
-Libespm does not require any additional setup. The rest of the libraries must be built separately. Instructions for building them and LOOT itself using Microsoft Visual Studio are given in [docs/BUILD.MSVC.md](docs/BUILD.MSVC.md).
+Libespm and Pseudosem do not require any additional setup. The rest of the libraries must be built separately. Instructions for building them and LOOT itself using Microsoft Visual Studio are given in [docs/BUILD.MSVC.md](docs/BUILD.MSVC.md).
 
 Although LOOT uses a cross-platform build system and cross-platform libraries, it does rely on some Windows API functionality. Anyone wishing to port LOOT to other platforms will need to ensure equivalent functionality is implemented for their target platform. The Windows API code is wrapped in `#ifdef _WIN32` blocks so that it can be easily identified.
 

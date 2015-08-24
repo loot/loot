@@ -69,6 +69,7 @@ Parameter | Values | Default |Description
 `LIBESPM_ROOT` | path | `../../libespm` | Path to the root of the libespm repository folder.
 `LIBGIT2_ROOT` | path | `../../libgit2` | Path to the root of the libgit2 repository folder.
 `LIBLOADORDER_ROOT` | path | `../../libloadorder` | Path to the root of the libloadorder repository folder.
+`PSEUDOSEM_ROOT` | Path | `../../pseudosem` | Path to the root of the Pseudosem repository folder.
 
 The default paths given in the table above are relative to LOOT's `CMakeLists.txt`.
 

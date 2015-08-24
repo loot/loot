@@ -54,7 +54,8 @@
  *      [Boost](http://www.boost.org/),
  *      [libespm](http://github.com/WrinklyNinja/libespm),
  *      [libgit2](http://github.com/libgit2/libgit2),
- *      [libloadorder](http://github.com/WrinklyNinja/libloadorder/) and
+ *      [libloadorder](http://github.com/WrinklyNinja/libloadorder/),
+ *      [Pseudosem](http://github.com/WrinklyNinja/pseudosem) and
  *      [yaml-cpp](http://github.com/WrinklyNinja/yaml-cpp) libraries. Copyright
  *      license information for all these may be found in the
  *      "docs/licenses/Licenses.txt" file.
