@@ -184,21 +184,16 @@ window.addEventListener('polymer-ready', function(e) {
     /* Set the plugin list's scroll target to its parent. */
     document.getElementById('main').lastElementChild.scrollTarget = document.getElementById('main');
 
-    require(['bower_components/marked/lib/marked', 'js/l10n', 'js/plugin', 'js/helpers', 'js/loot', 'js/filters', 'js/events'], function(markedResponse, l10nResponse) {
+    /* Register object observers. */
+    Object.observe(loot, loot.observer);
+    Object.observe(loot.game, loot.gameObserver);
 
-        /* Register object observers. */
-        Object.observe(loot, loot.observer);
-        Object.observe(loot.game, loot.gameObserver);
-
-        marked = markedResponse;
-        l10n = l10nResponse;
-        /* Make sure settings are what I want. */
-        marked.setOptions({
-            gfm: true,
-            tables: true,
-            sanitize: true
-        });
-        setupEventHandlers();
-        initVars();
+    /* Make sure settings are what I want. */
+    marked.setOptions({
+        gfm: true,
+        tables: true,
+        sanitize: true
     });
+    setupEventHandlers();
+    initVars();
 }, false);

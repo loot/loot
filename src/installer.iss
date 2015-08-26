@@ -103,26 +103,8 @@ DestDir: "{app}\docs\images"; Flags: ignoreversion
 
 Source: "resources\report\index.html"; \
 DestDir: "{app}\resources\report"; Flags: ignoreversion
-Source: "resources\report\bower_components\marked\lib\marked.js"; \
-DestDir: "{app}\resources\report\bower_components\marked\lib"; Flags: ignoreversion
-Source: "resources\report\bower_components\Jed\jed.js"; \
-DestDir: "{app}\resources\report\bower_components\Jed"; Flags: ignoreversion
-Source: "resources\report\bower_components\jed-gettext-parser\jedGettextParser.js"; \
-DestDir: "{app}\resources\report\bower_components\jed-gettext-parser"; Flags: ignoreversion
 Source: "resources\report\css\dark-theme.css"; \
 DestDir: "{app}\resources\report\css"; Flags: ignoreversion
-Source: "resources\report\js\events.js"; \
-DestDir: "{app}\resources\report\js"; Flags: ignoreversion
-Source: "resources\report\js\filters.js"; \
-DestDir: "{app}\resources\report\js"; Flags: ignoreversion
-Source: "resources\report\js\helpers.js"; \
-DestDir: "{app}\resources\report\js"; Flags: ignoreversion
-Source: "resources\report\js\l10n.js"; \
-DestDir: "{app}\resources\report\js"; Flags: ignoreversion
-Source: "resources\report\js\loot.js"; \
-DestDir: "{app}\resources\report\js"; Flags: ignoreversion
-Source: "resources\report\js\plugin.js"; \
-DestDir: "{app}\resources\report\js"; Flags: ignoreversion
 Source: "resources\report\fonts\*"; \
 DestDir: "{app}\resources\report\fonts"; Flags: ignoreversion
 

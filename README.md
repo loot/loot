@@ -39,7 +39,6 @@ LOOT's UI relies on a few web libraries:
 * [Jed](https://github.com/SlexAxton/Jed)
 * [Jed Gettext Parser](https://github.com/WrinklyNinja/jed-gettext-parser)
 * [Marked](https://github.com/chjj/marked)
-* [RequireJS](http://requirejs.org/)
 
 These dependencies are most easily managed using [Bower](http://bower.io/), and are built for distribution using [Vulcanize](https://github.com/Polymer/vulcanize).
 

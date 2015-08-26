@@ -12,7 +12,6 @@ LOOT uses a number of libraries, and their licenses are listed in this file.
 * Marked - MIT License; see "MIT License (Marked).txt" for the text.
 * Pseudosem - MIT License; see "MIT License (Pseudosem).txt" for the text.
 * Polymer - BSD license; see "BSD License (Polymer).txt" for the text.
-* RequireJS - MIT License; see "MIT License (RequireJS).txt" for the text.
 * yaml-cpp - MIT License; see "MIT License (yaml-cpp).txt" for the text.
 
 Source code for all libraries and binaries can be found on the websites linked to in the main LOOT readme.

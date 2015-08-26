@@ -28,7 +28,6 @@
     "paper-menu-button": "Polymer/paper-menu-button#~0.5.0",
     "Jed": "SlexAxton/Jed#a9d03e1bbca9211a8b29a93a298a7ee9ddb353f0",
     "marked": "~0.3.2",
-    "requirejs": "jrburke/requirejs-bower#~2.1.15",
     "paper-progress": "Polymer/paper-progress#~0.5.0",
     "core-pages": "Polymer/core-pages#~0.5.1",
     "paper-toast": "Polymer/paper-toast#~0.5.1",

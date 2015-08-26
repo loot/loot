@@ -6,7 +6,7 @@
         define(['bower_components/Jed/jed', 'bower_components/jed-gettext-parser/jedGettextParser'], factory);
     } else {
         // Browser globals
-        root.amdWeb = factory(root.jed, root.jedGettextParser);
+        root.l10n = factory(root.Jed, root.jedGettextParser);
     }
 }(this, function (jed, jedGettextParser) {
 
