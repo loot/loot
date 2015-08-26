@@ -98,10 +98,10 @@ def buildUIFiles():
         '--inline',
         '--strip',
         '--config',
-        os.path.join('..', 'vulcanize.config.json'),
+        os.path.join('vulcanize.config.json'),
         '-o',
         os.path.join(dest_path, 'index.html'),
-        os.path.join('gui', 'html', 'index.html')];
+        os.path.join('..', 'src', 'gui', 'html', 'index.html')];
     if not os.path.exists(dest_path):
         os.makedirs(dest_path)
     subprocess.call(args);
@@ -181,7 +181,7 @@ def createApiArchive(archive_path):
 
     # Now copy everything into the temporary folder.
     shutil.copy( os.path.join('..', 'build', 'Release', 'loot32.dll'), temp_path )
-    shutil.copy( os.path.join('api', 'api.h'), os.path.join(temp_path, 'include', 'loot') )
+    shutil.copy( os.path.join('..', 'src', 'api', 'api.h'), os.path.join(temp_path, 'include', 'loot') )
     shutil.copy( os.path.join('..', 'docs', 'latex', 'refman.pdf'), os.path.join(temp_path, 'docs', 'readme.pdf') )
 
     shutil.copytree( os.path.join('..', 'docs', 'licenses'), os.path.join(temp_path, 'docs', 'licenses') )

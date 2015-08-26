@@ -35,7 +35,7 @@ To translate everything but masterlist messages, first fork this repository. All
 
 First check that an [Inno Setup translation](http://www.jrsoftware.org/files/istrans/) exists for your language. Unofficial translations are acceptable, but require a bit of extra handling. If there isn't an official or unofficial translation for Inno Setup, you're better off making a translation and getting it listed on the linked page before continuing.
 
-1. Open the installer script at `src/installer.iss` in a text editor of your choice.
+1. Open the installer script at `scripts/installer.iss` in a text editor of your choice.
 2. If your language only has an unofficial translation, add a `#define <Language>Exists` block for it near the top of the script, like it has been done for Korean and Simplified Chinese.
 3. Add your language to the `[Languages]` section. The `Name` must be the POSIX locale code for your language. The `MessagesFile` filename is the filename of the Inno Setup translation that you checked exists. If your language only has an unofficial translation, wrap its line in `#ifdef` and `#endif` lines, again like it has been done for Korean and Simplified Chinese.
 4. Translate the string(s) in the `[CustomMessages]` into your language, following the example of the existing translations. Again, if your language only has an unofficial translation, wrap its line(s) in `#ifdef` and `#endif` lines.
@@ -63,6 +63,6 @@ If you're adding a new translation, LOOT's source code must be updated to recogn
 * In [language.h](src/backend/helpers/language.h), add a static constant for the language to the `Language` class.
 * In [language.cpp](src/backend/helpers/language.cpp), define the value for the constant you added, and update `Language::Language(const std::string& locale)`, `Language::Construct(const unsigned int code)` and `Language::Codes({...})` to include lines for your language.
 * Add constants for the language in [api.h](src/api/api.h) and [api.cpp](src/api/api.cpp).
-* In [archive.py](src/archive.py), add the language folder to the inline list on line 68.
-* In [installer.iss](src/installer.iss), add an entry for your language's translation file to the `[Files]` section.
+* In [archive.py](scripts/archive.py), add the language folder to the inline list on line 68.
+* In [installer.iss](scripts/installer.iss), add an entry for your language's translation file to the `[Files]` section.
 * In [LOOT Metadata Syntax.html](docs/LOOT%20Metadata%20Syntax.html), add a row for your language to the Language Codes table.
