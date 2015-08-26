@@ -101,12 +101,12 @@ DestDir: "{app}\docs\images"; Flags: ignoreversion
 Source: "docs\images\settings.png"; \
 DestDir: "{app}\docs\images"; Flags: ignoreversion
 
-Source: "resources\report\index.html"; \
-DestDir: "{app}\resources\report"; Flags: ignoreversion
-Source: "resources\report\css\dark-theme.css"; \
-DestDir: "{app}\resources\report\css"; Flags: ignoreversion
-Source: "resources\report\fonts\*"; \
-DestDir: "{app}\resources\report\fonts"; Flags: ignoreversion
+Source: "build\Release\resources\ui\index.html"; \
+DestDir: "{app}\resources\ui"; Flags: ignoreversion
+Source: "resources\ui\css\dark-theme.css"; \
+DestDir: "{app}\resources\ui\css"; Flags: ignoreversion
+Source: "resources\ui\fonts\*"; \
+DestDir: "{app}\resources\ui\fonts"; Flags: ignoreversion
 
 Source: "resources\l10n\da\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\da\LC_MESSAGES"; Flags: ignoreversion

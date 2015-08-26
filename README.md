@@ -42,7 +42,7 @@ LOOT's UI relies on a few web libraries:
 
 These dependencies are most easily managed using [Bower](http://bower.io/), and are built for distribution using [Vulcanize](https://github.com/Polymer/vulcanize).
 
-To install Bower and Vulcanize, first install [Node](http://nodejs.org/), and run `npm install -g bower vulcanize@0.7.11` from the command line. Once they are installed, fetch and build the dependencies by running `bower install && vulcanize --inline --strip --config vulcanize.config.json -o index.html report.html` from inside this repository's `resources/report` folder.
+To install Bower and Vulcanize, first install [Node](http://nodejs.org/), and run `npm install -g bower vulcanize@0.7.11` from the command line. Once they are installed, fetch and build the dependencies by running `bower install && vulcanize --inline --strip --config vulcanize.config.json -o build/Release/resources/ui/index.html src/gui/html/index.html`.
 
 ## Packaging Releases
 

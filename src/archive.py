@@ -89,18 +89,21 @@ def getNameSuffix():
 
     return ''
 
-def buildUIFiles(ui_path):
+def buildUIFiles():
     # Vulcanize the UI's files.
     vulcanize = which('vulcanize.cmd')
+    dest_path = os.path.join('..', 'build', 'Release', 'resources', 'ui')
     args = [
         vulcanize,
         '--inline',
         '--strip',
         '--config',
-        os.path.join(ui_path, 'vulcanize.config.json'),
+        os.path.join('..', 'vulcanize.config.json'),
         '-o',
-        os.path.join(ui_path, 'index.html'),
-        os.path.join(ui_path, 'report.html')];
+        os.path.join(dest_path, 'index.html'),
+        os.path.join('gui', 'html', 'index.html')];
+    if not os.path.exists(dest_path):
+        os.makedirs(dest_path)
     subprocess.call(args);
 
 def createArchive(folder_path, archive_path):
@@ -147,11 +150,10 @@ def createAppArchive(archive_path):
         shutil.copy( os.path.join('..', 'resources', 'l10n', lang, 'LC_MESSAGES', 'loot.mo'), os.path.join(temp_path, 'resources', 'l10n', lang, 'LC_MESSAGES') )
 
     # UI files.
-    os.makedirs( os.path.join(temp_path, 'resources', 'report') )
-    os.makedirs( os.path.join(temp_path, 'resources', 'report', 'css') )
-    shutil.copy( os.path.join('..', 'resources', 'report', 'index.html'), os.path.join(temp_path, 'resources', 'report') )
-    shutil.copy( os.path.join('..', 'resources', 'report', 'css', 'dark-theme.css'), os.path.join(temp_path, 'resources', 'report', 'css') )
-    shutil.copytree( os.path.join('..', 'resources', 'report', 'fonts'), os.path.join(temp_path, 'resources', 'report', 'fonts') )
+    os.makedirs( os.path.join(temp_path, 'resources', 'ui', 'css') )
+    shutil.copy( os.path.join('..', 'build', 'Release', 'resources', 'ui', 'index.html'), os.path.join(temp_path, 'resources', 'ui') )
+    shutil.copy( os.path.join('..', 'resources', 'ui', 'css', 'dark-theme.css'), os.path.join(temp_path, 'resources', 'ui', 'css') )
+    shutil.copytree( os.path.join('..', 'resources', 'ui', 'fonts'), os.path.join(temp_path, 'resources', 'ui', 'fonts') )
 
     # Docs.
     shutil.copytree( os.path.join('..', 'docs', 'images'), os.path.join(temp_path, 'docs', 'images') )
@@ -192,6 +194,6 @@ def createApiArchive(archive_path):
 
 # Create the archives.
 archive_suffix = getNameSuffix()
-buildUIFiles( os.path.join('..', 'resources', 'report') );
+buildUIFiles();
 createAppArchive( os.path.join('..', 'build', 'LOOT ' + archive_suffix) )
 createApiArchive( os.path.join('..', 'build', 'LOOT API ' + archive_suffix) )
