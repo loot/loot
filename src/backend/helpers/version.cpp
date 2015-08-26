@@ -35,8 +35,6 @@
 #      define _UNICODE
 #   endif
 #   include "windows.h"
-#   include "shlobj.h"
-#   include "shlwapi.h"
 #endif
 
 namespace loot {

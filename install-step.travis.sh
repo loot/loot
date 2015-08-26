@@ -36,5 +36,5 @@ make loadorder64
 cd ../..
 
 # Install pseudosem
-wget https://github.com/WrinklyNinja/pseudosem/archive/1.0.0.tar.gz -O - | tar -xz
-mv pseudosem-1.0.0 pseudosem
+wget https://github.com/WrinklyNinja/pseudosem/archive/1.0.1.tar.gz -O - | tar -xz
+mv pseudosem-1.0.1 pseudosem
