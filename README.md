@@ -14,9 +14,19 @@ LOOT is intended to make using mods easier, and mod users should still possess a
 
 ## Building LOOT
 
-### C++ Backend
+### Tools
 
-LOOT uses [CMake](http://cmake.org) to generate build files, and requires the following libraries (version numbers used in latest development revision given):
+LOOT uses the following tools as part of its build process:
+
+* [CMake](http://cmake.org): To generate build files
+* [Bower](http://bower.io): To manage the HTML UI dependencies
+* [Vulcanize](https://github.com/Polymer/vulcanize): To build the HTML UI
+
+To install Bower and Vulcanize, first install [Node.js](http://nodejs.org/), then run `npm install -g bower vulcanize@0.7.11` from the command line.
+
+### Dependencies
+
+LOOT requires the following C/C++ libraries (version numbers used in latest development revision given):
 
 * [Boost](http://www.boost.org) v1.59.0
 * [Chromium Embedded Framework](https://bitbucket.org/chromiumembedded/cef) branch 2454: Required to build the GUI, but not the API or tests.
@@ -27,22 +37,22 @@ LOOT uses [CMake](http://cmake.org) to generate build files, and requires the fo
 * [Pseudosem](http://github.com/WrinklyNinja/pseudosem): v1.0.1
 * [yaml-cpp](http://github.com/WrinklyNinja/yaml-cpp): Use the `patched-for-loot` branch.
 
-Libespm and Pseudosem do not require any additional setup. The rest of the libraries must be built separately. Instructions for building them and LOOT itself using Microsoft Visual Studio are given in [docs/BUILD.MSVC.md](docs/BUILD.MSVC.md).
-
-Although LOOT uses a cross-platform build system and cross-platform libraries, it does rely on some Windows API functionality. Anyone wishing to port LOOT to other platforms will need to ensure equivalent functionality is implemented for their target platform. The Windows API code is wrapped in `#ifdef _WIN32` blocks so that it can be easily identified.
-
-### User Interface
-
-LOOT's UI relies on a few web libraries:
+In addition, LOOT's UI relies on the web libraries below, which can be fetched by running `bower install` from the repository root.
 
 * [Polymer](https://www.polymer-project.org)
 * [Jed](https://github.com/SlexAxton/Jed)
 * [Jed Gettext Parser](https://github.com/WrinklyNinja/jed-gettext-parser)
 * [Marked](https://github.com/chjj/marked)
 
-These dependencies are most easily managed using [Bower](http://bower.io/), and are built for distribution using [Vulcanize](https://github.com/Polymer/vulcanize).
+### Building
 
-To install Bower and Vulcanize, first install [Node](http://nodejs.org/), and run `npm install -g bower vulcanize@0.7.11` from the command line. Once they are installed, fetch and build the dependencies by running `bower install && vulcanize --inline --strip --config scripts/vulcanize.config.json -o build/Release/resources/ui/index.html src/gui/html/index.html`.
+Aside from Libespm and Pseudosem, the C/C++ libraries must be built separately. Instructions for building them and LOOT itself using Microsoft Visual Studio are given in [docs/BUILD.MSVC.md](docs/BUILD.MSVC.md).
+
+The HTML UI is automatically built when building the LOOT executable, but it can also be built by running `node scripts/vulcanize.js` from the repository root.
+
+### Cross-Platform Support
+
+Although LOOT uses a cross-platform build system and cross-platform libraries, it does rely on some Windows API functionality. Anyone wishing to port LOOT to other platforms will need to ensure equivalent functionality is implemented for their target platform. The Windows API code is wrapped in `#ifdef _WIN32` blocks so that it can be easily identified.
 
 ## Packaging Releases
 
