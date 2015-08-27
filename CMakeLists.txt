@@ -350,7 +350,7 @@ FOREACH(cef_dll libcef.dll natives_blob.bin snapshot_blob.bin d3dcompiler_47.dll
     add_custom_command(TARGET LOOT POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
             "${CMAKE_SOURCE_DIR}/${CEF_ROOT}/$<CONFIGURATION>/${cef_dll}"
-            $<TARGET_FILE_DIR:LOOT>)
+            $<TARGET_FILE_DIR:LOOT>/${cef_dll})
 ENDFOREACH()
 
 # Copy CEF resources.
@@ -358,11 +358,23 @@ FOREACH(cef_resource icudtl.dat cef.pak cef_100_percent.pak cef_200_percent.pak 
     add_custom_command(TARGET LOOT POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
             "${CMAKE_SOURCE_DIR}/${CEF_ROOT}/Resources/${cef_resource}"
-            $<TARGET_FILE_DIR:LOOT>)
+            $<TARGET_FILE_DIR:LOOT>/${cef_resource})
 ENDFOREACH()
 
 # Copy CEF en-US locale resource.
 add_custom_command(TARGET LOOT POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "${CMAKE_SOURCE_DIR}/${CEF_ROOT}/Resources/locales/en-US.pak"
-        $<TARGET_FILE_DIR:LOOT>/resources/l10n)
+        $<TARGET_FILE_DIR:LOOT>/resources/l10n/en-US.pak)
+
+# Copy UI fonts. Not necessary for the build, but useful for testing.
+FOREACH(font Roboto-Bold.ttf Roboto-BoldItalic.ttf Roboto-Italic.ttf Roboto-Light.ttf Roboto-LightItalic.ttf Roboto-Medium.ttf Roboto-MediumItalic.ttf Roboto-Regular.ttf)
+add_custom_command(TARGET LOOT POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${CMAKE_SOURCE_DIR}/resources/ui/fonts/${font}"
+        $<TARGET_FILE_DIR:LOOT>/resources/ui/fonts/${font})
+ENDFOREACH()
+
+# Run Vulcanize to build the UI HTML.
+add_custom_command(TARGET LOOT POST_BUILD
+    COMMAND "node" "${CMAKE_SOURCE_DIR}/scripts/vulcanize.js" ${CMAKE_SOURCE_DIR})

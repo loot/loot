@@ -91,20 +91,7 @@ def getNameSuffix():
 
 def buildUIFiles():
     # Vulcanize the UI's files.
-    vulcanize = which('vulcanize.cmd')
-    dest_path = os.path.join('..', 'build', 'Release', 'resources', 'ui')
-    args = [
-        vulcanize,
-        '--inline',
-        '--strip',
-        '--config',
-        os.path.join('vulcanize.config.json'),
-        '-o',
-        os.path.join(dest_path, 'index.html'),
-        os.path.join('..', 'src', 'gui', 'html', 'index.html')];
-    if not os.path.exists(dest_path):
-        os.makedirs(dest_path)
-    subprocess.call(args);
+    subprocess.call(['node', './vulcanize.js', '..']);
 
 def createArchive(folder_path, archive_path):
     sevenzip_path = os.path.join('C:\\', 'Program Files', '7-Zip', '7z.exe')
