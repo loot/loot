@@ -56,11 +56,11 @@ Although LOOT uses a cross-platform build system and cross-platform libraries, i
 
 ## Packaging Releases
 
-Installer and zip archive releases for the main LOOT application can be handled by running the `scripts/installer.iss` and `scripts/archive.py` scripts respectively. The installer script requires [Inno Setup](http://www.jrsoftware.org/isinfo.php), while the archive script requires [Python](http://www.python.org/) (2 or 3). The installer and archive files are created in the `build/` folder, relative to the repository root.
+Packaging scripts are provided for creating an installer and compressed archives on Windows.
 
-If the unofficial Korean and Simplified Chinese Inno Setup translation files are installed alongside the official translation files, then the installer script will also offer those language options. If they are not found, the installer will be built without them.
+Run the `scripts/installer.iss` [Inno Setup](http://www.jrsoftware.org/isinfo.php) script to build an installer executable in the `build` folder. If the unofficial Korean and Simplified Chinese Inno Setup translation files are installed alongside the official translation files, then the installer script will also offer those language options. If they are not found, the installer will be built without them.
 
-If you have [Git for Windows](http://git-for-windows.github.io/) installed and you're building from a clone of this repository, the archive script will give archives descriptive names using the output of `git describe --tags --long`. If you have [7-Zip](http://7-zip.org) installed, `.7z` archives will be created. Otherwise, archives will be named `LOOT Archive` and created as deflate-compressed zip files.
+The archive packaging script requires [Git for Windows](http://git-for-windows.github.io/) and [7-Zip](http://7-zip.org) to be installed. It also requires the [fs-extra](https://www.npmjs.com/package/fs-extra) Node.js module, which can be installed using  `npm install fs-extra`. The script can be run using `node scripts/archive.js`, and will create `.7z` archives for LOOT and its API in the `build` folder. The archives will be given filenames using the output of `git describe --tags --long`.
 
 ## Snapshot Builds
 

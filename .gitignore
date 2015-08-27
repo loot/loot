@@ -53,3 +53,4 @@ docs/html
 docs/latex
 *.mo
 bower_components
+node_modules
