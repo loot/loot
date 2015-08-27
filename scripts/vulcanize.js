@@ -5,10 +5,10 @@ var child_process =  require('child_process');
 var path = require('path');
 var fs = require('fs');
 
-if (process.argc < 3) {
-    var root_path = process.argv[2];
-} else {
+if (process.argv.length < 3) {
     var root_path = '.';
+} else {
+    var root_path = process.argv[2];
 }
 var output_path = path.join(root_path, 'build', 'Release', 'resources', 'ui');
 

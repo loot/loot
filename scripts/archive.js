@@ -7,13 +7,6 @@ var child_process =  require('child_process');
 var path = require('path');
 var fs = require('fs-extra');
 
-if (process.argc < 3) {
-    var root_path = process.argv[2];
-} else {
-    var root_path = '.';
-}
-var temp_path = path.join(root_path, 'build', 'archive.tmp');
-
 function vulcanize() {
     return child_process.execFileSync('node', [
         'scripts/vulcanize.js',
@@ -161,6 +154,13 @@ function createApiArchive(dest_path) {
     // Finally, delete the temporary folder.
     fs.removeSync(temp_path);
 }
+
+if (process.argv.length < 3) {
+    var root_path = '.';
+} else {
+    var root_path = process.argv[2];
+}
+var temp_path = path.join(root_path, 'build', 'archive.tmp');
 
 var git_desc = getGitDescription();
 vulcanize();
