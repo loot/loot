@@ -62,6 +62,7 @@ function vulcanizeTests(releasePath) {
   const outputPath = path.join(releasePath.path, 'html_tests', 'elements');
 
   const tests = [
+    'test_editable-table.html',
     'test_loot-custom-icons.html',
     'test_loot-dropdown-menu.html',
     'test_loot-message-dialog.html',

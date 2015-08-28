@@ -1,340 +1,338 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../../../bower_components/paper-item/paper-item.html">
+
+<link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
+
 <link rel="import" href="../../../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../../../bower_components/core-icons/core-icons.html">
-<link rel="import" href="../../../../bower_components/core-tooltip/core-tooltip.html">
+<link rel="import" href="../../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../../../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../../../bower_components/paper-tooltip/paper-tooltip.html">
 
 <link rel="import" href="loot-dropdown-menu.html">
-<link rel="import" href="loot-validated-input.html">
 
 <template id="fileRow">
-    <tr>
-        <td><loot-validated-input error="A filename is required." class="name" required></loot-validated-input></td>
-        <td><paper-input class="display"></paper-input></td>
-        <td><paper-input class="condition"></paper-input></td>
-        <td>
-            <core-tooltip label="Delete Row" noarrow position="left">
-                <paper-icon-button class="delete" icon="delete"></paper-icon-button>
-            </core-tooltip>
-        </td>
-    </tr>
+  <tr>
+    <td><paper-input error-message="A filename is required." class="name" required auto-validate no-label-float></paper-input></td>
+    <td><paper-input class="display" no-label-float></paper-input></td>
+    <td><paper-input class="condition" no-label-float></paper-input></td>
+    <td>
+      <span>
+        <paper-icon-button class="delete" icon="delete"></paper-icon-button>
+        <paper-tooltip position="left">Delete Row</paper-tooltip>
+      </span>
+    </td>
+  </tr>
 </template>
 <template id="messageRow">
-    <tr>
-        <td>
-            <loot-dropdown-menu class="type" value="say">
-                <paper-item value="say" noink>Note</paper-item>
-                <paper-item value="warn" noink>Warning</paper-item>
-                <paper-item value="error" noink>Error</paper-item>
-            </loot-dropdown-menu>
-        </td>
-        <td><loot-validated-input error="A content string is required." class="content" required></loot-validated-input></td>
-        <td><paper-input class="condition"></paper-input></td>
-        <td>
-            <loot-dropdown-menu class="language" halign="right">
-                <!-- Language <option> elements go here. -->
-            </loot-dropdown-menu>
-        </td>
-        <td>
-            <core-tooltip label="Delete Row" noarrow position="left">
-                <paper-icon-button class="delete" icon="delete"></paper-icon-button>
-            </core-tooltip>
-        </td>
-    </tr>
+  <tr>
+    <td>
+      <loot-dropdown-menu class="type" value="say">
+        <paper-item value="say">Note</paper-item>
+        <paper-item value="warn">Warning</paper-item>
+        <paper-item value="error">Error</paper-item>
+      </loot-dropdown-menu>
+    </td>
+      <td><paper-textarea error-message="A content string is required." class="content" required auto-validate></paper-textarea></td>
+      <td><paper-input class="condition" no-label-float></paper-input></td>
+      <td>
+        <loot-dropdown-menu class="language">
+          <!-- Language <option> elements go here. -->
+        </loot-dropdown-menu>
+      </td>
+      <td>
+        <span>
+          <paper-icon-button class="delete" icon="delete"></paper-icon-button>
+          <paper-tooltip position="left">Delete Row</paper-tooltip>
+        </span>
+      </td>
+  </tr>
 </template>
 <template id="tagRow">
-    <tr>
-        <td>
-            <loot-dropdown-menu class="type" value="add">
-                <paper-item value="add" noink>Add</paper-item>
-                <paper-item value="remove" noink>Remove</paper-item>
-            </loot-dropdown-menu>
-        </td>
-        <td><loot-validated-input error="A name is required." class="name" required></loot-validated-input></td>
-        <td><paper-input class="condition"></paper-input></td>
-        <td>
-            <core-tooltip label="Delete Row" noarrow position="left">
-                <paper-icon-button class="delete" icon="delete"></paper-icon-button>
-            </core-tooltip>
-        </td>
-    </tr>
+  <tr>
+    <td>
+      <loot-dropdown-menu class="type" value="add">
+        <paper-item value="add">Add</paper-item>
+        <paper-item value="remove">Remove</paper-item>
+      </loot-dropdown-menu>
+    </td>
+    <td><paper-input error-message="A name is required." class="name" required auto-validate no-label-float></paper-input></td>
+    <td><paper-input class="condition" no-label-float></paper-input></td>
+    <td>
+      <span>
+        <paper-icon-button class="delete" icon="delete"></paper-icon-button>
+        <paper-tooltip position="left">Delete Row</paper-tooltip>
+      </span>
+    </td>
+  </tr>
 </template>
 <template id="dirtyInfoRow">
-    <tr>
-        <td><loot-validated-input error="A CRC is required." class="crc" maxlength="8" minlength="8" pattern="[0-9A-Fa-f]{8}" required></loot-validated-input></td>
-        <td><loot-validated-input error="Values must be integers." class="itm" type="number" min="0" step="1" value="0"></loot-validated-input></td>
-        <td><loot-validated-input error="Values must be integers." class="udr" type="number" min="0" step="1" value="0"></loot-validated-input></td>
-        <td><loot-validated-input error="Values must be integers." class="nav" type="number" min="0" step="1" value="0"></loot-validated-input></td>
-        <td><loot-validated-input error="A utility name is required." class="util" required></loot-validated-input></td>
-        <td>
-            <core-tooltip label="Delete Row" noarrow position="left">
-                <paper-icon-button class="delete" icon="delete"></paper-icon-button>
-            </core-tooltip>
-        </td>
-    </tr>
+  <tr>
+    <td><paper-input error-message="A CRC is required." class="crc" maxlength="8" minlength="8" pattern="[0-9A-Fa-f]{8}" required auto-validate no-label-float></paper-input></td>
+    <td><paper-input error-message="Values must be integers." class="itm" type="number" min="0" step="1" value="0" auto-validate no-label-float></paper-input></td>
+    <td><paper-input error-message="Values must be integers." class="udr" type="number" min="0" step="1" value="0" auto-validate no-label-float></paper-input></td>
+    <td><paper-input error-message="Values must be integers." class="nav" type="number" min="0" step="1" value="0" auto-validate no-label-float></paper-input></td>
+    <td><paper-input error-message="A utility name is required." class="util" required auto-validate no-label-float></paper-input></td>
+    <td>
+      <span>
+        <paper-icon-button class="delete" icon="delete"></paper-icon-button>
+        <paper-tooltip position="left">Delete Row</paper-tooltip>
+      </span>
+    </td>
+  </tr>
 </template>
 <template id="locationRow">
-    <tr>
-        <td><loot-validated-input error="A link is required." class="link" required></loot-validated-input></td>
-        <td><paper-input class="name"></paper-input></td>
-        <td>
-            <core-tooltip label="Delete Row" noarrow position="left">
-                <paper-icon-button class="delete" icon="delete"></paper-icon-button>
-            </core-tooltip>
-        </td>
-    </tr>
+  <tr>
+    <td><paper-input error-message="A link is required." class="link" required auto-validate no-label-float></paper-input></td>
+    <td><paper-input class="name" no-label-float></paper-input></td>
+    <td>
+      <span>
+        <paper-icon-button class="delete" icon="delete"></paper-icon-button>
+        <paper-tooltip position="left">Delete Row</paper-tooltip>
+      </span>
+    </td>
+  </tr>
 </template>
 <template id="gameRow">
-    <tr>
-        <td><loot-validated-input error="A name is required." class="name" required></loot-validated-input></td>
-        <td>
-            <loot-dropdown-menu class="type">
-                <!-- Game <option> elements go here. -->
-            </loot-dropdown-menu>
-        </td>
-        <td><loot-validated-input error="A folder is required." class="folder" required></loot-validated-input></td>
-        <td><paper-input class="master"></paper-input></td>
-        <td><paper-input class="repo"></paper-input></td>
-        <td><paper-input class="branch"></paper-input></td>
-        <td><paper-input class="path"></paper-input></td>
-        <td><paper-input class="registry"></paper-input></td>
-        <td>
-            <core-tooltip label="Delete Row" noarrow position="left">
-                <paper-icon-button class="delete" icon="delete"></paper-icon-button>
-            </core-tooltip>
-        </td>
-    </tr>
+  <tr>
+    <td><paper-input error-message="A name is required." class="name" required auto-validate no-label-float></paper-input></td>
+    <td>
+      <loot-dropdown-menu class="type">
+        <!-- Game <option> elements go here. -->
+      </loot-dropdown-menu>
+    </td>
+    <td><paper-input error-message="A folder is required." class="folder" required auto-validate no-label-float></paper-input></td>
+    <td><paper-input class="master" no-label-float></paper-input></td>
+    <td><paper-input class="repo" no-label-float></paper-input></td>
+    <td><paper-input class="branch" no-label-float></paper-input></td>
+    <td><paper-input class="path" no-label-float></paper-input></td>
+    <td><paper-input class="registry" no-label-float></paper-input></td>
+    <td>
+      <span>
+        <paper-icon-button class="delete" icon="delete"></paper-icon-button>
+        <paper-tooltip position="left">Delete Row</paper-tooltip>
+      </span>
+    </td>
+  </tr>
 </template>
 <template id="newRow">
-    <tr>
-        <td>
-            <core-tooltip label="Add New Row" noarrow position="right">
-                <paper-icon-button icon="add"></paper-icon-button>
-            </core-tooltip>
-        </td>
-        <td></td>
-    </tr>
+  <tr>
+    <td>
+      <span>
+        <paper-icon-button icon="add"></paper-icon-button>
+        <paper-tooltip position="right">Add New Row</paper-tooltip>
+      </span>
+    </td>
+    <td></td>
+  </tr>
 </template>
 
-<style>
+<dom-module id="editable-table">
+  <template>
+    <style>
+      :host {
+          background-color: inherit;
+          border-collapse: collapse;
+          width: 100%;
+      }
+      ::content td,
+      ::content th {
+        vertical-align: top;
+        text-align: left;
+      }
+      ::content td {
+          padding: 0;
+      }
+      ::content th {
+          padding: 0 4px;
+          border-bottom: 1px solid var(--loot-divider-color);
+      }
+      ::content paper-icon-button {
+          color: var(--loot-secondary-text-color);
+      }
+      ::content paper-icon-button[disabled] {
+          color: var(--loot-disabled-text-color);
+      }
+      ::content paper-icon-button[icon=delete]:hover {
+          color: red;
+      }
+      ::content paper-icon-button[icon=add]:hover {
+          color: green;
+      }
+    </style>
+    <content></content>
+  </template>
+  <script>
+    'use strict';
+    Polymer({ // eslint-disable-line new-cap, no-undef
+      is: 'editable-table',
+      extends: 'table',
 
-/* Table styling. */
-html /deep/ table[is=editable-table] {
-    background-color: inherit;
-}
-html /deep/ table[is=editable-table] td {
-    padding: 0;
-}
-html /deep/ table[is=editable-table] th {
-    padding: 0 4px;
-}
-html /deep/ table[is=editable-table] paper-icon-button {
-    color: rgba(0, 0, 0, 0.54);
-}
-html /deep/ table[is=editable-table] paper-icon-button[disabled] {
-    color: rgba(0, 0, 0, 0.26);
-}
-html /deep/ table[is=editable-table] paper-icon-button[icon=delete]:hover {
-    color: red;
-}
-html /deep/ table[is=editable-table] paper-icon-button[icon=add]:hover {
-    color: green;
-}
-</style>
-<script>
-'use strict';
-(function(){
-    /* Create a <editable-table> element type that extends from <table>. */
-    var EditableTableProto = Object.create(HTMLTableElement.prototype, {
+      attached() {
+        /* Add "add new row" row. */
+        const content = document.getElementById('newRow').content;
+        let row = document.importNode(content, true);
+        this.tBodies[0].appendChild(row);
+        row = this.tBodies[0].lastElementChild;
 
-        onDrop: {
-            value: function(evt) {
-                evt.stopPropagation();
+        /* Add new row listener. */
+        row.querySelector('paper-icon-button').addEventListener('click', this.onAddEmptyRow);
 
-                if (evt.currentTarget.tagName == 'TABLE' && evt.currentTarget.getAttribute('data-template') == 'fileRow') {
-                    var data = {
-                        name: evt.dataTransfer.getData('text/plain')
-                    };
-                    evt.currentTarget.addRow(data);
-                }
+        /* Add drag 'n' drop listeners.
+           Drag 'n' drop should only be enabled for file-row tables.
+        */
+        if (this.getAttribute('data-template') === 'fileRow') {
+          this.addEventListener('drop', this.onDrop);
+          this.addEventListener('dragover', this.onDragOver);
+        }
+      },
 
-                return false;
+      detached() {
+        /* Remove deletion listener. */
+        const icons = this.tBodies[0].getElementsByClassName('delete');
+        for (let i = 0; i < icons.length; ++i) {
+          icons[i].removeEventListener('click', this.onRemoveRow);
+        }
+
+        /* Remove new row listener. */
+        this.querySelector('tbody tr:last-child paper-icon-button').removeEventListener('click', this.onAddEmptyRow);
+
+        /* Remove drag 'n' drop listeners. */
+        this.removeEventListener('drop', this.onDrop);
+        this.removeEventListener('dragover', this.onDragOver);
+      },
+
+      onDrop(evt) {
+        evt.stopPropagation();
+
+        if (evt.currentTarget.tagName === 'TABLE'
+            && evt.currentTarget.getAttribute('data-template') === 'fileRow') {
+          evt.currentTarget.addRow({
+            name: evt.dataTransfer.getData('text/plain'),
+          });
+        }
+
+        return false;
+      },
+
+      onDragOver(evt) {
+        evt.preventDefault();
+        evt.dataTransfer.dropEffect = 'copy';
+      },
+
+      getRowsData(writableOnly) {
+        const writableRows = [];
+        const rows = this.tBodies[0].rows;
+
+        for (let i = 0; i < rows.length; ++i) {
+          const trash = rows[i].getElementsByClassName('delete');
+          if (trash.length > 0 && (!writableOnly || !trash[0].disabled)) {
+            const rowData = {};
+
+            const inputs = rows[i].querySelectorAll('paper-input, paper-textarea, loot-dropdown-menu');
+            for (let j = 0; j < inputs.length; ++j) {
+              rowData[inputs[j].className] = inputs[j].value;
             }
-        },
 
-        onDragOver: {
-            value: function(evt) {
-                evt.preventDefault();
-                evt.dataTransfer.dropEffect = 'copy';
+            writableRows.push(rowData);
+          }
+        }
+
+        return writableRows;
+      },
+
+      setReadOnly(row, classMask, readOnly) {
+        readOnly = readOnly || true;
+
+        const trash = row.getElementsByClassName('delete')[0];
+        if (classMask) {
+          if (classMask.indexOf('delete') !== -1) {
+            trash.disabled = readOnly;
+          }
+        } else {
+          trash.disabled = readOnly;
+        }
+
+        const inputs = row.querySelectorAll('paper-input, paper-textarea, loot-dropdown-menu');
+        for (let i = 0; i < inputs.length; ++i) {
+          if (classMask) {
+            for (let j = 0; j < classMask.length; ++j) {
+              if (inputs[i].classList.contains(classMask[j])) {
+                inputs[i].disabled = readOnly;
+                break;
+              }
             }
-        },
+          } else {
+            inputs[i].disabled = readOnly;
+          }
+        }
+      },
 
-        getRowsData: {
-            value: function(writableOnly) {
-                var writableRows = [];
-                var rows = this.tBodies[0].rows;
+      clear() {
+        const rowDeletes = this.tBodies[0].getElementsByClassName('delete');
+        while (rowDeletes.length > 0) {
+          rowDeletes[0].click();
+        }
+      },
 
-                for (var i = 0; i < rows.length; ++i) {
-                    var trash = rows[i].getElementsByClassName('delete');
-                    if (trash.length > 0 && (!writableOnly || !trash[0].disabled)) {
-                        var rowData = {};
+      onRemoveRow(evt) {
+        const tr = evt.target.parentElement.parentElement.parentElement;
+        const tbody = tr.parentElement;
+        const table = tbody.parentElement;
 
-                        var inputs = rows[i].querySelectorAll('paper-input, loot-validated-input, loot-dropdown-menu');
-                        for (var j = 0; j < inputs.length; ++j) {
-                            rowData[inputs[j].className] = inputs[j].value;
-                        }
+        /* Remove deletion listener. */
+        evt.target.removeEventListener('click', table.onRemoveRow);
 
-                        writableRows.push(rowData);
-                    }
-                }
+        /* Now remove row. */
+        tbody.removeChild(tr);
 
-                return writableRows;
-            }
-        },
+        /* Notify that the table size has changed. */
+        this.dispatchEvent(new CustomEvent('iron-resize', { bubbles: true }));
+      },
 
-        setReadOnly: {
-            value: function(row, classMask, readOnly) {
-                if (readOnly == undefined) {
-                    readOnly = true;
-                }
+      onAddEmptyRow(evt) {
+        evt.currentTarget.parentElement.parentElement.parentElement.parentElement.parentElement.addRow({});
 
-                var trash = row.getElementsByClassName('delete')[0];
-                if (classMask) {
-                    if (classMask.indexOf('delete') != -1) {
-                        trash.disabled = readOnly;
-                    }
-                } else {
-                    trash.disabled = readOnly;
-                }
+        /* Notify that the table size has changed. */
+        this.dispatchEvent(new CustomEvent('iron-resize', { bubbles: true }));
+      },
 
-                var inputs = row.querySelectorAll('paper-input, loot-validated-input, loot-dropdown-menu');
-                for (var i = 0; i < inputs.length; ++i) {
-                    if (classMask) {
-                        for (var j = 0; j < classMask.length; ++j) {
-                            if (inputs[i].classList.contains(classMask[j])) {
-                                inputs[i].disabled = readOnly;
-                                break;
-                            }
-                        }
-                    } else {
-                        inputs[i].disabled = readOnly;
-                    }
-                }
-            }
-        },
+      addRow(tableData) {
+        const rowTemplateId = this.getAttribute('data-template');
+        const content = document.getElementById(rowTemplateId).content;
+        let row = document.importNode(content, true);
+        this.tBodies[0].insertBefore(row, this.tBodies[0].lastElementChild);
+        row = this.tBodies[0].lastElementChild.previousElementSibling;
 
-        clear: {
-            value: function() {
-                var rowDeletes = this.tBodies[0].getElementsByClassName('delete');
+        /* Data is an object with keys that match element class names. */
+        for (const key in tableData) {
+          const elems = row.getElementsByClassName(key);
+          if (tableData[key] !== undefined && elems.length === 1) {
+            elems[0].value = tableData[key];
+          }
+        }
 
-                while (rowDeletes.length > 0) {
-                    rowDeletes[0].click();
-                }
-            }
-        },
+        /* Add deletion listener. */
+        row.getElementsByClassName('delete')[0].addEventListener('click', this.onRemoveRow);
 
-        onRemoveRow: {
-            value: function(evt) {
-                var tr = evt.target.parentElement.parentElement.parentElement;
-                var tbody = tr.parentElement;
-                var table = tbody.parentElement;
+        /* Notify that the table size has changed. */
+        this.dispatchEvent(new CustomEvent('iron-resize', { bubbles: true }));
 
-                /* Remove deletion listener. */
-                evt.target.removeEventListener('click', table.onRemoveRow, false);
+        return row;
+      },
 
-                /* Now remove row. */
-                tbody.removeChild(tr);
-            }
-        },
+      addReadOnlyRow(tableData) {
+        this.setReadOnly(this.addRow(tableData));
+      },
 
-        onAddEmptyRow: {
-            value: function(evt) {
-                /* Create new row. */
-                var table = evt.currentTarget.parentElement.parentElement.parentElement.parentElement.parentElement;
-
-                table.addRow({});
-            }
-        },
-
-        addRow: {
-            value: function(tableData) {
-                var rowTemplateId = this.getAttribute('data-template');
-                var content = document.querySelector('link[rel="import"][href$="editable-table.html"]');
-                if (content) {
-                    content = content.import.getElementById(rowTemplateId).content;
-                } else {
-                    content = document.getElementById(rowTemplateId).content;
-                }
-                var row = document.importNode(content, true);
-
-                var tbody = this.tBodies[0];
-                tbody.insertBefore(row, tbody.lastElementChild);
-                row = tbody.lastElementChild.previousElementSibling;
-
-                /* Data is an object with keys that match element class names. */
-                for (var key in tableData) {
-                    var elems = row.getElementsByClassName(key);
-                    if (tableData[key] != undefined && elems.length == 1) {
-                        elems[0].value = tableData[key];
-                    }
-                }
-
-                /* Add deletion listener. */
-                row.getElementsByClassName('delete')[0].addEventListener('click', this.onRemoveRow, false);
-
-                return row;
-            }
-        },
-
-        attachedCallback: {
-            value: function() {
-                /* Add "add new row" row. */
-                var content = document.querySelector('link[rel="import"][href$="editable-table.html"]');
-                if (content) {
-                    content = content.import.getElementById('newRow').content;
-                } else {
-                    content = document.getElementById('newRow').content;
-                }
-                var row = document.importNode(content, true);
-                this.tBodies[0].appendChild(row);
-                row = this.tBodies[0].lastElementChild;
-
-                /* Add new row listener. */
-                row.querySelector('paper-icon-button').addEventListener('click', this.onAddEmptyRow, false);
-
-                /* Add drag 'n' drop listeners.
-                   Drag 'n' drop should only be enabled for file-row tables.
-                */
-                if (this.getAttribute('data-template') == 'fileRow') {
-                    this.addEventListener('drop', this.onDrop, false);
-                    this.addEventListener('dragover', this.onDragOver, false);
-                }
-            }
-        },
-
-        detachedCallback: {
-            value: function() {
-                /* Remove deletion listener. */
-                var icons = this.tBodies[0].getElementsByClassName('delete');
-                for (var i = 0; i < icons.length; ++i) {
-                    icons[i].removeEventListener('click', this.onRemoveRow, false);
-                }
-
-                /* Remove new row listener. */
-                this.querySelector('tbody tr:last-child paper-icon-button').removeEventListener('click', this.onAddEmptyRow, false);
-
-                /* Remove drag 'n' drop listeners. */
-                this.removeEventListener('drop', this.onDrop, false);
-                this.removeEventListener('dragover', this.onDragOver, false);
-            }
-        },
-
+      validate() {
+        const inputs = this.querySelectorAll('paper-input, paper-textarea');
+        for (let i = 0; i < inputs.length; ++i) {
+          if (!inputs[i].validate()) {
+            return false;
+          }
+        }
+        return true;
+      },
     });
-
-    document.registerElement('editable-table', {
-        prototype: EditableTableProto,
-        extends: 'table'
-    });
-})();
-</script>
+  </script>
+</dom-module>
