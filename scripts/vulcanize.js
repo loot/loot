@@ -63,6 +63,7 @@ function vulcanizeTests(releasePath) {
 
   const tests = [
     'test_loot-custom-icons.html',
+    'test_loot-dropdown-menu.html',
   ];
 
   tests.forEach((test) => {
