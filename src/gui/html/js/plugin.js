@@ -303,6 +303,10 @@
       this._isDirty = dirty;
     }
 
+    get hasUserEdits() {
+      return this.userlist && Object.keys(this.userlist).length > 1;
+    }
+
     getCardContent(filters) {
       return new PluginCardContent(this, filters);
     }
