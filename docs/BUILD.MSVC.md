@@ -24,6 +24,35 @@ Most of the required binaries are pre-built, but the libcef_dll_wrapper dynamic 
 
 2. Open the generated solution file, and build it with `Release` configuration.
 
+#### Google Test
+
+1. Configure CMake and generate a build system for Visual Studio by running:
+
+   ```
+   mkdir build && cd build
+   cmake.exe .. -G "Visual Studio 12"
+   ```
+
+2. Open the generated solution file, and build it with `Release` configuration.
+
+#### Libgit2
+
+1. Configure CMake and generate a build system for Visual Studio by running:
+
+   ```
+   mkdir build && cd build
+   cmake.exe .. -G "Visual Studio 12" -DBUILD_SHARED_LIBS=OFF
+   ```
+
+  Adapt the commands as necessary for your particular setup.
+2. Open the generated solution file, and build it with `Release` configuration.
+
+#### Libloadorder
+
+Follow the instructions in libloadorder's README.md to build it as a static library.
+
+Example CMake keys: `-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=build -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=build`
+
 #### yaml-cpp
 
 1. Configure CMake and generate a build system for Visual Studio by running:
@@ -34,24 +63,6 @@ Most of the required binaries are pre-built, but the libcef_dll_wrapper dynamic 
    ```
 
    Adapt the commands as necessary for your particular setup.
-2. Open the generated solution file, and build it with `Release` configuration.
-
-#### Libloadorder
-
-Follow the instructions in libloadorder's README.md to build it as a static library.
-
-Example CMake keys: `-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=build -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=build`
-
-#### Libgit2
-
-1. Configure CMake and generate a build system for Visual Studio by running:
-
-   ```
-   mkdir build && cd build
-   cmake.exe .. -G "Visual Studio 12" -DBUILD_SHARED_LIBS=OFF -DSTATIC_CRT=ON -DTHREADSAFE=ON
-   ```
-
-  Adapt the commands as necessary for your particular setup.
 2. Open the generated solution file, and build it with `Release` configuration.
 
 #### LOOT

@@ -76,8 +76,6 @@ namespace loot {
         void SendProgressUpdate(CefRefPtr<CefFrame> frame, const std::string& message);
 
         LootState& _lootState;
-    private:
-        IMPLEMENT_REFCOUNTING(Handler);
     };
 }
 
