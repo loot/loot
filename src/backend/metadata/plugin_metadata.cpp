@@ -298,23 +298,23 @@ namespace loot {
 
         //First need to get plugin's CRC, if it is an exact plugin and it does not have its CRC set.
         if (!IsRegexPlugin()) {
-            uint32_t crc = 0;
-            unordered_map<std::string, uint32_t>::iterator it = game.crcCache.find(boost::locale::to_lower(name));
-            if (it != game.crcCache.end())
-                crc = it->second;
-            else if (boost::filesystem::exists(game.DataPath() / name)) {
-                crc = GetCrc32(game.DataPath() / name);
-            }
-            else if (boost::filesystem::exists(game.DataPath() / (name + ".ghost"))) {
-                crc = GetCrc32(game.DataPath() / (name + ".ghost"));
-            }
-            else {
-                // The plugin isn't installed, discard the dirty info.
-                _dirtyInfo.clear();
-            }
+            uint32_t crc = game.GetCachedCrc(name);
+            if (crc == 0) {
+                if (boost::filesystem::exists(game.DataPath() / name)) {
+                    crc = GetCrc32(game.DataPath() / name);
+                }
+                else if (boost::filesystem::exists(game.DataPath() / (name + ".ghost"))) {
+                    crc = GetCrc32(game.DataPath() / (name + ".ghost"));
+                }
+                else {
+                    // The plugin isn't installed, discard the dirty info.
+                    _dirtyInfo.clear();
+                }
 
-            // Store the CRC in the cache in case it's not already in there.
-            game.crcCache.insert(pair<string, uint32_t>(boost::locale::to_lower(name), crc));
+                // Store the CRC in the cache in case it's not already in there.
+                if (crc != 0)
+                    game.CacheCrc(name, crc);
+            }
 
             // Now use the CRC to evaluate the dirty info.
             for (auto it = _dirtyInfo.begin(); it != _dirtyInfo.end();) {

@@ -25,6 +25,7 @@
 #ifndef __LOOT_GAME__
 #define __LOOT_GAME__
 
+#include "game_cache.h"
 #include "game_settings.h"
 #include "load_order_handler.h"
 #include "../plugin/plugin.h"
@@ -32,19 +33,12 @@
 #include "../masterlist.h"
 
 #include <string>
-#include <vector>
-#include <cstdint>
 #include <unordered_map>
-#include <unordered_set>
 
 #include <boost/filesystem.hpp>
-#include <boost/locale.hpp>
-
-#include <api/libloadorder.h>
-#include <yaml-cpp/yaml.h>
 
 namespace loot {
-    class Game : public GameSettings, public LoadOrderHandler {
+    class Game : public GameSettings, public LoadOrderHandler, public GameCache {
     public:
         //Game functions.
         Game();  //Sets game to LOOT_Game::autodetect, with all other vars being empty.
@@ -58,11 +52,6 @@ namespace loot {
 
         void LoadPlugins(bool headersOnly);  //Loads all installed plugins.
         bool ArePluginsFullyLoaded() const;  // Checks if the game's plugins have already been loaded.
-
-        //Caches for condition results, active plugins and CRCs.
-        std::unordered_map<std::string, bool> conditionCache;  //Holds lowercased strings.
-        std::unordered_map<std::string, uint32_t> crcCache;  //Holds lowercased strings.
-        std::unordered_set<std::string> activePlugins;  //Holds lowercased strings.
 
         //Plugin data and metadata lists.
         Masterlist masterlist;

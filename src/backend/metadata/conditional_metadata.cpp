@@ -51,9 +51,9 @@ namespace loot {
 
         BOOST_LOG_TRIVIAL(trace) << "Evaluating condition: " << _condition;
 
-        unordered_map<std::string, bool>::const_iterator it = game.conditionCache.find(boost::locale::to_lower(_condition));
-        if (it != game.conditionCache.end())
-            return it->second;
+        auto cachedValue = game.GetCachedCondition(_condition);
+        if (cachedValue.second)
+            return cachedValue.first;
 
         ConditionGrammar<std::string::const_iterator, boost::spirit::qi::space_type> grammar(&game);
         boost::spirit::qi::space_type skipper;
@@ -77,7 +77,7 @@ namespace loot {
             throw loot::error(loot::error::condition_eval_fail, (boost::format(lc::translate("Failed to parse condition \"%1%\".")) % _condition).str());
         }
 
-        game.conditionCache.insert(pair<string, bool>(boost::locale::to_lower(_condition), eval));
+        game.CacheCondition(_condition, eval);
 
         return eval;
     }

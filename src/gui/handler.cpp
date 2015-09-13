@@ -639,8 +639,7 @@ namespace loot {
             SendProgressUpdate(frame, loc::translate("Loading plugin headers..."));
 
             // First clear CRC and condition caches, otherwise they could lead to incorrect evaluations.
-            _lootState.CurrentGame().conditionCache.clear();
-            _lootState.CurrentGame().crcCache.clear();
+            _lootState.CurrentGame().ClearCache();
 
             // Also refresh active plugins list.
             _lootState.CurrentGame().RefreshActivePluginsList();

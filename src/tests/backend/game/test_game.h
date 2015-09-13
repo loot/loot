@@ -133,19 +133,63 @@ TEST_F(Game, Init) {
     ASSERT_FALSE(boost::filesystem::exists(loot::g_path_local / game.FolderName()));
     EXPECT_THROW(game.Init(false), loot::error);
     EXPECT_FALSE(boost::filesystem::exists(loot::g_path_local / game.FolderName()));
-    EXPECT_TRUE(game.activePlugins.empty());
+    EXPECT_FALSE(game.IsPluginActive("Skyrim.esm"));
+    EXPECT_FALSE(game.IsPluginActive("skyrim.esm"));
+    EXPECT_FALSE(game.IsPluginActive("Blank.esm"));
+    EXPECT_FALSE(game.IsPluginActive("Blank - Different.esm"));
+    EXPECT_FALSE(game.IsPluginActive("Blank - Master Dependent.esm"));
+    EXPECT_FALSE(game.IsPluginActive("Blank - Different Master Dependent.esm"));
+    EXPECT_FALSE(game.IsPluginActive("Blank.esp"));
+    EXPECT_FALSE(game.IsPluginActive("Blank - Different.esp"));
+    EXPECT_FALSE(game.IsPluginActive("Blank - Master Dependent.esp"));
+    EXPECT_FALSE(game.IsPluginActive("Blank - Different Master Dependent.esp"));
+    EXPECT_FALSE(game.IsPluginActive("Blank - Plugin Dependent.esp"));
+    EXPECT_FALSE(game.IsPluginActive("Blank - Different Plugin Dependent.esp"));
 
     game = loot::Game(loot::Game::tes5).SetGamePath(dataPath.parent_path());
-    ASSERT_TRUE(game.activePlugins.empty());
+    EXPECT_FALSE(game.IsPluginActive("Skyrim.esm"));
+    EXPECT_FALSE(game.IsPluginActive("skyrim.esm"));
+    EXPECT_FALSE(game.IsPluginActive("Blank.esm"));
+    EXPECT_FALSE(game.IsPluginActive("Blank - Different.esm"));
+    EXPECT_FALSE(game.IsPluginActive("Blank - Master Dependent.esm"));
+    EXPECT_FALSE(game.IsPluginActive("Blank - Different Master Dependent.esm"));
+    EXPECT_FALSE(game.IsPluginActive("Blank.esp"));
+    EXPECT_FALSE(game.IsPluginActive("Blank - Different.esp"));
+    EXPECT_FALSE(game.IsPluginActive("Blank - Master Dependent.esp"));
+    EXPECT_FALSE(game.IsPluginActive("Blank - Different Master Dependent.esp"));
+    EXPECT_FALSE(game.IsPluginActive("Blank - Plugin Dependent.esp"));
+    EXPECT_FALSE(game.IsPluginActive("Blank - Different Plugin Dependent.esp"));
+
     EXPECT_NO_THROW(game.Init(false, localPath));
     EXPECT_FALSE(boost::filesystem::exists(loot::g_path_local / game.FolderName()));
-    EXPECT_FALSE(game.activePlugins.empty());
+    EXPECT_TRUE(game.IsPluginActive("Skyrim.esm"));
+    EXPECT_TRUE(game.IsPluginActive("skyrim.esm"));
+    EXPECT_TRUE(game.IsPluginActive("Blank.esm"));
+    EXPECT_FALSE(game.IsPluginActive("Blank - Different.esm"));
+    EXPECT_FALSE(game.IsPluginActive("Blank - Master Dependent.esm"));
+    EXPECT_FALSE(game.IsPluginActive("Blank - Different Master Dependent.esm"));
+    EXPECT_FALSE(game.IsPluginActive("Blank.esp"));
+    EXPECT_FALSE(game.IsPluginActive("Blank - Different.esp"));
+    EXPECT_FALSE(game.IsPluginActive("Blank - Master Dependent.esp"));
+    EXPECT_TRUE(game.IsPluginActive("Blank - Different Master Dependent.esp"));
+    EXPECT_FALSE(game.IsPluginActive("Blank - Plugin Dependent.esp"));
+    EXPECT_FALSE(game.IsPluginActive("Blank - Different Plugin Dependent.esp"));
 
     game = loot::Game(loot::Game::tes5).SetGamePath(dataPath.parent_path());
-    ASSERT_TRUE(game.activePlugins.empty());
     EXPECT_NO_THROW(game.Init(true, localPath));
     EXPECT_TRUE(boost::filesystem::exists(loot::g_path_local / game.FolderName()));
-    EXPECT_FALSE(game.activePlugins.empty());
+    EXPECT_TRUE(game.IsPluginActive("Skyrim.esm"));
+    EXPECT_TRUE(game.IsPluginActive("skyrim.esm"));
+    EXPECT_TRUE(game.IsPluginActive("Blank.esm"));
+    EXPECT_FALSE(game.IsPluginActive("Blank - Different.esm"));
+    EXPECT_FALSE(game.IsPluginActive("Blank - Master Dependent.esm"));
+    EXPECT_FALSE(game.IsPluginActive("Blank - Different Master Dependent.esm"));
+    EXPECT_FALSE(game.IsPluginActive("Blank.esp"));
+    EXPECT_FALSE(game.IsPluginActive("Blank - Different.esp"));
+    EXPECT_FALSE(game.IsPluginActive("Blank - Master Dependent.esp"));
+    EXPECT_TRUE(game.IsPluginActive("Blank - Different Master Dependent.esp"));
+    EXPECT_FALSE(game.IsPluginActive("Blank - Plugin Dependent.esp"));
+    EXPECT_FALSE(game.IsPluginActive("Blank - Different Plugin Dependent.esp"));
 #else
     game = loot::Game(loot::Game::tes5).SetGamePath(dataPath.parent_path());
     EXPECT_NO_THROW(game.Init(false));
@@ -161,20 +205,25 @@ TEST_F(Game, RefreshActivePluginsList) {
     game.SetGamePath(dataPath.parent_path());
 
     // Throw because the load order handler hasn't been initialised.
-    ASSERT_TRUE(game.activePlugins.empty());
     EXPECT_THROW(game.RefreshActivePluginsList(), loot::error);
-    EXPECT_TRUE(game.activePlugins.empty());
 
     // Calling Init calls RefreshActivePluginsList, so clear it before testing
     // separately.
     game.Init(false, localPath);
-    EXPECT_NO_THROW(game.activePlugins.clear());
+    EXPECT_NO_THROW(game.ClearCache());
     EXPECT_NO_THROW(game.RefreshActivePluginsList());
-    EXPECT_FALSE(game.activePlugins.empty());
-    ASSERT_EQ(3, game.activePlugins.size());
-    EXPECT_EQ(1, game.activePlugins.count("skyrim.esm"));
-    EXPECT_EQ(1, game.activePlugins.count("blank.esm"));
-    EXPECT_EQ(1, game.activePlugins.count("blank - different master dependent.esp"));
+    EXPECT_TRUE(game.IsPluginActive("Skyrim.esm"));
+    EXPECT_TRUE(game.IsPluginActive("skyrim.esm"));
+    EXPECT_TRUE(game.IsPluginActive("Blank.esm"));
+    EXPECT_FALSE(game.IsPluginActive("Blank - Different.esm"));
+    EXPECT_FALSE(game.IsPluginActive("Blank - Master Dependent.esm"));
+    EXPECT_FALSE(game.IsPluginActive("Blank - Different Master Dependent.esm"));
+    EXPECT_FALSE(game.IsPluginActive("Blank.esp"));
+    EXPECT_FALSE(game.IsPluginActive("Blank - Different.esp"));
+    EXPECT_FALSE(game.IsPluginActive("Blank - Master Dependent.esp"));
+    EXPECT_TRUE(game.IsPluginActive("Blank - Different Master Dependent.esp"));
+    EXPECT_FALSE(game.IsPluginActive("Blank - Plugin Dependent.esp"));
+    EXPECT_FALSE(game.IsPluginActive("Blank - Different Plugin Dependent.esp"));
 }
 
 TEST_F(Game, RedatePlugins) {

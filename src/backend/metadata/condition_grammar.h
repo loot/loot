@@ -287,12 +287,9 @@ namespace loot {
             if (_game == nullptr)
                 return;
 
-            uint32_t crc;
-            std::unordered_map<std::string, uint32_t>::iterator it = _game->crcCache.find(boost::locale::to_lower(file));
+            uint32_t crc = _game->GetCachedCrc(file);
 
-            if (it != _game->crcCache.end())
-                crc = it->second;
-            else {
+            if (crc == 0) {
                 if (file == "LOOT")
                     crc = GetCrc32(boost::filesystem::absolute("LOOT.exe"));
                 if (boost::filesystem::exists(_game->DataPath() / file))
@@ -304,7 +301,7 @@ namespace loot {
                     return;
                 }
 
-                _game->crcCache.insert(std::pair<std::string, uint32_t>(boost::locale::to_lower(file), crc));
+                _game->CacheCrc(file, crc);
             }
 
             result = checksum == crc;

@@ -83,7 +83,7 @@ namespace loot {
     }
 
     void Game::RefreshActivePluginsList() {
-        activePlugins = GetActivePlugins();
+        CacheActivePlugins(GetActivePlugins());
     }
 
     void Game::RedatePlugins() {

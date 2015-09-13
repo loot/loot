@@ -107,7 +107,7 @@ namespace loot {
             if (!headerOnly) {
                 BOOST_LOG_TRIVIAL(trace) << name << ": Caching CRC value.";
                 crc = loader.Crc();
-                game.crcCache.insert(pair<string, uint32_t>(boost::locale::to_lower(name), crc));
+                game.CacheCrc(name, crc);
             }
 
             BOOST_LOG_TRIVIAL(trace) << name << ": Counting override FormIDs.";
@@ -235,7 +235,7 @@ namespace loot {
     }
 
     bool Plugin::IsActive(const Game& game) const {
-        return game.activePlugins.find(boost::locale::to_lower(name)) != game.activePlugins.end();
+        return game.IsPluginActive(name);
     }
 
     std::string Plugin::Version() const {
