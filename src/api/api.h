@@ -25,7 +25,7 @@
 /**
  *  @mainpage
  *  @author WrinklyNinja
- *  @version 0.8.0
+ *  @version 0.8.1
  *  @copyright
  *      The LOOT API is distributed under the GNU General Public License v3.0.
  *      For the full text of the license, see the "GNU GPL v3.txt" file
@@ -61,20 +61,38 @@
  *      "docs/licenses/Licenses.txt" file.
  *
  * @section history_sec Version History
+ *      ## 0.8.1 - 27 September 2015*
+ *
+ *        * Fixed crash when loading plugins due to lack of thread safety.
+ *        * Fixed masterlist updater and validator not checking for valid
+ *          condition and regex syntax.
+ *        * Check for safe file paths when parsing conditions.
+ *        * Updated Boost (1.59.0), libgit2 (0.23.2) and CEF (branch 2454)
+ *          dependencies. This fixes the masterlist updater not working
+ *          correctly for Windows Vista users.
+ *
  *      ## 0.8.0 - *22 July 2015*
  *
- *        * Fixed many miscellaneous bugs, including initialisation crashes and incorrect metadata input/output handling.
- *        * Fixed LOOT silently discarding some non-unique metadata: an error will now occur when loading or attempting to apply such metadata.
- *        * Fixed and improved LOOT's version comparison behaviour for a wide variety of version string formats. This involved removing LOOT's usage of the Alphanum code library.
- *        * Improved plugin loading performance for computers with weaker multithreading capabilities (eg. non-hyperthreaded dual-core or single-core CPUs).
+ *        * Fixed many miscellaneous bugs, including initialisation crashes and
+ *          incorrect metadata input/output handling.
+ *        * Fixed LOOT silently discarding some non-unique metadata: an error
+ *          will now occur when loading or attempting to apply such metadata.
+ *        * Fixed and improved LOOT's version comparison behaviour for a wide
+ *          variety of version string formats. This involved removing LOOT's
+ *          usage of the Alphanum code library.
+ *        * Improved plugin loading performance for computers with weaker
+ *          multithreading capabilities (eg. non-hyperthreaded dual-core or
+ *          single-core CPUs).
  *        * LOOT no longer outputs validity warnings for inactive plugins.
- *        * Metadata syntax support changes, see the metadata syntax document for details.
+ *        * Metadata syntax support changes, see the metadata syntax document
+ *          for details.
  *        * Updated libgit2 to v0.23.0.
  *
  *      ## 0.7.1 - *22 June 2015*
  *
  *        * Fixed "No existing load order position" errors when sorting.
- *        * Fixed output of Bash Tag removal suggestions in `loot_write_minimal_list()`.
+ *        * Fixed output of Bash Tag removal suggestions in
+ *          `loot_write_minimal_list()`.
  *
  *      ## 0.7.0 - *20 May 2015*
  *

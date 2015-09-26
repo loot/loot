@@ -29,7 +29,7 @@ namespace loot {
     //Version numbers.
     const unsigned int g_version_major = 0;
     const unsigned int g_version_minor = 8;
-    const unsigned int g_version_patch = 0;
+    const unsigned int g_version_patch = 1;
 
     // Build revision
     const char * g_build_revision = "@GIT_COMMIT_STRING@";
