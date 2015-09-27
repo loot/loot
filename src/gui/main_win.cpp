@@ -142,8 +142,8 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
     if (hMutex != NULL)
         ReleaseMutex(hMutex);
 
-    // Delete the folders CEF generates that LOOT doesn't need.
-    boost::filesystem::remove_all(boost::filesystem::current_path() / "pdf.dll");
+    // Delete the Widevine folder CEF wrongly generates (CEF issue #1713).
+    boost::filesystem::remove_all(boost::filesystem::current_path() / "widevinecdmadapter.dll");
 
     return 0;
 
