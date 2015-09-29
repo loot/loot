@@ -216,10 +216,13 @@ include_directories ("${CMAKE_SOURCE_DIR}/src"
                      ${GTEST_INCLUDE_DIRS}
                      "${PSEUDOSEM_ROOT}/include")
 
+# Look in build and build/<arch> folders to support single and multiarch builds.
 link_directories ("${LIBLOADORDER_ROOT}/build"
+                  "${LIBLOADORDER_ROOT}/build/${PROJECT_ARCH}"
                   "${LIBGIT2_ROOT}/build"
                   "${CEF_ROOT}/Release"
                   "${CEF_ROOT}/build/libcef_dll/Release")
+                  "${LIBGIT2_ROOT}/build/${PROJECT_ARCH}"
 
 
 ##############################
