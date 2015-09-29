@@ -44,8 +44,18 @@ project (LOOT)
 option(BUILD_SHARED_LIBS "Build a shared library" ON)
 option(PROJECT_STATIC_RUNTIME "Build with static runtime libs (/MT)" ON)
 
-IF (NOT DEFINED PROJECT_ARCH)
-    set (PROJECT_ARCH "32")
+# With MSVC, the 32/64 bit compilers have separate generators, so PROJECT_ARCH
+# should always match whichever is being used.
+IF (MSVC)
+    IF (CMAKE_CL_64)
+        set (PROJECT_ARCH "64")
+    ELSE ()
+        set (PROJECT_ARCH "32")
+    ENDIF ()
+ELSE ()
+    IF (NOT DEFINED PROJECT_ARCH)
+        set (PROJECT_ARCH "32")
+    ENDIF ()
 ENDIF ()
 
 IF (NOT DEFINED LIBESPM_ROOT)
