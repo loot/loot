@@ -220,9 +220,9 @@ include_directories ("${CMAKE_SOURCE_DIR}/src"
 link_directories ("${LIBLOADORDER_ROOT}/build"
                   "${LIBLOADORDER_ROOT}/build/${PROJECT_ARCH}"
                   "${LIBGIT2_ROOT}/build"
-                  "${CEF_ROOT}/Release"
-                  "${CEF_ROOT}/build/libcef_dll/Release")
                   "${LIBGIT2_ROOT}/build/${PROJECT_ARCH}"
+                  "${CEF_ROOT}"
+                  "${CEF_ROOT}/build/libcef_dll")
 
 
 ##############################
