@@ -4,13 +4,19 @@
 var child_process =  require('child_process');
 var path = require('path');
 var fs = require('fs');
+var helpers = require('./helpers');
 
 if (process.argv.length < 3) {
     var root_path = '.';
 } else {
     var root_path = process.argv[2];
 }
-var output_path = path.join(root_path, 'build', 'Release', 'resources', 'ui');
+
+if (helpers.isMultiArch(root_path)) {
+    var output_path = path.join(root_path, 'build', '32', 'Release', 'resources', 'ui');
+} else {
+    var output_path = path.join(root_path, 'build', 'Release', 'resources', 'ui');
+}
 
 // Makes sure output directory exists first.
 try {

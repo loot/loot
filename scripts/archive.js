@@ -6,6 +6,11 @@
 var child_process =  require('child_process');
 var path = require('path');
 var fs = require('fs-extra');
+var helpers = require('./helpers');
+
+function isApi64Bit(root_path) {
+    return helpers.fileExists(path.join(root_path, 'build', 'Release', 'loot64.dll'));
+}
 
 function vulcanize() {
     return child_process.execFileSync('node', [
@@ -42,6 +47,12 @@ function createAppArchive(dest_path) {
     // Ensure that the output directory is empty.
     fs.emptyDirSync(temp_path);
 
+    if (helpers.isMultiArch(root_path)) {
+        var release_path = path.join(root_path, 'build', '32', 'Release');
+    } else {
+        var release_path = path.join(root_path, 'build', 'Release');
+    }
+
     // Copy LOOT exectuable and CEF files.
     [
         'LOOT.exe',
@@ -59,7 +70,7 @@ function createAppArchive(dest_path) {
         'icudtl.dat'
     ].forEach(function(file){
         fs.copySync(
-            path.join(root_path, 'build', 'Release', file),
+            path.join(release_path, file),
             path.join(temp_path, file)
         );
     });
@@ -67,7 +78,7 @@ function createAppArchive(dest_path) {
     // CEF locale file.
     fs.mkdirsSync(path.join(temp_path, 'resources', 'l10n'));
     fs.copySync(
-        path.join(root_path, 'build', 'Release', 'resources', 'l10n', 'en-US.pak'),
+        path.join(release_path, 'resources', 'l10n', 'en-US.pak'),
         path.join(temp_path, 'resources', 'l10n', 'en-US.pak')
     );
 
@@ -86,7 +97,7 @@ function createAppArchive(dest_path) {
     // UI files.
     fs.mkdirsSync(path.join(temp_path, 'resources', 'ui', 'css'));
     fs.copySync(
-        path.join(root_path, 'build', 'Release', 'resources', 'ui', 'index.html'),
+        path.join(release_path, 'resources', 'ui', 'index.html'),
         path.join(temp_path, 'resources', 'ui', 'index.html')
     );
     fs.copySync(
@@ -123,11 +134,27 @@ function createApiArchive(dest_path) {
     // Ensure that the output directory is empty.
     fs.emptyDirSync(temp_path);
 
-    // API binary.
-    fs.copySync(
-        path.join(root_path, 'build', 'Release', 'loot32.dll'),
-        path.join(temp_path, 'loot32.dll')
-    );
+    // API binary/binaries.
+    if (helpers.isMultiArch(root_path)) {
+        fs.copySync(
+            path.join(root_path, 'build', '32', 'Release', 'loot32.dll'),
+            path.join(temp_path, 'loot32.dll')
+        );
+        fs.copySync(
+            path.join(root_path, 'build', '64', 'Release', 'loot64.dll'),
+            path.join(temp_path, 'loot64.dll')
+        );
+    } else if (isApi64Bit(root_path)) {
+        fs.copySync(
+            path.join(root_path, 'build', 'Release', 'loot64.dll'),
+            path.join(temp_path, 'loot64.dll')
+        );
+    } else {
+        fs.copySync(
+            path.join(root_path, 'build', 'Release', 'loot32.dll'),
+            path.join(temp_path, 'loot32.dll')
+        );
+    }
 
     // API header file.
     fs.mkdirsSync(path.join(temp_path, 'include', 'loot'));
