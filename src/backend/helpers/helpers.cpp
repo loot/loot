@@ -165,14 +165,14 @@ namespace loot {
 
     //Helper to turn UTF8 strings into strings that can be used by WinAPI.
     std::wstring ToWinWide(const std::string& str) {
-        int len = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), str.length(), 0, 0);
+        size_t len = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), str.length(), 0, 0);
         std::wstring wstr(len, 0);
         MultiByteToWideChar(CP_UTF8, 0, str.c_str(), str.length(), &wstr[0], len);
         return wstr;
     }
 
     std::string FromWinWide(const std::wstring& wstr) {
-        int len = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), wstr.length(), NULL, 0, NULL, NULL);
+        size_t len = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), wstr.length(), NULL, 0, NULL, NULL);
         std::string str(len, 0);
         WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), wstr.length(), &str[0], len, NULL, NULL);
         return str;
