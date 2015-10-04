@@ -92,17 +92,15 @@ namespace loot {
 
         list<string> loadorder = GetLoadOrder();
         if (!loadorder.empty()) {
-            time_t lastTime;
-            fs::path filepath = DataPath() / *loadorder.begin();
-            if (!fs::exists(filepath) && fs::exists(filepath.string() + ".ghost"))
-                filepath += ".ghost";
-
-            lastTime = fs::last_write_time(filepath);
-
+            time_t lastTime = 0;
             for (const auto &pluginName : loadorder) {
-                filepath = DataPath() / pluginName;
-                if (!fs::exists(filepath) && fs::exists(filepath.string() + ".ghost"))
-                    filepath += ".ghost";
+                fs::path filepath = DataPath() / pluginName;
+                if (!fs::exists(filepath)) {
+                    if (fs::exists(filepath.string() + ".ghost"))
+                        filepath += ".ghost";
+                    else
+                        continue;
+                }
 
                 time_t thisTime = fs::last_write_time(filepath);
                 BOOST_LOG_TRIVIAL(info) << "Current timestamp for \"" << filepath.filename().string() << "\": " << thisTime;
