@@ -142,9 +142,6 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
     if (hMutex != NULL)
         ReleaseMutex(hMutex);
 
-    // Delete the Widevine folder CEF wrongly generates (CEF issue #1713).
-    boost::filesystem::remove_all(boost::filesystem::current_path() / "widevinecdmadapter.dll");
-
     return 0;
 
 #ifdef _WIN32
