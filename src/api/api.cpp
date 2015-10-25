@@ -22,7 +22,7 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#include "api.h"
+#include "loot/api.h"
 #include "../backend/game/game.h"
 #include "../backend/globals.h"
 #include "../backend/error.h"

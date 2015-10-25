@@ -507,7 +507,10 @@ extern "C"
      *      The URL of the remote from which to fetch updates. This can also be
      *      a relative or absolute path to a local repository.
      *  @param remoteBranch
-     *      The branch of the remote from which to apply updates.
+     *      The branch of the remote from which to apply updates. LOOT's
+     *      official masterlists are versioned using separate branches for each
+     *      new version of the masterlist syntax, so if you're using them,
+     *      check their repositories to see which is the latest release branch.
      *  @param updated
      *      `true` if the masterlist was updated. `false` if no update was
      *      necessary, ie. it was already up-to-date. If `true`, the masterlist

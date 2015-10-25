@@ -159,7 +159,7 @@ function createApiArchive(dest_path) {
     // API header file.
     fs.mkdirsSync(path.join(temp_path, 'include', 'loot'));
     fs.copySync(
-        path.join(root_path, 'src', 'api', 'api.h'),
+        path.join(root_path, 'include', 'loot', 'api.h'),
         path.join(temp_path, 'include', 'loot', 'api.h')
     );
 

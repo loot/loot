@@ -166,7 +166,7 @@ set (LOOT_API_SRC ${LOOT_SRC}
                   "${CMAKE_SOURCE_DIR}/src/api/api.cpp")
 
 set (LOOT_API_HEADERS ${LOOT_HEADERS}
-                  "${CMAKE_SOURCE_DIR}/src/api/api.h")
+                  "${CMAKE_SOURCE_DIR}/include/loot/api.h")
 
 set (LOOT_VALIDATOR_SRC ${LOOT_SRC}
                         "${CMAKE_SOURCE_DIR}/src/validator/main.cpp")
@@ -208,6 +208,7 @@ source_group("Header Files" FILES ${LOOT_HEADERS} ${LOOT_GUI_HEADERS} ${LOOT_API
 # Include source and library directories.
 include_directories ("${CMAKE_SOURCE_DIR}/src"
                      "${LIBLOADORDER_ROOT}/src"
+                     "${CMAKE_SOURCE_DIR}/include"
                      "${LIBGIT2_ROOT}/include"
                      ${CEF_ROOT}
                      ${LIBESPM_ROOT}

@@ -62,7 +62,7 @@ If you're adding a new translation, LOOT's source code must be updated to recogn
 
 * In [language.h](src/backend/helpers/language.h), add a static constant for the language to the `Language` class.
 * In [language.cpp](src/backend/helpers/language.cpp), define the value for the constant you added, and update `Language::Language(const std::string& locale)`, `Language::Construct(const unsigned int code)` and `Language::Codes({...})` to include lines for your language.
-* Add constants for the language in [api.h](src/api/api.h) and [api.cpp](src/api/api.cpp).
+* Add constants for the language in [api.h](include/loot/api.h) and [api.cpp](src/api/api.cpp).
 * In [archive.js](scripts/archive.js), add the language folder to the list on line 83.
 * In [installer.iss](scripts/installer.iss), add an entry for your language's translation file to the `[Files]` section.
 * In [LOOT Metadata Syntax.html](docs/LOOT%20Metadata%20Syntax.html), add a row for your language to the Language Codes table.

@@ -25,7 +25,7 @@ along with LOOT.  If not, see
 #ifndef LOOT_TEST_API
 #define LOOT_TEST_API
 
-#include "api/api.h"
+#include "../include/loot/api.h"
 #include "tests/fixtures.h"
 
 #include <boost/algorithm/string/predicate.hpp>
