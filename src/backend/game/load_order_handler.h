@@ -33,7 +33,7 @@
 
 #include <boost/filesystem.hpp>
 
-#include <api/libloadorder.h>
+#include <libloadorder/libloadorder.h>
 
 namespace loot {
     class LoadOrderHandler {
