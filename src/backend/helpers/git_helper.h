@@ -43,11 +43,18 @@ namespace loot {
 
         static bool IsRepository(const boost::filesystem::path& path);
 
-        // Removes the read-only flag from some files in git repositories
-        // created by libgit2.
-        static void FixRepoPermissions(const boost::filesystem::path& path);
+        // Clones a repository and opens it. Sets 'repo'.
+        void Clone(const boost::filesystem::path& path, const std::string& url);
 
-        static int diff_file_cb(const git_diff_delta *delta, float progress, void * payload);
+        // Fetch from remote.
+        void Fetch(const std::string& remote);
+
+        // Create and checkout a new remote-tracking branch.
+        void CheckoutNewBranch(const std::string& remote, const std::string& branch);
+
+        void CheckoutRevision(const std::string& revision);
+
+        std::string GetHeadShortId();
 
         git_repository * repo;
         git_remote * remote;
@@ -62,12 +69,21 @@ namespace loot {
         git_diff * diff;
         git_buf buf;
 
+        git_checkout_options checkout_options;
+        git_clone_options clone_options;
+
         struct git_diff_payload {
             bool fileFound;
             const char * fileToFind;
         };
+
+        static int diff_file_cb(const git_diff_delta *delta, float progress, void * payload);
     private:
         std::string errorMessage;
+
+        // Removes the read-only flag from some files in git repositories
+        // created by libgit2.
+        static void FixRepoPermissions(const boost::filesystem::path& path);
     };
 
     bool IsFileDifferent(const boost::filesystem::path& repoRoot, const std::string& filename);

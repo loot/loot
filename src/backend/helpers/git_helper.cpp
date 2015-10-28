@@ -50,6 +50,9 @@ namespace loot {
         buf({0}) {
         // Init threading system and OpenSSL (for Linux builds).
         git_libgit2_init();
+
+        checkout_options = GIT_CHECKOUT_OPTIONS_INIT;
+        clone_options = GIT_CLONE_OPTIONS_INIT;
     }
 
     GitHelper::~GitHelper() {
@@ -118,6 +121,12 @@ namespace loot {
         tree = nullptr;
         diff = nullptr;
         buf = {0};
+
+        // Also free any path strings in the checkout options.
+        for (size_t i = 0; i < checkout_options.paths.count; ++i) {
+            delete[] checkout_options.paths.strings[i];
+            checkout_options.paths.strings[i] = nullptr;
+        }
     }
 
     bool GitHelper::IsRepository(const boost::filesystem::path& path) {
@@ -144,6 +153,163 @@ namespace loot {
         }
 
         return 0;
+    }
+
+    // Clones a repository and opens it.
+    void GitHelper::Clone(const boost::filesystem::path& path, const std::string& url) {
+        if (this->repo != nullptr)
+            throw error(error::git_error, "Cannot clone repository that has already been opened.");
+
+        this->SetErrorMessage(lc::translate("An error occurred while trying to clone the remote masterlist repository."));
+        // Clone the remote repository.
+        BOOST_LOG_TRIVIAL(info) << "Repository doesn't exist, cloning the remote repository.";
+
+        fs::path tempPath = fs::temp_directory_path() / fs::unique_path();
+        if (!fs::is_empty(path)) {
+            // Directory is non-empty. Delete the masterlist file and
+            // .git folder, then move any remaining files to a temporary
+            // folder while the repo is cloned, before moving them back.
+            BOOST_LOG_TRIVIAL(trace) << "Repo path not empty, renaming folder.";
+
+            // Clear any read-only flags first.
+            this->FixRepoPermissions(path);
+
+            // Now move to temp path.
+            fs::rename(path, tempPath);
+
+            // Recreate the game folder so that we don't inadvertently
+            // cause any other errors (everything past LOOT init assumes
+            // it exists).
+            fs::create_directory(path);
+        }
+
+        // Perform the clone.
+        this->Call(git_clone(&this->repo, url.c_str(), path.string().c_str(), &this->clone_options));
+
+        if (fs::exists(tempPath)) {
+            //Move contents back in.
+            BOOST_LOG_TRIVIAL(trace) << "Repo path wasn't empty, moving previous files back in.";
+            for (fs::directory_iterator it(tempPath); it != fs::directory_iterator(); ++it) {
+                if (!fs::exists(path / it->path().filename())) {
+                    //No conflict, OK to move back in.
+                    fs::rename(it->path(), path / it->path().filename());
+                }
+            }
+            //Delete temporary folder.
+            fs::remove_all(tempPath);
+        }
+    }
+
+    void GitHelper::Fetch(const std::string& remote) {
+        if (this->repo == nullptr)
+            throw error(error::git_error, "Cannot fetch updates for repository that has not been opened.");
+
+        BOOST_LOG_TRIVIAL(trace) << "Fetching updates from remote.";
+        this->SetErrorMessage(lc::translate("An error occurred while trying to update the masterlist. This could be due to a server-side error. Try again in a few minutes."));
+
+        // Get the origin remote.
+        this->Call(git_remote_lookup(&this->remote, this->repo, remote.c_str()));
+
+        // Now fetch any updates.
+        git_fetch_options fetch_options = GIT_FETCH_OPTIONS_INIT;
+        this->Call(git_remote_fetch(this->remote, nullptr, &fetch_options, nullptr));
+
+        // Log some stats on what was fetched either during update or clone.
+        const git_transfer_progress * stats = git_remote_stats(this->remote);
+        BOOST_LOG_TRIVIAL(info) << "Received " << stats->indexed_objects << " of " << stats->total_objects << " objects in " << stats->received_bytes << " bytes.";
+
+        git_remote_free(this->remote);
+        this->remote = nullptr;
+    }
+
+    void GitHelper::CheckoutNewBranch(const std::string& remote, const std::string& branch) {
+        if (this->repo == nullptr)
+            throw error(error::git_error, "Cannot fetch updates for repository that has not been opened.");
+        else if (this->commit != nullptr)
+            throw error(error::git_error, "Cannot fetch repository updates, commit memory already allocated.");
+        else if (this->obj != nullptr)
+            throw error(error::git_error, "Cannot fetch repository updates, object memory already allocated.");
+        else if (this->ref != nullptr)
+            throw error(error::git_error, "Cannot fetch repository updates, reference memory already allocated.");
+
+        BOOST_LOG_TRIVIAL(trace) << "Looking up commit referred to by the remote branch \"" << branch << "\".";
+        this->Call(git_revparse_single(&this->obj, this->repo, (remote + "/" + branch).c_str()));
+        const git_oid * commit_id = git_object_id(this->obj);
+
+        // Create a branch.
+        BOOST_LOG_TRIVIAL(trace) << "Creating the new branch.";
+        this->Call(git_commit_lookup(&this->commit, this->repo, commit_id));
+        this->Call(git_branch_create(&this->ref, this->repo, branch.c_str(), this->commit, 0));
+
+        // Set upstream.
+        BOOST_LOG_TRIVIAL(trace) << "Setting the upstream for the new branch.";
+        this->Call(git_branch_set_upstream(this->ref, (remote + "/" + branch).c_str()));
+
+        // Check if HEAD points to the desired branch and set it to if not.
+        if (!git_branch_is_head(this->ref)) {
+            BOOST_LOG_TRIVIAL(trace) << "Setting HEAD to follow branch: " << branch;
+            this->Call(git_repository_set_head(this->repo, (string("refs/heads/") + branch).c_str()));
+        }
+
+        BOOST_LOG_TRIVIAL(trace) << "Performing a Git checkout of HEAD.";
+        this->Call(git_checkout_head(this->repo, &this->checkout_options));
+
+        // Free tree and commit pointers. Reference pointer is still used below.
+        git_object_free(this->obj);
+        git_commit_free(this->commit);
+        git_reference_free(this->ref);
+        this->commit = nullptr;
+        this->obj = nullptr;
+        this->ref = nullptr;
+    }
+
+    void GitHelper::CheckoutRevision(const std::string& revision) {
+        if (this->repo == nullptr)
+            throw error(error::git_error, "Cannot checkout revision for repository that has not been opened.");
+        else if (this->obj != nullptr)
+            throw error(error::git_error, "Cannot fetch repository updates, object memory already allocated.");
+
+        // Get an object ID for 'HEAD^'.
+        this->Call(git_revparse_single(&this->obj, this->repo, revision.c_str()));
+        const git_oid * oid = git_object_id(this->obj);
+
+        // Detach HEAD to HEAD~1. This will roll back HEAD by one commit each time it is called.
+        this->Call(git_repository_set_head_detached(this->repo, oid));
+
+        // Checkout the new HEAD.
+        BOOST_LOG_TRIVIAL(trace) << "Performing a Git checkout of HEAD.";
+        this->Call(git_checkout_head(this->repo, &this->checkout_options));
+
+        git_object_free(this->obj);
+        this->obj = nullptr;
+    }
+
+    std::string GitHelper::GetHeadShortId() {
+        if (this->repo == nullptr)
+            throw error(error::git_error, "Cannot checkout revision for repository that has not been opened.");
+        else if (this->obj != nullptr)
+            throw error(error::git_error, "Cannot fetch repository updates, object memory already allocated.");
+        else if (this->ref != nullptr)
+            throw error(error::git_error, "Cannot fetch repository updates, reference memory already allocated.");
+        else if (this->buf.ptr != nullptr)
+            throw error(error::git_error, "Cannot fetch repository updates, buffer memory already allocated.");
+
+        BOOST_LOG_TRIVIAL(trace) << "Getting the Git object for HEAD.";
+        this->Call(git_repository_head(&this->ref, this->repo));
+        this->Call(git_reference_peel(&this->obj, this->ref, GIT_OBJ_COMMIT));
+
+        BOOST_LOG_TRIVIAL(trace) << "Generating hex string for Git object ID.";
+        this->Call(git_object_short_id(&this->buf, this->obj));
+        string revision = this->buf.ptr;
+
+        git_reference_free(this->ref);
+        git_object_free(this->obj);
+        git_buf_free(&this->buf);
+        this->ref = nullptr;
+        this->obj = nullptr;
+        this->buf = {0};
+
+        return revision;
     }
 
     bool IsFileDifferent(const boost::filesystem::path& repoRoot, const std::string& filename) {
