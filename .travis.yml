@@ -2,8 +2,9 @@ sudo: false
 language: cpp
 compiler: gcc
 
-# Need Boost 1.54+, which isn't in the 12.04 repositories - install from a PPA.
-# Also need the OpenSSL dev package, for git clone from HTTPS URLs support.
+# Need GCC 5 and Boost 1.54+, which aren't in the 12.04 repositories - install
+# from PPAs. Also install the libssl-dev package, which is needed to build 
+# libgit2 with support for cloning from HTTPS URLs.
 addons:
   apt:
     sources:
@@ -23,7 +24,7 @@ addons:
 install:
   # Use GCC 5.
   - if [ "$CXX" = "g++" ]; then export CXX="g++-5" CC="gcc-5"; fi
-  # Run install step script.
+  # Run install step script to download and build dependencies.
   - chmod +x scripts/install-step.travis.sh
   - ./scripts/install-step.travis.sh
 
@@ -41,13 +42,13 @@ before_script:
   - mv testing-plugins-master/* ./
   # Fetch metadata to test with.
   - wget https://github.com/loot/testing-metadata/archive/master.tar.gz -O - | tar -xz
-  # Travis machines are 64 bit, and the deps use dynamic linking.
+  # Travis machines are 64 bit, and the dependencies use dynamic linking.
   - cmake .. -DPROJECT_ARCH=64 -DPROJECT_STATIC_RUNTIME=OFF -DBUILD_SHARED_LIBS=OFF -DGTEST_ROOT=../../googletest-release-1.7.0
 
 script: make tests && ./tests
 
 before_deploy:
-  # Build the metadata editor
+  # Build the metadata validator
   - make metadata-validator
   - tar -pczf metadata-validator.tar.gz metadata-validator
 
