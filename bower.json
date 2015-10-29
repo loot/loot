@@ -18,6 +18,7 @@
     "paper-dropdown-menu": "Polymer/paper-dropdown-menu#~0.5.0",
     "core-toolbar": "Polymer/core-toolbar#~0.5.0",
     "core-icons": "Polymer/core-icons#~0.5.0",
+    "core-label": "Polymer/core-label#~0.5.0",
     "core-tooltip": "Polymer/core-tooltip#~0.5.0",
     "core-drawer-panel": "Polymer/core-drawer-panel#~0.5.0",
     "paper-input": "Polymer/paper-input#~0.5.0",
