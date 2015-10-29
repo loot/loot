@@ -26,8 +26,13 @@
 #include "loot_state.h"
 #include "../backend/globals.h"
 
+#ifdef _WIN32
 #include <windows.h>
 #include <include/cef_sandbox_win.h>
+#else
+#include <X11/Xlib.h>
+#include "include/base/cef_logging.h"
+#endif
 
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
@@ -60,23 +65,49 @@ CefSettings GetCefSettings() {
     return cef_settings;
 }
 
+#ifndef _WIN32
+namespace {
+    int XErrorHandlerImpl(Display *display, XErrorEvent *event) {
+        LOG(WARNING)
+            << "X error received: "
+            << "type " << event->type << ", "
+            << "serial " << event->serial << ", "
+            << "error_code " << static_cast<int>(event->error_code) << ", "
+            << "request_code " << static_cast<int>(event->request_code) << ", "
+            << "minor_code " << static_cast<int>(event->minor_code);
+        return 0;
+    }
+
+    int XIOErrorHandlerImpl(Display *display) {
+        return 0;
+    }
+}
+#endif
+
 #ifdef _WIN32
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
+#else
+int main(int argc, char* argv[]) {
 #endif
 
     // Do all the standard CEF setup stuff.
     //-------------------------------------
 
+    void * sandbox_info = nullptr;
+
+#ifdef _WIN32
     // Enable High-DPI support on Windows 7 or newer.
     CefEnableHighDPISupport();
 
     // Set up CEF sandbox.
     CefScopedSandboxInfo scoped_sandbox;
-    void * sandbox_info = scoped_sandbox.sandbox_info();
+    sandbox_info = scoped_sandbox.sandbox_info();
 
     // Read command line arguments.
-#ifdef _WIN32
     CefMainArgs main_args(hInstance);
+#else
+    // Read command line arguments.
+    CefMainArgs main_args(argc, argv);
 #endif
 
     // Create the process reference.
@@ -89,6 +120,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
         return exit_code;
     }
 
+#ifdef _WIN32
     // Check if LOOT is already running
     //---------------------------------
 
@@ -103,6 +135,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
         //Create the mutex so that future instances will not run.
         hMutex = ::CreateMutex(NULL, FALSE, L"LOOT.Shell.Instance");
     }
+#endif
 
     // Handle command line args (not CEF args)
     //----------------------------------------
@@ -125,12 +158,16 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 
     // Initialise CEF settings.
     CefSettings cef_settings = GetCefSettings();
+    
+#ifndef _WIN32
+    // Install xlib error handlers so that the application won't be terminated
+    // on non-fatal errors.
+    XSetErrorHandler(XErrorHandlerImpl);
+    XSetIOErrorHandler(XIOErrorHandlerImpl);
+#endif
 
     // Initialize CEF.
     CefInitialize(main_args, cef_settings, app.get(), sandbox_info);
-
-    // Do application init
-    //--------------------
 
     // Run the CEF message loop. This will block until CefQuitMessageLoop() is called.
     CefRunMessageLoop();
@@ -138,12 +175,11 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
     // Shut down CEF.
     CefShutdown();
 
+#ifdef _WIN32
     // Release the program instance mutex.
     if (hMutex != NULL)
         ReleaseMutex(hMutex);
+#endif
 
     return 0;
-
-#ifdef _WIN32
 }
-#endif

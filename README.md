@@ -46,13 +46,26 @@ In addition, LOOT's UI relies on the web libraries below, which can be fetched b
 
 ### Building
 
-Aside from Libespm and Pseudosem, the C/C++ libraries must be built separately. Instructions for building them and LOOT itself using Microsoft Visual Studio are given in [docs/BUILD.MSVC.md](docs/BUILD.MSVC.md).
+Instructions for building Windows binaries using Microsoft Visual Studio are given in [docs/BUILD.MSVC.md](docs/BUILD.MSVC.md), and instructions for building Linux binaries using GCC are given in [docs/BUILD.LINUX.md](docs/BUILD.LINUX.md).
 
 The HTML UI is automatically built when building the LOOT executable, but it can also be built by running `node scripts/vulcanize.js` from the repository root.
 
-### Cross-Platform Support
+#### CMake Variables
 
-Although LOOT uses a cross-platform build system and cross-platform libraries, it does rely on some Windows API functionality. Anyone wishing to port LOOT to other platforms will need to ensure equivalent functionality is implemented for their target platform. The Windows API code is wrapped in `#ifdef _WIN32` blocks so that it can be easily identified.
+LOOT uses the following CMake variables to set build parameters:
+
+Parameter | Values | Default |Description
+----------|--------|---------|-----------
+`BUILD_SHARED_LIBS` | `ON`, `OFF` | `OFF` | Whether or not to build a shared libloot.
+`PROJECT_STATIC_RUNTIME` | `ON`, `OFF` | `ON` | Whether to link the C++ runtime statically or not. This also affects the whether static or shared Boost libraries are used.
+`PROJECT_ARCH` | `32`, `64` | `32` | Whether to build 32 or 64 bit LOOT binaries.
+`CEF_ROOT` | path | `../../cef` | Path to the root of the Chromium Embedded Framework folder.
+`LIBESPM_ROOT` | path | `../../libespm` | Path to the root of the libespm repository folder.
+`LIBGIT2_ROOT` | path | `../../libgit2` | Path to the root of the libgit2 repository folder.
+`LIBLOADORDER_ROOT` | path | `../../libloadorder` | Path to the root of the libloadorder repository folder.
+`PSEUDOSEM_ROOT` | Path | `../../pseudosem` | Path to the root of the Pseudosem repository folder.
+
+The default paths given in the table above are relative to LOOT's `CMakeLists.txt`.
 
 ## Packaging Releases
 

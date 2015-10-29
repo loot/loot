@@ -180,7 +180,10 @@ namespace loot {
             // May be a request with arguments.
             YAML::Node req;
             try {
-                req = JSON::parse(request.ToString());
+                // Can't pass this as a reference directly as GCC
+                // complains about it.
+                std::string requestString = request.ToString();
+                req = JSON::parse(requestString);
             }
             catch (exception &e) {
                 BOOST_LOG_TRIVIAL(error) << "Failed to parse CEF query request \"" << request.ToString() << "\": " << e.what();
@@ -568,17 +571,13 @@ namespace loot {
     void Handler::OpenReadme() {
         BOOST_LOG_TRIVIAL(info) << "Opening LOOT readme.";
         // Open readme in default application.
-        HINSTANCE ret = ShellExecute(0, NULL, ToWinWide(ToFileURL(g_path_readme)).c_str(), NULL, NULL, SW_SHOWNORMAL);
-        if ((int)ret <= 32)
-            throw error(error::windows_error, loc::translate("Shell execute failed."));
+        OpenInDefaultApplication(g_path_readme);
     }
 
     void Handler::OpenLogLocation() {
         BOOST_LOG_TRIVIAL(info) << "Opening LOOT local appdata folder.";
         //Open debug log folder.
-        HINSTANCE ret = ShellExecute(NULL, L"open", ToWinWide(g_path_log.parent_path().string()).c_str(), NULL, NULL, SW_SHOWNORMAL);
-        if ((int)ret <= 32)
-            throw error(error::windows_error, loc::translate("Shell execute failed."));
+        OpenInDefaultApplication(g_path_log.parent_path());
     }
 
     std::string Handler::GetVersion() {

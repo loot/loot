@@ -69,21 +69,6 @@ Example CMake keys: `-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=build -DCMAKE_ARCHIVE_OUTP
 
 LOOT uses a third-party CMake module to generate its build revision data, so first download the `GetGitRevisionDescription.cmake` and `GetGitRevisionDescription.cmake.in` files found in [this repository](https://github.com/rpavlik/cmake-modules) to the `build` subdirectory of the LOOT folder.
 
-LOOT uses the following CMake variables to set build parameters:
-
-Parameter | Values | Default |Description
-----------|--------|---------|-----------
-`BUILD_SHARED_LIBS` | `ON`, `OFF` | `OFF` | Whether or not to build a shared libloot.
-`PROJECT_STATIC_RUNTIME` | `ON`, `OFF` | `ON` | Whether to link the C++ runtime statically or not. This also affects the Boost libraries used.
-`PROJECT_ARCH` | `32`, `64` | `32` | Whether to build 32 or 64 bit LOOT binaries.
-`CEF_ROOT` | path | `../../cef` | Path to the root of the Chromium Embedded Framework folder.
-`LIBESPM_ROOT` | path | `../../libespm` | Path to the root of the libespm repository folder.
-`LIBGIT2_ROOT` | path | `../../libgit2` | Path to the root of the libgit2 repository folder.
-`LIBLOADORDER_ROOT` | path | `../../libloadorder` | Path to the root of the libloadorder repository folder.
-`PSEUDOSEM_ROOT` | Path | `../../pseudosem` | Path to the root of the Pseudosem repository folder.
-
-The default paths given in the table above are relative to LOOT's `CMakeLists.txt`.
-
 1. Set CMake up so that it builds the binaries in the `build` subdirectory of the LOOT folder.
 2. Define any necessary parameters.
 3. Configure CMake, then generate a build system for Visual Studio 12.

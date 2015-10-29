@@ -25,8 +25,10 @@ along with LOOT.  If not, see
 #ifndef __LOOT_GUI_RESOURCE__
 #define __LOOT_GUI_RESOURCE__
 
+#ifdef _WIN32
 #include <windows.h>
 
 #define MAINICON 101
+#endif
 
 #endif

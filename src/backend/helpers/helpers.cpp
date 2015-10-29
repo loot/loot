@@ -99,6 +99,37 @@ namespace loot {
         return out;
     }
 
+    //Turns an absolute filesystem path into a valid file:// URL.
+    std::string ToFileURL(const fs::path& file) {
+        BOOST_LOG_TRIVIAL(trace) << "Converting file path " << file << " to a URL.";
+        string url;
+
+#ifdef _WIN32
+        wstring wstr(MAX_PATH, 0);
+        DWORD len = MAX_PATH;
+        UrlCreateFromPath(ToWinWide(file.string()).c_str(), &wstr[0], &len, NULL);
+        url = FromWinWide(wstr.c_str());  // Passing c_str() cuts off any unused buffer.
+        BOOST_LOG_TRIVIAL(trace) << "Converted to: " << url;
+#else
+        // Let's be naive about this.
+        url = "file://" + file.string();
+#endif
+
+        return url;
+    }
+
+    //Opens the file in its registered default application.
+    void OpenInDefaultApplication(const boost::filesystem::path& file) {
+#ifdef _WIN32
+        HINSTANCE ret = ShellExecute(0, NULL, ToWinWide(file.string()).c_str(), NULL, NULL, SW_SHOWNORMAL);
+        if ((int)ret <= 32)
+            throw error(error::windows_error, lc::translate("Failed to open file in its default application."));
+#else
+        if (system(("/usr/bin/xdg-open" + file.string()).c_str()) != 0)
+            throw error(error::windows_error, lc::translate("Failed to open file in its default application."));
+#endif
+    }
+
 #ifdef _WIN32
     //Get registry subkey value string.
     string RegKeyStringValue(const std::string& keyStr, const std::string& subkey, const std::string& value) {
@@ -148,19 +179,6 @@ namespace loot {
             return fs::path(path);
         else
             return fs::path("");
-    }
-
-    //Turns an absolute filesystem path into a valid file:// URL.
-    std::string ToFileURL(const fs::path& file) {
-        BOOST_LOG_TRIVIAL(trace) << "Converting file path " << file << " to a URL.";
-
-        wstring wstr(MAX_PATH, 0);
-        DWORD len = MAX_PATH;
-        UrlCreateFromPath(ToWinWide(file.string()).c_str(), &wstr[0], &len, NULL);
-        string str = FromWinWide(wstr.c_str());  // Passing c_str() cuts off any unused buffer.
-        BOOST_LOG_TRIVIAL(trace) << "Converted to: " << str;
-
-        return str;
     }
 
     //Helper to turn UTF8 strings into strings that can be used by WinAPI.

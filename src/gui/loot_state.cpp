@@ -144,7 +144,8 @@ namespace loot {
             _initErrors.push_back((format(translate("Error: Games' settings parsing failed. %1%")) % e.what()).str());
             // Now redo, but with no games settings, so only the hardcoded defaults get loaded. It means the user can
             // at least still then edit them.
-            _games = ToGames(GetGameSettings(YAML::Node()));
+            YAML::Node node;
+            _games = ToGames(GetGameSettings(node));
         }
 
         try {
@@ -369,7 +370,7 @@ namespace loot {
                 // Conversion from 0.6 key.
                 _settings["games"] = _settings["Games"];
 
-                for (auto &node : _settings["games"]) {
+                for (auto node : _settings["games"]) {
                     if (node["url"]) {
                         node["repo"] = node["url"];
                         node["branch"] = "v0.8";
@@ -385,7 +386,7 @@ namespace loot {
         else {
             // Update existing default branches to new version default, if the
             // default repositories are used.
-            for (auto &node : _settings["games"]) {
+            for (auto node : _settings["games"]) {
                 GameSettings settings(node.as<GameSettings>());
 
                 set<string> oldDefaultBranches({

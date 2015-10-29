@@ -248,10 +248,7 @@ namespace loot {
         }
 
         BOOST_LOG_TRIVIAL(info) << "Opening link in Windows' default handler.";
-        // Open readme in default application.
-        HINSTANCE ret = ShellExecute(0, NULL, request->GetURL().ToWString().c_str(), NULL, NULL, SW_SHOWNORMAL);
-        if ((int)ret <= 32)
-            throw error(error::windows_error, "Shell execute failed.");
+        OpenInDefaultApplication(fs::path(request->GetURL().ToString()));
 
         return true;
     }

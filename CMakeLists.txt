@@ -143,7 +143,7 @@ set (LOOT_HEADERS "${CMAKE_SOURCE_DIR}/src/backend/metadata/condition_grammar.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/error.h")
 
 set (LOOT_GUI_SRC ${LOOT_SRC}
-                  "${CMAKE_SOURCE_DIR}/src/gui/main_win.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/gui/main.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/handler.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_handler.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_app.cpp"
@@ -213,7 +213,7 @@ include_directories ("${CMAKE_SOURCE_DIR}/src"
                      ${CEF_ROOT}
                      "${LIBESPM_ROOT}/include"
                      ${Boost_INCLUDE_DIRS}
-					 ${YAML_CPP_INCLUDE_DIR}
+                     ${YAML_CPP_INCLUDE_DIR}
                      ${GTEST_INCLUDE_DIRS}
                      "${PSEUDOSEM_ROOT}/include")
 
@@ -255,6 +255,17 @@ IF (CMAKE_COMPILER_IS_GNUCXX)
                    ssl
                    curl
                    loadorder${PROJECT_ARCH})
+    set (LOOT_GUI_LIBS ${LOOT_LIBS}
+                       cef
+                       cef_dll_wrapper
+                       z
+                       crypto
+                       X11)
+
+    IF (NOT MINGW)
+        link_directories("${CEF_ROOT}/Release")
+        add_definitions(-DNDEBUG)
+    ENDIF ()
 ENDIF ()
 
 # MinGW settings.
@@ -267,10 +278,8 @@ IF (MINGW)
                    version
                    ws2_32
                    shlwapi)
-    set (LOOT_GUI_LIBS ${LOOT_LIBS}
+    set (LOOT_GUI_LIBS ${LOOT_GUI_LIBS}
                        cef_sandbox
-                       libcef
-                       libcef_dll_wrapper
                        rpcrt4
                        comctl32)
 ELSEIF (MSVC)
@@ -355,20 +364,30 @@ ENDIF ()
 # Post-Build Steps
 ##############################
 
-add_custom_command(
-    TARGET LOOT
-    POST_BUILD
-    COMMAND "mt.exe" -manifest \"${CMAKE_SOURCE_DIR}/src/gui/LOOT.exe.manifest\" -inputresource:"$(TargetDir)$(TargetFileName)"\;\#1 -outputresource:"$(TargetDir)$(TargetFileName)"\;\#1
-    COMMENT "Adding manifest..."
-)
+IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
+    add_custom_command(
+        TARGET LOOT
+        POST_BUILD
+        COMMAND "mt.exe" -manifest \"${CMAKE_SOURCE_DIR}/src/gui/LOOT.exe.manifest\" -inputresource:"$(TargetDir)$(TargetFileName)"\;\#1 -outputresource:"$(TargetDir)$(TargetFileName)"\;\#1
+        COMMENT "Adding manifest..."
+    )
 
-# Copy CEF binaries.
-FOREACH(cef_dll libcef.dll natives_blob.bin snapshot_blob.bin d3dcompiler_47.dll libEGL.dll libGLESv2.dll wow_helper.exe)
-    add_custom_command(TARGET LOOT POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "${CMAKE_SOURCE_DIR}/${CEF_ROOT}/$<CONFIGURATION>/${cef_dll}"
-            $<TARGET_FILE_DIR:LOOT>/${cef_dll})
-ENDFOREACH()
+    # Copy CEF binaries.
+    FOREACH(cef_dll libcef.dll natives_blob.bin snapshot_blob.bin d3dcompiler_47.dll libEGL.dll libGLESv2.dll wow_helper.exe)
+        add_custom_command(TARGET LOOT POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${CMAKE_SOURCE_DIR}/${CEF_ROOT}/$<CONFIGURATION>/${cef_dll}"
+                $<TARGET_FILE_DIR:LOOT>/${cef_dll})
+    ENDFOREACH()
+ELSE ()
+    # Copy CEF binaries.
+    FOREACH(cef_dll libcef.so natives_blob.bin snapshot_blob.bin chrome-sandbox)
+        add_custom_command(TARGET LOOT POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${CMAKE_SOURCE_DIR}/${CEF_ROOT}/Release/${cef_dll}"
+                $<TARGET_FILE_DIR:LOOT>/${cef_dll})
+    ENDFOREACH()
+ENDIF ()
 
 # Copy CEF resources.
 FOREACH(cef_resource icudtl.dat cef.pak cef_100_percent.pak cef_200_percent.pak devtools_resources.pak)
