@@ -130,6 +130,36 @@ namespace loot {
 #endif
     }
 
+    boost::filesystem::path GetLocalAppDataPath() {
+#ifdef _WIN32
+        HWND owner = 0;
+        PWSTR path;
+
+        if (SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, NULL, &path) != S_OK)
+            throw error(error::windows_error, lc::translate("Failed to get %LOCALAPPDATA% path."));
+
+        fs::path localAppDataPath(FromWinWide(path));
+        CoTaskMemFree(path);
+
+        return localAppDataPath;
+#else
+        // Use XDG_CONFIG_HOME environmental variable if it's available.
+        const char * xdgConfigHome = getenv("XDG_CONFIG_HOME");
+
+        if (xdgConfigHome != nullptr)
+            return fs::path(xdgConfigHome);
+
+        // Otherwise, use the HOME env. var. if it's available.
+        xdgConfigHome = getenv("HOME");
+
+        if (xdgConfigHome != nullptr)
+            return fs::path(xdgConfigHome) / ".config";
+
+        // If somehow both are missing, use the current path.
+        return fs::current_path();
+#endif
+    }
+
 #ifdef _WIN32
     //Get registry subkey value string.
     string RegKeyStringValue(const std::string& keyStr, const std::string& subkey, const std::string& value) {
@@ -167,18 +197,6 @@ namespace loot {
             BOOST_LOG_TRIVIAL(error) << "Failed to get string value.";
             return "";
         }
-    }
-
-    boost::filesystem::path GetLocalAppDataPath() {
-        HWND owner = 0;
-        TCHAR path[MAX_PATH];
-
-        HRESULT res = SHGetFolderPath(owner, CSIDL_LOCAL_APPDATA, NULL, SHGFP_TYPE_CURRENT, path);
-
-        if (res == S_OK)
-            return fs::path(path);
-        else
-            return fs::path("");
     }
 
     //Helper to turn UTF8 strings into strings that can be used by WinAPI.
