@@ -43,8 +43,9 @@ namespace loot {
 
         void Init(const GameSettings& game, const boost::filesystem::path& gameLocalAppData = "");
 
-        std::unordered_set<std::string> GetActivePlugins() const;
         std::list<std::string> GetLoadOrder() const;
+
+        bool IsPluginActive(const std::string& pluginName) const;
 
         //These modify game load order, even though const.
         void SetLoadOrder(const char * const * const loadOrder, const size_t numPlugins) const;  // For API.

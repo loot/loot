@@ -54,7 +54,7 @@ namespace loot {
         size_t NumOverrideFormIDs() const;
 
         bool LoadsBSA() const;
-        bool IsActive(const Game& game) const;
+        bool IsActive() const;
 
         //Load ordering functions.
         bool DoFormIDsOverlap(const Plugin& plugin) const;
@@ -65,6 +65,7 @@ namespace loot {
         static bool IsValid(const std::string& filename, const Game& game);
     private:
         bool _isEmpty;  // Does the plugin contain any records other than the TES4 header?
+        bool _isActive;
         bool _loadsBsa;
         std::string version;  //Obtained from description field.
         uint32_t crc;

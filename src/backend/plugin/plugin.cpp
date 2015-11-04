@@ -42,6 +42,7 @@ namespace loot {
         PluginMetadata(n),
         libespm::Plugin(libespm::GameId::SKYRIM),
         _isEmpty(true),
+        _isActive(false),
         _loadsBsa(false),
         crc(0),
         numOverrideRecords(0) {}
@@ -50,6 +51,7 @@ namespace loot {
         PluginMetadata(name),
         libespm::Plugin(game.LibespmId()),
         _isEmpty(true),
+        _isActive(false),
         _loadsBsa(false),
         crc(0),
         numOverrideRecords(0) {
@@ -96,6 +98,8 @@ namespace loot {
                     }
                 }
             }
+            // Get whether the plugin is active or not.
+            _isActive = game.IsPluginActive(name);
 
             // Get whether the plugin loads a BSA or not.
             if (game.Id() == Game::tes5) {
@@ -192,8 +196,8 @@ namespace loot {
         return false;
     }
 
-    bool Plugin::IsActive(const Game& game) const {
-        return game.IsPluginActive(Name());
+    bool Plugin::IsActive() const {
+        return _isActive;
     }
 
     uint32_t Plugin::Crc() const {
@@ -202,7 +206,7 @@ namespace loot {
 
     bool Plugin::CheckInstallValidity(const Game& game) {
         BOOST_LOG_TRIVIAL(trace) << "Checking that the current install is valid according to " << Name() << "'s data.";
-        if (IsActive(game)) {
+        if (IsActive()) {
             auto pluginExists = [](const Game& game, const std::string& file) {
                 return boost::filesystem::exists(game.DataPath() / file)
                     || ((boost::iends_with(file, ".esp") || boost::iends_with(file, ".esm")) && boost::filesystem::exists(game.DataPath() / (file + ".ghost")));
@@ -213,7 +217,7 @@ namespace loot {
                         BOOST_LOG_TRIVIAL(error) << "\"" << Name() << "\" requires \"" << master << "\", but it is missing.";
                         messages.push_back(Message(Message::error, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % master).str()));
                     }
-                    else if (!Plugin(master).IsActive(game)) {
+                    else if (!Plugin(game, master, true).IsActive()) {
                         BOOST_LOG_TRIVIAL(error) << "\"" << Name() << "\" requires \"" << master << "\", but it is inactive.";
                         messages.push_back(Message(Message::error, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be active, but it is inactive.")) % master).str()));
                     }
@@ -227,7 +231,7 @@ namespace loot {
                 }
             }
             for (const auto &inc : Incs()) {
-                if (pluginExists(game, inc.Name()) && Plugin(inc.Name()).IsActive(game)) {
+                if (pluginExists(game, inc.Name()) && Plugin(game, inc.Name(), true).IsActive()) {
                     BOOST_LOG_TRIVIAL(error) << "\"" << Name() << "\" is incompatible with \"" << inc.Name() << "\", but both are present.";
                     messages.push_back(loot::Message(Message::error, (boost::format(boost::locale::translate("This plugin is incompatible with \"%1%\", but both are present.")) % inc.Name()).str()));
                 }

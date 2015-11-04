@@ -40,17 +40,14 @@ namespace loot {
         GameCache& operator=(const GameCache& cache);
 
         void CacheCondition(const std::string& condition, bool result);
-        void CacheActivePlugins(const std::unordered_set<std::string>& plugins);
 
         // Returns false for second bool if no cached condition.
         std::pair<bool, bool> GetCachedCondition(const std::string& condition) const;
-        bool IsPluginActive(const std::string& plugin) const;
 
         void ClearCache();
     private:
         //Caches for condition results, CRCs and active plugins.
         std::unordered_map<std::string, bool> conditionCache;
-        std::unordered_set<std::string> activePlugins;
 
         mutable std::mutex mutex;
     };

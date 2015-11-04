@@ -400,7 +400,6 @@ LOOT_API unsigned int loot_eval_lists(loot_db db, const unsigned int language) {
     loot::MetadataList userTemp = db->rawUserMetadata;
     try {
         // Refresh active plugins before evaluating conditions.
-        db->RefreshActivePluginsList();
         temp.EvalAllConditions(*db, language);
         userTemp.EvalAllConditions(*db, language);
     }

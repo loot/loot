@@ -47,7 +47,6 @@ namespace loot {
 
         void Init(bool createFolder, const boost::filesystem::path& gameLocalAppData = "");
 
-        void RefreshActivePluginsList();
         void RedatePlugins();  //Change timestamps to match load order (Skyrim only).
 
         void LoadPlugins(bool headersOnly);  //Loads all installed plugins.

@@ -97,33 +97,28 @@ namespace loot {
         }
     }
 
-    std::unordered_set<std::string> LoadOrderHandler::GetActivePlugins() const {
-        BOOST_LOG_TRIVIAL(debug) << "Getting active plugins.";
+    bool LoadOrderHandler::IsPluginActive(const std::string& pluginName) const {
+        BOOST_LOG_TRIVIAL(debug) << "Checking if plugin \"" << pluginName << "\" is active.";
 
-        char ** pluginArr;
-        size_t pluginArrSize;
-        unsigned int ret = lo_get_active_plugins(_gh, &pluginArr, &pluginArrSize);
-        if (ret != LIBLO_OK && ret != LIBLO_WARN_BAD_FILENAME && ret != LIBLO_WARN_INVALID_LIST && ret != LIBLO_WARN_LO_MISMATCH) {
+        bool result = false;
+        unsigned int ret = lo_get_plugin_active(_gh, pluginName.c_str(), &result);
+        if (ret != LIBLO_OK && ret != LIBLO_WARN_BAD_FILENAME) {
             const char * e = nullptr;
             string err;
             lo_get_error_message(&e);
             if (e == nullptr) {
-                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to get the active plugins list. Details could not be fetched.";
-                err = lc::translate("libloadorder failed to get the active plugins list. Details could not be fetched.").str();
+                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to check if a plugin is active. Details could not be fetched.";
+                err = lc::translate("libloadorder failed to check if a plugin is active. Details could not be fetched.").str();
             }
             else {
-                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to get the active plugins list. Details: " << e;
-                err = lc::translate("libloadorder failed to get the active plugins list. Details:").str() + " " + e;
+                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to check if a plugin is active. Details: " << e;
+                err = lc::translate("libloadorder failed to check if a plugin is active. Details:").str() + " " + e;
             }
             lo_cleanup();
             throw error(error::liblo_error, err);
         }
 
-        std::unordered_set<std::string> activePlugins;
-        for (size_t i = 0; i < pluginArrSize; ++i) {
-            activePlugins.insert(boost::locale::to_lower(string(pluginArr[i])));
-        }
-        return activePlugins;
+        return result;
     }
 
     std::list<std::string> LoadOrderHandler::GetLoadOrder() const {

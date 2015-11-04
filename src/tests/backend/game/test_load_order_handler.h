@@ -66,19 +66,19 @@ TEST_F(LoadOrderHandler, Init) {
     EXPECT_NO_THROW(loh.Init(game, localPath));
 }
 
-TEST_F(LoadOrderHandler, GetActivePlugins) {
+TEST_F(LoadOrderHandler, IsPluginActive) {
     loot::LoadOrderHandler loh;
     loot::GameSettings game(loot::GameSettings::tes5);
     game.SetGamePath(dataPath.parent_path());
+
+    EXPECT_THROW(loh.IsPluginActive("Skyrim.esm"), loot::error);
+
     ASSERT_NO_THROW(loh.Init(game, localPath));
 
-    std::unordered_set<std::string> expected({
-        "skyrim.esm",
-        "blank.esm",
-        "blank - different master dependent.esp",
-    });
-
-    EXPECT_EQ(expected, loh.GetActivePlugins());
+    EXPECT_TRUE(loh.IsPluginActive("Skyrim.esm"));
+    EXPECT_TRUE(loh.IsPluginActive("Blank.esm"));
+    EXPECT_TRUE(loh.IsPluginActive("Blank - Different Master Dependent.esp"));
+    EXPECT_FALSE(loh.IsPluginActive("Blank.esp"));
 }
 
 TEST_F(LoadOrderHandler, GetLoadOrder) {

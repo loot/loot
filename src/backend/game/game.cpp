@@ -77,12 +77,6 @@ namespace loot {
         }
 
         LoadOrderHandler::Init(*this, gameLocalAppData);
-
-        RefreshActivePluginsList();
-    }
-
-    void Game::RefreshActivePluginsList() {
-        CacheActivePlugins(GetActivePlugins());
     }
 
     void Game::RedatePlugins() {
