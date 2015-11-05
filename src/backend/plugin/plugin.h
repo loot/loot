@@ -53,7 +53,7 @@ namespace loot {
         uint32_t Crc() const;
         size_t NumOverrideFormIDs() const;
 
-        bool LoadsBSA(const Game& game) const;
+        bool LoadsBSA() const;
         bool IsActive(const Game& game) const;
 
         //Load ordering functions.
@@ -65,6 +65,7 @@ namespace loot {
         static bool IsValid(const std::string& filename, const Game& game);
     private:
         bool _isEmpty;  // Does the plugin contain any records other than the TES4 header?
+        bool _loadsBsa;
         std::vector<std::string> masters;
         std::set<libespm::FormId> formIDs;
         std::string version;  //Obtained from description field.
