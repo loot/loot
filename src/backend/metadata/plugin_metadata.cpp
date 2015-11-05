@@ -360,6 +360,17 @@ namespace loot {
     bool PluginMetadata::operator != (const PluginMetadata& rhs) const {
         return !(*this == rhs);
     }
+
+    bool PluginMetadata::operator == (const std::string& rhs) const {
+        if (IsRegexPlugin())
+            return regex_match(PluginMetadata(rhs).Name(), regex(name, regex::ECMAScript | regex::icase));
+        else
+            return boost::iequals(name, PluginMetadata(rhs).Name());
+    }
+
+    bool PluginMetadata::operator != (const std::string& rhs) const {
+        return !(*this == rhs);
+    }
 }
 
 namespace YAML {

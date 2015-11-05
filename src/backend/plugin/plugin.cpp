@@ -166,14 +166,6 @@ namespace loot {
         BOOST_LOG_TRIVIAL(trace) << name << ": " << "Plugin loading complete.";
     }
 
-    bool Plugin::operator == (const Plugin& rhs) const {
-        return PluginMetadata(name) == PluginMetadata(rhs.Name());
-    }
-
-    bool Plugin::operator != (const Plugin& rhs) const {
-        return !(*this == rhs);
-    }
-
     const std::set<libespm::FormId>& Plugin::FormIDs() const {
         return formIDs;
     }

@@ -96,6 +96,10 @@ namespace loot {
         //Compare name strings.
         bool operator == (const PluginMetadata& rhs) const;
         bool operator != (const PluginMetadata& rhs) const;
+
+        //Compare name string.
+        bool operator == (const std::string& rhs) const;
+        bool operator != (const std::string& rhs) const;
     protected:
         std::string name;
         bool enabled;  //Default to true.

@@ -56,10 +56,6 @@ namespace loot {
         bool LoadsBSA(const Game& game) const;
         bool IsActive(const Game& game) const;
 
-        //Compare name strings.
-        bool operator == (const Plugin& rhs) const;
-        bool operator != (const Plugin& rhs) const;
-
         //Load ordering functions.
         bool DoFormIDsOverlap(const Plugin& plugin) const;
         std::set<libespm::FormId> OverlapFormIDs(const Plugin& plugin) const;

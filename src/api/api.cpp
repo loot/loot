@@ -767,8 +767,8 @@ LOOT_API unsigned int loot_get_dirty_info(loot_db db, const char * const plugin,
     *needsCleaning = loot_needs_cleaning_unknown;
 
     // Is there any dirty info? Testing for applicability happens in loot_eval_lists().
-    if (!db->masterlist.FindPlugin(loot::Plugin(plugin)).DirtyInfo().empty()
-        || !db->userlist.FindPlugin(loot::Plugin(plugin)).DirtyInfo().empty()) {
+    if (!db->masterlist.FindPlugin(loot::PluginMetadata(plugin)).DirtyInfo().empty()
+        || !db->userlist.FindPlugin(loot::PluginMetadata(plugin)).DirtyInfo().empty()) {
         *needsCleaning = loot_needs_cleaning_yes;
     }
 
@@ -776,9 +776,9 @@ LOOT_API unsigned int loot_get_dirty_info(loot_db db, const char * const plugin,
     // This isn't a very reliable system, because if the lists have been evaluated in some language
     // other than English, the strings will be in different languages (and the API can't tell what they'd be)
     // and the strings may be non-standard and begin with something other than "Do not clean." anyway.
-    std::list<loot::Message> messages(db->masterlist.FindPlugin(loot::Plugin(plugin)).Messages());
+    std::list<loot::Message> messages(db->masterlist.FindPlugin(loot::PluginMetadata(plugin)).Messages());
 
-    std::list<loot::Message> temp(db->userlist.FindPlugin(loot::Plugin(plugin)).Messages());
+    std::list<loot::Message> temp(db->userlist.FindPlugin(loot::PluginMetadata(plugin)).Messages());
     messages.insert(messages.end(), temp.begin(), temp.end());
 
     for (const auto& message : messages) {
@@ -806,9 +806,9 @@ LOOT_API unsigned int loot_write_minimal_list(loot_db db, const char * const out
         return c_error(loot_error_file_write_fail, "Output file exists but overwrite is not set to true.");
 
     loot::Masterlist temp = db->masterlist;
-    std::unordered_set<loot::Plugin> minimalPlugins;
+    std::unordered_set<loot::PluginMetadata> minimalPlugins;
     for (const auto &plugin : temp.Plugins()) {
-        loot::Plugin p(plugin.Name());
+        loot::PluginMetadata p(plugin.Name());
         p.Tags(plugin.Tags());
         p.DirtyInfo(plugin.DirtyInfo());
         minimalPlugins.insert(p);

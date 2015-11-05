@@ -464,7 +464,7 @@ namespace loot {
     std::string Handler::ClearPluginMetadata(const std::string& pluginName) {
         BOOST_LOG_TRIVIAL(debug) << "Clearing user metadata for plugin " << pluginName;
 
-        _lootState.CurrentGame().userlist.ErasePlugin(Plugin(pluginName));
+        _lootState.CurrentGame().userlist.ErasePlugin(PluginMetadata(pluginName));
 
         // Save userlist edits.
         _lootState.CurrentGame().userlist.Save(_lootState.CurrentGame().UserlistPath());

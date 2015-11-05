@@ -40,6 +40,22 @@ protected:
         callback = [](const std::string&) {};
     }
 
+    inline std::list<std::string> GetExpectedSortedOrder() const {
+        return std::list<std::string>({
+            "Skyrim.esm",
+            "Blank.esm",
+            "Blank - Different.esm",
+            "Blank - Master Dependent.esm",
+            "Blank - Different Master Dependent.esm",
+            "Blank.esp",
+            "Blank - Different.esp",
+            "Blank - Master Dependent.esp",
+            "Blank - Different Master Dependent.esp",
+            "Blank - Plugin Dependent.esp",
+            "Blank - Different Plugin Dependent.esp",
+        });
+    }
+
     loot::Game game;
     std::function<void(const std::string&)> callback;
 };
@@ -54,84 +70,54 @@ TEST_F(PluginSorter, Sort) {
     ASSERT_NO_THROW(game.LoadPlugins(false));
 
     loot::PluginSorter ps;
+    std::list<std::string> expectedSortedOrder = GetExpectedSortedOrder();
+
     std::list<loot::Plugin> sorted = ps.Sort(game, loot::Language::english, callback);
-    EXPECT_EQ(std::list<loot::Plugin>({
-        loot::Plugin("Skyrim.esm"),
-        loot::Plugin("Blank.esm"),
-        loot::Plugin("Blank - Different.esm"),
-        loot::Plugin("Blank - Master Dependent.esm"),
-        loot::Plugin("Blank - Different Master Dependent.esm"),
-        loot::Plugin("Blank.esp"),
-        loot::Plugin("Blank - Different.esp"),
-        loot::Plugin("Blank - Master Dependent.esp"),
-        loot::Plugin("Blank - Different Master Dependent.esp"),
-        loot::Plugin("Blank - Plugin Dependent.esp"),
-        loot::Plugin("Blank - Different Plugin Dependent.esp"),
-    }), sorted);
+    EXPECT_TRUE(std::equal(begin(sorted), end(sorted), begin(expectedSortedOrder)));
 
     // Check stability.
     sorted = ps.Sort(game, loot::Language::english, callback);
-    EXPECT_EQ(std::list<loot::Plugin>({
-        loot::Plugin("Skyrim.esm"),
-        loot::Plugin("Blank.esm"),
-        loot::Plugin("Blank - Different.esm"),
-        loot::Plugin("Blank - Master Dependent.esm"),
-        loot::Plugin("Blank - Different Master Dependent.esm"),
-        loot::Plugin("Blank.esp"),
-        loot::Plugin("Blank - Different.esp"),
-        loot::Plugin("Blank - Master Dependent.esp"),
-        loot::Plugin("Blank - Different Master Dependent.esp"),
-        loot::Plugin("Blank - Plugin Dependent.esp"),
-        loot::Plugin("Blank - Different Plugin Dependent.esp"),
-    }), sorted);
+    EXPECT_TRUE(std::equal(begin(sorted), end(sorted), begin(expectedSortedOrder)));
 }
 
 TEST_F(PluginSorter, Sort_HeadersOnly) {
     ASSERT_NO_THROW(game.LoadPlugins(true));
 
     loot::PluginSorter ps;
+    std::list<std::string> expectedSortedOrder = GetExpectedSortedOrder();
+
     std::list<loot::Plugin> sorted = ps.Sort(game, loot::Language::english, callback);
-    EXPECT_EQ(std::list<loot::Plugin>({
-        loot::Plugin("Skyrim.esm"),
-        loot::Plugin("Blank.esm"),
-        loot::Plugin("Blank - Different.esm"),
-        loot::Plugin("Blank - Master Dependent.esm"),
-        loot::Plugin("Blank - Different Master Dependent.esm"),
-        loot::Plugin("Blank.esp"),
-        loot::Plugin("Blank - Different.esp"),
-        loot::Plugin("Blank - Master Dependent.esp"),
-        loot::Plugin("Blank - Different Master Dependent.esp"),
-        loot::Plugin("Blank - Plugin Dependent.esp"),
-        loot::Plugin("Blank - Different Plugin Dependent.esp"),
-    }), sorted);
+    EXPECT_TRUE(std::equal(begin(sorted), end(sorted), begin(expectedSortedOrder)));
 }
 
 TEST_F(PluginSorter, Sort_WithPriority) {
     ASSERT_NO_THROW(game.LoadPlugins(false));
-    loot::Plugin plugin("Blank - Different Master Dependent.esp");
+    loot::PluginMetadata plugin("Blank - Different Master Dependent.esp");
     plugin.Priority(-1100000);
     game.userlist.AddPlugin(plugin);
 
     loot::PluginSorter ps;
+    std::list<std::string> expectedSortedOrder({
+        "Skyrim.esm",
+        "Blank.esm",
+        "Blank - Different.esm",
+        "Blank - Master Dependent.esm",
+        "Blank - Different Master Dependent.esm",
+        "Blank - Different Master Dependent.esp",
+        "Blank.esp",
+        "Blank - Different.esp",
+        "Blank - Master Dependent.esp",
+        "Blank - Plugin Dependent.esp",
+        "Blank - Different Plugin Dependent.esp",
+    });
+
     std::list<loot::Plugin> sorted = ps.Sort(game, loot::Language::english, callback);
-    EXPECT_EQ(std::list<loot::Plugin>({
-        loot::Plugin("Skyrim.esm"),
-        loot::Plugin("Blank.esm"),
-        loot::Plugin("Blank - Different.esm"),
-        loot::Plugin("Blank - Master Dependent.esm"),
-        loot::Plugin("Blank - Different Master Dependent.esm"),
-        loot::Plugin("Blank - Different Master Dependent.esp"),
-        loot::Plugin("Blank.esp"),
-        loot::Plugin("Blank - Different.esp"),
-        loot::Plugin("Blank - Master Dependent.esp"),
-        loot::Plugin("Blank - Plugin Dependent.esp"),
-        loot::Plugin("Blank - Different Plugin Dependent.esp"),
-    }), sorted);
+    EXPECT_TRUE(std::equal(begin(sorted), end(sorted), begin(expectedSortedOrder)));
 }
 
 TEST_F(PluginSorter, Sort_WithLoadAfter) {
     ASSERT_NO_THROW(game.LoadPlugins(false));
-    loot::Plugin plugin("Blank.esp");
+    loot::PluginMetadata plugin("Blank.esp");
     plugin.LoadAfter({
         loot::File("Blank - Different.esp"),
         loot::File("Blank - Different Plugin Dependent.esp"),
@@ -139,25 +125,27 @@ TEST_F(PluginSorter, Sort_WithLoadAfter) {
     game.userlist.AddPlugin(plugin);
 
     loot::PluginSorter ps;
+    std::list<std::string> expectedSortedOrder({
+        "Skyrim.esm",
+        "Blank.esm",
+        "Blank - Different.esm",
+        "Blank - Master Dependent.esm",
+        "Blank - Different Master Dependent.esm",
+        "Blank - Different.esp",
+        "Blank - Master Dependent.esp",
+        "Blank - Different Master Dependent.esp",
+        "Blank - Different Plugin Dependent.esp",
+        "Blank.esp",
+        "Blank - Plugin Dependent.esp",
+    });
+
     std::list<loot::Plugin> sorted = ps.Sort(game, loot::Language::english, callback);
-    EXPECT_EQ(std::list<loot::Plugin>({
-        loot::Plugin("Skyrim.esm"),
-        loot::Plugin("Blank.esm"),
-        loot::Plugin("Blank - Different.esm"),
-        loot::Plugin("Blank - Master Dependent.esm"),
-        loot::Plugin("Blank - Different Master Dependent.esm"),
-        loot::Plugin("Blank - Different.esp"),
-        loot::Plugin("Blank - Master Dependent.esp"),
-        loot::Plugin("Blank - Different Master Dependent.esp"),
-        loot::Plugin("Blank - Different Plugin Dependent.esp"),
-        loot::Plugin("Blank.esp"),
-        loot::Plugin("Blank - Plugin Dependent.esp"),
-    }), sorted);
+    EXPECT_TRUE(std::equal(begin(sorted), end(sorted), begin(expectedSortedOrder)));
 }
 
 TEST_F(PluginSorter, Sort_WithRequirements) {
     ASSERT_NO_THROW(game.LoadPlugins(false));
-    loot::Plugin plugin("Blank.esp");
+    loot::PluginMetadata plugin("Blank.esp");
     plugin.Reqs({
         loot::File("Blank - Different.esp"),
         loot::File("Blank - Different Plugin Dependent.esp"),
@@ -165,25 +153,27 @@ TEST_F(PluginSorter, Sort_WithRequirements) {
     game.userlist.AddPlugin(plugin);
 
     loot::PluginSorter ps;
+    std::list<std::string> expectedSortedOrder({
+        "Skyrim.esm",
+        "Blank.esm",
+        "Blank - Different.esm",
+        "Blank - Master Dependent.esm",
+        "Blank - Different Master Dependent.esm",
+        "Blank - Different.esp",
+        "Blank - Master Dependent.esp",
+        "Blank - Different Master Dependent.esp",
+        "Blank - Different Plugin Dependent.esp",
+        "Blank.esp",
+        "Blank - Plugin Dependent.esp",
+    });
+
     std::list<loot::Plugin> sorted = ps.Sort(game, loot::Language::english, callback);
-    EXPECT_EQ(std::list<loot::Plugin>({
-        loot::Plugin("Skyrim.esm"),
-        loot::Plugin("Blank.esm"),
-        loot::Plugin("Blank - Different.esm"),
-        loot::Plugin("Blank - Master Dependent.esm"),
-        loot::Plugin("Blank - Different Master Dependent.esm"),
-        loot::Plugin("Blank - Different.esp"),
-        loot::Plugin("Blank - Master Dependent.esp"),
-        loot::Plugin("Blank - Different Master Dependent.esp"),
-        loot::Plugin("Blank - Different Plugin Dependent.esp"),
-        loot::Plugin("Blank.esp"),
-        loot::Plugin("Blank - Plugin Dependent.esp"),
-    }), sorted);
+    EXPECT_TRUE(std::equal(begin(sorted), end(sorted), begin(expectedSortedOrder)));
 }
 
 TEST_F(PluginSorter, Sort_HasCycle) {
     ASSERT_NO_THROW(game.LoadPlugins(false));
-    loot::Plugin plugin("Blank.esm");
+    loot::PluginMetadata plugin("Blank.esm");
     plugin.LoadAfter({loot::File("Blank - Master Dependent.esm")});
     game.userlist.AddPlugin(plugin);
 
