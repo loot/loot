@@ -119,14 +119,9 @@ TEST_F(Plugin, IsValid) {
     game.SetGamePath(dataPath.parent_path());
     ASSERT_NO_THROW(game.Init(false, localPath));
 
-    loot::Plugin plugin("Blank.esm");
-    EXPECT_TRUE(plugin.IsValid(game));
-
-    plugin = loot::Plugin("NotAPlugin.esm");
-    EXPECT_FALSE(plugin.IsValid(game));
-
-    plugin = loot::Plugin("EmptyFile.esm");
-    EXPECT_FALSE(plugin.IsValid(game));
+    EXPECT_TRUE(loot::Plugin::IsValid("Blank.esm", game));
+    EXPECT_FALSE(loot::Plugin::IsValid("NotAPlugin.esm", game));
+    EXPECT_FALSE(loot::Plugin::IsValid("EmptyFile.esm", game));
 }
 
 TEST_F(Plugin, IsActive) {

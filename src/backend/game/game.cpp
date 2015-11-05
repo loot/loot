@@ -123,7 +123,7 @@ namespace loot {
         // First find out how many plugins there are, and their sizes.
         BOOST_LOG_TRIVIAL(trace) << "Scanning for plugins in " << this->DataPath();
         for (fs::directory_iterator it(this->DataPath()); it != fs::directory_iterator(); ++it) {
-            if (fs::is_regular_file(it->status()) && Plugin(it->path().filename().string()).IsValid(*this)) {
+            if (fs::is_regular_file(it->status()) && Plugin::IsValid(it->path().filename().string(), *this)) {
                 Plugin temp(it->path().filename().string());
                 BOOST_LOG_TRIVIAL(info) << "Found plugin: " << temp.Name();
 

@@ -224,24 +224,29 @@ namespace loot {
         return _isEmpty;
     }
 
-    bool Plugin::IsValid(const Game& game) const {
-        BOOST_LOG_TRIVIAL(trace) << "Checking to see if \"" << name << "\" is a valid plugin.";
-        // Check the extension, because only plugins with the .esm or .esp
-        // extension (or .ghost, which is trimmed) should be handled by LOOT,
-        // even if the file content is valid.
+    bool Plugin::IsValid(const std::string& filename, const Game& game) {
+        BOOST_LOG_TRIVIAL(trace) << "Checking to see if \"" << filename << "\" is a valid plugin.";
+
+        //If the filename passed ends in '.ghost', that should be trimmed.
+        std::string name;
+        if (boost::iends_with(filename, ".ghost"))
+            name = filename.substr(0, filename.length() - 6);
+        else
+            name = filename;
+
+        // Check that the file has a valid extension.
         if (!boost::iends_with(name, ".esm") && !boost::iends_with(name, ".esp"))
             return false;
 
+        // Add the ".ghost" file extension if the plugin is ghosted.
         boost::filesystem::path filepath = game.DataPath() / name;
-
-        // In case the plugin is ghosted.
         if (!boost::filesystem::exists(filepath) && boost::filesystem::exists(filepath.string() + ".ghost"))
             filepath += ".ghost";
 
         if (libespm::Plugin::isValid(filepath, game.LibespmId(), true))
             return true;
 
-        BOOST_LOG_TRIVIAL(warning) << "The .es(p|m) file \"" << name << "\" is not a valid plugin.";
+        BOOST_LOG_TRIVIAL(warning) << "The .es(p|m) file \"" << filename << "\" is not a valid plugin.";
         return false;
     }
 
