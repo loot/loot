@@ -37,16 +37,6 @@ using namespace std;
 using libespm::FormId;
 
 namespace loot {
-    // TODO: Remove the name-only constructor.
-    Plugin::Plugin(const std::string& n) :
-        PluginMetadata(n),
-        libespm::Plugin(libespm::GameId::SKYRIM),
-        _isEmpty(true),
-        _isActive(false),
-        _loadsBsa(false),
-        crc(0),
-        numOverrideRecords(0) {}
-
     Plugin::Plugin(const Game& game, const std::string& name, const bool headerOnly) :
         PluginMetadata(name),
         libespm::Plugin(game.LibespmId()),

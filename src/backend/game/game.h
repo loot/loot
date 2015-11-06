@@ -43,7 +43,10 @@ namespace loot {
         //Game functions.
         Game();  //Sets game to LOOT_Game::autodetect, with all other vars being empty.
         Game(const GameSettings& gameSettings);
+        Game(const Game& game);
         Game(const unsigned int baseGameCode, const std::string& lootFolder = "");
+
+        Game& operator= (const Game& game);
 
         void Init(bool createFolder, const boost::filesystem::path& gameLocalAppData = "");
 
@@ -58,6 +61,9 @@ namespace loot {
         std::unordered_map<std::string, Plugin> plugins;  //Map so that plugin data can be edited.
     private:
         bool _pluginsFullyLoaded;
+        std::mutex mutex;
+
+        void addPlugin(const Plugin&& plugin);
     };
 
     std::list<Game> ToGames(const std::list<GameSettings>& settings);

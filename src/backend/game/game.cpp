@@ -41,7 +41,7 @@ namespace lc = boost::locale;
 namespace loot {
     Game::Game() : _pluginsFullyLoaded(false) {}
 
-    Game::Game(const GameSettings& gameSettings) : GameSettings(gameSettings.Id(), gameSettings.FolderName()), _pluginsFullyLoaded(false) {
+    Game::Game(const GameSettings& gameSettings) : GameSettings(gameSettings), _pluginsFullyLoaded(false) {
         this->SetName(gameSettings.Name())
             .SetMaster(gameSettings.Master())
             .SetRepoURL(gameSettings.RepoURL())
@@ -50,7 +50,30 @@ namespace loot {
             .SetRegistryKey(gameSettings.RegistryKey());
     }
 
+    Game::Game(const Game& game) :
+        GameSettings(game),
+        LoadOrderHandler(game),
+        GameCache(game),
+        masterlist(game.masterlist),
+        userlist(game.userlist),
+        plugins(game.plugins),
+        _pluginsFullyLoaded(game.ArePluginsFullyLoaded()) {}
+
     Game::Game(const unsigned int gameCode, const std::string& folder) : GameSettings(gameCode, folder), _pluginsFullyLoaded(false) {}
+
+    Game& Game::operator= (const Game& game) {
+        if (&game != this) {
+            GameSettings::operator=(game);
+            LoadOrderHandler::operator=(game);
+            GameCache::operator=(game);
+
+            masterlist = game.masterlist;
+            userlist = game.userlist;
+            plugins = game.plugins;
+            _pluginsFullyLoaded = game.ArePluginsFullyLoaded();
+        }
+        return *this;
+    }
 
     void Game::Init(bool createFolder, const boost::filesystem::path& gameLocalAppData) {
         if (Id() != Game::tes4 && Id() != Game::tes5 && Id() != Game::fo3 && Id() != Game::fonv && Id() != Game::fo4) {
@@ -118,29 +141,35 @@ namespace loot {
         BOOST_LOG_TRIVIAL(trace) << "Scanning for plugins in " << this->DataPath();
         for (fs::directory_iterator it(this->DataPath()); it != fs::directory_iterator(); ++it) {
             if (fs::is_regular_file(it->status()) && Plugin::IsValid(it->path().filename().string(), *this)) {
-                Plugin temp(it->path().filename().string());
-                BOOST_LOG_TRIVIAL(info) << "Found plugin: " << temp.Name();
+                string name = it->path().filename().string();
+                BOOST_LOG_TRIVIAL(info) << "Found plugin: " << name;
+
+                // Trim .ghost extension if present.
+                if (boost::iends_with(name, ".ghost"))
+                    name = name.substr(0, name.length() - 6);
 
                 uintmax_t fileSize = fs::file_size(it->path());
                 meanFileSize += fileSize;
 
-                //Insert the lowercased name as a key for case-insensitive matching.
-                string name = boost::locale::to_lower(temp.Name());
-                plugins.insert(pair<string, Plugin>(name, temp));
-                sizeMap.insert(pair<uintmax_t, string>(fileSize, name));
+                sizeMap.emplace(fileSize, name);
             }
         }
         meanFileSize /= sizeMap.size();  //Rounding error, but not important.
 
+        // Reserve space in the plugins unordered_map to speed up inserting
+        // later and more importantly avoid any inserts invalidating
+        // iterators.
+        plugins.reserve(sizeMap.size());
+
         // Get the number of threads to use.
         // hardware_concurrency() may be zero, if so then use only one thread.
-        size_t threadsToUse = std::min((size_t)thread::hardware_concurrency(), plugins.size());
+        size_t threadsToUse = std::min((size_t)thread::hardware_concurrency(), sizeMap.size());
         threadsToUse = std::max(threadsToUse, (size_t)1);
 
         // Divide the plugins up by thread.
-        unsigned int pluginsPerThread = ceil((double)plugins.size() / threadsToUse);
-        vector<vector<unordered_map<string, Plugin>::iterator>> pluginGroups(threadsToUse);
-        BOOST_LOG_TRIVIAL(info) << "Loading " << plugins.size() << " plugins using " << threadsToUse << " threads, with up to " << pluginsPerThread << " plugins per thread.";
+        unsigned int pluginsPerThread = ceil((double)sizeMap.size() / threadsToUse);
+        vector<vector<string>> pluginGroups(threadsToUse);
+        BOOST_LOG_TRIVIAL(info) << "Loading " << sizeMap.size() << " plugins using " << threadsToUse << " threads, with up to " << pluginsPerThread << " plugins per thread.";
 
         // The plugins should be split between the threads so that the data
         // load is as evenly spread as possible.
@@ -149,7 +178,7 @@ namespace loot {
             if (currentGroup == threadsToUse)
                 currentGroup = 0;
             BOOST_LOG_TRIVIAL(trace) << "Adding plugin " << plugin.second << " to loading group " << currentGroup;
-            pluginGroups[currentGroup].push_back(plugins.find(plugin.second));
+            pluginGroups[currentGroup].push_back(plugin.second);
             ++currentGroup;
         }
 
@@ -157,19 +186,11 @@ namespace loot {
         BOOST_LOG_TRIVIAL(trace) << "Starting plugin loading.";
         vector<thread> threads;
         while (threads.size() < threadsToUse) {
-            vector<unordered_map<string, Plugin>::iterator>& pluginGroup = pluginGroups[threads.size()];
-            threads.push_back(thread([this, &pluginGroup, headersOnly]() {
-                for (auto it : pluginGroup) {
-                    BOOST_LOG_TRIVIAL(trace) << "Loading " << it->second.Name();
-                    try {
-                        it->second = Plugin(*this, it->second.Name(), headersOnly);
-                    }
-                    catch (exception &e) {
-                        BOOST_LOG_TRIVIAL(error) << it->second.Name() << ": Exception occurred: " << e.what();
-                        Plugin p(it->second.Name());
-                        p.Messages(list<Message>(1, Message(Message::error, lc::translate("An exception occurred while loading this plugin. Details:").str() + " " + e.what())));
-                        it->second = p;
-                    }
+            vector<string>& pluginGroup = pluginGroups[threads.size()];
+            threads.push_back(thread([&]() {
+                for (auto pluginName : pluginGroup) {
+                    BOOST_LOG_TRIVIAL(trace) << "Loading " << pluginName;
+                    addPlugin(Plugin(*this, pluginName, headersOnly));
                 }
             }));
         }
@@ -185,6 +206,11 @@ namespace loot {
 
     bool Game::ArePluginsFullyLoaded() const {
         return _pluginsFullyLoaded;
+    }
+
+    void Game::addPlugin(const Plugin&& plugin) {
+        std::lock_guard<std::mutex> lock(mutex);
+        plugins.emplace(boost::locale::to_lower(plugin.Name()), plugin);
     }
 
     std::list<Game> ToGames(const std::list<GameSettings>& settings) {

@@ -41,7 +41,6 @@ namespace loot {
 
     class Plugin : public PluginMetadata, private libespm::Plugin {
     public:
-        Plugin(const std::string& name);
         Plugin(const Game& game, const std::string& name, const bool headerOnly);
 
         using libespm::Plugin::getDescription;
