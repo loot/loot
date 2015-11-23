@@ -289,7 +289,7 @@ TEST_F(Game, LoadPlugins) {
     }), plugin.FormIDs());
     EXPECT_TRUE(plugin.Masters().empty());
     EXPECT_EQ("5.0", plugin.Version());
-    EXPECT_EQ(0xD33753E4, plugin.Crc());
+    EXPECT_EQ(0x187BE342, plugin.Crc());
     EXPECT_EQ(0, plugin.NumOverrideFormIDs());
 
     ASSERT_NE(game.plugins.end(), game.plugins.find("blank.esm"));
@@ -311,7 +311,7 @@ TEST_F(Game, LoadPlugins) {
     }), plugin.FormIDs());
     EXPECT_TRUE(plugin.Masters().empty());
     EXPECT_EQ("5.0", plugin.Version());
-    EXPECT_EQ(0xD33753E4, plugin.Crc());
+    EXPECT_EQ(0x187BE342, plugin.Crc());
     EXPECT_EQ(0, plugin.NumOverrideFormIDs());
 
     ASSERT_NE(game.plugins.end(), game.plugins.find("blank - different.esm"));
@@ -393,7 +393,7 @@ TEST_F(Game, LoadPlugins) {
     }), plugin.FormIDs());
     EXPECT_TRUE(plugin.Masters().empty());
     EXPECT_EQ("", plugin.Version());
-    EXPECT_EQ(0xE12EFAAA, plugin.Crc());
+    EXPECT_EQ(0x24F0E2A1, plugin.Crc());
     EXPECT_EQ(0, plugin.NumOverrideFormIDs());
 
     ASSERT_NE(game.plugins.end(), game.plugins.find("blank - different.esp"));

@@ -36,7 +36,7 @@ TEST_F(GetCrc32, MissingFile) {
 }
 
 TEST_F(GetCrc32, ValidFile) {
-    EXPECT_EQ(0xE12EFAAA, loot::GetCrc32(dataPath / "Blank.esp"));
+    EXPECT_EQ(0x24F0E2A1, loot::GetCrc32(dataPath / "Blank.esp"));
 }
 
 TEST(IntToHexString, PositiveAndZeroValues) {

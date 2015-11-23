@@ -226,7 +226,7 @@ TEST_F(ConditionGrammar, ChecksumConditionTrue) {
     bool r = false;
     Grammar cg(&game);
 
-    std::string condition("checksum(\"Blank.esp\", E12EFAAA)");
+    std::string condition("checksum(\"Blank.esp\", 24F0E2A1)");
     std::string::const_iterator begin = condition.begin();
     std::string::const_iterator end = condition.end();
 

@@ -80,7 +80,7 @@ TEST_F(Plugin, ConstructorsAndDataAccess) {
     EXPECT_TRUE(plugin.IsMaster());
     EXPECT_FALSE(plugin.IsEmpty());
     EXPECT_EQ("5.0", plugin.Version());
-    EXPECT_EQ(0xD33753E4, plugin.Crc());
+    EXPECT_EQ(0x187BE342, plugin.Crc());
 
     plugin = loot::Plugin(game, "Blank - Master Dependent.esp", false);
     EXPECT_EQ("Blank - Master Dependent.esp", plugin.Name());
@@ -293,14 +293,14 @@ TEST_F(Plugin, CheckInstallValidity) {
         loot::File("Skyrim.esm"),
     });
     plugin.DirtyInfo({
-        loot::PluginDirtyInfo(0xD33753E4, 0, 1, 2, "utility1"),
+        loot::PluginDirtyInfo(0x187BE342, 0, 1, 2, "utility1"),
         loot::PluginDirtyInfo(0xDEADBEEF, 0, 5, 10, "utility2"),
     });
     EXPECT_TRUE(plugin.CheckInstallValidity(game));
     EXPECT_EQ(std::list<loot::Message>({
         loot::Message(loot::Message::error, "This plugin requires \"Blank.missing.esm\" to be installed, but it is missing."),
         loot::Message(loot::Message::error, "This plugin is incompatible with \"Skyrim.esm\", but both are present."),
-        loot::PluginDirtyInfo(0xD33753E4, 0, 1, 2, "utility1").AsMessage(),
+        loot::PluginDirtyInfo(0x187BE342, 0, 1, 2, "utility1").AsMessage(),
         loot::PluginDirtyInfo(0xDEADBEEF, 0, 5, 10, "utility2").AsMessage(),
     }), plugin.Messages());
 
