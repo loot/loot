@@ -8,8 +8,8 @@ wget -P build https://raw.githubusercontent.com/rpavlik/cmake-modules/master/Get
 cd ../..
 
 # Install libespm.
-wget https://github.com/WrinklyNinja/libespm/archive/1.0.0.tar.gz -O - | tar -xz
-mv libespm-1.0.0 libespm
+wget https://github.com/WrinklyNinja/libespm/archive/2.4.0.tar.gz -O - | tar -xz
+mv libespm-2.4.0 libespm
 
 # Build yaml-cpp
 wget https://github.com/WrinklyNinja/yaml-cpp/archive/patched-for-loot.tar.gz -O - | tar -xz
@@ -28,8 +28,8 @@ make git2
 cd ../..
 
 # Build libloadorder
-wget https://github.com/WrinklyNinja/libloadorder/archive/50342d7298f27a6a4366175119bd17aaf09000c7.tar.gz -O - | tar -xz
-mv libloadorder-50342d7298f27a6a4366175119bd17aaf09000c7 libloadorder
+wget https://github.com/WrinklyNinja/libloadorder/archive/e1ea3c8ceb741f4eae39ae6320e8f37f778bc335.tar.gz -O - | tar -xz
+mv libloadorder-e1ea3c8ceb741f4eae39ae6320e8f37f778bc335 libloadorder
 mkdir libloadorder/build && cd libloadorder/build
 cmake .. -DPROJECT_ARCH=64 -DPROJECT_STATIC_RUNTIME=OFF -DBUILD_SHARED_LIBS=OFF -DGTEST_ROOT=../gtest-1.7.0
 make loadorder64

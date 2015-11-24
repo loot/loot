@@ -30,7 +30,6 @@ along with LOOT.  If not, see
 #include <gtest/gtest.h>
 
 #include "backend/metadata/file.h"
-#include "backend/metadata/formid.h"
 #include "backend/metadata/location.h"
 #include "backend/metadata/message.h"
 #include "backend/metadata/message_content.h"
@@ -44,14 +43,6 @@ namespace loot {
         *os << "loot::File(\"" << value.Name() << "\", "
             << "\"" << value.DisplayName() << "\", "
             << "\"" << value.Condition() << "\""
-            << ")";
-    }
-
-    void PrintTo(const FormID& value, ::std::ostream* os) {
-        *os << "loot::FormID(\"" << value.Plugin() << "\", 0x"
-            << std::hex << std::uppercase
-            << value.Id()
-            << std::nouppercase << std::dec
             << ")";
     }
 

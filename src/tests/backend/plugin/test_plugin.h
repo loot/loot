@@ -64,17 +64,17 @@ TEST_F(Plugin, ConstructorsAndDataAccess) {
 
     plugin = loot::Plugin(game, "Blank.esm", false);
     EXPECT_EQ("Blank.esm", plugin.Name());
-    EXPECT_EQ(std::set<loot::FormID>({
-        loot::FormID("Blank.esm", 0xCF0),
-        loot::FormID("Blank.esm", 0xCF1),
-        loot::FormID("Blank.esm", 0xCF2),
-        loot::FormID("Blank.esm", 0xCF3),
-        loot::FormID("Blank.esm", 0xCF4),
-        loot::FormID("Blank.esm", 0xCF5),
-        loot::FormID("Blank.esm", 0xCF6),
-        loot::FormID("Blank.esm", 0xCF7),
-        loot::FormID("Blank.esm", 0xCF8),
-        loot::FormID("Blank.esm", 0xCF9),
+    EXPECT_EQ(std::set<libespm::FormId>({
+        libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF0),
+        libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF1),
+        libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF2),
+        libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF3),
+        libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF4),
+        libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF5),
+        libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF6),
+        libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF7),
+        libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF8),
+        libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF9),
     }), plugin.FormIDs());
     EXPECT_TRUE(plugin.Masters().empty());
     EXPECT_TRUE(plugin.IsMaster());
@@ -86,11 +86,11 @@ TEST_F(Plugin, ConstructorsAndDataAccess) {
     EXPECT_EQ("Blank - Master Dependent.esp", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
     EXPECT_FALSE(plugin.IsMaster());
-    EXPECT_EQ(std::set<loot::FormID>({
-        loot::FormID("Blank.esm", 0xCF0),
-        loot::FormID("Blank.esm", 0xCF1),
-        loot::FormID("Blank - Master Dependent.esp", 0xCE9),
-        loot::FormID("Blank - Master Dependent.esp", 0xCEA),
+    EXPECT_EQ(std::set<libespm::FormId>({
+        libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF0),
+        libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF1),
+        libespm::FormId("Blank - Master Dependent.esp", std::vector<std::string>(), 0xCE9),
+        libespm::FormId("Blank - Master Dependent.esp", std::vector<std::string>(), 0xCEA),
     }), plugin.FormIDs());
     EXPECT_EQ(std::vector<std::string>({
         "Blank.esm"
@@ -259,17 +259,17 @@ TEST_F(Plugin, OverlapFormIDs) {
 
     plugin1 = loot::Plugin(game, "Blank.esm", false);
     plugin2 = loot::Plugin(game, "Blank - Master Dependent.esm", false);
-    EXPECT_EQ(std::set<loot::FormID>({
-        loot::FormID("Blank.esm", 0xCF0),
-        loot::FormID("Blank.esm", 0xCF1),
-        loot::FormID("Blank.esm", 0xCF2),
-        loot::FormID("Blank.esm", 0xCF3),
+    EXPECT_EQ(std::set<libespm::FormId>({
+        libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF0),
+        libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF1),
+        libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF2),
+        libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF3),
     }), plugin1.OverlapFormIDs(plugin2));
-    EXPECT_EQ(std::set<loot::FormID>({
-        loot::FormID("Blank.esm", 0xCF0),
-        loot::FormID("Blank.esm", 0xCF1),
-        loot::FormID("Blank.esm", 0xCF2),
-        loot::FormID("Blank.esm", 0xCF3),
+    EXPECT_EQ(std::set<libespm::FormId>({
+        libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF0),
+        libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF1),
+        libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF2),
+        libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF3),
     }), plugin2.OverlapFormIDs(plugin1));
 }
 

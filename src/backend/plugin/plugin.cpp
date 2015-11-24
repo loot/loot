@@ -23,7 +23,6 @@
     */
 
 #include "plugin.h"
-#include "plugin_loader.h"
 #include "../game/game.h"
 #include "../helpers/helpers.h"
 
@@ -34,7 +33,10 @@
 #include <boost/locale.hpp>
 #include <regex>
 
+#include <libespm/Plugin.h>
+
 using namespace std;
+using libespm::FormId;
 
 namespace loot {
     /// REGEX expression definition
@@ -97,27 +99,34 @@ namespace loot {
     Plugin::Plugin(loot::Game& game, const std::string& n, const bool headerOnly)
         : PluginMetadata(n), _isEmpty(true), isMaster(false), crc(0), numOverrideRecords(0) {
         try {
-            PluginLoader loader;
-            loader.Load(game, name, headerOnly, false);
-            isMaster = loader.IsMaster();
-            masters = loader.Masters();
-            _isEmpty = loader.IsEmpty();
-            formIDs = loader.FormIDs();
+            boost::filesystem::path filepath = game.DataPath() / name;
+
+            // In case the plugin is ghosted.
+            if (!boost::filesystem::exists(filepath) && boost::filesystem::exists(filepath.string() + ".ghost"))
+                filepath += ".ghost";
+
+            libespm::Plugin plugin(game.LibespmId());
+            plugin.load(filepath, headerOnly);
+
+            isMaster = plugin.isMasterFile();
+            masters = plugin.getMasters();
+            formIDs = plugin.getFormIds();
+            _isEmpty = plugin.getRecordAndGroupCount() == 0;
 
             if (!headerOnly) {
                 BOOST_LOG_TRIVIAL(trace) << name << ": Caching CRC value.";
-                crc = loader.Crc();
+                crc = GetCrc32(filepath);
                 game.CacheCrc(name, crc);
             }
 
             BOOST_LOG_TRIVIAL(trace) << name << ": Counting override FormIDs.";
             for (const auto& formID : formIDs) {
-                if (!boost::iequals(formID.Plugin(), name))
+                if (!boost::iequals(formID.getPluginName(), name))
                     ++numOverrideRecords;
             }
 
             //Also read Bash Tags applied and version string in description.
-            string text = loader.Description();
+            string text = plugin.getDescription();
             BOOST_LOG_TRIVIAL(trace) << name << ": " << "Attempting to read the version from the description.";
             for (size_t i = 0; i < version_checks.size(); ++i) {
                 smatch what;
@@ -165,7 +174,7 @@ namespace loot {
         return !(*this == rhs);
     }
 
-    const std::set<FormID>& Plugin::FormIDs() const {
+    const std::set<libespm::FormId>& Plugin::FormIDs() const {
         return formIDs;
     }
 
@@ -173,7 +182,7 @@ namespace loot {
         //Basically std::set_intersection except with an early exit instead of an append to results.
         //BOOST_LOG_TRIVIAL(trace) << "Checking for FormID overlap between \"" << name << "\" and \"" << plugin.Name() << "\".";
 
-        set<FormID>::const_iterator i = formIDs.begin(),
+        set<FormId>::const_iterator i = formIDs.begin(),
             j = plugin.FormIDs().begin(),
             iend = formIDs.end(),
             jend = plugin.FormIDs().end();
@@ -194,9 +203,9 @@ namespace loot {
         return numOverrideRecords;
     }
 
-    std::set<FormID> Plugin::OverlapFormIDs(const Plugin& plugin) const {
-        set<FormID> otherFormIDs = plugin.FormIDs();
-        set<FormID> overlap;
+    std::set<FormId> Plugin::OverlapFormIDs(const Plugin& plugin) const {
+        set<FormId> otherFormIDs = plugin.FormIDs();
+        set<FormId> overlap;
 
         set_intersection(formIDs.begin(), formIDs.end(), otherFormIDs.begin(), otherFormIDs.end(), inserter(overlap, overlap.end()));
 
@@ -217,21 +226,17 @@ namespace loot {
 
     bool Plugin::IsValid(const Game& game) const {
         BOOST_LOG_TRIVIAL(trace) << "Checking to see if \"" << name << "\" is a valid plugin.";
-        // Rather than just checking the extension, try also parsing the file header, and see if it fails.
-        if (!boost::iends_with(name, ".esm") && !boost::iends_with(name, ".esp")) {
-            return false;
-        }
+        boost::filesystem::path filepath = game.DataPath() / name;
 
-        try {
-            PluginLoader loader;
-            loader.Load(game, name, true, true);
+        // In case the plugin is ghosted.
+        if (!boost::filesystem::exists(filepath) && boost::filesystem::exists(filepath.string() + ".ghost"))
+            filepath += ".ghost";
+
+        if (libespm::Plugin::isValid(filepath, game.LibespmId(), true))
             return true;
-        }
-        catch (std::exception& /*e*/) {
-            BOOST_LOG_TRIVIAL(warning) << "The .es(p|m) file \"" << name << "\" is not a valid plugin.";
-            return false;
-        }
-        return true;
+
+        BOOST_LOG_TRIVIAL(warning) << "The .es(p|m) file \"" << name << "\" is not a valid plugin.";
+        return false;
     }
 
     bool Plugin::IsActive(const Game& game) const {

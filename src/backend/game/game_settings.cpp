@@ -120,6 +120,17 @@ namespace loot {
         return _id;
     }
 
+    libespm::GameId GameSettings::LibespmId() const {
+        if (_id == GameSettings::tes4)
+            return libespm::GameId::OBLIVION;
+        else if (_id == GameSettings::tes5)
+            return libespm::GameId::SKYRIM;
+        else if (_id == GameSettings::fo3)
+            return libespm::GameId::FALLOUT3;
+        else
+            return libespm::GameId::FALLOUTNV;
+    }
+
     string GameSettings::Name() const {
         return _name;
     }

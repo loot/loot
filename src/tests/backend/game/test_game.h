@@ -275,17 +275,17 @@ TEST_F(Game, LoadPlugins) {
     EXPECT_EQ("Skyrim.esm", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
     EXPECT_TRUE(plugin.IsMaster());
-    EXPECT_EQ(std::set<loot::FormID>({
-        loot::FormID("Skyrim.esm", 0xCF0),
-        loot::FormID("Skyrim.esm", 0xCF1),
-        loot::FormID("Skyrim.esm", 0xCF2),
-        loot::FormID("Skyrim.esm", 0xCF3),
-        loot::FormID("Skyrim.esm", 0xCF4),
-        loot::FormID("Skyrim.esm", 0xCF5),
-        loot::FormID("Skyrim.esm", 0xCF6),
-        loot::FormID("Skyrim.esm", 0xCF7),
-        loot::FormID("Skyrim.esm", 0xCF8),
-        loot::FormID("Skyrim.esm", 0xCF9),
+    EXPECT_EQ(std::set<libespm::FormId>({
+        libespm::FormId("Skyrim.esm", std::vector<std::string>(), 0xCF0),
+        libespm::FormId("Skyrim.esm", std::vector<std::string>(), 0xCF1),
+        libespm::FormId("Skyrim.esm", std::vector<std::string>(), 0xCF2),
+        libespm::FormId("Skyrim.esm", std::vector<std::string>(), 0xCF3),
+        libespm::FormId("Skyrim.esm", std::vector<std::string>(), 0xCF4),
+        libespm::FormId("Skyrim.esm", std::vector<std::string>(), 0xCF5),
+        libespm::FormId("Skyrim.esm", std::vector<std::string>(), 0xCF6),
+        libespm::FormId("Skyrim.esm", std::vector<std::string>(), 0xCF7),
+        libespm::FormId("Skyrim.esm", std::vector<std::string>(), 0xCF8),
+        libespm::FormId("Skyrim.esm", std::vector<std::string>(), 0xCF9),
     }), plugin.FormIDs());
     EXPECT_TRUE(plugin.Masters().empty());
     EXPECT_EQ("5.0", plugin.Version());
@@ -297,17 +297,17 @@ TEST_F(Game, LoadPlugins) {
     EXPECT_EQ("Blank.esm", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
     EXPECT_TRUE(plugin.IsMaster());
-    EXPECT_EQ(std::set<loot::FormID>({
-        loot::FormID("Blank.esm", 0xCF0),
-        loot::FormID("Blank.esm", 0xCF1),
-        loot::FormID("Blank.esm", 0xCF2),
-        loot::FormID("Blank.esm", 0xCF3),
-        loot::FormID("Blank.esm", 0xCF4),
-        loot::FormID("Blank.esm", 0xCF5),
-        loot::FormID("Blank.esm", 0xCF6),
-        loot::FormID("Blank.esm", 0xCF7),
-        loot::FormID("Blank.esm", 0xCF8),
-        loot::FormID("Blank.esm", 0xCF9),
+    EXPECT_EQ(std::set<libespm::FormId>({
+        libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF0),
+        libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF1),
+        libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF2),
+        libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF3),
+        libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF4),
+        libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF5),
+        libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF6),
+        libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF7),
+        libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF8),
+        libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF9),
     }), plugin.FormIDs());
     EXPECT_TRUE(plugin.Masters().empty());
     EXPECT_EQ("5.0", plugin.Version());
@@ -319,16 +319,16 @@ TEST_F(Game, LoadPlugins) {
     EXPECT_EQ("Blank - Different.esm", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
     EXPECT_TRUE(plugin.IsMaster());
-    EXPECT_EQ(std::set<loot::FormID>({
-        loot::FormID("Blank - Different.esm", 0xCEF),
-        loot::FormID("Blank - Different.esm", 0xCF0),
-        loot::FormID("Blank - Different.esm", 0xCF1),
-        loot::FormID("Blank - Different.esm", 0xCF2),
-        loot::FormID("Blank - Different.esm", 0xCF3),
-        loot::FormID("Blank - Different.esm", 0xCF4),
-        loot::FormID("Blank - Different.esm", 0xCF5),
-        loot::FormID("Blank - Different.esm", 0xCF6),
-        loot::FormID("Blank - Different.esm", 0xCF7),
+    EXPECT_EQ(std::set<libespm::FormId>({
+        libespm::FormId("Blank - Different.esm", std::vector<std::string>(), 0xCEF),
+        libespm::FormId("Blank - Different.esm", std::vector<std::string>(), 0xCF0),
+        libespm::FormId("Blank - Different.esm", std::vector<std::string>(), 0xCF1),
+        libespm::FormId("Blank - Different.esm", std::vector<std::string>(), 0xCF2),
+        libespm::FormId("Blank - Different.esm", std::vector<std::string>(), 0xCF3),
+        libespm::FormId("Blank - Different.esm", std::vector<std::string>(), 0xCF4),
+        libespm::FormId("Blank - Different.esm", std::vector<std::string>(), 0xCF5),
+        libespm::FormId("Blank - Different.esm", std::vector<std::string>(), 0xCF6),
+        libespm::FormId("Blank - Different.esm", std::vector<std::string>(), 0xCF7),
     }), plugin.FormIDs());
     EXPECT_TRUE(plugin.Masters().empty());
     EXPECT_EQ("", plugin.Version());
@@ -340,15 +340,15 @@ TEST_F(Game, LoadPlugins) {
     EXPECT_EQ("Blank - Master Dependent.esm", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
     EXPECT_TRUE(plugin.IsMaster());
-    EXPECT_EQ(std::set<loot::FormID>({
-        loot::FormID("Blank.esm", 0xCF0),
-        loot::FormID("Blank.esm", 0xCF1),
-        loot::FormID("Blank.esm", 0xCF2),
-        loot::FormID("Blank.esm", 0xCF3),
-        loot::FormID("Blank - Master Dependent.esm", 0xCEA),
-        loot::FormID("Blank - Master Dependent.esm", 0xCEB),
-        loot::FormID("Blank - Master Dependent.esm", 0xCEC),
-        loot::FormID("Blank - Master Dependent.esm", 0xCED),
+    EXPECT_EQ(std::set<libespm::FormId>({
+        libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF0),
+        libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF1),
+        libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF2),
+        libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF3),
+        libespm::FormId("Blank - Master Dependent.esm", std::vector<std::string>(), 0xCEA),
+        libespm::FormId("Blank - Master Dependent.esm", std::vector<std::string>(), 0xCEB),
+        libespm::FormId("Blank - Master Dependent.esm", std::vector<std::string>(), 0xCEC),
+        libespm::FormId("Blank - Master Dependent.esm", std::vector<std::string>(), 0xCED),
     }), plugin.FormIDs());
     EXPECT_EQ(std::vector<std::string>({
         "Blank.esm"
@@ -362,14 +362,14 @@ TEST_F(Game, LoadPlugins) {
     EXPECT_EQ("Blank - Different Master Dependent.esm", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
     EXPECT_TRUE(plugin.IsMaster());
-    EXPECT_EQ(std::set<loot::FormID>({
-        loot::FormID("Blank - Different.esm", 0xCEF),
-        loot::FormID("Blank - Different.esm", 0xCF0),
-        loot::FormID("Blank - Different.esm", 0xCF1),
-        loot::FormID("Blank - Different.esm", 0xCF2),
-        loot::FormID("Blank - Different Master Dependent.esm", 0xCE9),
-        loot::FormID("Blank - Different Master Dependent.esm", 0xCEA),
-        loot::FormID("Blank - Different Master Dependent.esm", 0xCEB),
+    EXPECT_EQ(std::set<libespm::FormId>({
+        libespm::FormId("Blank - Different.esm", std::vector<std::string>(), 0xCEF),
+        libespm::FormId("Blank - Different.esm", std::vector<std::string>(), 0xCF0),
+        libespm::FormId("Blank - Different.esm", std::vector<std::string>(), 0xCF1),
+        libespm::FormId("Blank - Different.esm", std::vector<std::string>(), 0xCF2),
+        libespm::FormId("Blank - Different Master Dependent.esm", std::vector<std::string>(), 0xCE9),
+        libespm::FormId("Blank - Different Master Dependent.esm", std::vector<std::string>(), 0xCEA),
+        libespm::FormId("Blank - Different Master Dependent.esm", std::vector<std::string>(), 0xCEB),
     }), plugin.FormIDs());
     EXPECT_EQ(std::vector<std::string>({
         "Blank - Different.esm"
@@ -383,13 +383,13 @@ TEST_F(Game, LoadPlugins) {
     EXPECT_EQ("Blank.esp", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
     EXPECT_FALSE(plugin.IsMaster());
-    EXPECT_EQ(std::set<loot::FormID>({
-        loot::FormID("Blank.esp", 0xCEC),
-        loot::FormID("Blank.esp", 0xCED),
-        loot::FormID("Blank.esp", 0xCEE),
-        loot::FormID("Blank.esp", 0xCEF),
-        loot::FormID("Blank.esp", 0xCF0),
-        loot::FormID("Blank.esp", 0xCF1),
+    EXPECT_EQ(std::set<libespm::FormId>({
+        libespm::FormId("Blank.esp", std::vector<std::string>(), 0xCEC),
+        libespm::FormId("Blank.esp", std::vector<std::string>(), 0xCED),
+        libespm::FormId("Blank.esp", std::vector<std::string>(), 0xCEE),
+        libespm::FormId("Blank.esp", std::vector<std::string>(), 0xCEF),
+        libespm::FormId("Blank.esp", std::vector<std::string>(), 0xCF0),
+        libespm::FormId("Blank.esp", std::vector<std::string>(), 0xCF1),
     }), plugin.FormIDs());
     EXPECT_TRUE(plugin.Masters().empty());
     EXPECT_EQ("", plugin.Version());
@@ -401,12 +401,12 @@ TEST_F(Game, LoadPlugins) {
     EXPECT_EQ("Blank - Different.esp", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
     EXPECT_FALSE(plugin.IsMaster());
-    EXPECT_EQ(std::set<loot::FormID>({
-        loot::FormID("Blank - Different.esp", 0xCEB),
-        loot::FormID("Blank - Different.esp", 0xCEC),
-        loot::FormID("Blank - Different.esp", 0xCED),
-        loot::FormID("Blank - Different.esp", 0xCEE),
-        loot::FormID("Blank - Different.esp", 0xCEF),
+    EXPECT_EQ(std::set<libespm::FormId>({
+        libespm::FormId("Blank - Different.esp", std::vector<std::string>(), 0xCEB),
+        libespm::FormId("Blank - Different.esp", std::vector<std::string>(), 0xCEC),
+        libespm::FormId("Blank - Different.esp", std::vector<std::string>(), 0xCED),
+        libespm::FormId("Blank - Different.esp", std::vector<std::string>(), 0xCEE),
+        libespm::FormId("Blank - Different.esp", std::vector<std::string>(), 0xCEF),
     }), plugin.FormIDs());
     EXPECT_TRUE(plugin.Masters().empty());
     EXPECT_EQ("", plugin.Version());
@@ -418,11 +418,11 @@ TEST_F(Game, LoadPlugins) {
     EXPECT_EQ("Blank - Master Dependent.esp", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
     EXPECT_FALSE(plugin.IsMaster());
-    EXPECT_EQ(std::set<loot::FormID>({
-        loot::FormID("Blank.esm", 0xCF0),
-        loot::FormID("Blank.esm", 0xCF1),
-        loot::FormID("Blank - Master Dependent.esp", 0xCE9),
-        loot::FormID("Blank - Master Dependent.esp", 0xCEA),
+    EXPECT_EQ(std::set<libespm::FormId>({
+        libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF0),
+        libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF1),
+        libespm::FormId("Blank - Master Dependent.esp", std::vector<std::string>(), 0xCE9),
+        libespm::FormId("Blank - Master Dependent.esp", std::vector<std::string>(), 0xCEA),
     }), plugin.FormIDs());
     EXPECT_EQ(std::vector<std::string>({
         "Blank.esm"
@@ -436,10 +436,10 @@ TEST_F(Game, LoadPlugins) {
     EXPECT_EQ("Blank - Different Master Dependent.esp", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
     EXPECT_FALSE(plugin.IsMaster());
-    EXPECT_EQ(std::set<loot::FormID>({
-        loot::FormID("Blank - Different.esm", 0xCEF),
-        loot::FormID("Blank - Different.esm", 0xCF0),
-        loot::FormID("Blank - Different Master Dependent.esp", 0xCE7),
+    EXPECT_EQ(std::set<libespm::FormId>({
+        libespm::FormId("Blank - Different.esm", std::vector<std::string>(), 0xCEF),
+        libespm::FormId("Blank - Different.esm", std::vector<std::string>(), 0xCF0),
+        libespm::FormId("Blank - Different Master Dependent.esp", std::vector<std::string>(), 0xCE7),
     }), plugin.FormIDs());
     EXPECT_EQ(std::vector<std::string>({
         "Blank - Different.esm"
@@ -453,9 +453,9 @@ TEST_F(Game, LoadPlugins) {
     EXPECT_EQ("Blank - Plugin Dependent.esp", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
     EXPECT_FALSE(plugin.IsMaster());
-    EXPECT_EQ(std::set<loot::FormID>({
-        loot::FormID("Blank.esp", 0xCEC),
-        loot::FormID("Blank - Plugin Dependent.esp", 0xCE7),
+    EXPECT_EQ(std::set<libespm::FormId>({
+        libespm::FormId("Blank.esp", std::vector<std::string>(), 0xCEC),
+        libespm::FormId("Blank - Plugin Dependent.esp", std::vector<std::string>(), 0xCE7),
     }), plugin.FormIDs());
     EXPECT_EQ(std::vector<std::string>({
         "Blank.esp"
@@ -469,8 +469,8 @@ TEST_F(Game, LoadPlugins) {
     EXPECT_EQ("Blank - Different Plugin Dependent.esp", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
     EXPECT_FALSE(plugin.IsMaster());
-    EXPECT_EQ(std::set<loot::FormID>({
-        loot::FormID("Blank - Different.esp", 0xCEB),
+    EXPECT_EQ(std::set<libespm::FormId>({
+        libespm::FormId("Blank - Different.esp", std::vector<std::string>(), 0xCEB),
     }), plugin.FormIDs());
     EXPECT_EQ(std::vector<std::string>({
         "Blank - Different.esp"

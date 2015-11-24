@@ -32,6 +32,8 @@
 
 #include <yaml-cpp/yaml.h>
 
+#include <libespm/GameId.h>
+
 namespace loot {
     class GameSettings {
     public:
@@ -44,6 +46,7 @@ namespace loot {
         bool operator == (const GameSettings& rhs) const;  //Compares names and folder names.
 
         unsigned int Id() const;
+        libespm::GameId LibespmId() const;
         std::string Name() const;  //Returns the game's name, eg. "TES IV: Oblivion".
         std::string FolderName() const;
         std::string Master() const;
