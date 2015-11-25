@@ -165,6 +165,10 @@ namespace loot {
         BOOST_LOG_TRIVIAL(info) << "Repository doesn't exist, cloning the remote repository.";
 
         fs::path tempPath = fs::temp_directory_path() / fs::unique_path();
+
+        //Delete temporary folder in case it already exists.
+        fs::remove_all(tempPath);
+
         if (!fs::is_empty(path)) {
             // Directory is non-empty. Delete the masterlist file and
             // .git folder, then move any remaining files to a temporary
