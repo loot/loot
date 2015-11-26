@@ -612,6 +612,7 @@ namespace loot {
         temp.push_back(Game(Game::tes5).FolderName());
         temp.push_back(Game(Game::fo3).FolderName());
         temp.push_back(Game(Game::fonv).FolderName());
+        temp.push_back(Game(Game::fo4).FolderName());
         return JSON::stringify(temp);
     }
 

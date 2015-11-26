@@ -54,7 +54,7 @@ namespace loot {
     Game::Game(const unsigned int gameCode, const std::string& folder) : GameSettings(gameCode, folder), _pluginsFullyLoaded(false) {}
 
     void Game::Init(bool createFolder, const boost::filesystem::path& gameLocalAppData) {
-        if (Id() != Game::tes4 && Id() != Game::tes5 && Id() != Game::fo3 && Id() != Game::fonv) {
+        if (Id() != Game::tes4 && Id() != Game::tes5 && Id() != Game::fo3 && Id() != Game::fonv && Id() != Game::fo4) {
             throw error(error::invalid_args, lc::translate("Invalid game ID supplied.").str());
         }
 

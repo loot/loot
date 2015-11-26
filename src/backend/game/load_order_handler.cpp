@@ -45,7 +45,8 @@ namespace loot {
         if (game.Id() != GameSettings::tes4
             && game.Id() != GameSettings::tes5
             && game.Id() != GameSettings::fo3
-            && game.Id() != GameSettings::fonv) {
+            && game.Id() != GameSettings::fonv
+            && game.Id() != GameSettings::fo4) {
             throw error(error::invalid_args, lc::translate("Unsupported game ID supplied.").str());
         }
 
@@ -74,6 +75,8 @@ namespace loot {
             ret = lo_create_handle(&_gh, LIBLO_GAME_FO3, game.GamePath().string().c_str(), gameLocalDataPath);
         else if (game.Id() == GameSettings::fonv)
             ret = lo_create_handle(&_gh, LIBLO_GAME_FNV, game.GamePath().string().c_str(), gameLocalDataPath);
+        else if (game.Id() == GameSettings::fo4)
+            ret = lo_create_handle(&_gh, LIBLO_GAME_FO4, game.GamePath().string().c_str(), gameLocalDataPath);
         else
             ret = LIBLO_ERROR_INVALID_ARGS;
 

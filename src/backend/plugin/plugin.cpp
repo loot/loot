@@ -296,7 +296,7 @@ namespace loot {
     bool Plugin::LoadsBSA(const Game& game) const {
         if (IsRegexPlugin())
             return false;
-        if (game.Id() == Game::tes5) {
+        if (game.Id() == Game::tes5 || game.Id() == Game::fo4) {
             // Skyrim plugins only load BSAs that exactly match their basename.
             return boost::filesystem::exists(game.DataPath() / (name.substr(0, name.length() - 3) + "bsa"));
         }

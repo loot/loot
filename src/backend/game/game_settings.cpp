@@ -42,6 +42,7 @@ namespace loot {
     const unsigned int GameSettings::tes5 = 2;
     const unsigned int GameSettings::fo3 = 3;
     const unsigned int GameSettings::fonv = 4;
+    const unsigned int GameSettings::fo4 = 5;
 
     GameSettings::GameSettings() : _id(GameSettings::autodetect) {}
 
@@ -76,6 +77,14 @@ namespace loot {
             _lootFolderName = "FalloutNV";
             _masterFile = "FalloutNV.esm";
             _repositoryURL = "https://github.com/loot/falloutnv.git";
+            _repositoryBranch = "v0.8";
+        }
+        else if (Id() == GameSettings::fo4) {
+            _name = "Fallout 4";
+            _registryKey = "Software\\Bethesda Softworks\\Fallout4\\Installed Path";
+            _lootFolderName = "Fallout4";
+            _masterFile = "Fallout4.esm";
+            _repositoryURL = "https://github.com/loot/fallout4.git";
             _repositoryBranch = "v0.8";
         }
 
@@ -127,8 +136,10 @@ namespace loot {
             return libespm::GameId::SKYRIM;
         else if (_id == GameSettings::fo3)
             return libespm::GameId::FALLOUT3;
-        else
+        else if (_id == GameSettings::fonv)
             return libespm::GameId::FALLOUTNV;
+        else
+            return libespm::GameId::FALLOUT4;
     }
 
     string GameSettings::Name() const {
@@ -233,6 +244,9 @@ namespace loot {
 
         if (find(games.begin(), games.end(), GameSettings(GameSettings::fonv)) == games.end())
             games.push_back(GameSettings(GameSettings::fonv));
+
+        if (find(games.begin(), games.end(), GameSettings(GameSettings::fo4)) == games.end())
+            games.push_back(GameSettings(GameSettings::fo4));
 
         // If there were any missing defaults, make sure they're in settings now.
         settings["games"] = games;

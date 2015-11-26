@@ -63,6 +63,7 @@ const unsigned int loot_game_tes4 = loot::Game::tes4;
 const unsigned int loot_game_tes5 = loot::Game::tes5;
 const unsigned int loot_game_fo3 = loot::Game::fo3;
 const unsigned int loot_game_fonv = loot::Game::fonv;
+const unsigned int loot_game_fo4 = loot::Game::fo4;
 
 // LOOT message types.
 const unsigned int loot_message_say = loot::Message::say;
@@ -243,7 +244,12 @@ LOOT_API unsigned int loot_create_db(loot_db * const db,
                                      const unsigned int clientGame,
                                      const char * const gamePath,
                                      const char * const gameLocalPath) {
-    if (db == nullptr || (clientGame != loot_game_tes4 && clientGame != loot_game_tes5 && clientGame != loot_game_fo3 && clientGame != loot_game_fonv))
+    if (db == nullptr
+        || (clientGame != loot_game_tes4
+        && clientGame != loot_game_tes5
+        && clientGame != loot_game_fo3
+        && clientGame != loot_game_fonv
+        && clientGame != loot_game_fo4))
         return c_error(loot_error_invalid_args, "Null pointer passed.");
 
     //Set the locale to get encoding conversions working correctly.
