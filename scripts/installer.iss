@@ -159,16 +159,19 @@ Type: files; Name: "{localappdata}\{#MyAppName}\Oblivion\masterlist.yaml";
 Type: files; Name: "{localappdata}\{#MyAppName}\Skyrim\masterlist.yaml";
 Type: files; Name: "{localappdata}\{#MyAppName}\Fallout3\masterlist.yaml";
 Type: files; Name: "{localappdata}\{#MyAppName}\FalloutNV\masterlist.yaml";
+Type: files; Name: "{localappdata}\{#MyAppName}\Fallout4\masterlist.yaml";
 
 Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\Oblivion\.git";
 Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\Skyrim\.git";
 Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\Fallout3\.git";
 Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\FalloutNV\.git";
+Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\Fallout4\.git";
 
 Type: dirifempty; Name: "{localappdata}\{#MyAppName}\Oblivion";
 Type: dirifempty; Name: "{localappdata}\{#MyAppName}\Skyrim";
 Type: dirifempty; Name: "{localappdata}\{#MyAppName}\Fallout3";
 Type: dirifempty; Name: "{localappdata}\{#MyAppName}\FalloutNV";
+Type: dirifempty; Name: "{localappdata}\{#MyAppName}\Fallout4";
 
 Type: dirifempty; Name: "{localappdata}\{#MyAppName}";
 
@@ -230,6 +233,7 @@ begin
       DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\Skyrim\userlist.yaml'));
       DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\Fallout3\userlist.yaml'));
       DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\FalloutNV\userlist.yaml'));
+      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\Fallout4\userlist.yaml'));
     end;
   end;
 end;
