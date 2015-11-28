@@ -226,6 +226,12 @@ namespace loot {
 
     bool Plugin::IsValid(const Game& game) const {
         BOOST_LOG_TRIVIAL(trace) << "Checking to see if \"" << name << "\" is a valid plugin.";
+        // Check the extension, because only plugins with the .esm or .esp
+        // extension (or .ghost, which is trimmed) should be handled by LOOT,
+        // even if the file content is valid.
+        if (!boost::iends_with(name, ".esm") && !boost::iends_with(name, ".esp"))
+            return false;
+
         boost::filesystem::path filepath = game.DataPath() / name;
 
         // In case the plugin is ghosted.
