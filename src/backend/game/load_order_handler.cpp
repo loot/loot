@@ -95,28 +95,6 @@ namespace loot {
             lo_cleanup();
             throw error(error::liblo_error, err);
         }
-
-        if (game.Id() != GameSettings::tes5) {
-            ret = lo_set_game_master(_gh, game.Master().c_str());
-            if (ret != LIBLO_OK && ret != LIBLO_WARN_BAD_FILENAME && ret != LIBLO_WARN_INVALID_LIST && ret != LIBLO_WARN_LO_MISMATCH) {
-                const char * e = nullptr;
-                string err;
-                lo_get_error_message(&e);
-                lo_destroy_handle(_gh);
-                _gh = nullptr;
-
-                if (e == nullptr) {
-                    BOOST_LOG_TRIVIAL(error) << "libloadorder failed to initialise game master file support. Details could not be fetched.";
-                    err = lc::translate("libloadorder failed to initialise game master file support. Details could not be fetched.").str();
-                }
-                else {
-                    BOOST_LOG_TRIVIAL(error) << "libloadorder failed to initialise game master file support. Details: " << e;
-                    err = lc::translate("libloadorder failed to initialise game master file support. Details:").str() + " " + e;
-                }
-                lo_cleanup();
-                throw error(error::liblo_error, err);
-            }
-        }
     }
 
     std::unordered_set<std::string> LoadOrderHandler::GetActivePlugins() const {
