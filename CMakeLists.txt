@@ -7,24 +7,14 @@
 # Get Build Revision
 ##############################
 
-# Uses the CMake module in this repo: https://github.com/rpavlik/cmake-modules
-# On Windows, this requires Git for Windows to be installed.
+find_package(Git)
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
-include(GetGitRevisionDescription OPTIONAL RESULT_VARIABLE GIT_MODULE_PATH)
-IF (NOT GIT_MODULE_PATH MATCHES "NOTFOUND")
-    get_git_head_revision(GIT_REFSPEC GIT_COMMIT_STRING --tags --long)
-
-    IF (GIT_COMMIT_STRING MATCHES "GITDIR-NOTFOUND")
-        set(GIT_COMMIT_STRING "unknown")
-    ELSE ()
-        # Get a shortened ID. Although knowing the shortest unique string requires Git,
-        # 8 characters should be a good compromise between chance of ambiguity and length,
-        # especially since the version numbers would narrow down the range of possibly
-        # ambiguous commits.
-        string(SUBSTRING ${GIT_COMMIT_STRING} 0 8 GIT_COMMIT_STRING)
-    ENDIF ()
-ELSE ()
+IF (GIT_FOUND)
+    execute_process(COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
+                  OUTPUT_VARIABLE GIT_COMMIT_STRING
+                  ERROR_QUIET
+                  OUTPUT_STRIP_TRAILING_WHITESPACE)
+ELSE()
     SET (GIT_COMMIT_STRING "unknown")
 ENDIF ()
 
