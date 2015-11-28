@@ -498,7 +498,7 @@ msgid "Empty Plugin"
 msgstr ""
 
 #: resources/report/js/l10n.js:64 resources/report/js/l10n.js:83
-msgid "Loads BSA"
+msgid "Loads Archive"
 msgstr ""
 
 #: resources/report/js/l10n.js:65 resources/report/js/l10n.js:140
