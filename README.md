@@ -31,9 +31,9 @@ LOOT requires the following C/C++ libraries (version numbers used in latest deve
 * [Boost](http://www.boost.org) v1.59.0
 * [Chromium Embedded Framework](https://bitbucket.org/chromiumembedded/cef) branch 2454: Required to build the GUI, but not the API or tests.
 * [Google Test](https://github.com/google/googletest) v1.7: Required to build the tests, but not the API or the GUI.
-* [Libespm](http://github.com/WrinklyNinja/libespm) v2.4.0
-* [Libgit2](http://libgit2.github.com/) v0.23.3
-* [Libloadorder](http://github.com/WrinklyNinja/libloadorder) revision 50342d7
+* [Libespm](http://github.com/WrinklyNinja/libespm) v2.5.0
+* [Libgit2](http://libgit2.github.com/) v0.23.4
+* [Libloadorder](http://github.com/WrinklyNinja/libloadorder) revision 3a7d694
 * [Pseudosem](http://github.com/WrinklyNinja/pseudosem): v1.0.1
 * [yaml-cpp](http://github.com/WrinklyNinja/yaml-cpp): Use the `patched-for-loot` branch.
 
