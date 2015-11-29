@@ -127,7 +127,7 @@ TEST_F(PluginLoader, Load) {
     }), pl.FormIDs());
     EXPECT_TRUE(pl.Masters().empty());
     EXPECT_EQ("v5.0", pl.Description());
-    EXPECT_EQ(0xD33753E4, pl.Crc());
+    EXPECT_EQ(0x187BE342, pl.Crc());
 
     EXPECT_NO_THROW(pl.Load(game, "Blank - Master Dependent.esp", false, false));
     EXPECT_FALSE(pl.IsEmpty());

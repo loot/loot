@@ -105,7 +105,7 @@ TEST_F(Masterlist, GetInfo_NoMasterlist) {
 }
 
 TEST_F(Masterlist, GetInfo_NoRepository) {
-    ASSERT_NO_THROW(boost::filesystem::copy("./testing-metadata-master/masterlist.yaml", masterlistPath));
+    ASSERT_NO_THROW(boost::filesystem::copy("./testing-metadata/masterlist.yaml", masterlistPath));
 
     loot::Masterlist masterlist;
     EXPECT_ANY_THROW(masterlist.GetInfo(masterlistPath, false));

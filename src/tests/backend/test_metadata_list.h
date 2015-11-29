@@ -31,9 +31,9 @@ along with LOOT.  If not, see
 class MetadataList : public SkyrimTest {
 protected:
     MetadataList() :
-        metadataPath("./testing-metadata-master/masterlist.yaml"),
-        savedMetadataPath("./testing-metadata-master/saved.masterlist.yaml"),
-        invalidMetadataPaths({"./testing-metadata-master/invalid/non_unique.yaml"}) {
+        metadataPath("./testing-metadata/masterlist.yaml"),
+        savedMetadataPath("./testing-metadata/saved.masterlist.yaml"),
+        invalidMetadataPaths({"./testing-metadata/invalid/non_unique.yaml"}) {
         PluginMetadataToString = [](const loot::PluginMetadata& plugin) {
             return plugin.Name();
         };
