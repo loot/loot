@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: LOOT v0.8.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-11-30 04:07+0100\n"
-"PO-Revision-Date: 2015-11-30 12:56+0100\n"
+"PO-Revision-Date: 2015-11-30 15:34+0100\n"
 "Last-Translator: Frederik “Freso” S. Olesen <freso.dk@gmail.com>\n"
 "Language-Team: Danish\n"
 "Language: da\n"
@@ -47,7 +47,7 @@ msgstr "Spilsti er ikke initialiseret."
 msgid ""
 "libloadorder failed to create a game handle. Details could not be fetched."
 msgstr ""
-"libloadorder kunne ikke oprette \"game handle\". Kunne ikke hente detaljer."
+"libloadorder kunne ikke oprette “game handle”. Kunne ikke hente detaljer."
 
 #: backend/game/load_order_handler.cpp:90
 msgid "libloadorder failed to create a game handle. Details:"
@@ -184,7 +184,7 @@ msgstr "Kunne ikke analysere betingelsen “%1%”: %2%"
 #: backend/metadata/conditional_metadata.cpp:77
 #: backend/metadata/conditional_metadata.cpp:109
 msgid "Failed to parse condition \"%1%\"."
-msgstr "Kunne ikke analysere betingelsen “%1%\"."
+msgstr "Kunne ikke analysere betingelsen “%1%”."
 
 #: backend/metadata/plugin_dirty_info.cpp:68
 msgid ""
@@ -239,7 +239,7 @@ msgstr "Pluginet kræver at “%1%” er aktivt, men det er inaktivt."
 
 #: backend/plugin/plugin.cpp:278
 msgid "This plugin is incompatible with \"%1%\", but both are present."
-msgstr "Pluginet er uforeneligt med \"%1%\", men begge er til stede."
+msgstr "Pluginet er uforeneligt med “%1%”, men begge er til stede."
 
 #: backend/plugin_sorter.cpp:84
 #, fuzzy
@@ -247,7 +247,7 @@ msgid ""
 "Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: "
 "%3%"
 msgstr ""
-"Opdaget cyklisk interaktion mellem plug-ins “%1%” og “%2%”. Back cycle: %3%"
+"Opdaget cyklisk interaktion mellem plugins “%1%” og “%2%”. Back cycle: %3%"
 
 #: backend/plugin_sorter.cpp:105
 msgid "Building plugin graph..."
@@ -831,7 +831,7 @@ msgstr "Skjul CRC’er"
 #: gui/html/js/l10n.js:254
 #, fuzzy
 msgid "Hide Bash Tags"
-msgstr "Skjul Bash-tags"
+msgstr "Skjul Bash‐tags"
 
 #: gui/html/js/l10n.js:255
 msgid "Hide notes"
@@ -927,7 +927,7 @@ msgstr "Grundspil"
 
 #: gui/html/js/l10n.js:294
 msgid "LOOT Folder"
-msgstr "LOOT-mappe"
+msgstr "LOOT‐mappe"
 
 #: gui/html/js/l10n.js:296
 msgid "Masterlist Repository URL"
@@ -947,31 +947,41 @@ msgstr ""
 
 #: gui/html/js/l10n.js:310
 msgid "First-Time Tips"
-msgstr ""
+msgstr "Førstegangstips"
 
 #: gui/html/js/l10n.js:312
 msgid ""
 "CRCs are only displayed after plugins have been loaded, either by conflict "
 "filtering, or by sorting."
 msgstr ""
+"CRC’er bliver kun vist efter plugins er blevet indlæst, enten ved "
+"konfliktfilrering eller ved sortering."
 
 #: gui/html/js/l10n.js:313
 msgid ""
 "Double-click a plugin in the sidebar to quickly open its metadata editor. "
 "Multiple metadata editors can be opened at once."
 msgstr ""
+"Dobbeltklik på et plugin i sidebjælken for hurtigt at åbne et "
+"redigeringsvindue for dets metadata. Flere redigeringsvinduer kan være åbne "
+"samtidig."
 
 #: gui/html/js/l10n.js:314
 msgid ""
 "Plugins can be drag and dropped from the sidebar into editors' \"load after, "
 "\"requirements\" and \"incompatibility\" tables."
 msgstr ""
+"Plugins kan trækkes og slippes fra sidebjælken ind i redigeringsvinduets "
+"“indlæs efter”‐, “krav”‐ og “uforligeligheder”‐tabeller."
 
 #: gui/html/js/l10n.js:315
 msgid ""
 "Some features are disabled while there is an editor open, or while there is "
 "a sorted load order that has not been applied or discarded."
 msgstr ""
+"Nogle funktioner er slået fra mens der er et redigeringsvindue åbent, eller "
+"når en indlæsningsrækkefølge er blevet sorteret men ikke anvendt eller "
+"kasseret."
 
 #: gui/html/js/l10n.js:316
 msgid ""
@@ -979,6 +989,9 @@ msgid ""
 "try hovering your mouse over it to find out. Otherwise, LOOT's documentation "
 "can be accessed through the main menu."
 msgstr ""
+"Mange elementer i brugerfladen har værktøjstips. Hvis du ikke ved hvad noget "
+"er eller gør, så prøv at holde musen over elementet og find ud af det. "
+"Derudover kan LOOTs dokumentation findes gennem hovedmenuen."
 
 #: gui/html/js/loot.js:183 gui/html/js/loot.js:188
 msgid "N/A"
