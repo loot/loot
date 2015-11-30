@@ -973,11 +973,11 @@ msgstr ""
 
 #: resources/report/js/l10n.js:314
 msgid ""
-"Plugins can be drag and dropped from the sidebar into editors' \"load after, "
+"Plugins can be drag and dropped from the sidebar into editors' \"load after\", "
 "\"requirements\" and \"incompatibility\" tables."
 msgstr ""
 "Плагины можно перетащить из боковой панели в таблицы редакторов ' \"грузить "
-"после, \"требования\" и  \"несовместимости\"."
+"после\", \"требования\" и  \"несовместимости\"."
 
 #: resources/report/js/l10n.js:315
 msgid ""

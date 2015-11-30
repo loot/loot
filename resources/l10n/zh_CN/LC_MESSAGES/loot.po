@@ -938,7 +938,7 @@ msgstr ""
 
 #: resources/report/js/l10n.js:314
 msgid ""
-"Plugins can be drag and dropped from the sidebar into editors' \"load after, "
+"Plugins can be drag and dropped from the sidebar into editors' \"load after\", "
 "\"requirements\" and \"incompatibility\" tables."
 msgstr ""
 "插件可以从侧边栏拖动进入编辑器的\"加载在……后面，\"需求\"和\"不兼容\"表格。"

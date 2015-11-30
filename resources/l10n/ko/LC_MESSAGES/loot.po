@@ -823,7 +823,7 @@ msgstr ""
 
 #: resources/report/js/l10n.js:308
 msgid ""
-"Plugins can be drag and dropped from the sidebar into editors' \"load after, "
+"Plugins can be drag and dropped from the sidebar into editors' \"load after\", "
 "\"requirements\" and \"incompatibility\" tables."
 msgstr ""
 "플러그인은 사이드바에서 편집기로 '선행 로드',  요구 사항', '비호환성'테이블"
