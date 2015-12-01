@@ -357,12 +357,19 @@ IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
     )
 
     # Copy CEF binaries.
-    FOREACH(cef_dll libcef.dll natives_blob.bin snapshot_blob.bin d3dcompiler_47.dll libEGL.dll libGLESv2.dll wow_helper.exe)
+    FOREACH(cef_dll libcef.dll natives_blob.bin snapshot_blob.bin d3dcompiler_47.dll libEGL.dll libGLESv2.dll)
         add_custom_command(TARGET LOOT POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_if_different
                 "${CMAKE_SOURCE_DIR}/${CEF_ROOT}/$<CONFIGURATION>/${cef_dll}"
                 $<TARGET_FILE_DIR:LOOT>/${cef_dll})
     ENDFOREACH()
+
+    IF (PROJECT_ARCH MATCHES "32")
+        add_custom_command(TARGET LOOT POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${CMAKE_SOURCE_DIR}/${CEF_ROOT}/$<CONFIGURATION>/wow_helper.exe"
+                $<TARGET_FILE_DIR:LOOT>/wow_helper.exe)
+    ENDIF ()
 ELSE ()
     # Copy CEF binaries.
     FOREACH(cef_dll libcef.so natives_blob.bin snapshot_blob.bin chrome-sandbox)
