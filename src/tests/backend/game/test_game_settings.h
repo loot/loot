@@ -259,7 +259,8 @@ TEST(GetGameSettings, AllMissing) {
         loot::GameSettings(loot::GameSettings::tes4),
         loot::GameSettings(loot::GameSettings::tes5),
         loot::GameSettings(loot::GameSettings::fo3),
-        loot::GameSettings(loot::GameSettings::fonv)
+        loot::GameSettings(loot::GameSettings::fonv),
+        loot::GameSettings(loot::GameSettings::fo4)
     };
 
     EXPECT_FALSE(settings["games"]);
@@ -271,7 +272,8 @@ TEST(GetGameSettings, MissingFallout3) {
     std::list<loot::GameSettings> initial({
         loot::GameSettings(loot::GameSettings::tes4, "folder1"),
         loot::GameSettings(loot::GameSettings::tes5, "folder2"),
-        loot::GameSettings(loot::GameSettings::fonv, "folder3")
+        loot::GameSettings(loot::GameSettings::fonv, "folder3"),
+        loot::GameSettings(loot::GameSettings::fo4, "folder4")
     });
 
     YAML::Node settings;
@@ -281,6 +283,7 @@ TEST(GetGameSettings, MissingFallout3) {
         loot::GameSettings(loot::GameSettings::tes4, "folder1"),
         loot::GameSettings(loot::GameSettings::tes5, "folder2"),
         loot::GameSettings(loot::GameSettings::fonv, "folder3"),
+        loot::GameSettings(loot::GameSettings::fo4, "folder4"),
         loot::GameSettings(loot::GameSettings::fo3)
     };
 

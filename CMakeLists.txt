@@ -7,24 +7,14 @@
 # Get Build Revision
 ##############################
 
-# Uses the CMake module in this repo: https://github.com/rpavlik/cmake-modules
-# On Windows, this requires Git for Windows to be installed.
+find_package(Git)
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
-include(GetGitRevisionDescription OPTIONAL RESULT_VARIABLE GIT_MODULE_PATH)
-IF (NOT GIT_MODULE_PATH MATCHES "NOTFOUND")
-    get_git_head_revision(GIT_REFSPEC GIT_COMMIT_STRING --tags --long)
-
-    IF (GIT_COMMIT_STRING MATCHES "GITDIR-NOTFOUND")
-        set(GIT_COMMIT_STRING "unknown")
-    ELSE ()
-        # Get a shortened ID. Although knowing the shortest unique string requires Git,
-        # 8 characters should be a good compromise between chance of ambiguity and length,
-        # especially since the version numbers would narrow down the range of possibly
-        # ambiguous commits.
-        string(SUBSTRING ${GIT_COMMIT_STRING} 0 8 GIT_COMMIT_STRING)
-    ENDIF ()
-ELSE ()
+IF (GIT_FOUND)
+    execute_process(COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
+                  OUTPUT_VARIABLE GIT_COMMIT_STRING
+                  ERROR_QUIET
+                  OUTPUT_STRIP_TRAILING_WHITESPACE)
+ELSE()
     SET (GIT_COMMIT_STRING "unknown")
 ENDIF ()
 
@@ -92,7 +82,6 @@ find_package(GTest)
 
 set (LOOT_SRC   "${CMAKE_SOURCE_DIR}/src/backend/metadata/conditional_metadata.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata/file.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/metadata/formid.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata/location.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata/message.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata/message_content.cpp"
@@ -106,7 +95,6 @@ set (LOOT_SRC   "${CMAKE_SOURCE_DIR}/src/backend/metadata/conditional_metadata.c
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata_list.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/masterlist.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/plugin/plugin.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/plugin/plugin_loader.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/git_helper.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/helpers.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/language.cpp"
@@ -117,7 +105,6 @@ set (LOOT_SRC   "${CMAKE_SOURCE_DIR}/src/backend/metadata/conditional_metadata.c
 set (LOOT_HEADERS "${CMAKE_SOURCE_DIR}/src/backend/metadata/condition_grammar.h"
 				"${CMAKE_SOURCE_DIR}/src/backend/metadata/conditional_metadata.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata/file.h"
-                "${CMAKE_SOURCE_DIR}/src/backend/metadata/formid.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata/location.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata/message.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata/message_content.h"
@@ -131,7 +118,6 @@ set (LOOT_HEADERS "${CMAKE_SOURCE_DIR}/src/backend/metadata/condition_grammar.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata_list.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/masterlist.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/plugin/plugin.h"
-                "${CMAKE_SOURCE_DIR}/src/backend/plugin/plugin_loader.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/git_helper.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/helpers.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/language.h"
@@ -190,7 +176,6 @@ set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/fixtures.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/test_condition_grammar.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/test_conditional_metadata.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/test_file.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/test_formid.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/test_location.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/test_message.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/test_message_content.h"
@@ -198,7 +183,6 @@ set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/fixtures.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/test_plugin_metadata.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/test_tag.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/plugin/test_plugin.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/backend/plugin/test_plugin_loader.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/test_metadata_list.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/test_masterlist.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/test_plugin_sorter.h")
@@ -373,12 +357,19 @@ IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
     )
 
     # Copy CEF binaries.
-    FOREACH(cef_dll libcef.dll natives_blob.bin snapshot_blob.bin d3dcompiler_47.dll libEGL.dll libGLESv2.dll wow_helper.exe)
+    FOREACH(cef_dll libcef.dll natives_blob.bin snapshot_blob.bin d3dcompiler_47.dll libEGL.dll libGLESv2.dll)
         add_custom_command(TARGET LOOT POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_if_different
                 "${CMAKE_SOURCE_DIR}/${CEF_ROOT}/$<CONFIGURATION>/${cef_dll}"
                 $<TARGET_FILE_DIR:LOOT>/${cef_dll})
     ENDFOREACH()
+
+    IF (PROJECT_ARCH MATCHES "32")
+        add_custom_command(TARGET LOOT POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${CMAKE_SOURCE_DIR}/${CEF_ROOT}/$<CONFIGURATION>/wow_helper.exe"
+                $<TARGET_FILE_DIR:LOOT>/wow_helper.exe)
+    ENDIF ()
 ELSE ()
     # Copy CEF binaries.
     FOREACH(cef_dll libcef.so natives_blob.bin snapshot_blob.bin chrome-sandbox)

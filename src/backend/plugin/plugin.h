@@ -24,7 +24,6 @@
 #ifndef __LOOT_PLUGIN__
 #define __LOOT_PLUGIN__
 
-#include "../metadata/formid.h"
 #include "../metadata/plugin_metadata.h"
 
 #include <cstdint>
@@ -35,6 +34,8 @@
 
 #include <boost/locale.hpp>
 
+#include <libespm/FormId.h>
+
 namespace loot {
     class Game;
 
@@ -44,7 +45,7 @@ namespace loot {
         Plugin(const std::string& name);
         Plugin(Game& game, const std::string& name, const bool headerOnly);
 
-        const std::set<FormID>& FormIDs() const;
+        const std::set<libespm::FormId>& FormIDs() const;
         std::vector<std::string> Masters() const;
         bool IsMaster() const;  //Checks master bit flag.
         bool IsEmpty() const;
@@ -62,14 +63,14 @@ namespace loot {
 
         //Load ordering functions.
         bool DoFormIDsOverlap(const Plugin& plugin) const;
-        std::set<FormID> OverlapFormIDs(const Plugin& plugin) const;
+        std::set<libespm::FormId> OverlapFormIDs(const Plugin& plugin) const;
 
         //Validity checks.
         bool CheckInstallValidity(const Game& game);  //Checks that reqs and masters are all present, and that no incs are present. Returns true if the plugin is dirty.
     private:
         bool _isEmpty;  // Does the plugin contain any records other than the TES4 header?
         std::vector<std::string> masters;
-        std::set<FormID> formIDs;
+        std::set<libespm::FormId> formIDs;
         std::string version;  //Obtained from description field.
         bool isMaster;
         uint32_t crc;

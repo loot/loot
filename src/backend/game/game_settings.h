@@ -32,6 +32,8 @@
 
 #include <yaml-cpp/yaml.h>
 
+#include <libespm/GameId.h>
+
 namespace loot {
     class GameSettings {
     public:
@@ -44,6 +46,7 @@ namespace loot {
         bool operator == (const GameSettings& rhs) const;  //Compares names and folder names.
 
         unsigned int Id() const;
+        libespm::GameId LibespmId() const;
         std::string Name() const;  //Returns the game's name, eg. "TES IV: Oblivion".
         std::string FolderName() const;
         std::string Master() const;
@@ -68,6 +71,7 @@ namespace loot {
         static const unsigned int tes5;
         static const unsigned int fo3;
         static const unsigned int fonv;
+        static const unsigned int fo4;
     private:
         unsigned int _id;
         std::string _name;
@@ -119,6 +123,8 @@ namespace YAML {
                 rhs = loot::GameSettings(loot::GameSettings::fo3, node["folder"].as<std::string>());
             else if (node["type"].as<std::string>() == loot::GameSettings(loot::GameSettings::fonv).FolderName())
                 rhs = loot::GameSettings(loot::GameSettings::fonv, node["folder"].as<std::string>());
+            else if (node["type"].as<std::string>() == loot::GameSettings(loot::GameSettings::fo4).FolderName())
+                rhs = loot::GameSettings(loot::GameSettings::fo4, node["folder"].as<std::string>());
             else
                 throw RepresentationException(node.Mark(), "bad conversion: invalid value for 'type' key in 'game settings' object");
 

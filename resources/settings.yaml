@@ -46,6 +46,15 @@ games:
     path: ~
     registry: Software\Bethesda Softworks\FalloutNV\Installed Path
 
+  - folder: Fallout4
+    name: "Fallout 4"
+    type: Fallout4
+    master: Fallout4.esm
+    repo: https://github.com/loot/fallout4.git
+    branch: master
+    path: ~
+    registry: Software\Bethesda Softworks\Fallout4\Installed Path
+
   - folder: Nehrim
     name: Nehrim - At Fate's Edge
     type: Oblivion

@@ -296,8 +296,12 @@ namespace loot {
                 ++it;
         }
 
-        //First need to get plugin's CRC, if it is an exact plugin and it does not have its CRC set.
-        if (!IsRegexPlugin()) {
+        // Regex plugins shouldn't have dirty info, but just clear in case.
+        if (IsRegexPlugin())
+            _dirtyInfo.clear();
+
+        if (!_dirtyInfo.empty()) {
+            //First need to get plugin's CRC, if it is an exact plugin and it does not have its CRC set.
             uint32_t crc = game.GetCachedCrc(name);
             if (crc == 0) {
                 if (boost::filesystem::exists(game.DataPath() / name)) {
@@ -323,10 +327,6 @@ namespace loot {
                 else
                     ++it;
             }
-        }
-        else {
-            // Regex plugins shouldn't have dirty info, but just clear in case.
-            _dirtyInfo.clear();
         }
 
         return *this;

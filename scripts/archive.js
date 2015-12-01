@@ -58,7 +58,6 @@ function createAppArchive(release_path, dest_path) {
             'libEGL.dll',
             'libGLESv2.dll',
             'libcef.dll',
-            'wow_helper.exe',
             'natives_blob.bin',
             'snapshot_blob.bin',
             'cef.pak',
@@ -67,6 +66,10 @@ function createAppArchive(release_path, dest_path) {
             'devtools_resources.pak',
             'icudtl.dat'
         ];
+
+        if (helpers.fileExists(path.join(release_path, 'wow_helper.exe'))) {
+            binaries.push('wow_helper.exe');
+        }
     } else {
         binaries = [
             'LOOT',

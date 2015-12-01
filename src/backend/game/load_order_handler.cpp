@@ -45,7 +45,8 @@ namespace loot {
         if (game.Id() != GameSettings::tes4
             && game.Id() != GameSettings::tes5
             && game.Id() != GameSettings::fo3
-            && game.Id() != GameSettings::fonv) {
+            && game.Id() != GameSettings::fonv
+            && game.Id() != GameSettings::fo4) {
             throw error(error::invalid_args, lc::translate("Unsupported game ID supplied.").str());
         }
 
@@ -74,6 +75,8 @@ namespace loot {
             ret = lo_create_handle(&_gh, LIBLO_GAME_FO3, game.GamePath().string().c_str(), gameLocalDataPath);
         else if (game.Id() == GameSettings::fonv)
             ret = lo_create_handle(&_gh, LIBLO_GAME_FNV, game.GamePath().string().c_str(), gameLocalDataPath);
+        else if (game.Id() == GameSettings::fo4)
+            ret = lo_create_handle(&_gh, LIBLO_GAME_FO4, game.GamePath().string().c_str(), gameLocalDataPath);
         else
             ret = LIBLO_ERROR_INVALID_ARGS;
 
@@ -91,28 +94,6 @@ namespace loot {
             }
             lo_cleanup();
             throw error(error::liblo_error, err);
-        }
-
-        if (game.Id() != GameSettings::tes5) {
-            ret = lo_set_game_master(_gh, game.Master().c_str());
-            if (ret != LIBLO_OK && ret != LIBLO_WARN_BAD_FILENAME && ret != LIBLO_WARN_INVALID_LIST && ret != LIBLO_WARN_LO_MISMATCH) {
-                const char * e = nullptr;
-                string err;
-                lo_get_error_message(&e);
-                lo_destroy_handle(_gh);
-                _gh = nullptr;
-
-                if (e == nullptr) {
-                    BOOST_LOG_TRIVIAL(error) << "libloadorder failed to initialise game master file support. Details could not be fetched.";
-                    err = lc::translate("libloadorder failed to initialise game master file support. Details could not be fetched.").str();
-                }
-                else {
-                    BOOST_LOG_TRIVIAL(error) << "libloadorder failed to initialise game master file support. Details: " << e;
-                    err = lc::translate("libloadorder failed to initialise game master file support. Details:").str() + " " + e;
-                }
-                lo_cleanup();
-                throw error(error::liblo_error, err);
-            }
         }
     }
 

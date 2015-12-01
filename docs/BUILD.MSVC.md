@@ -67,8 +67,6 @@ Example CMake keys: `-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=build -DCMAKE_ARCHIVE_OUTP
 
 #### LOOT
 
-LOOT uses a third-party CMake module to generate its build revision data, so first download the `GetGitRevisionDescription.cmake` and `GetGitRevisionDescription.cmake.in` files found in [this repository](https://github.com/rpavlik/cmake-modules) to the `build` subdirectory of the LOOT folder.
-
 1. Set CMake up so that it builds the binaries in the `build` subdirectory of the LOOT folder.
 2. Define any necessary parameters.
 3. Configure CMake, then generate a build system for Visual Studio 12.

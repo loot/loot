@@ -165,7 +165,8 @@ var {
 </style>
 <!--  LOOT
 
-    A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and Fallout: New Vegas.
+    A load order optimisation tool for Oblivion, Skyrim, Fallout 3,
+    Fallout: New Vegas and Fallout 4.
 
     Copyright (C) 2012–2015    WrinklyNinja
 
@@ -211,7 +212,7 @@ var {
 
 <h2 id="intro">Introduction</h2>
 
-<p>LOOT is a plugin load order optimiser for TES IV: Oblivion, TES V: Skyrim, Fallout 3 and Fallout: New Vegas. It is designed to assist mod users in avoiding detrimental conflicts, by automatically calculating a load order that satisfies all plugin dependencies and maximises each plugin's impact on the user's game.
+<p>LOOT is a plugin load order optimiser for TES IV: Oblivion, TES V: Skyrim, Fallout 3, Fallout: New Vegas and Fallout 4. It is designed to assist mod users in avoiding detrimental conflicts, by automatically calculating a load order that satisfies all plugin dependencies and maximises each plugin's impact on the user's game.
 
 <p>LOOT also provides some load order error checking, including checks for requirements, incompatibilities and cyclic dependencies. In addition, it provides a large number of plugin-specific usage notes, bug warnings and Bash Tag suggestions for Wrye Bash.
 
@@ -239,7 +240,7 @@ var {
 
 <p>When LOOT is run, it will attempt to detect which of the supported games are installed. If a <a href="#settingsDefaultGame">default game</a> has been set, LOOT will run for it, otherwise it will run for the same game as it last ran for. If the relevant game cannot be detected, or if there is no record of the last game LOOT ran for, it will run for the first detected game.
 
-<p>LOOT can also be launched with the <code>--game=&lt;game folder name&gt;</code> command line parameter to set the game to run for. If the supplied game folder name is valid, the default and last game values are ignored. The default folder names are <code>Oblivion</code>, <code>Skyrim</code>, <code>Fallout3</code> and <code>FalloutNV</code>.
+<p>LOOT can also be launched with the <code>--game=&lt;game folder name&gt;</code> command line parameter to set the game to run for. If the supplied game folder name is valid, the default and last game values are ignored. The default folder names are <code>Oblivion</code>, <code>Skyrim</code>, <code>Fallout3</code>, <code>FalloutNV</code> and <code>Fallout4</code>.
 
 <p>If LOOT cannot detect any supported game installs, it will immediately open the <a href="#usage-settings">Settings dialog</a>. There you can edit LOOT's settings to provide a path to a supported game, after which you can select it from the game menu.
 
@@ -315,7 +316,7 @@ var {
     <li>The plugin's <abbr title="Cyclic Redundancy Checksum">CRC</abbr>, which can be used to uniquely identify it. CRCs are only displayed after they have been calculated during conflict filtering or sorting.
     <li>The <q>Master File</q> icon.
     <li>The <q>Empty Plugin</q> icon.
-    <li>The <q>Loads BSA</q> icon.
+    <li>The <q>Loads Archive</q> icon.
     <li>The <q>Has User Metadata</q> icon.
     <li>The plugin menu button, which provides access to a few plugin-specific features, including a conflict filter and access to its metadata editor. These are explained in later sections.
 </ol>
@@ -444,7 +445,7 @@ var {
         <tr><td>Enable Debug Logging<td>If enabled, writes debug output to <code>%LOCALAPPDATA%\LOOT\LOOTDebugLog.txt</code>. Debug logging can have a noticeable impact on performance, so it is off by default.
         <tr><td id="settingsUpdateMasterlist">Update masterlist before sorting<td>If checked, LOOT will update its masterlist, should an update be available, before sorting plugins.
 </table>
-<p>LOOT's game-specific settings can be customised in the games table. New game profiles can be added, making it easy to use LOOT across multiple copies of a game, including total conversion mods. LOOT ships with settings for the <q>Nehrim - At Fate's Edge</q> total conversion mod as an example. Game profiles can also be deleted, though the active game cannot have its profile deleted, and LOOT will recreate the profiles for the four base games it supports (Oblivion, Skyrim, Fallout 3, Fallout: New Vegas) when it is next run.
+<p>LOOT's game-specific settings can be customised in the games table. New game profiles can be added, making it easy to use LOOT across multiple copies of a game, including total conversion mods. LOOT ships with settings for the <q>Nehrim - At Fate's Edge</q> total conversion mod as an example. Game profiles can also be deleted, though the active game cannot have its profile deleted, and LOOT will recreate the profiles for the four base games it supports (Oblivion, Skyrim, Fallout 3, Fallout: New Vegas, Fallout 4) when it is next run.
 
 <p>The game settings are explained in the table below.
 <table>
@@ -458,9 +459,10 @@ var {
             <li>TES V: Skyrim
             <li>Fallout 3
             <li>Fallout: New Vegas
+            <li>Fallout 4
         </ul>
         <tr><td>LOOT Folder Name<td>The sub-folder which LOOT uses to store the game's files in. Each game must be given a unique sub-folder.
-        <tr><td>Master File<td>The game's main master file. This is specified as it must load before all other plugins. Note that Skyrim-based games will always load Skyrim.esm first, so this column must always be set to <q>Skyrim.esm</q> for such games.
+        <tr><td>Master File<td>The game's main master file. This is checked for when detecting if the game is installed.
         <tr><td id="settingsMasterlistURL">Masterlist Repository URL<td>The URL of the repository that LOOT uses to update its local copy of the masterlist. If left empty, masterlist updating will be skipped.
         <br><br>
         Masterlist repositories are <a href="http://git-scm.com/">Git</a> repositories that are configured to allow unauthenticated read access and contain a masterlist file named <code>masterlist.yaml</code> in their root directory. The LOOT team maintains a set of official repositories for the games that LOOT supports by default.

@@ -25,7 +25,6 @@
 #define __LOOT_METADATA_PLUGIN_METADATA__
 
 #include "file.h"
-#include "formid.h"
 #include "location.h"
 #include "message.h"
 #include "plugin_dirty_info.h"
