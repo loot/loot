@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: LOOT v0.8.1\n"
+"Project-Id-Version: LOOT v0.9\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-30 04:07+0100\n"
-"PO-Revision-Date: 2015-11-30 15:34+0100\n"
+"POT-Creation-Date: 2015-11-30 18:01+0000\n"
+"PO-Revision-Date: 2015-12-01 19:58+0100\n"
 "Last-Translator: Frederik “Freso” S. Olesen <freso.dk@gmail.com>\n"
 "Language-Team: Danish\n"
 "Language: da\n"
@@ -12,11 +12,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.8.6\n"
 "X-Poedit-KeywordsList: translate:1,1t;translate:1c,2,t\n"
-"X-Poedit-Basepath: ../../../../src\n"
+"X-Poedit-Basepath: ../../src\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SearchPath-0: backend\n"
 "X-Poedit-SearchPath-1: gui\n"
+"X-Poedit-SearchPath-2: gui/html/js\n"
 
 #: backend/game/game.cpp:58
 msgid "Invalid game ID supplied."
@@ -34,36 +35,26 @@ msgstr "Kunne ikke oprette LOOT‐mappe til spillet. Detaljer:"
 msgid "An exception occurred while loading this plugin. Details:"
 msgstr "Der opstod en undtagelse under indlæsningen af dette plugin. Detaljer:"
 
-#: backend/game/load_order_handler.cpp:49
+#: backend/game/load_order_handler.cpp:50
 msgid "Unsupported game ID supplied."
 msgstr "Ikke‐understøttet spil‐id angivet."
 
-#: backend/game/load_order_handler.cpp:54
+#: backend/game/load_order_handler.cpp:55
 msgid "Game path is not initialised."
 msgstr "Spilsti er ikke initialiseret."
 
-#: backend/game/load_order_handler.cpp:86
+#: backend/game/load_order_handler.cpp:89
 #, fuzzy
 msgid ""
 "libloadorder failed to create a game handle. Details could not be fetched."
 msgstr ""
 "libloadorder kunne ikke oprette “game handle”. Kunne ikke hente detaljer."
 
-#: backend/game/load_order_handler.cpp:90
+#: backend/game/load_order_handler.cpp:93
 msgid "libloadorder failed to create a game handle. Details:"
 msgstr ""
 
-#: backend/game/load_order_handler.cpp:107
-msgid ""
-"libloadorder failed to initialise game master file support. Details could "
-"not be fetched."
-msgstr ""
-
-#: backend/game/load_order_handler.cpp:111
-msgid "libloadorder failed to initialise game master file support. Details:"
-msgstr ""
-
-#: backend/game/load_order_handler.cpp:131
+#: backend/game/load_order_handler.cpp:112
 msgid ""
 "libloadorder failed to get the active plugins list. Details could not be "
 "fetched."
@@ -71,25 +62,25 @@ msgstr ""
 "libloadorder kunne ikke få listen over aktive plugins. Kunne ikke hente "
 "detaljer."
 
-#: backend/game/load_order_handler.cpp:135
+#: backend/game/load_order_handler.cpp:116
 msgid "libloadorder failed to get the active plugins list. Details:"
 msgstr "libloadorder kunne ikke få listen over aktive plugins. Detaljer:"
 
-#: backend/game/load_order_handler.cpp:161
+#: backend/game/load_order_handler.cpp:142
 msgid ""
 "libloadorder failed to get the load order. Details could not be fetched."
 msgstr ""
 
-#: backend/game/load_order_handler.cpp:165
+#: backend/game/load_order_handler.cpp:146
 msgid "libloadorder failed to get the load order. Details:"
 msgstr ""
 
-#: backend/game/load_order_handler.cpp:188
+#: backend/game/load_order_handler.cpp:169
 msgid ""
 "libloadorder failed to set the load order. Details could not be fetched."
 msgstr ""
 
-#: backend/game/load_order_handler.cpp:192
+#: backend/game/load_order_handler.cpp:173
 msgid "libloadorder failed to set the load order. Details:"
 msgstr ""
 
@@ -103,7 +94,7 @@ msgid ""
 msgstr ""
 "Der opstod en fejl under forsøg på at klone det eksterne masterliste‐lager."
 
-#: backend/helpers/git_helper.cpp:208
+#: backend/helpers/git_helper.cpp:212
 msgid ""
 "An error occurred while trying to update the masterlist. This could be due "
 "to a server-side error. Try again in a few minutes."
@@ -111,7 +102,7 @@ msgstr ""
 "Der opstod en fejl i forsøg på at opdatere masterlisten. Dette kan være på "
 "grund af en serverfejl. Prøv igen om et par minutter."
 
-#: backend/helpers/git_helper.cpp:320 backend/masterlist.cpp:50
+#: backend/helpers/git_helper.cpp:324 backend/masterlist.cpp:50
 msgid "Unknown: Git repository missing"
 msgstr "Ukendt: Git‐lager mangler"
 
@@ -159,7 +150,7 @@ msgid ""
 "masterlist. If this error happens again, try deleting the \".git\" folder in "
 "%1%."
 msgstr ""
-"Der opstod en fejl i forsøg på at læse (information om den) opdaterede "
+"Der opstod en fejl i forsøg på at læse (infromation om den) opdaterede "
 "masterlist. Prøv at slette “.git”‐mappen i %1% hvis fejlen opstår igen."
 
 #: backend/masterlist.cpp:256
@@ -225,19 +216,19 @@ msgstr "Indeholder %1% ITM‐poster. Rengør med %2%."
 msgid "Contains %1% ITM records and %2% deleted references. Clean with %3%."
 msgstr "Indeholder %1% ITM‐poster og %2% slettede referencer. Rengør med %3%."
 
-#: backend/plugin/plugin.cpp:154
+#: backend/plugin/plugin.cpp:163
 msgid "Cannot read \"%1%\". Details: %2%"
 msgstr "Kan ikke læse “%1%”. Detaljer: %2%"
 
-#: backend/plugin/plugin.cpp:260 backend/plugin/plugin.cpp:272
+#: backend/plugin/plugin.cpp:271 backend/plugin/plugin.cpp:283
 msgid "This plugin requires \"%1%\" to be installed, but it is missing."
 msgstr "Pluginet kræver at “%1%” er installeret, men det mangler."
 
-#: backend/plugin/plugin.cpp:264
+#: backend/plugin/plugin.cpp:275
 msgid "This plugin requires \"%1%\" to be active, but it is inactive."
 msgstr "Pluginet kræver at “%1%” er aktivt, men det er inaktivt."
 
-#: backend/plugin/plugin.cpp:278
+#: backend/plugin/plugin.cpp:289
 msgid "This plugin is incompatible with \"%1%\", but both are present."
 msgstr "Pluginet er uforeneligt med “%1%”, men begge er til stede."
 
@@ -247,7 +238,7 @@ msgid ""
 "Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: "
 "%3%"
 msgstr ""
-"Opdaget cyklisk interaktion mellem plugins “%1%” og “%2%”. Back cycle: %3%"
+"Opdaget cyklisk interaktion mellem plug-ins “%1%” og “%2%”. Back cycle: %3%"
 
 #: backend/plugin_sorter.cpp:105
 msgid "Building plugin graph..."
@@ -257,7 +248,7 @@ msgstr "Bygger plugin‐graf…"
 msgid "Adding edges to plugin graph and performing topological sort..."
 msgstr "Tilføjer kanter til plugin‐graf og udfører topologisk sortering…"
 
-#: backend/plugin_sorter.cpp:210 gui/handler.cpp:1055
+#: backend/plugin_sorter.cpp:210 gui/handler.cpp:1056
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
 msgstr "“%1%” indeholder en betingelse der ikke kunne løses. Detaljer: %2%"
 
@@ -274,7 +265,7 @@ msgstr "Kunne ikke kopiere plugin‐metadata: Detaljer: %1%"
 msgid "Failed to apply plugin metadata. Details: %1%"
 msgstr "Kunne ikke anvende plugin‐metadata. Detaljer: %1%"
 
-#: gui/handler.cpp:407 gui/handler.cpp:993
+#: gui/handler.cpp:407 gui/handler.cpp:994
 msgid "Loading plugin contents..."
 msgstr "Indlæser plugin‐indhold…"
 
@@ -282,15 +273,15 @@ msgstr "Indlæser plugin‐indhold…"
 msgid "Checking for conflicting plugins..."
 msgstr "Tjekker for modstridende plugins…"
 
-#: gui/handler.cpp:638
+#: gui/handler.cpp:639
 msgid "Loading plugin headers..."
 msgstr "Indlæser plugin‐hoveder…"
 
-#: gui/handler.cpp:663
+#: gui/handler.cpp:664
 msgid "Parsing masterlist..."
 msgstr "Analyserer masterliste…"
 
-#: gui/handler.cpp:670
+#: gui/handler.cpp:671
 msgid ""
 "An error occurred while parsing the masterlist: %1%. This probably happened "
 "because an update to LOOT changed its metadata syntax support. Try updating "
@@ -300,11 +291,11 @@ msgstr ""
 "LOOT‐opdatering ændrede dets understøttede metadatasyntaks. Prøv at opdatere "
 "masterlisten for at løse fejlen."
 
-#: gui/handler.cpp:680
+#: gui/handler.cpp:681
 msgid "Parsing userlist..."
 msgstr "Analyserer brugerliste…"
 
-#: gui/handler.cpp:687
+#: gui/handler.cpp:688
 msgid ""
 "An error occurred while parsing the userlist: %1%. This probably happened "
 "because an update to LOOT changed its metadata syntax support. Your user "
@@ -332,37 +323,37 @@ msgstr ""
 "Du kan også søge hjælp i LOOTs forumtråd, som er linket til på [LOOTs "
 "hjemmeside](http://loot.github.io/)."
 
-#: gui/handler.cpp:724
+#: gui/handler.cpp:725
 msgid "Merging and evaluating plugin metadata..."
 msgstr "Sammenfletter og evaluerer plugin‐metadata…"
 
-#: gui/handler.cpp:789
+#: gui/handler.cpp:790
 msgid "Loading general messages..."
 msgstr "Indlæser generelle beskeder…"
 
-#: gui/handler.cpp:818 gui/handler.cpp:931
+#: gui/handler.cpp:819 gui/handler.cpp:932
 msgid ""
 "A global message contains a condition that could not be evaluated. Details: "
 "%1%"
 msgstr ""
 
-#: gui/handler.cpp:828 gui/handler.cpp:832
+#: gui/handler.cpp:829 gui/handler.cpp:833
 msgid "Failed to get game data. Details: %1%"
 msgstr "Kunne ikke hente spildata. Detaljer: %1%"
 
-#: gui/handler.cpp:851
+#: gui/handler.cpp:852
 msgid "Updating and parsing masterlist..."
 msgstr "Opdaterer og analyserer masterliste…"
 
-#: gui/handler.cpp:873
+#: gui/handler.cpp:874
 msgid "Regenerating displayed content..."
 msgstr "Regenerér vist indhold…"
 
-#: gui/handler.cpp:944 gui/handler.cpp:948
+#: gui/handler.cpp:945 gui/handler.cpp:949
 msgid "Failed to update the masterlist. Details: %1%"
 msgstr "Kunne ikke opdatere masterlisten. Detaljer: %1%"
 
-#: gui/handler.cpp:1028
+#: gui/handler.cpp:1029
 msgid "Failed to sort plugins. Details: %1%"
 msgstr "Kunne ikke sortere plugins. Detaljer: %1%"
 
@@ -547,8 +538,8 @@ msgid "Empty Plugin"
 msgstr "Tomt plugin"
 
 #: gui/html/js/l10n.js:64 gui/html/js/l10n.js:83
-msgid "Loads BSA"
-msgstr "Indæser BSA"
+msgid "Loads Archive"
+msgstr "Indæser arkiv"
 
 #: gui/html/js/l10n.js:65 gui/html/js/l10n.js:140
 msgid "Has User Metadata"
@@ -968,8 +959,8 @@ msgstr ""
 
 #: gui/html/js/l10n.js:314
 msgid ""
-"Plugins can be drag and dropped from the sidebar into editors' \"load after\", "
-"\"requirements\" and \"incompatibility\" tables."
+"Plugins can be drag and dropped from the sidebar into editors' \"load after"
+"\", \"requirements\" and \"incompatibility\" tables."
 msgstr ""
 "Plugins kan trækkes og slippes fra sidebjælken ind i redigeringsvinduets "
 "“indlæs efter”‐, “krav”‐ og “uforligeligheder”‐tabeller."
