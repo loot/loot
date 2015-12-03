@@ -32,7 +32,7 @@ for (var i = 0; i < release_paths.length; ++i) {
         vulcanize += '.cmd';
     }
 
-    child_process.execFileSync('vulcanize.cmd', [
+    child_process.execFileSync(vulcanize, [
         '--inline',
         '--strip',
         '--config',
