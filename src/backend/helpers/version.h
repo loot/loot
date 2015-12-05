@@ -31,16 +31,12 @@
 namespace loot {
     //Version class for more robust version comparisons.
     class Version {
-    private:
-        std::string verString;
     public:
         Version();
         Version(const std::string& ver);
         Version(const boost::filesystem::path& file);
 
         std::string AsString() const;
-        void Decompose(std::vector<unsigned long>& release,
-                       std::vector<std::string>& preRelease) const;
 
         bool operator > (const Version&) const;
         bool operator < (const Version&) const;
@@ -48,6 +44,11 @@ namespace loot {
         bool operator <= (const Version&) const;
         bool operator == (const Version&) const;
         bool operator != (const Version&) const;
+    private:
+        std::string verString;
+
+        void Decompose(std::vector<unsigned long>& release,
+                       std::vector<std::string>& preRelease) const;
     };
 }
 
