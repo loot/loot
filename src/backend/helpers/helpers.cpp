@@ -24,17 +24,16 @@
 
 #include "helpers.h"
 #include "../error.h"
-#include "streams.h"
 
 #include <boost/spirit/include/karma.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/crc.hpp>
 #include <boost/log/trivial.hpp>
+#include <boost/filesystem/fstream.hpp>
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
 
 #include <cstring>
-#include <iostream>
 #include <cctype>
 #include <cstdio>
 #include <ctime>
@@ -68,7 +67,7 @@ namespace loot {
     uint32_t GetCrc32(const fs::path& filename) {
         uint32_t chksum = 0;
         try {
-            loot::ifstream ifile(filename, ios::binary);
+            fs::ifstream ifile(filename, ios::binary);
             BOOST_LOG_TRIVIAL(trace) << "Calculating CRC for: " << filename.string();
             boost::crc_32_type result;
             if (ifile) {

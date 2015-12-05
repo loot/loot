@@ -139,7 +139,7 @@ TEST_F(Masterlist, GetInfo_Edited) {
     ASSERT_TRUE(masterlist.Update(masterlistPath,
         "https://github.com/loot/testing-metadata.git",
         "master"));
-    loot::ofstream out(masterlistPath);
+    boost::filesystem::ofstream out(masterlistPath);
     out.close();
 
     loot::Masterlist::Info info = masterlist.GetInfo(masterlistPath, false);

@@ -28,8 +28,8 @@
 #include "../backend/globals.h"
 #include "../backend/helpers/helpers.h"
 #include "../backend/helpers/language.h"
-#include "../backend/helpers/streams.h"
 
+#include <boost/filesystem/fstream.hpp>
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
 #include <boost/log/core.hpp>
@@ -71,7 +71,7 @@ namespace loot {
         }
         if (fs::exists(g_path_settings)) {
             try {
-                loot::ifstream in(g_path_settings);
+                fs::ifstream in(g_path_settings);
                 _settings = YAML::Load(in);
                 in.close();
             }
@@ -271,7 +271,7 @@ namespace loot {
             yout.SetIndent(2);
             yout << _settings;
 
-            loot::ofstream out(loot::g_path_settings);
+            fs::ofstream out(loot::g_path_settings);
             out << yout.c_str();
             out.close();
         }

@@ -25,12 +25,12 @@ along with LOOT.  If not, see
 #ifndef LOOT_TEST_FIXTURES
 #define LOOT_TEST_FIXTURES
 
-#include "backend/helpers/streams.h"
 #include "printers.h"
 
 #include <gtest/gtest.h>
 
 #include <boost/filesystem.hpp>
+#include <boost/filesystem/fstream.hpp>
 
 class GameTest : public ::testing::Test {
 protected:
@@ -72,7 +72,7 @@ protected:
         ASSERT_TRUE(boost::filesystem::exists(dataPath / "Blank - Master Dependent.esm.ghost"));
 
         // Write out an empty file.
-        loot::ofstream out(dataPath / "EmptyFile.esm");
+        boost::filesystem::ofstream out(dataPath / "EmptyFile.esm");
         out.close();
         ASSERT_TRUE(boost::filesystem::exists(dataPath / "EmptyFile.esm"));
 
@@ -163,7 +163,7 @@ protected:
         }
 
         // Set Oblivion's active plugins to a known list before running the test.
-        loot::ofstream activePlugins(localPath / "plugins.txt");
+        boost::filesystem::ofstream activePlugins(localPath / "plugins.txt");
         activePlugins
             << "Oblivion.esm" << std::endl
             << "Blank.esm" << std::endl;
@@ -183,7 +183,7 @@ protected:
     };
 
     inline void GenerateMasterlist() {
-        loot::ofstream masterlist(masterlistPath);
+        boost::filesystem::ofstream masterlist(masterlistPath);
         masterlist
             << "plugins:" << std::endl
             << "  - name: Oblivion.esm" << std::endl
@@ -268,7 +268,7 @@ protected:
         ASSERT_TRUE(boost::filesystem::exists(dataPath / "Skyrim.esm"));
 
         // Set Skyrim's load order to a known list before running the test.
-        loot::ofstream loadOrder(localPath / "loadorder.txt");
+        boost::filesystem::ofstream loadOrder(localPath / "loadorder.txt");
         loadOrder
             << "Skyrim.esm" << std::endl
             << "Blank.esm" << std::endl
@@ -284,7 +284,7 @@ protected:
         loadOrder.close();
 
         // Set Skyrim's active plugins to a known list before running the test.
-        loot::ofstream activePlugins(localPath / "plugins.txt");
+        boost::filesystem::ofstream activePlugins(localPath / "plugins.txt");
         activePlugins
             << "Blank.esm" << std::endl
             << "Blank - Different Master Dependent.esp" << std::endl;

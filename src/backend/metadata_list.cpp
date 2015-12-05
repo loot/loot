@@ -25,9 +25,9 @@
 #include "metadata_list.h"
 #include "globals.h"
 #include "error.h"
-#include "helpers/streams.h"
 
 #include <boost/algorithm/string.hpp>
+#include <boost/filesystem/fstream.hpp>
 #include <boost/log/trivial.hpp>
 
 using namespace std;
@@ -40,7 +40,10 @@ namespace loot {
 
         BOOST_LOG_TRIVIAL(debug) << "Loading file: " << filepath;
 
-        loot::ifstream in(filepath);
+        boost::filesystem::ifstream in(filepath);
+        if (!in.good())
+            throw error(error::path_read_fail, "Cannot open " + filepath.string());
+
         YAML::Node metadataList = YAML::Load(in);
         in.close();
 
@@ -70,7 +73,7 @@ namespace loot {
             << YAML::Key << "globals" << YAML::Value << messages
             << YAML::EndMap;
 
-        loot::ofstream uout(filepath);
+        boost::filesystem::ofstream uout(filepath);
         uout << yout.c_str();
         uout.close();
     }

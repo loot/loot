@@ -25,7 +25,6 @@
 #include "game/game.h"
 #include "error.h"
 #include "plugin_sorter.h"
-#include "helpers/streams.h"
 #include "helpers/helpers.h"
 
 #include <cstdlib>

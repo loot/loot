@@ -26,7 +26,6 @@
 #include "../backend/game/game.h"
 #include "../backend/globals.h"
 #include "../backend/error.h"
-#include "../backend/helpers/streams.h"
 #include "../backend/plugin_sorter.h"
 
 #include <yaml-cpp/yaml.h>
@@ -40,6 +39,7 @@
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/filesystem/fstream.hpp>
 #include <boost/log/core.hpp>
 
 const unsigned int loot_ok = loot::error::ok;
@@ -822,9 +822,9 @@ LOOT_API unsigned int loot_write_minimal_list(loot_db db, const char * const out
 
     boost::filesystem::path p(outputFile);
     try {
-        loot::ofstream out(p);
+        boost::filesystem::ofstream out(p);
         if (out.fail())
-            return c_error(loot_error_invalid_args, "Couldn't open output file.");
+            return c_error(loot_error_file_write_fail, "Couldn't open output file.");
         out << yout.c_str();
         out.close();
     }

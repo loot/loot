@@ -651,7 +651,7 @@ TEST_F(OblivionAPIOperationsTest, WriteMinimalList) {
     EXPECT_EQ(loot_ok, loot_load_lists(db, masterlistPath.string().c_str(), NULL));
     EXPECT_EQ(loot_ok, loot_write_minimal_list(db, outputFile.c_str(), false));
 
-    loot::ifstream in(outputFile);
+    boost::filesystem::ifstream in(outputFile);
     std::string line;
     while (std::getline(in, line)) {
         EXPECT_FALSE(boost::contains(line, "- \"-\""));

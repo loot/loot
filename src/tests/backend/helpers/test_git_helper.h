@@ -101,7 +101,7 @@ class IsFileDifferent : public ::testing::Test {
         ASSERT_TRUE(boost::filesystem::exists(parentRepoRoot / "CONTRIBUTING.md.copy"));
 
         // Edit CONTRIBUTING.md
-        loot::ofstream out(parentRepoRoot / "CONTRIBUTING.md");
+        boost::filesystem::ofstream out(parentRepoRoot / "CONTRIBUTING.md");
         out.close();
     }
 

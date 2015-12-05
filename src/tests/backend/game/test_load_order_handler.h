@@ -127,7 +127,7 @@ TEST_F(LoadOrderHandler, SetLoadOrder) {
     EXPECT_NO_THROW(loh.SetLoadOrder(loadOrder));
 
     std::list<std::string> actual;
-    loot::ifstream in(localPath / "loadorder.txt");
+    boost::filesystem::ifstream in(localPath / "loadorder.txt");
     while (in) {
         std::string line;
         std::getline(in, line);
