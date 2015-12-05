@@ -29,121 +29,123 @@ along with LOOT.  If not, see
 #include "backend/helpers/version.h"
 #include "tests/fixtures.h"
 
-class Version : public SkyrimTest {};
+namespace loot {
+    namespace test {
+        TEST(Version, ConstructorsAndDataAccess) {
+            Version version;
+            EXPECT_EQ("", version.AsString());
 
-TEST_F(Version, ConstructorsAndDataAccess) {
-    loot::Version version;
-    EXPECT_EQ("", version.AsString());
-
-    version = loot::Version(std::string("5"));
-    EXPECT_EQ("5", version.AsString());
+            version = Version(std::string("5"));
+            EXPECT_EQ("5", version.AsString());
 
 #ifdef _WIN32
-    // Use the API DLL built.
-    version = loot::Version(boost::filesystem::path("loot32.dll"));
-    std::string expected(
-        std::to_string(loot::g_version_major) + "." +
-        std::to_string(loot::g_version_minor) + "." +
-        std::to_string(loot::g_version_patch) + ".0"
-        );
-    EXPECT_EQ(expected, version.AsString());
+            // Use the API DLL built.
+            version = Version(boost::filesystem::path("loot32.dll"));
+            std::string expected(
+                std::to_string(g_version_major) + "." +
+                std::to_string(g_version_minor) + "." +
+                std::to_string(g_version_patch) + ".0"
+                );
+            EXPECT_EQ(expected, version.AsString());
 #endif
-}
+        }
 
-TEST_F(Version, GreaterThan) {
-    loot::Version version1, version2;
-    EXPECT_FALSE(version1 > version2);
-    EXPECT_FALSE(version2 > version1);
+        TEST(Version, GreaterThan) {
+            Version version1, version2;
+            EXPECT_FALSE(version1 > version2);
+            EXPECT_FALSE(version2 > version1);
 
-    version1 = loot::Version(std::string("5"));
-    version2 = loot::Version(std::string("5"));
-    EXPECT_FALSE(version1 > version2);
-    EXPECT_FALSE(version2 > version1);
+            version1 = Version(std::string("5"));
+            version2 = Version(std::string("5"));
+            EXPECT_FALSE(version1 > version2);
+            EXPECT_FALSE(version2 > version1);
 
-    version1 = loot::Version(std::string("4"));
-    version2 = loot::Version(std::string("5"));
-    EXPECT_FALSE(version1 > version2);
-    EXPECT_TRUE(version2 > version1);
-}
+            version1 = Version(std::string("4"));
+            version2 = Version(std::string("5"));
+            EXPECT_FALSE(version1 > version2);
+            EXPECT_TRUE(version2 > version1);
+        }
 
-TEST_F(Version, LessThan) {
-    loot::Version version1, version2;
-    EXPECT_FALSE(version1 < version2);
-    EXPECT_FALSE(version2 < version1);
+        TEST(Version, LessThan) {
+            Version version1, version2;
+            EXPECT_FALSE(version1 < version2);
+            EXPECT_FALSE(version2 < version1);
 
-    version1 = loot::Version(std::string("5"));
-    version2 = loot::Version(std::string("5"));
-    EXPECT_FALSE(version1 < version2);
-    EXPECT_FALSE(version2 < version1);
+            version1 = Version(std::string("5"));
+            version2 = Version(std::string("5"));
+            EXPECT_FALSE(version1 < version2);
+            EXPECT_FALSE(version2 < version1);
 
-    version1 = loot::Version(std::string("4"));
-    version2 = loot::Version(std::string("5"));
-    EXPECT_TRUE(version1 < version2);
-    EXPECT_FALSE(version2 < version1);
-}
+            version1 = Version(std::string("4"));
+            version2 = Version(std::string("5"));
+            EXPECT_TRUE(version1 < version2);
+            EXPECT_FALSE(version2 < version1);
+        }
 
-TEST_F(Version, GreaterThanEqual) {
-    loot::Version version1, version2;
-    EXPECT_TRUE(version1 >= version2);
-    EXPECT_TRUE(version2 >= version1);
+        TEST(Version, GreaterThanEqual) {
+            Version version1, version2;
+            EXPECT_TRUE(version1 >= version2);
+            EXPECT_TRUE(version2 >= version1);
 
-    version1 = loot::Version(std::string("5"));
-    version2 = loot::Version(std::string("5"));
-    EXPECT_TRUE(version1 >= version2);
-    EXPECT_TRUE(version2 >= version1);
+            version1 = Version(std::string("5"));
+            version2 = Version(std::string("5"));
+            EXPECT_TRUE(version1 >= version2);
+            EXPECT_TRUE(version2 >= version1);
 
-    version1 = loot::Version(std::string("4"));
-    version2 = loot::Version(std::string("5"));
-    EXPECT_FALSE(version1 >= version2);
-    EXPECT_TRUE(version2 >= version1);
-}
+            version1 = Version(std::string("4"));
+            version2 = Version(std::string("5"));
+            EXPECT_FALSE(version1 >= version2);
+            EXPECT_TRUE(version2 >= version1);
+        }
 
-TEST_F(Version, LessThanEqual) {
-    loot::Version version1, version2;
-    EXPECT_TRUE(version1 <= version2);
-    EXPECT_TRUE(version2 <= version1);
+        TEST(Version, LessThanEqual) {
+            Version version1, version2;
+            EXPECT_TRUE(version1 <= version2);
+            EXPECT_TRUE(version2 <= version1);
 
-    version1 = loot::Version(std::string("5"));
-    version2 = loot::Version(std::string("5"));
-    EXPECT_TRUE(version1 <= version2);
-    EXPECT_TRUE(version2 <= version1);
+            version1 = Version(std::string("5"));
+            version2 = Version(std::string("5"));
+            EXPECT_TRUE(version1 <= version2);
+            EXPECT_TRUE(version2 <= version1);
 
-    version1 = loot::Version(std::string("4"));
-    version2 = loot::Version(std::string("5"));
-    EXPECT_TRUE(version1 <= version2);
-    EXPECT_FALSE(version2 <= version1);
-}
+            version1 = Version(std::string("4"));
+            version2 = Version(std::string("5"));
+            EXPECT_TRUE(version1 <= version2);
+            EXPECT_FALSE(version2 <= version1);
+        }
 
-TEST_F(Version, Equal) {
-    loot::Version version1, version2;
-    EXPECT_TRUE(version1 == version2);
-    EXPECT_TRUE(version2 == version1);
+        TEST(Version, Equal) {
+            Version version1, version2;
+            EXPECT_TRUE(version1 == version2);
+            EXPECT_TRUE(version2 == version1);
 
-    version1 = loot::Version(std::string("5"));
-    version2 = loot::Version(std::string("5"));
-    EXPECT_TRUE(version1 == version2);
-    EXPECT_TRUE(version2 == version1);
+            version1 = Version(std::string("5"));
+            version2 = Version(std::string("5"));
+            EXPECT_TRUE(version1 == version2);
+            EXPECT_TRUE(version2 == version1);
 
-    version1 = loot::Version(std::string("4"));
-    version2 = loot::Version(std::string("5"));
-    EXPECT_FALSE(version1 == version2);
-    EXPECT_FALSE(version2 == version1);
-}
+            version1 = Version(std::string("4"));
+            version2 = Version(std::string("5"));
+            EXPECT_FALSE(version1 == version2);
+            EXPECT_FALSE(version2 == version1);
+        }
 
-TEST_F(Version, NotEqual) {
-    loot::Version version1, version2;
-    EXPECT_FALSE(version1 != version2);
-    EXPECT_FALSE(version2 != version1);
+        TEST(Version, NotEqual) {
+            Version version1, version2;
+            EXPECT_FALSE(version1 != version2);
+            EXPECT_FALSE(version2 != version1);
 
-    version1 = loot::Version(std::string("5"));
-    version2 = loot::Version(std::string("5"));
-    EXPECT_FALSE(version1 != version2);
-    EXPECT_FALSE(version2 != version1);
+            version1 = Version(std::string("5"));
+            version2 = Version(std::string("5"));
+            EXPECT_FALSE(version1 != version2);
+            EXPECT_FALSE(version2 != version1);
 
-    version1 = loot::Version(std::string("4"));
-    version2 = loot::Version(std::string("5"));
-    EXPECT_TRUE(version1 != version2);
-    EXPECT_TRUE(version2 != version1);
+            version1 = Version(std::string("4"));
+            version2 = Version(std::string("5"));
+            EXPECT_TRUE(version1 != version2);
+            EXPECT_TRUE(version2 != version1);
+        }
+    }
 }
 
 #endif
