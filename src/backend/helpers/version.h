@@ -25,6 +25,7 @@
 #ifndef __LOOT_VERSION__
 #define __LOOT_VERSION__
 
+#include <regex>
 #include <string>
 #include <boost/filesystem.hpp>
 
@@ -46,6 +47,7 @@ namespace loot {
         bool operator != (const Version&) const;
     private:
         std::string verString;
+        static const std::regex versionRegex;
 
         void Decompose(std::vector<unsigned long>& release,
                        std::vector<std::string>& preRelease) const;

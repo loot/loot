@@ -31,23 +31,117 @@ along with LOOT.  If not, see
 
 namespace loot {
     namespace test {
-        TEST(Version, ConstructorsAndDataAccess) {
-            Version version;
-            EXPECT_EQ("", version.AsString());
-
-            version = Version(std::string("5"));
-            EXPECT_EQ("5", version.AsString());
-
 #ifdef _WIN32
+        TEST(Version, shouldExtractVersionFromApiDll) {
             // Use the API DLL built.
-            version = Version(boost::filesystem::path("loot32.dll"));
+            Version version(boost::filesystem::path("loot32.dll"));
             std::string expected(
                 std::to_string(g_version_major) + "." +
                 std::to_string(g_version_minor) + "." +
                 std::to_string(g_version_patch) + ".0"
                 );
             EXPECT_EQ(expected, version.AsString());
+        }
 #endif
+        TEST(Version, defaultConstructorShouldSetEmptyVersionString) {
+            EXPECT_EQ("", Version().AsString());
+        }
+
+        TEST(Version, shouldExtractAVersionContainingASingleDigit) {
+            Version version(std::string("5"));
+            EXPECT_EQ("5", version.AsString());
+        }
+
+        TEST(Version, shouldExtractAVersionContainingMultipleDigits) {
+            Version version(std::string("10"));
+            EXPECT_EQ("10", version.AsString());
+        }
+
+        TEST(Version, shouldExtractAVersionContainingMultipleNumbers) {
+            Version version(std::string("10.11.12.13"));
+            EXPECT_EQ("10.11.12.13", version.AsString());
+        }
+
+        TEST(Version, shouldExtractASemanticVersion) {
+            Version version(std::string("1.0.0-x.7.z.92+exp.sha.5114f85"));
+            EXPECT_EQ("1.0.0-x.7.z.92", version.AsString());
+        }
+
+        TEST(Version, shouldExtractAPseudosemExtendedVersionStoppingAtTheFirstSpaceSeparator) {
+            Version version(std::string("01.0.0_alpha:1-2 3"));
+            EXPECT_EQ("01.0.0_alpha:1-2", version.AsString());
+        }
+
+        TEST(Version, shouldExtractAVersionSubstring) {
+            Version version(std::string("v5.0"));
+            EXPECT_EQ("5.0", version.AsString());
+        }
+
+        TEST(Version, shouldBeEmptyIfInputStringContainedNoVersion) {
+            Version version(std::string("The quick brown fox jumped over the lazy dog."));
+            EXPECT_EQ("", version.AsString());
+        }
+
+        TEST(Version, shouldExtractTimestampWithForwardslashDateSeparators) {
+            // Found in a Bashed Patch. Though the timestamp isn't useful to
+            // LOOT, it is semantically a version, and extracting it is far
+            // easier than trying to skip it and the number of records changed.
+            Version version(std::string("Updated: 10/09/2015 13:15:18\r\n\r\nRecords Changed: 43"));
+            EXPECT_EQ("10/09/2015 13:15:18", version.AsString());
+        }
+
+        TEST(Version, shouldNotExtractTrailingPeriods) {
+            // Found in <http://www.nexusmods.com/fallout4/mods/2955/>.
+            Version version(std::string("Version 0.2."));
+            EXPECT_EQ("0.2", version.AsString());
+        }
+
+        TEST(Version, shouldExtractVersionAfterTextWhenPrecededByVersionColonString) {
+            // Found in <http://www.nexusmods.com/skyrim/mods/71214/>.
+            std::string testText("Legendary Edition\r\n\r\nVersion: 3.0.0");
+            EXPECT_EQ("3.0.0", Version(testText).AsString());
+        }
+
+        TEST(Version, shouldIgnoreNumbersContainingCommas) {
+            // Found in <http://www.nexusmods.com/oblivion/mods/5296/>.
+            std::string testText("fixing over 2,300 bugs so far! Version: 3.5.3");
+            EXPECT_EQ("3.5.3", Version(testText).AsString());
+        }
+
+        TEST(Version, shouldExtractVersionBeforeText) {
+            // Found in <http://www.nexusmods.com/fallout3/mods/19122/>.
+            std::string testText("Version: 2.1 The Unofficial Fallout 3 Patch");
+            EXPECT_EQ("2.1", Version(testText).AsString());
+        }
+
+        TEST(Version, shouldExtractVersionWithPrecedingV) {
+            // Found in <http://www.nexusmods.com/oblivion/mods/22795/>.
+            std::string testText("V2.11\r\n\r\n{{BASH:Invent}}");
+            EXPECT_EQ("2.11", Version(testText).AsString());
+        }
+
+        TEST(Version, shouldExtractVersionWithPrecedingColonPeriodWhitespace) {
+            // Found in <http://www.nexusmods.com/oblivion/mods/45570>.
+            std::string testText("Version:. 1.09");
+            EXPECT_EQ("1.09", Version(testText).AsString());
+        }
+
+        TEST(Version, shouldExtractVersionWithLettersImmediatelyAfterNumbers) {
+            // Found in <http://www.nexusmods.com/skyrim/mods/19>.
+            std::string testText("comprehensive bugfixing mod for The Elder Scrolls V: Skyrim\r\n\r\nVersion: 2.1.3b\r\n\r\n");
+            EXPECT_EQ("2.1.3b", Version(testText).AsString());
+        }
+
+        TEST(Version, shouldExtractVersionWithPeriodAndNoPrecedingIdentifier) {
+            // Found in <http://www.nexusmods.com/skyrim/mods/3863>.
+            std::string testText("SkyUI 5.1");
+            EXPECT_EQ("5.1", Version(testText).AsString());
+        }
+
+        TEST(Version, shouldNotExtractSingleDigitInSentence) {
+            // Found in <http://www.nexusmods.com/skyrim/mods/4708>.
+            std::string testText("Adds 8 variants of Triss Merigold's outfit from \"The Witcher 2\"");
+            EXPECT_EQ("", Version(testText).AsString());
         }
 
         TEST(Version, GreaterThan) {
