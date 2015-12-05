@@ -92,13 +92,6 @@ namespace loot {
         regex(regex7, regex::ECMAScript | regex::icase)
     });
 
-    Plugin::Plugin() :
-        _isEmpty(true),
-        _loadsBsa(false),
-        isMaster(false),
-        crc(0),
-        numOverrideRecords(0) {}
-
     Plugin::Plugin(const std::string& n) :
         PluginMetadata(n),
         _isEmpty(true),

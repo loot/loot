@@ -31,16 +31,7 @@ along with LOOT.  If not, see
 class Plugin : public SkyrimTest {};
 
 TEST_F(Plugin, ConstructorsAndDataAccess) {
-    loot::Plugin plugin;
-    EXPECT_EQ("", plugin.Name());
-    EXPECT_TRUE(plugin.FormIDs().empty());
-    EXPECT_TRUE(plugin.Masters().empty());
-    EXPECT_FALSE(plugin.IsMaster());
-    EXPECT_TRUE(plugin.IsEmpty());
-    EXPECT_EQ("", plugin.Version());
-    EXPECT_EQ(0, plugin.Crc());
-
-    plugin = loot::Plugin("Blank.esm");
+    loot::Plugin plugin("Blank.esm");
     EXPECT_EQ("Blank.esm", plugin.Name());
     EXPECT_TRUE(plugin.FormIDs().empty());
     EXPECT_TRUE(plugin.Masters().empty());
@@ -133,12 +124,8 @@ TEST_F(Plugin, IsActive) {
 }
 
 TEST_F(Plugin, EqualityOperator) {
-    loot::Plugin plugin1, plugin2;
-    EXPECT_TRUE(plugin1 == plugin2);
-    EXPECT_TRUE(plugin2 == plugin1);
-
-    plugin1 = loot::Plugin("Blank.esm");
-    plugin2 = loot::Plugin("blank.esm");
+    loot::Plugin plugin1("Blank.esm");
+    loot::Plugin plugin2("blank.esm");
     EXPECT_TRUE(plugin1 == plugin2);
     EXPECT_TRUE(plugin2 == plugin1);
 
@@ -169,12 +156,8 @@ TEST_F(Plugin, EqualityOperator) {
 }
 
 TEST_F(Plugin, InequalityOperator) {
-    loot::Plugin plugin1, plugin2;
-    EXPECT_FALSE(plugin1 != plugin2);
-    EXPECT_FALSE(plugin2 != plugin1);
-
-    plugin1 = loot::Plugin("Blank.esm");
-    plugin2 = loot::Plugin("blank.esm");
+    loot::Plugin plugin1("Blank.esm");
+    loot::Plugin plugin2("blank.esm");
     EXPECT_FALSE(plugin1 != plugin2);
     EXPECT_FALSE(plugin2 != plugin1);
 
@@ -209,7 +192,8 @@ TEST_F(Plugin, DoFormIDsOverlap) {
     game.SetGamePath(dataPath.parent_path());
     ASSERT_NO_THROW(game.Init(false, localPath));
 
-    loot::Plugin plugin1, plugin2;
+    loot::Plugin plugin1("Blank.esm");
+    loot::Plugin plugin2("blank.esm");
     EXPECT_FALSE(plugin1.DoFormIDsOverlap(plugin2));
     EXPECT_FALSE(plugin2.DoFormIDsOverlap(plugin1));
 
@@ -234,7 +218,8 @@ TEST_F(Plugin, OverlapFormIDs) {
     game.SetGamePath(dataPath.parent_path());
     ASSERT_NO_THROW(game.Init(false, localPath));
 
-    loot::Plugin plugin1, plugin2;
+    loot::Plugin plugin1("Blank.esm");
+    loot::Plugin plugin2("blank.esm");
     EXPECT_TRUE(plugin1.OverlapFormIDs(plugin2).empty());
     EXPECT_TRUE(plugin2.OverlapFormIDs(plugin1).empty());
 
@@ -269,7 +254,7 @@ TEST_F(Plugin, CheckInstallValidity) {
     game.SetGamePath(dataPath.parent_path());
     ASSERT_NO_THROW(game.Init(false, localPath));
 
-    loot::Plugin plugin;
+    loot::Plugin plugin("Blank.esm");
     EXPECT_FALSE(plugin.CheckInstallValidity(game));
     EXPECT_TRUE(plugin.Messages().empty());
 
