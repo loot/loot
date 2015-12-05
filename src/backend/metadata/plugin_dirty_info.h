@@ -32,6 +32,8 @@
 #include <yaml-cpp/yaml.h>
 
 namespace loot {
+    class Game;
+
     class PluginDirtyInfo {
     public:
         PluginDirtyInfo();
@@ -47,6 +49,8 @@ namespace loot {
         std::string CleaningUtility() const;
 
         Message AsMessage() const;
+
+        bool EvalCondition(Game& game, const std::string& pluginName) const;
     private:
         uint32_t _crc;
         unsigned int _itm;

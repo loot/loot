@@ -24,6 +24,9 @@
 
 #include "plugin_dirty_info.h"
 
+#include "../game/game.h"
+#include "../helpers/helpers.h"
+
 #include <boost/locale.hpp>
 #include <boost/format.hpp>
 
@@ -85,6 +88,31 @@ namespace loot {
             f = boost::format(boost::locale::translate("Contains %1% ITM records and %2% deleted references. Clean with %3%.")) % this->_itm % this->_ref % this->_utility;
 
         return Message(Message::warn, f.str());
+    }
+
+    bool PluginDirtyInfo::EvalCondition(Game& game, const std::string& pluginName) const {
+        if (pluginName.empty())
+            return false;
+
+        // First need to get plugin's CRC.
+        uint32_t crc = 0;
+
+        // Get the CRC from the game plugin cache if possible.
+        auto pluginPairIt = game.plugins.find(boost::locale::to_lower(pluginName));
+        if (pluginPairIt != game.plugins.end())
+            crc = pluginPairIt->second.Crc();
+
+        // Otherwise calculate it from the file.
+        if (crc == 0) {
+            if (boost::filesystem::exists(game.DataPath() / pluginName)) {
+                crc = GetCrc32(game.DataPath() / pluginName);
+            }
+            else if (boost::filesystem::exists(game.DataPath() / (pluginName + ".ghost"))) {
+                crc = GetCrc32(game.DataPath() / (pluginName + ".ghost"));
+            }
+        }
+
+        return _crc == crc;
     }
 }
 

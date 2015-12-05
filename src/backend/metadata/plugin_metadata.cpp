@@ -296,33 +296,11 @@ namespace loot {
                 ++it;
         }
 
-        // Regex plugins shouldn't have dirty info, but just clear in case.
-        if (IsRegexPlugin())
+        if (IsRegexPlugin())  // Remove any dirty metadata from a regex plugin.
             _dirtyInfo.clear();
-
-        if (!_dirtyInfo.empty()) {
-            //First need to get plugin's CRC, if it is an exact plugin and it does not have its CRC set.
-            uint32_t crc = game.GetCachedCrc(name);
-            if (crc == 0) {
-                if (boost::filesystem::exists(game.DataPath() / name)) {
-                    crc = GetCrc32(game.DataPath() / name);
-                }
-                else if (boost::filesystem::exists(game.DataPath() / (name + ".ghost"))) {
-                    crc = GetCrc32(game.DataPath() / (name + ".ghost"));
-                }
-                else {
-                    // The plugin isn't installed, discard the dirty info.
-                    _dirtyInfo.clear();
-                }
-
-                // Store the CRC in the cache in case it's not already in there.
-                if (crc != 0)
-                    game.CacheCrc(name, crc);
-            }
-
-            // Now use the CRC to evaluate the dirty info.
+        else {
             for (auto it = _dirtyInfo.begin(); it != _dirtyInfo.end();) {
-                if (it->CRC() != crc)
+                if (!it->EvalCondition(game, name))
                     _dirtyInfo.erase(it++);
                 else
                     ++it;
