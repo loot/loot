@@ -37,59 +37,6 @@ using namespace std;
 using libespm::FormId;
 
 namespace loot {
-    /// REGEX expression definition
-    ///  Each expression is composed of three parts:
-    ///    1. The marker string "version", "ver", "rev", "v" or "r"
-    ///    2. The version string itself.
-
-    const char* regex1 =
-        "^(?:\\bversion\\b[ ]*(?:[:.\\-]?)|\\brevision\\b(?:[:.\\-]?))[ ]*"
-        "((?:alpha|beta|test|debug)?\\s*[-0-9a-zA-Z._+]+\\s*(?:alpha|beta|test|debug)?\\s*(?:[0-9]*))$"
-        ;
-
-    const char* regex2 =
-        "(?:\\bversion\\b(?:[ :]?)|\\brevision\\b(?:[:.\\-]?))[ ]*"
-        "([0-9][-0-9a-zA-Z._]+\\+?)"
-        ;
-
-    const char* regex3 =
-        "(?:\\bver(?:[:.]?)|\\brev(?:[:.]?))\\s*"
-        "([0-9][-0-9a-zA-Z._]*\\+?)"
-        ;
-
-    // Matches "Updated: <date>" for the Bashed patch
-    const char* regex4 =
-        "(?:Updated:)\\s*"
-        "([-0-9aAmMpP/ :]+)$"
-        ;
-
-    // Matches isolated versions as last resort
-    const char* regex5 =
-        "(?:(?:\\bv|\\br)(?:\\s?)(?:[-.:])?(?:\\s*))"
-        "((?:(?:\\balpha\\b)?|(?:\\bbeta\\b)?)\\s*[0-9]+([-._]*(?!esp|esm)[0-9a-zA-Z]+)*\\+?)"
-        ;
-
-    // Matches isolated versions as last resort
-    const char* regex6 =
-        "((?:(?:\\balpha\\b)?|(?:\\bbeta\\b)?)\\s*\\b[0-9][-0-9a-zA-Z._]*\\+?)$"
-        ;
-
-    const char* regex7 =
-        "(^\\bmark\\b\\s*\\b[IVX0-9][-0-9a-zA-Z._+]*\\s*(?:alpha|beta|test|debug)?\\s*(?:[0-9]*)?)$"
-        ;
-
-    /// Array used to try each of the expressions defined above using
-    /// an iteration for each of them.
-    const vector<regex> version_checks({
-        regex(regex1, regex::ECMAScript | regex::icase),
-        regex(regex2, regex::ECMAScript | regex::icase),
-        regex(regex3, regex::ECMAScript | regex::icase),
-        regex(regex4, regex::ECMAScript | regex::icase),
-        regex(regex5, regex::ECMAScript | regex::icase),  //This incorrectly identifies "OBSE v19" where 19 is any integer.
-        //regex(regex6, regex::ECMAScript | regex::icase),  //This is responsible for metallicow's false positive.
-        regex(regex7, regex::ECMAScript | regex::icase)
-    });
-
     // TODO: Remove the name-only constructor.
     Plugin::Plugin(const std::string& n) :
         PluginMetadata(n),
@@ -131,17 +78,6 @@ namespace loot {
 
             //Also read Bash Tags applied and version string in description.
             string text = getDescription();
-            BOOST_LOG_TRIVIAL(trace) << Name() << ": " << "Attempting to read the version from the description.";
-            for (size_t i = 0; i < version_checks.size(); ++i) {
-                smatch what;
-                if (regex_search(text, what, version_checks[i])) {
-                    //Use the first sub-expression match.
-                    version = string(what[1].first, what[1].second);
-                    boost::trim(version);
-                    BOOST_LOG_TRIVIAL(info) << Name() << ": " << "Extracted version \"" << version << "\" using regex " << i + 1;
-                    break;
-                }
-            }
             BOOST_LOG_TRIVIAL(trace) << Name() << ": " << "Attempting to extract Bash Tags from the description.";
             size_t pos1 = text.find("{{BASH:");
             if (pos1 != string::npos && pos1 + 7 != text.length()) {
@@ -259,10 +195,6 @@ namespace loot {
 
     bool Plugin::IsActive(const Game& game) const {
         return game.IsPluginActive(Name());
-    }
-
-    std::string Plugin::Version() const {
-        return version;
     }
 
     uint32_t Plugin::Crc() const {

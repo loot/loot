@@ -328,7 +328,7 @@ namespace loot {
                 trueVersion = Version(boost::filesystem::absolute("LOOT.exe"));
             else if (Plugin::IsValid(file, *_game)) {
                 Plugin plugin(*_game, file, true);
-                trueVersion = Version(plugin.Version());
+                trueVersion = Version(plugin.getDescription());
             }
             else
                 trueVersion = Version(_game->DataPath() / file);

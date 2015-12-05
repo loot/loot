@@ -44,12 +44,12 @@ namespace loot {
         Plugin(const std::string& name);
         Plugin(Game& game, const std::string& name, const bool headerOnly);
 
+        using libespm::Plugin::getDescription;
         using libespm::Plugin::getFormIds;
         using libespm::Plugin::getMasters;
         using libespm::Plugin::isMasterFile;
 
         bool IsEmpty() const;
-        std::string Version() const;
         uint32_t Crc() const;
         size_t NumOverrideFormIDs() const;
 

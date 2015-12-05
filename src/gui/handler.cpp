@@ -32,6 +32,7 @@
 #include "../backend/plugin_sorter.h"
 #include "../backend/helpers/helpers.h"
 #include "../backend/helpers/json.h"
+#include "../backend/helpers/version.h"
 
 #include <include/cef_app.h>
 #include <include/cef_runnable.h>
@@ -745,7 +746,7 @@ namespace loot {
                 pluginNode["isMaster"] = plugin.isMasterFile();
                 pluginNode["loadsBSA"] = plugin.LoadsBSA();
                 pluginNode["crc"] = IntToHexString(plugin.Crc());
-                pluginNode["version"] = plugin.Version();
+                pluginNode["version"] = Version(plugin.getDescription()).AsString();
 
                 if (!mlistPlugin.HasNameOnly()) {
                     // Now add the masterlist metadata to the pluginNode.

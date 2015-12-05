@@ -37,7 +37,7 @@ TEST_F(Plugin, ConstructorsAndDataAccess) {
     EXPECT_TRUE(plugin.getMasters().empty());
     EXPECT_FALSE(plugin.isMasterFile());
     EXPECT_TRUE(plugin.IsEmpty());
-    EXPECT_EQ("", plugin.Version());
+    EXPECT_EQ("", plugin.getDescription());
     EXPECT_EQ(0, plugin.Crc());
 
     loot::Game game(loot::Game::tes5);
@@ -50,7 +50,7 @@ TEST_F(Plugin, ConstructorsAndDataAccess) {
     EXPECT_TRUE(plugin.getMasters().empty());
     EXPECT_TRUE(plugin.isMasterFile());
     EXPECT_FALSE(plugin.IsEmpty());
-    EXPECT_EQ("5.0", plugin.Version());
+    EXPECT_EQ("v5.0", plugin.getDescription());
     EXPECT_EQ(0, plugin.Crc());
 
     plugin = loot::Plugin(game, "Blank.esm", false);
@@ -70,7 +70,7 @@ TEST_F(Plugin, ConstructorsAndDataAccess) {
     EXPECT_TRUE(plugin.getMasters().empty());
     EXPECT_TRUE(plugin.isMasterFile());
     EXPECT_FALSE(plugin.IsEmpty());
-    EXPECT_EQ("5.0", plugin.Version());
+    EXPECT_EQ("v5.0", plugin.getDescription());
     EXPECT_EQ(0x187BE342, plugin.Crc());
 
     plugin = loot::Plugin(game, "Blank - Master Dependent.esp", false);
@@ -86,7 +86,7 @@ TEST_F(Plugin, ConstructorsAndDataAccess) {
     EXPECT_EQ(std::vector<std::string>({
         "Blank.esm"
     }), plugin.getMasters());
-    EXPECT_EQ("", plugin.Version());
+    EXPECT_EQ("", plugin.getDescription());
     EXPECT_EQ(0x832152DC, plugin.Crc());
 }
 
