@@ -136,8 +136,8 @@ namespace loot {
                 // Branch doesn't exist. Create a new branch using the remote branch's latest commit.
                 git.CheckoutNewBranch("origin", repoBranch);
             else {
-                // The local branch exists. Need to merge the remote branch 
-                // into it. 
+                // The local branch exists. Need to merge the remote branch
+                // into it.
                 git.Call(ret);  // Handle other errors from preceding branch lookup.
 
                 // Check if HEAD points to the desired branch and set it to if not.
@@ -207,9 +207,11 @@ namespace loot {
                                 BOOST_LOG_TRIVIAL(info) << "Local branch and masterlist file are already up to date.";
                                 return false;
                             }
-                        } else
+                        }
+                        else
                             BOOST_LOG_TRIVIAL(trace) << "Local branch heads is ahead of remote branch head.";
-                    } else
+                    }
+                    else
                         BOOST_LOG_TRIVIAL(trace) << "Local branch can be fast-forwarded to remote branch.";
 
                     if (updateBranchHead) {

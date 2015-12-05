@@ -158,7 +158,7 @@ int main(int argc, char* argv[]) {
 
     // Initialise CEF settings.
     CefSettings cef_settings = GetCefSettings();
-    
+
 #ifndef _WIN32
     // Install xlib error handlers so that the application won't be terminated
     // on non-fatal errors.

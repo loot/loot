@@ -115,4 +115,4 @@ namespace loot {
     bool Version::operator != (const Version& ver) const {
         return pseudosem::compare(this->verString, ver.AsString()) != 0;
     }
-        }
+}
