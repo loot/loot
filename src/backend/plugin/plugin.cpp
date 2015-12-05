@@ -46,7 +46,7 @@ namespace loot {
         crc(0),
         numOverrideRecords(0) {}
 
-    Plugin::Plugin(Game& game, const std::string& name, const bool headerOnly) :
+    Plugin::Plugin(const Game& game, const std::string& name, const bool headerOnly) :
         PluginMetadata(name),
         libespm::Plugin(game.LibespmId()),
         _isEmpty(true),
@@ -67,7 +67,6 @@ namespace loot {
             if (!headerOnly) {
                 BOOST_LOG_TRIVIAL(trace) << Name() << ": Caching CRC value.";
                 crc = GetCrc32(filepath);
-                game.CacheCrc(Name(), crc);
             }
 
             BOOST_LOG_TRIVIAL(trace) << Name() << ": Counting override FormIDs.";

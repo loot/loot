@@ -39,12 +39,9 @@ namespace loot {
 
         GameCache& operator=(const GameCache& cache);
 
-        void CacheCrc(const std::string& plugin, uint32_t crc);
         void CacheCondition(const std::string& condition, bool result);
         void CacheActivePlugins(const std::unordered_set<std::string>& plugins);
 
-        // Returns 0 if no cached CRC.
-        uint32_t GetCachedCrc(const std::string& plugin) const;
         // Returns false for second bool if no cached condition.
         std::pair<bool, bool> GetCachedCondition(const std::string& condition) const;
         bool IsPluginActive(const std::string& plugin) const;
@@ -53,7 +50,6 @@ namespace loot {
     private:
         //Caches for condition results, CRCs and active plugins.
         std::unordered_map<std::string, bool> conditionCache;
-        std::unordered_map<std::string, uint32_t> crcCache;
         std::unordered_set<std::string> activePlugins;
 
         mutable std::mutex mutex;

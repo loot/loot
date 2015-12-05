@@ -42,20 +42,13 @@ namespace loot {
     GameCache::GameCache() {}
     GameCache::GameCache(const GameCache& cache)
         : conditionCache(cache.conditionCache),
-        crcCache(cache.crcCache),
         activePlugins(cache.activePlugins) {}
 
     GameCache& GameCache::operator=(const GameCache& cache) {
         conditionCache = cache.conditionCache;
-        crcCache = cache.crcCache;
         activePlugins = cache.activePlugins;
 
         return *this;
-    }
-
-    void GameCache::CacheCrc(const std::string& plugin, uint32_t crc) {
-        std::lock_guard<std::mutex> guard(mutex);
-        crcCache.insert(pair<string, uint32_t>(boost::locale::to_lower(plugin), crc));
     }
 
     void GameCache::CacheCondition(const std::string& condition, bool result) {
@@ -66,17 +59,6 @@ namespace loot {
     void GameCache::CacheActivePlugins(const std::unordered_set<std::string>& plugins) {
         std::lock_guard<std::mutex> guard(mutex);
         activePlugins = plugins;
-    }
-
-    uint32_t GameCache::GetCachedCrc(const std::string& plugin) const {
-        std::lock_guard<std::mutex> guard(mutex);
-
-        auto it = crcCache.find(boost::locale::to_lower(plugin));
-
-        if (it != crcCache.end())
-            return it->second;
-        else
-            return 0;
     }
 
     std::pair<bool, bool> GameCache::GetCachedCondition(const std::string& condition) const {
@@ -100,7 +82,6 @@ namespace loot {
         std::lock_guard<std::mutex> guard(mutex);
 
         conditionCache.clear();
-        crcCache.clear();
         activePlugins.clear();
     }
 }

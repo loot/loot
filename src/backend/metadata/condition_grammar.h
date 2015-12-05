@@ -287,21 +287,26 @@ namespace loot {
             if (_game == nullptr)
                 return;
 
-            uint32_t crc = _game->GetCachedCrc(file);
+            uint32_t crc = 0;
+            if (file == "LOOT")
+                crc = GetCrc32(boost::filesystem::absolute("LOOT.exe"));
+            else {
+                // CRC could be for a plugin or a file.
+                // Get the CRC from the game plugin cache if possible.
+                auto pluginPairIt = _game->plugins.find(boost::locale::to_lower(file));
+                if (pluginPairIt != _game->plugins.end())
+                    crc = pluginPairIt->second.Crc();
 
-            if (crc == 0) {
-                if (file == "LOOT")
-                    crc = GetCrc32(boost::filesystem::absolute("LOOT.exe"));
-                if (boost::filesystem::exists(_game->DataPath() / file))
-                    crc = GetCrc32(_game->DataPath() / file);
-                else if ((boost::iends_with(file, ".esp") || boost::iends_with(file, ".esm")) && boost::filesystem::exists(_game->DataPath() / (file + ".ghost")))
-                    crc = GetCrc32(_game->DataPath() / (file + ".ghost"));
+                if (crc == 0) {
+                    if (boost::filesystem::exists(_game->DataPath() / file))
+                        crc = GetCrc32(_game->DataPath() / file);
+                    else if ((boost::iends_with(file, ".esp") || boost::iends_with(file, ".esm")) && boost::filesystem::exists(_game->DataPath() / (file + ".ghost")))
+                        crc = GetCrc32(_game->DataPath() / (file + ".ghost"));
+                }
                 else {
                     result = false;
                     return;
                 }
-
-                _game->CacheCrc(file, crc);
             }
 
             result = checksum == crc;
