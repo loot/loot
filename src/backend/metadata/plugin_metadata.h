@@ -100,7 +100,7 @@ namespace loot {
         //Compare name string.
         bool operator == (const std::string& rhs) const;
         bool operator != (const std::string& rhs) const;
-    protected:
+    private:
         std::string name;
         bool enabled;  //Default to true.
         bool _isPriorityExplicit;  //If false and priority is 0, then priority was not explicitly set as such.
@@ -108,10 +108,11 @@ namespace loot {
         std::set<File> loadAfter;
         std::set<File> requirements;
         std::set<File> incompatibilities;
-        std::list<Message> messages;
-        std::set<Tag> tags;
         std::set<PluginDirtyInfo> _dirtyInfo;
         std::set<Location> _locations;
+    protected:
+        std::list<Message> messages;
+        std::set<Tag> tags;
     };
 }
 

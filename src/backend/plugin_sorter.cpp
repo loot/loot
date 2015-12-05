@@ -268,13 +268,13 @@ namespace loot {
             loot::vertex_it vit2 = vit;
             ++vit2;
             while (vit2 != vitend) {
-                if (graph[*vit].IsMaster() == graph[*vit2].IsMaster()) {
+                if (graph[*vit].isMasterFile() == graph[*vit2].isMasterFile()) {
                     ++vit2;
                     continue;
                 }
 
                 vertex_t vertex, parentVertex;
-                if (graph[*vit2].IsMaster()) {
+                if (graph[*vit2].isMasterFile()) {
                     parentVertex = *vit2;
                     vertex = *vit;
                 }
@@ -292,7 +292,7 @@ namespace loot {
             }
 
             BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for masters.";
-            vector<string> strVec(graph[*vit].Masters());
+            vector<string> strVec(graph[*vit].getMasters());
             for (const auto &master : strVec) {
                 if (GetVertexByName(master, parentVertex) &&
                     !boost::edge(parentVertex, *vit, graph).second) {
@@ -361,7 +361,7 @@ namespace loot {
             for (boost::tie(vit2, vitend2) = boost::vertices(graph); vit2 != vitend2; ++vit2) {
                 if (graph[*vit].Priority() == graph[*vit2].Priority()
                     || (abs(graph[*vit].Priority()) < max_priority && abs(graph[*vit2].Priority()) < max_priority
-                    && !graph[*vit].FormIDs().empty() && !graph[*vit2].FormIDs().empty() && !graph[*vit].DoFormIDsOverlap(graph[*vit2])
+                    && !graph[*vit].getFormIds().empty() && !graph[*vit2].getFormIds().empty() && !graph[*vit].DoFormIDsOverlap(graph[*vit2])
                     )
                     ) {
                     continue;

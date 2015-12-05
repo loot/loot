@@ -33,9 +33,9 @@ class Plugin : public SkyrimTest {};
 TEST_F(Plugin, ConstructorsAndDataAccess) {
     loot::Plugin plugin("Blank.esm");
     EXPECT_EQ("Blank.esm", plugin.Name());
-    EXPECT_TRUE(plugin.FormIDs().empty());
-    EXPECT_TRUE(plugin.Masters().empty());
-    EXPECT_FALSE(plugin.IsMaster());
+    EXPECT_TRUE(plugin.getFormIds().empty());
+    EXPECT_TRUE(plugin.getMasters().empty());
+    EXPECT_FALSE(plugin.isMasterFile());
     EXPECT_TRUE(plugin.IsEmpty());
     EXPECT_EQ("", plugin.Version());
     EXPECT_EQ(0, plugin.Crc());
@@ -46,9 +46,9 @@ TEST_F(Plugin, ConstructorsAndDataAccess) {
 
     plugin = loot::Plugin(game, "Blank.esm", true);
     EXPECT_EQ("Blank.esm", plugin.Name());
-    EXPECT_TRUE(plugin.FormIDs().empty());
-    EXPECT_TRUE(plugin.Masters().empty());
-    EXPECT_TRUE(plugin.IsMaster());
+    EXPECT_TRUE(plugin.getFormIds().empty());
+    EXPECT_TRUE(plugin.getMasters().empty());
+    EXPECT_TRUE(plugin.isMasterFile());
     EXPECT_FALSE(plugin.IsEmpty());
     EXPECT_EQ("5.0", plugin.Version());
     EXPECT_EQ(0, plugin.Crc());
@@ -66,9 +66,9 @@ TEST_F(Plugin, ConstructorsAndDataAccess) {
         libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF7),
         libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF8),
         libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF9),
-    }), plugin.FormIDs());
-    EXPECT_TRUE(plugin.Masters().empty());
-    EXPECT_TRUE(plugin.IsMaster());
+    }), plugin.getFormIds());
+    EXPECT_TRUE(plugin.getMasters().empty());
+    EXPECT_TRUE(plugin.isMasterFile());
     EXPECT_FALSE(plugin.IsEmpty());
     EXPECT_EQ("5.0", plugin.Version());
     EXPECT_EQ(0x187BE342, plugin.Crc());
@@ -76,16 +76,16 @@ TEST_F(Plugin, ConstructorsAndDataAccess) {
     plugin = loot::Plugin(game, "Blank - Master Dependent.esp", false);
     EXPECT_EQ("Blank - Master Dependent.esp", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
-    EXPECT_FALSE(plugin.IsMaster());
+    EXPECT_FALSE(plugin.isMasterFile());
     EXPECT_EQ(std::set<libespm::FormId>({
         libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF0),
         libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF1),
         libespm::FormId("Blank - Master Dependent.esp", std::vector<std::string>(), 0xCE9),
         libespm::FormId("Blank - Master Dependent.esp", std::vector<std::string>(), 0xCEA),
-    }), plugin.FormIDs());
+    }), plugin.getFormIds());
     EXPECT_EQ(std::vector<std::string>({
         "Blank.esm"
-    }), plugin.Masters());
+    }), plugin.getMasters());
     EXPECT_EQ("", plugin.Version());
     EXPECT_EQ(0x832152DC, plugin.Crc());
 }

@@ -274,7 +274,7 @@ TEST_F(Game, LoadPlugins) {
     loot::Plugin plugin = game.plugins.find("skyrim.esm")->second;
     EXPECT_EQ("Skyrim.esm", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
-    EXPECT_TRUE(plugin.IsMaster());
+    EXPECT_TRUE(plugin.isMasterFile());
     EXPECT_EQ(std::set<libespm::FormId>({
         libespm::FormId("Skyrim.esm", std::vector<std::string>(), 0xCF0),
         libespm::FormId("Skyrim.esm", std::vector<std::string>(), 0xCF1),
@@ -286,8 +286,8 @@ TEST_F(Game, LoadPlugins) {
         libespm::FormId("Skyrim.esm", std::vector<std::string>(), 0xCF7),
         libespm::FormId("Skyrim.esm", std::vector<std::string>(), 0xCF8),
         libespm::FormId("Skyrim.esm", std::vector<std::string>(), 0xCF9),
-    }), plugin.FormIDs());
-    EXPECT_TRUE(plugin.Masters().empty());
+    }), plugin.getFormIds());
+    EXPECT_TRUE(plugin.getMasters().empty());
     EXPECT_EQ("5.0", plugin.Version());
     EXPECT_EQ(0x187BE342, plugin.Crc());
     EXPECT_EQ(0, plugin.NumOverrideFormIDs());
@@ -296,7 +296,7 @@ TEST_F(Game, LoadPlugins) {
     plugin = game.plugins.find("blank.esm")->second;
     EXPECT_EQ("Blank.esm", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
-    EXPECT_TRUE(plugin.IsMaster());
+    EXPECT_TRUE(plugin.isMasterFile());
     EXPECT_EQ(std::set<libespm::FormId>({
         libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF0),
         libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF1),
@@ -308,8 +308,8 @@ TEST_F(Game, LoadPlugins) {
         libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF7),
         libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF8),
         libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF9),
-    }), plugin.FormIDs());
-    EXPECT_TRUE(plugin.Masters().empty());
+    }), plugin.getFormIds());
+    EXPECT_TRUE(plugin.getMasters().empty());
     EXPECT_EQ("5.0", plugin.Version());
     EXPECT_EQ(0x187BE342, plugin.Crc());
     EXPECT_EQ(0, plugin.NumOverrideFormIDs());
@@ -318,7 +318,7 @@ TEST_F(Game, LoadPlugins) {
     plugin = game.plugins.find("blank - different.esm")->second;
     EXPECT_EQ("Blank - Different.esm", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
-    EXPECT_TRUE(plugin.IsMaster());
+    EXPECT_TRUE(plugin.isMasterFile());
     EXPECT_EQ(std::set<libespm::FormId>({
         libespm::FormId("Blank - Different.esm", std::vector<std::string>(), 0xCEF),
         libespm::FormId("Blank - Different.esm", std::vector<std::string>(), 0xCF0),
@@ -329,8 +329,8 @@ TEST_F(Game, LoadPlugins) {
         libespm::FormId("Blank - Different.esm", std::vector<std::string>(), 0xCF5),
         libespm::FormId("Blank - Different.esm", std::vector<std::string>(), 0xCF6),
         libespm::FormId("Blank - Different.esm", std::vector<std::string>(), 0xCF7),
-    }), plugin.FormIDs());
-    EXPECT_TRUE(plugin.Masters().empty());
+    }), plugin.getFormIds());
+    EXPECT_TRUE(plugin.getMasters().empty());
     EXPECT_EQ("", plugin.Version());
     EXPECT_EQ(0x64B9F757, plugin.Crc());
     EXPECT_EQ(0, plugin.NumOverrideFormIDs());
@@ -339,7 +339,7 @@ TEST_F(Game, LoadPlugins) {
     plugin = game.plugins.find("blank - master dependent.esm")->second;
     EXPECT_EQ("Blank - Master Dependent.esm", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
-    EXPECT_TRUE(plugin.IsMaster());
+    EXPECT_TRUE(plugin.isMasterFile());
     EXPECT_EQ(std::set<libespm::FormId>({
         libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF0),
         libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF1),
@@ -349,10 +349,10 @@ TEST_F(Game, LoadPlugins) {
         libespm::FormId("Blank - Master Dependent.esm", std::vector<std::string>(), 0xCEB),
         libespm::FormId("Blank - Master Dependent.esm", std::vector<std::string>(), 0xCEC),
         libespm::FormId("Blank - Master Dependent.esm", std::vector<std::string>(), 0xCED),
-    }), plugin.FormIDs());
+    }), plugin.getFormIds());
     EXPECT_EQ(std::vector<std::string>({
         "Blank.esm"
-    }), plugin.Masters());
+    }), plugin.getMasters());
     EXPECT_EQ("", plugin.Version());
     EXPECT_EQ(0xB2D4119E, plugin.Crc());
     EXPECT_EQ(4, plugin.NumOverrideFormIDs());
@@ -361,7 +361,7 @@ TEST_F(Game, LoadPlugins) {
     plugin = game.plugins.find("blank - different master dependent.esm")->second;
     EXPECT_EQ("Blank - Different Master Dependent.esm", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
-    EXPECT_TRUE(plugin.IsMaster());
+    EXPECT_TRUE(plugin.isMasterFile());
     EXPECT_EQ(std::set<libespm::FormId>({
         libespm::FormId("Blank - Different.esm", std::vector<std::string>(), 0xCEF),
         libespm::FormId("Blank - Different.esm", std::vector<std::string>(), 0xCF0),
@@ -370,10 +370,10 @@ TEST_F(Game, LoadPlugins) {
         libespm::FormId("Blank - Different Master Dependent.esm", std::vector<std::string>(), 0xCE9),
         libespm::FormId("Blank - Different Master Dependent.esm", std::vector<std::string>(), 0xCEA),
         libespm::FormId("Blank - Different Master Dependent.esm", std::vector<std::string>(), 0xCEB),
-    }), plugin.FormIDs());
+    }), plugin.getFormIds());
     EXPECT_EQ(std::vector<std::string>({
         "Blank - Different.esm"
-    }), plugin.Masters());
+    }), plugin.getMasters());
     EXPECT_EQ("", plugin.Version());
     EXPECT_EQ(0xAADF6710, plugin.Crc());
     EXPECT_EQ(4, plugin.NumOverrideFormIDs());
@@ -382,7 +382,7 @@ TEST_F(Game, LoadPlugins) {
     plugin = game.plugins.find("blank.esp")->second;
     EXPECT_EQ("Blank.esp", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
-    EXPECT_FALSE(plugin.IsMaster());
+    EXPECT_FALSE(plugin.isMasterFile());
     EXPECT_EQ(std::set<libespm::FormId>({
         libespm::FormId("Blank.esp", std::vector<std::string>(), 0xCEC),
         libespm::FormId("Blank.esp", std::vector<std::string>(), 0xCED),
@@ -390,8 +390,8 @@ TEST_F(Game, LoadPlugins) {
         libespm::FormId("Blank.esp", std::vector<std::string>(), 0xCEF),
         libespm::FormId("Blank.esp", std::vector<std::string>(), 0xCF0),
         libespm::FormId("Blank.esp", std::vector<std::string>(), 0xCF1),
-    }), plugin.FormIDs());
-    EXPECT_TRUE(plugin.Masters().empty());
+    }), plugin.getFormIds());
+    EXPECT_TRUE(plugin.getMasters().empty());
     EXPECT_EQ("", plugin.Version());
     EXPECT_EQ(0x24F0E2A1, plugin.Crc());
     EXPECT_EQ(0, plugin.NumOverrideFormIDs());
@@ -400,15 +400,15 @@ TEST_F(Game, LoadPlugins) {
     plugin = game.plugins.find("blank - different.esp")->second;
     EXPECT_EQ("Blank - Different.esp", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
-    EXPECT_FALSE(plugin.IsMaster());
+    EXPECT_FALSE(plugin.isMasterFile());
     EXPECT_EQ(std::set<libespm::FormId>({
         libespm::FormId("Blank - Different.esp", std::vector<std::string>(), 0xCEB),
         libespm::FormId("Blank - Different.esp", std::vector<std::string>(), 0xCEC),
         libespm::FormId("Blank - Different.esp", std::vector<std::string>(), 0xCED),
         libespm::FormId("Blank - Different.esp", std::vector<std::string>(), 0xCEE),
         libespm::FormId("Blank - Different.esp", std::vector<std::string>(), 0xCEF),
-    }), plugin.FormIDs());
-    EXPECT_TRUE(plugin.Masters().empty());
+    }), plugin.getFormIds());
+    EXPECT_TRUE(plugin.getMasters().empty());
     EXPECT_EQ("", plugin.Version());
     EXPECT_EQ(0xD4C9B7AE, plugin.Crc());
     EXPECT_EQ(0, plugin.NumOverrideFormIDs());
@@ -417,16 +417,16 @@ TEST_F(Game, LoadPlugins) {
     plugin = game.plugins.find("blank - master dependent.esp")->second;
     EXPECT_EQ("Blank - Master Dependent.esp", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
-    EXPECT_FALSE(plugin.IsMaster());
+    EXPECT_FALSE(plugin.isMasterFile());
     EXPECT_EQ(std::set<libespm::FormId>({
         libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF0),
         libespm::FormId("Blank.esm", std::vector<std::string>(), 0xCF1),
         libespm::FormId("Blank - Master Dependent.esp", std::vector<std::string>(), 0xCE9),
         libespm::FormId("Blank - Master Dependent.esp", std::vector<std::string>(), 0xCEA),
-    }), plugin.FormIDs());
+    }), plugin.getFormIds());
     EXPECT_EQ(std::vector<std::string>({
         "Blank.esm"
-    }), plugin.Masters());
+    }), plugin.getMasters());
     EXPECT_EQ("", plugin.Version());
     EXPECT_EQ(0x832152DC, plugin.Crc());
     EXPECT_EQ(2, plugin.NumOverrideFormIDs());
@@ -435,15 +435,15 @@ TEST_F(Game, LoadPlugins) {
     plugin = game.plugins.find("blank - different master dependent.esp")->second;
     EXPECT_EQ("Blank - Different Master Dependent.esp", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
-    EXPECT_FALSE(plugin.IsMaster());
+    EXPECT_FALSE(plugin.isMasterFile());
     EXPECT_EQ(std::set<libespm::FormId>({
         libespm::FormId("Blank - Different.esm", std::vector<std::string>(), 0xCEF),
         libespm::FormId("Blank - Different.esm", std::vector<std::string>(), 0xCF0),
         libespm::FormId("Blank - Different Master Dependent.esp", std::vector<std::string>(), 0xCE7),
-    }), plugin.FormIDs());
+    }), plugin.getFormIds());
     EXPECT_EQ(std::vector<std::string>({
         "Blank - Different.esm"
-    }), plugin.Masters());
+    }), plugin.getMasters());
     EXPECT_EQ("", plugin.Version());
     EXPECT_EQ(0x3AD17683, plugin.Crc());
     EXPECT_EQ(2, plugin.NumOverrideFormIDs());
@@ -452,14 +452,14 @@ TEST_F(Game, LoadPlugins) {
     plugin = game.plugins.find("blank - plugin dependent.esp")->second;
     EXPECT_EQ("Blank - Plugin Dependent.esp", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
-    EXPECT_FALSE(plugin.IsMaster());
+    EXPECT_FALSE(plugin.isMasterFile());
     EXPECT_EQ(std::set<libespm::FormId>({
         libespm::FormId("Blank.esp", std::vector<std::string>(), 0xCEC),
         libespm::FormId("Blank - Plugin Dependent.esp", std::vector<std::string>(), 0xCE7),
-    }), plugin.FormIDs());
+    }), plugin.getFormIds());
     EXPECT_EQ(std::vector<std::string>({
         "Blank.esp"
-    }), plugin.Masters());
+    }), plugin.getMasters());
     EXPECT_EQ("", plugin.Version());
     EXPECT_EQ(0x28EF26DB, plugin.Crc());
     EXPECT_EQ(1, plugin.NumOverrideFormIDs());
@@ -468,13 +468,13 @@ TEST_F(Game, LoadPlugins) {
     plugin = game.plugins.find("blank - different plugin dependent.esp")->second;
     EXPECT_EQ("Blank - Different Plugin Dependent.esp", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
-    EXPECT_FALSE(plugin.IsMaster());
+    EXPECT_FALSE(plugin.isMasterFile());
     EXPECT_EQ(std::set<libespm::FormId>({
         libespm::FormId("Blank - Different.esp", std::vector<std::string>(), 0xCEB),
-    }), plugin.FormIDs());
+    }), plugin.getFormIds());
     EXPECT_EQ(std::vector<std::string>({
         "Blank - Different.esp"
-    }), plugin.Masters());
+    }), plugin.getMasters());
     EXPECT_EQ("", plugin.Version());
     EXPECT_EQ(0xEB47BE63, plugin.Crc());
     EXPECT_EQ(1, plugin.NumOverrideFormIDs());
@@ -492,9 +492,9 @@ TEST_F(Game, LoadPlugins_HeadersOnly) {
     loot::Plugin plugin = game.plugins.find("skyrim.esm")->second;
     EXPECT_EQ("Skyrim.esm", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
-    EXPECT_TRUE(plugin.IsMaster());
-    EXPECT_TRUE(plugin.FormIDs().empty());
-    EXPECT_TRUE(plugin.Masters().empty());
+    EXPECT_TRUE(plugin.isMasterFile());
+    EXPECT_TRUE(plugin.getFormIds().empty());
+    EXPECT_TRUE(plugin.getMasters().empty());
     EXPECT_EQ("5.0", plugin.Version());
     EXPECT_EQ(0, plugin.Crc());
     EXPECT_EQ(0, plugin.NumOverrideFormIDs());
@@ -503,9 +503,9 @@ TEST_F(Game, LoadPlugins_HeadersOnly) {
     plugin = game.plugins.find("blank.esm")->second;
     EXPECT_EQ("Blank.esm", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
-    EXPECT_TRUE(plugin.IsMaster());
-    EXPECT_TRUE(plugin.FormIDs().empty());
-    EXPECT_TRUE(plugin.Masters().empty());
+    EXPECT_TRUE(plugin.isMasterFile());
+    EXPECT_TRUE(plugin.getFormIds().empty());
+    EXPECT_TRUE(plugin.getMasters().empty());
     EXPECT_EQ("5.0", plugin.Version());
     EXPECT_EQ(0, plugin.Crc());
     EXPECT_EQ(0, plugin.NumOverrideFormIDs());
@@ -514,9 +514,9 @@ TEST_F(Game, LoadPlugins_HeadersOnly) {
     plugin = game.plugins.find("blank - different.esm")->second;
     EXPECT_EQ("Blank - Different.esm", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
-    EXPECT_TRUE(plugin.IsMaster());
-    EXPECT_TRUE(plugin.FormIDs().empty());
-    EXPECT_TRUE(plugin.Masters().empty());
+    EXPECT_TRUE(plugin.isMasterFile());
+    EXPECT_TRUE(plugin.getFormIds().empty());
+    EXPECT_TRUE(plugin.getMasters().empty());
     EXPECT_EQ("", plugin.Version());
     EXPECT_EQ(0, plugin.Crc());
     EXPECT_EQ(0, plugin.NumOverrideFormIDs());
@@ -525,11 +525,11 @@ TEST_F(Game, LoadPlugins_HeadersOnly) {
     plugin = game.plugins.find("blank - master dependent.esm")->second;
     EXPECT_EQ("Blank - Master Dependent.esm", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
-    EXPECT_TRUE(plugin.IsMaster());
-    EXPECT_TRUE(plugin.FormIDs().empty());
+    EXPECT_TRUE(plugin.isMasterFile());
+    EXPECT_TRUE(plugin.getFormIds().empty());
     EXPECT_EQ(std::vector<std::string>({
         "Blank.esm"
-    }), plugin.Masters());
+    }), plugin.getMasters());
     EXPECT_EQ("", plugin.Version());
     EXPECT_EQ(0, plugin.Crc());
     EXPECT_EQ(0, plugin.NumOverrideFormIDs());
@@ -538,11 +538,11 @@ TEST_F(Game, LoadPlugins_HeadersOnly) {
     plugin = game.plugins.find("blank - different master dependent.esm")->second;
     EXPECT_EQ("Blank - Different Master Dependent.esm", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
-    EXPECT_TRUE(plugin.IsMaster());
-    EXPECT_TRUE(plugin.FormIDs().empty());
+    EXPECT_TRUE(plugin.isMasterFile());
+    EXPECT_TRUE(plugin.getFormIds().empty());
     EXPECT_EQ(std::vector<std::string>({
         "Blank - Different.esm"
-    }), plugin.Masters());
+    }), plugin.getMasters());
     EXPECT_EQ("", plugin.Version());
     EXPECT_EQ(0, plugin.Crc());
     EXPECT_EQ(0, plugin.NumOverrideFormIDs());
@@ -551,9 +551,9 @@ TEST_F(Game, LoadPlugins_HeadersOnly) {
     plugin = game.plugins.find("blank.esp")->second;
     EXPECT_EQ("Blank.esp", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
-    EXPECT_FALSE(plugin.IsMaster());
-    EXPECT_TRUE(plugin.FormIDs().empty());
-    EXPECT_TRUE(plugin.Masters().empty());
+    EXPECT_FALSE(plugin.isMasterFile());
+    EXPECT_TRUE(plugin.getFormIds().empty());
+    EXPECT_TRUE(plugin.getMasters().empty());
     EXPECT_EQ("", plugin.Version());
     EXPECT_EQ(0, plugin.Crc());
     EXPECT_EQ(0, plugin.NumOverrideFormIDs());
@@ -562,9 +562,9 @@ TEST_F(Game, LoadPlugins_HeadersOnly) {
     plugin = game.plugins.find("blank - different.esp")->second;
     EXPECT_EQ("Blank - Different.esp", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
-    EXPECT_FALSE(plugin.IsMaster());
-    EXPECT_TRUE(plugin.FormIDs().empty());
-    EXPECT_TRUE(plugin.Masters().empty());
+    EXPECT_FALSE(plugin.isMasterFile());
+    EXPECT_TRUE(plugin.getFormIds().empty());
+    EXPECT_TRUE(plugin.getMasters().empty());
     EXPECT_EQ("", plugin.Version());
     EXPECT_EQ(0, plugin.Crc());
     EXPECT_EQ(0, plugin.NumOverrideFormIDs());
@@ -573,11 +573,11 @@ TEST_F(Game, LoadPlugins_HeadersOnly) {
     plugin = game.plugins.find("blank - master dependent.esp")->second;
     EXPECT_EQ("Blank - Master Dependent.esp", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
-    EXPECT_FALSE(plugin.IsMaster());
-    EXPECT_TRUE(plugin.FormIDs().empty());
+    EXPECT_FALSE(plugin.isMasterFile());
+    EXPECT_TRUE(plugin.getFormIds().empty());
     EXPECT_EQ(std::vector<std::string>({
         "Blank.esm"
-    }), plugin.Masters());
+    }), plugin.getMasters());
     EXPECT_EQ("", plugin.Version());
     EXPECT_EQ(0, plugin.Crc());
     EXPECT_EQ(0, plugin.NumOverrideFormIDs());
@@ -586,11 +586,11 @@ TEST_F(Game, LoadPlugins_HeadersOnly) {
     plugin = game.plugins.find("blank - different master dependent.esp")->second;
     EXPECT_EQ("Blank - Different Master Dependent.esp", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
-    EXPECT_FALSE(plugin.IsMaster());
-    EXPECT_TRUE(plugin.FormIDs().empty());
+    EXPECT_FALSE(plugin.isMasterFile());
+    EXPECT_TRUE(plugin.getFormIds().empty());
     EXPECT_EQ(std::vector<std::string>({
         "Blank - Different.esm"
-    }), plugin.Masters());
+    }), plugin.getMasters());
     EXPECT_EQ("", plugin.Version());
     EXPECT_EQ(0, plugin.Crc());
     EXPECT_EQ(0, plugin.NumOverrideFormIDs());
@@ -599,11 +599,11 @@ TEST_F(Game, LoadPlugins_HeadersOnly) {
     plugin = game.plugins.find("blank - plugin dependent.esp")->second;
     EXPECT_EQ("Blank - Plugin Dependent.esp", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
-    EXPECT_FALSE(plugin.IsMaster());
-    EXPECT_TRUE(plugin.FormIDs().empty());
+    EXPECT_FALSE(plugin.isMasterFile());
+    EXPECT_TRUE(plugin.getFormIds().empty());
     EXPECT_EQ(std::vector<std::string>({
         "Blank.esp"
-    }), plugin.Masters());
+    }), plugin.getMasters());
     EXPECT_EQ("", plugin.Version());
     EXPECT_EQ(0, plugin.Crc());
     EXPECT_EQ(0, plugin.NumOverrideFormIDs());
@@ -612,11 +612,11 @@ TEST_F(Game, LoadPlugins_HeadersOnly) {
     plugin = game.plugins.find("blank - different plugin dependent.esp")->second;
     EXPECT_EQ("Blank - Different Plugin Dependent.esp", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
-    EXPECT_FALSE(plugin.IsMaster());
-    EXPECT_TRUE(plugin.FormIDs().empty());
+    EXPECT_FALSE(plugin.isMasterFile());
+    EXPECT_TRUE(plugin.getFormIds().empty());
     EXPECT_EQ(std::vector<std::string>({
         "Blank - Different.esp"
-    }), plugin.Masters());
+    }), plugin.getMasters());
     EXPECT_EQ("", plugin.Version());
     EXPECT_EQ(0, plugin.Crc());
     EXPECT_EQ(0, plugin.NumOverrideFormIDs());

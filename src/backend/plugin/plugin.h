@@ -34,19 +34,20 @@
 
 #include <boost/locale.hpp>
 
-#include <libespm/FormId.h>
+#include <libespm/Plugin.h>
 
 namespace loot {
     class Game;
 
-    class Plugin : public PluginMetadata {
+    class Plugin : public PluginMetadata, private libespm::Plugin {
     public:
         Plugin(const std::string& name);
         Plugin(Game& game, const std::string& name, const bool headerOnly);
 
-        const std::set<libespm::FormId>& FormIDs() const;
-        std::vector<std::string> Masters() const;
-        bool IsMaster() const;  //Checks master bit flag.
+        using libespm::Plugin::getFormIds;
+        using libespm::Plugin::getMasters;
+        using libespm::Plugin::isMasterFile;
+
         bool IsEmpty() const;
         std::string Version() const;
         uint32_t Crc() const;
@@ -65,10 +66,7 @@ namespace loot {
     private:
         bool _isEmpty;  // Does the plugin contain any records other than the TES4 header?
         bool _loadsBsa;
-        std::vector<std::string> masters;
-        std::set<libespm::FormId> formIDs;
         std::string version;  //Obtained from description field.
-        bool isMaster;
         uint32_t crc;
 
         //Useful caches.
