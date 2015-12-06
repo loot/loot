@@ -99,10 +99,6 @@ int main(int argc, char* argv[]) {
     // Enable High-DPI support on Windows 7 or newer.
     CefEnableHighDPISupport();
 
-    // Set up CEF sandbox.
-    CefScopedSandboxInfo scoped_sandbox;
-    sandbox_info = scoped_sandbox.sandbox_info();
-
     // Read command line arguments.
     CefMainArgs main_args(hInstance);
 #else
@@ -114,7 +110,7 @@ int main(int argc, char* argv[]) {
     CefRefPtr<loot::LootApp> app(new loot::LootApp);
 
     // Run the process.
-    int exit_code = CefExecuteProcess(main_args, app.get(), sandbox_info);
+    int exit_code = CefExecuteProcess(main_args, app.get(), nullptr);
     if (exit_code >= 0) {
         // The sub-process has completed so return here.
         return exit_code;

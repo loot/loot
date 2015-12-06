@@ -287,7 +287,6 @@ ELSEIF (MSVC)
                     crypt32
                     Rpcrt4)
     set (LOOT_GUI_LIBS ${LOOT_LIBS}
-                       cef_sandbox
                        libcef
                        libcef_dll_wrapper
                        rpcrt4
