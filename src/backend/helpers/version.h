@@ -48,9 +48,6 @@ namespace loot {
     private:
         std::string verString;
         static const std::regex versionRegex;
-
-        void Decompose(std::vector<unsigned long>& release,
-                       std::vector<std::string>& preRelease) const;
     };
 }
 
