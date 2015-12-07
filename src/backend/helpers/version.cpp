@@ -43,53 +43,51 @@
 namespace loot {
     using namespace std;
 
-    const regex Version::versionRegex(
-        // The R"()" raw string literal format means the outermost brackets in
-        // the C strings below are not part of the regex.
-        // There are three separate version string matchers below:
-        // 1. Timestamp with forwardslash date separators.
-        // 2. Subset of Pseudosem-supported versions.
-        // 3. Single-number versions that are at the start of the search string
+    /* The string below matches timestamps that use forwardslashes for date
+       separators. However, Pseudosem v1.0.1 will only compare the first
+       two digits as it does not recognise forwardslashes as separators. */
+    const std::string dateRegex = R"((\d{1,2}/\d{1,2}/\d{1,4} \d{1,2}:\d{1,2}:\d{1,2}))";
 
-        R"((?:)"
-        // The string below matches timestamps that use forwardslashes for date
-        // separators. However, Pseudosem v1.0.1 will only compare the first
-        // two digits as it does not recognise forwardslashes as separators.
-        R"((\d{1,2}/\d{1,2}/\d{1,4} \d{1,2}:\d{1,2}:\d{1,2}))"
-        R"(|)"
-        // The string below only allows matches that have one of the following
-        // conditions:
-        // * are at the start of the search string
-        // * are preceded by a "v"
-        // * are preceded by a whitespace character
-        R"((?:^|v|\s))"
-        // The string below matches the range of version strings supported by
-        // Pseudosem v1.0.1, excluding space separators, as they make version
-        // extraction from inside sentences very tricky and have not been
-        // seen "in the wild".
+    /* The string below matches the range of version strings supported by
+       Pseudosem v1.0.1, excluding space separators, as they make version
+       extraction from inside sentences very tricky and have not been
+       seen "in the wild". */
+    const std::string pseudosemVersionRegex =
         R"((\d+(?:\.\d+)+(?:[-._:]?[A-Za-z0-9]+)*))"
-        // The string below prevents numbers followed by a comma from matching.
-        R"((?!,))"
-        R"(|)"
-        // The string below matches a number containing one or more digits
-        // found at the start of the search string.
-        R"(^(\d+))"
-        R"())"
-        ,
-        regex::ECMAScript | regex::icase);
+        // The string below prevents version numbers followed by a comma from
+        // matching.
+        R"((?!,))";
+
+    /* There are a few different version formats that can appear in strings
+       together, and in order to extract the correct one, they must be searched
+       for in order of priority. */
+    const vector<regex> Version::versionRegexes({
+        regex(dateRegex, regex::ECMAScript | regex::icase),
+        regex(R"(version:?\s)" +
+              pseudosemVersionRegex, regex::ECMAScript | regex::icase),
+        regex(R"((?:^|v|\s))" +
+              pseudosemVersionRegex, regex::ECMAScript | regex::icase),
+        regex(
+              /* The string below matches a number containing one or more digits
+                 found at the start of the search string or preceded by 'v'. */
+              R"((?:^|v)(\d+))", regex::ECMAScript | regex::icase),
+    });
 
     Version::Version() {}
 
     Version::Version(const std::string& ver) {
         smatch what;
-        if (regex_search(ver, what, versionRegex)) {
-            for (auto it = next(begin(what)); it != end(what); ++it) {
-                if (it->str().empty())
-                    continue;
+        for (const auto& versionRegex : versionRegexes) {
+            if (regex_search(ver, what, versionRegex)) {
+                for (auto it = next(begin(what)); it != end(what); ++it) {
+                    if (it->str().empty())
+                        continue;
 
-                //Use the first non-empty sub-match.
-                verString = *it;
-                boost::trim(verString);
+                    //Use the first non-empty sub-match.
+                    verString = *it;
+                    boost::trim(verString);
+                    return;
+                }
             }
         }
     }

@@ -47,7 +47,7 @@ namespace loot {
         bool operator != (const Version&) const;
     private:
         std::string verString;
-        static const std::regex versionRegex;
+        static const std::vector<std::regex> versionRegexes;
     };
 }
 

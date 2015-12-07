@@ -144,6 +144,26 @@ namespace loot {
             EXPECT_EQ("", Version(testText).AsString());
         }
 
+        TEST(Version, shouldPreferVersionPrefixedNumbersOverVersionsInSentence) {
+            // Found in <http://www.nexusmods.com/skyrim/mods/47327>
+            std::string testText("Requires Skyrim patch 1.9.32.0.8 or greater.\n"
+                                 "Requires Unofficial Skyrim Legendary Edition Patch 3.0.0 or greater.\n"
+                                 "Version 2.0.0");
+            EXPECT_EQ("2.0.0", Version(testText).AsString());
+        }
+
+        TEST(Version, shouldExtractSingleDigitVersionPrecededByV) {
+            // Found in <http://www.nexusmods.com/skyrim/mods/19733>
+            std::string testText("Immersive Armors v8 Main Plugin");
+            EXPECT_EQ("8", Version(testText).AsString());
+        }
+
+        TEST(Version, shouldPreferVersionPrefixedNumbersOverVPrefixedNumber) {
+            // Found in <http://www.nexusmods.com/skyrim/mods/43773>
+            std::string testText("Compatibility patch for AOS v2.5 and True Storms v1.5 (or later),\nPatch Version: 1.0");
+            EXPECT_EQ("1.0", Version(testText).AsString());
+        }
+
         TEST(Version, GreaterThan) {
             Version version1, version2;
             EXPECT_FALSE(version1 > version2);
