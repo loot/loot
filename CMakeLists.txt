@@ -103,7 +103,7 @@ set (LOOT_SRC   "${CMAKE_SOURCE_DIR}/src/backend/metadata/conditional_metadata.c
                 "${CMAKE_BINARY_DIR}/generated/globals.cpp")
 
 set (LOOT_HEADERS "${CMAKE_SOURCE_DIR}/src/backend/metadata/condition_grammar.h"
-				"${CMAKE_SOURCE_DIR}/src/backend/metadata/conditional_metadata.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/metadata/conditional_metadata.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata/file.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata/location.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata/message.h"
@@ -215,13 +215,13 @@ link_directories ("${LIBLOADORDER_ROOT}/build"
 
 # If building on Travis, set a preprocessor definition.
 IF ($ENV{TRAVIS})
-	add_definitions (-DTRAVIS)
+    add_definitions (-DTRAVIS)
 ENDIF ()
 
 # Settings when compiling for Windows. Since it's a Windows-only app this is always true, but useful to check for copy/paste into other projects.
 IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
     add_definitions (-DUNICODE -D_UNICODE -DLIBLO_STATIC)
-	set (LOOT_API_SRC ${LOOT_API_SRC} "${CMAKE_SOURCE_DIR}/src/resource.rc")
+    set (LOOT_API_SRC ${LOOT_API_SRC} "${CMAKE_SOURCE_DIR}/src/resource.rc")
 ENDIF ()
 
 # GCC and MinGW settings.
@@ -237,12 +237,12 @@ IF (CMAKE_COMPILER_IS_GNUCXX)
     set (LOOT_LIBS git2
                    ssl
                    curl
+                   z
+                   crypto
                    loadorder${PROJECT_ARCH})
     set (LOOT_GUI_LIBS ${LOOT_LIBS}
                        cef
                        cef_dll_wrapper
-                       z
-                       crypto
                        X11)
 
     IF (NOT MINGW)
