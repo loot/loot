@@ -89,7 +89,7 @@ namespace loot {
                 }
             }
             // Get whether the plugin is active or not.
-            _isActive = game.IsPluginActive(name);
+            _isActive = game.IsPluginActive(Name());
 
             // Get whether the plugin loads a BSA or not.
             if (game.Id() == Game::tes5) {
@@ -108,7 +108,7 @@ namespace loot {
             }
         }
         catch (std::exception& e) {
-            BOOST_LOG_TRIVIAL(error) << "Cannot read plugin file \"" << Name() << "\". Details: " << e.what();
+            BOOST_LOG_TRIVIAL(error) << "Cannot read plugin file \"" << name << "\". Details: " << e.what();
             messages.push_back(loot::Message(loot::Message::error, (boost::format(boost::locale::translate("Cannot read \"%1%\". Details: %2%")) % name % e.what()).str()));
         }
 
@@ -117,8 +117,6 @@ namespace loot {
 
     bool Plugin::DoFormIDsOverlap(const Plugin& plugin) const {
         //Basically std::set_intersection except with an early exit instead of an append to results.
-        //BOOST_LOG_TRIVIAL(trace) << "Checking for FormID overlap between \"" << name << "\" and \"" << plugin.Name() << "\".";
-
         set<FormId> formIds(getFormIds());
         set<FormId> otherFormIds(plugin.getFormIds());
         auto i = begin(formIds);
