@@ -35,8 +35,8 @@ before_script:
   - cd googletest-release-1.7.0
   - cmake .
   - make
-  # Move back into the cloned LOOT repo path.
-  - cd $TRAVIS_BUILD_DIR/build
+  # Move into the cloned LOOT repo build path.
+  - mkdir $TRAVIS_BUILD_DIR/build && cd $TRAVIS_BUILD_DIR/build
   # Fetch plugins to test with.
   - wget https://github.com/WrinklyNinja/testing-plugins/archive/1.0.0.tar.gz -O - | tar -xz
   - mv testing-plugins-1.0.0/* ./

@@ -1,10 +1,7 @@
 #!/bin/bash
 set -ev
 
-# Currently inside the cloned repo path.
-# Get the 3rd-party CMake modules.
-wget -P build https://raw.githubusercontent.com/rpavlik/cmake-modules/master/GetGitRevisionDescription.cmake
-wget -P build https://raw.githubusercontent.com/rpavlik/cmake-modules/master/GetGitRevisionDescription.cmake.in
+# Move out of LOOT repo path.
 cd ../..
 
 # Install libespm.
