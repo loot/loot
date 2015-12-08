@@ -35,35 +35,20 @@ TEST_F(GameCache, Constructors) {
     loot::GameCache cache;
     std::unordered_set<std::string> plugins({"skyrim.esm"});
 
-    EXPECT_NO_THROW(cache.CacheCrc("Blank.esp", 5));
     EXPECT_NO_THROW(cache.CacheCondition("True Condition", true));
-    EXPECT_NO_THROW(cache.CacheActivePlugins(plugins));
 
     loot::GameCache cache2(cache);
-    EXPECT_EQ(5, cache2.GetCachedCrc("blank.Esp"));
     EXPECT_EQ(std::make_pair(true, true), cache2.GetCachedCondition("true Condition"));
-    EXPECT_TRUE(cache2.IsPluginActive("Skyrim.esm"));
 }
 
 TEST_F(GameCache, AssignmentOperator) {
     loot::GameCache cache;
     std::unordered_set<std::string> plugins({"skyrim.esm"});
 
-    EXPECT_NO_THROW(cache.CacheCrc("Blank.esp", 5));
     EXPECT_NO_THROW(cache.CacheCondition("True Condition", true));
-    EXPECT_NO_THROW(cache.CacheActivePlugins(plugins));
 
     loot::GameCache cache2 = cache;
-    EXPECT_EQ(5, cache2.GetCachedCrc("blank.Esp"));
     EXPECT_EQ(std::make_pair(true, true), cache2.GetCachedCondition("true Condition"));
-    EXPECT_TRUE(cache2.IsPluginActive("Skyrim.esm"));
-}
-
-TEST_F(GameCache, CacheCrc) {
-    loot::GameCache cache;
-    EXPECT_NO_THROW(cache.CacheCrc("Blank.esp", 5));
-    EXPECT_EQ(5, cache.GetCachedCrc("blank.Esp"));
-    EXPECT_EQ(0, cache.GetCachedCrc("Blank.missing.esp"));
 }
 
 TEST_F(GameCache, CacheCondition) {
@@ -76,19 +61,6 @@ TEST_F(GameCache, CacheCondition) {
 
     EXPECT_EQ(std::make_pair(false, false), cache.GetCachedCondition("true missing Condition"));
     EXPECT_EQ(std::make_pair(false, false), cache.GetCachedCondition("false missing Condition"));
-}
-
-TEST_F(GameCache, CacheActivePlugins) {
-    loot::GameCache cache;
-    std::unordered_set<std::string> plugins({
-        "skyrim.esm",
-        "blank.esp"
-    });
-    EXPECT_NO_THROW(cache.CacheActivePlugins(plugins));
-
-    EXPECT_TRUE(cache.IsPluginActive("Skyrim.esm"));
-    EXPECT_TRUE(cache.IsPluginActive("Blank.esp"));
-    EXPECT_FALSE(cache.IsPluginActive("Blank.missing.esp"));
 }
 
 TEST_F(GameCache, ClearCache) {}

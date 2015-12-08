@@ -28,12 +28,8 @@
 #include "game_cache.h"
 #include "game_settings.h"
 #include "load_order_handler.h"
-#include "../plugin/plugin.h"
-#include "../metadata_list.h"
-#include "../masterlist.h"
 
 #include <string>
-#include <unordered_map>
 
 #include <boost/filesystem.hpp>
 
@@ -47,16 +43,14 @@ namespace loot {
 
         void Init(bool createFolder, const boost::filesystem::path& gameLocalAppData = "");
 
-        void RefreshActivePluginsList();
         void RedatePlugins();  //Change timestamps to match load order (Skyrim only).
 
         void LoadPlugins(bool headersOnly);  //Loads all installed plugins.
         bool ArePluginsFullyLoaded() const;  // Checks if the game's plugins have already been loaded.
 
-        //Plugin data and metadata lists.
-        Masterlist masterlist;
-        MetadataList userlist;
-        std::unordered_map<std::string, Plugin> plugins;  //Map so that plugin data can be edited.
+        // Check if the plugin is active by using the cached value if
+        // available, and otherwise asking the load order handler.
+        bool IsPluginActive(const std::string& pluginName) const;
     private:
         bool _pluginsFullyLoaded;
     };

@@ -41,8 +41,7 @@ namespace loot {
 
     class Plugin : public PluginMetadata, private libespm::Plugin {
     public:
-        Plugin(const std::string& name);
-        Plugin(Game& game, const std::string& name, const bool headerOnly);
+        Plugin(const Game& game, const std::string& name, const bool headerOnly);
 
         using libespm::Plugin::getDescription;
         using libespm::Plugin::getFormIds;
@@ -54,7 +53,7 @@ namespace loot {
         size_t NumOverrideFormIDs() const;
 
         bool LoadsBSA() const;
-        bool IsActive(const Game& game) const;
+        bool IsActive() const;
 
         //Load ordering functions.
         bool DoFormIDsOverlap(const Plugin& plugin) const;
@@ -63,8 +62,11 @@ namespace loot {
         //Validity checks.
         bool CheckInstallValidity(const Game& game);  //Checks that reqs and masters are all present, and that no incs are present. Returns true if the plugin is dirty.
         static bool IsValid(const std::string& filename, const Game& game);
+
+        bool operator < (const Plugin& rhs) const;
     private:
         bool _isEmpty;  // Does the plugin contain any records other than the TES4 header?
+        bool _isActive;
         bool _loadsBsa;
         std::string version;  //Obtained from description field.
         uint32_t crc;

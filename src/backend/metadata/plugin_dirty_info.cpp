@@ -98,9 +98,10 @@ namespace loot {
         uint32_t crc = 0;
 
         // Get the CRC from the game plugin cache if possible.
-        auto pluginPairIt = game.plugins.find(boost::locale::to_lower(pluginName));
-        if (pluginPairIt != game.plugins.end())
-            crc = pluginPairIt->second.Crc();
+        try {
+            crc = game.GetPlugin(pluginName).Crc();
+        }
+        catch (...) {}
 
         // Otherwise calculate it from the file.
         if (crc == 0) {

@@ -94,7 +94,7 @@ TEST_F(PluginSorter, Sort_WithPriority) {
     ASSERT_NO_THROW(game.LoadPlugins(false));
     loot::PluginMetadata plugin("Blank - Different Master Dependent.esp");
     plugin.Priority(-1100000);
-    game.userlist.AddPlugin(plugin);
+    game.GetUserlist().AddPlugin(plugin);
 
     loot::PluginSorter ps;
     std::list<std::string> expectedSortedOrder({
@@ -122,7 +122,7 @@ TEST_F(PluginSorter, Sort_WithLoadAfter) {
         loot::File("Blank - Different.esp"),
         loot::File("Blank - Different Plugin Dependent.esp"),
     });
-    game.userlist.AddPlugin(plugin);
+    game.GetUserlist().AddPlugin(plugin);
 
     loot::PluginSorter ps;
     std::list<std::string> expectedSortedOrder({
@@ -150,7 +150,7 @@ TEST_F(PluginSorter, Sort_WithRequirements) {
         loot::File("Blank - Different.esp"),
         loot::File("Blank - Different Plugin Dependent.esp"),
     });
-    game.userlist.AddPlugin(plugin);
+    game.GetUserlist().AddPlugin(plugin);
 
     loot::PluginSorter ps;
     std::list<std::string> expectedSortedOrder({
@@ -175,7 +175,7 @@ TEST_F(PluginSorter, Sort_HasCycle) {
     ASSERT_NO_THROW(game.LoadPlugins(false));
     loot::PluginMetadata plugin("Blank.esm");
     plugin.LoadAfter({loot::File("Blank - Master Dependent.esm")});
-    game.userlist.AddPlugin(plugin);
+    game.GetUserlist().AddPlugin(plugin);
 
     loot::PluginSorter ps;
     EXPECT_ANY_THROW(ps.Sort(game, loot::Language::english, callback));

@@ -25,8 +25,8 @@ make git2
 cd ../..
 
 # Build libloadorder
-wget https://github.com/WrinklyNinja/libloadorder/archive/3a7d694e2eab9957b745fe828da1ed00f537c989.tar.gz -O - | tar -xz
-mv libloadorder-3a7d694e2eab9957b745fe828da1ed00f537c989 libloadorder
+wget https://github.com/WrinklyNinja/libloadorder/archive/7.0.0.tar.gz -O - | tar -xz
+mv libloadorder-7.0.0 libloadorder
 mkdir libloadorder/build && cd libloadorder/build
 cmake .. -DPROJECT_ARCH=64 -DPROJECT_STATIC_RUNTIME=OFF -DBUILD_SHARED_LIBS=OFF -DGTEST_ROOT=../gtest-1.7.0
 make loadorder64

@@ -33,8 +33,8 @@ LOOT requires the following C/C++ libraries (version numbers used in latest deve
 * [Google Test](https://github.com/google/googletest) v1.7: Required to build the tests, but not the API or the GUI.
 * [Libespm](http://github.com/WrinklyNinja/libespm) v2.5.0
 * [Libgit2](http://libgit2.github.com/) v0.23.4
-* [Libloadorder](http://github.com/WrinklyNinja/libloadorder) revision 3a7d694
-* [Pseudosem](http://github.com/WrinklyNinja/pseudosem): v1.0.1
+* [Libloadorder](http://github.com/WrinklyNinja/libloadorder) v7.0.0
+* [Pseudosem](http://github.com/WrinklyNinja/pseudosem) v1.0.1
 * [yaml-cpp](http://github.com/WrinklyNinja/yaml-cpp): Use the `patched-for-loot` branch.
 
 In addition, LOOT's UI relies on the web libraries below, which can be fetched by running `bower install` from the repository root.
