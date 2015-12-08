@@ -363,9 +363,9 @@ LOOT_API unsigned int loot_load_lists(loot_db db, const char * const masterlistP
     db->extTagMap = nullptr;
     db->extMessageArray = nullptr;
 
-    db->masterlist = temp;
+    db->GetMasterlist() = temp;
     db->rawMetadata = temp;
-    db->userlist = userTemp;
+    db->GetUserlist() = userTemp;
     db->rawUserMetadata = userTemp;
 
     return loot_ok;
@@ -406,8 +406,8 @@ LOOT_API unsigned int loot_eval_lists(loot_db db, const unsigned int language) {
     catch (loot::error& e) {
         return c_error(e);
     }
-    db->masterlist = temp;
-    db->userlist = userTemp;
+    db->GetMasterlist() = temp;
+    db->GetUserlist() = userTemp;
 
     return loot_ok;
 }
@@ -575,12 +575,12 @@ LOOT_API unsigned int loot_get_tag_map(loot_db db, char *** const tagMap, size_t
 
     std::set<std::string> allTags;
 
-    for (const auto &plugin : db->masterlist.Plugins()) {
+    for (const auto &plugin : db->GetMasterlist().Plugins()) {
         for (const auto &tag : plugin.Tags()) {
             allTags.insert(tag.Name());
         }
     }
-    for (const auto &plugin : db->userlist.Plugins()) {
+    for (const auto &plugin : db->GetUserlist().Plugins()) {
         for (const auto &tag : plugin.Tags()) {
             allTags.insert(tag.Name());
         }
@@ -649,7 +649,7 @@ LOOT_API unsigned int loot_get_plugin_tags(loot_db db, const char * const plugin
     *numTags_removed = 0;
 
     std::set<std::string> tagsAdded, tagsRemoved;
-    loot::PluginMetadata p = db->masterlist.FindPlugin(loot::PluginMetadata(plugin));
+    loot::PluginMetadata p = db->GetMasterlist().FindPlugin(loot::PluginMetadata(plugin));
     for (const auto &tag : p.Tags()) {
         if (tag.IsAddition())
             tagsAdded.insert(tag.Name());
@@ -657,7 +657,7 @@ LOOT_API unsigned int loot_get_plugin_tags(loot_db db, const char * const plugin
             tagsRemoved.insert(tag.Name());
     }
 
-    p = db->userlist.FindPlugin(loot::PluginMetadata(plugin));
+    p = db->GetUserlist().FindPlugin(loot::PluginMetadata(plugin));
     *userlistModified = !p.Tags().empty();
     for (const auto &tag : p.Tags()) {
         *userlistModified = true;
@@ -730,10 +730,10 @@ LOOT_API unsigned int loot_get_plugin_messages(loot_db db, const char * const pl
     *messages = nullptr;
     *numMessages = 0;
 
-    loot::PluginMetadata p = db->masterlist.FindPlugin(loot::PluginMetadata(plugin));
+    loot::PluginMetadata p = db->GetMasterlist().FindPlugin(loot::PluginMetadata(plugin));
     std::list<loot::Message> pluginMessages(p.Messages());
 
-    p = db->userlist.FindPlugin(loot::PluginMetadata(plugin));
+    p = db->GetUserlist().FindPlugin(loot::PluginMetadata(plugin));
     std::list<loot::Message> temp(p.Messages());
     pluginMessages.insert(pluginMessages.end(), temp.begin(), temp.end());
 
@@ -766,8 +766,8 @@ LOOT_API unsigned int loot_get_dirty_info(loot_db db, const char * const plugin,
     *needsCleaning = loot_needs_cleaning_unknown;
 
     // Is there any dirty info? Testing for applicability happens in loot_eval_lists().
-    if (!db->masterlist.FindPlugin(loot::PluginMetadata(plugin)).DirtyInfo().empty()
-        || !db->userlist.FindPlugin(loot::PluginMetadata(plugin)).DirtyInfo().empty()) {
+    if (!db->GetMasterlist().FindPlugin(loot::PluginMetadata(plugin)).DirtyInfo().empty()
+        || !db->GetUserlist().FindPlugin(loot::PluginMetadata(plugin)).DirtyInfo().empty()) {
         *needsCleaning = loot_needs_cleaning_yes;
     }
 
@@ -775,9 +775,9 @@ LOOT_API unsigned int loot_get_dirty_info(loot_db db, const char * const plugin,
     // This isn't a very reliable system, because if the lists have been evaluated in some language
     // other than English, the strings will be in different languages (and the API can't tell what they'd be)
     // and the strings may be non-standard and begin with something other than "Do not clean." anyway.
-    std::list<loot::Message> messages(db->masterlist.FindPlugin(loot::PluginMetadata(plugin)).Messages());
+    std::list<loot::Message> messages(db->GetMasterlist().FindPlugin(loot::PluginMetadata(plugin)).Messages());
 
-    std::list<loot::Message> temp(db->userlist.FindPlugin(loot::PluginMetadata(plugin)).Messages());
+    std::list<loot::Message> temp(db->GetUserlist().FindPlugin(loot::PluginMetadata(plugin)).Messages());
     messages.insert(messages.end(), temp.begin(), temp.end());
 
     for (const auto& message : messages) {
@@ -804,7 +804,7 @@ LOOT_API unsigned int loot_write_minimal_list(loot_db db, const char * const out
     if (boost::filesystem::exists(outputFile) && !overwrite)
         return c_error(loot_error_file_write_fail, "Output file exists but overwrite is not set to true.");
 
-    loot::Masterlist temp = db->masterlist;
+    loot::Masterlist temp = db->GetMasterlist();
     std::unordered_set<loot::PluginMetadata> minimalPlugins;
     for (const auto &plugin : temp.Plugins()) {
         loot::PluginMetadata p(plugin.Name());

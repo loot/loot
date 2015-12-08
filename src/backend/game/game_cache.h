@@ -25,11 +25,14 @@
 #ifndef __LOOT_GAME_CRC_CACHE__
 #define __LOOT_GAME_CRC_CACHE__
 
-#include <string>
+#include "../metadata_list.h"
+#include "../masterlist.h"
+#include "../plugin/plugin.h"
+
 #include <cstdint>
+#include <string>
 #include <mutex>
 #include <unordered_map>
-#include <unordered_set>
 
 namespace loot {
     class GameCache {
@@ -39,15 +42,23 @@ namespace loot {
 
         GameCache& operator=(const GameCache& cache);
 
-        void CacheCondition(const std::string& condition, bool result);
+        Masterlist& GetMasterlist();
+        MetadataList& GetUserlist();
 
         // Returns false for second bool if no cached condition.
         std::pair<bool, bool> GetCachedCondition(const std::string& condition) const;
+        void CacheCondition(const std::string& condition, bool result);
+
+        std::set<Plugin> GetPlugins() const;
+        const Plugin& GetPlugin(const std::string & pluginName) const;
+        void AddPlugin(const Plugin&& plugin);
 
         void ClearCache();
     private:
-        //Caches for condition results, CRCs and active plugins.
+        Masterlist masterlist;
+        MetadataList userlist;
         std::unordered_map<std::string, bool> conditionCache;
+        std::unordered_map<std::string, Plugin> plugins;
 
         mutable std::mutex mutex;
     };

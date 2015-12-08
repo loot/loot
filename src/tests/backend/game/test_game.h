@@ -216,11 +216,11 @@ TEST_F(Game, LoadPlugins) {
     game.SetGamePath(dataPath.parent_path());
 
     EXPECT_NO_THROW(game.LoadPlugins(false));
-    EXPECT_EQ(11, game.plugins.size());
+    EXPECT_EQ(11, game.GetPlugins().size());
 
     // Check that all the plugins' data have loaded correctly.
-    ASSERT_NE(game.plugins.end(), game.plugins.find("skyrim.esm"));
-    loot::Plugin plugin = game.plugins.find("skyrim.esm")->second;
+    ASSERT_NO_THROW(game.GetPlugin("Skyrim.esm"));
+    loot::Plugin plugin = game.GetPlugin("Skyrim.esm");
     EXPECT_EQ("Skyrim.esm", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
     EXPECT_TRUE(plugin.isMasterFile());
@@ -241,8 +241,8 @@ TEST_F(Game, LoadPlugins) {
     EXPECT_EQ(0x187BE342, plugin.Crc());
     EXPECT_EQ(0, plugin.NumOverrideFormIDs());
 
-    ASSERT_NE(game.plugins.end(), game.plugins.find("blank.esm"));
-    plugin = game.plugins.find("blank.esm")->second;
+    ASSERT_NO_THROW(game.GetPlugin("blank.esm"));
+    plugin = game.GetPlugin("blank.esm");
     EXPECT_EQ("Blank.esm", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
     EXPECT_TRUE(plugin.isMasterFile());
@@ -263,8 +263,8 @@ TEST_F(Game, LoadPlugins) {
     EXPECT_EQ(0x187BE342, plugin.Crc());
     EXPECT_EQ(0, plugin.NumOverrideFormIDs());
 
-    ASSERT_NE(game.plugins.end(), game.plugins.find("blank - different.esm"));
-    plugin = game.plugins.find("blank - different.esm")->second;
+    ASSERT_NO_THROW(game.GetPlugin("Blank - Different.esm"));
+    plugin = game.GetPlugin("Blank - Different.esm");
     EXPECT_EQ("Blank - Different.esm", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
     EXPECT_TRUE(plugin.isMasterFile());
@@ -284,8 +284,8 @@ TEST_F(Game, LoadPlugins) {
     EXPECT_EQ(0x64B9F757, plugin.Crc());
     EXPECT_EQ(0, plugin.NumOverrideFormIDs());
 
-    ASSERT_NE(game.plugins.end(), game.plugins.find("blank - master dependent.esm"));
-    plugin = game.plugins.find("blank - master dependent.esm")->second;
+    ASSERT_NO_THROW(game.GetPlugin("blank - master dependent.esm"));
+    plugin = game.GetPlugin("blank - master dependent.esm");
     EXPECT_EQ("Blank - Master Dependent.esm", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
     EXPECT_TRUE(plugin.isMasterFile());
@@ -306,8 +306,8 @@ TEST_F(Game, LoadPlugins) {
     EXPECT_EQ(0xB2D4119E, plugin.Crc());
     EXPECT_EQ(4, plugin.NumOverrideFormIDs());
 
-    ASSERT_NE(game.plugins.end(), game.plugins.find("blank - different master dependent.esm"));
-    plugin = game.plugins.find("blank - different master dependent.esm")->second;
+    ASSERT_NO_THROW(game.GetPlugin("blank - different master dependent.esm"));
+    plugin = game.GetPlugin("blank - different master dependent.esm");
     EXPECT_EQ("Blank - Different Master Dependent.esm", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
     EXPECT_TRUE(plugin.isMasterFile());
@@ -327,8 +327,8 @@ TEST_F(Game, LoadPlugins) {
     EXPECT_EQ(0xAADF6710, plugin.Crc());
     EXPECT_EQ(4, plugin.NumOverrideFormIDs());
 
-    ASSERT_NE(game.plugins.end(), game.plugins.find("blank.esp"));
-    plugin = game.plugins.find("blank.esp")->second;
+    ASSERT_NO_THROW(game.GetPlugin("blank.esp"));
+    plugin = game.GetPlugin("blank.esp");
     EXPECT_EQ("Blank.esp", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
     EXPECT_FALSE(plugin.isMasterFile());
@@ -345,8 +345,8 @@ TEST_F(Game, LoadPlugins) {
     EXPECT_EQ(0x24F0E2A1, plugin.Crc());
     EXPECT_EQ(0, plugin.NumOverrideFormIDs());
 
-    ASSERT_NE(game.plugins.end(), game.plugins.find("blank - different.esp"));
-    plugin = game.plugins.find("blank - different.esp")->second;
+    ASSERT_NO_THROW(game.GetPlugin("blank - different.esp"));
+    plugin = game.GetPlugin("blank - different.esp");
     EXPECT_EQ("Blank - Different.esp", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
     EXPECT_FALSE(plugin.isMasterFile());
@@ -362,8 +362,8 @@ TEST_F(Game, LoadPlugins) {
     EXPECT_EQ(0xD4C9B7AE, plugin.Crc());
     EXPECT_EQ(0, plugin.NumOverrideFormIDs());
 
-    ASSERT_NE(game.plugins.end(), game.plugins.find("blank - master dependent.esp"));
-    plugin = game.plugins.find("blank - master dependent.esp")->second;
+    ASSERT_NO_THROW(game.GetPlugin("blank - master dependent.esp"));
+    plugin = game.GetPlugin("blank - master dependent.esp");
     EXPECT_EQ("Blank - Master Dependent.esp", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
     EXPECT_FALSE(plugin.isMasterFile());
@@ -380,8 +380,8 @@ TEST_F(Game, LoadPlugins) {
     EXPECT_EQ(0x832152DC, plugin.Crc());
     EXPECT_EQ(2, plugin.NumOverrideFormIDs());
 
-    ASSERT_NE(game.plugins.end(), game.plugins.find("blank - different master dependent.esp"));
-    plugin = game.plugins.find("blank - different master dependent.esp")->second;
+    ASSERT_NO_THROW(game.GetPlugin("blank - different master dependent.esp"));
+    plugin = game.GetPlugin("blank - different master dependent.esp");
     EXPECT_EQ("Blank - Different Master Dependent.esp", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
     EXPECT_FALSE(plugin.isMasterFile());
@@ -397,8 +397,8 @@ TEST_F(Game, LoadPlugins) {
     EXPECT_EQ(0x3AD17683, plugin.Crc());
     EXPECT_EQ(2, plugin.NumOverrideFormIDs());
 
-    ASSERT_NE(game.plugins.end(), game.plugins.find("blank - plugin dependent.esp"));
-    plugin = game.plugins.find("blank - plugin dependent.esp")->second;
+    ASSERT_NO_THROW(game.GetPlugin("blank - plugin dependent.esp"));
+    plugin = game.GetPlugin("blank - plugin dependent.esp");
     EXPECT_EQ("Blank - Plugin Dependent.esp", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
     EXPECT_FALSE(plugin.isMasterFile());
@@ -413,8 +413,8 @@ TEST_F(Game, LoadPlugins) {
     EXPECT_EQ(0x28EF26DB, plugin.Crc());
     EXPECT_EQ(1, plugin.NumOverrideFormIDs());
 
-    ASSERT_NE(game.plugins.end(), game.plugins.find("blank - different plugin dependent.esp"));
-    plugin = game.plugins.find("blank - different plugin dependent.esp")->second;
+    ASSERT_NO_THROW(game.GetPlugin("blank - different plugin dependent.esp"));
+    plugin = game.GetPlugin("blank - different plugin dependent.esp");
     EXPECT_EQ("Blank - Different Plugin Dependent.esp", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
     EXPECT_FALSE(plugin.isMasterFile());
@@ -434,11 +434,11 @@ TEST_F(Game, LoadPlugins_HeadersOnly) {
     game.SetGamePath(dataPath.parent_path());
 
     EXPECT_NO_THROW(game.LoadPlugins(true));
-    EXPECT_EQ(11, game.plugins.size());
+    EXPECT_EQ(11, game.GetPlugins().size());
 
     // Check that all the plugins' data have loaded correctly.
-    ASSERT_NE(game.plugins.end(), game.plugins.find("skyrim.esm"));
-    loot::Plugin plugin = game.plugins.find("skyrim.esm")->second;
+    ASSERT_NO_THROW(game.GetPlugin("Skyrim.esm"));
+    loot::Plugin plugin = game.GetPlugin("Skyrim.esm");
     EXPECT_EQ("Skyrim.esm", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
     EXPECT_TRUE(plugin.isMasterFile());
@@ -448,8 +448,8 @@ TEST_F(Game, LoadPlugins_HeadersOnly) {
     EXPECT_EQ(0, plugin.Crc());
     EXPECT_EQ(0, plugin.NumOverrideFormIDs());
 
-    ASSERT_NE(game.plugins.end(), game.plugins.find("blank.esm"));
-    plugin = game.plugins.find("blank.esm")->second;
+    ASSERT_NO_THROW(game.GetPlugin("blank.esm"));
+    plugin = game.GetPlugin("blank.esm");
     EXPECT_EQ("Blank.esm", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
     EXPECT_TRUE(plugin.isMasterFile());
@@ -459,8 +459,8 @@ TEST_F(Game, LoadPlugins_HeadersOnly) {
     EXPECT_EQ(0, plugin.Crc());
     EXPECT_EQ(0, plugin.NumOverrideFormIDs());
 
-    ASSERT_NE(game.plugins.end(), game.plugins.find("blank - different.esm"));
-    plugin = game.plugins.find("blank - different.esm")->second;
+    ASSERT_NO_THROW(game.GetPlugin("Blank - Different.esm"));
+    plugin = game.GetPlugin("Blank - Different.esm");
     EXPECT_EQ("Blank - Different.esm", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
     EXPECT_TRUE(plugin.isMasterFile());
@@ -470,8 +470,8 @@ TEST_F(Game, LoadPlugins_HeadersOnly) {
     EXPECT_EQ(0, plugin.Crc());
     EXPECT_EQ(0, plugin.NumOverrideFormIDs());
 
-    ASSERT_NE(game.plugins.end(), game.plugins.find("blank - master dependent.esm"));
-    plugin = game.plugins.find("blank - master dependent.esm")->second;
+    ASSERT_NO_THROW(game.GetPlugin("blank - master dependent.esm"));
+    plugin = game.GetPlugin("blank - master dependent.esm");
     EXPECT_EQ("Blank - Master Dependent.esm", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
     EXPECT_TRUE(plugin.isMasterFile());
@@ -483,8 +483,8 @@ TEST_F(Game, LoadPlugins_HeadersOnly) {
     EXPECT_EQ(0, plugin.Crc());
     EXPECT_EQ(0, plugin.NumOverrideFormIDs());
 
-    ASSERT_NE(game.plugins.end(), game.plugins.find("blank - different master dependent.esm"));
-    plugin = game.plugins.find("blank - different master dependent.esm")->second;
+    ASSERT_NO_THROW(game.GetPlugin("blank - different master dependent.esm"));
+    plugin = game.GetPlugin("blank - different master dependent.esm");
     EXPECT_EQ("Blank - Different Master Dependent.esm", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
     EXPECT_TRUE(plugin.isMasterFile());
@@ -496,8 +496,8 @@ TEST_F(Game, LoadPlugins_HeadersOnly) {
     EXPECT_EQ(0, plugin.Crc());
     EXPECT_EQ(0, plugin.NumOverrideFormIDs());
 
-    ASSERT_NE(game.plugins.end(), game.plugins.find("blank.esp"));
-    plugin = game.plugins.find("blank.esp")->second;
+    ASSERT_NO_THROW(game.GetPlugin("blank.esp"));
+    plugin = game.GetPlugin("blank.esp");
     EXPECT_EQ("Blank.esp", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
     EXPECT_FALSE(plugin.isMasterFile());
@@ -507,8 +507,8 @@ TEST_F(Game, LoadPlugins_HeadersOnly) {
     EXPECT_EQ(0, plugin.Crc());
     EXPECT_EQ(0, plugin.NumOverrideFormIDs());
 
-    ASSERT_NE(game.plugins.end(), game.plugins.find("blank - different.esp"));
-    plugin = game.plugins.find("blank - different.esp")->second;
+    ASSERT_NO_THROW(game.GetPlugin("blank - different.esp"));
+    plugin = game.GetPlugin("blank - different.esp");
     EXPECT_EQ("Blank - Different.esp", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
     EXPECT_FALSE(plugin.isMasterFile());
@@ -518,8 +518,8 @@ TEST_F(Game, LoadPlugins_HeadersOnly) {
     EXPECT_EQ(0, plugin.Crc());
     EXPECT_EQ(0, plugin.NumOverrideFormIDs());
 
-    ASSERT_NE(game.plugins.end(), game.plugins.find("blank - master dependent.esp"));
-    plugin = game.plugins.find("blank - master dependent.esp")->second;
+    ASSERT_NO_THROW(game.GetPlugin("blank - master dependent.esp"));
+    plugin = game.GetPlugin("blank - master dependent.esp");
     EXPECT_EQ("Blank - Master Dependent.esp", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
     EXPECT_FALSE(plugin.isMasterFile());
@@ -531,8 +531,8 @@ TEST_F(Game, LoadPlugins_HeadersOnly) {
     EXPECT_EQ(0, plugin.Crc());
     EXPECT_EQ(0, plugin.NumOverrideFormIDs());
 
-    ASSERT_NE(game.plugins.end(), game.plugins.find("blank - different master dependent.esp"));
-    plugin = game.plugins.find("blank - different master dependent.esp")->second;
+    ASSERT_NO_THROW(game.GetPlugin("blank - different master dependent.esp"));
+    plugin = game.GetPlugin("blank - different master dependent.esp");
     EXPECT_EQ("Blank - Different Master Dependent.esp", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
     EXPECT_FALSE(plugin.isMasterFile());
@@ -544,8 +544,8 @@ TEST_F(Game, LoadPlugins_HeadersOnly) {
     EXPECT_EQ(0, plugin.Crc());
     EXPECT_EQ(0, plugin.NumOverrideFormIDs());
 
-    ASSERT_NE(game.plugins.end(), game.plugins.find("blank - plugin dependent.esp"));
-    plugin = game.plugins.find("blank - plugin dependent.esp")->second;
+    ASSERT_NO_THROW(game.GetPlugin("blank - plugin dependent.esp"));
+    plugin = game.GetPlugin("blank - plugin dependent.esp");
     EXPECT_EQ("Blank - Plugin Dependent.esp", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
     EXPECT_FALSE(plugin.isMasterFile());
@@ -557,8 +557,8 @@ TEST_F(Game, LoadPlugins_HeadersOnly) {
     EXPECT_EQ(0, plugin.Crc());
     EXPECT_EQ(0, plugin.NumOverrideFormIDs());
 
-    ASSERT_NE(game.plugins.end(), game.plugins.find("blank - different plugin dependent.esp"));
-    plugin = game.plugins.find("blank - different plugin dependent.esp")->second;
+    ASSERT_NO_THROW(game.GetPlugin("blank - different plugin dependent.esp"));
+    plugin = game.GetPlugin("blank - different plugin dependent.esp");
     EXPECT_EQ("Blank - Different Plugin Dependent.esp", plugin.Name());
     EXPECT_FALSE(plugin.IsEmpty());
     EXPECT_FALSE(plugin.isMasterFile());

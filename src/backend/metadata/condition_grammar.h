@@ -293,9 +293,10 @@ namespace loot {
             else {
                 // CRC could be for a plugin or a file.
                 // Get the CRC from the game plugin cache if possible.
-                auto pluginPairIt = _game->plugins.find(boost::locale::to_lower(file));
-                if (pluginPairIt != _game->plugins.end())
-                    crc = pluginPairIt->second.Crc();
+                try {
+                    crc = _game->GetPlugin(file).Crc();
+                }
+                catch (...) {}
 
                 if (crc == 0) {
                     if (boost::filesystem::exists(_game->DataPath() / file))

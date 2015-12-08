@@ -184,6 +184,10 @@ namespace loot {
         return false;
     }
 
+    bool Plugin::operator < (const Plugin & rhs) const {
+        return boost::ilexicographical_compare(Name(), rhs.Name());;
+    }
+
     bool Plugin::IsActive() const {
         return _isActive;
     }

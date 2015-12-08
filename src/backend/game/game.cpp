@@ -50,30 +50,7 @@ namespace loot {
             .SetRegistryKey(gameSettings.RegistryKey());
     }
 
-    Game::Game(const Game& game) :
-        GameSettings(game),
-        LoadOrderHandler(game),
-        GameCache(game),
-        masterlist(game.masterlist),
-        userlist(game.userlist),
-        plugins(game.plugins),
-        _pluginsFullyLoaded(game.ArePluginsFullyLoaded()) {}
-
     Game::Game(const unsigned int gameCode, const std::string& folder) : GameSettings(gameCode, folder), _pluginsFullyLoaded(false) {}
-
-    Game& Game::operator= (const Game& game) {
-        if (&game != this) {
-            GameSettings::operator=(game);
-            LoadOrderHandler::operator=(game);
-            GameCache::operator=(game);
-
-            masterlist = game.masterlist;
-            userlist = game.userlist;
-            plugins = game.plugins;
-            _pluginsFullyLoaded = game.ArePluginsFullyLoaded();
-        }
-        return *this;
-    }
 
     void Game::Init(bool createFolder, const boost::filesystem::path& gameLocalAppData) {
         if (Id() != Game::tes4 && Id() != Game::tes5 && Id() != Game::fo3 && Id() != Game::fonv && Id() != Game::fo4) {
@@ -156,11 +133,6 @@ namespace loot {
         }
         meanFileSize /= sizeMap.size();  //Rounding error, but not important.
 
-        // Reserve space in the plugins unordered_map to speed up inserting
-        // later and more importantly avoid any inserts invalidating
-        // iterators.
-        plugins.reserve(sizeMap.size());
-
         // Get the number of threads to use.
         // hardware_concurrency() may be zero, if so then use only one thread.
         size_t threadsToUse = std::min((size_t)thread::hardware_concurrency(), sizeMap.size());
@@ -190,7 +162,7 @@ namespace loot {
             threads.push_back(thread([&]() {
                 for (auto pluginName : pluginGroup) {
                     BOOST_LOG_TRIVIAL(trace) << "Loading " << pluginName;
-                    addPlugin(Plugin(*this, pluginName, headersOnly));
+                    AddPlugin(Plugin(*this, pluginName, headersOnly));
                 }
             }));
         }
@@ -209,16 +181,12 @@ namespace loot {
     }
 
     bool Game::IsPluginActive(const std::string& pluginName) const {
-        auto it = plugins.find(boost::locale::to_lower(pluginName));
-        if (it != end(plugins))
-            return it->second.IsActive();
-        else
+        try {
+            return GetPlugin(pluginName).IsActive();
+        }
+        catch (...) {
             return LoadOrderHandler::IsPluginActive(pluginName);
-    }
-
-    void Game::addPlugin(const Plugin&& plugin) {
-        std::lock_guard<std::mutex> lock(mutex);
-        plugins.emplace(boost::locale::to_lower(plugin.Name()), plugin);
+        }
     }
 
     std::list<Game> ToGames(const std::list<GameSettings>& settings) {

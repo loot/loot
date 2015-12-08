@@ -177,21 +177,16 @@ namespace loot {
         // Using a set of plugin names followed by finding the matching key
         // in the unordered map, as it's probably faster than copying the
         // full plugin objects then sorting them.
-        set<string> pluginNames;
-        for (const auto &plugin : game.plugins) {
-            pluginNames.insert(plugin.first);
-        }
-
-        for (const auto &plugin : pluginNames) {
-            vertex_t v = boost::add_vertex(game.plugins.find(plugin)->second, graph);
+        for (const auto &plugin : game.GetPlugins()) {
+            vertex_t v = boost::add_vertex(plugin, graph);
             BOOST_LOG_TRIVIAL(trace) << "Merging for plugin \"" << graph[v].Name() << "\"";
 
             //Check if there is a plugin entry in the masterlist. This will also find matching regex entries.
             BOOST_LOG_TRIVIAL(trace) << "Merging masterlist data down to plugin list data.";
-            graph[v].MergeMetadata(game.masterlist.FindPlugin(graph[v]));
+            graph[v].MergeMetadata(game.GetMasterlist().FindPlugin(graph[v]));
 
             //Check if there is a plugin entry in the userlist. This will also find matching regex entries.
-            PluginMetadata ulistPlugin = game.userlist.FindPlugin(graph[v]);
+            PluginMetadata ulistPlugin = game.GetUserlist().FindPlugin(graph[v]);
 
             if (!ulistPlugin.HasNameOnly() && ulistPlugin.Enabled()) {
                 BOOST_LOG_TRIVIAL(trace) << "Merging userlist data down to plugin list data.";

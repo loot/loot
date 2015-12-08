@@ -62,6 +62,8 @@ namespace loot {
         //Validity checks.
         bool CheckInstallValidity(const Game& game);  //Checks that reqs and masters are all present, and that no incs are present. Returns true if the plugin is dirty.
         static bool IsValid(const std::string& filename, const Game& game);
+
+        bool operator < (const Plugin& rhs) const;
     private:
         bool _isEmpty;  // Does the plugin contain any records other than the TES4 header?
         bool _isActive;
