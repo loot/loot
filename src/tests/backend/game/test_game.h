@@ -580,6 +580,81 @@ TEST_F(Game, ArePluginsFullyLoaded) {
     EXPECT_TRUE(game.ArePluginsFullyLoaded());
 }
 
+TEST_F(Game, shouldThrowIfCheckingIfPluginThatIsntLoadedIsActiveAndGameHasNotBeenInitialised) {
+    loot::Game game(loot::Game::tes5);
+    game.SetGamePath(dataPath.parent_path());
+
+    EXPECT_ANY_THROW(game.IsPluginActive("Blank.esm"));
+}
+
+TEST_F(Game, shouldShowBlankEsmAsActiveIfItHasNotBeenLoadedAndTheGameHasBeenInitialised) {
+    loot::Game game(loot::Game::tes5);
+    game.SetGamePath(dataPath.parent_path());
+    ASSERT_NO_THROW(game.Init(false, localPath));
+
+    EXPECT_TRUE(game.IsPluginActive("Blank.esm"));
+}
+
+TEST_F(Game, shouldShowBlankEspAsInctiveIfItHasNotBeenLoadedAndTheGameHasBeenInitialised) {
+    loot::Game game(loot::Game::tes5);
+    game.SetGamePath(dataPath.parent_path());
+    ASSERT_NO_THROW(game.Init(false, localPath));
+
+    EXPECT_FALSE(game.IsPluginActive("Blank.esp"));
+}
+
+TEST_F(Game, shouldShowBlankEsmAsInactiveIfItsHeaderHasBeenLoadedAndGameHasNotBeenInitialised) {
+    loot::Game game(loot::Game::tes5);
+    game.SetGamePath(dataPath.parent_path());
+    ASSERT_NO_THROW(game.LoadPlugins(true));
+
+    EXPECT_FALSE(game.IsPluginActive("Blank.esm"));
+}
+
+TEST_F(Game, shouldShowBlankEspAsActiveIfItsHeaderHasBeenLoadedAndGameHasNotBeenInitialised) {
+    loot::Game game(loot::Game::tes5);
+    game.SetGamePath(dataPath.parent_path());
+    ASSERT_NO_THROW(game.LoadPlugins(true));
+
+    EXPECT_FALSE(game.IsPluginActive("Blank.esp"));
+}
+
+TEST_F(Game, shouldShowBlankEsmAsActiveIfItsHeaderHasBeenLoadedAndTheGameHasBeenInitialised) {
+    loot::Game game(loot::Game::tes5);
+    game.SetGamePath(dataPath.parent_path());
+    ASSERT_NO_THROW(game.Init(false, localPath));
+    ASSERT_NO_THROW(game.LoadPlugins(true));
+
+    EXPECT_TRUE(game.IsPluginActive("Blank.esm"));
+}
+
+TEST_F(Game, shouldShowBlankEspAsActiveIfItsHeaderHasBeenLoadedAndTheGameHasBeenInitialised) {
+    loot::Game game(loot::Game::tes5);
+    game.SetGamePath(dataPath.parent_path());
+    ASSERT_NO_THROW(game.Init(false, localPath));
+    ASSERT_NO_THROW(game.LoadPlugins(true));
+
+    EXPECT_FALSE(game.IsPluginActive("Blank.esp"));
+}
+
+TEST_F(Game, shouldShowBlankEsmAsActiveIfItHasBeenFullyLoadedAndTheGameHasBeenInitialised) {
+    loot::Game game(loot::Game::tes5);
+    game.SetGamePath(dataPath.parent_path());
+    ASSERT_NO_THROW(game.Init(false, localPath));
+    ASSERT_NO_THROW(game.LoadPlugins(false));
+
+    EXPECT_TRUE(game.IsPluginActive("Blank.esm"));
+}
+
+TEST_F(Game, shouldShowBlankEspAsActiveIfItHasBeenFullyLoadedAndTheGameHasBeenInitialised) {
+    loot::Game game(loot::Game::tes5);
+    game.SetGamePath(dataPath.parent_path());
+    ASSERT_NO_THROW(game.Init(false, localPath));
+    ASSERT_NO_THROW(game.LoadPlugins(false));
+
+    EXPECT_FALSE(game.IsPluginActive("Blank.esp"));
+}
+
 TEST(ToGames, EmptySettings) {
     EXPECT_EQ(std::list<loot::Game>(), loot::ToGames(std::list<loot::GameSettings>()));
 }

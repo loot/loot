@@ -363,7 +363,7 @@ namespace loot {
             if (file == "LOOT")
                 result = false;
             else
-                result = Plugin(*_game, file, true).IsActive();
+                result = _game->IsPluginActive(file);
 
             BOOST_LOG_TRIVIAL(trace) << "Active check result: " << result;
         }

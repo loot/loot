@@ -55,6 +55,10 @@ namespace loot {
         void LoadPlugins(bool headersOnly);  //Loads all installed plugins.
         bool ArePluginsFullyLoaded() const;  // Checks if the game's plugins have already been loaded.
 
+        // Check if the plugin is active by using the cached value if
+        // available, and otherwise asking the load order handler.
+        bool IsPluginActive(const std::string& pluginName) const;
+
         //Plugin data and metadata lists.
         Masterlist masterlist;
         MetadataList userlist;

@@ -208,6 +208,14 @@ namespace loot {
         return _pluginsFullyLoaded;
     }
 
+    bool Game::IsPluginActive(const std::string& pluginName) const {
+        auto it = plugins.find(boost::locale::to_lower(pluginName));
+        if (it != end(plugins))
+            return it->second.IsActive();
+        else
+            return LoadOrderHandler::IsPluginActive(pluginName);
+    }
+
     void Game::addPlugin(const Plugin&& plugin) {
         std::lock_guard<std::mutex> lock(mutex);
         plugins.emplace(boost::locale::to_lower(plugin.Name()), plugin);

@@ -354,15 +354,15 @@ namespace loot {
                     decLength = 2;
                 }
                 size_t i = 0;
-                for (const auto& plugin : plugins) {
-                    if (Plugin(_lootState.CurrentGame(), plugin, true).IsActive()) {
+                for (const auto& pluginName : plugins) {
+                    if (_lootState.CurrentGame().IsPluginActive(pluginName)) {
                         ss << setw(decLength) << i << " " << hex << setw(2) << i << dec << " ";
                         ++i;
                     }
                     else {
                         ss << setw(decLength + 4) << "     ";
                     }
-                    ss << plugin << "\r\n";
+                    ss << pluginName << "\r\n";
                 }
                 CopyToClipboard(ss.str());
                 callback->Success("");
