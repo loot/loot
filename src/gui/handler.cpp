@@ -797,12 +797,14 @@ namespace loot {
             //Evaluate any conditions in the global messages.
             BOOST_LOG_TRIVIAL(debug) << "Evaluating global message conditions.";
             list<Message> messages = parsingErrors;
+            auto metadataListMessages = _lootState.CurrentGame().masterlist.Messages();
+            messages.insert(end(messages),
+                            begin(metadataListMessages),
+                            end(metadataListMessages));
+            metadataListMessages = _lootState.CurrentGame().userlist.Messages();
             messages.insert(messages.end(),
-                            _lootState.CurrentGame().masterlist.messages.begin(),
-                            _lootState.CurrentGame().masterlist.messages.end());
-            messages.insert(messages.end(),
-                            _lootState.CurrentGame().userlist.messages.begin(),
-                            _lootState.CurrentGame().userlist.messages.end());
+                            begin(metadataListMessages),
+                            end(metadataListMessages));
             try {
                 list<Message>::iterator it = messages.begin();
                 while (it != messages.end()) {
@@ -855,7 +857,7 @@ namespace loot {
                     // There was a parsing error, but roll-back was successful, so the process
 
                     // should still complete.
-                    _lootState.CurrentGame().masterlist.messages.push_back(Message(Message::error, e.what()));
+                    _lootState.CurrentGame().masterlist.AppendMessage(Message(Message::error, e.what()));
                     wasChanged = true;
                 }
                 else {
@@ -915,7 +917,7 @@ namespace loot {
 
                 //Evaluate any conditions in the global messages.
                 BOOST_LOG_TRIVIAL(debug) << "Evaluating global message conditions.";
-                list<Message> messages = _lootState.CurrentGame().masterlist.messages;
+                list<Message> messages = _lootState.CurrentGame().masterlist.Messages();
                 try {
                     list<Message>::iterator it = messages.begin();
                     while (it != messages.end()) {

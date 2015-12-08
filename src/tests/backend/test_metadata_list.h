@@ -73,7 +73,7 @@ TEST_F(MetadataList, Load) {
     EXPECT_NO_THROW(ml.Load(metadataPath));
     EXPECT_EQ(std::list<loot::Message>({
         loot::Message(loot::Message::say, "A global message."),
-    }), ml.messages);
+    }), ml.Messages());
 
     // Non-regex plugins can be outputted in any order, and regex entries can
     // match each other, so convert the list to a set of strings for
@@ -92,14 +92,14 @@ TEST_F(MetadataList, Load) {
     }), names);
 
     EXPECT_ANY_THROW(ml.Load("NotAPlugin.esm"));
-    EXPECT_TRUE(ml.messages.empty());
+    EXPECT_TRUE(ml.Messages().empty());
     EXPECT_TRUE(ml.Plugins().empty());
 
     // Fill the list again.
     ASSERT_NO_THROW(ml.Load(metadataPath));
 
     EXPECT_ANY_THROW(ml.Load("Blank.missing.esm"));
-    EXPECT_TRUE(ml.messages.empty());
+    EXPECT_TRUE(ml.Messages().empty());
     EXPECT_TRUE(ml.Plugins().empty());
 }
 
@@ -120,7 +120,7 @@ TEST_F(MetadataList, Save) {
 
     EXPECT_EQ(std::list<loot::Message>({
         loot::Message(loot::Message::say, "A global message."),
-    }), ml.messages);
+    }), ml.Messages());
 
     // Non-regex plugins can be outputted in any order, and regex entries can
     // match each other, so convert the list to a set of strings for
@@ -142,11 +142,11 @@ TEST_F(MetadataList, Save) {
 TEST_F(MetadataList, clear) {
     loot::MetadataList ml;
     ASSERT_NO_THROW(ml.Load(metadataPath));
-    ASSERT_FALSE(ml.messages.empty());
+    ASSERT_FALSE(ml.Messages().empty());
     ASSERT_FALSE(ml.Plugins().empty());
 
     ml.clear();
-    EXPECT_TRUE(ml.messages.empty());
+    EXPECT_TRUE(ml.Messages().empty());
     EXPECT_TRUE(ml.Plugins().empty());
 }
 

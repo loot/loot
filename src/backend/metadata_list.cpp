@@ -92,6 +92,10 @@ namespace loot {
         return pluginList;
     }
 
+    std::list<Message> MetadataList::Messages() const {
+        return messages;
+    }
+
     // Merges multiple matching regex entries if any are found.
     PluginMetadata MetadataList::FindPlugin(const PluginMetadata& plugin) const {
         PluginMetadata match(plugin.Name());
@@ -130,6 +134,10 @@ namespace loot {
             plugins.erase(it);
             return;
         }
+    }
+
+    void MetadataList::AppendMessage(const Message& message) {
+        messages.push_back(message);
     }
 
     void MetadataList::EvalAllConditions(Game& game, const unsigned int language) {

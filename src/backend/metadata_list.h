@@ -53,6 +53,7 @@ namespace loot {
         void clear();
 
         std::list<PluginMetadata> Plugins() const;
+        std::list<Message> Messages() const;
 
         // Merges multiple matching regex entries if any are found.
         PluginMetadata FindPlugin(const PluginMetadata& plugin) const;
@@ -62,13 +63,15 @@ namespace loot {
         // be required for other plugins.
         void ErasePlugin(const PluginMetadata& plugin);
 
+        void AppendMessage(const Message& message);
+
         // Eval plugin conditions.
         void EvalAllConditions(Game& game, const unsigned int language);
 
-        std::list<Message> messages;
     protected:
         std::unordered_set<PluginMetadata> plugins;
         std::list<PluginMetadata> regexPlugins;
+        std::list<Message> messages;
     };
 }
 
