@@ -56,6 +56,17 @@ protected:
         });
     }
 
+    inline static std::list<std::string> GetActualSortedOrder(const std::list<loot::Plugin>& sortedPlugins) {
+        std::list<std::string> output;
+        std::transform(begin(sortedPlugins),
+                       end(sortedPlugins),
+                       std::back_inserter(output),
+                       [](const loot::Plugin& plugin) {
+            return plugin.Name();
+        });
+        return output;
+    }
+
     loot::Game game;
     std::function<void(const std::string&)> callback;
 };
@@ -114,6 +125,57 @@ TEST_F(PluginSorter, Sort_WithPriority) {
 
     std::list<loot::Plugin> sorted = ps.Sort(game, loot::Language::english, callback);
     EXPECT_TRUE(std::equal(begin(sorted), end(sorted), begin(expectedSortedOrder)));
+}
+
+TEST_F(PluginSorter, sortingWithPrioritiesShouldInheritRecursivelyRegardlessOfEvaluationOrder) {
+    ASSERT_NO_THROW(game.LoadPlugins(false));
+
+    // Set Blank.esp's priority.
+    loot::PluginMetadata plugin("Blank.esp");
+    plugin.Priority(2);
+    game.GetUserlist().AddPlugin(plugin);
+
+    // Load Blank - Master Dependent.esp after Blank.esp so that it
+    // inherits Blank.esp's priority.
+    plugin = loot::PluginMetadata("Blank - Master Dependent.esp");
+    plugin.LoadAfter({
+        loot::File("Blank.esp"),
+    });
+    game.GetUserlist().AddPlugin(plugin);
+
+    // Load Blank - Different.esp after Blank - Master Dependent.esp, so
+    // that it inherits its inherited priority.
+    plugin = loot::PluginMetadata("Blank - Different.esp");
+    plugin.LoadAfter({
+        loot::File("Blank - Master Dependent.esp"),
+    });
+    game.GetUserlist().AddPlugin(plugin);
+
+    // Set Blank - Different Master Dependent.esp to have a higher priority
+    // than 0 but lower than Blank.esp. Need to also make it a global priority
+    // because it doesn't otherwise conflict with the other plugins.
+    plugin = loot::PluginMetadata("Blank - Different Master Dependent.esp");
+    plugin.Priority(1);
+    plugin.SetPriorityGlobal(true);
+    game.GetUserlist().AddPlugin(plugin);
+
+    loot::PluginSorter ps;
+    std::list<std::string> expectedSortedOrder({
+        "Skyrim.esm",
+        "Blank.esm",
+        "Blank - Different.esm",
+        "Blank - Master Dependent.esm",
+        "Blank - Different Master Dependent.esm",
+        "Blank - Different Master Dependent.esp",
+        "Blank.esp",
+        "Blank - Master Dependent.esp",
+        "Blank - Different.esp",
+        "Blank - Plugin Dependent.esp",
+        "Blank - Different Plugin Dependent.esp",
+    });
+
+    std::list<std::string> actualSortedOrder = GetActualSortedOrder(ps.Sort(game, loot::Language::english, callback));
+    EXPECT_EQ(expectedSortedOrder, actualSortedOrder);
 }
 
 TEST_F(PluginSorter, Sort_WithLoadAfter) {

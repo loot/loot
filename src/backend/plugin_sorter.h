@@ -56,6 +56,8 @@ namespace loot {
 
         int plugincmp(const std::string& plugin1, const std::string& plugin2) const;
 
+        void PropagatePriorities();
+
         void BuildPluginGraph(Game& game, const unsigned int language);
         void AddSpecificEdges();
         void AddPriorityEdges();

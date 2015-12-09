@@ -118,6 +118,8 @@ namespace loot {
         BOOST_LOG_TRIVIAL(debug) << "Adding non-overlap edges.";
         AddSpecificEdges();
 
+        PropagatePriorities();
+
         BOOST_LOG_TRIVIAL(debug) << "Adding priority edges.";
         AddPriorityEdges();
 
@@ -249,12 +251,66 @@ namespace loot {
         return false;
     }
 
+    void PluginSorter::PropagatePriorities() {
+        /* If a plugin has a priority value > 0, that value should be
+           inherited by all plugins that have edges coming from that
+           plugin, ie. those that load after it, unless the plugin being
+           compared itself has a larger value. */
+
+        // Find all vertices with priorities > 0.
+        std::vector<vertex_t> positivePriorityVertices;
+        vertex_it vit, vitend;
+        boost::tie(vit, vitend) = boost::vertices(graph);
+        std::copy_if(vit,
+                     vitend,
+                     std::back_inserter(positivePriorityVertices),
+                     [&](const vertex_t& vertex) {
+            return graph[vertex].Priority() > 0;
+        });
+
+        // To reduce the number of priorities that will need setting,
+        // sort the vertices in order of decreasing priority.
+        std::sort(begin(positivePriorityVertices),
+                  end(positivePriorityVertices),
+                  [&](const vertex_t& lhs, const vertex_t& rhs) {
+            return graph[lhs].Priority() > graph[rhs].Priority();
+        });
+
+        // Create a color map.
+        std::vector<boost::default_color_type> colorVec(num_vertices(graph));
+        boost::iterator_property_map<boost::default_color_type*, vertex_map_t> colorMap(&colorVec.front(), vertexIndexMap);
+
+        // Now loop over the vertices. For each one, do a depth-first
+        // search, setting priorities until an equal or larger value is
+        // encountered.
+        for (const vertex_t& vertex : positivePriorityVertices) {
+            BOOST_LOG_TRIVIAL(trace) << "Doing DFS for " << graph[vertex].Name() << " which has priority " << graph[vertex].Priority();
+            boost::dfs_visitor<> visitor;
+            boost::depth_first_visit(graph,
+                                     vertex,
+                                     visitor,
+                                     colorMap,
+                                     [&vertex](const vertex_t& currentVertex, const PluginGraph& graph) {
+                if (graph[currentVertex].Priority() < graph[vertex].Priority()) {
+                    BOOST_LOG_TRIVIAL(trace) << "Overriding priority for " << graph[currentVertex].Name() << " from " << graph[currentVertex].Priority() << " to " << graph[vertex].Priority();
+                    // const_cast is necessary because depth_first_search
+                    // takes a const graph.
+                    const_cast<PluginGraph&>(graph)[currentVertex].Priority(graph[vertex].Priority());
+
+                    return false;
+                }
+
+                return currentVertex != vertex
+                    && graph[currentVertex].Priority() >= graph[vertex].Priority();
+            });
+        }
+    }
+
     void PluginSorter::AddSpecificEdges() {
         //Add edges for all relationships that aren't overlaps or priority differences.
         loot::vertex_it vit, vitend;
         for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
             vertex_t parentVertex;
-            int parentPriority = graph[*vit].Priority();
 
             BOOST_LOG_TRIVIAL(trace) << "Adding specific edges to vertex for \"" << graph[*vit].Name() << "\".";
 
@@ -294,11 +350,6 @@ namespace loot {
                     BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[*vit].Name() << "\".";
 
                     boost::add_edge(parentVertex, *vit, graph);
-
-                    int priority = graph[parentVertex].Priority();
-                    if (priority > parentPriority) {
-                        parentPriority = priority;
-                    }
                 }
             }
             BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for requirements.";
@@ -309,11 +360,6 @@ namespace loot {
                     BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[*vit].Name() << "\".";
 
                     boost::add_edge(parentVertex, *vit, graph);
-
-                    int priority = graph[parentVertex].Priority();
-                    if (priority > parentPriority) {
-                        parentPriority = priority;
-                    }
                 }
             }
 
@@ -325,26 +371,13 @@ namespace loot {
                     BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[*vit].Name() << "\".";
 
                     boost::add_edge(parentVertex, *vit, graph);
-
-                    int priority = graph[parentVertex].Priority();
-                    if (priority > parentPriority) {
-                        parentPriority = priority;
-                    }
                 }
-            }
-
-            //parentPriority is now the highest priority value of any plugin that the current plugin needs to load after.
-            //Set the current plugin's priority to parentPlugin.
-            if (parentPriority > 0 && graph[*vit].Priority() < parentPriority) {
-                BOOST_LOG_TRIVIAL(trace) << "Overriding priority for " << graph[*vit].Name() << " from " << graph[*vit].Priority() << " to " << parentPriority;
-                graph[*vit].Priority(parentPriority);
             }
         }
     }
 
     void PluginSorter::AddPriorityEdges() {
         loot::vertex_it vit, vitend;
-
         for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
             BOOST_LOG_TRIVIAL(trace) << "Adding priority difference edges to vertex for \"" << graph[*vit].Name() << "\".";
             //Priority differences should only be taken account between plugins that conflict.
