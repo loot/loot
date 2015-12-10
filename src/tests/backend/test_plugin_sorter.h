@@ -93,7 +93,8 @@ TEST_F(PluginSorter, Sort_HeadersOnly) {
 TEST_F(PluginSorter, Sort_WithPriority) {
     ASSERT_NO_THROW(game.LoadPlugins(false));
     loot::PluginMetadata plugin("Blank - Different Master Dependent.esp");
-    plugin.Priority(-1100000);
+    plugin.Priority(-100000);
+    plugin.SetPriorityGlobal(true);
     game.GetUserlist().AddPlugin(plugin);
 
     loot::PluginSorter ps;

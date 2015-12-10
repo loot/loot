@@ -43,7 +43,7 @@
 #include <yaml-cpp/yaml.h>
 
 namespace loot {
-    const int max_priority = 1000000;
+    const int yamlGlobalPriorityDivisor = 1000000;
 
     class Game;
 
@@ -69,6 +69,8 @@ namespace loot {
         std::string Name() const;
         bool Enabled() const;
         int Priority() const;
+        bool IsPriorityExplicit() const;
+        bool IsPriorityGlobal() const;
         std::set<File> LoadAfter() const;
         std::set<File> Reqs() const;
         std::set<File> Incs() const;
@@ -78,8 +80,9 @@ namespace loot {
         std::set<Location> Locations() const;
 
         void Enabled(const bool enabled);
-        void SetPriorityExplicit(bool state);
         void Priority(const int priority);
+        void SetPriorityExplicit(bool state);
+        void SetPriorityGlobal(bool state);
         void LoadAfter(const std::set<File>& after);
         void Reqs(const std::set<File>& reqs);
         void Incs(const std::set<File>& incs);
@@ -91,7 +94,6 @@ namespace loot {
         PluginMetadata& EvalAllConditions(Game& game, const unsigned int language);
         bool HasNameOnly() const;
         bool IsRegexPlugin() const;
-        bool IsPriorityExplicit() const;
 
         //Compare name strings.
         bool operator == (const PluginMetadata& rhs) const;
@@ -100,11 +102,14 @@ namespace loot {
         //Compare name string.
         bool operator == (const std::string& rhs) const;
         bool operator != (const std::string& rhs) const;
+
+        int GetYamlPriorityValue() const;
     private:
         std::string name;
         bool enabled;  //Default to true.
-        bool _isPriorityExplicit;  //If false and priority is 0, then priority was not explicitly set as such.
         int priority;  //Default to 0 : >0 is lower down in load order, <0 is higher up.
+        bool _isPriorityExplicit;  //If false and priority is 0, then priority was not explicitly set as such.
+        bool isPriorityGlobal;
         std::set<File> loadAfter;
         std::set<File> requirements;
         std::set<File> incompatibilities;
@@ -136,7 +141,7 @@ namespace YAML {
                 node["enabled"] = rhs.Enabled();
 
             if (rhs.IsPriorityExplicit())
-                node["priority"] = rhs.Priority();
+                node["priority"] = rhs.GetYamlPriorityValue();
 
             if (!rhs.LoadAfter().empty())
                 node["after"] = rhs.LoadAfter();
@@ -178,8 +183,10 @@ namespace YAML {
                 rhs.Enabled(node["enabled"].as<bool>());
 
             if (node["priority"]) {
-                rhs.Priority(node["priority"].as<int>());
+                int priority = node["priority"].as<int>();
+                rhs.Priority(priority % loot::yamlGlobalPriorityDivisor);
                 rhs.SetPriorityExplicit(true);
+                rhs.SetPriorityGlobal(abs(priority) >= loot::yamlGlobalPriorityDivisor);
             }
 
             if (node["after"])

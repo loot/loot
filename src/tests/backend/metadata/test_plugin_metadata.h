@@ -34,12 +34,14 @@ TEST_F(PluginMetadata, Constructors) {
     loot::PluginMetadata pm;
     EXPECT_TRUE(pm.Enabled());
     EXPECT_FALSE(pm.IsPriorityExplicit());
+    EXPECT_FALSE(pm.IsPriorityGlobal());
     EXPECT_EQ(0, pm.Priority());
 
     pm = loot::PluginMetadata("Blank.esm");
     EXPECT_EQ("Blank.esm", pm.Name());
     EXPECT_TRUE(pm.Enabled());
     EXPECT_FALSE(pm.IsPriorityExplicit());
+    EXPECT_FALSE(pm.IsPriorityGlobal());
     EXPECT_EQ(0, pm.Priority());
 }
 
@@ -134,6 +136,7 @@ TEST_F(PluginMetadata, MergeMetadata) {
     EXPECT_TRUE(pm1.Enabled());
     EXPECT_EQ(5, pm1.Priority());
     EXPECT_TRUE(pm1.IsPriorityExplicit());
+    EXPECT_FALSE(pm1.IsPriorityGlobal());
     EXPECT_EQ(std::set<loot::File>({
         loot::File("Blank.esm"),
         loot::File("Blank.esp"),
@@ -168,6 +171,7 @@ TEST_F(PluginMetadata, MergeMetadata) {
     EXPECT_NO_THROW(pm1.MergeMetadata(pm2));
     EXPECT_EQ(0, pm1.Priority());
     EXPECT_TRUE(pm1.IsPriorityExplicit());
+    EXPECT_FALSE(pm1.IsPriorityGlobal());
 }
 
 TEST_F(PluginMetadata, DiffMetadata) {
@@ -244,6 +248,7 @@ TEST_F(PluginMetadata, DiffMetadata) {
     EXPECT_FALSE(result.Enabled());
     EXPECT_EQ(0, result.Priority());
     EXPECT_FALSE(result.IsPriorityExplicit());
+    EXPECT_FALSE(result.IsPriorityGlobal());
     EXPECT_EQ(std::set<loot::File>({
         loot::File("Blank.esp"),
         loot::File("Blank - Different.esm"),
@@ -279,6 +284,7 @@ TEST_F(PluginMetadata, DiffMetadata) {
 
     EXPECT_EQ(5, result.Priority());
     EXPECT_TRUE(result.IsPriorityExplicit());
+    EXPECT_FALSE(result.IsPriorityGlobal());
 }
 
 TEST_F(PluginMetadata, NewMetadata) {
@@ -355,6 +361,7 @@ TEST_F(PluginMetadata, NewMetadata) {
     EXPECT_TRUE(result.Enabled());
     EXPECT_EQ(0, result.Priority());
     EXPECT_FALSE(result.IsPriorityExplicit());
+    EXPECT_FALSE(result.IsPriorityGlobal());
     EXPECT_EQ(std::set<loot::File>({
         loot::File("Blank.esp")
     }), result.LoadAfter());
@@ -383,6 +390,7 @@ TEST_F(PluginMetadata, NewMetadata) {
 
     EXPECT_EQ(0, result.Priority());
     EXPECT_FALSE(result.IsPriorityExplicit());
+    EXPECT_FALSE(result.IsPriorityGlobal());
 }
 
 TEST_F(PluginMetadata, Enabled) {
@@ -404,6 +412,48 @@ TEST_F(PluginMetadata, Priority) {
     ASSERT_NE(10, pm.Priority());
     pm.Priority(10);
     EXPECT_EQ(10, pm.Priority());
+}
+
+TEST_F(PluginMetadata, settingPriorityWithAbsoluteValueGreaterOrEqualToGlobalPriorityDivisorShouldThrow) {
+    loot::PluginMetadata pm;
+    EXPECT_ANY_THROW(pm.Priority(loot::yamlGlobalPriorityDivisor));
+    EXPECT_ANY_THROW(pm.Priority(loot::yamlGlobalPriorityDivisor + 1));
+    EXPECT_ANY_THROW(pm.Priority(-loot::yamlGlobalPriorityDivisor));
+    EXPECT_ANY_THROW(pm.Priority(-loot::yamlGlobalPriorityDivisor - 1));
+}
+
+TEST_F(PluginMetadata, settingPriorityAsGlobalShouldSucceed) {
+    loot::PluginMetadata pm;
+    ASSERT_FALSE(pm.IsPriorityGlobal());
+    pm.SetPriorityGlobal(true);
+    EXPECT_TRUE(pm.IsPriorityGlobal());
+}
+
+TEST_F(PluginMetadata, settingPriorityAsNotGlobalShouldSucceed) {
+    loot::PluginMetadata pm;
+    pm.SetPriorityGlobal(true);
+    ASSERT_TRUE(pm.IsPriorityGlobal());
+    pm.SetPriorityGlobal(false);
+    EXPECT_FALSE(pm.IsPriorityGlobal());
+}
+
+TEST_F(PluginMetadata, gettingYamlPriorityValueForAGlobalPriorityShouldReturnValueWithGlobalFlagSet) {
+    loot::PluginMetadata pm;
+    pm.Priority(10);
+    pm.SetPriorityGlobal(true);
+    EXPECT_EQ(1000010, pm.GetYamlPriorityValue());
+
+    pm.Priority(-20);
+    EXPECT_EQ(-1000020, pm.GetYamlPriorityValue());
+}
+
+TEST_F(PluginMetadata, gettingYamlPriorityValueForANonGlobalPriorityShouldReturnValueWithGlobalFlagNotSet) {
+    loot::PluginMetadata pm;
+    pm.Priority(10);
+    EXPECT_EQ(10, pm.GetYamlPriorityValue());
+
+    pm.Priority(-20);
+    EXPECT_EQ(-20, pm.GetYamlPriorityValue());
 }
 
 TEST_F(PluginMetadata, LoadAfter) {
@@ -798,6 +848,7 @@ TEST_F(PluginMetadata, YamlDecode) {
     EXPECT_EQ("Blank.esp", pm.Name());
     EXPECT_EQ(0, pm.Priority());
     EXPECT_FALSE(pm.IsPriorityExplicit());
+    EXPECT_FALSE(pm.IsPriorityGlobal());
 
     node = YAML::Load("name: 'Blank.esp'\n"
                       "priority: 5\n"
@@ -824,6 +875,7 @@ TEST_F(PluginMetadata, YamlDecode) {
     EXPECT_EQ("Blank.esp", pm.Name());
     EXPECT_EQ(5, pm.Priority());
     EXPECT_TRUE(pm.IsPriorityExplicit());
+    EXPECT_FALSE(pm.IsPriorityGlobal());
     EXPECT_FALSE(pm.Enabled());
     EXPECT_EQ(std::set<loot::File>({
         loot::File("Blank.esm")

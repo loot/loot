@@ -352,23 +352,22 @@ namespace loot {
             //as they are for loading BSAs, and in Skyrim that means the resources they load can
             //be affected by load order.
 
+            // If the plugin does not have a global priority and doesn't load
+            // an archive and has no override records, skip it.
+            if (!graph[*vit].IsPriorityGlobal() && graph[*vit].NumOverrideFormIDs() == 0 && !graph[*vit].LoadsBSA())
+                continue;
+
             loot::vertex_it vit2, vitend2;
             for (boost::tie(vit2, vitend2) = boost::vertices(graph); vit2 != vitend2; ++vit2) {
+                // If the plugins have equal priority, or have non-global
+                // priorities but don't conflict, don't add a priority edge.
                 if (graph[*vit].Priority() == graph[*vit2].Priority()
-                    || (abs(graph[*vit].Priority()) < max_priority && abs(graph[*vit2].Priority()) < max_priority
-                    && !graph[*vit].getFormIds().empty() && !graph[*vit2].getFormIds().empty() && !graph[*vit].DoFormIDsOverlap(graph[*vit2])
-                    )
-                    ) {
+                    || !graph[*vit].IsPriorityGlobal() && !graph[*vit2].IsPriorityGlobal() && !graph[*vit].DoFormIDsOverlap(graph[*vit2])) {
                     continue;
                 }
 
-                //BOOST_LOG_TRIVIAL(trace) << "Checking priority difference between \"" << graph[*vit].Name() << "\" and \"" << graph[*vit2].Name() << "\".";
-
                 vertex_t vertex, parentVertex;
-                //Modulo operator is not consistently defined for negative numbers except in C++11, so use function.
-                int p1 = graph[*vit].Priority() % max_priority;
-                int p2 = graph[*vit2].Priority() % max_priority;
-                if (p1 < p2) {
+                if (graph[*vit].Priority() < graph[*vit2].Priority()) {
                     parentVertex = *vit;
                     vertex = *vit2;
                 }

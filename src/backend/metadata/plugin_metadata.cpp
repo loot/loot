@@ -25,6 +25,7 @@
 #include "plugin_metadata.h"
 #include "../game/game.h"
 #include "../helpers/helpers.h"
+#include "../error.h"
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
@@ -36,9 +37,9 @@
 using namespace std;
 
 namespace loot {
-    PluginMetadata::PluginMetadata() : enabled(true), _isPriorityExplicit(false), priority(0) {}
+    PluginMetadata::PluginMetadata() : enabled(true), _isPriorityExplicit(false), isPriorityGlobal(false), priority(0) {}
 
-    PluginMetadata::PluginMetadata(const std::string& n) : name(n), enabled(true), _isPriorityExplicit(false), priority(0) {
+    PluginMetadata::PluginMetadata(const std::string& n) : name(n), enabled(true), _isPriorityExplicit(false), isPriorityGlobal(false), priority(0) {
         //If the name passed ends in '.ghost', that should be trimmed.
         if (boost::iends_with(name, ".ghost"))
             name = name.substr(0, name.length() - 6);
@@ -52,7 +53,8 @@ namespace loot {
         //For 'enabled' and 'priority' metadata, use the given plugin's values, but if the 'priority' user value is not explicit, ignore it.
         enabled = plugin.Enabled();
         if (plugin.IsPriorityExplicit()) {
-            priority = plugin.Priority();
+            Priority(plugin.Priority());
+            SetPriorityGlobal(plugin.IsPriorityGlobal());
             _isPriorityExplicit = true;
         }
 
@@ -87,8 +89,9 @@ namespace loot {
         BOOST_LOG_TRIVIAL(trace) << "Calculating metadata difference for: " << name;
         PluginMetadata p(*this);
 
-        if (priority == plugin.Priority()) {
+        if (Priority() == plugin.Priority() && IsPriorityGlobal() == plugin.IsPriorityGlobal()) {
             p.Priority(0);
+            p.SetPriorityGlobal(false);
             p.SetPriorityExplicit(false);
         }
 
@@ -192,6 +195,14 @@ namespace loot {
         return priority;
     }
 
+    bool PluginMetadata::IsPriorityExplicit() const {
+        return priority != 0 || _isPriorityExplicit;
+    }
+
+    bool PluginMetadata::IsPriorityGlobal() const {
+        return isPriorityGlobal;
+    }
+
     std::set<File> PluginMetadata::LoadAfter() const {
         return loadAfter;
     }
@@ -224,12 +235,19 @@ namespace loot {
         enabled = e;
     }
 
+    void PluginMetadata::Priority(const int p) {
+        if (abs(p) >= yamlGlobalPriorityDivisor)
+            throw error(error::invalid_args, "Cannot set priority that has an absolute value greater than or equal to " + to_string(yamlGlobalPriorityDivisor));
+
+        priority = p;
+    }
+
     void PluginMetadata::SetPriorityExplicit(bool state) {
         _isPriorityExplicit = state;
     }
 
-    void PluginMetadata::Priority(const int p) {
-        priority = p;
+    void PluginMetadata::SetPriorityGlobal(bool state) {
+        isPriorityGlobal = state;
     }
 
     void PluginMetadata::LoadAfter(const std::set<File>& l) {
@@ -321,10 +339,6 @@ namespace loot {
         return strpbrk(name.c_str(), ":\\*?|") != nullptr;
     }
 
-    bool PluginMetadata::IsPriorityExplicit() const {
-        return priority != 0 || _isPriorityExplicit;
-    }
-
     bool PluginMetadata::operator == (const PluginMetadata& rhs) const {
         if (IsRegexPlugin() == rhs.IsRegexPlugin())
             return boost::iequals(name, rhs.Name());
@@ -349,6 +363,17 @@ namespace loot {
     bool PluginMetadata::operator != (const std::string& rhs) const {
         return !(*this == rhs);
     }
+
+    int PluginMetadata::GetYamlPriorityValue() const {
+        int priorityValue = Priority();
+        if (IsPriorityGlobal()) {
+            if (priorityValue < 0)
+                priorityValue -= loot::yamlGlobalPriorityDivisor;
+            else
+                priorityValue += loot::yamlGlobalPriorityDivisor;
+        }
+        return priorityValue;
+    }
 }
 
 namespace YAML {
@@ -357,8 +382,9 @@ namespace YAML {
             out << BeginMap
                 << Key << "name" << Value << YAML::SingleQuoted << rhs.Name();
 
-            if (rhs.IsPriorityExplicit())
-                out << Key << "priority" << Value << rhs.Priority();
+            if (rhs.IsPriorityExplicit()) {
+                out << Key << "priority" << Value << rhs.GetYamlPriorityValue();
+            }
 
             if (!rhs.Enabled())
                 out << Key << "enabled" << Value << rhs.Enabled();
