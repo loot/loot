@@ -269,11 +269,6 @@ LOOT_API unsigned int loot_get_error_message(const char ** const message) {
     return loot_ok;
 }
 
-// Frees memory allocated to error string.
-LOOT_API void     loot_cleanup() {
-    extMessageStr.clear();
-}
-
 //////////////////////////////
 // Version Functions
 //////////////////////////////

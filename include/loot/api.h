@@ -309,11 +309,6 @@ extern "C"
      */
     LOOT_API unsigned int loot_get_error_message(const char ** const message);
 
-    /**
-     *  @brief Frees the memory allocated to the last error details string.
-     */
-    LOOT_API void loot_cleanup();
-
     /**@}*/
     /**********************************************************************//**
      *  @name Version Functions

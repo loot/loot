@@ -76,31 +76,6 @@ TEST(GetErrorMessage, HandlesInputCorrectly) {
     ASSERT_STREQ("Null message pointer passed.", error);
 }
 
-TEST(Cleanup, CleansUpAfterError) {
-    // First generate an error.
-    EXPECT_EQ(loot_error_invalid_args, loot_get_error_message(NULL));
-
-    // Check that the error message is non-null.
-    const char * error;
-    EXPECT_EQ(loot_ok, loot_get_error_message(&error));
-    ASSERT_STREQ("Null message pointer passed.", error);
-
-    ASSERT_NO_THROW(loot_cleanup());
-
-    // Now check that the error message pointer is null.
-    error = nullptr;
-    EXPECT_EQ(loot_ok, loot_get_error_message(&error));
-    EXPECT_EQ(nullptr, error);
-}
-
-TEST(Cleanup, HandlesNoError) {
-    ASSERT_NO_THROW(loot_cleanup());
-
-    const char * error = nullptr;
-    EXPECT_EQ(loot_ok, loot_get_error_message(&error));
-    EXPECT_EQ(nullptr, error);
-}
-
 TEST_F(OblivionTest, CreateDbHandlesValidInputs) {
     EXPECT_EQ(loot_ok, loot_create_db(&db, loot_game_tes4, dataPath.parent_path().string().c_str(), localPath.string().c_str()));
     ASSERT_NO_THROW(loot_destroy_db(db));
