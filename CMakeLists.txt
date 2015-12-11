@@ -151,7 +151,8 @@ set (LOOT_API_SRC ${LOOT_SRC}
                   "${CMAKE_SOURCE_DIR}/src/api/api.cpp")
 
 set (LOOT_API_HEADERS ${LOOT_HEADERS}
-                  "${CMAKE_SOURCE_DIR}/include/loot/api.h")
+                  "${CMAKE_SOURCE_DIR}/include/loot/api.h"
+                  "${CMAKE_SOURCE_DIR}/src/api/_loot_db_int.h")
 
 set (LOOT_VALIDATOR_SRC ${LOOT_SRC}
                         "${CMAKE_SOURCE_DIR}/src/validator/main.cpp")
