@@ -92,8 +92,8 @@ namespace loot {
             _isActive = game.IsPluginActive(Name());
 
             // Get whether the plugin loads an archive (BSA/BA2) or not.
-            if (game.Id() == Game::tes5) {
-                // Skyrim plugins only load BSAs that exactly match their basename.
+            if (game.Id() == Game::tes5 || game.Id() == Game::fo4) {
+                // Skyrim and Fallout 4 plugins only load archives that exactly match their basename.
                 _loadsArchive = boost::filesystem::exists(game.DataPath() / (Name().substr(0, Name().length() - 3) + "bsa"));
             }
             else if (game.Id() != Game::tes4 || boost::iends_with(Name(), ".esp")) {
