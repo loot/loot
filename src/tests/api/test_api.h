@@ -196,8 +196,8 @@ TEST_F(OblivionAPIOperationsTest, UpdateMasterlist) {
 }
 
 TEST_F(OblivionAPIOperationsTest, GetMasterlistRevision) {
-    char * revisionID;
-    char * revisionDate;
+    const char * revisionID;
+    const char * revisionDate;
     bool isModified;
     EXPECT_EQ(loot_error_invalid_args, loot_get_masterlist_revision(NULL, masterlistPath.string().c_str(), false, &revisionID, &revisionDate, &isModified));
     EXPECT_EQ(loot_error_invalid_args, loot_get_masterlist_revision(db, NULL, false, &revisionID, &revisionDate, &isModified));
@@ -345,7 +345,7 @@ TEST_F(SkyrimAPIOperationsTest, EvalLists) {
 }
 
 TEST_F(OblivionAPIOperationsTest, SortPlugins) {
-    char ** sortedPlugins;
+    const char * const * sortedPlugins;
     size_t numPlugins;
     EXPECT_EQ(loot_error_invalid_args, loot_sort_plugins(NULL, &sortedPlugins, &numPlugins));
     EXPECT_EQ(loot_error_invalid_args, loot_sort_plugins(db, NULL, &numPlugins));
@@ -376,7 +376,7 @@ TEST_F(OblivionAPIOperationsTest, SortPlugins) {
 }
 
 TEST_F(SkyrimAPIOperationsTest, SortPlugins) {
-    char ** sortedPlugins;
+    const char * const * sortedPlugins;
     size_t numPlugins;
     EXPECT_EQ(loot_error_invalid_args, loot_sort_plugins(NULL, &sortedPlugins, &numPlugins));
     EXPECT_EQ(loot_error_invalid_args, loot_sort_plugins(db, NULL, &numPlugins));
@@ -449,7 +449,7 @@ TEST_F(SkyrimAPIOperationsTest, ApplyLoadOrder) {
 }
 
 TEST_F(OblivionAPIOperationsTest, GetTagMap) {
-    char ** tagMap;
+    const char * const * tagMap;
     size_t numTags;
     EXPECT_EQ(loot_error_invalid_args, loot_get_tag_map(NULL, &tagMap, &numTags));
     EXPECT_EQ(loot_error_invalid_args, loot_get_tag_map(db, NULL, &numTags));
@@ -490,8 +490,8 @@ TEST_F(OblivionAPIOperationsTest, GetTagMap) {
 }
 
 TEST_F(OblivionAPIOperationsTest, GetPluginTags) {
-    unsigned int * added;
-    unsigned int * removed;
+    const unsigned int * added;
+    const unsigned int * removed;
     size_t numAdded, numRemoved;
     bool modified;
     EXPECT_EQ(loot_error_invalid_args, loot_get_plugin_tags(NULL, "Unofficial Oblivion Patch.esp", &added, &numAdded, &removed, &numRemoved, &modified));
@@ -506,7 +506,7 @@ TEST_F(OblivionAPIOperationsTest, GetPluginTags) {
     EXPECT_EQ(loot_error_no_tag_map, loot_get_plugin_tags(db, "Unofficial Oblivion Patch.esp", &added, &numAdded, &removed, &numRemoved, &modified));
 
     // Load tag map.
-    char ** tagMap;
+    const char * const * tagMap;
     size_t numTags;
     ASSERT_NO_THROW(GenerateMasterlist());
     ASSERT_EQ(loot_ok, loot_load_lists(db, masterlistPath.string().c_str(), NULL));
@@ -554,7 +554,7 @@ TEST_F(OblivionAPIOperationsTest, GetPluginTags) {
 }
 
 TEST_F(OblivionAPIOperationsTest, GetPluginMessages) {
-    loot_message * messages;
+    const loot_message * messages;
     size_t numMessages;
     EXPECT_EQ(loot_error_invalid_args, loot_get_plugin_messages(NULL, "EnhancedWeatherSIOnly.esm", &messages, &numMessages));
     EXPECT_EQ(loot_error_invalid_args, loot_get_plugin_messages(db, NULL, &messages, &numMessages));

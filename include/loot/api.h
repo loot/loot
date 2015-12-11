@@ -465,7 +465,7 @@ extern "C"
      *  @returns A return code.
      */
     LOOT_API unsigned int loot_sort_plugins(loot_db db,
-                                            char *** const sortedPlugins,
+                                            const char * const ** const sortedPlugins,
                                             size_t * const numPlugins);
 
     /**
@@ -555,8 +555,8 @@ extern "C"
     LOOT_API unsigned int loot_get_masterlist_revision(loot_db db,
                                                        const char * const masterlistPath,
                                                        const bool getShortID,
-                                                       char ** const revisionID,
-                                                       char ** const revisionDate,
+                                                       const char ** const revisionID,
+                                                       const char ** const revisionDate,
                                                        bool * const isModified);
 
     /**@}*/
@@ -585,7 +585,7 @@ extern "C"
      *  @returns A return code.
      */
     LOOT_API unsigned int loot_get_tag_map(loot_db db,
-                                           char *** const tagMap,
+                                           const char * const ** const tagMap,
                                            size_t * const numTags);
 
     /**
@@ -619,9 +619,9 @@ extern "C"
      */
     LOOT_API unsigned int loot_get_plugin_tags(loot_db db,
                                                const char * const plugin,
-                                               unsigned int ** const tags_added,
+                                               const unsigned int ** const tags_added,
                                                size_t * const numTags_added,
-                                               unsigned int ** const tags_removed,
+                                               const unsigned int ** const tags_removed,
                                                size_t * const numTags_removed,
                                                bool * const userlistModified);
 
@@ -643,7 +643,7 @@ extern "C"
      */
     LOOT_API unsigned int loot_get_plugin_messages(loot_db db,
                                                    const char * const plugin,
-                                                   loot_message ** const messages,
+                                                   const loot_message ** const messages,
                                                    size_t * const numMessages);
 
     /**

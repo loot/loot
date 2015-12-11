@@ -480,7 +480,7 @@ LOOT_API unsigned int loot_eval_lists(loot_db db, const unsigned int language) {
 ////////////////////////////////////
 
 LOOT_API unsigned int loot_sort_plugins(loot_db db,
-                                        char *** const sortedPlugins,
+                                        const char * const ** const sortedPlugins,
                                         size_t * const numPlugins) {
     if (db == nullptr || sortedPlugins == nullptr || numPlugins == nullptr)
         return c_error(loot_error_invalid_args, "Null pointer passed.");
@@ -506,7 +506,7 @@ LOOT_API unsigned int loot_sort_plugins(loot_db db,
     }
 
     *numPlugins = db->getPluginNames().size();
-    *sortedPlugins = const_cast<char **>(&db->getPluginNames()[0]);
+    *sortedPlugins = &db->getPluginNames()[0];
 
     return loot_ok;
 }
@@ -553,8 +553,8 @@ LOOT_API unsigned int loot_update_masterlist(loot_db db,
 LOOT_API unsigned int loot_get_masterlist_revision(loot_db db,
                                                    const char * const masterlistPath,
                                                    const bool getShortID,
-                                                   char ** const revisionID,
-                                                   char ** const revisionDate,
+                                                   const char ** const revisionID,
+                                                   const char ** const revisionDate,
                                                    bool * const isModified) {
     if (db == nullptr || masterlistPath == nullptr || revisionID == nullptr || revisionDate == nullptr || isModified == nullptr)
         return c_error(loot_error_invalid_args, "Null pointer passed.");
@@ -588,8 +588,8 @@ LOOT_API unsigned int loot_get_masterlist_revision(loot_db db,
         return c_error(loot_error_no_mem, e.what());
     }
 
-    *revisionID = const_cast<char*>(db->getRevisionIdString());
-    *revisionDate = const_cast<char*>(db->getRevisionDateString());
+    *revisionID = db->getRevisionIdString();
+    *revisionDate = db->getRevisionDateString();
     *isModified = edited;
 
     return loot_ok;
@@ -602,7 +602,7 @@ LOOT_API unsigned int loot_get_masterlist_revision(loot_db db,
 // Returns an array of the Bash Tags encounterred when loading the masterlist
 // and userlist, and the number of tags in the returned array. The array and
 // its contents are static and should not be freed by the client.
-LOOT_API unsigned int loot_get_tag_map(loot_db db, char *** const tagMap, size_t * const numTags) {
+LOOT_API unsigned int loot_get_tag_map(loot_db db, const char * const ** const tagMap, size_t * const numTags) {
     if (db == nullptr || tagMap == nullptr || numTags == nullptr)
         return c_error(loot_error_invalid_args, "Null pointer passed.");
 
@@ -636,7 +636,7 @@ LOOT_API unsigned int loot_get_tag_map(loot_db db, char *** const tagMap, size_t
         return c_error(loot_error_no_mem, e.what());
     }
 
-    *tagMap = const_cast<char **>(&db->getBashTagMap()[0]);
+    *tagMap = &db->getBashTagMap()[0];
     *numTags = db->getBashTagMap().size();
 
     return loot_ok;
@@ -650,9 +650,9 @@ LOOT_API unsigned int loot_get_tag_map(loot_db db, char *** const tagMap, size_t
 // will be nullptr. The userlistModified bool is true if the userlist contains Bash Tag
 // suggestion message additions.
 LOOT_API unsigned int loot_get_plugin_tags(loot_db db, const char * const plugin,
-                                           unsigned int ** const tagIds_added,
+                                           const unsigned int ** const tagIds_added,
                                            size_t * const numTags_added,
-                                           unsigned int ** const tagIds_removed,
+                                           const unsigned int ** const tagIds_removed,
                                            size_t * const numTags_removed,
                                            bool * const userlistModified) {
     if (db == nullptr || plugin == nullptr || tagIds_added == nullptr || numTags_added == nullptr || tagIds_removed == nullptr || numTags_removed == nullptr || userlistModified == nullptr)
@@ -709,7 +709,7 @@ LOOT_API unsigned int loot_get_plugin_tags(loot_db db, const char * const plugin
 // loot_destroy_db or loot_get_plugin_messages are next called. plugin is case-insensitive.
 // If no messages are attached, *messages will be nullptr and numMessages will equal 0.
 LOOT_API unsigned int loot_get_plugin_messages(loot_db db, const char * const plugin,
-                                               loot_message ** const messages,
+                                               const loot_message ** const messages,
                                                size_t * const numMessages) {
     if (db == nullptr || plugin == nullptr || messages == nullptr || numMessages == nullptr)
         return c_error(loot_error_invalid_args, "Null pointer passed.");
@@ -730,7 +730,7 @@ LOOT_API unsigned int loot_get_plugin_messages(loot_db db, const char * const pl
 
     db->setPluginMessages(pluginMessages);
 
-    *messages = const_cast<loot_message*>(&db->getPluginMessages()[0]);
+    *messages = &db->getPluginMessages()[0];
     *numMessages = db->getPluginMessages().size();
 
     return loot_ok;
