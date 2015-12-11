@@ -54,26 +54,18 @@ TEST(GetBuildID, HandlesValidInput) {
     EXPECT_STRNE("@GIT_COMMIT_STRING@", revision);  // The CMake placeholder.
 }
 
-TEST(IsCompatible, HandlesCompatibleVersion) {
+TEST(IsCompatible, shouldReturnTrueWithEqualMajorAndMinorVersionsAndUnequalPatchVersion) {
     unsigned int vMajor, vMinor, vPatch;
     EXPECT_EQ(loot_ok, loot_get_version(&vMajor, &vMinor, &vPatch));
 
-    EXPECT_TRUE(loot_is_compatible(vMajor, vMinor, vPatch));
-    // Test somewhat arbitrary variations.
-    EXPECT_TRUE(loot_is_compatible(vMajor, vMinor + 1, vPatch + 1));
-    if (vMinor > 0 && vPatch > 0)
-        EXPECT_TRUE(loot_is_compatible(vMajor, vMinor - 1, vPatch - 1));
+    EXPECT_TRUE(loot_is_compatible(vMajor, vMinor, vPatch + 1));
 }
 
-TEST(IsCompatible, HandlesIncompatibleVersion) {
+TEST(IsCompatible, shouldReturnFalseWithEqualMajorVersionAndUnequalMinorAndPatchVersions) {
     unsigned int vMajor, vMinor, vPatch;
     EXPECT_EQ(loot_ok, loot_get_version(&vMajor, &vMinor, &vPatch));
 
-    EXPECT_FALSE(loot_is_compatible(vMajor + 1, vMinor, vPatch));
-    // Test somewhat arbitrary variations.
-    EXPECT_FALSE(loot_is_compatible(vMajor + 1, vMinor + 1, vPatch + 1));
-    if (vMinor > 0 && vPatch > 0)
-        EXPECT_FALSE(loot_is_compatible(vMajor + 1, vMinor - 1, vPatch - 1));
+    EXPECT_FALSE(loot_is_compatible(vMajor, vMinor + 1, vPatch + 1));
 }
 
 TEST(GetErrorMessage, HandlesInputCorrectly) {

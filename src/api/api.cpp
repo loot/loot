@@ -203,7 +203,10 @@ LOOT_API void     loot_cleanup() {
 // Returns whether this version of LOOT supports the API from the given
 // LOOT version. Abstracts LOOT API stability policy away from clients.
 LOOT_API bool loot_is_compatible(const unsigned int versionMajor, const unsigned int versionMinor, const unsigned int versionPatch) {
-    return versionMajor == loot::g_version_major;
+    if (versionMajor > 0)
+        return versionMajor == loot::g_version_major;
+    else
+        return versionMinor == loot::g_version_minor;
 }
 
 // Returns the version string for this version of LOOT.
