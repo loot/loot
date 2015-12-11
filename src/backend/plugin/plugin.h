@@ -52,7 +52,7 @@ namespace loot {
         uint32_t Crc() const;
         size_t NumOverrideFormIDs() const;
 
-        bool LoadsBSA() const;
+        bool LoadsArchive() const;
         bool IsActive() const;
 
         //Load ordering functions.
@@ -67,7 +67,7 @@ namespace loot {
     private:
         bool _isEmpty;  // Does the plugin contain any records other than the TES4 header?
         bool _isActive;
-        bool _loadsBsa;
+        bool _loadsArchive;
         std::string version;  //Obtained from description field.
         uint32_t crc;
 

@@ -380,14 +380,12 @@ namespace loot {
         loot::vertex_it vit, vitend;
         for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
             BOOST_LOG_TRIVIAL(trace) << "Adding priority difference edges to vertex for \"" << graph[*vit].Name() << "\".";
-            //Priority differences should only be taken account between plugins that conflict.
-            //However, an exception is made for plugins that contain only a header record,
-            //as they are for loading BSAs, and in Skyrim that means the resources they load can
-            //be affected by load order.
-
             // If the plugin does not have a global priority and doesn't load
-            // an archive and has no override records, skip it.
-            if (!graph[*vit].IsPriorityGlobal() && graph[*vit].NumOverrideFormIDs() == 0 && !graph[*vit].LoadsBSA())
+            // an archive and has no override records, skip it. Plugins without
+            // override records can only conflict with plugins that override
+            // the records they add, so any edge necessary will be added when
+            // evaluating that plugin.
+            if (!graph[*vit].IsPriorityGlobal() && graph[*vit].NumOverrideFormIDs() == 0 && !graph[*vit].LoadsArchive())
                 continue;
 
             loot::vertex_it vit2, vitend2;

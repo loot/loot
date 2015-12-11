@@ -88,10 +88,10 @@ TEST_F(Plugin, ConstructorsAndDataAccess) {
     EXPECT_EQ(0x832152DC, plugin.Crc());
 }
 
-TEST_F(Plugin, LoadsBSA) {
-    EXPECT_FALSE(loot::Plugin(game, "Blank - Different.esm", true).LoadsBSA());
-    EXPECT_FALSE(loot::Plugin(game, "Blank\\.esm", true).LoadsBSA());
-    EXPECT_TRUE(loot::Plugin(game, "Blank.esm", true).LoadsBSA());
+TEST_F(Plugin, LoadsArchive) {
+    EXPECT_FALSE(loot::Plugin(game, "Blank - Different.esm", true).LoadsArchive());
+    EXPECT_FALSE(loot::Plugin(game, "Blank\\.esm", true).LoadsArchive());
+    EXPECT_TRUE(loot::Plugin(game, "Blank.esm", true).LoadsArchive());
 }
 
 TEST_F(Plugin, IsValid) {

@@ -30,7 +30,7 @@ function Plugin(obj) {
     this.isActive = obj.isActive;
     this.isEmpty = obj.isEmpty;
     this.isMaster = obj.isMaster;
-    this.loadsBSA = obj.loadsBSA;
+    this.loadsArchive = obj.loadsArchive;
 
     this.masterlist = obj.masterlist;
     this.userlist = obj.userlist;

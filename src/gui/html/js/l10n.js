@@ -61,7 +61,7 @@
             pluginCard.getElementById('activeTick').setAttribute('label', l10n.translate("Active Plugin").fetch());
             pluginCard.getElementById('isMaster').setAttribute('label', l10n.translate("Master File").fetch());
             pluginCard.getElementById('emptyPlugin').setAttribute('label', l10n.translate("Empty Plugin").fetch());
-            pluginCard.getElementById('loadsBSA').setAttribute('label', l10n.translate("Loads Archive").fetch());
+            pluginCard.getElementById('loadsArchive').setAttribute('label', l10n.translate("Loads Archive").fetch());
             pluginCard.getElementById('hasUserEdits').setAttribute('label', l10n.translate("Has User Metadata").fetch());
 
             pluginCard.getElementById('showOnlyConflicts').previousElementSibling.textContent = l10n.translate("Show Only Conflicts").fetch();
@@ -80,7 +80,7 @@
             pluginEditor.getElementById('activeTick').setAttribute('label', l10n.translate("Active Plugin").fetch());
             pluginEditor.getElementById('isMaster').setAttribute('label', l10n.translate("Master File").fetch());
             pluginEditor.getElementById('emptyPlugin').setAttribute('label', l10n.translate("Empty Plugin").fetch());
-            pluginEditor.getElementById('loadsBSA').setAttribute('label', l10n.translate("Loads Archive").fetch());
+            pluginEditor.getElementById('loadsArchive').setAttribute('label', l10n.translate("Loads Archive").fetch());
 
             pluginEditor.getElementById('enableEdits').previousElementSibling.textContent = l10n.translate("Enable Edits").fetch();
             pluginEditor.getElementById('globalPriority').parentElement.parentElement.setAttribute('label', l10n.translate("Global priorities are compared against all other plugins. Normal priorities are compared against only conflicting plugins.").fetch());

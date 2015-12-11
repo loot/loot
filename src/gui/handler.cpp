@@ -734,7 +734,7 @@ namespace loot {
                 pluginNode["isActive"] = plugin.IsActive();
                 pluginNode["isEmpty"] = plugin.IsEmpty();
                 pluginNode["isMaster"] = plugin.isMasterFile();
-                pluginNode["loadsBSA"] = plugin.LoadsBSA();
+                pluginNode["loadsArchive"] = plugin.LoadsArchive();
                 pluginNode["crc"] = IntToHexString(plugin.Crc());
                 pluginNode["version"] = Version(plugin.getDescription()).AsString();
 

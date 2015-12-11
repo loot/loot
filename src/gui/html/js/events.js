@@ -301,7 +301,7 @@ function onCopyContent(evt) {
                     version: plugin.version,
                     isActive: plugin.isActive,
                     isEmpty: plugin.isEmpty,
-                    loadsBSA: plugin.loadsBSA,
+                    loadsArchive: plugin.loadsArchive,
 
                     modPriority: plugin.modPriority,
                     isGlobalPriority: plugin.isGlobalPriority,
@@ -652,7 +652,7 @@ function onContentRefresh(evt) {
 
                     loot.game.plugins[i].isActive = plugin.isActive;
                     loot.game.plugins[i].isEmpty = plugin.isEmpty;
-                    loot.game.plugins[i].loadsBSA = plugin.loadsBSA;
+                    loot.game.plugins[i].loadsArchive = plugin.loadsArchive;
                     loot.game.plugins[i].crc = plugin.crc;
                     loot.game.plugins[i].version = plugin.version;
 

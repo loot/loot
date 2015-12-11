@@ -54,7 +54,7 @@ loot-clear-metadata
         :host([data-active=false]) #activeTick {
             visibility: hidden;
         }
-        :host([data-bsa=false]) #loadsBSA,
+        :host([data-archive=false]) #loadsArchive,
         :host([data-empty=false]) #emptyPlugin,
         :host([data-master=false]) #isMaster,
         :host(:not([data-edits])) #hasUserEdits {
@@ -174,7 +174,7 @@ loot-clear-metadata
                     <core-tooltip id="emptyPlugin" label="Empty Plugin" noarrow>
                         <core-icon icon="visibility-off"></core-icon>
                     </core-tooltip>
-                    <core-tooltip id="loadsBSA" label="Loads Archive" noarrow>
+                    <core-tooltip id="loadsArchive" label="Loads Archive" noarrow>
                         <core-icon icon="attachment"></core-icon>
                     </core-tooltip>
                     <core-tooltip id="hasUserEdits" label="Has User Metadata" noarrow>
@@ -332,7 +332,7 @@ loot-clear-metadata
             this.shadowRoot.getElementById('activeTick').setPosition();
             this.shadowRoot.getElementById('emptyPlugin').setPosition();
             this.shadowRoot.getElementById('hasUserEdits').setPosition();
-            this.shadowRoot.getElementById('loadsBSA').setPosition();
+            this.shadowRoot.getElementById('loadsArchive').setPosition();
 
             /* Also re-calculate editor tooltip positions. */
             this.shadowRoot.getElementById('editor').updatePolymerElements();

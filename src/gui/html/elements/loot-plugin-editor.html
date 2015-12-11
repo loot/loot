@@ -34,7 +34,7 @@ loot-editor-close
         :host-context(loot-plugin-card[data-active=false]) #activeTick {
             visibility: hidden;
         }
-        :host-context(loot-plugin-card[data-bsa=false]) #loadsBSA,
+        :host-context(loot-plugin-card[data-archive=false]) #loadsArchive,
         :host-context(loot-plugin-card[data-empty=false]) #emptyPlugin,
         :host-context(loot-plugin-card[data-master=false]) #isMaster {
             display: none;
@@ -134,7 +134,7 @@ loot-editor-close
             <core-tooltip id="emptyPlugin" label="Empty Plugin" noarrow>
                 <core-icon icon="visibility-off"></core-icon>
             </core-tooltip>
-            <core-tooltip id="loadsBSA" label="Loads Archive" noarrow>
+            <core-tooltip id="loadsArchive" label="Loads Archive" noarrow>
                 <core-icon icon="attachment"></core-icon>
             </core-tooltip>
             <core-tooltip label="Apply" noarrow>
