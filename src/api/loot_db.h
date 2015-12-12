@@ -62,7 +62,7 @@ struct loot_db : public loot::Game {
         std::transform(begin(plugins),
                        end(plugins),
                        begin(pluginNames),
-                       [](const loot::Plugin& plugin) {
+                       [](const loot::PluginMetadata& plugin) {
             return plugin.Name();
         });
 

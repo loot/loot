@@ -28,6 +28,7 @@
 #endif
 
 #include "api/test_api.h"
+#include "api/test_loot_db.h"
 #include "backend/game/test_game.h"
 #include "backend/game/test_game_settings.h"
 #include "backend/game/test_load_order_handler.h"
