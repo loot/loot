@@ -122,7 +122,7 @@ protected:
 
     const boost::filesystem::path resourcePath;
 
-    loot_db db;
+    loot_db * db;
 };
 
 class OblivionTest : public GameTest {

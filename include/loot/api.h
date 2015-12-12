@@ -184,7 +184,7 @@ extern "C"
      *           made for each game, though it should be kept in mind that the
      *           API is not thread-safe.
      */
-    typedef struct _loot_db_int * loot_db;
+    typedef struct loot_db loot_db;
 
     /**
      *  @brief A structure that holds the type of a message and the message
@@ -383,7 +383,7 @@ extern "C"
      *      variable (eg. Linux) can still use the API.
      *  @returns A return code.
      */
-    LOOT_API unsigned int loot_create_db(loot_db * const db,
+    LOOT_API unsigned int loot_create_db(loot_db ** const db,
                                          const unsigned int clientGame,
                                          const char * const gamePath,
                                          const char * const gameLocalPath);
@@ -396,7 +396,7 @@ extern "C"
      *  @param db
      *      The database handle to destroy.
      */
-    LOOT_API void loot_destroy_db(loot_db db);
+    LOOT_API void loot_destroy_db(loot_db * const db);
 
     /**@}*/
     /**********************************************************************//**
@@ -419,7 +419,7 @@ extern "C"
      *      be loaded.
      *  @returns A return code.
      */
-    LOOT_API unsigned int loot_load_lists(loot_db db,
+    LOOT_API unsigned int loot_load_lists(loot_db * const db,
                                           const char * const masterlistPath,
                                           const char * const userlistPath);
 
@@ -435,7 +435,7 @@ extern "C"
      *      The language code that is used for message language comparisons.
      *  @returns A return code.
      */
-    LOOT_API unsigned int loot_eval_lists(loot_db db,
+    LOOT_API unsigned int loot_eval_lists(loot_db * const db,
                                           const unsigned int language);
 
     /**********************************************************************//**
@@ -459,7 +459,7 @@ extern "C"
      *      A pointer to the size of the outputted array.
      *  @returns A return code.
      */
-    LOOT_API unsigned int loot_sort_plugins(loot_db db,
+    LOOT_API unsigned int loot_sort_plugins(loot_db * const db,
                                             const char * const ** const sortedPlugins,
                                             size_t * const numPlugins);
 
@@ -473,7 +473,7 @@ extern "C"
      *      The size of the inputted array.
      *  @returns A return code.
      */
-    LOOT_API unsigned int loot_apply_load_order(loot_db db,
+    LOOT_API unsigned int loot_apply_load_order(loot_db * const db,
                                                 const char * const * const loadOrder,
                                                 const size_t numPlugins);
 
@@ -514,7 +514,7 @@ extern "C"
      *      separately.
      *  @returns A return code.
      */
-    LOOT_API unsigned int loot_update_masterlist(loot_db db,
+    LOOT_API unsigned int loot_update_masterlist(loot_db * const db,
                                                  const char * const masterlistPath,
                                                  const char * const remoteURL,
                                                  const char * const remoteBranch,
@@ -547,7 +547,7 @@ extern "C"
      *      the revision given.
      *  @returns A return code.
      */
-    LOOT_API unsigned int loot_get_masterlist_revision(loot_db db,
+    LOOT_API unsigned int loot_get_masterlist_revision(loot_db * const db,
                                                        const char * const masterlistPath,
                                                        const bool getShortID,
                                                        const char ** const revisionID,
@@ -579,7 +579,7 @@ extern "C"
      *      suggested, this will be `0`.
      *  @returns A return code.
      */
-    LOOT_API unsigned int loot_get_tag_map(loot_db db,
+    LOOT_API unsigned int loot_get_tag_map(loot_db * const db,
                                            const char * const ** const tagMap,
                                            size_t * const numTags);
 
@@ -612,7 +612,7 @@ extern "C"
      *      userlist, `false` otherwise.
      *  @returns A return code.
      */
-    LOOT_API unsigned int loot_get_plugin_tags(loot_db db,
+    LOOT_API unsigned int loot_get_plugin_tags(loot_db * const db,
                                                const char * const plugin,
                                                const unsigned int ** const tags_added,
                                                size_t * const numTags_added,
@@ -636,7 +636,7 @@ extern "C"
      *      outputted, this will be `0`.
      *  @returns A return code.
      */
-    LOOT_API unsigned int loot_get_plugin_messages(loot_db db,
+    LOOT_API unsigned int loot_get_plugin_messages(loot_db * const db,
                                                    const char * const plugin,
                                                    const loot_message ** const messages,
                                                    size_t * const numMessages);
@@ -658,7 +658,7 @@ extern "C"
      *      A pointer to a plugin cleanliness code.
      *  @returns A return code.
      */
-    LOOT_API unsigned int loot_get_dirty_info(loot_db db,
+    LOOT_API unsigned int loot_get_dirty_info(loot_db * const db,
                                               const char * const plugin,
                                               unsigned int * const needsCleaning);
 
@@ -675,7 +675,7 @@ extern "C"
      *      written. Otherwise, data will be written.
      *  @returns A return code.
      */
-    LOOT_API unsigned int loot_write_minimal_list(loot_db db,
+    LOOT_API unsigned int loot_write_minimal_list(loot_db * const db,
                                                   const char * const outputFile,
                                                   const bool overwrite);
 

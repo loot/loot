@@ -31,8 +31,8 @@
 #include <vector>
 #include <unordered_map>
 
-struct _loot_db_int : public loot::Game {
-    _loot_db_int(const unsigned int clientGame, const std::string& gamePath, const boost::filesystem::path& gameLocalDataPath)
+struct loot_db : public loot::Game {
+    loot_db(const unsigned int clientGame, const std::string& gamePath, const boost::filesystem::path& gameLocalDataPath)
         : Game(clientGame) {
         this->SetGamePath(gamePath);
         this->Init(false, gameLocalDataPath);

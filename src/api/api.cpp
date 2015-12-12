@@ -23,7 +23,7 @@
     */
 
 #include "loot/api.h"
-#include "_loot_db_int.h"
+#include "loot_db.h"
 #include "../backend/globals.h"
 #include "../backend/plugin_sorter.h"
 
@@ -160,7 +160,7 @@ LOOT_API unsigned int loot_get_build_id(const char ** const revision) {
 // plugins.txt and loadorder.txt (if they both exist) are in sync. If
 // dataPath == nullptr then the API will attempt to detect the data path of
 // the specified game.
-LOOT_API unsigned int loot_create_db(loot_db * const db,
+LOOT_API unsigned int loot_create_db(loot_db ** const db,
                                      const unsigned int clientGame,
                                      const char * const gamePath,
                                      const char * const gameLocalPath) {
@@ -199,7 +199,7 @@ LOOT_API unsigned int loot_create_db(loot_db * const db,
         if (gameLocalPath != nullptr && !boost::filesystem::is_directory(gameLocalPath))
             return c_error(loot_error_invalid_args, "Given local data path \"" + std::string(gameLocalPath) + "\" is not a valid directory.");
 
-        *db = new _loot_db_int(clientGame, game_path, game_local_path);
+        *db = new loot_db(clientGame, game_path, game_local_path);
     }
     catch (loot::error& e) {
         return c_error(e);
@@ -215,7 +215,7 @@ LOOT_API unsigned int loot_create_db(loot_db * const db,
 }
 
 // Destroys the given DB, freeing any memory allocated as part of its use.
-LOOT_API void     loot_destroy_db(loot_db db) {
+LOOT_API void     loot_destroy_db(loot_db * const db) {
     delete db;
 }
 
@@ -227,7 +227,7 @@ LOOT_API void     loot_destroy_db(loot_db db) {
 // Can be called multiple times. On error, the database is unchanged.
 // Paths are case-sensitive if the underlying filesystem is case-sensitive.
 // masterlistPath and userlistPath are files.
-LOOT_API unsigned int loot_load_lists(loot_db db, const char * const masterlistPath,
+LOOT_API unsigned int loot_load_lists(loot_db * const db, const char * const masterlistPath,
                                       const char * const userlistPath) {
     if (db == nullptr || masterlistPath == nullptr)
         return c_error(loot_error_invalid_args, "Null pointer passed.");
@@ -279,7 +279,7 @@ LOOT_API unsigned int loot_load_lists(loot_db db, const char * const masterlistP
 // is called. Repeated calls re-evaluate the masterlist from scratch each time,
 // ignoring the results of any previous evaluations. Paths are case-sensitive
 // if the underlying filesystem is case-sensitive.
-LOOT_API unsigned int loot_eval_lists(loot_db db, const unsigned int language) {
+LOOT_API unsigned int loot_eval_lists(loot_db * const db, const unsigned int language) {
     if (db == nullptr)
         return c_error(loot_error_invalid_args, "Null pointer passed.");
     if (language != loot_lang_any
@@ -318,7 +318,7 @@ LOOT_API unsigned int loot_eval_lists(loot_db db, const unsigned int language) {
 // LOOT Functionality Functions
 ////////////////////////////////////
 
-LOOT_API unsigned int loot_sort_plugins(loot_db db,
+LOOT_API unsigned int loot_sort_plugins(loot_db * const db,
                                         const char * const ** const sortedPlugins,
                                         size_t * const numPlugins) {
     if (db == nullptr || sortedPlugins == nullptr || numPlugins == nullptr)
@@ -350,7 +350,7 @@ LOOT_API unsigned int loot_sort_plugins(loot_db db,
     return loot_ok;
 }
 
-LOOT_API unsigned int loot_apply_load_order(loot_db db,
+LOOT_API unsigned int loot_apply_load_order(loot_db * const db,
                                             const char * const * const loadOrder,
                                             const size_t numPlugins) {
     if (db == nullptr || loadOrder == nullptr)
@@ -366,7 +366,7 @@ LOOT_API unsigned int loot_apply_load_order(loot_db db,
     return loot_ok;
 }
 
-LOOT_API unsigned int loot_update_masterlist(loot_db db,
+LOOT_API unsigned int loot_update_masterlist(loot_db * const db,
                                              const char * const masterlistPath,
                                              const char * const remoteURL,
                                              const char * const remoteBranch,
@@ -389,7 +389,7 @@ LOOT_API unsigned int loot_update_masterlist(loot_db db,
     return loot_ok;
 }
 
-LOOT_API unsigned int loot_get_masterlist_revision(loot_db db,
+LOOT_API unsigned int loot_get_masterlist_revision(loot_db * const db,
                                                    const char * const masterlistPath,
                                                    const bool getShortID,
                                                    const char ** const revisionID,
@@ -441,7 +441,7 @@ LOOT_API unsigned int loot_get_masterlist_revision(loot_db db,
 // Returns an array of the Bash Tags encounterred when loading the masterlist
 // and userlist, and the number of tags in the returned array. The array and
 // its contents are static and should not be freed by the client.
-LOOT_API unsigned int loot_get_tag_map(loot_db db, const char * const ** const tagMap, size_t * const numTags) {
+LOOT_API unsigned int loot_get_tag_map(loot_db * const db, const char * const ** const tagMap, size_t * const numTags) {
     if (db == nullptr || tagMap == nullptr || numTags == nullptr)
         return c_error(loot_error_invalid_args, "Null pointer passed.");
 
@@ -488,7 +488,7 @@ LOOT_API unsigned int loot_get_tag_map(loot_db db, const char * const ** const t
 // case-insensitive. If no Tags are found for an array, the array pointer (*tagIds)
 // will be nullptr. The userlistModified bool is true if the userlist contains Bash Tag
 // suggestion message additions.
-LOOT_API unsigned int loot_get_plugin_tags(loot_db db, const char * const plugin,
+LOOT_API unsigned int loot_get_plugin_tags(loot_db * const db, const char * const plugin,
                                            const unsigned int ** const tagIds_added,
                                            size_t * const numTags_added,
                                            const unsigned int ** const tagIds_removed,
@@ -547,7 +547,7 @@ LOOT_API unsigned int loot_get_plugin_tags(loot_db db, const char * const plugin
 // Returns the messages attached to the given plugin. Messages are valid until Load,
 // loot_destroy_db or loot_get_plugin_messages are next called. plugin is case-insensitive.
 // If no messages are attached, *messages will be nullptr and numMessages will equal 0.
-LOOT_API unsigned int loot_get_plugin_messages(loot_db db, const char * const plugin,
+LOOT_API unsigned int loot_get_plugin_messages(loot_db * const db, const char * const plugin,
                                                const loot_message ** const messages,
                                                size_t * const numMessages) {
     if (db == nullptr || plugin == nullptr || messages == nullptr || numMessages == nullptr)
@@ -575,7 +575,7 @@ LOOT_API unsigned int loot_get_plugin_messages(loot_db db, const char * const pl
     return loot_ok;
 }
 
-LOOT_API unsigned int loot_get_dirty_info(loot_db db, const char * const plugin, unsigned int * const needsCleaning) {
+LOOT_API unsigned int loot_get_dirty_info(loot_db * const db, const char * const plugin, unsigned int * const needsCleaning) {
     if (db == nullptr || plugin == nullptr || needsCleaning == nullptr)
         return c_error(loot_error_invalid_args, "Null pointer passed.");
 
@@ -610,7 +610,7 @@ LOOT_API unsigned int loot_get_dirty_info(loot_db db, const char * const plugin,
 // and/or dirty messages, plus the Tag suggestions and/or messages themselves and their
 // conditions, in order to create the Wrye Bash taglist. outputFile is the path to use
 // for output. If outputFile already exists, it will only be overwritten if overwrite is true.
-LOOT_API unsigned int loot_write_minimal_list(loot_db db, const char * const outputFile, const bool overwrite) {
+LOOT_API unsigned int loot_write_minimal_list(loot_db * const db, const char * const outputFile, const bool overwrite) {
     if (db == nullptr || outputFile == nullptr)
         return c_error(loot_error_invalid_args, "Null pointer passed.");
 
