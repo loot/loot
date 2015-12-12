@@ -158,10 +158,20 @@ namespace loot {
             if (_game == nullptr)
                 return;
 
-            if (boost::iends_with(file, ".esp") || boost::iends_with(file, ".esm"))
-                result = boost::filesystem::exists(_game->DataPath() / file) || boost::filesystem::exists(_game->DataPath() / (file + ".ghost"));
-            else
-                result = boost::filesystem::exists(_game->DataPath() / file);
+            // Try first checking the plugin cache, as most file entries are
+            // for plugins.
+            try {
+                // GetPlugin throws if it can't find an entry.
+                _game->GetPlugin(file);
+                result = true;
+            }
+            catch (...) {
+                // Not a loaded plugin, check the filesystem.
+                if (boost::iends_with(file, ".esp") || boost::iends_with(file, ".esm"))
+                    result = boost::filesystem::exists(_game->DataPath() / file) || boost::filesystem::exists(_game->DataPath() / (file + ".ghost"));
+                else
+                    result = boost::filesystem::exists(_game->DataPath() / file);
+            }
 
             if (result)
                 BOOST_LOG_TRIVIAL(trace) << "The file does exist.";
@@ -230,7 +240,6 @@ namespace loot {
 
             //Now we have a valid parent path and a regex filename. Check that
             //the parent path exists and is a directory.
-
             boost::filesystem::path parent_path = _game->DataPath() / pathRegex.first;
             if (!boost::filesystem::exists(parent_path) || !boost::filesystem::is_directory(parent_path)) {
                 BOOST_LOG_TRIVIAL(trace) << "The path \"" << parent_path << "\" does not exist or is not a directory.";
@@ -332,12 +341,26 @@ namespace loot {
             Version trueVersion;
             if (file == "LOOT")
                 trueVersion = Version(boost::filesystem::absolute("LOOT.exe"));
-            else if (Plugin::IsValid(file, *_game)) {
-                Plugin plugin(*_game, file, true);
-                trueVersion = Version(plugin.getDescription());
+            else {
+                // If the file is a plugin, its version needs to be extracted
+                // from its description field. Try getting an entry from the
+                // plugin cache.
+                try {
+                    Plugin plugin = _game->GetPlugin(file);
+                    trueVersion = Version(plugin.getDescription());
+                }
+                catch (...) {
+                    // The file wasn't in the plugin cache, load it as a plugin
+                    // if it appears to be valid, otherwise treat it as a non
+                    // plugin file.
+                    if (Plugin::IsValid(file, *_game)) {
+                        Plugin plugin(*_game, file, true);
+                        trueVersion = Version(plugin.getDescription());
+                    }
+                    else
+                        trueVersion = Version(_game->DataPath() / file);
+                }
             }
-            else
-                trueVersion = Version(_game->DataPath() / file);
 
             BOOST_LOG_TRIVIAL(trace) << "Version extracted: " << trueVersion.AsString();
 
