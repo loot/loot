@@ -24,6 +24,7 @@
 
 #include "loot/api.h"
 #include "loot_db.h"
+#include "../backend/error.h"
 #include "../backend/globals.h"
 #include "../backend/plugin_sorter.h"
 

@@ -26,64 +26,34 @@
 #define LOOT_API_LOOT_DB_INT_H
 
 #include "../backend/game/game.h"
-#include "../backend/error.h"
+#include "../include/loot/api.h"
 
 #include <vector>
 #include <unordered_map>
 
 struct loot_db : public loot::Game {
-    loot_db(const unsigned int clientGame, const std::string& gamePath, const boost::filesystem::path& gameLocalDataPath)
-        : Game(clientGame) {
-        this->SetGamePath(gamePath);
-        this->Init(false, gameLocalDataPath);
-    }
+    loot_db(const unsigned int clientGame,
+            const std::string& gamePath,
+            const boost::filesystem::path& gameLocalDataPath);
 
     loot::MetadataList rawUserMetadata;
     loot::Masterlist rawMetadata;
 
-    const char * getRevisionIdString() const {
-        return revisionId.c_str();
-    }
+    const char * getRevisionIdString() const;
+    const char * getRevisionDateString() const;
 
-    const char * getRevisionDateString() const {
-        return revisionDate.c_str();
-    }
+    const std::vector<const char *>& getPluginNames() const;
 
-    const std::vector<const char *>& getPluginNames() const {
-        return cPluginNames;
-    }
+    const std::vector<const char *>& getBashTagMap() const;
+    unsigned int getBashTagUid(const std::string& name) const;
 
-    const std::vector<const char *>& getBashTagMap() const {
-        return cBashTagMap;
-    }
+    const std::vector<unsigned int>& getAddedTagIds() const;
+    const std::vector<unsigned int>& getRemovedTagIds() const;
 
-    unsigned int getBashTagUid(const std::string& name) const {
-        auto it = bashTagMap.find(name);
-        if (it != end(bashTagMap))
-            return it->second;
+    const std::vector<loot_message>& getPluginMessages() const;
 
-        throw loot::error(loot::error::no_tag_map, "The Bash Tag \"" + name + "\" does not exist in the Bash Tag map.");
-    }
-
-    const std::vector<unsigned int>& getAddedTagIds() const {
-        return addedTagIds;
-    }
-
-    const std::vector<unsigned int>& getRemovedTagIds() const {
-        return removedTagIds;
-    }
-
-    const std::vector<loot_message>& getPluginMessages() const {
-        return cPluginMessages;
-    }
-
-    void setRevisionIdString(const std::string& str) {
-        revisionId = str;
-    }
-
-    void setRevisionDateString(const std::string& str) {
-        revisionDate = str;
-    }
+    void setRevisionIdString(const std::string& str);
+    void setRevisionDateString(const std::string& str);
 
     template<class T>
     void setPluginNames(const T& plugins) {
@@ -106,65 +76,15 @@ struct loot_db : public loot::Game {
         });
     }
 
-    template<class T>
-    void setAddedTags(const T& names) {
-        for (const auto& name : names)
-            addedTagIds.push_back(getBashTagUid(name));
-    }
+    void setAddedTags(const std::set<std::string>& names);
+    void setRemovedTags(const std::set<std::string>& names);
 
-    template<class T>
-    void setRemovedTags(const T& names) {
-        for (const auto& name : names)
-            removedTagIds.push_back(getBashTagUid(name));
-    }
+    void setPluginMessages(const std::list<loot::Message>& pluginMessages);
 
-    template<class T>
-    void setPluginMessages(const T& pluginMessages) {
-        cPluginMessages.resize(pluginMessages.size());
-        pluginMessageStrings.resize(pluginMessages.size());
+    void addBashTagsToMap(std::set<std::string> names);
 
-        size_t i = 0;
-        for (const auto& message : pluginMessages) {
-            pluginMessageStrings[i] = message.ChooseContent(loot::Language::any).Str();
-
-            cPluginMessages[i].type = message.Type();
-            cPluginMessages[i].message = pluginMessageStrings[i].c_str();
-
-            ++i;
-        }
-    }
-
-    void addBashTagsToMap(std::set<std::string> names) {
-        for (const auto& name : names) {
-            // Try adding the Bash Tag to the map assuming it's not already in
-            // there, then use the UID in the returned value, as that will be
-            // equal to the value in the map, even if the Bash Tag was already
-            // present.
-            unsigned int uid = bashTagMap.size();
-            // If the tag already exists in the map, do
-            auto it = bashTagMap.emplace(name, uid).first;
-            if (it->second == cBashTagMap.size())
-                cBashTagMap.push_back(it->first.c_str());
-            else
-                cBashTagMap.at(it->second) = it->first.c_str();
-        }
-    }
-
-    void clearBashTagMap() {
-        bashTagMap.clear();
-        cBashTagMap.clear();
-    }
-
-    void clearArrays() {
-        pluginNames.clear();
-        cPluginNames.clear();
-
-        addedTagIds.clear();
-        removedTagIds.clear();
-
-        cPluginMessages.clear();
-        pluginMessageStrings.clear();
-    }
+    void clearBashTagMap();
+    void clearArrays();
 private:
     std::string revisionId;
     std::string revisionDate;

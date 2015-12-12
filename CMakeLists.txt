@@ -148,7 +148,8 @@ set (LOOT_GUI_HEADERS ${LOOT_HEADERS}
                   "${CMAKE_SOURCE_DIR}/src/gui/resource.h")
 
 set (LOOT_API_SRC ${LOOT_SRC}
-                  "${CMAKE_SOURCE_DIR}/src/api/api.cpp")
+                  "${CMAKE_SOURCE_DIR}/src/api/api.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/api/loot_db.cpp")
 
 set (LOOT_API_HEADERS ${LOOT_HEADERS}
                   "${CMAKE_SOURCE_DIR}/include/loot/api.h"
