@@ -12,13 +12,13 @@ var filters = {
         }
 
         if (plugin.name.toLowerCase().indexOf(needle) != -1
-            || plugin.getCrcString().toLowerCase().indexOf(needle) != -1
+            || plugin.crcString.toLowerCase().indexOf(needle) != -1
             || plugin.version.toLowerCase().indexOf(needle) != -1) {
 
             return true;
         }
 
-        var tags = plugin.getTagStrings();
+        var tags = plugin.tagStrings;
         if (tags.added.toLowerCase().indexOf(needle) != -1
             || tags.removed.toLowerCase().indexOf(needle) != -1) {
 
@@ -202,9 +202,11 @@ function setFilteredUIData() {
         document.getElementById('cardsNav').data = filtered;
         document.getElementById('main').lastElementChild.data = filtered;
 
-        /* Also run message filters on the filtered plugins. */
         filtered.forEach(function(plugin){
-            plugin.computed.messages = plugin.getUIMessages();
+            var element = document.getElementById(plugin.id);
+            if (element) {
+                element.onMessagesChange();
+            }
         });
 
         /* Now perform search again. If there is no current search, this won't

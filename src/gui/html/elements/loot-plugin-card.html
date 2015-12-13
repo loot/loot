@@ -220,7 +220,7 @@ loot-clear-metadata
 
         observe: {
             'data.tags': 'onTagsChange',
-            'data.computed.messages': 'onMessagesChange',
+            'data.messages': 'onMessagesChange',
             'data.userlist': 'onUserlistChange',
             'data.isSearchResult' : 'onSearchResultChange',
             'data.isMenuOpen': 'onMenuToggle'
@@ -278,8 +278,8 @@ loot-clear-metadata
 
         onTagsChange: function(oldValue, newValue) {
             if (this.data) {
-                this.getElementsByClassName('tag add')[0].classList.toggle('hidden', this.data.computed.tags.added.length == 0);
-                this.getElementsByClassName('tag remove')[0].classList.toggle('hidden', this.data.computed.tags.removed.length == 0);
+                this.getElementsByClassName('tag add')[0].classList.toggle('hidden', this.data.tagStrings.added.length == 0);
+                this.getElementsByClassName('tag remove')[0].classList.toggle('hidden', this.data.tagStrings.removed.length == 0);
             }
         },
 
@@ -291,10 +291,16 @@ loot-clear-metadata
                     messageUL.removeChild(messageUL.firstElementChild);
                 }
                 /* Now add new messages. */
-                this.data.computed.messages.forEach(function(message){
-                    messageUL.appendChild(message);
+                var visibleMessages = filters.applyMessageFilters(this.data.messages);
+                visibleMessages.forEach(function(message) {
+                    var messageLi = document.createElement('li');
+                    messageLi.className = message.type;
+                    // Use the Marked library for Markdown formatting support.
+                    messageLi.innerHTML = marked(message.content[0].str);
+                    messageUL.appendChild(messageLi);
+
                 });
-                messageUL.classList.toggle('hidden', this.data.computed.messages.length == 0);
+                messageUL.classList.toggle('hidden', visibleMessages.length == 0);
             }
         },
 

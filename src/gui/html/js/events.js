@@ -1,3 +1,17 @@
+'use strict';
+function onPluginMessageChange(evt) {
+  document.getElementById('filterTotalMessageNo').textContent = parseInt(document.getElementById('filterTotalMessageNo').textContent, 10) + evt.detail.totalDiff;
+  document.getElementById('totalMessageNo').textContent = parseInt(document.getElementById('totalMessageNo').textContent, 10) + evt.detail.totalDiff;
+  document.getElementById('totalWarningNo').textContent = parseInt(document.getElementById('totalWarningNo').textContent, 10) + evt.detail.warningDiff;
+  document.getElementById('totalErrorNo').textContent = parseInt(document.getElementById('totalErrorNo').textContent, 10) + evt.detail.errorDiff;
+}
+function onPluginIsDirtyChange(evt) {
+  if (evt.detail.isDirty) {
+    document.getElementById('dirtyPluginNo').textContent = parseInt(document.getElementById('dirtyPluginNo').textContent, 10) + 1;
+  } else {
+    document.getElementById('dirtyPluginNo').textContent = parseInt(document.getElementById('dirtyPluginNo').textContent, 10) - 1;
+  }
+}
 function saveFilterState(evt) {
     var request = JSON.stringify({
         name: 'saveFilterState',
@@ -62,7 +76,7 @@ function onChangeGame(evt) {
 
         /* Parse the data sent from C++. */
         try {
-            var gameInfo = JSON.parse(result, jsonToPlugin);
+            var gameInfo = JSON.parse(result, loot.Plugin.fromJson);
             loot.game.folder = gameInfo.folder;
             loot.game.masterlist = gameInfo.masterlist;
             loot.game.globalMessages = gameInfo.globalMessages;
@@ -163,7 +177,7 @@ function onSortPlugins(evt) {
                         }
                     }
                     if (!found) {
-                        loot.game.plugins.push(new Plugin(plugin));
+                        loot.game.plugins.push(new loot.Plugin(plugin));
                         loot.game.loadOrder.push(loot.game.plugins[loot.game.plugins.length - 1]);
                     }
                 });
@@ -668,7 +682,7 @@ function onContentRefresh(evt) {
             }
             if (!foundPlugin) {
                 /* A new plugin. */
-                loot.game.plugins.push(new Plugin(plugin));
+                loot.game.plugins.push(new loot.Plugin(plugin));
             }
             pluginNames.push(plugin.name);
         });
@@ -760,4 +774,8 @@ function setupEventHandlers() {
 
     document.getElementById('cardsNav').addEventListener('click', onSidebarClick, false);
     document.getElementById('cardsNav').addEventListener('dblclick', onSidebarClick, false);
+
+    /* Set up handler for plugin message and dirty info changes. */
+    document.addEventListener('loot-plugin-message-change', onPluginMessageChange);
+    document.addEventListener('loot-plugin-isdirty-change', onPluginIsDirtyChange);
 }

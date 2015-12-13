@@ -17,6 +17,8 @@
     "eslint": "^1.10.3",
     "eslint-config-airbnb": "^2.0.0",
     "fs-extra": "^0.26.2",
+    "mocha": "^2.3.4",
+    "should": "^8.0.1",
     "vulcanize": "^0.7.11"
   }
 }

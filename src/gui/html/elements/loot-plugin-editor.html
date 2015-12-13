@@ -126,7 +126,7 @@ loot-editor-close
             <div flex>
                 <h1>{{data.name}}</h1>
                 <span id="version">{{data.version}}</span>
-                <span id="crc">{{data.computed.crc}}</span>
+                <span id="crc">{{data.crcString}}</span>
             </div>
             <core-tooltip id="isMaster" label="Master File" noarrow>
                 <core-icon icon="loot-custom-icons:crown"></core-icon>
@@ -349,7 +349,7 @@ loot-editor-close
                         plugin.userlist.msg = rowsData;
                     } else if (tables[j].parentElement.id == 'tags') {
                         rowsData.forEach(function(value, index, arr){
-                            arr[index] = oldData.convTagObj(value);
+                            arr[index] = Plugin.tagFromRowData(value);
                         });
                         plugin.userlist.tag = rowsData;
                     } else if (tables[j].parentElement.id == 'dirty') {
@@ -493,14 +493,14 @@ loot-editor-close
 
                     if (newData.masterlist && newData.masterlist.tag) {
                         newData.masterlist.tag.forEach(function(tag) {
-                            var tagData = newData.convTagObj(tag);
+                            var tagData = Plugin.tagToRowData(tag);
                             var row = tables[j].addRow(tagData);
                             tables[j].setReadOnly(row);
                         }, newData);
                     }
                     if (tempData.userlist && tempData.userlist.tag) {
                         tempData.userlist.tag.forEach(function(tag) {
-                            var tagData = Plugin.prototype.convTagObj(tag);
+                            var tagData = Plugin.tagToRowData(tag);
                             tables[j].addRow(tagData);
                         }, tempData);
                     }

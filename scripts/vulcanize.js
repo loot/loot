@@ -34,7 +34,6 @@ for (var i = 0; i < release_paths.length; ++i) {
 
     child_process.execFileSync(vulcanize, [
         '--inline',
-        '--strip',
         '--config',
         path.join(root_path, 'scripts', 'vulcanize.config.json'),
         '-o',

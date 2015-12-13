@@ -155,7 +155,7 @@ function initVars() {
                 });
             } else {
                 return loot.query('getGameData').then(function(result){
-                    var game = JSON.parse(result, jsonToPlugin);
+                    var game = JSON.parse(result, loot.Plugin.fromJson);
                     loot.game.folder = game.folder;
                     loot.game.masterlist = game.masterlist;
                     loot.game.globalMessages = game.globalMessages;
