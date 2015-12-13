@@ -20,6 +20,7 @@ addons:
       - libssl-dev
       - gcc-5
       - g++-5
+  sauce_connect: true
 
 install:
   # Use GCC 5.
@@ -27,6 +28,16 @@ install:
   # Run install step script to download and build dependencies.
   - chmod +x scripts/install-step.travis.sh
   - ./scripts/install-step.travis.sh
+  # Install the latest stable Node.js. The default Node.js version is too old
+  # for some of the JavaScript syntax used.
+  - npm install -g nvm
+  - nvm install node
+  # Install Node.js dependencies
+  - npm install
+  # Add local binary path to PATH
+  - export PATH="./node_modules/.bin:$PATH"
+  # Install runtime dependencies using Bower
+  - bower install
 
 before_script:
   # Build Google Test
@@ -46,7 +57,9 @@ before_script:
   # Travis machines are 64 bit, and the dependencies use dynamic linking.
   - cmake .. -DPROJECT_ARCH=64 -DPROJECT_STATIC_RUNTIME=OFF -DBUILD_SHARED_LIBS=OFF -DGTEST_ROOT=../../googletest-release-1.7.0
 
-script: make tests && ./tests
+script:
+  - npm test
+  - make tests && ./tests
 
 before_deploy:
   # Build the metadata validator
@@ -69,3 +82,8 @@ notifications:
       - "chat.freenode.net#loot"
     use_notice: true
     skip_join: true
+
+env:
+  global:
+  - secure: OWgDkff/b+0eKk/P75rBnecaPDv1E/gMkCzsTUUtofmzj+sttpMUsh8VOVUvckGs5m3fRwRhc/t99gR4FuDtMOVE5JZ8CqZn7tcv2wNAspQ613pS0nWyIX/IUbyF+gjtPW2dWy81hKVtTP4yFvUn1Gk+JRjJLSyxM53Xt6oTOlY=
+  - secure: XpGbqizjWfaGiWDkrcW4UhSW8ijm00jgSo2qkthza3QmHQ3C0Vye3gQjjITCq+y6izQTPa46fxaI+Ozligyh4aQ1G8SpCa77tXMBfvo31led+s81FlAOSVGDJ/2eDOoawFuj5dTKTPR1zLniDYH8AqG8EDZuLoK6fhx7CchU2Yw=
