@@ -1,43 +1,43 @@
 #!/usr/bin/env node
 // Build the UI's index.html file. Takes one argument, which is the path to the
 // repository's root.
-var child_process =  require('child_process');
-var path = require('path');
-var fs = require('fs');
-var os = require('os');
-var helpers = require('./helpers');
+'use strict';
+const childProcess = require('child_process');
+const path = require('path');
+const fs = require('fs');
+const os = require('os');
+const helpers = require('./helpers');
 
-if (process.argv.length < 3) {
-    var root_path = '.';
-} else {
-    var root_path = process.argv[2];
+let rootPath = '.';
+if (process.argv.length > 2) {
+  rootPath = process.argv[2];
 }
 
-var release_paths = helpers.getAppReleasePaths(root_path);
+const releasePaths = helpers.getAppReleasePaths(rootPath);
 
-for (var i = 0; i < release_paths.length; ++i) {
-    var output_path = path.join(release_paths[i].path, 'resources', 'ui');
+for (let i = 0; i < releasePaths.length; ++i) {
+  const outputPath = path.join(releasePaths[i].path, 'resources', 'ui');
 
-    // Makes sure output directory exists first.
-    try {
-        fs.mkdirSync(output_path);
-    } catch (e) {
-        if (e.code != 'EEXIST') {
-            console.log(e);
-        }
+  // Makes sure output directory exists first.
+  try {
+    fs.mkdirSync(outputPath);
+  } catch (e) {
+    if (e.code !== 'EEXIST') {
+      console.log(e);
     }
+  }
 
-    var vulcanize = path.join(root_path, 'node_modules', '.bin', 'vulcanize');
-    if (os.platform() == 'win32') {
-        vulcanize += '.cmd';
-    }
+  let vulcanize = path.join(rootPath, 'node_modules', '.bin', 'vulcanize');
+  if (os.platform() === 'win32') {
+    vulcanize += '.cmd';
+  }
 
-    child_process.execFileSync(vulcanize, [
-        '--inline',
-        '--config',
-        path.join(root_path, 'scripts', 'vulcanize.config.json'),
-        '-o',
-        path.join(output_path, 'index.html'),
-        path.join(root_path, 'src', 'gui', 'html', 'index.html')
-    ]);
+  childProcess.execFileSync(vulcanize, [
+    '--inline',
+    '--config',
+    path.join(rootPath, 'scripts', 'vulcanize.config.json'),
+    '-o',
+    path.join(outputPath, 'index.html'),
+    path.join(rootPath, 'src', 'gui', 'html', 'index.html'),
+  ]);
 }
