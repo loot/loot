@@ -4,7 +4,7 @@ function processCefError(err) {
        promise errors, not just CEF errors. */
     console.log(err.stack);
     closeProgressDialog();
-    showMessageBox(l10n.jed.translate('Error').fetch(), err.message);
+    showMessageBox(loot.l10n.translate('Error'), err.message);
 }
 
 function showElement(element) {
@@ -24,13 +24,13 @@ function toast(text) {
 }
 function showMessageDialog(title, text, positiveText, closeCallback) {
     var dialog = document.createElement('loot-message-dialog');
-    dialog.setButtonText(positiveText, l10n.jed.translate('Cancel').fetch());
+    dialog.setButtonText(positiveText, loot.l10n.translate('Cancel'));
     dialog.showModal(title, text, closeCallback);
     document.body.appendChild(dialog);
 }
 function showMessageBox(title, text) {
     var dialog = document.createElement('loot-message-dialog');
-    dialog.setButtonText(l10n.jed.translate('OK').fetch());
+    dialog.setButtonText(loot.l10n.translate('OK'));
     dialog.showModal(title, text);
     document.body.appendChild(dialog);
 }
@@ -51,7 +51,7 @@ function closeProgressDialog() {
     }
 }
 function handleUnappliedChangesClose(change) {
-    showMessageDialog('', l10n.jed.translate('You have not yet applied or cancelled your %s. Are you sure you want to quit?').fetch(change), l10n.jed.translate('Quit').fetch(), function(result){
+    showMessageDialog('', loot.l10n.translate('You have not yet applied or cancelled your %s. Are you sure you want to quit?', change), loot.l10n.translate('Quit'), function(result){
         if (result) {
             /* Cancel any sorting and close any editors. Cheat by sending a
                cancelSort query for as many times as necessary. */
@@ -70,4 +70,3 @@ function handleUnappliedChangesClose(change) {
         }
     });
 }
-

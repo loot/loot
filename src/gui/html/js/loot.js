@@ -180,12 +180,12 @@ var loot = {
                 if (change.object[change.name] && change.object[change.name].revision) {
                     document.getElementById('masterlistRevision').textContent = change.object[change.name].revision;
                 } else {
-                    document.getElementById('masterlistRevision').textContent = l10n.jed.translate("N/A").fetch();
+                    document.getElementById('masterlistRevision').textContent = loot.l10n.translate("N/A");
                 }
                 if (change.object[change.name] && change.object[change.name].date) {
                     document.getElementById('masterlistDate').textContent = change.object[change.name].date;
                 } else {
-                    document.getElementById('masterlistDate').textContent = l10n.jed.translate("N/A").fetch();
+                    document.getElementById('masterlistDate').textContent = loot.l10n.translate("N/A");
                 }
             } else if (change.name == 'globalMessages') {
                 /* For the messages, they don't have a JS 'class' so need to everything

@@ -35,7 +35,7 @@ function initVars() {
             if (loot.version.length > pos + 1) {
                 document.getElementById('LOOTBuild').textContent = loot.version.substring(pos + 1);
             } else {
-                document.getElementById('LOOTBuild').textContent = l10n.jed.translate('unknown').fetch();
+                document.getElementById('LOOTBuild').textContent = loot.l10n.translate('unknown');
             }
 
             loot.version = loot.version.substring(0, pos);
@@ -139,12 +139,12 @@ function initVars() {
                 console.log('getSettings response: ' + results[2]);
             }
         }).then(function(){
-            return l10n.getJedInstance(loot.settings.language).then(function(jed){
-                l10n.translateStaticText(jed);
-                l10n.jed = jed;
-
-                /* Also need to update the settings UI. */
-                loot.updateSettingsUI();
+            /* Translate static text. */
+            loot.l10n = new loot.Translator(loot.settings.language);
+            loot.l10n.load().then(() => {
+              loot.translateStaticText(loot.l10n);
+              /* Also need to update the settings UI. */
+              loot.updateSettingsUI();
             }).catch(processCefError);
         }).then(function(){
             if (result) {

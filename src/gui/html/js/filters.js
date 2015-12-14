@@ -118,7 +118,7 @@ var filters = {
 
     doNotCleanFilter: function(message) {
         if (document.getElementById('hideDoNotCleanMessages').checked) {
-            return message.content[0].str.indexOf(l10n.jed.translate("Do not clean").fetch()) == -1;
+            return message.content[0].str.indexOf(loot.l10n.translate("Do not clean")) == -1;
         } else {
             return true;
         }
@@ -157,7 +157,7 @@ function getConflictingPluginsFromFilter() {
             ]
         });
 
-        showProgress(l10n.jed.translate('Checking if plugins have been loaded...').fetch());
+        showProgress(loot.l10n.translate('Checking if plugins have been loaded...'));
 
         return loot.query(request).then(JSON.parse).then(function(result){
             if (result) {
