@@ -1,6 +1,6 @@
 'use strict';
 
-(function (root, factory) {
+(function exportModule(root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
     define(['bower_components/Jed/jed', 'bower_components/jed-gettext-parser/jedGettextParser'], factory);
@@ -53,7 +53,7 @@
       }
 
       return translationDataPromise.catch((error) => {
-        console.log('Error loading translation data: ' + error.message);
+        console.log('Error loading translation data: ' + error.message); // eslint-disable-line no-console
         return defaultTranslationData;
       }).then((result) => {
         this.jed = new Jed({

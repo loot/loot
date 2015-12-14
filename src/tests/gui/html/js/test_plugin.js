@@ -3,15 +3,15 @@
 describe('Plugin', () => {
   describe('#Plugin()', () => {
     it('should throw if nothing is passed', () => {
-      (() => { new loot.Plugin(); }).should.throw();
+      (() => { new loot.Plugin(); }).should.throw(); // eslint-disable-line no-new
     });
 
     it('should throw if an object with no name key is passed', () => {
-      (() => { new loot.Plugin({}); }).should.throw();
+      (() => { new loot.Plugin({}); }).should.throw(); // eslint-disable-line no-new
     });
 
     it('should not throw if some members are undefined', () => {
-      (() => { new loot.Plugin({ name: 'test' }); }).should.not.throw();
+      (() => { new loot.Plugin({ name: 'test' }); }).should.not.throw(); // eslint-disable-line no-new
     });
   });
 

@@ -17,7 +17,7 @@ describe('Translator', () => {
     it('should return a Promise', () => {
       const l10n = new loot.Translator();
 
-      l10n.load().should.be.a.Promise();
+      l10n.load().should.be.a.Promise(); // eslint-disable-line new-cap
     });
 
     it('should be fulfilled for a locale of "en"', () => {
