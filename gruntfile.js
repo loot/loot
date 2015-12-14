@@ -20,7 +20,7 @@ module.exports = (grunt) => {
             platform: 'Windows 10',
             version: '47',
           }],
-          testname: 'LOOT UI JS tests',
+          testname: 'LOOT UI JS Tests',
         },
       },
     },
