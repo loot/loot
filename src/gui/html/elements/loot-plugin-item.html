@@ -140,8 +140,8 @@
 
         observe: {
             'data.userlist': 'onUserlistChange',
-            'data.modPriority': 'onPriorityChange',
-            'data.isGlobalPriority': 'onPriorityIsGlobalChange',
+            'data.priority': 'onPriorityChange',
+            'data.isPriorityGlobal': 'onPriorityIsGlobalChange',
             'data.isEditorOpen': 'onEditorStateChange',
         },
 
@@ -163,8 +163,8 @@
         },
 
         onPriorityChange: function(oldValue, newValue) {
-            if (this.data && this.data.modPriority) {
-                this.shadowRoot.getElementById('priority').textContent = this.data.modPriority;
+            if (this.data && this.data.priority) {
+                this.shadowRoot.getElementById('priority').textContent = this.data.priority;
                 this.shadowRoot.getElementById('secondary').classList.remove('hidden');
             } else {
                 this.shadowRoot.getElementById('priority').textContent = '';
@@ -173,7 +173,7 @@
         },
 
         onPriorityIsGlobalChange: function(oldValue, newValue) {
-            if (this.data && this.data.isGlobalPriority) {
+            if (this.data && this.data.isPriorityGlobal) {
                 this.shadowRoot.getElementById('secondary').firstElementChild.classList.remove('hidden');
             } else {
                 this.shadowRoot.getElementById('secondary').firstElementChild.classList.add('hidden');

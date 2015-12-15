@@ -135,33 +135,10 @@ searchTarget is the ID of the core-list element to search the elements of.
             var crcHidden = document.getElementById('hideCRCs').checked;
             var bashTagHidden = document.getElementById('hideBashTags').checked;
             document.getElementById(host.searchTarget).data.forEach(function(plugin, index){
-                if (plugin.name.toLowerCase().indexOf(needle) != -1
-                    || (!versionHidden && plugin.version.toLowerCase().indexOf(needle) != -1)
-                    || (!crcHidden && plugin.crcString.toLowerCase().indexOf(needle) != -1)) {
-
-                    host.results.push(index);
-                    plugin.isSearchResult = true;
-                    return;
-                }
-
-                if (!bashTagHidden) {
-                    var tags = plugin.tagStrings;
-                    if (tags.added.toLowerCase().indexOf(needle) != -1
-                        || tags.removed.toLowerCase().indexOf(needle) != -1) {
-
-                        host.results.push(index);
-                        plugin.isSearchResult = true;
-                        return;
-                    }
-                }
-
-                var visibleMessages = filters.applyMessageFilters(this.data.messages);
-                for (var i = 0; i < visibleMessages.length; ++i) {
-                    if (visibleMessages[i].content[0].str.toLowerCase().indexOf(needle) != -1) {
-                        host.results.push(index);
-                        plugin.isSearchResult = true;
-                        return;
-                    }
+                if (plugin.getCardContent(loot.filters).containsText(needle)) {
+                  host.results.push(index);
+                  plugin.isSearchResult = true;
+                  return;
                 }
             });
 

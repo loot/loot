@@ -111,10 +111,10 @@ function updateMasterlistNoProgress() {
                 for (var i = 0; i < loot.game.plugins.length; ++i) {
                     if (loot.game.plugins[i].name == plugin.name) {
                         loot.game.plugins[i].isDirty = plugin.isDirty;
-                        loot.game.plugins[i].isGlobalPriority = plugin.isGlobalPriority;
+                        loot.game.plugins[i].isPriorityGlobal = plugin.isPriorityGlobal;
                         loot.game.plugins[i].masterlist = plugin.masterlist;
                         loot.game.plugins[i].messages = plugin.messages;
-                        loot.game.plugins[i].modPriority = plugin.modPriority;
+                        loot.game.plugins[i].priority = plugin.priority;
                         loot.game.plugins[i].tags = plugin.tags;
                         break;
                     }
@@ -276,8 +276,8 @@ function onClearAllMetadata(evt) {
                                 loot.game.plugins[i].userlist = undefined;
                                 loot.game.plugins[i].editor = undefined;
 
-                                loot.game.plugins[i].modPriority = plugin.modPriority;
-                                loot.game.plugins[i].isGlobalPriority = plugin.isGlobalPriority;
+                                loot.game.plugins[i].priority = plugin.priority;
+                                loot.game.plugins[i].isPriorityGlobal = plugin.isPriorityGlobal;
                                 loot.game.plugins[i].messages = plugin.messages;
                                 loot.game.plugins[i].tags = plugin.tags;
                                 loot.game.plugins[i].isDirty = plugin.isDirty;
@@ -317,8 +317,8 @@ function onCopyContent(evt) {
                     isEmpty: plugin.isEmpty,
                     loadsArchive: plugin.loadsArchive,
 
-                    modPriority: plugin.modPriority,
-                    isGlobalPriority: plugin.isGlobalPriority,
+                    priority: plugin.priority,
+                    isPriorityGlobal: plugin.isPriorityGlobal,
                     messages: plugin.messages,
                     tags: plugin.tags,
                     isDirty: plugin.isDirty
@@ -491,8 +491,8 @@ function onEditorClose(evt) {
         });
         promise = loot.query(request).then(JSON.parse).then(function(result){
             if (result) {
-                evt.target.data.modPriority = result.modPriority;
-                evt.target.data.isGlobalPriority = result.isGlobalPriority;
+                evt.target.data.priority = result.priority;
+                evt.target.data.isPriorityGlobal = result.isPriorityGlobal;
                 evt.target.data.messages = result.messages;
                 evt.target.data.tags = result.tags;
                 evt.target.data.isDirty = result.isDirty;
@@ -598,8 +598,8 @@ function onClearMetadata(evt) {
                             loot.game.plugins[i].userlist = undefined;
                             loot.game.plugins[i].editor = undefined;
 
-                            loot.game.plugins[i].modPriority = result.modPriority;
-                            loot.game.plugins[i].isGlobalPriority = result.isGlobalPriority;
+                            loot.game.plugins[i].priority = result.priority;
+                            loot.game.plugins[i].isPriorityGlobal = result.isPriorityGlobal;
                             loot.game.plugins[i].messages = result.messages;
                             loot.game.plugins[i].tags = result.tags;
                             loot.game.plugins[i].isDirty = result.isDirty;
@@ -670,8 +670,8 @@ function onContentRefresh(evt) {
                     loot.game.plugins[i].crc = plugin.crc;
                     loot.game.plugins[i].version = plugin.version;
 
-                    loot.game.plugins[i].modPriority = plugin.modPriority;
-                    loot.game.plugins[i].isGlobalPriority = plugin.isGlobalPriority;
+                    loot.game.plugins[i].priority = plugin.priority;
+                    loot.game.plugins[i].isPriorityGlobal = plugin.isPriorityGlobal;
                     loot.game.plugins[i].messages = plugin.messages;
                     loot.game.plugins[i].tags = plugin.tags;
                     loot.game.plugins[i].isDirty = plugin.isDirty;
@@ -715,6 +715,15 @@ function onSearchOpen(evt) {
 function onSearchClose(evt) {
     document.getElementById('mainToolbar').classList.remove('search');
 }
+function onSidebarFilterToggle(evt) {
+  if (evt.target.id !== 'contentFilter') {
+    loot.filters[evt.target.id] = evt.target.checked;
+  } else {
+    loot.filters.contentSearchString = evt.target.value;
+  }
+  saveFilterState(evt);
+  setFilteredUIData();
+}
 function setupEventHandlers() {
     /*Set up handlers for filters.*/
     document.getElementById('hideVersionNumbers').addEventListener('change', onToggleDisplayCSS, false);
@@ -723,20 +732,15 @@ function setupEventHandlers() {
     document.getElementById('hideCRCs').addEventListener('change', saveFilterState, false);
     document.getElementById('hideBashTags').addEventListener('change', onToggleBashTags, false);
     document.getElementById('hideBashTags').addEventListener('change', saveFilterState, false);
-    document.getElementById('hideNotes').addEventListener('change', setFilteredUIData, false);
-    document.getElementById('hideNotes').addEventListener('change', saveFilterState, false);
-    document.getElementById('hideDoNotCleanMessages').addEventListener('change', setFilteredUIData, false);
-    document.getElementById('hideDoNotCleanMessages').addEventListener('change', saveFilterState, false);
-    document.getElementById('hideInactivePlugins').addEventListener('change', setFilteredUIData, false);
-    document.getElementById('hideInactivePlugins').addEventListener('change', saveFilterState, false);
-    document.getElementById('hideAllPluginMessages').addEventListener('change', setFilteredUIData, false);
-    document.getElementById('hideAllPluginMessages').addEventListener('change', saveFilterState, false);
-    document.getElementById('hideMessagelessPlugins').addEventListener('change', setFilteredUIData, false);
-    document.getElementById('hideMessagelessPlugins').addEventListener('change', saveFilterState, false);
+    document.getElementById('hideNotes').addEventListener('change', onSidebarFilterToggle, false);
+    document.getElementById('hideDoNotCleanMessages').addEventListener('change', onSidebarFilterToggle, false);
+    document.getElementById('hideInactivePlugins').addEventListener('change', onSidebarFilterToggle, false);
+    document.getElementById('hideAllPluginMessages').addEventListener('change', onSidebarFilterToggle, false);
+    document.getElementById('hideMessagelessPlugins').addEventListener('change', onSidebarFilterToggle, false);
     document.body.addEventListener('loot-filter-conflicts', onConflictsFilter, false);
 
     /* Set up event handlers for content filter. */
-    document.getElementById('contentFilter').addEventListener('change', setFilteredUIData, false);
+    document.getElementById('contentFilter').addEventListener('change', onSidebarFilterToggle, false);
 
     /* Set up handlers for buttons. */
     document.getElementById('redatePluginsButton').addEventListener('click', onRedatePlugins, false);

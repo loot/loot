@@ -213,10 +213,10 @@
                     <template>
                         <loot-plugin-card data="{{model}}" id="{{model.id}}" data-active="{{model.isActive}}" data-empty="{{model.isEmpty}}" data-archive="{{model.loadsArchive}}" data-master="{{model.isMaster}}">
                             <h1>{{model.name}}</h1>
-                            <span class="version">{{model.version}}</span>
-                            <span class="crc">{{model.crcString}}</span>
-                            <span class="tag add">{{model.tagStrings.added}}</span>
-                            <span class="tag remove">{{model.tagStrings.removed}}</span>
+                            <span class="version"></span>
+                            <span class="crc"></span>
+                            <span class="tag add"></span>
+                            <span class="tag remove"></span>
                             <ul></ul>
                         </loot-plugin-card>
                     </template>
@@ -315,12 +315,12 @@
     <script src="../../../bower_components/marked/lib/marked.js"></script>
     <script src="../../../bower_components/Jed/jed.js"></script>
     <script src="../../../bower_components/jed-gettext-parser/jedGettextParser.js"></script>
+    <script src="js/events.js"></script>
+    <script src="js/filters.js"></script>
+    <script src="js/game.js"></script>
     <script src="js/helpers.js"></script>
-    <script src="js/loot.js"></script>
-    <script src="js/translator.js"></script>
     <script src="js/l10n.js"></script>
     <script src="js/plugin.js"></script>
-    <script src="js/filters.js"></script>
-    <script src="js/events.js"></script>
+    <script src="js/translator.js"></script>
     <script src="js/init.js"></script>
 </body>

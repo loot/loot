@@ -1,252 +1,67 @@
-var filters = {
-    /* Filter functions return true if the given plugin passes the filter and
-       should be displayed, otherwise false. */
+'use strict';
+(function exportModule(root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+    define([], factory);
+  } else {
+    // Browser globals
+    root.loot = root.loot || {};
+    root.loot.Filters = factory();
+  }
+}(this, () => {
+  return class Filters {
+      constructor(l10n) {
+        /* Plugin filters */
+        this.hideMessagelessPlugins = false;
+        this.hideInactivePlugins = false;
+        this.conflictingPluginNames = [];
+        this.contentSearchString = '';
 
-    hiddenPluginNo: 0,
-    hiddenMessageNo: 0,
-    conflicts: [],
+        /* Plugin content filters */
+        this.hideVersionNumbers = false;
+        this.hideCRCs = false;
+        this.hideBashTags = false;
+        this.hideAllPluginMessages = false;
+        this.hideNotes = false;
+        this.hideDoNotCleanMessages = false;
 
-    searchFilter: function(plugin, needle) {
-        if (needle.length == 0) {
-            return true;
+        this._doNotCleanString = l10n.translate('Do not clean').toLowerCase();
+      }
+
+      pluginFilter(plugin) {
+        if (this.hideInactivePlugins && !plugin.isActive) {
+          return false;
         }
 
-        if (plugin.name.toLowerCase().indexOf(needle) != -1
-            || plugin.crcString.toLowerCase().indexOf(needle) != -1
-            || plugin.version.toLowerCase().indexOf(needle) != -1) {
-
-            return true;
+        if (this.conflictingPluginNames.length !== 0 && this.conflictingPluginNames.indexOf(plugin.name) === -1) {
+          return false;
         }
 
-        var tags = plugin.tagStrings;
-        if (tags.added.toLowerCase().indexOf(needle) != -1
-            || tags.removed.toLowerCase().indexOf(needle) != -1) {
-
-            return true;
+        if (this.hideMessagelessPlugins && plugin.getCardContent(this).messages.length === 0) {
+          return false;
         }
 
-        for (var i = 0; i < plugin.messages.length; ++i) {
-            if (plugin.messages[i].content[0].str.toLowerCase().indexOf(needle) != -1) {
-                return true;
-            }
-        }
-    },
-
-    messagelessFilter: function(plugin) {
-        /* This function could be further optimised to perform fewer checks,
-           but it's also responsible for setting the hidden message count, so
-           has to go through everything. */
-
-        var hasMessages = false;
-        /* If any messages exist, check if they are hidden or not. Note
-           that the messages may not be present as elements, so the check
-           is actually if they would be hidden according to the message
-           filters. */
-        if (this.allMessageFilter()) {
-            plugin.messages.forEach(function(message){
-                if (this.noteFilter(message)
-                    && this.doNotCleanFilter(message)) {
-
-                    hasMessages = true;
-                    return;
-                }
-                ++hiddenMessageNo;
-            }, this);
-        } else {
-            hiddenMessageNo += plugin.messages.length;
+        if (this.contentSearchString.length !== 0 && !plugin.getCardContent(this).containsText(this.contentSearchString)) {
+          return false;
         }
 
-        if (document.getElementById('hideMessagelessPlugins').checked) {
-            return hasMessages;
-        } else {
-            return true;
-        }
-    },
+        return true;
+      }
 
-    inactiveFilter: function(plugin) {
-        if (document.getElementById('hideInactivePlugins').checked) {
-            return plugin.isActive;
-        } else {
-            return true;
-        }
-    },
-
-    conflictsFilter: function(plugin) {
-        if (this.conflicts.length > 0) {
-            return this.conflicts.indexOf(plugin.name) != -1;
-        } else {
-            return true;
-        }
-    },
-
-    applyPluginFilters: function(plugins) {
-        var search = document.getElementById('contentFilter').value.toLowerCase();
-        hiddenPluginNo = 0;
-        hiddenMessageNo = 0;
-        var filteredPlugins = [];
-
-        plugins.forEach(function(plugin){
-            /* Messageless filter needs to run first. */
-            if (this.messagelessFilter(plugin)
-                && this.inactiveFilter(plugin)
-                && this.conflictsFilter(plugin)
-                && this.searchFilter(plugin, search)) {
-
-                filteredPlugins.push(plugin);
-                return;
-            }
-            ++hiddenPluginNo;
-        }, this);
-
-        document.getElementById('hiddenPluginNo').textContent = hiddenPluginNo;
-        document.getElementById('hiddenMessageNo').textContent = hiddenMessageNo;
-
-        return filteredPlugins;
-    },
-
-    /* Message filter functions are run from within plugin cards, when the card's
-       messages are to be added as elements. Each filter should return true if the
-       message is to be displayed. */
-
-    noteFilter: function(message) {
-        if (document.getElementById('hideNotes').checked) {
-            return message.type != 'say';
-        } else {
-            return true;
-        }
-    },
-
-    doNotCleanFilter: function(message) {
-        if (document.getElementById('hideDoNotCleanMessages').checked) {
-            return message.content[0].str.indexOf(loot.l10n.translate("Do not clean")) == -1;
-        } else {
-            return true;
-        }
-    },
-
-    allMessageFilter: function() {
-        return !document.getElementById('hideAllPluginMessages').checked;
-    },
-
-    applyMessageFilters: function(messages) {
-        var filteredMessages = [];
-
-        if (this.allMessageFilter()) {
-            messages.forEach(function(message){
-                if (this.noteFilter(message)
-                    && this.doNotCleanFilter(message)) {
-
-                    filteredMessages.push(message);
-                    return;
-                }
-            }, this);
+      messageFilter(message) {
+        if (this.hideAllPluginMessages) {
+          return false;
         }
 
-        return filteredMessages;
-    },
-};
-
-function getConflictingPluginsFromFilter() {
-    var conflictsPlugin = document.body.getAttribute('data-conflicts');
-    if (conflictsPlugin) {
-        /* Now get conflicts for the plugin. */
-        var request = JSON.stringify({
-            name: 'getConflictingPlugins',
-            args: [
-                conflictsPlugin
-            ]
-        });
-
-        showProgress(loot.l10n.translate('Checking if plugins have been loaded...'));
-
-        return loot.query(request).then(JSON.parse).then(function(result){
-            if (result) {
-                /* Filter everything but the plugin itself if there are no
-                   conflicts. */
-                var conflicts = [ conflictsPlugin ];
-                for (var key in result) {
-                    if (result[key].conflicts) {
-                        conflicts.push(key);
-                    }
-                    for (var i = 0; i < loot.game.plugins.length; ++i) {
-                        if (loot.game.plugins[i].name == key) {
-                            loot.game.plugins[i].crc = result[key].crc;
-                            loot.game.plugins[i].isEmpty = result[key].isEmpty;
-
-                            loot.game.plugins[i].messages = result[key].messages;
-                            loot.game.plugins[i].tags = result[key].tags;
-                            loot.game.plugins[i].isDirty = result[key].isDirty;
-                            break;
-                        }
-                    }
-                }
-                closeProgressDialog();
-                return conflicts;
-            }
-            closeProgressDialog();
-            return [ conflictsPlugin ];
-        }).catch(processCefError);
-    }
-
-    return Promise.resolve([]);
-}
-
-function setFilteredUIData() {
-    /* The conflict filter, if enabled, executes C++ code, so needs to be
-       handled using a promise, so the rest of the function should wait until
-       it is completed.
-    */
-    getConflictingPluginsFromFilter().then(function(conflicts) {
-        filters.conflicts = conflicts;
-        var filtered = filters.applyPluginFilters(loot.game.plugins);
-        document.getElementById('cardsNav').data = filtered;
-        document.getElementById('main').lastElementChild.data = filtered;
-
-        filtered.forEach(function(plugin){
-            var element = document.getElementById(plugin.id);
-            if (element) {
-                element.onMessagesChange();
-            }
-        });
-
-        /* Now perform search again. If there is no current search, this won't
-           do anything. */
-        document.getElementById('searchBar').search();
-    });
-}
-function restoreFilterStates() {
-    if (loot.settings.filters) {
-        document.getElementById('hideMessagelessPlugins').checked = loot.settings.filters.hideMessagelessPlugins;
-        document.getElementById('hideInactivePlugins').checked = loot.settings.filters.hideInactivePlugins;
-        document.getElementById('hideNotes').checked = loot.settings.filters.hideNotes;
-        document.getElementById('hideDoNotCleanMessages').checked = loot.settings.filters.hideDoNotCleanMessages;
-        document.getElementById('hideAllPluginMessages').checked = loot.settings.filters.hideAllPluginMessages;
-        document.getElementById('hideVersionNumbers').checked = loot.settings.filters.hideVersionNumbers;
-        document.getElementById('hideCRCs').checked = loot.settings.filters.hideCRCs;
-        document.getElementById('hideBashTags').checked = loot.settings.filters.hideBashTags;
-    }
-}
-
-function applyEnabledFilters() {
-    if (loot.settings.filters) {
-        if (loot.settings.filters.hideMessagelessPlugins
-            || loot.settings.filters.hideInactivePlugins
-            || loot.settings.filters.hideNotes
-            || loot.settings.filters.hideDoNotCleanMessages
-            || loot.settings.filters.hideAllPluginMessages) {
-            setFilteredUIData();
+        if (this.hideNotes && message.type === 'say') {
+          return false;
         }
 
-        if (loot.settings.filters.hideVersionNumbers) {
-            document.getElementById('hideVersionNumbers').dispatchEvent(new Event('change'));
+        if (this.hideDoNotCleanMessages && message.content.toLowerCase().indexOf(this._doNotCleanString) !== -1) {
+          return false;
         }
 
-        if (loot.settings.filters.hideCRCs) {
-            document.getElementById('hideCRCs').dispatchEvent(new Event('change'));
-        }
-
-        if (loot.settings.filters.hideBashTags) {
-            document.getElementById('hideBashTags').dispatchEvent(new Event('change'));
-        }
-    }
-}
+        return true;
+      }
+  };
+}));

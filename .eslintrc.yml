@@ -10,6 +10,7 @@ ecmaFeatures:
 
 globals:
   loot: false
+  should: false
 
 extends:
   - "eslint:recommended"

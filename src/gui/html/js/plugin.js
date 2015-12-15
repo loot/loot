@@ -32,23 +32,155 @@
     root.loot.Plugin = factory();
   }
 }(this, () => {
+  /* Messages, tags, CRCs and version strings can all be hidden by filters.
+     Use getters with no setters for member variables as data should not be
+     written to objects of this class. */
+  class PluginCardContent {
+    constructor(plugin, filters) {
+      this._name = plugin.name;
+      this._isActive = plugin.isActive || false;
+      this._isEmpty = plugin.isEmpty;
+      this._isMaster = plugin.isMaster;
+      this._loadsArchive = plugin.loadsArchive;
+
+      if (!filters.hideVersionNumbers) {
+        this._version = plugin.version;
+      } else {
+        this._version = '';
+      }
+
+      if (!filters.hideCRCs) {
+        this._crc = plugin.crc;
+      } else {
+        this._crc = 0;
+      }
+
+      if (!filters.hideBashTags) {
+        this._tags = plugin.tags;
+      } else {
+        this._tags = [];
+      }
+
+      this._messages = plugin.messages.map((message) => {
+        return {
+          type: message.type,
+          content: message.content[0].str,
+        };
+      }).filter(filters.messageFilter, filters);
+    }
+
+    get name() {
+      return this._name;
+    }
+
+    get isActive() {
+      return this._isActive;
+    }
+
+    get isEmpty() {
+      return this._isEmpty;
+    }
+
+    get isMaster() {
+      return this._isMaster;
+    }
+
+    get loadsArchive() {
+      return this._loadsArchive;
+    }
+
+    get version() {
+      return this._version;
+    }
+
+    get crc() {
+      if (this._crc === 0) {
+        return '';
+      }
+
+      /* Pad CRC string to 8 characters. */
+      return ('00000000' + this._crc.toString(16).toUpperCase()).slice(-8);
+    }
+
+    get tags() {
+      const tagsAdded = [];
+      const tagsRemoved = [];
+
+      if (this._tags) {
+        for (let i = 0; i < this._tags.length; ++i) {
+          if (this._tags[i].name[0] === '-') {
+            tagsRemoved.push(this._tags[i].name.substr(1));
+          } else {
+            tagsAdded.push(this._tags[i].name);
+          }
+        }
+      }
+      /* Now make sure that the same tag doesn't appear in both arrays.
+         Prefer the removed list. */
+      for (let i = 0; i < tagsAdded.length; ++i) {
+        for (let j = 0; j < tagsRemoved.length; ++j) {
+          if (tagsRemoved[j].toLowerCase() === tagsAdded[i].toLowerCase()) {
+            /* Remove tag from the tagsAdded array. */
+            tagsAdded.splice(i, 1);
+            --i;
+          }
+        }
+      }
+
+      return {
+        added: tagsAdded.join(', '),
+        removed: tagsRemoved.join(', '),
+      };
+    }
+
+    get messages() {
+      return this._messages;
+    }
+
+    containsText(text) {
+      if (text === undefined || text.length === 0) {
+        return true;
+      }
+      const needle = text.toLowerCase();
+
+      if (this.name.toLowerCase().indexOf(needle) !== -1
+          || this.crc.toLowerCase().indexOf(needle) !== -1
+          || this.version.toLowerCase().indexOf(needle) !== -1) {
+        return true;
+      }
+
+      if (this.tags.added.toLowerCase().indexOf(needle) !== -1
+          || this.tags.removed.toLowerCase().indexOf(needle) !== -1) {
+        return true;
+      }
+
+      for (let i = 0; i < this.messages.length; ++i) {
+        if (this.messages[i].content.toLowerCase().indexOf(needle) !== -1) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+  }
+
   return class Plugin {
     constructor(obj) {
       /* Plugin data */
       this.name = obj.name;
-      this.crc = obj.crc;
-      this.version = obj.version;
-      this.isActive = obj.isActive;
-      this.isEmpty = obj.isEmpty;
-      this.isMaster = obj.isMaster;
-      this.loadsArchive = obj.loadsArchive;
+      this.crc = obj.crc || 0;
+      this.version = obj.version || '';
+      this.isActive = obj.isActive || false;
+      this.isEmpty = obj.isEmpty || false;
+      this.isMaster = obj.isMaster || false;
+      this.loadsArchive = obj.loadsArchive || false;
 
       this.masterlist = obj.masterlist;
       this.userlist = obj.userlist;
 
-      this.modPriority = obj.modPriority;
-      this.isGlobalPriority = obj.isGlobalPriority;
-      this._messages = obj.messages;
+      this.priority = obj.priority || 0;
+      this.isPriorityGlobal = obj.isPriorityGlobal || false;
+      this._messages = obj.messages || [];
       this.tags = obj.tags;
       this._isDirty = obj.isDirty || false;
 
@@ -100,52 +232,12 @@
       return rowData;
     }
 
-    get tagStrings() {
-      const tagsAdded = [];
-      const tagsRemoved = [];
-
-      if (this.tags) {
-        for (let i = 0; i < this.tags.length; ++i) {
-          if (this.tags[i].name[0] === '-') {
-            tagsRemoved.push(this.tags[i].name.substr(1));
-          } else {
-            tagsAdded.push(this.tags[i].name);
-          }
-        }
-      }
-      /* Now make sure that the same tag doesn't appear in both arrays.
-         Prefer the removed list. */
-      for (let i = 0; i < tagsAdded.length; ++i) {
-        for (let j = 0; j < tagsRemoved.length; ++j) {
-          if (tagsRemoved[j].toLowerCase() === tagsAdded[i].toLowerCase()) {
-            /* Remove tag from the tagsAdded array. */
-            tagsAdded.splice(i, 1);
-            --i;
-          }
-        }
-      }
-
-      return {
-        added: tagsAdded.join(', '),
-        removed: tagsRemoved.join(', '),
-      };
-    }
-
     get priorityString() {
-      if (this.modPriority === undefined || this.modPriority === 0) {
+      if (this.priority === 0) {
         return '';
       }
 
-      return this.modPriority.toString();
-    }
-
-    get crcString() {
-      if (this.crc === undefined || this.crc === 0) {
-        return '';
-      }
-
-      /* Pad CRC string to 8 characters. */
-      return ('00000000' + this.crc.toString(16).toUpperCase()).slice(-8);
+      return this.priority.toString();
     }
 
     get messages() {
@@ -161,29 +253,25 @@
       let oldErrs = 0;
       let newErrs = 0;
 
-      if (this._messages) {
-        oldTotal = this._messages.length;
+      oldTotal = this._messages.length;
 
-        this._messages.forEach((message) => {
-          if (message.type === 'warn') {
-            ++oldWarns;
-          } else if (message.type === 'error') {
-            ++oldErrs;
-          }
-        });
-      }
+      this._messages.forEach((message) => {
+        if (message.type === 'warn') {
+          ++oldWarns;
+        } else if (message.type === 'error') {
+          ++oldErrs;
+        }
+      });
 
-      if (messages) {
-        newTotal = messages.length;
+      newTotal = messages.length;
 
-        messages.forEach((message) => {
-          if (message.type === 'warn') {
-            ++newWarns;
-          } else if (message.type === 'error') {
-            ++newErrs;
-          }
-        });
-      }
+      messages.forEach((message) => {
+        if (message.type === 'warn') {
+          ++newWarns;
+        } else if (message.type === 'error') {
+          ++newErrs;
+        }
+      });
 
       if (newTotal !== oldTotal || newWarns !== oldWarns || newErrs !== oldErrs) {
         document.dispatchEvent(new CustomEvent('loot-plugin-message-change', {
@@ -213,6 +301,10 @@
       }
 
       this._isDirty = dirty;
+    }
+
+    getCardContent(filters) {
+      return new PluginCardContent(this, filters);
     }
   };
 }));

@@ -488,12 +488,12 @@ namespace loot {
 
         // First sort out the priority value. This is only given if it was changed.
         BOOST_LOG_TRIVIAL(trace) << "Calculating userlist metadata priority value from Javascript variables.";
-        if (pluginMetadata["modPriority"] && pluginMetadata["isGlobalPriority"]) {
+        if (pluginMetadata["priority"] && pluginMetadata["isPriorityGlobal"]) {
             BOOST_LOG_TRIVIAL(trace) << "Priority value was changed, recalculating...";
             // Priority value was changed, so add it to the userlist data.
-            newUserlistEntry.Priority(pluginMetadata["modPriority"].as<int>());
+            newUserlistEntry.Priority(pluginMetadata["priority"].as<int>());
             newUserlistEntry.SetPriorityExplicit(true);
-            newUserlistEntry.SetPriorityGlobal(pluginMetadata["isGlobalPriority"].as<bool>());
+            newUserlistEntry.SetPriorityGlobal(pluginMetadata["isPriorityGlobal"].as<bool>());
         }
         else {
             // Priority value wasn't changed, use the existing userlist value.
@@ -1056,8 +1056,8 @@ namespace loot {
         // Now add to pluginNode.
         YAML::Node pluginNode;
         pluginNode["name"] = tempPlugin.Name();
-        pluginNode["modPriority"] = tempPlugin.Priority();
-        pluginNode["isGlobalPriority"] = tempPlugin.IsPriorityGlobal();
+        pluginNode["priority"] = tempPlugin.Priority();
+        pluginNode["isPriorityGlobal"] = tempPlugin.IsPriorityGlobal();
         pluginNode["messages"] = tempPlugin.Messages();
         pluginNode["tags"] = tempPlugin.Tags();
         pluginNode["isDirty"] = isDirty;

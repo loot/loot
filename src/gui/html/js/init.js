@@ -25,6 +25,53 @@
 var marked;
 var l10n;
 
+function restoreFilterStates() {
+  if (loot.settings.filters && loot.filters) {
+    loot.filters.hideMessagelessPlugins = loot.settings.filters.hideMessagelessPlugins;
+    loot.filters.hideInactivePlugins = loot.settings.filters.hideInactivePlugins;
+    loot.filters.hideNotes = loot.settings.filters.hideNotes;
+    loot.filters.hideDoNotCleanMessages = loot.settings.filters.hideDoNotCleanMessages;
+    loot.filters.hideAllPluginMessages = loot.settings.filters.hideAllPluginMessages;
+    loot.filters.hideVersionNumbers = loot.settings.filters.hideVersionNumbers;
+    loot.filters.hideCRCs = loot.settings.filters.hideCRCs;
+    loot.filters.hideBashTags = loot.settings.filters.hideBashTags;
+
+    document.getElementById('hideMessagelessPlugins').checked = loot.settings.filters.hideMessagelessPlugins;
+    document.getElementById('hideInactivePlugins').checked = loot.settings.filters.hideInactivePlugins;
+    document.getElementById('hideNotes').checked = loot.settings.filters.hideNotes;
+    document.getElementById('hideDoNotCleanMessages').checked = loot.settings.filters.hideDoNotCleanMessages;
+    document.getElementById('hideAllPluginMessages').checked = loot.settings.filters.hideAllPluginMessages;
+    document.getElementById('hideVersionNumbers').checked = loot.settings.filters.hideVersionNumbers;
+    document.getElementById('hideCRCs').checked = loot.settings.filters.hideCRCs;
+    document.getElementById('hideBashTags').checked = loot.settings.filters.hideBashTags;
+  }
+}
+
+function applyEnabledFilters() {
+  if (!loot.filters) {
+    return;
+  }
+
+  if (loot.filters.hideMessagelessPlugins
+      || loot.filters.hideInactivePlugins
+      || loot.filters.hideNotes
+      || loot.filters.hideDoNotCleanMessages
+      || loot.filters.hideAllPluginMessages) {
+    setFilteredUIData();
+  }
+
+  if (loot.filters.hideVersionNumbers) {
+    document.getElementById('hideVersionNumbers').dispatchEvent(new Event('change'));
+  }
+
+  if (loot.filters.hideCRCs) {
+    document.getElementById('hideCRCs').dispatchEvent(new Event('change'));
+  }
+
+  if (loot.filters.hideBashTags) {
+    document.getElementById('hideBashTags').dispatchEvent(new Event('change'));
+  }
+}
 function initVars() {
     loot.query('getVersion').then(function(result){
         try {
