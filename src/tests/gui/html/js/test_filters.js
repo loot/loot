@@ -1,13 +1,13 @@
 'use strict';
 
-/* Mock the Translator class. */
-class Translator {
-  translate(text) {
-    return text;
-  }
-}
-
 describe('Filters', () => {
+  /* Mock the Translator class. */
+  class Translator {
+    translate(text) {
+      return text;
+    }
+  }
+
   let l10n;
 
   beforeEach(() => {

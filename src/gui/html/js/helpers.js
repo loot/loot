@@ -141,3 +141,19 @@ function setFilteredUIData(filtersState) {
     document.getElementById('hiddenMessageNo').textContent = hiddenMessageNo;
   });
 }
+/* Call whenever game is changed or game menu / game table are rewritten. */
+function updateSelectedGame(gameFolder) {
+  document.getElementById('gameMenu').value = gameFolder;
+
+  /* Also disable deletion of the game's row in the settings dialog. */
+  const table = document.getElementById('gameTable');
+  for (let i = 0; i < table.tBodies[0].rows.length; ++i) {
+    if (table.tBodies[0].rows[i].getElementsByClassName('folder').length > 0) {
+      if (table.tBodies[0].rows[i].getElementsByClassName('folder')[0].value === gameFolder) {
+        table.setReadOnly(table.tBodies[0].rows[i], ['delete']);
+      } else {
+        table.setReadOnly(table.tBodies[0].rows[i], ['delete'], false);
+      }
+    }
+  }
+}

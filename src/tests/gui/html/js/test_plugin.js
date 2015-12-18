@@ -699,7 +699,6 @@ describe('PluginCardContent', () => {
   });
 
   describe('#messages', () => {
-
     it('should return message objects mapped from the plugin\'s message objects', () => {
       plugin.getCardContent(filters).messages.should.deepEqual([
         {
