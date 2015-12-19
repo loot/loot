@@ -77,16 +77,9 @@ function getConflictingPlugins(pluginName)  {
   }
 
   /* Now get conflicts for the plugin. */
-  const request = JSON.stringify({
-    name: 'getConflictingPlugins',
-    args: [
-      pluginName,
-    ],
-  });
-
   showProgress(loot.l10n.translate('Checking if plugins have been loaded...'));
 
-  return loot.query(request).then(JSON.parse).then((result) => {
+  return loot.query('getConflictingPlugins', pluginName).then(JSON.parse).then((result) => {
     if (result) {
       /* Filter everything but the plugin itself if there are no
          conflicts. */
@@ -213,18 +206,4 @@ function updateSettingsUI() {
 
     updateEnabledGames(loot.installedGames);
     updateSelectedGame(loot.game.folder);
-}
-/* Returns a cefQuery as a Promise. */
-var loot = loot || {};
-loot.query = function query(request) {
-    return new Promise(function(resolve, reject) {
-        window.cefQuery({
-            request: request,
-            persistent: false,
-            onSuccess: resolve,
-            onFailure: function(errorCode, errorMessage) {
-                reject(Error('Error code: ' + errorCode + '; ' + errorMessage))
-            }
-        });
-    });
 }

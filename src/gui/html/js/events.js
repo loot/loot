@@ -77,14 +77,7 @@ function onPluginIsDirtyChange(evt) {
   }
 }
 function saveFilterState(evt) {
-    var request = JSON.stringify({
-        name: 'saveFilterState',
-        args: [
-            evt.target.id,
-            evt.target.checked,
-        ]
-    });
-    loot.query(request).catch(processCefError);
+    loot.query('saveFilterState', evt.target.id, evt.target.checked).catch(processCefError);
 }
 function onToggleDisplayCSS(evt) {
     var attr = 'data-hide-' + evt.target.getAttribute('data-class');
@@ -118,13 +111,7 @@ function onChangeGame(evt) {
 
     /* Send off a CEF query with the folder name of the new game. */
     showProgress(loot.l10n.translate('Loading game data...'));
-    var request = JSON.stringify({
-        name: 'changeGame',
-        args: [
-            evt.currentTarget.getAttribute('value')
-        ]
-    });
-    loot.query(request).then(function(result){
+    loot.query('changeGame', evt.currentTarget.getAttribute('value')).then(function(result){
         /* Filters should be re-applied on game change, except the conflicts
            filter. Don't need to deactivate the others beforehand. Strictly not
            deactivating the conflicts filter either, just resetting it's value.
@@ -274,13 +261,7 @@ function onApplySort(evt) {
     loot.game.plugins.forEach(function(plugin){
         loadOrder.push(plugin.name);
     });
-    var request = JSON.stringify({
-        name: 'applySort',
-        args: [
-            loadOrder
-        ]
-    });
-    return loot.query(request).then(function(result){
+    return loot.query('applySort', loadOrder).then(function(result){
         /* Remove old load order storage. */
         delete loot.game.loadOrder;
         delete loot.game.oldLoadOrder;
@@ -399,15 +380,10 @@ function onCopyContent(evt) {
         }
     }
 
-    var request = JSON.stringify({
-        name: 'copyContent',
-        args: [{
-            messages: messages,
-            plugins: plugins
-        }]
-    });
-
-    loot.query(request).then(function(){
+    loot.query('copyContent', {
+        messages: messages,
+        plugins: plugins
+    }).then(function(){
         toast(loot.l10n.translate("LOOT's content has been copied to the clipboard."));
     }).catch(processCefError);
 }
@@ -422,14 +398,7 @@ function onCopyLoadOrder(evt) {
         }
     }
 
-    var request = JSON.stringify({
-        name: 'copyLoadOrder',
-        args: [
-            plugins
-        ]
-    });
-
-    loot.query(request).then(function(){
+    loot.query('copyLoadOrder', plugins).then(function(){
         toast(loot.l10n.translate("The load order has been copied to the clipboard."));
     }).catch(processCefError);
 }
@@ -469,13 +438,7 @@ function onCloseSettingsDialog(evt) {
         };
 
         /* Send the settings back to the C++ side. */
-        var request = JSON.stringify({
-            name: 'closeSettings',
-            args: [
-                settings
-            ]
-        });
-        loot.query(request).then(function(result){
+        loot.query('closeSettings', settings).then(function(result){
 
             try {
                 setInstalledGames(JSON.parse(result));
@@ -547,14 +510,7 @@ function onEditorClose(evt) {
            majority of the work to the C++ side of things. */
 
         var edits = evt.target.readFromEditor(evt.target.data);
-
-        var request = JSON.stringify({
-            name: 'editorClosed',
-            args: [
-                edits
-            ]
-        });
-        promise = loot.query(request).then(JSON.parse).then(function(result){
+        promise = loot.query('editorClosed', edits).then(JSON.parse).then(function(result){
             if (result) {
                 evt.target.data.priority = result.priority;
                 evt.target.data.isPriorityGlobal = result.isPriorityGlobal;
@@ -633,29 +589,14 @@ function onConflictsFilter(evt) {
     setFilteredUIData(evt);
 }
 function onCopyMetadata(evt) {
-    /* evt.detail is the name of the plugin. */
-    var request = JSON.stringify({
-        name: 'copyMetadata',
-        args: [
-            evt.target.getName(),
-        ]
-    });
-
-    loot.query(request).then(function(){
+    loot.query('copyMetadata', evt.target.getName()).then(function(){
         toast(loot.l10n.translate('The metadata for "%s" has been copied to the clipboard.', evt.target.getName()));
     }).catch(processCefError);
 }
 function onClearMetadata(evt) {
     showMessageDialog('', loot.l10n.translate('Are you sure you want to clear all existing user-added metadata from "%s"?', evt.target.getName()), loot.l10n.translate('Clear'), function(result){
         if (result) {
-            var request = JSON.stringify({
-                name: 'clearPluginMetadata',
-                args: [
-                    evt.target.getName()
-                ]
-            });
-
-            loot.query(request).then(JSON.parse).then(function(result){
+            loot.query('clearPluginMetadata', evt.target.getName()).then(JSON.parse).then(function(result){
                 if (result) {
                     /* Need to empty the UI-side user metadata. */
                     for (var i = 0; i < loot.game.plugins.length; ++i) {
