@@ -50,10 +50,12 @@ function onGameFolderChange(evt) {
   updateSelectedGame(evt.detail.folder);
   /* Enable/disable the redate plugins option. */
   let index = undefined;
-  for (let i = 0; i < loot.settings.games.length; ++i) {
-    if (loot.settings.games[i].folder === evt.detail.folder) {
-      index = i;
-      break;
+  if (loot.settings && loot.settings.games) {
+    for (let i = 0; i < loot.settings.games.length; ++i) {
+      if (loot.settings.games[i].folder === evt.detail.folder) {
+        index = i;
+        break;
+      }
     }
   }
   const redateButton = document.getElementById('redatePluginsButton');

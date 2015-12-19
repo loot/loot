@@ -20,3 +20,4 @@ rules:
   strict:
     - 2
     - global
+  guard-for-in: 0
