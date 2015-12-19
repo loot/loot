@@ -1,3 +1,4 @@
+'use strict';
 function processCefError(err) {
     /* Error.stack seems to be Chromium-specific. It gives a lot more useful
        info than just the error message. Also, this can be used to catch any
@@ -156,4 +157,74 @@ function updateSelectedGame(gameFolder) {
       }
     }
   }
+}
+
+/* Call whenever installedGames is changed or game menu is rewritten. */
+function updateEnabledGames(installedGames) {
+    /* Update the disabled games in the game menu. */
+    var gameMenuItems = document.getElementById('gameMenu').children;
+    for (var i = 0; i < gameMenuItems.length; ++i) {
+        if (installedGames.indexOf(gameMenuItems[i].getAttribute('value')) == -1) {
+            gameMenuItems[i].setAttribute('disabled', true);
+            gameMenuItems[i].removeEventListener('click', onChangeGame, false);
+        } else {
+            gameMenuItems[i].removeAttribute('disabled');
+            gameMenuItems[i].addEventListener('click', onChangeGame, false);
+        }
+    }
+}
+function setInstalledGames(installedGames) {
+  loot.installedGames = installedGames;
+  updateEnabledGames(installedGames);
+}
+/* Call whenever settings are changed. */
+function updateSettingsUI() {
+    var gameSelect = document.getElementById('defaultGameSelect');
+    var gameMenu = document.getElementById('gameMenu');
+    var gameTable = document.getElementById('gameTable');
+
+    /* First make sure game listing elements don't have any existing entries. */
+    while (gameSelect.children.length > 1) {
+        gameSelect.removeChild(gameSelect.lastElementChild);
+    }
+    while (gameMenu.firstElementChild) {
+        gameMenu.firstElementChild.removeEventListener('click', onChangeGame, false);
+        gameMenu.removeChild(gameMenu.firstElementChild);
+    }
+    gameTable.clear();
+
+    /* Now fill with new values. */
+    loot.settings.games.forEach(function(game){
+        var menuItem = document.createElement('paper-item');
+        menuItem.setAttribute('value', game.folder);
+        menuItem.setAttribute('noink', '');
+        menuItem.textContent = game.name;
+        gameMenu.appendChild(menuItem);
+        gameSelect.appendChild(menuItem.cloneNode(true));
+
+        var row = gameTable.addRow(game);
+        gameTable.setReadOnly(row, ['name','folder','type']);
+    });
+
+    gameSelect.value = loot.settings.game;
+    document.getElementById('languageSelect').value = loot.settings.language;
+    document.getElementById('enableDebugLogging').checked = loot.settings.enableDebugLogging;
+    document.getElementById('updateMasterlist').checked = loot.settings.updateMasterlist;
+
+    updateEnabledGames(loot.installedGames);
+    updateSelectedGame(loot.game.folder);
+}
+/* Returns a cefQuery as a Promise. */
+var loot = loot || {};
+loot.query = function query(request) {
+    return new Promise(function(resolve, reject) {
+        window.cefQuery({
+            request: request,
+            persistent: false,
+            onSuccess: resolve,
+            onFailure: function(errorCode, errorMessage) {
+                reject(Error('Error code: ' + errorCode + '; ' + errorMessage))
+            }
+        });
+    });
 }

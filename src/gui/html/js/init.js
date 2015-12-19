@@ -172,7 +172,7 @@ function initVars() {
             select.setAttribute('value', select.firstElementChild.getAttribute('value'));
 
             try {
-                loot.installedGames = JSON.parse(results[1]);
+                setInstalledGames(JSON.parse(results[1]));
             } catch (e) {
                 console.log(e);
                 console.log('getInstalledGames response: ' + results[1]);
@@ -180,6 +180,7 @@ function initVars() {
 
             try {
                 loot.settings = JSON.parse(results[2]);
+                updateSettingsUI();
                 restoreFilterStates();
             } catch (e) {
                 console.log(e);
@@ -191,7 +192,7 @@ function initVars() {
             loot.l10n.load().then(() => {
               loot.translateStaticText(loot.l10n);
               /* Also need to update the settings UI. */
-              loot.updateSettingsUI();
+              updateSettingsUI();
             }).catch(processCefError);
         }).then(function(){
             if (result) {
@@ -230,10 +231,6 @@ function initVars() {
 window.addEventListener('polymer-ready', function(e) {
     /* Set the plugin list's scroll target to its parent. */
     document.getElementById('main').lastElementChild.scrollTarget = document.getElementById('main');
-
-    /* Register object observers. */
-    Object.observe(loot, loot.observer);
-    Object.observe(loot.game, loot.gameObserver);
 
     /* Make sure settings are what I want. */
     marked.setOptions({
