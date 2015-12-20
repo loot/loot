@@ -106,6 +106,18 @@
     pluginItem.getElementById('editorIsOpenTooltip').textContent = l10n.translate('Editor Is Open');
   }
 
+  function translateMessageDialogTemplate(l10n) {
+    /* Plugin List Item Template */
+    let messageDialog = document.querySelector('link[rel="import"][href$="loot-message-dialog.html"]');
+    if (messageDialog) {
+      messageDialog = messageDialog.import.querySelector('template').content;
+    } else {
+      messageDialog = document.querySelector('polymer-element[name="loot-message-dialog"]').querySelector('template').content;
+    }
+    messageDialog.getElementById('confirm').textContent = l10n.translate('OK');
+    messageDialog.getElementById('dismiss').textContent = l10n.translate('Cancel');
+  }
+
   function translateFileRowTemplate(l10n) {
     /* File row template */
     let fileRow = document.querySelector('link[rel="import"][href$="editable-table.html"]');
@@ -312,6 +324,7 @@
     translatePluginCardTemplate(l10n);
     translatePluginEditorTemplate(l10n);
     translatePluginListItemTemplate(l10n);
+    translateMessageDialogTemplate(l10n);
 
     translateFileRowTemplate(l10n);
     translateMessageRowTemplate(l10n);

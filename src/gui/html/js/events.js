@@ -110,7 +110,7 @@ function onChangeGame(evt) {
     }
 
     /* Send off a CEF query with the folder name of the new game. */
-    showProgress(loot.l10n.translate('Loading game data...'));
+    loot.Dialog.showProgress(loot.l10n.translate('Loading game data...'));
     loot.query('changeGame', evt.currentTarget.getAttribute('value')).then(function(result){
         /* Filters should be re-applied on game change, except the conflicts
            filter. Don't need to deactivate the others beforehand. Strictly not
@@ -144,7 +144,7 @@ function onChangeGame(evt) {
             console.log('changeGame response: ' + result);
         }
 
-        closeProgressDialog();
+        loot.Dialog.closeProgress();
     }).catch(processCefError);
 }
 function onOpenReadme(evt) {
@@ -174,16 +174,16 @@ function updateMasterlistNoProgress() {
             /* Hack to stop cards overlapping. */
             document.getElementById('main').lastElementChild.updateSize();
 
-            toast(loot.l10n.translate('Masterlist updated to revision %s.', loot.game.masterlist.revision));
+            loot.Dialog.showNotification(loot.l10n.translate('Masterlist updated to revision %s.', loot.game.masterlist.revision));
         } else {
-            toast(loot.l10n.translate('No masterlist update was necessary.'));
+            loot.Dialog.showNotification(loot.l10n.translate('No masterlist update was necessary.'));
         }
     }).catch(processCefError);
 }
 function onUpdateMasterlist(evt) {
-    showProgress(loot.l10n.translate('Updating masterlist...'));
+    loot.Dialog.showProgress(loot.l10n.translate('Updating masterlist...'));
     updateMasterlistNoProgress().then(function(result){
-        closeProgressDialog();
+        loot.Dialog.closeProgress();
     }).catch(processCefError);
 }
 function onSortPlugins(evt) {
@@ -205,7 +205,7 @@ function onSortPlugins(evt) {
         promise = promise.then(updateMasterlistNoProgress());
     }
     promise.then(function(){
-        showProgress(loot.l10n.translate('Sorting plugins...'));
+        loot.Dialog.showProgress(loot.l10n.translate('Sorting plugins...'));
         loot.query('sortPlugins').then(JSON.parse).then(function(result){
             if (result) {
                 loot.game.oldLoadOrder = loot.game.plugins;
@@ -251,7 +251,7 @@ function onSortPlugins(evt) {
 
                 /* Disable changing game. */
                 document.getElementById('gameMenu').setAttribute('disabled', '');
-                closeProgressDialog();
+                loot.Dialog.closeProgress();
             }
         }).catch(processCefError);
     }).catch(processCefError);
@@ -301,16 +301,16 @@ function onRedatePlugins(evt) {
         return;
     }
 
-    showMessageDialog(loot.l10n.translate('Redate Plugins?'), loot.l10n.translate('This feature is provided so that modders using the Creation Kit may set the load order it uses. A side-effect is that any subscribed Steam Workshop mods will be re-downloaded by Steam. Do you wish to continue?'), loot.l10n.translate('Redate'), function(result){
+    loot.Dialog.askQuestion(loot.l10n.translate('Redate Plugins?'), loot.l10n.translate('This feature is provided so that modders using the Creation Kit may set the load order it uses. A side-effect is that any subscribed Steam Workshop mods will be re-downloaded by Steam. Do you wish to continue?'), loot.l10n.translate('Redate'), function(result){
         if (result) {
             loot.query('redatePlugins').then(function(response){
-                toast('Plugins were successfully redated.');
+                loot.Dialog.showNotification('Plugins were successfully redated.');
             }).catch(processCefError);
         }
     });
 }
 function onClearAllMetadata(evt) {
-    showMessageDialog('', loot.l10n.translate('Are you sure you want to clear all existing user-added metadata from all plugins?'), loot.l10n.translate('Clear'), function(result){
+    loot.Dialog.askQuestion('', loot.l10n.translate('Are you sure you want to clear all existing user-added metadata from all plugins?'), loot.l10n.translate('Clear'), function(result){
         if (result) {
             loot.query('clearAllMetadata').then(JSON.parse).then(function(result){
                 if (result) {
@@ -332,7 +332,7 @@ function onClearAllMetadata(evt) {
                         }
                     });
 
-                    toast(loot.l10n.translate('All user-added metadata has been cleared.'));
+                    loot.Dialog.showNotification(loot.l10n.translate('All user-added metadata has been cleared.'));
                 }
             }).catch(processCefError);
         }
@@ -384,7 +384,7 @@ function onCopyContent(evt) {
         messages: messages,
         plugins: plugins
     }).then(function(){
-        toast(loot.l10n.translate("LOOT's content has been copied to the clipboard."));
+        loot.Dialog.showNotification(loot.l10n.translate("LOOT's content has been copied to the clipboard."));
     }).catch(processCefError);
 }
 function onCopyLoadOrder(evt) {
@@ -399,7 +399,7 @@ function onCopyLoadOrder(evt) {
     }
 
     loot.query('copyLoadOrder', plugins).then(function(){
-        toast(loot.l10n.translate("The load order has been copied to the clipboard."));
+        loot.Dialog.showNotification(loot.l10n.translate("The load order has been copied to the clipboard."));
     }).catch(processCefError);
 }
 function onSwitchSidebarTab(evt) {
@@ -590,11 +590,11 @@ function onConflictsFilter(evt) {
 }
 function onCopyMetadata(evt) {
     loot.query('copyMetadata', evt.target.getName()).then(function(){
-        toast(loot.l10n.translate('The metadata for "%s" has been copied to the clipboard.', evt.target.getName()));
+        loot.Dialog.showNotification(loot.l10n.translate('The metadata for "%s" has been copied to the clipboard.', evt.target.getName()));
     }).catch(processCefError);
 }
 function onClearMetadata(evt) {
-    showMessageDialog('', loot.l10n.translate('Are you sure you want to clear all existing user-added metadata from "%s"?', evt.target.getName()), loot.l10n.translate('Clear'), function(result){
+    loot.Dialog.askQuestion('', loot.l10n.translate('Are you sure you want to clear all existing user-added metadata from "%s"?', evt.target.getName()), loot.l10n.translate('Clear'), function(result){
         if (result) {
             loot.query('clearPluginMetadata', evt.target.getName()).then(JSON.parse).then(function(result){
                 if (result) {
@@ -613,7 +613,7 @@ function onClearMetadata(evt) {
                             break;
                         }
                     }
-                    toast(loot.l10n.translate('The user-added metadata for "%s" has been cleared.', evt.target.getName()));
+                    loot.Dialog.showNotification(loot.l10n.translate('The user-added metadata for "%s" has been cleared.', evt.target.getName()));
                     /* Now perform search again. If there is no current search, this won't
                        do anything. */
                     document.getElementById('searchBar').search();
@@ -649,7 +649,7 @@ function onJumpToGeneralInfo(evt) {
 }
 function onContentRefresh(evt) {
     /* Send a query for updated load order and plugin header info. */
-    showProgress(loot.l10n.translate('Refreshing data...'));
+    loot.Dialog.showProgress(loot.l10n.translate('Refreshing data...'));
     loot.query('getGameData').then(function(result){
         /* Parse the data sent from C++. */
         try {
@@ -711,7 +711,7 @@ function onContentRefresh(evt) {
         /* Reapply filters. */
         setFilteredUIData();
 
-        closeProgressDialog();
+        loot.Dialog.closeProgress();
     }).catch(processCefError);
 }
 function onSearchOpen(evt) {

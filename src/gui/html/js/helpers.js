@@ -4,8 +4,8 @@ function processCefError(err) {
        info than just the error message. Also, this can be used to catch any
        promise errors, not just CEF errors. */
     console.log(err.stack);
-    closeProgressDialog();
-    showMessageBox(loot.l10n.translate('Error'), err.message);
+    loot.Dialog.closeProgress();
+    loot.Dialog.showMessage(loot.l10n.translate('Error'), err.message);
 }
 
 function showElement(element) {
@@ -18,41 +18,8 @@ function hideElement(element) {
         element.classList.toggle('hidden', true);
     }
 }
-function toast(text) {
-    var toast = document.getElementById('toast');
-    toast.text = text;
-    toast.show();
-}
-function showMessageDialog(title, text, positiveText, closeCallback) {
-    var dialog = document.createElement('loot-message-dialog');
-    dialog.setButtonText(positiveText, loot.l10n.translate('Cancel'));
-    dialog.showModal(title, text, closeCallback);
-    document.body.appendChild(dialog);
-}
-function showMessageBox(title, text) {
-    var dialog = document.createElement('loot-message-dialog');
-    dialog.setButtonText(loot.l10n.translate('OK'));
-    dialog.showModal(title, text);
-    document.body.appendChild(dialog);
-}
-
-function showProgress(message) {
-    var progressDialog = document.getElementById('progressDialog');
-    if (message) {
-        progressDialog.getElementsByTagName('p')[0].textContent = message;
-    }
-    if (!progressDialog.opened) {
-        progressDialog.showModal();
-    }
-}
-function closeProgressDialog() {
-    var progressDialog = document.getElementById('progressDialog');
-    if (progressDialog.opened) {
-        progressDialog.close();
-    }
-}
 function handleUnappliedChangesClose(change) {
-    showMessageDialog('', loot.l10n.translate('You have not yet applied or cancelled your %s. Are you sure you want to quit?', change), loot.l10n.translate('Quit'), function(result){
+    loot.Dialog.askQuestion('', loot.l10n.translate('You have not yet applied or cancelled your %s. Are you sure you want to quit?', change), loot.l10n.translate('Quit'), function(result){
         if (result) {
             /* Cancel any sorting and close any editors. Cheat by sending a
                cancelSort query for as many times as necessary. */
@@ -77,7 +44,7 @@ function getConflictingPlugins(pluginName)  {
   }
 
   /* Now get conflicts for the plugin. */
-  showProgress(loot.l10n.translate('Checking if plugins have been loaded...'));
+  loot.Dialog.showProgress(loot.l10n.translate('Checking if plugins have been loaded...'));
 
   return loot.query('getConflictingPlugins', pluginName).then(JSON.parse).then((result) => {
     if (result) {
@@ -100,10 +67,10 @@ function getConflictingPlugins(pluginName)  {
           }
         }
       }
-      closeProgressDialog();
+      loot.Dialog.closeProgress();
       return conflicts;
     }
-    closeProgressDialog();
+    loot.Dialog.closeProgress();
     return [pluginName];
   }).catch(processCefError);
 }

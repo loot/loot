@@ -35,7 +35,7 @@ html /deep/ ::-webkit-scrollbar-track {
 html /deep/ ::-webkit-scrollbar-thumb {
     background: rgba(0, 0, 0, 0.26);
 }
-paper-button[autofocus] {
+html /deep/ paper-button[autofocus] {
     color: #64B5F6;
 }
 .hidden {

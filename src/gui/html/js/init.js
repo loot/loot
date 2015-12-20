@@ -146,7 +146,7 @@ function initVars() {
             loot.query('getSettings'),
         ];
 
-        showProgress('Initialising user interface...');
+        loot.Dialog.showProgress('Initialising user interface...');
         Promise.all(parallelPromises).then(function(results) {
             try {
                 loot.gameTypes = JSON.parse(results[0]);
@@ -197,7 +197,7 @@ function initVars() {
         }).then(function(){
             if (result) {
                 return new Promise(function(resolve, reject){
-                    closeProgressDialog();
+                    loot.Dialog.closeProgress();
                     document.getElementById('settingsButton').click();
                     resolve('');
                 });
@@ -214,7 +214,7 @@ function initVars() {
 
                     setTimeout(function() {
                         document.getElementById('cardsNav').updateSize();
-                        closeProgressDialog();
+                        loot.Dialog.closeProgress();
                     }, 100);
 
                     return '';
