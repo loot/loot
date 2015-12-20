@@ -11,8 +11,8 @@ find_package(Git)
 
 IF (GIT_FOUND)
     execute_process(COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
+                  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
                   OUTPUT_VARIABLE GIT_COMMIT_STRING
-                  ERROR_QUIET
                   OUTPUT_STRIP_TRAILING_WHITESPACE)
 ELSE()
     SET (GIT_COMMIT_STRING "unknown")
