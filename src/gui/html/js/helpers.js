@@ -1,44 +1,43 @@
 'use strict';
-function processCefError(err) {
-    /* Error.stack seems to be Chromium-specific. It gives a lot more useful
-       info than just the error message. Also, this can be used to catch any
-       promise errors, not just CEF errors. */
-    console.log(err.stack);
-    loot.Dialog.closeProgress();
-    loot.Dialog.showMessage(loot.l10n.translate('Error'), err.message);
+function handlePromiseError(err) {
+  /* Error.stack seems to be Chromium-specific. */
+  console.log(err.stack);
+  loot.Dialog.closeProgress();
+  loot.Dialog.showMessage(loot.l10n.translate('Error'), err.message);
 }
 
 function showElement(element) {
-    if (element != null) {
-        element.classList.toggle('hidden', false);
-    }
+  if (element !== null) {
+    element.classList.toggle('hidden', false);
+  }
 }
 function hideElement(element) {
-    if (element != null) {
-        element.classList.toggle('hidden', true);
-    }
+  if (element !== null) {
+    element.classList.toggle('hidden', true);
+  }
 }
 function handleUnappliedChangesClose(change) {
-    loot.Dialog.askQuestion('', loot.l10n.translate('You have not yet applied or cancelled your %s. Are you sure you want to quit?', change), loot.l10n.translate('Quit'), function(result){
-        if (result) {
-            /* Cancel any sorting and close any editors. Cheat by sending a
-               cancelSort query for as many times as necessary. */
-            var queries = [];
-            var numQueries = 0;
-            if (!document.getElementById('applySortButton').classList.contains('hidden')) {
-                numQueries += 1;
-            }
-            numQueries += document.body.getAttribute('data-editors');
-            for (var i = 0; i < numQueries; ++i) {
-                queries.push(loot.query('cancelSort'));
-            }
-            Promise.all(queries).then(function(){
-                window.close();
-            }).catch(processCefError);
-        }
-    });
+  loot.Dialog.askQuestion('', loot.l10n.translate('You have not yet applied or cancelled your %s. Are you sure you want to quit?', change), loot.l10n.translate('Quit'), (result) => {
+    if (!result) {
+      return;
+    }
+    /* Cancel any sorting and close any editors. Cheat by sending a
+       cancelSort query for as many times as necessary. */
+    const queries = [];
+    let numQueries = 0;
+    if (!document.getElementById('applySortButton').classList.contains('hidden')) {
+      numQueries += 1;
+    }
+    numQueries += document.body.getAttribute('data-editors');
+    for (let i = 0; i < numQueries; ++i) {
+      queries.push(loot.query('cancelSort'));
+    }
+    Promise.all(queries).then(() => {
+      window.close();
+    }).catch(handlePromiseError);
+  });
 }
-function getConflictingPlugins(pluginName)  {
+function getConflictingPlugins(pluginName) {
   if (!pluginName) {
     return Promise.resolve([]);
   }
@@ -72,9 +71,9 @@ function getConflictingPlugins(pluginName)  {
     }
     loot.Dialog.closeProgress();
     return [pluginName];
-  }).catch(processCefError);
+  }).catch(handlePromiseError);
 }
-function setFilteredUIData(filtersState) {
+function setFilteredUIData() {
   getConflictingPlugins(loot.filters.conflictTargetPluginName).then((conflictingPluginNames) => {
     loot.filters.conflictingPluginNames = conflictingPluginNames;
     return loot.game.plugins.filter(loot.filters.pluginFilter, loot.filters);
@@ -121,17 +120,17 @@ function updateSelectedGame(gameFolder) {
 
 /* Call whenever installedGames is changed or game menu is rewritten. */
 function updateEnabledGames(installedGames) {
-    /* Update the disabled games in the game menu. */
-    var gameMenuItems = document.getElementById('gameMenu').children;
-    for (var i = 0; i < gameMenuItems.length; ++i) {
-        if (installedGames.indexOf(gameMenuItems[i].getAttribute('value')) == -1) {
-            gameMenuItems[i].setAttribute('disabled', true);
-            gameMenuItems[i].removeEventListener('click', onChangeGame, false);
-        } else {
-            gameMenuItems[i].removeAttribute('disabled');
-            gameMenuItems[i].addEventListener('click', onChangeGame, false);
-        }
+  /* Update the disabled games in the game menu. */
+  const gameMenuItems = document.getElementById('gameMenu').children;
+  for (let i = 0; i < gameMenuItems.length; ++i) {
+    if (installedGames.indexOf(gameMenuItems[i].getAttribute('value')) === -1) {
+      gameMenuItems[i].setAttribute('disabled', true);
+      gameMenuItems[i].removeEventListener('click', onChangeGame);
+    } else {
+      gameMenuItems[i].removeAttribute('disabled');
+      gameMenuItems[i].addEventListener('click', onChangeGame);
     }
+  }
 }
 function setInstalledGames(installedGames) {
   loot.installedGames = installedGames;
@@ -139,38 +138,38 @@ function setInstalledGames(installedGames) {
 }
 /* Call whenever settings are changed. */
 function updateSettingsUI() {
-    var gameSelect = document.getElementById('defaultGameSelect');
-    var gameMenu = document.getElementById('gameMenu');
-    var gameTable = document.getElementById('gameTable');
+  const gameSelect = document.getElementById('defaultGameSelect');
+  const gameMenu = document.getElementById('gameMenu');
+  const gameTable = document.getElementById('gameTable');
 
-    /* First make sure game listing elements don't have any existing entries. */
-    while (gameSelect.children.length > 1) {
-        gameSelect.removeChild(gameSelect.lastElementChild);
-    }
-    while (gameMenu.firstElementChild) {
-        gameMenu.firstElementChild.removeEventListener('click', onChangeGame, false);
-        gameMenu.removeChild(gameMenu.firstElementChild);
-    }
-    gameTable.clear();
+  /* First make sure game listing elements don't have any existing entries. */
+  while (gameSelect.children.length > 1) {
+    gameSelect.removeChild(gameSelect.lastElementChild);
+  }
+  while (gameMenu.firstElementChild) {
+    gameMenu.firstElementChild.removeEventListener('click', onChangeGame);
+    gameMenu.removeChild(gameMenu.firstElementChild);
+  }
+  gameTable.clear();
 
-    /* Now fill with new values. */
-    loot.settings.games.forEach(function(game){
-        var menuItem = document.createElement('paper-item');
-        menuItem.setAttribute('value', game.folder);
-        menuItem.setAttribute('noink', '');
-        menuItem.textContent = game.name;
-        gameMenu.appendChild(menuItem);
-        gameSelect.appendChild(menuItem.cloneNode(true));
+  /* Now fill with new values. */
+  loot.settings.games.forEach((game) => {
+    const menuItem = document.createElement('paper-item');
+    menuItem.setAttribute('value', game.folder);
+    menuItem.setAttribute('noink', '');
+    menuItem.textContent = game.name;
+    gameMenu.appendChild(menuItem);
+    gameSelect.appendChild(menuItem.cloneNode(true));
 
-        var row = gameTable.addRow(game);
-        gameTable.setReadOnly(row, ['name','folder','type']);
-    });
+    const row = gameTable.addRow(game);
+    gameTable.setReadOnly(row, ['name', 'folder', 'type']);
+  });
 
-    gameSelect.value = loot.settings.game;
-    document.getElementById('languageSelect').value = loot.settings.language;
-    document.getElementById('enableDebugLogging').checked = loot.settings.enableDebugLogging;
-    document.getElementById('updateMasterlist').checked = loot.settings.updateMasterlist;
+  gameSelect.value = loot.settings.game;
+  document.getElementById('languageSelect').value = loot.settings.language;
+  document.getElementById('enableDebugLogging').checked = loot.settings.enableDebugLogging;
+  document.getElementById('updateMasterlist').checked = loot.settings.updateMasterlist;
 
-    updateEnabledGames(loot.installedGames);
-    updateSelectedGame(loot.game.folder);
+  updateEnabledGames(loot.installedGames);
+  updateSelectedGame(loot.game.folder);
 }

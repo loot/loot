@@ -205,7 +205,7 @@ function initialise() {
     if (!loot.settings.lastVersion || loot.settings.lastVersion !== loot.version) {
       document.getElementById('firstRun').showModal();
     }
-  }).catch(processCefError);
+  }).catch(handlePromiseError);
 }
 
 window.addEventListener('polymer-ready', initialise);
