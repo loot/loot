@@ -29,7 +29,7 @@ To install Bower and Vulcanize, first install [Node.js](http://nodejs.org/), the
 LOOT requires the following C/C++ libraries (version numbers used in latest development revision given):
 
 * [Boost](http://www.boost.org) v1.59.0
-* [Chromium Embedded Framework](https://bitbucket.org/chromiumembedded/cef) branch 2454: Required to build the GUI, but not the API or tests.
+* [Chromium Embedded Framework](https://bitbucket.org/chromiumembedded/cef) branch 2526: Required to build the GUI, but not the API or tests.
 * [Google Test](https://github.com/google/googletest) v1.7: Required to build the tests, but not the API or the GUI.
 * [Libespm](http://github.com/WrinklyNinja/libespm) v2.5.0
 * [Libgit2](http://libgit2.github.com/) v0.23.4
