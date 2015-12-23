@@ -76,7 +76,7 @@ IF (NOT Boost_USE_STATIC_LIBS)
     add_definitions(-DBOOST_LOG_DYN_LINK)
 ENDIF ()
 
-find_package(Boost REQUIRED COMPONENTS log log_setup regex locale thread date_time chrono filesystem system iostreams)
+find_package(Boost REQUIRED COMPONENTS atomic log log_setup regex locale thread date_time chrono filesystem system iostreams)
 find_package(yaml-cpp)
 find_package(GTest)
 
