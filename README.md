@@ -19,10 +19,9 @@ LOOT is intended to make using mods easier, and mod users should still possess a
 LOOT uses the following tools as part of its build process:
 
 * [CMake](http://cmake.org): To generate build files
-* [Bower](http://bower.io): To manage the HTML UI dependencies
-* [Vulcanize](https://github.com/Polymer/vulcanize): To build the HTML UI
+* [Node.js](http://nodejs.org/): To manage the UI dependencies and build the UI
 
-To install Bower and Vulcanize, first install [Node.js](http://nodejs.org/), then run `npm install -g bower vulcanize@0.7.11` from the command line.
+Once Node.js is installed, run `npm install` from the repository root to install the necessary libraries and tools.
 
 ### Dependencies
 
@@ -37,7 +36,7 @@ LOOT requires the following C/C++ libraries (version numbers used in latest deve
 * [Pseudosem](http://github.com/WrinklyNinja/pseudosem) v1.0.1
 * [yaml-cpp](http://github.com/WrinklyNinja/yaml-cpp): Use the `patched-for-loot` branch.
 
-In addition, LOOT's UI relies on the web libraries below, which can be fetched by running `bower install` from the repository root.
+In addition, LOOT's UI relies on the web libraries below, which can be fetched by running `./node_modules/.bin/bower install` from the repository root.
 
 * [Polymer](https://www.polymer-project.org)
 * [Jed](https://github.com/SlexAxton/Jed)
@@ -73,7 +72,7 @@ Packaging scripts are provided for creating an installer and compressed archives
 
 Run the `scripts/installer.iss` [Inno Setup](http://www.jrsoftware.org/isinfo.php) script to build an installer executable in the `build` folder. If the unofficial Korean and Simplified Chinese Inno Setup translation files are installed alongside the official translation files, then the installer script will also offer those language options. If they are not found, the installer will be built without them.
 
-The archive packaging script requires [Git for Windows](http://git-for-windows.github.io/) and [7-Zip](http://7-zip.org) to be installed. It also requires the [fs-extra](https://www.npmjs.com/package/fs-extra) Node.js module, which can be installed using  `npm install fs-extra`. The script can be run using `node scripts/archive.js`, and will create `.7z` archives for LOOT and its API in the `build` folder. The archives will be given filenames using the output of `git describe --tags --long`.
+The archive packaging script requires [Git for Windows](http://git-for-windows.github.io/) and [7-Zip](http://7-zip.org) to be installed. The script can be run using `node scripts/archive.js`, and will create `.7z` archives for LOOT and its API in the `build` folder. The archives will be given filenames using the output of `git describe --tags --long`.
 
 ## Snapshot Builds
 

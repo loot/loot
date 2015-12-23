@@ -27,7 +27,7 @@ for (var i = 0; i < release_paths.length; ++i) {
         }
     }
 
-    var vulcanize = 'vulcanize';
+    var vulcanize = path.join(root_path, 'node_modules', '.bin', 'vulcanize');
     if (os.platform() == 'win32') {
         vulcanize += '.cmd';
     }

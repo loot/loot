@@ -1,0 +1,20 @@
+{
+  "name": "loot",
+  "author": "Oliver Hamlet <oliver.hamlet@gmail.com>",
+  "version": "0.8.1",
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/loot/loot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/loot/loot/issues"
+  },
+  "homepage": "https://github.com/loot/loot",
+  "private": true,
+  "devDependencies": {
+    "bower": "^1.7.1",
+    "fs-extra": "^0.26.2",
+    "vulcanize": "^0.7.11"
+  }
+}
