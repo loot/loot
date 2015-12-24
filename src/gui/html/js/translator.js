@@ -67,6 +67,9 @@
       if (text === undefined) {
         return '';
       }
+      if (this.jed === undefined) {
+        return text;
+      }
       const func = this.jed.translate(text);
       return func.fetch.apply(func, substitutions);
     }

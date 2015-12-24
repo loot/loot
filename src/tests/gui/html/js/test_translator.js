@@ -37,8 +37,8 @@ describe('Translator', () => {
       l10n = new loot.Translator();
     });
 
-    it('should throw if the translator has not been loaded', () => {
-      (() => { l10n.translate('foo'); }).should.throw();
+    it('should return original string if the translator has not been loaded', () => {
+      l10n.translate('foo').should.equal('foo');
     });
 
     it('should return an empty string if nothing is passed', () => {
