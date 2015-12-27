@@ -30,6 +30,7 @@
     // Browser globals
     root.loot = root.loot || {};
     root.loot.initialise = factory(root.loot.Dialog,
+                                    root.loot.dom,
                                     root.loot.Filters,
                                     root.loot.Game,
                                     root.loot.translateStaticText,
@@ -37,7 +38,7 @@
                                     root.loot.query,
                                     root.loot.Translator);
   }
-}(this, (Dialog, Filters, Game, translateStaticText, Plugin, query, Translator) => {
+}(this, (Dialog, dom, Filters, Game, translateStaticText, Plugin, query, Translator) => {
   function setupEventHandlers() {
     /* Set up handlers for filters. */
     document.getElementById('hideVersionNumbers').addEventListener('change', onToggleDisplayCSS);
@@ -152,7 +153,7 @@
     return query('getLanguages').then(JSON.parse).then((result) => {
       /* Now fill in language options. */
       const settingsLangSelect = document.getElementById('languageSelect');
-      const messageLangSelect = getElementInTableRowTemplate('messageRow', 'language');
+      const messageLangSelect = dom.getElementInTableRowTemplate('messageRow', 'language');
 
       result.forEach((language) => {
         const settingsItem = document.createElement('paper-item');
@@ -193,7 +194,7 @@
   function setGameTypes() {
     return query('getGameTypes').then(JSON.parse).then((result) => {
       /* Fill in game row template's game type options. */
-      const select = getElementInTableRowTemplate('gameRow', 'type');
+      const select = dom.getElementInTableRowTemplate('gameRow', 'type');
       result.forEach((gameType) => {
         const item = document.createElement('paper-item');
         item.setAttribute('value', gameType);
@@ -208,14 +209,14 @@
   function setInstalledGames(appData) {
     return query('getInstalledGames').then(JSON.parse).then((installedGames) => {
       appData.installedGames = installedGames;
-      updateEnabledGames(installedGames);
+      dom.updateEnabledGames(installedGames);
     });
   }
 
   function setSettings(appData) {
     return query('getSettings').then(JSON.parse).then((result) => {
       appData.settings = result;
-      updateSettingsDialog(appData.settings, appData.installedGames, appData.game.folder);
+      dom.updateSettingsDialog(appData.settings, appData.installedGames, appData.game.folder);
     });
   }
 
@@ -263,7 +264,7 @@
       loot.filters = new Filters(loot.l10n);
       translateStaticText(loot.l10n);
       /* Also need to update the settings UI. */
-      updateSettingsDialog(loot.settings, loot.installedGames, loot.game.folder);
+      dom.updateSettingsDialog(loot.settings, loot.installedGames, loot.game.folder);
     }).then(() => {
       return displayInitErrors();
     }).then((result) => {

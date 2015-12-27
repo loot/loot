@@ -47,7 +47,7 @@ function onGameMasterlistChange(evt) {
   document.getElementById('masterlistDate').textContent = evt.detail.date;
 }
 function onGameFolderChange(evt) {
-  updateSelectedGame(evt.detail.folder);
+  loot.dom.updateSelectedGame(evt.detail.folder);
   /* Enable/disable the redate plugins option. */
   let index = undefined;
   if (loot.settings && loot.settings.games) {
@@ -239,10 +239,10 @@ function onSortPlugins() {
 
     /* Now hide the masterlist update buttons, and display the accept and
        cancel sort buttons. */
-    hideElement(document.getElementById('updateMasterlistButton'));
-    hideElement(document.getElementById('sortButton'));
-    showElement(document.getElementById('applySortButton'));
-    showElement(document.getElementById('cancelSortButton'));
+    loot.dom.hide('updateMasterlistButton');
+    loot.dom.hide('sortButton');
+    loot.dom.show('applySortButton');
+    loot.dom.show('cancelSortButton');
 
     /* Disable changing game. */
     document.getElementById('gameMenu').setAttribute('disabled', '');
@@ -261,10 +261,10 @@ function onApplySort() {
 
     /* Now show the masterlist update buttons, and hide the accept and
        cancel sort buttons. */
-    showElement(document.getElementById('updateMasterlistButton'));
-    showElement(document.getElementById('sortButton'));
-    hideElement(document.getElementById('applySortButton'));
-    hideElement(document.getElementById('cancelSortButton'));
+    loot.dom.show('updateMasterlistButton');
+    loot.dom.show('sortButton');
+    loot.dom.hide('applySortButton');
+    loot.dom.hide('cancelSortButton');
 
     /* Enable changing game. */
     document.getElementById('gameMenu').removeAttribute('disabled');
@@ -280,10 +280,10 @@ function onCancelSort(evt) {
 
     /* Now show the masterlist update buttons, and hide the accept and
        cancel sort buttons. */
-    showElement(document.getElementById('updateMasterlistButton'));
-    showElement(document.getElementById('sortButton'));
-    hideElement(document.getElementById('applySortButton'));
-    hideElement(document.getElementById('cancelSortButton'));
+    loot.dom.show('updateMasterlistButton');
+    loot.dom.show('sortButton');
+    loot.dom.hide('applySortButton');
+    loot.dom.hide('cancelSortButton');
 
     /* Enable changing game. */
     document.getElementById('gameMenu').removeAttribute('disabled');
@@ -434,14 +434,14 @@ function onCloseSettingsDialog(evt) {
     /* Send the settings back to the C++ side. */
     loot.query('closeSettings', settings).then(JSON.parse).then((installedGames) => {
       loot.installedGames = installedGames;
-      updateEnabledGames(installedGames);
+      loot.dom.updateEnabledGames(installedGames);
     }).catch(handlePromiseError).then(() => {
       loot.settings = settings;
-      updateSettingsDialog(loot.settings, loot.installedGames, loot.game.folder);
+      loot.dom.updateSettingsDialog(loot.settings, loot.installedGames, loot.game.folder);
     }).catch(handlePromiseError);
   } else {
     /* Re-apply the existing settings to the settings dialog elements. */
-    updateSettingsDialog(loot.settings, loot.installedGames, loot.game.folder);
+    loot.dom.updateSettingsDialog(loot.settings, loot.installedGames, loot.game.folder);
   }
   evt.target.parentElement.close();
 }
