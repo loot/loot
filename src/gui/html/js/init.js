@@ -104,7 +104,7 @@ function applyEnabledFilters() {
       || loot.filters.hideNotes
       || loot.filters.hideDoNotCleanMessages
       || loot.filters.hideAllPluginMessages) {
-    setFilteredUIData();
+      filterPluginData(plugins, filters);
   }
 
   if (loot.filters.hideVersionNumbers) {

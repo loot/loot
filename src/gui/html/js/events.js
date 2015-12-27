@@ -139,7 +139,7 @@ function onChangeGame(evt) {
     document.getElementById('main').lastElementChild.scrollToItem(0);
 
     /* Now update virtual lists. */
-    setFilteredUIData();
+    filterPluginData(loot.game.plugins, loot.filters);
 
     loot.Dialog.closeProgress();
   }).catch(handlePromiseError);
@@ -235,7 +235,7 @@ function onSortPlugins() {
 
     /* Now update the UI for the new order. */
     loot.game.plugins = loot.game.loadOrder;
-    setFilteredUIData();
+    filterPluginData(loot.game.plugins, loot.filters);
 
     /* Now hide the masterlist update buttons, and display the accept and
        cancel sort buttons. */
@@ -274,7 +274,7 @@ function onCancelSort(evt) {
   return loot.query('cancelSort').then(() => {
     /* Sort UI elements again according to stored old load order. */
     loot.game.plugins = loot.game.oldLoadOrder;
-    setFilteredUIData();
+    filterPluginData(loot.game.plugins, loot.filters);
     delete loot.game.loadOrder;
     delete loot.game.oldLoadOrder;
 
@@ -573,7 +573,7 @@ function onConflictsFilter(evt) {
   } else {
     document.body.removeAttribute('data-conflicts');
   }
-  setFilteredUIData();
+  filterPluginData(loot.game.plugins, loot.filters);
 }
 function onCopyMetadata(evt) {
   loot.query('copyMetadata', evt.target.getName()).then(() => {
@@ -713,7 +713,7 @@ function onContentRefresh() {
     }
 
     /* Reapply filters. */
-    setFilteredUIData();
+    filterPluginData(loot.game.plugins, loot.filters);
 
     loot.Dialog.closeProgress();
   }).catch(handlePromiseError);
@@ -732,5 +732,5 @@ function onSidebarFilterToggle(evt) {
     loot.filters.contentSearchString = evt.target.value;
   }
   saveFilterState(evt);
-  setFilteredUIData();
+  filterPluginData(loot.game.plugins, loot.filters);
 }

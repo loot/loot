@@ -52,10 +52,10 @@ function getConflictingPlugins(pluginName) {
     return [pluginName];
   }).catch(handlePromiseError);
 }
-function setFilteredUIData() {
-  getConflictingPlugins(loot.filters.conflictTargetPluginName).then((conflictingPluginNames) => {
-    loot.filters.conflictingPluginNames = conflictingPluginNames;
-    return loot.game.plugins.filter(loot.filters.pluginFilter, loot.filters);
+function filterPluginData(plugins, filters) {
+  getConflictingPlugins(filters.conflictTargetPluginName).then((conflictingPluginNames) => {
+    filters.conflictingPluginNames = conflictingPluginNames;
+    return plugins.filter(filters.pluginFilter, filters);
   }).then((filteredPlugins) => {
     document.getElementById('cardsNav').data = filteredPlugins;
     document.getElementById('pluginCardList').data = filteredPlugins;
@@ -66,16 +66,18 @@ function setFilteredUIData() {
         element.onMessagesChange();
       }
     });
+    document.getElementById('cardsNav').updateSize();
+    document.getElementById('pluginCardList').updateSize();
 
     /* Now perform search again. If there is no current search, this won't
        do anything. */
     document.getElementById('searchBar').search();
 
     /* Re-count all hidden plugins and messages. */
-    document.getElementById('hiddenPluginNo').textContent = loot.game.plugins.length - filteredPlugins.length;
+    document.getElementById('hiddenPluginNo').textContent = plugins.length - filteredPlugins.length;
     let hiddenMessageNo = 0;
-    loot.game.plugins.forEach((plugin) => {
-      hiddenMessageNo += plugin.messages.length - plugin.getCardContent(loot.filters).messages.length;
+    plugins.forEach((plugin) => {
+      hiddenMessageNo += plugin.messages.length - plugin.getCardContent(filters).messages.length;
     });
     document.getElementById('hiddenMessageNo').textContent = hiddenMessageNo;
   });
