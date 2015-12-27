@@ -68,6 +68,7 @@
     document.getElementById('helpButton').addEventListener('click', onOpenReadme);
     document.getElementById('aboutButton').addEventListener('click', onShowAboutDialog);
     document.getElementById('quitButton').addEventListener('click', onQuit);
+    document.getElementById('gameMenu').addEventListener('core-select', onChangeGame);
     document.getElementById('updateMasterlistButton').addEventListener('click', onUpdateMasterlist);
     document.getElementById('sortButton').addEventListener('click', onSortPlugins);
     document.getElementById('applySortButton').addEventListener('click', onApplySort);

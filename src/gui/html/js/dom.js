@@ -44,10 +44,8 @@
       for (let i = 0; i < gameMenuItems.length; ++i) {
         if (installedGames.indexOf(gameMenuItems[i].getAttribute('value')) === -1) {
           gameMenuItems[i].setAttribute('disabled', true);
-          gameMenuItems[i].removeEventListener('click', onChangeGame);
         } else {
           gameMenuItems[i].removeAttribute('disabled');
-          gameMenuItems[i].addEventListener('click', onChangeGame);
         }
       }
     },
@@ -62,7 +60,6 @@
         gameSelect.removeChild(gameSelect.lastElementChild);
       }
       while (gameMenu.firstElementChild) {
-        gameMenu.firstElementChild.removeEventListener('click', onChangeGame);
         gameMenu.removeChild(gameMenu.firstElementChild);
       }
       gameTable.clear();

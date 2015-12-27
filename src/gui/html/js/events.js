@@ -107,13 +107,13 @@ function onOpenLogLocation(evt) {
 }
 function onChangeGame(evt) {
   /* Check that the selected game isn't the current one. */
-  if (evt.target.className.indexOf('core-selected') !== -1) {
+  if (!evt.detail.isSelected) {
     return;
   }
 
   /* Send off a CEF query with the folder name of the new game. */
   loot.Dialog.showProgress(loot.l10n.translate('Loading game data...'));
-  loot.query('changeGame', evt.currentTarget.getAttribute('value')).then((result) => {
+  loot.query('changeGame', evt.detail.item.getAttribute('value')).then((result) => {
     /* Filters should be re-applied on game change, except the conflicts
        filter. Don't need to deactivate the others beforehand. Strictly not
        deactivating the conflicts filter either, just resetting it's value.
