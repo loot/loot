@@ -436,11 +436,11 @@ function onCloseSettingsDialog(evt) {
       setInstalledGames(result);
     }).catch(handlePromiseError).then(() => {
       loot.settings = settings;
-      updateSettingsUI();
+      updateSettingsDialog(loot.settings, loot.installedGames, loot.game.folder);
     }).catch(handlePromiseError);
   } else {
     /* Re-apply the existing settings to the settings dialog elements. */
-    updateSettingsUI();
+    updateSettingsDialog(loot.settings, loot.installedGames, loot.game.folder);
   }
   evt.target.parentElement.close();
 }

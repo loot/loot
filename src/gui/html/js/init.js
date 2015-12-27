@@ -205,7 +205,7 @@ function getInstalledGames() {
 function getSettings() {
   return loot.query('getSettings').then(JSON.parse).then((result) => {
     loot.settings = result;
-    updateSettingsUI();
+      updateSettingsDialog(appData.settings, appData.installedGames, appData.game.folder);
   });
 }
 
