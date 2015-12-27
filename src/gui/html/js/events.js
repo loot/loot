@@ -623,6 +623,27 @@ function onSidebarClick(evt) {
     }
   }
 }
+function handleUnappliedChangesClose(change) {
+  loot.Dialog.askQuestion('', loot.l10n.translate('You have not yet applied or cancelled your %s. Are you sure you want to quit?', change), loot.l10n.translate('Quit'), (result) => {
+    if (!result) {
+      return;
+    }
+    /* Cancel any sorting and close any editors. Cheat by sending a
+       cancelSort query for as many times as necessary. */
+    const queries = [];
+    let numQueries = 0;
+    if (!document.getElementById('applySortButton').classList.contains('hidden')) {
+      numQueries += 1;
+    }
+    numQueries += document.body.getAttribute('data-editors');
+    for (let i = 0; i < numQueries; ++i) {
+      queries.push(loot.query('cancelSort'));
+    }
+    Promise.all(queries).then(() => {
+      window.close();
+    }).catch(handlePromiseError);
+  });
+}
 function onQuit(evt) {
   if (!document.getElementById('applySortButton').classList.contains('hidden')) {
     handleUnappliedChangesClose(loot.l10n.translate('sorted load order'));
