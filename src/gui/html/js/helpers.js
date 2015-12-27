@@ -71,7 +71,3 @@ function filterPluginData(plugins, filters) {
     document.getElementById('hiddenMessageNo').textContent = hiddenMessageNo;
   });
 }
-function setInstalledGames(installedGames) {
-  loot.installedGames = installedGames;
-  updateEnabledGames(installedGames);
-}

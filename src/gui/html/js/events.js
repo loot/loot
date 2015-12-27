@@ -432,8 +432,9 @@ function onCloseSettingsDialog(evt) {
     };
 
     /* Send the settings back to the C++ side. */
-    loot.query('closeSettings', settings).then(JSON.parse).then((result) => {
-      setInstalledGames(result);
+    loot.query('closeSettings', settings).then(JSON.parse).then((installedGames) => {
+      loot.installedGames = installedGames;
+      updateEnabledGames(installedGames);
     }).catch(handlePromiseError).then(() => {
       loot.settings = settings;
       updateSettingsDialog(loot.settings, loot.installedGames, loot.game.folder);

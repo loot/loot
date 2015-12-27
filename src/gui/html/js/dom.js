@@ -4,6 +4,13 @@ function showElement(element) {
     element.classList.toggle('hidden', false);
   }
 }
+function getElementInTableRowTemplate(rowTemplateId, elementClass) {
+  const select = document.querySelector('link[rel="import"][href$="editable-table.html"]');
+  if (select) {
+    return select.import.querySelector('#' + rowTemplateId).content.querySelector('.' + elementClass);
+  }
+  return document.querySelector('#' + rowTemplateId).content.querySelector('.' + elementClass);
+}
 function hideElement(element) {
   if (element !== null) {
     element.classList.toggle('hidden', true);
