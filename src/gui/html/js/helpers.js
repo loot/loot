@@ -14,31 +14,29 @@ function getConflictingPlugins(pluginName) {
   loot.Dialog.showProgress(loot.l10n.translate('Checking if plugins have been loaded...'));
 
   return loot.query('getConflictingPlugins', pluginName).then(JSON.parse).then((result) => {
+    const conflicts = [pluginName];
     if (result) {
       /* Filter everything but the plugin itself if there are no
          conflicts. */
-      const conflicts = [pluginName];
       for (const key in result) {
         if (result[key].conflicts) {
           conflicts.push(key);
         }
-        for (let i = 0; i < loot.game.plugins.length; ++i) {
-          if (loot.game.plugins[i].name === key) {
-            loot.game.plugins[i].crc = result[key].crc;
-            loot.game.plugins[i].isEmpty = result[key].isEmpty;
+        const plugin = loot.game.plugins.find((item) => {
+          return item.name === key;
+        });
+        if (plugin) {
+          plugin.crc = result[key].crc;
+          plugin.isEmpty = result[key].isEmpty;
 
-            loot.game.plugins[i].messages = result[key].messages;
-            loot.game.plugins[i].tags = result[key].tags;
-            loot.game.plugins[i].isDirty = result[key].isDirty;
-            break;
-          }
+          plugin.messages = result[key].messages;
+          plugin.tags = result[key].tags;
+          plugin.isDirty = result[key].isDirty;
         }
       }
-      loot.Dialog.closeProgress();
-      return conflicts;
     }
     loot.Dialog.closeProgress();
-    return [pluginName];
+    return conflicts;
   }).catch(handlePromiseError);
 }
 function filterPluginData(plugins, filters) {
@@ -69,5 +67,5 @@ function filterPluginData(plugins, filters) {
       hiddenMessageNo += plugin.messages.length - plugin.getCardContent(filters).messages.length;
     });
     document.getElementById('hiddenMessageNo').textContent = hiddenMessageNo;
-  });
+  }).catch(handlePromiseError);
 }
