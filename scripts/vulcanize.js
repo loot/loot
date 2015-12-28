@@ -2,21 +2,26 @@
 // Build the UI's index.html file. Takes one argument, which is the path to the
 // repository's root.
 'use strict';
-const childProcess = require('child_process');
 const path = require('path');
 const fs = require('fs');
-const os = require('os');
 const helpers = require('./helpers');
+const vulcanize = require('vulcanize');
+
+function runVulcanize(err) {
+  if (err) {
+    console.error(err);
+    process.exit(1);
+  }
+  vulcanize.processDocument();
+}
 
 let rootPath = '.';
 if (process.argv.length > 2) {
   rootPath = process.argv[2];
 }
 
-const releasePaths = helpers.getAppReleasePaths(rootPath);
-
-for (let i = 0; i < releasePaths.length; ++i) {
-  const outputPath = path.join(releasePaths[i].path, 'resources', 'ui');
+helpers.getAppReleasePaths(rootPath).forEach((releasePath) => {
+  const outputPath = path.join(releasePath.path, 'resources', 'ui');
 
   // Makes sure output directory exists first.
   try {
@@ -27,17 +32,12 @@ for (let i = 0; i < releasePaths.length; ++i) {
     }
   }
 
-  let vulcanize = path.join(rootPath, 'node_modules', '.bin', 'vulcanize');
-  if (os.platform() === 'win32') {
-    vulcanize += '.cmd';
-  }
-
-  childProcess.execFileSync(vulcanize, [
-    '--inline',
-    '--config',
-    path.join(rootPath, 'scripts', 'vulcanize.config.json'),
-    '-o',
-    path.join(outputPath, 'index.html'),
-    path.join(rootPath, 'src', 'gui', 'html', 'index.html'),
-  ]);
-}
+  vulcanize.setOptions({
+    inline: true,
+    excludes: {
+      styles: ['css/theme.css'],
+    },
+    output: path.join(outputPath, 'index.html'),
+    input: path.join(rootPath, 'src', 'gui', 'html', 'index.html'),
+  }, runVulcanize);
+})
