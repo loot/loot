@@ -49,17 +49,14 @@ function onGameMasterlistChange(evt) {
 function onGameFolderChange(evt) {
   loot.dom.updateSelectedGame(evt.detail.folder);
   /* Enable/disable the redate plugins option. */
-  let index = undefined;
+  let gameSettings = undefined;
   if (loot.settings && loot.settings.games) {
-    for (let i = 0; i < loot.settings.games.length; ++i) {
-      if (loot.settings.games[i].folder === evt.detail.folder) {
-        index = i;
-        break;
-      }
-    }
+    gameSettings = loot.settings.games.find((game) => {
+      return game.folder === evt.detail.folder;
+    });
   }
   const redateButton = document.getElementById('redatePluginsButton');
-  if (index && loot.settings.games[index].type === 'Skyrim') {
+  if (gameSettings && gameSettings.type === 'Skyrim') {
     redateButton.removeAttribute('disabled');
   } else {
     redateButton.setAttribute('disabled', true);
@@ -82,6 +79,7 @@ function saveFilterState(evt) {
   loot.query('saveFilterState', evt.target.id, evt.target.checked).catch(handlePromiseError);
 }
 function onToggleDisplayCSS(evt) {
+  saveFilterState(evt);
   const attr = 'data-hide-' + evt.target.getAttribute('data-class');
   if (evt.target.checked) {
     document.getElementById('main').setAttribute(attr, true);
@@ -89,20 +87,14 @@ function onToggleDisplayCSS(evt) {
     document.getElementById('main').removeAttribute(attr);
   }
 
-  if (evt.target.id !== 'hideBashTags') {
-    /* Now perform search again. If there is no current search, this won't
-       do anything. */
-    document.getElementById('searchBar').search();
+  if (evt.target.id === 'hideBashTags') {
+    document.getElementById('main').lastElementChild.updateSize();
   }
-}
-function onToggleBashTags(evt) {
-  onToggleDisplayCSS(evt);
-  document.getElementById('main').lastElementChild.updateSize();
   /* Now perform search again. If there is no current search, this won't
      do anything. */
   document.getElementById('searchBar').search();
 }
-function onOpenLogLocation(evt) {
+function onOpenLogLocation() {
   loot.query('openLogLocation').catch(handlePromiseError);
 }
 function onChangeGame(evt) {
@@ -129,10 +121,7 @@ function onChangeGame(evt) {
 
     /* Parse the data sent from C++. */
     const gameInfo = JSON.parse(result, loot.Plugin.fromJson);
-    loot.game.folder = gameInfo.folder;
-    loot.game.masterlist = gameInfo.masterlist;
-    loot.game.globalMessages = gameInfo.globalMessages;
-    loot.game.plugins = gameInfo.plugins;
+    loot.game = new loot.Game(gameInfo, loot.l10n);
 
     /* Reset virtual list positions. */
     document.getElementById('cardsNav').scrollToItem(0);
@@ -144,7 +133,7 @@ function onChangeGame(evt) {
     loot.Dialog.closeProgress();
   }).catch(handlePromiseError);
 }
-function onOpenReadme(evt) {
+function onOpenReadme() {
   loot.query('openReadme').catch(handlePromiseError);
 }
 /* Masterlist update process, minus progress dialog. */
@@ -155,17 +144,17 @@ function updateMasterlistNoProgress() {
       loot.game.masterlist = result.masterlist;
       loot.game.globalMessages = result.globalMessages;
 
-      result.plugins.forEach((plugin) => {
-        for (let i = 0; i < loot.game.plugins.length; ++i) {
-          if (loot.game.plugins[i].name === plugin.name) {
-            loot.game.plugins[i].isDirty = plugin.isDirty;
-            loot.game.plugins[i].isPriorityGlobal = plugin.isPriorityGlobal;
-            loot.game.plugins[i].masterlist = plugin.masterlist;
-            loot.game.plugins[i].messages = plugin.messages;
-            loot.game.plugins[i].priority = plugin.priority;
-            loot.game.plugins[i].tags = plugin.tags;
-            break;
-          }
+      result.plugins.forEach((resultPlugin) => {
+        const existingPlugin = loot.game.plugins.find((plugin) => {
+          return plugin.name === resultPlugin.name;
+        });
+        if (existingPlugin) {
+          existingPlugin.isDirty = resultPlugin.isDirty;
+          existingPlugin.isPriorityGlobal = resultPlugin.isPriorityGlobal;
+          existingPlugin.masterlist = resultPlugin.masterlist;
+          existingPlugin.messages = resultPlugin.messages;
+          existingPlugin.priority = resultPlugin.priority;
+          existingPlugin.tags = resultPlugin.tags;
         }
       });
       /* Hack to stop cards overlapping. */
@@ -186,9 +175,9 @@ function onUpdateMasterlist() {
 function onSortPlugins() {
   if (document.body.hasAttribute('data-conflicts')) {
     /* Deactivate any existing plugin conflict filter. */
-    for (let i = 0; i < loot.game.plugins.length; ++i) {
-      loot.game.plugins[i].isConflictFilterChecked = false;
-    }
+    loot.game.plugins.forEach((plugin) => {
+      plugin.isConflictFilterChecked = false;
+    });
     /* Un-highlight any existing filter plugin. */
     const cards = document.getElementById('main').getElementsByTagName('loot-plugin-card');
     for (let i = 0; i < cards.length; ++i) {
@@ -197,9 +186,9 @@ function onSortPlugins() {
     document.body.removeAttribute('data-conflicts');
   }
 
-  let promise = Promise.resolve('');
+  let promise = Promise.resolve();
   if (loot.settings.updateMasterlist) {
-    promise = promise.then(updateMasterlistNoProgress());
+    promise = promise.then(updateMasterlistNoProgress);
   }
   promise.then(() => {
     loot.Dialog.showProgress(loot.l10n.translate('Sorting plugins...'));
@@ -211,26 +200,20 @@ function onSortPlugins() {
     loot.game.oldLoadOrder = loot.game.plugins;
     loot.game.loadOrder = [];
     result.forEach((plugin) => {
-      let found = false;
-      for (let i = 0; i < loot.game.plugins.length; ++i) {
-        if (loot.game.plugins[i].name === plugin.name) {
-          loot.game.plugins[i].crc = plugin.crc;
-          loot.game.plugins[i].isEmpty = plugin.isEmpty;
+      let existingPlugin = loot.game.plugins.find((item) => {
+        return item.name === plugin.name;
+      });
+      if (existingPlugin) {
+        existingPlugin.crc = plugin.crc;
+        existingPlugin.isEmpty = plugin.isEmpty;
 
-          loot.game.plugins[i].messages = plugin.messages;
-          loot.game.plugins[i].tags = plugin.tags;
-          loot.game.plugins[i].isDirty = plugin.isDirty;
-
-          loot.game.loadOrder.push(loot.game.plugins[i]);
-
-          found = true;
-          break;
-        }
+        existingPlugin.messages = plugin.messages;
+        existingPlugin.tags = plugin.tags;
+        existingPlugin.isDirty = plugin.isDirty;
+      } else {
+        existingPlugin = new loot.Plugin(plugin);
       }
-      if (!found) {
-        loot.game.plugins.push(new loot.Plugin(plugin));
-        loot.game.loadOrder.push(loot.game.plugins[loot.game.plugins.length - 1]);
-      }
+      loot.game.loadOrder.push(existingPlugin);
     });
 
     /* Now update the UI for the new order. */
@@ -250,11 +233,10 @@ function onSortPlugins() {
   }).catch(handlePromiseError);
 }
 function onApplySort() {
-  const loadOrder = [];
-  loot.game.plugins.forEach((plugin) => {
-    loadOrder.push(plugin.name);
+  const loadOrder = loot.game.plugins.map((plugin) => {
+    return plugin.name;
   });
-  return loot.query('applySort', loadOrder).then((result) => {
+  return loot.query('applySort', loadOrder).then(() => {
     /* Remove old load order storage. */
     delete loot.game.loadOrder;
     delete loot.game.oldLoadOrder;
@@ -270,7 +252,7 @@ function onApplySort() {
     document.getElementById('gameMenu').removeAttribute('disabled');
   }).catch(handlePromiseError);
 }
-function onCancelSort(evt) {
+function onCancelSort() {
   return loot.query('cancelSort').then(() => {
     /* Sort UI elements again according to stored old load order. */
     loot.game.plugins = loot.game.oldLoadOrder;
@@ -313,19 +295,18 @@ function onClearAllMetadata() {
       }
       /* Need to empty the UI-side user metadata. */
       plugins.forEach((plugin) => {
-        for (let i = 0; i < loot.game.plugins.length; ++i) {
-          if (loot.game.plugins[i].name === plugin.name) {
-            loot.game.plugins[i].userlist = undefined;
-            loot.game.plugins[i].editor = undefined;
+        const existingPlugin = loot.game.plugins.find((item) => {
+          return item.name === plugin.name;
+        });
+        if (existingPlugin) {
+          existingPlugin.userlist = undefined;
+          existingPlugin.editor = undefined;
 
-            loot.game.plugins[i].priority = plugin.priority;
-            loot.game.plugins[i].isPriorityGlobal = plugin.isPriorityGlobal;
-            loot.game.plugins[i].messages = plugin.messages;
-            loot.game.plugins[i].tags = plugin.tags;
-            loot.game.plugins[i].isDirty = plugin.isDirty;
-
-            break;
-          }
+          existingPlugin.priority = plugin.priority;
+          existingPlugin.isPriorityGlobal = plugin.isPriorityGlobal;
+          existingPlugin.messages = plugin.messages;
+          existingPlugin.tags = plugin.tags;
+          existingPlugin.isDirty = plugin.isDirty;
         }
       });
 
@@ -334,21 +315,21 @@ function onClearAllMetadata() {
   });
 }
 function onCopyContent() {
-  const messages = [];
-  const plugins = [];
+  let messages = [];
+  let plugins = [];
 
   if (loot.game) {
     if (loot.game.globalMessages) {
-      loot.game.globalMessages.forEach((message) => {
-        messages.push({
+      messages = loot.game.globalMessages.map((message) => {
+        return {
           type: message.type,
           content: message.content[0].str,
-        });
+        };
       });
     }
     if (loot.game.plugins) {
-      loot.game.plugins.forEach((plugin) => {
-        plugins.push({
+      plugins = loot.game.plugins.map((plugin) => {
+        return {
           name: plugin.name,
           crc: plugin.crc,
           version: plugin.version,
@@ -361,7 +342,7 @@ function onCopyContent() {
           messages: plugin.messages,
           tags: plugin.tags,
           isDirty: plugin.isDirty,
-        });
+        };
       });
     }
   } else {
@@ -375,21 +356,19 @@ function onCopyContent() {
   }
 
   loot.query('copyContent', {
-    messages: messages,
-    plugins: plugins,
+    messages,
+    plugins,
   }).then(() => {
     loot.Dialog.showNotification(loot.l10n.translate("LOOT's content has been copied to the clipboard."));
   }).catch(handlePromiseError);
 }
 function onCopyLoadOrder() {
-  const plugins = [];
+  let plugins = [];
 
-  if (loot.game) {
-    if (loot.game.plugins) {
-      loot.game.plugins.forEach((plugin) =>{
-        plugins.push(plugin.name);
-      });
-    }
+  if (loot.game && loot.game.plugins) {
+    plugins = loot.game.plugins.map((plugin) => {
+      return plugin.name;
+    });
   }
 
   loot.query('copyLoadOrder', plugins).then(() => {
@@ -557,11 +536,11 @@ function onEditorClose(evt) {
 }
 function onConflictsFilter(evt) {
   /* Deactivate any existing plugin conflict filter. */
-  for (let i = 0; i < loot.game.plugins.length; ++i) {
-    if (loot.game.plugins[i].id !== evt.target.id) {
-      loot.game.plugins[i].isConflictFilterChecked = false;
+  loot.game.plugins.forEach((plugin) => {
+    if (plugin.id !== evt.target.id) {
+      plugin.isConflictFilterChecked = false;
     }
-  }
+  });
   /* Un-highlight any existing filter plugin. */
   const cards = document.getElementById('main').getElementsByTagName('loot-plugin-card');
   for (let i = 0; i < cards.length; ++i) {
@@ -591,19 +570,18 @@ function onClearMetadata(evt) {
         return;
       }
       /* Need to empty the UI-side user metadata. */
-      for (let i = 0; i < loot.game.plugins.length; ++i) {
-        if (loot.game.plugins[i].id === evt.target.id) {
-          loot.game.plugins[i].userlist = undefined;
-          loot.game.plugins[i].editor = undefined;
+      const existingPlugin = loot.game.plugins.find((item) => {
+        return item.id === evt.target.id;
+      });
+      if (existingPlugin) {
+        existingPlugin.userlist = undefined;
+        existingPlugin.editor = undefined;
 
-          loot.game.plugins[i].priority = plugin.priority;
-          loot.game.plugins[i].isPriorityGlobal = plugin.isPriorityGlobal;
-          loot.game.plugins[i].messages = plugin.messages;
-          loot.game.plugins[i].tags = plugin.tags;
-          loot.game.plugins[i].isDirty = plugin.isDirty;
-
-          break;
-        }
+        existingPlugin.priority = plugin.priority;
+        existingPlugin.isPriorityGlobal = plugin.isPriorityGlobal;
+        existingPlugin.messages = plugin.messages;
+        existingPlugin.tags = plugin.tags;
+        existingPlugin.isDirty = plugin.isDirty;
       }
       loot.Dialog.showNotification(loot.l10n.translate('The user-added metadata for "%s" has been cleared.', evt.target.getName()));
       /* Now perform search again. If there is no current search, this won't
@@ -645,7 +623,7 @@ function handleUnappliedChangesClose(change) {
     }).catch(handlePromiseError);
   });
 }
-function onQuit(evt) {
+function onQuit() {
   if (!document.getElementById('applySortButton').classList.contains('hidden')) {
     handleUnappliedChangesClose(loot.l10n.translate('sorted load order'));
   } else if (document.body.hasAttribute('data-editors')) {
@@ -661,57 +639,10 @@ function onJumpToGeneralInfo() {
 function onContentRefresh() {
   /* Send a query for updated load order and plugin header info. */
   loot.Dialog.showProgress(loot.l10n.translate('Refreshing data...'));
-  loot.query('getGameData').then(JSON.parse).then((result) => {
+  loot.query('getGameData').then((result) => {
     /* Parse the data sent from C++. */
-    /* We don't want the plugin info creating cards, so don't convert
-       to plugin objects. */
-    const gameInfo = result;
-
-    /* Now overwrite plugin data with the newly sent data. Also update
-       card and li vars as they were unset when the game was switched
-       from before. */
-    const pluginNames = [];
-    gameInfo.plugins.forEach((plugin) => {
-      let foundPlugin = false;
-      for (let i = 0; i < loot.game.plugins.length; ++i) {
-        if (loot.game.plugins[i].name === plugin.name) {
-          loot.game.plugins[i].isActive = plugin.isActive;
-          loot.game.plugins[i].isEmpty = plugin.isEmpty;
-          loot.game.plugins[i].loadsArchive = plugin.loadsArchive;
-          loot.game.plugins[i].crc = plugin.crc;
-          loot.game.plugins[i].version = plugin.version;
-
-          loot.game.plugins[i].priority = plugin.priority;
-          loot.game.plugins[i].isPriorityGlobal = plugin.isPriorityGlobal;
-          loot.game.plugins[i].messages = plugin.messages;
-          loot.game.plugins[i].tags = plugin.tags;
-          loot.game.plugins[i].isDirty = plugin.isDirty;
-
-          foundPlugin = true;
-          break;
-        }
-      }
-      if (!foundPlugin) {
-        /* A new plugin. */
-        loot.game.plugins.push(new loot.Plugin(plugin));
-      }
-      pluginNames.push(plugin.name);
-    });
-    for (let i = 0; i < loot.game.plugins.length;) {
-      let foundPlugin = false;
-      for (let j = 0; j < pluginNames.length; ++j) {
-        if (loot.game.plugins[i].name === pluginNames[j]) {
-          foundPlugin = true;
-          break;
-        }
-      }
-      if (!foundPlugin) {
-        /* Remove plugin. */
-        loot.game.plugins.splice(i, 1);
-      } else {
-        ++i;
-      }
-    }
+    const game = JSON.parse(result, loot.Plugin.fromJson);
+    loot.game = new loot.Game(game, loot.l10n);
 
     /* Reapply filters. */
     filterPluginData(loot.game.plugins, loot.filters);

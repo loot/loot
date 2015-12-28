@@ -42,11 +42,8 @@
   function setupEventHandlers() {
     /* Set up handlers for filters. */
     document.getElementById('hideVersionNumbers').addEventListener('change', onToggleDisplayCSS);
-    document.getElementById('hideVersionNumbers').addEventListener('change', saveFilterState);
     document.getElementById('hideCRCs').addEventListener('change', onToggleDisplayCSS);
-    document.getElementById('hideCRCs').addEventListener('change', saveFilterState);
-    document.getElementById('hideBashTags').addEventListener('change', onToggleBashTags);
-    document.getElementById('hideBashTags').addEventListener('change', saveFilterState);
+    document.getElementById('hideBashTags').addEventListener('change', onToggleDisplayCSS);
     document.getElementById('hideNotes').addEventListener('change', onSidebarFilterToggle);
     document.getElementById('hideDoNotCleanMessages').addEventListener('change', onSidebarFilterToggle);
     document.getElementById('hideInactivePlugins').addEventListener('change', onSidebarFilterToggle);
