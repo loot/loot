@@ -62,6 +62,7 @@ function onGameFolderChange(evt) {
     redateButton.setAttribute('disabled', true);
   }
 }
+
 function onPluginMessageChange(evt) {
   document.getElementById('filterTotalMessageNo').textContent = parseInt(document.getElementById('filterTotalMessageNo').textContent, 10) + evt.detail.totalDiff;
   document.getElementById('totalMessageNo').textContent = parseInt(document.getElementById('totalMessageNo').textContent, 10) + evt.detail.totalDiff;
@@ -75,6 +76,7 @@ function onPluginIsDirtyChange(evt) {
     document.getElementById('dirtyPluginNo').textContent = parseInt(document.getElementById('dirtyPluginNo').textContent, 10) - 1;
   }
 }
+
 function saveFilterState(evt) {
   loot.query('saveFilterState', evt.target.id, evt.target.checked).catch(handlePromiseError);
 }
@@ -94,8 +96,19 @@ function onToggleDisplayCSS(evt) {
      do anything. */
   document.getElementById('searchBar').search();
 }
-function onOpenLogLocation() {
-  loot.query('openLogLocation').catch(handlePromiseError);
+function onSidebarFilterToggle(evt) {
+  if (evt.target.id !== 'contentFilter') {
+    loot.filters[evt.target.id] = evt.target.checked;
+  } else {
+    loot.filters.contentSearchString = evt.target.value;
+  }
+  saveFilterState(evt);
+  filterPluginData(loot.game.plugins, loot.filters);
+}
+
+function onJumpToGeneralInfo() {
+  window.location.hash = '';
+  document.getElementById('main').scrollTop = 0;
 }
 function onChangeGame(evt) {
   /* Check that the selected game isn't the current one. */
@@ -132,9 +145,6 @@ function onChangeGame(evt) {
 
     loot.Dialog.closeProgress();
   }).catch(handlePromiseError);
-}
-function onOpenReadme() {
-  loot.query('openReadme').catch(handlePromiseError);
 }
 /* Masterlist update process, minus progress dialog. */
 function updateMasterlistNoProgress() {
@@ -271,6 +281,7 @@ function onCancelSort() {
     document.getElementById('gameMenu').removeAttribute('disabled');
   }).catch(handlePromiseError);
 }
+
 function onRedatePlugins(evt) {
   if (evt.target.hasAttribute('disabled')) {
     return;
@@ -375,14 +386,80 @@ function onCopyLoadOrder() {
     loot.Dialog.showNotification(loot.l10n.translate('The load order has been copied to the clipboard.'));
   }).catch(handlePromiseError);
 }
+function onContentRefresh() {
+  /* Send a query for updated load order and plugin header info. */
+  loot.Dialog.showProgress(loot.l10n.translate('Refreshing data...'));
+  loot.query('getGameData').then((result) => {
+    /* Parse the data sent from C++. */
+    const game = JSON.parse(result, loot.Plugin.fromJson);
+    loot.game = new loot.Game(game, loot.l10n);
+
+    /* Reapply filters. */
+    filterPluginData(loot.game.plugins, loot.filters);
+
+    loot.Dialog.closeProgress();
+  }).catch(handlePromiseError);
+}
+
+
+function onOpenReadme() {
+  loot.query('openReadme').catch(handlePromiseError);
+}
+function onOpenLogLocation() {
+  loot.query('openLogLocation').catch(handlePromiseError);
+}
+function onShowAboutDialog() {
+  document.getElementById('about').showModal();
+}
+function handleUnappliedChangesClose(change) {
+  loot.Dialog.askQuestion('', loot.l10n.translate('You have not yet applied or cancelled your %s. Are you sure you want to quit?', change), loot.l10n.translate('Quit'), (result) => {
+    if (!result) {
+      return;
+    }
+    /* Cancel any sorting and close any editors. Cheat by sending a
+       cancelSort query for as many times as necessary. */
+    const queries = [];
+    let numQueries = 0;
+    if (!document.getElementById('applySortButton').hidden) {
+      numQueries += 1;
+    }
+    numQueries += document.body.getAttribute('data-editors');
+    for (let i = 0; i < numQueries; ++i) {
+      queries.push(loot.query('cancelSort'));
+    }
+    Promise.all(queries).then(() => {
+      window.close();
+    }).catch(handlePromiseError);
+  });
+}
+function onQuit() {
+  if (!document.getElementById('applySortButton').hidden) {
+    handleUnappliedChangesClose(loot.l10n.translate('sorted load order'));
+  } else if (document.body.hasAttribute('data-editors')) {
+    handleUnappliedChangesClose(loot.l10n.translate('metadata edits'));
+  } else {
+    window.close();
+  }
+}
+
 function onSwitchSidebarTab(evt) {
   if (evt.detail.isSelected) {
     document.getElementById(evt.target.selected).parentElement.selected = evt.target.selected;
   }
 }
-function onShowAboutDialog() {
-  document.getElementById('about').showModal();
+function onSidebarClick(evt) {
+  if (evt.target.hasAttribute('data-index')) {
+    document.getElementById('main').lastElementChild.scrollToItem(evt.target.getAttribute('data-index'));
+
+    if (evt.type === 'dblclick') {
+      const card = document.getElementById(evt.target.getAttribute('data-id'));
+      if (!card.classList.contains('flip')) {
+        document.getElementById(evt.target.getAttribute('data-id')).onShowEditor();
+      }
+    }
+  }
 }
+
 function areSettingsValid() {
   /* Validate inputs individually. */
   const inputs = document.getElementById('settingsDialog').getElementsByTagName('loot-validated-input');
@@ -427,12 +504,7 @@ function onCloseSettingsDialog(evt) {
 function onShowSettingsDialog() {
   document.getElementById('settingsDialog').showModal();
 }
-function onFocusSearch(evt) {
-  if (evt.ctrlKey && evt.keyCode === 70) { // 'f'
-    document.getElementById('mainToolbar').classList.add('search');
-    document.getElementById('searchBar').focusInput();
-  }
-}
+
 function onEditorOpen(evt) {
   /* Set up drag 'n' drop event handlers. */
   const elements = document.getElementById('cardsNav').getElementsByTagName('loot-plugin-item');
@@ -590,65 +662,12 @@ function onClearMetadata(evt) {
     }).catch(handlePromiseError);
   });
 }
-function onSidebarClick(evt) {
-  if (evt.target.hasAttribute('data-index')) {
-    document.getElementById('main').lastElementChild.scrollToItem(evt.target.getAttribute('data-index'));
 
-    if (evt.type === 'dblclick') {
-      const card = document.getElementById(evt.target.getAttribute('data-id'));
-      if (!card.classList.contains('flip')) {
-        document.getElementById(evt.target.getAttribute('data-id')).onShowEditor();
-      }
-    }
+function onFocusSearch(evt) {
+  if (evt.ctrlKey && evt.keyCode === 70) { // 'f'
+    document.getElementById('mainToolbar').classList.add('search');
+    document.getElementById('searchBar').focusInput();
   }
-}
-function handleUnappliedChangesClose(change) {
-  loot.Dialog.askQuestion('', loot.l10n.translate('You have not yet applied or cancelled your %s. Are you sure you want to quit?', change), loot.l10n.translate('Quit'), (result) => {
-    if (!result) {
-      return;
-    }
-    /* Cancel any sorting and close any editors. Cheat by sending a
-       cancelSort query for as many times as necessary. */
-    const queries = [];
-    let numQueries = 0;
-    if (!document.getElementById('applySortButton').hidden) {
-      numQueries += 1;
-    }
-    numQueries += document.body.getAttribute('data-editors');
-    for (let i = 0; i < numQueries; ++i) {
-      queries.push(loot.query('cancelSort'));
-    }
-    Promise.all(queries).then(() => {
-      window.close();
-    }).catch(handlePromiseError);
-  });
-}
-function onQuit() {
-  if (!document.getElementById('applySortButton').hidden) {
-    handleUnappliedChangesClose(loot.l10n.translate('sorted load order'));
-  } else if (document.body.hasAttribute('data-editors')) {
-    handleUnappliedChangesClose(loot.l10n.translate('metadata edits'));
-  } else {
-    window.close();
-  }
-}
-function onJumpToGeneralInfo() {
-  window.location.hash = '';
-  document.getElementById('main').scrollTop = 0;
-}
-function onContentRefresh() {
-  /* Send a query for updated load order and plugin header info. */
-  loot.Dialog.showProgress(loot.l10n.translate('Refreshing data...'));
-  loot.query('getGameData').then((result) => {
-    /* Parse the data sent from C++. */
-    const game = JSON.parse(result, loot.Plugin.fromJson);
-    loot.game = new loot.Game(game, loot.l10n);
-
-    /* Reapply filters. */
-    filterPluginData(loot.game.plugins, loot.filters);
-
-    loot.Dialog.closeProgress();
-  }).catch(handlePromiseError);
 }
 function onSearchOpen() {
   document.getElementById('mainToolbar').classList.add('search');
@@ -656,13 +675,4 @@ function onSearchOpen() {
 }
 function onSearchClose() {
   document.getElementById('mainToolbar').classList.remove('search');
-}
-function onSidebarFilterToggle(evt) {
-  if (evt.target.id !== 'contentFilter') {
-    loot.filters[evt.target.id] = evt.target.checked;
-  } else {
-    loot.filters.contentSearchString = evt.target.value;
-  }
-  saveFilterState(evt);
-  filterPluginData(loot.game.plugins, loot.filters);
 }
