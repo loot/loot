@@ -1,18 +1,4 @@
 'use strict';
-function onPluginMessageChange(evt) {
-  document.getElementById('filterTotalMessageNo').textContent = parseInt(document.getElementById('filterTotalMessageNo').textContent, 10) + evt.detail.totalDiff;
-  document.getElementById('totalMessageNo').textContent = parseInt(document.getElementById('totalMessageNo').textContent, 10) + evt.detail.totalDiff;
-  document.getElementById('totalWarningNo').textContent = parseInt(document.getElementById('totalWarningNo').textContent, 10) + evt.detail.warningDiff;
-  document.getElementById('totalErrorNo').textContent = parseInt(document.getElementById('totalErrorNo').textContent, 10) + evt.detail.errorDiff;
-}
-function onPluginIsDirtyChange(evt) {
-  if (evt.detail.isDirty) {
-    document.getElementById('dirtyPluginNo').textContent = parseInt(document.getElementById('dirtyPluginNo').textContent, 10) + 1;
-  } else {
-    document.getElementById('dirtyPluginNo').textContent = parseInt(document.getElementById('dirtyPluginNo').textContent, 10) - 1;
-  }
-}
-
 function saveFilterState(evt) {
   loot.query('saveFilterState', evt.target.id, evt.target.checked).catch(handlePromiseError);
 }
