@@ -38,7 +38,7 @@ was pressed.
         },
 
         setDismissable: function(isDialogDismissable) {
-            this.shadowRoot.getElementById('dismiss').classList.toggle('hidden', !isDialogDismissable);
+            this.shadowRoot.getElementById('dismiss').hidden = !isDialogDismissable;
         },
 
         onButtonClick: function(evt) {

@@ -611,7 +611,7 @@ function handleUnappliedChangesClose(change) {
        cancelSort query for as many times as necessary. */
     const queries = [];
     let numQueries = 0;
-    if (!document.getElementById('applySortButton').classList.contains('hidden')) {
+    if (!document.getElementById('applySortButton').hidden) {
       numQueries += 1;
     }
     numQueries += document.body.getAttribute('data-editors');
@@ -624,7 +624,7 @@ function handleUnappliedChangesClose(change) {
   });
 }
 function onQuit() {
-  if (!document.getElementById('applySortButton').classList.contains('hidden')) {
+  if (!document.getElementById('applySortButton').hidden) {
     handleUnappliedChangesClose(loot.l10n.translate('sorted load order'));
   } else if (document.body.hasAttribute('data-editors')) {
     handleUnappliedChangesClose(loot.l10n.translate('metadata edits'));

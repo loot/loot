@@ -29,13 +29,10 @@ searchTarget is the ID of the core-list element to search the elements of.
             font-size: 0.857rem;
             color: rgba(255, 255, 255, 0.7);
         }
-        .hidden {
-            display: none;
-        }
         </style>
         <core-toolbar>
             <paper-input id="search" label="Search cards" flex></paper-input>
-            <div id="count" class="caption hidden">
+            <div id="count" class="caption" hidden>
                 {{currentResult + 1}}/{{numResults}}
             </div>
             <paper-icon-button id="prev" icon="expand-less" disabled></paper-icon-button>
@@ -125,7 +122,7 @@ searchTarget is the ID of the core-list element to search the elements of.
             var host = evt.target.parentElement.parentNode.host;
 
             host.resetResults();
-            host.shadowRoot.getElementById('count').classList.toggle('hidden', !evt.target.value);
+            host.shadowRoot.getElementById('count').hidden = !evt.target.value;
 
             if (!evt.target.value) {
                 return;
@@ -165,7 +162,7 @@ searchTarget is the ID of the core-list element to search the elements of.
         onClose: function(evt) {
             evt.target.parentElement.parentNode.host.resetResults();
             evt.target.parentElement.parentNode.getElementById('search').value = '';
-            evt.target.parentElement.parentNode.getElementById('count').classList.toggle('hidden', true);
+            evt.target.parentElement.parentNode.getElementById('count').hidden = true;
             evt.target.dispatchEvent(new CustomEvent('loot-search-close'));
         },
     });

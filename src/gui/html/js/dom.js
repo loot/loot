@@ -19,11 +19,11 @@
     },
 
     show(elementId) {
-      document.getElementById(elementId).classList.toggle('hidden', false);
+      document.getElementById(elementId).hidden = false;
     },
 
     hide(elementId) {
-      document.getElementById(elementId).classList.toggle('hidden', true);
+      document.getElementById(elementId).hidden = true;
     },
 
     updateSelectedGame(gameFolder) {

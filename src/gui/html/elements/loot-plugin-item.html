@@ -165,19 +165,14 @@
         onPriorityChange: function(oldValue, newValue) {
             if (this.data && this.data.priority) {
                 this.shadowRoot.getElementById('priority').textContent = this.data.priority;
-                this.shadowRoot.getElementById('secondary').classList.remove('hidden');
             } else {
                 this.shadowRoot.getElementById('priority').textContent = '';
-                this.shadowRoot.getElementById('secondary').classList.add('hidden');
             }
+            this.shadowRoot.getElementById('secondary').hidden = !(this.data && this.data.priority);
         },
 
         onPriorityIsGlobalChange: function(oldValue, newValue) {
-            if (this.data && this.data.isPriorityGlobal) {
-                this.shadowRoot.getElementById('secondary').firstElementChild.classList.remove('hidden');
-            } else {
-                this.shadowRoot.getElementById('secondary').firstElementChild.classList.add('hidden');
-            }
+            this.shadowRoot.getElementById('secondary').hidden = !(this.data && this.data.isPriorityGlobal);
         },
 
         onEditorStateChange: function(oldValue, newValue) {

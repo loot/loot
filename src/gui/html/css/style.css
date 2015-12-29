@@ -38,9 +38,6 @@ html /deep/ ::-webkit-scrollbar-thumb {
 html /deep/ paper-button[autofocus] {
     color: #64B5F6;
 }
-.hidden {
-    display:none;
-}
 a {
     color: #2196F3;
     text-decoration: none;

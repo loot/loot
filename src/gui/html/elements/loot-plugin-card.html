@@ -116,8 +116,6 @@ loot-clear-metadata
             font-weight: 400;
             font-size: 1rem;
         }
-        .hidden,
-        content::content > .hidden,
         :host-context(#main[data-hide-crc]) content::content > .crc,
         :host-context(#main[data-hide-tag]) content::content > .tag,
         :host-context(#main[data-hide-version]) content::content > .version {
@@ -285,10 +283,10 @@ loot-clear-metadata
                 var cardContent = this.data.getCardContent(loot.filters);
                 var tagsAdded = this.getElementsByClassName('tag add')[0];
                 tagsAdded.textContent = cardContent.tags.added;
-                tagsAdded.classList.toggle('hidden', cardContent.tags.added.length == 0);
+                tagsAdded.hidden = cardContent.tags.added.length === 0;
                 var tagsRemoved = this.getElementsByClassName('tag remove')[0];
                 tagsRemoved.textContent = cardContent.tags.removed;
-                tagsRemoved.classList.toggle('hidden', cardContent.tags.removed.length == 0);
+                tagsRemoved.hidden = cardContent.tags.removed.length === 0;
             }
         },
 
@@ -308,7 +306,7 @@ loot-clear-metadata
                     messageLi.innerHTML = marked(message.content);
                     messageUL.appendChild(messageLi);
                 });
-                messageUL.classList.toggle('hidden', cardContent.messages.length == 0);
+                messageUL.hidden = cardContent.messages.length === 0;
             }
         },
 
