@@ -97,10 +97,10 @@
     document.addEventListener('loot-plugin-isdirty-change', onPluginIsDirtyChange);
 
     /* Set up event handlers for game member variable changes. */
-    document.addEventListener('loot-game-folder-change', onGameFolderChange);
-    document.addEventListener('loot-game-masterlist-change', onGameMasterlistChange);
-    document.addEventListener('loot-game-global-messages-change', onGameGlobalMessagesChange);
-    document.addEventListener('loot-game-plugins-change', onGamePluginsChange);
+    document.addEventListener('loot-game-folder-change', Game.onFolderChange);
+    document.addEventListener('loot-game-masterlist-change', Game.onMasterlistChange);
+    document.addEventListener('loot-game-global-messages-change', Game.onGlobalMessagesChange);
+    document.addEventListener('loot-game-plugins-change', Game.onPluginsChange);
   }
 
   function applyEnabledFilters(filters, settings, plugins) {

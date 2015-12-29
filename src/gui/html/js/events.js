@@ -1,68 +1,4 @@
 'use strict';
-function onGamePluginsChange(evt) {
-  if (!evt.detail.valuesAreTotals) {
-    evt.detail.totalMessageNo += parseInt(document.getElementById('totalMessageNo').textContent, 10);
-    evt.detail.warnMessageNo += parseInt(document.getElementById('totalWarningNo').textContent, 10);
-    evt.detail.errorMessageNo += parseInt(document.getElementById('totalErrorNo').textContent, 10);
-    evt.detail.totalPluginNo += parseInt(document.getElementById('totalPluginNo').textContent, 10);
-    evt.detail.activePluginNo += parseInt(document.getElementById('activePluginNo').textContent, 10);
-    evt.detail.dirtyPluginNo += parseInt(document.getElementById('dirtyPluginNo').textContent, 10);
-  }
-
-  document.getElementById('filterTotalMessageNo').textContent = evt.detail.totalMessageNo;
-  document.getElementById('totalMessageNo').textContent = evt.detail.totalMessageNo;
-  document.getElementById('totalWarningNo').textContent = evt.detail.warnMessageNo;
-  document.getElementById('totalErrorNo').textContent = evt.detail.errorMessageNo;
-
-  document.getElementById('filterTotalPluginNo').textContent = evt.detail.totalPluginNo;
-  document.getElementById('totalPluginNo').textContent = evt.detail.totalPluginNo;
-  document.getElementById('activePluginNo').textContent = evt.detail.activePluginNo;
-  document.getElementById('dirtyPluginNo').textContent = evt.detail.dirtyPluginNo;
-}
-function onGameGlobalMessagesChange(evt) {
-  document.getElementById('filterTotalMessageNo').textContent = parseInt(document.getElementById('filterTotalMessageNo').textContent, 10) + evt.detail.totalDiff;
-  document.getElementById('totalMessageNo').textContent = parseInt(document.getElementById('totalMessageNo').textContent, 10) + evt.detail.totalDiff;
-  document.getElementById('totalWarningNo').textContent = parseInt(document.getElementById('totalWarningNo').textContent, 10) + evt.detail.warningDiff;
-  document.getElementById('totalErrorNo').textContent = parseInt(document.getElementById('totalErrorNo').textContent, 10) + evt.detail.errorDiff;
-
-  /* Remove old messages from UI. */
-  const generalMessagesList = document.getElementById('summary').getElementsByTagName('ul')[0];
-  while (generalMessagesList.firstElementChild) {
-    generalMessagesList.removeChild(generalMessagesList.firstElementChild);
-  }
-
-  /* Add new messages. */
-  if (evt.detail.messages) {
-    evt.detail.messages.forEach((message) => {
-      const li = document.createElement('li');
-      li.className = message.type;
-      /* Use the Marked library for Markdown formatting support. */
-      li.innerHTML = marked(message.content[0].str);
-      generalMessagesList.appendChild(li);
-    });
-  }
-}
-function onGameMasterlistChange(evt) {
-  document.getElementById('masterlistRevision').textContent = evt.detail.revision;
-  document.getElementById('masterlistDate').textContent = evt.detail.date;
-}
-function onGameFolderChange(evt) {
-  loot.dom.updateSelectedGame(evt.detail.folder);
-  /* Enable/disable the redate plugins option. */
-  let gameSettings = undefined;
-  if (loot.settings && loot.settings.games) {
-    gameSettings = loot.settings.games.find((game) => {
-      return game.folder === evt.detail.folder;
-    });
-  }
-  const redateButton = document.getElementById('redatePluginsButton');
-  if (gameSettings && gameSettings.type === 'Skyrim') {
-    redateButton.removeAttribute('disabled');
-  } else {
-    redateButton.setAttribute('disabled', true);
-  }
-}
-
 function onPluginMessageChange(evt) {
   document.getElementById('filterTotalMessageNo').textContent = parseInt(document.getElementById('filterTotalMessageNo').textContent, 10) + evt.detail.totalDiff;
   document.getElementById('totalMessageNo').textContent = parseInt(document.getElementById('totalMessageNo').textContent, 10) + evt.detail.totalDiff;
@@ -400,7 +336,6 @@ function onContentRefresh() {
     loot.Dialog.closeProgress();
   }).catch(handlePromiseError);
 }
-
 
 function onOpenReadme() {
   loot.query('openReadme').catch(handlePromiseError);
