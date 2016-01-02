@@ -34,10 +34,8 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-AppCopyright=Copyright (C) 2009-2015 {#MyAppPublisher}
+AppCopyright=Copyright (C) 2009-2016 {#MyAppPublisher}
 DefaultDirName={pf}\{#MyAppName}
-DefaultGroupName={#MyAppName}
-AllowNoIcons=yes
 SourceDir=..\
 OutputBaseFilename=LOOT Installer
 OutputDir=build
@@ -45,6 +43,7 @@ SetupIconFile=resources\icon.ico
 Compression=lzma
 SolidCompression=yes
 DisableReadyPage=yes
+DisableProgramGroupPage=yes
 
 [Languages]
 Name: "en"; MessagesFile: "compiler:Default.isl"
@@ -139,9 +138,8 @@ Source: "resources\settings.yaml"; \
 DestDir: "{localappdata}\{#MyAppName}"; Flags: onlyifdoesntexist uninsneveruninstall; AfterInstall: SetLOOTLanguage
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
-[Icons]
-Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
-Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
+[Icons] 
+Name: "{commonprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
