@@ -22,193 +22,303 @@
     <http://www.gnu.org/licenses/>.
 */
 'use strict';
-/* Plugin object for managing data and UI interaction. */
-function Plugin(obj) {
-    this.name = obj.name;
-    this.crc = obj.crc;
-    this.version = obj.version;
-    this.isActive = obj.isActive;
-    this.isEmpty = obj.isEmpty;
-    this.isMaster = obj.isMaster;
-    this.loadsArchive = obj.loadsArchive;
+(function exportModule(root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+    define([], factory);
+  } else {
+    // Browser globals
+    root.loot = root.loot || {};
+    root.loot.Plugin = factory();
+  }
+}(this, () => {
+  /* Messages, tags, CRCs and version strings can all be hidden by filters.
+     Use getters with no setters for member variables as data should not be
+     written to objects of this class. */
+  class PluginCardContent {
+    constructor(plugin, filters) {
+      this._name = plugin.name;
+      this._isActive = plugin.isActive || false;
+      this._isEmpty = plugin.isEmpty;
+      this._isMaster = plugin.isMaster;
+      this._loadsArchive = plugin.loadsArchive;
 
-    this.masterlist = obj.masterlist;
-    this.userlist = obj.userlist;
+      if (!filters.hideVersionNumbers) {
+        this._version = plugin.version;
+      } else {
+        this._version = '';
+      }
 
-    this.modPriority = obj.modPriority;
-    this.isGlobalPriority = obj.isGlobalPriority;
-    this.messages = obj.messages;
-    this.tags = obj.tags;
-    this.isDirty = obj.isDirty;
+      if (!filters.hideCRCs) {
+        this._crc = plugin.crc;
+      } else {
+        this._crc = 0;
+      }
 
-    this.id = this.name.replace(/\s+/g, '');
-    this.isMenuOpen = false;
-    this.isEditorOpen = false;
-    this.isConflictFilterChecked = false;
-    this.isSearchResult = false;
+      if (!filters.hideBashTags) {
+        this._tags = plugin.tags;
+      } else {
+        this._tags = [];
+      }
 
-    /* Converts between the LOOT metadata object for tags, and their
-       editor row representation. */
-    Plugin.prototype.convTagObj = function(tag) {
-        var newTag = {
-            condition: tag.condition
-        };
-        if (tag.type) {
-            /* Input is row data. */
-            if (tag.type == 'remove') {
-                newTag.name = '-' + tag.name;
-            } else {
-                newTag.name = tag.name;
-            }
-        } else {
-            /* Input is metadata object. */
-            if (tag.name[0] == '-') {
-                newTag.type = 'remove';
-                newTag.name = tag.name.substr(1);
-            } else {
-                newTag.type = 'add';
-                newTag.name = tag.name;
-            }
-        }
-        return newTag;
-    }
-
-    Plugin.prototype.getTagStrings = function() {
-        var tagsAdded = [];
-        var tagsRemoved = [];
-
-        if (this.tags) {
-            for (var i = 0; i < this.tags.length; ++i) {
-                if (this.tags[i].name[0] == '-') {
-                    tagsRemoved.push(this.tags[i].name.substr(1));
-                } else {
-                    tagsAdded.push(this.tags[i].name);
-                }
-            }
-        }
-        /* Now make sure that the same tag doesn't appear in both arrays.
-           Prefer the removed list. */
-        for (var i = 0; i < tagsAdded.length; ++i) {
-            for (var j = 0; j < tagsRemoved.length; ++j) {
-                if (tagsRemoved[j].toLowerCase() == tagsAdded[i].toLowerCase()) {
-                    /* Remove tag from the tagsAdded array. */
-                    tagsAdded.splice(i, 1);
-                    --i;
-                }
-            }
-        }
-
+      this._messages = plugin.messages.map((message) => {
         return {
-            added: tagsAdded.join(', '),
-            removed: tagsRemoved.join(', ')
+          type: message.type,
+          content: message.content[0].str,
         };
+      }).filter(filters.messageFilter, filters);
     }
 
-    Plugin.prototype.getPriorityString = function() {
-        if (this.modPriority != 0) {
-            return this.modPriority.toString();
-        } else {
-            return '';
+    get name() {
+      return this._name;
+    }
+
+    get isActive() {
+      return this._isActive;
+    }
+
+    get isEmpty() {
+      return this._isEmpty;
+    }
+
+    get isMaster() {
+      return this._isMaster;
+    }
+
+    get loadsArchive() {
+      return this._loadsArchive;
+    }
+
+    get version() {
+      return this._version;
+    }
+
+    get crc() {
+      if (this._crc === 0) {
+        return '';
+      }
+
+      /* Pad CRC string to 8 characters. */
+      return ('00000000' + this._crc.toString(16).toUpperCase()).slice(-8);
+    }
+
+    get tags() {
+      const tagsAdded = [];
+      const tagsRemoved = [];
+
+      if (this._tags) {
+        for (let i = 0; i < this._tags.length; ++i) {
+          if (this._tags[i].name[0] === '-') {
+            tagsRemoved.push(this._tags[i].name.substr(1));
+          } else {
+            tagsAdded.push(this._tags[i].name);
+          }
         }
-    }
-
-    Plugin.prototype.getCrcString = function() {
-        if (this.crc == 0) {
-            return '';
-        } else {
-            /* Pad CRC string to 8 characters. */
-            return ('00000000' + this.crc.toString(16).toUpperCase()).slice(-8);
+      }
+      /* Now make sure that the same tag doesn't appear in both arrays.
+         Prefer the removed list. */
+      for (let i = 0; i < tagsAdded.length; ++i) {
+        for (let j = 0; j < tagsRemoved.length; ++j) {
+          if (tagsRemoved[j].toLowerCase() === tagsAdded[i].toLowerCase()) {
+            /* Remove tag from the tagsAdded array. */
+            tagsAdded.splice(i, 1);
+            --i;
+          }
         }
+      }
+
+      return {
+        added: tagsAdded.join(', '),
+        removed: tagsRemoved.join(', '),
+      };
     }
 
-    Plugin.prototype.getUIMessages = function() {
-        var uiMessages = [];
-        /* Now add the new messages. */
-        if (this.messages && this.messages.length != 0) {
-            filters.applyMessageFilters(this.messages).forEach(function(message) {
-                var messageLi = document.createElement('li');
-                messageLi.className = message.type;
-                // Use the Marked library for Markdown formatting support.
-                messageLi.innerHTML = marked(message.content[0].str);
-                uiMessages.push(messageLi);
+    get messages() {
+      return this._messages;
+    }
 
-            });
+    containsText(text) {
+      if (text === undefined || text.length === 0) {
+        return true;
+      }
+      const needle = text.toLowerCase();
+
+      if (this.name.toLowerCase().indexOf(needle) !== -1
+          || this.crc.toLowerCase().indexOf(needle) !== -1
+          || this.version.toLowerCase().indexOf(needle) !== -1) {
+        return true;
+      }
+
+      if (this.tags.added.toLowerCase().indexOf(needle) !== -1
+          || this.tags.removed.toLowerCase().indexOf(needle) !== -1) {
+        return true;
+      }
+
+      for (let i = 0; i < this.messages.length; ++i) {
+        if (this.messages[i].content.toLowerCase().indexOf(needle) !== -1) {
+          return true;
         }
+      }
 
-        return uiMessages;
+      return false;
+    }
+  }
+
+  return class Plugin {
+    constructor(obj) {
+      /* Plugin data */
+      this.name = obj.name;
+      this.crc = obj.crc || 0;
+      this.version = obj.version || '';
+      this.isActive = obj.isActive || false;
+      this.isEmpty = obj.isEmpty || false;
+      this.isMaster = obj.isMaster || false;
+      this.loadsArchive = obj.loadsArchive || false;
+
+      this.masterlist = obj.masterlist;
+      this.userlist = obj.userlist;
+
+      this.priority = obj.priority || 0;
+      this.isPriorityGlobal = obj.isPriorityGlobal || false;
+      this._messages = obj.messages || [];
+      this.tags = obj.tags;
+      this._isDirty = obj.isDirty || false;
+
+      /* UI state variables */
+      this.id = this.name.replace(/\s+/g, '');
+      this.isMenuOpen = false;
+      this.isEditorOpen = false;
+      this.isConflictFilterChecked = false;
+      this.isSearchResult = false;
     }
 
-    Plugin.prototype.observer = function(changes) {
-        changes.forEach(function(change) {
-            if (change.name == 'tags') {
-                change.object.computed.tags = change.object.getTagStrings();
-            } else if (change.name == 'modPriority') {
-                change.object.computed.priority = change.object.getPriorityString();
-            } else if (change.name == 'crc') {
-                change.object.computed.crc = change.object.getCrcString();
-            } else if (change.name == 'messages') {
-                /* Update computed list items. */
-                change.object.computed.messages = change.object.getUIMessages();
-
-                /* Update the message counts. */
-                var oldTotal = 0;
-                var newTotal = 0;
-                var oldWarns = 0;
-                var newWarns = 0;
-                var oldErrs = 0;
-                var newErrs = 0;
-
-                if (change.oldValue) {
-                    oldTotal = change.oldValue.length;
-
-                    change.oldValue.forEach(function(message){
-                        if (message.type == 'warn') {
-                            ++oldWarns;
-                        } else if (message.type == 'error') {
-                            ++oldErrs;
-                        }
-                    });
-                }
-                if (change.object[change.name]) {
-                    newTotal = change.object[change.name].length;
-
-                    change.object[change.name].forEach(function(message){
-                        if (message.type == 'warn') {
-                            ++newWarns;
-                        } else if (message.type == 'error') {
-                            ++newErrs;
-                        }
-                    });
-                }
-
-                document.getElementById('filterTotalMessageNo').textContent = parseInt(document.getElementById('filterTotalMessageNo').textContent, 10) + newTotal - oldTotal;
-                document.getElementById('totalMessageNo').textContent = parseInt(document.getElementById('totalMessageNo').textContent, 10) + newTotal - oldTotal;
-                document.getElementById('totalWarningNo').textContent = parseInt(document.getElementById('totalWarningNo').textContent, 10) + newWarns - oldWarns;
-                document.getElementById('totalErrorNo').textContent = parseInt(document.getElementById('totalErrorNo').textContent, 10) + newErrs - oldErrs;
-            } else if (change.name == 'isDirty') {
-                /* Update dirty counts. */
-                if (change.object[change.name]) {
-                    document.getElementById('dirtyPluginNo').textContent = parseInt(document.getElementById('dirtyPluginNo').textContent, 10) + 1;
-                } else {
-                    document.getElementById('dirtyPluginNo').textContent = parseInt(document.getElementById('dirtyPluginNo').textContent, 10) - 1;
-                }
-            }
-        });
+    static fromJson(key, value) {
+      if (value !== null && value.__type === 'Plugin') {
+        return new Plugin(value);
+      }
+      return value;
     }
 
-    this.computed = {
-        tags: this.getTagStrings(),
-        priority: this.getPriorityString(),
-        crc: this.getCrcString(),
-        messages: this.getUIMessages(),
-    };
-    Object.observe(this, this.observer);
-}
+    static tagFromRowData(rowData) {
+      if (rowData.condition === undefined || rowData.name === undefined || rowData.type === undefined) {
+        throw new TypeError('Row data members are undefined');
+      }
+      const tag = {
+        condition: rowData.condition,
+        name: '',
+      };
 
-function jsonToPlugin(key, value) {
-    if (value !== null && value.__type === 'Plugin') {
-        var p = new Plugin(value);
-        return p;
+      if (rowData.type === 'remove') {
+        tag.name = '-';
+      }
+      tag.name += rowData.name;
+
+      return tag;
     }
-    return value;
-}
+
+    static tagToRowData(tag) {
+      const rowData = {
+        condition: tag.condition,
+      };
+
+      if (tag.name[0] === '-') {
+        rowData.type = 'remove';
+        rowData.name = tag.name.substr(1);
+      } else {
+        rowData.type = 'add';
+        rowData.name = tag.name;
+      }
+
+      return rowData;
+    }
+
+    get priorityString() {
+      if (this.priority === 0) {
+        return '';
+      }
+
+      return this.priority.toString();
+    }
+
+    get messages() {
+      return this._messages;
+    }
+
+    set messages(messages) {
+      /* Update the message counts. */
+      let oldTotal = 0;
+      let newTotal = 0;
+      let oldWarns = 0;
+      let newWarns = 0;
+      let oldErrs = 0;
+      let newErrs = 0;
+
+      oldTotal = this._messages.length;
+
+      this._messages.forEach((message) => {
+        if (message.type === 'warn') {
+          ++oldWarns;
+        } else if (message.type === 'error') {
+          ++oldErrs;
+        }
+      });
+
+      newTotal = messages.length;
+
+      messages.forEach((message) => {
+        if (message.type === 'warn') {
+          ++newWarns;
+        } else if (message.type === 'error') {
+          ++newErrs;
+        }
+      });
+
+      if (newTotal !== oldTotal || newWarns !== oldWarns || newErrs !== oldErrs) {
+        document.dispatchEvent(new CustomEvent('loot-plugin-message-change', {
+          detail: {
+            totalDiff: newTotal - oldTotal,
+            warningDiff: newWarns - oldWarns,
+            errorDiff: newErrs - oldErrs,
+          },
+        }));
+      }
+
+      this._messages = messages;
+    }
+
+    get isDirty() {
+      return this._isDirty;
+    }
+
+    set isDirty(dirty) {
+      /* Update dirty counts. */
+      if (dirty !== this._isDirty) {
+        document.dispatchEvent(new CustomEvent('loot-plugin-isdirty-change', {
+          detail: {
+            isDirty: dirty,
+          },
+        }));
+      }
+
+      this._isDirty = dirty;
+    }
+
+    getCardContent(filters) {
+      return new PluginCardContent(this, filters);
+    }
+
+    static onMessageChange(evt) {
+      document.getElementById('filterTotalMessageNo').textContent = parseInt(document.getElementById('filterTotalMessageNo').textContent, 10) + evt.detail.totalDiff;
+      document.getElementById('totalMessageNo').textContent = parseInt(document.getElementById('totalMessageNo').textContent, 10) + evt.detail.totalDiff;
+      document.getElementById('totalWarningNo').textContent = parseInt(document.getElementById('totalWarningNo').textContent, 10) + evt.detail.warningDiff;
+      document.getElementById('totalErrorNo').textContent = parseInt(document.getElementById('totalErrorNo').textContent, 10) + evt.detail.errorDiff;
+    }
+    static onIsDirtyChange(evt) {
+      if (evt.detail.isDirty) {
+        document.getElementById('dirtyPluginNo').textContent = parseInt(document.getElementById('dirtyPluginNo').textContent, 10) + 1;
+      } else {
+        document.getElementById('dirtyPluginNo').textContent = parseInt(document.getElementById('dirtyPluginNo').textContent, 10) - 1;
+      }
+    }
+  };
+}));

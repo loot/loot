@@ -16,74 +16,62 @@ was pressed.
 <link rel="import" href="../../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="loot-dialog.html">
 
-<polymer-element name="loot-message-dialog" extends="loot-dialog">
+<polymer-element name="loot-message-dialog">
     <template>
     <style>
-    :host {
+    #dialog {
         max-width: 50%;
     }
     </style>
-    <shadow></shadow>
+    <loot-dialog id="dialog">
+      <content></content>
+      <paper-button id="confirm" affirmative autofocus>OK</paper-button>
+      <paper-button id="dismiss" dismissive>Cancel</paper-button>
+    </loot-dialog>
     </template>
     <script>
     Polymer({
         closeCallback: undefined,
 
-        setButtonText: function(accept, cancel) {
-            this.getElementsByClassName('accept')[0].textContent = accept;
-            this.getElementsByClassName('cancel')[0].textContent = cancel;
+        setConfirmText: function(confirmText) {
+          this.shadowRoot.getElementById('confirm').textContent = confirmText;
+        },
 
-            if (!cancel) {
-                this.getElementsByClassName('cancel')[0].classList.toggle('hidden', true);
-            } else {
-                this.getElementsByClassName('cancel')[0].classList.toggle('hidden', false);
-            }
+        setDismissable: function(isDialogDismissable) {
+            this.shadowRoot.getElementById('dismiss').hidden = !isDialogDismissable;
         },
 
         onButtonClick: function(evt) {
             if (evt.target.parentElement.closeCallback) {
-                evt.target.parentElement.closeCallback(evt.target.classList.contains('accept'));
+                evt.target.parentElement.closeCallback(evt.target.id === 'confirm');
             }
-            evt.target.parentElement.addEventListener('core-overlay-close-completed', function(evt){
+            evt.target.parentElement.parentNode.host.addEventListener('core-overlay-close-completed', function(evt){
                 evt.target.parentElement.removeChild(evt.target);
             }, false);
         },
 
         showModal: function(title, text, closeCallback) {
             this.heading = title;
-            this.querySelector('.message').textContent = text;
+            this.getElementsByClassName('message')[0].textContent = text;
 
             this.closeCallback = closeCallback;
-            this.super();
+            this.shadowRoot.getElementById('dialog').showModal();
         },
 
         created: function() {
             var p = document.createElement('p');
             p.className = 'message';
             this.appendChild(p);
-
-            var accept = document.createElement('paper-button');
-            accept.className = 'accept';
-            accept.setAttribute('affirmative', true);
-            accept.setAttribute('autofocus', true);
-            accept.textContent = 'Apply';
-            this.appendChild(accept);
-
-            var cancel = document.createElement('paper-button');
-            cancel.className = 'cancel';
-            cancel.setAttribute('dismissive', true);
-            cancel.textContent = 'Cancel';
-            this.appendChild(cancel);
         },
 
         attached: function() {
-            this.getElementsByClassName('accept')[0].addEventListener('click', this.onButtonClick, false);
-            this.getElementsByClassName('cancel')[0].addEventListener('click', this.onButtonClick, false);
+            this.shadowRoot.getElementById('confirm').addEventListener('click', this.onButtonClick, false);
+            this.shadowRoot.getElementById('dismiss').addEventListener('click', this.onButtonClick, false);
         },
 
         detached: function() {
-            this.getElementsByClassName('accept')[0].removeEventListener('click', this.onButtonClick, false);
-            this.getElementsByClassName('cancel')[0].removeEventListener('click', this.onButtonClick, false);
+            this.shadowRoot.getElementById('confirm').removeEventListener('click', this.onButtonClick, false);
+            this.shadowRoot.getElementById('dismiss').removeEventListener('click', this.onButtonClick, false);
         },
 
     });

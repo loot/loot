@@ -37,5 +37,22 @@
     "jed-gettext-parser": "~1.0.0",
     "paper-toggle-button": "Polymer/paper-toggle-button#~0.5.4",
     "core-overlay": "WrinklyNinja/core-overlay#fix-focus-self-as-next"
+  },
+  "resolutions": {
+    "polymer": "^0.5",
+    "core-icons": "^0.5",
+    "core-icon": "^0.5",
+    "core-collapse": "^0.5",
+    "core-focusable": "^0.5",
+    "core-icon-button": "^0.5",
+    "core-resizable": "^0.5",
+    "core-iconset-svg": "^0.5",
+    "core-dropdown": "null-dimensions-positions-fix",
+    "core-transition": "^0.5",
+    "core-overlay": "fix-focus-self-as-next",
+    "webcomponentsjs": "^0.7.18",
+    "core-iconset": "^0.5",
+    "core-selection": "^0.5",
+    "core-meta": "^0.5"
   }
 }

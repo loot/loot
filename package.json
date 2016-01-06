@@ -14,7 +14,19 @@
   "private": true,
   "devDependencies": {
     "bower": "^1.7.1",
+    "eslint": "^1.10.3",
+    "eslint-config-airbnb": "^2.0.0",
     "fs-extra": "^0.26.2",
+    "grunt": "^0.4.5",
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-connect": "^0.11.2",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-saucelabs": "^8.6.2",
+    "mocha": "^2.3.4",
+    "should": "^8.0.1",
     "vulcanize": "^0.7.11"
+  },
+  "scripts": {
+    "test": "grunt test"
   }
 }

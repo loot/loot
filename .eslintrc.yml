@@ -1,0 +1,23 @@
+env:
+  es6: true
+  mocha: true
+  amd: true
+  node: true
+  browser: true
+
+ecmaFeatures:
+  modules: false
+
+globals:
+  loot: false
+  should: false
+
+extends:
+  - "eslint:recommended"
+  - "airbnb/base"
+
+rules:
+  strict:
+    - 2
+    - global
+  guard-for-in: 0

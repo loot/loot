@@ -1,113 +1,116 @@
 // Helper functions shared across scripts.
-var path = require('path');
-var fs = require('fs');
-var os = require('os');
+'use strict';
+const path = require('path');
+const fs = require('fs');
+const os = require('os');
 
-function fileExists(file_path) {
-    try {
-        // Query the entry
-        stats = fs.lstatSync(file_path);
+function fileExists(filePath) {
+  try {
+    // Query the entry
+    const stats = fs.lstatSync(filePath);
 
-        // Is it a directory?
-        if (stats.isFile()) {
-            return true;
-        }
-    } catch (e) {}
+    // Is it a directory?
+    if (stats.isFile()) {
+      return true;
+    }
+  } catch (e) {
+    /* Don't do anything, it's not an error. */
+  }
 
-    return false;
+  return false;
 }
 
-function getAppReleasePaths(root_path) {
-    var paths = [];
-    var file = 'LOOT';
-    var paths_to_try = [
-        {
-            path: path.join(root_path, 'build'),
-            label: null
-        },
-        {
-            path: path.join(root_path, 'build', '32'),
-            label: '32 bit'
-        },
-        {
-            path: path.join(root_path, 'build', '64'),
-            label: '64 bit'
-        }
-    ];
+function getAppReleasePaths(rootPath) {
+  const paths = [];
+  const pathsToTry = [
+    {
+      path: path.join(rootPath, 'build'),
+      label: null,
+    },
+    {
+      path: path.join(rootPath, 'build', '32'),
+      label: '32 bit',
+    },
+    {
+      path: path.join(rootPath, 'build', '64'),
+      label: '64 bit',
+    },
+  ];
 
-    if (os.platform() == 'win32') {
-        file += '.exe';
+  let file = 'LOOT';
+  if (os.platform() === 'win32') {
+    file += '.exe';
+  }
+
+  for (let i = 0; i < pathsToTry.length; ++i) {
+    if (os.platform() === 'win32') {
+      pathsToTry[i].path = path.join(pathsToTry[i].path, 'Release');
     }
 
-    for (var i = 0; i < paths_to_try.length; ++i) {
-        if (os.platform() == 'win32') {
-            paths_to_try[i].path = path.join(paths_to_try[i].path, 'Release');
-        }
-
-        if (fileExists(path.join(paths_to_try[i].path, file))) {
-            paths.push(paths_to_try[i]);
-        }
+    if (fileExists(path.join(pathsToTry[i].path, file))) {
+      paths.push(pathsToTry[i]);
     }
+  }
 
-    return paths;
+  return paths;
 }
 
-function getApiBinaryPaths(root_path) {
-    var paths = [];
-    var files = [];
-    var paths_to_try = [
+function getApiBinaryPaths(rootPath) {
+  const paths = [];
+  const pathsToTry = [
+    {
+      path: path.join(rootPath, 'build'),
+      label: null,
+    },
+    {
+      path: path.join(rootPath, 'build', '32'),
+      label: '32 bit',
+    },
+    {
+      path: path.join(rootPath, 'build', '64'),
+      label: '64 bit',
+    },
+  ];
+
+  for (let i = 0; i < pathsToTry.length; ++i) {
+    let files = [];
+    if (os.platform() === 'win32') {
+      pathsToTry[i].path = path.join(pathsToTry[i].path, 'Release');
+
+      files = [
         {
-            path: path.join(root_path, 'build'),
-            label: null
+          name: 'loot32.dll',
+          label: '32 bit',
         },
         {
-            path: path.join(root_path, 'build', '32'),
-            label: '32 bit'
+          name: 'loot64.dll',
+          label: '64 bit',
+        },
+      ];
+    } else {
+      files = [
+        {
+          name: 'libloot32.so',
+          label: '32 bit',
         },
         {
-            path: path.join(root_path, 'build', '64'),
-            label: '64 bit'
-        }
-    ];
-
-    for (var i = 0; i < paths_to_try.length; ++i) {
-        if (os.platform() == 'win32') {
-            paths_to_try[i].path = path.join(paths_to_try[i].path, 'Release');
-
-            files = [
-                {
-                    name: 'loot32.dll',
-                    label: '32 bit'
-                },
-                {
-                    name: 'loot64.dll',
-                    label: '64 bit'
-                }
-            ];
-        } else {
-            files = [
-                {
-                    name: 'libloot32.so',
-                    label: '32 bit'
-                },
-                {
-                    name: 'libloot64.so',
-                    label: '64 bit'
-                }
-            ];
-        }
-
-        for (var j = 0; j < files.length; ++j) {
-            if (fileExists(path.join(paths_to_try[i].path, files[j].name))) {
-                paths_to_try[i].path = path.join(paths_to_try[i].path, files[j].name);
-                paths_to_try[i].label = files[j].label;
-                paths.push(paths_to_try[i]);
-                break;
-            }
-        }
+          name: 'libloot64.so',
+          label: '64 bit',
+        },
+      ];
     }
 
-    return paths;
+    for (let j = 0; j < files.length; ++j) {
+      if (fileExists(path.join(pathsToTry[i].path, files[j].name))) {
+        pathsToTry[i].path = path.join(pathsToTry[i].path, files[j].name);
+        pathsToTry[i].label = files[j].label;
+        paths.push(pathsToTry[i]);
+        break;
+      }
+    }
+  }
+
+  return paths;
 }
 
 module.exports.fileExists = fileExists;

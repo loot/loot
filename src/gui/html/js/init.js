@@ -22,178 +22,262 @@
     <http://www.gnu.org/licenses/>.
 */
 'use strict';
-var marked;
-var l10n;
+(function exportModule(root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+    define([], factory);
+  } else {
+    // Browser globals
+    root.loot = root.loot || {};
+    root.loot.initialise = factory(root.loot.Dialog,
+                                    root.loot.dom,
+                                    root.loot.Filters,
+                                    root.loot.Game,
+                                    root.loot.translateStaticText,
+                                    root.loot.Plugin,
+                                    root.loot.query,
+                                    root.loot.Translator);
+  }
+}(this, (Dialog, dom, Filters, Game, translateStaticText, Plugin, query, Translator) => {
+  function setupEventHandlers() {
+    /* Set up handlers for filters. */
+    document.getElementById('hideVersionNumbers').addEventListener('change', onToggleDisplayCSS);
+    document.getElementById('hideCRCs').addEventListener('change', onToggleDisplayCSS);
+    document.getElementById('hideBashTags').addEventListener('change', onToggleDisplayCSS);
+    document.getElementById('hideNotes').addEventListener('change', onSidebarFilterToggle);
+    document.getElementById('hideDoNotCleanMessages').addEventListener('change', onSidebarFilterToggle);
+    document.getElementById('hideInactivePlugins').addEventListener('change', onSidebarFilterToggle);
+    document.getElementById('hideAllPluginMessages').addEventListener('change', onSidebarFilterToggle);
+    document.getElementById('hideMessagelessPlugins').addEventListener('change', onSidebarFilterToggle);
+    document.body.addEventListener('loot-filter-conflicts', onConflictsFilter);
 
-function initVars() {
-    loot.query('getVersion').then(function(result){
-        try {
-            loot.version = JSON.parse(result);
+    /* Set up event handlers for content filter. */
+    document.getElementById('contentFilter').addEventListener('change', onSidebarFilterToggle);
 
-            /* The fourth part of the version string is the build number. Trim it. */
-            var pos = loot.version.lastIndexOf('.');
-            if (loot.version.length > pos + 1) {
-                document.getElementById('LOOTBuild').textContent = loot.version.substring(pos + 1);
-            } else {
-                document.getElementById('LOOTBuild').textContent = l10n.jed.translate('unknown').fetch();
-            }
+    /* Set up handlers for buttons. */
+    document.getElementById('redatePluginsButton').addEventListener('click', onRedatePlugins);
+    document.getElementById('openLogButton').addEventListener('click', onOpenLogLocation);
+    document.getElementById('wipeUserlistButton').addEventListener('click', onClearAllMetadata);
+    document.getElementById('copyLoadOrderButton').addEventListener('click', onCopyLoadOrder);
+    document.getElementById('copyContentButton').addEventListener('click', onCopyContent);
+    document.getElementById('refreshContentButton').addEventListener('click', onContentRefresh);
+    document.getElementById('settingsButton').addEventListener('click', onShowSettingsDialog);
+    document.getElementById('helpButton').addEventListener('click', onOpenReadme);
+    document.getElementById('aboutButton').addEventListener('click', onShowAboutDialog);
+    document.getElementById('quitButton').addEventListener('click', onQuit);
+    document.getElementById('gameMenu').addEventListener('core-select', onChangeGame);
+    document.getElementById('updateMasterlistButton').addEventListener('click', onUpdateMasterlist);
+    document.getElementById('sortButton').addEventListener('click', onSortPlugins);
+    document.getElementById('applySortButton').addEventListener('click', onApplySort);
+    document.getElementById('cancelSortButton').addEventListener('click', onCancelSort);
+    document.getElementById('sidebarTabs').addEventListener('core-select', onSwitchSidebarTab);
+    document.getElementById('jumpToGeneralInfo').addEventListener('click', onJumpToGeneralInfo);
 
-            loot.version = loot.version.substring(0, pos);
-            document.getElementById('LOOTVersion').textContent = loot.version;
-            document.getElementById('firstTimeLootVersion').textContent = loot.version;
-        } catch (e) {
-            console.log(e);
-            console.log('Response: ' + result);
-        }
-    }).catch(processCefError);
+    /* Set up search event handlers. */
+    document.getElementById('showSearch').addEventListener('click', onSearchOpen);
+    document.getElementById('searchBar').addEventListener('loot-search-close', onSearchClose);
+    window.addEventListener('keyup', onFocusSearch);
 
-    loot.query('getLanguages').then(function(result){
-        try {
-            loot.languages = JSON.parse(result);
+    /* Set up event handlers for settings dialog. */
+    const settings = document.getElementById('settingsDialog');
+    settings.getElementsByClassName('accept')[0].addEventListener('click', onCloseSettingsDialog);
+    settings.getElementsByClassName('cancel')[0].addEventListener('click', onCloseSettingsDialog);
 
-            /* Now fill in language options. */
-            var settingsLangSelect = document.getElementById('languageSelect');
-            var messageLangSelect = document.querySelector('link[rel="import"][href$="editable-table.html"]');
-            if (messageLangSelect) {
-                messageLangSelect = messageLangSelect.import.querySelector('#messageRow').content.querySelector('.language');
-            } else {
-                messageLangSelect = document.querySelector('#messageRow').content.querySelector('.language');
-            }
+    /* Set up handler for opening and closing editors. */
+    document.body.addEventListener('loot-editor-open', onEditorOpen);
+    document.body.addEventListener('loot-editor-close', onEditorClose);
+    document.body.addEventListener('loot-copy-metadata', onCopyMetadata);
+    document.body.addEventListener('loot-clear-metadata', onClearMetadata);
 
-            for (var i = 0; i < loot.languages.length; ++i) {
-                var settingsItem = document.createElement('paper-item');
-                settingsItem.setAttribute('value', loot.languages[i].locale);
-                settingsItem.setAttribute('noink', '');
-                settingsItem.textContent = loot.languages[i].name;
-                settingsLangSelect.appendChild(settingsItem);
-                messageLangSelect.appendChild(settingsItem.cloneNode(true));
-            }
+    document.getElementById('cardsNav').addEventListener('click', onSidebarClick);
+    document.getElementById('cardsNav').addEventListener('dblclick', onSidebarClick);
 
-            messageLangSelect.setAttribute('value', messageLangSelect.firstElementChild.getAttribute('value'));
-        } catch (e) {
-            console.log(e);
-            console.log('Response: ' + result);
-        }
-    }).catch(processCefError);
+    /* Set up handler for plugin message and dirty info changes. */
+    document.addEventListener('loot-plugin-message-change', Plugin.onMessageChange);
+    document.addEventListener('loot-plugin-isdirty-change', Plugin.onIsDirtyChange);
 
-    loot.query('getInitErrors').then(JSON.parse).then(function(result){
-        if (result) {
-            var generalMessagesList = document.getElementById('summary').getElementsByTagName('ul')[0];
+    /* Set up event handlers for game member variable changes. */
+    document.addEventListener('loot-game-folder-change', Game.onFolderChange);
+    document.addEventListener('loot-game-masterlist-change', Game.onMasterlistChange);
+    document.addEventListener('loot-game-global-messages-change', Game.onGlobalMessagesChange);
+    document.addEventListener('loot-game-plugins-change', Game.onPluginsChange);
+  }
 
-            result.forEach(function(message){
-                var li = document.createElement('li');
-                li.className = 'error';
-                /* Use the Marked library for Markdown formatting support. */
-                li.innerHTML = marked(message);
-                generalMessagesList.appendChild(li);
-            });
+  function applyEnabledFilters(filters, settings, plugins) {
+    if (!filters) {
+      return;
+    }
 
-            document.getElementById('filterTotalMessageNo').textContent = result.length;
-            document.getElementById('totalMessageNo').textContent = result.length;
-            document.getElementById('totalErrorNo').textContent = result.length;
-        }
+    if (settings.filters) {
+      for (const filter in settings.filters) {
+        filters[filter] = settings.filters[filter];
+        document.getElementById(filter).checked = filters[filter];
+      }
+    }
 
-        var parallelPromises = [
-            loot.query('getGameTypes'),
-            loot.query('getInstalledGames'),
-            loot.query('getSettings'),
-        ];
+    if (filters.hideMessagelessPlugins
+        || filters.hideInactivePlugins
+        || filters.hideNotes
+        || filters.hideDoNotCleanMessages
+        || filters.hideAllPluginMessages) {
+      filterPluginData(plugins, filters);
+    }
 
-        showProgress('Initialising user interface...');
-        Promise.all(parallelPromises).then(function(results) {
-            try {
-                loot.gameTypes = JSON.parse(results[0]);
-            } catch (e) {
-                console.log(e);
-                console.log('getGameTypes response: ' + results[0]);
-            }
+    if (filters.hideVersionNumbers) {
+      document.getElementById('hideVersionNumbers').dispatchEvent(new Event('change'));
+    }
 
-            /* Fill in game row template's game type options. */
-            var select = document.querySelector('link[rel="import"][href$="editable-table.html"]');
-            if (select) {
-                select = select.import.querySelector('#gameRow').content.querySelector('.type')
-            } else {
-                select = document.querySelector('#gameRow').content.querySelector('.type');
-            }
-            for (var j = 0; j < loot.gameTypes.length; ++j) {
-                var item = document.createElement('paper-item');
-                item.setAttribute('value', loot.gameTypes[j]);
-                item.setAttribute('noink', '');
-                item.textContent = loot.gameTypes[j];
-                select.appendChild(item);
-            }
-            select.setAttribute('value', select.firstElementChild.getAttribute('value'));
+    if (filters.hideCRCs) {
+      document.getElementById('hideCRCs').dispatchEvent(new Event('change'));
+    }
 
-            try {
-                loot.installedGames = JSON.parse(results[1]);
-            } catch (e) {
-                console.log(e);
-                console.log('getInstalledGames response: ' + results[1]);
-            }
+    if (filters.hideBashTags) {
+      document.getElementById('hideBashTags').dispatchEvent(new Event('change'));
+    }
+  }
 
-            try {
-                loot.settings = JSON.parse(results[2]);
-                restoreFilterStates();
-            } catch (e) {
-                console.log(e);
-                console.log('getSettings response: ' + results[2]);
-            }
-        }).then(function(){
-            return l10n.getJedInstance(loot.settings.language).then(function(jed){
-                l10n.translateStaticText(jed);
-                l10n.jed = jed;
+  function setVersion(appData) {
+    return query('getVersion').then(JSON.parse).then((result) => {
+      /* The fourth part of the version string is the build number. Trim it. */
+      const pos = result.lastIndexOf('.');
+      appData.version = result.substring(0, pos);
+      document.getElementById('LOOTVersion').textContent = appData.version;
+      document.getElementById('firstTimeLootVersion').textContent = appData.version;
+      document.getElementById('LOOTBuild').textContent = result.substring(pos + 1);
+    });
+  }
 
-                /* Also need to update the settings UI. */
-                loot.updateSettingsUI();
-            }).catch(processCefError);
-        }).then(function(){
-            if (result) {
-                return new Promise(function(resolve, reject){
-                    closeProgressDialog();
-                    document.getElementById('settingsButton').click();
-                    resolve('');
-                });
-            } else {
-                return loot.query('getGameData').then(function(result){
-                    var game = JSON.parse(result, jsonToPlugin);
-                    loot.game.folder = game.folder;
-                    loot.game.masterlist = game.masterlist;
-                    loot.game.globalMessages = game.globalMessages;
-                    loot.game.plugins = game.plugins;
-                    document.getElementById('cardsNav').data = loot.game.plugins;
-                    document.getElementById('main').lastElementChild.data = loot.game.plugins;
-                    applyEnabledFilters();
+  function setLanguages() {
+    return query('getLanguages').then(JSON.parse).then((result) => {
+      /* Now fill in language options. */
+      const settingsLangSelect = document.getElementById('languageSelect');
+      const messageLangSelect = dom.getElementInTableRowTemplate('messageRow', 'language');
 
-                    setTimeout(function() {
-                        document.getElementById('cardsNav').updateSize();
-                        closeProgressDialog();
-                    }, 100);
+      result.forEach((language) => {
+        const settingsItem = document.createElement('paper-item');
+        settingsItem.setAttribute('value', language.locale);
+        settingsItem.setAttribute('noink', '');
+        settingsItem.textContent = language.name;
+        settingsLangSelect.appendChild(settingsItem);
+        messageLangSelect.appendChild(settingsItem.cloneNode(true));
+      });
 
-                    return '';
-                }).catch(processCefError);
-            }
-        }).then(function(){
-            if (!loot.settings.lastVersion || loot.settings.lastVersion != loot.version) {
-                document.getElementById('firstRun').showModal();
-            }
-        }).catch(processCefError);
-    }).catch(processCefError);
-}
+      messageLangSelect.setAttribute('value', messageLangSelect.firstElementChild.getAttribute('value'));
+    });
+  }
 
-window.addEventListener('polymer-ready', function(e) {
+  function displayInitErrors() {
+    return query('getInitErrors').then(JSON.parse).then((result) => {
+      if (!result) {
+        return result;
+      }
+      const generalMessagesList = document.getElementById('summary').getElementsByTagName('ul')[0];
+
+      result.forEach((message) => {
+        const li = document.createElement('li');
+        li.className = 'error';
+        /* Use the Marked library for Markdown formatting support. */
+        li.innerHTML = window.marked(message);
+        generalMessagesList.appendChild(li);
+      });
+
+      document.getElementById('filterTotalMessageNo').textContent = result.length;
+      document.getElementById('totalMessageNo').textContent = result.length;
+      document.getElementById('totalErrorNo').textContent = result.length;
+
+      return result;
+    });
+  }
+
+  function setGameTypes() {
+    return query('getGameTypes').then(JSON.parse).then((result) => {
+      /* Fill in game row template's game type options. */
+      const select = dom.getElementInTableRowTemplate('gameRow', 'type');
+      result.forEach((gameType) => {
+        const item = document.createElement('paper-item');
+        item.setAttribute('value', gameType);
+        item.setAttribute('noink', '');
+        item.textContent = gameType;
+        select.appendChild(item);
+      });
+      select.setAttribute('value', select.firstElementChild.getAttribute('value'));
+    });
+  }
+
+  function setInstalledGames(appData) {
+    return query('getInstalledGames').then(JSON.parse).then((installedGames) => {
+      appData.installedGames = installedGames;
+      dom.updateEnabledGames(installedGames);
+    });
+  }
+
+  function setSettings(appData) {
+    return query('getSettings').then(JSON.parse).then((result) => {
+      appData.settings = result;
+      dom.updateSettingsDialog(appData.settings, appData.installedGames, appData.game.folder);
+    });
+  }
+
+  function setGameData(appData) {
+    return query('getGameData').then((result) => {
+      const game = JSON.parse(result, Plugin.fromJson);
+      appData.game = new Game(game, appData.l10n);
+      document.getElementById('cardsNav').data = appData.game.plugins;
+      document.getElementById('main').lastElementChild.data = appData.game.plugins;
+      applyEnabledFilters(appData.filters, appData.settings, appData.game.plugins);
+      Dialog.closeProgress();
+    });
+  }
+
+  return () => {
+    Dialog.showProgress('Initialising user interface...');
     /* Set the plugin list's scroll target to its parent. */
-    document.getElementById('main').lastElementChild.scrollTarget = document.getElementById('main');
-
-    /* Register object observers. */
-    Object.observe(loot, loot.observer);
-    Object.observe(loot.game, loot.gameObserver);
+    document.getElementById('pluginCardList').scrollTarget = document.getElementById('main');
 
     /* Make sure settings are what I want. */
-    marked.setOptions({
-        gfm: true,
-        tables: true,
-        sanitize: true
+    window.marked.setOptions({
+      gfm: true,
+      tables: true,
+      sanitize: true,
     });
     setupEventHandlers();
-    initVars();
-}, false);
+
+    loot.version = '';
+    loot.settings = {};
+    loot.l10n = new Translator();
+    loot.game = new Game({}, loot.l10n);
+    loot.filters = new Filters(loot.l10n);
+
+    Promise.all([
+      setLanguages(),
+      setGameTypes(),
+      setInstalledGames(loot),
+      setVersion(loot),
+      setSettings(loot),
+    ]).then(() => {
+      /* Translate static text. */
+      loot.l10n = new Translator(loot.settings.language);
+      return loot.l10n.load();
+    }).then(() => {
+      loot.filters = new Filters(loot.l10n);
+      translateStaticText(loot.l10n);
+      /* Also need to update the settings UI. */
+      dom.updateSettingsDialog(loot.settings, loot.installedGames, loot.game.folder);
+    }).then(() => {
+      return displayInitErrors();
+    }).then((result) => {
+      if (result) {
+        Dialog.closeProgress();
+        document.getElementById('settingsButton').click();
+        return Promise.resolve();
+      }
+      return setGameData(loot);
+    }).then(() => {
+      if (!loot.settings.lastVersion || loot.settings.lastVersion !== loot.version) {
+        document.getElementById('firstRun').showModal();
+      }
+    }).catch(handlePromiseError);
+  };
+}));
+
+window.addEventListener('polymer-ready', loot.initialise);

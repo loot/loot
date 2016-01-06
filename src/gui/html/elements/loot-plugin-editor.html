@@ -125,8 +125,8 @@ loot-editor-close
             </core-tooltip>
             <div flex>
                 <h1>{{data.name}}</h1>
-                <span id="version">{{data.version}}</span>
-                <span id="crc">{{data.computed.crc}}</span>
+                <span id="version"></span>
+                <span id="crc"></span>
             </div>
             <core-tooltip id="isMaster" label="Master File" noarrow>
                 <core-icon icon="loot-custom-icons:crown"></core-icon>
@@ -250,8 +250,8 @@ loot-editor-close
         data: undefined,
 
         observe: {
-            'data.isGlobalPriority': 'onPriorityChange',
-            'data.modPriority': 'onPriorityChange',
+            'data.isPriorityGlobal': 'onPriorityChange',
+            'data.priority': 'onPriorityChange',
             'data.userlist': 'onDataCacheChange',
         },
 
@@ -318,10 +318,10 @@ loot-editor-close
             /* If either of the priority values have been changed, the
                base priority value they're derived from will have
                changed, so record both. */
-            if (this.shadowRoot.getElementById('globalPriority').checked != oldData.isGlobalPriority
-                || this.shadowRoot.getElementById('priorityValue').value != oldData.modPriority) {
-                plugin.isGlobalPriority = this.shadowRoot.getElementById('globalPriority').checked;
-                plugin.modPriority = this.shadowRoot.getElementById('priorityValue').value;
+            if (this.shadowRoot.getElementById('globalPriority').checked != oldData.isPriorityGlobal
+                || this.shadowRoot.getElementById('priorityValue').value != oldData.priority) {
+                plugin.isPriorityGlobal = this.shadowRoot.getElementById('globalPriority').checked;
+                plugin.priority = this.shadowRoot.getElementById('priorityValue').value;
                 /* Also mark the priority as being explicitly set in the userlist. */
                 plugin.userlist.hasExplicitPriority = true;
             }
@@ -349,7 +349,7 @@ loot-editor-close
                         plugin.userlist.msg = rowsData;
                     } else if (tables[j].parentElement.id == 'tags') {
                         rowsData.forEach(function(value, index, arr){
-                            arr[index] = oldData.convTagObj(value);
+                            arr[index] = loot.Plugin.tagFromRowData(value);
                         });
                         plugin.userlist.tag = rowsData;
                     } else if (tables[j].parentElement.id == 'dirty') {
@@ -391,20 +391,24 @@ loot-editor-close
                that for userlist and priority data if so. */
             var tempData = {};
             if (newData.editor) {
-                if (newData.editor.isGlobalPriority) {
-                    tempData.isGlobalPriority = newData.editor.isGlobalPriority;
+                if (newData.editor.isPriorityGlobal) {
+                    tempData.isPriorityGlobal = newData.editor.isPriorityGlobal;
                 }
-                if (newData.editor.modPriority) {
-                    tempData.modPriority = newData.editor.modPriority;
+                if (newData.editor.priority) {
+                    tempData.priority = newData.editor.priority;
                 }
                 tempData.userlist = newData.editor.userlist;
             } else {
                 tempData = {
-                    isGlobalPriority: newData.isGlobalPriority,
-                    modPriority: newData.modPriority,
+                    isPriorityGlobal: newData.isPriorityGlobal,
+                    priority: newData.priority,
                     userlist: newData.userlist
                 }
             }
+
+            /* Fill in the version and CRC values. */
+            this.shadowRoot.getElementById('version').textContent = newData.getCardContent(loot.filters).version;
+            this.shadowRoot.getElementById('crc').textContent = newData.getCardContent(loot.filters).crc;
 
             /* Fill in the editor input values. */
             if (tempData.userlist && !tempData.userlist.enabled) {
@@ -412,8 +416,8 @@ loot-editor-close
             } else {
                 this.shadowRoot.getElementById('enableEdits').checked = true;
             }
-            this.shadowRoot.getElementById('globalPriority').checked = tempData.isGlobalPriority;
-            this.shadowRoot.getElementById('priorityValue').value = tempData.modPriority;
+            this.shadowRoot.getElementById('globalPriority').checked = tempData.isPriorityGlobal;
+            this.shadowRoot.getElementById('priorityValue').value = tempData.priority;
 
             /* Clear then fill in editor table data. Masterlist-originated
                rows should have their contents made read-only. */
@@ -493,14 +497,14 @@ loot-editor-close
 
                     if (newData.masterlist && newData.masterlist.tag) {
                         newData.masterlist.tag.forEach(function(tag) {
-                            var tagData = newData.convTagObj(tag);
+                            var tagData = loot.Plugin.tagToRowData(tag);
                             var row = tables[j].addRow(tagData);
                             tables[j].setReadOnly(row);
                         }, newData);
                     }
                     if (tempData.userlist && tempData.userlist.tag) {
                         tempData.userlist.tag.forEach(function(tag) {
-                            var tagData = Plugin.prototype.convTagObj(tag);
+                            var tagData = loot.Plugin.tagToRowData(tag);
                             tables[j].addRow(tagData);
                         }, tempData);
                     }

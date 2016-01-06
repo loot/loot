@@ -116,8 +116,6 @@ loot-clear-metadata
             font-weight: 400;
             font-size: 1rem;
         }
-        .hidden,
-        content::content > .hidden,
         :host-context(#main[data-hide-crc]) content::content > .crc,
         :host-context(#main[data-hide-tag]) content::content > .tag,
         :host-context(#main[data-hide-version]) content::content > .version {
@@ -220,7 +218,7 @@ loot-clear-metadata
 
         observe: {
             'data.tags': 'onTagsChange',
-            'data.computed.messages': 'onMessagesChange',
+            'data.messages': 'onMessagesChange',
             'data.userlist': 'onUserlistChange',
             'data.isSearchResult' : 'onSearchResultChange',
             'data.isMenuOpen': 'onMenuToggle'
@@ -257,6 +255,10 @@ loot-clear-metadata
                     this.classList.toggle('flip');
                 }
 
+                /* Update version and CRC text */
+                this.getElementsByClassName('version')[0].textContent = this.data.getCardContent(loot.filters).version;
+                this.getElementsByClassName('crc')[0].textContent = this.data.getCardContent(loot.filters).crc;
+
                 /* Also initialise the non-simple-string data. */
                 this.onTagsChange();
                 this.onMessagesChange();
@@ -278,8 +280,13 @@ loot-clear-metadata
 
         onTagsChange: function(oldValue, newValue) {
             if (this.data) {
-                this.getElementsByClassName('tag add')[0].classList.toggle('hidden', this.data.computed.tags.added.length == 0);
-                this.getElementsByClassName('tag remove')[0].classList.toggle('hidden', this.data.computed.tags.removed.length == 0);
+                var cardContent = this.data.getCardContent(loot.filters);
+                var tagsAdded = this.getElementsByClassName('tag add')[0];
+                tagsAdded.textContent = cardContent.tags.added;
+                tagsAdded.hidden = cardContent.tags.added.length === 0;
+                var tagsRemoved = this.getElementsByClassName('tag remove')[0];
+                tagsRemoved.textContent = cardContent.tags.removed;
+                tagsRemoved.hidden = cardContent.tags.removed.length === 0;
             }
         },
 
@@ -291,10 +298,15 @@ loot-clear-metadata
                     messageUL.removeChild(messageUL.firstElementChild);
                 }
                 /* Now add new messages. */
-                this.data.computed.messages.forEach(function(message){
-                    messageUL.appendChild(message);
+                var cardContent = this.data.getCardContent(loot.filters);
+                cardContent.messages.forEach(function(message) {
+                    var messageLi = document.createElement('li');
+                    messageLi.className = message.type;
+                    // Use the Marked library for Markdown formatting support.
+                    messageLi.innerHTML = marked(message.content);
+                    messageUL.appendChild(messageLi);
                 });
-                messageUL.classList.toggle('hidden', this.data.computed.messages.length == 0);
+                messageUL.hidden = cardContent.messages.length === 0;
             }
         },
 
