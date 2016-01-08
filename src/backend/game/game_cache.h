@@ -52,7 +52,8 @@ namespace loot {
         const Plugin& GetPlugin(const std::string& pluginName) const;
         void AddPlugin(const Plugin&& plugin);
 
-        void ClearCache();
+        void ClearCachedConditions();
+        void ClearCachedPlugins();
     private:
         Masterlist masterlist;
         MetadataList userlist;

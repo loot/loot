@@ -632,7 +632,7 @@ namespace loot {
             SendProgressUpdate(frame, loc::translate("Loading plugin headers..."));
 
             // First clear CRC and condition caches, otherwise they could lead to incorrect evaluations.
-            _lootState.CurrentGame().ClearCache();
+            _lootState.CurrentGame().ClearCachedConditions();
 
             bool isFirstLoad = _lootState.CurrentGame().GetPlugins().empty();
             _lootState.CurrentGame().LoadPlugins(true);
@@ -735,7 +735,7 @@ namespace loot {
                 pluginNode["isEmpty"] = plugin.IsEmpty();
                 pluginNode["isMaster"] = plugin.isMasterFile();
                 pluginNode["loadsArchive"] = plugin.LoadsArchive();
-                pluginNode["crc"] = IntToHexString(plugin.Crc());
+                pluginNode["crc"] = plugin.Crc();
                 pluginNode["version"] = Version(plugin.getDescription()).AsString();
 
                 if (!mlistPlugin.HasNameOnly()) {

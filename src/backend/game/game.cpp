@@ -154,6 +154,9 @@ namespace loot {
             ++currentGroup;
         }
 
+        // Clear the existing plugin cache.
+        ClearCachedPlugins();
+
         // Load the plugins.
         BOOST_LOG_TRIVIAL(trace) << "Starting plugin loading.";
         vector<thread> threads;

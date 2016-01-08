@@ -22,47 +22,141 @@ along with LOOT.  If not, see
 <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TEST_BACKEND_GAME
-#define LOOT_TEST_BACKEND_GAME
+#ifndef LOOT_TEST_BACKEND_GAME_CACHE
+#define LOOT_TEST_BACKEND_GAME_CACHE
 
 #include "backend/game/game_cache.h"
 
 #include "tests/fixtures.h"
 
-class GameCache : public SkyrimTest {};
+namespace loot {
+    namespace test {
+        class GameCache : public SkyrimTest {
+        protected:
+            loot::GameCache cache;
+        };
 
-TEST_F(GameCache, Constructors) {
-    loot::GameCache cache;
-    std::unordered_set<std::string> plugins({"skyrim.esm"});
+        TEST_F(GameCache, copyConstructorShouldCopyCachedData) {
+            loot::Game game(loot::Game::tes5);
+            game.SetGamePath(dataPath.parent_path());
+            ASSERT_NO_THROW(game.Init(false, localPath));
 
-    EXPECT_NO_THROW(cache.CacheCondition("True Condition", true));
+            cache.CacheCondition("True Condition", true);
+            cache.AddPlugin(loot::Plugin(game, "Blank.esm", true));
 
-    loot::GameCache cache2(cache);
-    EXPECT_EQ(std::make_pair(true, true), cache2.GetCachedCondition("true Condition"));
+            loot::GameCache otherCache(cache);
+            EXPECT_EQ(std::make_pair(true, true), otherCache.GetCachedCondition("true Condition"));
+            EXPECT_EQ("Blank.esm", otherCache.GetPlugin("Blank.esm").Name());
+        }
+
+        TEST_F(GameCache, assignmentOperatorShouldCopyCachedData) {
+            loot::Game game(loot::Game::tes5);
+            game.SetGamePath(dataPath.parent_path());
+            ASSERT_NO_THROW(game.Init(false, localPath));
+
+            cache.CacheCondition("True Condition", true);
+            cache.AddPlugin(loot::Plugin(game, "Blank.esm", true));
+
+            loot::GameCache otherCache = cache;
+            EXPECT_EQ(std::make_pair(true, true), otherCache.GetCachedCondition("true Condition"));
+            EXPECT_EQ("Blank.esm", otherCache.GetPlugin("Blank.esm").Name());
+        }
+
+        TEST_F(GameCache, gettingATrueConditionShouldReturnATrueTruePair) {
+            EXPECT_NO_THROW(cache.CacheCondition("True Condition", true));
+
+            EXPECT_EQ(std::make_pair(true, true), cache.GetCachedCondition("true Condition"));
+        }
+
+        TEST_F(GameCache, gettingAFalseConditionShouldReturnAFalseTruePair) {
+            EXPECT_NO_THROW(cache.CacheCondition("False Condition", false));
+
+            EXPECT_EQ(std::make_pair(false, true), cache.GetCachedCondition("false Condition"));
+        }
+
+        TEST_F(GameCache, gettingANonCachedConditionShouldReturnAFalseFalsePair) {
+            EXPECT_EQ(std::make_pair(false, false), cache.GetCachedCondition("true missing Condition"));
+        }
+
+        TEST_F(GameCache, addingAPluginThatDoesNotExistShouldSucceed) {
+            loot::Game game(loot::Game::tes5);
+            game.SetGamePath(dataPath.parent_path());
+            ASSERT_NO_THROW(game.Init(false, localPath));
+
+            cache.AddPlugin(loot::Plugin(game, "Blank.esm", true));
+            EXPECT_EQ("Blank.esm", cache.GetPlugin("Blank.esm").Name());
+        }
+
+        TEST_F(GameCache, addingAPluginThatIsAlreadyCachedShouldOverwriteExistingEntry) {
+            loot::Game game(loot::Game::tes5);
+            game.SetGamePath(dataPath.parent_path());
+            ASSERT_NO_THROW(game.Init(false, localPath));
+
+            cache.AddPlugin(loot::Plugin(game, "Blank.esm", true));
+            EXPECT_EQ(0, cache.GetPlugin("Blank.esm").Crc());
+
+            cache.AddPlugin(loot::Plugin(game, "Blank.esm", false));
+            EXPECT_EQ(0x187BE342, cache.GetPlugin("Blank.esm").Crc());
+        }
+
+        TEST_F(GameCache, gettingAPluginThatIsNotCachedShouldThrow) {
+            EXPECT_ANY_THROW(cache.GetPlugin("Blank.esm"));
+        }
+
+        TEST_F(GameCache, gettingAPluginShouldBeCaseInsensitive) {
+            loot::Game game(loot::Game::tes5);
+            game.SetGamePath(dataPath.parent_path());
+            ASSERT_NO_THROW(game.Init(false, localPath));
+
+            cache.AddPlugin(loot::Plugin(game, "Blank.esm", true));
+            EXPECT_EQ("Blank.esm", cache.GetPlugin("blanK.esm").Name());
+        }
+
+        TEST_F(GameCache, gettingPluginsShouldReturnAnEmptySetIfNoPluginsHaveBeenCached) {
+            EXPECT_TRUE(cache.GetPlugins().empty());
+        }
+
+        TEST_F(GameCache, gettingPluginsShouldReturnASetOfCachedPluginsIfPluginsHaveBeenCached) {
+            loot::Game game(loot::Game::tes5);
+            game.SetGamePath(dataPath.parent_path());
+            ASSERT_NO_THROW(game.Init(false, localPath));
+
+            cache.AddPlugin(loot::Plugin(game, "Blank.esm", true));
+            cache.AddPlugin(loot::Plugin(game, "Blank - Master Dependent.esp", true));
+
+            EXPECT_EQ(std::set<loot::Plugin>({
+                loot::Plugin(game, "Blank.esm", true),
+                loot::Plugin(game, "Blank - Master Dependent.esp", true),
+            }), cache.GetPlugins());
+        }
+
+        TEST_F(GameCache, clearingCachedConditionsShouldNotThrowIfNoConditionsAreCached) {
+            EXPECT_NO_THROW(cache.ClearCachedConditions());
+        }
+
+        TEST_F(GameCache, clearingCachedConditionsShouldClearAnyCachedConditions) {
+            EXPECT_NO_THROW(cache.CacheCondition("True Condition", true));
+
+            EXPECT_NO_THROW(cache.ClearCachedConditions());
+
+            EXPECT_EQ(std::make_pair(false, false), cache.GetCachedCondition("true Condition"));
+        }
+
+        TEST_F(GameCache, clearingCachedPluginsShouldNotThrowIfNoPluginsAreCached) {
+            EXPECT_NO_THROW(cache.ClearCachedPlugins());
+        }
+
+        TEST_F(GameCache, clearingCachedPluginsShouldClearAnyCachedPlugins) {
+            loot::Game game(loot::Game::tes5);
+            game.SetGamePath(dataPath.parent_path());
+            ASSERT_NO_THROW(game.Init(false, localPath));
+
+            cache.AddPlugin(loot::Plugin(game, "Blank.esm", true));
+            cache.ClearCachedPlugins();
+
+            EXPECT_TRUE(cache.GetPlugins().empty());
+        }
+    }
 }
-
-TEST_F(GameCache, AssignmentOperator) {
-    loot::GameCache cache;
-    std::unordered_set<std::string> plugins({"skyrim.esm"});
-
-    EXPECT_NO_THROW(cache.CacheCondition("True Condition", true));
-
-    loot::GameCache cache2 = cache;
-    EXPECT_EQ(std::make_pair(true, true), cache2.GetCachedCondition("true Condition"));
-}
-
-TEST_F(GameCache, CacheCondition) {
-    loot::GameCache cache;
-    EXPECT_NO_THROW(cache.CacheCondition("True Condition", true));
-    EXPECT_NO_THROW(cache.CacheCondition("False Condition", false));
-
-    EXPECT_EQ(std::make_pair(true, true), cache.GetCachedCondition("true Condition"));
-    EXPECT_EQ(std::make_pair(false, true), cache.GetCachedCondition("false Condition"));
-
-    EXPECT_EQ(std::make_pair(false, false), cache.GetCachedCondition("true missing Condition"));
-    EXPECT_EQ(std::make_pair(false, false), cache.GetCachedCondition("false missing Condition"));
-}
-
-TEST_F(GameCache, ClearCache) {}
 
 #endif

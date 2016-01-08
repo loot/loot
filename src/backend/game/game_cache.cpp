@@ -102,12 +102,21 @@ namespace loot {
 
     void GameCache::AddPlugin(const Plugin&& plugin) {
         std::lock_guard<std::mutex> lock(mutex);
-        plugins.emplace(boost::locale::to_lower(plugin.Name()), plugin);
+
+        auto pair = plugins.emplace(boost::locale::to_lower(plugin.Name()), plugin);
+        if (!pair.second)
+            pair.first->second = plugin;
     }
 
-    void GameCache::ClearCache() {
+    void GameCache::ClearCachedConditions() {
         std::lock_guard<std::mutex> guard(mutex);
 
         conditionCache.clear();
+    }
+
+    void GameCache::ClearCachedPlugins() {
+        std::lock_guard<std::mutex> guard(mutex);
+
+        plugins.clear();
     }
 }

@@ -297,7 +297,7 @@ LOOT_API unsigned int loot_eval_lists(loot_db * const db, const unsigned int lan
         return c_error(loot_error_invalid_args, "Invalid language code given.");
 
     // Clear caches before evaluating conditions.
-    db->ClearCache();
+    db->ClearCachedConditions();
 
     loot::Masterlist temp = db->rawMetadata;
     loot::MetadataList userTemp = db->rawUserMetadata;
