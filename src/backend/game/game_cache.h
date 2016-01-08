@@ -29,7 +29,6 @@
 #include "../masterlist.h"
 #include "../plugin/plugin.h"
 
-#include <cstdint>
 #include <string>
 #include <mutex>
 #include <unordered_map>
@@ -50,7 +49,7 @@ namespace loot {
         void CacheCondition(const std::string& condition, bool result);
 
         std::set<Plugin> GetPlugins() const;
-        const Plugin& GetPlugin(const std::string & pluginName) const;
+        const Plugin& GetPlugin(const std::string& pluginName) const;
         void AddPlugin(const Plugin&& plugin);
 
         void ClearCache();
