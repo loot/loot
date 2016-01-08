@@ -217,6 +217,7 @@ loot-clear-metadata
         data: undefined,
 
         observe: {
+            'data.crc': 'onCrcChange',
             'data.tags': 'onTagsChange',
             'data.messages': 'onMessagesChange',
             'data.userlist': 'onUserlistChange',
@@ -276,6 +277,12 @@ loot-clear-metadata
                     tooltips[i].setPosition();
                 }
             }
+        },
+
+        onCrcChange: function(oldValue, newValue) {
+          if (this.data) {
+            this.getElementsByClassName('crc')[0].textContent = this.data.getCardContent(loot.filters).crc;
+          }
         },
 
         onTagsChange: function(oldValue, newValue) {
