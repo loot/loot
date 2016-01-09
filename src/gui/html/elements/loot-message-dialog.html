@@ -42,8 +42,8 @@ was pressed.
         },
 
         onButtonClick: function(evt) {
-            if (evt.target.parentElement.closeCallback) {
-                evt.target.parentElement.closeCallback(evt.target.id === 'confirm');
+            if (evt.target.parentElement.parentNode.host.closeCallback) {
+                evt.target.parentElement.parentNode.host.closeCallback(evt.target.id === 'confirm');
             }
             evt.target.parentElement.parentNode.host.addEventListener('core-overlay-close-completed', function(evt){
                 evt.target.parentElement.removeChild(evt.target);
