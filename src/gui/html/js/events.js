@@ -129,6 +129,18 @@ function onSortPlugins() {
     if (!result) {
       return;
     }
+    /* Check if sorted load order differs from current load order. */
+    const loadOrderIsUnchanged = result.every((plugin, index) => {
+      return plugin.name === loot.game.plugins[index].name;
+    });
+    if (loadOrderIsUnchanged) {
+      /* Send cancelSort query to notify that no unapplied sorting changes are
+         present. Not doing so prevents LOOT's window from closing. */
+      loot.query('cancelSort');
+      loot.Dialog.closeProgress();
+      loot.Dialog.showNotification(loot.l10n.translate('Sorting made no changes to the load order.'));
+      return;
+    }
     loot.game.oldLoadOrder = loot.game.plugins;
     loot.game.loadOrder = [];
     result.forEach((plugin) => {
