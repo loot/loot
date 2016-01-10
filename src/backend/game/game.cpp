@@ -191,12 +191,4 @@ namespace loot {
             return LoadOrderHandler::IsPluginActive(pluginName);
         }
     }
-
-    std::list<Game> ToGames(const std::list<GameSettings>& settings) {
-        return list<Game>(settings.begin(), settings.end());
-    }
-
-    std::list<GameSettings> ToGameSettings(const std::list<Game>& games) {
-        return list<GameSettings>(games.begin(), games.end());
-    }
 }

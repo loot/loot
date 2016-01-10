@@ -655,48 +655,4 @@ TEST_F(Game, shouldShowBlankEspAsActiveIfItHasBeenFullyLoadedAndTheGameHasBeenIn
     EXPECT_FALSE(game.IsPluginActive("Blank.esp"));
 }
 
-TEST(ToGames, EmptySettings) {
-    EXPECT_EQ(std::list<loot::Game>(), loot::ToGames(std::list<loot::GameSettings>()));
-}
-
-TEST(ToGames, NonEmptySettings) {
-    std::list<loot::GameSettings> settings({
-        loot::GameSettings(loot::GameSettings::tes4),
-        loot::GameSettings(loot::GameSettings::tes5),
-        loot::GameSettings(loot::GameSettings::fo3),
-        loot::GameSettings(loot::GameSettings::fonv),
-    });
-
-    std::list<loot::Game> expected({
-        loot::Game(loot::Game::tes4),
-        loot::Game(loot::Game::tes5),
-        loot::Game(loot::Game::fo3),
-        loot::Game(loot::Game::fonv),
-    });
-
-    EXPECT_EQ(expected, loot::ToGames(settings));
-}
-
-TEST(ToGameSettings, EmptyGames) {
-    EXPECT_EQ(std::list<loot::GameSettings>(), loot::ToGameSettings(std::list<loot::Game>()));
-}
-
-TEST(ToGameSettings, NonEmptyGames) {
-    std::list<loot::Game> games({
-        loot::Game(loot::Game::tes4),
-        loot::Game(loot::Game::tes5),
-        loot::Game(loot::Game::fo3),
-        loot::Game(loot::Game::fonv),
-    });
-
-    std::list<loot::GameSettings> expected({
-        loot::GameSettings(loot::GameSettings::tes4),
-        loot::GameSettings(loot::GameSettings::tes5),
-        loot::GameSettings(loot::GameSettings::fo3),
-        loot::GameSettings(loot::GameSettings::fonv),
-    });
-
-    EXPECT_EQ(expected, loot::ToGameSettings(games));
-}
-
 #endif

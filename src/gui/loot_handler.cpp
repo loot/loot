@@ -97,15 +97,13 @@ namespace loot {
 #endif
 
         // Set window size & position.
-        YAML::Node settings = _lootState.GetSettings();
-
-        if (settings["window"]["left"] && settings["window"]["top"] && settings["window"]["right"] && settings["window"]["bottom"]) {
+        if (_lootState.isWindowPositionStored()) {
 #ifdef _WIN32
             RECT rc;
-            rc.left = settings["window"]["left"].as<long>();
-            rc.top = settings["window"]["top"].as<long>();
-            rc.right = settings["window"]["right"].as<long>();
-            rc.bottom = settings["window"]["bottom"].as<long>();
+            rc.left = _lootState.getWindowPosition().left;
+            rc.top = _lootState.getWindowPosition().top;
+            rc.right = _lootState.getWindowPosition().right;
+            rc.bottom = _lootState.getWindowPosition().bottom;
 
             // Fit the saved window size/position to the current monitor setup.
 
@@ -175,21 +173,24 @@ namespace loot {
     void LootHandler::OnBeforeClose(CefRefPtr<CefBrowser> browser) {
         assert(CefCurrentlyOn(TID_UI));
 
-        // Save window size & position.
-        YAML::Node settings = _lootState.GetSettings();
-
 #ifdef _WIN32
         RECT rc;
         GetWindowRect(browser->GetHost()->GetWindowHandle(), &rc);
 
-        settings["window"]["left"] = rc.left;
-        settings["window"]["top"] = rc.top;
-        settings["window"]["right"] = rc.right;
-        settings["window"]["bottom"] = rc.bottom;
+        LootSettings::WindowPosition position;
+        position.top = rc.top;
+        position.bottom = rc.bottom;
+        position.left = rc.left;
+        position.right = rc.right;
+        _lootState.storeWindowPosition(position);
 #endif
 
-        _lootState.UpdateSettings(settings);
-        _lootState.SaveSettings();
+        try {
+            _lootState.save(g_path_settings);
+        }
+        catch (std::exception &e) {
+            BOOST_LOG_TRIVIAL(error) << "Failed to save LOOT's settings. Error: " << e.what();
+        }
 
         // Cancel any javascript callbacks.
         browser_side_router_->OnBeforeClose(browser);

@@ -71,17 +71,11 @@ namespace loot {
         }
         if (fs::exists(g_path_settings)) {
             try {
-                fs::ifstream in(g_path_settings);
-                _settings = YAML::Load(in);
-                in.close();
+                load(g_path_settings);
             }
             catch (exception& e) {
                 _initErrors.push_back((format(translate("Error: Settings parsing failed. %1%")) % e.what()).str());
             }
-        }
-        // Check if the settings are valid (or if they don't exist).
-        if (!AreSettingsValid()) {
-            _settings = GetDefaultSettings();
         }
 
         //Set up logging.
@@ -96,14 +90,7 @@ namespace loot {
                 )
             );
         boost::log::add_common_attributes();
-        bool enableDebugLogging = false;
-        if (_settings["enableDebugLogging"]) {
-            enableDebugLogging = _settings["enableDebugLogging"].as<bool>();
-        }
-        if (enableDebugLogging)
-            boost::log::core::get()->set_logging_enabled(true);
-        else
-            boost::log::core::get()->set_logging_enabled(false);
+        boost::log::core::get()->set_logging_enabled(isDebugLoggingEnabled());
 
         // Log some useful info.
         BOOST_LOG_TRIVIAL(info) << "LOOT Version: " << g_version_major << "." << g_version_minor << "." << g_version_patch;
@@ -121,9 +108,9 @@ namespace loot {
         fs::remove(g_path_local / "CEFDebugLog.txt");
 
         // Now that settings have been loaded, set the locale again to handle translations.
-        if (_settings["language"] && _settings["language"].as<string>() != Language(Language::english).Locale()) {
+        if (getLanguage().Code() != Language::english) {
             BOOST_LOG_TRIVIAL(debug) << "Initialising language settings.";
-            loot::Language lang(_settings["language"].as<string>());
+            loot::Language lang(getLanguage());
             BOOST_LOG_TRIVIAL(debug) << "Selected language: " << lang.Name();
 
             //Boost.Locale initialisation: Generate and imbue locales.
@@ -136,17 +123,7 @@ namespace loot {
 
         //Detect installed games.
         BOOST_LOG_TRIVIAL(debug) << "Detecting installed games.";
-        try {
-            _games = ToGames(GetGameSettings(_settings));
-        }
-        catch (YAML::Exception& e) {
-            BOOST_LOG_TRIVIAL(error) << "Games' settings parsing failed. " << e.what();
-            _initErrors.push_back((format(translate("Error: Games' settings parsing failed. %1%")) % e.what()).str());
-            // Now redo, but with no games settings, so only the hardcoded defaults get loaded. It means the user can
-            // at least still then edit them.
-            YAML::Node node;
-            _games = ToGames(GetGameSettings(node));
-        }
+        _games = ToGames(getGameSettings());
 
         try {
             BOOST_LOG_TRIVIAL(debug) << "Selecting game.";
@@ -154,7 +131,7 @@ namespace loot {
             BOOST_LOG_TRIVIAL(debug) << "Initialising game-specific settings.";
             _currentGame->Init(true);
             // Update game path in settings object.
-            _settings["games"] = ToGameSettings(_games);
+            storeGameSettings(ToGameSettings(_games));
         }
         catch (loot::error &e) {
             if (e.code() == loot::error::no_game_detected) {
@@ -172,7 +149,13 @@ namespace loot {
         return _initErrors;
     }
 
-    void LootState::UpdateGames(std::list<GameSettings>& games) {
+    void LootState::save(const boost::filesystem::path & file) {
+        storeLastGame(_currentGame->FolderName());
+        updateLastVersion();
+        LootSettings::save(file);
+    }
+
+    void LootState::UpdateGamesFromSettings() {
         // Acquire the lock for the scope of this method.
         base::AutoLock lock_scope(_lock);
 
@@ -180,7 +163,7 @@ namespace loot {
 
         // Update existing games, add new games.
         BOOST_LOG_TRIVIAL(trace) << "Updating existing games and adding new games.";
-        for (auto &game : games) {
+        for (const auto &game : getGameSettings()) {
             auto pos = find(_games.begin(), _games.end(), game);
 
             if (pos != _games.end()) {
@@ -214,7 +197,7 @@ namespace loot {
         // Re-initialise the current game in case the game path setting was changed.
         _currentGame->Init(true);
         // Update game path in settings object.
-        _settings["games"] = ToGameSettings(_games);
+        storeGameSettings(ToGameSettings(_games));
     }
 
     void LootState::ChangeGame(const std::string& newGameFolder) {
@@ -226,7 +209,7 @@ namespace loot {
         _currentGame->Init(true);
 
         // Update game path in settings object.
-        _settings["games"] = ToGameSettings(_games);
+        storeGameSettings(ToGameSettings(_games));
         BOOST_LOG_TRIVIAL(debug) << "New game is " << _currentGame->Name();
     }
 
@@ -246,186 +229,37 @@ namespace loot {
         return installedGames;
     }
 
-    const YAML::Node& LootState::GetSettings() const {
-        return _settings;
-    }
-
-    void LootState::UpdateSettings(const YAML::Node& settings) {
-        // Acquire the lock for the scope of this method.
-        base::AutoLock lock_scope(_lock);
-
-        _settings = settings;
-    }
-
-    void LootState::SaveSettings() {
-        // Acquire the lock for the scope of this method.
-        base::AutoLock lock_scope(_lock);
-
-        _settings["lastGame"] = _currentGame->FolderName();
-        _settings["lastVersion"] = to_string(g_version_major) + "." + to_string(g_version_minor) + "." + to_string(g_version_patch);
-
-        //Save settings.
-        try {
-            BOOST_LOG_TRIVIAL(debug) << "Saving LOOT settings.";
-            YAML::Emitter yout;
-            yout.SetIndent(2);
-            yout << _settings;
-
-            fs::ofstream out(loot::g_path_settings);
-            out << yout.c_str();
-            out.close();
-        }
-        catch (std::exception &e) {
-            BOOST_LOG_TRIVIAL(error) << "Failed to save LOOT's settings. Error: " << e.what();
-        }
-    }
-
     void LootState::SelectGame(std::string preferredGame) {
         if (preferredGame.empty()) {
             // Get preferred game from settings.
-            if (_settings["game"] && _settings["game"].as<string>() != "auto")
-                preferredGame = _settings["game"].as<string>();
-            else if (_settings["lastGame"] && _settings["lastGame"].as<string>() != "auto")
-                preferredGame = _settings["lastGame"].as<string>();
+            if (getGame() != "auto")
+                preferredGame = getGame();
+            else if (getLastGame() != "auto")
+                preferredGame = getLastGame();
         }
 
-        // Get iterator to preferred game if there is one.
-        _currentGame = _games.end();
-        for (auto it = _games.begin(); it != _games.end(); ++it) {
-            if ((preferredGame.empty() && it->IsInstalled())
-                || (!preferredGame.empty() && preferredGame == it->FolderName() && it->IsInstalled())) {
-                _currentGame = it;
-                return;
-            }
+        // Get iterator to preferred game.
+        _currentGame = find_if(begin(_games), end(_games), [&](auto& game) {
+            return (preferredGame.empty() || preferredGame == game.FolderName()) && game.IsInstalled();
+        });
+        // If the preferred game cannot be found, get the first installed game.
+        if (_currentGame == end(_games)) {
+            _currentGame = find_if(begin(_games), end(_games), [](auto& game) {
+                return game.IsInstalled();
+            });
         }
-
-        // Preferred game not found, just pick the first installed one.
-        for (auto it = _games.begin(); it != _games.end(); ++it) {
-            if (it->IsInstalled()) {
-                _currentGame = it;
-                return;
-            }
+        // If no game can be selected, throw an exception.
+        if (_currentGame == end(_games)) {
+            BOOST_LOG_TRIVIAL(error) << "None of the supported games were detected.";
+            throw error(error::no_game_detected, translate("None of the supported games were detected."));
         }
-
-        BOOST_LOG_TRIVIAL(error) << "None of the supported games were detected.";
-        throw error(error::no_game_detected, translate("None of the supported games were detected."));
     }
 
-    bool LootState::AreSettingsValid() {
-        // Acquire the lock for the scope of this method.
-        base::AutoLock lock_scope(_lock);
-
-        if (!_settings["language"]) {
-            if (_settings["Language"]) {
-                // Conversion from 0.6 key.
-                _settings["language"] = _settings["Language"];
-                _settings.remove("Language");
-            }
-            else
-                return false;
-        }
-        if (!_settings["game"]) {
-            if (_settings["Game"]) {
-                // Conversion from 0.6 key.
-                _settings["game"] = _settings["Game"];
-                _settings.remove("Game");
-            }
-            else
-                return false;
-        }
-        if (!_settings["lastGame"]) {
-            if (_settings["Last Game"]) {
-                // Conversion from 0.6 key.
-                _settings["lastGame"] = _settings["Last Game"];
-                _settings.remove("Last Game");
-            }
-            else
-                return false;
-        }
-        if (!_settings["enableDebugLogging"]) {
-            if (_settings["Debug Verbosity"]) {
-                // Conversion from 0.6 key.
-                _settings["enableDebugLogging"] = (_settings["Debug Verbosity"].as<unsigned int>() > 0);
-                _settings.remove("Debug Verbosity");
-            }
-            else if (_settings["debugVerbosity"]) {
-                // Conversion from 0.7 alpha key
-                _settings["enableDebugLogging"] = (_settings["debugVerbosity"].as<unsigned int>() > 0);
-                _settings.remove("debugVerbosity");
-            }
-            else
-                return false;
-        }
-        if (!_settings["updateMasterlist"]) {
-            if (_settings["Update Masterlist"]) {
-                // Conversion from 0.6 key.
-                _settings["updateMasterlist"] = _settings["Update Masterlist"];
-                _settings.remove("Update Masterlist");
-            }
-            else
-                return false;
-        }
-        if (!_settings["games"]) {
-            if (_settings["Games"]) {
-                // Conversion from 0.6 key.
-                _settings["games"] = _settings["Games"];
-
-                for (auto node : _settings["games"]) {
-                    if (node["url"]) {
-                        node["repo"] = node["url"];
-                        node["branch"] = "v0.8";
-                        node.remove("url");
-                    }
-                }
-
-                _settings.remove("Games");
-            }
-            else
-                return false;
-        }
-        else {
-            // Update existing default branches to new version default, if the
-            // default repositories are used.
-            for (auto node : _settings["games"]) {
-                GameSettings settings(node.as<GameSettings>());
-
-                set<string> oldDefaultBranches({
-                    "master",
-                    "v0.7",
-                });
-
-                if (settings.RepoURL() == GameSettings(settings.Id()).RepoURL()
-                    && oldDefaultBranches.count(settings.RepoBranch()) == 1) {
-                    node["branch"] = "v0.8";
-                }
-            }
-        }
-
-        if (_settings["windows"])
-            _settings.remove("windows");
-
-        return true;
+    std::list<Game> LootState::ToGames(const std::vector<GameSettings>& settings) {
+        return list<Game>(settings.begin(), settings.end());
     }
 
-    YAML::Node LootState::GetDefaultSettings() const {
-        YAML::Node root;
-
-        root["language"] = "en";
-        root["game"] = "auto";
-        root["lastGame"] = "auto";
-        root["enableDebugLogging"] = false;
-        root["updateMasterlist"] = true;
-
-        // Add base game definitions, and Nehrim.
-        GetGameSettings(root);
-
-        GameSettings settings(GameSettings::tes4, "Nehrim");
-        settings.SetName("Nehrim - At Fate's Edge")
-            .SetMaster("Nehrim.esm")
-            .SetRegistryKey("Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim - At Fate's Edge_is1\\InstallLocation");
-
-        root["games"].push_back(settings);
-
-        return root;
+    std::vector<GameSettings> LootState::ToGameSettings(const std::list<Game>& games) {
+        return vector<GameSettings>(games.begin(), games.end());
     }
 }

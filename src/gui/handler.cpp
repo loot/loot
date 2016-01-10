@@ -275,20 +275,16 @@ namespace loot {
         else if (requestName == "closeSettings") {
             BOOST_LOG_TRIVIAL(trace) << "Settings dialog closed and changes accepted, updating settings object.";
 
-            // Update the game details and settings.
-            _lootState.UpdateSettings(request["args"][0]);
+            // Update the settings.
+            _lootState.load(request["args"][0]);
             // If the user has deleted a default game, we don't want to restore it now.
             // It will be restored when LOOT is next loaded.
             try {
                 BOOST_LOG_TRIVIAL(trace) << "Updating games object.";
-                list<GameSettings> games(request["args"][0]["games"].as< list<GameSettings> >());
-                _lootState.UpdateGames(games);
+                _lootState.UpdateGamesFromSettings();
 
                 // Also enable/disable debug logging as required.
-                if (request["args"][0]["enableDebugLogging"] && request["args"][0]["enableDebugLogging"].as<bool>())
-                    boost::log::core::get()->set_logging_enabled(true);
-                else
-                    boost::log::core::get()->set_logging_enabled(false);
+                boost::log::core::get()->set_logging_enabled(_lootState.isDebugLoggingEnabled());
 
                 // Now send back the new list of installed games to the UI.
                 BOOST_LOG_TRIVIAL(trace) << "Getting new list of installed games.";
@@ -381,11 +377,7 @@ namespace loot {
             // Has two args: the first is the filter ID, the second is the value.
             BOOST_LOG_TRIVIAL(trace) << "Saving filter states.";
             try {
-                YAML::Node settings = _lootState.GetSettings();
-
-                settings["filters"][request["args"][0].as<string>()] = request["args"][1];
-
-                _lootState.UpdateSettings(settings);
+                _lootState.storeFilterState(request["args"][0].as<string>(), request["args"][1].as<bool>());
                 callback->Success("");
             }
             catch (exception &e) {
@@ -581,7 +573,7 @@ namespace loot {
 
     std::string Handler::GetSettings() {
         BOOST_LOG_TRIVIAL(info) << "Getting LOOT settings.";
-        return JSON::stringify(_lootState.GetSettings());
+        return JSON::stringify(_lootState.toYaml());
     }
 
     std::string Handler::GetLanguages() {
@@ -779,13 +771,7 @@ namespace loot {
             }
 
             SendProgressUpdate(frame, loc::translate("Loading general messages..."));
-            //Set language.
-            unsigned int language;
-            if (_lootState.GetSettings()["language"])
-                language = Language(_lootState.GetSettings()["language"].as<string>()).Code();
-            else
-                language = Language::any;
-            BOOST_LOG_TRIVIAL(info) << "Using message language: " << Language(language).Name();
+            BOOST_LOG_TRIVIAL(info) << "Using message language: " << _lootState.getLanguage().Name();
 
             //Evaluate any conditions in the global messages.
             BOOST_LOG_TRIVIAL(debug) << "Evaluating global message conditions.";
@@ -801,7 +787,7 @@ namespace loot {
             try {
                 list<Message>::iterator it = messages.begin();
                 while (it != messages.end()) {
-                    if (!it->EvalCondition(_lootState.CurrentGame(), language))
+                    if (!it->EvalCondition(_lootState.CurrentGame(), _lootState.getLanguage().Code()))
                         it = messages.erase(it);
                     else
                         ++it;
@@ -830,14 +816,7 @@ namespace loot {
     void Handler::UpdateMasterlist(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback) {
         try {
             BOOST_LOG_TRIVIAL(debug) << "Updating and parsing masterlist.";
-
-            //Set language.
-            unsigned int language;
-            if (_lootState.GetSettings()["language"])
-                language = Language(_lootState.GetSettings()["language"].as<string>()).Code();
-            else
-                language = Language::any;
-            BOOST_LOG_TRIVIAL(info) << "Using message language: " << Language(language).Name();
+            BOOST_LOG_TRIVIAL(info) << "Using message language: " << _lootState.getLanguage().Name();
 
             // Update / parse masterlist.
             bool wasChanged = true;
@@ -914,7 +893,7 @@ namespace loot {
                 try {
                     list<Message>::iterator it = messages.begin();
                     while (it != messages.end()) {
-                        if (!it->EvalCondition(_lootState.CurrentGame(), language))
+                        if (!it->EvalCondition(_lootState.CurrentGame(), _lootState.getLanguage().Code()))
                             it = messages.erase(it);
                         else
                             ++it;
@@ -974,13 +953,7 @@ namespace loot {
 
     void Handler::SortPlugins(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback) {
         BOOST_LOG_TRIVIAL(info) << "Beginning sorting operation.";
-        //Set language.
-        unsigned int language;
-        if (_lootState.GetSettings()["language"])
-            language = Language(_lootState.GetSettings()["language"].as<string>()).Code();
-        else
-            language = Language::any;
-        BOOST_LOG_TRIVIAL(info) << "Using message language: " << Language(language).Name();
+        BOOST_LOG_TRIVIAL(info) << "Using message language: " << _lootState.getLanguage().Name();
 
         try {
             // Always reload all the plugins.
@@ -989,7 +962,7 @@ namespace loot {
 
             //Sort plugins into their load order.
             PluginSorter sorter;
-            list<Plugin> plugins = sorter.Sort(_lootState.CurrentGame(), language, [this, frame](const string& message) {
+            list<Plugin> plugins = sorter.Sort(_lootState.CurrentGame(), _lootState.getLanguage().Code(), [this, frame](const string& message) {
                 this->SendProgressUpdate(frame, message);
             });
 
@@ -1024,13 +997,7 @@ namespace loot {
     }
 
     YAML::Node Handler::GenerateDerivedMetadata(const Plugin& file, const PluginMetadata& masterlist, const PluginMetadata& userlist) {
-        //Set language.
-        unsigned int language;
-        if (_lootState.GetSettings()["language"])
-            language = Language(_lootState.GetSettings()["language"].as<string>()).Code();
-        else
-            language = Language::any;
-        BOOST_LOG_TRIVIAL(info) << "Using message language: " << Language(language).Name();
+        BOOST_LOG_TRIVIAL(info) << "Using message language: " << _lootState.getLanguage().Name();
 
         // Now rederive the displayed metadata from the masterlist and userlist.
         Plugin tempPlugin(file);
@@ -1041,7 +1008,7 @@ namespace loot {
         //Evaluate any conditions
         BOOST_LOG_TRIVIAL(trace) << "Evaluate conditions for merged plugin data.";
         try {
-            tempPlugin.EvalAllConditions(_lootState.CurrentGame(), language);
+            tempPlugin.EvalAllConditions(_lootState.CurrentGame(), _lootState.getLanguage().Code());
         }
         catch (std::exception& e) {
             BOOST_LOG_TRIVIAL(error) << "\"" << tempPlugin.Name() << "\" contains a condition that could not be evaluated. Details: " << e.what();

@@ -96,15 +96,13 @@ namespace loot {
         // Need to set the global locale for this process so that messages will
         // be translated.
         BOOST_LOG_TRIVIAL(debug) << "Initialising language settings in UI thread.";
-        const YAML::Node& settings = lootState.GetSettings();
-        if (settings["language"] && settings["language"].as<string>() != Language(Language::english).Locale()) {
+        if (lootState.getLanguage().Code() != Language::english) {
             boost::locale::generator gen;
             gen.add_messages_path(g_path_l10n.string());
             gen.add_messages_domain("loot");
 
-            loot::Language lang(settings["language"].as<string>());
-            BOOST_LOG_TRIVIAL(debug) << "Selected language: " << lang.Name();
-            locale::global(gen(lang.Locale() + ".UTF-8"));
+            BOOST_LOG_TRIVIAL(debug) << "Selected language: " << lootState.getLanguage().Name();
+            locale::global(gen(lootState.getLanguage().Locale() + ".UTF-8"));
             boost::filesystem::path::imbue(locale());
         }
 
