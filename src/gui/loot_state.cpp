@@ -39,6 +39,10 @@
 #include <boost/log/utility/setup/common_attributes.hpp>
 #include <boost/log/support/date_time.hpp>
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 using namespace std;
 using boost::locale::translate;
 using boost::format;
@@ -156,8 +160,7 @@ namespace loot {
     }
 
     void LootState::UpdateGamesFromSettings() {
-        // Acquire the lock for the scope of this method.
-        base::AutoLock lock_scope(_lock);
+        std::lock_guard<std::mutex> guard(mutex);
 
         unordered_set<string> newGameFolders;
 
@@ -201,8 +204,7 @@ namespace loot {
     }
 
     void LootState::ChangeGame(const std::string& newGameFolder) {
-        // Acquire the lock for the scope of this method.
-        base::AutoLock lock_scope(_lock);
+        std::lock_guard<std::mutex> guard(mutex);
 
         BOOST_LOG_TRIVIAL(debug) << "Changing current game to that with folder: " << newGameFolder;
         _currentGame = find(_games.begin(), _games.end(), Game(Game::autodetect, newGameFolder));
@@ -214,8 +216,7 @@ namespace loot {
     }
 
     Game& LootState::CurrentGame() {
-        // Acquire the lock for the scope of this method.
-        base::AutoLock lock_scope(_lock);
+        std::lock_guard<std::mutex> guard(mutex);
 
         return *_currentGame;
     }

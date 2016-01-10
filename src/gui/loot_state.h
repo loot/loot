@@ -28,11 +28,8 @@
 #include "loot_settings.h"
 #include "backend/game/game.h"
 
-#include <include/cef_app.h>
-#include <include/base/cef_lock.h>
-
 namespace loot {
-    class LootState : public CefBase, public LootSettings {
+    class LootState : public LootSettings {
     public:
         LootState();
 
@@ -65,9 +62,8 @@ namespace loot {
         static std::list<Game> ToGames(const std::vector<GameSettings>& settings);
         static std::vector<GameSettings> ToGameSettings(const std::list<Game>& games);
 
-        // Lock used to protect access to member variables.
-        base::Lock _lock;
-        IMPLEMENT_REFCOUNTING(LootState);
+        // Mutex used to protect access to member variables.
+        std::mutex mutex;
     };
 }
 
