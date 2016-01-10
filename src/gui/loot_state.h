@@ -48,12 +48,16 @@ namespace loot {
         // Get the folder names of the installed games.
         std::vector<std::string> InstalledGames();
 
-        // Used to check if LOOT has unaccepted sorting or metadata changes on quit.
-        int numUnappliedChanges;
+        bool hasUnappliedChanges() const;
+        void incrementUnappliedChangeCounter();
+        void decrementUnappliedChangeCounter();
     private:
         std::list<Game> _games;
         std::list<Game>::iterator _currentGame;
         std::vector<std::string> _initErrors;
+
+        // Used to check if LOOT has unaccepted sorting or metadata changes on quit.
+        size_t unappliedChangeCounter;
 
         // Select initial game.
         void SelectGame(std::string cmdLineGame);

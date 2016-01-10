@@ -46,7 +46,7 @@ using boost::format;
 namespace fs = boost::filesystem;
 
 namespace loot {
-    LootState::LootState() : numUnappliedChanges(0), _currentGame(_games.end()) {}
+    LootState::LootState() : unappliedChangeCounter(0), _currentGame(_games.end()) {}
 
     void LootState::Init(const std::string& cmdLineGame) {
         // Do some preliminary locale / UTF-8 support setup here, in case the settings file reading requires it.
@@ -227,6 +227,18 @@ namespace loot {
                 installedGames.push_back(game.FolderName());
         }
         return installedGames;
+    }
+
+    bool LootState::hasUnappliedChanges() const {
+        return unappliedChangeCounter > 0;
+    }
+
+    void LootState::incrementUnappliedChangeCounter() {
+        ++unappliedChangeCounter;
+    }
+
+    void LootState::decrementUnappliedChangeCounter() {
+        --unappliedChangeCounter;
     }
 
     void LootState::SelectGame(std::string preferredGame) {

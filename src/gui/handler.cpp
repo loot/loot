@@ -160,12 +160,12 @@ namespace loot {
             return true;
         }
         else if (request == "cancelSort") {
-            --_lootState.numUnappliedChanges;
+            _lootState.decrementUnappliedChangeCounter();
             callback->Success("");
             return true;
         }
         else if (request == "editorOpened") {
-            ++_lootState.numUnappliedChanges;
+            _lootState.incrementUnappliedChangeCounter();
             callback->Success("");
             return true;
         }
@@ -173,7 +173,7 @@ namespace loot {
             // This version of the editorClosed query has no arguments as it is
             // sent when editing is cancelled. Just update the unapplied changes
             // counter.
-            --_lootState.numUnappliedChanges;
+            _lootState.decrementUnappliedChangeCounter();
             callback->Success("");
             return true;
         }
@@ -253,7 +253,7 @@ namespace loot {
             // One argument, which is the plugin metadata that has changed (+ its name).
             try {
                 callback->Success(ApplyUserEdits(request["args"][0]));
-                --_lootState.numUnappliedChanges;
+                _lootState.decrementUnappliedChangeCounter();
             }
             catch (loot::error &e) {
                 BOOST_LOG_TRIVIAL(error) << "Failed to apply plugin metadata. Details: " << e.what();
@@ -297,7 +297,7 @@ namespace loot {
             return true;
         }
         else if (requestName == "applySort") {
-            --_lootState.numUnappliedChanges;
+            _lootState.decrementUnappliedChangeCounter();
             BOOST_LOG_TRIVIAL(trace) << "User has accepted sorted load order, applying it.";
             try {
                 _lootState.CurrentGame().SetLoadOrder(request["args"][0].as<list<string>>());
@@ -983,7 +983,7 @@ namespace loot {
 
                 node.push_back(pluginNode);
             }
-            ++_lootState.numUnappliedChanges;
+            _lootState.incrementUnappliedChangeCounter();
 
             if (node.size() > 0)
                 callback->Success(JSON::stringify(node));

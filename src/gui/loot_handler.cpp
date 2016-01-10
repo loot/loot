@@ -152,7 +152,7 @@ namespace loot {
         assert(CefCurrentlyOn(TID_UI));
 
         // Check if unapplied changes exist.
-        if (_lootState.numUnappliedChanges > 0) {
+        if (_lootState.hasUnappliedChanges()) {
             browser->GetMainFrame()->ExecuteJavaScript("onQuit();", browser->GetMainFrame()->GetURL(), 0);
             return true;
         }
