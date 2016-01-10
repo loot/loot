@@ -89,11 +89,11 @@ namespace loot {
             boost::log::keywords::file_name = g_path_log.string().c_str(),
             boost::log::keywords::auto_flush = true,
             boost::log::keywords::format = (
-            boost::log::expressions::stream
-            << "[" << boost::log::expressions::format_date_time< boost::posix_time::ptime >("TimeStamp", "%H:%M:%S") << "]"
-            << " [" << boost::log::trivial::severity << "]: "
-            << boost::log::expressions::smessage
-            )
+                boost::log::expressions::stream
+                << "[" << boost::log::expressions::format_date_time< boost::posix_time::ptime >("TimeStamp", "%H:%M:%S") << "]"
+                << " [" << boost::log::trivial::severity << "]: "
+                << boost::log::expressions::smessage
+                )
             );
         boost::log::add_common_attributes();
         bool enableDebugLogging = false;
