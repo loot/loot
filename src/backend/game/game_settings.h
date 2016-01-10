@@ -85,8 +85,6 @@ namespace loot {
 
         boost::filesystem::path _gamePath;  //Path to the game's folder.
     };
-
-    std::list<GameSettings> GetGameSettings(YAML::Node& settings);
 }
 
 namespace YAML {

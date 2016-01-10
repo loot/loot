@@ -226,33 +226,6 @@ namespace loot {
         _gamePath = path;
         return *this;
     }
-
-    std::list<GameSettings> GetGameSettings(YAML::Node& settings) {
-        list<GameSettings> games;
-
-        if (settings["games"])
-            games = settings["games"].as< list<GameSettings> >();
-
-        if (find(games.begin(), games.end(), GameSettings(GameSettings::tes4)) == games.end())
-            games.push_back(GameSettings(GameSettings::tes4));
-
-        if (find(games.begin(), games.end(), GameSettings(GameSettings::tes5)) == games.end())
-            games.push_back(GameSettings(GameSettings::tes5));
-
-        if (find(games.begin(), games.end(), GameSettings(GameSettings::fo3)) == games.end())
-            games.push_back(GameSettings(GameSettings::fo3));
-
-        if (find(games.begin(), games.end(), GameSettings(GameSettings::fonv)) == games.end())
-            games.push_back(GameSettings(GameSettings::fonv));
-
-        if (find(games.begin(), games.end(), GameSettings(GameSettings::fo4)) == games.end())
-            games.push_back(GameSettings(GameSettings::fo4));
-
-        // If there were any missing defaults, make sure they're in settings now.
-        settings["games"] = games;
-
-        return games;
-    }
 }
 
 namespace YAML {
