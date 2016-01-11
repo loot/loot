@@ -134,6 +134,15 @@ function onSortPlugins() {
       return plugin.name === loot.game.plugins[index].name;
     });
     if (loadOrderIsUnchanged) {
+      result.forEach((plugin) => {
+        const existingPlugin = loot.game.plugins.find((item) => {
+          return item.name === plugin.name;
+        });
+        if (existingPlugin) {
+          existingPlugin.crc = plugin.crc;
+          existingPlugin.isEmpty = plugin.isEmpty;
+        }
+      });
       /* Send cancelSort query to notify that no unapplied sorting changes are
          present. Not doing so prevents LOOT's window from closing. */
       loot.query('cancelSort');
