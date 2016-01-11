@@ -159,10 +159,6 @@ function onSortPlugins() {
       if (existingPlugin) {
         existingPlugin.crc = plugin.crc;
         existingPlugin.isEmpty = plugin.isEmpty;
-
-        existingPlugin.messages = plugin.messages;
-        existingPlugin.tags = plugin.tags;
-        existingPlugin.isDirty = plugin.isDirty;
       } else {
         existingPlugin = new loot.Plugin(plugin);
       }
