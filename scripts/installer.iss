@@ -134,11 +134,7 @@ DestDir: "{app}\resources\l10n\ru\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\zh_CN\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\zh_CN\LC_MESSAGES"; Flags: ignoreversion
 
-Source: "resources\settings.yaml"; \
-DestDir: "{localappdata}\{#MyAppName}"; Flags: onlyifdoesntexist uninsneveruninstall; AfterInstall: SetLOOTLanguage
-; NOTE: Don't use "Flags: ignoreversion" on any shared system files
-
-[Icons] 
+[Icons]
 Name: "{commonprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
@@ -191,30 +187,6 @@ zh_CN.DeleteUserFiles=你想要删除你的设置和用户数据吗？
 es.DeleteUserFiles=¿Quieres borrar sus ajustes y metadatos de usuario?
 
 [Code]
-// Set LOOT's language in settings.yaml
-procedure SetLOOTLanguage();
-var
-  SearchLineStart: String;
-  ReplaceLine: String;
-  Lines: TArrayOfString;
-  I: Integer;
-begin
-  if ActiveLanguage = 'en' then
-    exit;
-
-  SearchLineStart := 'language:';
-  ReplaceLine := 'language: ' + ActiveLanguage;
-
-  if LoadStringsFromFile(ExpandConstant(CurrentFileName), Lines) = True then begin
-    for I := 0 to GetArrayLength(Lines) - 1 do begin
-      if Copy(Lines[I], 0, Length(SearchLineStart)) = SearchLineStart then begin
-        Lines[I] := ReplaceLine;
-        SaveStringsToUTF8File(ExpandConstant(CurrentFileName), Lines, False)
-        Break;
-      end;
-    end;
-  end;
-end;
 // Query user whether their data files should be deleted on uninstall.
 procedure CurUninstallStepChanged (CurUninstallStep: TUninstallStep);
 begin
@@ -235,28 +207,64 @@ begin
     end;
   end;
 end;
+// Set LOOT's language in settings.yaml
+procedure SetLootLanguage();
+var
+  LanguageLine: String;
+  File: String;
+  SearchLineStart: String;
+  Lines: TArrayOfString;
+  I: Integer;
+begin
+  LanguageLine := 'language: ' + ActiveLanguage;
+  File := ExpandConstant('{localappdata}\{#MyAppName}\settings.yaml');
+
+  if FileExists(File) then begin
+    SearchLineStart := 'language:';
+
+    if LoadStringsFromFile(File, Lines) = True then begin
+      for I := 0 to GetArrayLength(Lines) - 1 do begin
+        if Copy(Lines[I], 0, Length(SearchLineStart)) = SearchLineStart then begin
+          Lines[I] := LanguageLine;
+          SaveStringsToUTF8File(File, Lines, False)
+          Break;
+        end;
+      end;
+    end;
+  end
+  else begin
+    if ActiveLanguage <> 'en' then
+      SaveStringToFile(File, LanguageLine, False);
+  end;
+end;
 // Run a previous install's uninstaller before starting this installation.
-procedure CurStepChanged(CurStep: TSetupStep);
+procedure RunPreviousVersionUninstaller();
 var
   RegKey: String;
   RegValue: String;
   ResultCode: Integer;
 begin
-  if CurStep = ssInstall then begin
-    // First try using the Inno Setup installer's uninstall Registry key to get
-    // the uninstaller's path. This is necessary instead of just using the
-    // backwards-compatible key because the filename of the  uninstaller created
-    // by Inno Setup can vary.
-    RegKey := ExpandConstant('Software\Microsoft\Windows\CurrentVersion\Uninstall\{#emit SetupSetting("AppId")}_is1');
-    if RegQueryStringValue(HKLM, RegKey, 'UninstallString', RegValue) then begin
-        Exec(RemoveQuotes(RegValue), '/VERYSILENT', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
-    // Now try using the backwards-compatible Registry key, and run the NSIS
-    // uninstaller, which has a fixed filename.
-    end
-    else begin
-      if RegQueryStringValue(HKLM, 'Software\LOOT', 'Installed Path', RegValue) then begin
-        Exec(RegValue + '\Uninstall.exe', '/S', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
-      end;
+  // First try using the Inno Setup installer's uninstall Registry key to get
+  // the uninstaller's path. This is necessary instead of just using the
+  // backwards-compatible key because the filename of the  uninstaller created
+  // by Inno Setup can vary.
+  RegKey := ExpandConstant('Software\Microsoft\Windows\CurrentVersion\Uninstall\{#emit SetupSetting("AppId")}_is1');
+  if RegQueryStringValue(HKLM, RegKey, 'UninstallString', RegValue) then begin
+      Exec(RemoveQuotes(RegValue), '/VERYSILENT', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+  // Now try using the backwards-compatible Registry key, and run the NSIS
+  // uninstaller, which has a fixed filename.
+  end
+  else begin
+    if RegQueryStringValue(HKLM, 'Software\LOOT', 'Installed Path', RegValue) then begin
+      Exec(RegValue + '\Uninstall.exe', '/S', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
     end;
   end;
+end;
+procedure CurStepChanged(CurStep: TSetupStep);
+begin
+  if CurStep = ssInstall then
+    RunPreviousVersionUninstaller();
+
+  if CurStep = ssPostInstall then
+    SetLootLanguage();
 end;
