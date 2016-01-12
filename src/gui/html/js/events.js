@@ -45,7 +45,7 @@ function onChangeGame(evt) {
        filter. Don't need to deactivate the others beforehand. Strictly not
        deactivating the conflicts filter either, just resetting it's value.
        */
-    document.body.removeAttribute('data-conflicts');
+    loot.filters.conflictTargetPluginName = undefined;
 
     /* Clear the UI of all existing game-specific data. Also
        clear the card and li variables for each plugin object. */
@@ -105,18 +105,7 @@ function onUpdateMasterlist() {
   }).catch(handlePromiseError);
 }
 function onSortPlugins() {
-  if (document.body.hasAttribute('data-conflicts')) {
-    /* Deactivate any existing plugin conflict filter. */
-    loot.game.plugins.forEach((plugin) => {
-      plugin.isConflictFilterChecked = false;
-    });
-    /* Un-highlight any existing filter plugin. */
-    const cards = document.getElementById('main').getElementsByTagName('loot-plugin-card');
-    for (let i = 0; i < cards.length; ++i) {
-      cards[i].classList.toggle('highlight', false);
-    }
-    document.body.removeAttribute('data-conflicts');
-  }
+  undoConflictsFilter();
 
   let promise = Promise.resolve();
   if (loot.settings.updateMasterlist) {
@@ -544,24 +533,28 @@ function onEditorClose(evt) {
     document.getElementById('cardsNav').updateSize();
   }).catch(handlePromiseError);
 }
-function onConflictsFilter(evt) {
+function undoConflictsFilter() {
+  loot.filters.conflictTargetPluginName = undefined;
   /* Deactivate any existing plugin conflict filter. */
   loot.game.plugins.forEach((plugin) => {
-    if (plugin.id !== evt.target.id) {
-      plugin.isConflictFilterChecked = false;
-    }
+    plugin.isConflictFilterChecked = false;
   });
   /* Un-highlight any existing filter plugin. */
   const cards = document.getElementById('main').getElementsByTagName('loot-plugin-card');
   for (let i = 0; i < cards.length; ++i) {
     cards[i].classList.toggle('highlight', false);
   }
+}
+function onConflictsFilter(evt) {
+  /* Deactivate any existing plugin conflict filter. */
+  undoConflictsFilter();
   /* evt.detail is true if the filter has been activated. */
   if (evt.detail) {
-    document.body.setAttribute('data-conflicts', evt.target.getName());
+    evt.target.data.isConflictFilterChecked = true;
+    loot.filters.conflictTargetPluginName = evt.target.getName();
     evt.target.classList.toggle('highlight', true);
   } else {
-    document.body.removeAttribute('data-conflicts');
+    loot.filters.conflictTargetPluginName = undefined;
   }
   filterPluginData(loot.game.plugins, loot.filters);
 }
