@@ -251,43 +251,4 @@ TEST_F(GameSettings, YamlDecode) {
     EXPECT_EQ("branch1", game.RepoBranch());
     EXPECT_EQ("", game.GamePath());
 }
-
-TEST(GetGameSettings, AllMissing) {
-    YAML::Node settings;
-
-    std::list<loot::GameSettings> expected = {
-        loot::GameSettings(loot::GameSettings::tes4),
-        loot::GameSettings(loot::GameSettings::tes5),
-        loot::GameSettings(loot::GameSettings::fo3),
-        loot::GameSettings(loot::GameSettings::fonv),
-        loot::GameSettings(loot::GameSettings::fo4)
-    };
-
-    EXPECT_FALSE(settings["games"]);
-    EXPECT_EQ(expected, loot::GetGameSettings(settings));
-    EXPECT_EQ(expected, settings["games"].as<std::list<loot::GameSettings>>());
-}
-
-TEST(GetGameSettings, MissingFallout3) {
-    std::list<loot::GameSettings> initial({
-        loot::GameSettings(loot::GameSettings::tes4, "folder1"),
-        loot::GameSettings(loot::GameSettings::tes5, "folder2"),
-        loot::GameSettings(loot::GameSettings::fonv, "folder3"),
-        loot::GameSettings(loot::GameSettings::fo4, "folder4")
-    });
-
-    YAML::Node settings;
-    settings["games"] = initial;
-
-    std::list<loot::GameSettings> expected = {
-        loot::GameSettings(loot::GameSettings::tes4, "folder1"),
-        loot::GameSettings(loot::GameSettings::tes5, "folder2"),
-        loot::GameSettings(loot::GameSettings::fonv, "folder3"),
-        loot::GameSettings(loot::GameSettings::fo4, "folder4"),
-        loot::GameSettings(loot::GameSettings::fo3)
-    };
-
-    EXPECT_EQ(expected, loot::GetGameSettings(settings));
-    EXPECT_EQ(expected, settings["games"].as<std::list<loot::GameSettings>>());
-}
 #endif

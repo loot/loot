@@ -54,9 +54,6 @@ namespace loot {
     private:
         bool _pluginsFullyLoaded;
     };
-
-    std::list<Game> ToGames(const std::list<GameSettings>& settings);
-    std::list<GameSettings> ToGameSettings(const std::list<Game>& games);
 }
 
 #endif

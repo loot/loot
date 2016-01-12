@@ -132,6 +132,7 @@ set (LOOT_GUI_SRC ${LOOT_SRC}
                   "${CMAKE_SOURCE_DIR}/src/gui/handler.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_handler.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_app.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/gui/loot_settings.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_state.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/scheme.cpp"
                   "${CMAKE_SOURCE_DIR}/src/resource.rc")
@@ -143,6 +144,7 @@ set (LOOT_GUI_HEADERS ${LOOT_HEADERS}
                   "${CMAKE_SOURCE_DIR}/src/gui/handler.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_handler.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_app.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/loot_settings.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_state.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/scheme.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/resource.h")
@@ -160,7 +162,9 @@ set (LOOT_VALIDATOR_SRC ${LOOT_SRC}
 
 set (LOOT_VALIDATOR_HEADERS ${LOOT_HEADERS})
 
-set (LOOT_TESTS_SRC "${CMAKE_SOURCE_DIR}/src/api/loot_db.cpp"
+set (LOOT_TESTS_SRC ${LOOT_SRC}
+					"${CMAKE_SOURCE_DIR}/src/api/loot_db.cpp"
+					"${CMAKE_SOURCE_DIR}/src/gui/loot_settings.cpp"
 				    "${CMAKE_SOURCE_DIR}/src/tests/main.cpp")
 
 set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/fixtures.h"
@@ -188,7 +192,8 @@ set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/fixtures.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/plugin/test_plugin.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/test_metadata_list.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/test_masterlist.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/backend/test_plugin_sorter.h")
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/test_plugin_sorter.h"
+						"${CMAKE_SOURCE_DIR}/src/tests/gui/test_loot_settings.h")
 
 source_group("Header Files" FILES ${LOOT_HEADERS} ${LOOT_GUI_HEADERS} ${LOOT_API_HEADERS} ${LOOT_TESTS_HEADERS})
 
@@ -309,7 +314,7 @@ target_link_libraries (loot${PROJECT_ARCH} ${Boost_LIBRARIES} ${YAML_CPP_LIBRARI
 
 IF (${GTEST_FOUND})
     # Build tests.
-    add_executable(tests ${LOOT_TESTS_SRC} ${LOOT_SRC} ${LOOT_TESTS_HEADERS})
+    add_executable(tests ${LOOT_TESTS_SRC} ${LOOT_TESTS_HEADERS})
     target_link_libraries(tests loot${PROJECT_ARCH} ${Boost_LIBRARIES} ${YAML_CPP_LIBRARIES} ${LOOT_LIBS} ${GTEST_BOTH_LIBRARIES})
 ENDIF ()
 

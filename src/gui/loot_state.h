@@ -25,49 +25,45 @@
 #ifndef __LOOT_GUI_LOOT_STATE__
 #define __LOOT_GUI_LOOT_STATE__
 
-#include "../backend/game/game.h"
-
-#include <include/cef_app.h>
-#include <include/base/cef_lock.h>
-
-#include <yaml-cpp/yaml.h>
+#include "loot_settings.h"
+#include "backend/game/game.h"
 
 namespace loot {
-    class LootState : public CefBase {
+    class LootState : public LootSettings {
     public:
         LootState();
 
         void Init(const std::string& cmdLineGame);
         const std::vector<std::string>& InitErrors() const;
 
+        void save(const boost::filesystem::path& file);
+
         Game& CurrentGame();
         void ChangeGame(const std::string& newGameFolder);
-        void UpdateGames(std::list<GameSettings>& games);
+        void UpdateGamesFromSettings();
+
         // Get the folder names of the installed games.
         std::vector<std::string> InstalledGames();
 
-        const YAML::Node& GetSettings() const;
-        void UpdateSettings(const YAML::Node& settings);
-        void SaveSettings();
-
-        // Used to check if LOOT has unaccepted sorting or metadata changes on quit.
-        int numUnappliedChanges;
+        bool hasUnappliedChanges() const;
+        void incrementUnappliedChangeCounter();
+        void decrementUnappliedChangeCounter();
     private:
-        YAML::Node _settings;
         std::list<Game> _games;
         std::list<Game>::iterator _currentGame;
         std::vector<std::string> _initErrors;
 
+        // Used to check if LOOT has unaccepted sorting or metadata changes on quit.
+        size_t unappliedChangeCounter;
+
         // Select initial game.
         void SelectGame(std::string cmdLineGame);
 
-        // Check if the settings file has the right root keys (doesn't check their values).
-        bool AreSettingsValid();
-        YAML::Node GetDefaultSettings() const;
+        static std::list<Game> ToGames(const std::vector<GameSettings>& settings);
+        static std::vector<GameSettings> ToGameSettings(const std::list<Game>& games);
 
-        // Lock used to protect access to member variables.
-        base::Lock _lock;
-        IMPLEMENT_REFCOUNTING(LootState);
+        // Mutex used to protect access to member variables.
+        std::mutex mutex;
     };
 }
 
