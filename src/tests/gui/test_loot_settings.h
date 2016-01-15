@@ -28,8 +28,6 @@ along with LOOT.  If not, see
 #include "gui/loot_settings.h"
 #include "backend/globals.h"
 
-#include "tests/fixtures.h"
-
 namespace loot {
     namespace test {
         class LootSettings : public ::testing::Test {
