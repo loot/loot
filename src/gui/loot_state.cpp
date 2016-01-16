@@ -239,7 +239,8 @@ namespace loot {
     }
 
     void LootState::decrementUnappliedChangeCounter() {
-        --unappliedChangeCounter;
+        if (unappliedChangeCounter > 0)
+            --unappliedChangeCounter;
     }
 
     void LootState::SelectGame(std::string preferredGame) {
@@ -252,12 +253,12 @@ namespace loot {
         }
 
         // Get iterator to preferred game.
-        _currentGame = find_if(begin(_games), end(_games), [&](auto& game) {
+        _currentGame = find_if(begin(_games), end(_games), [&](Game& game) {
             return (preferredGame.empty() || preferredGame == game.FolderName()) && game.IsInstalled();
         });
         // If the preferred game cannot be found, get the first installed game.
         if (_currentGame == end(_games)) {
-            _currentGame = find_if(begin(_games), end(_games), [](auto& game) {
+            _currentGame = find_if(begin(_games), end(_games), [](Game& game) {
                 return game.IsInstalled();
             });
         }

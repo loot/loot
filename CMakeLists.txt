@@ -165,6 +165,7 @@ set (LOOT_VALIDATOR_HEADERS ${LOOT_HEADERS})
 set (LOOT_TESTS_SRC ${LOOT_SRC}
 					"${CMAKE_SOURCE_DIR}/src/api/loot_db.cpp"
 					"${CMAKE_SOURCE_DIR}/src/gui/loot_settings.cpp"
+					"${CMAKE_SOURCE_DIR}/src/gui/loot_state.cpp"
 				    "${CMAKE_SOURCE_DIR}/src/tests/main.cpp")
 
 set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/fixtures.h"
@@ -193,7 +194,8 @@ set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/fixtures.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/test_metadata_list.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/test_masterlist.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/test_plugin_sorter.h"
-						"${CMAKE_SOURCE_DIR}/src/tests/gui/test_loot_settings.h")
+						"${CMAKE_SOURCE_DIR}/src/tests/gui/test_loot_settings.h"
+						"${CMAKE_SOURCE_DIR}/src/tests/gui/test_loot_state.h")
 
 source_group("Header Files" FILES ${LOOT_HEADERS} ${LOOT_GUI_HEADERS} ${LOOT_API_HEADERS} ${LOOT_TESTS_HEADERS})
 
