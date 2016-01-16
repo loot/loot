@@ -47,12 +47,12 @@ function filterPluginData(plugins, filters) {
     document.getElementById('cardsNav').data = filteredPlugins;
     document.getElementById('pluginCardList').data = filteredPlugins;
 
-    filteredPlugins.forEach((plugin) => {
-      const element = document.getElementById(plugin.id);
-      if (element) {
-        element.onMessagesChange();
+    const pluginCards = document.getElementById('pluginCardList').children;
+    for (let i = 0; i < pluginCards.length; ++i) {
+      if (pluginCards[i].data) {
+        pluginCards[i].updateContent();
       }
-    });
+    }
     document.getElementById('cardsNav').updateSize();
     document.getElementById('pluginCardList').updateSize();
 

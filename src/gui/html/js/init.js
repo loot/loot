@@ -41,9 +41,9 @@
 }(this, (Dialog, dom, Filters, Game, translateStaticText, Plugin, query, Translator) => {
   function setupEventHandlers() {
     /* Set up handlers for filters. */
-    document.getElementById('hideVersionNumbers').addEventListener('change', onToggleDisplayCSS);
-    document.getElementById('hideCRCs').addEventListener('change', onToggleDisplayCSS);
-    document.getElementById('hideBashTags').addEventListener('change', onToggleDisplayCSS);
+    document.getElementById('hideVersionNumbers').addEventListener('change', onSidebarFilterToggle);
+    document.getElementById('hideCRCs').addEventListener('change', onSidebarFilterToggle);
+    document.getElementById('hideBashTags').addEventListener('change', onSidebarFilterToggle);
     document.getElementById('hideNotes').addEventListener('change', onSidebarFilterToggle);
     document.getElementById('hideDoNotCleanMessages').addEventListener('change', onSidebarFilterToggle);
     document.getElementById('hideInactivePlugins').addEventListener('change', onSidebarFilterToggle);

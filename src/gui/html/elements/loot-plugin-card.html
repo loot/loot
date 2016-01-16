@@ -116,11 +116,6 @@ loot-clear-metadata
             font-weight: 400;
             font-size: 1rem;
         }
-        :host-context(#main[data-hide-crc]) content::content > .crc,
-        :host-context(#main[data-hide-tag]) content::content > .tag,
-        :host-context(#main[data-hide-version]) content::content > .version {
-            display: none;
-        }
 
         /* Misc Styling. */
         core-toolbar {
@@ -277,6 +272,13 @@ loot-clear-metadata
                     tooltips[i].setPosition();
                 }
             }
+        },
+
+        updateContent: function() {
+          this.getElementsByClassName('version')[0].textContent = this.data.getCardContent(loot.filters).version;
+          this.onCrcChange();
+          this.onTagsChange();
+          this.onMessagesChange();
         },
 
         onCrcChange: function(oldValue, newValue) {

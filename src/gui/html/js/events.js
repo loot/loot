@@ -1,30 +1,11 @@
 'use strict';
-function saveFilterState(evt) {
-  loot.query('saveFilterState', evt.target.id, evt.target.checked).catch(handlePromiseError);
-}
-function onToggleDisplayCSS(evt) {
-  saveFilterState(evt);
-  const attr = 'data-hide-' + evt.target.getAttribute('data-class');
-  if (evt.target.checked) {
-    document.getElementById('main').setAttribute(attr, true);
-  } else {
-    document.getElementById('main').removeAttribute(attr);
-  }
-
-  if (evt.target.id === 'hideBashTags') {
-    document.getElementById('main').lastElementChild.updateSize();
-  }
-  /* Now perform search again. If there is no current search, this won't
-     do anything. */
-  document.getElementById('searchBar').search();
-}
 function onSidebarFilterToggle(evt) {
   if (evt.target.id !== 'contentFilter') {
     loot.filters[evt.target.id] = evt.target.checked;
   } else {
     loot.filters.contentSearchString = evt.target.value;
   }
-  saveFilterState(evt);
+  loot.query('saveFilterState', evt.target.id, evt.target.checked).catch(handlePromiseError);
   filterPluginData(loot.game.plugins, loot.filters);
 }
 
