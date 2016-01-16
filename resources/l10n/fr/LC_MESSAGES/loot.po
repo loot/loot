@@ -770,7 +770,7 @@ msgstr "Mettre à jour la masterlist"
 # Autre correspondance (Search card) traduite en "Rechercher..."
 #: gui/html/js/l10n.js:228
 msgid "Search Cards"
-msgstr ""
+msgstr "Rechercher"
 
 #: gui/html/js/l10n.js:231
 msgid "Redate Plugins"
