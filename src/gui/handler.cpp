@@ -275,16 +275,11 @@ namespace loot {
         else if (requestName == "closeSettings") {
             BOOST_LOG_TRIVIAL(trace) << "Settings dialog closed and changes accepted, updating settings object.";
 
-            // Update the settings.
-            _lootState.load(request["args"][0]);
-            // If the user has deleted a default game, we don't want to restore it now.
-            // It will be restored when LOOT is next loaded.
             try {
-                BOOST_LOG_TRIVIAL(trace) << "Updating games object.";
-                _lootState.UpdateGamesFromSettings();
-
-                // Also enable/disable debug logging as required.
-                boost::log::core::get()->set_logging_enabled(_lootState.isDebugLoggingEnabled());
+                // Update the settings.
+                // If the user has deleted a default game, we don't want to restore it now.
+                // It will be restored when LOOT is next loaded.
+                _lootState.load(request["args"][0]);
 
                 // Now send back the new list of installed games to the UI.
                 BOOST_LOG_TRIVIAL(trace) << "Getting new list of installed games.";
