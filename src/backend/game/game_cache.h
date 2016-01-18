@@ -52,13 +52,18 @@ namespace loot {
         const Plugin& GetPlugin(const std::string& pluginName) const;
         void AddPlugin(const Plugin&& plugin);
 
+        std::vector<Message> GetMessages() const;
+        void AppendMessage(const Message& message);
+
         void ClearCachedConditions();
         void ClearCachedPlugins();
+        void ClearMessages();
     private:
         Masterlist masterlist;
         MetadataList userlist;
         std::unordered_map<std::string, bool> conditionCache;
         std::unordered_map<std::string, Plugin> plugins;
+        std::vector<Message> messages;
 
         mutable std::mutex mutex;
     };

@@ -44,7 +44,8 @@ namespace loot {
         masterlist(cache.masterlist),
         userlist(cache.userlist),
         conditionCache(cache.conditionCache),
-        plugins(cache.plugins) {}
+        plugins(cache.plugins),
+        messages(cache.messages) {}
 
     GameCache& GameCache::operator=(const GameCache& cache) {
         if (&cache != this) {
@@ -52,6 +53,7 @@ namespace loot {
             userlist = cache.userlist;
             conditionCache = cache.conditionCache;
             plugins = cache.plugins;
+            messages = cache.messages;
         }
 
         return *this;
@@ -108,6 +110,16 @@ namespace loot {
             pair.first->second = plugin;
     }
 
+    std::vector<Message> GameCache::GetMessages() const {
+        return messages;
+    }
+
+    void GameCache::AppendMessage(const Message& message) {
+        std::lock_guard<std::mutex> guard(mutex);
+
+        messages.push_back(message);
+    }
+
     void GameCache::ClearCachedConditions() {
         std::lock_guard<std::mutex> guard(mutex);
 
@@ -118,5 +130,10 @@ namespace loot {
         std::lock_guard<std::mutex> guard(mutex);
 
         plugins.clear();
+    }
+    void GameCache::ClearMessages() {
+        std::lock_guard<std::mutex> guard(mutex);
+
+        messages.clear();
     }
 }

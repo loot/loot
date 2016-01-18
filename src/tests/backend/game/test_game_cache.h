@@ -43,10 +43,14 @@ namespace loot {
 
             cache.CacheCondition("True Condition", true);
             cache.AddPlugin(loot::Plugin(game, "Blank.esm", true));
+            Message expectedMessage(Message::say, "1");
+            cache.AppendMessage(expectedMessage);
 
             loot::GameCache otherCache(cache);
             EXPECT_EQ(std::make_pair(true, true), otherCache.GetCachedCondition("true Condition"));
             EXPECT_EQ("Blank.esm", otherCache.GetPlugin("Blank.esm").Name());
+            ASSERT_EQ(1, otherCache.GetMessages().size());
+            EXPECT_EQ(expectedMessage, otherCache.GetMessages()[0]);
         }
 
         TEST_F(GameCache, assignmentOperatorShouldCopyCachedData) {
@@ -56,10 +60,14 @@ namespace loot {
 
             cache.CacheCondition("True Condition", true);
             cache.AddPlugin(loot::Plugin(game, "Blank.esm", true));
+            Message expectedMessage(Message::say, "1");
+            cache.AppendMessage(expectedMessage);
 
             loot::GameCache otherCache = cache;
             EXPECT_EQ(std::make_pair(true, true), otherCache.GetCachedCondition("true Condition"));
             EXPECT_EQ("Blank.esm", otherCache.GetPlugin("Blank.esm").Name());
+            ASSERT_EQ(1, otherCache.GetMessages().size());
+            EXPECT_EQ(expectedMessage, otherCache.GetMessages()[0]);
         }
 
         TEST_F(GameCache, gettingATrueConditionShouldReturnATrueTruePair) {
@@ -155,6 +163,34 @@ namespace loot {
             cache.ClearCachedPlugins();
 
             EXPECT_TRUE(cache.GetPlugins().empty());
+        }
+
+        TEST_F(GameCache, noMessagesShouldBeStoredByDefault) {
+            EXPECT_TRUE(cache.GetMessages().empty());
+        }
+
+        TEST_F(GameCache, appendingMessagesShouldStoreThemInTheGivenOrder) {
+            std::vector<Message> messages({
+                Message(Message::say, "1"),
+                Message(Message::error, "2"),
+            });
+            for (const auto& message : messages)
+                cache.AppendMessage(message);
+
+            EXPECT_EQ(messages, cache.GetMessages());
+        }
+
+        TEST_F(GameCache, clearingMessagesShouldRemoveAllStoredMessages) {
+            std::vector<Message> messages({
+                Message(Message::say, "1"),
+                Message(Message::error, "2"),
+            });
+            for (const auto& message : messages)
+                cache.AppendMessage(message);
+
+            cache.ClearMessages();
+
+            EXPECT_TRUE(cache.GetMessages().empty());
         }
     }
 }
