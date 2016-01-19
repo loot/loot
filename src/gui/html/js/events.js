@@ -86,7 +86,10 @@ function onUpdateMasterlist() {
   }).catch(handlePromiseError);
 }
 function onSortPlugins() {
-  undoConflictsFilter();
+  if (undoConflictsFilter()) {
+    /* Conflicts filter was undone, update the displayed cards. */
+    filterPluginData(loot.game.plugins, loot.filters);
+  }
 
   let promise = Promise.resolve();
   if (loot.settings.updateMasterlist) {
@@ -515,6 +518,8 @@ function onEditorClose(evt) {
   }).catch(handlePromiseError);
 }
 function undoConflictsFilter() {
+  let wasConflictsFilterEnabled = (loot.filters.conflictTargetPluginName);
+
   loot.filters.conflictTargetPluginName = undefined;
   /* Deactivate any existing plugin conflict filter. */
   loot.game.plugins.forEach((plugin) => {
@@ -525,6 +530,8 @@ function undoConflictsFilter() {
   for (let i = 0; i < cards.length; ++i) {
     cards[i].classList.toggle('highlight', false);
   }
+
+  return wasConflictsFilterEnabled;
 }
 function onConflictsFilter(evt) {
   /* Deactivate any existing plugin conflict filter. */
