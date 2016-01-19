@@ -152,6 +152,11 @@ namespace loot {
             BOOST_LOG_TRIVIAL(info) << '\t' << graph[vertex].Name();
             plugins.push_back(graph[vertex]);
         }
+
+        // Clear any existing game-specific messages, as these only relate to
+        // state that has been changed by sorting.
+        game.ClearMessages();
+
         return plugins;
     }
 

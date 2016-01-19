@@ -91,6 +91,29 @@ TEST_F(PluginSorter, Sort) {
     EXPECT_TRUE(std::equal(begin(sorted), end(sorted), begin(expectedSortedOrder)));
 }
 
+TEST_F(PluginSorter, sortingShouldClearExistingGameMessages) {
+    ASSERT_NO_THROW(game.LoadPlugins(false));
+    game.AppendMessage(loot::Message(loot::Message::say, "1"));
+    ASSERT_FALSE(game.GetMessages().empty());
+
+    loot::PluginSorter ps;
+    std::list<loot::Plugin> sorted = ps.Sort(game, loot::Language::english, callback);
+    EXPECT_TRUE(game.GetMessages().empty());
+}
+
+TEST_F(PluginSorter, failedSortShouldNotClearExistingGameMessages) {
+    ASSERT_NO_THROW(game.LoadPlugins(false));
+    loot::PluginMetadata plugin("Blank.esm");
+    plugin.LoadAfter({loot::File("Blank - Master Dependent.esm")});
+    game.GetUserlist().AddPlugin(plugin);
+    game.AppendMessage(loot::Message(loot::Message::say, "1"));
+    ASSERT_FALSE(game.GetMessages().empty());
+
+    loot::PluginSorter ps;
+    EXPECT_ANY_THROW(ps.Sort(game, loot::Language::english, callback));
+    EXPECT_FALSE(game.GetMessages().empty());
+}
+
 TEST_F(PluginSorter, Sort_HeadersOnly) {
     ASSERT_NO_THROW(game.LoadPlugins(true));
 
