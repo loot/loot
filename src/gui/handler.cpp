@@ -915,6 +915,10 @@ namespace loot {
             });
 
             YAML::Node node;
+
+            // Store global messages in case they have changed.
+            node["globalMessages"] = GetGeneralMessages();
+
             for (const auto &plugin : plugins) {
                 YAML::Node pluginNode;
 
@@ -929,7 +933,7 @@ namespace loot {
                     pluginNode[key] = pair.second;
                 }
 
-                node.push_back(pluginNode);
+                node["plugins"].push_back(pluginNode);
             }
             _lootState.incrementUnappliedChangeCounter();
 
@@ -954,6 +958,10 @@ namespace loot {
         messages.insert(end(messages),
                         begin(metadataListMessages),
                         end(metadataListMessages));
+        auto gameMessages = _lootState.CurrentGame().GetMessages();
+        messages.insert(end(messages),
+                        begin(gameMessages),
+                        end(gameMessages));
 
         try {
             BOOST_LOG_TRIVIAL(info) << "Using message language: " << _lootState.getLanguage().Name();

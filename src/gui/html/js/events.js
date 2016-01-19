@@ -103,11 +103,13 @@ function onSortPlugins() {
       return;
     }
     /* Check if sorted load order differs from current load order. */
-    const loadOrderIsUnchanged = result.every((plugin, index) => {
+    const loadOrderIsUnchanged = result.plugins.every((plugin, index) => {
       return plugin.name === loot.game.plugins[index].name;
     });
     if (loadOrderIsUnchanged) {
-      result.forEach((plugin) => {
+      loot.game.globalMessages = result.globalMessages;
+
+      result.plugins.forEach((plugin) => {
         const existingPlugin = loot.game.plugins.find((item) => {
           return item.name === plugin.name;
         });
@@ -125,7 +127,7 @@ function onSortPlugins() {
     }
     loot.game.oldLoadOrder = loot.game.plugins;
     loot.game.loadOrder = [];
-    result.forEach((plugin) => {
+    result.plugins.forEach((plugin) => {
       let existingPlugin = loot.game.plugins.find((item) => {
         return item.name === plugin.name;
       });
