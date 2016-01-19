@@ -39,13 +39,15 @@ namespace fs = boost::filesystem;
 namespace lc = boost::locale;
 
 namespace loot {
-    GameCache::GameCache() {}
+    GameCache::GameCache() : isLoadOrderSorted(false) {}
+
     GameCache::GameCache(const GameCache& cache) :
         masterlist(cache.masterlist),
         userlist(cache.userlist),
         conditionCache(cache.conditionCache),
         plugins(cache.plugins),
-        messages(cache.messages) {}
+        messages(cache.messages),
+        isLoadOrderSorted(cache.isLoadOrderSorted) {}
 
     GameCache& GameCache::operator=(const GameCache& cache) {
         if (&cache != this) {
@@ -54,6 +56,7 @@ namespace loot {
             conditionCache = cache.conditionCache;
             plugins = cache.plugins;
             messages = cache.messages;
+            isLoadOrderSorted = cache.isLoadOrderSorted;
         }
 
         return *this;
@@ -111,13 +114,21 @@ namespace loot {
     }
 
     std::vector<Message> GameCache::GetMessages() const {
-        return messages;
+        vector<Message> output(messages);
+        if (!isLoadOrderSorted)
+            output.push_back(Message(Message::warn, "You have not sorted your load order this session."));
+
+        return output;
     }
 
     void GameCache::AppendMessage(const Message& message) {
         std::lock_guard<std::mutex> guard(mutex);
 
         messages.push_back(message);
+    }
+
+    void GameCache::SetLoadOrderSorted(bool isLoadOrderSorted) {
+        this->isLoadOrderSorted = isLoadOrderSorted;
     }
 
     void GameCache::ClearCachedConditions() {

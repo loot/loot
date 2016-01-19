@@ -102,13 +102,14 @@ function onSortPlugins() {
     if (!result) {
       return;
     }
+
+    loot.game.globalMessages = result.globalMessages;
+
     /* Check if sorted load order differs from current load order. */
     const loadOrderIsUnchanged = result.plugins.every((plugin, index) => {
       return plugin.name === loot.game.plugins[index].name;
     });
     if (loadOrderIsUnchanged) {
-      loot.game.globalMessages = result.globalMessages;
-
       result.plugins.forEach((plugin) => {
         const existingPlugin = loot.game.plugins.find((item) => {
           return item.name === plugin.name;
@@ -177,12 +178,15 @@ function onApplySort() {
   }).catch(handlePromiseError);
 }
 function onCancelSort() {
-  return loot.query('cancelSort').then(() => {
+  return loot.query('cancelSort').then(JSON.parse).then((messages) => {
     /* Sort UI elements again according to stored old load order. */
     loot.game.plugins = loot.game.oldLoadOrder;
     filterPluginData(loot.game.plugins, loot.filters);
     delete loot.game.loadOrder;
     delete loot.game.oldLoadOrder;
+
+    /* Update general messages */
+    loot.game.globalMessages = messages;
 
     /* Now show the masterlist update buttons, and hide the accept and
        cancel sort buttons. */

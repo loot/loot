@@ -156,6 +156,7 @@ namespace loot {
         // Clear any existing game-specific messages, as these only relate to
         // state that has been changed by sorting.
         game.ClearMessages();
+        game.SetLoadOrderSorted(true);
 
         return plugins;
     }
