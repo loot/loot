@@ -635,7 +635,6 @@ namespace loot {
                 catch (...) {}
             }
 
-            list<Message> parsingErrors;
             if (isFirstLoad) {
                 //Parse masterlist, don't update it.
                 if (fs::exists(_lootState.CurrentGame().MasterlistPath())) {
@@ -645,7 +644,7 @@ namespace loot {
                         _lootState.CurrentGame().GetMasterlist().Load(_lootState.CurrentGame().MasterlistPath());
                     }
                     catch (exception &e) {
-                        parsingErrors.push_back(Message(Message::error, (boost::format(loc::translate(
+                        _lootState.CurrentGame().GetMasterlist().AppendMessage(Message(Message::error, (boost::format(loc::translate(
                             "An error occurred while parsing the masterlist: %1%. "
                             "This probably happened because an update to LOOT changed "
                             "its metadata syntax support. Try updating your masterlist "
@@ -662,7 +661,7 @@ namespace loot {
                         _lootState.CurrentGame().GetUserlist().Load(_lootState.CurrentGame().UserlistPath());
                     }
                     catch (exception &e) {
-                        parsingErrors.push_back(Message(Message::error, (boost::format(loc::translate(
+                        _lootState.CurrentGame().GetUserlist().AppendMessage(Message(Message::error, (boost::format(loc::translate(
                             "An error occurred while parsing the userlist: %1%. "
                             "This probably happened because an update to LOOT changed "
                             "its metadata syntax support. Your user metadata will have "
@@ -698,6 +697,10 @@ namespace loot {
                 gameNode["masterlist"]["revision"] = e.what();
                 gameNode["masterlist"]["date"] = e.what();
             }
+
+            // Now store global messages.
+            SendProgressUpdate(frame, loc::translate("Loading general messages..."));
+            gameNode["globalMessages"] = GetGeneralMessages();
 
             // Now store plugin data.
             SendProgressUpdate(frame, loc::translate("Merging and evaluating plugin metadata..."));
@@ -765,37 +768,6 @@ namespace loot {
                 gameNode["plugins"].push_back(pluginNode);
             }
 
-            SendProgressUpdate(frame, loc::translate("Loading general messages..."));
-            BOOST_LOG_TRIVIAL(info) << "Using message language: " << _lootState.getLanguage().Name();
-
-            //Evaluate any conditions in the global messages.
-            BOOST_LOG_TRIVIAL(debug) << "Evaluating global message conditions.";
-            list<Message> messages = parsingErrors;
-            auto metadataListMessages = _lootState.CurrentGame().GetMasterlist().Messages();
-            messages.insert(end(messages),
-                            begin(metadataListMessages),
-                            end(metadataListMessages));
-            metadataListMessages = _lootState.CurrentGame().GetUserlist().Messages();
-            messages.insert(messages.end(),
-                            begin(metadataListMessages),
-                            end(metadataListMessages));
-            try {
-                list<Message>::iterator it = messages.begin();
-                while (it != messages.end()) {
-                    if (!it->EvalCondition(_lootState.CurrentGame(), _lootState.getLanguage().Code()))
-                        it = messages.erase(it);
-                    else
-                        ++it;
-                }
-            }
-            catch (std::exception& e) {
-                BOOST_LOG_TRIVIAL(error) << "A global message contains a condition that could not be evaluated. Details: " << e.what();
-                messages.push_back(Message(Message::error, (format(loc::translate("A global message contains a condition that could not be evaluated. Details: %1%")) % e.what()).str()));
-            }
-
-            // Now store global messages.
-            gameNode["globalMessages"] = messages;
-
             callback->Success(JSON::stringify(gameNode));
         }
         catch (loot::error &e) {
@@ -810,10 +782,8 @@ namespace loot {
 
     void Handler::UpdateMasterlist(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback) {
         try {
-            BOOST_LOG_TRIVIAL(debug) << "Updating and parsing masterlist.";
-            BOOST_LOG_TRIVIAL(info) << "Using message language: " << _lootState.getLanguage().Name();
-
             // Update / parse masterlist.
+            BOOST_LOG_TRIVIAL(debug) << "Updating and parsing masterlist.";
             bool wasChanged = true;
             try {
                 SendProgressUpdate(frame, loc::translate("Updating and parsing masterlist..."));
@@ -854,6 +824,9 @@ namespace loot {
                     gameNode["masterlist"]["date"] = e.what();
                 }
 
+                // Store global messages in case they have changed.
+                gameNode["globalMessages"] = GetGeneralMessages();
+
                 for (const auto& plugin : _lootState.CurrentGame().GetPlugins()) {
                     Plugin mlistPlugin(plugin);
                     mlistPlugin.MergeMetadata(_lootState.CurrentGame().GetMasterlist().FindPlugin(plugin));
@@ -881,26 +854,6 @@ namespace loot {
 
                     gameNode["plugins"].push_back(pluginNode);
                 }
-
-                //Evaluate any conditions in the global messages.
-                BOOST_LOG_TRIVIAL(debug) << "Evaluating global message conditions.";
-                list<Message> messages = _lootState.CurrentGame().GetMasterlist().Messages();
-                try {
-                    list<Message>::iterator it = messages.begin();
-                    while (it != messages.end()) {
-                        if (!it->EvalCondition(_lootState.CurrentGame(), _lootState.getLanguage().Code()))
-                            it = messages.erase(it);
-                        else
-                            ++it;
-                    }
-                }
-                catch (std::exception& e) {
-                    BOOST_LOG_TRIVIAL(error) << "A global message contains a condition that could not be evaluated. Details: " << e.what();
-                    messages.push_back(Message(Message::error, (format(loc::translate("A global message contains a condition that could not be evaluated. Details: %1%")) % e.what()).str()));
-                }
-
-                // Now store global messages from masterlist.
-                gameNode["globalMessages"] = messages;
 
                 callback->Success(JSON::stringify(gameNode));
             }
@@ -989,6 +942,35 @@ namespace loot {
             BOOST_LOG_TRIVIAL(error) << "Failed to sort plugins. Details: " << e.what();
             callback->Failure(e.code(), (boost::format(loc::translate("Failed to sort plugins. Details: %1%")) % e.what()).str());
         }
+    }
+
+    std::vector<Message> Handler::GetGeneralMessages() const {
+        vector<Message> messages;
+        auto metadataListMessages = _lootState.CurrentGame().GetMasterlist().Messages();
+        messages.insert(end(messages),
+                        begin(metadataListMessages),
+                        end(metadataListMessages));
+        metadataListMessages = _lootState.CurrentGame().GetUserlist().Messages();
+        messages.insert(end(messages),
+                        begin(metadataListMessages),
+                        end(metadataListMessages));
+
+        try {
+            BOOST_LOG_TRIVIAL(info) << "Using message language: " << _lootState.getLanguage().Name();
+            auto it = begin(messages);
+            while (it != end(messages)) {
+                if (!it->EvalCondition(_lootState.CurrentGame(), _lootState.getLanguage().Code()))
+                    it = messages.erase(it);
+                else
+                    ++it;
+            }
+        }
+        catch (std::exception& e) {
+            BOOST_LOG_TRIVIAL(error) << "A global message contains a condition that could not be evaluated. Details: " << e.what();
+            messages.push_back(Message(Message::error, (format(loc::translate("A global message contains a condition that could not be evaluated. Details: %1%")) % e.what()).str()));
+        }
+
+        return messages;
     }
 
     YAML::Node Handler::GenerateDerivedMetadata(const Plugin& file, const PluginMetadata& masterlist, const PluginMetadata& userlist) {

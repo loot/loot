@@ -69,6 +69,7 @@ namespace loot {
         std::string ClearPluginMetadata(const std::string& pluginName);
         std::string ApplyUserEdits(const YAML::Node& pluginMetadata);
 
+        std::vector<Message> GetGeneralMessages() const;
         YAML::Node GenerateDerivedMetadata(const std::string& pluginName);
         YAML::Node GenerateDerivedMetadata(const Plugin& file, const PluginMetadata& masterlist, const PluginMetadata& userlist);
 
