@@ -52,6 +52,7 @@
 #include "backend/test_masterlist.h"
 #include "backend/test_plugin_sorter.h"
 #include "gui/test_loot_settings.h"
+#include "gui/test_loot_state.h"
 
 #include <boost/log/core.hpp>
 

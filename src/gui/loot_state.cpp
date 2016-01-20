@@ -52,6 +52,54 @@ namespace fs = boost::filesystem;
 namespace loot {
     LootState::LootState() : unappliedChangeCounter(0), _currentGame(_games.end()) {}
 
+    void LootState::load(YAML::Node& settings) {
+        std::lock_guard<std::mutex> guard(mutex);
+
+        LootSettings::load(settings);
+
+        // Enable/disable debug logging in case it has changed.
+        boost::log::core::get()->set_logging_enabled(isDebugLoggingEnabled());
+
+        // Update existing games, add new games.
+        unordered_set<string> newGameFolders;
+        BOOST_LOG_TRIVIAL(trace) << "Updating existing games and adding new games.";
+        for (const auto &game : getGameSettings()) {
+            auto pos = find(_games.begin(), _games.end(), game);
+
+            if (pos != _games.end()) {
+                pos->SetName(game.Name())
+                    .SetMaster(game.Master())
+                    .SetRepoURL(game.RepoURL())
+                    .SetRepoBranch(game.RepoBranch())
+                    .SetGamePath(game.GamePath())
+                    .SetRegistryKey(game.RegistryKey());
+            }
+            else {
+                BOOST_LOG_TRIVIAL(trace) << "Adding new game entry for: " << game.FolderName();
+                _games.push_back(game);
+            }
+
+            newGameFolders.insert(game.FolderName());
+        }
+
+        // Remove deleted games. As the current game is stored using its index,
+        // removing an earlier game may invalidate it.
+        BOOST_LOG_TRIVIAL(trace) << "Removing deleted games.";
+        for (auto it = _games.begin(); it != _games.end();) {
+            if (newGameFolders.find(it->FolderName()) == newGameFolders.end()) {
+                BOOST_LOG_TRIVIAL(trace) << "Removing game: " << it->FolderName();
+                it = _games.erase(it);
+            }
+            else
+                ++it;
+        }
+
+        // Re-initialise the current game in case the game path setting was changed.
+        _currentGame->Init(true);
+        // Update game path in settings object.
+        storeGameSettings(ToGameSettings(_games));
+    }
+
     void LootState::Init(const std::string& cmdLineGame) {
         // Do some preliminary locale / UTF-8 support setup here, in case the settings file reading requires it.
         //Boost.Locale initialisation: Specify location of language dictionaries.
@@ -75,7 +123,7 @@ namespace loot {
         }
         if (fs::exists(g_path_settings)) {
             try {
-                load(g_path_settings);
+                LootSettings::load(g_path_settings);
             }
             catch (exception& e) {
                 _initErrors.push_back((format(translate("Error: Settings parsing failed. %1%")) % e.what()).str());
@@ -159,50 +207,6 @@ namespace loot {
         LootSettings::save(file);
     }
 
-    void LootState::UpdateGamesFromSettings() {
-        std::lock_guard<std::mutex> guard(mutex);
-
-        unordered_set<string> newGameFolders;
-
-        // Update existing games, add new games.
-        BOOST_LOG_TRIVIAL(trace) << "Updating existing games and adding new games.";
-        for (const auto &game : getGameSettings()) {
-            auto pos = find(_games.begin(), _games.end(), game);
-
-            if (pos != _games.end()) {
-                pos->SetName(game.Name())
-                    .SetMaster(game.Master())
-                    .SetRepoURL(game.RepoURL())
-                    .SetRepoBranch(game.RepoBranch())
-                    .SetGamePath(game.GamePath())
-                    .SetRegistryKey(game.RegistryKey());
-            }
-            else {
-                BOOST_LOG_TRIVIAL(trace) << "Adding new game entry for: " << game.FolderName();
-                _games.push_back(game);
-            }
-
-            newGameFolders.insert(game.FolderName());
-        }
-
-        // Remove deleted games. As the current game is stored using its index,
-        // removing an earlier game may invalidate it.
-        BOOST_LOG_TRIVIAL(trace) << "Removing deleted games.";
-        for (auto it = _games.begin(); it != _games.end();) {
-            if (newGameFolders.find(it->FolderName()) == newGameFolders.end()) {
-                BOOST_LOG_TRIVIAL(trace) << "Removing game: " << it->FolderName();
-                it = _games.erase(it);
-            }
-            else
-                ++it;
-        }
-
-        // Re-initialise the current game in case the game path setting was changed.
-        _currentGame->Init(true);
-        // Update game path in settings object.
-        storeGameSettings(ToGameSettings(_games));
-    }
-
     void LootState::ChangeGame(const std::string& newGameFolder) {
         std::lock_guard<std::mutex> guard(mutex);
 
@@ -239,7 +243,8 @@ namespace loot {
     }
 
     void LootState::decrementUnappliedChangeCounter() {
-        --unappliedChangeCounter;
+        if (unappliedChangeCounter > 0)
+            --unappliedChangeCounter;
     }
 
     void LootState::SelectGame(std::string preferredGame) {
@@ -252,12 +257,12 @@ namespace loot {
         }
 
         // Get iterator to preferred game.
-        _currentGame = find_if(begin(_games), end(_games), [&](auto& game) {
+        _currentGame = find_if(begin(_games), end(_games), [&](Game& game) {
             return (preferredGame.empty() || preferredGame == game.FolderName()) && game.IsInstalled();
         });
         // If the preferred game cannot be found, get the first installed game.
         if (_currentGame == end(_games)) {
-            _currentGame = find_if(begin(_games), end(_games), [](auto& game) {
+            _currentGame = find_if(begin(_games), end(_games), [](Game& game) {
                 return game.IsInstalled();
             });
         }

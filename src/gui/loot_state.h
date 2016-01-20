@@ -33,6 +33,7 @@ namespace loot {
     public:
         LootState();
 
+        void load(YAML::Node& settings);
         void Init(const std::string& cmdLineGame);
         const std::vector<std::string>& InitErrors() const;
 
@@ -40,7 +41,6 @@ namespace loot {
 
         Game& CurrentGame();
         void ChangeGame(const std::string& newGameFolder);
-        void UpdateGamesFromSettings();
 
         // Get the folder names of the installed games.
         std::vector<std::string> InstalledGames();
