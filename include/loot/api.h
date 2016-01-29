@@ -3,7 +3,7 @@
     A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
     Fallout: New Vegas.
 
-    Copyright (C) 2013-2015    WrinklyNinja
+    Copyright (C) 2013-2016    WrinklyNinja
 
     This file is part of LOOT.
 
@@ -61,7 +61,18 @@
  *      "docs/licenses/Licenses.txt" file.
  *
  * @section history_sec Version History
- *      ## 0.8.1 - 27 September 2015*
+ *      ## 0.9.0 - *X Y 2016*
+ *        * Moved API header location to the more standard `include/loot/api.h`.
+ *        * Documented LOOT's masterlist versioning system.
+ *        * Made all API outputs fully const to make it clear they should not
+ *          be modified and to avoid internal const casting.
+ *        * Removed the `loot_cleanup()` function, as the one string it used to
+ *          destroy is now stored on the stack and so destroyed when the API is
+ *          unloaded.
+ *        * The `loot_db` type is now an opaque struct, and functions that used
+ *          to take it as a value now take a pointer to it.
+ *
+ *      ## 0.8.1 - *27 September 2015*
  *
  *        * Fixed crash when loading plugins due to lack of thread safety.
  *        * Fixed masterlist updater and validator not checking for valid
