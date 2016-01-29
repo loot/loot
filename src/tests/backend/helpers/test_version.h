@@ -3,7 +3,7 @@
 A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
 Fallout: New Vegas.
 
-Copyright (C) 2014-2015    WrinklyNinja
+Copyright (C) 2014-2016    WrinklyNinja
 
 This file is part of LOOT.
 
@@ -86,8 +86,8 @@ namespace loot {
             // Found in a Bashed Patch. Though the timestamp isn't useful to
             // LOOT, it is semantically a version, and extracting it is far
             // easier than trying to skip it and the number of records changed.
-            Version version(std::string("Updated: 10/09/2015 13:15:18\r\n\r\nRecords Changed: 43"));
-            EXPECT_EQ("10/09/2015 13:15:18", version.AsString());
+            Version version(std::string("Updated: 10/09/2016 13:15:18\r\n\r\nRecords Changed: 43"));
+            EXPECT_EQ("10/09/2016 13:15:18", version.AsString());
         }
 
         TEST(Version, shouldNotExtractTrailingPeriods) {
