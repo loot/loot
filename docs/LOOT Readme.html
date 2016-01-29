@@ -538,6 +538,23 @@ A copy of the license is included in the file named "GNU FDL v1.3.txt".</blockqu
 <h2 id="history">Version History</h2>
 <p>Only program history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+<h3>0.9.0 - <i>X Y 2016</i></h3>
+<ul>
+    <li>Added Fallout 4 support.</li>
+    <li>Replaced references to "BSAs" with the more generic "Archives" as Fallout 4's BSA equivalents use a different file extension.</li>
+    <li>Fixed an error when attempting to redate plugins that are no longer installed.</li>
+    <li>Fixed the sorting process positioning some plugins incorrectly due to a bug involving priority values.</li>
+    <li>Changed the sorting process so that it recognises when the sorted load order is identical to the existing load order and informs the user, avoiding unnecessary filesystem interaction.</li>
+    <li>Reimplemented LOOT's settings file handling, fixing crashes due to invalid settings values and allowing missing settings to use their default values.</li>
+    <li>Reimplemented plugin version string extraction to improve its accuracy and maintainability.</li>
+    <li>Optimised plugin CRC, file and version condition evaluation.</li>
+    <li>Changed the installer so that it only creates one shortcut for LOOT in the Start menu, following Microsoft guidelines.</li>
+    <li>Updated French and Danish translations.</li>
+    <li>Refactored and improved the quality of a lot of code.</li>
+    <li>Updated Boost (1.60), CEF (3.2556.1368.g535c4fb), libespm (2.5.0), libgit2 (v0.23.4) and libloadorder (7.0.0) dependencies.</li>
+    <li>Fixed native Linux and 64-bit build errors. Such builds are unsupported and no official builds are planned.</li>
+</ul>
+
 <h3>0.8.1 - <i>27 September 2015</i></h3>
 <ul>
     <li>Fixed crash when loading plugins due to lack of thread safety.</li>
