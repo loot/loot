@@ -1,16 +1,10 @@
 {
-  "name": "report",
-  "version": "0.7.0",
-  "description": "Load order optimisation tool",
-  "main": "report.html",
-  "license": "GPL",
+  "name": "LOOT",
   "private": true,
   "ignore": [
     "**/.*",
     "node_modules",
-    "bower_components",
-    "test",
-    "tests"
+    "bower_components"
   ],
   "dependencies": {
     "polymer": "Polymer/polymer#~0.5.0",
