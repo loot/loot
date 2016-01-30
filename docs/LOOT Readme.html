@@ -9,49 +9,49 @@
     font-family: 'Roboto';
     font-style: normal;
     font-weight: 300;
-    src: url('../resources/report/fonts/Roboto-Light.ttf');
+    src: url('../resources/ui/fonts/Roboto-Light.ttf');
 }
 @font-face {
     font-family: 'Roboto';
     font-style: italic;
     font-weight: 300;
-    src: url('../resources/report/fonts/Roboto-LightItalic.ttf');
+    src: url('../resources/ui/fonts/Roboto-LightItalic.ttf');
 }
 @font-face {
     font-family: 'Roboto';
     font-style: normal;
     font-weight: 400;
-    src: url('../resources/report/fonts/Roboto-Regular.ttf');
+    src: url('../resources/ui/fonts/Roboto-Regular.ttf');
 }
 @font-face {
     font-family: 'Roboto';
     font-style: italic;
     font-weight: 400;
-    src: url('../resources/report/fonts/Roboto-Italic.ttf');
+    src: url('../resources/ui/fonts/Roboto-Italic.ttf');
 }
 @font-face {
     font-family: 'Roboto';
     font-style: normal;
     font-weight: 500;
-    src: url('../resources/report/fonts/Roboto-Medium.ttf');
+    src: url('../resources/ui/fonts/Roboto-Medium.ttf');
 }
 @font-face {
     font-family: 'Roboto';
     font-style: italic;
     font-weight: 500;
-    src: url('../resources/report/fonts/Roboto-MediumItalic.ttf');
+    src: url('../resources/ui/fonts/Roboto-MediumItalic.ttf');
 }
 @font-face {
     font-family: 'Roboto';
     font-style: normal;
     font-weight: 700;
-    src: url('../resources/report/fonts/Roboto-Bold.ttf');
+    src: url('../resources/ui/fonts/Roboto-Bold.ttf');
 }
 @font-face {
     font-family: 'Roboto';
     font-style: italic;
     font-weight: 700;
-    src: url('../resources/report/fonts/Roboto-BoldItalic.ttf');
+    src: url('../resources/ui/fonts/Roboto-BoldItalic.ttf');
 }
 
 /* Typography */
@@ -168,7 +168,7 @@ var {
     A load order optimisation tool for Oblivion, Skyrim, Fallout 3,
     Fallout: New Vegas and Fallout 4.
 
-    Copyright (C) 2012–2015    WrinklyNinja
+    Copyright (C) 2012–2016    WrinklyNinja
 
     This file is part of LOOT.
 
@@ -472,7 +472,7 @@ var {
 </table>
 
 <h2 id="themes">Themes</h2>
-<p>LOOT's user interface has experimental support for the use of alternative and custom CSS themes. To use a theme, place its CSS file into the <code>resources/report/css</code> folder inside LOOT's installation folder, and rename the file to <code>theme.css</code>. LOOT will then load this file when it launches. A dark user interface theme is provided with LOOT: to use it, rename <code>dark-theme.css</code> in the <code>resources/report/css</code> folder to <code>theme.css</code>. Theme support is experimental because future updates to LOOT's user interface may break existing CSS selectors.</p>
+<p>LOOT's user interface has experimental support for the use of alternative and custom CSS themes. To use a theme, place its CSS file into the <code>resources/ui/css</code> folder inside LOOT's installation folder, and rename the file to <code>theme.css</code>. LOOT will then load this file when it launches. A dark user interface theme is provided with LOOT: to use it, rename <code>dark-theme.css</code> in the <code>resources/ui/css</code> folder to <code>theme.css</code>. Theme support is experimental because future updates to LOOT's user interface may break existing CSS selectors.</p>
 
 
 <h2 id="contrib">Contributing &amp; Support</h2>
@@ -527,7 +527,7 @@ var {
 <p>LOOT has been specifically designed to prevent it being locked into the LOOT Team's official masterlist repositories. Nevertheless, the LOOT Team appeals to the community to avoid the distribution of unofficial masterlists, as this would only hamper the effort to create one set of stores for load order information. Any issues with a masterlist are best brought to the attention of the LOOT Team so that they may be remedied.
 
 <p>GNU Free Documentation License Version 1.3 Notice:
-<blockquote>Copyright (C)  2012&mdash;2015  WrinklyNinja<br />
+<blockquote>Copyright (C)  2012&mdash;2016  WrinklyNinja<br />
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.3
 or any later version published by the Free Software Foundation;
@@ -537,6 +537,23 @@ A copy of the license is included in the file named "GNU FDL v1.3.txt".</blockqu
 
 <h2 id="history">Version History</h2>
 <p>Only program history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
+
+<h3>0.9.0 - <i>X Y 2016</i></h3>
+<ul>
+    <li>Added Fallout 4 support.</li>
+    <li>Replaced references to "BSAs" with the more generic "Archives" as Fallout 4's BSA equivalents use a different file extension.</li>
+    <li>Fixed an error when attempting to redate plugins that are no longer installed.</li>
+    <li>Fixed the sorting process positioning some plugins incorrectly due to a bug involving priority values.</li>
+    <li>Changed the sorting process so that it recognises when the sorted load order is identical to the existing load order and informs the user, avoiding unnecessary filesystem interaction.</li>
+    <li>Reimplemented LOOT's settings file handling, fixing crashes due to invalid settings values and allowing missing settings to use their default values.</li>
+    <li>Reimplemented plugin version string extraction to improve its accuracy and maintainability.</li>
+    <li>Optimised plugin CRC, file and version condition evaluation.</li>
+    <li>Changed the installer so that it only creates one shortcut for LOOT in the Start menu, following Microsoft guidelines.</li>
+    <li>Updated French and Danish translations.</li>
+    <li>Refactored and improved the quality of a lot of code.</li>
+    <li>Updated Boost (1.60), CEF (3.2556.1368.g535c4fb), libespm (2.5.0), libgit2 (v0.23.4) and libloadorder (7.0.0) dependencies.</li>
+    <li>Fixed native Linux and 64-bit build errors. Such builds are unsupported and no official builds are planned.</li>
+</ul>
 
 <h3>0.8.1 - <i>27 September 2015</i></h3>
 <ul>
