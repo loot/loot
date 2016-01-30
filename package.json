@@ -24,7 +24,7 @@
     "grunt-saucelabs": "^8.6.2",
     "mocha": "^2.3.4",
     "should": "^8.0.1",
-    "vulcanize": "^0.7.11"
+    "vulcanize": "^1.14.5"
   },
   "scripts": {
     "test": "grunt test"
