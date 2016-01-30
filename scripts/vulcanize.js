@@ -7,6 +7,21 @@ const fs = require('fs');
 const helpers = require('./helpers');
 const vulcanize = require('vulcanize');
 
+let rootPath = '.';
+if (process.argv.length > 2) {
+  rootPath = process.argv[2];
+}
+
+function mkdir(dir) {
+  try {
+    fs.mkdirSync(dir);
+  } catch (e) {
+    if (e.code !== 'EEXIST') {
+      console.log(e);
+    }
+  }
+}
+
 function runVulcanize(err) {
   if (err) {
     console.error(err);
@@ -15,29 +30,21 @@ function runVulcanize(err) {
   vulcanize.processDocument();
 }
 
-let rootPath = '.';
-if (process.argv.length > 2) {
-  rootPath = process.argv[2];
-}
+function vulcanizeRelease(releasePath) {
+  const inputPath = path.join(rootPath, 'src', 'gui', 'html', 'index.html');
+  const outputPath = path.join(releasePath.path, 'resources', 'ui', 'index.html');
 
-helpers.getAppReleasePaths(rootPath).forEach((releasePath) => {
-  const outputPath = path.join(releasePath.path, 'resources', 'ui');
-
-  // Makes sure output directory exists first.
-  try {
-    fs.mkdirSync(outputPath);
-  } catch (e) {
-    if (e.code !== 'EEXIST') {
-      console.log(e);
-    }
-  }
+  // Make sure output directory exists first.
+  mkdir(path.dirname(outputPath));
 
   vulcanize.setOptions({
     inline: true,
     excludes: {
       styles: ['css/theme.css'],
     },
-    output: path.join(outputPath, 'index.html'),
-    input: path.join(rootPath, 'src', 'gui', 'html', 'index.html'),
+    output: outputPath,
+    input: inputPath,
   }, runVulcanize);
-});
+}
+
+helpers.getAppReleasePaths(rootPath).forEach(vulcanizeRelease);
