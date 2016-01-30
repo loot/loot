@@ -55,6 +55,8 @@ namespace loot {
         std::vector<Message> GetMessages() const;
         void AppendMessage(const Message& message);
 
+        void SetLoadOrderSorted(bool isLoadOrderSorted);
+
         void ClearCachedConditions();
         void ClearCachedPlugins();
         void ClearMessages();
@@ -64,6 +66,7 @@ namespace loot {
         std::unordered_map<std::string, bool> conditionCache;
         std::unordered_map<std::string, Plugin> plugins;
         std::vector<Message> messages;
+        bool isLoadOrderSorted;
 
         mutable std::mutex mutex;
     };

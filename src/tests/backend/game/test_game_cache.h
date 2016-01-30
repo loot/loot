@@ -45,6 +45,7 @@ namespace loot {
             cache.AddPlugin(loot::Plugin(game, "Blank.esm", true));
             Message expectedMessage(Message::say, "1");
             cache.AppendMessage(expectedMessage);
+            cache.SetLoadOrderSorted(true);
 
             loot::GameCache otherCache(cache);
             EXPECT_EQ(std::make_pair(true, true), otherCache.GetCachedCondition("true Condition"));
@@ -62,6 +63,7 @@ namespace loot {
             cache.AddPlugin(loot::Plugin(game, "Blank.esm", true));
             Message expectedMessage(Message::say, "1");
             cache.AppendMessage(expectedMessage);
+            cache.SetLoadOrderSorted(true);
 
             loot::GameCache otherCache = cache;
             EXPECT_EQ(std::make_pair(true, true), otherCache.GetCachedCondition("true Condition"));
@@ -165,8 +167,22 @@ namespace loot {
             EXPECT_TRUE(cache.GetPlugins().empty());
         }
 
-        TEST_F(GameCache, noMessagesShouldBeStoredByDefault) {
-            EXPECT_TRUE(cache.GetMessages().empty());
+        TEST_F(GameCache, aMessageShouldBeCachedByDefault) {
+            ASSERT_EQ(1, cache.GetMessages().size());
+        }
+
+        TEST_F(GameCache, settingLoadOrderSortedToTrueShouldSupressDefaultCachedMessage) {
+            cache.SetLoadOrderSorted(true);
+
+            ASSERT_TRUE(cache.GetMessages().empty());
+        }
+
+        TEST_F(GameCache, settingLoadOrderSortedToFalseShouldReverseTheDefaultCachedMessageSuppression) {
+            auto expectedMessages = cache.GetMessages();
+            cache.SetLoadOrderSorted(true);
+            cache.SetLoadOrderSorted(false);
+
+            ASSERT_EQ(expectedMessages, cache.GetMessages());
         }
 
         TEST_F(GameCache, appendingMessagesShouldStoreThemInTheGivenOrder) {
@@ -177,10 +193,12 @@ namespace loot {
             for (const auto& message : messages)
                 cache.AppendMessage(message);
 
-            EXPECT_EQ(messages, cache.GetMessages());
+            ASSERT_EQ(3, cache.GetMessages().size());
+            EXPECT_EQ(messages[0], cache.GetMessages()[0]);
+            EXPECT_EQ(messages[1], cache.GetMessages()[1]);
         }
 
-        TEST_F(GameCache, clearingMessagesShouldRemoveAllStoredMessages) {
+        TEST_F(GameCache, clearingMessagesShouldRemoveAllAppendedMessages) {
             std::vector<Message> messages({
                 Message(Message::say, "1"),
                 Message(Message::error, "2"),
@@ -188,9 +206,11 @@ namespace loot {
             for (const auto& message : messages)
                 cache.AppendMessage(message);
 
+            auto previousSize = cache.GetMessages().size();
+
             cache.ClearMessages();
 
-            EXPECT_TRUE(cache.GetMessages().empty());
+            EXPECT_EQ(previousSize - messages.size(), cache.GetMessages().size());
         }
     }
 }

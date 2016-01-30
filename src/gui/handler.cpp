@@ -161,7 +161,10 @@ namespace loot {
         }
         else if (request == "cancelSort") {
             _lootState.decrementUnappliedChangeCounter();
-            callback->Success("");
+            _lootState.CurrentGame().SetLoadOrderSorted(false);
+
+            YAML::Node node(GetGeneralMessages());
+            callback->Success(JSON::stringify(node));
             return true;
         }
         else if (request == "editorOpened") {
