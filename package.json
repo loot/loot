@@ -23,6 +23,7 @@
     "grunt-contrib-connect": "^0.11.2",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-saucelabs": "^8.6.2",
+    "mkdirp": "^0.5.1",
     "mocha": "^2.3.4",
     "should": "^8.0.1",
     "vulcanize": "^1.14.5"

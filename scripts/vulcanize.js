@@ -6,9 +6,15 @@ const path = require('path');
 const fs = require('fs');
 const helpers = require('./helpers');
 const Vulcanize = require('vulcanize');
+const mkdirp = require('mkdirp');
 
+// Initialise from command line parameters.
 let rootPath = '.';
-if (process.argv.length > 2) {
+let buildType = 'ui';
+if (process.argv.length > 3) {
+  rootPath = process.argv[2];
+  buildType = process.argv[3];
+} else if (process.argv.length > 2) {
   rootPath = process.argv[2];
 }
 
@@ -22,7 +28,7 @@ const vulcanize = new Vulcanize({
 
 function mkdir(dir) {
   try {
-    fs.mkdirSync(dir);
+    mkdirp.sync(dir);
   } catch (e) {
     if (e.code !== 'EEXIST') {
       console.log(e);
@@ -51,4 +57,26 @@ function vulcanizeRelease(releasePath) {
   vulcanizeFile(inputPath, outputPath);
 }
 
-helpers.getAppReleasePaths(rootPath).forEach(vulcanizeRelease);
+function vulcanizeTests(releasePath) {
+  const inputPath = path.join(rootPath, 'src', 'tests', 'gui', 'html', 'elements');
+  const outputPath = path.join(releasePath.path, 'html_tests', 'elements');
+
+  const tests = [
+    'test_loot-custom-icons.html',
+  ];
+
+  tests.forEach((test) => {
+    vulcanizeFile(path.join(inputPath, test), path.join(outputPath, test));
+  });
+}
+
+// Run the appropriate build(s).
+const releasePaths = helpers.getAppReleasePaths(rootPath);
+
+if (buildType === 'ui' || buildType === 'all') {
+  releasePaths.forEach(vulcanizeRelease);
+}
+
+if (buildType === 'tests' || buildType === 'all') {
+  releasePaths.forEach(vulcanizeTests);
+}
