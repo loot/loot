@@ -1,6 +1,6 @@
 <!--
-<loot-message-dialog> is an extension of <loot-dialog> that provides a
-simpler interface for supplying a dialog consisting of a:
+<loot-message-dialog> provides a simple interface for supplying a dialog
+consisting of a:
 
 * title
 * message
@@ -13,67 +13,82 @@ was pressed.
 -->
 
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
+
 <link rel="import" href="../../../../bower_components/paper-button/paper-button.html">
-<link rel="import" href="loot-dialog.html">
+<link rel="import" href="../../../../bower_components/paper-dialog/paper-dialog.html">
 
-<polymer-element name="loot-message-dialog">
-    <template>
+<link rel="import" href="../../../../bower_components/neon-animation/animations/fade-in-animation.html">
+<link rel="import" href="../../../../bower_components/neon-animation/animations/fade-out-animation.html">
+
+<dom-module id="loot-message-dialog">
+  <template>
     <style>
-    #dialog {
+      paper-dialog {
+        margin: 24px 40px;
         max-width: 50%;
-    }
+      }
     </style>
-    <loot-dialog id="dialog">
+    <paper-dialog id="dialog"
+                  entry-animation="fade-in-animation"
+                  exit-animation="fade-out-animation"
+                  modal>
       <content></content>
-      <paper-button id="confirm" affirmative autofocus>OK</paper-button>
-      <paper-button id="dismiss" dismissive>Cancel</paper-button>
-    </loot-dialog>
-    </template>
-    <script>
-    Polymer({
-        closeCallback: undefined,
+      <div class="buttons">
+        <paper-button id="dismiss" dialog-dismiss>Cancel</paper-button>
+        <paper-button id="confirm" dialog-confirm autofocus>OK</paper-button>
+      </div>
+    </paper-dialog>
+  </template>
+  <script>
+    'use strict';
+    Polymer({ // eslint-disable-line new-cap, no-undef
+      is: 'loot-message-dialog',
+      closeCallback: undefined,
 
-        setConfirmText: function(confirmText) {
-          this.shadowRoot.getElementById('confirm').textContent = confirmText;
-        },
+      setConfirmText(confirmText) {
+        this.shadowRoot.getElementById('confirm').textContent = confirmText;
+      },
 
-        setDismissable: function(isDialogDismissable) {
-            this.shadowRoot.getElementById('dismiss').hidden = !isDialogDismissable;
-        },
+      setDismissable(isDialogDismissable) {
+        this.shadowRoot.getElementById('dismiss').hidden = !isDialogDismissable;
+      },
 
-        onButtonClick: function(evt) {
-            if (evt.target.parentElement.parentNode.host.closeCallback) {
-                evt.target.parentElement.parentNode.host.closeCallback(evt.target.id === 'confirm');
-            }
-            evt.target.parentElement.parentNode.host.addEventListener('core-overlay-close-completed', function(evt){
-                evt.target.parentElement.removeChild(evt.target);
-            }, false);
-        },
+      onClose(evt) {
+        if (evt.target.parentNode.host.closeCallback) {
+          evt.target.parentNode.host.closeCallback(evt.target.closingReason.confirmed);
+        }
+        evt.target.parentNode.host.parentElement.removeChild(evt.target.parentNode.host);
+      },
 
-        showModal: function(title, text, closeCallback) {
-            this.heading = title;
-            this.getElementsByClassName('message')[0].textContent = text;
+      showModal(title, text, closeCallback) {
+        this.getElementsByClassName('heading')[0].textContent = title;
+        this.getElementsByClassName('message')[0].textContent = text;
 
-            this.closeCallback = closeCallback;
-            this.shadowRoot.getElementById('dialog').showModal();
-        },
+        this.closeCallback = closeCallback;
+        this.$.dialog.open();
+      },
 
-        created: function() {
-            var p = document.createElement('p');
-            p.className = 'message';
-            this.appendChild(p);
-        },
+      close() {
+        this.$.dialog.close();
+      },
 
-        attached: function() {
-            this.shadowRoot.getElementById('confirm').addEventListener('click', this.onButtonClick, false);
-            this.shadowRoot.getElementById('dismiss').addEventListener('click', this.onButtonClick, false);
-        },
+      created() {
+        const h2 = document.createElement('h2');
+        h2.className = 'heading';
+        this.appendChild(h2);
 
-        detached: function() {
-            this.shadowRoot.getElementById('confirm').removeEventListener('click', this.onButtonClick, false);
-            this.shadowRoot.getElementById('dismiss').removeEventListener('click', this.onButtonClick, false);
-        },
+        const p = document.createElement('p');
+        p.className = 'message';
+        this.appendChild(p);
+      },
 
+      attached() {
+        this.$.dialog.addEventListener('iron-overlay-closed', this.onClose);
+      },
+
+      detached() {
+        this.$.dialog.removeEventListener('iron-overlay-closed', this.onClose);
+      },
     });
-    </script>
-</polymer-element>
+  </script>
+</dom-module>
