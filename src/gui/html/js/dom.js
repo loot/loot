@@ -13,9 +13,9 @@
     getElementInTableRowTemplate(rowTemplateId, elementClass) {
       const select = document.querySelector('link[rel="import"][href$="editable-table.html"]');
       if (select) {
-        return select.import.querySelector('#' + rowTemplateId).content.querySelector('.' + elementClass);
+        return select.import.querySelector(`#${rowTemplateId}`).content.querySelector(`.${elementClass}`);
       }
-      return document.querySelector('#' + rowTemplateId).content.querySelector('.' + elementClass);
+      return document.querySelector(`#${rowTemplateId}`).content.querySelector(`.${elementClass}`);
     },
 
     show(elementId) {
@@ -34,7 +34,9 @@
       for (let i = 0; i < table.tBodies[0].rows.length; ++i) {
         const folderElements = table.tBodies[0].rows[i].getElementsByClassName('folder');
         if (folderElements.length === 1) {
-          table.setReadOnly(table.tBodies[0].rows[i], ['delete'], folderElements[0].value === gameFolder);
+          table.setReadOnly(table.tBodies[0].rows[i],
+                            ['delete'],
+                            folderElements[0].value === gameFolder);
         }
       }
     },

@@ -3,7 +3,9 @@
 (function exportModule(root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-    define(['bower_components/Jed/jed', 'bower_components/jed-gettext-parser/jedGettextParser'], factory);
+    define(['bower_components/Jed/jed',
+           'bower_components/jed-gettext-parser/jedGettextParser'],
+           factory);
   } else {
     // Browser globals
     root.loot = root.loot || {};
@@ -19,11 +21,11 @@
 
     load() {
       const defaultTranslationData = {
-        'messages': {
+        messages: {
           '': {
-            'domain': 'messages',
-            'lang': 'en',
-            'plural_forms': 'nplurals=2; plural=(n != 1);',
+            domain: 'messages',
+            lang: 'en',
+            plural_forms: 'nplurals=2; plural=(n != 1);',
           },
         },
       };
@@ -34,7 +36,7 @@
         translationDataPromise = Promise.resolve(defaultTranslationData);
       } else {
         translationDataPromise = new Promise((resolve, reject) => {
-          const url = 'loot://l10n/' + this.locale + '/LC_MESSAGES/loot.mo';
+          const url = `loot://l10n/${this.locale}/LC_MESSAGES/loot.mo`;
           const xhr = new XMLHttpRequest();
           xhr.open('GET', url);
           xhr.responseType = 'arraybuffer';
@@ -53,12 +55,12 @@
       }
 
       return translationDataPromise.catch((error) => {
-        console.log('Error loading translation data: ' + error.message); // eslint-disable-line no-console
+        console.log(`Error loading translation data: ${error.message}`); // eslint-disable-line no-console
         return defaultTranslationData;
       }).then((result) => {
         this.jed = new Jed({
-          'locale_data': result,
-          'domain': 'messages',
+          locale_data: result,
+          domain: 'messages',
         });
       });
     }
