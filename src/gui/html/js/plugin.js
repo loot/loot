@@ -99,7 +99,7 @@
       }
 
       /* Pad CRC string to 8 characters. */
-      return ('00000000' + this._crc.toString(16).toUpperCase()).slice(-8);
+      return (`00000000${this._crc.toString(16).toUpperCase()}`).slice(-8);
     }
 
     get tags() {

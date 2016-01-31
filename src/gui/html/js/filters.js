@@ -33,15 +33,18 @@
           return false;
         }
 
-        if (this.conflictingPluginNames.length !== 0 && this.conflictingPluginNames.indexOf(plugin.name) === -1) {
+        if (this.conflictingPluginNames.length !== 0
+            && this.conflictingPluginNames.indexOf(plugin.name) === -1) {
           return false;
         }
 
-        if (this.hideMessagelessPlugins && plugin.getCardContent(this).messages.length === 0) {
+        if (this.hideMessagelessPlugins
+            && plugin.getCardContent(this).messages.length === 0) {
           return false;
         }
 
-        if (this.contentSearchString.length !== 0 && !plugin.getCardContent(this).containsText(this.contentSearchString)) {
+        if (this.contentSearchString.length !== 0
+            && !plugin.getCardContent(this).containsText(this.contentSearchString)) {
           return false;
         }
 
@@ -57,7 +60,8 @@
           return false;
         }
 
-        if (this.hideDoNotCleanMessages && message.content.toLowerCase().indexOf(this._doNotCleanString) !== -1) {
+        if (this.hideDoNotCleanMessages
+            && message.content.toLowerCase().indexOf(this._doNotCleanString) !== -1) {
           return false;
         }
 

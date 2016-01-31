@@ -40,4 +40,4 @@ helpers.getAppReleasePaths(rootPath).forEach((releasePath) => {
     output: path.join(outputPath, 'index.html'),
     input: path.join(rootPath, 'src', 'gui', 'html', 'index.html'),
   }, runVulcanize);
-})
+});

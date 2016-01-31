@@ -41,7 +41,7 @@ function compress(sourcePath, destPath) {
     'a',
     '-r',
     destPath,
-    '.' + path.sep + path.join(sourcePath, '*'),
+    path.join('.', sourcePath, '*'),
   ]);
 }
 
@@ -192,13 +192,22 @@ vulcanize(rootPath);
 const releasePaths = helpers.getAppReleasePaths(rootPath);
 for (let i = 0; i < releasePaths.length; ++i) {
   if (releasePaths[i].label) {
-    createAppArchive(rootPath, releasePaths[i].path, tempPath, path.join(rootPath, 'build', 'LOOT ' + gitDesc + ' (' + releasePaths[i].label + ').7z'));
+    const filename = `LOOT ${gitDesc} (${releasePaths[i].label}).7z`;
+    createAppArchive(rootPath,
+                     releasePaths[i].path,
+                     tempPath,
+                     path.join(rootPath, 'build', filename));
   } else {
-    createAppArchive(releasePaths[i].path, path.join(rootPath, 'build', 'LOOT ' + gitDesc + '.7z'));
+    createAppArchive(releasePaths[i].path,
+                     path.join(rootPath, 'build', `LOOT ${gitDesc}.7z`));
   }
 }
 
 const binaryPaths = helpers.getApiBinaryPaths(rootPath);
 for (let i = 0; i < binaryPaths.length; ++i) {
-  createApiArchive(rootPath, binaryPaths[i].path, tempPath, path.join(rootPath, 'build', 'LOOT API ' + gitDesc + ' (' + binaryPaths[i].label + ').7z'));
+  const filename = `LOOT API ${gitDesc} (${binaryPaths[i].label}).7z`;
+  createApiArchive(rootPath,
+                   binaryPaths[i].path,
+                   tempPath,
+                   path.join(rootPath, 'build', filename));
 }
