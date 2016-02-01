@@ -413,9 +413,6 @@ function onShowSettingsDialog() {
 }
 
 function onEditorOpen(evt) {
-  /* Now show editor. */
-  evt.target.classList.toggle('flip');
-
   /* Enable priority hover in plugins list and enable header
      buttons if this is the only editor instance. */
   let numEditors = 0;
@@ -478,10 +475,6 @@ function onEditorClose(evt) {
   }
   promise.then(() => {
     delete evt.target.data.editor;
-
-    /* Now hide editor. */
-    evt.target.classList.toggle('flip');
-    evt.target.data.isEditorOpen = false;
 
     /* Disable priority hover in plugins list and enable header
        buttons if this is the only editor instance. */
