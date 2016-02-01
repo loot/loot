@@ -413,13 +413,6 @@ function onShowSettingsDialog() {
 }
 
 function onEditorOpen(evt) {
-  /* Set up drag 'n' drop event handlers. */
-  const elements = document.getElementById('cardsNav').getElementsByTagName('loot-plugin-item');
-  for (let i = 0; i < elements.length; ++i) {
-    elements[i].draggable = true;
-    elements[i].addEventListener('dragstart', elements[i].onDragStart);
-  }
-
   /* Now show editor. */
   evt.target.classList.toggle('flip');
 
@@ -432,6 +425,13 @@ function onEditorOpen(evt) {
   ++numEditors;
 
   if (numEditors === 1) {
+    /* Set up drag 'n' drop event handlers. */
+    const elements = document.getElementById('cardsNav').getElementsByTagName('loot-plugin-item');
+    for (let i = 0; i < elements.length; ++i) {
+      elements[i].draggable = true;
+      elements[i].addEventListener('dragstart', elements[i].onDragStart);
+    }
+
     /* Set the edit mode toggle attribute. */
     document.getElementById('cardsNav').setAttribute('data-editModeToggle', '');
     /* Disable the toolbar elements. */
@@ -483,19 +483,19 @@ function onEditorClose(evt) {
     evt.target.classList.toggle('flip');
     evt.target.data.isEditorOpen = false;
 
-    /* Remove drag 'n' drop event handlers. */
-    const elements = document.getElementById('cardsNav').getElementsByTagName('loot-plugin-item');
-    for (let i = 0; i < elements.length; ++i) {
-      elements[i].removeAttribute('draggable');
-      elements[i].removeEventListener('dragstart', elements[i].onDragStart);
-    }
-
     /* Disable priority hover in plugins list and enable header
        buttons if this is the only editor instance. */
     let numEditors = parseInt(document.body.getAttribute('data-editors'), 10);
     --numEditors;
 
     if (numEditors === 0) {
+      /* Remove drag 'n' drop event handlers. */
+      const elements = document.getElementById('cardsNav').getElementsByTagName('loot-plugin-item');
+      for (let i = 0; i < elements.length; ++i) {
+        elements[i].removeAttribute('draggable');
+        elements[i].removeEventListener('dragstart', elements[i].onDragStart);
+      }
+
       document.body.removeAttribute('data-editors');
       /* Set the edit mode toggle attribute. */
       document.getElementById('cardsNav').setAttribute('data-editModeToggle', '');
