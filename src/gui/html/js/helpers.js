@@ -44,8 +44,8 @@ function filterPluginData(plugins, filters) {
     filters.conflictingPluginNames = conflictingPluginNames;
     return plugins.filter(filters.pluginFilter, filters);
   }).then((filteredPlugins) => {
-    document.getElementById('cardsNav').data = filteredPlugins;
-    document.getElementById('pluginCardList').data = filteredPlugins;
+    document.getElementById('cardsNav').items = filteredPlugins;
+    document.getElementById('pluginCardList').items = filteredPlugins;
 
     const pluginCards = document.getElementById('pluginCardList').children;
     for (let i = 0; i < pluginCards.length; ++i) {
@@ -53,8 +53,7 @@ function filterPluginData(plugins, filters) {
         pluginCards[i].updateContent();
       }
     }
-    document.getElementById('cardsNav').updateSize();
-    document.getElementById('pluginCardList').updateSize();
+    document.getElementById('cardsNav').notifyResize();
 
     /* Now perform search again. If there is no current search, this won't
        do anything. */

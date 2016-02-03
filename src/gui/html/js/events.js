@@ -40,8 +40,8 @@ function onChangeGame(evt) {
     loot.game = new loot.Game(gameInfo, loot.l10n);
 
     /* Reset virtual list positions. */
-    document.getElementById('cardsNav').scrollToItem(0);
-    document.getElementById('main').lastElementChild.scrollToItem(0);
+    document.getElementById('cardsNav').scrollToIndex(0);
+    document.getElementById('main').lastElementChild.scrollToIndex(0);
 
     /* Now update virtual lists. */
     filterPluginData(loot.game.plugins, loot.filters);
@@ -70,8 +70,6 @@ function updateMasterlistNoProgress() {
           existingPlugin.tags = resultPlugin.tags;
         }
       });
-      /* Hack to stop cards overlapping. */
-      document.getElementById('main').lastElementChild.updateSize();
 
       loot.Dialog.showNotification(loot.l10n.translate('Masterlist updated to revision %s.', loot.game.masterlist.revision));
     } else {
@@ -356,7 +354,7 @@ function onSwitchSidebarTab(evt) {
 }
 function onSidebarClick(evt) {
   if (evt.target.hasAttribute('data-index')) {
-    document.getElementById('main').lastElementChild.scrollToItem(evt.target.getAttribute('data-index'));
+    document.getElementById('main').lastElementChild.scrollToIndex(evt.target.getAttribute('data-index'));
 
     if (evt.type === 'dblclick') {
       const card = document.getElementById(evt.target.getAttribute('data-id'));
@@ -439,7 +437,7 @@ function onEditorOpen(evt) {
     document.getElementById('sortButton').setAttribute('disabled', '');
   }
   document.body.setAttribute('data-editors', numEditors);
-  document.getElementById('cardsNav').updateSize();
+  document.getElementById('cardsNav').notifyResize();
 
   return loot.query('editorOpened').catch(handlePromiseError);
 }
@@ -500,7 +498,7 @@ function onEditorClose(evt) {
     } else {
       document.body.setAttribute('data-editors', numEditors);
     }
-    document.getElementById('cardsNav').updateSize();
+    document.getElementById('cardsNav').notifyResize();
   }).catch(handlePromiseError);
 }
 function undoConflictsFilter() {

@@ -222,8 +222,8 @@
     return query('getGameData').then((result) => {
       const game = JSON.parse(result, Plugin.fromJson);
       appData.game = new Game(game, appData.l10n);
-      document.getElementById('cardsNav').data = appData.game.plugins;
-      document.getElementById('main').lastElementChild.data = appData.game.plugins;
+      document.getElementById('cardsNav').items = appData.game.plugins;
+      document.getElementById('main').lastElementChild.items = appData.game.plugins;
       applyEnabledFilters(appData.filters, appData.settings, appData.game.plugins);
       Dialog.closeProgress();
     });
