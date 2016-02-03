@@ -14,11 +14,9 @@ function onJumpToGeneralInfo() {
   document.getElementById('main').scrollTop = 0;
 }
 function onChangeGame(evt) {
-  /* Check that the selected game isn't the current one. */
-  if (!evt.detail.isSelected) {
+  if (evt.detail.item.getAttribute('value') === loot.game.folder) {
     return;
   }
-
   /* Send off a CEF query with the folder name of the new game. */
   loot.Dialog.showProgress(loot.l10n.translate('Loading game data...'));
   loot.query('changeGame', evt.detail.item.getAttribute('value')).then((result) => {
@@ -348,13 +346,12 @@ function onQuit() {
 }
 
 function onSwitchSidebarTab(evt) {
-  if (evt.detail.isSelected) {
-    document.getElementById(evt.target.selected).parentElement.selected = evt.target.selected;
-  }
+  document.getElementById(evt.target.selected).parentElement.selected = evt.target.selected;
 }
 function onSidebarClick(evt) {
   if (evt.target.hasAttribute('data-index')) {
-    document.getElementById('main').lastElementChild.scrollToIndex(evt.target.getAttribute('data-index'));
+    const index = parseInt(evt.target.getAttribute('data-index'), 10);
+    document.getElementById('pluginCardList').scrollToIndex(index);
 
     if (evt.type === 'dblclick') {
       const card = document.getElementById(evt.target.getAttribute('data-id'));
@@ -366,14 +363,7 @@ function onSidebarClick(evt) {
 }
 
 function areSettingsValid() {
-  /* Validate inputs individually. */
-  const inputs = document.getElementById('settingsDialog').getElementsByTagName('loot-validated-input');
-  for (let i = 0; i < inputs.length; ++i) {
-    if (!inputs[i].checkValidity()) {
-      return false;
-    }
-  }
-  return true;
+  return document.getElementById('gameTable').validate();
 }
 function onCloseSettingsDialog(evt) {
   if (evt.target.classList.contains('accept')) {
@@ -404,13 +394,16 @@ function onCloseSettingsDialog(evt) {
     /* Re-apply the existing settings to the settings dialog elements. */
     loot.dom.updateSettingsDialog(loot.settings, loot.installedGames, loot.game.folder);
   }
-  evt.target.parentElement.close();
+  evt.target.parentElement.parentElement.close();
 }
 function onShowSettingsDialog() {
   document.getElementById('settingsDialog').open();
 }
 
 function onEditorOpen(evt) {
+  /* Update the size of the card in the iron-list. */
+  document.getElementById('pluginCardList').updateSizeForItem(evt.target.data);
+
   /* Enable priority hover in plugins list and enable header
      buttons if this is the only editor instance. */
   let numEditors = 0;
@@ -442,6 +435,9 @@ function onEditorOpen(evt) {
   return loot.query('editorOpened').catch(handlePromiseError);
 }
 function onEditorClose(evt) {
+  /* Update the size of the card in the iron-list. */
+  document.getElementById('pluginCardList').updateSizeForItem(evt.target.data);
+
   /* evt.detail is true if the apply button was pressed. */
   let promise;
   if (evt.detail) {
