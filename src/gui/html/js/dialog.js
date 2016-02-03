@@ -14,29 +14,34 @@
       const progressDialog = document.getElementById('progressDialog');
       progressDialog.getElementsByTagName('p')[0].textContent = text;
       if (!progressDialog.opened) {
-        progressDialog.showModal();
+        progressDialog.open();
+      } else {
+        progressDialog.center();
       }
     }
 
     static closeProgress() {
       const progressDialog = document.getElementById('progressDialog');
       if (progressDialog.opened) {
+        /* Center before closing so that when it is re-opened it does so in the
+           correct position. */
+        progressDialog.center();
         progressDialog.close();
       }
     }
 
     static showMessage(title, text) {
       const dialog = document.createElement('loot-message-dialog');
+      document.body.appendChild(dialog);
       dialog.setDismissable(false);
       dialog.showModal(title, text);
-      document.body.appendChild(dialog);
     }
 
     static askQuestion(title, text, confirmText, closeCallback) {
       const dialog = document.createElement('loot-message-dialog');
+      document.body.appendChild(dialog);
       dialog.setConfirmText(confirmText);
       dialog.showModal(title, text, closeCallback);
-      document.body.appendChild(dialog);
     }
 
     static showNotification(text) {
