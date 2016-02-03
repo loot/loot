@@ -324,7 +324,7 @@ function onOpenLogLocation() {
   loot.query('openLogLocation').catch(handlePromiseError);
 }
 function onShowAboutDialog() {
-  document.getElementById('about').showModal();
+  document.getElementById('about').open();
 }
 function handleUnappliedChangesClose(change) {
   loot.Dialog.askQuestion('', loot.l10n.translate('You have not yet applied or cancelled your %s. Are you sure you want to quit?', change), loot.l10n.translate('Quit'), (result) => {
@@ -407,7 +407,7 @@ function onCloseSettingsDialog(evt) {
   evt.target.parentElement.close();
 }
 function onShowSettingsDialog() {
-  document.getElementById('settingsDialog').showModal();
+  document.getElementById('settingsDialog').open();
 }
 
 function onEditorOpen(evt) {
