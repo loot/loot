@@ -279,5 +279,3 @@
     }).catch(handlePromiseError);
   };
 }));
-
-window.addEventListener('polymer-ready', loot.initialise);
