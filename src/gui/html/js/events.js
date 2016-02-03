@@ -429,8 +429,6 @@ function onEditorOpen(evt) {
       elements[i].addEventListener('dragstart', elements[i].onDragStart);
     }
 
-    /* Set the edit mode toggle attribute. */
-    document.getElementById('cardsNav').setAttribute('data-editModeToggle', '');
     /* Disable the toolbar elements. */
     document.getElementById('wipeUserlistButton').setAttribute('disabled', '');
     document.getElementById('copyContentButton').setAttribute('disabled', '');
@@ -490,8 +488,7 @@ function onEditorClose(evt) {
       }
 
       document.body.removeAttribute('data-editors');
-      /* Set the edit mode toggle attribute. */
-      document.getElementById('cardsNav').setAttribute('data-editModeToggle', '');
+
       /* Re-enable toolbar elements. */
       document.getElementById('wipeUserlistButton').removeAttribute('disabled');
       document.getElementById('copyContentButton').removeAttribute('disabled');
