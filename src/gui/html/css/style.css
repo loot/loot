@@ -23,9 +23,6 @@
 */
 
 /* Misc */
-html /deep/ paper-button[autofocus] {
-    color: #64B5F6;
-}
 a {
     color: #2196F3;
     text-decoration: none;
@@ -38,11 +35,6 @@ tt, code, kbd, samp {
 }
 
 /* App bar */
-core-toolbar, div[drawer] > div:first-child {
-    background: #3F51B5;
-    color: white;
-    height: 56px;
-}
 #mainToolbar,
 #searchBar {
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
@@ -51,13 +43,6 @@ core-toolbar, div[drawer] > div:first-child {
 #mainToolbar:not(.search) + #searchBar,
 #mainToolbar.search {
     display: none;
-}
-#gameMenu {
-    margin-top: -0.5em;
-}
-#drawerToggle, #applySortButton, #cancelSortButton {
-    position: relative;
-    top: -3px;
 }
 #applySortButton {
     color: #2196F3;
@@ -71,55 +56,44 @@ div[drawer] {
 div[drawer] > * {
     border-right: 1px rgba(0, 0, 0, 0.12) solid;
 }
-paper-item > a {
-    -webkit-user-drag: none;
-    color: inherit;
+div[drawer] > iron-pages {
+  overflow: auto;
 }
-paper-item > a:hover {
-    text-decoration: none;
-}
-#cardsNav[data-editModeToggle] > loot-plugin-item {
-    transition: transform 0.6s;
-}
-#cardsNav > loot-plugin-item {
-    margin: 8px 0;
-}
-#contentFilter {
-    display: block;
-    line-height: initial;
+#cardsNav {
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
 #filters {
     padding: 8px 0;
-    overflow: hidden;
+    overflow: auto;
 }
 #filters > paper-checkbox,
-#filters > core-tooltip,
-#filters > div:not(.divider) {
+#hiddenPlugins,
+#hiddenMessages {
     padding: 0 16px;
     height: 48px;
     line-height: 48px;
 }
-#filters > paper-checkbox,
-#filters > core-tooltip {
-    display: block;
+#contentFilter {
+    padding: 0 16px;
+    height: 48px;
 }
 
 /* Panel */
 #main {
-    background: #EEE;
+    background-color: #fafafa;
     overflow: auto;
     position: relative;
     z-index: 0;
 }
-#main > core-list {
+#main > iron-list {
     transform-style: preserve-3d;
+    margin-bottom: 170px;
 }
 #summary {
-    background: white;
+    background-color: white;
     margin: 8px;
     padding: 16px;
-    border-radius: 2px;
-    box-shadow: rgba(0, 0, 0, 0.0980392) 0px 2px 4px, rgba(0, 0, 0, 0.0980392) 0px 0px 3px;
 }
 #summary > h1 {
     margin: -16px 0 0;
@@ -132,6 +106,7 @@ paper-item > a:hover {
     margin-right: 32px;
     width: auto;
     background-color: inherit;
+    border-collapse: collapse;
 }
 #summary > table:last-child {
     margin-right: 0;
@@ -167,28 +142,25 @@ li.warn {
 
 /* Dialogs */
 #about {
-    max-width: 580px;
+    max-width: 550px;
 }
 #about blockquote {
     white-space: pre-line;
 }
-#settingsDialog > div > * {
+#settingsDialog > paper-dialog-scrollable > div > * {
     margin: 16px;
 }
-#settingsDialog > div > div > :first-child {
+#settingsDialog > paper-dialog-scrollable > div > div > :first-child {
     margin-right: 16px;
     margin-left: 0;
 }
-#settingsDialog > div > :last-child {
+#settingsDialog > paper-dialog-scrollable > div > :last-child {
     margin-right: 0;
-}
-#settingsDialog core-label [for]:last-child {
-    margin-left: 16px;
 }
 #gameTable {
     margin: 32px 0 0;
 }
-paper-progress {
+#progressDialog paper-progress {
     width: 100%;
 }
 
@@ -199,16 +171,13 @@ paper-progress {
     margin-top: -1px;
 }
 
-/* Tables */
-html /deep/ table {
-    border-collapse: collapse;
-    width: 100%;
+/* Hack for the squashing of icons when text is not wrapped, due to the use of
+   flex display. See <https://github.com/PolymerElements/paper-item/issues/71> */
+paper-icon-item iron-icon {
+  margin-right: 32px;
 }
-html /deep/ table td, html /deep/ table th {
-    vertical-align: top;
-    text-align: left;
-    padding: 8px 16px;
-}
-html /deep/ table th {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+
+/* Set icons to use Material Design colouring. */
+iron-icon {
+    color: rgba(0, 0, 0, 0.54);
 }
