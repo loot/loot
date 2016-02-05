@@ -75,7 +75,9 @@
 
     /* Set up search event handlers. */
     document.getElementById('showSearch').addEventListener('click', onSearchOpen);
-    document.getElementById('searchBar').addEventListener('loot-search-close', onSearchClose);
+    document.getElementById('searchBar').addEventListener('loot-search-begin', onSearchBegin);
+    document.getElementById('searchBar').addEventListener('loot-search-change-selection', onSearchChangeSelection, false);
+    document.getElementById('searchBar').addEventListener('loot-search-end', onSearchEnd);
     window.addEventListener('keyup', onFocusSearch);
 
     /* Set up event handlers for settings dialog. */

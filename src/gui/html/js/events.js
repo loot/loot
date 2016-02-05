@@ -576,6 +576,34 @@ function onSearchOpen() {
   document.getElementById('mainToolbar').classList.add('search');
   document.getElementById('searchBar').focusInput();
 }
-function onSearchClose() {
+function onSearchBegin(evt) {
+  loot.game.plugins.forEach((plugin) => {
+    plugin.isSearchResult = false;
+  });
+
+  if (!evt.detail.needle) {
+    return;
+  }
+
+  // Don't push to the target's results property directly, as the
+  // change observer doesn't work correctly unless special Polymer APIs
+  // are used, which I don't want to get into.
+  const results = [];
+  loot.game.plugins.forEach((plugin, index) => {
+    if (plugin.getCardContent(loot.filters).containsText(evt.detail.needle)) {
+      results.push(index);
+      plugin.isSearchResult = true;
+    }
+  });
+
+  evt.target.results = results;
+}
+function onSearchChangeSelection(evt) {
+  document.getElementById('pluginCardList').scrollToIndex(evt.detail.selection);
+}
+function onSearchEnd(evt) {
+  loot.game.plugins.forEach((plugin) => {
+    plugin.isSearchResult = false;
+  });
   document.getElementById('mainToolbar').classList.remove('search');
 }
