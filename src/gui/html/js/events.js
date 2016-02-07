@@ -39,7 +39,7 @@ function onChangeGame(evt) {
 
     /* Reset virtual list positions. */
     document.getElementById('cardsNav').scrollToIndex(0);
-    document.getElementById('main').lastElementChild.scrollToIndex(0);
+    document.getElementById('pluginCardList').scrollToIndex(0);
 
     /* Now update virtual lists. */
     filterPluginData(loot.game.plugins, loot.filters);
