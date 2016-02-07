@@ -233,8 +233,6 @@
 
   return () => {
     Dialog.showProgress('Initialising user interface...');
-    /* Set the plugin list's scroll target to its parent. */
-    document.getElementById('pluginCardList').scrollTarget = document.getElementById('main');
 
     /* Make sure settings are what I want. */
     window.marked.setOptions({
