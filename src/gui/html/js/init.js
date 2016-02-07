@@ -158,7 +158,6 @@
       result.forEach((language) => {
         const settingsItem = document.createElement('paper-item');
         settingsItem.setAttribute('value', language.locale);
-        settingsItem.setAttribute('noink', '');
         settingsItem.textContent = language.name;
         settingsLangSelect.appendChild(settingsItem);
         messageLangSelect.appendChild(settingsItem.cloneNode(true));
@@ -198,7 +197,6 @@
       result.forEach((gameType) => {
         const item = document.createElement('paper-item');
         item.setAttribute('value', gameType);
-        item.setAttribute('noink', '');
         item.textContent = gameType;
         select.appendChild(item);
       });

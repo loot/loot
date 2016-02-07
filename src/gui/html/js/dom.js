@@ -70,7 +70,6 @@
       settings.games.forEach((game) => {
         const menuItem = document.createElement('paper-item');
         menuItem.setAttribute('value', game.folder);
-        menuItem.setAttribute('noink', '');
         menuItem.textContent = game.name;
         gameMenu.appendChild(menuItem);
         gameSelect.appendChild(menuItem.cloneNode(true));
