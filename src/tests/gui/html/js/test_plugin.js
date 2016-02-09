@@ -357,7 +357,7 @@ describe('Plugin', () => {
       }];
       const plugin = new loot.Plugin({
         name: 'test',
-        messages: messages,
+        messages,
       });
 
       plugin.messages.should.be.deepEqual(messages);
@@ -378,7 +378,7 @@ describe('Plugin', () => {
       plugin.messages.should.be.deepEqual(messages);
     });
 
-    it('setting messages should not fire an event if no message counts were changed', (done) => {
+    it('setting messages should not fire an event if no messages were changed', (done) => {
       const plugin = new loot.Plugin({
         name: 'test',
         messages: [{
@@ -386,10 +386,6 @@ describe('Plugin', () => {
           content: 'test message',
         }],
       });
-      const messages = [{
-        type: 'say',
-        content: 'another test message',
-      }];
 
       handleEvent = () => {
         done(new Error('Should not have fired an event'));
@@ -397,12 +393,12 @@ describe('Plugin', () => {
 
       document.addEventListener('loot-plugin-message-change', handleEvent);
 
-      plugin.messages = messages;
+      plugin.messages = plugin.messages;
 
       setTimeout(done, 100);
     });
 
-    it('setting messages should fire an event if message counts were changed', (done) => {
+    it('setting messages should fire an event if the messages were changed', (done) => {
       const plugin = new loot.Plugin({
         name: 'test',
         messages: [],
@@ -413,6 +409,7 @@ describe('Plugin', () => {
       }];
 
       handleEvent = (evt) => {
+        evt.detail.pluginId.should.equal(plugin.id);
         evt.detail.totalDiff.should.equal(1);
         evt.detail.warningDiff.should.equal(0);
         evt.detail.errorDiff.should.equal(1);
@@ -480,6 +477,131 @@ describe('Plugin', () => {
       document.addEventListener('loot-plugin-isdirty-change', handleEvent);
 
       plugin.isDirty = !plugin.isDirty;
+    });
+  });
+
+  describe('#crc', () => {
+    let handleEvent;
+
+    afterEach(() => {
+      document.removeEventListener('loot-plugin-card-content-change', handleEvent);
+    });
+
+    it('getting value should return 0 if crc has not been set in the constructor', () => {
+      const plugin = new loot.Plugin({ name: 'test' });
+
+      plugin.isDirty.should.be.false();
+    });
+
+    it('getting value should return 0xDEADBEEF if it was set in the constructor', () => {
+      const plugin = new loot.Plugin({
+        name: 'test',
+        crc: 0xDEADBEEF,
+      });
+
+      plugin.crc.should.equal(0xDEADBEEF);
+    });
+
+    it('setting value should store set value', () => {
+      const plugin = new loot.Plugin({ name: 'test' });
+
+      plugin.crc = 0xDEADBEEF;
+
+      plugin.crc.should.equal(0xDEADBEEF);
+    });
+
+    it('setting value to the current value should not fire an event', (done) => {
+      const plugin = new loot.Plugin({ name: 'test' });
+
+      handleEvent = () => {
+        done(new Error('Should not have fired an event'));
+      };
+
+      document.addEventListener('loot-plugin-card-content-change', handleEvent);
+
+      plugin.crc = plugin.crc;
+
+      setTimeout(done, 100);
+    });
+
+    it('setting value not equal to the current value should fire an event', (done) => {
+      const plugin = new loot.Plugin({ name: 'test' });
+
+      handleEvent = (evt) => {
+        evt.detail.pluginId.should.equal(plugin.id);
+        done();
+      };
+
+      document.addEventListener('loot-plugin-card-content-change', handleEvent);
+
+      plugin.crc = 0xDEADBEEF;
+    });
+  });
+
+  describe('#tags', () => {
+    let handleEvent;
+
+    afterEach(() => {
+      document.removeEventListener('loot-plugin-card-content-change', handleEvent);
+    });
+
+    it('getting value should return an empty array if tags have not been set in the constructor', () => {
+      const plugin = new loot.Plugin({ name: 'test' });
+
+      plugin.tags.length.should.equal(0);
+    });
+
+    it('getting value should return any tags that are set', () => {
+      const tags = [{
+        name: 'Delev',
+      }];
+      const plugin = new loot.Plugin({
+        name: 'test',
+        tags,
+      });
+
+      plugin.tags.should.deepEqual(tags);
+    });
+
+    it('setting value should store set value', () => {
+      const plugin = new loot.Plugin({ name: 'test' });
+      const tags = [{
+        name: 'Delev',
+      }];
+
+      plugin.tags = tags;
+
+      plugin.tags.should.deepEqual(tags);
+    });
+
+    it('setting value to the current value should not fire an event', (done) => {
+      const plugin = new loot.Plugin({ name: 'test' });
+
+      handleEvent = () => {
+        done(new Error('Should not have fired an event'));
+      };
+
+      document.addEventListener('loot-plugin-card-content-change', handleEvent);
+
+      plugin.tags = plugin.tags;
+
+      setTimeout(done, 100);
+    });
+
+    it('setting value not equal to the current value should fire an event', (done) => {
+      const plugin = new loot.Plugin({ name: 'test' });
+      const tags = [{
+        name: 'Delev',
+      }];
+
+      handleEvent = (evt) => {
+        evt.detail.pluginId.should.equal(plugin.id);
+        done();
+      };
+
+      document.addEventListener('loot-plugin-card-content-change', handleEvent);
+
+      plugin.tags = tags;
     });
   });
 

@@ -94,9 +94,11 @@
     document.getElementById('cardsNav').addEventListener('click', onSidebarClick);
     document.getElementById('cardsNav').addEventListener('dblclick', onSidebarClick);
 
-    /* Set up handler for plugin message and dirty info changes. */
+    /* Set up handler for plugin data changes. */
     document.addEventListener('loot-plugin-message-change', Plugin.onMessageChange);
+    document.addEventListener('loot-plugin-message-change', Plugin.onContentChange);
     document.addEventListener('loot-plugin-isdirty-change', Plugin.onIsDirtyChange);
+    document.addEventListener('loot-plugin-card-content-change', Plugin.onContentChange);
 
     /* Set up event handlers for game member variable changes. */
     document.addEventListener('loot-game-folder-change', Game.onFolderChange);

@@ -25,13 +25,13 @@
 (function exportModule(root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-    define([], factory);
+    define(['bower_components/lodash/dist/lodash.core.min'], factory);
   } else {
     // Browser globals
     root.loot = root.loot || {};
-    root.loot.Plugin = factory();
+    root.loot.Plugin = factory(root._);
   }
-}(this, () => {
+}(this, (_) => {
   /* Messages, tags, CRCs and version strings can all be hidden by filters.
      Use getters with no setters for member variables as data should not be
      written to objects of this class. */
@@ -168,7 +168,7 @@
     constructor(obj) {
       /* Plugin data */
       this.name = obj.name;
-      this.crc = obj.crc || 0;
+      this._crc = obj.crc || 0;
       this.version = obj.version || '';
       this.isActive = obj.isActive || false;
       this.isEmpty = obj.isEmpty || false;
@@ -181,7 +181,7 @@
       this.priority = obj.priority || 0;
       this.isPriorityGlobal = obj.isPriorityGlobal || false;
       this._messages = obj.messages || [];
-      this.tags = obj.tags;
+      this._tags = obj.tags;
       this._isDirty = obj.isDirty || false;
 
       /* UI state variables */
@@ -240,6 +240,12 @@
       return this.priority.toString();
     }
 
+    _dispatchCardContentChangeEvent() {
+      document.dispatchEvent(new CustomEvent('loot-plugin-card-content-change', {
+        detail: { pluginId: this.id },
+      }));
+    }
+
     get messages() {
       return this._messages;
     }
@@ -273,17 +279,21 @@
         }
       });
 
-      if (newTotal !== oldTotal || newWarns !== oldWarns || newErrs !== oldErrs) {
+      if (newTotal !== oldTotal
+        || newWarns !== oldWarns
+        || newErrs !== oldErrs
+        || !_.isEqual(this._messages, messages)) {
+        this._messages = messages;
+
         document.dispatchEvent(new CustomEvent('loot-plugin-message-change', {
           detail: {
+            pluginId: this.id,
             totalDiff: newTotal - oldTotal,
             warningDiff: newWarns - oldWarns,
             errorDiff: newErrs - oldErrs,
           },
         }));
       }
-
-      this._messages = messages;
     }
 
     get isDirty() {
@@ -293,14 +303,38 @@
     set isDirty(dirty) {
       /* Update dirty counts. */
       if (dirty !== this._isDirty) {
+        this._isDirty = dirty;
+
         document.dispatchEvent(new CustomEvent('loot-plugin-isdirty-change', {
           detail: {
             isDirty: dirty,
           },
         }));
       }
+    }
 
-      this._isDirty = dirty;
+    get crc() {
+      return this._crc;
+    }
+
+    set crc(crc) {
+      if (this._crc !== crc) {
+        this._crc = crc;
+
+        this._dispatchCardContentChangeEvent();
+      }
+    }
+
+    get tags() {
+      return this._tags;
+    }
+
+    set tags(tags) {
+      if (!_.isEqual(this._tags, tags)) {
+        this._tags = tags;
+
+        this._dispatchCardContentChangeEvent();
+      }
     }
 
     get hasUserEdits() {
@@ -317,11 +351,19 @@
       document.getElementById('totalWarningNo').textContent = parseInt(document.getElementById('totalWarningNo').textContent, 10) + evt.detail.warningDiff;
       document.getElementById('totalErrorNo').textContent = parseInt(document.getElementById('totalErrorNo').textContent, 10) + evt.detail.errorDiff;
     }
+
     static onIsDirtyChange(evt) {
       if (evt.detail.isDirty) {
         document.getElementById('dirtyPluginNo').textContent = parseInt(document.getElementById('dirtyPluginNo').textContent, 10) + 1;
       } else {
         document.getElementById('dirtyPluginNo').textContent = parseInt(document.getElementById('dirtyPluginNo').textContent, 10) - 1;
+      }
+    }
+
+    static onContentChange(evt) {
+      const card = document.getElementById(evt.detail.pluginId);
+      if (card) {
+        card.updateContent();
       }
     }
   };
