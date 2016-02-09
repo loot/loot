@@ -82,8 +82,8 @@
 
     /* Set up event handlers for settings dialog. */
     const settings = document.getElementById('settingsDialog');
-    settings.getElementsByClassName('accept')[0].addEventListener('click', onCloseSettingsDialog);
-    settings.getElementsByClassName('cancel')[0].addEventListener('click', onCloseSettingsDialog);
+    settings.addEventListener('iron-overlay-closed', onCloseSettingsDialog);
+    settings.querySelector('[dialog-confirm]').addEventListener('tap', onApplySettings);
 
     /* Set up handler for opening and closing editors. */
     document.body.addEventListener('loot-editor-open', onEditorOpen);
@@ -214,7 +214,10 @@
   function setSettings(appData) {
     return query('getSettings').then(JSON.parse).then((result) => {
       appData.settings = result;
-      dom.updateSettingsDialog(appData.settings, appData.installedGames, appData.game.folder);
+      dom.updateSettingsDialog(appData.settings);
+      loot.dom.setGameMenuItems(appData.settings.games);
+      loot.dom.updateEnabledGames(appData.installedGames);
+      loot.dom.updateSelectedGame(appData.game.folder);
     });
   }
 
@@ -260,7 +263,10 @@
       loot.filters = new Filters(loot.l10n);
       translateStaticText(loot.l10n);
       /* Also need to update the settings UI. */
-      dom.updateSettingsDialog(loot.settings, loot.installedGames, loot.game.folder);
+      dom.updateSettingsDialog(loot.settings);
+      loot.dom.setGameMenuItems(loot.settings.games);
+      loot.dom.updateEnabledGames(loot.installedGames);
+      loot.dom.updateSelectedGame(loot.game.folder);
     }).then(() => {
       return displayInitErrors();
     }).then((result) => {

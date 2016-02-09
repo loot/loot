@@ -365,36 +365,45 @@ function onSidebarClick(evt) {
 function areSettingsValid() {
   return document.getElementById('gameTable').validate();
 }
-function onCloseSettingsDialog(evt) {
-  if (evt.target.classList.contains('accept')) {
-    if (!areSettingsValid()) {
-      return;
-    }
-
-    /* Update the JS variable values. */
-    const settings = {
-      enableDebugLogging: document.getElementById('enableDebugLogging').checked,
-      game: document.getElementById('defaultGameSelect').value,
-      games: document.getElementById('gameTable').getRowsData(false),
-      language: document.getElementById('languageSelect').value,
-      lastGame: loot.settings.lastGame,
-      updateMasterlist: document.getElementById('updateMasterlist').checked,
-      filters: loot.settings.filters,
-    };
-
-    /* Send the settings back to the C++ side. */
-    loot.query('closeSettings', settings).then(JSON.parse).then((installedGames) => {
-      loot.installedGames = installedGames;
-      loot.dom.updateEnabledGames(installedGames);
-    }).catch(handlePromiseError).then(() => {
-      loot.settings = settings;
-      loot.dom.updateSettingsDialog(loot.settings, loot.installedGames, loot.game.folder);
-    }).catch(handlePromiseError);
-  } else {
-    /* Re-apply the existing settings to the settings dialog elements. */
-    loot.dom.updateSettingsDialog(loot.settings, loot.installedGames, loot.game.folder);
+function onApplySettings(evt) {
+  if (!areSettingsValid()) {
+    evt.stopPropagation();
   }
-  evt.target.parentElement.parentElement.close();
+}
+function onCloseSettingsDialog(evt) {
+  if (evt.target.id !== 'settingsDialog') {
+    /* The event can be fired by dropdowns in the settings dialog, so ignore
+       any events that don't come from the dialog itself. */
+    return;
+  }
+  if (!evt.detail.confirmed) {
+    /* Re-apply the existing settings to the settings dialog elements. */
+    loot.dom.updateSettingsDialog(loot.settings);
+    return;
+  }
+
+  /* Update the JS variable values. */
+  const settings = {
+    enableDebugLogging: document.getElementById('enableDebugLogging').checked,
+    game: document.getElementById('defaultGameSelect').value,
+    games: document.getElementById('gameTable').getRowsData(false),
+    language: document.getElementById('languageSelect').value,
+    lastGame: loot.settings.lastGame,
+    updateMasterlist: document.getElementById('updateMasterlist').checked,
+    filters: loot.settings.filters,
+  };
+
+  /* Send the settings back to the C++ side. */
+  loot.query('closeSettings', settings).then(JSON.parse).then((installedGames) => {
+    loot.installedGames = installedGames;
+    loot.dom.updateEnabledGames(installedGames);
+  }).catch(handlePromiseError).then(() => {
+    loot.settings = settings;
+    loot.dom.updateSettingsDialog(loot.settings);
+    loot.dom.setGameMenuItems(loot.settings.games);
+    loot.dom.updateEnabledGames(loot.installedGames);
+    loot.dom.updateSelectedGame(loot.game.folder);
+  }).catch(handlePromiseError);
 }
 function onShowSettingsDialog() {
   document.getElementById('settingsDialog').open();
