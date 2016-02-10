@@ -176,10 +176,10 @@
       this.loadsArchive = obj.loadsArchive || false;
 
       this.masterlist = obj.masterlist;
-      this.userlist = obj.userlist;
+      this._userlist = obj.userlist;
 
-      this.priority = obj.priority || 0;
-      this.isPriorityGlobal = obj.isPriorityGlobal || false;
+      this._priority = obj.priority || 0;
+      this._isPriorityGlobal = obj.isPriorityGlobal || false;
       this._messages = obj.messages || [];
       this._tags = obj.tags || [];
       this._isDirty = obj.isDirty || false;
@@ -187,7 +187,7 @@
       /* UI state variables */
       this.id = this.name.replace(/\s+/g, '');
       this.isMenuOpen = false;
-      this.isEditorOpen = false;
+      this._isEditorOpen = false;
       this.isConflictFilterChecked = false;
       this.isSearchResult = false;
     }
@@ -235,6 +235,18 @@
     _dispatchCardContentChangeEvent() {
       document.dispatchEvent(new CustomEvent('loot-plugin-card-content-change', {
         detail: { pluginId: this.id },
+      }));
+    }
+
+    _dispatchItemContentChangeEvent() {
+      document.dispatchEvent(new CustomEvent('loot-plugin-item-content-change', {
+        detail: {
+          pluginId: this.id,
+          priority: this.priority,
+          isPriorityGlobal: this.isPriorityGlobal,
+          isEditorOpen: this.isEditorOpen,
+          hasUserEdits: this.hasUserEdits,
+        },
       }));
     }
 
@@ -330,7 +342,55 @@
     }
 
     get hasUserEdits() {
-      return this.userlist && Object.keys(this.userlist).length > 1;
+      return this.userlist !== undefined && Object.keys(this.userlist).length > 1;
+    }
+
+    get userlist() {
+      return this._userlist;
+    }
+
+    set userlist(userlist) {
+      if (!_.isEqual(this._userlist, userlist)) {
+        this._userlist = userlist;
+
+        this._dispatchItemContentChangeEvent();
+      }
+    }
+
+    get priority() {
+      return this._priority;
+    }
+
+    set priority(priority) {
+      if (this._priority !== priority) {
+        this._priority = priority;
+
+        this._dispatchItemContentChangeEvent();
+      }
+    }
+
+    get isPriorityGlobal() {
+      return this._isPriorityGlobal;
+    }
+
+    set isPriorityGlobal(isPriorityGlobal) {
+      if (this._isPriorityGlobal !== isPriorityGlobal) {
+        this._isPriorityGlobal = isPriorityGlobal;
+
+        this._dispatchItemContentChangeEvent();
+      }
+    }
+
+    get isEditorOpen() {
+      return this._isEditorOpen;
+    }
+
+    set isEditorOpen(isEditorOpen) {
+      if (this._isEditorOpen !== isEditorOpen) {
+        this._isEditorOpen = isEditorOpen;
+
+        this._dispatchItemContentChangeEvent();
+      }
     }
 
     getCardContent(filters) {
@@ -356,6 +416,28 @@
       const card = document.getElementById(evt.detail.pluginId);
       if (card) {
         card.updateContent();
+      }
+    }
+
+    static onItemContentChange(evt) {
+      const item = document.getElementById('cardsNav').querySelector(`[data-id="${evt.detail.pluginId}"]`);
+      if (item) {
+        item.setAttribute('priority', evt.detail.priority);
+        if (evt.detail.isPriorityGlobal) {
+          item.setAttribute('is-priority-global', '');
+        } else {
+          item.removeAttribute('is-priority-global');
+        }
+        if (evt.detail.isEditorOpen) {
+          item.setAttribute('is-editor-open', '');
+        } else {
+          item.removeAttribute('is-editor-open');
+        }
+        if (evt.detail.hasUserEdits) {
+          item.setAttribute('has-user-edits', '');
+        } else {
+          item.removeAttribute('has-user-edits');
+        }
       }
     }
   };

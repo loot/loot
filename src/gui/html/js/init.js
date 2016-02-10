@@ -99,6 +99,7 @@
     document.addEventListener('loot-plugin-message-change', Plugin.onContentChange);
     document.addEventListener('loot-plugin-isdirty-change', Plugin.onIsDirtyChange);
     document.addEventListener('loot-plugin-card-content-change', Plugin.onContentChange);
+    document.addEventListener('loot-plugin-item-content-change', Plugin.onItemContentChange);
 
     /* Set up event handlers for game member variable changes. */
     document.addEventListener('loot-game-folder-change', Game.onFolderChange);

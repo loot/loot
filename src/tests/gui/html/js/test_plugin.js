@@ -646,6 +646,245 @@ describe('Plugin', () => {
     });
   });
 
+  describe('#userlist', () => {
+    let handleEvent;
+
+    afterEach(() => {
+      document.removeEventListener('loot-plugin-item-content-change', handleEvent);
+    });
+
+    it('getting value should return undefined if it has not been set in the constructor', () => {
+      const plugin = new loot.Plugin({ name: 'test' });
+
+      should(plugin.userlist).be.undefined();
+    });
+
+    it('getting value should return the value that was set', () => {
+      const plugin = new loot.Plugin({
+        name: 'test',
+        userlist: {},
+      });
+
+      plugin.userlist.should.deepEqual({});
+    });
+
+    it('setting value should store set value', () => {
+      const plugin = new loot.Plugin({ name: 'test' });
+
+      plugin.userlist = {};
+
+      plugin.userlist.should.deepEqual({});
+    });
+
+    it('setting value to the current value should not fire an event', (done) => {
+      const plugin = new loot.Plugin({ name: 'test' });
+
+      handleEvent = () => {
+        done(new Error('Should not have fired an event'));
+      };
+
+      document.addEventListener('loot-plugin-item-content-change', handleEvent);
+
+      plugin.userlist = plugin.userlist;
+
+      setTimeout(done, 100);
+    });
+
+    it('setting value not equal to the current value should fire an event', (done) => {
+      const plugin = new loot.Plugin({ name: 'test' });
+
+      handleEvent = (evt) => {
+        evt.detail.pluginId.should.equal(plugin.id);
+        evt.detail.priority.should.equal(plugin.priority);
+        evt.detail.isPriorityGlobal.should.equal(plugin.isPriorityGlobal);
+        evt.detail.isEditorOpen.should.equal(plugin.isEditorOpen);
+        evt.detail.hasUserEdits.should.equal(plugin.hasUserEdits);
+        done();
+      };
+
+      document.addEventListener('loot-plugin-item-content-change', handleEvent);
+
+      plugin.userlist = { priority: 1 };
+    });
+  });
+
+  describe('#priority', () => {
+    let handleEvent;
+
+    afterEach(() => {
+      document.removeEventListener('loot-plugin-item-content-change', handleEvent);
+    });
+
+    it('getting value should return 0 if it has not been set in the constructor', () => {
+      const plugin = new loot.Plugin({ name: 'test' });
+
+      plugin.priority.should.equal(0);
+    });
+
+    it('getting value should return the value that was set', () => {
+      const plugin = new loot.Plugin({
+        name: 'test',
+        priority: 5,
+      });
+
+      plugin.priority.should.equal(5);
+    });
+
+    it('setting value should store set value', () => {
+      const plugin = new loot.Plugin({ name: 'test' });
+
+      plugin.priority = 5;
+
+      plugin.priority.should.equal(5);
+    });
+
+    it('setting value to the current value should not fire an event', (done) => {
+      const plugin = new loot.Plugin({ name: 'test' });
+
+      handleEvent = () => {
+        done(new Error('Should not have fired an event'));
+      };
+
+      document.addEventListener('loot-plugin-item-content-change', handleEvent);
+
+      plugin.priority = plugin.priority;
+
+      setTimeout(done, 100);
+    });
+
+    it('setting value not equal to the current value should fire an event', (done) => {
+      const plugin = new loot.Plugin({ name: 'test' });
+
+      handleEvent = (evt) => {
+        evt.detail.pluginId.should.equal(plugin.id);
+        evt.detail.priority.should.equal(plugin.priority);
+        evt.detail.isPriorityGlobal.should.equal(plugin.isPriorityGlobal);
+        evt.detail.isEditorOpen.should.equal(plugin.isEditorOpen);
+        evt.detail.hasUserEdits.should.equal(plugin.hasUserEdits);
+        done();
+      };
+
+      document.addEventListener('loot-plugin-item-content-change', handleEvent);
+
+      plugin.priority = 5;
+    });
+  });
+
+  describe('#isPriorityGlobal', () => {
+    let handleEvent;
+
+    afterEach(() => {
+      document.removeEventListener('loot-plugin-item-content-change', handleEvent);
+    });
+
+    it('getting value should return false if it has not been set in the constructor', () => {
+      const plugin = new loot.Plugin({ name: 'test' });
+
+      plugin.isPriorityGlobal.should.be.false();
+    });
+
+    it('getting value should return the value that was set', () => {
+      const plugin = new loot.Plugin({
+        name: 'test',
+        isPriorityGlobal: true,
+      });
+
+      plugin.isPriorityGlobal.should.be.true();
+    });
+
+    it('setting value should store set value', () => {
+      const plugin = new loot.Plugin({ name: 'test' });
+
+      plugin.isPriorityGlobal = true;
+
+      plugin.isPriorityGlobal.should.be.true();
+    });
+
+    it('setting value to the current value should not fire an event', (done) => {
+      const plugin = new loot.Plugin({ name: 'test' });
+
+      handleEvent = () => {
+        done(new Error('Should not have fired an event'));
+      };
+
+      document.addEventListener('loot-plugin-item-content-change', handleEvent);
+
+      plugin.isPriorityGlobal = plugin.isPriorityGlobal;
+
+      setTimeout(done, 100);
+    });
+
+    it('setting value not equal to the current value should fire an event', (done) => {
+      const plugin = new loot.Plugin({ name: 'test' });
+
+      handleEvent = (evt) => {
+        evt.detail.pluginId.should.equal(plugin.id);
+        evt.detail.priority.should.equal(plugin.priority);
+        evt.detail.isPriorityGlobal.should.equal(plugin.isPriorityGlobal);
+        evt.detail.isEditorOpen.should.equal(plugin.isEditorOpen);
+        evt.detail.hasUserEdits.should.equal(plugin.hasUserEdits);
+        done();
+      };
+
+      document.addEventListener('loot-plugin-item-content-change', handleEvent);
+
+      plugin.isPriorityGlobal = true;
+    });
+  });
+
+  describe('#isEditorOpen', () => {
+    let handleEvent;
+
+    afterEach(() => {
+      document.removeEventListener('loot-plugin-item-content-change', handleEvent);
+    });
+
+    it('getting value should return false if it has not been set in the constructor', () => {
+      const plugin = new loot.Plugin({ name: 'test' });
+
+      plugin.isEditorOpen.should.be.false();
+    });
+
+    it('setting value should store set value', () => {
+      const plugin = new loot.Plugin({ name: 'test' });
+
+      plugin.isEditorOpen = true;
+
+      plugin.isEditorOpen.should.be.true();
+    });
+
+    it('setting value to the current value should not fire an event', (done) => {
+      const plugin = new loot.Plugin({ name: 'test' });
+
+      handleEvent = () => {
+        done(new Error('Should not have fired an event'));
+      };
+
+      document.addEventListener('loot-plugin-item-content-change', handleEvent);
+
+      plugin.isEditorOpen = plugin.isEditorOpen;
+
+      setTimeout(done, 100);
+    });
+
+    it('setting value not equal to the current value should fire an event', (done) => {
+      const plugin = new loot.Plugin({ name: 'test' });
+
+      handleEvent = (evt) => {
+        evt.detail.pluginId.should.equal(plugin.id);
+        evt.detail.priority.should.equal(plugin.priority);
+        evt.detail.isPriorityGlobal.should.equal(plugin.isPriorityGlobal);
+        evt.detail.isEditorOpen.should.equal(plugin.isEditorOpen);
+        evt.detail.hasUserEdits.should.equal(plugin.hasUserEdits);
+        done();
+      };
+
+      document.addEventListener('loot-plugin-item-content-change', handleEvent);
+
+      plugin.isEditorOpen = true;
+    });
+  });
+
   describe('#getCardContent()', () => {
     let plugin;
     beforeEach(() => {
