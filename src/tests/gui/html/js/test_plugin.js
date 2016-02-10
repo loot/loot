@@ -177,10 +177,10 @@ describe('Plugin', () => {
     it('should set isPriorityGlobal to passed key\'s value', () => {
       const plugin = new loot.Plugin({
         name: 'test',
-        isEmpty: true,
+        isPriorityGlobal: true,
       });
 
-      plugin.isEmpty.should.be.true();
+      plugin.isPriorityGlobal.should.be.true();
     });
 
     it('should set id to the plugins name without spaces', () => {
