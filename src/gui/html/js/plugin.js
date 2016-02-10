@@ -232,14 +232,6 @@
       return rowData;
     }
 
-    get priorityString() {
-      if (this.priority === 0) {
-        return '';
-      }
-
-      return this.priority.toString();
-    }
-
     _dispatchCardContentChangeEvent() {
       document.dispatchEvent(new CustomEvent('loot-plugin-card-content-change', {
         detail: { pluginId: this.id },

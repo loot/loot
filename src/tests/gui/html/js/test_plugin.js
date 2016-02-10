@@ -301,32 +301,6 @@ describe('Plugin', () => {
     });
   });
 
-  describe('#priorityString', () => {
-    it('should return an empty string if priority is undefined', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
-
-      plugin.priorityString.should.equal('');
-    });
-
-    it('should return an empty string if priority is zero', () => {
-      const plugin = new loot.Plugin({
-        name: 'test',
-        priority: 0,
-      });
-
-      plugin.priorityString.should.equal('');
-    });
-
-    it('should return priority value as string if non zero', () => {
-      const plugin = new loot.Plugin({
-        name: 'test',
-        priority: -50,
-      });
-
-      plugin.priorityString.should.equal('-50');
-    });
-  });
-
   describe('#messages', () => {
     let handleEvent;
 
