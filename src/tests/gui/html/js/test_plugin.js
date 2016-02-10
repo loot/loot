@@ -168,6 +168,21 @@ describe('Plugin', () => {
       plugin.userlist.should.be.deepEqual({});
     });
 
+    it('should set priority to 0 if no key was passed', () => {
+      const plugin = new loot.Plugin({ name: 'test' });
+
+      plugin.priority.should.equal(0);
+    });
+
+    it('should set priority to passed key\'s value', () => {
+      const plugin = new loot.Plugin({
+        name: 'test',
+        priority: 5,
+      });
+
+      plugin.priority.should.equal(5);
+    });
+
     it('should set isPriorityGlobal value to false if no key was passed', () => {
       const plugin = new loot.Plugin({ name: 'test' });
 
@@ -181,6 +196,25 @@ describe('Plugin', () => {
       });
 
       plugin.isPriorityGlobal.should.be.true();
+    });
+
+    it('should set messages value to an empty array if no key was passed', () => {
+      const plugin = new loot.Plugin({ name: 'test' });
+
+      plugin.messages.length.should.equal(0);
+    });
+
+    it('should set messages to passed key\'s value', () => {
+      const messages = [{
+        type: 'say',
+        content: 'test message',
+      }];
+      const plugin = new loot.Plugin({
+        name: 'test',
+        messages,
+      });
+
+      plugin.messages.should.deepEqual(messages);
     });
 
     it('should set tags value to an empty array if no key was passed', () => {
@@ -199,6 +233,21 @@ describe('Plugin', () => {
       });
 
       plugin.tags.should.deepEqual(tags);
+    });
+
+    it('should set isDirty value to false if no key was passed', () => {
+      const plugin = new loot.Plugin({ name: 'test' });
+
+      plugin.isDirty.should.be.false();
+    });
+
+    it('should set isDirty to passed key\'s value', () => {
+      const plugin = new loot.Plugin({
+        name: 'test',
+        isDirty: true,
+      });
+
+      plugin.isDirty.should.be.true();
     });
 
     it('should set id to the plugins name without spaces', () => {
