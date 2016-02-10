@@ -183,6 +183,24 @@ describe('Plugin', () => {
       plugin.isPriorityGlobal.should.be.true();
     });
 
+    it('should set tags value to an empty array if no key was passed', () => {
+      const plugin = new loot.Plugin({ name: 'test' });
+
+      plugin.tags.length.should.equal(0);
+    });
+
+    it('should set tags to passed key\'s value', () => {
+      const tags = [{
+        name: 'Delev',
+      }];
+      const plugin = new loot.Plugin({
+        name: 'test',
+        tags,
+      });
+
+      plugin.tags.should.deepEqual(tags);
+    });
+
     it('should set id to the plugins name without spaces', () => {
       const plugin = new loot.Plugin({ name: 'test plugin name' });
 

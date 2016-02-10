@@ -181,7 +181,7 @@
       this.priority = obj.priority || 0;
       this.isPriorityGlobal = obj.isPriorityGlobal || false;
       this._messages = obj.messages || [];
-      this._tags = obj.tags;
+      this._tags = obj.tags || [];
       this._isDirty = obj.isDirty || false;
 
       /* UI state variables */
