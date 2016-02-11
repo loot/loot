@@ -885,6 +885,55 @@ describe('Plugin', () => {
     });
   });
 
+  describe('#isSearchResult', () => {
+    let handleEvent;
+
+    afterEach(() => {
+      document.removeEventListener('loot-plugin-card-content-change', handleEvent);
+    });
+
+    it('getting value should return false if it has not been set in the constructor', () => {
+      const plugin = new loot.Plugin({ name: 'test' });
+
+      plugin.isSearchResult.should.be.false();
+    });
+
+    it('setting value should store set value', () => {
+      const plugin = new loot.Plugin({ name: 'test' });
+
+      plugin.isSearchResult = true;
+
+      plugin.isSearchResult.should.be.true();
+    });
+
+    it('setting value to the current value should not fire an event', (done) => {
+      const plugin = new loot.Plugin({ name: 'test' });
+
+      handleEvent = () => {
+        done(new Error('Should not have fired an event'));
+      };
+
+      document.addEventListener('loot-plugin-card-content-change', handleEvent);
+
+      plugin.isSearchResult = plugin.isSearchResult;
+
+      setTimeout(done, 100);
+    });
+
+    it('setting value not equal to the current value should fire an event', (done) => {
+      const plugin = new loot.Plugin({ name: 'test' });
+
+      handleEvent = (evt) => {
+        evt.detail.pluginId.should.equal(plugin.id);
+        done();
+      };
+
+      document.addEventListener('loot-plugin-card-content-change', handleEvent);
+
+      plugin.isSearchResult = true;
+    });
+  });
+
   describe('#getCardContent()', () => {
     let plugin;
     beforeEach(() => {

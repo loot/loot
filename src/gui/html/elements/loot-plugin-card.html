@@ -330,6 +330,9 @@ loot-clear-metadata
           this._setTagsContent(cardContent.tags);
           this._setMessagesContent(cardContent.messages);
 
+          this.hasUserEdits = this.data.hasUserEdits;
+          this.isSearchResult = this.data.isSearchResult;
+
           /* Update the conflict filter toggle state. */
           this.$.showOnlyConflicts.checked = this.data.isConflictFilterChecked;
 

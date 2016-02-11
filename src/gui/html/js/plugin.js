@@ -189,7 +189,7 @@
       this.isMenuOpen = false;
       this._isEditorOpen = false;
       this.isConflictFilterChecked = false;
-      this.isSearchResult = false;
+      this._isSearchResult = false;
     }
 
     static fromJson(key, value) {
@@ -354,6 +354,7 @@
         this._userlist = userlist;
 
         this._dispatchItemContentChangeEvent();
+        this._dispatchCardContentChangeEvent();
       }
     }
 
@@ -390,6 +391,18 @@
         this._isEditorOpen = isEditorOpen;
 
         this._dispatchItemContentChangeEvent();
+      }
+    }
+
+    get isSearchResult() {
+      return this._isSearchResult;
+    }
+
+    set isSearchResult(isSearchResult) {
+      if (this._isSearchResult !== isSearchResult) {
+        this._isSearchResult = isSearchResult;
+
+        this._dispatchCardContentChangeEvent();
       }
     }
 
