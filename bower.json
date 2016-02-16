@@ -9,7 +9,7 @@
   "dependencies": {
     "polymer": "Polymer/polymer#^1.1.0",
     "iron-icons": "PolymerElements/iron-icons#^1.0.0",
-    "iron-list": "PolymerElements/iron-list#^1.0.0",
+    "iron-list": "loot/iron-list#patched-for-loot",
     "iron-pages": "PolymerElements/iron-pages#^1.0.0",
     "paper-button": "PolymerElements/paper-button#^1.0.0",
     "paper-checkbox": "PolymerElements/paper-checkbox#^1.0.0",
