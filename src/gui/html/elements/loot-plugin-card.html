@@ -155,7 +155,7 @@ loot-clear-metadata
           <paper-tooltip for="loadsArchive">Loads Archive</paper-tooltip>
           <iron-icon id="hasUserEdits" icon="account-circle" hidden$="[[!hasUserEdits]]"></iron-icon>
           <paper-tooltip for="hasUserEdits">Has User Metadata</paper-tooltip>
-          <paper-menu-button id="menu" opened="{{data.isMenuOpen}}" horizontal-align="right">
+          <paper-menu-button id="menu" horizontal-align="right">
             <paper-icon-button icon="more-vert" class="dropdown-trigger"></paper-icon-button>
             <loot-menu class="dropdown-content">
               <paper-toggle-button id="showOnlyConflicts" checked="{{data.isConflictFilterChecked}}">Show Only Conflicts</paper-toggle-button>

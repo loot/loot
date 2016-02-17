@@ -256,12 +256,6 @@ describe('Plugin', () => {
       plugin.id.should.equal('testpluginname');
     });
 
-    it('should set isMenuOpen to false', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
-
-      plugin.isMenuOpen.should.be.false();
-    });
-
     it('should set isEditorOpen to false', () => {
       const plugin = new loot.Plugin({ name: 'test' });
 
