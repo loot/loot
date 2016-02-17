@@ -39,7 +39,6 @@
   <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
   <link rel="import" href="../../../bower_components/paper-item/paper-item.html">
   <link rel="import" href="../../../bower_components/paper-item/paper-icon-item.html">
-  <link rel="import" href="../../../bower_components/paper-menu/paper-menu.html">
   <link rel="import" href="../../../bower_components/paper-menu-button/paper-menu-button.html">
   <link rel="import" href="../../../bower_components/paper-progress/paper-progress.html">
   <link rel="import" href="../../../bower_components/paper-toast/paper-toast.html">
@@ -218,7 +217,7 @@
         <paper-tooltip for="showSearch">Search Cards</paper-tooltip>
         <paper-menu-button horizontal-align="right">
           <paper-icon-button icon="more-vert" class="dropdown-trigger"></paper-icon-button>
-          <paper-menu class="dropdown-content">
+          <loot-menu class="dropdown-content">
             <paper-icon-item id="redatePluginsButton">
               <iron-icon icon="today" item-icon></iron-icon>
               Redate Plugins
@@ -262,7 +261,7 @@
               <iron-icon icon="close" item-icon></iron-icon>
               Quit
             </paper-icon-item>
-          </paper-menu>
+          </loot-menu>
         </paper-menu-button>
       </paper-toolbar>
       <loot-search-toolbar id="searchBar"></loot-search-toolbar>

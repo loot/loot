@@ -65,6 +65,7 @@ function vulcanizeTests(releasePath) {
     'test_editable-table.html',
     'test_loot-custom-icons.html',
     'test_loot-dropdown-menu.html',
+    'test_loot-menu.html',
     'test_loot-message-dialog.html',
     'test_loot-plugin-card.html',
     'test_loot-plugin-editor.html',

@@ -1,0 +1,30 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../../../bower_components/paper-listbox/paper-listbox.html">
+
+<dom-module id="loot-menu">
+  <template>
+    <style>
+      ::content > * {
+        cursor: pointer;
+      }
+    </style>
+    <paper-listbox id="menu" multi>
+      <content></content>
+    </paper-listbox>
+  </template>
+  <script>
+    'use strict';
+    Polymer({
+      is: 'loot-menu',
+
+      listeners: {
+        'menu.iron-select': 'onSelect',
+      },
+
+      onSelect(evt) {
+        evt.currentTarget.select(evt.currentTarget.indexOf(evt.detail.item));
+      },
+    });
+  </script>
+</dom-module>

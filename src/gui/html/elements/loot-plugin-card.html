@@ -20,7 +20,6 @@ loot-clear-metadata
 <link rel="import" href="../../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../../bower_components/paper-item/paper-icon-item.html">
 <link rel="import" href="../../../../bower_components/paper-material/paper-material.html">
-<link rel="import" href="../../../../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../../../../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../../../../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../../../../bower_components/paper-toolbar/paper-toolbar.html">
@@ -28,6 +27,7 @@ loot-clear-metadata
 
 <link rel="import" href="loot-plugin-editor.html">
 <link rel="import" href="loot-custom-icons.html">
+<link rel="import" href="loot-menu.html">
 
 <dom-module id="loot-plugin-card">
   <template>
@@ -157,7 +157,7 @@ loot-clear-metadata
           <paper-tooltip for="hasUserEdits">Has User Metadata</paper-tooltip>
           <paper-menu-button id="menu" opened="{{data.isMenuOpen}}" horizontal-align="right">
             <paper-icon-button icon="more-vert" class="dropdown-trigger"></paper-icon-button>
-            <paper-menu class="dropdown-content">
+            <loot-menu class="dropdown-content">
               <paper-toggle-button id="showOnlyConflicts" checked="{{data.isConflictFilterChecked}}">Show Only Conflicts</paper-toggle-button>
               <paper-icon-item id="editMetadata">
                 <iron-icon icon="create" item-icon></iron-icon>
@@ -171,7 +171,7 @@ loot-clear-metadata
                 <iron-icon icon="delete" item-icon></iron-icon>
                 Clear User Metadata
               </paper-icon-item>
-            </paper-menu>
+            </loot-menu>
           </paper-menu-button>
         </paper-toolbar>
         <div id="content">
