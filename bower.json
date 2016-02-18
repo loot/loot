@@ -8,6 +8,7 @@
   ],
   "dependencies": {
     "polymer": "Polymer/polymer#^1.1.0",
+    "iron-dropdown": "loot/iron-dropdown#fix-position-inside-transformed-element",
     "iron-icons": "PolymerElements/iron-icons#^1.0.0",
     "iron-list": "loot/iron-list#patched-for-loot",
     "iron-pages": "PolymerElements/iron-pages#^1.0.0",
@@ -33,5 +34,8 @@
     "jed-gettext-parser": "^1.0.0",
     "marked": "^0.3.2",
     "lodash": "^4.3.0"
+  },
+  "resolutions": {
+    "iron-dropdown": "fix-position-inside-transformed-element"
   }
 }
