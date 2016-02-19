@@ -354,6 +354,10 @@ function onSidebarClick(evt) {
     document.getElementById('pluginCardList').scrollToIndex(index);
 
     if (evt.type === 'dblclick') {
+      /* Double-clicking can select the item's text, clear the selection in
+         case that has happened. */
+      window.getSelection().removeAllRanges();
+
       const card = document.getElementById(evt.target.getAttribute('data-id'));
       if (!card.classList.contains('flip')) {
         document.getElementById(evt.target.getAttribute('data-id')).onShowEditor();
