@@ -23,18 +23,6 @@
 */
 
 /* Misc */
-html /deep/ ::-webkit-scrollbar-corner {
-    background: inherit;
-}
-html /deep/ ::-webkit-scrollbar {
-    width: 12px;
-}
-html /deep/ ::-webkit-scrollbar-track {
-    background: inherit;
-}
-html /deep/ ::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.26);
-}
 html /deep/ paper-button[autofocus] {
     color: #64B5F6;
 }
@@ -44,9 +32,6 @@ a {
 }
 a:hover {
     text-decoration: underline;
-}
-html /deep/ *:focus {
-    outline: none;
 }
 tt, code, kbd, samp {
     font-family: Consolas, monospace;
