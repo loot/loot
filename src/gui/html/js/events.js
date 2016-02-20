@@ -119,9 +119,9 @@ function onSortPlugins() {
           existingPlugin.isEmpty = plugin.isEmpty;
         }
       });
-      /* Send cancelSort query to notify that no unapplied sorting changes are
-         present. Not doing so prevents LOOT's window from closing. */
-      loot.query('cancelSort');
+      /* Send discardUnappliedChanges query. Not doing so prevents LOOT's window
+         from closing. */
+      loot.query('discardUnappliedChanges');
       loot.Dialog.closeProgress();
       loot.Dialog.showNotification(loot.l10n.translate('Sorting made no changes to the load order.'));
       return;
@@ -333,18 +333,8 @@ function handleUnappliedChangesClose(change) {
     if (!result) {
       return;
     }
-    /* Cancel any sorting and close any editors. Cheat by sending a
-       cancelSort query for as many times as necessary. */
-    const queries = [];
-    let numQueries = 0;
-    if (!document.getElementById('applySortButton').hidden) {
-      numQueries += 1;
-    }
-    numQueries += document.body.getAttribute('data-editors');
-    for (let i = 0; i < numQueries; ++i) {
-      queries.push(loot.query('cancelSort'));
-    }
-    Promise.all(queries).then(() => {
+    /* Discard any unapplied changes. */
+    loot.query('discardUnappliedChanges').then(() => {
       window.close();
     }).catch(handlePromiseError);
   });

@@ -180,6 +180,12 @@ namespace loot {
             callback->Success("");
             return true;
         }
+        else if (request == "discardUnappliedChanges") {
+            while (_lootState.hasUnappliedChanges())
+                _lootState.decrementUnappliedChangeCounter();
+            callback->Success("");
+            return true;
+        }
         else {
             // May be a request with arguments.
             YAML::Node req;
