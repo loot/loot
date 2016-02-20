@@ -2,10 +2,10 @@
 function onSidebarFilterToggle(evt) {
   if (evt.target.id !== 'contentFilter') {
     loot.filters[evt.target.id] = evt.target.checked;
+    loot.query('saveFilterState', evt.target.id, evt.target.checked).catch(handlePromiseError);
   } else {
     loot.filters.contentSearchString = evt.target.value;
   }
-  loot.query('saveFilterState', evt.target.id, evt.target.checked).catch(handlePromiseError);
   filterPluginData(loot.game.plugins, loot.filters);
 }
 
