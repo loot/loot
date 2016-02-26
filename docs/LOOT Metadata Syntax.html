@@ -428,7 +428,7 @@ name: 'Unofficial Skyrim Patch on Steam Workshop'
 <table>
     <thead><tr><th>Key Name<th>Value Type<th>Required<th>Notes
     <tbody>
-        <tr><td><code>crc</code><td>hexadecimal integer<td>&#x2713;<td>The CRC checksum of the dirty plugin, before cleaning. LOOT displays the CRCs of installed plugins in its report. The 8-character CRC should be preceded by <code>0x</code> so that it is correctly interpreted.
+        <tr><td><code>crc</code><td>hexadecimal integer<td>&#x2713;<td>The CRC-32 checksum of the dirty plugin, before cleaning. LOOT displays the CRCs of installed plugins in its report. The 8-character CRC should be preceded by <code>0x</code> so that it is correctly interpreted.
         <tr><td><code>util</code><td>string<td>&#x2713;<td>The utility that should be used to clean the plugin.
         <tr><td><code>itm</code><td>integer<td>&#x2717;<td>The number of identical-to-master records reported for the dirty plugin. If the number is unknown, this field should not be supplied. If the number is known and zero, this field should be supplied.
         <tr><td><code>udr</code><td>integer<td>&#x2717;<td>The number of undeleted records reported for the dirty plugin. If the number is unknown, this field should not be supplied. If the number is known and zero, this field should be supplied.
@@ -529,7 +529,7 @@ msg:
         <tr><td>File<td><code>file("<var>filepath</var>")</code><td>Returns true if <var>filepath</var> is installed, false otherwise.
         <tr><td>File<td><code>regex("<var>regex</var>")</code><td>Returns true if a file matching <var>regex</var> is found, false otherwise.
         <tr><td>Many<td><code>many("<var>regex</var>")</code><td>Returns true if more than one file matching <var>regex</var> is found, and false otherwise.
-        <tr><td>Checksum<td><code>checksum("<var>filepath</var>", <var>checksum</var>)</code><td>Returns true if the calculated checksum of <var>filepath</var> matches <var>checksum</var>, false otherwise. If <var>filepath</var> does not exist, returns false.
+        <tr><td>Checksum<td><code>checksum("<var>filepath</var>", <var>checksum</var>)</code><td>Returns true if the calculated CRC-32 checksum of <var>filepath</var> matches <var>checksum</var>, false otherwise. If <var>filepath</var> does not exist, returns false.
         <tr><td>Version<td><code>version("<var>filepath</var>", "<var>version</var>", <var>comparator</var>)</code><td>Returns true if the boolean expression <code>(actual version of <var>filepath</var>) <var>comparator version</var></code> holds true, false otherwise. If <var>filepath</var> does not exist and <var>comparator</var> is <code>==</code>, <code>&gt;</code> or <code>&gt;=</code>, returns false. If <var>filepath</var> does not exist and <var>comparator</var> is <code>!=</code>, <code>&lt;</code> or <code>&lt;=</code>, returns true. The comparison is not a straightforward per-character comparison, but instead uses the precedence rules defined by <a href="http://semver.org/">Semantic Versioning</a>, extended to allow leading zeroes, an arbitrary number of release version numbers, case-insensitivity and a wider range of separator characters.
         <tr><td>Plugin Active Status<td><code>active("<var>filepath</var>")</code><td>Returns true if <var>filepath</var> is a <code>.esp</code> or <code>.esm</code> file that is both installed and active, false otherwise.
 </table>
