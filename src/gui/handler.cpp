@@ -282,7 +282,8 @@ namespace loot {
                 // Update the settings.
                 // If the user has deleted a default game, we don't want to restore it now.
                 // It will be restored when LOOT is next loaded.
-                _lootState.load(request["args"][0]);
+                YAML::Node settings = request["args"][0];
+                _lootState.load(settings);
 
                 // Now send back the new list of installed games to the UI.
                 BOOST_LOG_TRIVIAL(trace) << "Getting new list of installed games.";
