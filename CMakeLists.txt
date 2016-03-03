@@ -197,7 +197,16 @@ set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/fixtures.h"
 						"${CMAKE_SOURCE_DIR}/src/tests/gui/test_loot_settings.h"
 						"${CMAKE_SOURCE_DIR}/src/tests/gui/test_loot_state.h")
 
-source_group("Header Files" FILES ${LOOT_HEADERS} ${LOOT_GUI_HEADERS} ${LOOT_API_HEADERS} ${LOOT_TESTS_HEADERS})
+source_group("Header Files\\backend" FILES ${LOOT_HEADERS})
+source_group("Header Files\\gui" FILES ${LOOT_GUI_HEADERS})
+source_group("Header Files\\api" FILES ${LOOT_API_HEADERS})
+source_group("Header Files\\tests" FILES ${LOOT_TESTS_HEADERS})
+
+source_group("Source Files\\backend" FILES ${LOOT_SRC})
+source_group("Source Files\\gui" FILES ${LOOT_GUI_SRC})
+source_group("Source Files\\api" FILES ${LOOT_API_SRC})
+source_group("Source Files\\tests" FILES ${LOOT_TESTS_SRC})
+source_group("Source Files\\validator" FILES ${LOOT_VALIDATOR_SRC})
 
 # Include source and library directories.
 include_directories ("${CMAKE_SOURCE_DIR}/src"
