@@ -186,7 +186,6 @@
 
       /* UI state variables */
       this.id = this.name.replace(/\s+/g, '');
-      this._isEditorOpen = false;
       this.isConflictFilterChecked = false;
       this._isSearchResult = false;
     }
@@ -252,7 +251,6 @@
           pluginId: this.id,
           priority: this.priority,
           isPriorityGlobal: this.isPriorityGlobal,
-          isEditorOpen: this.isEditorOpen,
           hasUserEdits: this.hasUserEdits,
         },
       }));
@@ -391,18 +389,6 @@
       }
     }
 
-    get isEditorOpen() {
-      return this._isEditorOpen;
-    }
-
-    set isEditorOpen(isEditorOpen) {
-      if (this._isEditorOpen !== isEditorOpen) {
-        this._isEditorOpen = isEditorOpen;
-
-        this._dispatchItemContentChangeEvent();
-      }
-    }
-
     get isSearchResult() {
       return this._isSearchResult;
     }
@@ -456,11 +442,6 @@
           item.setAttribute('is-priority-global', '');
         } else {
           item.removeAttribute('is-priority-global');
-        }
-        if (evt.detail.isEditorOpen) {
-          item.setAttribute('is-editor-open', '');
-        } else {
-          item.removeAttribute('is-editor-open');
         }
         if (evt.detail.hasUserEdits) {
           item.setAttribute('has-user-edits', '');

@@ -256,12 +256,6 @@ describe('Plugin', () => {
       plugin.id.should.equal('testpluginname');
     });
 
-    it('should set isEditorOpen to false', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
-
-      plugin.isEditorOpen.should.be.false();
-    });
-
     it('should set isConflictFilterChecked to false', () => {
       const plugin = new loot.Plugin({ name: 'test' });
 
@@ -691,7 +685,6 @@ describe('Plugin', () => {
         evt.detail.pluginId.should.equal(plugin.id);
         evt.detail.priority.should.equal(plugin.priority);
         evt.detail.isPriorityGlobal.should.equal(plugin.isPriorityGlobal);
-        evt.detail.isEditorOpen.should.equal(plugin.isEditorOpen);
         evt.detail.hasUserEdits.should.equal(plugin.hasUserEdits);
         done();
       };
@@ -753,7 +746,6 @@ describe('Plugin', () => {
         evt.detail.pluginId.should.equal(plugin.id);
         evt.detail.priority.should.equal(plugin.priority);
         evt.detail.isPriorityGlobal.should.equal(plugin.isPriorityGlobal);
-        evt.detail.isEditorOpen.should.equal(plugin.isEditorOpen);
         evt.detail.hasUserEdits.should.equal(plugin.hasUserEdits);
         done();
       };
@@ -815,7 +807,6 @@ describe('Plugin', () => {
         evt.detail.pluginId.should.equal(plugin.id);
         evt.detail.priority.should.equal(plugin.priority);
         evt.detail.isPriorityGlobal.should.equal(plugin.isPriorityGlobal);
-        evt.detail.isEditorOpen.should.equal(plugin.isEditorOpen);
         evt.detail.hasUserEdits.should.equal(plugin.hasUserEdits);
         done();
       };
@@ -823,59 +814,6 @@ describe('Plugin', () => {
       document.addEventListener('loot-plugin-item-content-change', handleEvent);
 
       plugin.isPriorityGlobal = true;
-    });
-  });
-
-  describe('#isEditorOpen', () => {
-    let handleEvent;
-
-    afterEach(() => {
-      document.removeEventListener('loot-plugin-item-content-change', handleEvent);
-    });
-
-    it('getting value should return false if it has not been set in the constructor', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
-
-      plugin.isEditorOpen.should.be.false();
-    });
-
-    it('setting value should store set value', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
-
-      plugin.isEditorOpen = true;
-
-      plugin.isEditorOpen.should.be.true();
-    });
-
-    it('setting value to the current value should not fire an event', (done) => {
-      const plugin = new loot.Plugin({ name: 'test' });
-
-      handleEvent = () => {
-        done(new Error('Should not have fired an event'));
-      };
-
-      document.addEventListener('loot-plugin-item-content-change', handleEvent);
-
-      plugin.isEditorOpen = plugin.isEditorOpen;
-
-      setTimeout(done, 100);
-    });
-
-    it('setting value not equal to the current value should fire an event', (done) => {
-      const plugin = new loot.Plugin({ name: 'test' });
-
-      handleEvent = (evt) => {
-        evt.detail.pluginId.should.equal(plugin.id);
-        evt.detail.priority.should.equal(plugin.priority);
-        evt.detail.isPriorityGlobal.should.equal(plugin.isPriorityGlobal);
-        evt.detail.isEditorOpen.should.equal(plugin.isEditorOpen);
-        evt.detail.hasUserEdits.should.equal(plugin.hasUserEdits);
-        done();
-      };
-
-      document.addEventListener('loot-plugin-item-content-change', handleEvent);
-
-      plugin.isEditorOpen = true;
     });
   });
 

@@ -12,28 +12,9 @@
   <template>
     <style>
       /* Flip effect for user metadata / editor open icons. */
-      #flipper {
-        transform-style: preserve-3d;
-        transition: 0.6s;
-        overflow: visible;
-      }
-      #flipper.flipped {
-        transform: rotateY(180deg);
-      }
-      #hasUserEdits,
-      #editorIsOpen {
+      #hasUserEdits {
         display: block;
         margin-right: 0;
-        backface-visibility: hidden;
-      }
-      #hasUserEdits {
-        transform: translateZ(1px);
-        position: absolute;
-        top: 0;
-        left: 0;
-      }
-      #editorIsOpen {
-        transform: rotateY(180deg) translateZ(-1px);
       }
 
       /* paper-item (two-line) */
@@ -104,12 +85,8 @@
           <span id="priority" hidden$="[[!priority]]">[[priority]]</span>
         </div>
       </paper-item-body>
-      <paper-tooltip for="editorIsOpen" position="left">Editor Is Open</paper-tooltip>
+      <iron-icon id="hasUserEdits" icon="account-circle" hidden$="[[!hasUserEdits]]"></iron-icon>
       <paper-tooltip for="hasUserEdits" position="left">Has User Metadata</paper-tooltip>
-      <div id="flipper" class$="[[computeFlipperClass(isEditorOpen)]]">
-        <iron-icon id="editorIsOpen" icon="create"></iron-icon>
-        <iron-icon id="hasUserEdits" icon="account-circle" hidden$="[[!hasUserEdits]]"></iron-icon>
-      </div>
     </paper-item>
   </template>
   <script>
@@ -127,23 +104,11 @@
           value: false,
           reflectToAttribute: true,
         },
-        isEditorOpen: {
-          type: Boolean,
-          value: false,
-          reflectToAttribute: true,
-        },
         hasUserEdits: {
           type: Boolean,
           value: false,
           reflectToAttribute: true,
         },
-      },
-
-      computeFlipperClass(isEditorOpen) {
-        if (isEditorOpen) {
-          return 'flipped';
-        }
-        return '';
       },
 
       getName() {

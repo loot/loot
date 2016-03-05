@@ -84,7 +84,6 @@
 
     pluginItem.querySelector('paper-tooltip[for=globalPriorityIcon]').textContent = l10n.translate('Global Priority');
     pluginItem.querySelector('paper-tooltip[for=hasUserEdits]').textContent = l10n.translate('Has User Metadata');
-    pluginItem.querySelector('paper-tooltip[for=editorIsOpen]').textContent = l10n.translate('Editor Is Open');
   }
 
   function translateMessageDialogTemplate(l10n) {
