@@ -44,8 +44,7 @@ loot-clear-metadata
       :host(.highlight) #wrapper {
         outline: 4px solid var(--loot-accent-color);
       }
-      :host([is-search-result]) #front,
-      :host([is-search-result]) #editor {
+      :host(.search-result) #wrapper > * {
         box-shadow: inset 4px 0 var(--loot-primary-color);
       }
       #front {
@@ -80,7 +79,8 @@ loot-clear-metadata
       #activeTick {
         color: green;
       }
-      :host(:not([is-active])) #activeTick {
+      #activeTick[hidden] {
+        display: initial;
         visibility: hidden;
       }
 
@@ -147,13 +147,13 @@ loot-clear-metadata
             <content select=".version"></content>
             <content select=".crc"></content>
           </div>
-          <iron-icon id="isMaster" icon="loot-custom-icons:crown" hidden$="[[!isMaster]]"></iron-icon>
+          <iron-icon id="isMaster" icon="loot-custom-icons:crown"></iron-icon>
           <paper-tooltip for="isMaster">Master File</paper-tooltip>
-          <iron-icon id="emptyPlugin" icon="visibility-off" hidden$="[[!isEmpty]]"></iron-icon>
-          <paper-tooltip for="emptyPlugin">Empty Plugin</paper-tooltip>
-          <iron-icon id="loadsArchive" icon="attachment" hidden$="[[!loadsArchive]]"></iron-icon>
+          <iron-icon id="isEmpty" icon="visibility-off"></iron-icon>
+          <paper-tooltip for="isEmpty">Empty Plugin</paper-tooltip>
+          <iron-icon id="loadsArchive" icon="attachment"></iron-icon>
           <paper-tooltip for="loadsArchive">Loads Archive</paper-tooltip>
-          <iron-icon id="hasUserEdits" icon="account-circle" hidden$="[[!hasUserEdits]]"></iron-icon>
+          <iron-icon id="hasUserEdits" icon="account-circle"></iron-icon>
           <paper-tooltip for="hasUserEdits">Has User Metadata</paper-tooltip>
           <paper-menu-button id="menu" horizontal-align="right">
             <paper-icon-button icon="more-vert" class="dropdown-trigger"></paper-icon-button>
@@ -203,36 +203,6 @@ loot-clear-metadata
           notify: true,
           observer: '_dataChanged',
         },
-        isActive: {
-          type: Boolean,
-          value: false,
-          reflectToAttribute: true,
-        },
-        isMaster: {
-          type: Boolean,
-          value: false,
-          reflectToAttribute: true,
-        },
-        isEmpty: {
-          type: Boolean,
-          value: false,
-          reflectToAttribute: true,
-        },
-        loadsArchive: {
-          type: Boolean,
-          value: false,
-          reflectToAttribute: true,
-        },
-        hasUserEdits: {
-          type: Boolean,
-          value: false,
-          reflectToAttribute: true,
-        },
-        isSearchResult: {
-          type: Boolean,
-          value: false,
-          reflectToAttribute: true,
-        },
       },
 
       attached() {
@@ -277,11 +247,14 @@ loot-clear-metadata
           /* Initialise the card content data. */
           this.updateContent();
 
-          /* Also set highlight if the conflict filter is active. */
-          this.classList.toggle('highlight', newValue.isConflictFilterChecked);
+          /* Set icons' visibility */
+          this.$.activeTick.hidden = !this.data.isActive;
+          this.$.isMaster.hidden = !this.data.isMaster;
+          this.$.isEmpty.hidden = !this.data.isEmpty;
+          this.$.loadsArchive.hidden = !this.data.loadsArchive;
 
-          /* Set highlight if the plugin is a search result. */
-          this.classList.toggle('search-result', newValue.isSearchResult);
+          /* Also set highlight if the conflict filter is active. */
+          this.classList.toggle('highlight', this.data.isConflictFilterChecked);
         }
       },
 
@@ -330,8 +303,9 @@ loot-clear-metadata
           this._setTagsContent(cardContent.tags);
           this._setMessagesContent(cardContent.messages);
 
-          this.hasUserEdits = this.data.hasUserEdits;
-          this.isSearchResult = this.data.isSearchResult;
+          this.$.hasUserEdits.hidden = !this.data.hasUserEdits;
+          /* Set highlight if the plugin is a search result. */
+          this.classList.toggle('search-result', this.data.isSearchResult);
 
           /* Update the conflict filter toggle state. */
           this.$.showOnlyConflicts.checked = this.data.isConflictFilterChecked;
