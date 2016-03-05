@@ -245,7 +245,8 @@ loot-clear-metadata
           }
 
           /* Initialise the card content data. */
-          this.updateContent();
+          this.updateContent(true);
+          this.updateStyling();
 
           /* Set icons' visibility */
           this.$.activeTick.hidden = !this.data.isActive;
@@ -290,7 +291,7 @@ loot-clear-metadata
         }
       },
 
-      updateContent() {
+      updateContent(updateBodyContent) {
         if (this.data) {
           const cardContent = this.data.getCardContent(loot.filters);
 
@@ -300,18 +301,25 @@ loot-clear-metadata
           this.getElementsByClassName('crc')[0].textContent = cardContent.crc;
           this.$.editor.getElementsByClassName('crc')[0].textContent = cardContent.crc;
 
-          this._setTagsContent(cardContent.tags);
-          this._setMessagesContent(cardContent.messages);
+          if (updateBodyContent) {
+            this._setTagsContent(cardContent.tags);
+            this._setMessagesContent(cardContent.messages);
 
-          this.$.hasUserEdits.hidden = !this.data.hasUserEdits;
-          /* Set highlight if the plugin is a search result. */
-          this.classList.toggle('search-result', this.data.isSearchResult);
+            /* Notify that this card (may have) changed size. */
+            this.dispatchEvent(new CustomEvent('iron-resize', { bubbles: true }));
+          }
 
           /* Update the conflict filter toggle state. */
           this.$.showOnlyConflicts.checked = this.data.isConflictFilterChecked;
+        }
+      },
 
-          /* Notify that this card (may have) changed size. */
-          this.dispatchEvent(new CustomEvent('iron-resize', { bubbles: true }));
+      updateStyling() {
+        if (this.data) {
+          this.$.hasUserEdits.hidden = !this.data.hasUserEdits;
+
+          /* Set highlight if the plugin is a search result. */
+          this.classList.toggle('search-result', this.data.isSearchResult);
         }
       },
 

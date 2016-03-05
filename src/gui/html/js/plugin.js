@@ -231,8 +231,17 @@
       return rowData;
     }
 
-    _dispatchCardContentChangeEvent() {
+    _dispatchCardContentChangeEvent(mayChangeCardHeight) {
       document.dispatchEvent(new CustomEvent('loot-plugin-card-content-change', {
+        detail: {
+          pluginId: this.id,
+          mayChangeCardHeight,
+        },
+      }));
+    }
+
+    _dispatchCardStylingChangeEvent() {
+      document.dispatchEvent(new CustomEvent('loot-plugin-card-styling-change', {
         detail: { pluginId: this.id },
       }));
     }
@@ -291,6 +300,7 @@
         document.dispatchEvent(new CustomEvent('loot-plugin-message-change', {
           detail: {
             pluginId: this.id,
+            mayChangeCardHeight: true,
             totalDiff: newTotal - oldTotal,
             warningDiff: newWarns - oldWarns,
             errorDiff: newErrs - oldErrs,
@@ -324,7 +334,7 @@
       if (this._crc !== crc) {
         this._crc = crc;
 
-        this._dispatchCardContentChangeEvent();
+        this._dispatchCardContentChangeEvent(false);
       }
     }
 
@@ -336,7 +346,7 @@
       if (!_.isEqual(this._tags, tags)) {
         this._tags = tags;
 
-        this._dispatchCardContentChangeEvent();
+        this._dispatchCardContentChangeEvent(true);
       }
     }
 
@@ -353,7 +363,7 @@
         this._userlist = userlist;
 
         this._dispatchItemContentChangeEvent();
-        this._dispatchCardContentChangeEvent();
+        this._dispatchCardStylingChangeEvent();
       }
     }
 
@@ -401,7 +411,7 @@
       if (this._isSearchResult !== isSearchResult) {
         this._isSearchResult = isSearchResult;
 
-        this._dispatchCardContentChangeEvent();
+        this._dispatchCardStylingChangeEvent();
       }
     }
 
@@ -427,7 +437,14 @@
     static onContentChange(evt) {
       const card = document.getElementById(evt.detail.pluginId);
       if (card) {
-        card.updateContent();
+        card.updateContent(evt.detail.mayChangeCardHeight);
+      }
+    }
+
+    static onCardStylingChange(evt) {
+      const card = document.getElementById(evt.detail.pluginId);
+      if (card) {
+        card.updateStyling();
       }
     }
 

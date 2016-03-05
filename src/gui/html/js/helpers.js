@@ -50,7 +50,7 @@ function filterPluginData(plugins, filters) {
     const pluginCards = document.getElementById('pluginCardList').children;
     for (let i = 0; i < pluginCards.length; ++i) {
       if (pluginCards[i].data) {
-        pluginCards[i].updateContent();
+        pluginCards[i].updateContent(true);
       }
     }
     document.getElementById('cardsNav').notifyResize();
