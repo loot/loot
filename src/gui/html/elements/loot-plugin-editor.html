@@ -29,6 +29,9 @@ loot-editor-close
       :host {
         position: relative;
         @apply(--shadow-elevation-2dp);
+        height: 264px;
+        min-height: 56px;
+        max-height: calc(100% - 56px);
       }
 
       /* Material Design for non-button icons. */
@@ -64,6 +67,10 @@ loot-editor-close
         margin-right: 16px;
         @apply(--layout-flex);
       }
+      iron-pages {
+        height: calc(100% - 104px);
+        overflow: auto;
+      }
       iron-pages > *:not(.iron-selected) {
         display: none;
       }
@@ -88,7 +95,19 @@ loot-editor-close
       paper-tab {
         --paper-tab-ink: var(--loot-accent-color);
       }
+      #splitter {
+        width: 100%;
+        height: 10px;
+        position: absolute;
+        top: -5px;
+        cursor: row-resize;
+        z-index: 1;
+      }
+      #splitter:active {
+        background: rgba(0, 0, 0, 0.12);
+      }
     </style>
+    <div id="splitter"></div>
     <paper-toolbar class="medium-tall">
       <div id="title">
         <content select="h1"></content>
@@ -211,17 +230,26 @@ loot-editor-close
         this.$.accept.addEventListener('click', this._onHideEditor);
         this.$.cancel.addEventListener('click', this._onHideEditor);
         this.$.tablePages.addEventListener('iron-deselect', this._onTablePageActivate);
+        this.$.splitter.addEventListener('track', this._onSplitterDrag);
       },
 
       detached() {
         this.$.accept.removeEventListener('click', this._onHideEditor);
         this.$.cancel.removeEventListener('click', this._onHideEditor);
         this.$.tablePages.removeEventListener('iron-deselect', this._onTablePageActivate);
+        this.$.splitter.removeEventListener('track', this._onSplitterDrag);
       },
 
       _onTablePageActivate() {
         /* Notify that this editor (may have) changed size. */
         this.dispatchEvent(new CustomEvent('iron-resize', { bubbles: true }));
+      },
+
+      _onSplitterDrag(evt) {
+        if (evt.detail.state === 'start') {
+          this.parentNode.host.style.height = parseInt(window.getComputedStyle(this.parentNode.host).height) + 'px';
+        }
+        this.parentNode.host.style.height = (parseInt(this.parentNode.host.style.height) - evt.detail.ddy) + 'px';
       },
 
       _rowDataToMessage(rowData) {
@@ -306,6 +334,9 @@ loot-editor-close
         }
 
         if (isValid || evt.target.id !== 'accept') {
+          /* Reset height to default */
+          this.parentElement.parentNode.host.style.height = '264px';
+
           /* Fire the close event, saying whether or not to save data. */
           evt.target.dispatchEvent(new CustomEvent('loot-editor-close', {
             detail: evt.target.id === 'accept',
