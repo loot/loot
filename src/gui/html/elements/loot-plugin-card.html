@@ -32,43 +32,18 @@ loot-clear-metadata
 <dom-module id="loot-plugin-card">
   <template>
     <style>
-      /* Host and front/editor styling. */
+      /* Host styling. */
       #wrapper {
         display: block;
         background: white;
         margin: 0 8px 8px 8px;
         position: relative;
-        transition: 0.6s;
-        transform-style: preserve-3d;
       }
       :host(.highlight) #wrapper {
         outline: 4px solid var(--loot-accent-color);
       }
-      :host(.search-result) #wrapper > * {
+      :host(.search-result) #wrapper {
         box-shadow: inset 4px 0 var(--loot-primary-color);
-      }
-      #front {
-        display: block;
-        backface-visibility: hidden;
-      }
-      #editor {
-        transform: rotateY(180deg);
-        display:none;
-        backface-visibility: hidden;
-      }
-
-      /* Flip animation styling. */
-      :host(.flip) #wrapper {
-        transform: rotateY(180deg);
-      }
-      :host(.flip) #front  {
-        display: none;
-      }
-      :host(.flip) #editor  {
-        display: block;
-      }
-      :host(.fastflip) #wrapper {
-        transition-duration: 1ms;
       }
 
       /* Icon styling. */
@@ -138,53 +113,46 @@ loot-clear-metadata
       }
     </style>
     <paper-material id="wrapper" elevation="1">
-      <section id="front">
-        <paper-toolbar>
-          <iron-icon id="activeTick" icon="check"></iron-icon>
-          <paper-tooltip for="activeTick">Active Plugin</paper-tooltip>
-          <div id="title">
-            <content select="h1"></content>
-            <content select=".version"></content>
-            <content select=".crc"></content>
-          </div>
-          <iron-icon id="isMaster" icon="loot-custom-icons:crown"></iron-icon>
-          <paper-tooltip for="isMaster">Master File</paper-tooltip>
-          <iron-icon id="isEmpty" icon="visibility-off"></iron-icon>
-          <paper-tooltip for="isEmpty">Empty Plugin</paper-tooltip>
-          <iron-icon id="loadsArchive" icon="attachment"></iron-icon>
-          <paper-tooltip for="loadsArchive">Loads Archive</paper-tooltip>
-          <iron-icon id="hasUserEdits" icon="account-circle"></iron-icon>
-          <paper-tooltip for="hasUserEdits">Has User Metadata</paper-tooltip>
-          <paper-menu-button id="menu" horizontal-align="right">
-            <paper-icon-button icon="more-vert" class="dropdown-trigger"></paper-icon-button>
-            <loot-menu class="dropdown-content">
-              <paper-toggle-button id="showOnlyConflicts" checked="{{data.isConflictFilterChecked}}">Show Only Conflicts</paper-toggle-button>
-              <paper-icon-item id="editMetadata">
-                <iron-icon icon="create" item-icon></iron-icon>
-                Edit Metadata
-              </paper-icon-item>
-              <paper-icon-item id="copyMetadata">
-                <iron-icon icon="content-copy" item-icon></iron-icon>
-                Copy Metadata
-              </paper-icon-item>
-              <paper-icon-item id="clearMetadata">
-                <iron-icon icon="delete" item-icon></iron-icon>
-                Clear User Metadata
-              </paper-icon-item>
-            </loot-menu>
-          </paper-menu-button>
-        </paper-toolbar>
-        <div id="content">
-          <content select=".tag.add"></content>
-          <content select=".tag.remove"></content>
-          <content></content>
+      <paper-toolbar>
+        <iron-icon id="activeTick" icon="check"></iron-icon>
+        <paper-tooltip for="activeTick">Active Plugin</paper-tooltip>
+        <div id="title">
+          <content select="h1"></content>
+          <content select=".version"></content>
+          <content select=".crc"></content>
         </div>
-      </section>
-      <loot-plugin-editor id="editor">
-        <h1>[[data.name]]</h1>
-        <span class="version"></span>
-        <span class="crc"></span>
-      </loot-plugin-editor>
+        <iron-icon id="isMaster" icon="loot-custom-icons:crown"></iron-icon>
+        <paper-tooltip for="isMaster">Master File</paper-tooltip>
+        <iron-icon id="isEmpty" icon="visibility-off"></iron-icon>
+        <paper-tooltip for="isEmpty">Empty Plugin</paper-tooltip>
+        <iron-icon id="loadsArchive" icon="attachment"></iron-icon>
+        <paper-tooltip for="loadsArchive">Loads Archive</paper-tooltip>
+        <iron-icon id="hasUserEdits" icon="account-circle"></iron-icon>
+        <paper-tooltip for="hasUserEdits">Has User Metadata</paper-tooltip>
+        <paper-menu-button id="menu" horizontal-align="right">
+          <paper-icon-button icon="more-vert" class="dropdown-trigger"></paper-icon-button>
+          <loot-menu class="dropdown-content">
+            <paper-toggle-button id="showOnlyConflicts" checked="{{data.isConflictFilterChecked}}">Show Only Conflicts</paper-toggle-button>
+            <paper-icon-item id="editMetadata">
+              <iron-icon icon="create" item-icon></iron-icon>
+              Edit Metadata
+            </paper-icon-item>
+            <paper-icon-item id="copyMetadata">
+              <iron-icon icon="content-copy" item-icon></iron-icon>
+              Copy Metadata
+            </paper-icon-item>
+            <paper-icon-item id="clearMetadata">
+              <iron-icon icon="delete" item-icon></iron-icon>
+              Clear User Metadata
+            </paper-icon-item>
+          </loot-menu>
+        </paper-menu-button>
+      </paper-toolbar>
+      <div id="content">
+        <content select=".tag.add"></content>
+        <content select=".tag.remove"></content>
+        <content></content>
+      </div>
     </paper-material>
   </template>
   <script>
@@ -208,42 +176,19 @@ loot-clear-metadata
       attached() {
         this.$.showOnlyConflicts.addEventListener('change', this._onShowOnlyConflicts);
         this.$.editMetadata.addEventListener('click', this.onShowEditor);
-        this.$.editor.addEventListener('loot-editor-close', this._onHideEditor);
         this.$.copyMetadata.addEventListener('click', this._onCopyMetadata);
         this.$.clearMetadata.addEventListener('click', this._onClearMetadata);
-
-        this.addEventListener('transitionend', this._onFlipEnd);
       },
 
       detached() {
         this.$.showOnlyConflicts.removeEventListener('change', this._onShowOnlyConflicts);
         this.$.editMetadata.removeEventListener('click', this.onShowEditor);
-        this.$.editor.removeEventListener('loot-editor-close', this._onHideEditor);
         this.$.copyMetadata.removeEventListener('click', this._onCopyMetadata);
         this.$.clearMetadata.removeEventListener('click', this._onClearMetadata);
-
-        this.removeEventListener('transitionend', this._onFlipEnd);
       },
 
       _dataChanged(newValue, oldValue) {
         if (newValue) {
-          if (newValue.isEditorOpen) {
-            /* Record existing data. */
-            if (oldValue) {
-              oldValue.editor = this.readFromEditor(oldValue);
-            }
-            /* Share the data with the editor. */
-            this.$.editor.setEditorData(newValue);
-          }
-
-          /* Set the card flip state. */
-          if (this.classList.contains('flip') !== newValue.isEditorOpen) {
-            /* Temporarily speed up the flip effect, as otherwise fast
-               scrolling lets the user see the end of it. */
-            this.classList.add('fastflip');
-            this.classList.toggle('flip');
-          }
-
           /* Initialise the card content data. */
           this.updateContent(true);
           this.updateStyling();
@@ -296,10 +241,8 @@ loot-clear-metadata
           const cardContent = this.data.getCardContent(loot.filters);
 
           this.getElementsByClassName('version')[0].textContent = cardContent.version;
-          this.$.editor.getElementsByClassName('version')[0].textContent = cardContent.version;
 
           this.getElementsByClassName('crc')[0].textContent = cardContent.crc;
-          this.$.editor.getElementsByClassName('crc')[0].textContent = cardContent.crc;
 
           if (updateBodyContent) {
             this._setTagsContent(cardContent.tags);
@@ -327,56 +270,11 @@ loot-clear-metadata
         return this.getElementsByTagName('h1')[0].textContent;
       },
 
-      _onFlipEnd() {
-        /* Remove fastflip class if present. This also fires when the menu is
-           opened or closed, but that isn't an issue. */
-        this.classList.remove('fastflip');
-      },
-
       onShowEditor() {
-        let card;
-        if (this.tagName === 'LOOT-PLUGIN-CARD') {
-          card = this;
-        } else {
-          card = getMenuItemCard(this);
-        }
-
-        /* If the editor hasn't already been opened, its data is not yet set, so do that now. */
-        if (!card.data.isEditorOpen && !card.data.editor) {
-          card.$.editor.setEditorData(card.data);
-        }
-
-        card.data.isEditorOpen = true;
-
-        card.classList.toggle('flip');
-
         /* Fire an open event, so that the UI can enter edit mode. */
-        card.dispatchEvent(new CustomEvent('loot-editor-open', {
+        this.dispatchEvent(new CustomEvent('loot-editor-open', {
           bubbles: true,
         }));
-
-        /* Notify that this card (may have) changed size. */
-        card.dispatchEvent(new CustomEvent('iron-resize', { bubbles: true }));
-      },
-
-      _onHideEditor() {
-        let card;
-        if (this.tagName === 'LOOT-PLUGIN-CARD') {
-          card = this;
-        } else {
-          card = getMenuItemCard(this);
-        }
-
-        /* Now hide editor. */
-        card.classList.toggle('flip');
-        card.data.isEditorOpen = false;
-
-        /* Notify that this card (may have) changed size. */
-        card.dispatchEvent(new CustomEvent('iron-resize', { bubbles: true }));
-      },
-
-      readFromEditor(oldData) {
-        return this.$.editor.readFromEditor(oldData);
       },
 
       _onShowOnlyConflicts(evt) {

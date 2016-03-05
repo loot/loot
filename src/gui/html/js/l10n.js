@@ -30,11 +30,6 @@
     /* Plugin editor template. */
     const pluginEditor = document.getElementById('loot-plugin-editor').querySelector('template').content;
 
-    pluginEditor.querySelector('paper-tooltip[for=activeTick]').textContent = l10n.translate('Active Plugin');
-    pluginEditor.querySelector('paper-tooltip[for=isMaster]').textContent = l10n.translate('Master File');
-    pluginEditor.querySelector('paper-tooltip[for=isEmpty]').textContent = l10n.translate('Empty Plugin');
-    pluginEditor.querySelector('paper-tooltip[for=loadsArchive]').textContent = l10n.translate('Loads Archive');
-
     pluginEditor.getElementById('enableEdits').previousElementSibling.textContent = l10n.translate('Enable Edits');
     pluginEditor.getElementById('isPriorityGlobal').previousElementSibling.textContent = l10n.translate('Global Priority');
     pluginEditor.querySelector('paper-tooltip[for=isPriorityGlobal]').textContent = l10n.translate('Global priorities are compared against all other plugins. Normal priorities are compared against only conflicting plugins.');

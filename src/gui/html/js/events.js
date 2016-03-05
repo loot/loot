@@ -414,59 +414,55 @@ function onShowSettingsDialog() {
 }
 
 function onEditorOpen(evt) {
-  /* Update the size of the card in the iron-list. */
-  document.getElementById('pluginCardList').updateSizeForItem(evt.target.data);
+  /* Set the editor data. */
+  const editor = document.getElementById('editor');
+  editor.setEditorData(evt.target.data);
 
-  /* Enable priority hover in plugins list and enable header
-     buttons if this is the only editor instance. */
-  let numEditors = 0;
-  if (document.body.hasAttribute('data-editors')) {
-    numEditors = parseInt(document.body.getAttribute('data-editors'), 10);
-  }
-  ++numEditors;
-
-  if (numEditors === 1) {
-    /* Set up drag 'n' drop event handlers. */
-    const elements = document.getElementById('cardsNav').getElementsByTagName('loot-plugin-item');
-    for (let i = 0; i < elements.length; ++i) {
-      elements[i].draggable = true;
-      elements[i].addEventListener('dragstart', elements[i].onDragStart);
-    }
-
-    /* Disable the toolbar elements. */
-    document.getElementById('wipeUserlistButton').setAttribute('disabled', '');
-    document.getElementById('copyContentButton').setAttribute('disabled', '');
-    document.getElementById('refreshContentButton').setAttribute('disabled', '');
-    document.getElementById('settingsButton').setAttribute('disabled', '');
-    document.getElementById('gameMenu').setAttribute('disabled', '');
-    document.getElementById('updateMasterlistButton').setAttribute('disabled', '');
-    document.getElementById('sortButton').setAttribute('disabled', '');
-  }
-  document.body.setAttribute('data-editors', numEditors);
+  /* Set body attribute so that sidebar items are styled correctly. */
+  document.body.setAttribute('data-editors', true);
   document.getElementById('cardsNav').notifyResize();
+
+  /* Unhide editor. */
+  editor.hidden = false;
+
+  /* Set up drag 'n' drop event handlers. */
+  const elements = document.getElementById('cardsNav').getElementsByTagName('loot-plugin-item');
+  for (let i = 0; i < elements.length; ++i) {
+    elements[i].draggable = true;
+    elements[i].addEventListener('dragstart', elements[i].onDragStart);
+  }
+
+  /* Disable the toolbar elements. */
+  document.getElementById('wipeUserlistButton').setAttribute('disabled', '');
+  document.getElementById('copyContentButton').setAttribute('disabled', '');
+  document.getElementById('refreshContentButton').setAttribute('disabled', '');
+  document.getElementById('settingsButton').setAttribute('disabled', '');
+  document.getElementById('gameMenu').setAttribute('disabled', '');
+  document.getElementById('updateMasterlistButton').setAttribute('disabled', '');
+  document.getElementById('sortButton').setAttribute('disabled', '');
 
   return loot.query('editorOpened').catch(handlePromiseError);
 }
 function onEditorClose(evt) {
-  /* Update the size of the card in the iron-list. */
-  document.getElementById('pluginCardList').updateSizeForItem(evt.target.data);
-
   /* evt.detail is true if the apply button was pressed. */
   let promise;
   if (evt.detail) {
     /* Need to record the editor control values and work out what's
        changed, and update any UI elements necessary. Offload the
        majority of the work to the C++ side of things. */
-    const edits = evt.target.readFromEditor(evt.target.data);
+    const plugin = loot.game.plugins.find((item) => {
+      return item.name === evt.target.querySelector('h1').textContent;
+    })
+    const edits = evt.target.readFromEditor(plugin);
     promise = loot.query('editorClosed', edits).then(JSON.parse).then((result) => {
       if (result) {
-        evt.target.data.priority = result.priority;
-        evt.target.data.isPriorityGlobal = result.isPriorityGlobal;
-        evt.target.data.messages = result.messages;
-        evt.target.data.tags = result.tags;
-        evt.target.data.isDirty = result.isDirty;
+        plugin.priority = result.priority;
+        plugin.isPriorityGlobal = result.isPriorityGlobal;
+        plugin.messages = result.messages;
+        plugin.tags = result.tags;
+        plugin.isDirty = result.isDirty;
 
-        evt.target.data.userlist = edits.userlist;
+        plugin.userlist = edits.userlist;
 
         /* Now perform search again. If there is no current search, this won't
            do anything. */
@@ -479,35 +475,28 @@ function onEditorClose(evt) {
     promise = loot.query('editorClosed');
   }
   promise.then(() => {
-    delete evt.target.data.editor;
-
-    /* Disable priority hover in plugins list and enable header
-       buttons if this is the only editor instance. */
-    let numEditors = parseInt(document.body.getAttribute('data-editors'), 10);
-    --numEditors;
-
-    if (numEditors === 0) {
-      /* Remove drag 'n' drop event handlers. */
-      const elements = document.getElementById('cardsNav').getElementsByTagName('loot-plugin-item');
-      for (let i = 0; i < elements.length; ++i) {
-        elements[i].removeAttribute('draggable');
-        elements[i].removeEventListener('dragstart', elements[i].onDragStart);
-      }
-
-      document.body.removeAttribute('data-editors');
-
-      /* Re-enable toolbar elements. */
-      document.getElementById('wipeUserlistButton').removeAttribute('disabled');
-      document.getElementById('copyContentButton').removeAttribute('disabled');
-      document.getElementById('refreshContentButton').removeAttribute('disabled');
-      document.getElementById('settingsButton').removeAttribute('disabled');
-      document.getElementById('gameMenu').removeAttribute('disabled');
-      document.getElementById('updateMasterlistButton').removeAttribute('disabled');
-      document.getElementById('sortButton').removeAttribute('disabled');
-    } else {
-      document.body.setAttribute('data-editors', numEditors);
-    }
+    /* Remove body attribute so that sidebar items are styled correctly. */
+    document.body.removeAttribute('data-editors');
     document.getElementById('cardsNav').notifyResize();
+
+    /* Hide editor. */
+    evt.target.hidden = true;
+
+    /* Remove drag 'n' drop event handlers. */
+    const elements = document.getElementById('cardsNav').getElementsByTagName('loot-plugin-item');
+    for (let i = 0; i < elements.length; ++i) {
+      elements[i].removeAttribute('draggable');
+      elements[i].removeEventListener('dragstart', elements[i].onDragStart);
+    }
+
+    /* Re-enable toolbar elements. */
+    document.getElementById('wipeUserlistButton').removeAttribute('disabled');
+    document.getElementById('copyContentButton').removeAttribute('disabled');
+    document.getElementById('refreshContentButton').removeAttribute('disabled');
+    document.getElementById('settingsButton').removeAttribute('disabled');
+    document.getElementById('gameMenu').removeAttribute('disabled');
+    document.getElementById('updateMasterlistButton').removeAttribute('disabled');
+    document.getElementById('sortButton').removeAttribute('disabled');
   }).catch(handlePromiseError);
 }
 function undoConflictsFilter() {
