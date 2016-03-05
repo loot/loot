@@ -25,32 +25,32 @@
 </template>
 <template id="messageRow">
   <tr>
-    <td>
-      <loot-dropdown-menu class="type" value="say">
+    <td style="width: 100px;">
+      <loot-dropdown-menu class="type" value="say" vertical-align="bottom">
         <paper-item value="say">Note</paper-item>
         <paper-item value="warn">Warning</paper-item>
         <paper-item value="error">Error</paper-item>
       </loot-dropdown-menu>
     </td>
-      <td><paper-textarea error-message="A content string is required." class="content" required auto-validate></paper-textarea></td>
-      <td><paper-input class="condition" no-label-float></paper-input></td>
-      <td>
-        <loot-dropdown-menu class="language">
-          <!-- Language <option> elements go here. -->
-        </loot-dropdown-menu>
-      </td>
-      <td>
-        <span>
-          <paper-icon-button class="delete" icon="delete"></paper-icon-button>
-          <paper-tooltip position="left">Delete Row</paper-tooltip>
-        </span>
-      </td>
+    <td><paper-input error-message="A content string is required." class="content" required auto-validate no-label-float></paper-input></td>
+    <td><paper-input class="condition" no-label-float></paper-input></td>
+    <td>
+      <loot-dropdown-menu class="language" vertical-align="bottom">
+        <!-- Language <option> elements go here. -->
+      </loot-dropdown-menu>
+    </td>
+    <td>
+      <span>
+        <paper-icon-button class="delete" icon="delete"></paper-icon-button>
+        <paper-tooltip position="left">Delete Row</paper-tooltip>
+      </span>
+    </td>
   </tr>
 </template>
 <template id="tagRow">
   <tr>
-    <td>
-      <loot-dropdown-menu class="type" value="add">
+    <td style="width: 100px;">
+      <loot-dropdown-menu class="type" value="add" vertical-align="bottom">
         <paper-item value="add">Add</paper-item>
         <paper-item value="remove">Remove</paper-item>
       </loot-dropdown-menu>
@@ -67,10 +67,10 @@
 </template>
 <template id="dirtyInfoRow">
   <tr>
-    <td><paper-input error-message="A CRC is required." class="crc" maxlength="8" minlength="8" pattern="[0-9A-Fa-f]{8}" required auto-validate no-label-float></paper-input></td>
-    <td><paper-input error-message="Values must be integers." class="itm" type="number" min="0" step="1" value="0" auto-validate no-label-float></paper-input></td>
-    <td><paper-input error-message="Values must be integers." class="udr" type="number" min="0" step="1" value="0" auto-validate no-label-float></paper-input></td>
-    <td><paper-input error-message="Values must be integers." class="nav" type="number" min="0" step="1" value="0" auto-validate no-label-float></paper-input></td>
+    <td style="width: 92px;"><paper-input error-message="A CRC is required." class="crc" maxlength="8" minlength="8" pattern="[0-9A-Fa-f]{8}" required auto-validate no-label-float></paper-input></td>
+    <td style="width: 48px;"><paper-input error-message="Values must be integers." class="itm" type="number" min="0" step="1" value="0" auto-validate no-label-float></paper-input></td>
+    <td style="width: 48px;"><paper-input error-message="Values must be integers." class="udr" type="number" min="0" step="1" value="0" auto-validate no-label-float></paper-input></td>
+    <td style="width: 48px;"><paper-input error-message="Values must be integers." class="nav" type="number" min="0" step="1" value="0" auto-validate no-label-float></paper-input></td>
     <td><paper-input error-message="A utility name is required." class="util" required auto-validate no-label-float></paper-input></td>
     <td>
       <span>
@@ -96,7 +96,7 @@
   <tr>
     <td><paper-input error-message="A name is required." class="name" required auto-validate no-label-float></paper-input></td>
     <td>
-      <loot-dropdown-menu class="type">
+      <loot-dropdown-menu class="type" vertical-align="bottom">
         <!-- Game <option> elements go here. -->
       </loot-dropdown-menu>
     </td>
@@ -136,14 +136,26 @@
       }
       ::content td,
       ::content th {
-        vertical-align: top;
+        vertical-align: middle;
         text-align: left;
+        padding: 0 7px;
       }
-      ::content td {
-          padding: 0;
+      ::content th:first-child,
+      ::content td:first-child {
+        padding-left: 16px;
+      }
+      ::content th:last-child,
+      ::content td:last-child {
+        padding-left: 0;
+      }
+      ::content thead > tr {
+        height: 56px;
+      }
+      ::content tbody > tr {
+        height: 48px;
       }
       ::content th {
-          padding: 0 4px;
+          color: var(--loot-secondary-text-color);
           border-bottom: 1px solid var(--loot-divider-color);
       }
       ::content paper-icon-button {
