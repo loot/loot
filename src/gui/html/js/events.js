@@ -358,8 +358,7 @@ function onSidebarClick(evt) {
          case that has happened. */
       window.getSelection().removeAllRanges();
 
-      const card = document.getElementById(evt.target.getAttribute('data-id'));
-      if (!card.classList.contains('flip')) {
+      if (!document.body.hasAttribute('data-editors')) {
         document.getElementById(evt.target.getAttribute('data-id')).onShowEditor();
       }
     }
