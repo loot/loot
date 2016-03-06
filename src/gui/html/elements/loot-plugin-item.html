@@ -97,17 +97,14 @@
         priority: {
           type: String,
           value: '',
-          reflectToAttribute: true,
         },
         isPriorityGlobal: {
           type: Boolean,
           value: false,
-          reflectToAttribute: true,
         },
         hasUserEdits: {
           type: Boolean,
           value: false,
-          reflectToAttribute: true,
         },
       },
 
@@ -119,6 +116,12 @@
         evt.dataTransfer.effectAllowed = 'copy';
         evt.dataTransfer.setData('text/plain', evt.currentTarget.getName());
         evt.dataTransfer.setDragImage(evt.currentTarget, 325, 175);
+      },
+
+      updateStyling(pluginData) {
+        this.priority = pluginData.priority;
+        this.isPriorityGlobal = pluginData.isPriorityGlobal;
+        this.hasUserEdits = pluginData.hasUserEdits;
       },
     });
   </script>

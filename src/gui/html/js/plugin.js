@@ -437,17 +437,7 @@
     static onItemContentChange(evt) {
       const item = document.getElementById('cardsNav').querySelector(`[data-id="${evt.detail.pluginId}"]`);
       if (item) {
-        item.setAttribute('priority', evt.detail.priority);
-        if (evt.detail.isPriorityGlobal) {
-          item.setAttribute('is-priority-global', '');
-        } else {
-          item.removeAttribute('is-priority-global');
-        }
-        if (evt.detail.hasUserEdits) {
-          item.setAttribute('has-user-edits', '');
-        } else {
-          item.removeAttribute('has-user-edits');
-        }
+        item.updateStyling(evt.detail);
       }
     }
   };
