@@ -41,7 +41,7 @@ function compress(sourcePath, destPath) {
     'a',
     '-r',
     destPath,
-    path.join('.', sourcePath, '*'),
+    `.${path.sep}${path.join(sourcePath, '*')}`,
   ]);
 }
 
