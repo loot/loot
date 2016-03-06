@@ -32,6 +32,14 @@ loot-editor-close
         height: 264px;
         min-height: 56px;
         max-height: calc(100% - 56px);
+        transition: height 0.6s, min-height 0.6s;
+      }
+      :host(.hidden) {
+        height: 0;
+        min-height: 0;
+      }
+      :host(.resizing) {
+        transition: unset;
       }
 
       /* Material Design for non-button icons. */
@@ -240,7 +248,10 @@ loot-editor-close
 
       _onSplitterDrag(evt) {
         if (evt.detail.state === 'start') {
+          this.parentNode.host.classList.toggle('resizing', true);
           this.parentNode.host.style.height = parseInt(window.getComputedStyle(this.parentNode.host).height, 10) + 'px';
+        } else if (evt.detail.state === 'end') {
+          this.parentNode.host.classList.toggle('resizing', false);
         }
         this.parentNode.host.style.height = (parseInt(this.parentNode.host.style.height, 10) - evt.detail.ddy) + 'px';
       },
@@ -327,8 +338,9 @@ loot-editor-close
         }
 
         if (isValid || evt.target.id !== 'accept') {
-          /* Reset height to default */
-          this.parentElement.parentNode.host.style.height = '264px';
+          /* Now hide editor. */
+          evt.target.parentElement.parentNode.host.style.height = '';
+          evt.target.parentElement.parentNode.host.classList.toggle('hidden', true);
 
           /* Fire the close event, saying whether or not to save data. */
           evt.target.dispatchEvent(new CustomEvent('loot-editor-close', {
@@ -424,6 +436,9 @@ loot-editor-close
             }
           }
         }
+
+        /* Now show editor. */
+        this.classList.toggle('hidden', false);
       },
     });
   </script>

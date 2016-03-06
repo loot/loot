@@ -414,15 +414,11 @@ function onShowSettingsDialog() {
 
 function onEditorOpen(evt) {
   /* Set the editor data. */
-  const editor = document.getElementById('editor');
-  editor.setEditorData(evt.target.data);
+  document.getElementById('editor').setEditorData(evt.target.data);
 
   /* Set body attribute so that sidebar items are styled correctly. */
   document.body.setAttribute('data-editors', true);
   document.getElementById('cardsNav').notifyResize();
-
-  /* Unhide editor. */
-  editor.hidden = false;
 
   /* Set up drag 'n' drop event handlers. */
   const elements = document.getElementById('cardsNav').getElementsByTagName('loot-plugin-item');
@@ -477,9 +473,6 @@ function onEditorClose(evt) {
     /* Remove body attribute so that sidebar items are styled correctly. */
     document.body.removeAttribute('data-editors');
     document.getElementById('cardsNav').notifyResize();
-
-    /* Hide editor. */
-    evt.target.hidden = true;
 
     /* Remove drag 'n' drop event handlers. */
     const elements = document.getElementById('cardsNav').getElementsByTagName('loot-plugin-item');
