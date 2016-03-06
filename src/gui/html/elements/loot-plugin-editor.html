@@ -253,6 +253,7 @@ loot-editor-close
         } else if (evt.detail.state === 'end') {
           this.parentNode.host.classList.toggle('resizing', false);
         }
+        window.getSelection().removeAllRanges();
         this.parentNode.host.style.height = (parseInt(this.parentNode.host.style.height, 10) - evt.detail.ddy) + 'px';
       },
 
