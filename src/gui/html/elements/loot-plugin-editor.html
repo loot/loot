@@ -53,7 +53,7 @@ loot-editor-close
         display: none;
       }
       #accept {
-        color: var(--loot-accent-color);
+        color: var(--loot-dark-accent-color);
       }
       #cancel {
         color: red;
@@ -120,8 +120,8 @@ loot-editor-close
       <div id="title">
         <content select="h1"></content>
       </div>
-      <paper-icon-button id="accept" icon="check"></paper-icon-button>
-      <paper-tooltip for="accept">Apply</paper-tooltip>
+      <paper-icon-button id="accept" icon="save"></paper-icon-button>
+      <paper-tooltip for="accept">Save Metadata</paper-tooltip>
       <paper-icon-button id="cancel" icon="close"></paper-icon-button>
       <paper-tooltip for="cancel">Cancel</paper-tooltip>
       <paper-tabs id="tableTabs" class="bottom fit" selected="{{selected}}" attr-for-selected="data-for" scrollable>

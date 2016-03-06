@@ -74,7 +74,7 @@
     pluginEditor.getElementById('url').querySelector('th:first-child').textContent = l10n.translate('URL');
     pluginEditor.getElementById('url').querySelector('th:nth-child(2)').textContent = l10n.translate('Name');
 
-    pluginEditor.querySelector('paper-tooltip[for=accept]').textContent = l10n.translate('Apply');
+    pluginEditor.querySelector('paper-tooltip[for=accept]').textContent = l10n.translate('Save Metadata');
     pluginEditor.querySelector('paper-tooltip[for=cancel]').textContent = l10n.translate('Cancel');
   }
 
