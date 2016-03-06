@@ -229,27 +229,20 @@ loot-editor-close
       attached() {
         this.$.accept.addEventListener('click', this._onHideEditor);
         this.$.cancel.addEventListener('click', this._onHideEditor);
-        this.$.tablePages.addEventListener('iron-deselect', this._onTablePageActivate);
         this.$.splitter.addEventListener('track', this._onSplitterDrag);
       },
 
       detached() {
         this.$.accept.removeEventListener('click', this._onHideEditor);
         this.$.cancel.removeEventListener('click', this._onHideEditor);
-        this.$.tablePages.removeEventListener('iron-deselect', this._onTablePageActivate);
         this.$.splitter.removeEventListener('track', this._onSplitterDrag);
-      },
-
-      _onTablePageActivate() {
-        /* Notify that this editor (may have) changed size. */
-        this.dispatchEvent(new CustomEvent('iron-resize', { bubbles: true }));
       },
 
       _onSplitterDrag(evt) {
         if (evt.detail.state === 'start') {
-          this.parentNode.host.style.height = parseInt(window.getComputedStyle(this.parentNode.host).height) + 'px';
+          this.parentNode.host.style.height = parseInt(window.getComputedStyle(this.parentNode.host).height, 10) + 'px';
         }
-        this.parentNode.host.style.height = (parseInt(this.parentNode.host.style.height) - evt.detail.ddy) + 'px';
+        this.parentNode.host.style.height = (parseInt(this.parentNode.host.style.height, 10) - evt.detail.ddy) + 'px';
       },
 
       _rowDataToMessage(rowData) {
