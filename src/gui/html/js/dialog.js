@@ -16,16 +16,14 @@
       if (!progressDialog.opened) {
         progressDialog.open();
       } else {
-        progressDialog.center();
+        progressDialog.refit();
       }
     }
 
     static closeProgress() {
       const progressDialog = document.getElementById('progressDialog');
       if (progressDialog.opened) {
-        /* Center before closing so that when it is re-opened it does so in the
-           correct position. */
-        progressDialog.center();
+        progressDialog.refit();
         progressDialog.close();
       }
     }
