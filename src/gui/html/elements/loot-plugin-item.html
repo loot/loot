@@ -1,197 +1,128 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
+
 <link rel="import" href="../../../../bower_components/paper-item/paper-item.html">
-<link rel="import" href="../../../../bower_components/core-tooltip/core-tooltip.html">
-<link rel="import" href="../../../../bower_components/core-icon/core-icon.html">
-<link rel="import" href="../../../../bower_components/core-icons/core-icons.html">
+<link rel="import" href="../../../../bower_components/paper-item/paper-item-body.html">
+<link rel="import" href="../../../../bower_components/paper-ripple/paper-ripple.html">
+<link rel="import" href="../../../../bower_components/paper-tooltip/paper-tooltip.html">
 
-<polymer-element name="loot-plugin-item" attributes="priorityText data">
-    <template>
-        <style>
-        :host(:not([data-edits]):not([data-editor-open])) #iconTooltip {
-            pointer-events: none;
-        }
-        :host(:not([data-edits])) #hasUserEditsTooltip,
-        :host([data-editor-open]) #hasUserEditsTooltip,
-        :host(:not([data-editor-open])) #editorIsOpenTooltip {
-            display: none;
-        }
-        :host(:not([data-edits])) #hasUserEdits {
-            visibility: hidden;
-        }
-        #hasUserEdits,
-        #editorIsOpen {
-            display: block;
-            margin-right: 0;
-            backface-visibility: hidden;
-        }
-        paper-item > core-tooltip {
-            margin-left: 16px;
-        }
+<dom-module id="loot-plugin-item">
+  <template>
+    <style>
+      /* Flip effect for user metadata / editor open icons. */
+      #hasUserEdits {
+        display: block;
+        margin-right: 0;
+      }
 
-        /* Flip effect for user metadata / editor open icons. */
-        #flipper {
-            transform-style: preserve-3d;
-            transition: 0.6s;
-            overflow: visible;
-        }
-        :host([data-editor-open]) #flipper {
-            transform: rotateY(180deg);
-        }
-        #hasUserEdits {
-            transform: translateZ(1px);
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-        #editorIsOpen {
-            transform: rotateY(180deg) translateZ(-1px);
-        }
+      /* paper-item (two-line) */
+      paper-item {
+        position: relative;
+        min-height: 32px;
+        line-height: 32px;
+        font-size: 1rem;
 
-        /* paper-item (two-line) */
-        paper-item.two-line {
-            /* Two-line items should be 72px high according to Material Design.
-               Squeeze the height to fit more items in. */
-            /*height: 72px;*/
-            height: 32px;
-            line-height: 32px;
-            font-size: 1rem;
+        --paper-item-focused-before: {
+          opacity: 0;
         }
-        /* Don't have a margin for this paper-item. */
-        paper-item.two-line:last-child {
-            margin-bottom: 0;
-        }
-        :host-context(body[data-editors]) paper-item.two-line {
-            height: 40px;
-        }
-        #primary,
-        #secondary,
-        #secondary core-icon,
-        paper-item.two-line::shadow .button-content {
-            transition: 0.6s;
-        }
-        paper-item.two-line::shadow .button-content {
-            padding: 0px 16px;
-        }
-        :host-context(body[data-editors]) paper-item.two-line::shadow .button-content {
-            padding: 4.5px 16px;
-        }
-        #text {
-            /* Padding is disabled as otherwise text won't fit in correctly. */
-            /*padding: 4px 0;*/
-            overflow: visible;
-        }
-        :host-context(body[data-editors]) #text {
-            line-height: normal;
-        }
-        #secondary {
-            /* MD spec says 14sp, but that doesn't fit, so use 12sp. */
-            /*font-size: 1rem; */
-            font-size: 0.857rem;
-            color: rgba(0, 0, 0, 0.54);
-            height: 13px;
-            overflow: visible;
-        }
-        #secondary core-icon {
-            margin-right: 0;
-            height: 13px;
-        }
-        #hasUserEditsTooltip,
-        #editorIsOpenTooltip {
-            overflow: visible;
-        }
-
-        /* When not in edit mode, hide secondary text. */
-        #secondary.hidden,
-        :host-context(body:not([data-editors])) #secondary {
-            height: 0;
-            overflow: hidden;
-        }
-
-        core-tooltip.hidden {
-            opacity: 0;
-            pointer-events: none;
-            overflow: hidden;
-        }
-        </style>
-
-        <paper-item class="two-line">
-            <div id="text" flex>
-                <div id="primary"><content></content></div>
-                <div id="secondary" layout horizontal center>
-                    <core-tooltip label="Global Priority" noarrow position="right">
-                        <core-icon icon="star"></core-icon>
-                    </core-tooltip>
-                    <div id="priority"></div>
-                </div>
-            </div>
-            <core-tooltip id="iconTooltip" noarrow position="left">
-                <div tip id="hasUserEditsTooltip">Has User Metadata</div>
-                <div tip id="editorIsOpenTooltip">Editor Is Open</div>
-                <div id="flipper">
-                    <core-icon id="hasUserEdits" icon="account-circle"></core-icon>
-                    <core-icon id="editorIsOpen" icon="create"></core-icon>
-                </div>
-            </core-tooltip>
-        </paper-item>
-    </template>
-    <script>
-    Polymer({
-        data: undefined,
-
-        observe: {
-            'data.userlist': 'onUserlistChange',
-            'data.priority': 'onPriorityChange',
-            'data.isPriorityGlobal': 'onPriorityIsGlobalChange',
-            'data.isEditorOpen': 'onEditorStateChange',
+      }
+      paper-item-body[two-line] {
+        min-height: 32px;
+        height: 32px;
+      }
+      :host-context(body[data-editors]) paper-item-body[two-line] {
+        min-height: 40px;
+      }
+      #primary,
+      #secondary,
+      #secondary iron-icon {
+        transition: 0.6s;
+      }
+      :host-context(body[data-editors]) #primary {
+          line-height: normal;
+      }
+      #priority {
+          font-size: 0.857rem;
+          color: var(--loot-secondary-text-color);
+          height: 13px;
+          overflow: visible;
+      }
+      #globalPriorityIcon {
+          height: 13px;
+      }
+      iron-icon {
+          color: var(--loot-secondary-text-color);
+      }
+      /* When not in edit mode, hide secondary text. */
+      :host-context(body:not([data-editors])) #secondary {
+          height: 0;
+          overflow: hidden;
+      }
+      [hidden],
+      #hasUserEdits[hidden] {
+        display: none;
+      }
+      #globalPriorityIcon[hidden] {
+        visibility: hidden;
+        display: inline-flex;
+      }
+      :host {
+        cursor: pointer;
+      }
+      paper-ripple {
+        color: var(--loot-accent-color);
+      }
+    </style>
+    <paper-item>
+      <paper-ripple></paper-ripple>
+      <paper-item-body two-line>
+        <div id="primary"><content></content></div>
+        <div id="secondary" secondary>
+          <iron-icon id="globalPriorityIcon" icon="star" hidden$="[[!isPriorityGlobal]]"></iron-icon>
+          <paper-tooltip for="globalPriorityIcon" position="right">Global Priority</paper-tooltip>
+          <span id="priority" hidden$="[[!priority]]">[[priority]]</span>
+        </div>
+      </paper-item-body>
+      <iron-icon id="hasUserEdits" icon="account-circle" hidden$="[[!hasUserEdits]]"></iron-icon>
+      <paper-tooltip for="hasUserEdits" position="left">Has User Metadata</paper-tooltip>
+    </paper-item>
+  </template>
+  <script>
+    'use strict';
+    Polymer({ // eslint-disable-line new-cap, no-undef
+      is: 'loot-plugin-item',
+      properties: {
+        priority: {
+          type: String,
+          value: '',
         },
-
-        dataChanged: function(oldValue, newValue) {
-            this.onUserlistChange();
-            this.onPriorityChange();
-            this.onPriorityIsGlobalChange();
-            this.onEditorStateChange();
+        isPriorityGlobal: {
+          type: Boolean,
+          value: false,
         },
-
-        onUserlistChange: function(oldValue, newValue) {
-            /* The enabled key will always be set on application of edits, even
-               if there were none to apply, so long for more than just that key. */
-            if (this.data && this.data.userlist && Object.keys(this.data.userlist).length > 1) {
-                this.setAttribute('data-edits', 'true');
-            } else {
-                this.removeAttribute('data-edits');
-            }
+        hasUserEdits: {
+          type: Boolean,
+          value: false,
         },
+      },
 
-        onPriorityChange: function(oldValue, newValue) {
-            if (this.data && this.data.priority) {
-                this.shadowRoot.getElementById('priority').textContent = this.data.priority;
-            } else {
-                this.shadowRoot.getElementById('priority').textContent = '';
-            }
-            this.shadowRoot.getElementById('secondary').hidden = !(this.data && this.data.priority);
-        },
+      getName() {
+        return this.textContent.trim();
+      },
 
-        onPriorityIsGlobalChange: function(oldValue, newValue) {
-            this.shadowRoot.getElementById('secondary').hidden = !(this.data && this.data.isPriorityGlobal);
-        },
+      onDragStart(evt) {
+        evt.dataTransfer.effectAllowed = 'copy';
+        evt.dataTransfer.setData('text/plain', evt.currentTarget.getName());
+        evt.dataTransfer.setDragImage(evt.currentTarget, 325, 175);
+      },
 
-        onEditorStateChange: function(oldValue, newValue) {
-            if (this.data && this.data.isEditorOpen) {
-                this.setAttribute('data-editor-open', true);
-            } else {
-                this.removeAttribute('data-editor-open');
-            }
-        },
-
-        getName: function() {
-            return this.textContent.trim();
-        },
-
-        onDragStart: function(evt) {
-            evt.dataTransfer.effectAllowed = 'copy';
-            evt.dataTransfer.setData('text/plain', evt.currentTarget.getName());
-            evt.dataTransfer.setDragImage(evt.currentTarget, 325, 175);
-        },
+      updateStyling(pluginData) {
+        this.priority = pluginData.priority;
+        this.isPriorityGlobal = pluginData.isPriorityGlobal;
+        this.hasUserEdits = pluginData.hasUserEdits;
+      },
     });
-    </script>
-</polymer-element>
+  </script>
+</dom-module>

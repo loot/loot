@@ -108,8 +108,6 @@ DestDir: "{app}\docs\images"; Flags: ignoreversion
 
 Source: "{#buildir}\Release\resources\ui\index.html"; \
 DestDir: "{app}\resources\ui"; Flags: ignoreversion
-Source: "resources\ui\css\dark-theme.css"; \
-DestDir: "{app}\resources\ui\css"; Flags: ignoreversion
 Source: "resources\ui\fonts\*"; \
 DestDir: "{app}\resources\ui\fonts"; Flags: ignoreversion
 

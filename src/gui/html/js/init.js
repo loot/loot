@@ -65,23 +65,25 @@
     document.getElementById('helpButton').addEventListener('click', onOpenReadme);
     document.getElementById('aboutButton').addEventListener('click', onShowAboutDialog);
     document.getElementById('quitButton').addEventListener('click', onQuit);
-    document.getElementById('gameMenu').addEventListener('core-select', onChangeGame);
+    document.getElementById('gameMenu').addEventListener('iron-select', onChangeGame);
     document.getElementById('updateMasterlistButton').addEventListener('click', onUpdateMasterlist);
     document.getElementById('sortButton').addEventListener('click', onSortPlugins);
     document.getElementById('applySortButton').addEventListener('click', onApplySort);
     document.getElementById('cancelSortButton').addEventListener('click', onCancelSort);
-    document.getElementById('sidebarTabs').addEventListener('core-select', onSwitchSidebarTab);
+    document.getElementById('sidebarTabs').addEventListener('iron-select', onSwitchSidebarTab);
     document.getElementById('jumpToGeneralInfo').addEventListener('click', onJumpToGeneralInfo);
 
     /* Set up search event handlers. */
     document.getElementById('showSearch').addEventListener('click', onSearchOpen);
-    document.getElementById('searchBar').addEventListener('loot-search-close', onSearchClose);
+    document.getElementById('searchBar').addEventListener('loot-search-begin', onSearchBegin);
+    document.getElementById('searchBar').addEventListener('loot-search-change-selection', onSearchChangeSelection, false);
+    document.getElementById('searchBar').addEventListener('loot-search-end', onSearchEnd);
     window.addEventListener('keyup', onFocusSearch);
 
     /* Set up event handlers for settings dialog. */
     const settings = document.getElementById('settingsDialog');
-    settings.getElementsByClassName('accept')[0].addEventListener('click', onCloseSettingsDialog);
-    settings.getElementsByClassName('cancel')[0].addEventListener('click', onCloseSettingsDialog);
+    settings.addEventListener('iron-overlay-closed', onCloseSettingsDialog);
+    settings.querySelector('[dialog-confirm]').addEventListener('tap', onApplySettings);
 
     /* Set up handler for opening and closing editors. */
     document.body.addEventListener('loot-editor-open', onEditorOpen);
@@ -92,9 +94,13 @@
     document.getElementById('cardsNav').addEventListener('click', onSidebarClick);
     document.getElementById('cardsNav').addEventListener('dblclick', onSidebarClick);
 
-    /* Set up handler for plugin message and dirty info changes. */
+    /* Set up handler for plugin data changes. */
     document.addEventListener('loot-plugin-message-change', Plugin.onMessageChange);
+    document.addEventListener('loot-plugin-message-change', Plugin.onContentChange);
     document.addEventListener('loot-plugin-isdirty-change', Plugin.onIsDirtyChange);
+    document.addEventListener('loot-plugin-card-content-change', Plugin.onContentChange);
+    document.addEventListener('loot-plugin-card-styling-change', Plugin.onCardStylingChange);
+    document.addEventListener('loot-plugin-item-content-change', Plugin.onItemContentChange);
 
     /* Set up event handlers for game member variable changes. */
     document.addEventListener('loot-game-folder-change', Game.onFolderChange);
@@ -156,7 +162,6 @@
       result.forEach((language) => {
         const settingsItem = document.createElement('paper-item');
         settingsItem.setAttribute('value', language.locale);
-        settingsItem.setAttribute('noink', '');
         settingsItem.textContent = language.name;
         settingsLangSelect.appendChild(settingsItem);
         messageLangSelect.appendChild(settingsItem.cloneNode(true));
@@ -196,7 +201,6 @@
       result.forEach((gameType) => {
         const item = document.createElement('paper-item');
         item.setAttribute('value', gameType);
-        item.setAttribute('noink', '');
         item.textContent = gameType;
         select.appendChild(item);
       });
@@ -214,7 +218,10 @@
   function setSettings(appData) {
     return query('getSettings').then(JSON.parse).then((result) => {
       appData.settings = result;
-      dom.updateSettingsDialog(appData.settings, appData.installedGames, appData.game.folder);
+      dom.updateSettingsDialog(appData.settings);
+      loot.dom.setGameMenuItems(appData.settings.games);
+      loot.dom.updateEnabledGames(appData.installedGames);
+      loot.dom.updateSelectedGame(appData.game.folder);
     });
   }
 
@@ -222,8 +229,8 @@
     return query('getGameData').then((result) => {
       const game = JSON.parse(result, Plugin.fromJson);
       appData.game = new Game(game, appData.l10n);
-      document.getElementById('cardsNav').data = appData.game.plugins;
-      document.getElementById('main').lastElementChild.data = appData.game.plugins;
+      document.getElementById('cardsNav').items = appData.game.plugins;
+      document.getElementById('pluginCardList').items = appData.game.plugins;
       applyEnabledFilters(appData.filters, appData.settings, appData.game.plugins);
       Dialog.closeProgress();
     });
@@ -231,8 +238,6 @@
 
   return () => {
     Dialog.showProgress('Initialising user interface...');
-    /* Set the plugin list's scroll target to its parent. */
-    document.getElementById('pluginCardList').scrollTarget = document.getElementById('main');
 
     /* Make sure settings are what I want. */
     window.marked.setOptions({
@@ -262,7 +267,10 @@
       loot.filters = new Filters(loot.l10n);
       translateStaticText(loot.l10n);
       /* Also need to update the settings UI. */
-      dom.updateSettingsDialog(loot.settings, loot.installedGames, loot.game.folder);
+      dom.updateSettingsDialog(loot.settings);
+      loot.dom.setGameMenuItems(loot.settings.games);
+      loot.dom.updateEnabledGames(loot.installedGames);
+      loot.dom.updateSelectedGame(loot.game.folder);
     }).then(() => {
       return displayInitErrors();
     }).then((result) => {
@@ -274,10 +282,8 @@
       return setGameData(loot);
     }).then(() => {
       if (!loot.settings.lastVersion || loot.settings.lastVersion !== loot.version) {
-        document.getElementById('firstRun').showModal();
+        document.getElementById('firstRun').open();
       }
     }).catch(handlePromiseError);
   };
 }));
-
-window.addEventListener('polymer-ready', loot.initialise);

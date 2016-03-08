@@ -52,28 +52,40 @@
       }
     },
 
-    updateSettingsDialog(settings, installedGames, gameFolder) {
-      const gameSelect = document.getElementById('defaultGameSelect');
+    createGameItem(game) {
+      const menuItem = document.createElement('paper-item');
+      menuItem.setAttribute('value', game.folder);
+      menuItem.textContent = game.name;
+
+      return menuItem;
+    },
+
+    setGameMenuItems(games) {
       const gameMenu = document.getElementById('gameMenu');
+
+      /* First make sure game listing elements don't have any existing entries. */
+      while (gameMenu.firstElementChild) {
+        gameMenu.removeChild(gameMenu.firstElementChild);
+      }
+
+      games.forEach((game) => {
+        gameMenu.appendChild(this.createGameItem(game));
+      });
+    },
+
+    updateSettingsDialog(settings) {
+      const gameSelect = document.getElementById('defaultGameSelect');
       const gameTable = document.getElementById('gameTable');
 
       /* First make sure game listing elements don't have any existing entries. */
       while (gameSelect.children.length > 1) {
         gameSelect.removeChild(gameSelect.lastElementChild);
       }
-      while (gameMenu.firstElementChild) {
-        gameMenu.removeChild(gameMenu.firstElementChild);
-      }
       gameTable.clear();
 
       /* Now fill with new values. */
       settings.games.forEach((game) => {
-        const menuItem = document.createElement('paper-item');
-        menuItem.setAttribute('value', game.folder);
-        menuItem.setAttribute('noink', '');
-        menuItem.textContent = game.name;
-        gameMenu.appendChild(menuItem);
-        gameSelect.appendChild(menuItem.cloneNode(true));
+        gameSelect.appendChild(this.createGameItem(game));
 
         const row = gameTable.addRow(game);
         gameTable.setReadOnly(row, ['name', 'folder', 'type']);
@@ -83,9 +95,6 @@
       document.getElementById('languageSelect').value = settings.language;
       document.getElementById('enableDebugLogging').checked = settings.enableDebugLogging;
       document.getElementById('updateMasterlist').checked = settings.updateMasterlist;
-
-      this.updateEnabledGames(installedGames);
-      this.updateSelectedGame(gameFolder);
     },
   };
 }));

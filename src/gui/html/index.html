@@ -1,329 +1,471 @@
 <!DOCTYPE html>
 <head>
-    <meta charset="utf-8" />
-    <title>LOOT</title>
-    <link rel="stylesheet" href="css/typography.css" />
-    <link rel="stylesheet" href="css/style.css" />
-    <link rel="stylesheet" href="css/material.css" />
-    <link rel="stylesheet" href="css/overrides.css" />
-    <link rel="stylesheet" href="css/theme.css" />
+  <meta charset="utf-8" />
+  <title>LOOT</title>
+  <link rel="stylesheet" href="css/typography.css" />
+  <link rel="stylesheet" href="css/style.css" />
 
-    <link rel="import" href="../../../bower_components/polymer/polymer.html">
+  <link rel="import" href="native-shadow-dom.html">
 
-    <link rel="import" href="elements/editable-table.html">
-    <link rel="import" href="elements/loot-dialog.html">
-    <link rel="import" href="elements/loot-dropdown-menu.html">
-    <link rel="import" href="elements/loot-message-dialog.html">
-    <link rel="import" href="elements/loot-plugin-item.html">
-    <link rel="import" href="elements/loot-plugin-card.html">
-    <link rel="import" href="elements/loot-search.html">
+  <link rel="import" href="../../../bower_components/polymer/polymer.html">
 
-    <link rel="import" href="../../../bower_components/core-toolbar/core-toolbar.html">
-    <link rel="import" href="../../../bower_components/core-icon/core-icon.html">
-    <link rel="import" href="../../../bower_components/core-icons/core-icons.html">
-    <link rel="import" href="../../../bower_components/core-tooltip/core-tooltip.html">
-    <link rel="import" href="../../../bower_components/core-drawer-panel/core-drawer-panel.html">
-    <link rel="import" href="../../../bower_components/core-pages/core-pages.html">
-    <link rel="import" href="../../../bower_components/core-list/core-list.html">
-    <link rel="import" href="../../../bower_components/core-label/core-label.html">
+  <link rel="import" href="elements/editable-table.html">
+  <link rel="import" href="elements/loot-dropdown-menu.html">
+  <link rel="import" href="elements/loot-message-dialog.html">
+  <link rel="import" href="elements/loot-plugin-item.html">
+  <link rel="import" href="elements/loot-plugin-card.html">
+  <link rel="import" href="elements/loot-plugin-editor.html">
+  <link rel="import" href="elements/loot-search-toolbar.html">
 
-    <link rel="import" href="../../../bower_components/paper-menu-button/paper-menu-button.html">
-    <link rel="import" href="../../../bower_components/paper-item/paper-item.html">
-    <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
-    <link rel="import" href="../../../bower_components/paper-button/paper-button.html">
-    <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
-    <link rel="import" href="../../../bower_components/paper-tabs/paper-tabs.html">
-    <link rel="import" href="../../../bower_components/paper-checkbox/paper-checkbox.html">
-    <link rel="import" href="../../../bower_components/paper-dialog/paper-dialog.html">
-    <link rel="import" href="../../../bower_components/paper-dialog/paper-dialog-transition.html">
-    <link rel="import" href="../../../bower_components/paper-dropdown/paper-dropdown.html">
-    <link rel="import" href="../../../bower_components/paper-progress/paper-progress.html">
-    <link rel="import" href="../../../bower_components/paper-toast/paper-toast.html">
-    <link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
+  <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+  <link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
+  <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+  <link rel="import" href="../../../bower_components/iron-list/iron-list.html">
+  <link rel="import" href="../../../bower_components/iron-pages/iron-pages.html">
+
+  <link rel="import" href="../../../bower_components/neon-animation/animations/fade-in-animation.html">
+  <link rel="import" href="../../../bower_components/neon-animation/animations/fade-out-animation.html">
+
+  <link rel="import" href="../../../bower_components/paper-item/paper-item.html">
+  <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
+  <link rel="import" href="../../../bower_components/paper-button/paper-button.html">
+  <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+  <link rel="import" href="../../../bower_components/paper-tabs/paper-tabs.html">
+  <link rel="import" href="../../../bower_components/paper-checkbox/paper-checkbox.html">
+  <link rel="import" href="../../../bower_components/paper-dialog/paper-dialog.html">
+  <link rel="import" href="../../../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+  <link rel="import" href="../../../bower_components/paper-drawer-panel/paper-drawer-panel.html">
+  <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
+  <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+  <link rel="import" href="../../../bower_components/paper-item/paper-item.html">
+  <link rel="import" href="../../../bower_components/paper-item/paper-icon-item.html">
+  <link rel="import" href="../../../bower_components/paper-menu-button/paper-menu-button.html">
+  <link rel="import" href="../../../bower_components/paper-progress/paper-progress.html">
+  <link rel="import" href="../../../bower_components/paper-toast/paper-toast.html">
+  <link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
+  <link rel="import" href="../../../bower_components/paper-toolbar/paper-toolbar.html">
+  <link rel="import" href="../../../bower_components/paper-tooltip/paper-tooltip.html">
+  <style is="custom-style">
+    div[drawer],
+    div[main] {
+      @apply(--layout-vertical);
+    }
+    #sidebarTabs {
+      @apply(--layout-self-stretch);
+    }
+    #cardsNav,
+    #filtersSpacer,
+    #hiddenPluginsTxt,
+    #hiddenMessagesTxt,
+    #toolbarSpacer,
+    #pluginCardList {
+      @apply(--layout-flex);
+    }
+    #filters,
+    div[drawer] > iron-pages,
+    #main {
+      @apply(--layout-vertical);
+      @apply(--layout-flex);
+    }
+    #hiddenPlugins,
+    #hiddenMessages {
+      @apply(--layout-horizontal);
+      @apply(--layout-center);
+    }
+    #settingsDialog > paper-dialog-scrollable > div {
+      @apply(--layout-horizontal);
+      @apply(--layout-center);
+      @apply(--layout-wrap);
+    }
+    #settingsDialog > paper-dialog-scrollable > div > div {
+      @apply(--layout-horizontal);
+      @apply(--layout-center);
+    }
+
+    /* Paper element styling.
+       Colour variables are from Polymer's paper-styles element. */
+    :root {
+      --loot-primary-color: var(--paper-indigo-500);
+      --loot-accent-color: var(--paper-blue-300);
+      --loot-dark-accent-color: var(--paper-blue-500);
+
+      --loot-primary-text-color: rgba(0, 0, 0, var(--dark-primary-opacity));
+      --loot-secondary-text-color: rgba(0, 0, 0, var(--dark-secondary-opacity));
+      --loot-disabled-text-color: rgba(0, 0, 0, var(--dark-disabled-opacity));
+      --loot-divider-color: rgba(0, 0, 0, var(--dark-divider-opacity));
+
+      --loot-dark-theme-text-color: white;
+      --loot-dark-theme-secondary-color: rgba(255, 255, 255, var(--light-secondary-opacity));
+      --loot-dark-theme-disabled-color: rgba(255, 255, 255, var(--light-disabled-opacity));
+      --loot-dark-theme-divider-color: rgba(255, 255, 255, var(--light-divider-opacity));
+
+      a,
+      #applySortButton {
+        color: var(--loot-dark-accent-color);
+      }
+
+      --paper-button: {
+        font-weight: 500;
+        font-size: 1rem;
+      }
+
+      --paper-icon-button-disabled-text: rgba(255, 255, 255, 0.30);
+      --paper-icon-button-disabled: {
+        transition: color 0.6s;
+      }
+
+      --paper-icon-item: {
+        white-space: nowrap;
+      }
+
+      --paper-input-container-input: {
+        text-overflow: ellipsis;
+      }
+      --paper-input-container-underline: {
+        background-color: var(--loot-divider-color);
+      };
+      --paper-input-container-underline-focus: {
+        background-color: var(--loot-accent-color);
+      };
+
+      paper-menu-button {
+        --paper-icon-item: {
+          font-weight: 500;
+          font-size: 1rem;
+          white-space: nowrap;
+        }
+      }
+
+      --paper-tabs-selection-bar-color: var(--loot-accent-color);
+      --paper-tab-ink: var(--loot-accent-color);
+      --paper-tab-content: {
+        text-transform: uppercase;
+      }
+
+      /* Prevents pop-in for the toggle button when a dropdown containing it is
+         opened. */
+      --paper-toggle-button-unchecked-button: {
+        will-change: initial;
+      }
+
+      --paper-toolbar-background: var(--loot-primary-color);
+      /*--paper-toolbar-color: var(--loot-primary-text-color);*/
+      --paper-toolbar-height: 56px;
+    }
+  </style>
 </head>
 <!-- oncontextmenu attribute disables the right-click menu. -->
-<body oncontextmenu="return false" unresolved fullbleed vertical layout >
-    <core-drawer-panel id="container" drawerWidth="33%">
-        <div drawer vertical layout>
-            <div layout horizontal end>
-                <paper-tabs id="sidebarTabs" selected="cardsNav" valueattr="data-id" flex>
-                    <paper-tab data-id="cardsNav">Plugins</paper-tab>
-                    <paper-tab data-id="filters">Filters</paper-tab>
-                </paper-tabs>
-            </div>
-            <core-pages selected="cardsNav" valueattr="id" flex>
-                <core-list  id="cardsNav" class="tab-content" flex>
-                    <template>
-                        <loot-plugin-item data-id="{{model.id}}" data="{{model}}" data-index="{{index}}">
-                            {{model.name}}
-                        </loot-plugin-item>
-                    </template>
-                    <!-- Generated <loot-plugin-item> elements go here. -->
-                </core-list>
-                <div id="filters" class="tab-content" layout vertical flex>
-                    <paper-checkbox id="hideVersionNumbers" data-class="version" label="Hide version numbers"></paper-checkbox>
-                    <paper-checkbox id="hideCRCs" data-class="crc" label="Hide CRCs"></paper-checkbox>
-                    <paper-checkbox id="hideBashTags" data-class="tag" label="Hide Bash Tags"></paper-checkbox>
-                    <paper-checkbox id="hideNotes" label="Hide notes"></paper-checkbox>
-                    <paper-checkbox id="hideDoNotCleanMessages" label="Hide 'Do not clean' messages"></paper-checkbox>
-                    <paper-checkbox id="hideAllPluginMessages" label="Hide all plugin messages"></paper-checkbox>
-                    <paper-checkbox id="hideInactivePlugins" label="Hide inactive plugins"></paper-checkbox>
-                    <paper-checkbox id="hideMessagelessPlugins" label="Hide messageless plugins"></paper-checkbox>
-                    <core-tooltip label="Press Enter or click outside the input to set the filter." position="bottom" noarrow>
-                        <paper-input id="contentFilter" label="Filter content"></paper-input>
-                    </core-tooltip>
-                    <div flex></div>
-                    <div class="divider"></div>
-                    <div center horizontal layout>
-                        <div id="hiddenPluginsTxt" flex>Hidden plugins:</div>
-                        <div><span id="hiddenPluginNo">0</span> / <span id="filterTotalPluginNo">0</span></div>
-                    </div>
-                    <div center horizontal layout>
-                        <div id="hiddenMessagesTxt" flex>Hidden messages:</div>
-                        <div><span id="hiddenMessageNo">0</span> / <span id="filterTotalMessageNo">0</span></div>
-                    </div>
-                </div>
-            </core-pages>
+<body oncontextmenu="return false" unresolved>
+  <paper-drawer-panel id="container" drawer-width="33%">
+    <div drawer>
+      <paper-toolbar>
+        <paper-tabs id="sidebarTabs" selected="cardsNav" attr-for-selected="data-id" class="bottom fit">
+          <paper-tab data-id="cardsNav">Plugins</paper-tab>
+          <paper-tab data-id="filters">Filters</paper-tab>
+        </paper-tabs>
+      </paper-toolbar>
+      <iron-pages selected="cardsNav" attr-for-selected="id">
+        <iron-list id="cardsNav">
+          <template>
+            <loot-plugin-item data-id$="[[item.id]]"
+                              data-index$="[[index]]"
+                              priority="[[item.priority]]"
+                              is-priority-global$="[[item.isPriorityGlobal]]"
+                              has-user-edits$="[[item.hasUserEdits]]">[[item.name]]</loot-plugin-item>
+          </template>
+          <!-- Generated <loot-plugin-item> elements go here. -->
+        </iron-list>
+        <div id="filters">
+          <paper-checkbox id="hideVersionNumbers" data-class="version">Hide version numbers</paper-checkbox>
+          <paper-checkbox id="hideCRCs" data-class="crc">Hide CRCs</paper-checkbox>
+          <paper-checkbox id="hideBashTags" data-class="tag">Hide Bash Tags</paper-checkbox>
+          <paper-checkbox id="hideNotes">Hide notes</paper-checkbox>
+          <paper-checkbox id="hideDoNotCleanMessages">Hide 'Do not clean' messages</paper-checkbox>
+          <paper-checkbox id="hideAllPluginMessages">Hide all plugin messages</paper-checkbox>
+          <paper-checkbox id="hideInactivePlugins">Hide inactive plugins</paper-checkbox>
+          <paper-checkbox id="hideMessagelessPlugins">Hide messageless plugins</paper-checkbox>
+          <paper-input id="contentFilter" label="Filter content" no-label-float></paper-input>
+          <paper-tooltip for="contentFilter" position="bottom">Press Enter or click outside the input to set the filter.</paper-tooltip>
+          <div id="filtersSpacer"></div>
+          <div class="divider"></div>
+          <div id="hiddenPlugins">
+            <div id="hiddenPluginsTxt">Hidden plugins:</div>
+            <div><span id="hiddenPluginNo">0</span> / <span id="filterTotalPluginNo">0</span></div>
+          </div>
+          <div id="hiddenMessages">
+            <div id="hiddenMessagesTxt">Hidden messages:</div>
+            <div><span id="hiddenMessageNo">0</span> / <span id="filterTotalMessageNo">0</span></div>
+          </div>
         </div>
-        <div main layout vertical>
-            <core-toolbar id="mainToolbar">
-                <paper-icon-button icon="menu" id="drawerToggle" core-drawer-toggle></paper-icon-button>
-                <core-tooltip label="Jump To General Information" noarrow>
-                    <paper-icon-button id="jumpToGeneralInfo" icon="home"></paper-icon-button>
-                </core-tooltip>
-                <loot-dropdown-menu id="gameMenu" class="title dark">
-                    <!-- Generated game <li> elements go here. -->
-                </loot-dropdown-menu>
-                <span flex></span>
-                <core-tooltip label="Sort Plugins" noarrow>
-                    <paper-icon-button id="sortButton" icon="sort"></paper-icon-button>
-                </core-tooltip>
-                <core-tooltip label="Update Masterlist" noarrow>
-                    <paper-icon-button id="updateMasterlistButton" icon="file-download"></paper-icon-button>
-                </core-tooltip>
-                <paper-button id="applySortButton" hidden>Apply</paper-button>
-                <paper-button id="cancelSortButton" hidden>Cancel</paper-button>
-                <core-tooltip label="Search Cards" noarrow>
-                    <paper-icon-button id="showSearch" icon="search"></paper-icon-button>
-                </core-tooltip>
-                <paper-menu-button>
-                    <paper-icon-button icon="more-vert"></paper-icon-button>
-                    <paper-dropdown class="dropdown" halign="right">
-                        <core-menu class="menu">
-                            <paper-item id="redatePluginsButton" noink>
-                                <core-icon icon="today"></core-icon>
-                                <span>Redate Plugins</span>
-                            </paper-item>
-                            <paper-item id="wipeUserlistButton" noink>
-                                <core-icon icon="delete"></core-icon>
-                                <span>Clear All User Metadata</span>
-                            </paper-item>
-                            <paper-item id="copyLoadOrderButton" noink>
-                                <core-icon icon="receipt"></core-icon>
-                                <span>Copy Load Order</span>
-                            </paper-item>
-                            <paper-item id="copyContentButton" noink>
-                                <core-icon icon="content-copy"></core-icon>
-                                <span>Copy Content</span>
-                            </paper-item>
-                            <paper-item id="refreshContentButton" noink>
-                                <core-icon icon="refresh"></core-icon>
-                                <span>Refresh Content</span>
-                            </paper-item>
-                            <div class="divider"></div>
-                            <paper-item id="settingsButton" noink>
-                                <core-icon icon="settings"></core-icon>
-                                <span>Settings</span>
-                            </paper-item>
-                            <div class="divider"></div>
-                            <paper-item id="helpButton" noink>
-                                <core-icon icon="book"></core-icon>
-                                <span>View Documentation</span>
-                            </paper-item>
-                            <paper-item id="openLogButton" noink>
-                                <core-icon icon="folder"></core-icon>
-                                <span>Open Debug Log Location</span>
-                            </paper-item>
-                            <paper-item id="aboutButton" noink>
-                                <core-icon icon="help"></core-icon>
-                                <span>About</span>
-                            </paper-item>
-                            <div class="divider"></div>
-                            <paper-item id="quitButton" noink>
-                                <core-icon icon="close"></core-icon>
-                                <span>Quit</span>
-                            </paper-item>
-                        </core-menu>
-                    </paper-dropdown>
-                </paper-menu-button>
-            </core-toolbar>
-            <loot-search id="searchBar" searchTarget="pluginCardList"></loot-search>
-            <div id="main" flex layout vertical>
-                <section id="summary">
-                    <h1>General Information</h1>
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td>Masterlist Revision</td>
-                                <td id="masterlistRevision">N/A</td>
-                            </tr>
-                            <tr>
-                                <td>Masterlist Date</td>
-                                <td id="masterlistDate">N/A</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td>Warnings</td>
-                                <td id="totalWarningNo">0</td>
-                            </tr>
-                            <tr>
-                                <td>Errors</td>
-                                <td id="totalErrorNo">0</td>
-                            </tr>
-                            <tr>
-                                <td>Total Messages</td>
-                                <td id="totalMessageNo">0</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td>Active Plugins</td>
-                                <td id="activePluginNo">0</td>
-                            </tr>
-                            <tr>
-                                <td>Dirty Plugins</td>
-                                <td id="dirtyPluginNo">0</td>
-                            </tr>
-                            <tr>
-                                <td>Total Plugins</td>
-                                <td id="totalPluginNo">0</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <ul>
-                        <!-- Generated message <li> elements go here. -->
-                    </ul>
-                </section>
-                <core-list id="pluginCardList" flex>
-                    <template>
-                        <loot-plugin-card data="{{model}}" id="{{model.id}}" data-active="{{model.isActive}}" data-empty="{{model.isEmpty}}" data-archive="{{model.loadsArchive}}" data-master="{{model.isMaster}}">
-                            <h1>{{model.name}}</h1>
-                            <span class="version"></span>
-                            <span class="crc"></span>
-                            <span class="tag add"></span>
-                            <span class="tag remove"></span>
-                            <ul></ul>
-                        </loot-plugin-card>
-                    </template>
-                    <!-- Generated <loot-plugin-card> elements go here. -->
-                </core-list>
-            </div>
-        </div>
-    </core-drawer-panel>
-    <paper-toast id="toast"></paper-toast>
-    <loot-dialog id="progressDialog">
-        <paper-progress indeterminate></paper-progress>
-        <p>Calculating the last digit of &pi;...</p>
-    </loot-dialog>
-
-    <loot-dialog id="about" heading="About LOOT">
-        <p>Version <span id="LOOTVersion"></span> (build <span id="LOOTBuild"></span>)</p>
-        <p>Load order optimisation for Oblivion, Skyrim, Fallout 3, Fallout: New Vegas and Fallout 4.</p>
-        <p><a href="http://loot.github.io">http://loot.github.io</a></p>
-        <p>LOOT is free, but if you want to show your appreciation with some money, donations may be made to WrinklyNinja (LOOT's creator and main developer) using <a href="https://www.paypal.me/OliverHamlet">PayPal</a> or <a href="https://wrinklyninja.github.io/bitcoin/">Bitcoin</a>.</p>
-        <p>Copyright &copy; 2012&ndash;2016 WrinklyNinja</p>
-        <blockquote>
-            LOOT is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or any later version.
-
-            LOOT is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-
-            You should have received a copy of the GNU General Public License along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
-        </blockquote>
-        <paper-button affirmative autofocus>OK</paper-button>
-    </loot-dialog>
-
-    <loot-dialog id="settingsDialog" heading="Settings" closeSelector="">
-        <div layout horizontal center wrap>
-            <div center horizontal layout>
-                <div>Default Game</div>
-                <loot-dropdown-menu id="defaultGameSelect">
-                    <paper-item value="auto" noink>Autodetect</paper-item>
-                    <!-- Game <option> elements go here. -->
-                </loot-dropdown-menu>
-            </div>
-            <div center horizontal layout>
-                <core-tooltip label="Language changes will be applied after LOOT is restarted." noarrow>
-                    Language
-                </core-tooltip>
-                <loot-dropdown-menu id="languageSelect">
-                    <!-- Language <option> elements go here. -->
-                </loot-dropdown-menu>
-            </div>
-            <core-tooltip label="The output is logged to the LOOTDebugLog.txt file." noarrow>
-                <core-label center horizontal layout>
-                    <div>Enable debug logging</div>
-                    <paper-toggle-button id="enableDebugLogging" for></paper-toggle-button>
-                </core-label>
-            </core-tooltip>
-            <core-label center horizontal layout>
-                <div>Update masterlist before sorting</div>
-                <paper-toggle-button id="updateMasterlist" for></paper-toggle-button>
-            </core-label>
-        </div>
-        <table is="editable-table" id="gameTable" data-template="gameRow">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Base Game</th>
-                    <th>LOOT Folder</th>
-                    <th>Master File</th>
-                    <th>Masterlist Repository URL</th>
-                    <th>Masterlist Repository Branch</th>
-                    <th>Install Path</th>
-                    <th>Install Path Registry Key</th>
-                    <th></th>
-                </tr>
-            </thead>
+      </iron-pages>
+    </div>
+    <div main>
+      <paper-toolbar id="mainToolbar">
+        <paper-icon-button icon="menu" id="drawerToggle" paper-drawer-toggle></paper-icon-button>
+        <paper-icon-button id="jumpToGeneralInfo" icon="home"></paper-icon-button>
+        <paper-tooltip for="jumpToGeneralInfo">Jump To General Information</paper-tooltip>
+        <loot-dropdown-menu id="gameMenu" class="dark">
+          <!-- Generated game <li> elements go here. -->
+        </loot-dropdown-menu>
+        <!-- right-align the rest of the toolbar items. -->
+        <span id="toolbarSpacer"></span>
+        <paper-icon-button id="sortButton" icon="sort"></paper-icon-button>
+        <paper-tooltip for="sortButton">Sort Plugins</paper-tooltip>
+        <paper-icon-button id="updateMasterlistButton" icon="file-download"></paper-icon-button>
+        <paper-tooltip for="updateMasterlistButton">Update Masterlist</paper-tooltip>
+        <paper-button id="applySortButton" hidden>Apply</paper-button>
+        <paper-button id="cancelSortButton" hidden>Cancel</paper-button>
+        <paper-icon-button id="showSearch" icon="search"></paper-icon-button>
+        <paper-tooltip for="showSearch">Search Cards</paper-tooltip>
+        <paper-menu-button horizontal-align="right">
+          <paper-icon-button icon="more-vert" class="dropdown-trigger"></paper-icon-button>
+          <loot-menu class="dropdown-content">
+            <paper-icon-item id="redatePluginsButton">
+              <iron-icon icon="today" item-icon></iron-icon>
+              Redate Plugins
+            </paper-icon-item>
+            <paper-icon-item id="wipeUserlistButton">
+              <iron-icon icon="delete" item-icon></iron-icon>
+              Clear All User Metadata
+            </paper-icon-item>
+            <paper-icon-item id="copyLoadOrderButton">
+              <iron-icon icon="receipt" item-icon></iron-icon>
+              Copy Load Order
+            </paper-icon-item>
+            <paper-icon-item id="copyContentButton">
+              <iron-icon icon="content-copy" item-icon></iron-icon>
+              Copy Content
+            </paper-icon-item>
+            <paper-icon-item id="refreshContentButton">
+              <iron-icon icon="refresh" item-icon></iron-icon>
+              Refresh Content
+            </paper-icon-item>
+            <div class="divider"></div>
+            <paper-icon-item id="settingsButton">
+              <iron-icon icon="settings" item-icon></iron-icon>
+              Settings
+            </paper-icon-item>
+            <div class="divider"></div>
+            <paper-icon-item id="helpButton">
+              <iron-icon icon="book" item-icon></iron-icon>
+              View Documentation
+            </paper-icon-item>
+            <paper-icon-item id="openLogButton">
+              <iron-icon icon="folder" item-icon></iron-icon>
+              Open Debug Log Location
+            </paper-icon-item>
+            <paper-icon-item id="aboutButton">
+              <iron-icon icon="help" item-icon></iron-icon>
+              About
+            </paper-icon-item>
+            <div class="divider"></div>
+            <paper-icon-item id="quitButton">
+              <iron-icon icon="close" item-icon></iron-icon>
+              Quit
+            </paper-icon-item>
+          </loot-menu>
+        </paper-menu-button>
+      </paper-toolbar>
+      <loot-search-toolbar id="searchBar"></loot-search-toolbar>
+      <div id="main">
+        <paper-material id="summary">
+          <h1>General Information</h1>
+          <table>
             <tbody>
-                <!-- Game rows go here. -->
+              <tr>
+                <td>Masterlist Revision</td>
+                <td id="masterlistRevision">N/A</td>
+              </tr>
+              <tr>
+                <td>Masterlist Date</td>
+                <td id="masterlistDate">N/A</td>
+              </tr>
             </tbody>
-        </table>
-        <paper-button class="accept" affirmative autofocus>Apply</paper-button>
-        <paper-button class="cancel" dismissive>Cancel</paper-button>
-    </loot-dialog>
+          </table>
+          <table>
+            <tbody>
+              <tr>
+                <td>Warnings</td>
+                <td id="totalWarningNo">0</td>
+              </tr>
+              <tr>
+                <td>Errors</td>
+                <td id="totalErrorNo">0</td>
+              </tr>
+              <tr>
+                <td>Total Messages</td>
+                <td id="totalMessageNo">0</td>
+              </tr>
+            </tbody>
+          </table>
+          <table>
+            <tbody>
+              <tr>
+                <td>Active Plugins</td>
+                <td id="activePluginNo">0</td>
+              </tr>
+              <tr>
+                <td>Dirty Plugins</td>
+                <td id="dirtyPluginNo">0</td>
+              </tr>
+              <tr>
+                <td>Total Plugins</td>
+                <td id="totalPluginNo">0</td>
+              </tr>
+            </tbody>
+          </table>
+          <ul>
+            <!-- Generated message <li> elements go here. -->
+          </ul>
+        </paper-material>
+        <iron-list id="pluginCardList" as="plugin" scroll-target="main">
+          <template>
+            <loot-plugin-card id="[[plugin.id]]"
+                              data="[[plugin]]">
+              <h1>[[plugin.name]]</h1>
+              <span class="version"></span>
+              <span class="crc"></span>
+              <span class="tag add"></span>
+              <span class="tag remove"></span>
+              <ul>
+                <!-- Messages go here. -->
+              </ul>
+            </loot-plugin-card>
+          </template>
+          <!-- Generated <loot-plugin-card> elements go here. -->
+        </iron-list>
+      </div>
+      <loot-plugin-editor id="editor" class="hidden">
+        <h1></h1>
+      </loot-plugin-editor>
+    </div>
+  </paper-drawer-panel>
+  <paper-toast id="toast"></paper-toast>
+  <paper-dialog id="progressDialog"
+                modal
+                entry-animation="fade-in-animation"
+                exit-animation="fade-out-animation">
+    <div><paper-progress indeterminate></paper-progress></div>
+    <p>Calculating the last digit of &pi;...</p>
+  </paper-dialog>
 
-    <loot-dialog id="firstRun" heading="First-Time Tips">
-        <p>This appears to be the first time you have run LOOT v<span id="firstTimeLootVersion"></span>. Here are some tips to help you get started with the interface.</p>
-        <ul>
-            <li>Click <core-icon icon="more-vert"></core-icon> buttons to open menus.</li>
-            <li>As well as messages, LOOT displays plugin <span class="version">version numbers</span>, <span class="crc">CRCs</span> and Bash Tag suggestions for <span class="tag add">addition</span> and <span class="tag remove">removal</span>.</li>
-            <li>CRCs are only displayed after plugins have been loaded, either by conflict filtering, or by sorting.</li>
-            <li>Double-click a plugin in the sidebar to quickly open its metadata editor. Multiple metadata editors can be opened at once.</li>
-            <li>Plugins can be drag and dropped from the sidebar into editors' "load after, "requirements" and "incompatibility" tables.</li>
-            <li>Some features are disabled while there is an editor open, or while there is a sorted load order that has not been applied or discarded.</li>
-            <li>Many interface elements have tooltips. If you don't know what something is, try hovering your mouse over it to find out. Otherwise, LOOT's documentation can be accessed through the main menu.</li>
-        </ul>
+  <paper-dialog id="about"
+                modal
+                entry-animation="fade-in-animation"
+                exit-animation="fade-out-animation">
+    <h2>About LOOT</h2>
+    <paper-dialog-scrollable>
+      <p>Version <span id="LOOTVersion"></span> (build <span id="LOOTBuild"></span>)</p>
+      <p>Load order optimisation for Oblivion, Skyrim, Fallout 3, Fallout: New Vegas and Fallout 4.</p>
+      <p><a href="http://loot.github.io">http://loot.github.io</a></p>
+      <p>LOOT is free, but if you want to show your appreciation with some money, donations may be made to WrinklyNinja (LOOT's creator and main developer) using <a href="https://www.paypal.me/OliverHamlet">PayPal</a> or <a href="https://wrinklyninja.github.io/bitcoin/">Bitcoin</a>.</p>
+      <p>Copyright &copy; 2012&ndash;2015 WrinklyNinja</p>
+      <blockquote>
+        LOOT is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or any later version.
 
-        <p>LOOT is free, but if you want to show your appreciation with some money, donations may be made to WrinklyNinja (LOOT's creator and main developer) using <a href="https://www.paypal.me/OliverHamlet">PayPal</a> or <a href="https://wrinklyninja.github.io/bitcoin/">Bitcoin</a>.</p>
-        <paper-button affirmative autofocus>OK</paper-button>
-    </loot-dialog>
-    <script src="../../../bower_components/marked/lib/marked.js"></script>
-    <script src="../../../bower_components/Jed/jed.js"></script>
-    <script src="../../../bower_components/jed-gettext-parser/jedGettextParser.js"></script>
-    <script src="js/dialog.js"></script>
-    <script src="js/dom.js"></script>
-    <script src="js/events.js"></script>
-    <script src="js/filters.js"></script>
-    <script src="js/game.js"></script>
-    <script src="js/helpers.js"></script>
-    <script src="js/l10n.js"></script>
-    <script src="js/plugin.js"></script>
-    <script src="js/query.js"></script>
-    <script src="js/translator.js"></script>
-    <script src="js/init.js"></script>
+        LOOT is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+        You should have received a copy of the GNU General Public License along with LOOT. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+      </blockquote>
+    </paper-dialog-scrollable>
+    <div class="buttons">
+      <paper-button dialog-confirm autofocus>OK</paper-button>
+    </div>
+  </paper-dialog>
+
+  <paper-dialog id="settingsDialog"
+                modal
+                entry-animation="fade-in-animation"
+                exit-animation="fade-out-animation">
+    <h2>Settings</h2>
+    <paper-dialog-scrollable>
+      <div>
+        <div>
+          <div>Default Game</div>
+          <loot-dropdown-menu id="defaultGameSelect">
+            <paper-item value="auto">Autodetect</paper-item>
+            <!-- Game <option> elements go here. -->
+          </loot-dropdown-menu>
+        </div>
+        <div>
+          <span id="languageLabel">Language</span>
+          <paper-tooltip for="languageLabel">Language changes will be applied after LOOT is restarted.</paper-tooltip>
+          <loot-dropdown-menu id="languageSelect">
+            <!-- Language <option> elements go here. -->
+          </loot-dropdown-menu>
+        </div>
+        <div>
+          <div>Enable debug logging</div>
+          <paper-toggle-button id="enableDebugLogging"></paper-toggle-button>
+          <paper-tooltip>The output is logged to the LOOTDebugLog.txt file.</paper-tooltip>
+        </div>
+        <div>
+          <div>Update masterlist before sorting</div>
+          <paper-toggle-button id="updateMasterlist"></paper-toggle-button>
+        </div>
+      </div>
+      <table is="editable-table" id="gameTable" data-template="gameRow">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Base Game</th>
+            <th>LOOT Folder</th>
+            <th>Master File</th>
+            <th>Masterlist Repository URL</th>
+            <th>Masterlist Repository Branch</th>
+            <th>Install Path</th>
+            <th>Install Path Registry Key</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Game rows go here. -->
+        </tbody>
+      </table>
+    </paper-dialog-scrollable>
+    <div class="buttons">
+      <paper-button class="cancel" dialog-dismiss>Cancel</paper-button>
+      <paper-button class="accept" dialog-confirm autofocus>Apply</paper-button>
+    </div>
+  </paper-dialog>
+
+  <paper-dialog id="firstRun"
+                modal
+                entry-animation="fade-in-animation"
+                exit-animation="fade-out-animation">
+    <h2>First-Time Tips</h2>
+    <p>This appears to be the first time you have run LOOT v<span id="firstTimeLootVersion"></span>. Here are some tips to help you get started with the interface.</p>
+    <ul>
+      <li>Click <iron-icon icon="more-vert"></iron-icon> buttons to open menus.</li>
+      <li>As well as messages, LOOT displays plugin <span class="version">version numbers</span>, <span class="crc">CRCs</span> and Bash Tag suggestions for <span class="tag add">addition</span> and <span class="tag remove">removal</span>.</li>
+      <li>CRCs are only displayed after plugins have been loaded, either by conflict filtering, or by sorting.</li>
+      <li>Double-click a plugin in the sidebar to quickly open its metadata editor. Multiple metadata editors can be opened at once.</li>
+      <li>Plugins can be drag and dropped from the sidebar into editors' "load after, "requirements" and "incompatibility" tables.</li>
+      <li>Some features are disabled while there is an editor open, or while there is a sorted load order that has not been applied or discarded.</li>
+      <li>Many interface elements have tooltips. If you don't know what something is, try hovering your mouse over it to find out. Otherwise, LOOT's documentation can be accessed through the main menu.</li>
+    </ul>
+    <p>LOOT is free, but if you want to show your appreciation with some money, donations may be made to WrinklyNinja (LOOT's creator and main developer) using <a href="https://www.paypal.me/OliverHamlet">PayPal</a> or <a href="https://wrinklyninja.github.io/bitcoin/">Bitcoin</a>.</p>
+    <div class="buttons">
+      <paper-button dialog-confirm autofocus>OK</paper-button>
+    </div>
+  </paper-dialog>
+  <script src="../../../bower_components/marked/lib/marked.js"></script>
+  <script src="../../../bower_components/Jed/jed.js"></script>
+  <script src="../../../bower_components/jed-gettext-parser/jedGettextParser.js"></script>
+  <script src="../../../bower_components/lodash/dist/lodash.core.min.js"></script>
+  <script src="js/dialog.js"></script>
+  <script src="js/dom.js"></script>
+  <script src="js/events.js"></script>
+  <script src="js/filters.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/helpers.js"></script>
+  <script src="js/l10n.js"></script>
+  <script src="js/plugin.js"></script>
+  <script src="js/query.js"></script>
+  <script src="js/translator.js"></script>
+  <script src="js/init.js"></script>
+  <script>
+    'use strict';
+    loot.initialise();
+  </script>
 </body>

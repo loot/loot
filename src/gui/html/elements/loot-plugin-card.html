@@ -12,408 +12,292 @@ loot-clear-metadata
 -->
 
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../../bower_components/core-toolbar/core-toolbar.html">
-<link rel="import" href="../../../../bower_components/core-tooltip/core-tooltip.html">
-<link rel="import" href="../../../../bower_components/core-icon/core-icon.html">
-<link rel="import" href="../../../../bower_components/core-icons/core-icons.html">
-<link rel="import" href="../../../../bower_components/core-label/core-label.html">
-<link rel="import" href="../../../../bower_components/paper-menu-button/paper-menu-button.html">
-<link rel="import" href="../../../../bower_components/paper-item/paper-item.html">
-<link rel="import" href="../../../../bower_components/paper-dropdown/paper-dropdown.html">
-<link rel="import" href="../../../../bower_components/paper-checkbox/paper-checkbox.html">
+
+<link rel="import" href="../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
+
 <link rel="import" href="../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../../bower_components/paper-item/paper-icon-item.html">
+<link rel="import" href="../../../../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../../../../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../../../../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../../../../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../../../../bower_components/paper-tooltip/paper-tooltip.html">
 
-<link rel="import" href="loot-plugin-editor.html">
 <link rel="import" href="loot-custom-icons.html">
+<link rel="import" href="loot-menu.html">
 
+<dom-module id="loot-plugin-card">
+  <template>
+    <style>
+      /* Host styling. */
+      #wrapper {
+        display: block;
+        background: white;
+        margin: 0 8px 8px 8px;
+        position: relative;
+      }
+      :host(.highlight) #wrapper {
+        outline: 4px solid var(--loot-accent-color);
+      }
+      :host(.search-result) #wrapper > * {
+        box-shadow: inset 4px 0 var(--loot-primary-color);
+      }
 
-<polymer-element name="loot-plugin-card" attributes="data">
-    <template>
-        <style>
-        /* Material Design for non-button icons. */
-        core-tooltip > core-icon {
-            color: rgba(0, 0, 0, 0.54);
-        }
+      /* Icon styling. */
+      iron-icon {
+        color: var(--loot-secondary-text-color);
+        padding: 8px;
+      }
+      #activeTick {
+        color: green;
+      }
+      #activeTick[hidden] {
+        display: initial;
+        visibility: hidden;
+      }
 
-        /* Host and front/editor styling. */
-        #wrapper {
-            display: block;
-            background:white;
-            margin: 0 8px 8px 8px;
-            position: relative;
-            border-radius: 2px;
-            box-shadow: rgba(0, 0, 0, 0.0980392) 0px 2px 4px, rgba(0, 0, 0, 0.0980392) 0px 0px 3px;
-            position: relative;
-            transition: 0.6s;
-            transform-style: preserve-3d;
-        }
-        :host(.highlight) #wrapper {
-            outline: 4px solid #64B5F6;
-        }
-        :host([data-active=false]) #activeTick {
-            visibility: hidden;
-        }
-        :host([data-archive=false]) #loadsArchive,
-        :host([data-empty=false]) #emptyPlugin,
-        :host([data-master=false]) #isMaster,
-        :host(:not([data-edits])) #hasUserEdits {
-            display: none;
-        }
-        :host(.search-result) #front,
-        :host(.search-result) #editor {
-            box-shadow: inset 4px 0 #3F51B5;
-        }
-        #front {
-            display: block;
-            backface-visibility: hidden;
-        }
-        #editor {
-            transform: rotateY(180deg);
-            display:none;
-            backface-visibility: hidden;
-        }
+      /* Content styling. */
+      content::content > .tag {
+        display: block;
+        padding: 0 16px 16px;
+      }
+      content::content > ul {
+        display: block;
+        padding: 0 16px 16px 40px;
+        margin: 0;
+      }
+      content::content > h1 {
+        font-size: 1.143rem;
+        display: inline-block;
+        margin: 0;
+        color: inherit;
+      }
+      content::content > .version,
+      content::content > .crc {
+        display: inline-block;
+        margin-left: 16px;
+        font-weight: 400;
+        font-size: 1rem;
+      }
 
-        /* Flip animation styling. */
-        :host(.flip) #wrapper {
-            transform: rotateY(180deg);
-        }
-        :host(.flip) #front  {
-            display: none;
-        }
-        :host(.flip) #editor  {
-            display: block;
-        }
-        :host(.fastflip) #wrapper {
-            transition-duration: 1ms;
-        }
-
-        /* Icon styling. */
-        #activeTick > core-icon {
-            color: green;
-        }
-
-        /* Content styling. */
-        content::content > .tag {
-            display: block;
-            padding: 0 16px 16px;
-        }
-        content::content > ul {
-            display: block;
-            padding: 0 16px 16px 40px;
-            margin: 0;
-        }
-        content::content > h1 {
-            font-size: 1.143rem;
-            display: inline-block;
-            margin: 0;
-            color: inherit;
-        }
-        content::content > .version,
-        content::content > .crc {
-            display: inline-block;
-            margin-left: 16px;
-            font-weight: 400;
-            font-size: 1rem;
-        }
-
-        /* Misc Styling. */
-        core-toolbar {
-            background: inherit;
-            height: 56px;
-        }
-        core-toolbar > div {
-            position: relative;
-            top: -4px;
-            overflow: hidden;
-            white-space: nowrap;
-        }
-        core-tooltip > core-icon {
-            vertical-align: inherit !important;
-        }
-        #content {
-            overflow: hidden;
-        }
-        #conflictsLabel {
-            font-size: 1rem;
-            font-weight: 500;
-            padding: 0 16px;
-            height: 48px;
-            line-height: 48px;
-            cursor: pointer;
-        }
-        #conflictsLabel > core-icon {
-            margin-right: 32px;
-            color: rgba(0, 0, 0, 0.54);
-        }
-        #conflictsLabel [for] {
-            margin-left: 32px;
-        }
-        </style>
-        <div id="wrapper">
-            <section id="front">
-                <core-toolbar>
-                    <core-tooltip id="activeTick" label="Active Plugin" noarrow>
-                        <core-icon icon="check"></core-icon>
-                    </core-tooltip>
-                    <div flex>
-                        <content select="h1"></content>
-                        <content select=".version"></content>
-                        <content select=".crc"></content>
-                    </div>
-                    <core-tooltip id="isMaster" label="Master File" noarrow>
-                        <core-icon icon="loot-custom-icons:crown"></core-icon>
-                    </core-tooltip>
-                    <core-tooltip id="emptyPlugin" label="Empty Plugin" noarrow>
-                        <core-icon icon="visibility-off"></core-icon>
-                    </core-tooltip>
-                    <core-tooltip id="loadsArchive" label="Loads Archive" noarrow>
-                        <core-icon icon="attachment"></core-icon>
-                    </core-tooltip>
-                    <core-tooltip id="hasUserEdits" label="Has User Metadata" noarrow>
-                        <core-icon icon="account-circle"></core-icon>
-                    </core-tooltip>
-                    <paper-menu-button>
-                        <paper-icon-button icon="more-vert"></paper-icon-button>
-                        <paper-dropdown class="dropdown" halign="right" opened="{{data.isMenuOpen}}">
-                            <core-menu class="menu">
-                                <core-label id="conflictsLabel" center horizontal layout>
-                                    <core-icon icon="filter-list"></core-icon>
-                                    <div flex>Show Only Conflicts</div>
-                                    <paper-toggle-button id="showOnlyConflicts" checked="{{data.isConflictFilterChecked}}" for></paper-toggle-button>
-                                </core-label>
-                                <paper-item id="editMetadata" noink>
-                                    <core-icon icon="create"></core-icon>
-                                    Edit Metadata
-                                </paper-item>
-                                <paper-item id="copyMetadata" noink>
-                                    <core-icon icon="content-copy"></core-icon>
-                                    Copy Metadata
-                                </paper-item>
-                                <paper-item id="clearMetadata" noink>
-                                    <core-icon icon="delete"></core-icon>
-                                    Clear User Metadata
-                                </paper-item>
-                            </core-menu>
-                        </paper-dropdown>
-                    </paper-menu-button>
-                </core-toolbar>
-                <div id="content">
-                    <content select=".tag.add"></content>
-                    <content select=".tag.remove"></content>
-                    <content></content>
-                </div>
-            </section>
-            <loot-plugin-editor id="editor"></loot-plugin-editor>
+      /* Misc Styling. */
+      paper-toolbar {
+        --paper-toolbar-color: var(--loot-primary-text-color);
+        --paper-toolbar-background: inherit;
+      }
+      #content {
+        overflow: hidden;
+      }
+      #title {
+        @apply(--layout-flex);
+        overflow: hidden;
+        white-space: nowrap;
+      }
+      :host-context(body[data-editors]) #editMetadata {
+        color: #9b9b9b;
+        pointer-events: none;
+      }
+      #editMetadata,
+      #copyMetadata,
+      #clearMetadata {
+        cursor: pointer;
+      }
+      #showOnlyConflicts {
+        min-height: 48px;
+        padding: 0 16px;
+        font-weight: 500;
+        --paper-toggle-button-label-spacing: 16px;
+        white-space: nowrap;
+      }
+      [hidden] {
+        display: none;
+      }
+    </style>
+    <paper-material id="wrapper" elevation="1">
+      <paper-toolbar>
+        <iron-icon id="activeTick" icon="check"></iron-icon>
+        <paper-tooltip for="activeTick">Active Plugin</paper-tooltip>
+        <div id="title">
+          <content select="h1"></content>
+          <content select=".version"></content>
+          <content select=".crc"></content>
         </div>
-    </template>
-    <script>
-    Polymer({
-        data: undefined,
-
-        observe: {
-            'data.crc': 'onCrcChange',
-            'data.tags': 'onTagsChange',
-            'data.messages': 'onMessagesChange',
-            'data.userlist': 'onUserlistChange',
-            'data.isSearchResult' : 'onSearchResultChange',
-            'data.isMenuOpen': 'onMenuToggle'
-        },
-
-        attached: function() {
-            this.shadowRoot.getElementById('showOnlyConflicts').addEventListener('change', this.onShowOnlyConflicts, false);
-            this.shadowRoot.getElementById('editMetadata').addEventListener('click', this.onShowEditor, false);
-            this.shadowRoot.getElementById('copyMetadata').addEventListener('click', this.onCopyMetadata, false);
-            this.shadowRoot.getElementById('clearMetadata').addEventListener('click', this.onClearMetadata, false);
-
-            this.addEventListener('transitionend', this.onFlipEnd, false);
-        },
-
-        detached: function() {
-            this.shadowRoot.getElementById('showOnlyConflicts').removeEventListener('change', this.onShowOnlyConflicts, false);
-            this.shadowRoot.getElementById('editMetadata').removeEventListener('click', this.onShowEditor, false);
-            this.shadowRoot.getElementById('copyMetadata').removeEventListener('click', this.onCopyMetadata, false);
-            this.shadowRoot.getElementById('clearMetadata').addEventListener('click', this.onClearMetadata, false);
-        },
-
-        dataChanged: function(oldValue, newValue) {
-            if (newValue) {
-                if (newValue.isEditorOpen) {
-                    /* Share the data with the editor. */
-                    this.shadowRoot.getElementById('editor').data = newValue;
-                }
-
-                /* Set the card flip state. */
-                if (this.classList.contains('flip') != newValue.isEditorOpen) {
-                    /* Temporarily speed up the flip effect, as otherwise fast
-                       scrolling lets the user see the end of it. */
-                    this.classList.add('fastflip');
-                    this.classList.toggle('flip');
-                }
-
-                /* Update version and CRC text */
-                this.getElementsByClassName('version')[0].textContent = this.data.getCardContent(loot.filters).version;
-                this.getElementsByClassName('crc')[0].textContent = this.data.getCardContent(loot.filters).crc;
-
-                /* Also initialise the non-simple-string data. */
-                this.onTagsChange();
-                this.onMessagesChange();
-                this.onUserlistChange();
-
-                /* Also set highlight if the conflict filter is active. */
-                this.classList.toggle('highlight', newValue.isConflictFilterChecked);
-
-                /* Set highlight if the plugin is a search result. */
-                this.onSearchResultChange(undefined, newValue.isSearchResult);
-
-                /* Update tooltip positions. */
-                var tooltips = this.shadowRoot.querySelectorAll('core-tooltip');
-                for (var i = 0; i < tooltips.length; ++i) {
-                    tooltips[i].setPosition();
-                }
-            }
-        },
-
-        updateContent: function() {
-          this.getElementsByClassName('version')[0].textContent = this.data.getCardContent(loot.filters).version;
-          this.onCrcChange();
-          this.onTagsChange();
-          this.onMessagesChange();
-        },
-
-        onCrcChange: function(oldValue, newValue) {
-          if (this.data) {
-            this.getElementsByClassName('crc')[0].textContent = this.data.getCardContent(loot.filters).crc;
-          }
-        },
-
-        onTagsChange: function(oldValue, newValue) {
-            if (this.data) {
-                var cardContent = this.data.getCardContent(loot.filters);
-                var tagsAdded = this.getElementsByClassName('tag add')[0];
-                tagsAdded.textContent = cardContent.tags.added;
-                tagsAdded.hidden = cardContent.tags.added.length === 0;
-                var tagsRemoved = this.getElementsByClassName('tag remove')[0];
-                tagsRemoved.textContent = cardContent.tags.removed;
-                tagsRemoved.hidden = cardContent.tags.removed.length === 0;
-            }
-        },
-
-        onMessagesChange: function(oldValue, newValue) {
-            if (this.data) {
-                /* First clear any existing messages. */
-                var messageUL = this.getElementsByTagName('ul')[0];
-                while(messageUL.firstElementChild) {
-                    messageUL.removeChild(messageUL.firstElementChild);
-                }
-                /* Now add new messages. */
-                var cardContent = this.data.getCardContent(loot.filters);
-                cardContent.messages.forEach(function(message) {
-                    var messageLi = document.createElement('li');
-                    messageLi.className = message.type;
-                    // Use the Marked library for Markdown formatting support.
-                    messageLi.innerHTML = marked(message.content);
-                    messageUL.appendChild(messageLi);
-                });
-                messageUL.hidden = cardContent.messages.length === 0;
-            }
-        },
-
-        onUserlistChange: function(oldValue, newValue) {
-            /* The enabled key will always be set on application of edits, even
-            if there were none to apply, so long for more than just that key. */
-            if (this.data && this.data.userlist && Object.keys(this.data.userlist).length > 1) {
-                this.setAttribute('data-edits', 'true');
-            } else {
-                this.removeAttribute('data-edits');
-            }
-        },
-
-        onSearchResultChange: function(oldValue, newValue) {
-            this.classList.toggle('search-result', newValue);
-        },
-
-        onMenuToggle: function(oldValue, newValue) {
-            if (newValue) {
-                this.style.marginBottom = '190px';
-            } else {
-                this.style.marginBottom = '0';
-            }
-        },
-
-        getName: function() {
-            return this.getElementsByTagName('h1')[0].textContent;
-        },
-
-        onFlipEnd: function(evt) {
-            /* Remove fastflip class if present. */
-            this.classList.remove('fastflip');
-
-            /* Re-calculate tooltip positions, since the flip animation tends to mess with them. */
-            this.shadowRoot.getElementById('activeTick').setPosition();
-            this.shadowRoot.getElementById('emptyPlugin').setPosition();
-            this.shadowRoot.getElementById('hasUserEdits').setPosition();
-            this.shadowRoot.getElementById('loadsArchive').setPosition();
-
-            /* Also re-calculate editor tooltip positions. */
-            this.shadowRoot.getElementById('editor').updatePolymerElements();
-
-            /* Remove the edit mode toggle if present. */
-            document.getElementById('cardsNav').removeAttribute('data-editModeToggle');
-        },
-
-        onShowEditor: function(evt) {
-            var card;
-            if (this.tagName == 'LOOT-PLUGIN-CARD') {
-                card = this;
-            } else {
-                card = getMenuItemCard(this);
-            }
-
-            /* If the editor hasn't already been opened, its data is not yet set, so do that now. */
-            if (!card.data.isEditorOpen && !card.data.editor) {
-                card.shadowRoot.getElementById('editor').data = card.data;
-                card.shadowRoot.getElementById('editor').setEditorData(card.data);
-            }
-
-            card.data.isEditorOpen = true;
-
-            /* Fire an open event, so that the UI can enter edit mode. */
-            card.dispatchEvent(new CustomEvent('loot-editor-open', {
-                bubbles: true,
-            }));
-        },
-
-        readFromEditor: function(oldData) {
-            return this.shadowRoot.getElementById('editor').readFromEditor(oldData);
-        },
-
-        onShowOnlyConflicts: function(evt) {
-            getMenuItemCard(this).data.isMenuOpen = false;
-            evt.target.dispatchEvent(new CustomEvent('loot-filter-conflicts', {
-                bubbles: true,
-                detail: evt.target.checked,
-            }));
-        },
-
-        onCopyMetadata: function(evt) {
-            evt.target.dispatchEvent(new CustomEvent('loot-copy-metadata', {
-                bubbles: true,
-            }));
-        },
-
-        onClearMetadata: function(evt) {
-            evt.target.dispatchEvent(new CustomEvent('loot-clear-metadata', {
-                bubbles: true,
-            }));
-        },
-    });
-
+        <iron-icon id="isMaster" icon="loot-custom-icons:crown"></iron-icon>
+        <paper-tooltip for="isMaster">Master File</paper-tooltip>
+        <iron-icon id="isEmpty" icon="visibility-off"></iron-icon>
+        <paper-tooltip for="isEmpty">Empty Plugin</paper-tooltip>
+        <iron-icon id="loadsArchive" icon="attachment"></iron-icon>
+        <paper-tooltip for="loadsArchive">Loads Archive</paper-tooltip>
+        <iron-icon id="hasUserEdits" icon="account-circle"></iron-icon>
+        <paper-tooltip for="hasUserEdits">Has User Metadata</paper-tooltip>
+        <paper-menu-button id="menu" horizontal-align="right">
+          <paper-icon-button icon="more-vert" class="dropdown-trigger"></paper-icon-button>
+          <loot-menu class="dropdown-content">
+            <paper-toggle-button id="showOnlyConflicts" checked="{{data.isConflictFilterChecked}}">Show Only Conflicts</paper-toggle-button>
+            <paper-icon-item id="editMetadata">
+              <iron-icon icon="create" item-icon></iron-icon>
+              Edit Metadata
+            </paper-icon-item>
+            <paper-icon-item id="copyMetadata">
+              <iron-icon icon="content-copy" item-icon></iron-icon>
+              Copy Metadata
+            </paper-icon-item>
+            <paper-icon-item id="clearMetadata">
+              <iron-icon icon="delete" item-icon></iron-icon>
+              Clear User Metadata
+            </paper-icon-item>
+          </loot-menu>
+        </paper-menu-button>
+      </paper-toolbar>
+      <div id="content">
+        <content select=".tag.add"></content>
+        <content select=".tag.remove"></content>
+        <content></content>
+      </div>
+    </paper-material>
+  </template>
+  <script>
+    'use strict';
     function getMenuItemCard(element) {
-        while (element.parentElement) {
-            element = element.parentElement;
-        }
-        return element.parentNode.host;
+      while (element.parentElement) {
+        element = element.parentElement;
+      }
+      return element.parentNode.host;
     }
-    </script>
-</polymer-element>
+
+    Polymer({
+      is: 'loot-plugin-card',
+      properties: {
+        data: {
+          notify: true,
+          observer: '_dataChanged',
+        },
+      },
+
+      attached() {
+        this.$.showOnlyConflicts.addEventListener('change', this._onShowOnlyConflicts);
+        this.$.editMetadata.addEventListener('click', this.onShowEditor);
+        this.$.copyMetadata.addEventListener('click', this._onCopyMetadata);
+        this.$.clearMetadata.addEventListener('click', this._onClearMetadata);
+      },
+
+      detached() {
+        this.$.showOnlyConflicts.removeEventListener('change', this._onShowOnlyConflicts);
+        this.$.editMetadata.removeEventListener('click', this.onShowEditor);
+        this.$.copyMetadata.removeEventListener('click', this._onCopyMetadata);
+        this.$.clearMetadata.removeEventListener('click', this._onClearMetadata);
+      },
+
+      _dataChanged(newValue, oldValue) {
+        if (newValue) {
+          /* Initialise the card content data. */
+          this.updateContent(true);
+          this.updateStyling();
+
+          /* Set icons' visibility */
+          this.$.activeTick.hidden = !this.data.isActive;
+          this.$.isMaster.hidden = !this.data.isMaster;
+          this.$.isEmpty.hidden = !this.data.isEmpty;
+          this.$.loadsArchive.hidden = !this.data.loadsArchive;
+
+          /* Also set highlight if the conflict filter is active. */
+          this.classList.toggle('highlight', this.data.isConflictFilterChecked);
+        }
+      },
+
+      _setTagsContent(tags) {
+        if (tags) {
+          const tagsAdded = this.getElementsByClassName('tag add')[0];
+          tagsAdded.textContent = tags.added;
+          tagsAdded.hidden = tags.added.length === 0;
+
+          const tagsRemoved = this.getElementsByClassName('tag remove')[0];
+          tagsRemoved.textContent = tags.removed;
+          tagsRemoved.hidden = tags.removed.length === 0;
+        }
+      },
+
+      _setMessagesContent(messages) {
+        /* First clear any existing messages. */
+        const messageList = this.getElementsByTagName('ul')[0];
+        while (messageList.firstElementChild) {
+          messageList.removeChild(messageList.firstElementChild);
+        }
+
+        if (messages) {
+          /* Now add new messages. */
+          messages.forEach((message) => {
+            const messageListItem = document.createElement('li');
+            messageListItem.className = message.type;
+            // Use the Marked library for Markdown formatting support.
+            messageListItem.innerHTML = window.marked(message.content);
+            messageList.appendChild(messageListItem);
+          });
+          messageList.hidden = messages.length === 0;
+        }
+      },
+
+      updateContent(updateBodyContent) {
+        if (this.data) {
+          const cardContent = this.data.getCardContent(loot.filters);
+
+          this.getElementsByClassName('version')[0].textContent = cardContent.version;
+
+          this.getElementsByClassName('crc')[0].textContent = cardContent.crc;
+
+          if (updateBodyContent) {
+            this._setTagsContent(cardContent.tags);
+            this._setMessagesContent(cardContent.messages);
+
+            /* Notify that this card (may have) changed size. */
+            this.dispatchEvent(new CustomEvent('iron-resize', { bubbles: true }));
+          }
+
+          /* Update the conflict filter toggle state. */
+          this.$.showOnlyConflicts.checked = this.data.isConflictFilterChecked;
+        }
+      },
+
+      updateStyling() {
+        if (this.data) {
+          this.$.hasUserEdits.hidden = !this.data.hasUserEdits;
+
+          /* Set highlight if the plugin is a search result. */
+          this.classList.toggle('search-result', this.data.isSearchResult);
+        }
+      },
+
+      getName() {
+        return this.getElementsByTagName('h1')[0].textContent;
+      },
+
+      onShowEditor() {
+        /* Fire an open event, so that the UI can enter edit mode. */
+        this.dispatchEvent(new CustomEvent('loot-editor-open', {
+          bubbles: true,
+        }));
+      },
+
+      _onShowOnlyConflicts(evt) {
+        evt.target.dispatchEvent(new CustomEvent('loot-filter-conflicts', {
+          detail: evt.currentTarget.checked,
+          bubbles: true,
+        }));
+      },
+
+      _onCopyMetadata(evt) {
+        evt.target.dispatchEvent(new CustomEvent('loot-copy-metadata', {
+          bubbles: true,
+        }));
+      },
+
+      _onClearMetadata(evt) {
+        evt.target.dispatchEvent(new CustomEvent('loot-clear-metadata', {
+          bubbles: true,
+        }));
+      },
+    });
+  </script>
+</dom-module>

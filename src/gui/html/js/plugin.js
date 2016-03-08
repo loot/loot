@@ -25,13 +25,13 @@
 (function exportModule(root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-    define([], factory);
+    define(['bower_components/lodash/dist/lodash.core.min'], factory);
   } else {
     // Browser globals
     root.loot = root.loot || {};
-    root.loot.Plugin = factory();
+    root.loot.Plugin = factory(root._);
   }
-}(this, () => {
+}(this, (_) => {
   /* Messages, tags, CRCs and version strings can all be hidden by filters.
      Use getters with no setters for member variables as data should not be
      written to objects of this class. */
@@ -168,7 +168,7 @@
     constructor(obj) {
       /* Plugin data */
       this.name = obj.name;
-      this.crc = obj.crc || 0;
+      this._crc = obj.crc || 0;
       this.version = obj.version || '';
       this.isActive = obj.isActive || false;
       this.isEmpty = obj.isEmpty || false;
@@ -176,20 +176,18 @@
       this.loadsArchive = obj.loadsArchive || false;
 
       this.masterlist = obj.masterlist;
-      this.userlist = obj.userlist;
+      this._userlist = obj.userlist;
 
-      this.priority = obj.priority || 0;
-      this.isPriorityGlobal = obj.isPriorityGlobal || false;
+      this._priority = obj.priority || 0;
+      this._isPriorityGlobal = obj.isPriorityGlobal || false;
       this._messages = obj.messages || [];
-      this.tags = obj.tags;
+      this._tags = obj.tags || [];
       this._isDirty = obj.isDirty || false;
 
       /* UI state variables */
       this.id = this.name.replace(/\s+/g, '');
-      this.isMenuOpen = false;
-      this.isEditorOpen = false;
       this.isConflictFilterChecked = false;
-      this.isSearchResult = false;
+      this._isSearchResult = false;
     }
 
     static fromJson(key, value) {
@@ -232,12 +230,30 @@
       return rowData;
     }
 
-    get priorityString() {
-      if (this.priority === 0) {
-        return '';
-      }
+    _dispatchCardContentChangeEvent(mayChangeCardHeight) {
+      document.dispatchEvent(new CustomEvent('loot-plugin-card-content-change', {
+        detail: {
+          pluginId: this.id,
+          mayChangeCardHeight,
+        },
+      }));
+    }
 
-      return this.priority.toString();
+    _dispatchCardStylingChangeEvent() {
+      document.dispatchEvent(new CustomEvent('loot-plugin-card-styling-change', {
+        detail: { pluginId: this.id },
+      }));
+    }
+
+    _dispatchItemContentChangeEvent() {
+      document.dispatchEvent(new CustomEvent('loot-plugin-item-content-change', {
+        detail: {
+          pluginId: this.id,
+          priority: this.priority,
+          isPriorityGlobal: this.isPriorityGlobal,
+          hasUserEdits: this.hasUserEdits,
+        },
+      }));
     }
 
     get messages() {
@@ -273,17 +289,22 @@
         }
       });
 
-      if (newTotal !== oldTotal || newWarns !== oldWarns || newErrs !== oldErrs) {
+      if (newTotal !== oldTotal
+        || newWarns !== oldWarns
+        || newErrs !== oldErrs
+        || !_.isEqual(this._messages, messages)) {
+        this._messages = messages;
+
         document.dispatchEvent(new CustomEvent('loot-plugin-message-change', {
           detail: {
+            pluginId: this.id,
+            mayChangeCardHeight: true,
             totalDiff: newTotal - oldTotal,
             warningDiff: newWarns - oldWarns,
             errorDiff: newErrs - oldErrs,
           },
         }));
       }
-
-      this._messages = messages;
     }
 
     get isDirty() {
@@ -293,14 +314,91 @@
     set isDirty(dirty) {
       /* Update dirty counts. */
       if (dirty !== this._isDirty) {
+        this._isDirty = dirty;
+
         document.dispatchEvent(new CustomEvent('loot-plugin-isdirty-change', {
           detail: {
             isDirty: dirty,
           },
         }));
       }
+    }
 
-      this._isDirty = dirty;
+    get crc() {
+      return this._crc;
+    }
+
+    set crc(crc) {
+      if (this._crc !== crc) {
+        this._crc = crc;
+
+        this._dispatchCardContentChangeEvent(false);
+      }
+    }
+
+    get tags() {
+      return this._tags;
+    }
+
+    set tags(tags) {
+      if (!_.isEqual(this._tags, tags)) {
+        this._tags = tags;
+
+        this._dispatchCardContentChangeEvent(true);
+      }
+    }
+
+    get hasUserEdits() {
+      return this.userlist !== undefined && Object.keys(this.userlist).length > 1;
+    }
+
+    get userlist() {
+      return this._userlist;
+    }
+
+    set userlist(userlist) {
+      if (!_.isEqual(this._userlist, userlist)) {
+        this._userlist = userlist;
+
+        this._dispatchItemContentChangeEvent();
+        this._dispatchCardStylingChangeEvent();
+      }
+    }
+
+    get priority() {
+      return this._priority;
+    }
+
+    set priority(priority) {
+      if (this._priority !== priority) {
+        this._priority = priority;
+
+        this._dispatchItemContentChangeEvent();
+      }
+    }
+
+    get isPriorityGlobal() {
+      return this._isPriorityGlobal;
+    }
+
+    set isPriorityGlobal(isPriorityGlobal) {
+      if (this._isPriorityGlobal !== isPriorityGlobal) {
+        this._isPriorityGlobal = isPriorityGlobal;
+
+        this._dispatchItemContentChangeEvent();
+      }
+    }
+
+    get isSearchResult() {
+      return this._isSearchResult;
+    }
+
+    set isSearchResult(isSearchResult) {
+      if (this._isSearchResult !== isSearchResult) {
+        this._isSearchResult = isSearchResult;
+
+        this._dispatchCardStylingChangeEvent();
+      }
     }
 
     getCardContent(filters) {
@@ -313,11 +411,33 @@
       document.getElementById('totalWarningNo').textContent = parseInt(document.getElementById('totalWarningNo').textContent, 10) + evt.detail.warningDiff;
       document.getElementById('totalErrorNo').textContent = parseInt(document.getElementById('totalErrorNo').textContent, 10) + evt.detail.errorDiff;
     }
+
     static onIsDirtyChange(evt) {
       if (evt.detail.isDirty) {
         document.getElementById('dirtyPluginNo').textContent = parseInt(document.getElementById('dirtyPluginNo').textContent, 10) + 1;
       } else {
         document.getElementById('dirtyPluginNo').textContent = parseInt(document.getElementById('dirtyPluginNo').textContent, 10) - 1;
+      }
+    }
+
+    static onContentChange(evt) {
+      const card = document.getElementById(evt.detail.pluginId);
+      if (card) {
+        card.updateContent(evt.detail.mayChangeCardHeight);
+      }
+    }
+
+    static onCardStylingChange(evt) {
+      const card = document.getElementById(evt.detail.pluginId);
+      if (card) {
+        card.updateStyling();
+      }
+    }
+
+    static onItemContentChange(evt) {
+      const item = document.getElementById('cardsNav').querySelector(`[data-id="${evt.detail.pluginId}"]`);
+      if (item) {
+        item.updateStyling(evt.detail);
       }
     }
   };
