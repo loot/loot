@@ -397,8 +397,6 @@ namespace loot {
     void Handler::GetConflictingPlugins(const std::string& pluginName, CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback) {
         BOOST_LOG_TRIVIAL(debug) << "Searching for plugins that conflict with " << pluginName;
 
-        auto plugin = _lootState.CurrentGame().GetPlugin(pluginName);
-
         // Checking for FormID overlap will only work if the plugins have been loaded, so check if
         // the plugins have been fully loaded, and if not load all plugins.
         if (!_lootState.CurrentGame().ArePluginsFullyLoaded()) {
@@ -408,6 +406,7 @@ namespace loot {
 
         SendProgressUpdate(frame, loc::translate("Checking for conflicting plugins..."));
         YAML::Node node;
+        auto plugin = _lootState.CurrentGame().GetPlugin(pluginName);
         for (const auto& otherPlugin : _lootState.CurrentGame().GetPlugins()) {
             YAML::Node pluginNode;
 
