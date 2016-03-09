@@ -101,6 +101,11 @@ function onSortPlugins() {
 
     loot.game.globalMessages = result.globalMessages;
 
+    if (!result.plugins) {
+      loot.Dialog.closeProgress();
+      return;
+    }
+
     /* Check if sorted load order differs from current load order. */
     const loadOrderIsUnchanged = result.plugins.every((plugin, index) => {
       return plugin.name === loot.game.plugins[index].name;

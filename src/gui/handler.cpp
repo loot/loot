@@ -953,7 +953,15 @@ namespace loot {
         }
         catch (loot::error& e) {
             BOOST_LOG_TRIVIAL(error) << "Failed to sort plugins. Details: " << e.what();
-            callback->Failure(e.code(), (boost::format(loc::translate("Failed to sort plugins. Details: %1%")) % e.what()).str());
+            if (e.code() == error::sorting_error) {
+                _lootState.CurrentGame().AppendMessage(Message(Message::error, e.what()));
+
+                YAML::Node node;
+                node["globalMessages"] = GetGeneralMessages();
+                callback->Success(JSON::stringify(node));
+            }
+            else
+                callback->Failure(e.code(), (boost::format(loc::translate("Failed to sort plugins. Details: %1%")) % e.what()).str());
         }
     }
 
