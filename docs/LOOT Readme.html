@@ -159,6 +159,10 @@ var {
     color: #303F9F;
 }
 
+figure > div {
+    width: 100%;
+    overflow-x: auto;
+}
 .clipper {
     overflow: hidden;
 }
@@ -250,7 +254,7 @@ var {
 <h3 id="usage-header">The Header Bar</h3>
 
 <figure>
-    <div style="width: 100%; overflow-x: auto;">
+    <div>
         <div class="clipper" style="height: 54px; width: 1060px;">
             <img src="images/main.png">
         </div>
@@ -297,9 +301,9 @@ var {
 <h3 id="usage-cards">Plugin Cards &amp; Sidebar Items</h3>
 
 <figure>
-    <div style="width: 100%; overflow-x: auto;">
-        <div class="clipper" style="height: 235px; width: 665px;">
-            <img src="images/main.png" style="position: relative; top: -60px; left: -340px;">
+    <div>
+        <div class="clipper" style="height: 230px; width: 665px;">
+            <img src="images/main.png" style="position: relative; top: -270px; left: -340px;">
         </div>
     </div>
 <figcaption>Examples of plugin cards.</figcaption>
@@ -340,15 +344,8 @@ var {
 </ul>
 <p>The filter toggles have their states saved on quitting LOOT, and they are restored when LOOT is next launched. There are also two other filters:
 <ul>
-    <li>A content filter, located beneath the filter toggles in the <span class="button">Filters</span> sidebar tab. This hides any plugins that don't have the filter input value present in any of the following:
-    <ul>
-        <li>Filename
-        <li>Version
-        <li>CRC value
-        <li>Bash Tag suggestions
-        <li>Messages
-    </ul>
-    <li>A conflict filter that can be accessed through each plugin's menu. This filters the plugin cards displayed so that only plugins which conflict with this plugin will be visible. If this plugin loads an archive, other plugins that load archives which <em>may</em> contain conflicting resources are also displayed.</p>
+    <li>A content filter, located beneath the filter toggles in the <span class="button">Filters</span> sidebar tab. This hides any plugins that don't have the filter input value present in any of the text on their cards.
+    <li>A conflict filter that can be accessed through each plugin card's menu. This filters the plugin cards displayed so that only plugins which conflict with this plugin will be visible. If this plugin loads an archive, other plugins that load archives which <em>may</em> contain conflicting resources are also displayed.</p>
 
     Only one plugin's conflict filter can be active at any one time, so activating a second conflict filter will deactivate the first. The plugin for which the filter is currently active has its card highlighted. Sorting with a conflict filter active will first deactivate it.
 
@@ -357,9 +354,9 @@ var {
 <h3 id="usage-editing">Editing Plugin Metadata</h3>
 
 <figure>
-    <div style="width: 100%; overflow-x: auto;">
-        <div class="clipper" style="height: 295px; width: 665px;">
-            <img src="images/main.png" style="position: relative; top: -295px; left: -340px;">
+    <div>
+        <div class="clipper" style="height: 295px; width: 685px;">
+            <img src="images/main.png" style="position: relative; top: -500px; left: -340px;">
         </div>
     </div>
 <figcaption>A metadata editor panel.</figcaption>
@@ -367,9 +364,9 @@ var {
 
 <p>LOOT uses metadata to supply plugins with messages and Bash Tag suggestions, and to help it sort plugins that it can't otherwise sort correctly. Users can add to their plugins' metadata through each plugin's metadata editor panel, and plugins with user metadata are indicated with a <q>Has User Metadata</q> icon.
 
-<p>A plugin's editor panel is accessed by clicking the <q>Edit Metadata</q> item in the plugin's menu. Multiple plugins can have their editor panels open at once. While at least one editor panel is open, the plugin sidebar also displays any non-zero plugin priorities, to aid setting new priority values.
+<p>The editor panel is accessed by clicking the <q>Edit Metadata</q> item in a plugin's menu, or by double-clicking a plugin name in the sidebar. Only one plugin's metadata can be edited at a time. While the editor panel is open, the plugin sidebar also displays any non-zero plugin priorities, to aid setting new priority values. The editor can be resized by grabbing the top of the editor's header and dragging it up or down.
 
-<p>The editor's header bar is similar to the header on the front of the plugin card, minus the <q>Has User Metadata</q> icon, and with the addition of <q>Apply</q> and <q>Cancel</q> icon buttons and a row of tabs. The <span class="button">Main</span> tab contains the following inputs:
+<p>The editor's header displays the name of the plugin being edited, <q>Save Metadata</q> and <q>Cancel</q> buttons, and a row of tabs. The <span class="button">Main</span> tab's page contains the following inputs:
 
 <ul>
     <li>The <q>Enable Edits</q> toggle must be on for LOOT to use any user-added metadata, otherwise it will be ignored.
@@ -377,7 +374,7 @@ var {
     <li>The <q>Priority Value</q> input sets the plugin's priority value, which is used to modify plugin position relative to others. Plugins with higher priority values load after plugins with lower priority values. Plugins have a default priority of 0.
 </ul>
 
-<p>The other tabs contain metadata tables, which are detailed below. New rows can be added, and existing user-added rows can be removed, though rows containing metadata from the masterlist cannot. The <span class="button">Load After</span>, <span class="button">Requirements</span> and <span class="button">Incompatibilities</span> tables can have rows added by dragging and dropping plugins from the sidebar into the table area.
+<p>The other tab pages contain metadata tables, which are detailed below. New rows can be added, and existing user-added rows can be removed, though rows containing metadata from the masterlist cannot. The <span class="button">Load After</span>, <span class="button">Requirements</span> and <span class="button">Incompatibilities</span> tables can have rows added by dragging and dropping plugins from the sidebar into the table area.
 
 <table>
     <thead>
@@ -427,7 +424,7 @@ var {
 
 <h3 id="usage-settings">Editing Settings</h3>
 <figure>
-    <div style="width: 100%; overflow-x: auto;">
+    <div>
         <div class="clipper" style="height: 768px; width: 1024px;">
             <img src="images/settings.png" style="position: relative;">
         </div>
@@ -535,20 +532,48 @@ A copy of the license is included in the file named "GNU FDL v1.3.txt".</blockqu
 <p>Only program history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
 <h3>0.9.0 - <i>X Y 2016</i></h3>
+<h4>Fixes</h4>
 <ul>
-    <li>Added Fallout 4 support.</li>
-    <li>Replaced references to "BSAs" with the more generic "Archives" as Fallout 4's BSA equivalents use a different file extension.</li>
-    <li>Fixed an error when attempting to redate plugins that are no longer installed.</li>
-    <li>Fixed the sorting process positioning some plugins incorrectly due to a bug involving priority values.</li>
-    <li>Changed the sorting process so that it recognises when the sorted load order is identical to the existing load order and informs the user, avoiding unnecessary filesystem interaction.</li>
-    <li>Reimplemented LOOT's settings file handling, fixing crashes due to invalid settings values and allowing missing settings to use their default values.</li>
-    <li>Reimplemented plugin version string extraction to improve its accuracy and maintainability.</li>
-    <li>Optimised plugin CRC, file and version condition evaluation.</li>
-    <li>Changed the installer so that it only creates one shortcut for LOOT in the Start menu, following Microsoft guidelines.</li>
-    <li>Updated French and Danish translations.</li>
-    <li>Refactored and improved the quality of a lot of code.</li>
-    <li>Updated Boost (1.60), CEF (3.2556.1368.g535c4fb), libespm (2.5.0), libgit2 (v0.23.4) and libloadorder (7.0.0) dependencies.</li>
-    <li>Fixed native Linux and 64-bit build errors. Such builds are unsupported and no official builds are planned.</li>
+    <li>Redate Plugins attempted to redate plugins that were missing, causing an error.</li>
+    <li>Sorting processed priority value inheritance throughout the load order incorrectly, leading to some plugins being positioned incorrectly.</li>
+    <li>The conflict filter displayed only the target plugin when enabled for the first time in a session.</li>
+    <li>The behaviour of the search functionality was inconsistent.</li>
+    <li>Duplicate messages could be displayed under certain circumstances.</li>
+    <li>Opening the metadata editor for one plugin displayed the metadata for another plugin under certain circumstances.</li>
+    <li>Changing the current game quickly could leave the UI unresponsive.</li>
+    <li>Applying a filter then scrolling the plugin card list would display some cards with no content.</li>
+    <li>Plugin cards would disappearing when jumping to a plugin card near the bottom of the load order using the sidebar.</li>
+    <li>Clicking on a disabled element in a dropdown menu would cause the menu to close.</li>
+    <li>The UI font size was too large, due to a misunderstanding of the Material Design guidelines.</li>
+    <li>Attempting to build native Linux and 64-bit executables produced errors. Such builds are unsupported and no official builds are planned.</li>
+</ul>
+<h4>Additions</h4>
+<ul>
+    <li>Support for Fallout 4.</li>
+    <li>A warning message is displayed in the General Information card if the user has not sorted their load order in the current LOOT session.</li>
+    <li>An error message is displayed in the General Information card when a cyclic interaction sorting error is encountered, and remains there until sorting is next attempted.</li>
+</ul>
+<h4>Changes</h4>
+<ul>
+    <li>References to "BSAs" have been replaced with the more generic "Archives" as Fallout 4's BSA equivalents use a different file extension.</li>
+    <li>The sorting process now recognises when the sorted load order is identical to the existing load order and informs the user, avoiding unnecessary filesystem interaction.</li>
+    <li>The metadata editor has been reimplemented as a single resizeable panel displayed below the plugin card list instead of a separate editor for each plugin card.</li>
+    <li>Editable table styling has been improved to more closely align to the Material Design guidelines.</li>
+    <li>Minor UI changes have been made to scrollbar and focus outline styling to improve accessibility.</li>
+    <li>UI interaction performance has been improved, especially when scrolling the plugin card list.</li>
+    <li>The PayPal donation link now points to the PayPal.Me service, which has a more polished UX and lower fees.</li>
+    <li>LOOT's settings file handling has been reimplemented, fixing crashes due to invalid settings values and allowing missing settings to use their default values.</li>
+    <li>Plugin version string extraction has been reimplemented, improving its accuracy and maintainability.</li>
+    <li>Plugin CRC, file and version condition evaluation has been optimised to use cached data where it exists, avoiding unnecessary filesystem interaction.</li>
+    <li>The French and Danish translations have been updated.</li>
+    <li>The installer now only creates one shortcut for LOOT in the Start menu, following Microsoft guidelines.</li>
+    <li>A lot of code has been refactored and improved to increase its quality.</li>
+    <li>The Boost (1.60), CEF (3.2556.1368.g535c4fb), libespm (2.5.0), libgit2 (0.24.0), libloadorder (7.0.0) and Polymer (1.2) dependencies have been updated to the versions given in brackets.</li>
+</ul>
+<h4>Removals</h4>
+<ul>
+    <li>The Flattr donation link.</li>
+    <li>The experimental theming support, as its implementation was incompatible with Polymer 1.2's styling mechanisms.</li>
 </ul>
 
 <h3>0.8.1 - <i>27 September 2015</i></h3>
