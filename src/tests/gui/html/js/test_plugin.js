@@ -821,7 +821,7 @@ describe('Plugin', () => {
     let handleEvent;
 
     afterEach(() => {
-      document.removeEventListener('loot-plugin-card-content-change', handleEvent);
+      document.removeEventListener('loot-plugin-card-styling-change', handleEvent);
     });
 
     it('getting value should return false if it has not been set in the constructor', () => {
@@ -845,7 +845,7 @@ describe('Plugin', () => {
         done(new Error('Should not have fired an event'));
       };
 
-      document.addEventListener('loot-plugin-card-content-change', handleEvent);
+      document.addEventListener('loot-plugin-card-styling-change', handleEvent);
 
       plugin.isSearchResult = plugin.isSearchResult;
 
@@ -860,7 +860,7 @@ describe('Plugin', () => {
         done();
       };
 
-      document.addEventListener('loot-plugin-card-content-change', handleEvent);
+      document.addEventListener('loot-plugin-card-styling-change', handleEvent);
 
       plugin.isSearchResult = true;
     });
