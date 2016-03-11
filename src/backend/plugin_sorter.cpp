@@ -101,6 +101,10 @@ namespace loot {
         indexMap.clear();
         oldLoadOrder.clear();
 
+        // Clear any existing game-specific messages, as these only relate to
+        // state that has been changed by sorting.
+        game.ClearMessages();
+
         progressCallback(boost::locale::translate("Building plugin graph..."));
         BuildPluginGraph(game, language);
 
@@ -153,9 +157,6 @@ namespace loot {
             plugins.push_back(graph[vertex]);
         }
 
-        // Clear any existing game-specific messages, as these only relate to
-        // state that has been changed by sorting.
-        game.ClearMessages();
         game.SetLoadOrderSorted(true);
 
         return plugins;

@@ -102,8 +102,10 @@ function onSortPlugins() {
     loot.game.globalMessages = result.globalMessages;
 
     if (!result.plugins) {
-      loot.Dialog.closeProgress();
-      return;
+      const message = result.globalMessages.find((item) => {
+        return item.content[0].str.startsWith('Cyclic interaction detected');
+      });
+      throw new Error(loot.l10n.translate('Failed to sort plugins. Details: ' + message.content[0].str));
     }
 
     /* Check if sorted load order differs from current load order. */
