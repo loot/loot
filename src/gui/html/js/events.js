@@ -18,7 +18,6 @@ function onChangeGame(evt) {
     return;
   }
   /* Send off a CEF query with the folder name of the new game. */
-  loot.Dialog.showProgress(loot.l10n.translate('Loading game data...'));
   loot.query('changeGame', evt.detail.item.getAttribute('value')).then((result) => {
     /* Filters should be re-applied on game change, except the conflicts
        filter. Don't need to deactivate the others beforehand. Strictly not
@@ -48,7 +47,8 @@ function onChangeGame(evt) {
   }).catch(handlePromiseError);
 }
 /* Masterlist update process, minus progress dialog. */
-function updateMasterlistNoProgress() {
+function updateMasterlist() {
+  loot.Dialog.showProgress('Updating and parsing masterlist...');
   return loot.query('updateMasterlist').then(JSON.parse).then((result) => {
     if (result) {
       /* Update JS variables. */
@@ -76,8 +76,7 @@ function updateMasterlistNoProgress() {
   }).catch(handlePromiseError);
 }
 function onUpdateMasterlist() {
-  loot.Dialog.showProgress(loot.l10n.translate('Updating masterlist...'));
-  updateMasterlistNoProgress().then(() => {
+  updateMasterlist().then(() => {
     loot.Dialog.closeProgress();
   }).catch(handlePromiseError);
 }
@@ -89,10 +88,9 @@ function onSortPlugins() {
 
   let promise = Promise.resolve();
   if (loot.settings.updateMasterlist) {
-    promise = promise.then(updateMasterlistNoProgress);
+    promise = promise.then(updateMasterlist);
   }
   promise.then(() => {
-    loot.Dialog.showProgress(loot.l10n.translate('Sorting plugins...'));
     return loot.query('sortPlugins').then(JSON.parse);
   }).then((result) => {
     if (!result) {
@@ -309,7 +307,6 @@ function onCopyLoadOrder() {
 }
 function onContentRefresh() {
   /* Send a query for updated load order and plugin header info. */
-  loot.Dialog.showProgress(loot.l10n.translate('Refreshing data...'));
   loot.query('getGameData').then((result) => {
     /* Parse the data sent from C++. */
     const game = JSON.parse(result, loot.Plugin.fromJson);

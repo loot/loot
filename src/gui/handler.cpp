@@ -117,6 +117,7 @@ namespace loot {
             return true;
         }
         else if (request == "getGameData") {
+            SendProgressUpdate(frame, loc::translate("Parsing, merging and evaluating metadata..."));
             return CefPostTask(TID_FILE, base::Bind(&Handler::GetGameData, base::Unretained(this), frame, callback));
         }
         else if (request == "cancelFind") {
@@ -146,7 +147,7 @@ namespace loot {
             return true;
         }
         else if (request == "updateMasterlist") {
-            return CefPostTask(TID_FILE, base::Bind(&Handler::UpdateMasterlist, base::Unretained(this), frame, callback));
+            return CefPostTask(TID_FILE, base::Bind(&Handler::UpdateMasterlist, base::Unretained(this), callback));
         }
         else if (request == "sortPlugins") {
             return CefPostTask(TID_FILE, base::Bind(&Handler::SortPlugins, base::Unretained(this), frame, callback));
@@ -233,7 +234,7 @@ namespace loot {
         }
         else if (requestName == "getConflictingPlugins") {
             // Has one arg, which is the name of the plugin to get conflicts for.
-            CefPostTask(TID_FILE, base::Bind(&Handler::GetConflictingPlugins, base::Unretained(this), request["args"][0].as<string>(), frame, callback));
+            CefPostTask(TID_FILE, base::Bind(&Handler::GetConflictingPlugins, base::Unretained(this), request["args"][0].as<string>(), callback));
             return true;
         }
         else if (requestName == "copyMetadata") {
@@ -394,17 +395,14 @@ namespace loot {
         return false;
     }
 
-    void Handler::GetConflictingPlugins(const std::string& pluginName, CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback) {
+    void Handler::GetConflictingPlugins(const std::string& pluginName, CefRefPtr<Callback> callback) {
         BOOST_LOG_TRIVIAL(debug) << "Searching for plugins that conflict with " << pluginName;
 
         // Checking for FormID overlap will only work if the plugins have been loaded, so check if
         // the plugins have been fully loaded, and if not load all plugins.
-        if (!_lootState.CurrentGame().ArePluginsFullyLoaded()) {
-            SendProgressUpdate(frame, loc::translate("Loading plugin contents..."));
+        if (!_lootState.CurrentGame().ArePluginsFullyLoaded())
             _lootState.CurrentGame().LoadPlugins(false);
-        }
 
-        SendProgressUpdate(frame, loc::translate("Checking for conflicting plugins..."));
         YAML::Node node;
         auto plugin = _lootState.CurrentGame().GetPlugin(pluginName);
         for (const auto& otherPlugin : _lootState.CurrentGame().GetPlugins()) {
@@ -625,8 +623,6 @@ namespace loot {
             BOOST_LOG_TRIVIAL(info) << "Getting data specific to LOOT's active game.";
             // Get masterlist revision info and parse if it exists. Also get plugin headers info and parse userlist if it exists.
 
-            SendProgressUpdate(frame, loc::translate("Loading plugin headers..."));
-
             // First clear CRC and condition caches, otherwise they could lead to incorrect evaluations.
             _lootState.CurrentGame().ClearCachedConditions();
 
@@ -647,7 +643,6 @@ namespace loot {
             if (isFirstLoad) {
                 //Parse masterlist, don't update it.
                 if (fs::exists(_lootState.CurrentGame().MasterlistPath())) {
-                    SendProgressUpdate(frame, loc::translate("Parsing masterlist..."));
                     BOOST_LOG_TRIVIAL(debug) << "Parsing masterlist.";
                     try {
                         _lootState.CurrentGame().GetMasterlist().Load(_lootState.CurrentGame().MasterlistPath());
@@ -664,7 +659,6 @@ namespace loot {
 
                 //Parse userlist.
                 if (fs::exists(_lootState.CurrentGame().UserlistPath())) {
-                    SendProgressUpdate(frame, loc::translate("Parsing userlist..."));
                     BOOST_LOG_TRIVIAL(debug) << "Parsing userlist.";
                     try {
                         _lootState.CurrentGame().GetUserlist().Load(_lootState.CurrentGame().UserlistPath());
@@ -708,11 +702,9 @@ namespace loot {
             }
 
             // Now store global messages.
-            SendProgressUpdate(frame, loc::translate("Loading general messages..."));
             gameNode["globalMessages"] = GetGeneralMessages();
 
             // Now store plugin data.
-            SendProgressUpdate(frame, loc::translate("Merging and evaluating plugin metadata..."));
             for (const auto& plugin : installed) {
                 /* Each plugin has members while hold its raw masterlist and userlist data for
                    the editor, and also processed data for the main display.
@@ -789,13 +781,12 @@ namespace loot {
         }
     }
 
-    void Handler::UpdateMasterlist(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback) {
+    void Handler::UpdateMasterlist(CefRefPtr<Callback> callback) {
         try {
             // Update / parse masterlist.
             BOOST_LOG_TRIVIAL(debug) << "Updating and parsing masterlist.";
             bool wasChanged = true;
             try {
-                SendProgressUpdate(frame, loc::translate("Updating and parsing masterlist..."));
                 wasChanged = _lootState.CurrentGame().GetMasterlist().Update(_lootState.CurrentGame());
             }
             catch (loot::error &e) {
@@ -817,7 +808,6 @@ namespace loot {
             }
 
             // Now regenerate the JS-side masterlist data if the masterlist was changed.
-            SendProgressUpdate(frame, loc::translate("Regenerating displayed content..."));
             if (wasChanged) {
                 // The data structure is to be set as 'loot.game'.
                 YAML::Node gameNode;
@@ -918,10 +908,9 @@ namespace loot {
             _lootState.CurrentGame().LoadPlugins(false);
 
             //Sort plugins into their load order.
+            SendProgressUpdate(frame, loc::translate("Sorting load order..."));
             PluginSorter sorter;
-            list<Plugin> plugins = sorter.Sort(_lootState.CurrentGame(), _lootState.getLanguage().Code(), [this, frame](const string& message) {
-                this->SendProgressUpdate(frame, message);
-            });
+            list<Plugin> plugins = sorter.Sort(_lootState.CurrentGame(), _lootState.getLanguage().Code());
 
             YAML::Node node;
 

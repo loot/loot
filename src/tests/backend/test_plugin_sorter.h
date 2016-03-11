@@ -36,8 +36,6 @@ protected:
         game = loot::Game(loot::Game::tes5);
         game.SetGamePath(dataPath.parent_path());
         ASSERT_NO_THROW(game.Init(false, localPath));
-
-        callback = [](const std::string&) {};
     }
 
     inline std::list<std::string> GetExpectedSortedOrder() const {
@@ -73,7 +71,7 @@ protected:
 
 TEST_F(PluginSorter, Sort_NoPlugins) {
     loot::PluginSorter ps;
-    std::list<loot::Plugin> sorted = ps.Sort(game, loot::Language::english, callback);
+    std::list<loot::Plugin> sorted = ps.Sort(game, loot::Language::english);
     EXPECT_TRUE(sorted.empty());
 }
 
@@ -83,11 +81,11 @@ TEST_F(PluginSorter, Sort) {
     loot::PluginSorter ps;
     std::list<std::string> expectedSortedOrder = GetExpectedSortedOrder();
 
-    std::list<loot::Plugin> sorted = ps.Sort(game, loot::Language::english, callback);
+    std::list<loot::Plugin> sorted = ps.Sort(game, loot::Language::english);
     EXPECT_TRUE(std::equal(begin(sorted), end(sorted), begin(expectedSortedOrder)));
 
     // Check stability.
-    sorted = ps.Sort(game, loot::Language::english, callback);
+    sorted = ps.Sort(game, loot::Language::english);
     EXPECT_TRUE(std::equal(begin(sorted), end(sorted), begin(expectedSortedOrder)));
 }
 
@@ -97,7 +95,7 @@ TEST_F(PluginSorter, sortingShouldClearExistingGameMessages) {
     ASSERT_FALSE(game.GetMessages().empty());
 
     loot::PluginSorter ps;
-    std::list<loot::Plugin> sorted = ps.Sort(game, loot::Language::english, callback);
+    std::list<loot::Plugin> sorted = ps.Sort(game, loot::Language::english);
     EXPECT_TRUE(game.GetMessages().empty());
 }
 
@@ -110,7 +108,7 @@ TEST_F(PluginSorter, failedSortShouldNotClearExistingGameMessages) {
     ASSERT_FALSE(game.GetMessages().empty());
 
     loot::PluginSorter ps;
-    EXPECT_ANY_THROW(ps.Sort(game, loot::Language::english, callback));
+    EXPECT_ANY_THROW(ps.Sort(game, loot::Language::english));
     EXPECT_FALSE(game.GetMessages().empty());
 }
 
@@ -120,7 +118,7 @@ TEST_F(PluginSorter, Sort_HeadersOnly) {
     loot::PluginSorter ps;
     std::list<std::string> expectedSortedOrder = GetExpectedSortedOrder();
 
-    std::list<loot::Plugin> sorted = ps.Sort(game, loot::Language::english, callback);
+    std::list<loot::Plugin> sorted = ps.Sort(game, loot::Language::english);
     EXPECT_TRUE(std::equal(begin(sorted), end(sorted), begin(expectedSortedOrder)));
 }
 
@@ -146,7 +144,7 @@ TEST_F(PluginSorter, Sort_WithPriority) {
         "Blank - Different Plugin Dependent.esp",
     });
 
-    std::list<loot::Plugin> sorted = ps.Sort(game, loot::Language::english, callback);
+    std::list<loot::Plugin> sorted = ps.Sort(game, loot::Language::english);
     EXPECT_TRUE(std::equal(begin(sorted), end(sorted), begin(expectedSortedOrder)));
 }
 
@@ -197,7 +195,7 @@ TEST_F(PluginSorter, sortingWithPrioritiesShouldInheritRecursivelyRegardlessOfEv
         "Blank - Different Plugin Dependent.esp",
     });
 
-    std::list<std::string> actualSortedOrder = GetActualSortedOrder(ps.Sort(game, loot::Language::english, callback));
+    std::list<std::string> actualSortedOrder = GetActualSortedOrder(ps.Sort(game, loot::Language::english));
     EXPECT_EQ(expectedSortedOrder, actualSortedOrder);
 }
 
@@ -225,7 +223,7 @@ TEST_F(PluginSorter, Sort_WithLoadAfter) {
         "Blank - Plugin Dependent.esp",
     });
 
-    std::list<loot::Plugin> sorted = ps.Sort(game, loot::Language::english, callback);
+    std::list<loot::Plugin> sorted = ps.Sort(game, loot::Language::english);
     EXPECT_TRUE(std::equal(begin(sorted), end(sorted), begin(expectedSortedOrder)));
 }
 
@@ -253,7 +251,7 @@ TEST_F(PluginSorter, Sort_WithRequirements) {
         "Blank - Plugin Dependent.esp",
     });
 
-    std::list<loot::Plugin> sorted = ps.Sort(game, loot::Language::english, callback);
+    std::list<loot::Plugin> sorted = ps.Sort(game, loot::Language::english);
     EXPECT_TRUE(std::equal(begin(sorted), end(sorted), begin(expectedSortedOrder)));
 }
 
@@ -264,7 +262,7 @@ TEST_F(PluginSorter, Sort_HasCycle) {
     game.GetUserlist().AddPlugin(plugin);
 
     loot::PluginSorter ps;
-    EXPECT_ANY_THROW(ps.Sort(game, loot::Language::english, callback));
+    EXPECT_ANY_THROW(ps.Sort(game, loot::Language::english));
 }
 
 #endif

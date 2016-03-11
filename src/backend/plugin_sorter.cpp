@@ -93,9 +93,7 @@ namespace loot {
         }
     };
 
-    std::list<Plugin> PluginSorter::Sort(Game& game,
-                                         const unsigned int language,
-                                         std::function<void(const std::string&)> progressCallback) {
+    std::list<Plugin> PluginSorter::Sort(Game& game, const unsigned int language) {
         // Clear existing data.
         graph.clear();
         indexMap.clear();
@@ -105,7 +103,6 @@ namespace loot {
         // state that has been changed by sorting.
         game.ClearMessages();
 
-        progressCallback(boost::locale::translate("Building plugin graph..."));
         BuildPluginGraph(game, language);
 
         // Get the existing load order.
@@ -113,9 +110,6 @@ namespace loot {
         BOOST_LOG_TRIVIAL(info) << "Fetched existing load order: ";
         for (const auto &plugin : oldLoadOrder)
             BOOST_LOG_TRIVIAL(info) << plugin;
-
-        // Now add edges and sort.
-        progressCallback(boost::locale::translate("Adding edges to plugin graph and performing topological sort..."));
 
         //Now add the interactions between plugins to the graph as edges.
         BOOST_LOG_TRIVIAL(info) << "Adding edges to plugin graph.";
