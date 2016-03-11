@@ -54,7 +54,7 @@ namespace loot {
         std::string GetGameTypes();
         std::string GetInstalledGames();
         void GetGameData(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback);
-        void UpdateMasterlist(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback);
+        void UpdateMasterlist(CefRefPtr<Callback> callback);
         std::string ClearAllMetadata();
         void SortPlugins(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback);
 
@@ -64,7 +64,7 @@ namespace loot {
                                 YAML::Node& request,
                                 CefRefPtr<Callback> callback);
 
-        void GetConflictingPlugins(const std::string& pluginName, CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback);
+        void GetConflictingPlugins(const std::string& pluginName, CefRefPtr<Callback> callback);
         void CopyMetadata(const std::string& pluginName);
         std::string ClearPluginMetadata(const std::string& pluginName);
         std::string ApplyUserEdits(const YAML::Node& pluginMetadata);

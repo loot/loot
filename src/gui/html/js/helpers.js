@@ -11,7 +11,7 @@ function getConflictingPlugins(pluginName) {
   }
 
   /* Now get conflicts for the plugin. */
-  loot.Dialog.showProgress(loot.l10n.translate('Checking if plugins have been loaded...'));
+  loot.Dialog.showProgress(loot.l10n.translate('Identifying conflicting plugins...'));
 
   return loot.query('getConflictingPlugins', pluginName).then(JSON.parse).then((result) => {
     const conflicts = [pluginName];

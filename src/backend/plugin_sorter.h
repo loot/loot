@@ -41,9 +41,7 @@ namespace loot {
 
     class PluginSorter {
     public:
-        std::list<Plugin> Sort(Game& game,
-                               const unsigned int language,
-                               std::function<void(const std::string&)> progressCallback);
+        std::list<Plugin> Sort(Game& game, const unsigned int language);
     private:
         PluginGraph graph;
         std::map<vertex_t, size_t> indexMap;

@@ -167,10 +167,10 @@ LOOT_API unsigned int loot_create_db(loot_db ** const db,
                                      const char * const gameLocalPath) {
     if (db == nullptr
         || (clientGame != loot_game_tes4
-        && clientGame != loot_game_tes5
-        && clientGame != loot_game_fo3
-        && clientGame != loot_game_fonv
-        && clientGame != loot_game_fo4))
+            && clientGame != loot_game_tes5
+            && clientGame != loot_game_fo3
+            && clientGame != loot_game_fonv
+            && clientGame != loot_game_fo4))
         return c_error(loot_error_invalid_args, "Null pointer passed.");
 
     //Set the locale to get encoding conversions working correctly.
@@ -336,7 +336,7 @@ LOOT_API unsigned int loot_sort_plugins(loot_db * const db,
         //Sort plugins into their load order.
         loot::PluginSorter sorter;
 
-        db->setPluginNames(sorter.Sort(*db, loot_lang_any, [](const std::string& message) {}));
+        db->setPluginNames(sorter.Sort(*db, loot_lang_any));
     }
     catch (loot::error &e) {
         return c_error(e);
