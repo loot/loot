@@ -28,84 +28,85 @@ along with LOOT.  If not, see
 #include "backend/metadata/message_content.h"
 #include "tests/fixtures.h"
 
-using loot::Language;
-using loot::MessageContent;
+namespace loot {
+    namespace test {
+        TEST(MessageContent, ConstructorsAndDataAccess) {
+            MessageContent mc;
+            EXPECT_EQ("", mc.Str());
+            EXPECT_EQ(Language::english, mc.Language());
 
-TEST(MessageContent, ConstructorsAndDataAccess) {
-    MessageContent mc;
-    EXPECT_EQ("", mc.Str());
-    EXPECT_EQ(Language::english, mc.Language());
+            mc = MessageContent("content", Language::french);
+            EXPECT_EQ("content", mc.Str());
+            EXPECT_EQ(Language::french, mc.Language());
+        }
 
-    mc = MessageContent("content", Language::french);
-    EXPECT_EQ("content", mc.Str());
-    EXPECT_EQ(Language::french, mc.Language());
-}
+        TEST(MessageContent, EqualityOperator) {
+            MessageContent mc1, mc2;
+            EXPECT_TRUE(mc1 == mc2);
 
-TEST(MessageContent, EqualityOperator) {
-    MessageContent mc1, mc2;
-    EXPECT_TRUE(mc1 == mc2);
+            mc1 = MessageContent("content", Language::french);
+            mc2 = MessageContent("Content", Language::french);
+            EXPECT_TRUE(mc1 == mc2);
 
-    mc1 = MessageContent("content", Language::french);
-    mc2 = MessageContent("Content", Language::french);
-    EXPECT_TRUE(mc1 == mc2);
+            mc1 = MessageContent("content1", Language::french);
+            mc2 = MessageContent("content2", Language::french);
+            EXPECT_FALSE(mc1 == mc2);
 
-    mc1 = MessageContent("content1", Language::french);
-    mc2 = MessageContent("content2", Language::french);
-    EXPECT_FALSE(mc1 == mc2);
+            mc1 = MessageContent("content", Language::english);
+            mc2 = MessageContent("Content", Language::french);
+            EXPECT_TRUE(mc1 == mc2);
+        }
 
-    mc1 = MessageContent("content", Language::english);
-    mc2 = MessageContent("Content", Language::french);
-    EXPECT_TRUE(mc1 == mc2);
-}
+        TEST(MessageContent, LessThanOperator) {
+            MessageContent mc1, mc2;
+            EXPECT_FALSE(mc1 < mc2);
+            EXPECT_FALSE(mc2 < mc1);
 
-TEST(MessageContent, LessThanOperator) {
-    MessageContent mc1, mc2;
-    EXPECT_FALSE(mc1 < mc2);
-    EXPECT_FALSE(mc2 < mc1);
+            mc1 = MessageContent("content", Language::french);
+            mc2 = MessageContent("Content", Language::french);
+            EXPECT_FALSE(mc1 < mc2);
+            EXPECT_FALSE(mc2 < mc1);
 
-    mc1 = MessageContent("content", Language::french);
-    mc2 = MessageContent("Content", Language::french);
-    EXPECT_FALSE(mc1 < mc2);
-    EXPECT_FALSE(mc2 < mc1);
+            mc1 = MessageContent("content", Language::english);
+            mc2 = MessageContent("content", Language::french);
+            EXPECT_FALSE(mc1 < mc2);
+            EXPECT_FALSE(mc2 < mc1);
 
-    mc1 = MessageContent("content", Language::english);
-    mc2 = MessageContent("content", Language::french);
-    EXPECT_FALSE(mc1 < mc2);
-    EXPECT_FALSE(mc2 < mc1);
+            mc1 = MessageContent("content1", Language::english);
+            mc2 = MessageContent("content2", Language::english);
+            EXPECT_TRUE(mc1 < mc2);
+            EXPECT_FALSE(mc2 < mc1);
+        }
 
-    mc1 = MessageContent("content1", Language::english);
-    mc2 = MessageContent("content2", Language::english);
-    EXPECT_TRUE(mc1 < mc2);
-    EXPECT_FALSE(mc2 < mc1);
-}
+        TEST(MessageContent, YamlEmitter) {
+            MessageContent mc("content", Language::french);
+            YAML::Emitter e1;
+            e1 << mc;
+            EXPECT_STREQ("lang: fr\nstr: 'content'", e1.c_str());
+        }
 
-TEST(MessageContent, YamlEmitter) {
-    MessageContent mc("content", Language::french);
-    YAML::Emitter e1;
-    e1 << mc;
-    EXPECT_STREQ("lang: fr\nstr: 'content'", e1.c_str());
-}
+        TEST(MessageContent, YamlEncode) {
+            YAML::Node node;
 
-TEST(MessageContent, YamlEncode) {
-    YAML::Node node;
+            MessageContent mc("content", Language::french);
+            node = mc;
+            EXPECT_EQ("content", node["str"].as<std::string>());
+            EXPECT_EQ("fr", node["lang"].as<std::string>());
+        }
 
-    MessageContent mc("content", Language::french);
-    node = mc;
-    EXPECT_EQ("content", node["str"].as<std::string>());
-    EXPECT_EQ("fr", node["lang"].as<std::string>());
-}
+        TEST(MessageContent, YamlDecode) {
+            YAML::Node node = YAML::Load("{str: content, lang: de}");
+            MessageContent mc = node.as<MessageContent>();
+            EXPECT_EQ("content", mc.Str());
+            EXPECT_EQ(Language::german, mc.Language());
 
-TEST(MessageContent, YamlDecode) {
-    YAML::Node node = YAML::Load("{str: content, lang: de}");
-    MessageContent mc = node.as<MessageContent>();
-    EXPECT_EQ("content", mc.Str());
-    EXPECT_EQ(Language::german, mc.Language());
+            node = YAML::Load("scalar");
+            EXPECT_ANY_THROW(node.as<MessageContent>());
 
-    node = YAML::Load("scalar");
-    EXPECT_ANY_THROW(node.as<MessageContent>());
-
-    node = YAML::Load("[0, 1, 2]");
-    EXPECT_ANY_THROW(node.as<MessageContent>());
+            node = YAML::Load("[0, 1, 2]");
+            EXPECT_ANY_THROW(node.as<MessageContent>());
+        }
+    }
 }
 
 #endif

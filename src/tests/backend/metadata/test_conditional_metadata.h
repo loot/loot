@@ -29,58 +29,62 @@ along with LOOT.  If not, see
 #include "backend/metadata/conditional_metadata.h"
 #include "tests/fixtures.h"
 
-class ConditionalMetadata : public SkyrimTest {};
+namespace loot {
+    namespace test {
+        class ConditionalMetadataTest : public SkyrimTest {};
 
-TEST_F(ConditionalMetadata, ConstructorAndDataAccess) {
-    loot::ConditionalMetadata cm;
-    EXPECT_EQ("", cm.Condition());
+        TEST_F(ConditionalMetadataTest, ConstructorAndDataAccess) {
+            ConditionalMetadata cm;
+            EXPECT_EQ("", cm.Condition());
 
-    cm = loot::ConditionalMetadata("condition");
-    EXPECT_EQ("condition", cm.Condition());
-}
+            cm = ConditionalMetadata("condition");
+            EXPECT_EQ("condition", cm.Condition());
+        }
 
-TEST_F(ConditionalMetadata, IsConditional) {
-    loot::ConditionalMetadata cm;
-    EXPECT_FALSE(cm.IsConditional());
+        TEST_F(ConditionalMetadataTest, IsConditional) {
+            ConditionalMetadata cm;
+            EXPECT_FALSE(cm.IsConditional());
 
-    cm = loot::ConditionalMetadata("condition");
-    EXPECT_TRUE(cm.IsConditional());
-}
+            cm = ConditionalMetadata("condition");
+            EXPECT_TRUE(cm.IsConditional());
+        }
 
-TEST_F(ConditionalMetadata, EvalCondition) {
-    loot::Game game(loot::Game::tes5);
-    game.SetGamePath(dataPath.parent_path());
-    ASSERT_NO_THROW(game.Init(false, localPath));
+        TEST_F(ConditionalMetadataTest, EvalCondition) {
+            Game game(Game::tes5);
+            game.SetGamePath(dataPath.parent_path());
+            ASSERT_NO_THROW(game.Init(false, localPath));
 
-    loot::ConditionalMetadata cm;
-    EXPECT_TRUE(cm.EvalCondition(game));
+            ConditionalMetadata cm;
+            EXPECT_TRUE(cm.EvalCondition(game));
 
-    cm = loot::ConditionalMetadata("condition");
-    EXPECT_THROW(cm.EvalCondition(game), loot::error);
+            cm = ConditionalMetadata("condition");
+            EXPECT_THROW(cm.EvalCondition(game), error);
 
-    cm = loot::ConditionalMetadata("file(\"Blank.esm\")");
-    EXPECT_TRUE(cm.EvalCondition(game));
+            cm = ConditionalMetadata("file(\"Blank.esm\")");
+            EXPECT_TRUE(cm.EvalCondition(game));
 
-    cm = loot::ConditionalMetadata("file(\"Blank.missing.esm\")");
-    EXPECT_FALSE(cm.EvalCondition(game));
-}
+            cm = ConditionalMetadata("file(\"Blank.missing.esm\")");
+            EXPECT_FALSE(cm.EvalCondition(game));
+        }
 
-TEST_F(ConditionalMetadata, ParseCondition) {
-    loot::ConditionalMetadata cm;
-    EXPECT_NO_THROW(cm.ParseCondition());
+        TEST_F(ConditionalMetadataTest, ParseCondition) {
+            ConditionalMetadata cm;
+            EXPECT_NO_THROW(cm.ParseCondition());
 
-    cm = loot::ConditionalMetadata("condition");
-    EXPECT_THROW(cm.ParseCondition(), loot::error);
+            cm = ConditionalMetadata("condition");
+            EXPECT_THROW(cm.ParseCondition(), error);
 
-    // Check that invalid regex also throws.
-    cm = loot::ConditionalMetadata("regex(\"RagnvaldBook(Farengar(+Ragnvald)?)?\\.esp\")");
-    EXPECT_THROW(cm.ParseCondition(), loot::error);
+            // Check that invalid regex also throws.
+            cm = ConditionalMetadata("regex(\"RagnvaldBook(Farengar(+Ragnvald)?)?\\.esp\")");
+            EXPECT_THROW(cm.ParseCondition(), error);
 
-    cm = loot::ConditionalMetadata("file(\"Blank.esm\")");
-    EXPECT_NO_THROW(cm.ParseCondition());
+            cm = ConditionalMetadata("file(\"Blank.esm\")");
+            EXPECT_NO_THROW(cm.ParseCondition());
 
-    cm = loot::ConditionalMetadata("file(\"Blank.missing.esm\")");
-    EXPECT_NO_THROW(cm.ParseCondition());
+            cm = ConditionalMetadata("file(\"Blank.missing.esm\")");
+            EXPECT_NO_THROW(cm.ParseCondition());
+        }
+    }
 }
 
 #endif

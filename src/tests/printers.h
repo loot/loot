@@ -39,65 +39,67 @@ along with LOOT.  If not, see
 #include "backend/plugin/plugin.h"
 
 namespace loot {
-    void PrintTo(const File& value, ::std::ostream* os) {
-        *os << "loot::File(\"" << value.Name() << "\", "
-            << "\"" << value.DisplayName() << "\", "
-            << "\"" << value.Condition() << "\""
-            << ")";
-    }
+    namespace test {
+        void PrintTo(const File& value, ::std::ostream* os) {
+            *os << "File(\"" << value.Name() << "\", "
+                << "\"" << value.DisplayName() << "\", "
+                << "\"" << value.Condition() << "\""
+                << ")";
+        }
 
-    void PrintTo(const Location& value, ::std::ostream* os) {
-        *os << "loot::Location(\"" << value.URL() << "\", "
-            << "\"" << value.Name() << "\", "
-            << ")";
-    }
+        void PrintTo(const Location& value, ::std::ostream* os) {
+            *os << "Location(\"" << value.URL() << "\", "
+                << "\"" << value.Name() << "\", "
+                << ")";
+        }
 
-    void PrintTo(const Message& value, ::std::ostream* os) {
-        std::string type;
-        if (value.Type() == Message::warn)
-            type = "warn";
-        else if (value.Type() == Message::error)
-            type = "error";
-        else
-            type = "say";
+        void PrintTo(const Message& value, ::std::ostream* os) {
+            std::string type;
+            if (value.Type() == Message::warn)
+                type = "warn";
+            else if (value.Type() == Message::error)
+                type = "error";
+            else
+                type = "say";
 
-        *os << "loot::Message(\"" << type << "\", "
-            << ::testing::PrintToString(value.Content()) << ", "
-            << "\"" << value.Condition() << "\""
-            << ")";
-    }
+            *os << "Message(\"" << type << "\", "
+                << ::testing::PrintToString(value.Content()) << ", "
+                << "\"" << value.Condition() << "\""
+                << ")";
+        }
 
-    void PrintTo(const MessageContent& value, ::std::ostream* os) {
-        *os << "loot::MessageContent(\"" << value.Str() << "\", "
-            << "\"" << Language(value.Language()).Name() << "\""
-            << ")";
-    }
+        void PrintTo(const MessageContent& value, ::std::ostream* os) {
+            *os << "MessageContent(\"" << value.Str() << "\", "
+                << "\"" << Language(value.Language()).Name() << "\""
+                << ")";
+        }
 
-    void PrintTo(const PluginDirtyInfo& value, ::std::ostream* os) {
-        *os << "loot::PluginDirtyInfo(0x"
-            << std::hex << std::uppercase
-            << value.CRC()
-            << std::nouppercase << std::dec << ", "
-            << value.ITMs() << ", "
-            << value.DeletedRefs() << ", "
-            << value.DeletedNavmeshes() << ", "
-            << "\"" << value.CleaningUtility() << "\""
-            << ")";
-    }
+        void PrintTo(const PluginDirtyInfo& value, ::std::ostream* os) {
+            *os << "PluginDirtyInfo(0x"
+                << std::hex << std::uppercase
+                << value.CRC()
+                << std::nouppercase << std::dec << ", "
+                << value.ITMs() << ", "
+                << value.DeletedRefs() << ", "
+                << value.DeletedNavmeshes() << ", "
+                << "\"" << value.CleaningUtility() << "\""
+                << ")";
+        }
 
-    void PrintTo(const PluginMetadata& value, ::std::ostream* os) {
-        *os << "loot::PluginMetadata(\"" << value.Name() << "\")";
-    }
+        void PrintTo(const PluginMetadata& value, ::std::ostream* os) {
+            *os << "PluginMetadata(\"" << value.Name() << "\")";
+        }
 
-    void PrintTo(const Tag& value, ::std::ostream* os) {
-        *os << "loot::Tag(\"" << value.Name() << "\", "
-            << value.IsAddition() << ", "
-            << "\"" << value.Condition() << "\""
-            << ")";
-    }
+        void PrintTo(const Tag& value, ::std::ostream* os) {
+            *os << "Tag(\"" << value.Name() << "\", "
+                << value.IsAddition() << ", "
+                << "\"" << value.Condition() << "\""
+                << ")";
+        }
 
-    void PrintTo(const Plugin& value, ::std::ostream* os) {
-        *os << "loot::Plugin(\"" << value.Name() << "\")";
+        void PrintTo(const Plugin& value, ::std::ostream* os) {
+            *os << "Plugin(\"" << value.Name() << "\")";
+        }
     }
 }
 

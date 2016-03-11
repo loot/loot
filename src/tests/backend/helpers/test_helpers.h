@@ -29,19 +29,23 @@ along with LOOT.  If not, see
 #include "backend/error.h"
 #include "tests/fixtures.h"
 
-class GetCrc32 : public SkyrimTest {};
+namespace loot {
+    namespace test {
+        class GetCrc32Test : public SkyrimTest {};
 
-TEST_F(GetCrc32, MissingFile) {
-    EXPECT_THROW(loot::GetCrc32(dataPath / "Blank.missing.esp"), loot::error);
-}
+        TEST_F(GetCrc32Test, MissingFile) {
+            EXPECT_THROW(GetCrc32(dataPath / "Blank.missing.esp"), error);
+        }
 
-TEST_F(GetCrc32, ValidFile) {
-    EXPECT_EQ(0x24F0E2A1, loot::GetCrc32(dataPath / "Blank.esp"));
-}
+        TEST_F(GetCrc32Test, ValidFile) {
+            EXPECT_EQ(0x24F0E2A1, GetCrc32(dataPath / "Blank.esp"));
+        }
 
-TEST(IntToHexString, PositiveAndZeroValues) {
-    EXPECT_EQ("14", loot::IntToHexString(20));
-    EXPECT_EQ("0", loot::IntToHexString(0));
+        TEST(IntToHexString, PositiveAndZeroValues) {
+            EXPECT_EQ("14", IntToHexString(20));
+            EXPECT_EQ("0", IntToHexString(0));
+        }
+    }
 }
 
 #endif

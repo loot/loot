@@ -30,113 +30,117 @@ along with LOOT.  If not, see
 
 #include "tests/fixtures.h"
 
-class LoadOrderHandler : public SkyrimTest {};
+namespace loot {
+    namespace test {
+        class LoadOrderHandlerTest : public SkyrimTest {};
 
-TEST_F(LoadOrderHandler, Constructors) {
-    loot::LoadOrderHandler * loh = nullptr;
-    EXPECT_NO_THROW(loh = new loot::LoadOrderHandler);
-    EXPECT_NO_THROW(delete loh);
-}
+        TEST_F(LoadOrderHandlerTest, Constructors) {
+            LoadOrderHandler * loh = nullptr;
+            EXPECT_NO_THROW(loh = new LoadOrderHandler);
+            EXPECT_NO_THROW(delete loh);
+        }
 
-TEST_F(LoadOrderHandler, Init) {
-    // Should throw for invalid game settings ID.
-    loot::LoadOrderHandler loh;
-    loot::GameSettings game(loot::GameSettings::autodetect);
-    EXPECT_THROW(loh.Init(game), loot::error);
-    EXPECT_THROW(loh.Init(game), loot::error);
-    EXPECT_THROW(loh.Init(game, localPath), loot::error);
-    EXPECT_THROW(loh.Init(game, localPath), loot::error);
+        TEST_F(LoadOrderHandlerTest, Init) {
+            // Should throw for invalid game settings ID.
+            LoadOrderHandler loh;
+            GameSettings game(GameSettings::autodetect);
+            EXPECT_THROW(loh.Init(game), error);
+            EXPECT_THROW(loh.Init(game), error);
+            EXPECT_THROW(loh.Init(game, localPath), error);
+            EXPECT_THROW(loh.Init(game, localPath), error);
 
-    // Should throw an exception if no game path has been set.
-    game = loot::GameSettings(loot::GameSettings::tes5);
-    EXPECT_THROW(loh.Init(game), loot::error);
-    EXPECT_THROW(loh.Init(game), loot::error);
-    EXPECT_THROW(loh.Init(game, localPath), loot::error);
-    EXPECT_THROW(loh.Init(game, localPath), loot::error);
+            // Should throw an exception if no game path has been set.
+            game = GameSettings(GameSettings::tes5);
+            EXPECT_THROW(loh.Init(game), error);
+            EXPECT_THROW(loh.Init(game), error);
+            EXPECT_THROW(loh.Init(game, localPath), error);
+            EXPECT_THROW(loh.Init(game, localPath), error);
 
 #ifndef _WIN32
     // Should throw on Linux if no game local app data path is given.
-    game = loot::GameSettings(loot::GameSettings::tes5)
-        .SetGamePath(dataPath.parent_path());
-    EXPECT_THROW(loh.Init(game), loot::error);
+            game = GameSettings(GameSettings::tes5)
+                .SetGamePath(dataPath.parent_path());
+            EXPECT_THROW(loh.Init(game), error);
 #endif
 
-    game = loot::GameSettings(loot::GameSettings::tes5)
-        .SetGamePath(dataPath.parent_path());
-    EXPECT_NO_THROW(loh.Init(game, localPath));
-}
+            game = GameSettings(GameSettings::tes5)
+                .SetGamePath(dataPath.parent_path());
+            EXPECT_NO_THROW(loh.Init(game, localPath));
+        }
 
-TEST_F(LoadOrderHandler, IsPluginActive) {
-    loot::LoadOrderHandler loh;
-    loot::GameSettings game(loot::GameSettings::tes5);
-    game.SetGamePath(dataPath.parent_path());
+        TEST_F(LoadOrderHandlerTest, IsPluginActive) {
+            LoadOrderHandler loh;
+            GameSettings game(GameSettings::tes5);
+            game.SetGamePath(dataPath.parent_path());
 
-    EXPECT_THROW(loh.IsPluginActive("Skyrim.esm"), loot::error);
+            EXPECT_THROW(loh.IsPluginActive("Skyrim.esm"), error);
 
-    ASSERT_NO_THROW(loh.Init(game, localPath));
+            ASSERT_NO_THROW(loh.Init(game, localPath));
 
-    EXPECT_TRUE(loh.IsPluginActive("Skyrim.esm"));
-    EXPECT_TRUE(loh.IsPluginActive("Blank.esm"));
-    EXPECT_TRUE(loh.IsPluginActive("Blank - Different Master Dependent.esp"));
-    EXPECT_FALSE(loh.IsPluginActive("Blank.esp"));
-}
+            EXPECT_TRUE(loh.IsPluginActive("Skyrim.esm"));
+            EXPECT_TRUE(loh.IsPluginActive("Blank.esm"));
+            EXPECT_TRUE(loh.IsPluginActive("Blank - Different Master Dependent.esp"));
+            EXPECT_FALSE(loh.IsPluginActive("Blank.esp"));
+        }
 
-TEST_F(LoadOrderHandler, GetLoadOrder) {
-    loot::LoadOrderHandler loh;
-    loot::GameSettings game(loot::GameSettings::tes5);
-    game.SetGamePath(dataPath.parent_path());
-    ASSERT_NO_THROW(loh.Init(game, localPath));
+        TEST_F(LoadOrderHandlerTest, GetLoadOrder) {
+            LoadOrderHandler loh;
+            GameSettings game(GameSettings::tes5);
+            game.SetGamePath(dataPath.parent_path());
+            ASSERT_NO_THROW(loh.Init(game, localPath));
 
-    std::list<std::string> expected({
-        "Skyrim.esm",
-        "Blank.esm",
-        "Blank - Different.esm",
-        "Blank - Master Dependent.esm",
-        "Blank - Different Master Dependent.esm",
-        "Blank.esp",
-        "Blank - Different.esp",
-        "Blank - Master Dependent.esp",
-        "Blank - Different Master Dependent.esp",
-        "Blank - Plugin Dependent.esp",
-        "Blank - Different Plugin Dependent.esp"
-    });
+            std::list<std::string> expected({
+                "Skyrim.esm",
+                "Blank.esm",
+                "Blank - Different.esm",
+                "Blank - Master Dependent.esm",
+                "Blank - Different Master Dependent.esm",
+                "Blank.esp",
+                "Blank - Different.esp",
+                "Blank - Master Dependent.esp",
+                "Blank - Different Master Dependent.esp",
+                "Blank - Plugin Dependent.esp",
+                "Blank - Different Plugin Dependent.esp"
+            });
 
-    EXPECT_EQ(expected, loh.GetLoadOrder());
-}
+            EXPECT_EQ(expected, loh.GetLoadOrder());
+        }
 
-TEST_F(LoadOrderHandler, SetLoadOrder) {
-    loot::LoadOrderHandler loh;
-    loot::GameSettings game(loot::GameSettings::tes5);
-    game.SetGamePath(dataPath.parent_path());
-    ASSERT_NO_THROW(loh.Init(game, localPath));
+        TEST_F(LoadOrderHandlerTest, SetLoadOrder) {
+            LoadOrderHandler loh;
+            GameSettings game(GameSettings::tes5);
+            game.SetGamePath(dataPath.parent_path());
+            ASSERT_NO_THROW(loh.Init(game, localPath));
 
-    std::list<std::string> loadOrder({
-        "Skyrim.esm",
-        "Blank.esm",
-        "Blank - Master Dependent.esm",
-        "Blank - Different.esm",
-        "Blank - Different Master Dependent.esm",
-        "Blank - Different.esp",
-        "Blank - Different Plugin Dependent.esp",
-        "Blank.esp",
-        "Blank - Master Dependent.esp",
-        "Blank - Different Master Dependent.esp",
-        "Blank - Plugin Dependent.esp",
-    });
+            std::list<std::string> loadOrder({
+                "Skyrim.esm",
+                "Blank.esm",
+                "Blank - Master Dependent.esm",
+                "Blank - Different.esm",
+                "Blank - Different Master Dependent.esm",
+                "Blank - Different.esp",
+                "Blank - Different Plugin Dependent.esp",
+                "Blank.esp",
+                "Blank - Master Dependent.esp",
+                "Blank - Different Master Dependent.esp",
+                "Blank - Plugin Dependent.esp",
+            });
 
-    EXPECT_NO_THROW(loh.SetLoadOrder(loadOrder));
+            EXPECT_NO_THROW(loh.SetLoadOrder(loadOrder));
 
-    std::list<std::string> actual;
-    boost::filesystem::ifstream in(localPath / "loadorder.txt");
-    while (in) {
-        std::string line;
-        std::getline(in, line);
+            std::list<std::string> actual;
+            boost::filesystem::ifstream in(localPath / "loadorder.txt");
+            while (in) {
+                std::string line;
+                std::getline(in, line);
 
-        if (!line.empty())
-            actual.push_back(line);
+                if (!line.empty())
+                    actual.push_back(line);
+            }
+
+            EXPECT_EQ(loadOrder, actual);
+        }
     }
-
-    EXPECT_EQ(loadOrder, actual);
 }
 
 #endif

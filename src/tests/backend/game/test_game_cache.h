@@ -31,120 +31,120 @@ along with LOOT.  If not, see
 
 namespace loot {
     namespace test {
-        class GameCache : public SkyrimTest {
+        class GameCacheTest : public SkyrimTest {
         protected:
-            loot::GameCache cache;
+            GameCache cache;
         };
 
-        TEST_F(GameCache, copyConstructorShouldCopyCachedData) {
-            loot::Game game(loot::Game::tes5);
+        TEST_F(GameCacheTest, copyConstructorShouldCopyCachedData) {
+            Game game(Game::tes5);
             game.SetGamePath(dataPath.parent_path());
             ASSERT_NO_THROW(game.Init(false, localPath));
 
             cache.CacheCondition("True Condition", true);
-            cache.AddPlugin(loot::Plugin(game, "Blank.esm", true));
+            cache.AddPlugin(Plugin(game, "Blank.esm", true));
             Message expectedMessage(Message::say, "1");
             cache.AppendMessage(expectedMessage);
             cache.SetLoadOrderSorted(true);
 
-            loot::GameCache otherCache(cache);
+            GameCache otherCache(cache);
             EXPECT_EQ(std::make_pair(true, true), otherCache.GetCachedCondition("true Condition"));
             EXPECT_EQ("Blank.esm", otherCache.GetPlugin("Blank.esm").Name());
             ASSERT_EQ(1, otherCache.GetMessages().size());
             EXPECT_EQ(expectedMessage, otherCache.GetMessages()[0]);
         }
 
-        TEST_F(GameCache, assignmentOperatorShouldCopyCachedData) {
-            loot::Game game(loot::Game::tes5);
+        TEST_F(GameCacheTest, assignmentOperatorShouldCopyCachedData) {
+            Game game(Game::tes5);
             game.SetGamePath(dataPath.parent_path());
             ASSERT_NO_THROW(game.Init(false, localPath));
 
             cache.CacheCondition("True Condition", true);
-            cache.AddPlugin(loot::Plugin(game, "Blank.esm", true));
+            cache.AddPlugin(Plugin(game, "Blank.esm", true));
             Message expectedMessage(Message::say, "1");
             cache.AppendMessage(expectedMessage);
             cache.SetLoadOrderSorted(true);
 
-            loot::GameCache otherCache = cache;
+            GameCache otherCache = cache;
             EXPECT_EQ(std::make_pair(true, true), otherCache.GetCachedCondition("true Condition"));
             EXPECT_EQ("Blank.esm", otherCache.GetPlugin("Blank.esm").Name());
             ASSERT_EQ(1, otherCache.GetMessages().size());
             EXPECT_EQ(expectedMessage, otherCache.GetMessages()[0]);
         }
 
-        TEST_F(GameCache, gettingATrueConditionShouldReturnATrueTruePair) {
+        TEST_F(GameCacheTest, gettingATrueConditionShouldReturnATrueTruePair) {
             EXPECT_NO_THROW(cache.CacheCondition("True Condition", true));
 
             EXPECT_EQ(std::make_pair(true, true), cache.GetCachedCondition("true Condition"));
         }
 
-        TEST_F(GameCache, gettingAFalseConditionShouldReturnAFalseTruePair) {
+        TEST_F(GameCacheTest, gettingAFalseConditionShouldReturnAFalseTruePair) {
             EXPECT_NO_THROW(cache.CacheCondition("False Condition", false));
 
             EXPECT_EQ(std::make_pair(false, true), cache.GetCachedCondition("false Condition"));
         }
 
-        TEST_F(GameCache, gettingANonCachedConditionShouldReturnAFalseFalsePair) {
+        TEST_F(GameCacheTest, gettingANonCachedConditionShouldReturnAFalseFalsePair) {
             EXPECT_EQ(std::make_pair(false, false), cache.GetCachedCondition("true missing Condition"));
         }
 
-        TEST_F(GameCache, addingAPluginThatDoesNotExistShouldSucceed) {
-            loot::Game game(loot::Game::tes5);
+        TEST_F(GameCacheTest, addingAPluginThatDoesNotExistShouldSucceed) {
+            Game game(Game::tes5);
             game.SetGamePath(dataPath.parent_path());
             ASSERT_NO_THROW(game.Init(false, localPath));
 
-            cache.AddPlugin(loot::Plugin(game, "Blank.esm", true));
+            cache.AddPlugin(Plugin(game, "Blank.esm", true));
             EXPECT_EQ("Blank.esm", cache.GetPlugin("Blank.esm").Name());
         }
 
-        TEST_F(GameCache, addingAPluginThatIsAlreadyCachedShouldOverwriteExistingEntry) {
-            loot::Game game(loot::Game::tes5);
+        TEST_F(GameCacheTest, addingAPluginThatIsAlreadyCachedShouldOverwriteExistingEntry) {
+            Game game(Game::tes5);
             game.SetGamePath(dataPath.parent_path());
             ASSERT_NO_THROW(game.Init(false, localPath));
 
-            cache.AddPlugin(loot::Plugin(game, "Blank.esm", true));
+            cache.AddPlugin(Plugin(game, "Blank.esm", true));
             EXPECT_EQ(0, cache.GetPlugin("Blank.esm").Crc());
 
-            cache.AddPlugin(loot::Plugin(game, "Blank.esm", false));
+            cache.AddPlugin(Plugin(game, "Blank.esm", false));
             EXPECT_EQ(0x187BE342, cache.GetPlugin("Blank.esm").Crc());
         }
 
-        TEST_F(GameCache, gettingAPluginThatIsNotCachedShouldThrow) {
+        TEST_F(GameCacheTest, gettingAPluginThatIsNotCachedShouldThrow) {
             EXPECT_ANY_THROW(cache.GetPlugin("Blank.esm"));
         }
 
-        TEST_F(GameCache, gettingAPluginShouldBeCaseInsensitive) {
-            loot::Game game(loot::Game::tes5);
+        TEST_F(GameCacheTest, gettingAPluginShouldBeCaseInsensitive) {
+            Game game(Game::tes5);
             game.SetGamePath(dataPath.parent_path());
             ASSERT_NO_THROW(game.Init(false, localPath));
 
-            cache.AddPlugin(loot::Plugin(game, "Blank.esm", true));
+            cache.AddPlugin(Plugin(game, "Blank.esm", true));
             EXPECT_EQ("Blank.esm", cache.GetPlugin("blanK.esm").Name());
         }
 
-        TEST_F(GameCache, gettingPluginsShouldReturnAnEmptySetIfNoPluginsHaveBeenCached) {
+        TEST_F(GameCacheTest, gettingPluginsShouldReturnAnEmptySetIfNoPluginsHaveBeenCached) {
             EXPECT_TRUE(cache.GetPlugins().empty());
         }
 
-        TEST_F(GameCache, gettingPluginsShouldReturnASetOfCachedPluginsIfPluginsHaveBeenCached) {
-            loot::Game game(loot::Game::tes5);
+        TEST_F(GameCacheTest, gettingPluginsShouldReturnASetOfCachedPluginsIfPluginsHaveBeenCached) {
+            Game game(Game::tes5);
             game.SetGamePath(dataPath.parent_path());
             ASSERT_NO_THROW(game.Init(false, localPath));
 
-            cache.AddPlugin(loot::Plugin(game, "Blank.esm", true));
-            cache.AddPlugin(loot::Plugin(game, "Blank - Master Dependent.esp", true));
+            cache.AddPlugin(Plugin(game, "Blank.esm", true));
+            cache.AddPlugin(Plugin(game, "Blank - Master Dependent.esp", true));
 
-            EXPECT_EQ(std::set<loot::Plugin>({
-                loot::Plugin(game, "Blank.esm", true),
-                loot::Plugin(game, "Blank - Master Dependent.esp", true),
+            EXPECT_EQ(std::set<Plugin>({
+                Plugin(game, "Blank.esm", true),
+                Plugin(game, "Blank - Master Dependent.esp", true),
             }), cache.GetPlugins());
         }
 
-        TEST_F(GameCache, clearingCachedConditionsShouldNotThrowIfNoConditionsAreCached) {
+        TEST_F(GameCacheTest, clearingCachedConditionsShouldNotThrowIfNoConditionsAreCached) {
             EXPECT_NO_THROW(cache.ClearCachedConditions());
         }
 
-        TEST_F(GameCache, clearingCachedConditionsShouldClearAnyCachedConditions) {
+        TEST_F(GameCacheTest, clearingCachedConditionsShouldClearAnyCachedConditions) {
             EXPECT_NO_THROW(cache.CacheCondition("True Condition", true));
 
             EXPECT_NO_THROW(cache.ClearCachedConditions());
@@ -152,32 +152,32 @@ namespace loot {
             EXPECT_EQ(std::make_pair(false, false), cache.GetCachedCondition("true Condition"));
         }
 
-        TEST_F(GameCache, clearingCachedPluginsShouldNotThrowIfNoPluginsAreCached) {
+        TEST_F(GameCacheTest, clearingCachedPluginsShouldNotThrowIfNoPluginsAreCached) {
             EXPECT_NO_THROW(cache.ClearCachedPlugins());
         }
 
-        TEST_F(GameCache, clearingCachedPluginsShouldClearAnyCachedPlugins) {
-            loot::Game game(loot::Game::tes5);
+        TEST_F(GameCacheTest, clearingCachedPluginsShouldClearAnyCachedPlugins) {
+            Game game(Game::tes5);
             game.SetGamePath(dataPath.parent_path());
             ASSERT_NO_THROW(game.Init(false, localPath));
 
-            cache.AddPlugin(loot::Plugin(game, "Blank.esm", true));
+            cache.AddPlugin(Plugin(game, "Blank.esm", true));
             cache.ClearCachedPlugins();
 
             EXPECT_TRUE(cache.GetPlugins().empty());
         }
 
-        TEST_F(GameCache, aMessageShouldBeCachedByDefault) {
+        TEST_F(GameCacheTest, aMessageShouldBeCachedByDefault) {
             ASSERT_EQ(1, cache.GetMessages().size());
         }
 
-        TEST_F(GameCache, settingLoadOrderSortedToTrueShouldSupressDefaultCachedMessage) {
+        TEST_F(GameCacheTest, settingLoadOrderSortedToTrueShouldSupressDefaultCachedMessage) {
             cache.SetLoadOrderSorted(true);
 
             ASSERT_TRUE(cache.GetMessages().empty());
         }
 
-        TEST_F(GameCache, settingLoadOrderSortedToFalseShouldReverseTheDefaultCachedMessageSuppression) {
+        TEST_F(GameCacheTest, settingLoadOrderSortedToFalseShouldReverseTheDefaultCachedMessageSuppression) {
             auto expectedMessages = cache.GetMessages();
             cache.SetLoadOrderSorted(true);
             cache.SetLoadOrderSorted(false);
@@ -185,7 +185,7 @@ namespace loot {
             ASSERT_EQ(expectedMessages, cache.GetMessages());
         }
 
-        TEST_F(GameCache, appendingMessagesShouldStoreThemInTheGivenOrder) {
+        TEST_F(GameCacheTest, appendingMessagesShouldStoreThemInTheGivenOrder) {
             std::vector<Message> messages({
                 Message(Message::say, "1"),
                 Message(Message::error, "2"),
@@ -198,7 +198,7 @@ namespace loot {
             EXPECT_EQ(messages[1], cache.GetMessages()[1]);
         }
 
-        TEST_F(GameCache, clearingMessagesShouldRemoveAllAppendedMessages) {
+        TEST_F(GameCacheTest, clearingMessagesShouldRemoveAllAppendedMessages) {
             std::vector<Message> messages({
                 Message(Message::say, "1"),
                 Message(Message::error, "2"),

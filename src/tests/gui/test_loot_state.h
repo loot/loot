@@ -31,40 +31,40 @@ along with LOOT.  If not, see
 
 namespace loot {
     namespace test {
-        class LootState : public ::testing::Test {
+        class LootStateTest : public ::testing::Test {
         protected:
-            loot::LootState lootState;
+            LootState lootState;
         };
 
-        TEST_F(LootState, hasUnappliedChangesShouldBeFalseByDefault) {
+        TEST_F(LootStateTest, hasUnappliedChangesShouldBeFalseByDefault) {
             EXPECT_FALSE(lootState.hasUnappliedChanges());
         }
 
-        TEST_F(LootState, shouldNotHaveUnappliedChangesIfCounterIsDeccremented) {
+        TEST_F(LootStateTest, shouldNotHaveUnappliedChangesIfCounterIsDeccremented) {
             lootState.decrementUnappliedChangeCounter();
             EXPECT_FALSE(lootState.hasUnappliedChanges());
         }
 
-        TEST_F(LootState, shouldHaveUnappliedChangesIfCounterIsIncremented) {
+        TEST_F(LootStateTest, shouldHaveUnappliedChangesIfCounterIsIncremented) {
             lootState.incrementUnappliedChangeCounter();
             EXPECT_TRUE(lootState.hasUnappliedChanges());
         }
 
-        TEST_F(LootState, incrementingTheChangeCounterMoreThanItIsDecrementedShouldLeaveUnappliedChanges) {
+        TEST_F(LootStateTest, incrementingTheChangeCounterMoreThanItIsDecrementedShouldLeaveUnappliedChanges) {
             lootState.incrementUnappliedChangeCounter();
             lootState.incrementUnappliedChangeCounter();
             lootState.decrementUnappliedChangeCounter();
             EXPECT_TRUE(lootState.hasUnappliedChanges());
         }
 
-        TEST_F(LootState, incrementingTheChangeCounterLessThanItIsDecrementedShouldLeaveNoUnappliedChanges) {
+        TEST_F(LootStateTest, incrementingTheChangeCounterLessThanItIsDecrementedShouldLeaveNoUnappliedChanges) {
             lootState.incrementUnappliedChangeCounter();
             lootState.decrementUnappliedChangeCounter();
             lootState.decrementUnappliedChangeCounter();
             EXPECT_FALSE(lootState.hasUnappliedChanges());
         }
 
-        TEST_F(LootState, incrementingTheChangeCounterThenDecrementingItEquallyShouldLeaveNoUnappliedChanges) {
+        TEST_F(LootStateTest, incrementingTheChangeCounterThenDecrementingItEquallyShouldLeaveNoUnappliedChanges) {
             lootState.incrementUnappliedChangeCounter();
             lootState.incrementUnappliedChangeCounter();
             lootState.decrementUnappliedChangeCounter();

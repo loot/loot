@@ -30,19 +30,19 @@ along with LOOT.  If not, see
 
 namespace loot {
     namespace test {
-        class LootSettings : public ::testing::Test {
+        class LootSettingsTest : public ::testing::Test {
         protected:
-            LootSettings() : settingsFile("./settings.yaml") {}
+            LootSettingsTest() : settingsFile("./settings.yaml") {}
 
-            ~LootSettings() {
+            ~LootSettingsTest() {
                 boost::filesystem::remove(settingsFile);
             }
 
             boost::filesystem::path settingsFile;
-            loot::LootSettings settings;
+            LootSettings settings;
         };
 
-        TEST_F(LootSettings, defaultConstructorShouldSetDefaultValues) {
+        TEST_F(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
             const std::string currentVersion = std::to_string(g_version_major) + "." + std::to_string(g_version_minor) + "." + std::to_string(g_version_patch);
             const std::vector<GameSettings> expectedGameSettings({
                 GameSettings(GameSettings::tes4),
@@ -109,7 +109,7 @@ namespace loot {
             EXPECT_EQ(expectedGameSettings[5].RepoBranch(), actualGameSettings[5].RepoBranch());
         }
 
-        TEST_F(LootSettings, loadingFromFileShouldLoadContentAsYaml) {
+        TEST_F(LootSettingsTest, loadingFromFileShouldLoadContentAsYaml) {
             boost::filesystem::ofstream out(settingsFile);
             out << "enableDebugLogging: true" << std::endl;
             out.close();
@@ -119,7 +119,7 @@ namespace loot {
             EXPECT_TRUE(settings.isDebugLoggingEnabled());
         }
 
-        TEST_F(LootSettings, loadingFromYamlShouldStoreLoadedValues) {
+        TEST_F(LootSettingsTest, loadingFromYamlShouldStoreLoadedValues) {
             const bool enableDebugLogging = true;
             const bool updateMasterlist = true;
             const std::string game = "Oblivion";
@@ -174,12 +174,12 @@ namespace loot {
             EXPECT_EQ(games[0].Name(), settings.getGameSettings()[0].Name());
         }
 
-        TEST_F(LootSettings, loadingFromEmptyYamlShouldNotThrow) {
+        TEST_F(LootSettingsTest, loadingFromEmptyYamlShouldNotThrow) {
             YAML::Node yaml;
             EXPECT_NO_THROW(settings.load(yaml));
         }
 
-        TEST_F(LootSettings, loadingFromYamlShouldUpgradeFromVersion0Point6Format) {
+        TEST_F(LootSettingsTest, loadingFromYamlShouldUpgradeFromVersion0Point6Format) {
             const unsigned int DebugVerbosity = 3;
             const bool UpdateMasterlist = true;
             const std::string Game = "Oblivion";
@@ -215,7 +215,7 @@ namespace loot {
             EXPECT_EQ(Games[0].RepoBranch(), settings.getGameSettings()[0].RepoBranch());
         }
 
-        TEST_F(LootSettings, loadingFromYamlShouldNotUpgradeVersion0Point6SettingsIfEquivalentsAlreadyExist) {
+        TEST_F(LootSettingsTest, loadingFromYamlShouldNotUpgradeVersion0Point6SettingsIfEquivalentsAlreadyExist) {
             const unsigned int DebugVerbosity = 3;
             const bool enableDebugLogging = false;
             const bool UpdateMasterlist = true;
@@ -264,7 +264,7 @@ namespace loot {
             EXPECT_EQ(games[0].Name(), settings.getGameSettings()[0].Name());
         }
 
-        TEST_F(LootSettings, loadingFromYamlShouldUpgradeOldDefaultGameRepositoryBranches) {
+        TEST_F(LootSettingsTest, loadingFromYamlShouldUpgradeOldDefaultGameRepositoryBranches) {
             const std::vector<GameSettings> games({GameSettings(GameSettings::tes4)});
 
             YAML::Node inputYaml;
@@ -276,7 +276,7 @@ namespace loot {
             EXPECT_EQ(games[0].RepoBranch(), settings.getGameSettings()[0].RepoBranch());
         }
 
-        TEST_F(LootSettings, loadingFromYamlShouldNotUpgradeNonDefaultGameRepositoryBranches) {
+        TEST_F(LootSettingsTest, loadingFromYamlShouldNotUpgradeNonDefaultGameRepositoryBranches) {
             const std::vector<GameSettings> games({GameSettings(GameSettings::tes4)});
 
             YAML::Node inputYaml;
@@ -288,7 +288,7 @@ namespace loot {
             EXPECT_EQ("foo", settings.getGameSettings()[0].RepoBranch());
         }
 
-        TEST_F(LootSettings, loadingFromYamlShouldAddMissingBaseGames) {
+        TEST_F(LootSettingsTest, loadingFromYamlShouldAddMissingBaseGames) {
             const std::vector<GameSettings> games({GameSettings(GameSettings::tes4)});
             YAML::Node inputYaml;
             inputYaml["games"] = games;
@@ -305,7 +305,7 @@ namespace loot {
             EXPECT_EQ(expectedGameSettings, settings.getGameSettings());
         }
 
-        TEST_F(LootSettings, loadingFromYamlShouldSkipUnrecognisedGames) {
+        TEST_F(LootSettingsTest, loadingFromYamlShouldSkipUnrecognisedGames) {
             YAML::Node inputYaml;
             inputYaml["games"][0] = GameSettings(GameSettings::tes4);
             inputYaml["games"][0]["type"] = "Foobar";
@@ -317,14 +317,14 @@ namespace loot {
             EXPECT_EQ("Game Name", settings.getGameSettings()[0].Name());
         }
 
-        TEST_F(LootSettings, loadingFromYamlShouldRemoveTheContentFilterSetting) {
+        TEST_F(LootSettingsTest, loadingFromYamlShouldRemoveTheContentFilterSetting) {
             YAML::Node inputYaml;
             inputYaml["filters"]["contentFilter"] = "foo";
 
             settings.load(inputYaml);
         }
 
-        TEST_F(LootSettings, saveShouldWriteSettingsAsYamlToPassedFile) {
+        TEST_F(LootSettingsTest, saveShouldWriteSettingsAsYamlToPassedFile) {
             settings.storeLastGame("Skyrim");
             settings.save(settingsFile);
 
@@ -334,7 +334,7 @@ namespace loot {
             EXPECT_EQ("Skyrim", settings.getLastGame());
         }
 
-        TEST_F(LootSettings, getLanguageShouldReturnTheCurrentValue) {
+        TEST_F(LootSettingsTest, getLanguageShouldReturnTheCurrentValue) {
             YAML::Node inputYaml;
             inputYaml["language"] = "fr";
 
@@ -343,71 +343,71 @@ namespace loot {
             EXPECT_EQ("fr", settings.getLanguage().Locale());
         }
 
-        TEST_F(LootSettings, isWindowPositionStoredShouldReturnFalseIfAllPositionValuesAreZero) {
-            loot::LootSettings::WindowPosition position;
+        TEST_F(LootSettingsTest, isWindowPositionStoredShouldReturnFalseIfAllPositionValuesAreZero) {
+            LootSettings::WindowPosition position;
             settings.storeWindowPosition(position);
 
             EXPECT_FALSE(settings.isWindowPositionStored());
         }
 
-        TEST_F(LootSettings, isWindowPositionStoredShouldReturnTrueIfTopPositionValueIsNonZero) {
-            loot::LootSettings::WindowPosition position;
+        TEST_F(LootSettingsTest, isWindowPositionStoredShouldReturnTrueIfTopPositionValueIsNonZero) {
+            LootSettings::WindowPosition position;
             position.top = 1;
             settings.storeWindowPosition(position);
 
             EXPECT_TRUE(settings.isWindowPositionStored());
         }
 
-        TEST_F(LootSettings, isWindowPositionStoredShouldReturnTrueIfBottomPositionValueIsNonZero) {
-            loot::LootSettings::WindowPosition position;
+        TEST_F(LootSettingsTest, isWindowPositionStoredShouldReturnTrueIfBottomPositionValueIsNonZero) {
+            LootSettings::WindowPosition position;
             position.bottom = 1;
             settings.storeWindowPosition(position);
 
             EXPECT_TRUE(settings.isWindowPositionStored());
         }
 
-        TEST_F(LootSettings, isWindowPositionStoredShouldReturnTrueIfLeftPositionValueIsNonZero) {
-            loot::LootSettings::WindowPosition position;
+        TEST_F(LootSettingsTest, isWindowPositionStoredShouldReturnTrueIfLeftPositionValueIsNonZero) {
+            LootSettings::WindowPosition position;
             position.left = 1;
             settings.storeWindowPosition(position);
 
             EXPECT_TRUE(settings.isWindowPositionStored());
         }
 
-        TEST_F(LootSettings, isWindowPositionStoredShouldReturnTrueIfRightPositionValueIsNonZero) {
-            loot::LootSettings::WindowPosition position;
+        TEST_F(LootSettingsTest, isWindowPositionStoredShouldReturnTrueIfRightPositionValueIsNonZero) {
+            LootSettings::WindowPosition position;
             position.right = 1;
             settings.storeWindowPosition(position);
 
             EXPECT_TRUE(settings.isWindowPositionStored());
         }
 
-        TEST_F(LootSettings, storeGameSettingsShouldReplaceExistingGameSettings) {
+        TEST_F(LootSettingsTest, storeGameSettingsShouldReplaceExistingGameSettings) {
             const std::vector<GameSettings> gameSettings({GameSettings(GameSettings::tes5)});
             settings.storeGameSettings(gameSettings);
 
             EXPECT_EQ(gameSettings, settings.getGameSettings());
         }
 
-        TEST_F(LootSettings, storeLastGameShouldReplaceExistingValue) {
+        TEST_F(LootSettingsTest, storeLastGameShouldReplaceExistingValue) {
             settings.storeLastGame("Fallout3");
 
             EXPECT_EQ("Fallout3", settings.getLastGame());
         }
 
-        TEST_F(LootSettings, storeWindowPositionShouldReplaceExistingValue) {
-            loot::LootSettings::WindowPosition expectedPosition;
+        TEST_F(LootSettingsTest, storeWindowPositionShouldReplaceExistingValue) {
+            LootSettings::WindowPosition expectedPosition;
             expectedPosition.top = 1;
             settings.storeWindowPosition(expectedPosition);
 
-            loot::LootSettings::WindowPosition actualPosition = settings.getWindowPosition();
+            LootSettings::WindowPosition actualPosition = settings.getWindowPosition();
             EXPECT_EQ(expectedPosition.top, actualPosition.top);
             EXPECT_EQ(expectedPosition.bottom, actualPosition.bottom);
             EXPECT_EQ(expectedPosition.left, actualPosition.left);
             EXPECT_EQ(expectedPosition.right, actualPosition.right);
         }
 
-        TEST_F(LootSettings, updateLastVersionShouldSetValueToCurrentLootVersion) {
+        TEST_F(LootSettingsTest, updateLastVersionShouldSetValueToCurrentLootVersion) {
             const std::string currentVersion = std::to_string(g_version_major) + "." + std::to_string(g_version_minor) + "." + std::to_string(g_version_patch);
             YAML::Node inputYaml;
             inputYaml["lastVersion"] = "v0.7.1";
@@ -418,7 +418,7 @@ namespace loot {
             EXPECT_EQ(currentVersion, settings.getLastVersion());
         }
 
-        TEST_F(LootSettings, toYamlShouldOutputStoredSettings) {
+        TEST_F(LootSettingsTest, toYamlShouldOutputStoredSettings) {
             const bool enableDebugLogging = true;
             const bool updateMasterlist = true;
             const std::string game = "Oblivion";
