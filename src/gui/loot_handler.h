@@ -68,14 +68,19 @@ namespace loot {
         // CefRequestHandler methods
         //--------------------------
 
-        virtual CefRefPtr<CefRequestHandler> GetRequestHandler() OVERRIDE{
+        virtual CefRefPtr<CefRequestHandler> GetRequestHandler() OVERRIDE {
             return this;
         }
 
-            virtual bool OnBeforeBrowse(CefRefPtr< CefBrowser > browser,
-            CefRefPtr< CefFrame > frame,
-            CefRefPtr< CefRequest > request,
-            bool is_redirect) OVERRIDE;
+        virtual bool OnBeforeBrowse(CefRefPtr< CefBrowser > browser,
+                                    CefRefPtr< CefFrame > frame,
+                                    CefRefPtr< CefRequest > request,
+                                    bool is_redirect) OVERRIDE;
+
+        virtual CefRequestHandler::ReturnValue OnBeforeResourceLoad(CefRefPtr<CefBrowser> browser,
+                                                                    CefRefPtr<CefFrame> frame,
+                                                                    CefRefPtr<CefRequest> request,
+                                                                    CefRefPtr<CefRequestCallback> callback) OVERRIDE;
 
         // Request that all existing browser windows close.
         void CloseAllBrowsers(bool force_close);

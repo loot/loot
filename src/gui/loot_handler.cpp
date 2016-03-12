@@ -254,6 +254,16 @@ namespace loot {
         return true;
     }
 
+    CefRequestHandler::ReturnValue LootHandler::OnBeforeResourceLoad(CefRefPtr<CefBrowser> browser,
+                                                                     CefRefPtr<CefFrame> frame,
+                                                                     CefRefPtr<CefRequest> request,
+                                                                     CefRefPtr<CefRequestCallback> callback) {
+        if (boost::starts_with(request->GetURL().ToString(), "http"))
+            return RV_CANCEL;
+
+        return RV_CONTINUE;
+    }
+
     void LootHandler::CloseAllBrowsers(bool force_close) {
         if (!CefCurrentlyOn(TID_UI)) {
             // Execute on the UI thread.
