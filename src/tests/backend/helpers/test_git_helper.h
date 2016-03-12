@@ -31,11 +31,16 @@ along with LOOT.  If not, see
 
 namespace loot {
     namespace test {
-#ifdef _WIN32
-        boost::filesystem::path parentRepoRoot = boost::filesystem::current_path().parent_path().parent_path();
-#else
-        boost::filesystem::path parentRepoRoot = boost::filesystem::current_path().parent_path();
-#endif
+        boost::filesystem::path getRepoRoot() {
+            boost::filesystem::path dir = boost::filesystem::current_path();
+            while (!boost::filesystem::exists(dir / ".git")) {
+                dir = dir.parent_path();
+            }
+
+            return dir;
+        }
+
+        boost::filesystem::path parentRepoRoot = getRepoRoot();
 
         TEST(GitHelper, ConstructorAndDestructor) {
             GitHelper * git = new GitHelper();
