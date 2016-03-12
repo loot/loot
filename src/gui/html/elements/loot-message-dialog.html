@@ -65,6 +65,11 @@ was pressed.
         this.getElementsByClassName('message')[0].textContent = text;
 
         this.closeCallback = closeCallback;
+
+        // This is necessary to prevent the dialog position changing when it is
+        // displayed.
+        Polymer.dom.flush(); // eslint-disable-line new-cap, no-undef
+
         this.$.dialog.open();
       },
 
