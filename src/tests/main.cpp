@@ -27,8 +27,20 @@
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 #endif
 
+#include "api/loot_apply_load_order_test.h"
+#include "api/loot_create_db_test.h"
+#include "api/loot_db_test.h"
+#include "api/loot_eval_lists_test.h"
+#include "api/loot_get_dirty_info_test.h"
+#include "api/loot_get_masterlist_revision_test.h"
+#include "api/loot_get_plugin_messages_test.h"
+#include "api/loot_get_plugin_tags_test.h"
+#include "api/loot_get_tag_map_test.h"
+#include "api/loot_load_lists_test.h"
+#include "api/loot_sort_plugins_test.h"
+#include "api/loot_update_masterlist_test.h"
+#include "api/loot_write_minimal_list_test.h"
 #include "api/test_api.h"
-#include "api/test_loot_db.h"
 #include "backend/game/test_game.h"
 #include "backend/game/test_game_cache.h"
 #include "backend/game/test_game_settings.h"

@@ -27,30 +27,52 @@ along with LOOT.  If not, see
 
 #include "api/loot_db.h"
 #include "backend/game/game_settings.h"
-#include "tests/fixtures.h"
+#include "tests/base_game_test.h"
 
 namespace loot {
     namespace test {
-        class loot_db_test : public SkyrimTest {
+        class loot_db_test : public BaseGameTest {
         protected:
-            virtual void SetUp() {
-                SkyrimTest::SetUp();
+            loot_db_test() :
+                db(nullptr) {}
 
-                db = new loot_db(Game::tes5, dataPath.parent_path().string().c_str(), localPath.string().c_str());
+            virtual void SetUp() {
+                BaseGameTest::SetUp();
+
+                db = new loot_db(GetParam(), dataPath.parent_path().string().c_str(), localPath.string().c_str());
             }
+
+            inline virtual void TearDown() {
+                BaseGameTest::TearDown();
+
+                delete db;
+            }
+
+            loot_db * db;
         };
 
-        TEST_F(loot_db_test, settingRevisionIdStringShouldCopyIt) {
+        // Pass an empty first argument, as it's a prefix for the test instantation,
+        // but we only have the one so no prefix is necessary.
+        INSTANTIATE_TEST_CASE_P(,
+                                loot_db_test,
+                                ::testing::Values(
+                                    loot_game_tes4,
+                                    loot_game_tes5,
+                                    loot_game_fo3,
+                                    loot_game_fonv,
+                                    loot_game_fo4));
+
+        TEST_P(loot_db_test, settingRevisionIdStringShouldCopyIt) {
             db->setRevisionIdString("id");
             EXPECT_STREQ("id", db->getRevisionIdString());
         }
 
-        TEST_F(loot_db_test, settingRevisionDateStringShouldCopyIt) {
+        TEST_P(loot_db_test, settingRevisionDateStringShouldCopyIt) {
             db->setRevisionDateString("date");
             EXPECT_STREQ("date", db->getRevisionDateString());
         }
 
-        TEST_F(loot_db_test, settingPluginNamesShouldCopyThem) {
+        TEST_P(loot_db_test, settingPluginNamesShouldCopyThem) {
             db->setPluginNames(std::vector<PluginMetadata>({
                 PluginMetadata("Blank.esm"),
                 PluginMetadata("Blank.esp"),
@@ -61,7 +83,7 @@ namespace loot {
             EXPECT_STREQ("Blank.esp", db->getPluginNames()[1]);
         }
 
-        TEST_F(loot_db_test, settingPluginNamesTwiceShouldOverwriteTheFirstDataSet) {
+        TEST_P(loot_db_test, settingPluginNamesTwiceShouldOverwriteTheFirstDataSet) {
             db->setPluginNames(std::vector<PluginMetadata>({
                 PluginMetadata("Blank.esm"),
                 PluginMetadata("Blank.esp"),
@@ -76,7 +98,7 @@ namespace loot {
             EXPECT_STREQ("Blank - Different.esp", db->getPluginNames()[1]);
         }
 
-        TEST_F(loot_db_test, addingNewBashTagsToTheMapShouldAppendThem) {
+        TEST_P(loot_db_test, addingNewBashTagsToTheMapShouldAppendThem) {
             db->addBashTagsToMap({
                 "C.Climate",
                 "Relev",
@@ -87,7 +109,7 @@ namespace loot {
             EXPECT_STREQ("Relev", db->getBashTagMap()[1]);
         }
 
-        TEST_F(loot_db_test, addingAnExistingBashTagToTheMapShouldNotDuplicateIt) {
+        TEST_P(loot_db_test, addingAnExistingBashTagToTheMapShouldNotDuplicateIt) {
             db->addBashTagsToMap({
                 "C.Climate",
                 "Relev",
@@ -99,11 +121,11 @@ namespace loot {
             EXPECT_STREQ("Relev", db->getBashTagMap()[1]);
         }
 
-        TEST_F(loot_db_test, gettingABashTagsUidForATagThatIsNotInTheMapShouldThrow) {
+        TEST_P(loot_db_test, gettingABashTagsUidForATagThatIsNotInTheMapShouldThrow) {
             EXPECT_ANY_THROW(db->getBashTagUid("Relev"));
         }
 
-        TEST_F(loot_db_test, gettingABashTagsUidShouldReturnItsTagMapIndex) {
+        TEST_P(loot_db_test, gettingABashTagsUidShouldReturnItsTagMapIndex) {
             db->addBashTagsToMap({
                 "C.Climate",
                 "Relev",
@@ -112,11 +134,11 @@ namespace loot {
             EXPECT_EQ(1, db->getBashTagUid("Relev"));
         }
 
-        TEST_F(loot_db_test, clearingAnEmptyBashTagMapShouldDoNothing) {
+        TEST_P(loot_db_test, clearingAnEmptyBashTagMapShouldDoNothing) {
             EXPECT_NO_THROW(db->clearBashTagMap());
         }
 
-        TEST_F(loot_db_test, clearingABashTagMapShouldEmptyIt) {
+        TEST_P(loot_db_test, clearingABashTagMapShouldEmptyIt) {
             db->addBashTagsToMap({
                 "C.Climate",
                 "Relev",
@@ -126,7 +148,7 @@ namespace loot {
             EXPECT_TRUE(db->getBashTagMap().empty());
         }
 
-        TEST_F(loot_db_test, clearingABashTagMapShouldAffectExistingReferences) {
+        TEST_P(loot_db_test, clearingABashTagMapShouldAffectExistingReferences) {
             db->addBashTagsToMap({
                 "C.Climate",
                 "Relev",
@@ -137,13 +159,13 @@ namespace loot {
             EXPECT_TRUE(bashTagMap.empty());
         }
 
-        TEST_F(loot_db_test, settingAddedTagsWithNoTagMapShouldThrow) {
+        TEST_P(loot_db_test, settingAddedTagsWithNoTagMapShouldThrow) {
             EXPECT_ANY_THROW(db->setAddedTags({
                 "Relev",
             }));
         }
 
-        TEST_F(loot_db_test, gettingSetAddedTagsShouldReturnTheirUids) {
+        TEST_P(loot_db_test, gettingSetAddedTagsShouldReturnTheirUids) {
             db->addBashTagsToMap({
                 "C.Climate",
                 "Relev",
@@ -158,13 +180,13 @@ namespace loot {
             }), db->getAddedTagIds());
         }
 
-        TEST_F(loot_db_test, settingRemovedTagsWithNoTagMapShouldThrow) {
+        TEST_P(loot_db_test, settingRemovedTagsWithNoTagMapShouldThrow) {
             EXPECT_ANY_THROW(db->setRemovedTags({
                 "Relev",
             }));
         }
 
-        TEST_F(loot_db_test, gettingSetRemovedTagsShouldReturnTheirUids) {
+        TEST_P(loot_db_test, gettingSetRemovedTagsShouldReturnTheirUids) {
             db->addBashTagsToMap({
                 "C.Climate",
                 "Relev",
@@ -179,7 +201,7 @@ namespace loot {
             }), db->getRemovedTagIds());
         }
 
-        TEST_F(loot_db_test, settingPluginMessagesShouldCopyThem) {
+        TEST_P(loot_db_test, settingPluginMessagesShouldCopyThem) {
             db->setPluginMessages(std::list<Message>({
                 Message(Message::warn, "Test 1"),
                 Message(Message::error, "Test 2"),
@@ -192,7 +214,7 @@ namespace loot {
             EXPECT_STREQ("Test 2", db->getPluginMessages()[1].message);
         }
 
-        TEST_F(loot_db_test, settingPluginMessagesTwiceShouldOverwriteTheFirstDataSet) {
+        TEST_P(loot_db_test, settingPluginMessagesTwiceShouldOverwriteTheFirstDataSet) {
             db->setPluginMessages(std::list<Message>({
                 Message(Message::warn, "Test 1"),
                 Message(Message::error, "Test 2"),
@@ -212,7 +234,7 @@ namespace loot {
             EXPECT_STREQ("Test 5", db->getPluginMessages()[2].message);
         }
 
-        TEST_F(loot_db_test, clearingArraysShouldEmptyPluginNamesTagIdsAndMessages) {
+        TEST_P(loot_db_test, clearingArraysShouldEmptyPluginNamesTagIdsAndMessages) {
             db->setPluginMessages(std::list<Message>({
                 Message(Message::warn, "Test 1"),
                 Message(Message::error, "Test 2"),
@@ -247,7 +269,7 @@ namespace loot {
             EXPECT_TRUE(db->getRemovedTagIds().empty());
         }
 
-        TEST_F(loot_db_test, clearingArraysShouldNotEmptyBashTagMap) {
+        TEST_P(loot_db_test, clearingArraysShouldNotEmptyBashTagMap) {
             db->addBashTagsToMap({
                 "C.Climate",
                 "Relev",

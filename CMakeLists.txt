@@ -215,10 +215,26 @@ set (LOOT_TESTS_SRC ${LOOT_SRC}
           					"${CMAKE_SOURCE_DIR}/src/gui/loot_state.cpp"
 				            "${CMAKE_SOURCE_DIR}/src/tests/main.cpp")
 
-set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/fixtures.h"
+set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/base_game_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/fixtures.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/printers.h"
+
+                        "${CMAKE_SOURCE_DIR}/src/tests/api/api_game_operations_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/api/loot_apply_load_order_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/api/loot_create_db_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/api/loot_db_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/api/loot_eval_lists_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/api/loot_get_dirty_info_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/api/loot_get_masterlist_revision_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/api/loot_get_plugin_messages_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/api/loot_get_plugin_tags_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/api/loot_get_tag_map_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/api/loot_load_lists_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/api/loot_sort_plugins_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/api/loot_update_masterlist_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/api/loot_write_minimal_list_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/api/test_api.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/api/test_loot_db.h"
+
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/game/test_game.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/game/test_game_cache.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/game/test_game_settings.h"
