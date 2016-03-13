@@ -68,7 +68,7 @@
 
 #include <boost/log/core.hpp>
 
-TEST(ModuloOperator, Cpp11Conformance) {
+TEST(ModuloOperator, shouldConformToTheCpp11Standard) {
     // C++11 defines the modulo operator more strongly
     // (only x % 0 is left undefined), whereas C++03
     // only defined the operator for positive first operand.
