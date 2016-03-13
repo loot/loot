@@ -193,7 +193,7 @@ loot-clear-metadata
       _dataChanged(newValue, oldValue) {
         if (newValue) {
           /* Initialise the card content data. */
-          this.updateContent(true);
+          this.updateContent(true, true);
           this.updateStyling();
 
           /* Set icons' visibility */
@@ -239,7 +239,7 @@ loot-clear-metadata
         }
       },
 
-      updateContent(updateBodyContent) {
+      updateContent(updateBodyContent, suppressResizeEvent) {
         if (this.data) {
           const cardContent = this.data.getCardContent(loot.filters);
 
@@ -251,8 +251,10 @@ loot-clear-metadata
             this._setTagsContent(cardContent.tags);
             this._setMessagesContent(cardContent.messages);
 
-            /* Notify that this card (may have) changed size. */
-            this.dispatchEvent(new CustomEvent('iron-resize', { bubbles: true }));
+            if (!suppressResizeEvent) {
+              /* Notify that this card (may have) changed size. */
+              this.dispatchEvent(new CustomEvent('iron-resize', { bubbles: true }));
+            }
           }
 
           /* Update the conflict filter toggle state. */
