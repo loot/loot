@@ -36,14 +36,14 @@ namespace loot {
     namespace test {
         class GenericGameTest : public ::testing::Test {
         protected:
-            GenericGameTest(const boost::filesystem::path& gameDataPath, const boost::filesystem::path& gameLocalPath)
-                : dataPath(gameDataPath),
-                localPath(gameLocalPath),
+            GenericGameTest(const std::string& gameName)
+                : dataPath("./" + gameName + "/Data"),
+                localPath("./local/" + gameName),
                 missingPath("./missing"),
+                masterFile(gameName + ".esm"),
                 masterlistPath(localPath / "masterlist.yaml"),
                 userlistPath(localPath / "userlist.yaml"),
-                resourcePath(dataPath / "resource" / "detail" / "resource.txt"),
-                db(nullptr) {}
+                resourcePath(dataPath / "resource" / "detail" / "resource.txt") {}
 
             inline virtual void SetUp() {
                 ASSERT_NO_THROW(boost::filesystem::create_directories(localPath));
@@ -89,6 +89,21 @@ namespace loot {
                 out << "This isn't a valid plugin file.";
                 out.close();
                 ASSERT_TRUE(boost::filesystem::exists(dataPath / "NotAPlugin.esm"));
+
+                // LOOT expects the game master file to be present, so mock it.
+                ASSERT_FALSE(boost::filesystem::exists(dataPath / masterFile));
+                ASSERT_NO_THROW(boost::filesystem::copy_file(dataPath / "Blank.esm", dataPath / masterFile));
+                ASSERT_TRUE(boost::filesystem::exists(dataPath / masterFile));
+
+                setLoadOrder();
+
+                // Set Oblivion's active plugins to a known list before running the test.
+                boost::filesystem::ofstream activePlugins(localPath / "plugins.txt");
+                activePlugins
+                    << masterFile << std::endl
+                    << "Blank.esm" << std::endl
+                    << "Blank - Different Master Dependent.esp" << std::endl;
+                activePlugins.close();
             }
 
             inline virtual void TearDown() {
@@ -112,36 +127,32 @@ namespace loot {
                 // Also remove the ".git" folder if it has been created.
                 ASSERT_NO_THROW(boost::filesystem::remove_all(localPath / ".git"));
 
-                ASSERT_NO_THROW(loot_destroy_db(db));
+                // Delete the mock Oblivion.esm.
+                ASSERT_TRUE(boost::filesystem::exists(dataPath / masterFile));
+                ASSERT_NO_THROW(boost::filesystem::remove(dataPath / masterFile));
+                ASSERT_FALSE(boost::filesystem::exists(dataPath / masterFile));
+
+                // Delete existing plugins.txt.
+                ASSERT_NO_THROW(boost::filesystem::remove(localPath / "plugins.txt"));
+
+                // Delete loadorder.txt if it exists.
+                ASSERT_NO_THROW(boost::filesystem::remove(localPath / "loadorder.txt"));
             }
 
             const boost::filesystem::path dataPath;
             const boost::filesystem::path localPath;
             const boost::filesystem::path missingPath;
 
+            const std::string masterFile;
+
             const boost::filesystem::path masterlistPath;
             const boost::filesystem::path userlistPath;
 
             const boost::filesystem::path resourcePath;
-
-            loot_db * db;
-        };
-
-        class OblivionTest : public GenericGameTest {
-        protected:
-            OblivionTest() : GenericGameTest("./Oblivion/Data", "./local/Oblivion") {}
-
-            inline virtual void SetUp() {
-                GenericGameTest::SetUp();
-
-                // LOOT expects the game master file to be present, so mock it.
-                ASSERT_FALSE(boost::filesystem::exists(dataPath / "Oblivion.esm"));
-                ASSERT_NO_THROW(boost::filesystem::copy_file(dataPath / "Blank.esm", dataPath / "Oblivion.esm"));
-                ASSERT_TRUE(boost::filesystem::exists(dataPath / "Oblivion.esm"));
-
-                // Oblivion's load order is decided through timestamps, so reset them to a known order before each test.
-                std::list<std::string> loadOrder = {
-                    "Oblivion.esm",
+        private:
+            inline std::list<std::string> GetExpectedSortedOrder() const {
+                return std::list<std::string>({
+                    masterFile,
                     "Blank.esm",
                     "Blank - Different.esm",
                     "Blank - Master Dependent.esm",  // Ghosted
@@ -152,167 +163,49 @@ namespace loot {
                     "Blank - Different Master Dependent.esp",
                     "Blank - Plugin Dependent.esp",
                     "Blank - Different Plugin Dependent.esp"
-                };
-                time_t modificationTime = time(NULL);  // Current time.
-                for (const auto &plugin : loadOrder) {
-                    if (boost::filesystem::exists(dataPath / boost::filesystem::path(plugin + ".ghost"))) {
-                        boost::filesystem::last_write_time(dataPath / boost::filesystem::path(plugin + ".ghost"), modificationTime);
-                    }
-                    else {
-                        boost::filesystem::last_write_time(dataPath / plugin, modificationTime);
-                    }
-                    modificationTime += 60;
-                }
-
-                // Set Oblivion's active plugins to a known list before running the test.
-                boost::filesystem::ofstream activePlugins(localPath / "plugins.txt");
-                activePlugins
-                    << "Oblivion.esm" << std::endl
-                    << "Blank.esm" << std::endl;
-                activePlugins.close();
+                });
             }
 
-            inline virtual void TearDown() {
-                GenericGameTest::TearDown();
+            inline void setLoadOrder() {
+                if (isTimestampLoadOrderMethod()) {
+                    time_t modificationTime = time(NULL);  // Current time.
+                    for (const auto &plugin : GetExpectedSortedOrder()) {
+                        if (boost::filesystem::exists(dataPath / boost::filesystem::path(plugin + ".ghost"))) {
+                            boost::filesystem::last_write_time(dataPath / boost::filesystem::path(plugin + ".ghost"), modificationTime);
+                        }
+                        else {
+                            boost::filesystem::last_write_time(dataPath / plugin, modificationTime);
+                        }
+                        modificationTime += 60;
+                    }
+                }
+                else {
+                    boost::filesystem::ofstream loadOrder(localPath / "loadorder.txt");
+                    for (const auto &plugin : GetExpectedSortedOrder())
+                        loadOrder << plugin << std::endl;
+                    loadOrder.close();
+                }
+            }
 
-                // Delete the mock Oblivion.esm.
-                ASSERT_TRUE(boost::filesystem::exists(dataPath / "Oblivion.esm"));
-                ASSERT_NO_THROW(boost::filesystem::remove(dataPath / "Oblivion.esm"));
-                ASSERT_FALSE(boost::filesystem::exists(dataPath / "Oblivion.esm"));
-
-                // Delete existing plugins.txt.
-                ASSERT_NO_THROW(boost::filesystem::remove(localPath / "plugins.txt"));
-            };
-
-            inline void GenerateMasterlist() {
-                boost::filesystem::ofstream masterlist(masterlistPath);
-                masterlist
-                    << "plugins:" << std::endl
-                    << "  - name: Oblivion.esm" << std::endl
-                    << "  - name: Silgrad_Tower.esm" << std::endl
-                    << "  - name: No Lights Flicker.esm" << std::endl
-                    << "    msg:" << std::endl
-                    << "      - type: say" << std::endl
-                    << "        content: Use Wrye Bash Bashed Patch tweak instead." << std::endl
-                    << "  - name: bookplacing.esm" << std::endl
-                    << "    msg:" << std::endl
-                    << "      - type: warn" << std::endl
-                    << "        content: 'Check you are using v2+. If not, Update. v1 has a severe bug with the Mystic Emporium disappearing.'" << std::endl
-                    << "  - name: EnhancedWeatherSIOnly.esm" << std::endl
-                    << "    msg:" << std::endl
-                    << "      - type: error" << std::endl
-                    << "        content: Obsolete. Remove this and install Enhanced Weather." << std::endl
-                    << "  - name: Hammerfell.esm" << std::endl
-                    << "    dirty:" << std::endl
-                    << "      - crc: 0x7d22f9df" << std::endl
-                    << "        util: TES4Edit" << std::endl
-                    << "        udr: 4" << std::endl
-                    << "  - name: nVidia Black Screen Fix.esp" << std::endl
-                    << "    msg:" << std::endl
-                    << "      - type: say" << std::endl
-                    << "        content: Use Wrye Bash Bashed Patch tweak instead." << std::endl
-                    << "      - type: say" << std::endl
-                    << "        content: 'Alternatively, remove this and use UOP v3.0.1+ instead.'" << std::endl
-                    << "  - name: Unofficial Oblivion Patch.esp" << std::endl
-                    << "    msg:" << std::endl
-                    << "      - type: say" << std::endl
-                    << "        content: 'Do not clean ITM records, they are intentional and required for the mod to function.'" << std::endl
-                    << "    tag:" << std::endl
-                    << "      - Actors.ACBS" << std::endl
-                    << "      - Actors.AIData" << std::endl
-                    << "      - Actors.AIPackages" << std::endl
-                    << "      - Actors.CombatStyle" << std::endl
-                    << "      - Actors.DeathItem" << std::endl
-                    << "      - Actors.Stats" << std::endl
-                    << "      - C.Climate" << std::endl
-                    << "      - C.Light" << std::endl
-                    << "      - C.Music" << std::endl
-                    << "      - C.Name" << std::endl
-                    << "      - C.Owner" << std::endl
-                    << "      - Creatures.Blood" << std::endl
-                    << "      - Delev" << std::endl
-                    << "      - Factions" << std::endl
-                    << "      - Invent" << std::endl
-                    << "      - Names" << std::endl
-                    << "      - NPC.Class" << std::endl
-                    << "      - Relations" << std::endl
-                    << "      - Relev" << std::endl
-                    << "      - Scripts" << std::endl
-                    << "      - Stats" << std::endl
-                    << "      - '-C.Water'" << std::endl;
-
-                masterlist.close();
+            inline bool isTimestampLoadOrderMethod() {
+                return masterFile == "Oblivion.esm";
             }
         };
 
-        class OblivionAPIOperationsTest : public OblivionTest {
+        class OblivionTest : public GenericGameTest {
         protected:
-            inline virtual void SetUp() {
-                OblivionTest::SetUp();
-
-                ASSERT_EQ(loot_ok, loot_create_db(&db, loot_game_tes4, dataPath.parent_path().string().c_str(), localPath.string().c_str()));
-            }
+            OblivionTest() : GenericGameTest("Oblivion") {}
         };
 
         class SkyrimTest : public GenericGameTest {
         protected:
-            SkyrimTest() : GenericGameTest("./Skyrim/Data", "./local/Skyrim") {}
+            SkyrimTest() : GenericGameTest("Skyrim") {}
 
             inline virtual void SetUp() {
                 GenericGameTest::SetUp();
 
                 ASSERT_TRUE(boost::filesystem::exists(dataPath / "Blank.bsa"));
                 ASSERT_TRUE(boost::filesystem::exists(dataPath / "Blank.bsl"));
-
-                // Can't change Skyrim's main master file, so mock it.
-                ASSERT_FALSE(boost::filesystem::exists(dataPath / "Skyrim.esm"));
-                ASSERT_NO_THROW(boost::filesystem::copy_file(dataPath / "Blank.esm", dataPath / "Skyrim.esm"));
-                ASSERT_TRUE(boost::filesystem::exists(dataPath / "Skyrim.esm"));
-
-                // Set Skyrim's load order to a known list before running the test.
-                boost::filesystem::ofstream loadOrder(localPath / "loadorder.txt");
-                loadOrder
-                    << "Skyrim.esm" << std::endl
-                    << "Blank.esm" << std::endl
-                    << "Blank - Different.esm" << std::endl
-                    << "Blank - Master Dependent.esm" << std::endl  // Ghosted
-                    << "Blank - Different Master Dependent.esm" << std::endl
-                    << "Blank.esp" << std::endl
-                    << "Blank - Different.esp" << std::endl
-                    << "Blank - Master Dependent.esp" << std::endl
-                    << "Blank - Different Master Dependent.esp" << std::endl
-                    << "Blank - Plugin Dependent.esp" << std::endl
-                    << "Blank - Different Plugin Dependent.esp" << std::endl;
-                loadOrder.close();
-
-                // Set Skyrim's active plugins to a known list before running the test.
-                boost::filesystem::ofstream activePlugins(localPath / "plugins.txt");
-                activePlugins
-                    << "Blank.esm" << std::endl
-                    << "Blank - Different Master Dependent.esp" << std::endl;
-                activePlugins.close();
-            }
-
-            inline virtual void TearDown() {
-                GenericGameTest::TearDown();
-
-                // Delete the mock Skyrim.esm.
-                ASSERT_TRUE(boost::filesystem::exists(dataPath / "Skyrim.esm"));
-                ASSERT_NO_THROW(boost::filesystem::remove(dataPath / "Skyrim.esm"));
-                ASSERT_FALSE(boost::filesystem::exists(dataPath / "Skyrim.esm"));
-
-                // Delete existing plugins.txt and loadorder.txt.
-                ASSERT_NO_THROW(boost::filesystem::remove(localPath / "plugins.txt"));
-                ASSERT_NO_THROW(boost::filesystem::remove(localPath / "loadorder.txt"));
-            };
-        };
-
-        class SkyrimAPIOperationsTest : public SkyrimTest {
-        protected:
-            inline virtual void SetUp() {
-                SkyrimTest::SetUp();
-
-                ASSERT_EQ(loot_ok, loot_create_db(&db, loot_game_tes5, dataPath.parent_path().string().c_str(), localPath.string().c_str()));
             }
         };
     }

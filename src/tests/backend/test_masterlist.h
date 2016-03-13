@@ -30,7 +30,22 @@ along with LOOT.  If not, see
 
 namespace loot {
     namespace test {
-        class MasterlistTest : public SkyrimTest {};
+        class MasterlistTest : public SkyrimTest {
+        protected:
+#ifndef _WIN32
+            void SetUp() {
+                SkyrimTest::SetUp();
+
+                ASSERT_NO_THROW(boost::filesystem::create_directories(g_path_local / "Skyrim"));
+            }
+
+            void TearDown() {
+                SkyrimTest::TearDown();
+
+                ASSERT_NO_THROW(boost::filesystem::remove_all(g_path_local));
+            }
+#endif
+        };
 
         TEST_F(MasterlistTest, Update_Game) {
             Game game(Game::tes5);
