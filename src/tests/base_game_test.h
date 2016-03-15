@@ -46,7 +46,8 @@ namespace loot {
                 blankMasterDependentEsp("Blank - Master Dependent.esp"),
                 blankDifferentMasterDependentEsp("Blank - Different Master Dependent.esp"),
                 blankPluginDependentEsp("Blank - Plugin Dependent.esp"),
-                blankDifferentPluginDependentEsp("Blank - Different Plugin Dependent.esp") {}
+                blankDifferentPluginDependentEsp("Blank - Different Plugin Dependent.esp"),
+                blankEsmCrc(getBlankEsmCrc()) {}
 
             inline virtual void SetUp() {
                 ASSERT_NO_THROW(boost::filesystem::create_directories(localPath));
@@ -91,6 +92,8 @@ namespace loot {
             const std::string blankPluginDependentEsp;
             const std::string blankDifferentPluginDependentEsp;
 
+            const uint32_t blankEsmCrc;
+
         private:
             inline boost::filesystem::path getLocalPath() const {
                 if (GetParam() == loot_game_tes4)
@@ -117,6 +120,13 @@ namespace loot {
                     return "FalloutNV.esm";
                 else
                     return "Fallout4.esm";
+            }
+
+            inline uint32_t getBlankEsmCrc() const {
+                if (GetParam() == loot_game_tes4)
+                    return 0x374E2A6F;
+                else
+                    return 0x187BE342;
             }
         };
     }
