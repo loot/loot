@@ -27,7 +27,7 @@ along with LOOT.  If not, see
 
 #include "gui/loot_state.h"
 
-#include "tests/fixtures.h"
+#include <gtest/gtest.h>
 
 namespace loot {
     namespace test {

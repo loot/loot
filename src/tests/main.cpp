@@ -63,8 +63,8 @@
 #include "backend/test_metadata_list.h"
 #include "backend/test_masterlist.h"
 #include "backend/test_plugin_sorter.h"
-#include "gui/test_loot_settings.h"
-#include "gui/test_loot_state.h"
+#include "gui/loot_settings_test.h"
+#include "gui/loot_state_test.h"
 
 #include <boost/log/core.hpp>
 
