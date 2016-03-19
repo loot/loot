@@ -42,7 +42,7 @@
 #include "api/loot_write_minimal_list_test.h"
 #include "api/test_api.h"
 #include "backend/game/game_test.h"
-#include "backend/game/test_game_cache.h"
+#include "backend/game/game_cache_test.h"
 #include "backend/game/test_game_settings.h"
 #include "backend/game/test_load_order_handler.h"
 #include "backend/helpers/test_git_helper.h"
