@@ -29,19 +29,12 @@ along with LOOT.  If not, see
 #include "backend/globals.h"
 #include "backend/game/game.h"
 
-#include "tests/base_game_test.h"
+#include "load_order_handler_test.h"
 
 namespace loot {
     namespace test {
         class GameTest : public BaseGameTest {
         protected:
-
-            void SetUp() {
-                BaseGameTest::SetUp();
-
-                setLoadOrder();
-                setActivePlugins();
-            }
 #ifndef _WIN32
             void TearDown() {
                 BaseGameTest::TearDown();
@@ -49,54 +42,6 @@ namespace loot {
                 ASSERT_NO_THROW(boost::filesystem::remove_all(g_path_local));
             }
 #endif
-
-            inline std::vector<std::string> getExpectedLoadOrder() const {
-                return std::vector<std::string>({
-                    masterFile,
-                    blankEsm,
-                    blankDifferentEsm,
-                    blankMasterDependentEsm,
-                    blankDifferentMasterDependentEsm,
-                    blankEsp,
-                    blankDifferentEsp,
-                    blankMasterDependentEsp,
-                    blankDifferentMasterDependentEsp,
-                    blankPluginDependentEsp,
-                    blankDifferentPluginDependentEsp,
-                });
-            }
-
-            inline void setLoadOrder() {
-                if (isTimestampLoadOrderMethod()) {
-                    time_t modificationTime = time(NULL);  // Current time.
-                    for (const auto &plugin : getExpectedLoadOrder()) {
-                        if (boost::filesystem::exists(dataPath / boost::filesystem::path(plugin + ".ghost"))) {
-                            boost::filesystem::last_write_time(dataPath / boost::filesystem::path(plugin + ".ghost"), modificationTime);
-                        }
-                        else {
-                            boost::filesystem::last_write_time(dataPath / plugin, modificationTime);
-                        }
-                        modificationTime += 60;
-                    }
-                }
-                else {
-                    boost::filesystem::ofstream loadOrder(localPath / "loadorder.txt");
-                    for (const auto &plugin : getExpectedLoadOrder())
-                        loadOrder << plugin << std::endl;
-                    loadOrder.close();
-                }
-            }
-
-            inline void setActivePlugins() {
-                boost::filesystem::ofstream activePlugins(localPath / "plugins.txt");
-                activePlugins
-                    << blankEsm << std::endl;
-                activePlugins.close();
-            }
-
-            inline bool isTimestampLoadOrderMethod() {
-                return GetParam() == Game::tes4 || GetParam() == Game::fo3 || GetParam() == Game::fonv;
-            }
         };
 
         // Pass an empty first argument, as it's a prefix for the test instantation,
@@ -220,7 +165,7 @@ namespace loot {
             game.SetGamePath(dataPath.parent_path());
             game.Init(false, localPath);
 
-            std::vector<std::string> loadOrder = getExpectedLoadOrder();
+            std::vector<std::string> loadOrder = getInitialLoadOrder();
 
             // First set reverse timestamps to be sure.
             time_t time = boost::filesystem::last_write_time(dataPath / masterFile);
@@ -373,7 +318,7 @@ namespace loot {
 
             EXPECT_FALSE(game.IsPluginActive(blankEsp));
         }
-}
+    }
 }
 
 #endif

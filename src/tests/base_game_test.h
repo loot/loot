@@ -27,6 +27,10 @@ along with LOOT.  If not, see
 
 #include <gtest/gtest.h>
 #include <boost/filesystem.hpp>
+#include <boost/filesystem/fstream.hpp>
+#include <boost/algorithm/string.hpp>
+
+#include <unordered_set>
 
 namespace loot {
     namespace test {
@@ -70,10 +74,64 @@ namespace loot {
                 ASSERT_FALSE(boost::filesystem::exists(dataPath / masterFile));
                 ASSERT_NO_THROW(boost::filesystem::copy_file(dataPath / blankEsm, dataPath / masterFile));
                 ASSERT_TRUE(boost::filesystem::exists(dataPath / masterFile));
+
+                // Set initial load order and active plugins.
+                setLoadOrder(getInitialLoadOrder());
+                setActivePlugins(getInitialActivePlugins());
             }
 
             inline virtual void TearDown() {
                 ASSERT_NO_THROW(boost::filesystem::remove(dataPath / masterFile));
+            }
+
+            inline std::list<std::string> getLoadOrder() {
+                std::list<std::string> actual;
+                if (isLoadOrderTimestampBased(GetParam())) {
+                    std::map<time_t, std::string> loadOrder;
+                    for (boost::filesystem::directory_iterator it(dataPath); it != boost::filesystem::directory_iterator(); ++it) {
+                        if (boost::filesystem::is_regular_file(it->status()) &&
+                            (boost::ends_with(it->path().filename().string(), ".esp") || boost::ends_with(it->path().filename().string(), ".esm"))) {
+                            loadOrder.emplace(boost::filesystem::last_write_time(it->path()), it->path().filename().string());
+                        }
+                    }
+                    for (const auto& plugin : loadOrder)
+                        actual.push_back(plugin.second);
+                }
+                else {
+                    boost::filesystem::ifstream in(localPath / "loadorder.txt");
+                    while (in) {
+                        std::string line;
+                        std::getline(in, line);
+
+                        if (!line.empty())
+                            actual.push_back(line);
+                    }
+                }
+
+                return actual;
+            }
+
+            inline std::vector<std::string> getInitialLoadOrder() const {
+                return std::vector<std::string>({
+                    masterFile,
+                    blankEsm,
+                    blankDifferentEsm,
+                    blankMasterDependentEsm,
+                    blankDifferentMasterDependentEsm,
+                    blankEsp,
+                    blankDifferentEsp,
+                    blankMasterDependentEsp,
+                    blankDifferentMasterDependentEsp,
+                    blankPluginDependentEsp,
+                    blankDifferentPluginDependentEsp,
+                });
+            }
+
+            inline std::unordered_set<std::string> getInitialActivePlugins() const {
+                return std::unordered_set<std::string>({
+                    masterFile,
+                    blankEsm,
+                });
             }
 
             const boost::filesystem::path missingPath;
@@ -127,6 +185,36 @@ namespace loot {
                     return 0x374E2A6F;
                 else
                     return 0x187BE342;
+            }
+
+            inline void setLoadOrder(const std::vector<std::string>& loadOrder) {
+                if (isLoadOrderTimestampBased(GetParam())) {
+                    time_t modificationTime = time(NULL);  // Current time.
+                    for (const auto &plugin : loadOrder) {
+                        if (boost::filesystem::exists(dataPath / boost::filesystem::path(plugin + ".ghost"))) {
+                            boost::filesystem::last_write_time(dataPath / boost::filesystem::path(plugin + ".ghost"), modificationTime);
+                        }
+                        else {
+                            boost::filesystem::last_write_time(dataPath / plugin, modificationTime);
+                        }
+                        modificationTime += 60;
+                    }
+                }
+                else {
+                    boost::filesystem::ofstream out(localPath / "loadorder.txt");
+                    for (const auto &plugin : loadOrder)
+                        out << plugin << std::endl;
+                }
+            }
+
+            inline void setActivePlugins(const std::unordered_set<std::string>& activePlugins) {
+                boost::filesystem::ofstream out(localPath / "plugins.txt");
+                for (const auto &plugin : activePlugins)
+                    out << plugin << std::endl;
+            }
+
+            inline static bool isLoadOrderTimestampBased(unsigned int gameId) {
+                return gameId == GameSettings::tes4 || gameId == GameSettings::fo3 || gameId == GameSettings::fonv;
             }
         };
     }
