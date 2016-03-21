@@ -25,9 +25,6 @@ addons:
 install:
   # Use GCC 5.
   - if [ "$CXX" = "g++" ]; then export CXX="g++-5" CC="gcc-5"; fi
-  # Run install step script to download and build dependencies.
-  - chmod +x scripts/install-step.travis.sh
-  - ./scripts/install-step.travis.sh
   # Install the latest stable Node.js. The default Node.js version is too old
   # for some of the JavaScript syntax used.
   - npm install -g nvm
@@ -40,22 +37,10 @@ install:
   - bower install
 
 before_script:
-  # Build Google Test
-  - cd ../..
-  - wget https://github.com/google/googletest/archive/release-1.7.0.tar.gz -O - | tar -xz
-  - cd googletest-release-1.7.0
-  - cmake .
-  - make
   # Move into the cloned LOOT repo build path.
-  - mkdir $TRAVIS_BUILD_DIR/build && cd $TRAVIS_BUILD_DIR/build
-  # Fetch plugins to test with.
-  - wget https://github.com/WrinklyNinja/testing-plugins/archive/1.0.0.tar.gz -O - | tar -xz
-  - mv testing-plugins-1.0.0/* ./
-  # Fetch metadata to test with.
-  - wget https://github.com/loot/testing-metadata/archive/1.0.0.tar.gz -O - | tar -xz
-  - mv testing-metadata-1.0.0 testing-metadata
+  - mkdir build && cd build
   # Travis machines are 64 bit, and the dependencies use dynamic linking.
-  - cmake .. -DPROJECT_ARCH=64 -DPROJECT_STATIC_RUNTIME=OFF -DBUILD_SHARED_LIBS=OFF -DGTEST_ROOT=../../googletest-release-1.7.0
+  - cmake .. -DPROJECT_STATIC_RUNTIME=OFF -DBUILD_SHARED_LIBS=OFF
 
 script:
   - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && npm test || false'

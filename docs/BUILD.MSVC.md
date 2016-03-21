@@ -1,6 +1,6 @@
 # Build Instructions using Microsoft Visual C++
 
-These instructions were used to build LOOT using Microsoft Visual Studio 2013 Community, though they should apply to other versions of MSVC.
+These instructions were used to build LOOT using Microsoft Visual Studio 2015 Community, though they should apply to other versions of MSVC.
 
 #### Boost
 
@@ -19,55 +19,14 @@ Most of the required binaries are pre-built, but the libcef_dll_wrapper dynamic 
 
    ```
    mkdir build && cd build
-   cmake.exe .. -G "Visual Studio 12"
+   cmake.exe .. -G "Visual Studio 14"
    ```
 
-2. Open the generated solution file, and build it with `Release` configuration.
-
-#### Google Test
-
-1. Configure CMake and generate a build system for Visual Studio by running:
-
-   ```
-   mkdir build && cd build
-   cmake.exe .. -G "Visual Studio 12"
-   ```
-
-2. Open the generated solution file, and build it with `Release` configuration.
-
-#### Libgit2
-
-1. Configure CMake and generate a build system for Visual Studio by running:
-
-   ```
-   mkdir build && cd build
-   cmake.exe .. -G "Visual Studio 12" -DBUILD_SHARED_LIBS=OFF
-   ```
-
-  Adapt the commands as necessary for your particular setup.
-2. Open the generated solution file, and build it with `Release` configuration.
-
-#### Libloadorder
-
-Follow the instructions in libloadorder's README.md to build it as a static library.
-
-Example CMake keys: `-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=build -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=build`
-
-#### yaml-cpp
-
-1. Configure CMake and generate a build system for Visual Studio by running:
-
-   ```
-   mkdir build && cd build
-   cmake.exe .. -G "Visual Studio 12" -DBOOST_ROOT={BOOST_ROOT} -DMSVC_SHARED_RT=OFF
-   ```
-
-   Adapt the commands as necessary for your particular setup.
 2. Open the generated solution file, and build it with `Release` configuration.
 
 #### LOOT
 
 1. Set CMake up so that it builds the binaries in the `build` subdirectory of the LOOT folder.
 2. Define any necessary parameters.
-3. Configure CMake, then generate a build system for Visual Studio 12.
+3. Configure CMake, then generate a build system for Visual Studio.
 4. Open the generated solution file, and build it.

@@ -25,23 +25,10 @@ Once Node.js is installed, run `npm install` from the repository root to install
 
 ### Dependencies
 
-LOOT requires the following C/C++ libraries (version numbers used in latest development revision given):
+LOOT requires a mix of web and C/C++ libraries. The web libraries can be fetched by running `./node_modules/.bin/bower install` from the repository root, and most of the C/C++ dependencies are resolved by CMake, but the following must be obtained separately (version numbers used in latest development revision given):
 
 * [Boost](http://www.boost.org) v1.60.0
 * [Chromium Embedded Framework](https://bitbucket.org/chromiumembedded/cef) branch 2623: Required to build the GUI, but not the API or tests.
-* [Google Test](https://github.com/google/googletest) v1.7: Required to build the tests, but not the API or the GUI.
-* [Libespm](http://github.com/WrinklyNinja/libespm) v2.5.0
-* [Libgit2](http://libgit2.github.com/) v0.24.0
-* [Libloadorder](http://github.com/WrinklyNinja/libloadorder) v7.0.0
-* [Pseudosem](http://github.com/WrinklyNinja/pseudosem) v1.0.1
-* [yaml-cpp](http://github.com/WrinklyNinja/yaml-cpp): Use the `patched-for-loot` branch.
-
-In addition, LOOT's UI relies on the web libraries below, which can be fetched by running `./node_modules/.bin/bower install` from the repository root.
-
-* [Polymer](https://www.polymer-project.org)
-* [Jed](https://github.com/SlexAxton/Jed)
-* [Jed Gettext Parser](https://github.com/WrinklyNinja/jed-gettext-parser)
-* [Marked](https://github.com/chjj/marked)
 
 ### Building
 
@@ -59,12 +46,8 @@ Parameter | Values | Default |Description
 `PROJECT_STATIC_RUNTIME` | `ON`, `OFF` | `ON` | Whether to link the C++ runtime statically or not. This also affects the whether static or shared Boost libraries are used.
 `PROJECT_ARCH` | `32`, `64` | `32` | Whether to build 32 or 64 bit LOOT binaries.
 `CEF_ROOT` | path | `../../cef` | Path to the root of the Chromium Embedded Framework folder.
-`LIBESPM_ROOT` | path | `../../libespm` | Path to the root of the libespm repository folder.
-`LIBGIT2_ROOT` | path | `../../libgit2` | Path to the root of the libgit2 repository folder.
-`LIBLOADORDER_ROOT` | path | `../../libloadorder` | Path to the root of the libloadorder repository folder.
-`PSEUDOSEM_ROOT` | Path | `../../pseudosem` | Path to the root of the Pseudosem repository folder.
 
-The default paths given in the table above are relative to LOOT's `CMakeLists.txt`.
+The default paths given in the table above are relative to LOOT's `CMakeLists.txt`. You may also need to set `BOOST_ROOT` if CMake cannot find Boost.
 
 ## Packaging Releases
 

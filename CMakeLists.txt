@@ -1,7 +1,14 @@
 # Settings passed on the command line:
 #
 # PROJECT_ARCH = the build architecture
-# LIBESPM_ROOT = the path to the root of the libespm source.
+
+cmake_minimum_required (VERSION 2.8)
+cmake_policy(SET CMP0015 NEW)
+project (LOOT)
+include(ExternalProject)
+
+option(BUILD_SHARED_LIBS "Build a shared library" ON)
+option(PROJECT_STATIC_RUNTIME "Build with static runtime libs (/MT)" ON)
 
 ##############################
 # Get Build Revision
@@ -24,15 +31,8 @@ message(STATUS "Git revision: ${GIT_COMMIT_STRING}")
 configure_file("${CMAKE_SOURCE_DIR}/src/backend/globals.cpp.in" "${CMAKE_BINARY_DIR}/generated/globals.cpp" @ONLY)
 
 ##############################
-# General Settings
+# External Projects
 ##############################
-
-cmake_minimum_required (VERSION 2.8)
-cmake_policy(SET CMP0015 NEW)
-project (LOOT)
-
-option(BUILD_SHARED_LIBS "Build a shared library" ON)
-option(PROJECT_STATIC_RUNTIME "Build with static runtime libs (/MT)" ON)
 
 # With MSVC, the 32/64 bit compilers have separate generators, so PROJECT_ARCH
 # should always match whichever is being used.
@@ -42,30 +42,12 @@ IF (MSVC)
     ELSE ()
         set (PROJECT_ARCH "32")
     ENDIF ()
+    set(YAML_CPP_LIBRARY_SUFFIX "mt${CMAKE_STATIC_LIBRARY_SUFFIX}")
 ELSE ()
     IF (NOT DEFINED PROJECT_ARCH)
         set (PROJECT_ARCH "32")
     ENDIF ()
-ENDIF ()
-
-IF (NOT DEFINED LIBESPM_ROOT)
-    set (LIBESPM_ROOT "../../libespm")
-ENDIF ()
-
-IF (NOT DEFINED LIBGIT2_ROOT)
-    set (LIBGIT2_ROOT "../../libgit2")
-ENDIF ()
-
-IF (NOT DEFINED LIBLOADORDER_ROOT)
-    set (LIBLOADORDER_ROOT "../../libloadorder")
-ENDIF ()
-
-IF (NOT DEFINED CEF_ROOT)
-    set (CEF_ROOT "../../cef")
-ENDIF ()
-
-IF (NOT DEFINED PSEUDOSEM_ROOT)
-    set (PSEUDOSEM_ROOT "../../pseudosem")
+    set(YAML_CPP_LIBRARY_SUFFIX ${CMAKE_STATIC_LIBRARY_SUFFIX})
 ENDIF ()
 
 set (Boost_USE_STATIC_LIBS ${PROJECT_STATIC_RUNTIME})
@@ -77,8 +59,87 @@ IF (NOT Boost_USE_STATIC_LIBS)
 ENDIF ()
 
 find_package(Boost REQUIRED COMPONENTS atomic log log_setup regex locale thread date_time chrono filesystem system iostreams)
-find_package(yaml-cpp)
-find_package(GTest)
+
+ExternalProject_Add(GTest
+                    PREFIX "external"
+                    URL "https://github.com/google/googletest/archive/release-1.7.0.tar.gz"
+                    INSTALL_COMMAND "")
+ExternalProject_Get_Property(GTest SOURCE_DIR BINARY_DIR)
+set (GTEST_INCLUDE_DIRS "${SOURCE_DIR}/include")
+set (GTEST_LIBRARIES "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}gtest${CMAKE_STATIC_LIBRARY_SUFFIX}")
+
+ExternalProject_Add(libespm
+                    PREFIX "external"
+                    URL "https://github.com/WrinklyNinja/libespm/archive/2.5.2.tar.gz"
+                    CONFIGURE_COMMAND ""
+                    BUILD_COMMAND ""
+                    INSTALL_COMMAND "")
+ExternalProject_Get_Property(libespm SOURCE_DIR)
+set (LIBESPM_INCLUDE_DIRS "${SOURCE_DIR}/include")
+
+ExternalProject_Add(libgit2
+                    PREFIX "external"
+                    URL "https://github.com/libgit2/libgit2/archive/v0.24.0.tar.gz"
+                    CMAKE_ARGS -DBUILD_SHARED_LIBS=OFF -DBUILD_CLAR=OFF
+                    BUILD_COMMAND ${CMAKE_COMMAND} --build . --target git2 --config $(CONFIGURATION)
+                    INSTALL_COMMAND "")
+ExternalProject_Get_Property(libgit2 SOURCE_DIR BINARY_DIR)
+set(LIBGIT2_INCLUDE_DIRS "${SOURCE_DIR}/include")
+set(LIBGIT2_LIBRARIES "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}git2${CMAKE_STATIC_LIBRARY_SUFFIX}")
+
+ExternalProject_Add(libloadorder
+                    PREFIX "external"
+                    DEPENDS libespm
+                    URL "https://github.com/WrinklyNinja/libloadorder/archive/8.0.0.tar.gz"
+                    CMAKE_ARGS -DBOOST_INCLUDEDIR=${Boost_INCLUDE_DIR} -DPROJECT_STATIC_RUNTIME=${PROJECT_STATIC_RUNTIME}
+                    # BUILD_COMMAND ${CMAKE_COMMAND} --build . --target loadorder --config $(CONFIGURATION)
+                    INSTALL_COMMAND "")
+ExternalProject_Get_Property(libloadorder SOURCE_DIR BINARY_DIR)
+set(LIBLOADORDER_INCLUDE_DIRS "${SOURCE_DIR}/include")
+set(LIBLOADORDER_LIBRARIES "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}loadorder${CMAKE_STATIC_LIBRARY_SUFFIX}")
+
+ExternalProject_Add(pseudosem
+                    PREFIX "external"
+                    URL "https://github.com/WrinklyNinja/pseudosem/archive/1.0.1.tar.gz"
+                    CONFIGURE_COMMAND ""
+                    BUILD_COMMAND ""
+                    INSTALL_COMMAND "")
+ExternalProject_Get_Property(pseudosem SOURCE_DIR)
+set(PSEUDOSEM_INCLUDE_DIRS "${SOURCE_DIR}/include")
+
+ExternalProject_Add(testing-metadata
+                    PREFIX "external"
+                    URL "https://github.com/loot/testing-metadata/archive/1.0.0.tar.gz"
+                    CONFIGURE_COMMAND ""
+                    BUILD_COMMAND ""
+                    INSTALL_COMMAND "")
+
+ExternalProject_Add(testing-plugins
+                    PREFIX "external"
+                    URL "https://github.com/WrinklyNinja/testing-plugins/archive/1.0.0.tar.gz"
+                    CONFIGURE_COMMAND ""
+                    BUILD_COMMAND ""
+                    INSTALL_COMMAND "")
+
+ExternalProject_Add(yaml-cpp
+                    PREFIX "external"
+                    URL "https://github.com/WrinklyNinja/yaml-cpp/archive/patched-for-loot.tar.gz"
+                    CMAKE_ARGS -DMSVC_SHARED_RT=OFF
+                    BUILD_COMMAND ${CMAKE_COMMAND} --build . --target yaml-cpp --config $(CONFIGURATION)
+                    INSTALL_COMMAND "")
+ExternalProject_Get_Property(yaml-cpp SOURCE_DIR BINARY_DIR)
+set(YAML_CPP_INCLUDE_DIRS "${SOURCE_DIR}/include")
+
+set(YAML_CPP_LIBRARIES "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/libyaml-cpp${YAML_CPP_LIBRARY_SUFFIX}")
+
+
+##############################
+# General Settings
+##############################
+
+IF (NOT DEFINED CEF_ROOT)
+    set (CEF_ROOT "../../cef")
+ENDIF ()
 
 set (LOOT_SRC   "${CMAKE_SOURCE_DIR}/src/backend/metadata/conditional_metadata.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata/file.cpp"
@@ -163,10 +224,10 @@ set (LOOT_VALIDATOR_SRC ${LOOT_SRC}
 set (LOOT_VALIDATOR_HEADERS ${LOOT_HEADERS})
 
 set (LOOT_TESTS_SRC ${LOOT_SRC}
-					"${CMAKE_SOURCE_DIR}/src/api/loot_db.cpp"
-					"${CMAKE_SOURCE_DIR}/src/gui/loot_settings.cpp"
-					"${CMAKE_SOURCE_DIR}/src/gui/loot_state.cpp"
-				    "${CMAKE_SOURCE_DIR}/src/tests/main.cpp")
+          					"${CMAKE_SOURCE_DIR}/src/api/loot_db.cpp"
+          					"${CMAKE_SOURCE_DIR}/src/gui/loot_settings.cpp"
+          					"${CMAKE_SOURCE_DIR}/src/gui/loot_state.cpp"
+				            "${CMAKE_SOURCE_DIR}/src/tests/main.cpp")
 
 set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/fixtures.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/printers.h"
@@ -194,8 +255,8 @@ set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/fixtures.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/test_metadata_list.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/test_masterlist.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/test_plugin_sorter.h"
-						"${CMAKE_SOURCE_DIR}/src/tests/gui/test_loot_settings.h"
-						"${CMAKE_SOURCE_DIR}/src/tests/gui/test_loot_state.h")
+            						"${CMAKE_SOURCE_DIR}/src/tests/gui/test_loot_settings.h"
+            						"${CMAKE_SOURCE_DIR}/src/tests/gui/test_loot_state.h")
 
 source_group("Header Files\\backend" FILES ${LOOT_HEADERS})
 source_group("Header Files\\gui" FILES ${LOOT_GUI_HEADERS})
@@ -211,21 +272,17 @@ source_group("Source Files\\validator" FILES ${LOOT_VALIDATOR_SRC})
 # Include source and library directories.
 include_directories ("${CMAKE_SOURCE_DIR}/src"
                      "${CMAKE_SOURCE_DIR}/include"
-                     "${LIBLOADORDER_ROOT}/include"
-                     "${LIBGIT2_ROOT}/include"
+                     ${LIBLOADORDER_INCLUDE_DIRS}
+                     ${LIBGIT2_INCLUDE_DIRS}
                      ${CEF_ROOT}
-                     "${LIBESPM_ROOT}/include"
+                     ${LIBESPM_INCLUDE_DIRS}
                      ${Boost_INCLUDE_DIRS}
-                     ${YAML_CPP_INCLUDE_DIR}
+                     ${YAML_CPP_INCLUDE_DIRS}
                      ${GTEST_INCLUDE_DIRS}
-                     "${PSEUDOSEM_ROOT}/include")
+                     ${PSEUDOSEM_INCLUDE_DIRS})
 
 # Look in build and build/<arch> folders to support single and multiarch builds.
-link_directories ("${LIBLOADORDER_ROOT}/build"
-                  "${LIBLOADORDER_ROOT}/build/${PROJECT_ARCH}"
-                  "${LIBGIT2_ROOT}/build"
-                  "${LIBGIT2_ROOT}/build/${PROJECT_ARCH}"
-                  "${CEF_ROOT}"
+link_directories ("${CEF_ROOT}"
                   "${CEF_ROOT}/build/libcef_dll")
 
 
@@ -238,7 +295,7 @@ IF ($ENV{TRAVIS})
     add_definitions (-DTRAVIS)
 ENDIF ()
 
-# Settings when compiling for Windows. Since it's a Windows-only app this is always true, but useful to check for copy/paste into other projects.
+# Settings when compiling for Windows.
 IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
     add_definitions (-DUNICODE -D_UNICODE -DLIBLO_STATIC)
     set (LOOT_API_SRC ${LOOT_API_SRC} "${CMAKE_SOURCE_DIR}/src/resource.rc")
@@ -254,12 +311,10 @@ IF (CMAKE_COMPILER_IS_GNUCXX)
         set (CMAKE_MODULE_LINKER_FLAGS "-static-libstdc++ -static-libgcc")
     ENDIF ()
 
-    set (LOOT_LIBS git2
-                   ssl
+    set (LOOT_LIBS ssl
                    curl
                    z
-                   crypto
-                   loadorder${PROJECT_ARCH})
+                   crypto)
     set (LOOT_GUI_LIBS ${LOOT_LIBS}
                        cef
                        cef_dll_wrapper
@@ -298,9 +353,7 @@ ELSEIF (MSVC)
         ENDFOREACH()
     ENDIF ()
 
-    set (LOOT_LIBS  git2
-                    version
-                    loadorder${PROJECT_ARCH}
+    set (LOOT_LIBS  version
                     ws2_32
                     shlwapi
                     winhttp
@@ -321,21 +374,23 @@ ENDIF ()
 
 # Build API.
 add_library           (loot${PROJECT_ARCH} ${LOOT_API_SRC} ${LOOT_API_HEADERS})
-target_link_libraries (loot${PROJECT_ARCH} ${Boost_LIBRARIES} ${YAML_CPP_LIBRARIES} ${LOOT_LIBS})
+add_dependencies      (loot${PROJECT_ARCH} libespm libgit2 libloadorder pseudosem yaml-cpp)
+target_link_libraries (loot${PROJECT_ARCH} ${Boost_LIBRARIES} ${YAML_CPP_LIBRARIES} ${LIBGIT2_LIBRARIES} ${LOOT_LIBS} ${LIBLOADORDER_LIBRARIES})
 
-IF (${GTEST_FOUND})
-    # Build tests.
-    add_executable(tests ${LOOT_TESTS_SRC} ${LOOT_TESTS_HEADERS})
-    target_link_libraries(tests loot${PROJECT_ARCH} ${Boost_LIBRARIES} ${YAML_CPP_LIBRARIES} ${LOOT_LIBS} ${GTEST_BOTH_LIBRARIES})
-ENDIF ()
+# Build tests.
+add_executable(tests ${LOOT_TESTS_SRC} ${LOOT_TESTS_HEADERS})
+add_dependencies(tests loot${PROJECT_ARCH} GTest testing-metadata testing-plugins)
+target_link_libraries(tests loot${PROJECT_ARCH} ${Boost_LIBRARIES} ${YAML_CPP_LIBRARIES} ${LOOT_LIBS} ${GTEST_LIBRARIES})
 
 # Build application.
 add_executable        (LOOT ${LOOT_GUI_SRC} ${LOOT_GUI_HEADERS})
-target_link_libraries (LOOT ${Boost_LIBRARIES} ${YAML_CPP_LIBRARIES} ${LOOT_GUI_LIBS})
+add_dependencies      (LOOT libespm libgit2 libloadorder pseudosem yaml-cpp)
+target_link_libraries (LOOT ${Boost_LIBRARIES} ${LOOT_GUI_LIBS} ${LIBGIT2_LIBRARIES} ${LIBLOADORDER_LIBRARIES} ${YAML_CPP_LIBRARIES})
 
 # Build validator.
 add_executable        (metadata-validator ${LOOT_VALIDATOR_SRC} ${LOOT_VALIDATOR_HEADERS})
-target_link_libraries (metadata-validator ${Boost_LIBRARIES} ${YAML_CPP_LIBRARIES} ${LOOT_LIBS})
+add_dependencies      (LOOT libespm libgit2 libloadorder yaml-cpp)
+target_link_libraries (metadata-validator ${Boost_LIBRARIES} ${LOOT_LIBS} ${LIBGIT2_LIBRARIES} ${LIBLOADORDER_LIBRARIES} ${YAML_CPP_LIBRARIES})
 
 
 
@@ -423,3 +478,17 @@ ENDFOREACH()
 # Run Vulcanize to build the UI HTML.
 add_custom_command(TARGET LOOT POST_BUILD
     COMMAND "node" "${CMAKE_SOURCE_DIR}/scripts/vulcanize.js" ${CMAKE_SOURCE_DIR})
+
+# Copy testing metadata
+ExternalProject_Get_Property(testing-metadata SOURCE_DIR)
+add_custom_command(TARGET tests POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${SOURCE_DIR}
+        "$<TARGET_FILE_DIR:tests>/testing-metadata")
+
+# Copy testing plugins
+ExternalProject_Get_Property(testing-plugins SOURCE_DIR)
+add_custom_command(TARGET tests POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${SOURCE_DIR}
+        $<TARGET_FILE_DIR:tests>)
