@@ -237,7 +237,7 @@ set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/base_game_test.h"
 
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/game/game_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/game/game_cache_test.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/backend/game/test_game_settings.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/game/game_settings_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/game/test_load_order_handler.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/helpers/test_git_helper.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/helpers/test_helpers.h"

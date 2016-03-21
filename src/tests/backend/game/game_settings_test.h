@@ -27,15 +27,26 @@ along with LOOT.  If not, see
 
 #include "backend/globals.h"
 #include "backend/game/game_settings.h"
-#include "tests/fixtures.h"
+
+#include "tests/base_game_test.h"
 
 namespace loot {
     namespace test {
-        class GameSettingsTest : public SkyrimTest {};
-
-        TEST_F(GameSettingsTest, ConstructorsAndDataAccess) {
+        class GameSettingsTest : public BaseGameTest {
+        protected:
             GameSettings game;
+        };
 
+        // Pass an empty first argument, as it's a prefix for the test instantation,
+        // but we only have the one so no prefix is necessary.
+        // Just test with one game because if it works for one it will work for them
+        // all.
+        INSTANTIATE_TEST_CASE_P(,
+                                GameSettingsTest,
+                                ::testing::Values(
+                                    GameSettings::tes5));
+
+        TEST_P(GameSettingsTest, defaultConstructorShouldInitialiseIdToAutodetectAndAllOtherSettingsToEmptyStrings) {
             EXPECT_EQ(GameSettings::autodetect, game.Id());
             EXPECT_EQ("", game.Name());
             EXPECT_EQ("", game.FolderName());
@@ -48,7 +59,9 @@ namespace loot {
             EXPECT_EQ("", game.DataPath());
             EXPECT_EQ("", game.MasterlistPath());
             EXPECT_EQ("", game.UserlistPath());
+        }
 
+        TEST_P(GameSettingsTest, idConstructorShouldInitialiseSettingsToDefaultsForThatGame) {
             game = GameSettings(GameSettings::tes5);
 
             EXPECT_EQ(GameSettings::tes5, game.Id());
@@ -64,108 +77,100 @@ namespace loot {
             EXPECT_EQ("", game.DataPath());
             EXPECT_EQ(g_path_local / "Skyrim" / "masterlist.yaml", game.MasterlistPath());
             EXPECT_EQ(g_path_local / "Skyrim" / "userlist.yaml", game.UserlistPath());
+        }
 
+        TEST_P(GameSettingsTest, idConstructorShouldSetGameFolderIfGiven) {
             game = GameSettings(GameSettings::tes5, "folder");
 
-            EXPECT_EQ(GameSettings::tes5, game.Id());
-            EXPECT_EQ("TES V: Skyrim", game.Name());
             EXPECT_EQ("folder", game.FolderName());
-            EXPECT_EQ("Skyrim.esm", game.Master());
-            EXPECT_EQ("Software\\Bethesda Softworks\\Skyrim\\Installed Path", game.RegistryKey());
-            EXPECT_EQ("https://github.com/loot/skyrim.git", game.RepoURL());
-            // Repo branch changes between LOOT versions, so don't check an exact value.
-            EXPECT_NE("", game.RepoBranch());
-
-            EXPECT_EQ("", game.GamePath());
-            EXPECT_EQ("", game.DataPath());
             EXPECT_EQ(g_path_local / "folder" / "masterlist.yaml", game.MasterlistPath());
             EXPECT_EQ(g_path_local / "folder" / "userlist.yaml", game.UserlistPath());
         }
 
-        TEST_F(GameSettingsTest, IsInstalled) {
+        TEST_P(GameSettingsTest, isInstalledShouldBeFalseIfGamePathIsNotSet) {
             GameSettings game;
-            EXPECT_FALSE(game.IsInstalled());
-
-            game = GameSettings(GameSettings::tes5);
-            game.SetGamePath(dataPath.parent_path());
-            EXPECT_TRUE(game.IsInstalled());
-            EXPECT_EQ(dataPath.parent_path(), game.GamePath());
-
-            game = GameSettings(GameSettings::fo3);
             EXPECT_FALSE(game.IsInstalled());
         }
 
-        TEST_F(GameSettingsTest, EqualityOperators) {
-            GameSettings game1, game2;
-            EXPECT_TRUE(game1 == game2);
+        TEST_P(GameSettingsTest, isInstalledShouldBeTrueIfGamePathIsValid) {
+            game = GameSettings(GameSettings::tes5);
+            game.SetGamePath(dataPath.parent_path());
+            EXPECT_TRUE(game.IsInstalled());
+        }
 
-            game1 = GameSettings(GameSettings::tes5);
-            game2 = GameSettings(GameSettings::tes5);
-            EXPECT_TRUE(game1 == game2);
-
-            game1 = GameSettings(GameSettings::tes5, "game1")
+        TEST_P(GameSettingsTest, gameSettingsWithTheSameIdsShouldBeEqual) {
+            GameSettings game1 = GameSettings(GameSettings::tes5, "game1")
                 .SetMaster("master1")
                 .SetRegistryKey("key1")
                 .SetRepoURL("url1")
                 .SetRepoBranch("branch1")
                 .SetGamePath("path1");
-            game2 = GameSettings(GameSettings::tes5, "game2")
+            GameSettings game2 = GameSettings(GameSettings::tes5, "game2")
                 .SetMaster("master2")
                 .SetRegistryKey("key2")
                 .SetRepoURL("url2")
                 .SetRepoBranch("branch2")
                 .SetGamePath("path2");
-            EXPECT_TRUE(game1 == game2);
 
-            game1 = GameSettings(GameSettings::tes4)
-                .SetName("name");
-            game2 = GameSettings(GameSettings::tes5)
-                .SetName("name");
             EXPECT_TRUE(game1 == game2);
+        }
 
-            game1 = GameSettings(GameSettings::tes4);
-            game2 = GameSettings(GameSettings::tes5);
+        TEST_P(GameSettingsTest, gameSettingsWithTheSameNameShouldBeEqual) {
+            GameSettings game1 = GameSettings(GameSettings::tes4)
+                .SetName("name");
+            GameSettings game2 = GameSettings(GameSettings::tes5)
+                .SetName("name");
+
+            EXPECT_TRUE(game1 == game2);
+        }
+
+        TEST_P(GameSettingsTest, gameSettingsWithDifferentIdsAndNamesShouldNotBeEqual) {
+            GameSettings game1 = GameSettings(GameSettings::tes4);
+            GameSettings game2 = GameSettings(GameSettings::tes5);
+
             EXPECT_FALSE(game1 == game2);
         }
 
-        TEST_F(GameSettingsTest, SetName) {
+        TEST_P(GameSettingsTest, setNameShouldStoreGivenValue) {
             GameSettings game;
             game.SetName("name");
             EXPECT_EQ("name", game.Name());
         }
 
-        TEST_F(GameSettingsTest, SetMaster) {
+        TEST_P(GameSettingsTest, setMasterShouldStoreGivenValue) {
             GameSettings game;
             game.SetMaster("master");
             EXPECT_EQ("master", game.Master());
         }
 
-        TEST_F(GameSettingsTest, SetRegistryKey) {
+        TEST_P(GameSettingsTest, setRegistryKeyShouldStoreGivenValue) {
             GameSettings game;
             game.SetRegistryKey("key");
             EXPECT_EQ("key", game.RegistryKey());
         }
 
-        TEST_F(GameSettingsTest, SetRepoURL) {
+        TEST_P(GameSettingsTest, setRepoUrlShouldStoreGivenValue) {
             GameSettings game;
             game.SetRepoURL("url");
             EXPECT_EQ("url", game.RepoURL());
         }
 
-        TEST_F(GameSettingsTest, SetRepoBranch) {
+        TEST_P(GameSettingsTest, setRepoBranchShouldStoreGivenValue) {
             GameSettings game;
             game.SetRepoBranch("branch");
             EXPECT_EQ("branch", game.RepoBranch());
         }
 
-        TEST_F(GameSettingsTest, SetGamePath) {
+        TEST_P(GameSettingsTest, setGamePathShouldStoreGivenValue) {
+            std::string pathValue = "path";
             GameSettings game;
-            game.SetGamePath("path");
-            EXPECT_EQ("path", game.GamePath().string());
-            EXPECT_EQ(boost::filesystem::path("path") / "Data", game.DataPath());
+
+            game.SetGamePath(pathValue);
+            EXPECT_EQ(pathValue, game.GamePath().string());
+            EXPECT_EQ(boost::filesystem::path(pathValue) / "Data", game.DataPath());
         }
 
-        TEST_F(GameSettingsTest, YamlEmitter) {
+        TEST_P(GameSettingsTest, emittingYamlShouldSerialiseDataCorrectly) {
             GameSettings game(GameSettings::tes5, "folder1");
             game.SetName("name1")
                 .SetMaster("master1")
@@ -186,7 +191,7 @@ namespace loot {
                          "registry: 'key1'", e.c_str());
         }
 
-        TEST_F(GameSettingsTest, YamlEncode) {
+        TEST_P(GameSettingsTest, encodingAsYamlShouldConvertDataCorrectly) {
             GameSettings game(GameSettings::tes5, "folder1");
             game.SetName("name1")
                 .SetMaster("master1")
@@ -207,7 +212,7 @@ namespace loot {
             EXPECT_EQ("key1", node["registry"].as<std::string>());
         }
 
-        TEST_F(GameSettingsTest, YamlDecode) {
+        TEST_P(GameSettingsTest, decodingFromYamlShouldInterpretTheYamlCorrectly) {
             YAML::Node node = YAML::Load("type: 'Skyrim'\n"
                                          "folder: 'folder1'\n"
                                          "name: 'name1'\n"
@@ -226,31 +231,35 @@ namespace loot {
             EXPECT_EQ("url1", game.RepoURL());
             EXPECT_EQ("branch1", game.RepoBranch());
             EXPECT_EQ("path1", game.GamePath());
+        }
 
-            node = YAML::Load("type: 'Invalid'\n");
+        TEST_P(GameSettingsTest, decodingFromAnInvalidYamlMapShouldThrowAnException) {
+            YAML::Node node = YAML::Load("type: 'Invalid'\n");
             EXPECT_ANY_THROW(node.as<GameSettings>());
+        }
 
-            node = YAML::Load("scalar");
+        TEST_P(GameSettingsTest, decodingFromAYamlScalarShouldThrowAnException) {
+            YAML::Node node = YAML::Load("scalar");
             EXPECT_ANY_THROW(node.as<GameSettings>());
+        }
 
-            node = YAML::Load("[0, 1, 2]");
+        TEST_P(GameSettingsTest, decodingFromAYamlListShouldThrowAnException) {
+            YAML::Node node = YAML::Load("[0, 1, 2]");
             EXPECT_ANY_THROW(node.as<GameSettings>());
+        }
 
+        TEST_P(GameSettingsTest, decodingFromAnIncompleteYamlMapShouldUseDefaultValuesForMissingSettings) {
             // Test inheritance of unspecified settings.
-            node = YAML::Load("type: 'Skyrim'\n"
-                              "folder: 'folder1'\n"
-                              "master: 'master1'\n"
-                              "repo: 'url1'\n"
-                              "branch: 'branch1'\n");
+            YAML::Node node = YAML::Load("type: 'Skyrim'\n"
+                                         "folder: 'folder1'\n"
+                                         "master: 'master1'\n"
+                                         "repo: 'url1'\n"
+                                         "branch: 'branch1'\n");
 
             game = node.as<GameSettings>();
             EXPECT_EQ(GameSettings::tes5, game.Id());
             EXPECT_EQ("TES V: Skyrim", game.Name());
-            EXPECT_EQ("folder1", game.FolderName());
-            EXPECT_EQ("master1", game.Master());
             EXPECT_EQ("Software\\Bethesda Softworks\\Skyrim\\Installed Path", game.RegistryKey());
-            EXPECT_EQ("url1", game.RepoURL());
-            EXPECT_EQ("branch1", game.RepoBranch());
             EXPECT_EQ("", game.GamePath());
         }
     }
