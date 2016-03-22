@@ -27,14 +27,15 @@ along with LOOT.  If not, see
 
 #include "backend/globals.h"
 #include "backend/helpers/version.h"
-#include "tests/fixtures.h"
+
+#include <gtest/gtest.h>
 
 namespace loot {
     namespace test {
 #ifdef _WIN32
         TEST(Version, shouldExtractVersionFromApiDll) {
             // Use the API DLL built.
-            Version version(boost::filesystem::path("loot32.dll"));
+            Version version(boost::filesystem::path("loot_api.dll"));
             std::string expected(
                 std::to_string(g_version_major) + "." +
                 std::to_string(g_version_minor) + "." +
