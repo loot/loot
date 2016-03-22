@@ -47,7 +47,7 @@
 #include "backend/game/load_order_handler_test.h"
 #include "backend/helpers/git_helper_test.h"
 #include "backend/helpers/helpers_test.h"
-#include "backend/helpers/test_language.h"
+#include "backend/helpers/language_test.h"
 #include "backend/helpers/test_version.h"
 #include "backend/helpers/test_yaml_set_helpers.h"
 #include "backend/metadata/test_condition_grammar.h"

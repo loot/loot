@@ -26,49 +26,50 @@ along with LOOT.  If not, see
 #define LOOT_TEST_BACKEND_HELPERS_LANGUAGE
 
 #include "backend/helpers/language.h"
-#include "tests/fixtures.h"
+
+#include <gtest/gtest.h>
 
 namespace loot {
     namespace test {
-        TEST(Language, ConstructorsAndDataAccess) {
-            // Test English code and locale.
+        TEST(Language, codeConstructorShouldSetTheCorrectData) {
             Language lang(Language::english);
             EXPECT_EQ(Language::english, lang.Code());
             EXPECT_EQ("English", lang.Name());
             EXPECT_EQ("en", lang.Locale());
 
-            lang = Language("en");
-            EXPECT_EQ(Language::english, lang.Code());
-            EXPECT_EQ("English", lang.Name());
-            EXPECT_EQ("en", lang.Locale());
-
-            // Test code and locale for a couple of other languages, in case English
-            // is wrongly being used for everything. No point testing all languages,
-            // because that would just be copying the class code.
             lang = Language(Language::polish);
             EXPECT_EQ(Language::polish, lang.Code());
             EXPECT_EQ("Polski", lang.Name());
             EXPECT_EQ("pl", lang.Locale());
+        }
+
+        TEST(Language, localeConstructorShouldSetTheCorrectData) {
+            Language lang("en");
+            EXPECT_EQ(Language::english, lang.Code());
+            EXPECT_EQ("English", lang.Name());
+            EXPECT_EQ("en", lang.Locale());
 
             lang = Language("de");
             EXPECT_EQ(Language::german, lang.Code());
             EXPECT_EQ("Deutsch", lang.Name());
             EXPECT_EQ("de", lang.Locale());
+        }
 
-            // Test that invalid values get treated as English.
-            lang = Language(1000);
-            EXPECT_EQ(Language::english, lang.Code());
-            EXPECT_EQ("English", lang.Name());
-            EXPECT_EQ("en", lang.Locale());
-
-            lang = Language("foo");
+        TEST(Language, codeConstructorShouldTreatAnInvalidCodeAsEnglish) {
+            Language lang(1000);
             EXPECT_EQ(Language::english, lang.Code());
             EXPECT_EQ("English", lang.Name());
             EXPECT_EQ("en", lang.Locale());
         }
 
-        TEST(Language, Codes) {
-            // Check that all the expected codes are given.
+        TEST(Language, localeConstructorShouldTreatAnInvalidLocaleAsEnglish) {
+            Language lang("foo");
+            EXPECT_EQ(Language::english, lang.Code());
+            EXPECT_EQ("English", lang.Name());
+            EXPECT_EQ("en", lang.Locale());
+        }
+
+        TEST(Language, codesShouldContainAllExpectedLanguageCodes) {
             std::vector<unsigned int> codes = {
                 Language::english,
                 Language::spanish,
@@ -82,7 +83,8 @@ namespace loot {
                 Language::danish,
                 Language::korean
             };
-            EXPECT_EQ(Language::Codes, codes);
+
+            EXPECT_EQ(codes, Language::Codes);
         }
     }
 }
