@@ -359,14 +359,14 @@ ENDIF ()
 ##############################
 
 # Build API.
-add_library           (loot ${LOOT_API_SRC} ${LOOT_API_HEADERS})
-add_dependencies      (loot libespm libgit2 libloadorder pseudosem yaml-cpp)
-target_link_libraries (loot ${Boost_LIBRARIES} ${YAML_CPP_LIBRARIES} ${LIBGIT2_LIBRARIES} ${LOOT_LIBS} ${LIBLOADORDER_LIBRARIES})
+add_library           (loot_api ${LOOT_API_SRC} ${LOOT_API_HEADERS})
+add_dependencies      (loot_api libespm libgit2 libloadorder pseudosem yaml-cpp)
+target_link_libraries (loot_api ${Boost_LIBRARIES} ${YAML_CPP_LIBRARIES} ${LIBGIT2_LIBRARIES} ${LOOT_LIBS} ${LIBLOADORDER_LIBRARIES})
 
 # Build tests.
 add_executable(tests ${LOOT_TESTS_SRC} ${LOOT_TESTS_HEADERS})
-add_dependencies(tests loot GTest testing-metadata testing-plugins)
-target_link_libraries(tests loot ${Boost_LIBRARIES} ${YAML_CPP_LIBRARIES} ${LOOT_LIBS} ${GTEST_LIBRARIES})
+add_dependencies(tests loot_api GTest testing-metadata testing-plugins)
+target_link_libraries(tests loot_api ${Boost_LIBRARIES} ${YAML_CPP_LIBRARIES} ${LOOT_LIBS} ${GTEST_LIBRARIES})
 
 # Build application.
 add_executable        (LOOT ${LOOT_GUI_SRC} ${LOOT_GUI_HEADERS})
@@ -396,9 +396,9 @@ ENDIF ()
 
 IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
     IF (BUILD_SHARED_LIBS)
-        set_target_properties (loot PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_EXPORT")
+        set_target_properties (loot_api PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_EXPORT")
     ELSE ()
-        set_target_properties (loot PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_STATIC")
+        set_target_properties (loot_api PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_STATIC")
     ENDIF ()
 ENDIF ()
 
