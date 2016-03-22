@@ -1,7 +1,3 @@
-# Settings passed on the command line:
-#
-# PROJECT_ARCH = the build architecture
-
 cmake_minimum_required (VERSION 2.8)
 cmake_policy(SET CMP0015 NEW)
 project (LOOT)
@@ -34,19 +30,9 @@ configure_file("${CMAKE_SOURCE_DIR}/src/backend/globals.cpp.in" "${CMAKE_BINARY_
 # External Projects
 ##############################
 
-# With MSVC, the 32/64 bit compilers have separate generators, so PROJECT_ARCH
-# should always match whichever is being used.
 IF (MSVC)
-    IF (CMAKE_CL_64)
-        set (PROJECT_ARCH "64")
-    ELSE ()
-        set (PROJECT_ARCH "32")
-    ENDIF ()
     set(YAML_CPP_LIBRARY_SUFFIX "mt${CMAKE_STATIC_LIBRARY_SUFFIX}")
 ELSE ()
-    IF (NOT DEFINED PROJECT_ARCH)
-        set (PROJECT_ARCH "32")
-    ENDIF ()
     set(YAML_CPP_LIBRARY_SUFFIX ${CMAKE_STATIC_LIBRARY_SUFFIX})
 ENDIF ()
 
@@ -303,8 +289,8 @@ ENDIF ()
 
 # GCC and MinGW settings.
 IF (CMAKE_COMPILER_IS_GNUCXX)
-    set (CMAKE_C_FLAGS "-m${PROJECT_ARCH} -O3 -std=c++11")
-    set (CMAKE_CXX_FLAGS "-m${PROJECT_ARCH} -O3 -std=c++11")
+    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3 -std=c++11")
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -std=c++11")
     IF (PROJECT_STATIC_RUNTIME)
         set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libstdc++ -static-libgcc")
         set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -static-libstdc++ -static-libgcc")
@@ -373,14 +359,14 @@ ENDIF ()
 ##############################
 
 # Build API.
-add_library           (loot${PROJECT_ARCH} ${LOOT_API_SRC} ${LOOT_API_HEADERS})
-add_dependencies      (loot${PROJECT_ARCH} libespm libgit2 libloadorder pseudosem yaml-cpp)
-target_link_libraries (loot${PROJECT_ARCH} ${Boost_LIBRARIES} ${YAML_CPP_LIBRARIES} ${LIBGIT2_LIBRARIES} ${LOOT_LIBS} ${LIBLOADORDER_LIBRARIES})
+add_library           (loot ${LOOT_API_SRC} ${LOOT_API_HEADERS})
+add_dependencies      (loot libespm libgit2 libloadorder pseudosem yaml-cpp)
+target_link_libraries (loot ${Boost_LIBRARIES} ${YAML_CPP_LIBRARIES} ${LIBGIT2_LIBRARIES} ${LOOT_LIBS} ${LIBLOADORDER_LIBRARIES})
 
 # Build tests.
 add_executable(tests ${LOOT_TESTS_SRC} ${LOOT_TESTS_HEADERS})
-add_dependencies(tests loot${PROJECT_ARCH} GTest testing-metadata testing-plugins)
-target_link_libraries(tests loot${PROJECT_ARCH} ${Boost_LIBRARIES} ${YAML_CPP_LIBRARIES} ${LOOT_LIBS} ${GTEST_LIBRARIES})
+add_dependencies(tests loot GTest testing-metadata testing-plugins)
+target_link_libraries(tests loot ${Boost_LIBRARIES} ${YAML_CPP_LIBRARIES} ${LOOT_LIBS} ${GTEST_LIBRARIES})
 
 # Build application.
 add_executable        (LOOT ${LOOT_GUI_SRC} ${LOOT_GUI_HEADERS})
@@ -410,9 +396,9 @@ ENDIF ()
 
 IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
     IF (BUILD_SHARED_LIBS)
-        set_target_properties (loot${PROJECT_ARCH} PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_EXPORT")
+        set_target_properties (loot PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_EXPORT")
     ELSE ()
-        set_target_properties (loot${PROJECT_ARCH} PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_STATIC")
+        set_target_properties (loot PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_STATIC")
     ENDIF ()
 ENDIF ()
 
@@ -437,7 +423,7 @@ IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
                 $<TARGET_FILE_DIR:LOOT>/${cef_dll})
     ENDFOREACH()
 
-    IF (PROJECT_ARCH MATCHES "32")
+    IF (NOT CMAKE_CL_64)
         add_custom_command(TARGET LOOT POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_if_different
                 "${CMAKE_SOURCE_DIR}/${CEF_ROOT}/$<CONFIGURATION>/wow_helper.exe"

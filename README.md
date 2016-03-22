@@ -42,9 +42,8 @@ LOOT uses the following CMake variables to set build parameters:
 
 Parameter | Values | Default |Description
 ----------|--------|---------|-----------
-`BUILD_SHARED_LIBS` | `ON`, `OFF` | `OFF` | Whether or not to build a shared libloot.
+`BUILD_SHARED_LIBS` | `ON`, `OFF` | `OFF` | Whether or not to build a shared loot API binary.
 `PROJECT_STATIC_RUNTIME` | `ON`, `OFF` | `ON` | Whether to link the C++ runtime statically or not. This also affects the whether static or shared Boost libraries are used.
-`PROJECT_ARCH` | `32`, `64` | `32` | Whether to build 32 or 64 bit LOOT binaries.
 `CEF_ROOT` | path | `../../cef` | Path to the root of the Chromium Embedded Framework folder.
 
 The default paths given in the table above are relative to LOOT's `CMakeLists.txt`. You may also need to set `BOOST_ROOT` if CMake cannot find Boost.
