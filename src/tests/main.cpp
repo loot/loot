@@ -49,7 +49,7 @@
 #include "backend/helpers/helpers_test.h"
 #include "backend/helpers/language_test.h"
 #include "backend/helpers/version_test.h"
-#include "backend/helpers/test_yaml_set_helpers.h"
+#include "backend/helpers/yaml_set_helpers_test.h"
 #include "backend/metadata/test_condition_grammar.h"
 #include "backend/metadata/test_conditional_metadata.h"
 #include "backend/metadata/test_file.h"
