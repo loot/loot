@@ -53,7 +53,7 @@
 #include "backend/metadata/condition_grammar_test.h"
 #include "backend/metadata/conditional_metadata_test.h"
 #include "backend/metadata/file_test.h"
-#include "backend/metadata/test_location.h"
+#include "backend/metadata/location_test.h"
 #include "backend/metadata/test_message.h"
 #include "backend/metadata/test_message_content.h"
 #include "backend/metadata/test_plugin_dirty_info.h"
