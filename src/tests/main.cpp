@@ -45,7 +45,7 @@
 #include "backend/game/game_cache_test.h"
 #include "backend/game/game_settings_test.h"
 #include "backend/game/load_order_handler_test.h"
-#include "backend/helpers/test_git_helper.h"
+#include "backend/helpers/git_helper_test.h"
 #include "backend/helpers/test_helpers.h"
 #include "backend/helpers/test_language.h"
 #include "backend/helpers/test_version.h"
