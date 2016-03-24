@@ -51,7 +51,7 @@
 #include "backend/helpers/version_test.h"
 #include "backend/helpers/yaml_set_helpers_test.h"
 #include "backend/metadata/condition_grammar_test.h"
-#include "backend/metadata/test_conditional_metadata.h"
+#include "backend/metadata/conditional_metadata_test.h"
 #include "backend/metadata/test_file.h"
 #include "backend/metadata/test_location.h"
 #include "backend/metadata/test_message.h"
