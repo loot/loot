@@ -80,8 +80,8 @@ namespace loot {
             Grammar grammar(nullptr);
             std::string condition("file(foo)");
 
-            EXPECT_THROW(boost::spirit::qi::phrase_parse(std::begin(condition),
-                                                         std::end(condition),
+            EXPECT_THROW(boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                                         std::cend(condition),
                                                          grammar,
                                                          skipper,
                                                          result), error);
@@ -91,8 +91,8 @@ namespace loot {
             Grammar grammar(&game);
             std::string condition("file(foo)");
 
-            EXPECT_THROW(boost::spirit::qi::phrase_parse(std::begin(condition),
-                                                         std::end(condition),
+            EXPECT_THROW(boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                                         std::cend(condition),
                                                          grammar,
                                                          skipper,
                                                          result), error);
@@ -102,8 +102,8 @@ namespace loot {
             Grammar grammar(nullptr);
             std::string condition("");
 
-            EXPECT_THROW(boost::spirit::qi::phrase_parse(std::begin(condition),
-                                                         std::end(condition),
+            EXPECT_THROW(boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                                         std::cend(condition),
                                                          grammar,
                                                          skipper,
                                                          result), error);
@@ -113,8 +113,8 @@ namespace loot {
             Grammar grammar(&game);
             std::string condition("");
 
-            EXPECT_THROW(boost::spirit::qi::phrase_parse(std::begin(condition),
-                                                         std::end(condition),
+            EXPECT_THROW(boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                                         std::cend(condition),
                                                          grammar,
                                                          skipper,
                                                          result), error);
@@ -124,8 +124,8 @@ namespace loot {
             Grammar grammar(&game);
             std::string condition("file(\"" + blankEsm + "\")");
 
-            success = boost::spirit::qi::phrase_parse(std::begin(condition),
-                                                      std::end(condition),
+            success = boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                                      std::cend(condition),
                                                       grammar,
                                                       skipper,
                                                       result);
@@ -137,8 +137,8 @@ namespace loot {
             Grammar grammar(&game);
             std::string condition("file(\"" + missingEsp + "\")");
 
-            success = boost::spirit::qi::phrase_parse(std::begin(condition),
-                                                      std::end(condition),
+            success = boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                                      std::cend(condition),
                                                       grammar,
                                                       skipper,
                                                       result);
@@ -150,8 +150,8 @@ namespace loot {
             Grammar grammar(&game);
             std::string condition("file(\"../../" + blankEsm + "\")");
 
-            EXPECT_THROW(boost::spirit::qi::phrase_parse(std::begin(condition),
-                                                         std::end(condition),
+            EXPECT_THROW(boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                                         std::cend(condition),
                                                          grammar,
                                                          skipper,
                                                          result), error);
@@ -161,8 +161,8 @@ namespace loot {
             Grammar grammar(&game);
             std::string condition("regex(\"RagnvaldBook(Farengar(+Ragnvald)?)?\\.esp\")");
 
-            EXPECT_THROW(boost::spirit::qi::phrase_parse(std::begin(condition),
-                                                         std::end(condition),
+            EXPECT_THROW(boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                                         std::cend(condition),
                                                          grammar,
                                                          skipper,
                                                          result), error);
@@ -172,8 +172,8 @@ namespace loot {
             Grammar grammar(&game);
             std::string condition("regex(\"Blank.+\\.esm\")");
 
-            success = boost::spirit::qi::phrase_parse(std::begin(condition),
-                                                      std::end(condition),
+            success = boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                                      std::cend(condition),
                                                       grammar,
                                                       skipper,
                                                       result);
@@ -185,8 +185,8 @@ namespace loot {
             Grammar grammar(&game);
             std::string condition("regex(\"Blank\\.m.+\\.esm\")");
 
-            success = boost::spirit::qi::phrase_parse(std::begin(condition),
-                                                      std::end(condition),
+            success = boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                                      std::cend(condition),
                                                       grammar,
                                                       skipper,
                                                       result);
@@ -198,8 +198,8 @@ namespace loot {
             Grammar grammar(&game);
             std::string condition("regex(\"resource\\\\detail\\\\resource\\.txt\")");
 
-            success = boost::spirit::qi::phrase_parse(std::begin(condition),
-                                                      std::end(condition),
+            success = boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                                      std::cend(condition),
                                                       grammar,
                                                       skipper,
                                                       result);
@@ -211,8 +211,8 @@ namespace loot {
             Grammar grammar(&game);
             std::string condition("many(\"Blank.+\\.esm\")");
 
-            success = boost::spirit::qi::phrase_parse(std::begin(condition),
-                                                      std::end(condition),
+            success = boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                                      std::cend(condition),
                                                       grammar,
                                                       skipper,
                                                       result);
@@ -224,8 +224,8 @@ namespace loot {
             Grammar grammar(&game);
             std::string condition("many(\"Blank\\.esm\")");
 
-            success = boost::spirit::qi::phrase_parse(std::begin(condition),
-                                                      std::end(condition),
+            success = boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                                      std::cend(condition),
                                                       grammar,
                                                       skipper,
                                                       result);
@@ -237,8 +237,8 @@ namespace loot {
             Grammar grammar(&game);
             std::string condition("checksum(\"" + blankEsm + "\", " + IntToHexString(blankEsmCrc) + ")");
 
-            success = boost::spirit::qi::phrase_parse(std::begin(condition),
-                                                      std::end(condition),
+            success = boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                                      std::cend(condition),
                                                       grammar,
                                                       skipper,
                                                       result);
@@ -250,8 +250,8 @@ namespace loot {
             Grammar grammar(&game);
             std::string condition("checksum(\"" + blankEsm + "\", DEADBEEF)");
 
-            success = boost::spirit::qi::phrase_parse(std::begin(condition),
-                                                      std::end(condition),
+            success = boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                                      std::cend(condition),
                                                       grammar,
                                                       skipper,
                                                       result);
@@ -265,8 +265,8 @@ namespace loot {
             Grammar grammar(&game);
             std::string condition("version(\"" + blankEsm + "\", \"5.0\", ==)");
 
-            success = boost::spirit::qi::phrase_parse(std::begin(condition),
-                                                      std::end(condition),
+            success = boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                                      std::cend(condition),
                                                       grammar,
                                                       skipper,
                                                       result);
@@ -280,8 +280,8 @@ namespace loot {
             Grammar grammar(&game);
             std::string condition("version(\"" + blankEsm + "\", \"6.0\", ==)");
 
-            success = boost::spirit::qi::phrase_parse(std::begin(condition),
-                                                      std::end(condition),
+            success = boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                                      std::cend(condition),
                                                       grammar,
                                                       skipper,
                                                       result);
@@ -295,8 +295,8 @@ namespace loot {
             Grammar grammar(&game);
             std::string condition("version(\"" + blankEsm + "\", \"6.0\", !=)");
 
-            success = boost::spirit::qi::phrase_parse(std::begin(condition),
-                                                      std::end(condition),
+            success = boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                                      std::cend(condition),
                                                       grammar,
                                                       skipper,
                                                       result);
@@ -310,8 +310,8 @@ namespace loot {
             Grammar grammar(&game);
             std::string condition("version(\"" + blankEsm + "\", \"5.0\", !=)");
 
-            success = boost::spirit::qi::phrase_parse(std::begin(condition),
-                                                      std::end(condition),
+            success = boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                                      std::cend(condition),
                                                       grammar,
                                                       skipper,
                                                       result);
@@ -325,8 +325,8 @@ namespace loot {
             Grammar grammar(&game);
             std::string condition("version(\"" + blankEsm + "\", \"6.0\", <)");
 
-            success = boost::spirit::qi::phrase_parse(std::begin(condition),
-                                                      std::end(condition),
+            success = boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                                      std::cend(condition),
                                                       grammar,
                                                       skipper,
                                                       result);
@@ -340,8 +340,8 @@ namespace loot {
             Grammar grammar(&game);
             std::string condition("version(\"" + blankEsm + "\", \"5.0\", <)");
 
-            success = boost::spirit::qi::phrase_parse(std::begin(condition),
-                                                      std::end(condition),
+            success = boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                                      std::cend(condition),
                                                       grammar,
                                                       skipper,
                                                       result);
@@ -355,8 +355,8 @@ namespace loot {
             Grammar grammar(&game);
             std::string condition("version(\"" + blankEsm + "\", \"4.0\", >)");
 
-            success = boost::spirit::qi::phrase_parse(std::begin(condition),
-                                                      std::end(condition),
+            success = boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                                      std::cend(condition),
                                                       grammar,
                                                       skipper,
                                                       result);
@@ -370,8 +370,8 @@ namespace loot {
             Grammar grammar(&game);
             std::string condition("version(\"" + blankEsm + "\", \"5.0\", >)");
 
-            success = boost::spirit::qi::phrase_parse(std::begin(condition),
-                                                      std::end(condition),
+            success = boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                                      std::cend(condition),
                                                       grammar,
                                                       skipper,
                                                       result);
@@ -385,8 +385,8 @@ namespace loot {
             Grammar grammar(&game);
             std::string condition("version(\"" + blankEsm + "\", \"5.0\", <=)");
 
-            success = boost::spirit::qi::phrase_parse(std::begin(condition),
-                                                      std::end(condition),
+            success = boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                                      std::cend(condition),
                                                       grammar,
                                                       skipper,
                                                       result);
@@ -400,8 +400,8 @@ namespace loot {
             Grammar grammar(&game);
             std::string condition("version(\"" + blankEsm + "\", \"4.0\", <=)");
 
-            success = boost::spirit::qi::phrase_parse(std::begin(condition),
-                                                      std::end(condition),
+            success = boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                                      std::cend(condition),
                                                       grammar,
                                                       skipper,
                                                       result);
@@ -416,8 +416,8 @@ namespace loot {
             Grammar grammar(&game);
             std::string condition("version(\"" + blankEsm + "\", \"5.0\", >=)");
 
-            success = boost::spirit::qi::phrase_parse(std::begin(condition),
-                                                      std::end(condition),
+            success = boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                                      std::cend(condition),
                                                       grammar,
                                                       skipper,
                                                       result);
@@ -431,8 +431,8 @@ namespace loot {
             Grammar grammar(&game);
             std::string condition("version(\"" + blankEsm + "\", \"6.0\", >=)");
 
-            success = boost::spirit::qi::phrase_parse(std::begin(condition),
-                                                      std::end(condition),
+            success = boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                                      std::cend(condition),
                                                       grammar,
                                                       skipper,
                                                       result);
@@ -446,8 +446,8 @@ namespace loot {
             Grammar grammar(&game);
             std::string condition("active(\"" + blankEsm + "\")");
 
-            success = boost::spirit::qi::phrase_parse(std::begin(condition),
-                                                      std::end(condition),
+            success = boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                                      std::cend(condition),
                                                       grammar,
                                                       skipper,
                                                       result);
@@ -461,8 +461,8 @@ namespace loot {
             Grammar grammar(&game);
             std::string condition("active(\"" + blankEsp + "\")");
 
-            success = boost::spirit::qi::phrase_parse(std::begin(condition),
-                                                      std::end(condition),
+            success = boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                                      std::cend(condition),
                                                       grammar,
                                                       skipper,
                                                       result);
@@ -474,8 +474,8 @@ namespace loot {
             Grammar grammar(&game);
             std::string condition("not file(\"" + missingEsp + "\")");
 
-            success = boost::spirit::qi::phrase_parse(std::begin(condition),
-                                                      std::end(condition),
+            success = boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                                      std::cend(condition),
                                                       grammar,
                                                       skipper,
                                                       result);
@@ -487,8 +487,8 @@ namespace loot {
             Grammar grammar(&game);
             std::string condition("not file(\"" + blankEsm + "\")");
 
-            success = boost::spirit::qi::phrase_parse(std::begin(condition),
-                                                      std::end(condition),
+            success = boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                                      std::cend(condition),
                                                       grammar,
                                                       skipper,
                                                       result);
@@ -501,8 +501,8 @@ namespace loot {
             std::string condition("file(\"" + blankEsm + "\")");
             std::string compound(condition + " and " + condition);
 
-            success = boost::spirit::qi::phrase_parse(std::begin(compound),
-                                                      std::end(compound),
+            success = boost::spirit::qi::phrase_parse(std::cbegin(compound),
+                                                      std::cend(compound),
                                                       grammar,
                                                       skipper,
                                                       result);
@@ -515,8 +515,8 @@ namespace loot {
             std::string condition("file(\"" + blankEsm + "\")");
             std::string compound(condition + " and not " + condition);
 
-            success = boost::spirit::qi::phrase_parse(std::begin(compound),
-                                                      std::end(compound),
+            success = boost::spirit::qi::phrase_parse(std::cbegin(compound),
+                                                      std::cend(compound),
                                                       grammar,
                                                       skipper,
                                                       result);
@@ -529,8 +529,8 @@ namespace loot {
             std::string condition("file(\"" + blankEsm + "\")");
             std::string compound("not " + condition + " or " + condition);
 
-            success = boost::spirit::qi::phrase_parse(std::begin(compound),
-                                                      std::end(compound),
+            success = boost::spirit::qi::phrase_parse(std::cbegin(compound),
+                                                      std::cend(compound),
                                                       grammar,
                                                       skipper,
                                                       result);
@@ -543,8 +543,8 @@ namespace loot {
             std::string condition("file(\"" + blankEsm + "\")");
             std::string compound("not " + condition + " or not " + condition);
 
-            success = boost::spirit::qi::phrase_parse(std::begin(compound),
-                                                      std::end(compound),
+            success = boost::spirit::qi::phrase_parse(std::cbegin(compound),
+                                                      std::cend(compound),
                                                       grammar,
                                                       skipper,
                                                       result);
@@ -557,8 +557,8 @@ namespace loot {
             std::string condition("file(\"" + blankEsm + "\")");
             std::string compound("not " + condition + " and " + condition + " or " + condition);
 
-            success = boost::spirit::qi::phrase_parse(std::begin(compound),
-                                                      std::end(compound),
+            success = boost::spirit::qi::phrase_parse(std::cbegin(compound),
+                                                      std::cend(compound),
                                                       grammar,
                                                       skipper,
                                                       result);
@@ -571,8 +571,8 @@ namespace loot {
             std::string condition("file(\"" + blankEsm + "\")");
             std::string compound("not " + condition + " and ( " + condition + " or " + condition + " )");
 
-            success = boost::spirit::qi::phrase_parse(std::begin(compound),
-                                                      std::end(compound),
+            success = boost::spirit::qi::phrase_parse(std::cbegin(compound),
+                                                      std::cend(compound),
                                                       grammar,
                                                       skipper,
                                                       result);
