@@ -25,6 +25,8 @@ along with LOOT.  If not, see
 #ifndef LOOT_TEST_BASE_GAME_TEST
 #define LOOT_TEST_BASE_GAME_TEST
 
+#include "backend/game/game_settings.h"
+
 #include <gtest/gtest.h>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
@@ -41,6 +43,7 @@ namespace loot {
                 dataPath(getPluginsPath()),
                 localPath(getLocalPath()),
                 masterFile(getMasterFile()),
+                missingEsp("Blank.missing.esp"),
                 blankEsm("Blank.esm"),
                 blankDifferentEsm("Blank - Different.esm"),
                 blankMasterDependentEsm("Blank - Master Dependent.esm"),
@@ -58,6 +61,7 @@ namespace loot {
                 ASSERT_TRUE(boost::filesystem::exists(localPath));
 
                 ASSERT_FALSE(boost::filesystem::exists(missingPath));
+                ASSERT_FALSE(boost::filesystem::exists(dataPath / missingEsp));
 
                 ASSERT_TRUE(boost::filesystem::exists(dataPath / blankEsm));
                 ASSERT_TRUE(boost::filesystem::exists(dataPath / blankDifferentEsm));
@@ -139,6 +143,7 @@ namespace loot {
             const boost::filesystem::path localPath;
 
             const std::string masterFile;
+            const std::string missingEsp;
             const std::string blankEsm;
             const std::string blankDifferentEsm;
             const std::string blankMasterDependentEsm;
@@ -154,34 +159,34 @@ namespace loot {
 
         private:
             inline boost::filesystem::path getLocalPath() const {
-                if (GetParam() == loot_game_tes4)
+                if (GetParam() == GameSettings::tes4)
                     return "./local/Oblivion";
                 else
                     return "./local/Skyrim";
             }
 
             inline boost::filesystem::path getPluginsPath() const {
-                if (GetParam() == loot_game_tes4)
+                if (GetParam() == GameSettings::tes4)
                     return "./Oblivion/Data";
                 else
                     return "./Skyrim/Data";
             }
 
             inline std::string getMasterFile() const {
-                if (GetParam() == loot_game_tes4)
+                if (GetParam() == GameSettings::tes4)
                     return "Oblivion.esm";
-                else if (GetParam() == loot_game_tes5)
+                else if (GetParam() == GameSettings::tes5)
                     return "Skyrim.esm";
-                else if (GetParam() == loot_game_fo3)
+                else if (GetParam() == GameSettings::fo3)
                     return "Fallout3.esm";
-                else if (GetParam() == loot_game_fonv)
+                else if (GetParam() == GameSettings::fonv)
                     return "FalloutNV.esm";
                 else
                     return "Fallout4.esm";
             }
 
             inline uint32_t getBlankEsmCrc() const {
-                if (GetParam() == loot_game_tes4)
+                if (GetParam() == GameSettings::tes4)
                     return 0x374E2A6F;
                 else
                     return 0x187BE342;

@@ -27,22 +27,35 @@ along with LOOT.  If not, see
 
 #include "backend/helpers/helpers.h"
 #include "backend/error.h"
-#include "tests/fixtures.h"
+
+#include "tests/base_game_test.h"
 
 namespace loot {
     namespace test {
-        class GetCrc32Test : public SkyrimTest {};
+        class GetCrc32Test : public BaseGameTest {};
 
-        TEST_F(GetCrc32Test, MissingFile) {
-            EXPECT_THROW(GetCrc32(dataPath / "Blank.missing.esp"), error);
+        // Pass an empty first argument, as it's a prefix for the test instantation,
+        // but we only have the one so no prefix is necessary.
+        // Just test with one game because if it works for one it will work for them
+        // all.
+        INSTANTIATE_TEST_CASE_P(,
+                                GetCrc32Test,
+                                ::testing::Values(
+                                    GameSettings::tes5));
+
+        TEST_P(GetCrc32Test, gettingTheCrcOfAMissingFileShouldThrow) {
+            EXPECT_THROW(GetCrc32(dataPath / missingEsp), error);
         }
 
-        TEST_F(GetCrc32Test, ValidFile) {
-            EXPECT_EQ(0x24F0E2A1, GetCrc32(dataPath / "Blank.esp"));
+        TEST_P(GetCrc32Test, gettingTheCrcOfAFileShouldReturnTheCorrectValue) {
+            EXPECT_EQ(blankEsmCrc, GetCrc32(dataPath / blankEsm));
         }
 
-        TEST(IntToHexString, PositiveAndZeroValues) {
+        TEST(IntToHexString, intToHexStringShouldOutputANonZeroPositiveIntegerCorrectly) {
             EXPECT_EQ("14", IntToHexString(20));
+        }
+
+        TEST(IntToHexString, intToHexStringShouldOutputZeroCorrectly) {
             EXPECT_EQ("0", IntToHexString(0));
         }
     }
