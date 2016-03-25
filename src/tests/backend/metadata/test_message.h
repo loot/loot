@@ -152,7 +152,7 @@ namespace loot {
             ASSERT_NO_THROW(game.Init(false, localPath));
 
             Message message;
-            EXPECT_TRUE(message.EvalCondition(game, Language::any));
+            EXPECT_TRUE(message.EvalCondition(game, Language::english));
             EXPECT_EQ(1, message.Content().size());
 
             message = Message(Message::say, MessageContents({
@@ -167,19 +167,19 @@ namespace loot {
         TEST_F(MessageTest, ChooseContent) {
             MessageContent mc;
             Message message;
-            EXPECT_EQ(mc, message.ChooseContent(Language::any));
+            EXPECT_EQ(mc, message.ChooseContent(Language::english));
             EXPECT_EQ(mc, message.ChooseContent(Language::french));
             EXPECT_EQ(mc, message.ChooseContent(Language::english));
 
             mc = MessageContent("content1", Language::english);
             message = Message(Message::say, "content1");
-            EXPECT_EQ(mc, message.ChooseContent(Language::any));
+            EXPECT_EQ(mc, message.ChooseContent(Language::english));
             EXPECT_EQ(mc, message.ChooseContent(Language::french));
             EXPECT_EQ(mc, message.ChooseContent(Language::english));
 
             mc = MessageContent("content1", Language::english);
             message = Message(Message::say, MessageContents({mc}));
-            EXPECT_EQ(mc, message.ChooseContent(Language::any));
+            EXPECT_EQ(mc, message.ChooseContent(Language::english));
             EXPECT_EQ(mc, message.ChooseContent(Language::french));
             EXPECT_EQ(mc, message.ChooseContent(Language::english));
 
@@ -188,7 +188,7 @@ namespace loot {
                 MessageContent("content1", Language::english),
                 MessageContent("content1", Language::german),
             }));
-            EXPECT_EQ(mc, message.ChooseContent(Language::any));
+            EXPECT_EQ(mc, message.ChooseContent(Language::english));
             EXPECT_EQ(mc, message.ChooseContent(Language::french));
             EXPECT_EQ(mc, message.ChooseContent(Language::english));
 
@@ -197,13 +197,13 @@ namespace loot {
                 MessageContent("content1", Language::english),
                 MessageContent("content1", Language::french),
             }));
-            EXPECT_EQ(MessageContent("content1", Language::german), message.ChooseContent(Language::any));
+            EXPECT_EQ(MessageContent("content1", Language::german), message.ChooseContent(Language::english));
             EXPECT_EQ(MessageContent("content1", Language::french), message.ChooseContent(Language::french));
             EXPECT_EQ(MessageContent("content1", Language::english), message.ChooseContent(Language::english));
 
             mc = MessageContent("content1", Language::german);
             message = Message(Message::say, MessageContents({mc}));
-            EXPECT_EQ(mc, message.ChooseContent(Language::any));
+            EXPECT_EQ(mc, message.ChooseContent(Language::english));
             EXPECT_EQ(mc, message.ChooseContent(Language::french));
         }
 

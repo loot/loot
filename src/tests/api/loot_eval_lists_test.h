@@ -44,7 +44,7 @@ namespace loot {
                                     loot_game_fo4));
 
         TEST_P(loot_eval_lists_test, shouldReturnAnInvalidArgsErrorIfPassedANullPointer) {
-            EXPECT_EQ(loot_error_invalid_args, loot_eval_lists(NULL, loot_lang_any));
+            EXPECT_EQ(loot_error_invalid_args, loot_eval_lists(NULL, loot_lang_english));
         }
 
         TEST_P(loot_eval_lists_test, shouldReturnAnInvalidArgsErrorIfPassedAnInvalidLanguageCode) {
@@ -52,7 +52,7 @@ namespace loot {
         }
 
         TEST_P(loot_eval_lists_test, shouldReturnOkForAllLanguagesWithNoListsLoaded) {
-            EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_any));
+            EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_english));
             EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_english));
             EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_spanish));
             EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_russian));
@@ -69,7 +69,7 @@ namespace loot {
             ASSERT_NO_THROW(generateMasterlist());
             ASSERT_EQ(loot_ok, loot_load_lists(db, masterlistPath.string().c_str(), NULL));
 
-            EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_any));
+            EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_english));
             EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_english));
             EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_spanish));
             EXPECT_EQ(loot_ok, loot_eval_lists(db, loot_lang_russian));

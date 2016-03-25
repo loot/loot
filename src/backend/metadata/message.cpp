@@ -68,7 +68,7 @@ namespace loot {
         BOOST_LOG_TRIVIAL(trace) << "Choosing message content.";
         if (_content.empty())
             return MessageContent();
-        else if (_content.size() == 1 || language == Language::any)
+        else if (_content.size() == 1)
             return _content[0];
         else {
             MessageContent english;

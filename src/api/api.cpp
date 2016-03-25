@@ -69,7 +69,6 @@ const unsigned int loot_message_warn = loot::Message::warn;
 const unsigned int loot_message_error = loot::Message::error;
 
 // LOOT message languages.
-const unsigned int loot_lang_any = loot::Language::any;
 const unsigned int loot_lang_english = loot::Language::english;
 const unsigned int loot_lang_spanish = loot::Language::spanish;
 const unsigned int loot_lang_russian = loot::Language::russian;
@@ -283,8 +282,7 @@ LOOT_API unsigned int loot_load_lists(loot_db * const db, const char * const mas
 LOOT_API unsigned int loot_eval_lists(loot_db * const db, const unsigned int language) {
     if (db == nullptr)
         return c_error(loot_error_invalid_args, "Null pointer passed.");
-    if (language != loot_lang_any
-        && language != loot_lang_english
+    if (language != loot_lang_english
         && language != loot_lang_spanish
         && language != loot_lang_russian
         && language != loot_lang_french
@@ -336,7 +334,7 @@ LOOT_API unsigned int loot_sort_plugins(loot_db * const db,
         //Sort plugins into their load order.
         loot::PluginSorter sorter;
 
-        db->setPluginNames(sorter.Sort(*db, loot_lang_any));
+        db->setPluginNames(sorter.Sort(*db, loot::Language::english));
     }
     catch (loot::error &e) {
         return c_error(e);
