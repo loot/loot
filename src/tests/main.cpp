@@ -54,7 +54,7 @@
 #include "backend/metadata/conditional_metadata_test.h"
 #include "backend/metadata/file_test.h"
 #include "backend/metadata/location_test.h"
-#include "backend/metadata/test_message.h"
+#include "backend/metadata/message_test.h"
 #include "backend/metadata/test_message_content.h"
 #include "backend/metadata/test_plugin_dirty_info.h"
 #include "backend/metadata/test_plugin_metadata.h"
