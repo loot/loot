@@ -71,6 +71,14 @@ namespace loot {
             EXPECT_EQ("condition1", message.Condition());
         }
 
+        TEST_P(MessageTest, vectorContentConstructorShouldThrowIfMultipleContentStringsAreGivenAndNoneAreEnglish) {
+            MessageContents contents({
+                MessageContent("content1", Language::german),
+                MessageContent("content2", Language::french),
+            });
+            EXPECT_ANY_THROW(Message(Message::error, contents, "condition1"));
+        }
+
         TEST_P(MessageTest, messagesWithDifferentContentStringsShouldBeUnequal) {
             Message message1(Message::say, "content1", "condition1");
             Message message2(Message::say, "content2", "condition1");
