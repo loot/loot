@@ -50,7 +50,8 @@ namespace loot {
         if (plugin.HasNameOnly())
             return;
 
-        //For 'enabled' and 'priority' metadata, use the given plugin's values, but if the 'priority' user value is not explicit, ignore it.
+        // For 'enabled' and 'priority' metadata, use the given plugin's values,
+        // but if the 'priority' user value is not explicit, ignore it.
         enabled = plugin.Enabled();
         if (plugin.IsPriorityExplicit()) {
             Priority(plugin.Priority());
@@ -58,29 +59,24 @@ namespace loot {
             _isPriorityExplicit = true;
         }
 
-        //Merge the following. If any files in the source already exist in the destination, they will be skipped. Files have display strings and condition strings which aren't considered when comparing them, so will be lost if the plugin being merged in has additional data in these strings.
-        std::set<File> files = plugin.LoadAfter();
-        loadAfter.insert(files.begin(), files.end());
+        // Merge the following. If any files in the source already exist in the
+        // destination, they will be skipped. Files have display strings and
+        // condition strings which aren't considered when comparing them, so
+        // will be lost if the plugin being merged in has additional data in
+        // these strings.
+        loadAfter.insert(begin(plugin.loadAfter), end(plugin.loadAfter));
+        requirements.insert(begin(plugin.requirements), end(plugin.requirements));
+        incompatibilities.insert(begin(plugin.incompatibilities), end(plugin.incompatibilities));
 
-        files = plugin.Reqs();
-        requirements.insert(files.begin(), files.end());
+        // Merge Bash Tags too. Conditions are ignored during comparison, but
+        // if a tag is added and removed, both instances will be in the set.
+        tags.insert(begin(plugin.tags), end(plugin.tags));
 
-        files = plugin.Incs();
-        incompatibilities.insert(files.begin(), files.end());
+        // Messages are in an ordered list, and should be fully merged.
+        messages.insert(end(messages), begin(plugin.messages), end(plugin.messages));
 
-        //Merge Bash Tags too. Conditions are ignored during comparison, but if a tag is added and removed, both instances will be in the set.
-        std::set<Tag> bashTags = plugin.Tags();
-        tags.insert(bashTags.begin(), bashTags.end());
-
-        //Messages are in an ordered list, and should be fully merged.
-        std::list<Message> pMessages = plugin.Messages();
-        messages.insert(messages.end(), pMessages.begin(), pMessages.end());
-
-        set<PluginDirtyInfo> dirtyInfo = plugin.DirtyInfo();
-        _dirtyInfo.insert(dirtyInfo.begin(), dirtyInfo.end());
-
-        set<Location> locations = plugin.Locations();
-        _locations.insert(locations.begin(), locations.end());
+        _dirtyInfo.insert(begin(plugin._dirtyInfo), end(plugin._dirtyInfo));
+        _locations.insert(begin(plugin._locations), end(plugin._locations));
 
         return;
     }
@@ -96,19 +92,28 @@ namespace loot {
         }
 
         //Compare this plugin against the given plugin.
-        set<File> files = plugin.LoadAfter();
         set<File> filesDiff;
-        set_symmetric_difference(loadAfter.begin(), loadAfter.end(), files.begin(), files.end(), inserter(filesDiff, filesDiff.begin()));
+        set_symmetric_difference(begin(loadAfter),
+                                 end(loadAfter),
+                                 begin(plugin.loadAfter),
+                                 end(plugin.loadAfter),
+                                 inserter(filesDiff, begin(filesDiff)));
         p.LoadAfter(filesDiff);
 
         filesDiff.clear();
-        files = plugin.Reqs();
-        set_symmetric_difference(requirements.begin(), requirements.end(), files.begin(), files.end(), inserter(filesDiff, filesDiff.begin()));
+        set_symmetric_difference(begin(requirements),
+                                 end(requirements),
+                                 begin(plugin.requirements),
+                                 end(plugin.requirements),
+                                 inserter(filesDiff, begin(filesDiff)));
         p.Reqs(filesDiff);
 
         filesDiff.clear();
-        files = plugin.Incs();
-        set_symmetric_difference(incompatibilities.begin(), incompatibilities.end(), files.begin(), files.end(), inserter(filesDiff, filesDiff.begin()));
+        set_symmetric_difference(begin(incompatibilities),
+                                 end(incompatibilities),
+                                 begin(plugin.incompatibilities),
+                                 end(plugin.incompatibilities),
+                                 inserter(filesDiff, begin(filesDiff)));
         p.Incs(filesDiff);
 
         list<Message> msgs1 = plugin.Messages();
@@ -116,22 +121,35 @@ namespace loot {
         msgs1.sort();
         msgs2.sort();
         list<Message> mDiff;
-        set_symmetric_difference(msgs2.begin(), msgs2.end(), msgs1.begin(), msgs1.end(), inserter(mDiff, mDiff.begin()));
+        set_symmetric_difference(begin(msgs2),
+                                 end(msgs2),
+                                 begin(msgs1),
+                                 end(msgs1),
+                                 inserter(mDiff, begin(mDiff)));
         p.Messages(mDiff);
 
-        set<Tag> bashTags = plugin.Tags();
         set<Tag> tagDiff;
-        set_symmetric_difference(tags.begin(), tags.end(), bashTags.begin(), bashTags.end(), inserter(tagDiff, tagDiff.begin()));
+        set_symmetric_difference(begin(tags),
+                                 end(tags),
+                                 begin(plugin.tags),
+                                 end(plugin.tags),
+                                 inserter(tagDiff, begin(tagDiff)));
         p.Tags(tagDiff);
 
-        set<PluginDirtyInfo> dirtyInfo = plugin.DirtyInfo();
         set<PluginDirtyInfo> dirtDiff;
-        set_symmetric_difference(_dirtyInfo.begin(), _dirtyInfo.end(), dirtyInfo.begin(), dirtyInfo.end(), inserter(dirtDiff, dirtDiff.begin()));
+        set_symmetric_difference(begin(_dirtyInfo),
+                                 end(_dirtyInfo),
+                                 begin(plugin._dirtyInfo),
+                                 end(plugin._dirtyInfo),
+                                 inserter(dirtDiff, begin(dirtDiff)));
         p.DirtyInfo(dirtDiff);
 
-        set<Location> locations = plugin.Locations();
         set<Location> locationsDiff;
-        set_symmetric_difference(_locations.begin(), _locations.end(), locations.begin(), locations.end(), inserter(locationsDiff, locationsDiff.begin()));
+        set_symmetric_difference(begin(_locations),
+                                 end(_locations),
+                                 begin(plugin._locations),
+                                 end(plugin._locations),
+                                 inserter(locationsDiff, begin(locationsDiff)));
         p.Locations(locationsDiff);
 
         return p;
@@ -142,19 +160,28 @@ namespace loot {
         PluginMetadata p(*this);
 
         //Compare this plugin against the given plugin.
-        set<File> files = plugin.LoadAfter();
         set<File> filesDiff;
-        set_difference(loadAfter.begin(), loadAfter.end(), files.begin(), files.end(), inserter(filesDiff, filesDiff.begin()));
+        set_difference(begin(loadAfter),
+                       end(loadAfter),
+                       begin(plugin.loadAfter),
+                       end(plugin.loadAfter),
+                       inserter(filesDiff, begin(filesDiff)));
         p.LoadAfter(filesDiff);
 
         filesDiff.clear();
-        files = plugin.Reqs();
-        set_difference(requirements.begin(), requirements.end(), files.begin(), files.end(), inserter(filesDiff, filesDiff.begin()));
+        set_difference(begin(requirements),
+                       end(requirements),
+                       begin(plugin.requirements),
+                       end(plugin.requirements),
+                       inserter(filesDiff, begin(filesDiff)));
         p.Reqs(filesDiff);
 
         filesDiff.clear();
-        files = plugin.Incs();
-        set_difference(incompatibilities.begin(), incompatibilities.end(), files.begin(), files.end(), inserter(filesDiff, filesDiff.begin()));
+        set_difference(begin(incompatibilities),
+                       end(incompatibilities),
+                       begin(plugin.incompatibilities),
+                       end(plugin.incompatibilities),
+                       inserter(filesDiff, begin(filesDiff)));
         p.Incs(filesDiff);
 
         list<Message> msgs1 = plugin.Messages();
@@ -162,22 +189,35 @@ namespace loot {
         msgs1.sort();
         msgs2.sort();
         list<Message> mDiff;
-        set_difference(msgs2.begin(), msgs2.end(), msgs1.begin(), msgs1.end(), inserter(mDiff, mDiff.begin()));
+        set_difference(begin(msgs2),
+                       end(msgs2),
+                       begin(msgs1),
+                       end(msgs1),
+                       inserter(mDiff, begin(mDiff)));
         p.Messages(mDiff);
 
-        set<Tag> bashTags = plugin.Tags();
         set<Tag> tagDiff;
-        set_difference(tags.begin(), tags.end(), bashTags.begin(), bashTags.end(), inserter(tagDiff, tagDiff.begin()));
+        set_difference(begin(tags),
+                       end(tags),
+                       begin(plugin.tags),
+                       end(plugin.tags),
+                       inserter(tagDiff, begin(tagDiff)));
         p.Tags(tagDiff);
 
-        set<PluginDirtyInfo> dirtyInfo = plugin.DirtyInfo();
         set<PluginDirtyInfo> dirtDiff;
-        set_difference(_dirtyInfo.begin(), _dirtyInfo.end(), dirtyInfo.begin(), dirtyInfo.end(), inserter(dirtDiff, dirtDiff.begin()));
+        set_difference(begin(_dirtyInfo),
+                       end(_dirtyInfo),
+                       begin(plugin._dirtyInfo),
+                       end(plugin._dirtyInfo),
+                       inserter(dirtDiff, begin(dirtDiff)));
         p.DirtyInfo(dirtDiff);
 
-        set<Location> locations = plugin.Locations();
         set<Location> locationsDiff;
-        set_difference(_locations.begin(), _locations.end(), locations.begin(), locations.end(), inserter(locationsDiff, locationsDiff.begin()));
+        set_difference(begin(_locations),
+                       end(_locations),
+                       begin(plugin._locations),
+                       end(plugin._locations),
+                       inserter(locationsDiff, begin(locationsDiff)));
         p.Locations(locationsDiff);
 
         return p;
