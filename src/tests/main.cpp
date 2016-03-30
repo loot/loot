@@ -58,7 +58,7 @@
 #include "backend/metadata/message_content_test.h"
 #include "backend/metadata/plugin_dirty_info_test.h"
 #include "backend/metadata/plugin_metadata_test.h"
-#include "backend/metadata/test_tag.h"
+#include "backend/metadata/tag_test.h"
 #include "backend/plugin/test_plugin.h"
 #include "backend/test_metadata_list.h"
 #include "backend/test_masterlist.h"
