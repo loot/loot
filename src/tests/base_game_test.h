@@ -82,10 +82,20 @@ namespace loot {
                 // Set initial load order and active plugins.
                 setLoadOrder(getInitialLoadOrder());
                 setActivePlugins(getInitialActivePlugins());
+
+                // Ghost a plugin.
+                ASSERT_FALSE(boost::filesystem::exists(dataPath / (blankMasterDependentEsm + ".ghost")));
+                ASSERT_NO_THROW(boost::filesystem::rename(dataPath / blankMasterDependentEsm, dataPath / (blankMasterDependentEsm + ".ghost")));
+                ASSERT_TRUE(boost::filesystem::exists(dataPath / (blankMasterDependentEsm + ".ghost")));
             }
 
             inline virtual void TearDown() {
                 ASSERT_NO_THROW(boost::filesystem::remove(dataPath / masterFile));
+
+                // Unghost the ghosted plugin.
+                ASSERT_TRUE(boost::filesystem::exists(dataPath / (blankMasterDependentEsm + ".ghost")));
+                ASSERT_NO_THROW(boost::filesystem::rename(dataPath / (blankMasterDependentEsm + ".ghost"), dataPath / blankMasterDependentEsm));
+                ASSERT_FALSE(boost::filesystem::exists(dataPath / (blankMasterDependentEsm + ".ghost")));
             }
 
             inline std::list<std::string> getLoadOrder() {
