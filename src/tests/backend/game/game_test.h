@@ -170,21 +170,20 @@ namespace loot {
             // First set reverse timestamps to be sure.
             time_t time = boost::filesystem::last_write_time(dataPath / masterFile);
             for (size_t i = 1; i < loadOrder.size(); ++i) {
+                if (!boost::filesystem::exists(dataPath / loadOrder[i]))
+                    loadOrder[i] += ".ghost";
+
                 boost::filesystem::last_write_time(dataPath / loadOrder[i], time - i * 60);
                 ASSERT_EQ(time - i * 60, boost::filesystem::last_write_time(dataPath / loadOrder[i]));
             }
 
             EXPECT_NO_THROW(game.RedatePlugins());
 
-            if (GetParam() == Game::tes5) {
-                for (size_t i = 0; i < loadOrder.size(); ++i) {
-                    ASSERT_EQ(time + i * 60, boost::filesystem::last_write_time(dataPath / loadOrder[i]));
-                }
-            }
-            else {
-                for (size_t i = 0; i < loadOrder.size(); ++i) {
-                    ASSERT_EQ(time - i * 60, boost::filesystem::last_write_time(dataPath / loadOrder[i]));
-                }
+            time_t interval = 60;
+            if (GetParam() != Game::tes5)
+                interval *= -1;
+            for (size_t i = 0; i < loadOrder.size(); ++i) {
+                EXPECT_EQ(time + i * interval, boost::filesystem::last_write_time(dataPath / loadOrder[i]));
             }
         }
 

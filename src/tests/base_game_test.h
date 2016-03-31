@@ -103,9 +103,12 @@ namespace loot {
                 if (isLoadOrderTimestampBased(GetParam())) {
                     std::map<time_t, std::string> loadOrder;
                     for (boost::filesystem::directory_iterator it(dataPath); it != boost::filesystem::directory_iterator(); ++it) {
-                        if (boost::filesystem::is_regular_file(it->status()) &&
-                            (boost::ends_with(it->path().filename().string(), ".esp") || boost::ends_with(it->path().filename().string(), ".esm"))) {
-                            loadOrder.emplace(boost::filesystem::last_write_time(it->path()), it->path().filename().string());
+                        if (boost::filesystem::is_regular_file(it->status())) {
+                            std::string filename = it->path().filename().string();
+                            if (boost::ends_with(filename, ".ghost"))
+                                filename = it->path().stem().string();
+                            if (boost::ends_with(filename, ".esp") || boost::ends_with(filename, ".esm"))
+                                loadOrder.emplace(boost::filesystem::last_write_time(it->path()), filename);
                         }
                     }
                     for (const auto& plugin : loadOrder)
