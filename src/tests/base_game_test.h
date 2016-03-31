@@ -145,6 +145,7 @@ namespace loot {
                 return std::unordered_set<std::string>({
                     masterFile,
                     blankEsm,
+                    blankDifferentMasterDependentEsp,
                 });
             }
 

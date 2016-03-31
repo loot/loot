@@ -59,7 +59,7 @@
 #include "backend/metadata/plugin_dirty_info_test.h"
 #include "backend/metadata/plugin_metadata_test.h"
 #include "backend/metadata/tag_test.h"
-#include "backend/plugin/test_plugin.h"
+#include "backend/plugin/plugin_test.h"
 #include "backend/test_metadata_list.h"
 #include "backend/test_masterlist.h"
 #include "backend/test_plugin_sorter.h"
