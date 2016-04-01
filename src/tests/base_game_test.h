@@ -90,6 +90,8 @@ namespace loot {
             }
 
             inline virtual void TearDown() {
+                ASSERT_NO_THROW(boost::filesystem::remove_all(localPath));
+
                 ASSERT_NO_THROW(boost::filesystem::remove(dataPath / masterFile));
 
                 // Unghost the ghosted plugin.

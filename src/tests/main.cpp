@@ -61,7 +61,7 @@
 #include "backend/metadata/tag_test.h"
 #include "backend/plugin/plugin_test.h"
 #include "backend/test_metadata_list.h"
-#include "backend/test_masterlist.h"
+#include "backend/masterlist_test.h"
 #include "backend/test_plugin_sorter.h"
 #include "gui/loot_settings_test.h"
 #include "gui/loot_state_test.h"
