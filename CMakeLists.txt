@@ -216,7 +216,6 @@ set (LOOT_TESTS_SRC ${LOOT_SRC}
 				            "${CMAKE_SOURCE_DIR}/src/tests/main.cpp")
 
 set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/base_game_test.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/fixtures.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/printers.h"
 
                         "${CMAKE_SOURCE_DIR}/src/tests/api/api_game_operations_test.h"
@@ -256,9 +255,9 @@ set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/base_game_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/plugin/plugin_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/masterlist_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata_list_test.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/backend/test_plugin_sorter.h"
-            						"${CMAKE_SOURCE_DIR}/src/tests/gui/loot_settings_test.h"
-            						"${CMAKE_SOURCE_DIR}/src/tests/gui/loot_state_test.h")
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/plugin_sorter_test.h"
+            			"${CMAKE_SOURCE_DIR}/src/tests/gui/loot_settings_test.h"
+            			"${CMAKE_SOURCE_DIR}/src/tests/gui/loot_state_test.h")
 
 source_group("Header Files\\backend" FILES ${LOOT_HEADERS})
 source_group("Header Files\\gui" FILES ${LOOT_GUI_HEADERS})
