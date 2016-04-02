@@ -43,7 +43,7 @@ before_script:
   - cmake .. -DPROJECT_STATIC_RUNTIME=OFF -DBUILD_SHARED_LIBS=OFF
 
 script:
-  - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && npm test || false'
+  - if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then npm test; fi
   - make tests && ./tests
 
 before_deploy:

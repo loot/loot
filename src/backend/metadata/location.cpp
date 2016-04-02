@@ -31,8 +31,6 @@ using namespace std;
 namespace loot {
     Location::Location() {}
 
-    Location::Location(const std::string& url) : _url(url) {}
-
     Location::Location(const std::string& url, const std::string& name) : _url(url), _name(name) {}
 
     bool Location::operator < (const Location& rhs) const {

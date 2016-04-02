@@ -316,15 +316,14 @@ namespace loot {
         return revision;
     }
 
-    bool IsFileDifferent(const boost::filesystem::path& repoRoot, const std::string& filename) {
-        GitHelper git;
-
-        if (!git.IsRepository(repoRoot)) {
+    bool GitHelper::IsFileDifferent(const boost::filesystem::path& repoRoot, const std::string& filename) {
+        if (!IsRepository(repoRoot)) {
             BOOST_LOG_TRIVIAL(info) << "Unknown masterlist revision: Git repository missing.";
             throw error(error::ok, lc::translate("Unknown: Git repository missing"));
         }
 
         BOOST_LOG_TRIVIAL(debug) << "Existing repository found, attempting to open it.";
+        GitHelper git;
         git.Call(git_repository_open(&git.repo, repoRoot.string().c_str()));
 
         // Perform a git diff, then iterate the deltas to see if one exists for the masterlist.

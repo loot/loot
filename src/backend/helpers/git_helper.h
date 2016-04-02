@@ -43,6 +43,8 @@ namespace loot {
 
         static bool IsRepository(const boost::filesystem::path& path);
 
+        static bool IsFileDifferent(const boost::filesystem::path& repoRoot, const std::string& filename);
+
         // Clones a repository and opens it. Sets 'repo'.
         void Clone(const boost::filesystem::path& path, const std::string& url);
 
@@ -85,7 +87,5 @@ namespace loot {
         // created by libgit2.
         static void FixRepoPermissions(const boost::filesystem::path& path);
     };
-
-    bool IsFileDifferent(const boost::filesystem::path& repoRoot, const std::string& filename);
 }
 #endif

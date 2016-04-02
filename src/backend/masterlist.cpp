@@ -77,7 +77,7 @@ namespace loot {
         info.date = out.str();
 
         BOOST_LOG_TRIVIAL(trace) << "Diffing masterlist HEAD and working copy.";
-        if (IsFileDifferent(path.parent_path(), path.filename().string())) {
+        if (GitHelper::IsFileDifferent(path.parent_path(), path.filename().string())) {
             info.revision += string(" ") + lc::translate("(edited)").str();
             info.date += string(" ") + lc::translate("(edited)").str();
         }
@@ -203,7 +203,7 @@ namespace loot {
                         // must be performed and the checked-out file parsed.
                         if (!updateBranchHead) {
                             BOOST_LOG_TRIVIAL(trace) << "Local and remote branch heads are equal.";
-                            if (!IsFileDifferent(repoPath, filename)) {
+                            if (!GitHelper::IsFileDifferent(repoPath, filename)) {
                                 BOOST_LOG_TRIVIAL(info) << "Local branch and masterlist file are already up to date.";
                                 return false;
                             }

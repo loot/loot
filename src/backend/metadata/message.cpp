@@ -24,6 +24,7 @@
 
 #include "message.h"
 #include "../helpers/language.h"
+#include "../error.h"
 
 #include <boost/log/trivial.hpp>
 
@@ -42,7 +43,17 @@ namespace loot {
     }
 
     Message::Message(const unsigned int type, const std::vector<MessageContent>& content,
-                     const std::string& condition) : _type(type), _content(content), ConditionalMetadata(condition) {}
+                     const std::string& condition) : _type(type), _content(content), ConditionalMetadata(condition) {
+        if (content.size() > 1) {
+            bool englishStringExists = false;
+            for (const auto &mc : content) {
+                if (mc.Language() == loot::Language::english)
+                    englishStringExists = true;
+            }
+            if (!englishStringExists)
+                throw loot::error(error::invalid_args, "bad conversion: multilingual messages must contain an English content string");
+        }
+    }
 
     bool Message::operator < (const Message& rhs) const {
         if (!_content.empty() && !rhs.Content().empty())
@@ -68,7 +79,7 @@ namespace loot {
         BOOST_LOG_TRIVIAL(trace) << "Choosing message content.";
         if (_content.empty())
             return MessageContent();
-        else if (_content.size() == 1 || language == Language::any)
+        else if (_content.size() == 1)
             return _content[0];
         else {
             MessageContent english;

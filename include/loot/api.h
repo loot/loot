@@ -277,7 +277,6 @@ extern "C"
      *************************************************************************/
     /**@{*/
 
-    LOOT_API extern const unsigned int loot_lang_any;  /**< Tells the API to select messages of any language. */
     LOOT_API extern const unsigned int loot_lang_english;  /**< Tells the API to preferentially select English messages. */
     LOOT_API extern const unsigned int loot_lang_spanish;  /**< Tells the API to preferentially select Spanish messages */
     LOOT_API extern const unsigned int loot_lang_russian;  /**< Tells the API to preferentially select Russian messages. */

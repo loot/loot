@@ -39,7 +39,6 @@ namespace loot {
         std::string Name() const;
         std::string Locale() const;
 
-        static const unsigned int any; // This shouldn't be used as a selectable language, just for when picking any string in a message.
         static const unsigned int english;
         static const unsigned int spanish;
         static const unsigned int russian;

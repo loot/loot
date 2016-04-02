@@ -33,8 +33,7 @@ namespace loot {
     class Location {
     public:
         Location();
-        Location(const std::string& url);
-        Location(const std::string& url, const std::string& name);
+        Location(const std::string& url, const std::string& name = "");
 
         bool operator < (const Location& rhs) const;
         bool operator == (const Location& rhs) const;

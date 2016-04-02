@@ -25,7 +25,6 @@
 #include "language.h"
 
 namespace loot {
-    const unsigned int Language::any = 0;
     const unsigned int Language::english = 1;
     const unsigned int Language::spanish = 2;
     const unsigned int Language::russian = 3;

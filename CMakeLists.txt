@@ -215,34 +215,49 @@ set (LOOT_TESTS_SRC ${LOOT_SRC}
           					"${CMAKE_SOURCE_DIR}/src/gui/loot_state.cpp"
 				            "${CMAKE_SOURCE_DIR}/src/tests/main.cpp")
 
-set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/fixtures.h"
+set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/base_game_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/printers.h"
+
+                        "${CMAKE_SOURCE_DIR}/src/tests/api/api_game_operations_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/api/loot_apply_load_order_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/api/loot_create_db_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/api/loot_db_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/api/loot_eval_lists_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/api/loot_get_dirty_info_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/api/loot_get_masterlist_revision_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/api/loot_get_plugin_messages_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/api/loot_get_plugin_tags_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/api/loot_get_tag_map_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/api/loot_load_lists_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/api/loot_sort_plugins_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/api/loot_update_masterlist_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/api/loot_write_minimal_list_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/api/test_api.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/api/test_loot_db.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/backend/game/test_game.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/backend/game/test_game_cache.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/backend/game/test_game_settings.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/backend/game/test_load_order_handler.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/backend/helpers/test_git_helper.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/backend/helpers/test_helpers.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/backend/helpers/test_language.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/backend/helpers/test_version.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/backend/helpers/test_yaml_set_helpers.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/test_condition_grammar.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/test_conditional_metadata.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/test_file.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/test_location.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/test_message.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/test_message_content.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/test_plugin_dirty_info.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/test_plugin_metadata.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/test_tag.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/backend/plugin/test_plugin.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/backend/test_metadata_list.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/backend/test_masterlist.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/backend/test_plugin_sorter.h"
-            						"${CMAKE_SOURCE_DIR}/src/tests/gui/test_loot_settings.h"
-            						"${CMAKE_SOURCE_DIR}/src/tests/gui/test_loot_state.h")
+
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/game/game_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/game/game_cache_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/game/game_settings_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/game/load_order_handler_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/helpers/git_helper_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/helpers/helpers_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/helpers/language_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/helpers/version_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/helpers/yaml_set_helpers_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/condition_grammar_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/conditional_metadata_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/file_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/location_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/message_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/message_content_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/plugin_dirty_info_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/plugin_metadata_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/tag_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/plugin/plugin_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/masterlist_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata_list_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/plugin_sorter_test.h"
+            			"${CMAKE_SOURCE_DIR}/src/tests/gui/loot_settings_test.h"
+            			"${CMAKE_SOURCE_DIR}/src/tests/gui/loot_state_test.h")
 
 source_group("Header Files\\backend" FILES ${LOOT_HEADERS})
 source_group("Header Files\\gui" FILES ${LOOT_GUI_HEADERS})
@@ -289,8 +304,8 @@ ENDIF ()
 
 # GCC and MinGW settings.
 IF (CMAKE_COMPILER_IS_GNUCXX)
-    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3 -std=c++11")
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -std=c++11")
+    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3 -std=c++14")
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -std=c++14")
     IF (PROJECT_STATIC_RUNTIME)
         set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libstdc++ -static-libgcc")
         set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -static-libstdc++ -static-libgcc")
