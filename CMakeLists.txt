@@ -255,7 +255,7 @@ set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/base_game_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/tag_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/plugin/plugin_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/masterlist_test.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/backend/test_metadata_list.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata_list_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/test_plugin_sorter.h"
             						"${CMAKE_SOURCE_DIR}/src/tests/gui/loot_settings_test.h"
             						"${CMAKE_SOURCE_DIR}/src/tests/gui/loot_state_test.h")
