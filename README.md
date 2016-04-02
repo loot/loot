@@ -14,27 +14,16 @@ LOOT is intended to make using mods easier, and mod users should still possess a
 
 ## Building LOOT
 
-### Tools
+LOOT's build process uses [CMake](http://cmake.org). Most of LOOT's C++ dependencies are managed by CMake, but the following must be obtained manually:
 
-LOOT uses the following tools as part of its build process:
+* [Boost](http://www.boost.org) v1.55+
+* [Chromium Embedded Framework](https://bitbucket.org/chromiumembedded/cef) branch 2623 (only required if building the GUI)
 
-* [CMake](http://cmake.org): To generate build files
-* [Node.js](http://nodejs.org/): To manage the UI dependencies and build the UI
+Building LOOT's GUI also uses [Node.js](http://nodejs.org/). With it installed, run `npm install` then `./node_modules/.bin/bower install` from the repository root to install the additional tools and dependencies required.
 
-Once Node.js is installed, run `npm install` from the repository root to install the necessary libraries and tools.
+The GUI's HTML file is automatically built when building the LOOT GUI binary, but it can also be built by running `node scripts/vulcanize.js` from the repository root.
 
-### Dependencies
-
-LOOT requires a mix of web and C/C++ libraries. The web libraries can be fetched by running `./node_modules/.bin/bower install` from the repository root, and most of the C/C++ dependencies are resolved by CMake, but the following must be obtained separately (version numbers used in latest development revision given):
-
-* [Boost](http://www.boost.org) v1.60.0
-* [Chromium Embedded Framework](https://bitbucket.org/chromiumembedded/cef) branch 2623: Required to build the GUI, but not the API or tests.
-
-### Building
-
-Instructions for building Windows binaries using Microsoft Visual Studio are given in [docs/BUILD.MSVC.md](docs/BUILD.MSVC.md), and instructions for building Linux binaries using GCC are given in [docs/BUILD.LINUX.md](docs/BUILD.LINUX.md).
-
-The HTML UI is automatically built when building the LOOT executable, but it can also be built by running `node scripts/vulcanize.js` from the repository root.
+Platform-specific instructions for building Windows binaries using Microsoft Visual Studio are given in [docs/BUILD.MSVC.md](docs/BUILD.MSVC.md), and instructions for building Linux binaries using GCC are given in [docs/BUILD.LINUX.md](docs/BUILD.LINUX.md).
 
 #### CMake Variables
 
