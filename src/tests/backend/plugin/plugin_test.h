@@ -34,7 +34,9 @@ namespace loot {
         protected:
             PluginTest() :
                 emptyFile("EmptyFile.esm"),
-                nonPluginFile("NotAPlugin.esm") {}
+                nonPluginFile("NotAPlugin.esm"),
+                blankArchive("Blank" + Game(GetParam()).getArchiveFileExtension()),
+                blankSuffixArchive("Blank - Different - suffix" + Game(GetParam()).getArchiveFileExtension()) {}
 
             inline void SetUp() {
                 BaseGameTest::SetUp();
@@ -54,11 +56,11 @@ namespace loot {
                 out.close();
                 ASSERT_TRUE(boost::filesystem::exists(dataPath / nonPluginFile));
 
-                if (GetParam() == GameSettings::tes4 || GetParam() == GameSettings::fo4) {
-                    // Create a dummy BSA file.
-                    out.open(dataPath / getArchiveName());
-                    out.close();
-                }
+                // Create dummy archive files.
+                out.open(dataPath / blankArchive);
+                out.close();
+                out.open(dataPath / blankSuffixArchive);
+                out.close();
             }
 
             inline void TearDown() {
@@ -66,23 +68,16 @@ namespace loot {
 
                 boost::filesystem::remove(dataPath / emptyFile);
                 boost::filesystem::remove(dataPath / nonPluginFile);
-
-                if (GetParam() == GameSettings::tes4 || GetParam() == GameSettings::fo4)
-                    boost::filesystem::remove(dataPath / getArchiveName());
+                boost::filesystem::remove(dataPath / blankArchive);
+                boost::filesystem::remove(dataPath / blankSuffixArchive);
             }
 
             Game game;
 
             const std::string emptyFile;
             const std::string nonPluginFile;
-
-        private:
-            inline std::string getArchiveName() {
-                if (GetParam() == GameSettings::fo4)
-                    return "Blank.ba2";
-                else
-                    return "Blank.bsa";
-            }
+            const std::string blankArchive;
+            const std::string blankSuffixArchive;
         };
 
         // Pass an empty first argument, as it's a prefix for the test instantation,
@@ -149,12 +144,39 @@ namespace loot {
             }), plugin.getMasters());
         }
 
-        TEST_P(PluginTest, loadsArchiveShouldReturnTrueForAPluginThatLoadsAnArchive) {
+        TEST_P(PluginTest, loadsArchiveForAnArchiveThatExactlyMatchesAnEsmFileBasenameShouldReturnTrueForAllGamesExceptOblivion) {
+            bool loadsArchive = Plugin(game, blankEsm, true).LoadsArchive();
+
+            if (GetParam() == Game::tes4)
+                EXPECT_FALSE(loadsArchive);
+            else
+                EXPECT_TRUE(loadsArchive);
+        }
+
+        TEST_P(PluginTest, loadsArchiveForAnArchiveThatExactlyMatchesAnEspFileBasenameShouldReturnTrue) {
             EXPECT_TRUE(Plugin(game, blankEsp, true).LoadsArchive());
         }
 
+        TEST_P(PluginTest, loadsArchiveForAnArchiveWithAFilenameWhichStartsWithTheEsmFileBasenameShouldReturnTrueForAllGamesExceptOblivionAndSkyrim) {
+            bool loadsArchive = Plugin(game, blankDifferentEsm, true).LoadsArchive();
+
+            if (GetParam() == Game::tes4 || GetParam() == Game::tes5)
+                EXPECT_FALSE(loadsArchive);
+            else
+                EXPECT_TRUE(loadsArchive);
+        }
+
+        TEST_P(PluginTest, loadsArchiveForAnArchiveWithAFilenameWhichStartsWithTheEspFileBasenameShouldReturnTrueForAllGamesExceptSkyrim) {
+            bool loadsArchive = Plugin(game, blankDifferentEsp, true).LoadsArchive();
+
+            if (GetParam() == Game::tes5)
+                EXPECT_FALSE(loadsArchive);
+            else
+                EXPECT_TRUE(loadsArchive);
+        }
+
         TEST_P(PluginTest, loadsArchiveShouldReturnFalseForAPluginThatDoesNotLoadAnArchive) {
-            EXPECT_FALSE(Plugin(game, blankDifferentEsm, true).LoadsArchive());
+            EXPECT_FALSE(Plugin(game, blankMasterDependentEsp, true).LoadsArchive());
         }
 
         TEST_P(PluginTest, loadsArchiveShouldReturnFalseForAPluginWithARegexFilename) {

@@ -94,12 +94,12 @@ namespace loot {
             // Get whether the plugin loads an archive (BSA/BA2) or not.
             const string archiveExtension = game.getArchiveFileExtension();
 
-            if (game.Id() == Game::tes5 || game.Id() == Game::fo4) {
-                // Skyrim and Fallout 4 plugins only load archives that exactly match their basename.
+            if (game.Id() == Game::tes5) {
+                // Skyrim plugins only load BSAs that exactly match their basename.
                 _loadsArchive = boost::filesystem::exists(game.DataPath() / (Name().substr(0, Name().length() - 4) + archiveExtension));
             }
             else if (game.Id() != Game::tes4 || boost::iends_with(Name(), ".esp")) {
-                //Oblivion .esp files and FO3, FNV plugins can load BSAs which begin with the plugin basename.
+                //Oblivion .esp files and FO3, FNV, FO4 plugins can load archives which begin with the plugin basename.
                 string basename = Name().substr(0, Name().length() - 4);
                 for (boost::filesystem::directory_iterator it(game.DataPath()); it != boost::filesystem::directory_iterator(); ++it) {
                     if (boost::iequals(it->path().extension().string(), archiveExtension) && boost::istarts_with(it->path().filename().string(), basename)) {
