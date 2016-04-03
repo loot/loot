@@ -92,11 +92,7 @@ namespace loot {
             _isActive = game.IsPluginActive(Name());
 
             // Get whether the plugin loads an archive (BSA/BA2) or not.
-            string archiveExtension;
-            if (game.Id() == Game::fo4)
-                archiveExtension = ".ba2";
-            else
-                archiveExtension = ".bsa";
+            const string archiveExtension = game.getArchiveFileExtension();
 
             if (game.Id() == Game::tes5 || game.Id() == Game::fo4) {
                 // Skyrim and Fallout 4 plugins only load archives that exactly match their basename.

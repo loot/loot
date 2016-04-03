@@ -100,6 +100,14 @@ namespace loot {
             EXPECT_THROW(game.Init(true, localPath), error);
         }
 
+        TEST_P(GameTest, getArchiveFileExtensionShouldReturnDotBa2ForFallout4AndDotBsaForOtherGames) {
+            Game game(GetParam());
+            if (game.Id() == Game::fo4)
+                EXPECT_EQ(".ba2", game.getArchiveFileExtension());
+            else
+                EXPECT_EQ(".bsa", game.getArchiveFileExtension());
+        }
+
 #ifndef _WIN32
         // Testing on Windows will find real game installs in the Registry, so cannot
         // test autodetection fully unless on Linux.

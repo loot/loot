@@ -51,6 +51,8 @@ namespace loot {
         // Check if the plugin is active by using the cached value if
         // available, and otherwise asking the load order handler.
         bool IsPluginActive(const std::string& pluginName) const;
+
+        std::string getArchiveFileExtension() const;
     private:
         bool _pluginsFullyLoaded;
     };
