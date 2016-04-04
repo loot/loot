@@ -33,7 +33,7 @@
 #include <boost/graph/adjacency_list.hpp>
 
 namespace loot {
-    typedef boost::adjacency_list<boost::listS, boost::listS, boost::directedS, loot::Plugin> PluginGraph;
+    typedef boost::adjacency_list<boost::listS, boost::listS, boost::directedS, Plugin> PluginGraph;
     typedef boost::graph_traits<PluginGraph>::vertex_descriptor vertex_t;
     typedef boost::associative_property_map<std::map<vertex_t, size_t>> vertex_map_t;
 
@@ -56,11 +56,14 @@ namespace loot {
 
         void PropagatePriorities();
 
-        void BuildPluginGraph(Game& game, const unsigned int language);
+        void addPluginVertices(Game& game, const unsigned int language);
+        void addMasterFlagEdges();
         void AddSpecificEdges();
         void AddPriorityEdges();
         void AddOverlapEdges();
         void AddTieBreakEdges();
+
+        void addEdge(const vertex_t& fromVertex, const vertex_t& toVertex);
     };
 }
 

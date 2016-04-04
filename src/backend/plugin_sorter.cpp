@@ -44,53 +44,56 @@ namespace loot {
     typedef boost::graph_traits<PluginGraph>::edge_descriptor edge_t;
     typedef boost::graph_traits<PluginGraph>::edge_iterator edge_it;
 
-    struct cycle_detector : public boost::dfs_visitor < > {
-        cycle_detector() {}
-
-        std::list<std::string> trail;
-
-        inline void tree_edge(edge_t e, const PluginGraph& g) {
-            vertex_t source = boost::source(e, g);
-
-            string name = g[source].Name();
+    class CycleDetector : public boost::dfs_visitor<> {
+    public:
+        inline void tree_edge(edge_t edge, const PluginGraph& graph) {
+            const vertex_t source = boost::source(edge, graph);
+            const string name = graph[source].Name();
 
             // Check if the plugin already exists in the recorded trail.
-            auto it = find(trail.begin(), trail.end(), name);
+            auto it = find(begin(trail), end(trail), name);
 
-            if (it != trail.end()) {
+            if (it != end(trail)) {
                 // Erase everything from this position onwards, as it doesn't
                 // contribute to a forward-cycle.
-                trail.erase(it, trail.end());
+                trail.erase(it, end(trail));
             }
 
             trail.push_back(name);
         }
 
-        inline void back_edge(edge_t e, const PluginGraph& g) {
-            vertex_t vSource = boost::source(e, g);
-            vertex_t vTarget = boost::target(e, g);
+        inline void back_edge(edge_t edge, const PluginGraph& graph) {
+            vertex_t source = boost::source(edge, graph);
+            vertex_t target = boost::target(edge, graph);
 
-            trail.push_back(g[vSource].Name());
-            list<string>::iterator it = find(trail.begin(), trail.end(), g[vTarget].Name());
+            trail.push_back(graph[source].Name());
             string backCycle;
-            for (list<string>::iterator endIt = trail.end(); it != endIt; ++it) {
+            auto it = find(begin(trail), end(trail), graph[target].Name());
+            for (it; it != end(trail); ++it) {
                 backCycle += *it + ", ";
             }
             backCycle.erase(backCycle.length() - 2);
 
-            BOOST_LOG_TRIVIAL(error) << "Cyclic interaction detected between plugins \"" << g[vSource].Name() << "\" and \"" << g[vTarget].Name() << "\". Back cycle: " << backCycle;
+            BOOST_LOG_TRIVIAL(error) << "Cyclic interaction detected between plugins \"" << graph[source].Name() << "\" and \"" << graph[target].Name() << "\". Back cycle: " << backCycle;
 
-            throw loot::error(loot::error::sorting_error, (boost::format(boost::locale::translate("Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: %3%")) % g[vSource].Name() % g[vTarget].Name() % backCycle).str());
+            throw loot::error(loot::error::sorting_error, (boost::format(boost::locale::translate("Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: %3%")) % graph[source].Name() % graph[target].Name() % backCycle).str());
         }
+
+    private:
+        std::list<std::string> trail;
     };
 
-    struct path_detector : public boost::bfs_visitor < > {
-        vertex_t target;
+    class PathDetector : public boost::bfs_visitor<> {
+    public:
+        PathDetector(vertex_t vertex) : target(vertex) {}
 
-        inline void discover_vertex(vertex_t u, const PluginGraph& g) {
-            if (u == target)
+        inline void discover_vertex(vertex_t vertex, const PluginGraph& graph) {
+            if (vertex == target)
                 throw error(error::ok, "Found a path.");
         }
+
+    private:
+        vertex_t target;
     };
 
     std::list<Plugin> PluginSorter::Sort(Game& game, const unsigned int language) {
@@ -103,7 +106,7 @@ namespace loot {
         // state that has been changed by sorting.
         game.ClearMessages();
 
-        BuildPluginGraph(game, language);
+        addPluginVertices(game, language);
 
         // Get the existing load order.
         oldLoadOrder = game.GetLoadOrder();
@@ -156,7 +159,7 @@ namespace loot {
         return plugins;
     }
 
-    void PluginSorter::BuildPluginGraph(Game& game, const unsigned int language) {
+    void PluginSorter::addPluginVertices(Game& game, const unsigned int language) {
         BOOST_LOG_TRIVIAL(info) << "Merging masterlist, userlist into plugin list, evaluating conditions and checking for install validity.";
 
         // The resolution of tie-breaks in the plugin graph may be dependent
@@ -204,7 +207,7 @@ namespace loot {
             catch (std::exception& e) {
                 BOOST_LOG_TRIVIAL(error) << "\"" << graph[v].Name() << "\" contains a condition that could not be evaluated. Details: " << e.what();
                 list<Message> messages(graph[v].Messages());
-                messages.push_back(loot::Message(loot::Message::error, (boost::format(boost::locale::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % graph[v].Name() % e.what()).str()));
+                messages.push_back(Message(Message::error, (boost::format(boost::locale::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % graph[v].Name() % e.what()).str()));
                 graph[v].Messages(messages);
             }
 
@@ -219,13 +222,10 @@ namespace loot {
             put(vertexIndexMap, v, i++);
     }
 
-    bool PluginSorter::GetVertexByName(const std::string& name, vertex_t& vertex) const {
-        vertex_it vit, vit_end;
-        boost::tie(vit, vit_end) = boost::vertices(graph);
-
-        for (vit, vit_end; vit != vit_end; ++vit) {
-            if (boost::iequals(graph[*vit].Name(), name)) {
-                vertex = *vit;
+    bool PluginSorter::GetVertexByName(const std::string& name, vertex_t& vertexOut) const {
+        for (const auto& vertex : boost::make_iterator_range(boost::vertices(graph))) {
+            if (boost::iequals(graph[vertex].Name(), name)) {
+                vertexOut = vertex;
                 return true;
             }
         }
@@ -234,16 +234,12 @@ namespace loot {
     }
 
     void PluginSorter::CheckForCycles() const {
-        cycle_detector vis;
-        boost::depth_first_search(graph, visitor(vis).vertex_index_map(vertexIndexMap));
+        boost::depth_first_search(graph, visitor(CycleDetector()).vertex_index_map(vertexIndexMap));
     }
 
-    bool PluginSorter::EdgeCreatesCycle(const vertex_t& u, const vertex_t& v) const {
-        //A cycle is created when adding the edge (u,v) if there already exists a path from v to u, so check for that using a breadth-first search.
-        path_detector vis;
-        vis.target = u;
+    bool PluginSorter::EdgeCreatesCycle(const vertex_t& fromVertex, const vertex_t& toVertex) const {
         try {
-            boost::breadth_first_search(graph, v, visitor(vis).vertex_index_map(vertexIndexMap));
+            boost::breadth_first_search(graph, toVertex, visitor(PathDetector(fromVertex)).vertex_index_map(vertexIndexMap));
         }
         catch (error& e) {
             if (e.code() == error::ok)
@@ -261,7 +257,7 @@ namespace loot {
         // Find all vertices with priorities > 0.
         std::vector<vertex_t> positivePriorityVertices;
         vertex_it vit, vitend;
-        boost::tie(vit, vitend) = boost::vertices(graph);
+        tie(vit, vitend) = boost::vertices(graph);
         std::copy_if(vit,
                      vitend,
                      std::back_inserter(positivePriorityVertices),
@@ -307,23 +303,24 @@ namespace loot {
         }
     }
 
+    void PluginSorter::addEdge(const vertex_t& fromVertex, const vertex_t& toVertex) {
+        if (!boost::edge(fromVertex, toVertex, graph).second) {
+            BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[fromVertex].Name() << "\" to \"" << graph[toVertex].Name() << "\".";
+
+            boost::add_edge(fromVertex, toVertex, graph);
+        }
+    }
+
     void PluginSorter::AddSpecificEdges() {
         //Add edges for all relationships that aren't overlaps or priority differences.
-        loot::vertex_it vit, vitend;
-        for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
-            vertex_t parentVertex;
-
+        vertex_it vit, vitend;
+        for (tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
             BOOST_LOG_TRIVIAL(trace) << "Adding specific edges to vertex for \"" << graph[*vit].Name() << "\".";
 
             BOOST_LOG_TRIVIAL(trace) << "Adding edges for master flag differences.";
-
-            loot::vertex_it vit2 = vit;
-            ++vit2;
-            while (vit2 != vitend) {
-                if (graph[*vit].isMasterFile() == graph[*vit2].isMasterFile()) {
-                    ++vit2;
+            for (vertex_it vit2 = vit; vit2 != vitend; ++vit2) {
+                if (graph[*vit].isMasterFile() == graph[*vit2].isMasterFile())
                     continue;
-                }
 
                 vertex_t vertex, parentVertex;
                 if (graph[*vit2].isMasterFile()) {
@@ -335,143 +332,109 @@ namespace loot {
                     vertex = *vit2;
                 }
 
-                if (!boost::edge(parentVertex, vertex, graph).second) {
-                    BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[vertex].Name() << "\".";
-
-                    boost::add_edge(parentVertex, vertex, graph);
-                }
-                ++vit2;
+                addEdge(parentVertex, vertex);
             }
 
+            vertex_t parentVertex;
             BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for masters.";
-            vector<string> strVec(graph[*vit].getMasters());
-            for (const auto &master : strVec) {
-                if (GetVertexByName(master, parentVertex) &&
-                    !boost::edge(parentVertex, *vit, graph).second) {
-                    BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[*vit].Name() << "\".";
-
-                    boost::add_edge(parentVertex, *vit, graph);
-                }
+            for (const auto &master : graph[*vit].getMasters()) {
+                if (GetVertexByName(master, parentVertex))
+                    addEdge(parentVertex, *vit);
             }
-            BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for requirements.";
-            set<File> fileset(graph[*vit].Reqs());
-            for (const auto &file : fileset) {
-                if (GetVertexByName(file.Name(), parentVertex) &&
-                    !boost::edge(parentVertex, *vit, graph).second) {
-                    BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[*vit].Name() << "\".";
 
-                    boost::add_edge(parentVertex, *vit, graph);
-                }
+            BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for requirements.";
+            for (const auto &file : graph[*vit].Reqs()) {
+                if (GetVertexByName(file.Name(), parentVertex))
+                    addEdge(parentVertex, *vit);
             }
 
             BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for 'load after's.";
-            fileset = graph[*vit].LoadAfter();
-            for (const auto &file : fileset) {
-                if (GetVertexByName(file.Name(), parentVertex) &&
-                    !boost::edge(parentVertex, *vit, graph).second) {
-                    BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[*vit].Name() << "\".";
-
-                    boost::add_edge(parentVertex, *vit, graph);
-                }
+            for (const auto &file : graph[*vit].LoadAfter()) {
+                if (GetVertexByName(file.Name(), parentVertex))
+                    addEdge(parentVertex, *vit);
             }
         }
     }
 
     void PluginSorter::AddPriorityEdges() {
-        loot::vertex_it vit, vitend;
-        for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
-            BOOST_LOG_TRIVIAL(trace) << "Adding priority difference edges to vertex for \"" << graph[*vit].Name() << "\".";
+        for (const auto& vertex : boost::make_iterator_range(boost::vertices(graph))) {
+            BOOST_LOG_TRIVIAL(trace) << "Adding priority difference edges to vertex for \"" << graph[vertex].Name() << "\".";
             // If the plugin does not have a global priority and doesn't load
             // an archive and has no override records, skip it. Plugins without
             // override records can only conflict with plugins that override
             // the records they add, so any edge necessary will be added when
             // evaluating that plugin.
-            if (!graph[*vit].IsPriorityGlobal() && graph[*vit].NumOverrideFormIDs() == 0 && !graph[*vit].LoadsArchive())
+            if (!graph[vertex].IsPriorityGlobal() && graph[vertex].NumOverrideFormIDs() == 0 && !graph[vertex].LoadsArchive())
                 continue;
 
-            loot::vertex_it vit2, vitend2;
-            for (boost::tie(vit2, vitend2) = boost::vertices(graph); vit2 != vitend2; ++vit2) {
+            for (const auto& otherVertex : boost::make_iterator_range(boost::vertices(graph))) {
                 // If the plugins have equal priority, or have non-global
                 // priorities but don't conflict, don't add a priority edge.
-                if (graph[*vit].Priority() == graph[*vit2].Priority()
-                    || !graph[*vit].IsPriorityGlobal() && !graph[*vit2].IsPriorityGlobal() && !graph[*vit].DoFormIDsOverlap(graph[*vit2])) {
+                if (graph[vertex].Priority() == graph[otherVertex].Priority()
+                    || !graph[vertex].IsPriorityGlobal() && !graph[otherVertex].IsPriorityGlobal() && !graph[vertex].DoFormIDsOverlap(graph[otherVertex])) {
                     continue;
                 }
 
-                vertex_t vertex, parentVertex;
-                if (graph[*vit].Priority() < graph[*vit2].Priority()) {
-                    parentVertex = *vit;
-                    vertex = *vit2;
+                vertex_t toVertex, fromVertex;
+                if (graph[vertex].Priority() < graph[otherVertex].Priority()) {
+                    fromVertex = vertex;
+                    toVertex = otherVertex;
                 }
                 else {
-                    parentVertex = *vit2;
-                    vertex = *vit;
+                    fromVertex = otherVertex;
+                    toVertex = vertex;
                 }
 
-                if (!boost::edge(parentVertex, vertex, graph).second &&
-                    !EdgeCreatesCycle(parentVertex, vertex)) {  //No edge going the other way, OK to add this edge.
-                    BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[vertex].Name() << "\".";
-
-                    boost::add_edge(parentVertex, vertex, graph);
-                }
+                if (!EdgeCreatesCycle(fromVertex, toVertex))
+                    addEdge(fromVertex, toVertex);
             }
         }
     }
 
     void PluginSorter::AddOverlapEdges() {
-        loot::vertex_it vit, vitend;
+        for (const auto& vertex : boost::make_iterator_range(boost::vertices(graph))) {
+            BOOST_LOG_TRIVIAL(trace) << "Adding overlap edges to vertex for \"" << graph[vertex].Name() << "\".";
 
-        for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
-            BOOST_LOG_TRIVIAL(trace) << "Adding overlap edges to vertex for \"" << graph[*vit].Name() << "\".";
-
-            if (graph[*vit].NumOverrideFormIDs() == 0) {
-                BOOST_LOG_TRIVIAL(trace) << "Skipping vertex for \"" << graph[*vit].Name() << "\": the plugin contains no override records.";
+            if (graph[vertex].NumOverrideFormIDs() == 0) {
+                BOOST_LOG_TRIVIAL(trace) << "Skipping vertex for \"" << graph[vertex].Name() << "\": the plugin contains no override records.";
                 continue;
             }
 
-            loot::vertex_it vit2, vitend2;
-            for (boost::tie(vit2, vitend2) = boost::vertices(graph); vit2 != vitend2; ++vit2) {
-                if (vit == vit2 || boost::edge(*vit, *vit2, graph).second || boost::edge(*vit2, *vit, graph).second)
-                    //Vertices are the same or are already linked.
+            for (const auto& otherVertex : boost::make_iterator_range(boost::vertices(graph))) {
+                if (vertex == otherVertex ||
+                    boost::edge(vertex, otherVertex, graph).second ||
+                    boost::edge(otherVertex, vertex, graph).second ||
+                    graph[vertex].NumOverrideFormIDs() == graph[otherVertex].NumOverrideFormIDs() ||
+                    !graph[vertex].DoFormIDsOverlap(graph[otherVertex])) {
                     continue;
-
-                if (graph[*vit].DoFormIDsOverlap(graph[*vit2])) {
-                    vertex_t vertex, parentVertex;
-                    if (graph[*vit].NumOverrideFormIDs() > graph[*vit2].NumOverrideFormIDs()) {
-                        parentVertex = *vit;
-                        vertex = *vit2;
-                    }
-                    else if (graph[*vit].NumOverrideFormIDs() < graph[*vit2].NumOverrideFormIDs()) {
-                        parentVertex = *vit2;
-                        vertex = *vit;
-                    }
-                    else {
-                        // There's no way to determine the order between the two, so just leave them to be treated like
-                        // any two unlinked, non-conflicting plugins in the next pass.
-                        continue;
-                    }
-
-                    //BOOST_LOG_TRIVIAL(trace) << "Checking edge validity between \"" << graph[*vit].Name() << "\" and \"" << graph[*vit2].Name() << "\".";
-                    if (!EdgeCreatesCycle(parentVertex, vertex)) {  //No edge going the other way, OK to add this edge.
-                        BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[vertex].Name() << "\".";
-
-                        boost::add_edge(parentVertex, vertex, graph);
-                    }
                 }
+
+                vertex_t toVertex, fromVertex;
+                if (graph[vertex].NumOverrideFormIDs() > graph[otherVertex].NumOverrideFormIDs()) {
+                    fromVertex = vertex;
+                    toVertex = otherVertex;
+                }
+                else {
+                    fromVertex = otherVertex;
+                    toVertex = vertex;
+                }
+
+                if (!EdgeCreatesCycle(fromVertex, toVertex))
+                    addEdge(fromVertex, toVertex);
             }
         }
     }
 
     int PluginSorter::plugincmp(const std::string& plugin1, const std::string& plugin2) const {
-        auto it1 = find(oldLoadOrder.begin(), oldLoadOrder.end(), plugin1);
-        auto it2 = find(oldLoadOrder.begin(), oldLoadOrder.end(), plugin2);
+        auto it1 = find(begin(oldLoadOrder), end(oldLoadOrder), plugin1);
+        auto it2 = find(begin(oldLoadOrder), end(oldLoadOrder), plugin2);
 
-        if (it1 != oldLoadOrder.end() && it2 == oldLoadOrder.end())
+        if (it1 != end(oldLoadOrder) && it2 == end(oldLoadOrder))
             return -1;
-        else if (it1 == oldLoadOrder.end() && it2 != oldLoadOrder.end())
+        else if (it1 == end(oldLoadOrder) && it2 != end(oldLoadOrder))
             return 1;
-        else if (it1 != oldLoadOrder.end() && it2 != oldLoadOrder.end()) {
-            if (distance(oldLoadOrder.begin(), it1) < distance(oldLoadOrder.begin(), it2))
+        else if (it1 != end(oldLoadOrder) && it2 != end(oldLoadOrder)) {
+            if (distance(begin(oldLoadOrder), it1) < distance(begin(oldLoadOrder), it2))
                 return -1;
             else
                 return 1;
@@ -506,32 +469,25 @@ namespace loot {
         // In order for the sort to be performed stably, there must be only one possible result.
         // This can be enforced by adding edges between all vertices that aren't already linked.
         // Use existing load order to decide the direction of these edges.
-        loot::vertex_it vit, vitend;
-        for (boost::tie(vit, vitend) = boost::vertices(graph); vit != vitend; ++vit) {
-            BOOST_LOG_TRIVIAL(trace) << "Adding tie-break edges to vertex for \"" << graph[*vit].Name() << "\".";
+        for (const auto& vertex : boost::make_iterator_range(boost::vertices(graph))) {
+            BOOST_LOG_TRIVIAL(trace) << "Adding tie-break edges to vertex for \"" << graph[vertex].Name() << "\".";
 
-            loot::vertex_it vit2, vitend2;
-            for (boost::tie(vit2, vitend2) = boost::vertices(graph); vit2 != vitend2; ++vit2) {
-                if (vit == vit2 || boost::edge(*vit, *vit2, graph).second || boost::edge(*vit2, *vit, graph).second)
-                    //Vertices are the same or are already linked.
+            for (const auto& otherVertex : boost::make_iterator_range(boost::vertices(graph))) {
+                if (vertex == otherVertex || boost::edge(vertex, otherVertex, graph).second || boost::edge(otherVertex, vertex, graph).second)
                     continue;
 
-                vertex_t vertex, parentVertex;
-                if (plugincmp(graph[*vit].Name(), graph[*vit2].Name()) < 0) {
-                    parentVertex = *vit;
-                    vertex = *vit2;
+                vertex_t toVertex, fromVertex;
+                if (plugincmp(graph[vertex].Name(), graph[otherVertex].Name()) < 0) {
+                    fromVertex = vertex;
+                    toVertex = otherVertex;
                 }
                 else {
-                    parentVertex = *vit2;
-                    vertex = *vit;
+                    fromVertex = otherVertex;
+                    toVertex = vertex;
                 }
 
-                //BOOST_LOG_TRIVIAL(trace) << "Checking edge validity between \"" << graph[*vit].Name() << "\" and \"" << graph[*vit2].Name() << "\".";
-                if (!EdgeCreatesCycle(parentVertex, vertex)) {  //No edge going the other way, OK to add this edge.
-                    BOOST_LOG_TRIVIAL(trace) << "Adding edge from \"" << graph[parentVertex].Name() << "\" to \"" << graph[vertex].Name() << "\".";
-
-                    boost::add_edge(parentVertex, vertex, graph);
-                }
+                if (!EdgeCreatesCycle(fromVertex, toVertex))
+                    addEdge(fromVertex, toVertex);
             }
         }
     }
