@@ -186,6 +186,7 @@
 
       /* UI state variables */
       this.id = this.name.replace(/\s+/g, '');
+      this._isEditorOpen = false;
       this.isConflictFilterChecked = false;
       this._isSearchResult = false;
     }
@@ -251,6 +252,7 @@
           pluginId: this.id,
           priority: this.priority,
           isPriorityGlobal: this.isPriorityGlobal,
+          isEditorOpen: this.isEditorOpen,
           hasUserEdits: this.hasUserEdits,
         },
       }));
@@ -384,6 +386,18 @@
     set isPriorityGlobal(isPriorityGlobal) {
       if (this._isPriorityGlobal !== isPriorityGlobal) {
         this._isPriorityGlobal = isPriorityGlobal;
+
+        this._dispatchItemContentChangeEvent();
+      }
+    }
+
+    get isEditorOpen() {
+      return this._isEditorOpen;
+    }
+
+    set isEditorOpen(isEditorOpen) {
+      if (this._isEditorOpen !== isEditorOpen) {
+        this._isEditorOpen = isEditorOpen;
 
         this._dispatchItemContentChangeEvent();
       }
