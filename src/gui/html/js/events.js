@@ -424,6 +424,9 @@ function onEditorOpen(evt) {
   document.body.setAttribute('data-editors', true);
   document.getElementById('cardsNav').notifyResize();
 
+  /* Update the plugin's editor state tracker */
+  evt.target.data.isEditorOpen = true;
+
   /* Set up drag 'n' drop event handlers. */
   const elements = document.getElementById('cardsNav').getElementsByTagName('loot-plugin-item');
   for (let i = 0; i < elements.length; ++i) {
@@ -443,15 +446,18 @@ function onEditorOpen(evt) {
   return loot.query('editorOpened').catch(handlePromiseError);
 }
 function onEditorClose(evt) {
-  /* evt.detail is true if the apply button was pressed. */
+  const plugin = loot.game.plugins.find((item) => {
+    return item.name === evt.target.querySelector('h1').textContent;
+  });
+  /* Update the plugin's editor state tracker */
+  plugin.isEditorOpen = false;
+
   let promise;
+  /* evt.detail is true if the apply button was pressed. */
   if (evt.detail) {
     /* Need to record the editor control values and work out what's
        changed, and update any UI elements necessary. Offload the
        majority of the work to the C++ side of things. */
-    const plugin = loot.game.plugins.find((item) => {
-      return item.name === evt.target.querySelector('h1').textContent;
-    });
     const edits = evt.target.readFromEditor(plugin);
     promise = loot.query('editorClosed', edits).then(JSON.parse).then((result) => {
       if (result) {
