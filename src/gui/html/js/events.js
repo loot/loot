@@ -479,7 +479,7 @@ function onEditorClose(evt) {
        the editor has been closed. */
     promise = loot.query('editorClosed');
   }
-  promise.then(() => {
+  promise.catch(handlePromiseError).then(() => {
     /* Remove body attribute so that sidebar items are styled correctly. */
     document.body.removeAttribute('data-editors');
     document.getElementById('cardsNav').notifyResize();
