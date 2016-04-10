@@ -71,6 +71,8 @@
  *          unloaded.
  *        * The `loot_db` type is now an opaque struct, and functions that used
  *          to take it as a value now take a pointer to it.
+ *        * Removed the `loot_lang_any` constant. The `loot_lang_english`
+ *          constant should be used instead.
  *
  *      ## 0.8.1 - *27 September 2015*
  *
