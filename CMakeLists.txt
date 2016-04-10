@@ -337,7 +337,7 @@ IF (MINGW)
                    version
                    ws2_32
                    shlwapi)
-    set (LOOT_GUI_LIBS ${LOOT_GUI_LIBS}
+    set (LOOT_GUI_LIBS ${LOOT_LIBS}
                        cef_sandbox
                        rpcrt4
                        comctl32)
