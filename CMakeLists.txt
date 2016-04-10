@@ -376,22 +376,22 @@ ENDIF ()
 # Build API.
 add_library           (loot_api ${LOOT_API_SRC} ${LOOT_API_HEADERS})
 add_dependencies      (loot_api libespm libgit2 libloadorder pseudosem yaml-cpp)
-target_link_libraries (loot_api ${Boost_LIBRARIES} ${YAML_CPP_LIBRARIES} ${LIBGIT2_LIBRARIES} ${LOOT_LIBS} ${LIBLOADORDER_LIBRARIES})
+target_link_libraries (loot_api ${Boost_LIBRARIES} ${LIBGIT2_LIBRARIES} ${LIBLOADORDER_LIBRARIES} ${LOOT_LIBS} ${YAML_CPP_LIBRARIES})
 
 # Build tests.
 add_executable(tests ${LOOT_TESTS_SRC} ${LOOT_TESTS_HEADERS})
 add_dependencies(tests loot_api GTest testing-metadata testing-plugins)
-target_link_libraries(tests loot_api ${Boost_LIBRARIES} ${YAML_CPP_LIBRARIES} ${LOOT_LIBS} ${GTEST_LIBRARIES})
+target_link_libraries(tests loot_api ${Boost_LIBRARIES} ${GTEST_LIBRARIES} ${LOOT_LIBS} ${YAML_CPP_LIBRARIES})
 
 # Build application.
 add_executable        (LOOT ${LOOT_GUI_SRC} ${LOOT_GUI_HEADERS})
 add_dependencies      (LOOT libespm libgit2 libloadorder pseudosem yaml-cpp)
-target_link_libraries (LOOT ${Boost_LIBRARIES} ${LOOT_GUI_LIBS} ${LIBGIT2_LIBRARIES} ${LIBLOADORDER_LIBRARIES} ${YAML_CPP_LIBRARIES})
+target_link_libraries (LOOT ${Boost_LIBRARIES} ${LIBGIT2_LIBRARIES} ${LIBLOADORDER_LIBRARIES} ${LOOT_GUI_LIBS} ${YAML_CPP_LIBRARIES})
 
 # Build validator.
 add_executable        (metadata-validator ${LOOT_VALIDATOR_SRC} ${LOOT_VALIDATOR_HEADERS})
 add_dependencies      (LOOT libespm libgit2 libloadorder yaml-cpp)
-target_link_libraries (metadata-validator ${Boost_LIBRARIES} ${LOOT_LIBS} ${LIBGIT2_LIBRARIES} ${LIBLOADORDER_LIBRARIES} ${YAML_CPP_LIBRARIES})
+target_link_libraries (metadata-validator ${Boost_LIBRARIES} ${LIBGIT2_LIBRARIES} ${LIBLOADORDER_LIBRARIES} ${LOOT_LIBS} ${YAML_CPP_LIBRARIES})
 
 
 
