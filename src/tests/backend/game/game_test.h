@@ -173,16 +173,16 @@ namespace loot {
             game.SetGamePath(dataPath.parent_path());
             game.Init(false, localPath);
 
-            std::vector<std::string> loadOrder = getInitialLoadOrder();
+            std::vector<std::pair<std::string, bool>> loadOrder = getInitialLoadOrder();
 
             // First set reverse timestamps to be sure.
             time_t time = boost::filesystem::last_write_time(dataPath / masterFile);
             for (size_t i = 1; i < loadOrder.size(); ++i) {
-                if (!boost::filesystem::exists(dataPath / loadOrder[i]))
-                    loadOrder[i] += ".ghost";
+                if (!boost::filesystem::exists(dataPath / loadOrder[i].first))
+                    loadOrder[i].first += ".ghost";
 
-                boost::filesystem::last_write_time(dataPath / loadOrder[i], time - i * 60);
-                ASSERT_EQ(time - i * 60, boost::filesystem::last_write_time(dataPath / loadOrder[i]));
+                boost::filesystem::last_write_time(dataPath / loadOrder[i].first, time - i * 60);
+                ASSERT_EQ(time - i * 60, boost::filesystem::last_write_time(dataPath / loadOrder[i].first));
             }
 
             EXPECT_NO_THROW(game.RedatePlugins());
@@ -191,7 +191,7 @@ namespace loot {
             if (GetParam() != Game::tes5)
                 interval *= -1;
             for (size_t i = 0; i < loadOrder.size(); ++i) {
-                EXPECT_EQ(time + i * interval, boost::filesystem::last_write_time(dataPath / loadOrder[i]));
+                EXPECT_EQ(time + i * interval, boost::filesystem::last_write_time(dataPath / loadOrder[i].first));
             }
         }
 

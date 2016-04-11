@@ -145,8 +145,11 @@ namespace loot {
                 blankDifferentMasterDependentEsp,
                 blankPluginDependentEsp,
             });
-
             EXPECT_NO_THROW(loh.SetLoadOrder(loadOrder));
+
+            if (GetParam() == GameSettings::fo4)
+                loadOrder.erase(begin(loadOrder));
+
             EXPECT_EQ(loadOrder, getLoadOrder());
         }
     }
