@@ -30,12 +30,6 @@ configure_file("${CMAKE_SOURCE_DIR}/src/backend/globals.cpp.in" "${CMAKE_BINARY_
 # External Projects
 ##############################
 
-IF (MSVC)
-    set(YAML_CPP_LIBRARY_SUFFIX "mt${CMAKE_STATIC_LIBRARY_SUFFIX}")
-ELSE ()
-    set(YAML_CPP_LIBRARY_SUFFIX ${CMAKE_STATIC_LIBRARY_SUFFIX})
-ENDIF ()
-
 set (Boost_USE_STATIC_LIBS ${PROJECT_STATIC_RUNTIME})
 set (Boost_USE_MULTITHREADED ON)
 set (Boost_USE_STATIC_RUNTIME ${PROJECT_STATIC_RUNTIME})
@@ -115,8 +109,7 @@ ExternalProject_Add(yaml-cpp
                     INSTALL_COMMAND "")
 ExternalProject_Get_Property(yaml-cpp SOURCE_DIR BINARY_DIR)
 set(YAML_CPP_INCLUDE_DIRS "${SOURCE_DIR}/include")
-
-set(YAML_CPP_LIBRARIES "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/libyaml-cpp${YAML_CPP_LIBRARY_SUFFIX}")
+set(YAML_CPP_LIBRARIES "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/libyaml-cpp${CMAKE_STATIC_LIBRARY_SUFFIX}")
 
 
 ##############################
