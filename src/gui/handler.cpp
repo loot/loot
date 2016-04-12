@@ -912,6 +912,23 @@ namespace loot {
             PluginSorter sorter;
             list<Plugin> plugins = sorter.Sort(_lootState.CurrentGame(), _lootState.getLanguage().Code());
 
+            // If TESV or FO4, check if load order has been changed.
+            if ((_lootState.CurrentGame().Id() == Game::tes5 || _lootState.CurrentGame().Id() == Game::fo4)
+                && equal(begin(plugins), end(plugins), begin(_lootState.CurrentGame().GetLoadOrder()))) {
+                // Load order has not been changed, set it without asking for
+                // user input because there are no changes to accept and some
+                // plugins' positions may only be inferred and not written to
+                // loadorder.txt/plugins.txt.
+                std::list<std::string> newLoadOrder;
+                std::transform(begin(plugins),
+                               end(plugins),
+                               back_inserter(newLoadOrder),
+                               [](const Plugin& plugin) {
+                    return plugin.Name();
+                });
+                _lootState.CurrentGame().SetLoadOrder(newLoadOrder);
+            }
+
             YAML::Node node;
 
             // Store global messages in case they have changed.
