@@ -347,6 +347,9 @@ ELSEIF (MSVC)
         ENDFOREACH()
     ENDIF ()
 
+    # Set /bigobj to allow building Debug tests
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /bigobj")
+
     set (LOOT_LIBS  version
                     ws2_32
                     shlwapi
