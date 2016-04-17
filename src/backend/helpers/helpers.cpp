@@ -35,8 +35,10 @@
 
 #include <cstring>
 #include <cctype>
+#include <codecvt>
 #include <cstdio>
 #include <ctime>
+#include <locale>
 #include <sstream>
 
 #ifdef _WIN32
@@ -136,6 +138,12 @@ namespace loot {
 
         if (SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, NULL, &path) != S_OK)
             throw error(error::windows_error, lc::translate("Failed to get %LOCALAPPDATA% path."));
+
+        // This code runs to set the value for a global constant, so before the
+        // main initialisation code, which means it needs to imbue a UTF-8
+        // codecvt for paths itself.
+        std::locale::global(std::locale(std::locale(), new std::codecvt_utf8_utf16<wchar_t>));
+        boost::filesystem::path::imbue(std::locale());
 
         fs::path localAppDataPath(FromWinWide(path));
         CoTaskMemFree(path);
