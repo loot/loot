@@ -81,7 +81,6 @@ namespace loot {
 
                 // Set initial load order and active plugins.
                 setLoadOrder(getInitialLoadOrder());
-                setActivePlugins(getInitialActivePlugins());
 
                 // Ghost a plugin.
                 ASSERT_FALSE(boost::filesystem::exists(dataPath / (blankMasterDependentEsm + ".ghost")));
@@ -116,7 +115,7 @@ namespace loot {
                     for (const auto& plugin : loadOrder)
                         actual.push_back(plugin.second);
                 }
-                else {
+                else if (GetParam() == GameSettings::tes5) {
                     boost::filesystem::ifstream in(localPath / "loadorder.txt");
                     while (in) {
                         std::string line;
@@ -126,31 +125,37 @@ namespace loot {
                             actual.push_back(line);
                     }
                 }
+                else {
+                    boost::filesystem::ifstream in(localPath / "plugins.txt");
+                    while (in) {
+                        std::string line;
+                        std::getline(in, line);
+
+                        if (!line.empty()) {
+                            if (line[0] == '*')
+                                line = line.substr(1);
+
+                            actual.push_back(line);
+                        }
+                    }
+                }
 
                 return actual;
             }
 
-            inline std::vector<std::string> getInitialLoadOrder() const {
-                return std::vector<std::string>({
-                    masterFile,
-                    blankEsm,
-                    blankDifferentEsm,
-                    blankMasterDependentEsm,
-                    blankDifferentMasterDependentEsm,
-                    blankEsp,
-                    blankDifferentEsp,
-                    blankMasterDependentEsp,
-                    blankDifferentMasterDependentEsp,
-                    blankPluginDependentEsp,
-                    blankDifferentPluginDependentEsp,
-                });
-            }
-
-            inline std::unordered_set<std::string> getInitialActivePlugins() const {
-                return std::unordered_set<std::string>({
-                    masterFile,
-                    blankEsm,
-                    blankDifferentMasterDependentEsp,
+            inline std::vector<std::pair<std::string, bool>> getInitialLoadOrder() const {
+                return std::vector<std::pair<std::string, bool>>({
+                    {masterFile, true},
+                    {blankEsm, true},
+                    {blankDifferentEsm, false},
+                    {blankMasterDependentEsm, false},
+                    {blankDifferentMasterDependentEsm, false},
+                    {blankEsp, false},
+                    {blankDifferentEsp, false},
+                    {blankMasterDependentEsp, false},
+                    {blankDifferentMasterDependentEsp, true},
+                    {blankPluginDependentEsp, false},
+                    {blankDifferentPluginDependentEsp, false},
                 });
             }
 
@@ -208,30 +213,34 @@ namespace loot {
                     return 0x187BE342;
             }
 
-            inline void setLoadOrder(const std::vector<std::string>& loadOrder) {
+            inline void setLoadOrder(const std::vector<std::pair<std::string, bool>>& loadOrder) const {
+                boost::filesystem::ofstream out(localPath / "plugins.txt");
+                for (const auto &plugin : loadOrder) {
+                    if (GetParam() == GameSettings::fo4 && plugin.second)
+                        out << '*';
+                    else if (GetParam() != GameSettings::fo4 && !plugin.second)
+                        continue;
+
+                    out << plugin.first << std::endl;
+                }
+
                 if (isLoadOrderTimestampBased(GetParam())) {
                     time_t modificationTime = time(NULL);  // Current time.
                     for (const auto &plugin : loadOrder) {
-                        if (boost::filesystem::exists(dataPath / boost::filesystem::path(plugin + ".ghost"))) {
-                            boost::filesystem::last_write_time(dataPath / boost::filesystem::path(plugin + ".ghost"), modificationTime);
+                        if (boost::filesystem::exists(dataPath / boost::filesystem::path(plugin.first + ".ghost"))) {
+                            boost::filesystem::last_write_time(dataPath / boost::filesystem::path(plugin.first + ".ghost"), modificationTime);
                         }
                         else {
-                            boost::filesystem::last_write_time(dataPath / plugin, modificationTime);
+                            boost::filesystem::last_write_time(dataPath / plugin.first, modificationTime);
                         }
                         modificationTime += 60;
                     }
                 }
-                else {
+                else if (GetParam() == GameSettings::tes5) {
                     boost::filesystem::ofstream out(localPath / "loadorder.txt");
                     for (const auto &plugin : loadOrder)
-                        out << plugin << std::endl;
+                        out << plugin.first << std::endl;
                 }
-            }
-
-            inline void setActivePlugins(const std::unordered_set<std::string>& activePlugins) {
-                boost::filesystem::ofstream out(localPath / "plugins.txt");
-                for (const auto &plugin : activePlugins)
-                    out << plugin << std::endl;
             }
 
             inline static bool isLoadOrderTimestampBased(unsigned int gameId) {
