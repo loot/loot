@@ -44,8 +44,10 @@
 
     static showNotification(text) {
       const toast = document.getElementById('toast');
-      toast.text = text;
-      toast.show();
+      if (toast.opened) {
+        toast.hide();
+      }
+      toast.show(text);
     }
   };
 }));
