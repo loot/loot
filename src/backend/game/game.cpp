@@ -165,7 +165,10 @@ namespace loot {
             threads.push_back(thread([&]() {
                 for (auto pluginName : pluginGroup) {
                     BOOST_LOG_TRIVIAL(trace) << "Loading " << pluginName;
-                    AddPlugin(Plugin(*this, pluginName, headersOnly));
+                    if (boost::iequals(pluginName, Master()))
+                        AddPlugin(Plugin(*this, pluginName, true));
+                    else
+                        AddPlugin(Plugin(*this, pluginName, headersOnly));
                 }
             }));
         }
