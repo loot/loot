@@ -259,7 +259,7 @@ figure > div {
             <img src="images/main.png">
         </div>
     </div>
-<figcaption>LOOT's header bar, divided into sidebar and panel areas. The sidebar area contains the plugins and filters tabs. From left to right in the panel area are the <q>Jump To General Information</q> button, the game menu, and the sorting, masterlist update, search and main menu buttons. The game menu, masterlist update button and sorting button have been disabled, as a plugin metadata editor is open.</figcaption>
+<figcaption>LOOT's header bar, divided into sidebar and panel areas. The sidebar area contains the plugins and filters tabs. From left to right in the panel area are the <q>Jump To General Information</q> button, the game menu, and the sorting, masterlist update, search and main menu buttons. The game menu, masterlist update button and sorting button have been disabled, as the metadata editor is open.</figcaption>
 </figure>
 
 <p>The header bar provides access to LOOT's main features. Most of these features get disabled while the metadata editor is open, so if you're trying to use an option that is faded out, first close the editor.
@@ -274,7 +274,7 @@ figure > div {
 
 <p>By <a href="#settingsUpdateMasterlist">default</a>, sorting first updates the masterlist. LOOT then calculates a load order for your plugins, using their internal data and any metadata they may have. If a cyclic interaction is detected (eg. A depends on B depends on A), then sorting will fail.
 
-<p>Once LOOT has calculated a load order, the plugin cards are sorted into that order. The masterlist update and sorting buttons are replaced with <span class="button">Apply</span> and <span class="button">Cancel</span> buttons, which apply and discard the calculated load order respectively. Changing games is disabled until the calculated load order is applied or discarded.
+<p>Once LOOT has calculated a load order, it is compared with the current load order. If the current and calculated load orders are identical, LOOT will inform the user that no changes were made via a pop-up 'toast' notification. If the calculated load order contains changes, the plugin cards are sorted into that order and the masterlist update and sorting buttons are replaced with <span class="button">Apply</span> and <span class="button">Cancel</span> buttons, which apply and discard the calculated load order respectively. Changing games is disabled until the calculated load order is applied or discarded.
 
 <p>LOOT is able to sort plugins ghosted by Wrye Bash, and can extract Bash Tags and version numbers from plugin descriptions. Provided that they have the <code>Filter</code> Bash Tag present in their description, LOOT can recognise filter patches and so avoid displaying unnecessary error messages for any of their masters that may be missing.
 
@@ -309,19 +309,19 @@ figure > div {
 <figcaption>Examples of plugin cards.</figcaption>
 </figure>
 
-<p>Each plugin is displayed on its own <q>card</q>, which displays all the information LOOT has for that plugin, and provides access to plugin-specific functionality, including its metadata editor. Each plugin also has an item in the sidebar's <span class="button">Plugins</span> tab. The sidebar item contains the plugin's name and icons for plugins that load archives or have user metadata. Clicking on a plugin's sidebar item will jump to its card, while double-clicking will jump to its card and open its metadata editor.
+<p>Each plugin is displayed on its own <q>card</q>, which displays all the information LOOT has for that plugin, and provides access to plugin-specific functionality, including editing its metadata. Each plugin also has an item in the sidebar's <span class="button">Plugins</span> tab. The sidebar item contains the plugin's name and icons for plugins that load archives or have user metadata. Clicking on a plugin's sidebar item will jump to its card, while double-clicking will jump to its card and open it in the metadata editor.
 
 <p>The plugin card's header holds the following information, some of which is only displayed if applicable:
 <ol>
     <li>The <q>Active Plugin</q> icon.
     <li>The plugin name.
     <li>The plugin's version number, extracted from its description field.
-    <li>The plugin's <abbr title="Cyclic Redundancy Checksum">CRC</abbr>, which can be used to uniquely identify it. CRCs are only displayed after they have been calculated during conflict filtering or sorting.
+    <li>The plugin's <abbr title="Cyclic Redundancy Checksum">CRC</abbr>, which can be used to uniquely identify it. CRCs are only displayed after they have been calculated during conflict filtering or sorting, except the the CRC of the game's main master file, which is never displayed.
     <li>The <q>Master File</q> icon.
     <li>The <q>Empty Plugin</q> icon.
     <li>The <q>Loads Archive</q> icon.
     <li>The <q>Has User Metadata</q> icon.
-    <li>The plugin menu button, which provides access to a few plugin-specific features, including a conflict filter and access to its metadata editor. These are explained in later sections.
+    <li>The plugin menu button, which provides access to a few plugin-specific features, including a conflict filter and access to it in the metadata editor. These are explained in later sections.
 </ol>
 
 <p>Bash Tag suggestions and messages are displayed below the plugin card's header.
@@ -359,10 +359,10 @@ figure > div {
             <img src="images/main.png" style="position: relative; top: -500px; left: -340px;">
         </div>
     </div>
-<figcaption>A metadata editor panel.</figcaption>
+<figcaption>The metadata editor panel.</figcaption>
 </figure>
 
-<p>LOOT uses metadata to supply plugins with messages and Bash Tag suggestions, and to help it sort plugins that it can't otherwise sort correctly. Users can add to their plugins' metadata through each plugin's metadata editor panel, and plugins with user metadata are indicated with a <q>Has User Metadata</q> icon.
+<p>LOOT uses metadata to supply plugins with messages and Bash Tag suggestions, and to help it sort plugins that it can't otherwise sort correctly. Users can add to their plugins' metadata through the metadata editor panel, and plugins with user metadata are indicated with a <q>Has User Metadata</q> icon.
 
 <p>The editor panel is accessed by clicking the <q>Edit Metadata</q> item in a plugin's menu, or by double-clicking a plugin name in the sidebar. Only one plugin's metadata can be edited at a time. While the editor panel is open, the plugin sidebar also displays any non-zero plugin priorities, to aid setting new priority values. The editor can be resized by grabbing the top of the editor's header and dragging it up or down.
 
@@ -535,6 +535,7 @@ A copy of the license is included in the file named "GNU FDL v1.3.txt".</blockqu
 <h4>Fixes</h4>
 <ul>
     <li>Redate Plugins attempted to redate plugins that were missing, causing an error.</li>
+    <li>LOOT would not launch when run by a user with a non-ASCII local application data path.</li>
     <li>Sorting processed priority value inheritance throughout the load order incorrectly, leading to some plugins being positioned incorrectly.</li>
     <li>The conflict filter displayed only the target plugin when enabled for the first time in a session.</li>
     <li>The behaviour of the search functionality was inconsistent.</li>
@@ -555,6 +556,7 @@ A copy of the license is included in the file named "GNU FDL v1.3.txt".</blockqu
 </ul>
 <h4>Changes</h4>
 <ul>
+    <li>Improve sorting performance by only reading the header when loading game's main master file.</li>
     <li>References to "BSAs" have been replaced with the more generic "Archives" as Fallout 4's BSA equivalents use a different file extension.</li>
     <li>The sorting process now recognises when the sorted load order is identical to the existing load order and informs the user, avoiding unnecessary filesystem interaction.</li>
     <li>The metadata editor has been reimplemented as a single resizeable panel displayed below the plugin card list instead of a separate editor for each plugin card.</li>
@@ -568,7 +570,7 @@ A copy of the license is included in the file named "GNU FDL v1.3.txt".</blockqu
     <li>The French and Danish translations have been updated.</li>
     <li>The installer now only creates one shortcut for LOOT in the Start menu, following Microsoft guidelines.</li>
     <li>A lot of code has been refactored and improved to increase its quality.</li>
-    <li>The Boost (1.60), CEF (3.2623.1397.gaf139d7), libespm (2.5.2), libgit2 (0.24.0), libloadorder (8.0.0) and Polymer (1.4) dependencies have been updated to the versions given in brackets.</li>
+    <li>The Boost (1.60), CEF (3.2623.1397.gaf139d7), libespm (2.5.2), libgit2 (0.24.1), libloadorder (9.2.0) and Polymer (1.4) dependencies have been updated to the versions given in brackets.</li>
 </ul>
 <h4>Removals</h4>
 <ul>
