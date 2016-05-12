@@ -64,7 +64,7 @@ namespace loot {
 
             const YAML::Node node = settings.toYaml();
             EXPECT_TRUE(node["updateMasterlist"].as<bool>());
-            EXPECT_EQ(currentVersion, node["lastVersion"].as<std::string>());
+            EXPECT_TRUE(node["lastVersion"].as<std::string>().empty());
             EXPECT_FALSE(node["filters"]);
 
             // GameSettings equality only checks name and folder, so check

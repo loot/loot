@@ -50,8 +50,7 @@ namespace loot {
         updateMasterlist(true),
         game("auto"),
         language(Language(Language::english)),
-        lastGame("auto"),
-        lastVersion(std::to_string(g_version_major) + "." + std::to_string(g_version_minor) + "." + std::to_string(g_version_patch)) {}
+        lastGame("auto") {}
 
     void LootSettings::load(YAML::Node& settings) {
         std::lock_guard<std::recursive_mutex> guard(mutex);
