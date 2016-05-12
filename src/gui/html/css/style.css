@@ -163,6 +163,9 @@ li.warn {
 #progressDialog paper-progress {
     width: 100%;
 }
+#firstRun > ul {
+    padding-left: 48px;
+}
 
 /* For Material Design generic dividers. */
 .divider {
