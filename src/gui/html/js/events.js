@@ -41,10 +41,6 @@ function onChangeGame(evt) {
     const gameInfo = JSON.parse(result, loot.Plugin.fromJson);
     loot.game = new loot.Game(gameInfo, loot.l10n);
 
-    /* Reset virtual list positions. */
-    document.getElementById('cardsNav').scrollToIndex(0);
-    document.getElementById('pluginCardList').scrollToIndex(0);
-
     /* Now update virtual lists. */
     filterPluginData(loot.game.plugins, loot.filters);
 

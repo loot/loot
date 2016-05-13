@@ -54,6 +54,7 @@ function filterPluginData(plugins, filters) {
       }
     }
     document.getElementById('cardsNav').notifyResize();
+    document.getElementById('pluginCardList').notifyResize();
 
     /* Now perform search again. If there is no current search, this won't
        do anything. */
