@@ -3,7 +3,7 @@
 ; be displayed correctly.
 
 #define MyAppName "LOOT"
-#define MyAppVersion "0.8.1"
+#define MyAppVersion "0.9.0"
 #define MyAppPublisher "LOOT Team"
 #define MyAppURL "http://loot.github.io"
 #define MyAppExeName "LOOT.exe"

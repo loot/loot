@@ -25,7 +25,7 @@
 /**
  *  @mainpage
  *  @author WrinklyNinja
- *  @version 0.8.1
+ *  @version 0.9.0
  *  @copyright
  *      The LOOT API is distributed under the GNU General Public License v3.0.
  *      For the full text of the license, see the "GNU GPL v3.txt" file
