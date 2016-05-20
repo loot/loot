@@ -386,7 +386,7 @@ target_link_libraries (LOOT ${Boost_LIBRARIES} ${LIBGIT2_LIBRARIES} ${LIBLOADORD
 
 # Build validator.
 add_executable        (metadata-validator ${LOOT_VALIDATOR_SRC} ${LOOT_VALIDATOR_HEADERS})
-add_dependencies      (LOOT libespm libgit2 libloadorder yaml-cpp)
+add_dependencies      (metadata-validator libespm libgit2 libloadorder yaml-cpp)
 target_link_libraries (metadata-validator ${Boost_LIBRARIES} ${LIBGIT2_LIBRARIES} ${LIBLOADORDER_LIBRARIES} ${LOOT_LIBS} ${YAML_CPP_LIBRARIES})
 
 
