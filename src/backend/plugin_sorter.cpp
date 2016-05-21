@@ -108,6 +108,11 @@ namespace loot {
 
         addPluginVertices(game, language);
 
+        // If there aren't any vertices, exit early, because sorting assumes
+        // there is at least one plugin.
+        if (boost::num_vertices(graph) == 0)
+            return std::list<Plugin>();
+
         // Get the existing load order.
         oldLoadOrder = game.GetLoadOrder();
         BOOST_LOG_TRIVIAL(info) << "Fetched existing load order: ";

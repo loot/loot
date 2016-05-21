@@ -89,7 +89,7 @@ namespace loot {
                 }
             }
             // Get whether the plugin is active or not.
-            _isActive = game.IsPluginActive(Name());
+            _isActive = game.LoadOrderHandler::IsPluginActive(Name());
 
             // Get whether the plugin loads an archive (BSA/BA2) or not.
             const string archiveExtension = game.getArchiveFileExtension();

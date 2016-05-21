@@ -393,7 +393,7 @@ namespace loot {
         }
 
         void SyntaxError(Iterator const& /*first*/, Iterator const& last, Iterator const& errorpos, boost::spirit::info const& what) {
-            std::string context(errorpos, min(errorpos + 50, last));
+            std::string context(errorpos, last);
             boost::trim(context);
 
             BOOST_LOG_TRIVIAL(error) << "Expected \"" << what.tag << "\" at \"" << context << "\".";

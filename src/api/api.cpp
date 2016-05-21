@@ -343,6 +343,9 @@ LOOT_API unsigned int loot_sort_plugins(loot_db * const db,
         return c_error(loot_error_no_mem, e.what());
     }
 
+    if (db->getPluginNames().empty())
+        return loot_ok;
+
     *numPlugins = db->getPluginNames().size();
     *sortedPlugins = &db->getPluginNames()[0];
 
@@ -535,10 +538,18 @@ LOOT_API unsigned int loot_get_plugin_tags(loot_db * const db, const char * cons
     }
 
     //Set outputs.
-    *tagIds_added = reinterpret_cast<const unsigned int*>(&db->getAddedTagIds()[0]);
-    *tagIds_removed = reinterpret_cast<const unsigned int*>(&db->getRemovedTagIds()[0]);
     *numTags_added = db->getAddedTagIds().size();
     *numTags_removed = db->getRemovedTagIds().size();
+
+    if (db->getAddedTagIds().empty())
+        *tagIds_added = nullptr;
+    else
+        *tagIds_added = reinterpret_cast<const unsigned int*>(&db->getAddedTagIds()[0]);
+
+    if (db->getRemovedTagIds().empty())
+        *tagIds_removed = nullptr;
+    else
+        *tagIds_removed = reinterpret_cast<const unsigned int*>(&db->getRemovedTagIds()[0]);
 
     return loot_ok;
 }
