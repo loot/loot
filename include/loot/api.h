@@ -61,7 +61,7 @@
  *      "docs/licenses/Licenses.txt" file.
  *
  * @section history_sec Version History
- *      ## 0.9.0 - *X Y 2016*
+ *      ## 0.9.0 - *21 May 2016*
  *        * Moved API header location to the more standard `include/loot/api.h`.
  *        * Documented LOOT's masterlist versioning system.
  *        * Made all API outputs fully const to make it clear they should not
