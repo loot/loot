@@ -131,42 +131,6 @@ namespace loot {
 #endif
     }
 
-    boost::filesystem::path GetLocalAppDataPath() {
-#ifdef _WIN32
-        HWND owner = 0;
-        PWSTR path;
-
-        if (SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, NULL, &path) != S_OK)
-            throw error(error::windows_error, lc::translate("Failed to get %LOCALAPPDATA% path."));
-
-        // This code runs to set the value for a global constant, so before the
-        // main initialisation code, which means it needs to imbue a UTF-8
-        // codecvt for paths itself.
-        std::locale::global(std::locale(std::locale(), new std::codecvt_utf8_utf16<wchar_t>));
-        boost::filesystem::path::imbue(std::locale());
-
-        fs::path localAppDataPath(FromWinWide(path));
-        CoTaskMemFree(path);
-
-        return localAppDataPath;
-#else
-        // Use XDG_CONFIG_HOME environmental variable if it's available.
-        const char * xdgConfigHome = getenv("XDG_CONFIG_HOME");
-
-        if (xdgConfigHome != nullptr)
-            return fs::path(xdgConfigHome);
-
-        // Otherwise, use the HOME env. var. if it's available.
-        xdgConfigHome = getenv("HOME");
-
-        if (xdgConfigHome != nullptr)
-            return fs::path(xdgConfigHome) / ".config";
-
-        // If somehow both are missing, use the current path.
-        return fs::current_path();
-#endif
-    }
-
 #ifdef _WIN32
     //Get registry subkey value string.
     string RegKeyStringValue(const std::string& keyStr, const std::string& subkey, const std::string& value) {

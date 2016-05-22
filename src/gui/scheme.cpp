@@ -24,7 +24,7 @@ along with LOOT.  If not, see
 
 #include "scheme.h"
 
-#include "../backend/globals.h"
+#include "backend/app/loot_paths.h"
 
 #include <include/wrapper/cef_stream_resource_handler.h>
 
@@ -47,7 +47,7 @@ namespace loot {
 
         // Get the path from the custom URL, which is of the form
         // loot://l10n/<l10n path>
-        string file = (g_path_l10n / request->GetURL().ToString().substr(12)).string();
+        string file = (LootPaths::getL10nPath() / request->GetURL().ToString().substr(12)).string();
 
         CefResponse::HeaderMap headers;
         headers.emplace("Access-Control-Allow-Origin", "*");

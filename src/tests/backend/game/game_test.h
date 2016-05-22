@@ -26,7 +26,7 @@ along with LOOT.  If not, see
 #define LOOT_TEST_BACKEND_GAME
 
 #include "backend/error.h"
-#include "backend/globals.h"
+#include "backend/app/loot_paths.h"
 #include "backend/game/game.h"
 
 #include "load_order_handler_test.h"
@@ -39,7 +39,7 @@ namespace loot {
             void TearDown() {
                 BaseGameTest::TearDown();
 
-                ASSERT_NO_THROW(boost::filesystem::remove_all(g_path_local));
+                ASSERT_NO_THROW(boost::filesystem::remove_all(LootPaths::getLootDataPath()));
             }
 #endif
         };
@@ -121,7 +121,7 @@ namespace loot {
 
         TEST_P(GameTest, initShouldThrowOnLinuxIfLocalPathIsNotGiven) {
             Game game = Game(GetParam()).SetGamePath(dataPath.parent_path());
-            ASSERT_FALSE(boost::filesystem::exists(g_path_local / game.FolderName()));
+            ASSERT_FALSE(boost::filesystem::exists(LootPaths::getLootDataPath() / game.FolderName()));
             EXPECT_THROW(game.Init(false), error);
         }
 
@@ -130,19 +130,19 @@ namespace loot {
         TEST_P(GameTest, initShouldNotCreateAGameFolderIfTheCreateFolderArgumentIsFalse) {
             Game game = Game(GetParam()).SetGamePath(dataPath.parent_path());
 
-            ASSERT_FALSE(boost::filesystem::exists(g_path_local / game.FolderName()));
+            ASSERT_FALSE(boost::filesystem::exists(LootPaths::getLootDataPath() / game.FolderName()));
             EXPECT_NO_THROW(game.Init(false, localPath));
 
-            EXPECT_FALSE(boost::filesystem::exists(g_path_local / game.FolderName()));
+            EXPECT_FALSE(boost::filesystem::exists(LootPaths::getLootDataPath() / game.FolderName()));
         }
 
         TEST_P(GameTest, initShouldCreateAGameFolderIfTheCreateFolderArgumentIsTrue) {
             Game game = Game(GetParam()).SetGamePath(dataPath.parent_path());
 
-            ASSERT_FALSE(boost::filesystem::exists(g_path_local / game.FolderName()));
+            ASSERT_FALSE(boost::filesystem::exists(LootPaths::getLootDataPath() / game.FolderName()));
             EXPECT_NO_THROW(game.Init(true, localPath));
 
-            EXPECT_TRUE(boost::filesystem::exists(g_path_local / game.FolderName()));
+            EXPECT_TRUE(boost::filesystem::exists(LootPaths::getLootDataPath() / game.FolderName()));
         }
 #else
         TEST_P(GameTest, initShouldNotThrowOnWindowsIfLocalPathIsNotGiven) {

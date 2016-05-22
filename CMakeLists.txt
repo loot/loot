@@ -24,7 +24,7 @@ ENDIF ()
 message(STATUS "Git revision: ${GIT_COMMIT_STRING}")
 
 # Write to file.
-configure_file("${CMAKE_SOURCE_DIR}/src/backend/globals.cpp.in" "${CMAKE_BINARY_DIR}/generated/globals.cpp" @ONLY)
+configure_file("${CMAKE_SOURCE_DIR}/src/backend/app/loot_version.cpp.in" "${CMAKE_BINARY_DIR}/generated/loot_version.cpp" @ONLY)
 
 ##############################
 # External Projects
@@ -120,8 +120,10 @@ IF (NOT DEFINED CEF_ROOT)
     set (CEF_ROOT "../../cef")
 ENDIF ()
 
-set (LOOT_SRC   "${CMAKE_SOURCE_DIR}/src/backend/app/loot_settings.cpp"
+set (LOOT_SRC   "${CMAKE_SOURCE_DIR}/src/backend/app/loot_paths.cpp"
+                "${CMAKE_SOURCE_DIR}/src/backend/app/loot_settings.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/app/loot_state.cpp"
+                "${CMAKE_BINARY_DIR}/generated/loot_version.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata/conditional_metadata.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata/file.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata/location.cpp"
@@ -141,11 +143,12 @@ set (LOOT_SRC   "${CMAKE_SOURCE_DIR}/src/backend/app/loot_settings.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/git_helper.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/helpers.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/language.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/helpers/version.cpp"
-                "${CMAKE_BINARY_DIR}/generated/globals.cpp")
+                "${CMAKE_SOURCE_DIR}/src/backend/helpers/version.cpp")
 
-set (LOOT_HEADERS "${CMAKE_SOURCE_DIR}/src/backend/app/loot_settings.h"
+set (LOOT_HEADERS "${CMAKE_SOURCE_DIR}/src/backend/app/loot_paths.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/app/loot_settings.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/app/loot_state.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/app/loot_version.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata/condition_grammar.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata/conditional_metadata.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata/file.h"
@@ -169,7 +172,6 @@ set (LOOT_HEADERS "${CMAKE_SOURCE_DIR}/src/backend/app/loot_settings.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/language.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/version.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/yaml_set_helpers.h"
-                "${CMAKE_SOURCE_DIR}/src/backend/globals.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/error.h")
 
 set (LOOT_GUI_SRC ${LOOT_SRC}
@@ -223,6 +225,7 @@ set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/base_game_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/api/loot_write_minimal_list_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/api/test_api.h"
                         
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/app/loot_paths_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/app/loot_settings_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/app/loot_state_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/game/game_test.h"

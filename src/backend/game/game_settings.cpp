@@ -23,7 +23,7 @@
     */
 
 #include "game_settings.h"
-#include "../globals.h"
+#include "../app/loot_paths.h"
 #include "../helpers/helpers.h"
 #include "../error.h"
 
@@ -181,14 +181,14 @@ namespace loot {
         if (_lootFolderName.empty())
             return "";
         else
-            return g_path_local / _lootFolderName / "masterlist.yaml";
+            return LootPaths::getLootDataPath() / _lootFolderName / "masterlist.yaml";
     }
 
     fs::path GameSettings::UserlistPath() const {
         if (_lootFolderName.empty())
             return "";
         else
-            return g_path_local / _lootFolderName / "userlist.yaml";
+            return LootPaths::getLootDataPath() / _lootFolderName / "userlist.yaml";
     }
 
     GameSettings& GameSettings::SetName(const std::string& name) {

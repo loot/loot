@@ -23,7 +23,7 @@
     */
 
 #include "game.h"
-#include "../globals.h"
+#include "../app/loot_paths.h"
 #include "../helpers/helpers.h"
 #include "../error.h"
 
@@ -67,8 +67,8 @@ namespace loot {
         if (createFolder) {
             //Make sure that the LOOT game path exists.
             try {
-                if (!fs::exists(g_path_local / FolderName()))
-                    fs::create_directories(g_path_local / FolderName());
+                if (!fs::exists(LootPaths::getLootDataPath() / FolderName()))
+                    fs::create_directories(LootPaths::getLootDataPath() / FolderName());
             }
             catch (fs::filesystem_error& e) {
                 BOOST_LOG_TRIVIAL(error) << "Could not create LOOT folder for game. Details: " << e.what();

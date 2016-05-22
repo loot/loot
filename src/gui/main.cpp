@@ -23,8 +23,7 @@
     */
 
 #include "loot_app.h"
-#include "backend/app/loot_state.h"
-#include "backend/globals.h"
+#include "backend/app/loot_paths.h"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -57,10 +56,10 @@ CefSettings GetCefSettings() {
     cef_settings.command_line_args_disabled = false;
 
     // Set CEF logging.
-    CefString(&cef_settings.log_file).FromString((g_path_local / "CEFDebugLog.txt").string());
+    CefString(&cef_settings.log_file).FromString((LootPaths::getLootDataPath() / "CEFDebugLog.txt").string());
 
     // Load locale pack files from LOOT's l10n path.
-    CefString(&cef_settings.locales_dir_path).FromString(g_path_l10n.string());
+    CefString(&cef_settings.locales_dir_path).FromString(LootPaths::getL10nPath().string());
 
     return cef_settings;
 }

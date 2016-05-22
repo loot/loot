@@ -26,7 +26,7 @@ along with LOOT.  If not, see
 #define LOOT_TEST_GUI_LOOT_SETTINGS
 
 #include "backend/app/loot_settings.h"
-#include "backend/globals.h"
+#include "backend/app/loot_version.h"
 
 namespace loot {
     namespace test {
@@ -43,7 +43,7 @@ namespace loot {
         };
 
         TEST_F(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
-            const std::string currentVersion = std::to_string(g_version_major) + "." + std::to_string(g_version_minor) + "." + std::to_string(g_version_patch);
+            const std::string currentVersion = std::to_string(LootVersion::major) + "." + std::to_string(LootVersion::minor) + "." + std::to_string(LootVersion::patch);
             const std::vector<GameSettings> expectedGameSettings({
                 GameSettings(GameSettings::tes4),
                 GameSettings(GameSettings::tes5),
@@ -408,7 +408,7 @@ namespace loot {
         }
 
         TEST_F(LootSettingsTest, updateLastVersionShouldSetValueToCurrentLootVersion) {
-            const std::string currentVersion = std::to_string(g_version_major) + "." + std::to_string(g_version_minor) + "." + std::to_string(g_version_patch);
+            const std::string currentVersion = std::to_string(LootVersion::major) + "." + std::to_string(LootVersion::minor) + "." + std::to_string(LootVersion::patch);
             YAML::Node inputYaml;
             inputYaml["lastVersion"] = "v0.7.1";
 

@@ -28,7 +28,8 @@
 #include "loot_handler.h"
 
 #include "../backend/error.h"
-#include "../backend/globals.h"
+#include "../backend/app/loot_paths.h"
+#include "../backend/app/loot_version.h"
 #include "../backend/plugin/plugin_sorter.h"
 #include "../backend/helpers/helpers.h"
 #include "../backend/helpers/json.h"
@@ -558,18 +559,18 @@ namespace loot {
     void Handler::OpenReadme() {
         BOOST_LOG_TRIVIAL(info) << "Opening LOOT readme.";
         // Open readme in default application.
-        OpenInDefaultApplication(g_path_readme);
+        OpenInDefaultApplication(LootPaths::getReadmePath());
     }
 
     void Handler::OpenLogLocation() {
         BOOST_LOG_TRIVIAL(info) << "Opening LOOT local appdata folder.";
         //Open debug log folder.
-        OpenInDefaultApplication(g_path_log.parent_path());
+        OpenInDefaultApplication(LootPaths::getLogPath().parent_path());
     }
 
     std::string Handler::GetVersion() {
         BOOST_LOG_TRIVIAL(info) << "Getting LOOT version.";
-        YAML::Node version(to_string(g_version_major) + "." + to_string(g_version_minor) + "." + to_string(g_version_patch) + "." + g_build_revision);
+        YAML::Node version(to_string(LootVersion::major) + "." + to_string(LootVersion::minor) + "." + to_string(LootVersion::patch) + "." + LootVersion::revision);
         return JSON::stringify(version);
     }
 
@@ -653,7 +654,7 @@ namespace loot {
                             "This probably happened because an update to LOOT changed "
                             "its metadata syntax support. Try updating your masterlist "
                             "to resolve the error."
-                            )) % e.what()).str()));
+                        )) % e.what()).str()));
                     }
                 }
 
@@ -676,7 +677,7 @@ namespace loot {
                             "[syntax documentation](http://loot.github.io/docs/%2%.%3%.%4%/LOOT%%20Metadata%%20Syntax.html).\n\n"
                             "You can also seek support on LOOT's forum thread, which is "
                             "linked to on [LOOT's website](http://loot.github.io/)."
-                            )) % e.what() % g_version_major % g_version_minor % g_version_patch).str()));
+                        )) % e.what() % LootVersion::major % LootVersion::minor % LootVersion::patch).str()));
                     }
                 }
             }

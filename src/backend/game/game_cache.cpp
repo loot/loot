@@ -23,7 +23,6 @@
     */
 
 #include "game_cache.h"
-#include "../globals.h"
 #include "../helpers/helpers.h"
 #include "../error.h"
 

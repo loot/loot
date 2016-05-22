@@ -25,7 +25,6 @@ along with LOOT.  If not, see
 #ifndef LOOT_TEST_BACKEND_HELPERS_VERSION
 #define LOOT_TEST_BACKEND_HELPERS_VERSION
 
-#include "backend/globals.h"
 #include "backend/helpers/version.h"
 
 #include <gtest/gtest.h>
@@ -37,10 +36,10 @@ namespace loot {
             // Use the API DLL built.
             Version version(boost::filesystem::path("loot_api.dll"));
             std::string expected(
-                std::to_string(g_version_major) + "." +
-                std::to_string(g_version_minor) + "." +
-                std::to_string(g_version_patch) + ".0"
-                );
+                std::to_string(LootVersion::major) + "." +
+                std::to_string(LootVersion::minor) + "." +
+                std::to_string(LootVersion::patch) + ".0"
+            );
             EXPECT_EQ(expected, version.AsString());
         }
 #endif

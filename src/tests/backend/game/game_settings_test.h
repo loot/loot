@@ -25,7 +25,7 @@ along with LOOT.  If not, see
 #ifndef LOOT_TEST_BACKEND_GAME_SETTINGS
 #define LOOT_TEST_BACKEND_GAME_SETTINGS
 
-#include "backend/globals.h"
+#include "backend/app/loot_paths.h"
 #include "backend/game/game_settings.h"
 
 #include "tests/base_game_test.h"
@@ -75,16 +75,16 @@ namespace loot {
 
             EXPECT_EQ("", game.GamePath());
             EXPECT_EQ("", game.DataPath());
-            EXPECT_EQ(g_path_local / "Skyrim" / "masterlist.yaml", game.MasterlistPath());
-            EXPECT_EQ(g_path_local / "Skyrim" / "userlist.yaml", game.UserlistPath());
+            EXPECT_EQ(LootPaths::getLootDataPath() / "Skyrim" / "masterlist.yaml", game.MasterlistPath());
+            EXPECT_EQ(LootPaths::getLootDataPath() / "Skyrim" / "userlist.yaml", game.UserlistPath());
         }
 
         TEST_P(GameSettingsTest, idConstructorShouldSetGameFolderIfGiven) {
             game = GameSettings(GameSettings::tes5, "folder");
 
             EXPECT_EQ("folder", game.FolderName());
-            EXPECT_EQ(g_path_local / "folder" / "masterlist.yaml", game.MasterlistPath());
-            EXPECT_EQ(g_path_local / "folder" / "userlist.yaml", game.UserlistPath());
+            EXPECT_EQ(LootPaths::getLootDataPath() / "folder" / "masterlist.yaml", game.MasterlistPath());
+            EXPECT_EQ(LootPaths::getLootDataPath() / "folder" / "userlist.yaml", game.UserlistPath());
         }
 
         TEST_P(GameSettingsTest, isInstalledShouldBeFalseIfGamePathIsNotSet) {

@@ -41,6 +41,7 @@
 #include "api/loot_update_masterlist_test.h"
 #include "api/loot_write_minimal_list_test.h"
 #include "api/test_api.h"
+#include "backend/app/loot_paths_test.h"
 #include "backend/app/loot_settings_test.h"
 #include "backend/app/loot_state_test.h"
 #include "backend/game/game_test.h"

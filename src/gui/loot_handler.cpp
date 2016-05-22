@@ -28,7 +28,7 @@
 #include "loot_app.h"
 
 #include "../backend/error.h"
-#include "../backend/globals.h"
+#include "../backend/app/loot_paths.h"
 #include "../backend/helpers/helpers.h"
 #include "../backend/helpers/json.h"
 
@@ -186,7 +186,7 @@ namespace loot {
 #endif
 
         try {
-            _lootState.save(g_path_settings);
+            _lootState.save(LootPaths::getSettingsPath());
         }
         catch (std::exception &e) {
             BOOST_LOG_TRIVIAL(error) << "Failed to save LOOT's settings. Error: " << e.what();
@@ -241,9 +241,9 @@ namespace loot {
                                      CefRefPtr< CefRequest > request,
                                      bool is_redirect) {
         BOOST_LOG_TRIVIAL(trace) << "Attempting to open link: " << request->GetURL().ToString();
-        BOOST_LOG_TRIVIAL(trace) << "Comparing with URL: " << ToFileURL(g_path_report);
+        BOOST_LOG_TRIVIAL(trace) << "Comparing with URL: " << ToFileURL(LootPaths::getUIIndexPath());
 
-        if (boost::iequals(request->GetURL().ToString(), ToFileURL(g_path_report))) {
+        if (boost::iequals(request->GetURL().ToString(), ToFileURL(LootPaths::getUIIndexPath()))) {
             BOOST_LOG_TRIVIAL(trace) << "Link is to LOOT page, allowing CEF's default handling.";
             return false;
         }

@@ -25,7 +25,8 @@
 #include "loot/api.h"
 #include "loot_db.h"
 #include "../backend/error.h"
-#include "../backend/globals.h"
+#include "../backend/app/loot_paths.h"
+#include "../backend/app/loot_version.h"
 #include "../backend/plugin/plugin_sorter.h"
 
 #include <yaml-cpp/yaml.h>
@@ -121,9 +122,9 @@ LOOT_API unsigned int loot_get_error_message(const char ** const message) {
 // LOOT version. Abstracts LOOT API stability policy away from clients.
 LOOT_API bool loot_is_compatible(const unsigned int versionMajor, const unsigned int versionMinor, const unsigned int versionPatch) {
     if (versionMajor > 0)
-        return versionMajor == loot::g_version_major;
+        return versionMajor == loot::LootVersion::major;
     else
-        return versionMinor == loot::g_version_minor;
+        return versionMinor == loot::LootVersion::minor;
 }
 
 // Returns the version string for this version of LOOT.
@@ -133,9 +134,9 @@ LOOT_API unsigned int loot_get_version(unsigned int * const versionMajor, unsign
     if (versionMajor == nullptr || versionMinor == nullptr || versionPatch == nullptr)
         return c_error(loot_error_invalid_args, "Null pointer passed.");
 
-    *versionMajor = loot::g_version_major;
-    *versionMinor = loot::g_version_minor;
-    *versionPatch = loot::g_version_patch;
+    *versionMajor = loot::LootVersion::major;
+    *versionMinor = loot::LootVersion::minor;
+    *versionPatch = loot::LootVersion::patch;
 
     return loot_ok;
 }
@@ -144,7 +145,7 @@ LOOT_API unsigned int loot_get_build_id(const char ** const revision) {
     if (revision == nullptr)
         return c_error(loot_error_invalid_args, "Null message pointer passed.");
 
-    *revision = loot::g_build_revision;
+    *revision = loot::LootVersion::revision.c_str();
 
     return loot_ok;
 }
@@ -172,9 +173,7 @@ LOOT_API unsigned int loot_create_db(loot_db ** const db,
             && clientGame != loot_game_fo4))
         return c_error(loot_error_invalid_args, "Null pointer passed.");
 
-    //Set the locale to get encoding conversions working correctly.
-    std::locale::global(boost::locale::generator().generate(""));
-    boost::filesystem::path::imbue(std::locale());
+    loot::LootPaths::initialise();
 
     //Disable logging or else stdout will get overrun.
     boost::log::core::get()->set_logging_enabled(false);

@@ -27,7 +27,7 @@
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 #endif
 
-#include "backend/globals.h"
+#include "backend/app/loot_version.h"
 #include "backend/metadata_list.h"
 
 #include <boost/log/core.hpp>
@@ -54,9 +54,9 @@ int main(int argc, char **argv) {
     // Print version info if -v or --version are given.
     if ((strcmp(argv[1], "-v") == 0) || (strcmp(argv[1], "--version") == 0)) {
         std::cout << std::endl << "LOOT Metadata Validator" << std::endl
-            << "v" << loot::g_version_major << "." << loot::g_version_minor
-            << "." << loot::g_version_patch << std::endl
-            << "build revision " << loot::g_build_revision << std::endl << std::endl;
+            << "v" << loot::LootVersion::major << "." << loot::LootVersion::minor
+            << "." << loot::LootVersion::patch << std::endl
+            << "build revision " << loot::LootVersion::revision << std::endl << std::endl;
         return 0;
     }
 

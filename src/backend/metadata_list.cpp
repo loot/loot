@@ -23,7 +23,6 @@
     */
 
 #include "metadata_list.h"
-#include "globals.h"
 #include "error.h"
 
 #include <boost/algorithm/string.hpp>

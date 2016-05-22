@@ -26,6 +26,7 @@ along with LOOT.  If not, see
 #define LOOT_TEST_BACKEND_MASTERLIST
 
 #include "backend/masterlist.h"
+#include "backend/app/loot_paths.h"
 #include "tests/base_game_test.h"
 
 namespace loot {
@@ -43,7 +44,7 @@ namespace loot {
                 ASSERT_FALSE(boost::filesystem::exists(masterlistPath));
                 ASSERT_FALSE(boost::filesystem::exists(localPath / ".git"));
 
-                ASSERT_NO_THROW(boost::filesystem::create_directories(g_path_local / Game(GetParam()).FolderName()));
+                ASSERT_NO_THROW(boost::filesystem::create_directories(LootPaths::getLootDataPath() / Game(GetParam()).FolderName()));
             }
 
             void TearDown() {
@@ -52,8 +53,8 @@ namespace loot {
                 ASSERT_NO_THROW(boost::filesystem::remove(masterlistPath));
                 ASSERT_NO_THROW(boost::filesystem::remove_all(localPath / ".git"));
 
-                ASSERT_NO_THROW(boost::filesystem::remove(g_path_local / Game(GetParam()).FolderName() / "masterlist.yaml"));
-                ASSERT_NO_THROW(boost::filesystem::remove_all(g_path_local / Game(GetParam()).FolderName() / ".git"));
+                ASSERT_NO_THROW(boost::filesystem::remove(LootPaths::getLootDataPath() / Game(GetParam()).FolderName() / "masterlist.yaml"));
+                ASSERT_NO_THROW(boost::filesystem::remove_all(LootPaths::getLootDataPath() / Game(GetParam()).FolderName() / ".git"));
             }
 
             const std::string repoUrl;

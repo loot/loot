@@ -26,7 +26,7 @@
 #include "loot_handler.h"
 #include "scheme.h"
 
-#include "../backend/globals.h"
+#include "../backend/app/loot_paths.h"
 #include "../backend/helpers/helpers.h"
 #include "../backend/helpers/language.h"
 
@@ -47,7 +47,9 @@ using boost::format;
 namespace fs = boost::filesystem;
 
 namespace loot {
-    LootApp::LootApp() {}
+    LootApp::LootApp() {
+        LootPaths::initialise();
+    }
 
     void LootApp::OnBeforeCommandLineProcessing(const CefString& process_type,
                                                 CefRefPtr<CefCommandLine> command_line) {
@@ -98,7 +100,7 @@ namespace loot {
         BOOST_LOG_TRIVIAL(debug) << "Initialising language settings in UI thread.";
         if (lootState.getLanguage().Code() != Language::english) {
             boost::locale::generator gen;
-            gen.add_messages_path(g_path_l10n.string());
+            gen.add_messages_path(LootPaths::getL10nPath().string());
             gen.add_messages_domain("loot");
 
             BOOST_LOG_TRIVIAL(debug) << "Selected language: " << lootState.getLanguage().Name();
@@ -107,7 +109,7 @@ namespace loot {
         }
 
         // Set URL to load. Ignore any command line values.
-        std::string url = ToFileURL(g_path_report);
+        std::string url = ToFileURL(LootPaths::getUIIndexPath());
 
         // Create the first browser window.
         CefBrowserHost::CreateBrowser(window_info, handler.get(), url, browser_settings, NULL);

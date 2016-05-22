@@ -42,9 +42,6 @@ namespace loot {
     //Opens the file in its registered default application.
     void OpenInDefaultApplication(const boost::filesystem::path& file);
 
-    //Get the local application data path, within which LOOT's data folder should be stored.
-    boost::filesystem::path GetLocalAppDataPath();
-
 #ifdef _WIN32
     //Get registry subkey value string.
     std::string RegKeyStringValue(const std::string& keyStr, const std::string& subkey, const std::string& value);

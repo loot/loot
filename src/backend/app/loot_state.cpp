@@ -23,9 +23,10 @@
     */
 
 #include "loot_state.h"
+#include "loot_paths.h"
 
 #include "backend/error.h"
-#include "backend/globals.h"
+#include "backend/app/loot_version.h"
 #include "backend/helpers/helpers.h"
 #include "backend/helpers/language.h"
 
@@ -104,7 +105,7 @@ namespace loot {
         // Do some preliminary locale / UTF-8 support setup here, in case the settings file reading requires it.
         //Boost.Locale initialisation: Specify location of language dictionaries.
         boost::locale::generator gen;
-        gen.add_messages_path(g_path_l10n.string());
+        gen.add_messages_path(LootPaths::getL10nPath().string());
         gen.add_messages_domain("loot");
 
         //Boost.Locale initialisation: Generate and imbue locales.
@@ -112,18 +113,18 @@ namespace loot {
         boost::filesystem::path::imbue(locale());
 
         // Check if the LOOT local app data folder exists, and create it if not.
-        if (!fs::exists(g_path_local)) {
+        if (!fs::exists(LootPaths::getLootDataPath())) {
             BOOST_LOG_TRIVIAL(info) << "Local app data LOOT folder doesn't exist, creating it.";
             try {
-                fs::create_directory(g_path_local);
+                fs::create_directory(LootPaths::getLootDataPath());
             }
             catch (exception& e) {
                 _initErrors.push_back((format(translate("Error: Could not create LOOT settings file. %1%")) % e.what()).str());
             }
         }
-        if (fs::exists(g_path_settings)) {
+        if (fs::exists(LootPaths::getSettingsPath())) {
             try {
-                LootSettings::load(g_path_settings);
+                LootSettings::load(LootPaths::getSettingsPath());
             }
             catch (exception& e) {
                 _initErrors.push_back((format(translate("Error: Settings parsing failed. %1%")) % e.what()).str());
@@ -132,7 +133,7 @@ namespace loot {
 
         //Set up logging.
         boost::log::add_file_log(
-            boost::log::keywords::file_name = g_path_log.string().c_str(),
+            boost::log::keywords::file_name = LootPaths::getLogPath().string().c_str(),
             boost::log::keywords::auto_flush = true,
             boost::log::keywords::format = (
                 boost::log::expressions::stream
@@ -140,13 +141,13 @@ namespace loot {
                 << " [" << boost::log::trivial::severity << "]: "
                 << boost::log::expressions::smessage
                 )
-            );
+        );
         boost::log::add_common_attributes();
         boost::log::core::get()->set_logging_enabled(isDebugLoggingEnabled());
 
         // Log some useful info.
-        BOOST_LOG_TRIVIAL(info) << "LOOT Version: " << g_version_major << "." << g_version_minor << "." << g_version_patch;
-        BOOST_LOG_TRIVIAL(info) << "LOOT Build Revision: " << g_build_revision;
+        BOOST_LOG_TRIVIAL(info) << "LOOT Version: " << LootVersion::major << "." << LootVersion::minor << "." << LootVersion::patch;
+        BOOST_LOG_TRIVIAL(info) << "LOOT Build Revision: " << LootVersion::revision;
 #ifdef _WIN32
         // Check if LOOT is being run through Mod Organiser.
         bool runFromMO = GetModuleHandle(ToWinWide("hook.dll").c_str()) != NULL;
@@ -157,7 +158,7 @@ namespace loot {
 
         // The CEF debug log is appended to, not overwritten, so it gets really long.
         // Delete the current CEF debug log.
-        fs::remove(g_path_local / "CEFDebugLog.txt");
+        fs::remove(LootPaths::getLootDataPath() / "CEFDebugLog.txt");
 
         // Now that settings have been loaded, set the locale again to handle translations.
         if (getLanguage().Code() != Language::english) {

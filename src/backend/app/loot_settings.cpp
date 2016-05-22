@@ -23,7 +23,7 @@
     */
 
 #include "loot_settings.h"
-#include "backend/globals.h"
+#include "backend/app/loot_version.h"
 
 #include <thread>
 
@@ -195,7 +195,7 @@ namespace loot {
     void LootSettings::updateLastVersion() {
         std::lock_guard<std::recursive_mutex> guard(mutex);
 
-        lastVersion = std::to_string(g_version_major) + "." + std::to_string(g_version_minor) + "." + std::to_string(g_version_patch);
+        lastVersion = std::to_string(LootVersion::major) + "." + std::to_string(LootVersion::minor) + "." + std::to_string(LootVersion::patch);
     }
 
     YAML::Node LootSettings::toYaml() const {
