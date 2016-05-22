@@ -62,9 +62,9 @@
 #include "backend/metadata/plugin_metadata_test.h"
 #include "backend/metadata/tag_test.h"
 #include "backend/plugin/plugin_test.h"
+#include "backend/plugin/plugin_sorter_test.h"
 #include "backend/masterlist_test.h"
 #include "backend/metadata_list_test.h"
-#include "backend/plugin_sorter_test.h"
 
 #include <boost/log/core.hpp>
 

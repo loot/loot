@@ -22,10 +22,10 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#include "game/game.h"
-#include "error.h"
 #include "plugin_sorter.h"
-#include "helpers/helpers.h"
+#include "backend/game/game.h"
+#include "backend/error.h"
+#include "backend/helpers/helpers.h"
 
 #include <cstdlib>
 

@@ -29,7 +29,7 @@
 
 #include "../backend/error.h"
 #include "../backend/globals.h"
-#include "../backend/plugin_sorter.h"
+#include "../backend/plugin/plugin_sorter.h"
 #include "../backend/helpers/helpers.h"
 #include "../backend/helpers/json.h"
 #include "../backend/helpers/version.h"

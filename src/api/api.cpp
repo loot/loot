@@ -26,7 +26,7 @@
 #include "loot_db.h"
 #include "../backend/error.h"
 #include "../backend/globals.h"
-#include "../backend/plugin_sorter.h"
+#include "../backend/plugin/plugin_sorter.h"
 
 #include <yaml-cpp/yaml.h>
 

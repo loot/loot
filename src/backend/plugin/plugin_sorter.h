@@ -22,10 +22,10 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#ifndef __LOOT_GRAPH__
-#define __LOOT_GRAPH__
+#ifndef LOOT_BACKEND_PLUGIN_SORTER
+#define LOOT_BACKEND_PLUGIN_SORTER
 
-#include "plugin/plugin.h"
+#include "plugin.h"
 
 #include <map>
 

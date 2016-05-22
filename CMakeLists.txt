@@ -137,11 +137,11 @@ set (LOOT_SRC   "${CMAKE_SOURCE_DIR}/src/backend/app/loot_settings.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata_list.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/masterlist.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/plugin/plugin.cpp"
+                "${CMAKE_SOURCE_DIR}/src/backend/plugin/plugin_sorter.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/git_helper.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/helpers.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/language.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/version.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/plugin_sorter.cpp"
                 "${CMAKE_BINARY_DIR}/generated/globals.cpp")
 
 set (LOOT_HEADERS "${CMAKE_SOURCE_DIR}/src/backend/app/loot_settings.h"
@@ -162,6 +162,7 @@ set (LOOT_HEADERS "${CMAKE_SOURCE_DIR}/src/backend/app/loot_settings.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata_list.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/masterlist.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/plugin/plugin.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/plugin/plugin_sorter.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/git_helper.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/helpers.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/json.h"
@@ -169,7 +170,6 @@ set (LOOT_HEADERS "${CMAKE_SOURCE_DIR}/src/backend/app/loot_settings.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/version.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/yaml_set_helpers.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/globals.h"
-                "${CMAKE_SOURCE_DIR}/src/backend/plugin_sorter.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/error.h")
 
 set (LOOT_GUI_SRC ${LOOT_SRC}
@@ -244,9 +244,9 @@ set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/base_game_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/plugin_metadata_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata/tag_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/plugin/plugin_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/plugin/plugin_sorter_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/masterlist_test.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata_list_test.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/backend/plugin_sorter_test.h")
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata_list_test.h")
 
 source_group("Header Files\\backend" FILES ${LOOT_HEADERS})
 source_group("Header Files\\gui" FILES ${LOOT_GUI_HEADERS})

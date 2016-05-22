@@ -25,7 +25,7 @@ along with LOOT.  If not, see
 #ifndef LOOT_TEST_BACKEND_PLUGIN_SORTER
 #define LOOT_TEST_BACKEND_PLUGIN_SORTER
 
-#include "backend/plugin_sorter.h"
+#include "backend/plugin/plugin_sorter.h"
 #include "tests/base_game_test.h"
 
 namespace loot {
