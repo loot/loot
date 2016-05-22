@@ -120,7 +120,9 @@ IF (NOT DEFINED CEF_ROOT)
     set (CEF_ROOT "../../cef")
 ENDIF ()
 
-set (LOOT_SRC   "${CMAKE_SOURCE_DIR}/src/backend/metadata/conditional_metadata.cpp"
+set (LOOT_SRC   "${CMAKE_SOURCE_DIR}/src/backend/app/loot_settings.cpp"
+                "${CMAKE_SOURCE_DIR}/src/backend/app/loot_state.cpp"
+                "${CMAKE_SOURCE_DIR}/src/backend/metadata/conditional_metadata.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata/file.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata/location.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata/message.cpp"
@@ -142,7 +144,9 @@ set (LOOT_SRC   "${CMAKE_SOURCE_DIR}/src/backend/metadata/conditional_metadata.c
                 "${CMAKE_SOURCE_DIR}/src/backend/plugin_sorter.cpp"
                 "${CMAKE_BINARY_DIR}/generated/globals.cpp")
 
-set (LOOT_HEADERS "${CMAKE_SOURCE_DIR}/src/backend/metadata/condition_grammar.h"
+set (LOOT_HEADERS "${CMAKE_SOURCE_DIR}/src/backend/app/loot_settings.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/app/loot_state.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/metadata/condition_grammar.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata/conditional_metadata.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata/file.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata/location.h"
@@ -160,6 +164,7 @@ set (LOOT_HEADERS "${CMAKE_SOURCE_DIR}/src/backend/metadata/condition_grammar.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/plugin/plugin.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/git_helper.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/helpers.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/helpers/json.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/language.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/version.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/yaml_set_helpers.h"
@@ -172,20 +177,13 @@ set (LOOT_GUI_SRC ${LOOT_SRC}
                   "${CMAKE_SOURCE_DIR}/src/gui/handler.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_handler.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_app.cpp"
-                  "${CMAKE_SOURCE_DIR}/src/gui/loot_settings.cpp"
-                  "${CMAKE_SOURCE_DIR}/src/gui/loot_state.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/scheme.cpp"
                   "${CMAKE_SOURCE_DIR}/src/resource.rc")
 
 set (LOOT_GUI_HEADERS ${LOOT_HEADERS}
-                  # Code the API doesn't need.
-                  "${CMAKE_SOURCE_DIR}/src/backend/helpers/json.h"
-                  # Actual GUI code.
                   "${CMAKE_SOURCE_DIR}/src/gui/handler.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_handler.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_app.h"
-                  "${CMAKE_SOURCE_DIR}/src/gui/loot_settings.h"
-                  "${CMAKE_SOURCE_DIR}/src/gui/loot_state.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/scheme.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/resource.h")
 
@@ -204,8 +202,6 @@ set (LOOT_VALIDATOR_HEADERS ${LOOT_HEADERS})
 
 set (LOOT_TESTS_SRC ${LOOT_SRC}
                     "${CMAKE_SOURCE_DIR}/src/api/loot_db.cpp"
-                    "${CMAKE_SOURCE_DIR}/src/gui/loot_settings.cpp"
-                    "${CMAKE_SOURCE_DIR}/src/gui/loot_state.cpp"
                     "${CMAKE_SOURCE_DIR}/src/tests/main.cpp")
 
 set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/base_game_test.h"
@@ -226,7 +222,9 @@ set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/base_game_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/api/loot_update_masterlist_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/api/loot_write_minimal_list_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/api/test_api.h"
-
+                        
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/app/loot_settings_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/app/loot_state_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/game/game_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/game/game_cache_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/game/game_settings_test.h"
@@ -248,9 +246,7 @@ set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/base_game_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/plugin/plugin_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/masterlist_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata_list_test.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/backend/plugin_sorter_test.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/gui/loot_settings_test.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/gui/loot_state_test.h")
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/plugin_sorter_test.h")
 
 source_group("Header Files\\backend" FILES ${LOOT_HEADERS})
 source_group("Header Files\\gui" FILES ${LOOT_GUI_HEADERS})

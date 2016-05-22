@@ -25,7 +25,7 @@ along with LOOT.  If not, see
 #ifndef LOOT_TEST_GUI_LOOT_SETTINGS
 #define LOOT_TEST_GUI_LOOT_SETTINGS
 
-#include "gui/loot_settings.h"
+#include "backend/app/loot_settings.h"
 #include "backend/globals.h"
 
 namespace loot {

@@ -22,8 +22,8 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#ifndef LOOT_GUI_LOOT_SETTINGS
-#define LOOT_GUI_LOOT_SETTINGS
+#ifndef LOOT_BACKEND_LOOT_SETTINGS
+#define LOOT_BACKEND_LOOT_SETTINGS
 
 #include "backend/game/game_settings.h"
 #include "backend/helpers/language.h"

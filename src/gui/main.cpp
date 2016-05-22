@@ -23,8 +23,8 @@
     */
 
 #include "loot_app.h"
-#include "loot_state.h"
-#include "../backend/globals.h"
+#include "backend/app/loot_state.h"
+#include "backend/globals.h"
 
 #ifdef _WIN32
 #include <windows.h>

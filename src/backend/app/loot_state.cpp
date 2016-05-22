@@ -24,10 +24,10 @@
 
 #include "loot_state.h"
 
-#include "../backend/error.h"
-#include "../backend/globals.h"
-#include "../backend/helpers/helpers.h"
-#include "../backend/helpers/language.h"
+#include "backend/error.h"
+#include "backend/globals.h"
+#include "backend/helpers/helpers.h"
+#include "backend/helpers/language.h"
 
 #include <boost/filesystem/fstream.hpp>
 #include <boost/format.hpp>

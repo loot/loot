@@ -41,6 +41,8 @@
 #include "api/loot_update_masterlist_test.h"
 #include "api/loot_write_minimal_list_test.h"
 #include "api/test_api.h"
+#include "backend/app/loot_settings_test.h"
+#include "backend/app/loot_state_test.h"
 #include "backend/game/game_test.h"
 #include "backend/game/game_cache_test.h"
 #include "backend/game/game_settings_test.h"
@@ -63,8 +65,6 @@
 #include "backend/masterlist_test.h"
 #include "backend/metadata_list_test.h"
 #include "backend/plugin_sorter_test.h"
-#include "gui/loot_settings_test.h"
-#include "gui/loot_state_test.h"
 
 #include <boost/log/core.hpp>
 

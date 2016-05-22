@@ -25,7 +25,7 @@
 #ifndef __LOOT_GUI_LOOT_HANDLER__
 #define __LOOT_GUI_LOOT_HANDLER__
 
-#include "loot_state.h"
+#include "backend/app/loot_state.h"
 
 #include <include/cef_client.h>
 #include <include/wrapper/cef_message_router.h>

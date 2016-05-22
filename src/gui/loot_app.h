@@ -25,7 +25,7 @@
 #ifndef __LOOT_GUI_LOOT_APP__
 #define __LOOT_GUI_LOOT_APP__
 
-#include "loot_state.h"
+#include "backend/app/loot_state.h"
 
 #include <include/cef_app.h>
 #include <include/wrapper/cef_message_router.h>
