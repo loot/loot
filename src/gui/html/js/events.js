@@ -149,13 +149,13 @@ function onSortPlugins() {
 
     /* Now hide the masterlist update buttons, and display the accept and
        cancel sort buttons. */
-    loot.dom.hide('updateMasterlistButton');
-    loot.dom.hide('sortButton');
+    loot.dom.show('updateMasterlistButton', false);
+    loot.dom.show('sortButton', false);
     loot.dom.show('applySortButton');
     loot.dom.show('cancelSortButton');
 
     /* Disable changing game. */
-    document.getElementById('gameMenu').setAttribute('disabled', '');
+    loot.dom.enable('gameMenu', false);
     loot.Dialog.closeProgress();
   }).catch(handlePromiseError);
 }
@@ -172,11 +172,11 @@ function onApplySort() {
        cancel sort buttons. */
     loot.dom.show('updateMasterlistButton');
     loot.dom.show('sortButton');
-    loot.dom.hide('applySortButton');
-    loot.dom.hide('cancelSortButton');
+    loot.dom.show('applySortButton', false);
+    loot.dom.show('cancelSortButton', false);
 
     /* Enable changing game. */
-    document.getElementById('gameMenu').removeAttribute('disabled');
+    loot.dom.enable('gameMenu');
   }).catch(handlePromiseError);
 }
 function onCancelSort() {
@@ -194,19 +194,15 @@ function onCancelSort() {
        cancel sort buttons. */
     loot.dom.show('updateMasterlistButton');
     loot.dom.show('sortButton');
-    loot.dom.hide('applySortButton');
-    loot.dom.hide('cancelSortButton');
+    loot.dom.show('applySortButton', false);
+    loot.dom.show('cancelSortButton', false);
 
     /* Enable changing game. */
-    document.getElementById('gameMenu').removeAttribute('disabled');
+    loot.dom.enable('gameMenu');
   }).catch(handlePromiseError);
 }
 
 function onRedatePlugins(evt) {
-  if (evt.target.hasAttribute('disabled')) {
-    return;
-  }
-
   loot.Dialog.askQuestion(loot.l10n.translate('Redate Plugins?'), loot.l10n.translate('This feature is provided so that modders using the Creation Kit may set the load order it uses. A side-effect is that any subscribed Steam Workshop mods will be re-downloaded by Steam. Do you wish to continue?'), loot.l10n.translate('Redate'), (result) => {
     if (result) {
       loot.query('redatePlugins').then(() => {
@@ -436,13 +432,13 @@ function onEditorOpen(evt) {
   }
 
   /* Disable the toolbar elements. */
-  document.getElementById('wipeUserlistButton').setAttribute('disabled', '');
-  document.getElementById('copyContentButton').setAttribute('disabled', '');
-  document.getElementById('refreshContentButton').setAttribute('disabled', '');
-  document.getElementById('settingsButton').setAttribute('disabled', '');
-  document.getElementById('gameMenu').setAttribute('disabled', '');
-  document.getElementById('updateMasterlistButton').setAttribute('disabled', '');
-  document.getElementById('sortButton').setAttribute('disabled', '');
+  loot.dom.enable('wipeUserlistButton', false);
+  loot.dom.enable('copyContentButton', false);
+  loot.dom.enable('refreshContentButton', false);
+  loot.dom.enable('settingsButton', false);
+  loot.dom.enable('gameMenu', false);
+  loot.dom.enable('updateMasterlistButton', false);
+  loot.dom.enable('sortButton', false);
 
   return loot.query('editorOpened').catch(handlePromiseError);
 }
@@ -493,13 +489,13 @@ function onEditorClose(evt) {
     }
 
     /* Re-enable toolbar elements. */
-    document.getElementById('wipeUserlistButton').removeAttribute('disabled');
-    document.getElementById('copyContentButton').removeAttribute('disabled');
-    document.getElementById('refreshContentButton').removeAttribute('disabled');
-    document.getElementById('settingsButton').removeAttribute('disabled');
-    document.getElementById('gameMenu').removeAttribute('disabled');
-    document.getElementById('updateMasterlistButton').removeAttribute('disabled');
-    document.getElementById('sortButton').removeAttribute('disabled');
+    loot.dom.enable('wipeUserlistButton');
+    loot.dom.enable('copyContentButton');
+    loot.dom.enable('refreshContentButton');
+    loot.dom.enable('settingsButton');
+    loot.dom.enable('gameMenu');
+    loot.dom.enable('updateMasterlistButton');
+    loot.dom.enable('sortButton');
   }).catch(handlePromiseError);
 }
 function undoConflictsFilter() {

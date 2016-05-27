@@ -18,12 +18,16 @@
       return document.querySelector(`#${rowTemplateId}`).content.querySelector(`.${elementClass}`);
     },
 
-    show(elementId) {
-      document.getElementById(elementId).hidden = false;
+    show(elementId, showElement = true) {
+      document.getElementById(elementId).hidden = !showElement;
     },
 
-    hide(elementId) {
-      document.getElementById(elementId).hidden = true;
+    enable(elementId, enableElement = true) {
+      if (enableElement) {
+        document.getElementById(elementId).removeAttribute('disabled');
+      } else {
+        document.getElementById(elementId).setAttribute('disabled', '');
+      }
     },
 
     updateSelectedGame(gameFolder) {
