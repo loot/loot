@@ -57,6 +57,7 @@
 
       /* Disable changing game. */
       loot.dom.enable('gameMenu', false);
+      loot.dom.enable('refreshContentButton', false);
 
       this.currentState = State.SORTING_STATE;
     }
@@ -78,6 +79,7 @@
 
       /* Enable changing game. */
       loot.dom.enable('gameMenu');
+      loot.dom.enable('refreshContentButton');
 
       this.currentState = State.DEFAULT_STATE;
     }

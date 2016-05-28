@@ -129,6 +129,7 @@ describe('State', () => {
       getShown('applySortButton').should.be.true();
       getShown('cancelSortButton').should.be.true();
       getEnabled('gameMenu').should.be.false();
+      getEnabled('refreshContentButton').should.be.false();
     });
 
     it('should throw an error if called in the editing state', () => {
@@ -150,6 +151,7 @@ describe('State', () => {
       getShown('applySortButton').should.be.true();
       getShown('cancelSortButton').should.be.true();
       getEnabled('gameMenu').should.be.false();
+      getEnabled('refreshContentButton').should.be.false();
     });
   });
 
@@ -166,6 +168,7 @@ describe('State', () => {
       getShown('applySortButton').should.be.false();
       getShown('cancelSortButton').should.be.false();
       getEnabled('gameMenu').should.be.true();
+      getEnabled('refreshContentButton').should.be.true();
     });
 
     it('should throw an error if called in the editing state', () => {
@@ -186,6 +189,7 @@ describe('State', () => {
       should(getShown('applySortButton')).be.undefined();
       should(getShown('cancelSortButton')).be.undefined();
       should(getEnabled('gameMenu')).be.undefined();
+      should(getEnabled('refreshContentButton')).be.undefined();
     });
   });
 
