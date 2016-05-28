@@ -358,4 +358,102 @@ describe('Game', () => {
       game.removePluginAtIndex(0);
     });
   });
+
+  describe('#getContent()', () => {
+    let game;
+
+    beforeEach(() => {
+      game = new loot.Game({}, l10n);
+    });
+
+    it('should return an object of two empty arrays if there is no game data', () => {
+      game.getContent().should.deepEqual({
+        messages: [],
+        plugins: [],
+      });
+    });
+
+    it('should return a structure containing converted plugin and message structures', () => {
+      game._globalMessages = [{
+        type: 'say',
+        condition: 'file("foo.esp")',
+        content: [{
+          lang: 'fr',
+          str: 'Bonjour le monde',
+        }],
+      }];
+      game._plugins = [{
+        name: 'foo',
+        crc: 0xDEADBEEF,
+        version: '1.0',
+        isActive: true,
+        isEmpty: true,
+        loadsArchive: true,
+
+        masterlist: {},
+        userlist: {},
+
+        priority: 500,
+        isPriorityGlobal: true,
+        messages: [{
+          type: 'warn',
+          condition: 'file("bar.esp")',
+          content: [{
+            lang: 'en',
+            str: 'Hello world',
+          }],
+        }],
+        tags: ['invalidStructure'],
+        isDirty: true,
+
+        id: '',
+        _isEditorOpen: true,
+        isConflictFilterChecked: true,
+        _isSearchResult: true,
+      }];
+
+      game.getContent().should.deepEqual({
+        messages: [{
+          type: game._globalMessages[0].type,
+          content: game._globalMessages[0].content[0].str,
+        }],
+        plugins: [{
+          name: game._plugins[0].name,
+          crc: game._plugins[0].crc,
+          version: game._plugins[0].version,
+          isActive: game._plugins[0].isActive,
+          isEmpty: game._plugins[0].isEmpty,
+          loadsArchive: game._plugins[0].loadsArchive,
+
+          priority: game._plugins[0].priority,
+          isPriorityGlobal: game._plugins[0].isPriorityGlobal,
+          messages: game._plugins[0].messages,
+          tags: game._plugins[0].tags,
+          isDirty: game._plugins[0].isDirty,
+        }],
+      });
+    });
+  });
+
+  describe('#getPluginNames()', () => {
+    let game;
+
+    beforeEach(() => {
+      game = new loot.Game({}, l10n);
+    });
+
+    it('should return an empty array if there are no plugins', () => {
+      game.getPluginNames().should.be.empty();
+    });
+
+    it('should return an array of plugin filenames if there are plugins', () => {
+      game._plugins = [{
+        name: 'foo',
+        isActive: true,
+        messages: [{ type: 'warn' }],
+      }];
+
+      game.getPluginNames().should.deepEqual(['foo']);
+    });
+  });
 });

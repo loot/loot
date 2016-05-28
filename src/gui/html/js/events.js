@@ -91,9 +91,7 @@ function onSortPlugins() {
   if (loot.settings.updateMasterlist) {
     promise = promise.then(updateMasterlist);
   }
-  promise.then(() => {
-    return loot.query('sortPlugins').then(JSON.parse);
-  }).then((result) => {
+  promise.then(() => loot.query('sortPlugins')).then(JSON.parse).then((result) => {
     if (!result) {
       return;
     }
@@ -153,9 +151,7 @@ function onSortPlugins() {
   }).catch(handlePromiseError);
 }
 function onApplySort() {
-  const loadOrder = loot.game.plugins.map((plugin) => {
-    return plugin.name;
-  });
+  const loadOrder = loot.game.getPluginNames();
   return loot.query('applySort', loadOrder).then(() => {
     /* Remove old load order storage. */
     delete loot.game.loadOrder;
@@ -219,50 +215,24 @@ function onClearAllMetadata() {
   });
 }
 function onCopyContent() {
-  let messages = [];
-  let plugins = [];
+  let content = {
+    messages: [],
+    plugins: [],
+  };
 
   if (loot.game) {
-    if (loot.game.globalMessages) {
-      messages = loot.game.globalMessages.map((message) => {
-        return {
-          type: message.type,
-          content: message.content[0].str,
-        };
-      });
-    }
-    if (loot.game.plugins) {
-      plugins = loot.game.plugins.map((plugin) => {
-        return {
-          name: plugin.name,
-          crc: plugin.crc,
-          version: plugin.version,
-          isActive: plugin.isActive,
-          isEmpty: plugin.isEmpty,
-          loadsArchive: plugin.loadsArchive,
-
-          priority: plugin.priority,
-          isPriorityGlobal: plugin.isPriorityGlobal,
-          messages: plugin.messages,
-          tags: plugin.tags,
-          isDirty: plugin.isDirty,
-        };
-      });
-    }
+    content = loot.game.getContent();
   } else {
     const message = document.getElementById('summary').getElementsByTagName('ul')[0].firstElementChild;
     if (message) {
-      messages.push({
-        type: 'error',
+      content.messages.push({
+        type: message.className,
         content: message.textContent,
       });
     }
   }
 
-  loot.query('copyContent', {
-    messages,
-    plugins,
-  }).then(() => {
+  loot.query('copyContent', content).then(() => {
     loot.Dialog.showNotification(loot.l10n.translate("LOOT's content has been copied to the clipboard."));
   }).catch(handlePromiseError);
 }
@@ -270,9 +240,7 @@ function onCopyLoadOrder() {
   let plugins = [];
 
   if (loot.game && loot.game.plugins) {
-    plugins = loot.game.plugins.map((plugin) => {
-      return plugin.name;
-    });
+    plugins = loot.game.getPluginNames();
   }
 
   loot.query('copyLoadOrder', plugins).then(() => {

@@ -254,6 +254,43 @@
       this._plugins.splice(index, 1);
     }
 
+    getContent() {
+      let messages = [];
+      let plugins = [];
+
+      if (this.globalMessages) {
+        messages = this.globalMessages.map(message => ({
+          type: message.type,
+          content: message.content[0].str,
+        }));
+      }
+      if (this.plugins) {
+        plugins = this.plugins.map(plugin => ({
+          name: plugin.name,
+          crc: plugin.crc,
+          version: plugin.version,
+          isActive: plugin.isActive,
+          isEmpty: plugin.isEmpty,
+          loadsArchive: plugin.loadsArchive,
+
+          priority: plugin.priority,
+          isPriorityGlobal: plugin.isPriorityGlobal,
+          messages: plugin.messages,
+          tags: plugin.tags,
+          isDirty: plugin.isDirty,
+        }));
+      }
+
+      return {
+        messages,
+        plugins,
+      };
+    }
+
+    getPluginNames() {
+      return this.plugins.map(plugin => plugin.name);
+    }
+
     static onPluginsChange(evt) {
       if (!evt.detail.valuesAreTotals) {
         evt.detail.totalMessageNo += parseInt(document.getElementById('totalMessageNo').textContent, 10);
