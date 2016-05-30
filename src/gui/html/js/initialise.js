@@ -115,10 +115,10 @@
     }
 
     if (settings.filters) {
-      for (const filter in settings.filters) {
+      Object.getOwnPropertyNames(settings.filters).forEach((filter) => {
         filters[filter] = settings.filters[filter];
         document.getElementById(filter).checked = filters[filter];
-      }
+      });
     }
 
     if (filters.hideMessagelessPlugins
@@ -271,9 +271,7 @@
       loot.DOM.setGameMenuItems(loot.settings.games);
       loot.DOM.updateEnabledGames(loot.installedGames);
       loot.DOM.updateSelectedGame(loot.game.folder);
-    }).then(() => {
-      return displayInitErrors();
-    }).then((result) => {
+    }).then(displayInitErrors).then((result) => {
       if (result) {
         Dialog.closeProgress();
         document.getElementById('settingsButton').click();

@@ -9,119 +9,116 @@
     root.loot.State = factory(root.loot.DOM);
     root.loot.state = new root.loot.State();
   }
-}(this, (dom) => {
-  return class State {
+}(this, dom => class State {
+  static get DEFAULT_STATE() {
+    return 0;
+  }
 
-    static get DEFAULT_STATE() {
-      return 0;
+  static get SORTING_STATE() {
+    return 1;
+  }
+
+  static get EDITING_STATE() {
+    return 2;
+  }
+
+  constructor() {
+    this.currentState = State.DEFAULT_STATE;
+  }
+
+  isInDefaultState() {
+    return this.currentState === State.DEFAULT_STATE;
+  }
+
+  isInEditingState() {
+    return this.currentState === State.EDITING_STATE;
+  }
+
+  isInSortingState() {
+    return this.currentState === State.SORTING_STATE;
+  }
+
+  enterSortingState() {
+    if (this.isInSortingState()) {
+      return;
+    }
+    if (this.isInEditingState()) {
+      throw new Error('Cannot enter sorting state from editing state');
     }
 
-    static get SORTING_STATE() {
-      return 1;
+    /* Hide the masterlist update buttons, and display the accept and
+       cancel sort buttons. */
+    dom.show('updateMasterlistButton', false);
+    dom.show('sortButton', false);
+    dom.show('applySortButton');
+    dom.show('cancelSortButton');
+
+    /* Disable changing game. */
+    dom.enable('gameMenu', false);
+    dom.enable('refreshContentButton', false);
+
+    this.currentState = State.SORTING_STATE;
+  }
+
+  exitSortingState() {
+    if (this.isInDefaultState()) {
+      return;
+    }
+    if (this.isInEditingState()) {
+      throw new Error('Cannot exit sorting state from editing state');
     }
 
-    static get EDITING_STATE() {
-      return 2;
+    /* Show the masterlist update buttons, and hide the accept and
+       cancel sort buttons. */
+    dom.show('updateMasterlistButton');
+    dom.show('sortButton');
+    dom.show('applySortButton', false);
+    dom.show('cancelSortButton', false);
+
+    /* Enable changing game. */
+    dom.enable('gameMenu');
+    dom.enable('refreshContentButton');
+
+    this.currentState = State.DEFAULT_STATE;
+  }
+
+  enterEditingState() {
+    if (this.isInEditingState()) {
+      return;
+    }
+    if (this.isInSortingState()) {
+      throw new Error('Cannot enter editing state from sorting state');
     }
 
-    constructor() {
-      this.currentState = State.DEFAULT_STATE;
+    /* Disable the toolbar elements. */
+    dom.enable('wipeUserlistButton', false);
+    dom.enable('copyContentButton', false);
+    dom.enable('refreshContentButton', false);
+    dom.enable('settingsButton', false);
+    dom.enable('gameMenu', false);
+    dom.enable('updateMasterlistButton', false);
+    dom.enable('sortButton', false);
+
+    this.currentState = State.EDITING_STATE;
+  }
+
+  exitEditingState() {
+    if (this.isInDefaultState()) {
+      return;
+    }
+    if (this.isInSortingState()) {
+      throw new Error('Cannot exit editing state from sorting state');
     }
 
-    isInDefaultState() {
-      return this.currentState === State.DEFAULT_STATE;
-    }
+    /* Re-enable toolbar elements. */
+    dom.enable('wipeUserlistButton');
+    dom.enable('copyContentButton');
+    dom.enable('refreshContentButton');
+    dom.enable('settingsButton');
+    dom.enable('gameMenu');
+    dom.enable('updateMasterlistButton');
+    dom.enable('sortButton');
 
-    isInEditingState() {
-      return this.currentState === State.EDITING_STATE;
-    }
-
-    isInSortingState() {
-      return this.currentState === State.SORTING_STATE;
-    }
-
-    enterSortingState() {
-      if (this.isInSortingState()) {
-        return;
-      }
-      if (this.isInEditingState()) {
-        throw new Error('Cannot enter sorting state from editing state');
-      }
-
-      /* Hide the masterlist update buttons, and display the accept and
-         cancel sort buttons. */
-      loot.DOM.show('updateMasterlistButton', false);
-      loot.DOM.show('sortButton', false);
-      loot.DOM.show('applySortButton');
-      loot.DOM.show('cancelSortButton');
-
-      /* Disable changing game. */
-      loot.DOM.enable('gameMenu', false);
-      loot.DOM.enable('refreshContentButton', false);
-
-      this.currentState = State.SORTING_STATE;
-    }
-
-    exitSortingState() {
-      if (this.isInDefaultState()) {
-        return;
-      }
-      if (this.isInEditingState()) {
-        throw new Error('Cannot exit sorting state from editing state');
-      }
-
-      /* Show the masterlist update buttons, and hide the accept and
-         cancel sort buttons. */
-      loot.DOM.show('updateMasterlistButton');
-      loot.DOM.show('sortButton');
-      loot.DOM.show('applySortButton', false);
-      loot.DOM.show('cancelSortButton', false);
-
-      /* Enable changing game. */
-      loot.DOM.enable('gameMenu');
-      loot.DOM.enable('refreshContentButton');
-
-      this.currentState = State.DEFAULT_STATE;
-    }
-
-    enterEditingState() {
-      if (this.isInEditingState()) {
-        return;
-      }
-      if (this.isInSortingState()) {
-        throw new Error('Cannot enter editing state from sorting state');
-      }
-
-      /* Disable the toolbar elements. */
-      loot.DOM.enable('wipeUserlistButton', false);
-      loot.DOM.enable('copyContentButton', false);
-      loot.DOM.enable('refreshContentButton', false);
-      loot.DOM.enable('settingsButton', false);
-      loot.DOM.enable('gameMenu', false);
-      loot.DOM.enable('updateMasterlistButton', false);
-      loot.DOM.enable('sortButton', false);
-
-      this.currentState = State.EDITING_STATE;
-    }
-
-    exitEditingState() {
-      if (this.isInDefaultState()) {
-        return;
-      }
-      if (this.isInSortingState()) {
-        throw new Error('Cannot exit editing state from sorting state');
-      }
-
-      /* Re-enable toolbar elements. */
-      loot.DOM.enable('wipeUserlistButton');
-      loot.DOM.enable('copyContentButton');
-      loot.DOM.enable('refreshContentButton');
-      loot.DOM.enable('settingsButton');
-      loot.DOM.enable('gameMenu');
-      loot.DOM.enable('updateMasterlistButton');
-      loot.DOM.enable('sortButton');
-
-      this.currentState = State.DEFAULT_STATE;
-    }
-  };
+    this.currentState = State.DEFAULT_STATE;
+  }
 }));

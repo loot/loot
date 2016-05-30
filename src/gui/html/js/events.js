@@ -57,9 +57,7 @@ function updateMasterlist() {
       loot.game.globalMessages = result.globalMessages;
 
       result.plugins.forEach((resultPlugin) => {
-        const existingPlugin = loot.game.plugins.find((plugin) => {
-          return plugin.name === resultPlugin.name;
-        });
+        const existingPlugin = loot.game.plugins.find(plugin => plugin.name === resultPlugin.name);
         if (existingPlugin) {
           existingPlugin.isDirty = resultPlugin.isDirty;
           existingPlugin.isPriorityGlobal = resultPlugin.isPriorityGlobal;
@@ -70,7 +68,8 @@ function updateMasterlist() {
         }
       });
 
-      loot.Dialog.showNotification(loot.l10n.translate('Masterlist updated to revision %s.', loot.game.masterlist.revision));
+      loot.Dialog.showNotification(loot.l10n.translate('Masterlist updated to revision %s.',
+                                   loot.game.masterlist.revision));
     } else {
       loot.Dialog.showNotification(loot.l10n.translate('No masterlist update was necessary.'));
     }
@@ -99,21 +98,21 @@ function onSortPlugins() {
     loot.game.globalMessages = result.globalMessages;
 
     if (!result.plugins) {
-      const message = result.globalMessages.find((item) => {
-        return item.content[0].str.startsWith('Cyclic interaction detected');
-      });
-      throw new Error(loot.l10n.translate('Failed to sort plugins. Details: ' + message.content[0].str));
+      const message = result.globalMessages.find(item => (
+        item.content[0].str.startsWith('Cyclic interaction detected'
+      ))).content[0].str;
+      throw new Error(loot.l10n.translate(`Failed to sort plugins. Details: ${message}`));
     }
 
     /* Check if sorted load order differs from current load order. */
-    const loadOrderIsUnchanged = result.plugins.every((plugin, index) => {
-      return plugin.name === loot.game.plugins[index].name;
-    });
+    const loadOrderIsUnchanged = result.plugins.every((plugin, index) => (
+      plugin.name === loot.game.plugins[index].name
+    ));
     if (loadOrderIsUnchanged) {
       result.plugins.forEach((plugin) => {
-        const existingPlugin = loot.game.plugins.find((item) => {
-          return item.name === plugin.name;
-        });
+        const existingPlugin = loot.game.plugins.find((item) => (
+          item.name === plugin.name
+        ));
         if (existingPlugin) {
           existingPlugin.crc = plugin.crc;
           existingPlugin.isEmpty = plugin.isEmpty;
@@ -129,9 +128,7 @@ function onSortPlugins() {
     loot.game.oldLoadOrder = loot.game.plugins;
     loot.game.loadOrder = [];
     result.plugins.forEach((plugin) => {
-      let existingPlugin = loot.game.plugins.find((item) => {
-        return item.name === plugin.name;
-      });
+      let existingPlugin = loot.game.plugins.find(item => item.name === plugin.name);
       if (existingPlugin) {
         existingPlugin.crc = plugin.crc;
         existingPlugin.isEmpty = plugin.isEmpty;
@@ -195,9 +192,7 @@ function onClearAllMetadata() {
       }
       /* Need to empty the UI-side user metadata. */
       plugins.forEach((plugin) => {
-        const existingPlugin = loot.game.plugins.find((item) => {
-          return item.name === plugin.name;
-        });
+        const existingPlugin = loot.game.plugins.find(item => item.name === plugin.name);
         if (existingPlugin) {
           existingPlugin.userlist = undefined;
           existingPlugin.editor = undefined;
@@ -381,9 +376,9 @@ function onEditorOpen(evt) {
   return loot.query('editorOpened').catch(handlePromiseError);
 }
 function onEditorClose(evt) {
-  const plugin = loot.game.plugins.find((item) => {
-    return item.name === evt.target.querySelector('h1').textContent;
-  });
+  const plugin = loot.game.plugins.find((item) => (
+    item.name === evt.target.querySelector('h1').textContent
+  ));
   /* Update the plugin's editor state tracker */
   plugin.isEditorOpen = false;
 
@@ -430,7 +425,7 @@ function onEditorClose(evt) {
   }).catch(handlePromiseError);
 }
 function undoConflictsFilter() {
-  let wasConflictsFilterEnabled = (loot.filters.conflictTargetPluginName);
+  const wasConflictsFilterEnabled = (loot.filters.conflictTargetPluginName);
 
   loot.filters.conflictTargetPluginName = undefined;
   /* Deactivate any existing plugin conflict filter. */
@@ -473,9 +468,7 @@ function onClearMetadata(evt) {
         return;
       }
       /* Need to empty the UI-side user metadata. */
-      const existingPlugin = loot.game.plugins.find((item) => {
-        return item.id === evt.target.id;
-      });
+      const existingPlugin = loot.game.plugins.find(item => item.id === evt.target.id);
       if (existingPlugin) {
         existingPlugin.userlist = undefined;
         existingPlugin.editor = undefined;

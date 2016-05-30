@@ -61,12 +61,10 @@
         this._tags = [];
       }
 
-      this._messages = plugin.messages.map((message) => {
-        return {
-          type: message.type,
-          content: message.content[0].str,
-        };
-      }).filter(filters.messageFilter, filters);
+      this._messages = plugin.messages.map(message => ({
+        type: message.type,
+        content: message.content[0].str,
+      })).filter(filters.messageFilter, filters);
     }
 
     get name() {

@@ -22,9 +22,7 @@ function getConflictingPlugins(pluginName) {
         if (result[key].conflicts) {
           conflicts.push(key);
         }
-        const plugin = loot.game.plugins.find((item) => {
-          return item.name === key;
-        });
+        const plugin = loot.game.plugins.find(item => item.name === key);
         if (plugin) {
           plugin.crc = result[key].crc;
           plugin.isEmpty = result[key].isEmpty;
