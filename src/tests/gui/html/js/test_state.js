@@ -1,7 +1,7 @@
 'use strict';
 
 /* Mock the DOM interactions */
-loot.dom = {
+loot.DOM = {
   elementShownStates: new Map(),
   elementEnabledStates: new Map(),
 
@@ -15,16 +15,16 @@ loot.dom = {
 };
 
 function getShown(elementId) {
-  return loot.dom.elementShownStates.get(elementId);
+  return loot.DOM.elementShownStates.get(elementId);
 }
 
 function getEnabled(elementId) {
-  return loot.dom.elementEnabledStates.get(elementId);
+  return loot.DOM.elementEnabledStates.get(elementId);
 }
 
 beforeEach(() => {
-  loot.dom.elementShownStates.clear();
-  loot.dom.elementEnabledStates.clear();
+  loot.DOM.elementShownStates.clear();
+  loot.DOM.elementEnabledStates.clear();
 });
 
 describe('State', () => {

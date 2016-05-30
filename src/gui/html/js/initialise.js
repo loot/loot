@@ -30,7 +30,7 @@
     // Browser globals
     root.loot = root.loot || {};
     root.loot.initialise = factory(root.loot.Dialog,
-                                    root.loot.dom,
+                                    root.loot.DOM,
                                     root.loot.Filters,
                                     root.loot.Game,
                                     root.loot.translateStaticText,
@@ -219,9 +219,9 @@
     return query('getSettings').then(JSON.parse).then((result) => {
       appData.settings = result;
       dom.updateSettingsDialog(appData.settings);
-      loot.dom.setGameMenuItems(appData.settings.games);
-      loot.dom.updateEnabledGames(appData.installedGames);
-      loot.dom.updateSelectedGame(appData.game.folder);
+      loot.DOM.setGameMenuItems(appData.settings.games);
+      loot.DOM.updateEnabledGames(appData.installedGames);
+      loot.DOM.updateSelectedGame(appData.game.folder);
     });
   }
 
@@ -268,9 +268,9 @@
       translateStaticText(loot.l10n);
       /* Also need to update the settings UI. */
       dom.updateSettingsDialog(loot.settings);
-      loot.dom.setGameMenuItems(loot.settings.games);
-      loot.dom.updateEnabledGames(loot.installedGames);
-      loot.dom.updateSelectedGame(loot.game.folder);
+      loot.DOM.setGameMenuItems(loot.settings.games);
+      loot.DOM.updateEnabledGames(loot.installedGames);
+      loot.DOM.updateSelectedGame(loot.game.folder);
     }).then(() => {
       return displayInitErrors();
     }).then((result) => {

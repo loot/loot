@@ -339,7 +339,7 @@
       document.getElementById('masterlistDate').textContent = evt.detail.date;
     }
     static onFolderChange(evt) {
-      loot.dom.updateSelectedGame(evt.detail.folder);
+      loot.DOM.updateSelectedGame(evt.detail.folder);
       /* Enable/disable the redate plugins option. */
       let gameSettings = undefined;
       if (loot.settings && loot.settings.games) {

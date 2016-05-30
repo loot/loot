@@ -327,7 +327,7 @@ function onCloseSettingsDialog(evt) {
   }
   if (!evt.detail.confirmed) {
     /* Re-apply the existing settings to the settings dialog elements. */
-    loot.dom.updateSettingsDialog(loot.settings);
+    loot.DOM.updateSettingsDialog(loot.settings);
     return;
   }
 
@@ -345,13 +345,13 @@ function onCloseSettingsDialog(evt) {
   /* Send the settings back to the C++ side. */
   loot.query('closeSettings', settings).then(JSON.parse).then((installedGames) => {
     loot.installedGames = installedGames;
-    loot.dom.updateEnabledGames(installedGames);
+    loot.DOM.updateEnabledGames(installedGames);
   }).catch(handlePromiseError).then(() => {
     loot.settings = settings;
-    loot.dom.updateSettingsDialog(loot.settings);
-    loot.dom.setGameMenuItems(loot.settings.games);
-    loot.dom.updateEnabledGames(loot.installedGames);
-    loot.dom.updateSelectedGame(loot.game.folder);
+    loot.DOM.updateSettingsDialog(loot.settings);
+    loot.DOM.setGameMenuItems(loot.settings.games);
+    loot.DOM.updateEnabledGames(loot.installedGames);
+    loot.DOM.updateSelectedGame(loot.game.folder);
   }).catch(handlePromiseError);
 }
 function onShowSettingsDialog() {

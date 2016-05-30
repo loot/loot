@@ -6,7 +6,7 @@
   } else {
     // Browser globals
     root.loot = root.loot || {};
-    root.loot.State = factory(root.loot.dom);
+    root.loot.State = factory(root.loot.DOM);
     root.loot.state = new root.loot.State();
   }
 }(this, (dom) => {
@@ -50,14 +50,14 @@
 
       /* Hide the masterlist update buttons, and display the accept and
          cancel sort buttons. */
-      loot.dom.show('updateMasterlistButton', false);
-      loot.dom.show('sortButton', false);
-      loot.dom.show('applySortButton');
-      loot.dom.show('cancelSortButton');
+      loot.DOM.show('updateMasterlistButton', false);
+      loot.DOM.show('sortButton', false);
+      loot.DOM.show('applySortButton');
+      loot.DOM.show('cancelSortButton');
 
       /* Disable changing game. */
-      loot.dom.enable('gameMenu', false);
-      loot.dom.enable('refreshContentButton', false);
+      loot.DOM.enable('gameMenu', false);
+      loot.DOM.enable('refreshContentButton', false);
 
       this.currentState = State.SORTING_STATE;
     }
@@ -72,14 +72,14 @@
 
       /* Show the masterlist update buttons, and hide the accept and
          cancel sort buttons. */
-      loot.dom.show('updateMasterlistButton');
-      loot.dom.show('sortButton');
-      loot.dom.show('applySortButton', false);
-      loot.dom.show('cancelSortButton', false);
+      loot.DOM.show('updateMasterlistButton');
+      loot.DOM.show('sortButton');
+      loot.DOM.show('applySortButton', false);
+      loot.DOM.show('cancelSortButton', false);
 
       /* Enable changing game. */
-      loot.dom.enable('gameMenu');
-      loot.dom.enable('refreshContentButton');
+      loot.DOM.enable('gameMenu');
+      loot.DOM.enable('refreshContentButton');
 
       this.currentState = State.DEFAULT_STATE;
     }
@@ -93,13 +93,13 @@
       }
 
       /* Disable the toolbar elements. */
-      loot.dom.enable('wipeUserlistButton', false);
-      loot.dom.enable('copyContentButton', false);
-      loot.dom.enable('refreshContentButton', false);
-      loot.dom.enable('settingsButton', false);
-      loot.dom.enable('gameMenu', false);
-      loot.dom.enable('updateMasterlistButton', false);
-      loot.dom.enable('sortButton', false);
+      loot.DOM.enable('wipeUserlistButton', false);
+      loot.DOM.enable('copyContentButton', false);
+      loot.DOM.enable('refreshContentButton', false);
+      loot.DOM.enable('settingsButton', false);
+      loot.DOM.enable('gameMenu', false);
+      loot.DOM.enable('updateMasterlistButton', false);
+      loot.DOM.enable('sortButton', false);
 
       this.currentState = State.EDITING_STATE;
     }
@@ -113,13 +113,13 @@
       }
 
       /* Re-enable toolbar elements. */
-      loot.dom.enable('wipeUserlistButton');
-      loot.dom.enable('copyContentButton');
-      loot.dom.enable('refreshContentButton');
-      loot.dom.enable('settingsButton');
-      loot.dom.enable('gameMenu');
-      loot.dom.enable('updateMasterlistButton');
-      loot.dom.enable('sortButton');
+      loot.DOM.enable('wipeUserlistButton');
+      loot.DOM.enable('copyContentButton');
+      loot.DOM.enable('refreshContentButton');
+      loot.DOM.enable('settingsButton');
+      loot.DOM.enable('gameMenu');
+      loot.DOM.enable('updateMasterlistButton');
+      loot.DOM.enable('sortButton');
 
       this.currentState = State.DEFAULT_STATE;
     }
