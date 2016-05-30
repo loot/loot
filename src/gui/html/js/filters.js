@@ -9,7 +9,7 @@
     root.loot.Filters = factory();
   }
 }(this, () => {
-  return class Filters {
+  return class {
     constructor(l10n) {
       /* Plugin filters */
       this.hideMessagelessPlugins = false;

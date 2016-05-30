@@ -12,7 +12,7 @@
     root.loot.Translator = factory(root.Jed, root.jedGettextParser);
   }
 }(this, (Jed, jedGettextParser) => {
-  return class Translator {
+  return class {
     /* Returns a Promise */
     constructor(locale) {
       this.locale = locale || 'en';

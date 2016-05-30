@@ -9,7 +9,7 @@
     root.loot.Dialog = factory();
   }
 }(this, () => {
-  return class Dialog {
+  return class {
     static showProgress(text) {
       const progressDialog = document.getElementById('progressDialog');
       progressDialog.getElementsByTagName('p')[0].textContent = text;

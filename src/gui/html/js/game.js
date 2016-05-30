@@ -10,7 +10,7 @@
     root.loot.Game = factory(root.marked);
   }
 }(this, (marked) => {
-  return class Game {
+  return class {
     constructor(obj, l10n) {
       this.folder = obj.folder || '';
       this.globalMessages = obj.globalMessages || [];
